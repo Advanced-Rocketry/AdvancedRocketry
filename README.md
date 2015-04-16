@@ -36,11 +36,12 @@ Milestone 3:
 		- (each level of solar panel increases effectiveness by 10% with base of 50RF/t)
 		
 	- circuit level determines resistivity to environmental(can be toggled off) and artifical (ground to space missles/lasers) hazards
-	
+
 Milestone 4:
 - space stations
 - orbital factories (some materials can only be produced in space and/or process faster and/or dupe more(ores)
 - space elevator (eliminates need for rocket launch to get materials to orbital factories/ space stations
+
 MileStone 5:
 - "Search for habitable planets program"
 	- Orbital satallite telescopes/detectors
@@ -51,5 +52,6 @@ MileStone 5:
 		- temperature detector (increases info on planetary temperature) space only
 		- star scanner (increases the likelyhood of finding planets orbiting a star; higher level allows for smaller planets) ground and space
 	- procedural generation of limited planet types
+
 Milestone 6:
 research tree

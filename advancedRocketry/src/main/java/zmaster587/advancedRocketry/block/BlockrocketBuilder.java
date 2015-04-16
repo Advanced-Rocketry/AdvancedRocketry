@@ -6,6 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.libVulpes.block.RotatableBlock;
 
@@ -38,7 +39,24 @@ public class BlockrocketBuilder extends RotatableBlock {
 		
 		if(bb == null)
 			player.addChatMessage(new ChatComponentText("Null"));
-		else player.addChatMessage(new ChatComponentText(bb.toString()));
+		else {
+			boolean whole = true;
+			
+			boundLoop:
+			for(int xx = (int)bb.minX; xx <= (int)bb.maxX; xx++) {
+				for(int zz = (int)bb.minZ; zz <= (int)bb.maxZ && whole; zz++) {
+					if(world.getBlock(xx, (int)bb.minY-1, zz) != AdvancedRocketry.launchpad) {
+						whole = false;
+						break boundLoop;
+					}
+				}
+			}
+			
+			if(whole)
+			player.addChatMessage(new ChatComponentText(bb.toString()));
+			else
+				player.addChatMessage(new ChatComponentText("Structure incomplete"));
+		}
 		
 		return super.onBlockActivated(world, x, y, z, player, a, b, c, d);
 	}

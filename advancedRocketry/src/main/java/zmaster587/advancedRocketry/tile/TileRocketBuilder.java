@@ -31,7 +31,7 @@ public class TileRocketBuilder extends TileEntity {
 
 	
 	/**
-	 * 
+	 * Does not make sure the structure is complete, only gets max bounds!
 	 * @param world the world
 	 * @param x coord to evaluate from
 	 * @param y coord to evaluate from
@@ -90,7 +90,7 @@ public class TileRocketBuilder extends TileEntity {
 		
 		int maxTowerSize = 0;
 		//Check perimeter for structureBlocks and get the size
-		for(int i = xMin; i < xMax; i++) {
+		for(int i = xMin; i <= xMax; i++) {
 			if(world.getBlock(i, yCurrent, zMin-1) == AdvancedRocketry.structureTower) {
 				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, ForgeDirection.UP, i, yCurrent, zMin-1, MAX_SIZE_Y, AdvancedRocketry.structureTower));
 			}
@@ -100,22 +100,24 @@ public class TileRocketBuilder extends TileEntity {
 			}
 		}
 
-		for(int i = zMin; i < zMax; i++) {
+		for(int i = zMin; i <= zMax; i++) {
 			if(world.getBlock(xMin-1, yCurrent, i) == AdvancedRocketry.structureTower) {
 				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, ForgeDirection.UP, xMin-1, yCurrent, i, MAX_SIZE_Y, AdvancedRocketry.structureTower));
 			}
 			
-			if(world.getBlock(xMin+1, yCurrent, i) == AdvancedRocketry.structureTower) {
-				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, ForgeDirection.UP, xMin+1, yCurrent, i, MAX_SIZE_Y, AdvancedRocketry.structureTower));
+			if(world.getBlock(xMax+1, yCurrent, i) == AdvancedRocketry.structureTower) {
+				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, ForgeDirection.UP, xMax+1, yCurrent, i, MAX_SIZE_Y, AdvancedRocketry.structureTower));
 			}
 		}
 		
+		//if tower does not meet criteria then reutrn null
 		if(maxTowerSize < MIN_SIZE_Y || xSize < MIN_SIZE || zSize < MIN_SIZE) {
 			return null;
 		}
 		
 		return AxisAlignedBB.getBoundingBox(xMin, yCurrent+1, zMin, xMax, yCurrent + maxTowerSize, zMax);
 	}
+	
 
 	public void startBuild(int x, int y, int z) {
 
