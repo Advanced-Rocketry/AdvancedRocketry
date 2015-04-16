@@ -5,9 +5,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.world.ChunkCache;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
+import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.block.RotatableBlock;
 
 public class BlockrocketBuilder extends RotatableBlock {
@@ -52,8 +55,12 @@ public class BlockrocketBuilder extends RotatableBlock {
 				}
 			}
 			
-			if(whole)
-			player.addChatMessage(new ChatComponentText(bb.toString()));
+			if(whole) {
+				player.addChatMessage(new ChatComponentText(bb.toString() + "  Moving..."));
+				StorageChunk chunk = StorageChunk.copyWorldBB(world, bb);
+				
+				chunk.pasteInWorld(world, x, y + 50, z);
+			}
 			else
 				player.addChatMessage(new ChatComponentText("Structure incomplete"));
 		}

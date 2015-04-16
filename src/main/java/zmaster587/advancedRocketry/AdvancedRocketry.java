@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry;
 
 
+import zmaster587.advancedRocketry.block.BlockBasic;
 import zmaster587.advancedRocketry.block.BlockLinkedHorizontalTexture;
 import zmaster587.advancedRocketry.block.BlockrocketBuilder;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
@@ -58,7 +59,7 @@ public class AdvancedRocketry {
 
 	public static Block launchpad;
 	public static Block structureTower;
-	public static BlockrocketBuilder rocketBuilder;
+	public static Block rocketBuilder;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -66,8 +67,8 @@ public class AdvancedRocketry {
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 		
-		launchpad = new BlockLinkedHorizontalTexture(Material.rock).setBlockName("pad").setCreativeTab(CreativeTabs.tabTransport).setBlockTextureName("rocketLaunchPad");//new BlockMulti(Material.rock).setNames(new String[] {"concrete", "launchtower"});
-		structureTower = new BlockLinkedHorizontalTexture(Material.rock).setBlockName("tower").setCreativeTab(CreativeTabs.tabTransport);
+		launchpad = new BlockLinkedHorizontalTexture(Material.rock).setBlockName("pad").setCreativeTab(CreativeTabs.tabTransport).setBlockTextureName("advancedrocketry:rocketPad");//.setBlockTextureName("advancedrocketry:rocketLaunchPad");//new BlockMulti(Material.rock).setNames(new String[] {"concrete", "launchtower"});
+		structureTower = new BlockBasic(Material.rock).setBlockName("structuretower").setCreativeTab(CreativeTabs.tabTransport).setBlockTextureName("advancedrocketry:structuretower");
 		rocketBuilder = (BlockrocketBuilder) new BlockrocketBuilder(Material.rock).setBlockName("rockets").setCreativeTab(CreativeTabs.tabTransport);
 		
 		GameRegistry.registerBlock(launchpad, "launchpad");
