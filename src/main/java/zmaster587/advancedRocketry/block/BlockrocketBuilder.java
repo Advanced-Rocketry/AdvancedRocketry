@@ -59,7 +59,7 @@ public class BlockrocketBuilder extends RotatableBlock {
 				player.addChatMessage(new ChatComponentText(bb.toString() + "  Moving..."));
 				StorageChunk chunk = StorageChunk.copyWorldBB(world, bb);
 				
-				chunk.pasteInWorld(world, x, y + 50, z);
+				chunk.pasteInWorld(world, x, y + 20, z);
 			}
 			else
 				player.addChatMessage(new ChatComponentText("Structure incomplete"));

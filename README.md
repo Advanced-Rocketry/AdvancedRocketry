@@ -5,7 +5,7 @@ MileStones:
 
 Roadmap:
 
-Milestone 1:
+Milestone 1 (tenativly complete):
 - rockets can be dissassembled and reassembled
 	- rockets size determined by size of lauchpad (square) and height of structure tower (used for fueling/etc)
 - bounds for rockets can be set

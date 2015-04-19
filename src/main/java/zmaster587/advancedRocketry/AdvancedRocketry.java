@@ -3,7 +3,9 @@ package zmaster587.advancedRocketry;
 
 import zmaster587.advancedRocketry.block.BlockBasic;
 import zmaster587.advancedRocketry.block.BlockLinkedHorizontalTexture;
+import zmaster587.advancedRocketry.block.BlockSeat;
 import zmaster587.advancedRocketry.block.BlockrocketBuilder;
+import zmaster587.advancedRocketry.entity.EntityDummy;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.libVulpes.block.BlockMulti;
 import zmaster587.libVulpes.block.RotatableBlock;
@@ -60,6 +62,7 @@ public class AdvancedRocketry {
 	public static Block launchpad;
 	public static Block structureTower;
 	public static Block rocketBuilder;
+	public static Block genericSeat;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -69,11 +72,16 @@ public class AdvancedRocketry {
 		
 		launchpad = new BlockLinkedHorizontalTexture(Material.rock).setBlockName("pad").setCreativeTab(CreativeTabs.tabTransport).setBlockTextureName("advancedrocketry:rocketPad");//.setBlockTextureName("advancedrocketry:rocketLaunchPad");//new BlockMulti(Material.rock).setNames(new String[] {"concrete", "launchtower"});
 		structureTower = new BlockBasic(Material.rock).setBlockName("structuretower").setCreativeTab(CreativeTabs.tabTransport).setBlockTextureName("advancedrocketry:structuretower");
-		rocketBuilder = (BlockrocketBuilder) new BlockrocketBuilder(Material.rock).setBlockName("rockets").setCreativeTab(CreativeTabs.tabTransport);
+		rocketBuilder = (BlockrocketBuilder) new BlockrocketBuilder(Material.rock).setBlockName("rocketAssembler").setCreativeTab(CreativeTabs.tabTransport);
+		genericSeat = new BlockSeat(Material.circuits).setBlockName("seat").setCreativeTab(CreativeTabs.tabTransport).setBlockTextureName("minecraft:wool_colored_silver");
 		
 		GameRegistry.registerBlock(launchpad, "launchpad");
 		GameRegistry.registerBlock(rocketBuilder, "rocketBuilder");
 		GameRegistry.registerBlock(structureTower, "structureTower");
+		GameRegistry.registerBlock(genericSeat, "seat");
+		
+		EntityRegistry.registerModEntity(EntityDummy.class, "mountDummy", 0, this, 16, 20, false);
+		
 		GameRegistry.registerTileEntity(TileRocketBuilder.class, "rocketBuilder");
 		
 		//blockRemoteConnector = new BlockRemoteConnector();
