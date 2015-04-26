@@ -1,11 +1,17 @@
 package zmaster587.advancedRocketry;
 
 
+import zmaster587.advancedRocketry.Inventory.GuiHandler;
 import zmaster587.advancedRocketry.block.BlockBasic;
 import zmaster587.advancedRocketry.block.BlockLinkedHorizontalTexture;
+import zmaster587.advancedRocketry.block.BlockRocketMotor;
 import zmaster587.advancedRocketry.block.BlockSeat;
+import zmaster587.advancedRocketry.block.BlockTank;
 import zmaster587.advancedRocketry.block.BlockrocketBuilder;
+import zmaster587.advancedRocketry.common.CommonProxy;
 import zmaster587.advancedRocketry.entity.EntityDummy;
+import zmaster587.advancedRocketry.network.PacketHandler;
+import zmaster587.advancedRocketry.tile.TileModelRender;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.libVulpes.block.BlockMulti;
 import zmaster587.libVulpes.block.RotatableBlock;
@@ -38,8 +44,8 @@ import cpw.mods.fml.common.Mod.Instance;
 public class AdvancedRocketry {
 	public static final String modId = "advancedRocketry";
 
-	//@SidedProxy(clientSide="zmaster587.advancedRocketry.client.ClientProxy", serverSide="zmaster587.advancedRocketry.CommonProxy")
-	//public static CommonProxy proxy;
+	@SidedProxy(clientSide="zmaster587.advancedRocketry.client.ClientProxy", serverSide="zmaster587.advancedRocketry.common.CommonProxy")
+	public static CommonProxy proxy;
 
 	@Instance(value = modId)
 	public static AdvancedRocketry instance;
@@ -63,6 +69,8 @@ public class AdvancedRocketry {
 	public static Block structureTower;
 	public static Block rocketBuilder;
 	public static Block genericSeat;
+	public static Block blockEngine;
+	public static Block blockFuelTank;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -74,15 +82,20 @@ public class AdvancedRocketry {
 		structureTower = new BlockBasic(Material.rock).setBlockName("structuretower").setCreativeTab(CreativeTabs.tabTransport).setBlockTextureName("advancedrocketry:structuretower");
 		rocketBuilder = (BlockrocketBuilder) new BlockrocketBuilder(Material.rock).setBlockName("rocketAssembler").setCreativeTab(CreativeTabs.tabTransport);
 		genericSeat = new BlockSeat(Material.circuits).setBlockName("seat").setCreativeTab(CreativeTabs.tabTransport).setBlockTextureName("minecraft:wool_colored_silver");
+		blockEngine = new BlockRocketMotor(Material.rock).setBlockName("rocket").setCreativeTab(CreativeTabs.tabTransport);
+		blockFuelTank = new BlockTank(Material.rock).setBlockName("fuelTank").setCreativeTab(CreativeTabs.tabTransport);
 		
 		GameRegistry.registerBlock(launchpad, "launchpad");
 		GameRegistry.registerBlock(rocketBuilder, "rocketBuilder");
 		GameRegistry.registerBlock(structureTower, "structureTower");
 		GameRegistry.registerBlock(genericSeat, "seat");
+		GameRegistry.registerBlock(blockEngine, "rocketmotor");
+		GameRegistry.registerBlock(blockFuelTank, "fuelTank");
 		
 		EntityRegistry.registerModEntity(EntityDummy.class, "mountDummy", 0, this, 16, 20, false);
 		
 		GameRegistry.registerTileEntity(TileRocketBuilder.class, "rocketBuilder");
+		GameRegistry.registerTileEntity(TileModelRender.class, "modelRenderer");
 		
 		//blockRemoteConnector = new BlockRemoteConnector();
 		/*blockMissionComp = new BlockMissionControl();
@@ -149,6 +162,10 @@ public class AdvancedRocketry {
 	@EventHandler
 	public void load(FMLInitializationEvent event)
 	{
+		proxy.registerRenderers();
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
+		
+		
 		/*proxy.registerRenderers();
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(blockBlastBrick,4), new ItemStack(Items.potionitem,1,8195), new ItemStack(Items.potionitem,1,8201), Blocks.brick_block, Blocks.brick_block, Blocks.brick_block, Blocks.brick_block);
@@ -185,8 +202,9 @@ public class AdvancedRocketry {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		/*ForgeChunkManager.setForcedChunkLoadingCallback(instance, new WorldEvents());
 		PacketHandler.init();
+		/*ForgeChunkManager.setForcedChunkLoadingCallback(instance, new WorldEvents());
+		
 		proxy.registerKeyBinds();*/
 	}
 }
