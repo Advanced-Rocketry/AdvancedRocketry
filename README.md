@@ -12,10 +12,7 @@ Milestone 1 (tenativly complete):
 - player can sit on rocket
 
 Milestone 2:
-- rocket launch accompanied by cutscene for players on board, particle cloud cover for those not on board.
-- ability for unmanned rockets / satallites
-- satallites management system
-	- control block
+- rocket entity that renders all blocks and moves vertically
 - rocket parts
 	- engines (determines max blocks for rocket must be placed on bottom)
 	- life support (determines farthest distance the rocket can fly) manned only
@@ -23,6 +20,9 @@ Milestone 2:
 	- guidance systems (decreases chance of needing to return home (manned) or being destroyed (unmanned))
 
 Milestone 3:
+- ability for unmanned rockets / satallites
+- satallites management system
+	- control block
 - Implentatation of satallites:
 	- Ground to space missile ( circuit level compared to that of target; chance of destruction (10%)*(missle level / target level) )
 	- Ore scanning (complete)
