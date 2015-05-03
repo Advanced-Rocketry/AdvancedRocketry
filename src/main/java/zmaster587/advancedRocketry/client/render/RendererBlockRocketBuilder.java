@@ -169,7 +169,8 @@ public class RendererBlockRocketBuilder extends TileEntitySpecialRenderer {
 			RenderHelper.renderTopFaceWithUV(tess, yMax, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
 			tess.draw();
 			
-			
+			GL11.glAlphaFunc(GL11.GL_GEQUAL, 0.1f);
+			GL11.glDepthMask(false);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glPopMatrix();
 		}

@@ -10,6 +10,7 @@ import zmaster587.advancedRocketry.block.BlockTank;
 import zmaster587.advancedRocketry.block.BlockrocketBuilder;
 import zmaster587.advancedRocketry.common.CommonProxy;
 import zmaster587.advancedRocketry.entity.EntityDummy;
+import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.tile.TileModelRender;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
@@ -93,9 +94,11 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(blockFuelTank, "fuelTank");
 		
 		EntityRegistry.registerModEntity(EntityDummy.class, "mountDummy", 0, this, 16, 20, false);
+		EntityRegistry.registerModEntity(EntityRocket.class, "rocket", 1, this, 64, 1, true);
 		
 		GameRegistry.registerTileEntity(TileRocketBuilder.class, "rocketBuilder");
 		GameRegistry.registerTileEntity(TileModelRender.class, "modelRenderer");
+		
 		
 		//blockRemoteConnector = new BlockRemoteConnector();
 		/*blockMissionComp = new BlockMissionControl();

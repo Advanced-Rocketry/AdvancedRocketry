@@ -52,6 +52,9 @@ public class GuiRocketBuilder extends GuiContainer {
 		if(button == scan) {
 			PacketHandler.sendToServer(new PacketMachine(tile, (byte)0));
 		}
+		else if(button == build) {
+			PacketHandler.sendToServer(new PacketMachine(tile, (byte)1));
+		}
 	}
 	
 	

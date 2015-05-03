@@ -16,10 +16,12 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.world.WorldServer;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.FMLEmbeddedChannel;
 import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
@@ -31,16 +33,16 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class PacketHandler {
 	public static final EnumMap<Side, FMLEmbeddedChannel> channels = Maps.newEnumMap(Side.class);
 
-	
+
 	public static void init() {
 		if (!channels.isEmpty()) // avoid duplicate inits..
 			return;
 
 		Codec codec = new Codec();
-		
+
 		codec.addDiscriminator(0, PacketMachine.class);
-		//codec.addDiscriminator(1, PacketGravitySwitch.class);
-		
+		codec.addDiscriminator(1, PacketEntity.class);
+
 
 		channels.putAll(NetworkRegistry.INSTANCE.newChannel(AdvancedRocketry.modId, codec, new HandlerServer()));
 
@@ -58,6 +60,17 @@ public class PacketHandler {
 	public static final void sendToServer(BasePacket packet) {
 		channels.get(Side.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
 		channels.get(Side.CLIENT).writeOutbound(packet);
+	}
+
+	@SideOnly(Side.SERVER)
+	public static final void sendToPlayersTrackingEntity(BasePacket packet, Entity entity) {
+
+		for( EntityPlayer player : ((WorldServer)entity.worldObj).getEntityTracker().getTrackingPlayers(entity)) {
+
+			channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
+			channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
+			channels.get(Side.SERVER).writeOutbound(packet);
+		}
 	}
 
 	public static final void sendToPlayer(BasePacket packet, EntityPlayer player) {

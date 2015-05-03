@@ -47,7 +47,7 @@ public class BlockrocketBuilder extends RotatableBlock {
 		
 		player.openGui(AdvancedRocketry.instance, GuiHandler.guiId.RocketBuilder.ordinal(), world, x, y, z);
 		
-		return super.onBlockActivated(world, x, y, z, player, a, b, c, d);
+		return true;
 	}
 	
 	@Override

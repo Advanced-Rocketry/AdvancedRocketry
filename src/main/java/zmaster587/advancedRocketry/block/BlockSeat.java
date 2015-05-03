@@ -26,7 +26,6 @@ public class BlockSeat extends Block {
 	public boolean isOpaqueCube() {
 		return false;
 	}
-
 	
 	//If the block is destroyed remove any mounting associated with it
 	@Override

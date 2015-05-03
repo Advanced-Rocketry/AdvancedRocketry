@@ -12,8 +12,15 @@ import cpw.mods.fml.relauncher.Side;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.IFuelTank;
 import zmaster587.advancedRocketry.api.IRocketEngine;
+import zmaster587.advancedRocketry.block.BlockSeat;
+import zmaster587.advancedRocketry.entity.EntityRocket;
+import zmaster587.advancedRocketry.network.PacketEntity;
+import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.stats.StatsRocket;
+import zmaster587.advancedRocketry.util.RocketStorageChunk;
+import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.block.RotatableBlock;
+import zmaster587.libVulpes.interfaces.INetworkEntity;
 import zmaster587.libVulpes.tile.TileEntityRFConsumer;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils;
@@ -43,43 +50,46 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 
 	private int scanTotalBlocks;
 	private int scanTime; // How long until scan is finished from 0 -> num blocks
+	private boolean building; //True is rocket is being built, false if only scanning or otherwise
+
 	private StatsRocket stats;
 	private AxisAlignedBB bbCache;
 
 	public TileRocketBuilder() {
 		stats = new StatsRocket();
 		energy = new EnergyStorage(10000);
+		building = false;
 	}
 
 	public StatsRocket getRocketStats() { return stats; }
-	
+
 	public AxisAlignedBB getBBCache() { return bbCache;}
-	
+
 	public int getScanTotalBlocks() { return scanTotalBlocks; }
 	public void setScanTotalBlocks(int scanTotalBlocks) { this.scanTotalBlocks = scanTotalBlocks; }
-	
+
 	public int getScanTime() { return scanTime; }
 	public void setScanTime(int scanTime) { this.scanTime = scanTime; }
-	
+
 	public double getNormilizedScanTime() {
-		
+
 		return scanTime/(double)(scanTotalBlocks*MAXSCANDELAY);
 	}
-	
+
 	public float getAcceleration() {
 		return (getThrust() - (getWeight()*GRAVITY));
 	}
-	
+
 	public int getWeight()  { return stats.getWeight(); }
 
 	public int getThrust() { return stats.getThrust(); }
-	
+
 	public float getNeededThrust() {return getWeight()*GRAVITY;}
-	
+
 	public float getNeededFuel() { return getAcceleration() > 0 ? stats.getFuelRate()*MathHelper.sqrt_float((2*(orbit-this.yCoord))/getAcceleration()) : 0; }
-	
+
 	public int getFuel() {return stats.getFuel();}
-	
+
 	@Override
 	public boolean canUpdate() {
 		return true;
@@ -90,17 +100,18 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 		// TODO Auto-generated method stub
 		return pass == 1;
 	}
-	
+
 	@Override
 	public void updateEntity() {
-		
+
 		if(isScanning()) {
-			
+
 			if(scanTime >= (scanTotalBlocks*MAXSCANDELAY)) {
-				onFinishScan();
+				if(building)
+					assembleRocket();
 				scanTotalBlocks = -1;
 				scanTime = 0;
-				
+				building = false; //Done building
 			}
 			scanTime++;
 		}
@@ -113,11 +124,20 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 		}
 		return super.getRenderBoundingBox();
 	}
-	
+
 	public boolean isScanning() { return scanTotalBlocks > 0; }
-	
-	public void onFinishScan() {
-		
+
+	public void assembleRocket() {
+		RocketStorageChunk storageChunk = RocketStorageChunk.cutWorldBB(worldObj, bbCache);
+
+		EntityRocket rocket = new EntityRocket(worldObj, storageChunk,bbCache.minX + (bbCache.maxX-bbCache.minX)/2f, yCoord , bbCache.minZ + (bbCache.maxZ-bbCache.minZ)/2f );
+
+		worldObj.spawnEntityInWorld(rocket);
+		NBTTagCompound nbtdata = new NBTTagCompound();
+
+		rocket.writeToNBT(nbtdata);
+		PacketHandler.sentToNearby(new PacketEntity((INetworkEntity)rocket, (byte)0, nbtdata), rocket.worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 64);
+
 	}
 
 	/**
@@ -128,7 +148,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 	 * @param z coord to evaluate from
 	 * @return AxisAlignedBB bounds of structure if valid  otherwise null
 	 */
-	public AxisAlignedBB getRocketBounds(World world,int x, int y, int z) {
+	public AxisAlignedBB getRocketPadBounds(World world,int x, int y, int z) {
 		ForgeDirection direction = RotatableBlock.getFront(world.getBlockMetadata(x, y, z)).getOpposite();
 		int xMin, zMin, xMax, zMax;
 		int yCurrent = y -1;
@@ -226,19 +246,19 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 	}
 
 	public void analyzeRocket(World world,EntityPlayer player, int x, int y, int z) {
-		AxisAlignedBB bb = getRocketBounds(world, x, y, z);
+		AxisAlignedBB bb = getRocketPadBounds(world, x, y, z);
 
 		if(bb == null)
 			return;
 
 		bbCache = bb;
-		
+
 		int numBlocks = 0;
 		int thrust = 0;
 		int fuelUse = 0;
 		int fuel = 0;
 		int inventorySlots = 0;
-		
+
 		if(verifyScan(bb, world)) {
 			for(int yCurr = (int) bb.minY; yCurr <= bb.maxY; yCurr++) {
 				for(int xCurr = (int) bb.minX; xCurr <= bb.maxX; xCurr++) {
@@ -252,11 +272,11 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 								thrust += ((IRocketEngine)block).getThrust(world, xCurr, yCurr, z);
 								fuelUse += ((IRocketEngine)block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
 							}
-							
+
 							if(block instanceof IFuelTank) {
 								fuel+= ((IFuelTank)block).getMaxFill();
 							}
-							
+
 							TileEntity tile;
 							if((tile = world.getTileEntity(xCurr, yCurr, zCurr)) instanceof IInventory) {
 								inventorySlots += ((IInventory)tile).getSizeInventory();
@@ -265,12 +285,12 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 					}
 				}
 			}
-			
+
 			stats.setFuelRate(fuelUse);
 			stats.setWeight(numBlocks + inventorySlots);
 			stats.setThrust(thrust);
 			stats.setFuel(fuel);
-			
+
 			scanTotalBlocks = numBlocks;
 		}
 
@@ -279,11 +299,11 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		
+
 		stats.writeToNBT(nbt);
 		nbt.setInteger("scanTime", scanTime);
 		nbt.setInteger("scanTotalBlocks", scanTotalBlocks);
-		
+
 		if(bbCache != null) {
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setDouble("minX", bbCache.minX);
@@ -292,46 +312,46 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 			tag.setDouble("maxX", bbCache.maxX);
 			tag.setDouble("maxY", bbCache.maxY);
 			tag.setDouble("maxZ", bbCache.maxZ);
-			
+
 			nbt.setTag("bb", tag);
 		}
-		
+
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		
+
 		stats.readFromNBT(nbt);
-		
+
 		scanTime = nbt.getInteger("scanTime");
 		scanTotalBlocks = nbt.getInteger("scanTotalBlocks");
-		
+
 		if(nbt.hasKey("bb")) {
-			
+
 			NBTTagCompound tag = nbt.getCompoundTag("bb");
 			bbCache = AxisAlignedBB.getBoundingBox(tag.getDouble("minX"), 
 					tag.getDouble("minY"), tag.getDouble("minZ"),
 					tag.getDouble("maxX"), tag.getDouble("maxY"), tag.getDouble("maxZ"));
-		
+
 		}
 	}
-	
+
 	@Override
 	public Packet getDescriptionPacket() {
 		super.getDescriptionPacket();
 		NBTTagCompound nbt = new NBTTagCompound();
-		
+
 		writeToNBT(nbt);
-		
+
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, nbt);
 	}
-	
+
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		readFromNBT(pkt.func_148857_g());
 	}
-	
+
 	//Creates the effects for building the rocket and changes state to build
 	public void startBuild(int x, int y, int z) {
 
@@ -340,14 +360,14 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void readDataFromNetwork(ByteBuf in, byte packetId,
 			NBTTagCompound nbt) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -357,6 +377,17 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 			this.analyzeRocket(worldObj, player, xCoord, yCoord, zCoord);
 			this.markDirty();
 			this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
+		else if(id == 1) {
+
+			if(isScanning())
+				return;
+
+			building = true;
+			this.analyzeRocket(worldObj, player, xCoord, yCoord, zCoord);
+			this.markDirty();
+			this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+
 		}
 	}
 }
