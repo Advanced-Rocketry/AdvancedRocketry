@@ -4,14 +4,9 @@ import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.libVulpes.render.RenderHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
@@ -30,17 +25,19 @@ public class RendererBlockRocketBuilder extends TileEntitySpecialRenderer {
 
 
 		TileRocketBuilder renderTile = (TileRocketBuilder)tile;
-
 		AxisAlignedBB bb;
-
+		
+		//If the rocketbuilder is scanning and a valid bounding box for the rocket exists
 		if(renderTile.isScanning() && (bb = renderTile.getBBCache()) != null) {
 
 			double xOffset = bb.minX - tile.xCoord;
 			double yOffset = bb.maxY - tile.yCoord;
 			double zOffset = bb.minZ - tile.zCoord;
 
+			//Get size of the BB
 			double xSize = bb.maxX - bb.minX+1;
 			double zSize = bb.maxZ - bb.minZ+1;
+			
 			double yLocation = -(bb.maxY - bb.minY + 1.12)*renderTile.getNormilizedScanTime();
 			Tessellator tess = Tessellator.instance;
 			
@@ -66,7 +63,6 @@ public class RendererBlockRocketBuilder extends TileEntitySpecialRenderer {
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
 			
 			//Draw Supports
-			//GL11.glColor4b((byte)195, (byte)128, (byte)87, (byte)255);
 			GL11.glColor4f(0.78f, 0.5f, 0.34f, 1f);
 			bindTexture(girder);
 			GL11.glDepthMask(true);
@@ -83,11 +79,14 @@ public class RendererBlockRocketBuilder extends TileEntitySpecialRenderer {
 			tess.draw();
 			
 			
-			//Draw grid
+			//Draw scanning grid
 			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glDisable(GL11.GL_FOG);
 			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glColor4f(0.5f, 1, 0.5f, .05f);
+			if(renderTile.isBuilding())
+				GL11.glColor4f(1, 0.5f, 0.5f, .05f);
+			else
+				GL11.glColor4f(0.5f, 1, 0.5f, .05f);
 			GL11.glDepthMask(false);
 			GL11.glAlphaFunc(GL11.GL_GEQUAL, 0.0f);
 			GL11.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA );
@@ -148,7 +147,11 @@ public class RendererBlockRocketBuilder extends TileEntitySpecialRenderer {
 			//Set ignore light then draw the glowy bits
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 0xf0, 0xf0);
 			tess.startDrawingQuads();
-			GL11.glColor4f(1f, 3f, 1f, 1f);
+			if(renderTile.isBuilding())
+				GL11.glColor4f(3f, 1f, 1f, 1f);
+			else
+				GL11.glColor4f(1f, 3f, 1f, 1f);
+			
 			RenderHelper.renderEastFace(tess, xMax, yMin, zMin, yMax, zMax);
 			
 			//Change mins/maxes then render east block

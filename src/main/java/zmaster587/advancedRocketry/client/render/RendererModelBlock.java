@@ -19,7 +19,6 @@ public class RendererModelBlock  extends TileEntitySpecialRenderer {
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x,
 			double y, double z, float f) {
-
 		
 		TileModelRender rendertile = (TileModelRender)tile;
 		GL11.glPushMatrix();

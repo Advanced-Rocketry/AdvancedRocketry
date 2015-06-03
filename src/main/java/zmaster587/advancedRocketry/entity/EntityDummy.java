@@ -8,6 +8,8 @@ import net.minecraft.world.World;
 
 public class EntityDummy extends Entity {
 
+	
+	//Just a dummy so a player can sit on a chair
 	public EntityDummy(World world) {
 		super(world);
 		this.noClip=true;

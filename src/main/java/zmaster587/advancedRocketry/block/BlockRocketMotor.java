@@ -12,11 +12,10 @@ import net.minecraft.world.World;
 public class BlockRocketMotor extends Block implements IRocketEngine {
 
 	public BlockRocketMotor(Material mat) {
-		super(mat);
-		
-		
+		super(mat);	
 	}
-
+	
+	//Futureproofing (ISBRHs being removed in 1.8) sadly now need a tile Entity just to render decent shapes
 	@Override
 	public TileEntity createTileEntity(World world, int metadata) {
 		return new TileModelRender(TileModelRender.models.ROCKET.ordinal());
@@ -26,8 +25,6 @@ public class BlockRocketMotor extends Block implements IRocketEngine {
 	public boolean hasTileEntity(int metadata) {
 		return true;
 	}
-	
-	
 	
 	@Override
 	@SideOnly(Side.CLIENT)

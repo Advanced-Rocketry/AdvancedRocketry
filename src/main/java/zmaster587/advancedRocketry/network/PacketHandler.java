@@ -6,15 +6,8 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.ChannelHandler.Sharable;
 
 import java.util.EnumMap;
-import java.util.logging.Logger;
-
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.network.BasePacket.ProtocolException;
-
 import com.google.common.collect.Maps;
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteStreams;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;

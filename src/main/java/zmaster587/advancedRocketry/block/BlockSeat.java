@@ -52,17 +52,13 @@ public class BlockSeat extends Block {
 			for(Entity e : list) {
 				if(e instanceof EntityDummy) {
 					if(e.riddenByEntity != null) {
-						if(e.riddenByEntity == player) {
-							player.mountEntity(null);
-							e.setDead();
-						}
-						return false;
+						return true;
 					}
 					else {
 						//Ensure that the entity is in the correct position
 						e.setPosition(x + 0.5d,y + 0.2d, z + 0.5d);
 						player.mountEntity(e);
-						return false;
+						return true;
 					}
 				}
 			}
@@ -71,7 +67,6 @@ public class BlockSeat extends Block {
 			player.mountEntity(entity);
 		}
 
-		return false;
-
+		return true;
 	}
 }

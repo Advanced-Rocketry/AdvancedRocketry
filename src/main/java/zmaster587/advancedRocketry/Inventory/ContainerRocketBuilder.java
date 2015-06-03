@@ -1,16 +1,14 @@
 package zmaster587.advancedRocketry.Inventory;
 
-import com.sun.org.apache.xml.internal.security.Init;
-
+import zmaster587.advancedRocketry.api.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerRocketBuilder extends Container {
+public class ContainerRocketBuilder extends ContainerPowered {
 
 	private enum values {
 		FUELRATE,
@@ -18,16 +16,25 @@ public class ContainerRocketBuilder extends Container {
 		THRUST,
 		FUEL,
 		SCANTIME,
-		TOTALSCANTIME
+		TOTALSCANTIME,
+		STATUS;
+
+		int id;
+		public void setId( int id) {this.id = id; }
+		public int getId() { return id; }
 	}
 
 	int[] prevValues;
-
 	TileRocketBuilder tile;
+	
 	public ContainerRocketBuilder(InventoryPlayer playerInv, TileRocketBuilder tile) {
-
-		this.tile = tile;
-
+		super(playerInv, tile);
+		this.tile = (TileRocketBuilder)super.tile;
+		
+		//Create ids
+		for(values val : values.values())
+			val.setId(nextSlot());
+			
 		// Player hotbar
 		for (int j1 = 0; j1 < 9; j1++) {
 			addSlotToContainer(new Slot(playerInv, j1, 8 + j1 * 18, 147));
@@ -36,12 +43,13 @@ public class ContainerRocketBuilder extends Container {
 		
 
 		prevValues = new int[values.values().length];
-		prevValues[values.FUELRATE.ordinal()] = tile.getRocketStats().getFuelRate();
-		prevValues[values.THRUST.ordinal()] = tile.getRocketStats().getThrust();
-		prevValues[values.WEIGHT.ordinal()] = tile.getRocketStats().getWeight();
-		prevValues[values.FUEL.ordinal()] = tile.getRocketStats().getFuel();
-		prevValues[values.TOTALSCANTIME.ordinal()] = tile.getScanTotalBlocks();
-		prevValues[values.SCANTIME.ordinal()] = tile.getScanTime();
+		prevValues[values.FUELRATE.getId()] = tile.getRocketStats().getFuelRate(FuelType.LIQUID);
+		prevValues[values.THRUST.getId()] = tile.getRocketStats().getThrust();
+		prevValues[values.WEIGHT.getId()] = tile.getRocketStats().getWeight();
+		prevValues[values.FUEL.getId()] = tile.getRocketStats().getFuelCapacity(FuelType.LIQUID);
+		prevValues[values.TOTALSCANTIME.getId()] = tile.getScanTotalBlocks();
+		prevValues[values.SCANTIME.getId()] = tile.getScanTime();
+		prevValues[values.STATUS.getId()] = tile.getStatus().ordinal();
 	}
 
 	@Override
@@ -55,13 +63,13 @@ public class ContainerRocketBuilder extends Container {
 	public void addCraftingToCrafters(ICrafting crafter) {
 		super.addCraftingToCrafters(crafter);
 		
-		crafter.sendProgressBarUpdate(this,  values.FUELRATE.ordinal(), tile.getRocketStats().getFuelRate());
-		crafter.sendProgressBarUpdate(this,  values.WEIGHT.ordinal(), tile.getRocketStats().getWeight());
-		crafter.sendProgressBarUpdate(this,  values.THRUST.ordinal(), tile.getRocketStats().getThrust());
-		crafter.sendProgressBarUpdate(this,  values.FUEL.ordinal(), tile.getRocketStats().getFuel());
-		crafter.sendProgressBarUpdate(this,  values.SCANTIME.ordinal(),  tile.getScanTime());
-		crafter.sendProgressBarUpdate(this,  values.TOTALSCANTIME.ordinal(), tile.getScanTotalBlocks());
-		
+		crafter.sendProgressBarUpdate(this,  values.FUELRATE.getId(), tile.getRocketStats().getFuelRate(FuelType.LIQUID));
+		crafter.sendProgressBarUpdate(this,  values.WEIGHT.getId(), tile.getRocketStats().getWeight());
+		crafter.sendProgressBarUpdate(this,  values.THRUST.getId(), tile.getRocketStats().getThrust());
+		crafter.sendProgressBarUpdate(this,  values.FUEL.getId(), tile.getRocketStats().getFuelCapacity(FuelType.LIQUID));
+		crafter.sendProgressBarUpdate(this,  values.SCANTIME.getId(),  tile.getScanTime());
+		crafter.sendProgressBarUpdate(this,  values.TOTALSCANTIME.getId(), tile.getScanTotalBlocks());
+		crafter.sendProgressBarUpdate(this,  values.STATUS.getId(), tile.getStatus().ordinal());
 	}
 	
 	@Override
@@ -70,40 +78,46 @@ public class ContainerRocketBuilder extends Container {
 
 		for (int j = 0; j < this.crafters.size(); ++j) {
 
-			if(prevValues[values.FUELRATE.ordinal()] != tile.getRocketStats().getFuelRate()) {
+			if(prevValues[values.FUELRATE.getId()] != tile.getRocketStats().getFuelRate(FuelType.LIQUID)) {
 
-				int value = prevValues[values.FUELRATE.ordinal()] = tile.getRocketStats().getFuelRate();
-				((ICrafting)this.crafters.get(j)).sendProgressBarUpdate(this, values.FUELRATE.ordinal(), value);
+				int value = prevValues[values.FUELRATE.getId()] = tile.getRocketStats().getFuelRate(FuelType.LIQUID);
+				((ICrafting)this.crafters.get(j)).sendProgressBarUpdate(this, values.FUELRATE.getId(), value);
 			}
 			
-			if(prevValues[values.FUEL.ordinal()] != tile.getRocketStats().getFuel()) {
+			if(prevValues[values.FUEL.getId()] != tile.getRocketStats().getFuelCapacity(FuelType.LIQUID)) {
 
-				int value = prevValues[values.FUEL.ordinal()] = tile.getRocketStats().getFuel();
-				((ICrafting)this.crafters.get(j)).sendProgressBarUpdate(this, values.FUEL.ordinal(), value);
+				int value = prevValues[values.FUEL.getId()] = tile.getRocketStats().getFuelCapacity(FuelType.LIQUID);
+				((ICrafting)this.crafters.get(j)).sendProgressBarUpdate(this, values.FUEL.getId(), value);
 			}
 			
-			if(prevValues[values.THRUST.ordinal()] != tile.getRocketStats().getThrust()) {
+			if(prevValues[values.THRUST.getId()] != tile.getRocketStats().getThrust()) {
 
-				int value = prevValues[values.THRUST.ordinal()] = tile.getRocketStats().getThrust();
-				((ICrafting)this.crafters.get(j)).sendProgressBarUpdate(this, values.THRUST.ordinal(), value);
+				int value = prevValues[values.THRUST.getId()] = tile.getRocketStats().getThrust();
+				((ICrafting)this.crafters.get(j)).sendProgressBarUpdate(this, values.THRUST.getId(), value);
 			}
 			
-			if(prevValues[values.WEIGHT.ordinal()] != tile.getRocketStats().getWeight()) {
+			if(prevValues[values.WEIGHT.getId()] != tile.getRocketStats().getWeight()) {
 
-				int value = prevValues[values.WEIGHT.ordinal()] = tile.getRocketStats().getWeight();
-				((ICrafting)this.crafters.get(j)).sendProgressBarUpdate(this, values.WEIGHT.ordinal(), value);
+				int value = prevValues[values.WEIGHT.getId()] = tile.getRocketStats().getWeight();
+				((ICrafting)this.crafters.get(j)).sendProgressBarUpdate(this, values.WEIGHT.getId(), value);
 			}
 			
-			if(prevValues[values.SCANTIME.ordinal()] != tile.getScanTime()) {
+			if(prevValues[values.SCANTIME.getId()] != tile.getScanTime()) {
 
-				int value = prevValues[values.SCANTIME.ordinal()] = tile.getScanTime();
-				((ICrafting)this.crafters.get(j)).sendProgressBarUpdate(this, values.SCANTIME.ordinal(), value);
+				int value = prevValues[values.SCANTIME.getId()] = tile.getScanTime();
+				((ICrafting)this.crafters.get(j)).sendProgressBarUpdate(this, values.SCANTIME.getId(), value);
 			}
 			
-			if(prevValues[values.TOTALSCANTIME.ordinal()] != tile.getScanTime()) {
+			if(prevValues[values.TOTALSCANTIME.getId()] != tile.getScanTime()) {
 
-				int value = prevValues[values.TOTALSCANTIME.ordinal()] = tile.getScanTotalBlocks();
-				((ICrafting)this.crafters.get(j)).sendProgressBarUpdate(this, values.TOTALSCANTIME.ordinal(), value);
+				int value = prevValues[values.TOTALSCANTIME.getId()] = tile.getScanTotalBlocks();
+				((ICrafting)this.crafters.get(j)).sendProgressBarUpdate(this, values.TOTALSCANTIME.getId(), value);
+			}
+			
+			if(prevValues[values.STATUS.getId()] != tile.getStatus().ordinal()) {
+
+				int value = prevValues[values.STATUS.getId()] = tile.getStatus().ordinal();
+				((ICrafting)this.crafters.get(j)).sendProgressBarUpdate(this, values.STATUS.getId(), value);
 			}
 		}
 	}
@@ -112,28 +126,31 @@ public class ContainerRocketBuilder extends Container {
 	public void updateProgressBar(int id, int value) {
 		super.updateProgressBar(id, value);
 		
-		if(id == values.FUELRATE.ordinal()) {
-			tile.getRocketStats().setFuelRate(value);
+		if(id == values.FUELRATE.getId()) {
+			tile.getRocketStats().setFuelRate(FuelType.LIQUID,value);
 		}
 		
-		if(id == values.FUEL.ordinal()) {
-			tile.getRocketStats().setFuel(value);
+		if(id == values.FUEL.getId()) {
+			tile.getRocketStats().setFuelCapacity(FuelType.LIQUID,value);
 		}
 		
-		if(id == values.THRUST.ordinal()) {
+		if(id == values.THRUST.getId()) {
 			tile.getRocketStats().setThrust(value);
 		}
 		
-		if(id == values.WEIGHT.ordinal()) {
+		if(id == values.WEIGHT.getId()) {
 			tile.getRocketStats().setWeight(value);
 		}
 		
-		if(id == values.SCANTIME.ordinal()) {
+		if(id == values.SCANTIME.getId()) {
 			tile.setScanTime(value);
 		}
 		
-		if(id == values.TOTALSCANTIME.ordinal()) {
+		if(id == values.TOTALSCANTIME.getId()) {
 			tile.setScanTotalBlocks(value);
+		}
+		if(id == values.STATUS.getId()) {
+			tile.setStatus(value);
 		}
 	}
 

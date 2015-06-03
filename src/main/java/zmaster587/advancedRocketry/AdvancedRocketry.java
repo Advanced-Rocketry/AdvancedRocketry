@@ -2,8 +2,13 @@ package zmaster587.advancedRocketry;
 
 
 import zmaster587.advancedRocketry.Inventory.GuiHandler;
+import zmaster587.advancedRocketry.api.FuelRegistry;
+import zmaster587.advancedRocketry.api.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.block.BlockBasic;
+import zmaster587.advancedRocketry.block.BlockFuelingStation;
 import zmaster587.advancedRocketry.block.BlockLinkedHorizontalTexture;
+import zmaster587.advancedRocketry.block.BlockPlanetSoil;
+import zmaster587.advancedRocketry.block.BlockMultimine;
 import zmaster587.advancedRocketry.block.BlockRocketMotor;
 import zmaster587.advancedRocketry.block.BlockSeat;
 import zmaster587.advancedRocketry.block.BlockTank;
@@ -11,23 +16,21 @@ import zmaster587.advancedRocketry.block.BlockrocketBuilder;
 import zmaster587.advancedRocketry.common.CommonProxy;
 import zmaster587.advancedRocketry.entity.EntityDummy;
 import zmaster587.advancedRocketry.entity.EntityRocket;
+import zmaster587.advancedRocketry.entity.fx.RocketFx;
+import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.network.PacketHandler;
+import zmaster587.advancedRocketry.tile.TileEntityFuelingStation;
 import zmaster587.advancedRocketry.tile.TileModelRender;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
-import zmaster587.libVulpes.block.BlockMulti;
-import zmaster587.libVulpes.block.RotatableBlock;
+import zmaster587.advancedRocketry.world.ProviderMoon;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemReed;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.fluids.FluidRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -35,7 +38,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -72,6 +74,9 @@ public class AdvancedRocketry {
 	public static Block genericSeat;
 	public static Block blockEngine;
 	public static Block blockFuelTank;
+	public static Block blockFuelingStation;
+	public static Block blockMoonTurf;
+	public static Block blockMultiMineOre;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -85,6 +90,9 @@ public class AdvancedRocketry {
 		genericSeat = new BlockSeat(Material.circuits).setBlockName("seat").setCreativeTab(CreativeTabs.tabTransport).setBlockTextureName("minecraft:wool_colored_silver");
 		blockEngine = new BlockRocketMotor(Material.rock).setBlockName("rocket").setCreativeTab(CreativeTabs.tabTransport);
 		blockFuelTank = new BlockTank(Material.rock).setBlockName("fuelTank").setCreativeTab(CreativeTabs.tabTransport);
+		blockFuelingStation = new BlockFuelingStation(Material.rock).setBlockName("fuelStation").setCreativeTab(CreativeTabs.tabTransport);
+		blockMoonTurf = new BlockPlanetSoil().setHardness(0.5F).setStepSound(Block.soundTypeGravel).setBlockName("turf").setBlockTextureName("advancedrocketry:moon_turf");
+		blockMultiMineOre = new BlockMultimine().setBlockName("multimine");
 		
 		GameRegistry.registerBlock(launchpad, "launchpad");
 		GameRegistry.registerBlock(rocketBuilder, "rocketBuilder");
@@ -92,12 +100,19 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(genericSeat, "seat");
 		GameRegistry.registerBlock(blockEngine, "rocketmotor");
 		GameRegistry.registerBlock(blockFuelTank, "fuelTank");
+		GameRegistry.registerBlock(blockFuelingStation, "fuelingStation");
+		GameRegistry.registerBlock(blockMoonTurf, "moonTurf");
+		GameRegistry.registerBlock(blockMultiMineOre, "blockMultiMineOre");
 		
 		EntityRegistry.registerModEntity(EntityDummy.class, "mountDummy", 0, this, 16, 20, false);
-		EntityRegistry.registerModEntity(EntityRocket.class, "rocket", 1, this, 64, 1, true);
+		EntityRegistry.registerModEntity(EntityRocket.class, "rocket", 1, this, 64, 20, true);
+		EntityRegistry.registerModEntity(RocketFx.class, "RocketFx", 2, this, 64, 5, true);
 		
 		GameRegistry.registerTileEntity(TileRocketBuilder.class, "rocketBuilder");
 		GameRegistry.registerTileEntity(TileModelRender.class, "modelRenderer");
+		GameRegistry.registerTileEntity(TileEntityFuelingStation.class, "fuelingStation");
+		
+		
 		
 		
 		//blockRemoteConnector = new BlockRemoteConnector();
@@ -168,6 +183,8 @@ public class AdvancedRocketry {
 		proxy.registerRenderers();
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 		
+		DimensionManager.registerProviderType(zmaster587.advancedRocketry.util.Configuration.MoonId, ProviderMoon.class, true);
+		DimensionManager.registerDimension(zmaster587.advancedRocketry.util.Configuration.MoonId, zmaster587.advancedRocketry.util.Configuration.MoonId);
 		
 		/*proxy.registerRenderers();
 		
@@ -205,7 +222,9 @@ public class AdvancedRocketry {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
+		MinecraftForge.EVENT_BUS.register(new RocketEventHandler());
 		PacketHandler.init();
+		FuelRegistry.instance.registerFuel(FuelType.LIQUID, FluidRegistry.WATER, 100);
 		/*ForgeChunkManager.setForcedChunkLoadingCallback(instance, new WorldEvents());
 		
 		proxy.registerKeyBinds();*/

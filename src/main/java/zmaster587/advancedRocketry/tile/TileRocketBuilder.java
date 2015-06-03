@@ -10,14 +10,16 @@ import cofh.api.energy.EnergyStorage;
 import io.netty.buffer.ByteBuf;
 import cpw.mods.fml.relauncher.Side;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.IFuelTank;
 import zmaster587.advancedRocketry.api.IRocketEngine;
 import zmaster587.advancedRocketry.block.BlockSeat;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.network.PacketEntity;
 import zmaster587.advancedRocketry.network.PacketHandler;
+import zmaster587.advancedRocketry.network.PacketMachine;
 import zmaster587.advancedRocketry.stats.StatsRocket;
-import zmaster587.advancedRocketry.util.RocketStorageChunk;
+import zmaster587.advancedRocketry.util.Configuration;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.interfaces.INetworkEntity;
@@ -44,23 +46,45 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 	private final int MAX_SIZE_Y = 64;
 	private final int MIN_SIZE_Y = 4;
 	private final int MAXSCANDELAY = 10;
+	private final int ENERGYFOROP = 100;
 	//private final int ENERGY = 100;
-	private final static float GRAVITY = 9.81f;
-	private final static int orbit = 500;
+
 
 	private int scanTotalBlocks;
 	private int scanTime; // How long until scan is finished from 0 -> num blocks
+	private int scanTimeLast; // Used for client/server sync
 	private boolean building; //True is rocket is being built, false if only scanning or otherwise
 
 	private StatsRocket stats;
 	private AxisAlignedBB bbCache;
+	private ErrorCodes status;
 
-	public TileRocketBuilder() {
-		stats = new StatsRocket();
-		energy = new EnergyStorage(10000);
-		building = false;
+	public enum ErrorCodes {
+		SUCCESS("Clear for liftoff!"),
+		NOFUEL("Not enough fuel!"),
+		NOSEAT("Missing Seat!"),
+		NOENGINES("You do not have enough thrust!"),
+		UNSCANNED("Rocket unscanned.");
+
+		String code;
+		private ErrorCodes(String code) {
+			this.code = code;
+		}
+
+		public String getErrorCode() { return code; } 
 	}
 
+	public TileRocketBuilder() {
+		super(100000);
+		status = ErrorCodes.UNSCANNED;
+		stats = new StatsRocket();
+		building = false;
+		scanTimeLast = 0;
+	}
+
+	public ErrorCodes getStatus() {
+		return status;
+	}
 	public StatsRocket getRocketStats() { return stats; }
 
 	public AxisAlignedBB getBBCache() { return bbCache;}
@@ -77,18 +101,26 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 	}
 
 	public float getAcceleration() {
-		return (getThrust() - (getWeight()*GRAVITY));
+		return (getThrust() - getWeight());
 	}
 
 	public int getWeight()  { return stats.getWeight(); }
 
 	public int getThrust() { return stats.getThrust(); }
 
-	public float getNeededThrust() {return getWeight()*GRAVITY;}
+	public float getNeededThrust() {return getWeight();}
 
-	public float getNeededFuel() { return getAcceleration() > 0 ? stats.getFuelRate()*MathHelper.sqrt_float((2*(orbit-this.yCoord))/getAcceleration()) : 0; }
+	public float getNeededFuel() { return getAcceleration() > 0 ? stats.getFuelRate(FuelType.LIQUID)*MathHelper.sqrt_float((2*(Configuration.orbit-this.yCoord))/getAcceleration()) : 0; }
 
-	public int getFuel() {return stats.getFuel();}
+	public int getFuel() {return stats.getFuelCapacity(FuelType.LIQUID);}
+
+	public boolean isBuilding() { return building; }
+
+	public void setBuilding(boolean building) { this.building = building; }
+
+	public void setStatus(int value) {
+		status = ErrorCodes.values()[value];
+	}
 
 	@Override
 	public boolean canUpdate() {
@@ -97,24 +129,41 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 
 	@Override
 	public boolean shouldRenderInPass(int pass) {
-		// TODO Auto-generated method stub
 		return pass == 1;
 	}
 
 	@Override
-	public void updateEntity() {
+	public int getPowerPerOperation() {
+		return ENERGYFOROP;
+	}
 
-		if(isScanning()) {
-
-			if(scanTime >= (scanTotalBlocks*MAXSCANDELAY)) {
+	@Override
+	public void performFunction() {
+		if(scanTime >= (scanTotalBlocks*MAXSCANDELAY)) {
+			if(!worldObj.isRemote) {
 				if(building)
 					assembleRocket();
-				scanTotalBlocks = -1;
-				scanTime = 0;
-				building = false; //Done building
+				else
+					scanRocket(worldObj, xCoord, yCoord, zCoord, bbCache);
 			}
-			scanTime++;
+			scanTotalBlocks = -1;
+			scanTime = 0;
+			scanTimeLast = 0;
+			building = false; //Done building
 		}
+
+		scanTime++;
+
+		if(!this.worldObj.isRemote && this.energy.getEnergyStored() < getPowerPerOperation() && scanTime - scanTimeLast > 0) {
+			scanTimeLast = scanTime;
+			PacketHandler.sentToNearby(new PacketMachine(this, (byte)2), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 32);
+		}
+
+	}
+	
+	@Override
+	public boolean canPerformFunction() {
+		return isScanning();
 	}
 
 	@Override
@@ -127,10 +176,109 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 
 	public boolean isScanning() { return scanTotalBlocks > 0; }
 
-	public void assembleRocket() {
-		RocketStorageChunk storageChunk = RocketStorageChunk.cutWorldBB(worldObj, bbCache);
+	public void scanRocket(World world, int x, int y, int z, AxisAlignedBB bb) {
 
-		EntityRocket rocket = new EntityRocket(worldObj, storageChunk,bbCache.minX + (bbCache.maxX-bbCache.minX)/2f, yCoord , bbCache.minZ + (bbCache.maxZ-bbCache.minZ)/2f );
+		int thrust = 0;
+		int fuelUse = 0;
+		int fuel = 0;
+		int inventorySlots = 0;
+		int numBlocks = 0;
+		stats.reset();
+
+		int actualMinX = (int)bb.maxX,
+				actualMinY = (int)bb.maxY,
+				actualMinZ = (int)bb.maxZ,
+				actualMaxX = (int)bb.minX,
+				actualMaxY = (int)bb.minY,
+				actualMaxZ = (int)bb.minZ;
+
+
+		for(int xCurr = (int)bb.minX; xCurr <= bb.maxX; xCurr++) {
+			for(int zCurr = (int)bb.minZ; zCurr <= bb.maxZ; zCurr++) {
+				for(int yCurr = (int)bb.minY; yCurr<= bb.maxY; yCurr++) {
+
+					Block block = world.getBlock(xCurr, yCurr, zCurr);
+
+					if(!block.isAir(world, xCurr, yCurr, zCurr)) {
+						if(xCurr < actualMinX)
+							actualMinX = xCurr;
+						if(yCurr < actualMinY)
+							actualMinY = yCurr;
+						if(zCurr < actualMinZ)
+							actualMinZ = zCurr;
+						if(xCurr > actualMaxX)
+							actualMaxX = xCurr;
+						if(yCurr > actualMaxY)
+							actualMaxY = yCurr;
+						if(zCurr > actualMaxZ)
+							actualMaxZ = zCurr;
+					}
+				}
+			}
+		}
+
+		if(verifyScan(bb, world)) {
+			for(int yCurr = (int) bb.minY; yCurr <= bb.maxY; yCurr++) {
+				for(int xCurr = (int) bb.minX; xCurr <= bb.maxX; xCurr++) {
+					for(int zCurr = (int) bb.minZ; zCurr <= bb.maxZ; zCurr++) {
+
+						if(!world.isAirBlock(xCurr, yCurr, zCurr)) {
+							Block block = world.getBlock(xCurr, yCurr, zCurr);
+							numBlocks++;
+							//If rocketEngine increaseThrust
+							if(block instanceof IRocketEngine) {
+								thrust += ((IRocketEngine)block).getThrust(world, xCurr, yCurr, z);
+								fuelUse += ((IRocketEngine)block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
+								stats.addEngineLocation(xCurr - actualMinX - ((actualMaxX - actualMinX)/2f), yCurr - actualMinY, zCurr - actualMinZ - ((actualMaxZ - actualMinZ)/2f));
+							}
+
+							if(block instanceof IFuelTank) {
+								fuel+= ((IFuelTank)block).getMaxFill(world, xCurr, yCurr, zCurr, world.getBlockMetadata(xCurr, yCurr, zCurr));
+							}
+
+							if(block instanceof BlockSeat) {
+								stats.setSeatLocation((int)(xCurr - actualMinX - ((actualMaxX - actualMinX)/2f)) , (int)(yCurr  -actualMinY), (int)(zCurr - actualMinZ - ((actualMaxZ - actualMinZ)/2f)));
+							}
+
+							TileEntity tile;
+							if((tile = world.getTileEntity(xCurr, yCurr, zCurr)) instanceof IInventory) {
+								inventorySlots += ((IInventory)tile).getSizeInventory();
+							}
+						}
+					}
+				}
+			}
+			stats.setFuelRate(FuelType.LIQUID,fuelUse);
+			stats.setWeight(numBlocks + inventorySlots);
+			stats.setThrust(thrust);
+			stats.setFuelCapacity(FuelType.LIQUID,fuel);
+
+			//Set status
+			if(!stats.hasSeat()) 
+				status = ErrorCodes.NOSEAT;
+			else if(getFuel() < getNeededFuel()) 
+				status = ErrorCodes.NOFUEL;
+			else if(getThrust() < getNeededThrust()) 
+				status = ErrorCodes.NOENGINES;
+			else
+				status = ErrorCodes.SUCCESS;
+		}
+	}
+
+
+	public void assembleRocket() {
+
+		if(bbCache == null)
+			return;
+		//Need to scan again b/c something may have changed
+		scanRocket(worldObj, xCoord, yCoord, zCoord, bbCache);
+
+		if(status != ErrorCodes.SUCCESS)
+			return;
+
+		StorageChunk storageChunk = StorageChunk.cutWorldBB(worldObj, bbCache);
+
+		EntityRocket rocket = new EntityRocket(worldObj, storageChunk, stats.copy(),bbCache.minX + (bbCache.maxX-bbCache.minX)/2f, yCoord , bbCache.minZ + (bbCache.maxZ-bbCache.minZ)/2f );
 
 		worldObj.spawnEntityInWorld(rocket);
 		NBTTagCompound nbtdata = new NBTTagCompound();
@@ -138,6 +286,10 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 		rocket.writeToNBT(nbtdata);
 		PacketHandler.sentToNearby(new PacketEntity((INetworkEntity)rocket, (byte)0, nbtdata), rocket.worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 64);
 
+		stats.reset();
+		this.status = ErrorCodes.UNSCANNED;
+		this.markDirty();
+		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	/**
@@ -245,19 +397,13 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 		return whole;
 	}
 
-	public void analyzeRocket(World world,EntityPlayer player, int x, int y, int z) {
-		AxisAlignedBB bb = getRocketPadBounds(world, x, y, z);
+	public int getVolume(World world, int x, int y, int z, AxisAlignedBB bb) {
 
-		if(bb == null)
-			return;
 
-		bbCache = bb;
+		return (int) ((bb.maxX - bb.minX) * (bb.maxY - bb.minY) * (bb.maxZ - bb.minZ));
 
-		int numBlocks = 0;
-		int thrust = 0;
-		int fuelUse = 0;
-		int fuel = 0;
-		int inventorySlots = 0;
+		/*int numBlocks = 0;
+
 
 		if(verifyScan(bb, world)) {
 			for(int yCurr = (int) bb.minY; yCurr <= bb.maxY; yCurr++) {
@@ -265,34 +411,15 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 					for(int zCurr = (int) bb.minZ; zCurr <= bb.maxZ; zCurr++) {
 
 						if(!world.isAirBlock(xCurr, yCurr, zCurr)) {
-							Block block = world.getBlock(xCurr, yCurr, zCurr);
 							numBlocks++;
-							//If rocketEngine increaseThrust
-							if(block instanceof IRocketEngine) {
-								thrust += ((IRocketEngine)block).getThrust(world, xCurr, yCurr, z);
-								fuelUse += ((IRocketEngine)block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
-							}
 
-							if(block instanceof IFuelTank) {
-								fuel+= ((IFuelTank)block).getMaxFill();
-							}
-
-							TileEntity tile;
-							if((tile = world.getTileEntity(xCurr, yCurr, zCurr)) instanceof IInventory) {
-								inventorySlots += ((IInventory)tile).getSizeInventory();
-							}
 						}
 					}
 				}
 			}
 
-			stats.setFuelRate(fuelUse);
-			stats.setWeight(numBlocks + inventorySlots);
-			stats.setThrust(thrust);
-			stats.setFuel(fuel);
-
 			scanTotalBlocks = numBlocks;
-		}
+		}*/
 
 	}
 
@@ -303,6 +430,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 		stats.writeToNBT(nbt);
 		nbt.setInteger("scanTime", scanTime);
 		nbt.setInteger("scanTotalBlocks", scanTotalBlocks);
+		nbt.setBoolean("building", building);
 
 		if(bbCache != null) {
 			NBTTagCompound tag = new NBTTagCompound();
@@ -324,9 +452,10 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 
 		stats.readFromNBT(nbt);
 
-		scanTime = nbt.getInteger("scanTime");
+		scanTimeLast = scanTime = nbt.getInteger("scanTime");
 		scanTotalBlocks = nbt.getInteger("scanTotalBlocks");
 
+		building = nbt.getBoolean("building");
 		if(nbt.hasKey("bb")) {
 
 			NBTTagCompound tag = nbt.getCompoundTag("bb");
@@ -359,14 +488,22 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {
-		// TODO Auto-generated method stub
+		//Used to sync clinet/server
+		if(id == 2) {
+			out.writeInt(energy.getEnergyStored());
+			out.writeInt(this.scanTime);
+		}
 
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
+	public void readDataFromNetwork(ByteBuf in, byte id,
 			NBTTagCompound nbt) {
-		// TODO Auto-generated method stub
+
+		if(id == 2) {
+			nbt.setInteger("pwr", in.readInt());
+			nbt.setInteger("tik", in.readInt());
+		}
 
 	}
 
@@ -374,7 +511,13 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
 		if(id == 0) {
-			this.analyzeRocket(worldObj, player, xCoord, yCoord, zCoord);
+			AxisAlignedBB bb = getRocketPadBounds(worldObj, xCoord, yCoord, zCoord);
+
+			bbCache = bb;
+			if(bb == null)
+				return;
+
+			scanTotalBlocks = this.getVolume(worldObj, xCoord, yCoord, zCoord, bbCache)/10;
 			this.markDirty();
 			this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
@@ -384,10 +527,22 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 				return;
 
 			building = true;
-			this.analyzeRocket(worldObj, player, xCoord, yCoord, zCoord);
+			AxisAlignedBB bb = getRocketPadBounds(worldObj, xCoord, yCoord, zCoord);
+
+			bbCache = bb;
+			if(bb == null)
+				return;
+
+			scanTotalBlocks =this.getVolume(worldObj, xCoord, yCoord, zCoord,bbCache)/10;
 			this.markDirty();
 			this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 
 		}
+		else if(id == 2){
+			energy.setEnergyStored(nbt.getInteger("pwr"));
+			this.scanTime = nbt.getInteger("tik");
+		}
 	}
+
+
 }

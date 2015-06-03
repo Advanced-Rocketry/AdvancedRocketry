@@ -6,35 +6,49 @@
 package zmaster587.advancedRocketry.util;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class StorageChunk implements IBlockAccess {
+public class StorageChunk implements IBlockAccess, IInventory {
+	
 	Block blocks[][][];
 	short metas[][][];
 	int sizeX, sizeY, sizeZ;
+	int sizeInv;
+	
+	private int invPosition;
 
-	ArrayList<NBTTagCompound> tile;
 	ArrayList<TileEntity> tileEntities;
+
+	//To store inventories (just chests right now)
+	ArrayList<IInventory> inventories;
+	ItemStack invCache[];
 
 	public StorageChunk() {
 		sizeX = 0;
 		sizeY = 0;
 		sizeZ = 0;
-		tile = new ArrayList<NBTTagCompound>();
 		tileEntities = new ArrayList<TileEntity>();
+		inventories = new ArrayList<IInventory>();
+		sizeInv = -1;
+		invPosition = 0;
 	}
 
 	protected StorageChunk(int xSize, int ySize, int zSize) {
@@ -45,19 +59,48 @@ public class StorageChunk implements IBlockAccess {
 		sizeY = ySize;
 		sizeZ = zSize;
 
-		tile = new ArrayList<NBTTagCompound>();
 		tileEntities = new ArrayList<TileEntity>();
+		inventories = new ArrayList<IInventory>();
+
+		sizeInv = -1;
+		
+		invPosition = 0;
 	}
 
 	public int getSizeX() { return sizeX; }
 	public int getSizeY() { return sizeY; }
 	public int getSizeZ() { return sizeZ; }
 
-	public List<TileEntity> getTileEntityList() {
+	public void incrementInvPos() {
+		initInventories();
 		
-		return tileEntities;
+		if(sizeInv > ((invPosition+1)*27) )
+			invPosition++;
 	}
 	
+
+	public void decrementInvPos() {
+		initInventories();
+		
+		if(invPosition > 0 )
+			invPosition--;
+	}
+	
+	public void setInvPos(int pos) {
+		if(pos < 0)
+			invPosition = 0;
+		invPosition = (pos*27 > sizeInv) ? sizeInv/27 : pos;
+	}
+	
+	public int getInvPos() {
+		return invPosition;
+	}
+	
+	public List<TileEntity> getTileEntityList() {
+
+		return tileEntities;
+	}
+
 	@Override
 	public Block getBlock(int x, int y, int z) {
 		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ)
@@ -83,7 +126,11 @@ public class StorageChunk implements IBlockAccess {
 
 					NBTTagCompound tileNbtData = null;
 
-					for(NBTTagCompound tileNbt : tile) {
+					for(TileEntity tile : tileEntities) {
+						NBTTagCompound tileNbt = new NBTTagCompound();
+						
+						tile.writeToNBT(tileNbt);
+						
 						if(tileNbt.getInteger("x") == x && tileNbt.getInteger("y") == y && tileNbt.getInteger("z") == z){
 							tileNbtData = tileNbt;
 							break;
@@ -110,6 +157,10 @@ public class StorageChunk implements IBlockAccess {
 		blocks = new Block[sizeX][sizeY][sizeZ];
 		metas = new short[sizeX][sizeY][sizeZ];
 
+		tileEntities.clear();
+		inventories.clear();
+		sizeInv = -1;
+		
 		for(int x = 0; x < sizeX; x++) {
 			for(int y = 0; y < sizeY; y++) {
 				for(int z = 0; z < sizeZ; z++) {
@@ -126,15 +177,18 @@ public class StorageChunk implements IBlockAccess {
 
 
 					if(tag.hasKey("tile")) {
-						tile.add(tag.getCompoundTag("tile"));
 						TileEntity tile = TileEntity.createAndLoadEntity(tag.getCompoundTag("tile"));
 						if(Thread.currentThread().getName().equalsIgnoreCase("Client thread"))
 							tile.setWorldObj(Minecraft.getMinecraft().theWorld);
 						tileEntities.add(tile);
+
+						//Machines would throw a wrench in the works
+						if(tile instanceof TileEntityChest) {
+							inventories.add((IInventory)tile);
+						}
 					}
 
 				}
-
 			}
 		}
 
@@ -142,19 +196,19 @@ public class StorageChunk implements IBlockAccess {
 
 	public static StorageChunk copyWorldBB(World world, AxisAlignedBB bb) {
 		int actualMinX = (int)bb.maxX,
-		actualMinY = (int)bb.maxY,
-		actualMinZ = (int)bb.maxZ,
-		actualMaxX = (int)bb.minX,
-		actualMaxY = (int)bb.minY,
-		actualMaxZ = (int)bb.minZ;
-		
-		
+				actualMinY = (int)bb.maxY,
+				actualMinZ = (int)bb.maxZ,
+				actualMaxX = (int)bb.minX,
+				actualMaxY = (int)bb.minY,
+				actualMaxZ = (int)bb.minZ;
+
+
 		for(int x = (int)bb.minX; x <= bb.maxX; x++) {
 			for(int z = (int)bb.minZ; z <= bb.maxZ; z++) {
 				for(int y = (int)bb.minY; y<= bb.maxY; y++) {
 
 					Block block = world.getBlock(x, y, z);
-					
+
 					if(!block.isAir(world, x, y, z)) {
 						if(x < actualMinX)
 							actualMinX = x;
@@ -172,15 +226,15 @@ public class StorageChunk implements IBlockAccess {
 				}
 			}
 		}
-		
+
 		StorageChunk ret = new StorageChunk((actualMaxX - actualMinX + 1), (actualMaxY - actualMinY + 1), (actualMaxZ - actualMinZ + 1));
-		
+
 		//Iterate though the bounds given storing blocks/meta/tiles
 		for(int x = actualMinX; x <= actualMaxX; x++) {
 			for(int z = actualMinZ; z <= actualMaxZ; z++) {
 				for(int y = actualMinY; y<= actualMaxY; y++) {
 
-					
+
 					ret.blocks[x - actualMinX][y - actualMinY][z - actualMinZ] = world.getBlock(x, y, z);
 					ret.metas[x - actualMinX][y - actualMinY][z - actualMinZ] = (short)world.getBlockMetadata(x, y, z);
 
@@ -193,8 +247,13 @@ public class StorageChunk implements IBlockAccess {
 						nbt.setInteger("x",nbt.getInteger("x") - actualMinX);
 						nbt.setInteger("y",nbt.getInteger("y") - actualMinY);
 						nbt.setInteger("z",nbt.getInteger("z") - actualMinZ);
-
-						ret.tile.add(nbt);
+						
+						TileEntity newTile = TileEntity.createAndLoadEntity(nbt);
+						
+						if(entity instanceof TileEntityChest)
+							ret.inventories.add((IInventory)newTile);
+					
+						ret.tileEntities.add(newTile);
 					}
 				}
 			}
@@ -218,7 +277,9 @@ public class StorageChunk implements IBlockAccess {
 		}
 
 		//Set tiles for each block
-		for(NBTTagCompound nbt : tile) {
+		for(TileEntity tile : tileEntities) {
+			NBTTagCompound nbt = new NBTTagCompound();
+			tile.writeToNBT(nbt);
 			int x = nbt.getInteger("x");
 			int y = nbt.getInteger("y");
 			int z = nbt.getInteger("z");
@@ -228,7 +289,7 @@ public class StorageChunk implements IBlockAccess {
 			int tmpZ = z + zCoord;
 
 			//Set blocks of tiles again to avoid weirdness caused by updates
-			world.setBlock(xCoord + x, yCoord + y, zCoord + z, blocks[x][y][z], metas[x][y][z], 2);
+			//world.setBlock(xCoord + x, yCoord + y, zCoord + z, blocks[x][y][z], metas[x][y][z], 2);
 
 
 			nbt.setInteger("x",tmpX);
@@ -237,7 +298,8 @@ public class StorageChunk implements IBlockAccess {
 
 			TileEntity entity = world.getTileEntity(tmpX, tmpY, tmpZ);
 
-			entity.readFromNBT(nbt);
+			if(entity != null)
+				entity.readFromNBT(nbt);
 		}
 	}
 
@@ -290,7 +352,6 @@ public class StorageChunk implements IBlockAccess {
 
 	@Override
 	public boolean extendedLevelsInChunkCache() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -300,7 +361,121 @@ public class StorageChunk implements IBlockAccess {
 
 		if(x + side.offsetX < 0 || x + side.offsetX >= sizeX || y + side.offsetY < 0 || y + side.offsetY >= sizeY || z + side.offsetZ < 0 || x + side.offsetZ >= sizeZ)
 			return false;
-			
+
 		return blocks[x + side.offsetX][y + side.offsetY][z + side.offsetZ].isBlockSolid(this, x, y, z, metas[x][y][z]);
+	}
+
+	public static StorageChunk cutWorldBB(World worldObj, AxisAlignedBB bb) {
+		StorageChunk chunk = StorageChunk.copyWorldBB(worldObj, bb);
+		for(int x = (int)bb.minX; x <= bb.maxX; x++) {
+			for(int z = (int)bb.minZ; z <= bb.maxZ; z++) {
+				for(int y = (int)bb.minY; y<= bb.maxY; y++) {
+
+					worldObj.setBlockToAir(x, y, z);
+					List<EntityItem> stacks = worldObj.getEntitiesWithinAABB(EntityItem.class, bb);
+					
+					for(EntityItem stack : stacks)
+						stack.setDead();
+				}
+			}
+		}
+		return chunk;
+	}
+
+	private void initInventories() {
+		//Get number of inventories on board
+		if(doesInvCacheExist()) {
+			LinkedList<ItemStack> list = new LinkedList<ItemStack>();
+			sizeInv = 0;
+			for(IInventory i : inventories) {
+				int size = i.getSizeInventory();
+
+				for(int j = 0; j < size; j++) {
+					list.add(i.getStackInSlot(j));
+				}
+				
+				//must be in sections of 27
+				sizeInv += Math.max(27,size);
+			}
+
+
+			invCache = new ItemStack[sizeInv];
+			invCache = list.toArray(invCache);
+		}
+	}
+
+	private boolean doesInvCacheExist() {
+		return sizeInv == -1;
+	}
+
+	@Override
+	public int getSizeInventory() {
+
+		initInventories();
+		return sizeInv == 0 ? sizeInv : inventories.get(invPosition).getSizeInventory();
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int slot) {
+		initInventories();
+
+		return inventories.get(invPosition).getStackInSlot(slot);
+	}
+
+	@Override
+	public ItemStack decrStackSize(int slot, int amt) {
+		return inventories.get(invPosition).decrStackSize(slot,amt);
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int slot) {
+		
+		return inventories.get(invPosition).getStackInSlotOnClosing(slot);
+	}
+
+	@Override
+	public void setInventorySlotContents(int slot, ItemStack stack) {
+		inventories.get(invPosition).setInventorySlotContents(slot, stack);
+	}
+
+	@Override
+	public String getInventoryName() {
+		return "Rocket";
+	}
+
+	@Override
+	public boolean hasCustomInventoryName() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public int getInventoryStackLimit() {
+		return 64;
+	}
+
+	@Override
+	public void markDirty() {
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public void openInventory() {
+
+	}
+
+	@Override
+	public void closeInventory() {
+
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+		return inventories.get(invPosition).isItemValidForSlot(slot, stack);
 	}
 }

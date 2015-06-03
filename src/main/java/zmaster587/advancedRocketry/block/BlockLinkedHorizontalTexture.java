@@ -13,6 +13,9 @@ import net.minecraft.world.World;
 
 public class BlockLinkedHorizontalTexture extends Block {
 
+	
+	//Mapping of side to names
+	//Order is such that the side with a block can be represented as as bitmask where a side with a block is represented by a 0
 	enum iconNames {
 		ALLEDGE(""),
 		NOTRIGHTEDGE("nrEdge"),
@@ -30,7 +33,6 @@ public class BlockLinkedHorizontalTexture extends Block {
 		TOPEDGE("topEdge"),
 		RIGHTEDGE("rightEdge"),
 		NOEDGE("noEdge");
-		//SIDE("side");
 		
 		private String suffix;
 		iconNames(String suffix) {
@@ -43,14 +45,6 @@ public class BlockLinkedHorizontalTexture extends Block {
 	public BlockLinkedHorizontalTexture(Material material) {
 		super(material);
 	}
-	
-	@Override
-	public void onBlockAdded(World world, int x,
-			int y, int z) {
-
-
-	}
-	
 	@Override
 	public void onBlockPlacedBy(World world, int x,
 			int y, int z, EntityLivingBase p_149689_5_,
