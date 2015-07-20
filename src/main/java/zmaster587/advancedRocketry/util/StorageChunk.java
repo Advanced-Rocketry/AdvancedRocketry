@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -27,12 +29,12 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class StorageChunk implements IBlockAccess, IInventory {
-	
+
 	Block blocks[][][];
 	short metas[][][];
 	int sizeX, sizeY, sizeZ;
 	int sizeInv;
-	
+
 	private int invPosition;
 
 	ArrayList<TileEntity> tileEntities;
@@ -63,7 +65,7 @@ public class StorageChunk implements IBlockAccess, IInventory {
 		inventories = new ArrayList<IInventory>();
 
 		sizeInv = -1;
-		
+
 		invPosition = 0;
 	}
 
@@ -73,29 +75,29 @@ public class StorageChunk implements IBlockAccess, IInventory {
 
 	public void incrementInvPos() {
 		initInventories();
-		
+
 		if(sizeInv > ((invPosition+1)*27) )
 			invPosition++;
 	}
-	
+
 
 	public void decrementInvPos() {
 		initInventories();
-		
+
 		if(invPosition > 0 )
 			invPosition--;
 	}
-	
+
 	public void setInvPos(int pos) {
 		if(pos < 0)
 			invPosition = 0;
 		invPosition = (pos*27 > sizeInv) ? sizeInv/27 : pos;
 	}
-	
+
 	public int getInvPos() {
 		return invPosition;
 	}
-	
+
 	public List<TileEntity> getTileEntityList() {
 
 		return tileEntities;
@@ -128,9 +130,9 @@ public class StorageChunk implements IBlockAccess, IInventory {
 
 					for(TileEntity tile : tileEntities) {
 						NBTTagCompound tileNbt = new NBTTagCompound();
-						
+
 						tile.writeToNBT(tileNbt);
-						
+
 						if(tileNbt.getInteger("x") == x && tileNbt.getInteger("y") == y && tileNbt.getInteger("z") == z){
 							tileNbtData = tileNbt;
 							break;
@@ -160,7 +162,7 @@ public class StorageChunk implements IBlockAccess, IInventory {
 		tileEntities.clear();
 		inventories.clear();
 		sizeInv = -1;
-		
+
 		for(int x = 0; x < sizeX; x++) {
 			for(int y = 0; y < sizeY; y++) {
 				for(int z = 0; z < sizeZ; z++) {
@@ -178,8 +180,13 @@ public class StorageChunk implements IBlockAccess, IInventory {
 
 					if(tag.hasKey("tile")) {
 						TileEntity tile = TileEntity.createAndLoadEntity(tag.getCompoundTag("tile"));
-						if(Thread.currentThread().getName().equalsIgnoreCase("Client thread"))
-							tile.setWorldObj(Minecraft.getMinecraft().theWorld);
+						if(Thread.currentThread().getName().equalsIgnoreCase("Client thread")) {
+							try {
+								tile.setWorldObj((World)Class.forName("net.minecraft.client.Minecraft").getField("theWorld").get(Class.forName("net.minecraft.client.Minecraft").getMethod("getMinecraft").invoke(null)));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
 						tileEntities.add(tile);
 
 						//Machines would throw a wrench in the works
@@ -247,12 +254,12 @@ public class StorageChunk implements IBlockAccess, IInventory {
 						nbt.setInteger("x",nbt.getInteger("x") - actualMinX);
 						nbt.setInteger("y",nbt.getInteger("y") - actualMinY);
 						nbt.setInteger("z",nbt.getInteger("z") - actualMinZ);
-						
+
 						TileEntity newTile = TileEntity.createAndLoadEntity(nbt);
-						
+
 						if(entity instanceof TileEntityChest)
 							ret.inventories.add((IInventory)newTile);
-					
+
 						ret.tileEntities.add(newTile);
 					}
 				}
@@ -315,6 +322,7 @@ public class StorageChunk implements IBlockAccess, IInventory {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public int getLightBrightnessForSkyBlocks(int x, int y,
 			int z, int meta) {
 		Entity ent = Minecraft.getMinecraft().renderViewEntity;
@@ -359,7 +367,7 @@ public class StorageChunk implements IBlockAccess, IInventory {
 	public boolean isSideSolid(int x, int y, int z, ForgeDirection side,
 			boolean _default) {
 
-		if(x + side.offsetX < 0 || x + side.offsetX >= sizeX || y + side.offsetY < 0 || y + side.offsetY >= sizeY || z + side.offsetZ < 0 || x + side.offsetZ >= sizeZ)
+		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ  || x + side.offsetX < 0 || x + side.offsetX >= sizeX || y + side.offsetY < 0 || y + side.offsetY >= sizeY || z + side.offsetZ < 0 || z + side.offsetZ >= sizeZ)
 			return false;
 
 		return blocks[x + side.offsetX][y + side.offsetY][z + side.offsetZ].isBlockSolid(this, x, y, z, metas[x][y][z]);
@@ -373,7 +381,7 @@ public class StorageChunk implements IBlockAccess, IInventory {
 
 					worldObj.setBlockToAir(x, y, z);
 					List<EntityItem> stacks = worldObj.getEntitiesWithinAABB(EntityItem.class, bb);
-					
+
 					for(EntityItem stack : stacks)
 						stack.setDead();
 				}
@@ -393,7 +401,7 @@ public class StorageChunk implements IBlockAccess, IInventory {
 				for(int j = 0; j < size; j++) {
 					list.add(i.getStackInSlot(j));
 				}
-				
+
 				//must be in sections of 27
 				sizeInv += Math.max(27,size);
 			}
@@ -429,7 +437,7 @@ public class StorageChunk implements IBlockAccess, IInventory {
 
 	@Override
 	public ItemStack getStackInSlotOnClosing(int slot) {
-		
+
 		return inventories.get(invPosition).getStackInSlotOnClosing(slot);
 	}
 
@@ -460,7 +468,6 @@ public class StorageChunk implements IBlockAccess, IInventory {
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 

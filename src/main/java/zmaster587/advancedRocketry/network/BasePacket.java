@@ -1,12 +1,20 @@
 package zmaster587.advancedRocketry.network;
 
-import io.netty.buffer.ByteBuf;
+import java.nio.ByteBuffer;
 
+import zmaster587.advancedRocketry.AdvancedRocketry;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.client.C17PacketCustomPayload;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+
+import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -28,6 +36,8 @@ public abstract class BasePacket {
 			return clazz.newInstance();
 		}
 	}
+	
+
 	
 
     public static class ProtocolException extends Exception {
@@ -55,18 +65,6 @@ public abstract class BasePacket {
 			throw new RuntimeException("Packet " + getClass().getSimpleName() + " is a missing mapping!");
 		}
 	}
-	
-	/*public final Packet makePacket() {
-		ByteArrayDataOutput out = ByteStreams.newDataOutput();
-		out.writeByte(getPacketId());
-		write(out);
-		
-		//byte[] output = getPacketId().
-		
-		C17PacketCustomPayload packet = new C17PacketCustomPayload(MechanicalUtilities.MOD_ID, (ByteBuf)out);
-		
-		return packet;
-	}*/
 
 	public abstract void write(ByteBuf out);
 

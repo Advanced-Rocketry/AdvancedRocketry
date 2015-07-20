@@ -1,12 +1,13 @@
 package zmaster587.advancedRocketry.Inventory;
 
 import zmaster587.libVulpes.api.IUniversalEnergy;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public abstract class ContainerPowered extends Container {
+public class ContainerPowered extends Container {
 
 	int currentId = 0;
 	protected IUniversalEnergy tile;
@@ -49,5 +50,10 @@ public abstract class ContainerPowered extends Container {
 		if(slot == -1) {
 			tile.setEnergyStored(value);
 		}
+	}
+
+	@Override
+	public boolean canInteractWith(EntityPlayer player) {
+		return true;
 	}
 }

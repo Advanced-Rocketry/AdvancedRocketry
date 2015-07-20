@@ -6,10 +6,10 @@
 
 package zmaster587.advancedRocketry.tile;
 
-import cofh.api.energy.EnergyStorage;
 import io.netty.buffer.ByteBuf;
 import cpw.mods.fml.relauncher.Side;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
 import zmaster587.advancedRocketry.api.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.IFuelTank;
 import zmaster587.advancedRocketry.api.IRocketEngine;
@@ -315,9 +315,9 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 
 		//Get min and maximum Z/X bounds
 		if(direction.offsetX != 0) {
-			xSize = ZUtils.getContinuousBlockLength(world, direction, xCurrent, yCurrent, zCurrent, MAX_SIZE, AdvancedRocketry.launchpad);
-			zMin = ZUtils.getContinuousBlockLength(world, ForgeDirection.NORTH, xCurrent, yCurrent, zCurrent, MAX_SIZE, AdvancedRocketry.launchpad);
-			zMax = ZUtils.getContinuousBlockLength(world, ForgeDirection.SOUTH, xCurrent, yCurrent, zCurrent+1, MAX_SIZE - zMin, AdvancedRocketry.launchpad);
+			xSize = ZUtils.getContinuousBlockLength(world, direction, xCurrent, yCurrent, zCurrent, MAX_SIZE, AdvRocketryBlocks.launchpad);
+			zMin = ZUtils.getContinuousBlockLength(world, ForgeDirection.NORTH, xCurrent, yCurrent, zCurrent, MAX_SIZE, AdvRocketryBlocks.launchpad);
+			zMax = ZUtils.getContinuousBlockLength(world, ForgeDirection.SOUTH, xCurrent, yCurrent, zCurrent+1, MAX_SIZE - zMin, AdvRocketryBlocks.launchpad);
 			zSize = zMin + zMax;
 
 			zMin = zCurrent - zMin + 1;
@@ -332,9 +332,9 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 			}
 		}
 		else {
-			zSize = ZUtils.getContinuousBlockLength(world, direction, xCurrent, yCurrent, zCurrent, MAX_SIZE, AdvancedRocketry.launchpad);
-			xMin = ZUtils.getContinuousBlockLength(world, ForgeDirection.WEST, xCurrent, yCurrent, zCurrent, MAX_SIZE, AdvancedRocketry.launchpad);
-			xMax = ZUtils.getContinuousBlockLength(world, ForgeDirection.EAST, xCurrent+1, yCurrent, zCurrent, MAX_SIZE - xMin, AdvancedRocketry.launchpad);
+			zSize = ZUtils.getContinuousBlockLength(world, direction, xCurrent, yCurrent, zCurrent, MAX_SIZE, AdvRocketryBlocks.launchpad);
+			xMin = ZUtils.getContinuousBlockLength(world, ForgeDirection.WEST, xCurrent, yCurrent, zCurrent, MAX_SIZE, AdvRocketryBlocks.launchpad);
+			xMax = ZUtils.getContinuousBlockLength(world, ForgeDirection.EAST, xCurrent+1, yCurrent, zCurrent, MAX_SIZE - xMin, AdvRocketryBlocks.launchpad);
 			xSize = xMin + xMax;
 
 			xMin = xCurrent - xMin + 1;
@@ -353,22 +353,22 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 		int maxTowerSize = 0;
 		//Check perimeter for structureBlocks and get the size
 		for(int i = xMin; i <= xMax; i++) {
-			if(world.getBlock(i, yCurrent, zMin-1) == AdvancedRocketry.structureTower) {
-				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, ForgeDirection.UP, i, yCurrent, zMin-1, MAX_SIZE_Y, AdvancedRocketry.structureTower));
+			if(world.getBlock(i, yCurrent, zMin-1) == AdvRocketryBlocks.structureTower) {
+				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, ForgeDirection.UP, i, yCurrent, zMin-1, MAX_SIZE_Y, AdvRocketryBlocks.structureTower));
 			}
 
-			if(world.getBlock(i, yCurrent, zMax+1) == AdvancedRocketry.structureTower) {
-				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, ForgeDirection.UP, i, yCurrent, zMax+1, MAX_SIZE_Y, AdvancedRocketry.structureTower));
+			if(world.getBlock(i, yCurrent, zMax+1) == AdvRocketryBlocks.structureTower) {
+				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, ForgeDirection.UP, i, yCurrent, zMax+1, MAX_SIZE_Y, AdvRocketryBlocks.structureTower));
 			}
 		}
 
 		for(int i = zMin; i <= zMax; i++) {
-			if(world.getBlock(xMin-1, yCurrent, i) == AdvancedRocketry.structureTower) {
-				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, ForgeDirection.UP, xMin-1, yCurrent, i, MAX_SIZE_Y, AdvancedRocketry.structureTower));
+			if(world.getBlock(xMin-1, yCurrent, i) == AdvRocketryBlocks.structureTower) {
+				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, ForgeDirection.UP, xMin-1, yCurrent, i, MAX_SIZE_Y, AdvRocketryBlocks.structureTower));
 			}
 
-			if(world.getBlock(xMax+1, yCurrent, i) == AdvancedRocketry.structureTower) {
-				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, ForgeDirection.UP, xMax+1, yCurrent, i, MAX_SIZE_Y, AdvancedRocketry.structureTower));
+			if(world.getBlock(xMax+1, yCurrent, i) == AdvRocketryBlocks.structureTower) {
+				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, ForgeDirection.UP, xMax+1, yCurrent, i, MAX_SIZE_Y, AdvRocketryBlocks.structureTower));
 			}
 		}
 
@@ -387,7 +387,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements INetworkM
 		boundLoop:
 			for(int xx = (int)bb.minX; xx <= (int)bb.maxX; xx++) {
 				for(int zz = (int)bb.minZ; zz <= (int)bb.maxZ && whole; zz++) {
-					if(world.getBlock(xx, (int)bb.minY-1, zz) != AdvancedRocketry.launchpad) {
+					if(world.getBlock(xx, (int)bb.minY-1, zz) != AdvRocketryBlocks.launchpad) {
 						whole = false;
 						break boundLoop;
 					}

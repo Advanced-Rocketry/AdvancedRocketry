@@ -19,20 +19,10 @@ public class TileModelRender extends TileEntity {
 	
 	//Registry of models and textures
 	public enum models {
-		ROCKET(AdvancedModelLoader.loadModel(new ResourceLocation("advancedrocketry:models/combustion.obj")),
-				new ResourceLocation("advancedrocketry:textures/models/combustion.png")),
-		TANKMIDDLE(AdvancedModelLoader.loadModel(new ResourceLocation("advancedrocketry:models/middleTank.obj")),new ResourceLocation("advancedrocketry:textures/models/tank.png")),
-		TANKEND(AdvancedModelLoader.loadModel(new ResourceLocation("advancedrocketry:models/endTank.obj")),new ResourceLocation("advancedrocketry:textures/models/tank.png")),
-		TANKTOP(AdvancedModelLoader.loadModel(new ResourceLocation("advancedrocketry:models/topTank.obj")),new ResourceLocation("advancedrocketry:textures/models/tank.png"));
-		
-		
-		private IModelCustom model;
-		private ResourceLocation texture;
-		
-		models(IModelCustom model, ResourceLocation texture) {
-			this.model = model;
-			this.texture = texture;
-		}
+		ROCKET,
+		TANKMIDDLE,
+		TANKEND,
+		TANKTOP;
 	}
 
 	
@@ -51,9 +41,8 @@ public class TileModelRender extends TileEntity {
 		return false;
 	}
 	
-	public IModelCustom getModel() {return models.values()[type].model;}
+	public int getModel() {return type;}
 	
-	public ResourceLocation getTexture(){ return models.values()[type].texture;}
 	
 	@Override
 	public Packet getDescriptionPacket() {

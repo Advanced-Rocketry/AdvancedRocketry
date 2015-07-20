@@ -6,20 +6,25 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.ChannelHandler.Sharable;
 
 import java.util.EnumMap;
+
 import zmaster587.advancedRocketry.AdvancedRocketry;
+
 import com.google.common.collect.Maps;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.world.WorldServer;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.FMLEmbeddedChannel;
 import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
 import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.handshake.NetworkDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -35,6 +40,7 @@ public class PacketHandler {
 
 		codec.addDiscriminator(0, PacketMachine.class);
 		codec.addDiscriminator(1, PacketEntity.class);
+		codec.addDiscriminator(2, PacketDimInfo.class);
 
 
 		channels.putAll(NetworkRegistry.INSTANCE.newChannel(AdvancedRocketry.modId, codec, new HandlerServer()));
@@ -55,6 +61,7 @@ public class PacketHandler {
 		channels.get(Side.CLIENT).writeOutbound(packet);
 	}
 
+	
 	@SideOnly(Side.SERVER)
 	public static final void sendToPlayersTrackingEntity(BasePacket packet, Entity entity) {
 
@@ -72,6 +79,12 @@ public class PacketHandler {
 		channels.get(Side.SERVER).writeOutbound(packet);
 	}
 
+	public static final void sendToDispatcher(BasePacket packet, NetworkManager netman) {
+		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DISPATCHER);
+		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(NetworkDispatcher.get(netman));
+		channels.get(Side.SERVER).writeOutbound(packet);
+	}
+	
 	public static final void sentToNearby(BasePacket packet,int dimId, int x, int y, int z, double dist) {
 		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
 		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(new NetworkRegistry.TargetPoint(dimId, x, y, z,dist));

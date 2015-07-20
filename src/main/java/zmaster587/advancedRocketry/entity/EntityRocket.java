@@ -8,9 +8,10 @@ import io.netty.buffer.ByteBuf;
 import cpw.mods.fml.relauncher.Side;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.Inventory.GuiHandler;
-import zmaster587.advancedRocketry.Inventory.GuiHandler.guiId;
 import zmaster587.advancedRocketry.api.IInfrastructure;
+import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.api.FuelRegistry.FuelType;
+import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.entity.fx.RocketFx;
 import zmaster587.advancedRocketry.network.PacketEntity;
 import zmaster587.advancedRocketry.network.PacketHandler;
@@ -28,16 +29,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.common.MinecraftForge;
 
 public class EntityRocket extends Entity implements INetworkEntity {
 
@@ -58,7 +57,7 @@ public class EntityRocket extends Entity implements INetworkEntity {
 
 	//stores the coordinates of infrastructures, used for when the world loads/saves
 	private LinkedList<Vector3F<Integer>> infrastructureCoords;
-
+	
 	public enum PacketType {
 		RECIEVENBT,
 		SENDINTERACT,
@@ -224,12 +223,11 @@ public class EntityRocket extends Entity implements INetworkEntity {
 				setFuelAmount(getFuelAmount() - stats.getFuelRate(FuelType.LIQUID));
 
 				//Spawn in the particle effects for the engines
-				if(!worldObj.isRemote  && (this.motionY > 0 || (riddenByEntity instanceof EntityPlayer && ((EntityPlayer)riddenByEntity).moveForward > 0))) {
+				if(worldObj.isRemote  && (this.motionY > 0 || (riddenByEntity instanceof EntityPlayer && ((EntityPlayer)riddenByEntity).moveForward > 0))) {
 					for(Vector3F<Float> vec : stats.getEngineLocations()) {
 
 						for(int i = 0; i < 4; i++) {
-							RocketFx fx = new RocketFx(worldObj, this.posX + vec.x, this.posY + vec.y - 0.75, this.posZ +vec.z,(this.rand.nextFloat() - 0.5f)/8f,-.75 + this.motionY,(this.rand.nextFloat() - 0.5f)/8f);
-							Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+							AdvancedRocketry.proxy.spawnParticle("rocketFlame", worldObj, this.posX + vec.x, this.posY + vec.y - 0.75, this.posZ +vec.z,(this.rand.nextFloat() - 0.5f)/8f,-.75 + this.motionY,(this.rand.nextFloat() - 0.5f)/8f);
 						}
 					}
 				}
@@ -238,13 +236,16 @@ public class EntityRocket extends Entity implements INetworkEntity {
 			if(this.riddenByEntity instanceof EntityPlayer) {
 				EntityPlayer player = (EntityPlayer)this.riddenByEntity;
 
-				//Hackish crap to make clients mount entities immediately after server transfer
-				if(!worldObj.isRemote && this.ticksExisted == 20) {
+				//Hackish crap to make clients mount entities immediately after server transfer and fire events
+				if(!worldObj.isRemote && this.isInFlight && this.ticksExisted == 20) {
+					//Deorbiting
+					MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketDeOrbitingEvent(this));
+					
 					if(player instanceof EntityPlayer)
 						PacketHandler.sendToPlayer(new PacketEntity((INetworkEntity)this,(byte)PacketType.FORCEMOUNT.ordinal()), player);
 
 				}
-
+				
 				//if the player holds the forward key then decelerate
 				if(isInOrbit && burningFuel)
 					this.motionY -= this.motionY*player.moveForward/75f;
@@ -262,7 +263,8 @@ public class EntityRocket extends Entity implements INetworkEntity {
 			this.moveEntity(0, this.motionY, 0);
 
 			//Check to see if it's landed
-			if(lastPosY + this.motionY != this.posY) {
+			if(isInFlight && lastPosY + this.motionY != this.posY) {
+				MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketLandedEvent(this));
 				this.setInFlight(false);
 				this.isInOrbit = false;
 			}
@@ -270,9 +272,10 @@ public class EntityRocket extends Entity implements INetworkEntity {
 
 			//TODO: unhardcode destination
 			if(this.posY > Configuration.orbit && !this.worldObj.isRemote) {
+				MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketReachesOrbitEvent(this));
 				this.motionY = -this.motionY;
 				isInOrbit = true;
-				this.travelToDimension(this.worldObj.provider.dimensionId ==2 ? 0 : 2);
+				this.travelToDimension(this.worldObj.provider.dimensionId == 2 ? 0 : 2);
 			}
 		}
 	}
@@ -281,7 +284,10 @@ public class EntityRocket extends Entity implements INetworkEntity {
 	public void launch() {
 		setInFlight(true);
 		Iterator<IInfrastructure> connectedTiles = connectedInfrastructure.iterator();
-
+		
+		if(worldObj.isRemote)
+			MinecraftForge.EVENT_BUS.post(new RocketLaunchEvent(this));
+		
 		//Disconnect things linked to the rocket on liftoff
 		while(connectedTiles.hasNext()) {
 			IInfrastructure i = connectedTiles.next();
@@ -413,7 +419,7 @@ public class EntityRocket extends Entity implements INetworkEntity {
 
 				entity.forceSpawn = true;
 				worldserver1.spawnEntityInWorld(entity);
-				entity.setLocationAndAngles(x, 500, z, this.rotationYaw, this.rotationPitch);
+				entity.setLocationAndAngles(x, Configuration.orbit, z, this.rotationYaw, this.rotationPitch);
 
 				this.isDead = true;
 
@@ -421,7 +427,7 @@ public class EntityRocket extends Entity implements INetworkEntity {
 					//Transfer the player if applicable
 					minecraftserver.getConfigurationManager().transferPlayerToDimension((EntityPlayerMP)rider, newDimId, new TeleporterNoPortal(worldserver1));
 
-					rider.setLocationAndAngles(x, 500, z, this.rotationYaw, this.rotationPitch);
+					rider.setLocationAndAngles(x, Configuration.orbit, z, this.rotationYaw, this.rotationPitch);
 
 					rider.mountEntity(entity);
 				}
@@ -508,6 +514,7 @@ public class EntityRocket extends Entity implements INetworkEntity {
 		else if(id == PacketType.FORCEMOUNT.ordinal()) { //Used for pesky dimension transfers
 			player.mountEntity(this);
 			this.onRocketMount(player);
+			MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketDeOrbitingEvent(this));
 		}
 		else if(id == PacketType.LAUNCH.ordinal()) {
 			this.launch();

@@ -13,6 +13,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class PacketEntity extends BasePacket {
 
@@ -47,7 +48,7 @@ public class PacketEntity extends BasePacket {
 
 	private void write(PacketBuffer out) {
 		out.writeInt(((Entity)entity).worldObj.provider.dimensionId);
-		out.writeInt(entity.getEntityId());
+		out.writeInt(((Entity)entity).getEntityId());
 		out.writeByte(packetId);
 
 		out.writeBoolean(!nbt.hasNoTags());
@@ -72,13 +73,8 @@ public class PacketEntity extends BasePacket {
 	public void read(PacketBuffer in, boolean server) {
 		//DEBUG:
 		World world;
-		if(server)
-			world = DimensionManager.getWorld(in.readInt());
-		else {
-			in.readInt();
-			world = Minecraft.getMinecraft().theWorld;
-		}
-		
+		world = DimensionManager.getWorld(in.readInt());
+
 		int entityId = in.readInt();
 		packetId = in.readByte();
 
@@ -86,16 +82,16 @@ public class PacketEntity extends BasePacket {
 
 		if(in.readBoolean()) {
 			NBTTagCompound nbt = null;
-			
+
 			try {
 				nbt = in.readNBTTagCompoundFromBuffer();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
+
 			this.nbt = nbt;
 		}
-		
+
 		if(ent != null && ent instanceof INetworkEntity) {
 			entity = (INetworkEntity)ent;
 			entity.readDataFromNetwork(in, packetId, nbt);
@@ -121,9 +117,41 @@ public class PacketEntity extends BasePacket {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void readClient(ByteBuf in) {
 		PacketBuffer buffer = new PacketBuffer(in);
-		read(buffer, false);
+
+		//DEBUG:
+		World world;
+
+		buffer.readInt();
+		world = Minecraft.getMinecraft().theWorld;
+
+
+		int entityId = buffer.readInt();
+		packetId = buffer.readByte();
+
+		Entity ent = world.getEntityByID(entityId);
+
+		if(buffer.readBoolean()) {
+			NBTTagCompound nbt = null;
+
+			try {
+				nbt = buffer.readNBTTagCompoundFromBuffer();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			this.nbt = nbt;
+		}
+
+		if(ent != null && ent instanceof INetworkEntity) {
+			entity = (INetworkEntity)ent;
+			entity.readDataFromNetwork(buffer, packetId, nbt);
+		}
+		else {
+			//Error
+		}
 	}
 
 }

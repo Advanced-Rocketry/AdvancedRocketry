@@ -4,7 +4,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.Inventory.GuiHandler;
@@ -42,7 +41,7 @@ public class BlockrocketBuilder extends RotatableBlock {
 	@Override
 	public void registerBlockIcons(IIconRegister icons) {
 		front = icons.registerIcon("advancedrocketry:MonitorFront");
-		back = sides = icons.registerIcon("advancedrocketry:MonitorSide");
+		rear = sides = icons.registerIcon("advancedrocketry:MonitorSide");
 		bottom = top = icons.registerIcon("advancedrocketry:MonitorTop");
 	}
 	

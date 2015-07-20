@@ -4,12 +4,10 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.Inventory.GuiHandler;
 import zmaster587.advancedRocketry.tile.TileEntityFuelingStation;
 import zmaster587.libVulpes.block.RotatableBlock;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 
 public class BlockFuelingStation extends RotatableBlock {
@@ -42,7 +40,7 @@ public class BlockFuelingStation extends RotatableBlock {
 	
 	@Override
 	public void registerBlockIcons(IIconRegister icons) {
-		back = sides = front = icons.registerIcon("advancedrocketry:FuelingMachine");
+		rear = sides = front = icons.registerIcon("advancedrocketry:FuelingMachine");
 		bottom = top = icons.registerIcon("advancedrocketry:MonitorTop");
 	}
 }

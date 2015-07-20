@@ -23,6 +23,11 @@ Milestone 2:
 - The moon
 
 Milestone 3:
+- Internals of planetary relationships (Eg: orbits) Req for satillites
+- Planet characteristics
+- Dimension storage
+
+Milestone 4:
 - unmanned rockets / satallites
 - satallite management system
 	- control block
@@ -40,21 +45,21 @@ Milestone 3:
 		
 	- circuit level determines resistivity to environmental(can be toggled off) and artifical (ground to space missles/lasers) hazards
 
-Milestone 4:
+Milestone 5:
 - Pregenned solar system (some number of planets with certain values set (editable in config)
 - space stations
 - orbital factories (some materials can only be produced in space and/or process faster and/or dupe more(ores)
 - space elevator (eliminates need for rocket launch to get materials to orbital factories/ space stations/shipyards
 - Interstellar shipyards (used to build Interstellar ships)
 
-Milestone 5:
+Milestone 6:
 - Crafting recipies
 - clean rooms required for certain processes
 - blast furnace for silicon (done)
 - Chip creation machine list (basic teir is done)
 - Machine API?
 
-MileStone 6:
+MileStone 7:
 - "Search for habitable planets program"
 	- Orbital satallite telescopes/detectors
 	- ground based telescopes
@@ -65,7 +70,15 @@ MileStone 6:
 		- star scanner (increases the likelyhood of finding planets orbiting a star; higher level allows for smaller planets) ground and space
 	- procedural generation of limited planet types
 
-Milestone 7:
+Milestone 8:
 - research tree
 
-Milestone 8:
+Milestone 9:
+- Terraforming?
+
+Random Ideas:
+- Terraforming
+	- after a certain amount of resources spent planet becomes "Habitable" Eg no suit required
+	- Plants can grow
+- machines dont render model if fast graphics options are set
+- blocks used to build machine determines Teir

@@ -42,8 +42,9 @@ public class RocketFx extends EntityFX {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(icon);
 		
 		GL11.glPushMatrix();
+		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE );
 		
-		GL11.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA );
 		
         float f11 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)x1 - interpPosX);
         float f12 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)x1 - interpPosY);
@@ -54,14 +55,14 @@ public class RocketFx extends EntityFX {
 
         
         
-        tess.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha);
+        tess.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, 1f);//this.particleAlpha);
         
         tess.addVertexWithUV((double)(f11 - y1 * f10 - y2 * f10), (double)(f12 - z1 * f10), (double)(f13 - x2 * f10 - z2 * f10), 1, 1);
         tess.addVertexWithUV((double)(f11 - y1 * f10 + y2 * f10), (double)(f12 + z1 * f10), (double)(f13 - x2 * f10 + z2 * f10), 1, 0);
         tess.addVertexWithUV((double)(f11 + y1 * f10 + y2 * f10), (double)(f12 + z1 * f10), (double)(f13 + x2 * f10 + z2 * f10), 0, 0);
         tess.addVertexWithUV((double)(f11 + y1 * f10 - y2 * f10), (double)(f12 - z1 * f10), (double)(f13 + x2 * f10 - z2 * f10), 0, 1);
+        GL11.glEnable(GL11.GL_BLEND);
         
-		
 		GL11.glPopMatrix();
 	}
 	

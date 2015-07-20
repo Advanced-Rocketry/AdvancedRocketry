@@ -1,9 +1,7 @@
 package zmaster587.advancedRocketry.world;
 
-import zmaster587.advancedRocketry.AdvancedRocketry;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.MapGenBase;
 
 public class MapGenCrater extends MapGenBase {
@@ -52,7 +50,7 @@ public class MapGenCrater extends MapGenBase {
 							}
 							
 							if(count > 1)
-								chunkArray[(x * 16 + z) * 256 + y-count] = AdvancedRocketry.blockMoonTurf;
+								chunkArray[(x * 16 + z) * 256 + y-count] = world.getBiomeGenForCoords(rangeX, rangeZ).topBlock;
 							break;
 						}
 					}
