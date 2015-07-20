@@ -81,4 +81,4 @@ Random Ideas:
 	- after a certain amount of resources spent planet becomes "Habitable" Eg no suit required
 	- Plants can grow
 - machines dont render model if fast graphics options are set
-- blocks used to build machine determines Teir
+- blocks used to build machine determines Teir trst
