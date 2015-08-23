@@ -26,9 +26,14 @@ public class WorldTypePlanetGen extends WorldType {
 	@Override
 	public WorldChunkManager getChunkManager(World world)
 	{
-		return new ChunkManagerPlanet(world);
+		return new ChunkManagerPlanet(world); //new WorldChunkManager(world);//
 	}
 
+	@Override
+	public boolean getCanBeCreated() {
+		return false;
+	}
+	
 	/**
 	 * Creates the GenLayerBiome used for generating the world
 	 *
@@ -39,17 +44,8 @@ public class WorldTypePlanetGen extends WorldType {
 	@Override
 	public GenLayer getBiomeLayer(long worldSeed, GenLayer parentLayer)
 	{
-		ArrayList<BiomeGenBase> list = new ArrayList<BiomeGenBase>();
-
-		list.addAll(Arrays.asList(BiomeDictionary.getBiomesForType(BiomeDictionary.Type.DRY)));
-		list.addAll(Arrays.asList(BiomeDictionary.getBiomesForType(BiomeDictionary.Type.SNOWY)));
-
-		//Neither are acceptable on planets
-		list.remove(BiomeGenBase.hell);
-		list.remove(BiomeGenBase.sky);
-
+		//return super.getBiomeLayer(worldSeed, parentLayer);
 		GenLayer ret = new GenLayerBiomePlanet(200L, parentLayer, this);
-		//GenLayer ret  = new GenLayerBiomePlanet(200L, parentLayer, this);
 
 		ret = GenLayerZoom.magnify(1000L, ret, 2);
 		ret = new GenLayerEdgeExtendedBiomes(1000L, ret);

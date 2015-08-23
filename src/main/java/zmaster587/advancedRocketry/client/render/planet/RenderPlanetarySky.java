@@ -281,7 +281,9 @@ public class RenderPlanetarySky extends IRenderHandler {
 		float f16 = (float)(l + 1) / 4.0F;
 		float f17 = (float)(i1 + 1) / 2.0F;
 
-		tessellator1.startDrawingQuads();
+		//TODO: draw sky planets
+		
+		/*tessellator1.startDrawingQuads();
 
 		tessellator1.setColorRGBA_F(1f, 1f, 1f, multiplier);
 
@@ -289,7 +291,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 		tessellator1.addVertexWithUV((double)f10, -100.0D, (double)f10, (double)f14, (double)f17);
 		tessellator1.addVertexWithUV((double)f10, -100.0D, (double)(-f10), (double)f14, (double)f15);
 		tessellator1.addVertexWithUV((double)(-f10), -100.0D, (double)(-f10), (double)f16, (double)f15);
-		tessellator1.draw();
+		tessellator1.draw();*/
+		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		float f18 = mc.theWorld.getStarBrightness(partialTicks) * f6 * (atmosphere) + (1-atmosphere);
 

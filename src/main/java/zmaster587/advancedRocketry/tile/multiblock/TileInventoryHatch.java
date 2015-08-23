@@ -1,5 +1,11 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
+import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.Inventory.modules.ModuleSlotArray;
 import zmaster587.libVulpes.tile.TileEntityPointer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -8,9 +14,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileInventoryHatch extends TileEntityPointer implements ISidedInventory {
+public class TileInventoryHatch extends TileEntityPointer implements ISidedInventory, IModularInventory {
 
-	ItemStack inv[];
+	protected ItemStack inv[];
 
 	public TileInventoryHatch() {
 	}
@@ -87,13 +93,9 @@ public class TileInventoryHatch extends TileEntityPointer implements ISidedInven
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		inv[slot] = stack;
-		if(getMasterBlock() != null)
+		TileEntity master = getMasterBlock();
+		if(master != null && master instanceof TileMultiBlockMachine)
 			((TileMultiBlockMachine)getMasterBlock()).onInventoryUpdated();
-	}
-
-	@Override
-	public String getInventoryName() {
-		return null;
 	}
 
 	@Override
@@ -147,6 +149,25 @@ public class TileInventoryHatch extends TileEntityPointer implements ISidedInven
 	public boolean canExtractItem(int p_102008_1_, ItemStack p_102008_2_,
 			int p_102008_3_) {
 		return true;
+	}
+
+	@Override
+	public List<ModuleBase> getModules() {
+		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
+		
+		modules.add(new ModuleSlotArray(8, 18, this, 0, this.getSizeInventory()));
+		
+		return modules;
+	}
+
+	@Override
+	public String getInventoryName() {
+		return getModularInventoryName();
+	}
+
+	@Override
+	public String getModularInventoryName() {
+		return null;
 	}
 
 }

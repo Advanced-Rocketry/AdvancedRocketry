@@ -2,13 +2,9 @@ package zmaster587.advancedRocketry.command;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import com.sun.org.apache.bcel.internal.generic.DMUL;
-
-import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.world.DimensionManager;
 import zmaster587.advancedRocketry.world.DimensionProperties;
 import zmaster587.advancedRocketry.world.TeleporterNoPortal;
@@ -19,8 +15,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeEventFactory;
 
 public class WorldCommand implements ICommand {
 
@@ -95,7 +89,7 @@ public class WorldCommand implements ICommand {
 					}
 					else if(string.length == 2) {
 						if(DimensionManager.getInstance().isDimensionCreated((dimId = sender.getEntityWorld().provider.dimensionId))) {
-							DimensionManager.getInstance().setDimProperties(dimId, new DimensionProperties());
+							DimensionManager.getInstance().setDimProperties(dimId, new DimensionProperties(dimId));
 						}
 					}
 				}
@@ -119,7 +113,7 @@ public class WorldCommand implements ICommand {
 				} else if(string[1].equalsIgnoreCase("new")) {
 					// advRocketry planet new <name>
 					if(string.length == 3) {
-						DimensionManager.getInstance().registerDim(DimensionManager.getInstance().getNextFreeDim(), new DimensionProperties(string[2]));
+						DimensionManager.getInstance().registerDim(new DimensionProperties(DimensionManager.getInstance().getNextFreeDim(), string[2]));
 						sender.addChatMessage(new ChatComponentText("Dimension Created!"));
 					}
 					else {

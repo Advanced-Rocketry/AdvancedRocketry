@@ -5,12 +5,17 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.AxisAlignedBB;
-import zmaster587.advancedRocketry.AdvancedRocketry;
+import net.minecraftforge.common.util.ForgeDirection;
+import zmaster587.advancedRocketry.Inventory.TextureResources;
+import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
+import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
 import zmaster587.libVulpes.interfaces.IRecipe;
 
-public class TileCrystallizer extends TileMultiBlockMachine {
+public class TileCrystallizer extends TileMultiBlockMachine implements IModularInventory {
 	@Override
 	public List<IRecipe> getMachineRecipeList() {
 		return RecipesMachine.getInstance().getRecipes(this.getClass());
@@ -42,15 +47,17 @@ public class TileCrystallizer extends TileMultiBlockMachine {
 		return set;
 	}
 	
+	@Override
 	public boolean completeStructure() {
-		boolean result = super.completeStructure();
-		if(result) {
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.blockMetadata | 8, 2);
-		}
-		else
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.blockMetadata & 7, 2);
+		return super.completeStructure();
+	}
+	
+	@Override
+	public List<ModuleBase> getModules() {
+		List<ModuleBase> modules = super.getModules();
 		
-		return result;
+		modules.add(new ModuleProgress(100, 4, 0, new ProgressBarImage(0, 0, 31, 66, 31, 0, 23, 49, 4, 17, ForgeDirection.UP, TextureResources.progressBars), this));
+		return modules;
 	}
 	
 	@Override

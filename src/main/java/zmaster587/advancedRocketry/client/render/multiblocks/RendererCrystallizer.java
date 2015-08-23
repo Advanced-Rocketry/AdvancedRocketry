@@ -54,9 +54,8 @@ public class RendererCrystallizer extends TileEntitySpecialRenderer {
 
 		if(multiBlockTile.isRunning()) {
 
-			float progress = multiBlockTile.getProgress()/(float)multiBlockTile.getTotalProgress();
+			float progress = multiBlockTile.getProgress(0)/(float)multiBlockTile.getTotalProgress(0);
 
-			//if(progress > 0.5) {
 				List<ItemStack> outputList = multiBlockTile.getOutputs();
 				if(outputList != null && !outputList.isEmpty()) {
 					ItemStack stack = outputList.get(0);
@@ -93,7 +92,6 @@ public class RendererCrystallizer extends TileEntitySpecialRenderer {
 					GL11.glPopMatrix();
 					
 				}
-			//}
 
 			bindTexture(texture);
 			model.renderPart("Hull");

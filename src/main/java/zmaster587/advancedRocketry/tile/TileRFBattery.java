@@ -1,6 +1,12 @@
 package zmaster587.advancedRocketry.tile;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import cofh.api.energy.EnergyStorage;
+import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
+import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.Inventory.modules.ModulePower;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.TileEntityPointer;
@@ -10,7 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileRFBattery extends TileEntityPointer implements IUniversalEnergy, IMultiblock, IInventory {
+public class TileRFBattery extends TileEntityPointer implements IModularInventory, IUniversalEnergy, IMultiblock, IInventory {
 
 	EnergyStorage storage;
 	int teir;
@@ -105,7 +111,7 @@ public class TileRFBattery extends TileEntityPointer implements IUniversalEnergy
 	}
 
 	@Override
-	public String getInventoryName() {
+	public String getModularInventoryName() {
 		return "RF Storage Box";
 	}
 
@@ -137,6 +143,18 @@ public class TileRFBattery extends TileEntityPointer implements IUniversalEnergy
 	@Override
 	public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) {
 		return false;
+	}
+
+	@Override
+	public List<ModuleBase> getModules() {
+		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		modules.add(new ModulePower(18, 20,this));
+		return modules;
+	}
+
+	@Override
+	public String getInventoryName() {
+		return null;
 	}
 
 }

@@ -55,7 +55,7 @@ public class RendererCuttingMachine extends TileEntitySpecialRenderer {
 
 		if(multiBlockTile.isRunning()) {
 
-			float progress = multiBlockTile.getProgress()/(float)multiBlockTile.getTotalProgress();
+			float progress = multiBlockTile.getProgress(0)/(float)multiBlockTile.getTotalProgress(0);
 			float tray;
 			tray = 2.2f*progress;
 
@@ -81,7 +81,8 @@ public class RendererCuttingMachine extends TileEntitySpecialRenderer {
 			GL11.glPushMatrix();
 			
 			GL11.glTranslatef(1f, 1f, 1.5f);
-			GL11.glRotatef(-35*tile.getWorldObj().getTotalWorldTime() % 360, 1, 0, 0);
+			
+			GL11.glRotatef(-12*multiBlockTile.getProgress(0) % 360, 1, 0, 0);
 			GL11.glTranslatef(-1f, -1f, -1.5f);
 			model.renderPart("Saw");
 			GL11.glPopMatrix();

@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.Inventory.GuiHandler;
-import zmaster587.advancedRocketry.tile.TileEntityBlastFurnace;
+import zmaster587.advancedRocketry.tile.multiblock.TileEntityBlastFurnace;
 import zmaster587.libVulpes.block.RotatableMachineBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -41,10 +41,10 @@ public class BlockBlastFurnace extends RotatableMachineBlock {
 	{
 		TileEntityBlastFurnace e = (TileEntityBlastFurnace)world.getTileEntity(x, y, z);
 		//TODO: t
-		if(!e.isComplete())
+		if(!e.hasMaster())
 			e.setComplete(x,y,z);
 
-		if(!world.isRemote && e.isComplete()) {
+		if(!world.isRemote && e.hasMaster()) {
 			player.openGui(AdvancedRocketry.instance, GuiHandler.guiId.BlastFurnace.ordinal(), world, x, y, z);
 			return true;
 		}
@@ -75,7 +75,7 @@ public class BlockBlastFurnace extends RotatableMachineBlock {
 	{
 		this.top = icon.registerIcon("advancedRocketry:BlastBrick");
 		this.sides = this.top;
-		this.bottom = this.top; //icon.registerIcon("advancedRocketry:MonitorTop");
+		this.bottom = this.top;
 		this.activeFront = icon.registerIcon("advancedRocketry:BlastBrickFrontActive");
 		this.front = icon.registerIcon("advancedRocketry:BlastBrickFront");
 		this.rear =  this.top;

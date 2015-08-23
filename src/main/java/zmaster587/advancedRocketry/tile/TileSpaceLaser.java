@@ -10,7 +10,7 @@ import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
 import zmaster587.advancedRocketry.integration.CompatibilityMgr;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketMachine;
-import zmaster587.advancedRocketry.satallite.SatelliteLaser;
+import zmaster587.advancedRocketry.satellite.SatelliteLaser;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils;
@@ -482,7 +482,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		}
 
 		if(!this.worldObj.isRemote)
-			PacketHandler.sentToNearby(new PacketMachine(this, (byte)2), this.xCoord, this.yCoord, this.zCoord, 128, this.worldObj.provider.dimensionId);
+			PacketHandler.sendToNearby(new PacketMachine(this, (byte)2), this.xCoord, this.yCoord, this.zCoord, 128, this.worldObj.provider.dimensionId);
 	}
 
 	public int getEnergyPercentScaled(int max) {

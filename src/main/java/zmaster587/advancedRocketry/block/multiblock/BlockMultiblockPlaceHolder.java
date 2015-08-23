@@ -2,7 +2,7 @@ package zmaster587.advancedRocketry.block.multiblock;
 
 import java.util.ArrayList;
 
-import zmaster587.advancedRocketry.tile.multiblock.TileMultiBlockMachine;
+import zmaster587.advancedRocketry.tile.multiblock.TileEntityMultiBlock;
 import zmaster587.advancedRocketry.tile.multiblock.TilePlaceholder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -16,13 +16,17 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+/**
+ * Invisible block used to store blocks that are part of a completed multi-block structure
+ * 
+ */
 public class BlockMultiblockPlaceHolder extends BlockContainer {
 
 	public BlockMultiblockPlaceHolder() {
 		super(Material.iron);
 	}
 
-	
+	//Make invisible
 	@Override
 	public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int x, int y, int z, int l) {
 		return false;
@@ -42,12 +46,11 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 		return true;
 	}
 
+	//Make sure to get the block this one is storing rather than the placeholder itself
 	@Override
 	public ItemStack getPickBlock(MovingObjectPosition target, World world,
 			int x, int y, int z, EntityPlayer player) {
 		TilePlaceholder tile = (TilePlaceholder)world.getTileEntity(x, y, z);
-
-
 		return tile.getReplacedBlock().getPickBlock(target, world, x, y, z, player);
 	}
 
@@ -81,17 +84,6 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 		}
 	}
 
-	@Override
-	public void onBlockDestroyedByPlayer(World world, int x,
-			int y, int z, int meta) {
-
-		super.onBlockDestroyedByPlayer(world, x, y,
-				z, meta);
-
-
-	}
-
-
 
 	@Override
 	public void onBlockPreDestroy(World world, int x,
@@ -99,16 +91,13 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 		super.onBlockPreDestroy(world, x, y, z,
 				oldmeta);
 
-		TilePlaceholder tile = (TilePlaceholder)world.getTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(x, y, z);
 
-		if(tile != null) {
-
-			TileMultiBlockMachine masterTile = (TileMultiBlockMachine)tile.getMasterBlock();
-
-			if(masterTile != null)
-				masterTile.deconstructMultiBlock(world,x,y,z,true);
+		if(tile != null && tile instanceof TilePlaceholder) {
+			tile = ((TilePlaceholder)tile).getMasterBlock();
+			if(tile instanceof TileEntityMultiBlock)
+				((TileEntityMultiBlock)tile).deconstructMultiBlock(world,x,y,z,true);
 		}
-
 	}
 
 	@Override

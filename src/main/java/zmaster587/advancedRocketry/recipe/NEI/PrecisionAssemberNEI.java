@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
-import zmaster587.advancedRocketry.Inventory.multiblock.GuiCrystallizer;
+import zmaster587.advancedRocketry.Inventory.TextureResources;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
 import zmaster587.advancedRocketry.tile.multiblock.TilePrecisionAssembler;
 import zmaster587.libVulpes.interfaces.IRecipe;
@@ -142,7 +142,7 @@ public class PrecisionAssemberNEI extends TemplateRecipeHandler {
 	@Override
     public void drawExtras(int recipe)
     {
-		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiCrystallizer.progressBar);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureResources.progressBars);
 		
 		drawTexturedModalRect(58, 1, 132, 0, 53, 66);
 		

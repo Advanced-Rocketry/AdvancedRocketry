@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.Inventory;
 
-import zmaster587.advancedRocketry.tile.TileEntityBlastFurnace;
+import zmaster587.advancedRocketry.tile.multiblock.TileEntityBlastFurnace;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;

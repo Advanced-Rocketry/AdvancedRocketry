@@ -3,11 +3,10 @@ package zmaster587.advancedRocketry.api;
 import java.util.ArrayList;
 
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.gen.layer.GenLayer;
-import zmaster587.advancedRocketry.world.biome.BiomeGenAlienForest;
-import zmaster587.advancedRocketry.world.biome.BiomeGenHotDryRock;
-import zmaster587.advancedRocketry.world.biome.BiomeGenMoon;
 
+/**
+ * Stores information relating to the biomes and biome registry of AdvancedRocketry
+ */
 public class AdvancedRocketryBiomes {
 	
 	public static final AdvancedRocketryBiomes instance = new AdvancedRocketryBiomes();
@@ -19,25 +18,23 @@ public class AdvancedRocketryBiomes {
 	
 	private AdvancedRocketryBiomes() {
 		registeredBiomes = new ArrayList<BiomeGenBase>();
-		
-		registeredBiomes.add(moonBiome = new BiomeGenMoon(90, false));
-		registeredBiomes.add(alienForest = new BiomeGenAlienForest(91, false));
-		registeredBiomes.add(hotDryBiome = new BiomeGenHotDryRock(256, false));
-		
-		
 	}
 	
-	public static void init() {
-		
-	}
-	
+	/**
+	 * TODO: support id's higher than 255.  
+	 * Any biome registered through vanilla forge does not need to be registered here
+	 * @param biome BiomeGenBase to register with AdvancedRocketry's Biome registry
+	 */
 	public void registerBiome(BiomeGenBase biome) {
 		registeredBiomes.add(biome);
 	}
 	
+	/**
+	 * Gets Biomes from Advanced Rocketry's biomes registry.  If it does not exist attepts to retrieve from vanilla forge
+	 * @param id biome id
+	 * @return BiomeGenBase retrieved from the biome ID
+	 */
 	public BiomeGenBase getBiomeById(int id) {
-		
-		
 		
 		for(BiomeGenBase biome : registeredBiomes) {
 			if( biome.biomeID == id)

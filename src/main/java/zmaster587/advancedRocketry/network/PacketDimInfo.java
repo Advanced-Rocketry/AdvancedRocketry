@@ -54,14 +54,15 @@ public class PacketDimInfo extends BasePacket {
 			return;
 		}
 		
-		
-		if(DimensionManager.getInstance().isDimensionCreated(dimNumber)) {
+		if(dimNumber == 0) {
+			DimensionProperties.overworldProperties.readFromNBT(nbt);
+		}
+		else if( DimensionManager.getInstance().isDimensionCreated(dimNumber)) {
 			DimensionManager.getInstance().getDimensionProperties(dimNumber).readFromNBT(nbt);
 		} else {
-			
-			DimensionManager.getInstance().registerDim(dimNumber, DimensionProperties.createFromNBT(nbt));
-			net.minecraftforge.common.DimensionManager.registerProviderType(dimNumber,ProviderPlanet.class, false);
-			net.minecraftforge.common.DimensionManager.registerDimension(dimNumber, dimNumber);
+			DimensionManager.getInstance().registerDim(DimensionProperties.createFromNBT(dimNumber, nbt));
+			//net.minecraftforge.common.DimensionManager.registerProviderType(dimNumber,ProviderPlanet.class, false);
+			//net.minecraftforge.common.DimensionManager.registerDimension(dimNumber, dimNumber);
 		}
 	}
 

@@ -13,12 +13,12 @@ import zmaster587.advancedRocketry.block.multiblock.BlockMultiblockStructure;
 import zmaster587.advancedRocketry.tile.TileInputHatch;
 import zmaster587.advancedRocketry.tile.TileOutputHatch;
 import zmaster587.advancedRocketry.tile.TileRFBattery;
-import zmaster587.advancedRocketry.util.MultiBattery;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.util.INetworkMachine;
+import zmaster587.libVulpes.util.MultiBattery;
 import zmaster587.libVulpes.util.Vector3F;
 import zmaster587.libVulpes.util.ZUtils;
 import net.minecraft.block.Block;
@@ -34,76 +34,33 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileMultiBlockMachine extends TileEntity implements INetworkMachine {
+public class TileMultiBlockMachine extends TileEntityMultiPowerConsumer {
 
 	public enum NetworkPackets {
 		TOGGLE,
 		POWERERROR
 	}
 
-	protected MultiBattery batteries = new MultiBattery();
 	protected LinkedList<IInventory> itemInPorts = new LinkedList<IInventory>();
 	protected LinkedList<IInventory> itemOutPorts = new LinkedList<IInventory>();
 
-	private int completionTime, currentTime;
-	private int powerPerTick;
+
 	private List<ItemStack> outputItemStacks;
-	protected boolean completeStructure, enabled;
-	protected byte timeAlive = 0;
+	
 	boolean smartInventoryUpgrade = true;
 	//When using smart inventories sometimes setInventory content calls need to be made
 	//This flag prevents infinite recursion by having a value of true if any invCheck has started
 	boolean invCheckFlag = false;
-
-	//On server determines change in power state, on client determines last power state on server
-	boolean hadPowerLastTick = true;
-
+	
 	public TileMultiBlockMachine() {
+		super();
 		outputItemStacks = null;
-		completeStructure = false;
-		enabled = false;
-		completionTime = -1;
-		currentTime = -1;
-		hadPowerLastTick = true;
-	}
-
-	//Needed for GUI stuff
-	public MultiBattery getBatteries() {
-		return batteries;
-	}
-
-	public int getProgress() {
-		return currentTime;
-	}
-
-	public int getTotalProgress() {
-		return completionTime;
-	}
-
-	public String getMachineName() {
-		return "";
-	}
-
-	public void setProgress(int progress) {
-		currentTime = progress;
-	}
-
-	public void setTotalOperationTime(int progress) {
-		completionTime = progress;
-	}
-
-	public boolean isUsableByPlayer(EntityPlayer player) {
-		return player.getDistance(xCoord, yCoord, zCoord) < 64;
 	}
 
 	public List<ItemStack> getOutputs() {
 		return outputItemStacks;
 	}
-
-	public boolean isComplete() {
-		return completeStructure;
-	}
-
+	
 	@Override
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
@@ -172,14 +129,11 @@ public class TileMultiBlockMachine extends TileEntity implements INetworkMachine
 			}
 		}
 	}
-
+	
+	@Override
 	public void setMachineEnabled(boolean enabled) {
-		this.enabled = enabled;
+		super.setMachineEnabled(enabled);
 		onInventoryUpdated();
-	}
-
-	public boolean getMachineEnabled() {
-		return enabled;
 	}
 
 	public void resetCache() {
@@ -196,70 +150,8 @@ public class TileMultiBlockMachine extends TileEntity implements INetworkMachine
 	 * @param blockBroken set true if the block is being broken, otherwise some other means is being used to disassemble the machine
 	 */
 	public void deconstructMultiBlock(World world, int destroyedX, int destroyedY, int destroyedZ, boolean blockBroken) {
-		resetCache();
 		outputItemStacks = null;
-		completionTime = 0;
-		currentTime = 0;
-		completeStructure = false;
-		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.blockMetadata & 7, 2); //Turn off machine
-
-		this.markDirty();
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-
-		//UNDO all the placeholder blocks
-		ForgeDirection front = getFrontDirection();
-
-		Object[][][] structure = getStructure();
-		Vector3F<Integer> offset = getControllerOffset(structure);
-
-
-		//Mostly to make sure IMultiblocks lose their choke-hold on this machines and to revert placeholder blocks
-		for(int y = 0; y < structure.length; y++) {
-			for(int z = 0; z < structure[0].length; z++) {
-				for(int x = 0; x< structure[0][0].length; x++) {
-
-					int globalX = xCoord + (x - offset.x)*front.offsetZ - (z-offset.z)*front.offsetX;
-					int globalY = yCoord - y + offset.y;
-					int globalZ = zCoord - (x - offset.x)*front.offsetX  - (z-offset.z)*front.offsetZ;
-
-
-
-					//This block is being broken anyway so don't bother
-					if(blockBroken && globalX == destroyedX &&
-							globalY == destroyedY &&
-							globalZ == destroyedZ)
-						continue;
-					TileEntity tile = worldObj.getTileEntity(globalX, globalY, globalZ);
-					Block block = worldObj.getBlock(globalX, globalY, globalZ);
-
-
-					if(block instanceof BlockMultiblockStructure) {
-						((BlockMultiblockStructure)block).destroyStructure(worldObj, globalX, globalY, z, worldObj.getBlockMetadata(globalX, globalY, globalZ));
-					}
-
-					if(tile instanceof TilePlaceholder) {
-						TilePlaceholder placeholder = (TilePlaceholder)tile;
-
-						//Must set incomplete BEFORE changing the block to prevent stack overflow!
-						placeholder.setIncomplete();
-
-						worldObj.setBlock(tile.xCoord, tile.yCoord, tile.zCoord, placeholder.getReplacedBlock(), placeholder.getReplacedBlockMeta(), 3);
-
-						//Dont try to set a tile if none existed
-						if(placeholder.getReplacedTileEntity() != null) {
-							NBTTagCompound nbt = new NBTTagCompound();
-							placeholder.getReplacedTileEntity().writeToNBT(nbt);
-
-							worldObj.getTileEntity(tile.xCoord, tile.yCoord, tile.zCoord).readFromNBT(nbt);
-						}
-					}
-					//Make all pointers incomplete
-					else if(tile instanceof IMultiblock) {
-						((IMultiblock)tile).setIncomplete();
-					}
-				}
-			}
-		}
+		super.deconstructMultiBlock(world, destroyedX, destroyedY, destroyedZ, blockBroken);
 	}
 
 	protected void processComplete() {
@@ -272,13 +164,6 @@ public class TileMultiBlockMachine extends TileEntity implements INetworkMachine
 
 		this.markDirty();
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-	}
-
-
-	public ForgeDirection getFrontDirection() {
-		//Make sure meta is not -1
-		this.blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-		return RotatableBlock.getFront(this.blockMetadata);
 	}
 
 	//When the output of the recipe is dumped to the inventory
@@ -299,11 +184,6 @@ public class TileMultiBlockMachine extends TileEntity implements INetworkMachine
 				}
 			}
 		}
-	}
-
-	//True if the machine is running
-	public boolean isRunning() {
-		return completionTime > 0;
 	}
 
 	//Attempt to get a valid recipe given the inputs, null if none found
@@ -347,14 +227,6 @@ public class TileMultiBlockMachine extends TileEntity implements INetworkMachine
 	//Get outputs of the machine
 	protected List<ItemStack> getOutputs(IRecipe recipe) {
 		return recipe.getOutput();
-	}
-
-	public void useEnergy(int amt) {
-		batteries.extractEnergy(ForgeDirection.UNKNOWN, amt, false);
-	}
-
-	public boolean hasEnergy(int amt) {
-		return batteries.getEnergyStored(ForgeDirection.UNKNOWN) >= amt;
 	}
 
 
@@ -445,148 +317,8 @@ public class TileMultiBlockMachine extends TileEntity implements INetworkMachine
 		completeStructure = completeStructure();
 	}*/
 
-	public Object[][][] getStructure() {
-		return null;
-	}
 
-	public boolean attemptCompleteStructure() {
-		if(!completeStructure)
-			completeStructure = completeStructure();
-
-		if(completeStructure)
-			onInventoryUpdated();
-		return completeStructure;
-	}
-
-	/**
-	 * Returns a hashset of blocks which are allowable in spaces set as *
-	 */
-	protected HashSet<Block> getAllowableWildCardBlocks() {
-		return new HashSet<Block>();
-	}
-
-	/**
-	 * Use '*' to allow any kind of Hatch, or energy device or anything returned by getAllowableWildcards
-	 * Use 'L' for liquid hatches TODO
-	 * Use 'H' for item hatch TODO
-	 * Use 'P' for power TODO
-	 * Use a class extending tile entity to require that tile be at that location
-	 * Use a Block to force the user to place that block there
-	 * @return true if the structure is valid
-	 */
-	protected boolean completeStructure() {
-
-		//Make sure the environment is clean
-		resetCache();
-
-		Object[][][] structure = getStructure();
-
-		Vector3F<Integer> offset = getControllerOffset(structure);
-
-		ForgeDirection front = getFrontDirection();
-
-		//Store tile entities for later processing so we don't risk the check failing halfway through leaving half the multiblock assigned
-		LinkedList<TileEntity> tiles = new LinkedList<TileEntity>();
-
-		for(int y = 0; y < structure.length; y++) {
-			for(int z = 0; z < structure[0].length; z++) {
-				for(int x = 0; x< structure[0][0].length; x++) {
-
-					int globalX = xCoord + (x - offset.x)*front.offsetZ - (z-offset.z)*front.offsetX;
-					int globalY = yCoord - y + offset.y;
-					int globalZ = zCoord - (x - offset.x)*front.offsetX  - (z-offset.z)*front.offsetZ;
-
-					TileEntity tile = worldObj.getTileEntity(globalX, globalY, globalZ);
-					Block block = worldObj.getBlock(globalX, globalY, globalZ);
-
-					if(tile != null)
-						tiles.add(tile);
-
-					//If the other block already thinks it's complete just assume valid
-					if(tile instanceof TilePlaceholder) {
-						if(((IMultiblock)tile).getMasterBlock() != this)
-							return false;
-						else 
-							continue;
-					}
-
-					if(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == '*') {
-
-						if(!(tile instanceof TileInventoryHatch) && !(tile instanceof TileRFBattery) && !getAllowableWildCardBlocks().contains(block)) {	
-							return false;
-						}
-
-					}
-					else if(structure[y][z][x] instanceof Block && block != structure[y][z][x]) {
-
-						return false;
-					}
-					else if(structure[y][z][x] instanceof Class<?> && tile.getClass() != structure[y][z][x]) {
-
-						return false;
-					}
-
-				}
-			}
-		}
-
-		for(int y = 0; y < structure.length; y++) {
-			for(int z = 0; z < structure[0].length; z++) {
-				for(int x = 0; x< structure[0][0].length; x++) {
-
-					int globalX = xCoord + (x - offset.x)*front.offsetZ - (z-offset.z)*front.offsetX;
-					int globalY = yCoord - y + offset.y;
-					int globalZ = zCoord - (x - offset.x)*front.offsetX  - (z-offset.z)*front.offsetZ;
-
-					TileEntity tile = worldObj.getTileEntity(globalX, globalY, globalZ);
-					Block block = worldObj.getBlock(globalX, globalY, globalZ);
-
-					if(block instanceof BlockMultiblockStructure) {
-						((BlockMultiblockStructure)block).completeStructure(worldObj, globalX, globalY, z, worldObj.getBlockMetadata(globalX, globalY, globalZ));
-					}
-
-					if(!(tile instanceof IMultiblock) && !(tile instanceof TileMultiBlockMachine)) {
-						byte meta = (byte)worldObj.getBlockMetadata(globalX, globalY, globalZ);
-
-						worldObj.setBlock(globalX, globalY, globalZ, AdvRocketryBlocks.blockPlaceHolder);
-						TilePlaceholder newTile = (TilePlaceholder)worldObj.getTileEntity(globalX, globalY, globalZ);
-
-						newTile.setReplacedBlock(block);
-						newTile.setReplacedBlockMeta(meta);
-						newTile.setReplacedTileEntity(tile);
-						newTile.setMasterBlock(xCoord, yCoord, zCoord);
-					}
-				}
-			}
-		}
-
-		//Now that we know the multiblock is valid we can assign
-		for(TileEntity tile : tiles) {
-			if(tile instanceof IMultiblock)
-				((IMultiblock) tile).setComplete(xCoord, yCoord, zCoord);
-
-			if(tile instanceof TileInputHatch)
-				itemInPorts.add((IInventory) tile);
-			else if(tile instanceof TileOutputHatch) 
-				itemOutPorts.add((IInventory) tile);
-			else if(tile instanceof TileRFBattery) {
-				batteries.addBattery((IUniversalEnergy) tile);
-			}
-		}
-		return true;
-	}
-
-	private Vector3F<Integer> getControllerOffset(Object[][][] structure) {
-		for(int y = 0; y < structure.length; y++) {
-			for(int z = 0; z < structure[0].length; z++) {
-				for(int x = 0; x< structure[0][0].length; x++) {
-					if(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c')
-						return new Vector3F<Integer>(x, y, z);
-				}
-			}
-		}
-		return null;
-	}
+	
 
 	//Must be overridden or an NPE will occur
 	public List<IRecipe> getMachineRecipeList() {
@@ -618,26 +350,20 @@ public class TileMultiBlockMachine extends TileEntity implements INetworkMachine
 		}
 	}
 
-	public void setMachineRunning(boolean running) {
-		if(running && this.blockMetadata < 8) {
-			this.blockMetadata |= 8;
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.blockMetadata, 2);
-		}
-		else if(!running && this.blockMetadata >= 8) {
-			this.blockMetadata &= 7;
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.blockMetadata, 2); //Turn off machine
-		}
+	@Override
+	protected void integrateTile(TileEntity tile) {
+		super.integrateTile(tile);
+		
+		if(tile instanceof TileInputHatch)
+			itemInPorts.add((IInventory) tile);
+		else if(tile instanceof TileOutputHatch) 
+			itemOutPorts.add((IInventory) tile);
 	}
-
+	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-
-		nbt.setInteger("completionTime", this.completionTime);
-		nbt.setInteger("currentTime", this.currentTime);
-		nbt.setInteger("powerPerTick", this.powerPerTick);
-		nbt.setBoolean("enabled", enabled);
-
+		
 		//Save output items if applicable
 		if(outputItemStacks != null) {
 			NBTTagList list = new NBTTagList();
@@ -654,11 +380,6 @@ public class TileMultiBlockMachine extends TileEntity implements INetworkMachine
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
-		completionTime = nbt.getInteger("completionTime");
-		currentTime = nbt.getInteger("currentTime");
-		powerPerTick = nbt.getInteger("powerPerTick");
-		enabled = nbt.getBoolean("enabled");
-
 		//Load output items being processed if applicable
 		if(nbt.hasKey("outputItems")) {
 			outputItemStacks = new LinkedList<ItemStack>();
@@ -672,35 +393,28 @@ public class TileMultiBlockMachine extends TileEntity implements INetworkMachine
 		}
 	}
 
+	public boolean attemptCompleteStructure() {
+		boolean completeStructure = super.attemptCompleteStructure();
+		if(completeStructure)
+			onInventoryUpdated();
+		
+		return completeStructure;
+	}
+	
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {
-		if(id == NetworkPackets.TOGGLE.ordinal()) {
-			out.writeBoolean(enabled);
-		}
-		if(id == NetworkPackets.POWERERROR.ordinal()) {
-			out.writeBoolean(hadPowerLastTick);
-		}
+		super.writeDataToNetwork(out, id);
 	}
 
 	@Override
 	public void readDataFromNetwork(ByteBuf in, byte packetId,
 			NBTTagCompound nbt) {
-		if(packetId == NetworkPackets.TOGGLE.ordinal()) {
-			nbt.setBoolean("enabled", in.readBoolean());
-		}
-		else if(packetId == NetworkPackets.POWERERROR.ordinal()) {
-			nbt.setBoolean("hadPowerLastTick", in.readBoolean());
-		}
+		super.readDataFromNetwork(in, packetId, nbt);
 	}
 
 	@Override
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
-		if(id == NetworkPackets.TOGGLE.ordinal()) {
-			setMachineEnabled(nbt.getBoolean("enabled"));
-		}
-		else if(id == NetworkPackets.TOGGLE.ordinal()) {
-			hadPowerLastTick = nbt.getBoolean("hadPowerLastTick");
-		}
+		super.useNetworkData(player, side, id, nbt);
 	}
 }

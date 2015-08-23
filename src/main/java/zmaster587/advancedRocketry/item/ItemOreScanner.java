@@ -8,8 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.ISatallite;
-import zmaster587.advancedRocketry.satallite.OreMappingSatallite;
+import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
+import zmaster587.advancedRocketry.satellite.OreMappingSatellite;
 
 public class ItemOreScanner extends Item {
 
@@ -46,7 +46,7 @@ public class ItemOreScanner extends Item {
 	}
 
 
-	public void interactSatellite(ISatallite satellite,EntityPlayer player, World world, int x, int y, int z) {
+	public void interactSatellite(SatelliteBase satellite,EntityPlayer player, World world, int x, int y, int z) {
 		satellite.performAction(player, world,x,y,z);
 	}
 

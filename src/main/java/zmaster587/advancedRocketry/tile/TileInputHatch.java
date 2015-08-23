@@ -14,8 +14,8 @@ public class TileInputHatch extends TileInventoryHatch {
 	}
 	
 	@Override
-	public String getInventoryName() {
-		return "Input Hatch";
+	public String getModularInventoryName() {
+		return "tile.hatch.0.name";
 	}
 	
 	@Override

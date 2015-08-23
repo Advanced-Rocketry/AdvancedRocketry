@@ -61,7 +61,7 @@ public class RendererPrecisionAssembler extends TileEntitySpecialRenderer {
 		
 		if(multiBlockTile.isRunning()) {
 
-			float progress = multiBlockTile.getProgress()/(float)multiBlockTile.getTotalProgress();
+			float progress = multiBlockTile.getProgress(0)/(float)multiBlockTile.getTotalProgress(0);
 			float process,tray;
 			tray = process = 3*progress;
 

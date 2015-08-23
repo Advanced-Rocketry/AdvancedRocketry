@@ -6,6 +6,10 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+/**
+ * InvisLight source
+ *
+ */
 public class BlockLightSource extends Block {
 
 	public BlockLightSource() {

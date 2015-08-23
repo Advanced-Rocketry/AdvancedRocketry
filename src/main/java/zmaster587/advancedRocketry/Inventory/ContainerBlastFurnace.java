@@ -2,7 +2,7 @@ package zmaster587.advancedRocketry.Inventory;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import zmaster587.advancedRocketry.tile.TileEntityBlastFurnace;
+import zmaster587.advancedRocketry.tile.multiblock.TileEntityBlastFurnace;
 import zmaster587.libVulpes.gui.IlimitedItemSlotEntity;
 import zmaster587.libVulpes.gui.SlotLimitedItem;
 import zmaster587.libVulpes.gui.SlotMachineOutput;
@@ -26,7 +26,7 @@ public class ContainerBlastFurnace extends Container {
 			addSlotToContainer(new SlotLimitedItem(tile, i+6, 54 + 18*(i % 2), 19 + 18*(i/2), (IlimitedItemSlotEntity) tile));
 		}
 		for(int i=0; i < 6; i++) {
-			addSlotToContainer(new SlotMachineOutput(inventoryPlayer.player,tile, i+12, 136 + 18*(i % 2), 19 + 18*(i/2)));
+			addSlotToContainer(new SlotMachineOutput(tile, i+12, 136 + 18*(i % 2), 19 + 18*(i/2)));
 		}
 
 		// Player inventory

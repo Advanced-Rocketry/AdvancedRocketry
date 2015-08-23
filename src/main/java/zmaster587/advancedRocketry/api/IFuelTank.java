@@ -7,6 +7,14 @@ import net.minecraft.world.World;
  */
 public interface IFuelTank {
 	
-	//Returns the capacity for the container
+	//Returns 
+	/**
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param meta
+	 * @return the capacity for the container
+	 */
 	public int getMaxFill(World world, int x, int y, int z , int meta);
 }

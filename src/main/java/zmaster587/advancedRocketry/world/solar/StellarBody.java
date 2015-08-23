@@ -8,10 +8,19 @@ public class StellarBody {
 	
 	private int temperature;
 	private List<Planet> planets;
+	int numPlanets;
+	int discoveredPlanets;
 	
 	public StellarBody(int temperature) {
 		this.temperature = temperature;
-		
+	}
+	
+	public int getNumPlanets() {
+		return numPlanets;
+	}
+	
+	public int getNumberPlanets() {
+		return discoveredPlanets;
 	}
 	
 	public int getTemperature() {

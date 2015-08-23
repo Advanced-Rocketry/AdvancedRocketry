@@ -43,11 +43,11 @@ public class BlockRocketMotor extends Block implements IRocketEngine {
 
 	@Override
 	public int getThrust(World world, int x, int y, int z) {
-		return 100;
+		return 10;
 	}
 
 	@Override
 	public int getFuelConsumptionRate(World world, int x, int y, int z) {
-		return 10;
+		return 1;
 	}
 }

@@ -27,7 +27,6 @@ public class ItemIngredient extends Item {
 	
 	public ItemIngredient(int num) {
 		super();
-		this.setCreativeTab(CreativeTabs.tabTransport);
 		numIngots = num;
 		setHasSubtypes(true);
 		setMaxDamage(0);

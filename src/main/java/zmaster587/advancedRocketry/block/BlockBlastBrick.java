@@ -3,7 +3,7 @@ package zmaster587.advancedRocketry.block;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.tile.TileEntityBlastFurnace;
+import zmaster587.advancedRocketry.tile.multiblock.TileEntityBlastFurnace;
 import zmaster587.libVulpes.tile.TileEntityPointer;
 import zmaster587.libVulpes.tile.TileInventoriedPointer;
 import net.minecraft.block.Block;

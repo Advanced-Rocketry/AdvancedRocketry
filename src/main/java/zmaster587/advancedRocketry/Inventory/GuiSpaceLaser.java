@@ -17,15 +17,12 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class GuiSpaceLaser extends GuiContainer {
 
 	private ResourceLocation backdrop = new ResourceLocation("advancedrocketry", "textures/gui/LaserTile.png");
-	private ResourceLocation buttonLeft[] = {new ResourceLocation("advancedrocketry", "textures/gui/GuiArrowLeft.png"), new ResourceLocation("advancedrocketry", "textures/gui/GuiArrowLeft_hover.png"), new ResourceLocation("advancedrocketry", "textures/gui/GuiArrowLeft_pressed.png"), null};
-	private ResourceLocation buttonRight[] = {new ResourceLocation("advancedrocketry", "textures/gui/GuiArrowRight.png"), new ResourceLocation("advancedrocketry", "textures/gui/GuiArrowRight_hover.png"), new ResourceLocation("advancedrocketry", "textures/gui/GuiArrowRight_pressed.png"), null};
 	private TileSpaceLaser laserTile;
 	private int prevX, prevZ;
 
@@ -59,8 +56,8 @@ public class GuiSpaceLaser extends GuiContainer {
 		ybox.setCanLoseFocus(true);
 		ybox.setEnabled(true);
 
-		modeDown = new GuiImageButton(0, x + 103, y + 20, 5, 8, buttonLeft);
-		modeUp = new GuiImageButton(1, x + 157, y + 20, 5, 8, buttonRight);
+		modeDown = new GuiImageButton(0, x + 103, y + 20, 5, 8, TextureResources.buttonLeft);
+		modeUp = new GuiImageButton(1, x + 157, y + 20, 5, 8,  TextureResources.buttonRight);
 		this.buttonList.add(modeUp);
 		this.buttonList.add(modeDown);
 		this.buttonList.add(new GuiButton(2, x + 103, y + 62, 34,20, "Reset"));

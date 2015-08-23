@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import zmaster587.advancedRocketry.Inventory.multiblock.GuiCrystallizer;
+import zmaster587.advancedRocketry.Inventory.TextureResources;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
 import zmaster587.advancedRocketry.tile.multiblock.TileCrystallizer;
 import zmaster587.libVulpes.interfaces.IRecipe;
@@ -153,7 +153,7 @@ public class CrystallizerNEI extends TemplateRecipeHandler {
 	@Override
 	public void drawExtras(int recipe)
 	{
-		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiCrystallizer.progressBar);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureResources.progressBars);
 		drawTexturedModalRect(70, 3, 0, 13, 31, 66);
 		drawProgressBar(74, 7, 31, 0, 23, 49, 50, 3);
 	}

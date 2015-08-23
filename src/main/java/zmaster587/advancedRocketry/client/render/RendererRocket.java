@@ -60,8 +60,9 @@ public class RendererRocket extends Render {
 		//Render tile entities if applicable
 		for(TileEntity tile : storage.getTileEntityList()) {
 			TileEntitySpecialRenderer renderer = (TileEntitySpecialRenderer)TileEntityRendererDispatcher.instance.mapSpecialRenderers.get(tile.getClass());
-			if(renderer != null )
+			if(renderer != null ) {
 				renderer.renderTileEntityAt(tile, tile.xCoord, tile.yCoord,  tile.zCoord, f1);
+			}
 		}
 		GL11.glPopMatrix();
 	}

@@ -8,12 +8,25 @@ import zmaster587.advancedRocketry.entity.EntityRocket;
 
 public interface IInfrastructure {
 	
-	//Called when the rocket unlinks the object
+	/**
+	 * Called when the rocket unlinks the object
+	 */
 	public void unlinkRocket();
 	
-	// Returns true if the object is to be automatically unlinked by the rocket when launched
+	/**
+	 * @return true if the object is to be automatically unlinked by the rocket when launched
+	 */
 	public boolean disconnectOnLiftOff();
 	
-	//Called when the rocket attempts to link to the block
-	public void linkRocket(EntityRocket rocket);
+	/**
+	 * Called when the rocket attempts to link to the block
+	 * @param rocket Rocket Requesting the link
+	 * @return true if the infrastructure should be allowed to link
+	 */
+	public boolean linkRocket(EntityRocket rocket);
+	
+	/**
+	 * @return maximum link distance in block for the tile
+	 */
+	public int getMaxLinkDistance();
 }

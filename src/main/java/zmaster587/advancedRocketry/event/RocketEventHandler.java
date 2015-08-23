@@ -18,10 +18,12 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import zmaster587.advancedRocketry.Inventory.TextureResources;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
@@ -36,10 +38,12 @@ import zmaster587.advancedRocketry.world.DimensionManager;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.ZUtils;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 
 public class RocketEventHandler extends Gui {
 
-	private ResourceLocation background = new ResourceLocation("advancedrocketry:textures/gui/rocketHUD.png");
+	private ResourceLocation background = TextureResources.rocketHud;
 	private static ClientDynamicTexture earth;
 	private static ClientDynamicTexture outerBounds;
 	private static final int getImgSize = 512;
@@ -59,7 +63,8 @@ public class RocketEventHandler extends Gui {
 			}
 		}
 	}
-
+	
+	
 	@SubscribeEvent
 	public void onRocketLand(RocketLandedEvent event) {
 
@@ -72,6 +77,7 @@ public class RocketEventHandler extends Gui {
 				GL11.glDeleteTextures(outerBounds.getTextureId());
 			outerBounds = null;
 			earth = null;
+			mapReady = false;
 		}
 	}
 
@@ -95,7 +101,6 @@ public class RocketEventHandler extends Gui {
 		//Multi thread texture creation b/c it can be expensive
 		
 		new Thread(new Runnable() {
-
 			@Override
 			public void run() {
 
@@ -109,6 +114,7 @@ public class RocketEventHandler extends Gui {
 
 				for(int i = 0; i < getImgSize*getImgSize; i++) {
 					//TODO: Optimize
+					//TODO: fix outer layer
 					int xOffset = (i % getImgSize);
 					int yOffset = (i / getImgSize);
 
@@ -131,19 +137,6 @@ public class RocketEventHandler extends Gui {
 						}
 
 						int intColor = ( (color.colorValue & 0xFF) << 16) | ( ( color.colorValue >> 16 ) & 0xFF ) | ( color.colorValue & 0xFF00 );
-
-						//If water get the first nonwater block
-						/*if(color == MapColor.waterColor) {
-					MapColor color2 = MapColor.airColor;
-
-					for(; yPosition > 0; yPosition--) {
-						if((color2 = event.world.getBlock(xPosition, yPosition, zPosition).getMapColor(event.world.getBlockMetadata(xPosition, yPosition, zPosition))) != MapColor.waterColor) {
-							break;
-						}
-					}
-					intColor = 0xff2121;
-
-				}*/
 
 						//Put into the table and make opaque
 						table.put(i, intColor | 0xFF000000);
@@ -205,16 +198,13 @@ public class RocketEventHandler extends Gui {
 				mapReady = true;
 			}
 		}, "Planet Texture Creator").start();
-
-
 	}
-
-
-
+	
+	
 	//@SubscribeEvent
 	public static void onPostWorldRender(float partialTicks) {
 
-		if(!mapReady )//&& (event.entityPlayer.ridingEntity == null || !(event.entityPlayer.ridingEntity instanceof EntityRocket)) )
+		if(!mapReady )
 			return;
 		
 
@@ -239,9 +229,6 @@ public class RocketEventHandler extends Gui {
 
 		Tessellator tess = Tessellator.instance;
 
-		//GL11.glTranslated(Minecraft.getMinecraft().renderViewEntity.posX, Minecraft.getMinecraft().renderViewEntity.posY, Minecraft.getMinecraft().renderViewEntity.posZ);
-
-
 		//Less detailed land
 
 		tess.startDrawingQuads();
@@ -260,17 +247,7 @@ public class RocketEventHandler extends Gui {
 		
 		//Detailed Land
 		tess.setColorRGBA_F(brightness, brightness, brightness, opacityFromHeight);
-		RenderHelper.renderTopFaceWithUV(tess, -10 , size, size, -size,  -size, .2f, .8f, .2f, 0.8f);
-
-		size *= 1.15f;
-		
-		tess.setColorRGBA_F(brightness, brightness, brightness, opacityFromHeight * 0.8f);
-		RenderHelper.renderTopFaceWithUV(tess, -10.01, size, size, -size,  -size, .05f, .95f, .05f, 0.95f);
-
-		size *= 1.18f;
-		
-		tess.setColorRGBA_F(brightness, brightness, brightness, opacityFromHeight * 0.4f);
-		RenderHelper.renderTopFaceWithUV(tess, -10.02, size, size, -size,  -size, 0f, 1f, 0f, 1f);
+		RenderHelper.renderTopFaceWithUV(tess, -10 , size, size, -size,  -size, 0f, 1f, 0f, 1f);
 		
 		tess.draw();
 
@@ -299,19 +276,12 @@ public class RocketEventHandler extends Gui {
 		GL11.glPopAttrib();
 		GL11.glPopMatrix();
 	}
-
+	
 	@SubscribeEvent
 	public void onScreenRender(RenderGameOverlayEvent event) {
 		Entity ride;
-
 		if(event.type == ElementType.HOTBAR && (ride = Minecraft.getMinecraft().thePlayer.ridingEntity) instanceof EntityRocket) {
 			EntityRocket rocket = (EntityRocket)ride;
-
-			//If the space bar is pressed then send a packet to the server and launch the rocket
-			if(Keyboard.isKeyDown(Keyboard.KEY_SPACE) && !rocket.isInFlight()) {
-				PacketHandler.sendToServer(new PacketEntity(rocket, (byte)EntityRocket.PacketType.LAUNCH.ordinal()));
-				rocket.launch();
-			}
 
 			GL11.glEnable(GL11.GL_BLEND);
 
@@ -323,6 +293,7 @@ public class RocketEventHandler extends Gui {
 			float percentOrbit = MathHelper.clamp_float((float) ((rocket.posY - rocket.worldObj.provider.getAverageGroundLevel())/(float)(Configuration.orbit-rocket.worldObj.provider.getAverageGroundLevel())), 0f, 1f);
 			this.drawTexturedModalRect(3, 8 + (int)(79*(1 - percentOrbit)), 17, 0, 6, 6); //6 to 83
 
+			//Draw Velocity indicator
 			this.drawTexturedModalRect(3, 94 + (int)(69*(0.5 - (MathHelper.clamp_float((float) (rocket.motionY), -1f, 1f)/2f))), 17, 0, 6, 6); //94 to 161
 
 			//Draw fuel indicator

@@ -33,7 +33,6 @@ public class RocketFx extends EntityFX {
         this.particleMaxAge = (int)(8.0D / (Math.random() * 0.8D + 0.6D));
 	}
 
-	//TODO: glow in the dark
 	@Override
 	public void renderParticle(Tessellator tess, float x1,
 			float y1, float z1, float x2,
@@ -51,11 +50,9 @@ public class RocketFx extends EntityFX {
         float f13 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)x1 - interpPosZ);
         float f10 = 0.1F * this.particleScale;
         
-        //GL11.glColor4f(this.particleRed, this.particleGreen, this.particleBlue, 1f);
-
         
         
-        tess.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, 1f);//this.particleAlpha);
+        tess.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, 1f);
         
         tess.addVertexWithUV((double)(f11 - y1 * f10 - y2 * f10), (double)(f12 - z1 * f10), (double)(f13 - x2 * f10 - z2 * f10), 1, 1);
         tess.addVertexWithUV((double)(f11 - y1 * f10 + y2 * f10), (double)(f12 + z1 * f10), (double)(f13 - x2 * f10 + z2 * f10), 1, 0);

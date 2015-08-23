@@ -13,22 +13,37 @@ public class ClientDynamicTexture {
 	private static final byte BYTES_PER_PIXEL = 4;
 	int textureId;
 	
+	/**
+	 * Creates a texture with the default 512x512 pixels
+	 */
 	public ClientDynamicTexture() {
-		image = new BufferedImage(512, 512, BufferedImage.TYPE_INT_ARGB);
-		textureId = -1;
-		init();
+		this(512,512);
 	}
 	
+	/**
+	 * 
+	 * @param x x size of the image
+	 * @param y y size of the image
+	 */
 	public ClientDynamicTexture(int x, int y) {
 		image = new BufferedImage(x, y, BufferedImage.TYPE_INT_ARGB);
 		textureId = -1;
 		init();
 	}
 	
+	/**
+	 * @return this buffered image
+	 */
 	public BufferedImage getImage() {
 		return image;
 	}
 	
+	/**
+	 * 
+	 * @param x x location of the pixel
+	 * @param y y location of the pixel
+	 * @param color color in RGBA8
+	 */
 	public void setPixel(int x, int y, int color) {
 		
 		ByteBuffer buffer = BufferUtils.createByteBuffer(image.getHeight() * image.getWidth() * BYTES_PER_PIXEL);;
@@ -40,6 +55,9 @@ public class ClientDynamicTexture {
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
 	}
 	
+	/**
+	 * @return IntBuffer containing the pixels for the image
+	 */
 	public IntBuffer getByteBuffer() {
 		ByteBuffer buffer = BufferUtils.createByteBuffer(image.getHeight() * image.getWidth() * BYTES_PER_PIXEL);;
 		
@@ -52,7 +70,7 @@ public class ClientDynamicTexture {
 		ret.put(pixels);
 		return ret;
 	}
-	
+
 	public void setByteBuffer(IntBuffer buffer) {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, getTextureId());
 		
@@ -95,6 +113,10 @@ public class ClientDynamicTexture {
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
 	}
 	
+	/**
+	 * Returns the GL texture ID of this image, if it doesnt exist, then creates it
+	 * @return the GL texture ID of this image
+	 */
 	public int getTextureId() {
 		if(textureId != -1)
 			return textureId;

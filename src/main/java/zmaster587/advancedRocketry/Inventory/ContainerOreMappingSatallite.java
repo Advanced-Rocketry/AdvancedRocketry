@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.Inventory;
 
-import zmaster587.advancedRocketry.satallite.OreMappingSatallite;
+import zmaster587.advancedRocketry.satellite.OreMappingSatellite;
 import codechicken.lib.inventory.InventorySimple;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -15,9 +15,9 @@ import net.minecraftforge.oredict.OreDictionary;
 public class ContainerOreMappingSatallite extends Container {
 
 
-	private OreMappingSatallite inv;
+	private OreMappingSatellite inv;
 
-	ContainerOreMappingSatallite(OreMappingSatallite inv, InventoryPlayer inventoryPlayer) {
+	ContainerOreMappingSatallite(OreMappingSatellite inv, InventoryPlayer inventoryPlayer) {
 		super();
 		this.inv = inv;
 

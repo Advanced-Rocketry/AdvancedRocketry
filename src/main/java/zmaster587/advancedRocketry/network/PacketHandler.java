@@ -41,7 +41,7 @@ public class PacketHandler {
 		codec.addDiscriminator(0, PacketMachine.class);
 		codec.addDiscriminator(1, PacketEntity.class);
 		codec.addDiscriminator(2, PacketDimInfo.class);
-
+		codec.addDiscriminator(3, PacketSatellite.class);
 
 		channels.putAll(NetworkRegistry.INSTANCE.newChannel(AdvancedRocketry.modId, codec, new HandlerServer()));
 
@@ -73,6 +73,11 @@ public class PacketHandler {
 		}
 	}
 
+	public static final void sendToAll(BasePacket packet) {
+		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
+		channels.get(Side.SERVER).writeOutbound(packet);
+	}
+	
 	public static final void sendToPlayer(BasePacket packet, EntityPlayer player) {
 		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
 		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
@@ -85,7 +90,7 @@ public class PacketHandler {
 		channels.get(Side.SERVER).writeOutbound(packet);
 	}
 	
-	public static final void sentToNearby(BasePacket packet,int dimId, int x, int y, int z, double dist) {
+	public static final void sendToNearby(BasePacket packet,int dimId, int x, int y, int z, double dist) {
 		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
 		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(new NetworkRegistry.TargetPoint(dimId, x, y, z,dist));
 		channels.get(Side.SERVER).writeOutbound(packet);

@@ -2,7 +2,9 @@ package zmaster587.advancedRocketry.world;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.world.gen.BiomeCacheExtended;
 import zmaster587.advancedRocketry.world.gen.GenLayerHillsExtended;
@@ -36,22 +38,24 @@ import net.minecraft.world.gen.layer.IntCache;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 
 public class ChunkManagerPlanet extends WorldChunkManager {
-
+	//TODO: make higher biome ids work
 	/** A GenLayer containing the indices into BiomeGenBase.biomeList[] */
 	private GenLayer biomeIndexLayer;
 
-	private BiomeCacheExtended biomeCache;
+	private BiomeCache biomeCache;
 
 	private GenLayer genBiomes;
 
 	private List<BiomeEntry> biomes;
 
-	
+
 	public ChunkManagerPlanet(long seed, WorldTypePlanetGen default1) {
 		super(seed, default1);
 
-		this.biomeCache = new BiomeCacheExtended(this);
-		GenLayer[] agenlayer = initializeAllBiomeGenerators(seed, default1);
+		this.biomeCache = new BiomeCache(this);//new BiomeCacheExtended(this);
+		//TODO: more biomes
+		//TODO: remove rivers
+		GenLayer[] agenlayer = initializeAllBiomeGenerators(seed, default1);//GenLayer.initializeAllBiomeGenerators(seed, default1); //;
 		agenlayer = getModdedBiomeGenerators(default1, seed, agenlayer);
 		this.genBiomes = agenlayer[0];
 		this.biomeIndexLayer = agenlayer[1];
@@ -136,7 +140,7 @@ public class ChunkManagerPlanet extends WorldChunkManager {
 		GenLayerVoronoiExtended genlayervoronoizoom = new GenLayerVoronoiExtended(10L, genlayerrivermix);
 		genlayerrivermix.initWorldGenSeed(p_75901_0_);
 		genlayervoronoizoom.initWorldGenSeed(p_75901_0_);
-		
+
 		return new GenLayer[] {genlayerrivermix, genlayervoronoizoom, genlayerrivermix};
 	}
 
@@ -145,6 +149,7 @@ public class ChunkManagerPlanet extends WorldChunkManager {
 	/**
 	 * Returns a list of rainfall values for the specified blocks. Args: listToReuse, x, z, width, length.
 	 */
+	@Override
 	public float[] getRainfall(float[] p_76936_1_, int p_76936_2_, int p_76936_3_, int p_76936_4_, int p_76936_5_)
 	{
 		IntCache.resetIntCache();
@@ -163,6 +168,9 @@ public class ChunkManagerPlanet extends WorldChunkManager {
 				BiomeGenBase biome = AdvancedRocketryBiomes.instance.getBiomeById(aint[i1]);
 
 				//TODO: debug
+				if(biome == null)
+					System.out.println("shit");
+
 				float f = (float)biome.getIntRainfall() / 65536.0F;
 
 				if (f > 1.0F)
@@ -192,10 +200,11 @@ public class ChunkManagerPlanet extends WorldChunkManager {
 	/**
 	 * Returns an array of biomes for the location input.
 	 */
-	
-    /**
-     * Returns the BiomeGenBase related to the x, z position on the world.
-     */
+
+	/**
+	 * Returns the BiomeGenBase related to the x, z position on the world.
+	 */
+	@Override
     public BiomeGenBase getBiomeGenAt(int p_76935_1_, int p_76935_2_)
     {
         return this.biomeCache.getBiomeGenAt(p_76935_1_, p_76935_2_);
@@ -203,12 +212,17 @@ public class ChunkManagerPlanet extends WorldChunkManager {
 
 	public BiomeGenBase[] getBiomesForGeneration(BiomeGenBase[] p_76937_1_, int p_76937_2_, int p_76937_3_, int p_76937_4_, int p_76937_5_,  DimensionProperties properties)
 	{
+		GenLayerBiomePlanet.setupBiomesForUse(biomes);
+		//return super.getBiomesForGeneration(p_76937_1_, p_76937_2_, p_76937_3_, p_76937_4_, p_76937_5_);
+
+		IntCache.resetIntCache();
+
 		if (p_76937_1_ == null || p_76937_1_.length < p_76937_4_ * p_76937_5_)
 		{
 			p_76937_1_ = new BiomeGenBase[p_76937_4_ * p_76937_5_];
 		}
 
-		GenLayerBiomePlanet.setupBiomesForUse(biomes);
+
 		int[] aint = this.genBiomes.getInts(p_76937_2_, p_76937_3_, p_76937_4_, p_76937_5_);
 
 		try
@@ -233,45 +247,62 @@ public class ChunkManagerPlanet extends WorldChunkManager {
 		}
 	}
 
+	@Override
 	public BiomeGenBase[] loadBlockGeneratorData(BiomeGenBase[] p_76933_1_, int p_76933_2_, int p_76933_3_, int p_76933_4_, int p_76933_5_)
 	{
 		return this.getBiomeGenAt(p_76933_1_, p_76933_2_, p_76933_3_, p_76933_4_, p_76933_5_, true);
 	}
 
+
+	//TODO: make it allow more biomes later
 	/**
 	 * Return a list of biomes for the specified blocks. Args: listToReuse, x, y, width, length, cacheFlag (if false,
 	 * don't check biomeCache to avoid infinite loop in BiomeCacheBlock)
 	 */
 	@Override
-	public BiomeGenBase[] getBiomeGenAt(BiomeGenBase[] p_76931_1_, int p_76931_2_, int p_76931_3_, int p_76931_4_, int p_76931_5_, boolean p_76931_6_ )
+	public BiomeGenBase[] getBiomeGenAt(BiomeGenBase[] biomeGenBase, int x, int y, int width, int length, boolean p_76931_6_ )
 	{
+
+		GenLayerBiomePlanet.setupBiomesForUse(biomes);
+		//return super.getBiomeGenAt(biomeGenBase, x, y, width, length, p_76931_6_);
+
 		IntCache.resetIntCache();
 
-
-
-		if (p_76931_1_ == null || p_76931_1_.length < p_76931_4_ * p_76931_5_)
+		if (biomeGenBase == null || biomeGenBase.length < width * length)
 		{
-			p_76931_1_ = new BiomeGenBase[p_76931_4_ * p_76931_5_];
+			biomeGenBase = new BiomeGenBase[width * length];
 		}
 
-		if (p_76931_6_ && p_76931_4_ == 16 && p_76931_5_ == 16 && (p_76931_2_ & 15) == 0 && (p_76931_3_ & 15) == 0)
+		if (p_76931_6_ && width == 16 && length == 16 && (x & 15) == 0 && (y & 15) == 0)
 		{
-			BiomeGenBase[] abiomegenbase1 = this.biomeCache.getCachedBiomes(p_76931_2_, p_76931_3_);
-			System.arraycopy(abiomegenbase1, 0, p_76931_1_, 0, p_76931_4_ * p_76931_5_);
-			return p_76931_1_;
+			BiomeGenBase[] abiomegenbase1 = this.biomeCache.getCachedBiomes(x, y);
+			System.arraycopy(abiomegenbase1, 0, biomeGenBase, 0, width * length);
+			return biomeGenBase;
 		}
 		else
 		{
 
-			GenLayerBiomePlanet.setupBiomesForUse(biomes);
-			int[] aint = this.biomeIndexLayer.getInts(p_76931_2_, p_76931_3_, p_76931_4_, p_76931_5_);
 
-			for (int i1 = 0; i1 < p_76931_4_ * p_76931_5_; ++i1)
+			int[] aint = this.biomeIndexLayer.getInts(x, y, width, length);
+
+			for (int i1 = 0; i1 < width * length; ++i1)
 			{
-				p_76931_1_[i1] = AdvancedRocketryBiomes.instance.getBiomeById(aint[i1]);
+
+				//TODO DEBUG:
+				if(aint[i1] > 255) {
+					System.out.println("s");
+				}
+
+				biomeGenBase[i1] = AdvancedRocketryBiomes.instance.getBiomeById(aint[i1]);
 			}
 
-			return p_76931_1_;
+			return biomeGenBase;
 		}
+	}
+
+	@Override
+	public void cleanupCache() {
+		super.cleanupCache();
+		this.biomeCache.cleanupCache();
 	}
 }

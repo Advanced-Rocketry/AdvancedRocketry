@@ -55,7 +55,7 @@ public class BlockLaser extends RotatableBlock {
     @Override
     public void registerBlockIcons(IIconRegister icon)
     {
-    	this.top = icon.registerIcon("advancedRocketry:MonitorTop");
+    	this.top = icon.registerIcon("advancedRocketry:machineGeneric");
     	this.sides = icon.registerIcon("advancedRocketry:MonitorSide");
     	this.bottom = icon.registerIcon("advancedRocketry:LaserBottom");
     	this.front = icon.registerIcon("advancedRocketry:LaserFront");

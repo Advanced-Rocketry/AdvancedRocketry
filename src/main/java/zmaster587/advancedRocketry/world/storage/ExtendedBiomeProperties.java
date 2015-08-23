@@ -68,7 +68,7 @@ public class ExtendedBiomeProperties {
 			blockBiomeArray = ints;
 		}
 		
-		public BiomeGenBase getBiomeGenForWorldCoords(int x, int z, WorldChunkManager worldChunkManager) {
+		/*public BiomeGenBase getBiomeGenForWorldCoords(int x, int z, WorldChunkManager worldChunkManager) {
 
 			int id = blockBiomeArray[z << 4 | x];
 			
@@ -87,6 +87,6 @@ public class ExtendedBiomeProperties {
 
 			
 			return biome;
-		}
+		}*/
 	}
 }

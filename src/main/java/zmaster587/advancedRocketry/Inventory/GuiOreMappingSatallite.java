@@ -6,7 +6,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
-import zmaster587.advancedRocketry.satallite.OreMappingSatallite;
+import zmaster587.advancedRocketry.satellite.OreMappingSatellite;
 import zmaster587.libVulpes.util.MathVulpes;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
@@ -36,9 +36,9 @@ public class GuiOreMappingSatallite extends GuiContainer {
 	private static final ResourceLocation backdrop = new ResourceLocation("advancedrocketry", "textures/gui/VideoSatallite.png");
 	int[][] oreMap;
 	World world;
-	OreMappingSatallite tile;
+	OreMappingSatellite tile;
 
-	public GuiOreMappingSatallite(OreMappingSatallite tile,EntityPlayer inventoryPlayer) {
+	public GuiOreMappingSatallite(OreMappingSatellite tile,EntityPlayer inventoryPlayer) {
 		super( new ContainerOreMappingSatallite(tile,inventoryPlayer.inventory));
 		world = inventoryPlayer.worldObj;
 
@@ -57,7 +57,7 @@ public class GuiOreMappingSatallite extends GuiContainer {
 	Runnable mapper = new Runnable() {
 		@Override
 		public void run() {
-			oreMap = OreMappingSatallite.scanChunk(world, xCenter, zCenter, scanSize/2, radius);
+			oreMap = OreMappingSatellite.scanChunk(world, xCenter, zCenter, scanSize/2, radius);
 			if(oreMap != null)
 				merged = true;
 			else merged = false;
@@ -75,7 +75,7 @@ public class GuiOreMappingSatallite extends GuiContainer {
 
 		@Override
 		public void run() {
-			oreMap = OreMappingSatallite.scanChunk(world, xCenter, zCenter, scanSize/2, radius, myBlock);
+			oreMap = OreMappingSatellite.scanChunk(world, xCenter, zCenter, scanSize/2, radius, myBlock);
 			if(oreMap != null)
 				merged = true;
 			else merged = false;

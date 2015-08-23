@@ -5,4 +5,6 @@ public class Configuration {
 	public static int MoonId = 2;
 	public static int fuelPointsPer10Mb = 10;
 	public static int maxBiomes = 512;
+	public static boolean rocketRequireFuel = true;
+	public static float buildSpeedMultiplier = 1f;
 }

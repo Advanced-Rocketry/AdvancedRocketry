@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.world;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.world.DimensionProperties;
@@ -11,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldProvider;
+import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.client.IRenderHandler;
@@ -18,8 +20,6 @@ import net.minecraftforge.client.IRenderHandler;
 public class ProviderPlanet extends WorldProvider implements IPlanetaryProvider {
 	private IRenderHandler skyRender;
 
-	static final WorldTypePlanetGen planetWorldType = new WorldTypePlanetGen("PlanetCold");
-	
 	/*@Override
 	protected void registerWorldChunkManager() {
 		//this.worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.extremeHills, 0.0f);
@@ -35,23 +35,34 @@ public class ProviderPlanet extends WorldProvider implements IPlanetaryProvider 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IRenderHandler getSkyRenderer() {
-
-
 		return skyRender == null ? skyRender = new RenderPlanetarySky() : skyRender;
 	}
 
 	@Override
-	public BiomeGenBase getBiomeGenForCoords(int x, int z) {
-		return getDimensionProperties().biomeProperties.getChunkPropertiesFromBlockCoords(x, z).getBiomeGenForWorldCoords(x & 15, z & 15, this.worldChunkMgr);
+	public long getSeed() {
+		return super.getSeed() + dimensionId;
 	}
+	
+	/*@Override
+	public BiomeGenBase getBiomeGenForCoords(int x, int z) {
+		super.getBiomeGenForCoords(x, z)
+		return worldChunkMgr.getBiomeGenAt(x, z);
+		//return getDimensionProperties().biomeProperties.getChunkPropertiesFromBlockCoords(x, z).getBiomeGenForWorldCoords(x & 15, z & 15, this.worldChunkMgr);
+	}*/
 	
 	@Override
 	protected void registerWorldChunkManager()
 	{
-		worldObj.getWorldInfo().setTerrainType(planetWorldType);
-		this.worldChunkMgr = planetWorldType.getChunkManager(worldObj);
+		worldObj.getWorldInfo().setTerrainType(AdvancedRocketry.planetWorldType);
+		this.worldChunkMgr = new ChunkManagerPlanet(worldObj);
+		//AdvancedRocketry.planetWorldType.getChunkManager(worldObj);
 	}
 
+	@Override
+	public IChunkProvider createChunkGenerator() {
+		return new ChunkProviderPlanet(worldObj, worldObj.getSeed(), false);
+	}
+	
 	@Override
 	public void updateWeather() {
 
@@ -151,11 +162,6 @@ public class ProviderPlanet extends WorldProvider implements IPlanetaryProvider 
 	}
 
 	@Override
-	public IChunkProvider createChunkGenerator() {
-		return new ChunkProviderPlanet(worldObj, worldObj.getSeed(), false);
-	}
-
-	@Override
 	public String getDimensionName() {
 		return getDimensionProperties().name;
 	}
@@ -193,7 +199,7 @@ public class ProviderPlanet extends WorldProvider implements IPlanetaryProvider 
 	}
 
 	@Override
-	public double getGraviationalMultiplyer() {
+	public double getGravitationalMultiplier() {
 		return getDimensionProperties().gravitationalMultiplier;
 	}
 
@@ -256,6 +262,6 @@ public class ProviderPlanet extends WorldProvider implements IPlanetaryProvider 
 	@Override
 	public DimensionProperties getDimensionProperties() {
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(this.dimensionId);
-		return properties == null ? new DimensionProperties() : properties;
+		return properties == null ? new DimensionProperties(this.dimensionId) : properties;
 	}
 }

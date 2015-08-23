@@ -60,6 +60,7 @@ public class StatsRocket {
 	public int getSeatZ() { return seatPos.z; }
 	public int getThrust() {return thrust;}
 	public int getWeight() {return weight;}
+	public float getAcceleration() { return (thrust - weight)/10000f; }
 	public List<Vector3F<Float>> getEngineLocations() { return engineLoc; }
 
 	public void setThrust(int thrust) { this.thrust = thrust; }
@@ -201,7 +202,14 @@ public class StatsRocket {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param type type of fuel
+	 * @param amt amount of fuel to add
+	 * @return amount of fuel added
+	 */
 	public int addFuelAmount(FuelRegistry.FuelType type, int amt) {
+		//TODO: finish other ones
 		switch(type) {
 		case WARP:
 			fuelWarp += amt;
@@ -213,8 +221,10 @@ public class StatsRocket {
 			fuelIon += amt;
 			return fuelIon;
 		case LIQUID:
-			fuelLiquid += amt;
-			return fuelLiquid;
+			int maxAdd = fuelCapacityLiquid - fuelLiquid;
+			int amountToAdd = Math.min(amt, maxAdd);
+			fuelLiquid += amountToAdd;
+			return amountToAdd;
 		case NUCLEAR:
 			fuelNuclear += amt;
 			return fuelNuclear;
@@ -333,6 +343,5 @@ public class StatsRocket {
 				}
 			}
 		}
-
 	}
 }

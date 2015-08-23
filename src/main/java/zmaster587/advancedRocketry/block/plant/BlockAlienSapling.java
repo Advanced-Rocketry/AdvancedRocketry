@@ -25,9 +25,9 @@ public class BlockAlienSapling extends BlockSapling {
 	public IIcon[] icons = new IIcon[names.length];
 	
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item p_149666_1_, CreativeTabs p_149666_2_, List p_149666_3_)
+    public void getSubBlocks(Item item, CreativeTabs creativeTab, List list)
     {
-        p_149666_3_.add(new ItemStack(p_149666_1_, 1, 0));
+        list.add(new ItemStack(item, 1, 0));
     }
     
     /**
@@ -41,18 +41,21 @@ public class BlockAlienSapling extends BlockSapling {
     }
 	
     @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister p_149651_1_)
+    public void registerBlockIcons(IIconRegister iconRegister)
     {
         for (int i = 0; i < names.length; ++i)
         {
-        	icons[i] = p_149651_1_.registerIcon(this.getTextureName() + "_" + names[i]);
+        	icons[i] = iconRegister.registerIcon(this.getTextureName() + "_" + names[i]);
         }
     }
     
-    public void func_149878_d(World p_149878_1_, int p_149878_2_, int p_149878_3_, int p_149878_4_, Random p_149878_5_)
+    @Override
+    public void func_149878_d(World world, int x, int y, int z, Random random)
     {
-        if (!net.minecraftforge.event.terraingen.TerrainGen.saplingGrowTree(p_149878_1_, p_149878_5_, p_149878_2_, p_149878_3_, p_149878_4_)) return;
-        int l = p_149878_1_.getBlockMetadata(p_149878_2_, p_149878_3_, p_149878_4_) & 7;
+        if (!net.minecraftforge.event.terraingen.TerrainGen.saplingGrowTree(world, random, x, y, z)) 
+        	return;
+        
+        int l = world.getBlockMetadata(x, y, z) & 7;
         Object object = new WorldGenAlienTree(true);
         int i1 = 0;
         int j1 = 0;
@@ -65,28 +68,28 @@ public class BlockAlienSapling extends BlockSapling {
 
         if (flag)
         {
-            p_149878_1_.setBlock(p_149878_2_ + i1, p_149878_3_, p_149878_4_ + j1, block, 0, 4);
-            p_149878_1_.setBlock(p_149878_2_ + i1 + 1, p_149878_3_, p_149878_4_ + j1, block, 0, 4);
-            p_149878_1_.setBlock(p_149878_2_ + i1, p_149878_3_, p_149878_4_ + j1 + 1, block, 0, 4);
-            p_149878_1_.setBlock(p_149878_2_ + i1 + 1, p_149878_3_, p_149878_4_ + j1 + 1, block, 0, 4);
+            world.setBlock(x + i1, y, z + j1, block, 0, 4);
+            world.setBlock(x + i1 + 1, y, z + j1, block, 0, 4);
+            world.setBlock(x + i1, y, z + j1 + 1, block, 0, 4);
+            world.setBlock(x + i1 + 1, y, z + j1 + 1, block, 0, 4);
         }
         else
         {
-            p_149878_1_.setBlock(p_149878_2_, p_149878_3_, p_149878_4_, block, 0, 4);
+            world.setBlock(x, y, z, block, 0, 4);
         }
 
-        if (!((WorldGenerator)object).generate(p_149878_1_, p_149878_5_, p_149878_2_ + i1, p_149878_3_, p_149878_4_ + j1))
+        if (!((WorldGenerator)object).generate(world, random, x + i1, y, z + j1))
         {
             if (flag)
             {
-                p_149878_1_.setBlock(p_149878_2_ + i1, p_149878_3_, p_149878_4_ + j1, this, l, 4);
-                p_149878_1_.setBlock(p_149878_2_ + i1 + 1, p_149878_3_, p_149878_4_ + j1, this, l, 4);
-                p_149878_1_.setBlock(p_149878_2_ + i1, p_149878_3_, p_149878_4_ + j1 + 1, this, l, 4);
-                p_149878_1_.setBlock(p_149878_2_ + i1 + 1, p_149878_3_, p_149878_4_ + j1 + 1, this, l, 4);
+                world.setBlock(x + i1, y, z + j1, this, l, 4);
+                world.setBlock(x + i1 + 1, y, z + j1, this, l, 4);
+                world.setBlock(x + i1, y, z + j1 + 1, this, l, 4);
+                world.setBlock(x + i1 + 1, y, z + j1 + 1, this, l, 4);
             }
             else
             {
-                p_149878_1_.setBlock(p_149878_2_, p_149878_3_, p_149878_4_, this, l, 4);
+                world.setBlock(x, y, z, this, l, 4);
             }
         }
     }

@@ -6,12 +6,19 @@ import net.minecraft.util.Vec3;
 public interface IPlanetaryProvider {
 	
 	/**
-	 * @return multiplier for gravity
+	 * 100 is earth-like, 0 is none
+	 * @return multiplier of gravity
 	 */
-	public double getGraviationalMultiplyer();
+	public double getGravitationalMultiplier();
 	
+	/**
+	 * @return the dimension ID this one is in orbit around
+	 */
 	public int getOrbitingDimension();
 	
+	/**
+	 * @return array of dimension IDs orbiting this one
+	 */
 	public int[] getDimensionsInOrbit();
 	
 	/**
@@ -43,14 +50,23 @@ public interface IPlanetaryProvider {
 	public int getOrbitalDistance();
 	
 	/**
-	 * 
 	 * @return if the dimension is a planet vs spacecraft etc
 	 */
 	public boolean isPlanet();
 	
+	/**
+	 * @return color of the sun in RGB
+	 */
 	public Vec3 getSunColor();
 	
+	/**
+	 * @return {@link DimensionProperties} of this dimension
+	 */
 	public DimensionProperties getDimensionProperties();
 
+	/**
+	 * @param y height
+	 * @return Absolute density of the atmosphere at the given height
+	 */
 	float getAtmosphereDensityFromHeight(double y);
 }

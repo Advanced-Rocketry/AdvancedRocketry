@@ -1,14 +1,21 @@
 package zmaster587.advancedRocketry.block.multiblock;
 
 import java.util.List;
+import java.util.Random;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.Inventory.GuiHandler;
 import zmaster587.advancedRocketry.tile.TileInputHatch;
 import zmaster587.advancedRocketry.tile.TileOutputHatch;
+import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteHatch;
+import zmaster587.advancedRocketry.tile.data.TileDataBus;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -17,10 +24,13 @@ import net.minecraft.world.World;
 
 public class BlockHatch extends BlockMultiblockStructure {
 
-	IIcon output;
+	IIcon output, data, satellite;
 	
-	public BlockHatch() {
-		super();
+	private final Random random = new Random();
+	
+	public BlockHatch(Material material) {
+		super(material);
+		isBlockContainer = true;
 	}
 	
 	@Override
@@ -33,21 +43,26 @@ public class BlockHatch extends BlockMultiblockStructure {
 		return meta & 7;
 	}
 	
-	
 	@Override
 	public void registerBlockIcons(IIconRegister iconRegister) {
 		super.registerBlockIcons(iconRegister);
 		output = iconRegister.registerIcon("advancedrocketry:outputHatch");
 		blockIcon = iconRegister.registerIcon("advancedrocketry:inputHatch");
+		data = iconRegister.registerIcon("advancedrocketry:dataHatch");
+		satellite = iconRegister.registerIcon("advancedrocketry:satelliteBay");
 	}
 	
 	@Override
 	public IIcon getIcon(int side, int meta) {
 		if((meta & 7) == 0) {
 			return blockIcon;
-		}else {
+		}else if((meta & 7) == 1 ) {
 			return output;
 		}
+		else if((meta & 7) == 2 )
+			return data;
+		else
+			return satellite;
 	}
 	
 	@Override
@@ -55,27 +70,63 @@ public class BlockHatch extends BlockMultiblockStructure {
 			List list) {
 		list.add(new ItemStack(item, 1, 0));
 		list.add(new ItemStack(item, 1, 1));
+		list.add(new ItemStack(item, 1, 2));
+		list.add(new ItemStack(item, 1, 3));
 	}
 	
 	@Override
 	public TileEntity createTileEntity(World world, int metadata) {
-		if((metadata & 1) == 0)
+		//TODO: multiple sized Hatches
+		if((metadata & 7) == 0)
 			return new TileInputHatch(4);
-		else if((metadata & 1) == 1)
+		else if((metadata & 7) == 1)
 			return new TileOutputHatch(4);
-		
+		else if((metadata & 7) == 2)
+			return new TileDataBus(1);
+		else if((metadata & 7) == 3)
+			return new TileSatelliteHatch(1);		
 		
 		return null;
 	}
 
-
+	@Override
+	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+		
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if(tile != null && tile instanceof IInventory) {
+			IInventory inventory = (IInventory)tile;
+			for(int i = 0; i < inventory.getSizeInventory(); i++) {
+				ItemStack stack = inventory.getStackInSlot(i);
+				
+				if(stack == null)
+					continue;
+				
+				EntityItem entityitem = new EntityItem(world, x, y, z, stack);
+				
+				float mult = 0.05F;
+				
+                entityitem.motionX = (double)((float)this.random.nextGaussian() * mult);
+                entityitem.motionY = (double)((float)this.random.nextGaussian() * mult + 0.2F);
+                entityitem.motionZ = (double)((float)this.random.nextGaussian() * mult);
+                
+                world.spawnEntityInWorld(entityitem);
+			}
+		}
+		
+		super.breakBlock(world, x, y, z, block, meta);
+	}
 	
 	@Override
 	public boolean onBlockActivated(World world, int x,
 			int y, int z, EntityPlayer player,
 			int arg1, float arg2, float arg3,
 			float arg4) {
-		player.openGui(AdvancedRocketry.instance, GuiHandler.guiId.Hatch.ordinal(), world, x, y, z);
+		
+		int meta = world.getBlockMetadata(x, y, z);
+		//Handlue gui through modular system
+		if((meta & 7) < 4 )
+			player.openGui(AdvancedRocketry.instance, GuiHandler.guiId.MODULAR.ordinal(), world, x, y, z);
+		
 		return true;
 	}
 }

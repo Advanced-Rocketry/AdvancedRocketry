@@ -1,3 +1,5 @@
+itemGroup.advancedRocketry=Advanced Rocketry
+
 tile.seat.name=Seat
 tile.pad.name=Launch Pad
 tile.structuretower.name=Structure Tower
@@ -13,8 +15,21 @@ tile.blastFurnaceController.name=HeatProof Furnace Controller
 tile.fuelStation.name=Fueling station
 tile.hatch.0.name=Input Hatch
 tile.hatch.1.name=Output Hatch
+tile.hatch.2.name=Data Bus
+tile.hatch.3.name=Satellite Bay
 tile.rfBattery.name=Redstone Flux(RF) Plug
 tile.structureMachine.name=Machine Structure
+tile.observatory.name=Observatory
+tile.satelliteBuilder.name=Satellite Builder
+tile.rocket.name=Liquid Fueled Engine
+tile.fuelTank.name=Liquid Fuel Tank
+tile.monitoringstation.name=Monitoring Station
+tile.satelliteMonitor.name=Satellite Terminal
+tile.sapling.name=Lightwood Sapling
+tile.leaves2.name=Lightwood Leaves
+tile.chipStorage.name=Satellite Id Storage
+tile.planetanalyser.name=Planet Analyser
+tile.guidanceComputer.name=Guidance Computer
 
 item.ingot.0.name=Silicon Ingot
 item.ingot.1.name=Steel Ingot
@@ -25,7 +40,27 @@ item.circuitplate.0.name=Basic Circuit Plate
 item.circuitIC.0.name=Basic Circuit
 item.OreScanner.name=Ore Scanner
 item.qcrucible.name=Quartz Crucible
+item.dataUnit.0.name=Data Unit
+item.satellite.name=Satellite
+item.satellitePowerSource.0.name=Basic Solar Panel
+item.satellitePrimaryFunction.0.name=Optical Sensor
+item.satellitePrimaryFunction.1.name=Atmospheric Density Sensor
+item.satellitePrimaryFunction.2.name=Mass Detector
+item.satelliteIdChip.name=Satellite Id Chip
+item.planetIdChip.name=Planet Id Chip
 
 container.crystallizer=Crystallizer
 container.cuttingmachine=Cutting Machine
 container.precisionassemblingmachine=Precision Assembling Machine
+container.observatory=Observatory
+container.satellite=Satellite Bay
+container.monitoringstation=Monitoring Station
+container.satelliteMonitor=Satellite Terminal
+
+data.undefined.name=Some Random Data
+data.distance.name=Distance
+data.humidity.name=Humidity
+data.temperature.name=Temperature
+data.composition.name=Composition
+data.atmospheredensity.name=Atmosphere Density
+data.mass.name=Mass

@@ -1,8 +1,8 @@
 package zmaster587.advancedRocketry.tile;
 
-import zmaster587.advancedRocketry.api.ISatallite;
-import zmaster587.advancedRocketry.satallite.OreMappingSatallite;
-import zmaster587.advancedRocketry.satallite.SpySatellite;
+import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
+import zmaster587.advancedRocketry.satellite.OreMappingSatellite;
+import zmaster587.advancedRocketry.satellite.SpySatellite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -13,7 +13,7 @@ public class TileMissionController extends TileEntity {
 	//EntitySpaceshipBase entitySpaceShip;
 	long returnTime;
 	int missionTimeTotal;
-	ISatallite satellite;
+	SatelliteBase satellite;
 	
 	public TileMissionController() {
 		//entitySpaceShip = null;

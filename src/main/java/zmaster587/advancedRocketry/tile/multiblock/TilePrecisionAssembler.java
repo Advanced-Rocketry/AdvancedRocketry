@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.List;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
+import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
 import zmaster587.advancedRocketry.api.recipe.ITimedPoweredMachine;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
@@ -23,7 +25,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TilePrecisionAssembler extends TileMultiBlockMachine {
+public class TilePrecisionAssembler extends TileMultiBlockMachine implements IModularInventory {
 
 	public static final Object structure[][][] = new Object[][][]{ {{Blocks.stone, Blocks.stone, Blocks.stone, Blocks.stone}, 
 		{Blocks.stone, Blocks.stone, Blocks.stone, Blocks.stone},
@@ -61,18 +63,6 @@ public class TilePrecisionAssembler extends TileMultiBlockMachine {
 		return AxisAlignedBB.getBoundingBox(xCoord -4, yCoord -4, zCoord -4, xCoord + 4, yCoord + 4, zCoord + 4);
 	}
 	
-	public boolean completeStructure() {
-		boolean result;
-		result = super.completeStructure();
-		//result = false;
-		if(result) {
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.blockMetadata | 8, 2);
-		}
-		else
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.blockMetadata & 7, 2);
-		
-		return result;
-	}
 	
 	@Override
 	public String getMachineName() {

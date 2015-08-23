@@ -3,15 +3,20 @@ package zmaster587.advancedRocketry.tile.multiblock;
 import java.util.HashSet;
 import java.util.List;
 
-import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.Inventory.TextureResources;
+import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
+import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileCuttingMachine extends TileMultiBlockMachine {
+public class TileCuttingMachine extends TileMultiBlockMachine implements IModularInventory {
 
 	private static final Object[][][] structure = new Object[][][]{
 			{{Blocks.stone, Blocks.stone, Blocks.stone},
@@ -45,11 +50,6 @@ public class TileCuttingMachine extends TileMultiBlockMachine {
 	
 	public boolean completeStructure() {
 		boolean result = super.completeStructure();
-		if(result) {
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.blockMetadata | 8, 2);
-		}
-		else
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.blockMetadata & 7, 2);
 		
 		return result;
 	}
@@ -59,4 +59,12 @@ public class TileCuttingMachine extends TileMultiBlockMachine {
 		return "container.cuttingmachine";
 	}
 
+	@Override
+	public List<ModuleBase> getModules() {
+		List<ModuleBase> modules = super.getModules();
+		modules.add(new ModuleProgress(100, 20, 0, new ProgressBarImage(54, 0, 42, 42,96, 0, 36, 36, 3, 3, ForgeDirection.EAST, TextureResources.progressBars), this));
+		
+		return modules;
+	}
+	
 }
