@@ -29,6 +29,7 @@ import zmaster587.advancedRocketry.api.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
+import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.network.PacketEntity;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.satellite.SatelliteDefunct;
@@ -233,7 +234,7 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 		ItemStack heldItem = player.getHeldItem();
 
 		//Handle linkers
-		if(!worldObj.isRemote && heldItem != null) {
+		if(heldItem != null) {
 			float fuelMult;
 			FluidStack fluidStack;
 
@@ -248,21 +249,23 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 							if(!connectedInfrastructure.contains(tile)) {
 
 								linkInfrastructure(infrastructure);
-								player.addChatMessage(new ChatComponentText("Linked Sucessfully"));
+								if(!worldObj.isRemote) {
+									player.addChatMessage(new ChatComponentText("Linked Sucessfully"));
+								}
 								ItemLinker.resetPosition(heldItem);
 
 								return true;
 							}
-							else
+							else if(!worldObj.isRemote)
 								player.addChatMessage(new ChatComponentText("Already linked!"));
 						}
-						else
+						else if(!worldObj.isRemote)
 							player.addChatMessage(new ChatComponentText("The object you are trying to link is too far away"));
 					}
-					else
+					else if(!worldObj.isRemote)
 						player.addChatMessage(new ChatComponentText("This cannot be linked to a rocket!"));
 				}
-				else
+				else if(!worldObj.isRemote)
 					player.addChatMessage(new ChatComponentText("Nothing to be linked"));
 				return false;
 			}
@@ -287,18 +290,24 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 		//If player is holding shift open GUI
 		if(player.isSneaking()) {
 			player.openGui(AdvancedRocketry.instance, GuiHandler.guiId.MODULAR.ordinal(), player.worldObj, this.getEntityId(), -1,0);
+			
+			//Only handle the bypass on the server
+			if(!worldObj.isRemote)
+				PlanetEventHandler.addPlayerToInventoryBypass(player);
 		}
+		else if(!worldObj.isRemote && stats.hasSeat())
+			player.mountEntity(this);
 		return true;
 	}
 
 	@Override
 	public boolean interactFirst(EntityPlayer player) {
-		if(worldObj.isRemote) { 
+		if(worldObj.isRemote) {
+			//Due to forge's rigid handling of entities (NetHanlderPlayServer:866) needs to be handled differently for large rockets
 			PacketHandler.sendToServer(new PacketEntity(this, (byte)PacketType.SENDINTERACT.ordinal()));
 			return interact(player);
 		}
-		else
-			return false;
+		return true;
 
 	}
 
@@ -452,7 +461,8 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 		for(IInfrastructure infrastructure : connectedInfrastructure) {
 			infrastructure.unlinkRocket();
 		}
-
+			
+		
 		//paste the rocket into the world as blocks
 		storage.pasteInWorld(this.worldObj, (int)(this.posX - storage.getSizeX()/2f), (int)this.posY, (int)(this.posZ - storage.getSizeZ()/2f));
 		this.setDead();
@@ -642,9 +652,7 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 	@Override
 	public void readDataFromNetwork(ByteBuf in, byte packetId,
 			NBTTagCompound nbt) {
-		if(packetId == PacketType.OPENGUI.ordinal()) {
-			nbt.setInteger("slotPos", in.readInt());
-		} else if(packetId == PacketType.RECIEVENBT.ordinal()) {
+		if(packetId == PacketType.RECIEVENBT.ordinal()) {
 			storage = new StorageChunk();
 			storage.readFromNetwork(in);
 		}
@@ -653,10 +661,7 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {
 
-		if(id == PacketType.OPENGUI.ordinal()) {
-			out.writeInt(storage.getInvPos());
-		}
-		else if(id == PacketType.RECIEVENBT.ordinal()) {
+		if(id == PacketType.RECIEVENBT.ordinal()) {
 			storage.writeToNetwork(out);
 		}
 	}
@@ -693,9 +698,6 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 		else if(id == PacketType.LAUNCH.ordinal()) {
 			this.launch();
 		}
-		else if(id == PacketType.OPENGUI.ordinal()) {
-			this.storage.setInvPos(nbt.getInteger("slotPos"));
-		}
 		else if(id == PacketType.CHANGEWORLD.ordinal()) {
 			AdvancedRocketry.proxy.changeClientPlayerWorld(storage.world);
 		}
@@ -731,10 +733,7 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 	public List<ModuleBase> getModules() {
 		List<ModuleBase> modules;
 		//If the rocket is flight don't load the interface
-		if(isInFlight())
-			modules = new LinkedList<ModuleBase>();
-		else
-			modules = storage.getModules();
+		modules = new LinkedList<ModuleBase>();
 
 		//Backgrounds
 		modules.add(new ModuleImage(173, 0, new IconResource(128, 0, 48, 86, CommonResources.genericBackground)));
@@ -748,7 +747,7 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 		List<TileEntity> tiles = storage.getUsableTiles();
 		for(int i = 0; i < tiles.size(); i++) {
 			TileEntity tile  = tiles.get(i);
-			modules.add(new ModuleSlotButton(8 + 18* (i % 9), 17 + 18*(i/9), i + tilebuttonOffset, this, new ItemStack(storage.getBlock(tile.xCoord, tile.yCoord, tile.zCoord))));
+			modules.add(new ModuleSlotButton(8 + 18* (i % 9), 17 + 18*(i/9), i + tilebuttonOffset, this, new ItemStack(storage.getBlock(tile.xCoord, tile.yCoord, tile.zCoord), 1, storage.getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord))));
 		}
 
 		//Add buttons
@@ -799,15 +798,6 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 		case 0:
 			PacketHandler.sendToServer(new PacketEntity(this, (byte)EntityRocket.PacketType.DECONSTRUCT.ordinal()));
 			break;
-		case 1:
-			this.storage.decrementInvPos();
-			PacketHandler.sendToServer(new PacketEntity(this, (byte)PacketType.OPENGUI.ordinal()));
-			break;
-		case 2:
-			this.storage.incrementInvPos();
-			PacketHandler.sendToServer(new PacketEntity(this, (byte)PacketType.OPENGUI.ordinal()));
-			break;
-
 		default:
 			PacketHandler.sendToServer(new PacketEntity(this, (byte)(buttonId + 100)));
 
@@ -816,5 +806,14 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 			TileEntity tile = storage.getUsableTiles().get(buttonId - tilebuttonOffset);
 			storage.getBlock(tile.xCoord, tile.yCoord, tile.zCoord).onBlockActivated(storage.world, tile.xCoord, tile.yCoord,  tile.zCoord, Minecraft.getMinecraft().thePlayer, 0, 0, 0, 0);
 		}
+	}
+
+	@Override
+	public boolean canInteractWithContainer(EntityPlayer entity) {
+		boolean ret = !this.isDead && this.getDistanceToEntity(entity) < 64;
+		if(!ret)
+			PlanetEventHandler.removePlayerFromInventoryBypass(entity);
+		
+		return ret;
 	}
 }

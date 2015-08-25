@@ -21,9 +21,11 @@ public class ContainerModular extends Container {
 
 	List<ModuleBase> modules;
 	int numSlots;
-
-	public ContainerModular(EntityPlayer playerInv, List<ModuleBase> modules, boolean includePlayerInv) {
-
+	IModularInventory modularInventory;
+	
+	
+	public ContainerModular(EntityPlayer playerInv, List<ModuleBase> modules, IModularInventory modulularInv, boolean includePlayerInv) {
+		this.modularInventory = modulularInv;
 		this.modules = modules;
 		numSlots = 0;
 
@@ -141,6 +143,6 @@ public class ContainerModular extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return true;
+		return modularInventory.canInteractWithContainer(player);
 	}
 }

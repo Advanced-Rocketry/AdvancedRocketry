@@ -11,10 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteHatch;
@@ -24,34 +21,32 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class StorageChunk implements IBlockAccess, IInventory,IModularInventory {
+public class StorageChunk implements IBlockAccess {
 
 	Block blocks[][][];
 	short metas[][][];
 	int sizeX, sizeY, sizeZ;
-	int sizeInv;
 
-	private int invPosition;
 
 	ArrayList<TileEntity> tileEntities;
 
 	//To store inventories (just chests right now)
-	ArrayList<IInventory> inventories;
 	ArrayList<TileEntity> usableTiles;
-	ItemStack invCache[];
 
 	public WorldDummy world;
 
@@ -60,10 +55,7 @@ public class StorageChunk implements IBlockAccess, IInventory,IModularInventory 
 		sizeY = 0;
 		sizeZ = 0;
 		tileEntities = new ArrayList<TileEntity>();
-		inventories = new ArrayList<IInventory>();
 		usableTiles = new ArrayList<TileEntity>();
-		sizeInv = -1;
-		invPosition = 0;
 
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
 	}
@@ -77,12 +69,7 @@ public class StorageChunk implements IBlockAccess, IInventory,IModularInventory 
 		sizeZ = zSize;
 
 		tileEntities = new ArrayList<TileEntity>();
-		inventories = new ArrayList<IInventory>();
 		usableTiles = new ArrayList<TileEntity>();
-
-		sizeInv = -1;
-
-		invPosition = 0;
 
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
 	}
@@ -110,17 +97,46 @@ public class StorageChunk implements IBlockAccess, IInventory,IModularInventory 
 		return blocks[x][y][z];
 	}
 
+
 	//TODO: optimize the F*** out of this
 	public void writeToNBT(NBTTagCompound nbt) {
 		nbt.setInteger("xSize", sizeX);
 		nbt.setInteger("ySize", sizeY);
 		nbt.setInteger("zSize", sizeZ);
 
+		int[] blockId = new int[sizeX*sizeY*sizeZ];
+		int[] metasId = new int[sizeX*sizeY*sizeZ];
 		for(int x = 0; x < sizeX; x++) {
 			for(int y = 0; y < sizeY; y++) {
 				for(int z = 0; z < sizeZ; z++) {
+					blockId[z + (sizeZ*y) + (sizeZ*sizeY*x)] = Block.getIdFromBlock(blocks[x][y][z]);
+					metasId[z + (sizeZ*y) + (sizeZ*sizeY*x)] = (int)metas[x][y][z];
+				}
+			}
+		}
 
-					NBTTagCompound tag = new NBTTagCompound();
+		NBTTagIntArray idList = new NBTTagIntArray(blockId);
+		NBTTagIntArray metaList = new NBTTagIntArray(metasId);
+		NBTTagList tileList = new NBTTagList();
+
+		for(TileEntity tile : tileEntities) {
+			NBTTagCompound tileNbt = new NBTTagCompound();
+			tile.writeToNBT(tileNbt);
+			tileList.appendTag(tileNbt);
+		}
+		nbt.setTag("idList", idList);
+		nbt.setTag("metaList", metaList);
+		nbt.setTag("tiles", tileList);
+
+
+		/*for(int x = 0; x < sizeX; x++) {
+			for(int y = 0; y < sizeY; y++) {
+				for(int z = 0; z < sizeZ; z++) {
+
+					idList.appendTag(new NBTTagInt(Block.getIdFromBlock(blocks[x][y][z])));
+					metaList.appendTag(new NBTTagInt(metas[x][y][z]));
+
+					//NBTTagCompound tag = new NBTTagCompound();
 					tag.setInteger("block", Block.getIdFromBlock(blocks[x][y][z]));
 					tag.setShort("meta", metas[x][y][z]);
 
@@ -144,7 +160,7 @@ public class StorageChunk implements IBlockAccess, IInventory,IModularInventory 
 				}
 
 			}
-		}
+		}*/
 	}
 
 
@@ -162,10 +178,39 @@ public class StorageChunk implements IBlockAccess, IInventory,IModularInventory 
 
 		tileEntities.clear();
 		usableTiles.clear();
-		inventories.clear();
-		sizeInv = -1;
+
+		int[] blockId = nbt.getIntArray("idList");
+		int[] metasId = nbt.getIntArray("metaList");
 
 		for(int x = 0; x < sizeX; x++) {
+			for(int y = 0; y < sizeY; y++) {
+				for(int z = 0; z < sizeZ; z++) {
+					blocks[x][y][z] = Block.getBlockById(blockId[z + (sizeZ*y) + (sizeZ*sizeY*x)]);
+					metas[x][y][z] = (short)metasId[z + (sizeZ*y) + (sizeZ*sizeY*x)];
+				}
+			}
+		}
+
+		NBTTagList tileList = nbt.getTagList("tiles", NBT.TAG_COMPOUND);
+
+		for(int i = 0; i < tileList.tagCount(); i++) {
+
+			try {
+				TileEntity tile = TileEntity.createAndLoadEntity(tileList.getCompoundTagAt(i));
+				tile.setWorldObj(world);
+
+				if(isUsableBlock(tile)) {
+					usableTiles.add(tile);
+				}
+
+				tileEntities.add(tile);
+			} catch (Exception e) {
+				AdvancedRocketry.logger.warning("Rocket missing Tile (was a mod removed?)");
+			}
+
+		}
+
+		/*for(int x = 0; x < sizeX; x++) {
 			for(int y = 0; y < sizeY; y++) {
 				for(int z = 0; z < sizeZ; z++) {
 
@@ -180,22 +225,27 @@ public class StorageChunk implements IBlockAccess, IInventory,IModularInventory 
 					metas[x][y][z] = tag.getShort("meta");
 
 
-					if(tag.hasKey("tile")) {
-						TileEntity tile = TileEntity.createAndLoadEntity(tag.getCompoundTag("tile"));
-						tile.setWorldObj(world);
+					if(blockId != 0 && blocks[x][y][z] == Blocks.air) {
+						AdvancedRocketry.logger.warning("Removed pre-existing block with id " + blockId + " from a rocket (Was a mod removed?)");
+					}
+					else if(tag.hasKey("tile")) {
 
-						tileEntities.add(tile);
+						if(blocks[x][y][z].hasTileEntity(metas[x][y][z])) {
+							TileEntity tile = TileEntity.createAndLoadEntity(tag.getCompoundTag("tile"));
+							tile.setWorldObj(world);
 
-						//Machines would throw a wrench in the works
-						if(isUsableBlock(tile)) {
-							inventories.add((IInventory)tile);
-							usableTiles.add(tile);
+							tileEntities.add(tile);
+
+							//Machines would throw a wrench in the works
+							if(isUsableBlock(tile)) {
+								inventories.add((IInventory)tile);
+								usableTiles.add(tile);
+							}
 						}
 					}
-
 				}
 			}
-		}
+		}*/
 
 	}
 
@@ -263,7 +313,6 @@ public class StorageChunk implements IBlockAccess, IInventory,IModularInventory 
 						newTile.setWorldObj(world);
 
 						if(isUsableBlock(newTile)) {
-							ret.inventories.add((IInventory)newTile);
 							ret.usableTiles.add(newTile);
 						}
 
@@ -396,142 +445,20 @@ public class StorageChunk implements IBlockAccess, IInventory,IModularInventory 
 							inv.setInventorySlotContents(i, null);
 						}
 					}
-					
+
 					worldObj.setBlock(x, y, z, Blocks.air, 0, 2);
 				}
 			}
 		}
+
+		//Carpenter's block's dupe
+		for(Object entity : worldObj.getEntitiesWithinAABB(EntityItem.class, bb.expand(5, 5, 5)) ) {
+			((Entity)entity).setDead();
+		}
+
 		return chunk;
 	}
 
-	private void initInventories() {
-		//Get number of inventories on board
-		if(doesInvCacheExist()) {
-			LinkedList<ItemStack> list = new LinkedList<ItemStack>();
-			sizeInv = 0;
-			for(IInventory i : inventories) {
-				int size = i.getSizeInventory();
-
-				for(int j = 0; j < size; j++) {
-					list.add(i.getStackInSlot(j));
-				}
-
-				//must be in sections of 27
-				sizeInv += Math.min(27,size);
-			}
-
-
-			invCache = new ItemStack[sizeInv];
-			invCache = list.toArray(invCache);
-		}
-	}
-
-	private boolean doesInvCacheExist() {
-		return sizeInv == -1;
-	}
-
-	public void incrementInvPos() {
-		initInventories();
-
-		if(sizeInv > ((invPosition+1)*27) )
-			invPosition++;
-	}
-
-
-	public void decrementInvPos() {
-		initInventories();
-
-		if(invPosition > 0 )
-			invPosition--;
-	}
-
-	public void setInvPos(int pos) {
-		if(pos < 0)
-			invPosition = 0;
-		invPosition = (pos*27 > sizeInv) ? sizeInv/27 : pos;
-	}
-
-	public int getInvPos() {
-		return invPosition;
-	}
-
-	@Override
-	public int getSizeInventory() {
-
-		initInventories();
-		return sizeInv == 0 ? sizeInv : inventories.get(invPosition).getSizeInventory();
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int slot) {
-		initInventories();
-
-		return inventories.get(invPosition).getStackInSlot(slot);
-	}
-
-	@Override
-	public ItemStack decrStackSize(int slot, int amt) {
-		return inventories.get(invPosition).decrStackSize(slot,amt);
-	}
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) {
-
-		return inventories.get(invPosition).getStackInSlotOnClosing(slot);
-	}
-
-	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
-		inventories.get(invPosition).setInventorySlotContents(slot, stack);
-	}
-
-	@Override
-	public String getModularInventoryName() {
-		return "Rocket";
-	}
-
-	@Override
-	public boolean hasCustomInventoryName() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public int getInventoryStackLimit() {
-		return 64;
-	}
-
-	@Override
-	public void markDirty() {
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return true;
-	}
-
-	@Override
-	public void openInventory() {
-
-	}
-
-	@Override
-	public void closeInventory() {
-
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		return inventories.get(invPosition).isItemValidForSlot(slot, stack);
-	}
-
-	@Override
-	public List<ModuleBase> getModules() {
-		LinkedList<ModuleBase> list = new LinkedList<ModuleBase>();
-		//list.add(new ModuleSlotArray(8,17, this, 0, Math.min(getSizeInventory(), 27)));
-
-		return list;
-	}
 
 	public List<SatelliteBase> getSatellites() {
 		LinkedList<SatelliteBase> satellites = new LinkedList<SatelliteBase>();
@@ -565,19 +492,14 @@ public class StorageChunk implements IBlockAccess, IInventory,IModularInventory 
 		return null;
 	}
 
-	@Override
-	public String getInventoryName() {
-		return getModularInventoryName();
-	}
-	
 	public void writeToNetwork(ByteBuf out) {
 		PacketBuffer buffer = new PacketBuffer(out);
-		
+
 		buffer.writeByte(this.sizeX);
 		buffer.writeByte(this.sizeY);
 		buffer.writeByte(this.sizeZ);
 		buffer.writeShort(tileEntities.size());
-		
+
 		for(int x = 0; x < sizeX; x++) {
 			for(int y = 0; y < sizeY; y++) {
 				for(int z = 0; z < sizeZ; z++) {
@@ -586,11 +508,11 @@ public class StorageChunk implements IBlockAccess, IInventory,IModularInventory 
 				}
 			}
 		}
-		
+
 		for(TileEntity tile : tileEntities) {
 			NBTTagCompound nbt = new NBTTagCompound();
 			tile.writeToNBT(nbt);
-			
+
 			try {
 				buffer.writeNBTTagCompoundToBuffer(nbt);
 			} catch(Exception e) {
@@ -598,18 +520,18 @@ public class StorageChunk implements IBlockAccess, IInventory,IModularInventory 
 			}
 		}
 	}
-	
+
 	public void readFromNetwork(ByteBuf in) {
 		PacketBuffer buffer = new PacketBuffer(in);
-		
+
 		this.sizeX = buffer.readByte();
 		this.sizeY = buffer.readByte();
 		this.sizeZ = buffer.readByte();
 		short numTiles = buffer.readShort();
-		
+
 		this.blocks = new Block[sizeX][sizeY][sizeZ];
 		this.metas = new short[sizeX][sizeY][sizeZ];
-		
+
 		for(int x = 0; x < sizeX; x++) {
 			for(int y = 0; y < sizeY; y++) {
 				for(int z = 0; z < sizeZ; z++) {
@@ -618,20 +540,19 @@ public class StorageChunk implements IBlockAccess, IInventory,IModularInventory 
 				}
 			}
 		}
-		
+
 		for(short i = 0; i < numTiles; i++) {
 			try {
 				NBTTagCompound nbt = buffer.readNBTTagCompoundFromBuffer();
-				
+
 				TileEntity tile = TileEntity.createAndLoadEntity(nbt);
 				tile.setWorldObj(world);
 				tileEntities.add(tile);
-				
+
 				if(isUsableBlock(tile)) {
-					inventories.add((IInventory)tile);
 					usableTiles.add(tile);
 				}
-				
+
 			} catch(Exception e) {
 				e.printStackTrace();
 			}

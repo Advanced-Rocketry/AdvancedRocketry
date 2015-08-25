@@ -116,4 +116,9 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 		
 		return modules;
 	}
+
+	@Override
+	public boolean canInteractWithContainer(EntityPlayer entity) {
+		return true;
+	}
 }

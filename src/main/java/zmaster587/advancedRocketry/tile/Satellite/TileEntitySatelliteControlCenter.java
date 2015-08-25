@@ -249,4 +249,9 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 
 		return data.addData(maxAmount, type);
 	}
+
+	@Override
+	public boolean canInteractWithContainer(EntityPlayer entity) {
+		return true;
+	}
 }

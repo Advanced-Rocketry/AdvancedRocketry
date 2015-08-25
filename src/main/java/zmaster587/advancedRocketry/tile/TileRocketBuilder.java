@@ -719,4 +719,9 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		PacketHandler.sendToServer(new PacketMachine(this,(byte)( buttonId)) );
 		updateText();
 	}
+
+	@Override
+	public boolean canInteractWithContainer(EntityPlayer entity) {
+		return true;
+	}
 }

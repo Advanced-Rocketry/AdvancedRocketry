@@ -25,16 +25,23 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityMultiBlock extends TileEntity {
 
-	protected boolean completeStructure;
+	/*CanRender must be seperate from incomplete because some multiblocks must be completed on the client but
+	because chunks on the client */
+	protected boolean completeStructure, canRender;
 	protected byte timeAlive = 0;
 	
 	public TileEntityMultiBlock() {
 		completeStructure = false;
+		canRender = false;
 	}
 	
 
 	public boolean isComplete() {
 		return completeStructure;
+	}
+	
+	public boolean canRender() {
+		return canRender;
 	}
 	
 	public String getMachineName() {
@@ -48,7 +55,7 @@ public class TileEntityMultiBlock extends TileEntity {
 	@Override
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setBoolean("built", completeStructure);
+		nbt.setBoolean("canRender", canRender);
 		writeToNBT(nbt);
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, nbt);
 	}
@@ -57,7 +64,7 @@ public class TileEntityMultiBlock extends TileEntity {
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		NBTTagCompound nbt = pkt.func_148857_g();
 
-		completeStructure = nbt.getBoolean("built");
+		canRender = nbt.getBoolean("canRender");
 		readFromNBT(nbt);
 	}
 	
@@ -69,7 +76,7 @@ public class TileEntityMultiBlock extends TileEntity {
 	 * @param blockBroken set true if the block is being broken, otherwise some other means is being used to disassemble the machine
 	 */
 	public void deconstructMultiBlock(World world, int destroyedX, int destroyedY, int destroyedZ, boolean blockBroken) {
-		completeStructure = false;
+		canRender = completeStructure = false;
 		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.blockMetadata & 7, 2); //Turn off machine
 
 		this.markDirty();
@@ -143,7 +150,7 @@ public class TileEntityMultiBlock extends TileEntity {
 	
 	public boolean attemptCompleteStructure() {
 		if(!completeStructure)
-			completeStructure = completeStructure();
+			canRender = completeStructure = completeStructure();
 		return completeStructure;
 	}
 	

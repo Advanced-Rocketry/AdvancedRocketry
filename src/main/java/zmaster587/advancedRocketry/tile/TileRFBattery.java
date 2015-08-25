@@ -157,4 +157,9 @@ public class TileRFBattery extends TileEntityPointer implements IModularInventor
 		return null;
 	}
 
+	@Override
+	public boolean canInteractWithContainer(EntityPlayer entity) {
+		return true;
+	}
+
 }

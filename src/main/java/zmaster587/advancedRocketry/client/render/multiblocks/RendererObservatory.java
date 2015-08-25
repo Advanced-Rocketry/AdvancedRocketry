@@ -24,7 +24,7 @@ public class RendererObservatory  extends TileEntitySpecialRenderer {
 			double y, double z, float f) {
 		TileObservatory multiBlockTile = (TileObservatory)tile;
 
-		if(!multiBlockTile.isComplete())
+		if(!multiBlockTile.canRender())
 			return;
 
 		GL11.glPushMatrix();

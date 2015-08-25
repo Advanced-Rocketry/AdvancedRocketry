@@ -65,6 +65,9 @@ public class ProgressBarImage {
 	public int getBackHeight() { return backHeight; }
 	public int getForeWidth() { return foreWidth; }
 	public int getForeHeight() { return foreHeight; }
+	public int getInsetX() { return insetX; }
+	public int getInsetY() { return insetY; }
+	public ForgeDirection getDirection() { return direction; }
 	
 	/**
 	 * 

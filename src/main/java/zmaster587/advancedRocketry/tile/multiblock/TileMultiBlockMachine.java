@@ -66,7 +66,7 @@ public class TileMultiBlockMachine extends TileEntityMultiPowerConsumer {
 		NBTTagCompound nbt = new NBTTagCompound();
 
 		writeToNBT(nbt);
-		nbt.setBoolean("built", completeStructure);
+		nbt.setBoolean("built", canRender);
 		nbt.setBoolean("hadPowerLastTick", hadPowerLastTick);
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, nbt);
 	}
@@ -75,7 +75,7 @@ public class TileMultiBlockMachine extends TileEntityMultiPowerConsumer {
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		NBTTagCompound nbt = pkt.func_148857_g();
 
-		completeStructure = nbt.getBoolean("built");
+		canRender = nbt.getBoolean("built");
 		hadPowerLastTick = nbt.getBoolean("hadPowerLastTick");
 		readFromNBT(nbt);
 	}

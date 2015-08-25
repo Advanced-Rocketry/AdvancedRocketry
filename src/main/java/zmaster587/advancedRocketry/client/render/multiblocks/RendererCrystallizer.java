@@ -35,7 +35,7 @@ public class RendererCrystallizer extends TileEntitySpecialRenderer {
 			double y, double z, float f) {
 		TileMultiBlockMachine multiBlockTile = (TileMultiBlockMachine)tile;
 
-		if(!multiBlockTile.isComplete())
+		if(!multiBlockTile.canRender())
 			return;
 
 		GL11.glPushMatrix();

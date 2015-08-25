@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.util.StorageChunk;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -44,9 +45,10 @@ public class RendererRocket extends Render {
 		for(int xx = 0; xx < storage.getSizeX(); xx++) {
 			for(int zz = 0; zz < storage.getSizeZ(); zz++) {
 				for(int yy = 0; yy < storage.getSizeY(); yy++) {
-					if(storage.getBlock(xx, yy, zz).canRenderInPass(MinecraftForgeClient.getRenderPass())) {
+					Block block  = storage.getBlock(xx, yy, zz);
+					if(block.canRenderInPass(MinecraftForgeClient.getRenderPass())) {
 						Tessellator.instance.startDrawingQuads();
-						RenderBlocks.getInstance().renderBlockByRenderType(storage.getBlock(xx, yy, zz), xx, yy, zz);
+						RenderBlocks.getInstance().renderBlockByRenderType(block, xx, yy, zz);
 
 						Tessellator.instance.draw();
 					}

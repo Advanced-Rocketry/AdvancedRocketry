@@ -199,4 +199,9 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 		if(id == 2)
 			maxFuelLevel = progress;
 	}
+
+	@Override
+	public boolean canInteractWithContainer(EntityPlayer entity) {
+		return true;
+	}
 }

@@ -45,11 +45,11 @@ public class ModuleRadioButton  extends ModuleBase {
 	public void setOptionSeleted(int option) {
 		for(int i = 0; i < buttons.size(); i++){
 			if(i == option) {
-				buttons.get(i).setState(true);
+				buttons.get(i).setToggleState(true);
 				buttons.get(i).setColor(enabledColor);
 			}
 			else {
-				buttons.get(i).setState(false);
+				buttons.get(i).setToggleState(false);
 				buttons.get(i).setColor(disabledColor);
 			}
 		}
@@ -113,7 +113,7 @@ public class ModuleRadioButton  extends ModuleBase {
 				return;
 
 			for(ModuleToggleSwitch button : buttons) {
-				button.setState(button.isButton(buttonObj));
+				button.setToggleState(button.isButton(buttonObj));
 				if(button.isButton(buttonObj))
 					tile.onInventoryButtonPressed(button.buttonId);
 			}

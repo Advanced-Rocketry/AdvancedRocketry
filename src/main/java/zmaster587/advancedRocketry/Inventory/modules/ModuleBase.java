@@ -64,6 +64,16 @@ public abstract class ModuleBase {
 		return false;
 	}
 
+	@SideOnly(Side.CLIENT)
+	public void onMouseClicked(int x, int y, int button) {
+		
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void onMouseClickedAndDragged(int x, int y, int button, long timeSineLastClick) {
+		
+	}
+	
 	/**
 	 * 
 	 * @param localId The id requested local to this module eg (0 to numberOfChangesToSend())

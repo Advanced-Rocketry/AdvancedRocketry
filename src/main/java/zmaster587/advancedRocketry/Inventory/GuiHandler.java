@@ -41,7 +41,7 @@ public class GuiHandler implements IGuiHandler {
 			return new ContainerSpaceLaser(player.inventory, (TileSpaceLaser)tile);
 		}
 		else if(ID == guiId.MODULAR.ordinal() || ID == guiId.MODULARNOINV.ordinal()) {
-			return new ContainerModular(player, ((IModularInventory)tile).getModules(), ID == guiId.MODULAR.ordinal());
+			return new ContainerModular(player, ((IModularInventory)tile).getModules(), ((IModularInventory)tile), ID == guiId.MODULAR.ordinal());
 		}
 		return null;
 	}
@@ -65,7 +65,7 @@ public class GuiHandler implements IGuiHandler {
 		}
 		else if(ID == guiId.MODULAR.ordinal() || ID == guiId.MODULARNOINV.ordinal()) {
 			IModularInventory modularTile = ((IModularInventory)tile);
-			return new GuiModular(player, modularTile.getModules(), ID == guiId.MODULAR.ordinal(), modularTile.getModularInventoryName());
+			return new GuiModular(player,modularTile.getModules(), modularTile, ID == guiId.MODULAR.ordinal(), modularTile.getModularInventoryName());
 		}
 		return null;
 	}

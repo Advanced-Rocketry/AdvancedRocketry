@@ -170,4 +170,9 @@ public class TileInventoryHatch extends TileEntityPointer implements ISidedInven
 		return null;
 	}
 
+	@Override
+	public boolean canInteractWithContainer(EntityPlayer entity) {
+		return true;
+	}
+
 }

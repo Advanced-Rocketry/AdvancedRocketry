@@ -1,6 +1,8 @@
 package zmaster587.advancedRocketry;
 
 
+import java.util.logging.Logger;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -115,6 +117,7 @@ public class AdvancedRocketry {
 	public static WorldType planetWorldType;
 	
 	public static CompatibilityMgr compat = new CompatibilityMgr();
+	public static Logger logger = Logger.getLogger(modId);
 
 	
 	private static CreativeTabs tabAdvRocketry = new CreativeTabs("advancedRocketry") {

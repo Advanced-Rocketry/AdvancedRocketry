@@ -1,5 +1,10 @@
 package zmaster587.advancedRocketry.event;
 
+import java.lang.ref.WeakReference;
+import java.util.HashSet;
+import java.util.Iterator;
+
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -8,6 +13,7 @@ import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.world.DimensionManager;
 import zmaster587.advancedRocketry.world.DimensionProperties;
+import zmaster587.advancedRocketry.world.util.WorldDummy;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
@@ -19,7 +25,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class PlanetEventHandler {
 
 	public static long time = 0;
-	
+
 	//Handle gravity
 	@SubscribeEvent
 	public void playerTick(TickEvent.PlayerTickEvent event) {
@@ -31,11 +37,45 @@ public class PlanetEventHandler {
 		}
 	}
 
+
+	//TODO move
+	//Has weak refs so if the player gets killed/logsout etc the entry doesnt stay trapped in RAM
+	private static HashSet<WeakReference<EntityPlayer>> inventoryCheckPlayerBypassMap = new HashSet<WeakReference<EntityPlayer>>();
+
+	public static void addPlayerToInventoryBypass(EntityPlayer player) {
+		inventoryCheckPlayerBypassMap.add(new WeakReference<>(player));
+	}
+
+	public static void removePlayerFromInventoryBypass(EntityPlayer player) {
+		Iterator<WeakReference<EntityPlayer>> iter = inventoryCheckPlayerBypassMap.iterator();
+
+		while(iter.hasNext()) {
+			WeakReference<EntityPlayer> player2 = iter.next();
+			if(player2.get() == player || player2.get() == null)
+				iter.remove();
+		}
+	}
+
+	public static boolean canPlayerBypassInvChecks(EntityPlayer player) {
+		Iterator<WeakReference<EntityPlayer>> iter = inventoryCheckPlayerBypassMap.iterator();
+		while(iter.hasNext()) {
+			WeakReference<EntityPlayer> player2 = iter.next();
+			if(player2.get() == player)
+				return true;
+		}
+		return false;
+	}
+
 	@SubscribeEvent
 	public void containerOpen(PlayerOpenContainerEvent event) {
-		event.setResult(Result.ALLOW);
+		//event.entityPlayer.openContainer
+		if(canPlayerBypassInvChecks(event.entityPlayer))
+			if(event.entityPlayer.openContainer.windowId == 0)
+				removePlayerFromInventoryBypass(event.entityPlayer);
+			else
+				event.setResult(Result.ALLOW);
 	}
-	
+
 	//Tick dimensions, needed for satellites, and guis
 	@SubscribeEvent
 	public void tick(TickEvent.ServerTickEvent event) {
@@ -61,7 +101,7 @@ public class PlanetEventHandler {
 			PacketHandler.sendToDispatcher(new PacketDimInfo(i, DimensionManager.getInstance().getDimensionProperties(i)), event.manager);
 		}
 		PacketHandler.sendToDispatcher(new PacketDimInfo(0, DimensionManager.getInstance().getDimensionProperties(0)), event.manager);
-		
+
 	}
 
 
@@ -101,8 +141,8 @@ public class PlanetEventHandler {
 			properties.setBlockBiomeArray(event.getData().getIntArray("ExtendedBiomeArray"));
 		}
 	}
-*/
-	
+	 */
+
 	//Handle fog density and color
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)

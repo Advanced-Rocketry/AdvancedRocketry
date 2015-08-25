@@ -183,4 +183,9 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 		return null;
 	}
 
+	@Override
+	public boolean canInteractWithContainer(EntityPlayer entity) {
+		return true;
+	}
+
 }

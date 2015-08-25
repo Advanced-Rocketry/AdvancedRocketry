@@ -42,7 +42,7 @@ public class RendererPrecisionAssembler extends TileEntitySpecialRenderer {
 
 		TileMultiBlockMachine multiBlockTile = (TileMultiBlockMachine)tile;
 
-		if(!multiBlockTile.isComplete())
+		if(!multiBlockTile.canRender())
 			return;
 		
 		GL11.glPushMatrix();

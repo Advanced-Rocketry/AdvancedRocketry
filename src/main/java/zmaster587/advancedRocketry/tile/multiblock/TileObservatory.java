@@ -92,7 +92,7 @@ public class TileObservatory extends TileEntityMultiPowerConsumer implements IMo
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0 ) {
-			completeStructure = completeStructure();
+			canRender = completeStructure = completeStructure();
 			timeAlive = 0x1;
 		}
 

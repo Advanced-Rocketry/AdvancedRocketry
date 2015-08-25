@@ -14,4 +14,6 @@ public interface IModularInventory {
 	
 	public String getModularInventoryName();
 	
+	public boolean canInteractWithContainer(EntityPlayer entity);
+	
 }

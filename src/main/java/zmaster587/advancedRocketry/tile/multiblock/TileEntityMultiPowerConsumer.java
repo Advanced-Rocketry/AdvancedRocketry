@@ -33,7 +33,6 @@ public class TileEntityMultiPowerConsumer extends TileEntityMultiBlock implement
 	protected int powerPerTick;
 	protected boolean enabled;
 	private ModuleToggleSwitch toggleSwitch;
-
 	//On server determines change in power state, on client determines last power state on server
 	boolean hadPowerLastTick = true;
 
@@ -43,6 +42,7 @@ public class TileEntityMultiPowerConsumer extends TileEntityMultiBlock implement
 		completionTime = -1;
 		currentTime = -1;
 		hadPowerLastTick = true;
+		toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this, TextureResources.buttonToggleImage, 11, 26, getMachineEnabled());
 	}
 
 	//Needed for GUI stuff
@@ -87,7 +87,7 @@ public class TileEntityMultiPowerConsumer extends TileEntityMultiBlock implement
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0 && !worldObj.isRemote) {
-			completeStructure = completeStructure();
+			canRender = completeStructure = completeStructure();
 			timeAlive = 0x1;
 		}
 
@@ -242,6 +242,10 @@ public class TileEntityMultiPowerConsumer extends TileEntityMultiBlock implement
 		} else if (id == NetworkPackets.TOGGLE.ordinal()) {
 			setMachineEnabled(nbt.getBoolean("enabled"));
 			toggleSwitch.setToggleState(getMachineEnabled());
+			
+			//Last ditch effort to update the toggle switch when it's flipped
+			if(!worldObj.isRemote)
+				PacketHandler.sendToNearby(new PacketMachine(this, (byte)NetworkPackets.TOGGLE.ordinal()), worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 64);
 		}
 	}
 
@@ -250,6 +254,7 @@ public class TileEntityMultiPowerConsumer extends TileEntityMultiBlock implement
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this, TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
+
 		return modules;
 	}
 
@@ -271,5 +276,10 @@ public class TileEntityMultiPowerConsumer extends TileEntityMultiBlock implement
 	public void stateUpdated(ModuleBase module) {
 		if(module == toggleSwitch)
 			setMachineEnabled(toggleSwitch.getState());
+	}
+
+	@Override
+	public boolean canInteractWithContainer(EntityPlayer entity) {
+		return isComplete();
 	}
 }

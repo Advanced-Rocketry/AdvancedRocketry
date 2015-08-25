@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.Inventory;
 
 import java.util.List;
 
+import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
 import zmaster587.libVulpes.gui.CommonResources;
 import net.minecraft.client.gui.GuiButton;
@@ -17,8 +18,8 @@ public class GuiModular extends GuiContainer {
 	String unlocalizedName;
 	boolean hasSlots;
 	
-	public GuiModular(EntityPlayer playerInv, List<ModuleBase> modules,boolean includePlayerInv, String name) {
-		super(new ContainerModular(playerInv, modules, includePlayerInv));
+	public GuiModular(EntityPlayer playerInv, List<ModuleBase> modules, IModularInventory modularInv, boolean includePlayerInv, String name) {
+		super(new ContainerModular(playerInv, modules,modularInv, includePlayerInv));
 		this.modules = modules;
 		unlocalizedName = name;
 		hasSlots = includePlayerInv;
@@ -60,6 +61,24 @@ public class GuiModular extends GuiContainer {
 		for(ModuleBase module : modules)
 			module.renderForeground(a - (width - xSize)/2 ,b - (height - ySize) / 2, zLevel, this, this.fontRendererObj);
 		
+	}
+	
+	@Override
+	protected void mouseClicked(int x, int y, int button) {
+
+		super.mouseClicked(x, y, button);
+		
+		for(ModuleBase module : modules)
+			module.onMouseClicked(x - (width - xSize) / 2, y - (height - ySize) / 2, button);
+	}
+	
+	@Override
+	protected void mouseClickMove(int x, int y,
+			int button, long timeSinceLastClick) {
+		super.mouseClickMove(x, y, button, timeSinceLastClick);
+		
+		for(ModuleBase module : modules)
+			module.onMouseClickedAndDragged(x - (width - xSize) / 2, y - (height - ySize) / 2, button,timeSinceLastClick);
 	}
 	
 	@Override

@@ -26,7 +26,7 @@ public class RenderPlanetAnalyser extends TileEntitySpecialRenderer {
 			double y, double z, float f) {
 		TileEntityMultiPowerConsumer multiBlockTile = (TileEntityMultiPowerConsumer)tile;
 
-		if(!multiBlockTile.isComplete())
+		if(!multiBlockTile.canRender())
 			return;
 
 		GL11.glPushMatrix();

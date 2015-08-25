@@ -28,11 +28,13 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleOutputSlotArray;
 import zmaster587.advancedRocketry.Inventory.modules.ModulePower;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleRadioButton;
+import zmaster587.advancedRocketry.Inventory.modules.ModuleSlider;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleSlotArray;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleText;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleTexturedSlotArray;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleToggleSwitch;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.client.render.util.IndicatorBarImage;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
@@ -280,7 +282,7 @@ public class TilePlanetAnalyser extends TileEntityMultiPowerConsumer implements 
 			item.setDimensionId(outputItem, dimensionId);
 			outputHatch.setInventorySlotContents(0, outputItem);
 		}
-		
+
 		distanceData = 0;
 		densityData = 0;
 		massData = 0;
@@ -305,7 +307,7 @@ public class TilePlanetAnalyser extends TileEntityMultiPowerConsumer implements 
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)2));
 		}
 		else if(buttonId == 2) {
-			densitySetting = densityButton.getOptionSelected();
+			//densitySetting = densityButton.getOptionSelected();
 			distanceSetting = distanceButton.getOptionSelected();
 			PacketHandler.sendToServer(new PacketMachine(this,(byte)101));
 		}
@@ -315,7 +317,7 @@ public class TilePlanetAnalyser extends TileEntityMultiPowerConsumer implements 
 	public void writeDataToNetwork(ByteBuf out, byte id) {
 		super.writeDataToNetwork(out, id);
 		if(id > 100) {
-			out.writeInt(densityButton.getOptionSelected());
+			out.writeInt(densitySetting);
 			out.writeInt(distanceButton.getOptionSelected());
 			out.writeInt(massButton.getOptionSelected());
 		}
@@ -341,7 +343,7 @@ public class TilePlanetAnalyser extends TileEntityMultiPowerConsumer implements 
 
 		if(id > 100) {
 			densitySetting = nbt.getInteger("state");
-			densityButton.setOptionSeleted(densitySetting);
+			//densityButton.setOptionSeleted(densitySetting);
 
 			distanceSetting = nbt.getInteger("state2");
 			distanceButton.setOptionSeleted(distanceSetting);
@@ -369,6 +371,7 @@ public class TilePlanetAnalyser extends TileEntityMultiPowerConsumer implements 
 
 		int xStart = 150;
 		int yStart = 14;
+
 		modules.add(new ModuleTexturedSlotArray(xStart, yStart, inputHatch, 0, 1, TextureResources.idChip));
 		modules.add(new ModuleOutputSlotArray(xStart, yStart + 40, outputHatch, 0, 1));
 
@@ -386,10 +389,12 @@ public class TilePlanetAnalyser extends TileEntityMultiPowerConsumer implements 
 		List<ModuleToggleSwitch> toggleSwitches = new ArrayList<ModuleToggleSwitch>();
 		ResourceLocation toggleImages[] = {TextureResources.buttonBuild[0], TextureResources.buttonBuild[1]};
 
-		toggleSwitches.add(new ModuleToggleSwitch(xStart, 86, 2, "None", this, toggleImages, buttonXSize, buttonYSize, densitySetting == 0));
+		/*toggleSwitches.add(new ModuleToggleSwitch(xStart, 86, 2, "None", this, toggleImages, buttonXSize, buttonYSize, densitySetting == 0));
 		toggleSwitches.add(new ModuleToggleSwitch(xStart, 106, 2, "Normal", this, toggleImages, buttonXSize, buttonYSize, densitySetting == 1));
 		toggleSwitches.add(new ModuleToggleSwitch(xStart, 126, 2, "Dense", this, toggleImages, buttonXSize, buttonYSize, densitySetting == 2));
-		modules.add(densityButton = new ModuleRadioButton(this, toggleSwitches));
+		modules.add(densityButton = new ModuleRadioButton(this, toggleSwitches));*/
+
+		modules.add(new ModuleSlider(xStart, 86, 1, new IndicatorBarImage(2, 7, 12, 81, 17, 0, 6, 6, 1, 0, ForgeDirection.UP, TextureResources.rocketHud), this));
 
 		toggleSwitches = new ArrayList<ModuleToggleSwitch>();
 
@@ -418,6 +423,47 @@ public class TilePlanetAnalyser extends TileEntityMultiPowerConsumer implements 
 
 
 		return modules;
+	}
+
+	@Override
+	public int getProgress(int id) {
+		if(id == 1) {
+			return densitySetting;
+		}
+		else
+			return super.getProgress(id);
+	}
+
+	@Override
+	public float getNormallizedProgress(int id) {
+		if(id == 1)
+			return getProgress(id)/ (float)getTotalProgress(id);
+		else
+			return completionTime > 0 ? currentTime/(float)completionTime : 0f;
+	}
+
+	@Override
+	public void setProgress(int id, int progress) {
+		if(id == 1) {
+			densitySetting = progress;
+			PacketHandler.sendToServer(new PacketMachine(this, (byte)101));
+		}
+		else
+			super.setProgress(id, progress);
+	}
+
+	@Override
+	public void setTotalProgress(int id, int progress) {
+		if(id == 0)
+			super.setTotalProgress(id, progress);
+	}
+
+	@Override
+	public int getTotalProgress(int id) {
+		if(id == 1)
+			return 200;
+		else
+			return super.getTotalProgress(id);
 	}
 
 	@Override
