@@ -2,26 +2,14 @@ package zmaster587.advancedRocketry.tile.multiblock;
 
 import io.netty.buffer.ByteBuf;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
-import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
-import zmaster587.advancedRocketry.block.multiblock.BlockMultiblockStructure;
 import zmaster587.advancedRocketry.tile.TileInputHatch;
 import zmaster587.advancedRocketry.tile.TileOutputHatch;
-import zmaster587.advancedRocketry.tile.TileRFBattery;
-import zmaster587.libVulpes.api.IUniversalEnergy;
-import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.interfaces.IRecipe;
-import zmaster587.libVulpes.tile.IMultiblock;
-import zmaster587.libVulpes.util.INetworkMachine;
-import zmaster587.libVulpes.util.MultiBattery;
-import zmaster587.libVulpes.util.Vector3F;
 import zmaster587.libVulpes.util.ZUtils;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -32,9 +20,8 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileMultiBlockMachine extends TileEntityMultiPowerConsumer {
+public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 	public enum NetworkPackets {
 		TOGGLE,
@@ -46,13 +33,13 @@ public class TileMultiBlockMachine extends TileEntityMultiPowerConsumer {
 
 
 	private List<ItemStack> outputItemStacks;
-	
+
 	boolean smartInventoryUpgrade = true;
 	//When using smart inventories sometimes setInventory content calls need to be made
 	//This flag prevents infinite recursion by having a value of true if any invCheck has started
 	boolean invCheckFlag = false;
-	
-	public TileMultiBlockMachine() {
+
+	public TileMultiblockMachine() {
 		super();
 		outputItemStacks = null;
 	}
@@ -60,7 +47,7 @@ public class TileMultiBlockMachine extends TileEntityMultiPowerConsumer {
 	public List<ItemStack> getOutputs() {
 		return outputItemStacks;
 	}
-	
+
 	@Override
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
@@ -90,9 +77,11 @@ public class TileMultiBlockMachine extends TileEntityMultiPowerConsumer {
 		super.updateEntity();
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
-		if(timeAlive == 0 ) {
+		if(timeAlive == 0  && !worldObj.isRemote) {
 
-			completeStructure = completeStructure();
+			if(completeStructure)
+				completeStructure = completeStructure();
+
 			if(completeStructure && !worldObj.isRemote)
 				onInventoryUpdated();
 			timeAlive = 0x1;
@@ -107,7 +96,6 @@ public class TileMultiBlockMachine extends TileEntityMultiPowerConsumer {
 
 				//Increment for both client and server
 				currentTime++;
-
 				//If server then check to see if we need to update the client, use power and process output if applicable
 				if(!worldObj.isRemote) {
 
@@ -129,7 +117,7 @@ public class TileMultiBlockMachine extends TileEntityMultiPowerConsumer {
 			}
 		}
 	}
-	
+
 	@Override
 	public void setMachineEnabled(boolean enabled) {
 		super.setMachineEnabled(enabled);
@@ -169,18 +157,20 @@ public class TileMultiBlockMachine extends TileEntityMultiPowerConsumer {
 	//When the output of the recipe is dumped to the inventory
 	protected void dumpOutputToInventory() {
 
+		int totalItems = 0;
 		for(IInventory outInventory : itemOutPorts) {
-
-			for(int i = 0; i < outputItemStacks.size(); i++) {
+			for(int i = totalItems; i < outputItemStacks.size(); i++) {
 				ItemStack stack = outInventory.getStackInSlot(smartInventoryUpgrade ? outInventory.getSizeInventory() - i - 1 : i);
 
 				if(stack == null) {
 					outInventory.setInventorySlotContents(smartInventoryUpgrade ? outInventory.getSizeInventory() - i - 1 : i, outputItemStacks.get(i));
 					outInventory.markDirty();
+					totalItems++;
 				}
 				else if(stack.isItemEqual(outputItemStacks.get(i)) && stack.stackSize + outputItemStacks.get(i).stackSize <= outInventory.getInventoryStackLimit()) {
 					outInventory.markDirty();
 					outInventory.getStackInSlot(smartInventoryUpgrade ? outInventory.getSizeInventory() - i - 1 : i).stackSize += outputItemStacks.get(i).stackSize;
+					totalItems++;
 				}
 			}
 		}
@@ -214,7 +204,7 @@ public class TileMultiBlockMachine extends TileEntityMultiPowerConsumer {
 							}
 
 							//If no matching item is found for the ingredient
-							break recipeCheck;
+							//break recipeCheck;
 						}
 
 					if(mask == (1 << ( ( ingredients.size() ) ) - 1) && canProcessRecipe(recipe) )
@@ -318,12 +308,10 @@ public class TileMultiBlockMachine extends TileEntityMultiPowerConsumer {
 	}*/
 
 
-	
+
 
 	//Must be overridden or an NPE will occur
-	public List<IRecipe> getMachineRecipeList() {
-		return null;
-	}
+	public abstract List<IRecipe> getMachineRecipeList();
 
 	//Called by inventory blocks that are part of the structure
 	//This includes recipe management etc
@@ -334,8 +322,8 @@ public class TileMultiBlockMachine extends TileEntityMultiPowerConsumer {
 
 			if(enabled && (recipe = getRecipe(getMachineRecipeList())) != null && canProcessRecipe(recipe)) {
 				consumeItems(recipe);
-				powerPerTick = recipe.getPower();
-				completionTime = recipe.getTime();
+				powerPerTick = (int)Math.ceil((getPowerMultiplierForRecipe(recipe)*recipe.getPower()));
+				completionTime = (int)(getTimeMultiplierForRecipe(recipe)*recipe.getTime());
 				outputItemStacks = recipe.getOutput();
 
 				markDirty();
@@ -350,27 +338,37 @@ public class TileMultiBlockMachine extends TileEntityMultiPowerConsumer {
 		}
 	}
 
+	protected float getTimeMultiplierForRecipe(IRecipe recipe) {
+		return 1f;
+	}
+
+	protected float getPowerMultiplierForRecipe(IRecipe recipe) {
+		return 1f;
+	}
+
 	@Override
 	protected void integrateTile(TileEntity tile) {
 		super.integrateTile(tile);
-		
+
 		if(tile instanceof TileInputHatch)
 			itemInPorts.add((IInventory) tile);
 		else if(tile instanceof TileOutputHatch) 
 			itemOutPorts.add((IInventory) tile);
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		
+
 		//Save output items if applicable
 		if(outputItemStacks != null) {
 			NBTTagList list = new NBTTagList();
 			for(ItemStack stack : outputItemStacks) {
-				NBTTagCompound tag = new NBTTagCompound();
-				stack.writeToNBT(tag);
-				list.appendTag(tag);
+				if(stack != null) {
+					NBTTagCompound tag = new NBTTagCompound();
+					stack.writeToNBT(tag);
+					list.appendTag(tag);
+				}
 			}
 			nbt.setTag("outputItems", list);
 		}
@@ -397,10 +395,10 @@ public class TileMultiBlockMachine extends TileEntityMultiPowerConsumer {
 		boolean completeStructure = super.attemptCompleteStructure();
 		if(completeStructure)
 			onInventoryUpdated();
-		
+
 		return completeStructure;
 	}
-	
+
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {
 		super.writeDataToNetwork(out, id);

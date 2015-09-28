@@ -5,12 +5,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
+import zmaster587.advancedRocketry.api.PlayerDataHandler;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketHandler;
+import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.world.DimensionManager;
 import zmaster587.advancedRocketry.world.DimensionProperties;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
@@ -29,15 +32,30 @@ public class PlanetEventHandler {
 	//Handle gravity
 	@SubscribeEvent
 	public void playerTick(TickEvent.PlayerTickEvent event) {
+		
+		if(event.player.worldObj.isRemote && event.player.posY > 260 && event.player.posY < 270 && event.player.motionY < -.1) {
+			RocketEventHandler.destroyOrbitalTextures(event.player.worldObj);
+		}
 		if(event.player.worldObj.provider instanceof IPlanetaryProvider && !event.player.isInWater()) {
 			IPlanetaryProvider planet = (IPlanetaryProvider)event.player.worldObj.provider;
 			if(!event.player.capabilities.isFlying) {
 				event.player.motionY += 0.04f - planet.getGravitationalMultiplier()*0.04f;
 			}
 		}
+		else if(event.player.worldObj.provider.dimensionId == 0) {
+			if(!event.player.capabilities.isFlying) {
+				event.player.motionY += 0.04f - DimensionManager.overworldProperties.gravitationalMultiplier*0.04f;
+			}
+		}
 	}
 
-
+	@SubscribeEvent
+	public void entityRegister(EntityConstructing event) {
+		if(event.entity instanceof EntityPlayer) {
+			event.entity.registerExtendedProperties(PlayerDataHandler.IDENTIFIER, new PlayerDataHandler());
+		}
+	}
+	
 	//TODO move
 	//Has weak refs so if the player gets killed/logsout etc the entry doesnt stay trapped in RAM
 	private static HashSet<WeakReference<EntityPlayer>> inventoryCheckPlayerBypassMap = new HashSet<WeakReference<EntityPlayer>>();
@@ -85,18 +103,25 @@ public class PlanetEventHandler {
 	}
 
 	//Make sure the player receives data about the dimensions
-	@SubscribeEvent
+	//TODO not needed?
+	/*@SubscribeEvent
 	public void playerChangedDimensionEvent(PlayerEvent.PlayerChangedDimensionEvent event) {
 		if(!event.player.worldObj.isRemote) {
 			if(DimensionManager.getInstance().isDimensionCreated(event.toDim))
 				PacketHandler.sendToPlayer(new PacketDimInfo(event.toDim, DimensionManager.getInstance().getDimensionProperties(event.toDim)), event.player);
 		}
 
-	}
+	}*/
 
 	//Make sure the player receives data about the dimensions
 	@SubscribeEvent
 	public void playerLoggedInEvent(FMLNetworkEvent.ServerConnectionFromClientEvent event) {
+		
+		//Make sure stars are sent first
+		for(int i : DimensionManager.getInstance().getStars()) {
+			PacketHandler.sendToDispatcher(new PacketStellarInfo(i, DimensionManager.getInstance().getStar(i)), event.manager);
+		}
+		
 		for(int i : DimensionManager.getInstance().getregisteredDimensions()) {
 			PacketHandler.sendToDispatcher(new PacketDimInfo(i, DimensionManager.getInstance().getDimensionProperties(i)), event.manager);
 		}

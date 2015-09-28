@@ -8,11 +8,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class ItemPlanetIdentificationChip extends Item {
+public class ItemPlanetIdentificationChip extends ItemMultiData {
 
 	private static final String dimensionNameIdentifier = "DimensionName";
 	private static final String dimensionIdIdentifier = "dimId";
-	
+
+	public ItemPlanetIdentificationChip() {
+	}
+
 	@Override
 	public boolean isDamageable() {
 		return false;
@@ -34,8 +37,10 @@ public class ItemPlanetIdentificationChip extends Item {
 	 * @return true of the dimension stored on the stack exists and is valid
 	 */
 	public boolean hasValidDimension(ItemStack stack) {
+		
 		if(stack.hasTagCompound()) {
-			return DimensionManager.getInstance().isDimensionCreated(stack.getTagCompound().getInteger(dimensionIdIdentifier));
+			int dimId = stack.getTagCompound().getInteger(dimensionIdIdentifier);
+			return dimId == 0 || DimensionManager.getInstance().isDimensionCreated(dimId);
 		}
 
 		return false;
@@ -56,13 +61,24 @@ public class ItemPlanetIdentificationChip extends Item {
 	 */
 	public void setDimensionId(ItemStack stack, int dimensionId) {
 
+		NBTTagCompound nbt;
+		if(dimensionId == -1) {
+			nbt = new NBTTagCompound();
+			nbt.setInteger(dimensionIdIdentifier, dimensionId);
+			return;
+		}
+
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimensionId);
 		if(properties == null) {
 			erase(stack);
 			return;
 		}
 
-		NBTTagCompound nbt = new NBTTagCompound();
+		if(stack.hasTagCompound())
+			nbt = stack.getTagCompound();
+		else
+			nbt = new NBTTagCompound();
+
 		nbt.setInteger(dimensionIdIdentifier, dimensionId);
 		nbt.setString(dimensionNameIdentifier, properties.getName());
 		stack.setTagCompound(nbt);
@@ -92,18 +108,24 @@ public class ItemPlanetIdentificationChip extends Item {
 	@Override
 	public void addInformation(ItemStack stack, net.minecraft.entity.player.EntityPlayer player, java.util.List list, boolean bool) {
 
-		if(hasValidDimension(stack)) {
-			
-			String unknown = ChatFormatting.YELLOW + "???";
-			String dimName = stack.getTagCompound().getString(dimensionNameIdentifier);
-			
-			list.add("Planet Name: " + ChatFormatting.DARK_GREEN  + dimName);
-			list.add("Mass: " + unknown);
-			list.add("Atmosphere Density: " + unknown);
-			list.add("Distance From Star: " + unknown);
+		if(!stack.hasTagCompound()) {
+			list.add("Unprogrammed");
+		}
+		else if(!hasValidDimension(stack)) {
+			list.add(ChatFormatting.RED + "Programming Failed");
 		}
 		else {
-			list.add("Unprogrammed");
+
+			String unknown = ChatFormatting.YELLOW + "???";
+			String dimName = stack.getTagCompound().getString(dimensionNameIdentifier);
+
+			list.add("Planet Name: " + ChatFormatting.DARK_GREEN  + dimName);
+
+			super.addInformation(stack, player, list, bool);
+
+			//list.add("Mass: " + unknown);
+			//list.add("Atmosphere Density: " + unknown);
+			//list.add("Distance From Star: " + unknown);
 		}
 	}
 }

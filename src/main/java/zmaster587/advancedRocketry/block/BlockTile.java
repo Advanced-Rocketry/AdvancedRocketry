@@ -24,7 +24,7 @@ public class BlockTile extends RotatableBlock {
 	protected int guiId;
 
 	public BlockTile(Class<? extends TileEntity> tileClass, int guiId) {
-		super(Material.circuits);
+		super(Material.rock);
 		this.tileClass = tileClass;
 		this.guiId = guiId;
 		this.setHardness(1F).setResistance(3F).setBlockTextureName("Advancedrocketry:machineGeneric");

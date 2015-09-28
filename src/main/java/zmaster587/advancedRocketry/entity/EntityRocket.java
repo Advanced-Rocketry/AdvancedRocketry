@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.ListIterator;
 
 import io.netty.buffer.ByteBuf;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
@@ -30,6 +29,7 @@ import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
+import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.network.PacketEntity;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.satellite.SatelliteDefunct;
@@ -127,6 +127,14 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 		return null;
 	}
 
+	@Override
+	public void setPositionAndRotation2(double x, double y,
+			double z, float p_70056_7_, float p_70056_8_,
+			int p_70056_9_) {
+		if( y < 400 && this.isInOrbit)
+			super.setPositionAndRotation2(x, y, z, p_70056_7_, p_70056_8_, p_70056_9_);
+	}
+	
 	/**
 	 * @return the amount of fuel stored in the rocket
 	 */
@@ -233,7 +241,7 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 
 		ItemStack heldItem = player.getHeldItem();
 
-		//Handle linkers
+		//Handle linkers and right-click with fuel
 		if(heldItem != null) {
 			float fuelMult;
 			FluidStack fluidStack;
@@ -269,7 +277,7 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 					player.addChatMessage(new ChatComponentText("Nothing to be linked"));
 				return false;
 			}
-			else if(FluidContainerRegistry.isFilledContainer(heldItem) && (fuelMult = FuelRegistry.instance.getMultiplier(FuelType.LIQUID, (fluidStack = FluidContainerRegistry.getFluidForFilledItem(heldItem)).getFluid()) ) > 0 ) { //TODO
+			else if(FluidContainerRegistry.isFilledContainer(heldItem) && (fuelMult = FuelRegistry.instance.getMultiplier(FuelType.LIQUID, (fluidStack = FluidContainerRegistry.getFluidForFilledItem(heldItem)).getFluid()) ) > 0 ) { 
 
 
 				int amountToAdd = (int) (fuelMult*fluidStack.amount);
@@ -313,7 +321,7 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 
 
 	public boolean isBurningFuel() {
-		return getFuelAmount() > 0 && (!(this.riddenByEntity instanceof EntityPlayer) || !isInOrbit || ((EntityPlayer)this.riddenByEntity).moveForward > 0);
+		return (getFuelAmount() > 0 || !Configuration.rocketRequireFuel) && (!(this.riddenByEntity instanceof EntityPlayer) || !isInOrbit || ((EntityPlayer)this.riddenByEntity).moveForward > 0);
 	}
 
 	@Override
@@ -346,7 +354,7 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 				EntityPlayer player = (EntityPlayer)this.riddenByEntity;
 
 				//Hackish crap to make clients mount entities immediately after server transfer and fire events
-				if(!worldObj.isRemote && this.isInFlight && this.ticksExisted == 20) {
+				if(!worldObj.isRemote && this.isInFlight() && this.ticksExisted == 20) {
 					//Deorbiting
 					MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketDeOrbitingEvent(this));
 
@@ -357,8 +365,9 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 
 				//if the player holds the forward key then decelerate
 				if(isInOrbit && burningFuel)
-					this.motionY -= this.motionY*player.moveForward/75f;
+					this.motionY -= this.motionY*player.moveForward/50f;
 				this.velocityChanged = true;
+				
 			}
 
 			//If out of fuel or descending then accelerate downwards
@@ -373,7 +382,7 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 			this.moveEntity(0, this.motionY, 0);
 
 			//Check to see if it's landed
-			if(isInFlight && lastPosY + this.motionY != this.posY) {
+			if((isInOrbit || !burningFuel) && isInFlight() && lastPosY + this.motionY != this.posY) {
 				MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketLandedEvent(this));
 				this.setInFlight(false);
 				this.isInOrbit = false;
@@ -518,7 +527,7 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 			WorldServer worldserver1 = minecraftserver.worldServerForDimension(newDimId);
 			this.dimension = newDimId;
 
-			this.worldObj.removeEntity(this);
+			//this.worldObj.removeEntity(this);
 			this.isDead = false;
 			this.worldObj.theProfiler.startSection("reposition");
 

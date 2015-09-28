@@ -3,10 +3,12 @@ package zmaster587.advancedRocketry.world;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -15,11 +17,14 @@ import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketSatellite;
+import zmaster587.advancedRocketry.world.solar.StellarBody;
+import zmaster587.libVulpes.util.VulpineMath;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -43,20 +48,74 @@ public class DimensionProperties {
 			temp = i;
 		}
 
+		@Deprecated
 		public int getTemp() {
 			return temp;
 		}
+
+		public static Temps getTempFromValue(int value) {
+			for(Temps type : Temps.values()) {
+				if(value > type.temp)
+					return type;
+			}
+			return SNOWBALL;
+		}
 	}
 
-	public static DimensionProperties overworldProperties;
+	static enum AtmosphereTypes {
+		HIGHPRESSURE(150),
+		NORMAL(75),
+		LOW(25),
+		NONE(0);
 
-	static {
-		overworldProperties = new DimensionProperties(0);
-		overworldProperties.atmosphereDensity = 100;
-		overworldProperties.averageTemperature = 100;
-		overworldProperties.gravitationalMultiplier = 100;
-		overworldProperties.orbitalDist = 100;
-		overworldProperties.skyColor = new float[] {1f, 1f, 1f};
+		private int value;
+
+		private AtmosphereTypes(int value) {
+			this.value = value;
+		}
+
+		public int getAtmosphereValue() {
+			return value;
+		}
+
+		public static AtmosphereTypes getAtmosphereTypeFromValue(int value) {
+			for(AtmosphereTypes type : AtmosphereTypes.values()) {
+				if(value > type.value)
+					return type;
+			}
+			return NONE;
+		}
+
+		/*public int compareTo(AtmosphereTypes type) {
+			if(type == this)
+				return 0;
+			else if(type.value < this.value)
+				return -1;
+
+			return 1;
+		}*/
+	}
+
+	public static enum PlanetIcons {
+		EARTHLIKE(new ResourceLocation("advancedrocketry:textures/planets/Earthlike.png")),
+		LAVA(new ResourceLocation("advancedrocketry:textures/planets/Lava.png")),
+		MARSLIKE(new ResourceLocation("advancedrocketry:textures/planets/marslike.png")),
+		MOON(new ResourceLocation("advancedrocketry:textures/planets/moon.png")),
+		WATERWORLD(new ResourceLocation("advancedrocketry:textures/planets/WaterWorld.png")),
+		ICEWORLD(new ResourceLocation("advancedrocketry:textures/planets/IceWorld.png")),
+		UNKNOWN(new ResourceLocation("advancedrocketry:textures/planets/Unknown.png")),
+		;
+
+		public static final ResourceLocation atmosphere = new ResourceLocation("advancedrocketry:textures/planets/Atmosphere.png");
+		private ResourceLocation resource;
+
+		private PlanetIcons(ResourceLocation resource) {
+			this.resource = resource;
+		}
+
+		public ResourceLocation getResource() {
+			return resource;
+		}
 	}
 
 	public float[] skyColor;
@@ -66,14 +125,16 @@ public class DimensionProperties {
 	public int atmosphereDensity;
 	public int averageTemperature;
 	public int rotationalPeriod;
-	public float[] sunColor;
+	public double orbitTheta;
+	StellarBody star;
 	public String name;
 	public float[] sunriseSunsetColors;
 	//public ExtendedBiomeProperties biomeProperties;
 	private LinkedList<BiomeEntry> allowedBiomes;
+	private boolean isRegistered = false;
 
 	//Planet Heirachy
-	private LinkedList<Integer> childPlanets;
+	private HashSet<Integer> childPlanets;
 	private int parentPlanet;
 	private int planetId;
 
@@ -89,13 +150,11 @@ public class DimensionProperties {
 
 		planetId = id;
 		parentPlanet = -1;
-		childPlanets = new LinkedList<Integer>();
+		childPlanets = new HashSet<Integer>();
 
 		allowedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
 		satallites = new HashMap<>();
 		tickingSatallites = new LinkedList<SatelliteBase>();
-
-
 	}
 
 	public DimensionProperties(int id ,String name) {
@@ -106,13 +165,49 @@ public class DimensionProperties {
 
 	public void resetProperties() {
 		fogColor = new float[] {1,1,1};
-		sunColor = new float[] {.7f,.5f,.1f};
 		skyColor = new float[] {1f,1f,1f};
 		sunriseSunsetColors = new float[] {.7f,.2f,.2f,1};
 		gravitationalMultiplier = 1;
 		rotationalPeriod = 24000;
 		orbitalDist = 100;
 		atmosphereDensity = 100;
+	}
+
+	public float[] getSunColor() {
+		return star.getColor();
+	}
+
+	public void setStar(StellarBody star) {
+		this.star = star;
+		if(!this.isMoon())
+			this.star.addPlanet(this);
+	}
+
+	public StellarBody getStar() {
+		return star;
+	}
+
+	public ResourceLocation getPlanetIcon() {
+		AtmosphereTypes atmType = AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity);
+		Temps tempType = Temps.getTempFromValue(averageTemperature);
+
+
+		if(atmType != AtmosphereTypes.NONE && VulpineMath.isBetween(tempType.ordinal(), Temps.COLD.ordinal(), Temps.TOOHOT.ordinal()))
+			return PlanetIcons.EARTHLIKE.resource;//TODO: humidity
+		else if(tempType.compareTo(Temps.COLD) > 0)
+			if(atmType.compareTo(AtmosphereTypes.LOW) > 0)
+				return PlanetIcons.MOON.resource;
+			else
+				return PlanetIcons.ICEWORLD.resource;
+		else if(atmType.compareTo(AtmosphereTypes.LOW) > 0) {
+			
+			if(tempType.compareTo(Temps.COLD) < 0)
+				return PlanetIcons.MARSLIKE.resource;
+			else
+				return PlanetIcons.MOON.resource;
+		}
+		else
+			return PlanetIcons.LAVA.resource;
 	}
 
 	public String getName() {
@@ -129,12 +224,57 @@ public class DimensionProperties {
 		return parentPlanet;
 	}
 
-	public void setParentPlanet(int parentId) {
-		parentPlanet = parentId;
+	public DimensionProperties getParentProperties() {
+		if(parentPlanet != -1)
+			return DimensionManager.getInstance().getDimensionProperties(parentPlanet);
+		return null;
 	}
 
-	public List<Integer> getChildPlanets() {
+	public int getParentOrbitalDistance() {
+		return orbitalDist;
+	}
+
+	public int getSolarOrbitalDistance() {
+		if(parentPlanet != -1)
+			return getParentProperties().getSolarOrbitalDistance();
+		return orbitalDist;
+	}
+
+	public void setParentPlanet(int parentId) {
+
+		if(parentPlanet != -1)
+			getParentProperties().childPlanets.remove(new Integer(getId()));
+
+		parentPlanet = parentId;
+		if(parentId != -1)
+			getParentProperties().childPlanets.add(getId());
+
+	}
+
+	public boolean hasChildren() {
+		return !childPlanets.isEmpty();
+	}
+
+	public boolean isMoon() {
+		return parentPlanet != -1;
+	}
+
+	public static ResourceLocation getAtmosphereResource() {
+		return PlanetIcons.atmosphere;
+	}
+
+	public boolean hasAtmosphere() {
+		return AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity).compareTo(AtmosphereTypes.LOW) == -1;
+	}
+
+	public Set<Integer> getChildPlanets() {
 		return childPlanets;
+	}
+
+	public int getPathLengthToStar() {
+		if(isMoon())
+			return 1 + getParentProperties().getPathLengthToStar();
+		return 1;
 	}
 
 	public boolean addChildPlanet(int id) {
@@ -146,17 +286,20 @@ public class DimensionProperties {
 		DimensionManager.getInstance().getDimensionProperties(id).setParentPlanet(planetId);
 		return true;
 	}
+	
+	public void removeChild(int id) {
+		childPlanets.remove(id);
+	}
 
 	//Satallites
-
 	public void addSatallite(SatelliteBase satallite, World world) {
 		satallites.put(satallite.getId(), satallite);
 		satallite.setDimensionId(world);
-		
-		
+
+
 		if(satallite.canTick())
 			tickingSatallites.add(satallite);
-		
+
 		if(!world.isRemote)
 			PacketHandler.sendToAll(new PacketSatellite(satallite));
 	}
@@ -195,6 +338,10 @@ public class DimensionProperties {
 		}
 	}
 
+	public boolean hasRivers() {
+		return AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity).compareTo(AtmosphereTypes.LOW) != -1 && VulpineMath.isBetween(Temps.getTempFromValue(averageTemperature).ordinal(), Temps.COLD.ordinal(), Temps.HOT.ordinal());
+	}
+
 
 	public List<BiomeEntry> getBiomes(int id) {
 		return (List<BiomeEntry>)allowedBiomes.clone();
@@ -208,7 +355,10 @@ public class DimensionProperties {
 
 		ArrayList<BiomeGenBase> viableBiomes = new ArrayList<BiomeGenBase>();
 
-		if(averageTemperature > Temps.TOOHOT.getTemp()) {
+		if(atmosphereDensity < AtmosphereTypes.LOW.value)
+			viableBiomes.add(AdvancedRocketryBiomes.moonBiome);
+
+		else if(averageTemperature > Temps.TOOHOT.getTemp()) {
 			viableBiomes.add(AdvancedRocketryBiomes.hotDryBiome);
 		}
 		else if(averageTemperature > Temps.HOT.getTemp()) {
@@ -232,11 +382,8 @@ public class DimensionProperties {
 
 			viableBiomes.addAll(Arrays.asList(BiomeDictionary.getBiomesForType(BiomeDictionary.Type.COLD)));
 		}
-		else {//(averageTemperature >= Temps.SNOWBALL.getTemp()) 
-			if(atmosphereDensity < 25)
-				viableBiomes.add(AdvancedRocketryBiomes.moonBiome);
-			else
-				viableBiomes.addAll(Arrays.asList(BiomeDictionary.getBiomesForType(BiomeDictionary.Type.COLD)));
+		else {//(averageTemperature >= Temps.SNOWBALL.getTemp())
+			viableBiomes.addAll(Arrays.asList(BiomeDictionary.getBiomesForType(BiomeDictionary.Type.COLD)));
 			//TODO:
 		}
 
@@ -252,6 +399,11 @@ public class DimensionProperties {
 	public void addBiomes(List<BiomeGenBase> biomes) {
 		//TODO check for duplicates
 		allowedBiomes.addAll(getBiomesEntries(biomes));
+	}
+
+	public void setBiomes(List<BiomeGenBase> biomes) {
+		allowedBiomes.clear();
+		addBiomes(biomes);
 	}
 
 	public void addBiomeType(BiomeDictionary.Type type) {
@@ -365,14 +517,6 @@ public class DimensionProperties {
 			}
 		}
 
-		if(nbt.hasKey("sunColor")) {
-			list = nbt.getTagList("sunColor", NBT.TAG_FLOAT);
-			sunColor = new float[list.tagCount()];
-			for(int f = 0 ; f < list.tagCount(); f++) {
-				sunColor[f] = list.func_150308_e(f);
-			}
-		}
-
 		//Load biomes
 		if(nbt.hasKey("biomes")) {
 
@@ -388,10 +532,13 @@ public class DimensionProperties {
 			allowedBiomes.addAll(getBiomesEntries(biomesList));
 		}
 
+
+
 		gravitationalMultiplier = nbt.getFloat("gravitationalMultiplier");
 		orbitalDist = nbt.getInteger("orbitalDist");
+		orbitTheta = nbt.getDouble("orbitTheta");
 		atmosphereDensity = nbt.getInteger("atmosphereDensity");
-		averageTemperature =	nbt.getInteger("avgTemperature");
+		averageTemperature = nbt.getInteger("avgTemperature");
 		rotationalPeriod = nbt.getInteger("rotationalPeriod");
 		name = nbt.getString("name");
 
@@ -401,7 +548,9 @@ public class DimensionProperties {
 				childPlanets.add(i);
 		}
 
+		//Note: parent planet must be set before setting the star otherwise it would cause duplicate planets in the StellarBody's array
 		parentPlanet = nbt.getInteger("parentPlanet");
+		this.setStar( DimensionManager.getInstance().getStar(nbt.getInteger("starId")));
 
 		//Satallites
 
@@ -455,12 +604,6 @@ public class DimensionProperties {
 		}
 		nbt.setTag("fogColor", list);
 
-		list = new NBTTagList();
-		for(float f : sunColor) {
-			list.appendTag(new NBTTagFloat(f));
-		}
-		nbt.setTag("sunColor", list);
-
 		if(!allowedBiomes.isEmpty()) {
 			int biomeId[] = new int[allowedBiomes.size()];
 			for(int i = 0; i < allowedBiomes.size(); i++) {
@@ -469,8 +612,10 @@ public class DimensionProperties {
 			nbt.setIntArray("biomes", biomeId);
 		}
 
+		nbt.setInteger("starId", star.getId());
 		nbt.setFloat("gravitationalMultiplier", gravitationalMultiplier);
 		nbt.setInteger("orbitalDist", orbitalDist);
+		nbt.setDouble("orbitTheta", orbitTheta);
 		nbt.setInteger("atmosphereDensity", atmosphereDensity);
 		nbt.setInteger("avgTemperature", averageTemperature);
 		nbt.setInteger("rotationalPeriod", rotationalPeriod);

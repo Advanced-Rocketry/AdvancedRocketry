@@ -69,6 +69,37 @@ public class ProgressBarImage {
 	public int getInsetY() { return insetY; }
 	public ForgeDirection getDirection() { return direction; }
 	
+	@SideOnly(Side.CLIENT)
+	public void renderProgressBarPartial(int x, int y, float center, float variation, net.minecraft.client.gui.Gui gui) {
+		
+		Minecraft.getMinecraft().getTextureManager().bindTexture(image);
+		gui.drawTexturedModalRect(x, y, backOffsetX, backOffsetY, backWidth, backHeight);
+		
+		if(center - variation/2 < 0) {
+			float change = center - (variation/2f);
+			
+			center -= change/2f;
+			variation += change;
+		}
+		
+		if(center + variation/2 > 1) {
+			float change = 1 - center - (variation/2f);
+			
+			center += change/2f;
+			variation -= change;
+		}
+		
+		
+		if(direction == ForgeDirection.EAST )//Left to right
+			gui.drawTexturedModalRect(x + insetX + (int)(foreWidth*(1 - center - variation/2f)), y + insetY, foreOffsetX + (int)((1-variation/2-center)*foreWidth), foreOffsetY, (int)(variation*foreWidth), foreHeight);
+		//else if(direction == ForgeDirection.WEST)
+		else if(direction == ForgeDirection.UP) // bottom to top
+			gui.drawTexturedModalRect(x + insetX, y + insetY + foreHeight - (int)(variation*foreHeight), foreOffsetX, foreOffsetY + foreHeight - (int)(variation*foreHeight), foreWidth, (int)(variation*foreHeight) );
+		else if(direction == ForgeDirection.DOWN)
+			gui.drawTexturedModalRect(x + insetX, y + insetY, foreOffsetX, foreOffsetY, foreWidth, (int)(variation*foreHeight) );
+	
+	}
+	
 	/**
 	 * 
 	 * @param x X location to render the progress bar

@@ -40,6 +40,12 @@ public class ModuleToggleSwitch extends ModuleButton {
 		currentState = defaultState;
 	}
 	
+	public ModuleToggleSwitch(int offsetX, int offsetY, int buttonId, String text, IToggleButton tile, ResourceLocation buttonImages[], String tooltipText, int sizeX, int sizeY, boolean defaultState) {
+		super(offsetX, offsetY, buttonId, text, tile, buttonImages, tooltipText, sizeX, sizeY);
+		this.tile = tile;
+		currentState = defaultState;
+	}
+	
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
@@ -102,8 +108,8 @@ public class ModuleToggleSwitch extends ModuleButton {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void renderBackground(GuiContainer gui, int x, int y, FontRenderer font) {
-		super.renderBackground(gui, x, y, font);
+	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY, FontRenderer font) {
+		super.renderBackground(gui, x, y, mouseX, mouseY, font);
 		enabledButton.setState(currentState);
 	}
 }

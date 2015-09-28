@@ -32,4 +32,8 @@ public class CommonProxy {
 	public void changeClientPlayerWorld(World world) {
 		
 	}
+
+	public String getLocalizedString(String str) {
+		return str;
+	}
 }

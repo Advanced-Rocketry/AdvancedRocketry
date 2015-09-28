@@ -21,5 +21,4 @@ public class BlockPlanetSoil extends Block {
 	public MapColor getMapColor(int meta) {
 		return extraMapColor == null ? super.getMapColor(meta) : extraMapColor;
 	}
-	
 }

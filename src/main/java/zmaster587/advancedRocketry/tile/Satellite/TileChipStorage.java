@@ -27,10 +27,10 @@ import zmaster587.advancedRocketry.item.ItemSatellite;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketMachine;
-import zmaster587.advancedRocketry.tile.multiblock.TileEntityMultiPowerConsumer;
+import zmaster587.advancedRocketry.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.advancedRocketry.world.DimensionManager;
 
-public class TileChipStorage extends TileEntityMultiPowerConsumer  implements IModularInventory, IInventory, IButtonInventory {
+public class TileChipStorage extends TileMultiPowerConsumer  implements IModularInventory, IInventory, IButtonInventory {
 
 	public static final Object[][][] structure = new Object[][][] {
 		{{'c'}},

@@ -103,6 +103,23 @@ public class StorageChunk implements IBlockAccess {
 		nbt.setInteger("xSize", sizeX);
 		nbt.setInteger("ySize", sizeY);
 		nbt.setInteger("zSize", sizeZ);
+		
+		
+		Iterator<TileEntity> tileEntityIterator = tileEntities.iterator();
+		NBTTagList tileList = new NBTTagList();
+		while(tileEntityIterator.hasNext()) {
+			TileEntity tile = tileEntityIterator.next();
+			try {
+				NBTTagCompound tileNbt = new NBTTagCompound();
+				tile.writeToNBT(tileNbt);
+				tileList.appendTag(tileNbt);
+			} catch(RuntimeException e) {
+				AdvancedRocketry.logger.warning("A tile entity has thrown an error: " + tile.getClass().getCanonicalName());
+				blocks[tile.xCoord][tile.yCoord][tile.zCoord] = Blocks.air;
+				metas[tile.xCoord][tile.yCoord][tile.zCoord] = 0;
+				tileEntityIterator.remove();
+			}
+		}
 
 		int[] blockId = new int[sizeX*sizeY*sizeZ];
 		int[] metasId = new int[sizeX*sizeY*sizeZ];
@@ -117,13 +134,7 @@ public class StorageChunk implements IBlockAccess {
 
 		NBTTagIntArray idList = new NBTTagIntArray(blockId);
 		NBTTagIntArray metaList = new NBTTagIntArray(metasId);
-		NBTTagList tileList = new NBTTagList();
-
-		for(TileEntity tile : tileEntities) {
-			NBTTagCompound tileNbt = new NBTTagCompound();
-			tile.writeToNBT(tileNbt);
-			tileList.appendTag(tileNbt);
-		}
+		
 		nbt.setTag("idList", idList);
 		nbt.setTag("metaList", metaList);
 		nbt.setTag("tiles", tileList);
@@ -408,7 +419,7 @@ public class StorageChunk implements IBlockAccess {
 
 	@Override
 	public BiomeGenBase getBiomeGenForCoords(int p_72807_1_, int p_72807_2_) {
-		return null;
+		return BiomeGenBase.ocean;
 	}
 
 	@Override
@@ -509,14 +520,25 @@ public class StorageChunk implements IBlockAccess {
 			}
 		}
 
-		for(TileEntity tile : tileEntities) {
+		Iterator<TileEntity> tileIterator = tileEntities.iterator();
+		
+		while(tileIterator.hasNext()) {
+			TileEntity tile = tileIterator.next();
+			
 			NBTTagCompound nbt = new NBTTagCompound();
-			tile.writeToNBT(nbt);
-
+			
 			try {
-				buffer.writeNBTTagCompoundToBuffer(nbt);
-			} catch(Exception e) {
-				e.printStackTrace();
+				tile.writeToNBT(nbt);
+				
+				try {
+					buffer.writeNBTTagCompoundToBuffer(nbt);
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+				
+			} catch(RuntimeException e) {
+				AdvancedRocketry.logger.warning("A tile entity has thrown an error while writing to network: " + tile.getClass().getCanonicalName());
+				tileIterator.remove();
 			}
 		}
 	}

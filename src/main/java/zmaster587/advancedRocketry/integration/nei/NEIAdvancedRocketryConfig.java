@@ -8,16 +8,22 @@ import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
 import zmaster587.advancedRocketry.recipe.NEI.BlastFurnaceNEI;
 import zmaster587.advancedRocketry.recipe.NEI.CrystallizerNEI;
 import zmaster587.advancedRocketry.recipe.NEI.CuttingMachineNEI;
+import zmaster587.advancedRocketry.recipe.NEI.LatheNEI;
 import zmaster587.advancedRocketry.recipe.NEI.PrecisionAssemberNEI;
+import zmaster587.advancedRocketry.recipe.NEI.TemplateNEI;
 
 public class NEIAdvancedRocketryConfig implements IConfigureNEI {
 
 	@Override
 	public void loadConfig() {
-		PrecisionAssemberNEI precAss = new PrecisionAssemberNEI();
-		BlastFurnaceNEI blastFurnace = new BlastFurnaceNEI();
-		CrystallizerNEI crystallizer = new CrystallizerNEI();
-		CuttingMachineNEI cuttingMachine = new CuttingMachineNEI();
+		TemplateNEI precAss = new PrecisionAssemberNEI();
+		TemplateNEI blastFurnace = new BlastFurnaceNEI();
+		TemplateNEI crystallizer = new CrystallizerNEI();
+		TemplateNEI cuttingMachine = new CuttingMachineNEI();
+		TemplateNEI lathe = new LatheNEI();
+		
+		API.registerRecipeHandler(lathe);
+		API.registerUsageHandler(lathe);
 		API.registerRecipeHandler(precAss);
 		API.registerUsageHandler(precAss);
 		API.registerRecipeHandler(blastFurnace);
@@ -27,6 +33,7 @@ public class NEIAdvancedRocketryConfig implements IConfigureNEI {
 		API.registerRecipeHandler(cuttingMachine);
 		API.registerUsageHandler(cuttingMachine);
 		API.hideItem(new ItemStack(AdvRocketryBlocks.blockQuartzCrucible));
+		API.hideItem(new ItemStack(AdvRocketryBlocks.blockPlaceHolder));
 	}
 
 	@Override

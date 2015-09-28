@@ -13,13 +13,14 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketMachine;
-import zmaster587.advancedRocketry.tile.multiblock.TileEntityMultiPowerConsumer;
-import zmaster587.advancedRocketry.tile.multiblock.TileMultiBlockMachine;
+import zmaster587.advancedRocketry.tile.multiblock.TileMultiPowerConsumer;
+import zmaster587.advancedRocketry.tile.multiblock.TileMultiblockMachine;
 import zmaster587.advancedRocketry.util.DataStorage;
 import zmaster587.libVulpes.gui.GuiImageButton;
 import zmaster587.libVulpes.gui.GuiToggleButtonImage;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.IconResource;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -30,10 +31,11 @@ public class ModuleButton extends ModuleBase {
 
 	IButtonInventory tile;
 	boolean prevState;
-	int buttonId, sizeX, sizeY, color;
+	int buttonId, sizeX, sizeY, color, bgColor;
 	String text, tooltipText;
 	ResourceLocation buttonImages[];
 	boolean visible = true, enabled = true;
+	String sound;
 
 	public ModuleButton(int offsetX, int offsetY, int buttonId, String text, IButtonInventory tile, ResourceLocation buttonImages[]) {
 		super(offsetX, offsetY);
@@ -42,9 +44,11 @@ public class ModuleButton extends ModuleBase {
 		this.text = text;
 		this.buttonId = buttonId;
 
+		sound = "";
 		sizeX = 52;
 		sizeY = 16;
 
+		bgColor = 0xFFFFFFFF;
 		color = 0xFF22FF22; // Lime green
 	}
 
@@ -71,6 +75,19 @@ public class ModuleButton extends ModuleBase {
 		this.sizeX = buttonImage.getxSize();
 		this.sizeY = buttonImage.getySize();
 	}*/
+
+	public void setImage(ResourceLocation[] images) {
+		((GuiImageButton)button).setButtonTexture(images);
+	}
+
+
+	public void setSound(String str) {
+		if(FMLCommonHandler.instance().getSide().isClient())
+			if(button == null)
+				sound = str;
+			else
+				button.setSound(str);
+	}
 
 	/**
 	 * Sets the text of this button
@@ -100,6 +117,13 @@ public class ModuleButton extends ModuleBase {
 	 */
 	public int getColor() {
 		return this.color;
+	}
+
+	public void setBGColor(int color) {
+		if(button == null)
+			this.bgColor = color;
+		else
+			button.setBackgroundColor(color);
 	}
 
 	/**
@@ -147,6 +171,12 @@ public class ModuleButton extends ModuleBase {
 
 		button.visible = visible;
 
+		if(!sound.isEmpty()) {
+			button.setSound(sound);
+			sound = "";
+		}
+
+		button.setBackgroundColor(bgColor);
 		list.add(button);
 
 		return list;
@@ -159,23 +189,30 @@ public class ModuleButton extends ModuleBase {
 		}
 	}
 
+	public boolean isMouseOver(int mouseX, int mouseY) {
+		int relativeX = mouseX - offsetX;
+		int relativeY = mouseY - offsetY;
+
+		return relativeX > 0 && relativeX < sizeX && relativeY > 0 && relativeY < sizeY;
+	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void renderForeground(int mouseX, int mouseY, float zLevel,
+	public void renderForeground(int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel,
 			GuiContainer gui, FontRenderer font) {
 
 		//if(visible) {
 		gui.drawCenteredString(font, text, offsetX + sizeX / 2, offsetY + sizeY / 2  - font.FONT_HEIGHT/2, color);
 
 		if(tooltipText != null) {
-			int relativeX = mouseX - offsetX;
-			int relativeY = mouseY - offsetY;
 
-			if( relativeX > 0 && relativeX < sizeX && relativeY > 0 && relativeY < sizeY) {
-
+			if( isMouseOver(mouseX, mouseY) ) {
 				List<String> list = new LinkedList<String>();
-				list.add(tooltipText);
+				for(String str : tooltipText.split("\n")) {
 
+					list.add(str);
+
+				}
 				this.drawTooltip(gui, list, mouseX, mouseY, zLevel, font);
 			}
 			//}

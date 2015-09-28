@@ -6,106 +6,73 @@ import java.util.List;
 import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleSlotArray;
-import zmaster587.libVulpes.tile.TileEntityPointer;
+import zmaster587.advancedRocketry.util.EmbeddedInventory;
+import zmaster587.libVulpes.tile.TilePointer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
 
-public class TileInventoryHatch extends TileEntityPointer implements ISidedInventory, IModularInventory {
+public class TileInventoryHatch extends TilePointer implements ISidedInventory, IModularInventory {
 
-	protected ItemStack inv[];
+	protected EmbeddedInventory inventory;
 
 	public TileInventoryHatch() {
+		inventory = new EmbeddedInventory(0);
 	}
 
 	public TileInventoryHatch(int invSize) {
-		inv = new ItemStack[invSize];
+		inventory = new EmbeddedInventory(invSize);
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setInteger("size", inv.length);
-
-		NBTTagList list = new NBTTagList();
-		for(int i = 0; i < inv.length; i++)
-		{
-			ItemStack stack = inv[i];
-
-			if(stack != null) {
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setByte("Slot", (byte)(i));
-				stack.writeToNBT(tag);
-				list.appendTag(tag);
-			}
-		}
-		
-		nbt.setTag("outputItems", list);
+		inventory.writeToNBT(nbt);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		
-		NBTTagList list = nbt.getTagList("outputItems", 10);
-		inv = new ItemStack[nbt.getInteger("size")];
 
-		for (int i = 0; i < list.tagCount(); i++) {
-			NBTTagCompound tag = (NBTTagCompound) list.getCompoundTagAt(i);
-			byte slot = tag.getByte("Slot");
-			if (slot >= 0 && slot < inv.length) {
-				inv[slot] = ItemStack.loadItemStackFromNBT(tag);
-			}
-		}
+		inventory.readFromNBT(nbt);
 	}
 
 	@Override
 	public int getSizeInventory() {
-		return inv.length;
+		return inventory.getSizeInventory();
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return inv[slot];
+		return inventory.getStackInSlot(slot);
 	}
 
 	@Override
 	public ItemStack decrStackSize(int slot, int amt) {
-		ItemStack stack = inv[slot];
-		if(stack != null) {
-			ItemStack stack2 = stack.splitStack(amt);
-			if(stack.stackSize == 0)
-				inv[slot] = null;
-			
-			return stack2;
-		}
-		return null;
+		return inventory.decrStackSize(slot, amt);
 	}
 
 	@Override
 	public ItemStack getStackInSlotOnClosing(int slot) {
-		return inv[slot];
+		return inventory.getStackInSlotOnClosing(slot);
 	}
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
-		inv[slot] = stack;
-		TileEntity master = getMasterBlock();
-		if(master != null && master instanceof TileMultiBlockMachine)
-			((TileMultiBlockMachine)getMasterBlock()).onInventoryUpdated();
+		inventory.setInventorySlotContents(slot, stack);
+		if(this.hasMaster() && this.getMasterBlock() instanceof TileMultiblockMachine)
+			((TileMultiblockMachine)this.getMasterBlock()).onInventoryUpdated();
 	}
 
 	@Override
 	public boolean hasCustomInventoryName() {
-		return false;
+		return inventory.hasCustomInventoryName();
 	}
 
 	@Override
 	public int getInventoryStackLimit() {
-		return 64;
+		return inventory.getInventoryStackLimit();
 	}
 
 	@Override
@@ -124,39 +91,34 @@ public class TileInventoryHatch extends TileEntityPointer implements ISidedInven
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) {
-		return true;
+	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+		return inventory.isItemValidForSlot(slot, stack);
 	}
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side) {
 
-		int array[] = new int[inv.length];
-
-		for(int i = 0; i < inv.length; i++) {
-			array[i] = i;
-		}
-		return array;
+		return inventory.getAccessibleSlotsFromSide(side);
 	}
 
 	@Override
 	public boolean canInsertItem(int p_102007_1_, ItemStack p_102007_2_,
 			int p_102007_3_) {
-		return true;
+		return inventory.canInsertItem(p_102007_1_, p_102007_2_, p_102007_3_);
 	}
 
 	@Override
 	public boolean canExtractItem(int p_102008_1_, ItemStack p_102008_2_,
 			int p_102008_3_) {
-		return true;
+		return inventory.canExtractItem(p_102008_1_, p_102008_2_, p_102008_3_);
 	}
 
 	@Override
 	public List<ModuleBase> getModules() {
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
-		
+
 		modules.add(new ModuleSlotArray(8, 18, this, 0, this.getSizeInventory()));
-		
+
 		return modules;
 	}
 

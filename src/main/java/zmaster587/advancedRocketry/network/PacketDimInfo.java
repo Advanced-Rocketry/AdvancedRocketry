@@ -15,55 +15,67 @@ public class PacketDimInfo extends BasePacket {
 
 	DimensionProperties dimProperties;
 	int dimNumber;
-	
+
 	public PacketDimInfo() {}
-	
+
 	public PacketDimInfo(int dimNumber,DimensionProperties dimProperties) {
 		this.dimProperties = dimProperties;
 		this.dimNumber = dimNumber;
 	}
-	
+
 	@Override
 	public void write(ByteBuf out) {
 		NBTTagCompound nbt = new NBTTagCompound();
-		
-		dimProperties.writeToNBT(nbt);
-		
-		PacketBuffer packetBuffer = new PacketBuffer(out);
-		//TODO: error handling
-		try {
-			packetBuffer.writeNBTTagCompoundToBuffer(nbt);
-		} catch (IOException e) {
-			e.printStackTrace();
+		out.writeInt(dimNumber);
+		boolean flag = dimProperties == null;
+		out.writeBoolean(flag);
+		if(!flag) {
+			dimProperties.writeToNBT(nbt);
+
+			PacketBuffer packetBuffer = new PacketBuffer(out);
+			//TODO: error handling
+			try {
+				packetBuffer.writeNBTTagCompoundToBuffer(nbt);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		
-		packetBuffer.writeInt(dimNumber);
+
 	}
 
 	@Override
 	public void readClient(ByteBuf in) {
 		PacketBuffer packetBuffer = new PacketBuffer(in);
 		NBTTagCompound nbt;
-		
-		//TODO: error handling
-		try {
-			nbt = packetBuffer.readNBTTagCompoundFromBuffer();
-			dimNumber = packetBuffer.readInt();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return;
+		dimNumber = in.readInt();
+
+		if(in.readBoolean()) {
+			if(DimensionManager.getInstance().isDimensionCreated(dimNumber)) {
+				DimensionManager.getInstance().deleteDimension(dimNumber);
+			}
 		}
-		
-		if(dimNumber == 0) {
-			DimensionProperties.overworldProperties.readFromNBT(nbt);
+		else {
+			//TODO: error handling
+			try {
+				nbt = packetBuffer.readNBTTagCompoundFromBuffer();
+
+			} catch (IOException e) {
+				e.printStackTrace();
+				return;
+			}
+
+			if(dimNumber == 0) {
+				DimensionManager.overworldProperties.readFromNBT(nbt);
+			}
+			else if( DimensionManager.getInstance().isDimensionCreated(dimNumber)) {
+				DimensionManager.getInstance().getDimensionProperties(dimNumber).readFromNBT(nbt);
+			} else {
+				DimensionManager.getInstance().registerDimNoUpdate(DimensionProperties.createFromNBT(dimNumber, nbt));
+				//net.minecraftforge.common.DimensionManager.registerProviderType(dimNumber,ProviderPlanet.class, false);
+				//net.minecraftforge.common.DimensionManager.registerDimension(dimNumber, dimNumber);
+			}
 		}
-		else if( DimensionManager.getInstance().isDimensionCreated(dimNumber)) {
-			DimensionManager.getInstance().getDimensionProperties(dimNumber).readFromNBT(nbt);
-		} else {
-			DimensionManager.getInstance().registerDim(DimensionProperties.createFromNBT(dimNumber, nbt));
-			//net.minecraftforge.common.DimensionManager.registerProviderType(dimNumber,ProviderPlanet.class, false);
-			//net.minecraftforge.common.DimensionManager.registerDimension(dimNumber, dimNumber);
-		}
+
 	}
 
 	@Override

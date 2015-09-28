@@ -5,6 +5,7 @@ import java.util.List;
 import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
 import zmaster587.libVulpes.gui.CommonResources;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
@@ -18,8 +19,8 @@ public class GuiModular extends GuiContainer {
 	String unlocalizedName;
 	boolean hasSlots;
 	
-	public GuiModular(EntityPlayer playerInv, List<ModuleBase> modules, IModularInventory modularInv, boolean includePlayerInv, String name) {
-		super(new ContainerModular(playerInv, modules,modularInv, includePlayerInv));
+	public GuiModular(EntityPlayer playerInv, List<ModuleBase> modules, IModularInventory modularInv, boolean includePlayerInv, boolean includeHotBar, String name) {
+		super(new ContainerModular(playerInv, modules,modularInv, includePlayerInv, includeHotBar));
 		this.modules = modules;
 		unlocalizedName = name;
 		hasSlots = includePlayerInv;
@@ -40,9 +41,8 @@ public class GuiModular extends GuiContainer {
 		}
 	}
 	
-	
 	@Override
-	protected void actionPerformed(GuiButton button) {
+	public void actionPerformed(GuiButton button) {
 		super.actionPerformed(button);
 		
 		for(ModuleBase module : modules) {
@@ -50,7 +50,7 @@ public class GuiModular extends GuiContainer {
 		}
 		
 	}
-	
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int a,
 			int b) {
@@ -59,7 +59,7 @@ public class GuiModular extends GuiContainer {
 		this.fontRendererObj.drawString(I18n.format(unlocalizedName, new Object[0]), 8, 6, 4210752);
 
 		for(ModuleBase module : modules)
-			module.renderForeground(a - (width - xSize)/2 ,b - (height - ySize) / 2, zLevel, this, this.fontRendererObj);
+			module.renderForeground((width - xSize)/2, (height - ySize) / 2,a - (width - xSize)/2 ,b - (height - ySize) / 2, zLevel, this, this.fontRendererObj);
 		
 	}
 	
@@ -69,7 +69,7 @@ public class GuiModular extends GuiContainer {
 		super.mouseClicked(x, y, button);
 		
 		for(ModuleBase module : modules)
-			module.onMouseClicked(x - (width - xSize) / 2, y - (height - ySize) / 2, button);
+			module.onMouseClicked(this, x - (width - xSize) / 2, y - (height - ySize) / 2, button);
 	}
 	
 	@Override
@@ -94,8 +94,7 @@ public class GuiModular extends GuiContainer {
 		}
 		
 		for(ModuleBase module : modules) {
-			module.renderBackground(this, x, y, fontRendererObj);
+			module.renderBackground(this, x, y, i2, i3, fontRendererObj);
 		}
-		
 	}
 }

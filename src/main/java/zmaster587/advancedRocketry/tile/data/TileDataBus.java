@@ -43,11 +43,13 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	@Override
 	public void loadData() {
 		
-		if(inv[0] != null && inv[0].getItem() instanceof ItemData) {
-			ItemData itemData = (ItemData)inv[0].getItem();
+		ItemStack itemStack = inventory.getStackInSlot(0);
+		
+		if(itemStack != null && itemStack.getItem() instanceof ItemData) {
+			ItemData itemData = (ItemData)itemStack.getItem();
 			
-			itemData.removeData(inv[0], 
-					this.data.addData(itemData.getData(inv[0]), itemData.getDataType(inv[0])), DataStorage.DataType.UNDEFINED);
+			itemData.removeData(itemStack, 
+					this.data.addData(itemData.getData(itemStack), itemData.getDataType(itemStack)), DataStorage.DataType.UNDEFINED);
 
 			//this.data.removeData(itemData.removeData(inv[0], this.data.getData(), this.data.getDataType()));
 		}
@@ -64,10 +66,12 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 
 	@Override
 	public void storeData() {
-		if(inv[0] != null && inv[0].getItem() instanceof ItemData && inv[0].stackSize == 1) {
-			ItemData itemData = (ItemData)inv[0].getItem();
+		ItemStack itemStack = inventory.getStackInSlot(0);
+		
+		if(itemStack != null && itemStack.getItem() instanceof ItemData && itemStack.stackSize == 1) {
+			ItemData itemData = (ItemData)itemStack.getItem();
 
-			this.data.removeData(itemData.addData(inv[0], this.data.getData(), this.data.getDataType()));
+			this.data.removeData(itemData.addData(itemStack, this.data.getData(), this.data.getDataType()));
 		}
 
 		if(worldObj.isRemote) {

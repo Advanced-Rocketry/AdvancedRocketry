@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import zmaster587.advancedRocketry.network.PacketDimInfo;
+import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.world.DimensionManager;
 import zmaster587.advancedRocketry.world.DimensionProperties;
 import zmaster587.advancedRocketry.world.TeleporterNoPortal;
@@ -110,15 +112,6 @@ public class WorldCommand implements ICommand {
 					for(int i : DimensionManager.getInstance().getregisteredDimensions()) {
 						sender.addChatMessage(new ChatComponentText("DIM" + i + ":  " + DimensionManager.getInstance().getDimensionProperties(i).name)); 
 					}
-				} else if(string[1].equalsIgnoreCase("new")) {
-					// advRocketry planet new <name>
-					if(string.length == 3) {
-						DimensionManager.getInstance().registerDim(new DimensionProperties(DimensionManager.getInstance().getNextFreeDim(), string[2]));
-						sender.addChatMessage(new ChatComponentText("Dimension Created!"));
-					}
-					else {
-						sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " " + string[2] + " <name>"));
-					}
 				}
 				else if(string[1].equalsIgnoreCase("delete")) {
 					// advRocketry planet delete <name>
@@ -130,7 +123,8 @@ public class WorldCommand implements ICommand {
 							if(DimensionManager.getInstance().isDimensionCreated(deletedDimId)) {
 
 								if(net.minecraftforge.common.DimensionManager.getWorld(deletedDimId) == null || net.minecraftforge.common.DimensionManager.getWorld(deletedDimId).playerEntities.isEmpty()) {
-									DimensionManager.getInstance().unregisterDimension(deletedDimId);
+									DimensionManager.getInstance().deleteDimension(deletedDimId);
+									PacketHandler.sendToAll(new PacketDimInfo(deletedDimId, null));
 									sender.addChatMessage(new ChatComponentText("Deleted!"));
 								}
 								else {
@@ -166,6 +160,7 @@ public class WorldCommand implements ICommand {
 						}
 						else if(string.length == 9) {
 							DimensionManager.getInstance().generateRandom(string[2] ,Integer.parseInt(string[3]), Integer.parseInt(string[4]), Integer.parseInt(string[5]),Integer.parseInt(string[6]), Integer.parseInt(string[7]), Integer.parseInt(string[8]));
+							sender.addChatMessage(new ChatComponentText("Dimension: " + string[2] + " Generated!"));
 						}
 						else {
 							sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
@@ -220,8 +215,6 @@ public class WorldCommand implements ICommand {
 
 									}
 								}
-
-
 							}
 							else {
 								if(Integer.TYPE == field.getType() )
@@ -231,6 +224,8 @@ public class WorldCommand implements ICommand {
 								else
 									field.set(properties, string[3]);
 							}
+							
+							PacketHandler.sendToAll(new PacketDimInfo(dimId, properties));
 							return;
 
 						} catch (NumberFormatException e) {

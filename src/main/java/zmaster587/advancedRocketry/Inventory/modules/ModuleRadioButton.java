@@ -121,22 +121,22 @@ public class ModuleRadioButton  extends ModuleBase {
 	}
 
 	@Override
-	public void renderForeground(int mouseX, int mouseY, float zLevel,
+	public void renderForeground(int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel,
 			GuiContainer gui, FontRenderer font) {
-		super.renderForeground(mouseX, mouseY, zLevel, gui, font);
+		super.renderForeground(guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
 
 		for(ModuleToggleSwitch button : buttons) {
-			button.renderForeground(mouseX, mouseY, zLevel, gui, font);
+			button.renderForeground(guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
 		}
 	}
 
 	@Override
-	public void renderBackground(GuiContainer gui, int x, int y,
+	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY, 
 			FontRenderer font) {
-		super.renderBackground(gui, x, y, font);
+		super.renderBackground(gui, x, y, mouseX, mouseY, font);
 
 		for(ModuleToggleSwitch button : buttons) {
-			button.renderBackground(gui, x, y, font);
+			button.renderBackground(gui, x, y, mouseX, mouseY, font);
 		}
 	}
 

@@ -2,7 +2,7 @@ package zmaster587.advancedRocketry.client.render.multiblocks;
 
 import org.lwjgl.opengl.GL11;
 
-import zmaster587.advancedRocketry.tile.multiblock.TileEntityMultiPowerConsumer;
+import zmaster587.advancedRocketry.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.advancedRocketry.tile.multiblock.TileObservatory;
 import zmaster587.libVulpes.block.RotatableBlock;
 import net.minecraft.client.renderer.OpenGlHelper;

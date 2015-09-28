@@ -10,7 +10,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import zmaster587.advancedRocketry.tile.multiblock.TileEntityMultiPowerConsumer;
+import zmaster587.advancedRocketry.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.block.RotatableBlock;
 
 public class RenderPlanetAnalyser extends TileEntitySpecialRenderer {
@@ -24,7 +24,7 @@ public class RenderPlanetAnalyser extends TileEntitySpecialRenderer {
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x,
 			double y, double z, float f) {
-		TileEntityMultiPowerConsumer multiBlockTile = (TileEntityMultiPowerConsumer)tile;
+		TileMultiPowerConsumer multiBlockTile = (TileMultiPowerConsumer)tile;
 
 		if(!multiBlockTile.canRender())
 			return;

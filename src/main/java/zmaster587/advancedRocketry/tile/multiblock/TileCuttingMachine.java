@@ -8,22 +8,26 @@ import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.block.BlockRotatableModel;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
+import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileCuttingMachine extends TileMultiBlockMachine implements IModularInventory {
+public class TileCuttingMachine extends TileMultiblockMachine implements IModularInventory {
 
-	private static final Object[][][] structure = new Object[][][]{
-			{{Blocks.stone, Blocks.stone, Blocks.stone},
-		    	 {Blocks.stone, Blocks.stone, Blocks.stone}},
-			
-		    	 			 {{'*', 'c', '*'}, 
-							  {'*', '*', '*'}}};
+	private static final Object[][][] structure = new Object[][][]{			
+		    	 			 {{'O', 'c', 'I'}, 
+							  {'*', AdvRocketryBlocks.blockSawBlade, '*'}}};
 	
 	@Override
 	public List<IRecipe> getMachineRecipeList() {
@@ -36,16 +40,32 @@ public class TileCuttingMachine extends TileMultiBlockMachine implements IModula
 	}
 	
 	@Override
+	public void updateEntity() {
+		super.updateEntity();
+		
+		if(isRunning() && worldObj.getWorldTime() % 20 == 0) {
+			ForgeDirection back = RotatableBlock.getFront(this.getBlockMetadata()).getOpposite();
+			
+			float xCoord = this.xCoord + (0.5f*back.offsetX); 
+			float zCoord = this.zCoord + (0.5f*back.offsetZ);
+			
+			for(Object entity : worldObj.getEntitiesWithinAABB(EntityLivingBase.class, AxisAlignedBB.getBoundingBox(xCoord, yCoord + 1, zCoord, xCoord + 1, yCoord + 1.5f, zCoord + 1))) {
+				((EntityLivingBase)entity).attackEntityFrom(DamageSource.cactus, 1f);
+			}
+		}
+	}
+	
+	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		return AxisAlignedBB.getBoundingBox(xCoord -2,yCoord -2, zCoord -2, xCoord + 2, yCoord + 2, zCoord + 2);
 	}
 	
 	@Override
-	protected HashSet<Block> getAllowableWildCardBlocks() {
-		HashSet<Block> set = super.getAllowableWildCardBlocks();
+	public List<BlockMeta> getAllowableWildCardBlocks() {
+		List<BlockMeta> list = super.getAllowableWildCardBlocks();
 		
-		set.add(AdvRocketryBlocks.blockStructureBlock);
-		return set;
+		list.add(new BlockMeta(AdvRocketryBlocks.blockMotor, BlockMeta.WILDCARD));
+		return list;
 	}
 	
 	public boolean completeStructure() {
@@ -62,7 +82,7 @@ public class TileCuttingMachine extends TileMultiBlockMachine implements IModula
 	@Override
 	public List<ModuleBase> getModules() {
 		List<ModuleBase> modules = super.getModules();
-		modules.add(new ModuleProgress(100, 20, 0, new ProgressBarImage(54, 0, 42, 42,96, 0, 36, 36, 3, 3, ForgeDirection.EAST, TextureResources.progressBars), this));
+		modules.add(new ModuleProgress(100, 20, 0, TextureResources.cuttingMachineProgressBar, this));
 		
 		return modules;
 	}

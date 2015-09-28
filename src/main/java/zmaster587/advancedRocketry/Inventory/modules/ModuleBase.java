@@ -7,13 +7,17 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import zmaster587.advancedRocketry.Inventory.GuiModular;
+import zmaster587.advancedRocketry.Inventory.TextureResources;
 import zmaster587.advancedRocketry.api.PlanetEvent;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
+import zmaster587.libVulpes.gui.CommonResources;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
@@ -33,13 +37,16 @@ public abstract class ModuleBase {
 	protected List<Slot> slotList;
 	//Because each player has it's own instance of the container, in order to send changes to all clients we need to make sure we're running the same tick when calling "isUpdateRequired"
 	protected Long lastTickTime;
-	//is True for the tick ll players are being updates
+	//is True for the tick all players are being updated
 	boolean isSendingChanges = false;
+	
+	private boolean enabled;
 
 	protected ModuleBase(int offsetX, int offsetY) {
 		this.offsetX = offsetX;
 		this.offsetY = offsetY;
 		slotList = new LinkedList<Slot>();
+		enabled = true;
 	}
 
 	protected long getCurrentTime() {
@@ -63,9 +70,17 @@ public abstract class ModuleBase {
 	protected boolean needsUpdate(int localId) {
 		return false;
 	}
+	
+	public void setEnabled(boolean state) {
+		enabled = state;
+	}
+	
+	public boolean isEnabled() {
+		return enabled;
+	}
 
 	@SideOnly(Side.CLIENT)
-	public void onMouseClicked(int x, int y, int button) {
+	public void onMouseClicked(GuiModular gui, int x, int y, int button) {
 		
 	}
 	
@@ -104,21 +119,24 @@ public abstract class ModuleBase {
 	 * @param font FontRenderer, passed on the off-chance text needs to be rendered
 	 */
 	@SideOnly(Side.CLIENT)
-	public void renderBackground(GuiContainer gui, int x, int y, FontRenderer font) {
+	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY, FontRenderer font) {
+		gui.mc.getTextureManager().bindTexture(CommonResources.genericBackground);
 		for(Slot slot : slotList) {
 			gui.drawTexturedModalRect(x + slot.xDisplayPosition - 1, y + slot.yDisplayPosition - 1, 176, 0, 18, 18);
 		}
 	}
 
 	/**
-	 * @param mouseX x location of the mouse
-	 * @param mouseY y location of the mouse
+	 * @param guiOffsetX location of the gui on the X access
+	 * @param guiOffsetY location of the gui on the Y access
+	 * @param mouseX x location of the mouse relative to the window
+	 * @param mouseY y location of the mouse relative to the window
 	 * @param zLevel zLevel of the gui
 	 * @param gui gui calling this method
 	 * @param font FontRenderer, passed on the off-chance text needs to be rendered
 	 */
 	@SideOnly(Side.CLIENT)
-	public void renderForeground(int mouseX, int mouseY, float zLevel, GuiContainer gui, FontRenderer font) {
+	public void renderForeground(int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel, GuiContainer gui, FontRenderer font) {
 	}
 
 	/**

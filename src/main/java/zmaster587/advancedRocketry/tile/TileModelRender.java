@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileModelRender extends TileEntity {
 	
@@ -22,18 +23,30 @@ public class TileModelRender extends TileEntity {
 		ROCKET,
 		TANKMIDDLE,
 		TANKEND,
-		TANKTOP;
+		TANKTOP,
+		SAWBLADE,
+		MOTOR;
 	}
-
 	
 	int type;
 	
+	
 	public TileModelRender() {
 		super();
+		
 	}
 	
 	public TileModelRender(int type) {
+		this();
 		this.type = type;
+	}
+	
+	public TileModelRender(int type, ForgeDirection rotation) {
+		this.type = type;
+	}
+	
+	public ForgeDirection getRotation() {
+		return ForgeDirection.SOUTH;
 	}
 	
 	@Override

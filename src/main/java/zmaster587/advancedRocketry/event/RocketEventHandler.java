@@ -4,6 +4,7 @@ import java.nio.IntBuffer;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockGrass;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -13,16 +14,14 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.Inventory.TextureResources;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.RocketEvent;
@@ -31,15 +30,13 @@ import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
 import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.entity.EntityRocket;
-import zmaster587.advancedRocketry.network.PacketEntity;
-import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.util.Configuration;
 import zmaster587.advancedRocketry.world.DimensionManager;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.ZUtils;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class RocketEventHandler extends Gui {
 
@@ -64,23 +61,6 @@ public class RocketEventHandler extends Gui {
 		}
 	}
 	
-	
-	@SubscribeEvent
-	public void onRocketLand(RocketLandedEvent event) {
-
-		if(event.world.isRemote) {
-			if(!(event.world.provider instanceof IPlanetaryProvider))
-				event.world.provider.setSkyRenderer(null);
-			if(earth != null)
-				GL11.glDeleteTextures(earth.getTextureId());
-			if(outerBounds != null)
-				GL11.glDeleteTextures(outerBounds.getTextureId());
-			outerBounds = null;
-			earth = null;
-			mapReady = false;
-		}
-	}
-
 	@SubscribeEvent
 	public void onRocketLaunch(RocketLaunchEvent event) {
 		if(event.world.isRemote) {
@@ -88,7 +68,21 @@ public class RocketEventHandler extends Gui {
 			event.world.provider.setSkyRenderer(new RenderPlanetarySky());
 		}
 	}
+	
+	@SideOnly(Side.CLIENT)
+	public static void destroyOrbitalTextures(World world) {
+			if(!(world.provider instanceof IPlanetaryProvider))
+				world.provider.setSkyRenderer(null);
+			if(earth != null)
+				GL11.glDeleteTextures(earth.getTextureId());
+			if(outerBounds != null)
+				GL11.glDeleteTextures(outerBounds.getTextureId());
+			outerBounds = null;
+			earth = null;
+			mapReady = false;
+	}
 
+	@SideOnly(Side.CLIENT)
 	private void prepareOrbitalMap(final RocketEvent event) {
 		mapReady = false;
 
@@ -109,12 +103,13 @@ public class RocketEventHandler extends Gui {
 				outerBoundsTable = outerBounds.getByteBuffer();
 
 				//Get the average of each edge RGB
-				int topEdge[], bottomEdge[], leftEdge[], rightEdge[], total[];
-				total = topEdge = bottomEdge = leftEdge = rightEdge = new int[] {0,0,0};
+				long topEdge[], bottomEdge[], leftEdge[], rightEdge[], total[];
+				total = topEdge = bottomEdge = leftEdge = rightEdge = new long[] {0,0,0};
 
+				int numChunksLoaded = 0;
+				
 				for(int i = 0; i < getImgSize*getImgSize; i++) {
 					//TODO: Optimize
-					//TODO: fix outer layer
 					int xOffset = (i % getImgSize);
 					int yOffset = (i / getImgSize);
 
@@ -122,53 +117,50 @@ public class RocketEventHandler extends Gui {
 					int zPosition = (int)event.entity.posZ - (getImgSize/2) + yOffset;
 					Chunk chunk = event.world.getChunkFromBlockCoords(xPosition, zPosition);
 
-					if(chunk.isChunkLoaded) {
+					if(chunk.isChunkLoaded && !chunk.isEmpty()) {
 						//Get Xcoord and ZCoords in the chunk
-
+						numChunksLoaded++;
 						int heightValue = chunk.getHeightValue( xPosition + (chunk.xPosition >= 0 ? - (Math.abs( chunk.xPosition )<< 4) : (Math.abs( chunk.xPosition )<< 4)), zPosition + (chunk.zPosition >= 0 ? - (Math.abs(chunk.zPosition )<< 4) : (Math.abs(chunk.zPosition )<< 4)));
 						MapColor color = MapColor.airColor;
 						int yPosition;
+						
+						Block block = null;
 
 						//Get the first non-air block
 						for(yPosition = heightValue; yPosition > 0; yPosition-- ) {
-							if((color = event.world.getBlock(xPosition, yPosition, zPosition).getMapColor(event.world.getBlockMetadata(xPosition, yPosition, zPosition))) != MapColor.airColor) {
+							block = event.world.getBlock(xPosition, yPosition, zPosition);
+							if((color = block.getMapColor(event.world.getBlockMetadata(xPosition, yPosition, zPosition))) != MapColor.airColor) {
 								break;
 							}
 						}
-
-						int intColor = ( (color.colorValue & 0xFF) << 16) | ( ( color.colorValue >> 16 ) & 0xFF ) | ( color.colorValue & 0xFF00 );
+						
+						int intColor;
+						
+						if(block == Blocks.grass || block == Blocks.tallgrass) {
+							int color2 = event.world.getBiomeGenForCoords(xPosition, zPosition).getBiomeGrassColor(xPosition, yPosition, zPosition);
+							int r = (color2 & 0xFF);
+							int g = ( (color2 >>> 8) & 0xFF);
+							int b = ( (color2 >>> 16) & 0xFF);
+							intColor = b | (g << 8) | (r << 16);
+						}
+						else if(block == Blocks.leaves || block == Blocks.leaves2) {
+							int color2 = event.world.getBiomeGenForCoords(xPosition, zPosition).getBiomeFoliageColor(xPosition, yPosition, zPosition);
+							int r = (color2 & 0xFF);
+							int g = ( (color2 >>> 8) & 0xFF);
+							int b = ( (color2 >>> 16) & 0xFF);
+							intColor = b | (g << 8) | (r << 16);
+						}
+						else
+							intColor = ( (color.colorValue & 0xFF) << 16) | ( ( color.colorValue >>> 16 ) & 0xFF ) | ( color.colorValue & 0xFF00 );
 
 						//Put into the table and make opaque
 						table.put(i, intColor | 0xFF000000);
 
-						//Try to get edge Averages
-						if(xOffset == 0) {
-							leftEdge[0] += intColor & 0xFF;
-							leftEdge[1] += (intColor & 0xFF00) >> 8;
-						leftEdge[2] += (intColor & 0xFF0000) >> 16;
-						}
-						else if(xOffset == getImgSize - 1) {
-							rightEdge[0] += intColor & 0xFF;
-							rightEdge[1] += (intColor & 0xFF00) >> 8;
-						rightEdge[2] += (intColor & 0xFF0000) >> 16;
-						}
-						if(yOffset == 0) {
-							topEdge[0] += intColor & 0xFF;
-							topEdge[1] += (intColor & 0xFF00) >> 8;
-							topEdge[2] += (intColor & 0xFF0000) >> 16;
-						}
-						else if(yOffset== getImgSize - 1 ) {
-							bottomEdge[0] += intColor & 0xFF;
-							bottomEdge[1] += (intColor & 0xFF00) >> 8;
-							bottomEdge[2] += (intColor & 0xFF0000) >> 16;
-						}
-
 						//Background in case chunk doesnt load
 						total[0] += intColor & 0xFF;
-						total[1] += (intColor & 0xFF00) >> 8;
-						total[2] += (intColor & 0xFF0000) >> 16;
-
-
+						total[1] += (intColor & 0xFF00) >>> 8;
+						total[2] += (intColor & 0xFF0000) >>> 16;
+						
 					}
 				}
 
@@ -176,18 +168,22 @@ public class RocketEventHandler extends Gui {
 				int multiplierBlue = 1;
 
 				//Get the outer layer
-				topEdge[0] = ZUtils.getAverageColor(topEdge[0],topEdge[1]*multiplierGreen, topEdge[2]*multiplierBlue, getImgSize*getImgSize);
-				leftEdge[0] = ZUtils.getAverageColor(leftEdge[0], leftEdge[1]*multiplierGreen, leftEdge[2]* multiplierBlue, getImgSize*getImgSize);
-				rightEdge[0] = ZUtils.getAverageColor(rightEdge[0], rightEdge[1]*multiplierGreen, rightEdge[2]* multiplierBlue, getImgSize*getImgSize);
-				bottomEdge[0] = ZUtils.getAverageColor(bottomEdge[0], bottomEdge[1]*multiplierGreen, bottomEdge[2]* multiplierBlue, getImgSize*getImgSize);
-				total[0] = ZUtils.getAverageColor(total[0], total[1]*multiplierGreen, total[2]* multiplierBlue, getImgSize*getImgSize);
+				total[0] =     ZUtils.getAverageColor(total[0], total[1]*multiplierGreen, total[2]* multiplierBlue, numChunksLoaded);
 
 				Random random = new Random(); 
 
-				int randomMax = 0x1A;
+				int randomMax = 0x2A;
 
 				for(int i = 0; i < outerImgSize*outerImgSize; i++) {
-					int color = ( (total[0] - randomMax + random.nextInt(randomMax) / 2 ) & 0xFF ) | ( (total[0] + (( randomMax - random.nextInt(randomMax)/2 ) << 8 ) ) & 0xFF00 ) | ( (total[0] + ( ( randomMax - random.nextInt(randomMax) /2 ) << 16 ) & 0xFF0000) );
+					
+					int randR =   randomMax - random.nextInt(randomMax) / 2;
+					int randG = ( randomMax - random.nextInt(randomMax)/2 ) << 8;
+					int randB = ( randomMax - random.nextInt(randomMax) /2 ) << 16;
+
+					
+					int color = (int)( MathHelper.clamp_int((int) ( (total[0] & 0xFF) + randR ),0, 0xFF ) |
+							MathHelper.clamp_int((int)(total[0] & 0xFF00) + randG, 0x0100, 0xFF00)  | 
+							MathHelper.clamp_int( (int)(( total[0] & 0xFF0000) + randB), 0x010000, 0xFF0000) );
 
 					outerBoundsTable.put(i, color | 0xff000000);
 				}

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import zmaster587.advancedRocketry.tile.multiblock.TileMultiBlockMachine;
+import zmaster587.advancedRocketry.tile.multiblock.TileMultiblockMachine;
 import zmaster587.libVulpes.block.RotatableBlock;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -40,7 +40,7 @@ public class RendererPrecisionAssembler extends TileEntitySpecialRenderer {
 	public void renderTileEntityAt(TileEntity tile, double x,
 			double y, double z, float f) {
 
-		TileMultiBlockMachine multiBlockTile = (TileMultiBlockMachine)tile;
+		TileMultiblockMachine multiBlockTile = (TileMultiblockMachine)tile;
 
 		if(!multiBlockTile.canRender())
 			return;
@@ -55,7 +55,7 @@ public class RendererPrecisionAssembler extends TileEntitySpecialRenderer {
 
 		//Rotate and move the model into position
 		GL11.glTranslated(x+.5f, y, z + .5f);
-		ForgeDirection front = RotatableBlock.getFront(tile.blockMetadata);
+		ForgeDirection front = RotatableBlock.getFront(tile.getBlockMetadata());
 		GL11.glRotatef((front.offsetX == 1 ? 180 : 0) + front.offsetZ*90f, 0, 1, 0);
 		GL11.glTranslated(-.5f, 0, -.5f);
 		

@@ -28,7 +28,7 @@ public class ModuleSlotButton extends ModuleButton {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void renderBackground(GuiContainer gui, int x, int y,
+	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY,
 			FontRenderer font) {
 		
 		RenderBlocks renderBlocksRi = RenderBlocks.getInstance();

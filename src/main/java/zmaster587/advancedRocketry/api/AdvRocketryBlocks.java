@@ -1,6 +1,10 @@
 package zmaster587.advancedRocketry.api;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 
 /**
  * Stores references to Advanced Rocketry's blocks
@@ -11,10 +15,11 @@ public class AdvRocketryBlocks {
 	public static Block blockMissionComp;
 	public static Block blockSpaceLaser;
 	public static Block blockPrecisionAssembler;
-	public static Block blockBlastFurnace;
+	public static Block blockArcFurnace;
 	public static Block blockBlastBrick;
 	public static Block blockQuartzCrucible;
 	public static Block blockCrystallizer;
+	public static Block blockLathe;
 	public static Block blockCuttingMachine;
 	public static Block blockObservatory;
 	public static Block blockPlaceHolder;
@@ -36,4 +41,16 @@ public class AdvRocketryBlocks {
 	public static Block blockLightSource;
 	public static Block blockAlienWood, blockAlienLeaves, blockAlienSapling;
 	public static Block blockGuidanceComputer;
+	public static Block blockLunarAnalyser;
+	public static Block blockPlanetSelector;
+	public static Block blockSawBlade;
+	public static Block blockMotor;
+	public static Block blockConcrete;
+	public static List<Block> blockOre = new ArrayList<Block>();
+	public static List<Block> blockMetal = new ArrayList<Block>();
+	public static Block blockRollingMachine;
+	public static Block blockPhantom;
+	public static Block blockControllerDummy;
+	public static Block blockPlatePress;
+	public static List<Block> blockCoil = new ArrayList<Block>();
 }

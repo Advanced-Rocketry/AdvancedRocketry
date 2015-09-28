@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.tile.Satellite;
 
+import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
@@ -24,8 +25,9 @@ public class TileSatelliteHatch extends TileInventoryHatch {
 
 	public SatelliteBase getSatellite() {
 
-		if(inv[0] != null && inv[0].getItem() instanceof ItemSatellite) {
-			SatelliteProperties properties = ((ItemSatellite)inv[0].getItem()).getSatellite(inv[0]);
+		ItemStack itemStack = inventory.getStackInSlot(0);
+		if(itemStack != null && itemStack.getItem() instanceof ItemSatellite) {
+			SatelliteProperties properties = ((ItemSatellite)itemStack.getItem()).getSatellite(itemStack);
 
 			SatelliteBase satellite = SatelliteRegistry.getSatallite(properties.getSatelliteType());
 

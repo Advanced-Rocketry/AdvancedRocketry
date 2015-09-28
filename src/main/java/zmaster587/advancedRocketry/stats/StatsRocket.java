@@ -5,6 +5,7 @@ import java.util.List;
 
 import zmaster587.advancedRocketry.api.FuelRegistry;
 import zmaster587.advancedRocketry.api.FuelRegistry.FuelType;
+import zmaster587.advancedRocketry.util.Configuration;
 import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -130,6 +131,10 @@ public class StatsRocket {
 	}
 	
 	public int getFuelRate(FuelRegistry.FuelType type) {
+		
+		if(!Configuration.rocketRequireFuel)
+			return 0;
+		
 		switch(type) {
 		case WARP:
 			return fuelRateWarp;

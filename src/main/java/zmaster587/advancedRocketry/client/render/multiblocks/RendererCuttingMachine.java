@@ -16,14 +16,14 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import zmaster587.advancedRocketry.tile.multiblock.TileMultiBlockMachine;
+import zmaster587.advancedRocketry.tile.multiblock.TileMultiblockMachine;
 import zmaster587.libVulpes.block.RotatableBlock;
 
 public class RendererCuttingMachine extends TileEntitySpecialRenderer {
 
 	IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("advancedrocketry:models/cuttingMachine.obj"));
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/cuttingMachine.png");
+	public static ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/cuttingMachine.png");
 
 	private final RenderItem dummyItem = new RenderItem();
 
@@ -34,7 +34,7 @@ public class RendererCuttingMachine extends TileEntitySpecialRenderer {
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x,
 			double y, double z, float f) {
-		TileMultiBlockMachine multiBlockTile = (TileMultiBlockMachine)tile;
+		TileMultiblockMachine multiBlockTile = (TileMultiblockMachine)tile;
 
 		if(!multiBlockTile.canRender())
 			return;
@@ -49,7 +49,7 @@ public class RendererCuttingMachine extends TileEntitySpecialRenderer {
 
 		//Rotate and move the model into position
 		GL11.glTranslated(x+.5f, y, z + 0.5f);
-		ForgeDirection front = RotatableBlock.getFront(tile.blockMetadata);
+		ForgeDirection front = RotatableBlock.getFront(tile.getBlockMetadata());
 		GL11.glRotatef((front.offsetX == 1 ? 180 : 0) + front.offsetZ*90f, 0, 1, 0);
 		GL11.glTranslated(-.5f, 0, -1.5f);
 
@@ -82,7 +82,7 @@ public class RendererCuttingMachine extends TileEntitySpecialRenderer {
 			
 			GL11.glTranslatef(1f, 1f, 1.5f);
 			
-			GL11.glRotatef(-12*multiBlockTile.getProgress(0) % 360, 1, 0, 0);
+			GL11.glRotatef(-6*multiBlockTile.getProgress(0) % 360, 1, 0, 0);
 			GL11.glTranslatef(-1f, -1f, -1.5f);
 			model.renderPart("Saw");
 			GL11.glPopMatrix();

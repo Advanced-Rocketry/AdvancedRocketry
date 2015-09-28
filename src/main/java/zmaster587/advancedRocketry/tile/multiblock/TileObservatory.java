@@ -18,6 +18,7 @@ import zmaster587.advancedRocketry.tile.data.TileDataBus;
 import zmaster587.advancedRocketry.util.DataStorage;
 import zmaster587.advancedRocketry.util.DataStorage.DataType;
 import zmaster587.advancedRocketry.util.IDataInventory;
+import zmaster587.libVulpes.block.BlockMeta;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -27,7 +28,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileObservatory extends TileEntityMultiPowerConsumer implements IModularInventory, IDataInventory {
+public class TileObservatory extends TileMultiPowerConsumer implements IModularInventory, IDataInventory {
 
 
 	private static final Object[][][] structure = new Object[][][]{
@@ -66,6 +67,7 @@ public class TileObservatory extends TileEntityMultiPowerConsumer implements IMo
 	final static int observationtime = 1000;
 	int openProgress;
 	private LinkedList<TileDataBus> dataCables;
+	private boolean isOpen;
 	ItemStack dataChip;
 
 	public TileObservatory() {
@@ -96,15 +98,31 @@ public class TileObservatory extends TileEntityMultiPowerConsumer implements IMo
 			timeAlive = 0x1;
 		}
 
-		if(isRunning() && getMachineEnabled() && !worldObj.isRaining() && worldObj.canBlockSeeTheSky(xCoord, yCoord+3, zCoord) && worldObj.getBlockLightValue(xCoord, yCoord + 3, zCoord)  <= 6) {
-
+		if((worldObj.isRemote && isOpen) || (!worldObj.isRemote && isRunning() && getMachineEnabled() && !worldObj.isRaining() && worldObj.canBlockSeeTheSky(xCoord, yCoord+1, zCoord) && worldObj.getBlockLightValue(xCoord, yCoord + 1, zCoord)  <= 6) ) {
+			
+			if(!isOpen) {
+				isOpen= true;
+				
+				markDirty();
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			}
+			
 			if(openProgress >= openTime)
 				super.updateEntity();
 			else
 				openProgress++;
 		}
-		else if(openProgress > 0)
+		else if(openProgress > 0) {
+			
+			if(isOpen) {
+				isOpen = false;
+				
+				markDirty();
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			}
+			
 			openProgress--;
+		}
 	}
 
 	//Always running if enabled
@@ -143,11 +161,13 @@ public class TileObservatory extends TileEntityMultiPowerConsumer implements IMo
 	}
 
 	@Override
-	protected HashSet<Block> getAllowableWildCardBlocks() {
-		HashSet<Block> set = super.getAllowableWildCardBlocks();
+	public List<BlockMeta> getAllowableWildCardBlocks() {
+		List<BlockMeta> list = super.getAllowableWildCardBlocks();
 
-		set.add(Blocks.iron_block);
-		return set;
+		list.add(new BlockMeta(Blocks.iron_block,BlockMeta.WILDCARD));
+		list.addAll(getPowerInputBlocks());
+		list.addAll(getDataBlocks());
+		return list;
 	}
 
 	@Override
@@ -155,6 +175,7 @@ public class TileObservatory extends TileEntityMultiPowerConsumer implements IMo
 		super.writeToNBT(nbt);
 
 		nbt.setInteger("openProgress", openProgress);
+		nbt.setBoolean("isOpen", isOpen);
 
 		if(dataChip != null) {
 			NBTTagCompound dataItem = new NBTTagCompound();
@@ -169,6 +190,8 @@ public class TileObservatory extends TileEntityMultiPowerConsumer implements IMo
 
 		openProgress = nbt.getInteger("openProgress");
 
+		isOpen = nbt.getBoolean("isOpen");
+		
 		if(nbt.hasKey("dataItem")) {
 			dataChip = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("dataItem"));
 		}
@@ -182,10 +205,10 @@ public class TileObservatory extends TileEntityMultiPowerConsumer implements IMo
 	public boolean completeStructure() {
 		boolean result = super.completeStructure();
 		if(result) {
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.blockMetadata | 8, 2);
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.getBlockMetadata() | 8, 2);
 		}
 		else
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.blockMetadata & 7, 2);
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.getBlockMetadata() & 7, 2);
 
 		completionTime = observationtime;
 		return result;
@@ -208,7 +231,7 @@ public class TileObservatory extends TileEntityMultiPowerConsumer implements IMo
 
 		if(data.length > 0)
 			modules.add(new ModuleData(40, 20, 0, this, data));
-		modules.add(new ModuleProgress(120, 30, 0, new ProgressBarImage(185, 0, 16, 24, 201, 0, 16, 24, 0, 0, ForgeDirection.UP, TextureResources.progressBars), this));
+		modules.add(new ModuleProgress(120, 30, 0, TextureResources.progressScience, this));
 
 		return modules;
 	}

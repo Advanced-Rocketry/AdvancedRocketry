@@ -1,4 +1,7 @@
 itemGroup.advancedRocketry=Advanced Rocketry
+itemGroup.advancedRocketryOres=Advanced Rocketry Ores
+
+entity.advancedRocketry.rocket.name=Rocket
 
 tile.seat.name=Seat
 tile.pad.name=Launch Pad
@@ -6,6 +9,7 @@ tile.structuretower.name=Structure Tower
 tile.rocketAssembler.name=Pad Controller
 tile.turf.name=Moon Turf
 tile.cuttingMachine.name=Cutting Machine
+tile.sawBlade.name=Saw Blade Assembly
 tile.controlComp.name=Mission Control Computer
 tile.precisionAssemblingMachine.name=Precision Assembler
 tile.Laser Emitter.name=Laser Drill
@@ -29,18 +33,38 @@ tile.sapling.name=Lightwood Sapling
 tile.leaves2.name=Lightwood Leaves
 tile.chipStorage.name=Satellite Id Storage
 tile.planetanalyser.name=Planet Analyser
+tile.lunaranalyser.name=Lunar Analyser
 tile.guidanceComputer.name=Guidance Computer
+tile.electricArcFurnace.name=Electric Arc Furnace
+tile.motor.name=Motor
+tile.hotDryturf.name=Oxidized Ferric Sand
+tile.concrete.name=Concrete
+tile.lathe.name=Lathe
+tile.rollingMachine.name=Rolling Machine
+tile.planetSelector.name=Planet Selector
+tile.blockGenericMachine.name=Machine Controller Block
+tile.blockHandPress.name=Small Plate Presser
 
-item.ingot.0.name=Silicon Ingot
-item.ingot.1.name=Steel Ingot
-item.boule.0.name=Silicon Boule
-item.nugget.0.name=Silicon nugget
+tile.Dilithium.name=Dilithium Ore
+tile.Copper.name=Copper Ore
+tile.Tin.name=Tin Ore
+tile.Rutile.name=Rutile Ore
+
+tile.coil.dilithium.name=Dilithium Coil
+tile.coil.silicon.name=Silicon Coil
+tile.coil.copper.name=Copper Coil
+tile.coil.tin.name=Tin Coil
+tile.coil.steel.name=Steel Coil
+tile.coil=Coil
+
 item.wafer.0.name=Silicon Wafer
 item.circuitplate.0.name=Basic Circuit Plate
 item.circuitIC.0.name=Basic Circuit
+item.circuitIC.1.name=Tracking Circuit
 item.OreScanner.name=Ore Scanner
 item.qcrucible.name=Quartz Crucible
 item.dataUnit.0.name=Data Unit
+item.sawBlade.0.name=Iron Saw Blade
 item.satellite.name=Satellite
 item.satellitePowerSource.0.name=Basic Solar Panel
 item.satellitePrimaryFunction.0.name=Optical Sensor
@@ -48,6 +72,30 @@ item.satellitePrimaryFunction.1.name=Atmospheric Density Sensor
 item.satellitePrimaryFunction.2.name=Mass Detector
 item.satelliteIdChip.name=Satellite Id Chip
 item.planetIdChip.name=Planet Id Chip
+item.battery.0.name=Small Battery
+item.miscpart.0.name=User Interface
+item.holoProjector.name=Holo-Projector
+
+material.Gold.name=Gold
+material.Iron.name=Iron
+material.Dilithium.name=Dilithium
+material.Silicon.name=Silicon
+material.Copper.name=Copper
+material.Tin.name=Tin
+material.Steel.name=Steel
+material.Titanium.name=Titanium
+material.Rutile.name=Rutile
+
+type.crystal.name=Crystal
+type.dust.name=Dust
+type.boule.name=Boule
+type.ingot.name=Ingot
+type.nugget.name=Nugget
+type.rod.name=Rod
+type.plate.name=Plate
+type.ore.name=Ore
+type.block.name=Block
+type.coil.name=Coil
 
 container.crystallizer=Crystallizer
 container.cuttingmachine=Cutting Machine

@@ -48,14 +48,12 @@ public class ChunkManagerPlanet extends WorldChunkManager {
 
 	private List<BiomeEntry> biomes;
 
-
-	public ChunkManagerPlanet(long seed, WorldTypePlanetGen default1) {
-		super(seed, default1);
+	public ChunkManagerPlanet(long seed, WorldType default1, DimensionProperties properties) {
 
 		this.biomeCache = new BiomeCache(this);//new BiomeCacheExtended(this);
 		//TODO: more biomes
 		//TODO: remove rivers
-		GenLayer[] agenlayer = initializeAllBiomeGenerators(seed, default1);//GenLayer.initializeAllBiomeGenerators(seed, default1); //;
+		GenLayer[] agenlayer = initializeAllBiomeGenerators(seed, default1, properties);//GenLayer.initializeAllBiomeGenerators(seed, default1); //;
 		agenlayer = getModdedBiomeGenerators(default1, seed, agenlayer);
 		this.genBiomes = agenlayer[0];
 		this.biomeIndexLayer = agenlayer[1];
@@ -63,9 +61,9 @@ public class ChunkManagerPlanet extends WorldChunkManager {
 
 	public ChunkManagerPlanet(World world)
 	{
-		this(world.getSeed(), (WorldTypePlanetGen)world.getWorldInfo().getTerrainType());
+		this(world.getSeed(), (WorldTypePlanetGen)world.getWorldInfo().getTerrainType(), DimensionManager.getInstance().getDimensionProperties(world.provider.dimensionId));
 		//Note: world MUST BE REGISTERED WITH THE DIMENSION MANAGER
-		//This is a f***ing mess!
+		//This is a mess!
 		biomes = DimensionManager.getInstance().getDimensionProperties(world.provider.dimensionId).getBiomes(world.provider.dimensionId);
 	}
 
@@ -73,9 +71,11 @@ public class ChunkManagerPlanet extends WorldChunkManager {
 	 * the first array item is a linked list of the bioms, the second is the zoom function, the third is the same as the
 	 * first.
 	 */
-	public static GenLayer[] initializeAllBiomeGenerators(long p_75901_0_, WorldType p_75901_2_)
+	public static GenLayer[] initializeAllBiomeGenerators(long seed, WorldType type, DimensionProperties properties)
 	{
 		boolean flag = false;
+		boolean hasRivers = properties.hasRivers();
+
 		GenLayerIsland genlayerisland = new GenLayerIsland(1L);
 		GenLayerFuzzyZoom genlayerfuzzyzoom = new GenLayerFuzzyZoom(2000L, genlayerisland);
 		GenLayerAddIsland genlayeraddisland = new GenLayerAddIsland(1L, genlayerfuzzyzoom);
@@ -97,7 +97,7 @@ public class ChunkManagerPlanet extends WorldChunkManager {
 		GenLayer genlayer2 = GenLayerZoom.magnify(1000L, genlayerdeepocean, 0);
 		byte b0 = 4;
 
-		if (p_75901_2_ == WorldType.LARGE_BIOMES)
+		if (type == WorldType.LARGE_BIOMES)
 		{
 			b0 = 6;
 		}
@@ -106,18 +106,34 @@ public class ChunkManagerPlanet extends WorldChunkManager {
 		{
 			b0 = 4;
 		}
-		b0 = GenLayer.getModdedBiomeSize(p_75901_2_, b0);
+		b0 = GenLayer.getModdedBiomeSize(type, b0);
 
 		GenLayer genlayer = GenLayerZoom.magnify(1000L, genlayer2, 0);
-		GenLayerRiverInit genlayerriverinit = new GenLayerRiverInit(100L, genlayer);
-		Object object = p_75901_2_.getBiomeLayer(p_75901_0_, genlayer2);
+		Object object = type.getBiomeLayer(seed, genlayer2);
 
-		GenLayer genlayer1 = GenLayerZoom.magnify(1000L, genlayerriverinit, 2);
+		GenLayer genlayer1;
+
+
+		if(hasRivers) {
+			GenLayerRiverInit genlayerriverinit = new GenLayerRiverInit(100L, genlayer);
+			genlayer1 = GenLayerZoom.magnify(1000L, genlayerriverinit, 2);
+			genlayer = GenLayerZoom.magnify(1000L, genlayerriverinit, 2);
+		}
+		else
+			genlayer1 = genlayer;
+
 		GenLayerHillsExtended genlayerhills = new GenLayerHillsExtended(1000L, (GenLayer)object, genlayer1);
-		genlayer = GenLayerZoom.magnify(1000L, genlayerriverinit, 2);
+
 		genlayer = GenLayerZoom.magnify(1000L, genlayer, b0);
-		GenLayerRiver genlayerriver = new GenLayerRiver(1L, genlayer);
-		GenLayerSmooth genlayersmooth = new GenLayerSmooth(1000L, genlayerriver);
+
+		GenLayerSmooth genlayersmooth;
+		if(hasRivers) {
+			GenLayerRiver genlayerriver = new GenLayerRiver(1L, genlayer);
+			genlayersmooth = new GenLayerSmooth(1000L, genlayerriver);
+		}
+		else
+			genlayersmooth = new GenLayerSmooth(1000L, genlayer);
+
 		object = new GenLayerRareBiome(1001L, genlayerhills);
 
 		for (int j = 0; j < b0; ++j)
@@ -136,12 +152,19 @@ public class ChunkManagerPlanet extends WorldChunkManager {
 		}
 
 		GenLayerSmooth genlayersmooth1 = new GenLayerSmooth(1000L, (GenLayer)object);
-		GenLayerRiverMix genlayerrivermix = new GenLayerRiverMix(100L, genlayersmooth1, genlayersmooth);
-		GenLayerVoronoiExtended genlayervoronoizoom = new GenLayerVoronoiExtended(10L, genlayerrivermix);
-		genlayerrivermix.initWorldGenSeed(p_75901_0_);
-		genlayervoronoizoom.initWorldGenSeed(p_75901_0_);
+		GenLayerVoronoiExtended genlayervoronoizoom;
+		if(hasRivers) {
+			GenLayerRiverMix genlayerrivermix = new GenLayerRiverMix(100L, genlayersmooth1, genlayersmooth);
+			genlayervoronoizoom = new GenLayerVoronoiExtended(10L, genlayerrivermix);
+			genlayerrivermix.initWorldGenSeed(seed);
+			genlayer = genlayerrivermix;
+		}
+		else
+			genlayer = genlayervoronoizoom = new GenLayerVoronoiExtended(10L, genlayersmooth1);
+		
+		genlayervoronoizoom.initWorldGenSeed(seed);
 
-		return new GenLayer[] {genlayerrivermix, genlayervoronoizoom, genlayerrivermix};
+		return new GenLayer[] {genlayer, genlayervoronoizoom, genlayer};
 	}
 
 
@@ -205,10 +228,10 @@ public class ChunkManagerPlanet extends WorldChunkManager {
 	 * Returns the BiomeGenBase related to the x, z position on the world.
 	 */
 	@Override
-    public BiomeGenBase getBiomeGenAt(int p_76935_1_, int p_76935_2_)
-    {
-        return this.biomeCache.getBiomeGenAt(p_76935_1_, p_76935_2_);
-    }
+	public BiomeGenBase getBiomeGenAt(int p_76935_1_, int p_76935_2_)
+	{
+		return this.biomeCache.getBiomeGenAt(p_76935_1_, p_76935_2_);
+	}
 
 	public BiomeGenBase[] getBiomesForGeneration(BiomeGenBase[] p_76937_1_, int p_76937_2_, int p_76937_3_, int p_76937_4_, int p_76937_5_,  DimensionProperties properties)
 	{

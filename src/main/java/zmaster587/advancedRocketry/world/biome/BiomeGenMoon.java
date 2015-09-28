@@ -1,10 +1,13 @@
 package zmaster587.advancedRocketry.world.biome;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -27,6 +30,11 @@ public class BiomeGenMoon extends BiomeGenBase {
 		this.theBiomeDecorator.treesPerChunk=0;
 		this.fillerBlock = this.topBlock = AdvRocketryBlocks.blockMoonTurf;
 		this.biomeName="Moon";
+	}
+	
+	@Override
+	public List getSpawnableList(EnumCreatureType p_76747_1_) {
+		return new LinkedList<>();
 	}
 	
 	@Override

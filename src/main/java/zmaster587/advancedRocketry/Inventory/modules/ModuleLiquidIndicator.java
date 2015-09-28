@@ -120,9 +120,9 @@ public class ModuleLiquidIndicator extends ModuleBase {
 	}
 
 	@Override
-	public void renderBackground(GuiContainer gui, int x, int y,
+	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY,
 			FontRenderer font) {
-		super.renderBackground(gui, x, y, font);
+		super.renderBackground(gui, x, y, mouseX, mouseY,  font);
 		gui.drawTexturedModalRect(x + offsetX, y + offsetY, 176, 58, 14, 54);
 
 		//Draw Fluid

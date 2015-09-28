@@ -1,21 +1,11 @@
 package zmaster587.advancedRocketry.world;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import scala.actors.threadpool.Arrays;
 import zmaster587.advancedRocketry.world.gen.GenLayerEdgeExtendedBiomes;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.WorldChunkManager;
-import net.minecraft.world.biome.WorldChunkManagerHell;
-import net.minecraft.world.gen.FlatGeneratorInfo;
 import net.minecraft.world.gen.layer.GenLayer;
-import net.minecraft.world.gen.layer.GenLayerBiome;
-import net.minecraft.world.gen.layer.GenLayerBiomeEdge;
 import net.minecraft.world.gen.layer.GenLayerZoom;
-import net.minecraftforge.common.BiomeDictionary;
 
 public class WorldTypePlanetGen extends WorldType {
 

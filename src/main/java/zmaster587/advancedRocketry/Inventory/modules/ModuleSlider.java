@@ -1,5 +1,7 @@
 package zmaster587.advancedRocketry.Inventory.modules;
 
+import net.minecraft.client.gui.GuiScreen;
+import zmaster587.advancedRocketry.Inventory.GuiModular;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 
 public class ModuleSlider extends ModuleProgress {
@@ -12,14 +14,13 @@ public class ModuleSlider extends ModuleProgress {
 	@Override
 	public void onMouseClickedAndDragged(int x, int y, int button,
 			long timeSineLastClick) {
-		onMouseClicked(x, y, button);
+		onMouseClicked(null,x, y, button);
 	}
 	
 	@Override
-	public void onMouseClicked(int x, int y, int button) {
-		super.onMouseClicked(x, y, button);
+	public void onMouseClicked(GuiModular gui, int x, int y, int button) {
 
-		if(button == 0) {
+		if(button == 0 && isEnabled()) {
 			int localX = x - offsetX - progressBar.getInsetX();
 			int localY = y - offsetY - progressBar.getInsetY();
 
@@ -27,16 +28,17 @@ public class ModuleSlider extends ModuleProgress {
 			if(localX > 0 && localX < progressBar.getBackWidth() - progressBar.getInsetX() && localY > 0 && localY < progressBar.getBackHeight() - progressBar.getInsetY()) {
 
 				float percent;
-
 				if(progressBar.getDirection().offsetX != 0) { // horizontal
 					percent = localX / (float)(progressBar.getBackWidth() - progressBar.getInsetX());
 				}
-				else
+				else if(progressBar.getDirection().offsetY == 1)
 					percent = 1 - (localY / (float)(progressBar.getBackHeight() - progressBar.getInsetY()));
-
+				else
+					percent = localY / (float)(progressBar.getBackHeight() + progressBar.getInsetY());
+				
+				
 				progress.setProgress(id, (int) (percent*progress.getTotalProgress(id)));
 			}
 		}
 	}
-
 }

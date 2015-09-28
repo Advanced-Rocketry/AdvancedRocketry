@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
 import zmaster587.advancedRocketry.satellite.OreMappingSatellite;
-import zmaster587.libVulpes.util.MathVulpes;
+import zmaster587.libVulpes.util.VulpineMath;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -317,7 +317,7 @@ public class GuiOreMappingSatallite extends GuiContainer {
 		this.mc.renderEngine.bindTexture(backdrop);
 
 		this.drawTexturedModalRect(197 + x, 31 + y, 0, 192, 32, 14);
-		this.drawVerticalLine((int)(32*MathVulpes.log2(scanSize-1)/8F) + 199 + x, 34 + y, 45 + y, 0xFFC00F0F);
+		this.drawVerticalLine((int)(32*VulpineMath.log2(scanSize-1)/8F) + 199 + x, 34 + y, 45 + y, 0xFFC00F0F);
 		//this.drawTexturedModalRect(197 + x, 63 + y, 0, 192, 32, 14);
 		//this.drawVerticalLine((int)(28*MathVulpes.log2(radius)/4F) + 199 + x, 67 + y, 77 + y, 0xFF000000);
 		this.drawString(this.fontRendererObj, "Zoom", 198 + x, 22 + y, 0xF0F0F0);

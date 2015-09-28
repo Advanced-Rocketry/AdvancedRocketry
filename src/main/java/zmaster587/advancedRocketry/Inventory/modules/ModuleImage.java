@@ -18,9 +18,9 @@ public class ModuleImage extends ModuleBase {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void renderBackground(GuiContainer gui, int x, int y,
+	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY,
 			FontRenderer font) {
-		super.renderBackground(gui, x, y, font);
+		super.renderBackground(gui, x, y, mouseX, mouseY, font);
 		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(icon.getResourceLocation());
 		gui.drawTexturedModalRect(x + offsetX, y + offsetY, icon.getxLoc(), icon.getyLoc(), icon.getxSize(), icon.getySize());

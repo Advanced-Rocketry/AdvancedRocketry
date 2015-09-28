@@ -2,7 +2,7 @@ package zmaster587.advancedRocketry.block.multiblock;
 
 import java.util.ArrayList;
 
-import zmaster587.advancedRocketry.tile.multiblock.TileEntityMultiBlock;
+import zmaster587.advancedRocketry.tile.multiblock.TileMultiBlock;
 import zmaster587.advancedRocketry.tile.multiblock.TilePlaceholder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -51,7 +51,7 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 	public ItemStack getPickBlock(MovingObjectPosition target, World world,
 			int x, int y, int z, EntityPlayer player) {
 		TilePlaceholder tile = (TilePlaceholder)world.getTileEntity(x, y, z);
-		return tile.getReplacedBlock().getPickBlock(target, world, x, y, z, player);
+		return new ItemStack(tile.getReplacedBlock(), 1,tile.getReplacedBlockMeta());
 	}
 
 	@Override
@@ -95,8 +95,8 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 
 		if(tile != null && tile instanceof TilePlaceholder) {
 			tile = ((TilePlaceholder)tile).getMasterBlock();
-			if(tile instanceof TileEntityMultiBlock)
-				((TileEntityMultiBlock)tile).deconstructMultiBlock(world,x,y,z,true);
+			if(tile instanceof TileMultiBlock)
+				((TileMultiBlock)tile).deconstructMultiBlock(world,x,y,z,true);
 		}
 	}
 

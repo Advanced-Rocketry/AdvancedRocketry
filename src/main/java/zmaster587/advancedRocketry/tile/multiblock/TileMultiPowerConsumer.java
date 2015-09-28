@@ -20,12 +20,12 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleToggleSwitch;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketMachine;
 import zmaster587.advancedRocketry.tile.TileRFBattery;
-import zmaster587.advancedRocketry.tile.multiblock.TileMultiBlockMachine.NetworkPackets;
+import zmaster587.advancedRocketry.tile.multiblock.TileMultiblockMachine.NetworkPackets;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.MultiBattery;
 
-public class TileEntityMultiPowerConsumer extends TileEntityMultiBlock implements INetworkMachine, IModularInventory, IProgressBar, IToggleButton {
+public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMachine, IModularInventory, IProgressBar, IToggleButton {
 
 	protected MultiBattery batteries = new MultiBattery();
 
@@ -36,7 +36,7 @@ public class TileEntityMultiPowerConsumer extends TileEntityMultiBlock implement
 	//On server determines change in power state, on client determines last power state on server
 	boolean hadPowerLastTick = true;
 
-	public TileEntityMultiPowerConsumer() {
+	public TileMultiPowerConsumer() {
 		super();
 		enabled = false;
 		completionTime = -1;
@@ -87,15 +87,15 @@ public class TileEntityMultiPowerConsumer extends TileEntityMultiBlock implement
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0 && !worldObj.isRemote) {
-			canRender = completeStructure = completeStructure();
+			if(completeStructure)
+				canRender = completeStructure = completeStructure();
 			timeAlive = 0x1;
 		}
 
 		if(isRunning()) {
-			if( hasEnergy(powerPerTick) || (worldObj.isRemote && hadPowerLastTick)) {
+			if(hasEnergy(powerPerTick) || (worldObj.isRemote && hadPowerLastTick)) {
 
-				//Increment for both client and server
-				currentTime++;
+				onRunningPoweredTick();
 
 				//If server then check to see if we need to update the client, use power and process output if applicable
 				if(!worldObj.isRemote) {
@@ -108,8 +108,6 @@ public class TileEntityMultiPowerConsumer extends TileEntityMultiBlock implement
 
 					useEnergy(powerPerTick);
 				}
-				if(currentTime == completionTime)
-					processComplete();
 			}
 			else if(!worldObj.isRemote && hadPowerLastTick) { //If server and out of power check to see if client needs update
 				hadPowerLastTick = false;
@@ -117,6 +115,14 @@ public class TileEntityMultiPowerConsumer extends TileEntityMultiBlock implement
 				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			}
 		}
+	}
+
+	protected void onRunningPoweredTick() {
+		//Increment for both client and server
+		currentTime++;
+
+		if(currentTime == completionTime)
+			processComplete();
 	}
 
 	public void setMachineEnabled(boolean enabled) {
@@ -172,12 +178,12 @@ public class TileEntityMultiPowerConsumer extends TileEntityMultiBlock implement
 	}
 
 	public void setMachineRunning(boolean running) {
-		if(running && this.blockMetadata < 8) {
-			this.blockMetadata |= 8;
+		if(running && this.getBlockMetadata() < 8) {
+			this.blockMetadata = getBlockMetadata() | 8;
 			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.blockMetadata, 2);
 		}
 		else if(!running && this.blockMetadata >= 8) {
-			this.blockMetadata &= 7;
+			this.blockMetadata = getBlockMetadata() & 7;
 			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.blockMetadata, 2); //Turn off machine
 		}
 	}
@@ -242,7 +248,7 @@ public class TileEntityMultiPowerConsumer extends TileEntityMultiBlock implement
 		} else if (id == NetworkPackets.TOGGLE.ordinal()) {
 			setMachineEnabled(nbt.getBoolean("enabled"));
 			toggleSwitch.setToggleState(getMachineEnabled());
-			
+
 			//Last ditch effort to update the toggle switch when it's flipped
 			if(!worldObj.isRemote)
 				PacketHandler.sendToNearby(new PacketMachine(this, (byte)NetworkPackets.TOGGLE.ordinal()), worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 64);
@@ -268,7 +274,7 @@ public class TileEntityMultiPowerConsumer extends TileEntityMultiBlock implement
 
 		if(buttonId == 0) {
 			this.setMachineEnabled(toggleSwitch.getState());
-			PacketHandler.sendToServer(new PacketMachine(this,(byte)TileMultiBlockMachine.NetworkPackets.TOGGLE.ordinal()));
+			PacketHandler.sendToServer(new PacketMachine(this,(byte)TileMultiblockMachine.NetworkPackets.TOGGLE.ordinal()));
 		}
 	}
 

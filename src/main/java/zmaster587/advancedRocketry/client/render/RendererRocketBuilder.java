@@ -38,7 +38,7 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			double xSize = bb.maxX - bb.minX+1;
 			double zSize = bb.maxZ - bb.minZ+1;
 			
-			double yLocation = -(bb.maxY - bb.minY + 1.12)*renderTile.getNormilizedScanTime();
+			double yLocation = -(bb.maxY - bb.minY + 1.12)*renderTile.getNormallizedProgress();
 			Tessellator tess = Tessellator.instance;
 			
 			double xMin = xOffset;

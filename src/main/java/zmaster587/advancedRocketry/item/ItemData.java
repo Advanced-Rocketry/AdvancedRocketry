@@ -26,7 +26,6 @@ public class ItemData extends ItemIngredient {
 		case 0:
 			return 1000;
 		}
-
 		return 0;
 	}
 

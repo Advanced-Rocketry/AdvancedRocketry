@@ -9,14 +9,14 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.Inventory.modules.ModulePower;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.tile.IMultiblock;
-import zmaster587.libVulpes.tile.TileEntityPointer;
+import zmaster587.libVulpes.tile.TilePointer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileRFBattery extends TileEntityPointer implements IModularInventory, IUniversalEnergy, IMultiblock, IInventory {
+public class TileRFBattery extends TilePointer implements IModularInventory, IUniversalEnergy, IMultiblock, IInventory {
 
 	EnergyStorage storage;
 	int teir;

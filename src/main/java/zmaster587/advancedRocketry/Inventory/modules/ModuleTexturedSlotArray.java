@@ -16,7 +16,7 @@ public class ModuleTexturedSlotArray extends ModuleSlotArray {
 	}
 	
 	@Override
-	public void renderBackground(GuiContainer gui, int x, int y,
+	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY,
 			FontRenderer font) {
 		for(Slot slot : slotList) {
 			gui.drawTexturedModalRect(x + slot.xDisplayPosition - 1, y + slot.yDisplayPosition - 1, iconResource.getxLoc(), iconResource.getyLoc(), iconResource.getxSize(), iconResource.getySize());

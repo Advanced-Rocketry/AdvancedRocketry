@@ -11,6 +11,8 @@ public class Planet {
 	private List<Planet> moons;
 	private List<SatelliteBase> satallites;
 	private List<SatelliteBase> tickingSatallites;
+	//Between 0 and 2pi
+	private double orbit;
 	
 	public Planet(StellarBody star, int dimId) {
 		this.star = star;

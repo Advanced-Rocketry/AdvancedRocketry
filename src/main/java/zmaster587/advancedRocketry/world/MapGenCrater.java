@@ -5,14 +5,19 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.MapGenBase;
 
 public class MapGenCrater extends MapGenBase {
-
     
+	int chancePerChunk;
+	
+	public MapGenCrater(int chancePerChunk) {
+		this.chancePerChunk = chancePerChunk;
+	}
+	
 	@Override
 	protected void func_151538_a(World world, int rangeX,
 			int rangeZ, int chunkX, int chunkZ,
 			Block[] chunkArray) {
 		
-		if(rand.nextInt(30) == Math.abs(rangeX) % 30 && rand.nextInt(30) == Math.abs(rangeZ) % 30) {
+		if(rand.nextInt(chancePerChunk) == Math.abs(rangeX) % chancePerChunk && rand.nextInt(chancePerChunk) == Math.abs(rangeZ) % chancePerChunk) {
 
 			int radius = rand.nextInt(56) + 8; //64; 8 -> 64
 			

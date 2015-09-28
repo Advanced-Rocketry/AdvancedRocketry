@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.recipe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import zmaster587.libVulpes.interfaces.IRecipe;
@@ -74,8 +75,7 @@ public class RecipesMachine {
 
 	public static RecipesMachine getInstance() { return instance; }
 
-	public void addRecipe(Class clazz ,ItemStack out, int timeRequired, int power, Object ... obj) {
-
+	public void addRecipe(Class clazz ,List<ItemStack> out, int timeRequired, int power, Object ... inputs) {
 		ArrayList<IRecipe> recipes = getRecipes(clazz);
 		if(recipes == null) {
 			recipes = new ArrayList<IRecipe>();
@@ -85,13 +85,13 @@ public class RecipesMachine {
 		
 		ArrayList<ItemStack> stack = new ArrayList<ItemStack>();
 
-		for(int i = 0; i < obj.length; i++) {
-			if(obj[i] != null) {
-				if(obj[i] instanceof String) {
+		for(int i = 0; i < inputs.length; i++) {
+			if(inputs[i] != null) {
+				if(inputs[i] instanceof String) {
 
-					Object[] obj2 = obj.clone();
+					Object[] obj2 = inputs.clone();
 
-					for (ItemStack itemStack : OreDictionary.getOres((String)obj[i])) {
+					for (ItemStack itemStack : OreDictionary.getOres((String)inputs[i])) {
 						obj2[i] = itemStack;
 						addRecipe(clazz, out, timeRequired, power, obj2);
 					}
@@ -99,20 +99,26 @@ public class RecipesMachine {
 				}
 				else {
 
-					if(obj[i] instanceof Item) 
-						obj[i] = new ItemStack((Item)obj[i]);
-					else if(obj[i] instanceof Block)
-						obj[i] = new ItemStack((Block)obj[i]);
+					if(inputs[i] instanceof Item) 
+						inputs[i] = new ItemStack((Item)inputs[i]);
+					else if(inputs[i] instanceof Block)
+						inputs[i] = new ItemStack((Block)inputs[i]);
 
-					stack.add((ItemStack)obj[i]);
+					stack.add((ItemStack)inputs[i]);
 				}
 			}
 		}
 		ArrayList<ItemStack> outputItem = new ArrayList<ItemStack>();
-		outputItem.add(out);
+		outputItem.addAll(out);
 
 		Recipe recipe = new Recipe(outputItem, stack, timeRequired, power);
 		recipes.add(recipe);
+	}
+	
+	public void addRecipe(Class clazz ,ItemStack out, int timeRequired, int power, Object ... inputs) {
+		List<ItemStack> newList = new LinkedList<ItemStack>();
+		newList.add(out);
+		addRecipe(clazz, newList, timeRequired, power, inputs);
 	}
 
 	//Given the class return the list

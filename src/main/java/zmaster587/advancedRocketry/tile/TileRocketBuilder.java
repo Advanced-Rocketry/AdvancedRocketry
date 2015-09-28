@@ -74,9 +74,9 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	
 	private ModuleText thrustText, weightText, fuelText, accelerationText, errorText;
 
-	private int scanTotalBlocks;
-	private int scanTime; // How long until scan is finished from 0 -> num blocks
-	private int scanTimeLast; // Used for client/server sync
+	private int totalProgress;
+	private int progress; // How long until scan is finished from 0 -> num blocks
+	private int prevProgress; // Used for client/server sync
 	private boolean building; //True is rocket is being built, false if only scanning or otherwise
 
 	private StatsRocket stats;
@@ -104,7 +104,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		status = ErrorCodes.UNSCANNED;
 		stats = new StatsRocket();
 		building = false;
-		scanTimeLast = 0;
+		prevProgress = 0;
 	}
 
 	public ErrorCodes getStatus() {
@@ -114,14 +114,14 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	public AxisAlignedBB getBBCache() { return bbCache;}
 
-	public int getScanTotalBlocks() { return scanTotalBlocks; }
-	public void setScanTotalBlocks(int scanTotalBlocks) { this.scanTotalBlocks = scanTotalBlocks; }
+	public int getTotalProgress() { return totalProgress; }
+	public void setTotalProgress(int scanTotalBlocks) { this.totalProgress = scanTotalBlocks; }
 
-	public int getScanTime() { return scanTime; }
-	public void setScanTime(int scanTime) { this.scanTime = scanTime; }
+	public int getProgress() { return progress; }
+	public void setProgress(int scanTime) { this.progress = scanTime; }
 
-	public double getNormilizedScanTime() {
-		return scanTime/(double)(scanTotalBlocks*MAXSCANDELAY);
+	public double getNormallizedProgress() {
+		return progress/(double)(totalProgress*MAXSCANDELAY);
 	}
 
 	public float getAcceleration() {
@@ -130,13 +130,13 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	public int getWeight()  { return stats.getWeight(); }
 
-	public int getThrust() { return stats.getThrust(); }
+	public int getThrust() { return (int) (stats.getThrust()*Configuration.rocketThrustMultiplier); }
 
 	public float getNeededThrust() {return getWeight();}
 
 	public float getNeededFuel() { return getAcceleration() > 0 ? stats.getFuelRate(FuelType.LIQUID)*MathHelper.sqrt_float((2*(Configuration.orbit-this.yCoord))/getAcceleration()) : 0; }
 
-	public int getFuel() {return stats.getFuelCapacity(FuelType.LIQUID);}
+	public int getFuel() {return (int) (stats.getFuelCapacity(FuelType.LIQUID)*Configuration.fuelCapacityMultiplier);}
 
 	public boolean isBuilding() { return building; }
 
@@ -163,16 +163,16 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	@Override
 	public void performFunction() {
-		if(scanTime >= (scanTotalBlocks*MAXSCANDELAY)) {
+		if(progress >= (totalProgress*MAXSCANDELAY)) {
 			if(!worldObj.isRemote) {
 				if(building)
 					assembleRocket();
 				else
 					scanRocket(worldObj, xCoord, yCoord, zCoord, bbCache);
 			}
-			scanTotalBlocks = -1;
-			scanTime = 0;
-			scanTimeLast = 0;
+			totalProgress = -1;
+			progress = 0;
+			prevProgress = 0;
 			building = false; //Done building
 
 			//TODO call function instead
@@ -180,10 +180,10 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 				updateText();
 		}
 
-		scanTime++;
+		progress++;
 
-		if(!this.worldObj.isRemote && this.energy.getEnergyStored(ForgeDirection.UNKNOWN) < getPowerPerOperation() && scanTime - scanTimeLast > 0) {
-			scanTimeLast = scanTime;
+		if(!this.worldObj.isRemote && this.energy.getEnergyStored(ForgeDirection.UNKNOWN) < getPowerPerOperation() && progress - prevProgress > 0) {
+			prevProgress = progress;
 			PacketHandler.sendToNearby(new PacketMachine(this, (byte)2), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 32);
 		}
 
@@ -202,14 +202,13 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		return super.getRenderBoundingBox();
 	}
 
-	public boolean isScanning() { return scanTotalBlocks > 0; }
+	public boolean isScanning() { return totalProgress > 0; }
 
 	public void scanRocket(World world, int x, int y, int z, AxisAlignedBB bb) {
 
 		int thrust = 0;
 		int fuelUse = 0;
 		int fuel = 0;
-		int inventorySlots = 0;
 		int numBlocks = 0;
 		stats.reset();
 
@@ -272,8 +271,6 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 							}
 
 							TileEntity tile= world.getTileEntity(xCurr, yCurr, zCurr);
-							if(tile  instanceof IInventory) 
-								inventorySlots += ((IInventory)tile).getSizeInventory();
 							if(tile instanceof TileSatelliteHatch)
 								hasSatellite = true;
 							if(tile instanceof TileGuidanceComputer)
@@ -465,8 +462,8 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		super.writeToNBT(nbt);
 
 		stats.writeToNBT(nbt);
-		nbt.setInteger("scanTime", scanTime);
-		nbt.setInteger("scanTotalBlocks", scanTotalBlocks);
+		nbt.setInteger("scanTime", progress);
+		nbt.setInteger("scanTotalBlocks", totalProgress);
 		nbt.setBoolean("building", building);
 
 		if(bbCache != null) {
@@ -489,8 +486,8 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 		stats.readFromNBT(nbt);
 
-		scanTimeLast = scanTime = nbt.getInteger("scanTime");
-		scanTotalBlocks = nbt.getInteger("scanTotalBlocks");
+		prevProgress = progress = nbt.getInteger("scanTime");
+		totalProgress = nbt.getInteger("scanTotalBlocks");
 
 		building = nbt.getBoolean("building");
 		if(nbt.hasKey("bb")) {
@@ -528,7 +525,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		//Used to sync clinet/server
 		if(id == 2) {
 			out.writeInt(energy.getEnergyStored(ForgeDirection.UNKNOWN));
-			out.writeInt(this.scanTime);
+			out.writeInt(this.progress);
 		}
 
 	}
@@ -554,7 +551,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			if(bb == null)
 				return;
 
-			scanTotalBlocks = (int) (Configuration.buildSpeedMultiplier*this.getVolume(worldObj, xCoord, yCoord, zCoord, bbCache)/10);
+			totalProgress = (int) (Configuration.buildSpeedMultiplier*this.getVolume(worldObj, xCoord, yCoord, zCoord, bbCache)/10);
 			this.markDirty();
 			this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
@@ -570,14 +567,14 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			if(bb == null)
 				return;
 
-			scanTotalBlocks =(int) (Configuration.buildSpeedMultiplier*this.getVolume(worldObj, xCoord, yCoord, zCoord,bbCache)/10);
+			totalProgress =(int) (Configuration.buildSpeedMultiplier*this.getVolume(worldObj, xCoord, yCoord, zCoord,bbCache)/10);
 			this.markDirty();
 			this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 
 		}
 		else if(id == 2){
 			energy.setEnergyStored(nbt.getInteger("pwr"));
-			this.scanTime = nbt.getInteger("tik");
+			this.progress = nbt.getInteger("tik");
 		}
 	}
 
@@ -642,7 +639,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		case 1:
 			return MathHelper.clamp_float(0.5f + this.getAcceleration()*10, 0f, 1f);
 		case 2:
-			return (float)this.getNormilizedScanTime();
+			return (float)this.getNormallizedProgress();
 		}
 
 		return 0f;
@@ -651,27 +648,27 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	@Override
 	public void setProgress(int id, int progress) {
 		if(id == 2)
-			setScanTime(progress);
+			setProgress(progress);
 	}
 
 	@Override
 	public int getProgress(int id) {
 		if(id == 2)
-			return getScanTime();
+			return getProgress();
 		return 0;
 	}
 
 	@Override
 	public int getTotalProgress(int id) {
 		if(id == 2)
-			return getScanTotalBlocks();
+			return getTotalProgress();
 		return 0;
 	}
 
 	@Override
 	public void setTotalProgress(int id, int progress) {
 		if(id == 2) {
-			setScanTotalBlocks(progress);
+			setTotalProgress(progress);
 			updateText();
 		}
 	}

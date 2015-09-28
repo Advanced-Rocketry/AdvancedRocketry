@@ -5,7 +5,7 @@ import java.util.List;
 import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.item.ItemData;
-import zmaster587.advancedRocketry.tile.multiblock.TileEntityMultiPowerConsumer;
+import zmaster587.advancedRocketry.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.advancedRocketry.tile.multiblock.TileObservatory;
 import zmaster587.advancedRocketry.util.DataStorage;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,9 +22,9 @@ public class ContainerModular extends Container {
 	List<ModuleBase> modules;
 	int numSlots;
 	IModularInventory modularInventory;
-	
-	
-	public ContainerModular(EntityPlayer playerInv, List<ModuleBase> modules, IModularInventory modulularInv, boolean includePlayerInv) {
+
+
+	public ContainerModular(EntityPlayer playerInv, List<ModuleBase> modules, IModularInventory modulularInv, boolean includePlayerInv, boolean includeHotBar) {
 		this.modularInventory = modulularInv;
 		this.modules = modules;
 		numSlots = 0;
@@ -44,16 +44,18 @@ public class ContainerModular extends Container {
 			}
 		}
 
-		// Player hotbar
-		for (int j1 = 0; j1 < 9; j1++) {
-			addSlotToContainer(new Slot(playerInv.inventory, j1, 8 + j1 * 18, 147));
+		if(includeHotBar) {
+			// Player hotbar
+			for (int j1 = 0; j1 < 9; j1++) {
+				addSlotToContainer(new Slot(playerInv.inventory, j1, 8 + j1 * 18, 147));
+			}
 		}
 	}
-	
+
 	public Slot addSlotToContainer(Slot slot) {
 		return super.addSlotToContainer(slot);
 	}
-	
+
 	@Override
 	public void addCraftingToCrafters(ICrafting crafter) {
 		super.addCraftingToCrafters(crafter);
@@ -78,7 +80,7 @@ public class ContainerModular extends Container {
 		for(ModuleBase module : modules) {
 			for(int i = 0; i < module.numberOfChangesToSend(); i++) {
 				if(module.isUpdateRequired(i)) {
-					
+
 					for (int j = 0; j < this.crafters.size(); ++j) {
 						module.sendChanges(this, ((ICrafting)this.crafters.get(j)), moduleIndex, i);
 					}

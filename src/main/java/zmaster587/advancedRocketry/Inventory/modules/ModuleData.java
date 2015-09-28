@@ -113,10 +113,10 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void renderForeground(int mouseX, int mouseY, float zLevel, GuiContainer gui, FontRenderer font) {
+	public void renderForeground(int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel, GuiContainer gui, FontRenderer font) {
 
-		buttonLoad.renderForeground(mouseX, mouseY, zLevel, gui, font);
-		buttonStore.renderForeground(mouseX, mouseY, zLevel, gui, font);
+		buttonLoad.renderForeground(guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
+		buttonStore.renderForeground(guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
 
 		int relativeX = mouseX - offsetX;
 		int relativeY = mouseY - offsetY;
@@ -141,9 +141,9 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void renderBackground(GuiContainer gui, int x, int y, FontRenderer font) {
-		buttonLoad.renderBackground(gui, x, y, font);
-		buttonStore.renderBackground(gui, x, y, font);
+	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY, FontRenderer font) {
+		buttonLoad.renderBackground(gui, x, y, mouseX, mouseY, font);
+		buttonStore.renderBackground(gui, x, y, mouseX, mouseY, font);
 
 		for(Slot slot : slotList) {
 			gui.drawTexturedModalRect(x + slot.xDisplayPosition - 1, y + slot.yDisplayPosition - 1, icon.getxLoc(), icon.getyLoc(), icon.getxSize(), icon.getySize());

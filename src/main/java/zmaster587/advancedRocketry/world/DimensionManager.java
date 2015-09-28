@@ -8,30 +8,39 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.satellite.SatelliteDefunct;
 import zmaster587.advancedRocketry.world.solar.StellarBody;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
 
 
 public class DimensionManager {
 
 	//TODO: fix satellites not unloading on disconnect
-
 	private Random random;
 	private static DimensionManager instance = new DimensionManager();
 	public static final String workingPath = "advRocketry";
 	public static final String filePath = workingPath + "/temp.dat";
+	private HashMap<Integer,DimensionProperties> dimensionList;
+	private HashMap<Integer, StellarBody> starList;
 
 	private static long nextSatelliteId;
-	private static StellarBody sol = new StellarBody(0);
+	private static StellarBody sol;
+
+	public static DimensionProperties overworldProperties;
+
+	public static StellarBody getSol() {
+		return sol;
+	}
 
 	public static DimensionManager getInstance() {
 		return instance;
@@ -43,10 +52,23 @@ public class DimensionManager {
 		}
 	}
 
-	private HashMap<Integer,DimensionProperties> dimensionList;
-
 	public DimensionManager() {
 		dimensionList = new HashMap<Integer,DimensionProperties>();
+		starList = new HashMap<Integer, StellarBody>();
+		sol = new StellarBody();
+		sol.setTemperature(100);
+		sol.setId(0);
+		addStar(sol);
+
+		overworldProperties = new DimensionProperties(0);
+		overworldProperties.atmosphereDensity = 100;
+		overworldProperties.averageTemperature = 100;
+		overworldProperties.gravitationalMultiplier = 1f;
+		overworldProperties.orbitalDist = 100;
+		overworldProperties.skyColor = new float[] {1f, 1f, 1f};
+		overworldProperties.setStar(sol);
+		overworldProperties.name = "Earth";
+
 		random = new Random(System.currentTimeMillis());
 	}
 
@@ -64,7 +86,7 @@ public class DimensionManager {
 	}
 
 	public SatelliteBase getSatellite(long satId) {
-		SatelliteBase satellite = DimensionProperties.overworldProperties.getSatallite(satId);
+		SatelliteBase satellite = overworldProperties.getSatallite(satId);
 
 		if(satellite != null)
 			return satellite;
@@ -84,10 +106,10 @@ public class DimensionManager {
 	public String getNextName(int dimId) {
 		return "Sol-" + dimId;
 	}
-	
+
 	public void tickDimensions() {
 		//Tick satellites
-		DimensionProperties.overworldProperties.tick();
+		overworldProperties.tick();
 		for(int i : DimensionManager.getInstance().getLoadedDimensions()) {
 			DimensionManager.getInstance().getDimensionProperties(i).tick();
 		}
@@ -105,43 +127,68 @@ public class DimensionManager {
 		return 0;
 	}
 
-	public int generateRandom(int atmosphereFactor, int distanceFactor, int gravityFactor) {
-		return generateRandom(100, 100, 1, atmosphereFactor, distanceFactor, gravityFactor);
+	public DimensionProperties generateRandom(int atmosphereFactor, int distanceFactor, int gravityFactor) {
+		return generateRandom(100, 100, 100, atmosphereFactor, distanceFactor, gravityFactor);
 	}
 
-	public int generateRandom(String name, int atmosphereFactor, int distanceFactor, int gravityFactor) {
-		return generateRandom(name, 100, 100, 1, atmosphereFactor, distanceFactor, gravityFactor);
+	public DimensionProperties generateRandom(String name, int atmosphereFactor, int distanceFactor, int gravityFactor) {
+		return generateRandom(name, 100, 100, 100, atmosphereFactor, distanceFactor, gravityFactor);
 	}
 
-	public int generateRandom(String name, int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
+	public DimensionProperties generateRandom(String name, int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
 		DimensionProperties properties = new DimensionProperties(getNextFreeDim());
 
-		properties.name = getNextName(properties.getId());
-		properties.atmosphereDensity = baseAtmosphere + random.nextInt(atmosphereFactor) - atmosphereFactor/2; 
-		properties.orbitalDist = baseDistance + random.nextInt(distanceFactor) - distanceFactor/2;
-		properties.gravitationalMultiplier = (baseGravity + random.nextInt(gravityFactor) - gravityFactor/2)/100f;
+		if(name == "")
+			properties.name = getNextName(properties.getId());
+		else {
+			properties.name = name;
+		}
+		properties.atmosphereDensity = MathHelper.clamp_int(baseAtmosphere + random.nextInt(atmosphereFactor) - atmosphereFactor/2, 0, 200); 
+		properties.orbitalDist = MathHelper.clamp_int(baseDistance + random.nextInt(distanceFactor) - distanceFactor/2,0,200);
+		properties.gravitationalMultiplier = Math.min(Math.max(0.05f,(baseGravity + random.nextInt(gravityFactor) - gravityFactor/2)/100f), 1.3f);
+		properties.skyColor = new float []{.5f, .5f, .8f};
+
+		double minDistance;
+		
+		do {
+			minDistance = Double.MAX_VALUE;
+
+			properties.orbitTheta  = random.nextInt(360)*(2f*Math.PI)/360f;
+
+			for(DimensionProperties properties2 : sol.getPlanets()) {
+				double dist = Math.abs(properties2.orbitTheta - properties.orbitTheta);
+				if(dist < minDistance)
+					minDistance = dist;
+			}
+
+		} while(minDistance < (Math.PI/20f));
 
 		//Get Star Color
-		properties.sunColor = sol.getColor();
+		properties.setStar(sol);
 
 		//Linear is easier. Earth is nominal!
-		properties.averageTemperature = (sol.getTemperature() + (200 - properties.orbitalDist)*4 + properties.atmosphereDensity)/6;
+		properties.averageTemperature = (sol.getTemperature() + (200 - properties.orbitalDist)*10 + properties.atmosphereDensity*18)/20;
 
 		properties.addBiomes(properties.getViableBiomes());
 
 		registerDim(properties);
-		
-		PacketHandler.sendToAll(new PacketDimInfo(properties.getId(), properties));
-		
-		return properties.getId();
+		return properties;
 	}
 
 
-	public int generateRandom(int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
-		return generateRandom("temp", baseAtmosphere, baseDistance, baseGravity, atmosphereFactor, distanceFactor, gravityFactor);
+	public DimensionProperties generateRandom(int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
+		return generateRandom("", baseAtmosphere, baseDistance, baseGravity, atmosphereFactor, distanceFactor, gravityFactor);
 	}
 
 	public boolean registerDim(DimensionProperties properties) {
+		boolean bool = registerDimNoUpdate(properties);
+
+		if(bool)
+			PacketHandler.sendToAll(new PacketDimInfo(properties.getId(), properties));
+		return bool;
+	}
+
+	public boolean registerDimNoUpdate(DimensionProperties properties) {
 		int dimId = properties.getId();
 		Integer dim = new Integer(dimId);
 
@@ -163,7 +210,21 @@ public class DimensionManager {
 		dimensionList.clear();
 	}
 
-	public void unregisterDimension(int dimId) {
+	public void deleteDimension(int dimId) {
+
+		DimensionProperties properties = dimensionList.get(dimId);
+		properties.getStar().removePlanet(properties);
+		if(properties.isMoon()) {
+			properties.getParentProperties().removeChild(properties.getId());
+		}
+		
+		if(properties.hasChildren()) {
+			for(Integer child : properties.getChildPlanets()) {
+				deleteDimension(child);
+				PacketHandler.sendToAll(new PacketDimInfo(child, null));
+			}
+		}
+
 		//TODO: check for world loaded
 		net.minecraftforge.common.DimensionManager.unloadWorld(dimId);
 
@@ -184,19 +245,47 @@ public class DimensionManager {
 
 	public DimensionProperties getDimensionProperties(int dimId) {
 		DimensionProperties properties = dimensionList.get(new Integer(dimId));
-		return properties == null ? DimensionProperties.overworldProperties : properties;
+		return properties == null ? overworldProperties : properties;
+	}
+
+	public StellarBody getStar(int id) {
+		return starList.get(new Integer(id));
+	}
+
+	public Set<Integer> getStars() {
+		return starList.keySet();
+	}
+
+	public void addStar(StellarBody star) {
+		starList.put(star.getId(), star);
+	}
+
+	public void removeStar(int id) {
+		//TODO: actually remove subPlanets et
+		starList.remove(id);
 	}
 
 	public void saveDimensions(String filePath) {
 		NBTTagCompound nbt = new NBTTagCompound();
 		NBTTagCompound dimListnbt = new NBTTagCompound();
 
+
+		//Save SolarSystems first
+		NBTTagCompound solarSystem = new NBTTagCompound();
+		for(Entry<Integer, StellarBody> stars: starList.entrySet()) {
+			NBTTagCompound solarNBT = new NBTTagCompound();
+			stars.getValue().writeToNBT(solarNBT);
+			solarSystem.setTag(stars.getKey().toString(), solarNBT);
+		}
+
+		nbt.setTag("starSystems", solarSystem);
+
 		//Save satelliteId
 		nbt.setLong("nextSatelliteId", nextSatelliteId);
 
 		//Save Overworld
 		NBTTagCompound dimNbt = new NBTTagCompound();
-		DimensionProperties.overworldProperties.writeToNBT(dimNbt);
+		overworldProperties.writeToNBT(dimNbt);
 		dimListnbt.setTag("0", dimNbt);
 
 		for(Entry<Integer, DimensionProperties> dimSet : dimensionList.entrySet()) {
@@ -228,8 +317,6 @@ public class DimensionManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-
 	}
 
 	/**
@@ -266,6 +353,20 @@ public class DimensionManager {
 			e.printStackTrace();
 			return;
 		}
+		
+		//Load SolarSystems first
+		NBTTagCompound solarSystem = nbt.getCompoundTag("starSystems");
+
+		for(Object key : solarSystem.func_150296_c()) {
+
+			NBTTagCompound solarNBT = solarSystem.getCompoundTag((String)key);
+			StellarBody star = new StellarBody();
+			star.readFromNBT(solarNBT);
+			starList.put(star.getId(), star);
+		}
+
+		nbt.setTag("starSystems", solarSystem);
+
 
 		nextSatelliteId = nbt.getLong("nextSatelliteId");
 
@@ -276,13 +377,11 @@ public class DimensionManager {
 			String keyString = (String)key;
 			//Special Handling for overworld
 			if(keyString.equals("0")) {
-				DimensionProperties.overworldProperties.readFromNBT(dimListNbt.getCompoundTag(keyString));
+				overworldProperties.readFromNBT(dimListNbt.getCompoundTag(keyString));
 			} 
 			else {
 
 				DimensionProperties propeties = DimensionProperties.createFromNBT(Integer.parseInt(keyString) ,dimListNbt.getCompoundTag(keyString));
-
-
 
 				if(propeties != null) {
 					int keyInt = Integer.parseInt(keyString);
@@ -290,7 +389,9 @@ public class DimensionManager {
 					net.minecraftforge.common.DimensionManager.registerDimension(keyInt, keyInt);
 					dimensionList.put(new Integer(keyInt), propeties);
 				}
-				else{}
+				else{
+					AdvancedRocketry.logger.warning("Null Dimension Properties Recieved");
+				}
 				//TODO: print unable to register world
 			}
 		}

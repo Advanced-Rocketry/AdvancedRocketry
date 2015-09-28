@@ -3,41 +3,38 @@ package zmaster587.advancedRocketry.tile.multiblock;
 import java.util.HashSet;
 import java.util.List;
 
-import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.Inventory.TextureResources;
 import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
+import zmaster587.advancedRocketry.Inventory.modules.IProgressBar;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.Inventory.modules.ModuleImage;
+import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
-import zmaster587.advancedRocketry.api.recipe.ITimedPoweredMachine;
+import zmaster587.advancedRocketry.api.MaterialRegistry;
+import zmaster587.advancedRocketry.api.MaterialRegistry.AllowedProducts;
+import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
-import zmaster587.libVulpes.block.RotatableBlock;
-import zmaster587.libVulpes.gui.IlimitedItemSlotEntity;
+import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.interfaces.IRecipe;
-import zmaster587.libVulpes.tile.TileEntityMachine;
-import zmaster587.libVulpes.tile.TileEntityRFMachine;
-import zmaster587.libVulpes.util.PoweredTimedItemStack;
-import cofh.api.energy.EnergyStorage;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import zmaster587.libVulpes.util.IconResource;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TilePrecisionAssembler extends TileMultiBlockMachine implements IModularInventory {
+public class TilePrecisionAssembler extends TileMultiblockMachine implements IModularInventory, IProgressBar {
 
-	public static final Object structure[][][] = new Object[][][]{ {{Blocks.stone, Blocks.stone, Blocks.stone, Blocks.stone}, 
-		{Blocks.stone, Blocks.stone, Blocks.stone, Blocks.stone},
-		{Blocks.stone, Blocks.stone, Blocks.stone, Blocks.stone}},
+	public static final Object structure[][][] = new Object[][][]{ {{AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock}, 
+		{AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock},
+		{AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock}},
 	  
-	  {{Blocks.stone, Blocks.glass, Blocks.glass, Blocks.stone},
-		  {Blocks.stone, Blocks.glass, Blocks.glass, Blocks.stone},
-    	  {Blocks.stone, Blocks.stone, Blocks.stone, Blocks.stone}},
+	  {{AdvRocketryBlocks.blockStructureBlock, Blocks.glass, Blocks.glass, AdvRocketryBlocks.blockStructureBlock},
+		  {AdvRocketryBlocks.blockStructureBlock, Blocks.air, Blocks.air, AdvRocketryBlocks.blockStructureBlock},
+    	  {AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock}},
 	  
-     {{'c', Blocks.stone, Blocks.stone, '*'},
-	  {'*', Blocks.stone, Blocks.stone, '*'},
-	  {'*', Blocks.stone, Blocks.stone, '*'}}};
+     {{'c', '*', '*', '*'},
+	  {'*', Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), '*'},
+	  {'*', AdvRocketryBlocks.blockMotor, AdvRocketryBlocks.blockMotor, '*'}}};
 	
 	@Override
 	public List<IRecipe> getMachineRecipeList() {
@@ -50,12 +47,16 @@ public class TilePrecisionAssembler extends TileMultiBlockMachine implements IMo
 	}
 	
 	@Override
-	protected HashSet<Block> getAllowableWildCardBlocks() {
-		HashSet<Block> set = super.getAllowableWildCardBlocks();
+	public List<BlockMeta> getAllowableWildCardBlocks() {
+		List<BlockMeta> list = super.getAllowableWildCardBlocks();
 		
-		set.add(AdvRocketryBlocks.blockStructureBlock);
-		set.add(Blocks.stone);
-		return set;
+		list.add(new BlockMeta(AdvRocketryBlocks.blockStructureBlock, BlockMeta.WILDCARD));
+		list.add(new BlockMeta(AdvRocketryBlocks.blockRFBattery, BlockMeta.WILDCARD));
+		list.addAll(getAllowableOutputBlocks());
+		list.addAll(getInputs());
+		list.addAll(getPowerInputBlocks());
+		
+		return list;
 	}
 	
 	@Override
@@ -63,10 +64,65 @@ public class TilePrecisionAssembler extends TileMultiBlockMachine implements IMo
 		return AxisAlignedBB.getBoundingBox(xCoord -4, yCoord -4, zCoord -4, xCoord + 4, yCoord + 4, zCoord + 4);
 	}
 	
+	@Override
+	public List<ModuleBase> getModules() {
+		List<ModuleBase> modules = super.getModules();
+		
+		int yOffset = 16;
+		int xOffset = 65;
+		
+		modules.add(new ModuleImage(xOffset, yOffset, new IconResource(132, 0, 53, 66, TextureResources.progressBars)));
+		modules.add(new ModuleProgress(xOffset + 35, yOffset + 22, 1, new ProgressBarImage(167, 22, 13, 15, 54, 42, 13, 15, ForgeDirection.DOWN, TextureResources.progressBars), this));
+		modules.add(new ModuleProgress(xOffset + 36, yOffset + 41, 2, new ProgressBarImage(168, 41, 11, 15, 67, 42, 11, 15, ForgeDirection.DOWN, TextureResources.progressBars), this));
+		modules.add(new ModuleProgress(xOffset + 31, yOffset + 62, 3, new ProgressBarImage(163, 62, 21, 3, 90, 42, 21,  3, ForgeDirection.EAST, TextureResources.progressBars), this));
+		
+		return modules;
+	}
+	
+	@Override
+	public int getProgress(int id) {
+		if(id == 0) {
+			return super.getProgress(id);
+		}
+		if(id == 1) {
+			return Math.min(currentTime, completionTime/3);
+		}
+		else if(id == 2) {
+			int relativeTime = currentTime - (completionTime/3);
+			return relativeTime >= 0 ? Math.min(relativeTime, completionTime/3) : 0;
+		}
+		
+		int relativeTime = currentTime - (2*completionTime/3);
+		
+		return relativeTime >= 0 ? Math.min(relativeTime, completionTime/3) : 0; 
+	}
+	
+	@Override
+	public int getTotalProgress(int id) {
+		if(id == 0)
+			return super.getTotalProgress(id);
+		return completionTime/3;
+	}
+	
+	@Override
+	public void setTotalProgress(int id, int progress) {
+		if(id == 0)
+			super.setTotalProgress(id, progress);
+	}
+	
+	@Override
+	public void setProgress(int id, int progress) {
+		if(id == 0)
+			super.setProgress(id, progress);
+	}
+	
+	@Override
+	public float getNormallizedProgress(int id) {
+		return getProgress(id)/(float)getTotalProgress(id);
+	}
 	
 	@Override
 	public String getMachineName() {
 		return "container.precisionassemblingmachine";
 	}
-
 }

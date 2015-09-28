@@ -120,14 +120,6 @@ public class ProviderPlanet extends WorldProvider implements IPlanetaryProvider 
 		return getAtmosphereDensity() > .75f ? 128 : 0;
 	}
 
-
-	//Always see stars
-	@Override
-	@SideOnly(Side.CLIENT)
-	public float getStarBrightness(float par1) {
-		return super.getStarBrightness(par1);
-
-	}
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean isSkyColored() {
@@ -255,7 +247,7 @@ public class ProviderPlanet extends WorldProvider implements IPlanetaryProvider 
 
 	@Override
 	public Vec3 getSunColor() {
-		float[] vec = getDimensionProperties().sunColor;
+		float[] vec = getDimensionProperties().getSunColor();
 		return Vec3.createVectorHelper(vec[0],vec[1],vec[2]);
 	}
 	
