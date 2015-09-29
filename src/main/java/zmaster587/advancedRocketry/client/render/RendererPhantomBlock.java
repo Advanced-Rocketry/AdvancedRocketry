@@ -31,7 +31,8 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 
 		if(tileGhost.getReplacedTileEntity() != null && TileEntityRendererDispatcher.instance.hasSpecialRenderer(tileGhost.getReplacedTileEntity())) {
 			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ZERO);
+			GL11.glBlendFunc(GL11.GL_ONE_MINUS_SRC_COLOR, GL11.GL_SRC_ALPHA);
+			GL11.glColor4f(1f, 1f, 1f,0.7f);
 			TileEntityRendererDispatcher.instance.renderTileEntityAt(tileGhost.getReplacedTileEntity(), x, y, z, t);
 			GL11.glDisable(GL11.GL_BLEND);
 		}
@@ -43,8 +44,7 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 			RenderBlocks.getInstance().blockAccess = tileGhost.getWorldObj();
 			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glDisable(GL11.GL_ALPHA_TEST);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_DST_COLOR);
+			GL11.glBlendFunc(GL11.GL_ONE_MINUS_SRC_COLOR, GL11.GL_SRC_ALPHA);
 			Tessellator.instance.startDrawingQuads();
 			
             if(block.getRenderType() == 0) {
@@ -55,8 +55,7 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
     	        float r = (float)(l >> 16 & 255) / 255.0F;
     	        float g = (float)(l >> 8 & 255) / 255.0F;
     	        float b = (float)(l & 255) / 255.0F;
-    	        
-    			RenderHelper.renderStandardBlockWithColorMultiplier(block, 0,0,0, r, g, b, 1f);
+    			RenderHelper.renderStandardBlockWithColorMultiplier(block, 0,0,0, r, g, b, .7f);
             }
             else
             	RenderBlocks.getInstance().renderBlockByRenderType(block, 0, 0, 0);

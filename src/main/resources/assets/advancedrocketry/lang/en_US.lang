@@ -44,6 +44,7 @@ tile.rollingMachine.name=Rolling Machine
 tile.planetSelector.name=Planet Selector
 tile.blockGenericMachine.name=Machine Controller Block
 tile.blockHandPress.name=Small Plate Presser
+tile.placeHolder.name=Machine
 
 tile.Dilithium.name=Dilithium Ore
 tile.Copper.name=Copper Ore

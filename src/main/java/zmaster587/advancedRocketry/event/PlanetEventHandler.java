@@ -17,11 +17,13 @@ import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.world.DimensionManager;
 import zmaster587.advancedRocketry.world.DimensionProperties;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -47,6 +49,11 @@ public class PlanetEventHandler {
 				event.player.motionY += 0.04f - DimensionManager.overworldProperties.gravitationalMultiplier*0.04f;
 			}
 		}
+	}
+	
+	@EventHandler
+	public void disconnected(ClientDisconnectionFromServerEvent event) {
+		zmaster587.advancedRocketry.world.DimensionManager.getInstance().unregisterAllDimensions();
 	}
 
 	@SubscribeEvent

@@ -225,7 +225,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			return stack.getTagCompound().getInteger(IDNAME);
 		}
 		else
-			return -1;
+			return 0;
 	}
 
 	private void setYLevel(ItemStack stack, int level) {
@@ -235,8 +235,8 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		}
 		else 
 			nbt = new NBTTagCompound();
+		
 		TileMultiBlock machine = machineList.get(getMachineId(stack));
-
 		nbt.setInteger("yOffset", MathHelper.clamp_int(level, -1, machine.getStructure().length-1));
 		stack.setTagCompound(nbt);
 	}

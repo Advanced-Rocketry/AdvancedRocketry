@@ -27,7 +27,7 @@ public class BlockTile extends RotatableBlock {
 		super(Material.rock);
 		this.tileClass = tileClass;
 		this.guiId = guiId;
-		this.setHardness(1F).setResistance(3F).setBlockTextureName("Advancedrocketry:machineGeneric");
+		this.setBlockTextureName("Advancedrocketry:machineGeneric");
 	}
 
 	public Block setSideTexture(String textureName) {

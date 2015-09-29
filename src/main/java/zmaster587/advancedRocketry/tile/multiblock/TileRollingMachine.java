@@ -1,11 +1,9 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
-import java.util.HashSet;
 import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.Inventory.TextureResources;
@@ -15,6 +13,7 @@ import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
 import zmaster587.advancedRocketry.api.MaterialRegistry;
 import zmaster587.advancedRocketry.api.MaterialRegistry.AllowedProducts;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
+import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.interfaces.IRecipe;
 
 public class TileRollingMachine extends TileMultiblockMachine {
@@ -25,8 +24,8 @@ public class TileRollingMachine extends TileMultiblockMachine {
 			 {'I', Blocks.air, AdvRocketryBlocks.blockStructureBlock, Blocks.air}},
 		 
 		{{AdvRocketryBlocks.blockRFBattery, AdvRocketryBlocks.blockFuelTank, AdvRocketryBlocks.blockStructureBlock, Blocks.air},
-		 {Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock, 'O'},
-		 {Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), AdvRocketryBlocks.blockMotor, AdvRocketryBlocks.blockStructureBlock, 'O'}}
+		 {new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock, 'O'},
+		 {new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), AdvRocketryBlocks.blockMotor, AdvRocketryBlocks.blockStructureBlock, 'O'}}
 	};
 	
 	@Override

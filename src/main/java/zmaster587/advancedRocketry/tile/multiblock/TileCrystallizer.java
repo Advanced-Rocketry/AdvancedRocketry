@@ -16,6 +16,7 @@ import zmaster587.advancedRocketry.api.MaterialRegistry.AllowedProducts;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
 import zmaster587.advancedRocketry.tile.TileMaterial;
+import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.interfaces.IRecipe;
 
 public class TileCrystallizer extends TileMultiblockMachine implements IModularInventory {
@@ -24,9 +25,9 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 	
 	public static final Object[][][] structure = { {{AdvRocketryBlocks.blockQuartzCrucible, AdvRocketryBlocks.blockQuartzCrucible, AdvRocketryBlocks.blockQuartzCrucible},
 		{AdvRocketryBlocks.blockQuartzCrucible, AdvRocketryBlocks.blockQuartzCrucible, AdvRocketryBlocks.blockQuartzCrucible}},
-
+		
 		{{'O', 'c', 'I'}, 
-			{Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), 'P', Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem())}},
+			{new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), 'P', new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta())}},
 
 	};
 
@@ -44,18 +45,11 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 	@Override
 	protected void integrateTile(TileEntity tile) {
 		super.integrateTile(tile);
-		
-		if(tile instanceof TileMaterial) {
-			if(coil[0] == null)
-				coil[0] = ((TileMaterial)tile).getMaterial();
-			else
-				coil[1] = ((TileMaterial)tile).getMaterial();
-		}
 	}
 	
 	@Override
 	public boolean canProcessRecipe(IRecipe recipe) {
-		return super.canProcessRecipe(recipe) && coil[0] == MaterialRegistry.Materials.COPPER && coil[1] == MaterialRegistry.Materials.COPPER;
+		return super.canProcessRecipe(recipe);
 	}
 	
 	@Override

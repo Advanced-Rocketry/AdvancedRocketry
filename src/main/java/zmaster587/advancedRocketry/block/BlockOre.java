@@ -25,11 +25,11 @@ public class BlockOre extends Block {
 	IIcon[] textures = new IIcon[16];
 	byte numBlocks;
 	AllowedProducts product;
-	
+
 	public BlockOre(Material material) {
 		super(material);
 	}
-	
+
 	public AllowedProducts getProduct() {
 		return product;
 	}
@@ -79,8 +79,11 @@ public class BlockOre extends Block {
 		AdvancedRocketryItems.itemOreProduct = new ItemOreProduct[MaterialRegistry.AllowedProducts.values().length];
 
 		for(int i = 0; i < MaterialRegistry.AllowedProducts.values().length; i++) {
-			AdvancedRocketryItems.itemOreProduct[i] = new ItemOreProduct(MaterialRegistry.AllowedProducts.values()[i].name().toLowerCase());
-			GameRegistry.registerItem(AdvancedRocketryItems.itemOreProduct[i], "product" + MaterialRegistry.AllowedProducts.values()[i].name().toLowerCase());
+
+			if(!MaterialRegistry.AllowedProducts.values()[i].isBlock()) {
+				AdvancedRocketryItems.itemOreProduct[i] = new ItemOreProduct(MaterialRegistry.AllowedProducts.values()[i].name().toLowerCase()).setCreativeTab(tab);
+				GameRegistry.registerItem(AdvancedRocketryItems.itemOreProduct[i], "product" + MaterialRegistry.AllowedProducts.values()[i].name().toLowerCase());
+			}
 		}
 
 		for(int i = 0; i < numberOfOreBlocks; i++) {
@@ -93,12 +96,12 @@ public class BlockOre extends Block {
 			metalBlocks.setBlockName(metalBlockName).setCreativeTab(tab).setHardness(4f).setBlockTextureName("block");
 			metalBlocks.numBlocks = (byte)Math.min(len - (16*i), 16);
 			metalBlocks.product = AllowedProducts.BLOCK;
-			
+
 			ores = new BlockOre(Material.rock);
 			ores.setBlockName(name).setCreativeTab(tab).setHardness(4f).setBlockTextureName("ore");
 			ores.numBlocks = (byte)Math.min(len - (16*i), 16);
 			ores.product = AllowedProducts.ORE;
-			
+
 			coilBlocks = new BlockCoil(Material.rock, "advancedrocketry:coilSide", "advancedrocketry:coilPole");
 			coilBlocks.setBlockName(coilName).setCreativeTab(tab).setHardness(4f).setBlockTextureName("coil");
 			coilBlocks.numBlocks = (byte)Math.min(len - (16*i), 16);
@@ -107,20 +110,20 @@ public class BlockOre extends Block {
 			GameRegistry.registerBlock(ores, ItemOre.class, name + i);
 			GameRegistry.registerBlock(metalBlocks, ItemOre.class, metalBlockName + i);
 			GameRegistry.registerBlock(coilBlocks, ItemOre.class, coilName + i);
-			
+
 			for(int j = 0; j < 16 && j < 16*i + (len % 16); j++) {
 				int index = i*16 + j;
 				MaterialRegistry.Materials ore = MaterialRegistry.Materials.values()[index];
 
 				ores.ores[j] = ore;
 				ores.setHarvestLevel(ore.getTool(), ore.getHarvestLevel(), j);
-				
+
 				metalBlocks.ores[j] = ore;
 				metalBlocks.setHarvestLevel(ore.getTool(), ore.getHarvestLevel(), j);
 
 				coilBlocks.ores[j] = ore;
 				coilBlocks.setHarvestLevel(ore.getTool(), ore.getHarvestLevel(), j);
-				
+
 				for(MaterialRegistry.AllowedProducts product : MaterialRegistry.AllowedProducts.values()) {
 					if(!product.isBlock() && product.isOfType(ore.getAllowedProducts()))
 						((ItemOreProduct)AdvancedRocketryItems.itemOreProduct[product.ordinal()]).registerItem(index, ore);

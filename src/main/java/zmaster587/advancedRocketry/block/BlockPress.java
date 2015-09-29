@@ -56,6 +56,8 @@ public class BlockPress extends BlockPistonBase {
     }
     
     private boolean canExtend(World world, int x, int y, int z, int meta) {
+    	if(world.isAirBlock(x, y-1, z))
+    		return false;
     	Materials material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(world.getBlock(x, y-1, z), 1, world.getBlockMetadata(x, y-1, z)));
     	
     	return material != null && AllowedProducts.PLATE.isOfType(material.getAllowedProducts()) && world.getBlock(x, y-2, z) == Blocks.obsidian;

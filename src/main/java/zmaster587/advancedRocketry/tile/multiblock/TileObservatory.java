@@ -1,5 +1,7 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
+import io.netty.buffer.ByteBuf;
+
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -169,14 +171,25 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 		list.addAll(getDataBlocks());
 		return list;
 	}
+	
+	@Override
+	protected void writeNetworkData(NBTTagCompound nbt) {
+		super.writeNetworkData(nbt);
+		nbt.setInteger("openProgress", openProgress);
+		nbt.setBoolean("isOpen", isOpen);
+	}
+	
+	@Override
+	protected void readNetworkData(NBTTagCompound nbt) {
+		super.readNetworkData(nbt);
+		openProgress = nbt.getInteger("openProgress");
 
+		isOpen = nbt.getBoolean("isOpen");
+	}
+	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-
-		nbt.setInteger("openProgress", openProgress);
-		nbt.setBoolean("isOpen", isOpen);
-
 		if(dataChip != null) {
 			NBTTagCompound dataItem = new NBTTagCompound();
 			dataChip.writeToNBT(dataItem);
@@ -187,10 +200,6 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-
-		openProgress = nbt.getInteger("openProgress");
-
-		isOpen = nbt.getBoolean("isOpen");
 		
 		if(nbt.hasKey("dataItem")) {
 			dataChip = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("dataItem"));

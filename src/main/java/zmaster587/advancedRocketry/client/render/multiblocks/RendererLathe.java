@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.api.MaterialRegistry;
 import zmaster587.advancedRocketry.tile.multiblock.TileMultiblockMachine;
+import zmaster587.advancedRocketry.util.Debugger;
 import zmaster587.libVulpes.block.RotatableBlock;
 
 public class RendererLathe extends TileEntitySpecialRenderer {
@@ -19,6 +20,13 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/lathe.png");
 
+	private static int bodyList;
+
+	public RendererLathe() {
+		GL11.glNewList(bodyList = GL11.glGenLists(1), GL11.GL_COMPILE);
+		model.renderOnly("body");
+		GL11.glEndList();
+	}
 
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x,
@@ -47,32 +55,41 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 			float progress = multiBlockTile.getProgress(0)/(float)multiBlockTile.getTotalProgress(0);
 
 			bindTexture(texture);
-			model.renderPart("body");
-			
+			if(Debugger.renderList)
+				GL11.glCallList(bodyList);
+			else 
+				model.renderPart("body");
+
 			GL11.glPushMatrix();
 			if(progress < 0.95f)
 				GL11.glTranslatef(0f, 0f, progress/.95f);
 			else
 				GL11.glTranslatef(0f, 0f, (1 - progress)/.05f);
-			
+
 			model.renderOnly("Tray");
 			GL11.glPopMatrix();
-			
+
 			GL11.glPushMatrix();
 			GL11.glTranslatef(.5f, 1.5625f, 0f);
 			GL11.glRotatef(progress*1500, 0, 0, 1);
 			model.renderOnly("Cylinder");
-			
+
 			int color = MaterialRegistry.getMaterialFromItemStack(multiBlockTile.getOutputs().get(0)).getColor();
 			GL11.glColor3d((0xff & color >> 16)/256f, (0xff & color >> 8)/256f , (color & 0xff)/256f);
-			
+
 			model.renderOnly("rod");
 			GL11.glPopMatrix();
-			
+
 		}
 		else {
 			bindTexture(texture);
-			model.renderAllExcept("rod", "Cylinder");
+			if(Debugger.renderList)
+				GL11.glCallList(bodyList);
+			else 
+				model.renderPart("body");
+
+			model.renderPart("Tray");
+			//model.renderAllExcept("rod", "Cylinder");
 		}
 		GL11.glPopMatrix();
 	}

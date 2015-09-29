@@ -58,7 +58,7 @@ public class TileMultiBlock extends TileEntity {
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setBoolean("canRender", canRender);
-		writeToNBT(nbt);
+		writeNetworkData(nbt);
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, nbt);
 	}
 
@@ -67,7 +67,7 @@ public class TileMultiBlock extends TileEntity {
 		NBTTagCompound nbt = pkt.func_148857_g();
 
 		canRender = nbt.getBoolean("canRender");
-		readFromNBT(nbt);
+		readNetworkData(nbt);
 	}
 
 	/**
@@ -164,7 +164,7 @@ public class TileMultiBlock extends TileEntity {
 	}
 
 	public boolean attemptCompleteStructure() {
-		if(!completeStructure)
+		//if(!completeStructure)
 			canRender = completeStructure = completeStructure();
 		return completeStructure;
 	}
@@ -360,6 +360,11 @@ public class TileMultiBlock extends TileEntity {
 			list.add(new BlockMeta((Block) input, BlockMeta.WILDCARD));
 			return list;
 		}
+		else if(input instanceof BlockMeta) {
+			List<BlockMeta> list = new ArrayList<BlockMeta>();
+			list.add((BlockMeta) input);
+			return list;
+		}
 		List<BlockMeta> list = new ArrayList<BlockMeta>();
 		return list;
 	}
@@ -407,17 +412,25 @@ public class TileMultiBlock extends TileEntity {
 		return null;
 	}
 
+	protected void writeNetworkData(NBTTagCompound nbt) {
+		
+	}
+	
+	protected void readNetworkData(NBTTagCompound nbt) {
+		
+	}
+	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-
+		writeNetworkData(nbt);
 		nbt.setBoolean("completeStructure", completeStructure);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-
+		readNetworkData(nbt);
 		completeStructure = nbt.getBoolean("completeStructure");
 	}
 }

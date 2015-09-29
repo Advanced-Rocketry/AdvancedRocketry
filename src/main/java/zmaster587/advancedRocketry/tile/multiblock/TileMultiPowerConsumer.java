@@ -198,19 +198,17 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-
+	protected void writeNetworkData(NBTTagCompound nbt) {
+		super.writeNetworkData(nbt);
 		nbt.setInteger("completionTime", this.completionTime);
 		nbt.setInteger("currentTime", this.currentTime);
 		nbt.setInteger("powerPerTick", this.powerPerTick);
 		nbt.setBoolean("enabled", enabled);
 	}
-
+	
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-
+	protected void readNetworkData(NBTTagCompound nbt) {
+		super.readNetworkData(nbt);
 		completionTime = nbt.getInteger("completionTime");
 		currentTime = nbt.getInteger("currentTime");
 		powerPerTick = nbt.getInteger("powerPerTick");

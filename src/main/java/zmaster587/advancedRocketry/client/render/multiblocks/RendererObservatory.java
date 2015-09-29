@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.advancedRocketry.tile.multiblock.TileObservatory;
+import zmaster587.advancedRocketry.util.Debugger;
 import zmaster587.libVulpes.block.RotatableBlock;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -18,6 +19,15 @@ public class RendererObservatory  extends TileEntitySpecialRenderer {
 	IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("advancedrocketry:models/observatory.obj"));
 
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/T1Observatory.png");
+
+	private static int bodyList;
+
+	public RendererObservatory() {
+		GL11.glNewList(bodyList = GL11.glGenLists(1), GL11.GL_COMPILE);
+		model.renderOnly("body");
+		GL11.glEndList();
+	}
+
 
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x,
@@ -39,18 +49,22 @@ public class RendererObservatory  extends TileEntitySpecialRenderer {
 		ForgeDirection front = RotatableBlock.getFront(tile.getBlockMetadata());//tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
 		GL11.glTranslated(x + .5, y, z + .5);
 		GL11.glRotatef((front.offsetX == 1 ? 180 : 0) + front.offsetZ*90f, 0, 1, 0);
-		
+
 		GL11.glTranslated(2, -1, 0);
 
 		bindTexture(texture);
-		
+
 		float offset = multiBlockTile.getOpenProgress();
-		
+
 		if(offset != 0f) {
-			model.renderOnly("Base");
+			if(Debugger.renderList)
+				GL11.glCallList(bodyList);
+			else 
+				model.renderOnly("Base");
+
 			model.renderPart("Scope");
 			model.renderPart("Axis");
-			
+
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0, 0, -offset);
 			model.renderOnly("CasingXMinus");
@@ -63,7 +77,10 @@ public class RendererObservatory  extends TileEntitySpecialRenderer {
 
 		}
 		else {
-			model.renderOnly("Base");
+			if(Debugger.renderList)
+				GL11.glCallList(bodyList);
+			else 
+				model.renderOnly("Base");
 			model.renderOnly("CasingXMinus");
 			model.renderOnly("CasingXPlus");
 		}
