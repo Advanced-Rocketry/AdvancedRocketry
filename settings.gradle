@@ -1,0 +1,3 @@
+ 
+include 'libVulpes'
+project(':libVulpes').projectDir = new File('../libVulpes');
