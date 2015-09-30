@@ -140,7 +140,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 		int amount = 1;
 
 		for( TileDataBus datum : dataCables ) {
-			amount -= datum.addData(amount, DataStorage.DataType.UNDEFINED);
+			amount -= datum.addData(amount, DataStorage.DataType.DISTANCE);
 			if(amount == 0)
 				break;
 		}
