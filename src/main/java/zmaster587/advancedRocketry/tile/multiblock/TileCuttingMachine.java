@@ -26,8 +26,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class TileCuttingMachine extends TileMultiblockMachine implements IModularInventory {
 
 	private static final Object[][][] structure = new Object[][][]{			
-		    	 			 {{'O', 'c', 'I'}, 
-							  {'*', AdvRocketryBlocks.blockSawBlade, '*'}}};
+		    	 			 {{'I', 'c', 'O'}, 
+							  {new BlockMeta(AdvRocketryBlocks.blockMotor, BlockMeta.WILDCARD), AdvRocketryBlocks.blockSawBlade, new BlockMeta(AdvRocketryBlocks.blockRFBattery, 0)}}};
 	
 	@Override
 	public List<IRecipe> getMachineRecipeList() {
@@ -58,14 +58,6 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		return AxisAlignedBB.getBoundingBox(xCoord -2,yCoord -2, zCoord -2, xCoord + 2, yCoord + 2, zCoord + 2);
-	}
-	
-	@Override
-	public List<BlockMeta> getAllowableWildCardBlocks() {
-		List<BlockMeta> list = super.getAllowableWildCardBlocks();
-		
-		list.add(new BlockMeta(AdvRocketryBlocks.blockMotor, BlockMeta.WILDCARD));
-		return list;
 	}
 	
 	public boolean completeStructure() {

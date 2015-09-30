@@ -29,7 +29,9 @@ import zmaster587.libVulpes.util.Vector3F;
 import zmaster587.libVulpes.util.ZUtils;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -60,7 +62,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			ItemStack stack = Minecraft.getMinecraft().thePlayer.getHeldItem();
 
 			if(stack != null && stack.getItem() == this) {
-				if(event.dwheel > 0) {
+				if(event.dwheel < 0) {
 					setYLevel(stack, getYLevel(stack) + 1);
 				}
 				else
@@ -101,7 +103,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 		int y = getYLevel(stack);
 		int endNumber, startNumber;
-		
+
 		if(y == -1) {
 			startNumber = 0;
 			endNumber = structure.length;
@@ -122,7 +124,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 						continue;
 					else
 						block = multiblock.getAllowableBlocks(structure[y][z][x]);
-					
+
 					int globalX = posX - x*direction.offsetZ + z*direction.offsetX;
 					int globalZ = posZ + (x* direction.offsetX)  + (z*direction.offsetZ);
 					int globalY = -y + structure.length + posY - 1;
@@ -170,8 +172,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 		return super.onItemRightClick(stack, world, player);
 	}
-
-
+	
 	@Override
 	public List<ModuleBase> getModules() {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
@@ -235,9 +236,14 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		}
 		else 
 			nbt = new NBTTagCompound();
-		
+
 		TileMultiBlock machine = machineList.get(getMachineId(stack));
-		nbt.setInteger("yOffset", MathHelper.clamp_int(level, -1, machine.getStructure().length-1));
+
+		if( level == -2)
+			level = machine.getStructure().length-1;
+		else if(level == machine.getStructure().length)
+			level = -1;
+		nbt.setInteger("yOffset", level);
 		stack.setTagCompound(nbt);
 	}
 
@@ -320,10 +326,10 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	public void addInformation(ItemStack stack, EntityPlayer player,
 			List list, boolean bool) {
 		super.addInformation(stack, player, list, bool);
-		
+
 		list.add("Shift right-click: opens machine selection interface");
 		list.add("Shift-scroll: moves cross-section");
-		
+
 		int id = getMachineId(stack);
 		if(id != -1)
 			list.add(EnumChatFormatting.GREEN + AdvancedRocketry.proxy.getLocalizedString(machineList.get(id).getMachineName()));

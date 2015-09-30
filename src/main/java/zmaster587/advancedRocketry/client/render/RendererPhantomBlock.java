@@ -55,11 +55,12 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
     	        float r = (float)(l >> 16 & 255) / 255.0F;
     	        float g = (float)(l >> 8 & 255) / 255.0F;
     	        float b = (float)(l & 255) / 255.0F;
-    			RenderHelper.renderStandardBlockWithColorMultiplier(block, 0,0,0, r, g, b, .7f);
+    			RenderHelper.renderStandardBlockWithColorMultiplier(block, 0,0,0, r, g, b, .3f);
             }
             else
             	RenderBlocks.getInstance().renderBlockByRenderType(block, 0, 0, 0);
 			Tessellator.instance.draw();
+			net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
 			GL11.glDisable(GL11.GL_BLEND);
 			GL11.glPopMatrix();
 		}
@@ -75,6 +76,5 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 				RenderHelper.renderTag(Minecraft.getMinecraft().thePlayer.getDistanceSq(movingObjPos.blockX, movingObjPos.blockY, movingObjPos.blockZ), stack.getDisplayName(), x,y,z, 10);
 			}
 		}
-
 	}
 }
