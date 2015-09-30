@@ -7,6 +7,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.Inventory.GuiModular;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
@@ -18,6 +19,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
+import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ModuleContainerPan extends ModuleBase {
@@ -152,11 +154,23 @@ public class ModuleContainerPan extends ModuleBase {
 			module.actionPerform(button);
 	}
 
+	public void onScroll(int dwheel) {
+		if(dwheel < 0) {
+			moveContainerInterior(0, -20);
+		}
+		else if(dwheel > 0) {
+			moveContainerInterior(0, 20);
+		}
+	}
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void renderForeground(int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel,
 			GuiContainer gui, FontRenderer font) {
 
+		//Handle scrolling
+		onScroll(Mouse.getDWheel());
+		
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
 		setUpScissor(gui, offsetX + guiOffsetX, guiOffsetY + offsetY, screenSizeX, screenSizeY);
@@ -223,6 +237,42 @@ public class ModuleContainerPan extends ModuleBase {
 		return transformedMouseX > 0 && transformedMouseX < screenSizeX && transformedMouseY > 0 && transformedMouseY < screenSizeY;
 	}
 
+	protected void moveContainerInterior(int deltaX , int deltaY) {
+		//Clamp bounds ------------------------------------------------
+		if(deltaX > 0) {
+			deltaX = Math.min(deltaX, -currentPosX);
+		}
+		else if(deltaX < 0) {
+			deltaX = Math.max(deltaX, -containerSizeX - currentPosX);
+		}
+		if(deltaY > 0) {
+			deltaY = Math.min(deltaY, -currentPosY);
+		}
+		else if(deltaY < 0) {
+			deltaY = Math.max(deltaY, -containerSizeY - currentPosY);
+		}
+		//--------------------------------------------------------------
+
+		currentPosX += deltaX;
+		currentPosY += deltaY;
+
+		//Transform
+		for(Slot slot : slotList) {
+			slot.xDisplayPosition += deltaX;
+			slot.yDisplayPosition += deltaX;
+		}
+
+		for(GuiButton button2 : buttonList) {
+			button2.xPosition += deltaX;
+			button2.yPosition += deltaY;
+		}
+
+		for(ModuleBase module : moduleList) {
+			module.offsetX += deltaX;
+			module.offsetY += deltaY;
+		}
+	}
+	
 	//DO the actual scrolling
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -246,39 +296,7 @@ public class ModuleContainerPan extends ModuleBase {
 				int deltaX = (int) ((k - mouseLastX));
 				int deltaY = (int) ((l - mouseLastY));
 
-				//Clamp bounds ------------------------------------------------
-				if(deltaX > 0) {
-					deltaX = Math.min(deltaX, -currentPosX);
-				}
-				else if(deltaX < 0) {
-					deltaX = Math.max(deltaX, -containerSizeX - currentPosX);
-				}
-				if(deltaY > 0) {
-					deltaY = Math.min(deltaY, -currentPosY);
-				}
-				else if(deltaY < 0) {
-					deltaY = Math.max(deltaY, -containerSizeY - currentPosY);
-				}
-				//--------------------------------------------------------------
-
-				currentPosX += deltaX;
-				currentPosY += deltaY;
-
-				//Transform
-				for(Slot slot : slotList) {
-					slot.xDisplayPosition += deltaX;
-					slot.yDisplayPosition += deltaX;
-				}
-
-				for(GuiButton button2 : buttonList) {
-					button2.xPosition += deltaX;
-					button2.yPosition += deltaY;
-				}
-
-				for(ModuleBase module : moduleList) {
-					module.offsetX += deltaX;
-					module.offsetY += deltaY;
-				}
+				moveContainerInterior(deltaX, deltaY);
 
 				mouseLastX = k;
 				mouseLastY = l;

@@ -69,6 +69,10 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			renderStarSystem(DimensionManager.getInstance().getStar(0), center, center, 5f, 1f);
 	}
 
+	@Override
+	public void onScroll(int dwheel) {
+	}
+	
 	public int getSelectedSystem() {
 		return selectedSystem;
 	}

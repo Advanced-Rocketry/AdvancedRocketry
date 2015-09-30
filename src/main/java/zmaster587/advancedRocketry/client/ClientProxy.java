@@ -11,6 +11,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
+import zmaster587.advancedRocketry.Inventory.modules.ModuleContainerPan;
 import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.client.render.RendererPhantomBlock;
@@ -71,6 +72,7 @@ public class ClientProxy extends CommonProxy {
 		super.registerEventHandlers();
 		MinecraftForge.EVENT_BUS.register(new RocketEventHandler());
 		MinecraftForge.EVENT_BUS.register(AdvancedRocketryItems.itemHoloProjector);
+		MinecraftForge.EVENT_BUS.register(ModuleContainerPan.class);
 		
 		FMLCommonHandler.instance().bus().register(new PlanetEventHandlerClient());
 	}
