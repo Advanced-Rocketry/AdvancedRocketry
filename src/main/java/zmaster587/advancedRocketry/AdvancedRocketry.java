@@ -132,7 +132,7 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 
-@Mod(modid="advancedRocketry", name="Advanced Rocketry", version="0.0.1b", dependencies="required-after:libVulpes")
+@Mod(modid="advancedRocketry", name="Advanced Rocketry", version="0.1.1", dependencies="required-after:libVulpes")
 public class AdvancedRocketry {
 	public static final String modId = "advancedRocketry";
 

@@ -42,6 +42,7 @@ public class NEIAdvancedRocketryConfig implements IConfigureNEI {
 		API.hideItem(new ItemStack(AdvRocketryBlocks.blockPlaceHolder));
 		API.hideItem(new ItemStack(AdvRocketryBlocks.blockControllerDummy));
 		API.hideItem(new ItemStack(AdvRocketryBlocks.blockPhantom));
+		API.hideItem(new ItemStack(AdvancedRocketryItems.itemSatellite));
 	}
 
 	@Override

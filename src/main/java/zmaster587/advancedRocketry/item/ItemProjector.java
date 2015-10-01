@@ -226,7 +226,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			return stack.getTagCompound().getInteger(IDNAME);
 		}
 		else
-			return 0;
+			return -1;
 	}
 
 	private void setYLevel(ItemStack stack, int level) {
