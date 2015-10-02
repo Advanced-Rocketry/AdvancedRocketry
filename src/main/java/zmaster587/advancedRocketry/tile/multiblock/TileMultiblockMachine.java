@@ -181,13 +181,14 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 		for(IRecipe recipe : recipes) {
 			List<ItemStack> ingredients = recipe.getIngredients();
+			short mask = 0x0;
 			recipeCheck:
 
 				for(int ingredientNum = 0;ingredientNum < ingredients.size(); ingredientNum++) {
 
 					ItemStack ingredient = ingredients.get(ingredientNum);
 
-					short mask = 0x0;
+					
 
 					ingredientCheck:
 
@@ -207,7 +208,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 							//break recipeCheck;
 						}
 
-					if(mask == (1 << ( ( ingredients.size() ) ) - 1) && canProcessRecipe(recipe) )
+					if(mask == (1 << ( ( ingredients.size() ) )) - 1 && canProcessRecipe(recipe) )
 						return recipe;
 				}
 		}

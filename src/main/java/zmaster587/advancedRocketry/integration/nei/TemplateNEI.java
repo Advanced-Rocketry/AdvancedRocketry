@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.recipe.NEI;
+package zmaster587.advancedRocketry.integration.nei;
 
 import static codechicken.lib.gui.GuiDraw.changeTexture;
 import static codechicken.lib.gui.GuiDraw.drawTexturedModalRect;
@@ -155,18 +155,19 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 		public void drawForeground(int recipe)
 		{
 			super.drawForeground(recipe);
-			
 			GuiDraw.drawString(((CachedMachineRecipe)arecipes.get(recipe)).getEnergy() + " RF/t", 4, 60, 0x3d3d3d, false);
 			GuiDraw.drawString(((CachedMachineRecipe)arecipes.get(recipe)).getTime()/20 + " Seconds", 4, 70, 0x3d3d3d, false);
+		
 		}
-
 		@Override
 		public void drawExtras(int recipe)
 		{
 			ProgressBarImage progressBar = getProgressBar();
 			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureResources.progressBars);
 			drawTexturedModalRect(65, 3, progressBar.getBackOffsetX(), progressBar.getBackOffsetY(), progressBar.getBackWidth(), progressBar.getBackHeight());
-			drawProgressBar(65 + progressBar.getInsetX(), 3 +  + progressBar.getInsetY(), progressBar.getForeOffsetX(), progressBar.getForeOffsetY(), progressBar.getForeWidth(),  progressBar.getForeHeight(), 50, 3);
+			
+			
+			drawProgressBar(65 + progressBar.getInsetX(), 3 +  + progressBar.getInsetY(), progressBar.getForeOffsetX(), progressBar.getForeOffsetY(), progressBar.getForeWidth(),  progressBar.getForeHeight(), 50, progressBar.getDirection().ordinal());
 		}
 
 		@Override

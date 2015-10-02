@@ -1,23 +1,24 @@
-package zmaster587.advancedRocketry.recipe.NEI;
+package zmaster587.advancedRocketry.integration.nei;
 
 import zmaster587.advancedRocketry.Inventory.TextureResources;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
-import zmaster587.advancedRocketry.tile.multiblock.TileRollingMachine;
+import zmaster587.advancedRocketry.tile.multiblock.TileLathe;
 
-public class RollingMachineNEI extends TemplateNEI {
-	
+public class LatheNEI extends TemplateNEI {
+
 	@Override
 	public String getRecipeName() {
-		return "RollingMachine";
+		return "Lathe";
 	}
 
 	@Override
 	protected Class getMachine() {
-		return TileRollingMachine.class;
+		return TileLathe.class;
 	}
 
 	@Override
 	protected ProgressBarImage getProgressBar() {
-		return TextureResources.rollingMachineProgressBar;
+		return TextureResources.latheProgressBar;
 	}
+
 }

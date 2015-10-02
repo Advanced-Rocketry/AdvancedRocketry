@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.recipe.NEI;
+package zmaster587.advancedRocketry.integration.nei;
 
 import zmaster587.advancedRocketry.Inventory.TextureResources;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;

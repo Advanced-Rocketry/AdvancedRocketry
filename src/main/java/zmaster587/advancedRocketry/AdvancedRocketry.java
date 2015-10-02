@@ -497,8 +497,11 @@ public class AdvancedRocketry {
 			}
 
 			if(MaterialRegistry.AllowedProducts.PLATE.isOfType(ore.getAllowedProducts())) {
-				for(String oreDictNames : ore.getOreDictNames())
+				for(String oreDictNames : ore.getOreDictNames()) {
 					RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, ore.getProduct(MaterialRegistry.AllowedProducts.PLATE), 300, 200, "ingot" + oreDictNames);
+					if(AllowedProducts.BLOCK.isOfType(ore.getAllowedProducts()) || ore.isVanilla())
+						RecipesMachine.getInstance().addRecipe(BlockPress.class, ore.getProduct(MaterialRegistry.AllowedProducts.PLATE), 0, 0, ore.getProduct(MaterialRegistry.AllowedProducts.BLOCK));
+				}
 			}
 
 			if(MaterialRegistry.AllowedProducts.COIL.isOfType(ore.getAllowedProducts())) {
@@ -516,7 +519,7 @@ public class AdvancedRocketry {
 
 		GameRegistry.addSmelting(MaterialRegistry.Materials.DILITHIUM.getProduct(MaterialRegistry.AllowedProducts.ORE), MaterialRegistry.Materials.DILITHIUM.getProduct(AllowedProducts.DUST), 0);
 
-		
+
 		//Supporting Materials
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemMisc,1,0), "lrl", "fgf", 'l', "dyeLime", 'r', Items.redstone, 'g', Blocks.glass_pane, 'f', Items.glowstone_dust));
 		GameRegistry.addShapedRecipe(new ItemStack(AdvRocketryBlocks.genericSeat), "xxx", 'x', Blocks.wool);
@@ -564,7 +567,7 @@ public class AdvancedRocketry {
 		//TEMP RECIPES
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryItems.itemSatelliteIdChip), new ItemStack(AdvancedRocketryItems.itemIC, 1, 0));
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryItems.itemPlanetIdChip), new ItemStack(AdvancedRocketryItems.itemIC, 1, 0), new ItemStack(AdvancedRocketryItems.itemIC, 1, 0), new ItemStack(AdvancedRocketryItems.itemSatelliteIdChip));
-		
+
 		//Cutting Machine
 		RecipesMachine.getInstance().addRecipe(TileCuttingMachine.class, new ItemStack(AdvancedRocketryItems.itemIC, 4, 0), 300, 100, new ItemStack(AdvancedRocketryItems.itemCircuitPlate,1,0));
 		RecipesMachine.getInstance().addRecipe(TileCuttingMachine.class, new ItemStack(AdvancedRocketryItems.itemWafer, 4, 0), 300, 100, "bouleSilicon");
@@ -592,7 +595,7 @@ public class AdvancedRocketry {
 	{
 		proxy.registerEventHandlers();
 		proxy.registerKeyBindings();
-		
+
 		//TODO: debug
 		ClientCommandHandler.instance.registerCommand(new Debugger());
 
@@ -671,7 +674,7 @@ public class AdvancedRocketry {
 		}
 	}
 
-	
+
 	@EventHandler
 	public void serverStopped(FMLServerStoppedEvent event) {
 		zmaster587.advancedRocketry.world.DimensionManager.getInstance().unregisterAllDimensions();

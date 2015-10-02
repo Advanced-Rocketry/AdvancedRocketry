@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.recipe.NEI;
+package zmaster587.advancedRocketry.integration.nei;
 
 import static codechicken.lib.gui.GuiDraw.drawTexturedModalRect;
 import net.minecraft.client.Minecraft;

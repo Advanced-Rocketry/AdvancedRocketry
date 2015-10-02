@@ -144,6 +144,10 @@ public class MaterialRegistry {
 			this.color = color;
 		}
 
+		public boolean isVanilla() {
+			return this.unlocalizedName.equals("Iron") ||  this.unlocalizedName.equals("Gold");
+		}
+		
 		public ItemStack getProduct(AllowedProducts product, int amount) {
 			if(product.isBlock()) {
 				return new ItemStack(product.blockArray.get(this.ordinal()/16), amount, getMeta());
