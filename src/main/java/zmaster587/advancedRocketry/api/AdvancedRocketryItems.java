@@ -10,11 +10,11 @@ public class AdvancedRocketryItems {
 	public static Item itemWafer;
 	public static Item itemCircuitPlate;
 	public static Item itemIC;
-	public static Item satellitePowerSource;
-	public static Item satellitePrimaryFunction;
-	public static Item oreScanner;
-	public static Item quartzCrucible;
-	public static Item saplingBlue; 
+	public static Item itemSatellitePowerSource;
+	public static Item itemSatellitePrimaryFunction;
+	public static Item itemOreScanner;
+	public static Item itemQuartzCrucible;
+	public static Item itemSaplingBlue; 
 	public static Item itemDataUnit;
 	public static Item itemSatellite;
 	public static Item itemSatelliteIdChip;

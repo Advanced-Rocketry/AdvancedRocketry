@@ -116,14 +116,6 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 		}
 
 		@Override
-		public void loadUsageRecipes(String outputId, Object... results) {
-			//if(getClass() == getMachine())
-				loadUsageRecipes((ItemStack) results[0]);
-			//else
-				//super.loadCraftingRecipes(outputId, results);
-		}
-
-		@Override
 		public void loadUsageRecipes(ItemStack ingredient) {
 			for(IRecipe irecipe : RecipesMachine.getInstance().getRecipes(getMachine())) {
 				CachedMachineRecipe recipe = new CachedMachineRecipe(irecipe);

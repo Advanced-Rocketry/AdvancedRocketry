@@ -80,24 +80,27 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		ForgeDirection direction = ForgeDirection.getOrientation(getDirection(stack));
 
 		TileMultiBlock multiblock = machineList.get(id);
-		Object[][][] structure = machineList.get(getPrevMachineId(stack)).getStructure();
 
-		Vector3F<Integer> basepos = getBasePosition(stack);
+		int prevMachineId = getPrevMachineId(stack);
+		Object[][][] structure;
+		if(prevMachineId >= 0 && prevMachineId < machineList.size()) {
+			structure = machineList.get(prevMachineId).getStructure();
 
-		for(int y = 0; y < structure.length; y++) {
-			for(int z=0 ; z < structure[0].length; z++) {
-				for(int x=0; x < structure[0][0].length; x++) {
+			Vector3F<Integer> basepos = getBasePosition(stack);
 
-					int globalX = basepos.x - x*direction.offsetZ + z*direction.offsetX;
-					int globalZ = basepos.z + (x* direction.offsetX) + (z*direction.offsetZ);
+			for(int y = 0; y < structure.length; y++) {
+				for(int z=0 ; z < structure[0].length; z++) {
+					for(int x=0; x < structure[0][0].length; x++) {
 
-					if(world.getBlock(globalX, basepos.y + y, globalZ) == AdvRocketryBlocks.blockPhantom) 
-						world.setBlockToAir(globalX, basepos.y + y, globalZ);
+						int globalX = basepos.x - x*direction.offsetZ + z*direction.offsetX;
+						int globalZ = basepos.z + (x* direction.offsetX) + (z*direction.offsetZ);
+
+						if(world.getBlock(globalX, basepos.y + y, globalZ) == AdvRocketryBlocks.blockPhantom) 
+							world.setBlockToAir(globalX, basepos.y + y, globalZ);
+					}
 				}
 			}
 		}
-
-
 		structure = multiblock.getStructure();
 		direction = orientation;
 
@@ -172,7 +175,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 		return super.onItemRightClick(stack, world, player);
 	}
-	
+
 	@Override
 	public List<ModuleBase> getModules() {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();

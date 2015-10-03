@@ -37,15 +37,27 @@ public class TileMultiBlock extends TileEntity {
 	}
 
 
+	/**
+	 * Note: it may be true on the server but not the client.  This is because the client needs to form the multiblock
+	 * so the tile has references to other blocks in its structure for gui display etc
+	 * @return true if the structure is complete
+	 */
 	public boolean isComplete() {
 		return completeStructure;
 	}
 
+	/**
+	 * 
+	 * @return true if the block should be rendered as complete
+	 */
 	@SideOnly(Side.CLIENT)
 	public boolean canRender() {
 		return canRender;
 	}
 
+	/**
+	 * @return the unlocalized name of the machine
+	 */
 	public String getMachineName() {
 		return "";
 	}
@@ -100,8 +112,7 @@ public class TileMultiBlock extends TileEntity {
 					int globalY = yCoord - y + offset.y;
 					int globalZ = zCoord - (x - offset.x)*front.offsetX  - (z-offset.z)*front.offsetZ;
 
-
-
+					
 					//This block is being broken anyway so don't bother
 					if(blockBroken && globalX == destroyedX &&
 							globalY == destroyedY &&
@@ -128,10 +139,12 @@ public class TileMultiBlock extends TileEntity {
 	 */
 	protected void destroyBlockAt(int x, int y, int z, Block block, TileEntity tile) {
 
+		//if it's an instance of multiblock structure call its destroyStructure method
 		if(block instanceof BlockMultiblockStructure) {
 			((BlockMultiblockStructure)block).destroyStructure(worldObj, x, y, z, worldObj.getBlockMetadata(x, y, z));
 		}
 
+		//If the the tile is a placeholder then make sure to replace it with its original block and tile
 		if(tile instanceof TilePlaceholder) {
 			TilePlaceholder placeholder = (TilePlaceholder)tile;
 
@@ -226,41 +239,14 @@ public class TileMultiBlock extends TileEntity {
 						else 
 							continue;
 					}
-
-					/*if(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == '*') {
-
-						if(!(tile instanceof TileInventoryHatch) && !(tile instanceof TileRFBattery) && !isWildcardBlockOrTileAllowed(block, tile) && !getAllowableWildCardBlocks().contains(block)) {	
-							return false;
-						}
-
-					}
-					else if(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'D') {
-						if(!(tile instanceof TileDataBus))
-							return false;
-					}
-					else if(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'P') {
-						if(!(tile instanceof TileRFBattery)) //TODO make universal
-							return false;
-					}
-					else if(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'I') {
-						if(!getInputs().contains(new BlockMeta(block, meta)))
-							return false;
-					}
-					else if(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'O') {
-						if(!getOutputs().contains(new BlockMeta(block, meta)))
-							return false;
-					}
-					else if(structure[y][z][x] instanceof Block && block != structure[y][z][x]) {
-
-						return false;
-					}*/
-
+					//Make sure the structure is valid
 					if(!(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') && !getAllowableBlocks(structure[y][z][x]).contains(new BlockMeta(block,meta)))
 						return false;
 				}
 			}
 		}
 
+		//Notify all blocks in the structure that it's being build and assimilate them
 		for(int y = 0; y < structure.length; y++) {
 			for(int z = 0; z < structure[0].length; z++) {
 				for(int x = 0; x< structure[0][0].length; x++) {

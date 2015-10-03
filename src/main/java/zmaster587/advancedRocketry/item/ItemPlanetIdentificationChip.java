@@ -37,7 +37,7 @@ public class ItemPlanetIdentificationChip extends ItemMultiData {
 	 * @return true of the dimension stored on the stack exists and is valid
 	 */
 	public boolean hasValidDimension(ItemStack stack) {
-		
+
 		if(stack.hasTagCompound()) {
 			int dimId = stack.getTagCompound().getInteger(dimensionIdIdentifier);
 			return dimId == 0 || DimensionManager.getInstance().isDimensionCreated(dimId);
@@ -115,17 +115,22 @@ public class ItemPlanetIdentificationChip extends ItemMultiData {
 			list.add(ChatFormatting.RED + "Programming Failed");
 		}
 		else {
+			if(stack.getItemDamage()  == 0) {
+				String unknown = ChatFormatting.YELLOW + "???";
+				String dimName = stack.getTagCompound().getString(dimensionNameIdentifier);
 
-			String unknown = ChatFormatting.YELLOW + "???";
-			String dimName = stack.getTagCompound().getString(dimensionNameIdentifier);
+				list.add("Planet Name: " + ChatFormatting.DARK_GREEN  + dimName);
 
-			list.add("Planet Name: " + ChatFormatting.DARK_GREEN  + dimName);
+				super.addInformation(stack, player, list, bool);
 
-			super.addInformation(stack, player, list, bool);
+				//list.add("Mass: " + unknown);
+				//list.add("Atmosphere Density: " + unknown);
+				//list.add("Distance From Star: " + unknown);
 
-			//list.add("Mass: " + unknown);
-			//list.add("Atmosphere Density: " + unknown);
-			//list.add("Distance From Star: " + unknown);
+			}
+			else { //Space station
+				list.add("Station Id: " + ChatFormatting.DARK_GREEN + stack.getTagCompound().getString(dimensionNameIdentifier));
+			}
 		}
 	}
 }

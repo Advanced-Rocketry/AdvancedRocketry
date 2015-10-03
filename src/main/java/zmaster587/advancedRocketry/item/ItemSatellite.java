@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 
-public class ItemSatellite extends Item {
+public class ItemSatellite extends ItemIdWithName {
 
 	public SatelliteProperties getSatellite(ItemStack stack) {
 
@@ -39,23 +39,6 @@ public class ItemSatellite extends Item {
 
 	}
 
-	public void setName(ItemStack stack, String name) {
-
-		if(stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
-			nbt.setString("name", name);
-			stack.setTagCompound(nbt);
-		}
-	}
-
-	public String getName(ItemStack stack) {
-		if(stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
-			return nbt.getString("name");
-		}
-
-		return "";
-	}
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player,

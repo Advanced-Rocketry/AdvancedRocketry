@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
 
 /**
  * Stores references to Advanced Rocketry's blocks
  *
  */
 public class AdvRocketryBlocks {
-	
 	public static Block blockMissionComp;
 	public static Block blockSpaceLaser;
 	public static Block blockPrecisionAssembler;
@@ -27,10 +25,10 @@ public class AdvRocketryBlocks {
 	public static Block blockRFBattery;
 	public static Block blockStructureBlock;
 	public static Block blockPlanetAnalyser;
-	public static Block launchpad;
-	public static Block structureTower;
-	public static Block rocketBuilder;
-	public static Block genericSeat;
+	public static Block blockLaunchpad;
+	public static Block blockStructureTower;
+	public static Block blockRocketBuilder;
+	public static Block blockGenericSeat;
 	public static Block blockEngine;
 	public static Block blockFuelTank;
 	public static Block blockFuelingStation;

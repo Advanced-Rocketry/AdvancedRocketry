@@ -35,5 +35,4 @@ public class PlatePresserNEI  extends TemplateNEI {
 	protected ProgressBarImage getProgressBar() {
 		return TextureResources.smallPlatePresser;
 	}
-
 }

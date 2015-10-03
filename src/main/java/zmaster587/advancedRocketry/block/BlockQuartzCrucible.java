@@ -49,7 +49,7 @@ public class BlockQuartzCrucible extends BlockCauldron {
     @Override
     public Item getItemDropped(int par1, Random par2Random, int par3)
     {	
-    	return AdvancedRocketryItems.quartzCrucible;
+    	return AdvancedRocketryItems.itemQuartzCrucible;
     }
     
     @SideOnly(Side.CLIENT)
@@ -61,7 +61,7 @@ public class BlockQuartzCrucible extends BlockCauldron {
     @SideOnly(Side.CLIENT)
     public Item getItemPicked(World par1World, int par2, int par3, int par4)
     {
-        return AdvancedRocketryItems.quartzCrucible;
+        return AdvancedRocketryItems.itemQuartzCrucible;
     }
  
     @SideOnly(Side.CLIENT)

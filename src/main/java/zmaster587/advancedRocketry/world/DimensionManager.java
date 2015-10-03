@@ -14,6 +14,7 @@ import org.apache.commons.io.FileUtils;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
+import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.world.solar.StellarBody;
@@ -35,6 +36,7 @@ public class DimensionManager {
 
 	private static long nextSatelliteId;
 	private static StellarBody sol;
+	private static SpaceObjectManager spaceObjectManager;
 
 	public static DimensionProperties overworldProperties;
 
@@ -53,6 +55,7 @@ public class DimensionManager {
 	}
 
 	public DimensionManager() {
+		spaceObjectManager = new SpaceObjectManager();
 		dimensionList = new HashMap<Integer,DimensionProperties>();
 		starList = new HashMap<Integer, StellarBody>();
 		sol = new StellarBody();
@@ -97,8 +100,6 @@ public class DimensionManager {
 			if( (satellite = DimensionManager.getInstance().getDimensionProperties(i).getSatallite(satId)) != null )
 				return satellite;
 		}
-
-
 		return null;
 	}
 
@@ -149,7 +150,7 @@ public class DimensionManager {
 		properties.skyColor = new float []{.5f, .5f, .8f};
 
 		double minDistance;
-		
+
 		do {
 			minDistance = Double.MAX_VALUE;
 
@@ -217,7 +218,7 @@ public class DimensionManager {
 		if(properties.isMoon()) {
 			properties.getParentProperties().removeChild(properties.getId());
 		}
-		
+
 		if(properties.hasChildren()) {
 			for(Integer child : properties.getChildPlanets()) {
 				deleteDimension(child);
@@ -298,6 +299,9 @@ public class DimensionManager {
 
 		nbt.setTag("dimList", dimListnbt);
 
+		/*NBTTagCompound nbtTag = new NBTTagCompound();
+		spaceObjectManager.writeToNBT(nbtTag);
+		nbt.setTag("spaceObjects", nbtTag);*/
 
 		FileOutputStream outStream;
 		try {
@@ -353,7 +357,7 @@ public class DimensionManager {
 			e.printStackTrace();
 			return;
 		}
-		
+
 		//Load SolarSystems first
 		NBTTagCompound solarSystem = nbt.getCompoundTag("starSystems");
 
@@ -366,7 +370,6 @@ public class DimensionManager {
 		}
 
 		nbt.setTag("starSystems", solarSystem);
-
 
 		nextSatelliteId = nbt.getLong("nextSatelliteId");
 
@@ -395,5 +398,11 @@ public class DimensionManager {
 				//TODO: print unable to register world
 			}
 		}
+		
+		//Check for tag in case old version of Adv rocketry is in use
+		/*if(nbt.hasKey("spaceObjects")) {
+			NBTTagCompound nbtTag = nbt.getCompoundTag("spaceObjects");
+			spaceObjectManager.readFromNBT(nbtTag);
+		}*/
 	}
 }
