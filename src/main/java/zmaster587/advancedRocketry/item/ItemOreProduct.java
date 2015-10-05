@@ -50,7 +50,11 @@ public class ItemOreProduct extends Item {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getColorFromItemStack(ItemStack stack, int int1) {
-		return properties.get(stack.getItemDamage()).getColor();
+		int itemDamage = stack.getItemDamage();
+		//Sanity check if anyone somehow gets an invalid damage
+		if(!properties.containsKey(itemDamage))
+			return 0xFFFFFFFF;
+		return properties.get(itemDamage).getColor();
 	}
 
 

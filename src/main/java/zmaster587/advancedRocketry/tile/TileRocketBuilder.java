@@ -68,11 +68,12 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	private final int ENERGYFOROP = 100;
 	//private final int ENERGY = 100;
 	
-	private static final ResourceLocation backdrop =  new ResourceLocation("advancedrocketry","textures/gui/rocketBuilder.png");
+	protected static final ResourceLocation backdrop =  new ResourceLocation("advancedrocketry","textures/gui/rocketBuilder.png");
 	private static final ProgressBarImage horizontalProgressBar = new ProgressBarImage(89, 9, 81, 17, 176, 0, 80, 15, 0, 2, ForgeDirection.EAST, backdrop);
-	private static final ProgressBarImage verticalProgressBar = new ProgressBarImage(76, 93, 8, 52, 176, 15, 2, 38, 3, 2, ForgeDirection.UP, backdrop);
+	protected static final ProgressBarImage verticalProgressBar = new ProgressBarImage(76, 93, 8, 52, 176, 15, 2, 38, 3, 2, ForgeDirection.UP, backdrop);
 	
-	private ModuleText thrustText, weightText, fuelText, accelerationText, errorText;
+	private ModuleText thrustText, weightText, fuelText, accelerationText;
+	protected ModuleText errorText;
 
 	private int totalProgress;
 	private int progress; // How long until scan is finished from 0 -> num blocks
@@ -80,8 +81,8 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	private boolean building; //True is rocket is being built, false if only scanning or otherwise
 
 	private StatsRocket stats;
-	private AxisAlignedBB bbCache;
-	private ErrorCodes status;
+	protected AxisAlignedBB bbCache;
+	protected ErrorCodes status;
 
 	public enum ErrorCodes {
 		SUCCESS("Clear for liftoff!"),
@@ -89,7 +90,10 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		NOSEAT("Missing Seat or satellite!"),
 		NOENGINES("You do not have enough thrust!"),
 		NOGUIDANCE("Missing Guidance Computer"),
-		UNSCANNED("Rocket unscanned.");
+		UNSCANNED("Rocket unscanned."),
+		SUCCESS_STATION("Ready!"),
+		EMPTY("Nothing here"),
+		FINISHED("Build Complete!");;
 
 		String code;
 		private ErrorCodes(String code) {
@@ -541,6 +545,10 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	}
 
+	public boolean canScan() {
+		return bbCache != null;
+	}
+	
 	@Override
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
@@ -548,7 +556,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			AxisAlignedBB bb = getRocketPadBounds(worldObj, xCoord, yCoord, zCoord);
 
 			bbCache = bb;
-			if(bb == null)
+			if(!canScan())
 				return;
 
 			totalProgress = (int) (Configuration.buildSpeedMultiplier*this.getVolume(worldObj, xCoord, yCoord, zCoord, bbCache)/10);
@@ -564,7 +572,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			AxisAlignedBB bb = getRocketPadBounds(worldObj, xCoord, yCoord, zCoord);
 
 			bbCache = bb;
-			if(bb == null)
+			if(!canScan())
 				return;
 
 			totalProgress =(int) (Configuration.buildSpeedMultiplier*this.getVolume(worldObj, xCoord, yCoord, zCoord,bbCache)/10);
@@ -578,13 +586,12 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		}
 	}
 
-	private void updateText() {
+	protected void updateText() {
 		thrustText.setText(isScanning() ? "Thrust: ???" :  String.format("Thrust: %dN",getThrust()));
 		weightText.setText(isScanning() ? "Weight: ???"  : String.format("Weight: %dN",getWeight()));
 		fuelText.setText(isScanning() ? "Fuel: ???" :  String.format("Fuel: %dmb/s", getRocketStats().getFuelRate(FuelType.LIQUID)));
 		accelerationText.setText(isScanning() ? "Acc: ???" : String.format("Acc: %.2fm/s", getAcceleration()*20f));
 		errorText.setText(getStatus().getErrorCode());
-
 	}
 
 	@Override

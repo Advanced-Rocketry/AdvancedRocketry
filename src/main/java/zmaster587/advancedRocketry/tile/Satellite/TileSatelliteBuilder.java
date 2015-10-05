@@ -26,6 +26,7 @@ import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemSatellite;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
+import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketMachine;
 import zmaster587.advancedRocketry.tile.multiblock.TileMultiPowerConsumer;
@@ -135,7 +136,10 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		ItemStack stack1 = getStackInSlot(chipCopySlot);
 		getStackInSlot(outputSlot);
 
-		return !isRunning() && getStackInSlot(outputSlot) == null && 	stack0 != null && stack0.hasTagCompound() && stack1 != null && ((stack0.getItem() instanceof ItemSatellite && stack1.getItem() instanceof ItemSatelliteIdentificationChip)  || (stack0.getItem() instanceof ItemPlanetIdentificationChip && stack1.getItem() instanceof ItemPlanetIdentificationChip));
+		return !isRunning() && getStackInSlot(outputSlot) == null && stack0 != null && stack0.hasTagCompound() && stack1 != null && 
+				((stack0.getItem() instanceof ItemSatellite && stack1.getItem() instanceof ItemSatelliteIdentificationChip)  ||
+						(stack0.getItem() instanceof ItemStationChip && stack1.getItem() instanceof ItemStationChip) ||
+						(stack0.getItem() instanceof ItemPlanetIdentificationChip && stack1.getItem() instanceof ItemPlanetIdentificationChip));
 	}
 
 	private void copyChip() {
@@ -143,7 +147,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		ItemStack slot0 = getStackInSlot(chipSlot);
 		ItemStack slot1 = getStackInSlot(chipCopySlot);
 		
-		if(slot0.getItem() instanceof ItemSatelliteIdentificationChip || slot0.getItem() instanceof ItemPlanetIdentificationChip) {
+		if(slot0.getItem() instanceof ItemSatelliteIdentificationChip || slot0.getItem() instanceof ItemPlanetIdentificationChip || slot0.getItem() instanceof ItemStationChip) {
 			inventory[holdingSlot] = getStackInSlot(chipSlot).copy();
 		}
 		else {

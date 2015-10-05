@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import zmaster587.advancedRocketry.world.DimensionManager;
 import zmaster587.advancedRocketry.world.DimensionProperties;
-import zmaster587.advancedRocketry.world.ProviderPlanet;
+import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

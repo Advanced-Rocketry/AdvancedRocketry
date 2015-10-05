@@ -15,6 +15,7 @@ public class AdvancedRocketryBiomes {
 	public static BiomeGenBase moonBiome;
 	public static BiomeGenBase hotDryBiome;
 	public static BiomeGenBase alienForest;
+	public static BiomeGenBase spaceBiome;
 	
 	private AdvancedRocketryBiomes() {
 		registeredBiomes = new ArrayList<BiomeGenBase>();

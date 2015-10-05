@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.util.Configuration;
-import zmaster587.advancedRocketry.world.ProviderPlanet;
+import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;

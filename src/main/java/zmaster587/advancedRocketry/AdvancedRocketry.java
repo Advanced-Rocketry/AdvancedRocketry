@@ -16,6 +16,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemReed;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -71,10 +72,12 @@ import zmaster587.advancedRocketry.item.ItemBlockMeta;
 import zmaster587.advancedRocketry.item.ItemData;
 import zmaster587.advancedRocketry.item.ItemIngredient;
 import zmaster587.advancedRocketry.item.ItemOreScanner;
+import zmaster587.advancedRocketry.item.ItemPackedStructure;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemProjector;
 import zmaster587.advancedRocketry.item.ItemSatellite;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
+import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
 import zmaster587.advancedRocketry.satellite.SatelliteDefunct;
@@ -92,6 +95,7 @@ import zmaster587.advancedRocketry.tile.TileRFBattery;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.advancedRocketry.tile.TileSchematic;
 import zmaster587.advancedRocketry.tile.TileSpaceLaser;
+import zmaster587.advancedRocketry.tile.TileStationBuilder;
 import zmaster587.advancedRocketry.tile.Satellite.TileEntitySatelliteControlCenter;
 import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteBuilder;
 import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteHatch;
@@ -111,11 +115,14 @@ import zmaster587.advancedRocketry.tile.multiblock.TilePrecisionAssembler;
 import zmaster587.advancedRocketry.util.Debugger;
 import zmaster587.advancedRocketry.world.DimensionManager;
 import zmaster587.advancedRocketry.world.DimensionProperties;
-import zmaster587.advancedRocketry.world.WorldTypePlanetGen;
 import zmaster587.advancedRocketry.world.biome.BiomeGenAlienForest;
 import zmaster587.advancedRocketry.world.biome.BiomeGenHotDryRock;
 import zmaster587.advancedRocketry.world.biome.BiomeGenMoon;
+import zmaster587.advancedRocketry.world.biome.BiomeGenSpace;
 import zmaster587.advancedRocketry.world.ore.OreGenerator;
+import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
+import zmaster587.advancedRocketry.world.type.WorldTypePlanetGen;
+import zmaster587.advancedRocketry.world.type.WorldTypeSpace;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -132,7 +139,7 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 
-@Mod(modid="advancedRocketry", name="Advanced Rocketry", version="0.1.2", dependencies="required-after:libVulpes")
+@Mod(modid="advancedRocketry", name="Advanced Rocketry", version="0.2.0", dependencies="required-after:libVulpes")
 public class AdvancedRocketry {
 	public static final String modId = "advancedRocketry";
 
@@ -142,6 +149,7 @@ public class AdvancedRocketry {
 	@Instance(value = modId)
 	public static AdvancedRocketry instance;
 	public static WorldType planetWorldType;
+	public static WorldType spaceWorldType;
 
 	public static CompatibilityMgr compat = new CompatibilityMgr();
 	public static Logger logger = Logger.getLogger(modId);
@@ -218,6 +226,11 @@ public class AdvancedRocketry {
 		((BlockTile) AdvRocketryBlocks.blockRocketBuilder).setTopTexture("advancedrocketry:machineGeneric");
 		((BlockTile) AdvRocketryBlocks.blockRocketBuilder).setFrontTexture("advancedrocketry:MonitorFront");
 
+		AdvRocketryBlocks.blockStationBuilder = new BlockTile(TileStationBuilder.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("stationAssembler").setCreativeTab(tabAdvRocketry);
+		((BlockTile) AdvRocketryBlocks.blockStationBuilder).setSideTexture("advancedrocketry:machineGeneric");
+		((BlockTile) AdvRocketryBlocks.blockStationBuilder).setTopTexture("advancedrocketry:machineGeneric");
+		((BlockTile) AdvRocketryBlocks.blockStationBuilder).setFrontTexture("advancedrocketry:MonitorFront");
+		
 		AdvRocketryBlocks.blockFuelingStation = new BlockTile(TileEntityFuelingStation.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("fuelStation").setCreativeTab(tabAdvRocketry);
 		((BlockTile) AdvRocketryBlocks.blockFuelingStation).setSideTexture("Advancedrocketry:FuelingMachine");
 		((BlockTile) AdvRocketryBlocks.blockFuelingStation).setTopTexture("Advancedrocketry:machineGeneric");
@@ -342,7 +355,8 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvRocketryBlocks.blockPhantom, AdvRocketryBlocks.blockPhantom.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvRocketryBlocks.blockControllerDummy, AdvRocketryBlocks.blockControllerDummy.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvRocketryBlocks.blockPlatePress, AdvRocketryBlocks.blockPlatePress .getUnlocalizedName());
-
+		GameRegistry.registerBlock(AdvRocketryBlocks.blockStationBuilder, AdvRocketryBlocks.blockStationBuilder.getUnlocalizedName());
+		
 		BlockOre.registerOres(tabAdvRocketryOres);
 
 
@@ -353,7 +367,9 @@ public class AdvancedRocketry {
 		AdvancedRocketryItems.itemBattery = new ItemIngredient(1).setUnlocalizedName("battery").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemMisc = new ItemIngredient(1).setUnlocalizedName("miscpart").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemSawBlade = new ItemIngredient(1).setUnlocalizedName("sawBlade").setCreativeTab(tabAdvRocketry);
-
+		AdvancedRocketryItems.itemSpaceStationChip = new ItemStationChip().setUnlocalizedName("stationChip").setTextureName("advancedRocketry:stationIdChip").setCreativeTab(tabAdvRocketry);
+		AdvancedRocketryItems.itemSpaceStation = new ItemPackedStructure().setUnlocalizedName("station").setTextureName("advancedRocketry:SpaceStation");
+		
 		AdvancedRocketryItems.itemSatellitePowerSource = new ItemIngredient(1).setUnlocalizedName("satellitePowerSource").setCreativeTab(tabAdvRocketry);
 		SatelliteRegistry.registerSatelliteProperty(new ItemStack(AdvancedRocketryItems.itemSatellitePowerSource,1,0), new SatelliteProperties().setPowerGeneration(10));
 
@@ -394,8 +410,9 @@ public class AdvancedRocketry {
 		GameRegistry.registerItem(AdvancedRocketryItems.itemMisc, AdvancedRocketryItems.itemMisc.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemHoloProjector, AdvancedRocketryItems.itemHoloProjector.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemSawBlade, AdvancedRocketryItems.itemSawBlade.getUnlocalizedName());
-
-
+		GameRegistry.registerItem(AdvancedRocketryItems.itemSpaceStationChip, AdvancedRocketryItems.itemSpaceStationChip.getUnlocalizedName());
+		GameRegistry.registerItem(AdvancedRocketryItems.itemSpaceStation, AdvancedRocketryItems.itemSpaceStation.getUnlocalizedName());
+		
 		//Register multiblock items with the projector
 		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileCuttingMachine());
 		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileLathe());
@@ -414,43 +431,46 @@ public class AdvancedRocketry {
 
 
 		//TileEntity Registration ---------------------------------------------------------------------------------------------
-		GameRegistry.registerTileEntity(TileRocketBuilder.class, "rocketBuilder");
-		GameRegistry.registerTileEntity(TileModelRender.class, "modelRenderer");
-		GameRegistry.registerTileEntity(TileEntityFuelingStation.class, "fuelingStation");
-		GameRegistry.registerTileEntity(TileEntityMoniteringStation.class, "monitoringStation");
-		GameRegistry.registerTileEntity(TilePlaceholder.class, "placeHolder");
-		GameRegistry.registerTileEntity(TileMissionController.class, "missionControlComp");
-		GameRegistry.registerTileEntity(TileSpaceLaser.class, "spaceLaser");
-		GameRegistry.registerTileEntity(TilePrecisionAssembler.class, "precisionAssembler");
-		GameRegistry.registerTileEntity(TileObservatory.class, "observatory");
-		GameRegistry.registerTileEntity(zmaster587.advancedRocketry.tile.multiblock.TileCrystallizer.class, "crystallizer");
-		GameRegistry.registerTileEntity(TileOutputHatch.class, "outputHatch");
-		GameRegistry.registerTileEntity(TileInputHatch.class, "inputHatch");
-		GameRegistry.registerTileEntity(TileRFBattery.class, "rfBattery");
-		GameRegistry.registerTileEntity(TileCuttingMachine.class, "cuttingmachine");
-		GameRegistry.registerTileEntity(TileDataBus.class, "dataBus");
-		GameRegistry.registerTileEntity(TileSatelliteHatch.class, "satelliteHatch");
-		GameRegistry.registerTileEntity(TileSatelliteBuilder.class, "satelliteBuilder");
-		GameRegistry.registerTileEntity(TileEntitySatelliteControlCenter.class, "TileEntitySatelliteControlCenter");
-		GameRegistry.registerTileEntity(TilePlanetAnalyser.class, "planetAnalyser");
-		GameRegistry.registerTileEntity(TileGuidanceComputer.class, "guidanceComputer");
-		GameRegistry.registerTileEntity(TileElectricArcFurnace.class, "electricArcFurnace");
-		GameRegistry.registerTileEntity(TilePlanetSelector.class, "TilePlanetSelector");
-		GameRegistry.registerTileEntity(TileModelRenderRotatable.class, "TileModelRenderRotatable");
-		GameRegistry.registerTileEntity(TileMaterial.class, "TileMaterial");
-		GameRegistry.registerTileEntity(TileLathe.class, "TileLathe");
-		GameRegistry.registerTileEntity(TileRollingMachine.class, "TileMetalBender");
-		GameRegistry.registerTileEntity(TileSchematic.class, "TileSchematic");
+		GameRegistry.registerTileEntity(TileRocketBuilder.class, "ARrocketBuilder");
+		GameRegistry.registerTileEntity(TileModelRender.class, "ARmodelRenderer");
+		GameRegistry.registerTileEntity(TileEntityFuelingStation.class, "ARfuelingStation");
+		GameRegistry.registerTileEntity(TileEntityMoniteringStation.class, "ARmonitoringStation");
+		GameRegistry.registerTileEntity(TilePlaceholder.class, "ARplaceHolder");
+		GameRegistry.registerTileEntity(TileMissionController.class, "ARmissionControlComp");
+		GameRegistry.registerTileEntity(TileSpaceLaser.class, "ARspaceLaser");
+		GameRegistry.registerTileEntity(TilePrecisionAssembler.class, "ARprecisionAssembler");
+		GameRegistry.registerTileEntity(TileObservatory.class, "ARobservatory");
+		GameRegistry.registerTileEntity(zmaster587.advancedRocketry.tile.multiblock.TileCrystallizer.class, "ARcrystallizer");
+		GameRegistry.registerTileEntity(TileOutputHatch.class, "ARoutputHatch");
+		GameRegistry.registerTileEntity(TileInputHatch.class, "ARinputHatch");
+		GameRegistry.registerTileEntity(TileRFBattery.class, "ARrfBattery");
+		GameRegistry.registerTileEntity(TileCuttingMachine.class, "ARcuttingmachine");
+		GameRegistry.registerTileEntity(TileDataBus.class, "ARdataBus");
+		GameRegistry.registerTileEntity(TileSatelliteHatch.class, "ARsatelliteHatch");
+		GameRegistry.registerTileEntity(TileSatelliteBuilder.class, "ARsatelliteBuilder");
+		GameRegistry.registerTileEntity(TileEntitySatelliteControlCenter.class, "ARTileEntitySatelliteControlCenter");
+		GameRegistry.registerTileEntity(TilePlanetAnalyser.class, "ARplanetAnalyser");
+		GameRegistry.registerTileEntity(TileGuidanceComputer.class, "ARguidanceComputer");
+		GameRegistry.registerTileEntity(TileElectricArcFurnace.class, "ARelectricArcFurnace");
+		GameRegistry.registerTileEntity(TilePlanetSelector.class, "ARTilePlanetSelector");
+		GameRegistry.registerTileEntity(TileModelRenderRotatable.class, "ARTileModelRenderRotatable");
+		GameRegistry.registerTileEntity(TileMaterial.class, "ARTileMaterial");
+		GameRegistry.registerTileEntity(TileLathe.class, "ARTileLathe");
+		GameRegistry.registerTileEntity(TileRollingMachine.class, "ARTileMetalBender");
+		GameRegistry.registerTileEntity(TileSchematic.class, "ARTileSchematic");
+		GameRegistry.registerTileEntity(TileStationBuilder.class, "ARStationBuilder");
 		EntityRegistry.registerModEntity(EntityLaserNode.class, "laserNode", 0, instance, 256, 20, false);
 
 		//Biomes --------------------------------------------------------------------------------------
 		AdvancedRocketryBiomes.moonBiome = new BiomeGenMoon(90, true);
 		AdvancedRocketryBiomes.alienForest = new BiomeGenAlienForest(91, true);
 		AdvancedRocketryBiomes.hotDryBiome = new BiomeGenHotDryRock(92, true);
+		AdvancedRocketryBiomes.spaceBiome = new BiomeGenSpace(93, true);
 
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.moonBiome);
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.alienForest);
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.hotDryBiome);
+		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.spaceBiome);
 
 	}
 
@@ -547,7 +567,7 @@ public class AdvancedRocketry {
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 1), "odo", "pcp", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'p', new ItemStack(AdvancedRocketryItems.itemWafer,1,0), 'c', new ItemStack(AdvancedRocketryItems.itemIC,1,0), 'd', new ItemStack(AdvancedRocketryItems.itemIC,1,1));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemSawBlade,1,0), " x ","xox", " x ", 'x', "plateIron", 'o', "rodIron"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvRocketryBlocks.blockSawBlade,1,0), "xox", "x x", 'x', "plateIron", 'o', new ItemStack(AdvancedRocketryItems.itemSawBlade,1,0)));
-
+		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryItems.itemSpaceStationChip), MaterialRegistry.getItemStackFromMaterialAndType(Materials.DILITHIUM, AllowedProducts.CRYSTAL),MaterialRegistry.getItemStackFromMaterialAndType(Materials.DILITHIUM, AllowedProducts.CRYSTAL), new ItemStack(AdvancedRocketryItems.itemIC,1,0));
 
 		//MACHINES
 		GameRegistry.addShapedRecipe(new ItemStack(AdvRocketryBlocks.blockPrecisionAssembler), "ap ", "bcd", "ef ", 'a', Blocks.dropper, 'b', Items.repeater, 'c', AdvRocketryBlocks.blockStructureBlock, 'd', Blocks.furnace, 'e', Blocks.heavy_weighted_pressure_plate, 'f', Items.diamond, 'p', new ItemStack(AdvancedRocketryItems.itemMisc,1,0));
@@ -563,7 +583,8 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvRocketryBlocks.blockGuidanceComputer), "ctc", "rbr", "crc", 'c', new ItemStack(AdvancedRocketryItems.itemIC,1,1), 't', "plateTitanium", 'r', Items.redstone, 'b', AdvRocketryBlocks.blockStructureBlock));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvRocketryBlocks.blockPlanetSelector), "coc", "lbl", "cpc", 'c', new ItemStack(AdvancedRocketryItems.itemIC,1,1), 'o',new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'l', Blocks.lever, 'b', AdvRocketryBlocks.blockGuidanceComputer, 'p', Blocks.stone_button));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvRocketryBlocks.blockRocketBuilder), "rrr", "pbp","ccc", 'r', "rodTitanium", 'p', "plateTitanium", 'b', AdvRocketryBlocks.blockStructureBlock, 'c', AdvRocketryBlocks.blockConcrete));
-
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvRocketryBlocks.blockStationBuilder), " d ", "dsd", " d ", 'd', "crystalDilithium", 's', new ItemStack(AdvRocketryBlocks.blockRocketBuilder)));
+		
 		//TEMP RECIPES
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryItems.itemSatelliteIdChip), new ItemStack(AdvancedRocketryItems.itemIC, 1, 0));
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryItems.itemPlanetIdChip), new ItemStack(AdvancedRocketryItems.itemIC, 1, 0), new ItemStack(AdvancedRocketryItems.itemIC, 1, 0), new ItemStack(AdvancedRocketryItems.itemSatelliteIdChip));
@@ -588,6 +609,7 @@ public class AdvancedRocketry {
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 		planetWorldType = new WorldTypePlanetGen("PlanetCold");
+		spaceWorldType = new WorldTypeSpace("Space");
 	}
 
 	@EventHandler
@@ -602,6 +624,7 @@ public class AdvancedRocketry {
 		PlanetEventHandler handle = new PlanetEventHandler();
 		FMLCommonHandler.instance().bus().register(handle);
 		MinecraftForge.EVENT_BUS.register(handle);
+		FMLCommonHandler.instance().bus().register(DimensionManager.getSpaceManager());
 
 		PacketHandler.init();
 		FuelRegistry.instance.registerFuel(FuelType.LIQUID, FluidRegistry.WATER, 100);
@@ -611,13 +634,17 @@ public class AdvancedRocketry {
 		/*ForgeChunkManager.setForcedChunkLoadingCallback(instance, new WorldEvents());
 
 		proxy.registerKeyBinds();*/
+		
+		//Register space dimension
+		net.minecraftforge.common.DimensionManager.registerProviderType(zmaster587.advancedRocketry.util.Configuration.space, WorldProviderSpace.class, true);
+		net.minecraftforge.common.DimensionManager.registerDimension(zmaster587.advancedRocketry.util.Configuration.space,zmaster587.advancedRocketry.util.Configuration.space);
 	}
 
 	@EventHandler
 	public void serverStarted(FMLServerStartingEvent event) {
 		event.registerServerCommand(new WorldCommand());
-		zmaster587.advancedRocketry.world.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.world.DimensionManager.filePath);
 
+		zmaster587.advancedRocketry.world.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.world.DimensionManager.filePath);
 		//Register hard coded dimensions
 		if(!DimensionManager.getInstance().isDimensionCreated(zmaster587.advancedRocketry.util.Configuration.MoonId)) {
 			DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.util.Configuration.MoonId);

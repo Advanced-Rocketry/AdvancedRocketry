@@ -45,6 +45,7 @@ tile.planetSelector.name=Planet Selector
 tile.blockGenericMachine.name=Machine Controller Block
 tile.blockHandPress.name=Small Plate Presser
 tile.placeHolder.name=Machine
+tile.stationAssembler.name=Space Station Assembler
 
 tile.Dilithium.name=Dilithium Ore
 tile.Copper.name=Copper Ore
@@ -76,6 +77,8 @@ item.planetIdChip.name=Planet Id Chip
 item.battery.0.name=Small Battery
 item.miscpart.0.name=User Interface
 item.holoProjector.name=Holo-Projector
+item.station.name=Space Station Container
+item.stationChip.name=Space Station Id Chip
 
 material.Gold.name=Gold
 material.Iron.name=Iron

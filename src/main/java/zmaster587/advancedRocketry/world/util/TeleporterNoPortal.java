@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.world;
+package zmaster587.advancedRocketry.world.util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.world.Teleporter;

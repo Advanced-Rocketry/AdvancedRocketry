@@ -9,6 +9,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.world.gen.BiomeCacheExtended;
 import zmaster587.advancedRocketry.world.gen.GenLayerHillsExtended;
 import zmaster587.advancedRocketry.world.gen.GenLayerVoronoiExtended;
+import zmaster587.advancedRocketry.world.type.WorldTypePlanetGen;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.util.ReportedException;

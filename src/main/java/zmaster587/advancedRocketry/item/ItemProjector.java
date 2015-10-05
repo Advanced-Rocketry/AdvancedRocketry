@@ -61,7 +61,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		if(Minecraft.getMinecraft().thePlayer.isSneaking() && event.dwheel != 0) {
 			ItemStack stack = Minecraft.getMinecraft().thePlayer.getHeldItem();
 
-			if(stack != null && stack.getItem() == this) {
+			if(stack != null && stack.getItem() == this && getMachineId(stack) != -1) {
 				if(event.dwheel < 0) {
 					setYLevel(stack, getYLevel(stack) + 1);
 				}
@@ -242,7 +242,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 		TileMultiBlock machine = machineList.get(getMachineId(stack));
 
-		if( level == -2)
+		if(level == -2)
 			level = machine.getStructure().length-1;
 		else if(level == machine.getStructure().length)
 			level = -1;

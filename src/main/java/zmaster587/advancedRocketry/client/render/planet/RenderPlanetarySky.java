@@ -150,9 +150,9 @@ public class RenderPlanetarySky extends IRenderHandler {
 		if(mc.theWorld.provider instanceof IPlanetaryProvider) {
 			IPlanetaryProvider planetaryProvider = (IPlanetaryProvider)mc.theWorld.provider;
 
-			DimensionProperties properties = planetaryProvider.getDimensionProperties();
+			DimensionProperties properties = planetaryProvider.getDimensionProperties((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
 
-			atmosphere = planetaryProvider.getAtmosphereDensityFromHeight(mc.renderViewEntity.posY);
+			atmosphere = planetaryProvider.getAtmosphereDensityFromHeight(mc.renderViewEntity.posY, (int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
 			
 			children = new LinkedList<DimensionProperties>();
 			for (Integer i : properties.getChildPlanets()) {
@@ -170,7 +170,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 			}
 
-			sunColor = planetaryProvider.getSunColor();
+			sunColor = planetaryProvider.getSunColor((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
 		}
 		else {
 			children = new LinkedList<DimensionProperties>();
@@ -374,10 +374,12 @@ public class RenderPlanetarySky extends IRenderHandler {
 			GL11.glColor3f(f1, f2, f3);
 		}
 
-		GL11.glPushMatrix();
-		GL11.glTranslatef(0.0F, -((float)(d0 - 16.0D)), 0.0F);
-		GL11.glCallList(this.glSkyList2);
-		GL11.glPopMatrix();
+		//Blackness @ bottom of world
+		//GL11.glPushMatrix();
+		//GL11.glTranslatef(0.0F, -((float)(d0 - 16.0D)), 0.0F);
+		//GL11.glCallList(this.glSkyList2);
+		//GL11.glPopMatrix();
+		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDepthMask(true);
 

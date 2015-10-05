@@ -33,7 +33,7 @@ import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.util.Constants.NBT;
 
-public class DimensionProperties {
+public class DimensionProperties implements Cloneable {
 
 	static enum Temps {
 		TOOHOT(150),
@@ -137,6 +137,7 @@ public class DimensionProperties {
 	private HashSet<Integer> childPlanets;
 	private int parentPlanet;
 	private int planetId;
+	private boolean isStation;
 
 	//Satallites
 	private HashMap<Long,SatelliteBase> satallites;
@@ -162,6 +163,19 @@ public class DimensionProperties {
 		this.name = name;
 	}
 
+	public DimensionProperties(int id, boolean shouldRegister) {
+		this(id);
+		isStation = !shouldRegister;
+	}
+
+	@Override
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch(CloneNotSupportedException e) {
+			return null;
+		}
+	}
 
 	public void resetProperties() {
 		fogColor = new float[] {1,1,1};
@@ -179,7 +193,7 @@ public class DimensionProperties {
 
 	public void setStar(StellarBody star) {
 		this.star = star;
-		if(!this.isMoon())
+		if(!this.isMoon() && !isStation())
 			this.star.addPlanet(this);
 	}
 
@@ -200,7 +214,7 @@ public class DimensionProperties {
 			else
 				return PlanetIcons.ICEWORLD.resource;
 		else if(atmType.compareTo(AtmosphereTypes.LOW) > 0) {
-			
+
 			if(tempType.compareTo(Temps.COLD) < 0)
 				return PlanetIcons.MARSLIKE.resource;
 			else
@@ -241,14 +255,21 @@ public class DimensionProperties {
 	}
 
 	public void setParentPlanet(int parentId) {
+		this.setParentPlanet(parentId, true);
+	}
 
-		if(parentPlanet != -1)
-			getParentProperties().childPlanets.remove(new Integer(getId()));
+	public void setParentPlanet(int parentId, boolean update) {
 
-		parentPlanet = parentId;
-		if(parentId != -1)
-			getParentProperties().childPlanets.add(getId());
+		if(update) {
+			if(parentPlanet != -1)
+				getParentProperties().childPlanets.remove(new Integer(getId()));
 
+			parentPlanet = parentId;
+			if(parentId != -1)
+				getParentProperties().childPlanets.add(getId());
+		}
+		else 
+			parentPlanet = parentId;
 	}
 
 	public boolean hasChildren() {
@@ -257,6 +278,10 @@ public class DimensionProperties {
 
 	public boolean isMoon() {
 		return parentPlanet != -1;
+	}
+
+	public boolean isStation() {
+		return isStation;
 	}
 
 	public static ResourceLocation getAtmosphereResource() {
@@ -286,7 +311,7 @@ public class DimensionProperties {
 		DimensionManager.getInstance().getDimensionProperties(id).setParentPlanet(planetId);
 		return true;
 	}
-	
+
 	public void removeChild(int id) {
 		childPlanets.remove(id);
 	}
@@ -661,5 +686,9 @@ public class DimensionProperties {
 	public float[] getFogColorAtHeight(double y, Vec3 fogColor) {
 		float atmDensity = getAtmosphereDensityAtHeight(y);
 		return new float[] { (float) (atmDensity * fogColor.xCoord), (float) (atmDensity * fogColor.yCoord), (float) (atmDensity * fogColor.zCoord) };
+	}
+
+	public void setId(int id) {
+		this.planetId = id;
 	}
 }

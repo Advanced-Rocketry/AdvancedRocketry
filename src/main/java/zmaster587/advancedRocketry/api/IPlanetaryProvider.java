@@ -9,33 +9,33 @@ public interface IPlanetaryProvider {
 	 * 100 is earth-like, 0 is none
 	 * @return multiplier of gravity
 	 */
-	public double getGravitationalMultiplier();
+	public double getGravitationalMultiplier(int x, int z);
 	
 	/**
 	 * @return the dimension ID this one is in orbit around
 	 */
-	public int getOrbitingDimension();
+	public int getOrbitingDimension(int x, int z);
 	
 	/**
 	 * @return array of dimension IDs orbiting this one
 	 */
-	public int[] getDimensionsInOrbit();
+	public int[] getDimensionsInOrbit(int x, int z);
 	
 	/**
 	 * Earth is 100 (0 if no atmosphere)
 	 * @return Density of atmosphere
 	 */
-	public float getAtmosphereDensity();
+	public float getAtmosphereDensity(int x, int z);
 	
 	/**
 	 * @return Temperature of the planet
 	 */
-	public int getAverageTemperature();
+	public int getAverageTemperature(int x, int z);
 
 	/**
 	 * @return time in ticks for day/night cycle
 	 */
-	public int getRotationalPeriod();
+	public int getRotationalPeriod(int x, int z);
 	
 	/**
 	 * earth is 50
@@ -47,7 +47,7 @@ public interface IPlanetaryProvider {
 	 * Earth to moon is 100
 	 * @return Distance to parent body, used in maps and fuel consumption calculations
 	 */
-	public int getOrbitalDistance();
+	public int getOrbitalDistance(int x, int z);
 	
 	/**
 	 * @return if the dimension is a planet vs spacecraft etc
@@ -57,16 +57,19 @@ public interface IPlanetaryProvider {
 	/**
 	 * @return color of the sun in RGB
 	 */
-	public Vec3 getSunColor();
+	public Vec3  getSunColor(int x, int z);
 	
 	/**
+	 * @param x location in block coords
+	 * @param z location in block coords
 	 * @return {@link DimensionProperties} of this dimension
 	 */
-	public DimensionProperties getDimensionProperties();
+	public DimensionProperties getDimensionProperties(int x, int z);
 
 	/**
 	 * @param y height
 	 * @return Absolute density of the atmosphere at the given height
 	 */
-	float getAtmosphereDensityFromHeight(double y);
+	public float getAtmosphereDensityFromHeight(double y, int x, int z);
+
 }

@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -33,20 +34,20 @@ public class PlanetEventHandler {
 
 	//Handle gravity
 	@SubscribeEvent
-	public void playerTick(TickEvent.PlayerTickEvent event) {
+	public void playerTick(LivingUpdateEvent event) {
 		
-		if(event.player.worldObj.isRemote && event.player.posY > 260 && event.player.posY < 270 && event.player.motionY < -.1) {
-			RocketEventHandler.destroyOrbitalTextures(event.player.worldObj);
+		if(event.entity.worldObj.isRemote && event.entity.posY > 260 && event.entity.posY < 270 && event.entity.motionY < -.1) {
+			RocketEventHandler.destroyOrbitalTextures(event.entity.worldObj);
 		}
-		if(event.player.worldObj.provider instanceof IPlanetaryProvider && !event.player.isInWater()) {
-			IPlanetaryProvider planet = (IPlanetaryProvider)event.player.worldObj.provider;
-			if(!event.player.capabilities.isFlying) {
-				event.player.motionY += 0.04f - planet.getGravitationalMultiplier()*0.04f;
+		if(event.entity.worldObj.provider instanceof IPlanetaryProvider && !event.entity.isInWater()) {
+			IPlanetaryProvider planet = (IPlanetaryProvider)event.entity.worldObj.provider;
+			if(!(event.entity instanceof EntityPlayer) || !((EntityPlayer)event.entity).capabilities.isFlying) {
+				event.entity.motionY += 0.075f - planet.getGravitationalMultiplier((int)event.entity.posX, (int)event.entity.posZ)*0.075f;
 			}
 		}
-		else if(event.player.worldObj.provider.dimensionId == 0) {
-			if(!event.player.capabilities.isFlying) {
-				event.player.motionY += 0.04f - DimensionManager.overworldProperties.gravitationalMultiplier*0.04f;
+		else if(event.entity.worldObj.provider.dimensionId == 0) {
+			if(!(event.entity instanceof EntityPlayer) || !((EntityPlayer)event.entity).capabilities.isFlying) {
+				event.entity.motionY += 0.075f - DimensionManager.overworldProperties.gravitationalMultiplier*0.075f;
 			}
 		}
 	}
@@ -205,7 +206,7 @@ public class PlanetEventHandler {
 	public void fallEvent(LivingFallEvent event) {
 		if(event.entity.worldObj.provider instanceof IPlanetaryProvider) {
 			IPlanetaryProvider planet = (IPlanetaryProvider)event.entity.worldObj.provider;
-			event.distance *= planet.getGravitationalMultiplier();
+			event.distance *= planet.getGravitationalMultiplier((int)event.entity.posX, (int)event.entity.posZ);
 		}
 	}
 }

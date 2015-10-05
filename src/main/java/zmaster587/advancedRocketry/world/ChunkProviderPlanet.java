@@ -7,10 +7,13 @@ import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.SCAT
 import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.STRONGHOLD;
 import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.VILLAGE;
 import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.ANIMALS;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import zmaster587.advancedRocketry.world.decoration.MapGenCrater;
+import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
@@ -125,7 +128,8 @@ public class ChunkProviderPlanet implements IChunkProvider {
 		this.noiseGen6 = (NoiseGeneratorOctaves)noiseGens[5];
 		this.mobSpawnerNoise = (NoiseGeneratorOctaves)noiseGens[6];
 
-		float atmDensity = ((ProviderPlanet)worldObj.provider).getAtmosphereDensity();
+		//TODO: may break on little planets
+		float atmDensity = ((WorldProviderPlanet)worldObj.provider).getAtmosphereDensity(0,0);
 
 		if(atmDensity < 0.75f)
 			craterGenerator = new MapGenCrater( (int)(10 +  (26*atmDensity) ));
@@ -136,7 +140,8 @@ public class ChunkProviderPlanet implements IChunkProvider {
 	public void func_147424_a(int p_147424_1_, int p_147424_2_, Block[] p_147424_3_)
 	{
 		byte b0 = 63;
-		this.biomesForGeneration = ((ChunkManagerPlanet)this.worldObj.getWorldChunkManager()).getBiomesForGeneration(this.biomesForGeneration, p_147424_1_ * 4 - 2, p_147424_2_ * 4 - 2, 10, 10, ((ProviderPlanet)worldObj.provider).getDimensionProperties());
+		//TODO: may break for little planets
+		this.biomesForGeneration = ((ChunkManagerPlanet)this.worldObj.getWorldChunkManager()).getBiomesForGeneration(this.biomesForGeneration, p_147424_1_ * 4 - 2, p_147424_2_ * 4 - 2, 10, 10, ((WorldProviderPlanet)worldObj.provider).getDimensionProperties(0,0));
 		this.func_147423_a(p_147424_1_ * 4, 0, p_147424_2_ * 4);
 
 		for (int k = 0; k < 4; ++k)

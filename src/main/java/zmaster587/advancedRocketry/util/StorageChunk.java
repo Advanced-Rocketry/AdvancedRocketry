@@ -11,11 +11,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteHatch;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
+import zmaster587.libVulpes.util.Vector3F;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -471,6 +473,22 @@ public class StorageChunk implements IBlockAccess {
 	}
 
 
+	
+	public List<TileSatelliteHatch> getSatelliteHatches() {
+		LinkedList<TileSatelliteHatch> satelliteHatches = new LinkedList<TileSatelliteHatch>();
+		Iterator<TileEntity> iterator = getTileEntityList().iterator();
+		while(iterator.hasNext()) {
+			TileEntity tile = iterator.next();
+
+			if(tile instanceof TileSatelliteHatch) {
+				satelliteHatches.add((TileSatelliteHatch) tile);
+			}
+		}
+		
+		return satelliteHatches;
+	}
+	
+	@Deprecated
 	public List<SatelliteBase> getSatellites() {
 		LinkedList<SatelliteBase> satellites = new LinkedList<SatelliteBase>();
 		LinkedList<TileSatelliteHatch> satelliteHatches = new LinkedList<TileSatelliteHatch>();
@@ -489,7 +507,7 @@ public class StorageChunk implements IBlockAccess {
 		}
 		return satellites;
 	}
-
+	
 	public TileGuidanceComputer getGuidanceComputer() {
 		Iterator<TileEntity> iterator = getTileEntityList().iterator();
 		while(iterator.hasNext()) {

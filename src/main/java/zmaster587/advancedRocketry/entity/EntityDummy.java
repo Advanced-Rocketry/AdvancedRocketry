@@ -31,6 +31,11 @@ public class EntityDummy extends Entity {
 		return true;
 	}
 	
+	@Override
+	public void onChunkLoad() {
+		super.onChunkLoad();
+		this.setDead();
+	}
 
 	/**
 	 * Checks if the entity is in range to render by using the past in distance and comparing it to its average edge

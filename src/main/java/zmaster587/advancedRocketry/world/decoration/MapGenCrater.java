@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.world;
+package zmaster587.advancedRocketry.world.decoration;
 
 import net.minecraft.block.Block;
 import net.minecraft.world.World;

@@ -92,6 +92,11 @@ public class RocketEventHandler extends Gui {
 			outerBounds = new ClientDynamicTexture(outerImgSize, outerImgSize);
 		}
 		
+		if(event.world.provider.dimensionId == Configuration.space) {
+			destroyOrbitalTextures(event.world);
+			return;
+		}
+		
 		//Multi thread texture creation b/c it can be expensive
 		
 		new Thread(new Runnable() {
@@ -280,6 +285,7 @@ public class RocketEventHandler extends Gui {
 			EntityRocket rocket = (EntityRocket)ride;
 
 			GL11.glEnable(GL11.GL_BLEND);
+			//GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
 			Minecraft.getMinecraft().renderEngine.bindTexture(background);
 

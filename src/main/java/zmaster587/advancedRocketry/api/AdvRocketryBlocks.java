@@ -51,4 +51,5 @@ public class AdvRocketryBlocks {
 	public static Block blockControllerDummy;
 	public static Block blockPlatePress;
 	public static List<Block> blockCoil = new ArrayList<Block>();
+	public static Block blockStationBuilder;
 }

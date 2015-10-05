@@ -17,6 +17,7 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketHandler;
+import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.advancedRocketry.world.solar.StellarBody;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -39,6 +40,7 @@ public class DimensionManager {
 	private static SpaceObjectManager spaceObjectManager;
 
 	public static DimensionProperties overworldProperties;
+	public static DimensionProperties defaultSpaceDimensionProperties;
 
 	public static StellarBody getSol() {
 		return sol;
@@ -71,8 +73,24 @@ public class DimensionManager {
 		overworldProperties.skyColor = new float[] {1f, 1f, 1f};
 		overworldProperties.setStar(sol);
 		overworldProperties.name = "Earth";
+		
+		defaultSpaceDimensionProperties = new DimensionProperties(-1, false);
+		defaultSpaceDimensionProperties.atmosphereDensity = 0;
+		defaultSpaceDimensionProperties.averageTemperature = 0;
+		defaultSpaceDimensionProperties.gravitationalMultiplier = 0.1f;
+		defaultSpaceDimensionProperties.orbitalDist = 100;
+		defaultSpaceDimensionProperties.skyColor = new float[] {0f,0f,0f};
+		defaultSpaceDimensionProperties.setStar(sol);
+		defaultSpaceDimensionProperties.name = "Space";
+		defaultSpaceDimensionProperties.fogColor = new float[] {0f,0f,0f};
+		defaultSpaceDimensionProperties.setParentPlanet(0,false);
+		defaultSpaceDimensionProperties.orbitalDist = 1;
 
 		random = new Random(System.currentTimeMillis());
+	}
+	
+	public static SpaceObjectManager getSpaceManager() {
+		return spaceObjectManager;
 	}
 
 	public Integer[] getregisteredDimensions() {
@@ -196,7 +214,7 @@ public class DimensionManager {
 		if(dimensionList.containsKey(dim))
 			return false;
 
-		net.minecraftforge.common.DimensionManager.registerProviderType(properties.getId(), ProviderPlanet.class, false);
+		net.minecraftforge.common.DimensionManager.registerProviderType(properties.getId(), WorldProviderPlanet.class, false);
 		net.minecraftforge.common.DimensionManager.registerDimension(dimId, dimId);
 		dimensionList.put(dimId, properties);
 
@@ -299,9 +317,9 @@ public class DimensionManager {
 
 		nbt.setTag("dimList", dimListnbt);
 
-		/*NBTTagCompound nbtTag = new NBTTagCompound();
+		NBTTagCompound nbtTag = new NBTTagCompound();
 		spaceObjectManager.writeToNBT(nbtTag);
-		nbt.setTag("spaceObjects", nbtTag);*/
+		nbt.setTag("spaceObjects", nbtTag);
 
 		FileOutputStream outStream;
 		try {
@@ -388,7 +406,7 @@ public class DimensionManager {
 
 				if(propeties != null) {
 					int keyInt = Integer.parseInt(keyString);
-					net.minecraftforge.common.DimensionManager.registerProviderType(keyInt, ProviderPlanet.class, false);
+					net.minecraftforge.common.DimensionManager.registerProviderType(keyInt, WorldProviderPlanet.class, false);
 					net.minecraftforge.common.DimensionManager.registerDimension(keyInt, keyInt);
 					dimensionList.put(new Integer(keyInt), propeties);
 				}
@@ -400,9 +418,9 @@ public class DimensionManager {
 		}
 		
 		//Check for tag in case old version of Adv rocketry is in use
-		/*if(nbt.hasKey("spaceObjects")) {
+		if(nbt.hasKey("spaceObjects")) {
 			NBTTagCompound nbtTag = nbt.getCompoundTag("spaceObjects");
 			spaceObjectManager.readFromNBT(nbtTag);
-		}*/
+		}
 	}
 }
