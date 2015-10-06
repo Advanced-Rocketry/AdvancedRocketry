@@ -161,8 +161,8 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 		super.useNetworkData(player, side, id, nbt);
 		
 		if(id == 1) {
-			inventory.setInventorySlotContents(0, null);
-			inventory.setInventorySlotContents(1, null);
+			inventory.decrStackSize(0, 1);
+			inventory.decrStackSize(1, 1);
 		}
 	}
 	
