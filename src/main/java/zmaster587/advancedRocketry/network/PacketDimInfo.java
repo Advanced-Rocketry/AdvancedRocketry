@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.network;
 
 import java.io.IOException;
 
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.world.DimensionManager;
 import zmaster587.advancedRocketry.world.DimensionProperties;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
@@ -28,18 +29,28 @@ public class PacketDimInfo extends BasePacket {
 		NBTTagCompound nbt = new NBTTagCompound();
 		out.writeInt(dimNumber);
 		boolean flag = dimProperties == null;
-		out.writeBoolean(flag);
+		
 		if(!flag) {
-			dimProperties.writeToNBT(nbt);
-
-			PacketBuffer packetBuffer = new PacketBuffer(out);
-			//TODO: error handling
+			
+			//Try to send the nbt data of the dimension to the client, if it fails(probably due to non existant Biome ids) then remove the dimension
 			try {
-				packetBuffer.writeNBTTagCompoundToBuffer(nbt);
-			} catch (IOException e) {
-				e.printStackTrace();
+				dimProperties.writeToNBT(nbt);
+				PacketBuffer packetBuffer = new PacketBuffer(out);
+				//TODO: error handling
+				try {
+					packetBuffer.writeNBTTagCompoundToBuffer(nbt);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} catch(NullPointerException e) {
+				out.writeBoolean(false);
+				AdvancedRocketry.logger.warning("Dimension " + dimNumber + " has thrown an exception trying to write NBT, deleting!");
+				DimensionManager.getInstance().deleteDimension(dimNumber);
 			}
+
 		}
+		else
+			out.writeBoolean(flag);
 
 	}
 
