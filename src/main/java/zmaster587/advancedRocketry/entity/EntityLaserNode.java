@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.entity;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
@@ -60,7 +60,7 @@ public class EntityLaserNode extends Entity {
 					int x = (int)posX + (i % 3) - 1;
 					int z = (int)posZ + (i / 3) - 1;
 
-					if(worldObj.getBlock(x, h, z) == AdvRocketryBlocks.blockLightSource)
+					if(worldObj.getBlock(x, h, z) == AdvancedRocketryBlocks.blockLightSource)
 						worldObj.setBlockToAir(x, h, z);
 				}
 			}

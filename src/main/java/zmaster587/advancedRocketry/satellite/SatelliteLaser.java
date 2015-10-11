@@ -15,7 +15,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.entity.EntityLaserNode;
 import zmaster587.advancedRocketry.event.BlockBreakEvent.LaserBreakEvent;
@@ -103,7 +103,7 @@ public class SatelliteLaser extends SatelliteBase {
 			Block dropBlock = laser.worldObj.getBlock(x, (int)laser.posY, z);//Block.blocksList[laser.worldObj.getBlockId(x, (int)laser.posY, z)];
 
 			if(dropBlock == null || dropBlock.getMaterial().isReplaceable() ||  dropBlock.getMaterial().isLiquid()) {
-				laser.worldObj.setBlock(x, (int)laser.posY, z, AdvRocketryBlocks.blockLightSource, 0, 3);
+				laser.worldObj.setBlock(x, (int)laser.posY, z, AdvancedRocketryBlocks.blockLightSource, 0, 3);
 				continue;
 			}
 
@@ -123,7 +123,7 @@ public class SatelliteLaser extends SatelliteBase {
 			//creator.performOperation();
 
 			if(items.isEmpty()) {
-				laser.worldObj.setBlock((int)laser.posX, (int)laser.posY, (int)laser.posZ, AdvRocketryBlocks.blockLightSource,0,3);
+				laser.worldObj.setBlock((int)laser.posX, (int)laser.posY, (int)laser.posZ, AdvancedRocketryBlocks.blockLightSource,0,3);
 				continue;
 			}
 

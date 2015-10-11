@@ -6,7 +6,7 @@ import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.block.multiblock.BlockMultiBlockComponentVisible;
 import zmaster587.advancedRocketry.block.multiblock.BlockMultiblockStructure;
 import zmaster587.libVulpes.block.BlockMeta;
@@ -295,7 +295,7 @@ public class TileMultiBlock extends TileEntity {
 	 */
 	public List<BlockMeta> getAllowableOutputBlocks() {
 		List<BlockMeta> list = new LinkedList<BlockMeta>();
-		list.add(new BlockMeta(AdvRocketryBlocks.blockHatch, 1));
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 1));
 		return list;
 	}
 
@@ -304,7 +304,7 @@ public class TileMultiBlock extends TileEntity {
 	 */
 	public List<BlockMeta> getInputs() {
 		List<BlockMeta> list = new LinkedList<BlockMeta>();
-		list.add(new BlockMeta(AdvRocketryBlocks.blockHatch, 0));
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 0));
 		return list;
 	}
 	
@@ -313,7 +313,7 @@ public class TileMultiBlock extends TileEntity {
 	 */
 	public List<BlockMeta> getDataBlocks() {
 		List<BlockMeta> list = new LinkedList<BlockMeta>();
-		list.add(new BlockMeta(AdvRocketryBlocks.blockHatch, 2));
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 2));
 		return list;
 	}
 	
@@ -322,7 +322,7 @@ public class TileMultiBlock extends TileEntity {
 	 */
 	public List<BlockMeta> getPowerInputBlocks() {
 		List<BlockMeta> list = new LinkedList<BlockMeta>();
-		list.add(new BlockMeta(AdvRocketryBlocks.blockRFBattery, -1));
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockRFBattery, -1));
 		return list;
 	}
 	
@@ -369,7 +369,7 @@ public class TileMultiBlock extends TileEntity {
 
 		byte meta = (byte)worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 
-		worldObj.setBlock(xCoord, yCoord, zCoord, AdvRocketryBlocks.blockPlaceHolder);
+		worldObj.setBlock(xCoord, yCoord, zCoord, AdvancedRocketryBlocks.blockPlaceHolder);
 		TilePlaceholder newTile = (TilePlaceholder)worldObj.getTileEntity(xCoord, yCoord, zCoord);
 
 		newTile.setReplacedBlock(block);

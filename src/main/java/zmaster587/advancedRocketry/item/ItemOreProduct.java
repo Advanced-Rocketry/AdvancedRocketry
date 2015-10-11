@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.MaterialRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;

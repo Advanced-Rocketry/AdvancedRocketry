@@ -10,7 +10,7 @@ import zmaster587.advancedRocketry.Inventory.TextureResources;
 import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.MaterialRegistry;
 import zmaster587.advancedRocketry.api.MaterialRegistry.AllowedProducts;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
@@ -23,8 +23,8 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 
 	
 	
-	public static final Object[][][] structure = { {{AdvRocketryBlocks.blockQuartzCrucible, AdvRocketryBlocks.blockQuartzCrucible, AdvRocketryBlocks.blockQuartzCrucible},
-		{AdvRocketryBlocks.blockQuartzCrucible, AdvRocketryBlocks.blockQuartzCrucible, AdvRocketryBlocks.blockQuartzCrucible}},
+	public static final Object[][][] structure = { {{AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible},
+		{AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible}},
 		
 		{{'O', 'c', 'I'}, 
 			{new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), 'P', new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta())}},

@@ -9,7 +9,7 @@ import zmaster587.advancedRocketry.Inventory.modules.IProgressBar;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleImage;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.MaterialRegistry;
 import zmaster587.advancedRocketry.api.MaterialRegistry.AllowedProducts;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
@@ -24,17 +24,17 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class TilePrecisionAssembler extends TileMultiblockMachine implements IModularInventory, IProgressBar {
 
-	public static final Object structure[][][] = new Object[][][]{ {{AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock}, 
-		{AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock},
-		{AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock}},
+	public static final Object structure[][][] = new Object[][][]{ {{AdvancedRocketryBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureBlock}, 
+		{AdvancedRocketryBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureBlock},
+		{AdvancedRocketryBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureBlock}},
 	  
-	  {{AdvRocketryBlocks.blockStructureBlock, Blocks.glass, Blocks.glass, AdvRocketryBlocks.blockStructureBlock},
-		  {AdvRocketryBlocks.blockStructureBlock, Blocks.air, Blocks.air, AdvRocketryBlocks.blockStructureBlock},
-    	  {AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock}},
+	  {{AdvancedRocketryBlocks.blockStructureBlock, Blocks.glass, Blocks.glass, AdvancedRocketryBlocks.blockStructureBlock},
+		  {AdvancedRocketryBlocks.blockStructureBlock, Blocks.air, Blocks.air, AdvancedRocketryBlocks.blockStructureBlock},
+    	  {AdvancedRocketryBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureBlock}},
 	  
      {{'c', '*', '*', '*'},
 	  {'*', new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), '*'},
-	  {'*', AdvRocketryBlocks.blockMotor, AdvRocketryBlocks.blockMotor, '*'}}};
+	  {'*', AdvancedRocketryBlocks.blockMotor, AdvancedRocketryBlocks.blockMotor, '*'}}};
 	
 	@Override
 	public List<IRecipe> getMachineRecipeList() {
@@ -50,8 +50,8 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 	public List<BlockMeta> getAllowableWildCardBlocks() {
 		List<BlockMeta> list = super.getAllowableWildCardBlocks();
 		
-		list.add(new BlockMeta(AdvRocketryBlocks.blockStructureBlock, BlockMeta.WILDCARD));
-		list.add(new BlockMeta(AdvRocketryBlocks.blockRFBattery, BlockMeta.WILDCARD));
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock, BlockMeta.WILDCARD));
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockRFBattery, BlockMeta.WILDCARD));
 		list.addAll(getAllowableOutputBlocks());
 		list.addAll(getInputs());
 		list.addAll(getPowerInputBlocks());

@@ -5,7 +5,6 @@ import java.io.IOException;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.world.DimensionManager;
 import zmaster587.advancedRocketry.world.DimensionProperties;
-import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -32,10 +31,11 @@ public class PacketDimInfo extends BasePacket {
 		
 		if(!flag) {
 			
-			//Try to send the nbt data of the dimension to the client, if it fails(probably due to non existant Biome ids) then remove the dimension
+			//Try to send the nbt data of the dimension to the client, if it fails(probably due to non existent Biome ids) then remove the dimension
 			try {
 				dimProperties.writeToNBT(nbt);
 				PacketBuffer packetBuffer = new PacketBuffer(out);
+				out.writeBoolean(true);
 				//TODO: error handling
 				try {
 					packetBuffer.writeNBTTagCompoundToBuffer(nbt);
@@ -78,15 +78,12 @@ public class PacketDimInfo extends BasePacket {
 			if(dimNumber == 0) {
 				DimensionManager.overworldProperties.readFromNBT(nbt);
 			}
-			else if( DimensionManager.getInstance().isDimensionCreated(dimNumber)) {
+			else if( DimensionManager.getInstance().isDimensionCreated(dimNumber) ) {
 				DimensionManager.getInstance().getDimensionProperties(dimNumber).readFromNBT(nbt);
 			} else {
 				DimensionManager.getInstance().registerDimNoUpdate(DimensionProperties.createFromNBT(dimNumber, nbt));
-				//net.minecraftforge.common.DimensionManager.registerProviderType(dimNumber,ProviderPlanet.class, false);
-				//net.minecraftforge.common.DimensionManager.registerDimension(dimNumber, dimNumber);
 			}
 		}
-
 	}
 
 	@Override

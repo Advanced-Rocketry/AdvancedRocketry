@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.MaterialRegistry;
 import zmaster587.advancedRocketry.api.MaterialRegistry.AllowedProducts;
@@ -135,9 +135,9 @@ public class BlockOre extends Block {
 					OreDictionary.registerOre("coil" + str, new ItemStack(coilBlocks, 1 , j));
 				}
 			}
-			AdvRocketryBlocks.blockMetal.add(metalBlocks);
-			AdvRocketryBlocks.blockCoil.add(coilBlocks);
-			AdvRocketryBlocks.blockOre.add(ores);
+			AdvancedRocketryBlocks.blockMetal.add(metalBlocks);
+			AdvancedRocketryBlocks.blockCoil.add(coilBlocks);
+			AdvancedRocketryBlocks.blockOre.add(ores);
 		}
 	}
 }

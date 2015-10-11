@@ -2,7 +2,7 @@ package zmaster587.advancedRocketry.item;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.MaterialRegistry;
 import zmaster587.advancedRocketry.tile.TileMaterial;
 import net.minecraft.block.Block;

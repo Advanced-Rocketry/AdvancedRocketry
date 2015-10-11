@@ -9,7 +9,7 @@ import net.minecraft.block.Block;
  * Stores references to Advanced Rocketry's blocks
  *
  */
-public class AdvRocketryBlocks {
+public class AdvancedRocketryBlocks {
 	public static Block blockMissionComp;
 	public static Block blockSpaceLaser;
 	public static Block blockPrecisionAssembler;

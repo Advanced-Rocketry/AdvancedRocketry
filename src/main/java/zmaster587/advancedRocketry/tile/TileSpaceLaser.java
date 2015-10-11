@@ -6,7 +6,7 @@ import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.integration.CompatibilityMgr;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketMachine;

@@ -10,7 +10,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.MaterialRegistry;
 import zmaster587.advancedRocketry.tile.multiblock.TileMultiblockMachine;
 import zmaster587.advancedRocketry.util.Debugger;

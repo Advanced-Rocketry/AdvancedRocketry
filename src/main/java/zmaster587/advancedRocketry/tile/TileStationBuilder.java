@@ -14,7 +14,7 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleSlotArray;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleSync;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleText;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleTexturedSlotArray;
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.stations.SpaceObject;
@@ -45,7 +45,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 	@Override
 	public boolean canScan() {
-		ItemStack stack = new ItemStack(AdvRocketryBlocks.blockHatch,1,3);
+		ItemStack stack = new ItemStack(AdvancedRocketryBlocks.blockHatch,1,3);
 		return inventory.getStackInSlot(0) != null && stack.isItemEqual(inventory.getStackInSlot(0)) &&
 				inventory.getStackInSlot(1) != null && new ItemStack(AdvancedRocketryItems.itemSpaceStationChip,1, -1).isItemEqual(inventory.getStackInSlot(1)) &&
 				inventory.getStackInSlot(2) == null && inventory.getStackInSlot(3) == null && super.canScan();
