@@ -92,7 +92,7 @@ public class RocketEventHandler extends Gui {
 			outerBounds = new ClientDynamicTexture(outerImgSize, outerImgSize);
 		}
 		
-		if(event.world.provider.dimensionId == Configuration.space) {
+		if(event.world.provider.dimensionId == Configuration.spaceDimId) {
 			destroyOrbitalTextures(event.world);
 			return;
 		}

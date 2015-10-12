@@ -14,7 +14,6 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class SpaceObjectManager {
-	private final int stationSize = 512;
 	private int nextId = 1;
 
 	//station ids to object
@@ -52,36 +51,66 @@ public class SpaceObjectManager {
 	 * @return Space object occupying the block coords of null if none
 	 */
 	public SpaceObject getSpaceStationFromBlockCoords(int x, int z) {
-		int id = x/2/stationSize;
 
-		return getSpaceStation(id);
+		int radius = Math.max(Math.abs((x/2)/Configuration.stationSize), Math.abs((z/2)/Configuration.stationSize));
+
+		int index;
+
+		if(Math.abs(x) <= Math.abs(z)) {
+			if(z < 0)
+				index = (int)Math.pow(2*radius-1,2) + radius + x;
+			else
+				index = (int)Math.pow(2*radius-1,2) + radius + x + (radius*2 + 1);
+		}
+		else {
+			if(x < 0)
+				index = (int)Math.pow(2*radius-1,2) + radius - 1 + (radius*2 + 1)*2 + z;
+			else
+				index = (int)Math.pow(2*radius-1,2) + (3*radius) - 2 + (radius*2 + 1)*2 + z;
+		}
+
+		return getSpaceStation(index);
 	}
 
 	public void registerSpaceObject(SpaceObject object, int dimId, int stationId) {
 		object.setId(stationId);
 		stationLocations.put(stationId, object);
-		
-		
-		/*	radius = math.floor(math.ceil(math.sqrt(i+1))/2)
-	ringIndex = i-math.pow((radius*2) - 1,2)
-	
-	if(ringIndex < (radius*2 + 1)*2):
-		x = ringIndex % (radius*2 + 1) - radius
-		if(ringIndex < (radius*2 + 1)):
-			y = -radius
-		else:
-			y = radius
-	else:
-		newIndex = ringIndex - (radius*2 + 1)*2
-		y = newIndex % ((radius-1)*2 + 1) - (radius - 1)
-		if(newIndex < ((radius-1)*2 + 1)):
-			x = -radius
-		else:
-			x = radius*/
-		
-		object.setPos(2*stationSize*object.getId(), 0);
+
+
+		/*Calculate the location of a space station along a square spiral
+		 * here the top and bottom(including the corner locations) are filled first then the left and right last
+		 * 
+		 * Example shown below:
+		 *9 A B C D
+		 *  1 2 3
+		 *  7 0 8
+		 *  4 5 6
+		 *E F.....
+		 */
+
+		int radius = (int) Math.floor(Math.ceil(Math.sqrt(stationId+1))/2);
+		int ringIndex = (int) (stationId-Math.pow((radius*2) - 1,2));
+		int x,z;
+
+		if(ringIndex < (radius*2 + 1)*2) {
+			x = ringIndex % (radius*2 + 1) - radius;
+			if(ringIndex < (radius*2 + 1))
+				z = -radius;
+			else
+				z = radius;
+		}
+		else {
+			int newIndex = ringIndex - (radius*2 + 1)*2;
+			z = newIndex % ((radius-1)*2 + 1) - (radius - 1);
+			if(newIndex < ((radius-1)*2 + 1))
+				x = -radius;
+			else
+				x = radius;
+		}
+
+		object.setPos(2*x, 2*z);
 		if(!object.hasCustomSpawnLocation())
-			object.setSpawnLocation(2*stationSize*object.getId() + stationSize/2, 128, stationSize/2);
+			object.setSpawnLocation(2*Configuration.stationSize*x + Configuration.stationSize/2, 128, 2*Configuration.stationSize*z + Configuration.stationSize/2);
 
 		object.setOrbitingBody(dimId);
 		moveStationToBody(object, dimId);
@@ -107,38 +136,50 @@ public class SpaceObjectManager {
 
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent event) {
-		if(event.player.worldObj.provider.dimensionId == Configuration.space) {
-			int x = ((int)event.player.posX) >> 4;
-			int z = ((int)event.player.posZ) >> 4;
+		if(event.player.worldObj.provider.dimensionId == Configuration.spaceDimId) {
 
 			if(event.player.posY < 0 && !event.player.worldObj.isRemote) {
 				SpaceObject object = getSpaceStationFromBlockCoords((int)event.player.posX, (int)event.player.posZ);
 				if(object != null) {
-
+	
 					Vector3F<Integer> loc = object.getSpawnLocation();
-
+	
 					event.player.fallDistance=0;
 					event.player.motionY = 0;
 					event.player.setPositionAndUpdate(loc.x, loc.y, loc.z);
 					event.player.addChatComponentMessage(new ChatComponentText("You wake up finding yourself back on the station"));
 				}
 			}
-
-			if(z < 0 || z >= (stationSize >> 4)) {
+	
+			int result = Math.abs(2*(((int)event.player.posZ + Configuration.stationSize/2) % (2*Configuration.stationSize) )/Configuration.stationSize);
+			if(result == 0 || result == 3) {
 				event.player.motionZ = -event.player.motionZ;
-				if(z < 0)
-					event.player.setPosition(event.player.posX, event.player.posY, 0);
-				else
-					event.player.setPosition(event.player.posX, event.player.posY, stationSize);
-			}
-			if(x/(stationSize >> 4) == 1 || x/(stationSize >> 4) == 3) {
-				event.player.motionX = -event.player.motionX;
-				if(x/(stationSize >> 4) == 1) {
-					event.player.setPosition(event.player.posX + 16 - ( ((int)event.player.posX) % 16), event.player.posY, event.player.posZ);
+				if(result == 0) {
+					event.player.setPosition(event.player.posX, event.player.posY, event.player.posZ + (event.player.posZ < 0 ? Math.abs(event.player.posZ % 16) : (16 - event.player.posZ % 16)));
 				}
 				else
-					event.player.setPosition(event.player.posX - ( ((int)event.player.posX) % 16), event.player.posY, event.player.posZ);
-
+					event.player.setPosition(event.player.posX, event.player.posY, event.player.posZ - (event.player.posZ < 0 ? 16 - Math.abs(event.player.posZ % 16) : (event.player.posZ % 16)));
+	
+			}
+	
+			//double posX = event.player.posX < 0 ? -event.player.posX - Configuration.stationSize : event.player.posX;
+	
+			result = Math.abs(2*(((int)event.player.posX + Configuration.stationSize/2) % (2*Configuration.stationSize) )/Configuration.stationSize);
+	
+			if(event.player.posX < -Configuration.stationSize/2)
+				if(result == 3)
+					result = 0;
+				else if(result == 0)
+					result = 3;
+	
+			if(result == 0 || result == 3) {
+				event.player.motionX = -event.player.motionX;
+				if(result == 0) {
+					event.player.setPosition(event.player.posX + (event.player.posX < 0 ? Math.abs(event.player.posX % 16) : (16 - event.player.posX % 16)), event.player.posY, event.player.posZ);
+				}
+				else
+					event.player.setPosition(event.player.posX - (event.player.posX < 0 ? 16 - Math.abs(event.player.posX % 16) : (event.player.posX % 16)), event.player.posY, event.player.posZ);
+	
 			}
 		}
 	}

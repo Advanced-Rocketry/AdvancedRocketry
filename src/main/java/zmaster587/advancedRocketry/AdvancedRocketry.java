@@ -139,7 +139,7 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 
-@Mod(modid="advancedRocketry", name="Advanced Rocketry", version="0.2.0", dependencies="required-after:libVulpes")
+@Mod(modid="advancedRocketry", name="Advanced Rocketry", version="0.3.0", dependencies="required-after:libVulpes")
 public class AdvancedRocketry {
 	public static final String modId = "advancedRocketry";
 
@@ -182,7 +182,8 @@ public class AdvancedRocketry {
 
 		zmaster587.advancedRocketry.util.Configuration.buildSpeedMultiplier = (float) config.get(Configuration.CATEGORY_GENERAL, "buildSpeedMultiplier", 1f, "Multiplier for the build speed of the Rocket Builder (0.5 is twice as fast 2 is half as fast").getDouble();
 		zmaster587.advancedRocketry.util.Configuration.MoonId = config.get(Configuration.CATEGORY_GENERAL,"moonId" , 2,"Dimension ID to use for the moon").getInt();
-
+		zmaster587.advancedRocketry.util.Configuration.spaceDimId = config.get(Configuration.CATEGORY_GENERAL,"spaceStationId" , -2,"Dimension ID to use for space stations").getInt();
+		
 		zmaster587.advancedRocketry.util.Configuration.rocketRequireFuel = config.get(ROCKET, "rocketsRequireFuel", true, "Set to false if rockets should not require fuel to fly").getBoolean();
 		zmaster587.advancedRocketry.util.Configuration.rocketThrustMultiplier = config.get(ROCKET, "thrustMultiplier", 1f, "Multiplier for per-engine thrust").getDouble();
 		zmaster587.advancedRocketry.util.Configuration.fuelCapacityMultiplier = config.get(ROCKET, "fuelCapacityMultiplier", 1f, "Multiplier for per-tank capacity").getDouble();
@@ -641,8 +642,8 @@ public class AdvancedRocketry {
 		proxy.registerKeyBinds();*/
 
 		//Register space dimension
-		net.minecraftforge.common.DimensionManager.registerProviderType(zmaster587.advancedRocketry.util.Configuration.space, WorldProviderSpace.class, true);
-		net.minecraftforge.common.DimensionManager.registerDimension(zmaster587.advancedRocketry.util.Configuration.space,zmaster587.advancedRocketry.util.Configuration.space);
+		net.minecraftforge.common.DimensionManager.registerProviderType(zmaster587.advancedRocketry.util.Configuration.spaceDimId, WorldProviderSpace.class, true);
+		net.minecraftforge.common.DimensionManager.registerDimension(zmaster587.advancedRocketry.util.Configuration.spaceDimId,zmaster587.advancedRocketry.util.Configuration.spaceDimId);
 	}
 
 	@EventHandler

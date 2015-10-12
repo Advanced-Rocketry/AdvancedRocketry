@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
@@ -238,8 +239,13 @@ public class DimensionManager {
 		}
 
 		if(properties.hasChildren()) {
-			for(Integer child : properties.getChildPlanets()) {
+			
+			Iterator<Integer> iterator = properties.getChildPlanets().iterator();
+			while (iterator.hasNext()){
+				Integer child = iterator.next();
+				iterator.remove(); //Avoid CME
 				deleteDimension(child);
+				
 				PacketHandler.sendToAll(new PacketDimInfo(child, null));
 			}
 		}

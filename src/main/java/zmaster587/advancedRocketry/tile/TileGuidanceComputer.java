@@ -45,9 +45,9 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				return item.getDimensionId(stack);
 			}
 			else if(itemType instanceof ItemStationChip) {
-				if(Configuration.space == currentDimension)
+				if(Configuration.spaceDimId == currentDimension)
 					return 0;
-				return Configuration.space;
+				return Configuration.spaceDimId;
 			}
 				
 		}
@@ -62,7 +62,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		ItemStack stack = getStackInSlot(0);
 		if(stack != null && stack.getItem() instanceof ItemStationChip) {
 			ItemStationChip chip = (ItemStationChip)stack.getItem();
-			if(landingDimension == Configuration.space) {
+			if(landingDimension == Configuration.spaceDimId) {
 				
 				SpaceObject object = DimensionManager.getSpaceManager().getSpaceStation(chip.getDamage(stack));
 				

@@ -65,7 +65,7 @@ public class SpaceObject {
 	}
 
 	public void onFirstCreated(StorageChunk chunk) {
-			World worldObj = DimensionManager.getWorld(Configuration.space);
+			World worldObj = DimensionManager.getWorld(Configuration.spaceDimId);
 			chunk.pasteInWorld(worldObj, spawnLocation.x - chunk.getSizeX()/2, spawnLocation.y - chunk.getSizeY()/2, spawnLocation.z - chunk.getSizeZ()/2);
 
 	}

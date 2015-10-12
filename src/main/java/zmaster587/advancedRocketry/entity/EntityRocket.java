@@ -406,7 +406,7 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 			if(!worldObj.isRemote && this.posY < 0) {
 				int dimId = worldObj.provider.dimensionId;
 
-				if(dimId == Configuration.space) {
+				if(dimId == Configuration.spaceDimId) {
 					Vector3F<Float> pos = storage.getGuidanceComputer().getLandingLocation(dimId);
 					storage.getGuidanceComputer().setReturnPosition(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ));
 					if(pos != null) {
@@ -478,12 +478,12 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 			isInOrbit = true;
 			//If going to a station or something make sure to set coords accordingly
 			//If in space land on the planet, if on the planet go to space
-			if(destinationDimId == Configuration.space || this.worldObj.provider.dimensionId == Configuration.space) {
+			if(destinationDimId == Configuration.spaceDimId || this.worldObj.provider.dimensionId == Configuration.spaceDimId) {
 				Vector3F<Float> pos = storage.getGuidanceComputer().getLandingLocation(destinationDimId);
 				storage.getGuidanceComputer().setReturnPosition(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ));
 				if(pos != null) {
 
-					if(Configuration.space == destinationDimId) {
+					if(Configuration.spaceDimId == destinationDimId) {
 						this.travelToDimension(destinationDimId, pos.x, pos.z);
 					}
 					else {
@@ -512,7 +512,7 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 			destinationDimId = guidanceComputer.getDestinationDimId(worldObj.provider.dimensionId);
 		}
 
-		if(!stats.hasSeat() || ( destinationDimId != -1 && (DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || destinationDimId == Configuration.space || destinationDimId == 0) ) { //Abort if destination is invalid
+		if(!stats.hasSeat() || ( destinationDimId != -1 && (DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || destinationDimId == Configuration.spaceDimId || destinationDimId == 0) ) { //Abort if destination is invalid
 
 
 			setInFlight(true);

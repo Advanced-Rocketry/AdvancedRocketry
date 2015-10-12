@@ -35,7 +35,7 @@ public class PacketDimInfo extends BasePacket {
 			try {
 				dimProperties.writeToNBT(nbt);
 				PacketBuffer packetBuffer = new PacketBuffer(out);
-				out.writeBoolean(true);
+				out.writeBoolean(false);
 				//TODO: error handling
 				try {
 					packetBuffer.writeNBTTagCompoundToBuffer(nbt);
@@ -43,7 +43,7 @@ public class PacketDimInfo extends BasePacket {
 					e.printStackTrace();
 				}
 			} catch(NullPointerException e) {
-				out.writeBoolean(false);
+				out.writeBoolean(true);
 				AdvancedRocketry.logger.warning("Dimension " + dimNumber + " has thrown an exception trying to write NBT, deleting!");
 				DimensionManager.getInstance().deleteDimension(dimNumber);
 			}
