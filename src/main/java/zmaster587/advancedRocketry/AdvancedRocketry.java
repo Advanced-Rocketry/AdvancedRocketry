@@ -484,55 +484,6 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(MaterialRegistry.getItemStackFromMaterialAndType(Materials.IRON, AllowedProducts.ROD), "x  ", " x ", "  x", 'x', "ingotIron"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(MaterialRegistry.getItemStackFromMaterialAndType(Materials.STEEL, AllowedProducts.ROD), "x  ", " x ", "  x", 'x', "ingotSteel"));
 
-		//AutoGenned Recipes
-		for(MaterialRegistry.Materials ore : MaterialRegistry.Materials.values()) {
-			if(MaterialRegistry.AllowedProducts.ORE.isOfType(ore.getAllowedProducts()) && MaterialRegistry.AllowedProducts.INGOT.isOfType(ore.getAllowedProducts()))
-				GameRegistry.addSmelting(ore.getProduct(MaterialRegistry.AllowedProducts.ORE), ore.getProduct(AllowedProducts.INGOT), 0);
-
-			if(MaterialRegistry.AllowedProducts.NUGGET.isOfType(ore.getAllowedProducts())) {
-				ItemStack nugget = ore.getProduct(AllowedProducts.NUGGET);
-				nugget.stackSize = 9;
-				for(String str : ore.getOreDictNames()) {
-					GameRegistry.addRecipe(new ShapelessOreRecipe(nugget, AllowedProducts.INGOT.name().toLowerCase() + str));
-					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.INGOT), "ooo", "ooo", "ooo", 'o', AllowedProducts.NUGGET.name().toLowerCase() + str));
-				}
-			}
-
-			if(MaterialRegistry.AllowedProducts.CRYSTAL.isOfType(ore.getAllowedProducts())) {
-				for(String str : ore.getOreDictNames())
-					RecipesMachine.getInstance().addRecipe(TileCrystallizer.class, ore.getProduct(MaterialRegistry.AllowedProducts.CRYSTAL), 300, 200, MaterialRegistry.AllowedProducts.DUST.name().toLowerCase() + str);
-			}
-
-			if(MaterialRegistry.AllowedProducts.BOULE.isOfType(ore.getAllowedProducts())) {
-				for(String str : ore.getOreDictNames())
-					RecipesMachine.getInstance().addRecipe(TileCrystallizer.class, ore.getProduct(MaterialRegistry.AllowedProducts.BOULE), 300, 200, ore.getProduct(MaterialRegistry.AllowedProducts.INGOT), MaterialRegistry.AllowedProducts.NUGGET.name().toLowerCase() + str);
-			}
-
-			if(MaterialRegistry.AllowedProducts.ROD.isOfType(ore.getAllowedProducts()) && MaterialRegistry.AllowedProducts.INGOT.isOfType(ore.getAllowedProducts())) {
-				for(String name : ore.getOreDictNames())
-					RecipesMachine.getInstance().addRecipe(TileLathe.class, ore.getProduct(MaterialRegistry.AllowedProducts.ROD), 300, 200, MaterialRegistry.AllowedProducts.INGOT.name().toLowerCase() + name); //ore.getProduct(MaterialRegistry.AllowedProducts.INGOT));
-			}
-
-			if(MaterialRegistry.AllowedProducts.PLATE.isOfType(ore.getAllowedProducts())) {
-				for(String oreDictNames : ore.getOreDictNames()) {
-					RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, ore.getProduct(MaterialRegistry.AllowedProducts.PLATE), 300, 200, MaterialRegistry.AllowedProducts.INGOT.name().toLowerCase() + oreDictNames);
-					if(AllowedProducts.BLOCK.isOfType(ore.getAllowedProducts()) || ore.isVanilla())
-						RecipesMachine.getInstance().addRecipe(BlockPress.class, ore.getProduct(MaterialRegistry.AllowedProducts.PLATE), 0, 0, MaterialRegistry.AllowedProducts.BLOCK.name().toLowerCase() + oreDictNames);
-				}
-			}
-
-			if(MaterialRegistry.AllowedProducts.COIL.isOfType(ore.getAllowedProducts())) {
-				for(String str : ore.getOreDictNames())
-					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(MaterialRegistry.AllowedProducts.COIL), "ooo", "o o", "ooo",'o', MaterialRegistry.AllowedProducts.INGOT.name().toLowerCase() + str));
-			}
-		}
-
-
-		//Register mixed material's recipes
-		for(MixedMaterial material : MaterialRegistry.getMixedMaterialList()) {
-			RecipesMachine.getInstance().addRecipe(material.getMachine(), Arrays.asList(material.getProducts()), 100, 10, material.getInput());
-		}
-
 
 		GameRegistry.addSmelting(MaterialRegistry.Materials.DILITHIUM.getProduct(MaterialRegistry.AllowedProducts.ORE), MaterialRegistry.Materials.DILITHIUM.getProduct(AllowedProducts.DUST), 0);
 
@@ -645,6 +596,56 @@ public class AdvancedRocketry {
 
 		proxy.registerKeyBinds();*/
 
+		
+		//AutoGenned Recipes
+		for(MaterialRegistry.Materials ore : MaterialRegistry.Materials.values()) {
+			if(MaterialRegistry.AllowedProducts.ORE.isOfType(ore.getAllowedProducts()) && MaterialRegistry.AllowedProducts.INGOT.isOfType(ore.getAllowedProducts()))
+				GameRegistry.addSmelting(ore.getProduct(MaterialRegistry.AllowedProducts.ORE), ore.getProduct(AllowedProducts.INGOT), 0);
+
+			if(MaterialRegistry.AllowedProducts.NUGGET.isOfType(ore.getAllowedProducts())) {
+				ItemStack nugget = ore.getProduct(AllowedProducts.NUGGET);
+				nugget.stackSize = 9;
+				for(String str : ore.getOreDictNames()) {
+					GameRegistry.addRecipe(new ShapelessOreRecipe(nugget, AllowedProducts.INGOT.name().toLowerCase() + str));
+					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.INGOT), "ooo", "ooo", "ooo", 'o', AllowedProducts.NUGGET.name().toLowerCase() + str));
+				}
+			}
+
+			if(MaterialRegistry.AllowedProducts.CRYSTAL.isOfType(ore.getAllowedProducts())) {
+				for(String str : ore.getOreDictNames())
+					RecipesMachine.getInstance().addRecipe(TileCrystallizer.class, ore.getProduct(MaterialRegistry.AllowedProducts.CRYSTAL), 300, 200, MaterialRegistry.AllowedProducts.DUST.name().toLowerCase() + str);
+			}
+
+			if(MaterialRegistry.AllowedProducts.BOULE.isOfType(ore.getAllowedProducts())) {
+				for(String str : ore.getOreDictNames())
+					RecipesMachine.getInstance().addRecipe(TileCrystallizer.class, ore.getProduct(MaterialRegistry.AllowedProducts.BOULE), 300, 200, ore.getProduct(MaterialRegistry.AllowedProducts.INGOT), MaterialRegistry.AllowedProducts.NUGGET.name().toLowerCase() + str);
+			}
+
+			if(MaterialRegistry.AllowedProducts.ROD.isOfType(ore.getAllowedProducts()) && MaterialRegistry.AllowedProducts.INGOT.isOfType(ore.getAllowedProducts())) {
+				for(String name : ore.getOreDictNames())
+					RecipesMachine.getInstance().addRecipe(TileLathe.class, ore.getProduct(MaterialRegistry.AllowedProducts.ROD), 300, 200, MaterialRegistry.AllowedProducts.INGOT.name().toLowerCase() + name); //ore.getProduct(MaterialRegistry.AllowedProducts.INGOT));
+			}
+
+			if(MaterialRegistry.AllowedProducts.PLATE.isOfType(ore.getAllowedProducts())) {
+				for(String oreDictNames : ore.getOreDictNames()) {
+					RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, ore.getProduct(MaterialRegistry.AllowedProducts.PLATE), 300, 200, MaterialRegistry.AllowedProducts.INGOT.name().toLowerCase() + oreDictNames);
+					if(AllowedProducts.BLOCK.isOfType(ore.getAllowedProducts()) || ore.isVanilla())
+						RecipesMachine.getInstance().addRecipe(BlockPress.class, ore.getProduct(MaterialRegistry.AllowedProducts.PLATE), 0, 0, MaterialRegistry.AllowedProducts.BLOCK.name().toLowerCase() + oreDictNames);
+				}
+			}
+
+			if(MaterialRegistry.AllowedProducts.COIL.isOfType(ore.getAllowedProducts())) {
+				for(String str : ore.getOreDictNames())
+					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(MaterialRegistry.AllowedProducts.COIL), "ooo", "o o", "ooo",'o', MaterialRegistry.AllowedProducts.INGOT.name().toLowerCase() + str));
+			}
+		}
+
+
+		//Register mixed material's recipes
+		for(MixedMaterial material : MaterialRegistry.getMixedMaterialList()) {
+			RecipesMachine.getInstance().addRecipe(material.getMachine(), Arrays.asList(material.getProducts()), 100, 10, material.getInput());
+		}
+		
 		//Register space dimension
 		net.minecraftforge.common.DimensionManager.registerProviderType(zmaster587.advancedRocketry.util.Configuration.spaceDimId, WorldProviderSpace.class, true);
 		net.minecraftforge.common.DimensionManager.registerDimension(zmaster587.advancedRocketry.util.Configuration.spaceDimId,zmaster587.advancedRocketry.util.Configuration.spaceDimId);
