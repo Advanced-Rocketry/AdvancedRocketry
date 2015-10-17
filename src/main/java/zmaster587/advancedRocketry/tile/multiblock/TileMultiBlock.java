@@ -229,6 +229,9 @@ public class TileMultiBlock extends TileEntity {
 					Block block = worldObj.getBlock(globalX, globalY, globalZ);
 					int meta = worldObj.getBlockMetadata(globalX, globalY, globalZ);
 
+					if(block == AdvancedRocketryBlocks.blockPhantom)
+						return false;
+					
 					if(tile != null)
 						tiles.add(tile);
 

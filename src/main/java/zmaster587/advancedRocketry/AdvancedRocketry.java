@@ -139,7 +139,7 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 
-@Mod(modid="advancedRocketry", name="Advanced Rocketry", version="0.3.0", dependencies="required-after:libVulpes")
+@Mod(modid="advancedRocketry", name="Advanced Rocketry", version="0.3.1", dependencies="required-after:libVulpes")
 public class AdvancedRocketry {
 	public static final String modId = "advancedRocketry";
 
@@ -153,6 +153,8 @@ public class AdvancedRocketry {
 
 	public static CompatibilityMgr compat = new CompatibilityMgr();
 	public static Logger logger = Logger.getLogger(modId);
+	private static Configuration config;
+	private static final String BIOMECATETORY = "Biomes";
 
 
 	private static CreativeTabs tabAdvRocketry = new CreativeTabs("advancedRocketry") {
@@ -174,7 +176,7 @@ public class AdvancedRocketry {
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		//Configuration  ---------------------------------------------------------------------------------------------
-		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
+		config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 
 		final String oreGen = "Ore Generation";
@@ -462,17 +464,6 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileStationBuilder.class, "ARStationBuilder");
 		EntityRegistry.registerModEntity(EntityLaserNode.class, "laserNode", 0, instance, 256, 20, false);
 
-		//Biomes --------------------------------------------------------------------------------------
-		AdvancedRocketryBiomes.moonBiome = new BiomeGenMoon(90, true);
-		AdvancedRocketryBiomes.alienForest = new BiomeGenAlienForest(91, true);
-		AdvancedRocketryBiomes.hotDryBiome = new BiomeGenHotDryRock(92, true);
-		AdvancedRocketryBiomes.spaceBiome = new BiomeGenSpace(93, true);
-
-		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.moonBiome);
-		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.alienForest);
-		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.hotDryBiome);
-		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.spaceBiome);
-
 	}
 
 	@EventHandler
@@ -616,6 +607,19 @@ public class AdvancedRocketry {
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 		planetWorldType = new WorldTypePlanetGen("PlanetCold");
 		spaceWorldType = new WorldTypeSpace("Space");
+		
+		//Biomes --------------------------------------------------------------------------------------
+		
+		AdvancedRocketryBiomes.moonBiome = new BiomeGenMoon(config.get(BIOMECATETORY, "moonBiomeId", 90).getInt(), true);
+		AdvancedRocketryBiomes.alienForest = new BiomeGenAlienForest(config.get(BIOMECATETORY, "alienForestBiomeId", 91).getInt(), true);
+		AdvancedRocketryBiomes.hotDryBiome = new BiomeGenHotDryRock(config.get(BIOMECATETORY, "hotDryBiome", 92).getInt(), true);
+		AdvancedRocketryBiomes.spaceBiome = new BiomeGenSpace(config.get(BIOMECATETORY, "spaceBiomeId", 93).getInt(), true);
+		config.save();
+		
+		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.moonBiome);
+		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.alienForest);
+		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.hotDryBiome);
+		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.spaceBiome);
 	}
 
 	@EventHandler
