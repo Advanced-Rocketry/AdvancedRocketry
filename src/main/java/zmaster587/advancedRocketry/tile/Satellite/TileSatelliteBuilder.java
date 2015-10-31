@@ -137,9 +137,10 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		getStackInSlot(outputSlot);
 
 		boolean isSatellite = ((stack0.getItem() instanceof ItemSatellite || stack0.getItem() instanceof ItemSatelliteIdentificationChip) && stack1.getItem() instanceof ItemSatelliteIdentificationChip);
-		boolean isStation = stack0.getItem() instanceof ItemStationChip && stack1.getItem() instanceof ItemStationChip;
+		boolean isStation = stack0.getItem() instanceof ItemStationChip && stack0.getItemDamage() != 0 && stack1.getItem() instanceof ItemStationChip;
 		boolean isPlanet = (stack0.getItem() instanceof ItemPlanetIdentificationChip && stack1.getItem() instanceof ItemPlanetIdentificationChip);
-		return !isRunning() && getStackInSlot(outputSlot) == null && stack0 != null && stack0.hasTagCompound() && stack1 != null && 
+		
+		return !isRunning() && getStackInSlot(outputSlot) == null && stack0 != null && (isStation || stack0.hasTagCompound()) && stack1 != null && 
 				(isSatellite  || isStation || isPlanet);
 	}
 
