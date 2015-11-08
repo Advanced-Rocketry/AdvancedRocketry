@@ -194,7 +194,8 @@ public class TileMultiBlock extends TileEntity {
 
 	/**
 	 * Use '*' to allow any kind of Hatch, or energy device or anything returned by getAllowableWildcards
-	 * Use 'L' for liquid hatches TODO
+	 * Use 'L' for liquid input hatches
+	 * Use 'l' for liquid output hatches
 	 * Use 'I' for input hatch
 	 * Use 'O' for output hatch
 	 * Use 'P' for power
@@ -329,6 +330,19 @@ public class TileMultiBlock extends TileEntity {
 		return list;
 	}
 	
+	public List<BlockMeta> getLiquidInputBlocks() {
+		List<BlockMeta> list = new LinkedList<BlockMeta>();
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 4));
+		return list;
+	}
+	
+	public List<BlockMeta> getLiquidOutputBlocks() {
+		List<BlockMeta> list = new LinkedList<BlockMeta>();
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 5));
+		return list;
+	}
+	
+	
 	public List<BlockMeta> getAllowableBlocks(Object input) {
 		if(input instanceof Character && (Character)input == '*') {
 			return getAllowableWildCardBlocks();
@@ -344,6 +358,12 @@ public class TileMultiBlock extends TileEntity {
 		}
 		else if(input instanceof Character && (Character)input == 'O') {
 			return getAllowableOutputBlocks();
+		}
+		else if(input instanceof Character && (Character)input == 'L') {
+			return getLiquidInputBlocks();
+		}
+		else if(input instanceof Character && (Character)input == 'l') {
+			return getLiquidOutputBlocks();
 		}
 		else if(input instanceof Block) {
 			List<BlockMeta> list = new ArrayList<BlockMeta>();

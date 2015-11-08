@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 public class AdvancedRocketryItems {
 
 	public static Item itemWafer;
+	public static Item itemAnthracene;
 	public static Item itemCircuitPlate;
 	public static Item itemIC;
 	public static Item itemSatellitePowerSource;

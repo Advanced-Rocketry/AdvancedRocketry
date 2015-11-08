@@ -5,17 +5,21 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class RecipesMachine {
 	public class Recipe implements IRecipe {
 
 		private ArrayList<ItemStack> input;
+		private ArrayList<FluidStack> fluidInput;
 		private ArrayList<ItemStack> output;
+		private ArrayList<FluidStack> fluidOutput;
 		private int completionTime, power;
 
 		public Recipe() {}
@@ -29,6 +33,16 @@ public class RecipesMachine {
 
 			this.completionTime = completionTime;
 			this.power = powerReq;
+
+			this.fluidInput = new ArrayList<FluidStack>();
+			this.fluidOutput = new ArrayList<FluidStack>();
+		}
+
+		public Recipe(List<ItemStack> output, List<ItemStack> input, List<FluidStack> fluidOutput, List<FluidStack> fluidInput, int completionTime, int powerReq) {
+			this(output, input, completionTime, powerReq);
+
+			this.fluidInput.addAll(fluidInput);
+			this.fluidOutput.addAll(fluidOutput);
 		}
 
 		public int getCompletionTime() {return completionTime; }
@@ -41,6 +55,11 @@ public class RecipesMachine {
 		@Override
 		public ArrayList<ItemStack> getIngredients() {
 			return input;
+		}
+
+		@Override
+		public ArrayList<FluidStack> getFluidIngredients() {
+			return fluidInput;
 		}
 
 		@Override
@@ -63,6 +82,31 @@ public class RecipesMachine {
 
 			return stack;
 		}
+
+		@Override
+		public List<FluidStack> getFluidOutputs() {
+			ArrayList<FluidStack> stack = new ArrayList<FluidStack>();
+
+			for(FluidStack i : fluidOutput) {
+				stack.add(i.copy());
+			}
+
+			return stack;
+		}
+		
+		public IRecipe getRecipeAsAllItemsOnly() {
+			Recipe recipe = new Recipe(output, input, completionTime, power);
+			
+			for(FluidStack stack : getFluidIngredients()) {
+				recipe.input.add(new ItemStack(stack.getFluid().getBlock()));
+			}
+			
+			for(FluidStack stack : getFluidOutputs()) {
+				recipe.output.add(new ItemStack(stack.getFluid().getBlock()));
+			}
+			
+			return recipe;
+		}
 	}
 
 	public HashMap<Class<Object>, ArrayList<IRecipe>> recipeList;
@@ -75,49 +119,86 @@ public class RecipesMachine {
 
 	public static RecipesMachine getInstance() { return instance; }
 
-	public void addRecipe(Class clazz ,List<ItemStack> out, int timeRequired, int power, Object ... inputs) {
+	public void addRecipe(Class clazz ,List<Object> out, int timeRequired, int power, Object ... inputs) {
 		ArrayList<IRecipe> recipes = getRecipes(clazz);
 		if(recipes == null) {
 			recipes = new ArrayList<IRecipe>();
 			recipeList.put(clazz,recipes);
 		}
-			
-		
+
+
 		ArrayList<ItemStack> stack = new ArrayList<ItemStack>();
+		ArrayList<FluidStack> inputFluidStacks = new ArrayList<FluidStack>();
 
-		for(int i = 0; i < inputs.length; i++) {
-			if(inputs[i] != null) {
-				if(inputs[i] instanceof String) {
+		try {
 
-					Object[] obj2 = inputs.clone();
+			for(int i = 0; i < inputs.length; i++) {
+				if(inputs[i] != null) {
+					if(inputs[i] instanceof String) {
+						Object[] obj2 = inputs.clone();
 
-					for (ItemStack itemStack : OreDictionary.getOres((String)inputs[i])) {
-						obj2[i] = itemStack;
-						addRecipe(clazz, out, timeRequired, power, obj2);
+						for (ItemStack itemStack : OreDictionary.getOres((String)inputs[i])) {
+							obj2[i] = itemStack;
+							addRecipe(clazz, out, timeRequired, power, obj2);
+						}
+						return;	
 					}
-					return;	
-				}
-				else {
+					else if(inputs[i] instanceof FluidStack)
+						inputFluidStacks.add((FluidStack) inputs[i]);
+					else {
 
-					if(inputs[i] instanceof Item) 
-						inputs[i] = new ItemStack((Item)inputs[i]);
-					else if(inputs[i] instanceof Block)
-						inputs[i] = new ItemStack((Block)inputs[i]);
+						if(inputs[i] instanceof Item) 
+							inputs[i] = new ItemStack((Item)inputs[i]);
+						else if(inputs[i] instanceof Block)
+							inputs[i] = new ItemStack((Block)inputs[i]);
 
-					stack.add((ItemStack)inputs[i]);
+						stack.add((ItemStack)inputs[i]);
+					}
 				}
 			}
-		}
-		ArrayList<ItemStack> outputItem = new ArrayList<ItemStack>();
-		outputItem.addAll(out);
+			ArrayList<ItemStack> outputItem = new ArrayList<ItemStack>();
+			ArrayList<FluidStack> outputFluidStacks = new ArrayList<FluidStack>();
 
-		Recipe recipe = new Recipe(outputItem, stack, timeRequired, power);
-		recipes.add(recipe);
+			for(Object outputObject : out) {
+				if(outputObject instanceof ItemStack)
+					outputItem.add((ItemStack)outputObject);
+				else
+					outputFluidStacks.add((FluidStack)outputObject);
+			}
+
+			Recipe recipe;
+			if(inputFluidStacks.isEmpty() && outputFluidStacks.isEmpty())
+				recipe = new Recipe(outputItem, stack, timeRequired, power);
+			else
+				recipe = new Recipe(outputItem, stack, outputFluidStacks, inputFluidStacks, timeRequired, power);
+
+			recipes.add(recipe);
+
+		} catch(ClassCastException e) {
+			//Custom handling to make sure it logs and can be suppressed by user
+			String message = e.getLocalizedMessage();
+
+			for(StackTraceElement element : e.getStackTrace()) {
+				message += "\n\t" + element.toString();
+			}
+
+			AdvancedRocketry.logger.warning("Cannot add recipe!");
+			AdvancedRocketry.logger.warning(message);
+
+		}
 	}
-	
-	public void addRecipe(Class clazz ,ItemStack out, int timeRequired, int power, Object ... inputs) {
-		List<ItemStack> newList = new LinkedList<ItemStack>();
-		newList.add(out);
+
+	public void addRecipe(Class clazz , Object out, int timeRequired, int power, Object ... inputs) {
+		List<Object> newList;
+		
+		if(out instanceof List) {
+			newList = (List)out;
+		}
+		else {
+			newList = new LinkedList<Object>();
+			newList.add(out);
+		}
+		
 		addRecipe(clazz, newList, timeRequired, power, inputs);
 	}
 

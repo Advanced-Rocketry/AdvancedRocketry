@@ -9,6 +9,7 @@ import zmaster587.advancedRocketry.tile.TileInputHatch;
 import zmaster587.advancedRocketry.tile.TileOutputHatch;
 import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteHatch;
 import zmaster587.advancedRocketry.tile.data.TileDataBus;
+import zmaster587.advancedRocketry.tile.multiblock.TileFluidHatch;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -26,7 +27,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockHatch extends BlockMultiblockStructure {
 
-	IIcon output, data, satellite;
+	IIcon output, data, satellite, fluidInput, fluidOutput;
 	
 	private final Random random = new Random();
 	
@@ -54,6 +55,8 @@ public class BlockHatch extends BlockMultiblockStructure {
 		blockIcon = iconRegister.registerIcon("advancedrocketry:inputHatch");
 		data = iconRegister.registerIcon("advancedrocketry:dataHatch");
 		satellite = iconRegister.registerIcon("advancedrocketry:satelliteBay");
+		fluidInput = iconRegister.registerIcon("advancedrocketry:fluidInput");
+		fluidOutput = iconRegister.registerIcon("advancedrocketry:fluidOutput");
 	}
 	
 	@Override
@@ -65,8 +68,12 @@ public class BlockHatch extends BlockMultiblockStructure {
 		}
 		else if((meta & 7) == 2 )
 			return data;
-		else
+		else if((meta & 7) == 3 )
 			return satellite;
+		else if((meta & 7) == 4 )
+			return fluidInput;
+		else
+			return fluidOutput;
 	}
 	
 	@Override
@@ -76,6 +83,8 @@ public class BlockHatch extends BlockMultiblockStructure {
 		list.add(new ItemStack(item, 1, 1));
 		list.add(new ItemStack(item, 1, 2));
 		list.add(new ItemStack(item, 1, 3));
+		list.add(new ItemStack(item, 1, 4));
+		list.add(new ItemStack(item, 1, 5));
 	}
 	
 	@Override
@@ -88,7 +97,11 @@ public class BlockHatch extends BlockMultiblockStructure {
 		else if((metadata & 7) == 2)
 			return new TileDataBus(1);
 		else if((metadata & 7) == 3)
-			return new TileSatelliteHatch(1);		
+			return new TileSatelliteHatch(1);
+		else if((metadata & 7) == 4)
+			return new TileFluidHatch(false);	
+		else if((metadata & 7) == 5)
+			return new TileFluidHatch(true);	
 		
 		return null;
 	}
@@ -128,7 +141,7 @@ public class BlockHatch extends BlockMultiblockStructure {
 		
 		int meta = world.getBlockMetadata(x, y, z);
 		//Handlue gui through modular system
-		if((meta & 7) < 4 )
+		if((meta & 7) < 6 )
 			player.openGui(AdvancedRocketry.instance, GuiHandler.guiId.MODULAR.ordinal(), world, x, y, z);
 		
 		return true;

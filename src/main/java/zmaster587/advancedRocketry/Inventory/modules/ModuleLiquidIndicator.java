@@ -1,7 +1,12 @@
 package zmaster587.advancedRocketry.Inventory.modules;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -46,11 +51,11 @@ public class ModuleLiquidIndicator extends ModuleBase {
 			else
 				crafter.sendProgressBarUpdate(container, variableId, info.fluid.getFluidID());
 	}
-	
+
 	@Override
 	public void onChangeRecieved(int slot, int value) {
 		FluidTankInfo info[] = tile.getTankInfo(ForgeDirection.UNKNOWN);
-		
+
 		if(slot == 1) {
 			if(info[0].fluid == null && value != invalidFluid) {
 				tile.fill(ForgeDirection.UNKNOWN, new FluidStack(FluidRegistry.getFluid(value), 1), true);
@@ -67,7 +72,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 		}
 		else if(slot == 0 && info[0].fluid != null) {
 			int difference = value - info[0].fluid.amount;
-			
+
 			if(difference > 0) {
 				tile.fill(ForgeDirection.UNKNOWN, new FluidStack(info[0].fluid.getFluid(), difference), true);
 			}
@@ -84,14 +89,14 @@ public class ModuleLiquidIndicator extends ModuleBase {
 		}
 		else if(localId == 1) {
 			if(info.fluid == null)
-					return prevLiquidUUID != invalidFluid;
+				return prevLiquidUUID != invalidFluid;
 			else
 				return info.fluid.getFluidID() != prevLiquidUUID;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	protected void updatePreviousState(int localId) {
 		FluidTankInfo info = tile.getTankInfo(ForgeDirection.UNKNOWN)[0];
@@ -117,6 +122,33 @@ public class ModuleLiquidIndicator extends ModuleBase {
 		}
 
 		return fillAmount/(float)capacity;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void renderForeground (int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel, GuiContainer gui, FontRenderer font) {
+
+		int relativeX = mouseX - offsetX;
+		int relativeY = mouseY - offsetY;
+		int ySize = 52;
+		int xSize = 12;
+
+		if( relativeX > 0 && relativeX < xSize && relativeY > 0 && relativeY < ySize) {
+			List<String> list = new LinkedList<String>();
+			FluidStack fluidStack = tile.getTankInfo(ForgeDirection.UNKNOWN)[0].fluid;
+
+			if(fluidStack!= null) {
+				
+				list.add(fluidStack.getLocalizedName()+": "+fluidStack.amount + " / " + tile.getTankInfo(ForgeDirection.UNKNOWN)[0].capacity + " mB");
+
+				
+			}
+			else
+				list.add("Empty");
+			
+			this.drawTooltip(gui, list, mouseX, mouseY, zLevel, font);
+		}
+
 	}
 
 	@Override

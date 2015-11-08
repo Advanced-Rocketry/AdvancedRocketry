@@ -18,6 +18,8 @@ public class NEIAdvancedRocketryConfig implements IConfigureNEI {
 		TemplateNEI lathe = new LatheNEI();
 		TemplateNEI rollingMachine = new RollingMachineNEI();
 		TemplateNEI smallPlatePress = new PlatePresserNEI();
+		TemplateNEI electrolyser = new ElectrolyserNEI();
+		TemplateNEI chemReactor = new ChemicalReactorNEI();
 		
 		API.registerRecipeHandler(lathe);
 		API.registerUsageHandler(lathe);
@@ -33,6 +35,10 @@ public class NEIAdvancedRocketryConfig implements IConfigureNEI {
 		API.registerUsageHandler(rollingMachine);
 		API.registerRecipeHandler(smallPlatePress);
 		API.registerUsageHandler(smallPlatePress);
+		API.registerRecipeHandler(electrolyser);
+		API.registerUsageHandler(electrolyser);
+		API.registerRecipeHandler(chemReactor);
+		API.registerUsageHandler(chemReactor);
 		
 		API.hideItem(new ItemStack(AdvancedRocketryBlocks.blockQuartzCrucible));
 		API.hideItem(new ItemStack(AdvancedRocketryBlocks.blockPlaceHolder));
