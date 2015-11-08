@@ -17,7 +17,7 @@ import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleButton;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleContainerPan;
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.network.INetworkItem;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketItemModifcation;
@@ -95,7 +95,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 						int globalX = basepos.x - x*direction.offsetZ + z*direction.offsetX;
 						int globalZ = basepos.z + (x* direction.offsetX) + (z*direction.offsetZ);
 
-						if(world.getBlock(globalX, basepos.y + y, globalZ) == AdvRocketryBlocks.blockPhantom) 
+						if(world.getBlock(globalX, basepos.y + y, globalZ) == AdvancedRocketryBlocks.blockPhantom) 
 							world.setBlockToAir(globalX, basepos.y + y, globalZ);
 					}
 				}
@@ -121,7 +121,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 					List<BlockMeta> block;
 					if(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') {
 						block = new ArrayList<BlockMeta>();
-						block.add(new BlockMeta(AdvRocketryBlocks.blockControllerDummy,0));
+						block.add(new BlockMeta(AdvancedRocketryBlocks.blockControllerDummy,0));
 					}
 					else if(multiblock.getAllowableBlocks(structure[y][z][x]).isEmpty())
 						continue;
@@ -134,7 +134,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 					if(world.isAirBlock(globalX, globalY, globalZ) && block.get(0).getBlock().getMaterial() != Material.air) {
 						//block = (Block)structure[y][z][x];
-						world.setBlock(globalX, globalY, globalZ, AdvRocketryBlocks.blockPhantom);
+						world.setBlock(globalX, globalY, globalZ, AdvancedRocketryBlocks.blockPhantom);
 						TileEntity newTile = world.getTileEntity(globalX, globalY, globalZ);
 
 						//TODO: compatibility fixes with the tile entity not reflecting current block

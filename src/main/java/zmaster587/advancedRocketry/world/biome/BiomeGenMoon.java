@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.World;
@@ -28,7 +28,7 @@ public class BiomeGenMoon extends BiomeGenBase {
 		this.theBiomeDecorator.flowersPerChunk=0;
 		this.theBiomeDecorator.grassPerChunk=0;
 		this.theBiomeDecorator.treesPerChunk=0;
-		this.fillerBlock = this.topBlock = AdvRocketryBlocks.blockMoonTurf;
+		this.fillerBlock = this.topBlock = AdvancedRocketryBlocks.blockMoonTurf;
 		this.biomeName="Moon";
 	}
 	

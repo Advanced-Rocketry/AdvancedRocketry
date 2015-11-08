@@ -11,7 +11,7 @@ import zmaster587.advancedRocketry.Inventory.TextureResources;
 import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
 import zmaster587.advancedRocketry.tile.TileInputHatch;
@@ -24,38 +24,38 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 
 	public static final Object[][][] structure = { 
 		{	{Blocks.air,Blocks.air,Blocks.air,Blocks.air,Blocks.air},
-			{Blocks.air,'P',AdvRocketryBlocks.blockBlastBrick,'P',Blocks.air},
-			{Blocks.air,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,Blocks.air},
-			{Blocks.air,AdvRocketryBlocks.blockBlastBrick,'P',AdvRocketryBlocks.blockBlastBrick,Blocks.air},
+			{Blocks.air,'P',AdvancedRocketryBlocks.blockBlastBrick,'P',Blocks.air},
+			{Blocks.air,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,Blocks.air},
+			{Blocks.air,AdvancedRocketryBlocks.blockBlastBrick,'P',AdvancedRocketryBlocks.blockBlastBrick,Blocks.air},
 			{Blocks.air,Blocks.air,Blocks.air,Blocks.air,Blocks.air},
 		},
 
-		{	{Blocks.air,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,Blocks.air},
-			{AdvRocketryBlocks.blockBlastBrick,Blocks.gold_block,Blocks.air,Blocks.gold_block,AdvRocketryBlocks.blockBlastBrick},
-			{AdvRocketryBlocks.blockBlastBrick,Blocks.air,Blocks.air,Blocks.air,AdvRocketryBlocks.blockBlastBrick},
-			{AdvRocketryBlocks.blockBlastBrick,Blocks.air,Blocks.gold_block,Blocks.air,AdvRocketryBlocks.blockBlastBrick},
-			{Blocks.air,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,Blocks.air},
+		{	{Blocks.air,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,Blocks.air},
+			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.gold_block,Blocks.air,Blocks.gold_block,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.air,Blocks.air,Blocks.air,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.air,Blocks.gold_block,Blocks.air,AdvancedRocketryBlocks.blockBlastBrick},
+			{Blocks.air,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,Blocks.air},
 		},
 
-		{	{AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick},
-			{AdvRocketryBlocks.blockBlastBrick,Blocks.air,Blocks.air,Blocks.air,AdvRocketryBlocks.blockBlastBrick},
-			{AdvRocketryBlocks.blockBlastBrick,Blocks.air,Blocks.air,Blocks.air,AdvRocketryBlocks.blockBlastBrick},
-			{AdvRocketryBlocks.blockBlastBrick,Blocks.air,Blocks.air,Blocks.air,AdvRocketryBlocks.blockBlastBrick},
-			{AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick},
+		{	{AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.air,Blocks.air,Blocks.air,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.air,Blocks.air,Blocks.air,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.air,Blocks.air,Blocks.air,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick},
 		},
 
-		{	{AdvRocketryBlocks.blockBlastBrick,'*','c','*',AdvRocketryBlocks.blockBlastBrick},
+		{	{AdvancedRocketryBlocks.blockBlastBrick,'*','c','*',AdvancedRocketryBlocks.blockBlastBrick},
 			{'*',Blocks.air,Blocks.air,Blocks.air,'*'},
 			{'*',Blocks.air,Blocks.air,Blocks.air, '*'},
 			{'*',Blocks.air, Blocks.air,Blocks.air, '*'},
-			{AdvRocketryBlocks.blockBlastBrick,'*','*','*',AdvRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,'*','*','*',AdvancedRocketryBlocks.blockBlastBrick},
 		},
 
-		{	{AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick},
-			{AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick},
-			{AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick},
-			{AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick},
-			{AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick,AdvRocketryBlocks.blockBlastBrick},
+		{	{AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick},
 		}
 
 	};
@@ -63,9 +63,9 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 	@Override
 	public List<BlockMeta> getAllowableWildCardBlocks() {
 		List<BlockMeta> list = super.getAllowableWildCardBlocks();
-		list.add(new BlockMeta(AdvRocketryBlocks.blockHatch, 0));
-		list.add(new BlockMeta(AdvRocketryBlocks.blockHatch, 1));
-		list.add(new BlockMeta(AdvRocketryBlocks.blockBlastBrick, -1));
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 0));
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 1));
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockBlastBrick, -1));
 		return list;
 	}
 
@@ -78,7 +78,7 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 	@Override
 	protected void replaceStandardBlock(int xCoord, int yCoord, int zCoord,	Block block, TileEntity tile) {
 
-		if(block == AdvRocketryBlocks.blockBlastBrick) {
+		if(block == AdvancedRocketryBlocks.blockBlastBrick) {
 			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 1, 2);
 
 			TileEntity tileEntity = worldObj.getTileEntity(xCoord, yCoord, zCoord);
@@ -92,7 +92,7 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 		
 	@Override
 	protected void destroyBlockAt(int x, int y, int z, Block block,	TileEntity tile) {
-		if(block == AdvRocketryBlocks.blockBlastBrick) {
+		if(block == AdvancedRocketryBlocks.blockBlastBrick) {
 			worldObj.setBlockMetadataWithNotify(x, y, z, 0, 2);
 		}
 		else

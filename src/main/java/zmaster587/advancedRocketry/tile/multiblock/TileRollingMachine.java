@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.Inventory.TextureResources;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.MaterialRegistry;
 import zmaster587.advancedRocketry.api.MaterialRegistry.AllowedProducts;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
@@ -20,12 +20,12 @@ public class TileRollingMachine extends TileMultiblockMachine {
 
 	public static final Object structure[][][] = new Object[][][] { 
 		 {   {'c', Blocks.air, Blocks.air, Blocks.air},
-			 {'I', Blocks.air, AdvRocketryBlocks.blockStructureBlock, Blocks.air},
-			 {'I', Blocks.air, AdvRocketryBlocks.blockStructureBlock, Blocks.air}},
+			 {'I', Blocks.air, AdvancedRocketryBlocks.blockStructureBlock, Blocks.air},
+			 {'I', Blocks.air, AdvancedRocketryBlocks.blockStructureBlock, Blocks.air}},
 		 
-		{{AdvRocketryBlocks.blockRFBattery, AdvRocketryBlocks.blockFuelTank, AdvRocketryBlocks.blockStructureBlock, Blocks.air},
-		 {new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), AdvRocketryBlocks.blockStructureBlock, AdvRocketryBlocks.blockStructureBlock, 'O'},
-		 {new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), AdvRocketryBlocks.blockMotor, AdvRocketryBlocks.blockStructureBlock, 'O'}}
+		{{AdvancedRocketryBlocks.blockRFBattery, AdvancedRocketryBlocks.blockFuelTank, AdvancedRocketryBlocks.blockStructureBlock, Blocks.air},
+		 {new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), AdvancedRocketryBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureBlock, 'O'},
+		 {new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), AdvancedRocketryBlocks.blockMotor, AdvancedRocketryBlocks.blockStructureBlock, 'O'}}
 	};
 	
 	@Override

@@ -400,6 +400,24 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 			if((this.posY > Configuration.orbit) && !this.worldObj.isRemote) {
 				onOrbitReached();
 			}
+
+			
+			//If the rocket falls out of the world while in orbit either fall back to earth or die
+			if(!worldObj.isRemote && this.posY < 0) {
+				int dimId = worldObj.provider.dimensionId;
+
+				if(dimId == Configuration.space) {
+					Vector3F<Float> pos = storage.getGuidanceComputer().getLandingLocation(dimId);
+					storage.getGuidanceComputer().setReturnPosition(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ));
+					if(pos != null) {
+						this.travelToDimension(destinationDimId, pos.x, pos.z);
+					}
+					else
+						this.setDead();
+				}
+				else
+					this.setDead();
+			}
 		}
 	}
 
@@ -612,7 +630,7 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 					rider.mountEntity(entity);
 				}
 			}
-			
+
 			setDead();
 
 			this.worldObj.theProfiler.endSection();

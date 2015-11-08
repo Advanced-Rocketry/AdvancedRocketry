@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 
 public class NEIAdvancedRocketryConfig implements IConfigureNEI {
@@ -34,10 +34,10 @@ public class NEIAdvancedRocketryConfig implements IConfigureNEI {
 		API.registerRecipeHandler(smallPlatePress);
 		API.registerUsageHandler(smallPlatePress);
 		
-		API.hideItem(new ItemStack(AdvRocketryBlocks.blockQuartzCrucible));
-		API.hideItem(new ItemStack(AdvRocketryBlocks.blockPlaceHolder));
-		API.hideItem(new ItemStack(AdvRocketryBlocks.blockControllerDummy));
-		API.hideItem(new ItemStack(AdvRocketryBlocks.blockPhantom));
+		API.hideItem(new ItemStack(AdvancedRocketryBlocks.blockQuartzCrucible));
+		API.hideItem(new ItemStack(AdvancedRocketryBlocks.blockPlaceHolder));
+		API.hideItem(new ItemStack(AdvancedRocketryBlocks.blockControllerDummy));
+		API.hideItem(new ItemStack(AdvancedRocketryBlocks.blockPhantom));
 		API.hideItem(new ItemStack(AdvancedRocketryItems.itemSatellite));
 	}
 

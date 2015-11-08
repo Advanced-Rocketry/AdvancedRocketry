@@ -7,7 +7,7 @@ import zmaster587.advancedRocketry.Inventory.TextureResources;
 import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.block.BlockRotatableModel;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
@@ -27,7 +27,7 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 
 	private static final Object[][][] structure = new Object[][][]{			
 		    	 			 {{'I', 'c', 'O'}, 
-							  {new BlockMeta(AdvRocketryBlocks.blockMotor, BlockMeta.WILDCARD), AdvRocketryBlocks.blockSawBlade, new BlockMeta(AdvRocketryBlocks.blockRFBattery, 0)}}};
+							  {new BlockMeta(AdvancedRocketryBlocks.blockMotor, BlockMeta.WILDCARD), AdvancedRocketryBlocks.blockSawBlade, new BlockMeta(AdvancedRocketryBlocks.blockRFBattery, 0)}}};
 	
 	@Override
 	public List<IRecipe> getMachineRecipeList() {

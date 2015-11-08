@@ -15,7 +15,7 @@ public class EntityDummy extends Entity {
 		this.noClip=true;
 		this.height=0f;
 		this.yOffset=0.2f;
-		this.ySize=0f;
+		
 	}
 
 	public EntityDummy(World world, double x, double y, double z) {
@@ -24,6 +24,7 @@ public class EntityDummy extends Entity {
 		this.posX = this.lastTickPosX = x;
 		this.posY = this.lastTickPosY = y;
 		this.posZ = this.lastTickPosZ = z;
+		this.boundingBox.minY = this.boundingBox.maxY = y + .3f;
 	}
 	
 	@Override

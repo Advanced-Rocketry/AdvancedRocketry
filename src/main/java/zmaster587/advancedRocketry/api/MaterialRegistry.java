@@ -21,11 +21,11 @@ public class MaterialRegistry {
 		CRYSTAL,
 		BOULE,
 		NUGGET,
-		COIL(true, AdvRocketryBlocks.blockCoil),
+		COIL(true, AdvancedRocketryBlocks.blockCoil),
 		PLATE,
 		ROD,
-		BLOCK(true, AdvRocketryBlocks.blockMetal),
-		ORE(true, AdvRocketryBlocks.blockOre);
+		BLOCK(true, AdvancedRocketryBlocks.blockMetal),
+		ORE(true, AdvancedRocketryBlocks.blockOre);
 
 		boolean isBlock;
 		List<Block> blockArray;
@@ -185,7 +185,7 @@ public class MaterialRegistry {
 
 		@Deprecated
 		public Block getBlock() {
-			return AdvRocketryBlocks.blockOre.get(this.ordinal()/16);
+			return AdvancedRocketryBlocks.blockOre.get(this.ordinal()/16);
 		}
 
 		public int getMeta() {

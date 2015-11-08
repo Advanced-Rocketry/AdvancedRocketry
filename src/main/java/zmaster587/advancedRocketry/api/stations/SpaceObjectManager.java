@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import zmaster587.advancedRocketry.util.Configuration;
 import zmaster587.libVulpes.util.Vector3F;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -14,7 +11,6 @@ import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class SpaceObjectManager {
@@ -64,6 +60,25 @@ public class SpaceObjectManager {
 	public void registerSpaceObject(SpaceObject object, int dimId, int stationId) {
 		object.setId(stationId);
 		stationLocations.put(stationId, object);
+		
+		
+		/*	radius = math.floor(math.ceil(math.sqrt(i+1))/2)
+	ringIndex = i-math.pow((radius*2) - 1,2)
+	
+	if(ringIndex < (radius*2 + 1)*2):
+		x = ringIndex % (radius*2 + 1) - radius
+		if(ringIndex < (radius*2 + 1)):
+			y = -radius
+		else:
+			y = radius
+	else:
+		newIndex = ringIndex - (radius*2 + 1)*2
+		y = newIndex % ((radius-1)*2 + 1) - (radius - 1)
+		if(newIndex < ((radius-1)*2 + 1)):
+			x = -radius
+		else:
+			x = radius*/
+		
 		object.setPos(2*stationSize*object.getId(), 0);
 		if(!object.hasCustomSpawnLocation())
 			object.setSpawnLocation(2*stationSize*object.getId() + stationSize/2, 128, stationSize/2);

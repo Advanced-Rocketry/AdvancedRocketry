@@ -30,7 +30,7 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleText;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleTexturedSlotArray;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleToggleSwitch;
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
@@ -48,7 +48,7 @@ import zmaster587.libVulpes.block.BlockMeta;
 public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModularInventory, IInventory, ITilePlanetSystemSelectable {
 
 	private static final Object[][][] structure = new Object[][][]{
-		{{AdvRocketryBlocks.blockPlanetSelector, 'c', Blocks.stone_slab},
+		{{AdvancedRocketryBlocks.blockPlanetSelector, 'c', Blocks.stone_slab},
 			{Blocks.stone_slab, Blocks.stone_slab, Blocks.stone_slab}},
 
 			{{'P','I', 'I'},

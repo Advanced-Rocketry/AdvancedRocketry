@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.world.decoration;
 
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -10,11 +10,11 @@ public class MapGenSpaceStation {
 	public static void generateStation(World world, int blockX, int blockY, int blockZ) {
 		
 		//Center
-		world.setBlock(blockX, blockY, blockZ, AdvRocketryBlocks.blockConcrete, 0, 6);
-		world.setBlock(blockX + 1, blockY, blockZ + 1, AdvRocketryBlocks.blockConcrete, 0, 6);
-		world.setBlock(blockX - 1, blockY, blockZ - 1, AdvRocketryBlocks.blockConcrete, 0, 6);
-		world.setBlock(blockX + 1, blockY, blockZ - 1, AdvRocketryBlocks.blockConcrete, 0, 6);
-		world.setBlock(blockX - 1, blockY, blockZ + 1, AdvRocketryBlocks.blockConcrete, 0, 6);
+		world.setBlock(blockX, blockY, blockZ, AdvancedRocketryBlocks.blockConcrete, 0, 6);
+		world.setBlock(blockX + 1, blockY, blockZ + 1, AdvancedRocketryBlocks.blockConcrete, 0, 6);
+		world.setBlock(blockX - 1, blockY, blockZ - 1, AdvancedRocketryBlocks.blockConcrete, 0, 6);
+		world.setBlock(blockX + 1, blockY, blockZ - 1, AdvancedRocketryBlocks.blockConcrete, 0, 6);
+		world.setBlock(blockX - 1, blockY, blockZ + 1, AdvancedRocketryBlocks.blockConcrete, 0, 6);
 		
 		world.setBlock(blockX + 1, blockY, blockZ, Blocks.piston, 5, 6);
 		world.setBlock(blockX - 1, blockY, blockZ, Blocks.piston, 4, 6);
@@ -30,7 +30,7 @@ public class MapGenSpaceStation {
 	
 	private static void generateArm(World world, int blockX, int blockY, int blockZ, ForgeDirection direction) {
 		for(int i = 0; i < 8; i++) {
-			world.setBlock(blockX + direction.offsetX*2 + direction.offsetX*i, blockY, blockZ + direction.offsetZ*2 + direction.offsetZ*i, AdvRocketryBlocks.blockConcrete,0, 6);
+			world.setBlock(blockX + direction.offsetX*2 + direction.offsetX*i, blockY, blockZ + direction.offsetZ*2 + direction.offsetZ*i, AdvancedRocketryBlocks.blockConcrete,0, 6);
 		}
 		
 	}

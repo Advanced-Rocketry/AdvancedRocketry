@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.world.biome;
 
 import net.minecraft.world.biome.BiomeGenBase;
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 
 public class BiomeGenHotDryRock extends BiomeGenBase {
 
@@ -20,7 +20,7 @@ public class BiomeGenHotDryRock extends BiomeGenBase {
 		this.theBiomeDecorator.flowersPerChunk=0;
 		this.theBiomeDecorator.grassPerChunk=0;
 		this.theBiomeDecorator.treesPerChunk=0;
-		this.fillerBlock = this.topBlock = AdvRocketryBlocks.blockHotTurf;
+		this.fillerBlock = this.topBlock = AdvancedRocketryBlocks.blockHotTurf;
 		this.biomeName="Hot Dry Rock";
 	}
 	

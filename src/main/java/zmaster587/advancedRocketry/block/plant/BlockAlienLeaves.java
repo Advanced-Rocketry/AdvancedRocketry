@@ -3,7 +3,7 @@ package zmaster587.advancedRocketry.block.plant;
 import java.util.List;
 import java.util.Random;
 
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockLeaves;
@@ -96,7 +96,7 @@ public class BlockAlienLeaves extends BlockLeaves {
 	
     public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_)
     {
-        return Item.getItemFromBlock(AdvRocketryBlocks.blockAlienSapling);
+        return Item.getItemFromBlock(AdvancedRocketryBlocks.blockAlienSapling);
     }
 	
 	@Override

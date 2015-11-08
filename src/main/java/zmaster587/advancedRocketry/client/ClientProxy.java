@@ -12,7 +12,7 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleContainerPan;
-import zmaster587.advancedRocketry.api.AdvRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.client.render.RendererPhantomBlock;
 import zmaster587.advancedRocketry.client.render.RendererRocketBuilder;
@@ -59,10 +59,10 @@ public class ClientProxy extends CommonProxy {
 		
 		RendererModelBlock blockRenderer = new RendererModelBlock();
 		
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(AdvRocketryBlocks.blockSawBlade), blockRenderer);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(AdvRocketryBlocks.blockEngine), blockRenderer);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(AdvRocketryBlocks.blockFuelTank), blockRenderer);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(AdvRocketryBlocks.blockMotor), blockRenderer);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(AdvancedRocketryBlocks.blockSawBlade), blockRenderer);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(AdvancedRocketryBlocks.blockEngine), blockRenderer);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(AdvancedRocketryBlocks.blockFuelTank), blockRenderer);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(AdvancedRocketryBlocks.blockMotor), blockRenderer);
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityRocket.class, new RendererRocket());
 	}
