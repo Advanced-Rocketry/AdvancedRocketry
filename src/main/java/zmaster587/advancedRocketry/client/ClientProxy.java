@@ -19,6 +19,8 @@ import zmaster587.advancedRocketry.client.render.RendererRocketBuilder;
 import zmaster587.advancedRocketry.client.render.RendererModelBlock;
 import zmaster587.advancedRocketry.client.render.RendererRocket;
 import zmaster587.advancedRocketry.client.render.multiblocks.RenderPlanetAnalyser;
+import zmaster587.advancedRocketry.client.render.multiblocks.RendererElectrolyser;
+import zmaster587.advancedRocketry.client.render.multiblocks.RendererGenericMachineModel;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererRollingMachine;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererCrystallizer;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererCuttingMachine;
@@ -33,8 +35,10 @@ import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.tile.TileModelRender;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.advancedRocketry.tile.TileSchematic;
+import zmaster587.advancedRocketry.tile.multiblock.TileChemicalReactor;
 import zmaster587.advancedRocketry.tile.multiblock.TileCrystallizer;
 import zmaster587.advancedRocketry.tile.multiblock.TileCuttingMachine;
+import zmaster587.advancedRocketry.tile.multiblock.TileElectrolyser;
 import zmaster587.advancedRocketry.tile.multiblock.TileLathe;
 import zmaster587.advancedRocketry.tile.multiblock.TilePlaceholder;
 import zmaster587.advancedRocketry.tile.multiblock.TileRollingMachine;
@@ -55,6 +59,8 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TilePlanetAnalyser.class, new RenderPlanetAnalyser());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileLathe.class, new RendererLathe());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileRollingMachine.class, new RendererRollingMachine());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileElectrolyser.class, new RendererElectrolyser());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileChemicalReactor.class, new RendererGenericMachineModel("advancedrocketry:models/ChemicalReactor.obj", "advancedrocketry:textures/models/ChemicalReactor.png"));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSchematic.class, new RendererPhantomBlock());
 		
 		RendererModelBlock blockRenderer = new RendererModelBlock();

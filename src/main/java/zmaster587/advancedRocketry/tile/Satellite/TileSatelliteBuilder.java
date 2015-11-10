@@ -136,10 +136,12 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		ItemStack stack1 = getStackInSlot(chipCopySlot);
 		getStackInSlot(outputSlot);
 
-		return !isRunning() && getStackInSlot(outputSlot) == null && stack0 != null && stack0.hasTagCompound() && stack1 != null && 
-				((stack0.getItem() instanceof ItemSatellite && stack1.getItem() instanceof ItemSatelliteIdentificationChip)  ||
-						(stack0.getItem() instanceof ItemStationChip && stack1.getItem() instanceof ItemStationChip) ||
-						(stack0.getItem() instanceof ItemPlanetIdentificationChip && stack1.getItem() instanceof ItemPlanetIdentificationChip));
+		boolean isSatellite = ((stack0.getItem() instanceof ItemSatellite || stack0.getItem() instanceof ItemSatelliteIdentificationChip) && stack1.getItem() instanceof ItemSatelliteIdentificationChip);
+		boolean isStation = stack0.getItem() instanceof ItemStationChip && stack0.getItemDamage() != 0 && stack1.getItem() instanceof ItemStationChip;
+		boolean isPlanet = (stack0.getItem() instanceof ItemPlanetIdentificationChip && stack1.getItem() instanceof ItemPlanetIdentificationChip);
+		
+		return !isRunning() && getStackInSlot(outputSlot) == null && stack0 != null && (isStation || stack0.hasTagCompound()) && stack1 != null && 
+				(isSatellite  || isStation || isPlanet);
 	}
 
 	private void copyChip() {

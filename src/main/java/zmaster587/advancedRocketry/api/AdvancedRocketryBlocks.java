@@ -52,4 +52,9 @@ public class AdvancedRocketryBlocks {
 	public static Block blockPlatePress;
 	public static List<Block> blockCoil = new ArrayList<Block>();
 	public static Block blockStationBuilder;
+	public static Block blockElectrolyser;
+	public static Block blockOxygenFluid;
+	public static Block blockHydrogenFluid;
+	public static Block blockChemicalReactor;
+	public static Block blockFuelFluid;
 }

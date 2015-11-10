@@ -21,6 +21,8 @@ tile.hatch.0.name=Input Hatch
 tile.hatch.1.name=Output Hatch
 tile.hatch.2.name=Data Bus
 tile.hatch.3.name=Satellite Bay
+tile.hatch.4.name=Fluid Input Hatch
+tile.hatch.5.name=Fluid Output Hatch
 tile.rfBattery.name=Redstone Flux(RF) Plug
 tile.structureMachine.name=Machine Structure
 tile.observatory.name=Observatory
@@ -46,6 +48,10 @@ tile.blockGenericMachine.name=Machine Controller Block
 tile.blockHandPress.name=Small Plate Presser
 tile.placeHolder.name=Machine
 tile.stationAssembler.name=Space Station Assembler
+tile.electrolyser.name=Electrolyser
+tile.chemreactor.name=Chemical Reactor
+
+tile.liquidHatch.name=Fluid Hatch
 
 tile.Dilithium.name=Dilithium Ore
 tile.Copper.name=Copper Ore
@@ -116,3 +122,7 @@ data.temperature.name=Temperature
 data.composition.name=Composition
 data.atmospheredensity.name=Atmosphere Density
 data.mass.name=Mass
+
+fluid.oxygen=Oxygen
+fluid.hydrogen=Hydrogen
+fluid.rocketFuel=Rocket Fuel

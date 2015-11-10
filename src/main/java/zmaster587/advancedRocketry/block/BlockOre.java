@@ -106,7 +106,7 @@ public class BlockOre extends Block {
 			coilBlocks.setBlockName(coilName).setCreativeTab(tab).setHardness(4f).setBlockTextureName("coil");
 			coilBlocks.numBlocks = (byte)Math.min(len - (16*i), 16);
 			coilBlocks.product = AllowedProducts.COIL;
-
+			
 			GameRegistry.registerBlock(ores, ItemOre.class, name + i);
 			GameRegistry.registerBlock(metalBlocks, ItemOre.class, metalBlockName + i);
 			GameRegistry.registerBlock(coilBlocks, ItemOre.class, coilName + i);
@@ -130,9 +130,12 @@ public class BlockOre extends Block {
 				}
 
 				for(String str : ore.getOreDictNames()) {
-					OreDictionary.registerOre("ore" + str, new ItemStack(ores, 1 , j));
-					OreDictionary.registerOre("block" + str, new ItemStack(metalBlocks, 1 , j));
-					OreDictionary.registerOre("coil" + str, new ItemStack(coilBlocks, 1 , j));
+					if(MaterialRegistry.AllowedProducts.ORE.isOfType(ore.getAllowedProducts()))
+						OreDictionary.registerOre("ore" + str, new ItemStack(ores, 1 , j));
+					if(MaterialRegistry.AllowedProducts.BLOCK.isOfType(ore.getAllowedProducts()))
+						OreDictionary.registerOre("block" + str, new ItemStack(metalBlocks, 1 , j));
+					if(MaterialRegistry.AllowedProducts.COIL.isOfType(ore.getAllowedProducts()))
+						OreDictionary.registerOre("coil" + str, new ItemStack(coilBlocks, 1 , j));
 				}
 			}
 			AdvancedRocketryBlocks.blockMetal.add(metalBlocks);
