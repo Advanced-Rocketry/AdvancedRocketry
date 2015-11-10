@@ -21,6 +21,8 @@ tile.hatch.0.name=Входной люк
 tile.hatch.1.name=Выходной люк
 tile.hatch.2.name=Шина данных
 tile.hatch.3.name=Отсек для спутника
+tile.hatch.4.name=Элемен приёма жидкостей
+tile.hatch.5.name=Элемент вывода жидкостей
 tile.rfBattery.name=RF-разъём
 tile.structureMachine.name=Структурный блок
 tile.observatory.name=Обсерватория
@@ -46,6 +48,10 @@ tile.blockGenericMachine.name=Блок контроллера
 tile.blockHandPress.nameРучной пресс
 tile.placeHolder.name=Placeholder
 tile.stationAssembler.name=Сборщик космических станций
+tile.electrolyser.name=Электролизёр
+tile.chemreactor.name=Химический реактор
+
+tile.liquidHatch.name=Жидкосттный клапан
  
 tile.Dilithium.name=Руда дилития
 tile.Copper.name=Медная руда
@@ -116,3 +122,7 @@ data.temperature.name=Температура
 data.composition.name=Состав
 data.atmospheredensity.name=Плотность атмосферы
 data.mass.name=Масса 
+
+fluid.oxygen=Кислород
+fluid.hydrogen=Водород
+fluid.rocketFuel=Ракетное топливо
