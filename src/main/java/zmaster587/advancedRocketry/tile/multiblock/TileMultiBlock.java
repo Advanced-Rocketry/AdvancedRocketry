@@ -201,6 +201,7 @@ public class TileMultiBlock extends TileEntity {
 	 * Use 'P' for power
 	 * Use 'D' for data hatch
 	 * Use 'c' for the main Block, there can only be one
+	 * Use null for anything
 	 * Use a Block to force the user to place that block there
 	 * @return true if the structure is valid
 	 */
@@ -245,7 +246,7 @@ public class TileMultiBlock extends TileEntity {
 							continue;
 					}
 					//Make sure the structure is valid
-					if(!(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') && !(structure[y][z][x] instanceof Block && (Block)structure[y][z][x] == Blocks.air && worldObj.isAirBlock(globalX, globalY, globalZ)) && !getAllowableBlocks(structure[y][z][x]).contains(new BlockMeta(block,meta)))
+					if(structure[y][z][x] != null && !(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') && !(structure[y][z][x] instanceof Block && (Block)structure[y][z][x] == Blocks.air && worldObj.isAirBlock(globalX, globalY, globalZ)) && !getAllowableBlocks(structure[y][z][x]).contains(new BlockMeta(block,meta)))
 						return false;
 				}
 			}
