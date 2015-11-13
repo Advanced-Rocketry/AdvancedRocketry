@@ -1,0 +1,128 @@
+itemGroup.advancedRocketry=Advanced Rocketry
+itemGroup.advancedRocketryOres=Руды Advanced Rocketry
+ 
+entity.advancedRocketry.rocket.name=Ракета
+ 
+tile.seat.name=Сиденье
+tile.pad.name=Стартовая площадка
+tile.structuretower.name=Структурная башня
+tile.rocketAssembler.name=Сборщик ракеты
+tile.turf.name=Лунный грунт
+tile.cuttingMachine.name=Резательная машина
+tile.sawBlade.name=Сборка циркулярной пилы
+tile.controlComp.name=Компьютер управления полётами
+tile.precisionAssemblingMachine.name=Точный сборочный аппарат
+tile.Laser Emitter.name=Лазерная дрель
+tile.Crystallizer.name=Кристаллизатор
+tile.blastBrick.name=Жаропрочный кирпич
+tile.blastFurnaceController.name=Контроллер высокотемпературной печи
+tile.fuelStation.name=Заправочная станция
+tile.hatch.0.name=Входной люк
+tile.hatch.1.name=Выходной люк
+tile.hatch.2.name=Шина данных
+tile.hatch.3.name=Отсек для спутника
+tile.hatch.4.name=Элемен приёма жидкостей
+tile.hatch.5.name=Элемент вывода жидкостей
+tile.rfBattery.name=RF-разъём
+tile.structureMachine.name=Структурный блок
+tile.observatory.name=Обсерватория
+tile.satelliteBuilder.name=Спутниковый сборщик
+tile.rocket.name=Жидкостный ракетный двигатель
+tile.fuelTank.name=Топливный бак
+tile.monitoringstation.name=Станция мониторинга
+tile.satelliteMonitor.name=Спутниковый терминал
+tile.sapling.name=Саженец Lightwood
+tile.leaves2.name=Листья Lightwood
+tile.chipStorage.name=Хранилище адресов спутников
+tile.planetanalyser.name=Планетный анализатор
+tile.lunaranalyser.name=Лунный анализатор
+tile.guidanceComputer.name=Автопилот
+tile.electricArcFurnace.name=Электродуговая печь
+tile.motor.name=Электродвигатель
+tile.hotDryturf.name=Железистый грунт
+tile.concrete.name=Бетон
+tile.lathe.name=Токарный станок
+tile.rollingMachine.name=Прокатный стан
+tile.planetSelector.name=Селектор планет
+tile.blockGenericMachine.name=Блок контроллера
+tile.blockHandPress.nameРучной пресс
+tile.placeHolder.name=Placeholder
+tile.stationAssembler.name=Сборщик космических станций
+tile.electrolyser.name=Электролизёр
+tile.chemreactor.name=Химический реактор
+
+tile.liquidHatch.name=Жидкосттный клапан
+ 
+tile.Dilithium.name=Руда дилития
+tile.Copper.name=Медная руда
+tile.Tin.name=Оловянная руда
+tile.Rutile.name=Руда рутила
+ 
+tile.coil.dilithium.name=Дилитевая катушка
+tile.coil.silicon.name=Кремниевая катушка
+tile.coil.copper.name=Медная катушка
+tile.coil.tin.name=Оловянная катушка
+tile.coil.steel.name=Стальная катушка
+tile.coil=Катушка
+ 
+item.wafer.0.name=Кремниевая пластина
+item.circuitplate.0.name=Печатная плата
+item.circuitIC.0.name=Электросхема
+item.circuitIC.1.name=Электросхема трекинга
+item.OreScanner.name=Сканер руд
+item.qcrucible.name=Кварцевый тигель
+item.dataUnit.0.name=Хранилище данных
+item.sawBlade.0.name=Железная пила
+item.satellite.name=Спутник
+item.satellitePowerSource.0.name=Солнечная панель
+item.satellitePrimaryFunction.0.name=Оптический сенсор
+item.satellitePrimaryFunction.1.name=Датчик полтности атмосферы
+item.satellitePrimaryFunction.2.name=Детектор масс
+item.satelliteIdChip.name=Чип адреса спутника
+item.planetIdChip.name=Чип адреса планеты
+item.battery.0.name=Батарейка
+item.miscpart.0.name=Пользовательский интерфейс
+item.holoProjector.name=Голографический проектор
+item.station.name=Контейнер с космической станцией
+item.stationChip.name=Чип адреса космической станции
+ 
+material.Gold.name=Золотой
+material.Iron.name=Железный
+material.Dilithium.name=Дилитевый
+material.Silicon.name=Кремниевый
+material.Copper.name=Медный
+material.Tin.name=Оловянный
+material.Steel.name=Стальной
+material.Titanium.name=Титановый
+material.Rutile.name=Рутиловый
+ 
+type.crystal.name=кристалл
+type.dust.name=порошок
+type.boule.name=буль
+type.ingot.name=слиток
+type.nugget.name=самородок
+type.rod.name=стержень
+type.plate.name=Пластина
+type.ore.name=руда
+type.block.name=блок
+type.coil.name=моток
+ 
+container.crystallizer=Кристаллизатор
+container.cuttingmachine=Резак
+container.precisionassemblingmachine=Точный сборщик
+container.observatory=Обсерватория
+container.satellite=Отсек для спутника
+container.monitoringstation=Станция мониторинга
+container.satelliteMonitor=Спутниковый терминал
+ 
+data.undefined.name=Неизвестно
+data.distance.name=Расстояние
+data.humidity.name=Влажность
+data.temperature.name=Температура
+data.composition.name=Состав
+data.atmospheredensity.name=Плотность атмосферы
+data.mass.name=Масса 
+
+fluid.oxygen=Кислород
+fluid.hydrogen=Водород
+fluid.rocketFuel=Ракетное топливо
