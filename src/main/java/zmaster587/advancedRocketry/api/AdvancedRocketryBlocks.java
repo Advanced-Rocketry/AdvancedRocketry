@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import zmaster587.advancedRocketry.block.BlockTile;
 import net.minecraft.block.Block;
 
 /**
@@ -57,4 +58,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockHydrogenFluid;
 	public static Block blockChemicalReactor;
 	public static Block blockFuelFluid;
+	public static Block test;
+	public static Block blockOxygenVent;
+	public static Block blockOxygenScrubber;
 }

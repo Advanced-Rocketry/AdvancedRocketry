@@ -18,6 +18,7 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketHandler;
+import zmaster587.advancedRocketry.util.Configuration;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.advancedRocketry.world.solar.StellarBody;
 import net.minecraft.entity.player.EntityPlayer;
@@ -268,8 +269,16 @@ public class DimensionManager {
 		dimensionList.remove(new Integer(dimId));
 	}
 
+	/**
+	 * 
+	 * @param dimId id of the dimention of which to get the properties
+	 * @return DimensionProperties representing the dimId given
+	 */
 	public DimensionProperties getDimensionProperties(int dimId) {
 		DimensionProperties properties = dimensionList.get(new Integer(dimId));
+		if(dimId == Configuration.spaceDimId) {
+			return defaultSpaceDimensionProperties;
+		}
 		return properties == null ? overworldProperties : properties;
 	}
 

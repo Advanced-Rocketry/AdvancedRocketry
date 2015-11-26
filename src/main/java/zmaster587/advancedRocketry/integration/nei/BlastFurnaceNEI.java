@@ -7,7 +7,7 @@ import zmaster587.advancedRocketry.tile.multiblock.TileElectricArcFurnace;
 public class BlastFurnaceNEI extends TemplateNEI {
 	@Override
 	public String getRecipeName() {
-		return "Blast Furnace";
+		return "Electric Arc Furnace";
 	}
 	
     

@@ -50,7 +50,8 @@ tile.placeHolder.name=Machine
 tile.stationAssembler.name=Space Station Assembler
 tile.electrolyser.name=Electrolyser
 tile.chemreactor.name=Chemical Reactor
-
+tile.scrubber.name=CO2 Scrubber
+tile.oxygenVent.name=Oxygen Vent
 tile.liquidHatch.name=Fluid Hatch
 
 tile.Dilithium.name=Dilithium Ore
@@ -82,6 +83,7 @@ item.satelliteIdChip.name=Satellite Id Chip
 item.planetIdChip.name=Planet Id Chip
 item.battery.0.name=Small Battery
 item.miscpart.0.name=User Interface
+item.miscpart.1.name=Carbon Brick
 item.holoProjector.name=Holo-Projector
 item.station.name=Space Station Container
 item.stationChip.name=Space Station Id Chip
@@ -106,6 +108,7 @@ type.plate.name=Plate
 type.ore.name=Ore
 type.block.name=Block
 type.coil.name=Coil
+type.fan.name=Fan
 
 container.crystallizer=Crystallizer
 container.cuttingmachine=Cutting Machine

@@ -12,6 +12,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.util.IAdjBlockUpdate;
 import zmaster587.libVulpes.block.RotatableBlock;
 
 public class BlockTile extends RotatableBlock {
@@ -103,6 +104,17 @@ public class BlockTile extends RotatableBlock {
 	{
 		player.openGui(AdvancedRocketry.instance, guiId, world, x, y, z);
 		return true;
+	}
+	
+	@Override
+	public void onNeighborBlockChange(World world, int x,
+			int y, int z, Block block) {
+		super.onNeighborBlockChange(world, x, y, z,
+				block);
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if(tile instanceof IAdjBlockUpdate)
+			((IAdjBlockUpdate)tile).onAdjacentBlockUpdated();
+		
 	}
 
 	@SideOnly(Side.CLIENT)

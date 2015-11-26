@@ -10,6 +10,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import zmaster587.advancedRocketry.api.AtmosphereHandler;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.PlayerDataHandler;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
@@ -111,17 +112,6 @@ public class PlanetEventHandler {
 	}
 
 	//Make sure the player receives data about the dimensions
-	//TODO not needed?
-	/*@SubscribeEvent
-	public void playerChangedDimensionEvent(PlayerEvent.PlayerChangedDimensionEvent event) {
-		if(!event.player.worldObj.isRemote) {
-			if(DimensionManager.getInstance().isDimensionCreated(event.toDim))
-				PacketHandler.sendToPlayer(new PacketDimInfo(event.toDim, DimensionManager.getInstance().getDimensionProperties(event.toDim)), event.player);
-		}
-
-	}*/
-
-	//Make sure the player receives data about the dimensions
 	@SubscribeEvent
 	public void playerLoggedInEvent(FMLNetworkEvent.ServerConnectionFromClientEvent event) {
 		
@@ -176,6 +166,16 @@ public class PlanetEventHandler {
 	}
 	 */
 
+	@SubscribeEvent
+	public void worldLoadEvent(WorldEvent.Load event) {
+		AtmosphereHandler.registerWorld(event.world.provider.dimensionId);
+	}
+	
+	@SubscribeEvent
+	public void worldUnloadEvent(WorldEvent.Unload event) {
+		AtmosphereHandler.unregisterWorld(event.world.provider.dimensionId);
+	}
+	
 	//Handle fog density and color
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
@@ -190,7 +190,7 @@ public class PlanetEventHandler {
 
 		}
 	}
-
+	
 	//Saves NBT data
 	@SubscribeEvent
 	public void worldSaveEvent(WorldEvent.Save event) {

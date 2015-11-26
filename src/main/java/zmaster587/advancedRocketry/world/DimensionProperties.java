@@ -13,6 +13,7 @@ import java.util.Set;
 import org.apache.commons.lang3.ArrayUtils;
 
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
+import zmaster587.advancedRocketry.api.AtmosphereType;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.network.PacketHandler;
@@ -282,6 +283,13 @@ public class DimensionProperties implements Cloneable {
 
 	public boolean isStation() {
 		return isStation;
+	}
+
+	//TODO: change
+	public AtmosphereType getAtmosphere() {
+		if(atmosphereDensity > AtmosphereTypes.LOW.getAtmosphereValue())
+			return AtmosphereType.AIR;
+		return AtmosphereType.VACUUM;
 	}
 
 	public static ResourceLocation getAtmosphereResource() {

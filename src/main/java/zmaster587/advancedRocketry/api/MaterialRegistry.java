@@ -25,7 +25,8 @@ public class MaterialRegistry {
 		PLATE,
 		ROD,
 		BLOCK(true, AdvancedRocketryBlocks.blockMetal),
-		ORE(true, AdvancedRocketryBlocks.blockOre);
+		ORE(true, AdvancedRocketryBlocks.blockOre),
+		FAN;
 
 		boolean isBlock;
 		List<Block> blockArray;
@@ -113,7 +114,7 @@ public class MaterialRegistry {
 		SILICON("Silicon", "pickaxe", 3, 0x2c2c2b, AllowedProducts.INGOT.getFlagValue() | AllowedProducts.DUST.getFlagValue() | AllowedProducts.BOULE.getFlagValue() | AllowedProducts.NUGGET.getFlagValue(), false),
 		COPPER("Copper", "pickaxe", 2, 0xd55e28, AllowedProducts.COIL.getFlagValue() | AllowedProducts.BLOCK.getFlagValue() | AllowedProducts.ROD.getFlagValue() | AllowedProducts.INGOT.getFlagValue() | AllowedProducts.NUGGET.getFlagValue() | AllowedProducts.DUST.getFlagValue()),
 		TIN("Tin", "pickaxe", 2, 0xcdd5d8, AllowedProducts.BLOCK.getFlagValue() | AllowedProducts.PLATE.getFlagValue() | AllowedProducts.INGOT.getFlagValue() | AllowedProducts.NUGGET.getFlagValue() | AllowedProducts.DUST.getFlagValue()),
-		STEEL("Steel", "pickaxe", 2, 0x55555d, AllowedProducts.BLOCK.getFlagValue() | AllowedProducts.PLATE.getFlagValue() | AllowedProducts.INGOT.getFlagValue() | AllowedProducts.NUGGET.getFlagValue() | AllowedProducts.DUST.getFlagValue() | AllowedProducts.ROD.getFlagValue(), false),
+		STEEL("Steel", "pickaxe", 2, 0x55555d, AllowedProducts.BLOCK.getFlagValue() | AllowedProducts.FAN.getFlagValue() | AllowedProducts.PLATE.getFlagValue() | AllowedProducts.INGOT.getFlagValue() | AllowedProducts.NUGGET.getFlagValue() | AllowedProducts.DUST.getFlagValue() | AllowedProducts.ROD.getFlagValue(), false),
 		TITANIUM("Titanium", "pickaxe", 2, 0xb2669e, AllowedProducts.PLATE.getFlagValue() | AllowedProducts.INGOT.getFlagValue() | AllowedProducts.NUGGET.getFlagValue() | AllowedProducts.DUST.getFlagValue() | AllowedProducts.ROD.getFlagValue(), false),
 		RUTILE("Rutile", "pickaxe", 2, 0xbf936a, 0);
 

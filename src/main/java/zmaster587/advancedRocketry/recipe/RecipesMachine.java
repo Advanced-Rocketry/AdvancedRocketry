@@ -93,7 +93,7 @@ public class RecipesMachine {
 
 			return stack;
 		}
-		
+
 		public IRecipe getRecipeAsAllItemsOnly() {
 			Recipe recipe = new Recipe(output, input, completionTime, power);
 			
