@@ -278,7 +278,7 @@ public class TileMultiBlock extends TileEntity {
 							((BlockMultiblockStructure)block).hideBlock(worldObj, globalX, globalY, globalZ, worldObj.getBlockMetadata(globalX, globalY, globalZ));
 					}
 
-					if(!block.isAir(worldObj, globalX, globalY, globalZ) && !(tile instanceof IMultiblock) && !(tile instanceof TileMultiBlock)) {
+					if(structure[y][z][x] != null && !block.isAir(worldObj, globalX, globalY, globalZ) && !(tile instanceof IMultiblock) && !(tile instanceof TileMultiBlock)) {
 						replaceStandardBlock(globalX,globalY, globalZ, block, tile);
 					}
 				}

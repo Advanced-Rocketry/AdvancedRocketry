@@ -1,23 +1,17 @@
 package zmaster587.advancedRocketry.tile;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Stack;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import zmaster587.advancedRocketry.Inventory.TextureResources;
 import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleLiquidIndicator;
 import zmaster587.advancedRocketry.Inventory.modules.ModulePower;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleToggleSwitch;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AtmosphereHandler;
@@ -117,21 +111,21 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		if(!worldObj.isRemote) {
 
 			if(isSealed && !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)) {
-				AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).getBlobFromHandler(this).clearBlob();
+				AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).clearBlob(this);
 
 				deactivateAdjblocks();
 
 				isSealed = false;
 			}
 			else if(!isSealed && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)) {
-				AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).getBlobFromHandler(this).addBlock(new BlockPosition(this.xCoord, this.yCoord, this.zCoord));
+				AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).addBlock(this, new BlockPosition(this.xCoord, this.yCoord, this.zCoord));
 				isSealed = true;
 
 				onAdjacentBlockUpdated();
 			}
 
 			if(isSealed) {
-				int amtToDrain = (int) (AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).getBlobFromHandler(this).getBlobSize()*getGasUsageMultiplier());
+				int amtToDrain = (int) (AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).getBlobSize(this)*getGasUsageMultiplier());
 				FluidStack drainedFluid = this.drain(ForgeDirection.UNKNOWN, amtToDrain, false);
 
 				if( (drainedFluid != null && drainedFluid.amount >= amtToDrain) || amtToDrain == 0) {
@@ -141,11 +135,11 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 						onAdjacentBlockUpdated();
 
-						AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).getBlobFromHandler(this).setData(AtmosphereType.AIR);
+						AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).setAtmosphereType(this, AtmosphereType.AIR);
 					}
 				}
 				else if(hasFluid){
-					AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).getBlobFromHandler(this).setData(DimensionManager.getInstance().getDimensionProperties(this.worldObj.provider.dimensionId).getAtmosphere());
+					AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).setAtmosphereType(this, DimensionManager.getInstance().getDimensionProperties(this.worldObj.provider.dimensionId).getAtmosphere());
 
 					deactivateAdjblocks();
 
@@ -162,8 +156,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	@Override
 	public void notEnoughEnergyForFunction() {
 		if(isSealed && !worldObj.isRemote) {
-			AreaBlob blob = AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).getBlobFromHandler(this);
-			blob.clearBlob();
+			AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).clearBlob(this);
 
 			deactivateAdjblocks();
 
@@ -203,7 +196,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		modules.add(new ModulePower(18, 20, this));
 		modules.add(new ModuleLiquidIndicator(32, 20, this));
 		//modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this, TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
-
+		//TODO add itemStack slots for liqiuid
 		return modules;
 	}
 

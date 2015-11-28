@@ -61,4 +61,5 @@ public class AdvancedRocketryBlocks {
 	public static Block test;
 	public static Block blockOxygenVent;
 	public static Block blockOxygenScrubber;
+	public static Block blockOxygenCharger;
 }

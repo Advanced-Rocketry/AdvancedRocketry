@@ -52,21 +52,21 @@ public class SpaceObjectManager {
 	 */
 	public SpaceObject getSpaceStationFromBlockCoords(int x, int z) {
 
-		int radius = Math.max(Math.abs((x/2)/Configuration.stationSize), Math.abs((z/2)/Configuration.stationSize));
+		int radius = Math.max((int)Math.ceil(Math.abs((x/2)/(float)Configuration.stationSize)), (int)Math.ceil(Math.abs((z/2)/(float)Configuration.stationSize)));
 
 		int index;
 
 		if(Math.abs(x) <= Math.abs(z)) {
 			if(z < 0)
-				index = (int)Math.pow(2*radius-1,2) + radius + x;
+				index = (int)Math.pow(2*radius-1,2) + radius +(x/Configuration.stationSize);
 			else
-				index = (int)Math.pow(2*radius-1,2) + radius + x + (radius*2 + 1);
+				index = (int)Math.pow(2*radius-1,2) + radius + (x/Configuration.stationSize) + (radius*2 + 1);
 		}
 		else {
 			if(x < 0)
-				index = (int)Math.pow(2*radius-1,2) + radius - 1 + (radius*2 + 1)*2 + z;
+				index = (int)Math.pow(2*radius-1,2) + radius - 1 + (radius*2 + 1)*2 + (z/Configuration.stationSize);
 			else
-				index = (int)Math.pow(2*radius-1,2) + (3*radius) - 2 + (radius*2 + 1)*2 + z;
+				index = (int)Math.pow(2*radius-1,2) + (3*radius) - 2 + (radius*2 + 1)*2 + (z/Configuration.stationSize);
 		}
 
 		return getSpaceStation(index);

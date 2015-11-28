@@ -11,6 +11,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
@@ -23,10 +24,12 @@ import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.Inventory.TextureResources;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
+import zmaster587.advancedRocketry.api.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
 import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.entity.EntityRocket;
@@ -48,7 +51,7 @@ public class RocketEventHandler extends Gui {
 	private static boolean mapReady = false;
 	private static boolean mapNeedsBinding = false;
 	private static IntBuffer table,outerBoundsTable;
-	
+
 
 	@SubscribeEvent
 	public void onRocketDeorbit(RocketEvent.RocketDeOrbitingEvent event) {
@@ -60,7 +63,7 @@ public class RocketEventHandler extends Gui {
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onRocketLaunch(RocketLaunchEvent event) {
 		if(event.world.isRemote) {
@@ -68,18 +71,18 @@ public class RocketEventHandler extends Gui {
 			event.world.provider.setSkyRenderer(new RenderPlanetarySky());
 		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public static void destroyOrbitalTextures(World world) {
-			if(!(world.provider instanceof IPlanetaryProvider))
-				world.provider.setSkyRenderer(null);
-			if(earth != null)
-				GL11.glDeleteTextures(earth.getTextureId());
-			if(outerBounds != null)
-				GL11.glDeleteTextures(outerBounds.getTextureId());
-			outerBounds = null;
-			earth = null;
-			mapReady = false;
+		if(!(world.provider instanceof IPlanetaryProvider))
+			world.provider.setSkyRenderer(null);
+		if(earth != null)
+			GL11.glDeleteTextures(earth.getTextureId());
+		if(outerBounds != null)
+			GL11.glDeleteTextures(outerBounds.getTextureId());
+		outerBounds = null;
+		earth = null;
+		mapReady = false;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -91,14 +94,14 @@ public class RocketEventHandler extends Gui {
 			earth = new ClientDynamicTexture(getImgSize,getImgSize);
 			outerBounds = new ClientDynamicTexture(outerImgSize, outerImgSize);
 		}
-		
+
 		if(event.world.provider.dimensionId == Configuration.spaceDimId) {
 			destroyOrbitalTextures(event.world);
 			return;
 		}
-		
+
 		//Multi thread texture creation b/c it can be expensive
-		
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -112,7 +115,7 @@ public class RocketEventHandler extends Gui {
 				total = topEdge = bottomEdge = leftEdge = rightEdge = new long[] {0,0,0};
 
 				int numChunksLoaded = 0;
-				
+
 				for(int i = 0; i < getImgSize*getImgSize; i++) {
 					//TODO: Optimize
 					int xOffset = (i % getImgSize);
@@ -128,7 +131,7 @@ public class RocketEventHandler extends Gui {
 						int heightValue = chunk.getHeightValue( xPosition + (chunk.xPosition >= 0 ? - (Math.abs( chunk.xPosition )<< 4) : (Math.abs( chunk.xPosition )<< 4)), zPosition + (chunk.zPosition >= 0 ? - (Math.abs(chunk.zPosition )<< 4) : (Math.abs(chunk.zPosition )<< 4)));
 						MapColor color = MapColor.airColor;
 						int yPosition;
-						
+
 						Block block = null;
 
 						//Get the first non-air block
@@ -138,9 +141,9 @@ public class RocketEventHandler extends Gui {
 								break;
 							}
 						}
-						
+
 						int intColor;
-						
+
 						if(block == Blocks.grass || block == Blocks.tallgrass) {
 							int color2 = event.world.getBiomeGenForCoords(xPosition, zPosition).getBiomeGrassColor(xPosition, yPosition, zPosition);
 							int r = (color2 & 0xFF);
@@ -164,8 +167,8 @@ public class RocketEventHandler extends Gui {
 						//Background in case chunk doesnt load
 						total[0] += intColor & 0xFF;
 						total[1] += (intColor & 0xFF00) >>> 8;
-						total[2] += (intColor & 0xFF0000) >>> 16;
-						
+							total[2] += (intColor & 0xFF0000) >>> 16;
+
 					}
 				}
 
@@ -180,12 +183,12 @@ public class RocketEventHandler extends Gui {
 				int randomMax = 0x2A;
 
 				for(int i = 0; i < outerImgSize*outerImgSize; i++) {
-					
+
 					int randR =   randomMax - random.nextInt(randomMax) / 2;
 					int randG = ( randomMax - random.nextInt(randomMax)/2 ) << 8;
 					int randB = ( randomMax - random.nextInt(randomMax) /2 ) << 16;
 
-					
+
 					int color = (int)( MathHelper.clamp_int((int) ( (total[0] & 0xFF) + randR ),0, 0xFF ) |
 							MathHelper.clamp_int((int)(total[0] & 0xFF00) + randG, 0x0100, 0xFF00)  | 
 							MathHelper.clamp_int( (int)(( total[0] & 0xFF0000) + randB), 0x010000, 0xFF0000) );
@@ -200,14 +203,14 @@ public class RocketEventHandler extends Gui {
 			}
 		}, "Planet Texture Creator").start();
 	}
-	
-	
+
+
 	//@SubscribeEvent
 	public static void onPostWorldRender(float partialTicks) {
 
 		if(!mapReady )
 			return;
-		
+
 
 		if(mapNeedsBinding) {
 			mapNeedsBinding = false;
@@ -245,11 +248,11 @@ public class RocketEventHandler extends Gui {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, earth.getTextureId());
 
 		float opacityFromHeight = MathHelper.clamp_float(((float)Minecraft.getMinecraft().renderViewEntity.posY -200f)/100f, 0f, 1f);
-		
+
 		//Detailed Land
 		tess.setColorRGBA_F(brightness, brightness, brightness, opacityFromHeight);
 		RenderHelper.renderTopFaceWithUV(tess, -10 , size, size, -size,  -size, 0f, 1f, 0f, 1f);
-		
+
 		tess.draw();
 
 		//AtmosphereGlow
@@ -277,32 +280,54 @@ public class RocketEventHandler extends Gui {
 		GL11.glPopAttrib();
 		GL11.glPopMatrix();
 	}
-	
+
 	@SubscribeEvent
 	public void onScreenRender(RenderGameOverlayEvent event) {
 		Entity ride;
-		if(event.type == ElementType.HOTBAR && (ride = Minecraft.getMinecraft().thePlayer.ridingEntity) instanceof EntityRocket) {
-			EntityRocket rocket = (EntityRocket)ride;
+		if(event.type == ElementType.HOTBAR) {
+			if((ride = Minecraft.getMinecraft().thePlayer.ridingEntity) instanceof EntityRocket) {
+				EntityRocket rocket = (EntityRocket)ride;
 
-			GL11.glEnable(GL11.GL_BLEND);
-			//GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+				GL11.glEnable(GL11.GL_BLEND);
+				//GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
-			Minecraft.getMinecraft().renderEngine.bindTexture(background);
+				Minecraft.getMinecraft().renderEngine.bindTexture(background);
 
-			this.drawTexturedModalRect(0, 0, 0, 0, 17, 252);
+				//Draw BG
+				this.drawTexturedModalRect(0, 0, 0, 0, 17, 252);
 
-			//Draw altitude indicator
-			float percentOrbit = MathHelper.clamp_float((float) ((rocket.posY - rocket.worldObj.provider.getAverageGroundLevel())/(float)(Configuration.orbit-rocket.worldObj.provider.getAverageGroundLevel())), 0f, 1f);
-			this.drawTexturedModalRect(3, 8 + (int)(79*(1 - percentOrbit)), 17, 0, 6, 6); //6 to 83
+				//Draw altitude indicator
+				float percentOrbit = MathHelper.clamp_float((float) ((rocket.posY - rocket.worldObj.provider.getAverageGroundLevel())/(float)(Configuration.orbit-rocket.worldObj.provider.getAverageGroundLevel())), 0f, 1f);
+				this.drawTexturedModalRect(3, 8 + (int)(79*(1 - percentOrbit)), 17, 0, 6, 6); //6 to 83
 
-			//Draw Velocity indicator
-			this.drawTexturedModalRect(3, 94 + (int)(69*(0.5 - (MathHelper.clamp_float((float) (rocket.motionY), -1f, 1f)/2f))), 17, 0, 6, 6); //94 to 161
+				//Draw Velocity indicator
+				this.drawTexturedModalRect(3, 94 + (int)(69*(0.5 - (MathHelper.clamp_float((float) (rocket.motionY), -1f, 1f)/2f))), 17, 0, 6, 6); //94 to 161
 
-			//Draw fuel indicator
-			int size = (int)(68*(rocket.getFuelAmount() /(float)rocket.getFuelCapacity()));
-			this.drawTexturedModalRect(3, 242 - size, 17, 75 - size, 3, size); //94 to 161
+				//Draw fuel indicator
+				int size = (int)(68*(rocket.getFuelAmount() /(float)rocket.getFuelCapacity()));
+				this.drawTexturedModalRect(3, 242 - size, 17, 75 - size, 3, size); //94 to 161
 
-			GL11.glDisable(GL11.GL_BLEND);
+				GL11.glDisable(GL11.GL_BLEND);
+			}
+			
+			ItemStack chestPiece = Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(3);
+			if(!Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode && chestPiece != null && chestPiece.getItem() == AdvancedRocketryItems.itemSpaceSuit_Chest) {
+				float size = ((ItemSpaceArmor)chestPiece.getItem()).getAirRemaining(chestPiece)/(float)ItemSpaceArmor.getMaxAir();
+			
+				GL11.glEnable(GL11.GL_BLEND);
+
+				Minecraft.getMinecraft().renderEngine.bindTexture(background);
+				
+				int width = 83;
+				int screenX = event.resolution.getScaledWidth()/2 + 8;
+				int screenY = event.resolution.getScaledHeight() - 57;
+				
+				//Draw BG
+				this.drawTexturedModalRect(screenX, screenY, 23, 0, width, 17);
+				
+				this.drawTexturedModalRect(screenX , screenY, 23, 17, (int)(width*size), 17);
+				
+			}
 		}
 	}
 }

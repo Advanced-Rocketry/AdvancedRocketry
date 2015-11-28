@@ -53,6 +53,10 @@ tile.chemreactor.name=Chemical Reactor
 tile.scrubber.name=CO2 Scrubber
 tile.oxygenVent.name=Oxygen Vent
 tile.liquidHatch.name=Fluid Hatch
+tile.rocketFuelBlock.name=Rocket Fuel
+tile.hydrogenFluidBlock.name=Hydrogen
+tile.oxygenFluidBlock.name=Oxygen
+tile.OxygenCharger.name=Oxygen Charge Pad
 
 tile.Dilithium.name=Dilithium Ore
 tile.Copper.name=Copper Ore
@@ -87,6 +91,11 @@ item.miscpart.1.name=Carbon Brick
 item.holoProjector.name=Holo-Projector
 item.station.name=Space Station Container
 item.stationChip.name=Space Station Id Chip
+item.spaceHelmet.name=Space Helmet
+item.spaceLeggings.name=Space Suit Legging
+item.spaceChest.name=Space Suit Chest-Piece
+item.spaceBoots.name=Space Boots
+item.bucketRocketFuel.name=Bucket of Rocket Fuel
 
 material.Gold.name=Gold
 material.Iron.name=Iron

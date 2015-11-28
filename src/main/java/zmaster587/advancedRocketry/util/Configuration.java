@@ -12,6 +12,7 @@ public class Configuration {
 	
 	public static int maxBiomes = 512;
 	public static boolean rocketRequireFuel = true;
+	public static boolean enableOxygen = true;
 	public static float buildSpeedMultiplier = 1f;
 	
 	public static boolean generateCopper;

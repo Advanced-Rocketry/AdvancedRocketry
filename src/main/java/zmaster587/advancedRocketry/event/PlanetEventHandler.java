@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import zmaster587.advancedRocketry.api.AtmosphereHandler;
@@ -36,7 +37,7 @@ public class PlanetEventHandler {
 	//Handle gravity
 	@SubscribeEvent
 	public void playerTick(LivingUpdateEvent event) {
-		
+
 		if(event.entity.worldObj.isRemote && event.entity.posY > 260 && event.entity.posY < 270 && event.entity.motionY < -.1) {
 			RocketEventHandler.destroyOrbitalTextures(event.entity.worldObj);
 		}
@@ -52,7 +53,7 @@ public class PlanetEventHandler {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void disconnected(ClientDisconnectionFromServerEvent event) {
 		zmaster587.advancedRocketry.world.DimensionManager.getInstance().unregisterAllDimensions();
@@ -114,12 +115,12 @@ public class PlanetEventHandler {
 	//Make sure the player receives data about the dimensions
 	@SubscribeEvent
 	public void playerLoggedInEvent(FMLNetworkEvent.ServerConnectionFromClientEvent event) {
-		
+
 		//Make sure stars are sent first
 		for(int i : DimensionManager.getInstance().getStars()) {
 			PacketHandler.sendToDispatcher(new PacketStellarInfo(i, DimensionManager.getInstance().getStar(i)), event.manager);
 		}
-		
+
 		for(int i : DimensionManager.getInstance().getregisteredDimensions()) {
 			PacketHandler.sendToDispatcher(new PacketDimInfo(i, DimensionManager.getInstance().getDimensionProperties(i)), event.manager);
 		}
@@ -168,14 +169,16 @@ public class PlanetEventHandler {
 
 	@SubscribeEvent
 	public void worldLoadEvent(WorldEvent.Load event) {
-		AtmosphereHandler.registerWorld(event.world.provider.dimensionId);
+		if(!event.world.isRemote)
+			AtmosphereHandler.registerWorld(event.world.provider.dimensionId);
 	}
-	
+
 	@SubscribeEvent
 	public void worldUnloadEvent(WorldEvent.Unload event) {
-		AtmosphereHandler.unregisterWorld(event.world.provider.dimensionId);
+		if(!event.world.isRemote)
+			AtmosphereHandler.unregisterWorld(event.world.provider.dimensionId);
 	}
-	
+
 	//Handle fog density and color
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
@@ -190,7 +193,7 @@ public class PlanetEventHandler {
 
 		}
 	}
-	
+
 	//Saves NBT data
 	@SubscribeEvent
 	public void worldSaveEvent(WorldEvent.Save event) {

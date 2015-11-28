@@ -1,25 +1,23 @@
 package zmaster587.advancedRocketry.api;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Stack;
-
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.ChunkPosition;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import zmaster587.advancedRocketry.api.util.AreaBlob;
 import zmaster587.advancedRocketry.api.util.AtmosphereBlob;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
-import zmaster587.advancedRocketry.event.BlockBreakEvent;
+import zmaster587.advancedRocketry.util.Configuration;
 import zmaster587.advancedRocketry.world.DimensionManager;
 import zmaster587.libVulpes.util.BlockPosition;
 
@@ -30,25 +28,37 @@ public class AtmosphereHandler {
 	private HashMap<IBlobHandler,AreaBlob> blobs;
 	int dimId;
 
+	/**
+	 * Registers the Atmosphere handler for the dimension given
+	 * @param dimId the dimension id to register the dimension for
+	 */
 	public static void registerWorld(int dimId) {
 		dimensionOxygen.put(dimId, new AtmosphereHandler(dimId));
-		MinecraftForge.EVENT_BUS.register(dimensionOxygen.get(dimId));
+		if(Configuration.enableOxygen) {
+			MinecraftForge.EVENT_BUS.register(dimensionOxygen.get(dimId));
+			FMLCommonHandler.instance().bus().register(dimensionOxygen.get(dimId));
+		}
 	}
 
+	/**
+	 * Unregisters the Atmosphere handler for the dimension given
+	 * @param dimId the dimension id to register the dimension for
+	 */
 	public static void unregisterWorld(int dimId) {
 		AtmosphereHandler handler = dimensionOxygen.remove(dimId);
-		if(handler != null)
+		if(Configuration.enableOxygen && handler != null) {
 			MinecraftForge.EVENT_BUS.unregister(handler);
+			FMLCommonHandler.instance().bus().unregister(handler);
+		}
 	}
 
-	public AtmosphereHandler(int dimId) {
+	private AtmosphereHandler(int dimId) {
 		this.dimId = dimId;
 		blobs = new HashMap<IBlobHandler,AreaBlob>();
 	}
 
 	@SubscribeEvent
 	public void onBlockPlace(BlockEvent.PlaceEvent event) {
-
 		BlockPosition pos = new BlockPosition(event.x, event.y, event.z);
 
 		for(AreaBlob blob : blobs.values()) {
@@ -69,6 +79,16 @@ public class AtmosphereHandler {
 		}
 	}
 
+	@SubscribeEvent
+	public void onTick(TickEvent.PlayerTickEvent event) {
+		if(event.side.isServer() && event.player.dimension == this.dimId) {
+			AtmosphereType atmosType = getAtmosphereType(event.player);
+
+			if(atmosType.canTick())
+				atmosType.onTick((EntityLivingBase)event.player);
+		}
+	}
+
 	private void onBlockRemove(BlockPosition pos) {
 		for(AreaBlob blob : getBlobWithinRadius(pos, MAX_BLOB_RADIUS)) {
 			//Make sure that a block can actually be attached to the blob
@@ -86,11 +106,13 @@ public class AtmosphereHandler {
 		onBlockRemove(pos);
 	}
 
-	public AreaBlob getBlobFromHandler(IBlobHandler handler) {
-		return blobs.get(handler);
-	}
-
-	public List<AreaBlob> getBlobWithinRadius(BlockPosition pos, int radius) {
+	/**
+	 * Gets a list of AreaBlobs within a radius
+	 * @param pos position
+	 * @param radius distance from the position to find blobs within
+	 * @return List of AreaBlobs within the radius from the position
+	 */
+	protected List<AreaBlob> getBlobWithinRadius(BlockPosition pos, int radius) {
 		LinkedList<AreaBlob> list = new LinkedList<AreaBlob>();
 		for(AreaBlob blob : blobs.values()) {
 			if(blob.getRootPosition().getDistance(pos) - radius <= 0) {
@@ -98,16 +120,6 @@ public class AtmosphereHandler {
 			}
 		}
 		return list;
-	}
-
-	private AreaBlob getBlobAtPosition(BlockPosition pos) {
-
-		for(AreaBlob blob : blobs.values()) {
-			if(blob.contains(pos)) {
-				return blob;
-			}
-		}
-		return null;
 	}
 
 	/**
@@ -133,7 +145,6 @@ public class AtmosphereHandler {
 			blobs.put(handler, blob);
 			blob.setData(AtmosphereType.AIR);
 		}
-
 	}
 
 	/**
@@ -145,6 +156,14 @@ public class AtmosphereHandler {
 	}
 
 	/**
+	 * Removes all blocks from the blob associated with this handler
+	 * @param handler the handler associated with this blob
+	 */
+	public void clearBlob(IBlobHandler handler) {
+		blobs.get(handler).clearBlob();
+	}
+	
+	/**
 	 * Adds a block to the blob
 	 * @param handler
 	 * @param x
@@ -152,12 +171,19 @@ public class AtmosphereHandler {
 	 * @param z
 	 */
 	public void addBlock(IBlobHandler handler, int x, int y, int z){
+		addBlock(handler, new BlockPosition(x, y, z));
+	}
+	
+	/**
+	 * Adds a block to the blob
+	 * @param handler
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	public void addBlock(IBlobHandler handler, BlockPosition pos){
 		AreaBlob blob = blobs.get(handler);
-		if(blob == null) {
-			blob = new AreaBlob(handler);
-			blobs.put(handler, blob);
-		}
-		blob.addBlock(x, y, z);
+		blob.addBlock(pos);
 	}
 
 	/**
@@ -167,24 +193,38 @@ public class AtmosphereHandler {
 	 * @return AtmosphereType at this location
 	 */
 	public AtmosphereType getAtmosphereType(int x, int y, int z) {
-		BlockPosition pos = new BlockPosition(x,y,z);
-		for(AreaBlob blob : blobs.values()) {
-			if(blob.contains(pos)) {
-				return (AtmosphereType)blob.getData();
+		if(Configuration.enableOxygen) {
+			BlockPosition pos = new BlockPosition(x,y,z);
+			for(AreaBlob blob : blobs.values()) {
+				if(blob.contains(pos)) {
+					return (AtmosphereType)blob.getData();
+				}
 			}
+
+
+			return DimensionManager.getInstance().getDimensionProperties(dimId).getAtmosphere();
 		}
-		return DimensionManager.getInstance().getDimensionProperties(dimId).getAtmosphere();
+
+		return AtmosphereType.AIR;
 	}
 
+	/**
+	 * Gets the atmosphere type at the location of this entity
+	 * @param entity the entity to check against
+	 * @return The atmosphere type this entity is inside of
+	 */
 	public AtmosphereType getAtmosphereType(Entity entity) {
-		BlockPosition pos = new BlockPosition((int)(entity.posX - 1), (int)Math.ceil(entity.posY), (int)(entity.posZ - 1));
-
-		for(AreaBlob blob : blobs.values()) {
-			if(blob.contains(pos)) {
-				return (AtmosphereType)blob.getData();
+		if(Configuration.enableOxygen) {
+			BlockPosition pos = new BlockPosition((int)(entity.posX - 1), (int)Math.ceil(entity.posY), (int)(entity.posZ - 1));
+			for(AreaBlob blob : blobs.values()) {
+				if(blob.contains(pos)) {
+					return (AtmosphereType)blob.getData();
+				}
 			}
+
+			return DimensionManager.getInstance().getDimensionProperties(dimId).getAtmosphere();
 		}
-		return DimensionManager.getInstance().getDimensionProperties(dimId).getAtmosphere();
+		return AtmosphereType.AIR;
 	}
 
 	/**
@@ -192,12 +232,41 @@ public class AtmosphereHandler {
 	 * @return true if the entity can breathe in the this atmosphere
 	 */
 	public boolean canEntityBreathe(EntityLiving entity) {
-		BlockPosition pos = new BlockPosition((int)Math.ceil(entity.posX), (int)Math.ceil(entity.posY), (int)Math.ceil(entity.posZ));
-		for(AreaBlob blob : blobs.values()) {
-			if(blob.contains(pos) && ((AtmosphereType)blob.getData()).isBreathable()) {
-				return true;
+		if(Configuration.enableOxygen) {
+			BlockPosition pos = new BlockPosition((int)Math.ceil(entity.posX), (int)Math.ceil(entity.posY), (int)Math.ceil(entity.posZ));
+			for(AreaBlob blob : blobs.values()) {
+				if(blob.contains(pos) && ((AtmosphereType)blob.getData()).isBreathable()) {
+					return true;
+				}
 			}
+			return DimensionManager.getInstance().getDimensionProperties(dimId).getAtmosphere().isBreathable();
 		}
-		return DimensionManager.getInstance().getDimensionProperties(dimId).getAtmosphere().isBreathable();
+
+		return true;
+	}
+
+	/**
+	 * @param handler the handler registered to this blob
+	 * @return The current size of the blob
+	 */
+	public int getBlobSize(IBlobHandler handler) {
+		return blobs.get(handler).getBlobSize();
+	}
+	
+	/**
+	 * Changes the atmosphere type of this blob
+	 * @param handler the handler for the blob
+	 * @param data the AtmosphereType to set this blob to.
+	 */
+	public void setAtmosphereType(IBlobHandler handler, AtmosphereType data) {
+		blobs.get(handler).setData(data);
+	}
+	
+	/**
+	 * Gets the atmosphere type of this blob
+	 * @param handler the handler for the blob
+	 */
+	public AtmosphereType getAtmosphereType(IBlobHandler handler) {
+		return (AtmosphereType)blobs.get(handler).getData();
 	}
 }

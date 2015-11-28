@@ -19,7 +19,7 @@ import zmaster587.libVulpes.interfaces.IRecipe;
 
 public class TileElectrolyser extends TileMultiblockMachine {
 	public static final Object[][][] structure = { 
-		{{Blocks.air, Blocks.air,Blocks.air},
+		{{null,null,null},
 		{'P', new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock),'P'}},
 		
 		{{'l', 'c', 'l'}, 

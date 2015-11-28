@@ -1,6 +1,10 @@
 package zmaster587.advancedRocketry.api;
 
-import net.minecraft.entity.EntityLiving;
+import zmaster587.advancedRocketry.api.armor.ItemSpaceArmor;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 
 public class AtmosphereType {
@@ -30,8 +34,19 @@ public class AtmosphereType {
 		return !isBreathable() || canTick;
 	}
 
-	public boolean isImmune(EntityLiving entity) {
-		return false;
+	public boolean isImmune(EntityLivingBase player) {
+		
+		ItemStack helm = player.getEquipmentInSlot(1);
+		ItemStack shirt = player.getEquipmentInSlot(2);
+		ItemStack leg = player.getEquipmentInSlot(3);
+		ItemStack feet = player.getEquipmentInSlot(4);
+		
+		return (player instanceof EntityPlayer && ((EntityPlayer)player).capabilities.isCreativeMode) ||
+				helm != null && helm.getItem() instanceof ItemArmor && ((ItemArmor)helm.getItem()).getArmorMaterial() == AdvancedRocketryItems.spaceSuit &&
+				shirt != null && shirt.getItem() instanceof ItemArmor && ((ItemArmor)shirt.getItem()).getArmorMaterial() == AdvancedRocketryItems.spaceSuit &&
+				leg != null && leg.getItem() instanceof ItemArmor && ((ItemArmor)leg.getItem()).getArmorMaterial() == AdvancedRocketryItems.spaceSuit &&
+				feet != null && feet.getItem() instanceof ItemArmor && ((ItemArmor)feet.getItem()).getArmorMaterial() == AdvancedRocketryItems.spaceSuit &&
+				((ItemSpaceArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).decrementAir(leg, 1) > 0;
 	}
 	
 	public boolean allowsCombustion() {
@@ -46,10 +61,10 @@ public class AtmosphereType {
 		this.allowsCombustion = allowsCombustion;
 	}
 
-	public void onTick(EntityLiving entity) {
-		if(!isImmune(entity)) {
+	public void onTick(EntityLivingBase player) {
+		if(player.worldObj.getTotalWorldTime() % 10  == 0 && !isImmune(player)) {
 			if(!isBreathable()) {
-				entity.attackEntityFrom(DamageSource.inWall, 1);
+				player.attackEntityFrom(DamageSource.inWall, 1);
 			}
 		}
 	}

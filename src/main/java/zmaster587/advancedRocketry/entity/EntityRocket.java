@@ -295,8 +295,11 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 				if(!player.capabilities.isCreativeMode) {
 					ItemStack emptyStack = FluidContainerRegistry.drainFluidContainer(player.getHeldItem());
 
-					if(player.inventory.addItemStackToInventory(emptyStack))
+					if(player.inventory.addItemStackToInventory(emptyStack)) {
 						player.getHeldItem().splitStack(1);
+						if(player.getHeldItem().stackSize == 0)
+							player.inventory.setInventorySlotContents(player.inventory.currentItem, null); 
+					}
 				}
 
 				return true;
