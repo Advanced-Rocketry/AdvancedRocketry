@@ -49,7 +49,6 @@ public class AdvancedRocketryBlocks {
 	public static List<Block> blockMetal = new ArrayList<Block>();
 	public static Block blockRollingMachine;
 	public static Block blockPhantom;
-	public static Block blockControllerDummy;
 	public static Block blockPlatePress;
 	public static List<Block> blockCoil = new ArrayList<Block>();
 	public static Block blockStationBuilder;
