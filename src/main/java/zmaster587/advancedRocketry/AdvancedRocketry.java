@@ -48,6 +48,7 @@ import zmaster587.advancedRocketry.api.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.block.BlockActiveState;
 import zmaster587.advancedRocketry.block.BlockAlphaTexture;
+import zmaster587.advancedRocketry.block.BlockDoor2;
 import zmaster587.advancedRocketry.block.BlockFluid;
 import zmaster587.advancedRocketry.block.BlockGeneric;
 import zmaster587.advancedRocketry.block.BlockLaser;
@@ -81,6 +82,7 @@ import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.integration.CompatibilityMgr;
 import zmaster587.advancedRocketry.item.ItemBlockMeta;
 import zmaster587.advancedRocketry.item.ItemData;
+import zmaster587.advancedRocketry.item.ItemDoor2;
 import zmaster587.advancedRocketry.item.ItemFluid;
 import zmaster587.advancedRocketry.item.ItemIngredient;
 import zmaster587.advancedRocketry.item.ItemOreScanner;
@@ -241,6 +243,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockPhantom = new BlockPhantom(Material.circuits).setBlockName("blockPhantom");
 		AdvancedRocketryBlocks.blockPlatePress = new BlockPress().setBlockName("blockHandPress").setCreativeTab(tabAdvRocketry).setHardness(2f);
 		AdvancedRocketryBlocks.blockOxygenScrubber = new BlockActiveState(Material.rock).setBlockActiveIcon("advancedrocketry:machineScrubberActive").setBlockTextureName("advancedrocketry:machineScrubber").setCreativeTab(tabAdvRocketry).setBlockName("scrubber").setHardness(3f);
+		AdvancedRocketryBlocks.blockAirLock = new BlockDoor2(Material.rock).setBlockName("smallAirlockDoor").setBlockTextureName("advancedRocketry:smallAirlockDoor").setHardness(3f).setResistance(8f);
 		
 		AdvancedRocketryBlocks.blockOxygenCharger = new BlockTile(TileOxygenCharger.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("oxygenCharger").setCreativeTab(tabAdvRocketry).setBlockTextureName("Advancedrocketry:machineGeneric").setHardness(3f);
 		((BlockTile) AdvancedRocketryBlocks.blockOxygenCharger).setSideTexture("advancedrocketry:machineGeneric");
@@ -418,6 +421,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockOxygenScrubber, AdvancedRocketryBlocks.blockOxygenScrubber.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockOxygenVent, AdvancedRocketryBlocks.blockOxygenVent.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockOxygenCharger, AdvancedRocketryBlocks.blockOxygenCharger.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockAirLock, AdvancedRocketryBlocks.blockAirLock.getUnlocalizedName());
 		
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockOxygenFluid,ItemFluid.class, AdvancedRocketryBlocks.blockOxygenFluid.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockHydrogenFluid,ItemFluid.class, AdvancedRocketryBlocks.blockHydrogenFluid.getUnlocalizedName());
@@ -435,7 +439,8 @@ public class AdvancedRocketry {
 		AdvancedRocketryItems.itemSawBlade = new ItemIngredient(1).setUnlocalizedName("sawBlade").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemSpaceStationChip = new ItemStationChip().setUnlocalizedName("stationChip").setTextureName("advancedRocketry:stationIdChip").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemSpaceStation = new ItemPackedStructure().setUnlocalizedName("station").setTextureName("advancedRocketry:SpaceStation");
-
+		AdvancedRocketryItems.itemSmallAirlockDoor = new ItemDoor2(Material.rock).setUnlocalizedName("smallAirlock").setTextureName("advancedRocketry:smallAirlock").setCreativeTab(tabAdvRocketry);
+		
 		AdvancedRocketryItems.itemSatellitePowerSource = new ItemIngredient(1).setUnlocalizedName("satellitePowerSource").setCreativeTab(tabAdvRocketry);
 		SatelliteRegistry.registerSatelliteProperty(new ItemStack(AdvancedRocketryItems.itemSatellitePowerSource,1,0), new SatelliteProperties().setPowerGeneration(10));
 
@@ -493,6 +498,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerItem(AdvancedRocketryItems.itemSpaceSuit_Chest, AdvancedRocketryItems.itemSpaceSuit_Chest.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemSpaceSuit_Leggings, AdvancedRocketryItems.itemSpaceSuit_Leggings.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemBucketRocketFuel, AdvancedRocketryItems.itemBucketRocketFuel.getUnlocalizedName());
+		GameRegistry.registerItem(AdvancedRocketryItems.itemSmallAirlockDoor, AdvancedRocketryItems.itemSmallAirlockDoor.getUnlocalizedName());
 		
 		//Register multiblock items with the projector
 		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileCuttingMachine(), (BlockTile)AdvancedRocketryBlocks.blockCuttingMachine);

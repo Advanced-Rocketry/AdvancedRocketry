@@ -15,6 +15,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class ModContainer extends DummyModContainer {
 	
+	//ModContainer Class adapted from SackCastellon
 	public ModContainer()
 	{		
 		super(new ModMetadata());
@@ -23,13 +24,13 @@ public class ModContainer extends DummyModContainer {
 		
 		ModMetadata meta = getMetadata();
 		
-		meta.modId = "CoreMod";
-		meta.name = "Core Mod";
+		meta.modId = "AdvancedRocketry";
+		meta.name = "Advanced Rocketry";
 		meta.version = "1";
-		meta.credits = "Created by SackCastellon";
-		meta.authorList = Arrays.asList("SackCastellon");
-		meta.description = "An API that contain some common classes for all my mods";
-		meta.url = "http://www.minecraftforum.net/topic/1909056-/#core";
+		meta.credits = "Created by Zmaster587";
+		meta.authorList = Arrays.asList("Zmaster587");
+		meta.description = "";
+		meta.url = "";
 		meta.updateUrl = "";
 		meta.screenshots = new String[0];
 		meta.logoFile = "";

@@ -36,6 +36,6 @@ public class AdvancedRocketryItems {
 	public static Item itemSpaceSuit_Chest;
 	public static Item itemSpaceSuit_Leggings;
 	public static Item itemSpaceSuit_Boots;
-
 	public static Item itemBucketRocketFuel;
+	public static Item itemSmallAirlockDoor;
 }

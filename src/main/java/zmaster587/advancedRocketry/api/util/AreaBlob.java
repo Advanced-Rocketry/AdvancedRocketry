@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.api.util;
 
 import java.util.HashSet;
 
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.libVulpes.util.BlockPosition;
 
@@ -21,6 +22,10 @@ public class AreaBlob {
 
 	public void setData(Object obj) {
 		data = obj;
+	}
+	
+	public boolean isPositionAllowed(World world, BlockPosition pos) {
+		return true;
 	}
 	
 	public Object getData() {
@@ -106,7 +111,7 @@ public class AreaBlob {
 	}
 
 	/**
-	 * Removed the block at the given coords for this blob
+	 * Removes the block at the given coords for this blob
 	 * @param x
 	 * @param y
 	 * @param z

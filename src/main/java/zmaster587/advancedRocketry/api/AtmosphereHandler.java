@@ -3,23 +3,22 @@ package zmaster587.advancedRocketry.api;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.world.ChunkPosition;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.event.world.ExplosionEvent;
 import zmaster587.advancedRocketry.api.util.AreaBlob;
 import zmaster587.advancedRocketry.api.util.AtmosphereBlob;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.util.Configuration;
 import zmaster587.advancedRocketry.world.DimensionManager;
 import zmaster587.libVulpes.util.BlockPosition;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 
 public class AtmosphereHandler {
 	private static final int MAX_BLOB_RADIUS = 64;
@@ -56,29 +55,6 @@ public class AtmosphereHandler {
 		this.dimId = dimId;
 		blobs = new HashMap<IBlobHandler,AreaBlob>();
 	}
-
-	@SubscribeEvent
-	public void onBlockPlace(BlockEvent.PlaceEvent event) {
-		BlockPosition pos = new BlockPosition(event.x, event.y, event.z);
-
-		for(AreaBlob blob : blobs.values()) {
-			if(blob.contains(pos)) {
-				blob.removeBlock(event.x, event.y, event.z);
-			}
-			else if(!blob.contains(blob.getRootPosition())) {
-				blob.addBlock(blob.getRootPosition());
-			}
-		}
-	}
-
-	@SubscribeEvent
-	public void onExplosion(ExplosionEvent.Detonate event) {
-		for(Object obj : event.explosion.affectedBlockPositions) {
-			ChunkPosition pos = (ChunkPosition)obj;
-			onBlockRemove(new BlockPosition(pos.chunkPosX, pos.chunkPosY, pos.chunkPosZ));
-		}
-	}
-
 	@SubscribeEvent
 	public void onTick(TickEvent.PlayerTickEvent event) {
 		if(event.side.isServer() && event.player.dimension == this.dimId) {
@@ -100,10 +76,50 @@ public class AtmosphereHandler {
 		}
 	}
 
-	@SubscribeEvent
-	public void onBlockRemove(BlockEvent.BreakEvent event) {
-		BlockPosition pos = new BlockPosition(event.x, event.y, event.z);
-		onBlockRemove(pos);
+	//Called from World.setBlockMetaDataWithNotify
+	public static void onBlockMetaChange(World world, int x , int y, int z) {
+		if(Configuration.enableOxygen && !world.isRemote && world.getChunkFromBlockCoords(x, z).isChunkLoaded) {
+			AtmosphereHandler handler = getOxygenHandler(world.provider.dimensionId);
+			BlockPosition pos = new BlockPosition(x, y, z);
+			int meta = world.getBlockMetadata(x, y, z);
+
+			for(AreaBlob blob : handler.getBlobWithinRadius(pos, MAX_BLOB_RADIUS)) {
+				
+				if(blob.contains(pos) && !blob.isPositionAllowed(world, pos))
+					blob.removeBlock(x, y, z);
+				else if(!blob.contains(pos) && blob.isPositionAllowed(world, pos))
+					handler.onBlockRemove(pos);
+				else if(!blob.contains(pos) && !blob.isPositionAllowed(world, pos) && blob.getBlobSize() == 0) {
+					blob.addBlock(blob.getRootPosition());
+				}
+			}
+		}
+	}
+
+	//Called from setBlock in World.class
+	public static void onBlockChange(World world, int x, int y, int z) {
+
+		if(Configuration.enableOxygen && !world.isRemote && world.getChunkFromBlockCoords(x, z).isChunkLoaded) {
+			BlockPosition pos = new BlockPosition(x, y, z);
+
+			AtmosphereHandler handler = getOxygenHandler(world.provider.dimensionId);
+
+			for(AreaBlob blob : handler.getBlobWithinRadius(pos, MAX_BLOB_RADIUS)) {
+
+				if(world.isAirBlock(x, y, z))
+					handler.onBlockRemove(pos);
+				else {
+					//Place block
+					if(blob.contains(pos)) {
+						blob.removeBlock(x, y, z);
+					}
+					else if(!blob.contains(blob.getRootPosition())) {
+						blob.addBlock(blob.getRootPosition());
+					}
+				}
+
+			}
+		}
 	}
 
 	/**
@@ -162,7 +178,7 @@ public class AtmosphereHandler {
 	public void clearBlob(IBlobHandler handler) {
 		blobs.get(handler).clearBlob();
 	}
-	
+
 	/**
 	 * Adds a block to the blob
 	 * @param handler
@@ -173,7 +189,7 @@ public class AtmosphereHandler {
 	public void addBlock(IBlobHandler handler, int x, int y, int z){
 		addBlock(handler, new BlockPosition(x, y, z));
 	}
-	
+
 	/**
 	 * Adds a block to the blob
 	 * @param handler
@@ -252,7 +268,7 @@ public class AtmosphereHandler {
 	public int getBlobSize(IBlobHandler handler) {
 		return blobs.get(handler).getBlobSize();
 	}
-	
+
 	/**
 	 * Changes the atmosphere type of this blob
 	 * @param handler the handler for the blob
@@ -261,7 +277,7 @@ public class AtmosphereHandler {
 	public void setAtmosphereType(IBlobHandler handler, AtmosphereType data) {
 		blobs.get(handler).setData(data);
 	}
-	
+
 	/**
 	 * Gets the atmosphere type of this blob
 	 * @param handler the handler for the blob
