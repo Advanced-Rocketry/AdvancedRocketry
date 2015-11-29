@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import zmaster587.advancedRocketry.api.AtmosphereHandler;
-import zmaster587.advancedRocketry.api.AtmosphereType;
+import zmaster587.advancedRocketry.api.atmosphere.AtmosphereHandler;
+import zmaster587.advancedRocketry.api.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.api.stations.SpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.network.PacketDimInfo;

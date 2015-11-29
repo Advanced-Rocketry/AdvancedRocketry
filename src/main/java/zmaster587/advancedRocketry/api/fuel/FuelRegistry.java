@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.api;
+package zmaster587.advancedRocketry.api.fuel;
 
 import java.util.HashSet;
 import java.util.Iterator;

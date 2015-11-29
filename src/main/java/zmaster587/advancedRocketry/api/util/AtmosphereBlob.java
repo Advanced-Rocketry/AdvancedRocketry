@@ -8,7 +8,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.AtmosphereHandler;
+import zmaster587.advancedRocketry.api.atmosphere.AtmosphereHandler;
 import zmaster587.libVulpes.util.BlockPosition;
 
 public class AtmosphereBlob extends AreaBlob {

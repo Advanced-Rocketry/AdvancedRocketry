@@ -1,7 +1,7 @@
-package zmaster587.advancedRocketry.api;
+package zmaster587.advancedRocketry.api.material;
 
 import net.minecraft.item.ItemStack;
-import zmaster587.advancedRocketry.api.MaterialRegistry.AllowedProducts;
+import zmaster587.advancedRocketry.api.material.MaterialRegistry.AllowedProducts;
 
 
 public class MixedMaterial {

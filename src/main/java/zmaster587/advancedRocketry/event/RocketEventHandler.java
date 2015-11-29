@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockGrass;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
@@ -51,6 +52,8 @@ public class RocketEventHandler extends Gui {
 	private static boolean mapReady = false;
 	private static boolean mapNeedsBinding = false;
 	private static IntBuffer table,outerBoundsTable;
+	public static long lastSuffocationTime;
+	private static final int numTicksToDisplay = 40;
 
 
 	@SubscribeEvent
@@ -310,6 +313,8 @@ public class RocketEventHandler extends Gui {
 				GL11.glDisable(GL11.GL_BLEND);
 			}
 			
+			
+			//Draw the O2 Bar if needed
 			ItemStack chestPiece = Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(3);
 			if(!Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode && chestPiece != null && chestPiece.getItem() == AdvancedRocketryItems.itemSpaceSuit_Chest) {
 				float size = ((ItemSpaceArmor)chestPiece.getItem()).getAirRemaining(chestPiece)/(float)ItemSpaceArmor.getMaxAir();
@@ -327,6 +332,28 @@ public class RocketEventHandler extends Gui {
 				
 				this.drawTexturedModalRect(screenX , screenY, 23, 17, (int)(width*size), 17);
 				
+			}
+			
+			//Tell the player he's suffocating if needed
+			if(Minecraft.getMinecraft().theWorld.getTotalWorldTime() - lastSuffocationTime < numTicksToDisplay) {
+				FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+				String str = "Warning: No Oxygen detected!";
+				int screenX = event.resolution.getScaledWidth()/6 - fontRenderer.getStringWidth(str)/2;
+				int screenY = event.resolution.getScaledHeight()/18;
+				
+				
+				
+				
+				
+				GL11.glPushMatrix();
+				GL11.glScalef(3, 3, 3);
+				
+				fontRenderer.drawStringWithShadow(str, screenX, screenY, 0xFF5656);
+				GL11.glColor3f(1f, 1f, 1f);
+				Minecraft.getMinecraft().getTextureManager().bindTexture(TextureResources.progressBars);
+				this.drawTexturedModalRect(screenX + fontRenderer.getStringWidth(str)/2 -8, screenY - 16, 0, 156, 16, 16);
+				
+				GL11.glPopMatrix();
 			}
 		}
 	}

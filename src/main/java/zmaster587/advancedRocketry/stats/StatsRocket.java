@@ -3,8 +3,8 @@ package zmaster587.advancedRocketry.stats;
 import java.util.ArrayList;
 import java.util.List;
 
-import zmaster587.advancedRocketry.api.FuelRegistry;
-import zmaster587.advancedRocketry.api.FuelRegistry.FuelType;
+import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
+import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.util.Configuration;
 import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.nbt.NBTTagCompound;

@@ -83,7 +83,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.TileOxygenCharger.name";
+		return "tile.oxygenCharger.name";
 	}
 
 	@Override

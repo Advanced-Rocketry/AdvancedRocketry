@@ -1,9 +1,11 @@
-package zmaster587.advancedRocketry.api;
+package zmaster587.advancedRocketry.api.material;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.util.ItemStackMapping;
 import zmaster587.advancedRocketry.tile.multiblock.TileElectricArcFurnace;
 import net.minecraft.block.Block;

@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.tile;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -14,8 +15,8 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleLiquidIndicator;
 import zmaster587.advancedRocketry.Inventory.modules.ModulePower;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
-import zmaster587.advancedRocketry.api.AtmosphereHandler;
-import zmaster587.advancedRocketry.api.AtmosphereType;
+import zmaster587.advancedRocketry.api.atmosphere.AtmosphereHandler;
+import zmaster587.advancedRocketry.api.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.api.util.AreaBlob;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.util.IAdjBlockUpdate;

@@ -2,9 +2,9 @@ package zmaster587.advancedRocketry.block;
 
 import java.util.ArrayList;
 
-import zmaster587.advancedRocketry.api.MaterialRegistry;
-import zmaster587.advancedRocketry.api.MaterialRegistry.AllowedProducts;
-import zmaster587.advancedRocketry.api.MaterialRegistry.Materials;
+import zmaster587.advancedRocketry.api.material.MaterialRegistry;
+import zmaster587.advancedRocketry.api.material.MaterialRegistry.AllowedProducts;
+import zmaster587.advancedRocketry.api.material.MaterialRegistry.Materials;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import net.minecraft.block.Block;

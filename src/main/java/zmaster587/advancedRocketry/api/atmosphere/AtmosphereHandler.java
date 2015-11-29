@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.api;
+package zmaster587.advancedRocketry.api.atmosphere;
 
 import java.util.HashMap;
 import java.util.LinkedList;

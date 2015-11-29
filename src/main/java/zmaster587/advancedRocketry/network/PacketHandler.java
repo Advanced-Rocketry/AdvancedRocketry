@@ -44,6 +44,7 @@ public class PacketHandler {
 		codec.addDiscriminator(3, PacketSatellite.class);
 		codec.addDiscriminator(4, PacketStellarInfo.class);
 		codec.addDiscriminator(5, PacketItemModifcation.class);
+		codec.addDiscriminator(6, PacketOxygenState.class);
 
 		channels.putAll(NetworkRegistry.INSTANCE.newChannel(AdvancedRocketry.modId, codec, new HandlerServer()));
 

@@ -3,9 +3,9 @@ package zmaster587.advancedRocketry.world.ore;
 import java.util.Random;
 
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.MaterialRegistry;
-import zmaster587.advancedRocketry.api.MaterialRegistry.AllowedProducts;
-import zmaster587.advancedRocketry.api.MaterialRegistry.Materials;
+import zmaster587.advancedRocketry.api.material.MaterialRegistry;
+import zmaster587.advancedRocketry.api.material.MaterialRegistry.AllowedProducts;
+import zmaster587.advancedRocketry.api.material.MaterialRegistry.Materials;
 import zmaster587.advancedRocketry.util.Configuration;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;

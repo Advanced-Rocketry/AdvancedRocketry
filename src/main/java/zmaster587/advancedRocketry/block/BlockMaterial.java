@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.MaterialRegistry;
-import zmaster587.advancedRocketry.api.MaterialRegistry.AllowedProducts;
+import zmaster587.advancedRocketry.api.material.MaterialRegistry;
+import zmaster587.advancedRocketry.api.material.MaterialRegistry.AllowedProducts;
 import zmaster587.advancedRocketry.block.multiblock.BlockMultiblockStructure;
 import zmaster587.advancedRocketry.tile.TileMaterial;
 import net.minecraft.block.Block;
