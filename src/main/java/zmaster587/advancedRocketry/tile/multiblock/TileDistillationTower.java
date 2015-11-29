@@ -8,7 +8,7 @@ import zmaster587.libVulpes.interfaces.IRecipe;
 public class TileDistillationTower extends TileMultiblockMachine {
 
 	@Override
-	public Set<IRecipe> getMachineRecipeList() {
+	public List<IRecipe> getMachineRecipeList() {
 		return null;
 	}
 }

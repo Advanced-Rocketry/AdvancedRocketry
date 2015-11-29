@@ -31,7 +31,7 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 							  {new BlockMeta(AdvancedRocketryBlocks.blockMotor, BlockMeta.WILDCARD), AdvancedRocketryBlocks.blockSawBlade, new BlockMeta(AdvancedRocketryBlocks.blockRFBattery, 0)}}};
 	
 	@Override
-	public Set<IRecipe> getMachineRecipeList() {
+	public List<IRecipe> getMachineRecipeList() {
 		return RecipesMachine.getInstance().getRecipes(this.getClass());
 	}
 

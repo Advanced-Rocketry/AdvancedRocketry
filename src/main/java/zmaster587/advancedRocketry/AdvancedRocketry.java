@@ -4,6 +4,7 @@ package zmaster587.advancedRocketry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -177,7 +178,7 @@ public class AdvancedRocketry {
 	private static Configuration config;
 	private static final String BIOMECATETORY = "Biomes";
 
-	private HashMap<AllowedProducts, List<String>> modProducts = new HashMap<AllowedProducts, List<String>>();
+	private HashMap<AllowedProducts, HashSet<String>> modProducts = new HashMap<AllowedProducts, HashSet<String>>();
 
 
 	private static CreativeTabs tabAdvRocketry = new CreativeTabs("advancedRocketry") {
@@ -773,16 +774,20 @@ public class AdvancedRocketry {
 
 		//Handle items from other mods
 		if(zmaster587.advancedRocketry.util.Configuration.allowMakingItemsForOtherMods) {
-			for(Entry<AllowedProducts, List<String>> entry : modProducts.entrySet()) {
+			for(Entry<AllowedProducts, HashSet<String>> entry : modProducts.entrySet()) {
 				if(entry.getKey() == AllowedProducts.PLATE) {
 					for(String str : entry.getValue()) {
-						if(OreDictionary.doesOreNameExist("ingot" + str))
+						MaterialRegistry.Materials material = MaterialRegistry.Materials.valueOf(str.toUpperCase());
+						
+						if(OreDictionary.doesOreNameExist("ingot" + str) && (material == null || !AllowedProducts.PLATE.isOfType(material.getAllowedProducts())) )
 							RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, OreDictionary.getOres("plate" + str).get(0), 300, 200, "ingot" + str);
 					}
 				}
 				else if(entry.getKey() == AllowedProducts.ROD) {
 					for(String str : entry.getValue()) {
-						if(OreDictionary.doesOreNameExist("ingot" + str))
+						MaterialRegistry.Materials material = MaterialRegistry.Materials.valueOf(str.toUpperCase());
+						
+						if(OreDictionary.doesOreNameExist("ingot" + str) && (material == null || !AllowedProducts.PLATE.isOfType(material.getAllowedProducts())) )
 							RecipesMachine.getInstance().addRecipe(TileLathe.class, OreDictionary.getOres("rod" + str).get(0), 300, 200, "ingot" + str);
 					}
 				}
@@ -875,9 +880,9 @@ public class AdvancedRocketry {
 
 		for(AllowedProducts product : AllowedProducts.values() ) {
 			if(event.Name.startsWith(product.name().toLowerCase())) {
-				List<String> list = modProducts.get(product);
+				HashSet<String> list = modProducts.get(product);
 				if(list == null) {
-					list = new LinkedList<String>();
+					list = new HashSet<String>();
 					modProducts.put(product, list);
 				}
 

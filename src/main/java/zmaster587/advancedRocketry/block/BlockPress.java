@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.block;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import zmaster587.advancedRocketry.api.material.MaterialRegistry;
 import zmaster587.advancedRocketry.api.material.MaterialRegistry.AllowedProducts;
@@ -66,7 +67,7 @@ public class BlockPress extends BlockPistonBase {
 		if(material == null)
 			return null;
 
-		HashSet<IRecipe> recipes = RecipesMachine.getInstance().getRecipes(this.getClass());
+		List<IRecipe> recipes = RecipesMachine.getInstance().getRecipes(this.getClass());
 		ItemStack stack = null;
 
 		for(IRecipe recipe : recipes) {

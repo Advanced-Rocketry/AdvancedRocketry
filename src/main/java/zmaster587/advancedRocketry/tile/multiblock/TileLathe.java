@@ -23,7 +23,7 @@ public class TileLathe extends TileMultiblockMachine implements IModularInventor
 	};
 	
 	@Override
-	public Set<IRecipe> getMachineRecipeList() {
+	public List<IRecipe> getMachineRecipeList() {
 		return RecipesMachine.getInstance().getRecipes(this.getClass());
 	}
 	@Override

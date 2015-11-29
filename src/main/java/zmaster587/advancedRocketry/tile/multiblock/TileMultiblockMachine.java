@@ -199,7 +199,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 	//TODO: improve recipe checks
 	//Attempt to get a valid recipe given the inputs, null if none found
-	protected IRecipe getRecipe(Set<IRecipe> set) {
+	protected IRecipe getRecipe(List<IRecipe> set) {
 
 		for(IRecipe recipe : set) {
 			
@@ -420,9 +420,9 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 
 	//Must be overridden or an NPE will occur
-	public Set<IRecipe> getMachineRecipeList() {
-		HashSet<IRecipe> list = RecipesMachine.getInstance().getRecipes(this.getClass());
-		return list != null ? list : new HashSet<IRecipe>();
+	public List<IRecipe> getMachineRecipeList() {
+		List<IRecipe> list = RecipesMachine.getInstance().getRecipes(this.getClass());
+		return list != null ? list : new LinkedList<IRecipe>();
 	}
 
 	//Called by inventory blocks that are part of the structure

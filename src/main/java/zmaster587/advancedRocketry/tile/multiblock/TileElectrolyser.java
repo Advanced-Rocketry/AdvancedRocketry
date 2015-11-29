@@ -29,7 +29,7 @@ public class TileElectrolyser extends TileMultiblockMachine {
 	};
 	
 	@Override
-	public Set<IRecipe> getMachineRecipeList() {
+	public List<IRecipe> getMachineRecipeList() {
 		return RecipesMachine.getInstance().getRecipes(this.getClass());
 	}
 	
