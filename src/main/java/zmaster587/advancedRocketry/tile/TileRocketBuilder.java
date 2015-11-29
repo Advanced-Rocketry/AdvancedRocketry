@@ -186,7 +186,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 		progress++;
 
-		if(!this.worldObj.isRemote && this.energy.getEnergyStored(ForgeDirection.UNKNOWN) < getPowerPerOperation() && progress - prevProgress > 0) {
+		if(!this.worldObj.isRemote && this.energy.getEnergyStored() < getPowerPerOperation() && progress - prevProgress > 0) {
 			prevProgress = progress;
 			PacketHandler.sendToNearby(new PacketMachine(this, (byte)2), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 32);
 		}
@@ -528,7 +528,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	public void writeDataToNetwork(ByteBuf out, byte id) {
 		//Used to sync clinet/server
 		if(id == 2) {
-			out.writeInt(energy.getEnergyStored(ForgeDirection.UNKNOWN));
+			out.writeInt(energy.getEnergyStored());
 			out.writeInt(this.progress);
 		}
 
@@ -726,6 +726,11 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	@Override
 	public boolean canInteractWithContainer(EntityPlayer entity) {
+		return true;
+	}
+
+	@Override
+	public boolean canConnectEnergy(ForgeDirection arg0) {
 		return true;
 	}
 }

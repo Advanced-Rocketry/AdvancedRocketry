@@ -105,7 +105,7 @@ public class BlockTile extends RotatableBlock {
 		player.openGui(AdvancedRocketry.instance, guiId, world, x, y, z);
 		return true;
 	}
-	
+
 	@Override
 	public void onNeighborBlockChange(World world, int x,
 			int y, int z, Block block) {
@@ -114,7 +114,7 @@ public class BlockTile extends RotatableBlock {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if(tile instanceof IAdjBlockUpdate)
 			((IAdjBlockUpdate)tile).onAdjacentBlockUpdated();
-		
+
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -122,7 +122,10 @@ public class BlockTile extends RotatableBlock {
 	public void registerBlockIcons(IIconRegister icons)
 	{
 		this.blockIcon = icons.registerIcon(this.getTextureName());
-		this.sides = icons.registerIcon(this.textureSideName);
+		if(this.textureSideName == null)
+			this.sides = this.blockIcon;
+		else
+			this.sides = icons.registerIcon(this.textureSideName);
 
 		if(this.textureSideName_active != null)
 			this.sides_active = icons.registerIcon(this.textureSideName_active);

@@ -13,7 +13,7 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.material.MaterialRegistry;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
-import zmaster587.advancedRocketry.tile.TileRFBattery;
+import zmaster587.advancedRocketry.tile.TileRFPlug;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.interfaces.IRecipe;
 
@@ -40,7 +40,7 @@ public class TileElectrolyser extends TileMultiblockMachine {
 	@Override
 	public boolean shouldHideBlock(World world, int x, int y, int z, Block tile) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		return tileEntity != null && !(tileEntity instanceof TileRFBattery || tileEntity instanceof TileElectrolyser);
+		return tileEntity != null && !(tileEntity instanceof TileRFPlug || tileEntity instanceof TileElectrolyser);
 	}
 	
 	

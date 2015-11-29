@@ -24,6 +24,7 @@ tile.hatch.3.name=Satellite Bay
 tile.hatch.4.name=Fluid Input Hatch
 tile.hatch.5.name=Fluid Output Hatch
 tile.rfBattery.name=Redstone Flux(RF) Plug
+tile.IC2Plug.name=IC2 Plug(EU)
 tile.structureMachine.name=Machine Structure
 tile.observatory.name=Observatory
 tile.satelliteBuilder.name=Satellite Builder

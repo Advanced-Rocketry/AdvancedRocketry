@@ -29,4 +29,6 @@ public class Configuration {
 	public static int rutilePerChunk;
 	public static int rutileClumpSize;
 	public static boolean allowMakingItemsForOtherMods;
+	public static float EUMult;
+	public static float RFMult;
 }

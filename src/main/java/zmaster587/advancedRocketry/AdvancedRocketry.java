@@ -69,7 +69,7 @@ import zmaster587.advancedRocketry.block.multiblock.BlockHatch;
 import zmaster587.advancedRocketry.block.multiblock.BlockMultiBlockComponentVisible;
 import zmaster587.advancedRocketry.block.multiblock.BlockMultiblockMachine;
 import zmaster587.advancedRocketry.block.multiblock.BlockMultiblockPlaceHolder;
-import zmaster587.advancedRocketry.block.multiblock.BlockRFBattery;
+import zmaster587.advancedRocketry.block.multiblock.BlockMultiMachineBattery;
 import zmaster587.advancedRocketry.block.plant.BlockAlienLeaves;
 import zmaster587.advancedRocketry.block.plant.BlockAlienSapling;
 import zmaster587.advancedRocketry.block.plant.BlockAlienWood;
@@ -100,6 +100,7 @@ import zmaster587.advancedRocketry.satellite.SatelliteDensity;
 import zmaster587.advancedRocketry.satellite.SatelliteMassScanner;
 import zmaster587.advancedRocketry.satellite.SatelliteOptical;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
+import zmaster587.advancedRocketry.tile.TileIC2Plug;
 import zmaster587.advancedRocketry.tile.TileInputHatch;
 import zmaster587.advancedRocketry.tile.TileMaterial;
 import zmaster587.advancedRocketry.tile.TileMissionController;
@@ -108,7 +109,7 @@ import zmaster587.advancedRocketry.tile.TileModelRenderRotatable;
 import zmaster587.advancedRocketry.tile.TileOutputHatch;
 import zmaster587.advancedRocketry.tile.TileOxygenCharger;
 import zmaster587.advancedRocketry.tile.TileOxygenVent;
-import zmaster587.advancedRocketry.tile.TileRFBattery;
+import zmaster587.advancedRocketry.tile.TileRFPlug;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.advancedRocketry.tile.TileSchematic;
 import zmaster587.advancedRocketry.tile.TileSpaceLaser;
@@ -197,6 +198,8 @@ public class AdvancedRocketry {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		
+		
 		//Configuration  ---------------------------------------------------------------------------------------------
 		config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
@@ -209,7 +212,8 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.util.Configuration.spaceDimId = config.get(Configuration.CATEGORY_GENERAL,"spaceStationId" , -2,"Dimension ID to use for space stations").getInt();
 		zmaster587.advancedRocketry.util.Configuration.enableOxygen = config.get(Configuration.CATEGORY_GENERAL, "EnableAtmosphericEffects", true, "If true, allows players being hurt due to lack of oxygen and allows effects from non-standard atmosphere types").getBoolean();
 		zmaster587.advancedRocketry.util.Configuration.allowMakingItemsForOtherMods = config.get(Configuration.CATEGORY_GENERAL, "makeMaterialsForOtherMods", true, "If true the machines from AdvancedRocketry will produce things like plates/rods for other mods even if Advanced Rocketry itself does not use the material (This can increase load time)").getBoolean();
-
+		zmaster587.advancedRocketry.util.Configuration.EUMult = (float)config.get(Configuration.CATEGORY_GENERAL, "EUPowerMultiplier", 7, "How many power unit one EU makes").getDouble();
+				
 		zmaster587.advancedRocketry.util.Configuration.rocketRequireFuel = config.get(ROCKET, "rocketsRequireFuel", true, "Set to false if rockets should not require fuel to fly").getBoolean();
 		zmaster587.advancedRocketry.util.Configuration.rocketThrustMultiplier = config.get(ROCKET, "thrustMultiplier", 1f, "Multiplier for per-engine thrust").getDouble();
 		zmaster587.advancedRocketry.util.Configuration.fuelCapacityMultiplier = config.get(ROCKET, "fuelCapacityMultiplier", 1f, "Multiplier for per-tank capacity").getDouble();
@@ -304,7 +308,8 @@ public class AdvancedRocketry {
 
 		AdvancedRocketryBlocks.blockHatch = new BlockHatch(Material.rock).setBlockName("hatch").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockPlaceHolder = new BlockMultiblockPlaceHolder().setBlockName("placeHolder").setBlockTextureName("advancedrocketry:machineGeneric");
-		AdvancedRocketryBlocks.blockRFBattery = new BlockRFBattery(Material.rock).setBlockName("rfBattery").setBlockTextureName("advancedrocketry:batteryRF").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		AdvancedRocketryBlocks.blockRFBattery = new BlockMultiMachineBattery(Material.rock, TileRFPlug.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("rfBattery").setBlockTextureName("advancedrocketry:batteryRF").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		AdvancedRocketryBlocks.blockIC2Plug = new BlockMultiMachineBattery(Material.rock ,TileIC2Plug.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("IC2Plug").setBlockTextureName("advancedrocketry:IC2Plug").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockStructureBlock = new BlockAlphaTexture(Material.rock).setBlockName("structureMachine").setBlockTextureName("advancedrocketry:structureBlock").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockAlienWood = new BlockAlienWood().setBlockName("log").setBlockTextureName("advancedrocketry:log").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockAlienLeaves = new BlockAlienLeaves().setBlockName("leaves2").setBlockTextureName("leaves").setCreativeTab(tabAdvRocketry).setHardness(3f);
@@ -428,7 +433,8 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockOxygenVent, AdvancedRocketryBlocks.blockOxygenVent.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockOxygenCharger, AdvancedRocketryBlocks.blockOxygenCharger.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockAirLock, AdvancedRocketryBlocks.blockAirLock.getUnlocalizedName());
-
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockIC2Plug, AdvancedRocketryBlocks.blockIC2Plug.getUnlocalizedName());
+		
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockOxygenFluid,ItemFluid.class, AdvancedRocketryBlocks.blockOxygenFluid.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockHydrogenFluid,ItemFluid.class, AdvancedRocketryBlocks.blockHydrogenFluid.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockFuelFluid, ItemFluid.class, AdvancedRocketryBlocks.blockFuelFluid.getUnlocalizedName());
@@ -537,7 +543,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(zmaster587.advancedRocketry.tile.multiblock.TileCrystallizer.class, "ARcrystallizer");
 		GameRegistry.registerTileEntity(TileOutputHatch.class, "ARoutputHatch");
 		GameRegistry.registerTileEntity(TileInputHatch.class, "ARinputHatch");
-		GameRegistry.registerTileEntity(TileRFBattery.class, "ARrfBattery");
+		GameRegistry.registerTileEntity(TileRFPlug.class, "ARrfBattery");
 		GameRegistry.registerTileEntity(TileCuttingMachine.class, "ARcuttingmachine");
 		GameRegistry.registerTileEntity(TileDataBus.class, "ARdataBus");
 		GameRegistry.registerTileEntity(TileSatelliteHatch.class, "ARsatelliteHatch");
@@ -558,6 +564,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileChemicalReactor.class, "ARChemicalReactor");
 		GameRegistry.registerTileEntity(TileOxygenVent.class, "AROxygenVent");
 		GameRegistry.registerTileEntity(TileOxygenCharger.class, "AROxygenCharger");
+		GameRegistry.registerTileEntity(TileIC2Plug.class, "ARIC2Plug");
 		EntityRegistry.registerModEntity(EntityLaserNode.class, "laserNode", 0, instance, 256, 20, false);
 
 	}

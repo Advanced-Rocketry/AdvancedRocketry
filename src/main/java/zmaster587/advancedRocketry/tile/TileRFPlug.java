@@ -1,78 +1,36 @@
 package zmaster587.advancedRocketry.tile;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import cofh.api.energy.EnergyStorage;
-import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.Inventory.modules.ModulePower;
-import zmaster587.libVulpes.api.IUniversalEnergy;
-import zmaster587.libVulpes.tile.IMultiblock;
-import zmaster587.libVulpes.tile.TilePointer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import cofh.api.energy.IEnergyHandler;
+import zmaster587.libVulpes.util.UniversalBattery;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileRFBattery extends TilePointer implements IModularInventory, IUniversalEnergy, IMultiblock, IInventory {
+public class TileRFPlug extends TilePlugBase implements IEnergyHandler {
 
-	EnergyStorage storage;
+	UniversalBattery storage;
 	int teir;
 	
-	public TileRFBattery() {
-		
+	public TileRFPlug() {
+		super(1);
 	}
-	
-	public TileRFBattery(int teir) {
-		this.teir = teir;
-		storage = new EnergyStorage(getMaxEnergy(teir), getMaxDrainRate(teir));
-	}
-	
-	protected int getMaxEnergy(int teir) {
-		return (int)Math.pow(10,teir)*10000;
-	}
-	
-	protected int getMaxDrainRate(int teir) {
-		return 250*(int)Math.pow(2, teir);
-	}
-	
-	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		nbt.setInteger("teir", teir);
-		storage.writeToNBT(nbt);
-	}
-	
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		
-		teir = nbt.getInteger("teir");
-		
-		storage = new EnergyStorage(getMaxEnergy(teir), getMaxDrainRate(teir));
-		storage.readFromNBT(nbt);
-	}
-	
+
 	@Override
 	public int extractEnergy(ForgeDirection dir, int amt, boolean sim) {
-		return storage.extractEnergy(amt, sim);
+		return extractEnergy(amt, sim);
 	}
 
 	@Override
 	public int getEnergyStored(ForgeDirection arg0) {
-		return storage.getEnergyStored();
+		return getEnergyStored();
 	}
 
 	@Override
 	public int getMaxEnergyStored(ForgeDirection arg0) {
-		return storage.getMaxEnergyStored();
+		return getMaxEnergyStored();
 	}
 
 	@Override
 	public int receiveEnergy(ForgeDirection arg0, int maxReceive, boolean simulate) {
-		return storage.receiveEnergy(maxReceive, simulate);
+		return acceptEnergy(maxReceive, simulate);
 	}
 
 	@Override
@@ -80,86 +38,15 @@ public class TileRFBattery extends TilePointer implements IModularInventory, IUn
 		return true;
 	}
 
-	@Override
-	public void setEnergyStored(int amt) {
-		storage.setEnergyStored(amt);
-	}
-
-	@Override
-	public int getSizeInventory() {
-		return 0;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int p_70301_1_) {
-		return null;
-	}
-
-	@Override
-	public ItemStack decrStackSize(int p_70298_1_, int p_70298_2_) {
-		return null;
-	}
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(int p_70304_1_) {
-		return null;
-	}
-
-	@Override
-	public void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_) {
-		
-	}
 
 	@Override
 	public String getModularInventoryName() {
 		return "RF Storage Box";
 	}
-
-	@Override
-	public boolean hasCustomInventoryName() {
-		return true;
-	}
-
-	@Override
-	public int getInventoryStackLimit() {
-		return 0;
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return true;
-	}
-
-	@Override
-	public void openInventory() {
-		
-	}
-
-	@Override
-	public void closeInventory() {
-		
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) {
-		return false;
-	}
-
-	@Override
-	public List<ModuleBase> getModules() {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-		modules.add(new ModulePower(18, 20,this));
-		return modules;
-	}
-
+	
 	@Override
 	public String getInventoryName() {
 		return null;
-	}
-
-	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
-		return true;
 	}
 
 }

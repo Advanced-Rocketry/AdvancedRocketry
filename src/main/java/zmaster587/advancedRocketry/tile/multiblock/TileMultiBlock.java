@@ -327,7 +327,8 @@ public class TileMultiBlock extends TileEntity {
 	 */
 	public List<BlockMeta> getPowerInputBlocks() {
 		List<BlockMeta> list = new LinkedList<BlockMeta>();
-		list.add(new BlockMeta(AdvancedRocketryBlocks.blockRFBattery, -1));
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockRFBattery, BlockMeta.WILDCARD));
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockIC2Plug, BlockMeta.WILDCARD));
 		return list;
 	}
 	
