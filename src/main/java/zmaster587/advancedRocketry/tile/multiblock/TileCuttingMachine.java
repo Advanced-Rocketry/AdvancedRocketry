@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.tile.multiblock;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import zmaster587.advancedRocketry.Inventory.TextureResources;
 import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
@@ -30,7 +31,7 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 							  {new BlockMeta(AdvancedRocketryBlocks.blockMotor, BlockMeta.WILDCARD), AdvancedRocketryBlocks.blockSawBlade, new BlockMeta(AdvancedRocketryBlocks.blockRFBattery, 0)}}};
 	
 	@Override
-	public List<IRecipe> getMachineRecipeList() {
+	public Set<IRecipe> getMachineRecipeList() {
 		return RecipesMachine.getInstance().getRecipes(this.getClass());
 	}
 

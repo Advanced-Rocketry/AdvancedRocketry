@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.recipe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -109,20 +110,20 @@ public class RecipesMachine {
 		}
 	}
 
-	public HashMap<Class<Object>, ArrayList<IRecipe>> recipeList;
+	public HashMap<Class<Object>, HashSet<IRecipe>> recipeList;
 
 	private static RecipesMachine instance = new RecipesMachine();
 
 	public RecipesMachine() {
-		recipeList = new HashMap<Class<Object>, ArrayList<IRecipe>>();
+		recipeList = new HashMap<Class<Object>, HashSet<IRecipe>>();
 	}
 
 	public static RecipesMachine getInstance() { return instance; }
 
 	public void addRecipe(Class clazz ,List<Object> out, int timeRequired, int power, Object ... inputs) {
-		ArrayList<IRecipe> recipes = getRecipes(clazz);
+		HashSet<IRecipe> recipes = getRecipes(clazz);
 		if(recipes == null) {
-			recipes = new ArrayList<IRecipe>();
+			recipes = new HashSet<IRecipe>();
 			recipeList.put(clazz,recipes);
 		}
 
@@ -203,7 +204,7 @@ public class RecipesMachine {
 	}
 
 	//Given the class return the list
-	public ArrayList<IRecipe> getRecipes(Class clazz) {
+	public HashSet<IRecipe> getRecipes(Class clazz) {
 		return recipeList.get(clazz);
 	}
 }

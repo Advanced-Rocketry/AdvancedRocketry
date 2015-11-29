@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -105,7 +106,7 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 	}
 
 	@Override
-	public List<IRecipe> getMachineRecipeList() {
+	public Set<IRecipe> getMachineRecipeList() {
 		return RecipesMachine.getInstance().getRecipes(this.getClass());
 	}
 

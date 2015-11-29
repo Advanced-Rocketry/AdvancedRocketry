@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.tile.multiblock;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import zmaster587.advancedRocketry.Inventory.TextureResources;
 import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
@@ -37,7 +38,7 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 	  {'*', AdvancedRocketryBlocks.blockMotor, AdvancedRocketryBlocks.blockMotor, '*'}}};
 	
 	@Override
-	public List<IRecipe> getMachineRecipeList() {
+	public Set<IRecipe> getMachineRecipeList() {
 		return RecipesMachine.getInstance().getRecipes(this.getClass());
 	}
 

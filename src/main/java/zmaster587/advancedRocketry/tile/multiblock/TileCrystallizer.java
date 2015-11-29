@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
@@ -38,7 +39,7 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 	}
 	
 	@Override
-	public List<IRecipe> getMachineRecipeList() {
+	public Set<IRecipe> getMachineRecipeList() {
 		return RecipesMachine.getInstance().getRecipes(this.getClass());
 	}
 

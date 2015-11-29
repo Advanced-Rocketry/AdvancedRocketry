@@ -4,12 +4,11 @@ package zmaster587.advancedRocketry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.logging.Logger;
-
-import com.google.common.eventbus.Subscribe;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
@@ -154,6 +153,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -177,7 +177,7 @@ public class AdvancedRocketry {
 	private static Configuration config;
 	private static final String BIOMECATETORY = "Biomes";
 
-	private HashMap<AllowedProducts, String> modProducts = new HashMap<AllowedProducts, String>();
+	private HashMap<AllowedProducts, List<String>> modProducts = new HashMap<AllowedProducts, List<String>>();
 
 
 	private static CreativeTabs tabAdvRocketry = new CreativeTabs("advancedRocketry") {
@@ -198,8 +198,8 @@ public class AdvancedRocketry {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		
-		
+
+
 		//Configuration  ---------------------------------------------------------------------------------------------
 		config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
@@ -213,7 +213,7 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.util.Configuration.enableOxygen = config.get(Configuration.CATEGORY_GENERAL, "EnableAtmosphericEffects", true, "If true, allows players being hurt due to lack of oxygen and allows effects from non-standard atmosphere types").getBoolean();
 		zmaster587.advancedRocketry.util.Configuration.allowMakingItemsForOtherMods = config.get(Configuration.CATEGORY_GENERAL, "makeMaterialsForOtherMods", true, "If true the machines from AdvancedRocketry will produce things like plates/rods for other mods even if Advanced Rocketry itself does not use the material (This can increase load time)").getBoolean();
 		zmaster587.advancedRocketry.util.Configuration.EUMult = (float)config.get(Configuration.CATEGORY_GENERAL, "EUPowerMultiplier", 7, "How many power unit one EU makes").getDouble();
-				
+
 		zmaster587.advancedRocketry.util.Configuration.rocketRequireFuel = config.get(ROCKET, "rocketsRequireFuel", true, "Set to false if rockets should not require fuel to fly").getBoolean();
 		zmaster587.advancedRocketry.util.Configuration.rocketThrustMultiplier = config.get(ROCKET, "thrustMultiplier", 1f, "Multiplier for per-engine thrust").getDouble();
 		zmaster587.advancedRocketry.util.Configuration.fuelCapacityMultiplier = config.get(ROCKET, "fuelCapacityMultiplier", 1f, "Multiplier for per-tank capacity").getDouble();
@@ -233,7 +233,7 @@ public class AdvancedRocketry {
 
 		if(zmaster587.advancedRocketry.util.Configuration.allowMakingItemsForOtherMods)
 			MinecraftForge.EVENT_BUS.register(this);
-		
+
 		//Satellites ---------------------------------------------------------------------------------------------
 		SatelliteRegistry.registerSatellite("defunct", SatelliteDefunct.class);
 		SatelliteRegistry.registerSatellite("optical", SatelliteOptical.class);
@@ -434,7 +434,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockOxygenCharger, AdvancedRocketryBlocks.blockOxygenCharger.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockAirLock, AdvancedRocketryBlocks.blockAirLock.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockIC2Plug, AdvancedRocketryBlocks.blockIC2Plug.getUnlocalizedName());
-		
+
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockOxygenFluid,ItemFluid.class, AdvancedRocketryBlocks.blockOxygenFluid.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockHydrogenFluid,ItemFluid.class, AdvancedRocketryBlocks.blockHydrogenFluid.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockFuelFluid, ItemFluid.class, AdvancedRocketryBlocks.blockFuelFluid.getUnlocalizedName());
@@ -770,17 +770,21 @@ public class AdvancedRocketry {
 				}
 			}	
 		}
-		
+
 		//Handle items from other mods
 		if(zmaster587.advancedRocketry.util.Configuration.allowMakingItemsForOtherMods) {
-			for(Entry<AllowedProducts, String> entry : modProducts.entrySet()) {
+			for(Entry<AllowedProducts, List<String>> entry : modProducts.entrySet()) {
 				if(entry.getKey() == AllowedProducts.PLATE) {
-					if(OreDictionary.doesOreNameExist("ingot" + entry.getValue()))
-						RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, OreDictionary.getOres("plate" + entry.getValue()).get(0), 300, 200, "ingot" + entry.getValue());
+					for(String str : entry.getValue()) {
+						if(OreDictionary.doesOreNameExist("ingot" + str))
+							RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, OreDictionary.getOres("plate" + str).get(0), 300, 200, "ingot" + str);
+					}
 				}
 				else if(entry.getKey() == AllowedProducts.ROD) {
-					if(OreDictionary.doesOreNameExist("ingot" + entry.getValue()))
-						RecipesMachine.getInstance().addRecipe(TileLathe.class, OreDictionary.getOres("rod" + entry.getValue()).get(0), 300, 200, "ingot" + entry.getValue());
+					for(String str : entry.getValue()) {
+						if(OreDictionary.doesOreNameExist("ingot" + str))
+							RecipesMachine.getInstance().addRecipe(TileLathe.class, OreDictionary.getOres("rod" + str).get(0), 300, 200, "ingot" + str);
+					}
 				}
 			}
 		}
@@ -866,13 +870,18 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.world.DimensionManager.getInstance().unregisterAllDimensions();
 	}
 
-	@Subscribe
+	@SubscribeEvent
 	public void registerOre(OreRegisterEvent event) {
 
 		for(AllowedProducts product : AllowedProducts.values() ) {
 			if(event.Name.startsWith(product.name().toLowerCase())) {
-				String material = event.Name.substring(product.name().length());
-				modProducts.put(product, material);
+				List<String> list = modProducts.get(product);
+				if(list == null) {
+					list = new LinkedList<String>();
+					modProducts.put(product, list);
+				}
+
+				list.add(event.Name.substring(product.name().length()));
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.util.AxisAlignedBB;
 import zmaster587.advancedRocketry.Inventory.TextureResources;
@@ -22,7 +23,7 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 	};
 	
 	@Override
-	public List<IRecipe> getMachineRecipeList() {
+	public Set<IRecipe> getMachineRecipeList() {
 		return RecipesMachine.getInstance().getRecipes(this.getClass());
 	}
 	
