@@ -1,5 +1,7 @@
 package zmaster587.advancedRocketry.util;
 
+import net.minecraftforge.common.config.Property;
+
 public class Configuration {
 	public static int orbit = 1000;
 	public static int MoonId = 2;
@@ -26,4 +28,5 @@ public class Configuration {
 	public static boolean generateRutile;
 	public static int rutilePerChunk;
 	public static int rutileClumpSize;
+	public static boolean allowMakingItemsForOtherMods;
 }

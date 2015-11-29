@@ -33,7 +33,6 @@ public class MaterialRegistry {
 		boolean isBlock;
 		List<Block> blockArray;
 		
-		
 		private AllowedProducts() {
 			this.isBlock = false;
 		}

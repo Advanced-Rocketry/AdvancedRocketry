@@ -56,7 +56,7 @@ tile.liquidHatch.name=Fluid Hatch
 tile.rocketFuelBlock.name=Rocket Fuel
 tile.hydrogenFluidBlock.name=Hydrogen
 tile.oxygenFluidBlock.name=Oxygen
-tile.OxygenCharger.name=Oxygen Charge Pad
+tile.oxygenCharger.name=Oxygen Charge Pad
 
 tile.Dilithium.name=Dilithium Ore
 tile.Copper.name=Copper Ore
@@ -96,6 +96,7 @@ item.spaceLeggings.name=Space Suit Legging
 item.spaceChest.name=Space Suit Chest-Piece
 item.spaceBoots.name=Space Boots
 item.bucketRocketFuel.name=Bucket of Rocket Fuel
+item.smallAirlock.name=Small Airlock Door
 
 material.Gold.name=Gold
 material.Iron.name=Iron
