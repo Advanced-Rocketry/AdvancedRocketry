@@ -777,7 +777,7 @@ public class AdvancedRocketry {
 			for(Entry<AllowedProducts, HashSet<String>> entry : modProducts.entrySet()) {
 				if(entry.getKey() == AllowedProducts.PLATE) {
 					for(String str : entry.getValue()) {
-						MaterialRegistry.Materials material = MaterialRegistry.Materials.valueOf(str.toUpperCase());
+						MaterialRegistry.Materials material = MaterialRegistry.Materials.valueOfSafe(str.toUpperCase());
 						
 						if(OreDictionary.doesOreNameExist("ingot" + str) && (material == null || !AllowedProducts.PLATE.isOfType(material.getAllowedProducts())) )
 							RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, OreDictionary.getOres("plate" + str).get(0), 300, 200, "ingot" + str);
@@ -785,10 +785,19 @@ public class AdvancedRocketry {
 				}
 				else if(entry.getKey() == AllowedProducts.ROD) {
 					for(String str : entry.getValue()) {
-						MaterialRegistry.Materials material = MaterialRegistry.Materials.valueOf(str.toUpperCase());
+						MaterialRegistry.Materials material = MaterialRegistry.Materials.valueOfSafe(str.toUpperCase());
 						
-						if(OreDictionary.doesOreNameExist("ingot" + str) && (material == null || !AllowedProducts.PLATE.isOfType(material.getAllowedProducts())) )
-							RecipesMachine.getInstance().addRecipe(TileLathe.class, OreDictionary.getOres("rod" + str).get(0), 300, 200, "ingot" + str);
+						if(OreDictionary.doesOreNameExist("ingot" + str) && (material == null || !AllowedProducts.ROD.isOfType(material.getAllowedProducts())) ) {
+							
+							//GT registers rods as sticks
+							if(OreDictionary.doesOreNameExist("rod" + str))
+								RecipesMachine.getInstance().addRecipe(TileLathe.class, OreDictionary.getOres("rod" + str).get(0), 300, 200, "ingot" + str);
+							else if(OreDictionary.doesOreNameExist("stick" + str)) {
+								RecipesMachine.getInstance().addRecipe(TileLathe.class, OreDictionary.getOres("stick" + str).get(0), 300, 200, "ingot" + str);
+							}
+							
+						}
+						
 					}
 				}
 			}
@@ -889,5 +898,17 @@ public class AdvancedRocketry {
 				list.add(event.Name.substring(product.name().length()));
 			}
 		}
+		
+		//GT uses stick instead of Rod
+		if(event.Name.startsWith("stick")) {
+			HashSet<String> list = modProducts.get(AllowedProducts.ROD);
+			if(list == null) {
+				list = new HashSet<String>();
+				modProducts.put(AllowedProducts.ROD, list);
+			}
+
+			list.add(event.Name.substring("stick".length()));
+		}
+		
 	}
 }

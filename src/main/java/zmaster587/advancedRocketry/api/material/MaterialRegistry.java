@@ -194,5 +194,12 @@ public class MaterialRegistry {
 			return this.ordinal() % 16;
 		}
 
+		public static Materials valueOfSafe(String str) {
+			try {
+				return Materials.valueOf(str);
+			} catch (Exception e) {
+				return null;
+			}
+		}
 	}
 }
