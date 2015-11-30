@@ -35,7 +35,7 @@ public class ClientHelper {
 	 * 5: up
 	 */
 
-	public static boolean rotate = true;
+	/*public static boolean rotate = true;
 
 	private static float roll = 90;
 
@@ -83,7 +83,7 @@ public class ClientHelper {
 
 	public static void transformGravity(int rotation, EntityLivingBase player) {
 		/*if(!player.worldObj.isRemote)
-			player.boundingBox.setBounds(-1, -1, -1, 1, 1, 1);*/
+			player.boundingBox.setBounds(-1, -1, -1, 1, 1, 1);* /
 
 		player.motionY *= 0.5F;
 		if(!(player instanceof EntityPlayer) || !((EntityPlayer)player).capabilities.isFlying)
@@ -141,7 +141,7 @@ public class ClientHelper {
 		zLNew = z - (double)f;
 		xMNew = x + (double)f;
 		yMNew = y - (double)entity.yOffset + (double)entity.ySize + (double)f1;
-		zMNew = z + (double)f;*/
+		zMNew = z + (double)f;* /
 
 		switch(rotation) {
 
@@ -179,7 +179,7 @@ public class ClientHelper {
             float f = entity.rotationYaw * 0.017453292F;
             entity.motionX -= (double)(MathHelper.sin(f) * 0.2F);
             entity.motionZ += (double)(MathHelper.cos(f) * 0.2F);
-        }*/
+        }* /
 
 
 		if(rotation == 1)
@@ -628,7 +628,7 @@ public class ClientHelper {
 		}
 	}
 
-	public static void transformCamera2(int rotation, EntityLivingBase base/*float yaw, float pitch, float prevYaw, float prevPitch*/,float p_78467_1_) {
+	public static void transformCamera2(int rotation, EntityLivingBase base/*float yaw, float pitch, float prevYaw, float prevPitch* /,float p_78467_1_) {
 
 		//Debug code
 		if(rotation == 0)
@@ -763,5 +763,5 @@ public class ClientHelper {
 				return Vec3.createVectorHelper((double)(f4 * f5), (double)f6, (double)(f3 * f5));
 			}
 		}
-	}
+	}*/
 }
