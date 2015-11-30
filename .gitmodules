@@ -1,0 +1,3 @@
+[submodule "libVulpes"]
+	path = libVulpes
+	url = https://github.com/zmaster587/libVulpes
