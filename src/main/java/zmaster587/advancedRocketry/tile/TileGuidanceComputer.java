@@ -6,12 +6,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.dimension.DimensionManager;
 import zmaster587.advancedRocketry.api.stations.SpaceObject;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.tile.multiblock.TileInventoryHatch;
-import zmaster587.advancedRocketry.util.Configuration;
-import zmaster587.advancedRocketry.world.DimensionManager;
 import zmaster587.libVulpes.util.Vector3F;
 
 public class TileGuidanceComputer extends TileInventoryHatch implements IModularInventory {

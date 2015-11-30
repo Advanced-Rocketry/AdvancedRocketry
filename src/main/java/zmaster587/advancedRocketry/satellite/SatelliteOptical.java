@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.satellite;
 
-import zmaster587.advancedRocketry.util.DataStorage;
-import zmaster587.advancedRocketry.util.DataStorage.DataType;
+import zmaster587.advancedRocketry.api.DataStorage;
+import zmaster587.advancedRocketry.api.DataStorage.DataType;
 
 public class SatelliteOptical extends SatelliteData {
 

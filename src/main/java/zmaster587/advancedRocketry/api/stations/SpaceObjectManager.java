@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import zmaster587.advancedRocketry.util.Configuration;
+
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.libVulpes.util.Vector3F;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;

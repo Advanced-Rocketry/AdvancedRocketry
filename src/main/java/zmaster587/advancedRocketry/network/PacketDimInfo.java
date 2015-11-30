@@ -3,8 +3,8 @@ package zmaster587.advancedRocketry.network;
 import java.io.IOException;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.world.DimensionManager;
-import zmaster587.advancedRocketry.world.DimensionProperties;
+import zmaster587.advancedRocketry.api.dimension.DimensionManager;
+import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

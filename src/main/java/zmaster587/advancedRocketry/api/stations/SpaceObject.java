@@ -1,9 +1,8 @@
 package zmaster587.advancedRocketry.api.stations;
 
-import zmaster587.advancedRocketry.util.Configuration;
+import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.util.StorageChunk;
-import zmaster587.advancedRocketry.world.DimensionProperties;
-import zmaster587.advancedRocketry.world.decoration.MapGenSpaceStation;
 import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -16,7 +15,7 @@ public class SpaceObject {
 	DimensionProperties properties;
 	
 	public SpaceObject() {
-		properties = (DimensionProperties) zmaster587.advancedRocketry.world.DimensionManager.defaultSpaceDimensionProperties.clone();
+		properties = (DimensionProperties) zmaster587.advancedRocketry.api.dimension.DimensionManager.defaultSpaceDimensionProperties.clone();
 	}
 
 	public int getId() {

@@ -42,6 +42,8 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.armor.ItemSpaceArmor;
+import zmaster587.advancedRocketry.api.dimension.DimensionManager;
+import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.material.MaterialRegistry;
@@ -136,8 +138,6 @@ import zmaster587.advancedRocketry.tile.multiblock.TilePlanetAnalyser;
 import zmaster587.advancedRocketry.tile.multiblock.TilePlanetSelector;
 import zmaster587.advancedRocketry.tile.multiblock.TilePrecisionAssembler;
 import zmaster587.advancedRocketry.util.FluidColored;
-import zmaster587.advancedRocketry.world.DimensionManager;
-import zmaster587.advancedRocketry.world.DimensionProperties;
 import zmaster587.advancedRocketry.world.biome.BiomeGenAlienForest;
 import zmaster587.advancedRocketry.world.biome.BiomeGenHotDryRock;
 import zmaster587.advancedRocketry.world.biome.BiomeGenMoon;
@@ -211,31 +211,31 @@ public class AdvancedRocketry {
 		final String oreGen = "Ore Generation";
 		final String ROCKET = "Rockets";
 
-		zmaster587.advancedRocketry.util.Configuration.buildSpeedMultiplier = (float) config.get(Configuration.CATEGORY_GENERAL, "buildSpeedMultiplier", 1f, "Multiplier for the build speed of the Rocket Builder (0.5 is twice as fast 2 is half as fast").getDouble();
-		zmaster587.advancedRocketry.util.Configuration.MoonId = config.get(Configuration.CATEGORY_GENERAL,"moonId" , 2,"Dimension ID to use for the moon").getInt();
-		zmaster587.advancedRocketry.util.Configuration.spaceDimId = config.get(Configuration.CATEGORY_GENERAL,"spaceStationId" , -2,"Dimension ID to use for space stations").getInt();
-		zmaster587.advancedRocketry.util.Configuration.enableOxygen = config.get(Configuration.CATEGORY_GENERAL, "EnableAtmosphericEffects", true, "If true, allows players being hurt due to lack of oxygen and allows effects from non-standard atmosphere types").getBoolean();
-		zmaster587.advancedRocketry.util.Configuration.allowMakingItemsForOtherMods = config.get(Configuration.CATEGORY_GENERAL, "makeMaterialsForOtherMods", true, "If true the machines from AdvancedRocketry will produce things like plates/rods for other mods even if Advanced Rocketry itself does not use the material (This can increase load time)").getBoolean();
-		zmaster587.advancedRocketry.util.Configuration.EUMult = (float)config.get(Configuration.CATEGORY_GENERAL, "EUPowerMultiplier", 7, "How many power unit one EU makes").getDouble();
+		zmaster587.advancedRocketry.api.Configuration.buildSpeedMultiplier = (float) config.get(Configuration.CATEGORY_GENERAL, "buildSpeedMultiplier", 1f, "Multiplier for the build speed of the Rocket Builder (0.5 is twice as fast 2 is half as fast").getDouble();
+		zmaster587.advancedRocketry.api.Configuration.MoonId = config.get(Configuration.CATEGORY_GENERAL,"moonId" , 2,"Dimension ID to use for the moon").getInt();
+		zmaster587.advancedRocketry.api.Configuration.spaceDimId = config.get(Configuration.CATEGORY_GENERAL,"spaceStationId" , -2,"Dimension ID to use for space stations").getInt();
+		zmaster587.advancedRocketry.api.Configuration.enableOxygen = config.get(Configuration.CATEGORY_GENERAL, "EnableAtmosphericEffects", true, "If true, allows players being hurt due to lack of oxygen and allows effects from non-standard atmosphere types").getBoolean();
+		zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods = config.get(Configuration.CATEGORY_GENERAL, "makeMaterialsForOtherMods", true, "If true the machines from AdvancedRocketry will produce things like plates/rods for other mods even if Advanced Rocketry itself does not use the material (This can increase load time)").getBoolean();
+		zmaster587.advancedRocketry.api.Configuration.EUMult = (float)config.get(Configuration.CATEGORY_GENERAL, "EUPowerMultiplier", 7, "How many power unit one EU makes").getDouble();
 
-		zmaster587.advancedRocketry.util.Configuration.rocketRequireFuel = config.get(ROCKET, "rocketsRequireFuel", true, "Set to false if rockets should not require fuel to fly").getBoolean();
-		zmaster587.advancedRocketry.util.Configuration.rocketThrustMultiplier = config.get(ROCKET, "thrustMultiplier", 1f, "Multiplier for per-engine thrust").getDouble();
-		zmaster587.advancedRocketry.util.Configuration.fuelCapacityMultiplier = config.get(ROCKET, "fuelCapacityMultiplier", 1f, "Multiplier for per-tank capacity").getDouble();
+		zmaster587.advancedRocketry.api.Configuration.rocketRequireFuel = config.get(ROCKET, "rocketsRequireFuel", true, "Set to false if rockets should not require fuel to fly").getBoolean();
+		zmaster587.advancedRocketry.api.Configuration.rocketThrustMultiplier = config.get(ROCKET, "thrustMultiplier", 1f, "Multiplier for per-engine thrust").getDouble();
+		zmaster587.advancedRocketry.api.Configuration.fuelCapacityMultiplier = config.get(ROCKET, "fuelCapacityMultiplier", 1f, "Multiplier for per-tank capacity").getDouble();
 
-		zmaster587.advancedRocketry.util.Configuration.generateCopper = config.get(oreGen, "GenerateCopper", true).getBoolean();
-		zmaster587.advancedRocketry.util.Configuration.copperClumpSize = config.get(oreGen, "CopperPerClump", 6).getInt();
-		zmaster587.advancedRocketry.util.Configuration.copperPerChunk = config.get(oreGen, "CopperPerChunk", 10).getInt();
+		zmaster587.advancedRocketry.api.Configuration.generateCopper = config.get(oreGen, "GenerateCopper", true).getBoolean();
+		zmaster587.advancedRocketry.api.Configuration.copperClumpSize = config.get(oreGen, "CopperPerClump", 6).getInt();
+		zmaster587.advancedRocketry.api.Configuration.copperPerChunk = config.get(oreGen, "CopperPerChunk", 10).getInt();
 
-		zmaster587.advancedRocketry.util.Configuration.generateTin = config.get(oreGen, "GenerateTin", true).getBoolean();
-		zmaster587.advancedRocketry.util.Configuration.tinClumpSize = config.get(oreGen, "TinPerClump", 6).getInt();
-		zmaster587.advancedRocketry.util.Configuration.tinPerChunk = config.get(oreGen, "TinPerChunk", 10).getInt();
+		zmaster587.advancedRocketry.api.Configuration.generateTin = config.get(oreGen, "GenerateTin", true).getBoolean();
+		zmaster587.advancedRocketry.api.Configuration.tinClumpSize = config.get(oreGen, "TinPerClump", 6).getInt();
+		zmaster587.advancedRocketry.api.Configuration.tinPerChunk = config.get(oreGen, "TinPerChunk", 10).getInt();
 
-		zmaster587.advancedRocketry.util.Configuration.generateRutile = config.get(oreGen, "GenerateRutile", true).getBoolean();
-		zmaster587.advancedRocketry.util.Configuration.rutileClumpSize = config.get(oreGen, "RutilePerClump", 3).getInt();
-		zmaster587.advancedRocketry.util.Configuration.rutilePerChunk = config.get(oreGen, "RutilePerChunk", 2).getInt();
+		zmaster587.advancedRocketry.api.Configuration.generateRutile = config.get(oreGen, "GenerateRutile", true).getBoolean();
+		zmaster587.advancedRocketry.api.Configuration.rutileClumpSize = config.get(oreGen, "RutilePerClump", 3).getInt();
+		zmaster587.advancedRocketry.api.Configuration.rutilePerChunk = config.get(oreGen, "RutilePerChunk", 2).getInt();
 		config.save();
 
-		if(zmaster587.advancedRocketry.util.Configuration.allowMakingItemsForOtherMods)
+		if(zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods)
 			MinecraftForge.EVENT_BUS.register(this);
 
 		//Satellites ---------------------------------------------------------------------------------------------
@@ -785,7 +785,7 @@ public class AdvancedRocketry {
 		}
 
 		//Handle items from other mods
-		if(zmaster587.advancedRocketry.util.Configuration.allowMakingItemsForOtherMods) {
+		if(zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods) {
 			for(Entry<AllowedProducts, HashSet<String>> entry : modProducts.entrySet()) {
 				if(entry.getKey() == AllowedProducts.PLATE) {
 					for(String str : entry.getValue()) {
@@ -825,18 +825,18 @@ public class AdvancedRocketry {
 		}
 
 		//Register space dimension
-		net.minecraftforge.common.DimensionManager.registerProviderType(zmaster587.advancedRocketry.util.Configuration.spaceDimId, WorldProviderSpace.class, true);
-		net.minecraftforge.common.DimensionManager.registerDimension(zmaster587.advancedRocketry.util.Configuration.spaceDimId,zmaster587.advancedRocketry.util.Configuration.spaceDimId);
+		net.minecraftforge.common.DimensionManager.registerProviderType(zmaster587.advancedRocketry.api.Configuration.spaceDimId, WorldProviderSpace.class, true);
+		net.minecraftforge.common.DimensionManager.registerDimension(zmaster587.advancedRocketry.api.Configuration.spaceDimId,zmaster587.advancedRocketry.api.Configuration.spaceDimId);
 	}
 
 	@EventHandler
 	public void serverStarted(FMLServerStartingEvent event) {
 		event.registerServerCommand(new WorldCommand());
 
-		zmaster587.advancedRocketry.world.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.world.DimensionManager.filePath);
+		zmaster587.advancedRocketry.api.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.api.dimension.DimensionManager.filePath);
 		//Register hard coded dimensions
-		if(!DimensionManager.getInstance().isDimensionCreated(zmaster587.advancedRocketry.util.Configuration.MoonId)) {
-			DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.util.Configuration.MoonId);
+		if(!DimensionManager.getInstance().isDimensionCreated(zmaster587.advancedRocketry.api.Configuration.MoonId)) {
+			DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId);
 			dimensionProperties.atmosphereDensity = 0;
 			dimensionProperties.averageTemperature = 20;
 			dimensionProperties.gravitationalMultiplier = .166f; //Actual moon value
@@ -893,7 +893,7 @@ public class AdvancedRocketry {
 
 	@EventHandler
 	public void serverStopped(FMLServerStoppedEvent event) {
-		zmaster587.advancedRocketry.world.DimensionManager.getInstance().unregisterAllDimensions();
+		zmaster587.advancedRocketry.api.dimension.DimensionManager.getInstance().unregisterAllDimensions();
 	}
 
 	@SubscribeEvent

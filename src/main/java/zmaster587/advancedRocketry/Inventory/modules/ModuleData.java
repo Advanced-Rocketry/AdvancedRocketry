@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import zmaster587.advancedRocketry.Inventory.TextureResources;
-import zmaster587.advancedRocketry.util.DataStorage;
+import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.gui.GuiImageButton;
 import zmaster587.libVulpes.util.IconResource;

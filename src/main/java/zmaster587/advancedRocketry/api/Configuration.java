@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.util;
+package zmaster587.advancedRocketry.api;
 
 import net.minecraftforge.common.config.Property;
 

@@ -17,10 +17,10 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereType;
+import zmaster587.advancedRocketry.api.dimension.DimensionManager;
 import zmaster587.advancedRocketry.api.util.AreaBlob;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.util.IAdjBlockUpdate;
-import zmaster587.advancedRocketry.world.DimensionManager;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
 import zmaster587.libVulpes.util.BlockPosition;
 

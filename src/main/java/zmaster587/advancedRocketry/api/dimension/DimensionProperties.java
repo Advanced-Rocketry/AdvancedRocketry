@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.world;
+package zmaster587.advancedRocketry.api.dimension;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,10 +15,10 @@ import org.apache.commons.lang3.ArrayUtils;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereType;
+import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketSatellite;
-import zmaster587.advancedRocketry.world.solar.StellarBody;
 import zmaster587.libVulpes.util.VulpineMath;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;

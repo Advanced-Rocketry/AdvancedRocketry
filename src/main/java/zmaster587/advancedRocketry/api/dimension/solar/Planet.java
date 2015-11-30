@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.world.solar;
+package zmaster587.advancedRocketry.api.dimension.solar;
 
 import java.util.Iterator;
 import java.util.List;

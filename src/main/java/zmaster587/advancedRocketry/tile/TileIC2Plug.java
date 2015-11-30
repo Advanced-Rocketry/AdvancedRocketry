@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.tile;
 
-import zmaster587.advancedRocketry.util.Configuration;
+import zmaster587.advancedRocketry.api.Configuration;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;

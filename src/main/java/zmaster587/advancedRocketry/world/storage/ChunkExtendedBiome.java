@@ -3,7 +3,7 @@ package zmaster587.advancedRocketry.world.storage;
 import java.util.Arrays;
 
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
-import zmaster587.advancedRocketry.util.Configuration;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;

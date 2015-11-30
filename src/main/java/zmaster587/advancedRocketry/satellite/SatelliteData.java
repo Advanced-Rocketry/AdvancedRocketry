@@ -6,11 +6,11 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.api.DataStorage;
+import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.satellite.IDataHandler;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
-import zmaster587.advancedRocketry.util.DataStorage;
-import zmaster587.advancedRocketry.util.DataStorage.DataType;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.util.ZUtils;
 

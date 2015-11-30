@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.api.satellite;
 
-import zmaster587.advancedRocketry.util.DataStorage;
+import zmaster587.advancedRocketry.api.DataStorage;
 
 public interface IDataHandler {
 	

@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.world;
+package zmaster587.advancedRocketry.api.dimension;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,14 +14,13 @@ import java.util.Set;
 import org.apache.commons.io.FileUtils;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.util.Configuration;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
-import zmaster587.advancedRocketry.world.solar.StellarBody;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
@@ -51,12 +50,6 @@ public class DimensionManager {
 	public static DimensionManager getInstance() {
 		return instance;
 	};
-
-	public void syncToPlayer(EntityPlayer entity) {
-		for(Entry<Integer, DimensionProperties> dimSet : dimensionList.entrySet()) {
-			PacketHandler.sendToPlayer(new PacketDimInfo(dimSet.getKey(), dimSet.getValue()), entity);
-		}
-	}
 
 	public DimensionManager() {
 		spaceObjectManager = new SpaceObjectManager();

@@ -21,6 +21,7 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleTexturedSlotArray;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
+import zmaster587.advancedRocketry.api.dimension.DimensionManager;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
@@ -30,7 +31,6 @@ import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketMachine;
 import zmaster587.advancedRocketry.tile.multiblock.TileMultiPowerConsumer;
-import zmaster587.advancedRocketry.world.DimensionManager;
 import zmaster587.libVulpes.block.BlockMeta;
 
 public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IModularInventory, IInventory, IButtonInventory {

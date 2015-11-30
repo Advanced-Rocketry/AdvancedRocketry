@@ -5,15 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereType;
+import zmaster587.advancedRocketry.api.dimension.DimensionManager;
+import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.api.stations.SpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.util.Configuration;
-import zmaster587.advancedRocketry.world.DimensionManager;
-import zmaster587.advancedRocketry.world.DimensionProperties;
 import zmaster587.advancedRocketry.world.biome.BiomeGenAlienForest;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
 import zmaster587.libVulpes.util.Vector3F;

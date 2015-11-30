@@ -14,11 +14,11 @@ import net.minecraftforge.event.world.WorldEvent;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.PlayerDataHandler;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereHandler;
+import zmaster587.advancedRocketry.api.dimension.DimensionManager;
+import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
-import zmaster587.advancedRocketry.world.DimensionManager;
-import zmaster587.advancedRocketry.world.DimensionProperties;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -56,7 +56,7 @@ public class PlanetEventHandler {
 
 	@EventHandler
 	public void disconnected(ClientDisconnectionFromServerEvent event) {
-		zmaster587.advancedRocketry.world.DimensionManager.getInstance().unregisterAllDimensions();
+		zmaster587.advancedRocketry.api.dimension.DimensionManager.getInstance().unregisterAllDimensions();
 	}
 
 	@SubscribeEvent

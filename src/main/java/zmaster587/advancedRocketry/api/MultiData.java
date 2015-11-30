@@ -1,10 +1,10 @@
-package zmaster587.advancedRocketry.util;
+package zmaster587.advancedRocketry.api;
 
 import java.util.HashMap;
 
 import net.minecraft.nbt.NBTTagCompound;
+import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.satellite.IDataHandler;
-import zmaster587.advancedRocketry.util.DataStorage.DataType;
 
 public class MultiData implements IDataHandler {
 	HashMap<DataStorage.DataType, DataStorage> dataStorages;

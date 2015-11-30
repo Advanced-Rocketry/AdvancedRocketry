@@ -6,6 +6,8 @@ import java.util.logging.Logger;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
+import zmaster587.advancedRocketry.api.dimension.DimensionManager;
+import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.world.gen.BiomeCacheExtended;
 import zmaster587.advancedRocketry.world.gen.GenLayerHillsExtended;
 import zmaster587.advancedRocketry.world.gen.GenLayerVoronoiExtended;

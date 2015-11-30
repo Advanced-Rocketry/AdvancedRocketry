@@ -32,6 +32,8 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleTexturedSlotArray;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleToggleSwitch;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.DataStorage;
+import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.network.PacketHandler;
@@ -39,9 +41,7 @@ import zmaster587.advancedRocketry.network.PacketMachine;
 import zmaster587.advancedRocketry.tile.TileInputHatch;
 import zmaster587.advancedRocketry.tile.TileOutputHatch;
 import zmaster587.advancedRocketry.tile.data.TileDataBus;
-import zmaster587.advancedRocketry.util.DataStorage;
 import zmaster587.advancedRocketry.util.EmbeddedInventory;
-import zmaster587.advancedRocketry.util.DataStorage.DataType;
 import zmaster587.advancedRocketry.util.ITilePlanetSystemSelectable;
 import zmaster587.libVulpes.block.BlockMeta;
 

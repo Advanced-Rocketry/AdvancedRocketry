@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.api;
 
-import zmaster587.advancedRocketry.api.armor.ItemSpaceArmor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraftforge.common.util.EnumHelper;

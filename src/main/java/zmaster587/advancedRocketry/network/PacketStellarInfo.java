@@ -8,9 +8,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import zmaster587.advancedRocketry.world.DimensionManager;
-import zmaster587.advancedRocketry.world.DimensionProperties;
-import zmaster587.advancedRocketry.world.solar.StellarBody;
+import zmaster587.advancedRocketry.api.dimension.DimensionManager;
+import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 
 public class PacketStellarInfo extends BasePacket {
 	StellarBody star;

@@ -3,7 +3,7 @@ package zmaster587.advancedRocketry.world.gen;
 import java.util.ArrayList;
 import java.util.List;
 
-import zmaster587.advancedRocketry.util.Configuration;
+import zmaster587.advancedRocketry.api.Configuration;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.LongHashMap;
 import net.minecraft.world.biome.BiomeGenBase;

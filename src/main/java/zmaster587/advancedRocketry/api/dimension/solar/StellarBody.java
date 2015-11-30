@@ -1,10 +1,10 @@
-package zmaster587.advancedRocketry.world.solar;
+package zmaster587.advancedRocketry.api.dimension.solar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import zmaster587.advancedRocketry.world.DimensionProperties;
+import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 
