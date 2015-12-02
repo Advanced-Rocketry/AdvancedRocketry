@@ -1,11 +1,13 @@
 package zmaster587.advancedRocketry.tile;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -15,11 +17,14 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleLiquidIndicator;
 import zmaster587.advancedRocketry.Inventory.modules.ModulePower;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.api.dimension.DimensionManager;
 import zmaster587.advancedRocketry.api.util.AreaBlob;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
+import zmaster587.advancedRocketry.tile.multiblock.TileInventoryHatch;
 import zmaster587.advancedRocketry.util.IAdjBlockUpdate;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
 import zmaster587.libVulpes.util.BlockPosition;
@@ -30,13 +35,15 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	boolean firstRun;
 	boolean hasFluid;
 	int numScrubbers;
+	List<TileCO2Scrubber> scrubbers;
 
 	public TileOxygenVent() {
 		super(1000,2, 1000);
-		isSealed = false;
+		isSealed = true;
 		firstRun = true;
 		hasFluid = true;
 		numScrubbers = 0;
+		scrubbers = new LinkedList<TileCO2Scrubber>();
 	}
 
 	public TileOxygenVent(int energy, int invSize, int tankSize) {
@@ -44,6 +51,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		isSealed = false;
 		firstRun = false;
 		hasFluid = true;
+		scrubbers = new LinkedList<TileCO2Scrubber>();
 	}
 
 	@Override
@@ -53,15 +61,32 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public void onAdjacentBlockUpdated() {
-		if(isSealed && hasFluid) {
-			numScrubbers = 0;
-			numScrubbers = toggleAdjBlock(this.xCoord + 1, this.yCoord, this.zCoord, true) ? numScrubbers + 1 : numScrubbers;
-			numScrubbers = toggleAdjBlock(this.xCoord - 1, this.yCoord, this.zCoord, true) ? numScrubbers + 1 : numScrubbers;
-			numScrubbers = toggleAdjBlock(this.xCoord, this.yCoord, this.zCoord + 1, true) ? numScrubbers + 1 : numScrubbers;
-			numScrubbers = toggleAdjBlock(this.xCoord, this.yCoord, this.zCoord - 1, true) ? numScrubbers + 1 : numScrubbers;
+		if(isSealed) {
+
+			activateAdjblocks();
+			scrubbers.clear();
+			TileEntity[] tiles = new TileEntity[4];
+			tiles[0] = worldObj.getTileEntity(this.xCoord + 1, this.yCoord, this.zCoord);
+			tiles[1] = worldObj.getTileEntity(this.xCoord - 1, this.yCoord, this.zCoord);
+			tiles[2] = worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord + 1);
+			tiles[3] = worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord - 1);
+
+			for(TileEntity tile : tiles) {
+				if(tile instanceof TileCO2Scrubber && worldObj.getBlock(tile.xCoord, tile.yCoord, tile.zCoord) == AdvancedRocketryBlocks.blockOxygenScrubber)
+					scrubbers.add((TileCO2Scrubber)tile);
+			}
+
 		}
 	}
-	
+
+	private void activateAdjblocks() {
+		numScrubbers = 0;
+		numScrubbers = toggleAdjBlock(this.xCoord + 1, this.yCoord, this.zCoord, true) ? numScrubbers + 1 : numScrubbers;
+		numScrubbers = toggleAdjBlock(this.xCoord - 1, this.yCoord, this.zCoord, true) ? numScrubbers + 1 : numScrubbers;
+		numScrubbers = toggleAdjBlock(this.xCoord, this.yCoord, this.zCoord + 1, true) ? numScrubbers + 1 : numScrubbers;
+		numScrubbers = toggleAdjBlock(this.xCoord, this.yCoord, this.zCoord - 1, true) ? numScrubbers + 1 : numScrubbers;
+	}
+
 	private void deactivateAdjblocks() {
 		toggleAdjBlock(this.xCoord + 1, this.yCoord, this.zCoord, false);
 		toggleAdjBlock(this.xCoord - 1, this.yCoord, this.zCoord, false);
@@ -74,8 +99,8 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		if(block == AdvancedRocketryBlocks.blockOxygenScrubber) {
 			int meta = worldObj.getBlockMetadata(x,y,z);
 			if(on && meta == 0)
-				worldObj.setBlockMetadataWithNotify(x, y, z, 1, 2);
-			else if(!on && meta == 1)
+				worldObj.setBlockMetadataWithNotify(x, y, z, 8, 2);
+			else if(!on && meta == 8)
 				worldObj.setBlockMetadataWithNotify(x, y, z, 0, 2);
 
 			return true;
@@ -106,6 +131,10 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		//IF first tick then register the blob and check for scrubbers
 		if(firstRun && !worldObj.isRemote) {
 			AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).registerBlob(this, xCoord, yCoord, zCoord);
+			
+			onAdjacentBlockUpdated();
+			//isSealed starts as true so we can accurately check for scrubbers, we now set it to false to force the tile to check for a seal on first run
+			isSealed = false;
 			firstRun = false;
 		}
 
@@ -122,10 +151,22 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 				AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).addBlock(this, new BlockPosition(this.xCoord, this.yCoord, this.zCoord));
 				isSealed = true;
 
-				onAdjacentBlockUpdated();
+				activateAdjblocks();
 			}
 
 			if(isSealed) {
+
+				if(Configuration.scrubberRequiresCartrige){ //If scrubbers exist and the config allows then use the cartridge
+					//TODO: could be optimized
+					if(worldObj.getTotalWorldTime() % 20 == 0) {
+						numScrubbers = 0;
+						for(TileCO2Scrubber scrubber : scrubbers) {
+							numScrubbers =  scrubber.useCharge() ? numScrubbers + 1 : numScrubbers;
+						}
+					}
+
+				}
+
 				int amtToDrain = (int) (AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).getBlobSize(this)*getGasUsageMultiplier());
 				FluidStack drainedFluid = this.drain(ForgeDirection.UNKNOWN, amtToDrain, false);
 
@@ -134,7 +175,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 					if(!hasFluid) {
 						hasFluid = true;
 
-						onAdjacentBlockUpdated();
+						activateAdjblocks();
 
 						AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).setAtmosphereType(this, AtmosphereType.AIR);
 					}

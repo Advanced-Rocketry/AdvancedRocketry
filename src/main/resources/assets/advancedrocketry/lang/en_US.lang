@@ -98,6 +98,7 @@ item.spaceChest.name=Space Suit Chest-Piece
 item.spaceBoots.name=Space Boots
 item.bucketRocketFuel.name=Bucket of Rocket Fuel
 item.smallAirlock.name=Small Airlock Door
+item.carbonScrubberCartridge.name=Carbon Collection Cartridge
 
 material.Gold.name=Gold
 material.Iron.name=Iron
@@ -120,6 +121,7 @@ type.ore.name=Ore
 type.block.name=Block
 type.coil.name=Coil
 type.fan.name=Fan
+type.sheet.name=Sheet
 
 container.crystallizer=Crystallizer
 container.cuttingmachine=Cutting Machine

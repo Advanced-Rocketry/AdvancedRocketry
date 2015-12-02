@@ -142,7 +142,7 @@ public class RecipesMachine {
 
 	public static RecipesMachine getInstance() { return instance; }
 
-	public void addRecipe(Class clazz ,List<Object> out, int timeRequired, int power, Object ... inputs) {
+	public void addRecipe(Class clazz , Object[] out, int timeRequired, int power, Object ... inputs) {
 		List<IRecipe> recipes = getRecipes(clazz);
 		if(recipes == null) {
 			recipes = new LinkedList<IRecipe>();
@@ -213,17 +213,9 @@ public class RecipesMachine {
 	}
 
 	public void addRecipe(Class clazz , Object out, int timeRequired, int power, Object ... inputs) {
-		List<Object> newList;
 		
-		if(out instanceof List) {
-			newList = (List)out;
-		}
-		else {
-			newList = new LinkedList<Object>();
-			newList.add(out);
-		}
 		
-		addRecipe(clazz, newList, timeRequired, power, inputs);
+		addRecipe(clazz, new Object[] {out}, timeRequired, power, inputs);
 	}
 
 	//Given the class return the list

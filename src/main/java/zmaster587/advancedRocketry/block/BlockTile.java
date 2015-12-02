@@ -30,6 +30,12 @@ public class BlockTile extends RotatableBlock {
 		this.guiId = guiId;
 		this.setBlockTextureName("Advancedrocketry:machineGeneric");
 	}
+	
+	public Block setBlockTextureName(String texture1, String textureActive) {
+		setBlockTextureName(texture1);
+		textureSideName_active = textureFrontName_active = textureTopName_active = textureBottomName_active = textureRearName_active = textureActive;
+		return this;
+	}
 
 	public Block setSideTexture(String textureName) {
 		textureSideName = textureName;
