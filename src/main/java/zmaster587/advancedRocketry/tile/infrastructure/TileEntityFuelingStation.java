@@ -24,7 +24,7 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleSlotArray;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.api.IEntityRocket;
+import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.libVulpes.gui.CommonResources;
@@ -34,7 +34,7 @@ import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
 import zmaster587.libVulpes.util.IconResource;
 
 public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank implements IModularInventory, IInfrastructure, ILinkableTile {
-	IEntityRocket linkedRocket;
+	EntityRocketBase linkedRocket;
 
 	public TileEntityFuelingStation() {
 		super(1000,3, 5000);
@@ -135,7 +135,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	}
 
 	@Override
-	public boolean linkRocket(IEntityRocket rocket) {
+	public boolean linkRocket(EntityRocketBase rocket) {
 		this.linkedRocket = rocket;
 		return true;
 	}

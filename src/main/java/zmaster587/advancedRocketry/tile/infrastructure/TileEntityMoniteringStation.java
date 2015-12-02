@@ -21,7 +21,7 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleButton;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.api.IEntityRocket;
+import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.api.network.PacketEntity;
 import zmaster587.advancedRocketry.api.network.PacketHandler;
@@ -35,7 +35,7 @@ import zmaster587.libVulpes.util.INetworkMachine;
 
 public class TileEntityMoniteringStation extends TileEntity  implements IModularInventory, IInfrastructure, ILinkableTile, INetworkMachine, IButtonInventory, IProgressBar  {
 
-	IEntityRocket linkedRocket;
+	EntityRocketBase linkedRocket;
 
 	int rocketHeight;
 	int velocity;
@@ -86,7 +86,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	}
 
 	@Override
-	public boolean linkRocket(IEntityRocket rocket) {
+	public boolean linkRocket(EntityRocketBase rocket) {
 		this.linkedRocket = rocket;
 		return true;
 	}
@@ -167,9 +167,9 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 		if(linkedRocket == null)
 			return 0;
 		if(id == 0)
-			return linkedRocket.getLocation().y.intValue();
+			return (int)linkedRocket.posY;
 		else if(id == 1)
-			return (int)(linkedRocket.getVelocity().y*100);
+			return (int)(linkedRocket.motionY*100);
 		else if (id == 2)
 			return (int)(linkedRocket.getFuelAmount());
 		

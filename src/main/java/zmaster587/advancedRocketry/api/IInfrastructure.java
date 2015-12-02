@@ -22,7 +22,7 @@ public interface IInfrastructure {
 	 * @param rocket Rocket Requesting the link
 	 * @return true if the infrastructure should be allowed to link
 	 */
-	public boolean linkRocket(IEntityRocket rocket);
+	public boolean linkRocket(EntityRocketBase rocket);
 	
 	/**
 	 * @return maximum link distance in block for the tile

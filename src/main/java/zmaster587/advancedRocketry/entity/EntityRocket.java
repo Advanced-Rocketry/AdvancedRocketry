@@ -25,7 +25,7 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleSlotButton;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleText;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.api.IEntityRocket;
+import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
@@ -70,7 +70,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-public class EntityRocket extends Entity implements INetworkEntity, IModularInventory, IProgressBar, IButtonInventory, IEntityRocket {
+public class EntityRocket extends EntityRocketBase implements INetworkEntity, IModularInventory, IProgressBar, IButtonInventory {
 
 
 	//Stores the blocks and tiles that make up the rocket
@@ -83,9 +83,6 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 	private boolean isInOrbit;
 	//True if the rocket isn't on the ground
 	private boolean isInFlight;
-
-	//Linked list containing Objects implementing IInfrastructure
-	private LinkedList<IInfrastructure> connectedInfrastructure;
 
 	//stores the coordinates of infrastructures, used for when the world loads/saves
 	private LinkedList<Vector3F<Integer>> infrastructureCoords;
@@ -195,26 +192,6 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 		return true;
 	}
 
-
-
-	/**
-	 * Links the passed infrastructure to the rocket
-	 * @param tile infrastructure to link to the rocket
-	 */
-	@Override
-	public void linkInfrastructure(IInfrastructure tile) {
-		if(tile.linkRocket(this));
-		connectedInfrastructure.add(tile);
-	}
-
-	/**
-	 * Unlinks the tile from the rocket
-	 * @param tile tile to unlink
-	 */
-	@Override
-	public void unlinkInfrastructure(IInfrastructure tile) {
-		connectedInfrastructure.remove(tile);
-	}
 
 	/**
 	 * If the rocket is in flight, ie the rocket has taken off and has not touched the ground
@@ -914,16 +891,6 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 			PlanetEventHandler.removePlayerFromInventoryBypass(entity);
 
 		return ret;
-	}
-
-	@Override
-	public Vector3F<Double> getLocation() {
-		return new Vector3F<Double>(posX, posY, posZ);
-	}
-
-	@Override
-	public Vector3F<Double>  getVelocity() {
-		return new Vector3F<Double>(motionX, motionY, motionZ);
 	}
 	
 	@Override
