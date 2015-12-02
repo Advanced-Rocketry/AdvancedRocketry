@@ -1,8 +1,8 @@
-package zmaster587.advancedRocketry.network;
+package zmaster587.advancedRocketry.api.network;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
-import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.dimension.DimensionManager;
 import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
 import io.netty.buffer.ByteBuf;
@@ -44,7 +44,7 @@ public class PacketDimInfo extends BasePacket {
 				}
 			} catch(NullPointerException e) {
 				out.writeBoolean(true);
-				AdvancedRocketry.logger.warning("Dimension " + dimNumber + " has thrown an exception trying to write NBT, deleting!");
+				Logger.getLogger("advancedRocketry").warning("Dimension " + dimNumber + " has thrown an exception trying to write NBT, deleting!");
 				DimensionManager.getInstance().deleteDimension(dimNumber);
 			}
 

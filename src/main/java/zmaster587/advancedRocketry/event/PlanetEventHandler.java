@@ -16,9 +16,9 @@ import zmaster587.advancedRocketry.api.PlayerDataHandler;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.api.dimension.DimensionManager;
 import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.network.PacketDimInfo;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.network.PacketStellarInfo;
+import zmaster587.advancedRocketry.api.network.PacketDimInfo;
+import zmaster587.advancedRocketry.api.network.PacketHandler;
+import zmaster587.advancedRocketry.api.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -59,12 +59,12 @@ public class PlanetEventHandler {
 		zmaster587.advancedRocketry.api.dimension.DimensionManager.getInstance().unregisterAllDimensions();
 	}
 
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public void entityRegister(EntityConstructing event) {
 		if(event.entity instanceof EntityPlayer) {
 			event.entity.registerExtendedProperties(PlayerDataHandler.IDENTIFIER, new PlayerDataHandler());
 		}
-	}
+	}*/
 	
 	//TODO move
 	//Has weak refs so if the player gets killed/logsout etc the entry doesnt stay trapped in RAM

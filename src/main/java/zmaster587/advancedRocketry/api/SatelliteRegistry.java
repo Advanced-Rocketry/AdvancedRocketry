@@ -6,10 +6,8 @@ import java.util.logging.Logger;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
-import zmaster587.advancedRocketry.satellite.SatelliteDefunct;
 
 public class SatelliteRegistry {
 	static HashMap<String, Class<? extends SatelliteBase>> registry = new HashMap<String, Class<? extends SatelliteBase>>();
@@ -23,12 +21,12 @@ public class SatelliteRegistry {
 	 */
 	public static void registerSatelliteProperty(ItemStack stack, SatelliteProperties properties) {
 		if(stack == null) {
-			Logger.getLogger(AdvancedRocketry.modId).warning("null satellite property being registered!");
+			Logger.getLogger(Constants.modId).warning("null satellite property being registered!");
 		}
 		else if(!itemPropertiesRegistry.containsKey(stack))
 			itemPropertiesRegistry.put(stack, properties);
 		else
-			Logger.getLogger(AdvancedRocketry.modId).warning("Duplicate satellite property being registered for " + stack.toString());
+			Logger.getLogger(Constants.modId).warning("Duplicate satellite property being registered for " + stack.toString());
 	}
 
 	/**
@@ -90,13 +88,13 @@ public class SatelliteRegistry {
 		Class<? extends SatelliteBase> clazz = registry.get(name);
 
 		if(clazz == null) {
-			return new SatelliteDefunct();
+			return null;
 		}
 		else
 			try {
 				return clazz.newInstance();
 			} catch( Exception e)  {
-				return new SatelliteDefunct();
+				return null;
 			}
 	}
 }

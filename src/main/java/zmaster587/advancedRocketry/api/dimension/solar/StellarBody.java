@@ -25,38 +25,59 @@ public class StellarBody {
 		return 200;
 	}
 	
+	/**
+	 * @param temp the temperature, in Kelvin, of this star
+	 */
 	public void setTemperature(int temp) {
 		temperature = temp;
 	}
 	
+	/**
+	 * @param planet registers this planet to be in orbit around this star
+	 */
 	public void addPlanet(DimensionProperties planet) {
 		planets.put(planet.getId(), planet);
 	}
 	
+	/**
+	 * @param planet
+	 * @return the {@link DimensionProperties} of the planet orbiting this star, or null if the planet does not exist
+	 */
 	public DimensionProperties removePlanet(DimensionProperties planet) {
 		return planets.remove(planet.getId());
 	}
 
+	/**
+	 * @return the number of planets orbiting this star
+	 */
 	public int getNumPlanets() {
 		return numPlanets;
 	}
 
+	/**
+	 * @return returns the unique id of this star
+	 */
 	public int getId() {
 		return id;
 	}
 	
+	/**
+	 * @param id the new id of this star
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
 	
-	public int getNumberPlanets() {
-		return discoveredPlanets;
-	}
-
+	/**
+	 * @return the temperature, in kelvin, of the star
+	 */
 	public int getTemperature() {
 		return temperature;
 	}
 
+	/**
+	 * @return the RGB color of this star represented as an int
+	 */
 	public int getColorRGB8() {
 		float[] color = getColor();
 		
@@ -64,6 +85,9 @@ public class StellarBody {
 	}
 	
 	//Thank you to http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/
+	/**
+	 * @return the color of the star as an array of floats with length 3
+	 */
 	public float[] getColor() {
 
 		if(color == null) {
@@ -111,6 +135,9 @@ public class StellarBody {
 		return color;
 	}
 
+	/**
+	 * @return List of {@link DimensionProperties} of planets orbiting this star
+	 */
 	public List<DimensionProperties> getPlanets() {
 		return new ArrayList<DimensionProperties>(planets.values());
 	}

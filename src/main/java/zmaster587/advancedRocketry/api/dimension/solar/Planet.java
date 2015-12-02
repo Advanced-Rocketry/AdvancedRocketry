@@ -11,6 +11,7 @@ public class Planet {
 	private List<Planet> moons;
 	private List<SatelliteBase> satallites;
 	private List<SatelliteBase> tickingSatallites;
+	
 	//Between 0 and 2pi
 	private double orbit;
 	
@@ -18,10 +19,18 @@ public class Planet {
 		this.star = star;
 	}
 	
+	/**
+	 * Adds a moon to this planet
+	 * @param moon Planet type to add as the moon
+	 */
 	public void addMoon(Planet moon) {
 		moons.add(moon);
 	}
 	
+	/**
+	 * Adds a satellite orbiting this body
+	 * @param satallite
+	 */
 	public void addSatallite(SatelliteBase satallite) {
 		satallites.add(satallite);
 		
@@ -29,6 +38,11 @@ public class Planet {
 			tickingSatallites.add(satallite);
 	}
 	
+	/**
+	 * Removes a satellite orbiting this body
+	 * @param satallite
+	 * @return true if the satellite was removed, false if it doesn't exist
+	 */
 	public boolean removeSatallite(SatelliteBase satallite) {
 		
 		if(satallite.canTick())
@@ -37,11 +51,17 @@ public class Planet {
 		return satallites.remove(satallite);
 	}
 	
+	/**
+	 * @return a list of satellites orbiting this body
+	 */
 	public List<SatelliteBase> getSatallites() {
 		return satallites;
 	}
 	
 	//TODO: multithreading
+	/**
+	 * If a satellite is registered to tick, then it is ticked in this method
+	 */
 	public void tick() {
 		Iterator<SatelliteBase> iterator = tickingSatallites.iterator();
 		
@@ -51,10 +71,19 @@ public class Planet {
 		}
 	}
 	
+	/**
+	 * @return The star the planet is orbiting
+	 */
 	public StellarBody getStar() {return star;}
 	
+	/**
+	 * @return the registered Dimid for this planet dimension
+	 */
 	public int getDimensionId() {return dimId;}
 	
+	/**
+	 * @return a list of planets registered as mooons orbiting this planet
+	 */
 	public List<Planet> getMoons() {
 		return moons;
 	}

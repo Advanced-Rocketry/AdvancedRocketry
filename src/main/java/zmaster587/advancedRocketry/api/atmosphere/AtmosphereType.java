@@ -1,76 +1,77 @@
 package zmaster587.advancedRocketry.api.atmosphere;
 
-import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.api.armor.ItemSpaceArmor;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.network.PacketOxygenState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemStack;
 
 public class AtmosphereType {
 
-	public static final AtmosphereType AIR = new AtmosphereType(false);
-	public static final AtmosphereType VACUUM = new AtmosphereType(false);
-
-	static {
-		AIR.isBreathable = true;
-	}
+	public static final AtmosphereType AIR = new AtmosphereType(false, true);
+	public static final AtmosphereType VACUUM = new AtmosphereVacuum();
 
 	private boolean allowsCombustion;
 	private boolean isBreathable;
 	private boolean canTick;
 
-	public AtmosphereType(boolean canTick) {
-		allowsCombustion = false;
-		isBreathable = false;
+	public AtmosphereType(boolean canTick, boolean isBreathable) {
+		this.allowsCombustion = false;
+		this.isBreathable = isBreathable;
 		this.canTick = canTick;
 	}
 
+	/**
+	 * The atmosphere can be unbreathable for a variety of reason, eg: toxic, too thin, no Oxygen, etc
+	 * @return true if the atmosphere is breathable
+	 */
 	public boolean isBreathable() {
 		return isBreathable;
 	}
 
+	/**
+	 * Should the gas run a tick on every player in it?  Calls onTick(EntityLiving base)
+	 * @return true if the atmosphere performs an action every tick
+	 */
 	public boolean canTick() {
-		return !isBreathable() || canTick;
+		return canTick;
 	}
 
+	//TODO: check for all entities
+	/**
+	 * 
+	 * @param player living entity inside this atmosphere we are ticking
+	 * @return true if the atmosphere does not affect the entity in any way
+	 */
 	public boolean isImmune(EntityLivingBase player) {
-
-		ItemStack helm = player.getEquipmentInSlot(1);
-		ItemStack shirt = player.getEquipmentInSlot(2);
-		ItemStack leg = player.getEquipmentInSlot(3);
-		ItemStack feet = player.getEquipmentInSlot(4);
-
-		return (player instanceof EntityPlayer && ((EntityPlayer)player).capabilities.isCreativeMode) ||
-				helm != null && helm.getItem() instanceof ItemArmor && ((ItemArmor)helm.getItem()).getArmorMaterial() == AdvancedRocketryItems.spaceSuit &&
-				shirt != null && shirt.getItem() instanceof ItemArmor && ((ItemArmor)shirt.getItem()).getArmorMaterial() == AdvancedRocketryItems.spaceSuit &&
-				leg != null && leg.getItem() instanceof ItemArmor && ((ItemArmor)leg.getItem()).getArmorMaterial() == AdvancedRocketryItems.spaceSuit &&
-				feet != null && feet.getItem() instanceof ItemArmor && ((ItemArmor)feet.getItem()).getArmorMaterial() == AdvancedRocketryItems.spaceSuit &&
-				((ItemSpaceArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).decrementAir(leg, 1) > 0;
+		return true;
 	}
 
+	/**
+	 * To be used to check if combustion can occur in this atmosphere, furnaces, torches, engines, etc could run this check
+	 * @return true if the atmosphere is combustable
+	 */
 	public boolean allowsCombustion() {
 		return allowsCombustion;
 	}
 
+	/**
+	 * Sets the atmosphere to be breathable or not breathable
+	 * @param isBreathable
+	 */
 	public void setIsBreathable(boolean isBreathable) {
 		this.isBreathable = isBreathable;
 	}
 
+	/**
+	 * Sets the atmosphere to allow combustion or not to allow combustion
+	 * @param allowsCombustion
+	 */
 	public void setAllowsCombustion(boolean allowsCombustion) {
 		this.allowsCombustion = allowsCombustion;
 	}
 
+	//TODO: tick for all entities
+	/**
+	 * If the canTick() returns true then then this is called every tick on EntityLivingBase objects located inside this atmosphere
+	 * @param player entity being ticked
+	 */
 	public void onTick(EntityLivingBase player) {
-		if(player.worldObj.getTotalWorldTime() % 10  == 0 && !isImmune(player)) {
-			if(!isBreathable()) {
-				player.attackEntityFrom(AdvancedRocketry.vacuumDamage, 1);
-				if(player instanceof EntityPlayer)
-					PacketHandler.sendToPlayer(new PacketOxygenState(), (EntityPlayer)player);
-			}
-		}
 	}
 }

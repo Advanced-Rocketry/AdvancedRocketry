@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.item;
 import java.util.List;
 
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
+import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.libVulpes.util.ZUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,13 +30,17 @@ public class ItemSatellite extends ItemIdWithName {
 
 	public void setSatellite(ItemStack stack, SatelliteProperties satellite) {
 
-		NBTTagCompound nbt = new NBTTagCompound();
+		SatelliteBase satellite2 = SatelliteRegistry.getSatallite(satellite.getSatelliteType());
+		if(satellite2 != null) {
+			NBTTagCompound nbt = new NBTTagCompound();
 
-		satellite.writeToNBT(nbt);
-		stack.setTagCompound(nbt);
+			satellite.writeToNBT(nbt);
+			stack.setTagCompound(nbt);
 
-		setName(stack, SatelliteRegistry.getSatallite(satellite.getSatelliteType()).getName());
-
+			setName(stack, satellite2.getName());
+		}
+		else
+			stack.setTagCompound(null);
 
 	}
 
@@ -51,17 +56,17 @@ public class ItemSatellite extends ItemIdWithName {
 
 			list.add(getName(stack));
 			list.add("ID: " + properties.getId());
-			
+
 			if( (powerStorage = properties.getPowerStorage()) > 0)
 				list.add("Power Storage: " + powerStorage);
 			else
 				list.add(EnumChatFormatting.RED + "No Power Storage");
-			
+
 			if( ( powerGeneration=properties.getPowerGeneration() ) > 0)
 				list.add("Power Generation: " + powerGeneration);
 			else
 				list.add(EnumChatFormatting.RED + "No Power Generation!");
-			
+
 			if( (dataStorage = properties.getMaxDataStorage()) > 0 ) 
 				list.add("Data Storage: " + ZUtils.formatNumber(dataStorage));
 			else

@@ -32,6 +32,7 @@ import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.api.armor.ItemSpaceArmor;
+import zmaster587.advancedRocketry.api.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.api.dimension.DimensionManager;
 import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
 import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
@@ -52,7 +53,7 @@ public class RocketEventHandler extends Gui {
 	private static boolean mapReady = false;
 	private static boolean mapNeedsBinding = false;
 	private static IntBuffer table,outerBoundsTable;
-	public static long lastSuffocationTime;
+	
 	private static final int numTicksToDisplay = 40;
 
 
@@ -335,7 +336,7 @@ public class RocketEventHandler extends Gui {
 			}
 			
 			//Tell the player he's suffocating if needed
-			if(Minecraft.getMinecraft().theWorld.getTotalWorldTime() - lastSuffocationTime < numTicksToDisplay) {
+			if(Minecraft.getMinecraft().theWorld.getTotalWorldTime() - AtmosphereHandler.lastSuffocationTime < numTicksToDisplay) {
 				FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 				String str = "Warning: No Oxygen detected!";
 				int screenX = event.resolution.getScaledWidth()/6 - fontRenderer.getStringWidth(str)/2;

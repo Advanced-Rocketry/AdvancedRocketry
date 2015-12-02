@@ -33,15 +33,27 @@ public class SpaceObjectManager {
 		registerSpaceObjectType("genericObject", SpaceObject.class);
 	}
 
+	/**
+	 * @param id
+	 * @return {@link SpaceObject} object registered to this spaceObject id
+	 */
 	public SpaceObject getSpaceStation(int id) {
 		return stationLocations.get(id);
 	}
 
 
+	/**
+	 * @return the next valid space object id and increments the value for the next one
+	 */
 	public int getNextStationId() {
 		return nextId++;
 	}
 
+	/**
+	 * Registers the spaceobject class with this manager, this must be done or the object cannot be saved!
+	 * @param str key with which to register the spaceObject type
+	 * @param clazz class of space object to register
+	 */
 	public void registerSpaceObjectType(String str, Class<? extends SpaceObject> clazz) {
 		nameToClass.put(str, clazz);
 		classToString.put(clazz, str);
@@ -73,6 +85,12 @@ public class SpaceObjectManager {
 		return getSpaceStation(index);
 	}
 
+	/**
+	 * Registers a space object with this manager, the class must have been registered prior to this with registerSpaceObjectType!
+	 * @param object
+	 * @param dimId
+	 * @param stationId
+	 */
 	public void registerSpaceObject(SpaceObject object, int dimId, int stationId) {
 		object.setId(stationId);
 		stationLocations.put(stationId, object);
@@ -135,6 +153,10 @@ public class SpaceObjectManager {
 		return spaceStationOrbitMap.get(planetId);
 	}
 
+	/*
+	 * Event designed to teleport a player to the spawn point for the station if he'she falls out of the world in space
+	 * TODO: prevent inf loop if nowhere to fall!
+	 */
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent event) {
 		if(event.player.worldObj.provider.dimensionId == Configuration.spaceDimId) {
@@ -186,7 +208,7 @@ public class SpaceObjectManager {
 	}
 
 	/**
-	 * 
+	 * Changes the orbiting body of the space object
 	 * @param station
 	 * @param dimId
 	 */

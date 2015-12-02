@@ -10,20 +10,20 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 
-import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
+import zmaster587.advancedRocketry.api.network.PacketDimInfo;
+import zmaster587.advancedRocketry.api.network.PacketHandler;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
-import zmaster587.advancedRocketry.network.PacketDimInfo;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.WorldProvider;
 
 
 public class DimensionManager {
@@ -33,6 +33,9 @@ public class DimensionManager {
 	private static DimensionManager instance = new DimensionManager();
 	public static final String workingPath = "advRocketry";
 	public static final String filePath = workingPath + "/temp.dat";
+	
+	//Reference to the worldProvider for any dimension created through this system, normally WorldProviderPlanet, set in AdvancedRocketry.java in preinit
+	public static Class<? extends WorldProvider> planetWorldProvider;
 	private HashMap<Integer,DimensionProperties> dimensionList;
 	private HashMap<Integer, StellarBody> starList;
 
@@ -40,7 +43,9 @@ public class DimensionManager {
 	private static StellarBody sol;
 	private static SpaceObjectManager spaceObjectManager;
 
+	//The default properties belonging to the overworld
 	public static DimensionProperties overworldProperties;
+	//the default property for any dimension created in space, normally, space over earth
 	public static DimensionProperties defaultSpaceDimensionProperties;
 
 	public static StellarBody getSol() {
@@ -84,23 +89,41 @@ public class DimensionManager {
 		random = new Random(System.currentTimeMillis());
 	}
 	
+	/**
+	 * The {@link SpaceObjectManager} is used for tasks such as managing space stations and orbiting worlds 
+	 * @return the {@link SpaceObjectManager} registered with the DimensionManager
+	 */
 	public static SpaceObjectManager getSpaceManager() {
 		return spaceObjectManager;
 	}
 
+	/**
+	 * @return an Integer array of dimensions registered with this DimensionManager
+	 */
 	public Integer[] getregisteredDimensions() {
 		Integer ret[] = new Integer[dimensionList.size()];
 		return dimensionList.keySet().toArray(ret);
 	}
 
+	/**
+	 * @return List of dimensions registered with this manager that are currently loaded on the server/integrated server
+	 */
 	public Integer[] getLoadedDimensions() {
 		return getregisteredDimensions();
 	}
 
+	/**
+	 * Increments the nextAvalible satellite ID and returns one
+	 * @return next avalible id for satellites
+	 */
 	public long getNextSatelliteId() {
 		return nextSatelliteId++;
 	}
 
+	/**
+	 * @param satId long id of the satellite
+	 * @return a reference to the satellite object with the supplied ID
+	 */
 	public SatelliteBase getSatellite(long satId) {
 		SatelliteBase satellite = overworldProperties.getSatallite(satId);
 
@@ -117,10 +140,17 @@ public class DimensionManager {
 	}
 
 	//TODO: fix naming system
-	public String getNextName(int dimId) {
+	/**
+	 * @param dimId id to register the planet with
+	 * @return the name for the next planet
+	 */
+	private String getNextName(int dimId) {
 		return "Sol-" + dimId;
 	}
 
+	/**
+	 * Called every tick to tick satellites
+	 */
 	public void tickDimensions() {
 		//Tick satellites
 		overworldProperties.tick();
@@ -129,10 +159,19 @@ public class DimensionManager {
 		}
 	}
 
+	/**
+	 * Sets the properies supplied for the supplied dimensionID, if the dimension does not exist, it is added to the list but not registered with minecraft
+	 * @param dimId id to set the properties of
+	 * @param properties to set for that dimension
+	 */
 	public void setDimProperties( int dimId, DimensionProperties properties) {
 		dimensionList.put(new Integer(dimId),properties);
 	}
 
+	/**
+	 * Iterates though the list of existing dimIds, and returns the closest free id greater than two
+	 * @return next free id
+	 */
 	public int getNextFreeDim() {
 		for(int i = 2; i < 1024; i++) {
 			if(!net.minecraftforge.common.DimensionManager.isDimensionRegistered(i))
@@ -149,6 +188,17 @@ public class DimensionManager {
 		return generateRandom(name, 100, 100, 100, atmosphereFactor, distanceFactor, gravityFactor);
 	}
 
+	/**
+	 * Creates and registers a planet with the given properties, Xfactor is the amount of variance from the supplied base property; ie: base - (factor/2) <= generated property value <= base - (factor/2)
+	 * @param name name of the planet
+	 * @param baseAtmosphere 
+	 * @param baseDistance
+	 * @param baseGravity
+	 * @param atmosphereFactor
+	 * @param distanceFactor
+	 * @param gravityFactor
+	 * @return the new dimension properties created for this planet
+	 */
 	public DimensionProperties generateRandom(String name, int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
 		DimensionProperties properties = new DimensionProperties(getNextFreeDim());
 
@@ -194,6 +244,11 @@ public class DimensionManager {
 		return generateRandom("", baseAtmosphere, baseDistance, baseGravity, atmosphereFactor, distanceFactor, gravityFactor);
 	}
 
+	/**
+	 * Attempts to register a dimension with {@link DimensionProperties}, if the dimension has not yet been registered, sends a packet containing the dimension information to all connected clients
+	 * @param properties {@link DimensionProperties} to register
+	 * @return false if the dimension has not been registered, true if it is being newly registered
+	 */
 	public boolean registerDim(DimensionProperties properties) {
 		boolean bool = registerDimNoUpdate(properties);
 
@@ -202,6 +257,11 @@ public class DimensionManager {
 		return bool;
 	}
 
+	/**
+	 * Attempts to register a dimension without sending an update to the client
+	 * @param properties {@link DimensionProperties} to register
+	 * @return true if the dimension has NOT been registered before, false if the dimension IS registered exist already
+	 */
 	public boolean registerDimNoUpdate(DimensionProperties properties) {
 		int dimId = properties.getId();
 		Integer dim = new Integer(dimId);
@@ -209,13 +269,16 @@ public class DimensionManager {
 		if(dimensionList.containsKey(dim))
 			return false;
 
-		net.minecraftforge.common.DimensionManager.registerProviderType(properties.getId(), WorldProviderPlanet.class, false);
+		net.minecraftforge.common.DimensionManager.registerProviderType(properties.getId(), DimensionManager.planetWorldProvider, false);
 		net.minecraftforge.common.DimensionManager.registerDimension(dimId, dimId);
 		dimensionList.put(dimId, properties);
 
 		return true;
 	}
 
+	/**
+	 * Unregisters all dimensions associated with this DimensionManager from both Minecraft and this DimnensionManager
+	 */
 	public void unregisterAllDimensions() {
 		for(Entry<Integer, DimensionProperties> dimSet : dimensionList.entrySet()) {
 			net.minecraftforge.common.DimensionManager.unregisterProviderType(dimSet.getKey());
@@ -224,6 +287,10 @@ public class DimensionManager {
 		dimensionList.clear();
 	}
 
+	/**
+	 * Deletes and unregisters the dimensions, as well as all child dimensions, from the game
+	 * @param dimId the dimensionId to delete
+	 */
 	public void deleteDimension(int dimId) {
 
 		DimensionProperties properties = dimensionList.get(dimId);
@@ -275,23 +342,42 @@ public class DimensionManager {
 		return properties == null ? overworldProperties : properties;
 	}
 
+	/**
+	 * @param id star id for which to get the object
+	 * @return the {@link StellarBody} object
+	 */
 	public StellarBody getStar(int id) {
 		return starList.get(new Integer(id));
 	}
 
+	/**
+	 * @return a list of star ids
+	 */
 	public Set<Integer> getStars() {
 		return starList.keySet();
 	}
 
+	/**
+	 * Adds a star to the handler
+	 * @param star star to add
+	 */
 	public void addStar(StellarBody star) {
 		starList.put(star.getId(), star);
 	}
 
+	/**
+	 * Removes the star from the handler
+	 * @param id id of the star to remove
+	 */
 	public void removeStar(int id) {
 		//TODO: actually remove subPlanets et
 		starList.remove(id);
 	}
 
+	/**
+	 * Saves all dimension data, satellites, and space stations to disk, SHOULD NOT BE CALLED OUTSIDE OF WORLDSAVEEVENT
+	 * @param filePath file path to which to save the data
+	 */
 	public void saveDimensions(String filePath) {
 		NBTTagCompound nbt = new NBTTagCompound();
 		NBTTagCompound dimListnbt = new NBTTagCompound();
@@ -357,6 +443,10 @@ public class DimensionManager {
 		return dimensionList.containsKey(new Integer(dimId));
 	}
 
+	/**
+	 * Loads all information to rebuild the galaxy and solar systems from disk into the current instance of DimensionManager
+	 * @param filePath file path from which to load the information
+	 */
 	public void loadDimensions(String filePath) {
 
 		FileInputStream inStream;
@@ -414,12 +504,12 @@ public class DimensionManager {
 
 				if(propeties != null) {
 					int keyInt = Integer.parseInt(keyString);
-					net.minecraftforge.common.DimensionManager.registerProviderType(keyInt, WorldProviderPlanet.class, false);
+					net.minecraftforge.common.DimensionManager.registerProviderType(keyInt, DimensionManager.planetWorldProvider, false);
 					net.minecraftforge.common.DimensionManager.registerDimension(keyInt, keyInt);
 					dimensionList.put(new Integer(keyInt), propeties);
 				}
 				else{
-					AdvancedRocketry.logger.warning("Null Dimension Properties Recieved");
+					Logger.getLogger("advancedRocketry").warning("Null Dimension Properties Recieved");
 				}
 				//TODO: print unable to register world
 			}

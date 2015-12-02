@@ -1,8 +1,8 @@
-package zmaster587.advancedRocketry.network;
+package zmaster587.advancedRocketry.api.network;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import zmaster587.advancedRocketry.event.RocketEventHandler;
+import zmaster587.advancedRocketry.api.atmosphere.AtmosphereHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +21,7 @@ public class PacketOxygenState extends BasePacket {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void readClient(ByteBuf in) {
-		RocketEventHandler.lastSuffocationTime = Minecraft.getMinecraft().theWorld.getTotalWorldTime();
+		AtmosphereHandler.lastSuffocationTime = Minecraft.getMinecraft().theWorld.getTotalWorldTime();
 	}
 
 	@Override

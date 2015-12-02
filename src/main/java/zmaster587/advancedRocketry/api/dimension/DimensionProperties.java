@@ -16,9 +16,10 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
+import zmaster587.advancedRocketry.api.network.PacketHandler;
+import zmaster587.advancedRocketry.api.network.PacketSatellite;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.network.PacketSatellite;
+import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.libVulpes.util.VulpineMath;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
@@ -36,6 +37,10 @@ import net.minecraftforge.common.util.Constants.NBT;
 
 public class DimensionProperties implements Cloneable {
 
+	/**
+	 * Contains standardized temperature ranges for planets
+	 * where 100 is earthlike, larger values are hotter
+	 */
 	static enum Temps {
 		TOOHOT(150),
 		HOT(125),
@@ -53,7 +58,11 @@ public class DimensionProperties implements Cloneable {
 		public int getTemp() {
 			return temp;
 		}
-
+		
+		/**
+		 * @return a temperature that refers to the supplied value
+		 */
+		
 		public static Temps getTempFromValue(int value) {
 			for(Temps type : Temps.values()) {
 				if(value > type.temp)
@@ -63,6 +72,10 @@ public class DimensionProperties implements Cloneable {
 		}
 	}
 
+	/**
+	 * Contains standardized pressure ranges for planets
+	 * where 100 is earthlike, largers values are higher pressure
+	 */
 	static enum AtmosphereTypes {
 		HIGHPRESSURE(150),
 		NORMAL(75),
@@ -86,17 +99,12 @@ public class DimensionProperties implements Cloneable {
 			}
 			return NONE;
 		}
-
-		/*public int compareTo(AtmosphereTypes type) {
-			if(type == this)
-				return 0;
-			else if(type.value < this.value)
-				return -1;
-
-			return 1;
-		}*/
 	}
 
+	/**
+	 * Contains default graphic {@link ResourceLocation} to display for different planet types
+	 *
+	 */
 	public static enum PlanetIcons {
 		EARTHLIKE(new ResourceLocation("advancedrocketry:textures/planets/Earthlike.png")),
 		LAVA(new ResourceLocation("advancedrocketry:textures/planets/Lava.png")),
@@ -147,7 +155,6 @@ public class DimensionProperties implements Cloneable {
 
 	public DimensionProperties(int id) {
 		name = "Temp";
-
 		resetProperties();
 
 		planetId = id;
@@ -178,6 +185,9 @@ public class DimensionProperties implements Cloneable {
 		}
 	}
 
+	/**
+	 * Resets all properties to default
+	 */
 	public void resetProperties() {
 		fogColor = new float[] {1,1,1};
 		skyColor = new float[] {1f,1f,1f};
@@ -188,20 +198,33 @@ public class DimensionProperties implements Cloneable {
 		atmosphereDensity = 100;
 	}
 
+	/**
+	 * @return the color of the sun as an array of floats represented as  {r,g,b}
+	 */
 	public float[] getSunColor() {
 		return star.getColor();
 	}
 
+	/**
+	 * Sets the host star for the planet
+	 * @param star the star to set as the host for this planet
+	 */
 	public void setStar(StellarBody star) {
 		this.star = star;
 		if(!this.isMoon() && !isStation())
 			this.star.addPlanet(this);
 	}
 
+	/**
+	 * @return the host star for this planet
+	 */
 	public StellarBody getStar() {
 		return star;
 	}
 
+	/**
+	 * @return the {@link ResourceLocation} representing this planet, generated from the planet's properties
+	 */
 	public ResourceLocation getPlanetIcon() {
 		AtmosphereTypes atmType = AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity);
 		Temps tempType = Temps.getTempFromValue(averageTemperature);
@@ -225,40 +248,68 @@ public class DimensionProperties implements Cloneable {
 			return PlanetIcons.LAVA.resource;
 	}
 
+	/**
+	 * @return the name of the planet
+	 */
 	public String getName() {
 		return name;
 	}
 
 	//Planet hierarchy
 
+	/**
+	 * @return the DIMID of the planet
+	 */
 	public int getId() {
 		return planetId;
 	}
 
+	/**
+	 * @return the DimID of the parent planet
+	 */
 	public int getParentPlanet() {
 		return parentPlanet;
 	}
 
+	/**
+	 * @return the {@link DimensionProperties} of the parent planet
+	 */
 	public DimensionProperties getParentProperties() {
 		if(parentPlanet != -1)
 			return DimensionManager.getInstance().getDimensionProperties(parentPlanet);
 		return null;
 	}
 
+	/**
+	 * Range 0 < value <= 200
+	 * @return if the planet is a moon, then the distance from the host planet where the earth's moon is 100, higher is farther, if planet, distance from the star, 100 is earthlike, higher value is father
+	 */
 	public int getParentOrbitalDistance() {
 		return orbitalDist;
 	}
 
+	/**
+	 * @return if a planet, the same as getParentOrbitalDistance(), if a moon, the moon's distance from the host star
+	 */
 	public int getSolarOrbitalDistance() {
 		if(parentPlanet != -1)
 			return getParentProperties().getSolarOrbitalDistance();
 		return orbitalDist;
 	}
 
+	/**
+	 * Sets this planet as a moon of the supplied planet's id.
+	 * @param parentId parent planet's DIMID, or -1 for none
+	 */
 	public void setParentPlanet(int parentId) {
 		this.setParentPlanet(parentId, true);
 	}
 
+	/**
+	 * Sets this planet as a moon of the supplied planet's ID
+	 * @param parentId DIMID of the parent planet
+	 * @param update true to update the parent's planet to the change
+	 */
 	public void setParentPlanet(int parentId, boolean update) {
 
 		if(update) {
@@ -273,45 +324,75 @@ public class DimensionProperties implements Cloneable {
 			parentPlanet = parentId;
 	}
 
+	/**
+	 * @return true if the planet has moons
+	 */
 	public boolean hasChildren() {
 		return !childPlanets.isEmpty();
 	}
 
+	/**
+	 * @return true if this DIM orbits another
+	 */
 	public boolean isMoon() {
 		return parentPlanet != -1;
 	}
 
+	/**
+	 * 
+	 * @return true if the dimension properties refer to that of a space station or orbiting object registered in {@link SpaceObjectManager}
+	 */
 	public boolean isStation() {
 		return isStation;
 	}
 
-	//TODO: change
+	//TODO: allow for more exotic atmospheres
+	/**
+	 * @return the default atmosphere of this dimension
+	 */
 	public AtmosphereType getAtmosphere() {
-		if(atmosphereDensity > AtmosphereTypes.LOW.getAtmosphereValue())
+		if(hasAtmosphere())
 			return AtmosphereType.AIR;
 		return AtmosphereType.VACUUM;
 	}
 
+	/**
+	 * @return {@link ResourceLocation} refering to the image to render as atmospheric haze as seen from orbit
+	 */
 	public static ResourceLocation getAtmosphereResource() {
 		return PlanetIcons.atmosphere;
 	}
 
+	/**
+	 * @return true if the planet has an atmosphere
+	 */
 	public boolean hasAtmosphere() {
 		return AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity).compareTo(AtmosphereTypes.LOW) == -1;
 	}
 
+	/**
+	 * @return set of all moons orbiting this planet
+	 */
 	public Set<Integer> getChildPlanets() {
 		return childPlanets;
 	}
 
+	/**
+	 * @return how many moons deep this planet is, IE: if the moon of a moon of a planet then three is returned
+	 */
 	public int getPathLengthToStar() {
 		if(isMoon())
 			return 1 + getParentProperties().getPathLengthToStar();
 		return 1;
 	}
 
+	/**
+	 * Does not check for hierarchy loops!
+	 * @param id DIMID of the new child
+	 * @return true if successfully added as a child planet
+	 */
 	public boolean addChildPlanet(int id) {
-		//TODO: possibly check to the stellar level
+		//TODO: check for hierarchy loops!
 		if(id == parentPlanet)
 			return false;
 
@@ -320,21 +401,30 @@ public class DimensionProperties implements Cloneable {
 		return true;
 	}
 
+	/**
+	 * Removes the passed DIMID from the list of moons
+	 * @param id
+	 */
 	public void removeChild(int id) {
 		childPlanets.remove(id);
 	}
 
-	//Satallites
-	public void addSatallite(SatelliteBase satallite, World world) {
-		satallites.put(satallite.getId(), satallite);
-		satallite.setDimensionId(world);
+	//Satallites --------------------------------------------------------
+	/**
+	 * Adds a satellite to this DIM
+	 * @param satellite satellite to add
+	 * @param world world to add the satellite to
+	 */
+	public void addSatallite(SatelliteBase satellite, World world) {
+		satallites.put(satellite.getId(), satellite);
+		satellite.setDimensionId(world);
 
 
-		if(satallite.canTick())
-			tickingSatallites.add(satallite);
+		if(satellite.canTick())
+			tickingSatallites.add(satellite);
 
 		if(!world.isRemote)
-			PacketHandler.sendToAll(new PacketSatellite(satallite));
+			PacketHandler.sendToAll(new PacketSatellite(satellite));
 	}
 
 	/**
@@ -348,6 +438,11 @@ public class DimensionProperties implements Cloneable {
 			tickingSatallites.add(satallite);
 	}
 
+	/**
+	 * Removes the satellite from orbit around this world
+	 * @param satalliteId ID # for this satellite
+	 * @return reference to the satellite object
+	 */
 	public SatelliteBase removeSatellite(long satalliteId) {
 		SatelliteBase satallite = satallites.remove(satalliteId);
 
@@ -357,11 +452,18 @@ public class DimensionProperties implements Cloneable {
 		return satallite;
 	}
 
+	/**
+	 * @param id ID # for this satellite
+	 * @return a reference to the satelliteBase object given this ID
+	 */
 	public SatelliteBase getSatallite(long id) {
 		return satallites.get(id);
 	}
 
 	//TODO: multithreading
+	/**
+	 * Tick satellites as needed
+	 */
 	public void tick() {
 		Iterator<SatelliteBase> iterator = tickingSatallites.iterator();
 
@@ -371,19 +473,34 @@ public class DimensionProperties implements Cloneable {
 		}
 	}
 
+	/**
+	 * @return true if this dimension is allowed to have rivers
+	 */
 	public boolean hasRivers() {
 		return AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity).compareTo(AtmosphereTypes.LOW) != -1 && VulpineMath.isBetween(Temps.getTempFromValue(averageTemperature).ordinal(), Temps.COLD.ordinal(), Temps.HOT.ordinal());
 	}
 
 
-	public List<BiomeEntry> getBiomes(int id) {
+	/**
+	 * Each Planet is assigned a list of biomes that are allowed to spawn there
+	 * @return List of biomes allowed to spawn on this planet
+	 */
+	public List<BiomeEntry> getBiomes() {
 		return (List<BiomeEntry>)allowedBiomes.clone();
 	}
 
+	/**
+	 * Used to determine if a biome is allowed to spawn on ANY planet
+	 * @param biome biome to check
+	 * @return true if the biome is not allowed to spawn on any Dimension
+	 */
 	public boolean isBiomeblackListed(BiomeGenBase biome) {
 		return biome.biomeID == BiomeGenBase.sky.biomeID || biome.biomeID == BiomeGenBase.hell.biomeID;
 	}
 
+	/**
+	 * @return a list of biomes allowed to spawn in this dimension
+	 */
 	public List<BiomeGenBase> getViableBiomes() {
 
 		ArrayList<BiomeGenBase> viableBiomes = new ArrayList<BiomeGenBase>();
@@ -423,22 +540,38 @@ public class DimensionProperties implements Cloneable {
 		return viableBiomes;
 	}
 
+	/**
+	 * Adds a biome to the list of biomes allowed to spawn on this planet
+	 * @param biome biome to be added as viable
+	 */
 	public void addBiome(BiomeGenBase biome) {
 		ArrayList<BiomeGenBase> biomes = new ArrayList<BiomeGenBase>();
 		biomes.add(biome);
 		allowedBiomes.addAll(getBiomesEntries(biomes));
 	}
 
+	/**
+	 * Adds a list of biomes to the allowed list of biomes for this planet
+	 * @param biomes 
+	 */
 	public void addBiomes(List<BiomeGenBase> biomes) {
 		//TODO check for duplicates
 		allowedBiomes.addAll(getBiomesEntries(biomes));
 	}
 
+	/**
+	 * Clears the list of allowed biomes and replaces it with the provided list
+	 * @param biomes
+	 */
 	public void setBiomes(List<BiomeGenBase> biomes) {
 		allowedBiomes.clear();
 		addBiomes(biomes);
 	}
 
+	/**
+	 * Adds all biomes of this type to the list of biomes allowed to generate
+	 * @param type
+	 */
 	public void addBiomeType(BiomeDictionary.Type type) {
 
 		ArrayList<BiomeGenBase> entryList = new ArrayList<BiomeGenBase>();
@@ -463,6 +596,10 @@ public class DimensionProperties implements Cloneable {
 
 	}
 
+	/**
+	 * Removes all biomes of this type from the list of biomes allowed to generate
+	 * @param type
+	 */
 	public void removeBiomeType(BiomeDictionary.Type type) {
 
 		ArrayList<BiomeGenBase> entryList = new ArrayList<BiomeGenBase>();
@@ -479,6 +616,11 @@ public class DimensionProperties implements Cloneable {
 
 	}
 
+	/**
+	 * Gets a list of BiomeEntries allowed to spawn in this dimension
+	 * @param biomeIds
+	 * @return
+	 */
 	private ArrayList<BiomeEntry> getBiomesEntries(List<BiomeGenBase> biomeIds) {
 
 		ArrayList<BiomeEntry> biomeEntries = new ArrayList<BiomeManager.BiomeEntry>();
@@ -687,15 +829,30 @@ public class DimensionProperties implements Cloneable {
 		return properties;
 	}
 
+	/**
+	 * Function for calculating atmosphere thinning with respect to hieght 
+	 * @param y
+	 * @return the density of the atmosphere at the given height
+	 */
 	public float getAtmosphereDensityAtHeight(double y) {
 		return atmosphereDensity*MathHelper.clamp_float((float) ( 1 + (256 - y)/200f), 0f,1f)/100f;
 	}
 
+	/**
+	 * Gets the fog color at a given altitude, used to assist the illusion of thinning atmosphere
+	 * @param y
+	 * @param fogColor current fog color at this location
+	 * @return
+	 */
 	public float[] getFogColorAtHeight(double y, Vec3 fogColor) {
 		float atmDensity = getAtmosphereDensityAtHeight(y);
 		return new float[] { (float) (atmDensity * fogColor.xCoord), (float) (atmDensity * fogColor.yCoord), (float) (atmDensity * fogColor.zCoord) };
 	}
 
+	/**
+	 * Sets the planet's id
+	 * @param id
+	 */
 	public void setId(int id) {
 		this.planetId = id;
 	}

@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.network;
+package zmaster587.advancedRocketry.api.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;

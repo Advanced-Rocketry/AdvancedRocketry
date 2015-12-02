@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import io.netty.buffer.ByteBuf;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -23,24 +25,23 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleSlotButton;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleText;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.IEntityRocket;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
+import zmaster587.advancedRocketry.api.StatsRocket;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.api.dimension.DimensionManager;
 import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
+import zmaster587.advancedRocketry.api.network.PacketEntity;
+import zmaster587.advancedRocketry.api.network.PacketHandler;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.SpaceObject;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
-import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.item.ItemPackedStructure;
-import zmaster587.advancedRocketry.network.PacketEntity;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.satellite.SatelliteDefunct;
-import zmaster587.advancedRocketry.stats.StatsRocket;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.StorageChunk;
@@ -69,7 +70,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-public class EntityRocket extends Entity implements INetworkEntity, IModularInventory, IProgressBar, IButtonInventory {
+public class EntityRocket extends Entity implements INetworkEntity, IModularInventory, IProgressBar, IButtonInventory, IEntityRocket {
 
 
 	//Stores the blocks and tiles that make up the rocket
@@ -200,6 +201,7 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 	 * Links the passed infrastructure to the rocket
 	 * @param tile infrastructure to link to the rocket
 	 */
+	@Override
 	public void linkInfrastructure(IInfrastructure tile) {
 		if(tile.linkRocket(this));
 		connectedInfrastructure.add(tile);
@@ -209,6 +211,7 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 	 * Unlinks the tile from the rocket
 	 * @param tile tile to unlink
 	 */
+	@Override
 	public void unlinkInfrastructure(IInfrastructure tile) {
 		connectedInfrastructure.remove(tile);
 	}
@@ -404,7 +407,7 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 				onOrbitReached();
 			}
 
-			
+
 			//If the rocket falls out of the world while in orbit either fall back to earth or die
 			if(!worldObj.isRemote && this.posY < 0) {
 				int dimId = worldObj.provider.dimensionId;
@@ -431,7 +434,9 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 	public List<SatelliteBase> getSatellites() {	
 		List<SatelliteBase> satellites = new ArrayList<SatelliteBase>();
 		for(TileSatelliteHatch tile : storage.getSatelliteHatches()) {
-			satellites.add(tile.getSatellite());
+			SatelliteBase satellite = tile.getSatellite();
+			if(satellite != null)
+				satellites.add(satellite);
 		}
 		return satellites;
 	}
@@ -450,7 +455,7 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 
 			for(TileSatelliteHatch tile : storage.getSatelliteHatches()) {
 				SatelliteBase satellite = tile.getSatellite();
-				if(tile.getSatellite() instanceof SatelliteDefunct) {
+				if(satellite == null) {
 					ItemStack stack = tile.getStackInSlot(0);
 					if(stack != null && stack.getItem() == AdvancedRocketryItems.itemSpaceStation) {
 						StorageChunk storage = ((ItemPackedStructure)stack.getItem()).getStructure(stack);
@@ -458,7 +463,7 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 
 						DimensionManager.getSpaceManager().moveStationToBody(object, this.worldObj.provider.dimensionId);
 
-						Vector3F<Integer> spawn = object.getSpawnLocation();
+						//Vector3F<Integer> spawn = object.getSpawnLocation();
 
 						object.onFirstCreated(storage);
 
@@ -540,6 +545,7 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 	/**
 	 * Called when the rocket is to be deconstructed
 	 */
+	@Override
 	public void deconstructRocket() {
 
 
@@ -908,5 +914,20 @@ public class EntityRocket extends Entity implements INetworkEntity, IModularInve
 			PlanetEventHandler.removePlayerFromInventoryBypass(entity);
 
 		return ret;
+	}
+
+	@Override
+	public Vector3F<Double> getLocation() {
+		return new Vector3F<Double>(posX, posY, posZ);
+	}
+
+	@Override
+	public Vector3F<Double>  getVelocity() {
+		return new Vector3F<Double>(motionX, motionY, motionZ);
+	}
+	
+	@Override
+	public StatsRocket getRocketStats() {
+		return stats;
 	}
 }

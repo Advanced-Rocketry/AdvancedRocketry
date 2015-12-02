@@ -67,7 +67,7 @@ public class ChunkManagerPlanet extends WorldChunkManager {
 		this(world.getSeed(), (WorldTypePlanetGen)world.getWorldInfo().getTerrainType(), DimensionManager.getInstance().getDimensionProperties(world.provider.dimensionId));
 		//Note: world MUST BE REGISTERED WITH THE DIMENSION MANAGER
 		//This is a mess!
-		biomes = DimensionManager.getInstance().getDimensionProperties(world.provider.dimensionId).getBiomes(world.provider.dimensionId);
+		biomes = DimensionManager.getInstance().getDimensionProperties(world.provider.dimensionId).getBiomes();
 	}
 
 	/**

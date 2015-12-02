@@ -1,9 +1,8 @@
-package zmaster587.advancedRocketry.stats;
+package zmaster587.advancedRocketry.api;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.libVulpes.util.Vector3F;
@@ -72,15 +71,28 @@ public class StatsRocket {
 		seatPos.z = z;
 	}
 
+	/**
+	 * Adds an engine location to the given coordinates
+	 * the engine location is only currently used to track the location for spawning particle effects
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
 	public void addEngineLocation(float x, float y, float z) {
 		//We want to be in the center of the block
 		engineLoc.add(new Vector3F<Float>(x , y, z));
 	}
 
+	/**
+	 * Removes all engine locations
+	 */
 	public void clearEngineLocations() {
 		engineLoc.clear();
 	}
 
+	/**
+	 * @return a duplicate of the rocket stats
+	 */
 	public StatsRocket copy() {
 		StatsRocket stat = new StatsRocket();
 		
@@ -98,6 +110,11 @@ public class StatsRocket {
 		return stat;
 	}
 
+	/**
+	 * 
+	 * @param type type of fuel to check
+	 * @return the amount of fuel of the type currently contained in the stat
+	 */
 	public int getFuelAmount(FuelRegistry.FuelType type) {
 		switch(type) {
 		case WARP:
@@ -114,6 +131,11 @@ public class StatsRocket {
 		return 0;
 	}
 	
+	/**
+	 * 
+	 * @param type
+	 * @return the largest amount of fuel of the type that can be stored in the stat
+	 */
 	public int getFuelCapacity(FuelRegistry.FuelType type) {
 		switch(type) {
 		case WARP:
@@ -130,6 +152,10 @@ public class StatsRocket {
 		return 0;
 	}
 	
+	/**
+	 * @param type
+	 * @return the consumption rate of the fuel per tick
+	 */
 	public int getFuelRate(FuelRegistry.FuelType type) {
 		
 		if(!Configuration.rocketRequireFuel)
@@ -150,6 +176,11 @@ public class StatsRocket {
 		return 0;
 	}
 	
+	/**
+	 * Sets the amount of a given fuel type in the stat
+	 * @param type
+	 * @param amt
+	 */
 	public void setFuelAmount(FuelRegistry.FuelType type, int amt) {
 		switch(type) {
 		case WARP:
@@ -169,6 +200,11 @@ public class StatsRocket {
 		}
 	}
 	
+	/**
+	 * Sets the fuel consumption rate per tick of the stat
+	 * @param type
+	 * @param amt
+	 */
 	public void setFuelRate(FuelRegistry.FuelType type, int amt) {
 		switch(type) {
 		case WARP:
@@ -188,6 +224,11 @@ public class StatsRocket {
 		}
 	}
 	
+	/**
+	 * Sets the fuel capacity of the fuel type in this stat
+	 * @param type
+	 * @param amt
+	 */
 	public void setFuelCapacity(FuelRegistry.FuelType type, int amt) {
 		switch(type) {
 		case WARP:
@@ -237,10 +278,16 @@ public class StatsRocket {
 		return 0;
 	}
 	
+	/**
+	 * @return true if a seat exists on this stat
+	 */
 	public boolean hasSeat() {
 		return seatPos.x != -1;
 	}
 
+	/**
+	 * resets all values to default
+	 */
 	public void reset() {
 		thrust = 0;
 		weight = 0;

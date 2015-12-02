@@ -9,7 +9,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
-
+/**
+ * Currently unused
+ *
+ */
 public class PlayerDataHandler implements IExtendedEntityProperties {
 	
 	public final static String IDENTIFIER = "planetdata";

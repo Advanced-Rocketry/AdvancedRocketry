@@ -9,8 +9,8 @@ import java.util.LinkedList;
 
 import org.lwjgl.input.Keyboard;
 
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.network.PacketMachine;
+import zmaster587.advancedRocketry.api.network.PacketHandler;
+import zmaster587.advancedRocketry.api.network.PacketMachine;
 import zmaster587.advancedRocketry.tile.TileSpaceLaser;
 import zmaster587.libVulpes.gui.GuiImageButton;
 import net.minecraft.client.gui.GuiButton;

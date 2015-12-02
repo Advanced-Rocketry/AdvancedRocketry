@@ -9,7 +9,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.ISpecialArmor;
-
+/**
+ * Space Armor
+ * Any class that extends this will gain the ability to store oxygen and will protect players from the vacuum atmosphere type
+ *
+ */
 public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor {
 
 	public ItemSpaceArmor(ArmorMaterial material, int component) {

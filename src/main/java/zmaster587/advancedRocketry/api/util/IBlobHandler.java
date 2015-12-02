@@ -4,7 +4,7 @@ import net.minecraft.world.World;
 import zmaster587.libVulpes.util.BlockPosition;
 
 public interface IBlobHandler {
-	/**
+	/* *
 	 * Called when a block is being removed from a blob
 	 * @param pos BlockPosition to remove
 	 * /

@@ -1,20 +1,10 @@
-package zmaster587.advancedRocketry.network;
+package zmaster587.advancedRocketry.api.network;
 
-import java.nio.ByteBuffer;
-
-import zmaster587.advancedRocketry.AdvancedRocketry;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.C17PacketCustomPayload;
-
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-
-import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

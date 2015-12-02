@@ -24,6 +24,7 @@ import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemReed;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
@@ -40,6 +41,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.api.dimension.DimensionManager;
@@ -50,6 +52,7 @@ import zmaster587.advancedRocketry.api.material.MaterialRegistry;
 import zmaster587.advancedRocketry.api.material.MixedMaterial;
 import zmaster587.advancedRocketry.api.material.MaterialRegistry.AllowedProducts;
 import zmaster587.advancedRocketry.api.material.MaterialRegistry.Materials;
+import zmaster587.advancedRocketry.api.network.PacketHandler;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.block.BlockActiveState;
 import zmaster587.advancedRocketry.block.BlockAlphaTexture;
@@ -97,9 +100,7 @@ import zmaster587.advancedRocketry.item.ItemProjector;
 import zmaster587.advancedRocketry.item.ItemSatellite;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
-import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
-import zmaster587.advancedRocketry.satellite.SatelliteDefunct;
 import zmaster587.advancedRocketry.satellite.SatelliteDensity;
 import zmaster587.advancedRocketry.satellite.SatelliteMassScanner;
 import zmaster587.advancedRocketry.satellite.SatelliteOptical;
@@ -145,6 +146,7 @@ import zmaster587.advancedRocketry.world.biome.BiomeGenHotDryRock;
 import zmaster587.advancedRocketry.world.biome.BiomeGenMoon;
 import zmaster587.advancedRocketry.world.biome.BiomeGenSpace;
 import zmaster587.advancedRocketry.world.ore.OreGenerator;
+import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.advancedRocketry.world.type.WorldTypePlanetGen;
 import zmaster587.advancedRocketry.world.type.WorldTypeSpace;
@@ -167,19 +169,18 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 @Mod(modid="advancedRocketry", name="Advanced Rocketry", version="%VERSION%", dependencies="required-after:libVulpes")
 public class AdvancedRocketry {
-	public static final String modId = "advancedRocketry";
+	
 
 	@SidedProxy(clientSide="zmaster587.advancedRocketry.client.ClientProxy", serverSide="zmaster587.advancedRocketry.common.CommonProxy")
 	public static CommonProxy proxy;
 
-	@Instance(value = modId)
+	@Instance(value = Constants.modId)
 	public static AdvancedRocketry instance;
 	public static WorldType planetWorldType;
 	public static WorldType spaceWorldType;
-	public static final DamageSource vacuumDamage = new DamageSource("Vacuum").setDamageBypassesArmor().setDamageIsAbsolute();
-
+	
 	public static CompatibilityMgr compat = new CompatibilityMgr();
-	public static Logger logger = Logger.getLogger(modId);
+	public static Logger logger = Logger.getLogger(Constants.modId);
 	private static Configuration config;
 	private static final String BIOMECATETORY = "Biomes";
 
@@ -204,7 +205,8 @@ public class AdvancedRocketry {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-
+		//Init API
+		DimensionManager.planetWorldProvider = WorldProviderPlanet.class;
 
 		//Configuration  ---------------------------------------------------------------------------------------------
 		config = new Configuration(event.getSuggestedConfigurationFile());
@@ -242,7 +244,6 @@ public class AdvancedRocketry {
 			MinecraftForge.EVENT_BUS.register(this);
 
 		//Satellites ---------------------------------------------------------------------------------------------
-		SatelliteRegistry.registerSatellite("defunct", SatelliteDefunct.class);
 		SatelliteRegistry.registerSatellite("optical", SatelliteOptical.class);
 		SatelliteRegistry.registerSatellite("density", SatelliteDensity.class);
 		SatelliteRegistry.registerSatellite("mass", SatelliteMassScanner.class);

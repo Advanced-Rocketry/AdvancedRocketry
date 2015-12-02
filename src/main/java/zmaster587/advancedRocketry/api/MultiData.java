@@ -5,7 +5,10 @@ import java.util.HashMap;
 import net.minecraft.nbt.NBTTagCompound;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.satellite.IDataHandler;
-
+/**
+ * Object to store "data" and can track multiple different types
+ *
+ */
 public class MultiData implements IDataHandler {
 	HashMap<DataStorage.DataType, DataStorage> dataStorages;
 

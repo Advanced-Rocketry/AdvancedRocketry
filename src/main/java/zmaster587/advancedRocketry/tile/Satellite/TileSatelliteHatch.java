@@ -5,7 +5,6 @@ import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.item.ItemSatellite;
-import zmaster587.advancedRocketry.satellite.SatelliteDefunct;
 import zmaster587.advancedRocketry.tile.multiblock.TileInventoryHatch;
 
 public class TileSatelliteHatch extends TileInventoryHatch {
@@ -31,10 +30,13 @@ public class TileSatelliteHatch extends TileInventoryHatch {
 
 			SatelliteBase satellite = SatelliteRegistry.getSatallite(properties.getSatelliteType());
 
+			if(satellite == null)
+				return null;
+			
 			satellite.setProperties(properties);
 			return satellite;
 		}
 		else
-			return  new SatelliteDefunct();
+			return null;
 	}
 }

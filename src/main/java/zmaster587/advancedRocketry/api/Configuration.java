@@ -2,6 +2,10 @@ package zmaster587.advancedRocketry.api;
 
 import net.minecraftforge.common.config.Property;
 
+/**
+ * Stores config variables
+ *
+ */
 public class Configuration {
 	public static int orbit = 1000;
 	public static int MoonId = 2;

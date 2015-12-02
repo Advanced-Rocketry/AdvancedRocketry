@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.api;
 
-import zmaster587.advancedRocketry.entity.EntityRocket;
 
 /**
  * Implemented by a class if it can be linked to a rocket by a linking tool
@@ -23,7 +22,7 @@ public interface IInfrastructure {
 	 * @param rocket Rocket Requesting the link
 	 * @return true if the infrastructure should be allowed to link
 	 */
-	public boolean linkRocket(EntityRocket rocket);
+	public boolean linkRocket(IEntityRocket rocket);
 	
 	/**
 	 * @return maximum link distance in block for the tile

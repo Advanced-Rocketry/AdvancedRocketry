@@ -14,10 +14,10 @@ import java.util.List;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
+import zmaster587.advancedRocketry.api.stations.IStorageChunk;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteHatch;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
-import zmaster587.libVulpes.util.Vector3F;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -38,7 +38,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class StorageChunk implements IBlockAccess {
+public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 	Block blocks[][][];
 	short metas[][][];
@@ -76,8 +76,13 @@ public class StorageChunk implements IBlockAccess {
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
 	}
 
+	@Override
 	public int getSizeX() { return sizeX; }
+	
+	@Override
 	public int getSizeY() { return sizeY; }
+	
+	@Override
 	public int getSizeZ() { return sizeZ; }
 
 	public List<TileEntity> getTileEntityList() {
@@ -339,6 +344,7 @@ public class StorageChunk implements IBlockAccess {
 	}
 
 	//pass the coords of the xmin, ymin, zmin as well as the world to move the rocket
+	@Override
 	public void pasteInWorld(World world, int xCoord, int yCoord ,int zCoord) {
 
 		//Set all the blocks
@@ -503,7 +509,9 @@ public class StorageChunk implements IBlockAccess {
 
 
 		for(TileSatelliteHatch tile : satelliteHatches) {
-			satellites.add(tile.getSatellite());
+			SatelliteBase satellite = tile.getSatellite();
+			if(satellite != null)
+				satellites.add(satellite);
 		}
 		return satellites;
 	}

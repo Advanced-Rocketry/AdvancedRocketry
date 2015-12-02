@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.network;
+package zmaster587.advancedRocketry.api.network;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -6,8 +6,6 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.ChannelHandler.Sharable;
 
 import java.util.EnumMap;
-
-import zmaster587.advancedRocketry.AdvancedRocketry;
 
 import com.google.common.collect.Maps;
 
@@ -46,7 +44,7 @@ public class PacketHandler {
 		codec.addDiscriminator(5, PacketItemModifcation.class);
 		codec.addDiscriminator(6, PacketOxygenState.class);
 
-		channels.putAll(NetworkRegistry.INSTANCE.newChannel(AdvancedRocketry.modId, codec, new HandlerServer()));
+		channels.putAll(NetworkRegistry.INSTANCE.newChannel("advancedRocketry", codec, new HandlerServer()));
 
 		// add handlers
 		if (FMLCommonHandler.instance().getSide().isClient())

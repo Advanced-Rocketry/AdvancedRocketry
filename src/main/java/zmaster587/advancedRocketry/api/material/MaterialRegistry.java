@@ -16,6 +16,9 @@ public class MaterialRegistry {
 
 	static HashMap<Object, MixedMaterial> mixedMaterialList = new HashMap<Object, MixedMaterial>();
 
+	/**
+	 * Contains a list of itemtypes that are common to multiple materials
+	 */
 	public static enum AllowedProducts {
 		DUST,
 		INGOT,
@@ -46,15 +49,26 @@ public class MaterialRegistry {
 			return 1 << ordinal();
 		}
 
+		/**
+		 * @param flag
+		 * @return true if the flag corresponds to this type of item
+		 */
 		public boolean isOfType(int flag) {
 			return (getFlagValue() & flag) != 0;
 		}
 		
+		/**
+		 * @return true if the itemtype is a block, IE Ore, coils, etc
+		 */
 		public boolean isBlock() {
 			return isBlock;
 		}
 	}
 
+	/**
+	 * @param stack the item stack to get the material of
+	 * @return {@link Materials} of the itemstack if it exists, otherwise null
+	 */
 	public static Materials getMaterialFromItemStack(ItemStack stack) {
 		Item item = stack.getItem();
 
@@ -81,14 +95,29 @@ public class MaterialRegistry {
 		return null;
 	}
 
-	public static ItemStack getItemStackFromMaterialAndType(Materials ore,AllowedProducts product) {
-		return getItemStackFromMaterialAndType(ore, product,1);
+	/**
+	 * @param material
+	 * @param product
+	 * @return an itemstack of size one containing the product with the given material, or null if one does not exist
+	 */
+	public static ItemStack getItemStackFromMaterialAndType(Materials material,AllowedProducts product) {
+		return getItemStackFromMaterialAndType(material, product,1);
 	}
 
+	/**
+	 * @param material
+	 * @param product
+	 * @param amount stackSize
+	 * @return an itemstack of stackSize amount containing the product with the given material, or null if one does not exist
+	 */
 	public static ItemStack getItemStackFromMaterialAndType(Materials ore,AllowedProducts product, int amount) {
 		return new ItemStack( AdvancedRocketryItems.itemOreProduct[product.ordinal()], amount, ore.ordinal());
 	}
-
+	
+	/**
+	 * Registers a mixed material or allow to automate recipe registration
+	 * @param material new mixed material to create
+	 */
 	public static void registerMixedMaterial(MixedMaterial material) {
 		if(material.getInput() instanceof ItemStack)
 			mixedMaterialList.put( new ItemStackMapping((ItemStack) material.getInput()), material);
@@ -96,14 +125,25 @@ public class MaterialRegistry {
 			mixedMaterialList.put( material.getInput(), material);
 	}
 
+	/**
+	 * @param stack
+	 * @return {@link MixedMaterial} that makes up the item, null if the item is not registered
+	 */
 	public MixedMaterial getMixedMaterial(ItemStack stack) {
 		return mixedMaterialList.get(new ItemStackMapping(stack));
 	}
 	
+	/**
+	 * @param str
+	 * @return mixed material corresponding to the supplied string example: "bronze"
+	 */
 	public MixedMaterial getMixedMaterial(String str) {
 		return mixedMaterialList.get(str);
 	}
 
+	/**
+	 * @return Collection containing all registered mixed materials
+	 */
 	public static Collection<MixedMaterial> getMixedMaterialList() {
 		return mixedMaterialList.values();
 	}
@@ -146,29 +186,49 @@ public class MaterialRegistry {
 			this.color = color;
 		}
 
+		/**
+		 * @return true if the material is vanilla (Gold, iron)
+		 */
 		public boolean isVanilla() {
 			return this.unlocalizedName.equals("Iron") ||  this.unlocalizedName.equals("Gold");
 		}
 		
+		/**
+		 * @param product
+		 * @param amount
+		 * @return Itemstack representing the product of this material, or null if nonexistant
+		 */
 		public ItemStack getProduct(AllowedProducts product, int amount) {
 			if(product.isBlock()) {
 				return new ItemStack(product.blockArray.get(this.ordinal()/16), amount, getMeta());
 			}
 			return new ItemStack(AdvancedRocketryItems.itemOreProduct[product.ordinal()], amount, getMeta());
 		}
-
+		/**
+		 * @param product
+		 * @return Itemstack of size 1 representing the product of this material, or null if nonexistant
+		 */
 		public ItemStack getProduct(AllowedProducts product) {
 			return getProduct(product,1);
 		}
-
+		
+		/**
+		 * @return 32wide-bitmask corresponding to allowed products by this material
+		 */
 		public int getAllowedProducts() {
 			return allowedProducts;
 		}
 
+		/**
+		 * @return harvest level required to harvest the ore of this material
+		 */
 		public int getHarvestLevel() {
 			return harvestLevel;
 		}
 
+		/**
+		 * @return tool required to harvest the ore of this material
+		 */
 		public String getTool() {
 			return tool;
 		}
@@ -177,10 +237,17 @@ public class MaterialRegistry {
 			return unlocalizedName;
 		}
 
+		/**
+		 * @return list of ore dictionary names for this material.  Example: {iron, pigiron}
+		 */
 		public String[] getOreDictNames() {
 			return oreDictNames;
 		}
 
+		/**
+		 * Used in rendering of the item and block
+		 * @return color of the material 0xRRGGBB
+		 */
 		public int getColor() {
 			return color;
 		}
@@ -190,10 +257,18 @@ public class MaterialRegistry {
 			return AdvancedRocketryBlocks.blockOre.get(this.ordinal()/16);
 		}
 
+		/**
+		 * @return the meta value for the itemstack representing a block of this material
+		 */
 		public int getMeta() {
 			return this.ordinal() % 16;
 		}
 
+		/**
+		 * 
+		 * @param str 
+		 * @return the material corresponding to the string supplied or null if non existant
+		 */
 		public static Materials valueOfSafe(String str) {
 			try {
 				return Materials.valueOf(str);
