@@ -24,6 +24,7 @@ tile.hatch.3.name=Отсек для спутника
 tile.hatch.4.name=Элемен приёма жидкостей
 tile.hatch.5.name=Элемент вывода жидкостей
 tile.rfBattery.name=RF-разъём
+tile.IC2Plug.name=IC2(EU)-разъём
 tile.structureMachine.name=Структурный блок
 tile.observatory.name=Обсерватория
 tile.satelliteBuilder.name=Спутниковый сборщик
@@ -50,9 +51,14 @@ tile.placeHolder.name=Placeholder
 tile.stationAssembler.name=Сборщик космических станций
 tile.electrolyser.name=Электролизёр
 tile.chemreactor.name=Химический реактор
+tile.scrubber.name=Поглотитель углекислого газа
+tile.oxygenVent.name=Кислородный клапан
+tile.liquidHatch.name=Жидкостный клапан
+tile.rocketFuelBlock.name=Ракетное топливо
+tile.hydrogenFluidBlock.name=Водород
+tile.oxygenFluidBlock.name=Кислород
+tile.oxygenCharger.name=Кислородный наполнитель
 
-tile.liquidHatch.name=Жидкосттный клапан
- 
 tile.Dilithium.name=Руда дилития
 tile.Copper.name=Медная руда
 tile.Tin.name=Оловянная руда
@@ -82,10 +88,18 @@ item.satelliteIdChip.name=Чип адреса спутника
 item.planetIdChip.name=Чип адреса планеты
 item.battery.0.name=Батарейка
 item.miscpart.0.name=Пользовательский интерфейс
-item.holoProjector.name=Голографический проектор
+item.miscpart.1.name=Углеродный кирпич
+item.holoProjector.name=Голо-проектор
 item.station.name=Контейнер с космической станцией
 item.stationChip.name=Чип адреса космической станции
- 
+item.spaceHelmet.name=Шлем скафандра
+item.spaceLeggings.name=Штаны скафандра
+item.spaceChest.name=Скафандр
+item.spaceBoots.name=Ботинки скафандра
+item.bucketRocketFuel.name=Ведро ракетного топлива
+item.smallAirlock.name=Малая гермодверь
+item.carbonScrubberCartridge.name=Поглощающий картридж
+
 material.Gold.name=Золотой
 material.Iron.name=Железный
 material.Dilithium.name=Дилитевый
@@ -102,11 +116,13 @@ type.boule.name=буль
 type.ingot.name=слиток
 type.nugget.name=самородок
 type.rod.name=стержень
-type.plate.name=Пластина
+type.plate.name=листок
 type.ore.name=руда
 type.block.name=блок
 type.coil.name=моток
- 
+type.fan.name=пропеллер
+type.sheet.name=лист
+
 container.crystallizer=Кристаллизатор
 container.cuttingmachine=Резак
 container.precisionassemblingmachine=Точный сборщик
