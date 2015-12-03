@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.tile.multiblock;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import zmaster587.advancedRocketry.Inventory.TextureResources;
 import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
@@ -10,8 +11,8 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleImage;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.MaterialRegistry;
-import zmaster587.advancedRocketry.api.MaterialRegistry.AllowedProducts;
+import zmaster587.advancedRocketry.api.material.MaterialRegistry;
+import zmaster587.advancedRocketry.api.material.MaterialRegistry.AllowedProducts;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
 import zmaster587.libVulpes.block.BlockMeta;

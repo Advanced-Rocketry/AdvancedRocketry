@@ -21,16 +21,16 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleSatellite;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleSlotArray;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleText;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleToggleSwitch;
+import zmaster587.advancedRocketry.api.DataStorage;
+import zmaster587.advancedRocketry.api.DataStorage.DataType;
+import zmaster587.advancedRocketry.api.dimension.DimensionManager;
+import zmaster587.advancedRocketry.api.network.PacketHandler;
+import zmaster587.advancedRocketry.api.network.PacketMachine;
 import zmaster587.advancedRocketry.api.satellite.IDataHandler;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.item.ItemData;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.network.PacketMachine;
-import zmaster587.advancedRocketry.util.DataStorage;
-import zmaster587.advancedRocketry.util.DataStorage.DataType;
 import zmaster587.advancedRocketry.util.IDataInventory;
-import zmaster587.advancedRocketry.world.DimensionManager;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumer;
 import zmaster587.libVulpes.util.INetworkMachine;
 
@@ -127,7 +127,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 
 			SatelliteBase satellite = moduleSatellite.getSatellite();
 			if(satellite != null) {
-				if(getPower() < getPowerPerOperation()) 
+				if(getEnergyStored() < getPowerPerOperation()) 
 					moduleText.setText("Not Enough power!");
 				else if(satellite.getDimensionId() != this.worldObj.provider.dimensionId) {
 					moduleText.setText(satellite.getName() + "\n\nToo Far" );

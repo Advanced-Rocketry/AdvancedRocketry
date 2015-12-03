@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.recipe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -93,7 +94,7 @@ public class RecipesMachine {
 
 			return stack;
 		}
-		
+
 		public IRecipe getRecipeAsAllItemsOnly() {
 			Recipe recipe = new Recipe(output, input, completionTime, power);
 			
@@ -107,22 +108,44 @@ public class RecipesMachine {
 			
 			return recipe;
 		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			if(obj instanceof Recipe) {
+				Recipe otherRecipe = (Recipe)obj;
+				if(input.size() != otherRecipe.input.size() || fluidInput.size() != otherRecipe.fluidInput.size())
+					return false;
+				
+				
+				for(int i = 0; i < input.size(); i++) {
+					if(!ItemStack.areItemStacksEqual(input.get(i), otherRecipe.input.get(i)))
+							return false;
+				}
+				
+				for(int i = 0; i < fluidInput.size(); i++) {
+					if(!FluidStack.areFluidStackTagsEqual(fluidInput.get(i), otherRecipe.fluidInput.get(i)))
+							return false;
+				}
+				
+			}
+			return super.equals(obj);
+		}
 	}
 
-	public HashMap<Class<Object>, ArrayList<IRecipe>> recipeList;
+	public HashMap<Class<Object>, List<IRecipe>> recipeList;
 
 	private static RecipesMachine instance = new RecipesMachine();
 
 	public RecipesMachine() {
-		recipeList = new HashMap<Class<Object>, ArrayList<IRecipe>>();
+		recipeList = new HashMap<Class<Object>, List<IRecipe>>();
 	}
 
 	public static RecipesMachine getInstance() { return instance; }
 
-	public void addRecipe(Class clazz ,List<Object> out, int timeRequired, int power, Object ... inputs) {
-		ArrayList<IRecipe> recipes = getRecipes(clazz);
+	public void addRecipe(Class clazz , Object[] out, int timeRequired, int power, Object ... inputs) {
+		List<IRecipe> recipes = getRecipes(clazz);
 		if(recipes == null) {
-			recipes = new ArrayList<IRecipe>();
+			recipes = new LinkedList<IRecipe>();
 			recipeList.put(clazz,recipes);
 		}
 
@@ -171,7 +194,8 @@ public class RecipesMachine {
 				recipe = new Recipe(outputItem, stack, timeRequired, power);
 			else
 				recipe = new Recipe(outputItem, stack, outputFluidStacks, inputFluidStacks, timeRequired, power);
-
+			
+		if(!recipes.contains(recipe))
 			recipes.add(recipe);
 
 		} catch(ClassCastException e) {
@@ -189,21 +213,13 @@ public class RecipesMachine {
 	}
 
 	public void addRecipe(Class clazz , Object out, int timeRequired, int power, Object ... inputs) {
-		List<Object> newList;
 		
-		if(out instanceof List) {
-			newList = (List)out;
-		}
-		else {
-			newList = new LinkedList<Object>();
-			newList.add(out);
-		}
 		
-		addRecipe(clazz, newList, timeRequired, power, inputs);
+		addRecipe(clazz, new Object[] {out}, timeRequired, power, inputs);
 	}
 
 	//Given the class return the list
-	public ArrayList<IRecipe> getRecipes(Class clazz) {
+	public List<IRecipe> getRecipes(Class clazz) {
 		return recipeList.get(clazz);
 	}
 }

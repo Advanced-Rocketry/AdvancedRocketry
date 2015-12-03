@@ -17,11 +17,12 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.Inventory.modules.ModulePower;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleToggleSwitch;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.network.PacketMachine;
-import zmaster587.advancedRocketry.tile.TileRFBattery;
+import zmaster587.advancedRocketry.api.network.PacketHandler;
+import zmaster587.advancedRocketry.api.network.PacketMachine;
+import zmaster587.advancedRocketry.tile.TileRFPlug;
 import zmaster587.advancedRocketry.tile.multiblock.TileMultiblockMachine.NetworkPackets;
 import zmaster587.libVulpes.api.IUniversalEnergy;
+import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.MultiBattery;
 
@@ -170,11 +171,11 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	public void useEnergy(int amt) {
-		batteries.extractEnergy(ForgeDirection.UNKNOWN, amt, false);
+		batteries.extractEnergy(amt, false);
 	}
 
 	public boolean hasEnergy(int amt) {
-		return batteries.getEnergyStored(ForgeDirection.UNKNOWN) >= amt;
+		return batteries.getEnergyStored() >= amt;
 	}
 
 	public void setMachineRunning(boolean running) {
@@ -192,8 +193,9 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	protected void integrateTile(TileEntity tile) {
 		super.integrateTile(tile);
 
-		if(tile instanceof TileRFBattery) {
-			batteries.addBattery((IUniversalEnergy) tile);
+		for(BlockMeta block :getPowerInputBlocks()) {
+			if(block.getBlock() == worldObj.getBlock(tile.xCoord, tile.yCoord, tile.zCoord))
+				batteries.addBattery((IUniversalEnergy) tile);
 		}
 	}
 

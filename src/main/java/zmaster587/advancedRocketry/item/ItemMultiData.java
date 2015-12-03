@@ -9,8 +9,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import zmaster587.advancedRocketry.util.DataStorage;
-import zmaster587.advancedRocketry.util.MultiData;
+import zmaster587.advancedRocketry.api.DataStorage;
+import zmaster587.advancedRocketry.api.MultiData;
 
 public class ItemMultiData extends Item {
 

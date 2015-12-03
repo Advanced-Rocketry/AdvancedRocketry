@@ -2,8 +2,10 @@ package zmaster587.advancedRocketry.tile.multiblock;
 
 import io.netty.buffer.ByteBuf;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import cpw.mods.fml.relauncher.Side;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
@@ -197,9 +199,9 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 	//TODO: improve recipe checks
 	//Attempt to get a valid recipe given the inputs, null if none found
-	protected IRecipe getRecipe(List<IRecipe> recipes) {
+	protected IRecipe getRecipe(List<IRecipe> set) {
 
-		for(IRecipe recipe : recipes) {
+		for(IRecipe recipe : set) {
 			
 			if(canProcessRecipe(recipe))
 				return recipe;

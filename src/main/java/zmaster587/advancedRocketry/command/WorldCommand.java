@@ -5,12 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import zmaster587.advancedRocketry.network.PacketDimInfo;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.world.DimensionManager;
-import zmaster587.advancedRocketry.world.DimensionProperties;
+import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.atmosphere.AtmosphereHandler;
+import zmaster587.advancedRocketry.api.atmosphere.AtmosphereType;
+import zmaster587.advancedRocketry.api.dimension.DimensionManager;
+import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.api.network.PacketDimInfo;
+import zmaster587.advancedRocketry.api.network.PacketHandler;
+import zmaster587.advancedRocketry.api.stations.SpaceObject;
+import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.world.biome.BiomeGenAlienForest;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
+import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -56,25 +62,53 @@ public class WorldCommand implements ICommand {
 
 		if(string.length > 1) {
 
-			if(string[0].equalsIgnoreCase("goto") && string.length == 2) {
+			if(string[0].equalsIgnoreCase("debug")) {
 				EntityPlayer player = sender.getEntityWorld().getPlayerEntityByName(sender.getCommandSenderName());
 
-				try {
-					int dim = Integer.parseInt(string[1]);
+				AtmosphereType atmosphere = AtmosphereHandler.getOxygenHandler(player.worldObj.provider.dimensionId).getAtmosphereType(player);
 
-					if(player != null) {
-						if(net.minecraftforge.common.DimensionManager.isDimensionRegistered(dim))
-							MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal(MinecraftServer.getServer().worldServerForDimension(dim)));
-						else
-							sender.addChatMessage(new ChatComponentText("Dimension does not exist"));
+				sender.addChatMessage(new ChatComponentText(atmosphere == AtmosphereType.VACUUM ? "vacumm" : "AIR"));
+
+				return;
+			}
+
+			if(string[0].equalsIgnoreCase("goto") && (string.length == 2 || string.length == 3)) {
+				EntityPlayer player = sender.getEntityWorld().getPlayerEntityByName(sender.getCommandSenderName());
+				if(player != null) {
+					try {
+						int dim;
+
+						if(string.length == 2) {
+							dim = Integer.parseInt(string[1]);
+							if(net.minecraftforge.common.DimensionManager.isDimensionRegistered(dim))
+								MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal(MinecraftServer.getServer().worldServerForDimension(dim)));
+							else
+								sender.addChatMessage(new ChatComponentText("Dimension does not exist"));
+						}
+						else if(string[1].equalsIgnoreCase("station")) {
+							dim = Configuration.spaceDimId;
+							int stationId = Integer.parseInt(string[2]);
+							SpaceObject object = DimensionManager.getSpaceManager().getSpaceStation(stationId);
+							
+							if(object != null) {
+								if(player.worldObj.provider.dimensionId != Configuration.spaceDimId)
+									MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal(MinecraftServer.getServer().worldServerForDimension(dim)));
+								Vector3F<Integer> vec = object.getSpawnLocation();
+								player.setPositionAndUpdate(vec.x, vec.y, vec.z);
+							}
+							else {
+								sender.addChatMessage(new ChatComponentText("Station " + stationId + " does not exist!"));
+							}
+						}
+
+
+					} catch(NumberFormatException e) {
+						sender.addChatMessage(new ChatComponentText(string[0] + " <dimId>"));
+						sender.addChatMessage(new ChatComponentText(string[0] + "station <station ID>"));
 					}
-					else 
-						sender.addChatMessage(new ChatComponentText("Must be a player to use this command"));
-					
-				} catch(NumberFormatException e) {
-					sender.addChatMessage(new ChatComponentText(string[0] + " <dimId>"));
-				}
-
+				}					
+				else 
+					sender.addChatMessage(new ChatComponentText("Must be a player to use this command"));
 			}
 			else if(string[0].equalsIgnoreCase("planet")) {
 
@@ -96,14 +130,14 @@ public class WorldCommand implements ICommand {
 					}
 				}
 				else if(string[1].equalsIgnoreCase("tree")) {
-					
+
 					for(int x = -30; x < 30; x++)
 						for(int y = 64; y < 120; y++) {
 							for(int z = -30; z < 30; z++) {
 								sender.getEntityWorld().setBlockToAir(x, y, z);
 							}
 						}
-					
+
 					BiomeGenAlienForest.alienTree.generate(sender.getEntityWorld(), new Random(), 0, 63, 0);
 				}
 				else if(string[1].equalsIgnoreCase("list")) { //Lists dimensions
@@ -224,7 +258,7 @@ public class WorldCommand implements ICommand {
 								else
 									field.set(properties, string[3]);
 							}
-							
+
 							PacketHandler.sendToAll(new PacketDimInfo(dimId, properties));
 							return;
 
@@ -238,12 +272,12 @@ public class WorldCommand implements ICommand {
 					}
 					else if(string[1].equalsIgnoreCase("get") && string.length == 3) {
 						DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimId);
-						
+
 						try {
 							Field field = properties.getClass().getDeclaredField(string[2]);
-							
+
 							sender.addChatMessage(new ChatComponentText(field.get(properties).toString()));
-							
+
 						} catch (Exception e) {
 
 							e.printStackTrace();

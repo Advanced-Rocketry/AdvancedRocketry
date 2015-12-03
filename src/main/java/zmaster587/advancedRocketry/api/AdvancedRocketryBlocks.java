@@ -48,7 +48,6 @@ public class AdvancedRocketryBlocks {
 	public static List<Block> blockMetal = new ArrayList<Block>();
 	public static Block blockRollingMachine;
 	public static Block blockPhantom;
-	public static Block blockControllerDummy;
 	public static Block blockPlatePress;
 	public static List<Block> blockCoil = new ArrayList<Block>();
 	public static Block blockStationBuilder;
@@ -57,4 +56,10 @@ public class AdvancedRocketryBlocks {
 	public static Block blockHydrogenFluid;
 	public static Block blockChemicalReactor;
 	public static Block blockFuelFluid;
+	public static Block test;
+	public static Block blockOxygenVent;
+	public static Block blockOxygenScrubber;
+	public static Block blockOxygenCharger;
+	public static Block blockAirLock;
+	public static Block blockIC2Plug;
 }

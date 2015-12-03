@@ -8,15 +8,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.PlayerDataHandler;
-import zmaster587.advancedRocketry.network.PacketDimInfo;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.network.PacketStellarInfo;
-import zmaster587.advancedRocketry.world.DimensionManager;
-import zmaster587.advancedRocketry.world.DimensionProperties;
+import zmaster587.advancedRocketry.api.atmosphere.AtmosphereHandler;
+import zmaster587.advancedRocketry.api.dimension.DimensionManager;
+import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.api.network.PacketDimInfo;
+import zmaster587.advancedRocketry.api.network.PacketHandler;
+import zmaster587.advancedRocketry.api.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -35,7 +37,7 @@ public class PlanetEventHandler {
 	//Handle gravity
 	@SubscribeEvent
 	public void playerTick(LivingUpdateEvent event) {
-		
+
 		if(event.entity.worldObj.isRemote && event.entity.posY > 260 && event.entity.posY < 270 && event.entity.motionY < -.1) {
 			RocketEventHandler.destroyOrbitalTextures(event.entity.worldObj);
 		}
@@ -51,18 +53,18 @@ public class PlanetEventHandler {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void disconnected(ClientDisconnectionFromServerEvent event) {
-		zmaster587.advancedRocketry.world.DimensionManager.getInstance().unregisterAllDimensions();
+		zmaster587.advancedRocketry.api.dimension.DimensionManager.getInstance().unregisterAllDimensions();
 	}
 
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public void entityRegister(EntityConstructing event) {
 		if(event.entity instanceof EntityPlayer) {
 			event.entity.registerExtendedProperties(PlayerDataHandler.IDENTIFIER, new PlayerDataHandler());
 		}
-	}
+	}*/
 	
 	//TODO move
 	//Has weak refs so if the player gets killed/logsout etc the entry doesnt stay trapped in RAM
@@ -111,25 +113,14 @@ public class PlanetEventHandler {
 	}
 
 	//Make sure the player receives data about the dimensions
-	//TODO not needed?
-	/*@SubscribeEvent
-	public void playerChangedDimensionEvent(PlayerEvent.PlayerChangedDimensionEvent event) {
-		if(!event.player.worldObj.isRemote) {
-			if(DimensionManager.getInstance().isDimensionCreated(event.toDim))
-				PacketHandler.sendToPlayer(new PacketDimInfo(event.toDim, DimensionManager.getInstance().getDimensionProperties(event.toDim)), event.player);
-		}
-
-	}*/
-
-	//Make sure the player receives data about the dimensions
 	@SubscribeEvent
 	public void playerLoggedInEvent(FMLNetworkEvent.ServerConnectionFromClientEvent event) {
-		
+
 		//Make sure stars are sent first
 		for(int i : DimensionManager.getInstance().getStars()) {
 			PacketHandler.sendToDispatcher(new PacketStellarInfo(i, DimensionManager.getInstance().getStar(i)), event.manager);
 		}
-		
+
 		for(int i : DimensionManager.getInstance().getregisteredDimensions()) {
 			PacketHandler.sendToDispatcher(new PacketDimInfo(i, DimensionManager.getInstance().getDimensionProperties(i)), event.manager);
 		}
@@ -175,6 +166,18 @@ public class PlanetEventHandler {
 		}
 	}
 	 */
+
+	@SubscribeEvent
+	public void worldLoadEvent(WorldEvent.Load event) {
+		if(!event.world.isRemote)
+			AtmosphereHandler.registerWorld(event.world.provider.dimensionId);
+	}
+
+	@SubscribeEvent
+	public void worldUnloadEvent(WorldEvent.Unload event) {
+		if(!event.world.isRemote)
+			AtmosphereHandler.unregisterWorld(event.world.provider.dimensionId);
+	}
 
 	//Handle fog density and color
 	@SubscribeEvent

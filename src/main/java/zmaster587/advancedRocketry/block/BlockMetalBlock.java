@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.block;
 
-import zmaster587.advancedRocketry.api.MaterialRegistry;
+import zmaster587.advancedRocketry.api.material.MaterialRegistry;
 import zmaster587.advancedRocketry.tile.TileMaterial;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

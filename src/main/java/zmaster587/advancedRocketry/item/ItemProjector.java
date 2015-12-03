@@ -18,15 +18,18 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleButton;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleContainerPan;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.network.INetworkItem;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.network.PacketItemModifcation;
+import zmaster587.advancedRocketry.api.network.INetworkItem;
+import zmaster587.advancedRocketry.api.network.PacketHandler;
+import zmaster587.advancedRocketry.api.network.PacketItemModifcation;
+import zmaster587.advancedRocketry.block.BlockTile;
 import zmaster587.advancedRocketry.tile.TileSchematic;
 import zmaster587.advancedRocketry.tile.multiblock.TileMultiBlock;
 import zmaster587.advancedRocketry.tile.multiblock.TilePlaceholder;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.util.Vector3F;
 import zmaster587.libVulpes.util.ZUtils;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
@@ -44,15 +47,18 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class ItemProjector extends Item implements IModularInventory, IButtonInventory, INetworkItem {
 
-	List<TileMultiBlock> machineList;
+	ArrayList<TileMultiBlock> machineList;
+	ArrayList<BlockTile> blockList;
 	private static final String IDNAME = "machineId";
 
 	public ItemProjector() {
 		machineList = new ArrayList<TileMultiBlock>();
+		blockList = new ArrayList<BlockTile>();
 	}
 
-	public void registerMachine(TileMultiBlock multiblock) {
+	public void registerMachine(TileMultiBlock multiblock, BlockTile mainBlock) {
 		machineList.add(multiblock);
+		blockList.add(mainBlock);
 	}
 
 	@SubscribeEvent
@@ -121,7 +127,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 					List<BlockMeta> block;
 					if(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') {
 						block = new ArrayList<BlockMeta>();
-						block.add(new BlockMeta(AdvancedRocketryBlocks.blockControllerDummy,0));
+						block.add(new BlockMeta(blockList.get(id), orientation.ordinal()));
 					}
 					else if(multiblock.getAllowableBlocks(structure[y][z][x]).isEmpty())
 						continue;

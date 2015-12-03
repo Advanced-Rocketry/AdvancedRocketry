@@ -37,15 +37,15 @@ public class ItemSatelliteIdentificationChip extends Item {
 
 			long satId = nbt.getLong("satelliteId");
 
-			SatelliteBase satellite = zmaster587.advancedRocketry.world.DimensionManager.getInstance().getSatellite(satId);
+			SatelliteBase satellite = zmaster587.advancedRocketry.api.dimension.DimensionManager.getInstance().getSatellite(satId);
 
 			if(satellite != null) {
 
 				if(!nbt.hasKey("dimId") || nbt.getInteger("dimId") == -1) {
 					nbt.setInteger("dimId", satellite.getDimensionId());
 				}
-				
-				
+
+
 				World world;
 				if( !nbt.hasKey(null) && (world = DimensionManager.getWorld(satellite.getDimensionId())) != null)
 					nbt.setString(name, world.provider.getDimensionName());
@@ -76,17 +76,20 @@ public class ItemSatelliteIdentificationChip extends Item {
 	 */
 	public void setSatellite(ItemStack stack, SatelliteProperties satellite) {
 		erase(stack);
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound())
-			nbt = stack.getTagCompound();
-		else 
-			nbt = new NBTTagCompound();
+		SatelliteBase satellite2 = SatelliteRegistry.getSatallite(satellite.getSatelliteType());
+		if(satellite2 != null) {
+			NBTTagCompound nbt;
+			if(stack.hasTagCompound())
+				nbt = stack.getTagCompound();
+			else 
+				nbt = new NBTTagCompound();
 
 
-		nbt.setString("satelliteName", SatelliteRegistry.getSatallite(satellite.getSatelliteType()).getName());
-		nbt.setLong("satelliteId", satellite.getId());
+			nbt.setString("satelliteName", satellite2.getName());
+			nbt.setLong("satelliteId", satellite.getId());
 
-		stack.setTagCompound(nbt);
+			stack.setTagCompound(nbt);
+		}
 	}
 
 	public void erase(ItemStack stack) {

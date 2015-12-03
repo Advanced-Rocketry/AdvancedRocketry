@@ -201,6 +201,7 @@ public class TileMultiBlock extends TileEntity {
 	 * Use 'P' for power
 	 * Use 'D' for data hatch
 	 * Use 'c' for the main Block, there can only be one
+	 * Use null for anything
 	 * Use a Block to force the user to place that block there
 	 * @return true if the structure is valid
 	 */
@@ -245,7 +246,7 @@ public class TileMultiBlock extends TileEntity {
 							continue;
 					}
 					//Make sure the structure is valid
-					if(!(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') && !(structure[y][z][x] instanceof Block && (Block)structure[y][z][x] == Blocks.air && worldObj.isAirBlock(globalX, globalY, globalZ)) && !getAllowableBlocks(structure[y][z][x]).contains(new BlockMeta(block,meta)))
+					if(structure[y][z][x] != null && !(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') && !(structure[y][z][x] instanceof Block && (Block)structure[y][z][x] == Blocks.air && worldObj.isAirBlock(globalX, globalY, globalZ)) && !getAllowableBlocks(structure[y][z][x]).contains(new BlockMeta(block,meta)))
 						return false;
 				}
 			}
@@ -277,7 +278,7 @@ public class TileMultiBlock extends TileEntity {
 							((BlockMultiblockStructure)block).hideBlock(worldObj, globalX, globalY, globalZ, worldObj.getBlockMetadata(globalX, globalY, globalZ));
 					}
 
-					if(!block.isAir(worldObj, globalX, globalY, globalZ) && !(tile instanceof IMultiblock) && !(tile instanceof TileMultiBlock)) {
+					if(structure[y][z][x] != null && !block.isAir(worldObj, globalX, globalY, globalZ) && !(tile instanceof IMultiblock) && !(tile instanceof TileMultiBlock)) {
 						replaceStandardBlock(globalX,globalY, globalZ, block, tile);
 					}
 				}
@@ -326,7 +327,8 @@ public class TileMultiBlock extends TileEntity {
 	 */
 	public List<BlockMeta> getPowerInputBlocks() {
 		List<BlockMeta> list = new LinkedList<BlockMeta>();
-		list.add(new BlockMeta(AdvancedRocketryBlocks.blockRFBattery, -1));
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockRFBattery, BlockMeta.WILDCARD));
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockIC2Plug, BlockMeta.WILDCARD));
 		return list;
 	}
 	

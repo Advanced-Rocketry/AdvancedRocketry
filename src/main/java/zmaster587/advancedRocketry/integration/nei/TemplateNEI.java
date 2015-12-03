@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 import org.lwjgl.opengl.GL11;
 
@@ -25,6 +26,7 @@ import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
 import zmaster587.advancedRocketry.recipe.RecipesMachine.Recipe;
 import zmaster587.libVulpes.interfaces.IRecipe;
+import zmaster587.libVulpes.util.ZUtils;
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
@@ -109,7 +111,7 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 			
 			boolean match = false;
 			for(ItemStack stack : i.getOutput() ) {
-				match = NEIServerUtils.areStacksSameTypeCrafting(stack, result);
+				match = NEIServerUtils.areStacksSameTypeCrafting(stack, result) || ZUtils.areOresSameTypeOreDict(stack, result);
 				if(match)
 					break;
 			}
@@ -157,7 +159,7 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 			boolean match = false;
 			
 			for(PositionedStack posStack : recipe.getIngredients()) {
-				if(posStack.item.isItemEqual(ingredient)) {
+				if(posStack.item.isItemEqual(ingredient) || ZUtils.areOresSameTypeOreDict(posStack.item, ingredient)) {
 					recipe.setIngredientPermutation(recipe.ingredients, ingredient);
 					arecipes.add(recipe);
 					match = true;

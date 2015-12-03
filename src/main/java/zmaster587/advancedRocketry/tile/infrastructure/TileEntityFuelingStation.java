@@ -21,11 +21,12 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleLiquidIndicator;
 import zmaster587.advancedRocketry.Inventory.modules.ModulePower;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleSlotArray;
-import zmaster587.advancedRocketry.api.FuelRegistry;
-import zmaster587.advancedRocketry.api.FuelRegistry.FuelType;
+import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
+import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
+import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.entity.EntityRocket;
-import zmaster587.advancedRocketry.util.Configuration;
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
 import zmaster587.libVulpes.item.ItemLinker;
@@ -33,7 +34,7 @@ import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
 import zmaster587.libVulpes.util.IconResource;
 
 public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank implements IModularInventory, IInfrastructure, ILinkableTile {
-	EntityRocket linkedRocket;
+	EntityRocketBase linkedRocket;
 
 	public TileEntityFuelingStation() {
 		super(1000,3, 5000);
@@ -64,7 +65,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	@Override
 	public boolean canPerformFunction() {
 		// TODO Solid fuel?
-		return linkedRocket != null && ( /*(inv != null) ||*/ (tank.getFluid() != null && tank.getFluidAmount() > 9 && linkedRocket.stats.getFuelAmount(FuelType.LIQUID) < linkedRocket.stats.getFuelCapacity(FuelType.LIQUID)) );
+		return linkedRocket != null && ( /*(inv != null) ||*/ (tank.getFluid() != null && tank.getFluidAmount() > 9 && linkedRocket.getRocketStats().getFuelAmount(FuelType.LIQUID) < linkedRocket.getRocketStats().getFuelCapacity(FuelType.LIQUID)) );
 	}
 
 	@Override
@@ -134,7 +135,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	}
 
 	@Override
-	public boolean linkRocket(EntityRocket rocket) {
+	public boolean linkRocket(EntityRocketBase rocket) {
 		this.linkedRocket = rocket;
 		return true;
 	}

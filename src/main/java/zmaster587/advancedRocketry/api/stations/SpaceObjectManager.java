@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import zmaster587.advancedRocketry.util.Configuration;
+
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.libVulpes.util.Vector3F;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
@@ -32,15 +33,27 @@ public class SpaceObjectManager {
 		registerSpaceObjectType("genericObject", SpaceObject.class);
 	}
 
+	/**
+	 * @param id
+	 * @return {@link SpaceObject} object registered to this spaceObject id
+	 */
 	public SpaceObject getSpaceStation(int id) {
 		return stationLocations.get(id);
 	}
 
 
+	/**
+	 * @return the next valid space object id and increments the value for the next one
+	 */
 	public int getNextStationId() {
 		return nextId++;
 	}
 
+	/**
+	 * Registers the spaceobject class with this manager, this must be done or the object cannot be saved!
+	 * @param str key with which to register the spaceObject type
+	 * @param clazz class of space object to register
+	 */
 	public void registerSpaceObjectType(String str, Class<? extends SpaceObject> clazz) {
 		nameToClass.put(str, clazz);
 		classToString.put(clazz, str);
@@ -52,26 +65,32 @@ public class SpaceObjectManager {
 	 */
 	public SpaceObject getSpaceStationFromBlockCoords(int x, int z) {
 
-		int radius = Math.max(Math.abs((x/2)/Configuration.stationSize), Math.abs((z/2)/Configuration.stationSize));
+		int radius = Math.max((int)Math.ceil(Math.abs((x/2)/(float)Configuration.stationSize)), (int)Math.ceil(Math.abs((z/2)/(float)Configuration.stationSize)));
 
 		int index;
 
 		if(Math.abs(x) <= Math.abs(z)) {
 			if(z < 0)
-				index = (int)Math.pow(2*radius-1,2) + radius + x;
+				index = (int)Math.pow(2*radius-1,2) + radius +(x/Configuration.stationSize);
 			else
-				index = (int)Math.pow(2*radius-1,2) + radius + x + (radius*2 + 1);
+				index = (int)Math.pow(2*radius-1,2) + radius + (x/Configuration.stationSize) + (radius*2 + 1);
 		}
 		else {
 			if(x < 0)
-				index = (int)Math.pow(2*radius-1,2) + radius - 1 + (radius*2 + 1)*2 + z;
+				index = (int)Math.pow(2*radius-1,2) + radius - 1 + (radius*2 + 1)*2 + (z/Configuration.stationSize);
 			else
-				index = (int)Math.pow(2*radius-1,2) + (3*radius) - 2 + (radius*2 + 1)*2 + z;
+				index = (int)Math.pow(2*radius-1,2) + (3*radius) - 2 + (radius*2 + 1)*2 + (z/Configuration.stationSize);
 		}
 
 		return getSpaceStation(index);
 	}
 
+	/**
+	 * Registers a space object with this manager, the class must have been registered prior to this with registerSpaceObjectType!
+	 * @param object
+	 * @param dimId
+	 * @param stationId
+	 */
 	public void registerSpaceObject(SpaceObject object, int dimId, int stationId) {
 		object.setId(stationId);
 		stationLocations.put(stationId, object);
@@ -134,6 +153,10 @@ public class SpaceObjectManager {
 		return spaceStationOrbitMap.get(planetId);
 	}
 
+	/*
+	 * Event designed to teleport a player to the spawn point for the station if he'she falls out of the world in space
+	 * TODO: prevent inf loop if nowhere to fall!
+	 */
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent event) {
 		if(event.player.worldObj.provider.dimensionId == Configuration.spaceDimId) {
@@ -185,7 +208,7 @@ public class SpaceObjectManager {
 	}
 
 	/**
-	 * 
+	 * Changes the orbiting body of the space object
 	 * @param station
 	 * @param dimId
 	 */

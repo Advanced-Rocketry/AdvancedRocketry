@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.api;
 
-import zmaster587.advancedRocketry.world.DimensionProperties;
+import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
 import net.minecraft.util.Vec3;
 
 public interface IPlanetaryProvider {

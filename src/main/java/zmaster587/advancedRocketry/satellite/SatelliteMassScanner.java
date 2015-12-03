@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.satellite;
 
-import zmaster587.advancedRocketry.util.DataStorage;
+import zmaster587.advancedRocketry.api.DataStorage;
 
 public class SatelliteMassScanner extends SatelliteData {
 

@@ -12,6 +12,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.util.IAdjBlockUpdate;
 import zmaster587.libVulpes.block.RotatableBlock;
 
 public class BlockTile extends RotatableBlock {
@@ -28,6 +29,12 @@ public class BlockTile extends RotatableBlock {
 		this.tileClass = tileClass;
 		this.guiId = guiId;
 		this.setBlockTextureName("Advancedrocketry:machineGeneric");
+	}
+	
+	public Block setBlockTextureName(String texture1, String textureActive) {
+		setBlockTextureName(texture1);
+		textureSideName_active = textureFrontName_active = textureTopName_active = textureBottomName_active = textureRearName_active = textureActive;
+		return this;
 	}
 
 	public Block setSideTexture(String textureName) {
@@ -105,12 +112,26 @@ public class BlockTile extends RotatableBlock {
 		return true;
 	}
 
+	@Override
+	public void onNeighborBlockChange(World world, int x,
+			int y, int z, Block block) {
+		super.onNeighborBlockChange(world, x, y, z,
+				block);
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if(tile instanceof IAdjBlockUpdate)
+			((IAdjBlockUpdate)tile).onAdjacentBlockUpdated();
+
+	}
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerBlockIcons(IIconRegister icons)
 	{
 		this.blockIcon = icons.registerIcon(this.getTextureName());
-		this.sides = icons.registerIcon(this.textureSideName);
+		if(this.textureSideName == null)
+			this.sides = this.blockIcon;
+		else
+			this.sides = icons.registerIcon(this.textureSideName);
 
 		if(this.textureSideName_active != null)
 			this.sides_active = icons.registerIcon(this.textureSideName_active);

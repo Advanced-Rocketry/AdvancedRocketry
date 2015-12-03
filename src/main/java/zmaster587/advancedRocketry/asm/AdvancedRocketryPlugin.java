@@ -6,8 +6,8 @@ import cpw.mods.fml.relauncher.IFMLCallHook;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.*;
 
-//@TransformerExclusions(value = {"zmaster587.advancedRocketry.asm.ClassTransformer"})
-//@MCVersion("1.7.10")
+@TransformerExclusions(value = {"zmaster587.advancedRocketry.asm.ClassTransformer"})
+@MCVersion("1.7.10")
 public class AdvancedRocketryPlugin implements IFMLLoadingPlugin {
 
 	public AdvancedRocketryPlugin() {

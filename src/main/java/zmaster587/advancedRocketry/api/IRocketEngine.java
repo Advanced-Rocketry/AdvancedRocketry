@@ -2,6 +2,10 @@ package zmaster587.advancedRocketry.api;
 
 import net.minecraft.world.World;
 
+/**
+ * Must be implemented by any block that is to be treated like a rocket engine
+ *
+ */
 public interface IRocketEngine {
 	/**
 	 * TODO: adjust.<br>  

@@ -25,18 +25,18 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleSync;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleText;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.FuelRegistry.FuelType;
+import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
+import zmaster587.advancedRocketry.api.network.PacketEntity;
+import zmaster587.advancedRocketry.api.network.PacketHandler;
+import zmaster587.advancedRocketry.api.network.PacketMachine;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IFuelTank;
 import zmaster587.advancedRocketry.api.IRocketEngine;
+import zmaster587.advancedRocketry.api.StatsRocket;
 import zmaster587.advancedRocketry.block.BlockSeat;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.entity.EntityRocket;
-import zmaster587.advancedRocketry.network.PacketEntity;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.network.PacketMachine;
-import zmaster587.advancedRocketry.stats.StatsRocket;
 import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteHatch;
-import zmaster587.advancedRocketry.util.Configuration;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.interfaces.INetworkEntity;
@@ -186,7 +186,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 		progress++;
 
-		if(!this.worldObj.isRemote && this.energy.getEnergyStored(ForgeDirection.UNKNOWN) < getPowerPerOperation() && progress - prevProgress > 0) {
+		if(!this.worldObj.isRemote && this.energy.getEnergyStored() < getPowerPerOperation() && progress - prevProgress > 0) {
 			prevProgress = progress;
 			PacketHandler.sendToNearby(new PacketMachine(this, (byte)2), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 32);
 		}
@@ -528,7 +528,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	public void writeDataToNetwork(ByteBuf out, byte id) {
 		//Used to sync clinet/server
 		if(id == 2) {
-			out.writeInt(energy.getEnergyStored(ForgeDirection.UNKNOWN));
+			out.writeInt(energy.getEnergyStored());
 			out.writeInt(this.progress);
 		}
 
@@ -726,6 +726,11 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	@Override
 	public boolean canInteractWithContainer(EntityPlayer entity) {
+		return true;
+	}
+
+	@Override
+	public boolean canConnectEnergy(ForgeDirection arg0) {
 		return true;
 	}
 }
