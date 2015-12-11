@@ -24,6 +24,13 @@ archivesBaseName = "AdvancedRocketry"
 sourceCompatibility = 7
 targetCompatibility = 7
 
+jar {
+        manifest {
+        attributes 'FMLCorePlugin': 'zmaster587.advancedRocketry.asm.AdvancedRocketryPlugin'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
+}
+
 minecraft {
     version = "1.7.10-10.13.4.1566-1.7.10"
     assetDir = "eclipse/assets"
