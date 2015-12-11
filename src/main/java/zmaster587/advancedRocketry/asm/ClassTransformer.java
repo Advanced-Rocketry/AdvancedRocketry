@@ -588,10 +588,10 @@ public class ClassTransformer implements IClassTransformer {
 				}
 
 
-				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 0));
-				nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 1));
-				nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 2));
-				nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 3));
+				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 0)); //this
+				nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 1)); //x
+				nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 2)); //y
+				nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 3)); //z
 				nodeAdd.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "zmaster587/advancedRocketry/api/atmosphere/AtmosphereHandler", "onBlockMetaChange", "(L" + getName(CLASS_KEY_WORLD) + ";III)V", false));
 
 				setBlockMetaMethod.instructions.insertBefore(pos, nodeAdd);
