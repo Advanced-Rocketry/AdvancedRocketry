@@ -123,6 +123,16 @@ public class BlockTile extends RotatableBlock {
 
 	}
 
+	@Override
+	public boolean isBlockNormalCube() {
+		return false;
+	}
+	
+	@Override
+	public boolean isOpaqueCube() {
+		return false;
+	}
+	
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerBlockIcons(IIconRegister icons)
