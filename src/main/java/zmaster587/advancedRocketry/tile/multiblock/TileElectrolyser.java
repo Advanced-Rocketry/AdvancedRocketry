@@ -41,7 +41,7 @@ public class TileElectrolyser extends TileMultiblockMachine {
 	@Override
 	public boolean shouldHideBlock(World world, int x, int y, int z, Block tile) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		return tileEntity != null && !(tileEntity instanceof TileRFPlug || tileEntity instanceof TileElectrolyser);
+		return !getPowerInputBlocks().contains(new BlockMeta(tile, BlockMeta.WILDCARD)) && tileEntity != null && !(tileEntity instanceof TileElectrolyser);
 	}
 	
 	
