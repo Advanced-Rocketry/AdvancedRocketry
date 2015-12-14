@@ -81,7 +81,7 @@ public class PacketDimInfo extends BasePacket {
 			else if( DimensionManager.getInstance().isDimensionCreated(dimNumber) ) {
 				DimensionManager.getInstance().getDimensionProperties(dimNumber).readFromNBT(nbt);
 			} else {
-				DimensionManager.getInstance().registerDimNoUpdate(DimensionProperties.createFromNBT(dimNumber, nbt));
+				DimensionManager.getInstance().registerDimNoUpdate(DimensionProperties.createFromNBT(dimNumber, nbt), true);
 			}
 		}
 	}

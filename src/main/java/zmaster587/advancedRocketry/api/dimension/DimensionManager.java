@@ -33,7 +33,7 @@ public class DimensionManager {
 	private static DimensionManager instance = new DimensionManager();
 	public static final String workingPath = "advRocketry";
 	public static final String filePath = workingPath + "/temp.dat";
-	
+
 	//Reference to the worldProvider for any dimension created through this system, normally WorldProviderPlanet, set in AdvancedRocketry.java in preinit
 	public static Class<? extends WorldProvider> planetWorldProvider;
 	private HashMap<Integer,DimensionProperties> dimensionList;
@@ -73,7 +73,7 @@ public class DimensionManager {
 		overworldProperties.skyColor = new float[] {1f, 1f, 1f};
 		overworldProperties.setStar(sol);
 		overworldProperties.name = "Earth";
-		
+
 		defaultSpaceDimensionProperties = new DimensionProperties(-1, false);
 		defaultSpaceDimensionProperties.atmosphereDensity = 0;
 		defaultSpaceDimensionProperties.averageTemperature = 0;
@@ -88,7 +88,7 @@ public class DimensionManager {
 
 		random = new Random(System.currentTimeMillis());
 	}
-	
+
 	/**
 	 * The {@link SpaceObjectManager} is used for tasks such as managing space stations and orbiting worlds 
 	 * @return the {@link SpaceObjectManager} registered with the DimensionManager
@@ -235,7 +235,7 @@ public class DimensionManager {
 
 		properties.addBiomes(properties.getViableBiomes());
 
-		registerDim(properties);
+		registerDim(properties, true);
 		return properties;
 	}
 
@@ -249,8 +249,8 @@ public class DimensionManager {
 	 * @param properties {@link DimensionProperties} to register
 	 * @return false if the dimension has not been registered, true if it is being newly registered
 	 */
-	public boolean registerDim(DimensionProperties properties) {
-		boolean bool = registerDimNoUpdate(properties);
+	public boolean registerDim(DimensionProperties properties, boolean registerWithForge) {
+		boolean bool = registerDimNoUpdate(properties, registerWithForge);
 
 		if(bool)
 			PacketHandler.sendToAll(new PacketDimInfo(properties.getId(), properties));
@@ -260,17 +260,20 @@ public class DimensionManager {
 	/**
 	 * Attempts to register a dimension without sending an update to the client
 	 * @param properties {@link DimensionProperties} to register
+	 * @param registerWithForge if true also registers the dimension with forge
 	 * @return true if the dimension has NOT been registered before, false if the dimension IS registered exist already
 	 */
-	public boolean registerDimNoUpdate(DimensionProperties properties) {
+	public boolean registerDimNoUpdate(DimensionProperties properties, boolean registerWithForge) {
 		int dimId = properties.getId();
 		Integer dim = new Integer(dimId);
 
 		if(dimensionList.containsKey(dim))
 			return false;
 
-		net.minecraftforge.common.DimensionManager.registerProviderType(properties.getId(), DimensionManager.planetWorldProvider, false);
-		net.minecraftforge.common.DimensionManager.registerDimension(dimId, dimId);
+		if(registerWithForge && !net.minecraftforge.common.DimensionManager.isDimensionRegistered(dim)) {
+			net.minecraftforge.common.DimensionManager.registerProviderType(properties.getId(), DimensionManager.planetWorldProvider, false);
+			net.minecraftforge.common.DimensionManager.registerDimension(dimId, dimId);
+		}
 		dimensionList.put(dimId, properties);
 
 		return true;
@@ -300,13 +303,13 @@ public class DimensionManager {
 		}
 
 		if(properties.hasChildren()) {
-			
+
 			Iterator<Integer> iterator = properties.getChildPlanets().iterator();
 			while (iterator.hasNext()){
 				Integer child = iterator.next();
 				iterator.remove(); //Avoid CME
 				deleteDimension(child);
-				
+
 				PacketHandler.sendToAll(new PacketDimInfo(child, null));
 			}
 		}
@@ -447,7 +450,7 @@ public class DimensionManager {
 	 * Loads all information to rebuild the galaxy and solar systems from disk into the current instance of DimensionManager
 	 * @param filePath file path from which to load the information
 	 */
-	public void loadDimensions(String filePath) {
+	public boolean loadDimensions(String filePath) {
 
 		FileInputStream inStream;
 		NBTTagCompound nbt;
@@ -459,7 +462,7 @@ public class DimensionManager {
 
 
 				file.createNewFile();
-				return;
+				return false;
 			}
 
 			inStream = new FileInputStream(file);
@@ -467,11 +470,12 @@ public class DimensionManager {
 			inStream.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			return;
+			return false;
 
 		} catch (IOException e) {
+			//TODO: try not to obliterate planets in the future
 			e.printStackTrace();
-			return;
+			return false;
 		}
 
 		//Load SolarSystems first
@@ -504,8 +508,11 @@ public class DimensionManager {
 
 				if(propeties != null) {
 					int keyInt = Integer.parseInt(keyString);
-					net.minecraftforge.common.DimensionManager.registerProviderType(keyInt, DimensionManager.planetWorldProvider, false);
-					net.minecraftforge.common.DimensionManager.registerDimension(keyInt, keyInt);
+					if(propeties.isNativeDimension) {
+						net.minecraftforge.common.DimensionManager.registerProviderType(keyInt, DimensionManager.planetWorldProvider, false);
+						net.minecraftforge.common.DimensionManager.registerDimension(keyInt, keyInt);
+					}
+
 					dimensionList.put(new Integer(keyInt), propeties);
 				}
 				else{
@@ -514,11 +521,13 @@ public class DimensionManager {
 				//TODO: print unable to register world
 			}
 		}
-		
+
 		//Check for tag in case old version of Adv rocketry is in use
 		if(nbt.hasKey("spaceObjects")) {
 			NBTTagCompound nbtTag = nbt.getCompoundTag("spaceObjects");
 			spaceObjectManager.readFromNBT(nbtTag);
 		}
+
+		return true;
 	}
 }

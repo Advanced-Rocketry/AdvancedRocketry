@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import scala.reflect.internal.Trees.If;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereType;
@@ -127,6 +128,7 @@ public class DimensionProperties implements Cloneable {
 		}
 	}
 
+	public boolean isNativeDimension;
 	public float[] skyColor;
 	public float[] fogColor;
 	public float gravitationalMultiplier;
@@ -716,6 +718,7 @@ public class DimensionProperties implements Cloneable {
 		averageTemperature = nbt.getInteger("avgTemperature");
 		rotationalPeriod = nbt.getInteger("rotationalPeriod");
 		name = nbt.getString("name");
+		isNativeDimension = nbt.hasKey("isNative") ? nbt.getBoolean("isNative") : true; //Prevent world breakages when loading from old version
 
 		//Hierarchy
 		if(nbt.hasKey("childrenPlanets")) {
@@ -795,6 +798,7 @@ public class DimensionProperties implements Cloneable {
 		nbt.setInteger("avgTemperature", averageTemperature);
 		nbt.setInteger("rotationalPeriod", rotationalPeriod);
 		nbt.setString("name", name);
+		nbt.setBoolean("isNative", isNativeDimension);
 
 		//Hierarchy
 		if(!childPlanets.isEmpty()) {
