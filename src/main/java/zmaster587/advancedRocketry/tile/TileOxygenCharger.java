@@ -52,7 +52,11 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 
 				if(stack != null && stack.getItem() instanceof ItemSpaceArmor) {
 					FluidStack fluidStack = this.drain(ForgeDirection.UNKNOWN, 1, false);
-					return fluidStack != null && fluidStack.getFluid() == AdvancedRocketryFluids.fluidOxygen && fluidStack.amount > 0;
+					if(fluidStack != null && fluidStack.getFluid() == AdvancedRocketryFluids.fluidOxygen && fluidStack.amount > 0)  {
+						this.drain(ForgeDirection.UNKNOWN, 1, true);
+						return true;
+					}
+					return false;
 				}
 			}
 		}
