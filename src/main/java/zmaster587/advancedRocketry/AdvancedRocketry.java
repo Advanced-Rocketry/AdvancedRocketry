@@ -89,6 +89,7 @@ import zmaster587.advancedRocketry.event.BucketHandler;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.integration.CompatibilityMgr;
 import zmaster587.advancedRocketry.item.ItemBlockMeta;
+import zmaster587.advancedRocketry.item.ItemBlockWithIcon;
 import zmaster587.advancedRocketry.item.ItemData;
 import zmaster587.advancedRocketry.item.ItemDoor2;
 import zmaster587.advancedRocketry.item.ItemFluid;
@@ -474,7 +475,7 @@ public class AdvancedRocketry {
 		SatelliteRegistry.registerSatelliteProperty(new ItemStack(AdvancedRocketryItems.itemDataUnit, 1, 0), new SatelliteProperties().setMaxData(1000));
 
 		AdvancedRocketryItems.itemOreScanner = new ItemOreScanner().setUnlocalizedName("OreScanner").setTextureName("advancedRocketry:oreScanner");
-		AdvancedRocketryItems.itemQuartzCrucible = (new ItemReed(AdvancedRocketryBlocks.blockQuartzCrucible)).setUnlocalizedName("qcrucible").setCreativeTab(tabAdvRocketry).setTextureName("advancedRocketry:qcrucible");
+		AdvancedRocketryItems.itemQuartzCrucible = (new ItemBlockWithIcon(AdvancedRocketryBlocks.blockQuartzCrucible)).setUnlocalizedName("qcrucible").setCreativeTab(tabAdvRocketry).setTextureName("advancedRocketry:qcrucible");
 
 		AdvancedRocketryItems.itemSatellite = new ItemSatellite().setUnlocalizedName("satellite").setTextureName("advancedRocketry:satellite");
 		AdvancedRocketryItems.itemSatelliteIdChip = new ItemSatelliteIdentificationChip().setUnlocalizedName("satelliteIdChip").setTextureName("advancedRocketry:satelliteIdChip").setCreativeTab(tabAdvRocketry);
