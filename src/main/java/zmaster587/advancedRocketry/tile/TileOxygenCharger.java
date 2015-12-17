@@ -45,14 +45,23 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	}	
 
 	@Override
+	public int getPowerPerOperation() {
+		return 1;
+	}
+	
+	@Override
 	public boolean canPerformFunction() {
 		if(!worldObj.isRemote) {
 			for( Object player : this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 2, this.zCoord + 1))) {
-				ItemStack stack = ((EntityPlayer)player).getEquipmentInSlot(2);
+				ItemStack stack = ((EntityPlayer)player).getEquipmentInSlot(3);
 
 				if(stack != null && stack.getItem() instanceof ItemSpaceArmor) {
 					FluidStack fluidStack = this.drain(ForgeDirection.UNKNOWN, 1, false);
-					if(fluidStack != null && fluidStack.getFluid() == AdvancedRocketryFluids.fluidOxygen && fluidStack.amount > 0)  {
+					
+					
+					
+					if(((ItemSpaceArmor)stack.getItem()).getAirRemaining(stack) < ((ItemSpaceArmor)stack.getItem()).getMaxAir() &&
+							fluidStack != null && fluidStack.getFluid() == AdvancedRocketryFluids.fluidOxygen && fluidStack.amount > 0)  {
 						this.drain(ForgeDirection.UNKNOWN, 1, true);
 						return true;
 					}
