@@ -84,7 +84,7 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 		if(block != null) {
 			//If the player is mousing over this block
 			MovingObjectPosition movingObjPos = Minecraft.getMinecraft().objectMouseOver;
-			if(movingObjPos.blockX == tile.xCoord && movingObjPos.blockY == tile.yCoord && movingObjPos.blockZ == tile.zCoord) {
+			if(Minecraft.getMinecraft().objectMouseOver != null && movingObjPos.blockX == tile.xCoord && movingObjPos.blockY == tile.yCoord && movingObjPos.blockZ == tile.zCoord) {
 				ItemStack stack = tile.getWorldObj().getBlock(tile.xCoord, tile.yCoord, tile.zCoord).getPickBlock(movingObjPos, Minecraft.getMinecraft().theWorld, movingObjPos.blockX, movingObjPos.blockY, movingObjPos.blockZ, Minecraft.getMinecraft().thePlayer);
 				if(stack == null)
 					return;
