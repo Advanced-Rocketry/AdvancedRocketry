@@ -83,6 +83,7 @@ import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.event.BucketHandler;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.integration.CompatibilityMgr;
+import zmaster587.advancedRocketry.integration.GalacticCraftHandler;
 import zmaster587.advancedRocketry.item.ItemBlockMeta;
 import zmaster587.advancedRocketry.item.ItemData;
 import zmaster587.advancedRocketry.item.ItemDoor2;
@@ -208,6 +209,7 @@ public class AdvancedRocketry {
 
 		final String oreGen = "Ore Generation";
 		final String ROCKET = "Rockets";
+		final String MOD_INTERACTION = "Mod Interaction";
 
 		zmaster587.advancedRocketry.api.Configuration.buildSpeedMultiplier = (float) config.get(Configuration.CATEGORY_GENERAL, "buildSpeedMultiplier", 1f, "Multiplier for the build speed of the Rocket Builder (0.5 is twice as fast 2 is half as fast").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.MoonId = config.get(Configuration.CATEGORY_GENERAL,"moonId" , 2,"Dimension ID to use for the moon").getInt();
@@ -216,7 +218,8 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods = config.get(Configuration.CATEGORY_GENERAL, "makeMaterialsForOtherMods", true, "If true the machines from AdvancedRocketry will produce things like plates/rods for other mods even if Advanced Rocketry itself does not use the material (This can increase load time)").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.scrubberRequiresCartrige = config.get(Configuration.CATEGORY_GENERAL, "scrubberRequiresCartrige", true, "If true the Oxygen scrubbers require a consumable carbon collection cartridge").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.EUMult = (float)config.get(Configuration.CATEGORY_GENERAL, "EUPowerMultiplier", 7, "How many power unit one EU makes").getDouble();
-
+		zmaster587.advancedRocketry.api.Configuration.overrideGCAir = config.get(MOD_INTERACTION, "OverrideGCAir", true, "If true Galaciticcraft's air will be disabled entirely requiring use of Advanced Rocketry's Oxygen system on GC planets").getBoolean();
+		
 		zmaster587.advancedRocketry.api.Configuration.rocketRequireFuel = config.get(ROCKET, "rocketsRequireFuel", true, "Set to false if rockets should not require fuel to fly").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.rocketThrustMultiplier = config.get(ROCKET, "thrustMultiplier", 1f, "Multiplier for per-engine thrust").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.fuelCapacityMultiplier = config.get(ROCKET, "fuelCapacityMultiplier", 1f, "Multiplier for per-tank capacity").getDouble();
@@ -718,8 +721,10 @@ public class AdvancedRocketry {
 		PlanetEventHandler handle = new PlanetEventHandler();
 		FMLCommonHandler.instance().bus().register(handle);
 		MinecraftForge.EVENT_BUS.register(handle);
-
 		MinecraftForge.EVENT_BUS.register(new BucketHandler());
+		
+		if(zmaster587.advancedRocketry.api.Configuration.overrideGCAir)
+			MinecraftForge.EVENT_BUS.register(new GalacticCraftHandler());
 
 		FMLCommonHandler.instance().bus().register(DimensionManager.getSpaceManager());
 
