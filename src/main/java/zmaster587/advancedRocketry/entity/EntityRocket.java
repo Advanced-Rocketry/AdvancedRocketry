@@ -346,6 +346,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 			if(this.riddenByEntity instanceof EntityPlayer) {
 				EntityPlayer player = (EntityPlayer)this.riddenByEntity;
+				player.fallDistance = 0;
+				this.fallDistance = 0;
 
 				//Hackish crap to make clients mount entities immediately after server transfer and fire events
 				if(!worldObj.isRemote && this.isInFlight() && this.ticksExisted == 20) {
