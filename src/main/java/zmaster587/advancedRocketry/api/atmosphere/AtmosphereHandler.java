@@ -23,7 +23,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 
 public class AtmosphereHandler {
 	public static final DamageSource vacuumDamage = new DamageSource("Vacuum").setDamageBypassesArmor().setDamageIsAbsolute();
-	
+
 	public static long lastSuffocationTime;
 	private static final int MAX_BLOB_RADIUS = 64;
 	private static HashMap<Integer, AtmosphereHandler> dimensionOxygen = new HashMap<Integer, AtmosphereHandler>();
@@ -88,7 +88,7 @@ public class AtmosphereHandler {
 			int meta = world.getBlockMetadata(x, y, z);
 
 			for(AreaBlob blob : handler.getBlobWithinRadius(pos, MAX_BLOB_RADIUS)) {
-				
+
 				if(blob.contains(pos) && !blob.isPositionAllowed(world, pos))
 					blob.removeBlock(x, y, z);
 				else if(!blob.contains(pos) && blob.isPositionAllowed(world, pos))
@@ -180,7 +180,8 @@ public class AtmosphereHandler {
 	 * @param handler the handler associated with this blob
 	 */
 	public void clearBlob(IBlobHandler handler) {
-		blobs.get(handler).clearBlob();
+		if(blobs.containsKey(handler))
+			blobs.get(handler).clearBlob();
 	}
 
 	/**
