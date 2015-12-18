@@ -311,10 +311,11 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 						//break recipeCheck;
 					}
 
-				if(mask != (1 << ( ( ingredients.size() ) )) - 1)
-					return false;
-			}
 
+			}
+		if(mask != (1 << ( ( ingredients.size() ) )) - 1)
+			return false;
+		
 		//Check output Items
 		bottomItemCheck:
 			for(IInventory outInventory : itemOutPorts) {

@@ -87,7 +87,8 @@ public class RendererRollingMachine extends TileEntitySpecialRenderer {
 
 
 
-			int color = MaterialRegistry.getMaterialFromItemStack(multiBlockTile.getOutputs().get(0)).getColor();
+			int color = MaterialRegistry.getColorFromItemMaterial(multiBlockTile.getOutputs().get(0));
+			//int color = MaterialRegistry.getMaterialFromItemStack(multiBlockTile.getOutputs().get(0)).getColor();
 			GL11.glColor3d((0xff & color >> 16)/256f, (0xff & color >> 8)/256f , (color & 0xff)/256f);
 
 			//Render the ingot
@@ -99,7 +100,7 @@ public class RendererRollingMachine extends TileEntitySpecialRenderer {
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
 				GL11.glPopMatrix();
 			}
-			//Render thr plate
+			//Render the plate
 			if(progress > 0.5f) {
 
 				GL11.glPushMatrix();

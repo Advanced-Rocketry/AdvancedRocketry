@@ -113,7 +113,7 @@ public class TileMultiBlock extends TileEntity {
 					int globalY = yCoord - y + offset.y;
 					int globalZ = zCoord - (x - offset.x)*front.offsetX  - (z-offset.z)*front.offsetZ;
 
-					
+
 					//This block is being broken anyway so don't bother
 					if(blockBroken && globalX == destroyedX &&
 							globalY == destroyedY &&
@@ -179,7 +179,7 @@ public class TileMultiBlock extends TileEntity {
 
 	public boolean attemptCompleteStructure() {
 		//if(!completeStructure)
-			canRender = completeStructure = completeStructure();
+		canRender = completeStructure = completeStructure();
 		return completeStructure;
 	}
 
@@ -187,7 +187,7 @@ public class TileMultiBlock extends TileEntity {
 		List<BlockMeta> list =new ArrayList<BlockMeta>();
 		return list;
 	}
-	
+
 	public void resetCache() {
 	}
 
@@ -233,7 +233,7 @@ public class TileMultiBlock extends TileEntity {
 
 					if(block == AdvancedRocketryBlocks.blockPhantom)
 						return false;
-					
+
 					if(tile != null)
 						tiles.add(tile);
 
@@ -267,7 +267,7 @@ public class TileMultiBlock extends TileEntity {
 
 					if(block instanceof BlockMultiBlockComponentVisible) {
 						((BlockMultiBlockComponentVisible)block).hideBlock(worldObj, globalX, globalY, globalZ, worldObj.getBlockMetadata(globalX, globalY, globalZ));
-						
+
 						tile = worldObj.getTileEntity(globalX, globalY, globalZ);
 
 						if(tile instanceof IMultiblock)
@@ -294,7 +294,7 @@ public class TileMultiBlock extends TileEntity {
 
 		return true;
 	}
-	
+
 	/**
 	 * @return a list containing allowable block and metadatas for machine item outputs
 	 */
@@ -312,7 +312,7 @@ public class TileMultiBlock extends TileEntity {
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 0));
 		return list;
 	}
-	
+
 	/**
 	 * @return a list containing allowable block and metadatas for machine data ports
 	 */
@@ -321,30 +321,31 @@ public class TileMultiBlock extends TileEntity {
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 2));
 		return list;
 	}
-	
+
 	/**
 	 * @return a list containing allowable block and metadatas for machine power inputs
 	 */
 	public List<BlockMeta> getPowerInputBlocks() {
 		List<BlockMeta> list = new LinkedList<BlockMeta>();
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockRFBattery, BlockMeta.WILDCARD));
-		list.add(new BlockMeta(AdvancedRocketryBlocks.blockIC2Plug, BlockMeta.WILDCARD));
+		if(AdvancedRocketryBlocks.blockIC2Plug != null)
+			list.add(new BlockMeta(AdvancedRocketryBlocks.blockIC2Plug, BlockMeta.WILDCARD));
 		return list;
 	}
-	
+
 	public List<BlockMeta> getLiquidInputBlocks() {
 		List<BlockMeta> list = new LinkedList<BlockMeta>();
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 4));
 		return list;
 	}
-	
+
 	public List<BlockMeta> getLiquidOutputBlocks() {
 		List<BlockMeta> list = new LinkedList<BlockMeta>();
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 5));
 		return list;
 	}
-	
-	
+
+
 	public List<BlockMeta> getAllowableBlocks(Object input) {
 		if(input instanceof Character && (Character)input == '*') {
 			return getAllowableWildCardBlocks();
@@ -380,7 +381,7 @@ public class TileMultiBlock extends TileEntity {
 		List<BlockMeta> list = new ArrayList<BlockMeta>();
 		return list;
 	}
-	
+
 	public boolean shouldHideBlock(World world, int x, int y, int z, Block tile) {
 		return false;
 	}
@@ -425,13 +426,13 @@ public class TileMultiBlock extends TileEntity {
 	}
 
 	protected void writeNetworkData(NBTTagCompound nbt) {
-		
+
 	}
-	
+
 	protected void readNetworkData(NBTTagCompound nbt) {
-		
+
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
