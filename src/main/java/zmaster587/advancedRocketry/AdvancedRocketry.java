@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.logging.Logger;
 
+import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -210,6 +211,7 @@ public class AdvancedRocketry {
 		final String oreGen = "Ore Generation";
 		final String ROCKET = "Rockets";
 		final String MOD_INTERACTION = "Mod Interaction";
+		final String PLANET = "Planet";
 
 		zmaster587.advancedRocketry.api.Configuration.buildSpeedMultiplier = (float) config.get(Configuration.CATEGORY_GENERAL, "buildSpeedMultiplier", 1f, "Multiplier for the build speed of the Rocket Builder (0.5 is twice as fast 2 is half as fast").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.MoonId = config.get(Configuration.CATEGORY_GENERAL,"moonId" , 2,"Dimension ID to use for the moon").getInt();
@@ -218,6 +220,7 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods = config.get(Configuration.CATEGORY_GENERAL, "makeMaterialsForOtherMods", true, "If true the machines from AdvancedRocketry will produce things like plates/rods for other mods even if Advanced Rocketry itself does not use the material (This can increase load time)").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.scrubberRequiresCartrige = config.get(Configuration.CATEGORY_GENERAL, "scrubberRequiresCartrige", true, "If true the Oxygen scrubbers require a consumable carbon collection cartridge").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.EUMult = (float)config.get(Configuration.CATEGORY_GENERAL, "EUPowerMultiplier", 7, "How many power unit one EU makes").getDouble();
+		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 127, "Dimensions including and after this number are allowed to be made into planets");
 		zmaster587.advancedRocketry.api.Configuration.overrideGCAir = config.get(MOD_INTERACTION, "OverrideGCAir", true, "If true Galaciticcraft's air will be disabled entirely requiring use of Advanced Rocketry's Oxygen system on GC planets").getBoolean();
 		
 		zmaster587.advancedRocketry.api.Configuration.rocketRequireFuel = config.get(ROCKET, "rocketsRequireFuel", true, "Set to false if rockets should not require fuel to fly").getBoolean();
@@ -723,8 +726,12 @@ public class AdvancedRocketry {
 		MinecraftForge.EVENT_BUS.register(handle);
 		MinecraftForge.EVENT_BUS.register(new BucketHandler());
 		
-		if(zmaster587.advancedRocketry.api.Configuration.overrideGCAir)
-			MinecraftForge.EVENT_BUS.register(new GalacticCraftHandler());
+		if(zmaster587.advancedRocketry.api.Configuration.overrideGCAir) {
+			GalacticCraftHandler eventHandler = new GalacticCraftHandler();
+			MinecraftForge.EVENT_BUS.register(eventHandler);
+			if(event.getSide().isClient())
+				FMLCommonHandler.instance().bus().register(eventHandler);
+		}
 
 		FMLCommonHandler.instance().bus().register(DimensionManager.getSpaceManager());
 
@@ -846,6 +853,9 @@ public class AdvancedRocketry {
 		//Register hard coded dimensions
 		if(!zmaster587.advancedRocketry.api.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.api.dimension.DimensionManager.filePath)) {
 
+			if(Loader.isModLoaded("GalacticraftCore"))
+				zmaster587.advancedRocketry.api.Configuration.MoonId = ConfigManagerCore.idDimensionMoon;
+			
 			DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId);
 			dimensionProperties.atmosphereDensity = 0;
 			dimensionProperties.averageTemperature = 20;
