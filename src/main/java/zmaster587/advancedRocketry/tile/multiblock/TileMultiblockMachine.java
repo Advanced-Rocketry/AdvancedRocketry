@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
 import zmaster587.advancedRocketry.recipe.RecipesMachine.Recipe;
@@ -71,7 +72,6 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		NBTTagCompound nbt = pkt.func_148857_g();
-
 		canRender = nbt.getBoolean("built");
 		hadPowerLastTick = nbt.getBoolean("hadPowerLastTick");
 		readFromNBT(nbt);
@@ -83,16 +83,22 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	}
 
 	@Override
+	public void onChunkUnload() {
+		super.onChunkUnload();
+		System.out.println(this.toString() + "     wft?");
+	}
+	
+	@Override
 	public void updateEntity() {
 		super.updateEntity();
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0  && !worldObj.isRemote) {
 
-			if(completeStructure)
-				completeStructure = completeStructure();
+			if(isComplete())
+				setComplete(completeStructure());
 
-			if(completeStructure && !worldObj.isRemote)
+			if(isComplete() && !worldObj.isRemote)
 				onInventoryUpdated();
 			timeAlive = 0x1;
 		}
@@ -277,7 +283,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 	//Can this recipe be processed
 	public boolean canProcessRecipe(IRecipe recipe) {
-		if( !completeStructure)
+		if( !isComplete())
 			return false;
 
 		invCheckFlag = true;
@@ -430,6 +436,13 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	//This includes recipe management etc
 	public void onInventoryUpdated() {
 		//If we are already processing something don't bother
+		
+		if(!worldObj.isRemote && !isComplete()) {
+			attemptCompleteStructure();
+			markDirty();
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
+		
 		if(outputItemStacks == null && outputFluidStacks == null) {
 			IRecipe recipe;
 

@@ -83,6 +83,10 @@ public class TileMultiBlock extends TileEntity {
 		readNetworkData(nbt);
 	}
 
+	public void invalidateComponent(TileEntity tile) {
+		setComplete(false);
+	}
+	
 	/**
 	 * @param world world
 	 * @param destroyedX x coord of destroyed block
@@ -182,12 +186,19 @@ public class TileMultiBlock extends TileEntity {
 		canRender = completeStructure = completeStructure();
 		return completeStructure;
 	}
+	
+	public void setComplete(boolean complete) {
+		completeStructure = complete;
+	}
 
 	public List<BlockMeta> getAllowableWildCardBlocks() {
 		List<BlockMeta> list =new ArrayList<BlockMeta>();
 		return list;
 	}
 
+	/**
+	 * Called when cached Tiles need to be cleared (batteries/IO/etc)
+	 */
 	public void resetCache() {
 	}
 
@@ -222,11 +233,16 @@ public class TileMultiBlock extends TileEntity {
 		for(int y = 0; y < structure.length; y++) {
 			for(int z = 0; z < structure[0].length; z++) {
 				for(int x = 0; x< structure[0][0].length; x++) {
+					
+
 
 					int globalX = xCoord + (x - offset.x)*front.offsetZ - (z-offset.z)*front.offsetX;
 					int globalY = yCoord - y + offset.y;
 					int globalZ = zCoord - (x - offset.x)*front.offsetX  - (z-offset.z)*front.offsetZ;
 
+					if(!worldObj.getChunkFromBlockCoords(globalX, globalZ).isChunkLoaded)
+						return false;
+					
 					TileEntity tile = worldObj.getTileEntity(globalX, globalY, globalZ);
 					Block block = worldObj.getBlock(globalX, globalY, globalZ);
 					int meta = worldObj.getBlockMetadata(globalX, globalY, globalZ);
