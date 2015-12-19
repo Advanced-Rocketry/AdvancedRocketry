@@ -96,7 +96,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0 ) {
-			canRender = completeStructure = completeStructure();
+			attemptCompleteStructure();
 			timeAlive = 0x1;
 		}
 

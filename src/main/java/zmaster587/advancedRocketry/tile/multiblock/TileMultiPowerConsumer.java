@@ -88,11 +88,17 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0 && !worldObj.isRemote) {
-			if(completeStructure)
+			if(isComplete())
 				canRender = completeStructure = completeStructure();
 			timeAlive = 0x1;
 		}
-
+		
+		if(!worldObj.isRemote && worldObj.getTotalWorldTime() % 1000L == 0 && !isComplete()) {
+			attemptCompleteStructure();
+			markDirty();
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
+		
 		if(isRunning()) {
 			if(hasEnergy(powerPerTick) || (worldObj.isRemote && hadPowerLastTick)) {
 
@@ -167,7 +173,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	 * @return true if the machine is currently processing something, or more formally, if completionTime > 0
 	 */
 	public boolean isRunning() {
-		return completionTime > 0;
+		return completionTime > 0 && isComplete();
 	}
 
 	public void useEnergy(int amt) {

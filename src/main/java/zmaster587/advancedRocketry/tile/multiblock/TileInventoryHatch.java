@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 
 public class TileInventoryHatch extends TilePointer implements ISidedInventory, IModularInventory {
 
@@ -135,6 +136,17 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	@Override
 	public boolean canInteractWithContainer(EntityPlayer entity) {
 		return true;
+	}
+
+	@Override
+	public void onChunkUnload() {
+		super.onChunkUnload();
+		if(!worldObj.isRemote) {
+			TileEntity tile = getFinalPointedTile();
+			if(tile instanceof TileMultiBlock) {
+				((TileMultiBlock) tile).invalidateComponent(this);
+			}
+		}
 	}
 
 }
