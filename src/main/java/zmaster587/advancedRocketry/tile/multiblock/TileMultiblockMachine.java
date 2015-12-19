@@ -81,12 +81,6 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	public boolean canUpdate() {
 		return true;
 	}
-
-	@Override
-	public void onChunkUnload() {
-		super.onChunkUnload();
-		System.out.println(this.toString() + "     wft?");
-	}
 	
 	@Override
 	public void updateEntity() {
@@ -190,8 +184,8 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 					totalItems++;
 				}
 				else if(stack.isItemEqual(outputItemStacks.get(i)) && stack.stackSize + outputItemStacks.get(i).stackSize <= outInventory.getInventoryStackLimit()) {
-					outInventory.markDirty();
 					outInventory.getStackInSlot(smartInventoryUpgrade ? outInventory.getSizeInventory() - i - 1 : i).stackSize += outputItemStacks.get(i).stackSize;
+					outInventory.markDirty();
 					totalItems++;
 				}
 			}
@@ -283,7 +277,8 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 	//Can this recipe be processed
 	public boolean canProcessRecipe(IRecipe recipe) {
-		if( !isComplete())
+		
+		if( !isComplete() || invCheckFlag)
 			return false;
 
 		invCheckFlag = true;
@@ -319,8 +314,11 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 
 			}
-		if(mask != (1 << ( ( ingredients.size() ) )) - 1)
+		if(mask != (1 << ( ( ingredients.size() ) )) - 1) {
+			invCheckFlag = false;
 			return false;
+		}
+			
 		
 		//Check output Items
 		bottomItemCheck:
@@ -436,7 +434,8 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	//This includes recipe management etc
 	public void onInventoryUpdated() {
 		//If we are already processing something don't bother
-		if(outputItemStacks == null && outputFluidStacks == null) {
+		
+		if(!invCheckFlag && outputItemStacks == null && outputFluidStacks == null) {
 			IRecipe recipe;
 
 			if(enabled && (recipe = getRecipe(getMachineRecipeList())) != null && canProcessRecipe(recipe)) {

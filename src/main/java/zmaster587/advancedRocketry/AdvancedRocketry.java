@@ -576,7 +576,7 @@ public class AdvancedRocketry {
 		//OreDict stuff
 		OreDictionary.registerOre("waferSilicon", new ItemStack(AdvancedRocketryItems.itemWafer,1,0));
 		OreDictionary.registerOre("ingotCarbon", new ItemStack(AdvancedRocketryItems.itemMisc, 1, 1));
-		
+
 		//MOD-SPECIFIC ENTRIES --------------------------------------------------------------------------------------------------------------------------
 		//Items dependant on IC2
 		if(Loader.isModLoaded("IC2")) {
