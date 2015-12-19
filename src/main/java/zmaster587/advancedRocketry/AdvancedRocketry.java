@@ -20,7 +20,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
-import net.minecraft.item.ItemReed;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -739,7 +738,7 @@ public class AdvancedRocketry {
 		MinecraftForge.EVENT_BUS.register(handle);
 		MinecraftForge.EVENT_BUS.register(new BucketHandler());
 		
-		if(zmaster587.advancedRocketry.api.Configuration.overrideGCAir) {
+		if(Loader.isModLoaded("GalacticraftCore") && zmaster587.advancedRocketry.api.Configuration.overrideGCAir) {
 			GalacticCraftHandler eventHandler = new GalacticCraftHandler();
 			MinecraftForge.EVENT_BUS.register(eventHandler);
 			if(event.getSide().isClient())
