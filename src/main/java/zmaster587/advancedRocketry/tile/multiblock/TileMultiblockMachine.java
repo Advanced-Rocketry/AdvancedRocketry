@@ -436,7 +436,6 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	//This includes recipe management etc
 	public void onInventoryUpdated() {
 		//If we are already processing something don't bother
-		
 		if(outputItemStacks == null && outputFluidStacks == null) {
 			IRecipe recipe;
 
