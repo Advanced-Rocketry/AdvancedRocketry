@@ -335,6 +335,10 @@ public class RocketEventHandler extends Gui {
 				
 			}
 			
+			
+			//In event of world change make sure the warning isn't displayed
+			if(Minecraft.getMinecraft().theWorld.getTotalWorldTime() - AtmosphereHandler.lastSuffocationTime < 0)
+				AtmosphereHandler.lastSuffocationTime = 0;
 			//Tell the player he's suffocating if needed
 			if(Minecraft.getMinecraft().theWorld.getTotalWorldTime() - AtmosphereHandler.lastSuffocationTime < numTicksToDisplay) {
 				FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
