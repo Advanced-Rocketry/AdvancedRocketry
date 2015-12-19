@@ -74,7 +74,7 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 			GL11.glRotatef(progress*1500, 0, 0, 1);
 			model.renderOnly("Cylinder");
 
-			int color = MaterialRegistry.getMaterialFromItemStack(multiBlockTile.getOutputs().get(0)).getColor();
+			int color = MaterialRegistry.getColorFromItemMaterial(multiBlockTile.getOutputs().get(0));
 			GL11.glColor3d((0xff & color >> 16)/256f, (0xff & color >> 8)/256f , (color & 0xff)/256f);
 
 			model.renderOnly("rod");
