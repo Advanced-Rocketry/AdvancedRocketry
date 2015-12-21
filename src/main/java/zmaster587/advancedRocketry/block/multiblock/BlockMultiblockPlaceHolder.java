@@ -71,6 +71,7 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 			TilePlaceholder tile = (TilePlaceholder)world.getTileEntity(x, y, z);
 
 			Block newBlock = tile.getReplacedBlock();
+			meta = tile.getReplacedBlockMeta();
 
 			if(newBlock != null && newBlock != Blocks.air && player.canHarvestBlock(newBlock)) {
 				ArrayList<ItemStack> stackList = newBlock.getDrops(world, x, y, z, meta, 0);
