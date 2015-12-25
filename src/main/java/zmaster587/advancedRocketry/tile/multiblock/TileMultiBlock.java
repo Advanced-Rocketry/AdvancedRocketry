@@ -454,6 +454,7 @@ public class TileMultiBlock extends TileEntity {
 		super.writeToNBT(nbt);
 		writeNetworkData(nbt);
 		nbt.setBoolean("completeStructure", completeStructure);
+		nbt.setBoolean("canRender", canRender);
 	}
 
 	@Override
@@ -461,5 +462,6 @@ public class TileMultiBlock extends TileEntity {
 		super.readFromNBT(nbt);
 		readNetworkData(nbt);
 		completeStructure = nbt.getBoolean("completeStructure");
+		canRender = nbt.getBoolean("canRender");
 	}
 }
