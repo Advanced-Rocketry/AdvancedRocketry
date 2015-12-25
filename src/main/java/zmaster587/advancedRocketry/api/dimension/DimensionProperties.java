@@ -166,6 +166,7 @@ public class DimensionProperties implements Cloneable {
 		allowedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
 		satallites = new HashMap<>();
 		tickingSatallites = new LinkedList<SatelliteBase>();
+		isNativeDimension = true;
 	}
 
 	public DimensionProperties(int id ,String name) {

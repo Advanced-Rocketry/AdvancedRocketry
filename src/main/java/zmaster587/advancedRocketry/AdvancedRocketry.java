@@ -919,7 +919,6 @@ public class AdvancedRocketry {
 
 					properties.setBiomes(biomes);
 				}
-
 			}
 		}
 	}
