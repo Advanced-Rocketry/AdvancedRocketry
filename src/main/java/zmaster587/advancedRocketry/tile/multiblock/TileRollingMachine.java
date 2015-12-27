@@ -24,7 +24,7 @@ public class TileRollingMachine extends TileMultiblockMachine {
 			 {'I', Blocks.air, AdvancedRocketryBlocks.blockStructureBlock, Blocks.air},
 			 {'I', Blocks.air, AdvancedRocketryBlocks.blockStructureBlock, Blocks.air}},
 		 
-		{{AdvancedRocketryBlocks.blockRFBattery, AdvancedRocketryBlocks.blockFuelTank, AdvancedRocketryBlocks.blockStructureBlock, Blocks.air},
+		{{AdvancedRocketryBlocks.blockRFBattery, AdvancedRocketryBlocks.blockFuelTank, AdvancedRocketryBlocks.blockStructureBlock, null},
 		 {new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), AdvancedRocketryBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureBlock, 'O'},
 		 {new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), AdvancedRocketryBlocks.blockMotor, AdvancedRocketryBlocks.blockStructureBlock, 'O'}}
 	};
