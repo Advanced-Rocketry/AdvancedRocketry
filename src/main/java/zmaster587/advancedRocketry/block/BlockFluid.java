@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.block;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
@@ -8,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
@@ -32,8 +34,7 @@ public class BlockFluid extends BlockFluidClassic {
     public void registerBlockIcons(IIconRegister register) {
             stillIcon = register.registerIcon("advancedrocketry:fluid/oxygen_still");
             flowingIcon = register.registerIcon("advancedrocketry:fluid/oxygen_flow");
-            definedFluid.setFlowingIcon(flowingIcon);
-            definedFluid.setStillIcon(stillIcon);
+            //definedFluid.setIcons(stillIcon, flowingIcon);
     }
    
     @Override
