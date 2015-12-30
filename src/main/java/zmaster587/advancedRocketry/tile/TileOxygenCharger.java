@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
@@ -34,14 +35,14 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-		if(resource.getFluid() == AdvancedRocketryFluids.fluidOxygen)
+		if(resource.getFluid().getID() == FluidRegistry.getFluidID(AdvancedRocketryFluids.fluidOxygen))
 			return super.fill(from, resource, doFill);
 		return 0;
 	}
 
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid) {
-		return fluid == AdvancedRocketryFluids.fluidOxygen;
+		return fluid.getID() == FluidRegistry.getFluidID(AdvancedRocketryFluids.fluidOxygen);
 	}	
 
 	@Override
@@ -61,7 +62,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 					
 					
 					if(((ItemSpaceArmor)stack.getItem()).getAirRemaining(stack) < ((ItemSpaceArmor)stack.getItem()).getMaxAir() &&
-							fluidStack != null && fluidStack.getFluid() == AdvancedRocketryFluids.fluidOxygen && fluidStack.amount > 0)  {
+							fluidStack != null && fluidStack.getFluid().getID() == AdvancedRocketryFluids.fluidOxygen.getID() && fluidStack.amount > 0)  {
 						this.drain(ForgeDirection.UNKNOWN, 1, true);
 						return true;
 					}
