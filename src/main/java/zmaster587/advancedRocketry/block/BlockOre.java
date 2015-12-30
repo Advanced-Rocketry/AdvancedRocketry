@@ -82,7 +82,7 @@ public class BlockOre extends Block {
 
 			if(!MaterialRegistry.AllowedProducts.values()[i].isBlock()) {
 				AdvancedRocketryItems.itemOreProduct[i] = new ItemOreProduct(MaterialRegistry.AllowedProducts.values()[i].name().toLowerCase()).setCreativeTab(tab);
-				GameRegistry.registerItem(AdvancedRocketryItems.itemOreProduct[i], "product" + MaterialRegistry.AllowedProducts.values()[i].name().toLowerCase());
+				GameRegistry.registerItem(AdvancedRocketryItems.itemOreProduct[i], "product" + MaterialRegistry.AllowedProducts.values()[i].getName().toLowerCase());
 			}
 		}
 

@@ -285,8 +285,10 @@ public class DimensionManager {
 	 */
 	public void unregisterAllDimensions() {
 		for(Entry<Integer, DimensionProperties> dimSet : dimensionList.entrySet()) {
-			net.minecraftforge.common.DimensionManager.unregisterProviderType(dimSet.getKey());
-			net.minecraftforge.common.DimensionManager.unregisterDimension(dimSet.getKey());
+			if(!dimSet.getValue().isNativeDimension) {
+				net.minecraftforge.common.DimensionManager.unregisterProviderType(dimSet.getKey());
+				net.minecraftforge.common.DimensionManager.unregisterDimension(dimSet.getKey());
+			}
 		}
 		dimensionList.clear();
 	}
