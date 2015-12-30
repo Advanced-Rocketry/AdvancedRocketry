@@ -67,6 +67,10 @@ public class MaterialRegistry {
 		public boolean isOfType(int flag) {
 			return (getFlagValue() & flag) != 0;
 		}
+		
+		public String getName() {
+			return this.name().equalsIgnoreCase("stick") ? "ROD" : this.name();
+		}
 
 		/**
 		 * @return true if the itemtype is a block, IE Ore, coils, etc
