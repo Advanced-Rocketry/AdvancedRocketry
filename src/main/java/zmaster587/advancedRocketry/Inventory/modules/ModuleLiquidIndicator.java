@@ -172,8 +172,9 @@ public class ModuleLiquidIndicator extends ModuleBase {
 			float percent = getProgress();
 			int ySize = 52;
 			int xSize = 12;
-
-			gui.drawTexturedModelRectFromIcon(offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), fluidIcon, xSize, (int)(percent*ySize));
+			
+			if(fluidIcon != null)
+				gui.drawTexturedModelRectFromIcon(offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), fluidIcon, xSize, (int)(percent*ySize));
 
 			//this.drawProgressBarIconVertical(x + 27, y + 18, fluidIcon, 12, 52, getProgress());
 		}
