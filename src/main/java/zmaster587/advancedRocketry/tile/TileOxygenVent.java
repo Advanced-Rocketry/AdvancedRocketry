@@ -111,7 +111,10 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).unregisterBlob(this);
+
+		AtmosphereHandler handler = AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId);
+		if(handler != null)
+			AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).unregisterBlob(this);
 		deactivateAdjblocks();
 	}
 
@@ -131,7 +134,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		//IF first tick then register the blob and check for scrubbers
 		if(firstRun && !worldObj.isRemote) {
 			AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).registerBlob(this, xCoord, yCoord, zCoord);
-			
+
 			onAdjacentBlockUpdated();
 			//isSealed starts as true so we can accurately check for scrubbers, we now set it to false to force the tile to check for a seal on first run
 			isSealed = false;
