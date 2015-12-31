@@ -35,7 +35,8 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-		if(resource.getFluid().getID() == FluidRegistry.getFluidID(AdvancedRocketryFluids.fluidOxygen))
+		
+		if(resource.getFluid().getID() == AdvancedRocketryFluids.fluidOxygen.getID())
 			return super.fill(from, resource, doFill);
 		return 0;
 	}
