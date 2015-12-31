@@ -137,7 +137,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	public void setPositionAndRotation2(double x, double y,
 			double z, float p_70056_7_, float p_70056_8_,
 			int p_70056_9_) {
-		if( y < 400 && this.isInFlight())
+		if( y < 270 && this.isInFlight())
 			super.setPositionAndRotation2(x, y, z, p_70056_7_, p_70056_8_, p_70056_9_);
 	}
 

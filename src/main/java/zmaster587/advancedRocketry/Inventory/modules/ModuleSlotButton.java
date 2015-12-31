@@ -75,7 +75,7 @@ public class ModuleSlotButton extends ModuleButton {
 			GL11.glTranslatef(1.0F, 0.5F, 1.0F);
 			GL11.glScalef(1.0F, 1.0F, -1.0F);
 			GL11.glRotatef(210.0F, 1.0F, 0.0F, 0.0F);
-			GL11.glRotatef(45.0F + Minecraft.getMinecraft().theWorld.getTotalWorldTime() * 2, 0.0F, 1.0F, 0.0F);
+			GL11.glRotated(45.0F + ((System.currentTimeMillis() % 200000)/50F) * 2, 0.0F, 1.0F, 0.0F);
 			l = stack.getItem().getColorFromItemStack(stack, 0);
 			f3 = (float)(l >> 16 & 255) / 255.0F;
 			f4 = (float)(l >> 8 & 255) / 255.0F;
