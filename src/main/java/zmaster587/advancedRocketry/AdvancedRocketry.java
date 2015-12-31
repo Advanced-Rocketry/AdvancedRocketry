@@ -936,15 +936,16 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.dimension.DimensionManager.getInstance().unregisterAllDimensions();
 	}
 	
-    @SideOnly(Side.CLIENT)
+    /*@SideOnly(Side.CLIENT)
     @SubscribeEvent
-	public void onTextureStitch(TextureStitchEvent.Post event) {
+	public void onTextureStitch(TextureStitchEvent.Pre event) {
     		//IIcon texture = event.map.registerIcon("advancedrocketry:fluid/oxygen_still");
+    	if(event.map)
     		AdvancedRocketryFluids.fluidRocketFuel.setIcons(event.map.registerIcon("advancedrocketry:fluid/oxygen_still"));
     		AdvancedRocketryFluids.fluidHydrogen.setIcons(event.map.registerIcon("advancedrocketry:fluid/oxygen_still"));
     		AdvancedRocketryFluids.fluidOxygen.setIcons(event.map.registerIcon("advancedrocketry:fluid/oxygen_still"));
     	
-	}
+	}*/
 	
 	@SubscribeEvent
 	public void registerOre(OreRegisterEvent event) {

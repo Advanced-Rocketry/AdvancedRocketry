@@ -34,7 +34,7 @@ public class BlockFluid extends BlockFluidClassic {
     public void registerBlockIcons(IIconRegister register) {
             stillIcon = register.registerIcon("advancedrocketry:fluid/oxygen_still");
             flowingIcon = register.registerIcon("advancedrocketry:fluid/oxygen_flow");
-            //definedFluid.setIcons(stillIcon, flowingIcon);
+            definedFluid.setIcons(stillIcon, flowingIcon);
     }
    
     @Override
