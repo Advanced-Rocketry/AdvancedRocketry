@@ -255,8 +255,10 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			float radius = currentlySelectedPlanet.radius/2;
 			GL11.glTranslatef(currentlySelectedPlanet.posX + currentPosX + radius, currentlySelectedPlanet.posY  + currentPosY + radius, 0);
 
+			double progress = System.currentTimeMillis() % 20000 / 50f;
+			
 			GL11.glPushMatrix();
-			GL11.glRotatef(Minecraft.getMinecraft().theWorld.getTotalWorldTime(), 0, 0, 1);
+			GL11.glRotated(progress, 0, 0, 1);
 			Tessellator.instance.startDrawingQuads();
 			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, 1, -radius, -radius, radius, radius, 0, 1, 0, 1);
 			Tessellator.instance.draw();
@@ -264,7 +266,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 			GL11.glPushMatrix();
 			//GL11.glRotatef(-Minecraft.getMinecraft().theWorld.getTotalWorldTime(), 0, 0, 1);
-			radius *= (1.2 + 0.1*Math.sin(Minecraft.getMinecraft().theWorld.getTotalWorldTime()/10f));
+			radius *= (1.2 + 0.1*Math.sin(progress/10f));
 			Tessellator.instance.startDrawingQuads();
 			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, 1, -radius, -radius, radius, radius, 0, 1, 0, 1);
 			Tessellator.instance.draw();
