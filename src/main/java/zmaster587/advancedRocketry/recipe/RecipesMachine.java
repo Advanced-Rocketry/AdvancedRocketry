@@ -11,6 +11,8 @@ import zmaster587.libVulpes.interfaces.IRecipe;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -97,37 +99,62 @@ public class RecipesMachine {
 
 		public IRecipe getRecipeAsAllItemsOnly() {
 			Recipe recipe = new Recipe(output, input, completionTime, power);
-			
+
 			for(FluidStack stack : getFluidIngredients()) {
-				recipe.input.add(new ItemStack(stack.getFluid().getBlock()));
+				FluidRegistry.getFluidID(stack.getFluid());
+
+				Block block = stack.getFluid().getBlock();
+
+				if(block == null) {
+					for(FluidContainerRegistry.FluidContainerData container : FluidContainerRegistry.getRegisteredFluidContainerData()) {
+						if(container.fluid.containsFluid(stack)) {
+							recipe.input.add(container.filledContainer.copy());
+							break;
+						}
+					}
+				}
+				else
+					recipe.input.add(new ItemStack(block));
 			}
-			
+
 			for(FluidStack stack : getFluidOutputs()) {
-				recipe.output.add(new ItemStack(stack.getFluid().getBlock()));
+				FluidRegistry.getFluidID(stack.getFluid());
+
+				Block block = stack.getFluid().getBlock();
+
+				if(block == null) {
+					for(FluidContainerRegistry.FluidContainerData container : FluidContainerRegistry.getRegisteredFluidContainerData()) {
+						if(container.fluid.containsFluid(stack)) {
+							recipe.output.add(container.filledContainer.copy());
+							break;
+						}
+					}
+				}
+				else
+					recipe.output.add(new ItemStack(block));
 			}
-			
+
 			return recipe;
 		}
-		
+
 		@Override
 		public boolean equals(Object obj) {
 			if(obj instanceof Recipe) {
 				Recipe otherRecipe = (Recipe)obj;
 				if(input.size() != otherRecipe.input.size() || fluidInput.size() != otherRecipe.fluidInput.size())
 					return false;
-				
-				
+
 				for(int i = 0; i < input.size(); i++) {
 					if(!ItemStack.areItemStacksEqual(input.get(i), otherRecipe.input.get(i)))
-							return false;
+						return false;
 				}
-				
+
 				for(int i = 0; i < fluidInput.size(); i++) {
 					if(!FluidStack.areFluidStackTagsEqual(fluidInput.get(i), otherRecipe.fluidInput.get(i)))
-							return false;
+						return false;
 				}
-				
 			}
+
 			return super.equals(obj);
 		}
 	}
@@ -194,9 +221,9 @@ public class RecipesMachine {
 				recipe = new Recipe(outputItem, stack, timeRequired, power);
 			else
 				recipe = new Recipe(outputItem, stack, outputFluidStacks, inputFluidStacks, timeRequired, power);
-			
-		if(!recipes.contains(recipe))
-			recipes.add(recipe);
+
+			if(!recipes.contains(recipe))
+				recipes.add(recipe);
 
 		} catch(ClassCastException e) {
 			//Custom handling to make sure it logs and can be suppressed by user
@@ -213,8 +240,8 @@ public class RecipesMachine {
 	}
 
 	public void addRecipe(Class clazz , Object out, int timeRequired, int power, Object ... inputs) {
-		
-		
+
+
 		addRecipe(clazz, new Object[] {out}, timeRequired, power, inputs);
 	}
 

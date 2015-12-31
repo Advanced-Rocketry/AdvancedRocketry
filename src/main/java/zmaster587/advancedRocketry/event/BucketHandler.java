@@ -25,6 +25,9 @@ public class BucketHandler {
 			event.world.setBlockToAir(event.target.blockX, event.target.blockY, event.target.blockZ);
 			
 			event.result = new ItemStack(bucket);
+			
+			bucket.hasContainerItem(event.result);
+			
 			event.setResult(Result.ALLOW);
 		}
 	}

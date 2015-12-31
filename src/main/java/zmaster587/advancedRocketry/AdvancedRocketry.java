@@ -21,11 +21,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -160,13 +157,10 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
-import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 
 @Mod(modid="advancedRocketry", name="Advanced Rocketry", version="%VERSION%", dependencies="required-after:libVulpes@[0.0.6c,)")
@@ -490,7 +484,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryItems.itemHoloProjector = new ItemProjector().setUnlocalizedName("holoProjector").setTextureName("advancedRocketry:holoProjector").setCreativeTab(tabAdvRocketry);
 
 		//Fluids
-		AdvancedRocketryItems.itemBucketRocketFuel = new ItemBucket(AdvancedRocketryBlocks.blockFuelFluid).setCreativeTab(tabAdvRocketryOres).setUnlocalizedName("bucketRocketFuel").setTextureName("advancedRocketry:bucket_liquid");
+		AdvancedRocketryItems.itemBucketRocketFuel = new ItemBucket(AdvancedRocketryBlocks.blockFuelFluid).setCreativeTab(tabAdvRocketryOres).setUnlocalizedName("bucketRocketFuel").setTextureName("advancedRocketry:bucket_liquid").setContainerItem(Items.bucket);
 
 		//Armor registration
 		AdvancedRocketryItems.itemSpaceSuit_Helmet = new ItemSpaceArmor(AdvancedRocketryItems.spaceSuit, 0).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceHelmet").setTextureName("advancedRocketry:space_helmet");
@@ -780,7 +774,7 @@ public class AdvancedRocketry {
 
 			if(MaterialRegistry.AllowedProducts.CRYSTAL.isOfType(ore.getAllowedProducts())) {
 				for(String str : ore.getOreDictNames())
-					RecipesMachine.getInstance().addRecipe(TileCrystallizer.class, MaterialRegistry.AllowedProducts.CRYSTAL.name().toLowerCase() + str, 300, 200, MaterialRegistry.AllowedProducts.DUST.name().toLowerCase() + str);
+					RecipesMachine.getInstance().addRecipe(TileCrystallizer.class, ore.getProduct(MaterialRegistry.AllowedProducts.CRYSTAL), 300, 200, MaterialRegistry.AllowedProducts.DUST.name().toLowerCase() + str);
 			}
 
 			if(MaterialRegistry.AllowedProducts.BOULE.isOfType(ore.getAllowedProducts())) {

@@ -51,7 +51,6 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 			
 			ingredients = new ArrayList<PositionedStack>();
 			for(int i = 0; i < rec.getIngredients().size(); i++ ) {
-
 				ingredients.add(new PositionedStack(rec.getIngredients().get(i), 4 + 18*(i%3), 4 + 18*(i/3)));
 			}
 			energy = rec.getPower();
