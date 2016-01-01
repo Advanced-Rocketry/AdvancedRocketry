@@ -862,12 +862,11 @@ public class AdvancedRocketry {
 	public void serverStarted(FMLServerStartingEvent event) {
 		event.registerServerCommand(new WorldCommand());
 
+		if(Loader.isModLoaded("GalacticraftCore"))
+			zmaster587.advancedRocketry.api.Configuration.MoonId = ConfigManagerCore.idDimensionMoon;
 
 		//Register hard coded dimensions
 		if(!zmaster587.advancedRocketry.api.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.api.dimension.DimensionManager.filePath)) {
-
-			if(Loader.isModLoaded("GalacticraftCore"))
-				zmaster587.advancedRocketry.api.Configuration.MoonId = ConfigManagerCore.idDimensionMoon;
 			
 			DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId);
 			dimensionProperties.atmosphereDensity = 0;

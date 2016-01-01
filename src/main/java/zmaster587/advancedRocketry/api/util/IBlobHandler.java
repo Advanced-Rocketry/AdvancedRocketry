@@ -10,6 +10,7 @@ public interface IBlobHandler {
 	 * /
 	public void onBlobRemove(BlockPosition pos);
 	
+	
 	/**
 	 * Called when a block is being added to the blob
 	 * @param pos BlockPosition to add
