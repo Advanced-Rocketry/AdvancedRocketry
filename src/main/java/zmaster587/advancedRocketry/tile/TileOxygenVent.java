@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -24,7 +25,6 @@ import zmaster587.advancedRocketry.api.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.api.dimension.DimensionManager;
 import zmaster587.advancedRocketry.api.util.AreaBlob;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
-import zmaster587.advancedRocketry.tile.multiblock.TileInventoryHatch;
 import zmaster587.advancedRocketry.util.IAdjBlockUpdate;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
 import zmaster587.libVulpes.util.BlockPosition;
@@ -36,7 +36,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	boolean hasFluid;
 	int numScrubbers;
 	List<TileCO2Scrubber> scrubbers;
-
+	
 	public TileOxygenVent() {
 		super(1000,2, 1000);
 		isSealed = true;
@@ -57,6 +57,11 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	@Override
 	public boolean canPerformFunction() {
 		return true;
+	}
+	
+	@Override
+	public World getWorld() {
+		return getWorldObj();
 	}
 
 	@Override
@@ -98,9 +103,9 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		Block block = this.worldObj.getBlock(x,y,z);
 		if(block == AdvancedRocketryBlocks.blockOxygenScrubber) {
 			int meta = worldObj.getBlockMetadata(x,y,z);
-			if(on && meta == 0)
+			if(on && (meta & 8) == 0)
 				worldObj.setBlockMetadataWithNotify(x, y, z, 8, 2);
-			else if(!on && meta == 8)
+			else if(!on && (meta & 8) == 8)
 				worldObj.setBlockMetadataWithNotify(x, y, z, 0, 2);
 
 			return true;
