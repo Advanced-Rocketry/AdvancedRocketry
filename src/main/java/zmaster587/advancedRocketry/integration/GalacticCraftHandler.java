@@ -17,6 +17,7 @@ public class GalacticCraftHandler {
 
 	@SubscribeEvent
 	public void GCSuffocationEvent(GCCoreOxygenSuffocationEvent.Pre event) {
+		
 		if(event.entity instanceof EntityPlayer) {
 			GCPlayerStats stats = GCPlayerStats.get((EntityPlayerMP) event.entity);
 			if(stats != null)
