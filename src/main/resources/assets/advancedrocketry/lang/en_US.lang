@@ -58,6 +58,7 @@ tile.rocketFuelBlock.name=Rocket Fuel
 tile.hydrogenFluidBlock.name=Hydrogen
 tile.oxygenFluidBlock.name=Oxygen
 tile.oxygenCharger.name=Oxygen Charge Pad
+tile.dockingPad.name=Docking Pad
 
 tile.Dilithium.name=Dilithium Ore
 tile.Copper.name=Copper Ore

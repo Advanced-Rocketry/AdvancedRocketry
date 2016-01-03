@@ -138,7 +138,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			double z, float p_70056_7_, float p_70056_8_,
 			int p_70056_9_) {
 		
-		if( !worldObj.isRemote || (y < 270 && this.isInFlight()))
+		//if( !worldObj.isRemote || (y < 270 && this.isInFlight()))
 			super.setPositionAndRotation2(x, y, z, p_70056_7_, p_70056_8_, p_70056_9_);
 	}
 
@@ -426,7 +426,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	 * Called when the rocket reaches orbit
 	 */
 	public void onOrbitReached() {
-		MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketReachesOrbitEvent(this));
+		super.onOrbitReached();
 
 		//TODO: support multiple riders and rider/satellite combo
 		if(!stats.hasSeat()) {
@@ -528,7 +528,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	 */
 	@Override
 	public void deconstructRocket() {
-
+		super.deconstructRocket();
 
 		for(IInfrastructure infrastructure : connectedInfrastructure) {
 			infrastructure.unlinkRocket();

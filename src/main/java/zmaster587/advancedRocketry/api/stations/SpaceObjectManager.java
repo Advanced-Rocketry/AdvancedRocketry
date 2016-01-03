@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
@@ -165,7 +166,7 @@ public class SpaceObjectManager {
 				SpaceObject object = getSpaceStationFromBlockCoords((int)event.player.posX, (int)event.player.posZ);
 				if(object != null) {
 	
-					Vector3F<Integer> loc = object.getSpawnLocation();
+					BlockPosition loc = object.getSpawnLocation();
 	
 					event.player.fallDistance=0;
 					event.player.motionY = 0;

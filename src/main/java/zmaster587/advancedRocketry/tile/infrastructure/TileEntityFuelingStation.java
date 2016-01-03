@@ -146,6 +146,11 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 
 		ItemLinker.setMasterCoords(item, this.xCoord, this.yCoord, this.zCoord);
 
+		if(this.linkedRocket != null) {
+			this.linkedRocket.unlinkInfrastructure(this);
+			this.unlinkRocket();
+		}
+		
 		if(player.worldObj.isRemote)
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText("You program the linker with the fueling station at: " + this.xCoord + " " + this.yCoord + " " + this.zCoord)));
 		return true;

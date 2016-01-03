@@ -16,6 +16,7 @@ import zmaster587.advancedRocketry.api.stations.SpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.world.biome.BiomeGenAlienForest;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
+import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -93,7 +94,7 @@ public class WorldCommand implements ICommand {
 							if(object != null) {
 								if(player.worldObj.provider.dimensionId != Configuration.spaceDimId)
 									MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal(MinecraftServer.getServer().worldServerForDimension(dim)));
-								Vector3F<Integer> vec = object.getSpawnLocation();
+								BlockPosition vec = object.getSpawnLocation();
 								player.setPositionAndUpdate(vec.x, vec.y, vec.z);
 							}
 							else {

@@ -12,6 +12,7 @@ import zmaster587.advancedRocketry.api.stations.SpaceObject;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.tile.multiblock.TileInventoryHatch;
+import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 
 public class TileGuidanceComputer extends TileInventoryHatch implements IModularInventory {
@@ -66,9 +67,12 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				//TODO: handle Exception
 				SpaceObject object = DimensionManager.getSpaceManager().getSpaceStation(chip.getDamage(stack));
 				
+				BlockPosition vec = object.getNextLandingPad();
 				
-				Vector3F<Integer> vec = object.getSpawnLocation();
-				return new Vector3F<Float>(vec.x.floatValue(),vec.y.floatValue(),vec.z.floatValue());
+				if(vec == null)
+					vec = object.getSpawnLocation();
+				
+				return new Vector3F<Float>(new Float(vec.x), new Float(vec.y), new Float(vec.z));
 			}
 			else {
 				return chip.getTakeoffCoords(stack);

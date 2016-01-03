@@ -54,7 +54,7 @@ public class RocketEventHandler extends Gui {
 	private static boolean mapNeedsBinding = false;
 	private static IntBuffer table,outerBoundsTable;
 	
-	private static final int numTicksToDisplay = 40;
+	private static final int numTicksToDisplay = 100;
 
 
 	@SubscribeEvent
