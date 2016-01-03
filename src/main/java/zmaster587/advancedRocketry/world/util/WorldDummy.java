@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.world.util;
 
 import zmaster587.advancedRocketry.util.StorageChunk;
 import net.minecraft.block.Block;
+import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
@@ -56,6 +57,7 @@ public class WorldDummy extends World {
 
 	}
 
+
 	@Override
 	protected boolean chunkExists(int x, int z) {
 		return false;
@@ -82,6 +84,7 @@ public class WorldDummy extends World {
 	@Override
 	protected void finishSetup() {
 		//Dont care about villages or providers or registration here
+		this.chunkProvider = this.createChunkProvider();
 	}
 
 	@Override
@@ -126,7 +129,7 @@ public class WorldDummy extends World {
 	@Override
 	protected IChunkProvider createChunkProvider() {
 		// TODO Auto-generated method stub
-		return null;
+		return new ChunkProviderClient(this);
 	}
 
 	@Override

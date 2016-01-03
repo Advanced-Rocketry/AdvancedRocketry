@@ -137,7 +137,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	public void setPositionAndRotation2(double x, double y,
 			double z, float p_70056_7_, float p_70056_8_,
 			int p_70056_9_) {
-		if( y < 270 && this.isInFlight())
+		
+		if( !worldObj.isRemote || (y < 270 && this.isInFlight()))
 			super.setPositionAndRotation2(x, y, z, p_70056_7_, p_70056_8_, p_70056_9_);
 	}
 
@@ -374,10 +375,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				this.motionY += stats.getAcceleration();
 
 			double lastPosY = this.posY;
-			this.moveEntity(0, this.motionY, 0);
+			double prevMotion = this.motionY;
+			this.moveEntity(0, prevMotion, 0);
 
 			//Check to see if it's landed
-			if((isInOrbit || !burningFuel) && isInFlight() && lastPosY + this.motionY != this.posY) {
+			if((isInOrbit || !burningFuel) && isInFlight() && lastPosY + prevMotion != this.posY) {
 				MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketLandedEvent(this));
 				this.setInFlight(false);
 				this.isInOrbit = false;
