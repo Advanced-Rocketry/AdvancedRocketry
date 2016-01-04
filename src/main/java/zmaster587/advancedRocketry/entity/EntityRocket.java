@@ -92,9 +92,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	//Offset for buttons linking to the tileEntityGrid
 	private int tilebuttonOffset = 3;
 
-	//Cannot do setDead to avoid index out of bounds in worldMulti
-	private boolean dieNextTick = false;
-
 	public enum PacketType {
 		RECIEVENBT,
 		SENDINTERACT,
@@ -319,10 +316,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-
-		if(dieNextTick)
-			this.setDead();
-
+		
 		//TODO move
 		World.MAX_ENTITY_RADIUS = 100;
 
@@ -586,6 +580,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			double x = posX, z = posZ;
 
 			Entity rider = this.riddenByEntity;
+			if(rider != null)
+				rider.mountEntity(null);
 
 			this.worldObj.theProfiler.startSection("changeDimension");
 			MinecraftServer minecraftserver = MinecraftServer.getServer();
@@ -678,9 +674,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			satallite = SatelliteRegistry.createFromNBT(satalliteNbt);
 
 		}
-
-		if(nbt.hasKey("dieNextTick"))
-			dieNextTick = nbt.getBoolean("dieNextTick");
 	}
 
 	protected void writeNetworkableNBT(NBTTagCompound nbt) {
@@ -722,8 +715,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			storage.writeToNBT(blocks);
 			nbt.setTag("data", blocks);
 		}
-
-		nbt.setBoolean("dieNextTick", dieNextTick);
 
 		//TODO handle non tile Infrastructure
 
