@@ -1,8 +1,5 @@
 package zmaster587.advancedRocketry.block;
 
-import java.util.Random;
-
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockDoor;
@@ -10,6 +7,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+
+import java.util.Random;
 
 public class BlockDoor2 extends BlockDoor {
 
@@ -23,11 +23,11 @@ public class BlockDoor2 extends BlockDoor {
     	//if(world.getBlock(x, y, z) == AdvancedRocketryBlocks.blockAirLock)
     	return AdvancedRocketryItems.itemSmallAirlockDoor;
     }
-    
+
     @Override
-    public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
-    	//if(world.getBlock(x, y, z) == AdvancedRocketryBlocks.blockAirLock)
-    	return AdvancedRocketryItems.itemSmallAirlockDoor;
+    public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_)
+    {
+        return (p_149650_1_ & 8) != 0 ? null : AdvancedRocketryItems.itemSmallAirlockDoor;
     }
     
     @Override
