@@ -1,9 +1,5 @@
 package zmaster587.advancedRocketry.tile;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -18,7 +14,6 @@ import zmaster587.advancedRocketry.Inventory.modules.ModuleLiquidIndicator;
 import zmaster587.advancedRocketry.Inventory.modules.ModulePower;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereType;
@@ -28,6 +23,10 @@ import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.util.IAdjBlockUpdate;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
 import zmaster587.libVulpes.util.BlockPosition;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBlobHandler, IModularInventory, IAdjBlockUpdate {
 
@@ -164,7 +163,8 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 			if(isSealed) {
 
-				if(Configuration.scrubberRequiresCartrige){ //If scrubbers exist and the config allows then use the cartridge
+				//If scrubbers exist and the config allows then use the cartridge
+				if(Configuration.scrubberRequiresCartrige){
 					//TODO: could be optimized
 					if(worldObj.getTotalWorldTime() % 20 == 0) {
 						numScrubbers = 0;

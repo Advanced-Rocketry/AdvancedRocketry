@@ -9,12 +9,17 @@ import zmaster587.advancedRocketry.api.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.api.network.PacketHandler;
 import zmaster587.advancedRocketry.api.network.PacketOxygenState;
 
+/**
+ * Atmosphere type for vaccum (No air)
+ * @author Zmaster
+ */
 public class AtmosphereVacuum extends AtmosphereType {
 
 	public AtmosphereVacuum() {
 		super(true, false);
 	}
 
+	@Override
 	public void onTick(EntityLivingBase player) {
 		if(player.worldObj.getTotalWorldTime() % 10  == 0 && !isImmune(player)) {
 			if(!isBreathable()) {
@@ -25,7 +30,7 @@ public class AtmosphereVacuum extends AtmosphereType {
 		}
 	}
 
-	
+	@Override
 	public boolean isImmune(EntityLivingBase player) {
 
 		//Checks if player is wearing spacesuit or anything that extends ItemSpaceArmor
@@ -34,12 +39,17 @@ public class AtmosphereVacuum extends AtmosphereType {
 		ItemStack chest = player.getEquipmentInSlot(3);
 		ItemStack helm = player.getEquipmentInSlot(4);
 
+		//TODO change over to use API #ISealedArmor
 		return (player instanceof EntityPlayer && ((EntityPlayer)player).capabilities.isCreativeMode) 
 				|| player.ridingEntity instanceof EntityRocketBase ||
+				//TODO make helper to see if player is wearing a set
+				//TODO add API #isPartOfSet(ItemStack) and #isSealed(ItemStack)
 				helm != null && helm.getItem() instanceof ItemSpaceArmor &&
 				chest != null && chest.getItem() instanceof ItemSpaceArmor &&
 				leg != null && leg.getItem() instanceof ItemSpaceArmor &&
 				feet != null && feet.getItem() instanceof ItemSpaceArmor &&
+						//TODO add API #isAirTank(ItemStack)
+						//TODO use Fluid Item interface ?
 				((ItemSpaceArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).decrementAir(chest, 1) > 0;
 	}
 }

@@ -1,9 +1,8 @@
 package zmaster587.advancedRocketry.api.atmosphere;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,9 +16,10 @@ import zmaster587.advancedRocketry.api.util.AreaBlob;
 import zmaster587.advancedRocketry.api.util.AtmosphereBlob;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.libVulpes.util.BlockPosition;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class AtmosphereHandler {
 	public static final DamageSource vacuumDamage = new DamageSource("Vacuum").setDamageBypassesArmor().setDamageIsAbsolute();
@@ -201,9 +201,6 @@ public class AtmosphereHandler {
 	/**
 	 * Adds a block to the blob
 	 * @param handler
-	 * @param x
-	 * @param y
-	 * @param z
 	 */
 	public void addBlock(IBlobHandler handler, BlockPosition pos){
 		AreaBlob blob = blobs.get(handler);
