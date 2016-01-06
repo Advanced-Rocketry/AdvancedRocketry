@@ -33,7 +33,7 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
     /** INSTANCE */
     public static final SealableBlockHandler INSTANCE = new SealableBlockHandler();
 
-    private SealableBlockHandler(){}
+    private SealableBlockHandler() {}
 
     @Override
     public boolean isBlockSealed(World world, int x, int y, int z)
@@ -48,12 +48,12 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
         Material material = block.getMaterial();
 
         //Always allow list
-        if(blockAllowList.contains(block) || materialAllowList.contains(material))
+        if (blockAllowList.contains(block) || materialAllowList.contains(material))
         {
             return true;
         }
         //Always block list
-        else if(blockBanList.contains(block) || materialBanList.contains(material))
+        else if (blockBanList.contains(block) || materialBanList.contains(material))
         {
             return false;
         }
@@ -77,11 +77,11 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
     @Override
     public void addUnsealableBlock(Block block)
     {
-        if(!blockBanList.contains(block))
+        if (!blockBanList.contains(block))
         {
             blockBanList.add(block);
         }
-        if(blockAllowList.contains(block))
+        if (blockAllowList.contains(block))
         {
             blockAllowList.remove(block);
         }
@@ -90,11 +90,11 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
     @Override
     public void addSealableBlock(Block block)
     {
-        if(!blockAllowList.contains(block))
+        if (!blockAllowList.contains(block))
         {
             blockAllowList.add(block);
         }
-        if(blockBanList.contains(block))
+        if (blockBanList.contains(block))
         {
             blockBanList.remove(block);
         }
@@ -112,7 +112,20 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
      */
     public static boolean isFulBlock(World world, BlockPosition pos)
     {
-        Block block = world.getBlock(pos.x, pos.y, pos.z);
+        return isFulBlock(world.getBlock(pos.x, pos.y, pos.z));
+    }
+
+    /**
+     * Checks if a block is full sized based off of block bounds. This
+     * is not a perfect check as mods may have a full size. However,
+     * have a 3D model that doesn't look a full block in size. There
+     * is no way around this other than to make a black list check.
+     *
+     * @param block - block to compare
+     * @return true if full block
+     */
+    public static boolean isFulBlock(Block block)
+    {
         //size * 100 to correct rounding errors
         int minX = (int) (block.getBlockBoundsMinX() * 100);
         int minY = (int) (block.getBlockBoundsMinY() * 100);
@@ -145,6 +158,28 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 
         return (otherBlock == AdvancedRocketryBlocks.blockAirLock && (otherMeta & 1) == (meta & 1)) ||
                 (otherBlock != AdvancedRocketryBlocks.blockAirLock && isBlockSealed(world, pos));
+    }
+
+    /**
+     * Checks if the block is banned from being a seal
+     *
+     * @param block - checked block
+     * @return true if it is banned, based on ban list only.
+     */
+    public boolean isBlockBanned(Block block)
+    {
+        return blockBanList.contains(block);
+    }
+
+    /**
+     * Checks if the material is banned from being a seal
+     *
+     * @param mat - material being checked
+     * @return true if it is banned, based on ban list only.
+     */
+    public boolean isMaterialBanned(Material mat)
+    {
+        return materialBanList.contains(mat);
     }
 
     /**
