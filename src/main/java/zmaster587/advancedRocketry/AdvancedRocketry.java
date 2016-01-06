@@ -1,16 +1,18 @@
 package zmaster587.advancedRocketry;
 
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 import ic2.api.item.IC2Items;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Random;
-import java.util.logging.Logger;
-
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
@@ -33,21 +35,16 @@ import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import zmaster587.advancedRocketry.Inventory.GuiHandler;
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
-import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.api.Constants;
-import zmaster587.advancedRocketry.api.SatelliteRegistry;
+import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.api.dimension.DimensionManager;
 import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.material.MaterialRegistry;
-import zmaster587.advancedRocketry.api.material.MixedMaterial;
 import zmaster587.advancedRocketry.api.material.MaterialRegistry.AllowedProducts;
 import zmaster587.advancedRocketry.api.material.MaterialRegistry.Materials;
+import zmaster587.advancedRocketry.api.material.MixedMaterial;
 import zmaster587.advancedRocketry.api.network.PacketHandler;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.block.BlockAlphaTexture;
@@ -85,58 +82,19 @@ import zmaster587.advancedRocketry.event.BucketHandler;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.integration.CompatibilityMgr;
 import zmaster587.advancedRocketry.integration.GalacticCraftHandler;
-import zmaster587.advancedRocketry.item.ItemBlockMeta;
-import zmaster587.advancedRocketry.item.ItemBlockWithIcon;
-import zmaster587.advancedRocketry.item.ItemData;
-import zmaster587.advancedRocketry.item.ItemDoor2;
-import zmaster587.advancedRocketry.item.ItemFluid;
-import zmaster587.advancedRocketry.item.ItemIngredient;
-import zmaster587.advancedRocketry.item.ItemOreScanner;
-import zmaster587.advancedRocketry.item.ItemPackedStructure;
-import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
-import zmaster587.advancedRocketry.item.ItemProjector;
-import zmaster587.advancedRocketry.item.ItemSatellite;
-import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
-import zmaster587.advancedRocketry.item.ItemStationChip;
+import zmaster587.advancedRocketry.item.*;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
 import zmaster587.advancedRocketry.satellite.SatelliteDensity;
 import zmaster587.advancedRocketry.satellite.SatelliteMassScanner;
 import zmaster587.advancedRocketry.satellite.SatelliteOptical;
-import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
-import zmaster587.advancedRocketry.tile.TileIC2Plug;
-import zmaster587.advancedRocketry.tile.TileInputHatch;
-import zmaster587.advancedRocketry.tile.TileMaterial;
-import zmaster587.advancedRocketry.tile.TileMissionController;
-import zmaster587.advancedRocketry.tile.TileModelRender;
-import zmaster587.advancedRocketry.tile.TileModelRenderRotatable;
-import zmaster587.advancedRocketry.tile.TileOutputHatch;
-import zmaster587.advancedRocketry.tile.TileOxygenCharger;
-import zmaster587.advancedRocketry.tile.TileCO2Scrubber;
-import zmaster587.advancedRocketry.tile.TileOxygenVent;
-import zmaster587.advancedRocketry.tile.TileRFPlug;
-import zmaster587.advancedRocketry.tile.TileRocketBuilder;
-import zmaster587.advancedRocketry.tile.TileSchematic;
-import zmaster587.advancedRocketry.tile.TileSpaceLaser;
-import zmaster587.advancedRocketry.tile.TileStationBuilder;
 import zmaster587.advancedRocketry.tile.Satellite.TileEntitySatelliteControlCenter;
 import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteBuilder;
 import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteHatch;
+import zmaster587.advancedRocketry.tile.*;
 import zmaster587.advancedRocketry.tile.data.TileDataBus;
 import zmaster587.advancedRocketry.tile.infrastructure.TileEntityFuelingStation;
 import zmaster587.advancedRocketry.tile.infrastructure.TileEntityMoniteringStation;
-import zmaster587.advancedRocketry.tile.multiblock.TileChemicalReactor;
-import zmaster587.advancedRocketry.tile.multiblock.TileCrystallizer;
-import zmaster587.advancedRocketry.tile.multiblock.TileCuttingMachine;
-import zmaster587.advancedRocketry.tile.multiblock.TileElectricArcFurnace;
-import zmaster587.advancedRocketry.tile.multiblock.TileElectrolyser;
-import zmaster587.advancedRocketry.tile.multiblock.TileLathe;
-import zmaster587.advancedRocketry.tile.multiblock.TileFluidHatch;
-import zmaster587.advancedRocketry.tile.multiblock.TileRollingMachine;
-import zmaster587.advancedRocketry.tile.multiblock.TileObservatory;
-import zmaster587.advancedRocketry.tile.multiblock.TilePlaceholder;
-import zmaster587.advancedRocketry.tile.multiblock.TilePlanetAnalyser;
-import zmaster587.advancedRocketry.tile.multiblock.TilePlanetSelector;
-import zmaster587.advancedRocketry.tile.multiblock.TilePrecisionAssembler;
+import zmaster587.advancedRocketry.tile.multiblock.*;
 import zmaster587.advancedRocketry.util.FluidColored;
 import zmaster587.advancedRocketry.world.biome.BiomeGenAlienForest;
 import zmaster587.advancedRocketry.world.biome.BiomeGenHotDryRock;
@@ -147,21 +105,10 @@ import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.advancedRocketry.world.type.WorldTypePlanetGen;
 import zmaster587.advancedRocketry.world.type.WorldTypeSpace;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.event.FMLServerStoppedEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 
 @Mod(modid="advancedRocketry", name="Advanced Rocketry", version="%VERSION%", dependencies="required-after:libVulpes@[0.0.6c,)")
@@ -387,13 +334,22 @@ public class AdvancedRocketry {
 
 		//Fluid Registration
 		AdvancedRocketryFluids.fluidOxygen = new FluidColored("oxygen",0x8f94b9).setUnlocalizedName("oxygen").setGaseous(true);
-		FluidRegistry.registerFluid(AdvancedRocketryFluids.fluidOxygen);
+		if(!FluidRegistry.registerFluid(AdvancedRocketryFluids.fluidOxygen))
+		{
+			AdvancedRocketryFluids.fluidOxygen = FluidRegistry.getFluid("oxygen");
+		}
 
 		AdvancedRocketryFluids.fluidHydrogen = new FluidColored("hydrogen",0xdbc1c1).setUnlocalizedName("hydrogen").setGaseous(true);
-		FluidRegistry.registerFluid(AdvancedRocketryFluids.fluidHydrogen);
+		if(!FluidRegistry.registerFluid(AdvancedRocketryFluids.fluidHydrogen))
+		{
+			AdvancedRocketryFluids.fluidHydrogen = FluidRegistry.getFluid("hydrogen");
+		}
 
 		AdvancedRocketryFluids.fluidRocketFuel = new FluidColored("rocketFuel", 0xe5d884).setUnlocalizedName("rocketFuel").setGaseous(true);
-		FluidRegistry.registerFluid(AdvancedRocketryFluids.fluidRocketFuel);
+		if(!FluidRegistry.registerFluid(AdvancedRocketryFluids.fluidRocketFuel))
+		{
+			AdvancedRocketryFluids.fluidRocketFuel = FluidRegistry.getFluid("rocketFuel");
+		}
 
 		AdvancedRocketryBlocks.blockOxygenFluid = new BlockFluid(AdvancedRocketryFluids.fluidOxygen, Material.water).setBlockName("oxygenFluidBlock").setCreativeTab(CreativeTabs.tabMisc);
 		AdvancedRocketryBlocks.blockHydrogenFluid = new BlockFluid(AdvancedRocketryFluids.fluidHydrogen, Material.water).setBlockName("hydrogenFluidBlock").setCreativeTab(CreativeTabs.tabMisc);
