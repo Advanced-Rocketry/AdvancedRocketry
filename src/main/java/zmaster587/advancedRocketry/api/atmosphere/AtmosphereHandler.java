@@ -36,12 +36,13 @@ public class AtmosphereHandler {
 	 * @param dimId the dimension id to register the dimension for
 	 */
 	public static void registerWorld(int dimId) {
-		dimensionOxygen.put(dimId, new AtmosphereHandler(dimId));
 		
 		//If O2 is allowed and
 		if(Configuration.enableOxygen && (Configuration.overrideGCAir || dimId != Configuration.MoonId || !DimensionManager.getInstance().getDimensionProperties(dimId).isNativeDimension)) {
+			dimensionOxygen.put(dimId, new AtmosphereHandler(dimId));
 			MinecraftForge.EVENT_BUS.register(dimensionOxygen.get(dimId));
 			FMLCommonHandler.instance().bus().register(dimensionOxygen.get(dimId));
+			
 		}
 	}
 
@@ -52,6 +53,7 @@ public class AtmosphereHandler {
 	public static void unregisterWorld(int dimId) {
 		AtmosphereHandler handler = dimensionOxygen.remove(dimId);
 		if(Configuration.enableOxygen && handler != null) {
+
 			MinecraftForge.EVENT_BUS.unregister(handler);
 			FMLCommonHandler.instance().bus().unregister(handler);
 		}
@@ -83,6 +85,13 @@ public class AtmosphereHandler {
 		}
 	}
 
+	/**
+	 * @return true if the dimension has an atmospherehandler Object associated with it
+	 */
+	public static boolean hasAtmosphereHandler(int dimId) {
+		return dimensionOxygen.containsKey(dimId);
+	}
+	
 	//Called from World.setBlockMetaDataWithNotify
 	public static void onBlockMetaChange(World world, int x , int y, int z) {
 		if(Configuration.enableOxygen && !world.isRemote && world.getChunkFromBlockCoords(x, z).isChunkLoaded) {
@@ -147,6 +156,7 @@ public class AtmosphereHandler {
 
 	/**
 	 * @param dimNumber dimension number for which to get the oxygenhandler
+	 * @return the oxygen handler for the planet or null if none exists
 	 */
 	public static AtmosphereHandler getOxygenHandler(int dimNumber) {
 		//Get your oxyclean!

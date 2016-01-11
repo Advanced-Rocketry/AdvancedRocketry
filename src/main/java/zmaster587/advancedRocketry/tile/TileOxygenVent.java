@@ -55,7 +55,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public boolean canPerformFunction() {
-		return true;
+		return AtmosphereHandler.hasAtmosphereHandler(this.worldObj.provider.dimensionId);
 	}
 	
 	@Override
@@ -134,7 +134,12 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public void performFunction() {
-
+		
+		/*NB: canPerformFunction returns false and must return true for perform function to execute
+		 *  if there is no O2 handler, this is why we can safely call AtmosphereHandler.getOxygenHandler
+		 * And not have to worry about an NPE being thrown
+		 */
+		
 		//IF first tick then register the blob and check for scrubbers
 		if(firstRun && !worldObj.isRemote) {
 			AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).registerBlob(this, xCoord, yCoord, zCoord);
@@ -206,7 +211,9 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	@Override
 	public void notEnoughEnergyForFunction() {
 		if(isSealed && !worldObj.isRemote) {
-			AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).clearBlob(this);
+			AtmosphereHandler handler = AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId);
+			if(handler != null)
+				handler.clearBlob(this);
 
 			deactivateAdjblocks();
 

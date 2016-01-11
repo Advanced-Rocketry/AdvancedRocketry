@@ -66,10 +66,14 @@ public class WorldCommand implements ICommand {
 			if(string[0].equalsIgnoreCase("debug")) {
 				EntityPlayer player = sender.getEntityWorld().getPlayerEntityByName(sender.getCommandSenderName());
 
+				if(AtmosphereHandler.hasAtmosphereHandler(player.worldObj.provider.dimensionId)) {
 				AtmosphereType atmosphere = AtmosphereHandler.getOxygenHandler(player.worldObj.provider.dimensionId).getAtmosphereType(player);
 
 				sender.addChatMessage(new ChatComponentText(atmosphere == AtmosphereType.VACUUM ? "vacumm" : "AIR"));
-
+				}
+				else
+					sender.addChatMessage(new ChatComponentText("AIR (no atmosphere object)"));
+				
 				return;
 			}
 
