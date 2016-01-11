@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.item;
 
+import net.minecraft.init.Items;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -12,6 +13,7 @@ public class ItemDoor2 extends net.minecraft.item.ItemDoor {
 
 	public ItemDoor2(Material material) {
 		super(material);
+		this.setMaxStackSize(Items.iron_door.getItemStackLimit());
 	}
 
 
