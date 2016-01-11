@@ -70,7 +70,7 @@ public class SpaceObjectManager {
 
 		int index;
 
-		if(Math.abs(x) <= Math.abs(z)) {
+		if(Math.abs(x/Configuration.stationSize) <= Math.abs(z/Configuration.stationSize)) {
 			if(z < 0)
 				index = (int)Math.pow(2*radius-1,2) + radius +(x/Configuration.stationSize);
 			else
