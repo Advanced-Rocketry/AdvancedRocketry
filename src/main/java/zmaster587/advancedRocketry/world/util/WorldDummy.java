@@ -128,8 +128,10 @@ public class WorldDummy extends World {
 
 	@Override
 	protected IChunkProvider createChunkProvider() {
-		// TODO Auto-generated method stub
-		return new ChunkProviderClient(this);
+		if(this.isRemote)
+			return new ChunkProviderClient(this);
+		else 
+			return null;
 	}
 
 	@Override
