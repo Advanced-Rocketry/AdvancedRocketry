@@ -1,10 +1,13 @@
 package zmaster587.advancedRocketry.entity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -46,9 +49,11 @@ import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
+import zmaster587.libVulpes.api.IDismountHandler;
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.interfaces.INetworkEntity;
 import zmaster587.libVulpes.item.ItemLinker;
+import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.IconResource;
 import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.client.Minecraft;
@@ -70,7 +75,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-public class EntityRocket extends EntityRocketBase implements INetworkEntity, IModularInventory, IProgressBar, IButtonInventory {
+public class EntityRocket extends EntityRocketBase implements INetworkEntity, IDismountHandler, IModularInventory, IProgressBar, IButtonInventory {
 
 
 	//Stores the blocks and tiles that make up the rocket
@@ -92,6 +97,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	//Offset for buttons linking to the tileEntityGrid
 	private int tilebuttonOffset = 3;
 
+	private HashMap<Integer, Entity> mountedEntities;
+	
 	public enum PacketType {
 		RECIEVENBT,
 		SENDINTERACT,
@@ -111,6 +118,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		isInFlight = false;
 		connectedInfrastructure = new LinkedList<IInfrastructure>();
 		infrastructureCoords = new LinkedList<Vector3F<Integer>>();
+		mountedEntities = new HashMap<Integer, Entity>();
 	}
 
 	public EntityRocket(World world, StorageChunk storage, StatsRocket stats, double x, double y, double z) {
@@ -292,8 +300,18 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			if(!worldObj.isRemote)
 				PlanetEventHandler.addPlayerToInventoryBypass(player);
 		}
-		else if(!worldObj.isRemote && stats.hasSeat())
-			player.mountEntity(this);
+		else if(!worldObj.isRemote && stats.hasSeat()) { //If pilot seat is open mount entity there
+			if(stats.hasSeat() && this.riddenByEntity == null)
+				player.mountEntity(this);
+			else if(stats.getNumPassengerSeats() > 0) { //If a passenger seat exists and one is empty, mount the player to it
+				for(int i = 0; i < stats.getNumPassengerSeats(); i++) {
+					if(!this.mountedEntities.containsKey(i)) {
+						player.ridingEntity = this;
+						this.mountedEntities.put(i, player);
+					}
+				}
+			}
+		}
 		return true;
 	}
 
@@ -798,6 +816,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			else
 				this.riddenByEntity.setPosition(this.posX , this.posY , this.posZ );
 		}
+		
+		for(Entry<Integer, Entity> entry : mountedEntities.entrySet()) {
+			BlockPosition pos = this.stats.getPassengerSeat(entry.getKey());
+			entry.getValue().setPosition(pos.x, pos.y, pos.z);
+		}
 	}
 
 	@Override
@@ -891,5 +914,20 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	@Override
 	public StatsRocket getRocketStats() {
 		return stats;
+	}
+
+	@Override
+	public void handleDismount(Entity entity) {
+		//Attempt to dismount passengers first, else dismount pilot
+		Iterator<Entry<Integer, Entity>> entryIterator = mountedEntities.entrySet().iterator();
+		while(entryIterator.hasNext()) {
+			Entry<Integer, Entity> entry = entryIterator.next();
+			if(entry.getValue().equals(entity)) {
+				entryIterator.remove();
+				break;
+			}
+		}
+		
+		this.riddenByEntity = null;
 	}
 }

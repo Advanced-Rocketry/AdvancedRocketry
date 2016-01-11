@@ -1,10 +1,12 @@
 package zmaster587.advancedRocketry.api;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
+import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -31,7 +33,8 @@ public class StatsRocket {
 	private int fuelRateWarp;
 	private int fuelRateImpulse;
 	
-	Vector3F<Integer> seatPos;
+	BlockPosition pilotSeatPos;
+	private final List<BlockPosition> passengerSeats = new ArrayList<BlockPosition>();
 	private List<Vector3F<Float>> engineLoc;
 
 	private static final String TAGNAME = "rocketStats";
@@ -40,8 +43,8 @@ public class StatsRocket {
 		thrust = 0;
 		weight = 0;
 		fuelLiquid = 0;
-		seatPos = new Vector3F<Integer>(0,0,0);
-		seatPos.x = -1;
+		pilotSeatPos = new BlockPosition(0,0,0);
+		pilotSeatPos.x = -1;
 		engineLoc = new ArrayList<Vector3F<Float>>();
 	}
 
@@ -55,9 +58,18 @@ public class StatsRocket {
 
 
 
-	public int getSeatX() { return seatPos.x; }
-	public int getSeatY() { return seatPos.y; }
-	public int getSeatZ() { return seatPos.z; }
+	public int getSeatX() { return pilotSeatPos.x; }
+	public int getSeatY() { return pilotSeatPos.y; }
+	public int getSeatZ() { return pilotSeatPos.z; }
+	
+	public BlockPosition getPassengerSeat(int index) {
+		return passengerSeats.get(index);
+	}
+	
+	public int getNumPassengerSeats() {
+		return passengerSeats.size();
+	}
+	
 	public int getThrust() {return thrust;}
 	public int getWeight() {return weight;}
 	public float getAcceleration() { return (thrust - weight)/10000f; }
@@ -65,12 +77,17 @@ public class StatsRocket {
 
 	public void setThrust(int thrust) { this.thrust = thrust; }
 	public void setWeight(int weight) { this.weight = weight; }
+	
 	public void setSeatLocation(int x, int y, int z) {
-		seatPos.x = x;
-		seatPos.y = y;
-		seatPos.z = z;
+		pilotSeatPos.x = x;
+		pilotSeatPos.y = y;
+		pilotSeatPos.z = z;
 	}
 
+	public void addPassengerSeat(int x, int y, int z) {
+		passengerSeats.add(new BlockPosition(x, y, z));
+	}
+	
 	/**
 	 * Adds an engine location to the given coordinates
 	 * the engine location is only currently used to track the location for spawning particle effects
@@ -105,7 +122,7 @@ public class StatsRocket {
 			stat.setFuelCapacity(type, this.getFuelCapacity(type));
 		}
 		
-		stat.seatPos = new Vector3F<Integer>(this.seatPos.x, this.seatPos.y, this.seatPos.z);
+		stat.pilotSeatPos = new BlockPosition(this.pilotSeatPos.x, this.pilotSeatPos.y, this.pilotSeatPos.z);
 		stat.engineLoc = new ArrayList<Vector3F<Float>>(engineLoc);
 		return stat;
 	}
@@ -282,7 +299,7 @@ public class StatsRocket {
 	 * @return true if a seat exists on this stat
 	 */
 	public boolean hasSeat() {
-		return seatPos.x != -1;
+		return pilotSeatPos.x != -1;
 	}
 
 	/**
@@ -299,8 +316,9 @@ public class StatsRocket {
 		}
 			
 		fuelLiquid = 0;
-		seatPos.x = -1;
+		pilotSeatPos.x = -1;
 		clearEngineLocations();
+		passengerSeats.clear();
 	}
 
 	public static StatsRocket createFromNBT(NBTTagCompound nbt) { 
@@ -338,9 +356,9 @@ public class StatsRocket {
 		stats.setInteger("fuelRateNuclear", this.fuelRateNuclear);
 		stats.setInteger("fuelRateWarp", this.fuelRateWarp);
 		
-		stats.setInteger("playerXPos", seatPos.x);
-		stats.setInteger("playerYPos", seatPos.y);
-		stats.setInteger("playerZPos", seatPos.z);
+		stats.setInteger("playerXPos", pilotSeatPos.x);
+		stats.setInteger("playerYPos", pilotSeatPos.y);
+		stats.setInteger("playerZPos", pilotSeatPos.z);
 
 		if(!engineLoc.isEmpty()) {
 			int locs[] = new int[engineLoc.size()*3];
@@ -382,9 +400,9 @@ public class StatsRocket {
 			this.fuelRateNuclear = stats.getInteger("fuelRateNuclear");
 			this.fuelRateWarp = stats.getInteger("fuelRateWarp");
 
-			seatPos.x = stats.getInteger("playerXPos");
-			seatPos.y = stats.getInteger("playerYPos");
-			seatPos.z = stats.getInteger("playerZPos");
+			pilotSeatPos.x = stats.getInteger("playerXPos");
+			pilotSeatPos.y = stats.getInteger("playerYPos");
+			pilotSeatPos.z = stats.getInteger("playerZPos");
 			
 			if(stats.hasKey("engineLoc")) {
 				int locations[] = stats.getIntArray("engineLoc");
