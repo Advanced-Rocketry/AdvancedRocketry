@@ -11,7 +11,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
-import zmaster587.advancedRocketry.api.armor.ItemSpaceArmor;
+import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.inventory.modules.ModuleLiquidIndicator;
@@ -20,7 +20,7 @@ import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
 
 public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements IModularInventory {
 	public TileOxygenCharger() {
-		super(1000, 2, ItemSpaceArmor.getMaxAir());
+		super(1000, 2, 16000);
 	}
 
 	@Override

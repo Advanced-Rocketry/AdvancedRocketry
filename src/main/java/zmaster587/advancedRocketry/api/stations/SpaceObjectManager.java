@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.libVulpes.util.BlockPosition;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
@@ -32,8 +31,6 @@ public class SpaceObjectManager {
 		spaceStationOrbitMap = new HashMap<Integer, List<ISpaceObject>>();
 		nameToClass = new HashMap<String, Class>();
 		classToString = new HashMap<Class, String>();
-
-		registerSpaceObjectType("genericObject", SpaceObject.class);
 	}
 
 	/**

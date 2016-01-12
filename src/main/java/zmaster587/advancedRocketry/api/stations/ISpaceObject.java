@@ -67,4 +67,35 @@ public interface ISpaceObject {
 	public void writeToNbt(NBTTagCompound nbt);
 	
 	public void readFromNbt(NBTTagCompound nbt);
+	
+	/**
+	 * @return true if there is an empty pad to land on
+	 */
+	public boolean hasFreeLandingPad();
+	
+	/**
+	 * @return next viable place to land
+	 */
+	public BlockPosition getNextLandingPad();
+	
+	/**
+	 * Adds a landing pad to the station
+	 * @param x
+	 * @param z
+	 */
+	public void addLandingPad(int x, int z);
+	
+	/**
+	 * Removes an existing landing pad from the station
+	 * @param x
+	 * @param z
+	 */
+	public void removeLandingPad(int x, int z);
+
+	/**
+	 * @param x
+	 * @param z
+	 * @param full true if the pad is avalible to use
+	 */
+	public void setPadStatus(int posX, int posZ, boolean full);
 }

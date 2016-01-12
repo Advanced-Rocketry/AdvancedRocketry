@@ -138,7 +138,7 @@ public class SpaceObject implements ISpaceObject {
 	/**
 	 * @param x
 	 * @param z
-	 * @param empty true if the pad is avalible to use
+	 * @param full true if the pad is avalible to use
 	 */
 	public void setPadStatus(int x, int z, boolean full) {
 		BlockPosition pos = new BlockPosition(x, 0, z);

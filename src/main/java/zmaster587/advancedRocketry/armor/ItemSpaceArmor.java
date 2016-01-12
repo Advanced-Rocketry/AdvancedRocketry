@@ -1,6 +1,10 @@
-package zmaster587.advancedRocketry.api.armor;
+package zmaster587.advancedRocketry.armor;
 
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.IAtmosphere;
+import zmaster587.advancedRocketry.api.armor.IFillableArmor;
+import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,7 +18,7 @@ import net.minecraftforge.common.ISpecialArmor;
  * Any class that extends this will gain the ability to store oxygen and will protect players from the vacuum atmosphere type
  *
  */
-public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor {
+public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillableArmor, IProtectiveArmor {
 
 	public ItemSpaceArmor(ArmorMaterial material, int component) {
 		super(material, 0, component);
@@ -53,6 +57,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor {
 	 * @param stack stack from which to get an amount of air
 	 * @return the amount of air in the stack
 	 */
+	@Override
 	public int getAirRemaining(ItemStack stack) {
 		if(stack.hasTagCompound()) {
 			return stack.getTagCompound().getInteger("air");
@@ -70,6 +75,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor {
 	 * @param stack the stack to operate on
 	 * @param amt amount of air to set the suit to
 	 */
+	@Override
 	public void setAirRemaining(ItemStack stack, int amt) {
 		NBTTagCompound nbt;
 		if(stack.hasTagCompound()) {
@@ -88,6 +94,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor {
 	 * @param amt amount of air by which to decrement
 	 * @return The amount of air extracted from the suit
 	 */
+	@Override
 	public int decrementAir(ItemStack stack, int amt) {
 		NBTTagCompound nbt;
 		if(stack.hasTagCompound()) {
@@ -111,6 +118,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor {
 	 * @param amt amount of air by which to decrement
 	 * @return The amount of air inserted into the suit
 	 */
+	@Override
 	public int increment(ItemStack stack, int amt) {
 		NBTTagCompound nbt;
 		if(stack.hasTagCompound()) {
@@ -131,7 +139,13 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor {
 	/**
 	 * @return the maximum amount of air allowed in this suit
 	 */
-	public static int getMaxAir() {
+	@Override
+	public int getMaxAir() {
 		return 36000; //30 minutes;
+	}
+
+	@Override
+	public boolean protectsFromSubstance(IAtmosphere atmosphere) {
+		return atmosphere == AtmosphereType.VACUUM;
 	}
 }

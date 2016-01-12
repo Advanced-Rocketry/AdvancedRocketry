@@ -1,9 +1,10 @@
-package zmaster587.advancedRocketry.api.util;
+package zmaster587.advancedRocketry.util;
 
 import java.util.HashSet;
 
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.libVulpes.util.BlockPosition;
 
 public class AreaBlob {

@@ -4,7 +4,6 @@ import java.util.LinkedList;
 
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
-import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.libVulpes.util.BlockPosition;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
@@ -82,8 +81,8 @@ public abstract class EntityRocketBase extends Entity {
 		if(this.worldObj.provider.dimensionId == Configuration.spaceDimId) {
 			ISpaceObject station = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
 			
-			if(station instanceof SpaceObject) {
-				((SpaceObject)station).setPadStatus((int)this.posX, (int)this.posZ, false);
+			if(station instanceof ISpaceObject) {
+				((ISpaceObject)station).setPadStatus((int)this.posX, (int)this.posZ, false);
 			}
 		}
 	}
@@ -95,8 +94,8 @@ public abstract class EntityRocketBase extends Entity {
 		if(this.worldObj.provider.dimensionId == Configuration.spaceDimId) {
 			ISpaceObject station = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
 			
-			if(station instanceof SpaceObject) {
-				((SpaceObject)station).setPadStatus((int)this.posX, (int)this.posZ, false);
+			if(station instanceof ISpaceObject) {
+				((ISpaceObject)station).setPadStatus((int)this.posX, (int)this.posZ, false);
 			}
 		}
 	}
