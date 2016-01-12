@@ -2,9 +2,9 @@ package zmaster587.advancedRocketry.client.render;
 
 import org.lwjgl.opengl.GL11;
 
-import zmaster587.advancedRocketry.Inventory.TextureResources;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererCuttingMachine;
+import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.tile.TileModelRender;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;

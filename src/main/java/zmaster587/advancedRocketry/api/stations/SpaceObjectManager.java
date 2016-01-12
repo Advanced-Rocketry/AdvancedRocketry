@@ -6,8 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.libVulpes.util.BlockPosition;
-import zmaster587.libVulpes.util.Vector3F;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,15 +19,17 @@ public class SpaceObjectManager {
 	private int nextId = 1;
 
 	//station ids to object
-	HashMap<Integer,SpaceObject> stationLocations;
+	HashMap<Integer,ISpaceObject> stationLocations;
 	//Map of planet IDs to station Ids
-	HashMap<Integer, List<SpaceObject>> spaceStationOrbitMap;
+	HashMap<Integer, List<ISpaceObject>> spaceStationOrbitMap;
 	HashMap<String, Class> nameToClass;
 	HashMap<Class, String> classToString;
+	
+	private final static SpaceObjectManager spaceObjectManager = new SpaceObjectManager();
 
-	public SpaceObjectManager() {
-		stationLocations = new HashMap<Integer,SpaceObject>();
-		spaceStationOrbitMap = new HashMap<Integer, List<SpaceObject>>();
+	private SpaceObjectManager() {
+		stationLocations = new HashMap<Integer,ISpaceObject>();
+		spaceStationOrbitMap = new HashMap<Integer, List<ISpaceObject>>();
 		nameToClass = new HashMap<String, Class>();
 		classToString = new HashMap<Class, String>();
 
@@ -35,10 +37,18 @@ public class SpaceObjectManager {
 	}
 
 	/**
+	 * The {@link SpaceObjectManager} is used for tasks such as managing space stations and orbiting worlds 
+	 * @return the {@link SpaceObjectManager} registered with the DimensionManager
+	 */
+	public final static SpaceObjectManager getSpaceManager() {
+		return spaceObjectManager;
+	}
+	
+	/**
 	 * @param id
 	 * @return {@link SpaceObject} object registered to this spaceObject id
 	 */
-	public SpaceObject getSpaceStation(int id) {
+	public ISpaceObject getSpaceStation(int id) {
 		return stationLocations.get(id);
 	}
 
@@ -55,7 +65,7 @@ public class SpaceObjectManager {
 	 * @param str key with which to register the spaceObject type
 	 * @param clazz class of space object to register
 	 */
-	public void registerSpaceObjectType(String str, Class<? extends SpaceObject> clazz) {
+	public void registerSpaceObjectType(String str, Class<? extends Object> clazz) {
 		nameToClass.put(str, clazz);
 		classToString.put(clazz, str);
 	}
@@ -64,7 +74,7 @@ public class SpaceObjectManager {
 	 * Gets the object at the location of passed Block x and z
 	 * @return Space object occupying the block coords of null if none
 	 */
-	public SpaceObject getSpaceStationFromBlockCoords(int x, int z) {
+	public ISpaceObject getSpaceStationFromBlockCoords(int x, int z) {
 
 		int radius = Math.max((int)Math.ceil(Math.abs((x/2)/(float)Configuration.stationSize)), (int)Math.ceil(Math.abs((z/2)/(float)Configuration.stationSize)));
 
@@ -92,7 +102,7 @@ public class SpaceObjectManager {
 	 * @param dimId
 	 * @param stationId
 	 */
-	public void registerSpaceObject(SpaceObject object, int dimId, int stationId) {
+	public void registerSpaceObject(ISpaceObject object, int dimId, int stationId) {
 		object.setId(stationId);
 		stationLocations.put(stationId, object);
 
@@ -141,7 +151,7 @@ public class SpaceObjectManager {
 	 * @param object
 	 * @param dimId dimension to place it in orbit around, -1 for undefined
 	 */
-	public void registerSpaceObject(SpaceObject object, int dimId) {
+	public void registerSpaceObject(ISpaceObject object, int dimId) {
 		registerSpaceObject(object, dimId, getNextStationId());
 	}
 
@@ -150,7 +160,7 @@ public class SpaceObjectManager {
 	 * @param planetId id of the planet to get stations around
 	 * @return list of spaceObjects around the planet
 	 */
-	public List<SpaceObject> getSpaceStationsOrbitingPlanet(int planetId) {
+	public List<ISpaceObject> getSpaceStationsOrbitingPlanet(int planetId) {
 		return spaceStationOrbitMap.get(planetId);
 	}
 
@@ -163,7 +173,7 @@ public class SpaceObjectManager {
 		if(event.player.worldObj.provider.dimensionId == Configuration.spaceDimId) {
 
 			if(event.player.posY < 0 && !event.player.worldObj.isRemote) {
-				SpaceObject object = getSpaceStationFromBlockCoords((int)event.player.posX, (int)event.player.posZ);
+				ISpaceObject object = getSpaceStationFromBlockCoords((int)event.player.posX, (int)event.player.posZ);
 				if(object != null) {
 	
 					BlockPosition loc = object.getSpawnLocation();
@@ -213,14 +223,14 @@ public class SpaceObjectManager {
 	 * @param station
 	 * @param dimId
 	 */
-	public void moveStationToBody(SpaceObject station, int dimId) {
+	public void moveStationToBody(ISpaceObject station, int dimId) {
 		//Remove station from the planet it's in orbit around before moving it!
 		if(station.getOrbitingPlanetId() != -1 && spaceStationOrbitMap.get(station.getOrbitingPlanetId()) != null) {
 			spaceStationOrbitMap.get(station.getOrbitingPlanetId()).remove(station);
 		}
 
 		if(spaceStationOrbitMap.get(dimId) == null)
-			spaceStationOrbitMap.put(dimId,new LinkedList<SpaceObject>());
+			spaceStationOrbitMap.put(dimId,new LinkedList<ISpaceObject>());
 
 		if(!spaceStationOrbitMap.get(dimId).contains(station))
 			spaceStationOrbitMap.get(dimId).add(station);
@@ -228,11 +238,11 @@ public class SpaceObjectManager {
 	}
 
 	public void writeToNBT(NBTTagCompound nbt) {
-		Iterator<SpaceObject> iterator = stationLocations.values().iterator();
+		Iterator<ISpaceObject> iterator = stationLocations.values().iterator();
 		NBTTagList nbtList = new NBTTagList();
 
 		while(iterator.hasNext()) {
-			SpaceObject object = iterator.next();
+			ISpaceObject object = iterator.next();
 			NBTTagCompound nbtTag = new NBTTagCompound();
 			object.writeToNbt(nbtTag);
 			nbtTag.setString("type", classToString.get(object.getClass()));
@@ -249,7 +259,7 @@ public class SpaceObjectManager {
 		for(int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound tag = list.getCompoundTagAt(i);
 			try {
-				SpaceObject object = (SpaceObject)nameToClass.get(tag.getString("type")).newInstance();
+				ISpaceObject object = (ISpaceObject)nameToClass.get(tag.getString("type")).newInstance();
 				object.readFromNbt(tag);
 				registerSpaceObject(object, object.getOrbitingPlanetId(), object.getId() );
 

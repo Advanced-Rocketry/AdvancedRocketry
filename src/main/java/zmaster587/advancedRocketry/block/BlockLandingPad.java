@@ -1,8 +1,10 @@
 package zmaster587.advancedRocketry.block;
 
 import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.api.dimension.DimensionManager;
-import zmaster587.advancedRocketry.api.stations.SpaceObject;
+import zmaster587.advancedRocketry.api.stations.ISpaceObject;
+import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.stations.SpaceObject;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,8 +26,10 @@ public class BlockLandingPad extends Block {
 				player, items);
 		
 		if(!world.isRemote && world.provider.dimensionId == Configuration.spaceDimId) {
-			SpaceObject spaceObj = DimensionManager.getSpaceManager().getSpaceStationFromBlockCoords(x, z);
-			spaceObj.addLandingPad(x, z);
+			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(x, z);
+		
+			if(spaceObj instanceof SpaceObject)
+				((SpaceObject)spaceObj).addLandingPad(x, z);
 		}
 	}
 	
@@ -36,8 +40,9 @@ public class BlockLandingPad extends Block {
 				oldMeta);
 		
 		if(world.provider.dimensionId == Configuration.spaceDimId) {
-			SpaceObject spaceObj = DimensionManager.getSpaceManager().getSpaceStationFromBlockCoords(x, z);
-			spaceObj.removeLandingPad(x, z);
+			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(x, z);
+			if(spaceObj instanceof SpaceObject)
+				((SpaceObject)spaceObj).removeLandingPad(x, z);
 		}
 	}
 }

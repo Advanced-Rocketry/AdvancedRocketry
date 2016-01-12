@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleOutputSlotArray;
+import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.inventory.modules.ModuleOutputSlotArray;
 import zmaster587.advancedRocketry.tile.multiblock.TileInventoryHatch;
 
 public class TileOutputHatch extends TileInventoryHatch {

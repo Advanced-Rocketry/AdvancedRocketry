@@ -34,19 +34,16 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
-import zmaster587.advancedRocketry.Inventory.GuiHandler;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.armor.ItemSpaceArmor;
-import zmaster587.advancedRocketry.api.dimension.DimensionManager;
-import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.material.MaterialRegistry;
 import zmaster587.advancedRocketry.api.material.MaterialRegistry.AllowedProducts;
 import zmaster587.advancedRocketry.api.material.MaterialRegistry.Materials;
 import zmaster587.advancedRocketry.api.material.MixedMaterial;
-import zmaster587.advancedRocketry.api.network.PacketHandler;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
+import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.block.BlockAlphaTexture;
 import zmaster587.advancedRocketry.block.BlockDoor2;
 import zmaster587.advancedRocketry.block.BlockFluid;
@@ -75,6 +72,8 @@ import zmaster587.advancedRocketry.block.plant.BlockAlienSapling;
 import zmaster587.advancedRocketry.block.plant.BlockAlienWood;
 import zmaster587.advancedRocketry.command.WorldCommand;
 import zmaster587.advancedRocketry.common.CommonProxy;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.entity.EntityDummy;
 import zmaster587.advancedRocketry.entity.EntityLaserNode;
 import zmaster587.advancedRocketry.entity.EntityRocket;
@@ -82,7 +81,9 @@ import zmaster587.advancedRocketry.event.BucketHandler;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.integration.CompatibilityMgr;
 import zmaster587.advancedRocketry.integration.GalacticCraftHandler;
+import zmaster587.advancedRocketry.inventory.GuiHandler;
 import zmaster587.advancedRocketry.item.*;
+import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
 import zmaster587.advancedRocketry.satellite.SatelliteDensity;
 import zmaster587.advancedRocketry.satellite.SatelliteMassScanner;
@@ -705,7 +706,7 @@ public class AdvancedRocketry {
 				FMLCommonHandler.instance().bus().register(eventHandler);
 		}
 
-		FMLCommonHandler.instance().bus().register(DimensionManager.getSpaceManager());
+		FMLCommonHandler.instance().bus().register(SpaceObjectManager.getSpaceManager());
 
 		PacketHandler.init();
 		FuelRegistry.instance.registerFuel(FuelType.LIQUID, AdvancedRocketryFluids.fluidRocketFuel, 1);
@@ -825,7 +826,7 @@ public class AdvancedRocketry {
 			zmaster587.advancedRocketry.api.Configuration.MoonId = ConfigManagerCore.idDimensionMoon;
 
 		//Register hard coded dimensions
-		if(!zmaster587.advancedRocketry.api.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.api.dimension.DimensionManager.filePath)) {
+		if(!zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.filePath)) {
 			
 			DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId);
 			dimensionProperties.atmosphereDensity = 0;
@@ -885,7 +886,7 @@ public class AdvancedRocketry {
 
 	@EventHandler
 	public void serverStopped(FMLServerStoppedEvent event) {
-		zmaster587.advancedRocketry.api.dimension.DimensionManager.getInstance().unregisterAllDimensions();
+		zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
 	}
 	
     /*@SideOnly(Side.CLIENT)

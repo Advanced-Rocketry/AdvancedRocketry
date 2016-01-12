@@ -2,9 +2,11 @@ package zmaster587.advancedRocketry.world.provider;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
-import zmaster587.advancedRocketry.api.dimension.DimensionManager;
-import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.api.stations.SpaceObject;
+import zmaster587.advancedRocketry.api.stations.ISpaceObject;
+import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.world.ChunkProviderSpace;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.WorldChunkManager;
@@ -53,9 +55,9 @@ public class WorldProviderSpace extends WorldProviderPlanet {
 	
 	@Override
 	public DimensionProperties getDimensionProperties(int x , int z) {
-		SpaceObject object = DimensionManager.getSpaceManager().getSpaceStationFromBlockCoords(x, z);
+		ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(x, z);
 		if(object != null)
-			return object.getProperties();
+			return (DimensionProperties)object.getProperties();
 		return DimensionManager.defaultSpaceDimensionProperties;
 	}
 }

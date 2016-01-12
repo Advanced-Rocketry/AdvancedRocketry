@@ -15,17 +15,6 @@ import io.netty.buffer.ByteBuf;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.Inventory.GuiHandler;
-import zmaster587.advancedRocketry.Inventory.TextureResources;
-import zmaster587.advancedRocketry.Inventory.modules.IButtonInventory;
-import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.Inventory.modules.IProgressBar;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleButton;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleImage;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleSlotButton;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleText;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
@@ -34,17 +23,30 @@ import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.StatsRocket;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
-import zmaster587.advancedRocketry.api.dimension.DimensionManager;
-import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
-import zmaster587.advancedRocketry.api.network.PacketEntity;
-import zmaster587.advancedRocketry.api.network.PacketHandler;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
-import zmaster587.advancedRocketry.api.stations.SpaceObject;
+import zmaster587.advancedRocketry.api.stations.ISpaceObject;
+import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
+import zmaster587.advancedRocketry.inventory.GuiHandler;
+import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.inventory.modules.IButtonInventory;
+import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
+import zmaster587.advancedRocketry.inventory.modules.IProgressBar;
+import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.inventory.modules.ModuleButton;
+import zmaster587.advancedRocketry.inventory.modules.ModuleImage;
+import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
+import zmaster587.advancedRocketry.inventory.modules.ModuleSlotButton;
+import zmaster587.advancedRocketry.inventory.modules.ModuleText;
 import zmaster587.advancedRocketry.item.ItemPackedStructure;
+import zmaster587.advancedRocketry.network.PacketEntity;
+import zmaster587.advancedRocketry.network.PacketHandler;
+import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.StorageChunk;
@@ -452,9 +454,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 					ItemStack stack = tile.getStackInSlot(0);
 					if(stack != null && stack.getItem() == AdvancedRocketryItems.itemSpaceStation) {
 						StorageChunk storage = ((ItemPackedStructure)stack.getItem()).getStructure(stack);
-						SpaceObject object = DimensionManager.getSpaceManager().getSpaceStation(stack.getItemDamage());
+						ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(stack.getItemDamage());
 
-						DimensionManager.getSpaceManager().moveStationToBody(object, this.worldObj.provider.dimensionId);
+						SpaceObjectManager.getSpaceManager().moveStationToBody(object, this.worldObj.provider.dimensionId);
 
 						//Vector3F<Integer> spawn = object.getSpawnLocation();
 
@@ -488,7 +490,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 						this.travelToDimension(destinationDimId, pos.x, pos.z);
 					}
 					else {
-						SpaceObject object = DimensionManager.getSpaceManager().getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
+						ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
 						if(object == null)
 							this.travelToDimension(destinationDimId, pos.x, pos.z);
 						else

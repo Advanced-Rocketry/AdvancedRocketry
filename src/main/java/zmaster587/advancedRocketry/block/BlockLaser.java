@@ -3,7 +3,7 @@ package zmaster587.advancedRocketry.block;
 import java.util.Random;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.Inventory.GuiHandler.guiId;
+import zmaster587.advancedRocketry.inventory.GuiHandler.guiId;
 import zmaster587.advancedRocketry.tile.TileSpaceLaser;
 import zmaster587.libVulpes.block.RotatableBlock;
 import cpw.mods.fml.relauncher.Side;

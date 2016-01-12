@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.api;
 
-import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import net.minecraft.util.Vec3;
 
 public interface IPlanetaryProvider {
@@ -64,7 +64,7 @@ public interface IPlanetaryProvider {
 	 * @param z location in block coords
 	 * @return {@link DimensionProperties} of this dimension
 	 */
-	public DimensionProperties getDimensionProperties(int x, int z);
+	public IDimensionProperties getDimensionProperties(int x, int z);
 
 	/**
 	 * @param y height
