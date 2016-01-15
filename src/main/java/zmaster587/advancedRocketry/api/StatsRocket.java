@@ -80,7 +80,7 @@ public class StatsRocket {
 	
 	public void setSeatLocation(int x, int y, int z) {
 		pilotSeatPos.x = x;
-		pilotSeatPos.y = y;
+		pilotSeatPos.y = (short)y;
 		pilotSeatPos.z = z;
 	}
 
@@ -401,7 +401,7 @@ public class StatsRocket {
 			this.fuelRateWarp = stats.getInteger("fuelRateWarp");
 
 			pilotSeatPos.x = stats.getInteger("playerXPos");
-			pilotSeatPos.y = stats.getInteger("playerYPos");
+			pilotSeatPos.y = (short)stats.getInteger("playerYPos");
 			pilotSeatPos.z = stats.getInteger("playerZPos");
 			
 			if(stats.hasKey("engineLoc")) {
