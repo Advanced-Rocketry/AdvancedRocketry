@@ -198,7 +198,6 @@ public class AdvancedRocketry {
 		SatelliteRegistry.registerSatellite("density", SatelliteDensity.class);
 		SatelliteRegistry.registerSatellite("mass", SatelliteMassScanner.class);
 
-
 		//Blocks -------------------------------------------------------------------------------------
 		AdvancedRocketryBlocks.blockLaunchpad = new BlockLinkedHorizontalTexture(Material.rock).setBlockName("pad").setCreativeTab(tabAdvRocketry).setBlockTextureName("advancedrocketry:rocketPad").setHardness(2f);
 		AdvancedRocketryBlocks.blockStructureTower = new BlockAlphaTexture(Material.rock).setBlockName("structuretower").setCreativeTab(tabAdvRocketry).setBlockTextureName("advancedrocketry:structuretower").setHardness(2f);
@@ -356,7 +355,6 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockOxygenFluid = new BlockFluid(AdvancedRocketryFluids.fluidOxygen, Material.water).setBlockName("oxygenFluidBlock").setCreativeTab(CreativeTabs.tabMisc);
 		AdvancedRocketryBlocks.blockHydrogenFluid = new BlockFluid(AdvancedRocketryFluids.fluidHydrogen, Material.water).setBlockName("hydrogenFluidBlock").setCreativeTab(CreativeTabs.tabMisc);
 		AdvancedRocketryBlocks.blockFuelFluid = new BlockFluid(AdvancedRocketryFluids.fluidRocketFuel, Material.water).setBlockName("rocketFuelBlock").setCreativeTab(CreativeTabs.tabMisc);
-
 		
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockLaunchpad, "launchpad");
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockRocketBuilder, "rocketBuilder");
@@ -373,7 +371,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockPlaceHolder, "blockPlaceholder");
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockRFBattery, "rfBattery");
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockStructureBlock, "blockStructureBlock");
-		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockSpaceLaser, "laserController");
+		//GameRegistry.registerBlock(AdvancedRocketryBlocks.blockSpaceLaser, "laserController");
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockPrecisionAssembler, "precisionassemblingmachine");
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockBlastBrick, "utilBlock");
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockQuartzCrucible, "quartzcrucible");

@@ -17,7 +17,6 @@ public class BlockLandingPad extends Block {
 		super(mat);
 	}
 
-	
 	@Override
 	public void onBlockPlacedBy(World world, int x,
 			int y, int z, EntityLivingBase player,

@@ -322,16 +322,14 @@ public class RocketEventHandler extends Gui {
 				float size = ((IFillableArmor)chestPiece.getItem()).getAirRemaining(chestPiece)/(float)((IFillableArmor)chestPiece.getItem()).getMaxAir();
 			
 				GL11.glEnable(GL11.GL_BLEND);
-
 				Minecraft.getMinecraft().renderEngine.bindTexture(background);
-				
+				GL11.glColor3f(1f, 1f, 1f);
 				int width = 83;
 				int screenX = event.resolution.getScaledWidth()/2 + 8;
 				int screenY = event.resolution.getScaledHeight() - 57;
 				
 				//Draw BG
 				this.drawTexturedModalRect(screenX, screenY, 23, 0, width, 17);
-				
 				this.drawTexturedModalRect(screenX , screenY, 23, 17, (int)(width*size), 17);
 				
 			}
@@ -346,10 +344,6 @@ public class RocketEventHandler extends Gui {
 				String str = "Warning: No Oxygen detected!";
 				int screenX = event.resolution.getScaledWidth()/6 - fontRenderer.getStringWidth(str)/2;
 				int screenY = event.resolution.getScaledHeight()/18;
-				
-				
-				
-				
 				
 				GL11.glPushMatrix();
 				GL11.glScalef(3, 3, 3);
