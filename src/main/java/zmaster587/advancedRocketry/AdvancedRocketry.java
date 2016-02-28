@@ -112,7 +112,7 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 
-@Mod(modid="advancedRocketry", name="Advanced Rocketry", version="%VERSION%", dependencies="required-after:libVulpes@[0.0.6c,)")
+@Mod(modid="advancedRocketry", name="Advanced Rocketry", version="%VERSION%", dependencies="required-after:libVulpes@[0.0.6e,)")
 public class AdvancedRocketry {
 
 
