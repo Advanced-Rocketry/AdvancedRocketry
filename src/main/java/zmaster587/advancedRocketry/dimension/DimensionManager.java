@@ -43,7 +43,6 @@ public class DimensionManager {
 
 	private static long nextSatelliteId;
 	private static StellarBody sol;
-	private static SpaceObjectManager spaceObjectManager;
 
 	//The default properties belonging to the overworld
 	public static DimensionProperties overworldProperties;
@@ -317,7 +316,6 @@ public class DimensionManager {
 
 		try {
 			FileUtils.deleteDirectory(file);
-
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -410,7 +408,7 @@ public class DimensionManager {
 		nbt.setTag("dimList", dimListnbt);
 
 		NBTTagCompound nbtTag = new NBTTagCompound();
-		spaceObjectManager.writeToNBT(nbtTag);
+		SpaceObjectManager.getSpaceManager().writeToNBT(nbtTag);
 		nbt.setTag("spaceObjects", nbtTag);
 
 		FileOutputStream outStream;
@@ -521,7 +519,7 @@ public class DimensionManager {
 		//Check for tag in case old version of Adv rocketry is in use
 		if(nbt.hasKey("spaceObjects")) {
 			NBTTagCompound nbtTag = nbt.getCompoundTag("spaceObjects");
-			spaceObjectManager.readFromNBT(nbtTag);
+			SpaceObjectManager.getSpaceManager().readFromNBT(nbtTag);
 		}
 
 		return true;

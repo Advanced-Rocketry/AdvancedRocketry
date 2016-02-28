@@ -123,6 +123,7 @@ public class StatsRocket {
 		}
 		
 		stat.pilotSeatPos = new BlockPosition(this.pilotSeatPos.x, this.pilotSeatPos.y, this.pilotSeatPos.z);
+		stat.passengerSeats.addAll(passengerSeats);
 		stat.engineLoc = new ArrayList<Vector3F<Float>>(engineLoc);
 		return stat;
 	}
@@ -372,6 +373,19 @@ public class StatsRocket {
 			stats.setIntArray("engineLoc", locs);
 		}
 
+		if(!passengerSeats.isEmpty()) {
+			int locs[] = new int[passengerSeats.size()*3];
+			
+			for(int i=0 ; (i/3) < passengerSeats.size(); i+=3) {
+				BlockPosition vec = passengerSeats.get(i/3);
+				locs[i] = vec.x;
+				locs[i + 1] = vec.y;
+				locs[i + 2] = vec.z;
+				
+			}
+			stats.setIntArray("passengerSeats", locs);
+		}
+		
 		nbt.setTag(TAGNAME, stats);
 	}
 
@@ -410,6 +424,15 @@ public class StatsRocket {
 				for(int i=0 ; i < locations.length; i+=3) {
 					
 					this.addEngineLocation(locations[i], locations[i+1], locations[i+2]);
+				}
+			}
+			
+			if(stats.hasKey("passengerSeats")) {
+				int locations[] = stats.getIntArray("passengerSeats");
+				
+				for(int i=0 ; i < locations.length; i+=3) {
+					
+					this.addPassengerSeat(locations[i], locations[i+1], locations[i+2]);
 				}
 			}
 		}

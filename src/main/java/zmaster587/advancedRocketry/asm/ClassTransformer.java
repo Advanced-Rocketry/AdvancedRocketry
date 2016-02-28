@@ -602,9 +602,10 @@ public class ClassTransformer implements IClassTransformer {
 				nodeAdd.add(new TypeInsnNode(Opcodes.INSTANCEOF, "zmaster587/libVulpes/api/IDismountHandler"));
 				nodeAdd.add(new JumpInsnNode(Opcodes.IFEQ, jumpLabel));
 				
-				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 1));
+				
 				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 0));
 				nodeAdd.add(new FieldInsnNode(Opcodes.GETFIELD, getName(CLASS_KEY_ENTITY), getName(FIELD_RIDINGENTITY), "L" + getName(CLASS_KEY_ENTITY) + ";"));
+				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 0));
 				nodeAdd.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "zmaster587/libVulpes/api/IDismountHandler", "handleDismount", "(L" + getName(CLASS_KEY_ENTITY) + ";)V", true));
 				nodeAdd.add(new InsnNode(Opcodes.RETURN));
 				nodeAdd.add(jumpLabel);
@@ -642,7 +643,7 @@ public class ClassTransformer implements IClassTransformer {
 				nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 1));
 				nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 2));
 				nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 3));
-				nodeAdd.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "zmaster587/advancedRocketry/api/atmosphere/AtmosphereHandler", "onBlockChange", "(L" + getName(CLASS_KEY_WORLD) + ";III)V", false));
+				nodeAdd.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "zmaster587/advancedRocketry/atmosphere/AtmosphereHandler", "onBlockChange", "(L" + getName(CLASS_KEY_WORLD) + ";III)V", false));
 
 				setBlockMethod.instructions.insertBefore(pos, nodeAdd);
 			}
@@ -668,7 +669,7 @@ public class ClassTransformer implements IClassTransformer {
 				nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 1)); //x
 				nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 2)); //y
 				nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 3)); //z
-				nodeAdd.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "zmaster587/advancedRocketry/api/atmosphere/AtmosphereHandler", "onBlockMetaChange", "(L" + getName(CLASS_KEY_WORLD) + ";III)V", false));
+				nodeAdd.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "zmaster587/advancedRocketry/atmosphere/AtmosphereHandler", "onBlockMetaChange", "(L" + getName(CLASS_KEY_WORLD) + ";III)V", false));
 
 				setBlockMetaMethod.instructions.insertBefore(pos, nodeAdd);
 			}			

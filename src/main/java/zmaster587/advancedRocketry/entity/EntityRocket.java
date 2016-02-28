@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.entity;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -99,8 +100,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	//Offset for buttons linking to the tileEntityGrid
 	private int tilebuttonOffset = 3;
 
-	private HashMap<Integer, Entity> mountedEntities;
-	
+	private WeakReference<Entity>[] mountedEntities;
+
 	public enum PacketType {
 		RECIEVENBT,
 		SENDINTERACT,
@@ -120,7 +121,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		isInFlight = false;
 		connectedInfrastructure = new LinkedList<IInfrastructure>();
 		infrastructureCoords = new LinkedList<Vector3F<Integer>>();
-		mountedEntities = new HashMap<Integer, Entity>();
+		mountedEntities = new WeakReference[stats.getNumPassengerSeats()];
 	}
 
 	public EntityRocket(World world, StorageChunk storage, StatsRocket stats, double x, double y, double z) {
@@ -130,6 +131,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		this.storage = storage;
 		initFromBounds();
 		isInFlight = false;
+		mountedEntities = new WeakReference[stats.getNumPassengerSeats()];
 	}
 
 	@Override
@@ -144,9 +146,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	public void setPositionAndRotation2(double x, double y,
 			double z, float p_70056_7_, float p_70056_8_,
 			int p_70056_9_) {
-		
+
 		//if( !worldObj.isRemote || (y < 270 && this.isInFlight()))
-			super.setPositionAndRotation2(x, y, z, p_70056_7_, p_70056_8_, p_70056_9_);
+		super.setPositionAndRotation2(x, y, z, p_70056_7_, p_70056_8_, p_70056_9_);
 	}
 
 	/**
@@ -302,17 +304,20 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			if(!worldObj.isRemote)
 				PlanetEventHandler.addPlayerToInventoryBypass(player);
 		}
-		else if(!worldObj.isRemote && stats.hasSeat()) { //If pilot seat is open mount entity there
-			if(stats.hasSeat() && this.riddenByEntity == null)
-				player.mountEntity(this);
-			else if(stats.getNumPassengerSeats() > 0) { //If a passenger seat exists and one is empty, mount the player to it
+		else if(stats.hasSeat()) { //If pilot seat is open mount entity there
+			if(stats.hasSeat() && this.riddenByEntity == null) {
+				if(!worldObj.isRemote)
+					player.mountEntity(this);
+			}
+			/*else if(stats.getNumPassengerSeats() > 0) { //If a passenger seat exists and one is empty, mount the player to it
 				for(int i = 0; i < stats.getNumPassengerSeats(); i++) {
-					if(!this.mountedEntities.containsKey(i)) {
+					if(this.mountedEntities[i] == null || this.mountedEntities[i].get() == null) {
 						player.ridingEntity = this;
-						this.mountedEntities.put(i, player);
+						this.mountedEntities[i] = new WeakReference<Entity>(player);
+						break;
 					}
 				}
-			}
+			}*/
 		}
 		return true;
 	}
@@ -336,7 +341,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		
+
 		//TODO move
 		World.MAX_ENTITY_RADIUS = 100;
 
@@ -656,6 +661,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 		isInOrbit = nbt.getBoolean("orbit");
 		stats.readFromNBT(nbt);
+
+		mountedEntities = new WeakReference[stats.getNumPassengerSeats()];
+
 		setFuelAmount(stats.getFuelAmount(FuelType.LIQUID));
 
 		setInFlight(nbt.getBoolean("flight"));
@@ -818,10 +826,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			else
 				this.riddenByEntity.setPosition(this.posX , this.posY , this.posZ );
 		}
-		
-		for(Entry<Integer, Entity> entry : mountedEntities.entrySet()) {
-			BlockPosition pos = this.stats.getPassengerSeat(entry.getKey());
-			entry.getValue().setPosition(pos.x, pos.y, pos.z);
+
+		for(int i = 0; i < this.stats.getNumPassengerSeats(); i++) {
+			BlockPosition pos = this.stats.getPassengerSeat(i);
+			if(mountedEntities[i] != null && mountedEntities[i].get() != null) {
+				mountedEntities[i].get().setPosition(this.posX + pos.x, this.posY + pos.y, this.posZ + pos.z); 
+				System.out.println("Additional: " + mountedEntities[i].get());
+			}
 		}
 	}
 
@@ -912,7 +923,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 		return ret;
 	}
-	
+
 	@Override
 	public StatsRocket getRocketStats() {
 		return stats;
@@ -920,16 +931,17 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 	@Override
 	public void handleDismount(Entity entity) {
+
 		//Attempt to dismount passengers first, else dismount pilot
-		Iterator<Entry<Integer, Entity>> entryIterator = mountedEntities.entrySet().iterator();
-		while(entryIterator.hasNext()) {
-			Entry<Integer, Entity> entry = entryIterator.next();
-			if(entry.getValue().equals(entity)) {
-				entryIterator.remove();
+		for(int i = 0; i < mountedEntities.length; i++) {
+
+			if(mountedEntities[i] != null && mountedEntities[i].equals(entity)) {
+				mountedEntities[i] = null;
 				break;
 			}
 		}
-		
+
+		entity.ridingEntity = null;
 		this.riddenByEntity = null;
 	}
 }
