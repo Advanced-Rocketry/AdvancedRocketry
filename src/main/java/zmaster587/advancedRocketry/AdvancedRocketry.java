@@ -63,6 +63,8 @@ import zmaster587.advancedRocketry.block.BlockRotatableModel;
 import zmaster587.advancedRocketry.block.BlockSeat;
 import zmaster587.advancedRocketry.block.BlockFuelTank;
 import zmaster587.advancedRocketry.block.BlockTile;
+import zmaster587.advancedRocketry.block.BlockWarpCore;
+import zmaster587.advancedRocketry.block.BlockWarpShipMonitor;
 import zmaster587.advancedRocketry.block.multiblock.BlockHatch;
 import zmaster587.advancedRocketry.block.multiblock.BlockMultiBlockComponentVisible;
 import zmaster587.advancedRocketry.block.multiblock.BlockMultiblockMachine;
@@ -245,6 +247,12 @@ public class AdvancedRocketry {
 		((BlockTile) AdvancedRocketryBlocks.blockMonitoringStation).setFrontTexture("Advancedrocketry:MonitorRocket");
 		AdvancedRocketryBlocks.blockMonitoringStation.setBlockName("monitoringstation");
 
+		AdvancedRocketryBlocks.blockWarpShipMonitor = new BlockWarpShipMonitor(TileWarpShipMonitor.class, GuiHandler.guiId.MODULARNOINV.ordinal()).setCreativeTab(tabAdvRocketry).setHardness(3f);
+		((BlockTile) AdvancedRocketryBlocks.blockWarpShipMonitor).setSideTexture("Advancedrocketry:machineGeneric", "Advancedrocketry:machineGeneric");
+		((BlockTile) AdvancedRocketryBlocks.blockWarpShipMonitor).setTopTexture("Advancedrocketry:machineGeneric");
+		((BlockTile) AdvancedRocketryBlocks.blockWarpShipMonitor).setFrontTexture("Advancedrocketry:starshipcontrolPanel");
+		AdvancedRocketryBlocks.blockWarpShipMonitor.setBlockName("stationmonitor");
+		
 		AdvancedRocketryBlocks.blockSatelliteBuilder = new BlockMultiblockMachine(TileSatelliteBuilder.class, GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setHardness(3f);
 		((BlockTile) AdvancedRocketryBlocks.blockSatelliteBuilder).setSideTexture("Advancedrocketry:machineGeneric", "Advancedrocketry:machineGeneric");
 		((BlockTile) AdvancedRocketryBlocks.blockSatelliteBuilder).setTopTexture("Advancedrocketry:machineGeneric");
@@ -290,6 +298,10 @@ public class AdvancedRocketry {
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockCrystallizer).setSideTexture("Advancedrocketry:Crystallizer", "Advancedrocketry:Crystallizer_active");
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockCrystallizer).setTopTexture("Advancedrocketry:machineGeneric");
 
+		AdvancedRocketryBlocks.blockWarpCore = new BlockWarpCore(TileWarpCore.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("warpCore").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockCrystallizer).setSideTexture("Advancedrocketry:Crystallizer", "Advancedrocketry:Crystallizer_active");
+		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockCrystallizer).setTopTexture("Advancedrocketry:machineGeneric");
+
 		AdvancedRocketryBlocks.blockChemicalReactor = new BlockMultiblockMachine(TileChemicalReactor.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("chemreactor").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockChemicalReactor).setFrontTexture("Advancedrocketry:Crystallizer", "Advancedrocketry:Crystallizer_active");
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockChemicalReactor).setTopTexture("Advancedrocketry:machineGeneric");
@@ -310,7 +322,6 @@ public class AdvancedRocketry {
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockElectrolyser).setFrontTexture("Advancedrocketry:controlPanel");
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockElectrolyser).setSideTexture("Advancedrocketry:machineGeneric");
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockElectrolyser).setTopTexture("Advancedrocketry:machineGeneric");
-
 
 		AdvancedRocketryBlocks.blockPlanetAnalyser = new BlockMultiblockMachine(TilePlanetAnalyser.class, GuiHandler.guiId.MODULARNOINV.ordinal()).setBlockName("planetanalyser").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockPlanetAnalyser).setTopTexture("Advancedrocketry:machineGeneric");
@@ -401,6 +412,8 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockOxygenCharger, AdvancedRocketryBlocks.blockOxygenCharger.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockAirLock, AdvancedRocketryBlocks.blockAirLock.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockLandingPad, AdvancedRocketryBlocks.blockLandingPad.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockWarpCore, AdvancedRocketryBlocks.blockWarpCore.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockWarpShipMonitor, AdvancedRocketryBlocks.blockWarpShipMonitor.getUnlocalizedName());
 		
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockOxygenFluid,ItemFluid.class, AdvancedRocketryBlocks.blockOxygenFluid.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockHydrogenFluid,ItemFluid.class, AdvancedRocketryBlocks.blockHydrogenFluid.getUnlocalizedName());
@@ -488,6 +501,7 @@ public class AdvancedRocketry {
 		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileElectricArcFurnace(), (BlockTile)AdvancedRocketryBlocks.blockArcFurnace);
 		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileElectrolyser(), (BlockTile)AdvancedRocketryBlocks.blockElectrolyser);
 		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileChemicalReactor(), (BlockTile)AdvancedRocketryBlocks.blockChemicalReactor);
+		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileWarpCore(), (BlockTile)AdvancedRocketryBlocks.blockWarpCore);
 		//End Items
 
 		//Entity Registration ---------------------------------------------------------------------------------------------
@@ -497,6 +511,7 @@ public class AdvancedRocketry {
 
 		//TileEntity Registration ---------------------------------------------------------------------------------------------
 		GameRegistry.registerTileEntity(TileRocketBuilder.class, "ARrocketBuilder");
+		GameRegistry.registerTileEntity(TileWarpCore.class, "ARwarpCore");
 		GameRegistry.registerTileEntity(TileModelRender.class, "ARmodelRenderer");
 		GameRegistry.registerTileEntity(TileEntityFuelingStation.class, "ARfuelingStation");
 		GameRegistry.registerTileEntity(TileEntityMoniteringStation.class, "ARmonitoringStation");
@@ -505,7 +520,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileSpaceLaser.class, "ARspaceLaser");
 		GameRegistry.registerTileEntity(TilePrecisionAssembler.class, "ARprecisionAssembler");
 		GameRegistry.registerTileEntity(TileObservatory.class, "ARobservatory");
-		GameRegistry.registerTileEntity(zmaster587.advancedRocketry.tile.multiblock.TileCrystallizer.class, "ARcrystallizer");
+		GameRegistry.registerTileEntity(TileCrystallizer.class, "ARcrystallizer");
 		GameRegistry.registerTileEntity(TileOutputHatch.class, "ARoutputHatch");
 		GameRegistry.registerTileEntity(TileInputHatch.class, "ARinputHatch");
 		GameRegistry.registerTileEntity(TileRFPlug.class, "ARrfBattery");
@@ -530,6 +545,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileOxygenVent.class, "AROxygenVent");
 		GameRegistry.registerTileEntity(TileOxygenCharger.class, "AROxygenCharger");
 		GameRegistry.registerTileEntity(TileCO2Scrubber.class, "ARCO2Scrubber");
+		GameRegistry.registerTileEntity(TileWarpShipMonitor.class, "ARStationMonitor");
 		EntityRegistry.registerModEntity(EntityLaserNode.class, "laserNode", 0, instance, 256, 20, false);
 
 		
@@ -842,7 +858,6 @@ public class AdvancedRocketry {
 			dimensionProperties.setStar(DimensionManager.getSol());
 			dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");
 			DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
-
 
 			Random random = new Random(System.currentTimeMillis());
 

@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.api.stations;
 
 import net.minecraft.nbt.NBTTagCompound;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.libVulpes.util.BlockPosition;
 
 public interface ISpaceObject {
@@ -98,4 +99,34 @@ public interface ISpaceObject {
 	 * @param full true if the pad is avalible to use
 	 */
 	public void setPadStatus(int posX, int posZ, boolean full);
+	
+	/**
+	 * Called when a time is given between dim transitions (warpships mostly)
+	 * @param time time in ticks
+	 */
+	public void beginTransition(long time);
+	
+	/**
+	 * Returns total world time for when the transition is due to complete
+	 * @return
+	 */
+	public long getTransitionTime();
+
+	/**
+	 * Set the destination dim id if a jump were to be made
+	 * @param id
+	 */
+	void setDestOrbitingBody(int id);
+
+	/**
+	 * Get the destination dimid of this object
+	 * @return
+	 */
+	int getDestOrbitingBody();
+
+	/**
+	 * Set the properties of the dimension
+	 * @param properties
+	 */
+	public void setProperties(DimensionProperties properties);
 }

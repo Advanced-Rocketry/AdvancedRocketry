@@ -51,8 +51,8 @@ public class TileElectrolyser extends TileMultiblockMachine {
 	}
 
 	@Override
-	public List<ModuleBase> getModules() {
-		List<ModuleBase> modules = super.getModules();
+	public List<ModuleBase> getModules(int ID) {
+		List<ModuleBase> modules = super.getModules(ID);
 
 		modules.add(new ModuleProgress(100, 4, 0, TextureResources.crystallizerProgressBar, this));
 		return modules;

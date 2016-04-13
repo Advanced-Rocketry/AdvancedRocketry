@@ -6,11 +6,14 @@ import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
+import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.stations.SpaceObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GLAllocation;
@@ -21,6 +24,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.IRenderHandler;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class RenderPlanetarySky extends IRenderHandler {
 
@@ -28,7 +32,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 	private int starGLCallList;
 	private int glSkyList;
 	private int glSkyList2;
-	
+
 	//Mostly vanilla code
 	//TODO: make usable on other planets
 	public RenderPlanetarySky() {
@@ -143,6 +147,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 		float atmosphere;
 		int solarOrbitalDistance, planetOrbitalDistance = 0;
 		boolean hasAtmosphere = false, isMoon;
+		boolean isWarp = false;
+		ForgeDirection travelDirection = null;
 		ResourceLocation parentPlanetIcon = null;
 		List<DimensionProperties> children;
 
@@ -153,17 +159,17 @@ public class RenderPlanetarySky extends IRenderHandler {
 			DimensionProperties properties = (DimensionProperties)planetaryProvider.getDimensionProperties((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
 
 			atmosphere = planetaryProvider.getAtmosphereDensityFromHeight(mc.renderViewEntity.posY, (int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
-			
+
 			children = new LinkedList<DimensionProperties>();
 			for (Integer i : properties.getChildPlanets()) {
 				children.add(DimensionManager.getInstance().getDimensionProperties(i));
 			}
 
 			solarOrbitalDistance = properties.getSolarOrbitalDistance();
-			
+
 			if(isMoon = properties.isMoon()) {
 				DimensionProperties parentProperties = properties.getParentProperties();
-				
+
 				hasAtmosphere = parentProperties.hasAtmosphere();
 				planetOrbitalDistance = properties.getParentOrbitalDistance();
 				parentPlanetIcon = parentProperties.getPlanetIcon();
@@ -171,6 +177,13 @@ public class RenderPlanetarySky extends IRenderHandler {
 			}
 
 			sunColor = planetaryProvider.getSunColor((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
+			if(world.provider.dimensionId == Configuration.spaceDimId) {
+				isWarp = properties.getParentPlanet() == -1;
+				if(isWarp) {
+					SpaceObject station = (SpaceObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
+					travelDirection = station.getForwardDirection();
+				}
+			}
 		}
 		else {
 			children = new LinkedList<DimensionProperties>();
@@ -288,32 +301,48 @@ public class RenderPlanetarySky extends IRenderHandler {
 		if (f18 > 0.0F)
 		{
 			GL11.glColor4f(f18, f18, f18, f18);
-			GL11.glCallList(this.starGLCallList);
+			GL11.glPushMatrix();
+			if(isWarp) {
+				for(int i = -3; i < 5; i++) {
+					GL11.glPushMatrix();
+					double magnitude = i*-100 + (((System.currentTimeMillis()) + 50) % 2000)/20f;
+					GL11.glTranslated(-travelDirection.offsetZ*magnitude, 0, travelDirection.offsetX*magnitude);
+					GL11.glCallList(this.starGLCallList);
+					GL11.glPopMatrix();
+				}
+				//GL11.glTranslated(((System.currentTimeMillis()/10) + 50) % 100, 0, 0);
+			}
+			else
+				GL11.glCallList(this.starGLCallList);
+			GL11.glPopMatrix();
 		}
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		
+
 		mc.renderEngine.bindTexture(TextureResources.locationSunPng);
 
-		tessellator1.startDrawingQuads();
 
-		//Set sun color and distance
-		f10 = 30f*(200-solarOrbitalDistance)/100f;
 		float multiplier = atmosphere > 1 ? (2-atmosphere) : 1f;
-		tessellator1.setColorOpaque_F((float)sunColor.xCoord * multiplier, (float)sunColor.yCoord * multiplier, (float)sunColor.zCoord * multiplier);
+
+		if(!isWarp) {
+			//Set sun color and distance
+			tessellator1.startDrawingQuads();		
+			f10 = 30f*(200-solarOrbitalDistance)/100f;
+			tessellator1.setColorOpaque_F((float)sunColor.xCoord * multiplier, (float)sunColor.yCoord * multiplier, (float)sunColor.zCoord * multiplier);
 
 
-		tessellator1.addVertexWithUV((double)(-f10), 100.0D, (double)(-f10), 0.0D, 0.0D);
-		tessellator1.addVertexWithUV((double)f10, 100.0D, (double)(-f10), 1.0D, 0.0D);
-		tessellator1.addVertexWithUV((double)f10, 100.0D, (double)f10, 1.0D, 1.0D);
-		tessellator1.addVertexWithUV((double)(-f10), 100.0D, (double)f10, 0.0D, 1.0D);
-		tessellator1.draw();
+			tessellator1.addVertexWithUV((double)(-f10), 100.0D, (double)(-f10), 0.0D, 0.0D);
+			tessellator1.addVertexWithUV((double)f10, 100.0D, (double)(-f10), 1.0D, 0.0D);
+			tessellator1.addVertexWithUV((double)f10, 100.0D, (double)f10, 1.0D, 1.0D);
+			tessellator1.addVertexWithUV((double)(-f10), 100.0D, (double)f10, 0.0D, 1.0D);
+			tessellator1.draw();
+		}
 		f10 = 20.0F;
 
 		GL11.glEnable(GL11.GL_FOG);
 		if(isMoon) {
 			renderPlanet(tessellator1, parentPlanetIcon, planetOrbitalDistance, multiplier, hasAtmosphere);
 		}
-		
+
 		for(DimensionProperties moons : children) {
 			GL11.glPushMatrix();
 			//DimensionProperties moons = children.get(0);
@@ -325,7 +354,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		
+
 		GL11.glPopMatrix();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glColor3f(0.0F, 0.0F, 0.0F);
@@ -379,7 +408,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		//GL11.glTranslatef(0.0F, -((float)(d0 - 16.0D)), 0.0F);
 		//GL11.glCallList(this.glSkyList2);
 		//GL11.glPopMatrix();
-		
+
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDepthMask(true);
 
@@ -416,15 +445,15 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 		tessellator1.draw();
 		//GL11.glEnable(GL11.GL_BLEND);
-		
+
 		GL11.glPopAttrib();
-		
+
 		//Draw atmosphere if applicable
 		if(hasAtmosphere) {
 			tessellator1.startDrawingQuads();
 			mc.renderEngine.bindTexture(DimensionProperties.getAtmosphereResource());
 			tessellator1.setColorRGBA_F(1f, 1f, 1f, alphaMultiplier);
-			
+
 			tessellator1.addVertexWithUV((double)(-f10), -100.0D, (double)f10, (double)f16, (double)f17);
 			tessellator1.addVertexWithUV((double)f10, -100.0D, (double)f10, (double)f14, (double)f17);
 			tessellator1.addVertexWithUV((double)f10, -100.0D, (double)(-f10), (double)f14, (double)f15);
@@ -432,5 +461,5 @@ public class RenderPlanetarySky extends IRenderHandler {
 			tessellator1.draw();
 		}
 	}
-	
+
 }

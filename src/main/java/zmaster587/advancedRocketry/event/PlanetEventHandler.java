@@ -12,11 +12,14 @@ import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
+import zmaster587.advancedRocketry.api.stations.ISpaceObject;
+import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketHandler;
+import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -123,6 +126,11 @@ public class PlanetEventHandler {
 		for(int i : DimensionManager.getInstance().getregisteredDimensions()) {
 			PacketHandler.sendToDispatcher(new PacketDimInfo(i, DimensionManager.getInstance().getDimensionProperties(i)), event.manager);
 		}
+		
+		for(ISpaceObject obj : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
+			PacketHandler.sendToDispatcher(new PacketSpaceStationInfo(obj.getId(), (DimensionProperties)obj.getProperties()), event.manager);
+		}
+		
 		PacketHandler.sendToDispatcher(new PacketDimInfo(0, DimensionManager.getInstance().getDimensionProperties(0)), event.manager);
 
 	}

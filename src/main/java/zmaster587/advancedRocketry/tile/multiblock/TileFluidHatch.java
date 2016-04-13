@@ -87,7 +87,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 	}
 
 	@Override
-	public List<ModuleBase> getModules() {
+	public List<ModuleBase> getModules(int ID) {
 		List<ModuleBase> list = new ArrayList<ModuleBase>();
 
 		list.add(new ModuleSlotArray(45, 18, this, 0, 1));

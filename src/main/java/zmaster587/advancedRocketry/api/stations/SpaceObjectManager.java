@@ -1,22 +1,35 @@
 package zmaster587.advancedRocketry.api.stations;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.network.PacketHandler;
+import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
+import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.libVulpes.util.BlockPosition;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatComponentText;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class SpaceObjectManager {
 	private int nextId = 1;
-
+	private final int WARPDIMID = -1;
+	private long nextStationTransitionTick = -1;
 	//station ids to object
 	HashMap<Integer,ISpaceObject> stationLocations;
 	//Map of planet IDs to station Ids
@@ -43,12 +56,15 @@ public class SpaceObjectManager {
 	
 	/**
 	 * @param id
-	 * @return {@link SpaceObject} object registered to this spaceObject id
+	 * @return {@link SpaceObject} object registered to this spaceObject id, or null if doesn't exist
 	 */
 	public ISpaceObject getSpaceStation(int id) {
 		return stationLocations.get(id);
 	}
 
+	public Collection<ISpaceObject> getSpaceObjects() {
+		return stationLocations.values();
+	}
 
 	/**
 	 * @return the next valid space object id and increments the value for the next one
@@ -144,14 +160,27 @@ public class SpaceObjectManager {
 	}
 
 	/**
-	 * 
+	 * Registers a space station and updates clients
 	 * @param object
 	 * @param dimId dimension to place it in orbit around, -1 for undefined
 	 */
 	public void registerSpaceObject(ISpaceObject object, int dimId) {
 		registerSpaceObject(object, dimId, getNextStationId());
+		PacketHandler.sendToAll(new PacketSpaceStationInfo(object.getId(), (DimensionProperties)object.getProperties()));
 	}
 
+	/**
+	 * registers a dimension with the given station ID
+	 * Used on client to create stations on packet recieve from server
+	 * FOR INTERNAL USE ONLY
+	 * @param object
+	 * @param dimId dimension to place it in orbit around, -1 for undefined
+	 */
+	@SideOnly(Side.CLIENT)
+	public void registerSpaceObjectClient(ISpaceObject object, int dimId, int stationId) {
+		registerSpaceObject(object, dimId, stationId);
+	}
+	
 	/**
 	 * 
 	 * @param planetId id of the planet to get stations around
@@ -214,6 +243,25 @@ public class SpaceObjectManager {
 			}
 		}
 	}
+	
+	@SubscribeEvent
+	public void onServerTick(TickEvent.ServerTickEvent event) {
+		long worldTime;
+		//Assuming server
+		//If no dim undergoing transition then nextTransitionTick = -1
+		if(nextStationTransitionTick != -1 && (worldTime = DimensionManager.getWorld(Configuration.spaceDimId).getTotalWorldTime()) >= nextStationTransitionTick && spaceStationOrbitMap.get(WARPDIMID) != null) {
+			long newNextTransitionTick = -1;
+			for(ISpaceObject obj : spaceStationOrbitMap.get(WARPDIMID)) {
+				if(obj.getTransitionTime() <= worldTime)
+					moveStationToBody(obj, obj.getDestOrbitingBody());
+				else if(newNextTransitionTick == -1 || obj.getTransitionTime() < newNextTransitionTick)
+					newNextTransitionTick = obj.getTransitionTime();
+			}
+			
+			nextStationTransitionTick = newNextTransitionTick;
+		}
+		
+	}
 
 	/**
 	 * Changes the orbiting body of the space object
@@ -232,6 +280,37 @@ public class SpaceObjectManager {
 		if(!spaceStationOrbitMap.get(dimId).contains(station))
 			spaceStationOrbitMap.get(dimId).add(station);
 		station.setOrbitingBody(dimId);
+		
+		if(FMLCommonHandler.instance().getSide().isServer()) {
+			PacketHandler.sendToAll(new PacketStationUpdate(station, PacketStationUpdate.Type.ORBIT_UPDATE));
+		}
+	}
+	
+	/**
+	 * Changes the orbiting body of the space object
+	 * @param station
+	 * @param dimId
+	 * @param timeDelta time in ticks to fully make the jump
+	 */
+	public void moveStationToBody(ISpaceObject station, int dimId, int timeDelta) {
+		//Remove station from the planet it's in orbit around before moving it!
+		if(station.getOrbitingPlanetId() != -1 && spaceStationOrbitMap.get(station.getOrbitingPlanetId()) != null) {
+			spaceStationOrbitMap.get(station.getOrbitingPlanetId()).remove(station);
+		}
+
+		if(spaceStationOrbitMap.get(WARPDIMID) == null)
+			spaceStationOrbitMap.put(WARPDIMID,new LinkedList<ISpaceObject>());
+
+		if(!spaceStationOrbitMap.get(WARPDIMID).contains(station))
+			spaceStationOrbitMap.get(WARPDIMID).add(station);
+		station.setOrbitingBody(WARPDIMID);
+		
+		if(FMLCommonHandler.instance().getSide().isServer()) {
+			PacketHandler.sendToAll(new PacketStationUpdate(station, PacketStationUpdate.Type.ORBIT_UPDATE));
+		}
+		
+		station.beginTransition(timeDelta + DimensionManager.getWorld(Configuration.spaceDimId).getTotalWorldTime());
+		nextStationTransitionTick = timeDelta + DimensionManager.getWorld(Configuration.spaceDimId).getTotalWorldTime();
 	}
 
 	public void writeToNBT(NBTTagCompound nbt) {
@@ -247,12 +326,14 @@ public class SpaceObjectManager {
 		}
 		nbt.setTag("spaceContents", nbtList);
 		nbt.setInteger("nextInt", nextId);
+		nbt.setLong("nextStationTransitionTick", nextStationTransitionTick);
 	}
 
 	public void readFromNBT(NBTTagCompound nbt) {
 		NBTTagList list = nbt.getTagList("spaceContents", NBT.TAG_COMPOUND);
 		nextId = nbt.getInteger("nextInt");
-
+		nextStationTransitionTick = nbt.getLong("nextStationTransitionTick");
+		
 		for(int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound tag = list.getCompoundTagAt(i);
 			try {

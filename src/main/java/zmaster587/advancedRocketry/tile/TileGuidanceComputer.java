@@ -23,8 +23,8 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		super(1);
 	}
 	@Override
-	public List<ModuleBase> getModules() {
-		return super.getModules();
+	public List<ModuleBase> getModules(int ID) {
+		return super.getModules(ID);
 	}
 
 	@Override

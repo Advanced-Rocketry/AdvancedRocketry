@@ -113,7 +113,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	}
 
 	@Override
-	public List<ModuleBase> getModules() {
+	public List<ModuleBase> getModules(int ID) {
 
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
 

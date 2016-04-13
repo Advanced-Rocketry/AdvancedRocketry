@@ -109,7 +109,7 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 
 	@Override
-	public List<ModuleBase> getModules() {
+	public List<ModuleBase> getModules(int ID) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 		
 		modules.add(new ModuleSlotArray(8, 17, this, 0, 1));

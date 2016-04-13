@@ -193,7 +193,7 @@ public class ModuleButton extends ModuleBase {
 		int relativeX = mouseX - offsetX;
 		int relativeY = mouseY - offsetY;
 
-		return relativeX > 0 && relativeX < sizeX && relativeY > 0 && relativeY < sizeY;
+		return enabled && relativeX > 0 && relativeX < sizeX && relativeY > 0 && relativeY < sizeY;
 	}
 
 	@Override

@@ -1,36 +1,58 @@
 package zmaster587.advancedRocketry.stations;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.StatsRocket;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.IStorageChunk;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.network.PacketHandler;
+import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.libVulpes.util.BlockPosition;
-import zmaster587.libVulpes.util.Vector3F;
-import net.minecraft.block.Block;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class SpaceObject implements ISpaceObject {
 	private int posX, posY;
 	private int altitude;
+	private int destinationDimId;
 	private BlockPosition spawnLocation;
 	private List<BlockPosition> spawnLocations;
+	private List<BlockPosition> warpCoreLocation;
 	private HashMap<BlockPosition,Boolean> occupiedLandingPads;
+	private StatsRocket engineInfo;
+	private long transitionEta;
+	private ForgeDirection direction;
 	DimensionProperties properties;
 
 	public SpaceObject() {
 		properties = (DimensionProperties) zmaster587.advancedRocketry.dimension.DimensionManager.defaultSpaceDimensionProperties.clone();
-		spawnLocations = new ArrayList<BlockPosition>();
+		spawnLocations = new LinkedList<BlockPosition>();
 		occupiedLandingPads = new HashMap<BlockPosition,Boolean>();
+		warpCoreLocation = new LinkedList<BlockPosition>(); 
+		engineInfo = null;
+		transitionEta = -1;
+		destinationDimId = -1;
+	}
+	
+	public void beginTransition(long time) {
+		if(time > 0)
+			transitionEta = time;
+	}
+	
+	public long getTransitionTime() {
+		return transitionEta;
 	}
 
 	/**
@@ -49,6 +71,11 @@ public class SpaceObject implements ISpaceObject {
 		return properties;
 	}
 
+	@SideOnly(Side.CLIENT)
+	public void setProperties(DimensionProperties properties) {
+		this.properties = properties;
+	}
+	
 	/**
 	 * @return the DIMID of the planet the object is currently orbiting, -1 if none
 	 */
@@ -57,6 +84,23 @@ public class SpaceObject implements ISpaceObject {
 		return properties.getParentPlanet();
 	}
 
+	/**
+	 * Sets the forward Facing direction of the object.  Mostly used for warpships
+	 * @param direction
+	 */
+	public void setForwardDirection(ForgeDirection direction) {
+		this.direction = direction;
+	}
+	
+	/**
+	 * Gets the forward facing direction of the ship.  Direction is not garunteed to be set
+	 * @return direction of the ship, or UNKNOWN if none exists
+	 */
+	public ForgeDirection getForwardDirection() {
+		if(direction == null)
+			return ForgeDirection.UNKNOWN;
+		return direction;
+	}
 	/**
 	 * @return the altitude above the parent DIM the object currently is
 	 */
@@ -85,6 +129,13 @@ public class SpaceObject implements ISpaceObject {
 		return spawnLocation;
 	}
 	
+	public void addWarpCore(BlockPosition position) {
+		warpCoreLocation.add(position);
+	}
+	public void removeWarpCore(BlockPosition position) {
+		warpCoreLocation.remove(position);
+	}
+	
 	/**
 	 * Adds a landing pad to the station
 	 * @param x
@@ -92,7 +143,6 @@ public class SpaceObject implements ISpaceObject {
 	 */
 	public void addLandingPad(int x, int z) {
 		BlockPosition pos = new BlockPosition(x, 0, z);
-		
 		if(!spawnLocations.contains(pos)) {
 			spawnLocations.add(pos);
 			occupiedLandingPads.put(pos, false);
@@ -182,9 +232,27 @@ public class SpaceObject implements ISpaceObject {
 	 */
 	@Override
 	public void setOrbitingBody(int id) {
+		if(id == this.getOrbitingPlanetId())
+			return;
+		
 		properties.setParentPlanet(id, false);
+		if(id != -1)
+			destinationDimId = id;
 	}
 
+	@Override
+	public void setDestOrbitingBody(int id) {
+		destinationDimId = id;
+		if(FMLCommonHandler.instance().getSide().isServer()) {
+			PacketHandler.sendToAll(new PacketStationUpdate(this, PacketStationUpdate.Type.DEST_ORBIT_UPDATE));
+		}
+	}
+	
+	@Override
+	public int getDestOrbitingBody() {
+		return destinationDimId;
+	}
+	
 	/**
 	 * When the space stations are first created they are 'unpacked' from the storage chunk they reside in
 	 * @param chunk
@@ -205,6 +273,13 @@ public class SpaceObject implements ISpaceObject {
 		nbt.setInteger("spawnX", spawnLocation.x);
 		nbt.setInteger("spawnY", spawnLocation.y);
 		nbt.setInteger("spawnZ", spawnLocation.z);
+		nbt.setInteger("destinationDimId", destinationDimId);
+		
+		if(direction !=null)
+			nbt.setInteger("direction", direction.ordinal());
+		
+		if(transitionEta > -1)
+			nbt.setLong("transitionEta", transitionEta);
 		
 		NBTTagList list = new NBTTagList();
 		for(BlockPosition pos : this.spawnLocations) {
@@ -213,19 +288,33 @@ public class SpaceObject implements ISpaceObject {
 			tag.setIntArray("pos", new int[] {pos.x, pos.z});
 			list.appendTag(tag);
 		}
-		
 		nbt.setTag("spawnPositions", list);
+		
+		list = new NBTTagList();
+		for(BlockPosition pos : this.warpCoreLocation) {
+			NBTTagCompound tag = new NBTTagCompound();
+			tag.setIntArray("pos", new int[] {pos.x, pos.y, pos.z});
+			list.appendTag(tag);
+		}
+		nbt.setTag("warpCorePositions", list);
 	}
 
 	@Override
 	public void readFromNbt(NBTTagCompound nbt) {
 		properties.readFromNBT(nbt);
+		
+		destinationDimId = nbt.getInteger("destinationDimId");
 		posX = nbt.getInteger("posX");
 		posY = nbt.getInteger("posY");
 		altitude = nbt.getInteger("altitude");
 		spawnLocation = new BlockPosition(nbt.getInteger("spawnX"), nbt.getInteger("spawnY"), nbt.getInteger("spawnZ"));
 		properties.setId(nbt.getInteger("id"));
 		
+		if(nbt.hasKey("direction"))
+			direction = ForgeDirection.getOrientation(nbt.getInteger("direction"));
+		
+		if(nbt.hasKey("transitionEta"))
+			transitionEta = nbt.getLong("transitionEta");
 		
 		NBTTagList list = nbt.getTagList("spawnPositions", NBT.TAG_COMPOUND);
 		spawnLocations.clear();
@@ -236,6 +325,15 @@ public class SpaceObject implements ISpaceObject {
 			BlockPosition pos = new BlockPosition(posInt[0], 0, posInt[1]);
 			spawnLocations.add(pos);
 			occupiedLandingPads.put(pos, tag.getBoolean("occupied"));
+		}
+		
+		list = nbt.getTagList("warpCorePositions", NBT.TAG_COMPOUND);
+		warpCoreLocation.clear();
+		for(int i = 0; i < list.tagCount(); i++) {
+			NBTTagCompound tag = list.getCompoundTagAt(i);
+			int[] posInt = tag.getIntArray("pos");
+			BlockPosition pos = new BlockPosition(posInt[0], posInt[1], posInt[2]);
+			warpCoreLocation.add(pos);
 		}
 	}
 

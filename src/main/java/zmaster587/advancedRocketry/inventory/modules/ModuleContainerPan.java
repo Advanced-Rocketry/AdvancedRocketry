@@ -169,7 +169,9 @@ public class ModuleContainerPan extends ModuleBase {
 			GuiContainer gui, FontRenderer font) {
 
 		//Handle scrolling
-		onScroll(Mouse.getDWheel());
+		int d;
+		if((d = Mouse.getDWheel()) != 0)
+			onScroll(d);
 		
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
@@ -185,7 +187,7 @@ public class ModuleContainerPan extends ModuleBase {
 	}
 
 	@SideOnly(Side.CLIENT)
-	private void setUpScissor(GuiContainer gui, int screenOffsetX, int screenOffsetY, int screenSizeX, int screenSizeY) {
+	protected void setUpScissor(GuiContainer gui, int screenOffsetX, int screenOffsetY, int screenSizeX, int screenSizeY) {
 		float multiplierX = gui.mc.displayWidth / (float)gui.width;
 		float multiplierY = gui.mc.displayHeight / (float)gui.height;
 

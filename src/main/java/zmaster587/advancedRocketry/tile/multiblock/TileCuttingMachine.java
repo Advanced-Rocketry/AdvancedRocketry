@@ -73,8 +73,8 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 	}
 
 	@Override
-	public List<ModuleBase> getModules() {
-		List<ModuleBase> modules = super.getModules();
+	public List<ModuleBase> getModules(int ID) {
+		List<ModuleBase> modules = super.getModules(ID);
 		modules.add(new ModuleProgress(100, 20, 0, TextureResources.cuttingMachineProgressBar, this));
 		
 		return modules;

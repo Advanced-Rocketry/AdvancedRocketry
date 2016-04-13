@@ -837,7 +837,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	}
 
 	@Override
-	public List<ModuleBase> getModules() {
+	public List<ModuleBase> getModules(int ID) {
 		List<ModuleBase> modules;
 		//If the rocket is flight don't load the interface
 		modules = new LinkedList<ModuleBase>();

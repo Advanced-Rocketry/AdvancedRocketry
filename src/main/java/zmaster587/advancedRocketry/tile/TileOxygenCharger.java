@@ -86,7 +86,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	}
 
 	@Override
-	public List<ModuleBase> getModules() {
+	public List<ModuleBase> getModules(int ID) {
 		ArrayList<ModuleBase> modules = new ArrayList<ModuleBase>();
 
 		modules.add(new ModulePower(18, 20, this));

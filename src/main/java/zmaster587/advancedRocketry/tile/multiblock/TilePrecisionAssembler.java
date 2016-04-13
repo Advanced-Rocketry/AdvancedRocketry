@@ -66,8 +66,8 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 	}
 	
 	@Override
-	public List<ModuleBase> getModules() {
-		List<ModuleBase> modules = super.getModules();
+	public List<ModuleBase> getModules(int ID) {
+		List<ModuleBase> modules = super.getModules(ID);
 		
 		int yOffset = 16;
 		int xOffset = 65;

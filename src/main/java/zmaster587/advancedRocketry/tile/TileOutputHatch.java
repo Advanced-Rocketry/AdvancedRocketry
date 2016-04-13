@@ -30,7 +30,7 @@ public class TileOutputHatch extends TileInventoryHatch {
 	}
 	
 	@Override
-	public List<ModuleBase> getModules() {
+	public List<ModuleBase> getModules(int ID) {
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModuleOutputSlotArray(8, 18, this, 0, this.getSizeInventory()));
 		return modules;
