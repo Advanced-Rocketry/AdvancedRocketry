@@ -7,6 +7,7 @@ import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.inventory.GuiHandler.guiId;
@@ -19,12 +20,15 @@ import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.inventory.modules.ModuleButton;
 import zmaster587.advancedRocketry.inventory.modules.ModuleImage;
 import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
+import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.inventory.modules.ModuleScaledImage;
 import zmaster587.advancedRocketry.inventory.modules.ModuleText;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketMachine;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.util.ITilePlanetSystemSelectable;
+import zmaster587.advancedRocketry.client.render.util.IndicatorBarImage;
+import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import	zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.libVulpes.util.INetworkMachine;
@@ -33,21 +37,35 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileWarpShipMonitor extends TileEntity implements IModularInventory, ISelectionNotify, INetworkMachine, IButtonInventory, IProgressBar {
 
 	protected ModulePlanetSelector container;
+	private ModuleText canWarp;
 	DimensionProperties dimCache;
+	private SpaceObject station;
 
 	public TileWarpShipMonitor() {
 	}
+
+
+	private SpaceObject getSpaceObject() {
+		if(station == null && worldObj.provider.dimensionId == Configuration.spaceDimId) {
+			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(xCoord, zCoord);
+			if(object instanceof SpaceObject)
+				station = (SpaceObject) object;
+		}
+		return station;
+	}
+
 
 	@Override
 	public List<ModuleBase> getModules(int ID) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		if(ID == guiId.MODULARNOINV.ordinal()) {
-			ISpaceObject station = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.xCoord, this.zCoord);
+			ISpaceObject station = getSpaceObject();
 			ResourceLocation location;
 			boolean hasAtmo = true;
 			String planetName;
@@ -87,6 +105,15 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 			modules.add(new ModuleButton(baseX - 3, baseY + sizeY, 0, "Select Planet", this, TextureResources.buttonBuild, sizeX + 6, 16));
 
+
+			//Status text
+			modules.add(new ModuleText(baseX, baseY + sizeY + 20, "Core Status:", 0x1b1b1b));
+			canWarp = new ModuleText(baseX, baseY + sizeY + 30, "N/A", 0xFF1b1b);
+			modules.add(canWarp);
+			modules.add(new ModuleProgress(baseX, baseY + sizeY + 40, 10, new IndicatorBarImage(70, 58, 53, 8, 122, 58, 5, 8, ForgeDirection.EAST, TextureResources.progressBars), this));
+
+
+
 			//DEST planet
 			baseX = 94;
 			baseY = 20;
@@ -96,14 +123,14 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			//warp.setEnabled(dimCache != null);
 			modules.add(warp);
 			modules.add(new ModuleScaledImage(baseX,baseY,sizeX,sizeY, TextureResources.starryBG));
-			
+
 			if(dimCache != null) {
 
 				hasAtmo = dimCache.hasAtmosphere();
 				planetName = dimCache.getName();
 				location = dimCache.getPlanetIcon();
 
-				
+
 				modules.add(new ModuleScaledImage(baseX + 10,baseY + 10,sizeX - 20, sizeY - 20, location));
 
 				if(hasAtmo)
@@ -123,8 +150,11 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			modules.add(new ModuleScaledImage(baseX + sizeX, baseY, -3,sizeY, TextureResources.verticalBar));
 			modules.add(new ModuleScaledImage(baseX,baseY,70,3, TextureResources.horizontalBar));
 			modules.add(new ModuleScaledImage(baseX,baseY + sizeY - 3,70,-3, TextureResources.horizontalBar));
+
+
 		}
 		else if (ID == guiId.MODULARFULLSCREEN.ordinal()) {
+			//Open planet selector menu
 			container = new ModulePlanetSelector(worldObj.provider.dimensionId, TextureResources.starryBG, this);
 			container.setOffset(1000, 1000);
 			modules.add(container);
@@ -179,9 +209,9 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 		else if(id == 2) {
-			ISpaceObject station = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.xCoord, this.zCoord);
+			SpaceObject station = getSpaceObject();
 
-			if(station != null) {
+			if(station != null && station.useFuel(500) != 0) {
 				SpaceObjectManager.getSpaceManager().moveStationToBody(station, station.getDestOrbitingBody(), 2000);
 			}
 		}
@@ -222,31 +252,36 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 	@Override
 	public float getNormallizedProgress(int id) {
-		// TODO Auto-generated method stub
-		return 0;
+		return getProgress(id)/(float)getTotalProgress(id);
 	}
 
 	@Override
 	public void setProgress(int id, int progress) {
-		// TODO Auto-generated method stub
-
+		if(id == 10)
+			if(getSpaceObject() != null)
+				getSpaceObject().setFuelAmount(progress);
 	}
 
 	@Override
 	public int getProgress(int id) {
-		// TODO Auto-generated method stub
+		if(id == 10) {
+			if(getSpaceObject() != null)
+				return getSpaceObject().getFuelAmount();
+		}
 		return 0;
 	}
 
 	@Override
 	public int getTotalProgress(int id) {
-		// TODO Auto-generated method stub
+		if(id == 10) {
+			if(getSpaceObject() != null)
+				return getSpaceObject().getMaxFuelAmount();
+		}
 		return 0;
 	}
 
 	@Override
 	public void setTotalProgress(int id, int progress) {
-		// TODO Auto-generated method stub
-
+		
 	}
 }

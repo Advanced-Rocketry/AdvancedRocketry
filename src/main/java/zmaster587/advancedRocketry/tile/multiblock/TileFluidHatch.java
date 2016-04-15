@@ -50,8 +50,8 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-		if(doFill && this.hasMaster() && this.getMasterBlock() instanceof TileMultiblockMachine)
-				((TileMultiblockMachine)this.getMasterBlock()).onInventoryUpdated();
+		if(doFill && this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
+				((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
 		if(outputOnly && from != ForgeDirection.UNKNOWN)
 			return 0;
 		return fluidTank.fill(resource, doFill);

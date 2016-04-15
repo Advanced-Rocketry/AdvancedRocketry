@@ -16,6 +16,7 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.libVulpes.util.BlockPosition;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
@@ -27,11 +28,12 @@ public class SpaceObject implements ISpaceObject {
 	private int posX, posY;
 	private int altitude;
 	private int destinationDimId;
+	private int fuelAmount;
+	private final int MAX_FUEL = 1000;
 	private BlockPosition spawnLocation;
 	private List<BlockPosition> spawnLocations;
 	private List<BlockPosition> warpCoreLocation;
 	private HashMap<BlockPosition,Boolean> occupiedLandingPads;
-	private StatsRocket engineInfo;
 	private long transitionEta;
 	private ForgeDirection direction;
 	DimensionProperties properties;
@@ -41,7 +43,6 @@ public class SpaceObject implements ISpaceObject {
 		spawnLocations = new LinkedList<BlockPosition>();
 		occupiedLandingPads = new HashMap<BlockPosition,Boolean>();
 		warpCoreLocation = new LinkedList<BlockPosition>(); 
-		engineInfo = null;
 		transitionEta = -1;
 		destinationDimId = -1;
 	}
@@ -134,6 +135,47 @@ public class SpaceObject implements ISpaceObject {
 	}
 	public void removeWarpCore(BlockPosition position) {
 		warpCoreLocation.remove(position);
+	}
+	
+	public int getFuelAmount() {
+		return fuelAmount;
+	}
+	
+	public int getMaxFuelAmount() {
+		return MAX_FUEL;
+	}
+	
+	public void setFuelAmount(int amt) {
+		fuelAmount = amt;
+	}
+	
+	/**
+	 * Adds the passed amount of fuel to the space station
+	 * @param amt
+	 * @return amount of fuel used
+	 */
+	public int addFuel(int amt) {
+		if(amt < 0)
+			return amt;
+		
+		int oldFuelAmt = fuelAmount;
+		fuelAmount = Math.min(fuelAmount + amt, MAX_FUEL);
+		
+		amt = fuelAmount - oldFuelAmt;
+		return amt;
+	}
+	
+	/**
+	 * Used the amount of fuel passed
+	 * @param amt
+	 * @return amount of fuel consumed
+	 */
+	public int useFuel(int amt) {
+		if(amt > getFuelAmount())
+			return 0;
+		
+		fuelAmount -= amt;
+		return amt;
 	}
 	
 	/**
@@ -274,6 +316,7 @@ public class SpaceObject implements ISpaceObject {
 		nbt.setInteger("spawnY", spawnLocation.y);
 		nbt.setInteger("spawnZ", spawnLocation.z);
 		nbt.setInteger("destinationDimId", destinationDimId);
+		nbt.setInteger("fuel", fuelAmount);
 		
 		if(direction !=null)
 			nbt.setInteger("direction", direction.ordinal());
@@ -307,6 +350,7 @@ public class SpaceObject implements ISpaceObject {
 		posX = nbt.getInteger("posX");
 		posY = nbt.getInteger("posY");
 		altitude = nbt.getInteger("altitude");
+		fuelAmount = nbt.getInteger("fuel");
 		spawnLocation = new BlockPosition(nbt.getInteger("spawnX"), nbt.getInteger("spawnY"), nbt.getInteger("spawnZ"));
 		properties.setId(nbt.getInteger("id"));
 		

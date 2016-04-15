@@ -62,8 +62,8 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
-		if(this.hasMaster() && this.getMasterBlock() instanceof TileMultiblockMachine)
-			((TileMultiblockMachine)this.getMasterBlock()).onInventoryUpdated();
+		if(this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
+			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
 	}
 
 	@Override

@@ -36,12 +36,6 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		POWERERROR
 	}
 
-	protected LinkedList<IInventory> itemInPorts = new LinkedList<IInventory>();
-	protected LinkedList<IInventory> itemOutPorts = new LinkedList<IInventory>();
-
-	protected LinkedList<IFluidHandler> fluidInPorts = new LinkedList<IFluidHandler>();
-	protected LinkedList<IFluidHandler> fluidOutPorts = new LinkedList<IFluidHandler>();
-
 	private List<ItemStack> outputItemStacks;
 	private List<FluidStack> outputFluidStacks;
 
@@ -134,11 +128,9 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		onInventoryUpdated();
 	}
 
+	@Override
 	public void resetCache() {
-		itemInPorts.clear();
-		itemOutPorts.clear();
-		fluidInPorts.clear();
-		fluidOutPorts.clear();
+		super.resetCache();
 		batteries.clear();
 	}
 
@@ -432,6 +424,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 	//Called by inventory blocks that are part of the structure
 	//This includes recipe management etc
+	@Override
 	public void onInventoryUpdated() {
 		//If we are already processing something don't bother
 		
@@ -463,23 +456,6 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 	protected float getPowerMultiplierForRecipe(IRecipe recipe) {
 		return 1f;
-	}
-
-	@Override
-	protected void integrateTile(TileEntity tile) {
-		super.integrateTile(tile);
-
-		if(tile instanceof TileInputHatch)
-			itemInPorts.add((IInventory) tile);
-		else if(tile instanceof TileOutputHatch) 
-			itemOutPorts.add((IInventory) tile);
-		else if(tile instanceof TileFluidHatch) {
-			TileFluidHatch liquidHatch = (TileFluidHatch)tile;
-			if(liquidHatch.isOutputOnly())
-				fluidOutPorts.add((IFluidHandler)liquidHatch);
-			else
-				fluidInPorts.add((IFluidHandler)liquidHatch);
-		}
 	}
 
 	@Override

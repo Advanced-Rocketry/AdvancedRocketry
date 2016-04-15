@@ -55,7 +55,6 @@ public class RendererWarpCore extends TileEntitySpecialRenderer {
 		bindTexture(texture);
 		model.renderOnly("Base");
 
-
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glColor4f(0.4f, 0.4f, 1f, 0.6f);
 		GL11.glEnable(GL11.GL_BLEND);
