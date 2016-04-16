@@ -4,6 +4,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -35,6 +36,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class PlanetEventHandler {
 
 	public static long time = 0;
+	private static long endTime, duration;
 
 	//Handle gravity
 	@SubscribeEvent
@@ -67,7 +69,7 @@ public class PlanetEventHandler {
 			event.entity.registerExtendedProperties(PlayerDataHandler.IDENTIFIER, new PlayerDataHandler());
 		}
 	}*/
-	
+
 	//TODO move
 	//Has weak refs so if the player gets killed/logsout etc the entry doesnt stay trapped in RAM
 	private static HashSet<WeakReference<EntityPlayer>> inventoryCheckPlayerBypassMap = new HashSet<WeakReference<EntityPlayer>>();
@@ -126,11 +128,11 @@ public class PlanetEventHandler {
 		for(int i : DimensionManager.getInstance().getregisteredDimensions()) {
 			PacketHandler.sendToDispatcher(new PacketDimInfo(i, DimensionManager.getInstance().getDimensionProperties(i)), event.manager);
 		}
-		
+
 		for(ISpaceObject obj : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
 			PacketHandler.sendToDispatcher(new PacketSpaceStationInfo(obj.getId(), (DimensionProperties)obj.getProperties()), event.manager);
 		}
-		
+
 		PacketHandler.sendToDispatcher(new PacketDimInfo(0, DimensionManager.getInstance().getDimensionProperties(0)), event.manager);
 
 	}
@@ -185,6 +187,17 @@ public class PlanetEventHandler {
 		if(!event.world.isRemote)
 			AtmosphereHandler.unregisterWorld(event.world.provider.dimensionId);
 	}
+	
+	/**
+	 * Starts a burst, used for move to warp effect
+	 * @param endTime
+	 * @param duration
+	 */
+	@SideOnly(Side.CLIENT)
+	public static void runBurst(long endTime, long duration) {
+		PlanetEventHandler.endTime = endTime;
+		PlanetEventHandler.duration = duration;
+	}
 
 	//Handle fog density and color
 	@SubscribeEvent
@@ -194,10 +207,19 @@ public class PlanetEventHandler {
 		if(properties != null) {
 			float fog = properties.getAtmosphereDensityAtHeight(event.entity.posY);
 
-			event.red *= fog;
-			event.green *= fog;
-			event.blue *= fog;
+			if(endTime > 0) {
+				double amt = (endTime - Minecraft.getMinecraft().theWorld.getTotalWorldTime()) / (double)duration;
+				if(amt < 0) {
+					endTime = 0;
+				}
+				else
+					event.green = event.blue = event.red = (float)amt;
 
+			} else {
+				event.red *= fog;
+				event.green *= fog;
+				event.blue *= fog;
+			}
 		}
 	}
 

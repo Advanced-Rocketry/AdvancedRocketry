@@ -26,11 +26,13 @@ import zmaster587.advancedRocketry.inventory.modules.ModuleText;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketMachine;
 import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.advancedRocketry.tile.multiblock.TileWarpCore;
 import zmaster587.advancedRocketry.util.ITilePlanetSystemSelectable;
 import zmaster587.advancedRocketry.client.render.util.IndicatorBarImage;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import	zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.IconResource;
 import net.minecraft.entity.player.EntityPlayer;
@@ -60,6 +62,10 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 	}
 
 
+	protected int getTravelCost() {
+		return 500;
+	}
+	
 	@Override
 	public List<ModuleBase> getModules(int ID) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
@@ -108,7 +114,8 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 			//Status text
 			modules.add(new ModuleText(baseX, baseY + sizeY + 20, "Core Status:", 0x1b1b1b));
-			canWarp = new ModuleText(baseX, baseY + sizeY + 30, "N/A", 0xFF1b1b);
+			boolean flag =  getSpaceObject().getFuelAmount() >= getTravelCost() && getSpaceObject().hasUsableWarpCore();
+			canWarp = new ModuleText(baseX, baseY + sizeY + 30, flag ? "Ready!" : "Not ready", flag ? 0x1baa1b : 0xFF1b1b);
 			modules.add(canWarp);
 			modules.add(new ModuleProgress(baseX, baseY + sizeY + 40, 10, new IndicatorBarImage(70, 58, 53, 8, 122, 58, 5, 8, ForgeDirection.EAST, TextureResources.progressBars), this));
 
@@ -183,14 +190,14 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {
-		if(id == 1)
+		if(id == 1 || id == 3)
 			out.writeInt(container.getSelectedSystem());
 	}
 
 	@Override
 	public void readDataFromNetwork(ByteBuf in, byte packetId,
 			NBTTagCompound nbt) {
-		if(packetId == 1)
+		if(packetId == 1 || packetId == 3)
 			nbt.setInteger("id", in.readInt());
 	}
 
@@ -199,7 +206,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			NBTTagCompound nbt) {
 		if(id == 0)
 			player.openGui(AdvancedRocketry.instance, guiId.MODULARFULLSCREEN.ordinal(), worldObj, this.xCoord, this.yCoord, this.zCoord);
-		else if(id == 1) {
+		else if(id == 1 || id == 3) {
 			int dimId = nbt.getInteger("id");
 			container.setSelectedSystem(dimId);
 			selectSystem(dimId);
@@ -207,12 +214,20 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			//Update known planets
 			markDirty();
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			if(id == 3)
+				player.openGui(AdvancedRocketry.instance, guiId.MODULARNOINV.ordinal(), worldObj, this.xCoord, this.yCoord, this.zCoord);
 		}
 		else if(id == 2) {
 			SpaceObject station = getSpaceObject();
 
-			if(station != null && station.useFuel(500) != 0) {
-				SpaceObjectManager.getSpaceManager().moveStationToBody(station, station.getDestOrbitingBody(), 2000);
+			if(station != null && station.useFuel(getTravelCost()) != 0 && station.hasUsableWarpCore()) {
+				SpaceObjectManager.getSpaceManager().moveStationToBody(station, station.getDestOrbitingBody(), 200);
+				for(BlockPosition vec : station.getWarpCoreLocations()) {
+					TileEntity tile = worldObj.getTileEntity(vec.x, vec.y, vec.z);
+					if(tile != null && tile instanceof TileWarpCore) {
+						((TileWarpCore)tile).onInventoryUpdated();
+					}
+				}
 			}
 		}
 	}
@@ -221,17 +236,21 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 	public void onSelectionConfirmed(Object sender) {
 		//Container Cannot be null at this time
 		onSelected(sender);
+		PacketHandler.sendToServer(new PacketMachine(this, (byte)3));
 	}
 
 	@Override
 	public void onSelected(Object sender) {
-
 		selectSystem(container.getSelectedSystem());
-
-		PacketHandler.sendToServer(new PacketMachine(this, (byte)1));
 	}
 
 	private void selectSystem(int id) {
+		
+		if(getSpaceObject().getOrbitingPlanetId() == SpaceObjectManager.WARPDIMID) {
+			dimCache = null;
+			return;
+		}
+		
 		if(id == -1)
 			dimCache = null;
 		else {
@@ -282,6 +301,5 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 	@Override
 	public void setTotalProgress(int id, int progress) {
-		
 	}
 }

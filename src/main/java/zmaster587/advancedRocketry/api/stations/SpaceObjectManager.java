@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketHandler;
@@ -26,7 +27,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 
 public class SpaceObjectManager {
 	private int nextId = 1;
-	private final int WARPDIMID = -1;
+	public static final int WARPDIMID = -1;
 	private long nextStationTransitionTick = -1;
 	//station ids to object
 	HashMap<Integer,ISpaceObject> stationLocations;
@@ -282,6 +283,7 @@ public class SpaceObjectManager {
 		if(FMLCommonHandler.instance().getSide().isServer()) {
 			PacketHandler.sendToAll(new PacketStationUpdate(station, PacketStationUpdate.Type.ORBIT_UPDATE));
 		}
+		AdvancedRocketry.proxy.fireFogBurst(station);
 	}
 	
 	/**
@@ -306,7 +308,10 @@ public class SpaceObjectManager {
 		if(FMLCommonHandler.instance().getSide().isServer()) {
 			PacketHandler.sendToAll(new PacketStationUpdate(station, PacketStationUpdate.Type.ORBIT_UPDATE));
 		}
+		AdvancedRocketry.proxy.fireFogBurst(station);
 		
+		
+		((DimensionProperties)station.getProperties()).atmosphereDensity = 0;
 		station.beginTransition(timeDelta + DimensionManager.getWorld(Configuration.spaceDimId).getTotalWorldTime());
 		nextStationTransitionTick = timeDelta + DimensionManager.getWorld(Configuration.spaceDimId).getTotalWorldTime();
 	}

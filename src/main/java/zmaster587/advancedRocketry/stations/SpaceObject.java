@@ -137,6 +137,14 @@ public class SpaceObject implements ISpaceObject {
 		warpCoreLocation.remove(position);
 	}
 	
+	public List<BlockPosition> getWarpCoreLocations() {
+		return warpCoreLocation;
+	}
+	
+	public boolean hasUsableWarpCore() {
+		return properties.getParentPlanet() != SpaceObjectManager.WARPDIMID && getDestOrbitingBody() != getOrbitingPlanetId();
+	}
+	
 	public int getFuelAmount() {
 		return fuelAmount;
 	}

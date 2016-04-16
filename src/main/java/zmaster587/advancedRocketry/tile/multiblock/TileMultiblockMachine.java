@@ -2,17 +2,10 @@ package zmaster587.advancedRocketry.tile.multiblock;
 
 import io.netty.buffer.ByteBuf;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
-import zmaster587.advancedRocketry.recipe.RecipesMachine.Recipe;
-import zmaster587.advancedRocketry.tile.TileInputHatch;
-import zmaster587.advancedRocketry.tile.TileOutputHatch;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.util.ZUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +16,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;

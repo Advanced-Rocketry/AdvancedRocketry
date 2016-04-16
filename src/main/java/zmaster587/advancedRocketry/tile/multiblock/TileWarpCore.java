@@ -1,22 +1,18 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
-import ic2.api.recipe.ICannerBottleRecipeManager.Input;
-
-import java.util.List;
-
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.material.MaterialRegistry;
-import zmaster587.advancedRocketry.api.material.MaterialRegistry.Materials;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceObject;
-import zmaster587.advancedRocketry.tile.TileInputHatch;
 import zmaster587.libVulpes.block.BlockMeta;
 
 public class TileWarpCore extends TileMultiBlock {
@@ -52,8 +48,17 @@ public class TileWarpCore extends TileMultiBlock {
 	}
 
 	@Override
+	public boolean shouldHideBlock(World world, int x, int y, int z, Block tile) {
+		return x == xCoord && y == yCoord && z == zCoord;
+	}
+	
+	@Override
 	public void onInventoryUpdated() {
-
+		//Needs completion
+		if(itemInPorts.isEmpty() /*&& !worldObj.isRemote*/) {
+			attemptCompleteStructure();
+		}
+		
 		if(getSpaceObject() == null || getSpaceObject().getFuelAmount() == getSpaceObject().getMaxFuelAmount())
 			return;
 		for(IInventory inv : itemInPorts) {
@@ -64,7 +69,10 @@ public class TileWarpCore extends TileMultiBlock {
 					int stackSize = stack.stackSize;
 					if(!worldObj.isRemote)
 						amt = getSpaceObject().addFuel(10*stack.stackSize);
+					else
+						amt = Math.min(getSpaceObject().getFuelAmount() + 10*stack.stackSize, getSpaceObject().getMaxFuelAmount()) - getSpaceObject().getFuelAmount();//
 					inv.decrStackSize(i, amt/10);
+					inv.markDirty();
 					
 					//If full
 					if(stackSize/10 != amt)

@@ -101,7 +101,6 @@ public class TileMultiBlock extends TileEntity {
 	 ** This includes recipe management etc
 	 **/
 	public void onInventoryUpdated() {
-		
 	}
 	
 	/**
