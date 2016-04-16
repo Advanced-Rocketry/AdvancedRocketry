@@ -21,7 +21,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 
 	private static RenderBlocks renderBlocks = RenderBlocks.getInstance();
-	
+
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x,
 			double y, double z, float t) {
@@ -44,7 +44,7 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 				ForgeDirection direction = ForgeDirection.getOrientation(tileGhost.getReplacedBlockMeta());
 				GL11.glTranslated(.5f,.5f,.5f);
 				if(direction.offsetX != 0 ) {
-				GL11.glRotatef( -90, 0,direction.offsetX,0);
+					GL11.glRotatef( -90, 0,direction.offsetX,0);
 				}
 				else if(direction.offsetZ  == 1) {
 					GL11.glRotatef( 180, direction.offsetZ,0,0);
@@ -58,7 +58,7 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 			//Render Each block
 			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 			renderBlocks.blockAccess = tileGhost.getWorldObj();
-			
+
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_ONE_MINUS_SRC_COLOR, GL11.GL_SRC_ALPHA);
 			Tessellator.instance.startDrawingQuads();
@@ -87,9 +87,9 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 			if(Minecraft.getMinecraft().objectMouseOver != null && movingObjPos.blockX == tile.xCoord && movingObjPos.blockY == tile.yCoord && movingObjPos.blockZ == tile.zCoord) {
 				ItemStack stack = tile.getWorldObj().getBlock(tile.xCoord, tile.yCoord, tile.zCoord).getPickBlock(movingObjPos, Minecraft.getMinecraft().theWorld, movingObjPos.blockX, movingObjPos.blockY, movingObjPos.blockZ, Minecraft.getMinecraft().thePlayer);
 				if(stack == null)
-					return;
-
-				RenderHelper.renderTag(Minecraft.getMinecraft().thePlayer.getDistanceSq(movingObjPos.blockX, movingObjPos.blockY, movingObjPos.blockZ), stack.getDisplayName(), x,y,z, 10);
+					RenderHelper.renderTag(Minecraft.getMinecraft().thePlayer.getDistanceSq(movingObjPos.blockX, movingObjPos.blockY, movingObjPos.blockZ), "THIS IS AN ERROR, CONTACT THE DEV!!!", x,y,z, 10);
+				else
+					RenderHelper.renderTag(Minecraft.getMinecraft().thePlayer.getDistanceSq(movingObjPos.blockX, movingObjPos.blockY, movingObjPos.blockZ), stack.getDisplayName(), x,y,z, 10);
 			}
 		}
 	}
