@@ -98,7 +98,7 @@ public class RendererWarpCore extends TileEntitySpecialRenderer {
 				GL11.glRotated(((j+1)*0.03*System.currentTimeMillis() % 360) + (i + j/5f)*offset, 0f, 1f, 0f);
 				GL11.glTranslatef(0, 0.1f*j-.2f + (5-j)*0.02f*(float)Math.sin(0.001d*System.currentTimeMillis()), 0.2f);
 				//GL11.glTranslatef(0f, 0.1f*(0.5f - MathHelper.sin((float)(0.001*System.currentTimeMillis() % 100))), 0f);
-				model.renderOnly("Ball_Sphere");
+				model.renderOnly("Ball");
 				GL11.glPopMatrix();
 			}
 		}
