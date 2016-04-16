@@ -10,7 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import zmaster587.advancedRocketry.api.DataStorage;
-import zmaster587.advancedRocketry.api.MultiData;
+import zmaster587.advancedRocketry.world.util.MultiData;
 
 public class ItemMultiData extends Item {
 

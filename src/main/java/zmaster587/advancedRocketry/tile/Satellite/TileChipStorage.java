@@ -10,24 +10,24 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
-import zmaster587.advancedRocketry.Inventory.TextureResources;
-import zmaster587.advancedRocketry.Inventory.modules.IButtonInventory;
-import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleButton;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleOutputSlotArray;
-import zmaster587.advancedRocketry.Inventory.modules.ModulePower;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleTexturedSlotArray;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
-import zmaster587.advancedRocketry.api.dimension.DimensionManager;
-import zmaster587.advancedRocketry.api.network.PacketHandler;
-import zmaster587.advancedRocketry.api.network.PacketMachine;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.inventory.modules.IButtonInventory;
+import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
+import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.inventory.modules.ModuleButton;
+import zmaster587.advancedRocketry.inventory.modules.ModuleOutputSlotArray;
+import zmaster587.advancedRocketry.inventory.modules.ModulePower;
+import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
+import zmaster587.advancedRocketry.inventory.modules.ModuleTexturedSlotArray;
 import zmaster587.advancedRocketry.item.ItemSatellite;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
+import zmaster587.advancedRocketry.network.PacketHandler;
+import zmaster587.advancedRocketry.network.PacketMachine;
 import zmaster587.advancedRocketry.tile.multiblock.TileMultiPowerConsumer;
 
 public class TileChipStorage extends TileMultiPowerConsumer  implements IModularInventory, IInventory, IButtonInventory {
@@ -72,7 +72,7 @@ public class TileChipStorage extends TileMultiPowerConsumer  implements IModular
 	}
 
 	@Override
-	public List<ModuleBase> getModules() {
+	public List<ModuleBase> getModules(int ID) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		modules.add(new ModulePower(18, 20, getBatteries()));

@@ -4,21 +4,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 
 public class StellarBody {
 
 	private int temperature;
-	private HashMap<Integer,DimensionProperties> planets;
+	private HashMap<Integer,IDimensionProperties> planets;
 	int numPlanets;
 	int discoveredPlanets;
 	float color[];
 	int id;
 
 	public StellarBody() {
-		planets = new HashMap<Integer,DimensionProperties>();
+		planets = new HashMap<Integer,IDimensionProperties>();
 	}
 	
 	public int getDisplayRadius() {
@@ -35,7 +35,7 @@ public class StellarBody {
 	/**
 	 * @param planet registers this planet to be in orbit around this star
 	 */
-	public void addPlanet(DimensionProperties planet) {
+	public void addPlanet(IDimensionProperties planet) {
 		planets.put(planet.getId(), planet);
 	}
 	
@@ -43,7 +43,7 @@ public class StellarBody {
 	 * @param planet
 	 * @return the {@link DimensionProperties} of the planet orbiting this star, or null if the planet does not exist
 	 */
-	public DimensionProperties removePlanet(DimensionProperties planet) {
+	public IDimensionProperties removePlanet(IDimensionProperties planet) {
 		return planets.remove(planet.getId());
 	}
 
@@ -138,8 +138,8 @@ public class StellarBody {
 	/**
 	 * @return List of {@link DimensionProperties} of planets orbiting this star
 	 */
-	public List<DimensionProperties> getPlanets() {
-		return new ArrayList<DimensionProperties>(planets.values());
+	public List<IDimensionProperties> getPlanets() {
+		return new ArrayList<IDimensionProperties>(planets.values());
 	}
 	
 	public void writeToNBT(NBTTagCompound nbt) {

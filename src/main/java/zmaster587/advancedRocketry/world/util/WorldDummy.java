@@ -64,10 +64,10 @@ public class WorldDummy extends World {
 	}
 
 	@Override
-    public boolean blockExists(int p_72899_1_, int p_72899_2_, int p_72899_3_) {
-    	return false;
-    }
-	
+	public boolean blockExists(int p_72899_1_, int p_72899_2_, int p_72899_3_) {
+		return false;
+	}
+
 	@Override
 	public int getBlockLightValue_do(int p_72849_1_, int p_72849_2_,
 			int p_72849_3_, boolean p_72849_4_) {
@@ -103,7 +103,7 @@ public class WorldDummy extends World {
 		return false;
 		//Dummy out
 	}
-	
+
 	@Override
 	public boolean setBlockMetadataWithNotify(int p_72921_1_, int p_72921_2_, int p_72921_3_, int p_72921_4_, int p_72921_5_) {
 		return false;

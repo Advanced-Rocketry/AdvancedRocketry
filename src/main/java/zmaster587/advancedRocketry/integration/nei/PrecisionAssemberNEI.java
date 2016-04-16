@@ -8,9 +8,9 @@ import java.awt.Rectangle;
 import java.util.LinkedList;
 import java.util.List;
 
-import zmaster587.advancedRocketry.Inventory.GuiModular;
-import zmaster587.advancedRocketry.Inventory.TextureResources;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
+import zmaster587.advancedRocketry.inventory.GuiModular;
+import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.tile.multiblock.TilePrecisionAssembler;
 
 public class PrecisionAssemberNEI extends TemplateNEI {

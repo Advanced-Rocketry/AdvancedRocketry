@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.api.util;
 
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.util.AreaBlob;
 import zmaster587.libVulpes.util.BlockPosition;
 
 public interface IBlobHandler {

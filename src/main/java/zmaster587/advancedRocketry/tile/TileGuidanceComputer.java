@@ -4,13 +4,15 @@ import java.util.List;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.api.dimension.DimensionManager;
-import zmaster587.advancedRocketry.api.stations.SpaceObject;
+import zmaster587.advancedRocketry.api.stations.ISpaceObject;
+import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
+import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
+import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.tile.multiblock.TileInventoryHatch;
 import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
@@ -21,8 +23,8 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		super(1);
 	}
 	@Override
-	public List<ModuleBase> getModules() {
-		return super.getModules();
+	public List<ModuleBase> getModules(int ID) {
+		return super.getModules(ID);
 	}
 
 	@Override
@@ -50,7 +52,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 					return 0;
 				return Configuration.spaceDimId;
 			}
-				
+
 		}
 		return -1;
 	}
@@ -65,13 +67,14 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 			ItemStationChip chip = (ItemStationChip)stack.getItem();
 			if(landingDimension == Configuration.spaceDimId) {
 				//TODO: handle Exception
-				SpaceObject object = DimensionManager.getSpaceManager().getSpaceStation(chip.getDamage(stack));
-				
-				BlockPosition vec = object.getNextLandingPad();
-				
+				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(chip.getDamage(stack));
+				BlockPosition vec = null;
+				if(object instanceof SpaceObject)
+					vec = ((SpaceObject)object).getNextLandingPad();
+
 				if(vec == null)
 					vec = object.getSpawnLocation();
-				
+
 				return new Vector3F<Float>(new Float(vec.x), new Float(vec.y), new Float(vec.z));
 			}
 			else {

@@ -15,13 +15,13 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
-import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleImage;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleLiquidIndicator;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleSlotArray;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
+import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
+import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.inventory.modules.ModuleImage;
+import zmaster587.advancedRocketry.inventory.modules.ModuleLiquidIndicator;
+import zmaster587.advancedRocketry.inventory.modules.ModuleSlotArray;
 import zmaster587.advancedRocketry.util.EmbeddedInventory;
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.tile.TilePointer;
@@ -50,8 +50,8 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-		if(doFill && this.hasMaster() && this.getMasterBlock() instanceof TileMultiblockMachine)
-				((TileMultiblockMachine)this.getMasterBlock()).onInventoryUpdated();
+		if(doFill && this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
+				((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
 		if(outputOnly && from != ForgeDirection.UNKNOWN)
 			return 0;
 		return fluidTank.fill(resource, doFill);
@@ -87,7 +87,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 	}
 
 	@Override
-	public List<ModuleBase> getModules() {
+	public List<ModuleBase> getModules(int ID) {
 		List<ModuleBase> list = new ArrayList<ModuleBase>();
 
 		list.add(new ModuleSlotArray(45, 18, this, 0, 1));

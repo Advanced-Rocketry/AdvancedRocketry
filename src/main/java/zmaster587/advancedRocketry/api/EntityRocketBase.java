@@ -2,8 +2,7 @@ package zmaster587.advancedRocketry.api;
 
 import java.util.LinkedList;
 
-import zmaster587.advancedRocketry.api.dimension.DimensionManager;
-import zmaster587.advancedRocketry.api.stations.SpaceObject;
+import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.libVulpes.util.BlockPosition;
 import net.minecraft.entity.Entity;
@@ -80,10 +79,10 @@ public abstract class EntityRocketBase extends Entity {
 		MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketReachesOrbitEvent(this));
 		
 		if(this.worldObj.provider.dimensionId == Configuration.spaceDimId) {
-			SpaceObject station = DimensionManager.getSpaceManager().getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
+			ISpaceObject station = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
 			
-			if(station != null) {
-				station.setPadStatus((int)this.posX, (int)this.posZ, false);
+			if(station instanceof ISpaceObject) {
+				((ISpaceObject)station).setPadStatus((int)this.posX, (int)this.posZ, false);
 			}
 		}
 	}
@@ -93,10 +92,10 @@ public abstract class EntityRocketBase extends Entity {
 	 */
 	public void deconstructRocket() {
 		if(this.worldObj.provider.dimensionId == Configuration.spaceDimId) {
-			SpaceObject station = DimensionManager.getSpaceManager().getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
+			ISpaceObject station = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
 			
-			if(station != null) {
-				station.setPadStatus((int)this.posX, (int)this.posZ, false);
+			if(station instanceof ISpaceObject) {
+				((ISpaceObject)station).setPadStatus((int)this.posX, (int)this.posZ, false);
 			}
 		}
 	}

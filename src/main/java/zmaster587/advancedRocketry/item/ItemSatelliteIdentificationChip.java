@@ -37,7 +37,7 @@ public class ItemSatelliteIdentificationChip extends Item {
 
 			long satId = nbt.getLong("satelliteId");
 
-			SatelliteBase satellite = zmaster587.advancedRocketry.api.dimension.DimensionManager.getInstance().getSatellite(satId);
+			SatelliteBase satellite = zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getSatellite(satId);
 
 			if(satellite != null) {
 

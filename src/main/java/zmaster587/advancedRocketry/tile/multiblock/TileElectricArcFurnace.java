@@ -8,12 +8,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import zmaster587.advancedRocketry.Inventory.TextureResources;
-import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
+import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
+import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
 import zmaster587.advancedRocketry.tile.TileInputHatch;
 import zmaster587.advancedRocketry.tile.TileOutputHatch;
@@ -116,9 +116,9 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 	}
 	
 	@Override
-	public List<ModuleBase> getModules() {
+	public List<ModuleBase> getModules(int ID) {
 		// TODO Auto-generated method stub
-		List<ModuleBase> modules = super.getModules();
+		List<ModuleBase> modules = super.getModules(ID);
 		
 		modules.add(new ModuleProgress(100, 20, 0, TextureResources.arcFurnaceProgressBar, this));
 		return modules;

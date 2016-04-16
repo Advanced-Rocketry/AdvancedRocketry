@@ -20,7 +20,7 @@ public class BlockCoil extends BlockMetalBlock {
 		sideIcon = register.registerIcon(side);
 		polesIcon = register.registerIcon(poles);
 	}
-
+	
 	@Override
 	public IIcon getIcon(int side, int meta) {
 		return (ForgeDirection.getOrientation(side) == ForgeDirection.UP || ForgeDirection.getOrientation(side) == ForgeDirection.DOWN) ? polesIcon : sideIcon;

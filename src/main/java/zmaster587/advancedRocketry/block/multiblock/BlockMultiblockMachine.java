@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.block.multiblock;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.block.BlockTile;
+import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.tile.multiblock.TileMultiBlock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -52,6 +53,7 @@ public class BlockMultiblockMachine extends BlockTile {
 		if(tile instanceof TileMultiBlock) {
 			TileMultiBlock tileMulti = (TileMultiBlock)tile;
 			if(tileMulti.isComplete() && !world.isRemote) {
+				if(tile instanceof IModularInventory)
 				player.openGui(AdvancedRocketry.instance, guiId, world, x, y, z);
 			}
 			else

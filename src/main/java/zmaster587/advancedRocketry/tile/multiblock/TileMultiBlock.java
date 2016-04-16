@@ -9,6 +9,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.block.multiblock.BlockMultiBlockComponentVisible;
 import zmaster587.advancedRocketry.block.multiblock.BlockMultiblockStructure;
+import zmaster587.advancedRocketry.tile.TileInputHatch;
+import zmaster587.advancedRocketry.tile.TileOutputHatch;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.tile.IMultiblock;
@@ -17,6 +19,7 @@ import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -24,6 +27,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.IFluidHandler;
 
 public class TileMultiBlock extends TileEntity {
 
@@ -31,6 +35,12 @@ public class TileMultiBlock extends TileEntity {
 	because chunks on the client.  It is also used to determine if the block on the server has ever been complete */
 	protected boolean completeStructure, canRender;
 	protected byte timeAlive = 0;
+	
+	protected LinkedList<IInventory> itemInPorts = new LinkedList<IInventory>();
+	protected LinkedList<IInventory> itemOutPorts = new LinkedList<IInventory>();
+
+	protected LinkedList<IFluidHandler> fluidInPorts = new LinkedList<IFluidHandler>();
+	protected LinkedList<IFluidHandler> fluidOutPorts = new LinkedList<IFluidHandler>();
 
 	public TileMultiBlock() {
 		completeStructure = false;
@@ -85,6 +95,12 @@ public class TileMultiBlock extends TileEntity {
 
 	public void invalidateComponent(TileEntity tile) {
 		setComplete(false);
+	}
+	
+	/**Called by inventory blocks that are part of the structure
+	 ** This includes recipe management etc
+	 **/
+	public void onInventoryUpdated() {
 	}
 	
 	/**
@@ -200,6 +216,10 @@ public class TileMultiBlock extends TileEntity {
 	 * Called when cached Tiles need to be cleared (batteries/IO/etc)
 	 */
 	public void resetCache() {
+		itemInPorts.clear();
+		itemOutPorts.clear();
+		fluidInPorts.clear();
+		fluidOutPorts.clear();
 	}
 
 
@@ -427,6 +447,18 @@ public class TileMultiBlock extends TileEntity {
 	protected void integrateTile(TileEntity tile) {
 		if(tile instanceof IMultiblock)
 			((IMultiblock) tile).setComplete(xCoord, yCoord, zCoord);
+		
+		if(tile instanceof TileInputHatch)
+			itemInPorts.add((IInventory) tile);
+		else if(tile instanceof TileOutputHatch) 
+			itemOutPorts.add((IInventory) tile);
+		else if(tile instanceof TileFluidHatch) {
+			TileFluidHatch liquidHatch = (TileFluidHatch)tile;
+			if(liquidHatch.isOutputOnly())
+				fluidOutPorts.add((IFluidHandler)liquidHatch);
+			else
+				fluidInPorts.add((IFluidHandler)liquidHatch);
+		}
 	}
 
 	protected Vector3F<Integer> getControllerOffset(Object[][][] structure) {

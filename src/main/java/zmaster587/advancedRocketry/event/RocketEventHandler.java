@@ -24,19 +24,20 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.Inventory.TextureResources;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
-import zmaster587.advancedRocketry.api.armor.ItemSpaceArmor;
-import zmaster587.advancedRocketry.api.atmosphere.AtmosphereHandler;
-import zmaster587.advancedRocketry.api.dimension.DimensionManager;
+import zmaster587.advancedRocketry.api.armor.IFillableArmor;
+import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
 import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.entity.EntityRocket;
+import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.ZUtils;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -317,20 +318,18 @@ public class RocketEventHandler extends Gui {
 			
 			//Draw the O2 Bar if needed
 			ItemStack chestPiece = Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(3);
-			if(!Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode && chestPiece != null && chestPiece.getItem() == AdvancedRocketryItems.itemSpaceSuit_Chest) {
-				float size = ((ItemSpaceArmor)chestPiece.getItem()).getAirRemaining(chestPiece)/(float)ItemSpaceArmor.getMaxAir();
+			if(!Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode && chestPiece != null && chestPiece.getItem() instanceof IFillableArmor) {
+				float size = ((IFillableArmor)chestPiece.getItem()).getAirRemaining(chestPiece)/(float)((IFillableArmor)chestPiece.getItem()).getMaxAir();
 			
 				GL11.glEnable(GL11.GL_BLEND);
-
 				Minecraft.getMinecraft().renderEngine.bindTexture(background);
-				
+				GL11.glColor3f(1f, 1f, 1f);
 				int width = 83;
 				int screenX = event.resolution.getScaledWidth()/2 + 8;
 				int screenY = event.resolution.getScaledHeight() - 57;
 				
 				//Draw BG
 				this.drawTexturedModalRect(screenX, screenY, 23, 0, width, 17);
-				
 				this.drawTexturedModalRect(screenX , screenY, 23, 17, (int)(width*size), 17);
 				
 			}
@@ -345,10 +344,6 @@ public class RocketEventHandler extends Gui {
 				String str = "Warning: No Oxygen detected!";
 				int screenX = event.resolution.getScaledWidth()/6 - fontRenderer.getStringWidth(str)/2;
 				int screenY = event.resolution.getScaledHeight()/18;
-				
-				
-				
-				
 				
 				GL11.glPushMatrix();
 				GL11.glScalef(3, 3, 3);

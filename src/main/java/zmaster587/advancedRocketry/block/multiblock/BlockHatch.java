@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.Inventory.GuiHandler;
+import zmaster587.advancedRocketry.inventory.GuiHandler;
 import zmaster587.advancedRocketry.tile.TileInputHatch;
 import zmaster587.advancedRocketry.tile.TileOutputHatch;
 import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteHatch;
