@@ -70,11 +70,12 @@ public class WorldCommand implements ICommand {
 
 				IAtmosphere atmosphere = AtmosphereHandler.getOxygenHandler(player.worldObj.provider.dimensionId).getAtmosphereType(player);
 
-				sender.addChatMessage(new ChatComponentText(atmosphere == AtmosphereType.VACUUM ? "vacumm" : "AIR"));
+				if(atmosphere != null) {
+					sender.addChatMessage(new ChatComponentText(atmosphere == AtmosphereType.VACUUM ? "vacumm" : "AIR"));
 				}
 				else
 					sender.addChatMessage(new ChatComponentText("AIR (no atmosphere object)"));
-				
+
 				return;
 			}
 
@@ -95,7 +96,7 @@ public class WorldCommand implements ICommand {
 							dim = Configuration.spaceDimId;
 							int stationId = Integer.parseInt(string[2]);
 							ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(stationId);
-							
+
 							if(object != null) {
 								if(player.worldObj.provider.dimensionId != Configuration.spaceDimId)
 									MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal(MinecraftServer.getServer().worldServerForDimension(dim)));
