@@ -174,7 +174,8 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 		list.add(new ModulePower(156, 12, this));
 		list.add(new ModuleSlotArray(45, 18, this, 0, 1));
 		list.add(new ModuleSlotArray(45, 54, this, 1, 2));
-		list.add(new ModuleImage(44, 35, new IconResource(194, 0, 18, 18, CommonResources.genericBackground)));
+		if(worldObj.isRemote)
+			list.add(new ModuleImage(44, 35, new IconResource(194, 0, 18, 18, CommonResources.genericBackground)));
 		list.add(new ModuleLiquidIndicator(27, 18, this));
 		
 		return list;

@@ -160,7 +160,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 			itemIdChip.setSatellite(slot1, satelliteItem.getSatellite(slot0));
 			inventory[holdingSlot] = slot1;
 		}
-		setInventorySlotContents(chipCopySlot, null);
+		decrStackSize(chipCopySlot, 1);
 		completionTime = 100;
 
 		this.markDirty();

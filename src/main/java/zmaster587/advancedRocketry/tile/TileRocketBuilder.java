@@ -67,11 +67,11 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	private final int MAXSCANDELAY = 10;
 	private final int ENERGYFOROP = 100;
 	//private final int ENERGY = 100;
-	
+
 	protected static final ResourceLocation backdrop =  new ResourceLocation("advancedrocketry","textures/gui/rocketBuilder.png");
 	private static final ProgressBarImage horizontalProgressBar = new ProgressBarImage(89, 9, 81, 17, 176, 0, 80, 15, 0, 2, ForgeDirection.EAST, backdrop);
 	protected static final ProgressBarImage verticalProgressBar = new ProgressBarImage(76, 93, 8, 52, 176, 15, 2, 38, 3, 2, ForgeDirection.UP, backdrop);
-	
+
 	private ModuleText thrustText, weightText, fuelText, accelerationText;
 	protected ModuleText errorText;
 
@@ -271,7 +271,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 							}
 
 							if(block instanceof BlockSeat) {
-								
+
 								if(stats.hasSeat()) 
 									stats.addPassengerSeat((int)(xCurr - actualMinX - ((actualMaxX - actualMinX)/2f)) , (int)(yCurr  -actualMinY), (int)(zCurr - actualMinZ - ((actualMaxZ - actualMinZ)/2f)));
 								else
@@ -552,7 +552,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	public boolean canScan() {
 		return bbCache != null;
 	}
-	
+
 	@Override
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
@@ -604,7 +604,8 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 		modules.add(new ModulePower(160, 90, this));
 
-		modules.add(new ModuleImage(4, 9, new IconResource(4, 9, 168, 74, backdrop)));
+		if(worldObj.isRemote)
+			modules.add(new ModuleImage(4, 9, new IconResource(4, 9, 168, 74, backdrop)));
 
 		modules.add(new ModuleProgress(89, 47, 0, horizontalProgressBar, this));
 		modules.add(new ModuleProgress(89, 66, 1, horizontalProgressBar, this));

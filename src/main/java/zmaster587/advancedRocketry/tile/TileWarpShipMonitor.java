@@ -65,9 +65,10 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 	protected int getTravelCost() {
 		return 500;
 	}
-	
+
 	@Override
 	public List<ModuleBase> getModules(int ID) {
+		//TODO: sync with client
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		if(ID == guiId.MODULARNOINV.ordinal()) {
@@ -94,21 +95,23 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			int sizeX = 70;
 			int sizeY = 70;
 
-			modules.add(new ModuleScaledImage(baseX,baseY,sizeX,sizeY, TextureResources.starryBG));
-			modules.add(new ModuleScaledImage(baseX + 10,baseY + 10,sizeX - 20, sizeY - 20, location));
+			if(worldObj.isRemote) {
+				modules.add(new ModuleScaledImage(baseX,baseY,sizeX,sizeY, TextureResources.starryBG));
+				modules.add(new ModuleScaledImage(baseX + 10,baseY + 10,sizeX - 20, sizeY - 20, location));
 
-			if(hasAtmo)
-				modules.add(new ModuleScaledImage(baseX + 10,baseY + 10,sizeX - 20, sizeY - 20,0.4f, DimensionProperties.getAtmosphereResource()));
 
-			modules.add(new ModuleText(baseX + 4, baseY + 4, "Orbiting:", 0xFFFFFF));
-			modules.add(new ModuleText(baseX + 4, baseY + 16, planetName, 0xFFFFFF));
+				if(hasAtmo)
+					modules.add(new ModuleScaledImage(baseX + 10,baseY + 10,sizeX - 20, sizeY - 20,0.4f, DimensionProperties.getAtmosphereResource()));
 
-			//Border
-			modules.add(new ModuleScaledImage(baseX - 3,baseY,3,sizeY, TextureResources.verticalBar));
-			modules.add(new ModuleScaledImage(baseX + sizeX, baseY, -3,sizeY, TextureResources.verticalBar));
-			modules.add(new ModuleScaledImage(baseX,baseY,70,3, TextureResources.horizontalBar));
-			modules.add(new ModuleScaledImage(baseX,baseY + sizeY - 3,70,-3, TextureResources.horizontalBar));
+				modules.add(new ModuleText(baseX + 4, baseY + 4, "Orbiting:", 0xFFFFFF));
+				modules.add(new ModuleText(baseX + 4, baseY + 16, planetName, 0xFFFFFF));
 
+				//Border
+				modules.add(new ModuleScaledImage(baseX - 3,baseY,3,sizeY, TextureResources.verticalBar));
+				modules.add(new ModuleScaledImage(baseX + sizeX, baseY, -3,sizeY, TextureResources.verticalBar));
+				modules.add(new ModuleScaledImage(baseX,baseY,70,3, TextureResources.horizontalBar));
+				modules.add(new ModuleScaledImage(baseX,baseY + sizeY - 3,70,-3, TextureResources.horizontalBar));
+			}
 			modules.add(new ModuleButton(baseX - 3, baseY + sizeY, 0, "Select Planet", this, TextureResources.buttonBuild, sizeX + 6, 16));
 
 
@@ -129,7 +132,9 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			ModuleButton warp = new ModuleButton(baseX - 3, baseY + sizeY,1, "Warp!", this ,TextureResources.buttonBuild, sizeX + 6, 16);
 			//warp.setEnabled(dimCache != null);
 			modules.add(warp);
-			modules.add(new ModuleScaledImage(baseX,baseY,sizeX,sizeY, TextureResources.starryBG));
+
+			if(worldObj.isRemote)
+				modules.add(new ModuleScaledImage(baseX,baseY,sizeX,sizeY, TextureResources.starryBG));
 
 			if(dimCache != null) {
 
@@ -138,10 +143,13 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 				location = dimCache.getPlanetIcon();
 
 
-				modules.add(new ModuleScaledImage(baseX + 10,baseY + 10,sizeX - 20, sizeY - 20, location));
+				if(worldObj.isRemote ) {
+					modules.add(new ModuleScaledImage(baseX + 10,baseY + 10,sizeX - 20, sizeY - 20, location));
 
-				if(hasAtmo)
-					modules.add(new ModuleScaledImage(baseX + 10,baseY + 10,sizeX - 20, sizeY - 20,0.4f, DimensionProperties.getAtmosphereResource()));
+					if(hasAtmo)
+						modules.add(new ModuleScaledImage(baseX + 10,baseY + 10,sizeX - 20, sizeY - 20,0.4f, DimensionProperties.getAtmosphereResource()));
+
+				}
 
 				modules.add(new ModuleText(baseX + 4, baseY + 4, "Dest:", 0xFFFFFF));
 				modules.add(new ModuleText(baseX + 4, baseY + 16, planetName, 0xFFFFFF));
@@ -152,11 +160,14 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 				modules.add(new ModuleText(baseX + 4, baseY + 4, "Dest:", 0xFFFFFF));
 				modules.add(new ModuleText(baseX + 4, baseY + 16, "None", 0xFFFFFF));
 			}
-			//Border
-			modules.add(new ModuleScaledImage(baseX - 3,baseY,3,sizeY, TextureResources.verticalBar));
-			modules.add(new ModuleScaledImage(baseX + sizeX, baseY, -3,sizeY, TextureResources.verticalBar));
-			modules.add(new ModuleScaledImage(baseX,baseY,70,3, TextureResources.horizontalBar));
-			modules.add(new ModuleScaledImage(baseX,baseY + sizeY - 3,70,-3, TextureResources.horizontalBar));
+
+			if(worldObj.isRemote) {
+				//Border
+				modules.add(new ModuleScaledImage(baseX - 3,baseY,3,sizeY, TextureResources.verticalBar));
+				modules.add(new ModuleScaledImage(baseX + sizeX, baseY, -3,sizeY, TextureResources.verticalBar));
+				modules.add(new ModuleScaledImage(baseX,baseY,70,3, TextureResources.horizontalBar));
+				modules.add(new ModuleScaledImage(baseX,baseY + sizeY - 3,70,-3, TextureResources.horizontalBar));
+			}
 
 
 		}
@@ -245,12 +256,12 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 	}
 
 	private void selectSystem(int id) {
-		
+
 		if(getSpaceObject().getOrbitingPlanetId() == SpaceObjectManager.WARPDIMID) {
 			dimCache = null;
 			return;
 		}
-		
+
 		if(id == -1)
 			dimCache = null;
 		else {

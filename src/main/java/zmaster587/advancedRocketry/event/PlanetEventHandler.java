@@ -130,7 +130,7 @@ public class PlanetEventHandler {
 		}
 
 		for(ISpaceObject obj : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
-			PacketHandler.sendToDispatcher(new PacketSpaceStationInfo(obj.getId(), (DimensionProperties)obj.getProperties()), event.manager);
+			PacketHandler.sendToDispatcher(new PacketSpaceStationInfo(obj.getId(), obj), event.manager);
 		}
 
 		PacketHandler.sendToDispatcher(new PacketDimInfo(0, DimensionManager.getInstance().getDimensionProperties(0)), event.manager);

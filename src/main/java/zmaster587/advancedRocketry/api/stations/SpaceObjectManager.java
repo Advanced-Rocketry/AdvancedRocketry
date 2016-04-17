@@ -12,6 +12,7 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
+import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.libVulpes.util.BlockPosition;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -35,7 +36,7 @@ public class SpaceObjectManager {
 	HashMap<Integer, List<ISpaceObject>> spaceStationOrbitMap;
 	HashMap<String, Class> nameToClass;
 	HashMap<Class, String> classToString;
-	
+
 	private final static SpaceObjectManager spaceObjectManager = new SpaceObjectManager();
 
 	private SpaceObjectManager() {
@@ -52,7 +53,7 @@ public class SpaceObjectManager {
 	public final static SpaceObjectManager getSpaceManager() {
 		return spaceObjectManager;
 	}
-	
+
 	/**
 	 * @param id
 	 * @return {@link SpaceObject} object registered to this spaceObject id, or null if doesn't exist
@@ -155,7 +156,7 @@ public class SpaceObjectManager {
 			object.setSpawnLocation(2*Configuration.stationSize*x + Configuration.stationSize/2, 128, 2*Configuration.stationSize*z + Configuration.stationSize/2);
 
 		object.setOrbitingBody(dimId);
-		moveStationToBody(object, dimId);
+		moveStationToBody(object, dimId, false);
 	}
 
 	/**
@@ -165,7 +166,7 @@ public class SpaceObjectManager {
 	 */
 	public void registerSpaceObject(ISpaceObject object, int dimId) {
 		registerSpaceObject(object, dimId, getNextStationId());
-		PacketHandler.sendToAll(new PacketSpaceStationInfo(object.getId(), (DimensionProperties)object.getProperties()));
+		PacketHandler.sendToAll(new PacketSpaceStationInfo(object.getId(), object));
 	}
 
 	/**
@@ -179,7 +180,7 @@ public class SpaceObjectManager {
 	public void registerSpaceObjectClient(ISpaceObject object, int dimId, int stationId) {
 		registerSpaceObject(object, dimId, stationId);
 	}
-	
+
 	/**
 	 * 
 	 * @param planetId id of the planet to get stations around
@@ -200,16 +201,16 @@ public class SpaceObjectManager {
 			if(event.player.posY < 0 && !event.player.worldObj.isRemote) {
 				ISpaceObject object = getSpaceStationFromBlockCoords((int)event.player.posX, (int)event.player.posZ);
 				if(object != null) {
-	
+
 					BlockPosition loc = object.getSpawnLocation();
-	
+
 					event.player.fallDistance=0;
 					event.player.motionY = 0;
 					event.player.setPositionAndUpdate(loc.x, loc.y, loc.z);
 					event.player.addChatComponentMessage(new ChatComponentText("You wake up finding yourself back on the station"));
 				}
 			}
-	
+
 			int result = Math.abs(2*(((int)event.player.posZ + Configuration.stationSize/2) % (2*Configuration.stationSize) )/Configuration.stationSize);
 			if(result == 0 || result == 3) {
 				event.player.motionZ = -event.player.motionZ;
@@ -218,19 +219,19 @@ public class SpaceObjectManager {
 				}
 				else
 					event.player.setPosition(event.player.posX, event.player.posY, event.player.posZ - (event.player.posZ < 0 ? 16 - Math.abs(event.player.posZ % 16) : (event.player.posZ % 16)));
-	
+
 			}
-	
+
 			//double posX = event.player.posX < 0 ? -event.player.posX - Configuration.stationSize : event.player.posX;
-	
+
 			result = Math.abs(2*(((int)event.player.posX + Configuration.stationSize/2) % (2*Configuration.stationSize) )/Configuration.stationSize);
-	
+
 			if(event.player.posX < -Configuration.stationSize/2)
 				if(result == 3)
 					result = 0;
 				else if(result == 0)
 					result = 3;
-	
+
 			if(result == 0 || result == 3) {
 				event.player.motionX = -event.player.motionX;
 				if(result == 0) {
@@ -238,11 +239,11 @@ public class SpaceObjectManager {
 				}
 				else
 					event.player.setPosition(event.player.posX - (event.player.posX < 0 ? 16 - Math.abs(event.player.posX % 16) : (event.player.posX % 16)), event.player.posY, event.player.posZ);
-	
+
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onServerTick(TickEvent.ServerTickEvent event) {
 		long worldTime;
@@ -256,10 +257,15 @@ public class SpaceObjectManager {
 				else if(newNextTransitionTick == -1 || obj.getTransitionTime() < newNextTransitionTick)
 					newNextTransitionTick = obj.getTransitionTime();
 			}
-			
+
 			nextStationTransitionTick = newNextTransitionTick;
 		}
-		
+
+	}
+
+
+	public void moveStationToBody(ISpaceObject station, int dimId) {
+		moveStationToBody(station, dimId, true);
 	}
 
 	/**
@@ -267,7 +273,7 @@ public class SpaceObjectManager {
 	 * @param station
 	 * @param dimId
 	 */
-	public void moveStationToBody(ISpaceObject station, int dimId) {
+	public void moveStationToBody(ISpaceObject station, int dimId, boolean update) {
 		//Remove station from the planet it's in orbit around before moving it!
 		if(station.getOrbitingPlanetId() != -1 && spaceStationOrbitMap.get(station.getOrbitingPlanetId()) != null) {
 			spaceStationOrbitMap.get(station.getOrbitingPlanetId()).remove(station);
@@ -279,13 +285,15 @@ public class SpaceObjectManager {
 		if(!spaceStationOrbitMap.get(dimId).contains(station))
 			spaceStationOrbitMap.get(dimId).add(station);
 		station.setOrbitingBody(dimId);
-		
-		if(FMLCommonHandler.instance().getSide().isServer()) {
-			PacketHandler.sendToAll(new PacketStationUpdate(station, PacketStationUpdate.Type.ORBIT_UPDATE));
+
+		if(update) {
+			if(FMLCommonHandler.instance().getSide().isServer()) {
+				PacketHandler.sendToAll(new PacketStationUpdate(station, PacketStationUpdate.Type.ORBIT_UPDATE));
+			}
+			AdvancedRocketry.proxy.fireFogBurst(station);
 		}
-		AdvancedRocketry.proxy.fireFogBurst(station);
 	}
-	
+
 	/**
 	 * Changes the orbiting body of the space object
 	 * @param station
@@ -304,13 +312,13 @@ public class SpaceObjectManager {
 		if(!spaceStationOrbitMap.get(WARPDIMID).contains(station))
 			spaceStationOrbitMap.get(WARPDIMID).add(station);
 		station.setOrbitingBody(WARPDIMID);
-		
+
 		if(FMLCommonHandler.instance().getSide().isServer()) {
 			PacketHandler.sendToAll(new PacketStationUpdate(station, PacketStationUpdate.Type.ORBIT_UPDATE));
 		}
 		AdvancedRocketry.proxy.fireFogBurst(station);
-		
-		
+
+
 		((DimensionProperties)station.getProperties()).atmosphereDensity = 0;
 		station.beginTransition(timeDelta + DimensionManager.getWorld(Configuration.spaceDimId).getTotalWorldTime());
 		nextStationTransitionTick = timeDelta + DimensionManager.getWorld(Configuration.spaceDimId).getTotalWorldTime();
@@ -336,7 +344,7 @@ public class SpaceObjectManager {
 		NBTTagList list = nbt.getTagList("spaceContents", NBT.TAG_COMPOUND);
 		nextId = nbt.getInteger("nextInt");
 		nextStationTransitionTick = nbt.getLong("nextStationTransitionTick");
-		
+
 		for(int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound tag = list.getCompoundTagAt(i);
 			try {

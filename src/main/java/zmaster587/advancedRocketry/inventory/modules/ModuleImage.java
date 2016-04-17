@@ -7,6 +7,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import zmaster587.libVulpes.util.IconResource;
 
+@SideOnly(Side.CLIENT)
 public class ModuleImage extends ModuleBase {
 
 	IconResource icon;

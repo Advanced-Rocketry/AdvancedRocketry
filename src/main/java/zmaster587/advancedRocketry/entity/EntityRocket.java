@@ -399,6 +399,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 			//Check to see if it's landed
 			if((isInOrbit || !burningFuel) && isInFlight() && lastPosY + prevMotion != this.posY) {
+				System.out.println("Landed");
 				MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketLandedEvent(this));
 				this.setInFlight(false);
 				this.isInOrbit = false;
@@ -843,9 +844,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		modules = new LinkedList<ModuleBase>();
 
 		//Backgrounds
-		modules.add(new ModuleImage(173, 0, new IconResource(128, 0, 48, 86, CommonResources.genericBackground)));
-		modules.add(new ModuleImage(173, 86, new IconResource(98, 0, 78, 83, CommonResources.genericBackground)));
-		modules.add(new ModuleImage(173, 168, new IconResource(98, 168, 78, 3, CommonResources.genericBackground)));
+		if(worldObj.isRemote) {
+			modules.add(new ModuleImage(173, 0, new IconResource(128, 0, 48, 86, CommonResources.genericBackground)));
+			modules.add(new ModuleImage(173, 86, new IconResource(98, 0, 78, 83, CommonResources.genericBackground)));
+			modules.add(new ModuleImage(173, 168, new IconResource(98, 168, 78, 3, CommonResources.genericBackground)));
+		}
 
 		//Fuel
 		modules.add(new ModuleProgress(192, 7, 0, new ProgressBarImage(2, 173, 12, 71, 17, 6, 3, 69, 1, 1, ForgeDirection.UP, TextureResources.rocketHud), this));
