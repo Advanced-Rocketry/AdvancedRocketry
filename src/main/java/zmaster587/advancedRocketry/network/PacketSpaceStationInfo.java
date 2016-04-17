@@ -64,7 +64,7 @@ public class PacketSpaceStationInfo extends BasePacket {
 		NBTTagCompound nbt;
 		stationNumber = in.readInt();
 
-		//Is dimention being deleted
+		//Is dimension being deleted
 		if(in.readBoolean()) {
 			if(DimensionManager.getInstance().isDimensionCreated(stationNumber)) {
 				DimensionManager.getInstance().deleteDimension(stationNumber);

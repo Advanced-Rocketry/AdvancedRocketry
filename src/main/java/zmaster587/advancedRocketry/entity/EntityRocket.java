@@ -796,7 +796,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketDeOrbitingEvent(this));
 		}
 		else if(id == PacketType.LAUNCH.ordinal()) {
-			this.launch();
+			if(player.equals(this.riddenByEntity))
+				this.launch();
 		}
 		else if(id == PacketType.CHANGEWORLD.ordinal()) {
 			AdvancedRocketry.proxy.changeClientPlayerWorld(storage.world);
