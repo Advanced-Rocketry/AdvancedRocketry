@@ -21,9 +21,10 @@ public class PlanetEventHandlerClient {
 		if(event.player.ridingEntity != null && event.player.ridingEntity instanceof EntityRocket) {
 			EntityRocket rocket = (EntityRocket)event.player.ridingEntity;
 			if(!rocket.isInFlight() && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-				if(Minecraft.getMinecraft().inGameHasFocus) {
+				if(Minecraft.getMinecraft().inGameHasFocus && event.player.equals(Minecraft.getMinecraft().thePlayer)) {
 					PacketHandler.sendToServer(new PacketEntity(rocket, (byte)EntityRocket.PacketType.LAUNCH.ordinal()));
 					rocket.launch();
+					
 				}
 			}
 			

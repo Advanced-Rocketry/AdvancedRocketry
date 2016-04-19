@@ -823,7 +823,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		{
 			//Bind player to the seat
 			if(this.storage != null) {
-				this.riddenByEntity.setPosition(this.posX  + stats.getSeatX(), this.posY + stats.getSeatY() + 1.5 , this.posZ + stats.getSeatZ() );
+				this.riddenByEntity.setPosition(this.posX  + stats.getSeatX(), this.posY + stats.getSeatY() + (worldObj.isRemote ? 1.5f : 0), this.posZ + stats.getSeatZ() );
 			}
 			else
 				this.riddenByEntity.setPosition(this.posX , this.posY , this.posZ );

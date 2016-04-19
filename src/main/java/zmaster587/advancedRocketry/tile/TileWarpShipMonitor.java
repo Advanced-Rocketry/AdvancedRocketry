@@ -63,29 +63,44 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 
 	protected int getTravelCost() {
-		return 500;
+		DimensionProperties properties = getSpaceObject().getProperties();
+
+		DimensionProperties destProperties = DimensionManager.getInstance().getDimensionProperties(getSpaceObject().getDestOrbitingBody());
+		while(destProperties.isMoon())
+			destProperties = destProperties.getParentProperties();
+
+		//TODO: actual trig
+		if(properties.getStar().getId() == destProperties.getStar().getId()){
+			return Math.abs(properties.orbitalDist - destProperties.orbitalDist);
+		}
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
 	public List<ModuleBase> getModules(int ID) {
-		//TODO: sync with client
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
+
 		if(ID == guiId.MODULARNOINV.ordinal()) {
+
 			ISpaceObject station = getSpaceObject();
+			boolean isOnStation = station != null;
 			ResourceLocation location;
 			boolean hasAtmo = true;
 			String planetName;
 
-			if(station != null) {
+			if(isOnStation) {
 				DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(station.getOrbitingPlanetId());
 				location = properties.getPlanetIcon();
 				hasAtmo = properties.hasAtmosphere();
 				planetName = properties.getName();
 			}
 			else {
-				location = DimensionManager.getInstance().getDimensionProperties(0).getPlanetIcon();
-				planetName = DimensionManager.getInstance().getDimensionProperties(0).getName();
+				location = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId).getPlanetIcon();
+				planetName = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId).getName();
+
+				if(planetName.isEmpty())
+					planetName = "???";
 			}
 
 
@@ -117,11 +132,12 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 			//Status text
 			modules.add(new ModuleText(baseX, baseY + sizeY + 20, "Core Status:", 0x1b1b1b));
-			boolean flag =  getSpaceObject().getFuelAmount() >= getTravelCost() && getSpaceObject().hasUsableWarpCore();
-			canWarp = new ModuleText(baseX, baseY + sizeY + 30, flag ? "Ready!" : "Not ready", flag ? 0x1baa1b : 0xFF1b1b);
+			boolean flag = isOnStation && getSpaceObject().getFuelAmount() >= getTravelCost() && getSpaceObject().hasUsableWarpCore();
+			canWarp = new ModuleText(baseX, baseY + sizeY + 30, (isOnStation && getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()) ? "Nowhere to go" : flag ? "Ready!" : "Not ready", flag ? 0x1baa1b : 0xFF1b1b);
 			modules.add(canWarp);
 			modules.add(new ModuleProgress(baseX, baseY + sizeY + 40, 10, new IndicatorBarImage(70, 58, 53, 8, 122, 58, 5, 8, ForgeDirection.EAST, TextureResources.progressBars), this));
-
+			modules.add(new ModuleText(baseX + 82, baseY + sizeY + 20, "Fuel Cost:", 0x1b1b1b));
+			modules.add(new ModuleText(baseX + 82, baseY + sizeY + 30, flag ? String.valueOf(getTravelCost()) : "N/A", 0x1b1b1b));
 
 
 			//DEST planet
@@ -130,13 +146,17 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			sizeX = 70;
 			sizeY = 70;
 			ModuleButton warp = new ModuleButton(baseX - 3, baseY + sizeY,1, "Warp!", this ,TextureResources.buttonBuild, sizeX + 6, 16);
-			//warp.setEnabled(dimCache != null);
+
 			modules.add(warp);
 
 			if(worldObj.isRemote)
 				modules.add(new ModuleScaledImage(baseX,baseY,sizeX,sizeY, TextureResources.starryBG));
 
+			if(dimCache == null && isOnStation && station.getOrbitingPlanetId() != -1 )
+				dimCache = DimensionManager.getInstance().getDimensionProperties(station.getOrbitingPlanetId());
+
 			if(dimCache != null) {
+
 
 				hasAtmo = dimCache.hasAtmosphere();
 				planetName = dimCache.getName();
@@ -182,7 +202,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 	@Override
 	public String getModularInventoryName() {
-		return "shipMonitor";
+		return "tile.stationmonitor.name";
 	}
 
 	@Override
@@ -192,10 +212,12 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 	@Override
 	public void onInventoryButtonPressed(int buttonId) {
-		if(buttonId == 0)
-			PacketHandler.sendToServer(new PacketMachine(this, (byte)0));
-		else if(buttonId == 1) {
-			PacketHandler.sendToServer(new PacketMachine(this, (byte)2));
+		if(getSpaceObject() != null) {
+			if(buttonId == 0)
+				PacketHandler.sendToServer(new PacketMachine(this, (byte)0));
+			else if(buttonId == 1) {
+				PacketHandler.sendToServer(new PacketMachine(this, (byte)2));
+			}
 		}
 	}
 
@@ -280,6 +302,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 		PacketHandler.sendToServer(new PacketMachine(this, (byte)1));
 	}
 
+	
 	@Override
 	public float getNormallizedProgress(int id) {
 		return getProgress(id)/(float)getTotalProgress(id);

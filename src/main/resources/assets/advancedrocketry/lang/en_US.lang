@@ -59,6 +59,8 @@ tile.hydrogenFluidBlock.name=Hydrogen
 tile.oxygenFluidBlock.name=Oxygen
 tile.oxygenCharger.name=Oxygen Charge Pad
 tile.dockingPad.name=Docking Pad
+tile.stationmonitor.name=Warp Controller
+tile.warpCore.name=Warp Core
 
 tile.Dilithium.name=Dilithium Ore
 tile.Copper.name=Copper Ore
