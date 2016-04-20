@@ -27,4 +27,9 @@ public interface IAtmosphere {
 	 * @param player entity being ticked
 	 */
 	public void onTick(EntityLivingBase player);
+	
+	/**
+	 * @return unlocalized name of the gas
+	 */
+	public String getUnlocalizedName();
 }

@@ -18,7 +18,7 @@ import zmaster587.advancedRocketry.network.PacketOxygenState;
 public class AtmosphereVacuum extends AtmosphereType {
 
 	public AtmosphereVacuum() {
-		super(true, false);
+		super(true, false, "vacuum");
 	}
 
 	@Override

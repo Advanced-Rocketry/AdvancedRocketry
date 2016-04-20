@@ -1,21 +1,33 @@
 package zmaster587.advancedRocketry.atmosphere;
 
+import cpw.mods.fml.common.registry.LanguageRegistry;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.IAtmosphere;
+import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
+import net.minecraft.client.resources.Language;
+import net.minecraft.client.resources.LanguageManager;
 import net.minecraft.entity.EntityLivingBase;
 
 public class AtmosphereType implements IAtmosphere {
 
-	public static final AtmosphereType AIR = new AtmosphereType(false, true);
+	public static final AtmosphereType AIR = new AtmosphereType(false, true, "air");
 	public static final AtmosphereType VACUUM = new AtmosphereVacuum();
 
+	static {
+		AtmosphereRegister.getInstance().registerAtmosphere(AIR, AIR.getUnlocalizedName());
+		AtmosphereRegister.getInstance().registerAtmosphere(VACUUM, VACUUM.getUnlocalizedName());
+	}
+	
 	private boolean allowsCombustion;
 	private boolean isBreathable;
 	private boolean canTick;
+	private String name;
 
-	public AtmosphereType(boolean canTick, boolean isBreathable) {
+	public AtmosphereType(boolean canTick, boolean isBreathable, String name) {
 		this.allowsCombustion = false;
 		this.isBreathable = isBreathable;
 		this.canTick = canTick;
+		this.name = name;
 	}
 
 	/**
@@ -35,7 +47,7 @@ public class AtmosphereType implements IAtmosphere {
 	public boolean isImmune(EntityLivingBase player) {
 		return isBreathable;
 	}
-
+	
 	/**
 	 * To be used to check if combustion can occur in this atmosphere, furnaces, torches, engines, etc could run this check
 	 * @return true if the atmosphere is combustable
@@ -66,5 +78,10 @@ public class AtmosphereType implements IAtmosphere {
 	 * @param player entity being ticked
 	 */
 	public void onTick(EntityLivingBase player) {
+	}
+
+	@Override
+	public String getUnlocalizedName() {
+		return name;
 	}
 }
