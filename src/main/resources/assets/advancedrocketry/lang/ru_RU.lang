@@ -58,6 +58,9 @@ tile.rocketFuelBlock.name=Ракетное топливо
 tile.hydrogenFluidBlock.name=Водород
 tile.oxygenFluidBlock.name=Кислород
 tile.oxygenCharger.name=Кислородный наполнитель
+tile.dockingPad.name=Стыковочный узел
+tile.stationmonitor.name=Варп-контроллер
+tile.warpCore.name=Варп-ядро
 
 tile.Dilithium.name=Руда дилития
 tile.Copper.name=Медная руда
