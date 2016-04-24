@@ -19,17 +19,17 @@ public class TileWarpCore extends TileMultiBlock {
 	private SpaceObject station;
 
 	public static final Object[][][] structure = { 
-		{{new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock)},
-			{new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), 'I', new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock)},
-			{new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock)}},
+		{{"blockTitanium", "blockTitanium", "blockTitanium"},
+			{"blockTitanium", 'I', new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock)},
+			{"blockTitanium", "blockTitanium", "blockTitanium"}},
 
 			{{null, new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), null},
 				{new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), new BlockMeta(Blocks.gold_block), new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock)},
 				{null, new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), null}},
 
-				{{new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), 'c', new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock)}, 
-					{new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), new BlockMeta(Blocks.gold_block), new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock)},
-					{new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock)}},
+				{{"blockTitanium", 'c', "blockTitanium"}, 
+					{"blockTitanium", new BlockMeta(Blocks.gold_block), "blockTitanium"},
+					{"blockTitanium", "blockTitanium", "blockTitanium"}},
 
 	};
 

@@ -20,6 +20,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -28,6 +29,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class TileMultiBlock extends TileEntity {
 
@@ -35,7 +37,7 @@ public class TileMultiBlock extends TileEntity {
 	because chunks on the client.  It is also used to determine if the block on the server has ever been complete */
 	protected boolean completeStructure, canRender;
 	protected byte timeAlive = 0;
-	
+
 	protected LinkedList<IInventory> itemInPorts = new LinkedList<IInventory>();
 	protected LinkedList<IInventory> itemOutPorts = new LinkedList<IInventory>();
 
@@ -96,13 +98,13 @@ public class TileMultiBlock extends TileEntity {
 	public void invalidateComponent(TileEntity tile) {
 		setComplete(false);
 	}
-	
+
 	/**Called by inventory blocks that are part of the structure
 	 ** This includes recipe management etc
 	 **/
 	public void onInventoryUpdated() {
 	}
-	
+
 	/**
 	 * @param world world
 	 * @param destroyedX x coord of destroyed block
@@ -202,7 +204,7 @@ public class TileMultiBlock extends TileEntity {
 		canRender = completeStructure = completeStructure();
 		return completeStructure;
 	}
-	
+
 	public void setComplete(boolean complete) {
 		completeStructure = complete;
 	}
@@ -253,7 +255,7 @@ public class TileMultiBlock extends TileEntity {
 		for(int y = 0; y < structure.length; y++) {
 			for(int z = 0; z < structure[0].length; z++) {
 				for(int x = 0; x< structure[0][0].length; x++) {
-					
+
 
 
 					int globalX = xCoord + (x - offset.x)*front.offsetZ - (z-offset.z)*front.offsetX;
@@ -262,7 +264,7 @@ public class TileMultiBlock extends TileEntity {
 
 					if(!worldObj.getChunkFromBlockCoords(globalX, globalZ).isChunkLoaded)
 						return false;
-					
+
 					TileEntity tile = worldObj.getTileEntity(globalX, globalY, globalZ);
 					Block block = worldObj.getBlock(globalX, globalY, globalZ);
 					int meta = worldObj.getBlockMetadata(globalX, globalY, globalZ);
@@ -404,6 +406,16 @@ public class TileMultiBlock extends TileEntity {
 		else if(input instanceof Character && (Character)input == 'l') {
 			return getLiquidOutputBlocks();
 		}
+		else if(input instanceof String) { //OreDict entry
+			List<ItemStack> stacks = OreDictionary.getOres((String)input);
+			List<BlockMeta> list = new LinkedList<BlockMeta>();
+			for(ItemStack stack : stacks) {
+				//stack.get
+				Block block = Block.getBlockFromItem(stack.getItem());
+				list.add(new BlockMeta(block, stack.getItem().getMetadata(stack.getItemDamage())));
+			}
+			return list;
+		}
 		else if(input instanceof Block) {
 			List<BlockMeta> list = new ArrayList<BlockMeta>();
 			list.add(new BlockMeta((Block) input, BlockMeta.WILDCARD));
@@ -447,7 +459,7 @@ public class TileMultiBlock extends TileEntity {
 	protected void integrateTile(TileEntity tile) {
 		if(tile instanceof IMultiblock)
 			((IMultiblock) tile).setComplete(xCoord, yCoord, zCoord);
-		
+
 		if(tile instanceof TileInputHatch)
 			itemInPorts.add((IInventory) tile);
 		else if(tile instanceof TileOutputHatch) 

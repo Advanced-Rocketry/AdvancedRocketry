@@ -77,8 +77,10 @@ tile.coil=Coil
 
 item.wafer.0.name=Silicon Wafer
 item.circuitplate.0.name=Basic Circuit Plate
+item.circuitplate.1.name=Advanced Circuit Plate
 item.circuitIC.0.name=Basic Circuit
 item.circuitIC.1.name=Tracking Circuit
+item.circuitIC.2.name=Advanced Circuit
 item.OreScanner.name=Ore Scanner
 item.qcrucible.name=Quartz Crucible
 item.dataUnit.0.name=Data Unit
