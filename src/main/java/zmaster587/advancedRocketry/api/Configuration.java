@@ -36,4 +36,5 @@ public class Configuration {
 	public static boolean scrubberRequiresCartrige;
 	public static float EUMult;
 	public static float RFMult;
+	public static boolean overrideGCAir;
 }

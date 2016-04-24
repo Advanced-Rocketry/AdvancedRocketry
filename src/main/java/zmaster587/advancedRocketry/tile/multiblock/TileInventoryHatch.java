@@ -3,15 +3,16 @@ package zmaster587.advancedRocketry.tile.multiblock;
 import java.util.LinkedList;
 import java.util.List;
 
-import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleSlotArray;
+import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
+import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.inventory.modules.ModuleSlotArray;
 import zmaster587.advancedRocketry.util.EmbeddedInventory;
 import zmaster587.libVulpes.tile.TilePointer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 
 public class TileInventoryHatch extends TilePointer implements ISidedInventory, IModularInventory {
 
@@ -61,8 +62,8 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
-		if(this.hasMaster() && this.getMasterBlock() instanceof TileMultiblockMachine)
-			((TileMultiblockMachine)this.getMasterBlock()).onInventoryUpdated();
+		if(this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
+			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
 	}
 
 	@Override
@@ -114,7 +115,7 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	}
 
 	@Override
-	public List<ModuleBase> getModules() {
+	public List<ModuleBase> getModules(int ID) {
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		modules.add(new ModuleSlotArray(8, 18, this, 0, this.getSizeInventory()));
@@ -135,6 +136,17 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	@Override
 	public boolean canInteractWithContainer(EntityPlayer entity) {
 		return true;
+	}
+
+	@Override
+	public void onChunkUnload() {
+		super.onChunkUnload();
+		if(!worldObj.isRemote) {
+			TileEntity tile = getFinalPointedTile();
+			if(tile instanceof TileMultiBlock) {
+				((TileMultiBlock) tile).invalidateComponent(this);
+			}
+		}
 	}
 
 }

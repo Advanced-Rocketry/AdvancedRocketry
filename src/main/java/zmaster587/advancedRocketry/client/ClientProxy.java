@@ -11,9 +11,9 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleContainerPan;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.client.render.RendererPhantomBlock;
 import zmaster587.advancedRocketry.client.render.RendererRocketBuilder;
 import zmaster587.advancedRocketry.client.render.RendererModelBlock;
@@ -28,11 +28,14 @@ import zmaster587.advancedRocketry.client.render.multiblocks.RendererCuttingMach
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererLathe;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererObservatory;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererPrecisionAssembler;
+import zmaster587.advancedRocketry.client.render.multiblocks.RendererWarpCore;
 import zmaster587.advancedRocketry.common.CommonProxy;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.entity.fx.RocketFx;
+import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.event.PlanetEventHandlerClient;
 import zmaster587.advancedRocketry.event.RocketEventHandler;
+import zmaster587.advancedRocketry.inventory.modules.ModuleContainerPan;
 import zmaster587.advancedRocketry.tile.TileModelRender;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.advancedRocketry.tile.TileSchematic;
@@ -46,6 +49,7 @@ import zmaster587.advancedRocketry.tile.multiblock.TileRollingMachine;
 import zmaster587.advancedRocketry.tile.multiblock.TileObservatory;
 import zmaster587.advancedRocketry.tile.multiblock.TilePlanetAnalyser;
 import zmaster587.advancedRocketry.tile.multiblock.TilePrecisionAssembler;
+import zmaster587.advancedRocketry.tile.multiblock.TileWarpCore;
 
 public class ClientProxy extends CommonProxy {
 
@@ -61,6 +65,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileLathe.class, new RendererLathe());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileRollingMachine.class, new RendererRollingMachine());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileElectrolyser.class, new RendererElectrolyser());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileWarpCore.class, new RendererWarpCore());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileChemicalReactor.class, new RendererGenericMachineModel("advancedrocketry:models/ChemicalReactor.obj", "advancedrocketry:textures/models/ChemicalReactor.png"));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSchematic.class, new RendererPhantomBlock());
 		
@@ -85,6 +90,11 @@ public class ClientProxy extends CommonProxy {
 		FMLCommonHandler.instance().bus().register(new PlanetEventHandlerClient());
 	}
 
+	@Override
+	public void fireFogBurst(ISpaceObject station) {
+		PlanetEventHandler.runBurst(Minecraft.getMinecraft().theWorld.getTotalWorldTime() + 20, 20);
+	}
+	
 	@Override
 	public void registerKeyBindings() {
 		//KeyBindings.init();

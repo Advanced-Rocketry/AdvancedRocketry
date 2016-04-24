@@ -17,7 +17,7 @@ public class BiomeGenSpace extends BiomeGenBase {
 		rootHeight=-2f;
 		heightVariation=0.00f;
 		rainfall = 0f;
-		temperature = 0.0f;
+		temperature = 1.0f;
 		this.theBiomeDecorator.generateLakes=false;
 		this.theBiomeDecorator.flowersPerChunk=0;
 		this.theBiomeDecorator.grassPerChunk=0;

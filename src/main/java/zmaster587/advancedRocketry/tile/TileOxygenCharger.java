@@ -8,18 +8,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleLiquidIndicator;
-import zmaster587.advancedRocketry.Inventory.modules.ModulePower;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
-import zmaster587.advancedRocketry.api.armor.ItemSpaceArmor;
+import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
+import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
+import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.inventory.modules.ModuleLiquidIndicator;
+import zmaster587.advancedRocketry.inventory.modules.ModulePower;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
 
 public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements IModularInventory {
 	public TileOxygenCharger() {
-		super(1000, 2, ItemSpaceArmor.getMaxAir());
+		super(1000, 2, 16000);
 	}
 
 	@Override
@@ -34,25 +35,39 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-		if(resource.getFluid() == AdvancedRocketryFluids.fluidOxygen)
+		
+		if(resource.getFluid().getID() == AdvancedRocketryFluids.fluidOxygen.getID())
 			return super.fill(from, resource, doFill);
 		return 0;
 	}
 
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid) {
-		return fluid == AdvancedRocketryFluids.fluidOxygen;
+		return fluid.getID() == FluidRegistry.getFluidID(AdvancedRocketryFluids.fluidOxygen);
 	}	
 
+	@Override
+	public int getPowerPerOperation() {
+		return 1;
+	}
+	
 	@Override
 	public boolean canPerformFunction() {
 		if(!worldObj.isRemote) {
 			for( Object player : this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 2, this.zCoord + 1))) {
-				ItemStack stack = ((EntityPlayer)player).getEquipmentInSlot(2);
+				ItemStack stack = ((EntityPlayer)player).getEquipmentInSlot(3);
 
 				if(stack != null && stack.getItem() instanceof ItemSpaceArmor) {
 					FluidStack fluidStack = this.drain(ForgeDirection.UNKNOWN, 1, false);
-					return fluidStack != null && fluidStack.getFluid() == AdvancedRocketryFluids.fluidOxygen && fluidStack.amount > 0;
+					
+					
+					
+					if(((ItemSpaceArmor)stack.getItem()).getAirRemaining(stack) < ((ItemSpaceArmor)stack.getItem()).getMaxAir() &&
+							fluidStack != null && fluidStack.getFluid().getID() == AdvancedRocketryFluids.fluidOxygen.getID() && fluidStack.amount > 0)  {
+						this.drain(ForgeDirection.UNKNOWN, 1, true);
+						return true;
+					}
+					return false;
 				}
 			}
 		}
@@ -71,7 +86,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	}
 
 	@Override
-	public List<ModuleBase> getModules() {
+	public List<ModuleBase> getModules(int ID) {
 		ArrayList<ModuleBase> modules = new ArrayList<ModuleBase>();
 
 		modules.add(new ModulePower(18, 20, this));

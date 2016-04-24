@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
@@ -24,6 +25,9 @@ public class BucketHandler {
 			event.world.setBlockToAir(event.target.blockX, event.target.blockY, event.target.blockZ);
 			
 			event.result = new ItemStack(bucket);
+			
+			bucket.hasContainerItem(event.result);
+			
 			event.setResult(Result.ALLOW);
 		}
 	}

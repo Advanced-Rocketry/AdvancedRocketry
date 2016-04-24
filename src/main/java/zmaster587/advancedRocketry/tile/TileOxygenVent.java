@@ -1,33 +1,32 @@
 package zmaster587.advancedRocketry.tile;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleLiquidIndicator;
-import zmaster587.advancedRocketry.Inventory.modules.ModulePower;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.api.atmosphere.AtmosphereHandler;
-import zmaster587.advancedRocketry.api.atmosphere.AtmosphereType;
-import zmaster587.advancedRocketry.api.dimension.DimensionManager;
-import zmaster587.advancedRocketry.api.util.AreaBlob;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
-import zmaster587.advancedRocketry.tile.multiblock.TileInventoryHatch;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
+import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.inventory.modules.ModuleLiquidIndicator;
+import zmaster587.advancedRocketry.inventory.modules.ModulePower;
+import zmaster587.advancedRocketry.util.AreaBlob;
 import zmaster587.advancedRocketry.util.IAdjBlockUpdate;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
 import zmaster587.libVulpes.util.BlockPosition;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBlobHandler, IModularInventory, IAdjBlockUpdate {
 
@@ -36,7 +35,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	boolean hasFluid;
 	int numScrubbers;
 	List<TileCO2Scrubber> scrubbers;
-
+	
 	public TileOxygenVent() {
 		super(1000,2, 1000);
 		isSealed = true;
@@ -56,7 +55,12 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public boolean canPerformFunction() {
-		return true;
+		return AtmosphereHandler.hasAtmosphereHandler(this.worldObj.provider.dimensionId);
+	}
+	
+	@Override
+	public World getWorld() {
+		return getWorldObj();
 	}
 
 	@Override
@@ -98,9 +102,9 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		Block block = this.worldObj.getBlock(x,y,z);
 		if(block == AdvancedRocketryBlocks.blockOxygenScrubber) {
 			int meta = worldObj.getBlockMetadata(x,y,z);
-			if(on && meta == 0)
+			if(on && (meta & 8) == 0)
 				worldObj.setBlockMetadataWithNotify(x, y, z, 8, 2);
-			else if(!on && meta == 8)
+			else if(!on && (meta & 8) == 8)
 				worldObj.setBlockMetadataWithNotify(x, y, z, 0, 2);
 
 			return true;
@@ -111,7 +115,10 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).unregisterBlob(this);
+
+		AtmosphereHandler handler = AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId);
+		if(handler != null)
+			AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).unregisterBlob(this);
 		deactivateAdjblocks();
 	}
 
@@ -127,11 +134,16 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public void performFunction() {
-
+		
+		/*NB: canPerformFunction returns false and must return true for perform function to execute
+		 *  if there is no O2 handler, this is why we can safely call AtmosphereHandler.getOxygenHandler
+		 * And not have to worry about an NPE being thrown
+		 */
+		
 		//IF first tick then register the blob and check for scrubbers
 		if(firstRun && !worldObj.isRemote) {
 			AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).registerBlob(this, xCoord, yCoord, zCoord);
-			
+
 			onAdjacentBlockUpdated();
 			//isSealed starts as true so we can accurately check for scrubbers, we now set it to false to force the tile to check for a seal on first run
 			isSealed = false;
@@ -156,7 +168,8 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 			if(isSealed) {
 
-				if(Configuration.scrubberRequiresCartrige){ //If scrubbers exist and the config allows then use the cartridge
+				//If scrubbers exist and the config allows then use the cartridge
+				if(Configuration.scrubberRequiresCartrige){
 					//TODO: could be optimized
 					if(worldObj.getTotalWorldTime() % 20 == 0) {
 						numScrubbers = 0;
@@ -198,7 +211,9 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	@Override
 	public void notEnoughEnergyForFunction() {
 		if(isSealed && !worldObj.isRemote) {
-			AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).clearBlob(this);
+			AtmosphereHandler handler = AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId);
+			if(handler != null)
+				handler.clearBlob(this);
 
 			deactivateAdjblocks();
 
@@ -232,7 +247,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	}
 
 	@Override
-	public List<ModuleBase> getModules() {
+	public List<ModuleBase> getModules(int ID) {
 		ArrayList<ModuleBase> modules = new ArrayList<ModuleBase>();
 
 		modules.add(new ModulePower(18, 20, this));

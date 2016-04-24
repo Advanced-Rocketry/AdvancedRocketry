@@ -6,16 +6,19 @@ import java.util.List;
 import java.util.Random;
 
 import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.api.atmosphere.AtmosphereHandler;
-import zmaster587.advancedRocketry.api.atmosphere.AtmosphereType;
-import zmaster587.advancedRocketry.api.dimension.DimensionManager;
-import zmaster587.advancedRocketry.api.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.api.network.PacketDimInfo;
-import zmaster587.advancedRocketry.api.network.PacketHandler;
-import zmaster587.advancedRocketry.api.stations.SpaceObject;
+import zmaster587.advancedRocketry.api.IAtmosphere;
+import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.network.PacketDimInfo;
+import zmaster587.advancedRocketry.network.PacketHandler;
+import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.world.biome.BiomeGenAlienForest;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
+import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -65,9 +68,13 @@ public class WorldCommand implements ICommand {
 			if(string[0].equalsIgnoreCase("debug")) {
 				EntityPlayer player = sender.getEntityWorld().getPlayerEntityByName(sender.getCommandSenderName());
 
-				AtmosphereType atmosphere = AtmosphereHandler.getOxygenHandler(player.worldObj.provider.dimensionId).getAtmosphereType(player);
+				IAtmosphere atmosphere = AtmosphereHandler.getOxygenHandler(player.worldObj.provider.dimensionId).getAtmosphereType(player);
 
-				sender.addChatMessage(new ChatComponentText(atmosphere == AtmosphereType.VACUUM ? "vacumm" : "AIR"));
+				if(atmosphere != null) {
+					sender.addChatMessage(new ChatComponentText(atmosphere == AtmosphereType.VACUUM ? "vacumm" : "AIR"));
+				}
+				else
+					sender.addChatMessage(new ChatComponentText("AIR (no atmosphere object)"));
 
 				return;
 			}
@@ -88,12 +95,12 @@ public class WorldCommand implements ICommand {
 						else if(string[1].equalsIgnoreCase("station")) {
 							dim = Configuration.spaceDimId;
 							int stationId = Integer.parseInt(string[2]);
-							SpaceObject object = DimensionManager.getSpaceManager().getSpaceStation(stationId);
-							
+							ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(stationId);
+
 							if(object != null) {
 								if(player.worldObj.provider.dimensionId != Configuration.spaceDimId)
 									MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal(MinecraftServer.getServer().worldServerForDimension(dim)));
-								Vector3F<Integer> vec = object.getSpawnLocation();
+								BlockPosition vec = object.getSpawnLocation();
 								player.setPositionAndUpdate(vec.x, vec.y, vec.z);
 							}
 							else {

@@ -20,9 +20,9 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import org.lwjgl.opengl.GL11;
 
-import zmaster587.advancedRocketry.Inventory.GuiModular;
-import zmaster587.advancedRocketry.Inventory.TextureResources;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
+import zmaster587.advancedRocketry.inventory.GuiModular;
+import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
 import zmaster587.advancedRocketry.recipe.RecipesMachine.Recipe;
 import zmaster587.libVulpes.interfaces.IRecipe;
@@ -51,7 +51,6 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 			
 			ingredients = new ArrayList<PositionedStack>();
 			for(int i = 0; i < rec.getIngredients().size(); i++ ) {
-
 				ingredients.add(new PositionedStack(rec.getIngredients().get(i), 4 + 18*(i%3), 4 + 18*(i/3)));
 			}
 			energy = rec.getPower();

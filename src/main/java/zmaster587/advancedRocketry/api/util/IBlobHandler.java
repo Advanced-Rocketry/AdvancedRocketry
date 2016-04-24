@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.api.util;
 
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.util.AreaBlob;
 import zmaster587.libVulpes.util.BlockPosition;
 
 public interface IBlobHandler {
@@ -9,6 +10,7 @@ public interface IBlobHandler {
 	 * @param pos BlockPosition to remove
 	 * /
 	public void onBlobRemove(BlockPosition pos);
+	
 	
 	/**
 	 * Called when a block is being added to the blob
@@ -21,7 +23,12 @@ public interface IBlobHandler {
 	 */
 	public boolean canFormBlob();
 	
-	public World getWorldObj();
+	
+	/**
+	 * Due to Minecraft's obf code we need a different method name than getWorldObj()
+	 * @return
+	 */
+	public World getWorld();
 	
 	/**
 	 * Called when two blobs of the same type overlap

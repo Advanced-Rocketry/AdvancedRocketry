@@ -4,24 +4,24 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
-import zmaster587.advancedRocketry.Inventory.TextureResources;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleButton;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleImage;
-import zmaster587.advancedRocketry.Inventory.modules.ModulePower;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleSlotArray;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleSync;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleText;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleTexturedSlotArray;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.api.dimension.DimensionManager;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
-import zmaster587.advancedRocketry.api.stations.SpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.inventory.modules.ModuleButton;
+import zmaster587.advancedRocketry.inventory.modules.ModuleImage;
+import zmaster587.advancedRocketry.inventory.modules.ModulePower;
+import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
+import zmaster587.advancedRocketry.inventory.modules.ModuleSlotArray;
+import zmaster587.advancedRocketry.inventory.modules.ModuleSync;
+import zmaster587.advancedRocketry.inventory.modules.ModuleText;
+import zmaster587.advancedRocketry.inventory.modules.ModuleTexturedSlotArray;
 import zmaster587.advancedRocketry.item.ItemPackedStructure;
+import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.util.EmbeddedInventory;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.util.IconResource;
@@ -105,7 +105,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 			SpaceObject object = new SpaceObject();
 
-			DimensionManager.getSpaceManager().registerSpaceObject(object, -1);
+			SpaceObjectManager.getSpaceManager().registerSpaceObject(object, -1);
 
 			ItemStack outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStation,1, object.getId());
 			((ItemPackedStructure)outputStack.getItem()).setStructure(outputStack, storageChunk);
@@ -129,7 +129,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 	}
 
 	@Override
-	public List<ModuleBase> getModules() {
+	public List<ModuleBase> getModules(int ID) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		modules.add(new ModulePower(160, 30, this));

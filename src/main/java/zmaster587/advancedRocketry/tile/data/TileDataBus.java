@@ -9,14 +9,14 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleData;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
-import zmaster587.advancedRocketry.api.network.PacketHandler;
-import zmaster587.advancedRocketry.api.network.PacketMachine;
+import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
+import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.inventory.modules.ModuleData;
 import zmaster587.advancedRocketry.item.ItemData;
+import zmaster587.advancedRocketry.network.PacketHandler;
+import zmaster587.advancedRocketry.network.PacketMachine;
 import zmaster587.advancedRocketry.tile.multiblock.TileInventoryHatch;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.util.INetworkMachine;
@@ -112,7 +112,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 
 	@Override
-	public List<ModuleBase> getModules() {
+	public List<ModuleBase> getModules(int ID) {
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModuleData(40, 20, 0, this, data));
 		return modules;

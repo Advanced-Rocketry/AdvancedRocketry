@@ -12,23 +12,8 @@ import java.util.List;
 import io.netty.buffer.ByteBuf;
 import cpw.mods.fml.relauncher.Side;
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.Inventory.TextureResources;
-import zmaster587.advancedRocketry.Inventory.modules.IButtonInventory;
-import zmaster587.advancedRocketry.Inventory.modules.IDataSync;
-import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.Inventory.modules.IProgressBar;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleButton;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleImage;
-import zmaster587.advancedRocketry.Inventory.modules.ModulePower;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleSync;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleText;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
-import zmaster587.advancedRocketry.api.network.PacketEntity;
-import zmaster587.advancedRocketry.api.network.PacketHandler;
-import zmaster587.advancedRocketry.api.network.PacketMachine;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IFuelTank;
 import zmaster587.advancedRocketry.api.IRocketEngine;
@@ -36,6 +21,21 @@ import zmaster587.advancedRocketry.api.StatsRocket;
 import zmaster587.advancedRocketry.block.BlockSeat;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.entity.EntityRocket;
+import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.inventory.modules.IButtonInventory;
+import zmaster587.advancedRocketry.inventory.modules.IDataSync;
+import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
+import zmaster587.advancedRocketry.inventory.modules.IProgressBar;
+import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.inventory.modules.ModuleButton;
+import zmaster587.advancedRocketry.inventory.modules.ModuleImage;
+import zmaster587.advancedRocketry.inventory.modules.ModulePower;
+import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
+import zmaster587.advancedRocketry.inventory.modules.ModuleSync;
+import zmaster587.advancedRocketry.inventory.modules.ModuleText;
+import zmaster587.advancedRocketry.network.PacketEntity;
+import zmaster587.advancedRocketry.network.PacketHandler;
+import zmaster587.advancedRocketry.network.PacketMachine;
 import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.block.RotatableBlock;
@@ -67,11 +67,11 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	private final int MAXSCANDELAY = 10;
 	private final int ENERGYFOROP = 100;
 	//private final int ENERGY = 100;
-	
+
 	protected static final ResourceLocation backdrop =  new ResourceLocation("advancedrocketry","textures/gui/rocketBuilder.png");
 	private static final ProgressBarImage horizontalProgressBar = new ProgressBarImage(89, 9, 81, 17, 176, 0, 80, 15, 0, 2, ForgeDirection.EAST, backdrop);
 	protected static final ProgressBarImage verticalProgressBar = new ProgressBarImage(76, 93, 8, 52, 176, 15, 2, 38, 3, 2, ForgeDirection.UP, backdrop);
-	
+
 	private ModuleText thrustText, weightText, fuelText, accelerationText;
 	protected ModuleText errorText;
 
@@ -271,7 +271,11 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 							}
 
 							if(block instanceof BlockSeat) {
-								stats.setSeatLocation((int)(xCurr - actualMinX - ((actualMaxX - actualMinX)/2f)) , (int)(yCurr  -actualMinY), (int)(zCurr - actualMinZ - ((actualMaxZ - actualMinZ)/2f)));
+
+								if(stats.hasSeat()) 
+									stats.addPassengerSeat((int)(xCurr - actualMinX - ((actualMaxX - actualMinX)/2f)) , (int)(yCurr  -actualMinY), (int)(zCurr - actualMinZ - ((actualMaxZ - actualMinZ)/2f)));
+								else
+									stats.setSeatLocation((int)(xCurr - actualMinX - ((actualMaxX - actualMinX)/2f)) , (int)(yCurr  -actualMinY), (int)(zCurr - actualMinZ - ((actualMaxZ - actualMinZ)/2f)));
 							}
 
 							TileEntity tile= world.getTileEntity(xCurr, yCurr, zCurr);
@@ -548,7 +552,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	public boolean canScan() {
 		return bbCache != null;
 	}
-	
+
 	@Override
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
@@ -595,12 +599,13 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	}
 
 	@Override
-	public List<ModuleBase> getModules() {
+	public List<ModuleBase> getModules(int ID) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		modules.add(new ModulePower(160, 90, this));
 
-		modules.add(new ModuleImage(4, 9, new IconResource(4, 9, 168, 74, backdrop)));
+		if(worldObj.isRemote)
+			modules.add(new ModuleImage(4, 9, new IconResource(4, 9, 168, 74, backdrop)));
 
 		modules.add(new ModuleProgress(89, 47, 0, horizontalProgressBar, this));
 		modules.add(new ModuleProgress(89, 66, 1, horizontalProgressBar, this));

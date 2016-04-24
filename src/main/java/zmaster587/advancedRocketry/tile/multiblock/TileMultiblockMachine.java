@@ -2,16 +2,10 @@ package zmaster587.advancedRocketry.tile.multiblock;
 
 import io.netty.buffer.ByteBuf;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-
 import cpw.mods.fml.relauncher.Side;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
-import zmaster587.advancedRocketry.recipe.RecipesMachine.Recipe;
-import zmaster587.advancedRocketry.tile.TileInputHatch;
-import zmaster587.advancedRocketry.tile.TileOutputHatch;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.util.ZUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +16,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -34,12 +27,6 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		TOGGLE,
 		POWERERROR
 	}
-
-	protected LinkedList<IInventory> itemInPorts = new LinkedList<IInventory>();
-	protected LinkedList<IInventory> itemOutPorts = new LinkedList<IInventory>();
-
-	protected LinkedList<IFluidHandler> fluidInPorts = new LinkedList<IFluidHandler>();
-	protected LinkedList<IFluidHandler> fluidOutPorts = new LinkedList<IFluidHandler>();
 
 	private List<ItemStack> outputItemStacks;
 	private List<FluidStack> outputFluidStacks;
@@ -71,7 +58,6 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		NBTTagCompound nbt = pkt.func_148857_g();
-
 		canRender = nbt.getBoolean("built");
 		hadPowerLastTick = nbt.getBoolean("hadPowerLastTick");
 		readFromNBT(nbt);
@@ -81,7 +67,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	public boolean canUpdate() {
 		return true;
 	}
-
+	
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
@@ -89,10 +75,10 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0  && !worldObj.isRemote) {
 
-			if(completeStructure)
-				completeStructure = completeStructure();
+			if(isComplete())
+				setComplete(completeStructure());
 
-			if(completeStructure && !worldObj.isRemote)
+			if(isComplete() && !worldObj.isRemote)
 				onInventoryUpdated();
 			timeAlive = 0x1;
 		}
@@ -134,11 +120,9 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		onInventoryUpdated();
 	}
 
+	@Override
 	public void resetCache() {
-		itemInPorts.clear();
-		itemOutPorts.clear();
-		fluidInPorts.clear();
-		fluidOutPorts.clear();
+		super.resetCache();
 		batteries.clear();
 	}
 
@@ -184,8 +168,8 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 					totalItems++;
 				}
 				else if(stack.isItemEqual(outputItemStacks.get(i)) && stack.stackSize + outputItemStacks.get(i).stackSize <= outInventory.getInventoryStackLimit()) {
-					outInventory.markDirty();
 					outInventory.getStackInSlot(smartInventoryUpgrade ? outInventory.getSizeInventory() - i - 1 : i).stackSize += outputItemStacks.get(i).stackSize;
+					outInventory.markDirty();
 					totalItems++;
 				}
 			}
@@ -277,7 +261,8 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 	//Can this recipe be processed
 	public boolean canProcessRecipe(IRecipe recipe) {
-		if( !completeStructure)
+		
+		if( !isComplete() || invCheckFlag)
 			return false;
 
 		invCheckFlag = true;
@@ -311,10 +296,14 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 						//break recipeCheck;
 					}
 
-				if(mask != (1 << ( ( ingredients.size() ) )) - 1)
-					return false;
-			}
 
+			}
+		if(mask != (1 << ( ( ingredients.size() ) )) - 1) {
+			invCheckFlag = false;
+			return false;
+		}
+			
+		
 		//Check output Items
 		bottomItemCheck:
 			for(IInventory outInventory : itemOutPorts) {
@@ -427,9 +416,11 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 	//Called by inventory blocks that are part of the structure
 	//This includes recipe management etc
+	@Override
 	public void onInventoryUpdated() {
 		//If we are already processing something don't bother
-		if(outputItemStacks == null && outputFluidStacks == null) {
+		
+		if(!invCheckFlag && outputItemStacks == null && outputFluidStacks == null) {
 			IRecipe recipe;
 
 			if(enabled && (recipe = getRecipe(getMachineRecipeList())) != null && canProcessRecipe(recipe)) {
@@ -457,23 +448,6 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 	protected float getPowerMultiplierForRecipe(IRecipe recipe) {
 		return 1f;
-	}
-
-	@Override
-	protected void integrateTile(TileEntity tile) {
-		super.integrateTile(tile);
-
-		if(tile instanceof TileInputHatch)
-			itemInPorts.add((IInventory) tile);
-		else if(tile instanceof TileOutputHatch) 
-			itemOutPorts.add((IInventory) tile);
-		else if(tile instanceof TileFluidHatch) {
-			TileFluidHatch liquidHatch = (TileFluidHatch)tile;
-			if(liquidHatch.isOutputOnly())
-				fluidOutPorts.add((IFluidHandler)liquidHatch);
-			else
-				fluidInPorts.add((IFluidHandler)liquidHatch);
-		}
 	}
 
 	@Override

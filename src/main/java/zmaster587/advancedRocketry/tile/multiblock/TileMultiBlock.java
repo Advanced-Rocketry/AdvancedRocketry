@@ -9,6 +9,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.block.multiblock.BlockMultiBlockComponentVisible;
 import zmaster587.advancedRocketry.block.multiblock.BlockMultiblockStructure;
+import zmaster587.advancedRocketry.tile.TileInputHatch;
+import zmaster587.advancedRocketry.tile.TileOutputHatch;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.tile.IMultiblock;
@@ -17,6 +19,7 @@ import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -24,6 +27,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.IFluidHandler;
 
 public class TileMultiBlock extends TileEntity {
 
@@ -31,6 +35,12 @@ public class TileMultiBlock extends TileEntity {
 	because chunks on the client.  It is also used to determine if the block on the server has ever been complete */
 	protected boolean completeStructure, canRender;
 	protected byte timeAlive = 0;
+	
+	protected LinkedList<IInventory> itemInPorts = new LinkedList<IInventory>();
+	protected LinkedList<IInventory> itemOutPorts = new LinkedList<IInventory>();
+
+	protected LinkedList<IFluidHandler> fluidInPorts = new LinkedList<IFluidHandler>();
+	protected LinkedList<IFluidHandler> fluidOutPorts = new LinkedList<IFluidHandler>();
 
 	public TileMultiBlock() {
 		completeStructure = false;
@@ -83,6 +93,16 @@ public class TileMultiBlock extends TileEntity {
 		readNetworkData(nbt);
 	}
 
+	public void invalidateComponent(TileEntity tile) {
+		setComplete(false);
+	}
+	
+	/**Called by inventory blocks that are part of the structure
+	 ** This includes recipe management etc
+	 **/
+	public void onInventoryUpdated() {
+	}
+	
 	/**
 	 * @param world world
 	 * @param destroyedX x coord of destroyed block
@@ -113,7 +133,7 @@ public class TileMultiBlock extends TileEntity {
 					int globalY = yCoord - y + offset.y;
 					int globalZ = zCoord - (x - offset.x)*front.offsetX  - (z-offset.z)*front.offsetZ;
 
-					
+
 					//This block is being broken anyway so don't bother
 					if(blockBroken && globalX == destroyedX &&
 							globalY == destroyedY &&
@@ -179,16 +199,27 @@ public class TileMultiBlock extends TileEntity {
 
 	public boolean attemptCompleteStructure() {
 		//if(!completeStructure)
-			canRender = completeStructure = completeStructure();
+		canRender = completeStructure = completeStructure();
 		return completeStructure;
+	}
+	
+	public void setComplete(boolean complete) {
+		completeStructure = complete;
 	}
 
 	public List<BlockMeta> getAllowableWildCardBlocks() {
 		List<BlockMeta> list =new ArrayList<BlockMeta>();
 		return list;
 	}
-	
+
+	/**
+	 * Called when cached Tiles need to be cleared (batteries/IO/etc)
+	 */
 	public void resetCache() {
+		itemInPorts.clear();
+		itemOutPorts.clear();
+		fluidInPorts.clear();
+		fluidOutPorts.clear();
 	}
 
 
@@ -222,18 +253,23 @@ public class TileMultiBlock extends TileEntity {
 		for(int y = 0; y < structure.length; y++) {
 			for(int z = 0; z < structure[0].length; z++) {
 				for(int x = 0; x< structure[0][0].length; x++) {
+					
+
 
 					int globalX = xCoord + (x - offset.x)*front.offsetZ - (z-offset.z)*front.offsetX;
 					int globalY = yCoord - y + offset.y;
 					int globalZ = zCoord - (x - offset.x)*front.offsetX  - (z-offset.z)*front.offsetZ;
 
+					if(!worldObj.getChunkFromBlockCoords(globalX, globalZ).isChunkLoaded)
+						return false;
+					
 					TileEntity tile = worldObj.getTileEntity(globalX, globalY, globalZ);
 					Block block = worldObj.getBlock(globalX, globalY, globalZ);
 					int meta = worldObj.getBlockMetadata(globalX, globalY, globalZ);
 
 					if(block == AdvancedRocketryBlocks.blockPhantom)
 						return false;
-					
+
 					if(tile != null)
 						tiles.add(tile);
 
@@ -267,7 +303,7 @@ public class TileMultiBlock extends TileEntity {
 
 					if(block instanceof BlockMultiBlockComponentVisible) {
 						((BlockMultiBlockComponentVisible)block).hideBlock(worldObj, globalX, globalY, globalZ, worldObj.getBlockMetadata(globalX, globalY, globalZ));
-						
+
 						tile = worldObj.getTileEntity(globalX, globalY, globalZ);
 
 						if(tile instanceof IMultiblock)
@@ -294,7 +330,7 @@ public class TileMultiBlock extends TileEntity {
 
 		return true;
 	}
-	
+
 	/**
 	 * @return a list containing allowable block and metadatas for machine item outputs
 	 */
@@ -312,7 +348,7 @@ public class TileMultiBlock extends TileEntity {
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 0));
 		return list;
 	}
-	
+
 	/**
 	 * @return a list containing allowable block and metadatas for machine data ports
 	 */
@@ -321,30 +357,31 @@ public class TileMultiBlock extends TileEntity {
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 2));
 		return list;
 	}
-	
+
 	/**
 	 * @return a list containing allowable block and metadatas for machine power inputs
 	 */
 	public List<BlockMeta> getPowerInputBlocks() {
 		List<BlockMeta> list = new LinkedList<BlockMeta>();
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockRFBattery, BlockMeta.WILDCARD));
-		list.add(new BlockMeta(AdvancedRocketryBlocks.blockIC2Plug, BlockMeta.WILDCARD));
+		if(AdvancedRocketryBlocks.blockIC2Plug != null)
+			list.add(new BlockMeta(AdvancedRocketryBlocks.blockIC2Plug, BlockMeta.WILDCARD));
 		return list;
 	}
-	
+
 	public List<BlockMeta> getLiquidInputBlocks() {
 		List<BlockMeta> list = new LinkedList<BlockMeta>();
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 4));
 		return list;
 	}
-	
+
 	public List<BlockMeta> getLiquidOutputBlocks() {
 		List<BlockMeta> list = new LinkedList<BlockMeta>();
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 5));
 		return list;
 	}
-	
-	
+
+
 	public List<BlockMeta> getAllowableBlocks(Object input) {
 		if(input instanceof Character && (Character)input == '*') {
 			return getAllowableWildCardBlocks();
@@ -380,7 +417,7 @@ public class TileMultiBlock extends TileEntity {
 		List<BlockMeta> list = new ArrayList<BlockMeta>();
 		return list;
 	}
-	
+
 	public boolean shouldHideBlock(World world, int x, int y, int z, Block tile) {
 		return false;
 	}
@@ -410,6 +447,18 @@ public class TileMultiBlock extends TileEntity {
 	protected void integrateTile(TileEntity tile) {
 		if(tile instanceof IMultiblock)
 			((IMultiblock) tile).setComplete(xCoord, yCoord, zCoord);
+		
+		if(tile instanceof TileInputHatch)
+			itemInPorts.add((IInventory) tile);
+		else if(tile instanceof TileOutputHatch) 
+			itemOutPorts.add((IInventory) tile);
+		else if(tile instanceof TileFluidHatch) {
+			TileFluidHatch liquidHatch = (TileFluidHatch)tile;
+			if(liquidHatch.isOutputOnly())
+				fluidOutPorts.add((IFluidHandler)liquidHatch);
+			else
+				fluidInPorts.add((IFluidHandler)liquidHatch);
+		}
 	}
 
 	protected Vector3F<Integer> getControllerOffset(Object[][][] structure) {
@@ -425,18 +474,19 @@ public class TileMultiBlock extends TileEntity {
 	}
 
 	protected void writeNetworkData(NBTTagCompound nbt) {
-		
+
 	}
-	
+
 	protected void readNetworkData(NBTTagCompound nbt) {
-		
+
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		writeNetworkData(nbt);
 		nbt.setBoolean("completeStructure", completeStructure);
+		nbt.setBoolean("canRender", canRender);
 	}
 
 	@Override
@@ -444,5 +494,6 @@ public class TileMultiBlock extends TileEntity {
 		super.readFromNBT(nbt);
 		readNetworkData(nbt);
 		completeStructure = nbt.getBoolean("completeStructure");
+		canRender = nbt.getBoolean("canRender");
 	}
 }

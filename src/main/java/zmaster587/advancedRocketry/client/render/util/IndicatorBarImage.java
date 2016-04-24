@@ -34,7 +34,7 @@ public class IndicatorBarImage extends ProgressBarImage {
 		if(direction == ForgeDirection.WEST)
 			xProgress = (int) (backWidth - insetX - ( ( backWidth - ( insetX*2 ) )*percent)) - foreHeight/2;
 		else if(direction == ForgeDirection.EAST)
-			xProgress = (int) (insetX + ( ( backWidth - ( insetX*2 ) )*percent));
+			xProgress = (int) (insetX - foreWidth + ( ( backWidth - ( insetX*2 ) )*percent));
 		else
 			xProgress = insetX;
 		

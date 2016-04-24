@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.block.multiblock;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.Inventory.GuiHandler.guiId;
+import zmaster587.advancedRocketry.inventory.GuiHandler.guiId;
 import zmaster587.advancedRocketry.tile.TileRFPlug;
 import zmaster587.advancedRocketry.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.IMultiblock;

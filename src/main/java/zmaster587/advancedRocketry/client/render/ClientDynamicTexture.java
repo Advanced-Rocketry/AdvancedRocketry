@@ -7,6 +7,8 @@ import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
+import zmaster587.advancedRocketry.AdvancedRocketry;
+
 public class ClientDynamicTexture {
 
 	private BufferedImage image;
@@ -85,7 +87,11 @@ public class ClientDynamicTexture {
 		//GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
 		
 		//GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
-		GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, 0, 0, image.getWidth(), image.getHeight(), GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+		try {
+			GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, 0, 0, image.getWidth(), image.getHeight(), GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+		} catch(IllegalArgumentException e) {
+			AdvancedRocketry.logger.warning("Planet image generation FX failed!");
+		}
 	}
 	
 	private void init() {

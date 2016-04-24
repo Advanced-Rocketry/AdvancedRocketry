@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.world.util;
 
 import zmaster587.advancedRocketry.util.StorageChunk;
 import net.minecraft.block.Block;
+import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
@@ -56,16 +57,17 @@ public class WorldDummy extends World {
 
 	}
 
+
 	@Override
 	protected boolean chunkExists(int x, int z) {
 		return false;
 	}
 
 	@Override
-    public boolean blockExists(int p_72899_1_, int p_72899_2_, int p_72899_3_) {
-    	return false;
-    }
-	
+	public boolean blockExists(int p_72899_1_, int p_72899_2_, int p_72899_3_) {
+		return false;
+	}
+
 	@Override
 	public int getBlockLightValue_do(int p_72849_1_, int p_72849_2_,
 			int p_72849_3_, boolean p_72849_4_) {
@@ -82,6 +84,7 @@ public class WorldDummy extends World {
 	@Override
 	protected void finishSetup() {
 		//Dont care about villages or providers or registration here
+		this.chunkProvider = this.createChunkProvider();
 	}
 
 	@Override
@@ -100,7 +103,7 @@ public class WorldDummy extends World {
 		return false;
 		//Dummy out
 	}
-	
+
 	@Override
 	public boolean setBlockMetadataWithNotify(int p_72921_1_, int p_72921_2_, int p_72921_3_, int p_72921_4_, int p_72921_5_) {
 		return false;
@@ -125,8 +128,10 @@ public class WorldDummy extends World {
 
 	@Override
 	protected IChunkProvider createChunkProvider() {
-		// TODO Auto-generated method stub
-		return null;
+		if(this.isRemote)
+			return new ChunkProviderClient(this);
+		else 
+			return null;
 	}
 
 	@Override

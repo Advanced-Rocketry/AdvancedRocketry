@@ -1,5 +1,8 @@
 package zmaster587.advancedRocketry.block;
 
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.IIcon;
 import zmaster587.advancedRocketry.api.IFuelTank;
 import zmaster587.advancedRocketry.tile.TileModelRender;
 import cpw.mods.fml.relauncher.Side;
@@ -103,5 +106,19 @@ public class BlockFuelTank extends Block implements IFuelTank{
 	@Override
 	public int getMaxFill(World world, int x, int y, int z , int meta) {
 		return 500;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void registerBlockIcons(IIconRegister reg)
+	{
+		//Not needed
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public IIcon getIcon(int side, int meta)
+	{
+		return Blocks.iron_block.getIcon(side, meta);
 	}
 }

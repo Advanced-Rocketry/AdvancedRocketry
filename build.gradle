@@ -18,14 +18,21 @@ buildscript {
 
 apply plugin: 'forge'
 def modversion
-modversion = version = "0.4.0"
+modversion = version = "0.4.12b7"
 group= "zmaster587.advancedRocketry" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "AdvancedRocketry"
 sourceCompatibility = 7
 targetCompatibility = 7
 
+jar {
+        manifest {
+        attributes 'FMLCorePlugin': 'zmaster587.advancedRocketry.asm.AdvancedRocketryPlugin'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
+}
+
 minecraft {
-    version = "1.7.10-10.13.4.1492-1.7.10"
+    version = "1.7.10-10.13.4.1566-1.7.10"
     assetDir = "eclipse/assets"
     
     replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"

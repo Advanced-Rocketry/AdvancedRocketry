@@ -2,8 +2,12 @@ package zmaster587.advancedRocketry.api;
 
 import java.util.LinkedList;
 
+import zmaster587.advancedRocketry.api.stations.ISpaceObject;
+import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
+import zmaster587.libVulpes.util.BlockPosition;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 
 
 
@@ -70,8 +74,29 @@ public abstract class EntityRocketBase extends Entity {
 	 */
 	public abstract StatsRocket getRocketStats();
 	
+	/**Called when orbit is reached by a rocket*/
+	public void onOrbitReached() {
+		MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketReachesOrbitEvent(this));
+		
+		if(this.worldObj.provider.dimensionId == Configuration.spaceDimId) {
+			ISpaceObject station = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
+			
+			if(station instanceof ISpaceObject) {
+				((ISpaceObject)station).setPadStatus((int)this.posX, (int)this.posZ, false);
+			}
+		}
+	}
+	
 	/**
 	 * Deconstructs the rocket, replacing it with actual blocks
 	 */
-	public abstract void deconstructRocket();
+	public void deconstructRocket() {
+		if(this.worldObj.provider.dimensionId == Configuration.spaceDimId) {
+			ISpaceObject station = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
+			
+			if(station instanceof ISpaceObject) {
+				((ISpaceObject)station).setPadStatus((int)this.posX, (int)this.posZ, false);
+			}
+		}
+	}
 }

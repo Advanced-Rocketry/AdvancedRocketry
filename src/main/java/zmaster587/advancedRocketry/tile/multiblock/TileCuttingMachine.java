@@ -4,13 +4,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import zmaster587.advancedRocketry.Inventory.TextureResources;
-import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.block.BlockRotatableModel;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
+import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
+import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.RotatableBlock;
@@ -73,8 +73,8 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 	}
 
 	@Override
-	public List<ModuleBase> getModules() {
-		List<ModuleBase> modules = super.getModules();
+	public List<ModuleBase> getModules(int ID) {
+		List<ModuleBase> modules = super.getModules(ID);
 		modules.add(new ModuleProgress(100, 20, 0, TextureResources.cuttingMachineProgressBar, this));
 		
 		return modules;

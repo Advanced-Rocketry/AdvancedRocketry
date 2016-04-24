@@ -7,17 +7,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
-import zmaster587.advancedRocketry.Inventory.TextureResources;
-import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleData;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
-import zmaster587.advancedRocketry.api.network.PacketHandler;
-import zmaster587.advancedRocketry.api.network.PacketMachine;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
+import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
+import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.inventory.modules.ModuleData;
+import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.item.ItemData;
+import zmaster587.advancedRocketry.network.PacketHandler;
+import zmaster587.advancedRocketry.network.PacketMachine;
 import zmaster587.advancedRocketry.tile.data.TileDataBus;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.block.BlockMeta;
@@ -41,11 +41,11 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			{Blocks.air, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.air},
 			{Blocks.air, Blocks.air, Blocks.air, Blocks.air, Blocks.air}},
 
-			{	{Blocks.air, Blocks.air, Blocks.air, Blocks.air, Blocks.air}, 
+			{	{Blocks.air,Blocks.air,Blocks.air,Blocks.air,Blocks.air}, 
 				{Blocks.air, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.air},
 				{Blocks.air, Blocks.iron_block, Blocks.coal_block, Blocks.iron_block, Blocks.air},
 				{Blocks.air, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.air},
-				{Blocks.air, Blocks.air, Blocks.air, Blocks.air, Blocks.air}},
+				{Blocks.air,Blocks.air,Blocks.air,Blocks.air,Blocks.air}},
 
 				{	{Blocks.air, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.air}, 
 					{Blocks.iron_block, Blocks.air, Blocks.air, Blocks.air, Blocks.iron_block},
@@ -53,13 +53,13 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 					{Blocks.iron_block, Blocks.air, Blocks.coal_block, Blocks.air, Blocks.iron_block},
 					{Blocks.air, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.air}},
 
-					{	{Blocks.air,'*', 'c', '*',Blocks.air}, 
+					{	{ Blocks.air,'*', 'c', '*',Blocks.air}, 
 						{'*',Blocks.iron_block, Blocks.iron_block, Blocks.iron_block,'*'},
 						{'*',Blocks.iron_block, Blocks.iron_block, Blocks.iron_block,'*'},
 						{'*',Blocks.iron_block, Blocks.iron_block, Blocks.iron_block,'*'},
-						{Blocks.air,'*', '*', '*',Blocks.air}},
+						{Blocks.air,'*', '*', '*', Blocks.air}},
 
-						{	{Blocks.air,'*', '*', '*',Blocks.air}, 
+						{	{Blocks.air,'*', '*', '*', Blocks.air}, 
 							{'*',Blocks.iron_block, Blocks.iron_block, Blocks.iron_block,'*'},
 							{'*',Blocks.iron_block, Blocks.iron_block, Blocks.iron_block,'*'},
 							{'*',Blocks.iron_block, Blocks.iron_block, Blocks.iron_block,'*'},
@@ -96,7 +96,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0 ) {
-			canRender = completeStructure = completeStructure();
+			attemptCompleteStructure();
 			timeAlive = 0x1;
 		}
 
@@ -229,8 +229,8 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public List<ModuleBase> getModules() {
-		List<ModuleBase> modules = super.getModules();
+	public List<ModuleBase> getModules(int ID) {
+		List<ModuleBase> modules = super.getModules(ID);
 
 		DataStorage data[] = new DataStorage[dataCables.size()];
 

@@ -10,15 +10,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import zmaster587.advancedRocketry.Inventory.TextureResources;
-import zmaster587.advancedRocketry.Inventory.modules.IProgressBar;
-import zmaster587.advancedRocketry.Inventory.modules.IToggleButton;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.Inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.Inventory.modules.ModulePower;
-import zmaster587.advancedRocketry.Inventory.modules.ModuleToggleSwitch;
-import zmaster587.advancedRocketry.api.network.PacketHandler;
-import zmaster587.advancedRocketry.api.network.PacketMachine;
+import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
+import zmaster587.advancedRocketry.inventory.modules.IProgressBar;
+import zmaster587.advancedRocketry.inventory.modules.IToggleButton;
+import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.inventory.modules.ModulePower;
+import zmaster587.advancedRocketry.inventory.modules.ModuleToggleSwitch;
+import zmaster587.advancedRocketry.network.PacketHandler;
+import zmaster587.advancedRocketry.network.PacketMachine;
 import zmaster587.advancedRocketry.tile.TileRFPlug;
 import zmaster587.advancedRocketry.tile.multiblock.TileMultiblockMachine.NetworkPackets;
 import zmaster587.libVulpes.api.IUniversalEnergy;
@@ -88,11 +88,17 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0 && !worldObj.isRemote) {
-			if(completeStructure)
+			if(isComplete())
 				canRender = completeStructure = completeStructure();
 			timeAlive = 0x1;
 		}
-
+		
+		if(!worldObj.isRemote && worldObj.getTotalWorldTime() % 1000L == 0 && !isComplete()) {
+			attemptCompleteStructure();
+			markDirty();
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
+		
 		if(isRunning()) {
 			if(hasEnergy(powerPerTick) || (worldObj.isRemote && hadPowerLastTick)) {
 
@@ -167,7 +173,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	 * @return true if the machine is currently processing something, or more formally, if completionTime > 0
 	 */
 	public boolean isRunning() {
-		return completionTime > 0;
+		return completionTime > 0 && isComplete();
 	}
 
 	public void useEnergy(int amt) {
@@ -256,7 +262,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	@Override
-	public List<ModuleBase> getModules() {
+	public List<ModuleBase> getModules(int ID) {
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this, TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
