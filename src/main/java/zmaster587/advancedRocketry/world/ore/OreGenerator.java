@@ -14,6 +14,8 @@ import cpw.mods.fml.common.IWorldGenerator;
 
 public class OreGenerator implements IWorldGenerator {
 
+	private static Block dilithiumTargetOre;
+	
 	private void generate(World world, Materials material, int numPerChunk,int clumpSize, int chunkX, int chunkZ, Random random) {
 		for(int i = 0; i < numPerChunk; i++) {
 			int coordX = 16*chunkX + random.nextInt(16);
@@ -23,6 +25,10 @@ public class OreGenerator implements IWorldGenerator {
 			new WorldGenMinable(Block.getBlockFromItem(material.getProduct(MaterialRegistry.AllowedProducts.ORE).getItem()), 
 					material.getMeta(), clumpSize, Blocks.stone).generate(world, random, coordX, coordY, coordZ);
 		}
+	}
+	
+	public static void setDilithiumTargetBlock(Block block) {
+		dilithiumTargetOre = block;
 	}
 	
 	@Override
@@ -47,7 +53,7 @@ public class OreGenerator implements IWorldGenerator {
 				int coordY = random.nextInt(64);
 				int coordZ = 16*chunkZ + random.nextInt(16);
 				
-				new WorldGenMinable(MaterialRegistry.Materials.DILITHIUM.getBlock(), MaterialRegistry.Materials.DILITHIUM.getMeta(), 16, Blocks.stone).generate(world, random, coordX, coordY, coordZ);
+				new WorldGenMinable(MaterialRegistry.Materials.DILITHIUM.getBlock(), MaterialRegistry.Materials.DILITHIUM.getMeta(), 16, dilithiumTargetOre).generate(world, random, coordX, coordY, coordZ);
 			}
 		}
 	}

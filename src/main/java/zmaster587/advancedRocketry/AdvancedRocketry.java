@@ -13,6 +13,8 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import ic2.api.item.IC2Items;
+import micdoodle8.mods.galacticraft.core.GalacticraftCore;
+import micdoodle8.mods.galacticraft.core.blocks.GCBlocks;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
@@ -850,8 +852,12 @@ public class AdvancedRocketry {
 	public void serverStarted(FMLServerStartingEvent event) {
 		event.registerServerCommand(new WorldCommand());
 
-		if(Loader.isModLoaded("GalacticraftCore"))
+		if(Loader.isModLoaded("GalacticraftCore")) {
 			zmaster587.advancedRocketry.api.Configuration.MoonId = ConfigManagerCore.idDimensionMoon;
+			OreGenerator.setDilithiumTargetBlock(GCBlocks.blockMoon);
+		}
+		else
+			OreGenerator.setDilithiumTargetBlock(Blocks.stone);
 
 		//Register hard coded dimensions
 		if(!zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.filePath)) {
