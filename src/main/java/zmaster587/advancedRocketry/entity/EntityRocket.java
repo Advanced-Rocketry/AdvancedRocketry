@@ -35,18 +35,23 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.inventory.GuiHandler;
 import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.inventory.GuiHandler.guiId;
 import zmaster587.advancedRocketry.inventory.modules.IButtonInventory;
 import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.inventory.modules.IProgressBar;
+import zmaster587.advancedRocketry.inventory.modules.ISelectionNotify;
 import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.inventory.modules.ModuleButton;
 import zmaster587.advancedRocketry.inventory.modules.ModuleImage;
+import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
 import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.inventory.modules.ModuleSlotButton;
 import zmaster587.advancedRocketry.inventory.modules.ModuleText;
 import zmaster587.advancedRocketry.item.ItemPackedStructure;
+import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.network.PacketEntity;
 import zmaster587.advancedRocketry.network.PacketHandler;
+import zmaster587.advancedRocketry.network.PacketMachine;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteHatch;
@@ -78,7 +83,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-public class EntityRocket extends EntityRocketBase implements INetworkEntity, IDismountHandler, IModularInventory, IProgressBar, IButtonInventory {
+public class EntityRocket extends EntityRocketBase implements INetworkEntity, IDismountHandler, IModularInventory, IProgressBar, IButtonInventory, ISelectionNotify {
 
 
 	//Stores the blocks and tiles that make up the rocket
@@ -99,9 +104,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	private int destinationDimId;
 	//Offset for buttons linking to the tileEntityGrid
 	private int tilebuttonOffset = 3;
-
 	private WeakReference<Entity>[] mountedEntities;
-
+	protected ModulePlanetSelector container;
+	
+	private int tmpSelection;
+	
 	public enum PacketType {
 		RECIEVENBT,
 		SENDINTERACT,
@@ -111,7 +118,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		DECONSTRUCT,
 		OPENGUI,
 		CHANGEWORLD,
-		REVERTWORLD
+		REVERTWORLD,
+		OPENPLANETSELECTION,
+		SENDPLANETDATA
 	}
 
 	public EntityRocket(World p_i1582_1_) {
@@ -512,6 +521,12 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		}
 	}
 
+	@Override
+	public void prepareLaunch() {
+
+	}
+
+	@Override
 	public void launch() {
 
 		//Get destination dimid and lock the computer
@@ -756,6 +771,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			storage = new StorageChunk();
 			storage.readFromNetwork(in);
 		}
+		else if(packetId == PacketType.SENDPLANETDATA.ordinal()) {
+			nbt.setInteger("selection", in.readInt());
+		}
 	}
 
 	@Override
@@ -763,6 +781,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 		if(id == PacketType.RECIEVENBT.ordinal()) {
 			storage.writeToNetwork(out);
+		}
+		else if(id == PacketType.SENDPLANETDATA.ordinal()) {
+			out.writeInt(container.getSelectedSystem());
 		}
 	}
 
@@ -805,6 +826,15 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		else if(id == PacketType.REVERTWORLD.ordinal()) {
 			AdvancedRocketry.proxy.changeClientPlayerWorld(this.worldObj);
 		}
+		else if(id == PacketType.OPENPLANETSELECTION.ordinal()) {
+			player.openGui(AdvancedRocketry.instance, GuiHandler.guiId.MODULARFULLSCREEN.ordinal(), player.worldObj, this.getEntityId(), -1,0);
+		}
+		else if(id == PacketType.SENDPLANETDATA.ordinal()) {
+			ItemStack stack = storage.getGuidanceComputer().getStackInSlot(0);
+			if(stack.getItem() == AdvancedRocketryItems.itemPlanetIdChip) {
+				((ItemPlanetIdentificationChip)AdvancedRocketryItems.itemPlanetIdChip).setDimensionId(stack, nbt.getInteger("selection"));
+			}
+		}
 		else if(id > 100) {
 			TileEntity tile = storage.getUsableTiles().get(id - 100 - tilebuttonOffset);
 
@@ -844,31 +874,38 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		//If the rocket is flight don't load the interface
 		modules = new LinkedList<ModuleBase>();
 
-		//Backgrounds
-		if(worldObj.isRemote) {
-			modules.add(new ModuleImage(173, 0, new IconResource(128, 0, 48, 86, CommonResources.genericBackground)));
-			modules.add(new ModuleImage(173, 86, new IconResource(98, 0, 78, 83, CommonResources.genericBackground)));
-			modules.add(new ModuleImage(173, 168, new IconResource(98, 168, 78, 3, CommonResources.genericBackground)));
+		if(ID == GuiHandler.guiId.MODULAR.ordinal()) {
+			//Backgrounds
+			if(worldObj.isRemote) {
+				modules.add(new ModuleImage(173, 0, new IconResource(128, 0, 48, 86, CommonResources.genericBackground)));
+				modules.add(new ModuleImage(173, 86, new IconResource(98, 0, 78, 83, CommonResources.genericBackground)));
+				modules.add(new ModuleImage(173, 168, new IconResource(98, 168, 78, 3, CommonResources.genericBackground)));
+			}
+
+			//Fuel
+			modules.add(new ModuleProgress(192, 7, 0, new ProgressBarImage(2, 173, 12, 71, 17, 6, 3, 69, 1, 1, ForgeDirection.UP, TextureResources.rocketHud), this));
+
+			//TODO DEBUG tiles!
+			List<TileEntity> tiles = storage.getUsableTiles();
+			for(int i = 0; i < tiles.size(); i++) {
+				TileEntity tile  = tiles.get(i);
+				modules.add(new ModuleSlotButton(8 + 18* (i % 9), 17 + 18*(i/9), i + tilebuttonOffset, this, new ItemStack(storage.getBlock(tile.xCoord, tile.yCoord, tile.zCoord), 1, storage.getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord))));
+			}
+
+			//Add buttons
+			modules.add(new ModuleButton(180, 140, 0, "Dissassemble", this, TextureResources.buttonBuild, 64, 20));
+
+			//modules.add(new ModuleButton(180, 95, 1, "", this, TextureResources.buttonLeft, 10, 16));
+			//modules.add(new ModuleButton(202, 95, 2, "", this, TextureResources.buttonRight, 10, 16));
+
+			modules.add(new ModuleButton(180, 114, 1, "Select Dst", this, TextureResources.buttonBuild, 64,20));
+			//modules.add(new ModuleText(180, 114, "Inventories", 0x404040));
 		}
-
-		//Fuel
-		modules.add(new ModuleProgress(192, 7, 0, new ProgressBarImage(2, 173, 12, 71, 17, 6, 3, 69, 1, 1, ForgeDirection.UP, TextureResources.rocketHud), this));
-
-		//TODO DEBUG tiles!
-		List<TileEntity> tiles = storage.getUsableTiles();
-		for(int i = 0; i < tiles.size(); i++) {
-			TileEntity tile  = tiles.get(i);
-			modules.add(new ModuleSlotButton(8 + 18* (i % 9), 17 + 18*(i/9), i + tilebuttonOffset, this, new ItemStack(storage.getBlock(tile.xCoord, tile.yCoord, tile.zCoord), 1, storage.getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord))));
+		else {
+			container = new ModulePlanetSelector(worldObj.provider.dimensionId, TextureResources.starryBG, this);
+			container.setOffset(1000, 1000);
+			modules.add(container);
 		}
-
-		//Add buttons
-		modules.add(new ModuleButton(180, 140, 0, "Dissassemble", this, TextureResources.buttonBuild, 64, 20));
-
-		//modules.add(new ModuleButton(180, 95, 1, "", this, TextureResources.buttonLeft, 10, 16));
-		//modules.add(new ModuleButton(202, 95, 2, "", this, TextureResources.buttonRight, 10, 16));
-
-		modules.add(new ModuleText(180, 114, "Inventories", 0x404040));
-
 		return modules;
 	}
 
@@ -909,6 +946,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		case 0:
 			PacketHandler.sendToServer(new PacketEntity(this, (byte)EntityRocket.PacketType.DECONSTRUCT.ordinal()));
 			break;
+		case 1:
+			PacketHandler.sendToServer(new PacketEntity(this, (byte)EntityRocket.PacketType.OPENPLANETSELECTION.ordinal()));
+			break;
 		default:
 			PacketHandler.sendToServer(new PacketEntity(this, (byte)(buttonId + 100)));
 
@@ -947,5 +987,21 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 		entity.ridingEntity = null;
 		this.riddenByEntity = null;
+	}
+
+	@Override
+	public void onSelected(Object sender) {
+		
+	}
+
+	@Override
+	public void onSelectionConfirmed(Object sender) {
+		PacketHandler.sendToServer(new PacketEntity(this, (byte)PacketType.SENDPLANETDATA.ordinal()));
+	}
+
+	@Override
+	public void onSystemFocusChanged(Object sender) {
+		// TODO Auto-generated method stub
+		
 	}
 }

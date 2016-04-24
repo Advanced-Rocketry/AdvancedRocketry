@@ -45,7 +45,12 @@ public abstract class EntityRocketBase extends Entity {
 	}
 	
 	/**
-	 * Launches the rocket
+	 * Called when the player is sitting in the rocket and hits the launch key, this is where countdown begin/gui should be called from before launch
+	 */
+	public abstract void prepareLaunch();
+	
+	/**
+	 * Handles actually launching the rocket
 	 */
 	public abstract void launch();
 

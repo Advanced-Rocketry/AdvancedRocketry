@@ -294,7 +294,6 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 				station.setDestOrbitingBody(id);
 			}
 		}
-
 	}
 
 	@Override

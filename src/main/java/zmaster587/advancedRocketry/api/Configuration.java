@@ -37,4 +37,5 @@ public class Configuration {
 	public static float EUMult;
 	public static float RFMult;
 	public static boolean overrideGCAir;
+	public static int fuelPointsPerDilithium;
 }
