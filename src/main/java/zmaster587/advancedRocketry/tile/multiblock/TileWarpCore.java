@@ -20,7 +20,7 @@ public class TileWarpCore extends TileMultiBlock {
 
 	public static final Object[][][] structure = { 
 		{{"blockTitanium", "blockTitanium", "blockTitanium"},
-			{"blockTitanium", 'I', new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock)},
+			{"blockTitanium", 'I', "blockTitanium"},
 			{"blockTitanium", "blockTitanium", "blockTitanium"}},
 
 			{{null, new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), null},
