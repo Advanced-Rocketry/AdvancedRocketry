@@ -66,4 +66,5 @@ public class AdvancedRocketryBlocks {
 	public static Block blockWarpCore;
 	public static Block blockWarpShipMonitor;
 	public static Block blockOxygenDetection;
+	public static Block blockUnlitTorch;
 }

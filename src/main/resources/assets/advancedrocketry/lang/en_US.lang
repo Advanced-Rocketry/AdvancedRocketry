@@ -62,6 +62,7 @@ tile.dockingPad.name=Docking Pad
 tile.stationmonitor.name=Warp Controller
 tile.warpCore.name=Warp Core
 tile.atmosphereDetector.name=Atmosphere Detector
+tile.unlittorch.name=Extinguished Torch
 
 tile.Dilithium.name=Dilithium Ore
 tile.Copper.name=Copper Ore

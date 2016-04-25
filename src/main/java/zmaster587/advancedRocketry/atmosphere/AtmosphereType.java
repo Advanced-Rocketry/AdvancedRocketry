@@ -24,10 +24,15 @@ public class AtmosphereType implements IAtmosphere {
 	private String name;
 
 	public AtmosphereType(boolean canTick, boolean isBreathable, String name) {
-		this.allowsCombustion = false;
+		this.allowsCombustion = isBreathable;
 		this.isBreathable = isBreathable;
 		this.canTick = canTick;
 		this.name = name;
+	}
+	
+	public AtmosphereType(boolean canTick, boolean isBreathable, boolean allowsCombustion, String name) {
+		this(canTick, isBreathable, name);
+		this.allowsCombustion = allowsCombustion;
 	}
 
 	/**

@@ -1,6 +1,8 @@
 package zmaster587.advancedRocketry.util;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -135,6 +137,13 @@ public class AreaBlob {
 	 */
 	public void clearBlob() {
 		graph.clear();
+	}
+	
+	/**
+	 * @return a set containing all locations
+	 */
+	public Set<BlockPosition> getLocations() {
+		return graph.getKeys();
 	}
 	
 	/**

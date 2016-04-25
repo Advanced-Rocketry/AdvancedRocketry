@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.util;
 
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
@@ -8,6 +9,7 @@ import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.libVulpes.util.BlockPosition;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Stack;
 
 public class AtmosphereBlob extends AreaBlob {
@@ -62,7 +64,16 @@ public class AtmosphereBlob extends AreaBlob {
 								addableBlocks.add(searchNextPosition);
 							}
 							else {
-								//TODO: for limits
+								
+								
+								World world = blobHandler.getWorld();
+								
+								for(BlockPosition pos : new LinkedList<BlockPosition>(getLocations())) {
+									if(world.getBlock(pos.x, pos.y, pos.z) == Blocks.torch) {
+										world.setBlock(pos.x, pos.y, pos.z, AdvancedRocketryBlocks.blockUnlitTorch);
+									}
+								}
+								
 								clearBlob();
 								return;
 							}
@@ -75,5 +86,18 @@ public class AtmosphereBlob extends AreaBlob {
 				super.addBlock(blockPos2);
 			}
 		}
+	}
+	
+	@Override
+	public void clearBlob() {
+		World world = blobHandler.getWorld();
+		
+		for(BlockPosition pos : new LinkedList<BlockPosition>(getLocations())) {
+			if(world.getBlock(pos.x, pos.y, pos.z) == Blocks.torch) {
+				world.setBlock(pos.x, pos.y, pos.z, AdvancedRocketryBlocks.blockUnlitTorch);
+			}
+		}
+		
+		super.clearBlob();
 	}
 }

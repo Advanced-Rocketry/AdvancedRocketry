@@ -6,12 +6,20 @@ import java.util.Iterator;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
@@ -55,6 +63,18 @@ public class PlanetEventHandler {
 			if(!(event.entity instanceof EntityPlayer) || !((EntityPlayer)event.entity).capabilities.isFlying) {
 				event.entity.motionY += 0.075f - DimensionManager.overworldProperties.gravitationalMultiplier*0.075f;
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void blockPlaceEvent(PlayerInteractEvent event) {
+		ForgeDirection direction = ForgeDirection.getOrientation(event.face);
+		if(!event.world.isRemote && Action.RIGHT_CLICK_BLOCK == event.action && event.entityPlayer != null && event.entityPlayer.getCurrentEquippedItem() != null && event.entityPlayer.getCurrentEquippedItem().getItem() == Item.getItemFromBlock(Blocks.torch) && 
+				event.world.getBlock(event.x, event.y, event.z).isSideSolid(event.world, event.x, event.y, event.z, direction) && 
+				!AtmosphereHandler.getOxygenHandler(event.world.provider.dimensionId).getAtmosphereType(event.x + direction.offsetX, event.y + direction.offsetY, event.z + direction.offsetZ).allowsCombustion()) {
+			event.setCanceled(true);
+			
+			event.world.setBlock(event.x + direction.offsetX, event.y + direction.offsetY, event.z + direction.offsetZ, AdvancedRocketryBlocks.blockUnlitTorch);
 		}
 	}
 
@@ -115,6 +135,7 @@ public class PlanetEventHandler {
 		DimensionManager.getInstance().tickDimensions();
 		time++;
 	}
+	
 
 	//Make sure the player receives data about the dimensions
 	@SubscribeEvent

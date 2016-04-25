@@ -6,19 +6,23 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.util.AreaBlob;
 import zmaster587.advancedRocketry.util.AtmosphereBlob;
+import zmaster587.advancedRocketry.util.SealableBlockHandler;
 import zmaster587.libVulpes.util.BlockPosition;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,13 +41,13 @@ public class AtmosphereHandler {
 	 * @param dimId the dimension id to register the dimension for
 	 */
 	public static void registerWorld(int dimId) {
-		
+
 		//If O2 is allowed and
 		if(Configuration.enableOxygen && (Configuration.overrideGCAir || dimId != Configuration.MoonId || !DimensionManager.getInstance().getDimensionProperties(dimId).isNativeDimension)) {
 			dimensionOxygen.put(dimId, new AtmosphereHandler(dimId));
 			MinecraftForge.EVENT_BUS.register(dimensionOxygen.get(dimId));
 			FMLCommonHandler.instance().bus().register(dimensionOxygen.get(dimId));
-			
+
 		}
 	}
 
@@ -64,7 +68,7 @@ public class AtmosphereHandler {
 		this.dimId = dimId;
 		blobs = new HashMap<IBlobHandler,AreaBlob>();
 	}
-	
+
 	@SubscribeEvent
 	public void onTick(TickEvent.PlayerTickEvent event) {
 		if(event.side.isServer() && event.player.dimension == this.dimId) {
@@ -92,7 +96,7 @@ public class AtmosphereHandler {
 	public static boolean hasAtmosphereHandler(int dimId) {
 		return dimensionOxygen.containsKey(dimId);
 	}
-	
+
 	//Called from World.setBlockMetaDataWithNotify
 	public static void onBlockMetaChange(World world, int x , int y, int z) {
 		if(Configuration.enableOxygen && !world.isRemote && world.getChunkFromBlockCoords(x, z).isChunkLoaded) {
@@ -127,14 +131,13 @@ public class AtmosphereHandler {
 					handler.onBlockRemove(pos);
 				else {
 					//Place block
-					if(blob.contains(pos)) {
+					if( blob.contains(pos) && SealableBlockHandler.isFulBlock(world, pos)) {
 						blob.removeBlock(x, y, z);
 					}
 					else if(!blob.contains(blob.getRootPosition())) {
 						blob.addBlock(blob.getRootPosition());
 					}
 				}
-
 			}
 		}
 	}
@@ -194,8 +197,10 @@ public class AtmosphereHandler {
 	 * @param handler the handler associated with this blob
 	 */
 	public void clearBlob(IBlobHandler handler) {
-		if(blobs.containsKey(handler))
+		
+		if(blobs.containsKey(handler)) {
 			blobs.get(handler).clearBlob();
+		}
 	}
 
 	/**
