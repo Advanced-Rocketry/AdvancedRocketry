@@ -188,7 +188,6 @@ public class TileMultiBlock extends TileEntity {
 		else if(tile instanceof IMultiblock) {
 			((IMultiblock)tile).setIncomplete();
 		}
-
 	}
 
 	public ForgeDirection getFrontDirection() {
@@ -255,9 +254,6 @@ public class TileMultiBlock extends TileEntity {
 		for(int y = 0; y < structure.length; y++) {
 			for(int z = 0; z < structure[0].length; z++) {
 				for(int x = 0; x< structure[0][0].length; x++) {
-
-
-
 					int globalX = xCoord + (x - offset.x)*front.offsetZ - (z-offset.z)*front.offsetX;
 					int globalY = yCoord - y + offset.y;
 					int globalZ = zCoord - (x - offset.x)*front.offsetX  - (z-offset.z)*front.offsetZ;

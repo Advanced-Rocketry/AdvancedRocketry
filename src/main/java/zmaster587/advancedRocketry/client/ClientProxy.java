@@ -32,6 +32,7 @@ import zmaster587.advancedRocketry.client.render.multiblocks.RendererWarpCore;
 import zmaster587.advancedRocketry.common.CommonProxy;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.entity.fx.RocketFx;
+import zmaster587.advancedRocketry.entity.fx.TrailFx;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.event.PlanetEventHandlerClient;
 import zmaster587.advancedRocketry.event.RocketEventHandler;
@@ -121,6 +122,10 @@ public class ClientProxy extends CommonProxy {
 	public void spawnParticle(String particle, World world, double x, double y, double z, double motionX, double motionY, double motionZ) {
 		if(particle == "rocketFlame") {
 			RocketFx fx = new RocketFx(world, x, y, z, motionX, motionY, motionZ);
+			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+		}
+		else if(particle == "rocketSmoke") {
+			TrailFx fx = new TrailFx(world, x, y, z, motionX, motionY, motionZ);
 			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 		}
 	}

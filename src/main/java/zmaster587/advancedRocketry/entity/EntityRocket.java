@@ -363,11 +363,15 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 					setFuelAmount(getFuelAmount() - stats.getFuelRate(FuelType.LIQUID));
 
 				//Spawn in the particle effects for the engines
-				if(worldObj.isRemote  && (this.motionY > 0 || (riddenByEntity instanceof EntityPlayer && ((EntityPlayer)riddenByEntity).moveForward > 0))) {
+				if(worldObj.isRemote && Minecraft.getMinecraft().gameSettings.particleSetting < 2 && (this.motionY > 0 || (riddenByEntity instanceof EntityPlayer && ((EntityPlayer)riddenByEntity).moveForward > 0))) {
 					for(Vector3F<Float> vec : stats.getEngineLocations()) {
-
+						
+						if(worldObj.getTotalWorldTime() % 10 == 0)
+							AdvancedRocketry.proxy.spawnParticle("rocketSmoke", worldObj, this.posX + vec.x, this.posY + vec.y - 0.75, this.posZ +vec.z,0,0,0);
+						
 						for(int i = 0; i < 4; i++) {
 							AdvancedRocketry.proxy.spawnParticle("rocketFlame", worldObj, this.posX + vec.x, this.posY + vec.y - 0.75, this.posZ +vec.z,(this.rand.nextFloat() - 0.5f)/8f,-.75 + this.motionY,(this.rand.nextFloat() - 0.5f)/8f);
+							
 						}
 					}
 				}

@@ -1,20 +1,18 @@
 package zmaster587.advancedRocketry.entity.fx;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class RocketFx extends EntityFX {
+import org.lwjgl.opengl.GL11;
 
+public class TrailFx extends EntityFX {
 	public static final ResourceLocation icon = new ResourceLocation("advancedrocketry:textures/particle/soft.png");
 
 	
-	public RocketFx(World world, double x,
+	public TrailFx(World world, double x,
 			double y, double z, double motx, double moty, double motz) {
 		super(world, x, y, z, motx, moty, motz);
 		
@@ -22,15 +20,16 @@ public class RocketFx extends EntityFX {
 		this.prevPosY = this.posY = this.lastTickPosY = y;
 		this.prevPosZ = this.posZ = this.lastTickPosZ = z;
 		
-        this.particleRed = 0.9F + this.rand.nextFloat()/10f;
-        this.particleGreen = 0.6F + this.rand.nextFloat()/5f;
-        this.particleBlue = 0.0F;
+		float chroma = this.rand.nextFloat()*0.2f;
+        this.particleRed = .4F + chroma;
+        this.particleGreen = .4F + chroma;
+        this.particleBlue = .4F + chroma;
         this.setSize(0.12F, 0.12F);
         this.particleScale *= this.rand.nextFloat() * 0.6F + 6F;
         this.motionX = motx;
         this.motionY = moty;
         this.motionZ = motz;
-        this.particleMaxAge = (int)(8.0D / (Math.random() * 0.8D + 0.6D));
+        this.particleMaxAge = (int)(1000.0D);
 	}
 
 	@Override
@@ -42,8 +41,8 @@ public class RocketFx extends EntityFX {
 		
 		GL11.glPushMatrix();
 		//GL11.glDisable(GL11.GL_BLEND);
-		GL11.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE );
-		
+		//GL11.glBlendFunc( GL11.GL_ZERO, GL11.GL_ONE_MINUS_SRC_ALPHA );
+		//tess.setBrightness(0);
 		
         float f11 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)x1 - interpPosX);
         float f12 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)x1 - interpPosY);
@@ -52,7 +51,7 @@ public class RocketFx extends EntityFX {
         
         
         
-        tess.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, 1f);
+        tess.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha);
         
         tess.addVertexWithUV((double)(f11 - y1 * f10 - y2 * f10), (double)(f12 - z1 * f10), (double)(f13 - x2 * f10 - z2 * f10), 1, 1);
         tess.addVertexWithUV((double)(f11 - y1 * f10 + y2 * f10), (double)(f12 + z1 * f10), (double)(f13 - x2 * f10 + z2 * f10), 1, 0);
@@ -65,7 +64,7 @@ public class RocketFx extends EntityFX {
 	
 	@Override
 	public int getFXLayer() {
-		return 2;
+		return 1;
 	}
 	
 	@Override
@@ -75,8 +74,8 @@ public class RocketFx extends EntityFX {
         this.prevPosZ = this.posZ;
         
         //Change color and alpha over lifespan
-        this.particleAlpha = 1- this.particleAge/ (float)this.particleMaxAge;
-        this.particleGreen -= this.particleGreen * this.particleAge/ ((float)this.particleMaxAge*2);
+        this.particleAlpha = 1 - this.particleAge/ (float)this.particleMaxAge;
+        this.particleScale *= 1.002f;
         
         if (this.particleAge++ >= this.particleMaxAge)
         {
