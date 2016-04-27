@@ -41,6 +41,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -79,9 +81,9 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			}
 		}
 	}
-
-	private void RebuildStructure(World world, TileMultiBlock tile, ItemStack stack, int posX, int posY, int posZ, ForgeDirection orientation) {
-
+	
+	private void clearStructure(World world, TileMultiBlock tile, ItemStack stack) {
+		
 		int id = getMachineId(stack);
 		ForgeDirection direction = ForgeDirection.getOrientation(getDirection(stack));
 
@@ -107,6 +109,18 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 				}
 			}
 		}
+	}
+
+	private void RebuildStructure(World world, TileMultiBlock tile, ItemStack stack, int posX, int posY, int posZ, ForgeDirection orientation) {
+
+		int id = getMachineId(stack);
+		ForgeDirection direction = ForgeDirection.getOrientation(getDirection(stack));
+
+		TileMultiBlock multiblock = machineList.get(id);
+		Object[][][] structure;
+		
+		clearStructure(world, tile, stack);
+		
 		structure = multiblock.getStructure();
 		direction = orientation;
 
@@ -157,7 +171,6 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		this.setDirection(stack, orientation.ordinal());
 	}
 
-
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world,
 			EntityPlayer player) {
@@ -168,15 +181,23 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		}
 
 		int id = getMachineId(stack);
-		if(id != -1) {
-			int intDir = ZUtils.getDirectionFacing(player.rotationYaw - 180);
-			ForgeDirection direction = ForgeDirection.getOrientation(intDir);
-			int xi = (int)player.posX + 4*direction.offsetX;
-			int zi = (int)player.posZ + 4*direction.offsetZ;
-			int playerY = (int) Math.ceil(player.posY);
+		if(!player.isSneaking() && id != -1 && world.isRemote) {
+			ForgeDirection dir = ForgeDirection.getOrientation(ZUtils.getDirectionFacing(player.rotationYaw - 180));
+			TileMultiBlock tile = machineList.get(getMachineId(stack));
+			
+			
+			int x = tile.getStructure()[0][0].length;
+			int z = tile.getStructure()[0].length;
+			
+			int globalX = (-x*dir.offsetZ + z*dir.offsetX)/2;
+			int globalZ = ((x* dir.offsetX)  + (z*dir.offsetZ))/2;
+			
+			MovingObjectPosition pos = Minecraft.getMinecraft().objectMouseOver;
+			
+			setBasePosition(stack, pos.blockX - globalX, pos.blockY+1, pos.blockZ - globalZ);
+			setDirection(stack, dir.ordinal());
 
-			if(!world.isRemote)
-				RebuildStructure(world, machineList.get(id), stack, xi, playerY, zi, direction);
+			PacketHandler.sendToServer(new PacketItemModifcation(this, player, (byte)2));
 		}
 
 		return super.onItemRightClick(stack, world, player);
@@ -349,8 +370,16 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		if(id == 0) {
 			out.writeInt(getMachineId(stack));
 		}
-		if(id == 1)
+		else if(id == 1)
 			out.writeInt(getYLevel(stack));
+		else if(id == 2) {
+			
+			Vector3F<Integer> pos = getBasePosition(stack);
+			out.writeInt(pos.x);
+			out.writeInt(pos.y);
+			out.writeInt(pos.z);
+			out.writeInt(getDirection(stack));
+		}
 	}
 
 	@Override
@@ -359,9 +388,14 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		if(packetId == 0) {
 			nbt.setInteger(IDNAME, in.readInt());
 		}
-
-		if(packetId == 1)
+		else if(packetId == 1)
 			nbt.setInteger("yLevel", in.readInt());
+		else if(packetId == 2) {
+			nbt.setInteger("x", in.readInt());
+			nbt.setInteger("y", in.readInt());
+			nbt.setInteger("z", in.readInt());
+			nbt.setInteger("dir", in.readInt());
+		}
 	}
 
 	@Override
@@ -373,10 +407,18 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			TileMultiBlock tile = machineList.get(machineId);
 			setYLevel(stack, tile.getStructure().length-1);
 		}
-		if(id == 1) {
+		else if(id == 1) {
 			setYLevel(stack, nbt.getInteger("yLevel"));
 			Vector3F<Integer> vec = getBasePosition(stack);
 			RebuildStructure(player.worldObj, this.machineList.get(getMachineId(stack)), stack, vec.x, vec.y, vec.z, ForgeDirection.getOrientation(getDirection(stack)));
+		}
+		else if(id == 2) {
+			int x = nbt.getInteger("x");
+			int y = nbt.getInteger("y");
+			int z = nbt.getInteger("z");
+			int dir = nbt.getInteger("dir");
+			
+			RebuildStructure(player.worldObj, this.machineList.get(getMachineId(stack)), stack, x, y, z, ForgeDirection.getOrientation(dir));
 		}
 	}
 }
