@@ -111,7 +111,8 @@ public class BlockTile extends RotatableBlock {
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
 	{
-		player.openGui(AdvancedRocketry.instance, guiId, world, x, y, z);
+		if(!world.isRemote)
+			player.openGui(AdvancedRocketry.instance, guiId, world, x, y, z);
 		return true;
 	}
 
