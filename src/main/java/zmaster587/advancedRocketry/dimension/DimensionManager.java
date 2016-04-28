@@ -501,10 +501,10 @@ public class DimensionManager {
 
 				if(propeties != null) {
 					int keyInt = Integer.parseInt(keyString);
-					if(!net.minecraftforge.common.DimensionManager.isDimensionRegistered(keyInt) /*propeties.isNativeDimension*/) {
+					if(!net.minecraftforge.common.DimensionManager.isDimensionRegistered(keyInt) && propeties.isNativeDimension) {
 						net.minecraftforge.common.DimensionManager.registerProviderType(keyInt, DimensionManager.planetWorldProvider, false);
 						net.minecraftforge.common.DimensionManager.registerDimension(keyInt, keyInt);
-						propeties.isNativeDimension = true;
+						//propeties.isNativeDimension = true;
 					}
 
 					dimensionList.put(new Integer(keyInt), propeties);

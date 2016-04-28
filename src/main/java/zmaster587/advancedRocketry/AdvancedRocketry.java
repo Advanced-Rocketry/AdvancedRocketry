@@ -865,12 +865,26 @@ public class AdvancedRocketry {
 	}
 
 	@EventHandler
-	public void serverStarted(FMLServerStartingEvent event) {
+	public void serverStarted(FMLServerStartedEvent event) {
+		for (int dimId : DimensionManager.getInstance().getLoadedDimensions()) {
+			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimId);
+			if(!properties.isNativeDimension) {
+				if(properties.getId() != zmaster587.advancedRocketry.api.Configuration.MoonId)
+					DimensionManager.getInstance().deleteDimension(properties.getId());
+				else
+					properties.isNativeDimension = true;
+			}
+		}
+	}
+	
+	@EventHandler
+	public void serverStarting(FMLServerStartingEvent event) {
 		event.registerServerCommand(new WorldCommand());
 
-		if(Loader.isModLoaded("GalacticraftCore")) {
+		if(Loader.isModLoaded("GalacticraftCore") ) {
 			zmaster587.advancedRocketry.api.Configuration.MoonId = ConfigManagerCore.idDimensionMoon;
 			OreGenerator.setDilithiumTargetBlock(GCBlocks.blockMoon);
+			
 		}
 		else
 			OreGenerator.setDilithiumTargetBlock(Blocks.stone);
@@ -929,6 +943,9 @@ public class AdvancedRocketry {
 					properties.setBiomes(biomes);
 				}
 			}
+		}
+		else if(Loader.isModLoaded("GalacticraftCore")  ) {
+			DimensionManager.getInstance().getDimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId).isNativeDimension = false;
 		}
 	}
 
