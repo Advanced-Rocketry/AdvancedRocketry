@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.world.decoration.MapGenCrater;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import cpw.mods.fml.common.eventhandler.Event.Result;
@@ -413,9 +414,11 @@ public class ChunkProviderPlanet implements IChunkProvider {
 		this.rand.setSeed((long)p_73153_2_ * i1 + (long)p_73153_3_ * j1 ^ this.worldObj.getSeed());
 		boolean flag = false;
 
-		MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Pre(p_73153_1_, worldObj, rand, p_73153_2_, p_73153_3_, flag));
-
-
+		//TODO: add registry for planets
+		boolean populationFlag = ((WorldProviderPlanet)worldObj.provider).getDimensionProperties(k, l).hasRivers();
+		
+		if(populationFlag )
+			MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Pre(p_73153_1_, worldObj, rand, p_73153_2_, p_73153_3_, flag));
 
 		if (this.mapFeaturesEnabled)
 		{
@@ -431,7 +434,8 @@ public class ChunkProviderPlanet implements IChunkProvider {
 		k += 8;
 		l += 8;
 
-		MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Post(p_73153_1_, worldObj, rand, p_73153_2_, p_73153_3_, flag));
+		if (populationFlag)
+			MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Post(p_73153_1_, worldObj, rand, p_73153_2_, p_73153_3_, flag));
 
 		BlockFalling.fallInstantly = false;
 	}

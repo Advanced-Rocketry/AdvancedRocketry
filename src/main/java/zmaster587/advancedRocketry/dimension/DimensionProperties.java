@@ -43,7 +43,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * Contains standardized temperature ranges for planets
 	 * where 100 is earthlike, larger values are hotter
 	 */
-	static enum Temps {
+	public static enum Temps {
 		TOOHOT(150),
 		HOT(125),
 		NORMAL(75),
@@ -59,6 +59,15 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		@Deprecated
 		public int getTemp() {
 			return temp;
+		}
+		
+		/**
+		 * @param lowerBound lower Bound (inclusive)
+		 * @param upperBound upper Bound (inclusive)
+		 * @return true if this resides between the to bounds
+		 */
+		public boolean isInRange(Temps lowerBound, Temps upperBound) {
+			return this.compareTo(lowerBound) <= 0 && this.compareTo(upperBound) >= 0;
 		}
 		
 		/**
@@ -78,7 +87,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * Contains standardized pressure ranges for planets
 	 * where 100 is earthlike, largers values are higher pressure
 	 */
-	static enum AtmosphereTypes {
+	public static enum AtmosphereTypes {
 		HIGHPRESSURE(150),
 		NORMAL(75),
 		LOW(25),
@@ -481,7 +490,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return true if this dimension is allowed to have rivers
 	 */
 	public boolean hasRivers() {
-		return AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity).compareTo(AtmosphereTypes.LOW) != -1 && VulpineMath.isBetween(Temps.getTempFromValue(averageTemperature).ordinal(), Temps.COLD.ordinal(), Temps.HOT.ordinal());
+		return AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity).compareTo(AtmosphereTypes.LOW) != -1 && Temps.getTempFromValue(averageTemperature).isInRange(Temps.COLD, Temps.HOT);
 	}
 
 
