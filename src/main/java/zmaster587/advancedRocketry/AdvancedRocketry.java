@@ -870,7 +870,7 @@ public class AdvancedRocketry {
 			if(!properties.isNativeDimension) {
 				if(properties.getId() != zmaster587.advancedRocketry.api.Configuration.MoonId)
 					DimensionManager.getInstance().deleteDimension(properties.getId());
-				else
+				else if (!Loader.isModLoaded("GalacticraftCore"))
 					properties.isNativeDimension = true;
 			}
 		}

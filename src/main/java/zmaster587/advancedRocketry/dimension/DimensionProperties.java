@@ -138,6 +138,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		}
 	}
 
+	//True if dimension is managed and created by AR (false otherwise)
 	public boolean isNativeDimension;
 	public float[] skyColor;
 	public float[] fogColor;

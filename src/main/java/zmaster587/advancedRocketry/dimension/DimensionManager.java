@@ -276,7 +276,7 @@ public class DimensionManager {
 	 */
 	public void unregisterAllDimensions() {
 		for(Entry<Integer, DimensionProperties> dimSet : dimensionList.entrySet()) {
-			if(!dimSet.getValue().isNativeDimension) {
+			if(dimSet.getValue().isNativeDimension) {
 				net.minecraftforge.common.DimensionManager.unregisterProviderType(dimSet.getKey());
 				net.minecraftforge.common.DimensionManager.unregisterDimension(dimSet.getKey());
 			}
@@ -309,7 +309,13 @@ public class DimensionManager {
 		}
 
 		//TODO: check for world loaded
-		net.minecraftforge.common.DimensionManager.unloadWorld(dimId);
+		// If not native to AR let the mod it's registered to handle it
+		if(!properties.isNativeDimension) {
+			net.minecraftforge.common.DimensionManager.unloadWorld(dimId);
+			net.minecraftforge.common.DimensionManager.unregisterProviderType(dimId);
+			net.minecraftforge.common.DimensionManager.unregisterDimension(dimId);
+			dimensionList.remove(new Integer(dimId));
+		}
 
 		//Delete World Folder
 		File file = new File(net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory(), workingPath + "/DIM" + dimId );
@@ -319,10 +325,6 @@ public class DimensionManager {
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
-
-		net.minecraftforge.common.DimensionManager.unregisterProviderType(dimId);
-		net.minecraftforge.common.DimensionManager.unregisterDimension(dimId);
-		dimensionList.remove(new Integer(dimId));
 	}
 
 	/**

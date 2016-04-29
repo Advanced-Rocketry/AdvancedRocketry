@@ -43,7 +43,7 @@ public class AtmosphereHandler {
 	public static void registerWorld(int dimId) {
 
 		//If O2 is allowed and
-		if(Configuration.enableOxygen && (Configuration.overrideGCAir || dimId != Configuration.MoonId || !DimensionManager.getInstance().getDimensionProperties(dimId).isNativeDimension)) {
+		if(Configuration.enableOxygen && (Configuration.overrideGCAir || dimId != Configuration.MoonId || DimensionManager.getInstance().getDimensionProperties(dimId).isNativeDimension)) {
 			dimensionOxygen.put(dimId, new AtmosphereHandler(dimId));
 			MinecraftForge.EVENT_BUS.register(dimensionOxygen.get(dimId));
 			FMLCommonHandler.instance().bus().register(dimensionOxygen.get(dimId));

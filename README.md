@@ -36,7 +36,7 @@ Future Features:
 - clean rooms
 - research tree (possible use for planetary data, hire villagers as scientists for you lab!)
 - supports for more power systems
-- axe RF dependance
+- remove RF dependance
 - planets actually moving in their orbits
 - Railguns to transfer goods between planets and stations
 - stations with day/night cycles
