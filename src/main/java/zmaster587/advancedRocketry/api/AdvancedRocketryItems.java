@@ -39,4 +39,5 @@ public class AdvancedRocketryItems {
 	public static Item itemSmallAirlockDoor;
 	public static Item itemCarbonScrubberCartridge;
 	public static Item itemSealDetector;
+	public static Item itemJackhammer;
 }

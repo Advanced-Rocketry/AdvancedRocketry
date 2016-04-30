@@ -24,6 +24,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
@@ -209,6 +210,9 @@ public class AdvancedRocketry {
 		SatelliteRegistry.registerSatellite("mass", SatelliteMassScanner.class);
 
 		//Blocks -------------------------------------------------------------------------------------
+		AdvancedRocketryBlocks.blocksGeode = new BlockGeneric(MaterialGeode.geode).setBlockName("geode").setCreativeTab(tabAdvRocketryOres).setBlockTextureName("advancedrocketry:geode").setHardness(6f);
+		AdvancedRocketryBlocks.blocksGeode.setHarvestLevel("jackhammer", 2);
+		
 		AdvancedRocketryBlocks.blockLaunchpad = new BlockLinkedHorizontalTexture(Material.rock).setBlockName("pad").setCreativeTab(tabAdvRocketry).setBlockTextureName("advancedrocketry:rocketPad").setHardness(2f);
 		AdvancedRocketryBlocks.blockStructureTower = new BlockAlphaTexture(Material.rock).setBlockName("structuretower").setCreativeTab(tabAdvRocketry).setBlockTextureName("advancedrocketry:structuretower").setHardness(2f);
 		AdvancedRocketryBlocks.blockGenericSeat = new BlockSeat(Material.cloth).setBlockName("seat").setCreativeTab(tabAdvRocketry).setBlockTextureName("minecraft:wool_colored_silver").setHardness(0.5f);
@@ -424,7 +428,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockWarpShipMonitor, AdvancedRocketryBlocks.blockWarpShipMonitor.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockOxygenDetection, AdvancedRocketryBlocks.blockOxygenDetection.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockUnlitTorch, AdvancedRocketryBlocks.blockUnlitTorch.getUnlocalizedName());
-		
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blocksGeode,AdvancedRocketryBlocks.blocksGeode.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockOxygenFluid,ItemFluid.class, AdvancedRocketryBlocks.blockOxygenFluid.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockHydrogenFluid,ItemFluid.class, AdvancedRocketryBlocks.blockHydrogenFluid.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockFuelFluid, ItemFluid.class, AdvancedRocketryBlocks.blockFuelFluid.getUnlocalizedName());
@@ -476,6 +480,11 @@ public class AdvancedRocketry {
 
 		AdvancedRocketryItems.itemSealDetector = new ItemSealDetector().setMaxStackSize(1).setCreativeTab(tabAdvRocketry).setUnlocalizedName("sealDetector").setTextureName("advancedRocketry:seal_detector");
 
+		//Tools
+		AdvancedRocketryItems.itemJackhammer = new ItemJackHammer(ToolMaterial.EMERALD).setTextureName("advancedRocketry:jackHammer").setUnlocalizedName("jackhammer").setCreativeTab(tabAdvRocketry);
+		AdvancedRocketryItems.itemJackhammer.setHarvestLevel("jackhammer", 3);
+		
+		
 		//Item Registration
 		GameRegistry.registerItem(AdvancedRocketryItems.itemQuartzCrucible, "iquartzcrucible");
 		GameRegistry.registerItem(AdvancedRocketryItems.itemOreScanner, "oreScanner");
@@ -502,7 +511,8 @@ public class AdvancedRocketry {
 		GameRegistry.registerItem(AdvancedRocketryItems.itemSmallAirlockDoor, AdvancedRocketryItems.itemSmallAirlockDoor.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemCarbonScrubberCartridge, AdvancedRocketryItems.itemCarbonScrubberCartridge.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemSealDetector, AdvancedRocketryItems.itemSealDetector.getUnlocalizedName());
-
+		GameRegistry.registerItem(AdvancedRocketryItems.itemJackhammer, AdvancedRocketryItems.itemJackhammer.getUnlocalizedName());
+		
 		//Register multiblock items with the projector
 		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileCuttingMachine(), (BlockTile)AdvancedRocketryBlocks.blockCuttingMachine);
 		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileLathe(), (BlockTile)AdvancedRocketryBlocks.blockLathe);
@@ -670,6 +680,9 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryItems.itemSpaceSuit_Chest, "wrw", "wtw", "wfw", 'w', Blocks.wool, 'r', "stickIron", 't', AdvancedRocketryBlocks.blockFuelTank, 'f', "fanSteel"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryItems.itemSpaceSuit_Helmet, "prp", "rgr", "www", 'w', Blocks.wool, 'r', "stickIron", 'p', "plateIron", 'g', Blocks.glass_pane));
 
+		//Tool Recipes
+		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryItems.itemJackhammer, " pt","imp","di ",'d', Items.diamond, 'm', AdvancedRocketryBlocks.blockMotor, 'p', "plateBronze", 't', "stickTitanium", 'i', "stickIron"));
+		
 		//Other blocks
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryItems.itemSmallAirlockDoor, "pp", "pp","pp", 'p', "plateSteel"));
 		
@@ -883,7 +896,6 @@ public class AdvancedRocketry {
 		if(Loader.isModLoaded("GalacticraftCore") ) {
 			zmaster587.advancedRocketry.api.Configuration.MoonId = ConfigManagerCore.idDimensionMoon;
 			OreGenerator.setDilithiumTargetBlock(GCBlocks.blockMoon);
-			
 		}
 		else
 			OreGenerator.setDilithiumTargetBlock(Blocks.stone);

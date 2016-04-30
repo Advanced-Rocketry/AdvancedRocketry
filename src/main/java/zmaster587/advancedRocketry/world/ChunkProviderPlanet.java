@@ -14,6 +14,7 @@ import java.util.Random;
 
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.world.decoration.MapGenCrater;
+import zmaster587.advancedRocketry.world.decoration.MapGenGeode;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import net.minecraft.block.Block;
@@ -76,6 +77,7 @@ public class ChunkProviderPlanet implements IChunkProvider {
 	private MapGenBase ravineGenerator = new MapGenRavine();
 
 	private MapGenCrater craterGenerator;
+	private MapGenGeode geodeGenerator;
 	/** The biomes that are used to generate the chunk */
 	private BiomeGenBase[] biomesForGeneration;
 	double[] field_147427_d;
@@ -136,6 +138,12 @@ public class ChunkProviderPlanet implements IChunkProvider {
 			craterGenerator = new MapGenCrater( (int)(10 +  (26*atmDensity) ));
 		else 
 			craterGenerator = null;
+		
+		if(atmDensity > 1.25f) {
+			geodeGenerator = new MapGenGeode(200);
+		}
+		else
+			geodeGenerator = null;
 	}
 
 	public void func_147424_a(int p_147424_1_, int p_147424_2_, Block[] p_147424_3_)
@@ -260,6 +268,9 @@ public class ChunkProviderPlanet implements IChunkProvider {
 
 		if(this.craterGenerator != null)
 			this.craterGenerator.func_151539_a(this, this.worldObj, p_73154_1_, p_73154_2_, ablock);
+		
+		if(this.geodeGenerator != null)
+			this.geodeGenerator.func_151539_a(this, this.worldObj, p_73154_1_, p_73154_2_, ablock);
 
 		if (this.mapFeaturesEnabled)
 		{

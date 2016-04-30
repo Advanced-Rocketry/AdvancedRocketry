@@ -63,6 +63,7 @@ tile.stationmonitor.name=Warp Controller
 tile.warpCore.name=Warp Core
 tile.atmosphereDetector.name=Atmosphere Detector
 tile.unlittorch.name=Extinguished Torch
+tile.geode.name=Geode Block
 
 tile.Dilithium.name=Dilithium Ore
 tile.Copper.name=Copper Ore
@@ -106,6 +107,7 @@ item.spaceBoots.name=Space Boots
 item.bucketRocketFuel.name=Bucket of Rocket Fuel
 item.smallAirlock.name=Small Airlock Door
 item.carbonScrubberCartridge.name=Carbon Collection Cartridge
+item.jackhammer.name=Jack Hammer
 
 material.Gold.name=Gold
 material.Iron.name=Iron
