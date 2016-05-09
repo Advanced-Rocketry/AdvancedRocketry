@@ -53,11 +53,11 @@ public class ItemSealDetector extends Item
                 }
                 else if (block instanceof IFluidBlock)
                 {
-                    player.addChatComponentMessage(new ChatComponentText("Air will bubble threw this block"));
+                    player.addChatComponentMessage(new ChatComponentText("Air will bubble through this block"));
                 }
                 else
                 {
-                    player.addChatComponentMessage(new ChatComponentText("Air will leak threw this block."));
+                    player.addChatComponentMessage(new ChatComponentText("Air will leak through this block."));
                 }
             }
         }

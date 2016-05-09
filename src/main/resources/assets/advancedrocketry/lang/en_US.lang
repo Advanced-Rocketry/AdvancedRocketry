@@ -112,6 +112,7 @@ item.bucketRocketFuel.name=Bucket of Rocket Fuel
 item.smallAirlock.name=Small Airlock Door
 item.carbonScrubberCartridge.name=Carbon Collection Cartridge
 item.jackhammer.name=Jack Hammer
+item.sealDetector.name=Seal Detector
 
 material.Gold.name=Gold
 material.Iron.name=Iron
