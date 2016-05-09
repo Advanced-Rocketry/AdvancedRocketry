@@ -38,4 +38,5 @@ public class Configuration {
 	public static float RFMult;
 	public static boolean overrideGCAir;
 	public static int fuelPointsPerDilithium;
+	public static boolean electricPlantsSpawnLightning;
 }

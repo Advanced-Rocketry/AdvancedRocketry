@@ -3,10 +3,13 @@ package zmaster587.advancedRocketry.block;
 import java.util.Random;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.entity.fx.FxSystemElectricArc;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockMushroom;
 import net.minecraft.block.IGrowable;
+import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -27,6 +30,19 @@ public class BlockElectricMushroom extends BlockMushroom implements IGrowable {
 		}
 		return false;
 	}
+	
+	@Override
+	public void updateTick(World world, int x, int y,
+			int z, Random rand) {
+		super.updateTick(world, x, y, z,
+				rand);
+		
+		if(!world.isRemote && Configuration.electricPlantsSpawnLightning && world.isRaining() /*&& world.getBiomeGenForCoords(x, z) == AdvancedRocketryBiomes.stormLandsBiome*/) {
+			int lightningX = x + rand.nextInt(24) - 12;
+			int lightningZ = z + rand.nextInt(24) - 12;
+			world.addWeatherEffect(new EntityLightningBolt(world, lightningX, world.getTopSolidOrLiquidBlock(lightningX, lightningZ), lightningZ));
+		}
+	}
 
 	@Override
 	public void randomDisplayTick(World world, int x,
@@ -34,7 +50,7 @@ public class BlockElectricMushroom extends BlockMushroom implements IGrowable {
 		super.randomDisplayTick(world, x, y, z,
 				rand);
 
-		if(world.getTotalWorldTime() % 100 == 0) {
+		if(world.getTotalWorldTime() % 100 == 0 && world.getBiomeGenForCoords(x, z) == AdvancedRocketryBiomes.stormLandsBiome) {
 			FxSystemElectricArc.spawnArc(world, x + 0.5f, y + 0.5f, z + 0.5f, .3, 7);
 			world.playSound(x, y, z, "advancedrocketry:ElectricShockSmall", .7f,  0.975f + world.rand.nextFloat()*0.05f, false);
 		}

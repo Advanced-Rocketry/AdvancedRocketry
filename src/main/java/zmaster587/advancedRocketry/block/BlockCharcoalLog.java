@@ -7,6 +7,8 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockCharcoalLog extends BlockLog {
 
@@ -20,6 +22,12 @@ public class BlockCharcoalLog extends BlockLog {
 	public void registerBlockIcons(IIconRegister icon) {
 		topIcon = icon.registerIcon("advancedrocketry:log_charcoal_top");
 		sideIcon = icon.registerIcon("advancedrocketry:log_charcoal");
+	}
+	
+	@Override
+	public int getFlammability(IBlockAccess world, int x, int y, int z,
+			ForgeDirection face) {
+		return 0;
 	}
 	
 	@Override
