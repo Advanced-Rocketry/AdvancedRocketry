@@ -20,7 +20,7 @@ public class BlockElectricMushroom extends BlockMushroom implements IGrowable {
 		super();
 		setBlockBounds(0f, 0f, 0f, 1f, 1f, 1f);
 	}
-	
+
 	public boolean canBlockStay(World p_149718_1_, int p_149718_2_, int p_149718_3_, int p_149718_4_)
 	{
 		if (p_149718_3_ >= 0 && p_149718_3_ < 256)
@@ -30,17 +30,29 @@ public class BlockElectricMushroom extends BlockMushroom implements IGrowable {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void updateTick(World world, int x, int y,
 			int z, Random rand) {
 		super.updateTick(world, x, y, z,
 				rand);
-		
-		if(!world.isRemote && Configuration.electricPlantsSpawnLightning && world.isRaining() /*&& world.getBiomeGenForCoords(x, z) == AdvancedRocketryBiomes.stormLandsBiome*/) {
+
+		if(!world.isRemote && Configuration.electricPlantsSpawnLightning && world.isRaining() && world.getBiomeGenForCoords(x, z) == AdvancedRocketryBiomes.stormLandsBiome) {
 			int lightningX = x + rand.nextInt(24) - 12;
 			int lightningZ = z + rand.nextInt(24) - 12;
 			world.addWeatherEffect(new EntityLightningBolt(world, lightningX, world.getTopSolidOrLiquidBlock(lightningX, lightningZ), lightningZ));
+		}
+	}
+
+	@Override
+	public void onBlockDestroyedByPlayer(World world, int x,
+			int y, int z, int p_149664_5_) {
+		super.onBlockDestroyedByPlayer(world, x, y,
+				z, p_149664_5_);
+
+		if(world.isRemote) {
+			FxSystemElectricArc.spawnArc(world, x + 0.5f, y + 0.5f, z + 0.5f, .3, 7);
+			world.playSound(x, y, z, "advancedrocketry:ElectricShockSmall", .7f,  0.975f + world.rand.nextFloat()*0.05f, false);
 		}
 	}
 
