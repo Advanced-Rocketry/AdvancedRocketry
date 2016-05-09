@@ -61,6 +61,9 @@ tile.oxygenCharger.name=Кислородный наполнитель
 tile.dockingPad.name=Стыковочный узел
 tile.stationmonitor.name=Варп-контроллер
 tile.warpCore.name=Варп-ядро
+tile.atmosphereDetector.name=Детектор атмосферы
+tile.unlittorch.name=Погасший факел
+tile.geode.name=Блок жеоды
 
 tile.Dilithium.name=Руда дилития
 tile.Copper.name=Медная руда
@@ -76,8 +79,10 @@ tile.coil=Катушка
  
 item.wafer.0.name=Кремниевая пластина
 item.circuitplate.0.name=Печатная плата
+item.circuitplate.1.name=Улучшенная плата
 item.circuitIC.0.name=Электросхема
-item.circuitIC.1.name=Электросхема трекинга
+item.circuitIC.1.name=Схема слежения
+item.circuitIC.2.name=Улучшенная электросхема
 item.OreScanner.name=Сканер руд
 item.qcrucible.name=Кварцевый тигель
 item.dataUnit.0.name=Хранилище данных
@@ -102,6 +107,7 @@ item.spaceBoots.name=Ботинки скафандра
 item.bucketRocketFuel.name=Ведро ракетного топлива
 item.smallAirlock.name=Малая гермодверь
 item.carbonScrubberCartridge.name=Поглощающий картридж
+item.jackhammer.name=Отбойный молоток
 
 material.Gold.name=Золотой
 material.Iron.name=Железный
