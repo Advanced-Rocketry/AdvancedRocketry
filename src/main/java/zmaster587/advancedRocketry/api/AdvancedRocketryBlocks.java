@@ -68,4 +68,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockOxygenDetection;
 	public static Block blockUnlitTorch;
 	public static Block blocksGeode;
+	public static Block blockVitrifiedSand;
+	public static Block blockCharcoalLog;
+	public static Block blockElectricMushroom;
 }

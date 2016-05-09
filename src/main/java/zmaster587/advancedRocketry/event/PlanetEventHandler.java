@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -30,6 +31,7 @@ import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
+import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -227,6 +229,13 @@ public class PlanetEventHandler {
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.entity.dimension);
 		if(properties != null) {
 			float fog = properties.getAtmosphereDensityAtHeight(event.entity.posY);
+			
+			if(event.entity.worldObj.provider instanceof IPlanetaryProvider) {
+				Vec3 color = event.entity.worldObj.provider.getSkyColor(event.entity, 0f);
+				event.red = (float) color.xCoord;
+				event.green = (float) color.yCoord;
+				event.blue = (float) color.zCoord;
+			}
 
 			if(endTime > 0) {
 				double amt = (endTime - Minecraft.getMinecraft().theWorld.getTotalWorldTime()) / (double)duration;

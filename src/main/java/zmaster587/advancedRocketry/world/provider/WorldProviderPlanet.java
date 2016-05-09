@@ -135,12 +135,12 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	@Override
 	public Vec3 getSkyColor(Entity cameraEntity, float partialTicks) {
 		float[] vec = getDimensionProperties((int)cameraEntity.posX, (int)cameraEntity.posZ).skyColor;
-		if(vec == null)
+		//if(vec == null)
 			return super.getSkyColor(cameraEntity, partialTicks);
-		else {
-			Vec3 skyColorVec =  Vec3.createVectorHelper(1, 1, 1);//super.getSkyColor(cameraEntity, partialTicks);
-			return Vec3.createVectorHelper(vec[0] * skyColorVec.xCoord, vec[1] * skyColorVec.yCoord, vec[2] * skyColorVec.zCoord) ;
-		}
+		//else {
+		//	Vec3 skyColorVec =  Vec3.createVectorHelper(1, 1, 1);//super.getSkyColor(cameraEntity, partialTicks);
+		//	return Vec3.createVectorHelper(vec[0] * skyColorVec.xCoord, vec[1] * skyColorVec.yCoord, vec[2] * skyColorVec.zCoord) ;
+		//}
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package zmaster587.advancedRocketry.api;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -10,15 +12,18 @@ import net.minecraft.world.biome.BiomeGenBase;
 public class AdvancedRocketryBiomes {
 	
 	public static final AdvancedRocketryBiomes instance = new AdvancedRocketryBiomes();
-	private ArrayList<BiomeGenBase> registeredBiomes;
+	private List<BiomeGenBase> registeredBiomes;
+	private List<BiomeGenBase> registeredHighPressureBiomes;
 	
 	public static BiomeGenBase moonBiome;
 	public static BiomeGenBase hotDryBiome;
 	public static BiomeGenBase alienForest;
 	public static BiomeGenBase spaceBiome;
+	public static BiomeGenBase stormLandsBiome;
 	
 	private AdvancedRocketryBiomes() {
 		registeredBiomes = new ArrayList<BiomeGenBase>();
+		registeredHighPressureBiomes = new LinkedList<BiomeGenBase>();
 	}
 	
 	/**
@@ -28,6 +33,18 @@ public class AdvancedRocketryBiomes {
 	 */
 	public void registerBiome(BiomeGenBase biome) {
 		registeredBiomes.add(biome);
+	}
+	
+	/**
+	 * Registers a biome as high pressure for use with the planet generators
+	 * @param biome
+	 */
+	public void registerHighPressureBiome(BiomeGenBase biome) {
+		registeredHighPressureBiomes.add(biome);
+	}
+	
+	public List<BiomeGenBase> getHighPressureBiomes() {
+		return registeredHighPressureBiomes;	
 	}
 	
 	/**

@@ -64,6 +64,10 @@ tile.warpCore.name=Warp Core
 tile.atmosphereDetector.name=Atmosphere Detector
 tile.unlittorch.name=Extinguished Torch
 tile.geode.name=Geode Block
+tile.electricMushroom.name=Electric Mushroom
+tile.charcoallog.name=Charcoal Log
+tile.vitrifiedSand.name=Vitrified Sand
+
 
 tile.Dilithium.name=Dilithium Ore
 tile.Copper.name=Copper Ore

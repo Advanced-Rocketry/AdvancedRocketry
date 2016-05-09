@@ -12,6 +12,7 @@ import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 public class BiomeGenAlienForest extends BiomeGenBase {
 
 	public final static WorldGenAbstractTree alienTree = new WorldGenAlienTree(false);
+	private final static WorldGenNoTree noTree = new WorldGenNoTree(false);;
 
 	public BiomeGenAlienForest(int biomeId, boolean register) {
 		super(biomeId, register);
@@ -40,9 +41,10 @@ public class BiomeGenAlienForest extends BiomeGenBase {
 		super.decorate(p_76728_1_, random, chunkX, chunkZ);
 	}
 
+	@Override
 	public WorldGenAbstractTree func_150567_a(Random p_150567_1_)
 	{
-		return new WorldGenNoTree(false);//alienTree;
+		return noTree;//alienTree;
 	}
 
 	@Override

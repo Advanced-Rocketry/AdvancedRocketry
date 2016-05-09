@@ -550,6 +550,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			viableBiomes.addAll(Arrays.asList(BiomeDictionary.getBiomesForType(BiomeDictionary.Type.COLD)));
 			//TODO:
 		}
+		
+		if(atmosphereDensity > AtmosphereTypes.HIGHPRESSURE.value && Temps.getTempFromValue(averageTemperature).isInRange(Temps.NORMAL, Temps.HOT))
+			viableBiomes.addAll(AdvancedRocketryBiomes.instance.getHighPressureBiomes());
 
 		return viableBiomes;
 	}

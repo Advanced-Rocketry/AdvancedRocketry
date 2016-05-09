@@ -20,6 +20,7 @@ Current Features:
 - Support for IC2 and RF
 
 Future Features:
+- Other engine types for space ships(ion/plasma)
 - Terraforming
 - Orbital factories
 - rovers (maybe? need a use)
@@ -49,3 +50,9 @@ Future Features:
         - atmospheric detectors (increases info on pressure; when combined with chemical can detect if planet has harvestable/hazardous gasses) ground and space
         - temperature detector (increases info on planetary temperature) space only
         - star scanner (increases the likelyhood of finding planets orbiting a star; higher level allows for smaller planets) ground and space
+- Hardmode
+    - must protect space stations from meteors
+    - rockets require life support
+    - space ships require statis chamber and must be provided with food (unless warp) - tranz9999
+    - heat system for machines and plasma engine
+    - 
