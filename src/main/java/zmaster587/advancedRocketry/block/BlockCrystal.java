@@ -32,7 +32,7 @@ public class BlockCrystal extends Block implements INamedMetaBlock {
     
     @Override
 	public String getUnlocalizedName(int itemDamage) {
-		return  "crystal." + names[itemDamage];
+		return  "tile." + names[itemDamage];
 	}
     
     @SideOnly(Side.CLIENT)

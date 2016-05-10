@@ -67,6 +67,12 @@ tile.geode.name=Geode Block
 tile.electricMushroom.name=Electric Mushroom
 tile.charcoallog.name=Charcoal Log
 tile.vitrifiedSand.name=Vitrified Sand
+tile.ruby.name=Ruby Block
+tile.emerald.name=Emerald Block
+tile.sapphire.name=Sapphire Block
+tile.citrine.name=Citrine Block
+tile.wulfentite.name=Wulfentite Block
+tile.amethyst.name=Amethyst Block
 
 
 tile.Dilithium.name=Dilithium Ore

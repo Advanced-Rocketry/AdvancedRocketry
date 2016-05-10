@@ -2,10 +2,7 @@ package zmaster587.advancedRocketry.world.biome;
 
 import java.util.Random;
 
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.world.gen.WorldGenLargeCrystal;
-import zmaster587.libVulpes.block.BlockMeta;
-import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
