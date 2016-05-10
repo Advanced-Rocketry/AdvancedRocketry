@@ -71,4 +71,5 @@ public class AdvancedRocketryBlocks {
 	public static Block blockVitrifiedSand;
 	public static Block blockCharcoalLog;
 	public static Block blockElectricMushroom;
+	public static Block blockCrystal;
 }

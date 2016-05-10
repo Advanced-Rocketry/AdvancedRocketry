@@ -20,7 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class BlockOre extends Block {
+public class BlockOre extends Block implements INamedMetaBlock {
 	MaterialRegistry.Materials[] ores = new MaterialRegistry.Materials[16];
 	IIcon[] textures = new IIcon[16];
 	byte numBlocks;
@@ -32,11 +32,6 @@ public class BlockOre extends Block {
 
 	public AllowedProducts getProduct() {
 		return product;
-	}
-
-	@Override
-	public String getUnlocalizedName() {
-		return super.getUnlocalizedName();
 	}
 
 	@Override
@@ -65,6 +60,7 @@ public class BlockOre extends Block {
 		return meta;
 	}
 
+	@Override
 	public String getUnlocalizedName(int itemDamage) {
 		return  "material." + ores[itemDamage].getUnlocalizedName();
 	}
