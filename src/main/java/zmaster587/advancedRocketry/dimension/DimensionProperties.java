@@ -13,6 +13,8 @@ import java.util.Set;
 import org.apache.commons.lang3.ArrayUtils;
 
 import scala.reflect.internal.Trees.If;
+import scala.util.Random;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
@@ -32,6 +34,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.BiomeGenBase.TempCategory;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
@@ -60,7 +63,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		public int getTemp() {
 			return temp;
 		}
-		
+
 		/**
 		 * @param lowerBound lower Bound (inclusive)
 		 * @param upperBound upper Bound (inclusive)
@@ -69,11 +72,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		public boolean isInRange(Temps lowerBound, Temps upperBound) {
 			return this.compareTo(lowerBound) <= 0 && this.compareTo(upperBound) >= 0;
 		}
-		
+
 		/**
 		 * @return a temperature that refers to the supplied value
 		 */
-		
+
 		public static Temps getTempFromValue(int value) {
 			for(Temps type : Temps.values()) {
 				if(value > type.temp)
@@ -138,6 +141,15 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		}
 	}
 
+	public static final int MAX_ATM_PRESSURE = 200;
+	public static final int MIN_ATM_PRESSURE = 0;
+	
+	public static final int MAX_DISTANCE = 200;
+	public static final int MIN_DISTANCE = 0;
+	
+	public static final int MAX_GRAVITY = 200;
+	public static final int MIN_GRAVITY = 0;
+	
 	//True if dimension is managed and created by AR (false otherwise)
 	public boolean isNativeDimension;
 	public float[] skyColor;
@@ -149,7 +161,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public int rotationalPeriod;
 	public double orbitTheta;
 	StellarBody star;
-	public String name;
+	private String name;
 	public float[] sunriseSunsetColors;
 	//public ExtendedBiomeProperties biomeProperties;
 	private LinkedList<BiomeEntry> allowedBiomes;
@@ -267,6 +279,13 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 */
 	public String getName() {
 		return name;
+	}
+	
+	/**
+	 * Sets the name of the planet
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	//Planet hierarchy
@@ -405,13 +424,13 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @param id DIMID of the new child
 	 * @return true if successfully added as a child planet
 	 */
-	public boolean addChildPlanet(int id) {
+	public boolean addChildPlanet(DimensionProperties child) {
 		//TODO: check for hierarchy loops!
-		if(id == parentPlanet)
+		if(child == this)
 			return false;
 
-		childPlanets.add(id);
-		DimensionManager.getInstance().getDimensionProperties(id).setParentPlanet(planetId);
+		childPlanets.add(child.getId());
+		child.setParentPlanet(planetId);
 		return true;
 	}
 
@@ -491,7 +510,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return true if this dimension is allowed to have rivers
 	 */
 	public boolean hasRivers() {
-		return AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity).compareTo(AtmosphereTypes.LOW) != -1 && Temps.getTempFromValue(averageTemperature).isInRange(Temps.COLD, Temps.HOT);
+		return AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity).compareTo(AtmosphereTypes.LOW) <= 0 && Temps.getTempFromValue(averageTemperature).isInRange(Temps.COLD, Temps.HOT);
 	}
 
 
@@ -509,16 +528,33 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return true if the biome is not allowed to spawn on any Dimension
 	 */
 	public boolean isBiomeblackListed(BiomeGenBase biome) {
-		return biome.biomeID == BiomeGenBase.sky.biomeID || biome.biomeID == BiomeGenBase.hell.biomeID;
+		return AdvancedRocketryBiomes.instance.getBlackListedBiomes().contains(biome.biomeID);
 	}
 
 	/**
 	 * @return a list of biomes allowed to spawn in this dimension
 	 */
 	public List<BiomeGenBase> getViableBiomes() {
-
+		Random random = new Random(System.currentTimeMillis());
 		ArrayList<BiomeGenBase> viableBiomes = new ArrayList<BiomeGenBase>();
 
+		if(random.nextInt(5) == 0) {
+			List<BiomeGenBase> list = new LinkedList<BiomeGenBase>(AdvancedRocketryBiomes.instance.getSingleBiome());
+
+			while(list.size() > 1) {
+				BiomeGenBase biome = list.get(random.nextInt(list.size()));
+				Temps temp = Temps.getTempFromValue(averageTemperature);
+				if((biome.getTempCategory() == TempCategory.COLD && temp.isInRange(Temps.FRIGID, Temps.NORMAL)) ||
+						((biome.getTempCategory() == TempCategory.MEDIUM || biome.getTempCategory() == TempCategory.OCEAN) &&
+								temp.isInRange(Temps.COLD, Temps.HOT)) ||
+								(biome.getTempCategory() == TempCategory.WARM && temp.isInRange(Temps.NORMAL, Temps.HOT))) {
+					viableBiomes.add(biome);
+					return viableBiomes;
+				}
+			}
+		}
+
+		
 		if(atmosphereDensity < AtmosphereTypes.LOW.value)
 			viableBiomes.add(AdvancedRocketryBiomes.moonBiome);
 
@@ -526,7 +562,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			viableBiomes.add(AdvancedRocketryBiomes.hotDryBiome);
 		}
 		else if(averageTemperature > Temps.HOT.getTemp()) {
-			viableBiomes.addAll(Arrays.asList(BiomeDictionary.getBiomesForType(BiomeDictionary.Type.HOT)));
+			for(BiomeGenBase biome : BiomeGenBase.getBiomeGenArray()) {
+				if(biome != null && (BiomeDictionary.isBiomeOfType(biome,BiomeDictionary.Type.HOT) || BiomeDictionary.isBiomeOfType(biome,BiomeDictionary.Type.OCEAN))  && !isBiomeblackListed(biome)) {
+					viableBiomes.add(biome);
+				}
+			}
 		}
 		else if(averageTemperature > Temps.NORMAL.getTemp()) {
 			for(BiomeGenBase biome : BiomeGenBase.getBiomeGenArray()) {
@@ -534,6 +574,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 					viableBiomes.add(biome);
 				}
 			}
+			viableBiomes.addAll(Arrays.asList(BiomeDictionary.getBiomesForType(BiomeDictionary.Type.OCEAN)));
 		}
 		else if(averageTemperature > Temps.COLD.getTemp()) {
 			for(BiomeGenBase biome : BiomeGenBase.getBiomeGenArray()) {
@@ -541,6 +582,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 					viableBiomes.add(biome);
 				}
 			}
+			viableBiomes.addAll(Arrays.asList(BiomeDictionary.getBiomesForType(BiomeDictionary.Type.OCEAN)));
 		}
 		else if(averageTemperature > Temps.FRIGID.getTemp()) {
 
@@ -550,7 +592,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			viableBiomes.addAll(Arrays.asList(BiomeDictionary.getBiomesForType(BiomeDictionary.Type.COLD)));
 			//TODO:
 		}
-		
+
 		if(atmosphereDensity > AtmosphereTypes.HIGHPRESSURE.value && Temps.getTempFromValue(averageTemperature).isInRange(Temps.NORMAL, Temps.HOT))
 			viableBiomes.addAll(AdvancedRocketryBiomes.instance.getHighPressureBiomes());
 
@@ -567,6 +609,23 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		allowedBiomes.addAll(getBiomesEntries(biomes));
 	}
 
+	/**
+	 * Adds a biome to the list of biomes allowed to spawn on this planet
+	 * @param biome biome to be added as viable
+	 * @return true if the biome was added sucessfully, false otherwise
+	 */
+	public boolean addBiome(int biomeId) {
+		
+		BiomeGenBase biome =  BiomeGenBase.getBiome(biomeId);
+		if(biomeId == 0 || biome != BiomeGenBase.ocean) {
+			List<BiomeGenBase> biomes = new ArrayList<BiomeGenBase>();
+			biomes.add(biome);
+			allowedBiomes.addAll(getBiomesEntries(biomes));
+			return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * Adds a list of biomes to the allowed list of biomes for this planet
 	 * @param biomes 
@@ -664,7 +723,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				for(BiomeManager.BiomeType types : BiomeManager.BiomeType.values()) {
 					for(BiomeEntry entry : BiomeManager.getBiomes(types)) {
 						if(biomes == null)
-							System.out.println("WTF null biome");
+							AdvancedRocketry.logger.warning("Null biomes loaded for DIMID: " + this.getId());
 						else if(entry.biome.biomeID == biomes.biomeID) {
 							biomeEntries.add(entry);
 							notFound = false;
@@ -674,7 +733,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 					}
 				}
 
-			if(notFound) {
+			if(notFound && biomes != null) {
 				biomeEntries.add(new BiomeEntry(biomes, 30));
 			}
 		}

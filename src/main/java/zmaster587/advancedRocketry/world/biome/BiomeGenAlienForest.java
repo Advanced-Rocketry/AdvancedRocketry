@@ -12,7 +12,7 @@ import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 public class BiomeGenAlienForest extends BiomeGenBase {
 
 	public final static WorldGenAbstractTree alienTree = new WorldGenAlienTree(false);
-	private final static WorldGenNoTree noTree = new WorldGenNoTree(false);;
+	private final static WorldGenNoTree noTree = new WorldGenNoTree(false);
 
 	public BiomeGenAlienForest(int biomeId, boolean register) {
 		super(biomeId, register);

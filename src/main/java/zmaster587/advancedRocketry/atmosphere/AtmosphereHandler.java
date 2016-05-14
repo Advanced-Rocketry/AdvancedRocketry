@@ -103,6 +103,10 @@ public class AtmosphereHandler {
 			AtmosphereHandler handler = getOxygenHandler(world.provider.dimensionId);
 			BlockPosition pos = new BlockPosition(x, y, z);
 			int meta = world.getBlockMetadata(x, y, z);
+			
+
+			if(handler == null)
+				return; //WTF
 
 			for(AreaBlob blob : handler.getBlobWithinRadius(pos, MAX_BLOB_RADIUS)) {
 
@@ -125,6 +129,9 @@ public class AtmosphereHandler {
 
 			AtmosphereHandler handler = getOxygenHandler(world.provider.dimensionId);
 
+			if(handler == null)
+				return; //WTF
+			
 			for(AreaBlob blob : handler.getBlobWithinRadius(pos, MAX_BLOB_RADIUS)) {
 
 				if(world.isAirBlock(x, y, z))

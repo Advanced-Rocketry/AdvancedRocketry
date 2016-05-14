@@ -327,6 +327,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			//Set sun color and distance
 			tessellator1.startDrawingQuads();		
 			f10 = 30f*(200-solarOrbitalDistance)/100f;
+			//multiplier = 2;
 			tessellator1.setColorOpaque_F((float)sunColor.xCoord * multiplier, (float)sunColor.yCoord * multiplier, (float)sunColor.zCoord * multiplier);
 
 

@@ -19,6 +19,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldProvider;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.client.IRenderHandler;
 
@@ -67,7 +68,11 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 		this.worldChunkMgr = new ChunkManagerPlanet(worldObj);
 		//AdvancedRocketry.planetWorldType.getChunkManager(worldObj);
 	}
-	
+	@Override
+	public boolean canDoRainSnowIce(Chunk chunk) {
+		// TODO Auto-generated method stub
+		return getAtmosphereDensity(0,0) > 75 ? super.canDoRainSnowIce(chunk) : false;
+	}
 	@Override
 	public void updateWeather() {
 
@@ -135,12 +140,12 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	@Override
 	public Vec3 getSkyColor(Entity cameraEntity, float partialTicks) {
 		float[] vec = getDimensionProperties((int)cameraEntity.posX, (int)cameraEntity.posZ).skyColor;
-		//if(vec == null)
+		if(vec == null)
 			return super.getSkyColor(cameraEntity, partialTicks);
-		//else {
-		//	Vec3 skyColorVec =  Vec3.createVectorHelper(1, 1, 1);//super.getSkyColor(cameraEntity, partialTicks);
-		//	return Vec3.createVectorHelper(vec[0] * skyColorVec.xCoord, vec[1] * skyColorVec.yCoord, vec[2] * skyColorVec.zCoord) ;
-		//}
+		else {
+			Vec3 skyColorVec = super.getSkyColor(cameraEntity, partialTicks);
+			return Vec3.createVectorHelper(vec[0] * skyColorVec.xCoord, vec[1] * skyColorVec.yCoord, vec[2] * skyColorVec.zCoord) ;
+		}
 	}
 
 	@Override
@@ -161,7 +166,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	public String getDimensionName() {
-		return getDimensionProperties(0,0).name;
+		return getDimensionProperties(0,0).getName();
 	}
 
 	//Make the world deep

@@ -135,7 +135,7 @@ public class ChunkProviderPlanet implements IChunkProvider {
 		float atmDensity = ((WorldProviderPlanet)worldObj.provider).getAtmosphereDensity(0,0);
 
 		if(atmDensity < 0.75f)
-			craterGenerator = new MapGenCrater( (int)(10 +  (26*atmDensity) ));
+			craterGenerator = new MapGenCrater( (int)(10 +  (26*(1-atmDensity)) ));
 		else 
 			craterGenerator = null;
 		

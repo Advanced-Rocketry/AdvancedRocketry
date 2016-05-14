@@ -17,7 +17,7 @@ public class BiomeGenCrystal extends BiomeGenBase  {
 		rootHeight=1f;
 		heightVariation=0.1f;
 		rainfall = 0.2f;
-		temperature = 0.2f;
+		temperature = 0.1f;
 		topBlock = Blocks.snow;
 		fillerBlock = Blocks.packed_ice;
 		this.spawnableMonsterList.clear();

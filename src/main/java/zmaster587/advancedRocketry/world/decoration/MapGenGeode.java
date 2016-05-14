@@ -21,7 +21,7 @@ public class MapGenGeode extends MapGenBase {
 			int rangeZ, int chunkX, int chunkZ,
 			Block[] chunkArray) {
 
-		if(rand.nextInt(chancePerChunk) == Math.abs(rangeX) % chancePerChunk && rand.nextInt(chancePerChunk) == Math.abs(rangeZ) % chancePerChunk) {
+		if(rand.nextInt(chancePerChunk) == Math.abs(rangeX) % chancePerChunk || rand.nextInt(chancePerChunk) == Math.abs(rangeZ) % chancePerChunk) {
 
 			int radius = rand.nextInt(24) + 24; //24; 24 -> 48
 

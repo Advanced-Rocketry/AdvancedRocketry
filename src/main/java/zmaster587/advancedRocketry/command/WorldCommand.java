@@ -17,6 +17,7 @@ import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.world.biome.BiomeGenAlienForest;
+import zmaster587.advancedRocketry.world.biome.BiomeGenDeepSwamp;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
 import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
@@ -138,20 +139,20 @@ public class WorldCommand implements ICommand {
 				}
 				else if(string[1].equalsIgnoreCase("tree")) {
 
-					for(int x = -30; x < 30; x++)
-						for(int y = 64; y < 120; y++) {
-							for(int z = -30; z < 30; z++) {
+					for(int x = -50; x < 50; x++)
+						for(int y = 4; y < 120; y++) {
+							for(int z = -50; z < 50; z++) {
 								sender.getEntityWorld().setBlockToAir(x, y, z);
 							}
 						}
 
-					BiomeGenAlienForest.alienTree.generate(sender.getEntityWorld(), new Random(), 0, 63, 0);
+					//BiomeGenDeepSwamp.swampTree.generate(sender.getEntityWorld(), new Random(), 0, 4, 0);
 				}
 				else if(string[1].equalsIgnoreCase("list")) { //Lists dimensions
 
 					sender.addChatMessage(new ChatComponentText("Dimensions:"));
 					for(int i : DimensionManager.getInstance().getregisteredDimensions()) {
-						sender.addChatMessage(new ChatComponentText("DIM" + i + ":  " + DimensionManager.getInstance().getDimensionProperties(i).name)); 
+						sender.addChatMessage(new ChatComponentText("DIM" + i + ":  " + DimensionManager.getInstance().getDimensionProperties(i).getName())); 
 					}
 				}
 				else if(string[1].equalsIgnoreCase("delete")) {

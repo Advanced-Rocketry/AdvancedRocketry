@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import zmaster587.advancedRocketry.world.biome.BiomeGenCrystal;
+import zmaster587.advancedRocketry.world.biome.BiomeGenDeepSwamp;
+import zmaster587.advancedRocketry.world.biome.BiomeGenOceanSpires;
 import net.minecraft.world.biome.BiomeGenBase;
 
 /**
@@ -15,6 +17,8 @@ public class AdvancedRocketryBiomes {
 	public static final AdvancedRocketryBiomes instance = new AdvancedRocketryBiomes();
 	private List<BiomeGenBase> registeredBiomes;
 	private List<BiomeGenBase> registeredHighPressureBiomes;
+	private List<BiomeGenBase> registeredSingleBiome;
+	private static List<Integer> blackListedBiomeIds;
 	
 	public static BiomeGenBase moonBiome;
 	public static BiomeGenBase hotDryBiome;
@@ -22,10 +26,18 @@ public class AdvancedRocketryBiomes {
 	public static BiomeGenBase spaceBiome;
 	public static BiomeGenBase stormLandsBiome;
 	public static BiomeGenBase crystalChasms;
+	public static BiomeGenBase swampDeepBiome;
+	public static BiomeGenBase marsh;
+	public static BiomeGenBase oceanSpires;
 	
 	private AdvancedRocketryBiomes() {
 		registeredBiomes = new ArrayList<BiomeGenBase>();
 		registeredHighPressureBiomes = new LinkedList<BiomeGenBase>();
+		blackListedBiomeIds = new ArrayList<Integer>();
+		registeredSingleBiome = new ArrayList<BiomeGenBase>();
+		
+		registerBlackListBiome(BiomeGenBase.sky);
+		registerBlackListBiome(BiomeGenBase.hell);
 	}
 	
 	/**
@@ -37,16 +49,45 @@ public class AdvancedRocketryBiomes {
 		registeredBiomes.add(biome);
 	}
 	
+	
 	/**
-	 * Registers a biome as high pressure for use with the planet generators
+	 * Registers biomes you don't want to spawn on any planet unless registered with highpressure or similar feature
+	 */
+	public void registerBlackListBiome(BiomeGenBase biome) {
+		blackListedBiomeIds.add(biome.biomeID);
+	}
+	
+	/**
+	 * Gets a list of the blacklisted Biome Ids
+	 */
+	public List<Integer> getBlackListedBiomes() {
+		return blackListedBiomeIds;
+	}
+	
+	/**
+	 * Registers a biome as high pressure for use with the planet generators (It will only spawn on planets with high pressure)
 	 * @param biome
 	 */
 	public void registerHighPressureBiome(BiomeGenBase biome) {
 		registeredHighPressureBiomes.add(biome);
+		registerBlackListBiome(biome);
 	}
 	
 	public List<BiomeGenBase> getHighPressureBiomes() {
 		return registeredHighPressureBiomes;	
+	}
+	
+	/**
+	 * Registers a biome to have a chance to spawn as the only biome on a planet
+	 * @param biome
+	 */
+	public void registerSingleBiome(BiomeGenBase biome) {
+		registeredSingleBiome.add(biome);
+		registerBlackListBiome(biome);
+	}
+	
+	public List<BiomeGenBase> getSingleBiome() {
+		return registeredSingleBiome;	
 	}
 	
 	/**

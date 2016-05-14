@@ -18,6 +18,7 @@ Current Features:
 - Satellites
 - Data collection of planets (not currently fully featured)
 - Support for IC2 and RF
+- planets can be generated from XML
 
 Future Features:
 - Other engine types for space ships(ion/plasma)

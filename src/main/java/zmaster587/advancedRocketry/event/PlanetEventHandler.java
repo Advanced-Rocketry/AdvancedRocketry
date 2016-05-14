@@ -4,23 +4,23 @@ import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
@@ -31,12 +31,9 @@ import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
-import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
-import zmaster587.advancedRocketry.world.util.WorldDummy;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
@@ -67,16 +64,20 @@ public class PlanetEventHandler {
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void blockPlaceEvent(PlayerInteractEvent event) {
 		ForgeDirection direction = ForgeDirection.getOrientation(event.face);
-		if(!event.world.isRemote && Action.RIGHT_CLICK_BLOCK == event.action && event.entityPlayer != null && event.entityPlayer.getCurrentEquippedItem() != null && event.entityPlayer.getCurrentEquippedItem().getItem() == Item.getItemFromBlock(Blocks.torch) && 
-				event.world.getBlock(event.x, event.y, event.z).isSideSolid(event.world, event.x, event.y, event.z, direction) && 
+		if(!event.world.isRemote && Action.RIGHT_CLICK_BLOCK == event.action && event.entityPlayer != null  && 
 				!AtmosphereHandler.getOxygenHandler(event.world.provider.dimensionId).getAtmosphereType(event.x + direction.offsetX, event.y + direction.offsetY, event.z + direction.offsetZ).allowsCombustion()) {
-			event.setCanceled(true);
-			
-			event.world.setBlock(event.x + direction.offsetX, event.y + direction.offsetY, event.z + direction.offsetZ, AdvancedRocketryBlocks.blockUnlitTorch);
+
+			if(event.entityPlayer.getCurrentEquippedItem() != null && event.entityPlayer.getCurrentEquippedItem().getItem() == Item.getItemFromBlock(Blocks.torch) && 
+					event.world.getBlock(event.x, event.y, event.z).isSideSolid(event.world, event.x, event.y, event.z, direction)) {
+				event.setCanceled(true);
+				event.world.setBlock(event.x + direction.offsetX, event.y + direction.offsetY, event.z + direction.offsetZ, AdvancedRocketryBlocks.blockUnlitTorch);
+			}
+			else if(event.entityPlayer.getCurrentEquippedItem().getItem() == Items.flint_and_steel || event.entityPlayer.getCurrentEquippedItem().getItem() == Items.fire_charge)
+				event.setCanceled(true);
 		}
 	}
 
@@ -137,7 +138,7 @@ public class PlanetEventHandler {
 		DimensionManager.getInstance().tickDimensions();
 		time++;
 	}
-	
+
 
 	//Make sure the player receives data about the dimensions
 	@SubscribeEvent
@@ -210,7 +211,7 @@ public class PlanetEventHandler {
 		if(!event.world.isRemote)
 			AtmosphereHandler.unregisterWorld(event.world.provider.dimensionId);
 	}
-	
+
 	/**
 	 * Starts a burst, used for move to warp effect
 	 * @param endTime
@@ -226,15 +227,19 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void fogColor(net.minecraftforge.client.event.EntityViewRenderEvent.FogColors event) {
+		Block block = ActiveRenderInfo.getBlockAtEntityViewpoint(event.entity.worldObj, event.entity, (float)event.renderPartialTicks);
+		if(block.getMaterial() == Material.water)
+			return;
+
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.entity.dimension);
 		if(properties != null) {
 			float fog = properties.getAtmosphereDensityAtHeight(event.entity.posY);
-			
+
 			if(event.entity.worldObj.provider instanceof IPlanetaryProvider) {
 				Vec3 color = event.entity.worldObj.provider.getSkyColor(event.entity, 0f);
-				event.red = (float) color.xCoord;
-				event.green = (float) color.yCoord;
-				event.blue = (float) color.zCoord;
+				event.red = (float) Math.min(color.xCoord*1.4f,1f);
+				event.green = (float) Math.min(color.yCoord*1.4f, 1f);
+				event.blue = (float) Math.min(color.zCoord*1.4f, 1f);
 			}
 
 			if(endTime > 0) {
@@ -252,6 +257,20 @@ public class PlanetEventHandler {
 			}
 		}
 	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void fogColor(net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity event) {
+		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.entity.dimension);
+		if(properties != null && properties.atmosphereDensity > 125) {
+			float fog = properties.getAtmosphereDensityAtHeight(event.entity.posY);
+
+			event.density = fog/128f;
+			event.setCanceled(true);
+		}
+	}
+
+
 
 	//Saves NBT data
 	@SubscribeEvent

@@ -34,6 +34,7 @@ public class DimensionManager {
 	private static DimensionManager instance = new DimensionManager();
 	public static final String workingPath = "advRocketry";
 	public static final String filePath = workingPath + "/temp.dat";
+	public static final String XML_PATH = workingPath + "/planetDefs.xml";
 	public static int dimOffset = 0;
 
 	//Reference to the worldProvider for any dimension created through this system, normally WorldProviderPlanet, set in AdvancedRocketry.java in preinit
@@ -72,7 +73,7 @@ public class DimensionManager {
 		overworldProperties.orbitalDist = 100;
 		overworldProperties.skyColor = new float[] {1f, 1f, 1f};
 		overworldProperties.setStar(sol);
-		overworldProperties.name = "Earth";
+		overworldProperties.setName("Earth");
 
 		defaultSpaceDimensionProperties = new DimensionProperties(-1, false);
 		defaultSpaceDimensionProperties.atmosphereDensity = 0;
@@ -81,7 +82,7 @@ public class DimensionManager {
 		defaultSpaceDimensionProperties.orbitalDist = 100;
 		defaultSpaceDimensionProperties.skyColor = new float[] {0f,0f,0f};
 		defaultSpaceDimensionProperties.setStar(sol);
-		defaultSpaceDimensionProperties.name = "Space";
+		defaultSpaceDimensionProperties.setName("Space");
 		defaultSpaceDimensionProperties.fogColor = new float[] {0f,0f,0f};
 		defaultSpaceDimensionProperties.setParentPlanet(0,false);
 		defaultSpaceDimensionProperties.orbitalDist = 1;
@@ -195,14 +196,13 @@ public class DimensionManager {
 		DimensionProperties properties = new DimensionProperties(getNextFreeDim());
 
 		if(name == "")
-			properties.name = getNextName(properties.getId());
+			properties.setName(getNextName(properties.getId()));
 		else {
-			properties.name = name;
+			properties.setName(name);
 		}
 		properties.atmosphereDensity = MathHelper.clamp_int(baseAtmosphere + random.nextInt(atmosphereFactor) - atmosphereFactor/2, 0, 200); 
 		properties.orbitalDist = MathHelper.clamp_int(baseDistance + random.nextInt(distanceFactor) - distanceFactor/2,0,200);
 		properties.gravitationalMultiplier = Math.min(Math.max(0.05f,(baseGravity + random.nextInt(gravityFactor) - gravityFactor/2)/100f), 1.3f);
-		properties.skyColor = new float []{.5f, .5f, .8f};
 
 		double minDistance;
 
