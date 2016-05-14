@@ -187,7 +187,6 @@ public class AdvancedRocketry {
 		final String PLANET = "Planet";
 
 		zmaster587.advancedRocketry.api.Configuration.buildSpeedMultiplier = (float) config.get(Configuration.CATEGORY_GENERAL, "buildSpeedMultiplier", 1f, "Multiplier for the build speed of the Rocket Builder (0.5 is twice as fast 2 is half as fast").getDouble();
-		zmaster587.advancedRocketry.api.Configuration.MoonId = config.get(Configuration.CATEGORY_GENERAL,"moonId" , 2,"Dimension ID to use for the moon").getInt();
 		zmaster587.advancedRocketry.api.Configuration.spaceDimId = config.get(Configuration.CATEGORY_GENERAL,"spaceStationId" , -2,"Dimension ID to use for space stations").getInt();
 		zmaster587.advancedRocketry.api.Configuration.enableOxygen = config.get(Configuration.CATEGORY_GENERAL, "EnableAtmosphericEffects", true, "If true, allows players being hurt due to lack of oxygen and allows effects from non-standard atmosphere types").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods = config.get(Configuration.CATEGORY_GENERAL, "makeMaterialsForOtherMods", true, "If true the machines from AdvancedRocketry will produce things like plates/rods for other mods even if Advanced Rocketry itself does not use the material (This can increase load time)").getBoolean();
@@ -952,23 +951,11 @@ public class AdvancedRocketry {
 
 		//Register hard coded dimensions
 		if(!zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.filePath)) {
-
-			DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId);
-			dimensionProperties.atmosphereDensity = 0;
-			dimensionProperties.averageTemperature = 20;
-			dimensionProperties.gravitationalMultiplier = .166f; //Actual moon value
-			dimensionProperties.setName("Luna");
-			dimensionProperties.orbitalDist = 150;
-			dimensionProperties.addBiome(AdvancedRocketryBiomes.moonBiome);
-
-			dimensionProperties.setParentPlanet(0);
-			dimensionProperties.setStar(DimensionManager.getSol());
-			dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");
-			DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
-
 			int numRandomGeneratedPlanets = 6;
 			File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
+			logger.info("Checking for config at " + file.getAbsolutePath());
 			if(file.exists()) {
+				logger.info("File found!");
 				XMLPlanetLoader loader = new XMLPlanetLoader();
 				try {
 					loader.loadFile(file);
@@ -982,6 +969,23 @@ public class AdvancedRocketry {
 				}
 			}
 
+			if(zmaster587.advancedRocketry.api.Configuration.MoonId == -1)
+				zmaster587.advancedRocketry.api.Configuration.MoonId = DimensionManager.getInstance().getNextFreeDim();
+			
+			DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId);
+			dimensionProperties.atmosphereDensity = 0;
+			dimensionProperties.averageTemperature = 20;
+			dimensionProperties.gravitationalMultiplier = .166f; //Actual moon value
+			dimensionProperties.setName("Luna");
+			dimensionProperties.orbitalDist = 150;
+			dimensionProperties.addBiome(AdvancedRocketryBiomes.moonBiome);
+
+			dimensionProperties.setParentPlanet(0);
+			dimensionProperties.setStar(DimensionManager.getSol());
+			dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");
+			DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
+
+			
 			Random random = new Random(System.currentTimeMillis());
 
 			for(int i = 0; i < numRandomGeneratedPlanets; i++) {

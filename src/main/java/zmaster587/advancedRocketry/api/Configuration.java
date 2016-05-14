@@ -10,7 +10,7 @@ public class Configuration {
 	public static final String configFolder = "advRocketry";
 	
 	public static int orbit = 1000;
-	public static int MoonId = 2;
+	public static int MoonId = -1;
 	public static int spaceDimId = -2;
 	public static int fuelPointsPer10Mb = 10;
 	public static int stationSize = 1024;
