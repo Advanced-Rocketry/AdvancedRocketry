@@ -7,6 +7,8 @@ import net.minecraftforge.common.config.Property;
  *
  */
 public class Configuration {
+	public static final String configFolder = "advRocketry";
+	
 	public static int orbit = 1000;
 	public static int MoonId = 2;
 	public static int spaceDimId = -2;

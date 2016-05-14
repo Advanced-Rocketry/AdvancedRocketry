@@ -177,7 +177,8 @@ public class AdvancedRocketry {
 
 
 		//Configuration  ---------------------------------------------------------------------------------------------
-		config = new Configuration(event.getSuggestedConfigurationFile());
+		
+		config = new Configuration(new File(event.getModConfigurationDirectory(), "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/advancedRocketry.cfg"));
 		config.load();
 
 		final String oreGen = "Ore Generation";
@@ -966,7 +967,7 @@ public class AdvancedRocketry {
 			DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
 
 			int numRandomGeneratedPlanets = 6;
-			File file = new File(net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory(), zmaster587.advancedRocketry.dimension.DimensionManager.XML_PATH);
+			File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
 			if(file.exists()) {
 				XMLPlanetLoader loader = new XMLPlanetLoader();
 				try {

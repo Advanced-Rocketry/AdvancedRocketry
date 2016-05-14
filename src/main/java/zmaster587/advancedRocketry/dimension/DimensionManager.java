@@ -34,7 +34,6 @@ public class DimensionManager {
 	private static DimensionManager instance = new DimensionManager();
 	public static final String workingPath = "advRocketry";
 	public static final String filePath = workingPath + "/temp.dat";
-	public static final String XML_PATH = workingPath + "/planetDefs.xml";
 	public static int dimOffset = 0;
 
 	//Reference to the worldProvider for any dimension created through this system, normally WorldProviderPlanet, set in AdvancedRocketry.java in preinit
