@@ -857,7 +857,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		{
 			//Bind player to the seat
 			if(this.storage != null) {
-				this.riddenByEntity.setPosition(this.posX  + stats.getSeatX(), this.posY + stats.getSeatY() + (worldObj.isRemote ? 1.5f : 0), this.posZ + stats.getSeatZ() );
+				//Conditional b/c for some reason client/server positions do not match 
+				this.riddenByEntity.setPosition(this.posX  + stats.getSeatX(), this.posY + stats.getSeatY() + (worldObj.isRemote && this.riddenByEntity.equals(Minecraft.getMinecraft().thePlayer) ? 1.25f : -0.25), this.posZ + stats.getSeatZ() );
 			}
 			else
 				this.riddenByEntity.setPosition(this.posX , this.posY , this.posZ );
