@@ -334,8 +334,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * Sets this planet as a moon of the supplied planet's id.
 	 * @param parentId parent planet's DIMID, or -1 for none
 	 */
-	public void setParentPlanet(int parentId) {
-		this.setParentPlanet(parentId, true);
+	public void setParentPlanet(DimensionProperties parent) {
+		this.setParentPlanet(parent, true);
 	}
 
 	/**
@@ -343,18 +343,18 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @param parentId DIMID of the parent planet
 	 * @param update true to update the parent's planet to the change
 	 */
-	public void setParentPlanet(int parentId, boolean update) {
+	public void setParentPlanet(DimensionProperties parent, boolean update) {
 
 		if(update) {
 			if(parentPlanet != -1)
-				getParentProperties().childPlanets.remove(new Integer(getId()));
+				parent.childPlanets.remove(new Integer(getId()));
 
-			parentPlanet = parentId;
-			if(parentId != -1)
-				getParentProperties().childPlanets.add(getId());
+			parentPlanet = parent.getId();
+			if(parent.getId() != -1)
+				parent.childPlanets.add(getId());
 		}
 		else 
-			parentPlanet = parentId;
+			parentPlanet = parent.getId();
 	}
 
 	/**
@@ -430,7 +430,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			return false;
 
 		childPlanets.add(child.getId());
-		child.setParentPlanet(planetId);
+		child.setParentPlanet(this);
 		return true;
 	}
 
@@ -551,6 +551,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 					viableBiomes.add(biome);
 					return viableBiomes;
 				}
+				list.remove(biome);
 			}
 		}
 

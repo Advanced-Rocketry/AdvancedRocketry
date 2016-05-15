@@ -292,7 +292,7 @@ public class SpaceObject implements ISpaceObject {
 		if(id == this.getOrbitingPlanetId())
 			return;
 
-		properties.setParentPlanet(id, false);
+		properties.setParentPlanet(zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(id), false);
 		if(id != -1)
 			destinationDimId = id;
 	}

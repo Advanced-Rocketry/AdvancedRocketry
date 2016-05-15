@@ -83,7 +83,7 @@ public class DimensionManager {
 		defaultSpaceDimensionProperties.setStar(sol);
 		defaultSpaceDimensionProperties.setName("Space");
 		defaultSpaceDimensionProperties.fogColor = new float[] {0f,0f,0f};
-		defaultSpaceDimensionProperties.setParentPlanet(0,false);
+		defaultSpaceDimensionProperties.setParentPlanet(overworldProperties,false);
 		defaultSpaceDimensionProperties.orbitalDist = 1;
 
 		random = new Random(System.currentTimeMillis());

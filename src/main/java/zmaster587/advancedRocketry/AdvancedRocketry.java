@@ -771,6 +771,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryBiomes.instance.registerBlackListBiome(AdvancedRocketryBiomes.hotDryBiome);
 		AdvancedRocketryBiomes.instance.registerBlackListBiome(AdvancedRocketryBiomes.alienForest);
 		AdvancedRocketryBiomes.instance.registerBlackListBiome(AdvancedRocketryBiomes.spaceBiome);
+		
 
 		AdvancedRocketryBiomes.instance.registerHighPressureBiome(AdvancedRocketryBiomes.stormLandsBiome);
 		AdvancedRocketryBiomes.instance.registerHighPressureBiome(AdvancedRocketryBiomes.swampDeepBiome);
@@ -980,7 +981,7 @@ public class AdvancedRocketry {
 			dimensionProperties.orbitalDist = 150;
 			dimensionProperties.addBiome(AdvancedRocketryBiomes.moonBiome);
 
-			dimensionProperties.setParentPlanet(0);
+			dimensionProperties.setParentPlanet(DimensionManager.overworldProperties);
 			dimensionProperties.setStar(DimensionManager.getSol());
 			dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");
 			DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
@@ -1013,7 +1014,7 @@ public class AdvancedRocketry {
 
 					for(int ii = 0; ii < numMoons; ii++) {
 						DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
-						moonProperties.setParentPlanet(properties.getId());
+						moonProperties.setParentPlanet(properties);
 					}
 				}
 			}
