@@ -36,7 +36,7 @@ Welcome to the Advanced Rocketry(AR) advanced configuration readme!
 
 This document will guide you through manually or semi-manually defining planets for your world!
 
-To use manual xml planet configuration, download and modify "template.xml" and rename to "planetDefs.xml" in the config/advancedRocketry folder
+To use manual xml planet configuration, download and modify https://github.com/zmaster587/AdvancedRocketry/blob/master/Template.xml and rename to "planetDefs.xml" in the config/advancedRocketry folder
 
 
 Explaination of usable tags:
