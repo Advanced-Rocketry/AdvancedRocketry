@@ -45,12 +45,21 @@ Future Features:
 - stations can be positioned over certain locations on planets
 - colony management system (seed testificates throughout the universe?)
 - config for mapping dims added by other mods to planets
+- Gravity generators for space stations, local areas on planets
 - ground based telescopes
         - water detectors (increases info on %dry) space only
         - chemical detectors (increases chance of finding planets rich in certain ores) space only
         - atmospheric detectors (increases info on pressure; when combined with chemical can detect if planet has harvestable/hazardous gasses) ground and space
         - temperature detector (increases info on planetary temperature) space only
         - star scanner (increases the likelyhood of finding planets orbiting a star; higher level allows for smaller planets) ground and space
+- asteroids
+    - automated harvesting
+    - manual harvesting
+    - research system
+        - random asteroid parameters ( size, composition, location (polar coords)
+        - research can be done to determine properties
+        - player can select as a destination
+            - temporary dim in created, destroyed when last player leaves
 - Hardmode
     - must protect space stations from meteors
     - rockets require life support
