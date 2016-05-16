@@ -96,6 +96,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	private boolean isInOrbit;
 	//True if the rocket isn't on the ground
 	private boolean isInFlight;
+	
+	private long lastWorldTickTicked;
 
 	//stores the coordinates of infrastructures, used for when the world loads/saves
 	private LinkedList<Vector3F<Integer>> infrastructureCoords;
@@ -106,9 +108,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	private int tilebuttonOffset = 3;
 	private WeakReference<Entity>[] mountedEntities;
 	protected ModulePlanetSelector container;
-	
-	private int tmpSelection;
-	
+
 	public enum PacketType {
 		RECIEVENBT,
 		SENDINTERACT,
@@ -131,6 +131,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		connectedInfrastructure = new LinkedList<IInfrastructure>();
 		infrastructureCoords = new LinkedList<Vector3F<Integer>>();
 		mountedEntities = new WeakReference[stats.getNumPassengerSeats()];
+		
+		lastWorldTickTicked = p_i1582_1_.getTotalWorldTime();
 	}
 
 	public EntityRocket(World world, StorageChunk storage, StatsRocket stats, double x, double y, double z) {
@@ -141,6 +143,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		initFromBounds();
 		isInFlight = false;
 		mountedEntities = new WeakReference[stats.getNumPassengerSeats()];
+		lastWorldTickTicked = world.getTotalWorldTime();
 	}
 
 	@Override
@@ -155,7 +158,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	public void setPositionAndRotation2(double x, double y,
 			double z, float p_70056_7_, float p_70056_8_,
 			int p_70056_9_) {
-
 		//if( !worldObj.isRemote || (y < 270 && this.isInFlight()))
 		super.setPositionAndRotation2(x, y, z, p_70056_7_, p_70056_8_, p_70056_9_);
 	}
@@ -224,6 +226,23 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	 * Sets the the status of flight of the rocket and updates the datawatcher
 	 * @param inflight status of flight
 	 */
+	public void setInOrbit(boolean inOrbit) {
+		this.isInOrbit = inOrbit;
+		this.dataWatcher.updateObject(18, new Byte(isInOrbit ? (byte)1 : (byte)0));
+	}
+	
+	/**
+	 * If the rocket is in flight, ie the rocket has taken off and has not touched the ground
+	 * @return true if in flight
+	 */
+	public boolean isInOrbit() {
+		return this.dataWatcher.getWatchableObjectByte(18) == 1;
+	}
+
+	/**
+	 * Sets the the status of flight of the rocket and updates the datawatcher
+	 * @param inflight status of flight
+	 */
 	public void setInFlight(boolean inflight) {
 		this.isInFlight = inflight;
 		this.dataWatcher.updateObject(16, new Byte(isInFlight ? (byte)1 : (byte)0));
@@ -233,6 +252,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	protected void entityInit() {
 		this.dataWatcher.addObject(16, new Byte(isInFlight ? (byte)1 : (byte)0));
 		this.dataWatcher.addObject(17, new Integer(0));
+		this.dataWatcher.addObject(18, new Byte(isInOrbit ? (byte)1 : (byte)0));
 	}
 
 	//Set the size and position of the rocket from storage
@@ -344,13 +364,16 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 
 	public boolean isBurningFuel() {
-		return (getFuelAmount() > 0 || !Configuration.rocketRequireFuel) && (!(this.riddenByEntity instanceof EntityPlayer) || !isInOrbit || ((EntityPlayer)this.riddenByEntity).moveForward > 0);
+		return (getFuelAmount() > 0 || !Configuration.rocketRequireFuel) && (!(this.riddenByEntity instanceof EntityPlayer) || !isInOrbit() || ((EntityPlayer)this.riddenByEntity).moveForward > 0);
 	}
 
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
 
+		long deltaTime = worldObj.getTotalWorldTime() - lastWorldTickTicked;
+		lastWorldTickTicked = worldObj.getTotalWorldTime();
+		
 		//TODO move
 		World.MAX_ENTITY_RADIUS = 100;
 
@@ -365,13 +388,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				//Spawn in the particle effects for the engines
 				if(worldObj.isRemote && Minecraft.getMinecraft().gameSettings.particleSetting < 2 && (this.motionY > 0 || (riddenByEntity instanceof EntityPlayer && ((EntityPlayer)riddenByEntity).moveForward > 0))) {
 					for(Vector3F<Float> vec : stats.getEngineLocations()) {
-						
+
 						if(worldObj.getTotalWorldTime() % 10 == 0)
 							AdvancedRocketry.proxy.spawnParticle("rocketSmoke", worldObj, this.posX + vec.x, this.posY + vec.y - 0.75, this.posZ +vec.z,0,0,0);
-						
+
 						for(int i = 0; i < 4; i++) {
-							AdvancedRocketry.proxy.spawnParticle("rocketFlame", worldObj, this.posX + vec.x, this.posY + vec.y - 0.75, this.posZ +vec.z,(this.rand.nextFloat() - 0.5f)/8f,-.75 + this.motionY,(this.rand.nextFloat() - 0.5f)/8f);
-							
+							AdvancedRocketry.proxy.spawnParticle("rocketFlame", worldObj, this.posX + vec.x, this.posY + vec.y - 0.75, this.posZ +vec.z,(this.rand.nextFloat() - 0.5f)/8f,-.75 ,(this.rand.nextFloat() - 0.5f)/8f);
+
 						}
 					}
 				}
@@ -393,51 +416,55 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				}
 
 				//if the player holds the forward key then decelerate
-				if(isInOrbit && burningFuel)
+				if(isInOrbit() && burningFuel)
 					this.motionY -= this.motionY*player.moveForward/50f;
 				this.velocityChanged = true;
 
 			}
 
-			//If out of fuel or descending then accelerate downwards
-			if(isInOrbit || !burningFuel) {
-				this.motionY = Math.min(this.motionY - 0.001, 1);
-			} else
-				//this.motionY = Math.min(this.motionY + 0.001, 1);
-				this.motionY += stats.getAcceleration();
-
-			double lastPosY = this.posY;
-			double prevMotion = this.motionY;
-			this.moveEntity(0, prevMotion, 0);
-
-			//Check to see if it's landed
-			if((isInOrbit || !burningFuel) && isInFlight() && lastPosY + prevMotion != this.posY) {
-				System.out.println("Landed");
-				MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketLandedEvent(this));
-				this.setInFlight(false);
-				this.isInOrbit = false;
-			}
-			if((this.posY > Configuration.orbit) && !this.worldObj.isRemote) {
-				onOrbitReached();
-			}
+			if(!worldObj.isRemote) {
+				//If out of fuel or descending then accelerate downwards
+				if(isInOrbit() || !burningFuel) {
+					this.motionY = Math.min(this.motionY - 0.001, 1);
+				} else
+					//this.motionY = Math.min(this.motionY + 0.001, 1);
+					this.motionY += stats.getAcceleration() * deltaTime;
 
 
-			//If the rocket falls out of the world while in orbit either fall back to earth or die
-			if(!worldObj.isRemote && this.posY < 0) {
-				int dimId = worldObj.provider.dimensionId;
+				double lastPosY = this.posY;
+				double prevMotion = this.motionY;
+				this.moveEntity(0, prevMotion*deltaTime, 0);
 
-				if(dimId == Configuration.spaceDimId) {
-					Vector3F<Float> pos = storage.getGuidanceComputer().getLandingLocation(dimId);
-					storage.getGuidanceComputer().setReturnPosition(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ));
-					if(pos != null) {
-						this.travelToDimension(destinationDimId, pos.x, pos.z);
+				//Check to see if it's landed
+				if((isInOrbit() || !burningFuel) && isInFlight() && lastPosY + prevMotion != this.posY) {
+					MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketLandedEvent(this)); //TODO: send to client
+					this.setInFlight(false);
+					this.setInOrbit(false);
+				}
+				if((this.posY > Configuration.orbit)) {
+					onOrbitReached();
+				}
+
+
+				//If the rocket falls out of the world while in orbit either fall back to earth or die
+				if(this.posY < 0) {
+					int dimId = worldObj.provider.dimensionId;
+
+					if(dimId == Configuration.spaceDimId) {
+						Vector3F<Float> pos = storage.getGuidanceComputer().getLandingLocation(dimId);
+						storage.getGuidanceComputer().setReturnPosition(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ));
+						if(pos != null) {
+							this.travelToDimension(destinationDimId, pos.x, pos.z);
+						}
+						else
+							this.setDead();
 					}
 					else
 						this.setDead();
 				}
-				else
-					this.setDead();
 			}
+			else
+				this.moveEntity(0, this.motionY, 0);
 		}
 	}
 
@@ -497,7 +524,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		else {
 			//TODO: maybe add orbit dimension
 			this.motionY = -this.motionY;
-			isInOrbit = true;
+			setInOrbit(true);
 			//If going to a station or something make sure to set coords accordingly
 			//If in space land on the planet, if on the planet go to space
 			if(destinationDimId == Configuration.spaceDimId || this.worldObj.provider.dimensionId == Configuration.spaceDimId) {
@@ -679,7 +706,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 
-		isInOrbit = nbt.getBoolean("orbit");
+		setInOrbit(isInOrbit = nbt.getBoolean("orbit"));
 		stats.readFromNBT(nbt);
 
 		mountedEntities = new WeakReference[stats.getNumPassengerSeats()];
@@ -725,7 +752,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	}
 
 	protected void writeNetworkableNBT(NBTTagCompound nbt) {
-		nbt.setBoolean("orbit", isInOrbit);
+		nbt.setBoolean("orbit", isInOrbit());
 		nbt.setBoolean("flight", isInFlight());
 		stats.writeToNBT(nbt);
 
@@ -858,7 +885,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			//Bind player to the seat
 			if(this.storage != null) {
 				//Conditional b/c for some reason client/server positions do not match 
-				this.riddenByEntity.setPosition(this.posX  + stats.getSeatX(), this.posY + stats.getSeatY() + (worldObj.isRemote && this.riddenByEntity.equals(Minecraft.getMinecraft().thePlayer) ? 1.25f : -0.25), this.posZ + stats.getSeatZ() );
+				this.riddenByEntity.setPosition(this.posX  + stats.getSeatX(), this.posY + stats.getSeatY() + (worldObj.isRemote && this.riddenByEntity.equals(Minecraft.getMinecraft().thePlayer) ? 1.5 : -0.25), this.posZ + stats.getSeatZ() );
 			}
 			else
 				this.riddenByEntity.setPosition(this.posX , this.posY , this.posZ );
@@ -996,7 +1023,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 	@Override
 	public void onSelected(Object sender) {
-		
+
 	}
 
 	@Override
@@ -1007,6 +1034,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	@Override
 	public void onSystemFocusChanged(Object sender) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

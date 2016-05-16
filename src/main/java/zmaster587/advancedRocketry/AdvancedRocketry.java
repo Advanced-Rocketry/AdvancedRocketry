@@ -550,7 +550,7 @@ public class AdvancedRocketry {
 
 		//Entity Registration ---------------------------------------------------------------------------------------------
 		EntityRegistry.registerModEntity(EntityDummy.class, "mountDummy", 0, this, 16, 20, false);
-		EntityRegistry.registerModEntity(EntityRocket.class, "rocket", 1, this, 64, 20, true);
+		EntityRegistry.registerModEntity(EntityRocket.class, "rocket", 1, this, 64, 3, true);
 
 
 		//TileEntity Registration ---------------------------------------------------------------------------------------------

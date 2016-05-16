@@ -609,6 +609,8 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 		modules.add(new ModuleProgress(89, 47, 0, horizontalProgressBar, this));
 		modules.add(new ModuleProgress(89, 66, 1, horizontalProgressBar, this));
+		modules.add(new ModuleProgress(89, 28, 3, horizontalProgressBar, this));
+		modules.add(new ModuleProgress(89, 9, 4, horizontalProgressBar, this));
 
 		modules.add(new ModuleProgress(149, 90, 2, verticalProgressBar, this));
 
@@ -652,6 +654,10 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			return MathHelper.clamp_float(0.5f + this.getAcceleration()*10, 0f, 1f);
 		case 2:
 			return (float)this.getNormallizedProgress();
+		case 3:
+			return this.getWeight() > 0 ? 0.5f : 0f;
+		case 4:
+			return this.getThrust() > 0 ? 0.9f : 0f;
 		}
 
 		return 0f;
