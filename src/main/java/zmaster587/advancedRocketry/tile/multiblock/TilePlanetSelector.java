@@ -111,6 +111,7 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 	public int getProgress(int id) {
 
 		if(!worldObj.isRemote) {
+			return 25; /*
 			if(getMasterBlock() != null) {
 
 				ItemStack stack = ((ITilePlanetSystemSelectable)getMasterBlock()).getChipWithId(container.getSelectedSystem());
@@ -131,13 +132,13 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 					if(dataAmt != 0)
 						return (int)(certaintyDataValue/(float)dataAmt);
 				}
-			}
+			}*/
 		}
 		else {
 			return cachedProgressValues[id];
 		}
 
-		return 400;
+		//return 400;
 	}
 
 	@Override
