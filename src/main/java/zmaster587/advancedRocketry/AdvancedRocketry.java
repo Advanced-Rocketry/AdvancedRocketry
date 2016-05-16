@@ -1068,6 +1068,5 @@ public class AdvancedRocketry {
 
 			list.add(event.Name.substring("stick".length()));
 		}
-
 	}
 }

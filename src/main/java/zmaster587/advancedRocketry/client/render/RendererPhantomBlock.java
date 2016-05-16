@@ -58,9 +58,11 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 			//Render Each block
 			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 			renderBlocks.blockAccess = tileGhost.getWorldObj();
+			renderBlocks.renderAllFaces = true;
 
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_ONE_MINUS_SRC_COLOR, GL11.GL_SRC_ALPHA);
+			
 			Tessellator.instance.startDrawingQuads();
 
 			if(block.getRenderType() == 0) {
