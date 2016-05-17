@@ -33,7 +33,7 @@ public class RendererRocket extends Render {
 
 		if(Minecraft.getMinecraft().thePlayer == entity.riddenByEntity) {
 			
-			y = -storage.getSizeY() - 0.25f;
+			y = - 0.5f - 2*((EntityRocket)entity).stats.getSeatY();
 		}
 		
 		//Find the halfway point along the XZ plane
