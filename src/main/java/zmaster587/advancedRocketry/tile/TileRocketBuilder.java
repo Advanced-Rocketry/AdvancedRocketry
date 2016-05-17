@@ -93,7 +93,8 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		UNSCANNED("Rocket unscanned."),
 		SUCCESS_STATION("Ready!"),
 		EMPTY("Nothing here"),
-		FINISHED("Build Complete!");;
+		FINISHED("Build Complete!"),
+		INCOMPLETESTRCUTURE("Invalid Launch Pad Structure!");
 
 		String code;
 		private ErrorCodes(String code) {
@@ -595,6 +596,9 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		weightText.setText(isScanning() ? "Weight: ???"  : String.format("Weight: %dN",getWeight()));
 		fuelText.setText(isScanning() ? "Fuel: ???" :  String.format("Fuel: %dmb/s", getRocketStats().getFuelRate(FuelType.LIQUID)));
 		accelerationText.setText(isScanning() ? "Acc: ???" : String.format("Acc: %.2fm/s", getAcceleration()*20f));
+		if(!worldObj.isRemote && getRocketPadBounds(worldObj, xCoord, yCoord, zCoord) == null)
+			setStatus(ErrorCodes.INCOMPLETESTRCUTURE.ordinal());
+			
 		errorText.setText(getStatus().getErrorCode());
 	}
 
