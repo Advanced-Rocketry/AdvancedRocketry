@@ -67,8 +67,9 @@ public class BlockPhantom extends Block {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		
 		if(tile != null && tile instanceof TilePlaceholder && ((TilePlaceholder)tile).getReplacedBlock() != null) {
+			Block block = ((TilePlaceholder)tile).getReplacedBlock();
 			ItemStack stack = ((TilePlaceholder)tile).getReplacedBlock().getPickBlock(target, world, x, y, z, player);
-			stack.setItemDamage(((TilePlaceholder)tile).getReplacedBlockMeta());
+			stack.setItemDamage(block.damageDropped(((TilePlaceholder)tile).getReplacedBlockMeta()));
 			return stack;
 		}
 		return super.getPickBlock(target, world, x, y, z, player);

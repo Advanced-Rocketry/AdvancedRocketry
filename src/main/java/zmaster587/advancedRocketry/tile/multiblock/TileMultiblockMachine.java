@@ -67,7 +67,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	public boolean canUpdate() {
 		return true;
 	}
-	
+
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
@@ -186,10 +186,10 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	protected IRecipe getRecipe(List<IRecipe> set) {
 
 		for(IRecipe recipe : set) {
-			
+
 			if(canProcessRecipe(recipe))
 				return recipe;
-			
+
 		}
 		return null;
 	}
@@ -214,11 +214,11 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 
 	public void consumeItems(IRecipe recipe) {
-		List<ItemStack> ingredients = recipe.getIngredients();
+		LinkedList<LinkedList<ItemStack>> ingredients = recipe.getIngredients();
 
 		for(int ingredientNum = 0;ingredientNum < ingredients.size(); ingredientNum++) {
 
-			ItemStack ingredient = ingredients.get(ingredientNum);
+			LinkedList<ItemStack> ingredient = ingredients.get(ingredientNum);
 
 			ingredientCheck:
 
@@ -226,10 +226,12 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 					for(int i = 0; i < hatch.getSizeInventory(); i++) {
 						ItemStack stackInSlot = hatch.getStackInSlot(i);
 
-						if(stackInSlot != null && stackInSlot.stackSize >= ingredient.stackSize && stackInSlot.isItemEqual(ingredient)) {
-							hatch.decrStackSize(i, ingredient.stackSize);
-							hatch.markDirty();
-							break ingredientCheck;
+						for (ItemStack stack : ingredient) {
+							if(stackInSlot != null && stackInSlot.stackSize >= stack.stackSize && stackInSlot.isItemEqual(stack)) {
+								hatch.decrStackSize(i, stack.stackSize);
+								hatch.markDirty();
+								break ingredientCheck;
+							}
 						}
 					}
 				}
@@ -261,7 +263,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 	//Can this recipe be processed
 	public boolean canProcessRecipe(IRecipe recipe) {
-		
+
 		if( !isComplete() || invCheckFlag)
 			return false;
 
@@ -270,14 +272,14 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 		boolean itemCheck = outputItems.size() == 0;
 
-		
-		List<ItemStack> ingredients = recipe.getIngredients();
+
+		LinkedList<LinkedList<ItemStack>> ingredients = recipe.getIngredients();
 		short mask = 0x0;
 		recipeCheck:
 
 			for(int ingredientNum = 0;ingredientNum < ingredients.size(); ingredientNum++) {
 
-				ItemStack ingredient = ingredients.get(ingredientNum);
+				List<ItemStack> ingredient = ingredients.get(ingredientNum);
 				ingredientCheck:
 
 					for(IInventory hatch : itemInPorts) {
@@ -285,10 +287,11 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 						for(int i = 0; i < hatch.getSizeInventory(); i++) {
 							ItemStack stackInSlot = hatch.getStackInSlot(i);
 
-
-							if(stackInSlot != null && stackInSlot.stackSize >= ingredient.stackSize && stackInSlot.isItemEqual(ingredient)) {
-								mask |= (1 << ingredientNum);
-								break ingredientCheck;
+							for(ItemStack stack : ingredient) {
+								if(stackInSlot != null && stackInSlot.stackSize >= stack.stackSize && stackInSlot.isItemEqual(stack)) {
+									mask |= (1 << ingredientNum);
+									break ingredientCheck;
+								}
 							}
 						}
 
@@ -302,8 +305,8 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 			invCheckFlag = false;
 			return false;
 		}
-			
-		
+
+
 		//Check output Items
 		bottomItemCheck:
 			for(IInventory outInventory : itemOutPorts) {
@@ -419,7 +422,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	@Override
 	public void onInventoryUpdated() {
 		//If we are already processing something don't bother
-		
+
 		if(!invCheckFlag && outputItemStacks == null && outputFluidStacks == null) {
 			IRecipe recipe;
 

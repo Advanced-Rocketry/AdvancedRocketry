@@ -93,6 +93,9 @@ item.circuitplate.1.name=Advanced Circuit Plate
 item.circuitIC.0.name=Basic Circuit
 item.circuitIC.1.name=Tracking Circuit
 item.circuitIC.2.name=Advanced Circuit
+item.circuitIC.3.name=Control Circuit Board
+item.circuitIC.4.name=Item IO Circuit Board
+item.circuitIC.5.name=Liquid IO Circuit Board
 item.OreScanner.name=Ore Scanner
 item.qcrucible.name=Quartz Crucible
 item.dataUnit.0.name=Data Unit
@@ -142,6 +145,7 @@ type.block.name=Block
 type.coil.name=Coil
 type.fan.name=Fan
 type.sheet.name=Sheet
+type.gear.name=Gear
 
 container.crystallizer=Crystallizer
 container.cuttingmachine=Cutting Machine

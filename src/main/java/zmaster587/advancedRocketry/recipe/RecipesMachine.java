@@ -19,29 +19,29 @@ import net.minecraftforge.oredict.OreDictionary;
 public class RecipesMachine {
 	public class Recipe implements IRecipe {
 
-		private ArrayList<ItemStack> input;
-		private ArrayList<FluidStack> fluidInput;
-		private ArrayList<ItemStack> output;
-		private ArrayList<FluidStack> fluidOutput;
+		private LinkedList<LinkedList<ItemStack>> input;
+		private LinkedList<FluidStack> fluidInput;
+		private LinkedList<ItemStack> output;
+		private LinkedList<FluidStack> fluidOutput;
 		private int completionTime, power;
 
 		public Recipe() {}
 
-		public Recipe(List<ItemStack> output, List<ItemStack> input, int completionTime, int powerReq) {
-			this.output = new ArrayList<ItemStack>();
+		public Recipe(List<ItemStack> output, LinkedList<LinkedList<ItemStack>> input, int completionTime, int powerReq) {
+			this.output = new LinkedList<ItemStack>();
 			this.output.addAll(output);
 
-			this.input = new ArrayList<ItemStack>();
+			this.input = new LinkedList<LinkedList<ItemStack>>();
 			this.input.addAll(input);
 
 			this.completionTime = completionTime;
 			this.power = powerReq;
 
-			this.fluidInput = new ArrayList<FluidStack>();
-			this.fluidOutput = new ArrayList<FluidStack>();
+			this.fluidInput = new LinkedList<FluidStack>();
+			this.fluidOutput = new LinkedList<FluidStack>();
 		}
 
-		public Recipe(List<ItemStack> output, List<ItemStack> input, List<FluidStack> fluidOutput, List<FluidStack> fluidInput, int completionTime, int powerReq) {
+		public Recipe(List<ItemStack> output, LinkedList<LinkedList<ItemStack>> input, List<FluidStack> fluidOutput, List<FluidStack> fluidInput, int completionTime, int powerReq) {
 			this(output, input, completionTime, powerReq);
 
 			this.fluidInput.addAll(fluidInput);
@@ -56,12 +56,12 @@ public class RecipesMachine {
 		}
 
 		@Override
-		public ArrayList<ItemStack> getIngredients() {
+		public LinkedList<LinkedList<ItemStack>> getIngredients() {
 			return input;
 		}
 
 		@Override
-		public ArrayList<FluidStack> getFluidIngredients() {
+		public List<FluidStack> getFluidIngredients() {
 			return fluidInput;
 		}
 
@@ -108,13 +108,18 @@ public class RecipesMachine {
 				if(block == null) {
 					for(FluidContainerRegistry.FluidContainerData container : FluidContainerRegistry.getRegisteredFluidContainerData()) {
 						if(container.fluid.containsFluid(stack)) {
-							recipe.input.add(container.filledContainer.copy());
+							LinkedList<ItemStack> list = new LinkedList<ItemStack>();
+							list.add(container.filledContainer.copy());
+							recipe.input.add(list);
 							break;
 						}
 					}
 				}
-				else
-					recipe.input.add(new ItemStack(block));
+				else {
+					LinkedList<ItemStack> list = new LinkedList<ItemStack>();
+					list.add(new ItemStack(block));
+					recipe.input.add(list);
+				}
 			}
 
 			for(FluidStack stack : getFluidOutputs()) {
@@ -145,8 +150,12 @@ public class RecipesMachine {
 					return false;
 
 				for(int i = 0; i < input.size(); i++) {
-					if(!ItemStack.areItemStacksEqual(input.get(i), otherRecipe.input.get(i)))
+					if(input.get(i).size() != otherRecipe.input.get(i).size())
 						return false;
+					for(int j = 0; j < input.get(i).size(); j++) {
+						if(!ItemStack.areItemStacksEqual(input.get(i).get(j), otherRecipe.input.get(i).get(j)))
+							return false;
+					}
 				}
 
 				for(int i = 0; i < fluidInput.size(); i++) {
@@ -177,21 +186,19 @@ public class RecipesMachine {
 		}
 
 
-		ArrayList<ItemStack> stack = new ArrayList<ItemStack>();
+		LinkedList<LinkedList<ItemStack>> stack = new LinkedList<LinkedList<ItemStack>>();
+		
 		ArrayList<FluidStack> inputFluidStacks = new ArrayList<FluidStack>();
 
 		try {
 
 			for(int i = 0; i < inputs.length; i++) {
+				LinkedList<ItemStack> innerList = new LinkedList<ItemStack>();
 				if(inputs[i] != null) {
 					if(inputs[i] instanceof String) {
-						Object[] obj2 = inputs.clone();
-
 						for (ItemStack itemStack : OreDictionary.getOres((String)inputs[i])) {
-							obj2[i] = itemStack;
-							addRecipe(clazz, out, timeRequired, power, obj2);
+							innerList.add(itemStack.copy());
 						}
-						return;	
 					}
 					else if(inputs[i] instanceof FluidStack)
 						inputFluidStacks.add((FluidStack) inputs[i]);
@@ -202,9 +209,10 @@ public class RecipesMachine {
 						else if(inputs[i] instanceof Block)
 							inputs[i] = new ItemStack((Block)inputs[i]);
 
-						stack.add((ItemStack)inputs[i]);
+						innerList.add((ItemStack)inputs[i]);
 					}
 				}
+				stack.add(innerList);
 			}
 			ArrayList<ItemStack> outputItem = new ArrayList<ItemStack>();
 			ArrayList<FluidStack> outputFluidStacks = new ArrayList<FluidStack>();
@@ -239,9 +247,14 @@ public class RecipesMachine {
 		}
 	}
 
+	/**
+	 * @param clazz Class object of the machine to register the recipe
+	 * @param out outout object of the machine, accepts itemStack and fluidStacks
+	 * @param timeRequired base running time for the recipe in ticks
+	 * @param power power units per tick
+	 * @param inputs input objects for the recipe, accepts forge ore dict entries as strings, itemStacks, Items, Blocks, and fluidStacks
+	 */
 	public void addRecipe(Class clazz , Object out, int timeRequired, int power, Object ... inputs) {
-
-
 		addRecipe(clazz, new Object[] {out}, timeRequired, power, inputs);
 	}
 

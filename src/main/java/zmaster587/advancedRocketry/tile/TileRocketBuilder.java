@@ -596,8 +596,12 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		weightText.setText(isScanning() ? "Weight: ???"  : String.format("Weight: %dN",getWeight()));
 		fuelText.setText(isScanning() ? "Fuel: ???" :  String.format("Fuel: %dmb/s", getRocketStats().getFuelRate(FuelType.LIQUID)));
 		accelerationText.setText(isScanning() ? "Acc: ???" : String.format("Acc: %.2fm/s", getAcceleration()*20f));
-		if(!worldObj.isRemote && getRocketPadBounds(worldObj, xCoord, yCoord, zCoord) == null)
-			setStatus(ErrorCodes.INCOMPLETESTRCUTURE.ordinal());
+		if(!worldObj.isRemote) { 
+			if(getRocketPadBounds(worldObj, xCoord, yCoord, zCoord) == null)
+				setStatus(ErrorCodes.INCOMPLETESTRCUTURE.ordinal());
+			else if( ErrorCodes.INCOMPLETESTRCUTURE.equals(getStatus()))
+				setStatus(ErrorCodes.UNSCANNED.ordinal());
+		}
 			
 		errorText.setText(getStatus().getErrorCode());
 	}

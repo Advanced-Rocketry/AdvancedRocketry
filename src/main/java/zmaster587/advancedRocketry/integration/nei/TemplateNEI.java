@@ -30,6 +30,7 @@ import zmaster587.libVulpes.util.ZUtils;
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
+import codechicken.nei.recipe.ShapedRecipeHandler;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import codechicken.nei.recipe.TemplateRecipeHandler.RecipeTransferRect;
 
@@ -73,14 +74,16 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 			return getResults();
 		}
 		
+		
 		public PositionedStack getResult() {
 			return null;//result.get(0);
 		}
 
 		@Override
 		public List<PositionedStack> getIngredients() {
-			return ingredients;
+			return getCycledIngredients(TemplateNEI.this.cycleticks / 20, ingredients);
 		}
+		
 		public int getEnergy() {return energy;}
 		public int getTime() {return time;}
 
@@ -104,8 +107,8 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 
 	public void loadCraftingRecipes(ItemStack result) {
 		super.loadCraftingRecipes(result);
+		
 		for(IRecipe i : RecipesMachine.getInstance().getRecipes(getMachine())) {
-
 			IRecipe newRecipe = i;
 			
 			boolean match = false;

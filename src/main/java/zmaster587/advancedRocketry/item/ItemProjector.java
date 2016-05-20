@@ -154,7 +154,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 					if(world.isAirBlock(globalX, globalY, globalZ) && block.get(0).getBlock().getMaterial() != Material.air) {
 						//block = (Block)structure[y][z][x];
-						world.setBlock(globalX, globalY, globalZ, AdvancedRocketryBlocks.blockPhantom);
+						world.setBlock(globalX, globalY, globalZ, AdvancedRocketryBlocks.blockPhantom, block.get(0).getMeta(), 3);
 						TileEntity newTile = world.getTileEntity(globalX, globalY, globalZ);
 
 						//TODO: compatibility fixes with the tile entity not reflecting current block
