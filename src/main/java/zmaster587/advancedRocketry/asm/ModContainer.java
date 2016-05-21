@@ -29,7 +29,7 @@ public class ModContainer extends DummyModContainer {
 		meta.version = "1";
 		meta.credits = "Created by Zmaster587";
 		meta.authorList = Arrays.asList("Zmaster587");
-		meta.description = "";
+		meta.description = "ASM handler for AR";
 		meta.url = "";
 		meta.updateUrl = "";
 		meta.screenshots = new String[0];

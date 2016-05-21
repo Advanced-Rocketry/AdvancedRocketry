@@ -504,7 +504,7 @@ public class AdvancedRocketry {
 		//Tools
 		AdvancedRocketryItems.itemJackhammer = new ItemJackHammer(ToolMaterial.EMERALD).setTextureName("advancedRocketry:jackHammer").setUnlocalizedName("jackhammer").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemJackhammer.setHarvestLevel("jackhammer", 3);
-
+		AdvancedRocketryItems.itemJackhammer.setHarvestLevel("pickaxe", 3);
 
 		//Item Registration
 		GameRegistry.registerItem(AdvancedRocketryItems.itemQuartzCrucible, "iquartzcrucible");
