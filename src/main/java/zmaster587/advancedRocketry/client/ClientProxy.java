@@ -20,6 +20,7 @@ import zmaster587.advancedRocketry.client.render.RendererModelBlock;
 import zmaster587.advancedRocketry.client.render.RendererRocket;
 import zmaster587.advancedRocketry.client.render.item.RendererBucket;
 import zmaster587.advancedRocketry.client.render.multiblocks.RenderPlanetAnalyser;
+import zmaster587.advancedRocketry.client.render.multiblocks.RendererChemicalReactor;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererElectrolyser;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererGenericMachineModel;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererRollingMachine;
@@ -68,7 +69,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileRollingMachine.class, new RendererRollingMachine());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileElectrolyser.class, new RendererElectrolyser());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileWarpCore.class, new RendererWarpCore());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileChemicalReactor.class, new RendererGenericMachineModel("advancedrocketry:models/ChemicalReactor.obj", "advancedrocketry:textures/models/ChemicalReactor.png"));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileChemicalReactor.class, new RendererChemicalReactor("advancedrocketry:models/ChemicalReactor.obj", "advancedrocketry:textures/models/ChemicalReactor.png"));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSchematic.class, new RendererPhantomBlock());
 		
 		RendererModelBlock blockRenderer = new RendererModelBlock();

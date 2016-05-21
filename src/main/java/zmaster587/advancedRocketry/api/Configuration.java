@@ -41,4 +41,6 @@ public class Configuration {
 	public static boolean overrideGCAir;
 	public static int fuelPointsPerDilithium;
 	public static boolean electricPlantsSpawnLightning;
+
+	public static boolean allowSawmillVanillaWood;
 }

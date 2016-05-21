@@ -32,6 +32,7 @@ public class RecipesMachine {
 			this.output.addAll(output);
 
 			this.input = new LinkedList<LinkedList<ItemStack>>();
+		
 			this.input.addAll(input);
 
 			this.completionTime = completionTime;
@@ -187,7 +188,7 @@ public class RecipesMachine {
 
 
 		LinkedList<LinkedList<ItemStack>> stack = new LinkedList<LinkedList<ItemStack>>();
-		
+
 		ArrayList<FluidStack> inputFluidStacks = new ArrayList<FluidStack>();
 
 		try {
@@ -212,6 +213,7 @@ public class RecipesMachine {
 						innerList.add((ItemStack)inputs[i]);
 					}
 				}
+				if(!innerList.isEmpty())
 				stack.add(innerList);
 			}
 			ArrayList<ItemStack> outputItem = new ArrayList<ItemStack>();

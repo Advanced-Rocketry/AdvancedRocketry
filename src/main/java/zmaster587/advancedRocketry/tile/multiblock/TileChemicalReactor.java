@@ -3,7 +3,10 @@ package zmaster587.advancedRocketry.tile.multiblock;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.block.Block;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
@@ -14,17 +17,23 @@ import zmaster587.libVulpes.interfaces.IRecipe;
 
 public class TileChemicalReactor extends TileMultiblockMachine {
 	public static final Object[][][] structure = { 
-		{{'L', 'P','l'},
-		{'L', new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock),'l'}},
+		{{null, 'c',null},
+		{'L', 'I','L'}},
 		
-		{{'I', 'c', 'O'}, 
-			{'I', new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), 'O'}},
+		{{'P', AdvancedRocketryBlocks.blockMotor, 'P'}, 
+			{'l', new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), 'O'}},
 
 	};
 	
 	@Override
 	public List<IRecipe> getMachineRecipeList() {
 		return RecipesMachine.getInstance().getRecipes(this.getClass());
+	}
+	
+	@Override
+	public boolean shouldHideBlock(World world, int x, int y, int z, Block tile) {
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
+		return !getPowerInputBlocks().contains(new BlockMeta(tile, BlockMeta.WILDCARD)) && tileEntity != null && !(tileEntity instanceof TileChemicalReactor);
 	}
 	
 	@Override
