@@ -132,7 +132,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
-		useBucket(0, getStackInSlot(0));
+		while(useBucket(0, getStackInSlot(0)));
 	}
 
 	@Override

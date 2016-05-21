@@ -149,6 +149,8 @@ public class TileMultiBlock extends TileEntity {
 				}
 			}
 		}
+		
+		resetCache();
 	}
 
 	/**

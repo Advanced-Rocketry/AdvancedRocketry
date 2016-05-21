@@ -142,6 +142,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 	public void resetCache() {
 		batteries.clear();
+		super.resetCache();
 	}
 
 	/**
