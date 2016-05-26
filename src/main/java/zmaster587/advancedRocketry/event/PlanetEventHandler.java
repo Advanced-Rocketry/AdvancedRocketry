@@ -71,13 +71,15 @@ public class PlanetEventHandler {
 		if(!event.world.isRemote && Action.RIGHT_CLICK_BLOCK == event.action && event.entityPlayer != null  && 
 				!AtmosphereHandler.getOxygenHandler(event.world.provider.dimensionId).getAtmosphereType(event.x + direction.offsetX, event.y + direction.offsetY, event.z + direction.offsetZ).allowsCombustion()) {
 
-			if(event.entityPlayer.getCurrentEquippedItem() != null && event.entityPlayer.getCurrentEquippedItem().getItem() == Item.getItemFromBlock(Blocks.torch) && 
-					event.world.getBlock(event.x, event.y, event.z).isSideSolid(event.world, event.x, event.y, event.z, direction)) {
-				event.setCanceled(true);
-				event.world.setBlock(event.x + direction.offsetX, event.y + direction.offsetY, event.z + direction.offsetZ, AdvancedRocketryBlocks.blockUnlitTorch);
+			if(event.entityPlayer.getCurrentEquippedItem() != null) {
+				if(event.entityPlayer.getCurrentEquippedItem().getItem() == Item.getItemFromBlock(Blocks.torch) && 
+						event.world.getBlock(event.x, event.y, event.z).isSideSolid(event.world, event.x, event.y, event.z, direction)) {
+					event.setCanceled(true);
+					event.world.setBlock(event.x + direction.offsetX, event.y + direction.offsetY, event.z + direction.offsetZ, AdvancedRocketryBlocks.blockUnlitTorch);
+				}
+				else if(event.entityPlayer.getCurrentEquippedItem().getItem() == Items.flint_and_steel || event.entityPlayer.getCurrentEquippedItem().getItem() == Items.fire_charge)
+					event.setCanceled(true);
 			}
-			else if(event.entityPlayer.getCurrentEquippedItem().getItem() == Items.flint_and_steel || event.entityPlayer.getCurrentEquippedItem().getItem() == Items.fire_charge)
-				event.setCanceled(true);
 		}
 	}
 
