@@ -42,7 +42,7 @@ public class RendererElectrolyser extends TileEntitySpecialRenderer{
 		//Rotate and move the model into position
 		GL11.glTranslated(x+.5f, y, z + 0.5f);
 		ForgeDirection front = RotatableBlock.getFront(tile.getBlockMetadata());
-		GL11.glRotatef((front.offsetZ == 1 ? 180 : 0) + front.offsetX*90f, 0, 1, 0);
+		GL11.glRotatef((front.offsetZ == 1 ? 180 : 0) - front.offsetX*90f, 0, 1, 0);
 
 		bindTexture(texture);
 		model.renderAll();
@@ -55,8 +55,8 @@ public class RendererElectrolyser extends TileEntitySpecialRenderer{
 			double width = 0.01;
 
 			//Isn't precision fun?
-			double ySkew = 0.1*MathHelper.sin((tile.getWorldObj().getWorldTime() & 0xffff)*2f);
-			double xSkew = 0.1*MathHelper.sin((200 + tile.getWorldObj().getWorldTime() & 0xffff)*3f);
+			double ySkew = 0.1*MathHelper.sin((tile.getWorldObj().getTotalWorldTime() & 0xffff)*2f);
+			double xSkew = 0.1*MathHelper.sin((200 + tile.getWorldObj().getTotalWorldTime() & 0xffff)*3f);
 			double yPos = 1.4;
 
 			GL11.glDisable(GL11.GL_TEXTURE_2D);

@@ -50,14 +50,19 @@ public class RendererChemicalReactor  extends TileEntitySpecialRenderer {
 		GL11.glPushMatrix();
 		GL11.glTranslated(x+.5f, y, z + 0.5f);
 		ForgeDirection front = RotatableBlock.getFront(tile.getBlockMetadata());
-		GL11.glRotatef((front.offsetZ == 1 ? 180 : 0) + front.offsetX*90f, 0, 1, 0);
+		GL11.glRotatef((front.offsetZ == 1 ? 180 : 0) - front.offsetX*90f, 0, 1, 0);
 		bindTexture(texture);
 		model.renderOnly("mesh");
 		GL11.glPopMatrix();
 		
-		GL11.glTranslated(x + 0.5, y - 0.5, z + 1.5 );
+		
+		
+		GL11.glTranslated(x+.5f, y, z + 0.5f);
+		GL11.glRotatef((front.offsetZ == 1 ? 180 : 0) - front.offsetX*90f, 0, 1, 0);
+		
+		GL11.glTranslated(0f, -0.5f, 1f );
 		if(multiBlockTile.isRunning())
-			GL11.glRotated((8*tile.getWorldObj().getWorldTime()) % 360, 1, 0, 0);
+			GL11.glRotated((8*tile.getWorldObj().getTotalWorldTime()) % 360, 1, 0, 0);
 		model.renderOnly("Cylinder");
 		
 		GL11.glPopMatrix();
