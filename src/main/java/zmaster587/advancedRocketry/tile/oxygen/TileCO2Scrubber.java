@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.tile;
+package zmaster587.advancedRocketry.tile.oxygen;
 
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;

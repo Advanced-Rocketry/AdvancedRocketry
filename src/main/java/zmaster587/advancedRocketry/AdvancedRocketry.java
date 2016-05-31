@@ -106,6 +106,11 @@ import zmaster587.advancedRocketry.tile.data.TileDataBus;
 import zmaster587.advancedRocketry.tile.infrastructure.TileEntityFuelingStation;
 import zmaster587.advancedRocketry.tile.infrastructure.TileEntityMoniteringStation;
 import zmaster587.advancedRocketry.tile.multiblock.*;
+import zmaster587.advancedRocketry.tile.oxygen.TileCO2Scrubber;
+import zmaster587.advancedRocketry.tile.oxygen.TileOxygenCharger;
+import zmaster587.advancedRocketry.tile.oxygen.TileOxygenVent;
+import zmaster587.advancedRocketry.tile.station.TileStationOrientationControl;
+import zmaster587.advancedRocketry.tile.station.TileWarpShipMonitor;
 import zmaster587.advancedRocketry.util.FluidColored;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader;
@@ -247,6 +252,8 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockElectricMushroom = new BlockElectricMushroom().setBlockName("electricMushroom").setCreativeTab(tabAdvRocketry).setBlockTextureName("advancedrocketry:mushroom_electric").setHardness(0.0F).setStepSound(Block.soundTypeGrass);
 		AdvancedRocketryBlocks.blockCrystal = new BlockCrystal().setBlockName("crystal").setCreativeTab(tabAdvRocketryOres).setBlockTextureName("advancedrocketry:crystal").setHardness(2f);
 
+		AdvancedRocketryBlocks.blockOrientationController = new BlockTile(TileStationOrientationControl.class,  GuiHandler.guiId.MODULAR.ordinal()).setBlockTextureName("advancedrocketry:machineScrubber").setCreativeTab(tabAdvRocketry).setBlockName("orientationControl").setHardness(3f);
+		
 		AdvancedRocketryBlocks.blockOxygenCharger = new BlockTile(TileOxygenCharger.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("oxygenCharger").setCreativeTab(tabAdvRocketry).setBlockTextureName("Advancedrocketry:machineGeneric").setHardness(3f);
 		((BlockTile) AdvancedRocketryBlocks.blockOxygenCharger).setSideTexture("advancedrocketry:machineGeneric");
 		((BlockTile) AdvancedRocketryBlocks.blockOxygenCharger).setTopTexture("advancedrocketry:machineGeneric");
@@ -454,6 +461,8 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockCharcoalLog, AdvancedRocketryBlocks.blockCharcoalLog.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockElectricMushroom, AdvancedRocketryBlocks.blockElectricMushroom.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockCrystal, ItemCrystalBlock.class, AdvancedRocketryBlocks.blockCrystal.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockOrientationController, AdvancedRocketryBlocks.blockOrientationController.getUnlocalizedName());
+		
 		BlockOre.registerOres(tabAdvRocketryOres);
 
 
@@ -591,6 +600,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileCO2Scrubber.class, "ARCO2Scrubber");
 		GameRegistry.registerTileEntity(TileWarpShipMonitor.class, "ARStationMonitor");
 		GameRegistry.registerTileEntity(TileAtmosphereDetector.class, "AROxygenDetector");
+		GameRegistry.registerTileEntity(TileStationOrientationControl.class, "AROrientationControl");
 		EntityRegistry.registerModEntity(EntityLaserNode.class, "laserNode", 0, instance, 256, 20, false);
 
 

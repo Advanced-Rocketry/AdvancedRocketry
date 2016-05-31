@@ -122,6 +122,7 @@ item.smallAirlock.name=Small Airlock Door
 item.carbonScrubberCartridge.name=Carbon Collection Cartridge
 item.jackhammer.name=Jack Hammer
 item.sealDetector.name=Seal Detector
+tile.orientationControl.name=Orientation Controller
 
 material.Gold.name=Gold
 material.Iron.name=Iron

@@ -20,6 +20,7 @@ import zmaster587.libVulpes.util.BlockPosition;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -37,6 +38,9 @@ public class SpaceObject implements ISpaceObject {
 	private HashMap<BlockPosition,Boolean> occupiedLandingPads;
 	private long transitionEta;
 	private ForgeDirection direction;
+	private double rotation;
+	private double angularVelocity;
+	private long lastTimeModification = 0;
 	DimensionProperties properties;
 
 	public SpaceObject() {
@@ -109,7 +113,45 @@ public class SpaceObject implements ISpaceObject {
 	public int getAltitude() {
 		return altitude;
 	}
+	
+	/**
+	 * @return rotation of the station in degrees
+	 */
+	public double getRotation() {
+		return (rotation + getDeltaRotation()*(getWorldTime() - lastTimeModification)) % (360D);
+	}
+	
+	/**
+	 * @param rotation rotation of the station in degrees
+	 */
+	public void setRotation(double rotation) {
+		this.rotation = rotation;
+	}
+	
+	/**
+	 * @return anglarVelocity of the station in degrees per tick
+	 */
+	public double getDeltaRotation() {
+		return angularVelocity;
+	}
+	
+	/**
+	 * @param rotation anglarVelocity of the station in degrees per tick
+	 */
+	public void setDeltaRotation(double rotation) {
+		this.rotation = getRotation();
+		this.lastTimeModification = getWorldTime();
+		this.angularVelocity = rotation;
+	}
+	
+	public double getMaxRotationalAcceleration() {
+		return 0.00002D;
+	}
 
+	private long getWorldTime() {
+		return DimensionManager.getWorld(Configuration.spaceDimId).getTotalWorldTime();
+	}
+	
 	/**
 	 * @return the X postion on the graph the object is stored in {@link SpaceObjectManager}
 	 */
@@ -332,7 +374,10 @@ public class SpaceObject implements ISpaceObject {
 		nbt.setInteger("spawnZ", spawnLocation.z);
 		nbt.setInteger("destinationDimId", destinationDimId);
 		nbt.setInteger("fuel", fuelAmount);
-
+		nbt.setDouble("rotation", rotation);
+		nbt.setDouble("deltaRotation", angularVelocity);
+		
+		
 		if(direction !=null)
 			nbt.setInteger("direction", direction.ordinal());
 
@@ -368,7 +413,9 @@ public class SpaceObject implements ISpaceObject {
 		fuelAmount = nbt.getInteger("fuel");
 		spawnLocation = new BlockPosition(nbt.getInteger("spawnX"), nbt.getInteger("spawnY"), nbt.getInteger("spawnZ"));
 		properties.setId(nbt.getInteger("id"));
-
+		rotation = nbt.getDouble("rotation");
+		angularVelocity = nbt.getDouble("deltaRotation");
+		
 		if(nbt.hasKey("direction"))
 			direction = ForgeDirection.getOrientation(nbt.getInteger("direction"));
 

@@ -263,7 +263,6 @@ public class SpaceObjectManager {
 
 	}
 
-
 	public void moveStationToBody(ISpaceObject station, int dimId) {
 		moveStationToBody(station, dimId, true);
 	}

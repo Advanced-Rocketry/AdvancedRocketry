@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.tile;
+package zmaster587.advancedRocketry.tile.oxygen;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;

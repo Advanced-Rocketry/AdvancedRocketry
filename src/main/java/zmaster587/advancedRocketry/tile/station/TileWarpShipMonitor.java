@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.tile;
+package zmaster587.advancedRocketry.tile.station;
 
 import io.netty.buffer.ByteBuf;
 

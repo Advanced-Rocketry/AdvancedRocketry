@@ -333,7 +333,7 @@ public class DimensionManager {
 	 */
 	public DimensionProperties getDimensionProperties(int dimId) {
 		DimensionProperties properties = dimensionList.get(new Integer(dimId));
-		if(dimId == Configuration.spaceDimId) {
+		if(dimId == Configuration.spaceDimId || dimId == -1) {
 			return defaultSpaceDimensionProperties;
 		}
 		return properties == null ? overworldProperties : properties;

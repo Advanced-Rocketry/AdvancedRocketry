@@ -182,8 +182,18 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	public float calculateCelestialAngle(long p_76563_1_, float p_76563_3_) {
-		int j = (int)(p_76563_1_ % getRotationalPeriod(0,0));
-		float f1 = ((float)j + p_76563_3_) / (float)getRotationalPeriod(0,0) - 0.25F;
+		int rotationalPeriod;
+		if(worldObj.isRemote) {
+			Entity player = Minecraft.getMinecraft().thePlayer;
+			rotationalPeriod = getRotationalPeriod((int)player.posX, (int)player.posZ);
+		}
+		else {
+			rotationalPeriod = getRotationalPeriod(0,0);
+		}
+		
+		int j = (int)(p_76563_1_ % rotationalPeriod);
+		
+		float f1 = ((float)j + p_76563_3_) / (float)rotationalPeriod - 0.25F;
 
 		if (f1 < 0.0F)
 		{

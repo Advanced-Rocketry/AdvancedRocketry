@@ -69,6 +69,16 @@ public interface ISpaceObject {
 	
 	public void readFromNbt(NBTTagCompound nbt);
 	
+	public double getRotation();
+	
+	public double getDeltaRotation();
+	
+	public void setRotation(double rotation);
+	
+	public double getMaxRotationalAcceleration();
+	
+	public void setDeltaRotation(double rotation);
+	
 	/**
 	 * @return true if there is an empty pad to land on
 	 */

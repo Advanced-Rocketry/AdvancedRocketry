@@ -7,7 +7,7 @@ import zmaster587.advancedRocketry.inventory.GuiModular;
 public class ModuleSlider extends ModuleProgress {
 
 	public ModuleSlider(int offsetX, int offsetY, int id,
-			ProgressBarImage progressBar, IProgressBar progress) {
+			ProgressBarImage progressBar, ISliderBar progress) {
 		super(offsetX, offsetY, id, progressBar, progress);
 	}
 
@@ -37,7 +37,7 @@ public class ModuleSlider extends ModuleProgress {
 					percent = localY / (float)(progressBar.getBackHeight() + progressBar.getInsetY());
 				
 				
-				progress.setProgress(id, (int) (percent*progress.getTotalProgress(id)));
+				((ISliderBar)progress).setProgressByUser(id, (int) (percent*progress.getTotalProgress(id)));
 			}
 		}
 	}

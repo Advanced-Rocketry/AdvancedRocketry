@@ -8,6 +8,8 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.world.ChunkProviderSpace;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.WorldChunkManager;
 import net.minecraft.world.biome.WorldChunkManagerHell;
@@ -42,8 +44,15 @@ public class WorldProviderSpace extends WorldProviderPlanet {
 	}
 	
 	@Override
-	public float calculateCelestialAngle(long p_76563_1_, float p_76563_3_) {
-		return 0f;//super.calculateCelestialAngle(p_76563_1_, p_76563_3_);
+	public float calculateCelestialAngle(long worldTime, float p_76563_3_) {
+		if(worldObj.isRemote) {
+			Entity player = Minecraft.getMinecraft().thePlayer;
+			if(player == null)
+				return 0;
+			return (float) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)player.posX, (int)player.posZ).getRotation();
+		}
+
+		return 0F;
 	}
 	
 	@Override
