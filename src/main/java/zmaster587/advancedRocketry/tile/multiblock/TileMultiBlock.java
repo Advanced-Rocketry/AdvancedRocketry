@@ -278,8 +278,8 @@ public class TileMultiBlock extends TileEntity {
 						if(((IMultiblock)tile).hasMaster() && ((IMultiblock)tile).getMasterBlock() != this) {
 							return false;
 						}
-						else 
-							continue;
+						//else 
+							//continue;
 					}
 					//Make sure the structure is valid
 					if(structure[y][z][x] != null && !(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') && !(structure[y][z][x] instanceof Block && (Block)structure[y][z][x] == Blocks.air && worldObj.isAirBlock(globalX, globalY, globalZ)) && !getAllowableBlocks(structure[y][z][x]).contains(new BlockMeta(block,meta)))
