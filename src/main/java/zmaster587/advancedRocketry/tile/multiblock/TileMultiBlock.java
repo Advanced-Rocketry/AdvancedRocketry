@@ -278,8 +278,8 @@ public class TileMultiBlock extends TileEntity {
 						if(((IMultiblock)tile).hasMaster() && ((IMultiblock)tile).getMasterBlock() != this) {
 							return false;
 						}
-						//else 
-							//continue;
+						else if(((IMultiblock)tile).getMasterBlock() == this) 
+							continue;
 					}
 					//Make sure the structure is valid
 					if(structure[y][z][x] != null && !(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') && !(structure[y][z][x] instanceof Block && (Block)structure[y][z][x] == Blocks.air && worldObj.isAirBlock(globalX, globalY, globalZ)) && !getAllowableBlocks(structure[y][z][x]).contains(new BlockMeta(block,meta)))
@@ -346,6 +346,7 @@ public class TileMultiBlock extends TileEntity {
 	public List<BlockMeta> getInputs() {
 		List<BlockMeta> list = new LinkedList<BlockMeta>();
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 0));
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 8));
 		return list;
 	}
 
@@ -355,6 +356,7 @@ public class TileMultiBlock extends TileEntity {
 	public List<BlockMeta> getDataBlocks() {
 		List<BlockMeta> list = new LinkedList<BlockMeta>();
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 2));
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 10));
 		return list;
 	}
 
@@ -372,12 +374,14 @@ public class TileMultiBlock extends TileEntity {
 	public List<BlockMeta> getLiquidInputBlocks() {
 		List<BlockMeta> list = new LinkedList<BlockMeta>();
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 4));
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 12));
 		return list;
 	}
 
 	public List<BlockMeta> getLiquidOutputBlocks() {
 		List<BlockMeta> list = new LinkedList<BlockMeta>();
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 5));
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 13));
 		return list;
 	}
 
