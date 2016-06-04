@@ -33,10 +33,10 @@ public class TileStationOrientationControl extends TileEntity implements IModula
 	private ModuleText moduleAngularVelocity, numThrusters, maxAngularAcceleration, targetRotations;
 
 	public TileStationOrientationControl() {
-		moduleAngularVelocity = new ModuleText(10, 15, "Angular Velocity: ", 0xaa2020);
+		moduleAngularVelocity = new ModuleText(6, 15, "Angular Velocity: ", 0xaa2020);
 		//numThrusters = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
-		maxAngularAcceleration = new ModuleText(10, 25, "Maximum Angular Acceleration: ", 0xaa2020);
-		targetRotations = new ModuleText(10, 35, "Target Ang Vel:", 0x202020);
+		maxAngularAcceleration = new ModuleText(6, 25, "Maximum Angular Acceleration: ", 0xaa2020);
+		targetRotations = new ModuleText(6, 35, "Target Ang Vel:", 0x202020);
 		progress = getTotalProgress(0)/2;
 	}
 
@@ -48,7 +48,7 @@ public class TileStationOrientationControl extends TileEntity implements IModula
 		modules.add(maxAngularAcceleration);
 
 		modules.add(targetRotations);
-		modules.add(new ModuleSlider(10, 60, 0, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
+		modules.add(new ModuleSlider(6, 60, 0, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
 
 		updateText();
 		return modules;
@@ -109,7 +109,7 @@ public class TileStationOrientationControl extends TileEntity implements IModula
 	}
 	@Override
 	public String getModularInventoryName() {
-		return "tile.orientationControl";
+		return "tile.orientationControl.name";
 	}
 
 	@Override
