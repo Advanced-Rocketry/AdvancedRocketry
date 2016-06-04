@@ -8,6 +8,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.libVulpes.util.BlockPosition;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Stack;
@@ -28,7 +29,7 @@ public class AtmosphereBlob extends AreaBlob {
 
 			BlockPosition newBlock = blockPos.getPositionAtOffset(direction.offsetX, direction.offsetY, direction.offsetZ);
 			if(graph.contains(newBlock) && !graph.doesPathExist(newBlock, blobHandler.getRootPosition()))
-				graph.removeAllNodesConnectedTo(newBlock);
+				runEffectOnWorldBlocks(blobHandler.getWorld(), graph.removeAllNodesConnectedTo(newBlock));
 		}
 	}
 
@@ -64,15 +65,9 @@ public class AtmosphereBlob extends AreaBlob {
 								addableBlocks.add(searchNextPosition);
 							}
 							else {
+								//World world = blobHandler.getWorld();
 								
-								
-								World world = blobHandler.getWorld();
-								
-								for(BlockPosition pos : new LinkedList<BlockPosition>(getLocations())) {
-									if(world.getBlock(pos.x, pos.y, pos.z) == Blocks.torch) {
-										world.setBlock(pos.x, pos.y, pos.z, AdvancedRocketryBlocks.blockUnlitTorch);
-									}
-								}
+								//runEffectOnWorldBlocks(world, getLocations());
 								
 								clearBlob();
 								return;
@@ -88,15 +83,23 @@ public class AtmosphereBlob extends AreaBlob {
 		}
 	}
 	
-	@Override
-	public void clearBlob() {
-		World world = blobHandler.getWorld();
-		
-		for(BlockPosition pos : new LinkedList<BlockPosition>(getLocations())) {
+	/**
+	 * @param world
+	 * @param blocks Collection containing affected locations
+	 */
+	protected void runEffectOnWorldBlocks(World world, Collection<BlockPosition> blocks) {
+		for(BlockPosition pos : new LinkedList<BlockPosition>(blocks)) {
 			if(world.getBlock(pos.x, pos.y, pos.z) == Blocks.torch) {
 				world.setBlock(pos.x, pos.y, pos.z, AdvancedRocketryBlocks.blockUnlitTorch);
 			}
 		}
+	}
+	
+	@Override
+	public void clearBlob() {
+		World world = blobHandler.getWorld();
+		
+		runEffectOnWorldBlocks(world, getLocations());
 		
 		super.clearBlob();
 	}

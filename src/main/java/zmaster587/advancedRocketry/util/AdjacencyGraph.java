@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.util;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -157,13 +158,15 @@ public class AdjacencyGraph<T> {
 	 * Removes all nodes connected to node
 	 * @param node node to start from
 	 */
-	public void removeAllNodesConnectedTo(T node) {
+	public Collection<T> removeAllNodesConnectedTo(T node) {
 
 		HashSet<T> removableNode = getAllNodesConnectedToNode(node);
 		Iterator<T> iterator = removableNode.iterator();
 
 		while(iterator.hasNext())
 			adjacencyMatrix.remove(iterator.next());
+		
+		return removableNode;
 	}
 
 	/**
