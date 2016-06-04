@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.inventory;
 
+import zmaster587.advancedRocketry.client.render.util.IndicatorBarImage;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.libVulpes.util.IconResource;
 import net.minecraft.util.ResourceLocation;
@@ -28,9 +29,13 @@ public class TextureResources {
 	public static final IconResource functionComponent = new IconResource(212, 18, 18, 18, null);
 	public static final IconResource powercomponent = new IconResource(230, 18, 18, 18, null);
 	
+	
+	public static final ProgressBarImage doubleWarningSideBarIndicator = new IndicatorBarImage(0, 84, 142, 16, 0, 100, 2, 9, 2, 2, ForgeDirection.EAST, planetSelectorBar);
+	public static final ProgressBarImage doubleWarningSideBar = new ProgressBarImage(0, 59, 142, 16, 0, 75, 136, 9, 2, 2, ForgeDirection.EAST, planetSelectorBar);
 	public static final ProgressBarImage massIndicator = new ProgressBarImage(0, 0, 81, 23, 6, 23, 75, 9, 2, 9, ForgeDirection.EAST, planetSelectorBar);
 	public static final ProgressBarImage atmIndicator = new ProgressBarImage(0, 0, 81, 23, 6, 32, 75, 9, 2, 9, ForgeDirection.EAST, planetSelectorBar);
 	public static final ProgressBarImage distanceIndicator = new ProgressBarImage(0, 0, 81, 23, 6, 41, 75, 9, 2, 9, ForgeDirection.EAST, planetSelectorBar);
+	public static final ProgressBarImage genericSlider = new ProgressBarImage(0, 0, 81, 23, 6, 41, 75, 9, 2, 9, ForgeDirection.EAST, planetSelectorBar);
 	public static final ProgressBarImage progressScience = new ProgressBarImage(185, 0, 16, 24, 201, 0, 16, 24, 0, 0, ForgeDirection.UP, TextureResources.progressBars);
 	
 	public static final ProgressBarImage crystallizerProgressBar = new ProgressBarImage(0, 0, 31, 66, 31, 0, 23, 49, 4, 17, ForgeDirection.UP, TextureResources.progressBars);

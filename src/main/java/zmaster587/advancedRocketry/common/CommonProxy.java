@@ -7,6 +7,7 @@ import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
 
 public class CommonProxy {
 	
@@ -43,5 +44,13 @@ public class CommonProxy {
 	
 	public String getLocalizedString(String str) {
 		return str;
+	}
+
+	public float calculateCelestialAngleSpaceStation() {
+		return 0;
+	}
+
+	public long getStationWorldTime() {
+		return DimensionManager.getWorld(Configuration.spaceDimId).getTotalWorldTime();
 	}
 }

@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.inventory.modules;
 
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.MathHelper;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.inventory.GuiModular;
 
@@ -29,7 +30,7 @@ public class ModuleSlider extends ModuleProgress {
 
 				float percent;
 				if(progressBar.getDirection().offsetX != 0) { // horizontal
-					percent = localX / (float)(progressBar.getBackWidth() - progressBar.getInsetX());
+					percent = MathHelper.clamp_float((localX  + progressBar.getInsetX())/ ((float)(progressBar.getBackWidth() - 2*progressBar.getInsetX())),0f,1f);
 				}
 				else if(progressBar.getDirection().offsetY == 1)
 					percent = 1 - (localY / (float)(progressBar.getBackHeight() - progressBar.getInsetY()));

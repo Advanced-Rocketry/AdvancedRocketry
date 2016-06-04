@@ -21,28 +21,56 @@ import zmaster587.advancedRocketry.inventory.modules.ModuleSlider;
 import zmaster587.advancedRocketry.inventory.modules.ModuleText;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketMachine;
+import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.util.INetworkMachine;
 
 public class TileStationOrientationControl extends TileEntity implements IModularInventory, INetworkMachine, ISliderBar {
 
 	int numRotationsPerHour;
+	int progress;
+
+	private ModuleText moduleAngularVelocity, numThrusters, maxAngularAcceleration, targetRotations;
+
+	public TileStationOrientationControl() {
+		moduleAngularVelocity = new ModuleText(10, 15, "Angular Velocity: ", 0xaa2020);
+		//numThrusters = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
+		maxAngularAcceleration = new ModuleText(10, 25, "Maximum Angular Acceleration: ", 0xaa2020);
+		targetRotations = new ModuleText(10, 35, "Target Ang Vel:", 0x202020);
+		progress = getTotalProgress(0)/2;
+	}
 
 	@Override
 	public List<ModuleBase> getModules(int id) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-		modules.add(new ModuleText(10, 15, "Angular Velocity: ", 0xaa2020));
-		modules.add(new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020));
-		modules.add(new ModuleText(10, 35, "Maximum Angular Acceleration: ", 0xaa2020));
+		modules.add(moduleAngularVelocity);
+		//modules.add(numThrusters);
+		modules.add(maxAngularAcceleration);
 
-		modules.add(new ModuleText(10, 45, "Target Number of rotations per hour:", 0x202020));
-		modules.add(new ModuleSlider(10, 60, 0, TextureResources.distanceIndicator, (ISliderBar)this));
+		modules.add(targetRotations);
+		modules.add(new ModuleSlider(10, 60, 0, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
+
+		updateText();
 		return modules;
 	}
 
 	@Override
 	public boolean canUpdate() {
 		return true;
+	}
+
+	private void updateText() {
+		if(worldObj.isRemote) {
+			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.xCoord, this.zCoord);
+			if(object != null) {
+				moduleAngularVelocity.setText(String.format("Angular Velocity: %.1f", 7200D*object.getDeltaRotation()));
+				maxAngularAcceleration.setText(String.format("Maximum Angular Acceleration: %.1f", 7200D*object.getMaxRotationalAcceleration()));
+			}
+
+			//numThrusters.setText("Number Of Thrusters: 0");
+
+			targetRotations.setText(String.format("Target Ang Vel: %d", numRotationsPerHour));
+		}
 	}
 
 	@Override
@@ -69,6 +97,12 @@ public class TileStationOrientationControl extends TileEntity implements IModula
 					}
 
 					object.setDeltaRotation(finalVel);
+					if(!worldObj.isRemote) {
+						//PacketHandler.sendToNearby(new PacketStationUpdate(object, PacketStationUpdate.Type.ROTANGLE_UPDATE), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 1024);
+						PacketHandler.sendToAll(new PacketStationUpdate(object, PacketStationUpdate.Type.ROTANGLE_UPDATE));
+					}
+					else
+						updateText();
 				}
 			}
 		}
@@ -86,7 +120,7 @@ public class TileStationOrientationControl extends TileEntity implements IModula
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {
 		if(id == 0) {
-			out.writeShort(numRotationsPerHour);
+			out.writeShort(progress);
 		}
 	}
 
@@ -94,7 +128,7 @@ public class TileStationOrientationControl extends TileEntity implements IModula
 	public void readDataFromNetwork(ByteBuf in, byte packetId,
 			NBTTagCompound nbt) {
 		if(packetId == 0) {
-			numRotationsPerHour = in.readShort();
+			setProgress(0, in.readShort());
 		}
 	}
 
@@ -124,12 +158,14 @@ public class TileStationOrientationControl extends TileEntity implements IModula
 
 	@Override
 	public void setProgress(int id, int progress) {
-		numRotationsPerHour = progress;
+
+		this.progress = progress;
+		numRotationsPerHour = 1*(progress - getTotalProgress(id)/2);
 	}
 
 	@Override
 	public int getProgress(int id) {
-		return numRotationsPerHour;
+		return this.progress;
 	}
 
 	@Override
@@ -144,7 +180,7 @@ public class TileStationOrientationControl extends TileEntity implements IModula
 
 	@Override
 	public void setProgressByUser(int id, int progress) {
-		setProgress(id, progress-1);
+		setProgress(id, progress);
 		PacketHandler.sendToServer(new PacketMachine(this, (byte)0));
 	}
 }

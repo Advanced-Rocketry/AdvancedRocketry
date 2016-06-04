@@ -19,9 +19,10 @@ public class PacketStationUpdate extends BasePacket {
 		DEST_ORBIT_UPDATE,
 		ORBIT_UPDATE,
 		SIGNAL_WHITE_BURST,
-		FUEL_UPDATE
+		FUEL_UPDATE,
+		ROTANGLE_UPDATE
 	}
-	
+
 	public PacketStationUpdate() {}
 
 	public PacketStationUpdate(ISpaceObject dimProperties, Type type) {
@@ -34,13 +35,22 @@ public class PacketStationUpdate extends BasePacket {
 	public void write(ByteBuf out) {
 		out.writeInt(stationNumber);
 		out.writeInt(type.ordinal());
-		
-		if(type == Type.DEST_ORBIT_UPDATE)
+
+		switch(type) {
+		case DEST_ORBIT_UPDATE:
 			out.writeInt(spaceObject.getDestOrbitingBody());
-		else if(type == Type.ORBIT_UPDATE)
+			break;
+		case ORBIT_UPDATE:
 			out.writeInt(spaceObject.getOrbitingPlanetId());
-		else if(type == Type.FUEL_UPDATE)
+			break;
+		case FUEL_UPDATE:
 			out.writeInt(spaceObject.getFuelAmount());
+			break;
+		case ROTANGLE_UPDATE:
+			out.writeDouble(spaceObject.getRotation());
+			out.writeDouble(spaceObject.getDeltaRotation());
+		default:
+		}
 	}
 
 	@Override
@@ -48,16 +58,25 @@ public class PacketStationUpdate extends BasePacket {
 		stationNumber = in.readInt();
 		spaceObject = (SpaceObject)SpaceObjectManager.getSpaceManager().getSpaceStation(stationNumber);
 		type = Type.values()[in.readInt()];
-		if(type == Type.DEST_ORBIT_UPDATE)
+
+
+		switch(type) {
+		case DEST_ORBIT_UPDATE:
 			spaceObject.setDestOrbitingBody(in.readInt());
-		else if(type == Type.ORBIT_UPDATE) {
+			break;
+		case ORBIT_UPDATE:
 			spaceObject.setOrbitingBody(in.readInt());
-		}
-		else if(type == Type.SIGNAL_WHITE_BURST) {
-			PlanetEventHandler.runBurst(Minecraft.getMinecraft().theWorld.getTotalWorldTime() + 20, 20);
-		}
-		else if(type == Type.FUEL_UPDATE)
+			break;
+		case FUEL_UPDATE:
 			spaceObject.setFuelAmount(in.readInt());
+			break;
+		case ROTANGLE_UPDATE:
+			spaceObject.setRotation(in.readDouble());
+			spaceObject.setDeltaRotation(in.readDouble());
+			break;
+		case SIGNAL_WHITE_BURST:
+			PlanetEventHandler.runBurst(Minecraft.getMinecraft().theWorld.getTotalWorldTime() + 20, 20);
+		}	
 	}
 
 	@Override

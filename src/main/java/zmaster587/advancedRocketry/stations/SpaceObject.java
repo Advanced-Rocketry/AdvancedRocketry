@@ -7,6 +7,7 @@ import java.util.List;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.StatsRocket;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
@@ -149,7 +150,7 @@ public class SpaceObject implements ISpaceObject {
 	}
 
 	private long getWorldTime() {
-		return DimensionManager.getWorld(Configuration.spaceDimId).getTotalWorldTime();
+		return AdvancedRocketry.proxy.getStationWorldTime();
 	}
 	
 	/**

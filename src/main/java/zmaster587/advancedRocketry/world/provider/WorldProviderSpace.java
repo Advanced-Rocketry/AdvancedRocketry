@@ -45,14 +45,7 @@ public class WorldProviderSpace extends WorldProviderPlanet {
 	
 	@Override
 	public float calculateCelestialAngle(long worldTime, float p_76563_3_) {
-		if(worldObj.isRemote) {
-			Entity player = Minecraft.getMinecraft().thePlayer;
-			if(player == null)
-				return 0;
-			return (float) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)player.posX, (int)player.posZ).getRotation();
-		}
-
-		return 0F;
+		return AdvancedRocketry.proxy.calculateCelestialAngleSpaceStation();
 	}
 	
 	@Override

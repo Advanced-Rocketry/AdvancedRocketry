@@ -145,7 +145,7 @@ public class PlanetEventHandler {
 	//Make sure the player receives data about the dimensions
 	@SubscribeEvent
 	public void playerLoggedInEvent(FMLNetworkEvent.ServerConnectionFromClientEvent event) {
-
+		
 		//Make sure stars are sent first
 		for(int i : DimensionManager.getInstance().getStars()) {
 			PacketHandler.sendToDispatcher(new PacketStellarInfo(i, DimensionManager.getInstance().getStar(i)), event.manager);

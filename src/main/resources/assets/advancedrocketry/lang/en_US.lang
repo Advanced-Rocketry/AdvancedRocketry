@@ -73,7 +73,7 @@ tile.sapphire.name=Sapphire Block
 tile.citrine.name=Citrine Block
 tile.wulfentite.name=Wulfentite Block
 tile.amethyst.name=Amethyst Block
-
+tile.orientationControl.name=Orientation Controller
 
 tile.Dilithium.name=Dilithium Ore
 tile.Copper.name=Copper Ore
