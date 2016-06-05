@@ -55,12 +55,12 @@ public class PlanetEventHandler {
 		if(event.entity.worldObj.provider instanceof IPlanetaryProvider && !event.entity.isInWater()) {
 			IPlanetaryProvider planet = (IPlanetaryProvider)event.entity.worldObj.provider;
 			if(!(event.entity instanceof EntityPlayer) || !((EntityPlayer)event.entity).capabilities.isFlying) {
-				event.entity.motionY += 0.075f - planet.getGravitationalMultiplier((int)event.entity.posX, (int)event.entity.posZ)*0.075f;
+				//event.entity.motionY += 0.075f - planet.getGravitationalMultiplier((int)event.entity.posX, (int)event.entity.posZ)*0.075f;
 			}
 		}
 		else if(event.entity.worldObj.provider.dimensionId == 0) {
 			if(!(event.entity instanceof EntityPlayer) || !((EntityPlayer)event.entity).capabilities.isFlying) {
-				event.entity.motionY += 0.075f - DimensionManager.overworldProperties.gravitationalMultiplier*0.075f;
+				//event.entity.motionY += 0.075f - DimensionManager.overworldProperties.gravitationalMultiplier*0.075f;
 			}
 		}
 	}

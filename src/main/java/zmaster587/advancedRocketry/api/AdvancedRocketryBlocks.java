@@ -73,4 +73,5 @@ public class AdvancedRocketryBlocks {
 	public static Block blockElectricMushroom;
 	public static Block blockCrystal;
 	public static Block blockOrientationController;
+	public static Block blockGravityController;
 }

@@ -224,6 +224,16 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		atmosphereDensity = 100;
 	}
 
+	@Override
+	public float getGravitationalMultiplier() {
+		return gravitationalMultiplier;
+	}
+	
+	@Override
+	public void setGravitationalMultiplier(float mult) {
+		gravitationalMultiplier = mult;
+	}
+	
 	/**
 	 * @return the color of the sun as an array of floats represented as  {r,g,b}
 	 */
@@ -320,7 +330,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public int getParentOrbitalDistance() {
 		return orbitalDist;
 	}
-
+	
 	/**
 	 * @return if a planet, the same as getParentOrbitalDistance(), if a moon, the moon's distance from the host star
 	 */

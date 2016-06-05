@@ -1,11 +1,17 @@
 package zmaster587.advancedRocketry.network;
 
+import java.io.IOException;
+import java.util.logging.Logger;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.stations.SpaceObject;
@@ -20,7 +26,8 @@ public class PacketStationUpdate extends BasePacket {
 		ORBIT_UPDATE,
 		SIGNAL_WHITE_BURST,
 		FUEL_UPDATE,
-		ROTANGLE_UPDATE
+		ROTANGLE_UPDATE, 
+		DIM_PROPERTY_UPDATE
 	}
 
 	public PacketStationUpdate() {}
@@ -49,6 +56,24 @@ public class PacketStationUpdate extends BasePacket {
 		case ROTANGLE_UPDATE:
 			out.writeDouble(spaceObject.getRotation());
 			out.writeDouble(spaceObject.getDeltaRotation());
+			break;
+		case DIM_PROPERTY_UPDATE:
+			NBTTagCompound nbt = new NBTTagCompound();
+			try {
+				spaceObject.getProperties().writeToNBT(nbt);
+				PacketBuffer packetBuffer = new PacketBuffer(out);
+				//TODO: error handling
+				try {
+					packetBuffer.writeNBTTagCompoundToBuffer(nbt);
+					out.writeInt(spaceObject.getForwardDirection().ordinal());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} catch(NullPointerException e) {
+				out.writeBoolean(true);
+				Logger.getLogger("advancedRocketry").warning("Dimension " + stationNumber + " has thrown an exception trying to write NBT, deleting!");
+				DimensionManager.getInstance().deleteDimension(stationNumber);
+			}
 		default:
 		}
 	}
@@ -76,6 +101,19 @@ public class PacketStationUpdate extends BasePacket {
 			break;
 		case SIGNAL_WHITE_BURST:
 			PlanetEventHandler.runBurst(Minecraft.getMinecraft().theWorld.getTotalWorldTime() + 20, 20);
+			break;
+		case DIM_PROPERTY_UPDATE:
+			PacketBuffer packetBuffer = new PacketBuffer(in);
+			NBTTagCompound nbt;
+			try {
+				nbt = packetBuffer.readNBTTagCompoundFromBuffer();
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+				return;
+			}
+			spaceObject.getProperties().readFromNBT(nbt);
+			break;
 		}	
 	}
 

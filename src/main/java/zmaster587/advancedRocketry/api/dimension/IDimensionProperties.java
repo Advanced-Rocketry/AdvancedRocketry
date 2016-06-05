@@ -70,6 +70,16 @@ public interface IDimensionProperties {
 	public Set<Integer> getChildPlanets();
 	
 	/**
+	 * sets the gravity multiplier of the object
+	 */
+	public void setGravitationalMultiplier(float mult);
+	
+	/**
+	 * gets the gravity multiplier of the object
+	 */
+	public float getGravitationalMultiplier();
+	
+	/**
 	 * Adds a satellite to this DIM
 	 * @param satellite satellite to add
 	 * @param world world to add the satellite to
