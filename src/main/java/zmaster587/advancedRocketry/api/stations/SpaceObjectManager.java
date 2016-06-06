@@ -28,7 +28,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 
 public class SpaceObjectManager {
 	private int nextId = 1;
-	public static final int WARPDIMID = -1;
+	public static final int WARPDIMID = Integer.MIN_VALUE;
 	private long nextStationTransitionTick = -1;
 	//station ids to object
 	HashMap<Integer,ISpaceObject> stationLocations;
