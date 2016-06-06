@@ -148,6 +148,7 @@ public class TileStationOrientationControl extends TileEntity implements IModula
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		numRotationsPerHour = nbt.getShort("numRotations");
+		progress = numRotationsPerHour + getTotalProgress(0)/2;
 	}
 
 

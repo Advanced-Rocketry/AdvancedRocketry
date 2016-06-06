@@ -35,7 +35,6 @@ public class TileStationGravityController extends TileEntity implements IModular
 		//numGravPylons = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
 		maxGravBuildSpeed = new ModuleText(6, 25, "Max Gravity Change Rate: ", 0xaa2020);
 		targetGrav = new ModuleText(6, 35, "Target Gravity:", 0x202020);
-		progress = getTotalProgress(0)/2;
 	}
 
 	@Override
@@ -146,6 +145,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		gravity = nbt.getShort("numRotations");
+		progress = gravity -10;
 	}
 
 
