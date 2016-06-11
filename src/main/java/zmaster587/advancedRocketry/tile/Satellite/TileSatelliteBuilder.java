@@ -136,9 +136,12 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		ItemStack stack1 = getStackInSlot(chipCopySlot);
 		getStackInSlot(outputSlot);
 
-		boolean isSatellite = stack0 != null && stack1 != null && ((stack0.getItem() instanceof ItemSatellite || stack0.getItem() instanceof ItemSatelliteIdentificationChip) && stack1.getItem() instanceof ItemSatelliteIdentificationChip);
-		boolean isStation = stack0 != null && stack1 != null && stack0.getItem() instanceof ItemStationChip && stack0.getItemDamage() != 0 && stack1.getItem() instanceof ItemStationChip;
-		boolean isPlanet = stack0 != null && stack1 != null && (stack0.getItem() instanceof ItemPlanetIdentificationChip && stack1.getItem() instanceof ItemPlanetIdentificationChip);
+		boolean chipsExist = stack0 != null && stack1 != null;
+		if(!chipsExist)
+			return false;
+		boolean isSatellite = ((stack0.getItem() instanceof ItemSatellite || stack0.getItem() instanceof ItemSatelliteIdentificationChip) && stack1.getItem() instanceof ItemSatelliteIdentificationChip);
+		boolean isStation = stack0.getItem() instanceof ItemStationChip && stack0.getItemDamage() != 0 && stack1.getItem() instanceof ItemStationChip;
+		boolean isPlanet = (stack0.getItem() instanceof ItemPlanetIdentificationChip && stack1.getItem() instanceof ItemPlanetIdentificationChip);
 		
 		return !isRunning() && getStackInSlot(outputSlot) == null && (isStation || stack0.hasTagCompound()) && 
 				(isSatellite  || isStation || isPlanet);
