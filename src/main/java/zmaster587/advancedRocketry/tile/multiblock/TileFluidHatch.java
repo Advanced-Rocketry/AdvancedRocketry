@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
@@ -54,15 +55,22 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
 		if(outputOnly && from != ForgeDirection.UNKNOWN)
 			return 0;
-		return fluidTank.fill(resource, doFill);
+		
+		int fillAmt = fluidTank.fill(resource, doFill);
+		while(useBucket(0, getStackInSlot(0)));
+		
+		return fillAmt;
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource,
 			boolean doDrain) {
 
-		if(resource.isFluidEqual(fluidTank.getFluid()))
-			return fluidTank.drain(resource.amount, doDrain);
+		if(resource.isFluidEqual(fluidTank.getFluid())) {
+			FluidStack fluidStack = fluidTank.drain(resource.amount, doDrain);
+			while(useBucket(0, getStackInSlot(0)));
+			return fluidStack;
+		}
 		return null;
 	}
 
@@ -225,7 +233,59 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 				}
 			}
 		}
+		else if(stack != null && stack.getItem() instanceof IFluidContainerItem) {
+			IFluidContainerItem fluidItem = ((IFluidContainerItem)stack.getItem());
+			FluidStack fluidStack;
+			stack = stack.copy();
+			stack.stackSize = 1;
+			
+			//Drain the tank into the item
+			if(fluidItem.getFluid(stack) == null || outputOnly) {
+				int amt = fluidItem.fill(stack, fluidTank.getFluid(), true);
+				
+				
+				//If the container is full move it down and try again for a new one
+				if(amt != 0 && fluidItem.getCapacity(stack) == fluidItem.getFluid(stack).amount) {
+					
+					
+					if(getStackInSlot(1) == null) {
+						inventory.setInventorySlotContents(1, stack);
+					}
+					else if(ItemStack.areItemStackTagsEqual(getStackInSlot(1), stack) && getStackInSlot(1).getItem().equals(stack.getItem()) && getStackInSlot(1).getItemDamage() == stack.getItemDamage() && stack.getItem().getItemStackLimit(stack) < getStackInSlot(1).stackSize) {
+						getStackInSlot(1).stackSize++;
 
+					}
+					else
+						return false;
+					fluidTank.drain(amt, true);
+					decrStackSize(0, 1);
+
+					return true;
+				}
+				
+			}
+			else {
+				fluidStack = fluidItem.drain(stack, fluidTank.getCapacity() - fluidTank.getFluidAmount(), false);
+
+				int amountDrained = fluidTank.fill(fluidStack, true);
+				fluidItem.drain(stack, amountDrained, true);
+				if (fluidItem.getFluid(stack) == null || fluidItem.getFluid(stack).amount == 0) {
+					if(getStackInSlot(1) == null) {
+						inventory.setInventorySlotContents(1, stack);
+					}
+					else if(ItemStack.areItemStackTagsEqual(getStackInSlot(1), stack) && getStackInSlot(1).getItem().equals(stack.getItem()) && getStackInSlot(1).getItemDamage() == stack.getItemDamage() && stack.getItem().getItemStackLimit(stack) < getStackInSlot(1).stackSize) {
+						getStackInSlot(1).stackSize++;
+
+					}
+					else
+						return false;
+
+					decrStackSize(0, 1);
+
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 }

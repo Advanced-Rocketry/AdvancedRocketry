@@ -82,6 +82,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidContainerItem;
 
 public class EntityRocket extends EntityRocketBase implements INetworkEntity, IDismountHandler, IModularInventory, IProgressBar, IButtonInventory, ISelectionNotify {
 
@@ -96,7 +97,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	private boolean isInOrbit;
 	//True if the rocket isn't on the ground
 	private boolean isInFlight;
-	
+
 	private long lastWorldTickTicked;
 
 	//stores the coordinates of infrastructures, used for when the world loads/saves
@@ -131,7 +132,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		connectedInfrastructure = new LinkedList<IInfrastructure>();
 		infrastructureCoords = new LinkedList<Vector3F<Integer>>();
 		mountedEntities = new WeakReference[stats.getNumPassengerSeats()];
-		
+
 		lastWorldTickTicked = p_i1582_1_.getTotalWorldTime();
 	}
 
@@ -230,7 +231,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		this.isInOrbit = inOrbit;
 		this.dataWatcher.updateObject(18, new Byte(isInOrbit ? (byte)1 : (byte)0));
 	}
-	
+
 	/**
 	 * If the rocket is in flight, ie the rocket has taken off and has not touched the ground
 	 * @return true if in flight
@@ -304,7 +305,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 					player.addChatMessage(new ChatComponentText("Nothing to be linked"));
 				return false;
 			}
-			else if(FluidContainerRegistry.isFilledContainer(heldItem) && (fuelMult = FuelRegistry.instance.getMultiplier(FuelType.LIQUID, (fluidStack = FluidContainerRegistry.getFluidForFilledItem(heldItem)).getFluid()) ) > 0 ) { 
+			else if((FluidContainerRegistry.isFilledContainer(heldItem) && (fuelMult = FuelRegistry.instance.getMultiplier(FuelType.LIQUID, (fluidStack = FluidContainerRegistry.getFluidForFilledItem(heldItem)).getFluid()) ) > 0 )
+					|| ( heldItem.getItem() instanceof IFluidContainerItem && ((IFluidContainerItem) heldItem.getItem()).getFluid(heldItem) != null && 
+					((IFluidContainerItem) heldItem.getItem()).getFluid(heldItem).amount >= FluidContainerRegistry.BUCKET_VOLUME
+					&& (fuelMult = FuelRegistry.instance.getMultiplier(FuelType.LIQUID, (fluidStack = ((IFluidContainerItem) heldItem.getItem()).getFluid(heldItem)).getFluid())) > 0 )) { 
 
 
 				int amountToAdd = (int) (fuelMult*fluidStack.amount);
@@ -312,12 +316,17 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 				//if the player is not in creative then try to use the fluid container
 				if(!player.capabilities.isCreativeMode) {
-					ItemStack emptyStack = FluidContainerRegistry.drainFluidContainer(player.getHeldItem());
+					if(heldItem.getItem() instanceof IFluidContainerItem) {
+						((IFluidContainerItem) heldItem.getItem()).drain(heldItem, FluidContainerRegistry.BUCKET_VOLUME, true);
+					}
+					else {
+						ItemStack emptyStack = FluidContainerRegistry.drainFluidContainer(player.getHeldItem());
 
-					if(player.inventory.addItemStackToInventory(emptyStack)) {
-						player.getHeldItem().splitStack(1);
-						if(player.getHeldItem().stackSize == 0)
-							player.inventory.setInventorySlotContents(player.inventory.currentItem, null); 
+						if(player.inventory.addItemStackToInventory(emptyStack)) {
+							player.getHeldItem().splitStack(1);
+							if(player.getHeldItem().stackSize == 0)
+								player.inventory.setInventorySlotContents(player.inventory.currentItem, null); 
+						}
 					}
 				}
 
@@ -373,7 +382,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 		long deltaTime = worldObj.getTotalWorldTime() - lastWorldTickTicked;
 		lastWorldTickTicked = worldObj.getTotalWorldTime();
-		
+
 		//TODO move
 		World.MAX_ENTITY_RADIUS = 100;
 
@@ -562,7 +571,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 		if(isInFlight() || isInOrbit())
 			return;
-		
+
 		//Get destination dimid and lock the computer
 		//TODO: lock the computer
 		if(stats.hasSeat()) {
