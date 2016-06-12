@@ -17,7 +17,7 @@ import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 
 public class PacketStationUpdate extends BasePacket {
-	SpaceObject spaceObject;
+	ISpaceObject spaceObject;
 	int stationNumber;
 	Type type;
 
@@ -51,7 +51,8 @@ public class PacketStationUpdate extends BasePacket {
 			out.writeInt(spaceObject.getOrbitingPlanetId());
 			break;
 		case FUEL_UPDATE:
-			out.writeInt(spaceObject.getFuelAmount());
+			if(spaceObject instanceof SpaceObject)
+				out.writeInt(((SpaceObject)spaceObject).getFuelAmount());
 			break;
 		case ROTANGLE_UPDATE:
 			out.writeDouble(spaceObject.getRotation());
@@ -65,7 +66,6 @@ public class PacketStationUpdate extends BasePacket {
 				//TODO: error handling
 				try {
 					packetBuffer.writeNBTTagCompoundToBuffer(nbt);
-					out.writeInt(spaceObject.getForwardDirection().ordinal());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -81,7 +81,7 @@ public class PacketStationUpdate extends BasePacket {
 	@Override
 	public void readClient(ByteBuf in) {
 		stationNumber = in.readInt();
-		spaceObject = (SpaceObject)SpaceObjectManager.getSpaceManager().getSpaceStation(stationNumber);
+		spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStation(stationNumber);
 		type = Type.values()[in.readInt()];
 
 
@@ -93,7 +93,8 @@ public class PacketStationUpdate extends BasePacket {
 			spaceObject.setOrbitingBody(in.readInt());
 			break;
 		case FUEL_UPDATE:
-			spaceObject.setFuelAmount(in.readInt());
+			if(spaceObject instanceof SpaceObject)
+				((SpaceObject)spaceObject).setFuelAmount(in.readInt());
 			break;
 		case ROTANGLE_UPDATE:
 			spaceObject.setRotation(in.readDouble());
@@ -107,7 +108,7 @@ public class PacketStationUpdate extends BasePacket {
 			NBTTagCompound nbt;
 			try {
 				nbt = packetBuffer.readNBTTagCompoundFromBuffer();
-				
+
 			} catch (IOException e) {
 				e.printStackTrace();
 				return;

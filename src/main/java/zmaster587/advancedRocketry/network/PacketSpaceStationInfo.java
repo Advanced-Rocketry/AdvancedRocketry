@@ -16,7 +16,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class PacketSpaceStationInfo extends BasePacket {
-	SpaceObject spaceObject;
+	ISpaceObject spaceObject;
 	int stationNumber;
 
 	public PacketSpaceStationInfo() {}
@@ -41,8 +41,8 @@ public class PacketSpaceStationInfo extends BasePacket {
 				out.writeBoolean(false);
 				//TODO: error handling
 				try {
+					packetBuffer.writeStringToBuffer(SpaceObjectManager.getSpaceManager().getItentifierFromClass(spaceObject.getClass()));
 					packetBuffer.writeNBTTagCompoundToBuffer(nbt);
-					out.writeInt(spaceObject.getForwardDirection().ordinal());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -73,7 +73,9 @@ public class PacketSpaceStationInfo extends BasePacket {
 		else {
 			//TODO: error handling
 			int direction;
+			String clazzId;
 			try {
+				clazzId = packetBuffer.readStringFromBuffer(127);
 				nbt = packetBuffer.readNBTTagCompoundFromBuffer();
 				
 			} catch (IOException e) {
@@ -81,7 +83,6 @@ public class PacketSpaceStationInfo extends BasePacket {
 				return;
 			}
 			
-			direction = in.readInt();
 			
 			ISpaceObject iObject = SpaceObjectManager.getSpaceManager().getSpaceStation(stationNumber);
 			//TODO: interface
@@ -89,16 +90,13 @@ public class PacketSpaceStationInfo extends BasePacket {
 			
 			//Station needs to be created
 			if( iObject == null ) {
-				SpaceObject object = new SpaceObject();
+				ISpaceObject object = SpaceObjectManager.getSpaceManager().getNewSpaceObjectFromIdentifier(clazzId);
 				object.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
-				
-				object.setForwardDirection(ForgeDirection.getOrientation(direction));
 				
 				SpaceObjectManager.getSpaceManager().registerSpaceObjectClient(object, object.getOrbitingPlanetId(), stationNumber);
 			}
 			else {
 				iObject.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
-				spaceObject.setForwardDirection(ForgeDirection.getOrientation(direction));
 			}
 		}
 	}

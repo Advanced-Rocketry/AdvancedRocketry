@@ -82,6 +82,28 @@ public class SpaceObjectManager {
 		nameToClass.put(str, clazz);
 		classToString.put(clazz, str);
 	}
+	
+	/**
+	 * Attempts to get a registered SpaceObject
+	 * @param id string identifier of the spaceobject
+	 * @return a new instance of the spaceobject or null if not registered
+	 */
+	public ISpaceObject getNewSpaceObjectFromIdentifier(String id) {
+		Class clazz = nameToClass.get(id);
+		
+		try {
+			return (ISpaceObject)clazz.newInstance();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String getItentifierFromClass(Class<? extends ISpaceObject> clazz) {
+		return classToString.get(clazz);
+	}
 
 	/**
 	 * Gets the object at the location of passed Block x and z

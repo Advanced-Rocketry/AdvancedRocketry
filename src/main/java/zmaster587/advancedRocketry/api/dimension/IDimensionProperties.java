@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.api.dimension;
 
 import java.util.Set;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
@@ -85,5 +86,9 @@ public interface IDimensionProperties {
 	 * @param world world to add the satellite to
 	 */
 	public void addSatallite(SatelliteBase satellite, World world);
+
+	public void writeToNBT(NBTTagCompound nbt);
+
+	public void readFromNBT(NBTTagCompound nbt);
 	
 }
