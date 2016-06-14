@@ -139,4 +139,10 @@ public interface ISpaceObject {
 	 * @param properties
 	 */
 	public void setProperties(DimensionProperties properties);
+	
+	/**
+	 * Called when a check for a cleanup is performed on objects registered as temporary
+	 * @return worldtime expiration is to occur
+	 */
+	public long getExpireTime();
 }

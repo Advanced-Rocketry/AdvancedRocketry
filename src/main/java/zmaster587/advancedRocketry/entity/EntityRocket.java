@@ -47,6 +47,7 @@ import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
 import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.inventory.modules.ModuleSlotButton;
 import zmaster587.advancedRocketry.inventory.modules.ModuleText;
+import zmaster587.advancedRocketry.item.ItemAsteroidChip;
 import zmaster587.advancedRocketry.item.ItemPackedStructure;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.network.PacketEntity;
@@ -500,30 +501,35 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		//TODO: support multiple riders and rider/satellite combo
 		if(!stats.hasSeat()) {
 
-			List<TileSatelliteHatch> satelliteHatches = storage.getSatelliteHatches();
+			if(storage.getGuidanceComputer() != null && storage.getGuidanceComputer().getStackInSlot(0) != null &&
+					storage.getGuidanceComputer().getStackInSlot(0).getItem() instanceof ItemAsteroidChip) {
+				
+			}
+			else {
+				List<TileSatelliteHatch> satelliteHatches = storage.getSatelliteHatches();
 
+				for(TileSatelliteHatch tile : storage.getSatelliteHatches()) {
+					SatelliteBase satellite = tile.getSatellite();
+					if(satellite == null) {
+						ItemStack stack = tile.getStackInSlot(0);
+						if(stack != null && stack.getItem() == AdvancedRocketryItems.itemSpaceStation) {
+							StorageChunk storage = ((ItemPackedStructure)stack.getItem()).getStructure(stack);
+							ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(stack.getItemDamage());
 
-			for(TileSatelliteHatch tile : storage.getSatelliteHatches()) {
-				SatelliteBase satellite = tile.getSatellite();
-				if(satellite == null) {
-					ItemStack stack = tile.getStackInSlot(0);
-					if(stack != null && stack.getItem() == AdvancedRocketryItems.itemSpaceStation) {
-						StorageChunk storage = ((ItemPackedStructure)stack.getItem()).getStructure(stack);
-						ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(stack.getItemDamage());
+							SpaceObjectManager.getSpaceManager().moveStationToBody(object, this.worldObj.provider.dimensionId);
 
-						SpaceObjectManager.getSpaceManager().moveStationToBody(object, this.worldObj.provider.dimensionId);
+							//Vector3F<Integer> spawn = object.getSpawnLocation();
 
-						//Vector3F<Integer> spawn = object.getSpawnLocation();
+							object.onFirstCreated(storage);
 
-						object.onFirstCreated(storage);
-
+						}
 					}
-				}
-				else {
-					satellite.setDimensionId(worldObj);
-					DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(this.worldObj.provider.dimensionId);
+					else {
+						satellite.setDimensionId(worldObj);
+						DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(this.worldObj.provider.dimensionId);
 
-					properties.addSatallite(satellite, this.worldObj);
+						properties.addSatallite(satellite, this.worldObj);
+					}
 				}
 			}
 

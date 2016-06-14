@@ -12,7 +12,9 @@ import net.minecraft.util.EnumChatFormatting;
  * MetaData corresponds to the id
  */
 public class ItemStationChip extends ItemIdWithName {
-
+	
+	private static final String uuidIdentifier = "UUID";
+	
 	public ItemStationChip() {
 		//setMaxDamage(Integer.MAX_VALUE);
 		setHasSubtypes(true);
@@ -49,6 +51,23 @@ public class ItemStationChip extends ItemIdWithName {
 			}
 		}
 		return null;
+	}
+	
+	public Long getUUID(ItemStack stack) {
+		if(stack.hasTagCompound())
+			return stack.getTagCompound().getLong(uuidIdentifier);
+		return null;
+	}
+
+	public void setUUID(ItemStack stack, long uuid) {
+		NBTTagCompound nbt;
+		if(stack.hasTagCompound())
+			nbt = stack.getTagCompound();
+		else
+			nbt = new NBTTagCompound();
+
+		nbt.setLong(uuidIdentifier,uuid);
+		stack.setTagCompound(nbt);
 	}
 
 	@Override

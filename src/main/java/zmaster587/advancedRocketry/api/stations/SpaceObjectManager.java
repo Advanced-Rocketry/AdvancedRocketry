@@ -16,12 +16,15 @@ import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.libVulpes.util.BlockPosition;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -34,6 +37,8 @@ public class SpaceObjectManager {
 	HashMap<Integer,ISpaceObject> stationLocations;
 	//Map of planet IDs to station Ids
 	HashMap<Integer, List<ISpaceObject>> spaceStationOrbitMap;
+	HashMap<Integer, Long> temporaryDimensions;				//Stores a list of temporary dimensions to time they vanish
+	HashMap<Integer, Integer> temporaryDimensionPlayerNumber;
 	HashMap<String, Class> nameToClass;
 	HashMap<Class, String> classToString;
 
@@ -44,6 +49,7 @@ public class SpaceObjectManager {
 		spaceStationOrbitMap = new HashMap<Integer, List<ISpaceObject>>();
 		nameToClass = new HashMap<String, Class>();
 		classToString = new HashMap<Class, String>();
+		temporaryDimensions = new HashMap<Integer, Long>();
 	}
 
 	/**
@@ -70,7 +76,10 @@ public class SpaceObjectManager {
 	 * @return the next valid space object id and increments the value for the next one
 	 */
 	public int getNextStationId() {
-		return nextId++;
+		for(int i = 0; i < Integer.MAX_VALUE; i++)
+			if(!stationLocations.containsKey(i))
+				return i;
+		return Integer.MAX_VALUE;
 	}
 
 	/**
@@ -82,7 +91,7 @@ public class SpaceObjectManager {
 		nameToClass.put(str, clazz);
 		classToString.put(clazz, str);
 	}
-	
+
 	/**
 	 * Attempts to get a registered SpaceObject
 	 * @param id string identifier of the spaceobject
@@ -90,7 +99,7 @@ public class SpaceObjectManager {
 	 */
 	public ISpaceObject getNewSpaceObjectFromIdentifier(String id) {
 		Class clazz = nameToClass.get(id);
-		
+
 		try {
 			return (ISpaceObject)clazz.newInstance();
 		} catch (InstantiationException e) {
@@ -100,7 +109,7 @@ public class SpaceObjectManager {
 		}
 		return null;
 	}
-	
+
 	public String getItentifierFromClass(Class<? extends ISpaceObject> clazz) {
 		return classToString.get(clazz);
 	}
@@ -182,6 +191,19 @@ public class SpaceObjectManager {
 	}
 
 	/**
+	 * Registers a dimension that is set to expire at a given an expiration time
+	 * @param object object to register
+	 * @param dimId dimid to orbit around
+	 * @param expireTime time at which to expire the dimension
+	 */
+	public void registerTemporarySpaceObject(ISpaceObject object, int dimId, long expireTime) {
+		int nextDimId = getNextStationId();
+		temporaryDimensions.put(nextDimId, expireTime);
+		temporaryDimensionPlayerNumber.put(dimId, 0);
+		registerSpaceObject(object, nextDimId);
+	}
+
+	/**
 	 * Registers a space station and updates clients
 	 * @param object
 	 * @param dimId dimension to place it in orbit around, -1 for undefined
@@ -189,6 +211,14 @@ public class SpaceObjectManager {
 	public void registerSpaceObject(ISpaceObject object, int dimId) {
 		registerSpaceObject(object, dimId, getNextStationId());
 		PacketHandler.sendToAll(new PacketSpaceStationInfo(object.getId(), object));
+	}
+	
+	public void unregisterSpaceObject(int id) {
+		temporaryDimensions.remove(id);
+		temporaryDimensionPlayerNumber.remove(id);
+		spaceStationOrbitMap.remove(id);
+		stationLocations.remove(id);
+		PacketHandler.sendToAll(new PacketSpaceStationInfo(id, null));
 	}
 
 	/**
@@ -212,7 +242,7 @@ public class SpaceObjectManager {
 		return spaceStationOrbitMap.get(planetId);
 	}
 
-	/*
+	/**
 	 * Event designed to teleport a player to the spawn point for the station if he'she falls out of the world in space
 	 * TODO: prevent inf loop if nowhere to fall!
 	 */
@@ -284,6 +314,35 @@ public class SpaceObjectManager {
 		}
 
 	}
+	
+	/*@SubscribeEvent
+	public void onPlayerTransition(PlayerEvent.PlayerChangedDimensionEvent event) {
+		
+		if(event.toDim == Configuration.spaceDimId && getSpaceStationFromBlockCoords((int)event.player.posX, (int)event.player.posZ) != null &&
+				temporaryDimensions.containsKey(getSpaceStationFromBlockCoords((int)event.player.posX, (int)event.player.posZ))) {
+			int stationId = getSpaceStationFromBlockCoords((int)event.player.posX, (int)event.player.posZ).getId();
+			
+			temporaryDimensionPlayerNumber.put(stationId, temporaryDimensionPlayerNumber.get(stationId)+1);
+		}
+		if(event.fromDim != Configuration.spaceDimId) 
+			return;
+		
+		ISpaceObject spaceObj = getSpaceStationFromBlockCoords((int)event.player.posX, (int)event.player.posZ);
+		Long expireTime = spaceObj.getExpireTime();
+		int numplayers;
+		temporaryDimensionPlayerNumber.put(spaceObj.getId(), (numplayers = temporaryDimensionPlayerNumber.get(spaceObj.getId())-1));
+		
+		if(expireTime == null)
+			return;
+		
+		long worldTime = DimensionManager.getWorld(event.toDim).getTotalWorldTime();
+
+		if(expireTime >= worldTime && numplayers == 0) {
+			//expired and delete
+			unregisterSpaceObject(spaceObj.getId());
+		}
+
+	}*/
 
 	public void moveStationToBody(ISpaceObject station, int dimId) {
 		moveStationToBody(station, dimId, true);
@@ -353,9 +412,17 @@ public class SpaceObjectManager {
 			ISpaceObject object = iterator.next();
 			NBTTagCompound nbtTag = new NBTTagCompound();
 			object.writeToNbt(nbtTag);
+			
 			nbtTag.setString("type", classToString.get(object.getClass()));
+			if(temporaryDimensions.containsKey(object.getId())) {
+				nbtTag.setLong("expireTime", temporaryDimensions.get(object.getId()));
+				nbtTag.setInteger("numPlayers", temporaryDimensionPlayerNumber.get(object.getId()));
+			}
+			
 			nbtList.appendTag(nbtTag);
 		}
+		
+		
 		nbt.setTag("spaceContents", nbtList);
 		nbt.setInteger("nextInt", nextId);
 		nbt.setLong("nextStationTransitionTick", nextStationTransitionTick);
@@ -371,6 +438,17 @@ public class SpaceObjectManager {
 			try {
 				ISpaceObject object = (ISpaceObject)nameToClass.get(tag.getString("type")).newInstance();
 				object.readFromNbt(tag);
+				
+				
+				if(tag.hasKey("expireTime")) {
+					long expireTime = tag.getLong("expireTime");
+					int numPlayers = tag.getInteger("numPlayers");
+					if (DimensionManager.getWorld(Configuration.spaceDimId).getTotalWorldTime() >= expireTime && numPlayers == 0)
+						continue;
+					temporaryDimensions.put(object.getId(), expireTime);
+					temporaryDimensionPlayerNumber.put(object.getId(), numPlayers);
+				}
+				
 				registerSpaceObject(object, object.getOrbitingPlanetId(), object.getId() );
 
 			} catch (Exception e) {

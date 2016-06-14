@@ -40,4 +40,5 @@ public class AdvancedRocketryItems {
 	public static Item itemCarbonScrubberCartridge;
 	public static Item itemSealDetector;
 	public static Item itemJackhammer;
+	public static Item itemAsteroidChip;
 }

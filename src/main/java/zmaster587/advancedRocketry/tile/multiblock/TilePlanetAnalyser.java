@@ -4,12 +4,11 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import cpw.mods.fml.relauncher.Side;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
@@ -32,14 +31,15 @@ import zmaster587.advancedRocketry.inventory.modules.ModuleData;
 import zmaster587.advancedRocketry.inventory.modules.ModuleOutputSlotArray;
 import zmaster587.advancedRocketry.inventory.modules.ModulePower;
 import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
+import zmaster587.advancedRocketry.inventory.modules.ModuleSlotArray;
 import zmaster587.advancedRocketry.inventory.modules.ModuleText;
 import zmaster587.advancedRocketry.inventory.modules.ModuleTexturedSlotArray;
 import zmaster587.advancedRocketry.inventory.modules.ModuleToggleSwitch;
+import zmaster587.advancedRocketry.item.ItemAsteroidChip;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketMachine;
 import zmaster587.advancedRocketry.tile.TileInputHatch;
-import zmaster587.advancedRocketry.tile.TileOutputHatch;
 import zmaster587.advancedRocketry.tile.data.TileDataBus;
 import zmaster587.advancedRocketry.util.EmbeddedInventory;
 import zmaster587.advancedRocketry.util.ITilePlanetSystemSelectable;
@@ -69,7 +69,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 		dataCables = new TileDataBus[3];
 		powerPerTick = 100;
 		massProgress = distanceProgress = atmosphereProgress = -1;
-		inventory = new EmbeddedInventory(2);
+		inventory = new EmbeddedInventory(3);
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 
 					switch(i) {
 					case 0:
-						dataCables[i].lockData(DataStorage.DataType.ATMOSPHEREDENSITY);
+						dataCables[i].lockData(DataStorage.DataType.COMPOSITION);
 						break;
 					case 1:
 						dataCables[i].lockData(DataStorage.DataType.DISTANCE);
@@ -152,7 +152,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 		ItemStack inputStack = this.getStackInSlot(0);
 
 		return inputStack != null && 
-				inputStack.getItem() instanceof ItemPlanetIdentificationChip && 
+				inputStack.getItem().equals(AdvancedRocketryItems.itemAsteroidChip) && 
 				!inputStack.hasTagCompound() &&
 				this.getStackInSlot(1) == null;
 	}
@@ -174,13 +174,15 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 
 		if(!worldObj.isRemote) {
 			//TODO;
-			ItemStack outputItem = new ItemStack(AdvancedRocketryItems.itemPlanetIdChip);
-			ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)outputItem.getItem();
+			ItemStack outputItem = new ItemStack(AdvancedRocketryItems.itemAsteroidChip);
+			ItemAsteroidChip item = (ItemAsteroidChip)outputItem.getItem();
+			
+			//Get UUID
+			item.setUUID(outputItem, (new Random(worldObj.getTotalWorldTime())).nextLong() % 10000);
 			item.setMaxData(outputItem, 2000);
 			//TODO: fix naming system
 			//int dimensionId = DimensionManager.getInstance().generateRandom("", baseAtmosphere, baseDistance, baseGravity, atmosphereFactor, distanceFactor, gravityFactor);
 
-			item.setDimensionId(outputItem, this.selectedPlanetId);
 			this.setInventorySlotContents(1, outputItem);
 		}
 	}
@@ -226,8 +228,8 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 	}
 
 	private void incrementDataOnChip(int planetId, int amount, DataStorage.DataType dataType) {
-		ItemStack stack = getChipWithId(planetId);
-		if(stack != null) {
+		ItemStack stack = getStackInSlot(2);
+		if(stack != null && stack.getItem().equals(AdvancedRocketryItems.itemAsteroidChip)) {
 			ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)stack.getItem();
 			item.addData(stack, amount, dataType);
 		}
@@ -235,7 +237,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 
 	private void attemptAllResearchStart() {
 
-		if(researchingAtmosphere && atmosphereProgress < 0 && dataCables[0].extractData(1, DataStorage.DataType.ATMOSPHEREDENSITY) > 0)
+		if(researchingAtmosphere && atmosphereProgress < 0 && dataCables[0].extractData(1, DataStorage.DataType.COMPOSITION) > 0)
 			atmosphereProgress = 0;
 
 		if(researchingDistance && distanceProgress < 0 && dataCables[1].extractData(1, DataStorage.DataType.DISTANCE) > 0)
@@ -258,7 +260,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 				atmosphereProgress = -1;
 
 				if(!worldObj.isRemote) {
-					incrementDataOnChip(selectedPlanetId, 1, DataType.ATMOSPHEREDENSITY);
+					incrementDataOnChip(selectedPlanetId, 1, DataType.COMPOSITION);
 					attemptAllResearchStart();
 				}
 			}
@@ -399,7 +401,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 
 		modules.add(new ModuleText(15, 76, "Planet " + selectedPlanetId,0x404040));
 
-		modules.add(new ModuleToggleSwitch(15, 86, 4, "", this, TextureResources.buttonToggleImage, "Atmosphere Research", 11, 26, researchingAtmosphere));
+		modules.add(new ModuleToggleSwitch(15, 86, 4, "", this, TextureResources.buttonToggleImage, "Composition Research", 11, 26, researchingAtmosphere));
 		modules.add(new ModuleToggleSwitch(65, 86, 5, "", this, TextureResources.buttonToggleImage,"Distance Research", 11, 26, researchingDistance));
 		modules.add(new ModuleToggleSwitch(125, 86, 6, "", this, TextureResources.buttonToggleImage, "Mass Research", 11, 26, researchingMass));
 
@@ -407,6 +409,8 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 		modules.add(new ModuleProgress(26, 86, 1, TextureResources.progressScience, this));
 		modules.add(new ModuleProgress(76, 86, 2, TextureResources.progressScience, this));
 		modules.add(new ModuleProgress(136, 86, 3, TextureResources.progressScience, this));
+		
+		modules.add(new ModuleSlotArray(26, 120, this, 2, 3));
 
 		/*modules.add(new ModuleText(15, 76, "Atmos",0x404040));
 		modules.add(new ModuleText(65, 76, "Distance",0x404040));

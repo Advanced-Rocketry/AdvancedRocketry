@@ -12,6 +12,7 @@ public class ItemPlanetIdentificationChip extends ItemMultiData {
 
 	private static final String dimensionNameIdentifier = "DimensionName";
 	private static final String dimensionIdIdentifier = "dimId";
+	private static final String uuidIdentifier = "UUID";
 
 	public ItemPlanetIdentificationChip() {
 	}
@@ -104,7 +105,24 @@ public class ItemPlanetIdentificationChip extends ItemMultiData {
 			return DimensionManager.getInstance().getDimensionProperties(stack.getTagCompound().getInteger(dimensionIdIdentifier));
 		return null;
 	}
+	
+	public Long getUUID(ItemStack stack) {
+		if(stack.hasTagCompound())
+			return stack.getTagCompound().getLong(uuidIdentifier);
+		return null;
+	}
 
+	public void setUUID(ItemStack stack, long uuid) {
+		NBTTagCompound nbt;
+		if(stack.hasTagCompound())
+			nbt = stack.getTagCompound();
+		else
+			nbt = new NBTTagCompound();
+
+		nbt.setLong(uuidIdentifier,uuid);
+		stack.setTagCompound(nbt);
+	}
+	
 	@Override
 	public void addInformation(ItemStack stack, net.minecraft.entity.player.EntityPlayer player, java.util.List list, boolean bool) {
 

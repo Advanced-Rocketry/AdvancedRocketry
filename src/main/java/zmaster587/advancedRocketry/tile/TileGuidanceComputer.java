@@ -31,7 +31,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	public int getInventoryStackLimit() {
 		return 1;
 	}
-
+	
 	/**
 	 * Gets the dimension to travel to if applicable
 	 * @return The dimension to travel to or -1 if not valid
