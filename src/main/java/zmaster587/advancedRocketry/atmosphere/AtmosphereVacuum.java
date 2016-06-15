@@ -17,6 +17,9 @@ import zmaster587.advancedRocketry.network.PacketOxygenState;
  */
 public class AtmosphereVacuum extends AtmosphereType {
 
+	
+	public static int damageValue;
+	
 	public AtmosphereVacuum() {
 		super(true, false, "vacuum");
 	}
@@ -25,7 +28,7 @@ public class AtmosphereVacuum extends AtmosphereType {
 	public void onTick(EntityLivingBase player) {
 		if(player.worldObj.getTotalWorldTime() % 10  == 0 && !isImmune(player)) {
 			if(!isImmune(player)) {
-				player.attackEntityFrom(AtmosphereHandler.vacuumDamage, 1);
+				player.attackEntityFrom(AtmosphereHandler.vacuumDamage, damageValue);
 				if(player instanceof EntityPlayer)
 					PacketHandler.sendToPlayer(new PacketOxygenState(), (EntityPlayer)player);
 			}
