@@ -230,7 +230,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 	private void incrementDataOnChip(int planetId, int amount, DataStorage.DataType dataType) {
 		ItemStack stack = getStackInSlot(2);
 		if(stack != null && stack.getItem().equals(AdvancedRocketryItems.itemAsteroidChip)) {
-			ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)stack.getItem();
+			ItemAsteroidChip item = (ItemAsteroidChip)stack.getItem();
 			item.addData(stack, amount, dataType);
 		}
 	}
@@ -297,7 +297,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 
 	@Override
 	public boolean isRunning() {
-		return super.isRunning() || (selectedPlanetId != -1 && (atmosphereProgress > -1 || distanceProgress > -1 || massProgress > -1));
+		return super.isRunning() || (getStackInSlot(2) != null && getStackInSlot(2).getItem().equals(AdvancedRocketryItems.itemAsteroidChip) && (atmosphereProgress > -1 || distanceProgress > -1 || massProgress > -1));
 	}
 
 	@Override
@@ -399,7 +399,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 
 		modules.add(new ModuleButton(xStart, yStart + 20, 1, "", this, TextureResources.buttonNull, "Process discovery", 17, 17));
 
-		modules.add(new ModuleText(15, 76, "Planet " + selectedPlanetId,0x404040));
+		modules.add(new ModuleText(15, 76, "Research",0x404040));
 
 		modules.add(new ModuleToggleSwitch(15, 86, 4, "", this, TextureResources.buttonToggleImage, "Composition Research", 11, 26, researchingAtmosphere));
 		modules.add(new ModuleToggleSwitch(65, 86, 5, "", this, TextureResources.buttonToggleImage,"Distance Research", 11, 26, researchingDistance));

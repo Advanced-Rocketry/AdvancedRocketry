@@ -112,21 +112,23 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 				decrStackSize(i, 1);
 			}
 		}
+		if(!worldObj.isRemote) {
+			//Set final satellite properties
+			properties = new SatelliteProperties(powerGeneration, powerStorage, satType,maxData);
+			properties.setId(DimensionManager.getInstance().getNextSatelliteId());
 
-		//Set final satellite properties
-		properties = new SatelliteProperties(powerGeneration, powerStorage, satType,maxData);
-		properties.setId(DimensionManager.getInstance().getNextSatelliteId());
+			//Create the output item
+			ItemSatellite satItem = (ItemSatellite)AdvancedRocketryItems.itemSatellite;
+			ItemStack output = new ItemStack(satItem);
+			satItem.setSatellite(output, properties);
 
-		//Create the output item
-		ItemSatellite satItem = (ItemSatellite)AdvancedRocketryItems.itemSatellite;
-		ItemStack output = new ItemStack(satItem);
-		satItem.setSatellite(output, properties);
+			//Set the ID chip
+			ItemSatelliteIdentificationChip idChipItem = (ItemSatelliteIdentificationChip)inventory[chipSlot].getItem();
+			idChipItem.setSatellite(inventory[chipSlot], properties);
 
-		//Set the ID chip
-		ItemSatelliteIdentificationChip idChipItem = (ItemSatelliteIdentificationChip)inventory[chipSlot].getItem();
-		idChipItem.setSatellite(inventory[chipSlot], properties);
 
-		inventory[holdingSlot] = output;
+			inventory[holdingSlot] = output;
+		}
 
 		completionTime = 100;
 	}
@@ -142,7 +144,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		boolean isSatellite = ((stack0.getItem() instanceof ItemSatellite || stack0.getItem() instanceof ItemSatelliteIdentificationChip) && stack1.getItem() instanceof ItemSatelliteIdentificationChip);
 		boolean isStation = stack0.getItem() instanceof ItemStationChip && stack0.getItemDamage() != 0 && stack1.getItem() instanceof ItemStationChip;
 		boolean isPlanet = (stack0.getItem() instanceof ItemPlanetIdentificationChip && stack1.getItem() instanceof ItemPlanetIdentificationChip);
-		
+
 		return !isRunning() && getStackInSlot(outputSlot) == null && (isStation || stack0.hasTagCompound()) && 
 				(isSatellite  || isStation || isPlanet);
 	}
@@ -151,15 +153,15 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 
 		ItemStack slot0 = getStackInSlot(chipSlot);
 		ItemStack slot1 = getStackInSlot(chipCopySlot);
-		
+
 		if(slot0.getItem() instanceof ItemSatelliteIdentificationChip || slot0.getItem() instanceof ItemPlanetIdentificationChip || slot0.getItem() instanceof ItemStationChip) {
 			inventory[holdingSlot] = getStackInSlot(chipSlot).copy();
 		}
 		else {
 			ItemSatellite satelliteItem = (ItemSatellite)slot0.getItem();
-			
+
 			ItemSatelliteIdentificationChip itemIdChip = (ItemSatelliteIdentificationChip)slot1.getItem();
-			
+
 			itemIdChip.setSatellite(slot1, satelliteItem.getSatellite(slot0));
 			inventory[holdingSlot] = slot1;
 		}

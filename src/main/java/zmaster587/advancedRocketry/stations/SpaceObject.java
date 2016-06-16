@@ -53,6 +53,10 @@ public class SpaceObject implements ISpaceObject {
 		destinationDimId = -1;
 	}
 
+	public long getExpireTime() { 
+		return Long.MAX_VALUE;
+	}
+	
 	public void beginTransition(long time) {
 		if(time > 0)
 			transitionEta = time;

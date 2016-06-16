@@ -10,6 +10,7 @@ import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.item.ItemAsteroidChip;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.stations.SpaceObject;
@@ -51,6 +52,9 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				if(Configuration.spaceDimId == currentDimension)
 					return 0;
 				return Configuration.spaceDimId;
+			}
+			else if(itemType instanceof ItemAsteroidChip) {
+				return currentDimension;
 			}
 
 		}

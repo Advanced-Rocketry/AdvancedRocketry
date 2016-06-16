@@ -30,6 +30,10 @@ public class SpaceObjectBase implements ISpaceObject {
 		properties = (DimensionProperties) zmaster587.advancedRocketry.dimension.DimensionManager.defaultSpaceDimensionProperties.clone();
 	}
 
+	public long getExpireTime() { 
+		return Long.MAX_VALUE;
+	}
+	
 	public void beginTransition(long time) {
 	}
 

@@ -50,6 +50,7 @@ import zmaster587.advancedRocketry.inventory.modules.ModuleText;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
 import zmaster587.advancedRocketry.item.ItemPackedStructure;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
+import zmaster587.advancedRocketry.mission.MissionOreMining;
 import zmaster587.advancedRocketry.network.PacketEntity;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketMachine;
@@ -86,8 +87,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
 public class EntityRocket extends EntityRocketBase implements INetworkEntity, IDismountHandler, IModularInventory, IProgressBar, IButtonInventory, ISelectionNotify {
-
-
+	
 	//Stores the blocks and tiles that make up the rocket
 	public StorageChunk storage;
 
@@ -503,7 +503,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 			if(storage.getGuidanceComputer() != null && storage.getGuidanceComputer().getStackInSlot(0) != null &&
 					storage.getGuidanceComputer().getStackInSlot(0).getItem() instanceof ItemAsteroidChip) {
+				MissionOreMining miningMission = new MissionOreMining(20, this);
+				DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId);
 				
+				properties.addSatallite(miningMission, worldObj);
+				//TODO: Move tracking stations over to the mission handler
 			}
 			else {
 				List<TileSatelliteHatch> satelliteHatches = storage.getSatelliteHatches();
@@ -583,6 +587,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		if(stats.hasSeat()) {
 			TileGuidanceComputer guidanceComputer = storage.getGuidanceComputer();
 			destinationDimId = guidanceComputer.getDestinationDimId(worldObj.provider.dimensionId);
+			
 		}
 
 		if(!stats.hasSeat() || ( destinationDimId != -1 && (DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || destinationDimId == Configuration.spaceDimId || destinationDimId == 0) ) { //Abort if destination is invalid

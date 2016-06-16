@@ -295,9 +295,9 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 			//Set status
 			//TODO: warn if seat OR satellite missing
-			if(!stats.hasSeat() && !hasSatellite) 
-				status = ErrorCodes.NOSEAT;
-			else if(stats.hasSeat() && !hasGuidance)
+			//if(!stats.hasSeat() && !hasSatellite) 
+				//status = ErrorCodes.NOSEAT;
+			/*else*/ if(!hasGuidance && !hasSatellite)
 				status = ErrorCodes.NOGUIDANCE;
 			else if(getFuel() < getNeededFuel()) 
 				status = ErrorCodes.NOFUEL;

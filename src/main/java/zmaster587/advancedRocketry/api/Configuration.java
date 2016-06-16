@@ -43,4 +43,8 @@ public class Configuration {
 	public static boolean electricPlantsSpawnLightning;
 
 	public static boolean allowSawmillVanillaWood;
+
+	public static double asteroidMiningMult;
+
+	public static String[] standardAsteroidOres;
 }

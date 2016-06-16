@@ -175,7 +175,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	//Satallites
 	private HashMap<Long,SatelliteBase> satallites;
-	private List<SatelliteBase> tickingSatallites;
+	private HashMap<Long,SatelliteBase> tickingSatallites;
 
 
 	public DimensionProperties(int id) {
@@ -188,7 +188,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		allowedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
 		satallites = new HashMap<>();
-		tickingSatallites = new LinkedList<SatelliteBase>();
+		tickingSatallites = new HashMap<Long,SatelliteBase>();
 		isNativeDimension = true;
 	}
 
@@ -464,7 +464,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 
 		if(satellite.canTick())
-			tickingSatallites.add(satellite);
+			tickingSatallites.put(satellite.getId(),satellite);
 
 		if(!world.isRemote)
 			PacketHandler.sendToAll(new PacketSatellite(satellite));
@@ -477,8 +477,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public void addSatallite(SatelliteBase satallite) {
 		satallites.put(satallite.getId(), satallite);
 
-		if(satallite.canTick() && !tickingSatallites.contains(satallite)) //TODO: check for dupes
-			tickingSatallites.add(satallite);
+		if(satallite.canTick()) //TODO: check for dupes
+			tickingSatallites.put(satallite.getId(), satallite);
 	}
 
 	/**
@@ -489,8 +489,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public SatelliteBase removeSatellite(long satalliteId) {
 		SatelliteBase satallite = satallites.remove(satalliteId);
 
-		if(satallite != null && satallite.canTick())
-			tickingSatallites.remove(satallite);
+		//if(satallite != null && satallite.canTick())
+			tickingSatallites.remove(satalliteId);
 
 		return satallite;
 	}
@@ -508,7 +508,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * Tick satellites as needed
 	 */
 	public void tick() {
-		Iterator<SatelliteBase> iterator = tickingSatallites.iterator();
+		
+		Iterator<SatelliteBase> iterator = tickingSatallites.values().iterator();
 
 		while(iterator.hasNext()) {
 			SatelliteBase satallite = iterator.next();
@@ -835,7 +836,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 					satallites.put(longKey, satallite);
 
 					if(satallite.canTick()) {
-						tickingSatallites.add(satallite);
+						tickingSatallites.put(satallite.getId(), satallite);
 					}
 				}
 			}
