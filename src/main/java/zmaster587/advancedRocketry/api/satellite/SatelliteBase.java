@@ -16,6 +16,7 @@ public abstract class SatelliteBase {
 
 	public SatelliteBase() {
 		satelliteProperties = new SatelliteProperties();
+		satelliteProperties.setSatelliteType(SatelliteRegistry.getKey(this.getClass()));
 	}
 	
 	/**

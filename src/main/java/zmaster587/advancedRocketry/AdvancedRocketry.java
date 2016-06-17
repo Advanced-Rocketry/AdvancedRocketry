@@ -59,6 +59,7 @@ import zmaster587.advancedRocketry.block.BlockLandingPad;
 import zmaster587.advancedRocketry.block.BlockLaser;
 import zmaster587.advancedRocketry.block.BlockLightSource;
 import zmaster587.advancedRocketry.block.BlockLinkedHorizontalTexture;
+import zmaster587.advancedRocketry.block.BlockMiningDrill;
 import zmaster587.advancedRocketry.block.BlockOre;
 import zmaster587.advancedRocketry.block.BlockPhantom;
 import zmaster587.advancedRocketry.block.BlockPlanetSoil;
@@ -401,6 +402,10 @@ public class AdvancedRocketry {
 		((BlockTile)AdvancedRocketryBlocks.blockPlanetSelector).setSideTexture("Advancedrocketry:MonitorSide");
 		((BlockTile)AdvancedRocketryBlocks.blockPlanetSelector).setFrontTexture("Advancedrocketry:guidanceComputer");
 
+		AdvancedRocketryBlocks.blockDrill = new BlockMiningDrill().setBlockName("drill").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		((BlockTile)AdvancedRocketryBlocks.blockDrill).setTopTexture("Advancedrocketry:laserBottom", "Advancedrocketry:laserBottom");
+		((BlockTile)AdvancedRocketryBlocks.blockDrill).setSideTexture("Advancedrocketry:machineWarning");
+		((BlockTile)AdvancedRocketryBlocks.blockDrill).setFrontTexture("Advancedrocketry:machineWarning");
 
 		//Fluid Registration
 		AdvancedRocketryFluids.fluidOxygen = new FluidColored("oxygen",0x8f94b9).setUnlocalizedName("oxygen").setGaseous(true);
@@ -484,6 +489,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockCrystal, ItemCrystalBlock.class, AdvancedRocketryBlocks.blockCrystal.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockOrientationController, AdvancedRocketryBlocks.blockOrientationController.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockGravityController, AdvancedRocketryBlocks.blockGravityController.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockDrill, AdvancedRocketryBlocks.blockDrill.getUnlocalizedName());
 
 		BlockOre.registerOres(tabAdvRocketryOres);
 
@@ -626,6 +632,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileAtmosphereDetector.class, "AROxygenDetector");
 		GameRegistry.registerTileEntity(TileStationOrientationControl.class, "AROrientationControl");
 		GameRegistry.registerTileEntity(TileStationGravityController.class, "ARGravityControl");
+		GameRegistry.registerTileEntity(TileDrill.class, "ARDrill");
 		EntityRegistry.registerModEntity(EntityLaserNode.class, "laserNode", 0, instance, 256, 20, false);
 
 

@@ -33,7 +33,6 @@ public class MissionOreMining extends SatelliteBase implements IMission {
 	
 	public MissionOreMining(long duration, EntityRocket entity) {
 		super();
-		satelliteProperties.setSatelliteType(SatelliteRegistry.getKey(this.getClass()));
 		
 		satelliteProperties.setId(zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getNextSatelliteId());
 		
@@ -92,7 +91,7 @@ public class MissionOreMining extends SatelliteBase implements IMission {
 		
 		//fill the inventory of the rocket
 		if(distanceData/(double)maxData > Math.random()) {
-			int totalStacks = (int) (massData*Configuration.asteroidMiningMult*Math.random()*128);
+			int totalStacks = (int) (massData*Configuration.asteroidMiningMult*Math.random()*64);
 			ItemStack[] stacks = new ItemStack[totalStacks];
 			for (int i = 0; i < totalStacks; i++) {
 				if((compositionData/(double)maxData)*0.9d > Math.random()) {
