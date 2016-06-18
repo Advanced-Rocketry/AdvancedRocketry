@@ -159,7 +159,7 @@ public class ClientProxy extends CommonProxy {
 	}
 	
 	@Override
-	public long getStationWorldTime() {
+	public long getWorldTimeUniversal(int id) {
 		return Minecraft.getMinecraft().theWorld.getTotalWorldTime();
 	}
 }

@@ -50,7 +50,7 @@ public class CommonProxy {
 		return 0;
 	}
 
-	public long getStationWorldTime() {
-		return DimensionManager.getWorld(Configuration.spaceDimId).getTotalWorldTime();
+	public long getWorldTimeUniversal(int id) {
+		return DimensionManager.getWorld(id).getTotalWorldTime();
 	}
 }

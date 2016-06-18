@@ -66,7 +66,7 @@ public class MissionOreMining extends SatelliteBase implements IMission {
 
 	@Override
 	public double getProgress(World world) {
-		return 2*(DimensionManager.getWorld(0).getTotalWorldTime() - startWorldTime) / (double)duration;
+		return (AdvancedRocketry.proxy.getWorldTimeUniversal(0) - startWorldTime) / (double)duration;
 	}
 
 	@Override
@@ -105,10 +105,10 @@ public class MissionOreMining extends SatelliteBase implements IMission {
 
 			if(stack != null) {
 
-				distanceData = ((ItemAsteroidChip)stack.getItem()).getDataStorage(stack).getDataAmount(DataType.DISTANCE);
-				compositionData = ((ItemAsteroidChip)stack.getItem()).getDataStorage(stack).getDataAmount(DataType.COMPOSITION);
-				massData = ((ItemAsteroidChip)stack.getItem()).getDataStorage(stack).getDataAmount(DataType.MASS);
-				maxData = ((ItemAsteroidChip)stack.getItem()).getDataStorage(stack).getMaxData();
+				distanceData = ((ItemAsteroidChip)stack.getItem()).getData(stack,DataType.DISTANCE);
+				compositionData = ((ItemAsteroidChip)stack.getItem()).getData(stack,DataType.COMPOSITION);
+				massData = ((ItemAsteroidChip)stack.getItem()).getData(stack,DataType.MASS);
+				maxData = ((ItemAsteroidChip)stack.getItem()).getMaxData(stack);
 
 				//fill the inventory of the rocket
 				if(distanceData/(double)maxData > Math.random()) {
@@ -148,7 +148,7 @@ public class MissionOreMining extends SatelliteBase implements IMission {
 		world.spawnEntityInWorld(rocket);
 		rocket.setInOrbit(true);
 		rocket.setInFlight(true);
-		rocket.setVelocity(0, -1, 0);
+		rocket.motionY = -1.0;
 
 		for(BlockPosition i : infrastructureCoords) {
 			TileEntity tile = world.getTileEntity(i.x, i.y, i.z);

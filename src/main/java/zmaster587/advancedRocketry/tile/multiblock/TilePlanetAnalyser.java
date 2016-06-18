@@ -40,30 +40,30 @@ import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketMachine;
 import zmaster587.advancedRocketry.tile.TileInputHatch;
+import zmaster587.advancedRocketry.tile.TileOutputHatch;
 import zmaster587.advancedRocketry.tile.data.TileDataBus;
 import zmaster587.advancedRocketry.util.EmbeddedInventory;
 import zmaster587.advancedRocketry.util.ITilePlanetSystemSelectable;
+import zmaster587.advancedRocketry.world.util.MultiData;
 import zmaster587.libVulpes.block.BlockMeta;
 
-public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModularInventory, IInventory, ITilePlanetSystemSelectable {
+public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModularInventory, IInventory {
 
 	private static final Object[][][] structure = new Object[][][]{
 		{{Blocks.stone_slab, 'c', Blocks.stone_slab},
 			{Blocks.stone_slab, Blocks.stone_slab, Blocks.stone_slab}},
 
-			{{'P','I', 'I'},
+			{{'P','I', 'O'},
 				{'D','D','D'}}
 	};
 
 
 	private TileDataBus dataCables[];
-	private ModuleText planetText;
-	private int selectedPlanetId = -1;
 	private boolean researchingDistance, researchingAtmosphere, researchingMass;
 	private int atmosphereProgress, distanceProgress, massProgress;
 	private static final int maxResearchTime = 20;
 	private EmbeddedInventory inventory;
-	TileInventoryHatch inputHatch, inputHatch2;
+	TileInventoryHatch inputHatch, outputHatch;
 
 	public TilePlanetAnalyser() {
 		dataCables = new TileDataBus[3];
@@ -103,10 +103,11 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 			}
 		}
 		else if(tile instanceof TileInputHatch) {
-			if(inputHatch == null)
-				inputHatch = (TileInventoryHatch) tile;
-			else
-				inputHatch2 = (TileInventoryHatch) tile; 
+			inputHatch = (TileInventoryHatch) tile;
+
+		}
+		else if(tile instanceof TileOutputHatch) {
+			outputHatch = (TileInventoryHatch) tile; 
 		}
 	}
 
@@ -129,7 +130,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 		super.resetCache();
 		Arrays.fill(dataCables, null);
 		inputHatch = null;
-		inputHatch2 = null;
+		outputHatch = null;
 	}
 
 	@Override
@@ -151,7 +152,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 
 		ItemStack inputStack = this.getStackInSlot(0);
 
-		return inputStack != null && 
+		return !super.isRunning() && inputStack != null && 
 				inputStack.getItem().equals(AdvancedRocketryItems.itemAsteroidChip) && 
 				!inputStack.hasTagCompound() &&
 				this.getStackInSlot(1) == null;
@@ -167,21 +168,79 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 	}
 
 	@Override
+	public void onInventoryUpdated() {
+
+		super.onInventoryUpdated();
+
+		if(inventory.getStackInSlot(1) != null) {
+			for(int i = 0; i < outputHatch.getSizeInventory(); i++) {
+				if(outputHatch.getStackInSlot(i) == null) {
+					outputHatch.inventory.setInventorySlotContents(i, inventory.getStackInSlot(1));
+					inventory.setInventorySlotContents(1, null);
+					break;
+				}
+			}
+		}
+
+		ItemStack stack0 = inventory.getStackInSlot(0);
+		if(stack0 == null || stack0.stackSize < stack0.getMaxStackSize())
+			for(int i = 0; i < inputHatch.getSizeInventory(); i++){
+				ItemStack stack = inputHatch.getStackInSlot(i);
+				if(stack != null && stack.getItem() instanceof ItemAsteroidChip && ((ItemAsteroidChip)stack.getItem()).getUUID(stack) == null ) {
+					if(stack0 == null) {
+						inventory.setInventorySlotContents(0, stack);
+						inputHatch.inventory.setInventorySlotContents(i, null);
+					}
+					else {
+						stack0.stackSize += inputHatch.inventory.decrStackSize(i, stack0.getMaxStackSize() - stack0.stackSize).stackSize;
+						//inventory.setInventorySlotContents(0, stack0);
+					}
+					if(!worldObj.isRemote) {
+						markDirty();
+						inputHatch.markDirty();
+						worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+						worldObj.markBlockForUpdate(inputHatch.xCoord, inputHatch.yCoord, inputHatch.zCoord);
+					}
+				}
+
+				if(canProcess())
+					process();
+			}
+
+		if(getStackInSlot(2) == null) {
+			for(int j = 0; j < inputHatch.getSizeInventory(); j++) {
+				ItemStack stack2 = inputHatch.getStackInSlot(j);
+				if(stack2 != null && stack2.getItem() instanceof ItemAsteroidChip && ((ItemAsteroidChip)stack2.getItem()).getUUID(stack2) != null) {
+					setInventorySlotContents(2, inputHatch.decrStackSize(j, 1));
+					break;
+				}
+			}
+		}
+		attemptAllResearchStart();
+	}
+
+	@Override
 	protected void processComplete() {
 		super.processComplete();
 
 		//The machine is done re-enable user input
 
 		if(!worldObj.isRemote) {
-			//TODO;
 			ItemStack outputItem = new ItemStack(AdvancedRocketryItems.itemAsteroidChip);
 			ItemAsteroidChip item = (ItemAsteroidChip)outputItem.getItem();
-			
+
 			//Get UUID
 			item.setUUID(outputItem, (new Random(worldObj.getTotalWorldTime())).nextLong() % 10000);
 			item.setMaxData(outputItem, 2000);
 			//TODO: fix naming system
 			//int dimensionId = DimensionManager.getInstance().generateRandom("", baseAtmosphere, baseDistance, baseGravity, atmosphereFactor, distanceFactor, gravityFactor);
+
+			for(int i = 0; i < outputHatch.getSizeInventory(); i++) {
+				if(outputHatch.getStackInSlot(i) == null) {
+					outputHatch.setInventorySlotContents(i, outputItem);
+					return;
+				}
+			}
 
 			this.setInventorySlotContents(1, outputItem);
 		}
@@ -198,52 +257,40 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 		return result;
 	}
 
-	@Override
-	public ItemStack getChipWithId(int id) {
-		if(inputHatch != null) {
-			for(int i = 0; i < inputHatch.getSizeInventory(); i++) {
-				ItemStack stack = inputHatch.getStackInSlot(i);
-
-				if(stack != null && stack.getItem() instanceof ItemPlanetIdentificationChip) {
-					ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)stack.getItem();
-					if(item.hasValidDimension(stack) && item.getDimensionId(stack) == id)
-						return stack;
-				}
-			}
-		}
-		
-		if(inputHatch2 != null) {
-			for(int i = 0; i < inputHatch2.getSizeInventory(); i++) {
-				ItemStack stack = inputHatch2.getStackInSlot(i);
-
-				if(stack != null && stack.getItem() instanceof ItemPlanetIdentificationChip) {
-					ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)stack.getItem();
-					if(item.hasValidDimension(stack) && item.getDimensionId(stack) == id)
-						return stack;
-				}
-			}
-		}
-		
-		return null;
-	}
-
 	private void incrementDataOnChip(int planetId, int amount, DataStorage.DataType dataType) {
 		ItemStack stack = getStackInSlot(2);
 		if(stack != null && stack.getItem().equals(AdvancedRocketryItems.itemAsteroidChip)) {
 			ItemAsteroidChip item = (ItemAsteroidChip)stack.getItem();
 			item.addData(stack, amount, dataType);
+			int maxData = item.getMaxData(stack);
+
+			if(item.getData(stack, DataType.COMPOSITION) == maxData && item.getData(stack, DataType.DISTANCE) == maxData && item.getData(stack, DataType.MASS) == maxData) {
+				for(int i = 0; i < outputHatch.getSizeInventory(); i++) {
+					if(outputHatch.getStackInSlot(i) == null) {
+						outputHatch.setInventorySlotContents(i, stack);
+
+						setInventorySlotContents(2, null);
+						return;
+					}
+				}
+			}
 		}
 	}
 
 	private void attemptAllResearchStart() {
+		ItemStack stack = getStackInSlot(2);
+		if(stack == null || !(stack.getItem() instanceof ItemAsteroidChip))
+			return;
 
-		if(researchingAtmosphere && atmosphereProgress < 0 && dataCables[0].extractData(1, DataStorage.DataType.COMPOSITION) > 0)
+		ItemAsteroidChip item = (ItemAsteroidChip)stack.getItem();
+
+		if(researchingAtmosphere && atmosphereProgress < 0 && dataCables[0].extractData(1, DataStorage.DataType.COMPOSITION) > 0 && !item.isFull(stack, DataStorage.DataType.COMPOSITION))
 			atmosphereProgress = 0;
 
-		if(researchingDistance && distanceProgress < 0 && dataCables[1].extractData(1, DataStorage.DataType.DISTANCE) > 0)
+		if(researchingDistance && distanceProgress < 0 && dataCables[1].extractData(1, DataStorage.DataType.DISTANCE) > 0 && !item.isFull(stack, DataStorage.DataType.DISTANCE))
 			distanceProgress = 0;
 
-		if(researchingMass && massProgress < 0 && dataCables[2].extractData(1, DataStorage.DataType.MASS) > 0)
+		if(researchingMass && massProgress < 0 && dataCables[2].extractData(1, DataStorage.DataType.MASS) > 0 && !item.isFull(stack, DataStorage.DataType.MASS))
 			massProgress = 0;
 
 		this.markDirty();
@@ -260,7 +307,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 				atmosphereProgress = -1;
 
 				if(!worldObj.isRemote) {
-					incrementDataOnChip(selectedPlanetId, 1, DataType.COMPOSITION);
+					incrementDataOnChip(0, 1, DataType.COMPOSITION);
 					attemptAllResearchStart();
 				}
 			}
@@ -274,7 +321,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 				massProgress = -1;
 
 				if(!worldObj.isRemote) {
-					incrementDataOnChip(selectedPlanetId, 1, DataType.MASS);
+					incrementDataOnChip(0, 1, DataType.MASS);
 					attemptAllResearchStart();
 				}
 			}
@@ -286,7 +333,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 			if(distanceProgress == maxResearchTime) {
 				distanceProgress = -1;
 				if(!worldObj.isRemote) {
-					incrementDataOnChip(selectedPlanetId, 1, DataType.DISTANCE);
+					incrementDataOnChip(0, 1, DataType.DISTANCE);
 					attemptAllResearchStart();
 				}
 			}
@@ -329,8 +376,6 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {
 		super.writeDataToNetwork(out, id);
-		if(id == 3) 
-			out.writeInt(selectedPlanetId);
 		if(id == 4) {
 			out.writeInt((researchingAtmosphere ? 1 : 0) | (researchingDistance ? 2 : 0) | (researchingMass ? 4 : 0));
 		}
@@ -353,12 +398,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 			NBTTagCompound nbt) {
 		super.useNetworkData(player, side, id, nbt);
 
-		if(id == 3) {
-			setSelectedPlanetId(nbt.getInteger("state"));
-			this.markDirty();
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		}
-		else if(id == 2) {
+		if(id == 2) {
 			if(canProcess())
 				process();
 		}
@@ -409,7 +449,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 		modules.add(new ModuleProgress(26, 86, 1, TextureResources.progressScience, this));
 		modules.add(new ModuleProgress(76, 86, 2, TextureResources.progressScience, this));
 		modules.add(new ModuleProgress(136, 86, 3, TextureResources.progressScience, this));
-		
+
 		modules.add(new ModuleSlotArray(26, 120, this, 2, 3));
 
 		/*modules.add(new ModuleText(15, 76, "Atmos",0x404040));
@@ -432,56 +472,6 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 		return modules;
 	}
 
-
-	@Override
-	public void setSelectedPlanetId(int id) {
-		selectedPlanetId = id;
-		if(worldObj.isRemote) {
-			PacketHandler.sendToServer(new PacketMachine(this, (byte)3));
-			setPlanetNumberText(selectedPlanetId);
-		}
-	}
-
-	private void setPlanetNumberText(int i) {
-		if(worldObj.isRemote && planetText != null)
-			planetText.setText("Planet " + i);
-	}
-
-	public int getSelectedPlanetId() {
-		return selectedPlanetId;
-	}
-
-	@Override
-	public List<Integer> getVisiblePlanets() {
-		ArrayList<Integer> visibleList = new ArrayList<Integer>();
-		visibleList.add(0);
-
-		if(inputHatch != null) {
-			for(int i = 0; i < inputHatch.getSizeInventory(); i++) {
-				ItemStack stack = inputHatch.getStackInSlot(i);
-
-				if(stack != null && stack.getItem() instanceof ItemPlanetIdentificationChip) {
-					ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)stack.getItem();
-					if(item.hasValidDimension(stack) && item.getData(stack, DataType.DISTANCE) > 50 && item.getData(stack, DataType.MASS) > 50)
-						visibleList.add(item.getDimensionId(stack));
-				}
-			}
-		}
-		
-		if(inputHatch2 != null) {
-			for(int i = 0; i < inputHatch2.getSizeInventory(); i++) {
-				ItemStack stack = inputHatch2.getStackInSlot(i);
-
-				if(stack != null && stack.getItem() instanceof ItemPlanetIdentificationChip) {
-					ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)stack.getItem();
-					if(item.hasValidDimension(stack) && item.getData(stack, DataType.DISTANCE) > 50 && item.getData(stack, DataType.MASS) > 50)
-						visibleList.add(item.getDimensionId(stack));
-				}
-			}
-		}
-
-		return visibleList;
-	}
 
 	@Override
 	public int getProgress(int id) {
@@ -534,11 +524,6 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 		super.readFromNBT(nbt);
 		inventory.readFromNBT(nbt);
 
-		selectedPlanetId = nbt.getInteger("planet");
-
-		if(worldObj != null)
-			setPlanetNumberText(selectedPlanetId);
-
 		researchingAtmosphere = nbt.getBoolean("researchingAtmosphere");
 		researchingDistance = nbt.getBoolean("researchingDistance");
 		researchingMass = nbt.getBoolean("researchingMass");
@@ -551,8 +536,6 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		inventory.writeToNBT(nbt);
-
-		nbt.setInteger("planet", selectedPlanetId);
 
 		nbt.setBoolean("researchingAtmosphere", researchingAtmosphere);
 		nbt.setBoolean("researchingDistance", researchingDistance);
@@ -585,6 +568,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
+		onInventoryUpdated();
 	}
 
 	@Override

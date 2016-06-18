@@ -29,15 +29,14 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 
 	public TileDataBus() {
 		data = new DataStorage(DataStorage.DataType.UNDEFINED);
-		data.setMaxData(500);
-		data.setData(500, DataStorage.DataType.DISTANCE);
+		data.setMaxData(2000);
 	}
 
 	public TileDataBus(int number) {
 		super(number);
 		data = new DataStorage(DataStorage.DataType.UNDEFINED);
 
-		data.setMaxData(500);
+		data.setMaxData(2000);
 	}
 
 	@Override

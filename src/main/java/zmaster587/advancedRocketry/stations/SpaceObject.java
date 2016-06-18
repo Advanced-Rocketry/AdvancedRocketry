@@ -154,7 +154,7 @@ public class SpaceObject implements ISpaceObject {
 	}
 
 	private long getWorldTime() {
-		return AdvancedRocketry.proxy.getStationWorldTime();
+		return AdvancedRocketry.proxy.getWorldTimeUniversal(Configuration.spaceDimId);
 	}
 	
 	/**

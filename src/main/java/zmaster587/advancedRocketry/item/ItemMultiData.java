@@ -36,8 +36,12 @@ public class ItemMultiData extends Item {
 	public int getData(ItemStack stack, DataStorage.DataType type) {
 		return getDataStorage(stack).getDataAmount(type);
 	}
+	
+	public int getMaxData(ItemStack stack) {
+		return getDataStorage(stack).getMaxData();
+	}
 
-	public MultiData getDataStorage(ItemStack item) {
+	private MultiData getDataStorage(ItemStack item) {
 
 		MultiData data = new MultiData();
 
@@ -51,6 +55,11 @@ public class ItemMultiData extends Item {
 		return data;
 	}
 
+	public boolean isFull(ItemStack item,  DataStorage.DataType dataType) {
+		return getDataStorage(item).getMaxData() == getData(item, dataType);
+		
+	}
+	
 	public int addData(ItemStack item, int amount, DataStorage.DataType dataType) {
 		MultiData data = getDataStorage(item);
 
