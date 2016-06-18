@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
@@ -47,8 +48,8 @@ public class TileLathe extends TileMultiblockMachine implements IModularInventor
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID) {
-		List<ModuleBase> modules = super.getModules(ID);
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+		List<ModuleBase> modules = super.getModules(ID, player);
 
 		modules.add(new ModuleProgress(100, 40, 0, TextureResources.latheProgressBar, this));
 		return modules;

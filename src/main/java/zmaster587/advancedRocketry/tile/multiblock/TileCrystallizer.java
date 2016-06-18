@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -69,8 +70,8 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID) {
-		List<ModuleBase> modules = super.getModules(ID);
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+		List<ModuleBase> modules = super.getModules(ID, player);
 
 		modules.add(new ModuleProgress(100, 4, 0, TextureResources.crystallizerProgressBar, this));
 		return modules;

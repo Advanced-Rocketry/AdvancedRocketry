@@ -28,7 +28,7 @@ public class TileIC2Plug extends TilePlugBase implements IEnergySink {
 	//TODO: find a way of doing this that doesn't tick all the time
 	@Override
 	public void updateEntity() {
-		if(!tickedOnce) {
+		if(!worldObj.isRemote && !tickedOnce) {
 			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
 			tickedOnce = true;
 		}

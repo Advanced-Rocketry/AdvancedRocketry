@@ -19,6 +19,7 @@ import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.util.IconResource;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -66,8 +67,8 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID) {
-		List<ModuleBase> modules = super.getModules(ID);
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+		List<ModuleBase> modules = super.getModules(ID, player);
 
 		int yOffset = 16;
 		int xOffset = 65;

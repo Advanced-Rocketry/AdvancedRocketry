@@ -204,7 +204,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID) {
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 		List<ModuleBase> btns = new LinkedList<ModuleBase>();
 

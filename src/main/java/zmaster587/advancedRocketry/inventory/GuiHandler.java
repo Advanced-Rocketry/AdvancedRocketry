@@ -44,7 +44,7 @@ public class GuiHandler implements IGuiHandler {
 			return new ContainerSpaceLaser(player.inventory, (TileSpaceLaser)tile);
 		}
 		else if(ID == guiId.MODULAR.ordinal() || ID == guiId.MODULARNOINV.ordinal() || ID == guiId.MODULARFULLSCREEN.ordinal()) {
-			return new ContainerModular(player, ((IModularInventory)tile).getModules(ID), ((IModularInventory)tile), ID == guiId.MODULAR.ordinal(), ID != guiId.MODULARFULLSCREEN.ordinal());
+			return new ContainerModular(player, ((IModularInventory)tile).getModules(ID, player), ((IModularInventory)tile), ID == guiId.MODULAR.ordinal(), ID != guiId.MODULARFULLSCREEN.ordinal());
 		}
 		return null;
 	}
@@ -75,11 +75,11 @@ public class GuiHandler implements IGuiHandler {
 		}
 		else if(ID == guiId.MODULAR.ordinal() || ID == guiId.MODULARNOINV.ordinal()) {
 			IModularInventory modularTile = ((IModularInventory)tile);
-			return new GuiModular(player, modularTile.getModules(ID), modularTile, ID == guiId.MODULAR.ordinal(), true, modularTile.getModularInventoryName());
+			return new GuiModular(player, modularTile.getModules(ID, player), modularTile, ID == guiId.MODULAR.ordinal(), true, modularTile.getModularInventoryName());
 		}
 		else if(ID == guiId.MODULARFULLSCREEN.ordinal()) {
 			IModularInventory modularTile = ((IModularInventory)tile);
-			return new GuiModularFullScreen(player,modularTile.getModules(ID), modularTile, ID == guiId.MODULAR.ordinal(), false, modularTile.getModularInventoryName());
+			return new GuiModularFullScreen(player,modularTile.getModules(ID, player), modularTile, ID == guiId.MODULAR.ordinal(), false, modularTile.getModularInventoryName());
 		}
 		return null;
 	}

@@ -503,10 +503,16 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 			if(storage.getGuidanceComputer() != null && storage.getGuidanceComputer().getStackInSlot(0) != null &&
 					storage.getGuidanceComputer().getStackInSlot(0).getItem() instanceof ItemAsteroidChip) {
-				MissionOreMining miningMission = new MissionOreMining(20, this);
+				//make it 30 minutes with one drill
+				float drillingPower = stats.getDrillingPower();
+				MissionOreMining miningMission = new MissionOreMining((long)(drillingPower == 0f ? 36000 : 360/stats.getDrillingPower()), this, connectedInfrastructure);
 				DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId);
 				
 				properties.addSatallite(miningMission, worldObj);
+				
+				for(IInfrastructure i : connectedInfrastructure) {
+					i.linkMission(miningMission);
+				}
 				//TODO: Move tracking stations over to the mission handler
 			}
 			else {
@@ -924,7 +930,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID) {
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		List<ModuleBase> modules;
 		//If the rocket is flight don't load the interface
 		modules = new LinkedList<ModuleBase>();

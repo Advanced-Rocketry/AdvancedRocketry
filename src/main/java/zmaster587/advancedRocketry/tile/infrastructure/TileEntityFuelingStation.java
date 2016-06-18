@@ -23,6 +23,7 @@ import zmaster587.advancedRocketry.inventory.modules.ModuleImage;
 import zmaster587.advancedRocketry.inventory.modules.ModuleLiquidIndicator;
 import zmaster587.advancedRocketry.inventory.modules.ModulePower;
 import zmaster587.advancedRocketry.inventory.modules.ModuleSlotArray;
+import zmaster587.advancedRocketry.mission.IMission;
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
 import zmaster587.libVulpes.item.ItemLinker;
@@ -168,7 +169,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID) {
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		List<ModuleBase> list = new ArrayList<ModuleBase>();
 		
 		list.add(new ModulePower(156, 12, this));
@@ -189,6 +190,15 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	@Override
 	public boolean canInteractWithContainer(EntityPlayer entity) {
 		return true;
+	}
+
+	@Override
+	public boolean linkMission(IMission misson) {
+		return false;
+	}
+	
+	@Override
+	public void unlinkMission() {
 	}
 
 }

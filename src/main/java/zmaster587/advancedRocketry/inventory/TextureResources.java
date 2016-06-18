@@ -38,6 +38,11 @@ public class TextureResources {
 	public static final ProgressBarImage genericSlider = new ProgressBarImage(0, 0, 81, 23, 6, 41, 75, 9, 2, 9, ForgeDirection.EAST, planetSelectorBar);
 	public static final ProgressBarImage progressScience = new ProgressBarImage(185, 0, 16, 24, 201, 0, 16, 24, 0, 0, ForgeDirection.UP, TextureResources.progressBars);
 	
+	public static final ProgressBarImage progressToMission = new ProgressBarImage(25, 248, 112, 8, 25, 240, 112, 8, ForgeDirection.EAST, TextureResources.progressBars);
+	public static final ProgressBarImage progressFromMission = new ProgressBarImage(25, 232, 112, 8, 25, 224, 112, 8, ForgeDirection.WEST, TextureResources.progressBars);
+	public static final ProgressBarImage workMission = new ProgressBarImage(25, 216, 112, 8, 25, 208, 112, 8, ForgeDirection.EAST, TextureResources.progressBars);
+	
+	
 	public static final ProgressBarImage crystallizerProgressBar = new ProgressBarImage(0, 0, 31, 66, 31, 0, 23, 49, 4, 17, ForgeDirection.UP, TextureResources.progressBars);
 	public static final ProgressBarImage cuttingMachineProgressBar = new ProgressBarImage(54, 0, 42, 42,96, 0, 36, 36, 3, 3, ForgeDirection.EAST, TextureResources.progressBars);
 	public static final ProgressBarImage arcFurnaceProgressBar = new ProgressBarImage(0, 66, 42, 42, 42, 66, 42, 42, 0, 0, ForgeDirection.UP, TextureResources.progressBars);

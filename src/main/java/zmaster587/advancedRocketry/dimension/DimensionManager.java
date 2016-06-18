@@ -35,6 +35,7 @@ public class DimensionManager {
 	public static final String workingPath = "advRocketry";
 	public static final String filePath = workingPath + "/temp.dat";
 	public static int dimOffset = 0;
+	private boolean hasBeenInitiallized = false;
 
 	//Reference to the worldProvider for any dimension created through this system, normally WorldProviderPlanet, set in AdvancedRocketry.java in preinit
 	public static Class<? extends WorldProvider> planetWorldProvider;
@@ -117,6 +118,14 @@ public class DimensionManager {
 	 * @return a reference to the satellite object with the supplied ID
 	 */
 	public SatelliteBase getSatellite(long satId) {
+		
+		//Hack to allow monitoring stations to properly reload after a server restart
+		//Because there should never be a tile in the world where no planets have been generated load file first
+		//Worst thing that can happen is there is no file and it gets genned later and the monitor does not reconnect
+		if(!hasBeenInitiallized) {
+			zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.filePath);
+		}
+		
 		SatelliteBase satellite = overworldProperties.getSatallite(satId);
 
 		if(satellite != null)
@@ -445,7 +454,8 @@ public class DimensionManager {
 	 * @param filePath file path from which to load the information
 	 */
 	public boolean loadDimensions(String filePath) {
-
+		hasBeenInitiallized = true;
+		
 		FileInputStream inStream;
 		NBTTagCompound nbt;
 		try {

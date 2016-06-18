@@ -14,6 +14,7 @@ public class StatsRocket {
 
 	private int thrust;
 	private int weight;
+	private float drillingPower;
 	
 	private int fuelLiquid;
 	private int fuelNuclear;
@@ -43,6 +44,7 @@ public class StatsRocket {
 		thrust = 0;
 		weight = 0;
 		fuelLiquid = 0;
+		drillingPower = 0f;
 		pilotSeatPos = new BlockPosition(0,0,0);
 		pilotSeatPos.x = -1;
 		engineLoc = new ArrayList<Vector3F<Float>>();
@@ -72,6 +74,8 @@ public class StatsRocket {
 	
 	public int getThrust() {return thrust;}
 	public int getWeight() {return weight;}
+	public float getDrillingPower() {return drillingPower;}
+	public void setDrillingPower(float power) {drillingPower = power;}
 	public float getAcceleration() { return (thrust - weight)/10000f; }
 	public List<Vector3F<Float>> getEngineLocations() { return engineLoc; }
 
@@ -115,6 +119,7 @@ public class StatsRocket {
 		
 		stat.thrust = this.thrust;
 		stat.weight = this.weight;
+		stat.drillingPower = this.drillingPower;
 		
 		for(FuelType type : FuelType.values()) {
 			stat.setFuelAmount(type, this.getFuelAmount(type));
@@ -309,6 +314,7 @@ public class StatsRocket {
 	public void reset() {
 		thrust = 0;
 		weight = 0;
+		drillingPower = 0f;
 		
 		for(FuelType type : FuelType.values()) {
 			setFuelAmount(type, 0);
@@ -338,6 +344,7 @@ public class StatsRocket {
 
 		stats.setInteger("thrust", this.thrust);
 		stats.setInteger("weight", this.weight);
+		stats.setFloat("drillingPower", this.drillingPower);
 		
 		stats.setInteger("fuelLiquid", this.fuelLiquid);
 		stats.setInteger("fuelImpulse", this.fuelImpulse);
@@ -395,6 +402,7 @@ public class StatsRocket {
 			NBTTagCompound stats = nbt.getCompoundTag(TAGNAME);
 			this.thrust = stats.getInteger("thrust");
 			this.weight = stats.getInteger("weight");
+			this.drillingPower = stats.getFloat("drillingPower");
 			
 			this.fuelLiquid = stats.getInteger("fuelLiquid");
 			this.fuelImpulse = stats.getInteger("fuelImpulse");

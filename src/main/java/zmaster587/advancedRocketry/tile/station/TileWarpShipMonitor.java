@@ -77,7 +77,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID) {
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 

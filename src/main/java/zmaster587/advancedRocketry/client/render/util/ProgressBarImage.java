@@ -114,6 +114,8 @@ public class ProgressBarImage {
 		
 		if(direction == ForgeDirection.EAST )//Left to right
 			gui.drawTexturedModalRect(x + insetX, y + insetY, foreOffsetX, foreOffsetY, (int)(percent*foreWidth), foreHeight);
+		else if(direction == ForgeDirection.WEST ) 
+			gui.drawTexturedModalRect(x + insetX + foreWidth - (int)(percent*foreWidth), y + insetY, foreOffsetX + foreWidth - (int)(percent*foreWidth), foreOffsetY, (int)(percent*foreWidth), foreHeight);
 		else if(direction == ForgeDirection.UP) // bottom to top
 			gui.drawTexturedModalRect(x + insetX, y + insetY + foreHeight - (int)(percent*foreHeight), foreOffsetX, foreOffsetY + foreHeight - (int)(percent*foreHeight), foreWidth, (int)(percent*foreHeight) );
 		else if(direction == ForgeDirection.DOWN)

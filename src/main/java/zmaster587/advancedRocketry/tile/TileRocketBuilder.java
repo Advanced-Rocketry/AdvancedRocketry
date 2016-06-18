@@ -16,6 +16,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IFuelTank;
+import zmaster587.advancedRocketry.api.IMiningDrill;
 import zmaster587.advancedRocketry.api.IRocketEngine;
 import zmaster587.advancedRocketry.api.StatsRocket;
 import zmaster587.advancedRocketry.block.BlockSeat;
@@ -215,6 +216,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		int fuelUse = 0;
 		int fuel = 0;
 		int numBlocks = 0;
+		float drillPower = 0f;
 		stats.reset();
 
 		int actualMinX = (int)bb.maxX,
@@ -278,7 +280,11 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 								else
 									stats.setSeatLocation((int)(xCurr - actualMinX - ((actualMaxX - actualMinX)/2f)) , (int)(yCurr  -actualMinY), (int)(zCurr - actualMinZ - ((actualMaxZ - actualMinZ)/2f)));
 							}
-
+							
+							if(block instanceof IMiningDrill) {
+								drillPower += ((IMiningDrill)block).getMiningSpeed(world, xCurr, yCurr, zCurr);
+							}
+							
 							TileEntity tile= world.getTileEntity(xCurr, yCurr, zCurr);
 							if(tile instanceof TileSatelliteHatch)
 								hasSatellite = true;
@@ -292,6 +298,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			stats.setWeight(numBlocks);
 			stats.setThrust(thrust);
 			stats.setFuelCapacity(FuelType.LIQUID,fuel);
+			stats.setDrillingPower(drillPower);
 
 			//Set status
 			//TODO: warn if seat OR satellite missing
@@ -607,7 +614,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID) {
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		modules.add(new ModulePower(160, 90, this));

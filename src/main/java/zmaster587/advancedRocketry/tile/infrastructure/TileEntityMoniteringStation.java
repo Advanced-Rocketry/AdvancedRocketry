@@ -16,8 +16,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
+import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.client.render.util.IndicatorBarImage;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.inventory.modules.IButtonInventory;
@@ -26,6 +28,8 @@ import zmaster587.advancedRocketry.inventory.modules.IProgressBar;
 import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.inventory.modules.ModuleButton;
 import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
+import zmaster587.advancedRocketry.inventory.modules.ModuleText;
+import zmaster587.advancedRocketry.mission.IMission;
 import zmaster587.advancedRocketry.network.PacketEntity;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketMachine;
@@ -36,10 +40,17 @@ import zmaster587.libVulpes.util.INetworkMachine;
 public class TileEntityMoniteringStation extends TileEntity  implements IModularInventory, IInfrastructure, ILinkableTile, INetworkMachine, IButtonInventory, IProgressBar  {
 
 	EntityRocketBase linkedRocket;
-
+	IMission mission;
+	ModuleText missionText;
+	
 	int rocketHeight;
 	int velocity;
 	int fuelLevel, maxFuelLevel;
+
+	public TileEntityMoniteringStation() {
+		mission = null;
+		missionText = new ModuleText(20, 90, "Mission Progress: N/A", 0x2b2b2b);
+	}
 
 	@Override
 	public void invalidate() {
@@ -48,6 +59,10 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 		if(linkedRocket != null) {
 			linkedRocket.unlinkInfrastructure(this);
 			unlinkRocket();
+		}
+		if(mission != null) {
+			mission.unlinkInfrastructure(this);
+			unlinkMission();
 		}
 	}
 
@@ -92,20 +107,60 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
 
+		if(nbt.hasKey("missionID")) {
+			long id = nbt.getLong("missionID");
+			int dimid = nbt.getInteger("missionDimId");
+
+			SatelliteBase sat = DimensionManager.getInstance().getSatellite(id);
+
+			if(sat instanceof IMission)
+				mission = (IMission)sat;
+		}
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+
+		if(mission != null) {
+			nbt.setLong("missionID", mission.getMissionId());
+			nbt.setInteger("missionDimId", mission.getOriginatingDimention());
+		}
+	}
+
+	@Override
+	public void writeDataToNetwork(ByteBuf out, byte id) {
+		if(id == 1)
+			out.writeLong(mission == null ? -1 : mission.getMissionId());
 	}
 
 	@Override
 	public void readDataFromNetwork(ByteBuf in, byte packetId,
 			NBTTagCompound nbt) {
-
+		if(packetId == 1) {
+			nbt.setLong("id", in.readLong());
+		}
 	}
 
 	@Override
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
+		if(id == 1) {
+			long idNum = nbt.getLong("id");
+			if(idNum == -1)
+				mission = null;
+			else {
+				SatelliteBase base = DimensionManager.getInstance().getSatellite(idNum);
 
+				if(base instanceof IMission) {
+					mission = (IMission)base;
+					missionText.setText(((SatelliteBase)mission).getName() + " Progress:");
+				}
+			}
+		}
 		if(id == 100) {
 			if(linkedRocket != null)
 				linkedRocket.launch();
@@ -113,14 +168,27 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID) {
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
 
-		modules.add(new ModuleButton(20, 60, 0, "Launch!", this, TextureResources.buttonBuild));
+		modules.add(new ModuleButton(20, 40, 0, "Launch!", this, TextureResources.buttonBuild));
 		modules.add(new ModuleProgress(98, 4, 0, new IndicatorBarImage(2, 7, 12, 81, 17, 0, 6, 6, 1, 0, ForgeDirection.UP, TextureResources.rocketHud), this));
 		modules.add(new ModuleProgress(120, 14, 1, new IndicatorBarImage(2, 95, 12, 71, 17, 0, 6, 6, 1, 0, ForgeDirection.UP, TextureResources.rocketHud), this));
 		modules.add(new ModuleProgress(142, 14, 2, new ProgressBarImage(2, 173, 12, 71, 17, 6, 3, 69, 1, 1, ForgeDirection.UP, TextureResources.rocketHud), this));
+		
+		if(mission != null) {
+			missionText.setText(((SatelliteBase)mission).getName() + " Progress:");
+		}
+		
+		modules.add(missionText);
+		modules.add(new ModuleProgress(30, 105, 3, TextureResources.progressToMission, this));
+		modules.add(new ModuleProgress(30, 115, 4, TextureResources.workMission, this));
+		modules.add(new ModuleProgress(30, 125, 5, TextureResources.progressFromMission, this));
+
+		if(!worldObj.isRemote) {
+			PacketHandler.sendToPlayer(new PacketMachine(this, (byte)1), player);
+		}
 
 		return modules;
 	}
@@ -138,8 +206,24 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	@Override
 	public float getNormallizedProgress(int id) {
 		if(id == 1) {
-			return Math.min(0.5f + (getProgress(id)/(float)getTotalProgress(id)), 1);
+			return Math.max(Math.min(0.5f + (getProgress(id)/(float)getTotalProgress(id)), 1), 0f);
 		}
+		else if(id == 3) {
+			if(mission == null)
+				return 0f;
+			return (float) Math.min(3f*mission.getProgress(this.worldObj), 1f);
+		}
+		else if(id == 4) {
+			if(mission == null)
+				return 0f;
+			return (float) Math.min(Math.max( 3f*(mission.getProgress(this.worldObj) - 0.333f), 0f), 1f);
+		}
+		else if(id == 5) {
+			if(mission == null)
+				return 0f;
+			return (float) Math.min(Math.max( 3f*(mission.getProgress(this.worldObj) - 0.666f), 0f), 1f);
+		}
+
 		return getProgress(id)/(float)getTotalProgress(id);
 	}
 
@@ -157,7 +241,9 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	public int getProgress(int id) {
 		//Try to keep client synced with server, this also allows us to put the monitor on a different world altogether
 		if(worldObj.isRemote)
-			if(id == 0)
+			if(mission != null && id == 0)
+				return getTotalProgress(id);
+			else if(id == 0)
 				return rocketHeight;
 			else if(id == 1)
 				return velocity;
@@ -172,7 +258,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 			return (int)(linkedRocket.motionY*100);
 		else if (id == 2)
 			return (int)(linkedRocket.getFuelAmount());
-		
+
 		return 0;
 	}
 
@@ -190,7 +276,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 					return 0;
 				else
 					return linkedRocket.getFuelCapacity();
-		
+
 		return 1;
 	}
 
@@ -204,5 +290,18 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	@Override
 	public boolean canInteractWithContainer(EntityPlayer entity) {
 		return true;
+	}
+
+	@Override
+	public boolean linkMission(IMission misson) {
+		this.mission = misson;
+		PacketHandler.sendToNearby(new PacketMachine(this, (byte)1), worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 16);
+		return true;
+	}
+
+	@Override
+	public void unlinkMission() {
+		mission = null;
+		PacketHandler.sendToNearby(new PacketMachine(this, (byte)1), worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 16);
 	}
 }

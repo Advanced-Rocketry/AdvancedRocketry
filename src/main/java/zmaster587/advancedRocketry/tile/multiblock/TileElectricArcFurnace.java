@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -116,9 +117,9 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 	}
 	
 	@Override
-	public List<ModuleBase> getModules(int ID) {
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		// TODO Auto-generated method stub
-		List<ModuleBase> modules = super.getModules(ID);
+		List<ModuleBase> modules = super.getModules(ID, player);
 		
 		modules.add(new ModuleProgress(100, 20, 0, TextureResources.arcFurnaceProgressBar, this));
 		return modules;

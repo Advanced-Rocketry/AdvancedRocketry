@@ -2,7 +2,7 @@ package zmaster587.advancedRocketry.block;
 
 import zmaster587.advancedRocketry.api.IMiningDrill;
 import zmaster587.advancedRocketry.tile.TileDrill;
-import net.minecraft.world.IWorldAccess;
+import net.minecraft.world.World;
 
 public class BlockMiningDrill extends BlockTile implements IMiningDrill {
 
@@ -11,8 +11,8 @@ public class BlockMiningDrill extends BlockTile implements IMiningDrill {
 	}
 
 	@Override
-	public float getMiningSpeed(IWorldAccess world, int x, int y, int z) {
-		return 0.01f;
+	public float getMiningSpeed(World world, int x, int y, int z) {
+		return world.isAirBlock(x, y + 1, z) && world.isAirBlock(x, y + 2, z) ? 0.01f : 0f;
 	}
 
 	@Override

@@ -51,7 +51,7 @@ public class TileDrill extends TileEntity implements IModularInventory, IToggleB
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int id) {
+	public List<ModuleBase> getModules(int id, EntityPlayer player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this, TextureResources.buttonToggleImage, 11, 26, drillExtended()));

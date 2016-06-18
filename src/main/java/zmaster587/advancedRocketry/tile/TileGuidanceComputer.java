@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.tile;
 
 import java.util.List;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.Configuration;
@@ -24,8 +25,8 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		super(1);
 	}
 	@Override
-	public List<ModuleBase> getModules(int ID) {
-		return super.getModules(ID);
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+		return super.getModules(ID, player);
 	}
 
 	@Override

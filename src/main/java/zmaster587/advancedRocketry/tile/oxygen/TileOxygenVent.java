@@ -247,7 +247,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID) {
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		ArrayList<ModuleBase> modules = new ArrayList<ModuleBase>();
 
 		modules.add(new ModulePower(18, 20, this));

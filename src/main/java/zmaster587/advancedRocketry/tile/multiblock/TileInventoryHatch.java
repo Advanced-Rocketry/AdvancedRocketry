@@ -115,7 +115,7 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID) {
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		modules.add(new ModuleSlotArray(8, 18, this, 0, this.getSizeInventory()));

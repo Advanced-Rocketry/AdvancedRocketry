@@ -67,7 +67,7 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID) {
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 

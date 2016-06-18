@@ -155,7 +155,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID) {
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModulePower(18, 20, this.energy));

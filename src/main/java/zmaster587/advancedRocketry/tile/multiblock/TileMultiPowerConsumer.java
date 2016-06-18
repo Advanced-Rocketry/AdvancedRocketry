@@ -263,7 +263,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID) {
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this, TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));

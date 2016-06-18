@@ -38,7 +38,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int id) {
+	public List<ModuleBase> getModules(int id, EntityPlayer player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(moduleGrav);
 		//modules.add(numThrusters);

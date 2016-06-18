@@ -229,8 +229,8 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID) {
-		List<ModuleBase> modules = super.getModules(ID);
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+		List<ModuleBase> modules = super.getModules(ID, player);
 
 		DataStorage data[] = new DataStorage[dataCables.size()];
 

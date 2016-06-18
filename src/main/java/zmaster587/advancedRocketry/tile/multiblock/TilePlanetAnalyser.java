@@ -377,7 +377,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID) {
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModulePower(18, 20, getBatteries()));

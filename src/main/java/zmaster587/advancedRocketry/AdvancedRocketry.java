@@ -301,7 +301,7 @@ public class AdvancedRocketry {
 		((BlockTile) AdvancedRocketryBlocks.blockFuelingStation).setTopTexture("Advancedrocketry:machineGeneric");
 		((BlockTile) AdvancedRocketryBlocks.blockFuelingStation).setFrontTexture("Advancedrocketry:FuelingMachine");
 
-		AdvancedRocketryBlocks.blockMonitoringStation = new BlockTile(TileEntityMoniteringStation.class, GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setHardness(3f);
+		AdvancedRocketryBlocks.blockMonitoringStation = new BlockTile(TileEntityMoniteringStation.class, GuiHandler.guiId.MODULARNOINV.ordinal()).setCreativeTab(tabAdvRocketry).setHardness(3f);
 		((BlockTile) AdvancedRocketryBlocks.blockMonitoringStation).setSideTexture("Advancedrocketry:machineGeneric", "Advancedrocketry:machineGeneric");
 		((BlockTile) AdvancedRocketryBlocks.blockMonitoringStation).setTopTexture("Advancedrocketry:machineGeneric");
 		((BlockTile) AdvancedRocketryBlocks.blockMonitoringStation).setFrontTexture("Advancedrocketry:MonitorRocket");

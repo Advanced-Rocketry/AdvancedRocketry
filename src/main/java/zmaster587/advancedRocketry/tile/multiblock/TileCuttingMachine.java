@@ -19,6 +19,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
@@ -73,8 +74,8 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID) {
-		List<ModuleBase> modules = super.getModules(ID);
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+		List<ModuleBase> modules = super.getModules(ID, player);
 		modules.add(new ModuleProgress(100, 20, 0, TextureResources.cuttingMachineProgressBar, this));
 		
 		return modules;
