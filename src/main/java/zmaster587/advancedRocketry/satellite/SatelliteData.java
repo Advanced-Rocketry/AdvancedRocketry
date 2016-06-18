@@ -26,7 +26,7 @@ public abstract class SatelliteData extends SatelliteBase {
 	}
 	
 	private int dataCreated(World world) {
-		return Math.min(data.getMaxData() - data.getData() , (int)Math.max(0,  (world.getTotalWorldTime() - lastActionTime)/2)); //TODO: change from 10 seconds
+		return Math.min(data.getMaxData() - data.getData() , (int)Math.max(0,  (world.getTotalWorldTime() - lastActionTime)/200)); //TODO: change from 10 seconds
 	}
 
 	@Override
