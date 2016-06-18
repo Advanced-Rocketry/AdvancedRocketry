@@ -36,33 +36,33 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	private static final Object[][][] structure = new Object[][][]{
 
 		{	{Blocks.air, Blocks.air, Blocks.air, Blocks.air, Blocks.air}, 
-			{Blocks.air, Blocks.iron_block, Blocks.coal_block, Blocks.iron_block, Blocks.air},
-			{Blocks.air, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.air},
-			{Blocks.air, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.air},
+			{Blocks.air, Blocks.stone, Blocks.glass, Blocks.stone, Blocks.air},
+			{Blocks.air, Blocks.stone, Blocks.stone, Blocks.stone, Blocks.air},
+			{Blocks.air, Blocks.stone, Blocks.stone, Blocks.stone, Blocks.air},
 			{Blocks.air, Blocks.air, Blocks.air, Blocks.air, Blocks.air}},
 
 			{	{Blocks.air,Blocks.air,Blocks.air,Blocks.air,Blocks.air}, 
-				{Blocks.air, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.air},
-				{Blocks.air, Blocks.iron_block, Blocks.coal_block, Blocks.iron_block, Blocks.air},
-				{Blocks.air, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.air},
+				{Blocks.air, Blocks.stone, Blocks.stone, Blocks.stone, Blocks.air},
+				{Blocks.air, Blocks.stone, Blocks.glass, Blocks.stone, Blocks.air},
+				{Blocks.air, Blocks.stone, Blocks.stone, Blocks.stone, Blocks.air},
 				{Blocks.air,Blocks.air,Blocks.air,Blocks.air,Blocks.air}},
 
-				{	{null, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, null}, 
-					{Blocks.iron_block, Blocks.air, Blocks.air, Blocks.air, Blocks.iron_block},
-					{Blocks.iron_block, Blocks.air, Blocks.air, Blocks.air, Blocks.iron_block},
-					{Blocks.iron_block, Blocks.air, Blocks.coal_block, Blocks.air, Blocks.iron_block},
-					{null, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, null}},
+				{	{null, Blocks.stone, Blocks.stone, Blocks.stone, null}, 
+					{Blocks.stone, Blocks.air, Blocks.air, Blocks.air, Blocks.stone},
+					{Blocks.stone, Blocks.air, Blocks.air, Blocks.air, Blocks.stone},
+					{Blocks.stone, Blocks.air, Blocks.glass, Blocks.air, Blocks.stone},
+					{null, Blocks.stone, Blocks.stone, Blocks.stone, null}},
 
 					{	{ null,'*', 'c', '*',null}, 
-						{'*',Blocks.iron_block, Blocks.iron_block, Blocks.iron_block,'*'},
-						{'*',Blocks.iron_block, Blocks.iron_block, Blocks.iron_block,'*'},
-						{'*',Blocks.iron_block, Blocks.iron_block, Blocks.iron_block,'*'},
+						{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
+						{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
+						{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
 						{null,'*', '*', '*', null}},
 
 						{	{null,'*', '*', '*', null}, 
-							{'*',Blocks.iron_block, Blocks.iron_block, Blocks.iron_block,'*'},
-							{'*',Blocks.iron_block, Blocks.iron_block, Blocks.iron_block,'*'},
-							{'*',Blocks.iron_block, Blocks.iron_block, Blocks.iron_block,'*'},
+							{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
+							{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
+							{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
 							{null,'*', '*', '*',null}}};
 
 	final static int openTime = 100;

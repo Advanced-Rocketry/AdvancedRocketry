@@ -48,7 +48,7 @@ import zmaster587.libVulpes.block.BlockMeta;
 public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModularInventory, IInventory, ITilePlanetSystemSelectable {
 
 	private static final Object[][][] structure = new Object[][][]{
-		{{AdvancedRocketryBlocks.blockPlanetSelector, 'c', Blocks.stone_slab},
+		{{Blocks.stone_slab, 'c', Blocks.stone_slab},
 			{Blocks.stone_slab, Blocks.stone_slab, Blocks.stone_slab}},
 
 			{{'P','I', 'I'},

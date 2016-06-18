@@ -708,6 +708,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 				entity.setLocationAndAngles(x, Configuration.orbit, z, this.rotationYaw, this.rotationPitch);
 				worldserver1.spawnEntityInWorld(entity);
+				
+				//Make player confirm deorbit
+				((EntityRocket)entity).setInFlight(false);
+				
 
 				if(rider != null) {
 					//Transfer the player if applicable
@@ -715,6 +719,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 					rider.setLocationAndAngles(x, Configuration.orbit, z, this.rotationYaw, this.rotationPitch);
 					rider.mountEntity(entity);
+					
 				}
 			}
 
