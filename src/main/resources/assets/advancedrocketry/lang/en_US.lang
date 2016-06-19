@@ -76,6 +76,7 @@ tile.amethyst.name=Amethyst Block
 tile.orientationControl.name=Orientation Controller
 tile.gravityControl.name=Gravity Controller
 tile.drill.name=Drill
+tile.dataCable.name=Data Cable
 
 tile.Dilithium.name=Dilithium Ore
 tile.Copper.name=Copper Ore

@@ -55,7 +55,7 @@ public class ItemData extends ItemIngredient {
 	public int addData(ItemStack item, int amount, DataStorage.DataType dataType) {
 		DataStorage data = getDataStorage(item);
 
-		int amt = data.addData(amount, dataType);
+		int amt = data.addData(amount, dataType, true);
 
 		NBTTagCompound nbt = new NBTTagCompound();
 		data.writeToNBT(nbt);
@@ -67,7 +67,7 @@ public class ItemData extends ItemIngredient {
 	public int removeData(ItemStack item, int amount, DataStorage.DataType dataType) {
 		DataStorage data = getDataStorage(item);
 
-		int amt = data.removeData(amount);
+		int amt = data.removeData(amount, true);
 
 		NBTTagCompound nbt = new NBTTagCompound();
 		data.writeToNBT(nbt);

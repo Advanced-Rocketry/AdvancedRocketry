@@ -5,6 +5,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.profiler.Profiler;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.DimensionManager;
@@ -22,6 +23,7 @@ import zmaster587.advancedRocketry.client.render.RendererPhantomBlock;
 import zmaster587.advancedRocketry.client.render.RendererRocketBuilder;
 import zmaster587.advancedRocketry.client.render.RendererModelBlock;
 import zmaster587.advancedRocketry.client.render.RendererRocket;
+import zmaster587.advancedRocketry.client.render.RendererPipe;
 import zmaster587.advancedRocketry.client.render.item.RendererBucket;
 import zmaster587.advancedRocketry.client.render.multiblocks.RenderPlanetAnalyser;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererChemicalReactor;
@@ -47,6 +49,8 @@ import zmaster587.advancedRocketry.tile.TileDrill;
 import zmaster587.advancedRocketry.tile.TileModelRender;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.advancedRocketry.tile.TileSchematic;
+import zmaster587.advancedRocketry.tile.cables.TileDataPipe;
+import zmaster587.advancedRocketry.tile.cables.TileLiquidPipe;
 import zmaster587.advancedRocketry.tile.multiblock.TileChemicalReactor;
 import zmaster587.advancedRocketry.tile.multiblock.TileCrystallizer;
 import zmaster587.advancedRocketry.tile.multiblock.TileCuttingMachine;
@@ -77,7 +81,9 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileChemicalReactor.class, new RendererChemicalReactor("advancedrocketry:models/ChemicalReactor.obj", "advancedrocketry:textures/models/ChemicalReactor.png"));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSchematic.class, new RendererPhantomBlock());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileDrill.class, new RendererDrill());
-
+		ClientRegistry.bindTileEntitySpecialRenderer(TileLiquidPipe.class, new RendererPipe(new ResourceLocation("AdvancedRocketry:textures/blocks/pipeLiquid.png")));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileDataPipe.class, new RendererPipe(new ResourceLocation("AdvancedRocketry:textures/blocks/pipeData.png")));
+		
 		RendererModelBlock blockRenderer = new RendererModelBlock();
 
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(AdvancedRocketryBlocks.blockSawBlade), blockRenderer);

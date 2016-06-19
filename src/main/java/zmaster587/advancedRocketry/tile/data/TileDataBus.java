@@ -9,6 +9,7 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
@@ -48,7 +49,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 			ItemData itemData = (ItemData)itemStack.getItem();
 			
 			itemData.removeData(itemStack, 
-					this.data.addData(itemData.getData(itemStack), itemData.getDataType(itemStack)), DataStorage.DataType.UNDEFINED);
+					this.data.addData(itemData.getData(itemStack), itemData.getDataType(itemStack), true), DataStorage.DataType.UNDEFINED);
 
 			//this.data.removeData(itemData.removeData(inv[0], this.data.getData(), this.data.getDataType()));
 		}
@@ -70,7 +71,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 		if(itemStack != null && itemStack.getItem() instanceof ItemData && itemStack.stackSize == 1) {
 			ItemData itemData = (ItemData)itemStack.getItem();
 
-			this.data.removeData(itemData.addData(itemStack, this.data.getData(), this.data.getDataType()));
+			this.data.removeData(itemData.addData(itemStack, this.data.getData(), this.data.getDataType()), true);
 		}
 
 		if(worldObj.isRemote) {
@@ -82,8 +83,9 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 		this.data.setData(data, dataType);
 	}
 
-	public int addData(int data, DataStorage.DataType dataType) {
-		return this.data.addData(data, dataType);
+	@Override
+	public int addData(int data, DataStorage.DataType dataType, ForgeDirection dir, boolean commit) {
+		return this.data.addData(data, dataType, commit);
 	}
 
 	public int getData() {
@@ -152,9 +154,9 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 
 	@Override
-	public int extractData(int maxAmount, DataType type) {
+	public int extractData(int maxAmount, DataType type, ForgeDirection dir, boolean commit) {
 		if(type == DataStorage.DataType.UNDEFINED || this.data.getDataType() == type)
-			return this.data.removeData(maxAmount);
+			return this.data.removeData(maxAmount, commit);
 		return 0;
 	}
 }

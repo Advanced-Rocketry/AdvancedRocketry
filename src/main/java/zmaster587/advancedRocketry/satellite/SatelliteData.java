@@ -6,6 +6,7 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.satellite.IDataHandler;
@@ -42,7 +43,7 @@ public abstract class SatelliteData extends SatelliteBase {
 
 		//Calculate Data Recieved
 		//TODO: pay attn to power
-		data.addData(dataCreated(world), data.getDataType());
+		data.addData(dataCreated(world), data.getDataType(), true);
 		lastActionTime = world.getTotalWorldTime();
 
 
@@ -51,7 +52,7 @@ public abstract class SatelliteData extends SatelliteBase {
 		if(tile instanceof IDataHandler) {
 			IDataInventory dataInv = (IDataInventory)tile;
 
-			data.removeData(dataInv.addData(data.getData(), data.getDataType()));
+			data.removeData(dataInv.addData(data.getData(), data.getDataType(), ForgeDirection.UNKNOWN, true), true);
 		}
 
 		return false;

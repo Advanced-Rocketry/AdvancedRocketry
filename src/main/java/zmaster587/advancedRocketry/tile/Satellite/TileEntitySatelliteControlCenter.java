@@ -34,7 +34,7 @@ import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumer;
 import zmaster587.libVulpes.util.INetworkMachine;
 
-public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer implements INetworkMachine, IModularInventory, IButtonInventory, IDataInventory, IDataHandler {
+public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer implements INetworkMachine, IModularInventory, IButtonInventory, IDataInventory {
 
 
 	//ModuleText satelliteText;
@@ -105,7 +105,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 		else if( id == 100 ) {
 
 			SatelliteBase satellite = moduleSatellite.getSatellite();
-			
+
 			if(satellite != null && satellite.getDimensionId() == this.worldObj.provider.dimensionId) {
 				satellite.performAction(player, worldObj, xCoord, yCoord, zCoord);
 			}
@@ -165,10 +165,10 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 
 		moduleSatellite = new ModuleSatellite(152, 10, this, 0);
 		modules.add(moduleSatellite);
-		
+
 		//Try to assign a satellite ASAP
 		moduleSatellite.setSatellite(getSatelliteFromSlot(0));
-		
+
 		moduleText = new ModuleText(60, 20, "No Link...", 0x404040);
 		modules.add(moduleText);
 
@@ -230,7 +230,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 			ItemStack inv = getStackInSlot(1);
 			if(inv != null && inv.getItem() instanceof ItemData && inv.stackSize == 1) {
 				ItemData dataItem = (ItemData)inv.getItem();
-				data.removeData(dataItem.addData(inv, data.getData(), data.getDataType()));
+				data.removeData(dataItem.addData(inv, data.getData(), data.getDataType()), true);
 			}
 		}
 		else {
@@ -239,15 +239,18 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 	}
 
 	@Override
-	public int extractData(int maxAmount, DataType type) {
+	public int extractData(int maxAmount, DataType type, ForgeDirection dir, boolean commit) {
 		//TODO
+		if(type == data.getDataType())
+			return data.removeData(maxAmount, commit);
 		return 0;
 	}
 
 	@Override
-	public int addData(int maxAmount, DataType type) {
-
-		return data.addData(maxAmount, type);
+	public int addData(int maxAmount, DataType type, ForgeDirection dir, boolean commit) {
+		if(dir == ForgeDirection.UNKNOWN)
+			return data.addData(maxAmount, type, commit);
+		return 0;
 	}
 
 	@Override

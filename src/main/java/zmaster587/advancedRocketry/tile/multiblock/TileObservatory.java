@@ -137,10 +137,10 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	protected void processComplete() {
 		super.processComplete();
 		completionTime = observationtime;
-		int amount = 1;
+		int amount = 25;
 
 		for( TileDataBus datum : dataCables ) {
-			amount -= datum.addData(amount, DataStorage.DataType.DISTANCE);
+			amount -= datum.addData(amount, DataStorage.DataType.DISTANCE, ForgeDirection.UNKNOWN, true);
 			if(amount == 0)
 				break;
 		}
@@ -312,12 +312,12 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public int extractData(int maxAmount, DataType type) {
+	public int extractData(int maxAmount, DataType type, ForgeDirection dir, boolean commit) {
 		return 0;
 	}
 
 	@Override
-	public int addData(int maxAmount, DataType type) {
+	public int addData(int maxAmount, DataType type, ForgeDirection dir, boolean commit) {
 		return 0;
 	}
 
@@ -335,7 +335,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 			for(TileDataBus tile : dataCables) {
 				DataStorage.DataType dataType = tile.getDataObject().getDataType();
-				data.addData(tile.extractData(data.getMaxData() - data.getData(), data.getDataType()), dataType);
+				data.addData(tile.extractData(data.getMaxData() - data.getData(), data.getDataType(), ForgeDirection.UNKNOWN, true), dataType ,true);
 			}
 
 			dataItem.setData(dataChip, data.getData(), data.getDataType());
