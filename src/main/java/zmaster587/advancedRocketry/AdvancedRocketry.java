@@ -212,8 +212,8 @@ public class AdvancedRocketry {
 
 		zmaster587.advancedRocketry.api.Configuration.asteroidMiningMult = config.get(ASTEROID, "miningMissionMultiplier", 1.0, "Multiplier changing how much total material is brought back from a mining mission").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres = config.get(ASTEROID, "standardOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone"}, "List of oredictionary names of ores allowed to spawn in asteriods").getStringList();
-		
-		
+
+
 		zmaster587.advancedRocketry.api.Configuration.rocketRequireFuel = config.get(ROCKET, "rocketsRequireFuel", true, "Set to false if rockets should not require fuel to fly").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.rocketThrustMultiplier = config.get(ROCKET, "thrustMultiplier", 1f, "Multiplier for per-engine thrust").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.fuelCapacityMultiplier = config.get(ROCKET, "fuelCapacityMultiplier", 1f, "Multiplier for per-tank capacity").getDouble();
@@ -275,7 +275,7 @@ public class AdvancedRocketry {
 		((BlockTile) AdvancedRocketryBlocks.blockGravityController).setTopTexture("advancedrocketry:machineGeneric");
 		((BlockTile) AdvancedRocketryBlocks.blockGravityController).setFrontTexture("advancedrocketry:machineOrientationControl");
 
-		
+
 		AdvancedRocketryBlocks.blockOxygenCharger = new BlockTile(TileOxygenCharger.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("oxygenCharger").setCreativeTab(tabAdvRocketry).setBlockTextureName("Advancedrocketry:machineGeneric").setHardness(3f);
 		((BlockTile) AdvancedRocketryBlocks.blockOxygenCharger).setSideTexture("advancedrocketry:machineGeneric");
 		((BlockTile) AdvancedRocketryBlocks.blockOxygenCharger).setTopTexture("advancedrocketry:machineGeneric");
@@ -572,7 +572,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerItem(AdvancedRocketryItems.itemSealDetector, AdvancedRocketryItems.itemSealDetector.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemJackhammer, AdvancedRocketryItems.itemJackhammer.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemAsteroidChip, AdvancedRocketryItems.itemAsteroidChip.getUnlocalizedName());
-		
+
 		//Register multiblock items with the projector
 		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileCuttingMachine(), (BlockTile)AdvancedRocketryBlocks.blockCuttingMachine);
 		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileLathe(), (BlockTile)AdvancedRocketryBlocks.blockLathe);
@@ -766,7 +766,7 @@ public class AdvancedRocketry {
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryItems.itemMisc,1,1), new ItemStack(Items.coal,1,1), new ItemStack(Items.coal,1,1), new ItemStack(Items.coal,1,1), new ItemStack(Items.coal,1,1) ,new ItemStack(Items.coal,1,1) ,new ItemStack(Items.coal,1,1));
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockLandingPad), new ItemStack(AdvancedRocketryBlocks.blockConcrete), trackingCircuit);
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryItems.itemAsteroidChip), trackingCircuit.copy(), AdvancedRocketryItems.itemDataUnit);
-		
+
 		RecipesMachine.getInstance().addRecipe(TileElectrolyser.class, new Object[] {new FluidStack(AdvancedRocketryFluids.fluidOxygen, 100), new FluidStack(AdvancedRocketryFluids.fluidHydrogen, 100)}, 100, 20, new FluidStack(FluidRegistry.WATER, 10));
 		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new FluidStack(AdvancedRocketryFluids.fluidRocketFuel, 20), 100, 10, new FluidStack(AdvancedRocketryFluids.fluidOxygen, 10), new FluidStack(AdvancedRocketryFluids.fluidHydrogen, 10));
 
@@ -973,20 +973,22 @@ public class AdvancedRocketry {
 					for(String str : entry.getValue()) {
 						MaterialRegistry.Materials material = MaterialRegistry.Materials.valueOfSafe(str.toUpperCase());
 
-						if(OreDictionary.doesOreNameExist("ingot" + str) && (material == null || !AllowedProducts.PLATE.isOfType(material.getAllowedProducts())) )
+						if(OreDictionary.doesOreNameExist("ingot" + str) && OreDictionary.getOres("ingot" + str).size() > 0 && (material == null || !AllowedProducts.PLATE.isOfType(material.getAllowedProducts())) ) {
+							
 							RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, OreDictionary.getOres("plate" + str).get(0), 300, 200, "ingot" + str);
+						}
 					}
 				}
 				else if(entry.getKey() == AllowedProducts.STICK) {
 					for(String str : entry.getValue()) {
 						MaterialRegistry.Materials material = MaterialRegistry.Materials.valueOfSafe(str.toUpperCase());
 
-						if(OreDictionary.doesOreNameExist("ingot" + str) && (material == null || !AllowedProducts.STICK.isOfType(material.getAllowedProducts())) ) {
+						if(OreDictionary.doesOreNameExist("ingot" + str) && OreDictionary.getOres("ingot" + str).size() > 0 && (material == null || !AllowedProducts.STICK.isOfType(material.getAllowedProducts())) ) {
 
 							//GT registers rods as sticks
-							if(OreDictionary.doesOreNameExist("rod" + str))
+							if(OreDictionary.doesOreNameExist("rod" + str) && OreDictionary.getOres("rod" + str).size() > 0)
 								RecipesMachine.getInstance().addRecipe(TileLathe.class, OreDictionary.getOres("rod" + str).get(0), 300, 200, "ingot" + str);
-							else if(OreDictionary.doesOreNameExist("stick" + str)) {
+							else if(OreDictionary.doesOreNameExist("stick" + str)  && OreDictionary.getOres("stick" + str).size() > 0) {
 								RecipesMachine.getInstance().addRecipe(TileLathe.class, OreDictionary.getOres("stick" + str).get(0), 300, 200, "ingot" + str);
 							}
 
