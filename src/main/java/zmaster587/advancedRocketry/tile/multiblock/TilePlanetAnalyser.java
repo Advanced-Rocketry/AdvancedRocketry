@@ -171,7 +171,9 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 	public void onInventoryUpdated() {
 
 		super.onInventoryUpdated();
-
+		if(inputHatch == null)
+			return;
+		
 		if(inventory.getStackInSlot(1) != null) {
 			for(int i = 0; i < outputHatch.getSizeInventory(); i++) {
 				if(outputHatch.getStackInSlot(i) == null) {
@@ -284,13 +286,13 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 
 		ItemAsteroidChip item = (ItemAsteroidChip)stack.getItem();
 
-		if(researchingAtmosphere && atmosphereProgress < 0 && dataCables[0].extractData(1, DataStorage.DataType.COMPOSITION) > 0 && !item.isFull(stack, DataStorage.DataType.COMPOSITION))
+		if(researchingAtmosphere && atmosphereProgress < 0 && dataCables[0].extractData(1, DataStorage.DataType.COMPOSITION, ForgeDirection.UNKNOWN, true) > 0 && !item.isFull(stack, DataStorage.DataType.COMPOSITION))
 			atmosphereProgress = 0;
 
-		if(researchingDistance && distanceProgress < 0 && dataCables[1].extractData(1, DataStorage.DataType.DISTANCE) > 0 && !item.isFull(stack, DataStorage.DataType.DISTANCE))
+		if(researchingDistance && distanceProgress < 0 && dataCables[1].extractData(1, DataStorage.DataType.DISTANCE, ForgeDirection.UNKNOWN, true) > 0 && !item.isFull(stack, DataStorage.DataType.DISTANCE))
 			distanceProgress = 0;
 
-		if(researchingMass && massProgress < 0 && dataCables[2].extractData(1, DataStorage.DataType.MASS) > 0 && !item.isFull(stack, DataStorage.DataType.MASS))
+		if(researchingMass && massProgress < 0 && dataCables[2].extractData(1, DataStorage.DataType.MASS, ForgeDirection.UNKNOWN, true) > 0 && !item.isFull(stack, DataStorage.DataType.MASS))
 			massProgress = 0;
 
 		this.markDirty();

@@ -13,6 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class SpaceObjectAsteroid extends SpaceObjectBase implements IDataHandler {
@@ -98,13 +99,13 @@ public class SpaceObjectAsteroid extends SpaceObjectBase implements IDataHandler
 	}
 
 	@Override
-	public int extractData(int maxAmount, DataType type) {
+	public int extractData(int maxAmount, DataType type, ForgeDirection dir, boolean commit) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int addData(int maxAmount, DataType type) {
+	public int addData(int maxAmount, DataType type, ForgeDirection dir, boolean commit) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

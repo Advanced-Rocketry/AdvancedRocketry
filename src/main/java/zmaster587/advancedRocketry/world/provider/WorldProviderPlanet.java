@@ -82,7 +82,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	public boolean canRespawnHere() {
-		return false;
+		return true;
 	}
 
 	@Override

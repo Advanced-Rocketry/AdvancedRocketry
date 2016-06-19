@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.world.util.MultiData;
 
@@ -63,7 +64,7 @@ public class ItemMultiData extends Item {
 	public int addData(ItemStack item, int amount, DataStorage.DataType dataType) {
 		MultiData data = getDataStorage(item);
 
-		int amt = data.addData(amount, dataType);
+		int amt = data.addData(amount, dataType, ForgeDirection.UNKNOWN,true);
 
 		NBTTagCompound nbt;
 		if(item.hasTagCompound())
@@ -80,7 +81,7 @@ public class ItemMultiData extends Item {
 	public int removeData(ItemStack item, int amount, DataStorage.DataType dataType) {
 		MultiData data = getDataStorage(item);
 
-		int amt = data.extractData(amount, dataType);
+		int amt = data.extractData(amount, dataType, ForgeDirection.UNKNOWN, true);
 		
 		NBTTagCompound nbt;
 		if(item.hasTagCompound())
