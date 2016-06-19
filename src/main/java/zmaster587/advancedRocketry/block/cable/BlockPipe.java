@@ -56,16 +56,10 @@ public class BlockPipe extends Block {
 	}
 	
 	@Override
-	public void onBlockAdded(World world, int x, int y, int z) {
-		super.onBlockAdded(world, x, y, z);
-
-		//((TilePipe)world.getTileEntity(x, y, z)).onPlaced();
-	}
-	
-	@Override
 	public void onPostBlockPlaced(World world, int x,
 			int y, int z, int p_149714_5_) {
 		((TilePipe)world.getTileEntity(x, y, z)).onPlaced();
+		
 		super.onPostBlockPlaced(world, x, y, z,
 				p_149714_5_);
 	}
