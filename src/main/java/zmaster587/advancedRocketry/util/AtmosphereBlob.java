@@ -13,10 +13,14 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Stack;
 
-public class AtmosphereBlob extends AreaBlob {
+public class AtmosphereBlob extends AreaBlob implements Runnable {
+
+	Thread worker;
+	BlockPosition blockPos;
 
 	public AtmosphereBlob(IBlobHandler blobHandler) {
 		super(blobHandler);
+		worker = null;
 	}
 
 	@Override
@@ -43,46 +47,73 @@ public class AtmosphereBlob extends AreaBlob {
 
 		if(blobHandler.canFormBlob()) {
 
-			int maxSize = this.getBlobMaxRadius();
-
-			HashSet<BlockPosition> addableBlocks = new HashSet<BlockPosition>();
 			if(!this.contains(blockPos)) {
 
-				Stack<BlockPosition> stack = new Stack<BlockPosition>();
-				stack.push(blockPos);
+				/*if(worker != null) {
+					this.blockPos = blockPos;
+
+					worker.interrupt();
+				}*/
+				//worker = null;
+				if(worker == null) {
+					this.blockPos = blockPos;
+					worker = new Thread(this);
+					worker.start();
+				}
 
 
-				while(!stack.isEmpty()) {
-					BlockPosition stackElement = stack.pop();
-					addableBlocks.add(stackElement);
+			}
 
-					for(ForgeDirection dir2 : ForgeDirection.VALID_DIRECTIONS) {
-						BlockPosition searchNextPosition = stackElement.getPositionAtOffset(dir2.offsetX, dir2.offsetY, dir2.offsetZ);
 
-						if(!SealableBlockHandler.INSTANCE.isBlockSealed(blobHandler.getWorld(), searchNextPosition) && !graph.contains(searchNextPosition) && !addableBlocks.contains(searchNextPosition)) {
-							if(searchNextPosition.getDistance(this.getRootPosition()) <= maxSize) {
-								stack.push(searchNextPosition);
-								addableBlocks.add(searchNextPosition);
-							}
-							else {
-								//World world = blobHandler.getWorld();
-								
-								//runEffectOnWorldBlocks(world, getLocations());
-								
-								clearBlob();
-								return;
-							}
-						}
+		}
+	}	
+
+
+	@Override
+	public void run() {
+
+		Stack<BlockPosition> stack = new Stack<BlockPosition>();
+		stack.push(blockPos);
+
+		final int maxSize = this.getBlobMaxRadius();
+		final HashSet<BlockPosition> addableBlocks = new HashSet<BlockPosition>();
+
+		while(!stack.isEmpty()) {
+			BlockPosition stackElement = stack.pop();
+			addableBlocks.add(stackElement);
+
+			for(ForgeDirection dir2 : ForgeDirection.VALID_DIRECTIONS) {
+				BlockPosition searchNextPosition = stackElement.getPositionAtOffset(dir2.offsetX, dir2.offsetY, dir2.offsetZ);
+
+				if(!SealableBlockHandler.INSTANCE.isBlockSealed(blobHandler.getWorld(), searchNextPosition) && !graph.contains(searchNextPosition) && !addableBlocks.contains(searchNextPosition)) {
+					if(addableBlocks.size() <= maxSize) {
+						stack.push(searchNextPosition);
+						addableBlocks.add(searchNextPosition);
+					}
+					else {
+						//World world = blobHandler.getWorld();
+
+						//runEffectOnWorldBlocks(world, getLocations());
+
+						clearBlob();
+						worker = null;
+						return;
 					}
 				}
 			}
+		}
+		if(Thread.interrupted())
+			return;
 
+		synchronized (graph) {
 			for(BlockPosition blockPos2 : addableBlocks) {
 				super.addBlock(blockPos2);
 			}
 		}
+		worker = null;
 	}
-	
+
+
 	/**
 	 * @param world
 	 * @param blocks Collection containing affected locations
@@ -94,13 +125,13 @@ public class AtmosphereBlob extends AreaBlob {
 			}
 		}
 	}
-	
+
 	@Override
 	public void clearBlob() {
 		World world = blobHandler.getWorld();
-		
+
 		runEffectOnWorldBlocks(world, getLocations());
-		
+
 		super.clearBlob();
 	}
 }

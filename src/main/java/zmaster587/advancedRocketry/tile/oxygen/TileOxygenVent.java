@@ -238,7 +238,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public int getMaxBlobRadius() {
-		return 32;
+		return (int)(Math.pow(32, 3)*Math.PI*4/3);
 	}
 
 	@Override
