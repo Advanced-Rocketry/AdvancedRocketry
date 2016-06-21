@@ -185,7 +185,22 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 		return ret;
 	}
+	
+	@Override
+	public void setPosition(double x, double y,
+			double z) {
+		// TODO Auto-generated method stub
+		super.setPosition(x, y, z);
 
+		if(storage != null) {
+			float sizeX = storage.getSizeX()/2.0f;
+			float sizeY = storage.getSizeY();
+			float sizeZ = storage.getSizeZ()/2.0f;
+			this.boundingBox.setBounds(x - sizeX, y - (double)this.yOffset + this.ySize, z - sizeZ, x + sizeX, y + sizeY - (double)this.yOffset + this.ySize, z + sizeZ);
+
+		}
+	}
+	
 	/**
 	 * Updates the data option
 	 * @param amt sets the amount of fuel in the rocket
