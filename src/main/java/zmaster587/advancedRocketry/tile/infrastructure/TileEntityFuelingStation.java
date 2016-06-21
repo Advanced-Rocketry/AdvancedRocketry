@@ -114,7 +114,6 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		
 		if(FluidContainerRegistry.isFilledContainer(stack))
 			return FuelRegistry.instance.isFuel(FuelType.LIQUID, FluidContainerRegistry.getFluidForFilledItem(stack).getFluid());
 		return FuelRegistry.instance.isFuel(FuelType.LIQUID,stack);

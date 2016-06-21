@@ -189,7 +189,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	@Override
 	public void setPosition(double x, double y,
 			double z) {
-		// TODO Auto-generated method stub
 		super.setPosition(x, y, z);
 
 		if(storage != null) {
