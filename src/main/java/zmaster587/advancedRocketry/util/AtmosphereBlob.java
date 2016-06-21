@@ -48,7 +48,6 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 		if(blobHandler.canFormBlob()) {
 
 			if(!this.contains(blockPos)) {
-
 				/*if(worker != null) {
 					this.blockPos = blockPos;
 
@@ -60,11 +59,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 					worker = new Thread(this);
 					worker.start();
 				}
-
-
 			}
-
-
 		}
 	}	
 
@@ -84,8 +79,13 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 			for(ForgeDirection dir2 : ForgeDirection.VALID_DIRECTIONS) {
 				BlockPosition searchNextPosition = stackElement.getPositionAtOffset(dir2.offsetX, dir2.offsetY, dir2.offsetZ);
-
-				if(!SealableBlockHandler.INSTANCE.isBlockSealed(blobHandler.getWorld(), searchNextPosition) && !graph.contains(searchNextPosition) && !addableBlocks.contains(searchNextPosition)) {
+				boolean sealed;
+				
+				synchronized(SealableBlockHandler.INSTANCE) {
+					sealed = SealableBlockHandler.INSTANCE.isBlockSealed(blobHandler.getWorld(), searchNextPosition);
+				}
+				
+				if(!sealed && !graph.contains(searchNextPosition) && !addableBlocks.contains(searchNextPosition)) {
 					if(addableBlocks.size() <= maxSize) {
 						stack.push(searchNextPosition);
 						addableBlocks.add(searchNextPosition);
