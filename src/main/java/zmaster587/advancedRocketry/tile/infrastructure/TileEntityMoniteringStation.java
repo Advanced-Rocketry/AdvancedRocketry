@@ -68,7 +68,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 
 	@Override
 	public int getMaxLinkDistance() {
-		return Integer.MAX_VALUE;
+		return 300000;
 	}
 
 	@Override
