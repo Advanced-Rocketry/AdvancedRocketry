@@ -12,15 +12,21 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Stack;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class AtmosphereBlob extends AreaBlob implements Runnable {
 
-	Thread worker;
+	
+	static ThreadPoolExecutor pool = new ThreadPoolExecutor(2, 16, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(2));
+	
+	boolean executing;
 	BlockPosition blockPos;
 
 	public AtmosphereBlob(IBlobHandler blobHandler) {
 		super(blobHandler);
-		worker = null;
+		executing = false;
 	}
 
 	@Override
@@ -54,10 +60,12 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 					worker.interrupt();
 				}*/
 				//worker = null;
-				if(worker == null) {
+				if(!executing) {
 					this.blockPos = blockPos;
-					worker = new Thread(this);
-					worker.start();
+					executing = true;
+					pool.execute(this);
+					//worker = new Thread(this);
+					//worker.start();
 				}
 			}
 		}
@@ -96,21 +104,20 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 						//runEffectOnWorldBlocks(world, getLocations());
 
 						clearBlob();
-						worker = null;
+						executing = false;
 						return;
 					}
 				}
 			}
 		}
-		if(Thread.interrupted())
-			return;
 
-		synchronized (graph) {
+		//only one instance can editing this at a time because this will not run again b/c "worker" is not null
+		
 			for(BlockPosition blockPos2 : addableBlocks) {
 				super.addBlock(blockPos2);
 			}
-		}
-		worker = null;
+		
+			executing = false;
 	}
 
 

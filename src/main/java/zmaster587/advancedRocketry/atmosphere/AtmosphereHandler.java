@@ -259,7 +259,7 @@ public class AtmosphereHandler {
 	 */
 	public IAtmosphere getAtmosphereType(Entity entity) {
 		if(Configuration.enableOxygen) {
-			BlockPosition pos = new BlockPosition((int)(entity.posX), (int)Math.ceil(entity.posY), (int)(entity.posZ - 1));
+			BlockPosition pos = new BlockPosition((int)(entity.posX - 1), (int)Math.ceil(entity.posY), (int)(entity.posZ - 1));
 			for(AreaBlob blob : blobs.values()) {
 				if(blob.contains(pos)) {
 					return (IAtmosphere)blob.getData();
