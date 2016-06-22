@@ -71,6 +71,7 @@ import zmaster587.advancedRocketry.block.BlockRotatableModel;
 import zmaster587.advancedRocketry.block.BlockSeat;
 import zmaster587.advancedRocketry.block.BlockFuelTank;
 import zmaster587.advancedRocketry.block.BlockTile;
+import zmaster587.advancedRocketry.block.BlockTileNeighborUpdate;
 import zmaster587.advancedRocketry.block.BlockWarpCore;
 import zmaster587.advancedRocketry.block.BlockWarpShipMonitor;
 import zmaster587.advancedRocketry.block.cable.BlockDataCable;
@@ -305,7 +306,7 @@ public class AdvancedRocketry {
 		((BlockTile) AdvancedRocketryBlocks.blockFuelingStation).setTopTexture("Advancedrocketry:machineGeneric");
 		((BlockTile) AdvancedRocketryBlocks.blockFuelingStation).setFrontTexture("Advancedrocketry:FuelingMachine");
 
-		AdvancedRocketryBlocks.blockMonitoringStation = new BlockTile(TileEntityMoniteringStation.class, GuiHandler.guiId.MODULARNOINV.ordinal()).setCreativeTab(tabAdvRocketry).setHardness(3f);
+		AdvancedRocketryBlocks.blockMonitoringStation = new BlockTileNeighborUpdate(TileEntityMoniteringStation.class, GuiHandler.guiId.MODULARNOINV.ordinal()).setCreativeTab(tabAdvRocketry).setHardness(3f);
 		((BlockTile) AdvancedRocketryBlocks.blockMonitoringStation).setSideTexture("Advancedrocketry:machineGeneric", "Advancedrocketry:machineGeneric");
 		((BlockTile) AdvancedRocketryBlocks.blockMonitoringStation).setTopTexture("Advancedrocketry:machineGeneric");
 		((BlockTile) AdvancedRocketryBlocks.blockMonitoringStation).setFrontTexture("Advancedrocketry:MonitorRocket");

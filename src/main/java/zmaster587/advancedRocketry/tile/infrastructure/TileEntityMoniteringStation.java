@@ -33,11 +33,12 @@ import zmaster587.advancedRocketry.mission.IMission;
 import zmaster587.advancedRocketry.network.PacketEntity;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketMachine;
+import zmaster587.advancedRocketry.util.IAdjBlockUpdate;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
 import zmaster587.libVulpes.item.ItemLinker;
 import zmaster587.libVulpes.util.INetworkMachine;
 
-public class TileEntityMoniteringStation extends TileEntity  implements IModularInventory, IInfrastructure, ILinkableTile, INetworkMachine, IButtonInventory, IProgressBar  {
+public class TileEntityMoniteringStation extends TileEntity  implements IModularInventory, IAdjBlockUpdate, IInfrastructure, ILinkableTile, INetworkMachine, IButtonInventory, IProgressBar  {
 
 	EntityRocketBase linkedRocket;
 	IMission mission;
@@ -63,6 +64,13 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 		if(mission != null) {
 			mission.unlinkInfrastructure(this);
 			unlinkMission();
+		}
+	}
+	
+	@Override
+	public void onAdjacentBlockUpdated() {
+		if(worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) && linkedRocket != null) {
+				linkedRocket.launch();
 		}
 	}
 
