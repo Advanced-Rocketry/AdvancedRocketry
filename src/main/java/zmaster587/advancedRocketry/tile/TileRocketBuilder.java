@@ -6,18 +6,23 @@
 
 package zmaster587.advancedRocketry.tile;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IFuelTank;
+import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.api.IMiningDrill;
 import zmaster587.advancedRocketry.api.IRocketEngine;
+import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
 import zmaster587.advancedRocketry.api.StatsRocket;
 import zmaster587.advancedRocketry.block.BlockSeat;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
@@ -40,26 +45,34 @@ import zmaster587.advancedRocketry.network.PacketMachine;
 import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.block.RotatableBlock;
+import zmaster587.libVulpes.interfaces.ILinkableTile;
 import zmaster587.libVulpes.interfaces.INetworkEntity;
+import zmaster587.libVulpes.item.ItemLinker;
 import zmaster587.libVulpes.tile.TileEntityRFConsumer;
+import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.IconResource;
 import zmaster587.libVulpes.util.ZUtils;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonInventory, INetworkMachine, IDataSync, IModularInventory, IProgressBar {
+public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonInventory, INetworkMachine, IDataSync, IModularInventory, IProgressBar, ILinkableTile {
 
 	private final int MAX_SIZE = 16;
 	private final int MIN_SIZE = 3;
@@ -85,6 +98,8 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	protected AxisAlignedBB bbCache;
 	protected ErrorCodes status;
 
+	List<BlockPosition> blockPos;
+
 	public enum ErrorCodes {
 		SUCCESS("Clear for liftoff!"),
 		NOFUEL("Not enough fuel capacity!"),
@@ -107,10 +122,26 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	public TileRocketBuilder() {
 		super(100000);
+
+		blockPos = new LinkedList<BlockPosition>();
+
 		status = ErrorCodes.UNSCANNED;
 		stats = new StatsRocket();
 		building = false;
 		prevProgress = 0;
+		MinecraftForge.EVENT_BUS.register(this);
+	}
+	
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		MinecraftForge.EVENT_BUS.unregister(this);
+	}
+	
+	@Override
+	public void onChunkUnload() {
+		super.onChunkUnload();
+		MinecraftForge.EVENT_BUS.unregister(this);
 	}
 
 	public ErrorCodes getStatus() {
@@ -280,11 +311,11 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 								else
 									stats.setSeatLocation((int)(xCurr - actualMinX - ((actualMaxX - actualMinX)/2f)) , (int)(yCurr  -actualMinY), (int)(zCurr - actualMinZ - ((actualMaxZ - actualMinZ)/2f)));
 							}
-							
+
 							if(block instanceof IMiningDrill) {
 								drillPower += ((IMiningDrill)block).getMiningSpeed(world, xCurr, yCurr, zCurr);
 							}
-							
+
 							TileEntity tile= world.getTileEntity(xCurr, yCurr, zCurr);
 							if(tile instanceof TileSatelliteHatch)
 								hasSatellite = true;
@@ -303,7 +334,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			//Set status
 			//TODO: warn if seat OR satellite missing
 			//if(!stats.hasSeat() && !hasSatellite) 
-				//status = ErrorCodes.NOSEAT;
+			//status = ErrorCodes.NOSEAT;
 			/*else*/ if(!hasGuidance && !hasSatellite)
 				status = ErrorCodes.NOGUIDANCE;
 			else if(getFuel() < getNeededFuel()) 
@@ -494,6 +525,20 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			nbt.setTag("bb", tag);
 		}
 
+
+		if(!blockPos.isEmpty()) {
+			int[] array = new int[blockPos.size()*3];
+			int counter = 0;
+			for(BlockPosition pos : blockPos) {
+				array[counter] = pos.x;
+				array[counter+1] = pos.y;
+				array[counter+2] = pos.z;
+				counter += 3;
+			}
+
+			nbt.setIntArray("infrastructureLocations", array);
+		}
+
 	}
 
 	@Override
@@ -513,6 +558,15 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 					tag.getDouble("minY"), tag.getDouble("minZ"),
 					tag.getDouble("maxX"), tag.getDouble("maxY"), tag.getDouble("maxZ"));
 
+		}
+
+		blockPos.clear();
+		if(nbt.hasKey("infrastructureLocations")) {
+			int array[] = nbt.getIntArray("infrastructureLocations");
+
+			for(int counter = 0; counter < array.length; counter += 3) {
+				blockPos.add(new BlockPosition(array[counter], array[counter+1], array[counter+2]));
+			}
 		}
 	}
 
@@ -609,7 +663,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			else if( ErrorCodes.INCOMPLETESTRCUTURE.equals(getStatus()))
 				setStatus(ErrorCodes.UNSCANNED.ordinal());
 		}
-			
+
 		errorText.setText(getStatus().getErrorCode());
 	}
 
@@ -758,5 +812,80 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	@Override
 	public boolean canConnectEnergy(ForgeDirection arg0) {
 		return true;
+	}
+
+	@Override
+	public boolean onLinkStart(ItemStack item, TileEntity entity,
+			EntityPlayer player, World world) {
+		return true;
+	}
+
+	@Override
+	public boolean onLinkComplete(ItemStack item, TileEntity entity,
+			EntityPlayer player, World world) {
+		TileEntity tile = world.getTileEntity(((ItemLinker)item.getItem()).getMasterX(item), ((ItemLinker)item.getItem()).getMasterY(item), ((ItemLinker)item.getItem()).getMasterZ(item));
+
+		if(tile instanceof IInfrastructure) {
+			BlockPosition pos = new BlockPosition(tile.xCoord, tile.yCoord, tile.zCoord);
+			if(!blockPos.contains(pos))
+				blockPos.add(pos);
+			
+			if(getBBCache() == null) {
+				bbCache = getRocketPadBounds(worldObj, xCoord, yCoord, zCoord);
+			}
+
+			if(getBBCache() != null) {
+
+				List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
+				for(EntityRocketBase rocket : rockets) {
+					rocket.linkInfrastructure((IInfrastructure) tile);
+				}
+			}
+
+			if(!worldObj.isRemote) {
+				player.addChatMessage(new ChatComponentText("Linked Sucessfully"));
+			}
+			
+			ItemLinker.resetPosition(item);
+			return true;
+		}
+		return false;
+	}
+
+	public List<IInfrastructure> getConnectedInfrastructure() {
+		List<IInfrastructure> infrastructure = new LinkedList<IInfrastructure>();
+
+		Iterator<BlockPosition> iter = blockPos.iterator();
+
+		while(iter.hasNext()) {
+			BlockPosition position = iter.next();
+			TileEntity tile = worldObj.getTileEntity(position.x, position.y, position.z);
+			if((tile = worldObj.getTileEntity(position.x, position.y, position.z)) instanceof IInfrastructure) {
+				infrastructure.add((IInfrastructure)tile);
+			}
+			else
+				iter.remove();
+		}
+
+		return infrastructure;
+	}
+
+	@SubscribeEvent
+	public void onRocketLand(RocketLandedEvent event) {
+		EntityRocketBase rocket = (EntityRocketBase)event.entity;
+
+		if(getBBCache() == null) {
+			bbCache = getRocketPadBounds(worldObj, xCoord, yCoord, zCoord);
+		}
+
+		if(getBBCache() != null) {
+			List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
+
+			if(rockets.contains(rocket)) {
+				for(IInfrastructure infrastructure : getConnectedInfrastructure()) {
+					rocket.linkInfrastructure(infrastructure);
+				}
+			}
+		}
 	}
 }
