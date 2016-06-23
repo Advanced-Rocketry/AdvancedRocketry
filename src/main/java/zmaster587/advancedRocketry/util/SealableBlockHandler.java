@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.util;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fluids.IFluidBlock;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.atmosphere.IAtmosphereSealHandler;
@@ -41,37 +42,54 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
         return isBlockSealed(world, new BlockPosition(x, y, z));
     }
 
+    /**
+     * Checks to see if the block at the location can be sealed
+     * @param world
+     * @param pos
+     * @return
+     */
     public boolean isBlockSealed(World world, BlockPosition pos)
     {
-        Block block = world.getBlock(pos.x, pos.y, pos.z);
-        int meta = world.getBlockMetadata(pos.x, pos.y, pos.z);
-        Material material = block.getMaterial();
+        //Ensure we are not checking outside of the map
+        if(pos.y >= 0 && pos.y <= 256)
+        {
+            //Prevents orphan chunk loading - DarkGuardsman
+            if(world instanceof WorldServer && !((WorldServer) world).theChunkProviderServer.chunkExists(pos.x >> 4, pos.z >> 4))
+            {
+                return false;
+            }
 
-        //Always allow list
-        if (blockAllowList.contains(block) || materialAllowList.contains(material))
-        {
-            return true;
+            Block block = world.getBlock(pos.x, pos.y, pos.z);
+            int meta = world.getBlockMetadata(pos.x, pos.y, pos.z);
+            Material material = block.getMaterial();
+
+            //Always allow list
+            if (blockAllowList.contains(block) || materialAllowList.contains(material))
+            {
+                return true;
+            }
+            //Always block list
+            else if (blockBanList.contains(block) || materialBanList.contains(material))
+            {
+                return false;
+            }
+            else if (material.isLiquid() || !material.isSolid())
+            {
+                return false;
+            }
+            else if (world.isAirBlock(pos.x, pos.y, pos.z) || block instanceof IFluidBlock)
+            {
+                return false;
+            }
+            //TODO replace with seal logic handler
+            else if (block == AdvancedRocketryBlocks.blockAirLock)
+            {
+                return checkDoorIsSealed(world, pos, meta);
+            }
+            //TODO add is side solid check, which will require forge direction or side check. Eg more complex logic...
+            return isFulBlock(world, pos);
         }
-        //Always block list
-        else if (blockBanList.contains(block) || materialBanList.contains(material))
-        {
-            return false;
-        }
-        else if (material.isLiquid() || !material.isSolid())
-        {
-            return false;
-        }
-        else if (world.isAirBlock(pos.x, pos.y, pos.z) || block instanceof IFluidBlock)
-        {
-            return false;
-        }
-        //TODO replace with seal logic handler
-        else if (block == AdvancedRocketryBlocks.blockAirLock)
-        {
-            return checkDoorIsSealed(world, pos, meta);
-        }
-        //TODO add is side solid check, which will require forge direction or side check. Eg more complex logic...
-        return isFulBlock(world, pos);
+        return false;
     }
 
     @Override
