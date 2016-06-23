@@ -47,4 +47,6 @@ public class Configuration {
 	public static double asteroidMiningMult;
 
 	public static String[] standardAsteroidOres;
+
+	public static int atmosphereHandleBitMask;
 }

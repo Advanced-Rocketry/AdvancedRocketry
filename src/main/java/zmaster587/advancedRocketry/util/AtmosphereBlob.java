@@ -5,6 +5,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.libVulpes.util.BlockPosition;
 
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 	
-	static ThreadPoolExecutor pool = new ThreadPoolExecutor(2, 16, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(2));
+	static ThreadPoolExecutor pool = (Configuration.atmosphereHandleBitMask & 1) == 1 ? new ThreadPoolExecutor(2, 16, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(2)) : null;
 	
 	boolean executing;
 	BlockPosition blockPos;
@@ -63,7 +64,10 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 				if(!executing) {
 					this.blockPos = blockPos;
 					executing = true;
-					pool.execute(this);
+					if((Configuration.atmosphereHandleBitMask & 1) == 1)
+						pool.execute(this);
+					else
+						this.run();
 					//worker = new Thread(this);
 					//worker.start();
 				}
@@ -78,7 +82,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 		Stack<BlockPosition> stack = new Stack<BlockPosition>();
 		stack.push(blockPos);
 
-		final int maxSize = this.getBlobMaxRadius();
+		final int maxSize = (Configuration.atmosphereHandleBitMask & 2) == 0 ? (int)(Math.pow(this.getBlobMaxRadius(), 3)*((4f/3f)*Math.PI)) : this.getBlobMaxRadius();
 		final HashSet<BlockPosition> addableBlocks = new HashSet<BlockPosition>();
 
 		while(!stack.isEmpty()) {
@@ -94,14 +98,12 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 				}
 				
 				if(!sealed && !graph.contains(searchNextPosition) && !addableBlocks.contains(searchNextPosition)) {
-					if(addableBlocks.size() <= maxSize) {
+					if(((Configuration.atmosphereHandleBitMask & 2) == 0 && searchNextPosition.getDistance(this.getRootPosition()) <= maxSize) || 
+							((Configuration.atmosphereHandleBitMask & 2) != 0 && addableBlocks.size() <= maxSize)) {
 						stack.push(searchNextPosition);
 						addableBlocks.add(searchNextPosition);
 					}
 					else {
-						//World world = blobHandler.getWorld();
-
-						//runEffectOnWorldBlocks(world, getLocations());
 
 						clearBlob();
 						executing = false;
