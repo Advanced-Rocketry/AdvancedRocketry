@@ -371,6 +371,10 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		this.status = ErrorCodes.UNSCANNED;
 		this.markDirty();
 		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		
+		for(IInfrastructure infrastructure : getConnectedInfrastructure()) {
+			rocket.linkInfrastructure(infrastructure);
+		}
 	}
 
 	/**

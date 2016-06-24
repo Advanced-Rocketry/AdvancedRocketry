@@ -14,9 +14,11 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
+import zmaster587.advancedRocketry.block.BlockTileRedstoneEmitter;
 import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.inventory.modules.ModuleImage;
@@ -47,8 +49,11 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 		if(!worldObj.isRemote) {
 			if(tank.getFluid() != null) {
 				float multiplier = FuelRegistry.instance.getMultiplier(FuelType.LIQUID, tank.getFluid().getFluid());
-				linkedRocket.addFuelAmount((int)(multiplier*Configuration.fuelPointsPer10Mb));
-				tank.drain(10, true);
+
+				tank.drain(linkedRocket.addFuelAmount((int)(multiplier*Configuration.fuelPointsPer10Mb)), true);
+				
+				//If the rocket is full then emit redstone
+				((BlockTileRedstoneEmitter)AdvancedRocketryBlocks.blockFuelingStation).setRedstoneState(worldObj, xCoord, yCoord, zCoord, linkedRocket.getFuelAmount() == linkedRocket.getFuelCapacity());
 			}
 		}
 		useBucket(0, inv[0]);
@@ -59,6 +64,11 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 		return 30;
 	}
 
+	@Override
+	public void updateEntity() {
+		super.updateEntity();
+	}
+	
 	@Override
 	public boolean canPerformFunction() {
 		// TODO Solid fuel?
@@ -122,7 +132,8 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	@Override
 	public void unlinkRocket() {
 		this.linkedRocket = null;
-
+		((BlockTileRedstoneEmitter)AdvancedRocketryBlocks.blockFuelingStation).setRedstoneState(worldObj, xCoord, yCoord, zCoord, false);
+		
 	}
 
 	@Override
