@@ -106,8 +106,8 @@ public class EmbeddedInventory implements ISidedInventory {
 		}
 
 		@Override
-		public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) {
-			return true;
+		public boolean isItemValidForSlot(int slot, ItemStack item) {
+			return inv[slot] == null || (inv[slot].isItemEqual(item) && inv[slot].getMaxStackSize() != inv[slot].stackSize);
 		}
 
 		@Override
