@@ -18,7 +18,7 @@ import zmaster587.advancedRocketry.inventory.modules.ModuleData;
 import zmaster587.advancedRocketry.item.ItemData;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketMachine;
-import zmaster587.advancedRocketry.tile.multiblock.TileInventoryHatch;
+import zmaster587.advancedRocketry.tile.hatch.TileInventoryHatch;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.util.INetworkMachine;
 

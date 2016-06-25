@@ -5,7 +5,7 @@ import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.item.ItemSatellite;
-import zmaster587.advancedRocketry.tile.multiblock.TileInventoryHatch;
+import zmaster587.advancedRocketry.tile.hatch.TileInventoryHatch;
 
 public class TileSatelliteHatch extends TileInventoryHatch {
 

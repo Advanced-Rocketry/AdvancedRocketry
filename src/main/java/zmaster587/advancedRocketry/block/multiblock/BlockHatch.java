@@ -5,11 +5,12 @@ import java.util.Random;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.inventory.GuiHandler;
-import zmaster587.advancedRocketry.tile.TileInputHatch;
-import zmaster587.advancedRocketry.tile.TileOutputHatch;
 import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteHatch;
 import zmaster587.advancedRocketry.tile.data.TileDataBus;
-import zmaster587.advancedRocketry.tile.multiblock.TileFluidHatch;
+import zmaster587.advancedRocketry.tile.hatch.TileFluidHatch;
+import zmaster587.advancedRocketry.tile.hatch.TileInputHatch;
+import zmaster587.advancedRocketry.tile.hatch.TileOutputHatch;
+import zmaster587.advancedRocketry.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.TilePointer;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -55,7 +56,7 @@ public class BlockHatch extends BlockMultiblockStructure {
 		ForgeDirection direction = ForgeDirection.getOrientation(dir);
 		boolean isPointer = world.getTileEntity(x - direction.offsetX , y- direction.offsetY, z - direction.offsetZ) instanceof TilePointer;
 		if(isPointer)
-			isPointer = isPointer && !((TilePointer)world.getTileEntity(x - direction.offsetX , y- direction.offsetY, z- direction.offsetZ)).hasMaster();
+			isPointer = isPointer && !(((TilePointer)world.getTileEntity(x - direction.offsetX , y- direction.offsetY, z- direction.offsetZ)).getMasterBlock() instanceof TileMultiBlock);
 		
 		
 		return !isPointer && (world.getBlockMetadata(x, y, z) & 8) != 0 ? 15 : 0;
@@ -165,7 +166,7 @@ public class BlockHatch extends BlockMultiblockStructure {
 		ForgeDirection direction = ForgeDirection.getOrientation(side);
 		boolean isPointer = access.getTileEntity(x - direction.offsetX , y- direction.offsetY, z - direction.offsetZ) instanceof TilePointer;
 		if(isPointer)
-			isPointer = isPointer && !((TilePointer)access.getTileEntity(x - direction.offsetX , y- direction.offsetY, z- direction.offsetZ)).hasMaster();
+			isPointer = isPointer && !(((TilePointer)access.getTileEntity(x - direction.offsetX , y- direction.offsetY, z- direction.offsetZ)).getMasterBlock() instanceof TileMultiBlock);
 		return ( isPointer || access.getBlockMetadata(x - direction.offsetX, y- direction.offsetY, z - direction.offsetZ) < 8);
 	}
 	

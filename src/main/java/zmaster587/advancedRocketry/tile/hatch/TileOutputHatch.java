@@ -1,5 +1,6 @@
-package zmaster587.advancedRocketry.tile;
+package zmaster587.advancedRocketry.tile.hatch;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
@@ -14,35 +15,43 @@ import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.block.multiblock.BlockHatch;
 import zmaster587.advancedRocketry.entity.EntityRocket;
+import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
+import zmaster587.advancedRocketry.inventory.modules.ModuleOutputSlotArray;
 import zmaster587.advancedRocketry.mission.IMission;
-import zmaster587.advancedRocketry.tile.multiblock.TileInventoryHatch;
+import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
+import zmaster587.libVulpes.interfaces.ILinkableTile;
 import zmaster587.libVulpes.item.ItemLinker;
-import zmaster587.libVulpes.util.BlockPosition;
 
-public class TileInputHatch extends TileInventoryHatch  implements IInfrastructure {
+public class TileOutputHatch extends TileInventoryHatch implements IInfrastructure {
 
 	EntityRocket rocket;
 
-	public TileInputHatch() {
+	public TileOutputHatch() {
 		super();
 	}
 
-	public TileInputHatch(int size) {
+	public TileOutputHatch(int size) {
 		super(size);
 	}
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.hatch.0.name";
-	}
-	
-	@Override
-	public void invalidate() {
-		super.invalidate();
-		if(getMasterBlock() instanceof TileRocketBuilder)
-			((TileRocketBuilder)getMasterBlock()).removeConnectedInfrastructure(this);
+		return "tile.hatch.1.name";
 	}
 
+	@Override
+	public boolean canInsertItem(int p_102007_1_, ItemStack p_102007_2_,
+			int p_102007_3_) {
+		return false;
+	}
+
+	@Override
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
+		modules.add(new ModuleOutputSlotArray(8, 18, this, 0, this.getSizeInventory()));
+		return modules;
+	}
+	
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
@@ -51,34 +60,29 @@ public class TileInputHatch extends TileInventoryHatch  implements IInfrastructu
 		if(rocket != null ) {
 			List<TileEntity> tiles = rocket.storage.getUsableTiles();
 			boolean foundStack = false;
-			boolean rocketContainsItems = false;
+			boolean rocketContainsNoItems = true;
 			out:
 				//Function returns if something can be moved
 				for(TileEntity tile : tiles) {
 					if(tile instanceof IInventory && !(tile instanceof TileGuidanceComputer)) {
 						IInventory inv = ((IInventory)tile);
-
 						for(int i = 0; i < inv.getSizeInventory(); i++) {
-							if(inv.getStackInSlot(i) == null)
-								rocketContainsItems = true;
-							
-							//Loop though this inventory's slots and find a suitible one
-							for(int j = 0; j < getSizeInventory(); j++) {
-								if(inv.getStackInSlot(i) == null && inventory.getStackInSlot(j) != null) {
-									inv.setInventorySlotContents(i, inventory.getStackInSlot(j));
-									inventory.setInventorySlotContents(j,null);
-									rocketContainsItems = true;
-									break out;
-								}
-								else if(getStackInSlot(j) != null && inv.isItemValidForSlot(i, getStackInSlot(j)) && inv.getStackInSlot(i).getMaxStackSize() != inv.getStackInSlot(i).stackSize ) {
-									ItemStack stack2 = inventory.decrStackSize(j, inv.getStackInSlot(i).getMaxStackSize() - inv.getStackInSlot(i).stackSize);
-									inv.getStackInSlot(i).stackSize += stack2.stackSize;
-									rocketContainsItems = true;
-									
-									if(inventory.getStackInSlot(j) == null)
+							if(inv.getStackInSlot(i) != null) {
+								rocketContainsNoItems = false;
+								//Loop though this inventory's slots and find a suitible one
+								for(int j = 0; j < getSizeInventory(); j++) {
+									if(getStackInSlot(j) == null) {
+										inventory.setInventorySlotContents(j, inv.getStackInSlot(i));
+										inv.setInventorySlotContents(i,null);
 										break out;
-									
-									foundStack = true;
+									}
+									else if(inv.getStackInSlot(i) != null && isItemValidForSlot(j, inv.getStackInSlot(i))) {
+										ItemStack stack2 = inv.decrStackSize(i, getStackInSlot(j).getMaxStackSize() - getStackInSlot(j).stackSize);
+										getStackInSlot(j).stackSize += stack2.stackSize;
+										if(inv.getStackInSlot(i) == null)
+											break out;
+										foundStack = true;
+									}
 								}
 							}
 							if(foundStack)
@@ -88,7 +92,7 @@ public class TileInputHatch extends TileInventoryHatch  implements IInfrastructu
 				}
 
 			//Update redstone state
-			((BlockHatch)AdvancedRocketryBlocks.blockHatch).setRedstoneState(worldObj, xCoord, yCoord, zCoord, !rocketContainsItems);
+			((BlockHatch)AdvancedRocketryBlocks.blockHatch).setRedstoneState(worldObj, xCoord, yCoord, zCoord, rocketContainsNoItems);
 
 		}
 	}
@@ -122,8 +126,8 @@ public class TileInputHatch extends TileInventoryHatch  implements IInfrastructu
 		rocket = null;
 		((BlockHatch)AdvancedRocketryBlocks.blockHatch).setRedstoneState(worldObj, xCoord, yCoord, zCoord, false);
 		//On unlink prevent the tile from ticking anymore
-		if(!worldObj.isRemote)
-			worldObj.loadedTileEntityList.remove(this);
+		//if(!worldObj.isRemote)
+			//worldObj.loadedTileEntityList.remove(this);
 	}
 
 	@Override
@@ -134,8 +138,8 @@ public class TileInputHatch extends TileInventoryHatch  implements IInfrastructu
 	@Override
 	public boolean linkRocket(EntityRocketBase rocket) {
 		//On linked allow the tile to tick
-		if(!worldObj.isRemote)
-			worldObj.loadedTileEntityList.add(this);
+		//if(!worldObj.isRemote)
+			//worldObj.loadedTileEntityList.add(this);
 		this.rocket = (EntityRocket) rocket;
 		return true;
 	}
@@ -151,13 +155,16 @@ public class TileInputHatch extends TileInventoryHatch  implements IInfrastructu
 	}
 
 	@Override
+	public boolean canUpdate() {
+		return true;
+	}
+	
+	@Override
 	public int getMaxLinkDistance() {
 		return 32;
 	}
-
-	@Override
-	public boolean canExtractItem(int p_102008_1_, ItemStack p_102008_2_,
-			int p_102008_3_) {
-		return false;
+	
+	public boolean canRenderConnection() {
+		return true;
 	}
 }

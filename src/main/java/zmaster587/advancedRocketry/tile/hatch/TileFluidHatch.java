@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.tile.multiblock;
+package zmaster587.advancedRocketry.tile.hatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +23,7 @@ import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.inventory.modules.ModuleImage;
 import zmaster587.advancedRocketry.inventory.modules.ModuleLiquidIndicator;
 import zmaster587.advancedRocketry.inventory.modules.ModuleSlotArray;
+import zmaster587.advancedRocketry.tile.multiblock.TileMultiBlock;
 import zmaster587.advancedRocketry.util.EmbeddedInventory;
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.tile.TilePointer;

@@ -133,19 +133,19 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		prevProgress = 0;
 		MinecraftForge.EVENT_BUS.register(this);
 	}
-	
+
 	@Override
 	public void invalidate() {
 		super.invalidate();
 		MinecraftForge.EVENT_BUS.unregister(this);
 		for(BlockPosition pos : blockPos) {
 			TileEntity tile = worldObj.getTileEntity(pos.x, pos.y, pos.z);
-			
+
 			if(tile instanceof IMultiblock)
 				((IMultiblock)tile).setIncomplete();
 		}
 	}
-	
+
 	@Override
 	public void onChunkUnload() {
 		super.onChunkUnload();
@@ -379,7 +379,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		this.status = ErrorCodes.UNSCANNED;
 		this.markDirty();
 		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		
+
 		for(IInfrastructure infrastructure : getConnectedInfrastructure()) {
 			rocket.linkInfrastructure(infrastructure);
 		}
@@ -494,26 +494,6 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 
 		return (int) ((bb.maxX - bb.minX) * (bb.maxY - bb.minY) * (bb.maxZ - bb.minZ));
-
-		/*int numBlocks = 0;
-
-
-		if(verifyScan(bb, world)) {
-			for(int yCurr = (int) bb.minY; yCurr <= bb.maxY; yCurr++) {
-				for(int xCurr = (int) bb.minX; xCurr <= bb.maxX; xCurr++) {
-					for(int zCurr = (int) bb.minZ; zCurr <= bb.maxZ; zCurr++) {
-
-						if(!world.isAirBlock(xCurr, yCurr, zCurr)) {
-							numBlocks++;
-
-						}
-					}
-				}
-			}
-
-			scanTotalBlocks = numBlocks;
-		}*/
-
 	}
 
 	@Override
@@ -841,7 +821,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			BlockPosition pos = new BlockPosition(tile.xCoord, tile.yCoord, tile.zCoord);
 			if(!blockPos.contains(pos))
 				blockPos.add(pos);
-			
+
 			if(getBBCache() == null) {
 				bbCache = getRocketPadBounds(worldObj, xCoord, yCoord, zCoord);
 			}
@@ -856,11 +836,11 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 			if(!worldObj.isRemote) {
 				player.addChatMessage(new ChatComponentText("Linked Sucessfully"));
-				
+
 				if(tile instanceof IMultiblock)
 					((IMultiblock)tile).setMasterBlock(xCoord, yCoord, zCoord);
 			}
-			
+
 			ItemLinker.resetPosition(item);
 			return true;
 		}
@@ -869,8 +849,21 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	public void removeConnectedInfrastructure(TileEntity tile) {
 		blockPos.remove(new BlockPosition(tile.xCoord, tile.yCoord, tile.zCoord));
+
+		if(getBBCache() == null) {
+			bbCache = getRocketPadBounds(worldObj, xCoord, yCoord, zCoord);
+		}
+
+		if(getBBCache() != null) {
+			List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
+			
+			for(EntityRocketBase rocket : rockets) {
+					rocket.unlinkInfrastructure((IInfrastructure) tile);
+			}
+		}
+
 	}
-	
+
 	public List<IInfrastructure> getConnectedInfrastructure() {
 		List<IInfrastructure> infrastructure = new LinkedList<IInfrastructure>();
 

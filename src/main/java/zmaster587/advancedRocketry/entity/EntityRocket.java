@@ -102,7 +102,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	private long lastWorldTickTicked;
 
 	//stores the coordinates of infrastructures, used for when the world loads/saves
-	private LinkedList<Vector3F<Integer>> infrastructureCoords;
+	private LinkedList<BlockPosition> infrastructureCoords;
 
 	private SatelliteBase satallite;
 	private int destinationDimId;
@@ -131,7 +131,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		stats = new StatsRocket();
 		isInFlight = false;
 		connectedInfrastructure = new LinkedList<IInfrastructure>();
-		infrastructureCoords = new LinkedList<Vector3F<Integer>>();
+		infrastructureCoords = new LinkedList<BlockPosition>();
 		mountedEntities = new WeakReference[stats.getNumPassengerSeats()];
 
 		lastWorldTickTicked = p_i1582_1_.getTotalWorldTime();
@@ -669,9 +669,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		super.onChunkLoad();
 
 
-		ListIterator<Vector3F<Integer>> itr = infrastructureCoords.listIterator();
+		ListIterator<BlockPosition> itr = infrastructureCoords.listIterator();
 		while(itr.hasNext()) {
-			Vector3F<Integer> temp = itr.next();
+			BlockPosition temp = itr.next();
 
 			TileEntity tile = this.worldObj.getTileEntity(temp.x, temp.y, temp.z);
 			if(tile instanceof IInfrastructure) {
@@ -785,7 +785,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 			}
 			else
-				infrastructureCoords.add(new Vector3F<Integer>(coords[0], coords[1], coords[2]));
+				infrastructureCoords.add(new BlockPosition(coords[0], coords[1], coords[2]));
 		}
 
 		destinationDimId = nbt.getInteger("destinationDimId");
@@ -1083,5 +1083,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	public void onSystemFocusChanged(Object sender) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	public LinkedList<IInfrastructure> getConnectedInfrastructure() {
+		return connectedInfrastructure;
 	}
 }

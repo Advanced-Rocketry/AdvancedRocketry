@@ -174,6 +174,10 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 		super.invalidate();
 		if(getMasterBlock() instanceof TileRocketBuilder)
 			((TileRocketBuilder)getMasterBlock()).removeConnectedInfrastructure(this);
+		
+		//Mostly for client rendering stuff
+		if(linkedRocket != null)
+			linkedRocket.unlinkInfrastructure(this);
 	}
 	
 	@Override
@@ -266,5 +270,8 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	public void setMasterBlock(int x, int y, int z) {
 		masterBlock = new BlockPosition(x, y, z);
 	}
-
+	
+	public boolean canRenderConnection() {
+		return true;
+	}
 }

@@ -15,7 +15,7 @@ import zmaster587.advancedRocketry.item.ItemAsteroidChip;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.stations.SpaceObject;
-import zmaster587.advancedRocketry.tile.multiblock.TileInventoryHatch;
+import zmaster587.advancedRocketry.tile.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 

@@ -39,9 +39,10 @@ import zmaster587.advancedRocketry.item.ItemAsteroidChip;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketMachine;
-import zmaster587.advancedRocketry.tile.TileInputHatch;
-import zmaster587.advancedRocketry.tile.TileOutputHatch;
 import zmaster587.advancedRocketry.tile.data.TileDataBus;
+import zmaster587.advancedRocketry.tile.hatch.TileInputHatch;
+import zmaster587.advancedRocketry.tile.hatch.TileInventoryHatch;
+import zmaster587.advancedRocketry.tile.hatch.TileOutputHatch;
 import zmaster587.advancedRocketry.util.EmbeddedInventory;
 import zmaster587.advancedRocketry.util.ITilePlanetSystemSelectable;
 import zmaster587.advancedRocketry.world.util.MultiData;
@@ -177,7 +178,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 		if(inventory.getStackInSlot(1) != null) {
 			for(int i = 0; i < outputHatch.getSizeInventory(); i++) {
 				if(outputHatch.getStackInSlot(i) == null) {
-					outputHatch.inventory.setInventorySlotContents(i, inventory.getStackInSlot(1));
+					outputHatch.setInventorySlotContentsNoUpdate(i, inventory.getStackInSlot(1));
 					inventory.setInventorySlotContents(1, null);
 					break;
 				}
@@ -191,10 +192,10 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 				if(stack != null && stack.getItem() instanceof ItemAsteroidChip && ((ItemAsteroidChip)stack.getItem()).getUUID(stack) == null ) {
 					if(stack0 == null) {
 						inventory.setInventorySlotContents(0, stack);
-						inputHatch.inventory.setInventorySlotContents(i, null);
+						inputHatch.setInventorySlotContentsNoUpdate(i, null);
 					}
 					else {
-						stack0.stackSize += inputHatch.inventory.decrStackSize(i, stack0.getMaxStackSize() - stack0.stackSize).stackSize;
+						stack0.stackSize += inputHatch.decrStackSize(i, stack0.getMaxStackSize() - stack0.stackSize).stackSize;
 						//inventory.setInventorySlotContents(0, stack0);
 					}
 					if(!worldObj.isRemote) {

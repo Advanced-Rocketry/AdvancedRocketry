@@ -44,4 +44,9 @@ public interface IInfrastructure {
 	 * @return maximum link distance in block for the tile
 	 */
 	public int getMaxLinkDistance();
+	
+	/**
+	 * @return true if a connection can be rendered to the infrastructure
+	 */
+	public boolean canRenderConnection();
 }

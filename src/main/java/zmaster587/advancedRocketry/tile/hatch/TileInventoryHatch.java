@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.tile.multiblock;
+package zmaster587.advancedRocketry.tile.hatch;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.inventory.modules.ModuleSlotArray;
+import zmaster587.advancedRocketry.tile.multiblock.TileMultiBlock;
 import zmaster587.advancedRocketry.util.EmbeddedInventory;
 import zmaster587.libVulpes.tile.TilePointer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -61,9 +62,14 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
-		inventory.setInventorySlotContents(slot, stack);
+		setInventorySlotContentsNoUpdate(slot, stack);
 		if(this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
 			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
+	}
+	
+	
+	public void setInventorySlotContentsNoUpdate(int slot, ItemStack stack) {
+		inventory.setInventorySlotContents(slot, stack);
 	}
 
 	@Override

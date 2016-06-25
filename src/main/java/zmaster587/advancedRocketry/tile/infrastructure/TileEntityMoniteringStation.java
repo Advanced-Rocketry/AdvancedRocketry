@@ -312,4 +312,9 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 		mission = null;
 		PacketHandler.sendToNearby(new PacketMachine(this, (byte)1), worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 16);
 	}
+
+	@Override
+	public boolean canRenderConnection() {
+		return false;
+	}
 }
