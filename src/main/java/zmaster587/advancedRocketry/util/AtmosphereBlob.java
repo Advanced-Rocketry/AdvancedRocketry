@@ -3,7 +3,7 @@ package zmaster587.advancedRocketry.util;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import zmaster587.advancedRocketry.util.SealableBlockHandler;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
@@ -91,20 +91,36 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 			for(ForgeDirection dir2 : ForgeDirection.VALID_DIRECTIONS) {
 				BlockPosition searchNextPosition = stackElement.getPositionAtOffset(dir2.offsetX, dir2.offsetY, dir2.offsetZ);
-				boolean sealed;
-				
-				synchronized(SealableBlockHandler.INSTANCE) {
-					sealed = SealableBlockHandler.INSTANCE.isBlockSealed(blobHandler.getWorld(), searchNextPosition);
-				}
-				
-				if(!sealed && !graph.contains(searchNextPosition) && !addableBlocks.contains(searchNextPosition)) {
-					if(((Configuration.atmosphereHandleBitMask & 2) == 0 && searchNextPosition.getDistance(this.getRootPosition()) <= maxSize) || 
-							((Configuration.atmosphereHandleBitMask & 2) != 0 && addableBlocks.size() <= maxSize)) {
-						stack.push(searchNextPosition);
-						addableBlocks.add(searchNextPosition);
-					}
-					else {
 
+				//Don't path areas we have already scanned
+				if(!graph.contains(searchNextPosition) && !addableBlocks.contains(searchNextPosition)) {
+
+					boolean sealed;
+
+					try {
+
+						synchronized(SealableBlockHandler.INSTANCE) {
+							sealed = SealableBlockHandler.INSTANCE.isBlockSealed(blobHandler.getWorld(), searchNextPosition);
+						}
+
+						if(!sealed) {
+							if(((Configuration.atmosphereHandleBitMask & 2) == 0 && searchNextPosition.getDistance(this.getRootPosition()) <= maxSize) ||
+									((Configuration.atmosphereHandleBitMask & 2) != 0 && addableBlocks.size() <= maxSize)) {
+								stack.push(searchNextPosition);
+								addableBlocks.add(searchNextPosition);
+							}
+							else {
+								//Failed to seal, void
+								clearBlob();
+								executing = false;
+								return;
+							}
+						}
+					} catch (Exception e){
+						//Catches errors with additional information
+						AdvancedRocketry.logger.info("Error: AtmosphereBlob has failed to form correctly due to an error. \nCurrentBlock: " + stackElement + "\tNextPos: " + searchNextPosition + "\tDir: " + dir2 + "\tStackSize: " + stack.size());
+						e.printStackTrace();
+						//Failed to seal, void
 						clearBlob();
 						executing = false;
 						return;

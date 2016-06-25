@@ -73,7 +73,10 @@ tile.sapphire.name=Сапфировый блок
 tile.citrine.name=Цитриновый блок
 tile.wulfentite.name=Блок вульфенита
 tile.amethyst.name=Блок аметиста
-
+tile.orientationControl.name=Контроллер ориентации
+tile.gravityControl.name=Контроллер гравитации
+tile.drill.name=Бур
+tile.dataCable.name=Кабель данных
 
 tile.Dilithium.name=Руда дилития
 tile.Copper.name=Медная руда
@@ -107,6 +110,7 @@ item.satellitePrimaryFunction.1.name=Датчик полтности атмос�
 item.satellitePrimaryFunction.2.name=Детектор масс
 item.satelliteIdChip.name=Чип адреса спутника
 item.planetIdChip.name=Чип адреса планеты
+item.asteroidChip.name=Чип адреса астероида
 item.battery.0.name=Батарейка
 item.miscpart.0.name=Пользовательский интерфейс
 item.miscpart.1.name=Углеродный кирпич
@@ -122,6 +126,7 @@ item.smallAirlock.name=Малая гермодверь
 item.carbonScrubberCartridge.name=Поглощающий картридж
 item.jackhammer.name=Отбойный молоток
 item.sealDetector.name=Течеискатель
+
 
 material.Gold.name=Золотой
 material.Iron.name=Железный
@@ -166,3 +171,5 @@ data.mass.name=Масса
 fluid.oxygen=Кислород
 fluid.hydrogen=Водород
 fluid.rocketFuel=Ракетное топливо
+
+mission.asteroidmining.name=Освоение астероидов
