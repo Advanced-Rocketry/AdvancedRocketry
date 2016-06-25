@@ -82,7 +82,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 		Stack<BlockPosition> stack = new Stack<BlockPosition>();
 		stack.push(blockPos);
 
-		final int maxSize = (Configuration.atmosphereHandleBitMask & 2) == 0 ? (int)(Math.pow(this.getBlobMaxRadius(), 3)*((4f/3f)*Math.PI)) : this.getBlobMaxRadius();
+		final int maxSize = (Configuration.atmosphereHandleBitMask & 2) != 0 ? (int)(Math.pow(this.getBlobMaxRadius(), 3)*((4f/3f)*Math.PI)) : this.getBlobMaxRadius();
 		final HashSet<BlockPosition> addableBlocks = new HashSet<BlockPosition>();
 
 		//Breadth first search; non recursive
