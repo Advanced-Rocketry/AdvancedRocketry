@@ -48,7 +48,9 @@ import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
 import zmaster587.libVulpes.interfaces.INetworkEntity;
 import zmaster587.libVulpes.item.ItemLinker;
+import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.TileEntityRFConsumer;
+import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.IconResource;
@@ -98,7 +100,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	protected AxisAlignedBB bbCache;
 	protected ErrorCodes status;
 
-	List<BlockPosition> blockPos;
+	private List<BlockPosition> blockPos;
 
 	public enum ErrorCodes {
 		SUCCESS("Clear for liftoff!"),
@@ -136,6 +138,12 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	public void invalidate() {
 		super.invalidate();
 		MinecraftForge.EVENT_BUS.unregister(this);
+		for(BlockPosition pos : blockPos) {
+			TileEntity tile = worldObj.getTileEntity(pos.x, pos.y, pos.z);
+			
+			if(tile instanceof IMultiblock)
+				((IMultiblock)tile).setIncomplete();
+		}
 	}
 	
 	@Override
@@ -848,6 +856,9 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 			if(!worldObj.isRemote) {
 				player.addChatMessage(new ChatComponentText("Linked Sucessfully"));
+				
+				if(tile instanceof IMultiblock)
+					((IMultiblock)tile).setMasterBlock(xCoord, yCoord, zCoord);
 			}
 			
 			ItemLinker.resetPosition(item);
@@ -856,6 +867,10 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		return false;
 	}
 
+	public void removeConnectedInfrastructure(TileEntity tile) {
+		blockPos.remove(new BlockPosition(tile.xCoord, tile.yCoord, tile.zCoord));
+	}
+	
 	public List<IInfrastructure> getConnectedInfrastructure() {
 		List<IInfrastructure> infrastructure = new LinkedList<IInfrastructure>();
 

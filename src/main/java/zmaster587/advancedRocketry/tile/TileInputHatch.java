@@ -17,6 +17,7 @@ import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.mission.IMission;
 import zmaster587.advancedRocketry.tile.multiblock.TileInventoryHatch;
 import zmaster587.libVulpes.item.ItemLinker;
+import zmaster587.libVulpes.util.BlockPosition;
 
 public class TileInputHatch extends TileInventoryHatch  implements IInfrastructure {
 
@@ -33,6 +34,13 @@ public class TileInputHatch extends TileInventoryHatch  implements IInfrastructu
 	@Override
 	public String getModularInventoryName() {
 		return "tile.hatch.0.name";
+	}
+	
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		if(getMasterBlock() instanceof TileRocketBuilder)
+			((TileRocketBuilder)getMasterBlock()).removeConnectedInfrastructure(this);
 	}
 
 	@Override

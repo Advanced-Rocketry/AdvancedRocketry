@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
@@ -26,17 +27,22 @@ import zmaster587.advancedRocketry.inventory.modules.ModuleLiquidIndicator;
 import zmaster587.advancedRocketry.inventory.modules.ModulePower;
 import zmaster587.advancedRocketry.inventory.modules.ModuleSlotArray;
 import zmaster587.advancedRocketry.mission.IMission;
+import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
 import zmaster587.libVulpes.item.ItemLinker;
+import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
+import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.IconResource;
 
-public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank implements IModularInventory, IInfrastructure, ILinkableTile {
+public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank implements IModularInventory, IMultiblock, IInfrastructure, ILinkableTile {
 	EntityRocketBase linkedRocket;
-
+	BlockPosition masterBlock;
+	
 	public TileEntityFuelingStation() {
 		super(1000,3, 5000);
+		masterBlock = new BlockPosition(0, -1, 0);
 	}
 
 	@Override
@@ -164,6 +170,13 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	}
 
 	@Override
+	public void invalidate() {
+		super.invalidate();
+		if(getMasterBlock() instanceof TileRocketBuilder)
+			((TileRocketBuilder)getMasterBlock()).removeConnectedInfrastructure(this);
+	}
+	
+	@Override
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 		if(player.worldObj.isRemote)
@@ -209,6 +222,49 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	
 	@Override
 	public void unlinkMission() {
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		
+		if(hasMaster()) {
+			nbt.setIntArray("masterPos", new int[] {masterBlock.x, masterBlock.y, masterBlock.z});
+		}
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		if(nbt.hasKey("masterPos")) {
+			int[] pos = nbt.getIntArray("masterPos");
+			setMasterBlock(pos[0], pos[1], pos[2]);
+		}
+	}
+	
+	@Override
+	public boolean hasMaster() {
+		return masterBlock.y > -1;
+	}
+
+	@Override
+	public TileEntity getMasterBlock() {
+		return worldObj.getTileEntity(masterBlock.x, masterBlock.y, masterBlock.z);
+	}
+
+	@Override
+	public void setComplete(int x, int y, int z) {
+		
+	}
+
+	@Override
+	public void setIncomplete() {
+		masterBlock.y = -1;
+	}
+
+	@Override
+	public void setMasterBlock(int x, int y, int z) {
+		masterBlock = new BlockPosition(x, y, z);
 	}
 
 }
