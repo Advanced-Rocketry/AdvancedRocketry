@@ -61,7 +61,7 @@ public class EmbeddedInventory implements ISidedInventory {
 		public ItemStack decrStackSize(int slot, int amt) {
 			ItemStack stack = inv[slot];
 			if(stack != null) {
-				ItemStack stack2 = stack.splitStack(amt);
+				ItemStack stack2 = stack.splitStack(Math.min(amt, stack.stackSize));
 				if(stack.stackSize == 0)
 					inv[slot] = null;
 				

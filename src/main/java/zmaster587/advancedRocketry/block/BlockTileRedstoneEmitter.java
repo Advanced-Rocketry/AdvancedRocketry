@@ -10,13 +10,6 @@ public class BlockTileRedstoneEmitter extends BlockTile {
 			int guiId) {
 		super(tileClass, guiId);
 	}
-
-	
-	@Override
-	public int isProvidingStrongPower(IBlockAccess world,
-			int x, int y, int z, int direction) {
-		return 0;//(world.getBlockMetadata(x, y, z) & 8) != 0 ? 15 : 0;
-	}
 	
 	@Override
 	public int isProvidingWeakPower(IBlockAccess world,

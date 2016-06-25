@@ -10,6 +10,7 @@ import zmaster587.advancedRocketry.tile.TileOutputHatch;
 import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteHatch;
 import zmaster587.advancedRocketry.tile.data.TileDataBus;
 import zmaster587.advancedRocketry.tile.multiblock.TileFluidHatch;
+import zmaster587.libVulpes.tile.TilePointer;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -47,6 +48,26 @@ public class BlockHatch extends BlockMultiblockStructure {
 		return meta & 7;
 	}
 
+	
+	@Override
+	public int isProvidingWeakPower(IBlockAccess world,
+			int x, int y, int z, int direction) {
+		return (world.getBlockMetadata(x, y, z) & 8) != 0 ? 15 : 0;
+	}
+	
+	@Override
+	public boolean canProvidePower() {
+		return true;
+	}
+	
+	public void setRedstoneState(World world, int x, int y, int z, boolean state) {
+		if(state && (world.getBlockMetadata(x, y, z) & 8) == 0) {
+			world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z) | 8, 3);
+		}
+		else if(!state && (world.getBlockMetadata(x, y, z) & 8) != 0) {
+			world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z) & 7, 3);
+		}
+	}
 	
 	@Override
 	public void registerBlockIcons(IIconRegister iconRegister) {
@@ -131,6 +152,15 @@ public class BlockHatch extends BlockMultiblockStructure {
 		}
 		
 		super.breakBlock(world, x, y, z, block, meta);
+	}
+	
+	@Override
+	public boolean shouldSideBeRendered(IBlockAccess access, int x, int y, int z, int side) {
+		ForgeDirection direction = ForgeDirection.getOrientation(side);
+		boolean isPointer = access.getTileEntity(x - direction.offsetX , y- direction.offsetY, z - direction.offsetZ) instanceof TilePointer;
+		if(isPointer)
+			isPointer = isPointer && !((TilePointer)access.getTileEntity(x - direction.offsetX , y- direction.offsetY, z- direction.offsetZ)).hasMaster();
+		return ( isPointer || access.getBlockMetadata(x - direction.offsetX, y- direction.offsetY, z - direction.offsetZ) < 8);
 	}
 	
 	@Override
