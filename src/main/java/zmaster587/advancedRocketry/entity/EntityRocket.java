@@ -630,6 +630,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				IInfrastructure i = connectedTiles.next();
 				if(i.disconnectOnLiftOff()) {
 					i.unlinkRocket();
+					infrastructureCoords.remove(new BlockPosition(((TileEntity)i).xCoord, ((TileEntity)i).yCoord, ((TileEntity)i).zCoord));
 					connectedTiles.remove();
 				}
 			}
