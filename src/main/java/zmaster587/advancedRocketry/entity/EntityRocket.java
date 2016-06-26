@@ -602,6 +602,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		if(isInFlight())
 			return;
 
+		if(isInOrbit()) {
+			setInFlight(true);
+			return;
+		}
+		
 		//Get destination dimid and lock the computer
 		//TODO: lock the computer
 		if(stats.hasSeat()) {
@@ -609,6 +614,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			destinationDimId = guidanceComputer.getDestinationDimId(worldObj.provider.dimensionId);
 			
 		}
+
 
 		if(!stats.hasSeat() || ( destinationDimId != -1 && (DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || destinationDimId == Configuration.spaceDimId || destinationDimId == 0) ) { //Abort if destination is invalid
 
