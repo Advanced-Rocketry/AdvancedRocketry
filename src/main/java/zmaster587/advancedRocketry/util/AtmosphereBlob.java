@@ -55,12 +55,6 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 		if(blobHandler.canFormBlob()) {
 
 			if(!this.contains(blockPos)) {
-				/*if(worker != null) {
-					this.blockPos = blockPos;
-
-					worker.interrupt();
-				}*/
-				//worker = null;
 				if(!executing) {
 					this.blockPos = blockPos;
 					executing = true;
@@ -68,8 +62,6 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 						pool.execute(this);
 					else
 						this.run();
-					//worker = new Thread(this);
-					//worker.start();
 				}
 			}
 		}

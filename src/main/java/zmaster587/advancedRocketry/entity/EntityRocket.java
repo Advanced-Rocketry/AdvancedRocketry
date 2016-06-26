@@ -599,7 +599,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	@Override
 	public void launch() {
 
-		if(isInFlight() || isInOrbit())
+		if(isInFlight())
 			return;
 
 		//Get destination dimid and lock the computer
