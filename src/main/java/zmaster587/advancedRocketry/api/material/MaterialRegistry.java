@@ -208,7 +208,7 @@ public class MaterialRegistry {
 		TIN("Tin", "pickaxe", 1, 0xcdd5d8, AllowedProducts.BLOCK.getFlagValue() | AllowedProducts.PLATE.getFlagValue() | AllowedProducts.INGOT.getFlagValue() | AllowedProducts.NUGGET.getFlagValue() | AllowedProducts.DUST.getFlagValue()),
 		STEEL("Steel", "pickaxe", 1, 0x55555d, AllowedProducts.BLOCK.getFlagValue() | AllowedProducts.FAN.getFlagValue() | AllowedProducts.PLATE.getFlagValue() | AllowedProducts.INGOT.getFlagValue() | AllowedProducts.NUGGET.getFlagValue() | AllowedProducts.DUST.getFlagValue() | AllowedProducts.STICK.getFlagValue() | AllowedProducts.GEAR.getFlagValue(), false),
 		TITANIUM("Titanium", "pickaxe", 1, 0xb2669e, AllowedProducts.PLATE.getFlagValue() | AllowedProducts.INGOT.getFlagValue() | AllowedProducts.NUGGET.getFlagValue() | AllowedProducts.DUST.getFlagValue() | AllowedProducts.STICK.getFlagValue() | AllowedProducts.BLOCK.getFlagValue() | AllowedProducts.GEAR.getFlagValue(), false),
-		RUTILE("Rutile", "pickaxe", 1, 0xbf936a, 0);
+		RUTILE("Rutile", "pickaxe", 1, 0xbf936a, 0, new String[] {"Rutile", "Titanium"});
 
 		String unlocalizedName, tool;
 		String[] oreDictNames;
