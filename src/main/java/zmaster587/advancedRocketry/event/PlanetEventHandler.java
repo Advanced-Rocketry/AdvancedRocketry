@@ -68,7 +68,7 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	public void blockPlaceEvent(PlayerInteractEvent event) {
 		ForgeDirection direction = ForgeDirection.getOrientation(event.face);
-		if(!event.world.isRemote && Action.RIGHT_CLICK_BLOCK == event.action && event.entityPlayer != null  && 
+		if(!event.world.isRemote && Action.RIGHT_CLICK_BLOCK == event.action && event.entityPlayer != null  && AtmosphereHandler.getOxygenHandler(event.world.provider.dimensionId) != null &&
 				!AtmosphereHandler.getOxygenHandler(event.world.provider.dimensionId).getAtmosphereType(event.x + direction.offsetX, event.y + direction.offsetY, event.z + direction.offsetZ).allowsCombustion()) {
 
 			if(event.entityPlayer.getCurrentEquippedItem() != null) {
