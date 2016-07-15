@@ -318,7 +318,7 @@ public class DimensionManager {
 
 		//TODO: check for world loaded
 		// If not native to AR let the mod it's registered to handle it
-		if(!properties.isNativeDimension) {
+		if(!properties.isNativeDimension && isDimensionCreated(dimId)) {
 			net.minecraftforge.common.DimensionManager.unloadWorld(dimId);
 			net.minecraftforge.common.DimensionManager.unregisterProviderType(dimId);
 			net.minecraftforge.common.DimensionManager.unregisterDimension(dimId);
