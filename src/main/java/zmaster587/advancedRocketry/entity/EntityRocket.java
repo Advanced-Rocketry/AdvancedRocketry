@@ -917,7 +917,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		}
 		else if(id == PacketType.SENDPLANETDATA.ordinal()) {
 			ItemStack stack = storage.getGuidanceComputer().getStackInSlot(0);
-			if(stack.getItem() == AdvancedRocketryItems.itemPlanetIdChip) {
+			if(stack != null && stack.getItem() == AdvancedRocketryItems.itemPlanetIdChip) {
 				((ItemPlanetIdentificationChip)AdvancedRocketryItems.itemPlanetIdChip).setDimensionId(stack, nbt.getInteger("selection"));
 			}
 		}
