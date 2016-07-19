@@ -436,7 +436,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 					if(player instanceof EntityPlayer)
 						PacketHandler.sendToPlayer(new PacketEntity((INetworkEntity)this,(byte)PacketType.FORCEMOUNT.ordinal()), player);
-
 				}
 
 				//if the player holds the forward key then decelerate
@@ -616,7 +615,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		}
 
 
-		if(!stats.hasSeat() || ( destinationDimId != -1 && (DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || destinationDimId == Configuration.spaceDimId || destinationDimId == 0) ) { //Abort if destination is invalid
+		if(!stats.hasSeat() || ( destinationDimId != worldObj.provider.dimensionId && destinationDimId != -1 && (DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || destinationDimId == Configuration.spaceDimId || destinationDimId == 0) ) { //Abort if destination is invalid
 
 
 			setInFlight(true);
