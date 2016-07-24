@@ -167,6 +167,7 @@ public class AdvancedRocketry {
 	public static Logger logger = Logger.getLogger(Constants.modId);
 	private static Configuration config;
 	private static final String BIOMECATETORY = "Biomes";
+	String[] sealableBlockWhileList;
 
 	private HashMap<AllowedProducts, HashSet<String>> modProducts = new HashMap<AllowedProducts, HashSet<String>>();
 
@@ -241,6 +242,8 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.generateRutile = config.get(oreGen, "GenerateRutile", true).getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.rutileClumpSize = config.get(oreGen, "RutilePerClump", 3).getInt();
 		zmaster587.advancedRocketry.api.Configuration.rutilePerChunk = config.get(oreGen, "RutilePerChunk", 6).getInt();
+		sealableBlockWhileList = config.getStringList(Configuration.CATEGORY_GENERAL, "sealableBlockWhiteList", new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
+		
 		config.save();
 
 		//if(zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods)
@@ -1041,6 +1044,20 @@ public class AdvancedRocketry {
 		//Register space dimension
 		net.minecraftforge.common.DimensionManager.registerProviderType(zmaster587.advancedRocketry.api.Configuration.spaceDimId, WorldProviderSpace.class, true);
 		net.minecraftforge.common.DimensionManager.registerDimension(zmaster587.advancedRocketry.api.Configuration.spaceDimId,zmaster587.advancedRocketry.api.Configuration.spaceDimId);
+	
+		//Register Whitelisted Sealable Blocks
+		
+		logger.fine("Start registering sealable blocks");
+		for(String str : sealableBlockWhileList) {
+			Block block = Block.getBlockFromName(str);
+			if(block == null)
+				logger.warning("'" + str + "' is not a valid Block");
+			else
+				SealableBlockHandler.INSTANCE.addSealableBlock(block);
+		}
+		logger.fine("End registering sealable blocks");
+		sealableBlockWhileList = null;
+	
 	}
 
 	@EventHandler
