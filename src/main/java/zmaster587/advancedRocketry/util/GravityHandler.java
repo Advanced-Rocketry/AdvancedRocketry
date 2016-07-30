@@ -9,22 +9,20 @@ import net.minecraft.entity.player.EntityPlayer;
 public class GravityHandler {
 	public static void applyGravity(Entity entity) {
 
-		if(entity.worldObj.provider instanceof IPlanetaryProvider && !entity.isInWater()) {
-			IPlanetaryProvider planet = (IPlanetaryProvider)entity.worldObj.provider;
+		if(!entity.isInWater()) {
 			if(!(entity instanceof EntityPlayer) || !((EntityPlayer)entity).capabilities.isFlying) {
+				if(DimensionManager.getInstance().isDimensionCreated(entity.worldObj.provider.dimensionId)) {
+					double gravMult;
+					if(entity.worldObj.provider instanceof IPlanetaryProvider)
+						gravMult = ((IPlanetaryProvider)entity.worldObj.provider).getGravitationalMultiplier((int)entity.posX, (int)entity.posZ);
+					else
+						gravMult = DimensionManager.getInstance().getDimensionProperties(entity.worldObj.provider.dimensionId).gravitationalMultiplier;
 
-				if(entity instanceof EntityItem)
-					entity.motionY -= planet.getGravitationalMultiplier((int)entity.posX, (int)entity.posZ)*0.04f;
-				else
-					entity.motionY -= planet.getGravitationalMultiplier((int)entity.posX, (int)entity.posZ)*0.075f;
-			}
-		}
-		else if(entity.worldObj.provider.dimensionId == 0) {
-			if(!(entity instanceof EntityPlayer) || !((EntityPlayer)entity).capabilities.isFlying) {
-				if(entity instanceof EntityItem)
-					entity.motionY -= DimensionManager.overworldProperties.gravitationalMultiplier*0.04f;
-				else
-					entity.motionY -= DimensionManager.overworldProperties.gravitationalMultiplier*0.075f;
+					if(entity instanceof EntityItem)
+						entity.motionY -= gravMult*0.04f;
+					else
+						entity.motionY -= gravMult*0.075f;
+				}
 			}
 		}
 		else
