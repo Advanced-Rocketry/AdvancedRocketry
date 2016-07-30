@@ -47,10 +47,17 @@ public class TileAtmosphereDetector extends TileEntity implements IModularInvent
 		if(!worldObj.isRemote && worldObj.getWorldTime() % 10 == 0) {
 			int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 			boolean detectedAtm = false;
-			for(int i = 1; i < ForgeDirection.values().length; i++) {
-				ForgeDirection direction = ForgeDirection.getOrientation(i);
-				detectedAtm = (!worldObj.getBlock(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ).isOpaqueCube() && atmosphereToDetect == AtmosphereHandler.getOxygenHandler(worldObj.provider.dimensionId).getAtmosphereType(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ));
-				if(detectedAtm) break;
+
+			//TODO: Galacticcraft support
+			if(AtmosphereHandler.getOxygenHandler(worldObj.provider.dimensionId) == null) {
+				detectedAtm = atmosphereToDetect == AtmosphereType.AIR;
+			}
+			else {
+				for(int i = 1; i < ForgeDirection.values().length; i++) {
+					ForgeDirection direction = ForgeDirection.getOrientation(i);
+					detectedAtm = (!worldObj.getBlock(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ).isOpaqueCube() && atmosphereToDetect == AtmosphereHandler.getOxygenHandler(worldObj.provider.dimensionId).getAtmosphereType(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ));
+					if(detectedAtm) break;
+				}
 			}
 
 			if((meta == 1) != detectedAtm) {
@@ -63,9 +70,9 @@ public class TileAtmosphereDetector extends TileEntity implements IModularInvent
 	public List<ModuleBase> getModules(int id, EntityPlayer player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 		List<ModuleBase> btns = new LinkedList<ModuleBase>();
-		
+
 		Iterator<IAtmosphere> atmIter = AtmosphereRegister.getInstance().getAtmosphereList().iterator();
-		
+
 		int i = 0;
 		while(atmIter.hasNext()) {
 			IAtmosphere atm = atmIter.next();
@@ -114,7 +121,7 @@ public class TileAtmosphereDetector extends TileEntity implements IModularInvent
 		if(packetId == 0) {
 			PacketBuffer buf = new PacketBuffer(in);
 			try {
-				
+
 				nbt.setString("uName", buf.readStringFromBuffer(buf.readShort()));
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -130,18 +137,18 @@ public class TileAtmosphereDetector extends TileEntity implements IModularInvent
 			atmosphereToDetect = AtmosphereRegister.getInstance().getAtmosphere(name);
 		}
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		
+
 		nbt.setString("atmName", atmosphereToDetect.getUnlocalizedName());
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		
+
 		atmosphereToDetect = AtmosphereRegister.getInstance().getAtmosphere(nbt.getString("atmName"));
 	}
 }
