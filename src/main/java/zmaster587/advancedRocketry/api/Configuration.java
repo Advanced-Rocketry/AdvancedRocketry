@@ -31,6 +31,11 @@ public class Configuration {
 	public static int tinPerChunk;
 	public static int tinClumpSize;
 	
+	public static boolean generateDilithium;
+	public static int dilithiumClumpSize;
+	public static int dilithiumPerChunk;
+	public static int dilithiumPerChunkMoon;
+	
 	public static boolean generateRutile;
 	public static int rutilePerChunk;
 	public static int rutileClumpSize;
@@ -49,4 +54,8 @@ public class Configuration {
 	public static String[] standardAsteroidOres;
 
 	public static int atmosphereHandleBitMask;
+
+	
+
+
 }

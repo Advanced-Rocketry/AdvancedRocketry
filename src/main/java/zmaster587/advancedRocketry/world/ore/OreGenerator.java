@@ -46,15 +46,15 @@ public class OreGenerator implements IWorldGenerator {
 			generate(world, Materials.RUTILE, Configuration.rutilePerChunk, Configuration.rutileClumpSize, chunkX, chunkZ, random);
 		}
 
-		//if(world.provider.dimensionId == Configuration.MoonId) {
-		int dilithiumChance = world.provider.dimensionId == Configuration.MoonId ? 10 : 1;
+		if(Configuration.generateDilithium) {
+		int dilithiumChance = world.provider.dimensionId == Configuration.MoonId ? Configuration.dilithiumPerChunkMoon : Configuration.dilithiumPerChunk;
 		for(int i = 0; i < dilithiumChance; i++) {
 			int coordX = 16*chunkX + random.nextInt(16);
 			int coordY = random.nextInt(64);
 			int coordZ = 16*chunkZ + random.nextInt(16);
 
-			new WorldGenMinable(MaterialRegistry.Materials.DILITHIUM.getBlock(), MaterialRegistry.Materials.DILITHIUM.getMeta(), 16, dilithiumTargetOre).generate(world, random, coordX, coordY, coordZ);
-			//}
+			new WorldGenMinable(MaterialRegistry.Materials.DILITHIUM.getBlock(), MaterialRegistry.Materials.DILITHIUM.getMeta(), Configuration.dilithiumClumpSize, dilithiumTargetOre).generate(world, random, coordX, coordY, coordZ);
+			}
 		}
 	}
 }
