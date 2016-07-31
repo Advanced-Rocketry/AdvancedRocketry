@@ -416,14 +416,16 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 		if(isInFlight()) {
 			boolean burningFuel = isBurningFuel();
+			
+			boolean descentPhase = Configuration.automaticRetroRockets && isInOrbit() && this.posY < 300 && (this.motionY < -0.2f || worldObj.isRemote);
 
-			if(burningFuel) {
+			if(burningFuel || descentPhase) {
 				//Burn the rocket fuel
-				if(!worldObj.isRemote)
+				if(!worldObj.isRemote && !descentPhase)
 					setFuelAmount(getFuelAmount() - stats.getFuelRate(FuelType.LIQUID));
 
 				//Spawn in the particle effects for the engines
-				if(worldObj.isRemote && Minecraft.getMinecraft().gameSettings.particleSetting < 2 && (this.motionY > 0 || (riddenByEntity instanceof EntityPlayer && ((EntityPlayer)riddenByEntity).moveForward > 0))) {
+				if(worldObj.isRemote && Minecraft.getMinecraft().gameSettings.particleSetting < 2 && (this.motionY > 0 || descentPhase || (riddenByEntity instanceof EntityPlayer && ((EntityPlayer)riddenByEntity).moveForward > 0))) {
 					for(Vector3F<Float> vec : stats.getEngineLocations()) {
 
 						if(worldObj.getTotalWorldTime() % 10 == 0)
@@ -443,10 +445,16 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				this.fallDistance = 0;
 
 				//if the player holds the forward key then decelerate
-				if(isInOrbit() && burningFuel)
-					this.motionY -= this.motionY*player.moveForward/50f;
+				if(isInOrbit() && (burningFuel || descentPhase)) {
+					float vel = descentPhase ? 1f : player.moveForward;
+					this.motionY -= this.motionY*vel/50f;
+				}
 				this.velocityChanged = true;
 
+			}
+			else if(isInOrbit() && descentPhase) { //For unmanned rockets
+				this.motionY -= this.motionY/50f;
+				this.velocityChanged = true;
 			}
 
 			if(!worldObj.isRemote) {
