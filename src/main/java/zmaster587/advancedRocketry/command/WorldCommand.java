@@ -299,7 +299,7 @@ public class WorldCommand implements ICommand {
 
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender sender) {
-		return true;
+		return !sender.getCommandSenderName().equalsIgnoreCase("RCon");
 	}
 
 	@Override

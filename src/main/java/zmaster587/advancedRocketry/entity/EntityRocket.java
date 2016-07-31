@@ -87,7 +87,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
 public class EntityRocket extends EntityRocketBase implements INetworkEntity, IDismountHandler, IModularInventory, IProgressBar, IButtonInventory, ISelectionNotify {
-	
+
 	//Stores the blocks and tiles that make up the rocket
 	public StorageChunk storage;
 
@@ -185,7 +185,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 		return ret;
 	}
-	
+
 	@Override
 	public void setPosition(double x, double y,
 			double z) {
@@ -199,7 +199,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 		}
 	}
-	
+
 	/**
 	 * Updates the data option
 	 * @param amt sets the amount of fuel in the rocket
@@ -401,6 +401,19 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		//TODO move
 		World.MAX_ENTITY_RADIUS = 100;
 
+
+		//Hackish crap to make clients mount entities immediately after server transfer and fire events
+		if(!worldObj.isRemote && (this.isInFlight() || this.isInOrbit()) && this.ticksExisted == 20) {
+			if(this.riddenByEntity instanceof EntityPlayer) {
+				EntityPlayer player = (EntityPlayer)this.riddenByEntity;
+				//Deorbiting
+				MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketDeOrbitingEvent(this));
+
+				if(player instanceof EntityPlayer)
+					PacketHandler.sendToPlayer(new PacketEntity((INetworkEntity)this,(byte)PacketType.FORCEMOUNT.ordinal()), player);
+			}
+		}
+
 		if(isInFlight()) {
 			boolean burningFuel = isBurningFuel();
 
@@ -428,15 +441,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				EntityPlayer player = (EntityPlayer)this.riddenByEntity;
 				player.fallDistance = 0;
 				this.fallDistance = 0;
-
-				//Hackish crap to make clients mount entities immediately after server transfer and fire events
-				if(!worldObj.isRemote && this.isInFlight() && this.ticksExisted == 20) {
-					//Deorbiting
-					MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketDeOrbitingEvent(this));
-
-					if(player instanceof EntityPlayer)
-						PacketHandler.sendToPlayer(new PacketEntity((INetworkEntity)this,(byte)PacketType.FORCEMOUNT.ordinal()), player);
-				}
 
 				//if the player holds the forward key then decelerate
 				if(isInOrbit() && burningFuel)
@@ -520,9 +524,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				float drillingPower = stats.getDrillingPower();
 				MissionOreMining miningMission = new MissionOreMining((long)(drillingPower == 0f ? 36000 : 360/stats.getDrillingPower()), this, connectedInfrastructure);
 				DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId);
-				
+
 				properties.addSatallite(miningMission, worldObj);
-				
+
 				for(IInfrastructure i : connectedInfrastructure) {
 					i.linkMission(miningMission);
 				}
@@ -584,9 +588,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 					return;
 				}
 			}
-
-
-			this.travelToDimension(this.worldObj.provider.dimensionId == destinationDimId ? 0 : destinationDimId);
+			//Make player confirm deorbit if a player is riding the rocket
+			if(this.riddenByEntity != null)
+				setInFlight(false);
+			if(destinationDimId != this.worldObj.provider.dimensionId)
+				this.travelToDimension(this.worldObj.provider.dimensionId == destinationDimId ? 0 : destinationDimId);
 		}
 	}
 
@@ -605,17 +611,17 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			setInFlight(true);
 			return;
 		}
-		
+
 		//Get destination dimid and lock the computer
 		//TODO: lock the computer
 		if(stats.hasSeat()) {
 			TileGuidanceComputer guidanceComputer = storage.getGuidanceComputer();
 			destinationDimId = guidanceComputer.getDestinationDimId(worldObj.provider.dimensionId);
-			
+
 		}
 
 
-		if(!stats.hasSeat() || ( destinationDimId != worldObj.provider.dimensionId && destinationDimId != -1 && (DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || destinationDimId == Configuration.spaceDimId || destinationDimId == 0) ) { //Abort if destination is invalid
+		if(!stats.hasSeat() || (destinationDimId != -1 && (DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || destinationDimId == Configuration.spaceDimId || destinationDimId == 0) ) { //Abort if destination is invalid
 
 
 			setInFlight(true);
@@ -728,10 +734,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 				entity.setLocationAndAngles(x, Configuration.orbit, z, this.rotationYaw, this.rotationPitch);
 				worldserver1.spawnEntityInWorld(entity);
-				
-				//Make player confirm deorbit
-				((EntityRocket)entity).setInFlight(false);
-				
+
 
 				if(rider != null) {
 					//Transfer the player if applicable
@@ -739,7 +742,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 					rider.setLocationAndAngles(x, Configuration.orbit, z, this.rotationYaw, this.rotationPitch);
 					rider.mountEntity(entity);
-					
+
 				}
 			}
 
@@ -938,8 +941,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		{
 			//Bind player to the seat
 			if(this.storage != null) {
-				//Conditional b/c for some reason client/server positions do not match 
-				this.riddenByEntity.setPosition(this.posX  + stats.getSeatX(), this.posY + stats.getSeatY() + (worldObj.isRemote && this.riddenByEntity.equals(Minecraft.getMinecraft().thePlayer) ? 1.5 : -0.25), this.posZ + stats.getSeatZ() );
+				//Conditional b/c for some reason client/server positions do not match
+				float xOffset = this.storage.getSizeX() % 2 == 0 ? 0.5f : 0f;
+				float zOffset = this.storage.getSizeZ() % 2 == 0 ? 0.5f : 0f;
+				this.riddenByEntity.setPosition(this.posX  + stats.getSeatX() + xOffset, this.posY + stats.getSeatY() + (worldObj.isRemote && this.riddenByEntity.equals(Minecraft.getMinecraft().thePlayer) ? 1.5 : -0.25), this.posZ + stats.getSeatZ() + zOffset );
 			}
 			else
 				this.riddenByEntity.setPosition(this.posX , this.posY , this.posZ );
@@ -1090,7 +1095,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	public LinkedList<IInfrastructure> getConnectedInfrastructure() {
 		return connectedInfrastructure;
 	}

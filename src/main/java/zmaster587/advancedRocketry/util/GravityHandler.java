@@ -22,10 +22,13 @@ public class GravityHandler {
 						entity.motionY -= gravMult*0.04f;
 					else
 						entity.motionY -= gravMult*0.075f;
+					return;
 				}
-			}
+				else
+					entity.motionY -= 0.08D;
+			}		
+			
 		}
-		else
-			entity.motionY -= 0.08D;
+
 	}
 }

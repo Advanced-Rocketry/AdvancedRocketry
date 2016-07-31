@@ -18,6 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
@@ -62,7 +63,11 @@ public class RocketEventHandler extends Gui {
 	public void onRocketDeorbit(RocketEvent.RocketDeOrbitingEvent event) {
 		if(event.world.isRemote) {
 			prepareOrbitalMap(event);
-
+			
+			//Sky blend color gets stuck and doesnt update unless a new X/Z coord is passed
+			//So fix that...
+			ForgeHooksClient.getSkyBlendColour(event.world, 0, 0, 0);
+			
 			if(!(event.world.provider instanceof IPlanetaryProvider)) {
 				event.world.provider.setSkyRenderer(new RenderPlanetarySky());
 			}
@@ -70,7 +75,7 @@ public class RocketEventHandler extends Gui {
 	}
 
 	@SubscribeEvent
-	public void onRocketLaunch(RocketLaunchEvent event) {
+	public void onRocketLaunch(RocketEvent.RocketLaunchEvent event) {
 		if(event.world.isRemote) {
 			prepareOrbitalMap(event);
 			event.world.provider.setSkyRenderer(new RenderPlanetarySky());
@@ -91,7 +96,7 @@ public class RocketEventHandler extends Gui {
 	}
 
 	@SideOnly(Side.CLIENT)
-	private void prepareOrbitalMap(final RocketEvent event) {
+	private void prepareOrbitalMap(RocketEvent event) {
 		mapReady = false;
 
 		//Attempt to generate everything on seperate thread
@@ -106,7 +111,8 @@ public class RocketEventHandler extends Gui {
 		}
 
 		//Multi thread texture creation b/c it can be expensive
-
+		final World worldObj = event.world;
+		final Entity entity = event.entity;
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -126,9 +132,9 @@ public class RocketEventHandler extends Gui {
 					int xOffset = (i % getImgSize);
 					int yOffset = (i / getImgSize);
 
-					int xPosition = (int)event.entity.posX - (getImgSize/2) + xOffset;
-					int zPosition = (int)event.entity.posZ - (getImgSize/2) + yOffset;
-					Chunk chunk = event.world.getChunkFromBlockCoords(xPosition, zPosition);
+					int xPosition = (int)entity.posX - (getImgSize/2) + xOffset;
+					int zPosition = (int)entity.posZ - (getImgSize/2) + yOffset;
+					Chunk chunk = worldObj.getChunkFromBlockCoords(xPosition, zPosition);
 
 					if(chunk.isChunkLoaded && !chunk.isEmpty()) {
 						//Get Xcoord and ZCoords in the chunk
@@ -141,8 +147,8 @@ public class RocketEventHandler extends Gui {
 
 						//Get the first non-air block
 						for(yPosition = heightValue; yPosition > 0; yPosition-- ) {
-							block = event.world.getBlock(xPosition, yPosition, zPosition);
-							if((color = block.getMapColor(event.world.getBlockMetadata(xPosition, yPosition, zPosition))) != MapColor.airColor) {
+							block = worldObj.getBlock(xPosition, yPosition, zPosition);
+							if((color = block.getMapColor(worldObj.getBlockMetadata(xPosition, yPosition, zPosition))) != MapColor.airColor) {
 								break;
 							}
 						}
@@ -150,14 +156,14 @@ public class RocketEventHandler extends Gui {
 						int intColor;
 
 						if(block == Blocks.grass || block == Blocks.tallgrass) {
-							int color2 = event.world.getBiomeGenForCoords(xPosition, zPosition).getBiomeGrassColor(xPosition, yPosition, zPosition);
+							int color2 = worldObj.getBiomeGenForCoords(xPosition, zPosition).getBiomeGrassColor(xPosition, yPosition, zPosition);
 							int r = (color2 & 0xFF);
 							int g = ( (color2 >>> 8) & 0xFF);
 							int b = ( (color2 >>> 16) & 0xFF);
 							intColor = b | (g << 8) | (r << 16);
 						}
 						else if(block == Blocks.leaves || block == Blocks.leaves2) {
-							int color2 = event.world.getBiomeGenForCoords(xPosition, zPosition).getBiomeFoliageColor(xPosition, yPosition, zPosition);
+							int color2 = worldObj.getBiomeGenForCoords(xPosition, zPosition).getBiomeFoliageColor(xPosition, yPosition, zPosition);
 							int r = (color2 & 0xFF);
 							int g = ( (color2 >>> 8) & 0xFF);
 							int b = ( (color2 >>> 16) & 0xFF);
@@ -227,6 +233,7 @@ public class RocketEventHandler extends Gui {
 		GL11.glTranslatef(0, -5, 0);
 		GL11.glPushAttrib(GL11.GL_ALPHA_TEST_FUNC);
 		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glDisable(GL11.GL_FOG);
 		GL11.glAlphaFunc(GL11.GL_GREATER, .01f);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -282,6 +289,7 @@ public class RocketEventHandler extends Gui {
 
 		tess.draw();
 		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glEnable(GL11.GL_FOG);
 		GL11.glPopAttrib();
 		GL11.glPopMatrix();
 	}
@@ -323,14 +331,25 @@ public class RocketEventHandler extends Gui {
 					GL11.glPushMatrix();
 					GL11.glScalef(3, 3, 3);
 					
-					fontRenderer.drawStringWithShadow(str, screenX, screenY, 0xFF5656);
-					GL11.glColor3f(1f, 1f, 1f);
-					Minecraft.getMinecraft().getTextureManager().bindTexture(TextureResources.progressBars);
-					this.drawTexturedModalRect(screenX + fontRenderer.getStringWidth(str)/2 -8, screenY - 16, 0, 156, 16, 16);
+					fontRenderer.drawStringWithShadow(str, screenX, screenY, 0xFFFFFF);
+					
+					GL11.glPopMatrix();
+				}else if(!rocket.isInFlight()) {
+					FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+					String str = "Press Space to take off!";
+					int screenX = event.resolution.getScaledWidth()/6 - fontRenderer.getStringWidth(str)/2;
+					int screenY = event.resolution.getScaledHeight()/18;
+					
+					GL11.glPushMatrix();
+					GL11.glScalef(3, 3, 3);
+					
+					fontRenderer.drawStringWithShadow(str, screenX, screenY, 0xFFFFFF);
 					
 					GL11.glPopMatrix();
 				}
+			
 			}
+			
 			
 			
 			//Draw the O2 Bar if needed
