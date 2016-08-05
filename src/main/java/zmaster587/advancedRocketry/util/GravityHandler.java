@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.util;
 
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,7 +12,7 @@ public class GravityHandler {
 
 		if(!entity.isInWater()) {
 			if(!(entity instanceof EntityPlayer) || !((EntityPlayer)entity).capabilities.isFlying) {
-				if(DimensionManager.getInstance().isDimensionCreated(entity.worldObj.provider.dimensionId)) {
+				if(DimensionManager.getInstance().isDimensionCreated(entity.worldObj.provider.dimensionId) || entity.worldObj.provider instanceof WorldProviderSpace) {
 					double gravMult;
 					if(entity.worldObj.provider instanceof IPlanetaryProvider)
 						gravMult = ((IPlanetaryProvider)entity.worldObj.provider).getGravitationalMultiplier((int)entity.posX, (int)entity.posZ);

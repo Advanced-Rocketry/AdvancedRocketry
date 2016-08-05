@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.tile;
+package zmaster587.advancedRocketry.tile.energy;
 
 import zmaster587.advancedRocketry.api.Configuration;
 import net.minecraft.tileentity.TileEntity;
@@ -8,9 +8,9 @@ import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
 
-public class TileIC2Plug extends TilePlugBase implements IEnergySink {
+public class TilePlugInputIC2 extends TilePlugBase implements IEnergySink {
 
-	public TileIC2Plug() {
+	public TilePlugInputIC2() {
 		super(1);
 	}
 	boolean tickedOnce = false;

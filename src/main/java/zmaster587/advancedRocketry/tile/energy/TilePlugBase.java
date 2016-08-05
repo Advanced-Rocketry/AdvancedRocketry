@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.tile;
+package zmaster587.advancedRocketry.tile.energy;
 
 import java.util.LinkedList;
 import java.util.List;

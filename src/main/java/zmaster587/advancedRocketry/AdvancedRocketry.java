@@ -113,6 +113,8 @@ import zmaster587.advancedRocketry.tile.*;
 import zmaster587.advancedRocketry.tile.cables.TileDataPipe;
 import zmaster587.advancedRocketry.tile.cables.TileLiquidPipe;
 import zmaster587.advancedRocketry.tile.data.TileDataBus;
+import zmaster587.advancedRocketry.tile.energy.TilePlugInputIC2;
+import zmaster587.advancedRocketry.tile.energy.TilePlugInputRF;
 import zmaster587.advancedRocketry.tile.hatch.TileFluidHatch;
 import zmaster587.advancedRocketry.tile.hatch.TileInputHatch;
 import zmaster587.advancedRocketry.tile.hatch.TileOutputHatch;
@@ -359,7 +361,7 @@ public class AdvancedRocketry {
 
 		AdvancedRocketryBlocks.blockHatch = new BlockHatch(Material.rock).setBlockName("hatch").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockPlaceHolder = new BlockMultiblockPlaceHolder().setBlockName("placeHolder").setBlockTextureName("advancedrocketry:machineGeneric").setHardness(1f);
-		AdvancedRocketryBlocks.blockRFBattery = new BlockMultiMachineBattery(Material.rock, TileRFPlug.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("rfBattery").setBlockTextureName("advancedrocketry:batteryRF").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		AdvancedRocketryBlocks.blockRFBattery = new BlockMultiMachineBattery(Material.rock, TilePlugInputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("rfBattery").setBlockTextureName("advancedrocketry:batteryRF").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockStructureBlock = new BlockAlphaTexture(Material.rock).setBlockName("structureMachine").setBlockTextureName("advancedrocketry:structureBlock").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockAlienWood = new BlockAlienWood().setBlockName("log").setBlockTextureName("advancedrocketry:log").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockAlienLeaves = new BlockAlienLeaves().setBlockName("leaves2").setBlockTextureName("leaves").setCreativeTab(tabAdvRocketry).setHardness(3f);
@@ -636,7 +638,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileCrystallizer.class, "ARcrystallizer");
 		GameRegistry.registerTileEntity(TileOutputHatch.class, "ARoutputHatch");
 		GameRegistry.registerTileEntity(TileInputHatch.class, "ARinputHatch");
-		GameRegistry.registerTileEntity(TileRFPlug.class, "ARrfBattery");
+		GameRegistry.registerTileEntity(TilePlugInputRF.class, "ARrfBattery");
 		GameRegistry.registerTileEntity(TileCuttingMachine.class, "ARcuttingmachine");
 		GameRegistry.registerTileEntity(TileDataBus.class, "ARdataBus");
 		GameRegistry.registerTileEntity(TileSatelliteHatch.class, "ARsatelliteHatch");
@@ -676,9 +678,9 @@ public class AdvancedRocketry {
 		//MOD-SPECIFIC ENTRIES --------------------------------------------------------------------------------------------------------------------------
 		//Items dependant on IC2
 		if(Loader.isModLoaded("IC2")) {
-			AdvancedRocketryBlocks.blockIC2Plug = new BlockMultiMachineBattery(Material.rock ,TileIC2Plug.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("IC2Plug").setBlockTextureName("advancedrocketry:IC2Plug").setCreativeTab(tabAdvRocketry).setHardness(3f);
+			AdvancedRocketryBlocks.blockIC2Plug = new BlockMultiMachineBattery(Material.rock ,TilePlugInputIC2.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("IC2Plug").setBlockTextureName("advancedrocketry:IC2Plug").setCreativeTab(tabAdvRocketry).setHardness(3f);
 			GameRegistry.registerBlock(AdvancedRocketryBlocks.blockIC2Plug, AdvancedRocketryBlocks.blockIC2Plug.getUnlocalizedName());
-			GameRegistry.registerTileEntity(TileIC2Plug.class, "ARIC2Plug");
+			GameRegistry.registerTileEntity(TilePlugInputIC2.class, "ARIC2Plug");
 		}
 
 		//Register Space Objects

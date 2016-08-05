@@ -15,7 +15,7 @@ import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
-import zmaster587.advancedRocketry.tile.TileRFPlug;
+import zmaster587.advancedRocketry.tile.energy.TilePlugInputRF;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.interfaces.IRecipe;
 

@@ -19,7 +19,7 @@ import zmaster587.advancedRocketry.inventory.modules.ModulePower;
 import zmaster587.advancedRocketry.inventory.modules.ModuleToggleSwitch;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketMachine;
-import zmaster587.advancedRocketry.tile.TileRFPlug;
+import zmaster587.advancedRocketry.tile.energy.TilePlugInputRF;
 import zmaster587.advancedRocketry.tile.multiblock.TileMultiblockMachine.NetworkPackets;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.block.BlockMeta;

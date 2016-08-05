@@ -1,15 +1,15 @@
-package zmaster587.advancedRocketry.tile;
+package zmaster587.advancedRocketry.tile.energy;
 
 import cofh.api.energy.IEnergyHandler;
 import zmaster587.libVulpes.util.UniversalBattery;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileRFPlug extends TilePlugBase implements IEnergyHandler {
+public class TilePlugInputRF extends TilePlugBase implements IEnergyHandler {
 
 	UniversalBattery storage;
 	int teir;
 	
-	public TileRFPlug() {
+	public TilePlugInputRF() {
 		super(1);
 	}
 
@@ -41,7 +41,7 @@ public class TileRFPlug extends TilePlugBase implements IEnergyHandler {
 
 	@Override
 	public String getModularInventoryName() {
-		return "RF Storage Box";
+		return "tile.rfBattery.name";
 	}
 	
 	@Override
