@@ -11,7 +11,7 @@ import java.util.List;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.inventory.GuiModular;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.tile.multiblock.TilePrecisionAssembler;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TilePrecisionAssembler;
 
 public class PrecisionAssemberNEI extends TemplateNEI {
 

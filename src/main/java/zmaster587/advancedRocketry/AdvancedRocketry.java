@@ -104,6 +104,7 @@ import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
 import zmaster587.advancedRocketry.satellite.SatelliteComposition;
 import zmaster587.advancedRocketry.satellite.SatelliteDensity;
+import zmaster587.advancedRocketry.satellite.SatelliteEnergy;
 import zmaster587.advancedRocketry.satellite.SatelliteMassScanner;
 import zmaster587.advancedRocketry.satellite.SatelliteOptical;
 import zmaster587.advancedRocketry.tile.Satellite.TileEntitySatelliteControlCenter;
@@ -115,12 +116,22 @@ import zmaster587.advancedRocketry.tile.cables.TileLiquidPipe;
 import zmaster587.advancedRocketry.tile.data.TileDataBus;
 import zmaster587.advancedRocketry.tile.energy.TilePlugInputIC2;
 import zmaster587.advancedRocketry.tile.energy.TilePlugInputRF;
+import zmaster587.advancedRocketry.tile.energy.TilePlugOutputRF;
 import zmaster587.advancedRocketry.tile.hatch.TileFluidHatch;
 import zmaster587.advancedRocketry.tile.hatch.TileInputHatch;
 import zmaster587.advancedRocketry.tile.hatch.TileOutputHatch;
 import zmaster587.advancedRocketry.tile.infrastructure.TileEntityFuelingStation;
 import zmaster587.advancedRocketry.tile.infrastructure.TileEntityMoniteringStation;
 import zmaster587.advancedRocketry.tile.multiblock.*;
+import zmaster587.advancedRocketry.tile.multiblock.energy.TileMicrowaveReciever;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TileChemicalReactor;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TileCrystallizer;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TileCuttingMachine;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TileElectricArcFurnace;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TileElectrolyser;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TileLathe;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TilePrecisionAssembler;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TileRollingMachine;
 import zmaster587.advancedRocketry.tile.oxygen.TileCO2Scrubber;
 import zmaster587.advancedRocketry.tile.oxygen.TileOxygenCharger;
 import zmaster587.advancedRocketry.tile.oxygen.TileOxygenVent;
@@ -224,12 +235,17 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.allowSawmillVanillaWood = config.get(Configuration.CATEGORY_GENERAL, "sawMillCutVanillaWood", true, "Should the cutting machine be able to cut vanilla wood into planks").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.automaticRetroRockets = config.get(ROCKET, "autoRetroRockets", true, "Setting to false will disable the retrorockets that fire automatically on reentry on both player and automated rockets").getBoolean();
 		
+		
 		zmaster587.advancedRocketry.api.Configuration.atmosphereHandleBitMask = config.get(PERFORMANCE, "atmosphereCalculationMethod", 0, "BitMask: 0: no threading, radius based; 1: threading, radius based (EXP); 2: no threading volume based; 3: threading volume based (EXP)").getInt();
+		zmaster587.advancedRocketry.api.Configuration.advancedVFX = config.get(PERFORMANCE, "advancedVFX", true, "Advanced visual effects").getBoolean();
+		
 		
 		zmaster587.advancedRocketry.api.Configuration.asteroidMiningMult = config.get(ASTEROID, "miningMissionMultiplier", 1.0, "Multiplier changing how much total material is brought back from a mining mission").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres = config.get(ASTEROID, "standardOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone"}, "List of oredictionary names of ores allowed to spawn in asteriods").getStringList();
 
 
+		//Client
+		
 		zmaster587.advancedRocketry.api.Configuration.rocketRequireFuel = config.get(ROCKET, "rocketsRequireFuel", true, "Set to false if rockets should not require fuel to fly").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.rocketThrustMultiplier = config.get(ROCKET, "thrustMultiplier", 1f, "Multiplier for per-engine thrust").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.fuelCapacityMultiplier = config.get(ROCKET, "fuelCapacityMultiplier", 1f, "Multiplier for per-tank capacity").getDouble();
@@ -262,10 +278,12 @@ public class AdvancedRocketry {
 
 		//Satellites ---------------------------------------------------------------------------------------------
 		SatelliteRegistry.registerSatellite("optical", SatelliteOptical.class);
+		SatelliteRegistry.registerSatellite("solar", SatelliteEnergy.class);
 		SatelliteRegistry.registerSatellite("density", SatelliteDensity.class);
 		SatelliteRegistry.registerSatellite("composition", SatelliteComposition.class);
 		SatelliteRegistry.registerSatellite("mass", SatelliteMassScanner.class);
 		SatelliteRegistry.registerSatellite("asteroidMiner", MissionOreMining.class);
+		SatelliteRegistry.registerSatellite("solarEnergy", SatelliteEnergy.class);
 
 		//Blocks -------------------------------------------------------------------------------------
 		AdvancedRocketryBlocks.blocksGeode = new BlockGeneric(MaterialGeode.geode).setBlockName("geode").setCreativeTab(tabAdvRocketryOres).setBlockTextureName("advancedrocketry:geode").setHardness(6f).setResistance(2000F);
@@ -351,6 +369,12 @@ public class AdvancedRocketry {
 		((BlockTile) AdvancedRocketryBlocks.blockSatelliteControlCenter).setFrontTexture("Advancedrocketry:MonitorSatellite");
 		AdvancedRocketryBlocks.blockSatelliteControlCenter.setBlockName("satelliteMonitor");
 
+		AdvancedRocketryBlocks.blockMicrowaveReciever = new BlockMultiblockMachine(TileMicrowaveReciever.class, GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setHardness(3f);
+		((BlockTile) AdvancedRocketryBlocks.blockMicrowaveReciever).setSideTexture("Advancedrocketry:machineGeneric", "Advancedrocketry:machineGeneric");
+		((BlockTile) AdvancedRocketryBlocks.blockMicrowaveReciever).setTopTexture("Advancedrocketry:machineGeneric");
+		((BlockTile) AdvancedRocketryBlocks.blockMicrowaveReciever).setFrontTexture("Advancedrocketry:machineGeneric");
+		AdvancedRocketryBlocks.blockMicrowaveReciever.setBlockName("microwaveReciever");
+		
 		//Arcfurnace
 		AdvancedRocketryBlocks.blockArcFurnace = new BlockMultiblockMachine(TileElectricArcFurnace.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("electricArcFurnace").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockArcFurnace).setSideTexture("Advancedrocketry:BlastBrick");
@@ -362,6 +386,9 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockHatch = new BlockHatch(Material.rock).setBlockName("hatch").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockPlaceHolder = new BlockMultiblockPlaceHolder().setBlockName("placeHolder").setBlockTextureName("advancedrocketry:machineGeneric").setHardness(1f);
 		AdvancedRocketryBlocks.blockRFBattery = new BlockMultiMachineBattery(Material.rock, TilePlugInputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("rfBattery").setBlockTextureName("advancedrocketry:batteryRF").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		AdvancedRocketryBlocks.blockRFOutput = new BlockMultiMachineBattery(Material.rock, TilePlugOutputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("rfOutput").setBlockTextureName("advancedrocketry:batteryRF").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		
+		
 		AdvancedRocketryBlocks.blockStructureBlock = new BlockAlphaTexture(Material.rock).setBlockName("structureMachine").setBlockTextureName("advancedrocketry:structureBlock").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockAlienWood = new BlockAlienWood().setBlockName("log").setBlockTextureName("advancedrocketry:log").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockAlienLeaves = new BlockAlienLeaves().setBlockName("leaves2").setBlockTextureName("leaves").setCreativeTab(tabAdvRocketry).setHardness(3f);
@@ -463,6 +490,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockDataPipe , AdvancedRocketryBlocks.blockDataPipe .getUnlocalizedName());
 		//GameRegistry.registerBlock(AdvancedRocketryBlocks.blockFluidPipe , AdvancedRocketryBlocks.blockFluidPipe .getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockLaunchpad, "launchpad");
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockRFOutput, "batteryOutputRF");
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockRocketBuilder, "rocketBuilder");
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockStructureTower, "structureTower");
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockGenericSeat, "seat");
@@ -522,7 +550,8 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockOrientationController, AdvancedRocketryBlocks.blockOrientationController.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockGravityController, AdvancedRocketryBlocks.blockGravityController.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockDrill, AdvancedRocketryBlocks.blockDrill.getUnlocalizedName());
-
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockMicrowaveReciever, AdvancedRocketryBlocks.blockMicrowaveReciever.getUnlocalizedName());
+		
 		BlockOre.registerOres(tabAdvRocketryOres);
 
 
@@ -538,15 +567,18 @@ public class AdvancedRocketry {
 		AdvancedRocketryItems.itemSpaceStation = new ItemPackedStructure().setUnlocalizedName("station").setTextureName("advancedRocketry:SpaceStation");
 		AdvancedRocketryItems.itemSmallAirlockDoor = new ItemDoor2(Material.rock).setUnlocalizedName("smallAirlock").setTextureName("advancedRocketry:smallAirlock").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemCarbonScrubberCartridge = new Item().setMaxDamage(172800).setUnlocalizedName("carbonScrubberCartridge").setTextureName("advancedRocketry:carbonCartridge").setCreativeTab(tabAdvRocketry);
-
-		AdvancedRocketryItems.itemSatellitePowerSource = new ItemIngredient(1).setUnlocalizedName("satellitePowerSource").setCreativeTab(tabAdvRocketry);
-		SatelliteRegistry.registerSatelliteProperty(new ItemStack(AdvancedRocketryItems.itemSatellitePowerSource,1,0), new SatelliteProperties().setPowerGeneration(10));
-
-		AdvancedRocketryItems.itemSatellitePrimaryFunction = new ItemIngredient(3).setUnlocalizedName("satellitePrimaryFunction").setCreativeTab(tabAdvRocketry);
+		AdvancedRocketryItems.itemLens = new ItemIngredient(1).setUnlocalizedName("lens").setCreativeTab(tabAdvRocketryOres);
+		
+		AdvancedRocketryItems.itemSatellitePowerSource = new ItemIngredient(2).setUnlocalizedName("satellitePowerSource").setCreativeTab(tabAdvRocketry);
+		SatelliteRegistry.registerSatelliteProperty(new ItemStack(AdvancedRocketryItems.itemSatellitePowerSource,1,0), new SatelliteProperties().setPowerGeneration(1));
+		SatelliteRegistry.registerSatelliteProperty(new ItemStack(AdvancedRocketryItems.itemSatellitePowerSource,1,1), new SatelliteProperties().setPowerGeneration(10));
+		
+		AdvancedRocketryItems.itemSatellitePrimaryFunction = new ItemIngredient(4).setUnlocalizedName("satellitePrimaryFunction").setCreativeTab(tabAdvRocketry);
 		SatelliteRegistry.registerSatelliteProperty(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), new SatelliteProperties().setSatelliteType(SatelliteRegistry.getKey(SatelliteOptical.class)));
 		SatelliteRegistry.registerSatelliteProperty(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 1), new SatelliteProperties().setSatelliteType(SatelliteRegistry.getKey(SatelliteComposition.class)));
 		SatelliteRegistry.registerSatelliteProperty(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 2), new SatelliteProperties().setSatelliteType(SatelliteRegistry.getKey(SatelliteMassScanner.class)));
-
+		SatelliteRegistry.registerSatelliteProperty(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 3), new SatelliteProperties().setSatelliteType(SatelliteRegistry.getKey(SatelliteEnergy.class)));
+		
 		//TODO: move registration in the case we have more than one chip type
 		AdvancedRocketryItems.itemDataUnit = new ItemData().setUnlocalizedName("dataUnit").setCreativeTab(tabAdvRocketry);
 		SatelliteRegistry.registerSatelliteProperty(new ItemStack(AdvancedRocketryItems.itemDataUnit, 1, 0), new SatelliteProperties().setMaxData(1000));
@@ -604,7 +636,8 @@ public class AdvancedRocketry {
 		GameRegistry.registerItem(AdvancedRocketryItems.itemSealDetector, AdvancedRocketryItems.itemSealDetector.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemJackhammer, AdvancedRocketryItems.itemJackhammer.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemAsteroidChip, AdvancedRocketryItems.itemAsteroidChip.getUnlocalizedName());
-
+		GameRegistry.registerItem(AdvancedRocketryItems.itemLens, AdvancedRocketryItems.itemLens.getUnlocalizedName());
+		
 		//Register multiblock items with the projector
 		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileCuttingMachine(), (BlockTile)AdvancedRocketryBlocks.blockCuttingMachine);
 		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileLathe(), (BlockTile)AdvancedRocketryBlocks.blockLathe);
@@ -617,6 +650,8 @@ public class AdvancedRocketry {
 		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileElectrolyser(), (BlockTile)AdvancedRocketryBlocks.blockElectrolyser);
 		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileChemicalReactor(), (BlockTile)AdvancedRocketryBlocks.blockChemicalReactor);
 		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileWarpCore(), (BlockTile)AdvancedRocketryBlocks.blockWarpCore);
+		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileMicrowaveReciever(), (BlockTile)AdvancedRocketryBlocks.blockMicrowaveReciever);
+		
 		//End Items
 
 		//Entity Registration ---------------------------------------------------------------------------------------------
@@ -639,6 +674,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileOutputHatch.class, "ARoutputHatch");
 		GameRegistry.registerTileEntity(TileInputHatch.class, "ARinputHatch");
 		GameRegistry.registerTileEntity(TilePlugInputRF.class, "ARrfBattery");
+		GameRegistry.registerTileEntity(TilePlugOutputRF.class, "ARrfOutputRF");
 		GameRegistry.registerTileEntity(TileCuttingMachine.class, "ARcuttingmachine");
 		GameRegistry.registerTileEntity(TileDataBus.class, "ARdataBus");
 		GameRegistry.registerTileEntity(TileSatelliteHatch.class, "ARsatelliteHatch");
@@ -667,6 +703,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileLiquidPipe.class, "ARLiquidPipe");
 		GameRegistry.registerTileEntity(TileDataPipe.class, "ARDataPipe");
 		GameRegistry.registerTileEntity(TileDrill.class, "ARDrill");
+		GameRegistry.registerTileEntity(TileMicrowaveReciever.class, "ARMicrowaveReciever");
 		EntityRegistry.registerModEntity(EntityLaserNode.class, "laserNode", 0, instance, 256, 20, false);
 
 
@@ -743,9 +780,12 @@ public class AdvancedRocketry {
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockMotor), " cp", "rrp"," cp", 'c', "coilCopper", 'p', "plateSteel", 'r', "stickSteel"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePowerSource,1,0), "rrr", "ggg","ppp", 'r', Items.redstone, 'g', Items.glowstone_dust, 'p', "plateGold"));
+		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemHoloProjector), "oro", "rpr", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'r', Items.redstone, 'p', "plateIron"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 2), "odo", "pcp", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'p', new ItemStack(AdvancedRocketryItems.itemWafer,1,0), 'c', basicCircuit, 'd', "crystalDilithium"));
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 1), "odo", "pcp", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'p', new ItemStack(AdvancedRocketryItems.itemWafer,1,0), 'c', basicCircuit, 'd', trackingCircuit);
+		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 3), "odo", "pcp", 'o', new ItemStack(AdvancedRocketryItems.itemLens, 1, 0), 'p', new ItemStack(AdvancedRocketryItems.itemWafer,1,0), 'c', basicCircuit, 'd', trackingCircuit);
+		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemSawBlade,1,0), " x ","xox", " x ", 'x', "plateIron", 'o', "stickIron"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockSawBlade,1,0), "r r","xox", "x x", 'r', "stickIron", 'x', "plateIron", 'o', new ItemStack(AdvancedRocketryItems.itemSawBlade,1,0)));
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryItems.itemSpaceStationChip), LibVulpes.itemLinker , basicCircuit);
@@ -806,6 +846,7 @@ public class AdvancedRocketry {
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockDrill), AdvancedRocketryBlocks.blockStructureBlock, Items.iron_pickaxe);
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockOrientationController), AdvancedRocketryBlocks.blockStructureBlock, Items.compass, userInterface);
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockGravityController), AdvancedRocketryBlocks.blockStructureBlock, Blocks.piston, Blocks.redstone_block);
+		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryItems.itemLens), " g ", "g g", 'g', Blocks.glass_pane);
 		
 		RecipesMachine.getInstance().addRecipe(TileElectrolyser.class, new Object[] {new FluidStack(AdvancedRocketryFluids.fluidOxygen, 100), new FluidStack(AdvancedRocketryFluids.fluidHydrogen, 100)}, 100, 20, new FluidStack(FluidRegistry.WATER, 10));
 		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new FluidStack(AdvancedRocketryFluids.fluidRocketFuel, 20), 100, 10, new FluidStack(AdvancedRocketryFluids.fluidOxygen, 10), new FluidStack(AdvancedRocketryFluids.fluidHydrogen, 10));

@@ -57,6 +57,8 @@ public class Configuration {
 
 	public static boolean automaticRetroRockets;
 
+	public static boolean advancedVFX;
+
 	
 
 

@@ -45,7 +45,6 @@ public class ItemSatelliteIdentificationChip extends Item {
 					nbt.setInteger("dimId", satellite.getDimensionId());
 				}
 
-
 				World world;
 				if( !nbt.hasKey(null) && (world = DimensionManager.getWorld(satellite.getDimensionId())) != null)
 					nbt.setString(name, world.provider.getDimensionName());

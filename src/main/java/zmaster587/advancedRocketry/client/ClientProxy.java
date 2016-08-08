@@ -29,6 +29,7 @@ import zmaster587.advancedRocketry.client.render.multiblocks.RenderPlanetAnalyse
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererChemicalReactor;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererElectrolyser;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererGenericMachineModel;
+import zmaster587.advancedRocketry.client.render.multiblocks.RendererMicrowaveReciever;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererRollingMachine;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererCrystallizer;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererCuttingMachine;
@@ -51,17 +52,18 @@ import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.advancedRocketry.tile.TileSchematic;
 import zmaster587.advancedRocketry.tile.cables.TileDataPipe;
 import zmaster587.advancedRocketry.tile.cables.TileLiquidPipe;
-import zmaster587.advancedRocketry.tile.multiblock.TileChemicalReactor;
-import zmaster587.advancedRocketry.tile.multiblock.TileCrystallizer;
-import zmaster587.advancedRocketry.tile.multiblock.TileCuttingMachine;
-import zmaster587.advancedRocketry.tile.multiblock.TileElectrolyser;
-import zmaster587.advancedRocketry.tile.multiblock.TileLathe;
 import zmaster587.advancedRocketry.tile.multiblock.TilePlaceholder;
-import zmaster587.advancedRocketry.tile.multiblock.TileRollingMachine;
 import zmaster587.advancedRocketry.tile.multiblock.TileObservatory;
 import zmaster587.advancedRocketry.tile.multiblock.TilePlanetAnalyser;
-import zmaster587.advancedRocketry.tile.multiblock.TilePrecisionAssembler;
 import zmaster587.advancedRocketry.tile.multiblock.TileWarpCore;
+import zmaster587.advancedRocketry.tile.multiblock.energy.TileMicrowaveReciever;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TileChemicalReactor;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TileCrystallizer;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TileCuttingMachine;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TileElectrolyser;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TileLathe;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TilePrecisionAssembler;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TileRollingMachine;
 
 public class ClientProxy extends CommonProxy {
 
@@ -83,6 +85,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileDrill.class, new RendererDrill());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileLiquidPipe.class, new RendererPipe(new ResourceLocation("AdvancedRocketry:textures/blocks/pipeLiquid.png")));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileDataPipe.class, new RendererPipe(new ResourceLocation("AdvancedRocketry:textures/blocks/pipeData.png")));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileMicrowaveReciever.class, new RendererMicrowaveReciever());
 		
 		RendererModelBlock blockRenderer = new RendererModelBlock();
 

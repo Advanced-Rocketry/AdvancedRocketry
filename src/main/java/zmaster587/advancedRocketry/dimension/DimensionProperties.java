@@ -499,7 +499,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @param id ID # for this satellite
 	 * @return a reference to the satelliteBase object given this ID
 	 */
-	public SatelliteBase getSatallite(long id) {
+	public SatelliteBase getSatellite(long id) {
 		return satallites.get(id);
 	}
 

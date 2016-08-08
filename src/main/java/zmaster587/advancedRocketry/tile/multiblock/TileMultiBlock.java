@@ -233,7 +233,8 @@ public class TileMultiBlock extends TileEntity {
 	 * Use 'l' for liquid output hatches
 	 * Use 'I' for input hatch
 	 * Use 'O' for output hatch
-	 * Use 'P' for power
+	 * Use 'P' for power input
+	 * Use 'p' for power output
 	 * Use 'D' for data hatch
 	 * Use 'c' for the main Block, there can only be one
 	 * Use null for anything
@@ -371,6 +372,12 @@ public class TileMultiBlock extends TileEntity {
 			list.add(new BlockMeta(AdvancedRocketryBlocks.blockIC2Plug, BlockMeta.WILDCARD));
 		return list;
 	}
+	
+	public List<BlockMeta> getPowerOutputBlocks() {
+		List<BlockMeta> list = new LinkedList<BlockMeta>();
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockRFOutput, BlockMeta.WILDCARD));
+		return list;
+	}
 
 	public List<BlockMeta> getLiquidInputBlocks() {
 		List<BlockMeta> list = new LinkedList<BlockMeta>();
@@ -396,6 +403,9 @@ public class TileMultiBlock extends TileEntity {
 		}
 		else if(input instanceof Character && (Character)input == 'P') {
 			return getPowerInputBlocks();
+		}
+		else if(input instanceof Character && (Character)input == 'p') {
+			return getPowerOutputBlocks();
 		}
 		else if(input instanceof Character && (Character)input == 'I') {
 			return getInputs();

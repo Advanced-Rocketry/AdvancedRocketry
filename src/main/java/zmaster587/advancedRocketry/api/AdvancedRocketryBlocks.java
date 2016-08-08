@@ -77,4 +77,6 @@ public class AdvancedRocketryBlocks {
 	public static Block blockDrill;
 	public static Block blockFluidPipe;
 	public static Block blockDataPipe;
+	public static Block blockRFOutput;
+	public static Block blockMicrowaveReciever;
 }

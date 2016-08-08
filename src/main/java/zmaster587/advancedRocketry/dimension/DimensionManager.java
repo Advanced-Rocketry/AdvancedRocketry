@@ -126,7 +126,7 @@ public class DimensionManager {
 			zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.filePath);
 		}
 		
-		SatelliteBase satellite = overworldProperties.getSatallite(satId);
+		SatelliteBase satellite = overworldProperties.getSatellite(satId);
 
 		if(satellite != null)
 			return satellite;
@@ -134,7 +134,7 @@ public class DimensionManager {
 		for(int i : DimensionManager.getInstance().getLoadedDimensions()) {
 
 
-			if( (satellite = DimensionManager.getInstance().getDimensionProperties(i).getSatallite(satId)) != null )
+			if( (satellite = DimensionManager.getInstance().getDimensionProperties(i).getSatellite(satId)) != null )
 				return satellite;
 		}
 		return null;

@@ -2,7 +2,7 @@ package zmaster587.advancedRocketry.integration.nei;
 
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.tile.multiblock.TileCuttingMachine;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TileCuttingMachine;
 
 public class CuttingMachineNEI extends TemplateNEI {
 	

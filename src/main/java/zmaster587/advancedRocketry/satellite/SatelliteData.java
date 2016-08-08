@@ -3,11 +3,13 @@ package zmaster587.advancedRocketry.satellite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.DataStorage;
+import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.satellite.IDataHandler;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
@@ -30,6 +32,13 @@ public abstract class SatelliteData extends SatelliteBase {
 		return Math.min(data.getMaxData() - data.getData() , (int)Math.max(0,  (world.getTotalWorldTime() - lastActionTime)/200)); //TODO: change from 10 seconds
 	}
 
+	@Override
+	public boolean acceptsItemInConstruction(ItemStack item) {
+		int flag = SatelliteRegistry.getSatelliteProperty(item).getPropertyFlag();
+		
+		return super.acceptsItemInConstruction(item) || SatelliteProperties.Property.DATA.isOfType(flag) || SatelliteProperties.Property.POWER_GEN.isOfType(flag);
+	}
+	
 	@Override
 	public void setProperties(SatelliteProperties satelliteProperties) {
 		super.setProperties(satelliteProperties);

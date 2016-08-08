@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
+import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -100,11 +101,15 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		SatelliteProperties properties;
 
 		String satType = SatelliteRegistry.getSatelliteProperty(inventory[0]).getSatelliteType();
+		SatelliteBase sat = SatelliteRegistry.getSatallite(satType);
 		for(int i = 0; i < 7; i++) {
 			ItemStack stack = getStackInSlot(i);
 			if(stack != null) {
 				properties = SatelliteRegistry.getSatelliteProperty(stack);
 
+				if(!sat.acceptsItemInConstruction(stack))
+					continue;
+				
 				powerStorage += properties.getPowerStorage();
 				powerGeneration += properties.getPowerGeneration();
 				maxData += properties.getMaxDataStorage();

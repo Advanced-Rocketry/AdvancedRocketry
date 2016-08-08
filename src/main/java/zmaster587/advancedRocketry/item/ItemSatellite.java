@@ -57,20 +57,26 @@ public class ItemSatellite extends ItemIdWithName {
 			list.add(getName(stack));
 			list.add("ID: " + properties.getId());
 
-			if( (powerStorage = properties.getPowerStorage()) > 0)
-				list.add("Power Storage: " + powerStorage);
-			else
-				list.add(EnumChatFormatting.RED + "No Power Storage");
+			if(SatelliteProperties.Property.BATTERY.isOfType(properties.getPropertyFlag())) {
+				if( (powerStorage = properties.getPowerStorage()) > 0)
+					list.add("Power Storage: " + powerStorage);
+				else
+					list.add(EnumChatFormatting.RED + "No Power Storage");
+			}
 
-			if( ( powerGeneration=properties.getPowerGeneration() ) > 0)
-				list.add("Power Generation: " + powerGeneration);
-			else
-				list.add(EnumChatFormatting.RED + "No Power Generation!");
+			if(SatelliteProperties.Property.POWER_GEN.isOfType(properties.getPropertyFlag())) {
+				if( ( powerGeneration=properties.getPowerGeneration() ) > 0)
+					list.add("Power Generation: " + powerGeneration);
+				else
+					list.add(EnumChatFormatting.RED + "No Power Generation!");
+			}
 
-			if( (dataStorage = properties.getMaxDataStorage()) > 0 ) 
-				list.add("Data Storage: " + ZUtils.formatNumber(dataStorage));
-			else
-				list.add(EnumChatFormatting.YELLOW + "No Data Storage!");
+			if(SatelliteProperties.Property.DATA.isOfType(properties.getPropertyFlag())) {
+				if( (dataStorage = properties.getMaxDataStorage()) > 0 ) 
+					list.add("Data Storage: " + ZUtils.formatNumber(dataStorage));
+				else
+					list.add(EnumChatFormatting.YELLOW + "No Data Storage!");
+			}
 
 		}
 	}

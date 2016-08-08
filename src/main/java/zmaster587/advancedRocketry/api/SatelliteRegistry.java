@@ -10,6 +10,9 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 
 public class SatelliteRegistry {
+	
+
+	
 	static HashMap<String, Class<? extends SatelliteBase>> registry = new HashMap<String, Class<? extends SatelliteBase>>();
 
 	static HashMap<ItemStack, SatelliteProperties> itemPropertiesRegistry = new HashMap<ItemStack, SatelliteProperties>();

@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.tile.multiblock;
+package zmaster587.advancedRocketry.tile.multiblock.machine;
 
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +15,7 @@ import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.inventory.modules.ModuleImage;
 import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
+import zmaster587.advancedRocketry.tile.multiblock.TileMultiblockMachine;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.util.IconResource;

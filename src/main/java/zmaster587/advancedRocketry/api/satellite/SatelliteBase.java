@@ -6,6 +6,7 @@ import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
@@ -17,6 +18,11 @@ public abstract class SatelliteBase {
 	public SatelliteBase() {
 		satelliteProperties = new SatelliteProperties();
 		satelliteProperties.setSatelliteType(SatelliteRegistry.getKey(this.getClass()));
+	}
+	
+	public boolean acceptsItemInConstruction(ItemStack item) {
+		int flag = SatelliteRegistry.getSatelliteProperty(item).getPropertyFlag();
+		return SatelliteProperties.Property.MAIN.isOfType(flag);
 	}
 	
 	/**
