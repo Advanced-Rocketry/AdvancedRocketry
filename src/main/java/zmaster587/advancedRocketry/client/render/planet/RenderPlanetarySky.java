@@ -178,7 +178,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 			sunColor = planetaryProvider.getSunColor((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
 			if(world.provider.dimensionId == Configuration.spaceDimId) {
-				isWarp = properties.getParentPlanet() == -1;
+				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
 				if(isWarp) {
 					SpaceObject station = (SpaceObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
 					travelDirection = station.getForwardDirection();

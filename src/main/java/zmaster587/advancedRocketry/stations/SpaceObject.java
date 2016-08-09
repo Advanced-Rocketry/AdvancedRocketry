@@ -339,8 +339,9 @@ public class SpaceObject implements ISpaceObject {
 		if(id == this.getOrbitingPlanetId())
 			return;
 
+		System.out.println(id);
 		properties.setParentPlanet(zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(id), false);
-		if(id != -1)
+		if(id != SpaceObjectManager.WARPDIMID)
 			destinationDimId = id;
 	}
 

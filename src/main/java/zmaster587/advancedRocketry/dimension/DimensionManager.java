@@ -75,7 +75,7 @@ public class DimensionManager {
 		overworldProperties.setStar(sol);
 		overworldProperties.setName("Earth");
 
-		defaultSpaceDimensionProperties = new DimensionProperties(-1, false);
+		defaultSpaceDimensionProperties = new DimensionProperties(SpaceObjectManager.WARPDIMID, false);
 		defaultSpaceDimensionProperties.atmosphereDensity = 0;
 		defaultSpaceDimensionProperties.averageTemperature = 0;
 		defaultSpaceDimensionProperties.gravitationalMultiplier = 0.1f;

@@ -21,6 +21,7 @@ import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
+import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketSatellite;
@@ -378,7 +379,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return true if this DIM orbits another
 	 */
 	public boolean isMoon() {
-		return parentPlanet != -1;
+		return parentPlanet != -1 && parentPlanet != SpaceObjectManager.WARPDIMID;
 	}
 
 	/**

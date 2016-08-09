@@ -29,6 +29,7 @@ import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -417,7 +418,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		if(isInFlight()) {
 			boolean burningFuel = isBurningFuel();
 			
-			boolean descentPhase = Configuration.automaticRetroRockets && isInOrbit() && this.posY < 300 && (this.motionY < -0.2f || worldObj.isRemote);
+			boolean descentPhase = Configuration.automaticRetroRockets && isInOrbit() && this.posY < 300 && (this.motionY < -0.4f || worldObj.isRemote);
 
 			if(burningFuel || descentPhase) {
 				//Burn the rocket fuel
@@ -428,7 +429,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				if(worldObj.isRemote && Minecraft.getMinecraft().gameSettings.particleSetting < 2 && (this.motionY > 0 || descentPhase || (riddenByEntity instanceof EntityPlayer && ((EntityPlayer)riddenByEntity).moveForward > 0))) {
 					for(Vector3F<Float> vec : stats.getEngineLocations()) {
 
-						if(worldObj.getTotalWorldTime() % 10 == 0)
+						AtmosphereHandler handler;
+						if(worldObj.getTotalWorldTime() % 10 == 0 && ( (handler = AtmosphereHandler.getOxygenHandler(worldObj.provider.dimensionId)) == null || handler.getAtmosphereType(this) == null || handler.getAtmosphereType(this).allowsCombustion()) )
 							AdvancedRocketry.proxy.spawnParticle("rocketSmoke", worldObj, this.posX + vec.x, this.posY + vec.y - 0.75, this.posZ +vec.z,0,0,0);
 
 						for(int i = 0; i < 4; i++) {
@@ -581,6 +583,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				Vector3F<Float> pos = storage.getGuidanceComputer().getLandingLocation(destinationDimId);
 				storage.getGuidanceComputer().setReturnPosition(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ));
 				if(pos != null) {
+					
+					//Make player confirm deorbit if a player is riding the rocket
+					if(this.riddenByEntity != null)
+						setInFlight(false);
 
 					if(Configuration.spaceDimId == destinationDimId) {
 						this.travelToDimension(destinationDimId, pos.x, pos.z);
@@ -592,6 +598,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 						else
 							this.travelToDimension(object.getOrbitingPlanetId(), pos.x, pos.z);
 					}
+					
+
 
 					return;
 				}

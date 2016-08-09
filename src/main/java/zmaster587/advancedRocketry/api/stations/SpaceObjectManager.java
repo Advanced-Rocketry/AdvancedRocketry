@@ -304,8 +304,10 @@ public class SpaceObjectManager {
 		if(nextStationTransitionTick != -1 && (worldTime = DimensionManager.getWorld(Configuration.spaceDimId).getTotalWorldTime()) >= nextStationTransitionTick && spaceStationOrbitMap.get(WARPDIMID) != null) {
 			long newNextTransitionTick = -1;
 			for(ISpaceObject obj : spaceStationOrbitMap.get(WARPDIMID)) {
-				if(obj.getTransitionTime() <= worldTime)
+				if(obj.getTransitionTime() <= worldTime) {
 					moveStationToBody(obj, obj.getDestOrbitingBody());
+					spaceStationOrbitMap.get(WARPDIMID).remove(obj);
+				}
 				else if(newNextTransitionTick == -1 || obj.getTransitionTime() < newNextTransitionTick)
 					newNextTransitionTick = obj.getTransitionTime();
 			}
@@ -355,7 +357,7 @@ public class SpaceObjectManager {
 	 */
 	public void moveStationToBody(ISpaceObject station, int dimId, boolean update) {
 		//Remove station from the planet it's in orbit around before moving it!
-		if(station.getOrbitingPlanetId() != -1 && spaceStationOrbitMap.get(station.getOrbitingPlanetId()) != null) {
+		if(spaceStationOrbitMap.get(station.getOrbitingPlanetId()) != null) {
 			spaceStationOrbitMap.get(station.getOrbitingPlanetId()).remove(station);
 		}
 
@@ -382,7 +384,7 @@ public class SpaceObjectManager {
 	 */
 	public void moveStationToBody(ISpaceObject station, int dimId, int timeDelta) {
 		//Remove station from the planet it's in orbit around before moving it!
-		if(station.getOrbitingPlanetId() != -1 && spaceStationOrbitMap.get(station.getOrbitingPlanetId()) != null) {
+		if(station.getOrbitingPlanetId() != WARPDIMID && spaceStationOrbitMap.get(station.getOrbitingPlanetId()) != null) {
 			spaceStationOrbitMap.get(station.getOrbitingPlanetId()).remove(station);
 		}
 
