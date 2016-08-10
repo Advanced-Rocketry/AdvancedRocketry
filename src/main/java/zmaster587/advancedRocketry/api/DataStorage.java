@@ -33,6 +33,9 @@ public class DataStorage {
 	}
 
 	public boolean setData(int data, DataType dataType) {
+		if(this.dataType == DataStorage.DataType.UNDEFINED)
+			this.dataType = dataType;
+		
 		if(dataType == DataStorage.DataType.UNDEFINED || dataType == this.dataType) {
 			this.data = Math.min(data, maxData);
 			return true;
