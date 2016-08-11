@@ -27,6 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -95,6 +96,7 @@ import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.event.BucketHandler;
 import zmaster587.advancedRocketry.event.CableTickHandler;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
+import zmaster587.advancedRocketry.event.WorldEvents;
 import zmaster587.advancedRocketry.integration.CompatibilityMgr;
 import zmaster587.advancedRocketry.integration.GalacticCraftHandler;
 import zmaster587.advancedRocketry.inventory.GuiHandler;
@@ -505,7 +507,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockPlaceHolder, "blockPlaceholder");
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockRFBattery, "rfBattery");
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockStructureBlock, "blockStructureBlock");
-		//GameRegistry.registerBlock(AdvancedRocketryBlocks.blockSpaceLaser, "laserController");
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockSpaceLaser, "laserController");
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockPrecisionAssembler, "precisionassemblingmachine");
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockBlastBrick, "utilBlock");
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockQuartzCrucible, "quartzcrucible");
@@ -657,7 +659,7 @@ public class AdvancedRocketry {
 		//Entity Registration ---------------------------------------------------------------------------------------------
 		EntityRegistry.registerModEntity(EntityDummy.class, "mountDummy", 0, this, 16, 20, false);
 		EntityRegistry.registerModEntity(EntityRocket.class, "rocket", 1, this, 64, 3, true);
-
+		EntityRegistry.registerModEntity(EntityLaserNode.class, "laserNode", 2, instance, 256, 20, false);
 
 		//TileEntity Registration ---------------------------------------------------------------------------------------------
 		GameRegistry.registerTileEntity(TileRocketBuilder.class, "ARrocketBuilder");
@@ -704,7 +706,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileDataPipe.class, "ARDataPipe");
 		GameRegistry.registerTileEntity(TileDrill.class, "ARDrill");
 		GameRegistry.registerTileEntity(TileMicrowaveReciever.class, "ARMicrowaveReciever");
-		EntityRegistry.registerModEntity(EntityLaserNode.class, "laserNode", 0, instance, 256, 20, false);
+		
 
 
 		//OreDict stuff
@@ -960,9 +962,7 @@ public class AdvancedRocketry {
 
 		GameRegistry.registerWorldGenerator(new OreGenerator(), 100);
 
-		/*ForgeChunkManager.setForcedChunkLoadingCallback(instance, new WorldEvents());
-
-		proxy.registerKeyBinds();*/
+		ForgeChunkManager.setForcedChunkLoadingCallback(instance, new WorldEvents());
 
 
 		//AutoGenned Recipes

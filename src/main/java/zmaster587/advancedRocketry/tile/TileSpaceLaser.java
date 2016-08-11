@@ -11,6 +11,7 @@ import zmaster587.advancedRocketry.integration.CompatibilityMgr;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketMachine;
 import zmaster587.advancedRocketry.satellite.SatelliteLaser;
+import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils;
@@ -200,7 +201,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		}
 
 		if(hasPowerForOperation() && isReadyForOperation() && laserSat.isAlive() && !laserSat.getJammed()) {
-			laserSat.performOperation();
+			//laserSat.performOperation();
 
 			storage.setEnergyStored(storage.getEnergyStored() - POWER_PER_OPERATION);
 			tickSinceLastOperation = 0;
@@ -459,7 +460,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	 */
 	public void checkCanRun() {
 		//Laser requires lense, redstone power, not be jammed, and be in orbit and energy to function
-		if(!worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || glassPanel == null || storage.getEnergyStored() == 0 /*|| !(this.worldObj.provider instanceof IOrbitDimension)*/) {
+		if(!worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || glassPanel == null || storage.getEnergyStored() == 0 || !(this.worldObj.provider instanceof WorldProviderSpace) || !DimensionManager.isDimensionRegistered(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(xCoord, zCoord).getParentPlanet())) {
 			if(laserSat.isAlive()) {
 				laserSat.deactivateLaser();
 			}
@@ -468,7 +469,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		} else if(!laserSat.isAlive() && !finished && !laserSat.getJammed() && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) && canMachineSeeEarth()) {
 
 			//Laser will be on at this point
-			int orbitDimId =0;//= WorldUtil.getProviderForName(((IOrbitDimension)this.worldObj.provider).getPlanetToOrbit()).dimensionId;
+			int orbitDimId = ((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(xCoord, zCoord).getParentPlanet();
 			WorldServer orbitWorld = DimensionManager.getWorld(orbitDimId);
 
 

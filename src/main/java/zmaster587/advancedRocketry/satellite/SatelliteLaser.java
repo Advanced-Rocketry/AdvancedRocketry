@@ -209,7 +209,7 @@ public class SatelliteLaser extends SatelliteBase {
 	@Override
 	public boolean performAction(EntityPlayer player, World world, int x,
 			int y, int z) {
-		// TODO Auto-generated method stub
+		performOperation();
 		return false;
 	}
 

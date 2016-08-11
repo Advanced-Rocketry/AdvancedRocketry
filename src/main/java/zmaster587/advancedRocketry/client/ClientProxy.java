@@ -18,6 +18,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.client.render.RenderLaser;
 import zmaster587.advancedRocketry.client.render.RendererDrill;
 import zmaster587.advancedRocketry.client.render.RendererPhantomBlock;
 import zmaster587.advancedRocketry.client.render.RendererRocketBuilder;
@@ -38,6 +39,7 @@ import zmaster587.advancedRocketry.client.render.multiblocks.RendererObservatory
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererPrecisionAssembler;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererWarpCore;
 import zmaster587.advancedRocketry.common.CommonProxy;
+import zmaster587.advancedRocketry.entity.EntityLaserNode;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.entity.fx.FxElectricArc;
 import zmaster587.advancedRocketry.entity.fx.RocketFx;
@@ -96,6 +98,7 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForgeClient.registerItemRenderer(AdvancedRocketryItems.itemBucketRocketFuel, new RendererBucket());
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityRocket.class, new RendererRocket());
+		RenderingRegistry.registerEntityRenderingHandler(EntityLaserNode.class, new RenderLaser());
 	}
 
 	@Override
