@@ -1,9 +1,13 @@
 package zmaster587.advancedRocketry.world.provider;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
+import zmaster587.advancedRocketry.client.render.planet.RenderSpaceSky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.stations.SpaceObject;
@@ -14,8 +18,11 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.WorldChunkManager;
 import net.minecraft.world.biome.WorldChunkManagerHell;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.client.IRenderHandler;
 
 public class WorldProviderSpace extends WorldProviderPlanet {
+	private IRenderHandler skyRender;
+	
 	@Override
 	public double getHorizon() {
 		return 0;
@@ -36,6 +43,12 @@ public class WorldProviderSpace extends WorldProviderPlanet {
 	@Override
 	public IChunkProvider createChunkGenerator() {
 		return new ChunkProviderSpace(this.worldObj, this.worldObj.getSeed());
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IRenderHandler getSkyRenderer() {
+		return skyRender == null ? skyRender = new RenderSpaceSky() : skyRender;
 	}
 	
 	@Override

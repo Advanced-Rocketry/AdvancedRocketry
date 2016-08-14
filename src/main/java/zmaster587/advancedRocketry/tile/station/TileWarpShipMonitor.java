@@ -64,7 +64,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 	protected int getTravelCost() {
 		DimensionProperties properties = getSpaceObject().getProperties();
-
+		properties.orbitalDist = 1;
 		DimensionProperties destProperties = DimensionManager.getInstance().getDimensionProperties(getSpaceObject().getDestOrbitingBody());
 		while(destProperties.isMoon())
 			destProperties = destProperties.getParentProperties();
@@ -152,7 +152,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			if(worldObj.isRemote)
 				modules.add(new ModuleScaledImage(baseX,baseY,sizeX,sizeY, TextureResources.starryBG));
 
-			if(dimCache == null && isOnStation && station.getOrbitingPlanetId() != -1 )
+			if(dimCache == null && isOnStation && station.getOrbitingPlanetId() != SpaceObjectManager.WARPDIMID )
 				dimCache = DimensionManager.getInstance().getDimensionProperties(station.getOrbitingPlanetId());
 
 			if(dimCache != null) {
@@ -281,10 +281,10 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 		if(getSpaceObject().getOrbitingPlanetId() == SpaceObjectManager.WARPDIMID) {
 			dimCache = null;
-			return;
+			//return;
 		}
 
-		if(id == -1)
+		if(id == SpaceObjectManager.WARPDIMID)
 			dimCache = null;
 		else {
 			dimCache = DimensionManager.getInstance().getDimensionProperties(container.getSelectedSystem());
@@ -320,6 +320,13 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			if(getSpaceObject() != null)
 				return getSpaceObject().getFuelAmount();
 		}
+		
+		if(id == 0)
+			return 30;
+		else if(id == 1)
+			return 30;
+		else if(id == 2)
+			return (int) 30;
 		return 0;
 	}
 
@@ -329,6 +336,13 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			if(getSpaceObject() != null)
 				return getSpaceObject().getMaxFuelAmount();
 		}
+		if(id == 0)
+			return dimCache.atmosphereDensity/2;
+		else if(id == 1)
+			return dimCache.orbitalDist/2;
+		else if(id == 2)
+			return (int) (dimCache.gravitationalMultiplier*50);
+		
 		return 0;
 	}
 

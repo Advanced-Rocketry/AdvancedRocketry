@@ -13,6 +13,7 @@ import zmaster587.advancedRocketry.network.PacketMachine;
 import zmaster587.advancedRocketry.satellite.SatelliteLaser;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.block.RotatableBlock;
+import zmaster587.libVulpes.compat.InventoryCompat;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -198,15 +199,16 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		//TODO: drain energy
 		if(!this.worldObj.isRemote) {
 			tickSinceLastOperation++;
+
+
+			if(hasPowerForOperation() && isReadyForOperation() && laserSat.isAlive() && !laserSat.getJammed()) {
+				laserSat.performOperation();
+
+				storage.setEnergyStored(storage.getEnergyStored() - POWER_PER_OPERATION);
+				tickSinceLastOperation = 0;
+			}
 		}
-
-		if(hasPowerForOperation() && isReadyForOperation() && laserSat.isAlive() && !laserSat.getJammed()) {
-			//laserSat.performOperation();
-
-			storage.setEnergyStored(storage.getEnergyStored() - POWER_PER_OPERATION);
-			tickSinceLastOperation = 0;
-		}
-
+		
 		if(laserSat.isFinished()) {
 			this.isRunning = false;
 			laserSat.deactivateLaser();
@@ -278,7 +280,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		this.writeToNBT(nbt);
 
 		nbt.setBoolean("IsRunning", isRunning);
-		
+
 		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
 	}
 
@@ -407,7 +409,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	 * Gets the first inventory with an empty slot
 	 * @return first available inventory or null
 	 */
-	private IInventory getAvalibleInv() {
+	private Object getAvalibleInv() {
 		ForgeDirection front = RotatableBlock.getFront(this.getBlockMetadata());
 
 		for(ForgeDirection f : VALID_INVENTORY_DIRECTIONS) {
@@ -417,7 +419,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 			TileEntity e = this.worldObj.getTileEntity(this.xCoord + f.offsetX, this.yCoord + f.offsetY, this.zCoord + f.offsetZ);
 
 
-			if(e != null && e instanceof IInventory && ZUtils.numEmptySlots((IInventory)e) > 0)
+			if(InventoryCompat.canInjectItems(e))
 				return (IInventory)e;
 		}
 		return null;
@@ -428,7 +430,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	 * @param item item to fit into inventory
 	 * @return inv with capablity of holding 'itemStack'
 	 */
-	private IInventory getAvalibleInv(ItemStack item) {
+	private Object getAvalibleInv(ItemStack item) {
 		if(item == null)
 			return getAvalibleInv();
 
@@ -441,8 +443,8 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 			TileEntity e = this.worldObj.getTileEntity(this.xCoord + f.offsetX, this.yCoord + f.offsetY, this.zCoord + f.offsetZ);
 
 
-			if(e != null && e instanceof IInventory && (ZUtils.numEmptySlots((IInventory)e) > 0 || ZUtils.doesInvHaveRoom(item, (IInventory)e)))
-				return (IInventory)e;
+			if(InventoryCompat.canInjectItems(e, item))
+				return e;
 		}
 		return null;
 	}
@@ -454,7 +456,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Checks to see if the situation for firing the laser exists... and changes the state accordingly
 	 */
@@ -471,6 +473,13 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 			//Laser will be on at this point
 			int orbitDimId = ((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(xCoord, zCoord).getParentPlanet();
 			WorldServer orbitWorld = DimensionManager.getWorld(orbitDimId);
+			
+			if(orbitWorld == null) {
+				DimensionManager.initDimension(orbitDimId);
+				orbitWorld = DimensionManager.getWorld(orbitDimId);
+				if(orbitWorld == null)
+					return;
+			}
 
 
 			if(ticket == null) {
@@ -573,14 +582,17 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 
 				TileEntity e = this.worldObj.getTileEntity(this.xCoord + f.offsetX, this.yCoord + f.offsetY, this.zCoord + f.offsetZ);
 
+				if(InventoryCompat.canInjectItems(e, itemstack))
+					InventoryCompat.injectItem(e, itemstack);
+				
 				//TODO: may cause inf loop
-				if(e != null && e instanceof IInventory)
+				/*if(e != null && e instanceof IInventory)
 					if(i < ((IInventory)e).getSizeInventory()) {
 						((IInventory)e).setInventorySlotContents(i, itemstack);
 						break;
 					}	
 					else
-						i -= ((IInventory)e).getSizeInventory();
+						i -= ((IInventory)e).getSizeInventory();*/
 			}
 
 			this.checkCanRun();

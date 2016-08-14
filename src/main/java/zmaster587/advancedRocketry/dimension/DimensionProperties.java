@@ -131,14 +131,23 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		;
 
 		public static final ResourceLocation atmosphere = new ResourceLocation("advancedrocketry:textures/planets/Atmosphere.png");
+		public static final ResourceLocation atmosphereLEO = new ResourceLocation("advancedrocketry:textures/planets/AtmosphereLEO.png");
+		
 		private ResourceLocation resource;
-
+		private ResourceLocation resourceLEO;
+		
 		private PlanetIcons(ResourceLocation resource) {
 			this.resource = resource;
+			
+			this.resourceLEO = new ResourceLocation(resource.toString().substring(0, resource.toString().length() - 4) + "LEO.png");
 		}
 
 		public ResourceLocation getResource() {
 			return resource;
+		}
+		
+		public ResourceLocation getResourceLEO() {
+			return resourceLEO;
 		}
 	}
 
@@ -284,6 +293,32 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		else
 			return PlanetIcons.LAVA.resource;
 	}
+	
+	/**
+	 * @return the {@link ResourceLocation} representing this planet, generated from the planet's properties
+	 */
+	public ResourceLocation getPlanetIconLEO() {
+		AtmosphereTypes atmType = AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity);
+		Temps tempType = Temps.getTempFromValue(averageTemperature);
+
+
+		if(atmType != AtmosphereTypes.NONE && VulpineMath.isBetween(tempType.ordinal(), Temps.COLD.ordinal(), Temps.TOOHOT.ordinal()))
+			return PlanetIcons.EARTHLIKE.resourceLEO;//TODO: humidity
+		else if(tempType.compareTo(Temps.COLD) > 0)
+			if(atmType.compareTo(AtmosphereTypes.LOW) > 0)
+				return PlanetIcons.MOON.resourceLEO;
+			else
+				return PlanetIcons.ICEWORLD.resourceLEO;
+		else if(atmType.compareTo(AtmosphereTypes.LOW) > 0) {
+
+			if(tempType.compareTo(Temps.COLD) < 0)
+				return PlanetIcons.MARSLIKE.resourceLEO;
+			else
+				return PlanetIcons.MOON.resourceLEO;
+		}
+		else
+			return PlanetIcons.LAVA.resourceLEO;
+	}
 
 	/**
 	 * @return the name of the planet
@@ -405,6 +440,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 */
 	public static ResourceLocation getAtmosphereResource() {
 		return PlanetIcons.atmosphere;
+	}
+	
+	public static ResourceLocation getAtmosphereLEOResource() {
+		return PlanetIcons.atmosphereLEO;
 	}
 
 	/**

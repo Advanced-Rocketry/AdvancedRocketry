@@ -369,9 +369,9 @@ public class SpaceObjectManager {
 		station.setOrbitingBody(dimId);
 
 		if(update) {
-			if(FMLCommonHandler.instance().getSide().isServer()) {
+			//if(FMLCommonHandler.instance().getSide().isServer()) {
 				PacketHandler.sendToAll(new PacketStationUpdate(station, PacketStationUpdate.Type.ORBIT_UPDATE));
-			}
+			//}
 			AdvancedRocketry.proxy.fireFogBurst(station);
 		}
 	}
@@ -395,9 +395,9 @@ public class SpaceObjectManager {
 			spaceStationOrbitMap.get(WARPDIMID).add(station);
 		station.setOrbitingBody(WARPDIMID);
 
-		if(FMLCommonHandler.instance().getSide().isServer()) {
+		//if(FMLCommonHandler.instance().getSide().isServer()) {
 			PacketHandler.sendToAll(new PacketStationUpdate(station, PacketStationUpdate.Type.ORBIT_UPDATE));
-		}
+		//}
 		AdvancedRocketry.proxy.fireFogBurst(station);
 
 

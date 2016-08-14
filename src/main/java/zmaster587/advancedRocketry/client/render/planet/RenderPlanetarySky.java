@@ -172,7 +172,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 				hasAtmosphere = parentProperties.hasAtmosphere();
 				planetOrbitalDistance = properties.getParentOrbitalDistance();
-				parentPlanetIcon = parentProperties.getPlanetIcon();
+				parentPlanetIcon = getTextureForPlanet(parentProperties);
 
 			}
 
@@ -416,7 +416,15 @@ public class RenderPlanetarySky extends IRenderHandler {
 		RocketEventHandler.onPostWorldRender(partialTicks);
 	}
 
-	private void renderPlanet(Tessellator tessellator1, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, boolean hasAtmosphere) {
+	protected ResourceLocation getTextureForPlanet(DimensionProperties properties) {
+		return properties.getPlanetIcon();
+	}
+	
+	protected ResourceLocation getTextureForPlanetLEO(DimensionProperties properties) {
+		return properties.getPlanetIcon();
+	}
+	
+	protected void renderPlanet(Tessellator tessellator1, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, boolean hasAtmosphere) {
 		//GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
