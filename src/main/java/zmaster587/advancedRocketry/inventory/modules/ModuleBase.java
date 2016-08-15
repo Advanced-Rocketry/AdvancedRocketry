@@ -89,6 +89,11 @@ public abstract class ModuleBase {
 		
 	}
 	
+	@SideOnly(Side.CLIENT)
+	public void keyTyped(char chr, int t) {
+		
+	}
+	
 	/**
 	 * 
 	 * @param localId The id requested local to this module eg (0 to numberOfChangesToSend())

@@ -27,6 +27,22 @@ import net.minecraft.util.ResourceLocation;
 
 public class ModulePlanetSelector extends ModuleContainerPan implements IButtonInventory {
 
+	
+	//Closest thing i can get to a struct :/
+	private class PlanetRenderProperties {
+		int radius;
+		int posX;
+		int posY;
+
+		public PlanetRenderProperties() {}
+
+		public PlanetRenderProperties(int radius, int posX, int posY) {
+			this.radius = radius;
+			this.posX = posX;
+			this.posY = posY;
+		}
+	}
+	
 	private static final int size = 2000;
 	private static final int starIdOffset = 10000;
 	ISelectionNotify hostTile;
@@ -412,20 +428,5 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		}
 
 		return numChanges;
-	}
-
-	//Closest thing i can get to a struct :/
-	private class PlanetRenderProperties {
-		int radius;
-		int posX;
-		int posY;
-
-		public PlanetRenderProperties() {}
-
-		public PlanetRenderProperties(int radius, int posX, int posY) {
-			this.radius = radius;
-			this.posX = posX;
-			this.posY = posY;
-		}
 	}
 }

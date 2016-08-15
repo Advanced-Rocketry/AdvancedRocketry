@@ -117,6 +117,9 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 			initialCheck = true;
 		}
 
+		if(!isComplete())
+			return;
+		
 		//Periodically check for obstructing blocks above the panel
 		if(!worldObj.isRemote && getPowerMadeLastTick() > 0 && worldObj.getTotalWorldTime() % 100 == 0) {
 			Vector3F<Integer> offset = getControllerOffset(getStructure());

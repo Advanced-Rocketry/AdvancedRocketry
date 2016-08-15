@@ -13,6 +13,7 @@ public class ModuleText extends ModuleBase {
 
 	List<String> text;
 	int color;
+	boolean centered;
 
 	public ModuleText(int offsetX, int offsetY, String text, int color) {
 		super(offsetX, offsetY);
@@ -21,6 +22,12 @@ public class ModuleText extends ModuleBase {
 
 		setText(text);
 		this.color = color;
+		centered = false;
+	}
+
+	public ModuleText(int offsetX, int offsetY, String text, int color, boolean centered) {
+		this(offsetX, offsetY, text, color);
+		this.centered = centered;
 	}
 
 	public void setText(String text) {
@@ -47,7 +54,10 @@ public class ModuleText extends ModuleBase {
 
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 		for(int i = 0; i < text.size(); i++) {
-			font.drawString(text.get(i), x + offsetX, y + offsetY + i*font.FONT_HEIGHT, color);
+			if(centered)
+				font.drawString(text.get(i), x + offsetX - (font.getStringWidth(text.get(i))/2), y + offsetY + i*font.FONT_HEIGHT, color);
+			else
+				font.drawString(text.get(i), x + offsetX, y + offsetY + i*font.FONT_HEIGHT, color);
 		}
 		GL11.glPopAttrib();
 	}

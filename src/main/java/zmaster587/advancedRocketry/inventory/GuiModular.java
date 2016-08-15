@@ -52,6 +52,13 @@ public class GuiModular extends GuiContainer {
 	}
 
 	@Override
+	protected void keyTyped(char key, int something) {
+		super.keyTyped(key, something);
+		for(ModuleBase module : modules)
+			module.keyTyped(key, something);
+	}
+	
+	@Override
 	protected void drawGuiContainerForegroundLayer(int a,
 			int b) {
 		super.drawGuiContainerForegroundLayer(a, b);

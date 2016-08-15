@@ -18,6 +18,7 @@ public class TextureResources {
 	public static final  ResourceLocation starryBG 	   = new ResourceLocation("advancedrocketry", "textures/gui/starryBg.png");
 	public static final  ResourceLocation progressBars =  new ResourceLocation("advancedrocketry:textures/gui/progressBars/progressBars.png");
 	public static final  ResourceLocation rocketHud = new ResourceLocation("advancedrocketry:textures/gui/rocketHUD.png");
+	public static final  ResourceLocation laserGui = new ResourceLocation("advancedrocketry", "textures/gui/LaserTile.png");
 	public static final  ResourceLocation buttonToggleImage[] = new ResourceLocation[] {new ResourceLocation("advancedrocketry:textures/gui/buttons/switchOn.png"), new ResourceLocation("advancedrocketry:textures/gui/buttons/switchOff.png")};
 	public static final  ResourceLocation locationSunPng = new ResourceLocation("advancedrocketry:textures/env/sun.png");
 	public static final  ResourceLocation selectionCircle = new ResourceLocation("advancedrocketry:textures/gui/Selection.png");
@@ -28,6 +29,7 @@ public class TextureResources {
 	public static final IconResource idChip = new IconResource(230, 0, 18, 18, null);
 	public static final IconResource functionComponent = new IconResource(212, 18, 18, 18, null);
 	public static final IconResource powercomponent = new IconResource(230, 18, 18, 18, null);
+	public static final IconResource laserGuiBG = new IconResource(8, 16, 65, 70, laserGui);
 	
 	
 	public static final ProgressBarImage doubleWarningSideBarIndicator = new IndicatorBarImage(0, 84, 142, 16, 0, 100, 2, 9, 2, 2, ForgeDirection.EAST, planetSelectorBar);

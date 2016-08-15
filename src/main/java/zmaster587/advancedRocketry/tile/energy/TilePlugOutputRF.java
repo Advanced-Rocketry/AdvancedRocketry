@@ -39,7 +39,7 @@ public class TilePlugOutputRF extends TilePlugBase implements IEnergyHandler {
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.rfOutputPlug.name";
+		return "tile.rfOutput.name";
 	}
 
 	@Override

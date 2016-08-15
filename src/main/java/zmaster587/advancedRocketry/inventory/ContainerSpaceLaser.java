@@ -1,5 +1,7 @@
 package zmaster587.advancedRocketry.inventory;
 
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.integration.CompatibilityMgr;
 import zmaster587.advancedRocketry.tile.TileSpaceLaser;
 import zmaster587.libVulpes.gui.SlotSingleItem;
@@ -29,7 +31,7 @@ public class ContainerSpaceLaser extends Container {
 		if(CompatibilityMgr.gregtechLoaded)
 			addSlotToContainer(new SlotOreDict(tile,0,56,54,"lenseRuby"));
 		else
-			addSlotToContainer(new SlotSingleItem(tile,0,56,54, Blocks.glass_pane));
+			addSlotToContainer(new SlotSingleItem(tile,0,56,54, AdvancedRocketryItems.itemLens));
 
 		// Player inventory
 		for (int i1 = 0; i1 < 3; i1++) {

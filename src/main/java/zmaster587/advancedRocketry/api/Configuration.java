@@ -59,6 +59,8 @@ public class Configuration {
 
 	public static boolean advancedVFX;
 
+	public static boolean enableLaserDrill;
+
 	
 
 
