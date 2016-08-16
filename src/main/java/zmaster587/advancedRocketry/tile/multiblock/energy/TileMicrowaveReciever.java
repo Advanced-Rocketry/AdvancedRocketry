@@ -19,6 +19,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -32,14 +33,14 @@ import zmaster587.libVulpes.util.Vector3F;
 
 public class TileMicrowaveReciever extends TileMultiPowerProducer {
 
-	static final BlockMeta iron_block = new BlockMeta(Blocks.iron_block);
+	static final BlockMeta iron_block = new BlockMeta(AdvancedRocketryBlocks.blockSolarPanel);
 	static final Object[][][] structure = new Object[][][] {
 		{
-			{iron_block, iron_block, '*', iron_block, iron_block},
-			{iron_block, iron_block, iron_block, iron_block, iron_block},
+			{iron_block, '*', '*', '*', iron_block},
+			{'*', iron_block, iron_block, iron_block, '*'},
 			{'*', iron_block, 'c', iron_block,'*'},
-			{iron_block, iron_block, iron_block, iron_block, iron_block},
-			{iron_block, iron_block, '*', iron_block, iron_block},
+			{'*', iron_block, iron_block, iron_block, '*'},
+			{iron_block, '*', '*', '*', iron_block},
 		}};
 
 	List<Long> connectedSatellites;
@@ -71,7 +72,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 		List<BlockMeta> blocks = super.getAllowableWildCardBlocks();
 
 		blocks.addAll(getInputs());
-		blocks.add(new BlockMeta(Blocks.iron_block));
+		blocks.add(iron_block);
 		blocks.addAll(getPowerOutputBlocks());
 
 		return blocks;
@@ -82,6 +83,11 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 		return true;
 	}
 
+	@Override
+	public String getMachineName() {
+		return "tile.microwaveReciever.name";
+	}
+	
 	public int getPowerMadeLastTick() {
 		return powerMadeLastTick;
 	}

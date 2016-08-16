@@ -19,7 +19,7 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 	byte teir;
 
 	public SatelliteEnergy() {
-		battery = new UniversalBattery(10000);
+		battery = new UniversalBattery(satelliteProperties.getPowerStorage());
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 
 	@Override
 	public String getName() {
-		return "Energy Satellite";
+		return "Microwave Energy Satellite";
 	}
 
 	@Override

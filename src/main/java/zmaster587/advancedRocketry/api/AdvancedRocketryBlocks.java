@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import zmaster587.advancedRocketry.block.BlockSolarPanel;
 import net.minecraft.block.Block;
 
 /**
@@ -79,4 +80,5 @@ public class AdvancedRocketryBlocks {
 	public static Block blockDataPipe;
 	public static Block blockRFOutput;
 	public static Block blockMicrowaveReciever;
+	public static Block blockSolarPanel;
 }

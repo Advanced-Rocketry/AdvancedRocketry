@@ -11,6 +11,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.integration.CompatibilityMgr;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.inventory.modules.IButtonInventory;
@@ -493,6 +494,8 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 
 			//Laser will be on at this point
 			int orbitDimId = ((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(xCoord, zCoord).getParentPlanet();
+			if(orbitDimId == SpaceObjectManager.WARPDIMID)
+				return;
 			WorldServer orbitWorld = DimensionManager.getWorld(orbitDimId);
 
 			if(orbitWorld == null) {

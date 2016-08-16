@@ -79,6 +79,7 @@ tile.drill.name=Drill
 tile.dataPipe.name=Data Cable
 tile.rfOutput.name=Redstone Flux Output Plug
 tile.microwaveReciever.name=Microwave Reciever
+tile.solarPanel.name=Solar Panel
 
 tile.Dilithium.name=Dilithium Ore
 tile.Copper.name=Copper Ore
@@ -104,7 +105,7 @@ item.circuitIC.4.name=Item IO Circuit Board
 item.circuitIC.5.name=Liquid IO Circuit Board
 item.OreScanner.name=Ore Scanner
 item.qcrucible.name=Quartz Crucible
-item.dataUnit.0.name=Data Unit
+item.dataUnit.0.name=Data Storage Unit
 item.sawBlade.0.name=Iron Saw Blade
 item.satellite.name=Satellite
 item.satellitePowerSource.0.name=Basic Solar Panel

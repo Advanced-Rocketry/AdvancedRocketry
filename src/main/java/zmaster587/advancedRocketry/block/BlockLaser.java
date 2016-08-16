@@ -20,7 +20,7 @@ public class BlockLaser extends RotatableBlock {
 
 	public BlockLaser() {
 		super(Material.iron);
-		setCreativeTab(CreativeTabs.tabTransport).setTickRandomly(true).setBlockName("spaceLaser");
+		setTickRandomly(true).setBlockName("spaceLaser");
 	}
 
 	@Override
