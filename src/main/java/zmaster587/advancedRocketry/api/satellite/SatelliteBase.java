@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.api.satellite;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
+import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
@@ -50,6 +51,22 @@ public abstract class SatelliteBase {
 	 */
 	public abstract double failureChance();
 	
+	/**
+	 * @return an item that can be used to control the satellite, normally a satellite ID chip but can be something else
+	 */
+	public ItemStack getContollerItemStack(ItemStack satIdChip, SatelliteProperties properties) {
+		ItemSatelliteIdentificationChip idChipItem = (ItemSatelliteIdentificationChip)satIdChip.getItem();
+		idChipItem.setSatellite(satIdChip, properties);
+		return satIdChip;
+	}
+	
+	/**
+	 * @param stack stack to check (can be null)
+	 * @return true if the item stack is a valid controller for the satellite
+	 */
+	public boolean isAcceptableControllerItemStack(ItemStack stack) {
+		return stack != null && stack.getItem() instanceof ItemSatelliteIdentificationChip;
+	}
 	
 	/**
 	 * @return true if the satellite can tick

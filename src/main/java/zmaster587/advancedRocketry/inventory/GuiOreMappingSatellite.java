@@ -6,7 +6,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
-import zmaster587.advancedRocketry.satellite.OreMappingSatellite;
+import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
 import zmaster587.libVulpes.util.VulpineMath;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
@@ -16,40 +16,48 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class GuiOreMappingSatallite extends GuiContainer {
+public class GuiOreMappingSatellite extends GuiContainer {
 
 	ClientDynamicTexture texture;
 	Thread currentMapping;
 	TileEntity masterConsole;
 	boolean merged = false;
 	private static final int SCREEN_SIZE = 146;
-	private static final int MAXZOOM = 128;
+	private int maxZoom = 128;
 	private static final int MAXRADIUS = 16;
 	private static final int FANCYSCANMAXSIZE = 57;
 	private int fancyScanOffset;
 	private long prevWorldTickTime;
 	private int prevSlot;
 	private int mouseValue;
-	private int scanSize = 32;
+	private int scanSize = 2;
 	private int radius = 1;
 	private int xSelected, zSelected, xCenter, zCenter;
 	private static final ResourceLocation backdrop = new ResourceLocation("advancedrocketry", "textures/gui/VideoSatallite.png");
 	int[][] oreMap;
 	World world;
-	OreMappingSatellite tile;
+	SatelliteOreMapping tile;
 
-	public GuiOreMappingSatallite(OreMappingSatellite tile,EntityPlayer inventoryPlayer) {
+	public GuiOreMappingSatellite(SatelliteOreMapping tile,EntityPlayer inventoryPlayer) {
 		super( new ContainerOreMappingSatallite(tile,inventoryPlayer.inventory));
 		world = inventoryPlayer.worldObj;
 
 		prevSlot = -1;
 		this.tile = tile;
 		//masterConsole = tile;
-		xCenter = tile.getBlockCenterX();
-		zCenter = tile.getBlockCenterZ();
+		xCenter = (int) inventoryPlayer.posX;
+		zCenter = (int) inventoryPlayer.posZ;
 		
+		//Max zoom is 128
+		if(tile != null)
+			maxZoom = (int) Math.pow(2, tile.getZoomRadius());
+		
+		if(maxZoom == 1)
+			this.tile = null;
+		scanSize = maxZoom;
+
 		prevWorldTickTime = world.getTotalWorldTime();
-		
+
 		fancyScanOffset = 0;
 	}
 
@@ -57,7 +65,7 @@ public class GuiOreMappingSatallite extends GuiContainer {
 	Runnable mapper = new Runnable() {
 		@Override
 		public void run() {
-			oreMap = OreMappingSatellite.scanChunk(world, xCenter, zCenter, scanSize/2, radius);
+			oreMap = SatelliteOreMapping.scanChunk(world, xCenter, zCenter, scanSize/2, radius);
 			if(oreMap != null)
 				merged = true;
 			else merged = false;
@@ -75,7 +83,7 @@ public class GuiOreMappingSatallite extends GuiContainer {
 
 		@Override
 		public void run() {
-			oreMap = OreMappingSatellite.scanChunk(world, xCenter, zCenter, scanSize/2, radius, myBlock);
+			oreMap = SatelliteOreMapping.scanChunk(world, xCenter, zCenter, scanSize/2, radius, myBlock);
 			if(oreMap != null)
 				merged = true;
 			else merged = false;
@@ -86,6 +94,9 @@ public class GuiOreMappingSatallite extends GuiContainer {
 	public boolean doesGuiPauseGame(){ return false; }
 
 	private void runMapperWithSelection() {
+		if(tile == null)
+			return;
+		
 		currentMapping.interrupt();
 		resetTexture();
 		if(prevSlot == -1) {
@@ -103,6 +114,9 @@ public class GuiOreMappingSatallite extends GuiContainer {
 	@Override
 	protected void mouseMovedOrUp(int x, int y, int button) {
 		super.mouseMovedOrUp(x, y, button);
+
+		if(tile == null)
+			return;
 
 		int xOffset = 47 + (width - 240) / 2, yOffset = 20 + (height - 192) / 2;
 
@@ -127,6 +141,8 @@ public class GuiOreMappingSatallite extends GuiContainer {
 
 	}
 
+	
+	
 	@Override
 	protected void keyTyped(char c, int i) {
 		if(i == Keyboard.KEY_W) {
@@ -149,12 +165,11 @@ public class GuiOreMappingSatallite extends GuiContainer {
 			runMapperWithSelection();
 		}
 		else if(i == Keyboard.KEY_DOWN){
-			scanSize = Math.min(scanSize*2, MAXZOOM);
+			scanSize = Math.min(scanSize*2, maxZoom);
 
 			runMapperWithSelection();
 		}
 		else if(i == Keyboard.KEY_UP) {
-
 			if((scanSize/2)/radius > 0) {
 				scanSize = Math.max(scanSize/2, 2);
 
@@ -190,9 +205,11 @@ public class GuiOreMappingSatallite extends GuiContainer {
 
 		ItemStack stack = inventorySlots.getSlot(0).getStack();
 
-		currentMapping = new Thread(mapper);
-		currentMapping.setName("Ore Scan");
-		currentMapping.start();
+		if(tile != null) {
+			currentMapping = new Thread(mapper);
+			currentMapping.setName("Ore Scan");
+			currentMapping.start();
+		}
 	}
 
 	//Reset the texture and prevent memory leaks
@@ -206,7 +223,8 @@ public class GuiOreMappingSatallite extends GuiContainer {
 		super.onGuiClosed();
 		//Delete texture and stop any mapping on close
 		GL11.glDeleteTextures(texture.getTextureId());
-		currentMapping.interrupt();
+		if(currentMapping != null)
+			currentMapping.interrupt();
 	}
 
 
@@ -224,17 +242,17 @@ public class GuiOreMappingSatallite extends GuiContainer {
 		tessellator.addVertex(0, 81 + fancyScanOffset, (double)this.zLevel);
 		tessellator.addVertex(-21, 81 + fancyScanOffset, (double)this.zLevel);
 		tessellator.draw();
-		
+
 		tessellator.startDrawingQuads();
 		tessellator.addVertex(-21, 82 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel);
 		tessellator.addVertex(0, 84 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel);
 		tessellator.addVertex(0, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel);
 		tessellator.addVertex(-21, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel);
 		tessellator.draw();
-		
-		
+
+
 		GL11.glEnable(GL11.GL_BLEND);
-		
+
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
 		GL11.glColor4f(0.5f, 0.5f, 0.0f,0.3f + ((float)Math.sin(Math.PI*(fancyScanOffset/(float)FANCYSCANMAXSIZE))/3f));
 		tessellator.startDrawingQuads();
@@ -243,11 +261,11 @@ public class GuiOreMappingSatallite extends GuiContainer {
 		tessellator.addVertex(194, 82, (double)this.zLevel);
 		tessellator.addVertex(173, 82, (double)this.zLevel);
 		tessellator.draw();
-		
+
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_BLEND);
-		
-		
+
+
 		if(world.getTotalWorldTime() - prevWorldTickTime >= 1 ) {
 			prevWorldTickTime = world.getTotalWorldTime();
 			if(fancyScanOffset >= FANCYSCANMAXSIZE)
@@ -255,15 +273,15 @@ public class GuiOreMappingSatallite extends GuiContainer {
 			else
 				fancyScanOffset++;
 		}
-		
-		
+
+
 		//If a slot is selected draw an indicator
 		int slot;
-		if((slot = tile.getSelectedSlot()) != -1) {
+		if(tile != null && (slot = tile.getSelectedSlot()) != -1) {
 
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glColor3f(0f, 0.8f, 0f);
-			
+
 			tessellator.startDrawingQuads();
 			tessellator.addVertexWithUV(13 + (18*slot), 155 + 16, (double)this.zLevel, 0, 1);
 			tessellator.addVertexWithUV(13 + 16 + (18*slot), 155 + 16, (double)this.zLevel, 1, 1);

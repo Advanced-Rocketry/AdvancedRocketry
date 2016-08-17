@@ -25,6 +25,7 @@ import zmaster587.advancedRocketry.inventory.modules.ModuleOutputSlotArray;
 import zmaster587.advancedRocketry.inventory.modules.ModulePower;
 import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.inventory.modules.ModuleTexturedSlotArray;
+import zmaster587.advancedRocketry.item.ItemOreScanner;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemSatellite;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
@@ -82,14 +83,14 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		}
 
 		//Make sure critical parts exist and output is empty
-		if(inventory[0] == null || inventory[holdingSlot] != null || inventory[outputSlot] != null || 
-				inventory[chipSlot] == null || !(inventory[chipSlot].getItem() instanceof ItemSatelliteIdentificationChip) 
-				|| SatelliteRegistry.getSatelliteProperty(inventory[0]).getSatelliteType() == null)
+		if(inventory[0] == null || inventory[holdingSlot] != null || inventory[outputSlot] != null || SatelliteRegistry.getSatelliteProperty(inventory[0]).getSatelliteType() == null)
 			return false;
 
+		String satType = SatelliteRegistry.getSatelliteProperty(inventory[0]).getSatelliteType();
+		SatelliteBase sat = SatelliteRegistry.getSatallite(satType);
+		
 		//TODO: UNDEBUG if 0 power gen also return false
-
-		return true;
+		return sat.isAcceptableControllerItemStack(inventory[chipSlot]);
 	}
 
 	/**
@@ -128,9 +129,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 			satItem.setSatellite(output, properties);
 
 			//Set the ID chip
-			ItemSatelliteIdentificationChip idChipItem = (ItemSatelliteIdentificationChip)inventory[chipSlot].getItem();
-			idChipItem.setSatellite(inventory[chipSlot], properties);
-
+			inventory[chipSlot] = sat.getContollerItemStack(inventory[chipSlot], properties);
 
 			inventory[holdingSlot] = output;
 		}
@@ -149,9 +148,9 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		boolean isSatellite = ((stack0.getItem() instanceof ItemSatellite || stack0.getItem() instanceof ItemSatelliteIdentificationChip) && stack1.getItem() instanceof ItemSatelliteIdentificationChip);
 		boolean isStation = stack0.getItem() instanceof ItemStationChip && stack0.getItemDamage() != 0 && stack1.getItem() instanceof ItemStationChip;
 		boolean isPlanet = (stack0.getItem() instanceof ItemPlanetIdentificationChip && stack1.getItem() instanceof ItemPlanetIdentificationChip);
-
+		boolean isOreScanner = (stack0.getItem() instanceof ItemOreScanner && stack1.getItem() instanceof ItemOreScanner);
 		return !isRunning() && getStackInSlot(outputSlot) == null && (isStation || stack0.hasTagCompound()) && 
-				(isSatellite  || isStation || isPlanet);
+				(isSatellite  || isStation || isPlanet || isOreScanner);
 	}
 
 	private void copyChip() {
@@ -159,7 +158,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		ItemStack slot0 = getStackInSlot(chipSlot);
 		ItemStack slot1 = getStackInSlot(chipCopySlot);
 
-		if(slot0.getItem() instanceof ItemSatelliteIdentificationChip || slot0.getItem() instanceof ItemPlanetIdentificationChip || slot0.getItem() instanceof ItemStationChip) {
+		if(slot0.getItem() instanceof ItemSatelliteIdentificationChip || slot0.getItem() instanceof ItemOreScanner || slot0.getItem() instanceof ItemPlanetIdentificationChip || slot0.getItem() instanceof ItemStationChip) {
 			inventory[holdingSlot] = getStackInSlot(chipSlot).copy();
 		}
 		else {

@@ -15,10 +15,13 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
+import zmaster587.advancedRocketry.item.ItemOreScanner;
 
-public class OreMappingSatellite extends SatelliteBase  {
+public class SatelliteOreMapping extends SatelliteBase  {
 
 	int blockCenterX, blockCenterZ;
 	public static ArrayList<Integer> oreList = new ArrayList<Integer>();
@@ -26,27 +29,38 @@ public class OreMappingSatellite extends SatelliteBase  {
 	ItemStack inv;
 
 	int selectedSlot = -1;
-	
-	public OreMappingSatellite(int x, int z) {
-		blockCenterX = x;
-		blockCenterZ = z;
-	}
-	
-	public int getBlockCenterX() {
-		return blockCenterX;
+
+	public SatelliteOreMapping() {
 	}
 
-	public int getBlockCenterZ() {
-		return blockCenterZ;
-	}
-
-	public void setSelectedSlot(int i) { selectedSlot = i; }
+	public void setSelectedSlot(int i) { if(canFilterOre()) selectedSlot = i; }
 
 	public int getSelectedSlot() {return selectedSlot;}
 
 	@Override
 	public String getInfo(World world) {
 		return "Operational";
+	}
+
+	public boolean acceptsItemInConstruction(ItemStack item) {
+		int flag = SatelliteRegistry.getSatelliteProperty(item).getPropertyFlag();
+		return SatelliteProperties.Property.MAIN.isOfType(flag) || SatelliteProperties.Property.POWER_GEN.isOfType(flag) || SatelliteProperties.Property.DATA.isOfType(flag);
+	}
+
+	@Override
+	public boolean isAcceptableControllerItemStack(ItemStack stack) {
+		return stack != null && stack.getItem() instanceof ItemOreScanner;
+	}
+
+	@Override
+	public ItemStack getContollerItemStack(ItemStack satIdChip,
+			SatelliteProperties properties) {
+		ItemStack stack = new ItemStack(AdvancedRocketryItems.itemOreScanner);
+		ItemOreScanner scanner = (ItemOreScanner)AdvancedRocketryItems.itemOreScanner;
+
+		scanner.setSatelliteID(stack, properties.getId());
+
+		return stack;
 	}
 
 	@Override
@@ -79,12 +93,13 @@ public class OreMappingSatellite extends SatelliteBase  {
 
 							//Note:May not work with tileEntities (GT ores)
 							boolean found = false;
-									for(ItemStack stack : world.getBlock(x + offsetX, y, z + offsetZ).getDrops(world,x + offsetX, y, z + offsetZ, world.getBlockMetadata(x + offsetX, y, z + offsetZ), 0)) {
-										if(stack.getItem() == block.getItem() && stack.getItemDamage() == block.getItemDamage()) {
-											oreCount++;
-											found = true;
-										}
+							if(world.getBlock(x + offsetX, y, z + offsetZ).getDrops(world,x + offsetX, y, z + offsetZ, world.getBlockMetadata(x + offsetX, y, z + offsetZ), 0) != null)
+								for(ItemStack stack : world.getBlock(x + offsetX, y, z + offsetZ).getDrops(world,x + offsetX, y, z + offsetZ, world.getBlockMetadata(x + offsetX, y, z + offsetZ), 0)) {
+									if(stack.getItem() == block.getItem() && stack.getItemDamage() == block.getItemDamage()) {
+										oreCount++;
+										found = true;
 									}
+								}
 
 							if(!found)
 								otherCount++;
@@ -177,20 +192,6 @@ public class OreMappingSatellite extends SatelliteBase  {
 	public double failureChance() { return 0D;}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		nbt.setInteger("CenterX", blockCenterX);
-		nbt.setInteger("CenterZ", blockCenterZ);
-
-
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		blockCenterX = nbt.getInteger("CenterX");
-		blockCenterZ = nbt.getInteger("CenterZ");
-	}
-
-	@Override
 	public String getName() {
 		return "Ore Mapper";
 	}
@@ -202,5 +203,13 @@ public class OreMappingSatellite extends SatelliteBase  {
 
 	@Override
 	public void tickEntity() {		
+	}
+
+	public int getZoomRadius() {
+		return Math.min(satelliteProperties.getPowerGeneration(),7);
+	}
+
+	public boolean canFilterOre() {
+		return satelliteProperties.getMaxDataStorage() == 3000;
 	}
 }

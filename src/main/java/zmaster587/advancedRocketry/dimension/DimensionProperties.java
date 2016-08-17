@@ -12,7 +12,6 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import scala.reflect.internal.Trees.If;
 import scala.util.Random;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
@@ -132,20 +131,20 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		public static final ResourceLocation atmosphere = new ResourceLocation("advancedrocketry:textures/planets/Atmosphere.png");
 		public static final ResourceLocation atmosphereLEO = new ResourceLocation("advancedrocketry:textures/planets/AtmosphereLEO.png");
-		
+
 		private ResourceLocation resource;
 		private ResourceLocation resourceLEO;
-		
+
 		private PlanetIcons(ResourceLocation resource) {
 			this.resource = resource;
-			
-			this.resourceLEO = new ResourceLocation(resource.toString().substring(0, resource.toString().length() - 4) + "LEO.png");
+
+			this.resourceLEO = new ResourceLocation(resource.toString().substring(0, resource.toString().length() - 4) + "LEO.jpg");
 		}
 
 		public ResourceLocation getResource() {
 			return resource;
 		}
-		
+
 		public ResourceLocation getResourceLEO() {
 			return resourceLEO;
 		}
@@ -153,13 +152,13 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	public static final int MAX_ATM_PRESSURE = 200;
 	public static final int MIN_ATM_PRESSURE = 0;
-	
+
 	public static final int MAX_DISTANCE = 200;
 	public static final int MIN_DISTANCE = 0;
-	
+
 	public static final int MAX_GRAVITY = 200;
 	public static final int MIN_GRAVITY = 0;
-	
+
 	//True if dimension is managed and created by AR (false otherwise)
 	public boolean isNativeDimension;
 	public float[] skyColor;
@@ -238,12 +237,12 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public float getGravitationalMultiplier() {
 		return gravitationalMultiplier;
 	}
-	
+
 	@Override
 	public void setGravitationalMultiplier(float mult) {
 		gravitationalMultiplier = mult;
 	}
-	
+
 	/**
 	 * @return the color of the sun as an array of floats represented as  {r,g,b}
 	 */
@@ -293,7 +292,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		else
 			return PlanetIcons.LAVA.resource;
 	}
-	
+
 	/**
 	 * @return the {@link ResourceLocation} representing this planet, generated from the planet's properties
 	 */
@@ -326,7 +325,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * Sets the name of the planet
 	 */
@@ -366,7 +365,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public int getParentOrbitalDistance() {
 		return orbitalDist;
 	}
-	
+
 	/**
 	 * @return if a planet, the same as getParentOrbitalDistance(), if a moon, the moon's distance from the host star
 	 */
@@ -441,7 +440,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public static ResourceLocation getAtmosphereResource() {
 		return PlanetIcons.atmosphere;
 	}
-	
+
 	public static ResourceLocation getAtmosphereLEOResource() {
 		return PlanetIcons.atmosphereLEO;
 	}
@@ -530,7 +529,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		SatelliteBase satallite = satallites.remove(satalliteId);
 
 		//if(satallite != null && satallite.canTick())
-			tickingSatallites.remove(satalliteId);
+		tickingSatallites.remove(satalliteId);
 
 		return satallite;
 	}
@@ -548,7 +547,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * Tick satellites as needed
 	 */
 	public void tick() {
-		
+
 		Iterator<SatelliteBase> iterator = tickingSatallites.values().iterator();
 
 		while(iterator.hasNext()) {
@@ -606,7 +605,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			}
 		}
 
-		
+
 		if(atmosphereDensity < AtmosphereTypes.LOW.value)
 			viableBiomes.add(AdvancedRocketryBiomes.moonBiome);
 
@@ -667,7 +666,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return true if the biome was added sucessfully, false otherwise
 	 */
 	public boolean addBiome(int biomeId) {
-		
+
 		BiomeGenBase biome =  BiomeGenBase.getBiome(biomeId);
 		if(biomeId == 0 || biome != BiomeGenBase.ocean) {
 			List<BiomeGenBase> biomes = new ArrayList<BiomeGenBase>();
@@ -677,7 +676,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Adds a list of biomes to the allowed list of biomes for this planet
 	 * @param biomes 
@@ -871,12 +870,18 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 					satallites.get(longKey).readFromNBT(satalliteNbt);
 				} 
 				else {
-					SatelliteBase satallite = SatelliteRegistry.createFromNBT(satalliteNbt);
+					//Check for NBT errors
+					try {
+						SatelliteBase satallite = SatelliteRegistry.createFromNBT(satalliteNbt);
 
-					satallites.put(longKey, satallite);
+						satallites.put(longKey, satallite);
 
-					if(satallite.canTick()) {
-						tickingSatallites.put(satallite.getId(), satallite);
+						if(satallite.canTick()) {
+							tickingSatallites.put(satallite.getId(), satallite);
+						}
+						
+					} catch (NullPointerException e) {
+						AdvancedRocketry.logger.warning("Satellite with bad NBT detected, Removing");
 					}
 				}
 			}

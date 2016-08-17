@@ -14,6 +14,7 @@ import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.satellite.IDataHandler;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
+import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.util.ZUtils;
 
@@ -66,7 +67,7 @@ public abstract class SatelliteData extends SatelliteBase {
 
 		return false;
 	}
-
+	
 	@Override
 	public void setDimensionId(World world) {
 		//TODO: send packet on orbit reached

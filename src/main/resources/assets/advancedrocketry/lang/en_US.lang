@@ -114,6 +114,7 @@ item.satellitePrimaryFunction.0.name=Optical Sensor
 item.satellitePrimaryFunction.1.name=Composition Sensor
 item.satellitePrimaryFunction.2.name=Mass Detector
 item.satellitePrimaryFunction.3.name=Microwave Transmitter
+item.satellitePrimaryFunction.4.name=Ore Mapper
 item.satelliteIdChip.name=Satellite Id Chip
 item.planetIdChip.name=Planet Id Chip
 item.asteroidChip.name=Asteroid Chip
