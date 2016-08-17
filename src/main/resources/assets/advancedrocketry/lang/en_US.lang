@@ -80,6 +80,8 @@ tile.dataPipe.name=Data Cable
 tile.rfOutput.name=Redstone Flux Output Plug
 tile.microwaveReciever.name=Microwave Reciever
 tile.solarPanel.name=Solar Panel
+tile.suitWorkStation.name=Suit Work Station
+tile.orientationControl.name=Orientation Controller
 
 tile.Dilithium.name=Dilithium Ore
 tile.Copper.name=Copper Ore
@@ -133,7 +135,9 @@ item.smallAirlock.name=Small Airlock Door
 item.carbonScrubberCartridge.name=Carbon Collection Cartridge
 item.jackhammer.name=Jack Hammer
 item.sealDetector.name=Seal Detector
-tile.orientationControl.name=Orientation Controller
+
+item.jetPack.name=Jet Pack
+item.pressureTank.name=Pressure Tank
 
 material.Gold.name=Gold
 material.Iron.name=Iron

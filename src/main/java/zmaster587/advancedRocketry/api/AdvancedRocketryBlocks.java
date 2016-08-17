@@ -81,4 +81,5 @@ public class AdvancedRocketryBlocks {
 	public static Block blockRFOutput;
 	public static Block blockMicrowaveReciever;
 	public static Block blockSolarPanel;
+	public static Block blockSuitWorkStation;
 }

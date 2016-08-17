@@ -102,6 +102,8 @@ import zmaster587.advancedRocketry.integration.CompatibilityMgr;
 import zmaster587.advancedRocketry.integration.GalacticCraftHandler;
 import zmaster587.advancedRocketry.inventory.GuiHandler;
 import zmaster587.advancedRocketry.item.*;
+import zmaster587.advancedRocketry.item.components.ItemJetpack;
+import zmaster587.advancedRocketry.item.components.ItemPressureTank;
 import zmaster587.advancedRocketry.mission.MissionOreMining;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.recipe.RecipesMachine;
@@ -143,6 +145,7 @@ import zmaster587.advancedRocketry.tile.station.TileStationGravityController;
 import zmaster587.advancedRocketry.tile.station.TileStationOrientationControl;
 import zmaster587.advancedRocketry.tile.station.TileWarpShipMonitor;
 import zmaster587.advancedRocketry.util.FluidColored;
+import zmaster587.advancedRocketry.util.InputSyncHandler;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader;
 import zmaster587.advancedRocketry.world.biome.BiomeGenAlienForest;
@@ -468,7 +471,14 @@ public class AdvancedRocketry {
 		((BlockTile)AdvancedRocketryBlocks.blockDrill).setSideTexture("Advancedrocketry:machineWarning");
 		((BlockTile)AdvancedRocketryBlocks.blockDrill).setFrontTexture("Advancedrocketry:machineWarning");
 		
+		AdvancedRocketryBlocks.blockSuitWorkStation = new BlockTile(TileSuitWorkStation.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("suitWorkStation").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		((BlockTile)AdvancedRocketryBlocks.blockSuitWorkStation).setTopTexture("Advancedrocketry:suitWorkStation");
+		((BlockTile)AdvancedRocketryBlocks.blockSuitWorkStation).setSideTexture("Advancedrocketry:panelSide");
+		((BlockTile)AdvancedRocketryBlocks.blockSuitWorkStation).setFrontTexture("Advancedrocketry:panelSide");
+		
+		
 		AdvancedRocketryBlocks.blockSolarPanel = new BlockSolarPanel(Material.iron).setBlockName("solarPanel").setCreativeTab(tabAdvRocketry).setHardness(3f);
+
 		
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill) {
@@ -569,6 +579,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockMicrowaveReciever, AdvancedRocketryBlocks.blockMicrowaveReciever.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockLightSource, AdvancedRocketryBlocks.blockLightSource.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockSolarPanel, AdvancedRocketryBlocks.blockSolarPanel.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockSuitWorkStation, AdvancedRocketryBlocks.blockSuitWorkStation.getUnlocalizedName());
 		
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
 			GameRegistry.registerBlock(AdvancedRocketryBlocks.blockSpaceLaser, "laserController");
@@ -609,6 +620,10 @@ public class AdvancedRocketry {
 		//Fluids
 		AdvancedRocketryItems.itemBucketRocketFuel = new ItemBucket(AdvancedRocketryBlocks.blockFuelFluid).setCreativeTab(tabAdvRocketryOres).setUnlocalizedName("bucketRocketFuel").setTextureName("advancedRocketry:bucket_liquid").setContainerItem(Items.bucket);
 
+		//Suit Component Registration
+		AdvancedRocketryItems.itemJetpack = new ItemJetpack().setCreativeTab(tabAdvRocketry).setUnlocalizedName("jetPack").setTextureName("advancedRocketry:jetpack");
+		AdvancedRocketryItems.itemPressureTank = new ItemPressureTank(1000).setCreativeTab(tabAdvRocketry).setUnlocalizedName("pressureTank").setTextureName("advancedRocketry:pressureTank");
+		
 		//Armor registration
 		AdvancedRocketryItems.itemSpaceSuit_Helmet = new ItemSpaceArmor(AdvancedRocketryItems.spaceSuit, 0).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceHelmet").setTextureName("advancedRocketry:space_helmet");
 		AdvancedRocketryItems.itemSpaceSuit_Chest = new ItemSpaceArmor(AdvancedRocketryItems.spaceSuit, 1).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceChest").setTextureName("advancedRocketry:space_chestplate");
@@ -663,7 +678,10 @@ public class AdvancedRocketry {
 		GameRegistry.registerItem(AdvancedRocketryItems.itemJackhammer, AdvancedRocketryItems.itemJackhammer.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemAsteroidChip, AdvancedRocketryItems.itemAsteroidChip.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemLens, AdvancedRocketryItems.itemLens.getUnlocalizedName());
-
+		GameRegistry.registerItem(AdvancedRocketryItems.itemJetpack, AdvancedRocketryItems.itemJetpack.getUnlocalizedName());
+		GameRegistry.registerItem(AdvancedRocketryItems.itemPressureTank, AdvancedRocketryItems.itemPressureTank.getUnlocalizedName());
+		
+		
 		//Register multiblock items with the projector
 		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileCuttingMachine(), (BlockTile)AdvancedRocketryBlocks.blockCuttingMachine);
 		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileLathe(), (BlockTile)AdvancedRocketryBlocks.blockLathe);
@@ -730,6 +748,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileDataPipe.class, "ARDataPipe");
 		GameRegistry.registerTileEntity(TileDrill.class, "ARDrill");
 		GameRegistry.registerTileEntity(TileMicrowaveReciever.class, "ARMicrowaveReciever");
+		GameRegistry.registerTileEntity(TileSuitWorkStation.class, "ARSuitWorkStation");
 
 
 
@@ -983,6 +1002,10 @@ public class AdvancedRocketry {
 		CableTickHandler cable = new CableTickHandler();
 		FMLCommonHandler.instance().bus().register(cable);
 		MinecraftForge.EVENT_BUS.register(cable);
+		
+		InputSyncHandler inputSync = new InputSyncHandler();
+		FMLCommonHandler.instance().bus().register(inputSync);
+		MinecraftForge.EVENT_BUS.register(inputSync);
 
 		if(Loader.isModLoaded("GalacticraftCore") && zmaster587.advancedRocketry.api.Configuration.overrideGCAir) {
 			GalacticCraftHandler eventHandler = new GalacticCraftHandler();
