@@ -79,5 +79,4 @@ public class ItemUpgrade extends ItemIngredient implements IArmorComponent {
 			this.icon[armorStack.getItemDamage()] = new ResourceIcon(TextureMap.locationItemsTexture, this.getIcon(armorStack, 0));
 		return this.icon[armorStack.getItemDamage()];
 	}
-
 }
