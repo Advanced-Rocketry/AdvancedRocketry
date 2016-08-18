@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.network;
 
 import io.netty.buffer.ByteBuf;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.libVulpes.util.INetworkMachine;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -97,7 +98,9 @@ public class PacketMachine extends BasePacket {
 	}
 
 	public void executeClient(EntityPlayer player) {
-		machine.useNetworkData(player, Side.CLIENT, packetId, nbt);
+		//Machine can be null if not all chunks are loaded
+		if(machine != null)
+			machine.useNetworkData(player, Side.CLIENT, packetId, nbt);
 	}
 
 	public void executeServer(EntityPlayerMP player) {
