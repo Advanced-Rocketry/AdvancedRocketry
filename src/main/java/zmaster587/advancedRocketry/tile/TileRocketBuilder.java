@@ -102,7 +102,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	private List<BlockPosition> blockPos;
 
-	public enum ErrorCodes {
+	protected static enum ErrorCodes {
 		SUCCESS("Clear for liftoff!"),
 		NOFUEL("Not enough fuel capacity!"),
 		NOSEAT("Missing Seat or satellite!"),
@@ -112,7 +112,10 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		SUCCESS_STATION("Ready!"),
 		EMPTY("Nothing here"),
 		FINISHED("Build Complete!"),
-		INCOMPLETESTRCUTURE("Invalid Launch Pad Structure!");
+		INCOMPLETESTRCUTURE("Invalid Launch Pad Structure!"),
+		NOSATELLITEHATCH("Missing Sat Bay"),
+		NOSATELLITECHIP("Missing Chip"),
+		OUTPUTBLOCKED("Output slot blocked");
 
 		String code;
 		private ErrorCodes(String code) {

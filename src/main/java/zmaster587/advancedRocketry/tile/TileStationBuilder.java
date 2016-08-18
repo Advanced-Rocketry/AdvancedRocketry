@@ -6,14 +6,10 @@ import java.util.List;
 import cpw.mods.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
-import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.inventory.modules.ModuleButton;
-import zmaster587.advancedRocketry.inventory.modules.ModuleImage;
 import zmaster587.advancedRocketry.inventory.modules.ModulePower;
 import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.inventory.modules.ModuleSlotArray;
@@ -24,7 +20,6 @@ import zmaster587.advancedRocketry.item.ItemPackedStructure;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.util.EmbeddedInventory;
 import zmaster587.advancedRocketry.util.StorageChunk;
-import zmaster587.libVulpes.util.IconResource;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -36,7 +31,7 @@ import net.minecraft.world.World;
 public class TileStationBuilder extends TileRocketBuilder implements IInventory {
 
 	EmbeddedInventory inventory;
-
+	
 	public TileStationBuilder() {
 		super();
 		inventory = new EmbeddedInventory(4);
@@ -46,9 +41,22 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 	@Override
 	public boolean canScan() {
 		ItemStack stack = new ItemStack(AdvancedRocketryBlocks.blockHatch,1,3);
-		return inventory.getStackInSlot(0) != null && stack.isItemEqual(inventory.getStackInSlot(0)) &&
-				inventory.getStackInSlot(1) != null && new ItemStack(AdvancedRocketryItems.itemSpaceStationChip,1, -1).isItemEqual(inventory.getStackInSlot(1)) &&
-				inventory.getStackInSlot(2) == null && inventory.getStackInSlot(3) == null && super.canScan();
+		
+		if(inventory.getStackInSlot(0) == null || !stack.isItemEqual(inventory.getStackInSlot(0))) {
+			status = ErrorCodes.NOSATELLITEHATCH;
+			return false;
+		}
+			
+		if(inventory.getStackInSlot(1) == null || !new ItemStack(AdvancedRocketryItems.itemSpaceStationChip,1, -1).isItemEqual(inventory.getStackInSlot(1))) {
+			status = ErrorCodes.NOSATELLITECHIP;
+			return false;
+		}
+		if( inventory.getStackInSlot(2) != null || inventory.getStackInSlot(3) != null) {
+			status = ErrorCodes.OUTPUTBLOCKED;
+			return false;
+		}
+		
+		return super.canScan();
 	}
 
 	@Override
