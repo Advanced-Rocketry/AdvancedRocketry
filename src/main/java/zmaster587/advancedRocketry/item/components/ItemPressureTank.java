@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.item.components;
 
 import java.util.List;
 
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -9,15 +10,21 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import zmaster587.advancedRocketry.api.armor.IArmorComponent;
+import zmaster587.advancedRocketry.client.ResourceIcon;
+import zmaster587.advancedRocketry.item.ItemIngredient;
 
-public class ItemPressureTank extends Item implements IArmorComponent, IFluidContainerItem {
+public class ItemPressureTank extends ItemIngredient implements IArmorComponent, IFluidContainerItem {
 
+	ResourceIcon icon;
+	
 	int capacity;
-	public ItemPressureTank(int capacity) {
+	public ItemPressureTank( int number, int capacity) {
+		super(number);
 		this.capacity = capacity;
 	}
 	
@@ -68,7 +75,7 @@ public class ItemPressureTank extends Item implements IArmorComponent, IFluidCon
 
 	@Override
 	public int getCapacity(ItemStack container) {
-		return capacity;
+		return capacity*(int)Math.pow(2, container.getItemDamage());
 	}
 
 	@Override
@@ -128,6 +135,19 @@ public class ItemPressureTank extends Item implements IArmorComponent, IFluidCon
 		}
 		
 		return null;
+	}
+
+	@Override
+	public ResourceIcon getComponentIcon(ItemStack armorStack) {
+		if(icon == null)
+			this.icon = new ResourceIcon(TextureMap.locationItemsTexture, this.getIcon(armorStack, 0));
+		
+		return this.icon;
+	}
+	
+	@Override
+	public boolean isAllowedInSlot(ItemStack stack, int slot) {
+		return slot == 1;
 	}
 
 }

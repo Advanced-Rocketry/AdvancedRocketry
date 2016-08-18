@@ -87,6 +87,7 @@ tile.Dilithium.name=Dilithium Ore
 tile.Copper.name=Copper Ore
 tile.Tin.name=Tin Ore
 tile.Rutile.name=Rutile Ore
+tile.Aluminum.name=Aluminum Ore
 
 tile.coil.dilithium.name=Dilithium Coil
 tile.coil.silicon.name=Silicon Coil
@@ -135,9 +136,16 @@ item.smallAirlock.name=Small Airlock Door
 item.carbonScrubberCartridge.name=Carbon Collection Cartridge
 item.jackhammer.name=Jack Hammer
 item.sealDetector.name=Seal Detector
+item.itemUpgrade.0.name=Hover Upgrade
+item.itemUpgrade.1.name=Flight Speed Control Upgrade
+item.itemUpgrade.2.name=Bionic Leg Upgrade
+item.itemUpgrade.3.name=Padded Landing Boots
 
 item.jetPack.name=Jet Pack
-item.pressureTank.name=Pressure Tank
+item.pressureTank.0.name=Low Pressure Tank
+item.pressureTank.1.name=Pressure Tank
+item.pressureTank.2.name=High Pressure Tank
+item.pressureTank.3.name=Super High Pressure Tank
 
 material.Gold.name=Gold
 material.Iron.name=Iron
@@ -148,6 +156,7 @@ material.Tin.name=Tin
 material.Steel.name=Steel
 material.Titanium.name=Titanium
 material.Rutile.name=Rutile
+material.Aluminum.name=Aluminum
 
 type.crystal.name=Crystal
 type.dust.name=Dust

@@ -9,6 +9,7 @@ import org.lwjgl.input.Keyboard;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.entity.EntityRocket;
+import zmaster587.advancedRocketry.network.PacketChangeKeyState;
 import zmaster587.advancedRocketry.network.PacketEntity;
 import zmaster587.advancedRocketry.network.PacketHandler;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -34,16 +35,25 @@ public class KeyBindings {
 			
 			EntityRocket rocket;
 			//If the space bar is pressed then send a packet to the server and launch the rocket
-			if(launch.isPressed() && player.ridingEntity instanceof EntityRocket && !(rocket = (EntityRocket)player.ridingEntity).isInFlight()) {
+			if(/*launch.isPressed()*/ false && player.ridingEntity instanceof EntityRocket && !(rocket = (EntityRocket)player.ridingEntity).isInFlight()) {
 				PacketHandler.sendToServer(new PacketEntity(rocket, (byte)EntityRocket.PacketType.LAUNCH.ordinal()));
 				rocket.launch();
 			}
+			
+			if(toggleJetpack.isPressed()) {
+				if(player.isSneaking())
+					PacketHandler.sendToServer(new PacketChangeKeyState(1, false));
+				else
+					PacketHandler.sendToServer(new PacketChangeKeyState(0, false));
+			}
 		}
 		
-		static KeyBinding launch = new KeyBinding("Launch", Keyboard.KEY_SPACE, "key.controls." + Constants.modId);
-
+		//static KeyBinding launch = new KeyBinding("Launch", Keyboard.KEY_SPACE, "key.controls." + Constants.modId);
+		static KeyBinding toggleJetpack = new KeyBinding("toggleJetpack", Keyboard.KEY_X, "key.controls." + Constants.modId);
+		
 		public static final void init() {
 
-			ClientRegistry.registerKeyBinding(launch);
+			//ClientRegistry.registerKeyBinding(launch);
+			ClientRegistry.registerKeyBinding(toggleJetpack);
 		}
 	}

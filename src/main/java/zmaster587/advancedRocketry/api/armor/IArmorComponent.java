@@ -1,11 +1,16 @@
 package zmaster587.advancedRocketry.api.armor;
 
+import zmaster587.advancedRocketry.client.ResourceIcon;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public interface IArmorComponent {
@@ -33,4 +38,12 @@ public interface IArmorComponent {
 	
 	public void onArmorDamaged(EntityLivingBase entity, ItemStack armorStack, ItemStack componentStack, DamageSource source, int damage);
 	
+	public boolean isAllowedInSlot(ItemStack componentStack, int targetSlot);
+	
+	/**
+	 * @param armorStack
+	 * @return The Icon for the HUD, null if none
+	 */
+	@SideOnly(Side.CLIENT)
+	public ResourceIcon getComponentIcon(ItemStack armorStack);
 }

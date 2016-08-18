@@ -8,11 +8,13 @@ import zmaster587.advancedRocketry.api.armor.IModularArmor;
 import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.inventory.modules.ModuleLimitedSlotArray;
+import zmaster587.advancedRocketry.inventory.modules.ModuleSlotArmor;
 import zmaster587.advancedRocketry.inventory.modules.ModuleSlotArray;
 import zmaster587.advancedRocketry.util.EmbeddedInventory;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -31,6 +33,7 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 
 		modules.add(new ModuleSlotArray(15, 15, this, 0, 1));
 		modules.add(new ModuleLimitedSlotArray(15, 35, this, 1, 5));
+		modules.add(new ModuleSlotArmor(150, 8, player));
 
 		return modules;
 	}
@@ -94,9 +97,12 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 			}
 			inventory.setInventorySlotContents(slot, contents);
 		}
-		else if(inventory.getStackInSlot(0) != null && inventory.getStackInSlot(0).getItem() instanceof IModularArmor && contents != null && contents.getItem() instanceof IArmorComponent) {
+		else if(inventory.getStackInSlot(0) != null && inventory.getStackInSlot(0).getItem() instanceof IModularArmor) {
 			//TODO
-			((IModularArmor)inventory.getStackInSlot(0).getItem()).addArmorComponent(worldObj, inventory.getStackInSlot(0), contents, slot - 1);
+			if(contents != null && contents.getItem() instanceof IArmorComponent)
+				((IModularArmor)inventory.getStackInSlot(0).getItem()).addArmorComponent(worldObj, inventory.getStackInSlot(0), contents, slot - 1);
+			else
+				((IModularArmor)inventory.getStackInSlot(0).getItem()).removeComponent(worldObj, inventory.getStackInSlot(0), slot - 1);
 		}
 	}
 
@@ -146,7 +152,8 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		return (slot == 0 && stack.getItem() instanceof IModularArmor) || (inventory.getStackInSlot(0) != null && inventory.getStackInSlot(0).getItem() instanceof IModularArmor && slot != 0 && stack.getItem() instanceof IArmorComponent);
+		
+		return (slot == 0 && stack.getItem() instanceof IModularArmor) || (inventory.getStackInSlot(0) != null && inventory.getStackInSlot(0).getItem() instanceof IModularArmor && slot != 0 && stack.getItem() instanceof IArmorComponent && ((IArmorComponent)stack.getItem()).isAllowedInSlot(stack, ((ItemArmor)inventory.getStackInSlot(0).getItem()).armorType));
 	}
 
 }

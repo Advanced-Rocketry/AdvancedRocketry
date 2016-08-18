@@ -12,6 +12,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -21,19 +22,26 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidContainerItem;
 
 import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
+import zmaster587.advancedRocketry.api.armor.IArmorComponent;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
+import zmaster587.advancedRocketry.api.armor.IModularArmor;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
+import zmaster587.advancedRocketry.client.ResourceIcon;
 import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
 import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -55,7 +63,7 @@ public class RocketEventHandler extends Gui {
 	private static boolean mapReady = false;
 	private static boolean mapNeedsBinding = false;
 	private static IntBuffer table,outerBoundsTable;
-	
+
 	private static final int numTicksToDisplay = 100;
 
 
@@ -63,11 +71,11 @@ public class RocketEventHandler extends Gui {
 	public void onRocketDeorbit(RocketEvent.RocketDeOrbitingEvent event) {
 		if(event.world.isRemote) {
 			prepareOrbitalMap(event);
-			
+
 			//Sky blend color gets stuck and doesnt update unless a new X/Z coord is passed
 			//So fix that...
 			ForgeHooksClient.getSkyBlendColour(event.world, 0, 0, 0);
-			
+
 			if(!(event.world.provider instanceof IPlanetaryProvider)) {
 				event.world.provider.setSkyRenderer(new RenderPlanetarySky());
 			}
@@ -321,56 +329,93 @@ public class RocketEventHandler extends Gui {
 				this.drawTexturedModalRect(3, 242 - size, 17, 75 - size, 3, size); //94 to 161
 
 				GL11.glDisable(GL11.GL_BLEND);
-				
+
 				if(rocket.isInOrbit() && !rocket.isInFlight()) {
 					FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 					String str = "Press Space to descend!";
 					int screenX = event.resolution.getScaledWidth()/6 - fontRenderer.getStringWidth(str)/2;
 					int screenY = event.resolution.getScaledHeight()/18;
-					
+
 					GL11.glPushMatrix();
 					GL11.glScalef(3, 3, 3);
-					
+
 					fontRenderer.drawStringWithShadow(str, screenX, screenY, 0xFFFFFF);
-					
+
 					GL11.glPopMatrix();
 				}else if(!rocket.isInFlight()) {
 					FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 					String str = "Press Space to take off!";
 					int screenX = event.resolution.getScaledWidth()/6 - fontRenderer.getStringWidth(str)/2;
 					int screenY = event.resolution.getScaledHeight()/18;
-					
+
 					GL11.glPushMatrix();
 					GL11.glScalef(3, 3, 3);
-					
+
 					fontRenderer.drawStringWithShadow(str, screenX, screenY, 0xFFFFFF);
-					
+
 					GL11.glPopMatrix();
 				}
-			
 			}
-			
-			
-			
+
 			//Draw the O2 Bar if needed
 			ItemStack chestPiece = Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(3);
 			if(!Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode && chestPiece != null && chestPiece.getItem() instanceof IFillableArmor) {
 				float size = ((IFillableArmor)chestPiece.getItem()).getAirRemaining(chestPiece)/(float)((IFillableArmor)chestPiece.getItem()).getMaxAir();
-			
+
 				GL11.glEnable(GL11.GL_BLEND);
 				Minecraft.getMinecraft().renderEngine.bindTexture(background);
 				GL11.glColor3f(1f, 1f, 1f);
 				int width = 83;
 				int screenX = event.resolution.getScaledWidth()/2 + 8;
 				int screenY = event.resolution.getScaledHeight() - 57;
-				
+
 				//Draw BG
 				this.drawTexturedModalRect(screenX, screenY, 23, 0, width, 17);
 				this.drawTexturedModalRect(screenX , screenY, 23, 17, (int)(width*size), 17);
-				
 			}
-			
-			
+
+			//Draw the H2 Bar if needed
+			if(!Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode && chestPiece != null && chestPiece.getItem() instanceof IModularArmor) {
+				IInventory inv = ((IModularArmor)chestPiece.getItem()).loadModuleInventory(chestPiece);
+
+				int amt = 0, maxAmt = 0;
+				for(int i = 0; i < inv.getSizeInventory(); i++) {
+					ItemStack currentStack = inv.getStackInSlot(i);
+
+					if(currentStack != null && currentStack.getItem() instanceof IFluidContainerItem ) {
+						FluidStack fluid = ((IFluidContainerItem)currentStack.getItem()).getFluid(currentStack);
+						if(fluid == null)
+							maxAmt += ((IFluidContainerItem)currentStack.getItem()).getCapacity(currentStack);
+						else if(fluid.getFluidID() == AdvancedRocketryFluids.fluidHydrogen.getID()) {
+							maxAmt += ((IFluidContainerItem)currentStack.getItem()).getCapacity(currentStack);
+							amt += fluid.amount;
+						}
+					}
+				}
+
+				if(maxAmt > 0) {
+					float size = amt/(float)maxAmt;
+
+					GL11.glEnable(GL11.GL_BLEND);
+					Minecraft.getMinecraft().renderEngine.bindTexture(background);
+					GL11.glColor3f(1f, 1f, 1f);
+					int width = 83;
+					int screenX = event.resolution.getScaledWidth()/2 + 8;
+					int screenY = event.resolution.getScaledHeight() - 74;
+
+					//Draw BG
+					this.drawTexturedModalRect(screenX, screenY, 23, 34, width, 17);
+					this.drawTexturedModalRect(screenX , screenY, 23, 51, (int)(width*size), 17);
+				}
+			}
+
+			//Draw module icons
+			if(!Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode) {
+				for(int i = 1; i < 5; i++) {
+					renderModuleSlots(Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(i), 4-i);
+				}
+			}
+
 			//In event of world change make sure the warning isn't displayed
 			if(Minecraft.getMinecraft().theWorld.getTotalWorldTime() - AtmosphereHandler.lastSuffocationTime < 0)
 				AtmosphereHandler.lastSuffocationTime = 0;
@@ -380,17 +425,93 @@ public class RocketEventHandler extends Gui {
 				String str = "Warning: No Oxygen detected!";
 				int screenX = event.resolution.getScaledWidth()/6 - fontRenderer.getStringWidth(str)/2;
 				int screenY = event.resolution.getScaledHeight()/18;
-				
+
 				GL11.glPushMatrix();
 				GL11.glScalef(3, 3, 3);
-				
+
 				fontRenderer.drawStringWithShadow(str, screenX, screenY, 0xFF5656);
 				GL11.glColor3f(1f, 1f, 1f);
 				Minecraft.getMinecraft().getTextureManager().bindTexture(TextureResources.progressBars);
 				this.drawTexturedModalRect(screenX + fontRenderer.getStringWidth(str)/2 -8, screenY - 16, 0, 156, 16, 16);
-				
+
 				GL11.glPopMatrix();
 			}
 		}
+	}
+	
+	private void renderModuleSlots(ItemStack armorStack, int slot) {
+		int index = 1;
+		float color = 0.85f + 0.15F*MathHelper.sin( 2f*(float)Math.PI*((Minecraft.getMinecraft().theWorld.getTotalWorldTime()) % 60)/60f );
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		float alpha = 0.6f;
+		
+		//TODO other armor slots
+		if(armorStack != null && armorStack.getItem() instanceof IModularArmor) {
+			
+			int size = 24;
+			int screenY = 8 + slot*(size + 8);
+			int screenX = 8;
+			
+			
+			
+			//Draw BG
+			GL11.glColor4f(1f,1f,1f, 1f);
+			Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
+			Tessellator.instance.startDrawingQuads();
+			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel, screenX - 4, screenY - 4, screenX + size, screenY + size + 4,0d,0.5d,0d,1d);
+			Tessellator.instance.draw();
+			
+			Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
+			Tessellator.instance.startDrawingQuads();
+			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel, screenX + size, screenY - 3, screenX + 2 + size, screenY + size + 3,0.5d,0.5d,0d,0d);
+			Tessellator.instance.draw();
+			
+			//Draw Icon
+			GL11.glColor4f(color,color,color, 1f);
+			Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.armorSlots[slot]);
+			Tessellator.instance.startDrawingQuads();
+			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel, screenX, screenY, screenX + size, screenY + size,0d,1d,1d,0d);
+			Tessellator.instance.draw();
+			
+			for( ItemStack stack : ((IModularArmor)armorStack.getItem()).getComponents(armorStack)) {
+				
+				ResourceIcon icon = ((IArmorComponent)stack.getItem()).getComponentIcon(stack);
+				ResourceLocation texture = icon.getResourceLocation();
+				
+				if(texture != null) {
+					
+					screenX = 12 + index*(size+2);
+					
+					//Draw BG
+					GL11.glColor4f(1f, 1f, 1f, 1f);
+					Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
+					Tessellator.instance.startDrawingQuads();
+					RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel, screenX - 4, screenY - 4, screenX + size, screenY + size + 4,0.5d,0.5d,0d,1d);
+					Tessellator.instance.draw();
+					
+					Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+					
+					//Draw Icon
+					GL11.glColor4f(color,color,color, alpha);
+					Tessellator.instance.startDrawingQuads();
+					RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel, screenX, screenY, screenX + size, screenY + size, icon.getMinU(),icon.getMaxU(), icon.getMaxV(),icon.getMinV());
+					Tessellator.instance.draw();
+					
+					
+					index++;
+				}
+			}
+			
+			screenX = (index)*(size+2) - 4;
+			//Draw BG
+			GL11.glColor4f(1f, 1f, 1f,1f);
+			Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
+			Tessellator.instance.startDrawingQuads();
+			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel, screenX - 4, screenY - 4, screenX + size, screenY + size + 4,0.5d,1d,0d,1d);
+			Tessellator.instance.draw();
+		}
+		
+		GL11.glDisable(GL11.GL_BLEND);
 	}
 }

@@ -36,6 +36,10 @@ public class Configuration {
 	public static int dilithiumPerChunk;
 	public static int dilithiumPerChunkMoon;
 	
+	public static int aluminumPerChunk;
+	public static int aluminumClumpSize;
+	public static boolean generateAluminum;
+	
 	public static boolean generateRutile;
 	public static int rutilePerChunk;
 	public static int rutileClumpSize;
@@ -60,8 +64,5 @@ public class Configuration {
 	public static boolean advancedVFX;
 
 	public static boolean enableLaserDrill;
-
-	
-
 
 }

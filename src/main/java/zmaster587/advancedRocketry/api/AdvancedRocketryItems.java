@@ -44,4 +44,5 @@ public class AdvancedRocketryItems {
 	public static Item itemLens;
 	public static Item itemJetpack;
 	public static Item itemPressureTank;
+	public static Item itemUpgrade;
 }

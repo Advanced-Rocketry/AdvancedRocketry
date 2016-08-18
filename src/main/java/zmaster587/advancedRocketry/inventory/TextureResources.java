@@ -25,6 +25,16 @@ public class TextureResources {
 	public static final  ResourceLocation planetSelectorBar = new ResourceLocation("advancedrocketry:textures/gui/progressBars/PlanetSelectorBars.png");
 	public static final  ResourceLocation verticalBar = new ResourceLocation("advancedrocketry:textures/gui/BorderVertical.png");
 	public static final  ResourceLocation horizontalBar = new ResourceLocation("advancedrocketry:textures/gui/BorderHorizontal.png");
+	public static final  ResourceLocation jetpackIconEnabled = new ResourceLocation("advancedrocketry:textures/gui/jetpack.png");
+	public static final  ResourceLocation jetpackIconDisabled = new ResourceLocation("advancedrocketry:textures/gui/jetpackDisabled.png");
+	public static final  ResourceLocation jetpackIconHover = new ResourceLocation("advancedrocketry:textures/gui/jetpackHover.png");
+	public static final  ResourceLocation modularHelm = new ResourceLocation("advancedrocketry:textures/gui/space_helmet.png");
+	public static final  ResourceLocation modularChest = new ResourceLocation("advancedrocketry:textures/gui/space_chestplate.png");
+	public static final  ResourceLocation modularLegs = new ResourceLocation("advancedrocketry:textures/gui/space_leggings.png");
+	public static final  ResourceLocation modularBoots = new ResourceLocation("advancedrocketry:textures/gui/space_boots.png");
+	public static final  ResourceLocation frameHUDBG = new ResourceLocation("advancedrocketry:textures/gui/FrameBG.png");
+	public static final  ResourceLocation[] armorSlots = new ResourceLocation[]{modularHelm, modularChest, modularLegs, modularBoots};
+	
 	public static final IconResource ioSlot = new IconResource(212, 0, 18, 18, null);
 	public static final IconResource idChip = new IconResource(230, 0, 18, 18, null);
 	public static final IconResource functionComponent = new IconResource(212, 18, 18, 18, null);

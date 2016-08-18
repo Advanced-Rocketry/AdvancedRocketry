@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.armor;
 import java.util.LinkedList;
 import java.util.List;
 
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.armor.IArmorComponent;
@@ -10,16 +11,20 @@ import zmaster587.advancedRocketry.api.armor.IFillableArmor;
 import zmaster587.advancedRocketry.api.armor.IModularArmor;
 import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
+import zmaster587.advancedRocketry.client.render.armor.RenderJetPack;
 import zmaster587.advancedRocketry.util.EmbeddedInventory;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -34,6 +39,20 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 
 	public ItemSpaceArmor(ArmorMaterial material, int component) {
 		super(material, 0, component);
+	}
+	
+	
+	
+	@Override
+	public void addInformation(ItemStack stack, EntityPlayer p_77624_2_,
+			List list, boolean p_77624_4_) {
+		super.addInformation(stack, p_77624_2_, list, p_77624_4_);
+		
+		list.add("Modules:");
+		
+		for(ItemStack componentStack : getComponents(stack)) {
+			list.add(EnumChatFormatting.DARK_GRAY + componentStack.getDisplayName());
+		}
 	}
 
 	@Override
@@ -53,6 +72,15 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 		return new EmbeddedInventory(4);
 	}
 
+	@Override
+	public ModelBiped getArmorModel(EntityLivingBase entityLiving,
+			ItemStack itemStack, int armorSlot) {
+		//if(armorSlot == 1)
+		//return new RenderJetPack();
+
+		return super.getArmorModel(entityLiving, itemStack, armorSlot);
+	}
+
 	private void saveEmbeddedInventory(ItemStack stack, EmbeddedInventory inv) {
 		if(stack.hasTagCompound()) {
 			inv.writeToNBT(stack.getTagCompound());
@@ -70,7 +98,9 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 		super.onArmorTick(world, player, armor);
 
 		if(armor.hasTagCompound()) {
-
+			
+			//Some upgrades modify player capabilities
+			
 			EmbeddedInventory inv = loadEmbeddedInventory(armor);
 			for(int i = 0; i < inv.getSizeInventory(); i++ ) {
 				ItemStack stack = inv.getStackInSlot(i);
@@ -79,7 +109,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 					component.onTick(world, player, armor, inv, stack);
 				}
 			}
-			
+
 			saveEmbeddedInventory(armor, inv);
 		}
 	}
@@ -112,7 +142,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 					component.onArmorDamaged(entity, armor, stack, source, damage);
 				}
 			}
-			
+
 			saveEmbeddedInventory(armor, inv);
 		}
 	}
@@ -145,10 +175,13 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 		ItemStack stack = inv.getStackInSlot(index);
 		inv.setInventorySlotContents(index, null);
 
-		IArmorComponent component = (IArmorComponent) stack.getItem();
-		component.onComponentRemoved(world, armor);
+		if(stack != null) {
+			IArmorComponent component = (IArmorComponent) stack.getItem();
+			component.onComponentRemoved(world, armor);
+			saveEmbeddedInventory(armor, inv);
+		}
 
-		saveEmbeddedInventory(armor, inv);
+		
 
 		return stack;
 	}
@@ -277,4 +310,15 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 	public ItemStack getComponentInSlot(ItemStack stack, int slot) {
 		return loadEmbeddedInventory(stack).getStackInSlot(slot);
 	}
+
+	@Override
+	public IInventory loadModuleInventory(ItemStack stack) {
+		return loadEmbeddedInventory(stack);
+	}
+
+	@Override
+	public void saveModuleInventory(ItemStack stack, IInventory inv) {
+		saveEmbeddedInventory(stack, (EmbeddedInventory)inv);
+	}
+
 }

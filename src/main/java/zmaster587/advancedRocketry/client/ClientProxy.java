@@ -18,6 +18,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.client.render.RenderComponents;
 import zmaster587.advancedRocketry.client.render.RenderLaser;
 import zmaster587.advancedRocketry.client.render.RenderLaserTile;
 import zmaster587.advancedRocketry.client.render.RendererDrill;
@@ -111,6 +112,8 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForge.EVENT_BUS.register(AdvancedRocketryItems.itemHoloProjector);
 		MinecraftForge.EVENT_BUS.register(ModuleContainerPan.class);
 
+		MinecraftForge.EVENT_BUS.register(new RenderComponents());
+		
 		FMLCommonHandler.instance().bus().register(new PlanetEventHandlerClient());
 	}
 
@@ -121,8 +124,8 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void registerKeyBindings() {
-		//KeyBindings.init();
-		//FMLCommonHandler.instance().bus().register(new KeyBindings());
+		KeyBindings.init();
+		FMLCommonHandler.instance().bus().register(new KeyBindings());
 
 	}
 
@@ -145,6 +148,10 @@ public class ClientProxy extends CommonProxy {
 	public void spawnParticle(String particle, World world, double x, double y, double z, double motionX, double motionY, double motionZ) {
 		if(particle == "rocketFlame") {
 			RocketFx fx = new RocketFx(world, x, y, z, motionX, motionY, motionZ);
+			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+		}
+		else if(particle == "smallRocketFlame") {
+			RocketFx fx = new RocketFx(world, x, y, z, motionX, motionY, motionZ, 0.25f);
 			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 		}
 		else if(particle == "rocketSmoke") {
