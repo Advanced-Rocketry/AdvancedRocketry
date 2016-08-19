@@ -49,15 +49,12 @@ import zmaster587.advancedRocketry.entity.fx.TrailFx;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.event.PlanetEventHandlerClient;
 import zmaster587.advancedRocketry.event.RocketEventHandler;
-import zmaster587.advancedRocketry.inventory.modules.ModuleContainerPan;
 import zmaster587.advancedRocketry.tile.TileDrill;
 import zmaster587.advancedRocketry.tile.TileModelRender;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
-import zmaster587.advancedRocketry.tile.TileSchematic;
 import zmaster587.advancedRocketry.tile.TileSpaceLaser;
 import zmaster587.advancedRocketry.tile.cables.TileDataPipe;
 import zmaster587.advancedRocketry.tile.cables.TileLiquidPipe;
-import zmaster587.advancedRocketry.tile.multiblock.TilePlaceholder;
 import zmaster587.advancedRocketry.tile.multiblock.TileObservatory;
 import zmaster587.advancedRocketry.tile.multiblock.TilePlanetAnalyser;
 import zmaster587.advancedRocketry.tile.multiblock.TileWarpCore;
@@ -69,6 +66,9 @@ import zmaster587.advancedRocketry.tile.multiblock.machine.TileElectrolyser;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileLathe;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TilePrecisionAssembler;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileRollingMachine;
+import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
+import zmaster587.libVulpes.tile.TileSchematic;
+import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 
 public class ClientProxy extends CommonProxy {
 
@@ -137,11 +137,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void changeClientPlayerWorld(World world) {
 		Minecraft.getMinecraft().thePlayer.worldObj = world;
-	}
-
-	@Override
-	public String getLocalizedString(String str) {
-		return I18n.format(str);
 	}
 
 	@Override

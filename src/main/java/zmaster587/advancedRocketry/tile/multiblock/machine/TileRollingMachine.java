@@ -17,23 +17,24 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.material.MaterialRegistry;
 import zmaster587.advancedRocketry.api.material.MaterialRegistry.AllowedProducts;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
-import zmaster587.advancedRocketry.recipe.RecipesMachine;
-import zmaster587.advancedRocketry.tile.multiblock.TileMultiblockMachine;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.interfaces.IRecipe;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleProgress;
+import zmaster587.libVulpes.recipe.RecipesMachine;
+import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
 public class TileRollingMachine extends TileMultiblockMachine {
 
 	public static final Object structure[][][] = new Object[][][] { 
 		{   {'c', null, Blocks.air, Blocks.air},
-			{'I', Blocks.air, AdvancedRocketryBlocks.blockStructureBlock, Blocks.air},
-			{'I', Blocks.air, AdvancedRocketryBlocks.blockStructureBlock, Blocks.air}},
+			{'I', Blocks.air, LibVulpesBlocks.blockStructureBlock, Blocks.air},
+			{'I', Blocks.air, LibVulpesBlocks.blockStructureBlock, Blocks.air}},
 
-			{{AdvancedRocketryBlocks.blockRFBattery, 'L', AdvancedRocketryBlocks.blockStructureBlock, null},
-				{new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), AdvancedRocketryBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureBlock, 'O'},
-				{new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), AdvancedRocketryBlocks.blockMotor, AdvancedRocketryBlocks.blockStructureBlock, 'O'}}
+			{{LibVulpesBlocks.blockRFBattery, 'L', LibVulpesBlocks.blockStructureBlock, null},
+				{new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'O'},
+				{new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), AdvancedRocketryBlocks.blockMotor, LibVulpesBlocks.blockStructureBlock, 'O'}}
 	};
 
 	@Override

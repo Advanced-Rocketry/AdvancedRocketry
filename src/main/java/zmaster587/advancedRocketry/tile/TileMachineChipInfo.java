@@ -6,10 +6,10 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.inventory.modules.ModuleScaledImage;
-import zmaster587.advancedRocketry.inventory.modules.ModuleText;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleScaledImage;
+import zmaster587.libVulpes.inventory.modules.ModuleText;
 
 public class TileMachineChipInfo extends TileEntity implements IModularInventory {
 

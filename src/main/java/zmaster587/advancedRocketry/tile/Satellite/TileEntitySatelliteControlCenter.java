@@ -16,21 +16,21 @@ import zmaster587.advancedRocketry.api.satellite.IDataHandler;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.inventory.modules.IButtonInventory;
-import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.inventory.modules.ModuleButton;
 import zmaster587.advancedRocketry.inventory.modules.ModuleData;
-import zmaster587.advancedRocketry.inventory.modules.ModulePower;
 import zmaster587.advancedRocketry.inventory.modules.ModuleSatellite;
-import zmaster587.advancedRocketry.inventory.modules.ModuleSlotArray;
-import zmaster587.advancedRocketry.inventory.modules.ModuleText;
-import zmaster587.advancedRocketry.inventory.modules.ModuleToggleSwitch;
 import zmaster587.advancedRocketry.item.ItemData;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.network.PacketMachine;
 import zmaster587.advancedRocketry.util.IDataInventory;
+import zmaster587.libVulpes.inventory.modules.IButtonInventory;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleButton;
+import zmaster587.libVulpes.inventory.modules.ModulePower;
+import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
+import zmaster587.libVulpes.inventory.modules.ModuleText;
+import zmaster587.libVulpes.inventory.modules.ModuleToggleSwitch;
+import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumer;
 import zmaster587.libVulpes.util.INetworkMachine;
 
@@ -159,7 +159,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModulePower(18, 20, this.energy));
-		modules.add(new ModuleButton(116, 70, 0, "Connect!", this, TextureResources.buttonBuild));
+		modules.add(new ModuleButton(116, 70, 0, "Connect!", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
 		modules.add(new ModuleButton(173, 3, 1, "", this, TextureResources.buttonKill, "Destroy Satellite", 24, 24));
 		modules.add(new ModuleData(28, 20, 1, this, data));
 

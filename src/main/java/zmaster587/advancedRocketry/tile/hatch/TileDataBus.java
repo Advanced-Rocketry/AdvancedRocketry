@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.tile.data;
+package zmaster587.advancedRocketry.tile.hatch;
 
 import io.netty.buffer.ByteBuf;
 
@@ -12,14 +12,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
-import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.inventory.modules.ModuleData;
 import zmaster587.advancedRocketry.item.ItemData;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.network.PacketMachine;
-import zmaster587.advancedRocketry.tile.hatch.TileInventoryHatch;
 import zmaster587.advancedRocketry.util.IDataInventory;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.util.INetworkMachine;
 
 //TODO: allow dataCable connections
@@ -61,7 +61,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.hatch.2.name";
+		return "tile.loader.0.name";
 	}
 
 	@Override

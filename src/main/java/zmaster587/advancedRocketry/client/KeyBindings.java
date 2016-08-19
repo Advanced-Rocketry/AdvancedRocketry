@@ -9,9 +9,10 @@ import org.lwjgl.input.Keyboard;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.entity.EntityRocket;
-import zmaster587.advancedRocketry.network.PacketChangeKeyState;
-import zmaster587.advancedRocketry.network.PacketEntity;
-import zmaster587.advancedRocketry.network.PacketHandler;
+import zmaster587.libVulpes.network.PacketChangeKeyState;
+import zmaster587.libVulpes.network.PacketEntity;
+import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.util.InputSyncHandler;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -22,6 +23,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class KeyBindings {
 
+	boolean prevState;
 		@SubscribeEvent
 		public void onKeyInput(InputEvent.KeyInputEvent event) {
 			final Minecraft minecraft = FMLClientHandler.instance().getClient();
@@ -46,13 +48,18 @@ public class KeyBindings {
 				else
 					PacketHandler.sendToServer(new PacketChangeKeyState(0, false));
 			}
+			
+			if(Keyboard.isKeyDown(Keyboard.KEY_SPACE) != prevState) {
+				prevState = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
+				InputSyncHandler.updateKeyPress(player, Keyboard.KEY_SPACE, prevState);
+				PacketHandler.sendToServer(new PacketChangeKeyState(Keyboard.KEY_SPACE, prevState));
+			}
 		}
 		
 		//static KeyBinding launch = new KeyBinding("Launch", Keyboard.KEY_SPACE, "key.controls." + Constants.modId);
 		static KeyBinding toggleJetpack = new KeyBinding("toggleJetpack", Keyboard.KEY_X, "key.controls." + Constants.modId);
 		
 		public static final void init() {
-
 			//ClientRegistry.registerKeyBinding(launch);
 			ClientRegistry.registerKeyBinding(toggleJetpack);
 		}

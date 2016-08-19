@@ -8,9 +8,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-import zmaster587.advancedRocketry.api.armor.IArmorComponent;
-import zmaster587.advancedRocketry.client.ResourceIcon;
-import zmaster587.advancedRocketry.item.ItemIngredient;
+import zmaster587.libVulpes.api.IArmorComponent;
+import zmaster587.libVulpes.client.ResourceIcon;
+import zmaster587.libVulpes.items.ItemIngredient;
 
 public class ItemUpgrade extends ItemIngredient implements IArmorComponent {
 

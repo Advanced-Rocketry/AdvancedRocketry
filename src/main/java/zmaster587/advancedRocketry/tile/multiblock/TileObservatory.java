@@ -9,18 +9,20 @@ import java.util.List;
 import cpw.mods.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
-import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.inventory.modules.ModuleData;
-import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.item.ItemData;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.network.PacketMachine;
-import zmaster587.advancedRocketry.tile.data.TileDataBus;
+import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.client.util.ProgressBarImage;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleProgress;
+import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
+import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -167,8 +169,8 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 		List<BlockMeta> list = super.getAllowableWildCardBlocks();
 
 		list.add(new BlockMeta(Blocks.iron_block,BlockMeta.WILDCARD));
-		list.addAll(getPowerInputBlocks());
-		list.addAll(getDataBlocks());
+		list.addAll(TileMultiBlock.getMapping('P'));
+		list.addAll(TileMultiBlock.getMapping('D'));
 		return list;
 	}
 	

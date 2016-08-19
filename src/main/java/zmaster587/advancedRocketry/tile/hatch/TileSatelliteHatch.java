@@ -1,11 +1,11 @@
-package zmaster587.advancedRocketry.tile.Satellite;
+package zmaster587.advancedRocketry.tile.hatch;
 
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.item.ItemSatellite;
-import zmaster587.advancedRocketry.tile.hatch.TileInventoryHatch;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 
 public class TileSatelliteHatch extends TileInventoryHatch {
 

@@ -22,12 +22,12 @@ import net.minecraftforge.fluids.IFluidContainerItem;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.api.armor.IArmorComponent;
-import zmaster587.advancedRocketry.api.armor.IJetPack;
-import zmaster587.advancedRocketry.api.armor.IModularArmor;
-import zmaster587.advancedRocketry.client.ResourceIcon;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.util.InputSyncHandler;
+import zmaster587.libVulpes.api.IArmorComponent;
+import zmaster587.libVulpes.api.IJetPack;
+import zmaster587.libVulpes.api.IModularArmor;
+import zmaster587.libVulpes.client.ResourceIcon;
+import zmaster587.libVulpes.util.InputSyncHandler;
 
 public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 

@@ -16,6 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
 import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.util.VulpineMath;
 
 @SideOnly(Side.CLIENT)

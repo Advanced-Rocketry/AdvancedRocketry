@@ -22,31 +22,32 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
-import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.inventory.modules.ModuleButton;
 import zmaster587.advancedRocketry.inventory.modules.ModuleData;
-import zmaster587.advancedRocketry.inventory.modules.ModuleOutputSlotArray;
-import zmaster587.advancedRocketry.inventory.modules.ModulePower;
-import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
-import zmaster587.advancedRocketry.inventory.modules.ModuleSlotArray;
-import zmaster587.advancedRocketry.inventory.modules.ModuleText;
-import zmaster587.advancedRocketry.inventory.modules.ModuleTexturedSlotArray;
-import zmaster587.advancedRocketry.inventory.modules.ModuleToggleSwitch;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.network.PacketMachine;
-import zmaster587.advancedRocketry.tile.data.TileDataBus;
-import zmaster587.advancedRocketry.tile.hatch.TileInputHatch;
-import zmaster587.advancedRocketry.tile.hatch.TileInventoryHatch;
-import zmaster587.advancedRocketry.tile.hatch.TileOutputHatch;
-import zmaster587.advancedRocketry.util.EmbeddedInventory;
+import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
 import zmaster587.advancedRocketry.util.ITilePlanetSystemSelectable;
 import zmaster587.advancedRocketry.world.util.MultiData;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.client.util.ProgressBarImage;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleButton;
+import zmaster587.libVulpes.inventory.modules.ModuleOutputSlotArray;
+import zmaster587.libVulpes.inventory.modules.ModulePower;
+import zmaster587.libVulpes.inventory.modules.ModuleProgress;
+import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
+import zmaster587.libVulpes.inventory.modules.ModuleText;
+import zmaster587.libVulpes.inventory.modules.ModuleTexturedSlotArray;
+import zmaster587.libVulpes.inventory.modules.ModuleToggleSwitch;
+import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileInputHatch;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
+import zmaster587.libVulpes.util.EmbeddedInventory;
 
 public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModularInventory, IInventory {
 
@@ -440,13 +441,13 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 
 		modules.add(new ModuleProgress(xStart, yStart + 20, 0, new ProgressBarImage(217,0, 17, 17, 234, 0, ForgeDirection.DOWN, TextureResources.progressBars), this));
 
-		modules.add(new ModuleButton(xStart, yStart + 20, 1, "", this, TextureResources.buttonNull, "Process discovery", 17, 17));
+		modules.add(new ModuleButton(xStart, yStart + 20, 1, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonNull, "Process discovery", 17, 17));
 
 		modules.add(new ModuleText(15, 76, "Research",0x404040));
 
-		modules.add(new ModuleToggleSwitch(15, 86, 4, "", this, TextureResources.buttonToggleImage, "Composition Research", 11, 26, researchingAtmosphere));
-		modules.add(new ModuleToggleSwitch(65, 86, 5, "", this, TextureResources.buttonToggleImage,"Distance Research", 11, 26, researchingDistance));
-		modules.add(new ModuleToggleSwitch(125, 86, 6, "", this, TextureResources.buttonToggleImage, "Mass Research", 11, 26, researchingMass));
+		modules.add(new ModuleToggleSwitch(15, 86, 4, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, "Composition Research", 11, 26, researchingAtmosphere));
+		modules.add(new ModuleToggleSwitch(65, 86, 5, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage,"Distance Research", 11, 26, researchingDistance));
+		modules.add(new ModuleToggleSwitch(125, 86, 6, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, "Mass Research", 11, 26, researchingMass));
 
 		//Research indicators
 		modules.add(new ModuleProgress(26, 86, 1, TextureResources.progressScience, this));

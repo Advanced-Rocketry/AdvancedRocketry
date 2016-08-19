@@ -2,8 +2,8 @@ package zmaster587.advancedRocketry.common;
 
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
+import zmaster587.libVulpes.network.PacketHandler;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
@@ -42,9 +42,7 @@ public class CommonProxy {
 		PacketHandler.sendToNearby(new PacketStationUpdate(station, PacketStationUpdate.Type.SIGNAL_WHITE_BURST), Configuration.spaceDimId, station.getSpawnLocation().x, 128, station.getSpawnLocation().z, Configuration.stationSize);
 	}
 	
-	public String getLocalizedString(String str) {
-		return str;
-	}
+
 
 	public float calculateCelestialAngleSpaceStation() {
 		return 0;

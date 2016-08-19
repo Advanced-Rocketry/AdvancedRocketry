@@ -15,6 +15,7 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.libVulpes.network.BasePacket;
 
 public class PacketStationUpdate extends BasePacket {
 	ISpaceObject spaceObject;

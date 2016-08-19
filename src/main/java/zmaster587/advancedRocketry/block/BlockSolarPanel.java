@@ -21,7 +21,7 @@ public class BlockSolarPanel extends Block {
 		//super.registerBlockIcons(icon);
 		top = icons.registerIcon("AdvancedRocketry:solar");
 		sides = icons.registerIcon("AdvancedRocketry:panelSide");
-		bottom = icons.registerIcon("AdvancedRocketry:machineGeneric");
+		bottom = icons.registerIcon("libvulpes:machineGeneric");
 	}
 	
 	@SideOnly(Side.CLIENT)

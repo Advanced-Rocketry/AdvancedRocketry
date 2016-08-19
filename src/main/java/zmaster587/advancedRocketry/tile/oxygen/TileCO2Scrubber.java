@@ -2,7 +2,7 @@ package zmaster587.advancedRocketry.tile.oxygen;
 
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.tile.hatch.TileInventoryHatch;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 
 public class TileCO2Scrubber extends TileInventoryHatch {
 	public TileCO2Scrubber() {

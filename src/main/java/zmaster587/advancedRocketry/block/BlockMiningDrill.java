@@ -2,13 +2,14 @@ package zmaster587.advancedRocketry.block;
 
 import zmaster587.advancedRocketry.api.IMiningDrill;
 import zmaster587.advancedRocketry.tile.TileDrill;
+import zmaster587.libVulpes.block.BlockTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 public class BlockMiningDrill extends BlockTile implements IMiningDrill {
 
 	public BlockMiningDrill() {
-		super(TileDrill.class, zmaster587.advancedRocketry.inventory.GuiHandler.guiId.MODULAR.ordinal());
+		super(TileDrill.class, zmaster587.libVulpes.inventory.GuiHandler.guiId.MODULAR.ordinal());
 	}
 
 	@Override

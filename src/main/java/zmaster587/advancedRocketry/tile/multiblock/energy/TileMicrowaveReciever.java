@@ -24,11 +24,12 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.network.PacketMachine;
-import zmaster587.advancedRocketry.tile.multiblock.TileMultiPowerProducer;
 import zmaster587.libVulpes.api.IUniversalEnergyTransmitter;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
+import zmaster587.libVulpes.tile.multiblock.TileMultiPowerProducer;
 import zmaster587.libVulpes.util.Vector3F;
 
 public class TileMicrowaveReciever extends TileMultiPowerProducer {
@@ -71,9 +72,9 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 	public List<BlockMeta> getAllowableWildCardBlocks() {
 		List<BlockMeta> blocks = super.getAllowableWildCardBlocks();
 
-		blocks.addAll(getInputs());
+		blocks.addAll(TileMultiBlock.getMapping('I'));
 		blocks.add(iron_block);
-		blocks.addAll(getPowerOutputBlocks());
+		blocks.addAll(TileMultiBlock.getMapping('p'));
 
 		return blocks;
 	}

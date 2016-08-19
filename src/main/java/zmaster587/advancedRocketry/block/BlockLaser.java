@@ -3,9 +3,10 @@ package zmaster587.advancedRocketry.block;
 import java.util.Random;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.inventory.GuiHandler.guiId;
 import zmaster587.advancedRocketry.tile.TileSpaceLaser;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.block.RotatableBlock;
+import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -43,7 +44,7 @@ public class BlockLaser extends RotatableBlock {
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
 	{
 		if(!world.isRemote)
-			player.openGui(AdvancedRocketry.instance, guiId.MODULAR.ordinal(), world, x, y, z);
+			player.openGui(LibVulpes.instance, guiId.MODULAR.ordinal(), world, x, y, z);
 		return true;
 	}
 
@@ -56,7 +57,7 @@ public class BlockLaser extends RotatableBlock {
 	@Override
 	public void registerBlockIcons(IIconRegister icon)
 	{
-		this.top = icon.registerIcon("advancedRocketry:machineGeneric");
+		this.top = icon.registerIcon("libvulpes:machineGeneric");
 		this.sides = icon.registerIcon("advancedRocketry:MonitorSide");
 		this.bottom = icon.registerIcon("advancedRocketry:LaserBottom");
 		this.front = icon.registerIcon("advancedRocketry:LaserFront");

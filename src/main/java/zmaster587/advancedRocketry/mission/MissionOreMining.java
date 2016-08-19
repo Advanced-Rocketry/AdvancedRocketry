@@ -23,6 +23,7 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
 import zmaster587.advancedRocketry.util.StorageChunk;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 
@@ -76,7 +77,7 @@ public class MissionOreMining extends SatelliteBase implements IMission {
 
 	@Override
 	public String getName() {
-		return AdvancedRocketry.proxy.getLocalizedString("mission.asteroidmining.name");
+		return LibVulpes.proxy.getLocalizedString("mission.asteroidmining.name");
 	}
 
 	@Override

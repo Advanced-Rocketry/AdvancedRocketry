@@ -10,12 +10,15 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
-import zmaster587.advancedRocketry.recipe.RecipesMachine;
-import zmaster587.advancedRocketry.tile.multiblock.TileMultiblockMachine;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.interfaces.IRecipe;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleProgress;
+import zmaster587.libVulpes.recipe.RecipesMachine;
+import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
+import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
 public class TileChemicalReactor extends TileMultiblockMachine {
 	public static final Object[][][] structure = { 
@@ -23,7 +26,7 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 		{'L', 'I','L'}},
 		
 		{{'P', AdvancedRocketryBlocks.blockMotor, 'P'}, 
-			{'l', new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), 'O'}},
+			{'l', new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'O'}},
 
 	};
 	
@@ -35,7 +38,8 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 	@Override
 	public boolean shouldHideBlock(World world, int x, int y, int z, Block tile) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		return !getPowerInputBlocks().contains(new BlockMeta(tile, BlockMeta.WILDCARD)) && tileEntity != null && !(tileEntity instanceof TileChemicalReactor);
+		
+		return !TileMultiBlock.getMapping('P').contains(new BlockMeta(tile, BlockMeta.WILDCARD)) && tileEntity != null && !(tileEntity instanceof TileChemicalReactor);
 	}
 	
 	@Override

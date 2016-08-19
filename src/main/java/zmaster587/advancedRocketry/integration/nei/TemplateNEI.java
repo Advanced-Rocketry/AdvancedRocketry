@@ -21,12 +21,12 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import org.lwjgl.opengl.GL11;
 
-import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
-import zmaster587.advancedRocketry.inventory.GuiModular;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.recipe.RecipesMachine;
-import zmaster587.advancedRocketry.recipe.RecipesMachine.Recipe;
+import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.interfaces.IRecipe;
+import zmaster587.libVulpes.inventory.GuiModular;
+import zmaster587.libVulpes.recipe.RecipesMachine;
+import zmaster587.libVulpes.recipe.RecipesMachine.Recipe;
 import zmaster587.libVulpes.util.ZUtils;
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.NEIServerUtils;

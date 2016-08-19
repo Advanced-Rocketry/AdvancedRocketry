@@ -1,8 +1,8 @@
 package zmaster587.advancedRocketry.client.render;
 
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.api.armor.IModularArmor;
 import zmaster587.advancedRocketry.client.render.armor.RenderJetPack;
+import zmaster587.libVulpes.api.IModularArmor;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderPlayerEvent;

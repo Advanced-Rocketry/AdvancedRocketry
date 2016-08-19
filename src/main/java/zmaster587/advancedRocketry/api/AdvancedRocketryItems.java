@@ -25,7 +25,6 @@ public class AdvancedRocketryItems {
 	public static Item itemSatelliteIdChip;
 	public static Item itemPlanetIdChip;
 	public static Item[] itemOreProduct;
-	public static Item itemBattery;
 	public static Item itemMisc;
 	public static Item itemHoloProjector;
 	public static Item itemSawBlade;

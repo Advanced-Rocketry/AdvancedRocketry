@@ -2,9 +2,12 @@ package zmaster587.advancedRocketry.inventory;
 
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
-import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
 import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
 import zmaster587.advancedRocketry.tile.TileSpaceLaser;
+import zmaster587.libVulpes.inventory.ContainerModular;
+import zmaster587.libVulpes.inventory.GuiModular;
+import zmaster587.libVulpes.inventory.GuiModularFullScreen;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -15,10 +18,7 @@ public class GuiHandler implements IGuiHandler {
 	public enum guiId {
 		RocketBuilder,
 		BlastFurnace,
-		OreMappingSatellite,
-		MODULAR,
-		MODULARNOINV,
-		MODULARFULLSCREEN
+		OreMappingSatellite
 	}
 
 	//X coord is entity ID num if entity
@@ -50,9 +50,6 @@ public class GuiHandler implements IGuiHandler {
 				satellite = null;
 			
 			return new ContainerOreMappingSatallite((SatelliteOreMapping) satellite, player.inventory);
-		}
-		else if(ID == guiId.MODULAR.ordinal() || ID == guiId.MODULARNOINV.ordinal() || ID == guiId.MODULARFULLSCREEN.ordinal()) {
-			return new ContainerModular(player, ((IModularInventory)tile).getModules(ID, player), ((IModularInventory)tile), ID == guiId.MODULAR.ordinal(), ID != guiId.MODULARFULLSCREEN.ordinal());
 		}
 		return null;
 	}
@@ -86,14 +83,6 @@ public class GuiHandler implements IGuiHandler {
 				satellite = null;
 			
 			return new GuiOreMappingSatellite((SatelliteOreMapping) satellite, player);
-		}
-		else if(ID == guiId.MODULAR.ordinal() || ID == guiId.MODULARNOINV.ordinal()) {
-			IModularInventory modularTile = ((IModularInventory)tile);
-			return new GuiModular(player, modularTile.getModules(ID, player), modularTile, ID == guiId.MODULAR.ordinal(), true, modularTile.getModularInventoryName());
-		}
-		else if(ID == guiId.MODULARFULLSCREEN.ordinal()) {
-			IModularInventory modularTile = ((IModularInventory)tile);
-			return new GuiModularFullScreen(player,modularTile.getModules(ID, player), modularTile, ID == guiId.MODULAR.ordinal(), false, modularTile.getModularInventoryName());
 		}
 		return null;
 	}

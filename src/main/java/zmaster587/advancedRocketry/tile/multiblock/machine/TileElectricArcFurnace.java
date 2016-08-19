@@ -10,18 +10,19 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
-import zmaster587.advancedRocketry.recipe.RecipesMachine;
-import zmaster587.advancedRocketry.tile.hatch.TileInputHatch;
-import zmaster587.advancedRocketry.tile.hatch.TileOutputHatch;
-import zmaster587.advancedRocketry.tile.multiblock.TileMultiblockMachine;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.interfaces.IRecipe;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleProgress;
+import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.IMultiblock;
+import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileInputHatch;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
 
 public class TileElectricArcFurnace extends TileMultiblockMachine implements IModularInventory {
 
@@ -66,8 +67,8 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 	@Override
 	public List<BlockMeta> getAllowableWildCardBlocks() {
 		List<BlockMeta> list = super.getAllowableWildCardBlocks();
-		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 0));
-		list.add(new BlockMeta(AdvancedRocketryBlocks.blockHatch, 1));
+		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 0));
+		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 1));
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockBlastBrick, -1));
 		return list;
 	}

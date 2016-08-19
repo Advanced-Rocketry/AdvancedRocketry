@@ -41,8 +41,6 @@ public class NEIAdvancedRocketryConfig implements IConfigureNEI {
 		API.registerUsageHandler(chemReactor);
 		
 		API.hideItem(new ItemStack(AdvancedRocketryBlocks.blockQuartzCrucible));
-		API.hideItem(new ItemStack(AdvancedRocketryBlocks.blockPlaceHolder));
-		API.hideItem(new ItemStack(AdvancedRocketryBlocks.blockPhantom));
 		API.hideItem(new ItemStack(AdvancedRocketryItems.itemSatellite));
 	}
 

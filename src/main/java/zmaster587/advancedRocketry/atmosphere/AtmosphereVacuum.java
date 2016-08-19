@@ -8,8 +8,8 @@ import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
 import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
-import zmaster587.advancedRocketry.network.PacketHandler;
 import zmaster587.advancedRocketry.network.PacketOxygenState;
+import zmaster587.libVulpes.network.PacketHandler;
 
 /**
  * Atmosphere type for vaccum (No air)

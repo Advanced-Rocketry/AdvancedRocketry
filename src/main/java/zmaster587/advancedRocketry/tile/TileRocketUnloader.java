@@ -1,6 +1,5 @@
-package zmaster587.advancedRocketry.tile.hatch;
+package zmaster587.advancedRocketry.tile;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
@@ -13,43 +12,22 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
-import zmaster587.advancedRocketry.block.multiblock.BlockHatch;
 import zmaster587.advancedRocketry.entity.EntityRocket;
-import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.inventory.modules.ModuleOutputSlotArray;
 import zmaster587.advancedRocketry.mission.IMission;
-import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
-import zmaster587.libVulpes.interfaces.ILinkableTile;
+import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.item.ItemLinker;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 
-public class TileOutputHatch extends TileInventoryHatch implements IInfrastructure {
-
+public class TileRocketUnloader extends TileInventoryHatch implements IInfrastructure {
 	EntityRocket rocket;
-
-	public TileOutputHatch() {
-		super();
-	}
-
-	public TileOutputHatch(int size) {
+	
+	public TileRocketUnloader(int size) {
 		super(size);
 	}
-
+	
 	@Override
 	public String getModularInventoryName() {
-		return "tile.hatch.1.name";
-	}
-
-	@Override
-	public boolean canInsertItem(int p_102007_1_, ItemStack p_102007_2_,
-			int p_102007_3_) {
-		return false;
-	}
-
-	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
-		modules.add(new ModuleOutputSlotArray(8, 18, this, 0, this.getSizeInventory()));
-		return modules;
+		return "tile.loader.2.name";
 	}
 	
 	@Override
@@ -92,7 +70,7 @@ public class TileOutputHatch extends TileInventoryHatch implements IInfrastructu
 				}
 
 			//Update redstone state
-			((BlockHatch)AdvancedRocketryBlocks.blockHatch).setRedstoneState(worldObj, xCoord, yCoord, zCoord, rocketContainsNoItems);
+			((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj, xCoord, yCoord, zCoord, rocketContainsNoItems);
 
 		}
 	}
@@ -124,7 +102,7 @@ public class TileOutputHatch extends TileInventoryHatch implements IInfrastructu
 	@Override
 	public void unlinkRocket() {
 		rocket = null;
-		((BlockHatch)AdvancedRocketryBlocks.blockHatch).setRedstoneState(worldObj, xCoord, yCoord, zCoord, false);
+		((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj, xCoord, yCoord, zCoord, false);
 		//On unlink prevent the tile from ticking anymore
 		//if(!worldObj.isRemote)
 			//worldObj.loadedTileEntityList.remove(this);

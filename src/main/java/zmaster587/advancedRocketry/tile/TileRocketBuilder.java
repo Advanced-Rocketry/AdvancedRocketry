@@ -25,29 +25,29 @@ import zmaster587.advancedRocketry.api.IRocketEngine;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
 import zmaster587.advancedRocketry.api.StatsRocket;
 import zmaster587.advancedRocketry.block.BlockSeat;
-import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.inventory.modules.IButtonInventory;
-import zmaster587.advancedRocketry.inventory.modules.IDataSync;
-import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.inventory.modules.IProgressBar;
-import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.inventory.modules.ModuleButton;
-import zmaster587.advancedRocketry.inventory.modules.ModuleImage;
-import zmaster587.advancedRocketry.inventory.modules.ModulePower;
-import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
-import zmaster587.advancedRocketry.inventory.modules.ModuleSync;
-import zmaster587.advancedRocketry.inventory.modules.ModuleText;
-import zmaster587.advancedRocketry.network.PacketEntity;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.network.PacketMachine;
-import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteHatch;
+import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.block.RotatableBlock;
+import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
 import zmaster587.libVulpes.interfaces.INetworkEntity;
+import zmaster587.libVulpes.inventory.modules.IButtonInventory;
+import zmaster587.libVulpes.inventory.modules.IDataSync;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
+import zmaster587.libVulpes.inventory.modules.IProgressBar;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleButton;
+import zmaster587.libVulpes.inventory.modules.ModuleImage;
+import zmaster587.libVulpes.inventory.modules.ModulePower;
+import zmaster587.libVulpes.inventory.modules.ModuleProgress;
+import zmaster587.libVulpes.inventory.modules.ModuleSync;
+import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.item.ItemLinker;
+import zmaster587.libVulpes.network.PacketEntity;
+import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.TileEntityRFConsumer;
 import zmaster587.libVulpes.tile.TilePointer;
@@ -679,10 +679,10 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		modules.add(new ModuleProgress(149, 90, 2, verticalProgressBar, this));
 
 
-		modules.add(new ModuleButton(5, 94, 0, "Scan", this, TextureResources.buttonScan));
+		modules.add(new ModuleButton(5, 94, 0, "Scan", this,  zmaster587.libVulpes.inventory.TextureResources.buttonScan));
 
 		ModuleButton buttonBuild;
-		modules.add(buttonBuild = new ModuleButton(5, 120, 1, "Build", this, TextureResources.buttonBuild));
+		modules.add(buttonBuild = new ModuleButton(5, 120, 1, "Build", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
 		buttonBuild.setColor(0xFFFF2222);
 
 		modules.add(thrustText = new ModuleText(8, 15, "", 0xFF22FF22));

@@ -12,21 +12,24 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.material.MaterialRegistry;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
-import zmaster587.advancedRocketry.recipe.RecipesMachine;
-import zmaster587.advancedRocketry.tile.energy.TilePlugInputRF;
-import zmaster587.advancedRocketry.tile.multiblock.TileMultiblockMachine;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.interfaces.IRecipe;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleProgress;
+import zmaster587.libVulpes.recipe.RecipesMachine;
+import zmaster587.libVulpes.tile.energy.TilePlugInputRF;
+import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
+import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
 public class TileElectrolyser extends TileMultiblockMachine {
 	public static final Object[][][] structure = { 
 		{{null,null,null},
-		{'P', new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock),'P'}},
+		{'P', new BlockMeta(LibVulpesBlocks.blockStructureBlock),'P'}},
 		
 		{{'l', 'c', 'l'}, 
-			{new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), 'L', new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock)}},
+			{new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'L', new BlockMeta(LibVulpesBlocks.blockStructureBlock)}},
 
 	};
 	
@@ -43,7 +46,7 @@ public class TileElectrolyser extends TileMultiblockMachine {
 	@Override
 	public boolean shouldHideBlock(World world, int x, int y, int z, Block tile) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		return !getPowerInputBlocks().contains(new BlockMeta(tile, BlockMeta.WILDCARD)) && tileEntity != null && !(tileEntity instanceof TileElectrolyser);
+		return !TileMultiBlock.getMapping('P').contains(new BlockMeta(tile, BlockMeta.WILDCARD)) && tileEntity != null && !(tileEntity instanceof TileElectrolyser);
 	}
 	
 	

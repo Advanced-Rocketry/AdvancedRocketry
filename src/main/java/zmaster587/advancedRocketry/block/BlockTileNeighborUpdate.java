@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.block;
 
-import zmaster587.advancedRocketry.util.IAdjBlockUpdate;
+import zmaster587.libVulpes.block.BlockTile;
+import zmaster587.libVulpes.util.IAdjBlockUpdate;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;

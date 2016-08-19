@@ -10,28 +10,29 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
-import zmaster587.advancedRocketry.inventory.GuiHandler.guiId;
-import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.inventory.modules.IButtonInventory;
-import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.inventory.modules.IProgressBar;
-import zmaster587.advancedRocketry.inventory.modules.ISelectionNotify;
-import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.inventory.modules.ModuleButton;
-import zmaster587.advancedRocketry.inventory.modules.ModuleImage;
 import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
-import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
-import zmaster587.advancedRocketry.inventory.modules.ModuleScaledImage;
-import zmaster587.advancedRocketry.inventory.modules.ModuleText;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.network.PacketMachine;
+import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.tile.multiblock.TileWarpCore;
 import zmaster587.advancedRocketry.util.ITilePlanetSystemSelectable;
-import zmaster587.advancedRocketry.client.render.util.IndicatorBarImage;
-import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
-import	zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.client.util.IndicatorBarImage;
+import zmaster587.libVulpes.client.util.ProgressBarImage;
+import zmaster587.libVulpes.inventory.GuiHandler.guiId;
+import zmaster587.libVulpes.inventory.modules.IButtonInventory;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
+import zmaster587.libVulpes.inventory.modules.IProgressBar;
+import zmaster587.libVulpes.inventory.modules.ISelectionNotify;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleButton;
+import zmaster587.libVulpes.inventory.modules.ModuleImage;
+import zmaster587.libVulpes.inventory.modules.ModuleProgress;
+import zmaster587.libVulpes.inventory.modules.ModuleScaledImage;
+import zmaster587.libVulpes.inventory.modules.ModuleText;
+import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.IconResource;
@@ -111,7 +112,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			int sizeY = 70;
 
 			if(worldObj.isRemote) {
-				modules.add(new ModuleScaledImage(baseX,baseY,sizeX,sizeY, TextureResources.starryBG));
+				modules.add(new ModuleScaledImage(baseX,baseY,sizeX,sizeY, zmaster587.libVulpes.inventory.TextureResources.starryBG));
 				modules.add(new ModuleScaledImage(baseX + 10,baseY + 10,sizeX - 20, sizeY - 20, location));
 
 
@@ -127,7 +128,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 				modules.add(new ModuleScaledImage(baseX,baseY,70,3, TextureResources.horizontalBar));
 				modules.add(new ModuleScaledImage(baseX,baseY + sizeY - 3,70,-3, TextureResources.horizontalBar));
 			}
-			modules.add(new ModuleButton(baseX - 3, baseY + sizeY, 0, "Select Planet", this, TextureResources.buttonBuild, sizeX + 6, 16));
+			modules.add(new ModuleButton(baseX - 3, baseY + sizeY, 0, "Select Planet", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, sizeX + 6, 16));
 
 
 			//Status text
@@ -145,12 +146,12 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			baseY = 20;
 			sizeX = 70;
 			sizeY = 70;
-			ModuleButton warp = new ModuleButton(baseX - 3, baseY + sizeY,1, "Warp!", this ,TextureResources.buttonBuild, sizeX + 6, 16);
+			ModuleButton warp = new ModuleButton(baseX - 3, baseY + sizeY,1, "Warp!", this ,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, sizeX + 6, 16);
 
 			modules.add(warp);
 
 			if(worldObj.isRemote)
-				modules.add(new ModuleScaledImage(baseX,baseY,sizeX,sizeY, TextureResources.starryBG));
+				modules.add(new ModuleScaledImage(baseX,baseY,sizeX,sizeY, zmaster587.libVulpes.inventory.TextureResources.starryBG));
 
 			if(dimCache == null && isOnStation && station.getOrbitingPlanetId() != SpaceObjectManager.WARPDIMID )
 				dimCache = DimensionManager.getInstance().getDimensionProperties(station.getOrbitingPlanetId());
@@ -193,7 +194,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 		}
 		else if (ID == guiId.MODULARFULLSCREEN.ordinal()) {
 			//Open planet selector menu
-			container = new ModulePlanetSelector(worldObj.provider.dimensionId, TextureResources.starryBG, this);
+			container = new ModulePlanetSelector(worldObj.provider.dimensionId, zmaster587.libVulpes.inventory.TextureResources.starryBG, this);
 			container.setOffset(1000, 1000);
 			modules.add(container);
 		}
@@ -238,7 +239,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
 		if(id == 0)
-			player.openGui(AdvancedRocketry.instance, guiId.MODULARFULLSCREEN.ordinal(), worldObj, this.xCoord, this.yCoord, this.zCoord);
+			player.openGui(LibVulpes.instance, guiId.MODULARFULLSCREEN.ordinal(), worldObj, this.xCoord, this.yCoord, this.zCoord);
 		else if(id == 1 || id == 3) {
 			int dimId = nbt.getInteger("id");
 			container.setSelectedSystem(dimId);
@@ -248,7 +249,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			markDirty();
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			if(id == 3)
-				player.openGui(AdvancedRocketry.instance, guiId.MODULARNOINV.ordinal(), worldObj, this.xCoord, this.yCoord, this.zCoord);
+				player.openGui(LibVulpes.instance, guiId.MODULARNOINV.ordinal(), worldObj, this.xCoord, this.yCoord, this.zCoord);
 		}
 		else if(id == 2) {
 			SpaceObject station = getSpaceObject();

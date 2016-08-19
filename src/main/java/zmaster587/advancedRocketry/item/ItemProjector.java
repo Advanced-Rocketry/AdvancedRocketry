@@ -9,24 +9,24 @@ import java.util.List;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.block.BlockTile;
-import zmaster587.advancedRocketry.inventory.GuiHandler;
-import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.inventory.modules.IButtonInventory;
-import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.inventory.modules.ModuleButton;
-import zmaster587.advancedRocketry.inventory.modules.ModuleContainerPan;
-import zmaster587.advancedRocketry.network.INetworkItem;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.network.PacketItemModifcation;
-import zmaster587.advancedRocketry.tile.TileSchematic;
-import zmaster587.advancedRocketry.tile.multiblock.TileMultiBlock;
-import zmaster587.advancedRocketry.tile.multiblock.TilePlaceholder;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.block.RotatableBlock;
+import zmaster587.libVulpes.inventory.GuiHandler;
+import zmaster587.libVulpes.inventory.TextureResources;
+import zmaster587.libVulpes.inventory.modules.IButtonInventory;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleButton;
+import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
+import zmaster587.libVulpes.network.INetworkItem;
+import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.network.PacketItemModifcation;
+import zmaster587.libVulpes.tile.TileSchematic;
+import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
+import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 import zmaster587.libVulpes.util.Vector3F;
 import zmaster587.libVulpes.util.ZUtils;
 import net.minecraft.block.Block;
@@ -103,7 +103,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 						int globalX = basepos.x - x*direction.offsetZ + z*direction.offsetX;
 						int globalZ = basepos.z + (x* direction.offsetX) + (z*direction.offsetZ);
 
-						if(world.getBlock(globalX, basepos.y + y, globalZ) == AdvancedRocketryBlocks.blockPhantom) 
+						if(world.getBlock(globalX, basepos.y + y, globalZ) == LibVulpesBlocks.blockPhantom) 
 							world.setBlockToAir(globalX, basepos.y + y, globalZ);
 					}
 				}
@@ -154,7 +154,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 					if(world.isAirBlock(globalX, globalY, globalZ) && block.get(0).getBlock().getMaterial() != Material.air) {
 						//block = (Block)structure[y][z][x];
-						world.setBlock(globalX, globalY, globalZ, AdvancedRocketryBlocks.blockPhantom, block.get(0).getMeta(), 3);
+						world.setBlock(globalX, globalY, globalZ, LibVulpesBlocks.blockPhantom, block.get(0).getMeta(), 3);
 						TileEntity newTile = world.getTileEntity(globalX, globalY, globalZ);
 
 						//TODO: compatibility fixes with the tile entity not reflecting current block
@@ -176,7 +176,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			EntityPlayer player) {
 
 		if(!world.isRemote && player.isSneaking()) {
-			player.openGui(AdvancedRocketry.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), world, -1, -1, 0);
+			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), world, -1, -1, 0);
 			return super.onItemRightClick(stack, world, player);
 		}
 
@@ -210,7 +210,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 		for(int i = 0; 	i <	machineList.size(); i++) {
 			TileMultiBlock multiblock = machineList.get(i);
-			btns.add(new ModuleButton(60, 4 + i*24, i, AdvancedRocketry.proxy.getLocalizedString(multiblock.getMachineName()), this, TextureResources.buttonBuild));
+			btns.add(new ModuleButton(60, 4 + i*24, i, LibVulpes.proxy.getLocalizedString(multiblock.getMachineName()), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
 		}
 
 		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<ModuleBase>(), TextureResources.starryBG, 165, 120, 0, 500);
@@ -362,7 +362,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 		int id = getMachineId(stack);
 		if(id != -1)
-			list.add(EnumChatFormatting.GREEN + AdvancedRocketry.proxy.getLocalizedString(machineList.get(id).getMachineName()));
+			list.add(EnumChatFormatting.GREEN + LibVulpes.proxy.getLocalizedString(machineList.get(id).getMachineName()));
 	}
 
 	@Override

@@ -13,12 +13,12 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
-import zmaster587.advancedRocketry.api.armor.IModularArmor;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
-import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.inventory.modules.ModuleLiquidIndicator;
-import zmaster587.advancedRocketry.inventory.modules.ModulePower;
+import zmaster587.libVulpes.api.IModularArmor;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleLiquidIndicator;
+import zmaster587.libVulpes.inventory.modules.ModulePower;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
 
 public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements IModularInventory {

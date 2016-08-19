@@ -8,18 +8,19 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.inventory.modules.ModuleButton;
-import zmaster587.advancedRocketry.inventory.modules.ModulePower;
-import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
-import zmaster587.advancedRocketry.inventory.modules.ModuleSlotArray;
-import zmaster587.advancedRocketry.inventory.modules.ModuleSync;
-import zmaster587.advancedRocketry.inventory.modules.ModuleText;
-import zmaster587.advancedRocketry.inventory.modules.ModuleTexturedSlotArray;
 import zmaster587.advancedRocketry.item.ItemPackedStructure;
 import zmaster587.advancedRocketry.stations.SpaceObject;
-import zmaster587.advancedRocketry.util.EmbeddedInventory;
 import zmaster587.advancedRocketry.util.StorageChunk;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleButton;
+import zmaster587.libVulpes.inventory.modules.ModulePower;
+import zmaster587.libVulpes.inventory.modules.ModuleProgress;
+import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
+import zmaster587.libVulpes.inventory.modules.ModuleSync;
+import zmaster587.libVulpes.inventory.modules.ModuleText;
+import zmaster587.libVulpes.inventory.modules.ModuleTexturedSlotArray;
+import zmaster587.libVulpes.util.EmbeddedInventory;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -40,7 +41,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 	@Override
 	public boolean canScan() {
-		ItemStack stack = new ItemStack(AdvancedRocketryBlocks.blockHatch,1,3);
+		ItemStack stack = new ItemStack(AdvancedRocketryBlocks.blockLoader,1,1);
 		
 		if(inventory.getStackInSlot(0) == null || !stack.isItemEqual(inventory.getStackInSlot(0))) {
 			status = ErrorCodes.NOSATELLITEHATCH;
@@ -144,10 +145,10 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 		modules.add(new ModuleProgress(149, 30, 2, verticalProgressBar, this));
 
-		modules.add(new ModuleButton(5, 34, 0, "Scan", this, TextureResources.buttonScan));
+		modules.add(new ModuleButton(5, 34, 0, "Scan", this,  zmaster587.libVulpes.inventory.TextureResources.buttonScan));
 
 		ModuleButton buttonBuild;
-		modules.add(buttonBuild = new ModuleButton(5, 60, 1, "Build", this, TextureResources.buttonBuild));
+		modules.add(buttonBuild = new ModuleButton(5, 60, 1, "Build", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
 		buttonBuild.setColor(0xFFFF2222);
 		modules.add(errorText = new ModuleText(5, 24, "", 0xFFFFFF22));
 		modules.add(new ModuleSync(4, this));

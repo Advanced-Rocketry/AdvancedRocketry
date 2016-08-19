@@ -14,9 +14,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
-import zmaster587.advancedRocketry.api.armor.IArmorComponent;
-import zmaster587.advancedRocketry.client.ResourceIcon;
-import zmaster587.advancedRocketry.item.ItemIngredient;
+import zmaster587.libVulpes.api.IArmorComponent;
+import zmaster587.libVulpes.client.ResourceIcon;
+import zmaster587.libVulpes.items.ItemIngredient;
 
 public class ItemPressureTank extends ItemIngredient implements IArmorComponent, IFluidContainerItem {
 

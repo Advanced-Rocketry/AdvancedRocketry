@@ -4,9 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import zmaster587.advancedRocketry.api.DataStorage;
-import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.IDataInventory;
-import zmaster587.libVulpes.gui.GuiImageButton;
+import zmaster587.libVulpes.inventory.TextureResources;
+import zmaster587.libVulpes.inventory.modules.IButtonInventory;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleButton;
 import zmaster587.libVulpes.util.IconResource;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -30,7 +32,7 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 	int prevDataType;
 	int slot;
 	IDataInventory chipStorage;
-	IconResource icon = TextureResources.ioSlot;
+	IconResource icon = zmaster587.advancedRocketry.inventory.TextureResources.ioSlot;
 	ModuleButton buttonStore, buttonLoad;
 
 	public ModuleData(int offsetX, int offsetY, int slot, IDataInventory chipStorage, DataStorage ... data) {
@@ -79,7 +81,7 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 	}
 
 	@Override
-	protected boolean needsUpdate(int localId) {
+	public boolean needsUpdate(int localId) {
 		if(localId < data.length)
 			return data[localId].getData() != prevData[localId];
 		return data[0].getDataType().ordinal() != prevDataType;

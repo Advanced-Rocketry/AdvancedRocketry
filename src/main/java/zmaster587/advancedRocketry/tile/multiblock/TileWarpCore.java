@@ -13,7 +13,9 @@ import zmaster587.advancedRocketry.api.material.MaterialRegistry;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 
 public class TileWarpCore extends TileMultiBlock {
 	private SpaceObject station;
@@ -23,9 +25,9 @@ public class TileWarpCore extends TileMultiBlock {
 			{"blockTitanium", 'I', "blockTitanium"},
 			{"blockTitanium", "blockTitanium", "blockTitanium"}},
 
-			{{null, new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), null},
-				{new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), new BlockMeta(Blocks.gold_block), new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock)},
-				{null, new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), null}},
+			{{null, new BlockMeta(LibVulpesBlocks.blockStructureBlock), null},
+				{new BlockMeta(LibVulpesBlocks.blockStructureBlock), new BlockMeta(Blocks.gold_block), new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
+				{null, new BlockMeta(LibVulpesBlocks.blockStructureBlock), null}},
 
 				{{"blockTitanium", 'c', "blockTitanium"}, 
 					{"blockTitanium", new BlockMeta(Blocks.gold_block), "blockTitanium"},

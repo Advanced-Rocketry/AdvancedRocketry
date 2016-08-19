@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
+import zmaster587.libVulpes.network.BasePacket;
 import zmaster587.libVulpes.util.INetworkMachine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
