@@ -5,10 +5,11 @@ import java.util.List;
 import java.util.Set;
 
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.material.MaterialRegistry;
-import zmaster587.advancedRocketry.api.material.MaterialRegistry.AllowedProducts;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.api.material.AllowedProducts;
+import zmaster587.libVulpes.api.material.Material;
+import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.interfaces.IRecipe;
@@ -38,7 +39,7 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 			{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock}},
 
 			{{'c', '*', '*', '*'},
-				{'*', new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), '*'},
+				{'*', new BlockMeta(Block.getBlockFromItem(Material.Materials.COPPER.getProduct(AllowedProducts.getProductByName("COIL")).getItem()), Material.Materials.COPPER.getMeta()), new BlockMeta(Block.getBlockFromItem(Material.Materials.COPPER.getProduct(AllowedProducts.getProductByName("COIL")).getItem()), Material.Materials.COPPER.getMeta()), '*'},
 				{'*', AdvancedRocketryBlocks.blockMotor, AdvancedRocketryBlocks.blockMotor, '*'}}};
 
 	@Override

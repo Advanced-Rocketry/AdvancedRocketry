@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.block;
 
 import java.util.List;
 
+import zmaster587.libVulpes.block.INamedMetaBlock;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;

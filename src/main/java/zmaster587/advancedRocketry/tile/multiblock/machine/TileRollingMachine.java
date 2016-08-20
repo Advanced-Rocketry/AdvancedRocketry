@@ -14,10 +14,11 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.IFluidHandler;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.material.MaterialRegistry;
-import zmaster587.advancedRocketry.api.material.MaterialRegistry.AllowedProducts;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.api.material.AllowedProducts;
+import zmaster587.libVulpes.api.material.Material;
+import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -33,8 +34,8 @@ public class TileRollingMachine extends TileMultiblockMachine {
 			{'I', Blocks.air, LibVulpesBlocks.blockStructureBlock, Blocks.air}},
 
 			{{LibVulpesBlocks.blockRFBattery, 'L', LibVulpesBlocks.blockStructureBlock, null},
-				{new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'O'},
-				{new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), AdvancedRocketryBlocks.blockMotor, LibVulpesBlocks.blockStructureBlock, 'O'}}
+				{new BlockMeta(Block.getBlockFromItem(Material.Materials.COPPER.getProduct(AllowedProducts.getProductByName("COIL")).getItem()), Material.Materials.COPPER.getMeta()), LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'O'},
+				{new BlockMeta(Block.getBlockFromItem(Material.Materials.COPPER.getProduct(AllowedProducts.getProductByName("COIL")).getItem()), Material.Materials.COPPER.getMeta()), AdvancedRocketryBlocks.blockMotor, LibVulpesBlocks.blockStructureBlock, 'O'}}
 	};
 
 	@Override
@@ -79,7 +80,7 @@ public class TileRollingMachine extends TileMultiblockMachine {
 
 	@Override
 	public boolean shouldHideBlock(World world, int x, int y, int z, Block tile) {
-		return tile != Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem());
+		return tile != Block.getBlockFromItem(Material.Materials.COPPER.getProduct(AllowedProducts.getProductByName("COIL")).getItem());
 	}
 
 	@Override

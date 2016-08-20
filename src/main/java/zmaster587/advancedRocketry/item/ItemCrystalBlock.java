@@ -3,7 +3,7 @@ package zmaster587.advancedRocketry.item;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlockWithMetadata;
 import net.minecraft.item.ItemStack;
-import zmaster587.advancedRocketry.block.INamedMetaBlock;
+import zmaster587.libVulpes.block.INamedMetaBlock;
 
 public class ItemCrystalBlock extends ItemBlockWithMetadata {
 	

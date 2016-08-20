@@ -42,11 +42,8 @@ public class AdvancedRocketryBlocks {
 	public static Block blockSawBlade;
 	public static Block blockMotor;
 	public static Block blockConcrete;
-	public static List<Block> blockOre = new ArrayList<Block>();
-	public static List<Block> blockMetal = new ArrayList<Block>();
 	public static Block blockRollingMachine;
 	public static Block blockPlatePress;
-	public static List<Block> blockCoil = new ArrayList<Block>();
 	public static Block blockStationBuilder;
 	public static Block blockElectrolyser;
 	public static Block blockOxygenFluid;

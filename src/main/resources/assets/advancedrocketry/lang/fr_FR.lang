@@ -17,15 +17,8 @@ tile.Crystallizer.name=Cristalliseur
 tile.blastBrick.name=Briques anti-feu
 tile.blastFurnaceController.name=Controleur du four anti-feu
 tile.fuelStation.name=Station de carburant
-tile.hatch.0.name=Écoutille d'entrée
-tile.hatch.1.name=Écoutille de sortie
-tile.hatch.2.name=Bus de données
-tile.hatch.3.name=Emplacement satellite
-tile.hatch.4.name=Écoutille d'entrée de fluide
-tile.hatch.5.name=Écoutille de sortie de fluide
-tile.rfBattery.name=Interface Redstone Flux(RF)
-tile.IC2Plug.name=Interface IC2(EU)
-tile.structureMachine.name=Structure de machine
+tile.loader.0.name=Bus de données
+tile.loader.1.name=Emplacement satellite
 tile.observatory.name=Observatoire
 tile.satelliteBuilder.name=Constructeur de satellite
 tile.rocket.name=Moteur à carburant liquide
@@ -60,16 +53,10 @@ tile.oxygenFluidBlock.name=Oxygène
 tile.oxygenCharger.name=Chargeur d'oxygène
 
 tile.Dilithium.name=Minerai de dilithium
-tile.Copper.name=Minerai de cuivre
-tile.Tin.name=Minerai d'étain
-tile.Rutile.name=Minerai de rutile
+
 
 tile.coil.dilithium.name=Bobine en dilithium
-tile.coil.silicon.name=Bobine en silicone
-tile.coil.copper.name=Bobine en cuivre
-tile.coil.tin.name=Bobine en étain
-tile.coil.steel.name=Bobine en en acier
-tile.coil=Bobine
+
 
 item.wafer.0.name=Galette de silicone
 item.circuitplate.0.name=Plaque de circuit de base
@@ -89,7 +76,6 @@ item.planetIdChip.name=Puce ID de planète
 item.battery.0.namePpetite Batterie
 item.miscpart.0.name=Interface utilisateur
 item.miscpart.1.name=Brique de carbone
-item.holoProjector.name=Holo-projecteur
 item.station.name=Conteneur de station spatiale
 item.stationChip.name=Puce ID de station spatiale
 item.spaceHelmet.name=Casque spatial
@@ -99,27 +85,8 @@ item.spaceBoots.name=Bottes spatiales
 item.bucketRocketFuel.name=Seau de carburant de fusée
 item.smallAirlock.name=Petite porte de sas
 
-material.Gold.name=Or
-material.Iron.name=Fer
 material.Dilithium.name=Dilithium
-material.Silicon.name=Silicone
-material.Copper.name=Cuivre
-material.Tin.name=Étain
-material.Steel.name=Acier
-material.Titanium.name=Titane
-material.Rutile.name=Rutile
 
-type.crystal.name=Cristal
-type.dust.name=Poussière
-type.boule.name=Barreau
-type.ingot.name=Lingot
-type.nugget.name=Pépite
-type.stick.name=Baton
-type.plate.name=Plaque
-type.ore.name=Minerai
-type.block.name=Bloc
-type.coil.name=Bobine
-type.fan.name=Ventilateur
 
 container.crystallizer=Cristalliseur
 container.cuttingmachine=Découpeuse

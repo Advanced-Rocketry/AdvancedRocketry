@@ -1,20 +1,17 @@
 package zmaster587.advancedRocketry.tile.multiblock.machine;
 
 import java.util.List;
-import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.material.MaterialRegistry;
-import zmaster587.advancedRocketry.api.material.MaterialRegistry.AllowedProducts;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.tile.TileMaterial;
+import zmaster587.libVulpes.api.material.AllowedProducts;
+import zmaster587.libVulpes.api.material.Material;
+import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
-import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -30,14 +27,14 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 		{AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible}},
 		
 		{{'O', 'c', 'I'}, 
-			{new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta()), 'P', new BlockMeta(Block.getBlockFromItem(MaterialRegistry.Materials.COPPER.getProduct(AllowedProducts.COIL).getItem()), MaterialRegistry.Materials.COPPER.getMeta())}},
+			{new BlockMeta(Block.getBlockFromItem(Material.Materials.COPPER.getProduct(AllowedProducts.getProductByName("COIL")).getItem()), Material.Materials.COPPER.getMeta()), 'P', new BlockMeta(Block.getBlockFromItem(Material.Materials.COPPER.getProduct(AllowedProducts.getProductByName("COIL")).getItem()), Material.Materials.COPPER.getMeta())}},
 
 	};
 
-	MaterialRegistry.Materials coil[];
+	Material.Materials coil[];
 	
 	public TileCrystallizer() {
-		coil = new MaterialRegistry.Materials[2];
+		coil = new Material.Materials[2];
 	}
 	
 	@Override

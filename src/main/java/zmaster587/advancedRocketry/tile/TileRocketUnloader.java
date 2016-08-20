@@ -21,6 +21,9 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 public class TileRocketUnloader extends TileInventoryHatch implements IInfrastructure {
 	EntityRocket rocket;
 	
+	public TileRocketUnloader() {
+	}
+	
 	public TileRocketUnloader(int size) {
 		super(size);
 	}

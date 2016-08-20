@@ -22,6 +22,8 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 	
 	EntityRocket rocket;
 	
+	public TileRocketLoader() {}
+	
 	public TileRocketLoader(int size) {
 		super(size);
 	}

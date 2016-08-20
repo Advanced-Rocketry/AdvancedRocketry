@@ -2,8 +2,8 @@ package zmaster587.advancedRocketry.block;
 
 import java.util.List;
 
-import zmaster587.advancedRocketry.api.material.MaterialRegistry;
-import zmaster587.advancedRocketry.api.material.MaterialRegistry.Materials;
+import zmaster587.libVulpes.api.material.Material;
+import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 import net.minecraft.block.Block;
@@ -59,7 +59,7 @@ public class BlockPress extends BlockPistonBase {
 		if(world.isAirBlock(x, y-1, z))
 			return null;
 		ItemStack stackInWorld = new ItemStack(world.getBlock(x, y-1, z), 1, world.getBlockMetadata(x, y-1, z));
-		Materials material = MaterialRegistry.getMaterialFromItemStack(stackInWorld);
+		Material.Materials material = MaterialRegistry.getMaterialFromItemStack(stackInWorld);
 
 
 		if(material == null)

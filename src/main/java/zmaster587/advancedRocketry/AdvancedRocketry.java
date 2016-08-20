@@ -8,6 +8,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
@@ -39,10 +40,6 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
-import zmaster587.advancedRocketry.api.material.MaterialRegistry;
-import zmaster587.advancedRocketry.api.material.MaterialRegistry.AllowedProducts;
-import zmaster587.advancedRocketry.api.material.MaterialRegistry.Materials;
-import zmaster587.advancedRocketry.api.material.MixedMaterial;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
@@ -59,7 +56,6 @@ import zmaster587.advancedRocketry.block.BlockLaser;
 import zmaster587.advancedRocketry.block.BlockLightSource;
 import zmaster587.advancedRocketry.block.BlockLinkedHorizontalTexture;
 import zmaster587.advancedRocketry.block.BlockMiningDrill;
-import zmaster587.advancedRocketry.block.BlockOre;
 import zmaster587.advancedRocketry.block.BlockPlanetSoil;
 import zmaster587.advancedRocketry.block.BlockPress;
 import zmaster587.advancedRocketry.block.BlockQuartzCrucible;
@@ -95,7 +91,7 @@ import zmaster587.advancedRocketry.integration.GalacticCraftHandler;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.item.ItemBlockMeta;
 import zmaster587.libVulpes.items.ItemIngredient;
-import zmaster587.libVulpes.items.LibVulpesItems;
+import zmaster587.libVulpes.items.ItemProjector;
 import zmaster587.advancedRocketry.item.*;
 import zmaster587.advancedRocketry.item.components.ItemJetpack;
 import zmaster587.advancedRocketry.item.components.ItemPressureTank;
@@ -157,15 +153,20 @@ import zmaster587.advancedRocketry.world.type.WorldTypePlanetGen;
 import zmaster587.advancedRocketry.world.type.WorldTypeSpace;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.api.LibVulpesItems;
+import zmaster587.libVulpes.api.material.AllowedProducts;
+import zmaster587.libVulpes.api.material.MaterialRegistry;
+import zmaster587.libVulpes.api.material.MixedMaterial;
+import zmaster587.libVulpes.api.material.Material.Materials;
 import zmaster587.libVulpes.block.BlockAlphaTexture;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.BlockTile;
-import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisible;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketItemModifcation;
 import zmaster587.libVulpes.recipe.RecipesMachine;
+import zmaster587.libVulpes.tile.TileMaterial;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.InputSyncHandler;
 
@@ -201,14 +202,6 @@ public class AdvancedRocketry {
 		@Override
 		public Item getTabIconItem() {
 			return AdvancedRocketryItems.itemSatelliteIdChip;
-		}
-	};
-
-	public static CreativeTabs tabAdvRocketryOres = new CreativeTabs("advancedRocketryOres") {
-
-		@Override
-		public Item getTabIconItem() {
-			return Item.getItemFromBlock(AdvancedRocketryBlocks.blockOre.get(0));
 		}
 	};
 
@@ -312,7 +305,7 @@ public class AdvancedRocketry {
 		SatelliteRegistry.registerSatellite("oreScanner", SatelliteOreMapping.class);
 
 		//Blocks -------------------------------------------------------------------------------------
-		AdvancedRocketryBlocks.blocksGeode = new BlockGeneric(MaterialGeode.geode).setBlockName("geode").setCreativeTab(tabAdvRocketryOres).setBlockTextureName("advancedrocketry:geode").setHardness(6f).setResistance(2000F);
+		AdvancedRocketryBlocks.blocksGeode = new BlockGeneric(MaterialGeode.geode).setBlockName("geode").setCreativeTab(LibVulpes.tabLibVulpesOres).setBlockTextureName("advancedrocketry:geode").setHardness(6f).setResistance(2000F);
 		AdvancedRocketryBlocks.blocksGeode.setHarvestLevel("jackhammer", 2);
 
 		AdvancedRocketryBlocks.blockLaunchpad = new BlockLinkedHorizontalTexture(Material.rock).setBlockName("pad").setCreativeTab(tabAdvRocketry).setBlockTextureName("advancedrocketry:rocketPad").setHardness(2f).setResistance(10f);
@@ -332,7 +325,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockVitrifiedSand = new BlockGeneric(Material.sand).setBlockName("vitrifiedSand").setCreativeTab(CreativeTabs.tabBlock).setBlockTextureName("advancedrocketry:vitrifiedSand").setHardness(0.5F).setStepSound(Block.soundTypeSand);
 		AdvancedRocketryBlocks.blockCharcoalLog = new BlockCharcoalLog().setBlockName("charcoallog").setCreativeTab(CreativeTabs.tabBlock);
 		AdvancedRocketryBlocks.blockElectricMushroom = new BlockElectricMushroom().setBlockName("electricMushroom").setCreativeTab(tabAdvRocketry).setBlockTextureName("advancedrocketry:mushroom_electric").setHardness(0.0F).setStepSound(Block.soundTypeGrass);
-		AdvancedRocketryBlocks.blockCrystal = new BlockCrystal().setBlockName("crystal").setCreativeTab(tabAdvRocketryOres).setBlockTextureName("advancedrocketry:crystal").setHardness(2f);
+		AdvancedRocketryBlocks.blockCrystal = new BlockCrystal().setBlockName("crystal").setCreativeTab(LibVulpes.tabLibVulpesOres).setBlockTextureName("advancedrocketry:crystal").setHardness(2f);
 
 		AdvancedRocketryBlocks.blockOrientationController = new BlockTile(TileStationOrientationControl.class,  GuiHandler.guiId.MODULAR.ordinal()).setBlockTextureName("advancedrocketry:machineScrubber").setCreativeTab(tabAdvRocketry).setBlockName("orientationControl").setHardness(3f);
 		((BlockTile) AdvancedRocketryBlocks.blockOrientationController).setSideTexture("advancedrocketry:machineOrientationControl");
@@ -586,7 +579,7 @@ public class AdvancedRocketry {
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
 			GameRegistry.registerBlock(AdvancedRocketryBlocks.blockSpaceLaser, "laserController");
 
-		BlockOre.registerOres(tabAdvRocketryOres);
+		
 
 
 		//Items -------------------------------------------------------------------------------------
@@ -600,26 +593,21 @@ public class AdvancedRocketry {
 		AdvancedRocketryItems.itemSpaceStation = new ItemPackedStructure().setUnlocalizedName("station").setTextureName("advancedRocketry:SpaceStation");
 		AdvancedRocketryItems.itemSmallAirlockDoor = new ItemDoor2(Material.rock).setUnlocalizedName("smallAirlock").setTextureName("advancedRocketry:smallAirlock").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemCarbonScrubberCartridge = new Item().setMaxDamage(172800).setUnlocalizedName("carbonScrubberCartridge").setTextureName("advancedRocketry:carbonCartridge").setCreativeTab(tabAdvRocketry);
-		AdvancedRocketryItems.itemLens = new ItemIngredient(1).setUnlocalizedName("advancedrocketry:lens").setCreativeTab(tabAdvRocketryOres);
-
+		AdvancedRocketryItems.itemLens = new ItemIngredient(1).setUnlocalizedName("advancedrocketry:lens").setCreativeTab(LibVulpes.tabLibVulpesOres);
 		AdvancedRocketryItems.itemSatellitePowerSource = new ItemIngredient(2).setUnlocalizedName("advancedrocketry:satellitePowerSource").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemSatellitePrimaryFunction = new ItemIngredient(5).setUnlocalizedName("advancedrocketry:satellitePrimaryFunction").setCreativeTab(tabAdvRocketry);
 
 
 		//TODO: move registration in the case we have more than one chip type
 		AdvancedRocketryItems.itemDataUnit = new ItemData().setUnlocalizedName("advancedrocketry:dataUnit").setCreativeTab(tabAdvRocketry);
-		
 		AdvancedRocketryItems.itemOreScanner = new ItemOreScanner().setUnlocalizedName("OreScanner").setTextureName("advancedRocketry:oreScanner").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemQuartzCrucible = (new ItemBlockWithIcon(AdvancedRocketryBlocks.blockQuartzCrucible)).setUnlocalizedName("qcrucible").setCreativeTab(tabAdvRocketry).setTextureName("advancedRocketry:qcrucible");
-
 		AdvancedRocketryItems.itemSatellite = new ItemSatellite().setUnlocalizedName("satellite").setTextureName("advancedRocketry:satellite");
 		AdvancedRocketryItems.itemSatelliteIdChip = new ItemSatelliteIdentificationChip().setUnlocalizedName("satelliteIdChip").setTextureName("advancedRocketry:satelliteIdChip").setCreativeTab(tabAdvRocketry);
-
 		AdvancedRocketryItems.itemPlanetIdChip = new ItemPlanetIdentificationChip().setUnlocalizedName("planetIdChip").setTextureName("advancedRocketry:planetIdChip").setCreativeTab(tabAdvRocketry);
-		AdvancedRocketryItems.itemHoloProjector = new ItemProjector().setUnlocalizedName("holoProjector").setTextureName("advancedRocketry:holoProjector").setCreativeTab(tabAdvRocketry);
-
+		
 		//Fluids
-		AdvancedRocketryItems.itemBucketRocketFuel = new ItemBucket(AdvancedRocketryBlocks.blockFuelFluid).setCreativeTab(tabAdvRocketryOres).setUnlocalizedName("bucketRocketFuel").setTextureName("advancedRocketry:bucket_liquid").setContainerItem(Items.bucket);
+		AdvancedRocketryItems.itemBucketRocketFuel = new ItemBucket(AdvancedRocketryBlocks.blockFuelFluid).setCreativeTab(LibVulpes.tabLibVulpesOres).setUnlocalizedName("bucketRocketFuel").setTextureName("advancedRocketry:bucket_liquid").setContainerItem(Items.bucket);
 
 		//Suit Component Registration
 		AdvancedRocketryItems.itemJetpack = new ItemJetpack().setCreativeTab(tabAdvRocketry).setUnlocalizedName("jetPack").setTextureName("advancedRocketry:jetpack");
@@ -664,7 +652,6 @@ public class AdvancedRocketry {
 		GameRegistry.registerItem(AdvancedRocketryItems.itemSatelliteIdChip, AdvancedRocketryItems.itemSatelliteIdChip.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemPlanetIdChip,AdvancedRocketryItems.itemPlanetIdChip.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemMisc, AdvancedRocketryItems.itemMisc.getUnlocalizedName());
-		GameRegistry.registerItem(AdvancedRocketryItems.itemHoloProjector, AdvancedRocketryItems.itemHoloProjector.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemSawBlade, AdvancedRocketryItems.itemSawBlade.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemSpaceStationChip, AdvancedRocketryItems.itemSpaceStationChip.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemSpaceStation, AdvancedRocketryItems.itemSpaceStation.getUnlocalizedName());
@@ -683,20 +670,19 @@ public class AdvancedRocketry {
 		GameRegistry.registerItem(AdvancedRocketryItems.itemPressureTank, AdvancedRocketryItems.itemPressureTank.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemUpgrade, AdvancedRocketryItems.itemUpgrade.getUnlocalizedName());
 		
-		
 		//Register multiblock items with the projector
-		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileCuttingMachine(), (BlockTile)AdvancedRocketryBlocks.blockCuttingMachine);
-		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileLathe(), (BlockTile)AdvancedRocketryBlocks.blockLathe);
-		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileCrystallizer(), (BlockTile)AdvancedRocketryBlocks.blockCrystallizer);
-		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TilePrecisionAssembler(), (BlockTile)AdvancedRocketryBlocks.blockPrecisionAssembler);
-		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileObservatory(), (BlockTile)AdvancedRocketryBlocks.blockObservatory);
-		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TilePlanetAnalyser(), (BlockTile)AdvancedRocketryBlocks.blockPlanetAnalyser);
-		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileRollingMachine(), (BlockTile)AdvancedRocketryBlocks.blockRollingMachine);
-		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileElectricArcFurnace(), (BlockTile)AdvancedRocketryBlocks.blockArcFurnace);
-		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileElectrolyser(), (BlockTile)AdvancedRocketryBlocks.blockElectrolyser);
-		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileChemicalReactor(), (BlockTile)AdvancedRocketryBlocks.blockChemicalReactor);
-		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileWarpCore(), (BlockTile)AdvancedRocketryBlocks.blockWarpCore);
-		((ItemProjector)AdvancedRocketryItems.itemHoloProjector).registerMachine(new TileMicrowaveReciever(), (BlockTile)AdvancedRocketryBlocks.blockMicrowaveReciever);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileCuttingMachine(), (BlockTile)AdvancedRocketryBlocks.blockCuttingMachine);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileLathe(), (BlockTile)AdvancedRocketryBlocks.blockLathe);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileCrystallizer(), (BlockTile)AdvancedRocketryBlocks.blockCrystallizer);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TilePrecisionAssembler(), (BlockTile)AdvancedRocketryBlocks.blockPrecisionAssembler);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileObservatory(), (BlockTile)AdvancedRocketryBlocks.blockObservatory);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TilePlanetAnalyser(), (BlockTile)AdvancedRocketryBlocks.blockPlanetAnalyser);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileRollingMachine(), (BlockTile)AdvancedRocketryBlocks.blockRollingMachine);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileElectricArcFurnace(), (BlockTile)AdvancedRocketryBlocks.blockArcFurnace);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileElectrolyser(), (BlockTile)AdvancedRocketryBlocks.blockElectrolyser);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileChemicalReactor(), (BlockTile)AdvancedRocketryBlocks.blockChemicalReactor);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileWarpCore(), (BlockTile)AdvancedRocketryBlocks.blockWarpCore);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileMicrowaveReciever(), (BlockTile)AdvancedRocketryBlocks.blockMicrowaveReciever);
 
 		//End Items
 
@@ -760,6 +746,9 @@ public class AdvancedRocketry {
 
 		//Register Space Objects
 		SpaceObjectManager.getSpaceManager().registerSpaceObjectType("genericObject", SpaceObject.class);
+		
+		//Register Allowed Products
+		
 
 	}
 
@@ -780,7 +769,7 @@ public class AdvancedRocketry {
 		ItemStack largeSolarPanel = new ItemStack(AdvancedRocketryItems.itemSatellitePowerSource,1,1);
 
 		//Register Alloys
-		MaterialRegistry.registerMixedMaterial(new MixedMaterial(TileElectricArcFurnace.class, "oreRutile", new ItemStack[] {MaterialRegistry.Materials.TITANIUM.getProduct(AllowedProducts.INGOT)}));
+		MaterialRegistry.registerMixedMaterial(new MixedMaterial(TileElectricArcFurnace.class, "oreRutile", new ItemStack[] {Materials.TITANIUM.getProduct(AllowedProducts.getProductByName("INGOT"))}));
 
 		proxy.registerRenderers();
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
@@ -789,9 +778,9 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockArcFurnace), "aga","ice", "aba", 'a', Items.netherbrick, 'g', userInterface, 'i', itemIOBoard, 'e',controlCircuitBoard, 'c', AdvancedRocketryBlocks.blockBlastBrick, 'b', "ingotCopper"));
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryItems.itemQuartzCrucible), " a ", "aba", " a ", Character.valueOf('a'), Items.quartz, Character.valueOf('b'), Items.cauldron);
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockPlatePress, "   ", " a ", "iii", 'a', Blocks.piston, 'i', Items.iron_ingot));
-		GameRegistry.addRecipe(new ShapedOreRecipe(MaterialRegistry.getItemStackFromMaterialAndType(Materials.IRON, AllowedProducts.STICK), "x  ", " x ", "  x", 'x', "ingotIron"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(MaterialRegistry.getItemStackFromMaterialAndType(Materials.STEEL, AllowedProducts.STICK), "x  ", " x ", "  x", 'x', "ingotSteel"));
-		GameRegistry.addSmelting(MaterialRegistry.Materials.DILITHIUM.getProduct(MaterialRegistry.AllowedProducts.ORE), MaterialRegistry.Materials.DILITHIUM.getProduct(AllowedProducts.DUST), 0);
+		GameRegistry.addRecipe(new ShapedOreRecipe(MaterialRegistry.getItemStackFromMaterialAndType(Materials.IRON, AllowedProducts.getProductByName("STICK")), "x  ", " x ", "  x", 'x', "ingotIron"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(MaterialRegistry.getItemStackFromMaterialAndType(Materials.STEEL, AllowedProducts.getProductByName("STICK")), "x  ", " x ", "  x", 'x', "ingotSteel"));
+		GameRegistry.addSmelting(Materials.DILITHIUM.getProduct(AllowedProducts.getProductByName("ORE")), Materials.DILITHIUM.getProduct(AllowedProducts.getProductByName("DUST")), 0);
 
 
 		//Supporting Materials
@@ -805,21 +794,23 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(LibVulpesBlocks.blockStructureBlock, "sps", "psp", "sps", 'p', "plateIron", 's', "stickIron"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesItems.itemBattery,1,0), " c ","prp", "prp", 'c', "stickIron", 'r', Items.redstone, 'p', "plateTin"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), "ppp", " g ", " l ", 'p', Blocks.glass_pane, 'g', Items.glowstone_dust, 'l', "plateGold"));
-		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryBlocks.blockObservatory), "gug", "pbp", "rrr", 'g', Blocks.glass_pane, 'u', userInterface, 'b', LibVulpesBlocks.blockStructureBlock, 'r', MaterialRegistry.getItemStackFromMaterialAndType(Materials.IRON, AllowedProducts.STICK));
+		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryBlocks.blockObservatory), "gug", "pbp", "rrr", 'g', Blocks.glass_pane, 'u', userInterface, 'b', LibVulpesBlocks.blockStructureBlock, 'r', MaterialRegistry.getItemStackFromMaterialAndType(Materials.IRON, AllowedProducts.getProductByName("STICK")));
 
 		//Hatches
 		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,0), "c", "m"," ", 'c', Blocks.chest, 'm', LibVulpesBlocks.blockStructureBlock);
 		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,1), "m", "c"," ", 'c', Blocks.chest, 'm', LibVulpesBlocks.blockStructureBlock);
+		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,2), "c", "m", " ", 'c', AdvancedRocketryBlocks.blockFuelTank, 'm', LibVulpesBlocks.blockStructureBlock);
+		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,3), "m", "c", " ", 'c', AdvancedRocketryBlocks.blockFuelTank, 'm', LibVulpesBlocks.blockStructureBlock);
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryBlocks.blockLoader,1,0), "m", "c"," ", 'c', AdvancedRocketryItems.itemDataUnit, 'm', LibVulpesBlocks.blockStructureBlock);
-		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,4), "c", "m", " ", 'c', AdvancedRocketryBlocks.blockFuelTank, 'm', LibVulpesBlocks.blockStructureBlock);
-		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,5), "m", "c", " ", 'c', AdvancedRocketryBlocks.blockFuelTank, 'm', LibVulpesBlocks.blockStructureBlock);
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockLoader,1,1), " x ", "xmx"," x ", 'x', "stickTitanium", 'm', LibVulpesBlocks.blockStructureBlock));
+		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockLoader,1,2), new ItemStack(LibVulpesBlocks.blockHatch,1,1), trackingCircuit);
+		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockLoader,1,3), new ItemStack(LibVulpesBlocks.blockHatch,1,0), trackingCircuit);
 
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockMotor), " cp", "rrp"," cp", 'c', "coilCopper", 'p', "plateSteel", 'r', "stickSteel"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePowerSource,1,0), "rrr", "ggg","ppp", 'r', Items.redstone, 'g', Items.glowstone_dust, 'p', "plateGold"));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemHoloProjector), "oro", "rpr", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'r', Items.redstone, 'p', "plateIron"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesItems.itemHoloProjector), "oro", "rpr", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'r', Items.redstone, 'p', "plateIron"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 2), "odo", "pcp", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'p', new ItemStack(AdvancedRocketryItems.itemWafer,1,0), 'c', basicCircuit, 'd', "crystalDilithium"));
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 1), "odo", "pcp", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'p', new ItemStack(AdvancedRocketryItems.itemWafer,1,0), 'c', basicCircuit, 'd', trackingCircuit);
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 3), "odo", "pcp", 'o', new ItemStack(AdvancedRocketryItems.itemLens, 1, 0), 'p', new ItemStack(AdvancedRocketryItems.itemWafer,1,0), 'c', basicCircuit, 'd', trackingCircuit);
@@ -914,7 +905,7 @@ public class AdvancedRocketry {
 		RecipesMachine.getInstance().addRecipe(TileCuttingMachine.class, new ItemStack(AdvancedRocketryItems.itemWafer, 4, 0), 300, 100, "bouleSilicon");
 
 		//Lathe
-		RecipesMachine.getInstance().addRecipe(TileLathe.class, MaterialRegistry.getItemStackFromMaterialAndType(Materials.IRON, AllowedProducts.STICK), 300, 100, "ingotIron");
+		RecipesMachine.getInstance().addRecipe(TileLathe.class, MaterialRegistry.getItemStackFromMaterialAndType(Materials.IRON, AllowedProducts.getProductByName("STICK")), 300, 100, "ingotIron");
 
 		//Precision Assembler recipes
 		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemCircuitPlate,1,0), 900, 100, Items.gold_ingot, Items.redstone, "waferSilicon");
@@ -930,8 +921,8 @@ public class AdvancedRocketry {
 		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemUpgrade,1,3), 400, 1, Items.leather_boots, Items.feather, advancedCircuit, controlCircuitBoard);
 		
 		//BlastFurnace
-		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.Materials.SILICON.getProduct(AllowedProducts.INGOT), 12000, 1, Blocks.sand);
-		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.Materials.STEEL.getProduct(AllowedProducts.INGOT), 6000, 1, "ingotIron", Items.coal);
+		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, Materials.SILICON.getProduct(AllowedProducts.getProductByName("INGOT")), 12000, 1, Blocks.sand);
+		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, Materials.STEEL.getProduct(AllowedProducts.getProductByName("INGOT")), 6000, 1, "ingotIron", Items.coal);
 
 		//Chemical Reactor
 		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new Object[] {new ItemStack(AdvancedRocketryItems.itemCarbonScrubberCartridge,1, 0), new ItemStack(Items.coal, 1, 1)}, 40, 20, new ItemStack(AdvancedRocketryItems.itemCarbonScrubberCartridge, 1, AdvancedRocketryItems.itemCarbonScrubberCartridge.getMaxDamage()));
@@ -1029,79 +1020,79 @@ public class AdvancedRocketry {
 
 
 		//AutoGenned Recipes
-		for(MaterialRegistry.Materials ore : MaterialRegistry.Materials.values()) {
-			if(MaterialRegistry.AllowedProducts.ORE.isOfType(ore.getAllowedProducts()) && MaterialRegistry.AllowedProducts.INGOT.isOfType(ore.getAllowedProducts()))
-				GameRegistry.addSmelting(ore.getProduct(MaterialRegistry.AllowedProducts.ORE), ore.getProduct(AllowedProducts.INGOT), 0);
+		for(Materials ore : Materials.values()) {
+			if(AllowedProducts.getProductByName("ORE").isOfType(ore.getAllowedProducts()) && AllowedProducts.getProductByName("INGOT").isOfType(ore.getAllowedProducts()))
+				GameRegistry.addSmelting(ore.getProduct(AllowedProducts.getProductByName("ORE")), ore.getProduct(AllowedProducts.getProductByName("INGOT")), 0);
 
-			if(MaterialRegistry.AllowedProducts.NUGGET.isOfType(ore.getAllowedProducts())) {
-				ItemStack nugget = ore.getProduct(AllowedProducts.NUGGET);
+			if(AllowedProducts.getProductByName("NUGGET").isOfType(ore.getAllowedProducts())) {
+				ItemStack nugget = ore.getProduct(AllowedProducts.getProductByName("NUGGET"));
 				nugget.stackSize = 9;
 				for(String str : ore.getOreDictNames()) {
-					GameRegistry.addRecipe(new ShapelessOreRecipe(nugget, AllowedProducts.INGOT.name().toLowerCase() + str));
-					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.INGOT), "ooo", "ooo", "ooo", 'o', AllowedProducts.NUGGET.name().toLowerCase() + str));
+					GameRegistry.addRecipe(new ShapelessOreRecipe(nugget, AllowedProducts.getProductByName("INGOT").name().toLowerCase() + str));
+					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("INGOT")), "ooo", "ooo", "ooo", 'o', AllowedProducts.getProductByName("NUGGET").name().toLowerCase() + str));
 				}
 			}
 
-			if(MaterialRegistry.AllowedProducts.CRYSTAL.isOfType(ore.getAllowedProducts())) {
+			if(AllowedProducts.getProductByName("CRYSTAL").isOfType(ore.getAllowedProducts())) {
 				for(String str : ore.getOreDictNames())
-					RecipesMachine.getInstance().addRecipe(TileCrystallizer.class, ore.getProduct(MaterialRegistry.AllowedProducts.CRYSTAL), 300, 200, MaterialRegistry.AllowedProducts.DUST.name().toLowerCase() + str);
+					RecipesMachine.getInstance().addRecipe(TileCrystallizer.class, ore.getProduct(AllowedProducts.getProductByName("CRYSTAL")), 300, 200, AllowedProducts.getProductByName("DUST").name().toLowerCase() + str);
 			}
 
-			if(MaterialRegistry.AllowedProducts.BOULE.isOfType(ore.getAllowedProducts())) {
+			if(AllowedProducts.getProductByName("BOULE").isOfType(ore.getAllowedProducts())) {
 				for(String str : ore.getOreDictNames())
-					RecipesMachine.getInstance().addRecipe(TileCrystallizer.class, ore.getProduct(MaterialRegistry.AllowedProducts.BOULE), 300, 200, MaterialRegistry.AllowedProducts.INGOT.name().toLowerCase() + str, MaterialRegistry.AllowedProducts.NUGGET.name().toLowerCase() + str);
+					RecipesMachine.getInstance().addRecipe(TileCrystallizer.class, ore.getProduct(AllowedProducts.getProductByName("BOULE")), 300, 200, AllowedProducts.getProductByName("INGOT").name().toLowerCase() + str, AllowedProducts.getProductByName("NUGGET").name().toLowerCase() + str);
 			}
 
-			if(MaterialRegistry.AllowedProducts.STICK.isOfType(ore.getAllowedProducts()) && MaterialRegistry.AllowedProducts.INGOT.isOfType(ore.getAllowedProducts())) {
+			if(AllowedProducts.getProductByName("STICK").isOfType(ore.getAllowedProducts()) && AllowedProducts.getProductByName("INGOT").isOfType(ore.getAllowedProducts())) {
 				for(String name : ore.getOreDictNames())
-					if(OreDictionary.doesOreNameExist(MaterialRegistry.AllowedProducts.INGOT.name().toLowerCase() + name))
-						RecipesMachine.getInstance().addRecipe(TileLathe.class, ore.getProduct(MaterialRegistry.AllowedProducts.STICK), 300, 200, MaterialRegistry.AllowedProducts.INGOT.name().toLowerCase() + name); //ore.getProduct(MaterialRegistry.AllowedProducts.INGOT));
+					if(OreDictionary.doesOreNameExist(AllowedProducts.getProductByName("INGOT").name().toLowerCase() + name))
+						RecipesMachine.getInstance().addRecipe(TileLathe.class, ore.getProduct(AllowedProducts.getProductByName("STICK")), 300, 200, AllowedProducts.getProductByName("INGOT").name().toLowerCase() + name); //ore.getProduct(AllowedProducts.getProductByName("INGOT")));
 			}
 
-			if(MaterialRegistry.AllowedProducts.PLATE.isOfType(ore.getAllowedProducts())) {
+			if(AllowedProducts.getProductByName("PLATE").isOfType(ore.getAllowedProducts())) {
 				for(String oreDictNames : ore.getOreDictNames()) {
-					if(OreDictionary.doesOreNameExist(MaterialRegistry.AllowedProducts.INGOT.name().toLowerCase() + oreDictNames)) {
-						RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, ore.getProduct(MaterialRegistry.AllowedProducts.PLATE), 300, 200, MaterialRegistry.AllowedProducts.INGOT.name().toLowerCase() + oreDictNames);
-						if(AllowedProducts.BLOCK.isOfType(ore.getAllowedProducts()) || ore.isVanilla())
-							RecipesMachine.getInstance().addRecipe(BlockPress.class, ore.getProduct(MaterialRegistry.AllowedProducts.PLATE,3), 0, 0, MaterialRegistry.AllowedProducts.BLOCK.name().toLowerCase() + oreDictNames);
+					if(OreDictionary.doesOreNameExist(AllowedProducts.getProductByName("INGOT").name().toLowerCase() + oreDictNames)) {
+						RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, ore.getProduct(AllowedProducts.getProductByName("PLATE")), 300, 200, AllowedProducts.getProductByName("INGOT").name().toLowerCase() + oreDictNames);
+						if(AllowedProducts.getProductByName("BLOCK").isOfType(ore.getAllowedProducts()) || ore.isVanilla())
+							RecipesMachine.getInstance().addRecipe(BlockPress.class, ore.getProduct(AllowedProducts.getProductByName("PLATE"),3), 0, 0, AllowedProducts.getProductByName("BLOCK").name().toLowerCase() + oreDictNames);
 					}
 				}
 			}
 
-			if(MaterialRegistry.AllowedProducts.SHEET.isOfType(ore.getAllowedProducts())) {
+			if(AllowedProducts.getProductByName("SHEET").isOfType(ore.getAllowedProducts())) {
 				for(String oreDictNames : ore.getOreDictNames()) {
-					RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, ore.getProduct(MaterialRegistry.AllowedProducts.SHEET), 300, 200, MaterialRegistry.AllowedProducts.PLATE.name().toLowerCase() + oreDictNames);
+					RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, ore.getProduct(AllowedProducts.getProductByName("SHEET")), 300, 200, AllowedProducts.getProductByName("PLATE").name().toLowerCase() + oreDictNames);
 				}
 			}
 
-			if(MaterialRegistry.AllowedProducts.COIL.isOfType(ore.getAllowedProducts())) {
+			if(AllowedProducts.getProductByName("COIL").isOfType(ore.getAllowedProducts())) {
 				for(String str : ore.getOreDictNames())
-					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(MaterialRegistry.AllowedProducts.COIL), "ooo", "o o", "ooo",'o', MaterialRegistry.AllowedProducts.INGOT.name().toLowerCase() + str));
+					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("COIL")), "ooo", "o o", "ooo",'o', AllowedProducts.getProductByName("INGOT").name().toLowerCase() + str));
 			}
 
-			if(MaterialRegistry.AllowedProducts.FAN.isOfType(ore.getAllowedProducts())) {
+			if(AllowedProducts.getProductByName("FAN").isOfType(ore.getAllowedProducts())) {
 				for(String str : ore.getOreDictNames()) {
-					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.FAN), "p p", " r ", "p p", 'p', AllowedProducts.PLATE.name().toLowerCase() + str, 'r', AllowedProducts.STICK.name().toLowerCase() + str));
+					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("FAN")), "p p", " r ", "p p", 'p', AllowedProducts.getProductByName("PLATE").name().toLowerCase() + str, 'r', AllowedProducts.getProductByName("STICK").name().toLowerCase() + str));
 				}
 			}
-			if(MaterialRegistry.AllowedProducts.GEAR.isOfType(ore.getAllowedProducts())) {
+			if(AllowedProducts.getProductByName("GEAR").isOfType(ore.getAllowedProducts())) {
 				for(String str : ore.getOreDictNames()) {
-					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.GEAR), "sps", " r ", "sps", 'p', AllowedProducts.PLATE.name().toLowerCase() + str, 's', AllowedProducts.STICK.name().toLowerCase() + str, 'r', AllowedProducts.INGOT.name().toLowerCase() + str));
+					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("GEAR")), "sps", " r ", "sps", 'p', AllowedProducts.getProductByName("PLATE").name().toLowerCase() + str, 's', AllowedProducts.getProductByName("STICK").name().toLowerCase() + str, 'r', AllowedProducts.getProductByName("INGOT").name().toLowerCase() + str));
 				}
 			}
-			if(MaterialRegistry.AllowedProducts.BLOCK.isOfType(ore.getAllowedProducts())) {
-				ItemStack ingot = ore.getProduct(AllowedProducts.INGOT);
+			if(AllowedProducts.getProductByName("BLOCK").isOfType(ore.getAllowedProducts())) {
+				ItemStack ingot = ore.getProduct(AllowedProducts.getProductByName("INGOT"));
 				ingot.stackSize = 9;
 				for(String str : ore.getOreDictNames()) {
-					GameRegistry.addRecipe(new ShapelessOreRecipe(ingot, AllowedProducts.BLOCK.name().toLowerCase() + str));
-					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.BLOCK), "ooo", "ooo", "ooo", 'o', AllowedProducts.INGOT.name().toLowerCase() + str));
+					GameRegistry.addRecipe(new ShapelessOreRecipe(ingot, AllowedProducts.getProductByName("BLOCK").name().toLowerCase() + str));
+					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("BLOCK")), "ooo", "ooo", "ooo", 'o', AllowedProducts.getProductByName("INGOT").name().toLowerCase() + str));
 				}
 			}
 
-			if(MaterialRegistry.AllowedProducts.DUST.isOfType(ore.getAllowedProducts())) {
+			if(AllowedProducts.getProductByName("DUST").isOfType(ore.getAllowedProducts())) {
 				for(String str : ore.getOreDictNames()) {
-					if(AllowedProducts.ORE.isOfType(ore.getAllowedProducts()) || ore.isVanilla())
-						RecipesMachine.getInstance().addRecipe(BlockPress.class, ore.getProduct(MaterialRegistry.AllowedProducts.DUST), 0, 0, MaterialRegistry.AllowedProducts.ORE.name().toLowerCase() + str);
+					if(AllowedProducts.getProductByName("ORE").isOfType(ore.getAllowedProducts()) || ore.isVanilla())
+						RecipesMachine.getInstance().addRecipe(BlockPress.class, ore.getProduct(AllowedProducts.getProductByName("DUST")), 0, 0, AllowedProducts.getProductByName("ORE").name().toLowerCase() + str);
 				}
 			}
 		}
@@ -1117,21 +1108,21 @@ public class AdvancedRocketry {
 		//Handle items from other mods
 		if(zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods) {
 			for(Entry<AllowedProducts, HashSet<String>> entry : modProducts.entrySet()) {
-				if(entry.getKey() == AllowedProducts.PLATE) {
+				if(entry.getKey() == AllowedProducts.getProductByName("PLATE")) {
 					for(String str : entry.getValue()) {
-						MaterialRegistry.Materials material = MaterialRegistry.Materials.valueOfSafe(str.toUpperCase());
+						Materials material = Materials.valueOfSafe(str.toUpperCase());
 
-						if(OreDictionary.doesOreNameExist("ingot" + str) && OreDictionary.getOres("ingot" + str).size() > 0 && (material == null || !AllowedProducts.PLATE.isOfType(material.getAllowedProducts())) ) {
+						if(OreDictionary.doesOreNameExist("ingot" + str) && OreDictionary.getOres("ingot" + str).size() > 0 && (material == null || !AllowedProducts.getProductByName("PLATE").isOfType(material.getAllowedProducts())) ) {
 
 							RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, OreDictionary.getOres("plate" + str).get(0), 300, 200, "ingot" + str);
 						}
 					}
 				}
-				else if(entry.getKey() == AllowedProducts.STICK) {
+				else if(entry.getKey() == AllowedProducts.getProductByName("STICK")) {
 					for(String str : entry.getValue()) {
-						MaterialRegistry.Materials material = MaterialRegistry.Materials.valueOfSafe(str.toUpperCase());
+						Materials material = Materials.valueOfSafe(str.toUpperCase());
 
-						if(OreDictionary.doesOreNameExist("ingot" + str) && OreDictionary.getOres("ingot" + str).size() > 0 && (material == null || !AllowedProducts.STICK.isOfType(material.getAllowedProducts())) ) {
+						if(OreDictionary.doesOreNameExist("ingot" + str) && OreDictionary.getOres("ingot" + str).size() > 0 && (material == null || !AllowedProducts.getProductByName("STICK").isOfType(material.getAllowedProducts())) ) {
 
 							//GT registers rods as sticks
 							if(OreDictionary.doesOreNameExist("rod" + str) && OreDictionary.getOres("rod" + str).size() > 0)
@@ -1303,27 +1294,77 @@ public class AdvancedRocketry {
 		if(!zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods)
 			return;
 
-		for(AllowedProducts product : AllowedProducts.values() ) {
+		for(AllowedProducts product : AllowedProducts.getAllAllowedProducts() ) {
 			if(event.Name.startsWith(product.name().toLowerCase())) {
 				HashSet<String> list = modProducts.get(product);
 				if(list == null) {
 					list = new HashSet<String>();
 					modProducts.put(product, list);
 				}
-
 				list.add(event.Name.substring(product.name().length()));
 			}
 		}
 
 		//GT uses stick instead of Rod
 		if(event.Name.startsWith("stick")) {
-			HashSet<String> list = modProducts.get(AllowedProducts.STICK);
+			HashSet<String> list = modProducts.get(AllowedProducts.getProductByName("STICK"));
 			if(list == null) {
 				list = new HashSet<String>();
-				modProducts.put(AllowedProducts.STICK, list);
+				modProducts.put(AllowedProducts.getProductByName("STICK"), list);
 			}
 
 			list.add(event.Name.substring("stick".length()));
+		}
+	}
+	
+	//Patch missing mappings
+	@Mod.EventHandler
+	public void missingMappingEvent(FMLMissingMappingsEvent event) {
+		Iterator<MissingMapping> itr = event.getAll().iterator();
+		while(itr.hasNext()) {
+			MissingMapping mapping = itr.next();
+
+			if(mapping.name.equalsIgnoreCase("advancedrocketry:" + LibVulpesItems.itemBattery.getUnlocalizedName()))
+				mapping.remap(LibVulpesItems.itemBattery);
+
+			/*if(mapping.name.equalsIgnoreCase("advancedrocketry:item.sawBlade")) {
+				if(mapping.type == mapping.type.ITEM) {
+					mapping.remap(Item.getItemFromBlock(AdvancedRocketryBlocks.blockSawBlade));
+				}	
+			}*/
+			
+			if(mapping.name.equalsIgnoreCase("advancedRocketry:item.satellitePowerSource")) 
+					mapping.remap(AdvancedRocketryItems.itemSatellitePowerSource);
+			
+			if(mapping.name.equalsIgnoreCase("advancedRocketry:item.circuitplate")) 
+				mapping.remap(AdvancedRocketryItems.itemCircuitPlate);
+			
+			if(mapping.name.equalsIgnoreCase("advancedRocketry:item.wafer")) 
+				mapping.remap(AdvancedRocketryItems.itemWafer);
+			
+			if(mapping.name.equalsIgnoreCase("advancedRocketry:item.itemUpgrade")) 
+				mapping.remap(AdvancedRocketryItems.itemUpgrade);
+			
+			if(mapping.name.equalsIgnoreCase("advancedRocketry:item.dataUnit")) 
+				mapping.remap(AdvancedRocketryItems.itemDataUnit);
+			
+			if(mapping.name.equalsIgnoreCase("advancedRocketry:item.satellitePrimaryFunction")) 
+				mapping.remap(AdvancedRocketryItems.itemSatellitePrimaryFunction);
+			
+			if(mapping.name.equalsIgnoreCase("advancedRocketry:item.pressureTank")) 
+				mapping.remap(AdvancedRocketryItems.itemPressureTank);
+			
+			if(mapping.name.equalsIgnoreCase("advancedRocketry:item.pressureTank")) 
+				mapping.remap(AdvancedRocketryItems.itemPressureTank);
+			
+			if(mapping.name.equalsIgnoreCase("advancedRocketry:item.lens")) 
+				mapping.remap(AdvancedRocketryItems.itemLens);
+			
+			if(mapping.name.equalsIgnoreCase("advancedRocketry:item.miscpart")) 
+				mapping.remap(AdvancedRocketryItems.itemMisc);
+			
+			if(mapping.name.equalsIgnoreCase("advancedRocketry:item.circuitIC")) 
+				mapping.remap(AdvancedRocketryItems.itemIC);
 		}
 	}
 }

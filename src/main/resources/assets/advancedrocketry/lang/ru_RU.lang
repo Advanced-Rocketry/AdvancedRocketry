@@ -17,15 +17,8 @@ tile.Crystallizer.name=Кристаллизатор
 tile.blastBrick.name=Жаропрочный кирпич
 tile.blastFurnaceController.name=Контроллер высокотемпературной печи
 tile.fuelStation.name=Заправочная станция
-tile.hatch.0.name=Входной люк
-tile.hatch.1.name=Выходной люк
-tile.hatch.2.name=Шина данных
-tile.hatch.3.name=Отсек для спутника
-tile.hatch.4.name=Элемен приёма жидкостей
-tile.hatch.5.name=Элемент вывода жидкостей
-tile.rfBattery.name=RF-разъём
-tile.IC2Plug.name=IC2(EU)-разъём
-tile.structureMachine.name=Структурный блок
+tile.loader.0.name=Шина данных
+tile.loader.1.name=Отсек для спутника
 tile.observatory.name=Обсерватория
 tile.satelliteBuilder.name=Спутниковый сборщик
 tile.rocket.name=Жидкостный ракетный двигатель
@@ -45,7 +38,6 @@ tile.concrete.name=Бетон
 tile.lathe.name=Токарный станок
 tile.rollingMachine.name=Прокатный стан
 tile.planetSelector.name=Селектор планет
-tile.blockGenericMachine.name=Блок контроллера
 tile.blockHandPress.nameРучной пресс
 tile.placeHolder.name=Placeholder
 tile.stationAssembler.name=Сборщик космических станций
@@ -79,16 +71,9 @@ tile.drill.name=Бур
 tile.dataCable.name=Кабель данных
 
 tile.Dilithium.name=Руда дилития
-tile.Copper.name=Медная руда
-tile.Tin.name=Оловянная руда
-tile.Rutile.name=Руда рутила
  
 tile.coil.dilithium.name=Дилитевая катушка
-tile.coil.silicon.name=Кремниевая катушка
-tile.coil.copper.name=Медная катушка
-tile.coil.tin.name=Оловянная катушка
-tile.coil.steel.name=Стальная катушка
-tile.coil=Катушка
+
  
 item.wafer.0.name=Кремниевая пластина
 item.circuitplate.0.name=Печатная плата
@@ -114,7 +99,6 @@ item.asteroidChip.name=Чип адреса астероида
 item.battery.0.name=Батарейка
 item.miscpart.0.name=Пользовательский интерфейс
 item.miscpart.1.name=Углеродный кирпич
-item.holoProjector.name=Голо-проектор
 item.station.name=Контейнер с космической станцией
 item.stationChip.name=Чип адреса космической станции
 item.spaceHelmet.name=Шлем скафандра
@@ -128,29 +112,9 @@ item.jackhammer.name=Отбойный молоток
 item.sealDetector.name=Течеискатель
 
 
-material.Gold.name=Золотой
-material.Iron.name=Железный
+
 material.Dilithium.name=Дилитевый
-material.Silicon.name=Кремниевый
-material.Copper.name=Медный
-material.Tin.name=Оловянный
-material.Steel.name=Стальной
-material.Titanium.name=Титановый
-material.Rutile.name=Рутиловый
- 
-type.crystal.name=кристалл
-type.dust.name=порошок
-type.boule.name=буль
-type.ingot.name=слиток
-type.nugget.name=самородок
-type.stick.name=стержень
-type.plate.name=листок
-type.ore.name=руда
-type.block.name=блок
-type.coil.name=моток
-type.fan.name=пропеллер
-type.sheet.name=лист
-type.gear.name=механизм
+
 
 container.crystallizer=Кристаллизатор
 container.cuttingmachine=Резак
