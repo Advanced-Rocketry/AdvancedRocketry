@@ -9,21 +9,26 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
 import zmaster587.libVulpes.api.IModularArmor;
+import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleImage;
 import zmaster587.libVulpes.inventory.modules.ModuleLiquidIndicator;
 import zmaster587.libVulpes.inventory.modules.ModulePower;
+import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
+import zmaster587.libVulpes.util.IconResource;
 
 public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements IModularInventory {
 	public TileOxygenCharger() {
-		super(1000, 2, 16000);
+		super(0, 2, 16000);
 	}
 
 	@Override
@@ -44,7 +49,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 			return super.fill(from, resource, doFill);
 		return 0;
 	}
-
+	
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid) {
 		return fluid.getID() == FluidRegistry.getFluidID(AdvancedRocketryFluids.fluidOxygen) || fluid.getID() == FluidRegistry.getFluidID(AdvancedRocketryFluids.fluidHydrogen);
@@ -52,7 +57,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 
 	@Override
 	public int getPowerPerOperation() {
-		return 1;
+		return 0;
 	}
 
 	@Override
@@ -110,9 +115,15 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		ArrayList<ModuleBase> modules = new ArrayList<ModuleBase>();
-
-		modules.add(new ModulePower(18, 20, this));
+		
+		modules.add(new ModuleSlotArray(50, 21, this, 0, 1));
+		modules.add(new ModuleSlotArray(50, 57, this, 1, 2));
+		if(worldObj.isRemote)
+			modules.add(new ModuleImage(49, 38, new IconResource(194, 0, 18, 18, CommonResources.genericBackground)));
+		
+		//modules.add(new ModulePower(18, 20, this));
 		modules.add(new ModuleLiquidIndicator(32, 20, this));
+		
 		//modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this, TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
 		//TODO add itemStack slots for liqiuid
 		return modules;
@@ -126,5 +137,104 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	@Override
 	public boolean canInteractWithContainer(EntityPlayer entity) {
 		return true;
+	}
+	
+	@Override
+	public void setInventorySlotContents(int slot, ItemStack stack) {
+		super.setInventorySlotContents(slot, stack);
+		while(useBucket(0, getStackInSlot(0)));
+	}
+	
+	//Yes i was lazy
+	//TODO: make better
+	private boolean useBucket( int slot, ItemStack stack) {
+
+		if(FluidContainerRegistry.isFilledContainer(stack)) {
+			if(slot == 0 && tank.getFluidAmount() + FluidContainerRegistry.getContainerCapacity(stack) <= tank.getCapacity()) {
+				ItemStack emptyContainer = FluidContainerRegistry.drainFluidContainer(stack);
+
+				if(emptyContainer != null && getStackInSlot(1) == null || (emptyContainer.isItemEqual(getStackInSlot(1)) && getStackInSlot(1).stackSize < getStackInSlot(1).getMaxStackSize())) {
+					tank.fill(FluidContainerRegistry.getFluidForFilledItem(stack), true);
+
+					if(getStackInSlot(1) == null)
+						inventory.setInventorySlotContents(1, emptyContainer);
+					else
+						getStackInSlot(1).stackSize++;
+					decrStackSize(0, 1);
+					return true;
+				}
+			}
+		}
+		else if(FluidContainerRegistry.isContainer(stack)) {
+			if(slot == 0 && tank.getFluidAmount() >= FluidContainerRegistry.BUCKET_VOLUME) {
+				ItemStack fullContainer = FluidContainerRegistry.fillFluidContainer(tank.drain(FluidContainerRegistry.BUCKET_VOLUME, false), stack);
+
+
+				if(fullContainer != null && (getStackInSlot(1) == null || (fullContainer.isItemEqual(getStackInSlot(1)) && getStackInSlot(1).stackSize < getStackInSlot(1).getMaxStackSize())) ) {
+					tank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
+
+					if(getStackInSlot(1) == null)
+						inventory.setInventorySlotContents(1, fullContainer);
+					else
+						getStackInSlot(1).stackSize++;
+					decrStackSize(0, 1);
+					return true;
+				}
+			}
+		}
+		else if(stack != null && stack.getItem() instanceof IFluidContainerItem) {
+			IFluidContainerItem fluidItem = ((IFluidContainerItem)stack.getItem());
+			FluidStack fluidStack;
+			stack = stack.copy();
+			stack.stackSize = 1;
+			
+			//Drain the tank into the item
+			if(fluidItem.getFluid(stack) == null) {
+				int amt = fluidItem.fill(stack, tank.getFluid(), true);
+				
+				
+				//If the container is full move it down and try again for a new one
+				if(amt != 0 && fluidItem.getCapacity(stack) == fluidItem.getFluid(stack).amount) {
+					
+					
+					if(getStackInSlot(1) == null) {
+						inventory.setInventorySlotContents(1, stack);
+					}
+					else if(ItemStack.areItemStackTagsEqual(getStackInSlot(1), stack) && getStackInSlot(1).getItem().equals(stack.getItem()) && getStackInSlot(1).getItemDamage() == stack.getItemDamage() && stack.getItem().getItemStackLimit(stack) < getStackInSlot(1).stackSize) {
+						getStackInSlot(1).stackSize++;
+
+					}
+					else
+						return false;
+					tank.drain(amt, true);
+					decrStackSize(0, 1);
+
+					return true;
+				}
+				
+			}
+			else {
+				fluidStack = fluidItem.drain(stack, tank.getCapacity() - tank.getFluidAmount(), false);
+
+				int amountDrained = tank.fill(fluidStack, true);
+				fluidItem.drain(stack, amountDrained, true);
+				if (fluidItem.getFluid(stack) == null || fluidItem.getFluid(stack).amount == 0) {
+					if(getStackInSlot(1) == null) {
+						inventory.setInventorySlotContents(1, stack);
+					}
+					else if(ItemStack.areItemStackTagsEqual(getStackInSlot(1), stack) && getStackInSlot(1).getItem().equals(stack.getItem()) && getStackInSlot(1).getItemDamage() == stack.getItemDamage() && stack.getItem().getItemStackLimit(stack) < getStackInSlot(1).stackSize) {
+						getStackInSlot(1).stackSize++;
+
+					}
+					else
+						return false;
+
+					decrStackSize(0, 1);
+
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

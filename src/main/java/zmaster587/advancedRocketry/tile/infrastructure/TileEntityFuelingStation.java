@@ -62,7 +62,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 				((BlockTileRedstoneEmitter)AdvancedRocketryBlocks.blockFuelingStation).setRedstoneState(worldObj, xCoord, yCoord, zCoord, linkedRocket.getFuelAmount() == linkedRocket.getFuelCapacity());
 			}
 		}
-		useBucket(0, inv[0]);
+		useBucket(0, inventory.getStackInSlot(0));
 	}
 
 	@Override
@@ -110,13 +110,13 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 		if(slot == 0 && FluidContainerRegistry.isFilledContainer(stack) && FuelRegistry.instance.isFuel(FuelType.LIQUID,FluidContainerRegistry.getFluidForFilledItem(stack).getFluid()) && tank.getFluidAmount() + FluidContainerRegistry.getContainerCapacity(stack) <= tank.getCapacity()) {
 			ItemStack emptyContainer = FluidContainerRegistry.drainFluidContainer(stack);
 
-			if(emptyContainer != null && inv[1] == null || (emptyContainer.isItemEqual(inv[1]) && inv[1].stackSize < inv[1].getMaxStackSize())) {
+			if(emptyContainer != null && inventory.getStackInSlot(1) == null || (emptyContainer.isItemEqual(inventory.getStackInSlot(1)) && inventory.getStackInSlot(1).stackSize < inventory.getStackInSlot(1).getMaxStackSize())) {
 				tank.fill(FluidContainerRegistry.getFluidForFilledItem(stack), true);
 
-				if(inv[1] == null)
+				if(inventory.getStackInSlot(1) == null)
 					super.setInventorySlotContents(1, emptyContainer);
 				else
-					inv[1].stackSize++;
+					inventory.getStackInSlot(1).stackSize++;
 				decrStackSize(0, 1);
 			}
 			else

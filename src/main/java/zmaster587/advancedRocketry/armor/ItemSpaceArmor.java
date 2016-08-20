@@ -5,6 +5,7 @@ import java.util.List;
 
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
 import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
@@ -293,7 +294,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 	 */
 	@Override
 	public int getMaxAir() {
-		return 36000; //30 minutes;
+		return Configuration.spaceSuitOxygenTime*1200; //30 minutes;
 	}
 
 	@Override

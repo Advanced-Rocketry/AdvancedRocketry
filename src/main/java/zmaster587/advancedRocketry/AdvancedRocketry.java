@@ -233,7 +233,7 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods = config.get(Configuration.CATEGORY_GENERAL, "makeMaterialsForOtherMods", true, "If true the machines from AdvancedRocketry will produce things like plates/rods for other mods even if Advanced Rocketry itself does not use the material (This can increase load time)").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.scrubberRequiresCartrige = config.get(Configuration.CATEGORY_GENERAL, "scrubberRequiresCartrige", true, "If true the Oxygen scrubbers require a consumable carbon collection cartridge").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.enableLaserDrill = config.get(Configuration.CATEGORY_GENERAL, "EnableLaserDrill", true, "Enables the laser drill machine").getBoolean();
-
+		zmaster587.advancedRocketry.api.Configuration.spaceSuitOxygenTime = config.get(Configuration.CATEGORY_GENERAL, "spaceSuitO2Buffer", 30, "Maximum time in minutes that the spacesuit's internal buffer can store O2 for").getInt();
 
 		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 127, "Dimensions including and after this number are allowed to be made into planets");
 		zmaster587.advancedRocketry.api.Configuration.overrideGCAir = config.get(MOD_INTERACTION, "OverrideGCAir", true, "If true Galaciticcraft's air will be disabled entirely requiring use of Advanced Rocketry's Oxygen system on GC planets").getBoolean();
@@ -339,9 +339,10 @@ public class AdvancedRocketry {
 
 
 		AdvancedRocketryBlocks.blockOxygenCharger = new BlockTile(TileOxygenCharger.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("oxygenCharger").setCreativeTab(tabAdvRocketry).setBlockTextureName("libvulpes:machineGeneric").setHardness(3f);
-		((BlockTile) AdvancedRocketryBlocks.blockOxygenCharger).setSideTexture("libvulpes:machineGeneric");
-		((BlockTile) AdvancedRocketryBlocks.blockOxygenCharger).setTopTexture("libvulpes:machineGeneric");
-		((BlockTile) AdvancedRocketryBlocks.blockOxygenCharger).setFrontTexture("libvulpes:machineGeneric");
+		AdvancedRocketryBlocks.blockOxygenCharger.setBlockBounds(0, 0, 0, 1, 0.5f, 1);
+		((BlockTile) AdvancedRocketryBlocks.blockOxygenCharger).setSideTexture("advancedrocketry:panelSide");
+		((BlockTile) AdvancedRocketryBlocks.blockOxygenCharger).setTopTexture("advancedrocketry:gasChargerTop");
+		((BlockTile) AdvancedRocketryBlocks.blockOxygenCharger).setFrontTexture("advancedrocketry:panelSide");
 
 		AdvancedRocketryBlocks.blockOxygenVent = new BlockTile(TileOxygenVent.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("oxygenVent").setCreativeTab(tabAdvRocketry).setBlockTextureName("libvulpes:machineGeneric").setHardness(3f);
 		((BlockTile) AdvancedRocketryBlocks.blockOxygenVent).setSideTexture("advancedrocketry:machineVent");
@@ -475,8 +476,8 @@ public class AdvancedRocketry {
 		
 		AdvancedRocketryBlocks.blockSuitWorkStation = new BlockTile(TileSuitWorkStation.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("suitWorkStation").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		((BlockTile)AdvancedRocketryBlocks.blockSuitWorkStation).setTopTexture("Advancedrocketry:suitWorkStation");
-		((BlockTile)AdvancedRocketryBlocks.blockSuitWorkStation).setSideTexture("Advancedrocketry:panelSide");
-		((BlockTile)AdvancedRocketryBlocks.blockSuitWorkStation).setFrontTexture("Advancedrocketry:panelSide");
+		((BlockTile)AdvancedRocketryBlocks.blockSuitWorkStation).setSideTexture("Advancedrocketry:panelSideWorkStation");
+		((BlockTile)AdvancedRocketryBlocks.blockSuitWorkStation).setFrontTexture("Advancedrocketry:panelSideWorkStation");
 		
 		
 		AdvancedRocketryBlocks.blockSolarPanel = new BlockSolarPanel(Material.iron).setBlockName("solarPanel").setCreativeTab(tabAdvRocketry).setHardness(3f);

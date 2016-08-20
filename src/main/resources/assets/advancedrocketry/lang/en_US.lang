@@ -51,7 +51,7 @@ tile.liquidHatch.name=Fluid Hatch
 tile.rocketFuelBlock.name=Rocket Fuel
 tile.hydrogenFluidBlock.name=Hydrogen
 tile.oxygenFluidBlock.name=Oxygen
-tile.oxygenCharger.name=Oxygen Charge Pad
+tile.oxygenCharger.name=Gas Charge Pad
 tile.dockingPad.name=Docking Pad
 tile.stationmonitor.name=Warp Controller
 tile.warpCore.name=Warp Core
@@ -74,7 +74,7 @@ tile.dataPipe.name=Data Cable
 tile.rfOutput.name=Redstone Flux Output Plug
 tile.microwaveReciever.name=Microwave Reciever
 tile.solarPanel.name=Solar Panel
-tile.suitWorkStation.name=Suit Work Station
+tile.suitWorkStation.name=Suit Workstation
 tile.orientationControl.name=Orientation Controller
 
 tile.Dilithium.name=Dilithium Ore

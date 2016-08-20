@@ -65,4 +65,6 @@ public class Configuration {
 
 	public static boolean enableLaserDrill;
 
+	public static int spaceSuitOxygenTime;
+
 }
