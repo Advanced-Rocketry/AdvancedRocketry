@@ -46,7 +46,7 @@ public class NEIAdvancedRocketryConfig implements IConfigureNEI {
 
 	@Override
 	public String getName() {
-		return "poop";
+		return "ARConfig";
 	}
 
 	@Override

@@ -410,7 +410,7 @@ public class RocketEventHandler extends Gui {
 			}
 
 			//Draw module icons
-			if(!Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode) {
+			if(!Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode && Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(4) != null && Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(4).getItem() instanceof IModularArmor) {
 				for(int i = 1; i < 5; i++) {
 					renderModuleSlots(Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(i), 4-i);
 				}
@@ -452,8 +452,6 @@ public class RocketEventHandler extends Gui {
 			int size = 24;
 			int screenY = 8 + slot*(size + 8);
 			int screenX = 8;
-			
-			
 			
 			//Draw BG
 			GL11.glColor4f(1f,1f,1f, 1f);

@@ -1,6 +1,8 @@
 package zmaster587.advancedRocketry.item.components;
 
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import java.lang.reflect.Field;
+
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,10 +19,15 @@ public class ItemUpgrade extends ItemIngredient implements IArmorComponent {
 	ResourceIcon icon[];
 	private int legUpgradeDamage = 2;
 	private int bootsUpgradeDamage = 3;
+	Field walkSpeed;
+	
 	public ItemUpgrade(int num) {
 		super(num);
 		icon = new ResourceIcon[num];
 		setMaxStackSize(1);
+		
+		walkSpeed = ReflectionHelper.findField(net.minecraft.entity.player.PlayerCapabilities.class, "walkSpeed", "field_75097_g");
+		walkSpeed.setAccessible(true);
 	}
 
 	@Override
@@ -39,10 +46,24 @@ public class ItemUpgrade extends ItemIngredient implements IArmorComponent {
 						itemCount++;
 					}
 				}
-				ObfuscationReflectionHelper.setPrivateValue(net.minecraft.entity.player.PlayerCapabilities.class, player.capabilities, (itemCount+1)*0.1f, "walkSpeed");
-			}
-			else
-				ObfuscationReflectionHelper.setPrivateValue(net.minecraft.entity.player.PlayerCapabilities.class, player.capabilities, 0.1f, "walkSpeed");
+				//Walkspeed
+				try {
+					walkSpeed.setFloat(player.capabilities, (itemCount+1)*0.1f);
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+				//ReflectionHelper.setPrivateValue(net.minecraft.entity.player.PlayerCapabilities.class, player.capabilities, (itemCount+1)*0.1f, "walkSpeed", "field_75097_g");
+			} else
+				try {
+					walkSpeed.setFloat(player.capabilities, 0.1f);
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+				//ReflectionHelper.setPrivateValue(net.minecraft.entity.player.PlayerCapabilities.class, player.capabilities, 0.1f,"walkSpeed", "field_75097_g");
 		}
 		else if(componentStack.getItemDamage() == bootsUpgradeDamage)
 			player.fallDistance = 0;
