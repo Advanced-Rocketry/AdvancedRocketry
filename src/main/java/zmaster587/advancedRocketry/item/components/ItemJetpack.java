@@ -1,8 +1,9 @@
 package zmaster587.advancedRocketry.item.components;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityLivingBase;
@@ -31,11 +32,18 @@ import zmaster587.libVulpes.util.InputSyncHandler;
 
 public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 
+	Field flySpeed;
+	
 	private static enum MODES {
 		NORMAL,
 		HOVER;
 	}
 
+	public ItemJetpack() {
+		flySpeed = ReflectionHelper.findField(net.minecraft.entity.player.PlayerCapabilities.class, "flySpeed", "field_75096_f");
+		flySpeed.setAccessible(true);
+	}
+	
 	private static final ResourceIcon jetpackHover = new ResourceIcon(TextureResources.jetpackIconHover);
 	private static final ResourceIcon jetpackEnabled = new ResourceIcon(TextureResources.jetpackIconEnabled);
 	private static final ResourceIcon jetpackDisabled = new ResourceIcon(TextureResources.jetpackIconDisabled);
@@ -69,7 +77,14 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 		MODES mode = getMode(componentStack);
 		boolean isActive = isActive(componentStack, player);
 
-		ObfuscationReflectionHelper.setPrivateValue(net.minecraft.entity.player.PlayerCapabilities.class, player.capabilities, speedUpgrades*0.02f, "flySpeed");
+		try {
+			flySpeed.setFloat(player.capabilities, speedUpgrades*0.02f);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		//ObfuscationReflectionHelper.setPrivateValue(net.minecraft.entity.player.PlayerCapabilities.class, player.capabilities, speedUpgrades*0.02f, "flySpeed");
 		player.capabilities.isFlying = false;
 
 		if(isEnabled(componentStack)) {

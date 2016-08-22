@@ -28,17 +28,16 @@ jar {
         manifest {
         attributes 'FMLCorePlugin': 'zmaster587.advancedRocketry.asm.AdvancedRocketryPlugin'
         attributes 'FMLCorePluginContainsFMLMod': 'true'
-        attributes 'FMLAT': 'accessTransformer.cfg'
     }
 }
 
 minecraft {
-    version = "1.7.10-10.13.4.1566-1.7.10"
+    version = "1.7.10-10.13.4.1614-1.7.10"
     assetDir = "eclipse/assets"
     
     replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"
     replace "%VERSION%", modversion
-    replace "%LIBVULPESVERSION%", "0.1.0"
+    replace "%LIBVULPESVERSION%", "0.1.0b"
 }
 
 repositories {
