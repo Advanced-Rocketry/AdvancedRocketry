@@ -2,6 +2,9 @@ package zmaster587.advancedRocketry.item.components;
 
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import zmaster587.libVulpes.api.IArmorComponent;
@@ -148,6 +152,13 @@ public class ItemPressureTank extends ItemIngredient implements IArmorComponent,
 	@Override
 	public boolean isAllowedInSlot(ItemStack stack, int slot) {
 		return slot == 1;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void renderScreen(ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event, Gui gui) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

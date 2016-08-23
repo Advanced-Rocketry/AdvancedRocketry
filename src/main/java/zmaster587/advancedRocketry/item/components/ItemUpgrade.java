@@ -1,8 +1,12 @@
 package zmaster587.advancedRocketry.item.components;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import cpw.mods.fml.relauncher.ReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,6 +14,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.items.ItemIngredient;
@@ -99,5 +104,12 @@ public class ItemUpgrade extends ItemIngredient implements IArmorComponent {
 		if(icon[armorStack.getItemDamage()] == null)
 			this.icon[armorStack.getItemDamage()] = new ResourceIcon(TextureMap.locationItemsTexture, this.getIcon(armorStack, 0));
 		return this.icon[armorStack.getItemDamage()];
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void renderScreen(ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event, Gui gui) {
+		// TODO Auto-generated method stub
+		
 	}
 }

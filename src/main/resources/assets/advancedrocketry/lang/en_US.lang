@@ -124,6 +124,7 @@ item.itemUpgrade.0.name=Hover Upgrade
 item.itemUpgrade.1.name=Flight Speed Control Upgrade
 item.itemUpgrade.2.name=Bionic Leg Upgrade
 item.itemUpgrade.3.name=Padded Landing Boots
+item.atmAnalyser.name=Atmosphere Analyzer
 
 item.jetPack.name=Jet Pack
 item.pressureTank.0.name=Low Pressure Tank

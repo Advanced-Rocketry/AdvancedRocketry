@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.event;
 
 import java.nio.IntBuffer;
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -374,45 +375,11 @@ public class RocketEventHandler extends Gui {
 				this.drawTexturedModalRect(screenX , screenY, 23, 17, (int)(width*size), 17);
 			}
 
-			//Draw the H2 Bar if needed
-			if(!Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode && chestPiece != null && chestPiece.getItem() instanceof IModularArmor) {
-				IInventory inv = ((IModularArmor)chestPiece.getItem()).loadModuleInventory(chestPiece);
-
-				int amt = 0, maxAmt = 0;
-				for(int i = 0; i < inv.getSizeInventory(); i++) {
-					ItemStack currentStack = inv.getStackInSlot(i);
-
-					if(currentStack != null && currentStack.getItem() instanceof IFluidContainerItem ) {
-						FluidStack fluid = ((IFluidContainerItem)currentStack.getItem()).getFluid(currentStack);
-						if(fluid == null)
-							maxAmt += ((IFluidContainerItem)currentStack.getItem()).getCapacity(currentStack);
-						else if(fluid.getFluidID() == AdvancedRocketryFluids.fluidHydrogen.getID()) {
-							maxAmt += ((IFluidContainerItem)currentStack.getItem()).getCapacity(currentStack);
-							amt += fluid.amount;
-						}
-					}
-				}
-
-				if(maxAmt > 0) {
-					float size = amt/(float)maxAmt;
-
-					GL11.glEnable(GL11.GL_BLEND);
-					Minecraft.getMinecraft().renderEngine.bindTexture(background);
-					GL11.glColor3f(1f, 1f, 1f);
-					int width = 83;
-					int screenX = event.resolution.getScaledWidth()/2 + 8;
-					int screenY = event.resolution.getScaledHeight() - 74;
-
-					//Draw BG
-					this.drawTexturedModalRect(screenX, screenY, 23, 34, width, 17);
-					this.drawTexturedModalRect(screenX , screenY, 23, 51, (int)(width*size), 17);
-				}
-			}
 
 			//Draw module icons
 			if(!Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode && Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(4) != null && Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(4).getItem() instanceof IModularArmor) {
 				for(int i = 1; i < 5; i++) {
-					renderModuleSlots(Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(i), 4-i);
+					renderModuleSlots(Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(i), 4-i, event);
 				}
 			}
 
@@ -439,7 +406,7 @@ public class RocketEventHandler extends Gui {
 		}
 	}
 	
-	private void renderModuleSlots(ItemStack armorStack, int slot) {
+	private void renderModuleSlots(ItemStack armorStack, int slot, RenderGameOverlayEvent event) {
 		int index = 1;
 		float color = 0.85f + 0.15F*MathHelper.sin( 2f*(float)Math.PI*((Minecraft.getMinecraft().theWorld.getTotalWorldTime()) % 60)/60f );
 		GL11.glEnable(GL11.GL_BLEND);
@@ -472,7 +439,12 @@ public class RocketEventHandler extends Gui {
 			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel, screenX, screenY, screenX + size, screenY + size,0d,1d,1d,0d);
 			Tessellator.instance.draw();
 			
-			for( ItemStack stack : ((IModularArmor)armorStack.getItem()).getComponents(armorStack)) {
+			List<ItemStack> stacks = ((IModularArmor)armorStack.getItem()).getComponents(armorStack);
+			
+			for( ItemStack stack : stacks) {
+				
+				GL11.glColor4f(1f, 1f, 1f, 1f);
+				((IArmorComponent)stack.getItem()).renderScreen(stack, stacks, event, this);
 				
 				ResourceIcon icon = ((IArmorComponent)stack.getItem()).getComponentIcon(stack);
 				ResourceLocation texture = icon.getResourceLocation();
@@ -482,7 +454,6 @@ public class RocketEventHandler extends Gui {
 					screenX = 12 + index*(size+2);
 					
 					//Draw BG
-					GL11.glColor4f(1f, 1f, 1f, 1f);
 					Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
 					Tessellator.instance.startDrawingQuads();
 					RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel, screenX - 4, screenY - 4, screenX + size, screenY + size + 4,0.5d,0.5d,0d,1d);

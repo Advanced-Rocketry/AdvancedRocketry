@@ -28,8 +28,8 @@ public class AtmosphereRegister {
 	 * @param atmosphere atmosphere to register
 	 * @param name name to register the atmosphere.  using the unlocalized name is HIGHLY recommended
 	 */
-	public void registerAtmosphere(IAtmosphere atmosphere, String name) {
-		atmosphereRegistration.put(name, atmosphere);
+	public void registerAtmosphere(IAtmosphere atmosphere) {
+		atmosphereRegistration.put(atmosphere.getUnlocalizedName(), atmosphere);
 		atmosphereList.add(atmosphere);
 	}
 	

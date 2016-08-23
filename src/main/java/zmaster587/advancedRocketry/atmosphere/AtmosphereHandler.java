@@ -2,10 +2,13 @@ package zmaster587.advancedRocketry.atmosphere;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -16,9 +19,11 @@ import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.network.PacketAtmSync;
 import zmaster587.advancedRocketry.util.AreaBlob;
 import zmaster587.advancedRocketry.util.AtmosphereBlob;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
+import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.BlockPosition;
 
 import java.util.HashMap;
@@ -32,10 +37,14 @@ public class AtmosphereHandler {
 	public static long lastSuffocationTime = Integer.MIN_VALUE;
 	private static final int MAX_BLOB_RADIUS = 64;
 	private static HashMap<Integer, AtmosphereHandler> dimensionOxygen = new HashMap<Integer, AtmosphereHandler>();
-
+	private static HashMap<EntityPlayer, IAtmosphere> prevAtmosphere = new HashMap<EntityPlayer, IAtmosphere>();
+	
 	private HashMap<IBlobHandler,AreaBlob> blobs;
 	int dimId;
 
+	//Stores current Atm on the CLIENT
+	public static IAtmosphere currentAtm;
+	
 	/**
 	 * Registers the Atmosphere handler for the dimension given
 	 * @param dimId the dimension id to register the dimension for
@@ -74,9 +83,25 @@ public class AtmosphereHandler {
 		if(event.side.isServer() && event.player.dimension == this.dimId) {
 			IAtmosphere atmosType = getAtmosphereType(event.player);
 
+			if(atmosType != prevAtmosphere.get(event.player)) {
+				PacketHandler.sendToPlayer(new PacketAtmSync(atmosType.getUnlocalizedName()), event.player);
+				prevAtmosphere.put(event.player, atmosType);
+			}
+			
 			if(atmosType.canTick())
 				atmosType.onTick((EntityLivingBase)event.player);
 		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerChangeDim(PlayerChangedDimensionEvent event) {
+		prevAtmosphere.remove(event.player);
+		
+	}
+	
+	@SubscribeEvent
+	public void onPlayerLogoutEvent(PlayerLoggedOutEvent event) {
+		prevAtmosphere.remove(event.player);
 	}
 
 	private void onBlockRemove(BlockPosition pos) {

@@ -14,8 +14,8 @@ public class AtmosphereType implements IAtmosphere {
 	public static final AtmosphereType VACUUM = new AtmosphereVacuum();
 
 	static {
-		AtmosphereRegister.getInstance().registerAtmosphere(AIR, AIR.getUnlocalizedName());
-		AtmosphereRegister.getInstance().registerAtmosphere(VACUUM, VACUUM.getUnlocalizedName());
+		AtmosphereRegister.getInstance().registerAtmosphere(AIR);
+		AtmosphereRegister.getInstance().registerAtmosphere(VACUUM);
 	}
 	
 	private boolean allowsCombustion;
@@ -50,6 +50,10 @@ public class AtmosphereType implements IAtmosphere {
 	 * @return true if the atmosphere does not affect the entity in any way
 	 */
 	public boolean isImmune(EntityLivingBase player) {
+		return isBreathable;
+	}
+	
+	public boolean isBreathable() {
 		return isBreathable;
 	}
 	

@@ -3,9 +3,13 @@ package zmaster587.advancedRocketry.item.components;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -17,6 +21,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
@@ -47,6 +52,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 	private static final ResourceIcon jetpackHover = new ResourceIcon(TextureResources.jetpackIconHover);
 	private static final ResourceIcon jetpackEnabled = new ResourceIcon(TextureResources.jetpackIconEnabled);
 	private static final ResourceIcon jetpackDisabled = new ResourceIcon(TextureResources.jetpackIconDisabled);
+	private ResourceLocation background = TextureResources.rocketHud;
 
 	@Override
 	public void onTick(World world, EntityPlayer player,
@@ -265,5 +271,41 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 	@Override
 	public boolean isAllowedInSlot(ItemStack stack, int slot) {
 		return slot == 1;
+	}
+
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void renderScreen(ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event, Gui gui) {
+		List<ItemStack> inv = modules;
+
+		int amt = 0, maxAmt = 0;
+		for(int i = 0; i < inv.size(); i++) {
+			ItemStack currentStack = inv.get(i);
+
+			if(currentStack != null && currentStack.getItem() instanceof IFluidContainerItem ) {
+				FluidStack fluid = ((IFluidContainerItem)currentStack.getItem()).getFluid(currentStack);
+				if(fluid == null)
+					maxAmt += ((IFluidContainerItem)currentStack.getItem()).getCapacity(currentStack);
+				else if(fluid.getFluidID() == AdvancedRocketryFluids.fluidHydrogen.getID()) {
+					maxAmt += ((IFluidContainerItem)currentStack.getItem()).getCapacity(currentStack);
+					amt += fluid.amount;
+				}
+			}
+		}
+
+		if(maxAmt > 0) {
+			float size = amt/(float)maxAmt;
+
+			Minecraft.getMinecraft().renderEngine.bindTexture(background);
+			GL11.glColor3f(1f, 1f, 1f);
+			int width = 83;
+			int screenX = event.resolution.getScaledWidth()/2 + 8;
+			int screenY = event.resolution.getScaledHeight() - 74;
+
+			//Draw BG
+			gui.drawTexturedModalRect(screenX, screenY, 23, 34, width, 17);
+			gui.drawTexturedModalRect(screenX , screenY, 23, 51, (int)(width*size), 17);
+		}
 	}
 }
