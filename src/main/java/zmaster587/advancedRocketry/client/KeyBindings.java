@@ -35,11 +35,22 @@ public class KeyBindings {
 				return;
 			
 			
-			EntityRocket rocket;
+			//EntityRocket rocket;
 			//If the space bar is pressed then send a packet to the server and launch the rocket
-			if(/*launch.isPressed()*/ false && player.ridingEntity instanceof EntityRocket && !(rocket = (EntityRocket)player.ridingEntity).isInFlight()) {
+			/*if(/*launch.isPressed()* / false && player.ridingEntity instanceof EntityRocket && !(rocket = (EntityRocket)player.ridingEntity).isInFlight()) {
 				PacketHandler.sendToServer(new PacketEntity(rocket, (byte)EntityRocket.PacketType.LAUNCH.ordinal()));
 				rocket.launch();
+			}*/
+			
+			if(player.ridingEntity != null && player.ridingEntity instanceof EntityRocket) {
+				EntityRocket rocket = (EntityRocket)player.ridingEntity;
+				if(!rocket.isInFlight() && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+					if(Minecraft.getMinecraft().inGameHasFocus && player.equals(Minecraft.getMinecraft().thePlayer)) {
+						PacketHandler.sendToServer(new PacketEntity(rocket, (byte)EntityRocket.PacketType.LAUNCH.ordinal()));
+						rocket.launch();
+					}
+				}
+				
 			}
 			
 			if(toggleJetpack.isPressed()) {

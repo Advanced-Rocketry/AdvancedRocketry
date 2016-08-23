@@ -1,16 +1,13 @@
 package zmaster587.advancedRocketry.client;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -31,7 +28,6 @@ import zmaster587.advancedRocketry.client.render.item.RendererBucket;
 import zmaster587.advancedRocketry.client.render.multiblocks.RenderPlanetAnalyser;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererChemicalReactor;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererElectrolyser;
-import zmaster587.advancedRocketry.client.render.multiblocks.RendererGenericMachineModel;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererMicrowaveReciever;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererRollingMachine;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererCrystallizer;
@@ -47,7 +43,6 @@ import zmaster587.advancedRocketry.entity.fx.FxElectricArc;
 import zmaster587.advancedRocketry.entity.fx.RocketFx;
 import zmaster587.advancedRocketry.entity.fx.TrailFx;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
-import zmaster587.advancedRocketry.event.PlanetEventHandlerClient;
 import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.tile.TileDrill;
 import zmaster587.advancedRocketry.tile.TileModelRender;
@@ -68,7 +63,6 @@ import zmaster587.advancedRocketry.tile.multiblock.machine.TilePrecisionAssemble
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileRollingMachine;
 import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
 import zmaster587.libVulpes.tile.TileSchematic;
-import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 
 public class ClientProxy extends CommonProxy {
 
@@ -112,8 +106,6 @@ public class ClientProxy extends CommonProxy {
 		
 		MinecraftForge.EVENT_BUS.register(ModuleContainerPan.class);
 		MinecraftForge.EVENT_BUS.register(new RenderComponents());
-		
-		FMLCommonHandler.instance().bus().register(new PlanetEventHandlerClient());
 	}
 
 	@Override
