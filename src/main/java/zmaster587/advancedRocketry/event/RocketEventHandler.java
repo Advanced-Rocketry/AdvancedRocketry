@@ -304,7 +304,7 @@ public class RocketEventHandler extends Gui {
 	}
 
 	@SubscribeEvent
-	public void onScreenRender(RenderGameOverlayEvent event) {
+	public void onScreenRender(RenderGameOverlayEvent.Post event) {
 		Entity ride;
 		if(event.type == ElementType.HOTBAR) {
 			if((ride = Minecraft.getMinecraft().thePlayer.ridingEntity) instanceof EntityRocket) {
@@ -441,7 +441,7 @@ public class RocketEventHandler extends Gui {
 			
 			List<ItemStack> stacks = ((IModularArmor)armorStack.getItem()).getComponents(armorStack);
 			
-			for( ItemStack stack : stacks) {
+			for(ItemStack stack : stacks) {
 				
 				GL11.glColor4f(1f, 1f, 1f, 1f);
 				((IArmorComponent)stack.getItem()).renderScreen(stack, stacks, event, this);
@@ -466,7 +466,6 @@ public class RocketEventHandler extends Gui {
 					Tessellator.instance.startDrawingQuads();
 					RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel, screenX, screenY, screenX + size, screenY + size, icon.getMinU(),icon.getMaxU(), icon.getMaxV(),icon.getMinV());
 					Tessellator.instance.draw();
-					
 					
 					index++;
 				}

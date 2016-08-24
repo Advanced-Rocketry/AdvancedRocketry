@@ -15,6 +15,7 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import micdoodle8.mods.galacticraft.core.blocks.GCBlocks;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
+import net.java.games.input.Mouse;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -1023,7 +1024,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerWorldGenerator(new OreGenerator(), 100);
 
 		ForgeChunkManager.setForcedChunkLoadingCallback(instance, new WorldEvents());
-
+		
 
 		//AutoGenned Recipes
 		for(Materials ore : Materials.values()) {

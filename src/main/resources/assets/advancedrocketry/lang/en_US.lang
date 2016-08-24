@@ -155,3 +155,6 @@ fluid.hydrogen=Hydrogen
 fluid.rocketFuel=Rocket Fuel
 
 mission.asteroidmining.name=Asteroid Mining
+
+key.controls.advancedRocketry=Advanced Rocketry
+key.toggleJetpack=Toggle Jetpack

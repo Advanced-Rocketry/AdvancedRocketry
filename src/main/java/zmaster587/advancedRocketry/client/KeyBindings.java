@@ -9,6 +9,7 @@ import org.lwjgl.input.Keyboard;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.entity.EntityRocket;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.network.PacketChangeKeyState;
 import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
@@ -68,7 +69,7 @@ public class KeyBindings {
 		}
 		
 		//static KeyBinding launch = new KeyBinding("Launch", Keyboard.KEY_SPACE, "key.controls." + Constants.modId);
-		static KeyBinding toggleJetpack = new KeyBinding("toggleJetpack", Keyboard.KEY_X, "key.controls." + Constants.modId);
+		static KeyBinding toggleJetpack = new KeyBinding(LibVulpes.proxy.getLocalizedString("key.toggleJetpack"), Keyboard.KEY_X, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
 		
 		public static final void init() {
 			//ClientRegistry.registerKeyBinding(launch);
