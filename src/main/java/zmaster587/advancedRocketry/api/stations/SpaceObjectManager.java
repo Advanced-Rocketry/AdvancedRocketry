@@ -402,8 +402,9 @@ public class SpaceObjectManager {
 
 
 		((DimensionProperties)station.getProperties()).atmosphereDensity = 0;
-		station.beginTransition(timeDelta + DimensionManager.getWorld(Configuration.spaceDimId).getTotalWorldTime());
-		nextStationTransitionTick = timeDelta + DimensionManager.getWorld(Configuration.spaceDimId).getTotalWorldTime();
+		nextStationTransitionTick = (int)(Configuration.travelTimeMultiplier*timeDelta) + DimensionManager.getWorld(Configuration.spaceDimId).getTotalWorldTime();
+		station.beginTransition(nextStationTransitionTick);
+		
 	}
 
 	public void writeToNBT(NBTTagCompound nbt) {

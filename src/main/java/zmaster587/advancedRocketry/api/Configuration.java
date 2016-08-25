@@ -67,4 +67,6 @@ public class Configuration {
 
 	public static int spaceSuitOxygenTime;
 
+	public static float travelTimeMultiplier;
+
 }
