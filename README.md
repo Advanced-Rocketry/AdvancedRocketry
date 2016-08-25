@@ -19,6 +19,18 @@ Current Features:
 - Data collection of planets (not currently fully featured)
 - Support for IC2 and RF
 - planets can be generated from XML
+- Gravity generators for space stations
+- stations with day/night cycles
+- more Satellites
+    - mining Satellite (ish, is spacestation bound)
+    - energy collection satellite
+    - ore scanning satallite
+- collection of materials from asteroids
+- asteroids
+    - automated harvesting
+    - research system
+        - random asteroid parameters ( size, composition, location (polar coords)
+        - research can be done to determine properties
 
 Future Features:
 - Other engine types for space ships(ion/plasma)
@@ -26,26 +38,21 @@ Future Features:
 - Orbital factories
 - rovers (maybe? need a use)
 - collection of materials from gas giants
-- collection of materials from asteroids
 - docking (maybe..)
 - planetary mapping system (feasible?)
 - more Satellites
-    - mining Satellite
     - Weather control satellite
-    - energy collection satellite
     - mapping satellite (feasible?)
-    - ore scanning satallite
 - clean rooms
 - research tree (possible use for planetary data, hire villagers as scientists for you lab!)
 - supports for more power systems
 - remove RF dependance
 - planets actually moving in their orbits
 - Railguns to transfer goods between planets and stations
-- stations with day/night cycles
 - stations can be positioned over certain locations on planets
 - colony management system (seed testificates throughout the universe?)
 - config for mapping dims added by other mods to planets
-- Gravity generators for space stations, local areas on planets
+- Gravity generators for local areas on planets
 - ground based telescopes
         - water detectors (increases info on %dry) space only
         - chemical detectors (increases chance of finding planets rich in certain ores) space only
@@ -53,11 +60,8 @@ Future Features:
         - temperature detector (increases info on planetary temperature) space only
         - star scanner (increases the likelyhood of finding planets orbiting a star; higher level allows for smaller planets) ground and space
 - asteroids
-    - automated harvesting
     - manual harvesting
     - research system
-        - random asteroid parameters ( size, composition, location (polar coords)
-        - research can be done to determine properties
         - player can select as a destination
             - temporary dim in created, destroyed when last player leaves
 - Hardmode
