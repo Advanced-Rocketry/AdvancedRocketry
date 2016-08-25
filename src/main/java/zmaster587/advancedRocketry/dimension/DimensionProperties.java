@@ -275,7 +275,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		AtmosphereTypes atmType = AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity);
 		Temps tempType = Temps.getTempFromValue(averageTemperature);
 
-
+		if(tempType == Temps.TOOHOT)
+			return PlanetIcons.MARSLIKE.resource;
 		if(atmType != AtmosphereTypes.NONE && VulpineMath.isBetween(tempType.ordinal(), Temps.COLD.ordinal(), Temps.TOOHOT.ordinal()))
 			return PlanetIcons.EARTHLIKE.resource;//TODO: humidity
 		else if(tempType.compareTo(Temps.COLD) > 0)
@@ -302,6 +303,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		Temps tempType = Temps.getTempFromValue(averageTemperature);
 
 
+		if(tempType == Temps.TOOHOT)
+			return PlanetIcons.MARSLIKE.resourceLEO;
 		if(atmType != AtmosphereTypes.NONE && VulpineMath.isBetween(tempType.ordinal(), Temps.COLD.ordinal(), Temps.TOOHOT.ordinal()))
 			return PlanetIcons.EARTHLIKE.resourceLEO;//TODO: humidity
 		else if(tempType.compareTo(Temps.COLD) > 0)

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockGrass;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -13,7 +12,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -23,22 +21,12 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
-
 import org.lwjgl.opengl.GL11;
 
-import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.RocketEvent;
-import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
-import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
-import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
 import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
@@ -424,19 +412,19 @@ public class RocketEventHandler extends Gui {
 			GL11.glColor4f(1f,1f,1f, 1f);
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
 			Tessellator.instance.startDrawingQuads();
-			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel, screenX - 4, screenY - 4, screenX + size, screenY + size + 4,0d,0.5d,0d,1d);
+			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel-1, screenX - 4, screenY - 4, screenX + size, screenY + size + 4,0d,0.5d,0d,1d);
 			Tessellator.instance.draw();
 			
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
 			Tessellator.instance.startDrawingQuads();
-			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel, screenX + size, screenY - 3, screenX + 2 + size, screenY + size + 3,0.5d,0.5d,0d,0d);
+			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel-1, screenX + size, screenY - 3, screenX + 2 + size, screenY + size + 3,0.5d,0.5d,0d,0d);
 			Tessellator.instance.draw();
 			
 			//Draw Icon
 			GL11.glColor4f(color,color,color, 1f);
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.armorSlots[slot]);
 			Tessellator.instance.startDrawingQuads();
-			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel, screenX, screenY, screenX + size, screenY + size,0d,1d,1d,0d);
+			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel-1, screenX, screenY, screenX + size, screenY + size,0d,1d,1d,0d);
 			Tessellator.instance.draw();
 			
 			List<ItemStack> stacks = ((IModularArmor)armorStack.getItem()).getComponents(armorStack);
@@ -455,7 +443,7 @@ public class RocketEventHandler extends Gui {
 					//Draw BG
 					Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
 					Tessellator.instance.startDrawingQuads();
-					RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel , screenX - 4, screenY - 4, screenX + size - 2, screenY + size + 4,0.5d,0.5d,0d,1d);
+					RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel -1, screenX - 4, screenY - 4, screenX + size - 2, screenY + size + 4,0.5d,0.5d,0d,1d);
 					Tessellator.instance.draw();
 					
 					Minecraft.getMinecraft().renderEngine.bindTexture(texture);
@@ -463,7 +451,7 @@ public class RocketEventHandler extends Gui {
 					//Draw Icon
 					GL11.glColor4f(color,color,color, alpha);
 					Tessellator.instance.startDrawingQuads();
-					RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel, screenX, screenY, screenX + size, screenY + size, icon.getMinU(),icon.getMaxU(), icon.getMaxV(),icon.getMinV());
+					RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel-1, screenX, screenY, screenX + size, screenY + size, icon.getMinU(),icon.getMaxU(), icon.getMaxV(),icon.getMinV());
 					Tessellator.instance.draw();
 					
 					index++;
@@ -475,7 +463,7 @@ public class RocketEventHandler extends Gui {
 			GL11.glColor4f(1f, 1f, 1f,1f);
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
 			Tessellator.instance.startDrawingQuads();
-			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel, screenX + 12, screenY - 4, screenX + size, screenY + size + 4,0.75d,1d,0d,1d);
+			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel-1, screenX + 12, screenY - 4, screenX + size, screenY + size + 4,0.75d,1d,0d,1d);
 			Tessellator.instance.draw();
 		}
 		

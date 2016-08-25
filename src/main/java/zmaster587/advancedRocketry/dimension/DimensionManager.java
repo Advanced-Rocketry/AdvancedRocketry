@@ -225,7 +225,7 @@ public class DimensionManager {
 					minDistance = dist;
 			}
 
-		} while(minDistance < (Math.PI/20f));
+		} while(minDistance < (Math.PI/40f));
 
 		//Get Star Color
 		properties.setStar(sol);
@@ -484,6 +484,9 @@ public class DimensionManager {
 
 		//Load SolarSystems first
 		NBTTagCompound solarSystem = nbt.getCompoundTag("starSystems");
+		
+		if(solarSystem.hasNoTags())
+			return false;
 
 		for(Object key : solarSystem.func_150296_c()) {
 
