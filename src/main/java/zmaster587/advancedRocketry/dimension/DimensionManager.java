@@ -209,7 +209,8 @@ public class DimensionManager {
 			properties.setName(name);
 		}
 		properties.atmosphereDensity = MathHelper.clamp_int(baseAtmosphere + random.nextInt(atmosphereFactor) - atmosphereFactor/2, 0, 200); 
-		properties.orbitalDist = MathHelper.clamp_int(baseDistance + random.nextInt(distanceFactor) - distanceFactor/2,0,200);
+		properties.orbitalDist = MathHelper.clamp_int(baseDistance + random.nextInt(distanceFactor),0,200);
+		//System.out.println(properties.orbitalDist);
 		properties.gravitationalMultiplier = Math.min(Math.max(0.05f,(baseGravity + random.nextInt(gravityFactor) - gravityFactor/2)/100f), 1.3f);
 
 		double minDistance;
@@ -231,7 +232,7 @@ public class DimensionManager {
 		properties.setStar(sol);
 
 		//Linear is easier. Earth is nominal!
-		properties.averageTemperature = (sol.getTemperature() + (200 - properties.orbitalDist)*10 + properties.atmosphereDensity*18)/20;
+		properties.averageTemperature = (sol.getTemperature() + (100 - properties.orbitalDist)*15 + properties.atmosphereDensity*18)/20;
 
 		properties.addBiomes(properties.getViableBiomes());
 

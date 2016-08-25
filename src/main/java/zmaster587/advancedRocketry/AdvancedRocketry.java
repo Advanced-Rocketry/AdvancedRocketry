@@ -1207,7 +1207,7 @@ public class AdvancedRocketry {
 
 		//Register hard coded dimensions
 		if(!zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.filePath)) {
-			int numRandomGeneratedPlanets = 6;
+			int numRandomGeneratedPlanets = 9;
 			File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
 			logger.info("Checking for config at " + file.getAbsolutePath());
 			if(file.exists()) {

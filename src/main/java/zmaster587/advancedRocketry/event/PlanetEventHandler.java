@@ -268,7 +268,7 @@ public class PlanetEventHandler {
 			float fog = properties.getAtmosphereDensityAtHeight(event.entity.posY);
 
 			event.density = fog/128f;
-			event.setCanceled(true);
+			event.setCanceled(false);
 		}
 	}
 

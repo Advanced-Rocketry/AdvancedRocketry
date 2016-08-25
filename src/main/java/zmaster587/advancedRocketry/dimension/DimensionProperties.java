@@ -91,7 +91,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * where 100 is earthlike, largers values are higher pressure
 	 */
 	public static enum AtmosphereTypes {
-		HIGHPRESSURE(150),
+		HIGHPRESSURE(125),
 		NORMAL(75),
 		LOW(25),
 		NONE(0);
@@ -592,7 +592,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		Random random = new Random(System.currentTimeMillis());
 		ArrayList<BiomeGenBase> viableBiomes = new ArrayList<BiomeGenBase>();
 
-		if(random.nextInt(5) == 0) {
+		if(random.nextInt(3) == 0) {
 			List<BiomeGenBase> list = new LinkedList<BiomeGenBase>(AdvancedRocketryBiomes.instance.getSingleBiome());
 
 			while(list.size() > 1) {
@@ -642,9 +642,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		else if(averageTemperature > Temps.FRIGID.getTemp()) {
 
 			viableBiomes.addAll(Arrays.asList(BiomeDictionary.getBiomesForType(BiomeDictionary.Type.COLD)));
+			viableBiomes.removeAll(AdvancedRocketryBiomes.instance.getBlackListedBiomes());
 		}
 		else {//(averageTemperature >= Temps.SNOWBALL.getTemp())
 			viableBiomes.addAll(Arrays.asList(BiomeDictionary.getBiomesForType(BiomeDictionary.Type.COLD)));
+			viableBiomes.removeAll(AdvancedRocketryBiomes.instance.getBlackListedBiomes());
 			//TODO:
 		}
 
