@@ -2,15 +2,19 @@ package zmaster587.advancedRocketry.item;
 
 import java.util.List;
 
+import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
+import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.client.ResourceIcon;
+import zmaster587.libVulpes.render.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,12 +23,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 
-	private ResourceIcon icon;
+	private static ResourceIcon icon;
+	private static ResourceLocation eyeCandySpinner = new ResourceLocation("advancedrocketry:textures/gui/eyeCandy/spinnyThing.png");
 
 	@Override
 	public void onTick(World world, EntityPlayer player, ItemStack armorStack,
@@ -78,6 +84,7 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	@Override
 	public void renderScreen(ItemStack componentStack, List<ItemStack> modules,
 			RenderGameOverlayEvent event, Gui gui) {
+		
 		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 		
 		int screenX = 8;
@@ -85,8 +92,28 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 
 		String str[] = getAtmosphereReadout(componentStack, (AtmosphereType) AtmosphereHandler.currentAtm);
 		//Draw BG
-		gui.drawString(fontRenderer, str[0], screenX, screenY, 0xFFFFFF);
-		gui.drawString(fontRenderer, str[1], screenX, screenY + fontRenderer.FONT_HEIGHT*4/3, 0xFFFFFF);
+		gui.drawString(fontRenderer, str[0], screenX, screenY, 0xaaffff);
+		gui.drawString(fontRenderer, str[1], screenX, screenY + fontRenderer.FONT_HEIGHT*4/3, 0xaaffff);
+	
+		//Render Eyecandy
+		GL11.glColor3f(1f, 1f, 1f);
+		GL11.glPushMatrix();
+		Minecraft.getMinecraft().renderEngine.bindTexture(eyeCandySpinner);
+		GL11.glTranslatef(20, screenY + 8, 0);
+		GL11.glRotatef(( System.currentTimeMillis() / 100 ) % 360, 0, 0, 1);
+		
+		Tessellator.instance.startDrawingQuads();
+		RenderHelper.renderNorthFaceWithUV(Tessellator.instance, -1, -16,  -16, 16,  16, 0, 1, 0, 1);
+		Tessellator.instance.draw();
+		GL11.glPopMatrix();
+		
+		
+		Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
+		Tessellator.instance.startDrawingQuads();
+		RenderHelper.renderNorthFaceWithUV(Tessellator.instance, -1, 0,  screenY - 12, 16,  screenY + 26, 0, 0.25f, 0, 1);
+		RenderHelper.renderNorthFaceWithUV(Tessellator.instance, -1, 16,  screenY - 12, 128,  screenY + 26, 0.5f, 0.5f, 0, 1);
+		RenderHelper.renderNorthFaceWithUV(Tessellator.instance, -1, 128,  screenY - 12, 144,  screenY + 26, 0.75f, 1f, 0, 1);
+		Tessellator.instance.draw();
 	}
 
 	@Override

@@ -442,7 +442,6 @@ public class RocketEventHandler extends Gui {
 			List<ItemStack> stacks = ((IModularArmor)armorStack.getItem()).getComponents(armorStack);
 			
 			for(ItemStack stack : stacks) {
-				
 				GL11.glColor4f(1f, 1f, 1f, 1f);
 				((IArmorComponent)stack.getItem()).renderScreen(stack, stacks, event, this);
 				
@@ -456,7 +455,7 @@ public class RocketEventHandler extends Gui {
 					//Draw BG
 					Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
 					Tessellator.instance.startDrawingQuads();
-					RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel, screenX - 4, screenY - 4, screenX + size, screenY + size + 4,0.5d,0.5d,0d,1d);
+					RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel , screenX - 4, screenY - 4, screenX + size - 2, screenY + size + 4,0.5d,0.5d,0d,1d);
 					Tessellator.instance.draw();
 					
 					Minecraft.getMinecraft().renderEngine.bindTexture(texture);
@@ -476,7 +475,7 @@ public class RocketEventHandler extends Gui {
 			GL11.glColor4f(1f, 1f, 1f,1f);
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
 			Tessellator.instance.startDrawingQuads();
-			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel, screenX - 4, screenY - 4, screenX + size, screenY + size + 4,0.5d,1d,0d,1d);
+			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel, screenX + 12, screenY - 4, screenX + size, screenY + size + 4,0.75d,1d,0d,1d);
 			Tessellator.instance.draw();
 		}
 		
