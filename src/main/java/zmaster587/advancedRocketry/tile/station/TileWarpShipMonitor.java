@@ -39,6 +39,7 @@ import zmaster587.libVulpes.util.IconResource;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -64,15 +65,28 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 
 	protected int getTravelCost() {
-		DimensionProperties properties = getSpaceObject().getProperties();
-		properties.orbitalDist = 1;
+		DimensionProperties properties = getSpaceObject().getProperties().getParentProperties();
+		//properties.orbitalDist = 1;
 		DimensionProperties destProperties = DimensionManager.getInstance().getDimensionProperties(getSpaceObject().getDestOrbitingBody());
 		while(destProperties.isMoon())
 			destProperties = destProperties.getParentProperties();
+		
+		if((destProperties.isMoon() && destProperties.getParentPlanet() == properties.getId()) || (properties.isMoon() && properties.getParentPlanet() == destProperties.getId()))
+			return 1;
 
+		while(properties.isMoon())
+			properties = properties.getParentProperties();
+		
 		//TODO: actual trig
-		if(properties.getStar().getId() == destProperties.getStar().getId()){
-			return Math.abs(properties.orbitalDist - destProperties.orbitalDist);
+		if(properties.getStar().getId() == destProperties.getStar().getId()) {
+			double x1 = properties.orbitalDist*MathHelper.cos((float) properties.orbitTheta);
+			double y1 = properties.orbitalDist*MathHelper.sin((float) properties.orbitTheta);
+			double x2 = destProperties.orbitalDist*MathHelper.cos((float) destProperties.orbitTheta);
+			double y2 = destProperties.orbitalDist*MathHelper.sin((float) destProperties.orbitTheta);
+			
+			return (int)Math.sqrt(Math.pow((x1 - x2),2) + Math.pow((y1 - y2),2));
+			
+			//return Math.abs(properties.orbitalDist - destProperties.orbitalDist);
 		}
 		return Integer.MAX_VALUE;
 	}
