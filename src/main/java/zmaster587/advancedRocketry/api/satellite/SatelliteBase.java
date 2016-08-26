@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.api.satellite;
 
 import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import net.minecraft.entity.player.EntityPlayer;
@@ -65,7 +66,7 @@ public abstract class SatelliteBase {
 	 * @return true if the item stack is a valid controller for the satellite
 	 */
 	public boolean isAcceptableControllerItemStack(ItemStack stack) {
-		return stack != null && stack.getItem() instanceof ItemSatelliteIdentificationChip;
+		return stack != null && stack.getItem() == AdvancedRocketryItems.itemSatelliteIdChip;
 	}
 	
 	/**

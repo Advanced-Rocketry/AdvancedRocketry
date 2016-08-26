@@ -71,4 +71,6 @@ public class Configuration {
 
 	public static int maxBiomesPerPlanet;
 
+	public static boolean enableTerraforming;
+
 }

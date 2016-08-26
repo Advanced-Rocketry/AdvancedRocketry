@@ -4,9 +4,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Set;
 
+import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.item.ItemBiomeChanger;
 import zmaster587.advancedRocketry.network.PacketBiomeIDChange;
@@ -20,20 +20,22 @@ import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversalEnergy {
 
 	private int biomeId;
 	private int radius;
+
 	//Stores blocks to be updated
 	//Note: we really don't care about order, in fact, lack of order is better
 	private List<BlockPosition> toChangeList;
+	private Set<Byte> discoveredBiomes;
 	private static int MAX_SIZE = 1024;
 
 	public SatelliteBiomeChanger() {
 		radius = 4;
 		toChangeList = new LinkedList<BlockPosition>();
+		discoveredBiomes = new HashSet<Byte>();
 	}
 
 	public void setBiome(int biomeId) {
@@ -42,6 +44,16 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 
 	public int getBiome() {
 		return biomeId;
+	}
+
+	public Set<Byte> discoveredBiomes() {
+		return discoveredBiomes;
+	}
+
+	public void addBiome(int biome) {
+		byte byteBiome = (byte)biome;
+		if(biome != BiomeGenBase.sky.biomeID && biome != BiomeGenBase.hell.biomeID && biome != BiomeGenBase.river.biomeID && biome != AdvancedRocketryBiomes.spaceBiome.biomeID)
+			discoveredBiomes.add(byteBiome);
 	}
 
 	@Override
@@ -164,7 +176,7 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setInteger("biome", biomeId);
+		nbt.setInteger("biomeId", biomeId);
 
 		int array[] = new int[toChangeList.size()*3];
 		Iterator<BlockPosition> itr = toChangeList.iterator();
@@ -175,6 +187,16 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 			array[i+2] = pos.z;
 		}
 		nbt.setTag("posList", new NBTTagIntArray(array));
+
+		array = new int[discoveredBiomes.size()];
+
+		int i = 0;
+		for(byte biome : discoveredBiomes) {
+			array[i] = biome;
+			i++;
+		}
+
+		nbt.setTag("biomeList", new NBTTagIntArray(array));
 	}
 
 	@Override
@@ -187,6 +209,12 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 		toChangeList.clear();
 		for(int i = 0; i < array.length; i +=3) {
 			toChangeList.add(new BlockPosition(array[i], array[i+1], array[i+2]));
+		}
+
+		array = nbt.getIntArray("biomeList");
+		discoveredBiomes.clear();
+		for(int i = 0; i < array.length; i ++) {
+			discoveredBiomes.add((byte) array[i]);
 		}
 	}
 

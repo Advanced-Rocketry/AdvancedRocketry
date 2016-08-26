@@ -84,7 +84,6 @@ public class AdvancedRocketryBiomes {
 	 */
 	public void registerSingleBiome(BiomeGenBase biome) {
 		registeredSingleBiome.add(biome);
-		registerBlackListBiome(biome);
 	}
 	
 	public List<BiomeGenBase> getSingleBiome() {
