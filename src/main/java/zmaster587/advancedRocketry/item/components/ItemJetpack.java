@@ -58,8 +58,16 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 	public void onTick(World world, EntityPlayer player,
 			ItemStack armorStack, IInventory inv, ItemStack componentStack) {
 
-		if(player.capabilities.isCreativeMode)
+		if(player.capabilities.isCreativeMode) {
+			try {
+				flySpeed.setFloat(player.capabilities, 0.05f);
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
 			return;
+		}
 
 		int speedUpgrades = 1;
 		boolean allowsHover = false;

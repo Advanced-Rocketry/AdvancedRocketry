@@ -25,6 +25,7 @@ import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.network.PacketSatellite;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.VulpineMath;
+import zmaster587.libVulpes.util.ZUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagIntArray;
@@ -589,8 +590,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return a list of biomes allowed to spawn in this dimension
 	 */
 	public List<BiomeGenBase> getViableBiomes() {
-		Random random = new Random(System.currentTimeMillis());
-		ArrayList<BiomeGenBase> viableBiomes = new ArrayList<BiomeGenBase>();
+		Random random = new Random(System.nanoTime());
+		List<BiomeGenBase> viableBiomes = new ArrayList<BiomeGenBase>();
 
 		if(random.nextInt(3) == 0) {
 			List<BiomeGenBase> list = new LinkedList<BiomeGenBase>(AdvancedRocketryBiomes.instance.getSingleBiome());
@@ -640,14 +641,24 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			viableBiomes.addAll(Arrays.asList(BiomeDictionary.getBiomesForType(BiomeDictionary.Type.OCEAN)));
 		}
 		else if(averageTemperature > Temps.FRIGID.getTemp()) {
-
-			viableBiomes.addAll(Arrays.asList(BiomeDictionary.getBiomesForType(BiomeDictionary.Type.COLD)));
-			viableBiomes.removeAll(AdvancedRocketryBiomes.instance.getBlackListedBiomes());
+			
+			for(BiomeGenBase biome : BiomeGenBase.getBiomeGenArray()) {
+				if(biome != null && !BiomeDictionary.isBiomeOfType(biome,BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
+					viableBiomes.add(biome);
+				}
+			}
 		}
 		else {//(averageTemperature >= Temps.SNOWBALL.getTemp())
-			viableBiomes.addAll(Arrays.asList(BiomeDictionary.getBiomesForType(BiomeDictionary.Type.COLD)));
-			viableBiomes.removeAll(AdvancedRocketryBiomes.instance.getBlackListedBiomes());
+			for(BiomeGenBase biome : BiomeGenBase.getBiomeGenArray()) {
+				if(biome != null && !BiomeDictionary.isBiomeOfType(biome,BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
+					viableBiomes.add(biome);
+				}
+			}
 			//TODO:
+		}
+
+		if(viableBiomes.size() > 5) {
+			viableBiomes  = ZUtils.copyRandomElements(viableBiomes, 5);
 		}
 
 		if(atmosphereDensity > AtmosphereTypes.HIGHPRESSURE.value && Temps.getTempFromValue(averageTemperature).isInRange(Temps.NORMAL, Temps.HOT))
@@ -885,7 +896,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 						if(satallite.canTick()) {
 							tickingSatallites.put(satallite.getId(), satallite);
 						}
-						
+
 					} catch (NullPointerException e) {
 						AdvancedRocketry.logger.warning("Satellite with bad NBT detected, Removing");
 					}

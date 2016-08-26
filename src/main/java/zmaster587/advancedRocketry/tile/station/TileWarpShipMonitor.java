@@ -351,6 +351,8 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			if(getSpaceObject() != null)
 				return getSpaceObject().getMaxFuelAmount();
 		}
+		if(dimCache == null)
+			return 0;
 		if(id == 0)
 			return dimCache.atmosphereDensity/2;
 		else if(id == 1)

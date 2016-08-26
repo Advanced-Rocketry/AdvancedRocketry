@@ -69,4 +69,6 @@ public class Configuration {
 
 	public static float travelTimeMultiplier;
 
+	public static int maxBiomesPerPlanet;
+
 }

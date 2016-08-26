@@ -122,7 +122,24 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	@Override
 	public float getSunBrightness(float par1) {
 		float atmosphere = getAtmosphereDensity(0,0);
-		return super.getSunBrightness(par1)*(0.5f + (2 - atmosphere)*.5f) - (1-atmosphere)*0.4f;
+		Math.abs(1-atmosphere);
+		//calculateCelestialAngle(p_76563_1_, p_76563_3_)
+        float f1 = worldObj.getCelestialAngle(par1);
+        float f2 = 1.0F - (MathHelper.cos(f1 * (float)Math.PI * 2.0F) * 2.0F + 0.2F) - atmosphere/4f;
+        
+        if (f2 < 0.0F)
+        {
+            f2 = 0.0F ;
+        }
+
+        if (f2 > 1.0F)
+        {
+            f2 = 1.0F;
+        }
+
+        f2 = 1.0F - f2;
+        
+		return f2*super.getSunBrightness(par1);
 	}
 
 	//No clouds

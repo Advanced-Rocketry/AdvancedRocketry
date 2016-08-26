@@ -74,4 +74,5 @@ public class AdvancedRocketryBlocks {
 	public static Block blockSolarPanel;
 	public static Block blockSuitWorkStation;
 	public static Block blockLoader;
+	public static Block blockBiomeScanner;
 }

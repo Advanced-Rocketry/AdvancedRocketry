@@ -26,13 +26,14 @@ public class TextureResources {
 	public static final  ResourceLocation modularBoots = new ResourceLocation("advancedrocketry:textures/gui/space_boots.png");
 	public static final  ResourceLocation frameHUDBG = new ResourceLocation("advancedrocketry:textures/gui/FrameBG.png");
 	public static final  ResourceLocation[] armorSlots = new ResourceLocation[]{modularHelm, modularChest, modularLegs, modularBoots};
+	public static final  ResourceLocation earthCandy = new ResourceLocation("advancedrocketry:textures/gui/eyeCandy/Earth.png");
 	
 	public static final IconResource ioSlot = new IconResource(212, 0, 18, 18, null);
 	public static final IconResource idChip = new IconResource(230, 0, 18, 18, null);
 	public static final IconResource functionComponent = new IconResource(212, 18, 18, 18, null);
 	public static final IconResource powercomponent = new IconResource(230, 18, 18, 18, null);
 	public static final IconResource laserGuiBG = new IconResource(8, 16, 65, 70, laserGui);
-	
+	public static final IconResource earthCandyIcon = new IconResource(0, 0, 128, 128, earthCandy);
 	
 	public static final ProgressBarImage doubleWarningSideBarIndicator = new IndicatorBarImage(0, 84, 142, 16, 0, 100, 2, 9, 2, 2, ForgeDirection.EAST, planetSelectorBar);
 	public static final ProgressBarImage doubleWarningSideBar = new ProgressBarImage(0, 59, 142, 16, 0, 75, 136, 9, 2, 2, ForgeDirection.EAST, planetSelectorBar);
