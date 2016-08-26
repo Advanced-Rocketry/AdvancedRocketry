@@ -15,7 +15,7 @@ import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.mission.IMission;
 import zmaster587.libVulpes.block.multiblock.BlockHatch;
-import zmaster587.libVulpes.item.ItemLinker;
+import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 
 public class TileRocketLoader extends TileInventoryHatch implements IInfrastructure {

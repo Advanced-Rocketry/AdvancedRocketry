@@ -43,4 +43,5 @@ public class AdvancedRocketryItems {
 	public static Item itemPressureTank;
 	public static Item itemUpgrade;
 	public static Item itemAtmAnalyser;
+	public static Item itemBiomeChanger;
 }

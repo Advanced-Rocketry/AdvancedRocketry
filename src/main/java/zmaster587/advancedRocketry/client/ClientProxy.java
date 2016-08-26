@@ -40,6 +40,7 @@ import zmaster587.advancedRocketry.client.render.multiblocks.RendererWarpCore;
 import zmaster587.advancedRocketry.common.CommonProxy;
 import zmaster587.advancedRocketry.entity.EntityLaserNode;
 import zmaster587.advancedRocketry.entity.EntityRocket;
+import zmaster587.advancedRocketry.entity.FxSkyLaser;
 import zmaster587.advancedRocketry.entity.fx.FxElectricArc;
 import zmaster587.advancedRocketry.entity.fx.RocketFx;
 import zmaster587.advancedRocketry.entity.fx.TrailFx;
@@ -99,7 +100,7 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForgeClient.registerItemRenderer(AdvancedRocketryItems.itemBucketRocketFuel, new RendererBucket());
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityRocket.class, new RendererRocket());
-		RenderingRegistry.registerEntityRenderingHandler(EntityLaserNode.class, new RenderLaser());
+		RenderingRegistry.registerEntityRenderingHandler(EntityLaserNode.class, new RenderLaser(2.0, new float[] {1F, 0.25F, 0.25F, 0.2F}, new float[] {0.9F, 0.2F, 0.3F, 0.5F}));
 	}
 
 	@Override
@@ -149,6 +150,10 @@ public class ClientProxy extends CommonProxy {
 		}
 		else if(particle == "arc") {
 			FxElectricArc fx = new FxElectricArc(world, x, y, z, motionX);
+			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+		}
+		else if(particle == "smallLazer") {
+			FxSkyLaser fx = new FxSkyLaser(world, x, y, z);
 			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 		}
 	}

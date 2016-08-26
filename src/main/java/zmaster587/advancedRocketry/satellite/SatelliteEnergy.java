@@ -13,13 +13,11 @@ import zmaster587.libVulpes.util.UniversalBattery;
 
 public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTransmitter {
 
-
 	UniversalBattery battery;
 	long lastActionTime;
 	byte teir;
 
 	public SatelliteEnergy() {
-		battery = new UniversalBattery(satelliteProperties.getPowerStorage());
 	}
 
 	@Override
@@ -30,11 +28,17 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 	}
 	
 	@Override
+	public void setProperties(SatelliteProperties satelliteProperties) {
+		super.setProperties(satelliteProperties);
+		battery = new UniversalBattery(satelliteProperties.getPowerStorage());
+	}
+	
+	@Override
 	public String getInfo(World world) {
 		return "Collecting Energy";
 	}
 
-	private int energyCreated(World world) {
+	protected int energyCreated(World world) {
 		int amt =(int) ((world.getTotalWorldTime() - lastActionTime)*getPowerPerTick());
 		lastActionTime = world.getTotalWorldTime();
 		return amt;
@@ -97,6 +101,8 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
+		if(battery == null)
+			battery = new UniversalBattery();
 		battery.readFromNBT(nbt);
 		lastActionTime = nbt.getLong("lastActionTime");
 		teir = nbt.getByte("teir");

@@ -137,15 +137,17 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	public void tick(TickEvent.ServerTickEvent event) {
 		//Tick satellites
-		DimensionManager.getInstance().tickDimensions();
-		time++;
+		if(event.phase == event.phase.END) {
+			DimensionManager.getInstance().tickDimensions();
+			time++;
+		}
 	}
 
 
 	//Make sure the player receives data about the dimensions
 	@SubscribeEvent
 	public void playerLoggedInEvent(FMLNetworkEvent.ServerConnectionFromClientEvent event) {
-		
+
 		//Make sure stars are sent first
 		for(int i : DimensionManager.getInstance().getStars()) {
 			PacketHandler.sendToDispatcher(new PacketStellarInfo(i, DimensionManager.getInstance().getStar(i)), event.manager);

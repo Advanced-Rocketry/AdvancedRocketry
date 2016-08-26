@@ -104,6 +104,7 @@ item.satellitePrimaryFunction.1.name=Composition Sensor
 item.satellitePrimaryFunction.2.name=Mass Detector
 item.satellitePrimaryFunction.3.name=Microwave Transmitter
 item.satellitePrimaryFunction.4.name=Ore Mapper
+item.satellitePrimaryFunction.5.name=Biome Changer
 item.satelliteIdChip.name=Satellite Id Chip
 item.planetIdChip.name=Planet Id Chip
 item.asteroidChip.name=Asteroid Chip
@@ -126,6 +127,7 @@ item.itemUpgrade.1.name=Flight Speed Control Upgrade
 item.itemUpgrade.2.name=Bionic Leg Upgrade
 item.itemUpgrade.3.name=Padded Landing Boots
 item.atmAnalyser.name=Atmosphere Analyzer
+item.biomeChanger.name=Biome Changer Remote
 
 item.jetPack.name=Jet Pack
 item.pressureTank.0.name=Low Pressure Tank
