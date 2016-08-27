@@ -34,8 +34,8 @@ public class TileRollingMachine extends TileMultiblockMachine {
 			{'I', Blocks.air, LibVulpesBlocks.blockStructureBlock, Blocks.air}},
 
 			{{LibVulpesBlocks.blockRFBattery, 'L', LibVulpesBlocks.blockStructureBlock, null},
-				{new BlockMeta(Block.getBlockFromItem(Material.Materials.COPPER.getProduct(AllowedProducts.getProductByName("COIL")).getItem()), Material.Materials.COPPER.getMeta()), LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'O'},
-				{new BlockMeta(Block.getBlockFromItem(Material.Materials.COPPER.getProduct(AllowedProducts.getProductByName("COIL")).getItem()), Material.Materials.COPPER.getMeta()), AdvancedRocketryBlocks.blockMotor, LibVulpesBlocks.blockStructureBlock, 'O'}}
+				{new BlockMeta(Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem()), MaterialRegistry.getMaterialFromName("Copper").getMeta()), LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'O'},
+				{new BlockMeta(Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem()), MaterialRegistry.getMaterialFromName("Copper").getMeta()), AdvancedRocketryBlocks.blockMotor, LibVulpesBlocks.blockStructureBlock, 'O'}}
 	};
 
 	@Override
@@ -80,7 +80,7 @@ public class TileRollingMachine extends TileMultiblockMachine {
 
 	@Override
 	public boolean shouldHideBlock(World world, int x, int y, int z, Block tile) {
-		return tile != Block.getBlockFromItem(Material.Materials.COPPER.getProduct(AllowedProducts.getProductByName("COIL")).getItem());
+		return tile != Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem());
 	}
 
 	@Override

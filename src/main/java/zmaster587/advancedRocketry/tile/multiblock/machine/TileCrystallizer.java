@@ -27,14 +27,14 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 		{AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible}},
 		
 		{{'O', 'c', 'I'}, 
-			{new BlockMeta(Block.getBlockFromItem(Material.Materials.COPPER.getProduct(AllowedProducts.getProductByName("COIL")).getItem()), Material.Materials.COPPER.getMeta()), 'P', new BlockMeta(Block.getBlockFromItem(Material.Materials.COPPER.getProduct(AllowedProducts.getProductByName("COIL")).getItem()), Material.Materials.COPPER.getMeta())}},
+			{new BlockMeta(Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem()), MaterialRegistry.getMaterialFromName("Copper").getMeta()), 'P', new BlockMeta(Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem()), MaterialRegistry.getMaterialFromName("Copper").getMeta())}},
 
 	};
 
-	Material.Materials coil[];
+	Material coil[];
 	
 	public TileCrystallizer() {
-		coil = new Material.Materials[2];
+		coil = new Material[2];
 	}
 	
 	@Override

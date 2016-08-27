@@ -160,7 +160,6 @@ import zmaster587.libVulpes.api.LibVulpesItems;
 import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.api.material.MixedMaterial;
-import zmaster587.libVulpes.api.material.Material.Materials;
 import zmaster587.libVulpes.block.BlockAlphaTexture;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.BlockTile;
@@ -791,7 +790,7 @@ public class AdvancedRocketry {
 		ItemStack largeSolarPanel = new ItemStack(AdvancedRocketryItems.itemSatellitePowerSource,1,1);
 
 		//Register Alloys
-		MaterialRegistry.registerMixedMaterial(new MixedMaterial(TileElectricArcFurnace.class, "oreRutile", new ItemStack[] {Materials.TITANIUM.getProduct(AllowedProducts.getProductByName("INGOT"))}));
+		MaterialRegistry.registerMixedMaterial(new MixedMaterial(TileElectricArcFurnace.class, "oreRutile", new ItemStack[] {MaterialRegistry.getMaterialFromName("Titanium").getProduct(AllowedProducts.getProductByName("INGOT"))}));
 
 		proxy.registerRenderers();
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
@@ -800,9 +799,9 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockArcFurnace), "aga","ice", "aba", 'a', Items.netherbrick, 'g', userInterface, 'i', itemIOBoard, 'e',controlCircuitBoard, 'c', AdvancedRocketryBlocks.blockBlastBrick, 'b', "ingotCopper"));
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryItems.itemQuartzCrucible), " a ", "aba", " a ", Character.valueOf('a'), Items.quartz, Character.valueOf('b'), Items.cauldron);
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockPlatePress, "   ", " a ", "iii", 'a', Blocks.piston, 'i', Items.iron_ingot));
-		GameRegistry.addRecipe(new ShapedOreRecipe(MaterialRegistry.getItemStackFromMaterialAndType(Materials.IRON, AllowedProducts.getProductByName("STICK")), "x  ", " x ", "  x", 'x', "ingotIron"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(MaterialRegistry.getItemStackFromMaterialAndType(Materials.STEEL, AllowedProducts.getProductByName("STICK")), "x  ", " x ", "  x", 'x', "ingotSteel"));
-		GameRegistry.addSmelting(Materials.DILITHIUM.getProduct(AllowedProducts.getProductByName("ORE")), Materials.DILITHIUM.getProduct(AllowedProducts.getProductByName("DUST")), 0);
+		GameRegistry.addRecipe(new ShapedOreRecipe(MaterialRegistry.getItemStackFromMaterialAndType("Iron", AllowedProducts.getProductByName("STICK")), "x  ", " x ", "  x", 'x', "ingotIron"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(MaterialRegistry.getItemStackFromMaterialAndType("Steel", AllowedProducts.getProductByName("STICK")), "x  ", " x ", "  x", 'x', "ingotSteel"));
+		GameRegistry.addSmelting(MaterialRegistry.getMaterialFromName("Dilithium").getProduct(AllowedProducts.getProductByName("ORE")), MaterialRegistry.getMaterialFromName("Dilithium").getProduct(AllowedProducts.getProductByName("DUST")), 0);
 
 
 		//Supporting Materials
@@ -816,7 +815,7 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(LibVulpesBlocks.blockStructureBlock, "sps", "psp", "sps", 'p', "plateIron", 's', "stickIron"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesItems.itemBattery,1,0), " c ","prp", "prp", 'c', "stickIron", 'r', Items.redstone, 'p', "plateTin"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), "ppp", " g ", " l ", 'p', Blocks.glass_pane, 'g', Items.glowstone_dust, 'l', "plateGold"));
-		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryBlocks.blockObservatory), "gug", "pbp", "rrr", 'g', Blocks.glass_pane, 'u', userInterface, 'b', LibVulpesBlocks.blockStructureBlock, 'r', MaterialRegistry.getItemStackFromMaterialAndType(Materials.IRON, AllowedProducts.getProductByName("STICK")));
+		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryBlocks.blockObservatory), "gug", "pbp", "rrr", 'g', Blocks.glass_pane, 'u', userInterface, 'b', LibVulpesBlocks.blockStructureBlock, 'r', MaterialRegistry.getItemStackFromMaterialAndType("Iron", AllowedProducts.getProductByName("STICK")));
 
 		//Hatches
 		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,0), "c", "m"," ", 'c', Blocks.chest, 'm', LibVulpesBlocks.blockStructureBlock);
@@ -927,7 +926,7 @@ public class AdvancedRocketry {
 		RecipesMachine.getInstance().addRecipe(TileCuttingMachine.class, new ItemStack(AdvancedRocketryItems.itemWafer, 4, 0), 300, 100, "bouleSilicon");
 
 		//Lathe
-		RecipesMachine.getInstance().addRecipe(TileLathe.class, MaterialRegistry.getItemStackFromMaterialAndType(Materials.IRON, AllowedProducts.getProductByName("STICK")), 300, 100, "ingotIron");
+		RecipesMachine.getInstance().addRecipe(TileLathe.class, MaterialRegistry.getItemStackFromMaterialAndType("Iron", AllowedProducts.getProductByName("STICK")), 300, 100, "ingotIron");
 
 		//Precision Assembler recipes
 		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemCircuitPlate,1,0), 900, 100, Items.gold_ingot, Items.redstone, "waferSilicon");
@@ -943,8 +942,8 @@ public class AdvancedRocketry {
 		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemUpgrade,1,3), 400, 1, Items.leather_boots, Items.feather, advancedCircuit, controlCircuitBoard);
 
 		//BlastFurnace
-		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, Materials.SILICON.getProduct(AllowedProducts.getProductByName("INGOT")), 12000, 1, Blocks.sand);
-		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, Materials.STEEL.getProduct(AllowedProducts.getProductByName("INGOT")), 6000, 1, "ingotIron", Items.coal);
+		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("Silicon").getProduct(AllowedProducts.getProductByName("INGOT")), 12000, 1, Blocks.sand);
+		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("Steel").getProduct(AllowedProducts.getProductByName("INGOT")), 6000, 1, "ingotIron", Items.coal);
 
 		//Chemical Reactor
 		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new Object[] {new ItemStack(AdvancedRocketryItems.itemCarbonScrubberCartridge,1, 0), new ItemStack(Items.coal, 1, 1)}, 40, 20, new ItemStack(AdvancedRocketryItems.itemCarbonScrubberCartridge, 1, AdvancedRocketryItems.itemCarbonScrubberCartridge.getMaxDamage()));
@@ -1042,7 +1041,7 @@ public class AdvancedRocketry {
 
 
 		//AutoGenned Recipes
-		for(Materials ore : Materials.values()) {
+		for(zmaster587.libVulpes.api.material.Material ore : MaterialRegistry.getAllMaterials()) {
 			if(AllowedProducts.getProductByName("ORE").isOfType(ore.getAllowedProducts()) && AllowedProducts.getProductByName("INGOT").isOfType(ore.getAllowedProducts()))
 				GameRegistry.addSmelting(ore.getProduct(AllowedProducts.getProductByName("ORE")), ore.getProduct(AllowedProducts.getProductByName("INGOT")), 0);
 
@@ -1132,7 +1131,7 @@ public class AdvancedRocketry {
 			for(Entry<AllowedProducts, HashSet<String>> entry : modProducts.entrySet()) {
 				if(entry.getKey() == AllowedProducts.getProductByName("PLATE")) {
 					for(String str : entry.getValue()) {
-						Materials material = Materials.valueOfSafe(str.toUpperCase());
+						zmaster587.libVulpes.api.material.Material material = zmaster587.libVulpes.api.material.Material.valueOfSafe(str.toUpperCase());
 
 						if(OreDictionary.doesOreNameExist("ingot" + str) && OreDictionary.getOres("ingot" + str).size() > 0 && (material == null || !AllowedProducts.getProductByName("PLATE").isOfType(material.getAllowedProducts())) ) {
 
@@ -1142,7 +1141,7 @@ public class AdvancedRocketry {
 				}
 				else if(entry.getKey() == AllowedProducts.getProductByName("STICK")) {
 					for(String str : entry.getValue()) {
-						Materials material = Materials.valueOfSafe(str.toUpperCase());
+						zmaster587.libVulpes.api.material.Material material = zmaster587.libVulpes.api.material.Material.valueOfSafe(str.toUpperCase());
 
 						if(OreDictionary.doesOreNameExist("ingot" + str) && OreDictionary.getOres("ingot" + str).size() > 0 && (material == null || !AllowedProducts.getProductByName("STICK").isOfType(material.getAllowedProducts())) ) {
 

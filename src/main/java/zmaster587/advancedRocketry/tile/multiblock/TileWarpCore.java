@@ -69,7 +69,7 @@ public class TileWarpCore extends TileMultiBlock {
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
 				ItemStack stack = inv.getStackInSlot(i);
 				int amt = 0;
-				if(stack != null && OreDictionary.itemMatches(MaterialRegistry.getItemStackFromMaterialAndType(Material.Materials.DILITHIUM, AllowedProducts.getProductByName("CRYSTAL")), stack, false)) {
+				if(stack != null && OreDictionary.itemMatches(MaterialRegistry.getItemStackFromMaterialAndType("Dilithium", AllowedProducts.getProductByName("CRYSTAL")), stack, false)) {
 					int stackSize = stack.stackSize;
 					if(!worldObj.isRemote)
 						amt = getSpaceObject().addFuel(Configuration.fuelPointsPerDilithium*stack.stackSize);

@@ -4,8 +4,8 @@ import java.util.Random;
 
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.libVulpes.api.material.AllowedProducts;
+import zmaster587.libVulpes.api.material.Material;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
-import zmaster587.libVulpes.api.material.Material.Materials;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
@@ -17,7 +17,7 @@ public class OreGenerator implements IWorldGenerator {
 
 	private static Block dilithiumTargetOre;
 
-	private void generate(World world, Materials material, int numPerChunk,int clumpSize, int chunkX, int chunkZ, Random random) {
+	private void generate(World world, Material material, int numPerChunk,int clumpSize, int chunkX, int chunkZ, Random random) {
 		for(int i = 0; i < numPerChunk; i++) {
 			int coordX = 16*chunkX + random.nextInt(16);
 			int coordY = random.nextInt(64);
@@ -37,14 +37,14 @@ public class OreGenerator implements IWorldGenerator {
 			IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
 
 		if(Configuration.generateCopper) {
-			generate(world, Materials.COPPER, Configuration.copperPerChunk, Configuration.copperClumpSize, chunkX, chunkZ, random);
+			generate(world, MaterialRegistry.getMaterialFromName("Copper"), Configuration.copperPerChunk, Configuration.copperClumpSize, chunkX, chunkZ, random);
 		}
 
 		if(Configuration.generateTin) {
-			generate(world, Materials.TIN, Configuration.tinPerChunk, Configuration.tinClumpSize, chunkX, chunkZ, random);
+			generate(world, MaterialRegistry.getMaterialFromName("Tin"), Configuration.tinPerChunk, Configuration.tinClumpSize, chunkX, chunkZ, random);
 		}
 		if(Configuration.generateRutile) {
-			generate(world, Materials.RUTILE, Configuration.rutilePerChunk, Configuration.rutileClumpSize, chunkX, chunkZ, random);
+			generate(world, MaterialRegistry.getMaterialFromName("Rutile"), Configuration.rutilePerChunk, Configuration.rutileClumpSize, chunkX, chunkZ, random);
 		}
 
 		if(Configuration.generateDilithium) {
@@ -54,7 +54,7 @@ public class OreGenerator implements IWorldGenerator {
 			int coordY = random.nextInt(64);
 			int coordZ = 16*chunkZ + random.nextInt(16);
 
-			new WorldGenMinable(Materials.DILITHIUM.getBlock(), Materials.DILITHIUM.getMeta(), Configuration.dilithiumClumpSize, dilithiumTargetOre).generate(world, random, coordX, coordY, coordZ);
+			new WorldGenMinable(MaterialRegistry.getMaterialFromName("Dilithium").getBlock(), MaterialRegistry.getMaterialFromName("Dilithium").getMeta(), Configuration.dilithiumClumpSize, dilithiumTargetOre).generate(world, random, coordX, coordY, coordZ);
 			}
 		}
 	}

@@ -59,7 +59,7 @@ public class BlockPress extends BlockPistonBase {
 		if(world.isAirBlock(x, y-1, z))
 			return null;
 		ItemStack stackInWorld = new ItemStack(world.getBlock(x, y-1, z), 1, world.getBlockMetadata(x, y-1, z));
-		Material.Materials material = MaterialRegistry.getMaterialFromItemStack(stackInWorld);
+		Material material = MaterialRegistry.getMaterialFromItemStack(stackInWorld);
 
 
 		if(material == null)

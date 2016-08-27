@@ -22,7 +22,7 @@ public class RendererRollingMachine extends TileEntitySpecialRenderer {
 
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/rollingMachine.png");
 	ResourceLocation coilSide = new ResourceLocation("libvulpes:textures/blocks/coilSide.png");
-	
+	static int i = MaterialRegistry.getMaterialFromName("Copper").getColor();
 	private static int bodyList;
 
 	public RendererRollingMachine() {
@@ -54,7 +54,7 @@ public class RendererRollingMachine extends TileEntitySpecialRenderer {
 		GL11.glTranslated(-.5f, -1f, -0.5f);
 
 		bindTexture(coilSide);
-		int i = Material.Materials.COPPER.getColor();
+		
 		GL11.glColor3f(((i >>> 16) & 0xFF)/255f, ((i >>> 8) & 0xFF)/255f, (i & 0xFF)/255f);
 		model.renderOnly("Coil");
 		GL11.glColor3f(1f,1f,1f);
