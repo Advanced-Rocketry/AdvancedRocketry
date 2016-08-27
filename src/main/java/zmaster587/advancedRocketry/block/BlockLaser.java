@@ -59,7 +59,7 @@ public class BlockLaser extends RotatableBlock {
 	{
 		this.top = icon.registerIcon("libvulpes:machineGeneric");
 		this.sides = icon.registerIcon("advancedRocketry:MonitorSide");
-		this.bottom = icon.registerIcon("advancedRocketry:LaserBottom");
+		this.bottom = icon.registerIcon("advancedRocketry:laserBottom");
 		this.front = icon.registerIcon("advancedRocketry:LaserFront");
 		this.rear = this.sides;
 	}
