@@ -109,6 +109,7 @@ item.satelliteIdChip.name=Satellite Id Chip
 item.planetIdChip.name=Planet Id Chip
 item.asteroidChip.name=Asteroid Chip
 item.battery.0.name=Small Battery
+item.battery.1.name=2x Small Battery
 item.miscpart.0.name=User Interface
 item.miscpart.1.name=Carbon Brick
 item.station.name=Space Station Container
@@ -136,6 +137,7 @@ item.pressureTank.2.name=High Pressure Tank
 item.pressureTank.3.name=Super High Pressure Tank
 
 material.Dilithium.name=Dilithium
+material.TitaniumAluminide.name=Titanium Aluminide
 
 container.crystallizer=Crystallizer
 container.cuttingmachine=Cutting Machine
