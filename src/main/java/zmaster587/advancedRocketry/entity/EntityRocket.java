@@ -1,5 +1,7 @@
 package zmaster587.advancedRocketry.entity;
 
+import io.netty.buffer.ByteBuf;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,18 +9,34 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import io.netty.buffer.ByteBuf;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidContainerItem;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.api.RocketEvent;
+import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.StatsRocket;
-import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
@@ -59,25 +77,8 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.IconResource;
 import zmaster587.libVulpes.util.Vector3F;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class EntityRocket extends EntityRocketBase implements INetworkEntity, IDismountHandler, IModularInventory, IProgressBar, IButtonInventory, ISelectionNotify {
 
@@ -580,19 +581,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 					if(this.riddenByEntity != null)
 						setInFlight(false);
 
-					if(Configuration.spaceDimId == destinationDimId) {
-						this.travelToDimension(destinationDimId, pos.x, pos.z);
-					}
-					else {
-						ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
-						if(object == null)
-							this.travelToDimension(destinationDimId, pos.x, pos.z);
-						else
-							this.travelToDimension(object.getOrbitingPlanetId(), pos.x, pos.z);
-					}
-					
-
-
+					this.travelToDimension(destinationDimId, pos.x, pos.z);
 					return;
 				}
 			}
@@ -615,6 +604,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		if(isInFlight())
 			return;
 
+
 		if(isInOrbit()) {
 			setInFlight(true);
 			return;
@@ -627,7 +617,15 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			destinationDimId = guidanceComputer.getDestinationDimId(worldObj.provider.dimensionId);
 
 		}
-
+		
+		if(Configuration.spaceDimId != destinationDimId)  {
+			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
+			if(object != null)
+				destinationDimId = object.getOrbitingPlanetId();
+		}
+		
+		if(!DimensionManager.getInstance().canTravelTo(destinationDimId))
+			return;
 
 		if(!stats.hasSeat() || (destinationDimId != -1 && (DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || destinationDimId == Configuration.spaceDimId || destinationDimId == 0) ) { //Abort if destination is invalid
 
@@ -712,6 +710,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		if (!this.worldObj.isRemote && !this.isDead)
 		{
 
+			if(!DimensionManager.getInstance().canTravelTo(newDimId))
+				return;
+			
 			double x = posX, z = posZ;
 
 			Entity rider = this.riddenByEntity;
@@ -810,9 +811,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		//Satallite
 		if(nbt.hasKey("satallite")) {
 			NBTTagCompound satalliteNbt = nbt.getCompoundTag("satallite");
-
 			satallite = SatelliteRegistry.createFromNBT(satalliteNbt);
-
 		}
 	}
 

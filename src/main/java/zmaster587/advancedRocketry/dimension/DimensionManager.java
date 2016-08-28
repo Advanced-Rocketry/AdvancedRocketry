@@ -42,6 +42,7 @@ public class DimensionManager {
 	private HashMap<Integer,DimensionProperties> dimensionList;
 	private HashMap<Integer, StellarBody> starList;
 
+	public static final int GASGIANT_DIMID_OFFSET = 0x100; //Offset by 256
 	private static long nextSatelliteId;
 	private static StellarBody sol;
 
@@ -181,6 +182,14 @@ public class DimensionManager {
 		return 0;
 	}
 
+	public int getNextFreeGasGaintDim() {
+		for(int i = GASGIANT_DIMID_OFFSET; i < Integer.MAX_VALUE; i++) {
+			if(this.getDimensionProperties(i) != overworldProperties)
+				return i;
+		}
+		return GASGIANT_DIMID_OFFSET;
+	}
+	
 	public DimensionProperties generateRandom(int atmosphereFactor, int distanceFactor, int gravityFactor) {
 		return generateRandom(100, 100, 100, atmosphereFactor, distanceFactor, gravityFactor);
 	}
@@ -244,7 +253,55 @@ public class DimensionManager {
 	public DimensionProperties generateRandom(int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
 		return generateRandom("", baseAtmosphere, baseDistance, baseGravity, atmosphereFactor, distanceFactor, gravityFactor);
 	}
+	
+	public DimensionProperties generateRandomGasGiant(String name, int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
+		DimensionProperties properties = new DimensionProperties(getNextFreeGasGaintDim());
 
+		if(name == "")
+			properties.setName(getNextName(properties.getId()));
+		else {
+			properties.setName(name);
+		}
+		properties.atmosphereDensity = MathHelper.clamp_int(baseAtmosphere + random.nextInt(atmosphereFactor) - atmosphereFactor/2, 0, 200); 
+		properties.orbitalDist = MathHelper.clamp_int(baseDistance + random.nextInt(distanceFactor),0,200);
+		//System.out.println(properties.orbitalDist);
+		properties.gravitationalMultiplier = Math.min(Math.max(0.05f,(baseGravity + random.nextInt(gravityFactor) - gravityFactor/2)/100f), 1.3f);
+
+		double minDistance;
+
+		do {
+			minDistance = Double.MAX_VALUE;
+
+			properties.orbitTheta  = random.nextInt(360)*(2f*Math.PI)/360f;
+
+			for(IDimensionProperties properties2 : sol.getPlanets()) {
+				double dist = Math.abs(((DimensionProperties)properties2).orbitTheta - properties.orbitTheta);
+				if(dist < minDistance)
+					minDistance = dist;
+			}
+
+		} while(minDistance < (Math.PI/40f));
+
+		//Get Star Color
+		properties.setStar(sol);
+
+		//Linear is easier. Earth is nominal!
+		properties.averageTemperature = (sol.getTemperature() + (100 - properties.orbitalDist)*15 + properties.atmosphereDensity*18)/20;
+
+		//TODO: add gasses
+		registerDim(properties, true);
+		return properties;
+	}
+
+	/**
+	 * 
+	 * @param dimId dimension id to check
+	 * @return true if it can be traveled to, in general if it has a surface
+	 */
+	public boolean canTravelTo(int dimId){
+		return dimId < GASGIANT_DIMID_OFFSET && net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId);
+	}
+	
 	/**
 	 * Attempts to register a dimension with {@link DimensionProperties}, if the dimension has not yet been registered, sends a packet containing the dimension information to all connected clients
 	 * @param properties {@link DimensionProperties} to register
@@ -271,7 +328,8 @@ public class DimensionManager {
 		if(dimensionList.containsKey(dim))
 			return false;
 
-		if(registerWithForge && !net.minecraftforge.common.DimensionManager.isDimensionRegistered(dim)) {
+		//Avoid registering gas giants as dimensions
+		if(registerWithForge && dimId < GASGIANT_DIMID_OFFSET && !net.minecraftforge.common.DimensionManager.isDimensionRegistered(dim)) {
 			net.minecraftforge.common.DimensionManager.registerProviderType(properties.getId(), DimensionManager.planetWorldProvider, false);
 			net.minecraftforge.common.DimensionManager.registerDimension(dimId, dimId);
 		}

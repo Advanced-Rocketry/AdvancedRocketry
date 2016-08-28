@@ -120,6 +120,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * Contains default graphic {@link ResourceLocation} to display for different planet types
 	 *
 	 */
+	public static final ResourceLocation atmosphere = new ResourceLocation("advancedrocketry:textures/planets/Atmosphere.png");
+	public static final ResourceLocation atmosphereLEO = new ResourceLocation("advancedrocketry:textures/planets/AtmosphereLEO.png");
+	
 	public static enum PlanetIcons {
 		EARTHLIKE(new ResourceLocation("advancedrocketry:textures/planets/Earthlike.png")),
 		LAVA(new ResourceLocation("advancedrocketry:textures/planets/Lava.png")),
@@ -127,11 +130,12 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		MOON(new ResourceLocation("advancedrocketry:textures/planets/moon.png")),
 		WATERWORLD(new ResourceLocation("advancedrocketry:textures/planets/WaterWorld.png")),
 		ICEWORLD(new ResourceLocation("advancedrocketry:textures/planets/IceWorld.png")),
-		UNKNOWN(new ResourceLocation("advancedrocketry:textures/planets/Unknown.png")),
+		GASGAINTBLUE(new ResourceLocation("advancedrocketry:textures/planets/GasGiantBlue.png")),
+		GASGAINTRED(new ResourceLocation("advancedrocketry:textures/planets/GasGiantOrange.png")),
+		UNKNOWN(new ResourceLocation("advancedrocketry:textures/planets/Unknown.png"))
 		;
 
-		public static final ResourceLocation atmosphere = new ResourceLocation("advancedrocketry:textures/planets/Atmosphere.png");
-		public static final ResourceLocation atmosphereLEO = new ResourceLocation("advancedrocketry:textures/planets/AtmosphereLEO.png");
+
 
 		private ResourceLocation resource;
 		private ResourceLocation resourceLEO;
@@ -140,6 +144,12 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			this.resource = resource;
 
 			this.resourceLEO = new ResourceLocation(resource.toString().substring(0, resource.toString().length() - 4) + "LEO.jpg");
+		}
+		
+		private PlanetIcons(ResourceLocation resource, ResourceLocation leo) {
+			this.resource = resource;
+
+			this.resourceLEO = atmosphereLEO;
 		}
 
 		public ResourceLocation getResource() {
@@ -159,9 +169,12 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	public static final int MAX_GRAVITY = 200;
 	public static final int MIN_GRAVITY = 0;
+	
+	
 
 	//True if dimension is managed and created by AR (false otherwise)
 	public boolean isNativeDimension;
+	//Gas giants DO NOT need a dimension registered to them
 	public float[] skyColor;
 	public float[] fogColor;
 	public float gravitationalMultiplier;
@@ -269,6 +282,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		return star;
 	}
 
+	public boolean isGasGiant() {
+		return getId() >= DimensionManager.GASGIANT_DIMID_OFFSET;
+	}
+	
 	/**
 	 * @return the {@link ResourceLocation} representing this planet, generated from the planet's properties
 	 */
@@ -276,6 +293,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		AtmosphereTypes atmType = AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity);
 		Temps tempType = Temps.getTempFromValue(averageTemperature);
 
+		if(isGasGiant())
+			return PlanetIcons.GASGAINTBLUE.resource;
+			
 		if(tempType == Temps.TOOHOT)
 			return PlanetIcons.MARSLIKE.resource;
 		if(atmType != AtmosphereTypes.NONE && VulpineMath.isBetween(tempType.ordinal(), Temps.COLD.ordinal(), Temps.TOOHOT.ordinal()))
@@ -304,6 +324,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		Temps tempType = Temps.getTempFromValue(averageTemperature);
 
 
+		if(isGasGiant())
+			return PlanetIcons.GASGAINTBLUE.resourceLEO;
+		
 		if(tempType == Temps.TOOHOT)
 			return PlanetIcons.MARSLIKE.resourceLEO;
 		if(atmType != AtmosphereTypes.NONE && VulpineMath.isBetween(tempType.ordinal(), Temps.COLD.ordinal(), Temps.TOOHOT.ordinal()))
@@ -443,11 +466,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return {@link ResourceLocation} refering to the image to render as atmospheric haze as seen from orbit
 	 */
 	public static ResourceLocation getAtmosphereResource() {
-		return PlanetIcons.atmosphere;
+		return atmosphere;
 	}
 
 	public static ResourceLocation getAtmosphereLEOResource() {
-		return PlanetIcons.atmosphereLEO;
+		return atmosphereLEO;
 	}
 
 	/**

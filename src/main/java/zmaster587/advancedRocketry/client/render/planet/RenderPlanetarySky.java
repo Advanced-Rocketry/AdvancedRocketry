@@ -148,6 +148,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		int solarOrbitalDistance, planetOrbitalDistance = 0;
 		boolean hasAtmosphere = false, isMoon;
 		boolean isWarp = false;
+		boolean isGasGiant = false;
 		ForgeDirection travelDirection = null;
 		ResourceLocation parentPlanetIcon = null;
 		List<DimensionProperties> children;
@@ -166,10 +167,11 @@ public class RenderPlanetarySky extends IRenderHandler {
 			}
 
 			solarOrbitalDistance = properties.getSolarOrbitalDistance();
+			
 
 			if(isMoon = properties.isMoon()) {
 				DimensionProperties parentProperties = properties.getParentProperties();
-
+				isGasGiant = parentProperties.isGasGiant();
 				hasAtmosphere = parentProperties.hasAtmosphere();
 				planetOrbitalDistance = properties.getParentOrbitalDistance();
 				parentPlanetIcon = getTextureForPlanet(parentProperties);
@@ -341,14 +343,14 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 		GL11.glEnable(GL11.GL_FOG);
 		if(isMoon) {
-			renderPlanet(tessellator1, parentPlanetIcon, planetOrbitalDistance, multiplier, hasAtmosphere);
+			renderPlanet(tessellator1, parentPlanetIcon, planetOrbitalDistance, multiplier, hasAtmosphere, isGasGiant);
 		}
 
 		for(DimensionProperties moons : children) {
 			GL11.glPushMatrix();
 			//DimensionProperties moons = children.get(0);
 			GL11.glRotatef((float)(moons.orbitTheta* 180F/Math.PI), 1f, 0f, 0f);
-			renderPlanet(tessellator1, moons.getPlanetIcon(), moons.getParentOrbitalDistance()*(1/moons.gravitationalMultiplier), multiplier, moons.hasAtmosphere());
+			renderPlanet(tessellator1, moons.getPlanetIcon(), moons.getParentOrbitalDistance()*(1/moons.gravitationalMultiplier), multiplier, moons.hasAtmosphere(), isGasGiant);
 			GL11.glPopMatrix();
 		}
 
@@ -424,7 +426,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		return properties.getPlanetIcon();
 	}
 	
-	protected void renderPlanet(Tessellator tessellator1, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, boolean hasAtmosphere) {
+	protected void renderPlanet(Tessellator tessellator1, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, boolean hasAtmosphere, boolean gasGiant) {
 		//GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

@@ -1,4 +1,4 @@
-<planets numPlanets="10">
+<planets numPlanets="10" numGasGiants="1">
     <planet name="Planet A">
         <fogColor>1,1,1</fogColor>
         <skyColor>0,0,1</skyColor>

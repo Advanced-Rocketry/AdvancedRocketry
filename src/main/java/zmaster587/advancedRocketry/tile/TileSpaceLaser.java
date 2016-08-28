@@ -484,7 +484,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	 */
 	public void checkCanRun() {
 		//Laser requires lense, redstone power, not be jammed, and be in orbit and energy to function
-		if(!worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || glassPanel == null || storage.getEnergyStored() == 0 || !(this.worldObj.provider instanceof WorldProviderSpace) || !DimensionManager.isDimensionRegistered(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(xCoord, zCoord).getParentPlanet())) {
+		if(!worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || glassPanel == null || storage.getEnergyStored() == 0 || !(this.worldObj.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(xCoord, zCoord).getParentPlanet())) {
 			if(laserSat.isAlive()) {
 				laserSat.deactivateLaser();
 			}

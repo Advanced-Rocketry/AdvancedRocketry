@@ -67,6 +67,24 @@ public class XMLPlanetLoader {
 		}
 		return returnValue;
 	}
+	
+
+	public int getMaxNumGasGiants() {
+		Node node = doc.getElementsByTagName("planets").item(0);
+		int returnValue = -1;
+
+		if(node.hasAttributes()) {
+			NamedNodeMap map = node.getAttributes();
+			Node attr = map.getNamedItem("numGasGiants");
+
+			try {
+				returnValue= Integer.parseInt(attr.getNodeValue());
+			} catch (NumberFormatException e) {
+				AdvancedRocketry.logger.warning("Invalid number of planets specified in xml config!");
+			}
+		}
+		return returnValue;
+	}
 
 	private List<DimensionProperties> readPlanetFromNode(Node planetNode) {
 		List<DimensionProperties> list = new ArrayList<DimensionProperties>();

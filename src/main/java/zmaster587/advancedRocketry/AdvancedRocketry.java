@@ -1239,6 +1239,7 @@ public class AdvancedRocketry {
 		//Register hard coded dimensions
 		if(!zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.filePath)) {
 			int numRandomGeneratedPlanets = 9;
+			int numRandomGeneratedGasGiants = 1;
 			File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
 			logger.info("Checking for config at " + file.getAbsolutePath());
 			if(file.exists()) {
@@ -1250,6 +1251,7 @@ public class AdvancedRocketry {
 					for(DimensionProperties properties : list)
 						DimensionManager.getInstance().registerDim(properties, true);
 					numRandomGeneratedPlanets = loader.getMaxNumPlanets();
+					numRandomGeneratedGasGiants = loader.getMaxNumGasGiants();
 
 				} catch(IOException e) {
 					logger.severe("XML planet config exists but cannot be loaded!  Defaulting to random gen.");
@@ -1275,6 +1277,23 @@ public class AdvancedRocketry {
 
 			Random random = new Random(System.currentTimeMillis());
 
+			
+			for(int i = 0; i < numRandomGeneratedGasGiants; i++) {
+				int baseAtm = 180;
+				int baseDistance = 100;
+				
+				DimensionProperties	properties = DimensionManager.getInstance().generateRandomGasGiant("",baseDistance + 50,baseAtm,125,100,100,75);
+			
+				if(properties.gravitationalMultiplier >= 1f) {
+					int numMoons = random.nextInt(8);
+
+					for(int ii = 0; ii < numMoons; ii++) {
+						DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
+						moonProperties.setParentPlanet(properties);
+					}
+				}
+			}
+			
 			for(int i = 0; i < numRandomGeneratedPlanets; i++) {
 				int baseAtm = 75;
 				int baseDistance = 100;
@@ -1291,8 +1310,7 @@ public class AdvancedRocketry {
 				else if((i + 1) % 3 == 0) {
 					baseDistance = 30;
 				}
-
-
+				
 				DimensionProperties properties = DimensionManager.getInstance().generateRandom(baseDistance,baseAtm,125,100,100,75);
 
 				if(properties.gravitationalMultiplier >= 1f) {
