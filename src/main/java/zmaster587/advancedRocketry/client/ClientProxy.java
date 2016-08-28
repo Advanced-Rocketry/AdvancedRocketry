@@ -27,6 +27,7 @@ import zmaster587.advancedRocketry.client.render.RendererPipe;
 import zmaster587.advancedRocketry.client.render.item.RendererBucket;
 import zmaster587.advancedRocketry.client.render.multiblocks.RenderBiomeScanner;
 import zmaster587.advancedRocketry.client.render.multiblocks.RenderPlanetAnalyser;
+import zmaster587.advancedRocketry.client.render.multiblocks.RenderTerraformerAtm;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererChemicalReactor;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererElectrolyser;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererMicrowaveReciever;
@@ -52,6 +53,7 @@ import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.advancedRocketry.tile.TileSpaceLaser;
 import zmaster587.advancedRocketry.tile.cables.TileDataPipe;
 import zmaster587.advancedRocketry.tile.cables.TileLiquidPipe;
+import zmaster587.advancedRocketry.tile.multiblock.TileAtmosphereTerraformer;
 import zmaster587.advancedRocketry.tile.multiblock.TileBiomeScanner;
 import zmaster587.advancedRocketry.tile.multiblock.TileObservatory;
 import zmaster587.advancedRocketry.tile.multiblock.TilePlanetAnalyser;
@@ -90,6 +92,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileMicrowaveReciever.class, new RendererMicrowaveReciever());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSpaceLaser.class, new RenderLaserTile());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileBiomeScanner.class, new RenderBiomeScanner());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileAtmosphereTerraformer.class, new RenderTerraformerAtm());
 		
 		RendererModelBlock blockRenderer = new RendererModelBlock();
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import zmaster587.advancedRocketry.block.BlockSolarPanel;
+import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import net.minecraft.block.Block;
 
@@ -75,4 +76,5 @@ public class AdvancedRocketryBlocks {
 	public static Block blockSuitWorkStation;
 	public static Block blockLoader;
 	public static Block blockBiomeScanner;
+	public static Block blockAtmosphereTerraformer;
 }

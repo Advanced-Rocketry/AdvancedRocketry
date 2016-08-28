@@ -77,6 +77,7 @@ tile.solarPanel.name=Solar Panel
 tile.suitWorkStation.name=Suit Workstation
 tile.orientationControl.name=Orientation Controller
 tile.biomeScanner.name=Biome Scanner
+tile.atmoshereTerraformer.name=Atmosphere Terraformer
 
 tile.Dilithium.name=Dilithium Ore
 

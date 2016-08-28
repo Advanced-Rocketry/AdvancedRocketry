@@ -27,6 +27,9 @@ public class TextureResources {
 	public static final  ResourceLocation frameHUDBG = new ResourceLocation("advancedrocketry:textures/gui/FrameBG.png");
 	public static final  ResourceLocation[] armorSlots = new ResourceLocation[]{modularHelm, modularChest, modularLegs, modularBoots};
 	public static final  ResourceLocation earthCandy = new ResourceLocation("advancedrocketry:textures/gui/eyeCandy/Earth.png");
+	public static final  ResourceLocation metalPlate = new ResourceLocation("advancedRocketry:textures/models/metalPlate.png");
+	public static final  ResourceLocation diamondMetal = new ResourceLocation("advancedRocketry:textures/models/diamondMetal.png");
+	public static final  ResourceLocation fan = new ResourceLocation("advancedRocketry:textures/models/fan.png");
 	
 	public static final IconResource ioSlot = new IconResource(212, 0, 18, 18, null);
 	public static final IconResource idChip = new IconResource(230, 0, 18, 18, null);

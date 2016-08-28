@@ -453,11 +453,15 @@ public class AdvancedRocketry {
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockRollingMachine).setTopTexture("libvulpes:machineGeneric");
 
 		AdvancedRocketryBlocks.blockElectrolyser = new BlockMultiblockMachine(TileElectrolyser.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("electrolyser").setCreativeTab(tabAdvRocketry).setHardness(3f);
-
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockElectrolyser).setFrontTexture("Advancedrocketry:machineElectrolzyer", "Advancedrocketry:machineElectrolzyer_active");
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockElectrolyser).setSideTexture("libvulpes:machineGeneric");
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockElectrolyser).setTopTexture("libvulpes:machineGeneric");
 
+		AdvancedRocketryBlocks.blockAtmosphereTerraformer = new BlockMultiblockMachine(TileAtmosphereTerraformer.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("atmosphereTerraformer").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockAtmosphereTerraformer).setFrontTexture("Advancedrocketry:machineElectrolzyer", "Advancedrocketry:machineElectrolzyer_active");
+		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockAtmosphereTerraformer).setSideTexture("libvulpes:machineGeneric");
+		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockAtmosphereTerraformer).setTopTexture("libvulpes:machineGeneric");
+		
 		AdvancedRocketryBlocks.blockPlanetAnalyser = new BlockMultiblockMachine(TilePlanetAnalyser.class, GuiHandler.guiId.MODULARNOINV.ordinal()).setBlockName("planetanalyser").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockPlanetAnalyser).setTopTexture("libvulpes:machineGeneric");
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockPlanetAnalyser).setSideTexture("libvulpes:machineGeneric");
@@ -591,7 +595,8 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockSolarPanel, AdvancedRocketryBlocks.blockSolarPanel.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockSuitWorkStation, AdvancedRocketryBlocks.blockSuitWorkStation.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockBiomeScanner, AdvancedRocketryBlocks.blockBiomeScanner.getUnlocalizedName());
-
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockAtmosphereTerraformer, AdvancedRocketryBlocks.blockAtmosphereTerraformer.getUnlocalizedName());
+		
 		//TODO, use different mechanism to enable/disable drill
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
 			GameRegistry.registerBlock(AdvancedRocketryBlocks.blockSpaceLaser, "laserController");
@@ -707,6 +712,7 @@ public class AdvancedRocketry {
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileWarpCore(), (BlockTile)AdvancedRocketryBlocks.blockWarpCore);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileMicrowaveReciever(), (BlockTile)AdvancedRocketryBlocks.blockMicrowaveReciever);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileBiomeScanner(), (BlockTile)AdvancedRocketryBlocks.blockBiomeScanner);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileAtmosphereTerraformer(), (BlockTile)AdvancedRocketryBlocks.blockAtmosphereTerraformer);
 
 		//End Items
 
@@ -757,6 +763,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileRocketLoader.class, "ARRocketLoader");
 		GameRegistry.registerTileEntity(TileRocketUnloader.class, "ARRocketUnloader");
 		GameRegistry.registerTileEntity(TileBiomeScanner.class, "ARBiomeScanner");
+		GameRegistry.registerTileEntity(TileAtmosphereTerraformer.class, "ARAttTerraformer");
 
 
 
@@ -980,7 +987,6 @@ public class AdvancedRocketry {
 		AdvancedRocketryBiomes.swampDeepBiome = new BiomeGenDeepSwamp(config.get(BIOMECATETORY, "deepSwampBiomeId", 96).getInt(), true);
 		AdvancedRocketryBiomes.marsh = new BiomeGenMarsh(config.get(BIOMECATETORY, "marsh", 97).getInt(), true);
 		AdvancedRocketryBiomes.oceanSpires = new BiomeGenOceanSpires(config.get(BIOMECATETORY, "oceanSpires", 98).getInt(), true);
-
 		config.save();
 
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.moonBiome);
