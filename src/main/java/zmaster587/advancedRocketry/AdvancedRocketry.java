@@ -134,6 +134,7 @@ import zmaster587.advancedRocketry.tile.multiblock.machine.TileRollingMachine;
 import zmaster587.advancedRocketry.tile.oxygen.TileCO2Scrubber;
 import zmaster587.advancedRocketry.tile.oxygen.TileOxygenCharger;
 import zmaster587.advancedRocketry.tile.oxygen.TileOxygenVent;
+import zmaster587.advancedRocketry.tile.station.TileLandingPad;
 import zmaster587.advancedRocketry.tile.station.TileStationGravityController;
 import zmaster587.advancedRocketry.tile.station.TileStationOrientationControl;
 import zmaster587.advancedRocketry.tile.station.TileWarpShipMonitor;
@@ -764,6 +765,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileRocketUnloader.class, "ARRocketUnloader");
 		GameRegistry.registerTileEntity(TileBiomeScanner.class, "ARBiomeScanner");
 		GameRegistry.registerTileEntity(TileAtmosphereTerraformer.class, "ARAttTerraformer");
+		GameRegistry.registerTileEntity(TileLandingPad.class, "ARLandingPad");
 
 
 

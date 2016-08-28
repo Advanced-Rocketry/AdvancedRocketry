@@ -5,16 +5,28 @@ import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.advancedRocketry.tile.station.TileLandingPad;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 public class BlockLandingPad extends Block {
 
 	public BlockLandingPad(Material mat) {
 		super(mat);
+	}
+	
+	@Override
+	public boolean hasTileEntity(int metadata) {
+		return true;
+	}
+	
+	@Override
+	public TileEntity createTileEntity(World world, int metadata) {
+		return new TileLandingPad();
 	}
 
 	@Override
