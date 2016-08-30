@@ -98,7 +98,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				return;
 			boolean isCoasting = Math.abs(this.posX - launchLocation.x) < 4*storage.getSizeX() && Math.abs(this.posY - launchLocation.y) < 4*storage.getSizeY() && Math.abs(this.posZ - launchLocation.z) < 4*storage.getSizeZ();
 
-			if(!isCoasting && !isInOrbit()) {
+			if(!isCoasting) {
 				//Burn the rocket fuel
 				if(!worldObj.isRemote)
 					setFuelAmount(getFuelAmount() - stats.getFuelRate(FuelType.LIQUID));
@@ -163,9 +163,9 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				//Coast away from the station
 				if(isCoasting) {
 					float speed = 0.01f;//(float)Math.min(0.2f, Math.abs(motionY) + 0.0001f);
-					motionX = speed*launchDirection.offsetX * ( 2.01*storage.getSizeX() - Math.abs(2*storage.getSizeX() - Math.abs(this.posX - launchLocation.x)) + 0.05);
-					motionY = speed*launchDirection.offsetY * ( 2.01*storage.getSizeY() - Math.abs(2*storage.getSizeY() - Math.abs(this.posY - launchLocation.y)) + 0.05);
-					motionZ = speed*launchDirection.offsetZ * ( 2.01*storage.getSizeZ() - Math.abs(2*storage.getSizeZ() - Math.abs(this.posZ - launchLocation.z)) + 0.05);
+					motionX = speed*launchDirection.offsetX * ( 2.1*storage.getSizeX() - Math.abs(2*storage.getSizeX() - Math.abs(this.posX - launchLocation.x)) + 0.05);
+					motionY = speed*launchDirection.offsetY * ( 2.1*storage.getSizeY() - Math.abs(2*storage.getSizeY() - Math.abs(this.posY - launchLocation.y)) + 0.05);
+					motionZ = speed*launchDirection.offsetZ * ( 2.1*storage.getSizeZ() - Math.abs(2*storage.getSizeZ() - Math.abs(this.posZ - launchLocation.z)) + 0.05);
 				}
 				else {
 					float acc = 0.01f;

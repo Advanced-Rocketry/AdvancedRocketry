@@ -103,6 +103,14 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 			return blocks[x][y][z];
 		return blocks[x][y][z];
 	}
+	
+	public void setBlockMeta(int x, int y, int z, int meta) {
+		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ)
+			return;
+
+		metas[x][y][z] = (short) meta;
+	}
+
 
 
 	//TODO: optimize the F*** out of this

@@ -46,7 +46,7 @@ public class TileModelRender extends TileEntity {
 	}
 	
 	public ForgeDirection getRotation() {
-		return ForgeDirection.SOUTH;
+		return ForgeDirection.DOWN;
 	}
 	
 	@Override

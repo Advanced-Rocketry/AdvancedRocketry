@@ -27,7 +27,7 @@ import zmaster587.libVulpes.util.ZUtils;
 public class TileStationDeployedAssembler extends TileRocketBuilder {
 
 	private final static int MAX_SIZE = 8, MAX_SIZE_Y = 8, MIN_SIZE = 4, MIN_SIZE_Y = 4;
-	
+
 	/**
 	 * Does not make sure the structure is complete, only gets max bounds!
 	 * @param world the world
@@ -46,12 +46,12 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 		zMax = zMin = zCurrent;
 		int xSize, zSize;
 
-		
+
 		if(world.isRemote)
 			return null;
 
 		yMax = ZUtils.getContinuousBlockLength(world, ForgeDirection.UP, this.xCoord, this.yCoord + 1, this.zCoord, MAX_SIZE_Y, AdvancedRocketryBlocks.blockStructureTower);
-		
+
 		//Get min and maximum Z/X bounds
 		if(direction.offsetX != 0) {
 			xSize = ZUtils.getContinuousBlockLength(world, direction, xCurrent, yCurrent + yMax, zCurrent, MAX_SIZE, AdvancedRocketryBlocks.blockStructureTower);
@@ -63,12 +63,12 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 			zMax = zCurrent + zMax;
 
 			if(direction.offsetX > 0) {
-				xMax = xCurrent + xSize + 1;
+				xMax = xCurrent + xSize - 1;
 				xMin++;
 			}
 
 			if(direction.offsetX < 0) {
-				xMin = xCurrent - xSize-1;
+				xMin = xCurrent - xSize+1;
 				xMax--;
 			}
 		}
@@ -81,7 +81,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 			xMin = xCurrent - xMin +1;
 			xMax = xCurrent + xMax;
 
-			
+
 			if(direction.offsetZ > 0) {
 				zMax = zCurrent + zSize + 1;
 				zMin++;
@@ -92,7 +92,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 				zMax --;
 			}
 		}
-		
+
 		//if tower does not meet criteria then reutrn null
 		if(yMax < MIN_SIZE_Y || xSize < MIN_SIZE || zSize < MIN_SIZE) {
 			return null;
@@ -100,7 +100,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 
 		return AxisAlignedBB.getBoundingBox(xMin, yCurrent, zMin, xMax, yCurrent + yMax - 1, zMax);
 	}
-	
+
 	public void assembleRocket() {
 
 		if(bbCache == null)
@@ -113,13 +113,26 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 
 		StorageChunk storageChunk = StorageChunk.cutWorldBB(worldObj, bbCache);
 
-		
+
 		EntityStationDeployedRocket rocket = new EntityStationDeployedRocket(worldObj, storageChunk, stats.copy(),bbCache.minX + (bbCache.maxX-bbCache.minX)/2f +.5f, yCoord , bbCache.minZ + (bbCache.maxZ-bbCache.minZ)/2f +.5f);
 
 		//TODO: setRocketDirection
 		rocket.forwardDirection = RotatableBlock.getFront(this.blockMetadata).getOpposite();
 		rocket.launchDirection = ForgeDirection.DOWN;
-		
+
+		//Change engine direction
+		for(int x = 0; x < storageChunk.getSizeX(); x++) {
+			for(int y = 0; y < storageChunk.getSizeY(); y++) {
+				for(int z = 0; z < storageChunk.getSizeZ(); z++) {
+
+					if(storageChunk.getBlock(x, y, z) == AdvancedRocketryBlocks.blockEngine) {
+						storageChunk.setBlockMeta(x, y, z, rocket.forwardDirection.ordinal());
+						storageChunk.getTileEntity(x, y, z).blockMetadata = rocket.forwardDirection.ordinal();
+					}
+				}		
+			}	
+		}
+
 		worldObj.spawnEntityInWorld(rocket);
 		NBTTagCompound nbtdata = new NBTTagCompound();
 
@@ -135,8 +148,8 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 			rocket.linkInfrastructure(infrastructure);
 		}
 	}
-	
-	
+
+
 	//TODO get direction of rocket
 	@Override
 	public void scanRocket(World world, int x, int y, int z, AxisAlignedBB bb) {
@@ -242,7 +255,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 				status = ErrorCodes.SUCCESS;
 		}
 	}
-	
+
 	//No additional scanning is needed
 	@Override
 	protected boolean verifyScan(AxisAlignedBB bb, World world) {
