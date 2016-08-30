@@ -93,7 +93,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSpaceLaser.class, new RenderLaserTile());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileBiomeScanner.class, new RenderBiomeScanner());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileAtmosphereTerraformer.class, new RenderTerraformerAtm());
-		
+
 		RendererModelBlock blockRenderer = new RendererModelBlock();
 
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(AdvancedRocketryBlocks.blockSawBlade), blockRenderer);
@@ -110,7 +110,7 @@ public class ClientProxy extends CommonProxy {
 	public void registerEventHandlers() {
 		super.registerEventHandlers();
 		MinecraftForge.EVENT_BUS.register(new RocketEventHandler());
-		
+
 		MinecraftForge.EVENT_BUS.register(ModuleContainerPan.class);
 		MinecraftForge.EVENT_BUS.register(new RenderComponents());
 	}
@@ -176,9 +176,13 @@ public class ClientProxy extends CommonProxy {
 			return 0;
 		}
 	}
-	
+
 	@Override
 	public long getWorldTimeUniversal(int id) {
-		return Minecraft.getMinecraft().theWorld.getTotalWorldTime();
+		try {
+			return Minecraft.getMinecraft().theWorld.getTotalWorldTime();
+		} catch (NullPointerException e) {
+			return 0;
+		}
 	}
 }

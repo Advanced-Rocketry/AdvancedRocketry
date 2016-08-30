@@ -3,97 +3,30 @@ package zmaster587.advancedRocketry.mission;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.oredict.OreDictionary;
-import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.IInfrastructure;
-import zmaster587.advancedRocketry.api.SatelliteRegistry;
-import zmaster587.advancedRocketry.api.StatsRocket;
-import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
-import zmaster587.advancedRocketry.util.StorageChunk;
-import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.util.BlockPosition;
-import zmaster587.libVulpes.util.Vector3F;
 
-public class MissionOreMining extends SatelliteBase implements IMission {
+public class MissionOreMining extends MissionResourceCollection {
 
-	long startWorldTime;
-	double x,y,z;
-	long duration;
-	int launchDimension;
-	StorageChunk rocketStorage;
-	StatsRocket rocketStats;
-	int worldId;
 
-	//stores the coordinates of infrastructures, used for when the world loads/saves
-	private LinkedList<BlockPosition> infrastructureCoords;
-
-	public MissionOreMining(){
-		infrastructureCoords = new LinkedList<BlockPosition>();
-	}
-
-	public MissionOreMining(long duration, EntityRocket entity, LinkedList<IInfrastructure> infrastructureCoords) {
+	public MissionOreMining() {
 		super();
-
-		satelliteProperties.setId(zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getNextSatelliteId());
-
-		startWorldTime = DimensionManager.getWorld(0).getTotalWorldTime();
-		this.duration = duration;
-		this.launchDimension = entity.worldObj.provider.dimensionId;
-		rocketStorage = entity.storage;
-		rocketStats = entity.stats;
-		x = entity.posX;
-		y = entity.posY;
-		z = entity.posZ;
-		worldId = entity.worldObj.provider.dimensionId;
-
-		this.infrastructureCoords = new LinkedList<BlockPosition>();
-
-		for(IInfrastructure tile : infrastructureCoords)
-			this.infrastructureCoords.add(new BlockPosition(((TileEntity)tile).xCoord, ((TileEntity)tile).yCoord, ((TileEntity)tile).zCoord));
 	}
 
-	@Override
-	public double getProgress(World world) {
-		return (AdvancedRocketry.proxy.getWorldTimeUniversal(0) - startWorldTime) / (double)duration;
-	}
-
-	@Override
-	public String getInfo(World world) {
-		return null;
-	}
-
-	@Override
-	public String getName() {
-		return LibVulpes.proxy.getLocalizedString("mission.asteroidmining.name");
-	}
-
-	@Override
-	public boolean performAction(EntityPlayer player, World world, int x,
-			int y, int z) {
-		return false;
-	}
-
-	@Override
-	public double failureChance() {
-		return 0;
-	}
-
-	@Override
-	public boolean canTick() {
-		return true;
+	public MissionOreMining(long l, EntityRocket entityRocket,
+			LinkedList<IInfrastructure> connectedInfrastructure) {
+		super(l, entityRocket, connectedInfrastructure);
 	}
 
 	@Override
@@ -158,89 +91,5 @@ public class MissionOreMining extends SatelliteBase implements IMission {
 				rocket.linkInfrastructure(((IInfrastructure)tile));
 			}
 		}
-	}
-
-	@Override
-	public void tickEntity() {
-		if(getProgress(DimensionManager.getWorld(getDimensionId())) >= 1 && !DimensionManager.getWorld(0).isRemote) {
-			zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(getDimensionId()).removeSatellite(getId());
-			onMissionComplete();
-		}
-	}
-
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		NBTTagCompound nbt2 = new NBTTagCompound();
-		rocketStats.writeToNBT(nbt2);
-		nbt.setTag("rocketStats", nbt2);
-
-		nbt2 = new NBTTagCompound();
-		rocketStorage.writeToNBT(nbt2);
-		nbt.setTag("rocketStorage", nbt2);
-
-		nbt.setDouble("launchPosX", x);
-		nbt.setDouble("launchPosY", y);
-		nbt.setDouble("launchPosZ", z);
-
-		nbt.setLong("startWorldTime", startWorldTime);
-		nbt.setLong("duration", duration);
-		nbt.setInteger("startDimid", worldId);
-
-		NBTTagList itemList = new NBTTagList();
-		for(int i = 0; i < infrastructureCoords.size(); i++)
-		{
-			BlockPosition inf = infrastructureCoords.get(i);
-
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setIntArray("loc", new int[] {inf.x, inf.y, inf.z});
-			itemList.appendTag(tag);
-
-		}
-		nbt.setTag("infrastructure", itemList);
-
-
-	}
-
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-
-		rocketStats = new StatsRocket();
-		rocketStats.readFromNBT(nbt.getCompoundTag("rocketStats"));
-
-		rocketStorage = new StorageChunk();
-		rocketStorage.readFromNBT(nbt.getCompoundTag("rocketStorage"));
-
-		x = nbt.getDouble("launchPosX");
-		y = nbt.getDouble("launchPosY");
-		z = nbt.getDouble("launchPosZ");
-
-		startWorldTime = nbt.getLong("startWorldTime");
-		duration = nbt.getLong("duration");
-		worldId = nbt.getInteger("startDimid");
-
-		NBTTagList tagList = nbt.getTagList("infrastructure", 10);
-		infrastructureCoords.clear();
-
-		for (int i = 0; i < tagList.tagCount(); i++) {
-			int coords[] = tagList.getCompoundTagAt(i).getIntArray("loc");
-			infrastructureCoords.add(new BlockPosition(coords[0], coords[1], coords[2]));
-		}
-	}
-
-	@Override
-	public long getMissionId() {
-		return getId();
-	}
-
-	@Override
-	public int getOriginatingDimention() {
-		return worldId;
-	}
-
-	@Override
-	public void unlinkInfrastructure(IInfrastructure tile) {
-
-		BlockPosition pos = new BlockPosition(((TileEntity)tile).xCoord, ((TileEntity)tile).yCoord, ((TileEntity)tile).zCoord);
-		infrastructureCoords.remove(pos);
 	}
 }

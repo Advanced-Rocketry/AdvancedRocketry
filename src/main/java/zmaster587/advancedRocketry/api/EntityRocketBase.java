@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.util.BlockPosition;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
@@ -15,6 +16,15 @@ public abstract class EntityRocketBase extends Entity {
 
 	//Linked list containing Objects implementing IInfrastructure
 	protected LinkedList<IInfrastructure> connectedInfrastructure;
+	
+	//stores the coordinates of infrastructures, used for when the world loads/saves
+	protected LinkedList<BlockPosition> infrastructureCoords;
+	
+	//Stores the blocks and tiles that make up the rocket
+	public StorageChunk storage;
+
+	//Stores other info about the rocket such as fuel and acceleration properties
+	public StatsRocket stats;
 	
 	public EntityRocketBase(World world) {
 		super(world);

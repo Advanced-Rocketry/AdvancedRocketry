@@ -82,24 +82,15 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class EntityRocket extends EntityRocketBase implements INetworkEntity, IDismountHandler, IModularInventory, IProgressBar, IButtonInventory, ISelectionNotify {
 
-	//Stores the blocks and tiles that make up the rocket
-	public StorageChunk storage;
-
-	//Stores other info about the rocket such as fuel and acceleration properties
-	public StatsRocket stats;
-
 	//true if the rocket is on decent
 	private boolean isInOrbit;
 	//True if the rocket isn't on the ground
 	private boolean isInFlight;
 
-	private long lastWorldTickTicked;
-
-	//stores the coordinates of infrastructures, used for when the world loads/saves
-	private LinkedList<BlockPosition> infrastructureCoords;
+	protected long lastWorldTickTicked;
 
 	private SatelliteBase satallite;
-	private int destinationDimId;
+	protected int destinationDimId;
 	//Offset for buttons linking to the tileEntityGrid
 	private int tilebuttonOffset = 3;
 	private WeakReference<Entity>[] mountedEntities;
@@ -148,14 +139,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			return this.boundingBox;
 		}
 		return null;
-	}
-
-	@Override
-	public void setPositionAndRotation2(double x, double y,
-			double z, float p_70056_7_, float p_70056_8_,
-			int p_70056_9_) {
-		//if( !worldObj.isRemote || (y < 270 && this.isInFlight()))
-		super.setPositionAndRotation2(x, y, z, p_70056_7_, p_70056_8_, p_70056_9_);
 	}
 
 	/**
@@ -273,7 +256,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		}
 	}
 
-	private boolean interact(EntityPlayer player) {
+	protected boolean interact(EntityPlayer player) {
 		//Actual interact code needs to be moved to a packet receive on the server
 
 		ItemStack heldItem = player.getHeldItem();
@@ -624,9 +607,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				destinationDimId = object.getOrbitingPlanetId();
 		}
 		
+		//TODO: make sure this doesn't break asteriod mining
 		if(!DimensionManager.getInstance().canTravelTo(destinationDimId))
 			return;
 
+		//TODO: Make sure this doesnt break asteroid mining
 		if(!stats.hasSeat() || (destinationDimId != -1 && (DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || destinationDimId == Configuration.spaceDimId || destinationDimId == 0) ) { //Abort if destination is invalid
 
 
@@ -646,8 +631,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				}
 			}
 		}
-
-
 	}
 
 	/**
@@ -686,7 +669,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	public void onChunkLoad() {
 		super.onChunkLoad();
 
-
+		//problems with loading on other world then where the infrastructure was set?
 		ListIterator<BlockPosition> itr = infrastructureCoords.listIterator();
 		while(itr.hasNext()) {
 			BlockPosition temp = itr.next();
@@ -781,6 +764,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 		setInFlight(nbt.getBoolean("flight"));
 
+		readMissionPersistantNBT(nbt);
 		if(nbt.hasKey("data"))
 		{
 			if(storage == null) 
@@ -816,6 +800,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	}
 
 	protected void writeNetworkableNBT(NBTTagCompound nbt) {
+		writeMissionPersistantNBT(nbt);
 		nbt.setBoolean("orbit", isInOrbit());
 		nbt.setBoolean("flight", isInFlight());
 		stats.writeToNBT(nbt);
@@ -845,6 +830,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		}
 	}
 
+	public void writeMissionPersistantNBT(NBTTagCompound nbt) {
+		
+	}
+	
+	public void readMissionPersistantNBT(NBTTagCompound nbt) {
+		
+	}
+	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 

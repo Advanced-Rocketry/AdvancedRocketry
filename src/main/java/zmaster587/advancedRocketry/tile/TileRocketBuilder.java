@@ -96,7 +96,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	private int prevProgress; // Used for client/server sync
 	private boolean building; //True is rocket is being built, false if only scanning or otherwise
 
-	private StatsRocket stats;
+	protected StatsRocket stats;
 	protected AxisAlignedBB bbCache;
 	protected ErrorCodes status;
 
