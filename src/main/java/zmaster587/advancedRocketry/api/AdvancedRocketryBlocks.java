@@ -78,4 +78,5 @@ public class AdvancedRocketryBlocks {
 	public static Block blockBiomeScanner;
 	public static Block blockAtmosphereTerraformer;
 	public static Block blockDeployableRocketBuilder;
+	public static Block blockPressureTank;
 }

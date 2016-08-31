@@ -58,6 +58,7 @@ import zmaster587.advancedRocketry.block.BlockLinkedHorizontalTexture;
 import zmaster587.advancedRocketry.block.BlockMiningDrill;
 import zmaster587.advancedRocketry.block.BlockPlanetSoil;
 import zmaster587.advancedRocketry.block.BlockPress;
+import zmaster587.advancedRocketry.block.BlockPressurizedFluidTank;
 import zmaster587.advancedRocketry.block.BlockQuartzCrucible;
 import zmaster587.advancedRocketry.block.BlockRedstoneEmitter;
 import zmaster587.advancedRocketry.block.BlockRocketMotor;
@@ -507,6 +508,7 @@ public class AdvancedRocketry {
 		((BlockTile)AdvancedRocketryBlocks.blockSuitWorkStation).setFrontTexture("Advancedrocketry:panelSideWorkStation");
 
 
+		AdvancedRocketryBlocks.blockPressureTank = new BlockPressurizedFluidTank(Material.iron).setBlockName("pressurizedTank").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockSolarPanel = new BlockSolarPanel(Material.iron).setBlockName("solarPanel").setCreativeTab(tabAdvRocketry).setHardness(3f);
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill) {
@@ -606,6 +608,8 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockBiomeScanner, AdvancedRocketryBlocks.blockBiomeScanner.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockAtmosphereTerraformer, AdvancedRocketryBlocks.blockAtmosphereTerraformer.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockDeployableRocketBuilder, AdvancedRocketryBlocks.blockDeployableRocketBuilder.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockPressureTank, AdvancedRocketryBlocks.blockPressureTank.getUnlocalizedName());
+		
 		//TODO, use different mechanism to enable/disable drill
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
 			GameRegistry.registerBlock(AdvancedRocketryBlocks.blockSpaceLaser, "laserController");
@@ -776,7 +780,8 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileAtmosphereTerraformer.class, "ARAttTerraformer");
 		GameRegistry.registerTileEntity(TileLandingPad.class, "ARLandingPad");
 		GameRegistry.registerTileEntity(TileStationDeployedAssembler.class, "ARStationDeployableRocketAssembler");
-
+		GameRegistry.registerTileEntity(TileFluidTank.class, "ARFluidTank");
+		
 		//OreDict stuff
 		OreDictionary.registerOre("waferSilicon", new ItemStack(AdvancedRocketryItems.itemWafer,1,0));
 		OreDictionary.registerOre("ingotCarbon", new ItemStack(AdvancedRocketryItems.itemMisc, 1, 1));
