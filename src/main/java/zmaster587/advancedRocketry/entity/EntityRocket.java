@@ -16,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
@@ -96,7 +97,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	private WeakReference<Entity>[] mountedEntities;
 	protected ModulePlanetSelector container;
 
-	public enum PacketType {
+	public static enum PacketType {
 		RECIEVENBT,
 		SENDINTERACT,
 		REQUESTNBT,
@@ -107,7 +108,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		CHANGEWORLD,
 		REVERTWORLD,
 		OPENPLANETSELECTION,
-		SENDPLANETDATA
+		SENDPLANETDATA,
+		DISCONNECTINFRASTRUCTURE,
+		CONNECTINFRASTRUCTURE
 	}
 
 	public EntityRocket(World p_i1582_1_) {
@@ -127,6 +130,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		this.stats = stats;
 		this.setPosition(x, y, z);
 		this.storage = storage;
+		this.storage.setEntity(this);
 		initFromBounds();
 		isInFlight = false;
 		mountedEntities = new WeakReference[stats.getNumPassengerSeats()];
@@ -161,6 +165,19 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		setFuelAmount(stats.getFuelAmount(FuelType.LIQUID));
 
 		return ret;
+	}
+
+	public void disconnectInfrastructure(IInfrastructure infrastructure){
+		infrastructure.unlinkRocket();
+		infrastructureCoords.remove(new BlockPosition(((TileEntity)infrastructure).xCoord, ((TileEntity)infrastructure).yCoord, ((TileEntity)infrastructure).zCoord));
+
+		if(!worldObj.isRemote) {
+			int pos[] = {((TileEntity)infrastructure).xCoord, ((TileEntity)infrastructure).yCoord, ((TileEntity)infrastructure).zCoord};
+
+			NBTTagCompound nbt = new NBTTagCompound();
+			nbt.setIntArray("pos", pos);
+			//PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, (byte)PacketType.DISCONNECTINFRASTRUCTURE.ordinal(), nbt), this);
+		}
 	}
 
 	@Override
@@ -393,7 +410,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 		if(isInFlight()) {
 			boolean burningFuel = isBurningFuel();
-			
+
 			boolean descentPhase = Configuration.automaticRetroRockets && isInOrbit() && this.posY < 300 && (this.motionY < -0.4f || worldObj.isRemote);
 
 			if(burningFuel || descentPhase) {
@@ -559,7 +576,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				Vector3F<Float> pos = storage.getGuidanceComputer().getLandingLocation(destinationDimId);
 				storage.getGuidanceComputer().setReturnPosition(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ));
 				if(pos != null) {
-					
+
 					//Make player confirm deorbit if a player is riding the rocket
 					if(this.riddenByEntity != null)
 						setInFlight(false);
@@ -600,13 +617,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			destinationDimId = guidanceComputer.getDestinationDimId(worldObj.provider.dimensionId);
 
 		}
-		
+
 		if(Configuration.spaceDimId != destinationDimId)  {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
 			if(object != null)
 				destinationDimId = object.getOrbitingPlanetId();
 		}
-		
+
 		//TODO: make sure this doesn't break asteriod mining
 		if(!DimensionManager.getInstance().canTravelTo(destinationDimId))
 			return;
@@ -623,10 +640,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 			//Disconnect things linked to the rocket on liftoff
 			while(connectedTiles.hasNext()) {
+
 				IInfrastructure i = connectedTiles.next();
 				if(i.disconnectOnLiftOff()) {
-					i.unlinkRocket();
-					infrastructureCoords.remove(new BlockPosition(((TileEntity)i).xCoord, ((TileEntity)i).yCoord, ((TileEntity)i).zCoord));
+					disconnectInfrastructure(i);
 					connectedTiles.remove();
 				}
 			}
@@ -695,7 +712,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 			if(!DimensionManager.getInstance().canTravelTo(newDimId))
 				return;
-			
+
 			double x = posX, z = posZ;
 
 			Entity rider = this.riddenByEntity;
@@ -771,6 +788,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				storage = new StorageChunk();
 
 			storage.readFromNBT(nbt.getCompoundTag("data"));
+			storage.setEntity(this);
 			this.setSize(Math.max(storage.getSizeX(), storage.getSizeZ()), storage.getSizeY());
 		}
 
@@ -831,13 +849,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	}
 
 	public void writeMissionPersistantNBT(NBTTagCompound nbt) {
-		
+
 	}
-	
+
 	public void readMissionPersistantNBT(NBTTagCompound nbt) {
-		
+
 	}
-	
+
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 
@@ -857,6 +875,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			NBTTagCompound nbt) {
 		if(packetId == PacketType.RECIEVENBT.ordinal()) {
 			storage = new StorageChunk();
+			storage.setEntity(this);
 			storage.readFromNetwork(in);
 		}
 		else if(packetId == PacketType.SENDPLANETDATA.ordinal()) {
@@ -923,8 +942,19 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				((ItemPlanetIdentificationChip)AdvancedRocketryItems.itemPlanetIdChip).setDimensionId(stack, nbt.getInteger("selection"));
 			}
 		}
+		else if(id == PacketType.DISCONNECTINFRASTRUCTURE.ordinal()) {
+			int pos[] = nbt.getIntArray("pos");
+			
+			connectedInfrastructure.remove(new BlockPosition(pos[0], pos[1], pos[2]));
+			
+			TileEntity tile = worldObj.getTileEntity(pos[0], pos[1], pos[2]);
+			if(tile instanceof IInfrastructure) {
+				((IInfrastructure)tile).unlinkRocket();
+				connectedInfrastructure.remove(tile);
+			}
+		}
 		else if(id > 100) {
-			TileEntity tile = storage.getUsableTiles().get(id - 100 - tilebuttonOffset);
+			TileEntity tile = storage.getInventoryTiles().get(id - 100 - tilebuttonOffset);
 
 			//Welcome to super hack time with packets
 			//Due to the fact the client uses the player's current world to open the gui, we have to move the client between worlds for a bit
@@ -977,7 +1007,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			modules.add(new ModuleProgress(192, 7, 0, new ProgressBarImage(2, 173, 12, 71, 17, 6, 3, 69, 1, 1, ForgeDirection.UP, TextureResources.rocketHud), this));
 
 			//TODO DEBUG tiles!
-			List<TileEntity> tiles = storage.getUsableTiles();
+			List<TileEntity> tiles = storage.getInventoryTiles();
 			for(int i = 0; i < tiles.size(); i++) {
 				TileEntity tile  = tiles.get(i);
 				modules.add(new ModuleSlotButton(8 + 18* (i % 9), 17 + 18*(i/9), i + tilebuttonOffset, this, new ItemStack(storage.getBlock(tile.xCoord, tile.yCoord, tile.zCoord), 1, storage.getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord))));
@@ -1045,7 +1075,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 			//Minecraft.getMinecraft().thePlayer.closeScreen();
 
-			TileEntity tile = storage.getUsableTiles().get(buttonId - tilebuttonOffset);
+			TileEntity tile = storage.getInventoryTiles().get(buttonId - tilebuttonOffset);
 			storage.getBlock(tile.xCoord, tile.yCoord, tile.zCoord).onBlockActivated(storage.world, tile.xCoord, tile.yCoord,  tile.zCoord, Minecraft.getMinecraft().thePlayer, 0, 0, 0, 0);
 		}
 	}

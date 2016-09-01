@@ -45,37 +45,39 @@ public class RendererRocket extends Render {
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float)x, (float)y, (float)z);
-		
+
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
 		GL11.glColor4f(0.5f, 1f, .5f, .2f);
-		
+
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_LINE_STIPPLE);
 		GL11.glLineWidth(1f);
 		GL11.glLineStipple(5, (short)0x2222);
 
-		for(IInfrastructure inf : ((EntityRocket)entity).getConnectedInfrastructure()) {
-			if(inf.canRenderConnection()) {
-				TileEntity tile = (TileEntity)inf;
+		if(!((EntityRocket)entity).isInFlight()) {
+			for(IInfrastructure inf : ((EntityRocket)entity).getConnectedInfrastructure()) {
+				if(inf.canRenderConnection()) {
+					TileEntity tile = (TileEntity)inf;
 
-				Tessellator.instance.startDrawing(GL11.GL_LINE_LOOP);
-				
-				Tessellator.instance.addVertex(0, storage.getSizeY()/2f, 0);
-				
-				Tessellator.instance.addVertex((tile.xCoord - entity.posX + 0.5f)/2f, storage.getSizeY()/2f, (tile.zCoord - entity.posZ + 0.5f)/2f);
-				
-				Tessellator.instance.addVertex(tile.xCoord - entity.posX + 0.5f, tile.yCoord - entity.posY  + 0.5f, tile.zCoord - entity.posZ + 0.5f);
-				
-				Tessellator.instance.addVertex((tile.xCoord - entity.posX + 0.5f)/2f, storage.getSizeY()/2f, (tile.zCoord - entity.posZ + 0.5f)/2f);
-				
-				//RenderHelper.renderCrossXZ(Tessellator.instance, .2f, 0, storage.getSizeY()/2f, 0, tile.xCoord - entity.posX + 0.5f, tile.yCoord - entity.posY  + 0.5f, tile.zCoord - entity.posZ + 0.5f);
-				//RenderHelper.renderBlockWithEndPointers(Tessellator.instance, .2f, 0, storage.getSizeY()/2f, 0, tile.xCoord - entity.posX, tile.yCoord - entity.posY, tile.zCoord - entity.posZ);
-				Tessellator.instance.draw();
-				//RenderHelper.renderCubeWithUV(tess, 0, 0, 0, 2, 55, 2, 0, 1, 0, 1);
+					Tessellator.instance.startDrawing(GL11.GL_LINE_LOOP);
+
+					Tessellator.instance.addVertex(0, storage.getSizeY()/2f, 0);
+
+					Tessellator.instance.addVertex((tile.xCoord - entity.posX + 0.5f)/2f, storage.getSizeY()/2f, (tile.zCoord - entity.posZ + 0.5f)/2f);
+
+					Tessellator.instance.addVertex(tile.xCoord - entity.posX + 0.5f, tile.yCoord - entity.posY  + 0.5f, tile.zCoord - entity.posZ + 0.5f);
+
+					Tessellator.instance.addVertex((tile.xCoord - entity.posX + 0.5f)/2f, storage.getSizeY()/2f, (tile.zCoord - entity.posZ + 0.5f)/2f);
+
+					//RenderHelper.renderCrossXZ(Tessellator.instance, .2f, 0, storage.getSizeY()/2f, 0, tile.xCoord - entity.posX + 0.5f, tile.yCoord - entity.posY  + 0.5f, tile.zCoord - entity.posZ + 0.5f);
+					//RenderHelper.renderBlockWithEndPointers(Tessellator.instance, .2f, 0, storage.getSizeY()/2f, 0, tile.xCoord - entity.posX, tile.yCoord - entity.posY, tile.zCoord - entity.posZ);
+					Tessellator.instance.draw();
+					//RenderHelper.renderCubeWithUV(tess, 0, 0, 0, 2, 55, 2, 0, 1, 0, 1);
+				}
 			}
 		}
-		
+
 		GL11.glColor3f(1f, 1f, 1f);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_LINE_STIPPLE);
