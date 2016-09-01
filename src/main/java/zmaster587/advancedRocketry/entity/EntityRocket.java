@@ -58,6 +58,7 @@ import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.PacketID;
 import zmaster587.libVulpes.api.IDismountHandler;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.gui.CommonResources;
@@ -110,7 +111,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		OPENPLANETSELECTION,
 		SENDPLANETDATA,
 		DISCONNECTINFRASTRUCTURE,
-		CONNECTINFRASTRUCTURE
+		CONNECTINFRASTRUCTURE,
+		ROCKETLANDEVENT
 	}
 
 	public EntityRocket(World p_i1582_1_) {
@@ -402,7 +404,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				EntityPlayer player = (EntityPlayer)this.riddenByEntity;
 				//Deorbiting
 				MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketDeOrbitingEvent(this));
-
+				PacketHandler.sendToNearby(new PacketEntity(this, (byte)PacketType.ROCKETLANDEVENT.ordinal()), worldObj.provider.dimensionId, (int)posX, (int)posY, (int)posZ, 64);
+				
 				if(player instanceof EntityPlayer)
 					PacketHandler.sendToPlayer(new PacketEntity((INetworkEntity)this,(byte)PacketType.FORCEMOUNT.ordinal()), player);
 			}
@@ -467,7 +470,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 				//Check to see if it's landed
 				if((isInOrbit() || !burningFuel) && isInFlight() && lastPosY + prevMotion != this.posY) {
-					MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketLandedEvent(this)); //TODO: send to client
+					MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketLandedEvent(this));
+					PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, (byte)PacketType.ROCKETLANDEVENT.ordinal()), this);
 					this.setInFlight(false);
 					this.setInOrbit(false);
 				}
@@ -952,6 +956,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				((IInfrastructure)tile).unlinkRocket();
 				connectedInfrastructure.remove(tile);
 			}
+		}
+		else if(id == PacketType.ROCKETLANDEVENT.ordinal() && worldObj.isRemote) {
+			MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketLandedEvent(this));
 		}
 		else if(id > 100) {
 			TileEntity tile = storage.getInventoryTiles().get(id - 100 - tilebuttonOffset);

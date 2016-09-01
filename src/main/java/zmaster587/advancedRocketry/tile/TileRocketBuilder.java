@@ -360,7 +360,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	public void assembleRocket() {
 
-		if(bbCache == null)
+		if(bbCache == null || worldObj.isRemote)
 			return;
 		//Need to scan again b/c something may have changed
 		scanRocket(worldObj, xCoord, yCoord, zCoord, bbCache);

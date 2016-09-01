@@ -5,6 +5,7 @@ import java.util.Iterator;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IInfrastructure;
+import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.api.StatsRocket;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
@@ -12,8 +13,11 @@ import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.entity.EntityRocket.PacketType;
 import zmaster587.advancedRocketry.mission.MissionGasCollection;
 import zmaster587.advancedRocketry.util.StorageChunk;
+import zmaster587.libVulpes.network.PacketEntity;
+import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.client.Minecraft;
@@ -79,8 +83,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			while(connectedTiles.hasNext()) {
 				IInfrastructure i = connectedTiles.next();
 				if(i.disconnectOnLiftOff()) {
-					i.unlinkRocket();
-					infrastructureCoords.remove(new BlockPosition(((TileEntity)i).xCoord, ((TileEntity)i).yCoord, ((TileEntity)i).zCoord));
+					disconnectInfrastructure(i);
 					connectedTiles.remove();
 				}
 			}
@@ -112,8 +115,8 @@ public class EntityStationDeployedRocket extends EntityRocket {
 						float xVel, zVel;
 
 						for(int i = 0; i < 4; i++) {
-							xVel = (1-xMult)*((this.rand.nextFloat() - 0.5f)/8f) + xMult*-.75f;
-							zVel = (1-zMult)*((this.rand.nextFloat() - 0.5f)/8f) + zMult*-.75f;
+							xVel = (1-xMult)*((this.rand.nextFloat() - 0.5f)/8f) + xMult*-.05f;
+							zVel = (1-zMult)*((this.rand.nextFloat() - 0.5f)/8f) + zMult*-.05f;
 
 							AdvancedRocketry.proxy.spawnParticle("rocketFlame", worldObj, this.posX + vec.x, this.posY + vec.y, this.posZ +vec.z, xVel,(this.rand.nextFloat() - 0.5f)/8f, zVel);
 
@@ -153,7 +156,11 @@ public class EntityStationDeployedRocket extends EntityRocket {
 					if(!worldObj.isRemote) {
 						this.setInFlight(false);
 						this.setInOrbit(false);
+						MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketLandedEvent(this));
+						PacketHandler.sendToNearby(new PacketEntity(this, (byte)PacketType.ROCKETLANDEVENT.ordinal()), worldObj.provider.dimensionId, (int)posX, (int)posY, (int)posZ, 64);
+						//PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, (byte)PacketType.ROCKETLANDEVENT.ordinal()), this);
 					}
+					
 					this.motionY = 0;
 					this.setPosition(launchLocation.x + (storage.getSizeX() % 2 == 0 ? 0 : 0.5f), launchLocation.y, launchLocation.z  + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5f));
 				}

@@ -46,10 +46,6 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 		zMax = zMin = zCurrent;
 		int xSize, zSize;
 
-
-		if(world.isRemote)
-			return null;
-
 		yMax = ZUtils.getContinuousBlockLength(world, ForgeDirection.UP, this.xCoord, this.yCoord + 1, this.zCoord, MAX_SIZE_Y, AdvancedRocketryBlocks.blockStructureTower);
 
 		//Get min and maximum Z/X bounds
@@ -103,7 +99,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 
 	public void assembleRocket() {
 
-		if(bbCache == null)
+		if(bbCache == null || worldObj.isRemote)
 			return;
 		//Need to scan again b/c something may have changed
 		scanRocket(worldObj, xCoord, yCoord, zCoord, bbCache);
