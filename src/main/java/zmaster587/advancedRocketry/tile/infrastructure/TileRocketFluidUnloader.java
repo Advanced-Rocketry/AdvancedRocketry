@@ -9,72 +9,76 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.mission.IMission;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
+import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.items.ItemLinker;
-import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 
-public class TileRocketUnloader extends TileInventoryHatch implements IInfrastructure {
+public class TileRocketFluidUnloader extends TileFluidHatch implements IInfrastructure {
+
 	EntityRocket rocket;
-	
-	public TileRocketUnloader() {
+
+	public TileRocketFluidUnloader() {
+		super();
 	}
-	
-	public TileRocketUnloader(int size) {
+
+	public TileRocketFluidUnloader(int size) {
 		super(size);
 	}
-	
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		if(getMasterBlock() instanceof TileRocketBuilder)
+			((TileRocketBuilder)getMasterBlock()).removeConnectedInfrastructure(this);
+	}
+
 	@Override
 	public String getModularInventoryName() {
-		return "tile.loader.2.name";
+		return "tile.loader.3.name";
 	}
-	
+
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
 
 		//Move a stack of items
 		if(rocket != null ) {
-			List<TileEntity> tiles = rocket.storage.getInventoryTiles();
-			boolean foundStack = false;
-			boolean rocketContainsNoItems = true;
-			out:
-				//Function returns if something can be moved
-				for(TileEntity tile : tiles) {
-					if(tile instanceof IInventory && !(tile instanceof TileGuidanceComputer)) {
-						IInventory inv = ((IInventory)tile);
-						for(int i = 0; i < inv.getSizeInventory(); i++) {
-							if(inv.getStackInSlot(i) != null) {
-								rocketContainsNoItems = false;
-								//Loop though this inventory's slots and find a suitible one
-								for(int j = 0; j < getSizeInventory(); j++) {
-									if(getStackInSlot(j) == null) {
-										inventory.setInventorySlotContents(j, inv.getStackInSlot(i));
-										inv.setInventorySlotContents(i,null);
-										break out;
-									}
-									else if(inv.getStackInSlot(i) != null && isItemValidForSlot(j, inv.getStackInSlot(i))) {
-										ItemStack stack2 = inv.decrStackSize(i, getStackInSlot(j).getMaxStackSize() - getStackInSlot(j).stackSize);
-										getStackInSlot(j).stackSize += stack2.stackSize;
-										if(inv.getStackInSlot(i) == null)
-											break out;
-										foundStack = true;
-									}
-								}
-							}
-							if(foundStack)
-								break out;
-						}
+			List<TileEntity> tiles = rocket.storage.getFluidTiles();
+			boolean rocketContainsItems = false;
+			//Function returns if something can be moved
+			for(TileEntity tile : tiles) {
+				IFluidHandler handler = (IFluidHandler)tile;
+
+				if(handler.drain(ForgeDirection.DOWN, 1, false) != null)
+					rocketContainsItems = true;
+				
+				FluidStack stack = fluidTank.getFluid();
+				if(stack == null) {
+					this.fill(ForgeDirection.UNKNOWN, handler.drain(ForgeDirection.DOWN, fluidTank.getCapacity(), true), true);
+				}
+				else {
+					stack = stack.copy();
+					stack.amount = fluidTank.getCapacity() - fluidTank.getFluidAmount();
+					
+					if(stack.amount != 0) {
+						this.fill(ForgeDirection.UNKNOWN, handler.drain(ForgeDirection.DOWN, stack, true), true);
 					}
 				}
+			}
 
 			//Update redstone state
-			((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj, xCoord, yCoord, zCoord, rocketContainsNoItems);
+			((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj, xCoord, yCoord, zCoord, !rocketContainsItems);
 
 		}
 	}
@@ -108,8 +112,9 @@ public class TileRocketUnloader extends TileInventoryHatch implements IInfrastru
 		rocket = null;
 		((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj, xCoord, yCoord, zCoord, false);
 		//On unlink prevent the tile from ticking anymore
+
 		//if(!worldObj.isRemote)
-			//worldObj.loadedTileEntityList.remove(this);
+		//worldObj.loadedTileEntityList.remove(this);
 	}
 
 	@Override
@@ -121,8 +126,13 @@ public class TileRocketUnloader extends TileInventoryHatch implements IInfrastru
 	public boolean linkRocket(EntityRocketBase rocket) {
 		//On linked allow the tile to tick
 		//if(!worldObj.isRemote)
-			//worldObj.loadedTileEntityList.add(this);
+		//worldObj.loadedTileEntityList.add(this);
 		this.rocket = (EntityRocket) rocket;
+		return true;
+	}
+
+	@Override
+	public boolean canUpdate() {
 		return true;
 	}
 
@@ -137,16 +147,12 @@ public class TileRocketUnloader extends TileInventoryHatch implements IInfrastru
 	}
 
 	@Override
-	public boolean canUpdate() {
-		return true;
-	}
-	
-	@Override
 	public int getMaxLinkDistance() {
 		return 32;
 	}
-	
+
 	public boolean canRenderConnection() {
 		return true;
 	}
+
 }

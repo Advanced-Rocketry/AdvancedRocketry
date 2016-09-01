@@ -1,9 +1,13 @@
 package zmaster587.advancedRocketry.world.util;
 
+import zmaster587.advancedRocketry.api.EntityRocketBase;
+import zmaster587.advancedRocketry.network.PacketStorageTileUpdate;
 import zmaster587.advancedRocketry.util.StorageChunk;
+import zmaster587.libVulpes.network.PacketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -27,6 +31,16 @@ public class WorldDummy extends World {
 	@Override
 	public Block getBlock(int x, int y, int z) {
 		return storage.getBlock(x, y, z);
+	}
+
+	@Override
+	public void markBlockForUpdate(int x, int y,
+			int z) {
+		super.markBlockForUpdate(x, y, z);
+		if(storage.getEntity() != null && !storage.getEntity().worldObj.isRemote) {
+			if(getTileEntity(x, y, z) != null && getTileEntity(x, y, z).getDescriptionPacket() instanceof S35PacketUpdateTileEntity )
+				PacketHandler.sendToPlayersTrackingEntity(new PacketStorageTileUpdate(storage.getEntity(), storage, getTileEntity(x, y, z)), storage.getEntity());
+		}
 	}
 
 	@Override

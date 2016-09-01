@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.IStorageChunk;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
@@ -37,6 +38,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.IFluidHandler;
 
 public class StorageChunk implements IBlockAccess, IStorageChunk {
 
@@ -47,17 +49,20 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 	ArrayList<TileEntity> tileEntities;
 
-	//To store inventories (just chests right now)
-	ArrayList<TileEntity> usableTiles;
+	//To store inventories (All inventories)
+	ArrayList<TileEntity> inventoryTiles;
+	ArrayList<TileEntity> liquidTiles;
 
 	public WorldDummy world;
+	private Entity entity;
 
 	public StorageChunk() {
 		sizeX = 0;
 		sizeY = 0;
 		sizeZ = 0;
 		tileEntities = new ArrayList<TileEntity>();
-		usableTiles = new ArrayList<TileEntity>();
+		inventoryTiles = new ArrayList<TileEntity>();
+		liquidTiles = new ArrayList<TileEntity>();
 
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
 	}
@@ -71,11 +76,21 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		sizeZ = zSize;
 
 		tileEntities = new ArrayList<TileEntity>();
-		usableTiles = new ArrayList<TileEntity>();
+		inventoryTiles = new ArrayList<TileEntity>();
+		liquidTiles = new ArrayList<TileEntity>();
 
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
 	}
 
+	public void setEntity(EntityRocketBase entity) {
+		this.entity = entity;
+		world.isRemote = entity.worldObj.isRemote;
+	}
+	
+	public EntityRocketBase getEntity() {
+		return (EntityRocketBase)entity;
+	}
+	
 	@Override
 	public int getSizeX() { return sizeX; }
 	
@@ -89,9 +104,16 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 		return tileEntities;
 	}
+	
+	/**
+	 * @return list of fluid handing tiles on the rocket all also implement IFluidHandler
+	 */
+	public List<TileEntity> getFluidTiles() {
+		return liquidTiles;
+	}
 
-	public List<TileEntity> getUsableTiles() {
-		return usableTiles;
+	public List<TileEntity> getInventoryTiles() {
+		return inventoryTiles;
 	}
 
 	@Override
@@ -190,10 +212,14 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	}
 
 
-	private static boolean isUsableBlock(TileEntity tile) {
+	private static boolean isInventoryBlock(TileEntity tile) {
 		return tile instanceof IInventory;
 	}
 
+	private static boolean isLiquidContainerBlock(TileEntity tile) {
+		return tile instanceof IFluidHandler;
+	}
+	
 	public void readFromNBT(NBTTagCompound nbt) {
 		sizeX = nbt.getInteger("xSize");
 		sizeY = nbt.getInteger("ySize");
@@ -203,7 +229,8 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		metas = new short[sizeX][sizeY][sizeZ];
 
 		tileEntities.clear();
-		usableTiles.clear();
+		inventoryTiles.clear();
+		liquidTiles.clear();
 
 		int[] blockId = nbt.getIntArray("idList");
 		int[] metasId = nbt.getIntArray("metaList");
@@ -225,11 +252,16 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 				TileEntity tile = TileEntity.createAndLoadEntity(tileList.getCompoundTagAt(i));
 				tile.setWorldObj(world);
 
-				if(isUsableBlock(tile)) {
-					usableTiles.add(tile);
+				if(isInventoryBlock(tile)) {
+					inventoryTiles.add(tile);
 				}
 
+				if(isLiquidContainerBlock(tile)) {
+					liquidTiles.add(tile);
+				}
+				
 				tileEntities.add(tile);
+				tile.setWorldObj(world);
 			} catch (Exception e) {
 				AdvancedRocketry.logger.warning("Rocket missing Tile (was a mod removed?)");
 			}
@@ -336,12 +368,16 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 						TileEntity newTile = TileEntity.createAndLoadEntity(nbt);
 
-						newTile.setWorldObj(world);
+						newTile.setWorldObj(ret.world);
 
-						if(isUsableBlock(newTile)) {
-							ret.usableTiles.add(newTile);
+						if(isInventoryBlock(newTile)) {
+							ret.inventoryTiles.add(newTile);
 						}
 
+						if(isLiquidContainerBlock(newTile)) {
+							ret.liquidTiles.add(newTile);
+						}
+						
 						ret.tileEntities.add(newTile);
 					}
 				}
@@ -605,9 +641,13 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 				tile.setWorldObj(world);
 				tileEntities.add(tile);
 
-				if(isUsableBlock(tile)) {
-					usableTiles.add(tile);
+				if(isInventoryBlock(tile)) {
+					inventoryTiles.add(tile);
 				}
+				
+				if(isLiquidContainerBlock(tile))
+					liquidTiles.add(tile);
+				tile.setWorldObj(world);
 
 			} catch(Exception e) {
 				e.printStackTrace();

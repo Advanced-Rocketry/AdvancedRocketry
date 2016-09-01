@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.tile;
+package zmaster587.advancedRocketry.tile.infrastructure;
 
 import java.util.List;
 
@@ -14,6 +14,8 @@ import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.mission.IMission;
+import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
+import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
@@ -46,7 +48,7 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 
 		//Move a stack of items
 		if(rocket != null ) {
-			List<TileEntity> tiles = rocket.storage.getUsableTiles();
+			List<TileEntity> tiles = rocket.storage.getInventoryTiles();
 			boolean foundStack = false;
 			boolean rocketContainsItems = false;
 			out:

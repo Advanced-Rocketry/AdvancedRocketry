@@ -6,6 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
+import zmaster587.advancedRocketry.world.util.WorldDummy;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.util.IAdjBlockUpdate;
 
@@ -26,7 +27,7 @@ public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
 	}
 
 	private void checkForUpdate() {
-		if(fluidChanged && worldObj.getTotalWorldTime() - lastUpdateTime > MAX_UPDATE) {
+		if(fluidChanged && worldObj instanceof WorldDummy || worldObj.getTotalWorldTime() - lastUpdateTime > MAX_UPDATE) {
 			this.markDirty();
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			lastUpdateTime = worldObj.getTotalWorldTime();

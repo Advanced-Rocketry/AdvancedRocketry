@@ -10,10 +10,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import zmaster587.advancedRocketry.tile.TileRocketLoader;
-import zmaster587.advancedRocketry.tile.TileRocketUnloader;
 import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
+import zmaster587.advancedRocketry.tile.infrastructure.TileRocketFluidLoader;
+import zmaster587.advancedRocketry.tile.infrastructure.TileRocketFluidUnloader;
+import zmaster587.advancedRocketry.tile.infrastructure.TileRocketLoader;
+import zmaster587.advancedRocketry.tile.infrastructure.TileRocketUnloader;
 import zmaster587.libVulpes.block.multiblock.BlockHatch;
 
 public class BlockARHatch extends BlockHatch {
@@ -22,13 +24,15 @@ public class BlockARHatch extends BlockHatch {
 		super(material);
 	}
 
-	IIcon data, satellite;
+	IIcon data, satellite, fluidLoader, fluidUnloader;
 	
 	@Override
 	public void registerBlockIcons(IIconRegister iconRegister) {
 		super.registerBlockIcons(iconRegister);
 		data = iconRegister.registerIcon("advancedrocketry:dataHatch");
 		satellite = iconRegister.registerIcon("advancedrocketry:satelliteBay");
+		fluidLoader = iconRegister.registerIcon("libvulpes:fluidInput");
+		fluidUnloader = iconRegister.registerIcon("libvulpes:fluidOutput");
 	}
 	
 	@Override
@@ -39,7 +43,11 @@ public class BlockARHatch extends BlockHatch {
 			return satellite;
 		}else if((meta & 7) == 2) {
 			return output;
+		}else if((meta & 7) == 4) {
+			return fluidUnloader;
 		}
+		else if((meta & 7) == 5)
+			return fluidLoader;
 		else
 			return blockIcon;
 	}
@@ -51,6 +59,8 @@ public class BlockARHatch extends BlockHatch {
 		list.add(new ItemStack(item, 1, 1));
 		list.add(new ItemStack(item, 1, 2));
 		list.add(new ItemStack(item, 1, 3));
+		list.add(new ItemStack(item, 1, 4));
+		list.add(new ItemStack(item, 1, 5));
 	}
 	
 	@Override
@@ -64,6 +74,10 @@ public class BlockARHatch extends BlockHatch {
 			return new TileRocketUnloader(4);
 		else if((metadata & 7) == 3)
 			return new TileRocketLoader(4);
+		else if((metadata & 7) == 4)
+			return new TileRocketFluidUnloader();
+		else if((metadata & 7) == 5)
+			return new TileRocketFluidLoader();
 		
 		return null;
 	}

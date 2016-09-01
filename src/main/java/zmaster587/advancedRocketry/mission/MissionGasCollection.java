@@ -10,6 +10,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IInfrastructure;
@@ -37,6 +41,16 @@ public class MissionGasCollection extends MissionResourceCollection {
 	
 	@Override
 	public void onMissionComplete() {
+		
+		int amountOfGas = 128000;
+		Fluid type = FluidRegistry.getFluid("hydrogen");
+		//Fill gas tanks
+		for(TileEntity tile : this.rocketStorage.getFluidTiles()) {
+			amountOfGas -= ((IFluidHandler)tile).fill(ForgeDirection.UNKNOWN, new FluidStack(type, amountOfGas), true);
+		
+			if(amountOfGas == 0)
+				break;
+		}
 		
 		EntityStationDeployedRocket rocket = new EntityStationDeployedRocket(DimensionManager.getWorld(launchDimension), rocketStorage, rocketStats, x, y, z);
 

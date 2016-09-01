@@ -108,6 +108,7 @@ import zmaster587.advancedRocketry.network.PacketSatellite;
 import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
+import zmaster587.advancedRocketry.network.PacketStorageTileUpdate;
 import zmaster587.advancedRocketry.satellite.SatelliteBiomeChanger;
 import zmaster587.advancedRocketry.satellite.SatelliteComposition;
 import zmaster587.advancedRocketry.satellite.SatelliteDensity;
@@ -124,6 +125,10 @@ import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.tile.infrastructure.TileEntityFuelingStation;
 import zmaster587.advancedRocketry.tile.infrastructure.TileEntityMoniteringStation;
+import zmaster587.advancedRocketry.tile.infrastructure.TileRocketFluidLoader;
+import zmaster587.advancedRocketry.tile.infrastructure.TileRocketFluidUnloader;
+import zmaster587.advancedRocketry.tile.infrastructure.TileRocketLoader;
+import zmaster587.advancedRocketry.tile.infrastructure.TileRocketUnloader;
 import zmaster587.advancedRocketry.tile.multiblock.*;
 import zmaster587.advancedRocketry.tile.multiblock.energy.TileMicrowaveReciever;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileChemicalReactor;
@@ -302,6 +307,7 @@ public class AdvancedRocketry {
 		PacketHandler.addDiscriminator(PacketSpaceStationInfo.class);
 		PacketHandler.addDiscriminator(PacketAtmSync.class);
 		PacketHandler.addDiscriminator(PacketBiomeIDChange.class);
+		PacketHandler.addDiscriminator(PacketStorageTileUpdate.class);
 
 		//if(zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods)
 		MinecraftForge.EVENT_BUS.register(this);
@@ -781,6 +787,8 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileLandingPad.class, "ARLandingPad");
 		GameRegistry.registerTileEntity(TileStationDeployedAssembler.class, "ARStationDeployableRocketAssembler");
 		GameRegistry.registerTileEntity(TileFluidTank.class, "ARFluidTank");
+		GameRegistry.registerTileEntity(TileRocketFluidUnloader.class, "ARFluidUnloader");
+		GameRegistry.registerTileEntity(TileRocketFluidLoader.class, "ARFluidLoader");
 		
 		//OreDict stuff
 		OreDictionary.registerOre("waferSilicon", new ItemStack(AdvancedRocketryItems.itemWafer,1,0));

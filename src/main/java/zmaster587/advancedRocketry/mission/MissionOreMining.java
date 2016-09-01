@@ -62,8 +62,8 @@ public class MissionOreMining extends MissionResourceCollection {
 						stacks[i] = new ItemStack(Blocks.stone,64);
 					}
 
-					for(int i = 0,  g = 0; i < rocketStorage.getUsableTiles().size(); i++) {
-						IInventory tile = (IInventory) rocketStorage.getUsableTiles().get(i);
+					for(int i = 0,  g = 0; i < rocketStorage.getInventoryTiles().size(); i++) {
+						IInventory tile = (IInventory) rocketStorage.getInventoryTiles().get(i);
 
 
 						for(int offset = 0; offset < tile.getSizeInventory() && g < totalStacks; offset++, g++) {

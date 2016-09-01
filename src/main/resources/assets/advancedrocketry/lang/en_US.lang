@@ -21,6 +21,8 @@ tile.loader.0.name=Data Bus
 tile.loader.1.name=Satellite Bay
 tile.loader.2.name=Rocket Unloader
 tile.loader.3.name=Rocket Loader
+tile.loader.4.name=Rocket Fluid Unloader
+tile.loader.5.name=Rocket Fluid Loader
 tile.observatory.name=Observatory
 tile.satelliteBuilder.name=Satellite Builder
 tile.rocket.name=Liquid Fueled Engine
@@ -78,6 +80,8 @@ tile.suitWorkStation.name=Suit Workstation
 tile.orientationControl.name=Orientation Controller
 tile.biomeScanner.name=Biome Scanner
 tile.atmoshereTerraformer.name=Atmosphere Terraformer
+tile.deployableRocketAssembler.name=Unmanned Vehicle Assembler
+tile.pressurizedTank.name=Pressurized Tank
 
 tile.Dilithium.name=Dilithium Ore
 
