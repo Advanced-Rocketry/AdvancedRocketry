@@ -26,4 +26,6 @@ public interface IMission {
 	public int getOriginatingDimention();
 
 	public void unlinkInfrastructure(IInfrastructure tile);
+
+	int getTimeRemainingInSeconds();
 }

@@ -38,6 +38,7 @@ import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import zmaster587.advancedRocketry.api.*;
+import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
@@ -51,6 +52,7 @@ import zmaster587.advancedRocketry.block.BlockDoor2;
 import zmaster587.advancedRocketry.block.BlockElectricMushroom;
 import zmaster587.advancedRocketry.block.BlockFluid;
 import zmaster587.advancedRocketry.block.BlockGeneric;
+import zmaster587.advancedRocketry.block.BlockIntake;
 import zmaster587.advancedRocketry.block.BlockLandingPad;
 import zmaster587.advancedRocketry.block.BlockLaser;
 import zmaster587.advancedRocketry.block.BlockLightSource;
@@ -238,6 +240,7 @@ public class AdvancedRocketry {
 		final String MOD_INTERACTION = "Mod Interaction";
 		final String PLANET = "Planet";
 		final String ASTEROID = "Asteroid";
+		final String GAS_MINING = "GasMining";
 		final String PERFORMANCE = "Performance";
 
 		AtmosphereVacuum.damageValue = (int) config.get(Configuration.CATEGORY_GENERAL, "vacuumDamage", 1, "Amount of damage taken every second in a vacuum").getInt();
@@ -262,7 +265,8 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.atmosphereHandleBitMask = config.get(PERFORMANCE, "atmosphereCalculationMethod", 0, "BitMask: 0: no threading, radius based; 1: threading, radius based (EXP); 2: no threading volume based; 3: threading volume based (EXP)").getInt();
 		zmaster587.advancedRocketry.api.Configuration.advancedVFX = config.get(PERFORMANCE, "advancedVFX", true, "Advanced visual effects").getBoolean();
 
-
+		zmaster587.advancedRocketry.api.Configuration.gasCollectionMult = config.get(GAS_MINING, "gasMissionMultiplier", 1.0, "Multiplier for the amount of time gas collection missions take").getDouble();
+		
 		zmaster587.advancedRocketry.api.Configuration.asteroidMiningMult = config.get(ASTEROID, "miningMissionMultiplier", 1.0, "Multiplier changing how much total material is brought back from a mining mission").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres = config.get(ASTEROID, "standardOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone"}, "List of oredictionary names of ores allowed to spawn in asteriods").getStringList();
 
@@ -513,7 +517,7 @@ public class AdvancedRocketry {
 		((BlockTile)AdvancedRocketryBlocks.blockSuitWorkStation).setSideTexture("Advancedrocketry:panelSideWorkStation");
 		((BlockTile)AdvancedRocketryBlocks.blockSuitWorkStation).setFrontTexture("Advancedrocketry:panelSideWorkStation");
 
-
+		AdvancedRocketryBlocks.blockIntake = new BlockIntake(Material.iron).setBlockTextureName("advancedrocketry:intake").setBlockName("gasIntake").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockPressureTank = new BlockPressurizedFluidTank(Material.iron).setBlockName("pressurizedTank").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockSolarPanel = new BlockSolarPanel(Material.iron).setBlockName("solarPanel").setCreativeTab(tabAdvRocketry).setHardness(3f);
 
@@ -542,9 +546,20 @@ public class AdvancedRocketry {
 			AdvancedRocketryFluids.fluidRocketFuel = FluidRegistry.getFluid("rocketFuel");
 		}
 
+		AdvancedRocketryFluids.fluidNitrogen = new FluidColored("nitrogen", 0x97a7e7);
+		if(!FluidRegistry.registerFluid(AdvancedRocketryFluids.fluidNitrogen))
+		{
+			AdvancedRocketryFluids.fluidRocketFuel = FluidRegistry.getFluid("nitrogen");
+		}		
+		
+		AtmosphereRegister.getInstance().registerHarvestableFluid(AdvancedRocketryFluids.fluidNitrogen);
+		AtmosphereRegister.getInstance().registerHarvestableFluid(AdvancedRocketryFluids.fluidHydrogen);
+		
 		AdvancedRocketryBlocks.blockOxygenFluid = new BlockFluid(AdvancedRocketryFluids.fluidOxygen, Material.water).setBlockName("oxygenFluidBlock").setCreativeTab(CreativeTabs.tabMisc);
 		AdvancedRocketryBlocks.blockHydrogenFluid = new BlockFluid(AdvancedRocketryFluids.fluidHydrogen, Material.water).setBlockName("hydrogenFluidBlock").setCreativeTab(CreativeTabs.tabMisc);
 		AdvancedRocketryBlocks.blockFuelFluid = new BlockFluid(AdvancedRocketryFluids.fluidRocketFuel, Material.water).setBlockName("rocketFuelBlock").setCreativeTab(CreativeTabs.tabMisc);
+		AdvancedRocketryBlocks.blockNitrogenFluid = new BlockFluid(AdvancedRocketryFluids.fluidNitrogen, Material.water).setBlockName("nitrogenFluidBlock").setCreativeTab(CreativeTabs.tabMisc);
+		
 
 		//Cables
 		//AdvancedRocketryBlocks.blockFluidPipe = new BlockLiquidPipe(Material.iron).setBlockName("liquidPipe").setCreativeTab(CreativeTabs.tabTransport);
@@ -600,6 +615,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockOxygenFluid,ItemFluid.class, AdvancedRocketryBlocks.blockOxygenFluid.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockHydrogenFluid,ItemFluid.class, AdvancedRocketryBlocks.blockHydrogenFluid.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockFuelFluid, ItemFluid.class, AdvancedRocketryBlocks.blockFuelFluid.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockNitrogenFluid, ItemFluid.class, AdvancedRocketryBlocks.blockNitrogenFluid.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockVitrifiedSand, AdvancedRocketryBlocks.blockVitrifiedSand.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockCharcoalLog, AdvancedRocketryBlocks.blockCharcoalLog.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockElectricMushroom, AdvancedRocketryBlocks.blockElectricMushroom.getUnlocalizedName());
@@ -615,6 +631,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockAtmosphereTerraformer, AdvancedRocketryBlocks.blockAtmosphereTerraformer.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockDeployableRocketBuilder, AdvancedRocketryBlocks.blockDeployableRocketBuilder.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockPressureTank, AdvancedRocketryBlocks.blockPressureTank.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockIntake, AdvancedRocketryBlocks.blockIntake.getUnlocalizedName());
 		
 		//TODO, use different mechanism to enable/disable drill
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)

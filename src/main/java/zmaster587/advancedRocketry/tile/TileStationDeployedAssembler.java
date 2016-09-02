@@ -6,9 +6,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.IFuelTank;
 import zmaster587.advancedRocketry.api.IInfrastructure;
+import zmaster587.advancedRocketry.api.IIntake;
 import zmaster587.advancedRocketry.api.IMiningDrill;
 import zmaster587.advancedRocketry.api.IRocketEngine;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
@@ -191,6 +194,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 
 		boolean hasSatellite = false;
 		boolean hasGuidance = false;
+		int fluidCapacity = 0;
 
 		if(verifyScan(bb, world)) {
 			for(int yCurr = (int) bb.minY; yCurr <= bb.maxY; yCurr++) {
@@ -199,6 +203,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 
 						if(!world.isAirBlock(xCurr, yCurr, zCurr)) {
 							Block block = world.getBlock(xCurr, yCurr, zCurr);
+							int meta = world.getBlockMetadata(xCurr, yCurr, zCurr);
 							numBlocks++;
 							//If rocketEngine increaseThrust
 							if(block instanceof IRocketEngine) {
@@ -222,12 +227,21 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 							if(block instanceof IMiningDrill) {
 								drillPower += ((IMiningDrill)block).getMiningSpeed(world, xCurr, yCurr, zCurr);
 							}
+							
+							if(block instanceof IIntake) {
+								stats.setStatTag("intakePower", (int)stats.getStatTag("intakePower") + ((IIntake)block).getIntakeAmt(meta));
+							}
 
 							TileEntity tile= world.getTileEntity(xCurr, yCurr, zCurr);
 							if(tile instanceof TileSatelliteHatch)
 								hasSatellite = true;
 							if(tile instanceof TileGuidanceComputer)
 								hasGuidance = true;
+							
+							if(tile instanceof IFluidHandler) {
+								for(FluidTankInfo info : ((IFluidHandler)tile).getTankInfo(ForgeDirection.UNKNOWN))
+									fluidCapacity += info.capacity;
+							}
 						}
 					}
 				}
@@ -237,19 +251,25 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 			stats.setThrust(thrust);
 			stats.setFuelCapacity(FuelType.LIQUID,fuel);
 			stats.setDrillingPower(drillPower);
+			stats.setStatTag("liquidCapacity", fluidCapacity);
 
 			//Set status
 			//TODO: warn if seat OR satellite missing
 			//if(!stats.hasSeat() && !hasSatellite) 
 			//status = ErrorCodes.NOSEAT;
 			/*else*/
-			if(getFuel() < getNeededFuel()) 
+			if(getFuel() < getNeededFuel()*(1 + fluidCapacity/1000)) 
 				status = ErrorCodes.NOFUEL;
-			else if(getThrust() < getNeededThrust()/100f) 
+			else if(getThrust() < getNeededThrust()) 
 				status = ErrorCodes.NOENGINES;
 			else
 				status = ErrorCodes.SUCCESS;
 		}
+	}
+	
+	@Override
+	public float getNeededFuel() {
+		return getAcceleration() > 0 ? stats.getFuelRate(FuelType.LIQUID) : 0;
 	}
 
 	//No additional scanning is needed

@@ -112,7 +112,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		SENDPLANETDATA,
 		DISCONNECTINFRASTRUCTURE,
 		CONNECTINFRASTRUCTURE,
-		ROCKETLANDEVENT
+		ROCKETLANDEVENT,
+		MENU_CHANGE,
+		UPDATE_ATM
 	}
 
 	public EntityRocket(World p_i1582_1_) {
@@ -471,7 +473,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				//Check to see if it's landed
 				if((isInOrbit() || !burningFuel) && isInFlight() && lastPosY + prevMotion != this.posY) {
 					MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketLandedEvent(this));
-					PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, (byte)PacketType.ROCKETLANDEVENT.ordinal()), this);
+					//PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, (byte)PacketType.ROCKETLANDEVENT.ordinal()), this);
 					this.setInFlight(false);
 					this.setInOrbit(false);
 				}

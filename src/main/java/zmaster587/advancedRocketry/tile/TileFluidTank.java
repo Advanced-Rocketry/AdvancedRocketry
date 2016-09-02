@@ -93,11 +93,11 @@ public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
 		return this.drain(from, resource.amount, doDrain);
 	}
 
-	public IFluidHandler getFluidTankInDirection(ForgeDirection direction) {
+	public TileFluidTank getFluidTankInDirection(ForgeDirection direction) {
 		TileEntity tile = worldObj.getTileEntity(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ);
 
 		if(tile instanceof TileFluidTank) {
-			return ((IFluidHandler) tile);
+			return ((TileFluidTank) tile);
 		}
 		return null;
 	}
@@ -132,15 +132,15 @@ public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
 
 	@Override
 	public void onAdjacentBlockUpdated() {
-		IFluidHandler tank = getFluidTankInDirection(ForgeDirection.UP);
+		TileFluidTank tank = getFluidTankInDirection(ForgeDirection.UP);
 
 		if(tank != null && tank.getTankInfo(ForgeDirection.UNKNOWN)[0].fluid != null) {
 			if(fluidTank.getFluid() == null) {
-				fluidTank.fill(tank.drain(ForgeDirection.UNKNOWN, fluidTank.getCapacity(), true), true);
+				fluidTank.fill(tank.fluidTank.drain(fluidTank.getCapacity(), true), true);
 			}
 			else if(tank.getTankInfo(ForgeDirection.UNKNOWN)[0].fluid.getFluidID() == fluidTank.getFluid().getFluidID()) {
 				fluidTank.fill(tank.drain(ForgeDirection.UNKNOWN, fluidTank.getCapacity() - fluidTank.getFluidAmount(), false), true);
-				tank.drain(ForgeDirection.UNKNOWN, fluidTank.getCapacity() - fluidTank.getFluidAmount(), true);
+				tank.fluidTank.drain(fluidTank.getCapacity() - fluidTank.getFluidAmount(), true);
 			}
 
 			this.markDirty();

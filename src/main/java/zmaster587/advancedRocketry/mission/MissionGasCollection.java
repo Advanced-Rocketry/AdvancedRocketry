@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
@@ -26,39 +27,44 @@ import zmaster587.libVulpes.util.BlockPosition;
 
 public class MissionGasCollection extends MissionResourceCollection {
 
+
+	Fluid gasFluid;
 	public MissionGasCollection() {
 		super();
 	}
 
-	public MissionGasCollection(long l, EntityRocket entityRocket, LinkedList<IInfrastructure> connectedInfrastructure) {
-		super(l, entityRocket, connectedInfrastructure);
+	public MissionGasCollection(long l, EntityRocket entityRocket, LinkedList<IInfrastructure> connectedInfrastructure, Fluid gasFluid) {
+		super((long) (l*Configuration.gasCollectionMult), entityRocket, connectedInfrastructure);
+		this.gasFluid = gasFluid;
 	}
-	
+
 	@Override
 	public String getName() {
 		return LibVulpes.proxy.getLocalizedString("mission.gascollection.name");
 	}
-	
+
 	@Override
 	public void onMissionComplete() {
-		
-		int amountOfGas = 128000;
-		Fluid type = FluidRegistry.getFluid("hydrogen");
-		//Fill gas tanks
-		for(TileEntity tile : this.rocketStorage.getFluidTiles()) {
-			amountOfGas -= ((IFluidHandler)tile).fill(ForgeDirection.UNKNOWN, new FluidStack(type, amountOfGas), true);
-		
-			if(amountOfGas == 0)
-				break;
-		}
-		
-		EntityStationDeployedRocket rocket = new EntityStationDeployedRocket(DimensionManager.getWorld(launchDimension), rocketStorage, rocketStats, x, y, z);
 
+		if((int)rocketStats.getStatTag("intakePower") > 0 && gasFluid != null) {
+			int amountOfGas = Integer.MAX_VALUE;
+			Fluid type = gasFluid;//FluidRegistry.getFluid("hydrogen");
+			//Fill gas tanks
+			for(TileEntity tile : this.rocketStorage.getFluidTiles()) {
+				amountOfGas -= ((IFluidHandler)tile).fill(ForgeDirection.UNKNOWN, new FluidStack(type, amountOfGas), true);
+
+				if(amountOfGas == 0)
+					break;
+			}
+		}
+
+		EntityStationDeployedRocket rocket = new EntityStationDeployedRocket(DimensionManager.getWorld(launchDimension), rocketStorage, rocketStats, x, y, z);
+		rocket.setFuelAmount(0);
 		World world = DimensionManager.getWorld(launchDimension);
 		rocket.readMissionPersistantNBT(missionPersistantNBT);
-		
+
 		ForgeDirection dir = rocket.forwardDirection;
-		
+
 		rocket.setPosition(dir.offsetX*64d + rocket.launchLocation.x + (rocketStorage.getSizeX() % 2 == 0 ? 0 : 0.5d), y, dir.offsetZ*64d + rocket.launchLocation.z + (rocketStorage.getSizeZ() % 2 == 0 ? 0 : 0.5d));
 		world.spawnEntityInWorld(rocket);
 		rocket.setInOrbit(true);
@@ -72,5 +78,17 @@ public class MissionGasCollection extends MissionResourceCollection {
 				rocket.linkInfrastructure(((IInfrastructure)tile));
 			}
 		}
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		nbt.setString("gas", gasFluid.getName());
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		gasFluid = FluidRegistry.getFluid(nbt.getString("gas"));
 	}
 }

@@ -150,6 +150,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	@Override
 	public boolean linkRocket(EntityRocketBase rocket) {
 		this.linkedRocket = rocket;
+		((BlockTileRedstoneEmitter)AdvancedRocketryBlocks.blockFuelingStation).setRedstoneState(worldObj, xCoord, yCoord, zCoord, linkedRocket.getFuelAmount() == linkedRocket.getFuelCapacity());
 		return true;
 	}
 

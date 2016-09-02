@@ -43,7 +43,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	EntityRocketBase linkedRocket;
 	IMission mission;
 	ModuleText missionText;
-	
+
 	int rocketHeight;
 	int velocity;
 	int fuelLevel, maxFuelLevel;
@@ -66,11 +66,11 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 			unlinkMission();
 		}
 	}
-	
+
 	@Override
 	public void onAdjacentBlockUpdated() {
-		if(worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) && linkedRocket != null) {
-				linkedRocket.launch();
+		if(!worldObj.isRemote && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) && linkedRocket != null) {
+			linkedRocket.launch();
 		}
 	}
 
@@ -158,14 +158,16 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 			NBTTagCompound nbt) {
 		if(id == 1) {
 			long idNum = nbt.getLong("id");
-			if(idNum == -1)
+			if(idNum == -1) {
 				mission = null;
+				setMissionText();
+			}
 			else {
 				SatelliteBase base = DimensionManager.getInstance().getSatellite(idNum);
 
 				if(base instanceof IMission) {
 					mission = (IMission)base;
-					missionText.setText(((SatelliteBase)mission).getName() + " Progress:");
+					setMissionText();
 				}
 			}
 		}
@@ -184,15 +186,13 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 		modules.add(new ModuleProgress(98, 4, 0, new IndicatorBarImage(2, 7, 12, 81, 17, 0, 6, 6, 1, 0, ForgeDirection.UP, TextureResources.rocketHud), this));
 		modules.add(new ModuleProgress(120, 14, 1, new IndicatorBarImage(2, 95, 12, 71, 17, 0, 6, 6, 1, 0, ForgeDirection.UP, TextureResources.rocketHud), this));
 		modules.add(new ModuleProgress(142, 14, 2, new ProgressBarImage(2, 173, 12, 71, 17, 6, 3, 69, 1, 1, ForgeDirection.UP, TextureResources.rocketHud), this));
-		
-		if(mission != null) {
-			missionText.setText(((SatelliteBase)mission).getName() + " Progress:");
-		}
-		
+
+		setMissionText();
+
 		modules.add(missionText);
-		modules.add(new ModuleProgress(30, 105, 3, TextureResources.progressToMission, this));
-		modules.add(new ModuleProgress(30, 115, 4, TextureResources.workMission, this));
-		modules.add(new ModuleProgress(30, 125, 5, TextureResources.progressFromMission, this));
+		modules.add(new ModuleProgress(30, 110, 3, TextureResources.progressToMission, this));
+		modules.add(new ModuleProgress(30, 120, 4, TextureResources.workMission, this));
+		modules.add(new ModuleProgress(30, 130, 5, TextureResources.progressFromMission, this));
 
 		if(!worldObj.isRemote) {
 			PacketHandler.sendToPlayer(new PacketMachine(this, (byte)1), player);
@@ -201,6 +201,19 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 		return modules;
 	}
 
+	private void setMissionText() {
+		if(mission != null) {
+			int time = mission.getTimeRemainingInSeconds();
+			int seconds = time % 60;
+			int minutes = (time/60) % 60;
+			int hours = time/3600;
+			
+			missionText.setText(((SatelliteBase)mission).getName() + " Progress: " + String.format("\n%02dhr:%02dm:%02ds", hours, minutes, seconds));
+		}
+		else
+			missionText.setText("Mission Progess: N/A");
+	}
+	
 	@Override
 	public void onInventoryButtonPressed(int buttonId) {
 		PacketHandler.sendToServer(new PacketMachine(this, (byte) (buttonId + 100)) );
@@ -231,7 +244,11 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 				return 0f;
 			return (float) Math.min(Math.max( 3f*(mission.getProgress(this.worldObj) - 0.666f), 0f), 1f);
 		}
-
+		
+		//keep text updated
+		if(worldObj.isRemote && mission != null)
+			setMissionText();
+		
 		return getProgress(id)/(float)getTotalProgress(id);
 	}
 
@@ -310,6 +327,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	@Override
 	public void unlinkMission() {
 		mission = null;
+		setMissionText();
 		PacketHandler.sendToNearby(new PacketMachine(this, (byte)1), worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 16);
 	}
 

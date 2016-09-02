@@ -73,4 +73,6 @@ public class Configuration {
 
 	public static boolean enableTerraforming;
 
+	public static double gasCollectionMult;
+
 }

@@ -9,6 +9,7 @@ import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.BlockPosition;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
@@ -85,6 +86,8 @@ public class RendererRocket extends Render {
 
 		GL11.glPopMatrix();
 
+		//Initial setup
+		
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float)x - halfx, (float)y, (float)z - halfz);
 		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
@@ -98,6 +101,7 @@ public class RendererRocket extends Render {
 					Block block  = storage.getBlock(xx, yy, zz);
 					if(block.canRenderInPass(MinecraftForgeClient.getRenderPass())) {
 						Tessellator.instance.startDrawingQuads();
+						//TOOD: fix lighting
 						RenderBlocks.getInstance().renderBlockByRenderType(block, xx, yy, zz);
 
 						Tessellator.instance.draw();

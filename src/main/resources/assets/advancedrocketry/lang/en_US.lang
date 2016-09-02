@@ -162,6 +162,7 @@ data.mass.name=Mass
 
 fluid.oxygen=Oxygen
 fluid.hydrogen=Hydrogen
+fluid.nitrogen=Nitrogen
 fluid.rocketFuel=Rocket Fuel
 
 mission.asteroidmining.name=Asteroid Mining

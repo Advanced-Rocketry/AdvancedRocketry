@@ -1,21 +1,28 @@
 package zmaster587.advancedRocketry.entity;
 
-import java.util.Iterator;
+import io.netty.buffer.ByteBuf;
 
+import java.util.Iterator;
+import java.util.List;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.api.StatsRocket;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
-import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
+import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.entity.EntityRocket.PacketType;
 import zmaster587.advancedRocketry.mission.MissionGasCollection;
 import zmaster587.advancedRocketry.util.StorageChunk;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleButton;
+import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.BlockPosition;
@@ -23,7 +30,6 @@ import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -33,12 +39,16 @@ public class EntityStationDeployedRocket extends EntityRocket {
 	public ForgeDirection launchDirection;
 	public ForgeDirection forwardDirection;
 	public BlockPosition launchLocation;
+	private ModuleText atmText;
+	private short gasId;
 	boolean coastMode;
 
 	public EntityStationDeployedRocket(World world) {
 		super(world);
 		launchDirection = ForgeDirection.DOWN;
 		launchLocation = new BlockPosition(0,0,0);
+		atmText = new ModuleText(182, 114, "", 0x2d2d2d);
+		gasId = 0;
 	}
 
 	public EntityStationDeployedRocket(World world, StorageChunk storage, StatsRocket stats, double x, double y, double z) {
@@ -46,6 +56,8 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		launchLocation = new BlockPosition((int)x,(int)y,(int)z);
 		launchDirection = ForgeDirection.DOWN;
 		stats.setSeatLocation(-1, -1, -1); //No seats
+		atmText = new ModuleText(182, 114, "", 0x2d2d2d);
+		gasId = 0;
 	}
 
 	//Use as a way of checking when chunk is unloaded
@@ -65,6 +77,8 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			setInFlight(true);
 			return;
 		}
+		if(getFuelAmount() < getFuelCapacity())
+			return;
 
 		ISpaceObject spaceObj;
 		if( worldObj.provider.dimensionId == Configuration.spaceDimId && (spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)posX, (int)posZ)) != null && ((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() ) { //Abort if destination is invalid
@@ -89,7 +103,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			}
 		}
 	}
-	
+
 	@Override
 	public void onUpdate() {
 		lastWorldTickTicked = worldObj.getTotalWorldTime();
@@ -103,8 +117,6 @@ public class EntityStationDeployedRocket extends EntityRocket {
 
 			if(!isCoasting) {
 				//Burn the rocket fuel
-				if(!worldObj.isRemote)
-					setFuelAmount(getFuelAmount() - stats.getFuelRate(FuelType.LIQUID));
 
 				//Spawn in the particle effects for the engines
 				if(worldObj.isRemote && Minecraft.getMinecraft().gameSettings.particleSetting < 2) {
@@ -115,10 +127,10 @@ public class EntityStationDeployedRocket extends EntityRocket {
 						float xVel, zVel;
 
 						for(int i = 0; i < 4; i++) {
-							xVel = (1-xMult)*((this.rand.nextFloat() - 0.5f)/8f) + xMult*-.05f;
-							zVel = (1-zMult)*((this.rand.nextFloat() - 0.5f)/8f) + zMult*-.05f;
+							xVel = (1-xMult)*((this.rand.nextFloat() - 0.5f)/8f) + xMult*-.15f;
+							zVel = (1-zMult)*((this.rand.nextFloat() - 0.5f)/8f) + zMult*-.15f;
 
-							AdvancedRocketry.proxy.spawnParticle("rocketFlame", worldObj, this.posX + vec.x, this.posY + vec.y, this.posZ +vec.z, xVel,(this.rand.nextFloat() - 0.5f)/8f, zVel);
+							AdvancedRocketry.proxy.spawnParticle("rocketFlame", worldObj, this.posX + vec.x + motionX, this.posY + vec.y, this.posZ +vec.z, xVel,(this.rand.nextFloat() - 0.5f)/8f, zVel +  motionZ);
 
 						}
 					}
@@ -145,11 +157,11 @@ public class EntityStationDeployedRocket extends EntityRocket {
 					dir = forwardDirection.getOpposite();
 
 					float acc = 0.01f;
-					
+
 					motionX = acc*(launchLocation.x - this.posX + (storage.getSizeX() % 2 == 0 ? 0 : 0.5f)) + 0.01*dir.offsetX;
 					motionY = 0;//acc*(launchLocation.y - this.posY) + 0.01*dir.offsetY;
 					motionZ = acc*(launchLocation.z - this.posZ + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5f)) + 0.01*dir.offsetZ;
-					
+
 				}
 
 				if(this.posY > launchLocation.y ) {
@@ -157,10 +169,10 @@ public class EntityStationDeployedRocket extends EntityRocket {
 						this.setInFlight(false);
 						this.setInOrbit(false);
 						MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketLandedEvent(this));
-						PacketHandler.sendToNearby(new PacketEntity(this, (byte)PacketType.ROCKETLANDEVENT.ordinal()), worldObj.provider.dimensionId, (int)posX, (int)posY, (int)posZ, 64);
+						//PacketHandler.sendToNearby(new PacketEntity(this, (byte)PacketType.ROCKETLANDEVENT.ordinal()), worldObj.provider.dimensionId, (int)posX, (int)posY, (int)posZ, 64);
 						//PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, (byte)PacketType.ROCKETLANDEVENT.ordinal()), this);
 					}
-					
+
 					this.motionY = 0;
 					this.setPosition(launchLocation.x + (storage.getSizeX() % 2 == 0 ? 0 : 0.5f), launchLocation.y, launchLocation.z  + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5f));
 				}
@@ -183,23 +195,75 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				}
 
 			}
-			
+
 
 			this.moveEntity(motionX, motionY, motionZ);
 		}
 	}
 
+	@Override
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+		List<ModuleBase> modules;
+		//If the rocket is flight don't load the interface
+		modules = super.getModules(ID, player);
+
+		Iterator<ModuleBase> itr = modules.iterator();
+		while(itr.hasNext()) {
+			ModuleBase module = itr.next();
+			if(module instanceof ModuleButton && ((ModuleButton)module).getText().equalsIgnoreCase("Select Dst")) {
+				itr.remove();
+				break;
+			}
+		}
+		atmText.setText(AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId).getLocalizedName());
+		modules.add(new ModuleButton(170, 114, 1, "", this, zmaster587.libVulpes.inventory.TextureResources.buttonLeft, 5, 8));
+		modules.add(atmText);
+		modules.add(new ModuleButton(240, 114, 2, "", this, zmaster587.libVulpes.inventory.TextureResources.buttonRight,  5, 8));
+
+		return modules;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void onInventoryButtonPressed(int buttonId) {
+		switch(buttonId) {
+		case 0:
+			PacketHandler.sendToServer(new PacketEntity(this, (byte)EntityRocket.PacketType.DECONSTRUCT.ordinal()));
+			break;
+		case 1:
+			gasId++;
+			if(gasId < 0)
+				gasId = (short)(AtmosphereRegister.getInstance().getHarvestableGasses().size() - 1);
+			else if(gasId > AtmosphereRegister.getInstance().getHarvestableGasses().size() - 1)
+				gasId = 0;
+			PacketHandler.sendToServer(new PacketEntity(this, (byte)EntityRocket.PacketType.MENU_CHANGE.ordinal()));
+			break;
+		case 2:
+			gasId--;
+			if(gasId < 0)
+				gasId = (short)(AtmosphereRegister.getInstance().getHarvestableGasses().size() - 1);
+			else if(gasId > AtmosphereRegister.getInstance().getHarvestableGasses().size() - 1)
+				gasId = 0;
+			PacketHandler.sendToServer(new PacketEntity(this, (byte)EntityRocket.PacketType.MENU_CHANGE.ordinal()));
+			break;
+		default:
+			super.onInventoryButtonPressed(buttonId);
+		}
+	}
+
+
 	/**
 	 * Called when the rocket reaches orbit
 	 */
 	public void onOrbitReached() {
-		//TODO: support multiple riders and rider/satellite combo
 		//make it 30 minutes with one drill
 
 		if(this.isDead)
 			return;
 
-		MissionGasCollection miningMission = new MissionGasCollection((long)(360), this, connectedInfrastructure);
+		//one intake with a 1 bucket tank should take 100 seconds
+		float intakePower = (Integer)stats.getStatTag("intakePower");
+		MissionGasCollection miningMission = new MissionGasCollection(intakePower == 0 ? 360 : (long)(2*((int)stats.getStatTag("liquidCapacity")/intakePower)), this, connectedInfrastructure, AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId));
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId).getParentProperties();
 
 		properties.addSatallite(miningMission);
@@ -236,6 +300,66 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			return false;
 		}
 		return super.writeToNBTOptional(p_70039_1_);
+	}
+
+
+	@Override
+	protected void writeNetworkableNBT(NBTTagCompound nbt) {
+		super.writeNetworkableNBT(nbt);
+		nbt.setShort("gas", gasId);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		gasId = nbt.getShort("gas");
+	}
+	
+	@Override
+	public void writeDataToNetwork(ByteBuf out, byte id) {
+		super.writeDataToNetwork(out, id);
+
+		if(id == PacketType.MENU_CHANGE.ordinal()) {
+			out.writeShort(gasId);
+		}
+		else
+			super.writeDataToNetwork(out, id);
+	}
+
+	@Override
+	public void readDataFromNetwork(ByteBuf in, byte packetId,
+			NBTTagCompound nbt) {
+
+
+		if(packetId == PacketType.MENU_CHANGE.ordinal()) {
+			nbt.setShort("gas", gasId);
+		}
+		else
+			super.readDataFromNetwork(in, packetId, nbt);
+	}
+
+	@Override
+	public void useNetworkData(EntityPlayer player, Side side, byte id,
+			NBTTagCompound nbt) {
+
+
+		if(id == PacketType.MENU_CHANGE.ordinal()) {
+
+			gasId = nbt.getShort("gas");
+
+			if(gasId < 0)
+				gasId = (short)(AtmosphereRegister.getInstance().getHarvestableGasses().size() - 1);
+			else if(gasId > AtmosphereRegister.getInstance().getHarvestableGasses().size() - 1)
+				gasId = 0;
+
+			if(!worldObj.isRemote)
+				PacketHandler.sendToNearby(new PacketEntity(this, (byte) PacketType.MENU_CHANGE.ordinal()), worldObj.provider.dimensionId, (int)posX, (int)posY, (int)posZ, 64d);
+			else
+				atmText.setText(AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId).getLocalizedName());
+
+		}
+		else
+			super.useNetworkData(player, side, id, nbt);
 	}
 
 

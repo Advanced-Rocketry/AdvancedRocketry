@@ -51,6 +51,7 @@ import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.tile.TileDrill;
 import zmaster587.advancedRocketry.tile.TileFluidTank;
 import zmaster587.advancedRocketry.tile.TileModelRender;
+import zmaster587.advancedRocketry.tile.TileModelRenderRotatable;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.advancedRocketry.tile.TileSpaceLaser;
 import zmaster587.advancedRocketry.tile.cables.TileDataPipe;
@@ -75,8 +76,11 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void registerRenderers() {
+		
+		RendererModelBlock modelBlock = new RendererModelBlock();
+		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileRocketBuilder.class, new RendererRocketBuilder());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileModelRender.class, new RendererModelBlock());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileModelRender.class, modelBlock);
 		ClientRegistry.bindTileEntitySpecialRenderer(TilePrecisionAssembler.class, new RendererPrecisionAssembler());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCuttingMachine.class, new RendererCuttingMachine());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrystallizer.class, new RendererCrystallizer());
@@ -96,6 +100,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileBiomeScanner.class, new RenderBiomeScanner());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileAtmosphereTerraformer.class, new RenderTerraformerAtm());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileFluidTank.class, new RenderTank());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileModelRenderRotatable.class, modelBlock);
 
 		RendererModelBlock blockRenderer = new RendererModelBlock();
 

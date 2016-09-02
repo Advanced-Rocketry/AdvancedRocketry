@@ -73,7 +73,7 @@ public class RocketEventHandler extends Gui {
 
 	@SubscribeEvent
 	public void onRocketLaunch(RocketEvent.RocketLaunchEvent event) {
-		if(event.world.isRemote) {
+		if(event.world.isRemote && event.entity.ridingEntity != null && event.entity.ridingEntity.equals(Minecraft.getMinecraft().thePlayer)) {
 			prepareOrbitalMap(event);
 			event.world.provider.setSkyRenderer(new RenderPlanetarySky());
 		}
