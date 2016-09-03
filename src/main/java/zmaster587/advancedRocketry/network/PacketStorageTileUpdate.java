@@ -3,6 +3,8 @@ package zmaster587.advancedRocketry.network;
 import java.io.IOException;
 
 import cpw.mods.fml.relauncher.ReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -61,6 +63,7 @@ public class PacketStorageTileUpdate extends BasePacket {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void readClient(ByteBuf in) {
 		//DEBUG:
 		World world;
@@ -100,6 +103,7 @@ public class PacketStorageTileUpdate extends BasePacket {
 
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public void executeClient(EntityPlayer thePlayer) {
 		//Make sure the chunk is initialized before using it 

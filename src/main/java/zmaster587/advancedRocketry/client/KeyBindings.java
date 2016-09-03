@@ -47,8 +47,7 @@ public class KeyBindings {
 				EntityRocket rocket = (EntityRocket)player.ridingEntity;
 				if(!rocket.isInFlight() && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 					if(Minecraft.getMinecraft().inGameHasFocus && player.equals(Minecraft.getMinecraft().thePlayer)) {
-						PacketHandler.sendToServer(new PacketEntity(rocket, (byte)EntityRocket.PacketType.LAUNCH.ordinal()));
-						rocket.launch();
+						rocket.prepareLaunch();
 					}
 				}
 				

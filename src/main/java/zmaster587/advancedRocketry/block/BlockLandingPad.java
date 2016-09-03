@@ -1,13 +1,12 @@
 package zmaster587.advancedRocketry.block;
 
-import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
-import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.tile.station.TileLandingPad;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.inventory.GuiHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -27,6 +26,14 @@ public class BlockLandingPad extends Block {
 	public TileEntity createTileEntity(World world, int metadata) {
 		return new TileLandingPad();
 	}
+	
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
+	{
+		if(!world.isRemote)
+			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULAR.ordinal(), world, x, y, z);
+		return true;
+	}
 
 	@Override
 	public void onBlockPlacedBy(World world, int x,
@@ -34,12 +41,9 @@ public class BlockLandingPad extends Block {
 			ItemStack items) {
 		super.onBlockPlacedBy(world, x, y, z,
 				player, items);
-		
-		if(!world.isRemote && world.provider.dimensionId == Configuration.spaceDimId) {
-			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(x, z);
-		
-			if(spaceObj instanceof SpaceObject)
-				((SpaceObject)spaceObj).addLandingPad(x, z);
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if(tile instanceof TileLandingPad) {
+			((TileLandingPad) tile).registerTileWithStation(world, x, y, z);
 		}
 	}
 	
@@ -49,10 +53,9 @@ public class BlockLandingPad extends Block {
 		super.onBlockPreDestroy(world, x, y, z,
 				oldMeta);
 		
-		if(world.provider.dimensionId == Configuration.spaceDimId) {
-			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(x, z);
-			if(spaceObj instanceof SpaceObject)
-				((SpaceObject)spaceObj).removeLandingPad(x, z);
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if(tile instanceof TileLandingPad) {
+			((TileLandingPad) tile).unregisterTileWithStation(world, x, y, z);
 		}
 	}
 }

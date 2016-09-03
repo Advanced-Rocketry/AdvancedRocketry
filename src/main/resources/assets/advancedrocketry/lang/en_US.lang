@@ -82,6 +82,7 @@ tile.biomeScanner.name=Biome Scanner
 tile.atmoshereTerraformer.name=Atmosphere Terraformer
 tile.deployableRocketAssembler.name=Unmanned Vehicle Assembler
 tile.pressurizedTank.name=Pressurized Tank
+tile.gasIntake.name=Gas Intake
 
 tile.Dilithium.name=Dilithium Ore
 

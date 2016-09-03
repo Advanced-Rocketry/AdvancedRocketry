@@ -6,18 +6,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.network.PacketSatellite;
 import zmaster587.advancedRocketry.satellite.SatelliteBiomeChanger;
-import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.inventory.GuiHandler;
@@ -138,6 +137,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void onInventoryButtonPressed(int buttonId) {
 		ItemStack stack = Minecraft.getMinecraft().thePlayer.getHeldItem();
 		if(stack != null && stack.getItem() == this) {

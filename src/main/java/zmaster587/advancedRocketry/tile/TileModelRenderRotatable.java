@@ -1,17 +1,18 @@
 package zmaster587.advancedRocketry.tile;
 
 import zmaster587.advancedRocketry.block.BlockRotatableModel;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileModelRenderRotatable extends TileModelRender {
 	
-	ForgeDirection rotation;
+	public ForgeDirection rotation;
 	
 	public TileModelRenderRotatable() {
 		super();
-		rotation = ForgeDirection.SOUTH;
+		rotation = ForgeDirection.DOWN;
 	}
 	
 	public TileModelRenderRotatable(int type, ForgeDirection rotation) {
@@ -28,5 +29,19 @@ public class TileModelRenderRotatable extends TileModelRender {
 	@Override
 	public ForgeDirection getRotation() {
 		return rotation;
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		nbt.setInteger("dir", rotation.ordinal());
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		
+		rotation = ForgeDirection.values()[nbt.getInteger("dir")];
+		
 	}
 }

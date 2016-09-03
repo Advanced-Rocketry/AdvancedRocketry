@@ -127,6 +127,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 					if(storageChunk.getBlock(x, y, z) == AdvancedRocketryBlocks.blockEngine) {
 						storageChunk.setBlockMeta(x, y, z, rocket.forwardDirection.ordinal());
 						storageChunk.getTileEntity(x, y, z).blockMetadata = rocket.forwardDirection.ordinal();
+						((TileModelRenderRotatable)storageChunk.getTileEntity(x, y, z)).rotation = rocket.forwardDirection;
 					}
 				}		
 			}	

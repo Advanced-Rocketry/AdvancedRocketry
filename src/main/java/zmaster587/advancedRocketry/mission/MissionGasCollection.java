@@ -64,6 +64,7 @@ public class MissionGasCollection extends MissionResourceCollection {
 		rocket.readMissionPersistantNBT(missionPersistantNBT);
 
 		ForgeDirection dir = rocket.forwardDirection;
+		rocket.forceSpawn = true;
 
 		rocket.setPosition(dir.offsetX*64d + rocket.launchLocation.x + (rocketStorage.getSizeX() % 2 == 0 ? 0 : 0.5d), y, dir.offsetZ*64d + rocket.launchLocation.z + (rocketStorage.getSizeZ() % 2 == 0 ? 0 : 0.5d));
 		world.spawnEntityInWorld(rocket);

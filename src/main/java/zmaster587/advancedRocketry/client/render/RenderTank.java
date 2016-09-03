@@ -35,7 +35,7 @@ public class RenderTank extends TileEntitySpecialRenderer {
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 			
 			int color = fluid.getFluid().getColor();
-			GL11.glColor3f(((color >>> 16) & 0xFF)/255f, ((color >>> 8) & 0xFF)/255f, ((color& 0xFF)/255f));
+			GL11.glColor4f(((color >>> 16) & 0xFF)/255f, ((color >>> 8) & 0xFF)/255f, ((color& 0xFF)/255f),1f);
 			
 			Block block = tile.getBlockType();
 			Tessellator tess = Tessellator.instance;

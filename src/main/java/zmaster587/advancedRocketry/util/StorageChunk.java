@@ -19,6 +19,8 @@ import zmaster587.advancedRocketry.api.stations.IStorageChunk;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
+import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.Vector3F;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -86,17 +88,17 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		this.entity = entity;
 		world.isRemote = entity.worldObj.isRemote;
 	}
-	
+
 	public EntityRocketBase getEntity() {
 		return (EntityRocketBase)entity;
 	}
-	
+
 	@Override
 	public int getSizeX() { return sizeX; }
-	
+
 	@Override
 	public int getSizeY() { return sizeY; }
-	
+
 	@Override
 	public int getSizeZ() { return sizeZ; }
 
@@ -104,7 +106,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 		return tileEntities;
 	}
-	
+
 	/**
 	 * @return list of fluid handing tiles on the rocket all also implement IFluidHandler
 	 */
@@ -116,6 +118,15 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		return inventoryTiles;
 	}
 
+	public List<TileEntity> getGUItiles() {
+		List<TileEntity> list = new LinkedList<TileEntity>(inventoryTiles);
+
+		TileEntity guidanceComputer = getGuidanceComputer();
+		if(guidanceComputer != null)
+			list.add(getGuidanceComputer());
+		return list;
+	}
+
 	@Override
 	public Block getBlock(int x, int y, int z) {
 		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ)
@@ -125,7 +136,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 			return blocks[x][y][z];
 		return blocks[x][y][z];
 	}
-	
+
 	public void setBlockMeta(int x, int y, int z, int meta) {
 		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ)
 			return;
@@ -140,8 +151,8 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		nbt.setInteger("xSize", sizeX);
 		nbt.setInteger("ySize", sizeY);
 		nbt.setInteger("zSize", sizeZ);
-		
-		
+
+
 		Iterator<TileEntity> tileEntityIterator = tileEntities.iterator();
 		NBTTagList tileList = new NBTTagList();
 		while(tileEntityIterator.hasNext()) {
@@ -171,7 +182,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 		NBTTagIntArray idList = new NBTTagIntArray(blockId);
 		NBTTagIntArray metaList = new NBTTagIntArray(metasId);
-		
+
 		nbt.setTag("idList", idList);
 		nbt.setTag("metaList", metaList);
 		nbt.setTag("tiles", tileList);
@@ -213,13 +224,13 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 
 	private static boolean isInventoryBlock(TileEntity tile) {
-		return tile instanceof IInventory;
+		return tile instanceof IInventory && !(tile instanceof TileGuidanceComputer);
 	}
 
 	private static boolean isLiquidContainerBlock(TileEntity tile) {
 		return tile instanceof IFluidHandler;
 	}
-	
+
 	public void readFromNBT(NBTTagCompound nbt) {
 		sizeX = nbt.getInteger("xSize");
 		sizeY = nbt.getInteger("ySize");
@@ -259,7 +270,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 				if(isLiquidContainerBlock(tile)) {
 					liquidTiles.add(tile);
 				}
-				
+
 				tileEntities.add(tile);
 				tile.setWorldObj(world);
 			} catch (Exception e) {
@@ -377,7 +388,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 						if(isLiquidContainerBlock(newTile)) {
 							ret.liquidTiles.add(newTile);
 						}
-						
+
 						ret.tileEntities.add(newTile);
 					}
 				}
@@ -523,7 +534,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	}
 
 
-	
+
 	public List<TileSatelliteHatch> getSatelliteHatches() {
 		LinkedList<TileSatelliteHatch> satelliteHatches = new LinkedList<TileSatelliteHatch>();
 		Iterator<TileEntity> iterator = getTileEntityList().iterator();
@@ -534,10 +545,10 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 				satelliteHatches.add((TileSatelliteHatch) tile);
 			}
 		}
-		
+
 		return satelliteHatches;
 	}
-	
+
 	@Deprecated
 	public List<SatelliteBase> getSatellites() {
 		LinkedList<SatelliteBase> satellites = new LinkedList<SatelliteBase>();
@@ -559,7 +570,8 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		}
 		return satellites;
 	}
-	
+
+	@Deprecated
 	public TileGuidanceComputer getGuidanceComputer() {
 		Iterator<TileEntity> iterator = getTileEntityList().iterator();
 		while(iterator.hasNext()) {
@@ -571,6 +583,43 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		}
 
 		return null;
+	}
+
+	/**
+	 * @return destination ID or -1 if none
+	 */
+	public int getDestinationDimId(int currentDimId, int x, int z) {
+		Iterator<TileEntity> iterator = getTileEntityList().iterator();
+		while(iterator.hasNext()) {
+			TileEntity tile = iterator.next();
+
+			if(tile instanceof TileGuidanceComputer) {
+				return ((TileGuidanceComputer)tile).getDestinationDimId(currentDimId,x,z);
+			}
+		}
+
+		return -1;
+	}
+
+	public Vector3F<Float> getDestinationCoordinates(int destDimID) {
+		Iterator<TileEntity> iterator = getTileEntityList().iterator();
+		while(iterator.hasNext()) {
+			TileEntity tile = iterator.next();
+			if(tile instanceof TileGuidanceComputer) {
+				return ((TileGuidanceComputer)tile).getLandingLocation(destDimID);
+			}
+		}
+		return null;
+	}
+
+	public void setDestinationCoordinates(Vector3F<Float> vec) {
+		Iterator<TileEntity> iterator = getTileEntityList().iterator();
+		while(iterator.hasNext()) {
+			TileEntity tile = iterator.next();
+			if(tile instanceof TileGuidanceComputer) {
+				((TileGuidanceComputer)tile).setReturnPosition(vec);
+			}
+		}
 	}
 
 	public void writeToNetwork(ByteBuf out) {
@@ -591,21 +640,21 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		}
 
 		Iterator<TileEntity> tileIterator = tileEntities.iterator();
-		
+
 		while(tileIterator.hasNext()) {
 			TileEntity tile = tileIterator.next();
-			
+
 			NBTTagCompound nbt = new NBTTagCompound();
-			
+
 			try {
 				tile.writeToNBT(nbt);
-				
+
 				try {
 					buffer.writeNBTTagCompoundToBuffer(nbt);
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
-				
+
 			} catch(RuntimeException e) {
 				AdvancedRocketry.logger.warning("A tile entity has thrown an error while writing to network: " + tile.getClass().getCanonicalName());
 				tileIterator.remove();
@@ -644,7 +693,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 				if(isInventoryBlock(tile)) {
 					inventoryTiles.add(tile);
 				}
-				
+
 				if(isLiquidContainerBlock(tile))
 					liquidTiles.add(tile);
 				tile.setWorldObj(world);

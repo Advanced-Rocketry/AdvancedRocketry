@@ -19,6 +19,7 @@ import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.mission.MissionGasCollection;
+import zmaster587.advancedRocketry.network.PacketSatellite;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleButton;
@@ -90,8 +91,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			launchLocation.z = (int) Math.floor(this.posZ);
 			Iterator<IInfrastructure> connectedTiles = connectedInfrastructure.iterator();
 
-			if(worldObj.isRemote)
-				MinecraftForge.EVENT_BUS.post(new RocketLaunchEvent(this));
+			MinecraftForge.EVENT_BUS.post(new RocketLaunchEvent(this));
 
 			//Disconnect things linked to the rocket on liftoff
 			while(connectedTiles.hasNext()) {
@@ -194,6 +194,10 @@ public class EntityStationDeployedRocket extends EntityRocket {
 
 				}
 
+				if(!worldObj.isRemote && this.getDistance(launchLocation.x, launchLocation.y, launchLocation.z) > 128) {
+					onOrbitReached();
+					return;
+				}
 			}
 
 
@@ -261,6 +265,13 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		if(this.isDead)
 			return;
 
+		//Check again to make sure we are around a gas giant
+		ISpaceObject spaceObj;
+		if( worldObj.provider.dimensionId == Configuration.spaceDimId || ((spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)posX, (int)posZ)) != null && !((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() )) { //Abort if destination is invalid
+			setInOrbit(true);
+			this.setPosition(forwardDirection.offsetX*64d + this.launchLocation.x + (storage.getSizeX() % 2 == 0 ? 0 : 0.5d), posY, forwardDirection.offsetZ*64d + this.launchLocation.z + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5d));	
+		}
+		
 		//one intake with a 1 bucket tank should take 100 seconds
 		float intakePower = (Integer)stats.getStatTag("intakePower");
 		MissionGasCollection miningMission = new MissionGasCollection(intakePower == 0 ? 360 : (long)(2*((int)stats.getStatTag("liquidCapacity")/intakePower)), this, connectedInfrastructure, AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId));
@@ -268,38 +279,14 @@ public class EntityStationDeployedRocket extends EntityRocket {
 
 		properties.addSatallite(miningMission);
 
+		if(!worldObj.isRemote)
+			PacketHandler.sendToAll(new PacketSatellite(miningMission));
+		
 		for(IInfrastructure i : connectedInfrastructure) {
 			i.linkMission(miningMission);
 		}
 
 		this.setDead();
-	}
-
-	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt) {
-		if(!worldObj.isRemote && isInFlight() && !isInOrbit() && this.getDistance(launchLocation.x, launchLocation.y, launchLocation.z) > 64) {
-			onOrbitReached();
-			return;
-		}
-		super.writeEntityToNBT(nbt);
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound p_70109_1_) {
-		if(!worldObj.isRemote && isInFlight() && !isInOrbit() && this.getDistance(launchLocation.x, launchLocation.y, launchLocation.z) > 64) {
-			onOrbitReached();
-			return;
-		}
-		super.writeToNBT(p_70109_1_);
-	}
-
-	@Override
-	public boolean writeToNBTOptional(NBTTagCompound p_70039_1_) {
-		if(!worldObj.isRemote && isInFlight() && !isInOrbit() && this.getDistance(launchLocation.x, launchLocation.y, launchLocation.z) > 64) {
-			onOrbitReached();
-			return false;
-		}
-		return super.writeToNBTOptional(p_70039_1_);
 	}
 
 
@@ -332,7 +319,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 
 
 		if(packetId == PacketType.MENU_CHANGE.ordinal()) {
-			nbt.setShort("gas", gasId);
+			nbt.setShort("gas", in.readShort());
 		}
 		else
 			super.readDataFromNetwork(in, packetId, nbt);

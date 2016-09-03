@@ -70,7 +70,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	@Override
 	public void onAdjacentBlockUpdated() {
 		if(!worldObj.isRemote && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) && linkedRocket != null) {
-			linkedRocket.launch();
+			linkedRocket.prepareLaunch();
 		}
 	}
 
@@ -173,7 +173,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 		}
 		if(id == 100) {
 			if(linkedRocket != null)
-				linkedRocket.launch();
+				linkedRocket.prepareLaunch();
 		}
 	}
 

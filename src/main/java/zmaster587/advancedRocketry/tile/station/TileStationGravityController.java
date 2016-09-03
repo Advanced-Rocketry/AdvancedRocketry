@@ -78,6 +78,8 @@ public class TileStationGravityController extends TileEntity implements IModular
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.xCoord, this.zCoord);
 
 			if(object != null) {
+				if(gravity == 0)
+					gravity = 15;
 				double targetGravity = gravity/100D;
 				double angVel = object.getProperties().getGravitationalMultiplier();
 				double acc = 0.001;

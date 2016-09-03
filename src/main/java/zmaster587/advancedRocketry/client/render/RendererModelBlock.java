@@ -55,7 +55,8 @@ public class RendererModelBlock  extends TileEntitySpecialRenderer implements II
 		
 		if(modelNum == TileModelRender.models.ROCKET.ordinal()) {
 			textureMgr.bindTexture(rocketTexture);
-			GL11.glRotatef(90, rendertile.getRotation().offsetY + 1,0,0);
+			if(rendertile.getRotation().offsetY == 0)
+				GL11.glRotatef(90,1,0,0);
 			rocketModel.renderAll();
 		}
 		else if(modelNum == TileModelRender.models.TANKMIDDLE.ordinal()) {

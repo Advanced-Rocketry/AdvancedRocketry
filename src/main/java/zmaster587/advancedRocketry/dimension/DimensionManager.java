@@ -299,7 +299,7 @@ public class DimensionManager {
 	 * @return true if it can be traveled to, in general if it has a surface
 	 */
 	public boolean canTravelTo(int dimId){
-		return dimId < GASGIANT_DIMID_OFFSET && net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId);
+		return dimId < GASGIANT_DIMID_OFFSET && net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId) && dimId != -1;
 	}
 	
 	/**
