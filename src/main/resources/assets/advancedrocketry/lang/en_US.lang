@@ -83,6 +83,7 @@ tile.atmoshereTerraformer.name=Atmosphere Terraformer
 tile.deployableRocketAssembler.name=Unmanned Vehicle Assembler
 tile.pressurizedTank.name=Pressurized Tank
 tile.gasIntake.name=Gas Intake
+tile.atmosphereTerraformer.name=Atmosphere Terraformer
 
 tile.Dilithium.name=Dilithium Ore
 

@@ -383,7 +383,7 @@ public class SpaceObject implements ISpaceObject {
 		nbt.setDouble("deltaRotation", angularVelocity);
 		
 		
-		if(direction !=null)
+		if(direction != null)
 			nbt.setInteger("direction", direction.ordinal());
 
 		if(transitionEta > -1)

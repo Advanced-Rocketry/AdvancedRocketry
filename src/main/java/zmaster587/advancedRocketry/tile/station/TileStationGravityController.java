@@ -7,6 +7,9 @@ import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
@@ -52,6 +55,23 @@ public class TileStationGravityController extends TileEntity implements IModular
 	}
 
 	@Override
+	public Packet getDescriptionPacket() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setInteger("gravity", gravity);
+
+		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, nbt);
+		return super.getDescriptionPacket();
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		super.onDataPacket(net, pkt);
+
+		gravity = pkt.func_148857_g().getInteger("gravity");
+
+	}
+
+	@Override
 	public boolean canUpdate() {
 		return true;
 	}
@@ -75,35 +95,40 @@ public class TileStationGravityController extends TileEntity implements IModular
 		super.updateEntity();
 
 		if(this.worldObj.provider instanceof WorldProviderSpace) {
-			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.xCoord, this.zCoord);
 
-			if(object != null) {
-				if(gravity == 0)
-					gravity = 15;
-				double targetGravity = gravity/100D;
-				double angVel = object.getProperties().getGravitationalMultiplier();
-				double acc = 0.001;
+			if(!worldObj.isRemote) {
+				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.xCoord, this.zCoord);
 
-				double difference = targetGravity - angVel;
+				if(object != null) {
+					if(gravity == 0)
+						gravity = 15;
+					double targetGravity = gravity/100D;
+					double angVel = object.getProperties().getGravitationalMultiplier();
+					double acc = 0.001;
 
-				if(difference != 0) {
-					double finalVel = angVel;
-					if(difference < 0) {
-						finalVel = angVel + Math.max(difference, -acc);
+					double difference = targetGravity - angVel;
+
+					if(difference != 0) {
+						double finalVel = angVel;
+						if(difference < 0) {
+							finalVel = angVel + Math.max(difference, -acc);
+						}
+						else if(difference > 0) {
+							finalVel = angVel + Math.min(difference, acc);
+						}
+
+						object.getProperties().setGravitationalMultiplier((float)finalVel);
+						if(!worldObj.isRemote) {
+							//PacketHandler.sendToNearby(new PacketStationUpdate(object, PacketStationUpdate.Type.ROTANGLE_UPDATE), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 1024);
+							PacketHandler.sendToAll(new PacketStationUpdate(object, PacketStationUpdate.Type.DIM_PROPERTY_UPDATE));
+						}
+						else
+							updateText();
 					}
-					else if(difference > 0) {
-						finalVel = angVel + Math.min(difference, acc);
-					}
-
-					object.getProperties().setGravitationalMultiplier((float)finalVel);
-					if(!worldObj.isRemote) {
-						//PacketHandler.sendToNearby(new PacketStationUpdate(object, PacketStationUpdate.Type.ROTANGLE_UPDATE), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 1024);
-						PacketHandler.sendToAll(new PacketStationUpdate(object, PacketStationUpdate.Type.DIM_PROPERTY_UPDATE));
-					}
-					else
-						updateText();
 				}
 			}
+			else
+				updateText();
 		}
 	}
 	@Override

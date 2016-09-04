@@ -78,32 +78,34 @@ public class TileStationOrientationControl extends TileEntity implements IModula
 		super.updateEntity();
 
 		if(this.worldObj.provider instanceof WorldProviderSpace) {
-			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.xCoord, this.zCoord);
+			if(!worldObj.isRemote) {
+				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.xCoord, this.zCoord);
 
-			if(object != null) {
-				double targetAngularVelocity = numRotationsPerHour/7200D;
-				double angVel = object.getDeltaRotation();
-				double acc = object.getMaxRotationalAcceleration();
+				if(object != null) {
+					double targetAngularVelocity = numRotationsPerHour/7200D;
+					double angVel = object.getDeltaRotation();
+					double acc = object.getMaxRotationalAcceleration();
 
-				double difference = targetAngularVelocity - angVel;
+					double difference = targetAngularVelocity - angVel;
 
-				if(difference != 0) {
-					double finalVel = angVel;
-					if(difference < 0) {
-						finalVel = angVel + Math.max(difference, -acc);
+					if(difference != 0) {
+						double finalVel = angVel;
+						if(difference < 0) {
+							finalVel = angVel + Math.max(difference, -acc);
+						}
+						else if(difference > 0) {
+							finalVel = angVel + Math.min(difference, acc);
+						}
+
+						object.setDeltaRotation(finalVel);
+						if(!worldObj.isRemote) {
+							//PacketHandler.sendToNearby(new PacketStationUpdate(object, PacketStationUpdate.Type.ROTANGLE_UPDATE), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 1024);
+							PacketHandler.sendToAll(new PacketStationUpdate(object, PacketStationUpdate.Type.ROTANGLE_UPDATE));
+						}
 					}
-					else if(difference > 0) {
-						finalVel = angVel + Math.min(difference, acc);
-					}
-
-					object.setDeltaRotation(finalVel);
-					if(!worldObj.isRemote) {
-						//PacketHandler.sendToNearby(new PacketStationUpdate(object, PacketStationUpdate.Type.ROTANGLE_UPDATE), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 1024);
-						PacketHandler.sendToAll(new PacketStationUpdate(object, PacketStationUpdate.Type.ROTANGLE_UPDATE));
-					}
-					else
-						updateText();
 				}
+				else
+					updateText();
 			}
 		}
 	}

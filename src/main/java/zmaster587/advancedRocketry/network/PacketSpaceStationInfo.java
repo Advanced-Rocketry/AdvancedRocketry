@@ -17,7 +17,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class PacketSpaceStationInfo extends BasePacket {
-	ISpaceObject spaceObject;
+	SpaceObject spaceObject;
 	int stationNumber;
 
 	public PacketSpaceStationInfo() {}
@@ -47,6 +47,9 @@ public class PacketSpaceStationInfo extends BasePacket {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				
+				out.writeInt(spaceObject.get)
+				
 			} catch(NullPointerException e) {
 				out.writeBoolean(true);
 				Logger.getLogger("advancedRocketry").warning("Dimension " + stationNumber + " has thrown an exception trying to write NBT, deleting!");

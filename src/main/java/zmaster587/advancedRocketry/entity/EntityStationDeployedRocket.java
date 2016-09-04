@@ -293,15 +293,14 @@ public class EntityStationDeployedRocket extends EntityRocket {
 	@Override
 	protected void writeNetworkableNBT(NBTTagCompound nbt) {
 		super.writeNetworkableNBT(nbt);
-		nbt.setShort("gas", gasId);
+		
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		gasId = nbt.getShort("gas");
+	protected void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		
 	}
-	
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {
 		super.writeDataToNetwork(out, id);
@@ -359,6 +358,8 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		nbt.setInteger("launchX", launchLocation.x);
 		nbt.setInteger("launchY", launchLocation.y);
 		nbt.setInteger("launchZ", launchLocation.z);
+		
+		nbt.setShort("gas", gasId);
 	}
 
 	@Override
@@ -369,5 +370,6 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		launchLocation.x = nbt.getInteger("launchX");
 		launchLocation.y = (short)nbt.getInteger("launchY");
 		launchLocation.z = nbt.getInteger("launchZ");
+		gasId = nbt.getShort("gas");
 	}
 }
