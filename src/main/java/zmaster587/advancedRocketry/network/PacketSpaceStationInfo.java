@@ -48,7 +48,7 @@ public class PacketSpaceStationInfo extends BasePacket {
 					e.printStackTrace();
 				}
 				
-				out.writeInt(spaceObject.get)
+				out.writeInt(spaceObject.getForwardDirection().ordinal());
 				
 			} catch(NullPointerException e) {
 				out.writeBoolean(true);
@@ -87,8 +87,13 @@ public class PacketSpaceStationInfo extends BasePacket {
 				return;
 			}
 			
+			direction = in.readInt();
+			
 			
 			ISpaceObject iObject = SpaceObjectManager.getSpaceManager().getSpaceStation(stationNumber);
+			
+			
+			
 			//TODO: interface
 			spaceObject = (SpaceObject)iObject;
 			
@@ -96,11 +101,13 @@ public class PacketSpaceStationInfo extends BasePacket {
 			if( iObject == null ) {
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getNewSpaceObjectFromIdentifier(clazzId);
 				object.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
+				((SpaceObject)object).setForwardDirection(ForgeDirection.values()[direction]);
 				
 				SpaceObjectManager.getSpaceManager().registerSpaceObjectClient(object, object.getOrbitingPlanetId(), stationNumber);
 			}
 			else {
 				iObject.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
+				((SpaceObject)iObject).setForwardDirection(ForgeDirection.values()[direction]);
 			}
 		}
 	}
