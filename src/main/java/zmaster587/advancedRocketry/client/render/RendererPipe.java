@@ -117,7 +117,7 @@ public class RendererPipe extends TileEntitySpecialRenderer {
 
 		tessellator.draw();*/
 		//Initial setup
-		int bright = tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord + 1, tile.zCoord,0);
+		int bright = tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord, tile.zCoord,0);
 		int brightX = bright % 65536;
 		int brightY = bright / 65536;
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
@@ -157,7 +157,7 @@ public class RendererPipe extends TileEntitySpecialRenderer {
 		}
 
 		//GL11.glDisable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_LIGHTING);
+		//GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glPopMatrix();
 	}

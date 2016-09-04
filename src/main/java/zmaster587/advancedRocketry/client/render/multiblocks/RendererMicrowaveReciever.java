@@ -41,7 +41,7 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
 		//Draw heat FX
 		if(Configuration.advancedVFX && multiBlockTile.getPowerMadeLastTick() > 0) {
 			double distance = Minecraft.getMinecraft().thePlayer.getDistance(tile.xCoord, tile.yCoord, tile.zCoord);
-			if(distance < 16 ){
+			if(distance < 16 ) {
 				double u = 256/distance;
 				double resolution = (int)u;
 

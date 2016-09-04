@@ -81,7 +81,7 @@ public class RendererWarpCore extends TileEntitySpecialRenderer {
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(tile.xCoord, tile.zCoord);
 			if(obj instanceof SpaceObject && ((SpaceObject)obj).getFuelAmount() > 50) {
 
-				double speedMult = ((DimensionProperties)obj.getProperties()).getParentPlanet() == -1 ? 1.5d : 0.1d;
+				double speedMult = ((DimensionProperties)obj.getProperties()).getParentPlanet() == SpaceObjectManager.WARPDIMID ? 1.5d : 0.1d;
 				
 				double speedRotate = speedMult*0.25d;
 				
