@@ -236,6 +236,11 @@ public class TileAtmosphereTerraformer extends TileMultiblockMachine {
 		return AxisAlignedBB.getBoundingBox(xCoord -15,yCoord -15, zCoord -15, xCoord +15, yCoord + 13, zCoord + 15);
 	}
 
+	@Override
+	public double getMaxRenderDistanceSquared() {
+		// TODO Auto-generated method stub
+		return super.getMaxRenderDistanceSquared()*2;
+	}
 	
 	@Override
 	public String getMachineName() {

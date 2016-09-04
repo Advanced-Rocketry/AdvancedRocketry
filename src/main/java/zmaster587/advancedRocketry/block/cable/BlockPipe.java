@@ -29,6 +29,7 @@ public class BlockPipe extends Block {
 	public boolean isOpaqueCube() {
 		return false;
 	}
+	
 
 	@Override
 	public boolean hasTileEntity(int metadata) {

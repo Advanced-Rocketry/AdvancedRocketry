@@ -127,6 +127,7 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 		nbt.setLong("startWorldTime", startWorldTime);
 		nbt.setLong("duration", duration);
 		nbt.setInteger("startDimid", worldId);
+		nbt.setInteger("launchDim", launchDimension);
 
 		NBTTagList itemList = new NBTTagList();
 		for(int i = 0; i < infrastructureCoords.size(); i++)
@@ -159,6 +160,7 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 		startWorldTime = nbt.getLong("startWorldTime");
 		duration = nbt.getLong("duration");
 		worldId = nbt.getInteger("startDimid");
+		launchDimension = nbt.getInteger("launchDim");
 
 		NBTTagList tagList = nbt.getTagList("infrastructure", 10);
 		infrastructureCoords.clear();

@@ -100,23 +100,12 @@ public class RendererPipe extends TileEntitySpecialRenderer {
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x, double y,
 			double z, float f) {
+		
 		Tessellator tessellator = Tessellator.instance;
 
 		GL11.glPushMatrix();
 
 		GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
-		
-		
-		//GL11.glEnable(GL11.GL_BLEND);
-		//GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
-
-
-		/*tessellator.startDrawingQuads();
-
-		drawCube(0.35D, tessellator);
-
-		tessellator.draw();*/
-		//Initial setup
 		int bright = tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord, tile.zCoord,0);
 		int brightX = bright % 65536;
 		int brightY = bright / 65536;
