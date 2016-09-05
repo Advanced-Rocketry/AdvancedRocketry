@@ -4,6 +4,8 @@ import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -231,6 +233,9 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void fogColor(net.minecraftforge.client.event.EntityViewRenderEvent.FogColors event) {
+		
+		
+		
 		Block block = ActiveRenderInfo.getBlockAtEntityViewpoint(event.entity.worldObj, event.entity, (float)event.renderPartialTicks);
 		if(block.getMaterial() == Material.water)
 			return;
@@ -264,13 +269,26 @@ public class PlanetEventHandler {
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void fogColor(net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity event) {
+	public void fogColor(net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent event) {
+		
+		if(event.fogMode == -1) {
+			return;
+		}
+		
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.entity.dimension);
-		if(properties != null && properties.atmosphereDensity > 125) {
+		if(properties != null && event.block != Blocks.water && event.block != Blocks.lava) {//& properties.atmosphereDensity > 125) {
 			float fog = properties.getAtmosphereDensityAtHeight(event.entity.posY);
 
-			event.density = fog/128f;
-			event.setCanceled(false);
+			float density = (properties.atmosphereDensity - 100)*(fog/2048f);
+			GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP);
+			
+			float f1 = 16*16f;//event.renderer.
+			GL11.glFogf(GL11.GL_FOG_START, f1 * 0.8F);
+            GL11.glFogf(GL11.GL_FOG_END, f1);
+			
+			GL11.glFogf(GL11.GL_FOG_DENSITY, density);
+			
+			//event.setCanceled(false);
 		}
 	}
 

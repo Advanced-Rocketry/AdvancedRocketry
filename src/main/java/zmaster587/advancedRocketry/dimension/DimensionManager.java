@@ -75,6 +75,7 @@ public class DimensionManager {
 		overworldProperties.skyColor = new float[] {1f, 1f, 1f};
 		overworldProperties.setStar(sol);
 		overworldProperties.setName("Earth");
+		overworldProperties.isNativeDimension = false;
 
 		defaultSpaceDimensionProperties = new DimensionProperties(SpaceObjectManager.WARPDIMID, false);
 		defaultSpaceDimensionProperties.atmosphereDensity = 0;
