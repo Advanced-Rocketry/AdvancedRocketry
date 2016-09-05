@@ -14,6 +14,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
@@ -79,17 +80,18 @@ public class AtmosphereHandler {
 	}
 
 	@SubscribeEvent
-	public void onTick(TickEvent.PlayerTickEvent event) {
-		if(event.side.isServer() && event.player.dimension == this.dimId) {
-			IAtmosphere atmosType = getAtmosphereType(event.player);
+	public void onTick(LivingUpdateEvent event) {
+		
+		if(!event.entity.worldObj.isRemote && event.entity.worldObj.provider.dimensionId == this.dimId) {
+			IAtmosphere atmosType = getAtmosphereType(event.entity);
 
-			if(atmosType != prevAtmosphere.get(event.player)) {
-				PacketHandler.sendToPlayer(new PacketAtmSync(atmosType.getUnlocalizedName()), event.player);
-				prevAtmosphere.put(event.player, atmosType);
+			if(event.entity instanceof EntityPlayer && atmosType != prevAtmosphere.get(event.entity)) {
+				PacketHandler.sendToPlayer(new PacketAtmSync(atmosType.getUnlocalizedName()), (EntityPlayer)event.entity);
+				prevAtmosphere.put((EntityPlayer)event.entity, atmosType);
 			}
 			
 			if(atmosType.canTick())
-				atmosType.onTick((EntityLivingBase)event.player);
+				atmosType.onTick((EntityLivingBase)event.entityLiving);
 		}
 	}
 	
