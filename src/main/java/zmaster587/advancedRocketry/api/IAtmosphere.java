@@ -32,4 +32,10 @@ public interface IAtmosphere {
 	 * @return unlocalized name of the gas
 	 */
 	public String getUnlocalizedName();
+	
+	
+	/**
+	 * @return true if the atmosphere is normally breathable without a suit
+	 */
+	public boolean isBreathable();
 }
