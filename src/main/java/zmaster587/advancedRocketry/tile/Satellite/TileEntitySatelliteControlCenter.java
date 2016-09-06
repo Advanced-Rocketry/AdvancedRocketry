@@ -197,6 +197,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 
 				idchip.erase(stack);
 				setInventorySlotContents(0, stack);
+				PacketHandler.sendToServer(new PacketMachine(this, (byte)(100 + buttonId)) );
 			}
 		}
 
