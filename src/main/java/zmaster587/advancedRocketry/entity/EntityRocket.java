@@ -663,11 +663,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		destinationDimId = storage.getDestinationDimId(worldObj.provider.dimensionId, (int)this.posX, (int)this.posZ);
 
 		//TODO: make sure this doesn't break asteriod mining
-		if(!DimensionManager.getInstance().canTravelTo(destinationDimId))
+		if(!(DimensionManager.getInstance().canTravelTo(destinationDimId) || (destinationDimId == -1 && storage.getSatelliteHatches().size() != 0)))
 			return;
 
 		//TODO: Clean this logic a bit?
-		if(!stats.hasSeat() || (destinationDimId != -1 && (DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || destinationDimId == Configuration.spaceDimId || destinationDimId == 0) ) { //Abort if destination is invalid
+		if(!stats.hasSeat() || ((DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || destinationDimId == Configuration.spaceDimId || destinationDimId == 0) ) { //Abort if destination is invalid
 
 
 			setInFlight(true);

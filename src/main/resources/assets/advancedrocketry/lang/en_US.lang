@@ -53,6 +53,7 @@ tile.liquidHatch.name=Fluid Hatch
 tile.rocketFuelBlock.name=Rocket Fuel
 tile.hydrogenFluidBlock.name=Hydrogen
 tile.oxygenFluidBlock.name=Oxygen
+tile.nitrogenFluidBlock.name=Nitrogen
 tile.oxygenCharger.name=Gas Charge Pad
 tile.dockingPad.name=Docking Pad
 tile.stationmonitor.name=Warp Controller
