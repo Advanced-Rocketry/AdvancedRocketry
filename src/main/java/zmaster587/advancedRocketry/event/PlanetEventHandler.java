@@ -16,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
@@ -28,6 +29,8 @@ import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
@@ -39,6 +42,7 @@ import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.util.BiomeHandler;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
+import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.network.PacketHandler;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -280,18 +284,19 @@ public class PlanetEventHandler {
 			
 			if(DimensionManager.getInstance().getDimensionProperties(event.world.provider.dimensionId).isTerraformed()) {
 				List<Chunk> list = ((WorldServer)event.world).theChunkProviderServer.loadedChunks;
-				//for(int i = 0; i < 128; i++) {
+				for(int i = 0; i < Configuration.terraformingBlockSpeed; i++) {
 					Chunk chunk = list.get(event.world.rand.nextInt(list.size()));
 					int coord = event.world.rand.nextInt(256);
 					int x = (coord & 0xF) + chunk.xPosition*16;
 					int z = (coord >> 4) + chunk.zPosition*16;
 
 					BiomeHandler.changeBiome(event.world, event.world.provider.worldChunkMgr.getBiomeGenAt(x,z).biomeID, x, z);
-				//}
+				}
 			}
 		}
 	}
 
+	static final ItemStack component = new ItemStack(AdvancedRocketryItems.itemUpgrade, 1, 4);
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void fogColor(net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent event) {
@@ -311,13 +316,26 @@ public class PlanetEventHandler {
 			float f1 = event.farPlaneDistance;
 			float near;
 			float far;
-			if(properties.getAtmosphereDensity() > 100) {
-				near = 0.75f*f1*(2.00f - properties.getAtmosphereDensity()*properties.getAtmosphereDensity()/10000f);
+			
+			int atmosphere = properties.getAtmosphereDensity();
+			ItemStack armor = Minecraft.getMinecraft().thePlayer.getCurrentArmor(3);
+			
+			if(armor != null && armor.getItem() instanceof IModularArmor) {
+				for(ItemStack i : ((IModularArmor)armor.getItem()).getComponents(armor)) {
+					if(i.isItemEqual(component)) {
+						atmosphere = Math.min(atmosphere, 100);
+						break;
+					}
+				}
+			}
+			
+			if(atmosphere > 100) {
+				near = 0.75f*f1*(2.00f - properties.getAtmosphereDensity()*atmosphere/10000f);
 				far = f1;
 			}
 			else {
-				near = 0.75f*f1*(2.00f - properties.getAtmosphereDensity()/100f);
-				far = f1*(2.002f - properties.getAtmosphereDensity()/100f);
+				near = 0.75f*f1*(2.00f -atmosphere/100f);
+				far = f1*(2.002f - atmosphere/100f);
 			}
 
 			GL11.glFogf(GL11.GL_FOG_START, near);

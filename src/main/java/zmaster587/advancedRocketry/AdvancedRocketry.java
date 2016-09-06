@@ -190,6 +190,8 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import scala.Int;
+
 
 @Mod(modid="advancedRocketry", name="Advanced Rocketry", version="%VERSION%", dependencies="required-after:libVulpes@[%LIBVULPESVERSION%,)")
 public class AdvancedRocketry {
@@ -255,7 +257,8 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.travelTimeMultiplier = (float)config.get(Configuration.CATEGORY_GENERAL, "warpTravelTime", 1f, "Multiplier for warp travel time").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.maxBiomesPerPlanet = config.get(Configuration.CATEGORY_GENERAL, "maxBiomesPerPlanet", 5, "Maximum unique biomes per planet, -1 to disable").getInt();
 		zmaster587.advancedRocketry.api.Configuration.allowTerraforming = config.get(Configuration.CATEGORY_GENERAL, "allowTerraforming", false, "EXPERIMENTAL: If set to true allows contruction and usage of the terraformer.  This is known to cause strange world generation after successful terraform").getBoolean();
-				
+		zmaster587.advancedRocketry.api.Configuration.terraformingBlockSpeed = config.getInt(Configuration.CATEGORY_GENERAL, "BiomeUpdateSpeed", 1, 1, Integer.MAX_VALUE, "How many blocks have the biome changed per tick.  Large numbers can slow the server down");
+		
 		
 		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 127, "Dimensions including and after this number are allowed to be made into planets");
 		zmaster587.advancedRocketry.api.Configuration.overrideGCAir = config.get(MOD_INTERACTION, "OverrideGCAir", true, "If true Galaciticcraft's air will be disabled entirely requiring use of Advanced Rocketry's Oxygen system on GC planets").getBoolean();
@@ -672,7 +675,7 @@ public class AdvancedRocketry {
 		//Suit Component Registration
 		AdvancedRocketryItems.itemJetpack = new ItemJetpack().setCreativeTab(tabAdvRocketry).setUnlocalizedName("jetPack").setTextureName("advancedRocketry:jetpack");
 		AdvancedRocketryItems.itemPressureTank = new ItemPressureTank(4, 1000).setCreativeTab(tabAdvRocketry).setUnlocalizedName("advancedrocketry:pressureTank").setTextureName("advancedRocketry:pressureTank");
-		AdvancedRocketryItems.itemUpgrade = new ItemUpgrade(4).setCreativeTab(tabAdvRocketry).setUnlocalizedName("advancedrocketry:itemUpgrade").setTextureName("advancedRocketry:itemUpgrade");
+		AdvancedRocketryItems.itemUpgrade = new ItemUpgrade(5).setCreativeTab(tabAdvRocketry).setUnlocalizedName("advancedrocketry:itemUpgrade").setTextureName("advancedRocketry:itemUpgrade");
 		AdvancedRocketryItems.itemAtmAnalyser = new ItemAtmosphereAnalzer().setCreativeTab(tabAdvRocketry).setUnlocalizedName("atmAnalyser").setTextureName("advancedRocketry:atmosphereAnalyzer");
 
 		//Armor registration
