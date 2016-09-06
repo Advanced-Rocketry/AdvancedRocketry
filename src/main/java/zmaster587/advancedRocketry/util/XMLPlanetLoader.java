@@ -141,7 +141,7 @@ public class XMLPlanetLoader {
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("atmosphereDensity")) {
 
 				try {
-					properties.atmosphereDensity = Math.min(Math.max(Integer.parseInt(planetPropertyNode.getTextContent()), DimensionProperties.MIN_ATM_PRESSURE), DimensionProperties.MAX_ATM_PRESSURE);
+					properties.setAtmosphereDensityDirect(Math.min(Math.max(Integer.parseInt(planetPropertyNode.getTextContent()), DimensionProperties.MIN_ATM_PRESSURE), DimensionProperties.MAX_ATM_PRESSURE));
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warning("Invalid atmosphereDensity specified"); //TODO: more detailed error msg
 				}

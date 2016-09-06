@@ -10,6 +10,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.item.ItemBiomeChanger;
 import zmaster587.advancedRocketry.network.PacketBiomeIDChange;
+import zmaster587.advancedRocketry.util.BiomeHandler;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.BlockPosition;
@@ -98,22 +99,7 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 						extractEnergy(10, false);
 						BlockPosition pos = toChangeList.remove(world.rand.nextInt(toChangeList.size()));
 
-						Chunk chunk = world.getChunkFromBlockCoords(pos.x, pos.z);
-
-						BiomeGenBase biome = world.getBiomeGenForCoords(pos.x, pos.z);
-						BiomeGenBase biomeTo = BiomeGenBase.getBiome(biomeId);
-						if(biome.topBlock != biomeTo.topBlock) {
-							int yy = world.getHeightValue(pos.x, pos.z);
-							if(world.getBlock(pos.x, yy - 1, pos.z) == biome.topBlock)
-								world.setBlock(pos.x, yy - 1, pos.z, biomeTo.topBlock);
-
-							pos.y = (short)yy;
-						}
-
-						byte[] biomeArr = chunk.getBiomeArray();
-						biomeArr[(pos.x % 16)+ (pos.z % 16)*16] = (byte)biomeId;
-
-						PacketHandler.sendToNearby(new PacketBiomeIDChange(chunk, world, pos), world.provider.dimensionId, pos.x, pos.y, pos.z, 256);
+						BiomeHandler.changeBiome(world, biomeId, pos.x, pos.z);
 
 					}
 					else
@@ -250,6 +236,10 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 	@Override
 	public int getMaxEnergyStored() {
 		return battery.getMaxEnergyStored();
+	}
+	
+	public void setMaxEnergyStored(int max) {
+		battery.setMaxEnergyStored(max);
 	}
 
 	@Override

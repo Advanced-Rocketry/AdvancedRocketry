@@ -199,7 +199,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			float sizeY = storage.getSizeY();
 			float sizeZ = storage.getSizeZ()/2.0f;
 			this.boundingBox.setBounds(x - sizeX, y - (double)this.yOffset + this.ySize, z - sizeZ, x + sizeX, y + sizeY - (double)this.yOffset + this.ySize, z + sizeZ);
-
 		}
 	}
 

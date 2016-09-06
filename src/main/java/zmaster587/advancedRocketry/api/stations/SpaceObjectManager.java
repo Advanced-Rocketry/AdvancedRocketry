@@ -401,7 +401,7 @@ public class SpaceObjectManager {
 		AdvancedRocketry.proxy.fireFogBurst(station);
 
 
-		((DimensionProperties)station.getProperties()).atmosphereDensity = 0;
+		((DimensionProperties)station.getProperties()).setAtmosphereDensityDirect(0);
 		nextStationTransitionTick = (int)(Configuration.travelTimeMultiplier*timeDelta) + DimensionManager.getWorld(Configuration.spaceDimId).getTotalWorldTime();
 		station.beginTransition(nextStationTransitionTick);
 		

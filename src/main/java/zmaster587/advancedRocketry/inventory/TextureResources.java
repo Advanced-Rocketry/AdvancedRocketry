@@ -57,5 +57,6 @@ public class TextureResources {
 	public static final ProgressBarImage smallPlatePresser = new ProgressBarImage(0, 108, 16, 48, 0, 0, 1, 1, ForgeDirection.DOWN, TextureResources.progressBars); //TODO
 	public static final ProgressBarImage latheProgressBar = new ProgressBarImage(185, 24, 23, 4, 185, 28, 23, 4, ForgeDirection.EAST, TextureResources.progressBars);
 	public static final ProgressBarImage rollingMachineProgressBar = new ProgressBarImage(84, 66, 41, 32, 125, 66, 41, 32, ForgeDirection.EAST, TextureResources.progressBars);
+	public static final ProgressBarImage terraformProgressBar = new ProgressBarImage(16, 109, 106, 30, 16, 138, 106, 30, ForgeDirection.EAST, TextureResources.progressBars);
 
 }

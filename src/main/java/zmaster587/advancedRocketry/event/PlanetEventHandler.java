@@ -3,6 +3,8 @@ package zmaster587.advancedRocketry.event;
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
@@ -15,6 +17,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
@@ -22,6 +26,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
@@ -32,6 +37,8 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
+import zmaster587.advancedRocketry.util.BiomeHandler;
+import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.libVulpes.network.PacketHandler;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -233,9 +240,9 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void fogColor(net.minecraftforge.client.event.EntityViewRenderEvent.FogColors event) {
-		
-		
-		
+
+
+
 		Block block = ActiveRenderInfo.getBlockAtEntityViewpoint(event.entity.worldObj, event.entity, (float)event.renderPartialTicks);
 		if(block.getMaterial() == Material.water)
 			return;
@@ -268,26 +275,56 @@ public class PlanetEventHandler {
 	}
 
 	@SubscribeEvent
+	public void serverTickEvent(TickEvent.WorldTickEvent event) {
+		if(zmaster587.advancedRocketry.api.Configuration.allowTerraforming && event.world.provider.getClass() == WorldProviderPlanet.class) {
+			
+			if(DimensionManager.getInstance().getDimensionProperties(event.world.provider.dimensionId).isTerraformed()) {
+				List<Chunk> list = ((WorldServer)event.world).theChunkProviderServer.loadedChunks;
+				//for(int i = 0; i < 128; i++) {
+					Chunk chunk = list.get(event.world.rand.nextInt(list.size()));
+					int coord = event.world.rand.nextInt(256);
+					int x = (coord & 0xF) + chunk.xPosition*16;
+					int z = (coord >> 4) + chunk.zPosition*16;
+
+					BiomeHandler.changeBiome(event.world, event.world.provider.worldChunkMgr.getBiomeGenAt(x,z).biomeID, x, z);
+				//}
+			}
+		}
+	}
+
+	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void fogColor(net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent event) {
-		
-		if(event.fogMode == -1) {
+
+		if(false || event.fogMode == -1) {
 			return;
 		}
-		
+
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.entity.dimension);
 		if(properties != null && event.block != Blocks.water && event.block != Blocks.lava) {//& properties.atmosphereDensity > 125) {
 			float fog = properties.getAtmosphereDensityAtHeight(event.entity.posY);
+			//GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP);
+			GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
 
-			float density = (properties.atmosphereDensity - 100)*(fog/2048f);
-			GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP);
-			
-			float f1 = 16*16f;//event.renderer.
-			GL11.glFogf(GL11.GL_FOG_START, f1 * 0.8F);
-            GL11.glFogf(GL11.GL_FOG_END, f1);
-			
-			GL11.glFogf(GL11.GL_FOG_DENSITY, density);
-			
+
+
+			float f1 = event.farPlaneDistance;
+			float near;
+			float far;
+			if(properties.getAtmosphereDensity() > 100) {
+				near = 0.75f*f1*(2.00f - properties.getAtmosphereDensity()*properties.getAtmosphereDensity()/10000f);
+				far = f1;
+			}
+			else {
+				near = 0.75f*f1*(2.00f - properties.getAtmosphereDensity()/100f);
+				far = f1*(2.002f - properties.getAtmosphereDensity()/100f);
+			}
+
+			GL11.glFogf(GL11.GL_FOG_START, near);
+			GL11.glFogf(GL11.GL_FOG_END, far);
+			GL11.glFogf(GL11.GL_FOG_DENSITY, 0);
+
+
 			//event.setCanceled(false);
 		}
 	}

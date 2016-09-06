@@ -733,6 +733,12 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	public int getMaxEnergyStored(ForgeDirection from) {
 		return getMaxEnergyStored();
 	}
+	
+	@Override
+	public void setMaxEnergyStored(int max) {
+		storage.setMaxEnergyStored(max);
+	}
+	
 	//Redstone Flux end
 
 	public boolean isJammed() {

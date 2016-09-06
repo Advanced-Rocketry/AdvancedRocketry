@@ -34,6 +34,7 @@ public class FxSkyLaser extends EntityFX {
 		EntityPlayer player  = Minecraft.getMinecraft().thePlayer;
 		Tessellator.instance.draw();
 		render.doRender(this, this.posX - player.posX, this.posY - player.posY, this.posZ - player.posZ, 0, 0);
+		GL11.glDisable(GL11.GL_LIGHTING);
 		Tessellator.instance.startDrawingQuads();
 	}
 

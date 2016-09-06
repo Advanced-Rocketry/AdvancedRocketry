@@ -22,7 +22,11 @@ import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
+import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketSatellite;
+import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
+import zmaster587.advancedRocketry.world.ChunkProviderPlanet;
+import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.VulpineMath;
 import zmaster587.libVulpes.util.ZUtils;
@@ -179,7 +183,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public float[] fogColor;
 	public float gravitationalMultiplier;
 	public int orbitalDist;
-	public int atmosphereDensity;
+	private int atmosphereDensity;
 	public int averageTemperature;
 	public int rotationalPeriod;
 	//Stored in radians
@@ -190,7 +194,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	//public ExtendedBiomeProperties biomeProperties;
 	private LinkedList<BiomeEntry> allowedBiomes;
 	private boolean isRegistered = false;
-
+	private boolean isTerraformed = false;
+	
 	//Planet Heirachy
 	private HashSet<Integer> childPlanets;
 	private int parentPlanet;
@@ -445,6 +450,36 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 
 	/**
+	 * @return true if terraformed
+	 */
+	public boolean isTerraformed() {
+		return isTerraformed;
+	}
+	
+	public int getAtmosphereDensity() {
+		return atmosphereDensity;
+	}
+	
+	public void setAtmosphereDensity(int atmosphereDensity) {
+		
+		int prevAtm = this.atmosphereDensity;
+		this.atmosphereDensity = atmosphereDensity;
+		
+		if (AtmosphereTypes.getAtmosphereTypeFromValue(prevAtm) != AtmosphereTypes.getAtmosphereTypeFromValue(this.atmosphereDensity)) {
+			setBiomes(getViableBiomes());
+			isTerraformed = true;
+			((ChunkManagerPlanet)net.minecraftforge.common.DimensionManager.getProvider(getId()).worldChunkMgr).resetCache();
+			
+		}
+		
+		PacketHandler.sendToAll(new PacketDimInfo(getId(), this));
+	}
+	
+	public void setAtmosphereDensityDirect(int atmosphereDensity) {
+		this.atmosphereDensity = atmosphereDensity;
+	}
+	
+	/**
 	 * 
 	 * @return true if the dimension properties refer to that of a space station or orbiting object registered in {@link SpaceObjectManager}
 	 */
@@ -597,7 +632,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return List of biomes allowed to spawn on this planet
 	 */
 	public List<BiomeEntry> getBiomes() {
-		return (List<BiomeEntry>)allowedBiomes.clone();
+		return (List<BiomeEntry>)allowedBiomes;
 	}
 
 	/**
@@ -616,7 +651,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		Random random = new Random(System.nanoTime());
 		List<BiomeGenBase> viableBiomes = new ArrayList<BiomeGenBase>();
 
-		if(random.nextInt(3) == 0) {
+		if(atmosphereDensity > AtmosphereTypes.LOW.value && random.nextInt(3) == 0) {
 			List<BiomeGenBase> list = new LinkedList<BiomeGenBase>(AdvancedRocketryBiomes.instance.getSingleBiome());
 
 			while(list.size() > 1) {
@@ -634,7 +669,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		}
 
 
-		if(atmosphereDensity < AtmosphereTypes.LOW.value)
+		if(atmosphereDensity <= AtmosphereTypes.LOW.value)
 			viableBiomes.add(AdvancedRocketryBiomes.moonBiome);
 
 		else if(averageTemperature > Temps.TOOHOT.getTemp()) {
@@ -689,7 +724,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		return viableBiomes;
 	}
-
+	
 	/**
 	 * Adds a biome to the list of biomes allowed to spawn on this planet
 	 * @param biome biome to be added as viable
@@ -885,6 +920,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		name = nbt.getString("name");
 		isNativeDimension = nbt.hasKey("isNative") ? nbt.getBoolean("isNative") : true; //Prevent world breakages when loading from old version
 
+		isTerraformed = nbt.getBoolean("terraformed");
+		
 		//Hierarchy
 		if(nbt.hasKey("childrenPlanets")) {
 			for(int i : nbt.getIntArray("childrenPlanets"))
@@ -970,6 +1007,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setInteger("rotationalPeriod", rotationalPeriod);
 		nbt.setString("name", name);
 		nbt.setBoolean("isNative", isNativeDimension);
+		nbt.setBoolean("terraformed", isTerraformed);
 
 		//Hierarchy
 		if(!childPlanets.isEmpty()) {

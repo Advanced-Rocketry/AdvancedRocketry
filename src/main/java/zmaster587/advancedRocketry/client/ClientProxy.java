@@ -44,6 +44,7 @@ import zmaster587.advancedRocketry.entity.EntityLaserNode;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.entity.FxSkyLaser;
 import zmaster587.advancedRocketry.entity.fx.FxElectricArc;
+import zmaster587.advancedRocketry.entity.fx.InverseTrailFx;
 import zmaster587.advancedRocketry.entity.fx.RocketFx;
 import zmaster587.advancedRocketry.entity.fx.TrailFx;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
@@ -157,6 +158,10 @@ public class ClientProxy extends CommonProxy {
 		}
 		else if(particle == "rocketSmoke") {
 			TrailFx fx = new TrailFx(world, x, y, z, motionX, motionY, motionZ);
+			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+		}
+		else if(particle == "rocketSmokeInverse") {
+			InverseTrailFx fx = new InverseTrailFx(world, x, y, z, motionX, motionY, motionZ);
 			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 		}
 		else if(particle == "arc") {

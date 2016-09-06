@@ -277,7 +277,7 @@ public class RocketEventHandler extends Gui {
 		size = (getImgSize*100/(180-Minecraft.getMinecraft().renderViewEntity.posY - deltaY));
 
 
-		for(int i = 0; i < 5 * MathHelper.clamp_float(( ( DimensionManager.getInstance().getDimensionProperties(Minecraft.getMinecraft().renderViewEntity.worldObj.provider.dimensionId).atmosphereDensity *.01f * (float)Minecraft.getMinecraft().renderViewEntity.posY -280f) )/150f, 0f, 2f); i++) {
+		for(int i = 0; i < 5 * MathHelper.clamp_float(( ( DimensionManager.getInstance().getDimensionProperties(Minecraft.getMinecraft().renderViewEntity.worldObj.provider.dimensionId).getAtmosphereDensity() *.01f * (float)Minecraft.getMinecraft().renderViewEntity.posY -280f) )/150f, 0f, 2f); i++) {
 			RenderHelper.renderTopFace(tess, -9 + i*.6, size, size, -size , -size);
 		}
 

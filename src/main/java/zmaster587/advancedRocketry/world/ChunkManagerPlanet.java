@@ -1,9 +1,11 @@
 package zmaster587.advancedRocketry.world;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -14,6 +16,7 @@ import zmaster587.advancedRocketry.world.gen.GenLayerVoronoiExtended;
 import zmaster587.advancedRocketry.world.type.WorldTypePlanetGen;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
+import net.minecraft.util.LongHashMap;
 import net.minecraft.util.ReportedException;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
@@ -50,7 +53,10 @@ public class ChunkManagerPlanet extends WorldChunkManager {
 	private GenLayer genBiomes;
 
 	private List<BiomeEntry> biomes;
-
+	
+	private static Field fBiomeCacheMap;
+	private static Field fBiomeCache;
+	
 	public ChunkManagerPlanet(long seed, WorldType default1, DimensionProperties properties) {
 
 		this.biomeCache = new BiomeCache(this);//new BiomeCacheExtended(this);
@@ -60,6 +66,12 @@ public class ChunkManagerPlanet extends WorldChunkManager {
 		agenlayer = getModdedBiomeGenerators(default1, seed, agenlayer);
 		this.genBiomes = agenlayer[0];
 		this.biomeIndexLayer = agenlayer[1];
+		
+		fBiomeCache = ReflectionHelper.findField(BiomeCache.class, "cache", "");
+		fBiomeCache.setAccessible(true);
+		
+		fBiomeCacheMap = ReflectionHelper.findField(BiomeCache.class, "cacheMap", "");
+		fBiomeCacheMap.setAccessible(true);
 	}
 
 	public ChunkManagerPlanet(World world)
@@ -234,6 +246,17 @@ public class ChunkManagerPlanet extends WorldChunkManager {
 	public BiomeGenBase getBiomeGenAt(int p_76935_1_, int p_76935_2_)
 	{
 		return this.biomeCache.getBiomeGenAt(p_76935_1_, p_76935_2_);
+	}
+	
+	
+	public void resetCache() {
+		
+		try {
+			fBiomeCacheMap.set(this.biomeCache, new LongHashMap());
+			((List)fBiomeCache.get(this.biomeCache)).clear();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public BiomeGenBase[] getBiomesForGeneration(BiomeGenBase[] p_76937_1_, int p_76937_2_, int p_76937_3_, int p_76937_4_, int p_76937_5_,  DimensionProperties properties)

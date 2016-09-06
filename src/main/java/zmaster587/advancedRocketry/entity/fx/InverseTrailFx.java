@@ -8,28 +8,29 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
-public class TrailFx extends EntityFX {
+public class InverseTrailFx extends EntityFX {
 	public static final ResourceLocation icon = new ResourceLocation("advancedrocketry:textures/particle/soft.png");
 
 	
-	public TrailFx(World world, double x,
+	public InverseTrailFx(World world, double x,
 			double y, double z, double motx, double moty, double motz) {
 		super(world, x, y, z, motx, moty, motz);
 		
-		this.prevPosX = this.posX = this.lastTickPosX = x;
-		this.prevPosY = this.posY = this.lastTickPosY = y;
-		this.prevPosZ = this.posZ = this.lastTickPosZ = z;
-		
 		float chroma = this.rand.nextFloat()*0.2f;
-        this.particleRed = .4F + chroma;
-        this.particleGreen = .4F + chroma;
-        this.particleBlue = .4F + chroma;
+        this.particleRed = .8F + chroma;
+        this.particleGreen = .8F + chroma;
+        this.particleBlue = .8F + chroma;
         this.setSize(0.12F, 0.12F);
-        this.particleScale *= this.rand.nextFloat() * 0.6F + 6F;
-        this.motionX = motx;
-        this.motionY = moty;
-        this.motionZ = motz;
-        this.particleMaxAge = (int)(1000.0D);
+        this.particleMaxAge = (int)(100.0D);
+        this.particleScale *= this.rand.nextFloat() * 0.6F + 6F + Math.pow(1.04f, this.particleMaxAge);
+        this.motionX = -motx;
+        this.motionY = -moty;
+        this.motionZ = -motz;
+        
+        
+		this.prevPosX = this.posX = this.lastTickPosX = x + motx*this.particleMaxAge;
+		this.prevPosY = this.posY = this.lastTickPosY = y + moty*this.particleMaxAge;
+		this.prevPosZ = this.posZ = this.lastTickPosZ = z + motz*this.particleMaxAge;
 	}
 
 	@Override
@@ -40,9 +41,9 @@ public class TrailFx extends EntityFX {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(icon);
 		
 		GL11.glPushMatrix();
-		//GL11.glDisable(GL11.GL_BLEND);
 		//GL11.glBlendFunc( GL11.GL_ZERO, GL11.GL_ONE_MINUS_SRC_ALPHA );
 		//tess.setBrightness(0);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
         float f11 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)x1 - interpPosX);
         float f12 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)x1 - interpPosY);
@@ -74,8 +75,8 @@ public class TrailFx extends EntityFX {
         this.prevPosZ = this.posZ;
         
         //Change color and alpha over lifespan
-        this.particleAlpha = 1 - this.particleAge/ (float)this.particleMaxAge;
-        this.particleScale *= 1.002f;
+        this.particleAlpha =  this.particleAge/ (float)this.particleMaxAge;
+        this.particleScale /= 1.02f;
         
         if (this.particleAge++ >= this.particleMaxAge)
         {

@@ -178,7 +178,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	public boolean doesXZShowFog(int x, int z) {
-		return getDimensionProperties(x,z).atmosphereDensity > 100;
+		return getDimensionProperties(x,z).getAtmosphereDensity() > 100;
 	}
 
 	@Override
@@ -247,7 +247,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	public float getAtmosphereDensity(int x, int z) {
-		return (float)(getDimensionProperties(x,z).atmosphereDensity/100f);
+		return (float)(getDimensionProperties(x,z).getAtmosphereDensity()/100f);
 	}
 
 	@Override

@@ -53,6 +53,7 @@ public class AtmosphereType implements IAtmosphere {
 		return isBreathable;
 	}
 	
+	@Override
 	public boolean isBreathable() {
 		return isBreathable;
 	}

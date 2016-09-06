@@ -6,29 +6,51 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidHandler;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
+import zmaster587.advancedRocketry.satellite.SatelliteBiomeChanger;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.block.RotatableBlock;
+import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleImage;
+import zmaster587.libVulpes.inventory.modules.ModuleLimitedSlotArray;
+import zmaster587.libVulpes.inventory.modules.ModuleProgress;
 import zmaster587.libVulpes.inventory.modules.ModuleRadioButton;
+import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.inventory.modules.ModuleToggleSwitch;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
+import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine.NetworkPackets;
+import zmaster587.libVulpes.util.EmbeddedInventory;
+import zmaster587.libVulpes.util.IconResource;
 
 public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 
 	private ModuleToggleSwitch buttonIncrease, buttonDecrease;
 	private ModuleRadioButton radioButton;
+	private EmbeddedInventory inv;
 
 	private static final Object[][][] structure = new Object[][][]{                                                                                                                                                                                                                                                                                                        
 		{   {null,         null,          null,              null,               null,                                      null,                                    null,                null,                                 null,                                   null,                                    null,                null,                                      null,                                    null,               null,              null,           null},
@@ -250,21 +272,32 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 
 	public TileAtmosphereTerraformer() {
 		powerPerTick = 10;
-		completionTime = 20;
-		buttonIncrease = new ModuleToggleSwitch(40, 20, 1, "Increase Atm", this, TextureResources.buttonScan, 32, 16,true);
+		completionTime = 18000;
+		buttonIncrease = new ModuleToggleSwitch(40, 20, 1, "Increase Atm", this, TextureResources.buttonScan, 80, 16,true);
 		buttonDecrease = new ModuleToggleSwitch(40, 38, 2, "Decrease Atm", this, TextureResources.buttonScan, 80, 16, false);
-		
+
 		List<ModuleToggleSwitch> buttons = new LinkedList<ModuleToggleSwitch>();
 		buttons.add(buttonIncrease);
 		buttons.add(buttonDecrease);
 		radioButton = new ModuleRadioButton(this, buttons);
+		inv = new EmbeddedInventory(1);
 	}
 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		List<ModuleBase> modules =  super.getModules(ID, player);
 
+		powerPerTick = 1024;
+
+		//Backgrounds
+		if(worldObj.isRemote) {
+			modules.add(new ModuleImage(173, 0, new IconResource(90, 0, 84, 48, CommonResources.genericBackground)));
+		}
+
 		modules.add(radioButton);
+		modules.add(new ModuleProgress(30, 57, 0, zmaster587.advancedRocketry.inventory.TextureResources.terraformProgressBar, this));
+		modules.add(new ModuleText(180, 30, String.format("Pressure: %.2f" ,DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId).getAtmosphereDensity()/100f), 0x282828));
+		modules.add(new ModuleLimitedSlotArray(150, 64, inv, 0, 1));
 
 		return modules;
 	}
@@ -282,40 +315,94 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 	@Override
 	protected void onRunningPoweredTick() {
 		super.onRunningPoweredTick();
+
+		if(worldObj.isRemote) {
+			if(Minecraft.getMinecraft().gameSettings.particleSetting < 2) {
+				ForgeDirection dir = RotatableBlock.getFront(this.getBlockMetadata()).getOpposite();
+
+				if(radioButton.getOptionSelected() == 0) {
+					if(worldObj.getTotalWorldTime() % 20 == 0) {
+						float xMot = (float) ((0.5f - worldObj.rand.nextGaussian())/40f);
+						float zMot = (float) ((0.5f - worldObj.rand.nextGaussian())/40f);
+						AdvancedRocketry.proxy.spawnParticle("rocketSmoke", worldObj, xCoord + dir.offsetX + 5, yCoord + 7, zCoord + 0.5 + dir.offsetZ, xMot, 0.02f, zMot);
+						AdvancedRocketry.proxy.spawnParticle("rocketSmoke", worldObj, xCoord + dir.offsetX - 4, yCoord + 7, zCoord + 0.5 + dir.offsetZ, xMot, 0.02f, zMot);
+						AdvancedRocketry.proxy.spawnParticle("rocketSmoke", worldObj, xCoord + dir.offsetX + 0.5f, yCoord + 7, zCoord + dir.offsetZ - 4, xMot, 0.02f, zMot);
+						AdvancedRocketry.proxy.spawnParticle("rocketSmoke", worldObj, xCoord + dir.offsetX + 0.5f, yCoord + 7, zCoord + dir.offsetZ + 5, xMot, 0.02f, zMot);
+					}
+				}
+				else {
+					float xMot = (float) ((0.5f - worldObj.rand.nextGaussian())/4f);
+					float yMot = (float) (worldObj.rand.nextGaussian()/20f);
+					float zMot = (float) ((0.5f - worldObj.rand.nextGaussian())/4f);
+					AdvancedRocketry.proxy.spawnParticle("rocketSmokeInverse", worldObj, xCoord + dir.offsetX + 5, yCoord + 7, zCoord + 0.5 + dir.offsetZ, xMot, 0.4f + yMot, zMot);
+					AdvancedRocketry.proxy.spawnParticle("rocketSmokeInverse", worldObj, xCoord + dir.offsetX - 4, yCoord + 7, zCoord + 0.5 + dir.offsetZ, xMot, 0.4f + yMot, zMot);
+					AdvancedRocketry.proxy.spawnParticle("rocketSmokeInverse", worldObj, xCoord + dir.offsetX + 0.5f, yCoord + 7, zCoord + dir.offsetZ - 4, xMot, 0.4f + yMot, zMot);
+					AdvancedRocketry.proxy.spawnParticle("rocketSmokeInverse", worldObj, xCoord + dir.offsetX + 0.5f, yCoord + 7, zCoord + dir.offsetZ + 5, xMot, 0.4f + yMot, zMot);
+				}
+			}
+		}
+		
+		int requiredN2 = 50, requiredO2 = 50;
+
+		for(IFluidHandler handler : fluidInPorts) {
+			FluidStack stack = handler.drain(ForgeDirection.UNKNOWN, new FluidStack(AdvancedRocketryFluids.fluidNitrogen, requiredN2), true);
+
+			if(stack != null)
+				requiredN2 -= stack.amount;
+
+			stack = handler.drain(ForgeDirection.UNKNOWN, new FluidStack(AdvancedRocketryFluids.fluidOxygen, requiredO2), true);
+
+			if(stack != null)
+				requiredO2 -= stack.amount;
+		}
+
+		ItemStack stack = inv.getStackInSlot(0);
+		SatelliteBase satellite;
+		if(requiredN2 != 0 || requiredO2 != 0 || stack == null || stack.getItem() != AdvancedRocketryItems.itemSatelliteIdChip 
+				|| (satellite = ((ItemSatelliteIdentificationChip)AdvancedRocketryItems.itemSatelliteIdChip).getSatellite(stack)).getDimensionId() != worldObj.provider.dimensionId ||
+				satellite instanceof SatelliteBiomeChanger) {
+			this.setMachineEnabled(false);
+			this.setMachineRunning(false);
+		}
 	}
 
 	@Override
 	public boolean isRunning() {
-		return getMachineEnabled() && super.isRunning();
+		boolean bool = getMachineEnabled() && super.isRunning() && zmaster587.advancedRocketry.api.Configuration.allowTerraforming;
+
+		if(!bool)
+			currentTime = 0;
+
+		return bool;
 	}
 
 	@Override
 	protected void processComplete() {
 		super.processComplete();
-		completionTime = 20;
+		completionTime = 18000;
 
 		DimensionProperties properties ;
 		if( !worldObj.isRemote && worldObj.provider.getClass().equals(WorldProviderPlanet.class) && (properties=DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId)).isNativeDimension ) {
-			if(buttonIncrease.getState() && properties.atmosphereDensity < 200)
-				properties.atmosphereDensity++;
-			else if(buttonDecrease.getState() && properties.atmosphereDensity > 0) {
-				properties.atmosphereDensity--;
+			if(buttonIncrease.getState() && properties.getAtmosphereDensity() < 200)
+				properties.setAtmosphereDensity(properties.getAtmosphereDensity()+1);
+			else if(buttonDecrease.getState() && properties.getAtmosphereDensity() > 0) {
+				properties.setAtmosphereDensity(properties.getAtmosphereDensity()-1);
 			}
-			PacketHandler.sendToAll(new PacketDimInfo(worldObj.provider.dimensionId, properties));
+
 
 		}
 	}
-	
+
 	@Override
 	public void readDataFromNetwork(ByteBuf in, byte packetId,
 			NBTTagCompound nbt) {
 		super.readDataFromNetwork(in, packetId, nbt);
-		
+
 		if(packetId == (byte)TileMultiblockMachine.NetworkPackets.TOGGLE.ordinal()) {
 			radioButton.setOptionSeleted((int)in.readByte());
 		}
 	}
-	
+
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {
 		super.writeDataToNetwork(out, id);
@@ -323,13 +410,14 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 			out.writeByte(radioButton.getOptionSelected());
 		}
 	}
-	
+
 	@Override
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
 		super.useNetworkData(player, side, id, nbt);
+
 	}
-	
+
 	@Override
 	public void onInventoryButtonPressed(int buttonId) {
 		super.onInventoryButtonPressed(buttonId);
@@ -337,21 +425,24 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 			PacketHandler.sendToServer(new PacketMachine(this,(byte)TileMultiblockMachine.NetworkPackets.TOGGLE.ordinal()));
 		}
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		
+
 		nbt.setInteger("selected", radioButton.getOptionSelected());
+		inv.writeToNBT(nbt);
+
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		
+
 		radioButton.setOptionSeleted(nbt.getInteger("selected"));
+		inv.readFromNBT(nbt);
 	}
-	
+
 	@Override
 	public String getMachineName() {
 		return "atmospherefiller";
