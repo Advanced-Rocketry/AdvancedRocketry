@@ -48,6 +48,16 @@ public class TileLathe extends TileMultiblockMachine implements IModularInventor
 	public AxisAlignedBB getRenderBoundingBox() {
 		return AxisAlignedBB.getBoundingBox(xCoord -3,yCoord -2, zCoord -3, xCoord + 3, yCoord + 2, zCoord + 3);
 	}
+	
+	@Override
+	public String getSound() {
+		return "advancedrocketry:rollingMachine";
+	}
+
+	@Override
+	public int getSoundDuration() {
+		return 30;
+	}
 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {

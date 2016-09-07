@@ -1,6 +1,8 @@
 package zmaster587.advancedRocketry.tile.oxygen;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -35,7 +37,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	boolean hasFluid;
 	int numScrubbers;
 	List<TileCO2Scrubber> scrubbers;
-	
+
 	public TileOxygenVent() {
 		super(1000,2, 1000);
 		isSealed = true;
@@ -57,7 +59,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	public boolean canPerformFunction() {
 		return AtmosphereHandler.hasAtmosphereHandler(this.worldObj.provider.dimensionId);
 	}
-	
+
 	@Override
 	public World getWorld() {
 		return getWorldObj();
@@ -134,12 +136,12 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public void performFunction() {
-		
+
 		/*NB: canPerformFunction returns false and must return true for perform function to execute
 		 *  if there is no O2 handler, this is why we can safely call AtmosphereHandler.getOxygenHandler
 		 * And not have to worry about an NPE being thrown
 		 */
-		
+
 		//IF first tick then register the blob and check for scrubbers
 		if(firstRun && !worldObj.isRemote) {
 			AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).registerBlob(this, xCoord, yCoord, zCoord);
@@ -167,6 +169,8 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 			}
 
 			if(isSealed) {
+				if(worldObj.getTotalWorldTime() % 30 == 0)
+					worldObj.playSoundEffect(xCoord, yCoord, zCoord, "advancedrocketry:airHissLoop", 0.3f,  0.975f + worldObj.rand.nextFloat()*0.05f);
 
 				//If scrubbers exist and the config allows then use the cartridge
 				if(Configuration.scrubberRequiresCartrige){

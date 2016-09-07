@@ -47,6 +47,15 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 		return structure;
 	}
 	
+	@Override
+	public String getSound() {
+		return "advancedrocketry:rollingMachine";
+	}
+
+	@Override
+	public int getSoundDuration() {
+		return 30;
+	}
 	
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {

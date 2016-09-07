@@ -193,6 +193,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public float[] sunriseSunsetColors;
 	//public ExtendedBiomeProperties biomeProperties;
 	private LinkedList<BiomeEntry> allowedBiomes;
+	private LinkedList<BiomeEntry> terraformedBiomes;
 	private boolean isRegistered = false;
 	private boolean isTerraformed = false;
 	
@@ -216,6 +217,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		childPlanets = new HashSet<Integer>();
 
 		allowedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
+		terraformedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
 		satallites = new HashMap<>();
 		tickingSatallites = new HashMap<Long,SatelliteBase>();
 		isNativeDimension = true;
@@ -466,9 +468,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		this.atmosphereDensity = atmosphereDensity;
 		
 		if (AtmosphereTypes.getAtmosphereTypeFromValue(prevAtm) != AtmosphereTypes.getAtmosphereTypeFromValue(this.atmosphereDensity)) {
-			setBiomes(getViableBiomes());
+			setTerraformedBiomes(getViableBiomes());
 			isTerraformed = true;
-			((ChunkManagerPlanet)net.minecraftforge.common.DimensionManager.getProvider(getId()).worldChunkMgr).resetCache();
+			
+			((ChunkManagerPlanet)((WorldProviderPlanet)net.minecraftforge.common.DimensionManager.getProvider(getId())).chunkMgrTerraformed).resetCache();
 			
 		}
 		
@@ -634,6 +637,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public List<BiomeEntry> getBiomes() {
 		return (List<BiomeEntry>)allowedBiomes;
 	}
+	
+	public List<BiomeEntry> getTerraformedBiomes() {
+		return (List<BiomeEntry>)terraformedBiomes;
+	}
 
 	/**
 	 * Used to determine if a biome is allowed to spawn on ANY planet
@@ -768,6 +775,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public void setBiomes(List<BiomeGenBase> biomes) {
 		allowedBiomes.clear();
 		addBiomes(biomes);
+	}
+	
+	public void setTerraformedBiomes(List<BiomeGenBase> biomes) {
+		terraformedBiomes.clear();
+		terraformedBiomes.addAll(getBiomesEntries(biomes));
 	}
 
 	/**
@@ -909,6 +921,20 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			allowedBiomes.addAll(getBiomesEntries(biomesList));
 		}
 
+		//Load biomes
+		if(nbt.hasKey("biomesTerra")) {
+
+			terraformedBiomes.clear();
+			int biomeIds[] = nbt.getIntArray("biomesTerra");
+			List<BiomeGenBase> biomesList = new ArrayList<BiomeGenBase>();
+
+
+			for(int i = 0; i < biomeIds.length; i++) {
+				biomesList.add(AdvancedRocketryBiomes.instance.getBiomeById(biomeIds[i]));
+			}
+
+			terraformedBiomes.addAll(getBiomesEntries(biomesList));
+		}
 
 
 		gravitationalMultiplier = nbt.getFloat("gravitationalMultiplier");
@@ -998,6 +1024,14 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			nbt.setIntArray("biomes", biomeId);
 		}
 
+		if(!terraformedBiomes.isEmpty()) {
+			int biomeId[] = new int[terraformedBiomes.size()];
+			for(int i = 0; i < terraformedBiomes.size(); i++) {
+				biomeId[i] = terraformedBiomes.get(i).biome.biomeID;
+			}
+			nbt.setIntArray("biomesTerra", biomeId);
+		}
+		
 		nbt.setInteger("starId", star.getId());
 		nbt.setFloat("gravitationalMultiplier", gravitationalMultiplier);
 		nbt.setInteger("orbitalDist", orbitalDist);

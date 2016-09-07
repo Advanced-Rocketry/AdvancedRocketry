@@ -44,4 +44,8 @@ public class AdvancedRocketryItems {
 	public static Item itemUpgrade;
 	public static Item itemAtmAnalyser;
 	public static Item itemBiomeChanger;
+	public static Item itemBucketNitrogen;
+	public static Item itemBucketHydrogen;
+
+	public static Item itemBucketOxygen;
 }

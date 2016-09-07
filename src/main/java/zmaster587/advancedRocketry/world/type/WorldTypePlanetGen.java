@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.world.type;
 
-import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.ChunkProviderPlanet;
 import zmaster587.advancedRocketry.world.GenLayerBiomePlanet;
 import zmaster587.advancedRocketry.world.gen.GenLayerEdgeExtendedBiomes;
@@ -20,7 +19,7 @@ public class WorldTypePlanetGen extends WorldType {
 	@Override
 	public WorldChunkManager getChunkManager(World world)
 	{
-		return new ChunkManagerPlanet(world); //new WorldChunkManager(world);//
+		return null;//new ChunkManagerPlanet(world); //new WorldChunkManager(world);//
 	}
 
 	@Override

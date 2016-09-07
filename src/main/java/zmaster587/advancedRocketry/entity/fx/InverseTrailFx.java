@@ -75,7 +75,7 @@ public class InverseTrailFx extends EntityFX {
         this.prevPosZ = this.posZ;
         
         //Change color and alpha over lifespan
-        this.particleAlpha =  this.particleAge/ (float)this.particleMaxAge;
+        this.particleAlpha =  0.25f*this.particleAge/ (float)this.particleMaxAge;
         this.particleScale /= 1.02f;
         
         if (this.particleAge++ >= this.particleMaxAge)

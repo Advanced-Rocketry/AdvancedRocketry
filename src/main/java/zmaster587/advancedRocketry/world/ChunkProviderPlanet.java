@@ -12,7 +12,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.world.decoration.MapGenCrater;
 import zmaster587.advancedRocketry.world.decoration.MapGenGeode;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
@@ -445,6 +447,15 @@ public class ChunkProviderPlanet implements IChunkProvider {
 		k += 8;
 		l += 8;
 
+		//If a planet is terraformed chenge upper blocks
+		if(zmaster587.advancedRocketry.api.Configuration.allowTerraforming && worldObj.provider.getClass() == WorldProviderPlanet.class) {
+
+			if(DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId).isTerraformed()) {
+				Chunk chunk = worldObj.getChunkFromChunkCoords(p_73153_2_, p_73153_3_);
+				PlanetEventHandler.modifyChunk(worldObj, (WorldProviderPlanet)worldObj.provider, chunk);
+			}
+		}
+		
 		if (populationFlag)
 			MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Post(p_73153_1_, worldObj, rand, p_73153_2_, p_73153_3_, flag));
 

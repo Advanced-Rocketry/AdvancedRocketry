@@ -18,6 +18,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -26,6 +27,8 @@ import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
+import net.minecraftforge.event.terraingen.PopulateChunkEvent;
+import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
@@ -281,20 +284,47 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	public void serverTickEvent(TickEvent.WorldTickEvent event) {
 		if(zmaster587.advancedRocketry.api.Configuration.allowTerraforming && event.world.provider.getClass() == WorldProviderPlanet.class) {
-			
+
 			if(DimensionManager.getInstance().getDimensionProperties(event.world.provider.dimensionId).isTerraformed()) {
 				List<Chunk> list = ((WorldServer)event.world).theChunkProviderServer.loadedChunks;
-				for(int i = 0; i < Configuration.terraformingBlockSpeed; i++) {
-					Chunk chunk = list.get(event.world.rand.nextInt(list.size()));
-					int coord = event.world.rand.nextInt(256);
-					int x = (coord & 0xF) + chunk.xPosition*16;
-					int z = (coord >> 4) + chunk.zPosition*16;
+				if(list.size() > 0) {
+					for(int i = 0; i < Configuration.terraformingBlockSpeed; i++) {
+						Chunk chunk = list.get(event.world.rand.nextInt(list.size()));
+						int coord = event.world.rand.nextInt(256);
+						int x = (coord & 0xF) + chunk.xPosition*16;
+						int z = (coord >> 4) + chunk.zPosition*16;
 
-					BiomeHandler.changeBiome(event.world, event.world.provider.worldChunkMgr.getBiomeGenAt(x,z).biomeID, x, z);
+						BiomeHandler.changeBiome(event.world, ((WorldProviderPlanet)event.world.provider).chunkMgrTerraformed.getBiomeGenAt(x,z).biomeID, x, z);
+					}
 				}
 			}
 		}
 	}
+
+	@SubscribeEvent
+	public void chunkLoadEvent(PopulateChunkEvent.Post event) {
+		if(zmaster587.advancedRocketry.api.Configuration.allowTerraforming && event.world.provider.getClass() == WorldProviderPlanet.class) {
+
+			if(DimensionManager.getInstance().getDimensionProperties(event.world.provider.dimensionId).isTerraformed()) {
+				Chunk chunk = event.world.getChunkFromChunkCoords(event.chunkX, event.chunkZ);
+				modifyChunk(event.world, (WorldProviderPlanet) event.world.provider, chunk);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void chunkLoadEvent(ChunkEvent.Load event) {
+	}
+
+	public static void modifyChunk(World world ,WorldProviderPlanet provider, Chunk chunk) {
+		for(int x = 0; x < 16; x++) {
+			for(int z = 0; z < 16; z++) {
+
+				BiomeHandler.changeBiome(world, provider.chunkMgrTerraformed.getBiomeGenAt(x + chunk.xPosition*16,z + chunk.zPosition*16).biomeID, chunk, x + chunk.xPosition* 16, z + chunk.zPosition*16);
+			}
+		}
+	}
+
 
 	static final ItemStack component = new ItemStack(AdvancedRocketryItems.itemUpgrade, 1, 4);
 	@SubscribeEvent
@@ -316,10 +346,10 @@ public class PlanetEventHandler {
 			float f1 = event.farPlaneDistance;
 			float near;
 			float far;
-			
+
 			int atmosphere = properties.getAtmosphereDensity();
 			ItemStack armor = Minecraft.getMinecraft().thePlayer.getCurrentArmor(3);
-			
+
 			if(armor != null && armor.getItem() instanceof IModularArmor) {
 				for(ItemStack i : ((IModularArmor)armor.getItem()).getComponents(armor)) {
 					if(i.isItemEqual(component)) {
@@ -328,7 +358,7 @@ public class PlanetEventHandler {
 					}
 				}
 			}
-			
+
 			if(atmosphere > 100) {
 				near = 0.75f*f1*(2.00f - properties.getAtmosphereDensity()*atmosphere/10000f);
 				far = f1;

@@ -44,18 +44,29 @@ public class BiomeHandler {
 
 		BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
 		BiomeGenBase biomeTo = BiomeGenBase.getBiome(biomeId);
+		
+		if(biome == biomeTo)
+			return;
+		
 		int y = 60;
 		if(biome.topBlock != biomeTo.topBlock) {
-			int yy = world.getHeightValue(x, z);
-			if(world.getBlock(x, yy - 1, z) == biome.topBlock)
-				world.setBlock(x, yy - 1, z, biomeTo.topBlock);
+			int yy = chunk.getHeightValue(x & 15, z & 15);
+			
+			while(!world.getBlock(x, yy - 1, z).isOpaqueCube() && yy > 0)
+				yy--;
+			
+			if(yy == 0)
+				return;
+			
+			if(chunk.getBlock(x & 15, yy - 1, z & 15) == biome.topBlock)
+				chunk.func_150807_a(x & 15, yy - 1, z & 15, biomeTo.topBlock, 0);
 
 			y = (short)yy;
 		}
 
 		byte[] biomeArr = chunk.getBiomeArray();
-		biomeArr[(x % 16)+ (z % 16)*16] = (byte)biomeId;
+		biomeArr[(x & 15) + (z & 15)*16] = (byte)biomeId;
 
-		PacketHandler.sendToNearby(new PacketBiomeIDChange(chunk, world, new BlockPosition(x, y, z)), world.provider.dimensionId, x, y, z, 256);
+		//PacketHandler.sendToNearby(new PacketBiomeIDChange(chunk, world, new BlockPosition(x, y, z)), world.provider.dimensionId, x, y, z, 256);
 	}
 }

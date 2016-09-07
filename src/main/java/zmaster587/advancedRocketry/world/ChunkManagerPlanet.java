@@ -67,19 +67,20 @@ public class ChunkManagerPlanet extends WorldChunkManager {
 		this.genBiomes = agenlayer[0];
 		this.biomeIndexLayer = agenlayer[1];
 		
-		fBiomeCache = ReflectionHelper.findField(BiomeCache.class, "cache", "");
+		fBiomeCache = ReflectionHelper.findField(BiomeCache.class, "cache", "field_76841_d");
 		fBiomeCache.setAccessible(true);
 		
-		fBiomeCacheMap = ReflectionHelper.findField(BiomeCache.class, "cacheMap", "");
+		fBiomeCacheMap = ReflectionHelper.findField(BiomeCache.class, "cacheMap", "field_76843_c");
 		fBiomeCacheMap.setAccessible(true);
 	}
 
-	public ChunkManagerPlanet(World world)
+	
+	public ChunkManagerPlanet(World world, List biomes)
 	{
 		this(world.getSeed(), (WorldTypePlanetGen)world.getWorldInfo().getTerrainType(), DimensionManager.getInstance().getDimensionProperties(world.provider.dimensionId));
 		//Note: world MUST BE REGISTERED WITH THE DIMENSION MANAGER
 		//This is a mess!
-		biomes = DimensionManager.getInstance().getDimensionProperties(world.provider.dimensionId).getBiomes();
+		this.biomes = biomes;
 	}
 
 	/**

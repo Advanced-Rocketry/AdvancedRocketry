@@ -77,5 +77,6 @@ public class Configuration {
 	public static boolean allowTerraforming;
 
 	public static int terraformingBlockSpeed;
+	public static double terraformSpeed;
 
 }

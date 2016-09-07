@@ -77,7 +77,16 @@ public class TileRollingMachine extends TileMultiblockMachine {
 		fluidHandler.drain(ForgeDirection.UNKNOWN, new FluidStack(FluidRegistry.WATER, 100), true);
 	}
 
+	@Override
+	public String getSound() {
+		return "advancedrocketry:rollingMachine";
+	}
 
+	@Override
+	public int getSoundDuration() {
+		return 30;
+	}
+	
 	@Override
 	public boolean shouldHideBlock(World world, int x, int y, int z, Block tile) {
 		return tile != Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem());

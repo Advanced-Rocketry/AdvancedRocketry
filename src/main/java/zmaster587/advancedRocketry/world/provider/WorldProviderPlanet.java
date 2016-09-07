@@ -19,12 +19,14 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldProvider;
+import net.minecraft.world.biome.WorldChunkManager;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.client.IRenderHandler;
 
 public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProvider {
 	private IRenderHandler skyRender;
+	public WorldChunkManager chunkMgrTerraformed;
 
 	/*@Override
 	protected void registerWorldChunkManager() {
@@ -65,7 +67,9 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	protected void registerWorldChunkManager()
 	{
 		worldObj.getWorldInfo().setTerrainType(AdvancedRocketry.planetWorldType);
-		this.worldChunkMgr = new ChunkManagerPlanet(worldObj);
+		
+		this.worldChunkMgr = new ChunkManagerPlanet(worldObj, DimensionManager.getInstance().getDimensionProperties(dimensionId).getBiomes());
+		this.chunkMgrTerraformed = new ChunkManagerPlanet(worldObj, DimensionManager.getInstance().getDimensionProperties(dimensionId).getTerraformedBiomes());
 		//AdvancedRocketry.planetWorldType.getChunkManager(worldObj);
 	}
 	@Override
