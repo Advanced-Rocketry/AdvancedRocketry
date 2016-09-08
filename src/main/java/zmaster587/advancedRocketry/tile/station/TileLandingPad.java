@@ -146,7 +146,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile 
 				AxisAlignedBB bbCache = AxisAlignedBB.getBoundingBox(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 1, this.yCoord + 2, this.zCoord + 1);
 				List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
 				
-				if(rockets != null)
+				if(rockets != null && !rockets.isEmpty())
 					((SpaceObject)spaceObj).setPadStatus(x, z, true);
 			}
 		}

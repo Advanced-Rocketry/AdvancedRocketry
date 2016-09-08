@@ -282,7 +282,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 		buttonIncrease = new ModuleToggleSwitch(40, 20, 1, "Increase Atm", this, TextureResources.buttonScan, 80, 16,true);
 		buttonDecrease = new ModuleToggleSwitch(40, 38, 2, "Decrease Atm", this, TextureResources.buttonScan, 80, 16, false);
 		text = new ModuleText(180, 30, "", 0x282828);
-		powerPerTick = 1024;
+		powerPerTick = 1000;
 
 		List<ModuleToggleSwitch> buttons = new LinkedList<ModuleToggleSwitch>();
 		buttons.add(buttonIncrease);
@@ -292,7 +292,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 	}
 
 	private int getCompletionTime() {
-		return 50;//(int) (18000 * Configuration.terraformSpeed);
+		return (int) (18000 * Configuration.terraformSpeed);
 	}
 
 	@Override
@@ -359,10 +359,10 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 			}
 		}
 
-		if(true)
+		if(!Configuration.terraformRequiresFluid)
 			return;
 
-		int requiredN2 = 50, requiredO2 = 50;
+		int requiredN2 = 80, requiredO2 = 80;
 
 		for(IFluidHandler handler : fluidInPorts) {
 			FluidStack stack = handler.drain(ForgeDirection.UNKNOWN, new FluidStack(AdvancedRocketryFluids.fluidNitrogen, requiredN2), true);

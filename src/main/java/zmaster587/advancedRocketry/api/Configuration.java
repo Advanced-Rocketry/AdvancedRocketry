@@ -78,5 +78,6 @@ public class Configuration {
 
 	public static int terraformingBlockSpeed;
 	public static double terraformSpeed;
+	public static boolean terraformRequiresFluid;
 
 }

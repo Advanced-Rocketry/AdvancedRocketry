@@ -70,6 +70,7 @@ import zmaster587.advancedRocketry.tile.multiblock.machine.TileElectrolyser;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileLathe;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TilePrecisionAssembler;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileRollingMachine;
+import zmaster587.libVulpes.entity.fx.FxErrorBlock;
 import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
 import zmaster587.libVulpes.tile.TileSchematic;
 
@@ -174,6 +175,10 @@ public class ClientProxy extends CommonProxy {
 		}
 		else if(particle == "smallLazer") {
 			FxSkyLaser fx = new FxSkyLaser(world, x, y, z);
+			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+		}
+		else if(particle == "errorBox") {
+			FxErrorBlock fx = new FxErrorBlock(world, x, y, z);
 			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 		}
 	}
