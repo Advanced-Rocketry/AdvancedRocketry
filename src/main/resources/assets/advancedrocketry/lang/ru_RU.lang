@@ -19,6 +19,8 @@ tile.blastFurnaceController.name=Контроллер высокотемпера
 tile.fuelStation.name=Заправочная станция
 tile.loader.0.name=Шина данных
 tile.loader.1.name=Отсек для спутника
+tile.loader.2.name=Разгрузчик ракет
+tile.loader.3.name=Погрузчик ракет
 tile.observatory.name=Обсерватория
 tile.satelliteBuilder.name=Спутниковый сборщик
 tile.rocket.name=Жидкостный ракетный двигатель
@@ -69,12 +71,18 @@ tile.orientationControl.name=Контроллер ориентации
 tile.gravityControl.name=Контроллер гравитации
 tile.drill.name=Бур
 tile.dataCable.name=Кабель данных
+tile.rfOutput.name=Выход RF
+tile.microwaveReciever.name=Микроволновый приёмник
+tile.solarPanel.name=Солнечная панель
+tile.suitWorkStation.name=Станция модификации костюма
+tile.orientationControl.name=Контроллер ориентации
+tile.biomeScanner.name=Сканер биомов
+tile.atmoshereTerraformer.name=Терраформер атмосферы
 
 tile.Dilithium.name=Руда дилития
- 
 tile.coil.dilithium.name=Дилитевая катушка
 
- 
+item.lens.0.name=Базовая линза
 item.wafer.0.name=Кремниевая пластина
 item.circuitplate.0.name=Печатная плата
 item.circuitplate.1.name=Улучшенная плата
@@ -90,15 +98,20 @@ item.dataUnit.0.name=Хранилище данных
 item.sawBlade.0.name=Железная пила
 item.satellite.name=Спутник
 item.satellitePowerSource.0.name=Солнечная панель
+item.satellitePowerSource.1.name=Большая солнечная панель
 item.satellitePrimaryFunction.0.name=Оптический сенсор
-item.satellitePrimaryFunction.1.name=Датчик полтности атмосферы
+item.satellitePrimaryFunction.1.name=Датчик плотности атмосферы
 item.satellitePrimaryFunction.2.name=Детектор масс
+item.satellitePrimaryFunction.3.name=Микроволновый передатчик
+item.satellitePrimaryFunction.4.name=Сканер руд
+item.satellitePrimaryFunction.5.name=Модификатор биома
 item.satelliteIdChip.name=Чип адреса спутника
 item.planetIdChip.name=Чип адреса планеты
 item.asteroidChip.name=Чип адреса астероида
 item.battery.0.name=Батарейка
+item.battery.1.name=Две батарейки
 item.miscpart.0.name=Пользовательский интерфейс
-item.miscpart.1.name=Углеродный кирпич
+item.miscpart.1.name=Графитовый блок
 item.station.name=Контейнер с космической станцией
 item.stationChip.name=Чип адреса космической станции
 item.spaceHelmet.name=Шлем скафандра
@@ -110,11 +123,21 @@ item.smallAirlock.name=Малая гермодверь
 item.carbonScrubberCartridge.name=Поглощающий картридж
 item.jackhammer.name=Отбойный молоток
 item.sealDetector.name=Течеискатель
+item.itemUpgrade.0.name=Улучшение "Полёт"
+item.itemUpgrade.1.name=Улучшение "Контроль скорости полёта"
+item.itemUpgrade.2.name=Улучшение "Бионические ноги"
+item.itemUpgrade.3.name=Улучшение "Гаситель падений"
+item.atmAnalyser.name=Анализатор атмосферы
+item.biomeChanger.name=Дистанционный модификатор биома
 
-
+item.jetPack.name=Реактивный ранец
+item.pressureTank.0.name=Баллон низкого давления
+item.pressureTank.1.name=Баллон
+item.pressureTank.2.name=Баллон высокого давления
+item.pressureTank.3.name=Баллон сверхвысокого давления
 
 material.Dilithium.name=Дилитевый
-
+material.TitaniumAluminide.name=Титано-алюминиевый
 
 container.crystallizer=Кристаллизатор
 container.cuttingmachine=Резак
@@ -137,3 +160,6 @@ fluid.hydrogen=Водород
 fluid.rocketFuel=Ракетное топливо
 
 mission.asteroidmining.name=Освоение астероидов
+
+key.controls.advancedRocketry=Advanced Rocketry
+key.toggleJetpack=Включить реактивный ранец
