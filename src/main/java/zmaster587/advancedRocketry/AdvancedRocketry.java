@@ -1385,6 +1385,7 @@ public class AdvancedRocketry {
 		else if(Loader.isModLoaded("GalacticraftCore")  ) {
 			DimensionManager.getInstance().getDimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId).isNativeDimension = false;
 		}
+		
 	}
 
 
@@ -1392,17 +1393,6 @@ public class AdvancedRocketry {
 	public void serverStopped(FMLServerStoppedEvent event) {
 		zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
 	}
-
-	/*@SideOnly(Side.CLIENT)
-    @SubscribeEvent
-	public void onTextureStitch(TextureStitchEvent.Pre event) {
-    		//IIcon texture = event.map.registerIcon("advancedrocketry:fluid/oxygen_still");
-    	if(event.map)
-    		AdvancedRocketryFluids.fluidRocketFuel.setIcons(event.map.registerIcon("advancedrocketry:fluid/oxygen_still"));
-    		AdvancedRocketryFluids.fluidHydrogen.setIcons(event.map.registerIcon("advancedrocketry:fluid/oxygen_still"));
-    		AdvancedRocketryFluids.fluidOxygen.setIcons(event.map.registerIcon("advancedrocketry:fluid/oxygen_still"));
-
-	}*/
 
 	@SubscribeEvent
 	public void registerOre(OreRegisterEvent event) {
@@ -1441,12 +1431,6 @@ public class AdvancedRocketry {
 
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:" + LibVulpesItems.itemBattery.getUnlocalizedName()))
 				mapping.remap(LibVulpesItems.itemBattery);
-
-			/*if(mapping.name.equalsIgnoreCase("advancedrocketry:item.sawBlade")) {
-				if(mapping.type == mapping.type.ITEM) {
-					mapping.remap(Item.getItemFromBlock(AdvancedRocketryBlocks.blockSawBlade));
-				}	
-			}*/
 
 			if(mapping.name.equalsIgnoreCase("advancedRocketry:item.satellitePowerSource")) 
 				mapping.remap(AdvancedRocketryItems.itemSatellitePowerSource);

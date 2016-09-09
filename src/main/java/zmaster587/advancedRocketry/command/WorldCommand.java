@@ -63,22 +63,10 @@ public class WorldCommand implements ICommand {
 	public void processCommand(ICommandSender sender, String[] string) {
 
 		//advRocketry planet set <var value>
+		int opLevel = 2;
+
 
 		if(string.length > 1) {
-
-			if(string[0].equalsIgnoreCase("debug")) {
-				EntityPlayer player = sender.getEntityWorld().getPlayerEntityByName(sender.getCommandSenderName());
-
-				IAtmosphere atmosphere = AtmosphereHandler.getOxygenHandler(player.worldObj.provider.dimensionId).getAtmosphereType(player);
-
-				if(atmosphere != null) {
-					sender.addChatMessage(new ChatComponentText(atmosphere == AtmosphereType.VACUUM ? "vacumm" : "AIR"));
-				}
-				else
-					sender.addChatMessage(new ChatComponentText("AIR (no atmosphere object)"));
-
-				return;
-			}
 
 			if(string[0].equalsIgnoreCase("goto") && (string.length == 2 || string.length == 3)) {
 				EntityPlayer player = sender.getEntityWorld().getPlayerEntityByName(sender.getCommandSenderName());
@@ -192,27 +180,44 @@ public class WorldCommand implements ICommand {
 						sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " " + string[2] + " <name>"));
 					}
 				}
+				/*
+				 * Attempt to generate a planet
+				 */
 				else if(string[1].equalsIgnoreCase("generate")) {
+
+					int gasOffset = 0;
+
+					if(string.length > 2 && string[2].equalsIgnoreCase("gas")) {
+						gasOffset = 1;
+					}
 
 					try {
 						//Advancedrocketry planet generate <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>
-						if(string.length == 6) {
-							DimensionManager.getInstance().generateRandom(string[2], Integer.parseInt(string[3]), Integer.parseInt(string[4]), Integer.parseInt(string[5]));
+						if(string.length == 6 + gasOffset) {
+							if(gasOffset == 0)
+								DimensionManager.getInstance().generateRandom(string[2 + gasOffset], Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]));
+							else
+								DimensionManager.getInstance().generateRandomGasGiant(string[2 + gasOffset], Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),0,0,0);
+
 							sender.addChatMessage(new ChatComponentText("Dimension Generated!"));
 						}
-						else if(string.length == 9) {
-							DimensionManager.getInstance().generateRandom(string[2] ,Integer.parseInt(string[3]), Integer.parseInt(string[4]), Integer.parseInt(string[5]),Integer.parseInt(string[6]), Integer.parseInt(string[7]), Integer.parseInt(string[8]));
-							sender.addChatMessage(new ChatComponentText("Dimension: " + string[2] + " Generated!"));
+						else if(string.length == 9  + gasOffset) {
+							if(gasOffset == 0)
+								DimensionManager.getInstance().generateRandom(string[2 + gasOffset] ,Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),Integer.parseInt(string[6 + gasOffset]), Integer.parseInt(string[7 + gasOffset]), Integer.parseInt(string[8 + gasOffset]));
+							else
+								DimensionManager.getInstance().generateRandomGasGiant(string[2 + gasOffset] ,Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),Integer.parseInt(string[6 + gasOffset]), Integer.parseInt(string[7 + gasOffset]), Integer.parseInt(string[8 + gasOffset]));
+
+							sender.addChatMessage(new ChatComponentText("Dimension: " + string[2 + gasOffset] + " Generated!"));
 						}
 						else {
-							sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+							sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + "[gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
 							sender.addChatMessage(new ChatComponentText(""));
-							sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " <name> <atmosphere base value> <distance base value> <gravity base value> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+							sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + "[gas] <name> <atmosphere base value> <distance base value> <gravity base value> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
 						}
 					} catch(NumberFormatException e) {
-						sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+						sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + "[gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
 						sender.addChatMessage(new ChatComponentText(""));
-						sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " <name> <atmosphere base value> <distance base value> <gravity base value> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+						sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + "[gas] <name> <atmosphere base value> <distance base value> <gravity base value> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
 					}
 				}
 				//Make sure player is in Dimension we have control over
@@ -222,54 +227,60 @@ public class WorldCommand implements ICommand {
 
 						DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimId);
 
+
 						try {
-							Field field = properties.getClass().getDeclaredField(string[2]);
-
-							if(field.getType().isArray()) {
-
-								if(Float.TYPE == field.getType().getComponentType()) {
-									float var[] = (float[])field.get(properties);
-
-									if(string.length - 3 == var.length) {
-
-										//Make sure we catch if some invalid arg is entered
-										for(int i = 0; i < var.length; i++) {
-											var[i] = Float.parseFloat(string[3+i]);
-										}
-
-										field.set(properties, var);
-
-									}
-								}
-
-								if(Integer.TYPE == field.getType().getComponentType()) {
-									int var[] = (int[])field.get(properties);
-
-									if(string.length - 3 == var.length) {
-
-										//Make sure we catch if some invalid arg is entered
-
-										for(int i = 0; i < var.length; i++) {
-											var[i] = Integer.parseInt(string[3+i]);
-										}
-
-										field.set(properties, var);
-
-									}
-								}
+							if(string[2].equalsIgnoreCase("atmosphereDensity")) {
+								properties.setAtmosphereDensityDirect(Integer.parseUnsignedInt(string[3]));
 							}
 							else {
-								if(Integer.TYPE == field.getType() )
-									field.set(properties, Integer.parseInt(string[3]));
-								else if(Float.TYPE == field.getType())
-									field.set(properties, Float.parseFloat(string[3]));
-								else
-									field.set(properties, string[3]);
+
+								Field field = properties.getClass().getDeclaredField(string[2]);
+
+								if(field.getType().isArray()) {
+
+									if(Float.TYPE == field.getType().getComponentType()) {
+										float var[] = (float[])field.get(properties);
+
+										if(string.length - 3 == var.length) {
+
+											//Make sure we catch if some invalid arg is entered
+											for(int i = 0; i < var.length; i++) {
+												var[i] = Float.parseFloat(string[3+i]);
+											}
+
+											field.set(properties, var);
+
+										}
+									}
+
+									if(Integer.TYPE == field.getType().getComponentType()) {
+										int var[] = (int[])field.get(properties);
+
+										if(string.length - 3 == var.length) {
+
+											//Make sure we catch if some invalid arg is entered
+
+											for(int i = 0; i < var.length; i++) {
+												var[i] = Integer.parseInt(string[3+i]);
+											}
+
+											field.set(properties, var);
+
+										}
+									}
+								}
+								else {
+									if(Integer.TYPE == field.getType() )
+										field.set(properties, Integer.parseInt(string[3]));
+									else if(Float.TYPE == field.getType())
+										field.set(properties, Float.parseFloat(string[3]));
+									else
+										field.set(properties, string[3]);
+								}
+
+								PacketHandler.sendToAll(new PacketDimInfo(dimId, properties));
+								return;
 							}
-
-							PacketHandler.sendToAll(new PacketDimInfo(dimId, properties));
-							return;
-
 						} catch (NumberFormatException e) {
 
 							sender.addChatMessage(new ChatComponentText("Invalid Argument for parameter " + string[2]));
@@ -280,15 +291,19 @@ public class WorldCommand implements ICommand {
 					}
 					else if(string[1].equalsIgnoreCase("get") && string.length == 3) {
 						DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimId);
+						if(string[2].equalsIgnoreCase("atmosphereDensity")) {
+							sender.addChatMessage(new ChatComponentText(Integer.toString(properties.getAtmosphereDensity())));
+						} 
+						else {
+							try {
+								Field field = properties.getClass().getDeclaredField(string[2]);
 
-						try {
-							Field field = properties.getClass().getDeclaredField(string[2]);
+								sender.addChatMessage(new ChatComponentText(field.get(properties).toString()));
 
-							sender.addChatMessage(new ChatComponentText(field.get(properties).toString()));
+							} catch (Exception e) {
 
-						} catch (Exception e) {
-
-							e.printStackTrace();
+								e.printStackTrace();
+							}
 						}
 					}
 				}
@@ -299,7 +314,7 @@ public class WorldCommand implements ICommand {
 
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender sender) {
-		return !sender.getCommandSenderName().equalsIgnoreCase("RCon");
+		return !sender.getCommandSenderName().equalsIgnoreCase("RCon") && sender.canCommandSenderUseCommand(2, getCommandName());
 	}
 
 	@Override
@@ -329,6 +344,7 @@ public class WorldCommand implements ICommand {
 			for(Field field : DimensionProperties.class.getFields()) {
 				if(field.getName().startsWith(string[2]))
 					list.add(field.getName());
+				list.add("atmosphereDensity");
 			}
 		}
 
