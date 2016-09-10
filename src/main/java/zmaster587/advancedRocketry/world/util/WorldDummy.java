@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.world.util;
 
 import zmaster587.advancedRocketry.api.EntityRocketBase;
+import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.network.PacketStorageTileUpdate;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.network.PacketHandler;

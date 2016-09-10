@@ -2,7 +2,6 @@ package zmaster587.advancedRocketry.api.stations;
 
 import net.minecraft.nbt.NBTTagCompound;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
-import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.libVulpes.util.BlockPosition;
 
 public interface ISpaceObject {
@@ -138,7 +137,7 @@ public interface ISpaceObject {
 	 * Set the properties of the dimension
 	 * @param properties
 	 */
-	public void setProperties(DimensionProperties properties);
+	public void setProperties(IDimensionProperties properties);
 	
 	/**
 	 * Called when a check for a cleanup is performed on objects registered as temporary

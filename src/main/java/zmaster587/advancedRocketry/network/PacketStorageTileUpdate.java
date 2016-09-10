@@ -17,6 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
+import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.interfaces.INetworkEntity;
 import zmaster587.libVulpes.network.BasePacket;
@@ -24,7 +25,7 @@ import zmaster587.libVulpes.network.BasePacket;
 public class PacketStorageTileUpdate extends BasePacket {
 
 
-	EntityRocketBase entity;
+	EntityRocket entity;
 	StorageChunk chunk;
 	int x,y,z;
 	TileEntity tile;
@@ -34,8 +35,8 @@ public class PacketStorageTileUpdate extends BasePacket {
 
 	}
 
-	public PacketStorageTileUpdate(EntityRocketBase entity, StorageChunk chunk, TileEntity tile) {
-		this.entity = entity;
+	public PacketStorageTileUpdate(Entity entity, StorageChunk chunk, TileEntity tile) {
+		this.entity = (EntityRocket)entity;
 		this.chunk = chunk;
 		this.tile = tile;
 		x = tile.xCoord;
@@ -90,7 +91,7 @@ public class PacketStorageTileUpdate extends BasePacket {
 
 
 		if(ent != null && ent instanceof INetworkEntity) {
-			entity = (EntityRocketBase)ent;
+			entity = (EntityRocket)ent;
 			this.chunk = entity.storage;
 		}
 		else {

@@ -45,6 +45,7 @@ public class PacketDimInfo extends BasePacket {
 				}
 			} catch(NullPointerException e) {
 				out.writeBoolean(true);
+				e.printStackTrace();
 				Logger.getLogger("advancedRocketry").warning("Dimension " + dimNumber + " has thrown an exception trying to write NBT, deleting!");
 				DimensionManager.getInstance().deleteDimension(dimNumber);
 			}

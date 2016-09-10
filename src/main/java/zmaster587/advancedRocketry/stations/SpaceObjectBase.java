@@ -6,9 +6,9 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.IStorageChunk;
-import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.libVulpes.network.PacketHandler;
@@ -17,7 +17,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SpaceObjectBase implements ISpaceObject {
+public abstract class SpaceObjectBase implements ISpaceObject {
 	private int posX, posY;
 	private int altitude;
 	private BlockPosition spawnLocation;
@@ -276,4 +276,6 @@ public class SpaceObjectBase implements ISpaceObject {
 	public void setPadStatus(int posX, int posZ, boolean full) {
 		
 	}
+	
+
 }

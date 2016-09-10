@@ -3,8 +3,8 @@ package zmaster587.advancedRocketry.api.satellite;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.ISatelliteIdItem;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
-import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
@@ -56,7 +56,7 @@ public abstract class SatelliteBase {
 	 * @return an item that can be used to control the satellite, normally a satellite ID chip but can be something else
 	 */
 	public ItemStack getContollerItemStack(ItemStack satIdChip, SatelliteProperties properties) {
-		ItemSatelliteIdentificationChip idChipItem = (ItemSatelliteIdentificationChip)satIdChip.getItem();
+		ISatelliteIdItem idChipItem = (ISatelliteIdItem)satIdChip.getItem();
 		idChipItem.setSatellite(satIdChip, properties);
 		return satIdChip;
 	}

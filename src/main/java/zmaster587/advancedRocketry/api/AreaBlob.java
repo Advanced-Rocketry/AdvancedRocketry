@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.util;
+package zmaster587.advancedRocketry.api;
 
 import java.util.HashSet;
 import java.util.List;
@@ -8,10 +8,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.AdjacencyGraph;
 
 public class AreaBlob {
 	//Graph containing the acutal area enclosed
-	AdjacencyGraph<BlockPosition> graph;
+	protected AdjacencyGraph<BlockPosition> graph;
 	//Object to call back to when events happen, usually a tileentity
 	protected IBlobHandler blobHandler;
 	//Data stored by this blob

@@ -10,9 +10,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.StatsRocket;
+import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.IStorageChunk;
-import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.network.PacketStationUpdate.Type;
@@ -83,8 +83,8 @@ public class SpaceObject implements ISpaceObject {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void setProperties(DimensionProperties properties) {
-		this.properties = properties;
+	public void setProperties(IDimensionProperties properties) {
+		this.properties = (DimensionProperties)properties;
 	}
 
 	/**

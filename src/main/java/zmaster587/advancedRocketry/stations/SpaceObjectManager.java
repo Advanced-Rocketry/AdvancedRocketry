@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.api.stations;
+package zmaster587.advancedRocketry.stations;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -7,11 +7,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ISpaceObjectManager;
+import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
-import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.BlockPosition;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -29,7 +31,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.Constants.NBT;
 
-public class SpaceObjectManager {
+public class SpaceObjectManager implements ISpaceObjectManager {
 	private int nextId = 1;
 	public static final int WARPDIMID = Integer.MIN_VALUE;
 	private long nextStationTransitionTick = -1;
@@ -50,6 +52,7 @@ public class SpaceObjectManager {
 		nameToClass = new HashMap<String, Class>();
 		classToString = new HashMap<Class, String>();
 		temporaryDimensions = new HashMap<Integer, Long>();
+		AdvancedRocketryAPI.spaceObjectManager = this;
 	}
 
 	/**

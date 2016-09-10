@@ -5,8 +5,8 @@ import java.util.Map.Entry;
 
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
+import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.satellite.IDataHandler;
-import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.world.util.MultiData;
 import net.minecraft.block.Block;
@@ -108,5 +108,11 @@ public class SpaceObjectAsteroid extends SpaceObjectBase implements IDataHandler
 	public int addData(int maxAmount, DataType type, ForgeDirection dir, boolean commit) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public void setProperties(IDimensionProperties properties) {
+		// TODO Auto-generated method stub
+		
 	}
 }

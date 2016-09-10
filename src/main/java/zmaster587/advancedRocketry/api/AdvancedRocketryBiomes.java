@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import zmaster587.advancedRocketry.world.biome.BiomeGenCrystal;
-import zmaster587.advancedRocketry.world.biome.BiomeGenDeepSwamp;
-import zmaster587.advancedRocketry.world.biome.BiomeGenOceanSpires;
 import net.minecraft.world.biome.BiomeGenBase;
 
 /**

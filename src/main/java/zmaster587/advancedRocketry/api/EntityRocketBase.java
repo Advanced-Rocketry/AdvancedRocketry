@@ -3,8 +3,6 @@ package zmaster587.advancedRocketry.api;
 import java.util.LinkedList;
 
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
-import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.util.BlockPosition;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
@@ -21,7 +19,7 @@ public abstract class EntityRocketBase extends Entity {
 	protected LinkedList<BlockPosition> infrastructureCoords;
 	
 	//Stores the blocks and tiles that make up the rocket
-	public StorageChunk storage;
+	//public StorageChunk storage;
 
 	//Stores other info about the rocket such as fuel and acceleration properties
 	public StatsRocket stats;
@@ -94,7 +92,7 @@ public abstract class EntityRocketBase extends Entity {
 		MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketReachesOrbitEvent(this));
 		
 		if(this.worldObj.provider.dimensionId == Configuration.spaceDimId) {
-			ISpaceObject station = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
+			ISpaceObject station = AdvancedRocketryAPI.spaceObjectManager.getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
 			
 			if(station instanceof ISpaceObject) {
 				((ISpaceObject)station).setPadStatus((int)this.posX, (int)this.posZ, false);
@@ -107,7 +105,7 @@ public abstract class EntityRocketBase extends Entity {
 	 */
 	public void deconstructRocket() {
 		if(this.worldObj.provider.dimensionId == Configuration.spaceDimId) {
-			ISpaceObject station = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
+			ISpaceObject station = AdvancedRocketryAPI.spaceObjectManager.getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
 			
 			if(station instanceof ISpaceObject) {
 				((ISpaceObject)station).setPadStatus((int)this.posX, (int)this.posZ, false);

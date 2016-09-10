@@ -8,13 +8,13 @@ import java.util.Random;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.world.biome.BiomeGenAlienForest;
 import zmaster587.advancedRocketry.world.biome.BiomeGenDeepSwamp;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
@@ -27,6 +27,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.world.World;
 
 public class WorldCommand implements ICommand {
 
@@ -106,6 +107,28 @@ public class WorldCommand implements ICommand {
 				else 
 					sender.addChatMessage(new ChatComponentText("Must be a player to use this command"));
 			}
+			else if(string[0].equalsIgnoreCase("fetch") && string.length == 2) {
+				EntityPlayer me = sender.getEntityWorld().getPlayerEntityByName(sender.getCommandSenderName());
+				EntityPlayer player = null;
+				
+				for(World world : MinecraftServer.getServer().worldServers) {
+					player = world.getPlayerEntityByName(string[1]);
+					if(player != null)
+						break;
+				}
+				
+				
+				
+				System.out.println(string[1] + "   " + sender.getCommandSenderName());
+				
+				if(player == null) {
+					sender.addChatMessage(new ChatComponentText("Invalid player name: " + string[1]));
+				}
+				else {
+					MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player,  me.worldObj.provider.dimensionId , new TeleporterNoPortal(MinecraftServer.getServer().worldServerForDimension(me.worldObj.provider.dimensionId)));
+					player.setPosition(me.posX, me.posY, me.posZ);
+				}
+			}
 			else if(string[0].equalsIgnoreCase("planet")) {
 
 				int dimId;
@@ -114,27 +137,17 @@ public class WorldCommand implements ICommand {
 						try {
 							dimId = Integer.parseInt(string[2]);
 							DimensionManager.getInstance().getDimensionProperties(dimId).resetProperties();
-
+							PacketHandler.sendToAll(new PacketDimInfo(dimId, DimensionManager.getInstance().getDimensionProperties(dimId)));
 						} catch (NumberFormatException e) {
 							sender.addChatMessage(new ChatComponentText("Invalid dimId"));
 						}
 					}
 					else if(string.length == 2) {
 						if(DimensionManager.getInstance().isDimensionCreated((dimId = sender.getEntityWorld().provider.dimensionId))) {
-							DimensionManager.getInstance().setDimProperties(dimId, new DimensionProperties(dimId));
+							DimensionManager.getInstance().getDimensionProperties(dimId).resetProperties();
+							PacketHandler.sendToAll(new PacketDimInfo(dimId, DimensionManager.getInstance().getDimensionProperties(dimId)));
 						}
 					}
-				}
-				else if(string[1].equalsIgnoreCase("tree")) {
-
-					for(int x = -50; x < 50; x++)
-						for(int y = 4; y < 120; y++) {
-							for(int z = -50; z < 50; z++) {
-								sender.getEntityWorld().setBlockToAir(x, y, z);
-							}
-						}
-
-					//BiomeGenDeepSwamp.swampTree.generate(sender.getEntityWorld(), new Random(), 0, 4, 0);
 				}
 				else if(string[1].equalsIgnoreCase("list")) { //Lists dimensions
 
@@ -177,7 +190,7 @@ public class WorldCommand implements ICommand {
 						}
 					}
 					else {
-						sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " " + string[2] + " <name>"));
+						sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " " + string[2] + " <dimid>"));
 					}
 				}
 				/*
@@ -231,6 +244,7 @@ public class WorldCommand implements ICommand {
 						try {
 							if(string[2].equalsIgnoreCase("atmosphereDensity")) {
 								properties.setAtmosphereDensityDirect(Integer.parseUnsignedInt(string[3]));
+								PacketHandler.sendToAll(new PacketDimInfo(dimId, properties));
 							}
 							else {
 
@@ -325,6 +339,7 @@ public class WorldCommand implements ICommand {
 		if(string.length == 1) {
 			list.add("planet");
 			list.add("goto");
+			list.add("fetch");
 		} else if(string.length == 2) {
 			ArrayList<String> list2 = new ArrayList<String>();
 			list2.add("get");
@@ -335,6 +350,7 @@ public class WorldCommand implements ICommand {
 			list2.add("list");
 			list2.add("generate");
 
+
 			for(String str : list2) {
 				if(str.startsWith(string[1]))
 					list.add(str);
@@ -344,8 +360,9 @@ public class WorldCommand implements ICommand {
 			for(Field field : DimensionProperties.class.getFields()) {
 				if(field.getName().startsWith(string[2]))
 					list.add(field.getName());
-				list.add("atmosphereDensity");
+
 			}
+			list.add("atmosphereDensity");
 		}
 
 		return list;
@@ -353,6 +370,6 @@ public class WorldCommand implements ICommand {
 
 	@Override
 	public boolean isUsernameIndex(String[] string, int number) {
-		return false;
+		return number == 1 && string[0].equalsIgnoreCase("fetch");
 	}
 }
