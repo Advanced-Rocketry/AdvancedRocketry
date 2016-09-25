@@ -5,14 +5,17 @@ import io.netty.buffer.ByteBuf;
 import java.util.LinkedList;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.network.PacketSatellite;
@@ -38,7 +41,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 	public List<ModuleBase> getModules(int id, EntityPlayer player) {
 		List<ModuleBase> list = new LinkedList<ModuleBase>();
 
-		SatelliteBiomeChanger sat = (SatelliteBiomeChanger) getSatellite(player.getCurrentEquippedItem());
+		SatelliteBiomeChanger sat = (SatelliteBiomeChanger) getSatellite(player.getHeldItem(EnumHand.MAIN_HAND));
 		if(player.worldObj.isRemote) {
 			list.add(new ModuleImage(24, 14, zmaster587.advancedRocketry.inventory.TextureResources.earthCandyIcon));
 		}
@@ -46,8 +49,8 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 		List<ModuleBase> list2 = new LinkedList<ModuleBase>();
 		int j = 0;
 		for(byte biomeByte : sat.discoveredBiomes()) {
-			BiomeGenBase biome = BiomeGenBase.getBiome(biomeByte);
-			list2.add(new ModuleButton(32, 16 + 24*(j++), biome.biomeID, biome.biomeName, this, TextureResources.buttonBuild));
+			Biome biome = Biome.getBiome(biomeByte);
+			list2.add(new ModuleButton(32, 16 + 24*(j++), Biome.getIdForBiome(biome), biome.getBiomeName(), this, TextureResources.buttonBuild));
 		}
 
 		//Relying on a bug, is this safe?
@@ -74,9 +77,9 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 			list.add("Unprogrammed");
 		else if(mapping == null)
 			list.add("Satellite not yet launched");
-		else if(mapping.getDimensionId() == player.worldObj.provider.dimensionId) {
+		else if(mapping.getDimensionId() == player.worldObj.provider.getDimension()) {
 			list.add("Connected");
-			list.add("Selected Biome: " + BiomeGenBase.getBiome(mapping.getBiome()).biomeName);
+			list.add("Selected Biome: " + Biome.getBiome(mapping.getBiome()).getBiomeName());
 			list.add("Num Biomes Scanned: " + mapping.discoveredBiomes().size());
 		}
 		else
@@ -87,8 +90,8 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world,
-			EntityPlayer player) {
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stack,
+			World world, EntityPlayer player, EnumHand hand) {
 		if(!world.isRemote) {
 			SatelliteBase sat = DimensionManager.getInstance().getSatellite(this.getSatelliteId(stack));
 			if(sat != null) {
@@ -98,15 +101,14 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 						PacketHandler.sendToPlayer(new PacketSatellite(getSatellite(stack )), player);
 						player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), world, -1, -1, 0);
 					}
-					return super.onItemRightClick(stack, world, player);
 				}
 				else {
 					//Attempt to change biome
-					sat.performAction(player, world, (int)player.posX, (int)player.posY, (int)player.posZ);
+					sat.performAction(player, world, player.getPosition());
 				}
 			}
 		}
-		return super.onItemRightClick(stack, world, player);
+		return super.onItemRightClick(stack, world, player, hand);
 	}
 
 	private int getBiomeId(ItemStack stack) {
@@ -118,7 +120,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 	}
 
 	private void setBiomeId(ItemStack stack, int id) {
-		if(BiomeGenBase.getBiome(id) != null) {
+		if(Biome.getBiome(id) != null) {
 			SatelliteBase sat = getSatellite(stack);
 			if(sat != null && sat instanceof SatelliteBiomeChanger) {
 				((SatelliteBiomeChanger)sat).setBiome(id);
@@ -139,7 +141,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void onInventoryButtonPressed(int buttonId) {
-		ItemStack stack = Minecraft.getMinecraft().thePlayer.getHeldItem();
+		ItemStack stack = Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.MAIN_HAND);
 		if(stack != null && stack.getItem() == this) {
 			setBiomeId(stack, buttonId);
 			PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getMinecraft().thePlayer, (byte)0));
@@ -169,7 +171,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 
 			//If -1 then discover current biome
 			if(biomeId == -1) {
-				((SatelliteBiomeChanger)getSatellite(stack)).addBiome(player.worldObj.getBiomeGenForCoords((int)player.posX, (int)player.posZ).biomeID);
+				((SatelliteBiomeChanger)getSatellite(stack)).addBiome(Biome.getIdForBiome(player.worldObj.getBiomeGenForCoords(new BlockPos((int)player.posX, 0, (int)player.posZ))));
 
 			}
 			else

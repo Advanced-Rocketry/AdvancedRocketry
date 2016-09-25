@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.atmosphere;
 
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;

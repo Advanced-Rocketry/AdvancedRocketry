@@ -17,14 +17,17 @@ import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.MathHelper;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.IRenderHandler;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class RenderPlanetarySky extends IRenderHandler {
 
@@ -43,7 +46,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		this.renderStars();
 		GL11.glEndList();
 		GL11.glPopMatrix();
-		Tessellator tessellator = Tessellator.instance;
+		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
 		this.glSkyList = this.starGLCallList + 1;
 		GL11.glNewList(this.glSkyList, GL11.GL_COMPILE);
 		byte b2 = 64;
@@ -56,12 +59,12 @@ public class RenderPlanetarySky extends IRenderHandler {
 		{
 			for (k = -b2 * i; k <= b2 * i; k += b2)
 			{
-				tessellator.startDrawingQuads();
-				tessellator.addVertex((double)(j + 0), (double)f, (double)(k + 0));
-				tessellator.addVertex((double)(j + b2), (double)f, (double)(k + 0));
-				tessellator.addVertex((double)(j + b2), (double)f, (double)(k + b2));
-				tessellator.addVertex((double)(j + 0), (double)f, (double)(k + b2));
-				tessellator.draw();
+				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+				buffer.pos((double)(j + 0), (double)f, (double)(k + 0)).endVertex();
+				buffer.pos((double)(j + b2), (double)f, (double)(k + 0)).endVertex();
+				buffer.pos((double)(j + b2), (double)f, (double)(k + b2)).endVertex();
+				buffer.pos((double)(j + 0), (double)f, (double)(k + b2)).endVertex();
+				buffer.finishDrawing();
 			}
 		}
 
@@ -69,20 +72,22 @@ public class RenderPlanetarySky extends IRenderHandler {
 		this.glSkyList2 = this.starGLCallList + 2;
 		GL11.glNewList(this.glSkyList2, GL11.GL_COMPILE);
 		f = -16.0F;
-		tessellator.startDrawingQuads();
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 
 		for (j = -b2 * i; j <= b2 * i; j += b2)
 		{
 			for (k = -b2 * i; k <= b2 * i; k += b2)
 			{
-				tessellator.addVertex((double)(j + b2), (double)f, (double)(k + 0));
-				tessellator.addVertex((double)(j + 0), (double)f, (double)(k + 0));
-				tessellator.addVertex((double)(j + 0), (double)f, (double)(k + b2));
-				tessellator.addVertex((double)(j + b2), (double)f, (double)(k + b2));
+				//buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+				buffer.pos((double)(j + 0), (double)f, (double)(k + 0)).endVertex();
+				buffer.pos((double)(j + b2), (double)f, (double)(k + 0)).endVertex();
+				buffer.pos((double)(j + b2), (double)f, (double)(k + b2)).endVertex();
+				buffer.pos((double)(j + 0), (double)f, (double)(k + b2)).endVertex();
+				//buffer.finishDrawing();
 			}
 		}
 
-		tessellator.draw();
+		buffer.finishDrawing();
 		GL11.glEndList();
 	}
 
@@ -91,8 +96,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 	private void renderStars()
 	{
 		Random random = new Random(10842L);
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
+		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 
 		for (int i = 0; i < 2000; ++i)
 		{
@@ -132,12 +137,13 @@ public class RenderPlanetarySky extends IRenderHandler {
 					double d23 = d17 * d12 - d20 * d13;
 					double d24 = d23 * d9 - d21 * d10;
 					double d25 = d21 * d9 + d23 * d10;
-					tessellator.addVertex(d5 + d24, d6 + d22, d7 + d25);
+					buffer.pos(d5 + d24, d6 + d22, d7 + d25).endVertex();
 				}
 			}
-		}
-
-		tessellator.draw();
+		}			
+		
+		Tessellator.getInstance().draw();
+		//buffer.finishDrawing();
 	}
 
 	@Override
@@ -149,17 +155,17 @@ public class RenderPlanetarySky extends IRenderHandler {
 		boolean hasAtmosphere = false, isMoon;
 		boolean isWarp = false;
 		boolean isGasGiant = false;
-		ForgeDirection travelDirection = null;
+		EnumFacing travelDirection = null;
 		ResourceLocation parentPlanetIcon = null;
 		List<DimensionProperties> children;
 
-		Vec3 sunColor;
+		Vec3d sunColor;
 		if(mc.theWorld.provider instanceof IPlanetaryProvider) {
 			IPlanetaryProvider planetaryProvider = (IPlanetaryProvider)mc.theWorld.provider;
 
-			DimensionProperties properties = (DimensionProperties)planetaryProvider.getDimensionProperties((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
+			DimensionProperties properties = (DimensionProperties)planetaryProvider.getDimensionProperties(mc.thePlayer.getPosition());
 
-			atmosphere = planetaryProvider.getAtmosphereDensityFromHeight(mc.renderViewEntity.posY, (int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
+			atmosphere = planetaryProvider.getAtmosphereDensityFromHeight(mc.getRenderViewEntity().posY, mc.thePlayer.getPosition());
 
 			children = new LinkedList<DimensionProperties>();
 			for (Integer i : properties.getChildPlanets()) {
@@ -178,11 +184,11 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 			}
 
-			sunColor = planetaryProvider.getSunColor((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
-			if(world.provider.dimensionId == Configuration.spaceDimId) {
+			sunColor = planetaryProvider.getSunColor(mc.thePlayer.getPosition());
+			if(world.provider.getDimension() == Configuration.spaceDimId) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
 				if(isWarp) {
-					SpaceObject station = (SpaceObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
+					SpaceObject station = (SpaceObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.thePlayer.getPosition());
 					travelDirection = station.getForwardDirection();
 				}
 			}
@@ -191,13 +197,13 @@ public class RenderPlanetarySky extends IRenderHandler {
 			children = new LinkedList<DimensionProperties>();
 			isMoon = false;
 			hasAtmosphere = DimensionManager.overworldProperties.hasAtmosphere();
-			atmosphere = DimensionManager.overworldProperties.getAtmosphereDensityAtHeight(mc.renderViewEntity.posY);
+			atmosphere = DimensionManager.overworldProperties.getAtmosphereDensityAtHeight(mc.getRenderViewEntity().posY);
 			solarOrbitalDistance = DimensionManager.overworldProperties.orbitalDist;
-			sunColor = Vec3.createVectorHelper(1, 1, 1);
+			sunColor = new Vec3d(1, 1, 1);
 		}
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		Vec3 vec3 = Minecraft.getMinecraft().theWorld.getSkyColor(this.mc.renderViewEntity, partialTicks);
+		Vec3d vec3 = Minecraft.getMinecraft().theWorld.getSkyColor(this.mc.getRenderViewEntity(), partialTicks);
 		float f1 = (float)vec3.xCoord;
 		float f2 = (float)vec3.yCoord;
 		float f3 = (float)vec3.zCoord;
@@ -219,7 +225,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 		f3 *= atmosphere;
 
 		GL11.glColor3f(f1, f2, f3);
-		Tessellator tessellator1 = Tessellator.instance;
+		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+		
 		GL11.glDepthMask(false);
 		GL11.glEnable(GL11.GL_FOG);
 		GL11.glColor3f(f1, f2, f3);
@@ -260,27 +267,26 @@ public class RenderPlanetarySky extends IRenderHandler {
 				f8 = f11;
 			}
 
-			tessellator1.startDrawing(6);
-			tessellator1.setColorRGBA_F(f6, f7, f8, afloat[3] * atmosphere);
-			tessellator1.addVertex(0.0D, 100.0D, 0.0D);
+			buffer.begin(GL11.GL_TRIANGLE_FAN, DefaultVertexFormats.POSITION_COLOR);
+			buffer.pos(0.0D, 100.0D, 0.0D).color(f6, f7, f8, afloat[3] * atmosphere).endVertex();
 			byte b0 = 16;
-			tessellator1.setColorRGBA_F(afloat[0], afloat[1], afloat[2], 0.0F);
 
 			for (int j = 0; j <= b0; ++j)
 			{
 				f11 = (float)j * (float)Math.PI * 2.0F / (float)b0;
 				float f12 = MathHelper.sin(f11);
 				float f13 = MathHelper.cos(f11);
-				tessellator1.addVertex((double)(f12 * 120.0F), (double)(f13 * 120.0F), (double)(-f13 * 40.0F * afloat[3]));
+				buffer.pos((double)(f12 * 120.0F), (double)(f13 * 120.0F), (double)(-f13 * 40.0F * afloat[3])).color(afloat[0], afloat[1], afloat[2], 0.0F).endVertex();
 			}
 
-			tessellator1.draw();
+			buffer.finishDrawing();
 			GL11.glPopMatrix();
 			GL11.glShadeModel(GL11.GL_FLAT);
 		}
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		OpenGlHelper.glBlendFunc(770, 1, 1, 0);
+		//OpenGlHelper.glBlendFunc(770, 1, 1, 0);
+		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, 1, 0);
 		GL11.glPushMatrix();
 
 
@@ -308,7 +314,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 				for(int i = -3; i < 5; i++) {
 					GL11.glPushMatrix();
 					double magnitude = i*-100 + (((System.currentTimeMillis()) + 50) % 2000)/20f;
-					GL11.glTranslated(-travelDirection.offsetZ*magnitude, 0, travelDirection.offsetX*magnitude);
+					GL11.glTranslated(-travelDirection.getFrontOffsetZ()*magnitude, 0, travelDirection.getFrontOffsetX()*magnitude);
 					GL11.glCallList(this.starGLCallList);
 					GL11.glPopMatrix();
 				}
@@ -327,30 +333,30 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 		if(!isWarp) {
 			//Set sun color and distance
-			tessellator1.startDrawingQuads();		
+			GlStateManager.color((float)sunColor.xCoord * multiplier, (float)sunColor.yCoord * multiplier, (float)sunColor.zCoord * multiplier);
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 			f10 = 30f*(200-solarOrbitalDistance)/100f;
 			//multiplier = 2;
-			tessellator1.setColorOpaque_F((float)sunColor.xCoord * multiplier, (float)sunColor.yCoord * multiplier, (float)sunColor.zCoord * multiplier);
-
-
-			tessellator1.addVertexWithUV((double)(-f10), 100.0D, (double)(-f10), 0.0D, 0.0D);
-			tessellator1.addVertexWithUV((double)f10, 100.0D, (double)(-f10), 1.0D, 0.0D);
-			tessellator1.addVertexWithUV((double)f10, 100.0D, (double)f10, 1.0D, 1.0D);
-			tessellator1.addVertexWithUV((double)(-f10), 100.0D, (double)f10, 0.0D, 1.0D);
-			tessellator1.draw();
+			buffer.pos((double)(-f10), 100.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
+			buffer.pos((double)f10, 100.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
+			buffer.pos((double)f10, 100.0D, (double)f10).tex(1.0D, 1.0D).endVertex();
+			buffer.pos((double)(-f10), 100.0D, (double)f10).tex(0.0D, 1.0D).endVertex();
+			
+			Tessellator.getInstance().draw();
+			//buffer.finishDrawing();
 		}
 		f10 = 20.0F;
 
 		
 		if(isMoon) {
-			renderPlanet(tessellator1, parentPlanetIcon, planetOrbitalDistance, multiplier, hasAtmosphere, isGasGiant);
+			renderPlanet(buffer, parentPlanetIcon, planetOrbitalDistance, multiplier, hasAtmosphere, isGasGiant);
 		}
 		
 		for(DimensionProperties moons : children) {
 			GL11.glPushMatrix();
 			//DimensionProperties moons = children.get(0);
 			GL11.glRotatef((float)(moons.orbitTheta* 180F/Math.PI), 1f, 0f, 0f);
-			renderPlanet(tessellator1, moons.getPlanetIcon(), moons.getParentOrbitalDistance()*(1/moons.gravitationalMultiplier), multiplier, moons.hasAtmosphere(), isGasGiant);
+			renderPlanet(buffer, moons.getPlanetIcon(), moons.getParentOrbitalDistance()*(1/moons.gravitationalMultiplier), multiplier, moons.hasAtmosphere(), isGasGiant);
 			GL11.glPopMatrix();
 		}
 		
@@ -362,7 +368,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GL11.glPopMatrix();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glColor3f(0.0F, 0.0F, 0.0F);
-		double d0 = this.mc.thePlayer.getPosition(partialTicks).yCoord - mc.theWorld.getHorizon();
+		double d0 = this.mc.thePlayer.getPositionEyes(partialTicks).yCoord - mc.theWorld.getHorizon();
 
 		if (d0 < 0.0D)
 		{
@@ -373,29 +379,32 @@ public class RenderPlanetarySky extends IRenderHandler {
 			f8 = 1.0F;
 			f9 = -((float)(d0 + 65.0D));
 			f10 = -f8;
-			tessellator1.startDrawingQuads();
-			tessellator1.setColorRGBA_I(0, 255);
-			tessellator1.addVertex((double)(-f8), (double)f9, (double)f8);
-			tessellator1.addVertex((double)f8, (double)f9, (double)f8);
-			tessellator1.addVertex((double)f8, (double)f10, (double)f8);
-			tessellator1.addVertex((double)(-f8), (double)f10, (double)f8);
-			tessellator1.addVertex((double)(-f8), (double)f10, (double)(-f8));
-			tessellator1.addVertex((double)f8, (double)f10, (double)(-f8));
-			tessellator1.addVertex((double)f8, (double)f9, (double)(-f8));
-			tessellator1.addVertex((double)(-f8), (double)f9, (double)(-f8));
-			tessellator1.addVertex((double)f8, (double)f10, (double)(-f8));
-			tessellator1.addVertex((double)f8, (double)f10, (double)f8);
-			tessellator1.addVertex((double)f8, (double)f9, (double)f8);
-			tessellator1.addVertex((double)f8, (double)f9, (double)(-f8));
-			tessellator1.addVertex((double)(-f8), (double)f9, (double)(-f8));
-			tessellator1.addVertex((double)(-f8), (double)f9, (double)f8);
-			tessellator1.addVertex((double)(-f8), (double)f10, (double)f8);
-			tessellator1.addVertex((double)(-f8), (double)f10, (double)(-f8));
-			tessellator1.addVertex((double)(-f8), (double)f10, (double)(-f8));
-			tessellator1.addVertex((double)(-f8), (double)f10, (double)f8);
-			tessellator1.addVertex((double)f8, (double)f10, (double)f8);
-			tessellator1.addVertex((double)f8, (double)f10, (double)(-f8));
-			tessellator1.draw();
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+			
+			buffer.color(0,0,0,1f);
+			buffer.pos((double)(-f8), (double)f9, (double)f8).endVertex();
+			buffer.pos((double)f8, (double)f9, (double)f8).endVertex();
+			buffer.pos((double)f8, (double)f10, (double)f8).endVertex();
+			buffer.pos((double)(-f8), (double)f10, (double)f8).endVertex();
+			buffer.pos((double)(-f8), (double)f10, (double)(-f8)).endVertex();
+			buffer.pos((double)f8, (double)f10, (double)(-f8)).endVertex();
+			buffer.pos((double)f8, (double)f9, (double)(-f8)).endVertex();
+			buffer.pos((double)(-f8), (double)f9, (double)(-f8)).endVertex();
+			buffer.pos((double)f8, (double)f10, (double)(-f8)).endVertex();
+			buffer.pos((double)f8, (double)f10, (double)f8).endVertex();
+			buffer.pos((double)f8, (double)f9, (double)f8).endVertex();
+			buffer.pos((double)f8, (double)f9, (double)(-f8)).endVertex();
+			buffer.pos((double)(-f8), (double)f9, (double)(-f8)).endVertex();
+			buffer.pos((double)(-f8), (double)f9, (double)f8).endVertex();
+			buffer.pos((double)(-f8), (double)f10, (double)f8).endVertex();
+			buffer.pos((double)(-f8), (double)f10, (double)(-f8)).endVertex();
+			buffer.pos((double)(-f8), (double)f10, (double)(-f8)).endVertex();
+			buffer.pos((double)(-f8), (double)f10, (double)f8).endVertex();
+			buffer.pos((double)f8, (double)f10, (double)f8).endVertex();
+			buffer.pos((double)f8, (double)f10, (double)(-f8)).endVertex();
+			
+			Tessellator.getInstance().draw();
+			//buffer.finishDrawing();
 		}
 
 		if (mc.theWorld.provider.isSkyColored())
@@ -417,6 +426,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GL11.glDepthMask(true);
 
 		RocketEventHandler.onPostWorldRender(partialTicks);
+		//Fix player/items going transparent
+		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 0, 0);
 	}
 
 	protected ResourceLocation getTextureForPlanet(DimensionProperties properties) {
@@ -427,7 +438,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		return properties.getPlanetIcon();
 	}
 	
-	protected void renderPlanet(Tessellator tessellator1, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, boolean hasAtmosphere, boolean gasGiant) {
+	protected void renderPlanet(VertexBuffer buffer, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, boolean hasAtmosphere, boolean gasGiant) {
 		//GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -446,31 +457,33 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 		//TODO: draw sky planets
 
-		tessellator1.startDrawingQuads();
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
-		tessellator1.setColorRGBA_F(1f, 1f, 1f, alphaMultiplier);
-
-		tessellator1.addVertexWithUV((double)(-f10), -100.0D, (double)f10, (double)f16, (double)f17);
-		tessellator1.addVertexWithUV((double)f10, -100.0D, (double)f10, (double)f14, (double)f17);
-		tessellator1.addVertexWithUV((double)f10, -100.0D, (double)(-f10), (double)f14, (double)f15);
-		tessellator1.addVertexWithUV((double)(-f10), -100.0D, (double)(-f10), (double)f16, (double)f15);
-
-		tessellator1.draw();
+		GlStateManager.color(1f, 1f, 1f, alphaMultiplier);
+		buffer.pos((double)(-f10), -100.0D, (double)f10).tex((double)f16, (double)f17).endVertex();
+		buffer.pos((double)f10, -100.0D, (double)f10).tex((double)f14, (double)f17).endVertex();
+		buffer.pos((double)f10, -100.0D, (double)(-f10)).tex((double)f14, (double)f15).endVertex();
+		buffer.pos((double)(-f10), -100.0D, (double)(-f10)).tex((double)f16, (double)f15).endVertex();
+		Tessellator.getInstance().draw();
+		//buffer.finishDrawing();
+		
 		//GL11.glEnable(GL11.GL_BLEND);
 
 		GL11.glPopAttrib();
 
 		//Draw atmosphere if applicable
 		if(hasAtmosphere) {
-			tessellator1.startDrawingQuads();
+			
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			mc.renderEngine.bindTexture(DimensionProperties.getAtmosphereResource());
-			tessellator1.setColorRGBA_F(1f, 1f, 1f, alphaMultiplier);
-
-			tessellator1.addVertexWithUV((double)(-f10), -100.0D, (double)f10, (double)f16, (double)f17);
-			tessellator1.addVertexWithUV((double)f10, -100.0D, (double)f10, (double)f14, (double)f17);
-			tessellator1.addVertexWithUV((double)f10, -100.0D, (double)(-f10), (double)f14, (double)f15);
-			tessellator1.addVertexWithUV((double)(-f10), -100.0D, (double)(-f10), (double)f16, (double)f15);
-			tessellator1.draw();
+			GlStateManager.color(1f, 1f, 1f, alphaMultiplier);
+			buffer.pos((double)(-f10), -100.0D, (double)f10).tex((double)f16, (double)f17).endVertex();
+			buffer.pos((double)f10, -100.0D, (double)f10).tex((double)f14, (double)f17).endVertex();
+			buffer.pos((double)f10, -100.0D, (double)(-f10)).tex((double)f14, (double)f15).endVertex();
+			buffer.pos((double)(-f10), -100.0D, (double)(-f10)).tex((double)f16, (double)f15).endVertex();
+			Tessellator.getInstance().draw();
+			//buffer.finishDrawing();
+			
 		}
 	}
 

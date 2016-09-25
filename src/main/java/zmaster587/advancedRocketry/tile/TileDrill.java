@@ -5,7 +5,6 @@ import io.netty.buffer.ByteBuf;
 import java.util.LinkedList;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.IToggleButton;
@@ -17,6 +16,7 @@ import zmaster587.libVulpes.util.INetworkMachine;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class TileDrill extends TileEntity implements IModularInventory, IToggleButton, INetworkMachine {
 
@@ -34,11 +34,6 @@ public class TileDrill extends TileEntity implements IModularInventory, IToggleB
 
 	public void setDistanceExtended(float distance) {
 		this.distanceExtended = distance;
-	}
-
-	@Override
-	public boolean canUpdate() {
-		return false;//super.canUpdate();
 	}
 
 	public boolean drillExtended() {
@@ -104,16 +99,17 @@ public class TileDrill extends TileEntity implements IModularInventory, IToggleB
 
 		//Last ditch effort to update the toggle switch when it's flipped
 		if(!worldObj.isRemote)
-			PacketHandler.sendToNearby(new PacketMachine(this, (byte)0), worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 64);
+			PacketHandler.sendToNearby(new PacketMachine(this, (byte)0), worldObj.provider.getDimension(), pos, 64);
 
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		
 		nbt.setFloat("extendAmt", distanceExtended);
 		nbt.setBoolean("extended", extended);
+		return nbt;
 	}
 	
 	@Override

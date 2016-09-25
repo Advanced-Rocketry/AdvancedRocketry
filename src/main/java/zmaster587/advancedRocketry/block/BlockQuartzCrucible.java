@@ -4,53 +4,47 @@ import java.util.Random;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockCauldron;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.util.IIcon;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockQuartzCrucible extends BlockCauldron {
-
-	private static IIcon innerIcon, topIcon, bottomIcon;
 	
 	public BlockQuartzCrucible() {
 		super();
-		setHardness(1F).setResistance(8F).setBlockTextureName("qcrucible");
+	}
+
+	
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos,
+			IBlockState state, EntityPlayer playerIn, EnumHand hand,
+			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
+			float hitZ) {
+		return false;
 	}
     
-    @Override
-    public void registerBlockIcons(IIconRegister par1IconRegister)
-    {
-        this.innerIcon = par1IconRegister.registerIcon("advancedRocketry:" + this.getTextureName() + "_inner");
-        this.topIcon = par1IconRegister.registerIcon("advancedRocketry:" + this.getTextureName() + "_top");
-        this.bottomIcon = par1IconRegister.registerIcon("advancedRocketry:" + this.getTextureName() + "_bottom");
-        this.blockIcon = par1IconRegister.registerIcon("advancedRocketry:" + this.getTextureName() + "_side");
-    }
+	@Override
+	public void fillWithRain(World worldIn, BlockPos pos) {
+	}
     
-    @SideOnly(Side.CLIENT)
-    @Override
-    public IIcon getIcon(int par1, int par2)
-    {
-        return par1 == 1 ? this.topIcon : (par1 == 0 ? this.bottomIcon : this.blockIcon);
-    }
-    
-    @Override
-    public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) { return false; }
-    
-    @Override
-    public void fillWithRain(World par1World, int par2, int par3, int par4){}
-    
-    
-    
-    @Override
-    public Item getItemDropped(int par1, Random par2Random, int par3)
-    {	
-    	return AdvancedRocketryItems.itemQuartzCrucible;
-    }
+	@Override
+	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+		return AdvancedRocketryItems.itemQuartzCrucible;
+	}
+	
+	@Override
+	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
+		
+		return new ItemStack(AdvancedRocketryItems.itemQuartzCrucible);//getItemPicked(worldIn, pos, ar3, par4)
+	}
     
     @SideOnly(Side.CLIENT)
     public Item getItem(World p_149694_1_, int p_149694_2_, int p_149694_3_,
@@ -62,11 +56,5 @@ public class BlockQuartzCrucible extends BlockCauldron {
     public Item getItemPicked(World par1World, int par2, int par3, int par4)
     {
         return AdvancedRocketryItems.itemQuartzCrucible;
-    }
- 
-    @SideOnly(Side.CLIENT)
-    public static IIcon getCauldronIcon(String par0Str)
-    {
-        return par0Str.equals("inner") ? innerIcon : (par0Str.equals("bottom") ? bottomIcon : null);
     }
 }

@@ -4,12 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class BucketHandler {
 	
@@ -18,15 +20,16 @@ public class BucketHandler {
 
 	@SubscribeEvent
 	public void onBucketFill(FillBucketEvent event) {
-		Block block = event.world.getBlock(event.target.blockX, event.target.blockY, event.target.blockZ);
+		IBlockState state =  event.getWorld().getBlockState(new BlockPos(event.getTarget().getBlockPos()));
+		Block block = state.getBlock();
 		Item bucket = bucketMap.get(block);
 		
-		if(bucket != null && event.world.getBlockMetadata(event.target.blockX, event.target.blockY, event.target.blockZ) == 0) {
-			event.world.setBlockToAir(event.target.blockX, event.target.blockY, event.target.blockZ);
+		if(bucket != null && state.equals(block.getDefaultState())) {
+			event.getWorld().setBlockToAir(new BlockPos(event.getTarget().getBlockPos()));
 			
-			event.result = new ItemStack(bucket);
+			event.setFilledBucket(new ItemStack(bucket));
 			
-			bucket.hasContainerItem(event.result);
+			bucket.hasContainerItem(event.getFilledBucket());
 			
 			event.setResult(Result.ALLOW);
 		}

@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.api.atmosphere;
 
 import net.minecraft.block.Block;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /** Interface used to talk to the internal seal handler for advanced rocketry.
@@ -20,7 +21,7 @@ public interface IAtmosphereSealHandler
      * @param world - world
      * @return true if it can be used to seal the blob
      */
-    boolean isBlockSealed(World world, int x, int y, int z);
+    boolean isBlockSealed(World world, BlockPos pos);
 
     /**
      * Simplified way to ban an entire block set, including all metadata.

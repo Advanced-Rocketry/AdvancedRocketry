@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.world.gen;
 
 import java.util.Random;
 
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 
@@ -12,9 +13,8 @@ public class WorldGenNoTree extends WorldGenAbstractTree {
 	}
 
 	@Override
-	public boolean generate(World p_76484_1_, Random p_76484_2_,
-			int p_76484_3_, int p_76484_4_, int p_76484_5_) {
+	public boolean generate(World worldIn, Random rand, BlockPos position) {
+		// TODO Auto-generated method stub
 		return false;
 	}
-
 }

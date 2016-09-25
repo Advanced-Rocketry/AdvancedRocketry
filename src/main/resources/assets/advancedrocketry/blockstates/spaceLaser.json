@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "facing=north": { "model": "advancedrocketry:spaceLaser" },
+        "facing=south": { "model": "advancedrocketry:spaceLaser", "y": 180 },
+        "facing=west":  { "model": "advancedrocketry:spaceLaser", "y": 270 },
+        "facing=east":  { "model": "advancedrocketry:spaceLaser", "y": 90 }
+    }
+}

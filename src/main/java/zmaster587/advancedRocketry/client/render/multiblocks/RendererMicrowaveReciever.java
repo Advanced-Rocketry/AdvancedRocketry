@@ -1,12 +1,16 @@
 package zmaster587.advancedRocketry.client.render.multiblocks;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
+
 import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.api.Configuration;
@@ -20,7 +24,7 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
 
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x,
-			double y, double z, float f) {
+			double y, double z, float f, int damage) {
 		TileMicrowaveReciever multiBlockTile = (TileMicrowaveReciever)tile;
 
 		if(!multiBlockTile.canRender())
@@ -28,19 +32,14 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
 
 		GL11.glPushMatrix();
 		GL11.glTranslated(x, y, z);
-		Tessellator tessellator = Tessellator.instance;
-
+		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
 		//Initial setup
-		int bright = tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord + 1, tile.zCoord,0);
-		int brightX = bright % 65536;
-		int brightY = bright / 65536;
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
 		bindTexture(texture);
-
+		
 
 		//Draw heat FX
 		if(Configuration.advancedVFX && multiBlockTile.getPowerMadeLastTick() > 0) {
-			double distance = Minecraft.getMinecraft().thePlayer.getDistance(tile.xCoord, tile.yCoord, tile.zCoord);
+			double distance = Math.sqrt(Minecraft.getMinecraft().thePlayer.getDistanceSq(tile.getPos()));
 			if(distance < 16 ) {
 				double u = 256/distance;
 				double resolution = (int)u;
@@ -54,48 +53,49 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
 						amplitideMax *= (resolution/2) - Math.abs(g - resolution/2);
 						amplitideMax *= (resolution/2) - Math.abs(i - resolution/2);
 
-						yLoc[i][g] = amplitideMax*MathHelper.sin(((i*16 + g + tile.getWorldObj().getTotalWorldTime()) & 0xffff)*0.5f);
+						yLoc[i][g] = amplitideMax*MathHelper.sin(((i*16 + g + tile.getWorld().getTotalWorldTime()) & 0xffff)*0.5f);
 					}
 
 				}
 
 				GL11.glPushMatrix();
 				GL11.glTranslated(-2, 0, -2);
-				tessellator.startDrawingQuads();
+				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+				
 				for(int i = 0; i < (int)resolution; i++) {
 					for(int g = 0; g < (int)resolution; g++) {
-						RenderHelper.renderTopFaceWithUV(tessellator, 1.01 + yLoc[i][g], 5*i/resolution, 5*g/resolution, 5*(i+1)/resolution, 5*(g+1)/resolution, 5*i/resolution, 5*(i+1)/resolution, 5*g/resolution, 5*(g+1)/resolution);
+						RenderHelper.renderTopFaceWithUV(buffer, 1.01 + yLoc[i][g], 5*i/resolution, 5*g/resolution, 5*(i+1)/resolution, 5*(g+1)/resolution, 5*i/resolution, 5*(i+1)/resolution, 5*g/resolution, 5*(g+1)/resolution);
 					}
 				}
-				tessellator.draw();
+				Tessellator.getInstance().draw();
 				GL11.glPopMatrix();
 			}
 		}
 
 		//Draw main panel
-		tessellator.startDrawingQuads();
-		RenderHelper.renderTopFaceWithUV(tessellator, 1.01, -2, -2, 3, 3, 0, 5, 0, 5);
-		tessellator.draw();
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		RenderHelper.renderTopFaceWithUV(buffer, 1.01, -2, -2, 3, 3, 0, 5, 0, 5);
+		Tessellator.getInstance().draw();
 		//And sides
 		
 		bindTexture(panelSide);
 		
-		tessellator.startDrawingQuads();
-		RenderHelper.renderNorthFaceWithUV(tessellator, -1.99, -2, 0, 3, 1, 0, 5, 0 ,1);
-		RenderHelper.renderSouthFaceWithUV(tessellator, 2.99, -2, 0, 3, 1, 0, 5, 0 ,1);
-		RenderHelper.renderEastFaceWithUV(tessellator, 2.99, 0, -2, 1, 3, 0, 5, 0 ,1);
-		RenderHelper.renderWestFaceWithUV(tessellator, -1.99, 0, -2, 1, 3, 0, 5, 0 ,1);
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		RenderHelper.renderNorthFaceWithUV(buffer, -1.99, -2, 0, 3, 1, 0, 5, 0 ,1);
+		RenderHelper.renderSouthFaceWithUV(buffer, 2.99, -2, 0, 3, 1, 0, 5, 0 ,1);
+		RenderHelper.renderEastFaceWithUV(buffer, 2.99, 0, -2, 1, 3, 0, 5, 0 ,1);
+		RenderHelper.renderWestFaceWithUV(buffer, -1.99, 0, -2, 1, 3, 0, 5, 0 ,1);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		RenderHelper.renderBottomFace(tessellator, 0.001, -2, -2, 3, 3);
+		RenderHelper.renderBottomFace(buffer, 0.001, -2, -2, 3, 3);
 		
-		RenderHelper.renderCubeWithUV(tessellator, -2, 0.99, -2, -1.9, 1.1, 3, 0, 0, 0,0);
-		RenderHelper.renderCubeWithUV(tessellator, -2, 0.99, -2, 3, 1.1, -1.9, 0, 0, 0,0);
+		RenderHelper.renderCubeWithUV(buffer, -2, 0.99, -2, -1.9, 1.1, 3, 0, 0, 0,0);
+		RenderHelper.renderCubeWithUV(buffer, -2, 0.99, -2, 3, 1.1, -1.9, 0, 0, 0,0);
 		
-		RenderHelper.renderCubeWithUV(tessellator, -1.9, 0.99, 2.9, 3, 1.1, 3, 0, 0, 0,0);
-		RenderHelper.renderCubeWithUV(tessellator, 2.9, 0.99, -1.9, 3, 1.1, 3, 0, 0, 0,0);
+		RenderHelper.renderCubeWithUV(buffer, -1.9, 0.99, 2.9, 3, 1.1, 3, 0, 0, 0,0);
+		RenderHelper.renderCubeWithUV(buffer, 2.9, 0.99, -1.9, 3, 1.1, 3, 0, 0, 0,0);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
-		tessellator.draw();
+		Tessellator.getInstance().draw();
 
 		if(multiBlockTile.getPowerMadeLastTick() > 0 ) {
 			GL11.glDisable(GL11.GL_LIGHTING);
@@ -106,9 +106,9 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 			GL11.glPushMatrix();
-			tessellator.startDrawing(7);
-			tessellator.setColorRGBA_F(0.2F, 0.2F, 0.2F, 0.3F);
-
+			GlStateManager.color(0.2F, 0.2F, 0.2F, 0.3F);
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+	
 			//GL11.glTranslated(0.5, 0, 0.5);
 			//GL11.glRotated(tile.getWorldObj().getTotalWorldTime()/10.0 % 360, 0, 1, 0);
 			//GL11.glTranslated(-0.3, 0, -0.3);
@@ -116,20 +116,20 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
 			for(float radius = 0.25F; radius < 2; radius += .25F) {
 
 				for(double i = 0; i < 2*Math.PI; i += Math.PI) {
-					tessellator.addVertex(- x , -y + 200,  - z);
-					tessellator.addVertex(- x, -y + 200, - z);
-					tessellator.addVertex(- (radius* Math.cos(i)) + 0.5F, 0,- (radius* Math.sin(i)) + 0.5F);
-					tessellator.addVertex(+ (radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F);
+					buffer.pos(- x , -y + 200,  - z).endVertex();
+					buffer.pos(- x, -y + 200, - z).endVertex();
+					buffer.pos(- (radius* Math.cos(i)) + 0.5F, 0,- (radius* Math.sin(i)) + 0.5F).endVertex();
+					buffer.pos(+ (radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F).endVertex();
 				}
 
 				for(double i = 0; i < 2*Math.PI; i += Math.PI) {
-					tessellator.addVertex(- x, -y + 200,- z);
-					tessellator.addVertex(- x, -y + 200, - z);
-					tessellator.addVertex(+ (radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F);
-					tessellator.addVertex(- (radius* Math.cos(i)) + 0.5F, 0,(radius* Math.sin(i)) + 0.5F);
+					buffer.pos(- x, -y + 200,- z).endVertex();
+					buffer.pos(- x, -y + 200, - z).endVertex();
+					buffer.pos(+ (radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F).endVertex();
+					buffer.pos(- (radius* Math.cos(i)) + 0.5F, 0,(radius* Math.sin(i)) + 0.5F).endVertex();
 				}
 			}
-			tessellator.draw();
+			Tessellator.getInstance().draw();
 
 			GL11.glPopMatrix();
 			GL11.glDisable(GL11.GL_BLEND);

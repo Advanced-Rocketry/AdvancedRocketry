@@ -79,11 +79,6 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) {
-		return inventory.getStackInSlotOnClosing(slot);
-	}
-
-	@Override
 	public void setInventorySlotContents(int slot, ItemStack contents) {
 		if(slot == 0) {
 			if(contents != null && contents.getItem() instanceof IModularArmor) {
@@ -110,10 +105,11 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		
 		inventory.writeToNBT(nbt);
+		return nbt;
 	}
 	
 	@Override
@@ -124,12 +120,12 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 	
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 		return getModularInventoryName();
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 		return true;
 	}
 
@@ -144,19 +140,46 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 
 	@Override
-	public void openInventory() {
-		inventory.openInventory();
+	public void openInventory(EntityPlayer player) {
+		inventory.openInventory(player);
 	}
 
 	@Override
-	public void closeInventory() {
-		inventory.closeInventory();	
+	public void closeInventory(EntityPlayer player) {
+		inventory.closeInventory(player);	
 	}
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		
 		return (slot == 0 && stack.getItem() instanceof IModularArmor) || (inventory.getStackInSlot(0) != null && inventory.getStackInSlot(0).getItem() instanceof IModularArmor && slot != 0 && stack.getItem() instanceof IArmorComponent && ((IArmorComponent)stack.getItem()).isAllowedInSlot(stack, ((ItemArmor)inventory.getStackInSlot(0).getItem()).armorType));
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getField(int id) {
+		return inventory.getField(id);
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		inventory.setField(id, value);
+	}
+
+	@Override
+	public int getFieldCount() {
+		return inventory.getFieldCount();
+	}
+
+	@Override
+	public void clear() {
+		inventory.clear();
+		
 	}
 
 }

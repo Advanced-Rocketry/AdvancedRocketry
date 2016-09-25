@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.inventory.TextureResources;
@@ -36,10 +38,11 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 	}
 	
 	@Override
-	public boolean shouldHideBlock(World world, int x, int y, int z, Block tile) {
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
+	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
+		TileEntity tileEntity = world.getTileEntity(pos);
 		
-		return !TileMultiBlock.getMapping('P').contains(new BlockMeta(tile, BlockMeta.WILDCARD)) && tileEntity != null && !(tileEntity instanceof TileChemicalReactor);
+		return !TileMultiBlock.getMapping('P').contains(new BlockMeta(tile.getBlock(), BlockMeta.WILDCARD)) && tileEntity != null && !(tileEntity instanceof TileChemicalReactor);
+	
 	}
 	
 	@Override
@@ -59,7 +62,7 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 	
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		return AxisAlignedBB.getBoundingBox(xCoord -2,yCoord -2, zCoord -2, xCoord + 2, yCoord + 2, zCoord + 2);
+		return new AxisAlignedBB(pos.add(-2,-2,-2), pos.add(2,2,2));
 	}
 
 	@Override

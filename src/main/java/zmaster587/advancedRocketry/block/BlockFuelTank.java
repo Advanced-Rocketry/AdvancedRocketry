@@ -1,124 +1,106 @@
 package zmaster587.advancedRocketry.block;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.IIcon;
 import zmaster587.advancedRocketry.api.IFuelTank;
-import zmaster587.advancedRocketry.tile.TileModelRender;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import zmaster587.advancedRocketry.block.BlockLinkedHorizontalTexture.IconNames;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockFuelTank extends Block implements IFuelTank{
 
-	
+	public final static PropertyEnum<TankStates> TANKSTATES = PropertyEnum.create("tankstates", TankStates.class);
+
 	public BlockFuelTank(Material mat) {
 		super(mat);
+		this.setDefaultState(this.getDefaultState().withProperty(TANKSTATES, TankStates.MIDDLE));
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		return this.getDefaultState().withProperty(TANKSTATES, TankStates.values()[meta]);
 	}
 	
 	@Override
-	public void onBlockAdded(World world, int x,
-			int y, int z) {
-		
-		int i = world.getBlock(x, y + 1, z) == this ? 1 : 0;
-		i += world.getBlock(x, y - 1, z) == this ? 2 : 0;
-		
+	public int getMetaFromState(IBlockState state) {
+		return state.getValue(TANKSTATES).ordinal();
+	}
+	
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, new IProperty[]{TANKSTATES});
+	}
+	
+	/*@Override
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
+
+
+		int i = world.getBlockState(pos.add(0,1,0)).getBlock() == this ? 1 : 0;
+		i += world.getBlockState(pos.add(0,-1,0)).getBlock() == this ? 2 : 0;
+
 		//If there is no tank below this one
-		if( i == 1 && world.getBlockMetadata(x, y, z) != 1) {
-			world.setBlockMetadataWithNotify(x, y, z, 1, 2);
-			((TileModelRender)world.getTileEntity(x, y, z)).setType(TileModelRender.models.TANKEND);
+		if( i == 1 ) {
+			world.setBlockState(pos, this.getDefaultState().withProperty(TANKSTATES, TankStates.BOTTOM),2);
+			((TileModelRender)world.getTileEntity(pos)).setType(TileModelRender.models.TANKEND);
 		}
 		//If there is no tank above this one
-		else if( i == 2  && world.getBlockMetadata(x, y, z) != 2) {
-			world.setBlockMetadataWithNotify(x, y, z, 2, 2);
-			((TileModelRender)world.getTileEntity(x, y, z)).setType(TileModelRender.models.TANKTOP);
+		else if( i == 2 ) {
+			world.setBlockState(pos, this.getDefaultState().withProperty(TANKSTATES, TankStates.TOP),2);
+			((TileModelRender)world.getTileEntity(pos)).setType(TileModelRender.models.TANKTOP);
 		}
 		//If there is a tank above and below this one
-		else if(world.getBlockMetadata(x, y, z) != 0) {
-			world.setBlockMetadataWithNotify(x, y, z, 0, 2);
-			((TileModelRender)world.getTileEntity(x, y, z)).setType(TileModelRender.models.TANKMIDDLE);
+		else {
+			world.setBlockState(pos, this.getDefaultState().withProperty(TANKSTATES, TankStates.MIDDLE),2);
+			((TileModelRender)world.getTileEntity(pos)).setType(TileModelRender.models.TANKMIDDLE);
 		}
-	}
-	
-	
-	
+	}*/
+
 	@Override
-	public void onNeighborBlockChange(World world, int x,
-			int y, int z, Block block) {
-		
-		int i = world.getBlock(x, y + 1, z) == this ? 1 : 0;
-		
-		i += world.getBlock(x, y - 1, z) == this ? 2 : 0;
-		
+	public IBlockState getActualState(IBlockState state, IBlockAccess world,
+			BlockPos pos) {
+		int i = world.getBlockState(pos.add(0,1,0)).getBlock() == this ? 1 : 0;
+		i += world.getBlockState(pos.add(0,-1,0)).getBlock() == this ? 2 : 0;
+
 		//If there is no tank below this one
-		if( i == 1 && world.getBlockMetadata(x, y, z) != 1) {
-			world.setBlockMetadataWithNotify(x, y, z, 1, 2);
-			((TileModelRender)world.getTileEntity(x, y, z)).setType(TileModelRender.models.TANKEND);
-			world.getTileEntity(x, y, z).markDirty();
-			world.markBlockForUpdate(x, y, z);
+		if( i == 1 ) {
+			return state.withProperty(TANKSTATES, TankStates.BOTTOM);
 		}
 		//If there is no tank above this one
-		else if( i == 2  && world.getBlockMetadata(x, y, z) != 2) {
-			world.setBlockMetadataWithNotify(x, y, z, 2, 2);
-			((TileModelRender)world.getTileEntity(x, y, z)).setType(TileModelRender.models.TANKTOP);
-			world.getTileEntity(x, y, z).markDirty();
-			world.markBlockForUpdate(x, y, z);
+		else if( i == 2 ) {
+			return state.withProperty(TANKSTATES, TankStates.TOP);
 		}
 		//If there is a tank above and below this one
-		else if((i == 0 || i == 3) && world.getBlockMetadata(x, y, z) != 0) {
-			world.setBlockMetadataWithNotify(x, y, z, 0, 2);
-			((TileModelRender)world.getTileEntity(x, y, z)).setType(TileModelRender.models.TANKMIDDLE);
-			world.getTileEntity(x, y, z).markDirty();
-			world.markBlockForUpdate(x, y, z);
+		else {
+			return state.withProperty(TANKSTATES, TankStates.MIDDLE);
 		}
-		
 	}
-	
+
 	
 	@Override
-	public TileEntity createTileEntity(World world, int metadata) {
-		return new TileModelRender(TileModelRender.models.TANKMIDDLE.ordinal() + metadata);
-	}
-	
-	@Override
-	public boolean hasTileEntity(int metadata) {
-		return true;
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean renderAsNormalBlock()
-	{
+	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
 
 	@Override
-	public boolean canRenderInPass(int pass) {
-		return false;
-	}
-	
-	@Override
-	public boolean isOpaqueCube() {return false;}
-
-	@Override
-	public int getMaxFill(World world, int x, int y, int z , int meta) {
+	public int getMaxFill(World world, BlockPos pos , IBlockState state) {
 		return 500;
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerBlockIcons(IIconRegister reg)
-	{
-		//Not needed
-	}
+	public enum TankStates implements IStringSerializable {
+		TOP,
+		BOTTOM,
+		MIDDLE;
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public IIcon getIcon(int side, int meta)
-	{
-		return Blocks.iron_block.getIcon(side, meta);
+		@Override
+		public String getName() {
+			return name().toLowerCase();
+		}
+
 	}
 }

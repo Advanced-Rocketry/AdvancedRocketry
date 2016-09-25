@@ -4,6 +4,8 @@ import java.util.Random;
 
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 
@@ -18,12 +20,15 @@ public class WorldGenCharredTree extends WorldGenAbstractTree {
         this.minTreeHeight = minHeight;
     }
 
-	
-    public boolean generate(World world, Random rand, int x, int y, int z)
-    {
-        int l = rand.nextInt(3) + this.minTreeHeight;
+	@Override
+	public boolean generate(World world, Random rand, BlockPos pos) {
+		int l = rand.nextInt(3) + this.minTreeHeight;
         boolean flag = true;
 
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
+        
         if (y >= 1 && y + l + 1 <= 256) {
             byte b0;
             int k1;
@@ -43,9 +48,10 @@ public class WorldGenCharredTree extends WorldGenAbstractTree {
                 for (int j1 = x - b0; j1 <= x + b0 && flag; ++j1) {
                     for (k1 = z - b0; k1 <= z + b0 && flag; ++k1) {
                         if (i1 >= 0 && i1 < 256) {
-                            block = world.getBlock(j1, i1, k1);
+                        	BlockPos pos2 = new BlockPos(j1, i1, k1);
+                            block = world.getBlockState(pos2).getBlock();
 
-                            if (!this.isReplaceable(world, j1, i1, k1)) {
+                            if (!this.isReplaceable(world, pos2)) {
                                 flag = false;
                             }
                         }
@@ -60,16 +66,20 @@ public class WorldGenCharredTree extends WorldGenAbstractTree {
                 return false;
             }
             else {
-                Block block2 = world.getBlock(x, y - 1, z);
+            	BlockPos pos3 = new BlockPos(x, y - 1, z);
+            	IBlockState state2 = world.getBlockState(pos3);
+                Block block2 = state2.getBlock();
                 if (y < 256 - l - 1) {
-                    block2.onPlantGrow(world, x, y - 1, z, x, y, z);
+                	
+                    block2.onPlantGrow(state2, world, pos3, pos3.up());
                     b0 = 3;
 
                     for (k1 = 0; k1 < l; ++k1) {
-                        block = world.getBlock(x, y + k1, z);
+                    	
+                    	state2 = world.getBlockState(new BlockPos(x, y + k1, z));
 
-                        if (block.isAir(world, x, y + k1, z) || block.isLeaves(world, x, y + k1, z)) {
-                            this.setBlockAndNotifyAdequately(world, x, y + k1, z, AdvancedRocketryBlocks.blockCharcoalLog, 0);
+                        if (world.isAirBlock(new BlockPos(x, y + k1, z)) || state2.getBlock().isLeaves(state2, world, new BlockPos(x, y + k1, z))) {
+                            this.setBlockAndNotifyAdequately(world, pos3, AdvancedRocketryBlocks.blockCharcoalLog.getDefaultState());
                         }
                     }
  
@@ -83,5 +93,5 @@ public class WorldGenCharredTree extends WorldGenAbstractTree {
         else {
             return false;
         }
-    }
+	}
 }

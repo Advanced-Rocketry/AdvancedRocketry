@@ -1,10 +1,10 @@
 package zmaster587.advancedRocketry.entity;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityDummy extends Entity {
 
@@ -14,7 +14,6 @@ public class EntityDummy extends Entity {
 		super(world);
 		this.noClip=true;
 		this.height=0f;
-		this.yOffset=0.2f;
 		
 	}
 
@@ -24,7 +23,6 @@ public class EntityDummy extends Entity {
 		this.posX = this.lastTickPosX = x;
 		this.posY = this.lastTickPosY = y;
 		this.posZ = this.lastTickPosZ = z;
-		this.boundingBox.minY = this.boundingBox.maxY = y + .3f;
 	}
 	
 	@Override
@@ -32,17 +30,13 @@ public class EntityDummy extends Entity {
 		return true;
 	}
 	
-	@Override
-	public void onChunkLoad() {
-		super.onChunkLoad();
-		this.setDead();
-	}
 
 	/**
 	 * Checks if the entity is in range to render by using the past in distance and comparing it to its average edge
 	 * length * 64 * renderDistanceWeight Args: distance
 	 */
 	@SideOnly(Side.CLIENT)
+	@Override
 	public boolean isInRangeToRenderDist(double p_70112_1_)
 	{
 		return false;

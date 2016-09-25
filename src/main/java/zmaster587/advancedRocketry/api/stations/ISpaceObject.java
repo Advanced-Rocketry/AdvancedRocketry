@@ -2,7 +2,7 @@ package zmaster587.advancedRocketry.api.stations;
 
 import net.minecraft.nbt.NBTTagCompound;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
-import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 
 public interface ISpaceObject {
 	
@@ -50,7 +50,7 @@ public interface ISpaceObject {
 	/**
 	 * @return the spawn location of the object
 	 */
-	public BlockPosition getSpawnLocation();
+	public HashedBlockPosition getSpawnLocation();
 	
 	/**
 	 * True if the spawn location for this space object is not the default one assigned to it
@@ -86,7 +86,7 @@ public interface ISpaceObject {
 	/**
 	 * @return next viable place to land
 	 */
-	public BlockPosition getNextLandingPad();
+	public HashedBlockPosition getNextLandingPad();
 	
 	/**
 	 * Adds a landing pad to the station

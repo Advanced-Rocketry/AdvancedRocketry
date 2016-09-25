@@ -1,5 +1,7 @@
 package zmaster587.advancedRocketry.api;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -16,5 +18,5 @@ public interface IFuelTank {
 	 * @param meta
 	 * @return the capacity for the container
 	 */
-	public int getMaxFill(World world, int x, int y, int z , int meta);
+	public int getMaxFill(World world, BlockPos pos , IBlockState state);
 }

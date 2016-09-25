@@ -5,31 +5,31 @@ import java.util.Random;
 import zmaster587.advancedRocketry.world.decoration.MapGenCrater;
 import zmaster587.advancedRocketry.world.gen.WorldGenNoTree;
 import zmaster587.advancedRocketry.world.gen.WorldGenSwampTree;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
+import net.minecraft.block.BlockFlower.EnumFlowerType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenSwamp;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.MapGenBase;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BiomeGenDeepSwamp extends BiomeGenBase {
+public class BiomeGenDeepSwamp extends Biome {
 
 	public static MapGenBase swampTree;
 	private final static WorldGenNoTree noTree = new WorldGenNoTree(false);
 	
 	public BiomeGenDeepSwamp(int biomeId, boolean register) {
-		super(biomeId,register);
-		this.biomeName="DeepSwamp";
-		rootHeight=-0.1f;
-		heightVariation=0.2f;
-		rainfall = 0.9f;
-		temperature = 0.9f;
+		super(new BiomeProperties("DeepSwamp").setBaseHeight(-0.1f).setHeightVariation(0.2f).setRainfall(0.9f).setTemperature(0.9f).setWaterColor(14745518));
+
+		registerBiome(biomeId, "DeepSwamp", this);
+		
 		this.theBiomeDecorator.treesPerChunk = 10;
         this.theBiomeDecorator.flowersPerChunk = 1;
         this.theBiomeDecorator.deadBushPerChunk = 1;
@@ -40,10 +40,9 @@ public class BiomeGenDeepSwamp extends BiomeGenBase {
         this.theBiomeDecorator.sandPerChunk2 = 0;
         this.theBiomeDecorator.sandPerChunk = 0;
         this.theBiomeDecorator.grassPerChunk = 5;
-        this.waterColorMultiplier = 14745518;
-        this.spawnableMonsterList.add(new BiomeGenBase.SpawnListEntry(EntitySlime.class, 1, 1, 1));
+        this.spawnableMonsterList.add(new Biome.SpawnListEntry(EntitySlime.class, 1, 1, 1));
         this.flowers.clear();
-        this.addFlower(Blocks.red_flower, 1, 10);
+        this.addFlower(Blocks.RED_FLOWER.getDefaultState(), 10);
 		swampTree = new WorldGenSwampTree(2);
 	}
 	
@@ -53,42 +52,38 @@ public class BiomeGenDeepSwamp extends BiomeGenBase {
 		return 0x203020;
 	}
 	
-	
-    public WorldGenAbstractTree func_150567_a(Random p_150567_1_)
-    {
-        return this.worldGeneratorSwamp;
-    }
-
-    public String func_150572_a(Random p_150572_1_, int p_150572_2_, int p_150572_3_, int p_150572_4_)
-    {
-        return BlockFlower.field_149859_a[1];
-    }
+	@Override
+	public WorldGenAbstractTree genBigTreeChance(Random rand) {
+		return this.SWAMP_FEATURE;
+	}
 	
 	@Override
-	public void genTerrainBlocks(World world, Random rand,
-			Block[] block, byte[] abyte, int x,
-			int z, double noise) {
-        double d1 = plantNoise.func_151601_a((double)x * 0.25D, (double)z * 0.25D);
+	public EnumFlowerType pickRandomFlower(Random rand, BlockPos pos) {
+		return EnumFlowerType.BLUE_ORCHID;
+	}
+	
+	@Override
+	public void genTerrainBlocks(World worldIn, Random rand,
+			ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal) {
+		
+		double d0 = GRASS_COLOR_NOISE.getValue((double)x * 0.25D, (double)z * 0.25D);
 
-        if (d1 > 0.0D)
+        if (d0 > 0.0D)
         {
-            int k = x & 15;
-            int l = z & 15;
-            int i1 = block.length / 256;
+            int i = x & 15;
+            int j = z & 15;
 
-            for (int j1 = 255; j1 >= 0; --j1)
+            for (int k = 255; k >= 0; --k)
             {
-                int k1 = (l * 16 + k) * i1 + j1;
-
-                if (block[k1] == null || block[k1].getMaterial() != Material.air)
+                if (chunkPrimerIn.getBlockState(j, k, i).getMaterial() != Material.AIR)
                 {
-                    if (j1 == 62 && block[k1] != Blocks.water)
+                    if (k == 62 && chunkPrimerIn.getBlockState(j, k, i).getBlock() != Blocks.WATER)
                     {
-                    	block[k1] = Blocks.water;
+                        chunkPrimerIn.setBlockState(j, k, i, WATER);
 
-                        if (d1 < 0.12D)
+                        if (d0 < 0.12D)
                         {
-                        	block[k1 + 1] = Blocks.waterlily;
+                            chunkPrimerIn.setBlockState(j, k + 1, i, Blocks.WATERLILY.getDefaultState());
                         }
                     }
 
@@ -97,22 +92,24 @@ public class BiomeGenDeepSwamp extends BiomeGenBase {
             }
         }
 
-        this.genBiomeTerrain(world, rand, block, abyte, x, z, noise);
+        this.generateBiomeTerrain(worldIn, rand, chunkPrimerIn, x, z, noiseVal);
+
         
 		//Decoration time takes too long due to block relights, so run at terrain gen time
 		///swampTree.func_151539_a(null, world, x, z, block); //Arg 1 never actually used so fake it
 		//Yes this is hacky
 		if(x % 16 == 0 && z % 16 == 0 )
-			swampTree.func_151539_a(null, world, x/16, z/16, block);
+			swampTree.generate(worldIn, x/16, z/16, chunkPrimerIn);
 	}
 	
     /**
      * Provides the basic grass color based on the biome temperature and rainfall
      */
     @SideOnly(Side.CLIENT)
-    public int getBiomeGrassColor(int p_150558_1_, int p_150558_2_, int p_150558_3_)
+    public int getBiomeGrassColor(int x, int y, int z)
     {
-        double d0 = plantNoise.func_151601_a((double)p_150558_1_ * 0.0225D, (double)p_150558_3_ * 0.0225D);
+    	
+    	double d0 = GRASS_COLOR_NOISE.getValue((double)x * 0.25D, (double)z * 0.25D);
         return d0 < -0.1D ? 5011004 : 6975545;
     }
 

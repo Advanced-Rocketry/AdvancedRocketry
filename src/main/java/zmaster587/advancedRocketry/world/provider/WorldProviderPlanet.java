@@ -5,8 +5,6 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
@@ -16,17 +14,23 @@ import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.ChunkProviderPlanet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
-import net.minecraft.world.biome.WorldChunkManager;
+import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.client.IRenderHandler;
+import net.minecraftforge.common.BiomeManager;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProvider {
 	private IRenderHandler skyRender;
-	public WorldChunkManager chunkMgrTerraformed;
+	public BiomeProvider chunkMgrTerraformed;
 
 	/*@Override
 	protected void registerWorldChunkManager() {
@@ -41,8 +45,8 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	}*/
 
 	@Override
-	public IChunkProvider createChunkGenerator() {
-		return new ChunkProviderPlanet(this.worldObj, this.worldObj.getSeed(), false);
+	public IChunkGenerator createChunkGenerator() {
+		return new ChunkProviderPlanet(this.worldObj, this.worldObj.getSeed(), false, worldObj.getWorldInfo().getGeneratorOptions());
 	}
 
 	@Override
@@ -53,7 +57,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	public long getSeed() {
-		return super.getSeed() + dimensionId;
+		return super.getSeed() + getDimension();
 	}
 
 	/*@Override
@@ -64,23 +68,24 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	}*/
 
 	@Override
-	protected void registerWorldChunkManager()
+	protected void createBiomeProvider()
 	{
 		worldObj.getWorldInfo().setTerrainType(AdvancedRocketry.planetWorldType);
 		
-		this.worldChunkMgr = new ChunkManagerPlanet(worldObj, DimensionManager.getInstance().getDimensionProperties(dimensionId).getBiomes());
-		this.chunkMgrTerraformed = new ChunkManagerPlanet(worldObj, DimensionManager.getInstance().getDimensionProperties(dimensionId).getTerraformedBiomes());
+		
+		this.biomeProvider = new ChunkManagerPlanet(worldObj, worldObj.getWorldInfo().getGeneratorOptions(), DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension()).getBiomes());
+		this.chunkMgrTerraformed = new ChunkManagerPlanet(worldObj, worldObj.getWorldInfo().getGeneratorOptions(), DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension()).getTerraformedBiomes());
 		//AdvancedRocketry.planetWorldType.getChunkManager(worldObj);
 	}
 	@Override
 	public boolean canDoRainSnowIce(Chunk chunk) {
 		// TODO Auto-generated method stub
-		return getAtmosphereDensity(0,0) > 75 ? super.canDoRainSnowIce(chunk) : false;
+		return getAtmosphereDensity(new BlockPos(0,0,0)) > 75 ? super.canDoRainSnowIce(chunk) : false;
 	}
 	@Override
 	public void updateWeather() {
 
-		if(getAtmosphereDensity(0,0) > 75)
+		if(getAtmosphereDensity(new BlockPos(0,0,0)) > 75)
 			super.updateWeather();
 	}
 
@@ -93,7 +98,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	@SideOnly(Side.CLIENT)
 	public float[] calcSunriseSunsetColors(float p_76560_1_, float p_76560_2_) {
 
-		float[] colors = getDimensionProperties((int)Minecraft.getMinecraft().thePlayer.posX, (int)Minecraft.getMinecraft().thePlayer.posZ).sunriseSunsetColors;
+		float[] colors = getDimensionProperties(new BlockPos((int)Minecraft.getMinecraft().thePlayer.posX,0 , (int)Minecraft.getMinecraft().thePlayer.posZ)).sunriseSunsetColors;
 
 		if(colors == null)
 			return super.calcSunriseSunsetColors(p_76560_1_, p_76560_2_);
@@ -112,7 +117,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 			finalColors[0] = f5 * 0.3F + colors[0];
 			finalColors[1] = f5 * f5 * 0.7F + colors[1];
 			finalColors[2] = f5 * f5 * 0.1F + colors[2];
-			finalColors[3] = f6 * (getAtmosphereDensityFromHeight(Minecraft.getMinecraft().renderViewEntity.posY, (int)Minecraft.getMinecraft().thePlayer.posX, (int)Minecraft.getMinecraft().thePlayer.posZ));
+			finalColors[3] = f6 * (getAtmosphereDensityFromHeight(Minecraft.getMinecraft().getRenderViewEntity().posY, new BlockPos((int)Minecraft.getMinecraft().thePlayer.posX, 0, (int)Minecraft.getMinecraft().thePlayer.posZ)));
 			return finalColors;
 		}
 		else
@@ -125,7 +130,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	public float getSunBrightness(float par1) {
-		float atmosphere = getAtmosphereDensity(0,0);
+		float atmosphere = getAtmosphereDensity(new BlockPos(0,0,0));
 		Math.abs(1-atmosphere);
 		//calculateCelestialAngle(p_76563_1_, p_76563_3_)
         float f1 = worldObj.getCelestialAngle(par1);
@@ -149,7 +154,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	//No clouds
 	@Override
 	public float getCloudHeight() {
-		return getAtmosphereDensity(0,0) > .75f ? 128 : -2000;
+		return getAtmosphereDensity(new BlockPos(0,0,0)) > .75f ? 128 : -2000;
 	}
 
 	@Override
@@ -159,35 +164,30 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	}
 
 	@Override
-	public Vec3 getSkyColor(Entity cameraEntity, float partialTicks) {
-		float[] vec = getDimensionProperties((int)cameraEntity.posX, (int)cameraEntity.posZ).skyColor;
+	public Vec3d getSkyColor(Entity cameraEntity, float partialTicks) {
+		float[] vec = getDimensionProperties(new BlockPos((int)cameraEntity.posX, 0, (int)cameraEntity.posZ)).skyColor;
 		if(vec == null)
 			return super.getSkyColor(cameraEntity, partialTicks);
 		else {
-			Vec3 skyColorVec = super.getSkyColor(cameraEntity, partialTicks);
-			return Vec3.createVectorHelper(vec[0] * skyColorVec.xCoord, vec[1] * skyColorVec.yCoord, vec[2] * skyColorVec.zCoord) ;
+			Vec3d skyColorVec = super.getSkyColor(cameraEntity, partialTicks);
+			return new Vec3d(vec[0] * skyColorVec.xCoord, vec[1] * skyColorVec.yCoord, vec[2] * skyColorVec.zCoord) ;
 		}
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Vec3 getFogColor(float p_76562_1_, float p_76562_2_) {
+	public Vec3d getFogColor(float p_76562_1_, float p_76562_2_) {
 
-		Vec3 superVec = super.getFogColor(p_76562_1_, p_76562_2_);
+		Vec3d superVec = super.getFogColor(p_76562_1_, p_76562_2_);
 		//float multiplier = getAtmosphereDensityFromHeight(Minecraft.getMinecraft().renderViewEntity.posY);
 
-		float[] vec = getDimensionProperties((int)Minecraft.getMinecraft().thePlayer.posX,(int)Minecraft.getMinecraft().thePlayer.posZ).fogColor;
-		return Vec3.createVectorHelper(vec[0] * superVec.xCoord, vec[1] * superVec.yCoord, vec[2] * superVec.zCoord);
+		float[] vec = getDimensionProperties(new BlockPos((int)Minecraft.getMinecraft().thePlayer.posX, 0, (int)Minecraft.getMinecraft().thePlayer.posZ)).fogColor;
+		return new Vec3d(vec[0] * superVec.xCoord, vec[1] * superVec.yCoord, vec[2] * superVec.zCoord);
 	}
 
 	@Override
 	public boolean doesXZShowFog(int x, int z) {
-		return getDimensionProperties(x,z).getAtmosphereDensity() > 100;
-	}
-
-	@Override
-	public String getDimensionName() {
-		return getDimensionProperties(0,0).getName();
+		return getDimensionProperties(new BlockPos(x,0,z)).getAtmosphereDensity() > 100;
 	}
 
 	//Make the world deep
@@ -204,7 +204,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	@Override
 	public float calculateCelestialAngle(long p_76563_1_, float p_76563_3_) {
 		int rotationalPeriod;
-		rotationalPeriod = getRotationalPeriod(0,0);
+		rotationalPeriod = getRotationalPeriod(new BlockPos(0,0,0));
 
 
 		int j = (int)(p_76563_1_ % rotationalPeriod);
@@ -228,45 +228,45 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	}
 
 	@Override
-	public double getGravitationalMultiplier(int x, int z) {
-		return getDimensionProperties(x,z).gravitationalMultiplier;
+	public double getGravitationalMultiplier(BlockPos pos) {
+		return getDimensionProperties(pos).gravitationalMultiplier;
 	}
 
 	@Override
-	public int getOrbitingDimension(int x ,int z) {
-		return getDimensionProperties(x,z).getParentPlanet();
+	public int getOrbitingDimension(BlockPos pos) {
+		return getDimensionProperties(pos).getParentPlanet();
 	}
 
 	@Override
-	public int[] getDimensionsInOrbit(int x, int z) {
-		Set<Integer> intSet = getDimensionProperties(x,z).getChildPlanets();
+	public int[] getDimensionsInOrbit(BlockPos pos) {
+		Set<Integer> intSet = getDimensionProperties(pos).getChildPlanets();
 		Integer[] intArray = new Integer[intSet.size()];
-		return ArrayUtils.toPrimitive(getDimensionProperties(x,z).getChildPlanets().toArray(intArray));
+		return ArrayUtils.toPrimitive(getDimensionProperties(pos).getChildPlanets().toArray(intArray));
 	}
 
 	@Override
-	public int getOrbitalDistance(int x, int z) {
-		return getDimensionProperties(x,z).orbitalDist;
+	public int getOrbitalDistance(BlockPos pos) {
+		return getDimensionProperties(pos).orbitalDist;
 	}
 
 	@Override
-	public float getAtmosphereDensity(int x, int z) {
-		return (float)(getDimensionProperties(x,z).getAtmosphereDensity()/100f);
+	public float getAtmosphereDensity(BlockPos pos) {
+		return (float)(getDimensionProperties(pos).getAtmosphereDensity()/100f);
 	}
 
 	@Override
-	public float getAtmosphereDensityFromHeight(double y, int x, int z) {
-		return getDimensionProperties(x,z).getAtmosphereDensityAtHeight(y);
+	public float getAtmosphereDensityFromHeight(double y, BlockPos pos) {
+		return getDimensionProperties(pos).getAtmosphereDensityAtHeight(y);
 	}
 
 	@Override
-	public int getAverageTemperature(int x, int z) {
-		return getDimensionProperties(x,z).averageTemperature;
+	public int getAverageTemperature(BlockPos pos) {
+		return getDimensionProperties(pos).averageTemperature;
 	}
 
 	@Override
-	public int getRotationalPeriod(int x, int z) {
-		return getDimensionProperties(0,0).rotationalPeriod;
+	public int getRotationalPeriod(BlockPos pos) {
+		return getDimensionProperties(new BlockPos(0,0,0)).rotationalPeriod;
 	}
 
 	@Override
@@ -285,18 +285,24 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	}
 
 	@Override
-	public Vec3 getSunColor(int x, int z) {
-		float[] vec = getDimensionProperties(x,z).getSunColor();
-		return Vec3.createVectorHelper(vec[0],vec[1],vec[2]);
+	public Vec3d getSunColor(BlockPos pos) {
+		float[] vec = getDimensionProperties(pos).getSunColor();
+		return new Vec3d(vec[0],vec[1],vec[2]);
 	}
 
-	public int getSolarOrbitalDistance(int x, int z) {
-		return getDimensionProperties(x,z).getSolarOrbitalDistance();
+	
+	public int getSolarOrbitalDistance(BlockPos pos) {
+		return getDimensionProperties(pos).getSolarOrbitalDistance();
 	}
 
 	@Override
-	public DimensionProperties getDimensionProperties(int x, int z) {
-		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(this.dimensionId);
-		return properties == null ? new DimensionProperties(this.dimensionId) : properties;
+	public DimensionProperties getDimensionProperties(BlockPos pos) {
+		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(this.getDimension());
+		return properties == null ? new DimensionProperties(this.getDimension()) : properties;
+	}
+
+	@Override
+	public DimensionType getDimensionType() {
+		return DimensionManager.PlanetDimensionType;
 	}
 }

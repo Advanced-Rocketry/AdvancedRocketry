@@ -4,12 +4,15 @@ import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.tile.cables.TilePipe;
 import zmaster587.libVulpes.render.RenderHelper;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class RendererPipe extends TileEntitySpecialRenderer {
 
@@ -20,130 +23,43 @@ public class RendererPipe extends TileEntitySpecialRenderer {
 	public RendererPipe(ResourceLocation texture) {
 		this.texture = texture;
 	}
-	
-	public void drawCube(double radius, Tessellator tessellator) {
-		//TOP
-		tessellator.addVertex(radius, -radius, radius);
-		tessellator.addVertex(radius, radius, radius);
-		tessellator.addVertex(-radius, radius, radius);
-		tessellator.addVertex(-radius, -radius, radius);
 
-		//BOTTOM
-		tessellator.addVertex(radius, radius, -radius);
-		tessellator.addVertex(radius, -radius, -radius);
-		tessellator.addVertex(-radius, -radius, -radius);
-		tessellator.addVertex(-radius, radius, -radius);
-
-		//EAST
-		tessellator.addVertex(radius, -radius, -radius);
-		tessellator.addVertex(radius, radius, -radius);
-		tessellator.addVertex(radius, radius, radius);
-		tessellator.addVertex(radius, -radius, radius);
-
-		//SOUTH
-		tessellator.addVertex(radius, -radius, -radius);
-		tessellator.addVertex(radius, -radius, radius);
-		tessellator.addVertex(-radius, -radius, radius);
-		tessellator.addVertex(-radius, -radius, -radius);
-
-		//WEST
-		tessellator.addVertex(-radius, -radius, radius);
-		tessellator.addVertex(-radius, radius, radius);
-		tessellator.addVertex(-radius, radius, -radius);
-		tessellator.addVertex(-radius, -radius, -radius);
-
-		//NORTH
-		tessellator.addVertex(radius, radius, radius);
-		tessellator.addVertex(radius, radius, -radius);
-		tessellator.addVertex(-radius, radius, -radius);
-		tessellator.addVertex(-radius, radius, radius);
-	}
-	
-	public void drawCubeUV(double radius, Tessellator tessellator) {
-		//TOP
-		tessellator.addVertexWithUV(radius, -radius, radius,1,0);
-		tessellator.addVertexWithUV(radius, radius, radius,1,1);
-		tessellator.addVertexWithUV(-radius, radius, radius,0,1);
-		tessellator.addVertexWithUV(-radius, -radius, radius,0,0);
-
-		//BOTTOM
-		tessellator.addVertexWithUV(radius, radius, -radius,1,1);
-		tessellator.addVertexWithUV(radius, -radius, -radius,1,0);
-		tessellator.addVertexWithUV(-radius, -radius, -radius,0,0);
-		tessellator.addVertexWithUV(-radius, radius, -radius,0,1);
-
-		//EAST
-		tessellator.addVertexWithUV(radius, -radius, -radius,0,0);
-		tessellator.addVertexWithUV(radius, radius, -radius,1,0);
-		tessellator.addVertexWithUV(radius, radius, radius,1,1);
-		tessellator.addVertexWithUV(radius, -radius, radius,0,1);
-
-		//SOUTH
-		tessellator.addVertexWithUV(radius, -radius, -radius,1,0);
-		tessellator.addVertexWithUV(radius, -radius, radius,1,1);
-		tessellator.addVertexWithUV(-radius, -radius, radius,0,1);
-		tessellator.addVertexWithUV(-radius, -radius, -radius,0,0);
-
-		//WEST
-		tessellator.addVertexWithUV(-radius, -radius, radius,0,1);
-		tessellator.addVertexWithUV(-radius, radius, radius,1,1);
-		tessellator.addVertexWithUV(-radius, radius, -radius,1,0);
-		tessellator.addVertexWithUV(-radius, -radius, -radius,0,0);
-
-		//NORTH
-		tessellator.addVertexWithUV(radius, radius, radius,1,1);
-		tessellator.addVertexWithUV(radius, radius, -radius,1,0);
-		tessellator.addVertexWithUV(-radius, radius, -radius,0,0);
-		tessellator.addVertexWithUV(-radius, radius, radius,0,1);
-	}
 
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x, double y,
-			double z, float f) {
+			double z, float f, int damage) {
 		
-		Tessellator tessellator = Tessellator.instance;
+		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
 
 		GL11.glPushMatrix();
 
 		GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
-		int bright = tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord, tile.zCoord,0);
-		int brightX = bright % 65536;
-		int brightY = bright / 65536;
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
 		
 		bindTexture(texture);
 		
-		tessellator.startDrawingQuads();
-		RenderHelper.renderCubeWithUV(Tessellator.instance, -0.3f,  -0.3f,  -0.3f,  0.3f, 0.3f, 0.3f, 0, 1, 0, 1);
-		tessellator.draw();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		//GL11.glDisable(GL11.GL_LIGHTING);
-		
+		GlStateManager.color(0.4f, 0.4f, 0.4f);
 		for(int i=0; i < 6; i++) {
 			if(((TilePipe)tile).canConnect(i)) {
 				GL11.glPushMatrix();
 
-				ForgeDirection dir = ForgeDirection.getOrientation(i);
+				EnumFacing dir = EnumFacing.values()[i];
 
-				GL11.glTranslated(0.5*dir.offsetX, 0.5*dir.offsetY, 0.5*dir.offsetZ);
-
-				tessellator.startDrawingQuads();
-
-				//tessellator.setColorRGBA_F(0.1F, 0.1F, 0.95F, 1.0f);
+				GL11.glTranslated(0.5*dir.getFrontOffsetX(), 0.5*dir.getFrontOffsetY(), 0.5*dir.getFrontOffsetZ());
 				
-				//bindTexture(texture);
-				
-				//for(int g=0; g < 8; g++) {
-				tessellator.setColorOpaque_F(.4f, 0.4f, 0.4f);
-				RenderHelper.renderCubeWithUV(Tessellator.instance, -0.25f,  -0.25f,  -0.25f,  0.25f, 0.25f, 0.25f, 0, 0, 0, 0);
+				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
+
+				//buffer.color(.4f, 0.4f, 0.4f,1f);
+				RenderHelper.renderCube(buffer, -0.25f,  -0.25f,  -0.25f,  0.25f, 0.25f, 0.25f);
 					//drawCube(0.25D, tessellator);
 				//}
-
-				tessellator.draw();
+				Tessellator.getInstance().draw();
 
 				GL11.glPopMatrix();
 			}
 		}
+		GlStateManager.color(1f,1f,1f);
 
 		//GL11.glDisable(GL11.GL_BLEND);
 		//GL11.glEnable(GL11.GL_LIGHTING);

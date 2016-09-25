@@ -19,12 +19,10 @@ import zmaster587.advancedRocketry.api.stations.IStorageChunk;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
-import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import zmaster587.libVulpes.util.ZUtils;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
@@ -34,13 +32,15 @@ import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.WorldType;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class StorageChunk implements IBlockAccess, IStorageChunk {
 
@@ -86,7 +86,6 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 	public void setEntity(EntityRocketBase entity) {
 		this.entity = entity;
-		world.isRemote = entity.worldObj.isRemote;
 	}
 
 	public EntityRocketBase getEntity() {
@@ -128,22 +127,26 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	}
 
 	@Override
-	public Block getBlock(int x, int y, int z) {
+	public IBlockState getBlockState(BlockPos pos) {
+		int x = pos.getX();
+		int y = pos.getY();
+		int z = pos.getZ();
 		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ)
-			return Blocks.air;
+			return Blocks.AIR.getDefaultState();
 
-		if(blocks[x][y][z] != Blocks.air)
-			return blocks[x][y][z];
-		return blocks[x][y][z];
+		if(blocks[x][y][z] != Blocks.AIR)
+			return blocks[x][y][z].getStateFromMeta(metas[x][y][z]);
+		return blocks[x][y][z].getStateFromMeta(metas[x][y][z]);
 	}
-
-	public void setBlockMeta(int x, int y, int z, int meta) {
-		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ)
-			return;
-
-		metas[x][y][z] = (short) meta;
+	
+	public void setBlockState(BlockPos pos, IBlockState state) {
+		int x = pos.getX();
+		int y = pos.getY();
+		int z = pos.getZ();
+		
+		blocks[x][y][z] = state.getBlock();
+		metas[x][y][z] = (short) state.getBlock().getMetaFromState(state);
 	}
-
 
 
 	//TODO: optimize the F*** out of this
@@ -163,8 +166,8 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 				tileList.appendTag(tileNbt);
 			} catch(RuntimeException e) {
 				AdvancedRocketry.logger.warning("A tile entity has thrown an error: " + tile.getClass().getCanonicalName());
-				blocks[tile.xCoord][tile.yCoord][tile.zCoord] = Blocks.air;
-				metas[tile.xCoord][tile.yCoord][tile.zCoord] = 0;
+				blocks[tile.getPos().getX()][tile.getPos().getY()][tile.getPos().getZ()] = Blocks.AIR;
+				metas[tile.getPos().getX()][tile.getPos().getY()][tile.getPos().getZ()] = 0;
 				tileEntityIterator.remove();
 			}
 		}
@@ -260,7 +263,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		for(int i = 0; i < tileList.tagCount(); i++) {
 
 			try {
-				TileEntity tile = TileEntity.createAndLoadEntity(tileList.getCompoundTagAt(i));
+				TileEntity tile = ZUtils.createTile(tileList.getCompoundTagAt(i));
 				tile.setWorldObj(world);
 
 				if(isInventoryBlock(tile)) {
@@ -331,10 +334,11 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		for(int x = (int)bb.minX; x <= bb.maxX; x++) {
 			for(int z = (int)bb.minZ; z <= bb.maxZ; z++) {
 				for(int y = (int)bb.minY; y<= bb.maxY; y++) {
+					BlockPos pos = new BlockPos(x,y,z);
+					
+					Block block = world.getBlockState(pos).getBlock();
 
-					Block block = world.getBlock(x, y, z);
-
-					if(!block.isAir(world, x, y, z)) {
+					if(!block.isAir(world.getBlockState(pos) ,world, pos)) {
 						if(x < actualMinX)
 							actualMinX = x;
 						if(y < actualMinY)
@@ -353,7 +357,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		}
 
 
-		bb.setBounds(actualMinX, actualMinY, actualMinZ, actualMaxX, actualMaxY, actualMaxZ);
+		bb = new AxisAlignedBB(actualMinX, actualMinY, actualMinZ, actualMaxX, actualMaxY, actualMaxZ);
 
 		StorageChunk ret = new StorageChunk((actualMaxX - actualMinX + 1), (actualMaxY - actualMinY + 1), (actualMaxZ - actualMinZ + 1));
 
@@ -362,12 +366,12 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		for(int x = actualMinX; x <= actualMaxX; x++) {
 			for(int z = actualMinZ; z <= actualMaxZ; z++) {
 				for(int y = actualMinY; y<= actualMaxY; y++) {
+					BlockPos pos = new BlockPos(x,y,z);
+					IBlockState state = world.getBlockState(pos);
+					ret.blocks[x - actualMinX][y - actualMinY][z - actualMinZ] = state.getBlock();
+					ret.metas[x - actualMinX][y - actualMinY][z - actualMinZ] = (short)state.getBlock().getMetaFromState(state);
 
-
-					ret.blocks[x - actualMinX][y - actualMinY][z - actualMinZ] = world.getBlock(x, y, z);
-					ret.metas[x - actualMinX][y - actualMinY][z - actualMinZ] = (short)world.getBlockMetadata(x, y, z);
-
-					TileEntity entity = world.getTileEntity(x, y, z);
+					TileEntity entity = world.getTileEntity(pos);
 					if(entity != null) {
 						NBTTagCompound nbt = new NBTTagCompound();
 						entity.writeToNBT(nbt);
@@ -377,7 +381,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 						nbt.setInteger("y",nbt.getInteger("y") - actualMinY);
 						nbt.setInteger("z",nbt.getInteger("z") - actualMinZ);
 
-						TileEntity newTile = TileEntity.createAndLoadEntity(nbt);
+						TileEntity newTile = ZUtils.createTile(nbt);
 
 						newTile.setWorldObj(ret.world);
 
@@ -407,8 +411,9 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 			for(int z = 0; z < sizeZ; z++) {
 				for(int y = 0; y< sizeY; y++) {
 
-					if(blocks[x][y][z] != null)
-						world.setBlock(xCoord + x, yCoord + y, zCoord + z, blocks[x][y][z], metas[x][y][z], 2);
+					if(blocks[x][y][z] != null) {
+						world.setBlockState(new BlockPos(xCoord + x, yCoord + y, zCoord + z), blocks[x][y][z].getStateFromMeta(metas[x][y][z]), 2);
+					}
 				}
 			}
 		}
@@ -433,7 +438,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 			nbt.setInteger("y",tmpY);
 			nbt.setInteger("z",tmpZ);
 
-			TileEntity entity = world.getTileEntity(tmpX, tmpY, tmpZ);
+			TileEntity entity = world.getTileEntity(new BlockPos(tmpX, tmpY, tmpZ));
 
 			if(entity != null)
 				entity.readFromNBT(nbt);
@@ -442,52 +447,26 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 
 	@Override
-	public TileEntity getTileEntity(int x, int y,
-			int z) {
+	public TileEntity getTileEntity(BlockPos pos) {
 		for(TileEntity tileE : tileEntities) {
-			if( tileE.xCoord == x &&  tileE.yCoord == y &&  tileE.zCoord == z)
+			if( tileE.getPos().compareTo(pos) == 0)
 				return tileE;
 		}
 		return null;
 	}
+	
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public int getLightBrightnessForSkyBlocks(int x, int y,
-			int z, int meta) {
-		Entity ent = Minecraft.getMinecraft().renderViewEntity;
-		return Minecraft.getMinecraft().theWorld.getLightBrightnessForSkyBlocks((int)ent.posX, (int)ent.posY, (int)ent.posZ, meta);
-	}
-
-	@Override
-	public int getBlockMetadata(int x, int y, int z) {
-		// Need bounds check... Thank you renderBlockStairs
-		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ )
-			return 0;
-		return metas[x][y][z];
-	}
-
-	@Override
-	public int isBlockProvidingPowerTo(int p_72879_1_, int p_72879_2_,
-			int p_72879_3_, int p_72879_4_) {
-		return 0;
-	}
-
-	@Override
-	public boolean isAirBlock(int x, int y, int z) {
-		if(x >= blocks.length || y >= blocks[0].length || z >= blocks[0][0].length)
+	public boolean isAirBlock(BlockPos pos) {
+		if(pos.getX() >= blocks.length || pos.getY() >= blocks[0].length || pos.getZ() >= blocks[0][0].length)
 			return true;
-		return blocks[x][y][z] == Blocks.air;
+		return blocks[pos.getX()][pos.getY()][pos.getZ()] == Blocks.AIR;
 	}
 
 	@Override
-	public BiomeGenBase getBiomeGenForCoords(int p_72807_1_, int p_72807_2_) {
-		return BiomeGenBase.ocean;
-	}
-
-	@Override
-	public int getHeight() {
-		return sizeY;
+	public Biome getBiomeGenForCoords(BlockPos pos) {
+		//Don't care, gen ocean
+		return Biome.getBiome(0);
 	}
 
 	@Override
@@ -496,23 +475,28 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	}
 
 	@Override
-	public boolean isSideSolid(int x, int y, int z, ForgeDirection side,
-			boolean _default) {
-
-		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ  || x + side.offsetX < 0 || x + side.offsetX >= sizeX || y + side.offsetY < 0 || y + side.offsetY >= sizeY || z + side.offsetZ < 0 || z + side.offsetZ >= sizeZ)
+	public boolean isSideSolid(BlockPos pos, EnumFacing side, boolean _default) {
+		int x = pos.getX();
+		int y = pos.getY();
+		int z = pos.getZ();
+		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ  || x + side.getFrontOffsetX() < 0 
+				|| x + side.getFrontOffsetX() >= sizeX || y + side.getFrontOffsetY() < 0 || y + side.getFrontOffsetY() >= sizeY 
+				|| z + side.getFrontOffsetZ() < 0 || z + side.getFrontOffsetZ() >= sizeZ)
 			return false;
 
-		return blocks[x + side.offsetX][y + side.offsetY][z + side.offsetZ].isBlockSolid(this, x, y, z, metas[x][y][z]);
+		return blocks[x + side.getFrontOffsetX()][y + side.getFrontOffsetY()][z + side.getFrontOffsetZ()].isBlockSolid(this, pos.offset(side), side.getOpposite());
+	
 	}
-
+	
 	public static StorageChunk cutWorldBB(World worldObj, AxisAlignedBB bb) {
 		StorageChunk chunk = StorageChunk.copyWorldBB(worldObj, bb);
 		for(int x = (int)bb.minX; x <= bb.maxX; x++) {
 			for(int z = (int)bb.minZ; z <= bb.maxZ; z++) {
 				for(int y = (int)bb.minY; y<= bb.maxY; y++) {
 
+					BlockPos pos = new BlockPos(x, y, z);
 					//Workaround for dupe
-					TileEntity tile = worldObj.getTileEntity(x, y, z);
+					TileEntity tile = worldObj.getTileEntity(pos);
 					if(tile instanceof IInventory) {
 						IInventory inv = (IInventory) tile;
 						for(int i = 0; i < inv.getSizeInventory(); i++) {
@@ -520,7 +504,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 						}
 					}
 
-					worldObj.setBlock(x, y, z, Blocks.air, 0, 2);
+					worldObj.setBlockState(pos, Blocks.AIR.getDefaultState(),2);
 				}
 			}
 		}
@@ -594,7 +578,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 			TileEntity tile = iterator.next();
 
 			if(tile instanceof TileGuidanceComputer) {
-				return ((TileGuidanceComputer)tile).getDestinationDimId(currentDimId,x,z);
+				return ((TileGuidanceComputer)tile).getDestinationDimId(currentDimId, new BlockPos(x,0,z));
 			}
 		}
 
@@ -686,7 +670,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 			try {
 				NBTTagCompound nbt = buffer.readNBTTagCompoundFromBuffer();
 
-				TileEntity tile = TileEntity.createAndLoadEntity(nbt);
+				TileEntity tile = ZUtils.createTile(nbt);
 				tile.setWorldObj(world);
 				tileEntities.add(tile);
 
@@ -702,5 +686,20 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	public int getCombinedLight(BlockPos pos, int lightValue) {
+		return lightValue;
+	}
+
+	@Override
+	public int getStrongPower(BlockPos pos, EnumFacing direction) {
+		return 0;
+	}
+
+	@Override
+	public WorldType getWorldType() {
+		return WorldType.CUSTOMIZED;
 	}
 }

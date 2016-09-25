@@ -3,13 +3,13 @@ package zmaster587.advancedRocketry.tile.Satellite;
 import java.util.LinkedList;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
@@ -37,6 +37,7 @@ public class TileChipStorage extends TileMultiPowerConsumer  implements IModular
 		{{'*'}}
 	};
 
+	
 	ItemStack inventory[];
 
 	@Override
@@ -78,7 +79,7 @@ public class TileChipStorage extends TileMultiPowerConsumer  implements IModular
 		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(new ModuleTexturedSlotArray(58, 16, this, 0, 1, TextureResources.idChip));   // Output
 		modules.add(new ModuleTexturedSlotArray(58, 36, this, 1, 2, TextureResources.idChip)); 	// Id chip
-		modules.add(new ModuleProgress(75, 36, 0, new ProgressBarImage(217,0, 17, 17, 234, 0, ForgeDirection.DOWN, TextureResources.progressBars), this));
+		modules.add(new ModuleProgress(75, 36, 0, new ProgressBarImage(217,0, 17, 17, 234, 0, EnumFacing.DOWN, TextureResources.progressBars), this));
 		modules.add(new ModuleButton(40, 56, 0, "Copy", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
 		return modules;
 	}
@@ -116,11 +117,6 @@ public class TileChipStorage extends TileMultiPowerConsumer  implements IModular
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) {
-		return inventory[slot];
-	}
-
-	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		inventory[slot] = stack;
 
@@ -130,7 +126,7 @@ public class TileChipStorage extends TileMultiPowerConsumer  implements IModular
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 		return false;
 	}
 
@@ -141,14 +137,14 @@ public class TileChipStorage extends TileMultiPowerConsumer  implements IModular
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player) {
-		return player.getDistanceSq(xCoord, yCoord, zCoord) < 64;
+		return player.getDistanceSq(pos) < 4092;
 	}
 
 	@Override
-	public void openInventory() {}
+	public void openInventory(EntityPlayer entity) {}
 
 	@Override
-	public void closeInventory() {}
+	public void closeInventory(EntityPlayer entity) {}
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
@@ -156,7 +152,7 @@ public class TileChipStorage extends TileMultiPowerConsumer  implements IModular
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
 		NBTTagList list = new NBTTagList();
@@ -173,6 +169,7 @@ public class TileChipStorage extends TileMultiPowerConsumer  implements IModular
 		}
 
 		nbt.setTag("outputItems", list);
+		return nbt;
 	}
 
 	@Override
@@ -191,7 +188,7 @@ public class TileChipStorage extends TileMultiPowerConsumer  implements IModular
 	}
 
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 		return null;
 	}
 }

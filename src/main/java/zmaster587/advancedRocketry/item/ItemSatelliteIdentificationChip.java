@@ -2,6 +2,8 @@ package zmaster587.advancedRocketry.item;
 
 import java.util.List;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import zmaster587.advancedRocketry.api.ISatelliteIdItem;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
@@ -47,7 +49,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 
 				World world;
 				if( !nbt.hasKey(null) && (world = DimensionManager.getWorld(satellite.getDimensionId())) != null)
-					nbt.setString(name, world.provider.getDimensionName());
+					nbt.setString(name, ChatFormatting.RED + "Dim names broken as of 1.10");
 			}
 
 

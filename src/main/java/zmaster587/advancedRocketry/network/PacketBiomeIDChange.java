@@ -8,24 +8,24 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.libVulpes.network.BasePacket;
-import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 
 public class PacketBiomeIDChange extends BasePacket {
 
 	Chunk chunk;
 	int worldId, xPos, zPos;
 	byte array[];
-	BlockPosition pos;
+	HashedBlockPosition pos;
 	
 	public PacketBiomeIDChange() {
 		array = new byte[256];
-		pos = new BlockPosition(0, 0, 0);
+		pos = new HashedBlockPosition(0, 0, 0);
 	}
 	
-	public PacketBiomeIDChange(Chunk chunk, World world, BlockPosition pos) {
+	public PacketBiomeIDChange(Chunk chunk, World world, HashedBlockPosition pos) {
 		this.chunk = chunk;
 		this.pos = pos;
-		worldId = world.provider.dimensionId;
+		worldId = world.provider.getDimension();
 	}
 	
 	@Override
@@ -59,9 +59,9 @@ public class PacketBiomeIDChange extends BasePacket {
 
 	@Override
 	public void executeClient(EntityPlayer thePlayer) {
-		if(thePlayer.worldObj.provider.dimensionId == worldId) {
+		if(thePlayer.worldObj.provider.getDimension() == worldId) {
 			chunk = thePlayer.worldObj.getChunkFromChunkCoords(xPos, zPos);
-			if(chunk.isChunkLoaded) {
+			if(chunk.isLoaded()) {
 				chunk.setBiomeArray(array);
 				AdvancedRocketry.proxy.spawnParticle("smallLazer", thePlayer.worldObj, pos.x, pos.y, pos.z, 0,0,0);
 			}

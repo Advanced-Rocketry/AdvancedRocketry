@@ -5,8 +5,8 @@ import io.netty.buffer.ByteBuf;
 import java.util.LinkedList;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -15,10 +15,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -32,7 +38,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerProducer;
 import zmaster587.libVulpes.util.Vector3F;
 
-public class TileMicrowaveReciever extends TileMultiPowerProducer {
+public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITickable {
 
 	static final BlockMeta iron_block = new BlockMeta(AdvancedRocketryBlocks.blockSolarPanel);
 	static final Object[][][] structure = new Object[][][] {
@@ -59,7 +65,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 	}
 
 	@Override
-	public boolean shouldHideBlock(World world, int x, int y, int z, Block tile) {
+	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
 		return false;
 	}
 
@@ -77,11 +83,6 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 		blocks.addAll(TileMultiBlock.getMapping('p'));
 
 		return blocks;
-	}
-
-	@Override
-	public boolean canUpdate() {
-		return true;
 	}
 
 	@Override
@@ -115,11 +116,10 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 	}
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
 
 		if(!initialCheck && !worldObj.isRemote) {
-			completeStructure = attemptCompleteStructure();
+			completeStructure = attemptCompleteStructure(worldObj.getBlockState(pos));
 			onInventoryUpdated();
 			initialCheck = true;
 		}
@@ -132,7 +132,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 			Vector3F<Integer> offset = getControllerOffset(getStructure());
 
 
-			List<Entity> entityList = worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(xCoord - offset.x, yCoord, zCoord - offset.z, xCoord - offset.x + getStructure()[0][0].length, 256, zCoord - offset.z + getStructure()[0].length));
+			List<Entity> entityList = worldObj.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(this.getPos().getX() - offset.x, this.getPos().getY(), this.getPos().getZ() - offset.z, this.getPos().getX() - offset.x + getStructure()[0][0].length, 256, this.getPos().getZ() - offset.z + getStructure()[0].length));
 
 			for(Entity e : entityList) {
 				e.setFire(5);
@@ -140,13 +140,14 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 
 			for(int x=0 ; x < getStructure()[0][0].length; x++) {
 				for(int z=0 ; z < getStructure()[0].length; z++) {
-					int y = worldObj.getHeightValue(xCoord + x - offset.x, zCoord +  z - offset.z);
-					Block block = worldObj.getBlock(xCoord + x - offset.x, y-1, zCoord +  z - offset.z);
+					
+					BlockPos pos2;
+					IBlockState state = worldObj.getBlockState(pos2 = (worldObj.getHeight(pos.add(x - offset.x, 128, z - offset.z)).add(0, -1, 0)));
 
-					if(y > this.yCoord - 1) {
-						if(!block.isAir(worldObj, xCoord + x - offset.x, y, zCoord +  z - offset.z)) {
-							worldObj.setBlockToAir(xCoord + x - offset.x,  y - 1, zCoord + z - offset.z);
-							worldObj.playSoundEffect(xCoord + x - offset.x,  y - 1, zCoord + z - offset.z, "fire.fire", 1, 3);
+					if(pos2.getY() > this.getPos().getY()) {
+						if(!worldObj.isAirBlock(pos2.add(0,1,0))) {
+							worldObj.setBlockToAir(pos2);
+							worldObj.playSound((double)pos2.getX(), (double)pos2.getY(), (double)pos2.getZ(), new SoundEvent(new ResourceLocation("fire.fire")), SoundCategory.BLOCKS, 1f, 3f, false);
 						}
 					}
 				}
@@ -154,8 +155,8 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 		}
 
 		DimensionProperties properties;
-		if(!worldObj.isRemote && (DimensionManager.getInstance().isDimensionCreated(worldObj.provider.dimensionId) || worldObj.provider.dimensionId == 0)) {
-			properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId);
+		if(!worldObj.isRemote && (DimensionManager.getInstance().isDimensionCreated(worldObj.provider.getDimension()) || worldObj.provider.getDimension() == 0)) {
+			properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension());
 
 			int energyRecieved = 0;
 
@@ -164,7 +165,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 					SatelliteBase satellite =  properties.getSatellite(lng);
 
 					if(satellite instanceof IUniversalEnergyTransmitter) {
-						energyRecieved += ((IUniversalEnergyTransmitter)satellite).transmitEnergy(ForgeDirection.UNKNOWN, false);
+						energyRecieved += ((IUniversalEnergyTransmitter)satellite).transmitEnergy(EnumFacing.UP, false);
 					}
 				}
 			}
@@ -172,7 +173,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 
 			if(powerMadeLastTick != prevPowerMadeLastTick) {
 				prevPowerMadeLastTick = powerMadeLastTick;
-				PacketHandler.sendToNearby(new PacketMachine(this, (byte)1), worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 128);
+				PacketHandler.sendToNearby(new PacketMachine(this, (byte)1), worldObj.provider.getDimension(),pos, 128);
 
 			}
 			producePower(energyRecieved);
@@ -180,17 +181,17 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 	}
 
 	@Override
-	public Packet getDescriptionPacket() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setBoolean("canRender", canRender);
 		nbt.setInteger("amtPwr", powerMadeLastTick);
 		writeNetworkData(nbt);
-		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, nbt);
+		return new SPacketUpdateTileEntity(pos, 0, nbt);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		NBTTagCompound nbt = pkt.func_148857_g();
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		NBTTagCompound nbt = pkt.getNbtCompound();
 
 		canRender = nbt.getBoolean("canRender");
 		powerMadeLastTick = nbt.getInteger("amtPwr");
@@ -227,7 +228,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
 		int[] intArray = new int[connectedSatellites.size()*2];
@@ -239,6 +240,8 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 		}
 
 		nbt.setIntArray("satilliteList", intArray);
+		
+		return nbt;
 	}
 
 	@Override

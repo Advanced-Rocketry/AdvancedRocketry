@@ -3,51 +3,32 @@ package zmaster587.advancedRocketry.block;
 import java.util.Random;
 
 import net.minecraft.block.BlockLog;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockCharcoalLog extends BlockLog {
 
-	IIcon topIcon, sideIcon;
 	
 	public BlockCharcoalLog() {
 		super();
 	}
 	
 	@Override
-	public void registerBlockIcons(IIconRegister icon) {
-		topIcon = icon.registerIcon("advancedrocketry:log_charcoal_top");
-		sideIcon = icon.registerIcon("advancedrocketry:log_charcoal");
-	}
-	
-	@Override
-	public int getFlammability(IBlockAccess world, int x, int y, int z,
-			ForgeDirection face) {
+	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face) {
 		return 0;
 	}
 	
 	@Override
-	protected IIcon getTopIcon(int p_150161_1_) {
-		return topIcon;
+	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+		return Items.COAL;
 	}
 	
 	@Override
-	protected IIcon getSideIcon(int p_150163_1_) {
-		return sideIcon;
-	}
-	
-	@Override
-	public Item getItemDropped(int p_149650_1_, Random p_149650_2_,
-			int p_149650_3_) {
-		return Items.coal;
-	}
-	
-	@Override
-	public int damageDropped(int p_149692_1_) {
+	public int damageDropped(IBlockState state) {
 		return 1;
 	}
 	

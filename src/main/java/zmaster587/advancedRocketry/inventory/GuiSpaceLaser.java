@@ -5,6 +5,7 @@
 
 package zmaster587.advancedRocketry.inventory;
 
+import java.io.IOException;
 import java.util.LinkedList;
 
 import org.lwjgl.input.Keyboard;
@@ -18,8 +19,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class GuiSpaceLaser extends GuiContainer {
 
@@ -44,8 +45,8 @@ public class GuiSpaceLaser extends GuiContainer {
 		int y = (height - ySize) / 2;
 
 		//Create and setup the textboxes
-		xbox = new GuiTextField(this.fontRendererObj, x + 113, y + 31, 50, 10);
-		ybox = new GuiTextField(this.fontRendererObj, x + 113, y + 41, 50, 10);
+		xbox = new GuiTextField(0,this.fontRendererObj, x + 113, y + 31, 50, 10);
+		ybox = new GuiTextField(1,this.fontRendererObj, x + 113, y + 41, 50, 10);
 		xbox.setMaxStringLength(15);
 		xbox.setEnableBackgroundDrawing(true);
 		xbox.setFocused(true);
@@ -65,7 +66,7 @@ public class GuiSpaceLaser extends GuiContainer {
 	}
 
 	@Override
-	protected void keyTyped(char par1, int par2)
+	protected void keyTyped(char par1, int par2) throws IOException
 	{
 		//Don't let players change the coords while the machine is running
 		if(!laserTile.isRunning()) {
@@ -142,7 +143,7 @@ public class GuiSpaceLaser extends GuiContainer {
 		
 		if(a > x + 11 && a < x + 27 && b < y + 85 && b > y + 43) {
 			LinkedList<String> text = new LinkedList<String>();
-			text.add(laserTile.getEnergyStored(ForgeDirection.UNKNOWN) + " / " + laserTile.getMaxEnergyStored(ForgeDirection.UNKNOWN) + " RF");
+			text.add(laserTile.getEnergyStored(EnumFacing.UP) + " / " + laserTile.getMaxEnergyStored(EnumFacing.UP) + " RF");
 			this.drawHoveringText(text, a, b, this.fontRendererObj);
 		}
 
@@ -151,9 +152,10 @@ public class GuiSpaceLaser extends GuiContainer {
 
 	/**
 	 * Args: x, y, buttonClicked
+	 * @throws IOException 
 	 */
 	@Override
-	public void mouseClicked(int xPos, int yPos, int par3)
+	public void mouseClicked(int xPos, int yPos, int par3) throws IOException
 	{
 		//Make sure we can focus the textboxes
 		int x = (width - xSize) / 2, y = (height - ySize) / 2;

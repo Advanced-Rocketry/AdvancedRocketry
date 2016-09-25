@@ -3,7 +3,8 @@ package zmaster587.advancedRocketry.tile.cables;
 import zmaster587.advancedRocketry.cable.HandlerCableNetwork;
 import zmaster587.advancedRocketry.cable.NetworkRegistry;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 
 public class TilePipe extends TileEntity {
 
@@ -18,46 +19,49 @@ public class TilePipe extends TileEntity {
 		connectedSides = new boolean[6];
 	}
 
-	
+
 	public void initialize(int id) {
 		networkID = id;
 		initialized = true;
 	}
-	
+
 	@Override
 	public void invalidate() {
 		super.invalidate();
 		removePipeFromSystem();
-		
+
 	}
-	
+
 	@Override
 	public void onChunkUnload() {
 		super.onChunkUnload();
 		removePipeFromSystem();
 	}
-	
+
 	public void removePipeFromSystem() {
 		if(!isInitialized())
 			return;
-		
-		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-			TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+
+		for(EnumFacing dir : EnumFacing.VALUES) {
+			TileEntity tile = worldObj.getTileEntity(this.getPos().offset(dir));
 			if(tile != null)
 				getNetworkHandler().removeFromAllTypes(this, tile);
 		}
 	}
-	
-	public void markForUpdate() {
+
+	@Override
+	public void markDirty() {
+		super.markDirty();
+
 		if(!worldObj.isRemote) {
-			worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), 20);
+			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 		}
 	}
 
 	public void onPlaced() {
 
-		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-			TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+		for(EnumFacing dir : EnumFacing.values()) {
+			TileEntity tile = worldObj.getTileEntity(getPos().offset(dir));
 
 
 			if(tile != null) {
@@ -84,8 +88,8 @@ public class TilePipe extends TileEntity {
 	}
 
 	public void linkSystems() {
-		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-			TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+		for(EnumFacing dir : EnumFacing.values()) {
+			TileEntity tile = worldObj.getTileEntity(getPos().offset(dir));
 
 			if(tile != null) {
 				attemptLink(dir, tile);
@@ -93,11 +97,12 @@ public class TilePipe extends TileEntity {
 		}
 	}
 
-	protected void attemptLink(ForgeDirection dir, TileEntity tile) {
+	protected void attemptLink(EnumFacing dir, TileEntity tile) {
 		//If the pipe can inject or extract, add to the cache
 		//if(!(tile instanceof IFluidHandler))
-			//return;
-		if(canExtract(dir, tile) && (worldObj.getBlockPowerInput(xCoord, yCoord, zCoord) > 0 || worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord))) {
+		//return;
+
+		if(canExtract(dir, tile) && (worldObj.isBlockIndirectlyGettingPowered(pos) > 0 || worldObj.getStrongPower(pos) > 0)) {
 			if(worldObj.isRemote)
 				connectedSides[dir.ordinal()]=true;
 			else {
@@ -106,7 +111,7 @@ public class TilePipe extends TileEntity {
 			}
 		}
 
-		if(canInject(dir, tile) && (worldObj.getBlockPowerInput(xCoord, yCoord, zCoord) == 0 && !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord))) {
+		if(canInject(dir, tile) && worldObj.isBlockIndirectlyGettingPowered(pos) == 0 && worldObj.getStrongPower(pos) == 0) {
 			if(worldObj.isRemote)
 				connectedSides[dir.ordinal()]=true;
 			else {
@@ -115,17 +120,17 @@ public class TilePipe extends TileEntity {
 			}
 		}
 	}
-	
+
 	public int getNetworkID() { return networkID; }
 
 	public boolean isInitialized() { return initialized && getNetworkHandler().doesNetworkExist(networkID); }
 
-	public void onNeighborTileChange(int x, int y, int z) {
+	public void onNeighborTileChange(BlockPos pos) {
 
 		//if(worldObj.isRemote)
 		//return;
 
-		TileEntity tile = worldObj.getTileEntity(x, y, z);
+		TileEntity tile = worldObj.getTileEntity(pos);
 
 		if(!worldObj.isRemote && !getNetworkHandler().doesNetworkExist(networkID)) {
 			initialized = false;
@@ -139,12 +144,14 @@ public class TilePipe extends TileEntity {
 				TilePipe pipe = ((TilePipe) tile);
 
 				if(worldObj.isRemote) {
-					ForgeDirection dir = ForgeDirection.UNKNOWN;
-					for(ForgeDirection dir2 : ForgeDirection.VALID_DIRECTIONS) {
-						if(dir2.offsetX == x - xCoord && dir2.offsetY == y - yCoord && dir2.offsetZ == z - zCoord)
+					EnumFacing dir = null;
+					for(EnumFacing dir2 : EnumFacing.values()) {
+
+						if(getPos().offset(dir2).compareTo(pos) == 0)
 							dir = dir2;
 					}
-					connectedSides[dir.ordinal()] = true;
+					if(dir != null)
+						connectedSides[dir.ordinal()] = true;
 				}
 				else {
 
@@ -175,24 +182,26 @@ public class TilePipe extends TileEntity {
 					initialized = true;
 				}
 
-				ForgeDirection dir = ForgeDirection.UNKNOWN;
-				for(ForgeDirection dir2 : ForgeDirection.VALID_DIRECTIONS) {
-					if(dir2.offsetX == x - xCoord && dir2.offsetY == y - yCoord && dir2.offsetZ == z - zCoord)
+				EnumFacing dir = null;
+				for(EnumFacing dir2 : EnumFacing.values()) {
+					if(getPos().offset(dir2).compareTo(pos) == 0)
 						dir = dir2;
 				}
 
 				//If the pipe can inject or extract, add to the cache
-				attemptLink(dir, tile);
+				if(dir != null)
+					attemptLink(dir, tile);
 			}
 		}
 		else if(worldObj.isRemote) {
-			
-			ForgeDirection dir = ForgeDirection.UNKNOWN;
-			for(ForgeDirection dir2 : ForgeDirection.VALID_DIRECTIONS) {
-				if(dir2.offsetX == x - xCoord && dir2.offsetY == y - yCoord && dir2.offsetZ == z - zCoord)
+
+			EnumFacing dir = null;
+			for(EnumFacing dir2 : EnumFacing.values()) {
+				if(getPos().offset(dir2).compareTo(pos) == 0)
 					dir = dir2;
 			}
-			connectedSides[dir.ordinal()] = false;
+			if(dir != null)
+				connectedSides[dir.ordinal()] = false;
 		}
 	}
 
@@ -204,11 +213,11 @@ public class TilePipe extends TileEntity {
 		return connectedSides[side];
 	}
 
-	public boolean canExtract(ForgeDirection dir, TileEntity e) {
+	public boolean canExtract(EnumFacing dir, TileEntity e) {
 		return false;
 	}
 
-	public boolean canInject(ForgeDirection dir, TileEntity e) {
+	public boolean canInject(EnumFacing dir, TileEntity e) {
 		return false;
 	}
 

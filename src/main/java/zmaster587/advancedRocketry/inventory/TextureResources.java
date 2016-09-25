@@ -3,8 +3,8 @@ package zmaster587.advancedRocketry.inventory;
 import zmaster587.libVulpes.client.util.IndicatorBarImage;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.util.IconResource;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class TextureResources {
 	public static final  ResourceLocation progressBars =  new ResourceLocation("advancedrocketry:textures/gui/progressBars/progressBars.png");
@@ -38,25 +38,25 @@ public class TextureResources {
 	public static final IconResource laserGuiBG = new IconResource(8, 16, 65, 70, laserGui);
 	public static final IconResource earthCandyIcon = new IconResource(0, 0, 128, 128, earthCandy);
 	
-	public static final ProgressBarImage doubleWarningSideBarIndicator = new IndicatorBarImage(0, 84, 142, 16, 0, 100, 2, 9, 2, 2, ForgeDirection.EAST, planetSelectorBar);
-	public static final ProgressBarImage doubleWarningSideBar = new ProgressBarImage(0, 59, 142, 16, 0, 75, 136, 9, 2, 2, ForgeDirection.EAST, planetSelectorBar);
-	public static final ProgressBarImage massIndicator = new ProgressBarImage(0, 0, 81, 23, 6, 23, 75, 9, 2, 9, ForgeDirection.EAST, planetSelectorBar);
-	public static final ProgressBarImage atmIndicator = new ProgressBarImage(0, 0, 81, 23, 6, 32, 75, 9, 2, 9, ForgeDirection.EAST, planetSelectorBar);
-	public static final ProgressBarImage distanceIndicator = new ProgressBarImage(0, 0, 81, 23, 6, 41, 75, 9, 2, 9, ForgeDirection.EAST, planetSelectorBar);
-	public static final ProgressBarImage genericSlider = new ProgressBarImage(0, 0, 81, 23, 6, 41, 75, 9, 2, 9, ForgeDirection.EAST, planetSelectorBar);
-	public static final ProgressBarImage progressScience = new ProgressBarImage(185, 0, 16, 24, 201, 0, 16, 24, 0, 0, ForgeDirection.UP, TextureResources.progressBars);
+	public static final ProgressBarImage doubleWarningSideBarIndicator = new IndicatorBarImage(0, 84, 142, 16, 0, 100, 2, 9, 2, 2, EnumFacing.EAST, planetSelectorBar);
+	public static final ProgressBarImage doubleWarningSideBar = new ProgressBarImage(0, 59, 142, 16, 0, 75, 136, 9, 2, 2, EnumFacing.EAST, planetSelectorBar);
+	public static final ProgressBarImage massIndicator = new ProgressBarImage(0, 0, 81, 23, 6, 23, 75, 9, 2, 9, EnumFacing.EAST, planetSelectorBar);
+	public static final ProgressBarImage atmIndicator = new ProgressBarImage(0, 0, 81, 23, 6, 32, 75, 9, 2, 9, EnumFacing.EAST, planetSelectorBar);
+	public static final ProgressBarImage distanceIndicator = new ProgressBarImage(0, 0, 81, 23, 6, 41, 75, 9, 2, 9, EnumFacing.EAST, planetSelectorBar);
+	public static final ProgressBarImage genericSlider = new ProgressBarImage(0, 0, 81, 23, 6, 41, 75, 9, 2, 9, EnumFacing.EAST, planetSelectorBar);
+	public static final ProgressBarImage progressScience = new ProgressBarImage(185, 0, 16, 24, 201, 0, 16, 24, 0, 0, EnumFacing.UP, TextureResources.progressBars);
 	
-	public static final ProgressBarImage progressToMission = new ProgressBarImage(25, 248, 112, 8, 25, 240, 112, 8, ForgeDirection.EAST, TextureResources.progressBars);
-	public static final ProgressBarImage progressFromMission = new ProgressBarImage(25, 232, 112, 8, 25, 224, 112, 8, ForgeDirection.WEST, TextureResources.progressBars);
-	public static final ProgressBarImage workMission = new ProgressBarImage(25, 216, 112, 8, 25, 208, 112, 8, ForgeDirection.EAST, TextureResources.progressBars);
+	public static final ProgressBarImage progressToMission = new ProgressBarImage(25, 248, 112, 8, 25, 240, 112, 8, EnumFacing.EAST, TextureResources.progressBars);
+	public static final ProgressBarImage progressFromMission = new ProgressBarImage(25, 232, 112, 8, 25, 224, 112, 8, EnumFacing.WEST, TextureResources.progressBars);
+	public static final ProgressBarImage workMission = new ProgressBarImage(25, 216, 112, 8, 25, 208, 112, 8, EnumFacing.EAST, TextureResources.progressBars);
 	
 	
-	public static final ProgressBarImage crystallizerProgressBar = new ProgressBarImage(0, 0, 31, 66, 31, 0, 23, 49, 4, 17, ForgeDirection.UP, TextureResources.progressBars);
-	public static final ProgressBarImage cuttingMachineProgressBar = new ProgressBarImage(54, 0, 42, 42,96, 0, 36, 36, 3, 3, ForgeDirection.EAST, TextureResources.progressBars);
-	public static final ProgressBarImage arcFurnaceProgressBar = new ProgressBarImage(0, 66, 42, 42, 42, 66, 42, 42, 0, 0, ForgeDirection.UP, TextureResources.progressBars);
-	public static final ProgressBarImage smallPlatePresser = new ProgressBarImage(0, 108, 16, 48, 0, 0, 1, 1, ForgeDirection.DOWN, TextureResources.progressBars); //TODO
-	public static final ProgressBarImage latheProgressBar = new ProgressBarImage(185, 24, 23, 4, 185, 28, 23, 4, ForgeDirection.EAST, TextureResources.progressBars);
-	public static final ProgressBarImage rollingMachineProgressBar = new ProgressBarImage(84, 66, 41, 32, 125, 66, 41, 32, ForgeDirection.EAST, TextureResources.progressBars);
-	public static final ProgressBarImage terraformProgressBar = new ProgressBarImage(16, 109, 106, 30, 16, 138, 106, 30, ForgeDirection.EAST, TextureResources.progressBars);
+	public static final ProgressBarImage crystallizerProgressBar = new ProgressBarImage(0, 0, 31, 66, 31, 0, 23, 49, 4, 17, EnumFacing.UP, TextureResources.progressBars);
+	public static final ProgressBarImage cuttingMachineProgressBar = new ProgressBarImage(54, 0, 42, 42,96, 0, 36, 36, 3, 3, EnumFacing.EAST, TextureResources.progressBars);
+	public static final ProgressBarImage arcFurnaceProgressBar = new ProgressBarImage(0, 66, 42, 42, 42, 66, 42, 42, 0, 0, EnumFacing.UP, TextureResources.progressBars);
+	public static final ProgressBarImage smallPlatePresser = new ProgressBarImage(0, 108, 16, 48, 0, 0, 1, 1, EnumFacing.DOWN, TextureResources.progressBars); //TODO
+	public static final ProgressBarImage latheProgressBar = new ProgressBarImage(185, 24, 23, 4, 185, 28, 23, 4, EnumFacing.EAST, TextureResources.progressBars);
+	public static final ProgressBarImage rollingMachineProgressBar = new ProgressBarImage(84, 66, 41, 32, 125, 66, 41, 32, EnumFacing.EAST, TextureResources.progressBars);
+	public static final ProgressBarImage terraformProgressBar = new ProgressBarImage(16, 109, 106, 30, 16, 138, 106, 30, EnumFacing.EAST, TextureResources.progressBars);
 
 }

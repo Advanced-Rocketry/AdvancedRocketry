@@ -20,10 +20,13 @@ import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
+import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.network.PacketHandler;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
 
 
@@ -35,6 +38,8 @@ public class DimensionManager {
 	public static final String workingPath = "advRocketry";
 	public static final String filePath = workingPath + "/temp.dat";
 	public static int dimOffset = 0;
+	public static final DimensionType PlanetDimensionType = DimensionType.register("planet", "planet", 2, WorldProviderPlanet.class, false);
+	public static final DimensionType spaceDimensionType = DimensionType.register("space", "space", 3, WorldProviderSpace.class, false);
 	private boolean hasBeenInitiallized = false;
 
 	//Reference to the worldProvider for any dimension created through this system, normally WorldProviderPlanet, set in AdvancedRocketry.java in preinit
@@ -331,8 +336,8 @@ public class DimensionManager {
 
 		//Avoid registering gas giants as dimensions
 		if(registerWithForge && dimId < GASGIANT_DIMID_OFFSET && !net.minecraftforge.common.DimensionManager.isDimensionRegistered(dim)) {
-			net.minecraftforge.common.DimensionManager.registerProviderType(properties.getId(), DimensionManager.planetWorldProvider, false);
-			net.minecraftforge.common.DimensionManager.registerDimension(dimId, dimId);
+			
+			net.minecraftforge.common.DimensionManager.registerDimension(dimId, PlanetDimensionType);
 		}
 		dimensionList.put(dimId, properties);
 
@@ -345,7 +350,6 @@ public class DimensionManager {
 	public void unregisterAllDimensions() {
 		for(Entry<Integer, DimensionProperties> dimSet : dimensionList.entrySet()) {
 			if(dimSet.getValue().isNativeDimension) {
-				net.minecraftforge.common.DimensionManager.unregisterProviderType(dimSet.getKey());
 				net.minecraftforge.common.DimensionManager.unregisterDimension(dimSet.getKey());
 			}
 		}
@@ -380,7 +384,6 @@ public class DimensionManager {
 		// If not native to AR let the mod it's registered to handle it
 		if(!properties.isNativeDimension && net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId)) {
 			net.minecraftforge.common.DimensionManager.unloadWorld(dimId);
-			net.minecraftforge.common.DimensionManager.unregisterProviderType(dimId);
 			net.minecraftforge.common.DimensionManager.unregisterDimension(dimId);
 			dimensionList.remove(new Integer(dimId));
 		}
@@ -548,7 +551,7 @@ public class DimensionManager {
 		if(solarSystem.hasNoTags())
 			return false;
 
-		for(Object key : solarSystem.func_150296_c()) {
+		for(Object key : solarSystem.getKeySet()) {
 
 			NBTTagCompound solarNBT = solarSystem.getCompoundTag((String)key);
 			StellarBody star = new StellarBody();
@@ -563,7 +566,7 @@ public class DimensionManager {
 		NBTTagCompound dimListNbt = nbt.getCompoundTag("dimList");
 
 
-		for(Object key : dimListNbt.func_150296_c()) {
+		for(Object key : dimListNbt.getKeySet()) {
 			String keyString = (String)key;
 			//Special Handling for overworld
 			if(keyString.equals("0")) {
@@ -576,8 +579,7 @@ public class DimensionManager {
 				if(propeties != null) {
 					int keyInt = Integer.parseInt(keyString);
 					if(!net.minecraftforge.common.DimensionManager.isDimensionRegistered(keyInt) && propeties.isNativeDimension) {
-						net.minecraftforge.common.DimensionManager.registerProviderType(keyInt, DimensionManager.planetWorldProvider, false);
-						net.minecraftforge.common.DimensionManager.registerDimension(keyInt, keyInt);
+						net.minecraftforge.common.DimensionManager.registerDimension(keyInt, PlanetDimensionType);
 						//propeties.isNativeDimension = true;
 					}
 

@@ -3,7 +3,8 @@ package zmaster587.advancedRocketry.armor;
 import java.util.LinkedList;
 import java.util.List;
 
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
@@ -18,6 +19,7 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -25,7 +27,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -38,11 +39,9 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 
 	private final static String componentNBTName = "componentName";
 
-	public ItemSpaceArmor(ArmorMaterial material, int component) {
+	public ItemSpaceArmor(ArmorMaterial material, EntityEquipmentSlot component) {
 		super(material, 0, component);
 	}
-	
-	
 	
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer p_77624_2_,
@@ -52,7 +51,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 		list.add("Modules:");
 		
 		for(ItemStack componentStack : getComponents(stack)) {
-			list.add(EnumChatFormatting.DARK_GRAY + componentStack.getDisplayName());
+			list.add(ChatFormatting.DARK_GRAY + componentStack.getDisplayName());
 		}
 	}
 
@@ -71,15 +70,6 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 			return inv;
 		}
 		return new EmbeddedInventory(4);
-	}
-
-	@Override
-	public ModelBiped getArmorModel(EntityLivingBase entityLiving,
-			ItemStack itemStack, int armorSlot) {
-		//if(armorSlot == 1)
-		//return new RenderJetPack();
-
-		return super.getArmorModel(entityLiving, itemStack, armorSlot);
 	}
 
 	private void saveEmbeddedInventory(ItemStack stack, EmbeddedInventory inv) {
@@ -116,8 +106,8 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 	}
 
 	@Override
-	public String getArmorTexture(ItemStack stack, Entity entity, int slot,
-			String type) {
+	public String getArmorTexture(ItemStack stack, Entity entity,
+			EntityEquipmentSlot slot, String type) {
 		if(stack.getItem() == AdvancedRocketryItems.itemSpaceSuit_Leggings)
 			return "advancedRocketry:textures/armor/spaceSuit_layer1.png";//super.getArmorTexture(stack, entity, slot, type);
 		return "advancedRocketry:textures/armor/spaceSuit_layer2.png";

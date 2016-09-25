@@ -5,8 +5,6 @@ import io.netty.buffer.ByteBuf;
 import java.util.Iterator;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IInfrastructure;
@@ -26,36 +24,39 @@ import zmaster587.libVulpes.inventory.modules.ModuleButton;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
-import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityStationDeployedRocket extends EntityRocket {
 
-	public ForgeDirection launchDirection;
-	public ForgeDirection forwardDirection;
-	public BlockPosition launchLocation;
+	public EnumFacing launchDirection;
+	public EnumFacing forwardDirection;
+	public HashedBlockPosition launchLocation;
 	private ModuleText atmText;
 	private short gasId;
 	boolean coastMode;
 
 	public EntityStationDeployedRocket(World world) {
 		super(world);
-		launchDirection = ForgeDirection.DOWN;
-		launchLocation = new BlockPosition(0,0,0);
+		launchDirection = EnumFacing.DOWN;
+		launchLocation = new HashedBlockPosition(0,0,0);
 		atmText = new ModuleText(182, 114, "", 0x2d2d2d);
 		gasId = 0;
 	}
 
 	public EntityStationDeployedRocket(World world, StorageChunk storage, StatsRocket stats, double x, double y, double z) {
 		super(world, storage, stats, x,y,z);
-		launchLocation = new BlockPosition((int)x,(int)y,(int)z);
-		launchDirection = ForgeDirection.DOWN;
+		launchLocation = new HashedBlockPosition((int)x,(int)y,(int)z);
+		launchDirection = EnumFacing.DOWN;
 		stats.setSeatLocation(-1, -1, -1); //No seats
 		atmText = new ModuleText(182, 114, "", 0x2d2d2d);
 		gasId = 0;
@@ -82,7 +83,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			return;
 
 		ISpaceObject spaceObj;
-		if( worldObj.provider.dimensionId == Configuration.spaceDimId && (spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)posX, (int)posZ)) != null && ((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() ) { //Abort if destination is invalid
+		if( worldObj.provider.getDimension() == Configuration.spaceDimId && (spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(getPosition())) != null && ((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() ) { //Abort if destination is invalid
 
 
 			setInFlight(true);
@@ -122,8 +123,8 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				if(worldObj.isRemote && Minecraft.getMinecraft().gameSettings.particleSetting < 2) {
 					for(Vector3F<Float> vec : stats.getEngineLocations()) {
 
-						float xMult = Math.abs(forwardDirection.offsetX);
-						float zMult = Math.abs(forwardDirection.offsetZ);
+						float xMult = Math.abs(forwardDirection.getFrontOffsetX());
+						float zMult = Math.abs(forwardDirection.getFrontOffsetZ());
 						float xVel, zVel;
 
 						for(int i = 0; i < 4; i++) {
@@ -143,24 +144,24 @@ public class EntityStationDeployedRocket extends EntityRocket {
 
 			//Returning
 			if(isInOrbit()) { //For unmanned rockets
-				ForgeDirection dir;
+				EnumFacing dir;
 				isCoasting = Math.abs(this.posX - launchLocation.x - (storage.getSizeX() % 2 == 0 ? 0 : 0.5f)) < 0.01 && Math.abs(this.posZ - launchLocation.z - (storage.getSizeZ() % 2 == 0 ? 0 : 0.5f)) < .01;
 
 				if(isCoasting) {
 					dir = launchDirection.getOpposite();
 					float speed = 0.075f;
-					motionX = speed*dir.offsetX;
-					motionY = speed*dir.offsetY;
-					motionZ = speed*dir.offsetZ;
+					motionX = speed*dir.getFrontOffsetX();
+					motionY = speed*dir.getFrontOffsetY();
+					motionZ = speed*dir.getFrontOffsetZ();
 				}
 				else {
 					dir = forwardDirection.getOpposite();
 
 					float acc = 0.01f;
 
-					motionX = acc*(launchLocation.x - this.posX + (storage.getSizeX() % 2 == 0 ? 0 : 0.5f)) + 0.01*dir.offsetX;
+					motionX = acc*(launchLocation.x - this.posX + (storage.getSizeX() % 2 == 0 ? 0 : 0.5f)) + 0.01*dir.getFrontOffsetX();
 					motionY = 0;//acc*(launchLocation.y - this.posY) + 0.01*dir.offsetY;
-					motionZ = acc*(launchLocation.z - this.posZ + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5f)) + 0.01*dir.offsetZ;
+					motionZ = acc*(launchLocation.z - this.posZ + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5f)) + 0.01*dir.getFrontOffsetZ();
 
 				}
 
@@ -182,15 +183,15 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				//Coast away from the station
 				if(isCoasting) {
 					float speed = 0.01f;//(float)Math.min(0.2f, Math.abs(motionY) + 0.0001f);
-					motionX = speed*launchDirection.offsetX * ( 2.1*storage.getSizeX() - Math.abs(2*storage.getSizeX() - Math.abs(this.posX - launchLocation.x)) + 0.05);
-					motionY = speed*launchDirection.offsetY * ( 2.1*storage.getSizeY() - Math.abs(2*storage.getSizeY() - Math.abs(this.posY - launchLocation.y)) + 0.05);
-					motionZ = speed*launchDirection.offsetZ * ( 2.1*storage.getSizeZ() - Math.abs(2*storage.getSizeZ() - Math.abs(this.posZ - launchLocation.z)) + 0.05);
+					motionX = speed*launchDirection.getFrontOffsetX() * ( 2.1*storage.getSizeX() - Math.abs(2*storage.getSizeX() - Math.abs(this.posX - launchLocation.x)) + 0.05);
+					motionY = speed*launchDirection.getFrontOffsetY() * ( 2.1*storage.getSizeY() - Math.abs(2*storage.getSizeY() - Math.abs(this.posY - launchLocation.y)) + 0.05);
+					motionZ = speed*launchDirection.getFrontOffsetZ() * ( 2.1*storage.getSizeZ() - Math.abs(2*storage.getSizeZ() - Math.abs(this.posZ - launchLocation.z)) + 0.05);
 				}
 				else {
 					float acc = 0.01f;
-					motionX += acc*forwardDirection.offsetX;
-					motionY += acc*forwardDirection.offsetY;
-					motionZ += acc*forwardDirection.offsetZ;
+					motionX += acc*forwardDirection.getFrontOffsetX();
+					motionY += acc*forwardDirection.getFrontOffsetY();
+					motionZ += acc*forwardDirection.getFrontOffsetZ();
 
 				}
 
@@ -219,7 +220,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				break;
 			}
 		}
-		atmText.setText(AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId).getLocalizedName());
+		atmText.setText(AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId).getLocalizedName(new FluidStack(AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId), 1)));
 		modules.add(new ModuleButton(170, 114, 1, "", this, zmaster587.libVulpes.inventory.TextureResources.buttonLeft, 5, 8));
 		modules.add(atmText);
 		modules.add(new ModuleButton(240, 114, 2, "", this, zmaster587.libVulpes.inventory.TextureResources.buttonRight,  5, 8));
@@ -267,15 +268,15 @@ public class EntityStationDeployedRocket extends EntityRocket {
 
 		//Check again to make sure we are around a gas giant
 		ISpaceObject spaceObj;
-		if( worldObj.provider.dimensionId == Configuration.spaceDimId || ((spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)posX, (int)posZ)) != null && !((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() )) { //Abort if destination is invalid
+		if( worldObj.provider.getDimension() == Configuration.spaceDimId || ((spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.getPosition())) != null && !((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() )) { //Abort if destination is invalid
 			setInOrbit(true);
-			this.setPosition(forwardDirection.offsetX*64d + this.launchLocation.x + (storage.getSizeX() % 2 == 0 ? 0 : 0.5d), posY, forwardDirection.offsetZ*64d + this.launchLocation.z + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5d));	
+			this.setPosition(forwardDirection.getFrontOffsetX()*64d + this.launchLocation.x + (storage.getSizeX() % 2 == 0 ? 0 : 0.5d), posY, forwardDirection.getFrontOffsetZ()*64d + this.launchLocation.z + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5d));	
 		}
 		
 		//one intake with a 1 bucket tank should take 100 seconds
 		float intakePower = (Integer)stats.getStatTag("intakePower");
 		MissionGasCollection miningMission = new MissionGasCollection(intakePower == 0 ? 360 : (long)(2*((int)stats.getStatTag("liquidCapacity")/intakePower)), this, connectedInfrastructure, AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId));
-		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId).getParentProperties();
+		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension()).getParentProperties();
 
 		properties.addSatallite(miningMission);
 
@@ -339,9 +340,9 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				gasId = 0;
 
 			if(!worldObj.isRemote)
-				PacketHandler.sendToNearby(new PacketEntity(this, (byte) PacketType.MENU_CHANGE.ordinal()), worldObj.provider.dimensionId, (int)posX, (int)posY, (int)posZ, 64d);
+				PacketHandler.sendToNearby(new PacketEntity(this, (byte) PacketType.MENU_CHANGE.ordinal()), worldObj.provider.getDimension(), (int)posX, (int)posY, (int)posZ, 64d);
 			else
-				atmText.setText(AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId).getLocalizedName());
+				atmText.setText(AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId).getLocalizedName(new FluidStack(AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId),1)));
 
 		}
 		else
@@ -365,7 +366,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 	@Override
 	public void readMissionPersistantNBT(NBTTagCompound nbt) {
 		super.readMissionPersistantNBT(nbt);
-		forwardDirection = ForgeDirection.values()[nbt.getInteger("fwd")];
+		forwardDirection = EnumFacing.values()[nbt.getInteger("fwd")];
 
 		launchLocation.x = nbt.getInteger("launchX");
 		launchLocation.y = (short)nbt.getInteger("launchY");

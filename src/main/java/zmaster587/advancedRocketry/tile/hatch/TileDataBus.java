@@ -5,11 +5,11 @@ import io.netty.buffer.ByteBuf;
 import java.util.LinkedList;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.inventory.modules.ModuleData;
@@ -84,7 +84,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 
 	@Override
-	public int addData(int data, DataStorage.DataType dataType, ForgeDirection dir, boolean commit) {
+	public int addData(int data, DataStorage.DataType dataType, EnumFacing dir, boolean commit) {
 		return this.data.addData(data, dataType, commit);
 	}
 
@@ -120,9 +120,10 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		data.writeToNBT(nbt);
+		return nbt;
 	}
 
 	@Override
@@ -154,7 +155,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 
 	@Override
-	public int extractData(int maxAmount, DataType type, ForgeDirection dir, boolean commit) {
+	public int extractData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {
 		if(type == DataStorage.DataType.UNDEFINED || this.data.getDataType() == type)
 			return this.data.removeData(maxAmount, commit);
 		return 0;

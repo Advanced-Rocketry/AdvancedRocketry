@@ -8,13 +8,14 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IInfrastructure;
@@ -23,7 +24,7 @@ import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.entity.EntityStationDeployedRocket;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
 import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 
 public class MissionGasCollection extends MissionResourceCollection {
 
@@ -51,7 +52,7 @@ public class MissionGasCollection extends MissionResourceCollection {
 			Fluid type = gasFluid;//FluidRegistry.getFluid("hydrogen");
 			//Fill gas tanks
 			for(TileEntity tile : this.rocketStorage.getFluidTiles()) {
-				amountOfGas -= ((IFluidHandler)tile).fill(ForgeDirection.UNKNOWN, new FluidStack(type, amountOfGas), true);
+				amountOfGas -= ((IFluidHandler)tile).fill(new FluidStack(type, amountOfGas), true);
 
 				if(amountOfGas == 0)
 					break;
@@ -63,17 +64,17 @@ public class MissionGasCollection extends MissionResourceCollection {
 		World world = DimensionManager.getWorld(launchDimension);
 		rocket.readMissionPersistantNBT(missionPersistantNBT);
 
-		ForgeDirection dir = rocket.forwardDirection;
+		EnumFacing dir = rocket.forwardDirection;
 		rocket.forceSpawn = true;
 
-		rocket.setPosition(dir.offsetX*64d + rocket.launchLocation.x + (rocketStorage.getSizeX() % 2 == 0 ? 0 : 0.5d), y, dir.offsetZ*64d + rocket.launchLocation.z + (rocketStorage.getSizeZ() % 2 == 0 ? 0 : 0.5d));
+		rocket.setPosition(dir.getFrontOffsetX()*64d + rocket.launchLocation.x + (rocketStorage.getSizeX() % 2 == 0 ? 0 : 0.5d), y, dir.getFrontOffsetZ()*64d + rocket.launchLocation.z + (rocketStorage.getSizeZ() % 2 == 0 ? 0 : 0.5d));
 		world.spawnEntityInWorld(rocket);
 		rocket.setInOrbit(true);
 		rocket.setInFlight(true);
 		//rocket.motionY = -1.0;
 
-		for(BlockPosition i : infrastructureCoords) {
-			TileEntity tile = world.getTileEntity(i.x, i.y, i.z);
+		for(HashedBlockPosition i : infrastructureCoords) {
+			TileEntity tile = world.getTileEntity(new BlockPos(i.x, i.y, i.z));
 			if(tile instanceof IInfrastructure) {
 				((IInfrastructure)tile).unlinkMission();
 				rocket.linkInfrastructure(((IInfrastructure)tile));

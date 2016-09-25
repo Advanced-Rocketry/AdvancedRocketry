@@ -2,10 +2,16 @@ package zmaster587.advancedRocketry.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.IFluidBlock;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
@@ -18,49 +24,49 @@ public class ItemSealDetector extends Item
 {
     //TODO make consume power?
 
-    @Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
-    {
-        //AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId)
-        //TODO test atmosphere
-        return stack;
-    }
-
-    @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float xx, float yy, float zz)
-    {
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn,
+			World worldIn, EntityPlayer playerIn, EnumHand hand) {
+		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
+	}
+	
+	@Override
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player,
+			World world, BlockPos pos, EnumHand hand, EnumFacing facing,
+			float hitX, float hitY, float hitZ) {
         if (!world.isRemote)
         {
-            if (SealableBlockHandler.INSTANCE.isBlockSealed(world, x, y, z))
+            if (SealableBlockHandler.INSTANCE.isBlockSealed(world, pos))
             {
-                player.addChatComponentMessage(new ChatComponentText("Should hold a nice seal."));
+                player.addChatComponentMessage(new TextComponentString("Should hold a nice seal."));
             }
             else
             {
-                Block block = world.getBlock(x, y, z);
-                Material mat = block.getMaterial();
+            	IBlockState state = world.getBlockState(pos);
+                Material mat = state.getMaterial();
                 if (SealableBlockHandler.INSTANCE.isMaterialBanned(mat))
                 {
-                    player.addChatComponentMessage(new ChatComponentText("Material will not hold a seal."));
+                    player.addChatComponentMessage(new TextComponentString("Material will not hold a seal."));
                 }
-                else if (SealableBlockHandler.INSTANCE.isBlockBanned(block))
+                else if (SealableBlockHandler.INSTANCE.isBlockBanned(state.getBlock()))
                 {
-                    player.addChatComponentMessage(new ChatComponentText("Block will not hold a seal."));
+                    player.addChatComponentMessage(new TextComponentString("Block will not hold a seal."));
                 }
-                else if (SealableBlockHandler.isFulBlock(block))
+                else if (SealableBlockHandler.isFulBlock(world, pos))
                 {
-                    player.addChatComponentMessage(new ChatComponentText("Air will pass around this block."));
+                    player.addChatComponentMessage(new TextComponentString("Air will pass around this block."));
                 }
-                else if (block instanceof IFluidBlock)
+                else if (state.getBlock() instanceof IFluidBlock)
                 {
-                    player.addChatComponentMessage(new ChatComponentText("Air will bubble through this block"));
+                    player.addChatComponentMessage(new TextComponentString("Air will bubble through this block"));
                 }
                 else
                 {
-                    player.addChatComponentMessage(new ChatComponentText("Air will leak through this block."));
+                    player.addChatComponentMessage(new TextComponentString("Air will leak through this block."));
                 }
             }
         }
-        return true;
-    }
+        return EnumActionResult.SUCCESS;
+	}
+	
 }

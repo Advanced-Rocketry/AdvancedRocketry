@@ -1,11 +1,16 @@
 package zmaster587.advancedRocketry.item;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class ItemBlockWithIcon extends Item {
@@ -16,19 +21,22 @@ public class ItemBlockWithIcon extends Item {
         this.block = p_i45329_1_;
     }
 
+    
     /**
      * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
      * True if something happen and false if it don't. This is for ITEMS, not BLOCKS
      */
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int p_77648_7_, float p_77648_8_, float p_77648_9_, float p_77648_10_)
-    {
-        Block block = world.getBlock(x, y, z);
+    @Override
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player,
+    		World world, BlockPos pos, EnumHand hand, EnumFacing facing,
+    		float hitX, float hitY, float hitZ) {
+        IBlockState block = world.getBlockState(pos);
 
-        if (block == Blocks.snow_layer && (world.getBlockMetadata(x, y, z) & 7) < 1)
+        if (block == Blocks.SNOW_LAYER.getDefaultState())
         {
-            p_77648_7_ = 1;
+            facing = EnumFacing.UP;
         }
-        else if (!block.isReplaceable(world, x, y, z))
+        else if (!block.getBlock().isReplaceable(world, pos))
         {
             if (p_77648_7_ == 0)
             {
@@ -91,4 +99,5 @@ public class ItemBlockWithIcon extends Item {
             return true;
         }
     }
+   
 }

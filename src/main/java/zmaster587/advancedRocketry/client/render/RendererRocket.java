@@ -5,25 +5,32 @@ import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.util.StorageChunk;
-import zmaster587.libVulpes.render.RenderHelper;
-import zmaster587.libVulpes.util.BlockPosition;
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RendererRocket extends Render {
+public class RendererRocket extends Render implements IRenderFactory<EntityRocket> {
 
+	private static BlockRendererDispatcher renderBlocks = Minecraft.getMinecraft().getBlockRendererDispatcher();
 
+	public RendererRocket(RenderManager manager) {
+		super(manager);
+	}
+
+	
 	//TODO: possibly optimize with GL lists
 	@Override
 	public void doRender(Entity entity, double x,
@@ -32,13 +39,11 @@ public class RendererRocket extends Render {
 
 		StorageChunk storage  = ((EntityRocket)entity).storage;
 
+		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+
 		if(storage == null)
 			return;
 
-		if(Minecraft.getMinecraft().thePlayer == entity.riddenByEntity) {
-
-			y = -1.25 -((EntityRocket)entity).stats.getSeatY();
-		}
 
 		//Find the halfway point along the XZ plane
 		float halfx = storage.getSizeX()/2f;
@@ -61,19 +66,16 @@ public class RendererRocket extends Render {
 				if(inf.canRenderConnection()) {
 					TileEntity tile = (TileEntity)inf;
 
-					Tessellator.instance.startDrawing(GL11.GL_LINE_LOOP);
+					buffer.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION);
 
-					Tessellator.instance.addVertex(0, storage.getSizeY()/2f, 0);
-
-					Tessellator.instance.addVertex((tile.xCoord - entity.posX + 0.5f)/2f, storage.getSizeY()/2f, (tile.zCoord - entity.posZ + 0.5f)/2f);
-
-					Tessellator.instance.addVertex(tile.xCoord - entity.posX + 0.5f, tile.yCoord - entity.posY  + 0.5f, tile.zCoord - entity.posZ + 0.5f);
-
-					Tessellator.instance.addVertex((tile.xCoord - entity.posX + 0.5f)/2f, storage.getSizeY()/2f, (tile.zCoord - entity.posZ + 0.5f)/2f);
+					buffer.pos(0, storage.getSizeY()/2f, 0).endVertex();
+					buffer.pos((tile.getPos().getX() - entity.posX + 0.5f)/2f, storage.getSizeY()/2f, (tile.getPos().getZ() - entity.posZ + 0.5f)/2f).endVertex();
+					buffer.pos(tile.getPos().getX() - entity.posX + 0.5f, tile.getPos().getY() - entity.posY  + 0.5f, tile.getPos().getZ() - entity.posZ + 0.5f).endVertex();
+					buffer.pos((tile.getPos().getX() - entity.posX + 0.5f)/2f, storage.getSizeY()/2f, (tile.getPos().getZ() - entity.posZ + 0.5f)/2f).endVertex();
 
 					//RenderHelper.renderCrossXZ(Tessellator.instance, .2f, 0, storage.getSizeY()/2f, 0, tile.xCoord - entity.posX + 0.5f, tile.yCoord - entity.posY  + 0.5f, tile.zCoord - entity.posZ + 0.5f);
 					//RenderHelper.renderBlockWithEndPointers(Tessellator.instance, .2f, 0, storage.getSizeY()/2f, 0, tile.xCoord - entity.posX, tile.yCoord - entity.posY, tile.zCoord - entity.posZ);
-					Tessellator.instance.draw();
+					buffer.finishDrawing();
 					//RenderHelper.renderCubeWithUV(tess, 0, 0, 0, 2, 55, 2, 0, 1, 0, 1);
 				}
 			}
@@ -87,26 +89,23 @@ public class RendererRocket extends Render {
 		GL11.glPopMatrix();
 
 		//Initial setup
-		
+
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float)x - halfx, (float)y, (float)z - halfz);
 		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
 
 		//Render Each block
-		RenderBlocks.getInstance().blockAccess = storage;
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		for(int xx = 0; xx < storage.getSizeX(); xx++) {
 			for(int zz = 0; zz < storage.getSizeZ(); zz++) {
 				for(int yy = 0; yy < storage.getSizeY(); yy++) {
-					Block block  = storage.getBlock(xx, yy, zz);
-					if(block.canRenderInPass(MinecraftForgeClient.getRenderPass())) {
-						Tessellator.instance.startDrawingQuads();
-						//TOOD: fix lighting
-						RenderBlocks.getInstance().renderBlockByRenderType(block, xx, yy, zz);
-
-						Tessellator.instance.draw();
-					}
+					IBlockState block  = storage.getBlockState(new BlockPos(xx, yy, zz));
+					
+					buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+					Minecraft.getMinecraft().getBlockRendererDispatcher().renderBlock(block, new BlockPos(xx, yy, zz), storage.world, buffer);
+					Tessellator.getInstance().draw();
 				}
+
 			}
 
 		}
@@ -117,7 +116,7 @@ public class RendererRocket extends Render {
 		for(TileEntity tile : storage.getTileEntityList()) {
 			TileEntitySpecialRenderer renderer = (TileEntitySpecialRenderer)TileEntityRendererDispatcher.instance.mapSpecialRenderers.get(tile.getClass());
 			if(renderer != null ) {
-				renderer.renderTileEntityAt(tile, tile.xCoord, tile.yCoord,  tile.zCoord, f1);
+				renderer.renderTileEntityAt(tile, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), f1, 0);
 			}
 		}
 		GL11.glPopMatrix();
@@ -126,6 +125,11 @@ public class RendererRocket extends Render {
 	@Override
 	protected ResourceLocation getEntityTexture(Entity p_110775_1_) {
 		return null;
+	}
+
+	@Override
+	public Render<? super EntityRocket> createRenderFor(RenderManager manager) {
+		return new RendererRocket(manager);
 	}
 
 }

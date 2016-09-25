@@ -1,7 +1,5 @@
 package zmaster587.advancedRocketry.block;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.tile.TileFluidTank;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.GuiHandler.guiId;
@@ -9,92 +7,85 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.util.IAdjBlockUpdate;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockPressurizedFluidTank extends Block {
 
-	IIcon top;
-
+	private static AxisAlignedBB bb = new AxisAlignedBB(.0625, 0, 0.0625, 0.9375, 1, 0.9375);
+	
 	public BlockPressurizedFluidTank(Material material) {
 		super(material);
-		this.setBlockTextureName("advancedrocketry:liquidTank");
-		this.setBlockBounds(0.05f, 0, 0.05f, 0.95f, 1, 0.95f);
 	}
 
 	@Override
-	public boolean hasTileEntity(int metadata) {
-		this.setBlockBounds(0.05f, 0, 0.05f, 0.95f, 1, 0.95f);
+	public boolean hasTileEntity(IBlockState state) {
 		return true;
 	}
 	
 	@Override
-	public boolean onBlockActivated(World world, int x,
-			int y, int z, EntityPlayer player,
-			int p_149727_6_, float p_149727_7_, float p_149727_8_,
-			float p_149727_9_) {
-
+	public boolean onBlockActivated(World world, BlockPos pos,
+			IBlockState state, EntityPlayer player, EnumHand hand,
+			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
+			float hitZ) {
 		
 		if(!world.isRemote)
-			player.openGui(LibVulpes.instance, guiId.MODULAR.ordinal(), world, x, y, z);
+			player.openGui(LibVulpes.instance, guiId.MODULAR.ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister reg) {
-		super.registerBlockIcons(reg);
-
-		top = reg.registerIcon("advancedrocketry:machineGeneric");
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public IIcon getIcon(int dir, int meta) {
-
-		ForgeDirection side = ForgeDirection.getOrientation(dir);
-		if(side.offsetY != 0)
-			return top;
-		return super.getIcon(dir, meta);
-	}
-
-	@Override
-	public TileEntity createTileEntity(World world, int metadata) {
-		return new TileFluidTank((int) (64000*Math.pow(2,metadata)));
+	public TileEntity createTileEntity(World world, IBlockState state) {
+		return new TileFluidTank((int) (64000*Math.pow(2,0)));
 	}
 	
 	@Override
-	public boolean shouldSideBeRendered(IBlockAccess world,
-			int x, int y, int z, int side) {
-
+	public boolean shouldSideBeRendered(IBlockState blockState,
+			IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
 		
-		if(ForgeDirection.values()[side].offsetY != 0) {
-			if(world.getBlock(x, y, z) == this)
-			return false;
+		if(side.getFrontOffsetY() != 0) {
+			if(blockAccess.getBlockState(pos).getBlock() == this)
+			return true;
 		}
 		
-		return super.shouldSideBeRendered(world, x, y, z, side);
+		return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
 	}
 	
 	@Override
-	public void onNeighborBlockChange(World world, int x,
-			int y, int z, Block block) {
-		TileEntity tile = world.getTileEntity(x, y, z);
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source,
+			BlockPos pos) {
+		return bb;
+	}
+	
+	@Override
+	public void onNeighborChange(IBlockAccess world, BlockPos pos,
+			BlockPos neighbor) {
+		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof IAdjBlockUpdate)
 			((IAdjBlockUpdate)tile).onAdjacentBlockUpdated();
 	}
 	
 	@Override
-	public boolean isOpaqueCube() {
+	public BlockRenderLayer getBlockLayer() {
+		return BlockRenderLayer.CUTOUT;
+	}
+	
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
 	
 	@Override
-	public boolean isBlockNormalCube() {
+	public boolean isBlockNormalCube(IBlockState state) {
 		return false;
 	}
 }

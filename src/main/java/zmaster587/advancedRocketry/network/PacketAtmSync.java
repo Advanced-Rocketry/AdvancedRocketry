@@ -31,11 +31,7 @@ public class PacketAtmSync extends BasePacket {
 		nbt.setString("type", type);
 		PacketBuffer packetBuffer = new PacketBuffer(out);
 		
-		try {
-			packetBuffer.writeNBTTagCompoundToBuffer(nbt);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		packetBuffer.writeNBTTagCompoundToBuffer(nbt);
 	}
 
 	@Override

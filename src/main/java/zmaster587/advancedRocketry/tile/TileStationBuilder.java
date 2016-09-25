@@ -3,7 +3,6 @@ package zmaster587.advancedRocketry.tile;
 import java.util.LinkedList;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.inventory.TextureResources;
@@ -22,12 +21,15 @@ import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.inventory.modules.ModuleTexturedSlotArray;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class TileStationBuilder extends TileRocketBuilder implements IInventory {
 
@@ -61,7 +63,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 	}
 
 	@Override
-	public void scanRocket(World world, int x, int y, int z, AxisAlignedBB bb) {
+	public void scanRocket(World world, BlockPos pos2, AxisAlignedBB bb) {
 
 		int actualMinX = (int)bb.maxX,
 				actualMinY = (int)bb.maxY,
@@ -75,9 +77,9 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 			for(int zCurr = (int)bb.minZ; zCurr <= bb.maxZ; zCurr++) {
 				for(int yCurr = (int)bb.minY; yCurr<= bb.maxY; yCurr++) {
 
-					Block block = world.getBlock(xCurr, yCurr, zCurr);
+					BlockPos posCurr = new BlockPos(xCurr, yCurr, zCurr);
 
-					if(!block.isAir(world, xCurr, yCurr, zCurr)) {
+					if(!world.isAirBlock(posCurr)) {
 						if(xCurr < actualMinX)
 							actualMinX = xCurr;
 						if(yCurr < actualMinY)
@@ -105,7 +107,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 			if(bbCache == null)
 				return;
 			//Need to scan again b/c something may have changed
-			scanRocket(worldObj, xCoord, yCoord, zCoord, bbCache);
+			scanRocket(worldObj, pos, bbCache);
 
 			if(status != ErrorCodes.SUCCESS_STATION)
 				return;
@@ -128,7 +130,6 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 			this.status = ErrorCodes.FINISHED;
 
 			this.markDirty();
-			this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
@@ -176,9 +177,10 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		inventory.writeToNBT(nbt);
+		return nbt;
 	}
 
 	public void readFromNBT(NBTTagCompound nbt) {
@@ -205,25 +207,19 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) {
-		return inventory.getStackInSlotOnClosing(slot);
-	}
-
-
-	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
 	}
 
 
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 		return "tile.stationBuilder.name";
 	}
 
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 		return false;
 	}
 
@@ -241,13 +237,13 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 
 	@Override
-	public void openInventory() {
+	public void openInventory(EntityPlayer pos) {
 
 	}
 
 
 	@Override
-	public void closeInventory() {
+	public void closeInventory(EntityPlayer pos) {
 
 	}
 
@@ -255,5 +251,30 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		return inventory.isItemValidForSlot(slot, stack);
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		return inventory.removeStackFromSlot(index);
+	}
+
+	@Override
+	public int getField(int id) {
+		return inventory.getField(id);
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		inventory.setField(id, value);
+	}
+
+	@Override
+	public int getFieldCount() {
+		return inventory.getFieldCount();
+	}
+
+	@Override
+	public void clear() {
+		inventory.clear();
 	}
 }

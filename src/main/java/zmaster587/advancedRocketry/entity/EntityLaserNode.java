@@ -1,12 +1,18 @@
 package zmaster587.advancedRocketry.entity;
 
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityLaserNode extends Entity {
 
@@ -32,9 +38,9 @@ public class EntityLaserNode extends Entity {
 	@Override
 	protected void entityInit() {
 	}
-
+	
 	@Override
-	public boolean isEntityInvulnerable() { return true;}
+	public boolean isEntityInvulnerable(DamageSource source) { return true;}
 	
 	@Override
 	public void setDead() {
@@ -58,9 +64,9 @@ public class EntityLaserNode extends Entity {
 				for(int i = 0; i < 9; i++) {
 					int x = (int)posX + (i % 3) - 1;
 					int z = (int)posZ + (i / 3) - 1;
-
-					if(worldObj.getBlock(x, h, z) == AdvancedRocketryBlocks.blockLightSource)
-						worldObj.setBlockToAir(x, h, z);
+					BlockPos pos = new BlockPos(x, h, z);
+					if(worldObj.getBlockState(pos).getBlock() == AdvancedRocketryBlocks.blockLightSource)
+						worldObj.setBlockToAir(pos);
 				}
 			}
 		}
@@ -82,21 +88,16 @@ public class EntityLaserNode extends Entity {
 				final double spread = 3;
 				final double initialSpeed = .5;
 				for(int i = 0; i < (Minecraft.getMinecraft().gameSettings.particleSetting == 0 ? 20 : 5); i++)
-					this.worldObj.spawnParticle("fireworksSpark", this.posX + (this.rand.nextDouble()*spread) - (spread/2), this.posY, this.posZ + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble() - (initialSpeed/2), initialSpeed * this.rand.nextDouble() * 20 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
+					this.worldObj.spawnParticle(EnumParticleTypes.FIREWORKS_SPARK, this.posX + (this.rand.nextDouble()*spread) - (spread/2), this.posY, this.posZ + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble() - (initialSpeed/2), initialSpeed * this.rand.nextDouble() * 20 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
 
 
 				//this.worldObj.spawnParticle("tilecrack_" + this.worldObj.getBlockId((int)this.posX, (int)this.posY - 1, (int)this.posZ) + "_" + 0, this.posX + (this.rand.nextDouble()*spread) - (spread/2), this.posY + 5, this.posZ + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble(), initialSpeed * this.rand.nextDouble() * 20 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
-				this.worldObj.spawnParticle("hugeexplosion", this.posX + (this.rand.nextDouble()*spread) - (spread/2), this.posY, this.posZ + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble(), initialSpeed * this.rand.nextDouble() * 4 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
+				this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, this.posX + (this.rand.nextDouble()*spread) - (spread/2), this.posY, this.posZ + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble(), initialSpeed * this.rand.nextDouble() * 4 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
 			}
 			//TODO: use sound setting
-			this.worldObj.playSoundEffect(this.posX, this.posY, this.posZ, "advancedRocketry:sound.laserDrill", 1.0f, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
+			this.worldObj.playSound(Minecraft.getMinecraft().thePlayer,this.posX, this.posY, this.posZ, new SoundEvent(new ResourceLocation("advancedRocketry:sound.laserDrill")), SoundCategory.NEUTRAL, 1.0f, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
 			
 		}
-	}
-
-	@Override
-	public void onChunkLoad() {
-		setDead();
 	}
 
 	@SideOnly(Side.CLIENT)

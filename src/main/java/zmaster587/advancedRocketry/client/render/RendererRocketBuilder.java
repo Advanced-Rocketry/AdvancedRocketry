@@ -6,10 +6,12 @@ import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.libVulpes.render.RenderHelper;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 
 public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 
@@ -20,7 +22,7 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 	
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x,
-			double y, double z, float f) {
+			double y, double z, float f, int dist) {
 
 
 
@@ -30,16 +32,16 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 		//If the rocketbuilder is scanning and a valid bounding box for the rocket exists
 		if(renderTile.isScanning() && (bb = renderTile.getBBCache()) != null) {
 
-			double xOffset = bb.minX - tile.xCoord;
-			double yOffset = bb.maxY - tile.yCoord;
-			double zOffset = bb.minZ - tile.zCoord;
+			double xOffset = bb.minX - tile.getPos().getX();
+			double yOffset = bb.maxY - tile.getPos().getY();
+			double zOffset = bb.minZ - tile.getPos().getZ();
 
 			//Get size of the BB
 			double xSize = bb.maxX - bb.minX+1;
 			double zSize = bb.maxZ - bb.minZ+1;
 			
 			double yLocation = -(bb.maxY - bb.minY + 1.12)*renderTile.getNormallizedProgress();
-			Tessellator tess = Tessellator.instance;
+			VertexBuffer buffer = Tessellator.getInstance().getBuffer();
 			
 			double xMin = xOffset;
 			double yMin = yOffset + yLocation;
@@ -55,27 +57,22 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			GL11.glPushMatrix();
 			GL11.glTranslated(x,y,z);
 			
-			//Initial setup
-			int bright = tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord + 1, tile.zCoord,0);
-			int brightX = bright % 65536;
-			int brightY = bright / 65536;
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
 			
 			//Draw Supports
 			GL11.glColor4f(0.78f, 0.5f, 0.34f, 1f);
 			bindTexture(girder);
 			GL11.glDepthMask(true);
-			tess.startDrawingQuads();
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			
 			float size = 0.25f;
 			
 			vMax = yMin/size;
 			
-			RenderHelper.renderCubeWithUV(tess, xOffset, 0d, zOffset, xOffset + size, yOffset + yLocation, zOffset + size, uMin, uMax, 0d, vMax);
-			RenderHelper.renderCubeWithUV(tess, xOffset + xSize - size, 0d, zOffset, xOffset  + xSize , yOffset + yLocation, zOffset + size, uMin, uMax, vMin, vMax);
-			RenderHelper.renderCubeWithUV(tess, xOffset + xSize - size, 0d, zOffset + zSize - size, xOffset  + xSize, yOffset + yLocation, zOffset + zSize, uMin, uMax, vMin, vMax);
-			RenderHelper.renderCubeWithUV(tess, xOffset, 0d, zOffset + zSize  - size, xOffset + size, yOffset + yLocation, zOffset + zSize, uMin, uMax, vMin, vMax);
-			tess.draw();
+			RenderHelper.renderCubeWithUV(buffer, xOffset, 0d, zOffset, xOffset + size, yOffset + yLocation, zOffset + size, uMin, uMax, 0d, vMax);
+			RenderHelper.renderCubeWithUV(buffer, xOffset + xSize - size, 0d, zOffset, xOffset  + xSize , yOffset + yLocation, zOffset + size, uMin, uMax, vMin, vMax);
+			RenderHelper.renderCubeWithUV(buffer, xOffset + xSize - size, 0d, zOffset + zSize - size, xOffset  + xSize, yOffset + yLocation, zOffset + zSize, uMin, uMax, vMin, vMax);
+			RenderHelper.renderCubeWithUV(buffer, xOffset, 0d, zOffset + zSize  - size, xOffset + size, yOffset + yLocation, zOffset + zSize, uMin, uMax, vMin, vMax);
+			Tessellator.getInstance().draw();
 			
 			
 			//Draw scanning grid
@@ -97,24 +94,18 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			float maxV = (float)(1*zSize);
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 0xf0, 0xf0);
 			
-			tess.startDrawing(7);
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			for(int i = 0; i < 20; i++) {
+				
 				
 				//BOTTOM
 				double offset = i/80d;
-				tess.addVertexWithUV(xOffset, yOffset + yLocation+offset, zOffset, min ,min);
-				tess.addVertexWithUV(xOffset + xSize, yOffset + yLocation+offset, zOffset,  maxU, min);
-				tess.addVertexWithUV(xOffset + xSize, yOffset + yLocation+offset, zOffset  + zSize,maxU , maxV);
-				tess.addVertexWithUV(xOffset, yOffset + yLocation+offset, zOffset  + zSize,min,  maxV);
-
-				//TOP
+				RenderHelper.renderBottomFaceWithUV(buffer, yOffset + yLocation+offset, xOffset, zOffset, xOffset + xSize, zOffset  + zSize, min, maxU, min, maxV);
+				RenderHelper.renderTopFaceWithUV(buffer, yOffset + yLocation+offset, xOffset, zOffset, xOffset + xSize, zOffset  + zSize, min, maxU, min, maxV);
 				
-				tess.addVertexWithUV(xOffset + xSize, yOffset + yLocation+offset, zOffset,maxU, min);
-				tess.addVertexWithUV(xOffset, yOffset + yLocation+offset, zOffset, min ,min);
-				tess.addVertexWithUV(xOffset, yOffset + yLocation+offset, zOffset  + zSize,min,  maxV);
-				tess.addVertexWithUV(xOffset + xSize, yOffset + yLocation+offset, zOffset  + zSize,maxU , maxV);
+				//TOP
 			}
-			tess.draw();
+			Tessellator.getInstance().draw();
 			
 			GL11.glDisable(GL11.GL_BLEND);
 			GL11.glEnable(GL11.GL_LIGHTING);
@@ -132,44 +123,44 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			//West block
 			
 			
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
-			tess.startDrawingQuads();
 			
-			RenderHelper.renderBottomFaceWithUV(tess, yMin, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
-			RenderHelper.renderWestFaceWithUV(tess, xMin, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax);
-			RenderHelper.renderSouthFaceWithUV(tess, zMax, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax);
-			RenderHelper.renderNorthFaceWithUV(tess, zMin, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax);
-			RenderHelper.renderTopFaceWithUV(tess, yMax, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
-			tess.draw();
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			RenderHelper.renderBottomFaceWithUV(buffer, yMin, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
+			RenderHelper.renderWestFaceWithUV(buffer, xMin, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax);
+			RenderHelper.renderSouthFaceWithUV(buffer, zMax, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax);
+			RenderHelper.renderNorthFaceWithUV(buffer, zMin, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax);
+			RenderHelper.renderTopFaceWithUV(buffer, yMax, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
+			Tessellator.getInstance().draw();
 			
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			//Set ignore light then draw the glowy bits
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 0xf0, 0xf0);
-			tess.startDrawingQuads();
+			
+			
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
 			if(renderTile.isBuilding())
 				GL11.glColor4f(3f, 1f, 1f, 1f);
 			else
 				GL11.glColor4f(1f, 3f, 1f, 1f);
 			
-			RenderHelper.renderEastFace(tess, xMax, yMin, zMin, yMax, zMax);
+			RenderHelper.renderEastFace(buffer, xMax, yMin, zMin, yMax, zMax);
 			
 			//Change mins/maxes then render east block
 			xMin = xOffset + xSize - 0.5;
 			xMax = xOffset + xSize;
 			
-			RenderHelper.renderWestFace(tess, xMin, yMin, zMin, yMax, zMax);
-			tess.draw();
+			RenderHelper.renderWestFace(buffer, xMin, yMin, zMin, yMax, zMax);
+			Tessellator.getInstance().draw();
 			
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
 			GL11.glColor4f(1f, 1f, 1f, 1f);
-			tess.startDrawingQuads();
-			RenderHelper.renderBottomFaceWithUV(tess, yMin, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
-			RenderHelper.renderEastFaceWithUV(tess, xMax, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax);
-			RenderHelper.renderSouthFaceWithUV(tess, zMax, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax);
-			RenderHelper.renderNorthFaceWithUV(tess, zMin, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax);
-			RenderHelper.renderTopFaceWithUV(tess, yMax, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
-			tess.draw();
+			
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			RenderHelper.renderBottomFaceWithUV(buffer, yMin, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
+			RenderHelper.renderEastFaceWithUV(buffer, xMax, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax);
+			RenderHelper.renderSouthFaceWithUV(buffer, zMax, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax);
+			RenderHelper.renderNorthFaceWithUV(buffer, zMin, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax);
+			RenderHelper.renderTopFaceWithUV(buffer, yMax, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
+			Tessellator.getInstance().draw();
 			
 			GL11.glAlphaFunc(GL11.GL_GEQUAL, 0.1f);
 			GL11.glDepthMask(false);

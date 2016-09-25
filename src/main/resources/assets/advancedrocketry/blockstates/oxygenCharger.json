@@ -1,0 +1,16 @@
+{
+    "variants": {
+        "facing=north,state=false": { "model": "advancedrocketry:oxygenCharger" },
+        "facing=south,state=false": { "model": "advancedrocketry:oxygenCharger", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:oxygenCharger", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:oxygenCharger", "y": 90 },
+        "facing=down,state=true":  { "model": "advancedrocketry:oxygenCharger" },
+        "facing=up,state=true":  { "model": "advancedrocketry:oxygenCharger" },
+        "facing=north,state=true": { "model": "advancedrocketry:oxygenCharger" },
+        "facing=south,state=true": { "model": "advancedrocketry:oxygenCharger", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:oxygenCharger", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:oxygenCharger", "y": 90 },
+        "facing=down,state=true":  { "model": "advancedrocketry:oxygenCharger" },
+        "facing=up,state=true":  { "model": "advancedrocketry:oxygenCharger" }
+    }
+}

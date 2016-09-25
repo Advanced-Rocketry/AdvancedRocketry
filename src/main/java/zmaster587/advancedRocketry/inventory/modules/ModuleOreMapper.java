@@ -4,19 +4,22 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
 import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.VulpineMath;
 
 @SideOnly(Side.CLIENT)
@@ -114,39 +117,36 @@ public class ModuleOreMapper extends ModuleBase {
 		super.renderForeground(guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui,
 				font);
 		
-		Tessellator tessellator = Tessellator.instance;
+		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
 		
 		//Draw fancy things
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glColor3f(0f, 0.8f, 0f);
-		tessellator.startDrawingQuads();
-		tessellator.addVertex(-21, 82 + fancyScanOffset, (double)zLevel);
-		tessellator.addVertex(0, 84 + fancyScanOffset, (double)zLevel);
-		tessellator.addVertex(0, 81 + fancyScanOffset, (double)zLevel);
-		tessellator.addVertex(-21, 81 + fancyScanOffset, (double)zLevel);
-		tessellator.draw();
+		GlStateManager.disableTexture2D();
+		buffer.color(0f, 0.8f, 0f, 1f);
+		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
+		buffer.pos(-21, 82 + fancyScanOffset, (double)zLevel).endVertex();
+		buffer.pos(0, 84 + fancyScanOffset, (double)zLevel).endVertex();
+		buffer.pos(0, 81 + fancyScanOffset, (double)zLevel).endVertex();
+		buffer.pos(-21, 81 + fancyScanOffset, (double)zLevel).endVertex();
+		buffer.finishDrawing();
 		
-		tessellator.startDrawingQuads();
-		tessellator.addVertex(-21, 82 - fancyScanOffset + FANCYSCANMAXSIZE, (double)zLevel);
-		tessellator.addVertex(0, 84 - fancyScanOffset + FANCYSCANMAXSIZE, (double)zLevel);
-		tessellator.addVertex(0, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)zLevel);
-		tessellator.addVertex(-21, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)zLevel);
-		tessellator.draw();
+		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
+		buffer.pos(-21, 82 - fancyScanOffset + FANCYSCANMAXSIZE, (double)zLevel).endVertex();
+		buffer.pos(0, 84 - fancyScanOffset + FANCYSCANMAXSIZE, (double)zLevel).endVertex();
+		buffer.pos(0, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)zLevel).endVertex();
+		buffer.pos(-21, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)zLevel).endVertex();
+		buffer.finishDrawing();
 		
 		
-		GL11.glEnable(GL11.GL_BLEND);
+		GlStateManager.enableBlend();
 		
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
-		GL11.glColor4f(0.5f, 0.5f, 0.0f,0.3f + ((float)Math.sin(Math.PI*(fancyScanOffset/(float)FANCYSCANMAXSIZE))/3f));
-		tessellator.startDrawingQuads();
-		tessellator.addVertex(173, 141, (double)zLevel);
-		tessellator.addVertex(194, 141, (double)zLevel);
-		tessellator.addVertex(194, 82, (double)zLevel);
-		tessellator.addVertex(173, 82, (double)zLevel);
-		tessellator.draw();
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
+		buffer.color(0.5f, 0.5f, 0.0f,0.3f + ((float)Math.sin(Math.PI*(fancyScanOffset/(float)FANCYSCANMAXSIZE))/3f));
+		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
+		RenderHelper.renderNorthFace(buffer, (double)zLevel, 173, 82, 194, 141);
+		buffer.finishDrawing();
 		
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glDisable(GL11.GL_BLEND);
+		GlStateManager.enableTexture2D();
+		GlStateManager.disableBlend();
 		
 		
 		if(world.getTotalWorldTime() - prevWorldTickTime >= 1 ) {
@@ -165,12 +165,9 @@ public class ModuleOreMapper extends ModuleBase {
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glColor3f(0f, 0.8f, 0f);
 			
-			tessellator.startDrawingQuads();
-			tessellator.addVertexWithUV(13 + (18*slot), 155 + 16, (double)zLevel, 0, 1);
-			tessellator.addVertexWithUV(13 + 16 + (18*slot), 155 + 16, (double)zLevel, 1, 1);
-			tessellator.addVertexWithUV(13 + 16 + (18*slot), 155, (double)zLevel, 1, 0);
-			tessellator.addVertexWithUV(13 + (18*slot), 155, (double)zLevel, 0, 0);
-			tessellator.draw();
+			buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
+			RenderHelper.renderNorthFaceWithUV(buffer, zLevel, 13 + (18*slot), 155, 13 + 16 + (18*slot), 155 + 16, 0, 1, 0, 1);
+			buffer.finishDrawing();
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 		}
 	}
@@ -206,13 +203,10 @@ public class ModuleOreMapper extends ModuleBase {
 		//Draw the actual display
 		int zLevel = 100;
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureId());
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(47 + x, 20 + y + SCREEN_SIZE, (double)zLevel, 0, 1);
-		tessellator.addVertexWithUV(47 + x + SCREEN_SIZE, 20 + y + SCREEN_SIZE, (double)zLevel, 1, 1);
-		tessellator.addVertexWithUV(47 + x + SCREEN_SIZE, 20 + y, (double)zLevel, 1, 0);
-		tessellator.addVertexWithUV(47 + x, 20 + y, (double)zLevel, 0, 0);
-		tessellator.draw();
+		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
+		RenderHelper.renderNorthFaceWithUV(buffer, zLevel, 47 + x,  20 + y, 47 + x + SCREEN_SIZE,  20 + y + SCREEN_SIZE, 0, 1, 0, 1);
+		buffer.finishDrawing();
 
 
 		//Render sliders and controls

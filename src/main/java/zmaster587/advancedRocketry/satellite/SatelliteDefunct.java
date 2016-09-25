@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.satellite;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
@@ -23,8 +24,7 @@ public class SatelliteDefunct extends SatelliteBase {
 	}
 
 	@Override
-	public boolean performAction(EntityPlayer player, World world, int x,
-			int y, int z) {
+	public boolean performAction(EntityPlayer player, World world, BlockPos pos) {
 		return false;
 	}
 

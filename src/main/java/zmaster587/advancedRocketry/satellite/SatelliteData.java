@@ -2,12 +2,13 @@ package zmaster587.advancedRocketry.satellite;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
@@ -48,8 +49,7 @@ public abstract class SatelliteData extends SatelliteBase {
 	
 	
 	@Override
-	public boolean performAction(EntityPlayer player, World world, int x,
-			int y, int z) {
+	public boolean performAction(EntityPlayer player, World world, BlockPos pos) {
 
 		//Calculate Data Recieved
 		//TODO: pay attn to power
@@ -57,12 +57,12 @@ public abstract class SatelliteData extends SatelliteBase {
 		lastActionTime = world.getTotalWorldTime();
 
 
-		TileEntity tile = world.getTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(pos);
 
 		if(tile instanceof IDataHandler) {
 			IDataInventory dataInv = (IDataInventory)tile;
 
-			data.removeData(dataInv.addData(data.getData(), data.getDataType(), ForgeDirection.UNKNOWN, true), true);
+			data.removeData(dataInv.addData(data.getData(), data.getDataType(), EnumFacing.DOWN, true), true);
 		}
 
 		return false;
@@ -106,7 +106,7 @@ public abstract class SatelliteData extends SatelliteBase {
 	}
 
 	@Override
-	public void sendChanges(Container container, ICrafting crafter, int variableId, int localId) {
+	public void sendChanges(Container container, IContainerListener crafter, int variableId, int localId) {
 		crafter.sendProgressBarUpdate(container, variableId, (short)(( lastActionTime >>> (localId*16) ) & 0xffff));
 		
 		if(localId == 3)

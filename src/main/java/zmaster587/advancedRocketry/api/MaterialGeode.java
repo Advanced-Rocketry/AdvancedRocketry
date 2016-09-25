@@ -5,7 +5,7 @@ import net.minecraft.block.material.Material;
 
 public class MaterialGeode extends Material {
 
-	public static final MaterialGeode geode = new MaterialGeode(MapColor.obsidianColor);
+	public static final MaterialGeode geode = new MaterialGeode(MapColor.OBSIDIAN);
 	
 	public MaterialGeode(MapColor p_i2116_1_) {
 		super(p_i2116_1_);

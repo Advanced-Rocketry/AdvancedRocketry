@@ -1,0 +1,8 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+        "top": "libvulpes:blocks/machineGeneric",
+        "front": "advancedrocketry:blocks/Crystallizer",
+        "side": "libvulpes:blocks/machineGeneric"
+    }
+}

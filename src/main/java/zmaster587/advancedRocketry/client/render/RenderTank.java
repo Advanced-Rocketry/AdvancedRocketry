@@ -10,19 +10,17 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class RenderTank extends TileEntitySpecialRenderer {
 
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x,
-			double y, double z, float p_147500_8_) {
+			double y, double z, float f, int damage) {
 
 		IFluidHandler fluidTile = (IFluidHandler)tile;
-		FluidStack fluid = fluidTile.getTankInfo(ForgeDirection.UNKNOWN)[0].fluid;
+		FluidStack fluid = fluidTile.getTankProperties()[0].getContents();
 
 
 		if(fluid != null && fluid.getFluid() != null)
@@ -56,8 +54,7 @@ public class RenderTank extends TileEntitySpecialRenderer {
 			GL11.glPopMatrix();
 			GL11.glColor3f(1f, 1f, 1f);
 		}
-	}	
-
+	}*/
 }
 
 

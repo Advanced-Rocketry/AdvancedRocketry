@@ -3,8 +3,9 @@ package zmaster587.advancedRocketry.api;
 import java.util.LinkedList;
 
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -16,7 +17,7 @@ public abstract class EntityRocketBase extends Entity {
 	protected LinkedList<IInfrastructure> connectedInfrastructure;
 	
 	//stores the coordinates of infrastructures, used for when the world loads/saves
-	protected LinkedList<BlockPosition> infrastructureCoords;
+	protected LinkedList<HashedBlockPosition> infrastructureCoords;
 	
 	//Stores the blocks and tiles that make up the rocket
 	//public StorageChunk storage;
@@ -91,8 +92,8 @@ public abstract class EntityRocketBase extends Entity {
 	public void onOrbitReached() {
 		MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketReachesOrbitEvent(this));
 		
-		if(this.worldObj.provider.dimensionId == Configuration.spaceDimId) {
-			ISpaceObject station = AdvancedRocketryAPI.spaceObjectManager.getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
+		if(this.worldObj.provider.getDimension() == Configuration.spaceDimId) {
+			ISpaceObject station = AdvancedRocketryAPI.spaceObjectManager.getSpaceStationFromBlockCoords(this.getPosition());
 			
 			if(station instanceof ISpaceObject) {
 				((ISpaceObject)station).setPadStatus((int)this.posX, (int)this.posZ, false);
@@ -104,8 +105,8 @@ public abstract class EntityRocketBase extends Entity {
 	 * Deconstructs the rocket, replacing it with actual blocks
 	 */
 	public void deconstructRocket() {
-		if(this.worldObj.provider.dimensionId == Configuration.spaceDimId) {
-			ISpaceObject station = AdvancedRocketryAPI.spaceObjectManager.getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
+		if(this.worldObj.provider.getDimension() == Configuration.spaceDimId) {
+			ISpaceObject station = AdvancedRocketryAPI.spaceObjectManager.getSpaceStationFromBlockCoords(this.getPosition());
 			
 			if(station instanceof ISpaceObject) {
 				((ISpaceObject)station).setPadStatus((int)this.posX, (int)this.posZ, false);

@@ -1,7 +1,10 @@
 package zmaster587.advancedRocketry.api;
 
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.util.EnumHelper;
 /**
  * Stores references to Advanced Rocketry's items
@@ -9,7 +12,8 @@ import net.minecraftforge.common.util.EnumHelper;
  */
 public class AdvancedRocketryItems {
 
-	public static final ArmorMaterial spaceSuit = EnumHelper.addArmorMaterial("spaceSuit", ArmorMaterial.DIAMOND.getDurability(0), new int[] {1,1,1,1}, 0);
+	//TODO: fix
+	public static final ArmorMaterial spaceSuit = EnumHelper.addArmorMaterial("spaceSuit", "", ArmorMaterial.DIAMOND.getDurability(EntityEquipmentSlot.CHEST), new int[] {1,1,1,1}, 0, new SoundEvent(new ResourceLocation("")), 0);
 	
 	public static Item itemWafer;
 	public static Item itemAnthracene;

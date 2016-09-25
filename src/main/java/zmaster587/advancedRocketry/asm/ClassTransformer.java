@@ -22,7 +22,6 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.launchwrapper.Launch;
@@ -42,6 +41,9 @@ public class ClassTransformer implements IClassTransformer {
 	private static final String CLASS_KEY_C03PACKETPLAYER = "net.minecraft.network.play.client.C03PacketPlayer";
 	private static final String CLASS_KEY_WORLD = "net.minecraft.world.World";
 	private static final String CLASS_KEY_BLOCK = "net.minecraft.block.Block";
+	private static final String CLASS_KEY_BLOCKPOS = "net.minecraft.util.math.BlockPos";
+	private static final String CLASS_KEY_IBLOCKSTATE = "net.minecraft.block.state.IBlockState";
+	
 	private static final String METHOD_KEY_PROCESSPLAYER = "processPlayer";
 	private static final String METHOD_KEY_JUMP = "jump";
 	private static final String METHOD_KEY_MOVEENTITY = "moveEntity";
@@ -53,7 +55,7 @@ public class ClassTransformer implements IClassTransformer {
 	private static final String METHOD_KEY_DORENDER  = "net.minecraft.client.renderer.entity.RenderLivingEntity.doRender";
 	private static final String METHOD_KEY_MOVEENTITYWITHHEADING = "net.minecraft.entity.EntityLivingBase.moveEntityWithHeading";
 	private static final String METHOD_KEY_MOVEFLYING = "net.minecraft.entity.Entity.moveFlying";
-	private static final String METHOD_KEY_SETBLOCK = CLASS_KEY_WORLD + ".setBlock";
+	private static final String METHOD_KEY_SETBLOCKSTATE = CLASS_KEY_WORLD + ".setBlockState";
 	private static final String METHOD_KEY_SETBLOCKMETADATAWITHNOTIFY = CLASS_KEY_WORLD + ".setBlockMetadataWithNotify";
 
 	private static final String FIELD_YAW = "net.minecraft.client.renderer.EntityRenderer.rotationYaw";
@@ -98,7 +100,9 @@ public class ClassTransformer implements IClassTransformer {
 		entryMap.put(CLASS_KEY_C03PACKETPLAYER, new SimpleEntry<String, String>("net/minecraft/network/play/client/C03PacketPlayer",""));
 		entryMap.put(CLASS_KEY_WORLD, new SimpleEntry<String, String>("net/minecraft/world/World","ahb"));
 		entryMap.put(CLASS_KEY_BLOCK, new SimpleEntry<String, String>("net/minecraft/block/Block","aji"));
-
+		entryMap.put(CLASS_KEY_BLOCKPOS, new SimpleEntry<String, String>("net/minecraft/util/math/BlockPos",""));
+		entryMap.put(CLASS_KEY_IBLOCKSTATE, new SimpleEntry<String, String>("net/minecraft/block/state/IBlockState",""));
+		
 		entryMap.put(METHOD_KEY_PROCESSPLAYER, new SimpleEntry<String, String>("processPlayer",""));
 		entryMap.put(METHOD_KEY_MOVEENTITY, new SimpleEntry<String, String>("moveEntity",""));
 		entryMap.put(METHOD_KEY_SETPOSITION, new SimpleEntry<String, String>("setPosition",""));
@@ -110,7 +114,7 @@ public class ClassTransformer implements IClassTransformer {
 		entryMap.put(METHOD_KEY_ONUPDATE, new SimpleEntry<String, String>("onUpdate","h"));
 		entryMap.put(METHOD_KEY_MOUNTENTITY, new SimpleEntry<String, String>("mountEntity", "a"));
 		entryMap.put(METHOD_KEY_JUMP, new SimpleEntry<String, String>("jump",""));
-		entryMap.put(METHOD_KEY_SETBLOCK, new SimpleEntry<String, String>("setBlock", "d"));
+		entryMap.put(METHOD_KEY_SETBLOCKSTATE, new SimpleEntry<String, String>("setBlockState", ""));
 		entryMap.put(METHOD_KEY_SETBLOCKMETADATAWITHNOTIFY, new SimpleEntry<String, String>("setBlockMetadataWithNotify", "a"));
 
 		entryMap.put(FIELD_YAW, new SimpleEntry<String, String>("rotationYaw", "blt"));
@@ -686,14 +690,15 @@ public class ClassTransformer implements IClassTransformer {
 				final InsnList nodeAdd = new InsnList();
 				AbstractInsnNode pos = null;
 				List<AbstractInsnNode> removeNodes = new LinkedList<AbstractInsnNode>();
+				int numGoto = 4;
 
 				for(int i = moveEntityWithHeading.instructions.size() - 1; i >= 0; i--) {
 					AbstractInsnNode ain = moveEntityWithHeading.instructions.get(i);
-					if(ain.getOpcode() == Opcodes.GOTO) {
+					if(ain.getOpcode() == Opcodes.GOTO && --numGoto == 0) {
 						pos = ain;
 
 
-						while(moveEntityWithHeading.instructions.get(++i).getOpcode() != Opcodes.ALOAD);
+						while(moveEntityWithHeading.instructions.get(--i).getOpcode() != Opcodes.ALOAD);
 
 						pos = moveEntityWithHeading.instructions.get(i-1);
 						ain = moveEntityWithHeading.instructions.get(i);
@@ -720,18 +725,18 @@ public class ClassTransformer implements IClassTransformer {
 		//On block change insert a call to the atmosphere handler
 		if(changedName.equals(getName(CLASS_KEY_WORLD))) {
 			ClassNode cn = startInjection(bytes);
-			MethodNode setBlockMethod = getMethod(cn, getName(METHOD_KEY_SETBLOCK), "(IIIL" + getName(CLASS_KEY_BLOCK) +";II)Z");
+			MethodNode setBlockStateMethod = getMethod(cn, getName(METHOD_KEY_SETBLOCKSTATE), "(L" + getName(CLASS_KEY_BLOCKPOS) + ";L" + getName(CLASS_KEY_IBLOCKSTATE) +";I)Z");
 			MethodNode setBlockMetaMethod = getMethod(cn, getName(METHOD_KEY_SETBLOCKMETADATAWITHNOTIFY), "(IIIII)Z");
 
-			if(setBlockMethod != null) {
+			if(setBlockStateMethod != null) {
 
 				final InsnList nodeAdd = new InsnList();
 				AbstractInsnNode pos = null;
-				int fmulNum = 2;
+				//int fmulNum = 2;
 
-				for (int i = setBlockMethod.instructions.size()-1; i >= 0 ; i--) {
-					AbstractInsnNode ain = setBlockMethod.instructions.get(i);
-					if (ain.getOpcode() == Opcodes.IRETURN && --fmulNum == 0) {
+				for (int i = setBlockStateMethod.instructions.size()-1; i >= 0 ; i--) {
+					AbstractInsnNode ain = setBlockStateMethod.instructions.get(i);
+					if (ain.getOpcode() == Opcodes.IRETURN) {
 						pos = ain;
 						break;
 					}
@@ -739,12 +744,10 @@ public class ClassTransformer implements IClassTransformer {
 
 
 				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 0));
-				nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 1));
-				nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 2));
-				nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 3));
-				nodeAdd.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "zmaster587/advancedRocketry/atmosphere/AtmosphereHandler", "onBlockChange", "(L" + getName(CLASS_KEY_WORLD) + ";III)V", false));
+				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 1));
+				nodeAdd.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "zmaster587/advancedRocketry/atmosphere/AtmosphereHandler", "onBlockChange", "(L" + getName(CLASS_KEY_WORLD) + ";L" + getName(CLASS_KEY_BLOCKPOS) + ";)V", false));
 
-				setBlockMethod.instructions.insertBefore(pos, nodeAdd);
+				setBlockStateMethod.instructions.insertBefore(pos, nodeAdd);
 			}
 			else
 				AdvancedRocketry.logger.severe("ASM injection into World.setBlock FAILED!");

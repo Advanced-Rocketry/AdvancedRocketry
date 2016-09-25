@@ -1,10 +1,12 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
@@ -28,18 +30,18 @@ public class TileWarpCore extends TileMultiBlock {
 			{"blockTitanium", "blockTitanium", "blockTitanium"}},
 
 			{{null, new BlockMeta(LibVulpesBlocks.blockStructureBlock), null},
-				{new BlockMeta(LibVulpesBlocks.blockStructureBlock), new BlockMeta(Blocks.gold_block), new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
+				{new BlockMeta(LibVulpesBlocks.blockStructureBlock), new BlockMeta(Blocks.GOLD_BLOCK), new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
 				{null, new BlockMeta(LibVulpesBlocks.blockStructureBlock), null}},
 
 				{{"blockTitanium", 'c', "blockTitanium"}, 
-					{"blockTitanium", new BlockMeta(Blocks.gold_block), "blockTitanium"},
+					{"blockTitanium", new BlockMeta(Blocks.GOLD_BLOCK), "blockTitanium"},
 					{"blockTitanium", "blockTitanium", "blockTitanium"}},
 
 	};
 
 	private SpaceObject getSpaceObject() {
-		if(station == null && worldObj.provider.dimensionId == Configuration.spaceDimId) {
-			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(xCoord, zCoord);
+		if(station == null && worldObj.provider.getDimension() == Configuration.spaceDimId) {
+			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceObject)
 				station = (SpaceObject) object;
 		}
@@ -52,15 +54,16 @@ public class TileWarpCore extends TileMultiBlock {
 	}
 
 	@Override
-	public boolean shouldHideBlock(World world, int x, int y, int z, Block tile) {
-		return x == xCoord && y == yCoord && z == zCoord;
+	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
+		return pos.compareTo(this.pos) == 0;
 	}
+	
 	
 	@Override
 	public void onInventoryUpdated() {
 		//Needs completion
 		if(itemInPorts.isEmpty() /*&& !worldObj.isRemote*/) {
-			attemptCompleteStructure();
+			attemptCompleteStructure(worldObj.getBlockState(pos));
 		}
 		
 		if(getSpaceObject() == null || getSpaceObject().getFuelAmount() == getSpaceObject().getMaxFuelAmount())
@@ -93,7 +96,8 @@ public class TileWarpCore extends TileMultiBlock {
 	
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		return AxisAlignedBB.getBoundingBox(xCoord -2,yCoord -2, zCoord -2, xCoord + 2, yCoord + 2, zCoord + 2);
+		
+		return new AxisAlignedBB(pos.add(-2,-2,-2),pos.add(2,2,2));
 	}
 
 }

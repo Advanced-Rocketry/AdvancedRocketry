@@ -9,8 +9,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
+import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
@@ -24,9 +26,8 @@ import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
-import cpw.mods.fml.relauncher.Side;
 
-public class TileStationGravityController extends TileEntity implements IModularInventory, INetworkMachine, ISliderBar {
+public class TileStationGravityController extends TileEntity implements IModularInventory, ITickable, INetworkMachine, ISliderBar {
 
 	int gravity;
 	int progress;
@@ -55,30 +56,26 @@ public class TileStationGravityController extends TileEntity implements IModular
 	}
 
 	@Override
-	public Packet getDescriptionPacket() {
-		NBTTagCompound nbt = new NBTTagCompound();
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		NBTTagCompound nbt = super.getUpdatePacket().getNbtCompound();
 		nbt.setInteger("gravity", gravity);
+		
 
-		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, nbt);
-		return super.getDescriptionPacket();
+		SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, 0, nbt);
+		return packet;
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		super.onDataPacket(net, pkt);
 
-		gravity = pkt.func_148857_g().getInteger("gravity");
+		gravity = pkt.getNbtCompound().getInteger("gravity");
 
 	}
-
-	@Override
-	public boolean canUpdate() {
-		return true;
-	}
-
+	
 	private void updateText() {
 		if(worldObj.isRemote) {
-			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.xCoord, this.zCoord);
+			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object != null) {
 				moduleGrav.setText(String.format("Artifical Gravity: %.2f", object.getProperties().getGravitationalMultiplier()));
 				maxGravBuildSpeed.setText(String.format("Max Gravity Change Rate: %.1f", 7200D*object.getMaxRotationalAcceleration()));
@@ -91,13 +88,12 @@ public class TileStationGravityController extends TileEntity implements IModular
 	}
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
 
 		if(this.worldObj.provider instanceof WorldProviderSpace) {
 
 			if(!worldObj.isRemote) {
-				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.xCoord, this.zCoord);
+				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 				if(object != null) {
 					if(gravity == 0)
@@ -163,9 +159,10 @@ public class TileStationGravityController extends TileEntity implements IModular
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setShort("numRotations", (short)gravity);
+		return nbt;
 	}
 
 	@Override

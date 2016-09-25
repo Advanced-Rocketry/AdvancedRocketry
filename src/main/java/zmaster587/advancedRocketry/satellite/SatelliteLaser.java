@@ -1,14 +1,17 @@
 package zmaster587.advancedRocketry.satellite;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -70,14 +73,14 @@ public class SatelliteLaser extends SatelliteBase {
 		ticketLaser = ForgeChunkManager.requestTicket(AdvancedRocketry.instance, world, Type.NORMAL);
 		
 		if(ticketLaser != null) {
-			ForgeChunkManager.forceChunk(ticketLaser, new ChunkCoordIntPair(x >> 4, z >> 4));
+			ForgeChunkManager.forceChunk(ticketLaser, new ChunkPos(x >> 4, z >> 4));
 			
 			int y = 64;
 			
-			if(world.getChunkFromBlockCoords(x, z).isChunkLoaded) {
+			if(world.getChunkFromChunkCoords(x >> 4, z >> 4).isLoaded()) {
 				int current = 0;
 				for(int i = 0; i < 9; i++) {
-					current = world.getTopSolidOrLiquidBlock(x + (i % 3) - 1, z + (i / 3) - 1);
+					current = world.getTopSolidOrLiquidBlock(new BlockPos(x + (i % 3) - 1, 0xFF, z + (i / 3) - 1)).getY();
 					if(current > y)
 						y = current;
 				}
@@ -99,9 +102,11 @@ public class SatelliteLaser extends SatelliteBase {
 		for(int i = 0; i < 9; i++) {
 			int x = (int)laser.posX + (i % 3) - 1;
 			int z = (int)laser.posZ + (i / 3) - 1;
+			
+			BlockPos laserPos = new BlockPos(x, (int)laser.posY, z);
 
-			Block dropBlock = laser.worldObj.getBlock(x, (int)laser.posY, z);//Block.blocksList[laser.worldObj.getBlockId(x, (int)laser.posY, z)];
-
+			 IBlockState state = laser.worldObj.getBlockState(laserPos);//Block.blocksList[laser.worldObj.getBlockId(x, (int)laser.posY, z)];
+			 Block dropBlock;
 			//Post an event to the eventbus to make protections easier
 			LaserBreakEvent event = new LaserBreakEvent(x, (int)laser.posY, z);
 			MinecraftForge.EVENT_BUS.post(event);
@@ -111,15 +116,15 @@ public class SatelliteLaser extends SatelliteBase {
 
 			
 			
-			if(dropBlock == null || dropBlock.getMaterial().isReplaceable() ||  dropBlock.getMaterial().isLiquid()) {
-				laser.worldObj.setBlock(x, (int)laser.posY, z, AdvancedRocketryBlocks.blockLightSource, 0, 3);
+			if(state == Blocks.AIR.getDefaultState() || state.getMaterial().isReplaceable() ||  state.getMaterial().isLiquid()) {
+				laser.worldObj.setBlockState(laserPos, AdvancedRocketryBlocks.blockLightSource.getDefaultState());
 				continue;
 			}
 
-			ArrayList<ItemStack> items = dropBlock.getDrops(laser.worldObj, x, (int)laser.posY, z, laser.worldObj.getBlockMetadata(x, (int)laser.posY, z), 0);
+			List<ItemStack> items = state.getBlock().getDrops(laser.worldObj, laserPos, state, 0);
 			
 			//TODO: may need to fix in later builds
-			if(!dropBlock.getMaterial().isOpaque() || dropBlock == Blocks.bedrock)
+			if(!state.getMaterial().isOpaque() || state.getBlock() == Blocks.BEDROCK)
 				continue;
 
 
@@ -127,7 +132,7 @@ public class SatelliteLaser extends SatelliteBase {
 			//creator.performOperation();
 
 			if(items.isEmpty()) {
-				laser.worldObj.setBlock((int)laser.posX, (int)laser.posY, (int)laser.posZ, AdvancedRocketryBlocks.blockLightSource,0,3);
+				laser.worldObj.setBlockState(laserPos, AdvancedRocketryBlocks.blockLightSource.getDefaultState());
 				continue;
 			}
 
@@ -161,7 +166,7 @@ public class SatelliteLaser extends SatelliteBase {
 					return;
 				}
 			}
-			laser.worldObj.setBlock(x, (int)laser.posY, z, AdvancedRocketryBlocks.blockLightSource,0,3);
+			laser.worldObj.setBlockState(laserPos, AdvancedRocketryBlocks.blockLightSource.getDefaultState());
 			//laser.worldObj.setBlockToAir(x, (int)laser.posY, z);
 		}
 
@@ -180,18 +185,20 @@ public class SatelliteLaser extends SatelliteBase {
 			for(int i = 0; i < 9; i++){
 				int x = (int)laser.posX + (i % 3) - 1;
 				int z = (int)laser.posZ + (i / 3) - 1;
+				
+				BlockPos laserPos = new BlockPos(x, (int)laser.posY, z);
 
-				Block dropBlock = laser.worldObj.getBlock(x, (int)laser.posY, z); //Block.blocksList[laser.worldObj.getBlockId(x, (int)laser.posY, z)];
-
-				if(!dropBlock.getMaterial().isOpaque() || dropBlock == Blocks.bedrock)
+				IBlockState state = laser.worldObj.getBlockState(laserPos);
+				
+				if(!state.getMaterial().isOpaque() || state.getBlock() == Blocks.BEDROCK)
 					continue;
 
-				if(dropBlock == null ||  dropBlock.getMaterial().isLiquid()) {
-					laser.worldObj.setBlockToAir(x, (int)laser.posY, z);
+				if(state == Blocks.AIR.getDefaultState() ||  state.getMaterial().isLiquid()) {
+					laser.worldObj.setBlockToAir(laserPos);
 					continue;
 				}
 
-				if(dropBlock != null) {
+				if(state != Blocks.AIR.getDefaultState()) {
 					blockInWay = true;
 					break;
 				}
@@ -212,8 +219,7 @@ public class SatelliteLaser extends SatelliteBase {
 	}
 
 	@Override
-	public boolean performAction(EntityPlayer player, World world, int x,
-			int y, int z) {
+	public boolean performAction(EntityPlayer player, World world, BlockPos pos) {
 		performOperation();
 		return false;
 	}

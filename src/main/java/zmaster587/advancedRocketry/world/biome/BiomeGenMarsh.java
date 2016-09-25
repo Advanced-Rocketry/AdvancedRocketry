@@ -2,21 +2,20 @@ package zmaster587.advancedRocketry.world.biome;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraft.world.gen.feature.WorldGenShrub;
 
-public class BiomeGenMarsh extends BiomeGenBase {
+public class BiomeGenMarsh extends Biome {
 
 	public BiomeGenMarsh(int id, boolean b) {
-		super(id, b);
-
-		this.biomeName = "Marsh";
-		this.rootHeight=-0.2f;
-		this.heightVariation=0.0f;
+		super(new BiomeProperties("Marsh").setBaseHeight(-0.2f).setHeightVariation(0f));
+		
+		registerBiome(id, "Marsh", this);
+		
 		this.theBiomeDecorator.clayPerChunk = 10;
 		this.theBiomeDecorator.flowersPerChunk = 0;
 		this.theBiomeDecorator.mushroomsPerChunk = 0;
@@ -30,35 +29,27 @@ public class BiomeGenMarsh extends BiomeGenBase {
 	}
 
 	@Override
-	public void genTerrainBlocks(World world, Random rand,
-			Block[] block, byte[] abyte, int x,
-			int z, double noise) {
-		super.genTerrainBlocks(world, rand, block, abyte, x, z, noise);
+	public void genTerrainBlocks(World worldIn, Random rand,
+			ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal) {
+		super.genTerrainBlocks(worldIn, rand, chunkPrimerIn, x, z, noiseVal);
 
-		double d1 = plantNoise.func_151601_a((double)x * 0.25D, (double)z * 0.25D);
+		double d1 = GRASS_COLOR_NOISE.getValue((double)x * 0.25D, (double)z * 0.25D);
 
 		if (d1 > 0.3D)
 		{
-			int index = (Math.abs(x % 16) * 16 + Math.abs(z % 16)) * 256 + 62;
-			block[index] = Blocks.grass;
+			chunkPrimerIn.setBlockState(x % 16, 62, z % 16, Blocks.GRASS.getDefaultState());
 			for(int y = (int)(61); y > 1; y--) {
-				index = (Math.abs(x % 16) * 16 + Math.abs(z % 16)) * 256 + y;
-				if(block[index] == null || !block[index].isOpaqueCube())
-					block[index] = Blocks.dirt;
+				
+				if(!chunkPrimerIn.getBlockState(x % 16, y, z % 16).isOpaqueCube())
+					chunkPrimerIn.setBlockState(x % 16, y, z % 16, Blocks.GRASS.getDefaultState());
 				else
 					break;
 			}
 		}
 	}
 	
-    public WorldGenAbstractTree func_150567_a(Random p_150567_1_)
-    {
-        return new WorldGenShrub(3, 0);
-    }
-
-
-	public BiomeGenBase.TempCategory getTempCategory()
-	{
-		return BiomeGenBase.TempCategory.OCEAN;
+	@Override
+	public WorldGenAbstractTree genBigTreeChance(Random rand) {
+		return new WorldGenShrub(Blocks.LOG.getDefaultState(), Blocks.LEAVES.getDefaultState());
 	}
 }

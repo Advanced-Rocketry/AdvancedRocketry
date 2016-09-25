@@ -4,15 +4,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
-import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.AdjacencyGraph;
 
 public class AreaBlob {
 	//Graph containing the acutal area enclosed
-	protected AdjacencyGraph<BlockPosition> graph;
+	protected AdjacencyGraph<HashedBlockPosition> graph;
 	//Object to call back to when events happen, usually a tileentity
 	protected IBlobHandler blobHandler;
 	//Data stored by this blob
@@ -20,7 +21,7 @@ public class AreaBlob {
 
 	public AreaBlob(IBlobHandler blobHandler) {
 		this.blobHandler = blobHandler;
-		graph = new AdjacencyGraph<BlockPosition>();
+		graph = new AdjacencyGraph<HashedBlockPosition>();
 		data = null;
 	}
 
@@ -28,7 +29,7 @@ public class AreaBlob {
 		data = obj;
 	}
 	
-	public boolean isPositionAllowed(World world, BlockPosition pos) {
+	public boolean isPositionAllowed(World world, HashedBlockPosition pos) {
 		return true;
 	}
 	
@@ -47,7 +48,7 @@ public class AreaBlob {
 	 * @param z
 	 */
 	public void addBlock(int x, int y , int z) {
-		BlockPosition blockPos = new BlockPosition(x, y, z);
+		HashedBlockPosition blockPos = new HashedBlockPosition(x, y, z);
 		addBlock(blockPos);
 	}
 	
@@ -55,7 +56,7 @@ public class AreaBlob {
 	 * Adds a block to the graph
 	 * @param blockPos block to add
 	 */
-	public void addBlock(BlockPosition blockPos) {
+	public void addBlock(HashedBlockPosition blockPos) {
 		if(!graph.contains(blockPos) && blobHandler.canFormBlob()) {
 			graph.add(blockPos, getPositionsToAdd(blockPos));
 		}
@@ -64,7 +65,7 @@ public class AreaBlob {
 	/**
 	 * @return the BlockPosition of the root of the blob
 	 */
-	public BlockPosition getRootPosition() {
+	public HashedBlockPosition getRootPosition() {
 		return blobHandler.getRootPosition();
 	}
 	
@@ -73,12 +74,12 @@ public class AreaBlob {
 	 * @param blockPos block to find things adjacent to
 	 * @return list containing valid adjacent blocks
 	 */
-	protected HashSet<BlockPosition> getPositionsToAdd(BlockPosition blockPos) {
-		HashSet<BlockPosition> set = new HashSet<BlockPosition>();
+	protected HashSet<HashedBlockPosition> getPositionsToAdd(HashedBlockPosition blockPos) {
+		HashSet<HashedBlockPosition> set = new HashSet<HashedBlockPosition>();
 		
-		for(ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
+		for(EnumFacing direction : EnumFacing.values()) {
 			
-			BlockPosition offset = blockPos.getPositionAtOffset(direction.offsetX, direction.offsetY, direction.offsetZ);
+			HashedBlockPosition offset = blockPos.getPositionAtOffset(direction);
 			if(graph.contains(offset))
 				set.add(offset);
 		}
@@ -90,7 +91,7 @@ public class AreaBlob {
 	 * Given a block position returns whether or not it exists in the graph
 	 * @return true if the block exists in the blob
 	 */
-	public boolean contains(BlockPosition position) {
+	public boolean contains(HashedBlockPosition position) {
 		return graph.contains(position);
 	}
 	
@@ -102,7 +103,7 @@ public class AreaBlob {
 	 * @return true if the block exists in the blob
 	 */
 	public boolean contains(int x, int y, int z) {
-		return contains(new BlockPosition(x, y, z));
+		return contains(new HashedBlockPosition(x, y, z));
 	}
 
 	/**
@@ -111,7 +112,7 @@ public class AreaBlob {
 	 * @return true if this blob is allowed to overlap the otherBlob
 	 */
 	public boolean canBlobsOverlap(int x, int y, int z, AreaBlob otherBlob) {
-		return blobHandler.canBlobsOverlap(new BlockPosition(x, y, z), otherBlob);
+		return blobHandler.canBlobsOverlap(new HashedBlockPosition(x, y, z), otherBlob);
 	}
 
 	/**
@@ -120,13 +121,13 @@ public class AreaBlob {
 	 * @param y
 	 * @param z
 	 */
-	public void removeBlock(int x, int y, int z) {
-		BlockPosition blockPos = new BlockPosition(x, y, z);
+	public void removeBlock(HashedBlockPosition blockPos) {
+		//HashedBlockPosition blockPos = new HashedBlockPosition(x, y, z);
 		graph.remove(blockPos);
 		
-		for(ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
+		for(EnumFacing direction : EnumFacing.values()) {
 
-			BlockPosition newBlock = blockPos.getPositionAtOffset(direction.offsetX, direction.offsetY, direction.offsetZ);
+			HashedBlockPosition newBlock = blockPos.getPositionAtOffset(direction);
 			if(graph.contains(newBlock) && !graph.doesPathExist(newBlock, blobHandler.getRootPosition()))
 				graph.removeAllNodesConnectedTo(newBlock);
 		}
@@ -143,7 +144,7 @@ public class AreaBlob {
 	/**
 	 * @return a set containing all locations
 	 */
-	public Set<BlockPosition> getLocations() {
+	public Set<HashedBlockPosition> getLocations() {
 		return graph.getKeys();
 	}
 	

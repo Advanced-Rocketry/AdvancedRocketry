@@ -6,11 +6,13 @@ import java.util.Random;
 import java.util.Map.Entry;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.capability.FluidTankProperties;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 public class LiquidNetwork extends CableNetwork {
 
@@ -44,25 +46,25 @@ public class LiquidNetwork extends CableNetwork {
 		if(sinks.isEmpty() || sources.isEmpty())
 			return;
 
-		Iterator<Entry<TileEntity,ForgeDirection>> sinkItr = sinks.iterator();
+		Iterator<Entry<TileEntity,EnumFacing>> sinkItr = sinks.iterator();
 
 		//Go through all sinks, if one is not full attempt to fill it
 		
 		while(sinkItr.hasNext()) {
 
 			//Get tile and key
-			Entry<TileEntity,ForgeDirection> obj = (Entry<TileEntity, ForgeDirection>)sinkItr.next();
+			Entry<TileEntity,EnumFacing> obj = (Entry<TileEntity, EnumFacing>)sinkItr.next();
 			IFluidHandler fluidHandleSink = (IFluidHandler)obj.getKey();
-			ForgeDirection dir = obj.getValue();
+			EnumFacing dir = obj.getValue();
 
-			Iterator<Entry<TileEntity,ForgeDirection>> sourceItr = sources.iterator();
+			Iterator<Entry<TileEntity,EnumFacing>> sourceItr = sources.iterator();
 
 			Fluid fluid = null;
 
 			//If the sink already has fluid in it then lets only try to fill it with that particular fluid
-			for(FluidTankInfo info : fluidHandleSink.getTankInfo(dir)) {
-				if(info != null && info.fluid != null) {
-					fluid = info.fluid.getFluid();
+			for(IFluidTankProperties info : fluidHandleSink.getTankProperties()) {
+				if(info != null && info.getContents() != null) {
+					fluid = info.getContents().getFluid();
 					break;
 				}
 			}
@@ -71,12 +73,12 @@ public class LiquidNetwork extends CableNetwork {
 			if(fluid == null) {
 				out:
 					while(sourceItr.hasNext()) {
-						Entry<TileEntity,ForgeDirection> objSource = (Entry<TileEntity, ForgeDirection>)sourceItr.next();
+						Entry<TileEntity,EnumFacing> objSource = (Entry<TileEntity, EnumFacing>)sourceItr.next();
 						IFluidHandler fluidHandleSource = (IFluidHandler)objSource.getKey();
 
-						for(FluidTankInfo srcInfo : fluidHandleSource.getTankInfo(objSource.getValue())) {
-							if(srcInfo != null && srcInfo.fluid != null) {
-								fluid = srcInfo.fluid.getFluid();
+						for(IFluidTankProperties srcInfo : fluidHandleSource.getTankProperties()) {
+							if(srcInfo != null && srcInfo.getContents() != null) {
+								fluid = srcInfo.getContents().getFluid();
 								break out;
 							}
 						}
@@ -88,20 +90,20 @@ public class LiquidNetwork extends CableNetwork {
 			if(fluid == null)
 				break;
 
-			if(fluidHandleSink.canFill(dir, fluid)) {
+			if(fluidHandleSink.fill(new FluidStack(fluid, 1), false) > 0) {
 				//Distribute? and drain tanks
 				//Get the max the tank can take this tick then iterate through all sources until it's been filled
 				sourceItr = sources.iterator();
 
-				int maxFill = Math.min(fluidHandleSink.fill(dir, new FluidStack(fluid, amount), false), amount);
+				int maxFill = Math.min(fluidHandleSink.fill(new FluidStack(fluid, amount), false), amount);
 				int actualFill = 0;
 				while(sourceItr.hasNext()) {
-					Entry<TileEntity,ForgeDirection> objSource = (Entry<TileEntity, ForgeDirection>)sourceItr.next();
+					Entry<TileEntity,EnumFacing> objSource = (Entry<TileEntity, EnumFacing>)sourceItr.next();
 					IFluidHandler fluidHandleSource = (IFluidHandler)objSource.getKey();
 
-					if(fluidHandleSource.canDrain(objSource.getValue(), fluid)) {
+					if(fluidHandleSource.drain(maxFill, false) != null) {
 						int buffer;
-						FluidStack fluid2 =  fluidHandleSource.drain(objSource.getValue(), maxFill, true);
+						FluidStack fluid2 =  fluidHandleSource.drain(maxFill, true);
 						
 						//drain sometimes returns a null value even when canDrain returns true
 						if(fluid2 == null)
@@ -117,7 +119,7 @@ public class LiquidNetwork extends CableNetwork {
 						break;
 				}
 
-				fluidHandleSink.fill(dir, new FluidStack(fluid, actualFill), true);
+				fluidHandleSink.fill(new FluidStack(fluid, actualFill), true);
 			}
 		}
 	}

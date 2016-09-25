@@ -1,16 +1,17 @@
 package zmaster587.advancedRocketry.api.satellite;
 
-import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.ISatelliteIdItem;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
 
 public abstract class SatelliteBase {
 	
@@ -44,7 +45,7 @@ public abstract class SatelliteBase {
 	 * @param Player interacting with the satellite
 	 * @return whether the player has successfully interacted with the satellite
 	 */
-	public abstract boolean performAction(EntityPlayer player, World world,int x, int y, int z);
+	public abstract boolean performAction(EntityPlayer player, World world, BlockPos pos);
 	
 	/**
 	 * Note: this is not currently used
@@ -93,7 +94,7 @@ public abstract class SatelliteBase {
 	 * @param world World of which to assign to the satellite
 	 */
 	public void setDimensionId(World world) {
-		int newId = world.provider.dimensionId;
+		int newId = world.provider.getDimension();
 		if(dimId != -1) {
 			//TODO: handle dim change
 		}
@@ -160,7 +161,7 @@ public abstract class SatelliteBase {
 		return false;
 	}
 	
-	public void sendChanges(Container container, ICrafting crafter, int variableId, int localId) {
+	public void sendChanges(Container container, IContainerListener crafter, int variableId, int localId) {
 
 	}
 

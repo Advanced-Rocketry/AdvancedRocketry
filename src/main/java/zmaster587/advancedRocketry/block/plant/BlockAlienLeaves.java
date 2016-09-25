@@ -4,19 +4,20 @@ import java.util.List;
 import java.util.Random;
 
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockLeaves;
+import net.minecraft.block.BlockPlanks.EnumType;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockAlienLeaves extends BlockLeaves {
 
@@ -27,12 +28,6 @@ public class BlockAlienLeaves extends BlockLeaves {
 	
 	protected static final String[] names = {"blueLeaf"};
 	protected static final String[][] textures = new String[][] {{"leaves_oak"}, {"leaves_oak_opaque"}};
-	
-    @SideOnly(Side.CLIENT)
-    public int getRenderColor(int meta)
-    {
-    	return meta == 0 ? 0x55ffe1 : super.getRenderColor(meta);
-    }
     
     public int quantityDropped(Random p_149745_1_)
     {
@@ -40,21 +35,19 @@ public class BlockAlienLeaves extends BlockLeaves {
     }
     
     @Override
-    public int getFlammability(IBlockAccess world, int x, int y, int z,
-    		ForgeDirection face) {
-    	return 50;
-    }
-   
-    @Override
-    public int getFireSpreadSpeed(IBlockAccess world, int x, int y, int z,
-    		ForgeDirection face) {
+    public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face) {
     	return 50;
     }
     
     @Override
-    public boolean isOpaqueCube()
-    {
-        return false;
+    public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos,
+    		EnumFacing face) {
+    	return 50;
+    }
+    
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+    	return false;
     }
     
     protected void func_150124_c(World world, int x, int y, int z, int p_150124_5_, int p_150124_6_)
@@ -75,41 +68,28 @@ public class BlockAlienLeaves extends BlockLeaves {
     	list.add(new ItemStack(item, 1,0));
     }
     
-	@Override
-	public IIcon getIcon(int side, int meta) {
-		return field_150129_M[Minecraft.isFancyGraphicsEnabled() ? 0 : 1][0];
-	}
-
-    @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister p_149651_1_)
-    {
-        for (int i = 0; i < textures.length; ++i)
-        {
-            this.field_150129_M[i] = new IIcon[textures[i].length];
-
-            for (int j = 0; j < textures[i].length; ++j)
-            {
-                this.field_150129_M[i][j] = p_149651_1_.registerIcon(textures[i][j]);
-            }
-        }
-    }
 	
     public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_)
     {
         return Item.getItemFromBlock(AdvancedRocketryBlocks.blockAlienSapling);
     }
-	
-	@Override
-	public String[] func_150125_e() {
-		return names;
-	}
-	
+    
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean shouldSideBeRendered(IBlockAccess p_149646_1_, int p_149646_2_, int p_149646_3_, int p_149646_4_, int p_149646_5_)
-    {
-    	//return super.shouldSideBeRendered(p_149646_1_, p_149646_2_, p_149646_3_, p_149646_4_, p_149646_5_);
-    	return Minecraft.isFancyGraphicsEnabled() ? true : super.shouldSideBeRendered(p_149646_1_, p_149646_2_, p_149646_3_, p_149646_4_, p_149646_5_);// !this.field_150121_P;
+    public boolean shouldSideBeRendered(IBlockState blockState,
+    		IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+    	return Minecraft.isFancyGraphicsEnabled() ? true : super.shouldSideBeRendered(blockState, blockAccess, pos, side);
     }
+
+	@Override
+	public List<ItemStack> onSheared(ItemStack item, IBlockAccess world,
+			BlockPos pos, int fortune) {
+		return null;
+	}
+
+	@Override
+	public EnumType getWoodType(int meta) {
+		return EnumType.OAK;
+	}
 
 }

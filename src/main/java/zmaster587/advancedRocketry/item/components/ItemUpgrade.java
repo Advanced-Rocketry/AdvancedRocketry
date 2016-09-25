@@ -3,18 +3,19 @@ package zmaster587.advancedRocketry.item.components;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.items.ItemIngredient;
@@ -91,19 +92,17 @@ public class ItemUpgrade extends ItemIngredient implements IArmorComponent {
 	}
 
 	@Override
-	public boolean isAllowedInSlot(ItemStack componentStack, int targetSlot) {
+	public boolean isAllowedInSlot(ItemStack componentStack, EntityEquipmentSlot targetSlot) {
 		if(componentStack.getItemDamage() == legUpgradeDamage)
-			return targetSlot == 2;
+			return targetSlot == EntityEquipmentSlot.LEGS;
 		else if(componentStack.getItemDamage() == bootsUpgradeDamage)
-			return targetSlot == 3;
-		return targetSlot == 0;
+			return targetSlot == EntityEquipmentSlot.FEET;
+		return targetSlot == EntityEquipmentSlot.HEAD;
 	}
 
 	@Override
 	public ResourceIcon getComponentIcon(ItemStack armorStack) {
-		if(icon[armorStack.getItemDamage()] == null)
-			this.icon[armorStack.getItemDamage()] = new ResourceIcon(TextureMap.locationItemsTexture, this.getIcon(armorStack, 0));
-		return this.icon[armorStack.getItemDamage()];
+		return null;
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import zmaster587.libVulpes.util.IconResource;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 
@@ -41,7 +41,7 @@ public class ModuleSatellite extends ModuleSlotArray {
 	}
 
 	@Override
-	public void sendChanges(Container container, ICrafting crafter,
+	public void sendChanges(Container container, IContainerListener crafter,
 			int variableId, int localId) {
 		if(satellite != null)
 			satellite.sendChanges(container, crafter, variableId, localId);

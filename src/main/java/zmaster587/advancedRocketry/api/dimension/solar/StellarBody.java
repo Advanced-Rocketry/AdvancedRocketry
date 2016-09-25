@@ -6,7 +6,7 @@ import java.util.List;
 
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 public class StellarBody {
 

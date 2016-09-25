@@ -1,7 +1,5 @@
 package zmaster587.advancedRocketry.entity.fx;
 
-import java.util.ArrayList;
-
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.libVulpes.util.Vector3F;

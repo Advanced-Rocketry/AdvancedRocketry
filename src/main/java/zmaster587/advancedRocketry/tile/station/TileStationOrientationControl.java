@@ -5,18 +5,17 @@ import io.netty.buffer.ByteBuf;
 import java.util.LinkedList;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
+import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
-import zmaster587.libVulpes.inventory.modules.IButtonInventory;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
-import zmaster587.libVulpes.inventory.modules.IProgressBar;
 import zmaster587.libVulpes.inventory.modules.ISliderBar;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleSlider;
@@ -25,7 +24,7 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
 
-public class TileStationOrientationControl extends TileEntity implements IModularInventory, INetworkMachine, ISliderBar {
+public class TileStationOrientationControl extends TileEntity implements ITickable, IModularInventory, INetworkMachine, ISliderBar {
 
 	int numRotationsPerHour;
 	int progress;
@@ -54,14 +53,9 @@ public class TileStationOrientationControl extends TileEntity implements IModula
 		return modules;
 	}
 
-	@Override
-	public boolean canUpdate() {
-		return true;
-	}
-
 	private void updateText() {
 		if(worldObj.isRemote) {
-			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.xCoord, this.zCoord);
+			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object != null) {
 				moduleAngularVelocity.setText(String.format("Angular Velocity: %.1f", 7200D*object.getDeltaRotation()));
 				maxAngularAcceleration.setText(String.format("Maximum Angular Acceleration: %.1f", 7200D*object.getMaxRotationalAcceleration()));
@@ -74,12 +68,11 @@ public class TileStationOrientationControl extends TileEntity implements IModula
 	}
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
 
 		if(this.worldObj.provider instanceof WorldProviderSpace) {
 			if(!worldObj.isRemote) {
-				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.xCoord, this.zCoord);
+				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 				if(object != null) {
 					double targetAngularVelocity = numRotationsPerHour/7200D;
@@ -141,9 +134,10 @@ public class TileStationOrientationControl extends TileEntity implements IModula
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setShort("numRotations", (short)numRotationsPerHour);
+		return nbt;
 	}
 
 	@Override

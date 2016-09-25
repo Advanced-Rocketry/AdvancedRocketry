@@ -5,26 +5,26 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
@@ -72,7 +72,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 		int speedUpgrades = 1;
 		boolean allowsHover = false;
 
-		ItemStack helm = player.getEquipmentInSlot(4);
+		ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 		if(helm != null && helm.getItem() instanceof IModularArmor) {
 			List<ItemStack> helmInv = ((IModularArmor)helm.getItem()).getComponents(helm);
 			for(ItemStack stack : helmInv) {
@@ -168,7 +168,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 
 			if(fuelTank != null && fuelTank.getItem() instanceof IFluidContainerItem) {
 				FluidStack fluid = ((IFluidContainerItem)fuelTank.getItem()).drain(fuelTank, 1, false);
-				if(fluid != null && fluid.getFluidID() == FluidRegistry.getFluidID(AdvancedRocketryFluids.fluidHydrogen)) {
+				if(fluid != null && fluid.getFluid() == AdvancedRocketryFluids.fluidHydrogen) {
 					((IFluidContainerItem)fuelTank.getItem()).drain(fuelTank, 1, true);
 					hasFuel = true;
 					break;
@@ -244,7 +244,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 		NBTTagCompound nbt;
 		int mode = 0;
 
-		ItemStack helm = player.getEquipmentInSlot(4);
+		ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 		if(helm != null && helm.getItem() instanceof IModularArmor) {
 			List<ItemStack> helmInv = ((IModularArmor)helm.getItem()).getComponents(helm);
 			for(ItemStack helmStack : helmInv) 
@@ -277,8 +277,8 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 	}
 
 	@Override
-	public boolean isAllowedInSlot(ItemStack stack, int slot) {
-		return slot == 1;
+	public boolean isAllowedInSlot(ItemStack stack, EntityEquipmentSlot slot) {
+		return slot == EntityEquipmentSlot.CHEST;
 	}
 
 
@@ -295,7 +295,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 				FluidStack fluid = ((IFluidContainerItem)currentStack.getItem()).getFluid(currentStack);
 				if(fluid == null)
 					maxAmt += ((IFluidContainerItem)currentStack.getItem()).getCapacity(currentStack);
-				else if(fluid.getFluidID() == AdvancedRocketryFluids.fluidHydrogen.getID()) {
+				else if(fluid.getFluid() == AdvancedRocketryFluids.fluidHydrogen) {
 					maxAmt += ((IFluidContainerItem)currentStack.getItem()).getCapacity(currentStack);
 					amt += fluid.amount;
 				}
@@ -308,8 +308,8 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 			Minecraft.getMinecraft().renderEngine.bindTexture(background);
 			GL11.glColor3f(1f, 1f, 1f);
 			int width = 83;
-			int screenX = event.resolution.getScaledWidth()/2 + 8;
-			int screenY = event.resolution.getScaledHeight() - 74;
+			int screenX = event.getResolution().getScaledWidth()/2 + 8;
+			int screenY = event.getResolution().getScaledHeight() - 74;
 
 			//Draw BG
 			gui.drawTexturedModalRect(screenX, screenY, 23, 34, width, 17);

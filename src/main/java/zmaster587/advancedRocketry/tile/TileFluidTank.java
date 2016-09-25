@@ -3,9 +3,9 @@ package zmaster587.advancedRocketry.tile;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.util.IAdjBlockUpdate;
@@ -29,25 +29,24 @@ public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
 	private void checkForUpdate() {
 		if(fluidChanged && worldObj instanceof WorldDummy || worldObj.getTotalWorldTime() - lastUpdateTime > MAX_UPDATE) {
 			this.markDirty();
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			lastUpdateTime = worldObj.getTotalWorldTime();
 			fluidChanged = false;
 		}
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-		IFluidHandler handler = this.getFluidTankInDirection(ForgeDirection.DOWN);
+	public int fill(FluidStack resource, boolean doFill) {
+		IFluidHandler handler = this.getFluidTankInDirection(EnumFacing.DOWN);
 		int amt = 0;
 
 		if(handler != null) {
-			amt = handler.fill(from, resource, doFill);
+			amt = handler.fill(resource, doFill);
 		}
 		//Copy to avoid modifiying the passed one
 		FluidStack resource2 = resource.copy();
 		resource2.amount -= amt;
 		if(resource2.amount > 0)
-			amt += super.fill(from, resource2, doFill);
+			amt += super.fill(resource2, doFill);
 		
 		if(amt > 0 && doFill)
 			fluidChanged = true;	
@@ -58,18 +57,18 @@ public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
-		IFluidHandler handler = this.getFluidTankInDirection(ForgeDirection.UP);
+	public FluidStack drain(int maxDrain, boolean doDrain) {
+		IFluidHandler handler = this.getFluidTankInDirection(EnumFacing.UP);
 
 		FluidStack stack = null;
-		if(handler != null && handler.getTankInfo(ForgeDirection.UNKNOWN)[0].fluid != null && 
-				fluidTank.getFluid() != null && fluidTank.getFluid().getFluidID() ==
-				handler.getTankInfo(ForgeDirection.UNKNOWN)[0].fluid.getFluidID()) {
+		if(handler != null && handler.getTankProperties()[0].getContents() != null && 
+				fluidTank.getFluid() != null && fluidTank.getFluid().getFluid() ==
+				handler.getTankProperties()[0].getContents().getFluid()) {
 
-			stack = handler.drain(from, maxDrain, doDrain);
+			stack = handler.drain(maxDrain, doDrain);
 		}
 
-		FluidStack stack2 = super.drain(from, maxDrain - (stack != null ? stack.amount : 0), doDrain);
+		FluidStack stack2 = super.drain(maxDrain - (stack != null ? stack.amount : 0), doDrain);
 
 		if(stack != null && stack2 != null)
 			stack2.amount += stack.amount;
@@ -85,16 +84,16 @@ public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource,
+	public FluidStack drain(FluidStack resource,
 			boolean doDrain) {
-		if(this.fluidTank.getFluid() == null || resource.getFluidID() != this.fluidTank.getFluid().getFluidID())
+		if(this.fluidTank.getFluid() == null || resource.getFluid() != this.fluidTank.getFluid().getFluid())
 			return null;
 
-		return this.drain(from, resource.amount, doDrain);
+		return this.drain(resource.amount, doDrain);
 	}
 
-	public TileFluidTank getFluidTankInDirection(ForgeDirection direction) {
-		TileEntity tile = worldObj.getTileEntity(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ);
+	public TileFluidTank getFluidTankInDirection(EnumFacing direction) {
+		TileEntity tile = worldObj.getTileEntity(pos.offset(direction));
 
 		if(tile instanceof TileFluidTank) {
 			return ((TileFluidTank) tile);
@@ -103,9 +102,10 @@ public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
 	}
 
 	@Override
-	protected void writeToNBTHelper(NBTTagCompound nbtTagCompound) {
+	protected NBTTagCompound writeToNBTHelper(NBTTagCompound nbtTagCompound) {
 		super.writeToNBTHelper(nbtTagCompound);
 		fluidTank.writeToNBT(nbtTagCompound);
+		return nbtTagCompound;
 	}
 
 	@Override
@@ -119,11 +119,11 @@ public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
 		boolean bucketUsed = super.useBucket(slot, stack);
 
 		if(bucketUsed) {
-			IFluidHandler handler = getFluidTankInDirection(ForgeDirection.DOWN);
+			IFluidHandler handler = getFluidTankInDirection(EnumFacing.DOWN);
 			if(handler != null) {
-				FluidStack othertank = handler.getTankInfo(ForgeDirection.UNKNOWN)[0].fluid;
-				if(othertank == null || (othertank.amount < handler.getTankInfo(ForgeDirection.UNKNOWN)[0].capacity))
-					fluidTank.drain(handler.fill(ForgeDirection.UNKNOWN, fluidTank.getFluid(), true),true);
+				FluidStack othertank = handler.getTankProperties()[0].getContents();
+				if(othertank == null || (othertank.amount < handler.getTankProperties()[0].getCapacity()))
+					fluidTank.drain(handler.fill(fluidTank.getFluid(), true),true);
 			}
 		}
 
@@ -132,19 +132,18 @@ public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
 
 	@Override
 	public void onAdjacentBlockUpdated() {
-		TileFluidTank tank = getFluidTankInDirection(ForgeDirection.UP);
+		TileFluidTank tank = getFluidTankInDirection(EnumFacing.UP);
 
-		if(tank != null && tank.getTankInfo(ForgeDirection.UNKNOWN)[0].fluid != null) {
+		if(tank != null && tank.getTankProperties()[0].getContents() != null) {
 			if(fluidTank.getFluid() == null) {
 				fluidTank.fill(tank.fluidTank.drain(fluidTank.getCapacity(), true), true);
 			}
-			else if(tank.getTankInfo(ForgeDirection.UNKNOWN)[0].fluid.getFluidID() == fluidTank.getFluid().getFluidID()) {
-				fluidTank.fill(tank.drain(ForgeDirection.UNKNOWN, fluidTank.getCapacity() - fluidTank.getFluidAmount(), false), true);
+			else if(tank.getTankProperties()[0].getContents().getFluid() == fluidTank.getFluid().getFluid()) {
+				fluidTank.fill(tank.drain(fluidTank.getCapacity() - fluidTank.getFluidAmount(), false), true);
 				tank.fluidTank.drain(fluidTank.getCapacity() - fluidTank.getFluidAmount(), true);
 			}
 
 			this.markDirty();
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 }

@@ -5,25 +5,21 @@ import java.util.List;
 
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
-public class BiomeGenSpace extends BiomeGenBase {
+public class BiomeGenSpace extends Biome {
 	public BiomeGenSpace(int biomeId, boolean register) {
-		super(biomeId, register);
+		super(new BiomeProperties("Space").setRainDisabled().setBaseHeight(-2f).setHeightVariation(0f).setTemperature(1f));
+		
+
+		registerBiome(biomeId, "Space", this);
 		
 		//cold and dry
-		enableRain = false;
-		enableSnow = false;
-		rootHeight=-2f;
-		heightVariation=0.00f;
-		rainfall = 0f;
-		temperature = 1.0f;
 		this.theBiomeDecorator.generateLakes=false;
 		this.theBiomeDecorator.flowersPerChunk=0;
 		this.theBiomeDecorator.grassPerChunk=0;
 		this.theBiomeDecorator.treesPerChunk=0;
-		this.fillerBlock = this.topBlock = Blocks.air;
-		this.biomeName="Space";
+		this.fillerBlock = this.topBlock = Blocks.AIR.getDefaultState();
 	}
 	
 	@Override

@@ -1,0 +1,24 @@
+{
+
+    "defaults": {
+        "textures": {
+            "#None": "advancedrocketry:/models/cuttingMachine"
+        },
+        "model": "advancedrocketry:models/sawBlade.obj"
+    },
+    "variants": {
+        "facing=north": { "model": "advancedrocketry:models/sawBlade.obj" },
+        "facing=south": { "model": "advancedrocketry:models/sawBlade.obj", "y": 180 },
+        "facing=west":  { "model": "advancedrocketry:models/sawBlade.obj", "y": 270 },
+        "facing=east":  { "model": "advancedrocketry:models/sawBlade.obj", "y": 90 },
+        "facing=up":  { "model": "advancedrocketry:models/sawBlade.obj", "x": 90 },
+        "facing=down":  { "model": "advancedrocketry:models/sawBlade.obj", "x": -90 },
+        "inventory": {
+            "model": "advancedrocketry:models/sawBlade.obj",
+            "transform": {
+                    "translation": [ 0, 0, 0],
+                    "scale": 1.0
+                }
+        }
+    }
+}

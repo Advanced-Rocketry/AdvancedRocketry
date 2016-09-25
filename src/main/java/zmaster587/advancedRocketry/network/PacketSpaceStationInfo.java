@@ -14,7 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 public class PacketSpaceStationInfo extends BasePacket {
 	SpaceObject spaceObject;
@@ -40,13 +40,8 @@ public class PacketSpaceStationInfo extends BasePacket {
 				spaceObject.getProperties().writeToNBT(nbt);
 				PacketBuffer packetBuffer = new PacketBuffer(out);
 				out.writeBoolean(false);
-				//TODO: error handling
-				try {
-					packetBuffer.writeStringToBuffer(SpaceObjectManager.getSpaceManager().getItentifierFromClass(spaceObject.getClass()));
-					packetBuffer.writeNBTTagCompoundToBuffer(nbt);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				packetBuffer.writeString(SpaceObjectManager.getSpaceManager().getItentifierFromClass(spaceObject.getClass()));
+				packetBuffer.writeNBTTagCompoundToBuffer(nbt);
 				
 				out.writeInt(spaceObject.getForwardDirection().ordinal());
 				
@@ -101,13 +96,13 @@ public class PacketSpaceStationInfo extends BasePacket {
 			if( iObject == null ) {
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getNewSpaceObjectFromIdentifier(clazzId);
 				object.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
-				((SpaceObject)object).setForwardDirection(ForgeDirection.values()[direction]);
+				((SpaceObject)object).setForwardDirection(EnumFacing.values()[direction]);
 				
 				SpaceObjectManager.getSpaceManager().registerSpaceObjectClient(object, object.getOrbitingPlanetId(), stationNumber);
 			}
 			else {
 				iObject.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
-				((SpaceObject)iObject).setForwardDirection(ForgeDirection.values()[direction]);
+				((SpaceObject)iObject).setForwardDirection(EnumFacing.values()[direction]);
 			}
 		}
 	}

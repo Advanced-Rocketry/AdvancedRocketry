@@ -7,13 +7,13 @@ import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
@@ -71,14 +71,13 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
-		container = new ModulePlanetSelector(worldObj.provider.dimensionId, TextureResources.starryBG, this);
+		container = new ModulePlanetSelector(worldObj.provider.getDimension(), TextureResources.starryBG, this);
 		container.setOffset(1000, 1000);
 		modules.add(container);
 
 		//Transfer discovery values
 		if(!worldObj.isRemote) {
 			markDirty();
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 
 		return modules;
@@ -151,19 +150,19 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 	}
 
 	@Override
-	public Packet getDescriptionPacket() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound comp = new NBTTagCompound();
 
 		writeToNBTHelper(comp);
 		writeAdditionalNBT(comp);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, comp);
+		return new SPacketUpdateTileEntity(pos, 0, comp);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 
 		super.onDataPacket(net, pkt);
-		readAdditionalNBT(pkt.func_148857_g());
+		readAdditionalNBT(pkt.getNbtCompound());
 	}
 
 	public void writeAdditionalNBT(NBTTagCompound nbt) {
@@ -213,7 +212,6 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 
 			//Update known planets
 			markDirty();
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 

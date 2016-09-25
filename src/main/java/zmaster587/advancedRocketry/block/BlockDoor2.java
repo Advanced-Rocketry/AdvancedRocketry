@@ -1,12 +1,17 @@
 package zmaster587.advancedRocketry.block;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 
 import java.util.Random;
@@ -17,22 +22,24 @@ public class BlockDoor2 extends BlockDoor {
 		super(p_i45402_1_);
 	}
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public Item getItem(World world, int x, int y, int z) {
-    	//if(world.getBlock(x, y, z) == AdvancedRocketryBlocks.blockAirLock)
-    	return AdvancedRocketryItems.itemSmallAirlockDoor;
-    }
+	@SideOnly(Side.CLIENT)
+	@Override
+	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
+		return new ItemStack(AdvancedRocketryItems.itemSmallAirlockDoor);
+	}
 
-    @Override
-    public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_)
-    {
-        return (p_149650_1_ & 8) != 0 ? null : AdvancedRocketryItems.itemSmallAirlockDoor;
-    }
-    
-    @Override
-    public boolean onBlockActivated(World p_149727_1_, int p_149727_2_, int p_149727_3_, int p_149727_4_, EntityPlayer p_149727_5_, int p_149727_6_, float p_149727_7_, float p_149727_8_, float p_149727_9_)
-    {
-    	return false;
-    }
+
+	@Override
+	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+		// TODO Auto-generated method stub
+		return (state.getValue(HALF) == EnumDoorHalf.LOWER) ? null : AdvancedRocketryItems.itemSmallAirlockDoor;
+	}
+
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos,
+			IBlockState state, EntityPlayer playerIn, EnumHand hand,
+			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
+			float hitZ) {
+		return false;
+	}
 }

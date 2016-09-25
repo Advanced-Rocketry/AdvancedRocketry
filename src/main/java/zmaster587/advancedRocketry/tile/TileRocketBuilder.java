@@ -11,9 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.Configuration;
@@ -26,7 +23,6 @@ import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
 import zmaster587.advancedRocketry.api.StatsRocket;
 import zmaster587.advancedRocketry.block.BlockSeat;
 import zmaster587.advancedRocketry.entity.EntityRocket;
-import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.block.RotatableBlock;
@@ -50,29 +46,28 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.TileEntityRFConsumer;
-import zmaster587.libVulpes.tile.TilePointer;
-import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.IconResource;
 import zmaster587.libVulpes.util.ZUtils;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagIntArray;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonInventory, INetworkMachine, IDataSync, IModularInventory, IProgressBar, ILinkableTile {
 
@@ -85,8 +80,8 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	//private final int ENERGY = 100;
 
 	protected static final ResourceLocation backdrop =  new ResourceLocation("advancedrocketry","textures/gui/rocketBuilder.png");
-	private static final ProgressBarImage horizontalProgressBar = new ProgressBarImage(89, 9, 81, 17, 176, 0, 80, 15, 0, 2, ForgeDirection.EAST, backdrop);
-	protected static final ProgressBarImage verticalProgressBar = new ProgressBarImage(76, 93, 8, 52, 176, 15, 2, 38, 3, 2, ForgeDirection.UP, backdrop);
+	private static final ProgressBarImage horizontalProgressBar = new ProgressBarImage(89, 9, 81, 17, 176, 0, 80, 15, 0, 2, EnumFacing.EAST, backdrop);
+	protected static final ProgressBarImage verticalProgressBar = new ProgressBarImage(76, 93, 8, 52, 176, 15, 2, 38, 3, 2, EnumFacing.UP, backdrop);
 
 	private ModuleText thrustText, weightText, fuelText, accelerationText;
 	protected ModuleText errorText;
@@ -100,7 +95,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	protected AxisAlignedBB bbCache;
 	protected ErrorCodes status;
 
-	private List<BlockPosition> blockPos;
+	private List<HashedBlockPosition> blockPos;
 
 	protected static enum ErrorCodes {
 		SUCCESS("Clear for liftoff!"),
@@ -128,7 +123,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	public TileRocketBuilder() {
 		super(100000);
 
-		blockPos = new LinkedList<BlockPosition>();
+		blockPos = new LinkedList<HashedBlockPosition>();
 
 		status = ErrorCodes.UNSCANNED;
 		stats = new StatsRocket();
@@ -141,8 +136,8 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	public void invalidate() {
 		super.invalidate();
 		MinecraftForge.EVENT_BUS.unregister(this);
-		for(BlockPosition pos : blockPos) {
-			TileEntity tile = worldObj.getTileEntity(pos.x, pos.y, pos.z);
+		for(HashedBlockPosition pos : blockPos) {
+			TileEntity tile = worldObj.getTileEntity(pos.getBlockPos());
 
 			if(tile instanceof IMultiblock)
 				((IMultiblock)tile).setIncomplete();
@@ -182,7 +177,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	public float getNeededThrust() {return getWeight();}
 
-	public float getNeededFuel() { return getAcceleration() > 0 ? stats.getFuelRate(FuelType.LIQUID)*MathHelper.sqrt_float((2*(Configuration.orbit-this.yCoord))/getAcceleration()) : 0; }
+	public float getNeededFuel() { return getAcceleration() > 0 ? stats.getFuelRate(FuelType.LIQUID)*MathHelper.sqrt_float((2*(Configuration.orbit-this.getPos().getY()))/getAcceleration()) : 0; }
 
 	public int getFuel() {return (int) (stats.getFuelCapacity(FuelType.LIQUID)*Configuration.fuelCapacityMultiplier);}
 
@@ -195,18 +190,14 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	}
 
 	@Override
-	public boolean canUpdate() {
-		return true;
-	}
-
-	@Override
 	public boolean shouldRenderInPass(int pass) {
 		return pass == 1;
 	}
 
 	@Override
 	public int getPowerPerOperation() {
-		return ENERGYFOROP;
+		//DEBUG
+		return 0;//ENERGYFOROP;
 	}
 
 	@Override
@@ -216,7 +207,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 				if(building)
 					assembleRocket();
 				else
-					scanRocket(worldObj, xCoord, yCoord, zCoord, bbCache);
+					scanRocket(worldObj, pos, bbCache);
 			}
 			totalProgress = -1;
 			progress = 0;
@@ -232,7 +223,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 		if(!this.worldObj.isRemote && this.energy.getEnergyStored() < getPowerPerOperation() && progress - prevProgress > 0) {
 			prevProgress = progress;
-			PacketHandler.sendToNearby(new PacketMachine(this, (byte)2), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 32);
+			PacketHandler.sendToNearby(new PacketMachine(this, (byte)2), this.worldObj.provider.getDimension(), this.getPos(), 32);
 		}
 
 	}
@@ -252,7 +243,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	public boolean isScanning() { return totalProgress > 0; }
 
-	public void scanRocket(World world, int x, int y, int z, AxisAlignedBB bb) {
+	public void scanRocket(World world, BlockPos pos2, AxisAlignedBB bb) {
 
 		int thrust = 0;
 		int fuelUse = 0;
@@ -273,9 +264,11 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			for(int zCurr = (int)bb.minZ; zCurr <= bb.maxZ; zCurr++) {
 				for(int yCurr = (int)bb.minY; yCurr<= bb.maxY; yCurr++) {
 
-					Block block = world.getBlock(xCurr, yCurr, zCurr);
+					BlockPos currBlockPos = new BlockPos(xCurr, yCurr, zCurr);
+					IBlockState state = world.getBlockState(currBlockPos);
+					Block block = state.getBlock();
 
-					if(!block.isAir(world, xCurr, yCurr, zCurr)) {
+					if(!worldObj.isAirBlock(currBlockPos)) {
 						if(xCurr < actualMinX)
 							actualMinX = xCurr;
 						if(yCurr < actualMinY)
@@ -301,18 +294,22 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 				for(int xCurr = (int) bb.minX; xCurr <= bb.maxX; xCurr++) {
 					for(int zCurr = (int) bb.minZ; zCurr <= bb.maxZ; zCurr++) {
 
-						if(!world.isAirBlock(xCurr, yCurr, zCurr)) {
-							Block block = world.getBlock(xCurr, yCurr, zCurr);
+						BlockPos currBlockPos = new BlockPos(xCurr, yCurr, zCurr);
+
+						if(!world.isAirBlock(currBlockPos)) {
+							IBlockState state = world.getBlockState(currBlockPos);
+							Block block = state.getBlock();
+
 							numBlocks++;
 							//If rocketEngine increaseThrust
 							if(block instanceof IRocketEngine) {
-								thrust += ((IRocketEngine)block).getThrust(world, xCurr, yCurr, z);
+								thrust += ((IRocketEngine)block).getThrust(world, currBlockPos);
 								fuelUse += ((IRocketEngine)block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
 								stats.addEngineLocation(xCurr - actualMinX - ((actualMaxX - actualMinX)/2f), yCurr - actualMinY, zCurr - actualMinZ - ((actualMaxZ - actualMinZ)/2f));
 							}
 
 							if(block instanceof IFuelTank) {
-								fuel+= ((IFuelTank)block).getMaxFill(world, xCurr, yCurr, zCurr, world.getBlockMetadata(xCurr, yCurr, zCurr));
+								fuel+= ((IFuelTank)block).getMaxFill(world, currBlockPos, state);
 							}
 
 							if(block instanceof BlockSeat) {
@@ -324,10 +321,10 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 							}
 
 							if(block instanceof IMiningDrill) {
-								drillPower += ((IMiningDrill)block).getMiningSpeed(world, xCurr, yCurr, zCurr);
+								drillPower += ((IMiningDrill)block).getMiningSpeed(world, currBlockPos);
 							}
 
-							TileEntity tile= world.getTileEntity(xCurr, yCurr, zCurr);
+							TileEntity tile= world.getTileEntity(currBlockPos);
 							if(tile instanceof TileSatelliteHatch)
 								hasSatellite = true;
 							if(tile instanceof TileGuidanceComputer)
@@ -363,25 +360,25 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		if(bbCache == null || worldObj.isRemote)
 			return;
 		//Need to scan again b/c something may have changed
-		scanRocket(worldObj, xCoord, yCoord, zCoord, bbCache);
+		scanRocket(worldObj, pos, bbCache);
 
 		if(status != ErrorCodes.SUCCESS)
 			return;
 
 		StorageChunk storageChunk = StorageChunk.cutWorldBB(worldObj, bbCache);
 
-		EntityRocket rocket = new EntityRocket(worldObj, storageChunk, stats.copy(),bbCache.minX + (bbCache.maxX-bbCache.minX)/2f +.5f, yCoord , bbCache.minZ + (bbCache.maxZ-bbCache.minZ)/2f +.5f);
+		EntityRocket rocket = new EntityRocket(worldObj, storageChunk, stats.copy(),bbCache.minX + (bbCache.maxX-bbCache.minX)/2f +.5f, this.getPos().getY() , bbCache.minZ + (bbCache.maxZ-bbCache.minZ)/2f +.5f);
 
 		worldObj.spawnEntityInWorld(rocket);
 		NBTTagCompound nbtdata = new NBTTagCompound();
 
 		rocket.writeToNBT(nbtdata);
-		PacketHandler.sendToNearby(new PacketEntity((INetworkEntity)rocket, (byte)0, nbtdata), rocket.worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 64);
+		PacketHandler.sendToNearby(new PacketEntity((INetworkEntity)rocket, (byte)0, nbtdata), rocket.worldObj.provider.getDimension(), this.pos, 64);
 
 		stats.reset();
 		this.status = ErrorCodes.UNSCANNED;
 		this.markDirty();
-		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 
 		for(IInfrastructure infrastructure : getConnectedInfrastructure()) {
 			rocket.linkInfrastructure(infrastructure);
@@ -396,51 +393,53 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	 * @param z coord to evaluate from
 	 * @return AxisAlignedBB bounds of structure if valid  otherwise null
 	 */
-	public AxisAlignedBB getRocketPadBounds(World world,int x, int y, int z) {
-		ForgeDirection direction = RotatableBlock.getFront(world.getBlockMetadata(x, y, z)).getOpposite();
+	public AxisAlignedBB getRocketPadBounds(World world, BlockPos pos) {
+		EnumFacing direction = RotatableBlock.getFront(world.getBlockState(pos)).getOpposite();
 		int xMin, zMin, xMax, zMax;
-		int yCurrent = y -1;
-		int xCurrent = x + direction.offsetX;
-		int zCurrent = z + direction.offsetZ;
+		int yCurrent = pos.getY() -1;
+		int xCurrent = pos.getX() + direction.getFrontOffsetX();
+		int zCurrent = pos.getZ() + direction.getFrontOffsetZ();
 		xMax = xMin = xCurrent;
 		zMax = zMin = zCurrent;
 		int xSize, zSize;
 
+		BlockPos currPos = new BlockPos(xCurrent, yCurrent, zCurrent);
+		
 		if(world.isRemote)
 			return null;
 
 		//Get min and maximum Z/X bounds
-		if(direction.offsetX != 0) {
-			xSize = ZUtils.getContinuousBlockLength(world, direction, xCurrent, yCurrent, zCurrent, MAX_SIZE, AdvancedRocketryBlocks.blockLaunchpad);
-			zMin = ZUtils.getContinuousBlockLength(world, ForgeDirection.NORTH, xCurrent, yCurrent, zCurrent, MAX_SIZE, AdvancedRocketryBlocks.blockLaunchpad);
-			zMax = ZUtils.getContinuousBlockLength(world, ForgeDirection.SOUTH, xCurrent, yCurrent, zCurrent+1, MAX_SIZE - zMin, AdvancedRocketryBlocks.blockLaunchpad);
+		if(direction.getFrontOffsetX() != 0) {
+			xSize = ZUtils.getContinuousBlockLength(world, direction, currPos, MAX_SIZE, AdvancedRocketryBlocks.blockLaunchpad);
+			zMin = ZUtils.getContinuousBlockLength(world, EnumFacing.NORTH, currPos, MAX_SIZE, AdvancedRocketryBlocks.blockLaunchpad);
+			zMax = ZUtils.getContinuousBlockLength(world, EnumFacing.SOUTH, currPos.add(0,0,1), MAX_SIZE - zMin, AdvancedRocketryBlocks.blockLaunchpad);
 			zSize = zMin + zMax;
 
 			zMin = zCurrent - zMin + 1;
 			zMax = zCurrent + zMax;
 
-			if(direction.offsetX > 0) {
+			if(direction.getFrontOffsetX() > 0) {
 				xMax = xCurrent + xSize-1;
 			}
 
-			if(direction.offsetX < 0) {
+			if(direction.getFrontOffsetX() < 0) {
 				xMin = xCurrent - xSize+1;
 			}
 		}
 		else {
-			zSize = ZUtils.getContinuousBlockLength(world, direction, xCurrent, yCurrent, zCurrent, MAX_SIZE, AdvancedRocketryBlocks.blockLaunchpad);
-			xMin = ZUtils.getContinuousBlockLength(world, ForgeDirection.WEST, xCurrent, yCurrent, zCurrent, MAX_SIZE, AdvancedRocketryBlocks.blockLaunchpad);
-			xMax = ZUtils.getContinuousBlockLength(world, ForgeDirection.EAST, xCurrent+1, yCurrent, zCurrent, MAX_SIZE - xMin, AdvancedRocketryBlocks.blockLaunchpad);
+			zSize = ZUtils.getContinuousBlockLength(world, direction, currPos, MAX_SIZE, AdvancedRocketryBlocks.blockLaunchpad);
+			xMin = ZUtils.getContinuousBlockLength(world, EnumFacing.WEST, currPos, MAX_SIZE, AdvancedRocketryBlocks.blockLaunchpad);
+			xMax = ZUtils.getContinuousBlockLength(world, EnumFacing.EAST, currPos.add(1,0,0), MAX_SIZE - xMin, AdvancedRocketryBlocks.blockLaunchpad);
 			xSize = xMin + xMax;
 
 			xMin = xCurrent - xMin + 1;
 			xMax = xCurrent + xMax;
 
-			if(direction.offsetZ > 0) {
+			if(direction.getFrontOffsetZ() > 0) {
 				zMax = zCurrent + zSize-1;
 			}
 
-			if(direction.offsetZ < 0) {
+			if(direction.getFrontOffsetZ() < 0) {
 				zMin = zCurrent - zSize+1;
 			}
 		}
@@ -449,22 +448,22 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		int maxTowerSize = 0;
 		//Check perimeter for structureBlocks and get the size
 		for(int i = xMin; i <= xMax; i++) {
-			if(world.getBlock(i, yCurrent, zMin-1) == AdvancedRocketryBlocks.blockStructureTower) {
-				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, ForgeDirection.UP, i, yCurrent, zMin-1, MAX_SIZE_Y, AdvancedRocketryBlocks.blockStructureTower));
+			if(world.getBlockState(new BlockPos(i, yCurrent, zMin-1)).getBlock() == AdvancedRocketryBlocks.blockStructureTower) {
+				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, EnumFacing.UP, new BlockPos(i, yCurrent, zMin-1), MAX_SIZE_Y, AdvancedRocketryBlocks.blockStructureTower));
 			}
 
-			if(world.getBlock(i, yCurrent, zMax+1) == AdvancedRocketryBlocks.blockStructureTower) {
-				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, ForgeDirection.UP, i, yCurrent, zMax+1, MAX_SIZE_Y, AdvancedRocketryBlocks.blockStructureTower));
+			if(world.getBlockState(new BlockPos(i, yCurrent, zMax+1)).getBlock() == AdvancedRocketryBlocks.blockStructureTower) {
+				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, EnumFacing.UP, new BlockPos(i, yCurrent, zMax+1), MAX_SIZE_Y, AdvancedRocketryBlocks.blockStructureTower));
 			}
 		}
 
 		for(int i = zMin; i <= zMax; i++) {
-			if(world.getBlock(xMin-1, yCurrent, i) == AdvancedRocketryBlocks.blockStructureTower) {
-				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, ForgeDirection.UP, xMin-1, yCurrent, i, MAX_SIZE_Y, AdvancedRocketryBlocks.blockStructureTower));
+			if(world.getBlockState(new BlockPos(xMin-1, yCurrent, i)).getBlock() == AdvancedRocketryBlocks.blockStructureTower) {
+				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, EnumFacing.UP, new BlockPos(xMin-1, yCurrent, i), MAX_SIZE_Y, AdvancedRocketryBlocks.blockStructureTower));
 			}
 
-			if(world.getBlock(xMax+1, yCurrent, i) == AdvancedRocketryBlocks.blockStructureTower) {
-				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, ForgeDirection.UP, xMax+1, yCurrent, i, MAX_SIZE_Y, AdvancedRocketryBlocks.blockStructureTower));
+			if(world.getBlockState(new BlockPos(xMax+1, yCurrent, i)).getBlock() == AdvancedRocketryBlocks.blockStructureTower) {
+				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, EnumFacing.UP, new BlockPos(xMax+1, yCurrent, i), MAX_SIZE_Y, AdvancedRocketryBlocks.blockStructureTower));
 			}
 		}
 
@@ -473,7 +472,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			return null;
 		}
 
-		return AxisAlignedBB.getBoundingBox(xMin, yCurrent+1, zMin, xMax, yCurrent + maxTowerSize, zMax);
+		return new AxisAlignedBB(new BlockPos(xMin, yCurrent+1, zMin), new BlockPos(xMax, yCurrent + maxTowerSize, zMax));
 	}
 
 
@@ -483,7 +482,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		boundLoop:
 			for(int xx = (int)bb.minX; xx <= (int)bb.maxX; xx++) {
 				for(int zz = (int)bb.minZ; zz <= (int)bb.maxZ && whole; zz++) {
-					if(world.getBlock(xx, (int)bb.minY-1, zz) != AdvancedRocketryBlocks.blockLaunchpad) {
+					if(world.getBlockState(new BlockPos(xx, (int)bb.minY-1, zz)).getBlock() != AdvancedRocketryBlocks.blockLaunchpad) {
 						whole = false;
 						break boundLoop;
 					}
@@ -493,14 +492,12 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		return whole;
 	}
 
-	public int getVolume(World world, int x, int y, int z, AxisAlignedBB bb) {
-
-
+	public int getVolume(World world, AxisAlignedBB bb) {
 		return (int) ((bb.maxX - bb.minX) * (bb.maxY - bb.minY) * (bb.maxZ - bb.minZ));
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
 		stats.writeToNBT(nbt);
@@ -524,7 +521,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		if(!blockPos.isEmpty()) {
 			int[] array = new int[blockPos.size()*3];
 			int counter = 0;
-			for(BlockPosition pos : blockPos) {
+			for(HashedBlockPosition pos : blockPos) {
 				array[counter] = pos.x;
 				array[counter+1] = pos.y;
 				array[counter+2] = pos.z;
@@ -533,7 +530,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 			nbt.setIntArray("infrastructureLocations", array);
 		}
-
+		return nbt;
 	}
 
 	@Override
@@ -549,7 +546,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		if(nbt.hasKey("bb")) {
 
 			NBTTagCompound tag = nbt.getCompoundTag("bb");
-			bbCache = AxisAlignedBB.getBoundingBox(tag.getDouble("minX"), 
+			bbCache = new AxisAlignedBB(tag.getDouble("minX"), 
 					tag.getDouble("minY"), tag.getDouble("minZ"),
 					tag.getDouble("maxX"), tag.getDouble("maxY"), tag.getDouble("maxZ"));
 
@@ -560,24 +557,24 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			int array[] = nbt.getIntArray("infrastructureLocations");
 
 			for(int counter = 0; counter < array.length; counter += 3) {
-				blockPos.add(new BlockPosition(array[counter], array[counter+1], array[counter+2]));
+				blockPos.add(new HashedBlockPosition(array[counter], array[counter+1], array[counter+2]));
 			}
 		}
 	}
 
 	@Override
-	public Packet getDescriptionPacket() {
-		super.getDescriptionPacket();
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		super.getUpdatePacket();
 		NBTTagCompound nbt = new NBTTagCompound();
 
 		writeToNBT(nbt);
 
-		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, nbt);
+		return new SPacketUpdateTileEntity(pos, 0, nbt);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		readFromNBT(pkt.func_148857_g());
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		readFromNBT(pkt.getNbtCompound());
 	}
 
 	//Creates the effects for building the rocket and changes state to build
@@ -614,15 +611,15 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
 		if(id == 0) {
-			AxisAlignedBB bb = getRocketPadBounds(worldObj, xCoord, yCoord, zCoord);
+			AxisAlignedBB bb = getRocketPadBounds(worldObj, pos);
 
 			bbCache = bb;
 			if(!canScan())
 				return;
 
-			totalProgress = (int) (Configuration.buildSpeedMultiplier*this.getVolume(worldObj, xCoord, yCoord, zCoord, bbCache)/10);
+			totalProgress = (int) (Configuration.buildSpeedMultiplier*this.getVolume(worldObj, bbCache)/10);
 			this.markDirty();
-			this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 		}
 		else if(id == 1) {
 
@@ -630,15 +627,15 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 				return;
 
 			building = true;
-			AxisAlignedBB bb = getRocketPadBounds(worldObj, xCoord, yCoord, zCoord);
+			AxisAlignedBB bb = getRocketPadBounds(worldObj, pos);
 
 			bbCache = bb;
 			if(!canScan())
 				return;
 
-			totalProgress =(int) (Configuration.buildSpeedMultiplier*this.getVolume(worldObj, xCoord, yCoord, zCoord,bbCache)/10);
+			totalProgress =(int) (Configuration.buildSpeedMultiplier*this.getVolume(worldObj,bbCache)/10);
 			this.markDirty();
-			this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 
 		}
 		else if(id == 2){
@@ -653,7 +650,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		fuelText.setText(isScanning() ? "Fuel: ???" :  String.format("Fuel: %dmb/s", getRocketStats().getFuelRate(FuelType.LIQUID)));
 		accelerationText.setText(isScanning() ? "Acc: ???" : String.format("Acc: %.2fm/s", getAcceleration()*20f));
 		if(!worldObj.isRemote) { 
-			if(getRocketPadBounds(worldObj, xCoord, yCoord, zCoord) == null)
+			if(getRocketPadBounds(worldObj, pos) == null)
 				setStatus(ErrorCodes.INCOMPLETESTRCUTURE.ordinal());
 			else if( ErrorCodes.INCOMPLETESTRCUTURE.equals(getStatus()))
 				setStatus(ErrorCodes.UNSCANNED.ordinal());
@@ -805,7 +802,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	}
 
 	@Override
-	public boolean canConnectEnergy(ForgeDirection arg0) {
+	public boolean canConnectEnergy(EnumFacing arg0) {
 		return true;
 	}
 
@@ -818,15 +815,15 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	@Override
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
-		TileEntity tile = world.getTileEntity(((ItemLinker)item.getItem()).getMasterX(item), ((ItemLinker)item.getItem()).getMasterY(item), ((ItemLinker)item.getItem()).getMasterZ(item));
+		TileEntity tile = world.getTileEntity(ItemLinker.getMasterCoords(item));
 
 		if(tile instanceof IInfrastructure) {
-			BlockPosition pos = new BlockPosition(tile.xCoord, tile.yCoord, tile.zCoord);
+			HashedBlockPosition pos = new HashedBlockPosition(tile.getPos());
 			if(!blockPos.contains(pos))
 				blockPos.add(pos);
 
 			if(getBBCache() == null) {
-				bbCache = getRocketPadBounds(worldObj, xCoord, yCoord, zCoord);
+				bbCache = getRocketPadBounds(worldObj, getPos());
 			}
 
 			if(getBBCache() != null) {
@@ -838,10 +835,10 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			}
 
 			if(!worldObj.isRemote) {
-				player.addChatMessage(new ChatComponentText("Linked Sucessfully"));
+				player.addChatMessage(new TextComponentString("Linked Sucessfully"));
 
 				if(tile instanceof IMultiblock)
-					((IMultiblock)tile).setMasterBlock(xCoord, yCoord, zCoord);
+					((IMultiblock)tile).setMasterBlock(getPos());
 			}
 
 			ItemLinker.resetPosition(item);
@@ -851,17 +848,17 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	}
 
 	public void removeConnectedInfrastructure(TileEntity tile) {
-		blockPos.remove(new BlockPosition(tile.xCoord, tile.yCoord, tile.zCoord));
+		blockPos.remove(new HashedBlockPosition(tile.getPos()));
 
 		if(getBBCache() == null) {
-			bbCache = getRocketPadBounds(worldObj, xCoord, yCoord, zCoord);
+			bbCache = getRocketPadBounds(worldObj, this.getPos());
 		}
 
 		if(getBBCache() != null) {
 			List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
-			
+
 			for(EntityRocketBase rocket : rockets) {
-					rocket.unlinkInfrastructure((IInfrastructure) tile);
+				rocket.unlinkInfrastructure((IInfrastructure) tile);
 			}
 		}
 
@@ -870,12 +867,12 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	public List<IInfrastructure> getConnectedInfrastructure() {
 		List<IInfrastructure> infrastructure = new LinkedList<IInfrastructure>();
 
-		Iterator<BlockPosition> iter = blockPos.iterator();
+		Iterator<HashedBlockPosition> iter = blockPos.iterator();
 
 		while(iter.hasNext()) {
-			BlockPosition position = iter.next();
-			TileEntity tile = worldObj.getTileEntity(position.x, position.y, position.z);
-			if((tile = worldObj.getTileEntity(position.x, position.y, position.z)) instanceof IInfrastructure) {
+			HashedBlockPosition position = iter.next();
+			TileEntity tile = worldObj.getTileEntity(position.getBlockPos());
+			if((tile = worldObj.getTileEntity(position.getBlockPos())) instanceof IInfrastructure) {
 				infrastructure.add((IInfrastructure)tile);
 			}
 			else
@@ -887,10 +884,10 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	@SubscribeEvent
 	public void onRocketLand(RocketLandedEvent event) {
-		EntityRocketBase rocket = (EntityRocketBase)event.entity;
+		EntityRocketBase rocket = (EntityRocketBase)event.getEntity();
 
 		if(getBBCache() == null) {
-			bbCache = getRocketPadBounds(worldObj, xCoord, yCoord, zCoord);
+			bbCache = getRocketPadBounds(worldObj, pos);
 		}
 
 		if(getBBCache() != null) {

@@ -2,7 +2,10 @@ package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -13,40 +16,34 @@ import net.minecraft.world.World;
 public class BlockLightSource extends Block {
 
 	public BlockLightSource() {
-		super(Material.glass);
-		setBlockName("lightSource");
+		super(Material.GLASS);
+		setUnlocalizedName("lightSource");
 		setLightLevel(1F);
 	}
 
 	@Override
-    public boolean canCollideCheck(int par1, boolean par2)
-    {
-        return false;
-    }
-    @Override
-    public boolean renderAsNormalBlock()
-    {
-        return false;
-    }	
-    
-    @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
-    {
-        return null;
-    }
-    
-    @Override
-    public int getLightValue(IBlockAccess world, int x, int y, int z)
-    {
-        return 15;
-    }
-    
-    @Override
-	public boolean isOpaqueCube() {return false;}
+	public boolean canCollideCheck(IBlockState state, boolean hitIfLiquid) {
+		 return false;
+	}
 
 	@Override
-	public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l)
-	{
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState,
+			World worldIn, BlockPos pos) {
+		return null;
+	}
+    
+	@Override
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
+		return 15;
+	}
+    
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
 		return false;
+	}
+
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		return EnumBlockRenderType.INVISIBLE;
 	}
 }

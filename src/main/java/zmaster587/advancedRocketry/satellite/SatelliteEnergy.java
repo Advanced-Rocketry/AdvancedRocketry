@@ -3,8 +3,9 @@ package zmaster587.advancedRocketry.satellite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
@@ -54,8 +55,7 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 	}
 
 	@Override
-	public boolean performAction(EntityPlayer player, World world, int x,
-			int y, int z) {
+	public boolean performAction(EntityPlayer player, World world, BlockPos pos) {
 		return false;
 	}
 
@@ -65,7 +65,7 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 	}
 
 	@Override
-	public int getEnergyMTU(ForgeDirection side) {
+	public int getEnergyMTU(EnumFacing side) {
 		return 10;
 	}
 
@@ -76,12 +76,12 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 	}
 	
 	@Override
-	public int transmitEnergy(ForgeDirection dir, boolean simulate) {
+	public int transmitEnergy(EnumFacing dir, boolean simulate) {
 		if(getDimensionId() != -1) {
 			World world = net.minecraftforge.common.DimensionManager.getWorld(getDimensionId());
 			if(world != null) {
 				battery.acceptEnergy(energyCreated(world), simulate);
-				int energy = battery.extractEnergy(getEnergyMTU(ForgeDirection.UNKNOWN), simulate);
+				int energy = battery.extractEnergy(getEnergyMTU(EnumFacing.DOWN), simulate);
 				return energy;
 			}
 		}

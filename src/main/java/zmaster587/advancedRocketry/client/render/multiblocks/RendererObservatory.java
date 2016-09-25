@@ -2,36 +2,34 @@ package zmaster587.advancedRocketry.client.render.multiblocks;
 
 import org.lwjgl.opengl.GL11;
 
+import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
+import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import zmaster587.advancedRocketry.tile.multiblock.TileObservatory;
-import zmaster587.advancedRocketry.util.Debugger;
 import zmaster587.libVulpes.block.RotatableBlock;
-import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class RendererObservatory  extends TileEntitySpecialRenderer {
 
-	IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("advancedrocketry:models/observatory.obj"));
+	WavefrontObject model;
 
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/T1Observatory.png");
 
-	private static int bodyList;
-
 	public RendererObservatory() {
-		GL11.glNewList(bodyList = GL11.glGenLists(1), GL11.GL_COMPILE);
-		model.renderOnly("body");
-		GL11.glEndList();
+		try {
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/observatory.obj"));
+		} catch (ModelFormatException e) {
+			e.printStackTrace();
+		}
 	}
 
 
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x,
-			double y, double z, float f) {
+			double y, double z, float f, int damage) {
 		TileObservatory multiBlockTile = (TileObservatory)tile;
 
 		if(!multiBlockTile.canRender())
@@ -39,16 +37,10 @@ public class RendererObservatory  extends TileEntitySpecialRenderer {
 
 		GL11.glPushMatrix();
 
-		//Initial setup
-		int bright = tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord + 1, tile.zCoord,0);
-		int brightX = bright % 65536;
-		int brightY = bright / 65536;
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
-
 		//Rotate and move the model into position
-		ForgeDirection front = RotatableBlock.getFront(tile.getBlockMetadata());//tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
+		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));//tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
 		GL11.glTranslated(x + .5, y, z + .5);
-		GL11.glRotatef((front.offsetX == 1 ? 180 : 0) + front.offsetZ*90f, 0, 1, 0);
+		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 180 : 0) + front.getFrontOffsetZ()*90f, 0, 1, 0);
 
 		GL11.glTranslated(2, -1, 0);
 
@@ -57,10 +49,7 @@ public class RendererObservatory  extends TileEntitySpecialRenderer {
 		float offset = multiBlockTile.getOpenProgress();
 
 		if(offset != 0f) {
-			if(Debugger.renderList)
-				GL11.glCallList(bodyList);
-			else 
-				model.renderOnly("Base");
+			model.renderOnly("Base");
 
 			model.renderPart("Scope");
 			model.renderPart("Axis");
@@ -77,10 +66,7 @@ public class RendererObservatory  extends TileEntitySpecialRenderer {
 
 		}
 		else {
-			if(Debugger.renderList)
-				GL11.glCallList(bodyList);
-			else 
-				model.renderOnly("Base");
+			model.renderOnly("Base");
 			model.renderOnly("CasingXMinus");
 			model.renderOnly("CasingXPlus");
 		}

@@ -3,27 +3,35 @@ package zmaster587.advancedRocketry.client.render.multiblocks;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
+import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
+import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 
 public class RenderTerraformerAtm extends TileEntitySpecialRenderer {
 	
-	IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("advancedrocketry:models/terraformerAtm.obj"));
+	WavefrontObject model;
 
 	ResourceLocation tubeTexture =  new ResourceLocation("advancedRocketry:textures/models/tubes.png");
 	
 	
+	public RenderTerraformerAtm() {
+		try {
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/terraformerAtm.obj"));
+		} catch (ModelFormatException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x,
-			double y, double z, float f) {
+			double y, double z, float f, int damage) {
 		TileMultiBlock multiBlockTile = (TileMultiBlock)tile;
 
 		if(!multiBlockTile.canRender())
@@ -32,15 +40,11 @@ public class RenderTerraformerAtm extends TileEntitySpecialRenderer {
 		GL11.glPushMatrix();
 
 		//Initial setup
-		int bright = tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord + 1, tile.zCoord,0);
-		int brightX = bright % 65536;
-		int brightY = bright / 65536;
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
 
 		//Rotate and move the model into position
 		GL11.glTranslated(x + 0.5, y, z + 0.5);
-		ForgeDirection front = RotatableBlock.getFront(tile.getBlockMetadata());
-		GL11.glRotatef((front.offsetX == 1 ? 180 : 0) + front.offsetZ*90f, 0, 1, 0);
+		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
+		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 180 : 0) + front.getFrontOffsetZ()*90f, 0, 1, 0);
 		GL11.glTranslated(1f, 0, 0f);
 		bindTexture(TextureResources.fan);
 		model.renderOnly("Fan");

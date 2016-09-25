@@ -8,9 +8,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
@@ -33,16 +34,16 @@ import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
-import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.IconResource;
 
 public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank implements IModularInventory, IMultiblock, IInfrastructure, ILinkableTile {
 	EntityRocketBase linkedRocket;
-	BlockPosition masterBlock;
+	HashedBlockPosition masterBlock;
 	
 	public TileEntityFuelingStation() {
 		super(1000,3, 5000);
-		masterBlock = new BlockPosition(0, -1, 0);
+		masterBlock = new HashedBlockPosition(0, -1, 0);
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 				tank.drain(linkedRocket.addFuelAmount((int)(multiplier*Configuration.fuelPointsPer10Mb)), true);
 				
 				//If the rocket is full then emit redstone
-				((BlockTileRedstoneEmitter)AdvancedRocketryBlocks.blockFuelingStation).setRedstoneState(worldObj, xCoord, yCoord, zCoord, linkedRocket.getFuelAmount() == linkedRocket.getFuelCapacity());
+				((BlockTileRedstoneEmitter)AdvancedRocketryBlocks.blockFuelingStation).setRedstoneState(worldObj, worldObj.getBlockState(pos), pos, linkedRocket.getFuelAmount() == linkedRocket.getFuelCapacity());
 			}
 		}
 		useBucket(0, inventory.getStackInSlot(0));
@@ -69,11 +70,6 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	public int getPowerPerOperation() {
 		return 30;
 	}
-
-	@Override
-	public void updateEntity() {
-		super.updateEntity();
-	}
 	
 	@Override
 	public boolean canPerformFunction() {
@@ -82,7 +78,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
+	public boolean canFill(Fluid fluid) {
 		return FuelRegistry.instance.isFuel(FuelType.LIQUID,fluid);
 	}
 
@@ -93,7 +89,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 		return true;
 	}
 
@@ -138,7 +134,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	@Override
 	public void unlinkRocket() {
 		this.linkedRocket = null;
-		((BlockTileRedstoneEmitter)AdvancedRocketryBlocks.blockFuelingStation).setRedstoneState(worldObj, xCoord, yCoord, zCoord, false);
+		((BlockTileRedstoneEmitter)AdvancedRocketryBlocks.blockFuelingStation).setRedstoneState(worldObj, worldObj.getBlockState(pos), pos, false);
 		
 	}
 
@@ -150,7 +146,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	@Override
 	public boolean linkRocket(EntityRocketBase rocket) {
 		this.linkedRocket = rocket;
-		((BlockTileRedstoneEmitter)AdvancedRocketryBlocks.blockFuelingStation).setRedstoneState(worldObj, xCoord, yCoord, zCoord, linkedRocket.getFuelAmount() == linkedRocket.getFuelCapacity());
+		((BlockTileRedstoneEmitter)AdvancedRocketryBlocks.blockFuelingStation).setRedstoneState(worldObj, worldObj.getBlockState(pos), pos, linkedRocket.getFuelAmount() == linkedRocket.getFuelCapacity());
 		return true;
 	}
 
@@ -158,7 +154,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	public boolean onLinkStart(ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 
-		ItemLinker.setMasterCoords(item, this.xCoord, this.yCoord, this.zCoord);
+		ItemLinker.setMasterCoords(item, pos);
 
 		if(this.linkedRocket != null) {
 			this.linkedRocket.unlinkInfrastructure(this);
@@ -166,7 +162,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 		}
 		
 		if(player.worldObj.isRemote)
-			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText("You program the linker with the fueling station at: " + this.xCoord + " " + this.yCoord + " " + this.zCoord)));
+			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new TextComponentString("You program the linker with the fueling station at: " + this.pos.getX() + " " + this.pos.getY() + " " + this.pos.getZ())));
 		return true;
 	}
 
@@ -185,13 +181,13 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 		if(player.worldObj.isRemote)
-			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText("This must be the first machine to link!")));
+			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new TextComponentString("This must be the first machine to link!")));
 		return false;
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int side) {
-		if(ForgeDirection.getOrientation(side) == ForgeDirection.DOWN)
+	public int[] getSlotsForFace(EnumFacing side) {
+		if(side == EnumFacing.DOWN)
 			return  new int[]{1};
 		return  new int[]{0}; 
 	}
@@ -211,7 +207,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	}
 
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 		return null;
 	}
 
@@ -230,12 +226,13 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		
 		if(hasMaster()) {
 			nbt.setIntArray("masterPos", new int[] {masterBlock.x, masterBlock.y, masterBlock.z});
 		}
+		return nbt;
 	}
 	
 	@Override
@@ -243,7 +240,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 		super.readFromNBT(nbt);
 		if(nbt.hasKey("masterPos")) {
 			int[] pos = nbt.getIntArray("masterPos");
-			setMasterBlock(pos[0], pos[1], pos[2]);
+			setMasterBlock(new BlockPos(pos[0], pos[1], pos[2]));
 		}
 	}
 	
@@ -254,11 +251,11 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 
 	@Override
 	public TileEntity getMasterBlock() {
-		return worldObj.getTileEntity(masterBlock.x, masterBlock.y, masterBlock.z);
+		return worldObj.getTileEntity(new BlockPos(masterBlock.x, masterBlock.y, masterBlock.z));
 	}
 
 	@Override
-	public void setComplete(int x, int y, int z) {
+	public void setComplete(BlockPos pos) {
 		
 	}
 
@@ -268,8 +265,8 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	}
 
 	@Override
-	public void setMasterBlock(int x, int y, int z) {
-		masterBlock = new BlockPosition(x, y, z);
+	public void setMasterBlock(BlockPos pos) {
+		masterBlock = new HashedBlockPosition(pos);
 	}
 	
 	public boolean canRenderConnection() {

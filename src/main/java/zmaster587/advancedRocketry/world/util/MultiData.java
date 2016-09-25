@@ -3,7 +3,7 @@ package zmaster587.advancedRocketry.world.util;
 import java.util.HashMap;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.satellite.IDataHandler;
@@ -31,7 +31,7 @@ public class MultiData implements IDataHandler {
 	}
 
 	@Override
-	public int extractData(int maxAmount, DataType type, ForgeDirection dir, boolean commit) {
+	public int extractData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {
 
 		DataStorage storage = dataStorages.get(type);
 
@@ -39,7 +39,7 @@ public class MultiData implements IDataHandler {
 	}
 
 	@Override
-	public int addData(int maxAmount, DataType type, ForgeDirection dir, boolean commit) {
+	public int addData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {
 		DataStorage storage = dataStorages.get(type);
 
 		return storage.addData(maxAmount, type, commit);

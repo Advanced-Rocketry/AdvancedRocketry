@@ -1,0 +1,18 @@
+{
+    "variants": {
+        "facing=north,state=false": { "model": "advancedrocketry:drill" },
+        "facing=south,state=false": { "model": "advancedrocketry:drill", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:drill", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:drill", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:drill" },
+        "facing=south,state=true": { "model": "advancedrocketry:drill", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:drill", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:drill", "y": 90 },
+        "facing=north": { "model": "advancedrocketry:drill" },
+        "facing=south": { "model": "advancedrocketry:drill", "y": 180 },
+        "facing=west":  { "model": "advancedrocketry:drill", "y": 270 },
+        "facing=east":  { "model": "advancedrocketry:drill", "y": 90 },
+        "facing=up": { "model": "advancedrocketry:drill" },
+        "facing=down": { "model": "advancedrocketry:drill", "y": 180 }
+    }
+}

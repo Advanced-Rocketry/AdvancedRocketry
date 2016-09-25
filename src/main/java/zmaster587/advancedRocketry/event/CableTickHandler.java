@@ -6,14 +6,14 @@ import java.util.Map.Entry;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.ChunkEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import zmaster587.advancedRocketry.cable.NetworkRegistry;
 import zmaster587.advancedRocketry.tile.cables.TilePipe;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
 
 public class CableTickHandler {
 
@@ -25,14 +25,14 @@ public class CableTickHandler {
         @SubscribeEvent
 	public void chunkLoadedEvent(ChunkEvent.Load event) {
 
-		Map map = event.getChunk().chunkTileEntityMap;
+		Map map = event.getChunk().getTileEntityMap();
 		Iterator<Entry> iter = map.entrySet().iterator();
 
 		while(iter.hasNext()) {
 			Object obj = iter.next().getValue();
 
 			if(obj instanceof TilePipe) {
-				((TilePipe)obj).markForUpdate();
+				((TilePipe)obj).markDirty();
 			}
 		}
 	}
@@ -40,9 +40,9 @@ public class CableTickHandler {
 	@SubscribeEvent
 	public void onBlockBroken(BreakEvent event) {
 
-		if(event.block.hasTileEntity(event.blockMetadata)) {
+		if(event.getState().getBlock().hasTileEntity(event.getState())) {
 
-			TileEntity homeTile = event.world.getTileEntity(event.x , event.y, event.z);
+			TileEntity homeTile = event.getWorld().getTileEntity(event.getPos());
 
 			if(homeTile instanceof TilePipe) {
 				
@@ -54,15 +54,15 @@ public class CableTickHandler {
 
 				int pipecount=0;
 
-				for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-					TileEntity tile = event.world.getTileEntity(event.x + dir.offsetX, event.y + dir.offsetY, event.z + dir.offsetZ);
+				for(EnumFacing dir : EnumFacing.values()) {
+					TileEntity tile = event.getWorld().getTileEntity(event.getPos().offset(dir));
 					if(tile instanceof TilePipe) 
 						pipecount++;
 				}
 				//TODO: delete check if sinks/sources need removal
 				if(pipecount > 1) {
-					for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-						TileEntity tile = event.world.getTileEntity(event.x + dir.offsetX, event.y + dir.offsetY, event.z + dir.offsetZ);
+					for(EnumFacing dir : EnumFacing.VALUES) {
+						TileEntity tile = event.getWorld().getTileEntity(event.getPos().offset(dir));
 
 						if(tile instanceof TilePipe) {
 							((TilePipe) tile).getNetworkHandler().removeNetworkByID(((TilePipe) tile).getNetworkID());
@@ -77,8 +77,8 @@ public class CableTickHandler {
 				((TilePipe)homeTile).markDirty();
 			}
 			else if(homeTile != null) {
-				for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-					TileEntity tile = event.world.getTileEntity(event.x + dir.offsetX, event.y + dir.offsetY, event.z + dir.offsetZ);
+				for(EnumFacing dir : EnumFacing.VALUES) {
+					TileEntity tile = event.getWorld().getTileEntity(event.getPos().offset(dir));
 
 					if(tile instanceof TilePipe) {
 						((TilePipe)tile).getNetworkHandler().removeFromAllTypes((TilePipe)tile, homeTile);

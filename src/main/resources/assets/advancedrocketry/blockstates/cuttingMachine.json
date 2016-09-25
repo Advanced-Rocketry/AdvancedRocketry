@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "facing=north,state=false": { "model": "advancedrocketry:cuttingMachine" },
+        "facing=south,state=false": { "model": "advancedrocketry:cuttingMachine", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:cuttingMachine", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:cuttingMachine", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:cuttingMachine_on" },
+        "facing=south,state=true": { "model": "advancedrocketry:cuttingMachine_on", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:cuttingMachine_on", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:cuttingMachine_on", "y": 90 }
+    }
+}

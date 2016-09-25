@@ -7,11 +7,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
@@ -23,7 +24,7 @@ import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 
-public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastructure {
+public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastructure, ITickable {
 
 	EntityRocket rocket;
 
@@ -48,8 +49,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	}
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
 
 		//Move a stack of items
 		if(rocket != null ) {
@@ -62,17 +62,17 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 				IFluidHandler handler = (IFluidHandler)tile;
 
 				//See if we have anything to fill because redstone output
-				FluidStack stack = handler.drain(ForgeDirection.DOWN, 1, false);
-				if(stack == null || handler.fill(ForgeDirection.UP, stack, false) > 0)
+				FluidStack stack = handler.drain(1, false);
+				if(stack == null || handler.fill(stack, false) > 0)
 					rocketContainsItems = true;
 
 				stack = fluidTank.drain(fluidTank.getCapacity(), false);
 				if(stack != null && stack.amount > 0)
-					fluidTank.drain(handler.fill(ForgeDirection.UP, stack, true), true);
+					fluidTank.drain(handler.fill(stack, true), true);
 			}
 
 			//Update redstone state
-			((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj, xCoord, yCoord, zCoord, !rocketContainsItems);
+			((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj, worldObj.getBlockState(pos), getPos(), !rocketContainsItems);
 
 		}
 	}
@@ -81,7 +81,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	public boolean onLinkStart(ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 
-		ItemLinker.setMasterCoords(item, this.xCoord, this.yCoord, this.zCoord);
+		ItemLinker.setMasterCoords(item, this.getPos());
 
 		if(this.rocket != null) {
 			this.rocket.unlinkInfrastructure(this);
@@ -89,7 +89,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 		}
 
 		if(player.worldObj.isRemote)
-			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText("You program the linker with the fueling station at: " + this.xCoord + " " + this.yCoord + " " + this.zCoord)));
+			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new TextComponentString("You program the linker with the fueling station at: " + getPos().getX() + " " + getPos().getY() + " " + getPos().getZ())));
 		return true;
 	}
 
@@ -97,14 +97,14 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 		if(player.worldObj.isRemote)
-			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText("This must be the first machine to link!")));
+			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new TextComponentString("This must be the first machine to link!")));
 		return false;
 	}
 
 	@Override
 	public void unlinkRocket() {
 		rocket = null;
-		((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj, xCoord, yCoord, zCoord, false);
+		((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj, worldObj.getBlockState(pos), pos, false);
 		//On unlink prevent the tile from ticking anymore
 
 		//if(!worldObj.isRemote)

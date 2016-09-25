@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.atmosphere;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
@@ -38,14 +39,15 @@ public class AtmosphereVacuum extends AtmosphereType {
 	public boolean isImmune(EntityLivingBase player) {
 
 		//Checks if player is wearing spacesuit or anything that extends ItemSpaceArmor
-		ItemStack feet = player.getEquipmentInSlot(1);
-		ItemStack leg = player.getEquipmentInSlot(2);
-		ItemStack chest = player.getEquipmentInSlot(3);
-		ItemStack helm = player.getEquipmentInSlot(4);
+
+		ItemStack feet = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
+		ItemStack leg = player.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
+		ItemStack chest = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
 		//TODO change over to use API #ISealedArmor
 		return (player instanceof EntityPlayer && ((EntityPlayer)player).capabilities.isCreativeMode) 
-				|| player.ridingEntity instanceof EntityRocketBase ||
+				|| player.getRidingEntity() instanceof EntityRocketBase ||
 				helm != null && helm.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)helm.getItem()).protectsFromSubstance(this) &&
 				chest != null && chest.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)chest.getItem()).protectsFromSubstance(this) &&
 				leg != null && leg.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)leg.getItem()).protectsFromSubstance(this) &&

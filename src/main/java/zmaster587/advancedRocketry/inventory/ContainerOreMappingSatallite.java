@@ -1,9 +1,9 @@
 package zmaster587.advancedRocketry.inventory;
 
 import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
-import codechicken.lib.inventory.InventorySimple;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
@@ -28,29 +28,29 @@ public class ContainerOreMappingSatallite extends Container {
 	}
 
 	@Override
-	public ItemStack slotClick(int slot, int p_75144_2_, int p_75144_3_, EntityPlayer player)
-	{
+	public ItemStack slotClick(int slot, int dragType, ClickType clickTypeIn,
+			EntityPlayer player) {
 		//Check if slot exists
-		ItemStack stack;
-		if(slot != -999)
-			stack =  player.inventory.mainInventory[slot];
-		else stack = null;
+				ItemStack stack;
+				if(slot != -999)
+					stack =  player.inventory.mainInventory[slot];
+				else stack = null;
 
-		if(inv != null && p_75144_2_ == 0)
-			//Check if anything is in the slot and set the slot value if it is
-			if(stack == null) {
-				inv.setSelectedSlot(-1);
-			}
-			else
-				for(int id : OreDictionary.getOreIDs(stack)) {
-					if(OreDictionary.getOreName(id).startsWith("ore")) {
-						inv.setSelectedSlot(slot);
+				if(inv != null && dragType == 0)
+					//Check if anything is in the slot and set the slot value if it is
+					if(stack == null) {
+						inv.setSelectedSlot(-1);
 					}
+					else
+						for(int id : OreDictionary.getOreIDs(stack)) {
+							if(OreDictionary.getOreName(id).startsWith("ore")) {
+								inv.setSelectedSlot(slot);
+							}
 
-				}
+						}
 
-		return stack;
-
+				return stack;
+	
 	}
 
 	@Override

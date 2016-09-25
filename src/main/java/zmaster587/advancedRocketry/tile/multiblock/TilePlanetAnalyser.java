@@ -8,16 +8,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import cpw.mods.fml.relauncher.Side;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.DataStorage;
@@ -30,6 +32,7 @@ import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
 import zmaster587.advancedRocketry.util.ITilePlanetSystemSelectable;
 import zmaster587.advancedRocketry.world.util.MultiData;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -52,8 +55,8 @@ import zmaster587.libVulpes.util.EmbeddedInventory;
 public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModularInventory, IInventory {
 
 	private static final Object[][][] structure = new Object[][][]{
-		{{Blocks.stone_slab, 'c', Blocks.stone_slab},
-			{Blocks.stone_slab, Blocks.stone_slab, Blocks.stone_slab}},
+		{{Blocks.STONE_SLAB, 'c', Blocks.STONE_SLAB},
+			{Blocks.STONE_SLAB, Blocks.STONE_SLAB, Blocks.STONE_SLAB}},
 
 			{{'P','I', 'O'},
 				{'D','D','D'}}
@@ -77,7 +80,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 	@Override
 	public List<BlockMeta> getAllowableWildCardBlocks() {
 		List<BlockMeta> list = super.getAllowableWildCardBlocks();
-		list.add(new BlockMeta(Blocks.iron_block,BlockMeta.WILDCARD));
+		list.add(new BlockMeta(Blocks.IRON_BLOCK,BlockMeta.WILDCARD));
 		return list;
 	}
 
@@ -114,8 +117,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 	}
 
 	@Override
-	public void deconstructMultiBlock(World world, int destroyedX,
-			int destroyedY, int destroyedZ, boolean blockBroken) {
+	public void deconstructMultiBlock(World world, BlockPos destroyedPos, boolean blockBroken, IBlockState state) {
 
 		//Make sure to unlock the data cables
 		for(int i = 0; i < dataCables.length; i++) {
@@ -123,8 +125,8 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 				dataCables[i].lockData(null);
 		}
 
-		super.deconstructMultiBlock(world, destroyedX, destroyedY, destroyedZ,
-				blockBroken);
+		super.deconstructMultiBlock(world, destroyedPos,
+				blockBroken, state);
 	}
 
 	@Override
@@ -146,8 +148,9 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 	}
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox() { //TODO
-		return AxisAlignedBB.getBoundingBox(xCoord -2,yCoord -2, zCoord -2, xCoord + 2, yCoord + 2, zCoord + 2);
+	public AxisAlignedBB getRenderBoundingBox() {
+
+		return new AxisAlignedBB(pos.add(-2,-2,-2),pos.add(2,2,2));
 	}
 
 	private boolean canProcess() {
@@ -175,7 +178,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 		super.onInventoryUpdated();
 		if(inputHatch == null)
 			return;
-		
+
 		if(inventory.getStackInSlot(1) != null) {
 			for(int i = 0; i < outputHatch.getSizeInventory(); i++) {
 				if(outputHatch.getStackInSlot(i) == null) {
@@ -202,8 +205,6 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 					if(!worldObj.isRemote) {
 						markDirty();
 						inputHatch.markDirty();
-						worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-						worldObj.markBlockForUpdate(inputHatch.xCoord, inputHatch.yCoord, inputHatch.zCoord);
 					}
 				}
 
@@ -251,13 +252,13 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 	}
 
 	@Override
-	public boolean completeStructure() {
-		boolean result = super.completeStructure();
+	public boolean completeStructure(IBlockState state) {
+		boolean result = super.completeStructure(state);
 		if(result) {
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.getBlockMetadata() | 8, 2);
+			((BlockMultiblockMachine)worldObj.getBlockState(pos).getBlock()).setBlockState(worldObj, worldObj.getBlockState(pos), pos, true);
 		}
 		else
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.getBlockMetadata() & 7, 2);
+			((BlockMultiblockMachine)worldObj.getBlockState(pos).getBlock()).setBlockState(worldObj, worldObj.getBlockState(pos), pos, false);
 		return result;
 	}
 
@@ -288,17 +289,16 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 
 		ItemAsteroidChip item = (ItemAsteroidChip)stack.getItem();
 
-		if(researchingAtmosphere && atmosphereProgress < 0 && dataCables[0].extractData(1, DataStorage.DataType.COMPOSITION, ForgeDirection.UNKNOWN, true) > 0 && !item.isFull(stack, DataStorage.DataType.COMPOSITION))
+		if(researchingAtmosphere && atmosphereProgress < 0 && dataCables[0].extractData(1, DataStorage.DataType.COMPOSITION, EnumFacing.UP, true) > 0 && !item.isFull(stack, DataStorage.DataType.COMPOSITION))
 			atmosphereProgress = 0;
 
-		if(researchingDistance && distanceProgress < 0 && dataCables[1].extractData(1, DataStorage.DataType.DISTANCE, ForgeDirection.UNKNOWN, true) > 0 && !item.isFull(stack, DataStorage.DataType.DISTANCE))
+		if(researchingDistance && distanceProgress < 0 && dataCables[1].extractData(1, DataStorage.DataType.DISTANCE, EnumFacing.UP, true) > 0 && !item.isFull(stack, DataStorage.DataType.DISTANCE))
 			distanceProgress = 0;
 
-		if(researchingMass && massProgress < 0 && dataCables[2].extractData(1, DataStorage.DataType.MASS, ForgeDirection.UNKNOWN, true) > 0 && !item.isFull(stack, DataStorage.DataType.MASS))
+		if(researchingMass && massProgress < 0 && dataCables[2].extractData(1, DataStorage.DataType.MASS, EnumFacing.UP, true) > 0 && !item.isFull(stack, DataStorage.DataType.MASS))
 			massProgress = 0;
 
 		this.markDirty();
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	@Override
@@ -416,7 +416,6 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 			attemptAllResearchStart();
 
 			this.markDirty();
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
@@ -439,7 +438,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 		modules.add(new ModuleOutputSlotArray(xStart, yStart + 40, this, 1, 2));
 
 
-		modules.add(new ModuleProgress(xStart, yStart + 20, 0, new ProgressBarImage(217,0, 17, 17, 234, 0, ForgeDirection.DOWN, TextureResources.progressBars), this));
+		modules.add(new ModuleProgress(xStart, yStart + 20, 0, new ProgressBarImage(217,0, 17, 17, 234, 0, EnumFacing.DOWN, TextureResources.progressBars), this));
 
 		modules.add(new ModuleButton(xStart, yStart + 20, 1, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonNull, "Process discovery", 17, 17));
 
@@ -537,7 +536,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		inventory.writeToNBT(nbt);
 
@@ -547,6 +546,8 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 		nbt.setInteger("atmosphereProgress", atmosphereProgress);
 		nbt.setInteger("distanceProgress", distanceProgress);
 		nbt.setInteger("massProgress", massProgress);
+		
+		return nbt;
 	}
 
 	@Override
@@ -565,23 +566,18 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) {
-		return inventory.getStackInSlotOnClosing(slot);
-	}
-
-	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
 		onInventoryUpdated();
 	}
 
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 		return getMachineName();
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 		return false;
 	}
 
@@ -592,21 +588,46 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player) {
-		return player.getDistance(xCoord, yCoord, zCoord) < 64;
+		return player.getDistanceSq(pos) < 4096;
 	}
 
 	@Override
-	public void openInventory() {
+	public void openInventory(EntityPlayer player) {
 
 	}
 
 	@Override
-	public void closeInventory() {
+	public void closeInventory(EntityPlayer player) {
 
 	}
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		return false;//inventory.isItemValidForSlot(slot, stack);
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		return inventory.removeStackFromSlot(index);
+	}
+
+	@Override
+	public int getField(int id) {
+		return inventory.getField(id);
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		inventory.setField(id, value);
+	}
+
+	@Override
+	public int getFieldCount() {
+		return inventory.getFieldCount();
+	}
+
+	@Override
+	public void clear() {
+		inventory.clear();
 	}
 }

@@ -1,37 +1,37 @@
 package zmaster587.advancedRocketry.world.decoration;
 
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import net.minecraft.block.BlockPistonBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class MapGenSpaceStation {
-	
+
 	public static void generateStation(World world, int blockX, int blockY, int blockZ) {
-		
+
+		BlockPos pos = new BlockPos(blockX, blockY, blockZ); 
+
 		//Center
-		world.setBlock(blockX, blockY, blockZ, AdvancedRocketryBlocks.blockConcrete, 0, 6);
-		world.setBlock(blockX + 1, blockY, blockZ + 1, AdvancedRocketryBlocks.blockConcrete, 0, 6);
-		world.setBlock(blockX - 1, blockY, blockZ - 1, AdvancedRocketryBlocks.blockConcrete, 0, 6);
-		world.setBlock(blockX + 1, blockY, blockZ - 1, AdvancedRocketryBlocks.blockConcrete, 0, 6);
-		world.setBlock(blockX - 1, blockY, blockZ + 1, AdvancedRocketryBlocks.blockConcrete, 0, 6);
-		
-		world.setBlock(blockX + 1, blockY, blockZ, Blocks.piston, 5, 6);
-		world.setBlock(blockX - 1, blockY, blockZ, Blocks.piston, 4, 6);
-		world.setBlock(blockX, blockY, blockZ + 1, Blocks.piston, 3, 6);
-		world.setBlock(blockX, blockY, blockZ - 1, Blocks.piston, 2, 6);
-		
-		generateArm(world, blockX, blockY, blockZ, ForgeDirection.NORTH);
-		generateArm(world, blockX, blockY, blockZ, ForgeDirection.EAST);
-		generateArm(world, blockX, blockY, blockZ, ForgeDirection.WEST);
-		generateArm(world, blockX, blockY, blockZ, ForgeDirection.SOUTH);
-		
-	}
-	
-	private static void generateArm(World world, int blockX, int blockY, int blockZ, ForgeDirection direction) {
-		for(int i = 0; i < 8; i++) {
-			world.setBlock(blockX + direction.offsetX*2 + direction.offsetX*i, blockY, blockZ + direction.offsetZ*2 + direction.offsetZ*i, AdvancedRocketryBlocks.blockConcrete,0, 6);
+		world.setBlockState(pos, AdvancedRocketryBlocks.blockConcrete.getDefaultState(), 6);
+		world.setBlockState(pos.add(1,0,1), AdvancedRocketryBlocks.blockConcrete.getDefaultState(), 6);
+		world.setBlockState(pos.add(-1,0,-1), AdvancedRocketryBlocks.blockConcrete.getDefaultState(), 6);
+		world.setBlockState(pos.add(1,0,-1), AdvancedRocketryBlocks.blockConcrete.getDefaultState(), 6);
+		world.setBlockState(pos.add(-1,0,1), AdvancedRocketryBlocks.blockConcrete.getDefaultState(), 6);
+
+
+		for(EnumFacing dir : EnumFacing.HORIZONTALS) {
+			world.setBlockState(pos.offset(dir), Blocks.PISTON.getDefaultState().withProperty(BlockPistonBase.FACING, dir), 6);
+			generateArm(world, pos, dir);
 		}
-		
+
+	}
+
+	private static void generateArm(World world, BlockPos pos, EnumFacing direction) {
+		for(int i = 0; i < 8; i++) {
+			world.setBlockState(pos.offset(direction, i+2), AdvancedRocketryBlocks.blockConcrete.getDefaultState(),6);
+		}
+
 	}
 }

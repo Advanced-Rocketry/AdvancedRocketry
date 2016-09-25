@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.StatsRocket;
@@ -17,15 +14,18 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.network.PacketStationUpdate.Type;
 import zmaster587.libVulpes.network.PacketHandler;
-import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SpaceObject implements ISpaceObject {
 	private int posX, posY;
@@ -33,12 +33,12 @@ public class SpaceObject implements ISpaceObject {
 	private int destinationDimId;
 	private int fuelAmount;
 	private final int MAX_FUEL = 1000;
-	private BlockPosition spawnLocation;
-	private List<BlockPosition> spawnLocations;
-	private List<BlockPosition> warpCoreLocation;
-	private HashMap<BlockPosition,Boolean> occupiedLandingPads;
+	private HashedBlockPosition spawnLocation;
+	private List<HashedBlockPosition> spawnLocations;
+	private List<HashedBlockPosition> warpCoreLocation;
+	private HashMap<HashedBlockPosition,Boolean> occupiedLandingPads;
 	private long transitionEta;
-	private ForgeDirection direction;
+	private EnumFacing direction;
 	private double rotation;
 	private double angularVelocity;
 	private long lastTimeModification = 0;
@@ -46,9 +46,9 @@ public class SpaceObject implements ISpaceObject {
 
 	public SpaceObject() {
 		properties = (DimensionProperties) zmaster587.advancedRocketry.dimension.DimensionManager.defaultSpaceDimensionProperties.clone();
-		spawnLocations = new LinkedList<BlockPosition>();
-		occupiedLandingPads = new HashMap<BlockPosition,Boolean>();
-		warpCoreLocation = new LinkedList<BlockPosition>(); 
+		spawnLocations = new LinkedList<HashedBlockPosition>();
+		occupiedLandingPads = new HashMap<HashedBlockPosition,Boolean>();
+		warpCoreLocation = new LinkedList<HashedBlockPosition>(); 
 		transitionEta = -1;
 		destinationDimId = -1;
 	}
@@ -99,7 +99,7 @@ public class SpaceObject implements ISpaceObject {
 	 * Sets the forward Facing direction of the object.  Mostly used for warpships
 	 * @param direction
 	 */
-	public void setForwardDirection(ForgeDirection direction) {
+	public void setForwardDirection(EnumFacing direction) {
 		this.direction = direction;
 	}
 
@@ -107,9 +107,9 @@ public class SpaceObject implements ISpaceObject {
 	 * Gets the forward facing direction of the ship.  Direction is not garunteed to be set
 	 * @return direction of the ship, or UNKNOWN if none exists
 	 */
-	public ForgeDirection getForwardDirection() {
+	public EnumFacing getForwardDirection() {
 		if(direction == null)
-			return ForgeDirection.UNKNOWN;
+			return EnumFacing.DOWN;
 		return direction;
 	}
 	/**
@@ -174,18 +174,18 @@ public class SpaceObject implements ISpaceObject {
 	/**
 	 * @return the spawn location of the object
 	 */
-	public BlockPosition getSpawnLocation() {
+	public HashedBlockPosition getSpawnLocation() {
 		return spawnLocation;
 	}
 
-	public void addWarpCore(BlockPosition position) {
+	public void addWarpCore(HashedBlockPosition position) {
 		warpCoreLocation.add(position);
 	}
-	public void removeWarpCore(BlockPosition position) {
+	public void removeWarpCore(HashedBlockPosition position) {
 		warpCoreLocation.remove(position);
 	}
 
-	public List<BlockPosition> getWarpCoreLocations() {
+	public List<HashedBlockPosition> getWarpCoreLocations() {
 		return warpCoreLocation;
 	}
 
@@ -240,26 +240,34 @@ public class SpaceObject implements ISpaceObject {
 		return amt;
 	}
 
+	public void addLandingPad(BlockPos pos) {
+		addLandingPad(pos.getX(), pos.getZ());
+	}
+	
 	/**
 	 * Adds a landing pad to the station
 	 * @param x
 	 * @param z
 	 */
 	public void addLandingPad(int x, int z) {
-		BlockPosition pos = new BlockPosition(x, 0, z);
+		HashedBlockPosition pos = new HashedBlockPosition(x, 0, z);
 		if(!spawnLocations.contains(pos)) {
 			spawnLocations.add(pos);
 			occupiedLandingPads.put(pos, false);
 		}
 	}
 
+	public void removeLandingPad(BlockPos pos) {
+		removeLandingPad(pos.getX(), pos.getZ());
+	}
+	
 	/**
 	 * Removes an existing landing pad from the station
 	 * @param x
 	 * @param z
 	 */
 	public void removeLandingPad(int x, int z) {
-		BlockPosition pos = new BlockPosition(x, 0, z);
+		HashedBlockPosition pos = new HashedBlockPosition(x, 0, z);
 		spawnLocations.remove(pos);
 		occupiedLandingPads.remove(pos);
 	}
@@ -267,8 +275,8 @@ public class SpaceObject implements ISpaceObject {
 	/**
 	 * @return next viable place to land
 	 */
-	public BlockPosition getNextLandingPad() {
-		for(BlockPosition pos : spawnLocations) {
+	public HashedBlockPosition getNextLandingPad() {
+		for(HashedBlockPosition pos : spawnLocations) {
 			if(!occupiedLandingPads.get(pos)) {
 				occupiedLandingPads.put(pos, true);
 				return pos;
@@ -281,7 +289,7 @@ public class SpaceObject implements ISpaceObject {
 	 * @return true if there is an empty pad to land on
 	 */
 	public boolean hasFreeLandingPad() {
-		for(BlockPosition pos : spawnLocations) {
+		for(HashedBlockPosition pos : spawnLocations) {
 			if(!occupiedLandingPads.get(pos)) {
 				return true;
 			}
@@ -289,13 +297,17 @@ public class SpaceObject implements ISpaceObject {
 		return false;
 	}
 
+	public void setPadStatus(BlockPos pos, boolean full) {
+		setPadStatus(pos.getX(), pos.getZ(), full);
+	}
+	
 	/**
 	 * @param x
 	 * @param z
 	 * @param full true if the pad is avalible to use
 	 */
 	public void setPadStatus(int x, int z, boolean full) {
-		BlockPosition pos = new BlockPosition(x, 0, z);
+		HashedBlockPosition pos = new HashedBlockPosition(x, 0, z);
 		if(occupiedLandingPads.containsKey(pos))
 			occupiedLandingPads.put(pos, full);
 	}
@@ -327,7 +339,7 @@ public class SpaceObject implements ISpaceObject {
 	 */
 	@Override
 	public void setSpawnLocation(int x, int y, int z) {
-		spawnLocation = new BlockPosition(x,y,z);
+		spawnLocation = new HashedBlockPosition(x,y,z);
 	}
 
 	/**
@@ -390,7 +402,7 @@ public class SpaceObject implements ISpaceObject {
 			nbt.setLong("transitionEta", transitionEta);
 
 		NBTTagList list = new NBTTagList();
-		for(BlockPosition pos : this.spawnLocations) {
+		for(HashedBlockPosition pos : this.spawnLocations) {
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setBoolean("occupied", occupiedLandingPads.get(pos));
 			tag.setIntArray("pos", new int[] {pos.x, pos.z});
@@ -399,7 +411,7 @@ public class SpaceObject implements ISpaceObject {
 		nbt.setTag("spawnPositions", list);
 
 		list = new NBTTagList();
-		for(BlockPosition pos : this.warpCoreLocation) {
+		for(HashedBlockPosition pos : this.warpCoreLocation) {
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setIntArray("pos", new int[] {pos.x, pos.y, pos.z});
 			list.appendTag(tag);
@@ -416,13 +428,13 @@ public class SpaceObject implements ISpaceObject {
 		posY = nbt.getInteger("posY");
 		altitude = nbt.getInteger("altitude");
 		fuelAmount = nbt.getInteger("fuel");
-		spawnLocation = new BlockPosition(nbt.getInteger("spawnX"), nbt.getInteger("spawnY"), nbt.getInteger("spawnZ"));
+		spawnLocation = new HashedBlockPosition(nbt.getInteger("spawnX"), nbt.getInteger("spawnY"), nbt.getInteger("spawnZ"));
 		properties.setId(nbt.getInteger("id"));
 		rotation = nbt.getDouble("rotation");
 		angularVelocity = nbt.getDouble("deltaRotation");
 		
 		if(nbt.hasKey("direction"))
-			direction = ForgeDirection.getOrientation(nbt.getInteger("direction"));
+			direction = EnumFacing.values()[nbt.getInteger("direction")];
 
 		if(nbt.hasKey("transitionEta"))
 			transitionEta = nbt.getLong("transitionEta");
@@ -433,7 +445,7 @@ public class SpaceObject implements ISpaceObject {
 		for(int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound tag = list.getCompoundTagAt(i);
 			int[] posInt = tag.getIntArray("pos");
-			BlockPosition pos = new BlockPosition(posInt[0], 0, posInt[1]);
+			HashedBlockPosition pos = new HashedBlockPosition(posInt[0], 0, posInt[1]);
 			spawnLocations.add(pos);
 			occupiedLandingPads.put(pos, tag.getBoolean("occupied"));
 		}
@@ -443,7 +455,7 @@ public class SpaceObject implements ISpaceObject {
 		for(int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound tag = list.getCompoundTagAt(i);
 			int[] posInt = tag.getIntArray("pos");
-			BlockPosition pos = new BlockPosition(posInt[0], posInt[1], posInt[2]);
+			HashedBlockPosition pos = new HashedBlockPosition(posInt[0], posInt[1], posInt[2]);
 			warpCoreLocation.add(pos);
 		}
 	}

@@ -37,12 +37,7 @@ public class PacketDimInfo extends BasePacket {
 				dimProperties.writeToNBT(nbt);
 				PacketBuffer packetBuffer = new PacketBuffer(out);
 				out.writeBoolean(false);
-				//TODO: error handling
-				try {
-					packetBuffer.writeNBTTagCompoundToBuffer(nbt);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				packetBuffer.writeNBTTagCompoundToBuffer(nbt);
 			} catch(NullPointerException e) {
 				out.writeBoolean(true);
 				e.printStackTrace();

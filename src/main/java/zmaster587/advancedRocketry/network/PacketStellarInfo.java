@@ -34,12 +34,7 @@ public class PacketStellarInfo extends BasePacket {
 		star.writeToNBT(nbt);
 
 		PacketBuffer packetBuffer = new PacketBuffer(out);
-		//TODO: error handling
-		try {
-			packetBuffer.writeNBTTagCompoundToBuffer(nbt);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		packetBuffer.writeNBTTagCompoundToBuffer(nbt);
 
 
 	}

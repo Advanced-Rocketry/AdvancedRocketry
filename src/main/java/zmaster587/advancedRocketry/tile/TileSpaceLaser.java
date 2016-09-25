@@ -4,14 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.integration.CompatibilityMgr;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.satellite.SatelliteLaser;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -32,6 +27,7 @@ import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.inventory.modules.ModuleTextBox;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.tile.TileInventoriedRFConsumer;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.UniversalBattery;
 import zmaster587.libVulpes.util.ZUtils;
@@ -45,31 +41,32 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Type;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEnergyHandler, INetworkMachine, IModularInventory, IGuiCallback, IButtonInventory, IUniversalEnergy {
+public class TileSpaceLaser extends TileInventoriedRFConsumer implements ISidedInventory, IUniversalEnergy, INetworkMachine, IModularInventory, IGuiCallback, IButtonInventory {
 
 	private static final int INVSIZE = 9;
-	protected UniversalBattery storage = new UniversalBattery(1000000);
 	ItemStack glassPanel;
-	//ItemStack invBuffer[];
 	SatelliteLaser laserSat;
 	protected boolean isRunning, finished;
 	protected IInventory adjInv;
 	private int radius, xCenter, yCenter, numSteps;
-	private ForgeDirection prevDir;
+	private EnumFacing prevDir;
 	public int laserX, laserZ, tickSinceLastOperation;
-	private static final ForgeDirection[] VALID_INVENTORY_DIRECTIONS = { ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH, ForgeDirection.WEST};
+	private static final EnumFacing[] VALID_INVENTORY_DIRECTIONS = { EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST};
 	private static final int POWER_PER_OPERATION = 10000;
 	private ModuleTextBox locationX, locationZ;
 	private ModuleText updateText;
@@ -86,13 +83,14 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	Ticket ticket;
 
 	public TileSpaceLaser() {
+		super(1000000, INVSIZE);
 		glassPanel = null;
 		//invBuffer = new ItemStack[INVSIZE];
 		radius = 0;
 		xCenter = 0;
 		yCenter = 0;
 		numSteps = 0;
-		prevDir = ForgeDirection.UNKNOWN;
+		prevDir = null;
 
 		tickSinceLastOperation = 0;
 		laserX = 0;
@@ -101,13 +99,6 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		isRunning = false;
 		finished = false;
 		mode = MODE.SINGLE;
-	}
-
-	//Required so we see the laser
-	@SideOnly(Side.CLIENT)
-	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
-		return AxisAlignedBB.getBoundingBox(this.xCoord + 1, this.yCoord, this.zCoord + 1, this.xCoord, this.yCoord - 100, this.zCoord);
 	}
 
 	/*
@@ -171,7 +162,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 
 	private void resetSpiral() {
 		radius = 0;
-		prevDir = ForgeDirection.UNKNOWN;
+		prevDir = null;
 		xCenter = 0;
 		yCenter = 0;
 		numSteps = 0;
@@ -211,13 +202,10 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 
 	public void setMode(MODE m) {mode = m;};
 
-	@Override
-	public boolean canUpdate() {return true;}
-
 	public void setFinished(boolean value) { finished = value; }
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 		//TODO: drain energy
 		if(!this.worldObj.isRemote) {
 			tickSinceLastOperation++;
@@ -225,8 +213,8 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 
 			if(hasPowerForOperation() && isReadyForOperation() && laserSat.isAlive() && !laserSat.getJammed()) {
 				laserSat.performOperation();
-
-				storage.setEnergyStored(storage.getEnergyStored() - POWER_PER_OPERATION);
+				
+				energy.setEnergyStored(energy.getEnergyStored() - POWER_PER_OPERATION);
 				tickSinceLastOperation = 0;
 			}
 		}
@@ -239,7 +227,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 				if(mode == MODE.SINGLE) 
 					finished = true;
 
-				if(this.worldObj.getBlockPowerInput(this.xCoord, this.yCoord, this.zCoord) != 0) {
+				if(this.worldObj.getStrongPower(getPos()) != 0) {
 					if(mode == MODE.LINE_X) {
 						this.laserX += 3;
 					}
@@ -250,22 +238,22 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 						numSteps++;
 						if(radius < numSteps) {
 							numSteps = 0;
-							if(prevDir == ForgeDirection.NORTH)
-								prevDir = ForgeDirection.EAST;
-							else if(prevDir == ForgeDirection.EAST){
-								prevDir = ForgeDirection.SOUTH;
+							if(prevDir == EnumFacing.NORTH)
+								prevDir = EnumFacing.EAST;
+							else if(prevDir == EnumFacing.EAST){
+								prevDir = EnumFacing.SOUTH;
 								radius++;
 							}
-							else if(prevDir == ForgeDirection.SOUTH)
-								prevDir = ForgeDirection.WEST;
+							else if(prevDir == EnumFacing.SOUTH)
+								prevDir = EnumFacing.WEST;
 							else {
-								prevDir = ForgeDirection.NORTH;
+								prevDir = EnumFacing.NORTH;
 								radius++;
 							}
 						}
 
-						this.laserX += 3*prevDir.offsetX;
-						this.laserZ += 3*prevDir.offsetZ;
+						this.laserX += 3*prevDir.getFrontOffsetX();
+						this.laserZ += 3*prevDir.getFrontOffsetZ();
 					}
 				}
 				//TODO: unneeded?
@@ -275,10 +263,10 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	}
 
 	public boolean isReadyForOperation() {
-		if(storage.getEnergyStored() == 0)
+		if(energy.getEnergyStored() == 0)
 			return false;
 
-		return tickSinceLastOperation > (3*this.storage.getMaxEnergyStored()/(float)this.storage.getEnergyStored());
+		return tickSinceLastOperation > (3*this.energy.getMaxEnergyStored()/(float)this.energy.getEnergyStored());
 	}
 
 	public void onDestroy() {
@@ -297,25 +285,25 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	}
 
 	@Override
-	public Packet getDescriptionPacket() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);
 
 		nbt.setBoolean("IsRunning", isRunning);
 
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
+		return new SPacketUpdateTileEntity(getPos(), 0, nbt);
 	}
 
 	@Override 
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.func_148857_g());
-		isRunning = pkt.func_148857_g().getBoolean("IsRunning");
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		this.readFromNBT(pkt.getNbtCompound());
+		isRunning = pkt.getNbtCompound().getBoolean("IsRunning");
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		storage.writeToNBT(nbt);
+		energy.writeToNBT(nbt);
 
 		NBTTagCompound laser = new NBTTagCompound();
 		laserSat.writeToNBT(laser);
@@ -354,12 +342,13 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 			nbt.setInteger("numSteps", numSteps);
 			nbt.setInteger("prevDir", prevDir.ordinal());
 		}
+		return nbt;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		storage.readFromNBT(nbt);
+		energy.readFromNBT(nbt);
 
 		laserSat.readFromNBT(nbt.getCompoundTag("laser"));
 
@@ -385,7 +374,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 			yCenter = nbt.getInteger("CenterY");
 			radius = nbt.getInteger("radius");
 			numSteps = nbt.getInteger("numSteps");
-			prevDir = ForgeDirection.values()[nbt.getInteger("prevDir")];
+			prevDir = EnumFacing.values()[nbt.getInteger("prevDir")];
 		}
 	}
 
@@ -432,13 +421,13 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	 * @return first available inventory or null
 	 */
 	private Object getAvalibleInv() {
-		ForgeDirection front = RotatableBlock.getFront(this.getBlockMetadata());
+		EnumFacing front = RotatableBlock.getFront(worldObj.getBlockState(getPos()));
 
-		for(ForgeDirection f : VALID_INVENTORY_DIRECTIONS) {
+		for(EnumFacing f : VALID_INVENTORY_DIRECTIONS) {
 			if(f == front)
 				continue;
 
-			TileEntity e = this.worldObj.getTileEntity(this.xCoord + f.offsetX, this.yCoord + f.offsetY, this.zCoord + f.offsetZ);
+			TileEntity e = this.worldObj.getTileEntity(getPos().offset(f));
 
 
 			if(InventoryCompat.canInjectItems(e))
@@ -456,13 +445,13 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		if(item == null)
 			return getAvalibleInv();
 
-		ForgeDirection front = RotatableBlock.getFront(this.getBlockMetadata());
+		EnumFacing front = RotatableBlock.getFront(worldObj.getBlockState(pos));
 
-		for(ForgeDirection f : VALID_INVENTORY_DIRECTIONS) {
+		for(EnumFacing f : VALID_INVENTORY_DIRECTIONS) {
 			if(f == front)
 				continue;
 
-			TileEntity e = this.worldObj.getTileEntity(this.xCoord + f.offsetX, this.yCoord + f.offsetY, this.zCoord + f.offsetZ);
+			TileEntity e = this.worldObj.getTileEntity(getPos());
 
 
 			if(InventoryCompat.canInjectItems(e, item))
@@ -472,8 +461,8 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	}
 
 	private boolean canMachineSeeEarth() {
-		for(int i = yCoord - 1; i > 0; i--) {
-			if(worldObj.isBlockNormalCubeDefault(xCoord, i, zCoord,true))
+		for(int i = getPos().getY() - 1; i > 0; i--) {
+			if(worldObj.isBlockNormalCube(new BlockPos(getPos().getX(), i, getPos().getZ()), true))
 				return false;
 		}
 		return true;
@@ -484,16 +473,16 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	 */
 	public void checkCanRun() {
 		//Laser requires lense, redstone power, not be jammed, and be in orbit and energy to function
-		if(!worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || glassPanel == null || storage.getEnergyStored() == 0 || !(this.worldObj.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(xCoord, zCoord).getParentPlanet())) {
+		if(worldObj.isBlockIndirectlyGettingPowered(getPos()) == 0 || glassPanel == null || energy.getEnergyStored() == 0 || !(this.worldObj.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(getPos()).getParentPlanet())) {
 			if(laserSat.isAlive()) {
 				laserSat.deactivateLaser();
 			}
 
 			isRunning = false;
-		} else if(!laserSat.isAlive() && !finished && !laserSat.getJammed() && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) && canMachineSeeEarth()) {
+		} else if(!laserSat.isAlive() && !finished && !laserSat.getJammed() && worldObj.isBlockIndirectlyGettingPowered(getPos()) > 0 && canMachineSeeEarth()) {
 
 			//Laser will be on at this point
-			int orbitDimId = ((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(xCoord, zCoord).getParentPlanet();
+			int orbitDimId = ((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(getPos()).getParentPlanet();
 			if(orbitDimId == SpaceObjectManager.WARPDIMID)
 				return;
 			WorldServer orbitWorld = DimensionManager.getWorld(orbitDimId);
@@ -509,35 +498,35 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 			if(ticket == null) {
 				ticket = ForgeChunkManager.requestTicket(AdvancedRocketry.instance, this.worldObj, Type.NORMAL);
 				if(ticket != null)
-					ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(this.xCoord / 16 - (this.xCoord < 0 ? 1 : 0), this.zCoord / 16 - (this.zCoord < 0 ? 1 : 0)));
+					ForgeChunkManager.forceChunk(ticket, new ChunkPos(getPos().getX() / 16 - (getPos().getX() < 0 ? 1 : 0), getPos().getZ() / 16 - (getPos().getZ() < 0 ? 1 : 0)));
 			}
 
 			isRunning = laserSat.activateLaser(orbitWorld, laserX, laserZ);
 		}
 
 		if(!this.worldObj.isRemote)
-			PacketHandler.sendToNearby(new PacketMachine(this, (byte)2), this.xCoord, this.yCoord, this.zCoord, 128, this.worldObj.provider.dimensionId);
+			PacketHandler.sendToNearby(new PacketMachine(this, (byte)2), 128, pos, this.worldObj.provider.getDimension());
 	}
 
 	public int getEnergyPercentScaled(int max) {
-		return (int)(max * (storage.getEnergyStored() / (float)storage.getMaxEnergyStored()) );
+		return (int)(max * (energy.getEnergyStored() / (float)energy.getMaxEnergyStored()) );
 	}
 
 	public boolean hasEnergy() {
-		return storage.getEnergyStored() != 0;
+		return energy.getEnergyStored() != 0;
 	}
 
 	//InventoryHandling start
 	@Override
 	public int getSizeInventory() {
 		int sizeInv = 0;
-		ForgeDirection front = RotatableBlock.getFront(this.getBlockMetadata());
+		EnumFacing front = RotatableBlock.getFront(worldObj.getBlockState(getPos()));
 
-		for(ForgeDirection f : VALID_INVENTORY_DIRECTIONS) {
+		for(EnumFacing f : VALID_INVENTORY_DIRECTIONS) {
 			if(f == front)
 				continue;
 
-			TileEntity e = this.worldObj.getTileEntity(this.xCoord + f.offsetX, this.yCoord + f.offsetY, this.zCoord + f.offsetZ);
+			TileEntity e = this.worldObj.getTileEntity(getPos().offset(f));
 
 			//TODO: may cause inf loop
 			if(e != null && e instanceof IInventory)
@@ -552,13 +541,13 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		if(i == 0)
 			return glassPanel;
 		else {
-			ForgeDirection front = RotatableBlock.getFront(this.getBlockMetadata());
+			EnumFacing front = RotatableBlock.getFront(worldObj.getBlockState(getPos()));
 
-			for(ForgeDirection f : VALID_INVENTORY_DIRECTIONS) {
+			for(EnumFacing f : VALID_INVENTORY_DIRECTIONS) {
 				if(f == front)
 					continue;
 
-				TileEntity e = this.worldObj.getTileEntity(this.xCoord + f.offsetX, this.yCoord + f.offsetY, this.zCoord + f.offsetZ);
+				TileEntity e = this.worldObj.getTileEntity(getPos().offset(f));
 
 				//TODO: may cause inf loop
 				if(e != null && e instanceof IInventory)
@@ -584,13 +573,6 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int i) {
-		if(i == 0)
-			return glassPanel;
-		return null;
-	}
-
-	@Override
 	public void setInventorySlotContents(int i, ItemStack itemstack) {
 
 		//TODO: add gregcipies
@@ -598,13 +580,13 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 			glassPanel = itemstack;
 		else {
 
-			ForgeDirection front = RotatableBlock.getFront(this.getBlockMetadata());
+			EnumFacing front = RotatableBlock.getFront(worldObj.getBlockState(getPos()));
 
-			for(ForgeDirection f : VALID_INVENTORY_DIRECTIONS) {
+			for(EnumFacing f : VALID_INVENTORY_DIRECTIONS) {
 				if(f == front)
 					continue;
 
-				TileEntity e = this.worldObj.getTileEntity(this.xCoord + f.offsetX, this.yCoord + f.offsetY, this.zCoord + f.offsetZ);
+				TileEntity e = this.worldObj.getTileEntity(getPos().offset(f));
 
 				if(InventoryCompat.canInjectItems(e, itemstack))
 					InventoryCompat.injectItem(e, itemstack);
@@ -624,7 +606,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	}
 
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 		return "Orbital Laser";
 	}
 
@@ -636,47 +618,50 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-		return entityplayer.getDistanceSq(this.xCoord, this.yCoord, this.zCoord) <= 64;
+		return entityplayer.getDistanceSq(pos) <= 64;
 	}
 
 	@Override
-	public void openInventory() {
+	public void openInventory(EntityPlayer entity) {
 		// TODO Perhaps make sure laser isn't running
 	}
 
 	@Override
-	public void closeInventory() {
+	public void closeInventory(EntityPlayer entity) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int var1) {
+	public int[] getSlotsForFace(EnumFacing side) {
 		return null;
 	}
 
+	
 	@Override
-	public boolean canInsertItem(int i, ItemStack itemstack, int j) {
+	public boolean canInsertItem(int index, ItemStack itemStackIn,
+			EnumFacing direction) {
 		return false;
 	}
-
+	
 	@Override
-	public boolean canExtractItem(int i, ItemStack itemstack, int j) {
+	public boolean canExtractItem(int index, ItemStack stack,
+			EnumFacing direction) {
 		return false;
 	}
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
 		if(i == 0)
-			return CompatibilityMgr.gregtechLoaded ? OreDictionary.getOreName(OreDictionary.getOreID(itemstack)).equals("lenseRuby") : AdvancedRocketryItems.itemLens == itemstack.getItem() ? true : false;
+			return AdvancedRocketryItems.itemLens == itemstack.getItem();
 
-			ForgeDirection front = RotatableBlock.getFront(this.getBlockMetadata());
+			EnumFacing front = RotatableBlock.getFront(worldObj.getBlockState(pos));
 
-			for(ForgeDirection f : VALID_INVENTORY_DIRECTIONS) {
+			for(EnumFacing f : VALID_INVENTORY_DIRECTIONS) {
 				if(f == front)
 					continue;
 
-				TileEntity e = this.worldObj.getTileEntity(this.xCoord + f.offsetX, this.yCoord + f.offsetY, this.zCoord + f.offsetZ);
+				TileEntity e = this.worldObj.getTileEntity(pos.offset(f));
 
 				//TODO: may cause inf loop
 				if(e != null && e instanceof IInventory)
@@ -696,7 +681,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	 * @return returns whether enough power is stored for the next opertation
 	 */
 	public boolean hasPowerForOperation() {
-		return POWER_PER_OPERATION <= storage.getEnergyStored();
+		return POWER_PER_OPERATION <= energy.getEnergyStored();
 	}
 
 	/**
@@ -704,39 +689,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	 * @param amt amount to set energy to
 	 */
 	public void setEnergy(int amt) {
-		storage.setEnergyStored(amt);
-	}
-
-	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive,
-			boolean simulate) {
-		
-		
-		if(from == ForgeDirection.DOWN || from == RotatableBlock.getFront(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord)))
-			return 0;
-
-		return acceptEnergy(maxReceive, simulate);
-	}
-
-	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract,
-			boolean simulate) {
-		return 0;
-	}
-
-	@Override
-	public int getEnergyStored(ForgeDirection from) {
-		return getEnergyStored();
-	}
-
-	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
-		return getMaxEnergyStored();
-	}
-	
-	@Override
-	public void setMaxEnergyStored(int max) {
-		storage.setMaxEnergyStored(max);
+		energy.setEnergyStored(amt);
 	}
 	
 	//Redstone Flux end
@@ -751,13 +704,13 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 		return false;
 	}
 
 	@Override
-	public boolean canConnectEnergy(ForgeDirection from) {
-		return from != ForgeDirection.DOWN && from != RotatableBlock.getFront(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
+	public boolean canConnectEnergy(EnumFacing from) {
+		return from != EnumFacing.DOWN && from != RotatableBlock.getFront(this.worldObj.getBlockState(pos));
 	}
 
 	@Override
@@ -840,27 +793,12 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	}
 
 	@Override
-	public void setEnergyStored(int amt) {
-		storage.setEnergyStored(amt);
+	public boolean canPerformFunction() {
+		return false;
 	}
 
 	@Override
-	public int extractEnergy(int amt, boolean simulate) {
-		return storage.extractEnergy(amt, simulate);
-	}
-
-	@Override
-	public int getEnergyStored() {
-		return storage.getEnergyStored();
-	}
-
-	@Override
-	public int getMaxEnergyStored() {
-		return storage.getMaxEnergyStored();
-	}
-
-	@Override
-	public int acceptEnergy(int amt, boolean simulate) {
-		return storage.acceptEnergy(amt, simulate);
+	public void performFunction() {
+		
 	}
 }

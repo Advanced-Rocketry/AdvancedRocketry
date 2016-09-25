@@ -9,27 +9,21 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
-public class BiomeGenMoon extends BiomeGenBase {
+public class BiomeGenMoon extends Biome {
 
 	public BiomeGenMoon(int biomeId, boolean register) {
-		super(biomeId, register);
+		super(new BiomeProperties("Moon").setRainDisabled().setBaseHeight(1f).setHeightVariation(0.01f).setRainfall(0).setTemperature(0.3f));
+
+		registerBiome(biomeId, "Moon", this);
 		
 		//cold and dry
-		
-		enableRain = false;
-		enableSnow = false;
-		rootHeight=1f;
-		heightVariation=0.01f;
-		rainfall = 0f;
-		temperature = 0.3f;
 		this.theBiomeDecorator.generateLakes=false;
 		this.theBiomeDecorator.flowersPerChunk=0;
 		this.theBiomeDecorator.grassPerChunk=0;
 		this.theBiomeDecorator.treesPerChunk=0;
-		this.fillerBlock = this.topBlock = AdvancedRocketryBlocks.blockMoonTurf;
-		this.biomeName="Moon";
+		this.fillerBlock = this.topBlock = AdvancedRocketryBlocks.blockMoonTurf.getDefaultState();
 	}
 	
 	@Override

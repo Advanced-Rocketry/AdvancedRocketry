@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.integration;
 
-import cpw.mods.fml.common.Loader;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.Loader;
 
 public class CompatibilityMgr {
 

@@ -1,0 +1,7 @@
+{
+    "parent": "block/cube_bottom_top",
+    "textures": {
+        "top": "advancedrocketry:blocks/rocketPad_nbEdge",
+        "side": "advancedrocketry:blocks/rocketPad_xCross"
+    }
+}

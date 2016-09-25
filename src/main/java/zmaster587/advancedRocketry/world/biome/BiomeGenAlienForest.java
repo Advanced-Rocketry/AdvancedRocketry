@@ -5,59 +5,52 @@ import java.util.Random;
 import zmaster587.advancedRocketry.world.gen.WorldGenAlienTree;
 import zmaster587.advancedRocketry.world.gen.WorldGenNoTree;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 
-public class BiomeGenAlienForest extends BiomeGenBase {
+public class BiomeGenAlienForest extends Biome {
 
 	public final static WorldGenAbstractTree alienTree = new WorldGenAlienTree(false);
 	private final static WorldGenNoTree noTree = new WorldGenNoTree(false);
 
 	public BiomeGenAlienForest(int biomeId, boolean register) {
-		super(biomeId, register);
+		super(new BiomeProperties("Alien Forest").setWaterColor(0x8888FF));
 
-		this.fillerBlock = Blocks.grass;
-		this.waterColorMultiplier = 0x8888FF;
-		this.biomeName="Alien Forest";
+		registerBiome(biomeId, "Alien Forest", this);
+		
+		this.fillerBlock = Blocks.GRASS.getDefaultState();
 		this.theBiomeDecorator.grassPerChunk = 50;
 		this.theBiomeDecorator.flowersPerChunk = 0;
 	}
 
 	@Override
-	public void decorate(World p_76728_1_, Random random, int chunkX,
-			int chunkZ) {
-
+	public void decorate(World worldIn, Random rand, BlockPos pos) {
 		//int xCoord = (chunkX << 4) + 8;
 		//int zCoord = (chunkZ << 4) + 8;
 
-		if(random.nextInt(20) == 0) {
+		if(rand.nextInt(20) == 0) {
 
-			int yCoord =  p_76728_1_.getHeightValue(chunkX, chunkZ);
 
-			alienTree.generate(p_76728_1_, random, chunkX, yCoord, chunkZ);
+			alienTree.generate(worldIn, rand, worldIn.getHeight(pos));
 		}
 
-		super.decorate(p_76728_1_, random, chunkX, chunkZ);
+		super.decorate(worldIn, rand, pos);
 	}
 
 	@Override
-	public WorldGenAbstractTree func_150567_a(Random p_150567_1_)
-	{
-		return noTree;//alienTree;
+	public WorldGenAbstractTree genBigTreeChance(Random rand) {
+		return noTree;
 	}
 
 	@Override
-	public int getBiomeFoliageColor(int p_150571_1_, int p_150571_2_,
-			int p_150571_3_) {
+	public int getFoliageColorAtPos(BlockPos pos) {
 		int color = 0x55ffe1;
 		return getModdedBiomeFoliageColor(color);
 	}
-
 	@Override
-	public int getBiomeGrassColor(int p_150558_1_, int p_150558_2_,
-			int p_150558_3_) {
-		waterColorMultiplier = 0xff1144;
+	public int getGrassColorAtPos(BlockPos pos) {
 		int color = 0x7777ff;
 		return getModdedBiomeFoliageColor(color);
 	}

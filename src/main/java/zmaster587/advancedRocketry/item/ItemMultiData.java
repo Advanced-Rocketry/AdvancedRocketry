@@ -2,14 +2,14 @@ package zmaster587.advancedRocketry.item;
 
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.world.util.MultiData;
 
@@ -64,7 +64,7 @@ public class ItemMultiData extends Item {
 	public int addData(ItemStack item, int amount, DataStorage.DataType dataType) {
 		MultiData data = getDataStorage(item);
 
-		int amt = data.addData(amount, dataType, ForgeDirection.UNKNOWN,true);
+		int amt = data.addData(amount, dataType, EnumFacing.DOWN,true);
 
 		NBTTagCompound nbt;
 		if(item.hasTagCompound())
@@ -81,7 +81,7 @@ public class ItemMultiData extends Item {
 	public int removeData(ItemStack item, int amount, DataStorage.DataType dataType) {
 		MultiData data = getDataStorage(item);
 
-		int amt = data.extractData(amount, dataType, ForgeDirection.UNKNOWN, true);
+		int amt = data.extractData(amount, dataType, EnumFacing.DOWN, true);
 		
 		NBTTagCompound nbt;
 		if(item.hasTagCompound())

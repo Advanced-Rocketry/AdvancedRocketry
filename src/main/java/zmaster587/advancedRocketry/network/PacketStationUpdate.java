@@ -12,7 +12,6 @@ import net.minecraft.network.PacketBuffer;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
-import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.network.BasePacket;
@@ -64,12 +63,7 @@ public class PacketStationUpdate extends BasePacket {
 			try {
 				spaceObject.getProperties().writeToNBT(nbt);
 				PacketBuffer packetBuffer = new PacketBuffer(out);
-				//TODO: error handling
-				try {
-					packetBuffer.writeNBTTagCompoundToBuffer(nbt);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				packetBuffer.writeNBTTagCompoundToBuffer(nbt);
 			} catch(NullPointerException e) {
 				out.writeBoolean(true);
 				Logger.getLogger("advancedRocketry").warning("Dimension " + stationNumber + " has thrown an exception trying to write NBT, deleting!");

@@ -2,11 +2,12 @@ package zmaster587.advancedRocketry.item;
 
 import java.util.List;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
 
 /**
  * MetaData corresponds to the id
@@ -74,9 +75,9 @@ public class ItemStationChip extends ItemIdWithName {
 	public void addInformation(ItemStack stack, EntityPlayer player, List list,
 			boolean bool) {
 		if(stack.getItemDamage() == 0)
-			list.add(EnumChatFormatting.GRAY + "Unprogrammed");
+			list.add(ChatFormatting.GRAY + "Unprogrammed");
 		else {
-			list.add(EnumChatFormatting.GREEN + "Station " + stack.getItemDamage());
+			list.add(ChatFormatting.GREEN + "Station " + stack.getItemDamage());
 			super.addInformation(stack, player, list, bool);
 		}
 	}

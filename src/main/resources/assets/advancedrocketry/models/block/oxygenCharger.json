@@ -1,0 +1,12 @@
+{
+    "parent": "block/orientable",
+    "display": {
+        "scale": [1, 0.5, 1], 
+        "translation": [0,-0.25,0] 
+    },
+    "textures": {
+        "top": "advancedrocketry:blocks/gasChargerTop",
+        "front": "advancedrocketry:blocks/panelSide",
+        "side": "advancedrocketry:blocks/panelSide"
+    }
+}

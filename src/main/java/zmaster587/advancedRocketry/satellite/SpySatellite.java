@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
@@ -26,8 +27,7 @@ public class SpySatellite extends SatelliteBase {
 	}
 
 	@Override
-	public boolean performAction(EntityPlayer player, World world, int x,
-			int y, int z) {
+	public boolean performAction(EntityPlayer player, World world, BlockPos pos) {
 
 		/*
 		//cam.setPosition(player.posX, player.posY + 30, player.posZ);

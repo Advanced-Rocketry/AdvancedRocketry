@@ -6,8 +6,6 @@ import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.libVulpes.network.BasePacket;
 import zmaster587.libVulpes.util.INetworkMachine;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,6 +15,8 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PacketSatellite extends BasePacket {
 
@@ -42,11 +42,7 @@ public class PacketSatellite extends BasePacket {
 		NBTTagCompound nbt = new NBTTagCompound();
 		machine.writeToNBT(nbt);
 		
-		try {
-			packetBuffer.writeNBTTagCompoundToBuffer(nbt);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		packetBuffer.writeNBTTagCompoundToBuffer(nbt);
 	}
 
 	@Override

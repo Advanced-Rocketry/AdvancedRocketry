@@ -9,12 +9,12 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 import zmaster587.advancedRocketry.tile.cables.TilePipe;
-import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 public class HandlerCableNetwork {
 	protected HashMap<Integer,CableNetwork> networks = new HashMap<Integer,CableNetwork>();
@@ -95,7 +95,7 @@ public class HandlerCableNetwork {
 	 * @param tile The source to be added
 	 * @param dir Direction of the source from the pipe
 	 */
-	public void addSource(TilePipe tilePipe, TileEntity tile, ForgeDirection dir) {
+	public void addSource(TilePipe tilePipe, TileEntity tile, EnumFacing dir) {
 		networks.get(tilePipe.getNetworkID()).addSource(tile, dir.getOpposite());
 	}
 
@@ -105,7 +105,7 @@ public class HandlerCableNetwork {
 	 * @param tile The sink to be added
 	 * @param dir Direction of the sink from the pipe
 	 */
-	public void addSink(TilePipe tilePipe, TileEntity tile, ForgeDirection dir) {
+	public void addSink(TilePipe tilePipe, TileEntity tile, EnumFacing dir) {
 		networks.get(tilePipe.getNetworkID()).addSink(tile, dir.getOpposite());
 	}
 	

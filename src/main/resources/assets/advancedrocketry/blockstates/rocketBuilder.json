@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "facing=north,state=false": { "model": "advancedrocketry:rocketBuilder" },
+        "facing=south,state=false": { "model": "advancedrocketry:rocketBuilder", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:rocketBuilder", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:rocketBuilder", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:rocketBuilder" },
+        "facing=south,state=true": { "model": "advancedrocketry:rocketBuilder", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:rocketBuilder", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:rocketBuilder", "y": 90 }
+    }
+}

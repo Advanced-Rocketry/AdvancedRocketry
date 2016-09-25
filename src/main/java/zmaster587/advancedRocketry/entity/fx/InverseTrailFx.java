@@ -1,14 +1,16 @@
 package zmaster587.advancedRocketry.entity.fx;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
-public class InverseTrailFx extends EntityFX {
+public class InverseTrailFx extends Particle {
 	public static final ResourceLocation icon = new ResourceLocation("advancedrocketry:textures/particle/soft.png");
 
 	
@@ -28,38 +30,37 @@ public class InverseTrailFx extends EntityFX {
         this.motionZ = -motz;
         
         
-		this.prevPosX = this.posX = this.lastTickPosX = x + motx*this.particleMaxAge;
-		this.prevPosY = this.posY = this.lastTickPosY = y + moty*this.particleMaxAge;
-		this.prevPosZ = this.posZ = this.lastTickPosZ = z + motz*this.particleMaxAge;
+		this.prevPosX = this.posX = x + motx*this.particleMaxAge;
+		this.prevPosY = this.posY = y + moty*this.particleMaxAge;
+		this.prevPosZ = this.posZ = z + motz*this.particleMaxAge;
 	}
 
 	@Override
-	public void renderParticle(Tessellator tess, float x1,
-			float y1, float z1, float x2,
-			float y2, float z2) {
+	public void renderParticle(VertexBuffer worldRendererIn, Entity entityIn,
+			float partialTicks, float rotationX, float rotationZ,
+			float rotationYZ, float rotationXY, float rotationXZ) {
+		super.renderParticle(worldRendererIn, entityIn, partialTicks, rotationX,
+				rotationZ, rotationYZ, rotationXY, rotationXZ);
+		
+		float f11 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks - interpPosX);
+		float f12 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks - interpPosY);
+		float f13 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks - interpPosZ);
+		float f10 = 0.25F * this.particleScale;
+		
+        int i = this.getBrightnessForRender(partialTicks);
+        int j = i >> 16 & 65535;
+        int k = i & 65535;
 		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(icon);
 		
 		GL11.glPushMatrix();
-		//GL11.glBlendFunc( GL11.GL_ZERO, GL11.GL_ONE_MINUS_SRC_ALPHA );
-		//tess.setBrightness(0);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		
-        float f11 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)x1 - interpPosX);
-        float f12 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)x1 - interpPosY);
-        float f13 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)x1 - interpPosZ);
-        float f10 = 0.1F * this.particleScale;
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         
         
-        
-        tess.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha);
-        
-        tess.addVertexWithUV((double)(f11 - y1 * f10 - y2 * f10), (double)(f12 - z1 * f10), (double)(f13 - x2 * f10 - z2 * f10), 1, 1);
-        tess.addVertexWithUV((double)(f11 - y1 * f10 + y2 * f10), (double)(f12 + z1 * f10), (double)(f13 - x2 * f10 + z2 * f10), 1, 0);
-        tess.addVertexWithUV((double)(f11 + y1 * f10 + y2 * f10), (double)(f12 + z1 * f10), (double)(f13 + x2 * f10 + z2 * f10), 0, 0);
-        tess.addVertexWithUV((double)(f11 + y1 * f10 - y2 * f10), (double)(f12 - z1 * f10), (double)(f13 + x2 * f10 - z2 * f10), 0, 1);
-        //GL11.glEnable(GL11.GL_BLEND);
-        
+		worldRendererIn.pos((double)(f11 - rotationX * f10 - rotationXY * f10), (double)(f12 - rotationZ * f10), (double)(f13 - rotationYZ * f10 - rotationXZ * f10)).tex(1, 1).color(this.particleRed, this.particleGreen, this.particleBlue, 1f).lightmap(j, k).endVertex();
+		worldRendererIn.pos((double)(f11 - rotationX * f10 + rotationXY * f10), (double)(f12 + rotationZ * f10), (double)(f13 - rotationYZ * f10 + rotationXZ * f10)).tex(1, 0).color(this.particleRed, this.particleGreen, this.particleBlue, 1f).lightmap(j, k).endVertex();
+		worldRendererIn.pos((double)(f11 + rotationX * f10 + rotationXY * f10), (double)(f12 + rotationZ * f10), (double)(f13 + rotationYZ * f10 + rotationXZ * f10)).tex(0, 0).color(this.particleRed, this.particleGreen, this.particleBlue, 1f).lightmap(j, k).endVertex();
+		worldRendererIn.pos((double)(f11 + rotationX * f10 - rotationXY * f10), (double)(f12 - rotationZ * f10), (double)(f13 + rotationYZ * f10 - rotationXZ * f10)).tex(0, 1).color(this.particleRed, this.particleGreen, this.particleBlue, 1f).lightmap(j, k).endVertex();
 		GL11.glPopMatrix();
 	}
 	
@@ -73,14 +74,13 @@ public class InverseTrailFx extends EntityFX {
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
-        
         //Change color and alpha over lifespan
         this.particleAlpha =  0.25f*this.particleAge/ (float)this.particleMaxAge;
         this.particleScale /= 1.02f;
         
         if (this.particleAge++ >= this.particleMaxAge)
         {
-            this.setDead();
+            this.setExpired();
         }
         
         this.setPosition(posX + this.motionX, posY + this.motionY, posZ  + this.motionZ);

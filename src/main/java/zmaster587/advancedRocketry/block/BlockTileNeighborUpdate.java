@@ -4,6 +4,8 @@ import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.util.IAdjBlockUpdate;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockTileNeighborUpdate extends BlockTile {
@@ -17,10 +19,11 @@ public class BlockTileNeighborUpdate extends BlockTile {
 	}
 	
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z,
-			Block block) {
-		super.onNeighborBlockChange(world, x, y, z, block);
-		TileEntity tile = world.getTileEntity(x, y, z);
+	public void onNeighborChange(IBlockAccess world, BlockPos pos,
+			BlockPos neighbor) {
+		// TODO Auto-generated method stub
+		super.onNeighborChange(world, pos, neighbor);
+		TileEntity tile = world.getTileEntity(pos);
 		
 		if(tile instanceof IAdjBlockUpdate)
 			((IAdjBlockUpdate)tile).onAdjacentBlockUpdated();

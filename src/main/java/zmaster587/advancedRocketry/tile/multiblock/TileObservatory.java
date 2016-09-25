@@ -1,12 +1,8 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
-import io.netty.buffer.ByteBuf;
-
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.inventory.TextureResources;
@@ -15,7 +11,7 @@ import zmaster587.advancedRocketry.item.ItemData;
 import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.block.BlockMeta;
-import zmaster587.libVulpes.client.util.ProgressBarImage;
+import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
@@ -23,48 +19,49 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class TileObservatory extends TileMultiPowerConsumer implements IModularInventory, IDataInventory {
 
 
 	private static final Object[][][] structure = new Object[][][]{
 
-		{	{Blocks.air, Blocks.air, Blocks.air, Blocks.air, Blocks.air}, 
-			{Blocks.air, Blocks.stone, Blocks.glass, Blocks.stone, Blocks.air},
-			{Blocks.air, Blocks.stone, Blocks.stone, Blocks.stone, Blocks.air},
-			{Blocks.air, Blocks.stone, Blocks.stone, Blocks.stone, Blocks.air},
-			{Blocks.air, Blocks.air, Blocks.air, Blocks.air, Blocks.air}},
+		{	{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR}, 
+			{Blocks.AIR, Blocks.STONE, Blocks.GLASS, Blocks.STONE, Blocks.AIR},
+			{Blocks.AIR, Blocks.STONE, Blocks.STONE, Blocks.STONE, Blocks.AIR},
+			{Blocks.AIR, Blocks.STONE, Blocks.STONE, Blocks.STONE, Blocks.AIR},
+			{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR}},
 
-			{	{Blocks.air,Blocks.air,Blocks.air,Blocks.air,Blocks.air}, 
-				{Blocks.air, Blocks.stone, Blocks.stone, Blocks.stone, Blocks.air},
-				{Blocks.air, Blocks.stone, Blocks.glass, Blocks.stone, Blocks.air},
-				{Blocks.air, Blocks.stone, Blocks.stone, Blocks.stone, Blocks.air},
-				{Blocks.air,Blocks.air,Blocks.air,Blocks.air,Blocks.air}},
+			{	{Blocks.AIR,Blocks.AIR,Blocks.AIR,Blocks.AIR,Blocks.AIR}, 
+				{Blocks.AIR, Blocks.STONE, Blocks.STONE, Blocks.STONE, Blocks.AIR},
+				{Blocks.AIR, Blocks.STONE, Blocks.GLASS, Blocks.STONE, Blocks.AIR},
+				{Blocks.AIR, Blocks.STONE, Blocks.STONE, Blocks.STONE, Blocks.AIR},
+				{Blocks.AIR,Blocks.AIR,Blocks.AIR,Blocks.AIR,Blocks.AIR}},
 
-				{	{null, Blocks.stone, Blocks.stone, Blocks.stone, null}, 
-					{Blocks.stone, Blocks.air, Blocks.air, Blocks.air, Blocks.stone},
-					{Blocks.stone, Blocks.air, Blocks.air, Blocks.air, Blocks.stone},
-					{Blocks.stone, Blocks.air, Blocks.glass, Blocks.air, Blocks.stone},
-					{null, Blocks.stone, Blocks.stone, Blocks.stone, null}},
+				{	{null, Blocks.STONE, Blocks.STONE, Blocks.STONE, null}, 
+					{Blocks.STONE, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.STONE},
+					{Blocks.STONE, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.STONE},
+					{Blocks.STONE, Blocks.AIR, Blocks.GLASS, Blocks.AIR, Blocks.STONE},
+					{null, Blocks.STONE, Blocks.STONE, Blocks.STONE, null}},
 
 					{	{ null,'*', 'c', '*',null}, 
-						{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
-						{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
-						{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
+						{'*',Blocks.STONE, Blocks.STONE, Blocks.STONE,'*'},
+						{'*',Blocks.STONE, Blocks.STONE, Blocks.STONE,'*'},
+						{'*',Blocks.STONE, Blocks.STONE, Blocks.STONE,'*'},
 						{null,'*', '*', '*', null}},
 
 						{	{null,'*', '*', '*', null}, 
-							{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
-							{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
-							{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
+							{'*',Blocks.STONE, Blocks.STONE, Blocks.STONE,'*'},
+							{'*',Blocks.STONE, Blocks.STONE, Blocks.STONE,'*'},
+							{'*',Blocks.STONE, Blocks.STONE, Blocks.STONE,'*'},
 							{null,'*', '*', '*',null}}};
 
 	final static int openTime = 100;
@@ -94,25 +91,25 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0 ) {
-			attemptCompleteStructure();
+			attemptCompleteStructure(worldObj.getBlockState(pos));
 			timeAlive = 0x1;
 		}
 
-		if((worldObj.isRemote && isOpen) || (!worldObj.isRemote && isRunning() && getMachineEnabled() && !worldObj.isRaining() && worldObj.canBlockSeeTheSky(xCoord, yCoord+1, zCoord) && worldObj.getBlockLightValue(xCoord, yCoord + 1, zCoord)  <= 6) ) {
+		if((worldObj.isRemote && isOpen) || (!worldObj.isRemote && isRunning() && getMachineEnabled() && !worldObj.isRaining() && worldObj.canBlockSeeSky(pos.add(0,1,0)) && !worldObj.isDaytime()) ) {
 			
 			if(!isOpen) {
 				isOpen= true;
 				
 				markDirty();
-				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+				worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 			}
 			
 			if(openProgress >= openTime)
-				super.updateEntity();
+				super.update();
 			else
 				openProgress++;
 		}
@@ -122,7 +119,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 				isOpen = false;
 				
 				markDirty();
-				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+				worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 			}
 			
 			openProgress--;
@@ -142,7 +139,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 		int amount = 25;
 
 		for( TileDataBus datum : dataCables ) {
-			amount -= datum.addData(amount, DataStorage.DataType.DISTANCE, ForgeDirection.UNKNOWN, true);
+			amount -= datum.addData(amount, DataStorage.DataType.DISTANCE, EnumFacing.UP, true);
 			if(amount == 0)
 				break;
 		}
@@ -161,14 +158,15 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		return AxisAlignedBB.getBoundingBox(xCoord -5,yCoord -3, zCoord -5, xCoord +5, yCoord + 3, zCoord + 5);
+		
+		return new AxisAlignedBB(pos.add(-5,-3,-5), pos.add(5,3,5));
 	}
 
 	@Override
 	public List<BlockMeta> getAllowableWildCardBlocks() {
 		List<BlockMeta> list = super.getAllowableWildCardBlocks();
 
-		list.add(new BlockMeta(Blocks.iron_block,BlockMeta.WILDCARD));
+		list.add(new BlockMeta(Blocks.IRON_BLOCK,BlockMeta.WILDCARD));
 		list.addAll(TileMultiBlock.getMapping('P'));
 		list.addAll(TileMultiBlock.getMapping('D'));
 		return list;
@@ -190,13 +188,14 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		if(dataChip != null) {
 			NBTTagCompound dataItem = new NBTTagCompound();
 			dataChip.writeToNBT(dataItem);
 			nbt.setTag("dataItem", dataItem);
 		}
+		return nbt;
 	}
 
 	@Override
@@ -213,13 +212,14 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public boolean completeStructure() {
-		boolean result = super.completeStructure();
+	public boolean completeStructure(IBlockState state) {
+		boolean result = super.completeStructure(state);
 		if(result) {
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.getBlockMetadata() | 8, 2);
+			((BlockMultiblockMachine)worldObj.getBlockState(pos).getBlock()).setBlockState(worldObj, worldObj.getBlockState(pos), pos, true);
 		}
 		else
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.getBlockMetadata() & 7, 2);
+			((BlockMultiblockMachine)worldObj.getBlockState(pos).getBlock()).setBlockState(worldObj, worldObj.getBlockState(pos), pos, false);
+		
 
 		completionTime = observationtime;
 		return result;
@@ -273,18 +273,13 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) {
-		return dataChip;
-	}
-
-	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		dataChip = stack;
 
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 		return false;
 	}
 
@@ -299,12 +294,12 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public void openInventory() {
+	public void openInventory(EntityPlayer player) {
 
 	}
 
 	@Override
-	public void closeInventory() {
+	public void closeInventory(EntityPlayer player) {
 
 	}
 
@@ -314,12 +309,12 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public int extractData(int maxAmount, DataType type, ForgeDirection dir, boolean commit) {
+	public int extractData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {
 		return 0;
 	}
 
 	@Override
-	public int addData(int maxAmount, DataType type, ForgeDirection dir, boolean commit) {
+	public int addData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {
 		return 0;
 	}
 
@@ -337,7 +332,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 			for(TileDataBus tile : dataCables) {
 				DataStorage.DataType dataType = tile.getDataObject().getDataType();
-				data.addData(tile.extractData(data.getMaxData() - data.getData(), data.getDataType(), ForgeDirection.UNKNOWN, true), dataType ,true);
+				data.addData(tile.extractData(data.getMaxData() - data.getData(), data.getDataType(), EnumFacing.UP, true), dataType ,true);
 			}
 
 			dataItem.setData(dataChip, data.getData(), data.getDataType());
@@ -349,7 +344,34 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 		return null;
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		ItemStack dataChip = this.dataChip;
+		this.dataChip = null;
+		return dataChip;
+	}
+
+	@Override
+	public int getField(int id) {
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		
 	}
 }

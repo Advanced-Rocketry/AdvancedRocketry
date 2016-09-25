@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
 
 public class GuidanceComputer implements IInventory, IModularInventory {
 
@@ -41,11 +42,6 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) {
-		return inv;
-	}
-
-	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		inv = stack;
 	}
@@ -56,12 +52,12 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 	
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 		return getModularInventoryName();
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 		return false;
 	}
 
@@ -81,12 +77,12 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 
 	@Override
-	public void openInventory() {
+	public void openInventory(EntityPlayer player) {
 		
 	}
 
 	@Override
-	public void closeInventory() {
+	public void closeInventory(EntityPlayer player) {
 		
 	}
 
@@ -120,5 +116,37 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	@Override
 	public boolean canInteractWithContainer(EntityPlayer entity) {
 		return true;
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return null;
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		ItemStack stack = inv;
+		inv = null;
+		return stack;
+	}
+
+	@Override
+	public int getField(int id) {
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		
 	}
 }

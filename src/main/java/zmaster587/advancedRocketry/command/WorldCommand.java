@@ -19,15 +19,18 @@ import zmaster587.advancedRocketry.world.biome.BiomeGenAlienForest;
 import zmaster587.advancedRocketry.world.biome.BiomeGenDeepSwamp;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
 import zmaster587.libVulpes.network.PacketHandler;
-import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 public class WorldCommand implements ICommand {
 
@@ -38,11 +41,6 @@ public class WorldCommand implements ICommand {
 		aliases = new ArrayList<String>();
 		aliases.add("advancedRocketry");
 		aliases.add("advRocketry");
-	}
-
-	@Override
-	public int compareTo(Object arg) {
-		return 0;
 	}
 
 	@Override
@@ -61,7 +59,8 @@ public class WorldCommand implements ICommand {
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] string) {
+	public void execute(MinecraftServer server, ICommandSender sender,
+			String[] string) throws CommandException {
 
 		//advRocketry planet set <var value>
 		int opLevel = 2;
@@ -70,7 +69,7 @@ public class WorldCommand implements ICommand {
 		if(string.length > 1) {
 
 			if(string[0].equalsIgnoreCase("goto") && (string.length == 2 || string.length == 3)) {
-				EntityPlayer player = sender.getEntityWorld().getPlayerEntityByName(sender.getCommandSenderName());
+				EntityPlayer player = (EntityPlayer) sender.getCommandSenderEntity();
 				if(player != null) {
 					try {
 						int dim;
@@ -78,9 +77,9 @@ public class WorldCommand implements ICommand {
 						if(string.length == 2) {
 							dim = Integer.parseInt(string[1]);
 							if(net.minecraftforge.common.DimensionManager.isDimensionRegistered(dim))
-								MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal(MinecraftServer.getServer().worldServerForDimension(dim)));
+								player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal((WorldServer) player.worldObj));
 							else
-								sender.addChatMessage(new ChatComponentText("Dimension does not exist"));
+								sender.addChatMessage(new TextComponentString("Dimension does not exist"));
 						}
 						else if(string[1].equalsIgnoreCase("station")) {
 							dim = Configuration.spaceDimId;
@@ -88,44 +87,44 @@ public class WorldCommand implements ICommand {
 							ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(stationId);
 
 							if(object != null) {
-								if(player.worldObj.provider.dimensionId != Configuration.spaceDimId)
-									MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal(MinecraftServer.getServer().worldServerForDimension(dim)));
-								BlockPosition vec = object.getSpawnLocation();
+								if(player.worldObj.provider.getDimension() != Configuration.spaceDimId)
+									player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal((WorldServer) player.worldObj));
+								HashedBlockPosition vec = object.getSpawnLocation();
 								player.setPositionAndUpdate(vec.x, vec.y, vec.z);
 							}
 							else {
-								sender.addChatMessage(new ChatComponentText("Station " + stationId + " does not exist!"));
+								sender.addChatMessage(new TextComponentString("Station " + stationId + " does not exist!"));
 							}
 						}
 
 
 					} catch(NumberFormatException e) {
-						sender.addChatMessage(new ChatComponentText(string[0] + " <dimId>"));
-						sender.addChatMessage(new ChatComponentText(string[0] + "station <station ID>"));
+						sender.addChatMessage(new TextComponentString(string[0] + " <dimId>"));
+						sender.addChatMessage(new TextComponentString(string[0] + "station <station ID>"));
 					}
 				}					
 				else 
-					sender.addChatMessage(new ChatComponentText("Must be a player to use this command"));
+					sender.addChatMessage(new TextComponentString("Must be a player to use this command"));
 			}
 			else if(string[0].equalsIgnoreCase("fetch") && string.length == 2) {
-				EntityPlayer me = sender.getEntityWorld().getPlayerEntityByName(sender.getCommandSenderName());
+				EntityPlayer me = (EntityPlayer) sender.getCommandSenderEntity();
 				EntityPlayer player = null;
-				
-				for(World world : MinecraftServer.getServer().worldServers) {
+
+				for(World world : me.getServer().worldServers) {
 					player = world.getPlayerEntityByName(string[1]);
 					if(player != null)
 						break;
 				}
-				
-				
-				
-				System.out.println(string[1] + "   " + sender.getCommandSenderName());
-				
+
+
+
+				System.out.println(string[1] + "   " + sender.getCommandSenderEntity());
+
 				if(player == null) {
-					sender.addChatMessage(new ChatComponentText("Invalid player name: " + string[1]));
+					sender.addChatMessage(new TextComponentString("Invalid player name: " + string[1]));
 				}
 				else {
-					MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player,  me.worldObj.provider.dimensionId , new TeleporterNoPortal(MinecraftServer.getServer().worldServerForDimension(me.worldObj.provider.dimensionId)));
+					player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  me.worldObj.provider.getDimension() , new TeleporterNoPortal(me.getServer().worldServerForDimension(me.worldObj.provider.getDimension())));
 					player.setPosition(me.posX, me.posY, me.posZ);
 				}
 			}
@@ -139,11 +138,11 @@ public class WorldCommand implements ICommand {
 							DimensionManager.getInstance().getDimensionProperties(dimId).resetProperties();
 							PacketHandler.sendToAll(new PacketDimInfo(dimId, DimensionManager.getInstance().getDimensionProperties(dimId)));
 						} catch (NumberFormatException e) {
-							sender.addChatMessage(new ChatComponentText("Invalid dimId"));
+							sender.addChatMessage(new TextComponentString("Invalid dimId"));
 						}
 					}
 					else if(string.length == 2) {
-						if(DimensionManager.getInstance().isDimensionCreated((dimId = sender.getEntityWorld().provider.dimensionId))) {
+						if(DimensionManager.getInstance().isDimensionCreated((dimId = sender.getEntityWorld().provider.getDimension()))) {
 							DimensionManager.getInstance().getDimensionProperties(dimId).resetProperties();
 							PacketHandler.sendToAll(new PacketDimInfo(dimId, DimensionManager.getInstance().getDimensionProperties(dimId)));
 						}
@@ -151,9 +150,9 @@ public class WorldCommand implements ICommand {
 				}
 				else if(string[1].equalsIgnoreCase("list")) { //Lists dimensions
 
-					sender.addChatMessage(new ChatComponentText("Dimensions:"));
+					sender.addChatMessage(new TextComponentString("Dimensions:"));
 					for(int i : DimensionManager.getInstance().getregisteredDimensions()) {
-						sender.addChatMessage(new ChatComponentText("DIM" + i + ":  " + DimensionManager.getInstance().getDimensionProperties(i).getName())); 
+						sender.addChatMessage(new TextComponentString("DIM" + i + ":  " + DimensionManager.getInstance().getDimensionProperties(i).getName())); 
 					}
 				}
 				else if(string[1].equalsIgnoreCase("delete")) {
@@ -168,29 +167,29 @@ public class WorldCommand implements ICommand {
 								if(net.minecraftforge.common.DimensionManager.getWorld(deletedDimId) == null || net.minecraftforge.common.DimensionManager.getWorld(deletedDimId).playerEntities.isEmpty()) {
 									DimensionManager.getInstance().deleteDimension(deletedDimId);
 									PacketHandler.sendToAll(new PacketDimInfo(deletedDimId, null));
-									sender.addChatMessage(new ChatComponentText("Deleted!"));
+									sender.addChatMessage(new TextComponentString("Deleted!"));
 								}
 								else {
 									//If the world still has players abort and list players
-									sender.addChatMessage(new ChatComponentText("World still has players:"));
+									sender.addChatMessage(new TextComponentString("World still has players:"));
 
 									for(EntityPlayer player : (List<EntityPlayer>)net.minecraftforge.common.DimensionManager.getWorld(deletedDimId).playerEntities) {
-										sender.addChatMessage(new ChatComponentText(player.getDisplayName()));
+										sender.addChatMessage(player.getDisplayName());
 									}
 
 								}
 
 
 							} else {
-								sender.addChatMessage(new ChatComponentText("Dimension does not exist"));
+								sender.addChatMessage(new TextComponentString("Dimension does not exist"));
 							}
 
 						} catch(NumberFormatException exception) {
-							sender.addChatMessage(new ChatComponentText("Invalid Argument"));
+							sender.addChatMessage(new TextComponentString("Invalid Argument"));
 						}
 					}
 					else {
-						sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " " + string[2] + " <dimid>"));
+						sender.addChatMessage(new TextComponentString(string[0] + " " + string[1] + " " + string[2] + " <dimid>"));
 					}
 				}
 				/*
@@ -212,7 +211,7 @@ public class WorldCommand implements ICommand {
 							else
 								DimensionManager.getInstance().generateRandomGasGiant(string[2 + gasOffset], Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),0,0,0);
 
-							sender.addChatMessage(new ChatComponentText("Dimension Generated!"));
+							sender.addChatMessage(new TextComponentString("Dimension Generated!"));
 						}
 						else if(string.length == 9  + gasOffset) {
 							if(gasOffset == 0)
@@ -220,21 +219,21 @@ public class WorldCommand implements ICommand {
 							else
 								DimensionManager.getInstance().generateRandomGasGiant(string[2 + gasOffset] ,Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),Integer.parseInt(string[6 + gasOffset]), Integer.parseInt(string[7 + gasOffset]), Integer.parseInt(string[8 + gasOffset]));
 
-							sender.addChatMessage(new ChatComponentText("Dimension: " + string[2 + gasOffset] + " Generated!"));
+							sender.addChatMessage(new TextComponentString("Dimension: " + string[2 + gasOffset] + " Generated!"));
 						}
 						else {
-							sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + "[gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
-							sender.addChatMessage(new ChatComponentText(""));
-							sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + "[gas] <name> <atmosphere base value> <distance base value> <gravity base value> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+							sender.addChatMessage(new TextComponentString(string[0] + " " + string[1] + "[gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+							sender.addChatMessage(new TextComponentString(""));
+							sender.addChatMessage(new TextComponentString(string[0] + " " + string[1] + "[gas] <name> <atmosphere base value> <distance base value> <gravity base value> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
 						}
 					} catch(NumberFormatException e) {
-						sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + "[gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
-						sender.addChatMessage(new ChatComponentText(""));
-						sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + "[gas] <name> <atmosphere base value> <distance base value> <gravity base value> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+						sender.addChatMessage(new TextComponentString(string[0] + " " + string[1] + "[gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+						sender.addChatMessage(new TextComponentString(""));
+						sender.addChatMessage(new TextComponentString(string[0] + " " + string[1] + "[gas] <name> <atmosphere base value> <distance base value> <gravity base value> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
 					}
 				}
 				//Make sure player is in Dimension we have control over
-				else if( DimensionManager.getInstance().isDimensionCreated((dimId = sender.getEntityWorld().provider.dimensionId)) ) {
+				else if( DimensionManager.getInstance().isDimensionCreated((dimId = sender.getEntityWorld().provider.getDimension())) ) {
 
 					if(string[1].equalsIgnoreCase("set") && string.length > 2) {
 
@@ -297,7 +296,7 @@ public class WorldCommand implements ICommand {
 							}
 						} catch (NumberFormatException e) {
 
-							sender.addChatMessage(new ChatComponentText("Invalid Argument for parameter " + string[2]));
+							sender.addChatMessage(new TextComponentString("Invalid Argument for parameter " + string[2]));
 						} catch (Exception e) {
 
 							e.printStackTrace();
@@ -306,13 +305,13 @@ public class WorldCommand implements ICommand {
 					else if(string[1].equalsIgnoreCase("get") && string.length == 3) {
 						DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimId);
 						if(string[2].equalsIgnoreCase("atmosphereDensity")) {
-							sender.addChatMessage(new ChatComponentText(Integer.toString(properties.getAtmosphereDensity())));
+							sender.addChatMessage(new TextComponentString(Integer.toString(properties.getAtmosphereDensity())));
 						} 
 						else {
 							try {
 								Field field = properties.getClass().getDeclaredField(string[2]);
 
-								sender.addChatMessage(new ChatComponentText(field.get(properties).toString()));
+								sender.addChatMessage(new TextComponentString(field.get(properties).toString()));
 
 							} catch (Exception e) {
 
@@ -327,13 +326,14 @@ public class WorldCommand implements ICommand {
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender sender) {
-		return !sender.getCommandSenderName().equalsIgnoreCase("RCon") && sender.canCommandSenderUseCommand(2, getCommandName());
+	public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+		return sender.getCommandSenderEntity() != null && sender.canCommandSenderUseCommand(2, getCommandName());
+		
 	}
 
 	@Override
-	public List addTabCompletionOptions(ICommandSender sender,
-			String[] string) {
+	public List<String> getTabCompletionOptions(MinecraftServer server,
+			ICommandSender sender, String[] string, BlockPos pos) {
 		ArrayList<String> list = new ArrayList<String>();
 
 		if(string.length == 1) {
@@ -371,5 +371,10 @@ public class WorldCommand implements ICommand {
 	@Override
 	public boolean isUsernameIndex(String[] string, int number) {
 		return number == 1 && string[0].equalsIgnoreCase("fetch");
+	}
+
+	@Override
+	public int compareTo(ICommand arg0) {
+		return 0;
 	}
 }

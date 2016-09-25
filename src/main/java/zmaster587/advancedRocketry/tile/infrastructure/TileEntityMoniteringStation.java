@@ -4,15 +4,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
@@ -69,7 +69,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 
 	@Override
 	public void onAdjacentBlockUpdated() {
-		if(!worldObj.isRemote && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) && linkedRocket != null) {
+		if(!worldObj.isRemote && worldObj.isBlockIndirectlyGettingPowered(getPos()) > 0 && linkedRocket != null) {
 			linkedRocket.prepareLaunch();
 		}
 	}
@@ -83,10 +83,10 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	public boolean onLinkStart(ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 
-		ItemLinker.setMasterCoords(item, this.xCoord, this.yCoord, this.zCoord);
+		ItemLinker.setMasterCoords(item, getPos());
 
 		if(player.worldObj.isRemote)
-			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText("You program the linker with the monitoring station at: " + this.xCoord + " " + this.yCoord + " " + this.zCoord)));
+			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new TextComponentString("You program the linker with the monitoring station at: " + getPos().getX() + " " + getPos().getY() + " " + getPos().getZ())));
 		return true;
 	}
 
@@ -94,7 +94,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 		if(player.worldObj.isRemote)
-			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText("This must be the first machine to link!")));
+			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new TextComponentString("This must be the first machine to link!")));
 		return false;
 	}
 
@@ -130,13 +130,14 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
 		if(mission != null) {
 			nbt.setLong("missionID", mission.getMissionId());
 			nbt.setInteger("missionDimId", mission.getOriginatingDimention());
 		}
+		return nbt;
 	}
 
 	@Override
@@ -183,9 +184,9 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		modules.add(new ModuleButton(20, 40, 0, "Launch!", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
-		modules.add(new ModuleProgress(98, 4, 0, new IndicatorBarImage(2, 7, 12, 81, 17, 0, 6, 6, 1, 0, ForgeDirection.UP, TextureResources.rocketHud), this));
-		modules.add(new ModuleProgress(120, 14, 1, new IndicatorBarImage(2, 95, 12, 71, 17, 0, 6, 6, 1, 0, ForgeDirection.UP, TextureResources.rocketHud), this));
-		modules.add(new ModuleProgress(142, 14, 2, new ProgressBarImage(2, 173, 12, 71, 17, 6, 3, 69, 1, 1, ForgeDirection.UP, TextureResources.rocketHud), this));
+		modules.add(new ModuleProgress(98, 4, 0, new IndicatorBarImage(2, 7, 12, 81, 17, 0, 6, 6, 1, 0, EnumFacing.UP, TextureResources.rocketHud), this));
+		modules.add(new ModuleProgress(120, 14, 1, new IndicatorBarImage(2, 95, 12, 71, 17, 0, 6, 6, 1, 0, EnumFacing.UP, TextureResources.rocketHud), this));
+		modules.add(new ModuleProgress(142, 14, 2, new ProgressBarImage(2, 173, 12, 71, 17, 6, 3, 69, 1, 1, EnumFacing.UP, TextureResources.rocketHud), this));
 
 		setMissionText();
 
@@ -320,7 +321,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	@Override
 	public boolean linkMission(IMission misson) {
 		this.mission = misson;
-		PacketHandler.sendToNearby(new PacketMachine(this, (byte)1), worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 16);
+		PacketHandler.sendToNearby(new PacketMachine(this, (byte)1), worldObj.provider.getDimension(), getPos(), 16);
 		return true;
 	}
 
@@ -328,7 +329,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	public void unlinkMission() {
 		mission = null;
 		setMissionText();
-		PacketHandler.sendToNearby(new PacketMachine(this, (byte)1), worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 16);
+		PacketHandler.sendToNearby(new PacketMachine(this, (byte)1), worldObj.provider.getDimension(), getPos(), 16);
 	}
 
 	@Override

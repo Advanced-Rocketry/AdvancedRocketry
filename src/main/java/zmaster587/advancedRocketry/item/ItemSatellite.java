@@ -2,6 +2,8 @@ package zmaster587.advancedRocketry.item;
 
 import java.util.List;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
@@ -10,7 +12,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
 
 public class ItemSatellite extends ItemIdWithName {
 
@@ -61,21 +62,21 @@ public class ItemSatellite extends ItemIdWithName {
 				if( (powerStorage = properties.getPowerStorage()) > 0)
 					list.add("Power Storage: " + powerStorage);
 				else
-					list.add(EnumChatFormatting.RED + "No Power Storage");
+					list.add(ChatFormatting.RED + "No Power Storage");
 			}
 
 			if(SatelliteProperties.Property.POWER_GEN.isOfType(properties.getPropertyFlag())) {
 				if( ( powerGeneration=properties.getPowerGeneration() ) > 0)
 					list.add("Power Generation: " + powerGeneration);
 				else
-					list.add(EnumChatFormatting.RED + "No Power Generation!");
+					list.add(ChatFormatting.RED + "No Power Generation!");
 			}
 
 			if(SatelliteProperties.Property.DATA.isOfType(properties.getPropertyFlag())) {
 				if( (dataStorage = properties.getMaxDataStorage()) > 0 ) 
 					list.add("Data Storage: " + ZUtils.formatNumber(dataStorage));
 				else
-					list.add(EnumChatFormatting.YELLOW + "No Data Storage!");
+					list.add(ChatFormatting.YELLOW + "No Data Storage!");
 			}
 
 		}

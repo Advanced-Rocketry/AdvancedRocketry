@@ -1,0 +1,23 @@
+{
+    "defaults": {
+        "textures": {
+            "#None": "advancedrocketry:/models/combustion"
+        },
+        "model": "advancedrocketry:models/rocketmotor.obj"
+    },
+    "variants": {
+        "facing=north": { "model": "advancedrocketry:models/rocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png" },
+        "facing=south": {  "model": "advancedrocketry:models/rocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "y": 180 },
+        "facing=west":  { "model": "advancedrocketry:models/rocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "y": 270 },
+        "facing=east":  { "model": "advancedrocketry:models/rocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "y": 90 },
+        "facing=up":  { "model": "advancedrocketry:models/rocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": 90 },
+        "facing=down":  { "model": "advancedrocketry:models/rocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": -90 },
+        "inventory": {
+            "model": "advancedrocketry:models/rocketmotor.obj",
+            "transform": "forge:default-block",
+            "textures": {
+                "layer0": "advancedrocketry:textures/models/combustion.png"
+            }
+        }
+    }
+}

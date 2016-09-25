@@ -1,14 +1,14 @@
 package zmaster587.advancedRocketry.util;
 
 import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AreaBlob;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
-import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -24,7 +24,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	static ThreadPoolExecutor pool = (Configuration.atmosphereHandleBitMask & 1) == 1 ? new ThreadPoolExecutor(2, 16, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(2)) : null;
 	
 	boolean executing;
-	BlockPosition blockPos;
+	HashedBlockPosition blockPos;
 
 	public AtmosphereBlob(IBlobHandler blobHandler) {
 		super(blobHandler);
@@ -32,26 +32,26 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	}
 
 	@Override
-	public void removeBlock(int x, int y, int z) {
-		BlockPosition blockPos = new BlockPosition(x, y, z);
+	public void removeBlock(HashedBlockPosition blockPos) {
+		
 		graph.remove(blockPos);
 		graph.contains(blockPos);
 
-		for(ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
+		for(EnumFacing direction : EnumFacing.values()) {
 
-			BlockPosition newBlock = blockPos.getPositionAtOffset(direction.offsetX, direction.offsetY, direction.offsetZ);
+			HashedBlockPosition newBlock = blockPos.getPositionAtOffset(direction);
 			if(graph.contains(newBlock) && !graph.doesPathExist(newBlock, blobHandler.getRootPosition()))
-				runEffectOnWorldBlocks(blobHandler.getWorld(), graph.removeAllNodesConnectedTo(newBlock));
+				runEffectOnWorldBlocks(blobHandler.getWorldObj(), graph.removeAllNodesConnectedTo(newBlock));
 		}
 	}
 
 	@Override
-	public boolean isPositionAllowed(World world, BlockPosition pos) {
-		return !SealableBlockHandler.INSTANCE.isBlockSealed(world, pos);
+	public boolean isPositionAllowed(World world, HashedBlockPosition pos) {
+		return !SealableBlockHandler.INSTANCE.isBlockSealed(world, pos.getBlockPos());
 	}
 
 	@Override
-	public void addBlock(BlockPosition blockPos) {
+	public void addBlock(HashedBlockPosition blockPos) {
 
 		if(blobHandler.canFormBlob()) {
 
@@ -72,19 +72,19 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	@Override
 	public void run() {
 
-		Stack<BlockPosition> stack = new Stack<BlockPosition>();
+		Stack<HashedBlockPosition> stack = new Stack<HashedBlockPosition>();
 		stack.push(blockPos);
 
 		final int maxSize = (Configuration.atmosphereHandleBitMask & 2) != 0 ? (int)(Math.pow(this.getBlobMaxRadius(), 3)*((4f/3f)*Math.PI)) : this.getBlobMaxRadius();
-		final HashSet<BlockPosition> addableBlocks = new HashSet<BlockPosition>();
+		final HashSet<HashedBlockPosition> addableBlocks = new HashSet<HashedBlockPosition>();
 
 		//Breadth first search; non recursive
 		while(!stack.isEmpty()) {
-			BlockPosition stackElement = stack.pop();
+			HashedBlockPosition stackElement = stack.pop();
 			addableBlocks.add(stackElement);
 
-			for(ForgeDirection dir2 : ForgeDirection.VALID_DIRECTIONS) {
-				BlockPosition searchNextPosition = stackElement.getPositionAtOffset(dir2.offsetX, dir2.offsetY, dir2.offsetZ);
+			for(EnumFacing dir2 : EnumFacing.values()) {
+				HashedBlockPosition searchNextPosition = stackElement.getPositionAtOffset(dir2);
 
 				//Don't path areas we have already scanned
 				if(!graph.contains(searchNextPosition) && !addableBlocks.contains(searchNextPosition)) {
@@ -93,7 +93,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 					try {
 
-						sealed = SealableBlockHandler.INSTANCE.isBlockSealed(blobHandler.getWorld(), searchNextPosition);
+						sealed = SealableBlockHandler.INSTANCE.isBlockSealed(blobHandler.getWorldObj(), searchNextPosition.getBlockPos());
 						
 
 						if(!sealed) {
@@ -124,7 +124,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 		//only one instance can editing this at a time because this will not run again b/c "worker" is not null
 		
-			for(BlockPosition blockPos2 : addableBlocks) {
+			for(HashedBlockPosition blockPos2 : addableBlocks) {
 				super.addBlock(blockPos2);
 			}
 		
@@ -136,17 +136,17 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	 * @param world
 	 * @param blocks Collection containing affected locations
 	 */
-	protected void runEffectOnWorldBlocks(World world, Collection<BlockPosition> blocks) {
-		for(BlockPosition pos : new LinkedList<BlockPosition>(blocks)) {
-			if(world.getBlock(pos.x, pos.y, pos.z) == Blocks.torch) {
-				world.setBlock(pos.x, pos.y, pos.z, AdvancedRocketryBlocks.blockUnlitTorch);
+	protected void runEffectOnWorldBlocks(World world, Collection<HashedBlockPosition> blocks) {
+		for(HashedBlockPosition pos : new LinkedList<HashedBlockPosition>(blocks)) {
+			if(world.getBlockState(pos.getBlockPos()).getBlock() == Blocks.TORCH) {
+				world.setBlockState(pos.getBlockPos(), AdvancedRocketryBlocks.blockUnlitTorch.getDefaultState());
 			}
 		}
 	}
 
 	@Override
 	public void clearBlob() {
-		World world = blobHandler.getWorld();
+		World world = blobHandler.getWorldObj();
 
 		runEffectOnWorldBlocks(world, getLocations());
 

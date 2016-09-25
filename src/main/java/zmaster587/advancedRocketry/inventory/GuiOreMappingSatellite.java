@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.inventory;
 
+import java.io.IOException;
 import java.nio.IntBuffer;
 
 import org.lwjgl.input.Keyboard;
@@ -7,9 +8,12 @@ import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
 import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
+import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.VulpineMath;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -112,9 +116,11 @@ public class GuiOreMappingSatellite extends GuiContainer {
 	}
 
 	@Override
-	protected void mouseMovedOrUp(int x, int y, int button) {
-		super.mouseMovedOrUp(x, y, button);
-
+	protected void mouseClickMove(int x, int y,
+			int button, long timeSinceLastClick) {
+		// TODO Auto-generated method stub
+		super.mouseClickMove(x, y, button, timeSinceLastClick);
+		
 		if(tile == null)
 			return;
 
@@ -140,11 +146,11 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		}
 
 	}
-
+	
 	
 	
 	@Override
-	protected void keyTyped(char c, int i) {
+	protected void keyTyped(char c, int i) throws IOException {
 		if(i == Keyboard.KEY_W) {
 			zCenter -= radius;
 			runMapperWithSelection();
@@ -232,35 +238,33 @@ public class GuiOreMappingSatellite extends GuiContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int p_146979_1_,	int p_146979_2_) {
 
-		Tessellator tessellator = Tessellator.instance;
+		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
 		//Draw fancy things
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glColor3f(0f, 0.8f, 0f);
-		tessellator.startDrawingQuads();
-		tessellator.addVertex(-21, 82 + fancyScanOffset, (double)this.zLevel);
-		tessellator.addVertex(0, 84 + fancyScanOffset, (double)this.zLevel);
-		tessellator.addVertex(0, 81 + fancyScanOffset, (double)this.zLevel);
-		tessellator.addVertex(-21, 81 + fancyScanOffset, (double)this.zLevel);
-		tessellator.draw();
+		GlStateManager.disableTexture2D();
+		GlStateManager.color(0f, 0.8f, 0f);
+		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
+		buffer.pos(-21, 82 + fancyScanOffset, (double)this.zLevel).endVertex();
+		buffer.pos(0, 84 + fancyScanOffset, (double)this.zLevel).endVertex();
+		buffer.pos(0, 81 + fancyScanOffset, (double)this.zLevel).endVertex();
+		buffer.pos(-21, 81 + fancyScanOffset, (double)this.zLevel).endVertex();
+		buffer.finishDrawing();
 
-		tessellator.startDrawingQuads();
-		tessellator.addVertex(-21, 82 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel);
-		tessellator.addVertex(0, 84 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel);
-		tessellator.addVertex(0, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel);
-		tessellator.addVertex(-21, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel);
-		tessellator.draw();
+		
+		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
+		buffer.pos(-21, 82 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel).endVertex();
+		buffer.pos(0, 84 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel).endVertex();
+		buffer.pos(0, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel).endVertex();
+		buffer.pos(-21, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel).endVertex();
+		buffer.finishDrawing();
 
 
-		GL11.glEnable(GL11.GL_BLEND);
-
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
-		GL11.glColor4f(0.5f, 0.5f, 0.0f,0.3f + ((float)Math.sin(Math.PI*(fancyScanOffset/(float)FANCYSCANMAXSIZE))/3f));
-		tessellator.startDrawingQuads();
-		tessellator.addVertex(173, 141, (double)this.zLevel);
-		tessellator.addVertex(194, 141, (double)this.zLevel);
-		tessellator.addVertex(194, 82, (double)this.zLevel);
-		tessellator.addVertex(173, 82, (double)this.zLevel);
-		tessellator.draw();
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
+		GlStateManager.color(0.5f, 0.5f, 0.0f,0.3f + ((float)Math.sin(Math.PI*(fancyScanOffset/(float)FANCYSCANMAXSIZE))/3f));
+		
+		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
+		RenderHelper.renderNorthFace(buffer, this.zLevel, 173, 82, 194, 141);
+		buffer.finishDrawing();
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_BLEND);
@@ -279,16 +283,13 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		int slot;
 		if(tile != null && (slot = tile.getSelectedSlot()) != -1) {
 
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glColor3f(0f, 0.8f, 0f);
+			GlStateManager.disableTexture2D();
+			GlStateManager.color(0f, 0.8f, 0f);
 
-			tessellator.startDrawingQuads();
-			tessellator.addVertexWithUV(13 + (18*slot), 155 + 16, (double)this.zLevel, 0, 1);
-			tessellator.addVertexWithUV(13 + 16 + (18*slot), 155 + 16, (double)this.zLevel, 1, 1);
-			tessellator.addVertexWithUV(13 + 16 + (18*slot), 155, (double)this.zLevel, 1, 0);
-			tessellator.addVertexWithUV(13 + (18*slot), 155, (double)this.zLevel, 0, 0);
-			tessellator.draw();
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
+			RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel, 13 + (18*slot), 155, 13 + 16 + (18*slot), 155 + 16, 0, 1, 0, 1);
+			buffer.finishDrawing();
+			GlStateManager.enableTexture2D();
 		}
 
 
@@ -298,7 +299,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_,
 			int p_146976_2_, int p_146976_3_) {
 		int x = (width - 240) / 2, y = (height - 192) / 2;
-
+		
 		//If the scan is done then 
 		if(merged) {
 			IntBuffer buffer = texture.getByteBuffer();
@@ -312,9 +313,9 @@ public class GuiOreMappingSatellite extends GuiContainer {
 			merged = false;
 		}
 
-
+		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
 		//Render the background then render
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.renderEngine.bindTexture(backdrop);
 		this.drawTexturedModalRect(x, y, 0, 0, 240, 192);
 
@@ -322,13 +323,9 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		//NOTE: if the controls are rendered first the display never shows up
 		//Draw the actual display
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureId());
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(47 + x, 20 + y + SCREEN_SIZE, (double)this.zLevel, 0, 1);
-		tessellator.addVertexWithUV(47 + x + SCREEN_SIZE, 20 + y + SCREEN_SIZE, (double)this.zLevel, 1, 1);
-		tessellator.addVertexWithUV(47 + x + SCREEN_SIZE, 20 + y, (double)this.zLevel, 1, 0);
-		tessellator.addVertexWithUV(47 + x, 20 + y, (double)this.zLevel, 0, 0);
-		tessellator.draw();
+		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
+		RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel, 47 + x, 20 + y, 47 + x + SCREEN_SIZE, 20 + y + SCREEN_SIZE, 0, 1, 0, 1);
+		buffer.finishDrawing();
 
 
 		//Render sliders and controls

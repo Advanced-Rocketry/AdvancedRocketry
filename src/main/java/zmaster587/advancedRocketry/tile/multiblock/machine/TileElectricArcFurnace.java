@@ -4,15 +4,17 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisible;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
@@ -35,23 +37,23 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 		},
 
 		{	{null,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,null},
-			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.gold_block,Blocks.air,Blocks.gold_block,AdvancedRocketryBlocks.blockBlastBrick},
-			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.air,Blocks.air,Blocks.air,AdvancedRocketryBlocks.blockBlastBrick},
-			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.air,Blocks.gold_block,Blocks.air,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.GOLD_BLOCK,Blocks.AIR,Blocks.GOLD_BLOCK,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.AIR,Blocks.AIR,Blocks.AIR,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.AIR,Blocks.GOLD_BLOCK,Blocks.AIR,AdvancedRocketryBlocks.blockBlastBrick},
 			{null,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,null},
 		},
 
 		{	{AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick},
-			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.air,Blocks.air,Blocks.air,AdvancedRocketryBlocks.blockBlastBrick},
-			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.air,Blocks.air,Blocks.air,AdvancedRocketryBlocks.blockBlastBrick},
-			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.air,Blocks.air,Blocks.air,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.AIR,Blocks.AIR,Blocks.AIR,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.AIR,Blocks.AIR,Blocks.AIR,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.AIR,Blocks.AIR,Blocks.AIR,AdvancedRocketryBlocks.blockBlastBrick},
 			{AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick},
 		},
 
 		{	{AdvancedRocketryBlocks.blockBlastBrick,'*','c','*',AdvancedRocketryBlocks.blockBlastBrick},
-			{'*',Blocks.air,Blocks.air,Blocks.air,'*'},
-			{'*',Blocks.air,Blocks.air,Blocks.air, '*'},
-			{'*',Blocks.air, Blocks.air,Blocks.air, '*'},
+			{'*',Blocks.AIR,Blocks.AIR,Blocks.AIR,'*'},
+			{'*',Blocks.AIR,Blocks.AIR,Blocks.AIR, '*'},
+			{'*',Blocks.AIR, Blocks.AIR,Blocks.AIR, '*'},
 			{AdvancedRocketryBlocks.blockBlastBrick,'*','*','*',AdvancedRocketryBlocks.blockBlastBrick},
 		},
 
@@ -76,31 +78,6 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 	@Override
 	protected void integrateTile(TileEntity tile) {
 		super.integrateTile(tile);
-	}
-	
-	//Since this doesn't have a render just set the meta and masterBlock
-	@Override
-	protected void replaceStandardBlock(int xCoord, int yCoord, int zCoord,	Block block, TileEntity tile) {
-
-		if(block == AdvancedRocketryBlocks.blockBlastBrick) {
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 1, 2);
-
-			TileEntity tileEntity = worldObj.getTileEntity(xCoord, yCoord, zCoord);
-
-			if(tileEntity instanceof IMultiblock) {
-				IMultiblock multiblock = (IMultiblock)tileEntity;
-				multiblock.setComplete(this.xCoord, this.yCoord, this.zCoord);
-			}	
-		}
-	}
-		
-	@Override
-	protected void destroyBlockAt(int x, int y, int z, Block block,	TileEntity tile) {
-		if(block == AdvancedRocketryBlocks.blockBlastBrick) {
-			worldObj.setBlockMetadataWithNotify(x, y, z, 0, 2);
-		}
-		else
-			super.destroyBlockAt(x, y, z, block, tile);
 	}
 
 	@Override

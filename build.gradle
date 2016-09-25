@@ -11,12 +11,13 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
 
 
-apply plugin: 'forge'
+apply plugin: 'net.minecraftforge.gradle.forge'
+
 def modversion
 modversion = version = "0.8.1"
 group= "zmaster587.advancedRocketry" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -32,9 +33,9 @@ jar {
 }
 
 minecraft {
-    version = "1.7.10-10.13.4.1614-1.7.10"
-    assetDir = "eclipse/assets"
-    
+    version = "1.10-12.18.0.2000-1.10.0"
+    runDir = "run"
+    mappings = "snapshot_20160518"
     replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"
     replace "%VERSION%", modversion
     replace "%LIBVULPESVERSION%", "0.1.3"

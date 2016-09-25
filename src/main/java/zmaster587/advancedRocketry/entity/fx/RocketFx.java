@@ -1,15 +1,10 @@
 package zmaster587.advancedRocketry.entity.fx;
 
-import org.lwjgl.opengl.GL11;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class RocketFx extends EntityFX {
+public class RocketFx extends Particle {
 
 	public static final ResourceLocation icon = new ResourceLocation("advancedrocketry:textures/particle/soft.png");
 
@@ -18,9 +13,9 @@ public class RocketFx extends EntityFX {
 			double y, double z, double motx, double moty, double motz, float scale) {
 		super(world, x, y, z, motx, moty, motz);
 		
-		this.prevPosX = this.posX = this.lastTickPosX = x;
-		this.prevPosY = this.posY = this.lastTickPosY = y;
-		this.prevPosZ = this.posZ = this.lastTickPosZ = z;
+		this.prevPosX = this.posX= x;
+		this.prevPosY = this.posY= y;
+		this.prevPosZ = this.posZ= z;
 		
         this.particleRed = 0.9F + this.rand.nextFloat()/10f;
         this.particleGreen = 0.6F + this.rand.nextFloat()/5f;
@@ -35,36 +30,6 @@ public class RocketFx extends EntityFX {
 	public RocketFx(World world, double x,
 			double y, double z, double motx, double moty, double motz) {
 		this(world, x, y,z, motx, moty, motz, 1.0f);
-	}
-
-	@Override
-	public void renderParticle(Tessellator tess, float x1,
-			float y1, float z1, float x2,
-			float y2, float z2) {
-		
-		Minecraft.getMinecraft().getTextureManager().bindTexture(icon);
-		
-		GL11.glPushMatrix();
-		//GL11.glDisable(GL11.GL_BLEND);
-		GL11.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE );
-		
-		
-        float f11 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)x1 - interpPosX);
-        float f12 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)x1 - interpPosY);
-        float f13 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)x1 - interpPosZ);
-        float f10 = 0.1F * this.particleScale;
-        
-        
-        
-        tess.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, 1f);
-        
-        tess.addVertexWithUV((double)(f11 - y1 * f10 - y2 * f10), (double)(f12 - z1 * f10), (double)(f13 - x2 * f10 - z2 * f10), 1, 1);
-        tess.addVertexWithUV((double)(f11 - y1 * f10 + y2 * f10), (double)(f12 + z1 * f10), (double)(f13 - x2 * f10 + z2 * f10), 1, 0);
-        tess.addVertexWithUV((double)(f11 + y1 * f10 + y2 * f10), (double)(f12 + z1 * f10), (double)(f13 + x2 * f10 + z2 * f10), 0, 0);
-        tess.addVertexWithUV((double)(f11 + y1 * f10 - y2 * f10), (double)(f12 - z1 * f10), (double)(f13 + x2 * f10 - z2 * f10), 0, 1);
-        //GL11.glEnable(GL11.GL_BLEND);
-        
-		GL11.glPopMatrix();
 	}
 	
 	@Override
@@ -84,7 +49,7 @@ public class RocketFx extends EntityFX {
         
         if (this.particleAge++ >= this.particleMaxAge)
         {
-            this.setDead();
+            this.setExpired();
         }
         
         this.setPosition(posX + this.motionX, posY + this.motionY, posZ  + this.motionZ);

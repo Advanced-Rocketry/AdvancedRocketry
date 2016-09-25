@@ -6,14 +6,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public class ItemDoor2 extends net.minecraft.item.ItemDoor {
 
-	public ItemDoor2(Material material) {
+	public ItemDoor2(Block block) {
 		super(material);
-		this.setMaxStackSize(Items.iron_door.getItemStackLimit());
+		this.setMaxStackSize(Items.IRON_DOOR.getItemStackLimit());
 	}
 
 

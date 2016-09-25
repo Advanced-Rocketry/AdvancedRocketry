@@ -2,12 +2,11 @@ package zmaster587.advancedRocketry.item.components;
 
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,6 +17,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.items.ItemIngredient;
@@ -143,15 +144,12 @@ public class ItemPressureTank extends ItemIngredient implements IArmorComponent,
 
 	@Override
 	public ResourceIcon getComponentIcon(ItemStack armorStack) {
-		if(icon == null)
-			this.icon = new ResourceIcon(TextureMap.locationItemsTexture, this.getIcon(armorStack, 0));
-		
-		return this.icon;
+		return null;
 	}
 	
 	@Override
-	public boolean isAllowedInSlot(ItemStack stack, int slot) {
-		return slot == 1;
+	public boolean isAllowedInSlot(ItemStack stack, EntityEquipmentSlot slot) {
+		return slot == EntityEquipmentSlot.CHEST;
 	}
 
 	@Override

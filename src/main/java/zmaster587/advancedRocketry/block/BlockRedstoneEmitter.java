@@ -1,71 +1,90 @@
 package zmaster587.advancedRocketry.block;
 
-import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.tile.TileAtmosphereDetector;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockRedstoneEmitter extends Block {
-
-	IIcon activeIcon;
-	String iconName;
+	
+	public static final PropertyBool POWERED = PropertyBool.create("powered");
 	
 	public BlockRedstoneEmitter(Material material,String activeIconName) {
 		super(material);
-		iconName = activeIconName;
+		this.setDefaultState(this.getDefaultState().withProperty(POWERED, false));
 	}
 	
 	@Override
-	public boolean hasTileEntity(int metadata) {
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, new IProperty[]{POWERED});
+	}
+	
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		return this.getDefaultState().withProperty(POWERED, (meta & 8) == 8);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		return state.getValue(POWERED) ? 8 : 0;
+	}
+	
+	@Override
+	public boolean hasTileEntity(IBlockState state) {
+		return true;
+	}
+	
+	public void setState(World world, IBlockState bstate, BlockPos pos, boolean state) {
+		world.setBlockState(pos, bstate.withProperty(POWERED, state));
+	}
+	
+	public boolean getState(World world, IBlockState bstate, BlockPos pos) {
+		return bstate.getValue(POWERED);
+	}
+	
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos,
+			IBlockState state, EntityPlayer player, EnumHand hand,
+			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
+			float hitZ) {
+		if(!world.isRemote) {
+			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
+		}
 		return true;
 	}
 	
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
-	{
-		player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), world, x, y, z);
-		return true;
-	}
-	
-	@Override
-	public TileEntity createTileEntity(World world, int metadata) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileAtmosphereDetector();
 	}
 	
 	@Override
-	public void registerBlockIcons(IIconRegister icon) {
-		super.registerBlockIcons(icon);
-		
-		activeIcon = icon.registerIcon(iconName);
+	public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess,
+			BlockPos pos, EnumFacing side) {
+		return blockState.getValue(POWERED) ? 15 : 0;
 	}
 	
 	@Override
-	public IIcon getIcon(int side, int meta) {
-		return meta == 1 ? activeIcon : super.getIcon(side, meta);
+	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess,
+			BlockPos pos, EnumFacing side) {
+		return blockState.getValue(POWERED) ? 15 : 0;
 	}
 	
 	@Override
-	public int isProvidingStrongPower(IBlockAccess world,
-			int x, int y, int z, int side) {
-		return world.getBlockMetadata(x, y, z) == 1 ? 15 : 0;
-	}
-	
-	@Override
-	public int isProvidingWeakPower(IBlockAccess world, int x,
-			int y, int z, int p_149709_5_) {
-		return world.getBlockMetadata(x, y, z) == 1 ? 15 : 0;
-	}
-	
-	@Override
-	public boolean canProvidePower() {
+	public boolean canProvidePower(IBlockState state) {
 		return true;
 	}
 

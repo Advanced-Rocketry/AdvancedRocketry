@@ -4,12 +4,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.satellite.IDataHandler;
@@ -50,7 +50,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int p_94128_1_) {
+	public int[] getSlotsForFace(EnumFacing side) {
 		return new int[0];
 	}
 
@@ -89,12 +89,6 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 			NBTTagCompound nbt) {
 
 	}
-
-	@Override
-	public void updateEntity() {
-		super.updateEntity();
-	}
-
 	@Override
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
@@ -106,8 +100,8 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 
 			SatelliteBase satellite = moduleSatellite.getSatellite();
 
-			if(satellite != null && satellite.getDimensionId() == this.worldObj.provider.dimensionId) {
-				satellite.performAction(player, worldObj, xCoord, yCoord, zCoord);
+			if(satellite != null && satellite.getDimensionId() == this.worldObj.provider.getDimension()) {
+				satellite.performAction(player, worldObj, pos);
 			}
 		}
 		else if( id == 101) {
@@ -129,7 +123,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 			if(satellite != null) {
 				if(getEnergyStored() < getPowerPerOperation()) 
 					moduleText.setText("Not Enough power!");
-				else if(satellite.getDimensionId() != this.worldObj.provider.dimensionId) {
+				else if(satellite.getDimensionId() != this.worldObj.provider.getDimension()) {
 					moduleText.setText(satellite.getName() + "\n\nToo Far" );
 				}
 
@@ -204,13 +198,14 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
 		NBTTagCompound data = new NBTTagCompound();
 
 		this.data.writeToNBT(data);
 		nbt.setTag("data", data);
+		return nbt;
 	}
 
 	@Override
@@ -240,7 +235,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 	}
 
 	@Override
-	public int extractData(int maxAmount, DataType type, ForgeDirection dir, boolean commit) {
+	public int extractData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {
 		//TODO
 		if(type == data.getDataType())
 			return data.removeData(maxAmount, commit);
@@ -248,10 +243,9 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 	}
 
 	@Override
-	public int addData(int maxAmount, DataType type, ForgeDirection dir, boolean commit) {
-		if(dir == ForgeDirection.UNKNOWN)
-			return data.addData(maxAmount, type, commit);
-		return 0;
+	public int addData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {
+		
+		return data.addData(maxAmount, type, commit);
 	}
 
 	@Override

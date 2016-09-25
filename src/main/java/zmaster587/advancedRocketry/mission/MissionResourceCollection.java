@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import zmaster587.advancedRocketry.AdvancedRocketry;
@@ -17,7 +18,7 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 
 
 public abstract class MissionResourceCollection extends SatelliteBase implements IMission {
@@ -33,10 +34,10 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 	NBTTagCompound missionPersistantNBT;
 
 	//stores the coordinates of infrastructures, used for when the world loads/saves
-	protected LinkedList<BlockPosition> infrastructureCoords;
+	protected LinkedList<HashedBlockPosition> infrastructureCoords;
 
 	public MissionResourceCollection(){
-		infrastructureCoords = new LinkedList<BlockPosition>();
+		infrastructureCoords = new LinkedList<HashedBlockPosition>();
 	}
 
 	public MissionResourceCollection(long duration, EntityRocket entity, LinkedList<IInfrastructure> infrastructureCoords) {
@@ -48,18 +49,18 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 
 		startWorldTime = DimensionManager.getWorld(0).getTotalWorldTime();
 		this.duration = duration;
-		this.launchDimension = entity.worldObj.provider.dimensionId;
+		this.launchDimension = entity.worldObj.provider.getDimension();
 		rocketStorage = entity.storage;
 		rocketStats = entity.stats;
 		x = entity.posX;
 		y = entity.posY;
 		z = entity.posZ;
-		worldId = entity.worldObj.provider.dimensionId;
+		worldId = entity.worldObj.provider.getDimension();
 
-		this.infrastructureCoords = new LinkedList<BlockPosition>();
+		this.infrastructureCoords = new LinkedList<HashedBlockPosition>();
 
 		for(IInfrastructure tile : infrastructureCoords)
-			this.infrastructureCoords.add(new BlockPosition(((TileEntity)tile).xCoord, ((TileEntity)tile).yCoord, ((TileEntity)tile).zCoord));
+			this.infrastructureCoords.add(new HashedBlockPosition(((TileEntity)tile).getPos()));
 	}
 
 	@Override
@@ -83,8 +84,7 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 	}
 
 	@Override
-	public boolean performAction(EntityPlayer player, World world, int x,
-			int y, int z) {
+	public boolean performAction(EntityPlayer player, World world, BlockPos pos) {
 		return false;
 	}
 
@@ -134,7 +134,7 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 		NBTTagList itemList = new NBTTagList();
 		for(int i = 0; i < infrastructureCoords.size(); i++)
 		{
-			BlockPosition inf = infrastructureCoords.get(i);
+			HashedBlockPosition inf = infrastructureCoords.get(i);
 
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setIntArray("loc", new int[] {inf.x, inf.y, inf.z});
@@ -169,7 +169,7 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 
 		for (int i = 0; i < tagList.tagCount(); i++) {
 			int coords[] = tagList.getCompoundTagAt(i).getIntArray("loc");
-			infrastructureCoords.add(new BlockPosition(coords[0], coords[1], coords[2]));
+			infrastructureCoords.add(new HashedBlockPosition(coords[0], coords[1], coords[2]));
 		}
 	}
 
@@ -185,7 +185,7 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 
 	@Override
 	public void unlinkInfrastructure(IInfrastructure tile) {
-		BlockPosition pos = new BlockPosition(((TileEntity)tile).xCoord, ((TileEntity)tile).yCoord, ((TileEntity)tile).zCoord);
+		HashedBlockPosition pos = new HashedBlockPosition(((TileEntity)tile).getPos());
 		infrastructureCoords.remove(pos);
 	}
 

@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -32,7 +33,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int slots) {
+	public int[] getSlotsForFace(EnumFacing side) {
 		return new int[] {};
 	}
 
@@ -42,17 +43,17 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+	public int fill(FluidStack resource, boolean doFill) {
 
-		if(resource.getFluidID() == AdvancedRocketryFluids.fluidOxygen.getID() ||
-				resource.getFluidID() == AdvancedRocketryFluids.fluidHydrogen.getID())
-			return super.fill(from, resource, doFill);
+		if(resource.getFluid() == AdvancedRocketryFluids.fluidOxygen ||
+				resource.getFluid() == AdvancedRocketryFluids.fluidHydrogen)
+			return super.fill(resource, doFill);
 		return 0;
 	}
 	
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
-		return fluid.getID() == FluidRegistry.getFluidID(AdvancedRocketryFluids.fluidOxygen) || fluid.getID() == FluidRegistry.getFluidID(AdvancedRocketryFluids.fluidHydrogen);
+	public boolean canFill(Fluid fluid) {
+		return fluid == AdvancedRocketryFluids.fluidOxygen || fluid == AdvancedRocketryFluids.fluidHydrogen;
 	}	
 
 	@Override
@@ -63,16 +64,16 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	@Override
 	public boolean canPerformFunction() {
 		if(!worldObj.isRemote) {
-			for( Object player : this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 2, this.zCoord + 1))) {
-				ItemStack stack = ((EntityPlayer)player).getEquipmentInSlot(3);
+			for( Object player : this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos, pos.add(1,2,1)))) {
+				ItemStack stack = ((EntityPlayer)player).getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 
 				//Check for O2 fill
 				if(stack != null && stack.getItem() instanceof ItemSpaceArmor) {
-					FluidStack fluidStack = this.drain(ForgeDirection.UNKNOWN, 1, false);
+					FluidStack fluidStack = this.drain(1, false);
 
 					if(((ItemSpaceArmor)stack.getItem()).getAirRemaining(stack) < ((ItemSpaceArmor)stack.getItem()).getMaxAir() &&
-							fluidStack != null && fluidStack.getFluid().getID() == AdvancedRocketryFluids.fluidOxygen.getID() && fluidStack.amount > 0)  {
-						this.drain(ForgeDirection.UNKNOWN, 1, true);
+							fluidStack != null && fluidStack.getFluid() == AdvancedRocketryFluids.fluidOxygen && fluidStack.amount > 0)  {
+						this.drain(1, true);
 						((ItemSpaceArmor)stack.getItem()).increment(stack, 100);
 						
 						return true;
@@ -83,14 +84,14 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 				if(stack != null && stack.getItem() instanceof IModularArmor) {
 					IInventory inv = ((IModularArmor)stack.getItem()).loadModuleInventory(stack);
 
-					FluidStack fluidStack = this.drain(ForgeDirection.UNKNOWN, 100, false);
+					FluidStack fluidStack = this.drain(100, false);
 					if(fluidStack != null) {
 						for(int i = 0; i < inv.getSizeInventory(); i++) {
 							ItemStack module = inv.getStackInSlot(i);
 							if(module != null && module.getItem() instanceof IFluidContainerItem) {
 								int amtFilled = ((IFluidContainerItem)module.getItem()).fill(module, fluidStack, true);
 								if(amtFilled == 100) {
-									this.drain(ForgeDirection.UNKNOWN, 100, true);
+									this.drain(100, true);
 									
 									((IModularArmor)stack.getItem()).saveModuleInventory(stack, inv);
 									

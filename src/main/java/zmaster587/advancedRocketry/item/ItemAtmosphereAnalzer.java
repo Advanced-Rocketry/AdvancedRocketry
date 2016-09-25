@@ -15,15 +15,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
@@ -51,14 +55,14 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world,
-			EntityPlayer player) {
-		if(!world.isRemote) {
-			String str[] = getAtmosphereReadout(stack, (AtmosphereType) AtmosphereHandler.getOxygenHandler(world.provider.dimensionId).getAtmosphereType(player));
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stack,
+			World worldIn, EntityPlayer playerIn, EnumHand hand) {
+		if(!worldIn.isRemote) {
+			String str[] = getAtmosphereReadout(stack, (AtmosphereType) AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension()).getAtmosphereType(playerIn));
 			for(String str1 : str)
-					player.addChatMessage(new ChatComponentText(str1));
+				playerIn.addChatMessage(new TextComponentString(str1));
 		}
-		return super.onItemRightClick(stack, world, player);
+		return super.onItemRightClick(stack, worldIn, playerIn, hand);
 	}
 
 	@Override
@@ -77,18 +81,18 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	}
 
 	@Override
-	public boolean isAllowedInSlot(ItemStack componentStack, int targetSlot) {
-		return targetSlot == 0;
+	public boolean isAllowedInSlot(ItemStack componentStack, EntityEquipmentSlot targetSlot) {
+		return targetSlot == EntityEquipmentSlot.HEAD;
 	}
 
 	@Override
 	public void renderScreen(ItemStack componentStack, List<ItemStack> modules,
 			RenderGameOverlayEvent event, Gui gui) {
 		
-		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
 		
 		int screenX = 8;
-		int screenY = event.resolution.getScaledHeight() - fontRenderer.FONT_HEIGHT*3;
+		int screenY = event.getResolution().getScaledHeight() - fontRenderer.FONT_HEIGHT*3;
 
 		String str[] = getAtmosphereReadout(componentStack, (AtmosphereType) AtmosphereHandler.currentAtm);
 		//Draw BG
@@ -102,26 +106,25 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 		GL11.glTranslatef(20, screenY + 8, 0);
 		GL11.glRotatef(( System.currentTimeMillis() / 100 ) % 360, 0, 0, 1);
 		
-		Tessellator.instance.startDrawingQuads();
-		RenderHelper.renderNorthFaceWithUV(Tessellator.instance, -1, -16,  -16, 16,  16, 0, 1, 0, 1);
-		Tessellator.instance.draw();
+		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+		
+		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
+		RenderHelper.renderNorthFaceWithUV(buffer, -1, -16,  -16, 16,  16, 0, 1, 0, 1);
+		buffer.finishDrawing();
 		GL11.glPopMatrix();
 		
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
-		Tessellator.instance.startDrawingQuads();
-		RenderHelper.renderNorthFaceWithUV(Tessellator.instance, -1, 0,  screenY - 12, 16,  screenY + 26, 0, 0.25f, 0, 1);
-		RenderHelper.renderNorthFaceWithUV(Tessellator.instance, -1, 16,  screenY - 12, 128,  screenY + 26, 0.5f, 0.5f, 0, 1);
-		RenderHelper.renderNorthFaceWithUV(Tessellator.instance, -1, 128,  screenY - 12, 144,  screenY + 26, 0.75f, 1f, 0, 1);
-		Tessellator.instance.draw();
+		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
+		RenderHelper.renderNorthFaceWithUV(buffer, -1, 0,  screenY - 12, 16,  screenY + 26, 0, 0.25f, 0, 1);
+		RenderHelper.renderNorthFaceWithUV(buffer, -1, 16,  screenY - 12, 128,  screenY + 26, 0.5f, 0.5f, 0, 1);
+		RenderHelper.renderNorthFaceWithUV(buffer, -1, 128,  screenY - 12, 144,  screenY + 26, 0.75f, 1f, 0, 1);
+		buffer.finishDrawing();
 	}
 
 	@Override
 	public ResourceIcon getComponentIcon(ItemStack armorStack) {
-		if(icon == null)
-			this.icon = new ResourceIcon(TextureMap.locationItemsTexture, this.getIcon(armorStack, 0));
-
-		return this.icon;
+		return null;
 	}
 
 }

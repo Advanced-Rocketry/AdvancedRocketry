@@ -7,7 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
@@ -19,7 +20,7 @@ import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 
-public class TileRocketUnloader extends TileInventoryHatch implements IInfrastructure {
+public class TileRocketUnloader extends TileInventoryHatch implements IInfrastructure, ITickable {
 	EntityRocket rocket;
 	
 	public TileRocketUnloader() {
@@ -35,8 +36,7 @@ public class TileRocketUnloader extends TileInventoryHatch implements IInfrastru
 	}
 	
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
 
 		//Move a stack of items
 		if(rocket != null ) {
@@ -74,7 +74,7 @@ public class TileRocketUnloader extends TileInventoryHatch implements IInfrastru
 				}
 
 			//Update redstone state
-			((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj, xCoord, yCoord, zCoord, rocketContainsNoItems);
+			((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj, worldObj.getBlockState(pos), pos, rocketContainsNoItems);
 
 		}
 	}
@@ -83,7 +83,7 @@ public class TileRocketUnloader extends TileInventoryHatch implements IInfrastru
 	public boolean onLinkStart(ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 
-		ItemLinker.setMasterCoords(item, this.xCoord, this.yCoord, this.zCoord);
+		ItemLinker.setMasterCoords(item, this.pos);
 
 		if(this.rocket != null) {
 			this.rocket.unlinkInfrastructure(this);
@@ -91,7 +91,7 @@ public class TileRocketUnloader extends TileInventoryHatch implements IInfrastru
 		}
 
 		if(player.worldObj.isRemote)
-			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText("You program the linker with the fueling station at: " + this.xCoord + " " + this.yCoord + " " + this.zCoord)));
+			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new TextComponentString("You program the linker with the fueling station at: " + this.getPos().getX() + " " + this.getPos().getY() + " " + this.getPos().getZ())));
 		return true;
 	}
 
@@ -99,14 +99,14 @@ public class TileRocketUnloader extends TileInventoryHatch implements IInfrastru
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 		if(player.worldObj.isRemote)
-			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText("This must be the first machine to link!")));
+			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new TextComponentString("This must be the first machine to link!")));
 		return false;
 	}
 
 	@Override
 	public void unlinkRocket() {
 		rocket = null;
-		((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj, xCoord, yCoord, zCoord, false);
+		((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj, worldObj.getBlockState(pos), pos, false);
 		//On unlink prevent the tile from ticking anymore
 		//if(!worldObj.isRemote)
 			//worldObj.loadedTileEntityList.remove(this);

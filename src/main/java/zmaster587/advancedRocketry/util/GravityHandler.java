@@ -12,12 +12,12 @@ public class GravityHandler {
 
 		if(!entity.isInWater()) {
 			if(!(entity instanceof EntityPlayer) || !((EntityPlayer)entity).capabilities.isFlying) {
-				if(DimensionManager.getInstance().isDimensionCreated(entity.worldObj.provider.dimensionId) || entity.worldObj.provider instanceof WorldProviderSpace) {
+				if(DimensionManager.getInstance().isDimensionCreated(entity.worldObj.provider.getDimension()) || entity.worldObj.provider instanceof WorldProviderSpace) {
 					double gravMult;
 					if(entity.worldObj.provider instanceof IPlanetaryProvider)
-						gravMult = ((IPlanetaryProvider)entity.worldObj.provider).getGravitationalMultiplier((int)entity.posX, (int)entity.posZ);
+						gravMult = ((IPlanetaryProvider)entity.worldObj.provider).getGravitationalMultiplier(entity.getPosition());
 					else
-						gravMult = DimensionManager.getInstance().getDimensionProperties(entity.worldObj.provider.dimensionId).gravitationalMultiplier;
+						gravMult = DimensionManager.getInstance().getDimensionProperties(entity.worldObj.provider.getDimension()).gravitationalMultiplier;
 
 					if(entity instanceof EntityItem)
 						entity.motionY -= gravMult*0.04f;

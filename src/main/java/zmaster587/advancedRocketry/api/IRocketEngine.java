@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.api;
 
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -12,7 +13,7 @@ public interface IRocketEngine {
 	 * amount of thrust per engine
 	 * @return meters per tick per block
 	 */
-	public int getThrust(World world, int x, int y, int z);
+	public int getThrust(World world, BlockPos pos);
 	
 	/**
 	 * @return base fuel consumption in mb/tick

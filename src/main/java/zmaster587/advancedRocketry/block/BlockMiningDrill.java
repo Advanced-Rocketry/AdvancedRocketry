@@ -3,30 +3,43 @@ package zmaster587.advancedRocketry.block;
 import zmaster587.advancedRocketry.api.IMiningDrill;
 import zmaster587.advancedRocketry.tile.TileDrill;
 import zmaster587.libVulpes.block.BlockTile;
+import zmaster587.libVulpes.block.FullyRotatableBlock;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockMiningDrill extends BlockTile implements IMiningDrill {
+public class BlockMiningDrill extends FullyRotatableBlock implements IMiningDrill {
 
 	public BlockMiningDrill() {
-		super(TileDrill.class, zmaster587.libVulpes.inventory.GuiHandler.guiId.MODULAR.ordinal());
+		super(Material.ROCK);
+		//super(TileDrill.class, zmaster587.libVulpes.inventory.GuiHandler.guiId.MODULAR.ordinal());
 	}
 
 	@Override
-	public boolean hasTileEntity(int meta) {
+	public boolean hasTileEntity(IBlockState state) {
 		return false;
 	}
+
 	@Override
-	public float getMiningSpeed(World world, int x, int y, int z) {
-		return world.isAirBlock(x, y + 1, z) && world.isAirBlock(x, y + 2, z) ? 0.01f : 0f;
+	public float getMiningSpeed(World world, BlockPos pos) {
+		return world.isAirBlock(pos.add(0,1,0)) && world.isAirBlock(pos.add(0,2,0)) ? 0.01f : 0f;
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z,
-			EntityPlayer player, int par6, float par7, float par8, float par9) {
-		return false;//super.onBlockActivated(world, x, y, z, player, par6, par7, par8, par9);
+	public boolean onBlockActivated(World world, BlockPos pos,
+			IBlockState state, EntityPlayer player, EnumHand hand,
+			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
+			float hitZ) {
+		// TODO Auto-generated method stub
+		return super.onBlockActivated(world, pos, state, player, hand, heldItem, side,
+				hitX, hitY, hitZ);
 	}
-	
+
 	@Override
 	public int powerConsumption() {
 		return 0;

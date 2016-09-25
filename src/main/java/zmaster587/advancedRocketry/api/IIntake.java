@@ -1,5 +1,7 @@
 package zmaster587.advancedRocketry.api;
 
+import net.minecraft.block.state.IBlockState;
+
 public interface IIntake {
-	public int getIntakeAmt(int meta);
+	public int getIntakeAmt(IBlockState state);
 }

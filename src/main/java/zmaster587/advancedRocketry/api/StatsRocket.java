@@ -6,7 +6,7 @@ import java.util.List;
 
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
-import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
@@ -36,8 +36,8 @@ public class StatsRocket {
 	private int fuelRateWarp;
 	private int fuelRateImpulse;
 
-	BlockPosition pilotSeatPos;
-	private final List<BlockPosition> passengerSeats = new ArrayList<BlockPosition>();
+	HashedBlockPosition pilotSeatPos;
+	private final List<HashedBlockPosition> passengerSeats = new ArrayList<HashedBlockPosition>();
 	private List<Vector3F<Float>> engineLoc;
 
 	private static final String TAGNAME = "rocketStats";
@@ -48,7 +48,7 @@ public class StatsRocket {
 		weight = 0;
 		fuelLiquid = 0;
 		drillingPower = 0f;
-		pilotSeatPos = new BlockPosition(0,0,0);
+		pilotSeatPos = new HashedBlockPosition(0,0,0);
 		pilotSeatPos.x = -1;
 		engineLoc = new ArrayList<Vector3F<Float>>();
 		statTags = new HashMap<String, Object>();
@@ -68,7 +68,7 @@ public class StatsRocket {
 	public int getSeatY() { return pilotSeatPos.y; }
 	public int getSeatZ() { return pilotSeatPos.z; }
 
-	public BlockPosition getPassengerSeat(int index) {
+	public HashedBlockPosition getPassengerSeat(int index) {
 		return passengerSeats.get(index);
 	}
 
@@ -93,7 +93,7 @@ public class StatsRocket {
 	}
 
 	public void addPassengerSeat(int x, int y, int z) {
-		passengerSeats.add(new BlockPosition(x, y, z));
+		passengerSeats.add(new HashedBlockPosition(x, y, z));
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class StatsRocket {
 			stat.setFuelCapacity(type, this.getFuelCapacity(type));
 		}
 
-		stat.pilotSeatPos = new BlockPosition(this.pilotSeatPos.x, this.pilotSeatPos.y, this.pilotSeatPos.z);
+		stat.pilotSeatPos = new HashedBlockPosition(this.pilotSeatPos.x, this.pilotSeatPos.y, this.pilotSeatPos.z);
 		stat.passengerSeats.addAll(passengerSeats);
 		stat.engineLoc = new ArrayList<Vector3F<Float>>(engineLoc);
 		stat.statTags = new HashMap<String, Object>(statTags);
@@ -420,7 +420,7 @@ public class StatsRocket {
 			int locs[] = new int[passengerSeats.size()*3];
 
 			for(int i=0 ; (i/3) < passengerSeats.size(); i+=3) {
-				BlockPosition vec = passengerSeats.get(i/3);
+				HashedBlockPosition vec = passengerSeats.get(i/3);
 				locs[i] = vec.x;
 				locs[i + 1] = vec.y;
 				locs[i + 2] = vec.z;
@@ -462,7 +462,7 @@ public class StatsRocket {
 				NBTTagCompound dynStats = stats.getCompoundTag("dynStats");
 
 
-				for(Object key : dynStats.func_150296_c()) {
+				for(Object key : dynStats.getKeySet()) {
 					Object obj = dynStats.getTag((String)key);
 
 					if(obj instanceof NBTTagFloat)

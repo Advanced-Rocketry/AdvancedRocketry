@@ -15,21 +15,20 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.libVulpes.network.PacketHandler;
-import zmaster587.libVulpes.util.BlockPosition;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SpaceObjectManager implements ISpaceObjectManager {
 	private int nextId = 1;
@@ -121,8 +120,9 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * Gets the object at the location of passed Block x and z
 	 * @return Space object occupying the block coords of null if none
 	 */
-	public ISpaceObject getSpaceStationFromBlockCoords(int x, int z) {
+	public ISpaceObject getSpaceStationFromBlockCoords(BlockPos pos) {
 
+		int x = pos.getX(); int z = pos.getZ();
 		int radius = Math.max((int)Math.ceil(Math.abs((x/2)/(float)Configuration.stationSize)), (int)Math.ceil(Math.abs((z/2)/(float)Configuration.stationSize)));
 
 		int index;
@@ -251,18 +251,18 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 */
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent event) {
-		if(event.player.worldObj.provider.dimensionId == Configuration.spaceDimId) {
+		if(event.player.worldObj.provider.getDimension() == Configuration.spaceDimId) {
 
 			if(event.player.posY < 0 && !event.player.worldObj.isRemote) {
-				ISpaceObject object = getSpaceStationFromBlockCoords((int)event.player.posX, (int)event.player.posZ);
+				ISpaceObject object = getSpaceStationFromBlockCoords(event.player.getPosition());
 				if(object != null) {
 
-					BlockPosition loc = object.getSpawnLocation();
+					HashedBlockPosition loc = object.getSpawnLocation();
 
 					event.player.fallDistance=0;
 					event.player.motionY = 0;
 					event.player.setPositionAndUpdate(loc.x, loc.y, loc.z);
-					event.player.addChatComponentMessage(new ChatComponentText("You wake up finding yourself back on the station"));
+					event.player.addChatComponentMessage(new TextComponentString("You wake up finding yourself back on the station"));
 				}
 			}
 

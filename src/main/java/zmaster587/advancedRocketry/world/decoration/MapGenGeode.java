@@ -4,24 +4,26 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.MapGenBase;
 
 public class MapGenGeode extends MapGenBase {
 	int chancePerChunk;
 
-	private final static BlockMeta[] ores = {new BlockMeta(Blocks.iron_ore), new BlockMeta(Blocks.gold_ore), new BlockMeta(Blocks.redstone_ore), new BlockMeta(Blocks.lapis_ore)};
+	private final static BlockMeta[] ores = {new BlockMeta(Blocks.IRON_ORE), new BlockMeta(Blocks.GOLD_ORE), new BlockMeta(Blocks.REDSTONE_ORE), new BlockMeta(Blocks.LAPIS_ORE)};
 
 	public MapGenGeode(int chancePerChunk) {
 		this.chancePerChunk = chancePerChunk;
 	}
-
+	
 	@Override
-	protected void func_151538_a(World world, int rangeX,
-			int rangeZ, int chunkX, int chunkZ,
-			Block[] chunkArray) {
+	protected void recursiveGenerate(World world, int chunkX,
+			int chunkZ, int p_180701_4_, int p_180701_5_,
+			ChunkPrimer chunkPrimerIn) {
 
-		if(rand.nextInt(chancePerChunk) == Math.abs(rangeX) % chancePerChunk || rand.nextInt(chancePerChunk) == Math.abs(rangeZ) % chancePerChunk) {
+		if(rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk || rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk) {
 
 			int radius = rand.nextInt(24) + 24; //24; 24 -> 48
 
@@ -29,10 +31,12 @@ public class MapGenGeode extends MapGenBase {
 
 			int depth = radius*radius;
 
-			int xCoord = -rangeX + chunkX;
-			int zCoord =  -rangeZ + chunkZ;
+			int xCoord = -chunkX + p_180701_4_;
+			int zCoord =  -chunkZ + p_180701_5_;
+			
+			BlockPos pos = new BlockPos(chunkX*16, 0, chunkZ*16);
 
-			int avgY = (int) ((world.getBiomeGenForCoords(rangeX, rangeZ).rootHeight + 2) *32) - 3*radius/4;
+			int avgY = (int) ((world.getBiomeGenForCoords(pos).getBaseHeight() + 2) *32) - 3*radius/4;
 
 			for(int x = 15; x >= 0; x--) {
 				for(int z = 15; z >= 0; z--) {
@@ -40,7 +44,7 @@ public class MapGenGeode extends MapGenBase {
 
 					for(int y = 255; y >= 0; y--) {
 						index = (x * 16 + z) * 256 + y;
-						if(chunkArray[index] != null)
+						if(chunkPrimerIn.getBlockState(x, y, z) != Blocks.AIR.getDefaultState())
 							break;
 					}
 
@@ -49,7 +53,7 @@ public class MapGenGeode extends MapGenBase {
 					//Clears air for the ceiling
 					for(int dist = -count; dist < Math.min(count,3); dist++) {
 						index = (x * 16 + z) * 256 + avgY -dist;
-						chunkArray[index] = null;
+						chunkPrimerIn.setBlockState(x, avgY - dist, z, Blocks.AIR.getDefaultState());
 					}
 
 					if(count >= 0) {
@@ -60,25 +64,25 @@ public class MapGenGeode extends MapGenBase {
 							//Generates ore hanging from the ceiling
 							if( x % 4 > 0 && z % 4 > 0) {
 								for(int i = 1; i < size; i++)
-									chunkArray[(x * 16 + z) * 256 + avgY + count - i] = ores[(x/4 + z/4) % ores.length].getBlock();
+									chunkPrimerIn.setBlockState(x, avgY + count - i, z, ores[(x/4 + z/4) % ores.length].getBlock().getDefaultState());
 							}
 							else {
 								size -=2;
 								for(int i = 1; i < size; i++) {
-									chunkArray[(x * 16 + z) * 256 + avgY + count - i] = Blocks.stone;
+									chunkPrimerIn.setBlockState(x, avgY + count - i, z, Blocks.STONE.getDefaultState());
 								}
 							}
 							
 							//Generates ore in the floor
 							if( (x+2) % 4 > 0 && (z+2) % 4 > 0) {
 								for(int i = 1; i < size; i++)
-									chunkArray[(x * 16 + z) * 256 + avgY - count + i] = ores[((x+2)/4 + (z+2)/4) % ores.length].getBlock();
+									chunkPrimerIn.setBlockState(x, avgY - count + i, z, ores[(x/4 + z/4) % ores.length].getBlock().getDefaultState());
 							}
 							
 						}
 
-						chunkArray[(x * 16 + z) * 256 + avgY-count] = AdvancedRocketryBlocks.blocksGeode;
-						chunkArray[(x * 16 + z) * 256 + avgY+count] = AdvancedRocketryBlocks.blocksGeode;//world.getBiomeGenForCoords(rangeX, rangeZ).topBlock;
+						chunkPrimerIn.setBlockState(x, avgY - count, z, AdvancedRocketryBlocks.blocksGeode.getDefaultState());
+						chunkPrimerIn.setBlockState(x, avgY + count, z, AdvancedRocketryBlocks.blocksGeode.getDefaultState());
 					}
 				}
 			}

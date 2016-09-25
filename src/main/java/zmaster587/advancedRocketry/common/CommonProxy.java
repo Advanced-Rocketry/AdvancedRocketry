@@ -4,6 +4,7 @@ import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.libVulpes.network.PacketHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
@@ -31,7 +32,7 @@ public class CommonProxy {
 	}
 
 	public Profiler getProfiler() {
-		return MinecraftServer.getServer().theProfiler;
+		return Minecraft.getMinecraft().mcProfiler;
 	}
 
 	public void changeClientPlayerWorld(World world) {
@@ -50,5 +51,10 @@ public class CommonProxy {
 
 	public long getWorldTimeUniversal(int id) {
 		return DimensionManager.getWorld(id).getTotalWorldTime();
+	}
+
+	public void preinit() {
+		// TODO Auto-generated method stub
+		
 	}
 }

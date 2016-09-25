@@ -2,49 +2,60 @@ package zmaster587.advancedRocketry.util;
 
 import zmaster587.advancedRocketry.network.PacketBiomeIDChange;
 import zmaster587.libVulpes.network.PacketHandler;
-import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.HashedBlockPosition;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 
 public class BiomeHandler {
-	public static void changeBiome(World world, int biomeId, int x, int z) {
-		Chunk chunk = world.getChunkFromBlockCoords(x, z);
+	
+	
+	public static void changeBiome(World world, int biomeId, BlockPos pos) {
+		Chunk chunk = world.getChunkFromBlockCoords(pos);
 
-		BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
-		BiomeGenBase biomeTo = BiomeGenBase.getBiome(biomeId);
+		Biome biome = world.getBiomeGenForCoords(pos);
+		Biome biomeTo = Biome.getBiome(biomeId);
 		
 		if(biome == biomeTo)
 			return;
 		
 		int y = 60;
 		if(biome.topBlock != biomeTo.topBlock) {
-			int yy = world.getHeightValue(x, z);
+			BlockPos yy = world.getHeight(pos);
 			
-			while(!world.getBlock(x, yy - 1, z).isOpaqueCube() && yy > 0)
-				yy--;
+			while(!world.getBlockState(yy.down()).isOpaqueCube() && yy.getY() > 0)
+				yy = yy.down();
 			
-			if(world.getBlock(x, yy - 1, z) == biome.topBlock)
-				world.setBlock(x, yy - 1, z, biomeTo.topBlock);
-
-			y = (short)yy;
+			if(world.getBlockState(yy.down()) == biome.topBlock)
+				world.setBlockState(yy.down(), biomeTo.topBlock);
 		}
 
 		byte[] biomeArr = chunk.getBiomeArray();
 		try {
-			biomeArr[(x & 15) + (z & 15)*16] = (byte)biomeId;
+			biomeArr[(pos.getX() & 15) + (pos.getZ() & 15)*16] = (byte)biomeId;
 		} catch (IndexOutOfBoundsException e) {
 			e.printStackTrace();
 		}
 
-		PacketHandler.sendToNearby(new PacketBiomeIDChange(chunk, world, new BlockPosition(x, y, z)), world.provider.dimensionId, x, y, z, 256);
+		PacketHandler.sendToNearby(new PacketBiomeIDChange(chunk, world, new HashedBlockPosition(pos)), world.provider.getDimension(), pos, 256);
+	}
+	
+	public static void changeBiome(World world, int biomeId, int x, int z) {
+		changeBiome(world, biomeId, new BlockPos(x, 0, z));
 	}
 	
 	public static void changeBiome(World world, int biomeId, Chunk chunk, int x, int z) {
-
-		BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
-		BiomeGenBase biomeTo = BiomeGenBase.getBiome(biomeId);
 		
+	}
+	
+	public static void changeBiome(World world, int biomeId, Chunk chunk, BlockPos pos) {
+
+		Biome biome = world.getBiomeGenForCoords(pos);
+		Biome biomeTo = Biome.getBiome(biomeId);
+		
+		int x = pos.getX();
+		int z = pos.getZ();
 		if(biome == biomeTo)
 			return;
 		
@@ -52,14 +63,16 @@ public class BiomeHandler {
 		if(biome.topBlock != biomeTo.topBlock) {
 			int yy = chunk.getHeightValue(x & 15, z & 15);
 			
-			while(!world.getBlock(x, yy - 1, z).isOpaqueCube() && yy > 0)
+			while(!world.getBlockState(new BlockPos(x, yy - 1, z)).isOpaqueCube() && yy > 0)
 				yy--;
 			
 			if(yy == 0)
 				return;
 			
-			if(chunk.getBlock(x & 15, yy - 1, z & 15) == biome.topBlock)
-				chunk.func_150807_a(x & 15, yy - 1, z & 15, biomeTo.topBlock, 0);
+			
+			
+			if(chunk.getBlockState(x & 15, yy - 1, z & 15) == biome.topBlock)
+				chunk.setBlockState(new BlockPos(x & 15, yy - 1, z & 15), biomeTo.topBlock);
 
 			y = (short)yy;
 		}

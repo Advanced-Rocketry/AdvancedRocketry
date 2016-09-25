@@ -8,12 +8,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
+import zmaster587.advancedRocketry.block.BlockRedstoneEmitter;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.IButtonInventory;
@@ -24,13 +24,16 @@ import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
+import net.minecraftforge.fml.relauncher.Side;
 
-public class TileAtmosphereDetector extends TileEntity implements IModularInventory, IButtonInventory, INetworkMachine {
+public class TileAtmosphereDetector extends TileEntity implements ITickable, IModularInventory, IButtonInventory, INetworkMachine {
 
 	IAtmosphere atmosphereToDetect;
 
@@ -38,31 +41,26 @@ public class TileAtmosphereDetector extends TileEntity implements IModularInvent
 		atmosphereToDetect = AtmosphereType.AIR;
 	}
 
-	@Override
-	public boolean canUpdate() {
-		return true;
-	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 		if(!worldObj.isRemote && worldObj.getWorldTime() % 10 == 0) {
-			int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+			IBlockState state = worldObj.getBlockState(pos);
 			boolean detectedAtm = false;
 
 			//TODO: Galacticcraft support
-			if(AtmosphereHandler.getOxygenHandler(worldObj.provider.dimensionId) == null) {
+			if(AtmosphereHandler.getOxygenHandler(worldObj.provider.getDimension()) == null) {
 				detectedAtm = atmosphereToDetect == AtmosphereType.AIR;
 			}
 			else {
-				for(int i = 1; i < ForgeDirection.values().length; i++) {
-					ForgeDirection direction = ForgeDirection.getOrientation(i);
-					detectedAtm = (!worldObj.getBlock(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ).isOpaqueCube() && atmosphereToDetect == AtmosphereHandler.getOxygenHandler(worldObj.provider.dimensionId).getAtmosphereType(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ));
+				for(EnumFacing  direction : EnumFacing.values()) {
+					detectedAtm = (!worldObj.getBlockState(pos.offset(direction)).isOpaqueCube() && atmosphereToDetect == AtmosphereHandler.getOxygenHandler(worldObj.provider.getDimension()).getAtmosphereType(pos.offset(direction)));
 					if(detectedAtm) break;
 				}
 			}
 
-			if((meta == 1) != detectedAtm) {
-				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, detectedAtm ? 1 : 0, 3);
+			if(((BlockRedstoneEmitter)state.getBlock()).getState(worldObj, state, pos) != detectedAtm) {
+				((BlockRedstoneEmitter)state.getBlock()).setState(worldObj, state, pos, detectedAtm);
 			}
 		}
 	}
@@ -107,12 +105,8 @@ public class TileAtmosphereDetector extends TileEntity implements IModularInvent
 		//Send the unlocalized name over the net to reduce chances of foulup due to client/server inconsistencies
 		if(id == 0) {
 			PacketBuffer buf = new PacketBuffer(out);
-			try {
-				buf.writeShort(atmosphereToDetect.getUnlocalizedName().length());
-				buf.writeStringToBuffer(atmosphereToDetect.getUnlocalizedName());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			buf.writeShort(atmosphereToDetect.getUnlocalizedName().length());
+			buf.writeString(atmosphereToDetect.getUnlocalizedName());
 		}
 	}
 
@@ -121,12 +115,7 @@ public class TileAtmosphereDetector extends TileEntity implements IModularInvent
 			NBTTagCompound nbt) {
 		if(packetId == 0) {
 			PacketBuffer buf = new PacketBuffer(in);
-			try {
-
-				nbt.setString("uName", buf.readStringFromBuffer(buf.readShort()));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			nbt.setString("uName", buf.readStringFromBuffer(buf.readShort()));
 		}
 	}
 
@@ -140,10 +129,11 @@ public class TileAtmosphereDetector extends TileEntity implements IModularInvent
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
 		nbt.setString("atmName", atmosphereToDetect.getUnlocalizedName());
+		return nbt;
 	}
 
 	@Override

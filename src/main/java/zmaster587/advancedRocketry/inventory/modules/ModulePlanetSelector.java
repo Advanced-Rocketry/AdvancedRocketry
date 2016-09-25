@@ -6,9 +6,6 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -27,10 +24,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ModulePlanetSelector extends ModuleContainerPan implements IButtonInventory {
 
@@ -280,7 +283,8 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		float theta = (float) (2 * Math.PI / (float)(numSegments));
 		float cos = (float) Math.cos(theta);
 		float sin = (float) Math.sin(theta);
-
+		
+		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
 		GL11.glPushMatrix();
 
 		//GL11.glTranslated(-this.currentPosX/4, -this.currentPosY/4, 0);
@@ -298,37 +302,38 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			float t;
 			GL11.glPushMatrix();
 			GL11.glTranslatef(center + currentPosX, center + currentPosY, 0);
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GlStateManager.disableTexture2D();
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GL11.glColor4f(0.8f, .8f, 1f, .2f);
 			GL11.glEnable(GL11.GL_LINE_STIPPLE);
 			GL11.glLineStipple(5, (short)0x5555);
 
-			Tessellator.instance.startDrawing(GL11.GL_LINE_LOOP);
+			
+			buffer.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION);
 			for(int i = 0; i < numSegments; i++)	{
-				Tessellator.instance.addVertex(x2, y2, 0);
+				buffer.pos(x2, y2, 0).endVertex();
 				t = x2;
 				x2 = cos*x2 - sin*y2;
 				y2 = sin*t + cos*y2;
 			}
-			Tessellator.instance.draw();
+			Tessellator.getInstance().draw();
+			//buffer.finishDrawing();
 			//Reset GL info
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GL11.glDisable(GL11.GL_LINE_STIPPLE);
+			GlStateManager.enableTexture2D();
+			GlStateManager.disableBlend();
 			GL11.glColor4f(1f, 1f, 1f, 1f);
-			GL11.glDisable(GL11.GL_BLEND);
 			GL11.glPopMatrix();
-
+			GL11.glLineStipple(5, (short)0xFFFF);
 		}
 
 		//Render Selection
 		if(selectedSystem != -1) {
 
-			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureResources.selectionCircle);
+			gui.mc.getTextureManager().bindTexture(TextureResources.selectionCircle);
 			GL11.glPushMatrix();
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			float radius = currentlySelectedPlanet.radius/2;
 			GL11.glTranslatef(currentlySelectedPlanet.posX + currentPosX + radius, currentlySelectedPlanet.posY  + currentPosY + radius, 0);
 
@@ -336,20 +341,23 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 			GL11.glPushMatrix();
 			GL11.glRotated(progress, 0, 0, 1);
-			Tessellator.instance.startDrawingQuads();
-			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, 1, -radius, -radius, radius, radius, 0, 1, 0, 1);
-			Tessellator.instance.draw();
+			
+			
+			
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			RenderHelper.renderNorthFaceWithUVNoNormal(buffer, 1, -radius, -radius, radius, radius, 0, 1, 0, 1);
+			Tessellator.getInstance().draw();
 			GL11.glPopMatrix();
 
 			GL11.glPushMatrix();
 			//GL11.glRotatef(-Minecraft.getMinecraft().theWorld.getTotalWorldTime(), 0, 0, 1);
 			radius *= (1.2 + 0.1*Math.sin(progress/10f));
-			Tessellator.instance.startDrawingQuads();
-			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, 1, -radius, -radius, radius, radius, 0, 1, 0, 1);
-			Tessellator.instance.draw();
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			RenderHelper.renderNorthFaceWithUVNoNormal(buffer, 1, -radius, -radius, radius, radius, 0, 1, 0, 1);
+			Tessellator.getInstance().draw();
 			GL11.glPopMatrix();
-			GL11.glDisable(GL11.GL_BLEND);
-
+			
+			GlStateManager.disableBlend();
 			GL11.glPopMatrix();
 		}
 		GL11.glPopMatrix();
@@ -403,7 +411,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 	}
 
 	@Override
-	public void sendChanges(Container container, ICrafting crafter,
+	public void sendChanges(Container container, IContainerListener crafter,
 			int variableId, int localId) {
 		for(ModuleBase module : staticModuleList) {
 			if(localId >= 0 && localId < module.numberOfChangesToSend()) {

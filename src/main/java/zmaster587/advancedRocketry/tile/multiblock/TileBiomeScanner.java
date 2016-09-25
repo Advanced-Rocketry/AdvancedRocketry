@@ -1,13 +1,16 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
@@ -38,17 +41,17 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 				{null, null, null, null, null},
 				{null, null, null, null, null}},
 
-				{	{null,Blocks.iron_block,Blocks.iron_block,Blocks.iron_block,null}, 
-					{Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block},
-					{Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block},
-					{Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block},
-					{null,Blocks.iron_block,Blocks.iron_block,Blocks.iron_block,null}},
+				{	{null,Blocks.IRON_BLOCK,Blocks.IRON_BLOCK,Blocks.IRON_BLOCK,null}, 
+					{Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK},
+					{Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK},
+					{Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK},
+					{null,Blocks.IRON_BLOCK,Blocks.IRON_BLOCK,Blocks.IRON_BLOCK,null}},
 
-					{	{Blocks.air, Blocks.air, Blocks.air, Blocks.air, Blocks.air}, 
-						{Blocks.air, Blocks.air, Blocks.air, Blocks.air, Blocks.air},
-						{Blocks.air, Blocks.air, Blocks.redstone_block, Blocks.air, Blocks.air},
-						{Blocks.air, Blocks.air, Blocks.air, Blocks.air, Blocks.air},
-						{Blocks.air, Blocks.air, Blocks.air, Blocks.air, Blocks.air}}};
+					{	{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR}, 
+						{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR},
+						{Blocks.AIR, Blocks.AIR, Blocks.REDSTONE_BLOCK, Blocks.AIR, Blocks.AIR},
+						{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR},
+						{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR}}};
 
 
 	@Override
@@ -61,8 +64,8 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 		List<ModuleBase> list = new LinkedList<ModuleBase>();//super.getModules(ID, player);
 
 		boolean suitable = true;
-		for(int y = this.yCoord - 4; y > 0; y--) {
-			if(!worldObj.isAirBlock(this.xCoord, y, this.zCoord)) {
+		for(int y = this.getPos().getY() - 4; y > 0; y--) {
+			if(!worldObj.isAirBlock(new BlockPos( this.getPos().getX(), y, this.getPos().getZ()))) {
 				suitable = false;
 				break;
 			}
@@ -72,7 +75,7 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 			list.add(new ModuleImage(24, 14, zmaster587.advancedRocketry.inventory.TextureResources.earthCandyIcon));
 		}
 
-		ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.xCoord, this.zCoord);
+		ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 		if(suitable && SpaceObjectManager.WARPDIMID != spaceObject.getOrbitingPlanetId()) {
 
 			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(spaceObject.getOrbitingPlanetId());
@@ -80,33 +83,39 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 			if(properties.isGasGiant()) {
 				list2.add(new ModuleText(32, 16, "nyehhh, Gassy, ain't it?", 0x202020));
 			} else {
-				
+
 
 				int i = 0;
 				if(properties.getId() == 0) {
-					for(BiomeGenBase biome : BiomeGenBase.getBiomeGenArray()) {
+					Iterator<Biome> itr = Biome.REGISTRY.iterator();
+					while (itr.hasNext()) {
+						Biome biome = itr.next();
 						if(biome != null)
-							list2.add(new ModuleText(32, 16 + 12*(i++), biome.biomeName, 0x202020));
+							list2.add(new ModuleText(32, 16 + 12*(i++), biome.getBiomeName(), 0x202020));
 					}
 				}
-				else
-					for(BiomeEntry biome : properties.getBiomes()) {
-						list2.add(new ModuleText(32, 16 + 12*(i++), biome.biome.biomeName, 0x202020));
+				else {
+					Iterator<Biome> itr = Biome.REGISTRY.iterator();
+					while (itr.hasNext()) {
+						Biome biome = itr.next();
+						list2.add(new ModuleText(32, 16 + 12*(i++), biome.getBiomeName(), 0x202020));
 					}
+				}
 			}
 			//Relying on a bug, is this safe?
 			ModuleContainerPan pan = new ModuleContainerPan(0, 16, list2, new LinkedList<ModuleBase>(), null, 148, 128, 0, -64, 0, 1000);
 			list.add(pan);
 		}
 		else
-			list.add(new ModuleText(32, 16, EnumChatFormatting.OBFUSCATED + "Foxes, that is all", 0x202020));
+			list.add(new ModuleText(32, 16, ChatFormatting.OBFUSCATED + "Foxes, that is all", 0x202020));
 
 		return list;
 	}
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		return AxisAlignedBB.getBoundingBox(xCoord -5,yCoord -3, zCoord -5, xCoord +5, yCoord + 3, zCoord + 5);
+		
+		return new AxisAlignedBB(pos.add(-5,-3,-5),pos.add(5,3,5));
 	}
 
 	@Override

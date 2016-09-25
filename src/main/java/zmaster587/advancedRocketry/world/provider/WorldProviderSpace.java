@@ -1,24 +1,20 @@
 package zmaster587.advancedRocketry.world.provider;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.client.render.planet.RenderSpaceSky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.ChunkProviderSpace;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.WorldChunkManager;
-import net.minecraft.world.biome.WorldChunkManagerHell;
-import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.biome.BiomeProviderSingle;
+import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraftforge.client.IRenderHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class WorldProviderSpace extends WorldProviderPlanet {
 	private IRenderHandler skyRender;
@@ -41,7 +37,7 @@ public class WorldProviderSpace extends WorldProviderPlanet {
 	}
 	
 	@Override
-	public IChunkProvider createChunkGenerator() {
+	public IChunkGenerator createChunkGenerator() {
 		return new ChunkProviderSpace(this.worldObj, this.worldObj.getSeed());
 	}
 	
@@ -52,7 +48,7 @@ public class WorldProviderSpace extends WorldProviderPlanet {
 	}
 	
 	@Override
-	public float getAtmosphereDensity(int x, int z) {
+	public float getAtmosphereDensity(BlockPos pos) {
 		return 0;
 	}
 	
@@ -62,15 +58,20 @@ public class WorldProviderSpace extends WorldProviderPlanet {
 	}
 	
 	@Override
-	protected void registerWorldChunkManager() {
+	protected void createBiomeProvider() {
+		// TODO Auto-generated method stub
+		//super.createBiomeProvider();
 		worldObj.getWorldInfo().setTerrainType(AdvancedRocketry.spaceWorldType);
-		this.worldChunkMgr = new WorldChunkManagerHell(AdvancedRocketryBiomes.spaceBiome, 0.0F);
-		this.hasNoSky = false;
+		
+		this.biomeProvider = new BiomeProviderSingle(AdvancedRocketryBiomes.spaceBiome);//new ChunkManagerPlanet(worldObj, worldObj.getWorldInfo().getGeneratorOptions(), DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension()).getBiomes());
+		
 	}
 	
+	
+	
 	@Override
-	public DimensionProperties getDimensionProperties(int x , int z) {
-		ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(x, z);
+	public DimensionProperties getDimensionProperties(BlockPos pos) {
+		ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 		if(object != null)
 			return (DimensionProperties)object.getProperties();
 		return DimensionManager.defaultSpaceDimensionProperties;

@@ -5,7 +5,6 @@ import io.netty.buffer.ByteBuf;
 import java.util.LinkedList;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
@@ -35,16 +34,17 @@ import zmaster587.libVulpes.inventory.modules.ModuleSync;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
-import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.IconResource;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class TileWarpShipMonitor extends TileEntity implements IModularInventory, ISelectionNotify, INetworkMachine, IButtonInventory, IProgressBar, IDataSync {
 
@@ -65,8 +65,8 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 
 	private SpaceObject getSpaceObject() {
-		if(station == null && worldObj.provider.dimensionId == Configuration.spaceDimId) {
-			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(xCoord, zCoord);
+		if(station == null && worldObj.provider.getDimension() == Configuration.spaceDimId) {
+			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceObject)
 				station = (SpaceObject) object;
 		}
@@ -157,7 +157,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			canWarp = new ModuleText(baseX, baseY + sizeY + 30, (isOnStation && getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()) ? "Nowhere to go" : flag ? "Ready!" : "Not ready", flag ? 0x1baa1b : 0xFF1b1b);
 
 			modules.add(canWarp);
-			modules.add(new ModuleProgress(baseX, baseY + sizeY + 40, 10, new IndicatorBarImage(70, 58, 53, 8, 122, 58, 5, 8, ForgeDirection.EAST, TextureResources.progressBars), this));
+			modules.add(new ModuleProgress(baseX, baseY + sizeY + 40, 10, new IndicatorBarImage(70, 58, 53, 8, 122, 58, 5, 8, EnumFacing.EAST, TextureResources.progressBars), this));
 			modules.add(new ModuleText(baseX + 82, baseY + sizeY + 20, "Fuel Cost:", 0x1b1b1b));
 			warpCost = getTravelCost();
 
@@ -209,7 +209,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 		}
 		else if (ID == guiId.MODULARFULLSCREEN.ordinal()) {
 			//Open planet selector menu
-			container = new ModulePlanetSelector(worldObj.provider.dimensionId, zmaster587.libVulpes.inventory.TextureResources.starryBG, this);
+			container = new ModulePlanetSelector(worldObj.provider.getDimension(), zmaster587.libVulpes.inventory.TextureResources.starryBG, this);
 			container.setOffset(1000, 1000);
 			modules.add(container);
 		}
@@ -231,8 +231,8 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			planetName = properties.getName();
 		}
 		else {
-			location = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId).getPlanetIcon();
-			planetName = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId).getName();
+			location = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension()).getPlanetIcon();
+			planetName = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension()).getName();
 
 			if(planetName.isEmpty())
 				planetName = "???";
@@ -346,7 +346,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
 		if(id == 0)
-			player.openGui(LibVulpes.instance, guiId.MODULARFULLSCREEN.ordinal(), worldObj, this.xCoord, this.yCoord, this.zCoord);
+			player.openGui(LibVulpes.instance, guiId.MODULARFULLSCREEN.ordinal(), worldObj, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
 		else if(id == 1 || id == 3) {
 			int dimId = nbt.getInteger("id");
 			container.setSelectedSystem(dimId);
@@ -354,17 +354,16 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 			//Update known planets
 			markDirty();
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			if(id == 3)
-				player.openGui(LibVulpes.instance, guiId.MODULARNOINV.ordinal(), worldObj, this.xCoord, this.yCoord, this.zCoord);
+				player.openGui(LibVulpes.instance, guiId.MODULARNOINV.ordinal(), worldObj, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
 		}
 		else if(id == 2) {
 			SpaceObject station = getSpaceObject();
 
 			if(station != null && station.useFuel(getTravelCost()) != 0 && station.hasUsableWarpCore()) {
 				SpaceObjectManager.getSpaceManager().moveStationToBody(station, station.getDestOrbitingBody(), 200);
-				for(BlockPosition vec : station.getWarpCoreLocations()) {
-					TileEntity tile = worldObj.getTileEntity(vec.x, vec.y, vec.z);
+				for(HashedBlockPosition vec : station.getWarpCoreLocations()) {
+					TileEntity tile = worldObj.getTileEntity(vec.getBlockPos());
 					if(tile != null && tile instanceof TileWarpCore) {
 						((TileWarpCore)tile).onInventoryUpdated();
 					}
@@ -397,7 +396,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 		else {
 			dimCache = DimensionManager.getInstance().getDimensionProperties(container.getSelectedSystem());
 
-			ISpaceObject station = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.xCoord, this.zCoord);
+			ISpaceObject station = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.getPos());
 			if(station != null) {
 				station.setDestOrbitingBody(id);
 			}

@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.inventory.TextureResources;
@@ -21,7 +23,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 public class TileLathe extends TileMultiblockMachine implements IModularInventory {
 
 	public static final Object[][][] structure = { 
-		{{'I', AdvancedRocketryBlocks.blockMotor, Blocks.air, 'c'}},
+		{{'I', AdvancedRocketryBlocks.blockMotor, Blocks.AIR, 'c'}},
 		{{'O', LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'P'}},
 	};
 	
@@ -35,7 +37,7 @@ public class TileLathe extends TileMultiblockMachine implements IModularInventor
 	}
 
 	@Override
-	public boolean shouldHideBlock(World world, int x, int y, int z, Block tile) {
+	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
 		return true;
 	}
 	
@@ -46,7 +48,8 @@ public class TileLathe extends TileMultiblockMachine implements IModularInventor
 	
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		return AxisAlignedBB.getBoundingBox(xCoord -3,yCoord -2, zCoord -3, xCoord + 3, yCoord + 2, zCoord + 3);
+		
+		return new AxisAlignedBB(pos.add(-3,-2,-3),pos.add(3,2,3));
 	}
 	
 	@Override

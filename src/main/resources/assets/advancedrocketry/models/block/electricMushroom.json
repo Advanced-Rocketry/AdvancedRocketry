@@ -1,0 +1,6 @@
+{
+    "parent": "block/cross",
+    "textures": {
+        "cross": "advancedrocketry:blocks/mushroom_electric"
+    }
+}
