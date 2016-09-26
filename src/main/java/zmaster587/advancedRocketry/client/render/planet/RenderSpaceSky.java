@@ -4,11 +4,14 @@ import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.render.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class RenderSpaceSky extends RenderPlanetarySky {
 
@@ -20,6 +23,15 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 
 	Minecraft mc = Minecraft.getMinecraft();
 
+	@Override
+	protected ForgeDirection getRotationAxis(DimensionProperties properties, int x, int z) {
+		try {
+			return SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(x,z).getForwardDirection().getRotation(ForgeDirection.UP);
+		} catch(NullPointerException e) {
+			return ForgeDirection.EAST;
+		}
+	}
+	
 	@Override
 	protected void renderPlanet(Tessellator tessellator1, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, boolean hasAtmosphere, boolean isGasgiant) {
 

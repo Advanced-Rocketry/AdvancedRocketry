@@ -152,6 +152,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 		ForgeDirection travelDirection = null;
 		ResourceLocation parentPlanetIcon = null;
 		List<DimensionProperties> children;
+		
+		ForgeDirection axis = ForgeDirection.EAST;
 
 		Vec3 sunColor;
 		if(mc.theWorld.provider instanceof IPlanetaryProvider) {
@@ -160,7 +162,9 @@ public class RenderPlanetarySky extends IRenderHandler {
 			DimensionProperties properties = (DimensionProperties)planetaryProvider.getDimensionProperties((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
 
 			atmosphere = planetaryProvider.getAtmosphereDensityFromHeight(mc.renderViewEntity.posY, (int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
-
+			
+			axis = getRotationAxis(properties, (int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
+			
 			children = new LinkedList<DimensionProperties>();
 			for (Integer i : properties.getChildPlanets()) {
 				children.add(DimensionManager.getInstance().getDimensionProperties(i));
@@ -295,7 +299,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, f6);
 		GL11.glTranslatef(f7, f8, f9);
 		GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(isWarp ? 0 : mc.theWorld.getCelestialAngle(partialTicks) * 360.0F, 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef(isWarp ? 0 : mc.theWorld.getCelestialAngle(partialTicks) * 360.0F, axis.offsetX, axis.offsetY, axis.offsetZ);
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		float f18 = mc.theWorld.getStarBrightness(partialTicks) * f6 * (atmosphere) + (1-atmosphere);
@@ -417,6 +421,10 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GL11.glDepthMask(true);
 
 		RocketEventHandler.onPostWorldRender(partialTicks);
+	}
+
+	protected ForgeDirection getRotationAxis(DimensionProperties properties, int posX, int posZ) {
+		return ForgeDirection.EAST;
 	}
 
 	protected ResourceLocation getTextureForPlanet(DimensionProperties properties) {

@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.api.stations;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.libVulpes.util.BlockPosition;
 
@@ -144,4 +145,6 @@ public interface ISpaceObject {
 	 * @return worldtime expiration is to occur
 	 */
 	public long getExpireTime();
+
+	public ForgeDirection getForwardDirection();
 }
