@@ -26,6 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -169,14 +170,14 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 					}
 				}
 			}
-			powerMadeLastTick = energyRecieved;
+			powerMadeLastTick = (int) (energyRecieved*Configuration.microwaveRecieverMulitplier);
 
 			if(powerMadeLastTick != prevPowerMadeLastTick) {
 				prevPowerMadeLastTick = powerMadeLastTick;
 				PacketHandler.sendToNearby(new PacketMachine(this, (byte)1), worldObj.provider.getDimension(),pos, 128);
 
 			}
-			producePower(energyRecieved);
+			producePower(powerMadeLastTick);
 		}
 	}
 

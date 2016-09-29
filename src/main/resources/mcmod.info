@@ -1,0 +1,16 @@
+[
+{
+  "modid": "advancedRocketry",
+  "name": "Advanced Rocketry",
+  "description": "A space mod for minecraft, adds planets, rockets, and some machines",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "http://minecraft.curseforge.com/projects/advanced-rocketry",
+  "updateUrl": "",
+  "authorList": ["zmaster587"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
