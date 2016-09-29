@@ -80,4 +80,6 @@ public class Configuration {
 	public static double terraformSpeed;
 	public static boolean terraformRequiresFluid;
 
+	public static float microwaveRecieverMulitplier;
+
 }
