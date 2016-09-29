@@ -15,7 +15,6 @@ import cpw.mods.fml.common.IWorldGenerator;
 
 public class OreGenerator implements IWorldGenerator {
 
-	private static Block dilithiumTargetOre;
 
 	private void generate(World world, Material material, int numPerChunk,int clumpSize, int chunkX, int chunkZ, Random random) {
 		for(int i = 0; i < numPerChunk; i++) {
@@ -26,10 +25,6 @@ public class OreGenerator implements IWorldGenerator {
 			new WorldGenMinable(Block.getBlockFromItem(material.getProduct(AllowedProducts.getProductByName("ORE")).getItem()), 
 					material.getMeta(), clumpSize, Blocks.stone).generate(world, random, coordX, coordY, coordZ);
 		}
-	}
-
-	public static void setDilithiumTargetBlock(Block block) {
-		dilithiumTargetOre = block;
 	}
 
 	@Override
@@ -48,13 +43,13 @@ public class OreGenerator implements IWorldGenerator {
 		}
 
 		if(Configuration.generateDilithium) {
-		int dilithiumChance = world.provider.dimensionId == Configuration.MoonId ? Configuration.dilithiumPerChunkMoon : Configuration.dilithiumPerChunk;
-		for(int i = 0; i < dilithiumChance; i++) {
-			int coordX = 16*chunkX + random.nextInt(16);
-			int coordY = random.nextInt(64);
-			int coordZ = 16*chunkZ + random.nextInt(16);
+			int dilithiumChance = world.provider.dimensionId == Configuration.MoonId ? Configuration.dilithiumPerChunkMoon : Configuration.dilithiumPerChunk;
+			for(int i = 0; i < dilithiumChance; i++) {
+				int coordX = 16*chunkX + random.nextInt(16);
+				int coordY = random.nextInt(64);
+				int coordZ = 16*chunkZ + random.nextInt(16);
 
-			new WorldGenMinable(MaterialRegistry.getMaterialFromName("Dilithium").getBlock(), MaterialRegistry.getMaterialFromName("Dilithium").getMeta(), Configuration.dilithiumClumpSize, dilithiumTargetOre).generate(world, random, coordX, coordY, coordZ);
+				new WorldGenMinable(MaterialRegistry.getMaterialFromName("Dilithium").getBlock(), MaterialRegistry.getMaterialFromName("Dilithium").getMeta(), Configuration.dilithiumClumpSize, Blocks.stone).generate(world, random, coordX, coordY, coordZ);
 			}
 		}
 	}
