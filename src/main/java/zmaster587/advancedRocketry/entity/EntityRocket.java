@@ -423,7 +423,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			}
 		}
 
-		
+
 		if(isInFlight()) {
 			boolean burningFuel = isBurningFuel();
 
@@ -547,7 +547,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId);
 
 				properties.addSatallite(miningMission, worldObj);
-				
+
 				if(!worldObj.isRemote)
 					PacketHandler.sendToAll(new PacketSatellite(miningMission));
 
@@ -627,7 +627,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				setInFlight(false);
 			else
 				setPosition(posX, Configuration.orbit, posZ);
-			
+
 			if(destinationDimId != this.worldObj.provider.dimensionId)
 				this.travelToDimension(this.worldObj.provider.dimensionId == destinationDimId ? 0 : destinationDimId);
 		}
@@ -1061,7 +1061,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			List<TileEntity> tiles = storage.getGUItiles();
 			for(int i = 0; i < tiles.size(); i++) {
 				TileEntity tile  = tiles.get(i);
-				modules.add(new ModuleSlotButton(8 + 18* (i % 9), 17 + 18*(i/9), i + tilebuttonOffset, this, new ItemStack(storage.getBlock(tile.xCoord, tile.yCoord, tile.zCoord), 1, storage.getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord))));
+				try {
+					modules.add(new ModuleSlotButton(8 + 18* (i % 9), 17 + 18*(i/9), i + tilebuttonOffset, this, new ItemStack(storage.getBlock(tile.xCoord, tile.yCoord, tile.zCoord), 1, storage.getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord))));
+				} catch(NullPointerException e) {
+					//Fail silently, seems to happen with odd blocks once in a while, see #207
+				}
 			}
 
 			//Add buttons
