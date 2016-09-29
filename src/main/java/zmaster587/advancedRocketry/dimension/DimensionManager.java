@@ -344,7 +344,7 @@ public class DimensionManager {
 	 */
 	public void unregisterAllDimensions() {
 		for(Entry<Integer, DimensionProperties> dimSet : dimensionList.entrySet()) {
-			if(dimSet.getValue().isNativeDimension) {
+			if(dimSet.getValue().isNativeDimension && !dimSet.getValue().isGasGiant()) {
 				net.minecraftforge.common.DimensionManager.unregisterProviderType(dimSet.getKey());
 				net.minecraftforge.common.DimensionManager.unregisterDimension(dimSet.getKey());
 			}
