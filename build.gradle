@@ -33,7 +33,7 @@ jar {
 }
 
 minecraft {
-    version = "1.10-12.18.0.2000-1.10.0"
+    version = "1.10.2-12.18.1.2093"
     runDir = "run"
     mappings = "snapshot_20160518"
     replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"

@@ -31,6 +31,8 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class TileAtmosphereDetector extends TileEntity implements ITickable, IModularInventory, IButtonInventory, INetworkMachine {
@@ -63,6 +65,12 @@ public class TileAtmosphereDetector extends TileEntity implements ITickable, IMo
 				((BlockRedstoneEmitter)state.getBlock()).setState(worldObj, state, pos, detectedAtm);
 			}
 		}
+	}
+	
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos,
+			IBlockState oldState, IBlockState newSate) {
+		return (oldState.getBlock() != newSate.getBlock());
 	}
 
 	@Override

@@ -152,8 +152,8 @@ public class AtmosphereHandler {
 
 			AtmosphereHandler handler = getOxygenHandler(world.provider.getDimension());
 
-			if(handler == null)
-				return; //WTF
+			//if(handler == null)
+			//	return; //WTF
 			
 			for(AreaBlob blob : handler.getBlobWithinRadius(pos, MAX_BLOB_RADIUS)) {
 
@@ -161,12 +161,14 @@ public class AtmosphereHandler {
 					handler.onBlockRemove(pos);
 				else {
 					//Place block
-					if( blob.contains(pos) && SealableBlockHandler.isFulBlock(world, pos.getBlockPos())) {
+					if( blob.contains(pos) && !blob.isPositionAllowed(world, pos)) {
 						blob.removeBlock(pos);
 					}
 					else if(!blob.contains(blob.getRootPosition())) {
 						blob.addBlock(blob.getRootPosition());
 					}
+					else if(!blob.contains(pos) && blob.isPositionAllowed(world, pos))//isFulBlock(world, pos.getBlockPos()))
+						blob.addBlock(pos);
 				}
 			}
 		}
@@ -247,10 +249,12 @@ public class AtmosphereHandler {
 	/**
 	 * Adds a block to the blob
 	 * @param handler
+	 * @return true if blob addition is successful
 	 */
-	public void addBlock(IBlobHandler handler, HashedBlockPosition pos){
+	public boolean addBlock(IBlobHandler handler, HashedBlockPosition pos){
 		AreaBlob blob = blobs.get(handler);
 		blob.addBlock(pos);
+		return !blob.getLocations().isEmpty();
 	}
 
 	/**

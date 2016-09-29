@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
+import net.minecraft.block.BlockDoor.EnumDoorHalf;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
@@ -159,7 +160,15 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 	//TODO unit test, document, cleanup
 	private boolean checkDoorIsSealed(World world, BlockPos pos, IBlockState state)
 	{
-		return isBlockSealed(world, pos.offset(BlockDoor.getFacing(world, pos).rotateY())) && isBlockSealed(world, pos.offset(BlockDoor.getFacing(world, pos).rotateYCCW())); 
+		IBlockState state2 = state;
+		//For some reason the actual direction is stored in the bottom block of a door, so get that, but use the current block to determine openness due to order of update
+		if(state.getValue(BlockDoor.HALF) == EnumDoorHalf.UPPER)
+			state2 = world.getBlockState(pos.down());
+		
+		if(state.getValue(BlockDoor.OPEN))
+			return isBlockSealed(world, pos.offset(state2.getValue(BlockDoor.FACING))) && isBlockSealed(world, pos.offset(state2.getValue(BlockDoor.FACING).rotateYCCW().rotateYCCW())); 
+		//state.getValue(BlockDoor.FACING)
+		return isBlockSealed(world, pos.offset(state2.getValue(BlockDoor.FACING).rotateY())) && isBlockSealed(world, pos.offset(state2.getValue(BlockDoor.FACING).rotateYCCW())); 
 	}
 
 	/**

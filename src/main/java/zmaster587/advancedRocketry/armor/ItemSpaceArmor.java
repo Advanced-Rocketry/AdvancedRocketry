@@ -30,6 +30,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * Space Armor
  * Any class that extends this will gain the ability to store oxygen and will protect players from the vacuum atmosphere type
@@ -53,6 +55,17 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 		for(ItemStack componentStack : getComponents(stack)) {
 			list.add(ChatFormatting.DARK_GRAY + componentStack.getDisplayName());
 		}
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public ModelBiped getArmorModel(EntityLivingBase entityLiving,
+			ItemStack itemStack, EntityEquipmentSlot armorSlot,
+			ModelBiped _default) {
+
+		if(armorSlot == EntityEquipmentSlot.CHEST)
+			return new RenderJetPack(_default);
+		return super.getArmorModel(entityLiving, itemStack, armorSlot, _default);
 	}
 
 	@Override

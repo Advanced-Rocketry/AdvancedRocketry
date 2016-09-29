@@ -49,9 +49,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 		flySpeed.setAccessible(true);
 	}
 	
-	private static final ResourceIcon jetpackHover = new ResourceIcon(TextureResources.jetpackIconHover);
-	private static final ResourceIcon jetpackEnabled = new ResourceIcon(TextureResources.jetpackIconEnabled);
-	private static final ResourceIcon jetpackDisabled = new ResourceIcon(TextureResources.jetpackIconDisabled);
+
 	private ResourceLocation background = TextureResources.rocketHud;
 
 	@Override
@@ -194,13 +192,13 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 				float ejectSpeed = mode == MODES.HOVER ? 0.1f : 0.3f;
 				//AdvancedRocketry.proxy.spawnParticle("smallRocketFlame", player.worldObj, xPos, player.posY - 0.75, zPos, (player.worldObj.rand.nextFloat() - 0.5f)/18f,-.1 ,(player.worldObj.rand.nextFloat() - 0.5f)/18f);
 
-				AdvancedRocketry.proxy.spawnParticle("smallRocketFlame", player.worldObj, xPos, player.posY - 0.75, zPos, 0, player.motionY -ejectSpeed ,0);
+				AdvancedRocketry.proxy.spawnParticle("smallRocketFlame", player.worldObj, xPos, player.posY + 0.75, zPos, 0, player.motionY -ejectSpeed ,0);
 
 				playerRot = (float) ((Math.PI/180f)*(player.rotationYaw - 125));
 				xPos = player.posX + MathHelper.cos(playerRot)*.4f;
 				zPos = player.posZ + MathHelper.sin(playerRot)*.4f;
 				
-				AdvancedRocketry.proxy.spawnParticle("smallRocketFlame", player.worldObj, xPos, player.posY - 0.75, zPos, 0, player.motionY -ejectSpeed ,0);
+				AdvancedRocketry.proxy.spawnParticle("smallRocketFlame", player.worldObj, xPos, player.posY + 0.75, zPos, 0, player.motionY -ejectSpeed ,0);
 			}
 
 			if(player.motionY > -1) {
@@ -213,7 +211,8 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ResourceIcon getComponentIcon(ItemStack armorStack) {
-		return isEnabled(armorStack) ? getMode(armorStack) == MODES.HOVER ? jetpackHover : jetpackEnabled : jetpackDisabled;
+		
+		return isEnabled(armorStack) ? getMode(armorStack) == MODES.HOVER ? new ResourceIcon(TextureResources.jetpackIconHover) : new ResourceIcon(TextureResources.jetpackIconEnabled) : new ResourceIcon(TextureResources.jetpackIconDisabled);
 	}
 
 	private MODES getMode(ItemStack stack) {

@@ -1,0 +1,6 @@
+{
+    "parent": "libvulpes:block/tintedCubeAll",
+    "textures": {
+        "all": "advancedrocketry:blocks/crystal"
+    }
+}

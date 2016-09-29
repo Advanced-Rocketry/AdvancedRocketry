@@ -23,6 +23,8 @@ import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import net.minecraft.client.renderer.culling.ICamera;
+import net.minecraft.entity.Entity;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.launchwrapper.Launch;
 
@@ -43,6 +45,8 @@ public class ClassTransformer implements IClassTransformer {
 	private static final String CLASS_KEY_BLOCK = "net.minecraft.block.Block";
 	private static final String CLASS_KEY_BLOCKPOS = "net.minecraft.util.math.BlockPos";
 	private static final String CLASS_KEY_IBLOCKSTATE = "net.minecraft.block.state.IBlockState";
+	private static final String CLASS_KEY_RENDER_GLOBAL = "net.minecraft.client.renderer.RenderGlobal";
+	private static final String CLASS_KEY_ICAMERA = "net.minecraft.client.renderer.culling.ICamera";
 	
 	private static final String METHOD_KEY_PROCESSPLAYER = "processPlayer";
 	private static final String METHOD_KEY_JUMP = "jump";
@@ -57,6 +61,7 @@ public class ClassTransformer implements IClassTransformer {
 	private static final String METHOD_KEY_MOVEFLYING = "net.minecraft.entity.Entity.moveFlying";
 	private static final String METHOD_KEY_SETBLOCKSTATE = CLASS_KEY_WORLD + ".setBlockState";
 	private static final String METHOD_KEY_SETBLOCKMETADATAWITHNOTIFY = CLASS_KEY_WORLD + ".setBlockMetadataWithNotify";
+	private static final String METHOD_KEY_SETUPTERRAIN = "setupTerrain";
 
 	private static final String FIELD_YAW = "net.minecraft.client.renderer.EntityRenderer.rotationYaw";
 	private static final String FIELD_PITCH = "net.minecraft.client.renderer.EntityRenderer.rotationPitch";
@@ -102,6 +107,8 @@ public class ClassTransformer implements IClassTransformer {
 		entryMap.put(CLASS_KEY_BLOCK, new SimpleEntry<String, String>("net/minecraft/block/Block","aji"));
 		entryMap.put(CLASS_KEY_BLOCKPOS, new SimpleEntry<String, String>("net/minecraft/util/math/BlockPos",""));
 		entryMap.put(CLASS_KEY_IBLOCKSTATE, new SimpleEntry<String, String>("net/minecraft/block/state/IBlockState",""));
+		entryMap.put(CLASS_KEY_RENDER_GLOBAL, new SimpleEntry<String, String>("net/minecraft/client/renderer/RenderGlobal",""));
+		entryMap.put(CLASS_KEY_ICAMERA, new SimpleEntry<String, String>("net/minecraft/client/renderer/culling/ICamera",""));
 		
 		entryMap.put(METHOD_KEY_PROCESSPLAYER, new SimpleEntry<String, String>("processPlayer",""));
 		entryMap.put(METHOD_KEY_MOVEENTITY, new SimpleEntry<String, String>("moveEntity",""));
@@ -116,7 +123,8 @@ public class ClassTransformer implements IClassTransformer {
 		entryMap.put(METHOD_KEY_JUMP, new SimpleEntry<String, String>("jump",""));
 		entryMap.put(METHOD_KEY_SETBLOCKSTATE, new SimpleEntry<String, String>("setBlockState", ""));
 		entryMap.put(METHOD_KEY_SETBLOCKMETADATAWITHNOTIFY, new SimpleEntry<String, String>("setBlockMetadataWithNotify", "a"));
-
+		entryMap.put(METHOD_KEY_SETUPTERRAIN, new SimpleEntry<String, String>("setupTerrain", ""));
+		
 		entryMap.put(FIELD_YAW, new SimpleEntry<String, String>("rotationYaw", "blt"));
 		entryMap.put(FIELD_PITCH, new SimpleEntry <String, String>("rotationPitch", "blt"));
 		entryMap.put(FIELD_PREV_YAW, new SimpleEntry<String, String>("prevRotationYaw", "blt"));
@@ -593,7 +601,53 @@ public class ClassTransformer implements IClassTransformer {
 		 *     }
 		 * }
 		 * */
+		if(changedName.equals(getName(CLASS_KEY_RENDER_GLOBAL))) {
+			ClassNode cn = startInjection(bytes);
+			MethodNode setupTerrain = getMethod(cn, getName(METHOD_KEY_SETUPTERRAIN), "(L"+ getName(CLASS_KEY_ENTITY) + ";DL" + getName(CLASS_KEY_ICAMERA) + ";IZ)V");
+			if(setupTerrain != null) {
+				final InsnList nodeAdd = new InsnList();
+				
+				AbstractInsnNode pos1 = null;
+				LabelNode pos2 = null;
+				
+				int ifnull = 3;
+				int aload = 3;
+				int indexPos1 = 0;;
+				
+				for(int i = setupTerrain.instructions.size() - 1; i >= 0; i--) {
+					AbstractInsnNode ain = setupTerrain.instructions.get(i);
+					if(ain.getOpcode() == Opcodes.IFNULL && --ifnull == 0) {
+						pos1 = ain;
+						indexPos1 = i;
+						break;
+					}
+				}
+				
+				for(int i = indexPos1; i < setupTerrain.instructions.size(); i++) {
+					AbstractInsnNode ain = setupTerrain.instructions.get(i);
+					if(ain.getOpcode() == Opcodes.ALOAD && --aload == 0) {
+						pos2 = (LabelNode)setupTerrain.instructions.get(i-2);;
+						break;
+					}
+				}
+				
+				
+				//Lack of robustness, this could go really wrong. To future me: told you so!
+				//pos2 = setupTerrain.instructions.get(914);
+				
+				//nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 25));
+				nodeAdd.add(new JumpInsnNode(Opcodes.GOTO, pos2));
+				//nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 27));
+				//nodeAdd.add(new JumpInsnNode(Opcodes.IFEQ, pos2));
+				
+				setupTerrain.instructions.insert(pos1, nodeAdd);
+				
+			}
+			else
+				AdvancedRocketry.logger.severe("ASM injection into RenderGlobal.setupTerrain FAILED!");
 
+			return finishInjection(cn);
+		}
 		if(changedName.equals(getName(CLASS_KEY_ENTITY_PLAYER))) {
 			ClassNode cn = startInjection(bytes);
 			MethodNode mountEntityMethod = getMethod(cn, getName(METHOD_KEY_MOUNTENTITY), "(L"+ getName(CLASS_KEY_ENTITY) + ";)V");

@@ -26,7 +26,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockCrystal extends Block implements INamedMetaBlock, IBlockColor {
+public class BlockCrystal extends Block implements INamedMetaBlock {
 	
 	public final static PropertyEnum<EnumCrystal> CRYSTALPROPERTY = PropertyEnum.create("type", EnumCrystal.class);
 	
@@ -53,27 +53,22 @@ public class BlockCrystal extends Block implements INamedMetaBlock, IBlockColor 
     	return state.getValue(CRYSTALPROPERTY).ordinal();
     }
     
-    public boolean isOpaqueCube()
+    @Override
+    public boolean isOpaqueCube(IBlockState state)
     {
         return false;
     }
-    
     @Override
 	public String getUnlocalizedName(int itemDamage) {
 		return  "tile." + names[itemDamage];
 	}
+    
     
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer()
     {
         return BlockRenderLayer.TRANSLUCENT;
     }
-    
-	@Override
-	public int colorMultiplier(IBlockState state, IBlockAccess worldIn,
-			BlockPos pos, int tintIndex) {
-		return state.getValue(CRYSTALPROPERTY).color;
-	}
 
 	@Override
 	public void getSubBlocks(Item item, CreativeTabs tab,
@@ -85,7 +80,7 @@ public class BlockCrystal extends Block implements INamedMetaBlock, IBlockColor 
 	
 	@Override
 	public int damageDropped(IBlockState state) {
-		return super.damageDropped(state);
+		return getMetaFromState(state);
 	}
 	
 	
@@ -94,7 +89,7 @@ public class BlockCrystal extends Block implements INamedMetaBlock, IBlockColor 
 	public boolean shouldSideBeRendered(IBlockState blockState,
 			IBlockAccess world, BlockPos pos, EnumFacing side) {
        
-        EnumFacing dir = side.getOpposite();
+        EnumFacing dir = side;//side.getOpposite();
         IBlockState blockState2 = world.getBlockState(pos.offset(dir));
        
         return  blockState.equals(blockState2) ? false : super.shouldSideBeRendered(blockState, world, pos, side);
@@ -137,6 +132,10 @@ public class BlockCrystal extends Block implements INamedMetaBlock, IBlockColor 
             return this.name;
         }
 
+        public int getColor() {
+        	return color;
+        }
+        
         public MapColor getMapColor()
         {
             return this.mapColor;

@@ -16,6 +16,8 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockElectricMushroom extends BlockMushroom implements IGrowable {
 
@@ -54,11 +56,13 @@ public class BlockElectricMushroom extends BlockMushroom implements IGrowable {
 		
 		if(world.isRemote) {
 			FxSystemElectricArc.spawnArc(world, pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, .3, 7);
-			world.playSound(Minecraft.getMinecraft().thePlayer, pos, new SoundEvent( new ResourceLocation("advancedrocketry:ElectricShockSmall")), SoundCategory.BLOCKS, .7f,  0.975f + world.rand.nextFloat()*0.05f);
+			
+			world.playSound(pos.getX(), pos.getY(), pos.getZ(), new SoundEvent( new ResourceLocation("advancedrocketry:ElectricShockSmall")), SoundCategory.BLOCKS, .7f,  0.975f + world.rand.nextFloat()*0.05f, false);
 		}
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void randomDisplayTick(IBlockState stateIn, World world,
 			BlockPos pos, Random rand) {
 		

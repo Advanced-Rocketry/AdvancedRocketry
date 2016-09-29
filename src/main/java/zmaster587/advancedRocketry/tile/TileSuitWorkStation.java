@@ -85,9 +85,9 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 				List<ItemStack> list = ((IModularArmor)contents.getItem()).getComponents(contents);
 				for(int i = 0; i < getSizeInventory() -1; i++) {
 					if(i >= list.size())
-						inventory.setInventorySlotContents(i+1, null);
+						inventory.setInventorySlotContents(i, null);
 					else
-						inventory.setInventorySlotContents(i+1, list.get(i));
+						inventory.setInventorySlotContents(i, list.get(i));
 				}
 			}
 			inventory.setInventorySlotContents(slot, contents);

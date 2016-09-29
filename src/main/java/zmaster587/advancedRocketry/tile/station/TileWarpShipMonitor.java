@@ -78,7 +78,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 		DimensionProperties properties = getSpaceObject().getProperties().getParentProperties();
 		//properties.orbitalDist = 1;
 		DimensionProperties destProperties = DimensionManager.getInstance().getDimensionProperties(getSpaceObject().getDestOrbitingBody());
-		while(destProperties.isMoon())
+		while(destProperties.getParentProperties() != null && destProperties.getParentProperties().isMoon())
 			destProperties = destProperties.getParentProperties();
 
 		if((destProperties.isMoon() && destProperties.getParentPlanet() == properties.getId()) || (properties.isMoon() && properties.getParentPlanet() == destProperties.getId()))

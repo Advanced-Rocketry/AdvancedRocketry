@@ -100,6 +100,8 @@ public class TileStationOrientationControl extends TileEntity implements ITickab
 				else
 					updateText();
 			}
+			else
+				updateText();
 		}
 	}
 	@Override

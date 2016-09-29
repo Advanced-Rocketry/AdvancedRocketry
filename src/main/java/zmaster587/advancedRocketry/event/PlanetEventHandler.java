@@ -328,7 +328,6 @@ public class PlanetEventHandler {
 	public static void modifyChunk(World world ,WorldProviderPlanet provider, Chunk chunk) {
 		for(int x = 0; x < 16; x++) {
 			for(int z = 0; z < 16; z++) {
-				
 				BiomeHandler.changeBiome(world, Biome.getIdForBiome(((ChunkManagerPlanet)((WorldProviderPlanet)world.provider).chunkMgrTerraformed).getBiomeGenAt(x + chunk.xPosition*16,z + chunk.zPosition*16)), chunk, x + chunk.xPosition* 16, z + chunk.zPosition*16);
 			}
 		}

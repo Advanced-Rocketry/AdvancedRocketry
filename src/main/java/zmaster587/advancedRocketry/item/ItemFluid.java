@@ -10,22 +10,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemFluid extends ItemBlock implements IItemColor {
+public class ItemFluid extends ItemBlock {
 
 	public ItemFluid(Block block) {
 		super(block);
 	}
 	
-	@SideOnly(Side.CLIENT)
-	@Override
-	public int getColorFromItemStack(ItemStack stack, int meta) {
-		return Block.getBlockFromItem(stack.getItem()).getRenderColor(meta);
-	}
-	
-	@Override
-	public void addInformation(ItemStack p_77624_1_, EntityPlayer p_77624_2_,
-			List p_77624_3_, boolean p_77624_4_) {
-		
-		super.addInformation(p_77624_1_, p_77624_2_, p_77624_3_, p_77624_4_);
-	}
 }

@@ -6,10 +6,15 @@ import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
@@ -21,7 +26,7 @@ public class RenderTank extends TileEntitySpecialRenderer {
 
 		IFluidHandler fluidTile = (IFluidHandler)tile;
 		FluidStack fluid = fluidTile.getTankProperties()[0].getContents();
-
+		ResourceLocation fluidIcon = new ResourceLocation("advancedrocketry:textures/blocks/fluid/oxygen_flow.png");
 
 		if(fluid != null && fluid.getFluid() != null)
 		{
@@ -29,24 +34,39 @@ public class RenderTank extends TileEntitySpecialRenderer {
 
 			GL11.glTranslatef((float)x, (float)y, (float)z);
 
-			IIcon icon = fluid.getFluid().getIcon();
-			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
+			double minU = 0, maxU = 1, minV = 0, maxV = 1;
+			TextureMap map = Minecraft.getMinecraft().getTextureMapBlocks();
+			TextureAtlasSprite sprite = map.getTextureExtry(fluid.getFluid().getStill().toString());
+			if(sprite != null) {
+				minU = sprite.getMinU();
+				maxU = sprite.getMaxU();
+				minV = sprite.getMinV();
+				maxV = sprite.getMaxV();
+				GlStateManager.bindTexture(map.getGlTextureId());
+			}
+			else {
+				int color = fluid.getFluid().getColor();
+				GL11.glColor4f(((color >>> 16) & 0xFF)/255f, ((color >>> 8) & 0xFF)/255f, ((color& 0xFF)/255f),1f);
+				
+				bindTexture(fluidIcon);
+			}
 			
-			int color = fluid.getFluid().getColor();
-			GL11.glColor4f(((color >>> 16) & 0xFF)/255f, ((color >>> 8) & 0xFF)/255f, ((color& 0xFF)/255f),1f);
+
 			
 			Block block = tile.getBlockType();
-			Tessellator tess = Tessellator.instance;
+			Tessellator tess = Tessellator.getInstance();
 
-			float amt = fluid.amount / (float)fluidTile.getTankInfo(ForgeDirection.UNKNOWN)[0].capacity;
+			float amt = fluid.amount / (float)fluidTile.getTankProperties()[0].getCapacity();
 			
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glDisable(GL11.GL_LIGHTING);
 			
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			
-			tess.startDrawingQuads();
-			RenderHelper.renderCubeWithUV(tess, block.getBlockBoundsMinX() + 0.01, block.getBlockBoundsMinY() + 0.01, block.getBlockBoundsMinZ() + 0.01, block.getBlockBoundsMaxX() - 0.01, block.getBlockBoundsMaxY()*amt - 0.01, block.getBlockBoundsMaxZ() - 0.01, icon.getMinU(), icon.getMaxU(), icon.getMinV(), icon.getMaxV());
+			AxisAlignedBB bb = block.getDefaultState().getBoundingBox(tile.getWorld(), tile.getPos());
+			
+			tess.getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			RenderHelper.renderCubeWithUV(tess.getBuffer(), bb.minX + 0.01, bb.minY + 0.01, bb.minZ + 0.01, bb.maxX - 0.01, bb.maxY*amt - 0.01, bb.maxZ - 0.01, minU, maxU, minV, maxV);
 			tess.draw();
 
 			GL11.glEnable(GL11.GL_LIGHTING);
@@ -54,7 +74,7 @@ public class RenderTank extends TileEntitySpecialRenderer {
 			GL11.glPopMatrix();
 			GL11.glColor3f(1f, 1f, 1f);
 		}
-	}*/
+	}
 }
 
 

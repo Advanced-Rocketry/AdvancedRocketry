@@ -63,6 +63,7 @@ import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
 import zmaster587.advancedRocketry.item.ItemPackedStructure;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
+import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.mission.MissionOreMining;
 import zmaster587.advancedRocketry.network.PacketSatellite;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -427,7 +428,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 
 	public boolean isBurningFuel() {
-		return (getFuelAmount() > 0 || !Configuration.rocketRequireFuel) && (!this.getPassengers().isEmpty() || !isInOrbit() || getPassengerMovingForward() > 0);
+		return (getFuelAmount() > 0 || !Configuration.rocketRequireFuel) && ((!this.getPassengers().isEmpty() && getPassengerMovingForward() > 0) || !isInOrbit());
 	}
 
 	private float getPassengerMovingForward() {
@@ -635,7 +636,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 						ItemStack stack = tile.getStackInSlot(0);
 						if(stack != null && stack.getItem() == AdvancedRocketryItems.itemSpaceStation) {
 							StorageChunk storage = ((ItemPackedStructure)stack.getItem()).getStructure(stack);
-							ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(stack.getItemDamage());
+							ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation((int)ItemStationChip.getUUID(stack));
 
 							SpaceObjectManager.getSpaceManager().moveStationToBody(object, this.worldObj.provider.getDimension());
 

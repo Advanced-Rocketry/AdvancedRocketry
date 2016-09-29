@@ -2,6 +2,7 @@
     "parent": "block/cube_bottom_top",
     "textures": {
         "top": "advancedrocketry:blocks/rocketPad_nlEdge",
-        "side": "advancedrocketry:blocks/rocketPad_xCross"
+        "side": "advancedrocketry:blocks/rocketPad_xCross",
+        "bottom": "advancedrocketry:blocks/rocketPad_nlEdge"
     }
 }

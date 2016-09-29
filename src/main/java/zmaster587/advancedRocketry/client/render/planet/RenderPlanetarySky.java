@@ -25,6 +25,7 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.IRenderHandler;
@@ -159,6 +160,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 		ResourceLocation parentPlanetIcon = null;
 		List<DimensionProperties> children;
 
+		EnumFacing axis = EnumFacing.EAST;
+		
 		Vec3d sunColor;
 		if(mc.theWorld.provider instanceof IPlanetaryProvider) {
 			IPlanetaryProvider planetaryProvider = (IPlanetaryProvider)mc.theWorld.provider;
@@ -166,6 +169,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			DimensionProperties properties = (DimensionProperties)planetaryProvider.getDimensionProperties(mc.thePlayer.getPosition());
 
 			atmosphere = planetaryProvider.getAtmosphereDensityFromHeight(mc.getRenderViewEntity().posY, mc.thePlayer.getPosition());
+			axis = getRotationAxis(properties, mc.thePlayer.getPosition());
 
 			children = new LinkedList<DimensionProperties>();
 			for (Integer i : properties.getChildPlanets()) {
@@ -249,7 +253,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			GL11.glPushMatrix();
 			GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
 			GL11.glRotatef(MathHelper.sin(mc.theWorld.getCelestialAngleRadians(partialTicks)) < 0.0F ? 180.0F : 0.0F, 0.0F, 0.0F, 1.0F);
-			GL11.glRotatef(90.0F, 0.0F, 0.0F, 1.0F);
+			GL11.glRotatef(90.0F, 0.0F, 0.0F, 0.0F);
 
 			//Sim atmospheric thickness
 			f6 = afloat[0];
@@ -301,7 +305,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, f6);
 		GL11.glTranslatef(f7, f8, f9);
 		GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(isWarp ? 0 : mc.theWorld.getCelestialAngle(partialTicks) * 360.0F, 1.0F, 0.0F, 0.0F);
+		
+		GL11.glRotatef(isWarp ? 0 : mc.theWorld.getCelestialAngle(partialTicks) * 360.0F, axis.getFrontOffsetX(), axis.getFrontOffsetY(), axis.getFrontOffsetZ());
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		float f18 = mc.theWorld.getStarBrightness(partialTicks) * f6 * (atmosphere) + (1-atmosphere);
@@ -436,6 +441,10 @@ public class RenderPlanetarySky extends IRenderHandler {
 	
 	protected ResourceLocation getTextureForPlanetLEO(DimensionProperties properties) {
 		return properties.getPlanetIcon();
+	}
+	
+	protected EnumFacing getRotationAxis(DimensionProperties properties, BlockPos pos) {
+		return EnumFacing.EAST;
 	}
 	
 	protected void renderPlanet(VertexBuffer buffer, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, boolean hasAtmosphere, boolean gasGiant) {

@@ -30,6 +30,7 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 	public void renderTileEntityAt(TileEntity tile, double x,
 			double y, double z, float t, int damage) {
 
+		renderBlocks = Minecraft.getMinecraft().getBlockRendererDispatcher();
 		TilePlaceholder tileGhost = (TilePlaceholder)tile;
 
 		IBlockState state = tileGhost.getReplacedState();

@@ -110,7 +110,7 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 		
 		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
 		RenderHelper.renderNorthFaceWithUV(buffer, -1, -16,  -16, 16,  16, 0, 1, 0, 1);
-		buffer.finishDrawing();
+		Tessellator.getInstance().draw();
 		GL11.glPopMatrix();
 		
 		
@@ -119,7 +119,7 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 		RenderHelper.renderNorthFaceWithUV(buffer, -1, 0,  screenY - 12, 16,  screenY + 26, 0, 0.25f, 0, 1);
 		RenderHelper.renderNorthFaceWithUV(buffer, -1, 16,  screenY - 12, 128,  screenY + 26, 0.5f, 0.5f, 0, 1);
 		RenderHelper.renderNorthFaceWithUV(buffer, -1, 128,  screenY - 12, 144,  screenY + 26, 0.75f, 1f, 0, 1);
-		buffer.finishDrawing();
+		Tessellator.getInstance().draw();
 	}
 
 	@Override

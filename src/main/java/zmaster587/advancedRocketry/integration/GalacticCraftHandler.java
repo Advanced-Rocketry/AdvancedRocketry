@@ -4,18 +4,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import micdoodle8.mods.galacticraft.api.event.oxygen.GCCoreOxygenSuffocationEvent;
-import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
-import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStatsClient;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class GalacticCraftHandler {
 
 
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public void GCSuffocationEvent(GCCoreOxygenSuffocationEvent.Pre event) {
 		
 		if(event.entity instanceof EntityPlayer) {
@@ -37,5 +30,5 @@ public class GalacticCraftHandler {
 				stats.oxygenSetupValid = true;
 		}
 	}
-
+*/
 }

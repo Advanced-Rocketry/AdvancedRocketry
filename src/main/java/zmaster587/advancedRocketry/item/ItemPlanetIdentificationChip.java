@@ -139,7 +139,7 @@ public class ItemPlanetIdentificationChip extends ItemMultiData {
 
 				list.add("Planet Name: " + ChatFormatting.DARK_GREEN  + dimName);
 
-				super.addInformation(stack, player, list, bool);
+				//super.addInformation(stack, player, list, bool);
 
 				//list.add("Mass: " + unknown);
 				//list.add("Atmosphere Density: " + unknown);

@@ -3,7 +3,14 @@ package zmaster587.advancedRocketry;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialLiquid;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
@@ -56,6 +63,7 @@ import zmaster587.advancedRocketry.block.BlockCrystal;
 import zmaster587.advancedRocketry.block.BlockDoor2;
 import zmaster587.advancedRocketry.block.BlockElectricMushroom;
 import zmaster587.advancedRocketry.block.BlockFluid;
+import zmaster587.advancedRocketry.block.BlockHalfTile;
 import zmaster587.advancedRocketry.block.BlockIntake;
 import zmaster587.advancedRocketry.block.BlockLandingPad;
 import zmaster587.advancedRocketry.block.BlockLaser;
@@ -215,8 +223,12 @@ public class AdvancedRocketry {
 	private static Configuration config;
 	private static final String BIOMECATETORY = "Biomes";
 	String[] sealableBlockWhileList;
+	
+	//static {
+	//	FluidRegistry.enableUniversalBucket(); // Must be called before preInit
+	//}
 
-	public MaterialRegistry materialRegistry = new MaterialRegistry(); 
+	public static MaterialRegistry materialRegistry = new MaterialRegistry(); 
 
 	private HashMap<AllowedProducts, HashSet<String>> modProducts = new HashMap<AllowedProducts, HashSet<String>>();
 
@@ -359,7 +371,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockCrystal = new BlockCrystal().setUnlocalizedName("crystal").setCreativeTab(LibVulpes.tabLibVulpesOres).setHardness(2f);
 		AdvancedRocketryBlocks.blockOrientationController = new BlockTile(TileStationOrientationControl.class,  GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setUnlocalizedName("orientationControl").setHardness(3f);
 		AdvancedRocketryBlocks.blockGravityController = new BlockTile(TileStationGravityController.class,  GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setUnlocalizedName("gravityControl").setHardness(3f);
-		AdvancedRocketryBlocks.blockOxygenCharger = new BlockTile(TileOxygenCharger.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("oxygenCharger").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		AdvancedRocketryBlocks.blockOxygenCharger = new BlockHalfTile(TileOxygenCharger.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("oxygenCharger").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockOxygenVent = new BlockTile(TileOxygenVent.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("oxygenVent").setCreativeTab(tabAdvRocketry).setHardness(3f);
 
 
@@ -474,10 +486,10 @@ public class AdvancedRocketry {
 		AtmosphereRegister.getInstance().registerHarvestableFluid(AdvancedRocketryFluids.fluidHydrogen);
 		AtmosphereRegister.getInstance().registerHarvestableFluid(AdvancedRocketryFluids.fluidOxygen);
 
-		AdvancedRocketryBlocks.blockOxygenFluid = new BlockFluid(AdvancedRocketryFluids.fluidOxygen, Material.WATER).setUnlocalizedName("oxygenFluidBlock").setCreativeTab(CreativeTabs.MISC);
-		AdvancedRocketryBlocks.blockHydrogenFluid = new BlockFluid(AdvancedRocketryFluids.fluidHydrogen, Material.WATER).setUnlocalizedName("hydrogenFluidBlock").setCreativeTab(CreativeTabs.MISC);
-		AdvancedRocketryBlocks.blockFuelFluid = new BlockFluid(AdvancedRocketryFluids.fluidRocketFuel, Material.WATER).setUnlocalizedName("rocketFuelBlock").setCreativeTab(CreativeTabs.MISC);
-		AdvancedRocketryBlocks.blockNitrogenFluid = new BlockFluid(AdvancedRocketryFluids.fluidNitrogen, Material.WATER).setUnlocalizedName("nitrogenFluidBlock").setCreativeTab(CreativeTabs.MISC);
+		//AdvancedRocketryBlocks.blockOxygenFluid = new BlockFluid(AdvancedRocketryFluids.fluidOxygen, Material.WATER).setUnlocalizedName("oxygenFluidBlock").setCreativeTab(CreativeTabs.MISC);
+		//AdvancedRocketryBlocks.blockHydrogenFluid = new BlockFluid(AdvancedRocketryFluids.fluidHydrogen, Material.WATER).setUnlocalizedName("hydrogenFluidBlock").setCreativeTab(CreativeTabs.MISC);
+		//AdvancedRocketryBlocks.blockFuelFluid = new BlockFluid(AdvancedRocketryFluids.fluidRocketFuel, new MaterialLiquid(MapColor.YELLOW)).setUnlocalizedName("rocketFuelBlock").setCreativeTab(CreativeTabs.MISC);
+		//AdvancedRocketryBlocks.blockNitrogenFluid = new BlockFluid(AdvancedRocketryFluids.fluidNitrogen, Material.WATER).setUnlocalizedName("nitrogenFluidBlock").setCreativeTab(CreativeTabs.MISC);
 
 
 		//Cables
@@ -531,14 +543,14 @@ public class AdvancedRocketry {
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockOxygenDetection.setRegistryName("oxygenDetection"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockUnlitTorch.setRegistryName("unlitTorch"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blocksGeode.setRegistryName("geode"));
-		//GameRegistry.registerBlock(AdvancedRocketryBlocks.blockOxygenFluid,ItemFluid.class, AdvancedRocketryBlocks.blockOxygenFluid.getUnlocalizedName());
-		//GameRegistry.registerBlock(AdvancedRocketryBlocks.blockHydrogenFluid,ItemFluid.class, AdvancedRocketryBlocks.blockHydrogenFluid.getUnlocalizedName());
-		//GameRegistry.registerBlock(AdvancedRocketryBlocks.blockFuelFluid, ItemFluid.class, AdvancedRocketryBlocks.blockFuelFluid.getUnlocalizedName());
-		//GameRegistry.registerBlock(AdvancedRocketryBlocks.blockNitrogenFluid, ItemFluid.class, AdvancedRocketryBlocks.blockNitrogenFluid.getUnlocalizedName());
+		//LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockOxygenFluid.setRegistryName("oxygenFluid"));
+		//LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockHydrogenFluid.setRegistryName("hydrogenFluid"));
+		//LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockFuelFluid.setRegistryName("rocketFuel"));
+		//LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockNitrogenFluid.setRegistryName("nitrogenFluid"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockVitrifiedSand.setRegistryName("vitrifiedSand"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockCharcoalLog.setRegistryName("charcoalLog"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockElectricMushroom.setRegistryName("electricMushroom"));
-		//GameRegistry.registerBlock(AdvancedRocketryBlocks.blockCrystal, ItemCrystalBlock.class, AdvancedRocketryBlocks.blockCrystal.getUnlocalizedName());
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockCrystal.setRegistryName("crystal"), ItemBlockCrystal.class, true );
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockOrientationController.setRegistryName("orientationController"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockGravityController.setRegistryName("gravityController"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockDrill.setRegistryName("drill"));
@@ -587,7 +599,11 @@ public class AdvancedRocketry {
 		AdvancedRocketryItems.itemBucketNitrogen = new ItemBucket(AdvancedRocketryBlocks.blockNitrogenFluid).setCreativeTab(LibVulpes.tabLibVulpesOres).setUnlocalizedName("bucketNitrogen").setContainerItem(Items.BUCKET);
 		AdvancedRocketryItems.itemBucketHydrogen = new ItemBucket(AdvancedRocketryBlocks.blockHydrogenFluid).setCreativeTab(LibVulpes.tabLibVulpesOres).setUnlocalizedName("bucketHydrogen").setContainerItem(Items.BUCKET);
 		AdvancedRocketryItems.itemBucketOxygen = new ItemBucket(AdvancedRocketryBlocks.blockOxygenFluid).setCreativeTab(LibVulpes.tabLibVulpesOres).setUnlocalizedName("bucketOxygen").setContainerItem(Items.BUCKET);
-
+		//FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidHydrogen);
+		//FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidNitrogen);
+		//FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidOxygen);
+		//FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidRocketFuel);
+		
 		//Suit Component Registration
 		AdvancedRocketryItems.itemJetpack = new ItemJetpack().setCreativeTab(tabAdvRocketry).setUnlocalizedName("jetPack");
 		AdvancedRocketryItems.itemPressureTank = new ItemPressureTank(4, 1000).setCreativeTab(tabAdvRocketry).setUnlocalizedName("advancedrocketry:pressureTank");
@@ -749,90 +765,19 @@ public class AdvancedRocketry {
 		materialRegistry.registerOres(LibVulpes.tabLibVulpesOres);
 
 		//Regiser item/block crap
-		if(FMLCommonHandler.instance().getSide().isClient()) {
-			//Register Block models
-			Item blockItem = Item.getItemFromBlock(AdvancedRocketryBlocks.blockLoader);
-			ModelLoader.setCustomModelResourceLocation(blockItem, 0, new ModelResourceLocation("advancedrocketry:databus", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(blockItem, 1, new ModelResourceLocation("advancedrocketry:satelliteHatch", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(blockItem, 2, new ModelResourceLocation("libvulpes:inputHatch", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(blockItem, 3, new ModelResourceLocation("libvulpes:outputHatch", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(blockItem, 4, new ModelResourceLocation("libvulpes:fluidInputHatch", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(blockItem, 5, new ModelResourceLocation("libvulpes:fluidOutputHatch", "inventory"));
-
-			blockItem = Item.getItemFromBlock(AdvancedRocketryBlocks.blockAirLock);
-			
-			blockItem = Item.getItemFromBlock(AdvancedRocketryBlocks.blockLaunchpad);
-			ModelLoader.setCustomModelResourceLocation(blockItem, 0, new ModelResourceLocation("advancedrocketry:launchpad_all", "inventory"));
-
-			blockItem = Item.getItemFromBlock(AdvancedRocketryBlocks.blockPlatePress);
-			ModelLoader.setCustomModelResourceLocation(blockItem, 0, new ModelResourceLocation("advancedrocketry:platePress", "inventory"));
-			//Register Item models
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSatellitePrimaryFunction, 0, new ModelResourceLocation("advancedrocketry:opticalSensor", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, new ModelResourceLocation("advancedrocketry:compositionSensor", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSatellitePrimaryFunction, 2, new ModelResourceLocation("advancedrocketry:massDetector", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSatellitePrimaryFunction, 3, new ModelResourceLocation("advancedrocketry:microwaveTransmitter", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSatellitePrimaryFunction, 4, new ModelResourceLocation("advancedrocketry:oreMapper", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSatellitePrimaryFunction, 5, new ModelResourceLocation("advancedrocketry:biomeChangerSat", "inventory"));
-
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemIC, 0, new ModelResourceLocation("advancedrocketry:basicCircuit", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemIC, 1, new ModelResourceLocation("advancedrocketry:trackingCircuit", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemIC, 2, new ModelResourceLocation("advancedrocketry:advancedCircuit", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemIC, 3, new ModelResourceLocation("advancedrocketry:controlIOCircuit", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemIC, 4, new ModelResourceLocation("advancedrocketry:itemIOCircuit", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemIC, 5, new ModelResourceLocation("advancedrocketry:liquidIOCircuit", "inventory"));
-
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemMisc, 0, new ModelResourceLocation("advancedrocketry:userInterface", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemMisc, 1, new ModelResourceLocation("advancedrocketry:carbonCartridge", "inventory"));
-
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemUpgrade, 0, new ModelResourceLocation("advancedrocketry:hoverUpgrade", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemUpgrade, 1, new ModelResourceLocation("advancedrocketry:flightSpeedUpgrade", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemUpgrade, 2, new ModelResourceLocation("advancedrocketry:bionicLegs", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemUpgrade, 3, new ModelResourceLocation("advancedrocketry:landingBoots", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemUpgrade, 4, new ModelResourceLocation("advancedrocketry:antiFogVisor", "inventory"));
-
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSatellitePowerSource, 0, new ModelResourceLocation("advancedrocketry:basicSolarPanel", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSatellitePowerSource, 1, new ModelResourceLocation("advancedrocketry:advancedSolarPanel", "inventory"));
-
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemLens, 0, new ModelResourceLocation("advancedrocketry:basicLens", "inventory"));
-
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemWafer, 0, new ModelResourceLocation("advancedrocketry:siliconWafer", "inventory"));
-
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSpaceSuit_Chest, 0, new ModelResourceLocation("advancedrocketry:spaceChestplate", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSpaceSuit_Helmet, 0, new ModelResourceLocation("advancedrocketry:spaceHelmet", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSpaceSuit_Boots, 0, new ModelResourceLocation("advancedrocketry:spaceBoots", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSpaceSuit_Leggings, 0, new ModelResourceLocation("advancedrocketry:spaceLeggings", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemQuartzCrucible, 0, new ModelResourceLocation("advancedrocketry:iquartzCrucible", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemDataUnit, 0, new ModelResourceLocation("advancedrocketry:dataStorageUnit", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSatelliteIdChip, 0, new ModelResourceLocation("advancedrocketry:satelliteIdChip", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemPlanetIdChip, 0, new ModelResourceLocation("advancedrocketry:planetIdChip", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSpaceStationChip, 0, new ModelResourceLocation("advancedrocketry:asteroidChip", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSawBlade, 0, new ModelResourceLocation("advancedrocketry:sawBladeIron", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemOreScanner, 0, new ModelResourceLocation("advancedrocketry:oreScanner", "inventory"));
-			
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemCarbonScrubberCartridge, 0, new ModelResourceLocation("advancedrocketry:carbonCartridge", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSealDetector, 0, new ModelResourceLocation("advancedrocketry:sealDetector", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemJackhammer, 0, new ModelResourceLocation("advancedrocketry:jackHammer", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemAsteroidChip, 0, new ModelResourceLocation("advancedrocketry:asteroidChip", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemJetpack, 0, new ModelResourceLocation("advancedrocketry:jetPack", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemAtmAnalyser, 0, new ModelResourceLocation("advancedrocketry:atmAnalyser", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBiomeChanger, 0, new ModelResourceLocation("advancedrocketry:biomeChanger", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSmallAirlockDoor, 0, new ModelResourceLocation("advancedrocketry:smallAirlockDoor", "inventory"));
-
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemCircuitPlate, 0, new ModelResourceLocation("advancedrocketry:basicCircuitPlate", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemCircuitPlate, 1, new ModelResourceLocation("advancedrocketry:advancedCircuitPlate", "inventory"));
-
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemPressureTank, 0, new ModelResourceLocation("advancedrocketry:pressureTank0", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemPressureTank, 1, new ModelResourceLocation("advancedrocketry:pressureTank1", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemPressureTank, 2, new ModelResourceLocation("advancedrocketry:pressureTank2", "inventory"));
-			ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemPressureTank, 3, new ModelResourceLocation("advancedrocketry:pressureTank3", "inventory"));
-		}
-
 		proxy.preinit();
 	}
 
 	@EventHandler
 	public void load(FMLInitializationEvent event)
 	{
+	
+		//TODO: move to proxy
+		//Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor) AdvancedRocketryBlocks.blockFuelFluid, new Block[] {AdvancedRocketryBlocks.blockFuelFluid});
+		
+		
+		proxy.init();
+		
 		zmaster587.advancedRocketry.cable.NetworkRegistry.registerFluidNetwork();
 		ItemStack userInterface = new ItemStack(AdvancedRocketryItems.itemMisc, 1,0);
 		ItemStack basicCircuit = new ItemStack(AdvancedRocketryItems.itemIC, 1,0);
@@ -855,7 +800,7 @@ public class AdvancedRocketry {
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 
-		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockBlastBrick,16), new ItemStack(Items.POTIONITEM,1,8195), new ItemStack(Items.POTIONITEM,1,8201), Blocks.BRICK_BLOCK, Blocks.BRICK_BLOCK, Blocks.BRICK_BLOCK, Blocks.BRICK_BLOCK);
+		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockBlastBrick,16), new ItemStack(Items.MAGMA_CREAM,1), new ItemStack(Items.MAGMA_CREAM,1), Blocks.BRICK_BLOCK, Blocks.BRICK_BLOCK, Blocks.BRICK_BLOCK, Blocks.BRICK_BLOCK);
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockArcFurnace), "aga","ice", "aba", 'a', Items.NETHERBRICK, 'g', userInterface, 'i', itemIOBoard, 'e',controlCircuitBoard, 'c', AdvancedRocketryBlocks.blockBlastBrick, 'b', "ingotCopper"));
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryItems.itemQuartzCrucible), " a ", "aba", " a ", Character.valueOf('a'), Items.QUARTZ, Character.valueOf('b'), Items.CAULDRON);
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockPlatePress, "   ", " a ", "iii", 'a', Blocks.PISTON, 'i', "ingotIron"));
@@ -901,9 +846,6 @@ public class AdvancedRocketry {
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryItems.itemSpaceStationChip), LibVulpesItems.itemLinker , basicCircuit);
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemCarbonScrubberCartridge), "xix", "xix", "xix", 'x', "sheetIron", 'i', Blocks.IRON_BARS));
 
-		//Plugs
-		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockRFBattery), " x ", "xmx"," x ", 'x', LibVulpesItems.itemBattery, 'm', LibVulpesBlocks.blockStructureBlock);
-
 		//O2 Support
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockOxygenVent), "bfb", "bmb", "btb", 'b', Blocks.IRON_BARS, 'f', "fanSteel", 'm', AdvancedRocketryBlocks.blockMotor, 't', AdvancedRocketryBlocks.blockFuelTank));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockOxygenScrubber), "bfb", "bmb", "btb", 'b', Blocks.IRON_BARS, 'f', "fanSteel", 'm', AdvancedRocketryBlocks.blockMotor, 't', "ingotCarbon"));
@@ -943,7 +885,7 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryItems.itemJetpack, "cpc", "lsl", "f f", 'c', AdvancedRocketryItems.itemPressureTank, 'f', Items.FIRE_CHARGE, 's', Items.STRING, 'l', Blocks.LEVER, 'p', "plateSteel"));
 
 		//Tool Recipes
-		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryItems.itemJackhammer, " pt","imp","di ",'d', Items.DIAMOND, 'm', AdvancedRocketryBlocks.blockMotor, 'p', "plateBronze", 't', "stickTitanium", 'i', "stickIron"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryItems.itemJackhammer, " pt","imp","di ",'d', Items.DIAMOND, 'm', AdvancedRocketryBlocks.blockMotor, 'p', "plateAluminum", 't', "stickTitanium", 'i', "stickIron"));
 
 		//Other blocks
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryItems.itemSmallAirlockDoor, "pp", "pp","pp", 'p', "plateSteel"));
@@ -959,8 +901,6 @@ public class AdvancedRocketry {
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockOrientationController), LibVulpesBlocks.blockStructureBlock, Items.COMPASS, userInterface);
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockGravityController), LibVulpesBlocks.blockStructureBlock, Blocks.PISTON, Blocks.REDSTONE_BLOCK);
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryItems.itemLens), " g ", "g g", 'g', Blocks.GLASS_PANE);
-		GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockRFBattery), new ItemStack(LibVulpesBlocks.blockRFOutput));
-		GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockRFOutput), new ItemStack(LibVulpesBlocks.blockRFBattery));
 		GameRegistry.addShapelessRecipe(largeSolarPanel.copy(), smallSolarPanel, smallSolarPanel, smallSolarPanel, smallSolarPanel, smallSolarPanel, smallSolarPanel);
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockMicrowaveReciever), "ggg", "tbc", "aoa", 'g', "plateGold", 't', trackingCircuit, 'b', LibVulpesBlocks.blockStructureBlock, 'c', controlCircuitBoard, 'a', advancedCircuit, 'o', opticalSensor));
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockSolarPanel, "rrr", "gbg", "ppp", 'r' , Items.REDSTONE, 'g', Items.GLOWSTONE_DUST, 'b', LibVulpesBlocks.blockStructureBlock, 'p', "plateGold"));
@@ -1076,13 +1016,12 @@ public class AdvancedRocketry {
 	{
 		proxy.registerEventHandlers();
 		proxy.registerKeyBindings();
-		materialRegistry.postInit();
 		//TODO: debug
 		//ClientCommandHandler.instance.registerCommand(new Debugger());
 
 		PlanetEventHandler handle = new PlanetEventHandler();
 		MinecraftForge.EVENT_BUS.register(handle);
-		MinecraftForge.EVENT_BUS.register(new BucketHandler());
+		//MinecraftForge.EVENT_BUS.register(new BucketHandler());
 
 		CableTickHandler cable = new CableTickHandler();
 		MinecraftForge.EVENT_BUS.register(cable);

@@ -7,6 +7,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.item.ItemPackedStructure;
+import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.StorageChunk;
@@ -118,14 +119,16 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 			SpaceObjectManager.getSpaceManager().registerSpaceObject(object, -1);
 
-			ItemStack outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStation,1, object.getId());
+			ItemStack outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStation,1);
+			ItemStationChip.setUUID(outputStack, object.getId());
 			((ItemPackedStructure)outputStack.getItem()).setStructure(outputStack, storageChunk);
 
 			inventory.setInventorySlotContents(2, outputStack);
 
-
-
-			inventory.setInventorySlotContents(3, new ItemStack(AdvancedRocketryItems.itemSpaceStationChip,1,object.getId()));
+			ItemStack chipOutput = new ItemStack(AdvancedRocketryItems.itemSpaceStationChip,1);
+			ItemStationChip.setUUID(chipOutput, object.getId());
+			
+			inventory.setInventorySlotContents(3, chipOutput);
 
 			this.status = ErrorCodes.FINISHED;
 

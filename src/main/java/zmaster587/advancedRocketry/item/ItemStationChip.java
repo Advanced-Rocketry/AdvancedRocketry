@@ -54,30 +54,30 @@ public class ItemStationChip extends ItemIdWithName {
 		return null;
 	}
 	
-	public Long getUUID(ItemStack stack) {
+	public static int getUUID(ItemStack stack) {
 		if(stack.hasTagCompound())
-			return stack.getTagCompound().getLong(uuidIdentifier);
-		return null;
+			return stack.getTagCompound().getInteger(uuidIdentifier);
+		return 0;
 	}
 
-	public void setUUID(ItemStack stack, long uuid) {
+	public static void setUUID(ItemStack stack, int uuid) {
 		NBTTagCompound nbt;
 		if(stack.hasTagCompound())
 			nbt = stack.getTagCompound();
 		else
 			nbt = new NBTTagCompound();
 
-		nbt.setLong(uuidIdentifier,uuid);
+		nbt.setInteger(uuidIdentifier,uuid);
 		stack.setTagCompound(nbt);
 	}
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list,
 			boolean bool) {
-		if(stack.getItemDamage() == 0)
+		if(getUUID(stack) == 0)
 			list.add(ChatFormatting.GRAY + "Unprogrammed");
 		else {
-			list.add(ChatFormatting.GREEN + "Station " + stack.getItemDamage());
+			list.add(ChatFormatting.GREEN + "Station " + getUUID(stack));
 			super.addInformation(stack, player, list, bool);
 		}
 	}

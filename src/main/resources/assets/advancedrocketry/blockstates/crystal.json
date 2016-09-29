@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "type=amethyst": { "model": "advancedrocketry:crystal" },
+        "type=sapphire": { "model": "advancedrocketry:crystal" },
+        "type=emerald": { "model": "advancedrocketry:crystal" },
+        "type=ruby": { "model": "advancedrocketry:crystal" },
+        "type=citrine": { "model": "advancedrocketry:crystal" },
+        "type=wulfentite": { "model": "advancedrocketry:crystal" }
+    }
+}

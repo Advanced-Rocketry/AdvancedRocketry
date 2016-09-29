@@ -57,7 +57,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound nbt = super.getUpdatePacket().getNbtCompound();
+		NBTTagCompound nbt = writeToNBT(new NBTTagCompound());
 		nbt.setInteger("gravity", gravity);
 		
 

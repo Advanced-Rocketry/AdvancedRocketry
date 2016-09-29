@@ -468,12 +468,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		//Don't care, gen ocean
 		return Biome.getBiome(0);
 	}
-
-	@Override
-	public boolean extendedLevelsInChunkCache() {
-		return false;
-	}
-
+	
 	@Override
 	public boolean isSideSolid(BlockPos pos, EnumFacing side, boolean _default) {
 		int x = pos.getX();

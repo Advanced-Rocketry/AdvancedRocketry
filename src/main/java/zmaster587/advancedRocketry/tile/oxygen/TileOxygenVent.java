@@ -128,7 +128,8 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public int getPowerPerOperation() {
-		return isSealed ? numScrubbers*10 + 1 : 0;
+		//DEBUG
+		return 0;//isSealed ? numScrubbers*10 + 1 : numScrubbers*10 + 1;
 	}
 
 	@Override
@@ -163,25 +164,27 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 				isSealed = false;
 			}
-			else if(!isSealed && worldObj.isBlockIndirectlyGettingPowered(pos) > 0) {
-				AtmosphereHandler.getOxygenHandler(this.worldObj.provider.getDimension()).addBlock(this, new HashedBlockPosition(pos));
-				isSealed = true;
+			else if(!isSealed && worldObj.isBlockIndirectlyGettingPowered(pos) > 0 && hasEnoughEnergy(getPowerPerOperation())) {
+				isSealed = AtmosphereHandler.getOxygenHandler(this.worldObj.provider.getDimension()).addBlock(this, new HashedBlockPosition(pos));
+				//isSealed = true;
 
-				activateAdjblocks();
+				if(isSealed)
+					activateAdjblocks();
 			}
 
 			if(isSealed) {
 				if(worldObj.getTotalWorldTime() % 30 == 0)
 					worldObj.playSound(this.pos.getX(), this.pos.getY(), this.pos.getZ(), new SoundEvent(new ResourceLocation("advancedrocketry:airHissLoop")), SoundCategory.BLOCKS,  0.3f,  0.975f + worldObj.rand.nextFloat()*0.05f, false);
-					
+
 
 				//If scrubbers exist and the config allows then use the cartridge
 				if(Configuration.scrubberRequiresCartrige){
 					//TODO: could be optimized
 					if(worldObj.getTotalWorldTime() % 20 == 0) {
 						numScrubbers = 0;
+						//DEBUG
 						for(TileCO2Scrubber scrubber : scrubbers) {
-							numScrubbers =  scrubber.useCharge() ? numScrubbers + 1 : numScrubbers;
+							numScrubbers = scrubber.useCharge() ? numScrubbers + 1 : numScrubbers;
 						}
 					}
 
@@ -227,7 +230,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 			isSealed = false;
 		}
 	}
-	
+
 	@Override
 	public int[] getSlotsForFace(EnumFacing side) {
 		return new int[]{};

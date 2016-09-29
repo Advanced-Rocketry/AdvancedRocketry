@@ -1,11 +1,9 @@
 package zmaster587.advancedRocketry.entity.fx;
 
-import net.minecraft.client.particle.Particle;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class TrailFx extends Particle {
-	public static final ResourceLocation icon = new ResourceLocation("advancedrocketry:textures/particle/soft.png");
+public class TrailFx extends InverseTrailFx {
+	//public static final ResourceLocation icon = new ResourceLocation("advancedrocketry:textures/particle/soft.png");
 
 	
 	public TrailFx(World world, double x,
@@ -21,7 +19,7 @@ public class TrailFx extends Particle {
         this.particleGreen = .4F + chroma;
         this.particleBlue = .4F + chroma;
         this.setSize(0.12F, 0.12F);
-        this.particleScale *= this.rand.nextFloat() * 0.6F + 6F;
+        this.particleScale = (float)(this.rand.nextFloat() * 0.6F + 6F);
         this.motionX = motx;
         this.motionY = moty;
         this.motionZ = motz;
@@ -30,7 +28,7 @@ public class TrailFx extends Particle {
 	
 	@Override
 	public int getFXLayer() {
-		return 1;
+		return 0;
 	}
 	
 	@Override

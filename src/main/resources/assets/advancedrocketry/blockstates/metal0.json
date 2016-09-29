@@ -1,6 +1,6 @@
 {
     "variants": {
-        "varient=0": { "model": "libvulpes:oreDilithium" },
+        "varient=0": { "model": "advancedrocketry:blockTitaniumAluminide" },
         "varient=1": { "model": "libvulpes:oreDilithium" },
         "varient=2": { "model": "libvulpes:oreDilithium" },
         "varient=3": { "model": "libvulpes:oreDilithium" },

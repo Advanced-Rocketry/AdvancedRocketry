@@ -22,14 +22,12 @@ import zmaster587.libVulpes.items.ItemIngredient;
 
 public class ItemUpgrade extends ItemIngredient implements IArmorComponent {
 
-	ResourceIcon icon[];
 	private int legUpgradeDamage = 2;
 	private int bootsUpgradeDamage = 3;
 	Field walkSpeed;
 	
 	public ItemUpgrade(int num) {
 		super(num);
-		icon = new ResourceIcon[num];
 		setMaxStackSize(1);
 		
 		walkSpeed = ReflectionHelper.findField(net.minecraft.entity.player.PlayerCapabilities.class, "walkSpeed", "field_75097_g");

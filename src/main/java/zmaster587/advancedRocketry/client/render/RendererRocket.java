@@ -8,6 +8,7 @@ import zmaster587.advancedRocketry.util.StorageChunk;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
@@ -44,6 +45,10 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 		if(storage == null)
 			return;
 
+		if(entity.getPassengers().contains(Minecraft.getMinecraft().thePlayer)) {
+
+			y = +0.5 -((EntityRocket)entity).stats.getSeatY();
+		}
 
 		//Find the halfway point along the XZ plane
 		float halfx = storage.getSizeX()/2f;
@@ -120,6 +125,8 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 			}
 		}
 		GL11.glPopMatrix();
+		//Clean up and make player not transparent
+		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 0, 0);
 	}
 
 	@Override

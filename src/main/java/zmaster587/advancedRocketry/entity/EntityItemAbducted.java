@@ -15,7 +15,7 @@ public class EntityItemAbducted extends EntityItem {
 		this.motionZ = 0;
 	}
 
-	@Override
+	/*@Override
 	public void onUpdate() {
 		ItemStack stack = this.getDataWatcher().getWatchableObjectItemStack(10);
         if (stack != null && stack.getItem() != null)
@@ -54,5 +54,5 @@ public class EntityItemAbducted extends EntityItem {
     {
 		return false;
     }
-    public void onCollideWithPlayer(EntityPlayer par1EntityPlayer) {}
+    public void onCollideWithPlayer(EntityPlayer par1EntityPlayer) {}*/
 }

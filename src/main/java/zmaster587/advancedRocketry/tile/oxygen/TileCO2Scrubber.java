@@ -25,7 +25,7 @@ public class TileCO2Scrubber extends TileInventoryHatch {
 			int newDamage = stack.getItemDamage() + 1;
 			if(newDamage != stack.getMaxDamage()) {
 				stack.setItemDamage(newDamage);
-				this.markDirty();
+				//this.markDirty();
 				return true;
 			}
 		}
