@@ -34,15 +34,10 @@ public class MapGenCrater extends MapGenBase {
 			for(int x = 15; x >= 0; x--) {
 				for(int z = 15; z >= 0; z--) {
 					for(int y = 254; y >= 0; y--) {
-						int index = (x * 16 + z) * 256 + y;
-						
-						
-						
-						if(chunkPrimerIn.getBlockState(x, y, z) != Blocks.AIR.getDefaultState() && chunkPrimerIn.getBlockState(x, y, z).isOpaqueCube()) {
+						if(chunkPrimerIn.getBlockState(x, y, z) != Blocks.AIR.getDefaultState()) { //&& chunkPrimerIn.getBlockState(x, y, z).isOpaqueCube()) {
 							int count = ( depth - ( ((xCoord*16)+x)*((xCoord*16)+x) + ((zCoord*16)+z)*((zCoord*16)+z) ) )/(radius*2);
 							
 							for(int dist = 0; dist < count; dist++) {
-								index = (x * 16 + z) * 256 + y-dist;
 								chunkPrimerIn.setBlockState(x, y-dist, z, Blocks.AIR.getDefaultState());
 							}
 							
@@ -52,11 +47,8 @@ public class MapGenCrater extends MapGenBase {
 
 								
 								for(int dist = 0; dist < ((ridgeSize*ridgeSize) - (count+ridgeSize)*(count+ridgeSize))/(ridgeSize*2); dist++) {
-									index = (x * 16 + z) * 256 + y + dist;
 									chunkPrimerIn.setBlockState(x, y + dist, z, world.getBiomeGenForCoords(new BlockPos(chunkX*16,0, chunkZ*16)).topBlock);
 								}
-								
-								
 							}
 							
 							if(count > 1)

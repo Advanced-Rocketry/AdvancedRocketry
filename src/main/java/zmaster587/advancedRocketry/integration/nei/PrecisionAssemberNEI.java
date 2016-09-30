@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.integration.nei;
 
-import static codechicken.lib.gui.GuiDraw.drawTexturedModalRect;
+/*import static codechicken.lib.gui.GuiDraw.drawTexturedModalRect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 
@@ -70,3 +70,4 @@ public class PrecisionAssemberNEI extends TemplateNEI {
 		return TextureResources.progressScience;
 	}
 }
+*/

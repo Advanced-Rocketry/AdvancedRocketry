@@ -1,5 +1,5 @@
 package zmaster587.advancedRocketry.integration.nei;
-
+/*
 import net.minecraft.item.ItemStack;
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
@@ -53,4 +53,4 @@ public class NEIAdvancedRocketryConfig implements IConfigureNEI {
 	public String getVersion() {
 		return "0.0.1";
 	}
-}
+}*/

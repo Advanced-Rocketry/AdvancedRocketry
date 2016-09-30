@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.integration.nei;
+/*package zmaster587.advancedRocketry.integration.nei;
 
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileChemicalReactor;
@@ -19,4 +19,4 @@ public class ChemicalReactorNEI  extends TemplateNEI {
 	protected ProgressBarImage getProgressBar() {
 		return TextureResources.crystallizerProgressBar;
 	}
-}
+}*/

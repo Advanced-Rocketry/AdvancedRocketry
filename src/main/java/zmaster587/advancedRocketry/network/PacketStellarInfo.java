@@ -31,11 +31,11 @@ public class PacketStellarInfo extends BasePacket {
 		out.writeBoolean(star == null);
 
 
-		star.writeToNBT(nbt);
-
-		PacketBuffer packetBuffer = new PacketBuffer(out);
-		packetBuffer.writeNBTTagCompoundToBuffer(nbt);
-
+		if((star != null)) {
+			star.writeToNBT(nbt);
+			PacketBuffer packetBuffer = new PacketBuffer(out);
+			packetBuffer.writeNBTTagCompoundToBuffer(nbt);
+		}
 
 	}
 
@@ -45,33 +45,34 @@ public class PacketStellarInfo extends BasePacket {
 		NBTTagCompound nbt;
 		starId = in.readInt();
 
-		if(in.readBoolean())
+		if(in.readBoolean()) {
 			if(DimensionManager.getInstance().isDimensionCreated(starId)) {
 				DimensionManager.getInstance().removeStar(starId);
 			}
-			else {
-				//TODO: error handling
-				try {
-					nbt = packetBuffer.readNBTTagCompoundFromBuffer();
+		}
+		else {
+			//TODO: error handling
+			try {
+				nbt = packetBuffer.readNBTTagCompoundFromBuffer();
 
-				} catch (IOException e) {
-					e.printStackTrace();
-					return;
-				}
-
-				StellarBody star;
-
-				if(starId == 0) {
-					DimensionManager.getSol().readFromNBT(nbt);
-				}
-				else if((star = DimensionManager.getInstance().getStar(starId)) != null) {
-					star.readFromNBT(nbt);
-				} else {
-					star = new StellarBody();
-					star.readFromNBT(nbt);
-					DimensionManager.getInstance().addStar(star);
-				}
+			} catch (IOException e) {
+				e.printStackTrace();
+				return;
 			}
+
+			StellarBody star;
+
+			if(starId == 0) {
+				DimensionManager.getSol().readFromNBT(nbt);
+			}
+			else if((star = DimensionManager.getInstance().getStar(starId)) != null) {
+				star.readFromNBT(nbt);
+			} else {
+				star = new StellarBody();
+				star.readFromNBT(nbt);
+				DimensionManager.getInstance().addStar(star);
+			}
+		}
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.integration.nei;
+/*package zmaster587.advancedRocketry.integration.nei;
 
 import org.lwjgl.opengl.GL11;
 
@@ -36,3 +36,4 @@ public class PlatePresserNEI  extends TemplateNEI {
 		return TextureResources.smallPlatePresser;
 	}
 }
+*/

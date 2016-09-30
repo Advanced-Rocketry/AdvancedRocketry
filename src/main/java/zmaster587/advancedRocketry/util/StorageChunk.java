@@ -102,7 +102,6 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	public int getSizeZ() { return sizeZ; }
 
 	public List<TileEntity> getTileEntityList() {
-
 		return tileEntities;
 	}
 

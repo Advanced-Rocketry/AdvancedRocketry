@@ -1,5 +1,5 @@
 package zmaster587.advancedRocketry.integration.nei;
-
+/*
 import static codechicken.lib.gui.GuiDraw.changeTexture;
 import static codechicken.lib.gui.GuiDraw.drawTexturedModalRect;
 
@@ -104,7 +104,7 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 	    	List list= new LinkedList();
 	    	list.add(GuiModular.class);
 	    	return list;
-	    }*/
+	    }* /
 
 	public void loadCraftingRecipes(ItemStack result) {
 		super.loadCraftingRecipes(result);
@@ -222,3 +222,4 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 		return "advancedrocketry:textures/gui/GenericNeiBackground.png";
 	}
 }
+*/

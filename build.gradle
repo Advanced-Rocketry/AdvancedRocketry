@@ -19,7 +19,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 def modversion
-modversion = version = "0.8.1"
+modversion = version = "1.10.2-0.8.1"
 group= "zmaster587.advancedRocketry" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "AdvancedRocketry"
 sourceCompatibility = 7
@@ -33,7 +33,7 @@ jar {
 }
 
 minecraft {
-    version = "1.10.2-12.18.1.2093"
+    version = "1.10.2-12.18.1.2094"
     runDir = "run"
     mappings = "snapshot_20160518"
     replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"
@@ -42,15 +42,10 @@ minecraft {
 }
 
 repositories {
-    maven {
-        name = "chickenbones"
-        url = "http://chickenbones.net/maven/"
-    }
-     ivy {
-		name "CoFHCore"
-		url = "http://addons-origin.cursecdn.com/files/2246/919/"
-		artifactPattern 'http://addons-origin.cursecdn.com/files/2246/919/[module]-[revision].[ext]'
-	}
+        maven {
+            name = "mezz.jei"
+            url = "http://dvs1.progwml6.com/files/maven"
+        }
 }
 
 dependencies {
@@ -59,7 +54,12 @@ dependencies {
     //compile "some.group:artifact:version:classifier"
     //compile "some.group:artifact:version"
     compile project(':libVulpes')
-      
+    
+    // compile against the JEI API
+    deobfCompile "mezz.jei:jei_1.10.2:3.11.2.280:api"
+    // at runtime, use the full JEI jar
+    runtime "mezz.jei:jei_1.10.2:3.11.2.280"
+  
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:7.0.20:dev'  // adds buildcraft to the dev env
     //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env

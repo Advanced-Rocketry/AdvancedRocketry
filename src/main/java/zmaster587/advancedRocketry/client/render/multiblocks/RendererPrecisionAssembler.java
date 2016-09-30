@@ -25,7 +25,7 @@ public class RendererPrecisionAssembler extends TileEntitySpecialRenderer {
 
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/precAssembler.png");
 
-	private final RenderItem dummyItem = Minecraft.getMinecraft().getRenderItem();
+	//private final RenderItem dummyItem = Minecraft.getMinecraft().getRenderItem();
 	
 	//Model Names:
 	// Tray
@@ -77,7 +77,8 @@ public class RendererPrecisionAssembler extends TileEntitySpecialRenderer {
 				
 				GL11.glPushMatrix();
 				GL11.glRotatef(90, 1, 0, 0);
-				RenderHelper.renderItem(multiBlockTile, entity, dummyItem);
+				GL11.glTranslated(1, tray + .5, -1.2f);
+				RenderHelper.renderItem(multiBlockTile, entity,  Minecraft.getMinecraft().getRenderItem());
 				GL11.glPopMatrix();
 			}
 			

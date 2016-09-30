@@ -7,7 +7,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 
 @TransformerExclusions(value = {"zmaster587.advancedRocketry.asm.ClassTransformer"})
-@MCVersion("1.10")
+@MCVersion("1.10.2")
 public class AdvancedRocketryPlugin implements IFMLLoadingPlugin {
 
 	public AdvancedRocketryPlugin() {

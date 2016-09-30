@@ -22,6 +22,7 @@ public class PacketAtmSync extends BasePacket {
 	}
 	
 	public PacketAtmSync() {
+		
 	}
 	
 	@Override

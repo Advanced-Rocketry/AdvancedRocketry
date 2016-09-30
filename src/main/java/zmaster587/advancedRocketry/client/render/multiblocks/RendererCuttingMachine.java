@@ -27,7 +27,7 @@ public class RendererCuttingMachine extends TileEntitySpecialRenderer {
 
 	public final static ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/cuttingMachine.png");
 
-	private final RenderItem dummyItem = Minecraft.getMinecraft().getRenderItem();
+	//private final RenderItem dummyItem = Minecraft.getMinecraft().getRenderItem();
 
 	public RendererCuttingMachine() {
 		try {
@@ -70,7 +70,8 @@ public class RendererCuttingMachine extends TileEntitySpecialRenderer {
 
 				GL11.glPushMatrix();
 				GL11.glRotatef(90, 1, 0, 0);
-				RenderHelper.renderItem(multiBlockTile, stack, dummyItem);
+				GL11.glTranslated(1f, tray + .25, -1.05);
+				RenderHelper.renderItem(multiBlockTile, stack, Minecraft.getMinecraft().getRenderItem());
 				GL11.glPopMatrix();
 			}
 

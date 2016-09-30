@@ -325,16 +325,16 @@ public class AdvancedRocketry {
 		config.save();
 
 		//Register Packets
-		PacketHandler.addDiscriminator(PacketDimInfo.class);
-		PacketHandler.addDiscriminator(PacketSatellite.class);
-		PacketHandler.addDiscriminator(PacketStellarInfo.class);
-		PacketHandler.addDiscriminator(PacketItemModifcation.class);
-		PacketHandler.addDiscriminator(PacketOxygenState.class);
-		PacketHandler.addDiscriminator(PacketStationUpdate.class);
-		PacketHandler.addDiscriminator(PacketSpaceStationInfo.class);
-		PacketHandler.addDiscriminator(PacketAtmSync.class);
-		PacketHandler.addDiscriminator(PacketBiomeIDChange.class);
-		PacketHandler.addDiscriminator(PacketStorageTileUpdate.class);
+		PacketHandler.INSTANCE.addDiscriminator(PacketDimInfo.class);
+		PacketHandler.INSTANCE.addDiscriminator(PacketSatellite.class);
+		PacketHandler.INSTANCE.addDiscriminator(PacketStellarInfo.class);
+		PacketHandler.INSTANCE.addDiscriminator(PacketItemModifcation.class);
+		PacketHandler.INSTANCE.addDiscriminator(PacketOxygenState.class);
+		PacketHandler.INSTANCE.addDiscriminator(PacketStationUpdate.class);
+		PacketHandler.INSTANCE.addDiscriminator(PacketSpaceStationInfo.class);
+		PacketHandler.INSTANCE.addDiscriminator(PacketAtmSync.class);
+		PacketHandler.INSTANCE.addDiscriminator(PacketBiomeIDChange.class);
+		PacketHandler.INSTANCE.addDiscriminator(PacketStorageTileUpdate.class);
 
 		//if(zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods)
 		MinecraftForge.EVENT_BUS.register(this);

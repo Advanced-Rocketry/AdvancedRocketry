@@ -9,6 +9,7 @@ import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class CommonProxy {
 	
@@ -32,7 +33,7 @@ public class CommonProxy {
 	}
 
 	public Profiler getProfiler() {
-		return Minecraft.getMinecraft().mcProfiler;
+		return FMLCommonHandler.instance().getMinecraftServerInstance().theProfiler;
 	}
 
 	public void changeClientPlayerWorld(World world) {

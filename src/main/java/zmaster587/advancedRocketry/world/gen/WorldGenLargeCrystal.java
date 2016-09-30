@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
 public class WorldGenLargeCrystal extends WorldGenerator {
@@ -48,8 +49,8 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 			for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
 
 				for(BlockPos yOff = world.getHeight(new BlockPos(x + xOff, y, z + zOff)); yOff.getY() < y; yOff = yOff.up()) //Fills the gaps under the crystal
-					world.setBlockState(yOff, fillerBlock.getDefaultState());
-				world.setBlockState(new BlockPos(x + xOff, y, z + zOff), fillerBlock.getDefaultState());
+					setBlockState(world,yOff, fillerBlock.getDefaultState());
+				setBlockState(world,new BlockPos(x + xOff, y, z + zOff), fillerBlock.getDefaultState());
 			}
 			currentEdgeRadius++;
 		}
@@ -59,8 +60,8 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 			for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
 				
 				for(BlockPos yOff = world.getHeight(new BlockPos(x + xOff, y,z + zOff)); yOff.getY() < y; yOff.up()) //Fills the gaps under the crystal
-					world.setBlockState(yOff, fillerBlock.getDefaultState());
-				world.setBlockState(new BlockPos(x + xOff, y, z + zOff), fillerBlock.getDefaultState());
+					setBlockState(world, yOff, fillerBlock.getDefaultState());
+				setBlockState(world, new BlockPos(x + xOff, y, z + zOff), fillerBlock.getDefaultState());
 			}
 		}
 
@@ -69,8 +70,8 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 			currentEdgeRadius--;
 			for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
 				for(BlockPos yOff = world.getHeight(new BlockPos(x + xOff, y, z + zOff)); yOff.getY() < y; yOff.getY()) //Fills the gaps under the crystal
-					world.setBlockState(yOff, fillerBlock.getDefaultState());
-				world.setBlockState(new BlockPos(x + xOff, y, z + zOff), fillerBlock.getDefaultState());
+					setBlockState(world,yOff, fillerBlock.getDefaultState());
+				setBlockState(world,new BlockPos(x + xOff, y, z + zOff), fillerBlock.getDefaultState());
 			}
 		}
 
@@ -85,7 +86,7 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 			for(int zOff = -numDiag - currentEdgeRadius/2; zOff <= -currentEdgeRadius/2; zOff++) {
 
 				for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
-					world.setBlockState(new BlockPos(x + xOff + xShear*yOff, y + yOff, z + zOff + zShear*yOff), usedState);
+					setBlockState(world, new BlockPos(x + xOff + xShear*yOff, y + yOff, z + zOff + zShear*yOff), usedState);
 				}
 				currentEdgeRadius++;
 			}
@@ -93,7 +94,7 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 			//Generate square segment
 			for(int zOff = -currentEdgeRadius/2; zOff <= currentEdgeRadius/2; zOff++) {
 				for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
-					world.setBlockState(new BlockPos(x + xOff + xShear*yOff, y + yOff, z + zOff + zShear*yOff), usedState);
+					setBlockState(world,new BlockPos(x + xOff + xShear*yOff, y + yOff, z + zOff + zShear*yOff), usedState);
 				}
 			}
 
@@ -101,7 +102,7 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 			for(int zOff = currentEdgeRadius/2; zOff <= numDiag + currentEdgeRadius/2; zOff++) {
 				currentEdgeRadius--;
 				for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
-					world.setBlockState(new BlockPos(x + xOff + xShear*yOff, y + yOff, z + zOff + zShear*yOff), usedState);
+					setBlockState(world, new BlockPos(x + xOff + xShear*yOff, y + yOff, z + zOff + zShear*yOff), usedState);
 				}
 			}
 		}
@@ -114,7 +115,7 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 
 			for(int xOff = -currentEdgeRadius/2; xOff <= currentEdgeRadius/2; xOff++) {
 				if(rand.nextInt(3)  < 1)
-					world.setBlockState(new BlockPos(x + xOff, y, z + zOff), state);
+					setBlockState(world, new BlockPos(x + xOff, y, z + zOff), state);
 			}
 			currentEdgeRadius++;
 		}
@@ -123,7 +124,7 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 		for(int zOff = -currentEdgeRadius/2; zOff <= currentEdgeRadius/2; zOff++) {
 			for(int xOff = -currentEdgeRadius/2; xOff <= currentEdgeRadius/2; xOff++) {
 				if(rand.nextInt(3)  < 1)
-					world.setBlockState(new BlockPos(x + xOff, y, z + zOff), state);
+					setBlockState(world, new BlockPos(x + xOff, y, z + zOff), state);
 			}
 		}
 
@@ -132,10 +133,16 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 			currentEdgeRadius--;
 			for(int xOff = -currentEdgeRadius/2; xOff <= currentEdgeRadius/2; xOff++) {
 				if(rand.nextInt(3)  < 1)
-					world.setBlockState(new BlockPos(x + xOff, y, z + zOff), state);
+					setBlockState(world, new BlockPos(x + xOff, y, z + zOff), state);
 			}
 		}
 
 		return true;
+	}
+	
+	//Screw thy lighting checks!
+	public void setBlockState(World world, BlockPos pos, IBlockState state) {
+		Chunk chunk = world.getChunkFromBlockCoords(pos);
+		chunk.setBlockState(pos, state);
 	}
 }

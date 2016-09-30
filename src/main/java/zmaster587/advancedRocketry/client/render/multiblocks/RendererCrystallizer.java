@@ -34,7 +34,6 @@ public class RendererCrystallizer extends TileEntitySpecialRenderer {
 
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/crystallizer.png");
 
-	private final RenderItem dummyItem = Minecraft.getMinecraft().getRenderItem();
 
 	public RendererCrystallizer() {
 
@@ -85,21 +84,21 @@ public class RendererCrystallizer extends TileEntitySpecialRenderer {
 				GL11.glTranslated(1, 0.2, 0.7);
 				GL11.glRotatef(rotation, 0, 1, 0);
 				GL11.glScalef(progress, progress, progress);
-				zmaster587.libVulpes.render.RenderHelper.renderItem(multiBlockTile, stack, dummyItem);
+				zmaster587.libVulpes.render.RenderHelper.renderItem(multiBlockTile, stack, Minecraft.getMinecraft().getRenderItem());
 				GL11.glPopMatrix();
 
 				GL11.glPushMatrix();
 				GL11.glTranslated(1, 0.2, 1.5);
 				GL11.glRotatef(rotation, 0, 1, 0);
 				GL11.glScalef(progress, progress, progress);
-				zmaster587.libVulpes.render.RenderHelper.renderItem(multiBlockTile, stack, dummyItem);
+				zmaster587.libVulpes.render.RenderHelper.renderItem(multiBlockTile, stack, Minecraft.getMinecraft().getRenderItem());
 				GL11.glPopMatrix();
 
 				GL11.glPushMatrix();
 				GL11.glTranslated(1, 0.2, 2.3);
 				GL11.glRotatef(rotation, 0, 1, 0);
 				GL11.glScalef(progress, progress, progress);
-				zmaster587.libVulpes.render.RenderHelper.renderItem(multiBlockTile, stack, dummyItem);
+				zmaster587.libVulpes.render.RenderHelper.renderItem(multiBlockTile, stack, Minecraft.getMinecraft().getRenderItem());
 				GL11.glPopMatrix();
 
 				GL11.glPopMatrix();
