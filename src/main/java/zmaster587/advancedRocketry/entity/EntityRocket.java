@@ -70,6 +70,7 @@ import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.StorageChunk;
+import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
@@ -862,18 +863,21 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				boolean flag = entity.forceSpawn;
 				entity.forceSpawn = true;
 				worldserver1.spawnEntityInWorld(entity);
-				entity.forceSpawn = flag;
 				worldserver1.updateEntityWithOptionalForce(entity, false);
 
+				int timeOffset = 1;
 				for(Entity e : passengers) {
 					//Fix that darn random crash?
-					worldserver.resetUpdateEntityTick();
-					worldserver1.resetUpdateEntityTick();
+					//worldserver.resetUpdateEntityTick();
+					//worldserver1.resetUpdateEntityTick();
 					//Transfer the player if applicable
-					minecraftserver.getPlayerList().transferPlayerToDimension((EntityPlayerMP)e, dimensionIn, teleporter);
+					
+					PlanetEventHandler.addDelayedTransition(worldserver.getTotalWorldTime() + (timeOffset++), new TransitionEntity(worldserver.getTotalWorldTime() + 1, e, dimensionIn, new BlockPos(posX, Configuration.orbit, posZ), entity));
+					
+					//minecraftserver.getPlayerList().transferPlayerToDimension((EntityPlayerMP)e, dimensionIn, teleporter);
 
-					e.setLocationAndAngles(posX, Configuration.orbit, posZ, this.rotationYaw, this.rotationPitch);
-					e.startRiding(entity);
+					//e.setLocationAndAngles(posX, Configuration.orbit, posZ, this.rotationYaw, this.rotationPitch);
+					//e.startRiding(entity);
 
 				}
 			}

@@ -2,10 +2,13 @@ package zmaster587.advancedRocketry.event;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.lwjgl.opengl.GL11;
 
@@ -14,12 +17,15 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -59,8 +65,10 @@ import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.BiomeHandler;
+import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
+import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.network.PacketHandler;
 
@@ -68,7 +76,12 @@ public class PlanetEventHandler {
 
 	public static long time = 0;
 	private static long endTime, duration;
+	private static Map<Long,TransitionEntity> transitionMap = new HashMap<Long,TransitionEntity>();
 
+	public static void addDelayedTransition(long tick, TransitionEntity entity) {
+		transitionMap.put(tick, entity);
+	}
+	
 	//Handle gravity
 	@SubscribeEvent
 	public void playerTick(LivingUpdateEvent event) {
@@ -164,6 +177,22 @@ public class PlanetEventHandler {
 		if(event.phase == event.phase.END) {
 			DimensionManager.getInstance().tickDimensions();
 			time++;
+			
+			if(!transitionMap.isEmpty()) {
+				Iterator<Entry<Long, TransitionEntity>> itr = transitionMap.entrySet().iterator();
+				
+				while(itr.hasNext()) {
+					Entry<Long, TransitionEntity> entry = itr.next();
+					TransitionEntity ent = entry.getValue();
+					if(ent.entity.worldObj.getTotalWorldTime() >= entry.getKey()) {
+						ent.entity.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP)ent.entity, ent.dimId, new TeleporterNoPortal(ent.entity.getServer().worldServerForDimension(ent.dimId)));
+						
+						ent.entity.setLocationAndAngles(ent.location.getX(), ent.location.getY(), ent.location.getZ(), ent.entity.rotationYaw, ent.entity.rotationPitch);
+						ent.entity.startRiding(ent.entity2);
+						itr.remove();
+					}
+				}
+			}
 		}
 	}
 
