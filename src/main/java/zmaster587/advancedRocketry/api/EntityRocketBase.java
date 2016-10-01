@@ -96,7 +96,7 @@ public abstract class EntityRocketBase extends Entity {
 			ISpaceObject station = AdvancedRocketryAPI.spaceObjectManager.getSpaceStationFromBlockCoords(this.getPosition());
 			
 			if(station instanceof ISpaceObject) {
-				((ISpaceObject)station).setPadStatus((int)this.posX, (int)this.posZ, false);
+				((ISpaceObject)station).setPadStatus((int)Math.floor(this.posX), (int)Math.floor(this.posZ), false);
 			}
 		}
 	}
