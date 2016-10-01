@@ -54,24 +54,11 @@ public class BlockLandingPad extends Block {
 	}
 
 	@Override
-	public void onBlockDestroyedByPlayer(World world, BlockPos pos,
-			IBlockState state) {
-		super.onBlockDestroyedByPlayer(world, pos, state);
-		
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileLandingPad) {
 			((TileLandingPad) tile).unregisterTileWithStation(world, pos);
 		}
-	}
-	
-	@Override
-	public void onBlockDestroyedByExplosion(World world, BlockPos pos,
-			Explosion explosion) {
-		super.onBlockDestroyedByExplosion(world, pos, explosion);
-		
-		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TileLandingPad) {
-			((TileLandingPad) tile).unregisterTileWithStation(world, pos);
-		}
+		super.breakBlock(world, pos, state);
 	}
 }
