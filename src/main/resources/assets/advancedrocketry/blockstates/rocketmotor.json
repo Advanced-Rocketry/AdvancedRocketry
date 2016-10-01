@@ -6,12 +6,12 @@
         "model": "advancedrocketry:models/rocketmotor.obj"
     },
     "variants": {
-        "facing=north": { "model": "advancedrocketry:models/rocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png" },
-        "facing=south": {  "model": "advancedrocketry:models/rocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "y": 180 },
-        "facing=west":  { "model": "advancedrocketry:models/rocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "y": 270 },
-        "facing=east":  { "model": "advancedrocketry:models/rocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "y": 90 },
-        "facing=up":  { "model": "advancedrocketry:models/rocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": 90 },
-        "facing=down":  { "model": "advancedrocketry:models/rocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": -90 },
+        "facing=north": { "model": "advancedrocketry:models/rocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": 90, "y": 180 },
+        "facing=south": {  "model": "advancedrocketry:models/rocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": 90 },
+        "facing=west":  { "model": "advancedrocketry:models/rocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": 90, "y": 270 },
+        "facing=east":  { "model": "advancedrocketry:models/rocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": 90, "y": 90 },
+        "facing=up":  { "model": "advancedrocketry:models/rocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": 180 },
+        "facing=down":  { "model": "advancedrocketry:models/rocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png" },
         "inventory": {
             "model": "advancedrocketry:models/rocketmotor.obj",
             "transform": "forge:default-block",

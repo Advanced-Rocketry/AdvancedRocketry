@@ -130,7 +130,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 				for(int z = 0; z < storageChunk.getSizeZ(); z++) {
 
 					BlockPos pos3 = new BlockPos(x,y,z);
-					if(storageChunk.getBlockState(pos3) == AdvancedRocketryBlocks.blockEngine) {
+					if(storageChunk.getBlockState(pos3).getBlock() == AdvancedRocketryBlocks.blockEngine) {
 						storageChunk.setBlockState(pos3, storageChunk.getBlockState(pos3).withProperty(RotatableBlock.FACING, rocket.forwardDirection)  );
 					}
 				}		

@@ -43,6 +43,8 @@ public class PacketSpaceStationInfo extends BasePacket {
 				packetBuffer.writeString(SpaceObjectManager.getSpaceManager().getItentifierFromClass(spaceObject.getClass()));
 				packetBuffer.writeNBTTagCompoundToBuffer(nbt);
 				
+				packetBuffer.writeInt(spaceObject.getFuelAmount());
+				
 				out.writeInt(spaceObject.getForwardDirection().ordinal());
 				
 			} catch(NullPointerException e) {
@@ -73,10 +75,11 @@ public class PacketSpaceStationInfo extends BasePacket {
 			//TODO: error handling
 			int direction;
 			String clazzId;
+			int fuelAmt;
 			try {
 				clazzId = packetBuffer.readStringFromBuffer(127);
 				nbt = packetBuffer.readNBTTagCompoundFromBuffer();
-				
+				fuelAmt = packetBuffer.readInt();
 			} catch (IOException e) {
 				e.printStackTrace();
 				return;
@@ -99,10 +102,12 @@ public class PacketSpaceStationInfo extends BasePacket {
 				((SpaceObject)object).setForwardDirection(EnumFacing.values()[direction]);
 				
 				SpaceObjectManager.getSpaceManager().registerSpaceObjectClient(object, object.getOrbitingPlanetId(), stationNumber);
+				((SpaceObject)object).setFuelAmount(fuelAmt);
 			}
 			else {
 				iObject.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
 				((SpaceObject)iObject).setForwardDirection(EnumFacing.values()[direction]);
+				((SpaceObject)iObject).setFuelAmount(fuelAmt);
 			}
 		}
 	}
