@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.RayTraceResult;
 
 public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 
@@ -68,16 +69,16 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 
 
 		//TODO: bring tags back
-		/*if(block != null) {
+		if(state != null) {
 			//If the player is mousing over this block
-			MovingObjectPosition movingObjPos = Minecraft.getMinecraft().objectMouseOver;
-			if(Minecraft.getMinecraft().objectMouseOver != null && movingObjPos.blockX == tile.xCoord && movingObjPos.blockY == tile.yCoord && movingObjPos.blockZ == tile.zCoord) {
-				ItemStack stack = tile.getWorldObj().getBlock(tile.xCoord, tile.yCoord, tile.zCoord).getPickBlock(movingObjPos, Minecraft.getMinecraft().theWorld, movingObjPos.blockX, movingObjPos.blockY, movingObjPos.blockZ, Minecraft.getMinecraft().thePlayer);
+			RayTraceResult movingObjPos = Minecraft.getMinecraft().objectMouseOver;
+			if(Minecraft.getMinecraft().objectMouseOver != null && movingObjPos.getBlockPos().getX() == tile.getPos().getX() && movingObjPos.getBlockPos().getY() == tile.getPos().getY() && movingObjPos.getBlockPos().getZ() == tile.getPos().getZ()) {
+				ItemStack stack = tile.getWorld().getBlockState(tile.getPos()).getBlock().getPickBlock(tile.getWorld().getBlockState(tile.getPos()), movingObjPos, Minecraft.getMinecraft().theWorld, tile.getPos(), Minecraft.getMinecraft().thePlayer);
 				if(stack == null)
-					RenderHelper.renderTag(Minecraft.getMinecraft().thePlayer.getDistanceSq(movingObjPos.blockX, movingObjPos.blockY, movingObjPos.blockZ), "THIS IS AN ERROR, CONTACT THE DEV!!!", x,y,z, 10);
+					RenderHelper.renderTag(Minecraft.getMinecraft().thePlayer.getDistanceSq(movingObjPos.hitVec.xCoord, movingObjPos.hitVec.yCoord, movingObjPos.hitVec.zCoord), "THIS IS AN ERROR, CONTACT THE DEV!!!", x,y,z, 10);
 				else
-					RenderHelper.renderTag(Minecraft.getMinecraft().thePlayer.getDistanceSq(movingObjPos.blockX, movingObjPos.blockY, movingObjPos.blockZ), stack.getDisplayName(), x,y,z, 10);
+					RenderHelper.renderTag(Minecraft.getMinecraft().thePlayer.getDistanceSq(movingObjPos.hitVec.xCoord, movingObjPos.hitVec.yCoord, movingObjPos.hitVec.zCoord), stack.getDisplayName(), x+ 0.5f,y,z+ 0.5f, 10);
 			}
-		}*/
+		}
 	}
 }

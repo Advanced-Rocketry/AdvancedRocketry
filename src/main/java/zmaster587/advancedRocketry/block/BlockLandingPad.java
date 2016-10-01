@@ -33,6 +33,17 @@ public class BlockLandingPad extends Block {
 	}
 	
 	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
+			EntityLivingBase placer, ItemStack stack) {
+		super.onBlockPlacedBy(world, pos, state, placer, stack);
+		
+		TileEntity tile = world.getTileEntity(pos);
+		if(tile instanceof TileLandingPad) {
+			((TileLandingPad) tile).registerTileWithStation(world, pos);
+		}
+	}
+	
+	@Override
 	public boolean onBlockActivated(World world, BlockPos pos,
 			IBlockState state, EntityPlayer player, EnumHand hand,
 			ItemStack heldItem, EnumFacing side, float hitX, float hitY,

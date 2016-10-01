@@ -42,20 +42,7 @@ public class BiomeGenCrystal extends Biome  {
 			ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal) {
 		super.genTerrainBlocks(worldIn, rand, chunkPrimerIn, x, z, noiseVal);
 		
-		//if(rand.nextInt(100) == 0) {\
 		if(x % 16 == 0 && z % 16 == 0 )
 			crystalGenBase.generate(worldIn, x >> 4, z >> 4, chunkPrimerIn);
-		//}
-	}
-
-	
-	@Override
-	public void decorate(World world, Random rand, BlockPos pos) {
-		// TODO Auto-generated method stub
-		super.decorate(world, rand, pos);
-		
-		//if(rand.nextInt(100) == 0) {
-		//	crystalGenerator.generate(world, rand, world.getTopSolidOrLiquidBlock(pos));
-		//}
 	}
 }

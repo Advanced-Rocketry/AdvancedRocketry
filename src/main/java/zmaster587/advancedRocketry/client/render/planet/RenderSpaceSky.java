@@ -169,7 +169,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 			BlockPos pos) {
 		try {
 			return SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos).getForwardDirection().rotateY();
-		} catch(NullPointerException e) {
+		} catch(Exception e) {
 			return EnumFacing.EAST;
 		}
 	}
