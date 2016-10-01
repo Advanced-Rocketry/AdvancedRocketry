@@ -441,7 +441,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 						
 						AtmosphereHandler handler;
 						//Cycle through engines outputting smoke, increases performance with craft with large number of engines
-						if(worldObj.getTotalWorldTime() % 10 == 0 && ((worldObj.getTotalWorldTime()/10) % Math.max((stats.getEngineLocations().size()/8),1)) == (engineNum/8) && ( (handler = AtmosphereHandler.getOxygenHandler(worldObj.provider.dimensionId)) == null || handler.getAtmosphereType(this) == null || handler.getAtmosphereType(this).allowsCombustion()) )
+						if(worldObj.getTotalWorldTime() % 10 == 0 && (engineNum < 8 || ((worldObj.getTotalWorldTime()/10) % Math.max((stats.getEngineLocations().size()/8),1)) == (engineNum/8)) && ( (handler = AtmosphereHandler.getOxygenHandler(worldObj.provider.dimensionId)) == null || handler.getAtmosphereType(this) == null || handler.getAtmosphereType(this).allowsCombustion()) )
 							AdvancedRocketry.proxy.spawnParticle("rocketSmoke", worldObj, this.posX + vec.x, this.posY + vec.y - 0.75, this.posZ +vec.z,0,0,0);
 
 						for(int i = 0; i < 4; i++) {
