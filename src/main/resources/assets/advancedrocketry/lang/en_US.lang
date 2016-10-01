@@ -85,6 +85,7 @@ tile.deployableRocketAssembler.name=Unmanned Vehicle Assembler
 tile.pressurizedTank.name=Pressurized Tank
 tile.gasIntake.name=Gas Intake
 tile.atmosphereTerraformer.name=Atmosphere Terraformer
+tile.circleLight.name=Station Light
 
 tile.Dilithium.name=Dilithium Ore
 
