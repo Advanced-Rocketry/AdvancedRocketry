@@ -121,7 +121,8 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 		for(TileEntity tile : storage.getTileEntityList()) {
 			TileEntitySpecialRenderer renderer = (TileEntitySpecialRenderer)TileEntityRendererDispatcher.instance.mapSpecialRenderers.get(tile.getClass());
 			if(renderer != null ) {
-				renderer.renderTileEntityAt(tile, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), f1, 0);
+				TileEntityRendererDispatcher.instance.renderTileEntityAt(tile, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), f1);
+				//renderer.renderTileEntity(tile, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), f1, 0);
 			}
 		}
 		GL11.glPopMatrix();
