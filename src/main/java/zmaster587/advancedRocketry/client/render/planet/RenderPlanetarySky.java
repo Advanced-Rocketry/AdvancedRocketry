@@ -325,8 +325,24 @@ public class RenderPlanetarySky extends IRenderHandler {
 				}
 				//GL11.glTranslated(((System.currentTimeMillis()/10) + 50) % 100, 0, 0);
 			}
-			else
+			else {
 				GL11.glCallList(this.starGLCallList);
+				//Extra stars for low ATM
+				if(atmosphere < 0.5) {
+					GL11.glColor4f(f18, f18, f18, f18/2f);
+					GL11.glPushMatrix();
+					GL11.glRotatef(-90, 0, 1, 0);
+					GL11.glCallList(this.starGLCallList);
+					GL11.glPopMatrix();
+				}
+				if(atmosphere < 0.25) {
+					GL11.glColor4f(f18, f18, f18, f18/4f);
+					GL11.glPushMatrix();
+					GL11.glRotatef(90, 0, 1, 0);
+					GL11.glCallList(this.starGLCallList);
+					GL11.glPopMatrix();
+				}
+			}
 			GL11.glPopMatrix();
 		}
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -339,7 +355,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 		if(!isWarp) {
 			//Set sun color and distance
-			GlStateManager.color((float)sunColor.xCoord * multiplier, (float)sunColor.yCoord * multiplier, (float)sunColor.zCoord * multiplier);
+			GlStateManager.color((float)sunColor.xCoord * multiplier, (float)sunColor.yCoord * multiplier, (float)sunColor.zCoord * multiplier,multiplier);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 			f10 = 30f*(200-solarOrbitalDistance)/100f;
 			//multiplier = 2;
