@@ -144,7 +144,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 		ItemStack stack = Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.MAIN_HAND);
 		if(stack != null && stack.getItem() == this) {
 			setBiomeId(stack, buttonId);
-			PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getMinecraft().thePlayer, (byte)0));
+			PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getMinecraft().thePlayer, (byte)(buttonId  == -1 ? -1 : 0)));
 		}
 	}
 
@@ -166,15 +166,15 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 	@Override
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt, ItemStack stack) {
+		if(id == -1) {
+			//If -1 then discover current biome
+			((SatelliteBiomeChanger)getSatellite(stack)).addBiome(Biome.getIdForBiome(player.worldObj.getBiomeGenForCoords(new BlockPos((int)player.posX, 0, (int)player.posZ))));
+			player.closeScreen();
+		}
 		if(id == 0) {
 			int biomeId = nbt.getInteger("biome");
 
-			//If -1 then discover current biome
-			if(biomeId == -1) {
-				((SatelliteBiomeChanger)getSatellite(stack)).addBiome(Biome.getIdForBiome(player.worldObj.getBiomeGenForCoords(new BlockPos((int)player.posX, 0, (int)player.posZ))));
-
-			}
-			else
+			
 				setBiomeId(stack, biomeId);
 			player.closeScreen();
 		}

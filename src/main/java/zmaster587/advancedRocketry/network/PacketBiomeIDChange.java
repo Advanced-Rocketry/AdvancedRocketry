@@ -1,8 +1,10 @@
 package zmaster587.advancedRocketry.network;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
@@ -63,7 +65,11 @@ public class PacketBiomeIDChange extends BasePacket {
 			chunk = thePlayer.worldObj.getChunkFromChunkCoords(xPos, zPos);
 			if(chunk.isLoaded()) {
 				chunk.setBiomeArray(array);
-				AdvancedRocketry.proxy.spawnParticle("smallLazer", thePlayer.worldObj, pos.x, pos.y, pos.z, 0,0,0);
+				BlockPos pos2 = pos.getBlockPos();// new BlockPos(chunk.xPosition << 4, 48, chunk.zPosition << 4);
+				thePlayer.worldObj.markBlockRangeForRenderUpdate(pos2, pos2.add(1, 64, 1));
+				
+				if(Minecraft.getMinecraft().gameSettings.particleSetting < 2)
+					AdvancedRocketry.proxy.spawnParticle("smallLazer", thePlayer.worldObj, pos.x, pos.y, pos.z, 0,0,0);
 			}
 		}
 	}

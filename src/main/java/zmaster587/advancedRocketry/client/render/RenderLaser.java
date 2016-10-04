@@ -5,6 +5,8 @@ import org.lwjgl.opengl.GL11;
 import zmaster587.libVulpes.render.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
@@ -60,7 +62,7 @@ public class RenderLaser extends Render implements IRenderFactory<Entity> {
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		buffer.color(color[0], color[1], color[2], color[3]);//0.9F, 0.2F, 0.3F, 0.5F);
+		GlStateManager.color(color[0], color[1], color[2], color[3]);//0.9F, 0.2F, 0.3F, 0.5F);
 
 		for(float radius = 0.25F; radius < size; radius += .25F) {
 
@@ -79,7 +81,7 @@ public class RenderLaser extends Render implements IRenderFactory<Entity> {
 			}
 		}
 
-		buffer.endVertex();
+		Tessellator.getInstance().draw();
 
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_LIGHTING);
@@ -105,21 +107,22 @@ public class RenderLaser extends Render implements IRenderFactory<Entity> {
 		Minecraft.getMinecraft().renderEngine.bindTexture(flare);
 		//bindTexture(flare);
 
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL);
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
-		buffer.color(flareColor[0],flareColor[1],flareColor[2],flareColor[3]);
+		GlStateManager.color(flareColor[0],flareColor[1],flareColor[2],flareColor[3]);
 
 		for(int i = 0; i < 4; i++) {
 			RenderHelper.renderBottomFaceWithUV(buffer, -y + 200, -(i*6) - x, -(i*6) - z, (i*6) - x, (i*6) - z, 0, 1, 0, 1);
 		}
 
-		buffer.finishDrawing();
+		Tessellator.getInstance().draw();
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, 0, 0);
+		//GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		buffer.color(color[0], color[1], color[2], color[3]);//0.9F, 0.2F, 0.3F, 0.5F);
+		GlStateManager.color(color[0], color[1], color[2], color[3]);//0.9F, 0.2F, 0.3F, 0.5F);
 
 		for(float radius = 0.25F; radius < size; radius += .25F) {
 
@@ -138,7 +141,7 @@ public class RenderLaser extends Render implements IRenderFactory<Entity> {
 			}
 		}
 
-		buffer.endVertex();
+		Tessellator.getInstance().draw();
 
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_LIGHTING);
@@ -146,6 +149,10 @@ public class RenderLaser extends Render implements IRenderFactory<Entity> {
 		GL11.glEnable(GL11.GL_FOG);
 		GL11.glDepthMask(true);
 		GL11.glPopMatrix();
+		
+		GlStateManager.color(1f, 1f, 1f,1f);
+		//Clean up and make player not transparent
+		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 0, 0);
 
 	}
 
