@@ -46,6 +46,8 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 		buttonLoad = new ModuleButton(12 + offsetX, 36 + offsetY, 1, "", this, TextureResources.buttonLeft, "Store to buffer", 10, 16);
 	}
 
+	
+	
 	@Override
 	public List<GuiButton> addButtons(int x, int y) {
 		List<GuiButton> list = buttonLoad.addButtons(x, y);
@@ -71,7 +73,7 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 
 	@Override
 	public List<Slot> getSlots(Container container) {
-		slotList.add(new Slot(chipStorage, slot, offsetX + 10, offsetY + 16));
+		slotList.add(new SlotData(chipStorage, slot, offsetX + 10, offsetY + 16));
 		return slotList;
 	}
 
