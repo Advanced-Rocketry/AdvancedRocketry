@@ -71,7 +71,7 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 
 	@Override
 	public List<Slot> getSlots(Container container) {
-		slotList.add(new Slot(chipStorage, slot, offsetX + 10, offsetY + 16));
+		slotList.add(new SlotData(chipStorage, slot, offsetX + 10, offsetY + 16));
 		return slotList;
 	}
 
