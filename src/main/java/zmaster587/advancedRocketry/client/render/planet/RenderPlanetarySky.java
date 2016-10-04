@@ -335,6 +335,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 
 		float multiplier = atmosphere > 1 ? (2-atmosphere) : 1f;
+		multiplier *= 1-mc.theWorld.getRainStrength(partialTicks);
 
 		if(!isWarp) {
 			//Set sun color and distance

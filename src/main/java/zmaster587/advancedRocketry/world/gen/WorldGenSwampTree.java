@@ -97,8 +97,8 @@ public class WorldGenSwampTree extends MapGenBase {
 			int rangeZ, int chunkX, int chunkZ, ChunkPrimer blocks) {
 		if(rand.nextInt(chancePerChunk) == Math.abs(rangeX) % chancePerChunk && rand.nextInt(chancePerChunk) == Math.abs(rangeZ) % chancePerChunk) {
 
-			int z = (rangeX - chunkX)*16;
-			int x =  (rangeZ- chunkZ)*16;
+			int x = (rangeX - chunkX)*16;
+			int z =  (rangeZ- chunkZ)*16;
 			int y = 56;
 			
 			

@@ -12,7 +12,7 @@ import net.minecraft.world.gen.feature.WorldGenShrub;
 public class BiomeGenMarsh extends Biome {
 
 	public BiomeGenMarsh(int id, boolean b) {
-		super(new BiomeProperties("Marsh").setBaseHeight(-0.2f).setHeightVariation(0f));
+		super(new BiomeProperties("Marsh").setBaseHeight(-0.4f).setHeightVariation(0f));
 		
 		registerBiome(id, "Marsh", this);
 		
@@ -34,14 +34,15 @@ public class BiomeGenMarsh extends Biome {
 		super.genTerrainBlocks(worldIn, rand, chunkPrimerIn, x, z, noiseVal);
 
 		double d1 = GRASS_COLOR_NOISE.getValue((double)x * 0.25D, (double)z * 0.25D);
-
-		if (d1 > 0.3D)
+		x = Math.abs(x % 16);
+		z = Math.abs(z % 16);
+		if (d1 > 0.2D)
 		{
-			chunkPrimerIn.setBlockState(x % 16, 62, z % 16, Blocks.GRASS.getDefaultState());
+			chunkPrimerIn.setBlockState(x, 62, z, Blocks.GRASS.getDefaultState());
 			for(int y = (int)(61); y > 1; y--) {
 				
-				if(!chunkPrimerIn.getBlockState(x % 16, y, z % 16).isOpaqueCube())
-					chunkPrimerIn.setBlockState(x % 16, y, z % 16, Blocks.GRASS.getDefaultState());
+				if(!chunkPrimerIn.getBlockState(x, y, z).isOpaqueCube())
+					chunkPrimerIn.setBlockState(x, y, z, Blocks.GRASS.getDefaultState());
 				else
 					break;
 			}
