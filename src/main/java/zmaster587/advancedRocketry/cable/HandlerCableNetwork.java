@@ -73,7 +73,7 @@ public class HandlerCableNetwork {
 	public int mergeNetworks(int a, int b) {
 		networks.get(Math.min(a, b)).merge(networks.get(Math.max(a, b)));
 
-		networks.remove(networks.get(Math.max(a, b)));
+		networks.remove(Math.max(a, b));
 
 		return Math.min(a, b);
 	}

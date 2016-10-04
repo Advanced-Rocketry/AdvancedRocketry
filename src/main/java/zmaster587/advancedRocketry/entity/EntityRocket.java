@@ -801,7 +801,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 					//worldserver.resetUpdateEntityTick();
 					//worldserver1.resetUpdateEntityTick();
 					//Transfer the player if applicable
-					PlanetEventHandler.addDelayedTransition(worldserver.getTotalWorldTime() + 1, new TransitionEntity(worldserver.getTotalWorldTime() + 1, rider, dimension, new BlockPosition((int)posX, Configuration.orbit, (int)posZ), entity));
+					PlanetEventHandler.addDelayedTransition(worldserver.getTotalWorldTime() + 1, new TransitionEntity(worldserver.getTotalWorldTime() + 20, rider, dimension, new BlockPosition((int)posX, Configuration.orbit, (int)posZ), entity));
 					
 					//minecraftserver.getConfigurationManager().transferPlayerToDimension((EntityPlayerMP)rider, newDimId, new TeleporterNoPortal(worldserver1));
 
