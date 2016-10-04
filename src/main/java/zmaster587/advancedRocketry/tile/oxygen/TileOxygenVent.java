@@ -5,6 +5,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -21,7 +24,9 @@ import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.advancedRocketry.api.AreaBlob;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -146,36 +151,33 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		 */
 
 		//IF first tick then register the blob and check for scrubbers
-		if(firstRun && !worldObj.isRemote) {
-			AtmosphereHandler.getOxygenHandler(this.worldObj.provider.getDimension()).registerBlob(this, pos);
-
-			onAdjacentBlockUpdated();
-			//isSealed starts as true so we can accurately check for scrubbers, we now set it to false to force the tile to check for a seal on first run
-			isSealed = false;
-			firstRun = false;
-		}
 
 		if(!worldObj.isRemote) {
+			if(firstRun) {
+				AtmosphereHandler.getOxygenHandler(this.worldObj.provider.getDimension()).registerBlob(this, pos);
+
+				onAdjacentBlockUpdated();
+				//isSealed starts as true so we can accurately check for scrubbers, we now set it to false to force the tile to check for a seal on first run
+				setSealed(false);
+				firstRun = false;
+			}
 
 			if(isSealed && worldObj.isBlockIndirectlyGettingPowered(pos) == 0) {
 				AtmosphereHandler.getOxygenHandler(this.worldObj.provider.getDimension()).clearBlob(this);
 
 				deactivateAdjblocks();
 
-				isSealed = false;
+				setSealed(false);
 			}
 			else if(!isSealed && worldObj.isBlockIndirectlyGettingPowered(pos) > 0 && hasEnoughEnergy(getPowerPerOperation())) {
-				isSealed = AtmosphereHandler.getOxygenHandler(this.worldObj.provider.getDimension()).addBlock(this, new HashedBlockPosition(pos));
-				//isSealed = true;
+				setSealed(AtmosphereHandler.getOxygenHandler(this.worldObj.provider.getDimension()).addBlock(this, new HashedBlockPosition(pos)));
+				
 
 				if(isSealed)
 					activateAdjblocks();
 			}
 
 			if(isSealed) {
-				if(worldObj.getTotalWorldTime() % 30 == 0)
-					worldObj.playSound(this.pos.getX(), this.pos.getY(), this.pos.getZ(), new SoundEvent(new ResourceLocation("advancedrocketry:airHissLoop")), SoundCategory.BLOCKS,  0.3f,  0.975f + worldObj.rand.nextFloat()*0.05f, false);
-
 
 				//If scrubbers exist and the config allows then use the cartridge
 				if(Configuration.scrubberRequiresCartrige){
@@ -213,6 +215,46 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 			}
 		}
 	}
+	
+	@Override
+	public void update() {
+		super.update();
+		if(worldObj.isRemote && isSealed && worldObj.getTotalWorldTime() % 30 == 0)
+			LibVulpes.proxy.playSound(worldObj, pos, AudioRegistry.airHissLoop, SoundCategory.BLOCKS,  0.2f,  0.975f + worldObj.rand.nextFloat()*0.05f);
+	}
+	
+	private void setSealed(boolean sealed) {
+		boolean prevSealed = isSealed;
+		if((prevSealed != sealed)) {
+			markDirty();
+			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 2);
+		}
+		isSealed = sealed;
+	}
+	
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		return new SPacketUpdateTileEntity(pos,getBlockMetadata(), getUpdateTag());
+		
+	}
+	
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		handleUpdateTag(pkt.getNbtCompound());
+	}
+	
+	@Override
+	public NBTTagCompound getUpdateTag() {
+		NBTTagCompound tag = super.getUpdateTag();
+		tag.setBoolean("isSealed", isSealed);
+		return tag;
+	}
+	
+	@Override
+	public void handleUpdateTag(NBTTagCompound tag) {
+		super.handleUpdateTag(tag);
+		isSealed = tag.getBoolean("isSealed");
+	}
 
 	public float getGasUsageMultiplier() {
 		return Math.max(0.05f - numScrubbers*0.025f,0);
@@ -227,7 +269,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 			deactivateAdjblocks();
 
-			isSealed = false;
+			setSealed(false);
 		}
 	}
 

@@ -84,6 +84,7 @@ import zmaster587.advancedRocketry.block.BlockTileRedstoneEmitter;
 import zmaster587.advancedRocketry.block.BlockWarpCore;
 import zmaster587.advancedRocketry.block.BlockWarpShipMonitor;
 import zmaster587.advancedRocketry.block.cable.BlockDataCable;
+import zmaster587.advancedRocketry.block.cable.BlockEnergyCable;
 import zmaster587.advancedRocketry.block.multiblock.BlockARHatch;
 import zmaster587.advancedRocketry.block.plant.BlockAlienLeaves;
 import zmaster587.advancedRocketry.block.plant.BlockAlienSapling;
@@ -134,6 +135,7 @@ import zmaster587.advancedRocketry.tile.Satellite.TileEntitySatelliteControlCent
 import zmaster587.advancedRocketry.tile.Satellite.TileSatelliteBuilder;
 import zmaster587.advancedRocketry.tile.*;
 import zmaster587.advancedRocketry.tile.cables.TileDataPipe;
+import zmaster587.advancedRocketry.tile.cables.TileEnergyPipe;
 import zmaster587.advancedRocketry.tile.cables.TileLiquidPipe;
 import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
@@ -497,8 +499,10 @@ public class AdvancedRocketry {
 		//Cables
 		//AdvancedRocketryBlocks.blockFluidPipe = new BlockLiquidPipe(Material.iron).setUnlocalizedName("liquidPipe").setCreativeTab(CreativeTabs.tabTransport);
 		AdvancedRocketryBlocks.blockDataPipe = new BlockDataCable(Material.IRON).setUnlocalizedName("dataPipe").setCreativeTab(tabAdvRocketry);
+		AdvancedRocketryBlocks.blockEnergyPipe = new BlockEnergyCable(Material.IRON).setUnlocalizedName("energyPipe").setCreativeTab(tabAdvRocketry);
 
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockDataPipe.setRegistryName("dataPipe"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockEnergyPipe.setRegistryName("energyPipe"));
 		//GameRegistry.registerBlock(AdvancedRocketryBlocks.blockFluidPipe , AdvancedRocketryBlocks.blockFluidPipe .getUnlocalizedName());
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockLaunchpad.setRegistryName("launchpad"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockRocketBuilder.setRegistryName("rocketBuilder"));
@@ -738,6 +742,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileStationGravityController.class, "ARGravityControl");
 		GameRegistry.registerTileEntity(TileLiquidPipe.class, "ARLiquidPipe");
 		GameRegistry.registerTileEntity(TileDataPipe.class, "ARDataPipe");
+		GameRegistry.registerTileEntity(TileEnergyPipe.class, "AREnergyPipe");
 		GameRegistry.registerTileEntity(TileDrill.class, "ARDrill");
 		GameRegistry.registerTileEntity(TileMicrowaveReciever.class, "ARMicrowaveReciever");
 		GameRegistry.registerTileEntity(TileSuitWorkStation.class, "ARSuitWorkStation");
@@ -757,6 +762,10 @@ public class AdvancedRocketry {
 		OreDictionary.registerOre("concrete", new ItemStack(AdvancedRocketryBlocks.blockConcrete));
 
 
+		
+		//AUDIO
+		
+		
 		//MOD-SPECIFIC ENTRIES --------------------------------------------------------------------------------------------------------------------------
 
 
@@ -901,6 +910,7 @@ public class AdvancedRocketry {
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockLandingPad), new ItemStack(AdvancedRocketryBlocks.blockConcrete), trackingCircuit);
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryItems.itemAsteroidChip), trackingCircuit.copy(), AdvancedRocketryItems.itemDataUnit);
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryBlocks.blockDataPipe, 8), "ggg", " d ", "ggg", 'g', Blocks.GLASS_PANE, 'd', AdvancedRocketryItems.itemDataUnit);
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockEnergyPipe, 32), "ggg", " d ", "ggg", 'g', Items.CLAY_BALL, 'd', "stickCopper"));
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockDrill), LibVulpesBlocks.blockStructureBlock, Items.IRON_PICKAXE);
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockOrientationController), LibVulpesBlocks.blockStructureBlock, Items.COMPASS, userInterface);
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockGravityController), LibVulpesBlocks.blockStructureBlock, Blocks.PISTON, Blocks.REDSTONE_BLOCK);
@@ -1322,6 +1332,7 @@ public class AdvancedRocketry {
 	@EventHandler
 	public void serverStopped(FMLServerStoppedEvent event) {
 		zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
+		zmaster587.advancedRocketry.cable.NetworkRegistry.clearNetworks();
 	}
 
 	@SubscribeEvent

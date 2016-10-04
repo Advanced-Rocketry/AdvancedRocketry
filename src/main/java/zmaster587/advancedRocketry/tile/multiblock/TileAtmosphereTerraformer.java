@@ -35,6 +35,7 @@ import zmaster587.advancedRocketry.entity.fx.FxSystemElectricArc;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.satellite.SatelliteBiomeChanger;
+import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.RotatableBlock;
@@ -391,9 +392,9 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 		}
 	}
 	
-	public String getSound() {
-		return "advancedrocketry:MachineLarge";
-	};
+	public SoundEvent getSound() {
+		return AudioRegistry.machineLarge;
+	}
 	
 	@Override
 	public int getSoundDuration() {
@@ -401,8 +402,8 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 	}
 	
 	@Override
-	protected void playMachineSound(String str) {
-    		worldObj.playSound(getPos().getX(), getPos().getY() + 7, getPos().getZ(), new SoundEvent(new ResourceLocation(str)), SoundCategory.BLOCKS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.BLOCKS),  0.975f + worldObj.rand.nextFloat()*0.05f, false);
+	protected void playMachineSound(SoundEvent event) {
+    		worldObj.playSound(getPos().getX(), getPos().getY() + 7, getPos().getZ(), event, SoundCategory.BLOCKS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.BLOCKS),  0.975f + worldObj.rand.nextFloat()*0.05f, false);
 	}
 
 	@Override

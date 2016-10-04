@@ -40,14 +40,13 @@ public class RenderJetPack extends ModelBiped {
 	/**
 	 * Sets the models various rotation angles then renders the model.
 	 */
-	public void render(Entity entity, float x, float y, float z, float p_78088_5_, float p_78088_6_, float p_78088_7_)
+	public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
 	{
 
 		//super.render(p_78088_1_, p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, p_78088_7_);
 
 
-
-	
+		biped.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entity);
 		biped.bipedRightArm.showModel = true;
 		biped.bipedBody.showModel = true;
 		biped.bipedLeftArm.showModel = true;
@@ -56,9 +55,9 @@ public class RenderJetPack extends ModelBiped {
 			GL11.glTranslatef(0,.25f, 0);
 		}
 		
-		biped.bipedBody.render(p_78088_7_);
-		biped.bipedLeftArm.render(p_78088_7_);
-		biped.bipedRightArm.render(p_78088_7_);
+		biped.bipedBody.render(scale);
+		biped.bipedLeftArm.render(scale);
+		biped.bipedRightArm.render(scale);
 		GL11.glPopMatrix();
 		
 		GL11.glPushMatrix();

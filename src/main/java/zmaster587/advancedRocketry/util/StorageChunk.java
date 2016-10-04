@@ -57,6 +57,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 	public WorldDummy world;
 	private Entity entity;
+	public boolean finalized = false; // Mkae sure we are ready to render
 
 	public StorageChunk() {
 		sizeX = 0;
@@ -680,6 +681,8 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 				e.printStackTrace();
 			}
 		}
+		//We are now ready to render
+		finalized = true;
 	}
 
 	@Override

@@ -54,7 +54,7 @@ public class BlockTorchUnlit extends BlockTorch {
 				item == Items.FLINT_AND_STEEL || 
 						item == Items.FIRE_CHARGE)) {
 
-			world.setBlockState(pos, Blocks.TORCH.getDefaultState());
+			world.setBlockState(pos, Blocks.TORCH.getDefaultState().withProperty(FACING, state.getValue(FACING)));
 
 			return true;
 		}

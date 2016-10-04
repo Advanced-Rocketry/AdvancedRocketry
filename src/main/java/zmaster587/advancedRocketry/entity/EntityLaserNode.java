@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.entity;
 
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.util.AudioRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -95,7 +96,7 @@ public class EntityLaserNode extends Entity {
 				this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, this.posX + (this.rand.nextDouble()*spread) - (spread/2), this.posY, this.posZ + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble(), initialSpeed * this.rand.nextDouble() * 4 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
 			}
 			//TODO: use sound setting
-			this.worldObj.playSound(Minecraft.getMinecraft().thePlayer,this.posX, this.posY, this.posZ, new SoundEvent(new ResourceLocation("advancedRocketry:sound.laserDrill")), SoundCategory.NEUTRAL, 1.0f, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
+			this.worldObj.playSound(Minecraft.getMinecraft().thePlayer,this.posX, this.posY, this.posZ, AudioRegistry.laserDrill, SoundCategory.NEUTRAL, 1.0f, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
 			
 		}
 	}

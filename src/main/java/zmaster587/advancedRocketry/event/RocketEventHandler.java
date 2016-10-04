@@ -62,6 +62,7 @@ public class RocketEventHandler extends Gui {
 	private static boolean mapReady = false;
 	private static boolean mapNeedsBinding = false;
 	private static IntBuffer table,outerBoundsTable;
+	Thread thread = null; 
 
 	private static final int numTicksToDisplay = 100;
 
@@ -120,107 +121,114 @@ public class RocketEventHandler extends Gui {
 		//Multi thread texture creation b/c it can be expensive
 		final World worldObj = event.world;
 		final Entity entity = event.getEntity();
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
+
+		if(thread == null || !thread.isAlive()) {
+
+			thread = new Thread(new Runnable() {
+				@Override
+				public void run() {
+
+					int numChunksLoaded = 0;
+					
+						table = earth.getByteBuffer();
+						outerBoundsTable = outerBounds.getByteBuffer();
+
+						//Get the average of each edge RGB
+						long topEdge[], bottomEdge[], leftEdge[], rightEdge[], total[];
+						total = topEdge = bottomEdge = leftEdge = rightEdge = new long[] {0,0,0};
 
 
-				table = earth.getByteBuffer();
-				outerBoundsTable = outerBounds.getByteBuffer();
+						do {
+						for(int i = 0; i < getImgSize*getImgSize; i++) {
+							//TODO: Optimize
+							int xOffset = (i % getImgSize);
+							int yOffset = (i / getImgSize);
 
-				//Get the average of each edge RGB
-				long topEdge[], bottomEdge[], leftEdge[], rightEdge[], total[];
-				total = topEdge = bottomEdge = leftEdge = rightEdge = new long[] {0,0,0};
+							int xPosition = (int)entity.posX - (getImgSize/2) + xOffset;
+							int zPosition = (int)entity.posZ - (getImgSize/2) + yOffset;
+							BlockPos thisPos = new BlockPos(xPosition, 0, zPosition);
+							Chunk chunk = worldObj.getChunkFromBlockCoords(thisPos);
 
-				int numChunksLoaded = 0;
+							if(chunk.isLoaded() && !chunk.isEmpty()) {
+								//Get Xcoord and ZCoords in the chunk
+								numChunksLoaded++;
+								int heightValue = chunk.getHeightValue( xPosition + (chunk.xPosition >= 0 ? - (Math.abs( chunk.xPosition )<< 4) : (Math.abs( chunk.xPosition )<< 4)), zPosition + (chunk.zPosition >= 0 ? - (Math.abs(chunk.zPosition )<< 4) : (Math.abs(chunk.zPosition )<< 4)));
+								MapColor color = MapColor.AIR;
+								int yPosition;
 
-				for(int i = 0; i < getImgSize*getImgSize; i++) {
-					//TODO: Optimize
-					int xOffset = (i % getImgSize);
-					int yOffset = (i / getImgSize);
+								IBlockState block = null;
 
-					int xPosition = (int)entity.posX - (getImgSize/2) + xOffset;
-					int zPosition = (int)entity.posZ - (getImgSize/2) + yOffset;
-					BlockPos thisPos = new BlockPos(xPosition, 0, zPosition);
-					Chunk chunk = worldObj.getChunkFromBlockCoords(thisPos);
+								//Get the first non-air block
+								for(yPosition = heightValue; yPosition > 0; yPosition-- ) {
+									block = worldObj.getBlockState(new BlockPos(xPosition, yPosition, zPosition));
+									if((color = block.getMapColor()) != MapColor.AIR) {
+										break;
+									}
+								}
 
-					if(chunk.isLoaded() && !chunk.isEmpty()) {
-						//Get Xcoord and ZCoords in the chunk
-						numChunksLoaded++;
-						int heightValue = chunk.getHeightValue( xPosition + (chunk.xPosition >= 0 ? - (Math.abs( chunk.xPosition )<< 4) : (Math.abs( chunk.xPosition )<< 4)), zPosition + (chunk.zPosition >= 0 ? - (Math.abs(chunk.zPosition )<< 4) : (Math.abs(chunk.zPosition )<< 4)));
-						MapColor color = MapColor.AIR;
-						int yPosition;
+								int intColor;
 
-						IBlockState block = null;
+								if(block.getBlock() == Blocks.GRASS || block.getBlock() == Blocks.TALLGRASS) {
+									int color2 = worldObj.getBiomeGenForCoords(thisPos).getGrassColorAtPos(thisPos.add(0, yPosition, 0));
+									int r = (color2 & 0xFF);
+									int g = ( (color2 >>> 8) & 0xFF);
+									int b = ( (color2 >>> 16) & 0xFF);
+									intColor = b | (g << 8) | (r << 16);
+								}
+								else if(block.getBlock() == Blocks.LEAVES || block.getBlock() == Blocks.LEAVES2) {
+									int color2 = worldObj.getBiomeGenForCoords(thisPos).getFoliageColorAtPos(thisPos.add(0, yPosition, 0));
+									int r = (color2 & 0xFF);
+									int g = ( (color2 >>> 8) & 0xFF);
+									int b = ( (color2 >>> 16) & 0xFF);
+									intColor = b | (g << 8) | (r << 16);
+								}
+								else
+									intColor = ( (color.colorValue & 0xFF) << 16) | ( ( color.colorValue >>> 16 ) & 0xFF ) | ( color.colorValue & 0xFF00 );
 
-						//Get the first non-air block
-						for(yPosition = heightValue; yPosition > 0; yPosition-- ) {
-							block = worldObj.getBlockState(new BlockPos(xPosition, yPosition, zPosition));
-							if((color = block.getMapColor()) != MapColor.AIR) {
-								break;
+								//Put into the table and make opaque
+								table.put(i, intColor | 0xFF000000);
+
+								//Background in case chunk doesnt load
+								total[0] += intColor & 0xFF;
+								total[1] += (intColor & 0xFF00) >>> 8;
+									total[2] += (intColor & 0xFF0000) >>> 16;
+
 							}
 						}
+					} while(numChunksLoaded == 0);
 
-						int intColor;
+					int multiplierGreen = 1;
+					int multiplierBlue = 1;
 
-						if(block.getBlock() == Blocks.GRASS || block.getBlock() == Blocks.TALLGRASS) {
-							int color2 = worldObj.getBiomeGenForCoords(thisPos).getGrassColorAtPos(thisPos.add(0, yPosition, 0));
-							int r = (color2 & 0xFF);
-							int g = ( (color2 >>> 8) & 0xFF);
-							int b = ( (color2 >>> 16) & 0xFF);
-							intColor = b | (g << 8) | (r << 16);
-						}
-						else if(block.getBlock() == Blocks.LEAVES || block.getBlock() == Blocks.LEAVES2) {
-							int color2 = worldObj.getBiomeGenForCoords(thisPos).getFoliageColorAtPos(thisPos.add(0, yPosition, 0));
-							int r = (color2 & 0xFF);
-							int g = ( (color2 >>> 8) & 0xFF);
-							int b = ( (color2 >>> 16) & 0xFF);
-							intColor = b | (g << 8) | (r << 16);
-						}
-						else
-							intColor = ( (color.colorValue & 0xFF) << 16) | ( ( color.colorValue >>> 16 ) & 0xFF ) | ( color.colorValue & 0xFF00 );
+					//Get the outer layer
+					total[0] =     ZUtils.getAverageColor(total[0], total[1]*multiplierGreen, total[2]* multiplierBlue, numChunksLoaded);
 
-						//Put into the table and make opaque
-						table.put(i, intColor | 0xFF000000);
+					Random random = new Random(); 
 
-						//Background in case chunk doesnt load
-						total[0] += intColor & 0xFF;
-						total[1] += (intColor & 0xFF00) >>> 8;
-							total[2] += (intColor & 0xFF0000) >>> 16;
+					int randomMax = 0x2A;
 
+					for(int i = 0; i < outerImgSize*outerImgSize; i++) {
+
+						int randR =   randomMax - random.nextInt(randomMax) / 2;
+						int randG = ( randomMax - random.nextInt(randomMax)/2 ) << 8;
+						int randB = ( randomMax - random.nextInt(randomMax) /2 ) << 16;
+
+
+						int color = (int)( MathHelper.clamp_int((int) ( (total[0] & 0xFF) + randR ),0, 0xFF ) |
+								MathHelper.clamp_int((int)(total[0] & 0xFF00) + randG, 0x0100, 0xFF00)  | 
+								MathHelper.clamp_int( (int)(( total[0] & 0xFF0000) + randB), 0x010000, 0xFF0000) );
+
+						outerBoundsTable.put(i, color | 0xff000000);
 					}
+
+					outerBoundsTable.flip();
+					table.flip(); //Yes really
+					mapNeedsBinding = true;
+					mapReady = true;
 				}
-
-				int multiplierGreen = 1;
-				int multiplierBlue = 1;
-
-				//Get the outer layer
-				total[0] =     ZUtils.getAverageColor(total[0], total[1]*multiplierGreen, total[2]* multiplierBlue, numChunksLoaded);
-
-				Random random = new Random(); 
-
-				int randomMax = 0x2A;
-
-				for(int i = 0; i < outerImgSize*outerImgSize; i++) {
-
-					int randR =   randomMax - random.nextInt(randomMax) / 2;
-					int randG = ( randomMax - random.nextInt(randomMax)/2 ) << 8;
-					int randB = ( randomMax - random.nextInt(randomMax) /2 ) << 16;
-
-
-					int color = (int)( MathHelper.clamp_int((int) ( (total[0] & 0xFF) + randR ),0, 0xFF ) |
-							MathHelper.clamp_int((int)(total[0] & 0xFF00) + randG, 0x0100, 0xFF00)  | 
-							MathHelper.clamp_int( (int)(( total[0] & 0xFF0000) + randB), 0x010000, 0xFF0000) );
-
-					outerBoundsTable.put(i, color | 0xff000000);
-				}
-
-				outerBoundsTable.flip();
-				table.flip(); //Yes really
-				mapNeedsBinding = true;
-				mapReady = true;
-			}
-		}, "Planet Texture Creator").start();
+			}, "Planet Texture Creator");
+			thread.start();
+		}
 	}
 
 

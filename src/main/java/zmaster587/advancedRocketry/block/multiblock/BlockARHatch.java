@@ -8,6 +8,9 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
@@ -16,6 +19,8 @@ import zmaster587.advancedRocketry.tile.infrastructure.TileRocketFluidUnloader;
 import zmaster587.advancedRocketry.tile.infrastructure.TileRocketLoader;
 import zmaster587.advancedRocketry.tile.infrastructure.TileRocketUnloader;
 import zmaster587.libVulpes.block.multiblock.BlockHatch;
+import zmaster587.libVulpes.tile.TilePointer;
+import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 
 public class BlockARHatch extends BlockHatch {
 
@@ -33,6 +38,30 @@ public class BlockARHatch extends BlockHatch {
 		list.add(new ItemStack(item, 1, 3));
 		list.add(new ItemStack(item, 1, 4));
 		list.add(new ItemStack(item, 1, 5));
+	}
+	
+	@Override
+	public boolean shouldSideBeRendered(IBlockState blockState,
+			IBlockAccess blockAccess, BlockPos pos, EnumFacing direction) {
+
+
+		boolean isPointer = blockAccess.getTileEntity(pos.offset(direction.getOpposite())) instanceof TilePointer;
+		
+		if(isPointer || blockState.getValue(VARIANT) < 2)
+			return super.shouldSideBeRendered(blockState, blockAccess, pos, direction);
+		return true;
+
+	}
+	
+	@Override
+	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess,
+			BlockPos pos, EnumFacing side) {
+		return blockState.getValue(VARIANT) >= 2 ? 15 : 0;
+	}
+	
+	@Override
+	public boolean canProvidePower(IBlockState state) {
+		return state.getValue(VARIANT) >= 10;
 	}
 	
 	@Override

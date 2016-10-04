@@ -52,7 +52,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	public void update() {
 
 		//Move a stack of items
-		if(rocket != null ) {
+		if(!worldObj.isRemote && rocket != null ) {
 			List<TileEntity> tiles = rocket.storage.getFluidTiles();
 			boolean foundStack = false;
 			boolean rocketContainsItems = false;

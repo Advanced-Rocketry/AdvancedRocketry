@@ -13,6 +13,7 @@ import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.client.render.armor.RenderJetPack;
 import zmaster587.libVulpes.api.IArmorComponent;
+import zmaster587.libVulpes.api.IJetPack;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import net.minecraft.client.model.ModelBiped;
@@ -44,27 +45,31 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 	public ItemSpaceArmor(ArmorMaterial material, EntityEquipmentSlot component) {
 		super(material, 0, component);
 	}
-	
+
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer p_77624_2_,
 			List list, boolean p_77624_4_) {
 		super.addInformation(stack, p_77624_2_, list, p_77624_4_);
-		
+
 		list.add("Modules:");
-		
+
 		for(ItemStack componentStack : getComponents(stack)) {
 			list.add(ChatFormatting.DARK_GRAY + componentStack.getDisplayName());
 		}
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ModelBiped getArmorModel(EntityLivingBase entityLiving,
 			ItemStack itemStack, EntityEquipmentSlot armorSlot,
 			ModelBiped _default) {
 
-		if(armorSlot == EntityEquipmentSlot.CHEST)
-			return new RenderJetPack(_default);
+		if(armorSlot == EntityEquipmentSlot.CHEST) {
+			for(ItemStack stack : getComponents(itemStack)) {
+				if(stack.getItem() instanceof IJetPack)
+					return new RenderJetPack(_default);
+			}
+		}
 		return super.getArmorModel(entityLiving, itemStack, armorSlot, _default);
 	}
 
@@ -102,9 +107,9 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 		super.onArmorTick(world, player, armor);
 
 		if(armor.hasTagCompound()) {
-			
+
 			//Some upgrades modify player capabilities
-			
+
 			EmbeddedInventory inv = loadEmbeddedInventory(armor);
 			for(int i = 0; i < inv.getSizeInventory(); i++ ) {
 				ItemStack stack = inv.getStackInSlot(i);
@@ -185,7 +190,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 			saveEmbeddedInventory(armor, inv);
 		}
 
-		
+
 
 		return stack;
 	}

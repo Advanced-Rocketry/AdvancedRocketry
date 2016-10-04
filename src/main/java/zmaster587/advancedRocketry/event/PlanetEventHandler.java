@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockTorch;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -112,7 +113,7 @@ public class PlanetEventHandler {
 				if(event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Item.getItemFromBlock(Blocks.TORCH) && 
 						event.getWorld().getBlockState(event.getPos()).isSideSolid(event.getWorld(), event.getPos(), direction)) {
 					event.setCanceled(true);
-					event.getWorld().setBlockState(event.getPos().offset(direction), AdvancedRocketryBlocks.blockUnlitTorch.getDefaultState());
+					event.getWorld().setBlockState(event.getPos().offset(direction), AdvancedRocketryBlocks.blockUnlitTorch.getDefaultState().withProperty(BlockTorch.FACING, direction));
 				}
 				else if(event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE)
 					event.setCanceled(true);
@@ -186,7 +187,6 @@ public class PlanetEventHandler {
 					TransitionEntity ent = entry.getValue();
 					if(ent.entity.worldObj.getTotalWorldTime() >= entry.getKey()) {
 						ent.entity.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP)ent.entity, ent.dimId, new TeleporterNoPortal(ent.entity.getServer().worldServerForDimension(ent.dimId)));
-						
 						ent.entity.setLocationAndAngles(ent.location.getX(), ent.location.getY(), ent.location.getZ(), ent.entity.rotationYaw, ent.entity.rotationPitch);
 						ent.entity.startRiding(ent.entity2);
 						itr.remove();

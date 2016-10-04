@@ -1,5 +1,7 @@
 package zmaster587.advancedRocketry.util;
 
+import net.minecraft.block.BlockTorch;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -138,8 +140,9 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	 */
 	protected void runEffectOnWorldBlocks(World world, Collection<HashedBlockPosition> blocks) {
 		for(HashedBlockPosition pos : new LinkedList<HashedBlockPosition>(blocks)) {
-			if(world.getBlockState(pos.getBlockPos()).getBlock() == Blocks.TORCH) {
-				world.setBlockState(pos.getBlockPos(), AdvancedRocketryBlocks.blockUnlitTorch.getDefaultState());
+			IBlockState state  = world.getBlockState(pos.getBlockPos());
+			if(state.getBlock() == Blocks.TORCH) {
+				world.setBlockState(pos.getBlockPos(), AdvancedRocketryBlocks.blockUnlitTorch.getDefaultState().withProperty(BlockTorch.FACING, state.getValue(BlockTorch.FACING)));
 			}
 		}
 	}

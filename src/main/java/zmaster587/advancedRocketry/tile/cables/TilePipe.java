@@ -23,6 +23,7 @@ public class TilePipe extends TileEntity {
 	public void initialize(int id) {
 		networkID = id;
 		initialized = true;
+		getNetworkHandler().getNetwork(id).addPipeToNetwork(this);
 	}
 
 	@Override
@@ -47,6 +48,9 @@ public class TilePipe extends TileEntity {
 			if(tile != null)
 				getNetworkHandler().removeFromAllTypes(this, tile);
 		}
+		getNetworkHandler().getNetwork(networkID).removePipeFromNetwork(this);
+		//Recreate the network until a clean way to tranverse nets in unloaded chunk can be found
+		getNetworkHandler().removeNetworkByID(networkID);
 	}
 
 	@Override

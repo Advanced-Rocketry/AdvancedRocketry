@@ -5,6 +5,7 @@ import java.util.Random;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.entity.fx.FxSystemElectricArc;
+import zmaster587.advancedRocketry.util.AudioRegistry;
 import net.minecraft.block.BlockMushroom;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
@@ -69,7 +70,7 @@ public class BlockElectricMushroom extends BlockMushroom implements IGrowable {
 		super.randomDisplayTick(stateIn, world, pos, rand);
 		if(world.getTotalWorldTime() % 100 == 0 && world.getBiomeGenForCoords(pos) == AdvancedRocketryBiomes.stormLandsBiome) {
 			FxSystemElectricArc.spawnArc(world, pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, .3, 7);
-			world.playSound(Minecraft.getMinecraft().thePlayer, pos, new SoundEvent( new ResourceLocation("advancedrocketry:ElectricShockSmall")), SoundCategory.BLOCKS, .7f,  0.975f + world.rand.nextFloat()*0.05f);
+			world.playSound(Minecraft.getMinecraft().thePlayer, pos, AudioRegistry.electricShockSmall, SoundCategory.BLOCKS, .7f,  0.975f + world.rand.nextFloat()*0.05f);
 		}
 	}
 }

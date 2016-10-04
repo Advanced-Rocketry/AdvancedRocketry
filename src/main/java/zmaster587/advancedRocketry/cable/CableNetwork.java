@@ -8,6 +8,7 @@ import java.util.Random;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import zmaster587.advancedRocketry.tile.cables.TilePipe;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.SingleEntry;
 
@@ -19,6 +20,8 @@ public class CableNetwork {
 
 	HashSet<Entry<TileEntity, EnumFacing>> sources;
 
+	protected int numCables = 0;
+	
 	HashSet<Entry<TileEntity, EnumFacing>> sinks;
 
 	protected CableNetwork() {
@@ -133,7 +136,7 @@ public class CableNetwork {
 
 	@Override 
 	public String toString() {
-		String output = "Sources: ";
+		String output = "NumCables:   " + numCables + "     Sources: ";
 		for(Entry<TileEntity, EnumFacing> obj : sources) {
 			TileEntity tile = (TileEntity)obj.getKey();
 			output += tile.getPos().getX() + "," + tile.getPos().getY() + "," + tile.getPos().getZ() + " ";
@@ -183,6 +186,15 @@ public class CableNetwork {
 		}
 	}
 
+	public void addPipeToNetwork(TilePipe tile) {
+		numCables++;
+	}
+	
 	public void tick() {
+	}
+
+	public void removePipeFromNetwork(TilePipe tilePipe) {
+		numCables--;
+		
 	}
 }

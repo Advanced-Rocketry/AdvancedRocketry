@@ -8,6 +8,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -17,6 +18,7 @@ import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.api.material.Material;
@@ -80,8 +82,8 @@ public class TileRollingMachine extends TileMultiblockMachine {
 	}
 
 	@Override
-	public String getSound() {
-		return "advancedrocketry:rollingMachine";
+	public SoundEvent getSound() {
+		return AudioRegistry.rollingMachine;
 	}
 
 	@Override

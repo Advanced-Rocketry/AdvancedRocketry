@@ -8,6 +8,8 @@ import zmaster587.advancedRocketry.util.StorageChunk;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -31,7 +33,7 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 		super(manager);
 	}
 
-	
+
 	//TODO: possibly optimize with GL lists
 	@Override
 	public void doRender(Entity entity, double x,
@@ -40,9 +42,10 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 
 		StorageChunk storage  = ((EntityRocket)entity).storage;
 
+
 		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
 
-		if(storage == null)
+		if(storage == null || !storage.finalized)
 			return;
 
 		if(entity.getPassengers().contains(Minecraft.getMinecraft().thePlayer)) {
@@ -94,40 +97,62 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 		GL11.glPopMatrix();
 
 		//Initial setup
+		if(storage.world.displayListIndex == -1) {
+			
+			storage.world.displayListIndex = GLAllocation.generateDisplayLists(1);
+			GL11.glPushMatrix();
+			GL11.glNewList(storage.world.displayListIndex, GL11.GL_COMPILE);
 
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float)x - halfx, (float)y, (float)z - halfz);
-		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+			net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
 
-		//Render Each block
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-		for(int xx = 0; xx < storage.getSizeX(); xx++) {
-			for(int zz = 0; zz < storage.getSizeZ(); zz++) {
-				for(int yy = 0; yy < storage.getSizeY(); yy++) {
-					IBlockState block  = storage.getBlockState(new BlockPos(xx, yy, zz));
-					
-					buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-					Minecraft.getMinecraft().getBlockRendererDispatcher().renderBlock(block, new BlockPos(xx, yy, zz), storage.world, buffer);
-					Tessellator.getInstance().draw();
+			//Render Each block
+			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+			for(int xx = 0; xx < storage.getSizeX(); xx++) {
+				for(int zz = 0; zz < storage.getSizeZ(); zz++) {
+					for(int yy = 0; yy < storage.getSizeY(); yy++) {
+						IBlockState block  = storage.getBlockState(new BlockPos(xx, yy, zz));
+
+						buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+						Minecraft.getMinecraft().getBlockRendererDispatcher().renderBlock(block, new BlockPos(xx, yy, zz), storage.world, buffer);
+						Tessellator.getInstance().draw();
+					}
+
 				}
 
 			}
 
+			net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
+			
+			GL11.glEndList();
+			
+			GL11.glPopMatrix();
 		}
 
-		net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
+		GL11.glPushMatrix();
+		GL11.glTranslatef((float)x - halfx, (float)y, (float)z - halfz);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		GL11.glCallList(storage.world.displayListIndex);
+		
+		
 
 		//Render tile entities if applicable
 		for(TileEntity tile : storage.getTileEntityList()) {
 			TileEntitySpecialRenderer renderer = (TileEntitySpecialRenderer)TileEntityRendererDispatcher.instance.mapSpecialRenderers.get(tile.getClass());
 			if(renderer != null ) {
 				TileEntityRendererDispatcher.instance.renderTileEntityAt(tile, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), f1);
+				
 				//renderer.renderTileEntity(tile, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), f1, 0);
 			}
 		}
+		//net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+		GlStateManager.enableLighting();
+		GlStateManager.color(1, 1, 1);
 		GL11.glPopMatrix();
+		
+		
 		//Clean up and make player not transparent
 		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 0, 0);
+
 	}
 
 	@Override

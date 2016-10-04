@@ -1,8 +1,6 @@
 {
-    "parent": "block/orientable",
+    "parent": "block/cube_all",
     "textures": {
-        "top": "libvulpes:blocks/machineGeneric",
-        "front": "advancedrocketry:blocks/atmosphereDetector",
-        "side": "libvulpes:blocks/machineGeneric"
+        "all": "advancedrocketry:blocks/atmosphereDetector"
     }
 }

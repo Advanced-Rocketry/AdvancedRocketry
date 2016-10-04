@@ -25,6 +25,7 @@ import zmaster587.advancedRocketry.entity.EntityStationDeployedRocket;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder.ErrorCodes;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.StorageChunk;
+import zmaster587.libVulpes.block.FullyRotatableBlock;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.interfaces.INetworkEntity;
 import zmaster587.libVulpes.network.PacketEntity;
@@ -114,8 +115,14 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 
 		if(status != ErrorCodes.SUCCESS)
 			return;
+		StorageChunk storageChunk;
 
-		StorageChunk storageChunk = StorageChunk.cutWorldBB(worldObj, bbCache);
+		//Breaks if nothing is there
+		try {
+			storageChunk = StorageChunk.cutWorldBB(worldObj, bbCache);
+		} catch(NegativeArraySizeException e) {
+			return;
+		}
 
 
 		EntityStationDeployedRocket rocket = new EntityStationDeployedRocket(worldObj, storageChunk, stats.copy(),bbCache.minX + (bbCache.maxX-bbCache.minX)/2f +.5f, getPos().getY() , bbCache.minZ + (bbCache.maxZ-bbCache.minZ)/2f +.5f);
@@ -131,7 +138,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 
 					BlockPos pos3 = new BlockPos(x,y,z);
 					if(storageChunk.getBlockState(pos3).getBlock() == AdvancedRocketryBlocks.blockEngine) {
-						storageChunk.setBlockState(pos3, storageChunk.getBlockState(pos3).withProperty(RotatableBlock.FACING, rocket.forwardDirection)  );
+						storageChunk.setBlockState(pos3, storageChunk.getBlockState(pos3).withProperty(FullyRotatableBlock.FACING, rocket.forwardDirection)  );
 					}
 				}		
 			}	
@@ -232,7 +239,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 							if(block instanceof IMiningDrill) {
 								drillPower += ((IMiningDrill)block).getMiningSpeed(world, currPos);
 							}
-							
+
 							if(block instanceof IIntake) {
 								stats.setStatTag("intakePower", (int)stats.getStatTag("intakePower") + ((IIntake)block).getIntakeAmt(state));
 							}
@@ -242,7 +249,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 								hasSatellite = true;
 							if(tile instanceof TileGuidanceComputer)
 								hasGuidance = true;
-							
+
 							if(tile instanceof IFluidHandler) {
 								for(IFluidTankProperties info : ((IFluidHandler)tile).getTankProperties())
 									fluidCapacity += info.getCapacity();
@@ -271,7 +278,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 				status = ErrorCodes.SUCCESS;
 		}
 	}
-	
+
 	@Override
 	public float getNeededFuel() {
 		return getAcceleration() > 0 ? stats.getFuelRate(FuelType.LIQUID) : 0;

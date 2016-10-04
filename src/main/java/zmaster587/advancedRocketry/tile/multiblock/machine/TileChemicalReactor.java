@@ -7,11 +7,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
@@ -51,8 +53,8 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 	}
 	
 	@Override
-	public String getSound() {
-		return "advancedrocketry:rollingMachine";
+	public SoundEvent getSound() {
+		return AudioRegistry.rollingMachine;
 	}
 
 	@Override

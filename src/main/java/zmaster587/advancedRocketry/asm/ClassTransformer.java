@@ -71,6 +71,7 @@ public class ClassTransformer implements IClassTransformer {
 	private static final String FIELD_HASMOVED = "net.minecraft.network.NetHandlerPlayServer.hasMoved";
 	private static final String FIELD_RIDINGENTITY = "net.minecraft.entity.Entity.ridingEntity";
 	private static final HashMap<String, SimpleEntry<String, String>> entryMap = new HashMap<String, SimpleEntry<String, String>>();
+	
 
 
 	private boolean obf;
@@ -98,7 +99,7 @@ public class ClassTransformer implements IClassTransformer {
 		//entryMap.put(CLASS_KEY_ENTITYLIVINGRENDERER, new SimpleEntry<String, String>("net/minecraft/client/renderer/entity/RendererLivingEntity", ""));
 		entryMap.put(CLASS_KEY_ENTITY, new SimpleEntry<String, String>("net/minecraft/entity/Entity","rw"));
 		//entryMap.put(CLASS_KEY_ENTITY_PLAYER_SP, new SimpleEntry<String, String>("net/minecraft/client/entity/EntityPlayerSP",""));
-		//entryMap.put(CLASS_KEY_ENTITY_PLAYER_MP, new SimpleEntry<String, String>("net/minecraft/entity/player/EntityPlayerMP",""));
+		entryMap.put(CLASS_KEY_ENTITY_PLAYER_MP, new SimpleEntry<String, String>("net/minecraft/entity/player/EntityPlayerMP","lu"));
 		entryMap.put(CLASS_KEY_ENTITY_PLAYER, new SimpleEntry<String, String>("net/minecraft/entity/player/EntityPlayer","zs"));
 		entryMap.put(CLASS_KEY_ENTITY_ITEM, new SimpleEntry<String, String>("net/minecraft/entity/item/EntityItem","yk"));
 		//entryMap.put(CLASS_KEY_NETHANDLERPLAYSERVER, new SimpleEntry<String, String>("net/minecraft/network/NetHandlerPlayServer",""));
@@ -686,7 +687,92 @@ public class ClassTransformer implements IClassTransformer {
 
 			return finishInjection(cn);
 		}*/
+		
+		if(changedName.equals(getName(CLASS_KEY_ENTITY_PLAYER_MP))) {
+			ClassNode cn = startInjection(bytes);
+			MethodNode onUpdate = getMethod(cn, getName(METHOD_KEY_ONUPDATE), "()V");
 
+			if(onUpdate != null) {
+				final InsnList nodeAdd = new InsnList();
+				LabelNode label = new LabelNode();
+				AbstractInsnNode pos = null;
+				AbstractInsnNode ain = null;
+				int numSpec = 1;
+				int numAload = 7;
+				
+				for(int i = 0; i < onUpdate.instructions.size(); i++) {
+					ain = onUpdate.instructions.get(i);
+					if(ain.getOpcode() == Opcodes.INVOKEVIRTUAL && numSpec-- == 0) {
+						
+						while( i < onUpdate.instructions.size() ) {
+							pos = onUpdate.instructions.get(i++);
+							if( pos.getOpcode()  == Opcodes.ALOAD && numAload-- == 0 ) {
+								label = (LabelNode)pos.getPrevious().getPrevious().getPrevious();
+								break;
+							}
+						}
+						break;
+					}
+				}
+				
+				
+				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 0));
+				nodeAdd.add(new TypeInsnNode(Opcodes.CHECKCAST, "java/lang/Object"));
+				nodeAdd.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "zmaster587/advancedRocketry/util/RocketInventoryHelper", "allowAccess", "(Ljava/lang/Object;)Z", false));
+				nodeAdd.add(new JumpInsnNode(Opcodes.IFNE, label));
+				
+				onUpdate.instructions.insert(ain, nodeAdd);
+				
+				//onUpdate.instructions.insertBefore(pos, label);
+				
+			}
+			
+			return finishInjection(cn);
+		}
+		if(changedName.equals(getName(CLASS_KEY_ENTITY_PLAYER))) {
+			ClassNode cn = startInjection(bytes);
+			MethodNode onUpdate = getMethod(cn, getName(METHOD_KEY_ONUPDATE), "()V");
+			if(onUpdate != null) {
+				final InsnList nodeAdd = new InsnList();
+				LabelNode label = new LabelNode();
+				AbstractInsnNode pos = null;
+				AbstractInsnNode ain = null;
+				int numSpec = 1;
+				int numAload = 7;
+				
+				for(int i = 0; i < onUpdate.instructions.size(); i++) {
+					ain = onUpdate.instructions.get(i);
+					if(ain.getOpcode() == Opcodes.INVOKESPECIAL && numSpec-- == 0) {
+						
+						while( i < onUpdate.instructions.size() ) {
+							pos = onUpdate.instructions.get(i++);
+							if( pos.getOpcode()  == Opcodes.ALOAD && numAload-- == 0 ) {
+								label = (LabelNode)pos.getPrevious().getPrevious().getPrevious();
+								break;
+							}
+								
+						}
+						break;
+					}
+				}
+				
+				
+				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 0));
+				nodeAdd.add(new TypeInsnNode(Opcodes.CHECKCAST, "java/lang/Object"));
+				nodeAdd.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "zmaster587/advancedRocketry/util/RocketInventoryHelper", "allowAccess", "(Ljava/lang/Object;)Z", false));
+				nodeAdd.add(new JumpInsnNode(Opcodes.IFNE, label));
+				
+				onUpdate.instructions.insert(ain, nodeAdd);
+				
+				//onUpdate.instructions.insertBefore(pos, label);
+				
+			}
+			else
+				AdvancedRocketry.logger.severe("ASM injection into World.setBlock FAILED!");
+			
+			
+			return finishInjection(cn);
+		}
 		if(changedName.equals(getName(CLASS_KEY_ENTITY_ITEM))) {
 			ClassNode cn = startInjection(bytes);
 
