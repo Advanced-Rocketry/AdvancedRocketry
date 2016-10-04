@@ -17,7 +17,9 @@ import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.advancedRocketry.api.AreaBlob;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleLiquidIndicator;
@@ -58,6 +60,20 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	@Override
 	public boolean canPerformFunction() {
 		return AtmosphereHandler.hasAtmosphereHandler(this.worldObj.provider.dimensionId);
+	}
+	
+	@Override
+	public void updateEntity() {
+
+		if(canPerformFunction()) {
+
+			if(hasEnoughEnergy(getPowerPerOperation())) {
+				performFunction();
+				if(!worldObj.isRemote && isSealed) this.energy.extractEnergy(getPowerPerOperation(), false);
+			}
+			else
+				notEnoughEnergyForFunction();
+		}
 	}
 
 	@Override
