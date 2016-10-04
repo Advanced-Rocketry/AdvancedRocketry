@@ -66,18 +66,6 @@ public class BlockPipe extends Block {
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos,
-			IBlockState state, EntityPlayer playerIn, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
-		if(!worldIn.isRemote)
-			playerIn.addChatMessage(new TextComponentString(worldIn.getTileEntity(pos).toString()));
-
-		return super.onBlockActivated(worldIn, pos, state, playerIn, hand, heldItem,
-				side, hitX, hitY, hitZ);
-	}
-
-	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
 		super.onBlockAdded(worldIn, pos, state);
 		((TilePipe)worldIn.getTileEntity(pos)).onPlaced();
@@ -85,7 +73,6 @@ public class BlockPipe extends Block {
 	}
 	
 	
-
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileDataPipe();

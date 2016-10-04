@@ -133,8 +133,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public int getPowerPerOperation() {
-		//DEBUG
-		return 0;//isSealed ? numScrubbers*10 + 1 : numScrubbers*10 + 1;
+		return isSealed ? numScrubbers*10 + 1 : numScrubbers*10 + 1;
 	}
 
 	@Override
@@ -184,7 +183,6 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 					//TODO: could be optimized
 					if(worldObj.getTotalWorldTime() % 20 == 0) {
 						numScrubbers = 0;
-						//DEBUG
 						for(TileCO2Scrubber scrubber : scrubbers) {
 							numScrubbers = scrubber.useCharge() ? numScrubbers + 1 : numScrubbers;
 						}

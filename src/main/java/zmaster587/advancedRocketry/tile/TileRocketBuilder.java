@@ -196,8 +196,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	@Override
 	public int getPowerPerOperation() {
-		//DEBUG
-		return 0;//ENERGYFOROP;
+		return ENERGYFOROP;
 	}
 
 	@Override

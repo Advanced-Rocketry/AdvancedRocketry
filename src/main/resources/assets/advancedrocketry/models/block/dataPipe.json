@@ -1,5 +1,5 @@
 {
-    "parent": "block/cube_all",
+    "parent": "advancedrocketry:block/pipe",
     "textures": {
         "all": "advancedrocketry:blocks/pipeData"
     }
