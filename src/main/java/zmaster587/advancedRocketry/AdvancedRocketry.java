@@ -1076,24 +1076,24 @@ public class AdvancedRocketry {
 
 			if(AllowedProducts.getProductByName("CRYSTAL").isOfType(ore.getAllowedProducts())) {
 				for(String str : ore.getOreDictNames())
-					RecipesMachine.getInstance().addRecipe(TileCrystallizer.class, ore.getProduct(AllowedProducts.getProductByName("CRYSTAL")), 300, 200, AllowedProducts.getProductByName("DUST").name().toLowerCase() + str);
+					RecipesMachine.getInstance().addRecipe(TileCrystallizer.class, ore.getProduct(AllowedProducts.getProductByName("CRYSTAL")), 300, 20, AllowedProducts.getProductByName("DUST").name().toLowerCase() + str);
 			}
 
 			if(AllowedProducts.getProductByName("BOULE").isOfType(ore.getAllowedProducts())) {
 				for(String str : ore.getOreDictNames())
-					RecipesMachine.getInstance().addRecipe(TileCrystallizer.class, ore.getProduct(AllowedProducts.getProductByName("BOULE")), 300, 200, AllowedProducts.getProductByName("INGOT").name().toLowerCase() + str, AllowedProducts.getProductByName("NUGGET").name().toLowerCase() + str);
+					RecipesMachine.getInstance().addRecipe(TileCrystallizer.class, ore.getProduct(AllowedProducts.getProductByName("BOULE")), 300, 20, AllowedProducts.getProductByName("INGOT").name().toLowerCase() + str, AllowedProducts.getProductByName("NUGGET").name().toLowerCase() + str);
 			}
 
 			if(AllowedProducts.getProductByName("STICK").isOfType(ore.getAllowedProducts()) && AllowedProducts.getProductByName("INGOT").isOfType(ore.getAllowedProducts())) {
 				for(String name : ore.getOreDictNames())
 					if(OreDictionary.doesOreNameExist(AllowedProducts.getProductByName("INGOT").name().toLowerCase() + name))
-						RecipesMachine.getInstance().addRecipe(TileLathe.class, ore.getProduct(AllowedProducts.getProductByName("STICK")), 300, 200, AllowedProducts.getProductByName("INGOT").name().toLowerCase() + name); //ore.getProduct(AllowedProducts.getProductByName("INGOT")));
+						RecipesMachine.getInstance().addRecipe(TileLathe.class, ore.getProduct(AllowedProducts.getProductByName("STICK")), 300, 20, AllowedProducts.getProductByName("INGOT").name().toLowerCase() + name); //ore.getProduct(AllowedProducts.getProductByName("INGOT")));
 			}
 
 			if(AllowedProducts.getProductByName("PLATE").isOfType(ore.getAllowedProducts())) {
 				for(String oreDictNames : ore.getOreDictNames()) {
 					if(OreDictionary.doesOreNameExist(AllowedProducts.getProductByName("INGOT").name().toLowerCase() + oreDictNames)) {
-						RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, ore.getProduct(AllowedProducts.getProductByName("PLATE")), 300, 200, AllowedProducts.getProductByName("INGOT").name().toLowerCase() + oreDictNames);
+						RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, ore.getProduct(AllowedProducts.getProductByName("PLATE")), 300, 20, AllowedProducts.getProductByName("INGOT").name().toLowerCase() + oreDictNames);
 						if(AllowedProducts.getProductByName("BLOCK").isOfType(ore.getAllowedProducts()) || ore.isVanilla())
 							RecipesMachine.getInstance().addRecipe(BlockPress.class, ore.getProduct(AllowedProducts.getProductByName("PLATE"),3), 0, 0, AllowedProducts.getProductByName("BLOCK").name().toLowerCase() + oreDictNames);
 					}
@@ -1155,7 +1155,7 @@ public class AdvancedRocketry {
 
 						if(OreDictionary.doesOreNameExist("ingot" + str) && OreDictionary.getOres("ingot" + str).size() > 0 && (material == null || !AllowedProducts.getProductByName("PLATE").isOfType(material.getAllowedProducts())) ) {
 
-							RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, OreDictionary.getOres("plate" + str).get(0), 300, 200, "ingot" + str);
+							RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, OreDictionary.getOres("plate" + str).get(0), 300, 20, "ingot" + str);
 						}
 					}
 				}
@@ -1167,9 +1167,9 @@ public class AdvancedRocketry {
 
 							//GT registers rods as sticks
 							if(OreDictionary.doesOreNameExist("rod" + str) && OreDictionary.getOres("rod" + str).size() > 0)
-								RecipesMachine.getInstance().addRecipe(TileLathe.class, OreDictionary.getOres("rod" + str).get(0), 300, 200, "ingot" + str);
+								RecipesMachine.getInstance().addRecipe(TileLathe.class, OreDictionary.getOres("rod" + str).get(0), 300, 20, "ingot" + str);
 							else if(OreDictionary.doesOreNameExist("stick" + str)  && OreDictionary.getOres("stick" + str).size() > 0) {
-								RecipesMachine.getInstance().addRecipe(TileLathe.class, OreDictionary.getOres("stick" + str).get(0), 300, 200, "ingot" + str);
+								RecipesMachine.getInstance().addRecipe(TileLathe.class, OreDictionary.getOres("stick" + str).get(0), 300, 20, "ingot" + str);
 							}
 
 						}
