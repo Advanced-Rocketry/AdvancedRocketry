@@ -216,10 +216,20 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	
 	@Override
 	public void update() {
-		super.update();
+
+		if(canPerformFunction()) {
+
+			if(hasEnoughEnergy(getPowerPerOperation())) {
+				performFunction();
+				if(!worldObj.isRemote && isSealed) this.energy.extractEnergy(getPowerPerOperation(), false);
+			}
+			else
+				notEnoughEnergyForFunction();
+		}
 		if(worldObj.isRemote && isSealed && worldObj.getTotalWorldTime() % 30 == 0)
 			LibVulpes.proxy.playSound(worldObj, pos, AudioRegistry.airHissLoop, SoundCategory.BLOCKS,  0.2f,  0.975f + worldObj.rand.nextFloat()*0.05f);
 	}
+	
 	
 	private void setSealed(boolean sealed) {
 		boolean prevSealed = isSealed;
