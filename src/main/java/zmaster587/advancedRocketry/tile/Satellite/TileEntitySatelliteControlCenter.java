@@ -237,14 +237,20 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 	@Override
 	public int extractData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {
 		//TODO
-		if(type == data.getDataType())
+		if(type == data.getDataType()) {
+			SatelliteBase satellite = getSatelliteFromSlot(0);
+			if(satellite != null && satellite.getDimensionId() == this.worldObj.provider.getDimension()) {
+				satellite.performAction(null, worldObj, pos);
+			}
+			
 			return data.removeData(maxAmount, commit);
+		}
 		return 0;
 	}
 
 	@Override
 	public int addData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {
-		
+
 		return data.addData(maxAmount, type, commit);
 	}
 
