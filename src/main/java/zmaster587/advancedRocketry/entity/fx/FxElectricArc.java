@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.entity.Entity;
@@ -45,7 +46,6 @@ public class FxElectricArc  extends Particle {
 
 
 		//GL11.glEnable(GL11.GL_BLEND);
-		worldRendererIn.color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha);
 		render(worldRendererIn,x,y+ f10 * 2,z, f10, rotX, rotXZ, rotZ, rotYZ, rotXY, 0);
 		render(worldRendererIn,x,y,z, f10, rotX, rotXZ, rotZ, rotYZ, rotXY, 0);
 	}
@@ -53,11 +53,14 @@ public class FxElectricArc  extends Particle {
 	private void render(VertexBuffer tess, float x, float y, float z, float scale,
 			float rotX, float rotXZ, float rotZ,
 			float rotYZ, float rotXY, float shearX) {
-
-		tess.pos((double)( x - scale * (rotX + rotYZ)), (double)(y - rotXZ * scale), (double)(z - rotZ * scale - rotXY * scale)).tex(1,1).endVertex();
-		tess.pos((double)( x + scale * (rotYZ - rotX)), (double)(y + rotXZ * scale), (double)(z - rotZ * scale + rotXY * scale)).tex(1,0).endVertex();
-		tess.pos((double)( x + scale * (rotX + rotYZ)), (double)(y + rotXZ * scale), (double)(z + rotZ * scale + rotXY * scale)).tex(0,0).endVertex();
-		tess.pos((double)( x + scale * (rotX - rotYZ)), (double)(y - rotXZ * scale), (double)(z + rotZ * scale - rotXY * scale)).tex(0,1).endVertex();
+		
+		int i = this.getBrightnessForRender(0);
+		int j = i >> 16 & 65535;
+		int k = i & 65535;
+		tess.pos((double)( x - scale * (rotX + rotYZ)), (double)(y - rotXZ * scale), (double)(z - rotZ * scale - rotXY * scale)).tex(1,1).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+		tess.pos((double)( x + scale * (rotYZ - rotX)), (double)(y + rotXZ * scale), (double)(z - rotZ * scale + rotXY * scale)).tex(1,0).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+		tess.pos((double)( x + scale * (rotX + rotYZ)), (double)(y + rotXZ * scale), (double)(z + rotZ * scale + rotXY * scale)).tex(0,0).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+		tess.pos((double)( x + scale * (rotX - rotYZ)), (double)(y - rotXZ * scale), (double)(z + rotZ * scale - rotXY * scale)).tex(0,1).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
 
 	}
 

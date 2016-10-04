@@ -1,5 +1,24 @@
 {
     "parent": "block/cross",
+        "display": {
+        "gui": {
+            "scale":[ 0.7, 0.7, 0.7 ]
+        },
+        "ground": {
+            "rotation": [ 0, 0, 0 ],
+            "translation": [ 0, 3, 0],
+            "scale":[ 0.35, 0.35, 0.35 ]
+        },
+        "thirdperson_righthand": {
+            "scale": [ 0.4, 0.4, 0.4 ]
+        },
+        "firstperson_righthand": {
+            "scale": [ 0.35, 0.35, 0.35 ]
+        },
+        "firstperson_lefthand": {
+            "scale": [ 0.35, 0.35, 0.35 ]
+        }
+    },
     "textures": {
         "cross": "advancedrocketry:blocks/mushroom_electric"
     }

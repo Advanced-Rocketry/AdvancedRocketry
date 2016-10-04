@@ -4,7 +4,7 @@ import java.util.Random;
 
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.world.gen.WorldGenCharredTree;
-import zmaster587.advancedRocketry.world.gen.WorldGenFlowerLike;
+import zmaster587.advancedRocketry.world.gen.WorldGenElectricMushroom;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.util.math.BlockPos;
@@ -40,7 +40,7 @@ public class BiomeGenStormland extends Biome {
         int x = pos.getX() + rand.nextInt(16);
         int y = rand.nextInt(28) + 80;
         int z = pos.getZ() + rand.nextInt(16);
-		(new WorldGenFlowerLike((BlockFlower)AdvancedRocketryBlocks.blockElectricMushroom)).generate(worldIn, rand, new BlockPos(x, y, z));
+		(new WorldGenElectricMushroom(AdvancedRocketryBlocks.blockElectricMushroom)).generate(worldIn, rand, new BlockPos(x, y, z));
 	}
 	
 	

@@ -4,6 +4,7 @@ import java.util.Random;
 
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLog;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -79,7 +80,7 @@ public class WorldGenCharredTree extends WorldGenAbstractTree {
                     	state2 = world.getBlockState(new BlockPos(x, y + k1, z));
 
                         if (world.isAirBlock(new BlockPos(x, y + k1, z)) || state2.getBlock().isLeaves(state2, world, new BlockPos(x, y + k1, z))) {
-                            this.setBlockAndNotifyAdequately(world, pos3, AdvancedRocketryBlocks.blockCharcoalLog.getDefaultState());
+                            this.setBlockAndNotifyAdequately(world, new BlockPos(x, y + k1, z), AdvancedRocketryBlocks.blockCharcoalLog.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
                         }
                     }
  

@@ -38,6 +38,7 @@ public class AdvancedRocketryBiomes {
 		registerBlackListBiome(Biomes.SKY); //Sky
 		registerBlackListBiome(Biomes.HELL); //Hell
 		registerBlackListBiome(Biomes.RIVER); //River
+		registerBlackListBiome(Biomes.VOID);
 	}
 	
 	/**

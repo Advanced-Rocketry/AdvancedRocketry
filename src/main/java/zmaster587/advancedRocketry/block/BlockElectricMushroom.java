@@ -15,7 +15,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -36,6 +38,12 @@ public class BlockElectricMushroom extends BlockMushroom implements IGrowable {
 		}
 		return false;
 	}
+	
+	@Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+    {
+        return FULL_BLOCK_AABB;
+    }
 
 	@Override
 	public void updateTick(World world, BlockPos pos, IBlockState state,
