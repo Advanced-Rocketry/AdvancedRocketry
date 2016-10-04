@@ -9,6 +9,7 @@ import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.BlockPosition;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -32,7 +33,7 @@ public class RendererRocket extends Render {
 
 		StorageChunk storage  = ((EntityRocket)entity).storage;
 
-		if(storage == null)
+		if(storage == null || entity.isDead)
 			return;
 
 		if(Minecraft.getMinecraft().thePlayer == entity.riddenByEntity) {
@@ -62,15 +63,10 @@ public class RendererRocket extends Render {
 					TileEntity tile = (TileEntity)inf;
 
 					Tessellator.instance.startDrawing(GL11.GL_LINE_LOOP);
-
 					Tessellator.instance.addVertex(0, storage.getSizeY()/2f, 0);
-
 					Tessellator.instance.addVertex((tile.xCoord - entity.posX + 0.5f)/2f, storage.getSizeY()/2f, (tile.zCoord - entity.posZ + 0.5f)/2f);
-
 					Tessellator.instance.addVertex(tile.xCoord - entity.posX + 0.5f, tile.yCoord - entity.posY  + 0.5f, tile.zCoord - entity.posZ + 0.5f);
-
 					Tessellator.instance.addVertex((tile.xCoord - entity.posX + 0.5f)/2f, storage.getSizeY()/2f, (tile.zCoord - entity.posZ + 0.5f)/2f);
-
 					//RenderHelper.renderCrossXZ(Tessellator.instance, .2f, 0, storage.getSizeY()/2f, 0, tile.xCoord - entity.posX + 0.5f, tile.yCoord - entity.posY  + 0.5f, tile.zCoord - entity.posZ + 0.5f);
 					//RenderHelper.renderBlockWithEndPointers(Tessellator.instance, .2f, 0, storage.getSizeY()/2f, 0, tile.xCoord - entity.posX, tile.yCoord - entity.posY, tile.zCoord - entity.posZ);
 					Tessellator.instance.draw();
@@ -87,32 +83,45 @@ public class RendererRocket extends Render {
 		GL11.glPopMatrix();
 
 		//Initial setup
+
+		if(storage.world.glListID == -1) {
+			GL11.glPushMatrix();
+			storage.world.glListID  = GLAllocation.generateDisplayLists(1);
+			GL11.glNewList(storage.world.glListID, GL11.GL_COMPILE);
+			net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+
+			//Render Each block
+			RenderBlocks.getInstance().blockAccess = storage;
+			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+			for(int xx = 0; xx < storage.getSizeX(); xx++) {
+				for(int zz = 0; zz < storage.getSizeZ(); zz++) {
+					for(int yy = 0; yy < storage.getSizeY(); yy++) {
+						Block block  = storage.getBlock(xx, yy, zz);
+						if(block.canRenderInPass(MinecraftForgeClient.getRenderPass())) {
+							Tessellator.instance.startDrawingQuads();
+							//TOOD: fix lighting
+							RenderBlocks.getInstance().renderBlockByRenderType(block, xx, yy, zz);
+
+							Tessellator.instance.draw();
+						}
+					}
+				}
+				
+			}
+
+			GL11.glPushMatrix();
+			GL11.glTranslatef((float)x - halfx, (float)y, (float)z - halfz);
+			net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
+			GL11.glPopMatrix();
+			
+			GL11.glEndList();
+			GL11.glPopMatrix();
+		}
 		
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float)x - halfx, (float)y, (float)z - halfz);
-		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
-
-		//Render Each block
-		RenderBlocks.getInstance().blockAccess = storage;
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
-		for(int xx = 0; xx < storage.getSizeX(); xx++) {
-			for(int zz = 0; zz < storage.getSizeZ(); zz++) {
-				for(int yy = 0; yy < storage.getSizeY(); yy++) {
-					Block block  = storage.getBlock(xx, yy, zz);
-					if(block.canRenderInPass(MinecraftForgeClient.getRenderPass())) {
-						Tessellator.instance.startDrawingQuads();
-						//TOOD: fix lighting
-						RenderBlocks.getInstance().renderBlockByRenderType(block, xx, yy, zz);
-
-						Tessellator.instance.draw();
-					}
-				}
-			}
-
-		}
-
-		net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
-
+		GL11.glCallList(storage.world.glListID);
+		
 		//Render tile entities if applicable
 		for(TileEntity tile : storage.getTileEntityList()) {
 			TileEntitySpecialRenderer renderer = (TileEntitySpecialRenderer)TileEntityRendererDispatcher.instance.mapSpecialRenderers.get(tile.getClass());
@@ -120,6 +129,7 @@ public class RendererRocket extends Render {
 				renderer.renderTileEntityAt(tile, tile.xCoord, tile.yCoord,  tile.zCoord, f1);
 			}
 		}
+		
 		GL11.glPopMatrix();
 	}
 

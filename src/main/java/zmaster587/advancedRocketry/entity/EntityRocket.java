@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
@@ -721,6 +722,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			connectedTiles.remove();
 		}
 
+		if(worldObj.isRemote && storage != null && storage.world.glListID != -1) {
+			GLAllocation.deleteDisplayLists(storage.world.glListID);
+		}
 	}
 
 

@@ -1,7 +1,5 @@
 package zmaster587.advancedRocketry.world.util;
 
-import zmaster587.advancedRocketry.api.EntityRocketBase;
-import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.network.PacketStorageTileUpdate;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.network.PacketHandler;
@@ -23,6 +21,8 @@ public class WorldDummy extends World {
 	private final static ProviderDummy dummyProvider = new ProviderDummy();
 
 	StorageChunk storage;
+	
+	public int glListID = -1;
 
 	public WorldDummy(Profiler p_i45368_5_, StorageChunk storage) {
 		super(new DummySaveHandler(), "dummy", new WorldSettings(0, WorldSettings.GameType.SURVIVAL, false, false, WorldType.FLAT), dummyProvider, p_i45368_5_);

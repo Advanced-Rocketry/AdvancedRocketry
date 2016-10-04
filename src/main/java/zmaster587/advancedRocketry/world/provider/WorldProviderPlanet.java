@@ -266,7 +266,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	public int getRotationalPeriod(int x, int z) {
-		return getDimensionProperties(0,0).rotationalPeriod;
+		return Math.max(getDimensionProperties(0,0).rotationalPeriod,1);
 	}
 
 	@Override
