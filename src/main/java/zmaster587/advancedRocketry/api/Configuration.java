@@ -79,7 +79,7 @@ public class Configuration {
 	public static int terraformingBlockSpeed;
 	public static double terraformSpeed;
 	public static boolean terraformRequiresFluid;
-
 	public static float microwaveRecieverMulitplier;
+	public static boolean blackListAllVanillaBiomes;
 
 }
