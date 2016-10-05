@@ -16,12 +16,14 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayer.EnumStatus;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -30,6 +32,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
@@ -57,6 +60,7 @@ import zmaster587.libVulpes.network.PacketHandler;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
@@ -71,6 +75,14 @@ public class PlanetEventHandler {
 
 	public static void addDelayedTransition(long tick, TransitionEntity entity) {
 		transitionMap.put(tick, entity);
+	}
+
+	public void sleepEvent(PlayerSleepInBedEvent event) {
+
+		if(event.entity.worldObj.provider instanceof WorldProviderPlanet && 
+				AtmosphereHandler.hasAtmosphereHandler(event.entity.worldObj.provider.dimensionId) && AtmosphereHandler.getOxygenHandler(event.entity.worldObj.provider.dimensionId).getAtmosphereType(event.x, event.y, event.z).isBreathable()) {
+			event.result = EnumStatus.NOT_SAFE;
+		}
 	}
 
 	//Handle gravity
@@ -168,16 +180,16 @@ public class PlanetEventHandler {
 		if(event.phase == event.phase.END) {
 			DimensionManager.getInstance().tickDimensions();
 			time++;
-			
+
 			if(!transitionMap.isEmpty()) {
 				Iterator<Entry<Long, TransitionEntity>> itr = transitionMap.entrySet().iterator();
-				
+
 				while(itr.hasNext()) {
 					Entry<Long, TransitionEntity> entry = itr.next();
 					TransitionEntity ent = entry.getValue();
 					if(ent.entity.worldObj.getTotalWorldTime() >= entry.getKey()) {
 						MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP)ent.entity, ent.dimId, new TeleporterNoPortal(MinecraftServer.getServer().worldServerForDimension(ent.dimId)));
-						
+
 						ent.entity.setLocationAndAngles(ent.location.x, ent.location.y, ent.location.z, ent.entity.rotationYaw, ent.entity.rotationPitch);
 						ent.entity.mountEntity(ent.entity2);
 						itr.remove();

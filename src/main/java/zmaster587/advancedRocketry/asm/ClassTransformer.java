@@ -42,6 +42,9 @@ public class ClassTransformer implements IClassTransformer {
 	private static final String CLASS_KEY_C03PACKETPLAYER = "net.minecraft.network.play.client.C03PacketPlayer";
 	private static final String CLASS_KEY_WORLD = "net.minecraft.world.World";
 	private static final String CLASS_KEY_BLOCK = "net.minecraft.block.Block";
+	private static final String CLASS_KEY_BLOCK_BED = "net.minecraft.block.BlockBed";
+	private static final String CLASS_KEY_WORLDPROVIDER = "net.minecraft.world.WorldProvider";
+
 	private static final String METHOD_KEY_PROCESSPLAYER = "processPlayer";
 	private static final String METHOD_KEY_JUMP = "jump";
 	private static final String METHOD_KEY_MOVEENTITY = "moveEntity";
@@ -55,6 +58,7 @@ public class ClassTransformer implements IClassTransformer {
 	private static final String METHOD_KEY_MOVEFLYING = "net.minecraft.entity.Entity.moveFlying";
 	private static final String METHOD_KEY_SETBLOCK = CLASS_KEY_WORLD + ".setBlock";
 	private static final String METHOD_KEY_SETBLOCKMETADATAWITHNOTIFY = CLASS_KEY_WORLD + ".setBlockMetadataWithNotify";
+	private static final String METHOD_KEY_ONBLOCKACTIVATED = CLASS_KEY_BLOCK + "onBlockActivated";
 
 	private static final String FIELD_YAW = "net.minecraft.client.renderer.EntityRenderer.rotationYaw";
 	private static final String FIELD_PITCH = "net.minecraft.client.renderer.EntityRenderer.rotationPitch";
@@ -63,6 +67,7 @@ public class ClassTransformer implements IClassTransformer {
 	private static final String FIELD_PLAYERENTITY = "net.minecraft.network.NetHandlerPlayServer.playerEntity";
 	private static final String FIELD_HASMOVED = "net.minecraft.network.NetHandlerPlayServer.hasMoved";
 	private static final String FIELD_RIDINGENTITY = "net.minecraft.entity.Entity.ridingEntity";
+	private static final String FIELD_PROVIDER = CLASS_KEY_WORLD + "provider";
 	private static final HashMap<String, SimpleEntry<String, String>> entryMap = new HashMap<String, SimpleEntry<String, String>>();
 
 
@@ -98,7 +103,9 @@ public class ClassTransformer implements IClassTransformer {
 		entryMap.put(CLASS_KEY_C03PACKETPLAYER, new SimpleEntry<String, String>("net/minecraft/network/play/client/C03PacketPlayer",""));
 		entryMap.put(CLASS_KEY_WORLD, new SimpleEntry<String, String>("net/minecraft/world/World","ahb"));
 		entryMap.put(CLASS_KEY_BLOCK, new SimpleEntry<String, String>("net/minecraft/block/Block","aji"));
-
+		entryMap.put(CLASS_KEY_BLOCK_BED, new SimpleEntry<String, String>("net/minecraft/block/BlockBed","ajh"));
+		entryMap.put(CLASS_KEY_WORLDPROVIDER, new SimpleEntry<String, String>("net/minecraft/world/WorldProvider","aqo"));
+		
 		entryMap.put(METHOD_KEY_PROCESSPLAYER, new SimpleEntry<String, String>("processPlayer",""));
 		entryMap.put(METHOD_KEY_MOVEENTITY, new SimpleEntry<String, String>("moveEntity",""));
 		entryMap.put(METHOD_KEY_SETPOSITION, new SimpleEntry<String, String>("setPosition",""));
@@ -112,6 +119,7 @@ public class ClassTransformer implements IClassTransformer {
 		entryMap.put(METHOD_KEY_JUMP, new SimpleEntry<String, String>("jump",""));
 		entryMap.put(METHOD_KEY_SETBLOCK, new SimpleEntry<String, String>("setBlock", "d"));
 		entryMap.put(METHOD_KEY_SETBLOCKMETADATAWITHNOTIFY, new SimpleEntry<String, String>("setBlockMetadataWithNotify", "a"));
+		entryMap.put(METHOD_KEY_ONBLOCKACTIVATED,  new SimpleEntry<String, String>("onBlockActivated", "a"));
 
 		entryMap.put(FIELD_YAW, new SimpleEntry<String, String>("rotationYaw", "blt"));
 		entryMap.put(FIELD_PITCH, new SimpleEntry <String, String>("rotationPitch", "blt"));
@@ -120,6 +128,7 @@ public class ClassTransformer implements IClassTransformer {
 		entryMap.put(FIELD_PLAYERENTITY, new SimpleEntry<String, String>("playerEntity", ""));
 		entryMap.put(FIELD_HASMOVED, new SimpleEntry<String, String>("hasMoved", ""));
 		entryMap.put(FIELD_RIDINGENTITY, new SimpleEntry<String,String>("ridingEntity", "m"));
+		entryMap.put(FIELD_PROVIDER, new SimpleEntry<String,String>("provider", "t"));
 	}
 
 	@Override
@@ -589,6 +598,43 @@ public class ClassTransformer implements IClassTransformer {
 		 *     }
 		 * }
 		 * */
+
+		if(changedName.equals(getName(CLASS_KEY_BLOCK_BED))) {
+			ClassNode cn = startInjection(bytes);
+			MethodNode onBlockActivated = getMethod(cn, getName(METHOD_KEY_ONBLOCKACTIVATED), "(L"+ getName(CLASS_KEY_WORLD) + ";IIIL" + getName(CLASS_KEY_ENTITY_PLAYER) + ";IFFF)Z");
+
+			if(onBlockActivated != null) {
+				int numVirtual = 4;
+				
+				final InsnList nodeAdd = new InsnList();
+				final LabelNode label = new LabelNode();
+				AbstractInsnNode pos = null, pos2 = null;
+
+				for(int i = 0; i < onBlockActivated.instructions.size(); i++) {
+					AbstractInsnNode ain = onBlockActivated.instructions.get(i);
+					if(ain.getOpcode() == Opcodes.INVOKEVIRTUAL && --numVirtual == 0) {
+						pos = ain.getPrevious().getPrevious();
+						
+						while((ain=onBlockActivated.instructions.get(i++)).getOpcode() != Opcodes.INVOKESTATIC);
+						pos2 = ain.getPrevious();
+						
+						break;
+					}
+				}
+				
+				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 1));
+				nodeAdd.add(new FieldInsnNode(Opcodes.GETFIELD, getName(CLASS_KEY_WORLD), getName(FIELD_PROVIDER), "L" + getName(CLASS_KEY_WORLDPROVIDER) + ";"));
+				nodeAdd.add(new TypeInsnNode(Opcodes.INSTANCEOF, "zmaster587/advancedRocketry/world/provider/WorldProviderPlanet"));
+				nodeAdd.add(new JumpInsnNode(Opcodes.IFNE, label));
+				
+				onBlockActivated.instructions.insertBefore(pos, nodeAdd);
+				onBlockActivated.instructions.insertBefore(pos2, label);
+			}
+			else
+				AdvancedRocketry.logger.severe("ASM injection into BlockBed.onBlockActivated FAILED!");
+
+			return finishInjection(cn);
+		}
 
 		if(changedName.equals(getName(CLASS_KEY_ENTITY_PLAYER))) {
 			ClassNode cn = startInjection(bytes);

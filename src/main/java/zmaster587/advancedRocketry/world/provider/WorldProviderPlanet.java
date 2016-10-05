@@ -8,7 +8,9 @@ import org.apache.commons.lang3.ArrayUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -16,6 +18,8 @@ import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.ChunkProviderPlanet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldProvider;
@@ -44,7 +48,19 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	public IChunkProvider createChunkGenerator() {
 		return new ChunkProviderPlanet(this.worldObj, this.worldObj.getSeed(), false);
 	}
+	
 
+	@Override
+	public int getRespawnDimension(EntityPlayerMP player) {
+		if(AtmosphereHandler.hasAtmosphereHandler(dimensionId) && Configuration.canPlayerRespawnInSpace) {
+			ChunkCoordinates coords = player.getBedLocation(dimensionId);
+			
+			if(AtmosphereHandler.getOxygenHandler(player.worldObj.provider.dimensionId).getAtmosphereType(coords.posX, coords.posY, coords.posZ).isBreathable())
+				return dimensionId;
+		}
+		return 0;
+	}
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IRenderHandler getSkyRenderer() {
@@ -86,7 +102,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	public boolean canRespawnHere() {
-		return true;
+		return false;
 	}
 
 	@Override
