@@ -1,12 +1,7 @@
 package zmaster587.advancedRocketry.integration.jei;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.block.BlockPress;
 import zmaster587.advancedRocketry.integration.jei.blastFurnace.BlastFurnaceCategory;
 import zmaster587.advancedRocketry.integration.jei.blastFurnace.BlastFurnaceRecipeHandler;
@@ -43,8 +38,6 @@ import zmaster587.advancedRocketry.tile.multiblock.machine.TileElectrolyser;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileLathe;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TilePrecisionAssembler;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileRollingMachine;
-import zmaster587.libVulpes.interfaces.IRecipe;
-import zmaster587.libVulpes.recipe.RecipesMachine;
 import mezz.jei.api.BlankModPlugin;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.IJeiHelpers;
@@ -54,15 +47,15 @@ import mezz.jei.api.JEIPlugin;
 @JEIPlugin
 public class ARPlugin extends BlankModPlugin {
 	public static IJeiHelpers jeiHelpers;
-	public static final String rollingMachineUUID = "rollingMachine";
-	public static final String latheUUID = "lathe";
-	public static final String precisionAssemblerUUID = "precisionAssembler";
-	public static final String sawMillUUID = "sawMill";
-	public static final String chemicalReactorUUID = "chemicalReactor";
-	public static final String crystallizerUUID = "crystallizer";
-	public static final String electrolyzerUUID = "electrolyzer";
-	public static final String arcFurnaceUUID = "arcFurnace";
-	public static final String platePresser = "platePresser";
+	public static final String rollingMachineUUID = "zmaster587.AR.rollingMachine";
+	public static final String latheUUID = "zmaster587.AR.lathe";
+	public static final String precisionAssemblerUUID = "zmaster587.AR.precisionAssembler";
+	public static final String sawMillUUID = "zmaster587.AR.sawMill";
+	public static final String chemicalReactorUUID = "zmaster587.AR.chemicalReactor";
+	public static final String crystallizerUUID = "zmaster587.AR.crystallizer";
+	public static final String electrolyzerUUID = "zmaster587.AR.electrolyzer";
+	public static final String arcFurnaceUUID = "zmaster587.AR.arcFurnace";
+	public static final String platePresser = "zmaster587.AR.platePresser";
 	
 	@Override
 	public void register(IModRegistry registry) {
