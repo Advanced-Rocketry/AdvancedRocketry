@@ -75,28 +75,30 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 
 	protected int getTravelCost() {
-		DimensionProperties properties = getSpaceObject().getProperties().getParentProperties();
-		//properties.orbitalDist = 1;
-		DimensionProperties destProperties = DimensionManager.getInstance().getDimensionProperties(getSpaceObject().getDestOrbitingBody());
-		while(destProperties.getParentProperties() != null && destProperties.getParentProperties().isMoon())
-			destProperties = destProperties.getParentProperties();
+		if(getSpaceObject() != null) {
+			DimensionProperties properties = getSpaceObject().getProperties().getParentProperties();
+			//properties.orbitalDist = 1;
+			DimensionProperties destProperties = DimensionManager.getInstance().getDimensionProperties(getSpaceObject().getDestOrbitingBody());
+			while(destProperties.getParentProperties() != null && destProperties.getParentProperties().isMoon())
+				destProperties = destProperties.getParentProperties();
 
-		if((destProperties.isMoon() && destProperties.getParentPlanet() == properties.getId()) || (properties.isMoon() && properties.getParentPlanet() == destProperties.getId()))
-			return 1;
+			if((destProperties.isMoon() && destProperties.getParentPlanet() == properties.getId()) || (properties.isMoon() && properties.getParentPlanet() == destProperties.getId()))
+				return 1;
 
-		while(properties.isMoon())
-			properties = properties.getParentProperties();
+			while(properties.isMoon())
+				properties = properties.getParentProperties();
 
-		//TODO: actual trig
-		if(properties.getStar().getId() == destProperties.getStar().getId()) {
-			double x1 = properties.orbitalDist*MathHelper.cos((float) properties.orbitTheta);
-			double y1 = properties.orbitalDist*MathHelper.sin((float) properties.orbitTheta);
-			double x2 = destProperties.orbitalDist*MathHelper.cos((float) destProperties.orbitTheta);
-			double y2 = destProperties.orbitalDist*MathHelper.sin((float) destProperties.orbitTheta);
+			//TODO: actual trig
+			if(properties.getStar().getId() == destProperties.getStar().getId()) {
+				double x1 = properties.orbitalDist*MathHelper.cos((float) properties.orbitTheta);
+				double y1 = properties.orbitalDist*MathHelper.sin((float) properties.orbitTheta);
+				double x2 = destProperties.orbitalDist*MathHelper.cos((float) destProperties.orbitTheta);
+				double y2 = destProperties.orbitalDist*MathHelper.sin((float) destProperties.orbitTheta);
 
-			return (int)Math.sqrt(Math.pow((x1 - x2),2) + Math.pow((y1 - y2),2));
+				return (int)Math.sqrt(Math.pow((x1 - x2),2) + Math.pow((y1 - y2),2));
 
-			//return Math.abs(properties.orbitalDist - destProperties.orbitalDist);
+				//return Math.abs(properties.orbitalDist - destProperties.orbitalDist);
+			}
 		}
 		return Integer.MAX_VALUE;
 	}
@@ -113,7 +115,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 				sync1 = new ModuleSync(0, this);
 				sync2 = new ModuleSync(1, this);
 				sync3 = new ModuleSync(2, this);
-				
+
 			}
 			modules.add(sync1);
 			modules.add(sync2);
@@ -415,7 +417,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 		if(worldObj.isRemote) {
 			setPlanetModuleInfo();
 		}
-		
+
 		return getProgress(id)/(float)getTotalProgress(id);
 	}
 
