@@ -48,7 +48,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 				}
 
 				World world;
-				if( !nbt.hasKey(null) && (world = DimensionManager.getWorld(satellite.getDimensionId())) != null)
+				if( !nbt.hasKey(null) && (world = DimensionManager.getWorld(satellite.getDimensionId())) != null && world.isRemote)
 					nbt.setString(name, ChatFormatting.RED + "Dim names broken as of 1.10");
 			}
 

@@ -81,6 +81,7 @@ public class BlockPipe extends Block {
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos,
 			Block blockIn) {
+		if(!worldIn.isRemote)
 		((TilePipe)worldIn.getTileEntity(pos)).onPlaced();
 	}
 

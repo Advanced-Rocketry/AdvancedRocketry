@@ -7,11 +7,15 @@ import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 public class BlockCharcoalLog extends BlockLog {
 
@@ -31,6 +35,21 @@ public class BlockCharcoalLog extends BlockLog {
 	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face) {
 		return 0;
 	}
+	
+	@Override
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target,
+			World world, BlockPos pos, EntityPlayer player) {
+		// TODO Auto-generated method stub
+		return super.getPickBlock(state, target, world, pos, player);
+	}
+	
+	@Override
+	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
+        Item item = Item.getItemFromBlock(this);
+        return item == null ? null : new ItemStack(item, 1, 0);
+	}
+	
+	
 	
     public IBlockState getStateFromMeta(int meta)
     {
