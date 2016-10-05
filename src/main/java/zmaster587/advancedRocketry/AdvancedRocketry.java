@@ -13,7 +13,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import micdoodle8.mods.galacticraft.core.blocks.GCBlocks;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
@@ -189,8 +188,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
-
-import scala.Int;
 
 
 @Mod(modid="advancedRocketry", name="Advanced Rocketry", version="%VERSION%", dependencies="required-after:libVulpes@[%LIBVULPESVERSION%,)")
@@ -1050,14 +1047,6 @@ public class AdvancedRocketry {
 		AdvancedRocketryBiomes.swampDeepBiome = new BiomeGenDeepSwamp(config.get(BIOMECATETORY, "deepSwampBiomeId", 96).getInt(), true);
 		AdvancedRocketryBiomes.marsh = new BiomeGenMarsh(config.get(BIOMECATETORY, "marsh", 97).getInt(), true);
 		AdvancedRocketryBiomes.oceanSpires = new BiomeGenOceanSpires(config.get(BIOMECATETORY, "oceanSpires", 98).getInt(), true);
-		String[] biomeBlackList = config.getStringList("Blacklisted Biomes", "Planet", new String[] {"7", "8", "9", "127"}, "List of Biomes to be blacklisted from spawning as BiomeIds, default is: river, sky, hell, void");
-		
-		config.save();
-
-		//Register these biomes before blacklisting them as registerSingleBiome will not accept blacklisted biomes
-		AdvancedRocketryBiomes.instance.registerSingleBiome(AdvancedRocketryBiomes.swampDeepBiome);
-		AdvancedRocketryBiomes.instance.registerSingleBiome(AdvancedRocketryBiomes.crystalChasms);
-		AdvancedRocketryBiomes.instance.registerSingleBiome(AdvancedRocketryBiomes.alienForest);
 		
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.moonBiome);
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.alienForest);
@@ -1069,10 +1058,17 @@ public class AdvancedRocketry {
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.marsh);
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.oceanSpires);
 
+		
+		String[] biomeBlackList = config.getStringList("BlacklistedBiomes", "Planet", new String[] {"7", "8", "9", "127", String.valueOf(AdvancedRocketryBiomes.alienForest.biomeID)}, "List of Biomes to be blacklisted from spawning as BiomeIds, default is: river, sky, hell, void, alienForest");
+		String[] biomeHighPressure = config.getStringList("HighPressureBiomes", "Planet", new String[] { String.valueOf(AdvancedRocketryBiomes.swampDeepBiome.biomeID), String.valueOf(AdvancedRocketryBiomes.stormLandsBiome.biomeID) }, "Biomes that only spawn on worlds with pressures over 125, will override blacklist.  Defaults: StormLands, DeepSwamp");
+		String[] biomeSingle = config.getStringList("SingleBiomes", "Planet", new String[] { String.valueOf(AdvancedRocketryBiomes.swampDeepBiome.biomeID), String.valueOf(AdvancedRocketryBiomes.crystalChasms.biomeID),  String.valueOf(AdvancedRocketryBiomes.alienForest.biomeID), String.valueOf(BiomeGenBase.desertHills.biomeID), 
+				String.valueOf(BiomeGenBase.mushroomIsland.biomeID), String.valueOf(BiomeGenBase.extremeHills.biomeID), String.valueOf(BiomeGenBase.icePlains.biomeID) }, "Some worlds have a chance of spawning single biomes contained in this list.  Defaults: deepSwamp, crystalChasms, alienForest, desert hills, mushroom island, extreme hills, ice plains");
+		
+		config.save();
+	
 		//Prevent these biomes from spawning normally
 		AdvancedRocketryBiomes.instance.registerBlackListBiome(AdvancedRocketryBiomes.moonBiome);
 		AdvancedRocketryBiomes.instance.registerBlackListBiome(AdvancedRocketryBiomes.hotDryBiome);
-		AdvancedRocketryBiomes.instance.registerBlackListBiome(AdvancedRocketryBiomes.alienForest);
 		AdvancedRocketryBiomes.instance.registerBlackListBiome(AdvancedRocketryBiomes.spaceBiome);
 
 		//Read BlackList from config and register Blacklisted biomes
@@ -1082,7 +1078,7 @@ public class AdvancedRocketry {
 				BiomeGenBase biome = BiomeGenBase.getBiome(id);
 				
 				if(biome.biomeID == 0 && id != 0)
-					logger.warning(String.format("Error blockListing biome id \"%d\", a biome with that ID does not exist!", id));
+					logger.warning(String.format("Error blackListing biome id \"%d\", a biome with that ID does not exist!", id));
 				else
 					AdvancedRocketryBiomes.instance.registerBlackListBiome(biome);
 			} catch (NumberFormatException e) {
@@ -1094,13 +1090,35 @@ public class AdvancedRocketry {
 			AdvancedRocketryBiomes.instance.blackListVanillaBiomes();
 		}
 		
-		AdvancedRocketryBiomes.instance.registerHighPressureBiome(AdvancedRocketryBiomes.stormLandsBiome);
-		AdvancedRocketryBiomes.instance.registerHighPressureBiome(AdvancedRocketryBiomes.swampDeepBiome);
-
-		AdvancedRocketryBiomes.instance.registerSingleBiome(BiomeGenBase.desertHills);
-		AdvancedRocketryBiomes.instance.registerSingleBiome(BiomeGenBase.mushroomIsland);
-		AdvancedRocketryBiomes.instance.registerSingleBiome(BiomeGenBase.extremeHillsPlus);
-		AdvancedRocketryBiomes.instance.registerSingleBiome(BiomeGenBase.icePlains);
+		//Read and Register High Pressure biomes from config
+		for(String string : biomeHighPressure) {
+			try {
+				int id = Integer.parseInt(string);
+				BiomeGenBase biome = BiomeGenBase.getBiome(id);
+				
+				if(biome.biomeID == 0 && id != 0)
+					logger.warning(String.format("Error registering high pressure biome id \"%d\", a biome with that ID does not exist!", id));
+				else
+					AdvancedRocketryBiomes.instance.registerHighPressureBiome(biome);
+			} catch (NumberFormatException e) {
+				logger.warning("Error registering high pressure biome \"" + string + "\".  It is not a valid number");
+			}
+		}
+		
+		//Read and Register Single biomes from config
+		for(String string : biomeSingle) {
+			try {
+				int id = Integer.parseInt(string);
+				BiomeGenBase biome = BiomeGenBase.getBiome(id);
+				
+				if(biome.biomeID == 0 && id != 0)
+					logger.warning(String.format("Error registering single biome id \"%d\", a biome with that ID does not exist!", id));
+				else
+					AdvancedRocketryBiomes.instance.registerSingleBiome(biome);
+			} catch (NumberFormatException e) {
+				logger.warning("Error registering single biome \"" + string + "\".  It is not a valid number");
+			}
+		}
 	}
 
 	@EventHandler
