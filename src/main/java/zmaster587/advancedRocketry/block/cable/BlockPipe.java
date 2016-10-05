@@ -64,15 +64,14 @@ public class BlockPipe extends Block {
 			pipe.markDirty();
 		}
 	}
-
+	
 	@Override
-	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
-		super.onBlockAdded(worldIn, pos, state);
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state,
+			EntityLivingBase placer, ItemStack stack) {
 		((TilePipe)worldIn.getTileEntity(pos)).onPlaced();
-
 	}
-	
-	
+
+
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileDataPipe();
@@ -81,8 +80,7 @@ public class BlockPipe extends Block {
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos,
 			Block blockIn) {
-		if(!worldIn.isRemote)
-			((TilePipe)worldIn.getTileEntity(pos)).onPlaced();
+		((TilePipe)worldIn.getTileEntity(pos)).onPlaced();
 	}
 
 	@Override
