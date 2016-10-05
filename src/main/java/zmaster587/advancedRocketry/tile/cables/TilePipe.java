@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.tile.cables;
 
 import zmaster587.advancedRocketry.cable.HandlerCableNetwork;
 import zmaster587.advancedRocketry.cable.NetworkRegistry;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -208,7 +209,7 @@ public class TilePipe extends TileEntity {
 				connectedSides[dir.ordinal()] = false;
 		}
 	}
-
+	
 	public HandlerCableNetwork getNetworkHandler() {
 		return NetworkRegistry.liquidNetwork;
 	}
