@@ -107,6 +107,8 @@ public class TileStationOrientationControl extends TileEntity implements IModula
 				else
 					updateText();
 			}
+			else
+				updateText();
 		}
 	}
 	@Override
