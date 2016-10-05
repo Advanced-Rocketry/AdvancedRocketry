@@ -34,11 +34,6 @@ public class AdvancedRocketryBiomes {
 		registeredHighPressureBiomes = new LinkedList<Biome>();
 		blackListedBiomeIds = new ArrayList<Integer>();
 		registeredSingleBiome = new ArrayList<Biome>();
-
-		registerBlackListBiome(Biomes.SKY); //Sky
-		registerBlackListBiome(Biomes.HELL); //Hell
-		registerBlackListBiome(Biomes.RIVER); //River
-		registerBlackListBiome(Biomes.VOID);
 	}
 
 	/**
