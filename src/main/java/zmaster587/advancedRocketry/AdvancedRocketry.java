@@ -262,6 +262,7 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.terraformRequiresFluid = config.get(Configuration.CATEGORY_GENERAL, "TerraformerRequiresFluids", true).getBoolean();
 
 		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 127, "Dimensions including and after this number are allowed to be made into planets");
+		zmaster587.advancedRocketry.api.Configuration.blackListAllVanillaBiomes = config.getBoolean("blackListVanillaBiomes", PLANET, false, "Prevents any vanilla biomes from spawning on planets");
 		zmaster587.advancedRocketry.api.Configuration.overrideGCAir = config.get(MOD_INTERACTION, "OverrideGCAir", true, "If true Galaciticcraft's air will be disabled entirely requiring use of Advanced Rocketry's Oxygen system on GC planets").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.fuelPointsPerDilithium = config.get(Configuration.CATEGORY_GENERAL, "pointsPerDilithium", 500, "How many units of fuel should each Dilithium Crystal give to warp ships", 1, 1000).getInt();
 		zmaster587.advancedRocketry.api.Configuration.electricPlantsSpawnLightning = config.get(Configuration.CATEGORY_GENERAL, "electricPlantsSpawnLightning", true, "Should Electric Mushrooms be able to spawn lightning").getBoolean();
@@ -1049,8 +1050,15 @@ public class AdvancedRocketry {
 		AdvancedRocketryBiomes.swampDeepBiome = new BiomeGenDeepSwamp(config.get(BIOMECATETORY, "deepSwampBiomeId", 96).getInt(), true);
 		AdvancedRocketryBiomes.marsh = new BiomeGenMarsh(config.get(BIOMECATETORY, "marsh", 97).getInt(), true);
 		AdvancedRocketryBiomes.oceanSpires = new BiomeGenOceanSpires(config.get(BIOMECATETORY, "oceanSpires", 98).getInt(), true);
+		String[] biomeBlackList = config.getStringList("Blacklisted Biomes", "Planet", new String[] {"7", "8", "9", "127"}, "List of Biomes to be blacklisted from spawning as BiomeIds, default is: river, sky, hell, void");
+		
 		config.save();
 
+		//Register these biomes before blacklisting them as registerSingleBiome will not accept blacklisted biomes
+		AdvancedRocketryBiomes.instance.registerSingleBiome(AdvancedRocketryBiomes.swampDeepBiome);
+		AdvancedRocketryBiomes.instance.registerSingleBiome(AdvancedRocketryBiomes.crystalChasms);
+		AdvancedRocketryBiomes.instance.registerSingleBiome(AdvancedRocketryBiomes.alienForest);
+		
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.moonBiome);
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.alienForest);
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.hotDryBiome);
@@ -1067,13 +1075,28 @@ public class AdvancedRocketry {
 		AdvancedRocketryBiomes.instance.registerBlackListBiome(AdvancedRocketryBiomes.alienForest);
 		AdvancedRocketryBiomes.instance.registerBlackListBiome(AdvancedRocketryBiomes.spaceBiome);
 
-
+		//Read BlackList from config and register Blacklisted biomes
+		for(String string : biomeBlackList) {
+			try {
+				int id = Integer.parseInt(string);
+				BiomeGenBase biome = BiomeGenBase.getBiome(id);
+				
+				if(biome.biomeID == 0 && id != 0)
+					logger.warning(String.format("Error blockListing biome id \"%d\", a biome with that ID does not exist!", id));
+				else
+					AdvancedRocketryBiomes.instance.registerBlackListBiome(biome);
+			} catch (NumberFormatException e) {
+				logger.warning("Error blackListing \"" + string + "\".  It is not a valid number");
+			}
+		}
+		
+		if(zmaster587.advancedRocketry.api.Configuration.blackListAllVanillaBiomes) {
+			AdvancedRocketryBiomes.instance.blackListVanillaBiomes();
+		}
+		
 		AdvancedRocketryBiomes.instance.registerHighPressureBiome(AdvancedRocketryBiomes.stormLandsBiome);
 		AdvancedRocketryBiomes.instance.registerHighPressureBiome(AdvancedRocketryBiomes.swampDeepBiome);
 
-		AdvancedRocketryBiomes.instance.registerSingleBiome(AdvancedRocketryBiomes.swampDeepBiome);
-		AdvancedRocketryBiomes.instance.registerSingleBiome(AdvancedRocketryBiomes.crystalChasms);
-		AdvancedRocketryBiomes.instance.registerSingleBiome(AdvancedRocketryBiomes.alienForest);
 		AdvancedRocketryBiomes.instance.registerSingleBiome(BiomeGenBase.desertHills);
 		AdvancedRocketryBiomes.instance.registerSingleBiome(BiomeGenBase.mushroomIsland);
 		AdvancedRocketryBiomes.instance.registerSingleBiome(BiomeGenBase.extremeHillsPlus);

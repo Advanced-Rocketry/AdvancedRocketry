@@ -101,5 +101,33 @@ public class AdvancedRocketryBiomes {
 		
 		return BiomeGenBase.getBiome(id);
 	}
+
+	public void blackListVanillaBiomes() {
+		//Good grief... this is long, better than making users do it though..
+		for(int i = 0; i < 40; i++)
+			blackListedBiomeIds.add(i);
+		
+		blackListedBiomeIds.add(129);
+		blackListedBiomeIds.add(130);
+		blackListedBiomeIds.add(131);
+		blackListedBiomeIds.add(132);
+		blackListedBiomeIds.add(133);
+		blackListedBiomeIds.add(134);
+		blackListedBiomeIds.add(140);
+		blackListedBiomeIds.add(149);
+		blackListedBiomeIds.add(151);
+		blackListedBiomeIds.add(155);
+		blackListedBiomeIds.add(156);
+		blackListedBiomeIds.add(157);
+		blackListedBiomeIds.add(158);
+		blackListedBiomeIds.add(160);
+		blackListedBiomeIds.add(161);
+		blackListedBiomeIds.add(162);
+		blackListedBiomeIds.add(163);
+		blackListedBiomeIds.add(164);
+		blackListedBiomeIds.add(165);
+		blackListedBiomeIds.add(166);
+		blackListedBiomeIds.add(167);
+	}
 	
 }
