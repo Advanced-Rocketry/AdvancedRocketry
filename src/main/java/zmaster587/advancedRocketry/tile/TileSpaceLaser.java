@@ -7,6 +7,7 @@ import io.netty.buffer.ByteBuf;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.satellite.SatelliteLaser;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -67,7 +68,7 @@ public class TileSpaceLaser extends TileInventoriedRFConsumer implements ISidedI
 	private EnumFacing prevDir;
 	public int laserX, laserZ, tickSinceLastOperation;
 	private static final EnumFacing[] VALID_INVENTORY_DIRECTIONS = { EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST};
-	private static final int POWER_PER_OPERATION = 10000;
+	private static final int POWER_PER_OPERATION =(int)( 10000* Configuration.spaceLaserPowerMult);
 	private ModuleTextBox locationX, locationZ;
 	private ModuleText updateText;
 
@@ -82,8 +83,8 @@ public class TileSpaceLaser extends TileInventoriedRFConsumer implements ISidedI
 
 	Ticket ticket;
 
-	public TileSpaceLaser() {
-		super(1000000, INVSIZE);
+	public TileSpaceLaser() { 
+		super((int) (1000000 * Configuration.spaceLaserPowerMult), INVSIZE);
 		glassPanel = null;
 		//invBuffer = new ItemStack[INVSIZE];
 		radius = 0;

@@ -636,7 +636,8 @@ public class ClassTransformer implements IClassTransformer {
 						pos = ain.getPrevious().getPrevious();
 						
 						while((ain=onBlockActivated.instructions.get(i++)).getOpcode() != Opcodes.INVOKEINTERFACE);
-						label = (LabelNode)ain.getPrevious().getPrevious().getPrevious().getPrevious().getPrevious();
+						while(!((ain=onBlockActivated.instructions.get(i--)) instanceof LabelNode));
+						label = (LabelNode)ain;
 						
 						break;
 					}

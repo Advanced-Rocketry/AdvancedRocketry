@@ -83,5 +83,6 @@ public class Configuration {
 	public static boolean blackListAllVanillaBiomes;
 
 	public static boolean canPlayerRespawnInSpace;
+	public static float spaceLaserPowerMult;
 
 }
