@@ -627,8 +627,8 @@ public class ClassTransformer implements IClassTransformer {
 				int numVirtual = 3;
 				
 				final InsnList nodeAdd = new InsnList();
-				final LabelNode label = new LabelNode();
-				AbstractInsnNode pos = null, pos2 = null;
+				LabelNode label = null;
+				AbstractInsnNode pos = null;
 
 				for(int i = 0; i < onBlockActivated.instructions.size(); i++) {
 					AbstractInsnNode ain = onBlockActivated.instructions.get(i);
@@ -636,7 +636,7 @@ public class ClassTransformer implements IClassTransformer {
 						pos = ain.getPrevious().getPrevious();
 						
 						while((ain=onBlockActivated.instructions.get(i++)).getOpcode() != Opcodes.INVOKEINTERFACE);
-						pos2 = ain.getPrevious().getPrevious();
+						label = (LabelNode)ain.getPrevious().getPrevious().getPrevious().getPrevious().getPrevious();
 						
 						break;
 					}
@@ -648,7 +648,6 @@ public class ClassTransformer implements IClassTransformer {
 				nodeAdd.add(new JumpInsnNode(Opcodes.IFNE, label));
 				
 				onBlockActivated.instructions.insertBefore(pos, nodeAdd);
-				onBlockActivated.instructions.insertBefore(pos2, label);
 			}
 			else
 				AdvancedRocketry.logger.severe("ASM injection into BlockBed.onBlockActivated FAILED!");
