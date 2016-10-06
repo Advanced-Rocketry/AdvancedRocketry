@@ -77,11 +77,12 @@ public class PlanetEventHandler {
 		transitionMap.put(tick, entity);
 	}
 
+	@SubscribeEvent
 	public void sleepEvent(PlayerSleepInBedEvent event) {
 
 		if(event.entity.worldObj.provider instanceof WorldProviderPlanet && 
-				AtmosphereHandler.hasAtmosphereHandler(event.entity.worldObj.provider.dimensionId) && AtmosphereHandler.getOxygenHandler(event.entity.worldObj.provider.dimensionId).getAtmosphereType(event.x, event.y, event.z).isBreathable()) {
-			event.result = EnumStatus.NOT_SAFE;
+				AtmosphereHandler.hasAtmosphereHandler(event.entity.worldObj.provider.dimensionId) && !AtmosphereHandler.getOxygenHandler(event.entity.worldObj.provider.dimensionId).getAtmosphereType(event.x, event.y, event.z).isBreathable()) {
+			event.result = EnumStatus.OTHER_PROBLEM;
 		}
 	}
 
