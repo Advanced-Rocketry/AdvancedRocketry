@@ -144,7 +144,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 					int y = worldObj.getHeightValue(xCoord + x - offset.x, zCoord +  z - offset.z);
 					Block block = worldObj.getBlock(xCoord + x - offset.x, y-1, zCoord +  z - offset.z);
 
-					if(y > this.yCoord - 1) {
+					if(y > this.yCoord + 1) {
 						if(!block.isAir(worldObj, xCoord + x - offset.x, y, zCoord +  z - offset.z)) {
 							worldObj.setBlockToAir(xCoord + x - offset.x,  y - 1, zCoord + z - offset.z);
 							worldObj.playSoundEffect(xCoord + x - offset.x,  y - 1, zCoord + z - offset.z, "fire.fire", 1, 3);
