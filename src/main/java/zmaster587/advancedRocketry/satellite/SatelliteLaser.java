@@ -35,7 +35,7 @@ public class SatelliteLaser extends SatelliteBase {
 	}
 
 	public boolean isAlive() {
-		return laser != null && !laser.isDead;
+		return laser != null && !laser.isDead && laser.worldObj != null;
 	}
 	
 	public boolean isFinished() {
