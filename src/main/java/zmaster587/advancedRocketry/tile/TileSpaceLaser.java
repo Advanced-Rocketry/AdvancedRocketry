@@ -11,6 +11,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.integration.CompatibilityMgr;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.satellite.SatelliteLaser;
@@ -60,7 +61,7 @@ import net.minecraftforge.oredict.OreDictionary;
 public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEnergyHandler, INetworkMachine, IModularInventory, IGuiCallback, IButtonInventory, IUniversalEnergy {
 
 	private static final int INVSIZE = 9;
-	protected UniversalBattery storage = new UniversalBattery(1000000);
+	protected UniversalBattery storage = new UniversalBattery((int) (1000000 * Configuration.spaceLaserPowerMult));
 	ItemStack glassPanel;
 	//ItemStack invBuffer[];
 	SatelliteLaser laserSat;
@@ -70,7 +71,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	private ForgeDirection prevDir;
 	public int laserX, laserZ, tickSinceLastOperation;
 	private static final ForgeDirection[] VALID_INVENTORY_DIRECTIONS = { ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH, ForgeDirection.WEST};
-	private static final int POWER_PER_OPERATION = 10000;
+	private static final int POWER_PER_OPERATION = (int) (10000  * Configuration.spaceLaserPowerMult); 
 	private ModuleTextBox locationX, locationZ;
 	private ModuleText updateText;
 
