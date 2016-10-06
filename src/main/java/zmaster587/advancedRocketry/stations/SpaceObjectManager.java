@@ -79,7 +79,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * @return the next valid space object id and increments the value for the next one
 	 */
 	public int getNextStationId() {
-		for(int i = 0; i < Integer.MAX_VALUE; i++)
+		for(int i = 1; i < Integer.MAX_VALUE; i++)
 			if(!stationLocations.containsKey(i))
 				return i;
 		return Integer.MAX_VALUE;
