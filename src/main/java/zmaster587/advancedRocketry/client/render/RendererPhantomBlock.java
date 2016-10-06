@@ -44,7 +44,7 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 			TileEntityRendererDispatcher.instance.renderTileEntityAt(tileGhost.getReplacedTileEntity(), x, y, z, t);
 			GL11.glDisable(GL11.GL_BLEND);
 		}*/
-		
+
 		GL11.glPushMatrix();
 
 		GL11.glTranslated(x - tile.getPos().getX(),y - tile.getPos().getY(),z - tile.getPos().getZ());
@@ -73,11 +73,16 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 			//If the player is mousing over this block
 			RayTraceResult movingObjPos = Minecraft.getMinecraft().objectMouseOver;
 			if(Minecraft.getMinecraft().objectMouseOver != null && movingObjPos.getBlockPos().getX() == tile.getPos().getX() && movingObjPos.getBlockPos().getY() == tile.getPos().getY() && movingObjPos.getBlockPos().getZ() == tile.getPos().getZ()) {
-				ItemStack stack = tile.getWorld().getBlockState(tile.getPos()).getBlock().getPickBlock(tile.getWorld().getBlockState(tile.getPos()), movingObjPos, Minecraft.getMinecraft().theWorld, tile.getPos(), Minecraft.getMinecraft().thePlayer);
-				if(stack == null)
-					RenderHelper.renderTag(Minecraft.getMinecraft().thePlayer.getDistanceSq(movingObjPos.hitVec.xCoord, movingObjPos.hitVec.yCoord, movingObjPos.hitVec.zCoord), "THIS IS AN ERROR, CONTACT THE DEV!!!", x,y,z, 10);
-				else
-					RenderHelper.renderTag(Minecraft.getMinecraft().thePlayer.getDistanceSq(movingObjPos.hitVec.xCoord, movingObjPos.hitVec.yCoord, movingObjPos.hitVec.zCoord), stack.getDisplayName(), x+ 0.5f,y,z+ 0.5f, 10);
+				try {
+					ItemStack stack = tile.getWorld().getBlockState(tile.getPos()).getBlock().getPickBlock(tile.getWorld().getBlockState(tile.getPos()), movingObjPos, Minecraft.getMinecraft().theWorld, tile.getPos(), Minecraft.getMinecraft().thePlayer);
+					if(stack == null)
+						RenderHelper.renderTag(Minecraft.getMinecraft().thePlayer.getDistanceSq(movingObjPos.hitVec.xCoord, movingObjPos.hitVec.yCoord, movingObjPos.hitVec.zCoord), "THIS IS AN ERROR, CONTACT THE DEV!!!", x,y,z, 10);
+					else
+						RenderHelper.renderTag(Minecraft.getMinecraft().thePlayer.getDistanceSq(movingObjPos.hitVec.xCoord, movingObjPos.hitVec.yCoord, movingObjPos.hitVec.zCoord), stack.getDisplayName(), x+ 0.5f,y,z+ 0.5f, 10);
+				} catch (NullPointerException e) {
+					//silence you fool
+				}
+
 			}
 		}
 	}
