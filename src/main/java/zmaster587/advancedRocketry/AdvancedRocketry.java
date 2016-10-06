@@ -1080,7 +1080,7 @@ public class AdvancedRocketry {
 				int id = Integer.parseInt(string);
 				BiomeGenBase biome = BiomeGenBase.getBiome(id);
 				
-				if(biome.biomeID == 0 && id != 0)
+				if(biome == null || (biome.biomeID == 0 && id != 0))
 					logger.warning(String.format("Error blackListing biome id \"%d\", a biome with that ID does not exist!", id));
 				else
 					AdvancedRocketryBiomes.instance.registerBlackListBiome(biome);
@@ -1099,7 +1099,7 @@ public class AdvancedRocketry {
 				int id = Integer.parseInt(string);
 				BiomeGenBase biome = BiomeGenBase.getBiome(id);
 				
-				if(biome.biomeID == 0 && id != 0)
+				if(biome == null || (biome.biomeID == 0 && id != 0))
 					logger.warning(String.format("Error registering high pressure biome id \"%d\", a biome with that ID does not exist!", id));
 				else
 					AdvancedRocketryBiomes.instance.registerHighPressureBiome(biome);
@@ -1114,7 +1114,7 @@ public class AdvancedRocketry {
 				int id = Integer.parseInt(string);
 				BiomeGenBase biome = BiomeGenBase.getBiome(id);
 				
-				if(biome.biomeID == 0 && id != 0)
+				if(biome == null || (biome.biomeID == 0 && id != 0))
 					logger.warning(String.format("Error registering single biome id \"%d\", a biome with that ID does not exist!", id));
 				else
 					AdvancedRocketryBiomes.instance.registerSingleBiome(biome);
