@@ -13,6 +13,7 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.FieldNode;
+import org.objectweb.asm.tree.FrameNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
@@ -599,7 +600,7 @@ public class ClassTransformer implements IClassTransformer {
 		 * }
 		 * */
 
-		if(changedName.equals(getName(CLASS_KEY_BLOCK_BED))) {
+		if(false && changedName.equals(getName(CLASS_KEY_BLOCK_BED))) {
 			ClassNode cn = startInjection(bytes);
 			MethodNode onBlockActivated = getMethod(cn, getName(METHOD_KEY_ONBLOCKACTIVATED), "(L"+ getName(CLASS_KEY_WORLD) + ";IIIL" + getName(CLASS_KEY_ENTITY_PLAYER) + ";IFFF)Z");
 
@@ -607,28 +608,30 @@ public class ClassTransformer implements IClassTransformer {
 				int numVirtual = 4;
 				
 				final InsnList nodeAdd = new InsnList();
-				final LabelNode label = new LabelNode();
-				AbstractInsnNode pos = null, pos2 = null;
+				LabelNode label = null;
+				AbstractInsnNode pos = null;
+				FrameNode frame = null;
 
 				for(int i = 0; i < onBlockActivated.instructions.size(); i++) {
 					AbstractInsnNode ain = onBlockActivated.instructions.get(i);
 					if(ain.getOpcode() == Opcodes.INVOKEVIRTUAL && --numVirtual == 0) {
 						pos = ain.getPrevious().getPrevious();
-						
+						frame = (FrameNode) ((FrameNode)pos.getPrevious()).clone(null);
 						while((ain=onBlockActivated.instructions.get(i++)).getOpcode() != Opcodes.INVOKESTATIC);
-						pos2 = ain.getPrevious();
+						label = (LabelNode)ain.getPrevious().getPrevious().getPrevious();
 						
 						break;
 					}
 				}
 				
+				//Super fricken hacky...
 				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 1));
 				nodeAdd.add(new FieldInsnNode(Opcodes.GETFIELD, getName(CLASS_KEY_WORLD), getName(FIELD_PROVIDER), "L" + getName(CLASS_KEY_WORLDPROVIDER) + ";"));
 				nodeAdd.add(new TypeInsnNode(Opcodes.INSTANCEOF, "zmaster587/advancedRocketry/world/provider/WorldProviderPlanet"));
 				nodeAdd.add(new JumpInsnNode(Opcodes.IFNE, label));
 				
+				onBlockActivated.instructions.insertBefore(label, frame);
 				onBlockActivated.instructions.insertBefore(pos, nodeAdd);
-				onBlockActivated.instructions.insertBefore(pos2, label);
 			}
 			else
 				AdvancedRocketry.logger.severe("ASM injection into BlockBed.onBlockActivated FAILED!");
