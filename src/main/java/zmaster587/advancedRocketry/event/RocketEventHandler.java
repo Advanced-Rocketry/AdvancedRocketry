@@ -444,7 +444,7 @@ public class RocketEventHandler extends Gui {
 			Tessellator.getInstance().draw();
 
 			//Draw Icon
-			GlStateManager.color(color,color,color, 1f);
+			GlStateManager.color(color,color,color, color);
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.armorSlots[slot-1]);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel-1, screenX, screenY, screenX + size, screenY + size,0d,1d,1d,0d);
@@ -466,6 +466,7 @@ public class RocketEventHandler extends Gui {
 				screenX = 12 + index*(size+2);
 
 				//Draw BG
+				
 				Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel -1, screenX - 4, screenY - 4, screenX + size - 2, screenY + size + 4,0.5d,0.5d,0d,1d);
@@ -496,7 +497,7 @@ public class RocketEventHandler extends Gui {
 
 			screenX = (index)*(size+2) - 4;
 			//Draw BG
-			GL11.glColor4f(1f, 1f, 1f,1f);
+			GlStateManager.color(1,1,1, 1f);
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel-1, screenX + 12, screenY - 4, screenX + size, screenY + size + 4,0.75d,1d,0d,1d);
