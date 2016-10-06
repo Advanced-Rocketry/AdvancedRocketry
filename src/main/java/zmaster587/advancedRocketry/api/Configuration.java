@@ -82,4 +82,6 @@ public class Configuration {
 	public static float microwaveRecieverMulitplier;
 	public static boolean blackListAllVanillaBiomes;
 
+	public static boolean canPlayerRespawnInSpace;
+
 }

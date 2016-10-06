@@ -6,7 +6,9 @@ import java.util.Set;
 import org.apache.commons.lang3.ArrayUtils;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -14,6 +16,7 @@ import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.ChunkProviderPlanet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -90,8 +93,19 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	}
 
 	@Override
+	public int getRespawnDimension(EntityPlayerMP player) {
+		if(AtmosphereHandler.hasAtmosphereHandler(getDimension()) && Configuration.canPlayerRespawnInSpace) {
+			BlockPos coords = player.getBedLocation(getDimension());
+			
+			if(coords != null && AtmosphereHandler.getOxygenHandler(player.worldObj.provider.getDimension()).getAtmosphereType(coords).isBreathable())
+				return getDimension();
+		}
+		return 0;
+	}
+	
+	@Override
 	public boolean canRespawnHere() {
-		return true;
+		return false;
 	}
 
 	@Override
