@@ -327,6 +327,19 @@ public class AdvancedRocketry {
 
 		//Satellite config
 		zmaster587.advancedRocketry.api.Configuration.microwaveRecieverMulitplier = (float)config.get(Configuration.CATEGORY_GENERAL, "MicrowaveRecieverMulitplier", 1f, "Multiplier for the amount of energy produced by the microwave reciever").getDouble();
+		
+		String str[] = config.getStringList("spaceLaserDimIdBlackList", Configuration.CATEGORY_GENERAL, new String[] {}, "Laser drill will not mine these dimension");
+		
+		//Load laser dimid blacklists
+		for(String s : str) {
+			
+			try {
+			zmaster587.advancedRocketry.api.Configuration.laserBlackListDims.add(Integer.parseInt(s));
+			} catch (NumberFormatException e) {
+				logger.warning("Invalid number \"" + s + "\" for laser dimid blacklist");
+			}
+		}
+		
 		config.save();
 
 		//Register Packets

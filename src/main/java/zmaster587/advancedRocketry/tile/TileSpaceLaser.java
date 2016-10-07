@@ -480,7 +480,8 @@ public class TileSpaceLaser extends TileInventoriedRFConsumer implements ISidedI
 	 */
 	public void checkCanRun() {
 		//Laser requires lense, redstone power, not be jammed, and be in orbit and energy to function
-		if(worldObj.isBlockIndirectlyGettingPowered(getPos()) == 0 || glassPanel == null || energy.getEnergyStored() == 0 || !(this.worldObj.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(getPos()).getParentPlanet())) {
+		if(worldObj.isBlockIndirectlyGettingPowered(getPos()) == 0 || glassPanel == null || energy.getEnergyStored() == 0 || !(this.worldObj.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(getPos()).getParentPlanet()) ||
+				Configuration.laserBlackListDims.contains(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(getPos()).getParentPlanet())) {
 			if(laserSat.isAlive()) {
 				laserSat.deactivateLaser();
 			}

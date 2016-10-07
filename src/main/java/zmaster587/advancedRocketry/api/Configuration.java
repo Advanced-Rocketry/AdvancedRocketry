@@ -1,5 +1,8 @@
 package zmaster587.advancedRocketry.api;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import net.minecraftforge.common.config.Property;
 
 /**
@@ -84,5 +87,6 @@ public class Configuration {
 
 	public static boolean canPlayerRespawnInSpace;
 	public static float spaceLaserPowerMult;
+	public static List<Integer> laserBlackListDims = new LinkedList<Integer>();
 
 }
