@@ -635,7 +635,7 @@ public class TileSpaceLaser extends TileInventoriedRFConsumer implements ISidedI
 
 	@Override
 	public int[] getSlotsForFace(EnumFacing side) {
-		return null;
+		return new int[] {};
 	}
 
 	
