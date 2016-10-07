@@ -301,7 +301,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 			}
 			else {
-				dstPlanetText.setText("None");
+				dstPlanetText.setText("???");
 				dstPlanetImg.setVisible(false);
 				dstAtmo.setVisible(false);
 			}
@@ -363,7 +363,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 		else if(id == 2) {
 			SpaceObject station = getSpaceObject();
 
-			if(station != null && station.useFuel(getTravelCost()) != 0 && station.hasUsableWarpCore()) {
+			if(station != null && station.hasUsableWarpCore() && station.useFuel(getTravelCost()) != 0) {
 				SpaceObjectManager.getSpaceManager().moveStationToBody(station, station.getDestOrbitingBody(), 200);
 				for(BlockPosition vec : station.getWarpCoreLocations()) {
 					TileEntity tile = worldObj.getTileEntity(vec.x, vec.y, vec.z);
