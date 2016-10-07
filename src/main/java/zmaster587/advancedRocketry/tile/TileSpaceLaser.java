@@ -653,7 +653,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(int var1) {
-		return null;
+		return new int[] {};
 	}
 
 	@Override
