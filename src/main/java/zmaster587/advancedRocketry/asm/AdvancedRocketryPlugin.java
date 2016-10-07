@@ -13,7 +13,7 @@ public class AdvancedRocketryPlugin implements IFMLLoadingPlugin {
 	public AdvancedRocketryPlugin() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	@Override
 	public String[] getASMTransformerClass() {
 		return new String[] {ClassTransformer.class.getName()};
@@ -32,13 +32,13 @@ public class AdvancedRocketryPlugin implements IFMLLoadingPlugin {
 
 	@Override
 	public void injectData(Map<String, Object> data) {
-		
+
 	}
 
 	@Override
 	public String getAccessTransformerClass() {
 		// TODO Auto-generated method stub
-		return "";
+		return null;
 	}
 
 }
