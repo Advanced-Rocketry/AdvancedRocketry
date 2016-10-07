@@ -217,6 +217,12 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 
 	public void setFinished(boolean value) { finished = value; }
 
+	private void setRunning(boolean value) {
+		this.isRunning = value;
+		markDirty();
+		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
+	
 	@Override
 	public void updateEntity() {
 		//TODO: drain energy
@@ -233,7 +239,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		}
 
 		if(laserSat.isFinished()) {
-			this.isRunning = false;
+			setRunning(false);
 			laserSat.deactivateLaser();
 
 			if(!laserSat.getJammed()) {
@@ -490,7 +496,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 				laserSat.deactivateLaser();
 			}
 
-			isRunning = false;
+			setRunning(false);
 		} else if(!laserSat.isAlive() && !finished && !laserSat.getJammed() && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) && canMachineSeeEarth()) {
 
 			//Laser will be on at this point
@@ -513,7 +519,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 					ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(this.xCoord / 16 - (this.xCoord < 0 ? 1 : 0), this.zCoord / 16 - (this.zCoord < 0 ? 1 : 0)));
 			}
 
-			isRunning = laserSat.activateLaser(orbitWorld, laserX, laserZ);
+			setRunning(laserSat.activateLaser(orbitWorld, laserX, laserZ));
 		}
 
 		if(!this.worldObj.isRemote)
