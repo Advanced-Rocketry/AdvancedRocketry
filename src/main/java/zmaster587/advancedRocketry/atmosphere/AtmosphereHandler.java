@@ -152,8 +152,11 @@ public class AtmosphereHandler {
 
 			AtmosphereHandler handler = getOxygenHandler(world.provider.getDimension());
 
-			//if(handler == null)
-			//	return; //WTF
+			//Bonus chests cause world gen to begin before loading the world
+			//Because atmosphere handlers are created at world load time
+			//there is a possibility handler can be null here
+			if(handler == null)
+				return; //WTF
 			
 			for(AreaBlob blob : handler.getBlobWithinRadius(pos, MAX_BLOB_RADIUS)) {
 
