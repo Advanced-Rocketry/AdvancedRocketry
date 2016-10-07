@@ -18,7 +18,7 @@ buildscript {
 
 apply plugin: 'forge'
 def modversion
-modversion = version = "0.8.3b"
+modversion = version = "0.8.4"
 group= "zmaster587.advancedRocketry" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "AdvancedRocketry"
 sourceCompatibility = 7

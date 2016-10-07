@@ -18,6 +18,7 @@ import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
@@ -72,7 +73,7 @@ public class ClassTransformer implements IClassTransformer {
 	private static final HashMap<String, SimpleEntry<String, String>> entryMap = new HashMap<String, SimpleEntry<String, String>>();
 
 
-	private boolean obf;
+	private static boolean obf;
 
 	/*private class ClassEntry {
 		String name, obfName, desc;
@@ -610,15 +611,19 @@ public class ClassTransformer implements IClassTransformer {
 				final InsnList nodeAdd = new InsnList();
 				LabelNode label = null;
 				AbstractInsnNode pos = null;
-				FrameNode frame = null;
 
 				for(int i = 0; i < onBlockActivated.instructions.size(); i++) {
 					AbstractInsnNode ain = onBlockActivated.instructions.get(i);
-					if(ain.getOpcode() == Opcodes.INVOKEVIRTUAL && --numVirtual == 0) {
+					if(ain.getOpcode() == Opcodes.INVOKEVIRTUAL && ((MethodInsnNode)ain).desc.equals("()Z") && ain.getPrevious().getOpcode() == Opcodes.GETFIELD && ((FieldInsnNode)ain.getPrevious()).desc.equals("L" + getName(CLASS_KEY_WORLDPROVIDER) + ";") ) {
 						pos = ain.getPrevious().getPrevious();
-						frame = (FrameNode) ((FrameNode)pos.getPrevious()).clone(null);
-						while((ain=onBlockActivated.instructions.get(i++)).getOpcode() != Opcodes.INVOKESTATIC);
-						label = (LabelNode)ain.getPrevious().getPrevious().getPrevious();
+						
+						//Screw it...
+						if(((LineNumberNode)pos.getPrevious().getPrevious()).line < 65)
+							continue;
+						
+						while((ain=onBlockActivated.instructions.get(i++)).getOpcode() != Opcodes.GETSTATIC);
+						while(!((ain=onBlockActivated.instructions.get(i++)) instanceof LabelNode));
+						label = (LabelNode)ain;
 						
 						break;
 					}
@@ -630,7 +635,6 @@ public class ClassTransformer implements IClassTransformer {
 				nodeAdd.add(new TypeInsnNode(Opcodes.INSTANCEOF, "zmaster587/advancedRocketry/world/provider/WorldProviderPlanet"));
 				nodeAdd.add(new JumpInsnNode(Opcodes.IFNE, label));
 				
-				onBlockActivated.instructions.insertBefore(label, frame);
 				onBlockActivated.instructions.insertBefore(pos, nodeAdd);
 			}
 			else
@@ -853,7 +857,7 @@ public class ClassTransformer implements IClassTransformer {
 		return null;
 	}
 
-	private String getName(String key) {
+	public static String getName(String key) {
 		SimpleEntry<String, String> entry = entryMap.get(key);
 		if(entry == null)
 			return "";
