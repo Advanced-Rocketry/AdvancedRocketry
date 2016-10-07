@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.api;
 
-import net.minecraftforge.common.config.Property;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Stores config variables
@@ -83,5 +84,5 @@ public class Configuration {
 	public static boolean blackListAllVanillaBiomes;
 	public static boolean canPlayerRespawnInSpace;
 	public static float spaceLaserPowerMult;
-
+	public static List<Integer> laserBlackListDims = new LinkedList<Integer>();
 }
