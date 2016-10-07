@@ -95,7 +95,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 				double x2 = destProperties.orbitalDist*MathHelper.cos((float) destProperties.orbitTheta);
 				double y2 = destProperties.orbitalDist*MathHelper.sin((float) destProperties.orbitTheta);
 
-				return (int)Math.sqrt(Math.pow((x1 - x2),2) + Math.pow((y1 - y2),2));
+				return Math.max((int)Math.sqrt(Math.pow((x1 - x2),2) + Math.pow((y1 - y2),2)),1);
 
 				//return Math.abs(properties.orbitalDist - destProperties.orbitalDist);
 			}
