@@ -79,7 +79,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			DimensionProperties properties = getSpaceObject().getProperties().getParentProperties();
 			//properties.orbitalDist = 1;
 			DimensionProperties destProperties = DimensionManager.getInstance().getDimensionProperties(getSpaceObject().getDestOrbitingBody());
-			while(destProperties.isMoon())
+			while(destProperties.getParentProperties() != null && destProperties.isMoon())
 				destProperties = destProperties.getParentProperties();
 
 			if((destProperties.isMoon() && destProperties.getParentPlanet() == properties.getId()) || (properties.isMoon() && properties.getParentPlanet() == destProperties.getId()))
@@ -95,7 +95,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 				double x2 = destProperties.orbitalDist*MathHelper.cos((float) destProperties.orbitTheta);
 				double y2 = destProperties.orbitalDist*MathHelper.sin((float) destProperties.orbitTheta);
 
-				return (int)Math.sqrt(Math.pow((x1 - x2),2) + Math.pow((y1 - y2),2));
+				return Math.max((int)Math.sqrt(Math.pow((x1 - x2),2) + Math.pow((y1 - y2),2)),1);
 
 				//return Math.abs(properties.orbitalDist - destProperties.orbitalDist);
 			}
