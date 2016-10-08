@@ -42,6 +42,8 @@ public class WorldCommand implements ICommand {
 
 	@Override
 	public int compareTo(Object arg) {
+		if(arg instanceof ICommand)
+			return this.getCommandName().compareTo(((ICommand) arg).getCommandName());
 		return 0;
 	}
 
