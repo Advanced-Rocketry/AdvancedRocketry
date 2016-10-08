@@ -16,6 +16,7 @@ public class BlockLightSource extends Block {
 		super(Material.glass);
 		setBlockName("lightSource");
 		setLightLevel(1F);
+		setBlockTextureName("advancedrocketry:clear");
 	}
 
 	@Override
