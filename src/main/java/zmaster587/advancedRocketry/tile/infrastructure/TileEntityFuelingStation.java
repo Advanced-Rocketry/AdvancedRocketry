@@ -1,12 +1,18 @@
 package zmaster587.advancedRocketry.tile.infrastructure;
 
+import io.netty.buffer.ByteBuf;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
@@ -24,30 +30,49 @@ import zmaster587.advancedRocketry.block.BlockTileRedstoneEmitter;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
+import zmaster587.libVulpes.inventory.modules.IButtonInventory;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleImage;
 import zmaster587.libVulpes.inventory.modules.ModuleLiquidIndicator;
 import zmaster587.libVulpes.inventory.modules.ModulePower;
+import zmaster587.libVulpes.inventory.modules.ModuleRedstoneOutputButton;
 import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
 import zmaster587.libVulpes.items.ItemLinker;
+import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
 import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.IconResource;
+import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
-public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank implements IModularInventory, IMultiblock, IInfrastructure, ILinkableTile {
+public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank implements IModularInventory, IMultiblock, IInfrastructure, ILinkableTile, IButtonInventory, INetworkMachine {
 	EntityRocketBase linkedRocket;
 	BlockPosition masterBlock;
+	ModuleRedstoneOutputButton redstoneControl;
+	RedstoneState state;
 	
 	public TileEntityFuelingStation() {
 		super(1000,3, 5000);
 		masterBlock = new BlockPosition(0, -1, 0);
+		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 0, "", this);
+		state = RedstoneState.ON;
 	}
 
 	@Override
 	public int getMaxLinkDistance() {
 		return 10;
+	}
+	
+	private void setRedstoneState(boolean condition) {
+		if(state == RedstoneState.INVERTED)
+			condition = !condition;
+		else if(state == RedstoneState.OFF)
+			condition = false;
+		((BlockTileRedstoneEmitter)AdvancedRocketryBlocks.blockFuelingStation).setRedstoneState(worldObj, xCoord, yCoord, zCoord, condition);
+		
 	}
 	
 	@Override
@@ -58,9 +83,10 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 
 				tank.drain(linkedRocket.addFuelAmount((int)(multiplier*Configuration.fuelPointsPer10Mb)), true);
 				
-				//If the rocket is full then emit redstone
-				((BlockTileRedstoneEmitter)AdvancedRocketryBlocks.blockFuelingStation).setRedstoneState(worldObj, xCoord, yCoord, zCoord, linkedRocket.getFuelAmount() == linkedRocket.getFuelCapacity());
+				
 			}
+			//If the rocket is full then emit redstone
+			setRedstoneState(linkedRocket.getFuelAmount() == linkedRocket.getFuelCapacity());
 		}
 		useBucket(0, inventory.getStackInSlot(0));
 	}
@@ -70,6 +96,20 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 		return 30;
 	}
 
+	@Override
+	public Packet getDescriptionPacket() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setByte("state", (byte)state.ordinal());
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, nbt);
+	}
+	
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		state = RedstoneState.values()[pkt.func_148857_g().getByte("state")];
+		redstoneControl.setRedstoneState(state);
+		super.onDataPacket(net, pkt);
+	}
+	
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
@@ -201,6 +241,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 		List<ModuleBase> list = new ArrayList<ModuleBase>();
 		
 		list.add(new ModulePower(156, 12, this));
+		list.add(redstoneControl);
 		list.add(new ModuleSlotArray(45, 18, this, 0, 1));
 		list.add(new ModuleSlotArray(45, 54, this, 1, 2));
 		if(worldObj.isRemote)
@@ -232,7 +273,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		
+		nbt.setByte("redstoneState", (byte) state.ordinal());
 		if(hasMaster()) {
 			nbt.setIntArray("masterPos", new int[] {masterBlock.x, masterBlock.y, masterBlock.z});
 		}
@@ -241,6 +282,10 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
+		
+		state = RedstoneState.values()[nbt.getByte("redstoneState")];
+		redstoneControl.setRedstoneState(state);
+		
 		if(nbt.hasKey("masterPos")) {
 			int[] pos = nbt.getIntArray("masterPos");
 			setMasterBlock(pos[0], pos[1], pos[2]);
@@ -274,5 +319,31 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	
 	public boolean canRenderConnection() {
 		return true;
+	}
+
+	@Override
+	public void onInventoryButtonPressed(int buttonId) {
+		state = redstoneControl.getState();
+		PacketHandler.sendToServer(new PacketMachine(this, (byte)0));
+	}
+
+	@Override
+	public void writeDataToNetwork(ByteBuf out, byte id) {
+		out.writeByte(state.ordinal());
+	}
+
+	@Override
+	public void readDataFromNetwork(ByteBuf in, byte packetId,
+			NBTTagCompound nbt) {
+		nbt.setByte("state", in.readByte());
+	}
+
+	@Override
+	public void useNetworkData(EntityPlayer player, Side side, byte id,
+			NBTTagCompound nbt) {
+		state = RedstoneState.values()[nbt.getByte("state")];
+		
+		if(linkedRocket != null)
+			setRedstoneState(linkedRocket.getFuelAmount() == linkedRocket.getFuelCapacity());
 	}
 }

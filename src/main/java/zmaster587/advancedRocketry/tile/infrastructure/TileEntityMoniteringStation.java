@@ -9,6 +9,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
@@ -30,6 +33,7 @@ import zmaster587.libVulpes.inventory.modules.IProgressBar;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleButton;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
+import zmaster587.libVulpes.inventory.modules.ModuleRedstoneOutputButton;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketEntity;
@@ -37,20 +41,26 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.IAdjBlockUpdate;
 import zmaster587.libVulpes.util.INetworkMachine;
+import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
 public class TileEntityMoniteringStation extends TileEntity  implements IModularInventory, IAdjBlockUpdate, IInfrastructure, ILinkableTile, INetworkMachine, IButtonInventory, IProgressBar  {
 
 	EntityRocketBase linkedRocket;
 	IMission mission;
 	ModuleText missionText;
+	RedstoneState state;
+	ModuleRedstoneOutputButton redstoneControl;
 
 	int rocketHeight;
 	int velocity;
 	int fuelLevel, maxFuelLevel;
 
+
 	public TileEntityMoniteringStation() {
 		mission = null;
 		missionText = new ModuleText(20, 90, "Mission Progress: N/A", 0x2b2b2b);
+		redstoneControl = new ModuleRedstoneOutputButton(174, 4, -1, "", this);
+		state = RedstoneState.ON;
 	}
 
 	@Override
@@ -67,9 +77,20 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 		}
 	}
 
+	public boolean getEquivilentPower() {
+		if(state == RedstoneState.OFF)
+			return false;
+
+		boolean state2 = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+
+		if(state == RedstoneState.INVERTED)
+			state2 = !state2;
+		return state2;
+	}
+
 	@Override
 	public void onAdjacentBlockUpdated() {
-		if(!worldObj.isRemote && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) && linkedRocket != null) {
+		if(!worldObj.isRemote && getEquivilentPower() && linkedRocket != null) {
 			linkedRocket.prepareLaunch();
 		}
 	}
@@ -117,6 +138,8 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
+		state = RedstoneState.values()[nbt.getByte("redstoneState")];
+		redstoneControl.setRedstoneState(state);
 
 		if(nbt.hasKey("missionID")) {
 			long id = nbt.getLong("missionID");
@@ -132,7 +155,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-
+		nbt.setByte("redstoneState", (byte) state.ordinal());
 		if(mission != null) {
 			nbt.setLong("missionID", mission.getMissionId());
 			nbt.setInteger("missionDimId", mission.getOriginatingDimention());
@@ -143,13 +166,19 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	public void writeDataToNetwork(ByteBuf out, byte id) {
 		if(id == 1)
 			out.writeLong(mission == null ? -1 : mission.getMissionId());
+		else if(id == 2)
+			out.writeByte(state.ordinal());
 	}
 
 	@Override
 	public void readDataFromNetwork(ByteBuf in, byte packetId,
 			NBTTagCompound nbt) {
+
 		if(packetId == 1) {
 			nbt.setLong("id", in.readLong());
+		}
+		else if(packetId == 2) {
+			nbt.setByte("state", in.readByte());
 		}
 	}
 
@@ -171,10 +200,27 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 				}
 			}
 		}
+		else if(id == 2) {
+			state = RedstoneState.values()[nbt.getByte("state")];
+		}
 		if(id == 100) {
 			if(linkedRocket != null)
 				linkedRocket.prepareLaunch();
 		}
+	}
+
+	@Override
+	public Packet getDescriptionPacket() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setByte("state", (byte)state.ordinal());
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, nbt);
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		state = RedstoneState.values()[pkt.func_148857_g().getByte("state")];
+		redstoneControl.setRedstoneState(state);
+		super.onDataPacket(net, pkt);
 	}
 
 	@Override
@@ -187,6 +233,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 		modules.add(new ModuleProgress(120, 14, 1, new IndicatorBarImage(2, 95, 12, 71, 17, 0, 6, 6, 1, 0, ForgeDirection.UP, TextureResources.rocketHud), this));
 		modules.add(new ModuleProgress(142, 14, 2, new ProgressBarImage(2, 173, 12, 71, 17, 6, 3, 69, 1, 1, ForgeDirection.UP, TextureResources.rocketHud), this));
 
+		modules.add(redstoneControl);
 		setMissionText();
 
 		modules.add(missionText);
@@ -207,16 +254,22 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 			int seconds = time % 60;
 			int minutes = (time/60) % 60;
 			int hours = time/3600;
-			
+
 			missionText.setText(((SatelliteBase)mission).getName() + " Progress: " + String.format("\n%02dhr:%02dm:%02ds", hours, minutes, seconds));
 		}
 		else
 			missionText.setText("Mission Progess: N/A");
 	}
-	
+
 	@Override
 	public void onInventoryButtonPressed(int buttonId) {
-		PacketHandler.sendToServer(new PacketMachine(this, (byte) (buttonId + 100)) );
+		if(buttonId != -1)
+			PacketHandler.sendToServer(new PacketMachine(this, (byte) (buttonId + 100)) );
+		else {
+			state = redstoneControl.getState();
+			PacketHandler.sendToServer(new PacketMachine(this, (byte)2));
+		}
+
 	}
 
 	@Override
@@ -244,11 +297,11 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 				return 0f;
 			return (float) Math.min(Math.max( 3f*(mission.getProgress(this.worldObj) - 0.666f), 0f), 1f);
 		}
-		
+
 		//keep text updated
 		if(worldObj.isRemote && mission != null)
 			setMissionText();
-		
+
 		return getProgress(id)/(float)getTotalProgress(id);
 	}
 
