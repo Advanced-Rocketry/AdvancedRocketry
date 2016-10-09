@@ -247,4 +247,14 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 	public int acceptEnergy(int amt, boolean simulate) {
 		return battery.acceptEnergy(amt, simulate);
 	}
+
+	@Override
+	public boolean canReceive() {
+		return true;
+	}
+
+	@Override
+	public boolean canExtract() {
+		return true;
+	}
 }

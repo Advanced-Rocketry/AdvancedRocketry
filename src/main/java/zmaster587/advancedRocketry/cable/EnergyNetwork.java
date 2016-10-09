@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class EnergyNetwork extends CableNetwork {
@@ -47,7 +48,7 @@ public class EnergyNetwork extends CableNetwork {
 		while(sinkItr.hasNext()) {
 			//Get tile and key
 			Entry<TileEntity,EnumFacing> obj = (Entry<TileEntity, EnumFacing>)sinkItr.next();
-			IEnergyStorage dataHandlerSink = (IEnergyStorage)obj.getKey();
+			IEnergyStorage dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
 
 			demand += dataHandlerSink.receiveEnergy(amount, true);
 		}
@@ -55,7 +56,7 @@ public class EnergyNetwork extends CableNetwork {
 		while(sourceItr.hasNext()) {
 			//Get tile and key
 			Entry<TileEntity,EnumFacing> obj = (Entry<TileEntity, EnumFacing>)sourceItr.next();
-			IEnergyStorage dataHandlerSink = (IEnergyStorage)obj.getKey();
+			IEnergyStorage dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
 
 			supply += dataHandlerSink.extractEnergy(amount, true);
 		}
@@ -68,7 +69,7 @@ public class EnergyNetwork extends CableNetwork {
 
 			//Get tile and key
 			Entry<TileEntity,EnumFacing> obj = (Entry<TileEntity, EnumFacing>)sinkItr.next();
-			IEnergyStorage dataHandlerSink = (IEnergyStorage)obj.getKey();
+			IEnergyStorage dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
 
 
 			amountToMove -= dataHandlerSink.receiveEnergy(amountToMove, false);
@@ -78,7 +79,7 @@ public class EnergyNetwork extends CableNetwork {
 		while(sourceItr.hasNext()) {
 			//Get tile and key
 			Entry<TileEntity,EnumFacing> obj = (Entry<TileEntity, EnumFacing>)sourceItr.next();
-			IEnergyStorage dataHandlerSink = (IEnergyStorage)obj.getKey();
+			IEnergyStorage dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
 
 			amountMoved -= dataHandlerSink.extractEnergy(amountMoved, false);
 		}

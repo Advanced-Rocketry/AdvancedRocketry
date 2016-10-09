@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.tile.cables;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import zmaster587.advancedRocketry.api.satellite.IDataHandler;
 import zmaster587.advancedRocketry.cable.HandlerCableNetwork;
@@ -12,12 +13,12 @@ public class TileEnergyPipe extends TilePipe {
 	@Override
 	public boolean canExtract(EnumFacing dir, TileEntity e) {
 		
-		return e instanceof IEnergyStorage && ((IEnergyStorage)e).canExtract();
+		return e.hasCapability(CapabilityEnergy.ENERGY, dir) && e.getCapability(CapabilityEnergy.ENERGY, dir).canExtract();
 	}
 
 	@Override
 	public boolean canInject(EnumFacing dir, TileEntity e) {
-		return e instanceof IEnergyStorage && ((IEnergyStorage)e).canReceive();
+		return e.hasCapability(CapabilityEnergy.ENERGY, dir) && e.getCapability(CapabilityEnergy.ENERGY, dir).canReceive();
 	}
 	
 	public HandlerCableNetwork getNetworkHandler() {
