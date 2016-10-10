@@ -8,6 +8,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.item.ItemPackedStructure;
+import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.StorageChunk;
@@ -32,7 +33,7 @@ import net.minecraft.world.World;
 public class TileStationBuilder extends TileRocketBuilder implements IInventory {
 
 	EmbeddedInventory inventory;
-	
+	Long storedId;
 	public TileStationBuilder() {
 		super();
 		inventory = new EmbeddedInventory(4);
@@ -42,13 +43,13 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 	@Override
 	public boolean canScan() {
 		ItemStack stack = new ItemStack(AdvancedRocketryBlocks.blockLoader,1,1);
-		
+
 		if(inventory.getStackInSlot(0) == null || !stack.isItemEqual(inventory.getStackInSlot(0))) {
 			status = ErrorCodes.NOSATELLITEHATCH;
 			return false;
 		}
-			
-		if(inventory.getStackInSlot(1) == null || !new ItemStack(AdvancedRocketryItems.itemSpaceStationChip,1, -1).isItemEqual(inventory.getStackInSlot(1))) {
+
+		if(inventory.getStackInSlot(1) == null || AdvancedRocketryItems.itemSpaceStationChip != inventory.getStackInSlot(1).getItem()) {
 			status = ErrorCodes.NOSATELLITECHIP;
 			return false;
 		}
@@ -56,7 +57,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 			status = ErrorCodes.OUTPUTBLOCKED;
 			return false;
 		}
-		
+
 		return super.canScan();
 	}
 
@@ -111,21 +112,27 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 				return;
 
 			StorageChunk storageChunk = StorageChunk.cutWorldBB(worldObj, bbCache);
+			ItemStack outputStack;
+			SpaceObject object = null;
+			if(storedId == null) {
+				object = new SpaceObject();
+				SpaceObjectManager.getSpaceManager().registerSpaceObject(object, -1);
 
-			SpaceObject object = new SpaceObject();
-
-			SpaceObjectManager.getSpaceManager().registerSpaceObject(object, -1);
-
-			ItemStack outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStation,1, object.getId());
+				outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStation,1, object.getId());
+				
+			}
+			else
+				outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStation,1, (int)(long)storedId);
+			
 			((ItemPackedStructure)outputStack.getItem()).setStructure(outputStack, storageChunk);
-
 			inventory.setInventorySlotContents(2, outputStack);
 
 
-
-			inventory.setInventorySlotContents(3, new ItemStack(AdvancedRocketryItems.itemSpaceStationChip,1,object.getId()));
+			if(storedId == null)
+				inventory.setInventorySlotContents(3, new ItemStack(AdvancedRocketryItems.itemSpaceStationChip,1,object.getId()));
 
 			this.status = ErrorCodes.FINISHED;
+			storedId = null;
 
 			this.markDirty();
 			this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -168,22 +175,31 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
 		super.useNetworkData(player, side, id, nbt);
-		
-		if(id == 1) {
+
+		if(id == 1 && canScan()) {
 			inventory.decrStackSize(0, 1);
-			inventory.decrStackSize(1, 1);
+			storedId = (long)inventory.getStackInSlot(1).getItemDamage();
+			if(storedId == 0) storedId = null;
+			if(storedId == null)
+				inventory.decrStackSize(1, 1);
 		}
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		inventory.writeToNBT(nbt);
+		if(storedId != null) {
+			nbt.setLong("storedID", storedId);
+		}
 	}
 
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		inventory.readFromNBT(nbt);
+		if(nbt.hasKey("storedID")) {
+			storedId = nbt.getLong("storedID");
+		}
 	}
 
 	@Override

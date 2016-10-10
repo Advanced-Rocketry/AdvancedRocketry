@@ -579,7 +579,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 							//Vector3F<Integer> spawn = object.getSpawnLocation();
 
-							object.onFirstCreated(storage);
+							object.onModuleUnpack(storage);
 
 						}
 					}

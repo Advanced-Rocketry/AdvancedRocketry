@@ -102,9 +102,125 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	@Override
 	public int getSizeZ() { return sizeZ; }
 
+	@Override
 	public List<TileEntity> getTileEntityList() {
 
 		return tileEntities;
+	}
+	
+	public void rotateBy(ForgeDirection dir) {
+		
+		BlockPosition newSizes = new BlockPosition(getSizeX(), getSizeY(), getSizeZ());
+		
+		BlockPosition newerSize = remapCoord(newSizes, dir);
+		newSizes = remapCoord(newSizes, dir);
+		
+		Block blocks[][][] = new Block[newSizes.x][newSizes.y][newSizes.z];
+		short metas[][][] = new short[newSizes.x][newSizes.y][newSizes.z];
+		
+		for(int y = 0; y < getSizeY(); y++) {
+			for(int z = 0; z < getSizeZ(); z++) {
+				for(int x = 0; x < getSizeX(); x++) {
+					newSizes = getNewCoord(new BlockPosition(x, y, z), dir);
+					blocks[newSizes.x][newSizes.y][newSizes.z] = this.blocks[x][y][z];
+					metas[newSizes.x][newSizes.y][newSizes.z] = this.metas[x][y][z];
+				}
+			}
+		}
+		this.blocks = blocks;
+		this.metas = metas;
+
+		
+		for(TileEntity e : tileEntities) {
+			newSizes = getNewCoord(new BlockPosition(e.xCoord, e.yCoord, e.zCoord), dir);
+			e.xCoord = newSizes.x;
+			e.yCoord = newSizes.y;
+			e.zCoord = newSizes.z;
+		}
+		
+		this.sizeX = newerSize.x;
+		this.sizeY = newerSize.y;
+		this.sizeZ = newerSize.z;
+	}
+	
+	private BlockPosition remapCoord(BlockPosition in, ForgeDirection dir) {
+		
+		BlockPosition out = new BlockPosition(0, 0, 0);
+		
+		switch(dir) {
+		case DOWN:
+			out.x = in.z;
+			out.y = in.y;
+			out.z = in.x;
+			break;
+		case UP:
+			out.x = in.z;
+			out.y = in.y;
+			out.z = in.x;
+			break;
+		case NORTH:
+			out.x = in.y;
+			out.y = (short)(in.x);
+			out.z = in.z;
+			break;
+		case SOUTH:
+			out.x = in.y;
+			out.y = (short)in.x;
+			out.z = in.z;
+			break;
+		case EAST:
+			out.x = in.x;
+			out.y = (short)(in.z);
+			out.z = in.y;
+			break;
+		case WEST:
+			out.x = in.x;
+			out.y = (short)in.z;
+			out.z = in.y;
+			break;
+		}
+			
+		return out;
+	}
+	
+	public BlockPosition getNewCoord(BlockPosition in, ForgeDirection dir) {
+		
+		BlockPosition out = new BlockPosition(0, 0, 0);
+		
+		switch(dir) {
+		case DOWN:
+			out.x = in.z;
+			out.y = in.y;
+			out.z = getSizeX()-in.x-1;
+			break;
+		case UP:
+			out.x = getSizeZ()-in.z -1;
+			out.y = in.y;
+			out.z = in.x;
+			break;
+		case NORTH:
+			out.x = in.y;
+			out.y = (short)(getSizeX()-in.x-1);
+			out.z = in.z;
+			break;
+		case SOUTH:
+			out.x = getSizeY()-in.y-1;
+			out.y = (short)in.x;
+			out.z = in.z;
+			break;
+		case EAST:
+			out.x = in.x;
+			out.y = (short)(getSizeZ()-in.z-1);
+			out.z = in.y;
+			break;
+		case WEST:
+			out.x = in.x;
+			out.y = (short)in.z;
+			out.z = getSizeY()-in.y-1;
+			break;
+		}
+			
+		return out;
 	}
 
 	/**

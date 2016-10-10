@@ -1,6 +1,10 @@
 package zmaster587.advancedRocketry.api.stations;
 
+import java.util.List;
+
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public interface IStorageChunk {
 	/**
@@ -15,4 +19,8 @@ public interface IStorageChunk {
 	public int getSizeX();
 	public int getSizeY();
 	public int getSizeZ();
+	
+	public List<TileEntity> getTileEntityList();
+	
+	public void rotateBy(ForgeDirection dir);
 }

@@ -27,6 +27,7 @@ import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleButton;
 import zmaster587.libVulpes.inventory.modules.ModuleImage;
+import zmaster587.libVulpes.inventory.modules.ModuleNumericTextbox;
 import zmaster587.libVulpes.inventory.modules.ModulePower;
 import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
@@ -790,8 +791,8 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		if(worldObj.isRemote) {
-			modules.add(locationX = new ModuleTextBox(this, 113, 31, 50, 10, 16));
-			modules.add(locationZ = new ModuleTextBox(this, 113, 41, 50, 10, 16));
+			modules.add(locationX = new ModuleNumericTextbox(this, 113, 31, 50, 10, 16));
+			modules.add(locationZ = new ModuleNumericTextbox(this, 113, 41, 50, 10, 16));
 			
 			locationX.setText(String.valueOf(this.laserX));
 			locationZ.setText(String.valueOf(this.laserZ));

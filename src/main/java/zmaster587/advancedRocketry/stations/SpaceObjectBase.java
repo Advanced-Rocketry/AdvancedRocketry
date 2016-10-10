@@ -210,7 +210,7 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 	 * When the space stations are first created they are 'unpacked' from the storage chunk they reside in
 	 * @param chunk
 	 */
-	public void onFirstCreated(IStorageChunk chunk) {
+	public void onModuleUnpack(IStorageChunk chunk) {
 		World worldObj = DimensionManager.getWorld(Configuration.spaceDimId);
 		chunk.pasteInWorld(worldObj, spawnLocation.x - chunk.getSizeX()/2, spawnLocation.y - chunk.getSizeY()/2, spawnLocation.z - chunk.getSizeZ()/2);
 

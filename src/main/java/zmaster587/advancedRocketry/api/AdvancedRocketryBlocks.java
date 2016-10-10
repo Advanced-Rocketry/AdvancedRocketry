@@ -81,4 +81,5 @@ public class AdvancedRocketryBlocks {
 	public static Block blockIntake;
 	public static Block blockNitrogenFluid;
 	public static Block blockCircularLight;
+	public static Block blockDockingPort;
 }

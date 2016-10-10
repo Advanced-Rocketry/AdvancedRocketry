@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.stations;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -16,11 +17,15 @@ import zmaster587.advancedRocketry.api.stations.IStorageChunk;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.network.PacketStationUpdate.Type;
+import zmaster587.advancedRocketry.tile.station.TileDockingPort;
+import zmaster587.advancedRocketry.util.StorageChunk;
+import zmaster587.libVulpes.block.BlockFullyRotatable;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.BlockPosition;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
@@ -29,6 +34,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class SpaceObject implements ISpaceObject {
 	private int posX, posY;
+	private boolean created;
 	private int altitude;
 	private int destinationDimId;
 	private int fuelAmount;
@@ -36,6 +42,7 @@ public class SpaceObject implements ISpaceObject {
 	private BlockPosition spawnLocation;
 	private List<BlockPosition> spawnLocations;
 	private List<BlockPosition> warpCoreLocation;
+	private HashMap<BlockPosition, String> dockingPoints;
 	private HashMap<BlockPosition,Boolean> occupiedLandingPads;
 	private long transitionEta;
 	private ForgeDirection direction;
@@ -48,15 +55,17 @@ public class SpaceObject implements ISpaceObject {
 		properties = (DimensionProperties) zmaster587.advancedRocketry.dimension.DimensionManager.defaultSpaceDimensionProperties.clone();
 		spawnLocations = new LinkedList<BlockPosition>();
 		occupiedLandingPads = new HashMap<BlockPosition,Boolean>();
-		warpCoreLocation = new LinkedList<BlockPosition>(); 
+		warpCoreLocation = new LinkedList<BlockPosition>();
+		dockingPoints = new HashMap<BlockPosition, String>();
 		transitionEta = -1;
 		destinationDimId = -1;
+		created = false;
 	}
 
 	public long getExpireTime() { 
 		return Long.MAX_VALUE;
 	}
-	
+
 	public void beginTransition(long time) {
 		if(time > 0)
 			transitionEta = time;
@@ -118,28 +127,28 @@ public class SpaceObject implements ISpaceObject {
 	public int getAltitude() {
 		return altitude;
 	}
-	
+
 	/**
 	 * @return rotation of the station in degrees
 	 */
 	public double getRotation() {
 		return (rotation + getDeltaRotation()*(getWorldTime() - lastTimeModification)) % (360D);
 	}
-	
+
 	/**
 	 * @param rotation rotation of the station in degrees
 	 */
 	public void setRotation(double rotation) {
 		this.rotation = rotation;
 	}
-	
+
 	/**
 	 * @return anglarVelocity of the station in degrees per tick
 	 */
 	public double getDeltaRotation() {
 		return angularVelocity;
 	}
-	
+
 	/**
 	 * @param rotation anglarVelocity of the station in degrees per tick
 	 */
@@ -148,7 +157,7 @@ public class SpaceObject implements ISpaceObject {
 		this.lastTimeModification = getWorldTime();
 		this.angularVelocity = rotation;
 	}
-	
+
 	public double getMaxRotationalAcceleration() {
 		return 0.00002D;
 	}
@@ -156,7 +165,7 @@ public class SpaceObject implements ISpaceObject {
 	private long getWorldTime() {
 		return AdvancedRocketry.proxy.getWorldTimeUniversal(Configuration.spaceDimId);
 	}
-	
+
 	/**
 	 * @return the X postion on the graph the object is stored in {@link SpaceObjectManager}
 	 */
@@ -234,7 +243,7 @@ public class SpaceObject implements ISpaceObject {
 			return 0;
 
 		fuelAmount -= amt;
-		
+
 		if(FMLCommonHandler.instance().getSide().isServer())
 			PacketHandler.sendToAll(new PacketStationUpdate(this, Type.FUEL_UPDATE));
 		return amt;
@@ -251,6 +260,27 @@ public class SpaceObject implements ISpaceObject {
 			spawnLocations.add(pos);
 			occupiedLandingPads.put(pos, false);
 		}
+	}
+
+	/**
+	 * Adds a docking location to the station
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	public void addDockingPosition(int x, int y, int z, String str) {
+		BlockPosition pos = new BlockPosition(x, y, z);
+		dockingPoints.put(pos, str);
+	}
+	/**
+	 * Removes a docking location from the station
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	public void removeDockingPosition(int x, int y, int z) {
+		BlockPosition pos = new BlockPosition(x, y, z);
+		dockingPoints.remove(pos);
 	}
 
 	/**
@@ -359,17 +389,84 @@ public class SpaceObject implements ISpaceObject {
 
 	/**
 	 * When the space stations are first created they are 'unpacked' from the storage chunk they reside in
+	 * Can also be called when a module is shipped
 	 * @param chunk
 	 */
-	public void onFirstCreated(IStorageChunk chunk) {
+	@Override
+	public void onModuleUnpack(IStorageChunk chunk) {
 		World worldObj = DimensionManager.getWorld(Configuration.spaceDimId);
-		chunk.pasteInWorld(worldObj, spawnLocation.x - chunk.getSizeX()/2, spawnLocation.y - chunk.getSizeY()/2, spawnLocation.z - chunk.getSizeZ()/2);
 
+		//If this is the first module sent up
+		if(!created) {
+			chunk.pasteInWorld(worldObj, spawnLocation.x - chunk.getSizeX()/2, spawnLocation.y - chunk.getSizeY()/2, spawnLocation.z - chunk.getSizeZ()/2);
+			created = true;
+		}
+		else {
+			List<TileEntity> tiles = chunk.getTileEntityList();
+			List<String> targetIds = new LinkedList<String>();
+			List<TileEntity> myPoss = new LinkedList<TileEntity>();
+			BlockPosition pos = null;
+			TileDockingPort destTile = null;
+			TileDockingPort srcTile = null;
+
+			//Iterate though all docking ports on the module in the chunk being launched
+			for(TileEntity tile : tiles) {
+				if(tile instanceof TileDockingPort) {
+					targetIds.add(((TileDockingPort)tile).getTargetId());
+					myPoss.add(tile);
+				}
+			}
+
+			//Find the first docking port on the station that matches the id in the new chunk
+			for(Entry<BlockPosition, String> map : dockingPoints.entrySet()) {
+				if(targetIds.contains(map.getValue())) {
+					int loc = targetIds.indexOf(map.getValue());
+					pos = map.getKey();
+					TileEntity tile;
+					if((tile = worldObj.getTileEntity(pos.x, pos.y, pos.z)) instanceof TileDockingPort) {
+						destTile = (TileDockingPort)tile;
+						srcTile = (TileDockingPort) myPoss.get(loc);
+						break;
+					}
+				}
+			}
+
+			if(destTile != null) {
+				ForgeDirection stationFacing = BlockFullyRotatable.getFront(destTile.getBlockMetadata());
+				ForgeDirection moduleFacing = BlockFullyRotatable.getFront(srcTile.getBlockMetadata());
+
+				BlockPosition offset = new BlockPosition(srcTile.xCoord, srcTile.yCoord, srcTile.zCoord);
+
+				ForgeDirection cross = moduleFacing.getRotation(stationFacing);
+				if(cross == moduleFacing) {
+					if(moduleFacing == stationFacing) {
+						if(cross == ForgeDirection.DOWN || cross == ForgeDirection.UP) {
+							chunk.rotateBy(ForgeDirection.NORTH);
+							chunk.rotateBy(ForgeDirection.NORTH);
+						}
+						else {
+							chunk.rotateBy(ForgeDirection.UP);
+							chunk.rotateBy(ForgeDirection.UP);
+						}
+					}
+				}
+				else
+					chunk.rotateBy(stationFacing.offsetZ == 0 ? cross.getOpposite() : cross);
+
+				int xCoord = (stationFacing.offsetX == 0 ? -srcTile.xCoord : srcTile.xCoord*stationFacing.offsetX) + stationFacing.offsetX + destTile.xCoord;
+				int yCoord = (stationFacing.offsetY == 0 ? -srcTile.yCoord : srcTile.yCoord*stationFacing.offsetY) + stationFacing.offsetY + destTile.yCoord;
+				int zCoord = (stationFacing.offsetZ == 0 ? -srcTile.zCoord : srcTile.zCoord*stationFacing.offsetZ) + stationFacing.offsetZ + destTile.zCoord;
+				chunk.pasteInWorld(worldObj, xCoord, yCoord, zCoord);
+				worldObj.setBlockToAir(destTile.xCoord + stationFacing.offsetX, destTile.yCoord + stationFacing.offsetY, destTile.zCoord + stationFacing.offsetZ);
+				worldObj.setBlockToAir(destTile.xCoord, destTile.yCoord, destTile.zCoord);
+			}
+		}
 	}
 
 	@Override
 	public void writeToNbt(NBTTagCompound nbt) {
 		properties.writeToNBT(nbt);
+		nbt.setBoolean("created", created);
 		nbt.setInteger("id", getId());
 		nbt.setInteger("posX", posX);
 		nbt.setInteger("posY", posY);
@@ -381,8 +478,8 @@ public class SpaceObject implements ISpaceObject {
 		nbt.setInteger("fuel", fuelAmount);
 		nbt.setDouble("rotation", rotation);
 		nbt.setDouble("deltaRotation", angularVelocity);
-		
-		
+
+
 		if(direction != null)
 			nbt.setInteger("direction", direction.ordinal());
 
@@ -405,12 +502,24 @@ public class SpaceObject implements ISpaceObject {
 			list.appendTag(tag);
 		}
 		nbt.setTag("warpCorePositions", list);
+
+		list = new NBTTagList();
+		for(Entry<BlockPosition, String> obj : this.dockingPoints.entrySet()) {
+			NBTTagCompound tag = new NBTTagCompound();
+			BlockPosition pos = obj.getKey();
+			String str = obj.getValue();
+			tag.setIntArray("pos", new int[] {pos.x, pos.y, pos.z});
+			tag.setString("id", str);
+			list.appendTag(tag);
+		}
+		nbt.setTag("dockingPositons", list);
 	}
 
 	@Override
 	public void readFromNbt(NBTTagCompound nbt) {
 		properties.readFromNBT(nbt);
 
+		created = nbt.getBoolean("created");
 		destinationDimId = nbt.getInteger("destinationDimId");
 		posX = nbt.getInteger("posX");
 		posY = nbt.getInteger("posY");
@@ -420,7 +529,7 @@ public class SpaceObject implements ISpaceObject {
 		properties.setId(nbt.getInteger("id"));
 		rotation = nbt.getDouble("rotation");
 		angularVelocity = nbt.getDouble("deltaRotation");
-		
+
 		if(nbt.hasKey("direction"))
 			direction = ForgeDirection.getOrientation(nbt.getInteger("direction"));
 
@@ -445,6 +554,16 @@ public class SpaceObject implements ISpaceObject {
 			int[] posInt = tag.getIntArray("pos");
 			BlockPosition pos = new BlockPosition(posInt[0], posInt[1], posInt[2]);
 			warpCoreLocation.add(pos);
+		}
+
+		list = nbt.getTagList("dockingPositons", NBT.TAG_COMPOUND);
+		dockingPoints.clear();
+		for(int i = 0; i < list.tagCount(); i++) {
+			NBTTagCompound tag = list.getCompoundTagAt(i);
+			int[] posInt = tag.getIntArray("pos");
+			BlockPosition pos = new BlockPosition(posInt[0], posInt[1], posInt[2]);
+			String str = tag.getString("id");
+			dockingPoints.put(pos, str);
 		}
 	}
 
