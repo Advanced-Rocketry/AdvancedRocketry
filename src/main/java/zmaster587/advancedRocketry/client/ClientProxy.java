@@ -131,7 +131,9 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void fireFogBurst(ISpaceObject station) {
+		try {
 		PlanetEventHandler.runBurst(Minecraft.getMinecraft().theWorld.getTotalWorldTime() + 20, 20);
+		} catch (NullPointerException e) {}
 	}
 
 	@Override
