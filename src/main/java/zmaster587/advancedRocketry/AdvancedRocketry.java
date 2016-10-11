@@ -79,6 +79,7 @@ import zmaster587.advancedRocketry.block.BlockRocketMotor;
 import zmaster587.advancedRocketry.block.BlockRotatableModel;
 import zmaster587.advancedRocketry.block.BlockSeat;
 import zmaster587.advancedRocketry.block.BlockFuelTank;
+import zmaster587.advancedRocketry.block.BlockStationModuleDockingPort;
 import zmaster587.advancedRocketry.block.BlockTileNeighborUpdate;
 import zmaster587.advancedRocketry.block.BlockTileRedstoneEmitter;
 import zmaster587.advancedRocketry.block.BlockWarpCore;
@@ -158,6 +159,7 @@ import zmaster587.advancedRocketry.tile.multiblock.machine.TileRollingMachine;
 import zmaster587.advancedRocketry.tile.oxygen.TileCO2Scrubber;
 import zmaster587.advancedRocketry.tile.oxygen.TileOxygenCharger;
 import zmaster587.advancedRocketry.tile.oxygen.TileOxygenVent;
+import zmaster587.advancedRocketry.tile.station.TileDockingPort;
 import zmaster587.advancedRocketry.tile.station.TileLandingPad;
 import zmaster587.advancedRocketry.tile.station.TileStationGravityController;
 import zmaster587.advancedRocketry.tile.station.TileStationOrientationControl;
@@ -472,6 +474,8 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockPressureTank = new BlockPressurizedFluidTank(Material.IRON).setUnlocalizedName("pressurizedTank").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockSolarPanel = new Block(Material.IRON).setUnlocalizedName("solarPanel").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockSolarGenerator = new BlockTile(TileSolarPanel.class, GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setHardness(3f).setUnlocalizedName("solarGenerator");
+		AdvancedRocketryBlocks.blockDockingPort = new BlockStationModuleDockingPort(Material.IRON).setUnlocalizedName("stationMarker").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		
 		
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill) {
 			AdvancedRocketryBlocks.blockSpaceLaser = new BlockLaser();
@@ -589,7 +593,8 @@ public class AdvancedRocketry {
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockIntake.setRegistryName("intake"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockCircleLight.setRegistryName("circleLight"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockSolarGenerator.setRegistryName("solarGenerator"));
-
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockDockingPort.setRegistryName("stationMarker"));
+		
 		//TODO, use different mechanism to enable/disable drill
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
 			LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockSpaceLaser.setRegistryName("spaceLaser"));
@@ -775,6 +780,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileRocketFluidUnloader.class, "ARFluidUnloader");
 		GameRegistry.registerTileEntity(TileRocketFluidLoader.class, "ARFluidLoader");
 		GameRegistry.registerTileEntity(TileSolarPanel.class, "ARSolarGenerator");
+		GameRegistry.registerTileEntity(TileDockingPort.class, "ARDockingPort");
 
 		//OreDict stuff
 		OreDictionary.registerOre("waferSilicon", new ItemStack(AdvancedRocketryItems.itemWafer,1,0));
@@ -939,6 +945,7 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockMicrowaveReciever), "ggg", "tbc", "aoa", 'g', "plateGold", 't', trackingCircuit, 'b', LibVulpesBlocks.blockStructureBlock, 'c', controlCircuitBoard, 'a', advancedCircuit, 'o', opticalSensor));
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockSolarPanel, "rrr", "gbg", "ppp", 'r' , Items.REDSTONE, 'g', Items.GLOWSTONE_DUST, 'b', LibVulpesBlocks.blockStructureBlock, 'p', "plateGold"));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(AdvancedRocketryBlocks.blockSolarGenerator, "itemBattery", LibVulpesBlocks.blockForgeOutputPlug, AdvancedRocketryBlocks.blockSolarPanel));
+		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockDockingPort), trackingCircuit, new ItemStack(AdvancedRocketryBlocks.blockLoader, 1,1));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryItems.itemOreScanner, "lwl", "bgb", "   ", 'l', Blocks.LEVER, 'g', userInterface, 'b', "battery", 'w', advancedCircuit));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 4), " c ","sss", "tot", 'c', "stickCopper", 's', "sheetIron", 'o', AdvancedRocketryItems.itemOreScanner, 't', trackingCircuit));

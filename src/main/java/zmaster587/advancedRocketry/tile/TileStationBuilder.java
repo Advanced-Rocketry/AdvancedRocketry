@@ -35,7 +35,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class TileStationBuilder extends TileRocketBuilder implements IInventory {
 
 	EmbeddedInventory inventory;
-	
+	Long storedId;
 	public TileStationBuilder() {
 		super();
 		inventory = new EmbeddedInventory(4);
@@ -45,13 +45,13 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 	@Override
 	public boolean canScan() {
 		ItemStack stack = new ItemStack(AdvancedRocketryBlocks.blockLoader,1,1);
-		
+
 		if(inventory.getStackInSlot(0) == null || !stack.isItemEqual(inventory.getStackInSlot(0))) {
 			status = ErrorCodes.NOSATELLITEHATCH;
 			return false;
 		}
-			
-		if(inventory.getStackInSlot(1) == null || !new ItemStack(AdvancedRocketryItems.itemSpaceStationChip,1, -1).isItemEqual(inventory.getStackInSlot(1))) {
+
+		if(inventory.getStackInSlot(1) == null || AdvancedRocketryItems.itemSpaceStationChip != inventory.getStackInSlot(1).getItem()) {
 			status = ErrorCodes.NOSATELLITECHIP;
 			return false;
 		}
@@ -59,7 +59,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 			status = ErrorCodes.OUTPUTBLOCKED;
 			return false;
 		}
-		
+
 		return super.canScan();
 	}
 
@@ -112,27 +112,43 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 			if(status != ErrorCodes.SUCCESS_STATION)
 				return;
+			StorageChunk storageChunk;
+			try {
+				storageChunk = StorageChunk.cutWorldBB(worldObj, bbCache);
+			} catch( NegativeArraySizeException e) {
+				return;
+			}
 
-			StorageChunk storageChunk = StorageChunk.cutWorldBB(worldObj, bbCache);
+			ItemStack outputStack;
+			SpaceObject object = null;
+			if(storedId == null) {
+				object = new SpaceObject();
+				SpaceObjectManager.getSpaceManager().registerSpaceObject(object, -1);
 
-			SpaceObject object = new SpaceObject();
+				outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStation,1);
+				ItemStationChip.setUUID(outputStack, object.getId());
 
-			SpaceObjectManager.getSpaceManager().registerSpaceObject(object, -1);
+			}
+			else {
+				outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStation,1);
+				ItemStationChip.setUUID(outputStack, (int)(long)storedId);
+			}
 
-			ItemStack outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStation,1);
-			ItemStationChip.setUUID(outputStack, object.getId());
 			((ItemPackedStructure)outputStack.getItem()).setStructure(outputStack, storageChunk);
 
 			inventory.setInventorySlotContents(2, outputStack);
 
-			ItemStack chipOutput = new ItemStack(AdvancedRocketryItems.itemSpaceStationChip,1);
-			ItemStationChip.setUUID(chipOutput, object.getId());
-			
-			inventory.setInventorySlotContents(3, chipOutput);
+			if(storedId == null) {
+				ItemStack stack = new ItemStack(AdvancedRocketryItems.itemSpaceStationChip,1);
+				ItemStationChip.setUUID(stack,object.getId() );
+				inventory.setInventorySlotContents(3, stack);
+			}
+
 
 			this.status = ErrorCodes.FINISHED;
-
+			storedId = null;
 			this.markDirty();
+			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);	
 		}
 	}
 
@@ -172,23 +188,33 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
 		super.useNetworkData(player, side, id, nbt);
-		
+
 		if(id == 1) {
 			inventory.decrStackSize(0, 1);
-			inventory.decrStackSize(1, 1);
+
+			storedId = (long)ItemStationChip.getUUID(inventory.getStackInSlot(1));
+			if(storedId == 0) storedId = null;
+			if(storedId == null)
+				inventory.decrStackSize(1, 1);
 		}
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		inventory.writeToNBT(nbt);
+		if(storedId != null) {
+			nbt.setLong("storedID", storedId);
+		}
 		return nbt;
 	}
 
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		inventory.readFromNBT(nbt);
+		if(nbt.hasKey("storedID")) {
+			storedId = nbt.getLong("storedID");
+		}
 	}
 
 	@Override

@@ -203,7 +203,7 @@ public class ClientProxy extends CommonProxy {
 
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemWafer, 0, new ModelResourceLocation("advancedrocketry:siliconWafer", "inventory"));
 
-		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSpaceStation, 0, new ModelResourceLocation("advancedrocketry:satellite", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSpaceStation, 0, new ModelResourceLocation("advancedrocketry:spaceStation", "inventory"));
 		
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBucketHydrogen, 0, new ModelResourceLocation("advancedrocketry:bucketHydrogen", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBucketOxygen, 0, new ModelResourceLocation("advancedrocketry:bucketOxygen", "inventory"));
@@ -292,7 +292,9 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void fireFogBurst(ISpaceObject station) {
+		try {
 		PlanetEventHandler.runBurst(Minecraft.getMinecraft().theWorld.getTotalWorldTime() + 20, 20);
+		} catch (NullPointerException e) {}
 	}
 
 	@Override

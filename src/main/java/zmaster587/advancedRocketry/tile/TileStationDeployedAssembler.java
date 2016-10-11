@@ -25,7 +25,7 @@ import zmaster587.advancedRocketry.entity.EntityStationDeployedRocket;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder.ErrorCodes;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.StorageChunk;
-import zmaster587.libVulpes.block.FullyRotatableBlock;
+import zmaster587.libVulpes.block.BlockFullyRotatable;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.interfaces.INetworkEntity;
 import zmaster587.libVulpes.network.PacketEntity;
@@ -138,7 +138,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 
 					BlockPos pos3 = new BlockPos(x,y,z);
 					if(storageChunk.getBlockState(pos3).getBlock() == AdvancedRocketryBlocks.blockEngine) {
-						storageChunk.setBlockState(pos3, storageChunk.getBlockState(pos3).withProperty(FullyRotatableBlock.FACING, rocket.forwardDirection)  );
+						storageChunk.setBlockState(pos3, storageChunk.getBlockState(pos3).withProperty(BlockFullyRotatable.FACING, rocket.forwardDirection)  );
 					}
 				}		
 			}	

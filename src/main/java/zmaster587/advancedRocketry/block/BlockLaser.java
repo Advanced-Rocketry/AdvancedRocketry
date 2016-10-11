@@ -4,7 +4,7 @@ import java.util.Random;
 
 import zmaster587.advancedRocketry.tile.TileSpaceLaser;
 import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.block.FullyRotatableBlock;
+import zmaster587.libVulpes.block.BlockFullyRotatable;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import net.minecraft.block.material.Material;

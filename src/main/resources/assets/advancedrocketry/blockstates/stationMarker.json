@@ -1,0 +1,13 @@
+{
+    "variants": {
+        "facing=north": { "model": "advancedrocketry:stationMarker" },
+        "facing=south": {  "model": "advancedrocketry:stationMarker",  "y": 180 },
+        "facing=west":  { "model": "advancedrocketry:stationMarker", "y": 270 },
+        "facing=east":  { "model": "advancedrocketry:stationMarker", "y": 90 },
+        "facing=up":  { "model": "advancedrocketry:stationMarker", "x": -90 },
+        "facing=down":  { "model": "advancedrocketry:stationMarker", "x": 90 },
+        "inventory": {
+            "model": "advancedrocketry:stationMarker"
+        }
+    }
+}

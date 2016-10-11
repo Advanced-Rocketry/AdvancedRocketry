@@ -19,6 +19,7 @@ import zmaster587.advancedRocketry.api.stations.IStorageChunk;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 import zmaster587.libVulpes.util.ZUtils;
 import net.minecraft.block.Block;
@@ -102,6 +103,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	@Override
 	public int getSizeZ() { return sizeZ; }
 
+	@Override
 	public List<TileEntity> getTileEntityList() {
 		return tileEntities;
 	}
@@ -225,6 +227,119 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		}*/
 	}
 
+	public void rotateBy(EnumFacing dir) {
+		
+		HashedBlockPosition newSizes = new HashedBlockPosition(getSizeX(), getSizeY(), getSizeZ());
+		
+		HashedBlockPosition newerSize = remapCoord(newSizes, dir);
+		newSizes = remapCoord(newSizes, dir);
+		
+		Block blocks[][][] = new Block[newSizes.x][newSizes.y][newSizes.z];
+		short metas[][][] = new short[newSizes.x][newSizes.y][newSizes.z];
+		
+		for(int y = 0; y < getSizeY(); y++) {
+			for(int z = 0; z < getSizeZ(); z++) {
+				for(int x = 0; x < getSizeX(); x++) {
+					newSizes = getNewCoord(new HashedBlockPosition(x, y, z), dir);
+					blocks[newSizes.x][newSizes.y][newSizes.z] = this.blocks[x][y][z];
+					metas[newSizes.x][newSizes.y][newSizes.z] = this.metas[x][y][z];
+				}
+			}
+		}
+		this.blocks = blocks;
+		this.metas = metas;
+
+		
+		for(TileEntity e : tileEntities) {
+			newSizes = getNewCoord(new HashedBlockPosition(e.getPos()), dir);
+			e.setPos(newSizes.getBlockPos());
+		}
+		
+		this.sizeX = newerSize.x;
+		this.sizeY = newerSize.y;
+		this.sizeZ = newerSize.z;
+	}
+	
+	private HashedBlockPosition remapCoord(HashedBlockPosition in, EnumFacing dir) {
+		
+		HashedBlockPosition out = new HashedBlockPosition(0, 0, 0);
+		
+		switch(dir) {
+		case DOWN:
+			out.x = in.z;
+			out.y = in.y;
+			out.z = in.x;
+			break;
+		case UP:
+			out.x = in.z;
+			out.y = in.y;
+			out.z = in.x;
+			break;
+		case NORTH:
+			out.x = in.y;
+			out.y = (short)(in.x);
+			out.z = in.z;
+			break;
+		case SOUTH:
+			out.x = in.y;
+			out.y = (short)in.x;
+			out.z = in.z;
+			break;
+		case EAST:
+			out.x = in.x;
+			out.y = (short)(in.z);
+			out.z = in.y;
+			break;
+		case WEST:
+			out.x = in.x;
+			out.y = (short)in.z;
+			out.z = in.y;
+			break;
+		}
+			
+		return out;
+	}
+	
+	public HashedBlockPosition getNewCoord(HashedBlockPosition in, EnumFacing dir) {
+		
+		HashedBlockPosition out = new HashedBlockPosition(0, 0, 0);
+		
+		switch(dir) {
+		case DOWN:
+			out.x = in.z;
+			out.y = in.y;
+			out.z = getSizeX()-in.x-1;
+			break;
+		case UP:
+			out.x = getSizeZ()-in.z -1;
+			out.y = in.y;
+			out.z = in.x;
+			break;
+		case NORTH:
+			out.x = in.y;
+			out.y = (short)(getSizeX()-in.x-1);
+			out.z = in.z;
+			break;
+		case SOUTH:
+			out.x = getSizeY()-in.y-1;
+			out.y = (short)in.x;
+			out.z = in.z;
+			break;
+		case EAST:
+			out.x = in.x;
+			out.y = (short)(getSizeZ()-in.z-1);
+			out.z = in.y;
+			break;
+		case WEST:
+			out.x = in.x;
+			out.y = (short)in.z;
+			out.z = getSizeY()-in.y-1;
+			break;
+		}
+			
+		return out;
+	}
+	
 
 	private static boolean isInventoryBlock(TileEntity tile) {
 		return tile instanceof IInventory && !(tile instanceof TileGuidanceComputer);

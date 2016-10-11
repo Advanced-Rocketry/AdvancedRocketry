@@ -90,6 +90,7 @@ tile.atmosphereTerraformer.name=Atmosphere Terraformer
 tile.circleLight.name=Station Light
 tile.energyPipe.name=Energy Pipe
 tile.solarGenerator.name=Solar Generator
+tile.stationMarker.name=Station Docking Port
 
 tile.Dilithium.name=Dilithium Ore
 

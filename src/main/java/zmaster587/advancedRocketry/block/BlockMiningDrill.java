@@ -3,7 +3,7 @@ package zmaster587.advancedRocketry.block;
 import zmaster587.advancedRocketry.api.IMiningDrill;
 import zmaster587.advancedRocketry.tile.TileDrill;
 import zmaster587.libVulpes.block.BlockTile;
-import zmaster587.libVulpes.block.FullyRotatableBlock;
+import zmaster587.libVulpes.block.BlockFullyRotatable;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +13,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockMiningDrill extends FullyRotatableBlock implements IMiningDrill {
+public class BlockMiningDrill extends BlockFullyRotatable implements IMiningDrill {
 
 	public BlockMiningDrill() {
 		super(Material.ROCK);

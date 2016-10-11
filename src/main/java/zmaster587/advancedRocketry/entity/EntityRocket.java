@@ -654,7 +654,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 							//Vector3F<Integer> spawn = object.getSpawnLocation();
 
-							object.onFirstCreated(storage);
+							object.onModuleUnpack(storage);
 
 						}
 					}

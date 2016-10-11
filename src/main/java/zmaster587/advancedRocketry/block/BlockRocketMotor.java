@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.block;
 
 import zmaster587.advancedRocketry.api.IRocketEngine;
-import zmaster587.libVulpes.block.FullyRotatableBlock;
+import zmaster587.libVulpes.block.BlockFullyRotatable;
 import zmaster587.libVulpes.block.RotatableBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -12,7 +12,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockRocketMotor extends FullyRotatableBlock implements IRocketEngine {
+public class BlockRocketMotor extends BlockFullyRotatable implements IRocketEngine {
 
 	public BlockRocketMotor(Material mat) {
 		super(mat);	

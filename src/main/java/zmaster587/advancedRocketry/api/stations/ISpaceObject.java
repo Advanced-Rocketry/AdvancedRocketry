@@ -63,7 +63,7 @@ public interface ISpaceObject {
 	 * When the space stations are first created they are 'unpacked' from the storage chunk they reside in
 	 * @param chunk
 	 */
-	public void onFirstCreated(IStorageChunk chunk);
+	public void onModuleUnpack(IStorageChunk chunk);
 	
 	public void writeToNbt(NBTTagCompound nbt);
 	
