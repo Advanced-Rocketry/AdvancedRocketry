@@ -1,15 +1,30 @@
 package zmaster587.advancedRocketry.tile;
 
+import io.netty.buffer.ByteBuf;
+
 import java.util.LinkedList;
 import java.util.List;
 
-import io.netty.buffer.ByteBuf;
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.ForgeChunkManager.Ticket;
+import net.minecraftforge.common.ForgeChunkManager.Type;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.integration.CompatibilityMgr;
@@ -20,7 +35,6 @@ import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.compat.InventoryCompat;
-import zmaster587.libVulpes.gui.SlotSingleItem;
 import zmaster587.libVulpes.inventory.modules.IButtonInventory;
 import zmaster587.libVulpes.inventory.modules.IGuiCallback;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
@@ -36,28 +50,9 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.UniversalBattery;
-import zmaster587.libVulpes.util.ZUtils;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.common.ForgeChunkManager.Type;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.common.ForgeChunkManager.Ticket;
-import net.minecraftforge.oredict.OreDictionary;
+import cofh.api.energy.IEnergyHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEnergyHandler, INetworkMachine, IModularInventory, IGuiCallback, IButtonInventory, IUniversalEnergy {
 
@@ -223,20 +218,25 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		markDirty();
 		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
-	
+
 	@Override
 	public void updateEntity() {
 		//TODO: drain energy
 		if(!this.worldObj.isRemote) {
 			tickSinceLastOperation++;
 
-
-			if(hasPowerForOperation() && isReadyForOperation() && laserSat.isAlive() && !laserSat.getJammed()) {
-				laserSat.performOperation();
-
-				storage.setEnergyStored(storage.getEnergyStored() - POWER_PER_OPERATION);
-				tickSinceLastOperation = 0;
+			if(!isAllowedToRun()) {
+				laserSat.deactivateLaser();
+				this.setFinished(true);
+				this.setRunning(false);
 			}
+			else
+				if(hasPowerForOperation() && isReadyForOperation() && laserSat.isAlive() && !laserSat.getJammed()) {
+					laserSat.performOperation();
+
+					storage.setEnergyStored(storage.getEnergyStored() - POWER_PER_OPERATION);
+					tickSinceLastOperation = 0;
+				}
 		}
 
 		if(laserSat.isFinished()) {
@@ -487,13 +487,17 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		return true;
 	}
 
+	private boolean isAllowedToRun() {
+		return !(glassPanel == null || storage.getEnergyStored() == 0 || !(this.worldObj.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(xCoord, zCoord).getParentPlanet()) ||
+				Configuration.laserBlackListDims.contains(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(xCoord, zCoord).getParentPlanet()));
+	}
+	
 	/**
 	 * Checks to see if the situation for firing the laser exists... and changes the state accordingly
 	 */
 	public void checkCanRun() {
 		//Laser requires lense, redstone power, not be jammed, and be in orbit and energy to function
-		if(!worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || glassPanel == null || storage.getEnergyStored() == 0 || !(this.worldObj.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(xCoord, zCoord).getParentPlanet()) ||
-				Configuration.laserBlackListDims.contains(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(xCoord, zCoord).getParentPlanet())) {
+		if(!isAllowedToRun() || !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)) {
 			if(laserSat.isAlive()) {
 				laserSat.deactivateLaser();
 			}
@@ -719,8 +723,8 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	@Override
 	public int receiveEnergy(ForgeDirection from, int maxReceive,
 			boolean simulate) {
-		
-		
+
+
 		if(from == ForgeDirection.DOWN || from == RotatableBlock.getFront(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord)))
 			return 0;
 
@@ -742,12 +746,12 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	public int getMaxEnergyStored(ForgeDirection from) {
 		return getMaxEnergyStored();
 	}
-	
+
 	@Override
 	public void setMaxEnergyStored(int max) {
 		storage.setMaxEnergyStored(max);
 	}
-	
+
 	//Redstone Flux end
 
 	public boolean isJammed() {
@@ -782,7 +786,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 				laserZ = Integer.parseInt(((ModuleTextBox)module).getText());
 			PacketHandler.sendToServer(new PacketMachine(this,(byte) 1));
 		}
-		
+
 
 	}
 
@@ -793,24 +797,24 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		if(worldObj.isRemote) {
 			modules.add(locationX = new ModuleNumericTextbox(this, 113, 31, 50, 10, 16));
 			modules.add(locationZ = new ModuleNumericTextbox(this, 113, 41, 50, 10, 16));
-			
+
 			locationX.setText(String.valueOf(this.laserX));
 			locationZ.setText(String.valueOf(this.laserZ));
-			
+
 			modules.add(updateText = new ModuleText(130, 20, this.getMode().toString(), 0x0b0b0b, true));
 			modules.add(new ModuleText(103, 33, "X:",  0x0b0b0b));
 			modules.add(new ModuleText(103, 43, "Z:",  0x0b0b0b));
-			
+
 			modules.add(new ModuleImage(8, 16, TextureResources.laserGuiBG));
 		}
-		
+
 		modules.add(new ModuleButton(103, 20, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonLeft, 5, 8));
 		modules.add(new ModuleButton(157, 20, 1, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonRight, 5, 8));
 		modules.add(new ModuleButton(103, 62, 2, "Reset", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, 34, 20));
 		modules.add(new ModulePower(11, 25, this));
 		modules.add(new ModuleSlotArray(56, 54, this, 0, 1));
-		
-		
+
+
 
 
 		return modules;
