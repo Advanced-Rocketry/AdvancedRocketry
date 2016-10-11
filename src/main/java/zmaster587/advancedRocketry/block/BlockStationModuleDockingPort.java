@@ -1,5 +1,7 @@
 package zmaster587.advancedRocketry.block;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,6 +27,7 @@ public class BlockStationModuleDockingPort extends BlockFullyRotatable {
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister icon) {
 		top = icon.registerIcon("libvulpes:machineGeneric");
 		rear = sides = bottom = top;

@@ -394,6 +394,9 @@ public class SpaceObject implements ISpaceObject {
 	 */
 	@Override
 	public void onModuleUnpack(IStorageChunk chunk) {
+		
+		if(DimensionManager.isDimensionRegistered(Configuration.spaceDimId) &&  DimensionManager.getWorld(Configuration.spaceDimId) == null)
+			DimensionManager.initDimension(Configuration.spaceDimId);
 		World worldObj = DimensionManager.getWorld(Configuration.spaceDimId);
 
 		//If this is the first module sent up
@@ -434,8 +437,6 @@ public class SpaceObject implements ISpaceObject {
 			if(destTile != null) {
 				ForgeDirection stationFacing = BlockFullyRotatable.getFront(destTile.getBlockMetadata());
 				ForgeDirection moduleFacing = BlockFullyRotatable.getFront(srcTile.getBlockMetadata());
-
-				BlockPosition offset = new BlockPosition(srcTile.xCoord, srcTile.yCoord, srcTile.zCoord);
 
 				ForgeDirection cross = moduleFacing.getRotation(stationFacing);
 				if(cross == moduleFacing) {

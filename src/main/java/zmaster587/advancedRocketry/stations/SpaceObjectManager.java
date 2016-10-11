@@ -123,22 +123,20 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 */
 	public ISpaceObject getSpaceStationFromBlockCoords(int x, int z) {
 
-		int radius = Math.max((int)Math.ceil(Math.abs((x/2)/(float)Configuration.stationSize)), (int)Math.ceil(Math.abs((z/2)/(float)Configuration.stationSize)));
+		x = (int) Math.round((x)/(2f*Configuration.stationSize));
+		z = (int) Math.round((z)/(2f*Configuration.stationSize));
+		int radius = Math.max(Math.abs(x), Math.abs(z));
 
-		int index;
-
-		if(Math.abs(x/Configuration.stationSize) <= Math.abs(z/Configuration.stationSize)) {
-			if(z < 0)
-				index = (int)Math.pow(2*radius-1,2) + radius +(x/Configuration.stationSize);
-			else
-				index = (int)Math.pow(2*radius-1,2) + radius + (x/Configuration.stationSize) + (radius*2 + 1);
+		int index = (int) Math.pow((2*radius-1),2) + x + radius;
+		
+		if(Math.abs(z) != radius) {
+			index = (int) Math.pow((2*radius-1),2) + z + radius + (4*radius + 2) - 1;
+			
+			if(x > 0)
+				index += 2*radius-1;
 		}
-		else {
-			if(x < 0)
-				index = (int)Math.pow(2*radius-1,2) + radius - 1 + (radius*2 + 1)*2 + (z/Configuration.stationSize);
-			else
-				index = (int)Math.pow(2*radius-1,2) + (3*radius) - 2 + (radius*2 + 1)*2 + (z/Configuration.stationSize);
-		}
+		else if(z > 0)
+			index += 2*radius+1;
 
 		return getSpaceStation(index);
 	}
