@@ -70,7 +70,7 @@ public class TilePipe extends TileEntity {
 
 
 			if(tile != null) {
-				if(tile instanceof TilePipe) {
+				if(tile instanceof TilePipe && tile.getClass() == this.getClass()) {
 					TilePipe pipe = (TilePipe)tile;
 					if(this.destroyed)
 						continue;
@@ -96,7 +96,7 @@ public class TilePipe extends TileEntity {
 		for(EnumFacing dir : EnumFacing.values()) {
 			TileEntity tile = worldObj.getTileEntity(getPos().offset(dir));
 
-			if(tile != null) {
+			if(tile != null &&tile.getClass() == this.getClass()) {
 				attemptLink(dir, tile);
 			}
 		}
@@ -141,7 +141,7 @@ public class TilePipe extends TileEntity {
 			initialized = false;
 		}
 
-		if(tile != null) {
+		if(tile != null && tile.getClass() == this.getClass()) {
 
 			//If two networks touch, merge them
 			if(tile instanceof TilePipe) {
