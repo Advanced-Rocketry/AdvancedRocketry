@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
@@ -113,6 +114,13 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 
 			saveEmbeddedInventory(armor, inv);
 		}
+		               ItemStack feet = player.getCurrentArmor(0);
+		               ItemStack leg = player.getCurrentArmor(1);
+		               ItemStack chest = player.getCurrentArmor(2);
+		               ItemStack helm = player.getCurrentArmor(3);
+		               if(feet != null && feet.getItem() instanceof ItemSpaceArmor && leg != null && leg.getItem() instanceof ItemSpaceArmor && chest != null && chest.getItem() instanceof ItemSpaceArmor && helm != null && helm.getItem() instanceof ItemSpaceArmor)
+		                       player.triggerAchievement(ARAchivements.suitedUp);
+
 	}
 
 	@Override

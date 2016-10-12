@@ -38,6 +38,7 @@ import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
@@ -55,11 +56,14 @@ import zmaster587.advancedRocketry.util.BiomeHandler;
 import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IModularArmor;
+import zmaster587.libVulpes.api.LibVulpesItems;
 import zmaster587.libVulpes.network.PacketHandler;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
@@ -85,6 +89,39 @@ public class PlanetEventHandler {
 			event.result = EnumStatus.OTHER_PROBLEM;
 		}
 	}
+	
+	@SubscribeEvent
+	public void onCrafting(PlayerEvent.ItemCraftedEvent event) {
+		if(event.crafting != null) {
+			Item item = event.crafting.getItem();
+			if(item == LibVulpesItems.itemHoloProjector) 
+			event.player.triggerAchievement(ARAchivements.holographic);
+			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockRollingMachine))
+				event.player.triggerAchievement(ARAchivements.rollin);
+			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockCrystallizer))
+				event.player.triggerAchievement(ARAchivements.crystalline);
+			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockLathe))
+				event.player.triggerAchievement(ARAchivements.spinDoctor);
+			else if(item ==Item.getItemFromBlock(AdvancedRocketryBlocks.blockElectrolyser))
+				event.player.triggerAchievement(ARAchivements.electrifying);
+			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockArcFurnace))
+				event.player.triggerAchievement(ARAchivements.feelTheHeat);
+			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockWarpCore))
+				event.player.triggerAchievement(ARAchivements.feelTheHeat);
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPickup(PlayerEvent.ItemPickupEvent event) {
+		if(event.pickedUp != null) {
+			Item item = event.pickedUp.getEntityItem().getItem();
+			
+			
+			zmaster587.libVulpes.api.material.Material mat = LibVulpes.materialRegistry.getMaterialFromItemStack( event.pickedUp.getEntityItem());
+			if(mat != null && mat.getUnlocalizedName().contains("Dilithium"))
+				event.player.triggerAchievement(ARAchivements.dilithiumCrystals);
+		}
+	}
 
 	//Handle gravity
 	@SubscribeEvent
@@ -104,6 +141,13 @@ public class PlanetEventHandler {
 				//event.entity.motionY += 0.075f - DimensionManager.overworldProperties.gravitationalMultiplier*0.075f;
 			}
 		}
+		
+		if(!event.entity.worldObj.isRemote && event.entity.worldObj.getTotalWorldTime() % 20 ==0 && event.entity instanceof EntityPlayer) {
+			if(DimensionManager.getInstance().getDimensionProperties(event.entity.worldObj.provider.dimensionId).getName().equals("Luna") && 
+					event.entity.getDistanceSq(67, 80, 2347) < 512 ) {
+				((EntityPlayer)event.entity).triggerAchievement(ARAchivements.weReallyWentToTheMoon);
+			}	
+		}
 	}
 
 	@SubscribeEvent
@@ -121,6 +165,10 @@ public class PlanetEventHandler {
 				else if(event.entityPlayer.getCurrentEquippedItem().getItem() == Items.flint_and_steel || event.entityPlayer.getCurrentEquippedItem().getItem() == Items.fire_charge)
 					event.setCanceled(true);
 			}
+		}
+		
+		if(!event.world.isRemote && event.entityPlayer != null && event.entityPlayer.getCurrentEquippedItem() != null && event.entityPlayer.getCurrentEquippedItem().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.world.getBlock(event.x, event.y, event.z) == Blocks.tnt) {
+			event.entityPlayer.triggerAchievement(ARAchivements.beerOnTheSun);
 		}
 	}
 

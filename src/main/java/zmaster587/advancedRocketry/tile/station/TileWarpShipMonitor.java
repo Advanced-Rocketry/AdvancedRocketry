@@ -5,8 +5,11 @@ import io.netty.buffer.ByteBuf;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.google.common.base.Predicate;
+
 import cpw.mods.fml.relauncher.Side;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
@@ -365,6 +368,20 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 			if(station != null && station.hasUsableWarpCore() && station.useFuel(getTravelCost()) != 0) {
 				SpaceObjectManager.getSpaceManager().moveStationToBody(station, station.getDestOrbitingBody(), 200);
+
+
+				for (Object plr : worldObj.playerEntities) {
+
+					EntityPlayer player2 = (EntityPlayer)plr;
+					if(SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)player2.posX, (int)player2.posZ) == station) {
+						player2.triggerAchievement(ARAchivements.givingItAllShesGot);
+						if(!DimensionManager.hasReachedWarp)
+							player2.triggerAchievement(ARAchivements.flightOfThePhoenix);
+					}
+				}
+
+				DimensionManager.hasReachedWarp = true;
+
 				for(BlockPosition vec : station.getWarpCoreLocations()) {
 					TileEntity tile = worldObj.getTileEntity(vec.x, vec.y, vec.z);
 					if(tile != null && tile instanceof TileWarpCore) {

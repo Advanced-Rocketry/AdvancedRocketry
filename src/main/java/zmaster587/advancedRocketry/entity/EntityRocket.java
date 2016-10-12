@@ -31,6 +31,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
@@ -440,7 +441,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				if(worldObj.isRemote && Minecraft.getMinecraft().gameSettings.particleSetting < 2 && (this.motionY > 0 || descentPhase || (riddenByEntity instanceof EntityPlayer && ((EntityPlayer)riddenByEntity).moveForward > 0))) {
 					int engineNum = 0;
 					for(Vector3F<Float> vec : stats.getEngineLocations()) {
-						
+
 						AtmosphereHandler handler;
 						//Cycle through engines outputting smoke, increases performance with craft with large number of engines
 						if(worldObj.getTotalWorldTime() % 10 == 0 && (engineNum < 8 || ((worldObj.getTotalWorldTime()/10) % Math.max((stats.getEngineLocations().size()/8),1)) == (engineNum/8)) && ( (handler = AtmosphereHandler.getOxygenHandler(worldObj.provider.dimensionId)) == null || handler.getAtmosphereType(this) == null || handler.getAtmosphereType(this).allowsCombustion()) )
@@ -450,7 +451,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 							AdvancedRocketry.proxy.spawnParticle("rocketFlame", worldObj, this.posX + vec.x, this.posY + vec.y - 0.75, this.posZ +vec.z,(this.rand.nextFloat() - 0.5f)/8f,-.75 ,(this.rand.nextFloat() - 0.5f)/8f);
 
 						}
-						
+
 						engineNum++;
 					}
 				}
@@ -629,8 +630,20 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				}
 			}
 			//Make player confirm deorbit if a player is riding the rocket
-			if(this.riddenByEntity != null)
+			if(this.riddenByEntity != null) {
 				setInFlight(false);
+
+				if(DimensionManager.getInstance().getDimensionProperties(destinationDimId).getName().equals("Luna")) {
+
+					if(this.riddenByEntity instanceof EntityPlayer) {
+						((EntityPlayer)this.riddenByEntity).triggerAchievement(ARAchivements.moonLanding);
+						if(!DimensionManager.hasReachedMoon)
+							((EntityPlayer)this.riddenByEntity).triggerAchievement(ARAchivements.oneSmallStep);
+					}
+
+					DimensionManager.hasReachedMoon = true;
+				}
+			}
 			else
 				setPosition(posX, Configuration.orbit, posZ);
 
@@ -789,7 +802,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			this.worldObj.theProfiler.endStartSection("reloading");
 			Entity entity = EntityList.createEntityByName(EntityList.getEntityString(this), worldserver1);
 
-			
+
 			if (entity != null)
 			{
 				entity.copyDataFrom(this, true);
@@ -806,7 +819,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 					//worldserver1.resetUpdateEntityTick();
 					//Transfer the player if applicable
 					PlanetEventHandler.addDelayedTransition(worldserver.getTotalWorldTime() + 1, new TransitionEntity(worldserver.getTotalWorldTime() + 1, rider, dimension, new BlockPosition((int)posX, Configuration.orbit, (int)posZ), entity));
-					
+
 					//minecraftserver.getConfigurationManager().transferPlayerToDimension((EntityPlayerMP)rider, newDimId, new TeleporterNoPortal(worldserver1));
 
 					//rider.setLocationAndAngles(x, Configuration.orbit, z, this.rotationYaw, this.rotationPitch);
