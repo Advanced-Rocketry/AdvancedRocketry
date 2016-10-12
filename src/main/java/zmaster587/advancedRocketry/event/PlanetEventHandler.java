@@ -237,9 +237,10 @@ public class PlanetEventHandler {
 					Entry<Long, TransitionEntity> entry = itr.next();
 					TransitionEntity ent = entry.getValue();
 					if(ent.entity.worldObj.getTotalWorldTime() >= entry.getKey()) {
+						ent.entity.setLocationAndAngles(ent.location.x, ent.location.y, ent.location.z, ent.entity.rotationYaw, ent.entity.rotationPitch);
+						
 						MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP)ent.entity, ent.dimId, new TeleporterNoPortal(MinecraftServer.getServer().worldServerForDimension(ent.dimId)));
 
-						ent.entity.setLocationAndAngles(ent.location.x, ent.location.y, ent.location.z, ent.entity.rotationYaw, ent.entity.rotationPitch);
 						ent.entity.mountEntity(ent.entity2);
 						itr.remove();
 					}
