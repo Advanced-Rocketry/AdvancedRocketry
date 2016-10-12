@@ -16,6 +16,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.EntityPlayer.SleepResult;
@@ -138,8 +139,7 @@ public class PlanetEventHandler {
 			if(DimensionManager.getInstance().getDimensionProperties(event.getEntity().worldObj.provider.getDimension()).getName().equals("Luna") && 
 					event.getEntity().getPosition().distanceSq(67, 80, 2347) < 512 ) {
 				((EntityPlayer)event.getEntity()).addStat(ARAchivements.weReallyWentToTheMoon);
-			}
-				
+			}	
 		}
 	}
 	
@@ -239,9 +239,10 @@ public class PlanetEventHandler {
 					Entry<Long, TransitionEntity> entry = itr.next();
 					TransitionEntity ent = entry.getValue();
 					if(ent.entity.worldObj.getTotalWorldTime() >= entry.getKey()) {
-						ent.entity.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP)ent.entity, ent.dimId, new TeleporterNoPortal(ent.entity.getServer().worldServerForDimension(ent.dimId)));
 						ent.entity.setLocationAndAngles(ent.location.getX(), ent.location.getY(), ent.location.getZ(), ent.entity.rotationYaw, ent.entity.rotationPitch);
+						ent.entity.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP)ent.entity, ent.dimId, new TeleporterNoPortal(ent.entity.getServer().worldServerForDimension(ent.dimId)));
 						ent.entity.startRiding(ent.entity2);
+						
 						itr.remove();
 					}
 				}

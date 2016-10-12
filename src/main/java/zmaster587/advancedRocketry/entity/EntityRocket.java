@@ -25,6 +25,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.play.server.SPacketRespawn;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -835,7 +836,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	public Entity changeDimension(int dimensionIn, double posX, double y, double posZ)
 	{
 		if (!this.worldObj.isRemote && !this.isDead)
-		{
+		{			
 			List<Entity> passengers = getPassengers();
 
 			if (!net.minecraftforge.common.ForgeHooks.onTravelToDimension(this, dimensionIn)) return null;
@@ -892,8 +893,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				int timeOffset = 1;
 				for(Entity e : passengers) {
 					//Fix that darn random crash?
-					//worldserver.resetUpdateEntityTick();
-					//worldserver1.resetUpdateEntityTick();
+					worldserver.resetUpdateEntityTick();
+					worldserver1.resetUpdateEntityTick();
 					//Transfer the player if applicable
 
 					//Need to handle our own removal to avoid race condition where player is mounted on client on the old entity but is already mounted to the new one on server
@@ -904,8 +905,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					//minecraftserver.getPlayerList().transferPlayerToDimension((EntityPlayerMP)e, dimensionIn, teleporter);
 
 					//e.setLocationAndAngles(posX, Configuration.orbit, posZ, this.rotationYaw, this.rotationPitch);
+					
 					//e.startRiding(entity);
 
+					
+					//e.playerNetServerHandler.sendPacket(new SPacketRespawn(e.dimension, e.worldObj.getDifficulty(), worldserver1.getWorldInfo().getTerrainType(), ((EntityPlayerMP)e).interactionManager.getGameType()));
+					//((WorldServer)startWorld).getPlayerManager().removePlayer(player);
+					
 				}
 			}
 
@@ -925,7 +931,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	/**
 	 * Prepares this entity in new dimension by copying NBT data from entity in old dimension
 	 */
-	private void copyDataFromOld(Entity entityIn)
+	public void copyDataFromOld(Entity entityIn)
 	{
 		NBTTagCompound nbttagcompound = entityIn.writeToNBT(new NBTTagCompound());
 		nbttagcompound.removeTag("Dimension");
@@ -1132,7 +1138,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketLandedEvent(this));
 		}
 		else if(id == PacketType.DISMOUNTCLIENT.ordinal() && worldObj.isRemote) {
-			this.removePassenger(player);
+			player.dismountRidingEntity();
+			//this.removePassenger(player);
 		}
 		else if(id > 100) {
 			TileEntity tile = storage.getGUItiles().get(id - 100 - tilebuttonOffset);
