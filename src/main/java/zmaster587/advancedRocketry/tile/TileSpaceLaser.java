@@ -218,7 +218,12 @@ public class TileSpaceLaser extends TileInventoriedRFConsumer implements ISidedI
 		if(!this.worldObj.isRemote) {
 			tickSinceLastOperation++;
 
-
+			if(!isAllowedToRun()) {
+				laserSat.deactivateLaser();
+				this.setFinished(true);
+				this.setRunning(false);
+			}
+			else
 			if(hasPowerForOperation() && isReadyForOperation() && laserSat.isAlive() && !laserSat.getJammed()) {
 				laserSat.performOperation();
 				
@@ -476,13 +481,17 @@ public class TileSpaceLaser extends TileInventoriedRFConsumer implements ISidedI
 		return true;
 	}
 
+	private boolean isAllowedToRun() {
+		return !(glassPanel == null || energy.getEnergyStored() == 0 || !(this.worldObj.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(getPos()).getParentPlanet()) ||
+				Configuration.laserBlackListDims.contains(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(getPos()).getParentPlanet()));
+	}
+	
 	/**
 	 * Checks to see if the situation for firing the laser exists... and changes the state accordingly
 	 */
 	public void checkCanRun() {
 		//Laser requires lense, redstone power, not be jammed, and be in orbit and energy to function
-		if(worldObj.isBlockIndirectlyGettingPowered(getPos()) == 0 || glassPanel == null || energy.getEnergyStored() == 0 || !(this.worldObj.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(getPos()).getParentPlanet()) ||
-				Configuration.laserBlackListDims.contains(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(getPos()).getParentPlanet())) {
+		if(worldObj.isBlockIndirectlyGettingPowered(getPos()) == 0 || !isAllowedToRun()) {
 			if(laserSat.isAlive()) {
 				laserSat.deactivateLaser();
 			}

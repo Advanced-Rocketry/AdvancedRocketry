@@ -1,21 +1,39 @@
 package zmaster587.advancedRocketry.world.decoration;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.libVulpes.block.BlockMeta;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.MapGenBase;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class MapGenGeode extends MapGenBase {
 	int chancePerChunk;
 
-	private final static BlockMeta[] ores = {new BlockMeta(Blocks.IRON_ORE), new BlockMeta(Blocks.GOLD_ORE), new BlockMeta(Blocks.REDSTONE_ORE), new BlockMeta(Blocks.LAPIS_ORE)};
+	private static  List<BlockMeta> ores; // = {new BlockMeta(Blocks.IRON_ORE), new BlockMeta(Blocks.GOLD_ORE), new BlockMeta(Blocks.REDSTONE_ORE), new BlockMeta(Blocks.LAPIS_ORE)};
 
 	public MapGenGeode(int chancePerChunk) {
 		this.chancePerChunk = chancePerChunk;
+		
+		if(ores == null) {
+			ores = new LinkedList<BlockMeta>();
+			for(int i = 0; i < Configuration.standardAsteroidOres.length; i++) {
+				String oreDictName = Configuration.standardAsteroidOres[i];
+				List<ItemStack> ores2 = OreDictionary.getOres(oreDictName);
+
+				if(ores2 != null && !ores2.isEmpty()) {
+					ores.add(new BlockMeta(Block.getBlockFromItem(ores2.get(0).getItem()), ores2.get(0).getItemDamage()));
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -64,7 +82,7 @@ public class MapGenGeode extends MapGenBase {
 							//Generates ore hanging from the ceiling
 							if( x % 4 > 0 && z % 4 > 0) {
 								for(int i = 1; i < size; i++)
-									chunkPrimerIn.setBlockState(x, avgY + count - i, z, ores[(x/4 + z/4) % ores.length].getBlock().getDefaultState());
+									chunkPrimerIn.setBlockState(x, avgY + count - i, z, ores.get((x/4 + z/4) % ores.size()).getBlockState());
 							}
 							else {
 								size -=2;
@@ -76,7 +94,7 @@ public class MapGenGeode extends MapGenBase {
 							//Generates ore in the floor
 							if( (x+2) % 4 > 0 && (z+2) % 4 > 0) {
 								for(int i = 1; i < size; i++)
-									chunkPrimerIn.setBlockState(x, avgY - count + i, z, ores[(x/4 + z/4) % ores.length].getBlock().getDefaultState());
+									chunkPrimerIn.setBlockState(x, avgY - count + i, z, ores.get((x/4 + z/4) % ores.size()).getBlockState());
 							}
 							
 						}

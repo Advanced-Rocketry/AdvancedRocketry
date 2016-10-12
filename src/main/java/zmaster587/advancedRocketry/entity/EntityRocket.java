@@ -16,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -42,6 +43,7 @@ import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
@@ -697,6 +699,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					if(hasHumanPassenger()) {
 						setInFlight(false);
 						pos.y = (float) Configuration.orbit;
+
 					}
 
 					this.changeDimension(destinationDimId, pos.x, pos.y, pos.z);
@@ -704,8 +707,20 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				}
 			}
 			//Make player confirm deorbit if a player is riding the rocket
-			if(hasHumanPassenger())
+			if(hasHumanPassenger()) {
 				setInFlight(false);
+				
+				if(DimensionManager.getInstance().getDimensionProperties(destinationDimId).getName().equals("Luna")) {
+					for(Entity player : this.getPassengers()) {
+						if(player instanceof EntityPlayer) {
+							((EntityPlayer)player).addStat(ARAchivements.moonLanding);
+							if(!DimensionManager.hasReachedMoon)
+								((EntityPlayer)player).addStat(ARAchivements.oneSmallStep);
+						}
+					}
+					DimensionManager.hasReachedMoon = true;
+				}
+			}
 			else
 				setPosition(posX, Configuration.orbit, posZ);
 
@@ -866,7 +881,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 			if (entity != null)
 			{
-				
+
 				this.moveToBlockPosAndAngles(new BlockPos(posX, y, posZ), entity.rotationYaw, entity.rotationPitch);
 				((EntityRocket)entity).copyDataFromOld(this);
 

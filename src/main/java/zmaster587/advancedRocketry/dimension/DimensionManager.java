@@ -41,6 +41,10 @@ public class DimensionManager {
 	public static final DimensionType PlanetDimensionType = DimensionType.register("planet", "planet", 2, WorldProviderPlanet.class, false);
 	public static final DimensionType spaceDimensionType = DimensionType.register("space", "space", 3, WorldProviderSpace.class, false);
 	private boolean hasBeenInitiallized = false;
+	
+	//Stat tracking
+	public static boolean hasReachedMoon;
+	public static boolean hasReachedWarp;
 
 	//Reference to the worldProvider for any dimension created through this system, normally WorldProviderPlanet, set in AdvancedRocketry.java in preinit
 	public static Class<? extends WorldProvider> planetWorldProvider;
@@ -479,6 +483,12 @@ public class DimensionManager {
 		}
 
 		nbt.setTag("dimList", dimListnbt);
+		
+		//Stats
+		NBTTagCompound stats = new NBTTagCompound();
+		stats.setBoolean("hasReachedMoon", hasReachedMoon);
+		stats.setBoolean("hasReachedWarp", hasReachedWarp);
+		nbt.setTag("stat", stats);
 
 		NBTTagCompound nbtTag = new NBTTagCompound();
 		SpaceObjectManager.getSpaceManager().writeToNBT(nbtTag);
@@ -551,6 +561,10 @@ public class DimensionManager {
 		if(solarSystem.hasNoTags())
 			return false;
 
+		NBTTagCompound stats = nbt.getCompoundTag("stat");
+		hasReachedMoon = stats.getBoolean("hasReachedMoon");
+		hasReachedWarp = stats.getBoolean("hasReachedWarp");
+		
 		for(Object key : solarSystem.getKeySet()) {
 
 			NBTTagCompound solarNBT = solarSystem.getCompoundTag((String)key);

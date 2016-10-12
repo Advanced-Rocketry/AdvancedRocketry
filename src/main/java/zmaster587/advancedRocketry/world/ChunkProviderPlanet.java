@@ -153,7 +153,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 			craterGenerator = null;
 
 		if(atmDensity > 1.25f) {
-			geodeGenerator = new MapGenGeode(8000);
+			geodeGenerator = new MapGenGeode(800);
 		}
 		else
 			geodeGenerator = null;

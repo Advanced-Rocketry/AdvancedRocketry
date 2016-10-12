@@ -35,6 +35,7 @@ import net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
@@ -48,6 +49,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerConnectionFromClientEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
@@ -64,7 +66,10 @@ import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IModularArmor;
+import zmaster587.libVulpes.api.LibVulpesItems;
+import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.network.PacketHandler;
 
 public class PlanetEventHandler {
@@ -75,6 +80,39 @@ public class PlanetEventHandler {
 
 	public static void addDelayedTransition(long tick, TransitionEntity entity) {
 		transitionMap.put(tick, entity);
+	}
+	
+	@SubscribeEvent
+	public void onCrafting(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent event) {
+		if(event.crafting != null) {
+			Item item = event.crafting.getItem();
+			if(item == LibVulpesItems.itemHoloProjector) 
+			event.player.addStat(ARAchivements.holographic);
+			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockRollingMachine))
+				event.player.addStat(ARAchivements.rollin);
+			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockCrystallizer))
+				event.player.addStat(ARAchivements.crystalline);
+			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockLathe))
+				event.player.addStat(ARAchivements.spinDoctor);
+			else if(item ==Item.getItemFromBlock(AdvancedRocketryBlocks.blockElectrolyser))
+				event.player.addStat(ARAchivements.electrifying);
+			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockArcFurnace))
+				event.player.addStat(ARAchivements.feelTheHeat);
+			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockWarpCore))
+				event.player.addStat(ARAchivements.feelTheHeat);
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPickup(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent event) {
+		if(event.pickedUp != null) {
+			Item item = event.pickedUp.getEntityItem().getItem();
+			
+			
+			zmaster587.libVulpes.api.material.Material mat = LibVulpes.materialRegistry.getMaterialFromItemStack( event.pickedUp.getEntityItem());
+			if(mat != null && mat.getUnlocalizedName().contains("Dilithium"))
+				event.player.addStat(ARAchivements.dilithiumCrystals);
+		}
 	}
 	
 	//Handle gravity
@@ -94,6 +132,14 @@ public class PlanetEventHandler {
 			if(!(event.getEntity() instanceof EntityPlayer) || !((EntityPlayer)event.getEntity()).capabilities.isFlying) {
 				//event.getEntity().motionY += 0.075f - DimensionManager.overworldProperties.gravitationalMultiplier*0.075f;
 			}
+		}
+		
+		if(!event.getEntity().worldObj.isRemote && event.getEntity().worldObj.getTotalWorldTime() % 20 ==0 && event.getEntity() instanceof EntityPlayer) {
+			if(DimensionManager.getInstance().getDimensionProperties(event.getEntity().worldObj.provider.getDimension()).getName().equals("Luna") && 
+					event.getEntity().getPosition().distanceSq(67, 80, 2347) < 512 ) {
+				((EntityPlayer)event.getEntity()).addStat(ARAchivements.weReallyWentToTheMoon);
+			}
+				
 		}
 	}
 	
@@ -121,6 +167,10 @@ public class PlanetEventHandler {
 				else if(event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE)
 					event.setCanceled(true);
 			}
+		}
+		
+		if(!event.getWorld().isRemote && event.getItemStack() != null && event.getItemStack().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
+			event.getEntityPlayer().addStat(ARAchivements.beerOnTheSun);
 		}
 	}
 

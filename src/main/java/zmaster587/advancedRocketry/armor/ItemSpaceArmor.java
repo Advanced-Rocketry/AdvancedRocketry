@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
@@ -121,6 +122,13 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 
 			saveEmbeddedInventory(armor, inv);
 		}
+		
+		ItemStack feet = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
+		ItemStack leg = player.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
+		ItemStack chest = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+		if(feet != null && feet.getItem() instanceof ItemSpaceArmor && leg != null && leg.getItem() instanceof ItemSpaceArmor && chest != null && chest.getItem() instanceof ItemSpaceArmor && helm != null && helm.getItem() instanceof ItemSpaceArmor)
+			player.addStat(ARAchivements.suitedUp);
 	}
 
 	@Override
@@ -167,6 +175,8 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 			saveEmbeddedInventory(armor, inv);
 		}
 	}
+	
+	
 
 	public ItemStack removeComponent(World world, ItemStack armor, int index) {
 		NBTTagCompound nbt;

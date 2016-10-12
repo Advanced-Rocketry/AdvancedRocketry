@@ -5,7 +5,10 @@ import io.netty.buffer.ByteBuf;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.google.common.base.Predicate;
+
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
@@ -77,7 +80,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 	protected int getTravelCost() {
 		if(getSpaceObject() != null) {
 			DimensionProperties properties = getSpaceObject().getProperties().getParentProperties();
-			//properties.orbitalDist = 1;
+
 			DimensionProperties destProperties = DimensionManager.getInstance().getDimensionProperties(getSpaceObject().getDestOrbitingBody());
 			while(destProperties.getParentProperties() != null && destProperties.getParentProperties().isMoon())
 				destProperties = destProperties.getParentProperties();
@@ -359,10 +362,23 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 				player.openGui(LibVulpes.instance, guiId.MODULARNOINV.ordinal(), worldObj, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
 		}
 		else if(id == 2) {
-			SpaceObject station = getSpaceObject();
+			final SpaceObject station = getSpaceObject();
 
 			if(station != null && station.hasUsableWarpCore() && station.useFuel(getTravelCost()) != 0) {
 				SpaceObjectManager.getSpaceManager().moveStationToBody(station, station.getDestOrbitingBody(), 200);
+
+				for (EntityPlayer player2 : worldObj.getPlayers(EntityPlayer.class, new Predicate<EntityPlayer>() {
+					public boolean apply(EntityPlayer input) {
+						return SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(input.getPosition()) == station;
+					};
+				})) {
+					player2.addStat(ARAchivements.givingItAllShesGot);
+					if(!DimensionManager.hasReachedWarp)
+						player2.addStat(ARAchivements.flightOfThePhoenix);
+				}
+
+				DimensionManager.hasReachedWarp = true;
+
 				for(HashedBlockPosition vec : station.getWarpCoreLocations()) {
 					TileEntity tile = worldObj.getTileEntity(vec.getBlockPos());
 					if(tile != null && tile instanceof TileWarpCore) {

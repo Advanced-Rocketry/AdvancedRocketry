@@ -22,9 +22,11 @@ import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.stats.Achievement;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -51,6 +53,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
@@ -176,6 +179,7 @@ import zmaster587.advancedRocketry.world.biome.BiomeGenMarsh;
 import zmaster587.advancedRocketry.world.biome.BiomeGenOceanSpires;
 import zmaster587.advancedRocketry.world.biome.BiomeGenSpace;
 import zmaster587.advancedRocketry.world.biome.BiomeGenStormland;
+import zmaster587.advancedRocketry.world.decoration.MapGenLander;
 import zmaster587.advancedRocketry.world.ore.OreGenerator;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
@@ -1103,6 +1107,8 @@ public class AdvancedRocketry {
 	{
 		proxy.registerEventHandlers();
 		proxy.registerKeyBindings();
+		
+		ARAchivements.register();
 		//TODO: debug
 		//ClientCommandHandler.instance.registerCommand(new Debugger());
 
@@ -1115,6 +1121,8 @@ public class AdvancedRocketry {
 
 		InputSyncHandler inputSync = new InputSyncHandler();
 		MinecraftForge.EVENT_BUS.register(inputSync);
+		
+		MinecraftForge.EVENT_BUS.register(new MapGenLander());
 
 		/*if(Loader.isModLoaded("GalacticraftCore") && zmaster587.advancedRocketry.api.Configuration.overrideGCAir) {
 			GalacticCraftHandler eventHandler = new GalacticCraftHandler();
