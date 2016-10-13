@@ -188,7 +188,7 @@ public class ClientProxy extends CommonProxy {
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemIC, 5, new ModelResourceLocation("advancedrocketry:liquidIOCircuit", "inventory"));
 
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemMisc, 0, new ModelResourceLocation("advancedrocketry:userInterface", "inventory"));
-		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemMisc, 1, new ModelResourceLocation("advancedrocketry:carbonCartridge", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemMisc, 1, new ModelResourceLocation("advancedrocketry:miscpart1", "inventory"));
 
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemUpgrade, 0, new ModelResourceLocation("advancedrocketry:hoverUpgrade", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemUpgrade, 1, new ModelResourceLocation("advancedrocketry:flightSpeedUpgrade", "inventory"));

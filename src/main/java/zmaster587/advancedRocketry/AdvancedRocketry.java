@@ -441,7 +441,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockLightSource = new BlockLightSource();
 
 		AdvancedRocketryBlocks.blockBlastBrick = new BlockMultiBlockComponentVisible(Material.ROCK).setCreativeTab(tabAdvRocketry).setUnlocalizedName("blastBrick").setHardness(3F).setResistance(15F);
-		AdvancedRocketryBlocks.blockQuartzCrucible = new BlockQuartzCrucible();
+		AdvancedRocketryBlocks.blockQuartzCrucible = new BlockQuartzCrucible().setUnlocalizedName("qcrucible");
 
 		AdvancedRocketryBlocks.blockPrecisionAssembler = new BlockMultiblockMachine(TilePrecisionAssembler.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("precisionAssemblingMachine").setCreativeTab(tabAdvRocketry).setHardness(3f);
 
@@ -954,7 +954,7 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapelessOreRecipe(AdvancedRocketryBlocks.blockSolarGenerator, "itemBattery", LibVulpesBlocks.blockForgeOutputPlug, AdvancedRocketryBlocks.blockSolarPanel));
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockDockingPort), trackingCircuit, new ItemStack(AdvancedRocketryBlocks.blockLoader, 1,1));
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryItems.itemOreScanner, "lwl", "bgb", "   ", 'l', Blocks.LEVER, 'g', userInterface, 'b', "battery", 'w', advancedCircuit));
+		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryItems.itemOreScanner, "lwl", "bgb", "   ", 'l', Blocks.LEVER, 'g', userInterface, 'b', "itemBattery", 'w', advancedCircuit));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 4), " c ","sss", "tot", 'c', "stickCopper", 's', "sheetIron", 'o', AdvancedRocketryItems.itemOreScanner, 't', trackingCircuit));
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryBlocks.blockSuitWorkStation), "c","b", 'c', Blocks.CRAFTING_TABLE, 'b', LibVulpesBlocks.blockStructureBlock);
 

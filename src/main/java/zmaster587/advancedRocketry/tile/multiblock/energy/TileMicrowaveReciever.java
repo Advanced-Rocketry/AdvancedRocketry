@@ -33,6 +33,8 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.libVulpes.api.IUniversalEnergyTransmitter;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
@@ -54,10 +56,20 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 	List<Long> connectedSatellites;
 	boolean initialCheck;
 	int powerMadeLastTick, prevPowerMadeLastTick;
-
+	ModuleText textModule;
 	public TileMicrowaveReciever() {
 		connectedSatellites = new LinkedList<Long>();
 		initialCheck = false;
+		textModule = new ModuleText(40, 20, "Generating 0 RF/t", 0x2b2b2b);
+	}
+
+	@Override
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+		List<ModuleBase> modules = super.getModules(ID, player);
+
+		modules.add(textModule);
+
+		return modules;
 	}
 
 	@Override
@@ -90,7 +102,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 	public String getMachineName() {
 		return "tile.microwaveReciever.name";
 	}
-	
+
 	public int getPowerMadeLastTick() {
 		return powerMadeLastTick;
 	}
@@ -127,7 +139,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 
 		if(!isComplete())
 			return;
-		
+
 		//Periodically check for obstructing blocks above the panel
 		if(!worldObj.isRemote && getPowerMadeLastTick() > 0 && worldObj.getTotalWorldTime() % 100 == 0) {
 			Vector3F<Integer> offset = getControllerOffset(getStructure());
@@ -141,7 +153,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 
 			for(int x=0 ; x < getStructure()[0][0].length; x++) {
 				for(int z=0 ; z < getStructure()[0].length; z++) {
-					
+
 					BlockPos pos2;
 					IBlockState state = worldObj.getBlockState(pos2 = (worldObj.getHeight(pos.add(x - offset.x, 128, z - offset.z)).add(0, -1, 0)));
 
@@ -179,6 +191,8 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 			}
 			producePower(powerMadeLastTick);
 		}
+		if(worldObj.isRemote)
+			textModule.setText("Generating " + powerMadeLastTick + " RF/t");
 	}
 
 	@Override
@@ -241,7 +255,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 		}
 
 		nbt.setIntArray("satilliteList", intArray);
-		
+
 		return nbt;
 	}
 

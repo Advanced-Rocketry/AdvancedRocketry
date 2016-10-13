@@ -17,7 +17,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 public class LiquidNetwork extends CableNetwork {
 
-	private final int MAX_TRANSFER = 10000;
+	private final int MAX_TRANSFER = 100;
 
 	/**
 	 * Create a new network and get an ID
@@ -41,7 +41,7 @@ public class LiquidNetwork extends CableNetwork {
 	//TODO: balance tanks
 	@Override
 	public void tick() {
-		int amount = 100;
+		int amount = MAX_TRANSFER;
 
 		//Return if there is nothing to do
 		if(sinks.isEmpty() || sources.isEmpty())

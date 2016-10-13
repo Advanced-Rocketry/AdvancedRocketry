@@ -92,6 +92,7 @@ tile.circleLight.name=Station Light
 tile.energyPipe.name=Energy Pipe
 tile.solarGenerator.name=Solar Generator
 tile.stationMarker.name=Station Docking Port
+tile.qcrucible.name=Quartz Crucible
 
 tile.Dilithium.name=Dilithium Ore
 
@@ -108,7 +109,6 @@ item.circuitIC.3.name=Control Circuit Board
 item.circuitIC.4.name=Item IO Circuit Board
 item.circuitIC.5.name=Liquid IO Circuit Board
 item.OreScanner.name=Ore Scanner
-item.qcrucible.name=Quartz Crucible
 item.dataUnit.0.name=Data Storage Unit
 item.sawBlade.0.name=Iron Saw Blade
 item.satellite.name=Satellite
@@ -137,7 +137,7 @@ item.bucketRocketFuel.name=Tank of Rocket Fuel
 item.bucketNitrogen.name=Tank of Nitrogen
 item.bucketHydrogen.name=Tank of Hydrogen
 item.bucketOxygen.name=Tank of Oxygen
-item.smallAirlock.name=Small Airlock Door
+item.smallAirlock.name=Small Airrrlock Door
 item.carbonScrubberCartridge.name=Carbon Collection Cartridge
 item.jackhammer.name=Jack Hammer
 item.sealDetector.name=Seal Detector
