@@ -30,7 +30,7 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 	public void update() {
 		if(canGeneratePower()) {
 			if(worldObj.isRemote)
-				text.setText("Collecting Energy");
+				text.setText("Collecting Energy:\n" + powerPerTick + " RF/t");
 			if(hasEnoughEnergyBuffer(getPowerPerOperation())) {
 				if(!worldObj.isRemote) this.energy.acceptEnergy(getPowerPerOperation(), false);
 				onGeneratePower();
