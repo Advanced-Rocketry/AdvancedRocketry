@@ -10,6 +10,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
@@ -54,7 +55,7 @@ public class LiquidNetwork extends CableNetwork {
 
 			//Get tile and key
 			Entry<TileEntity,EnumFacing> obj = (Entry<TileEntity, EnumFacing>)sinkItr.next();
-			IFluidHandler fluidHandleSink = (IFluidHandler)obj.getKey();
+			IFluidHandler fluidHandleSink = (IFluidHandler)obj.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
 			EnumFacing dir = obj.getValue();
 
 			Iterator<Entry<TileEntity,EnumFacing>> sourceItr = sources.iterator();
@@ -74,7 +75,7 @@ public class LiquidNetwork extends CableNetwork {
 				out:
 					while(sourceItr.hasNext()) {
 						Entry<TileEntity,EnumFacing> objSource = (Entry<TileEntity, EnumFacing>)sourceItr.next();
-						IFluidHandler fluidHandleSource = (IFluidHandler)objSource.getKey();
+						IFluidHandler fluidHandleSource = (IFluidHandler)objSource.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
 
 						for(IFluidTankProperties srcInfo : fluidHandleSource.getTankProperties()) {
 							if(srcInfo != null && srcInfo.getContents() != null) {
@@ -99,7 +100,7 @@ public class LiquidNetwork extends CableNetwork {
 				int actualFill = 0;
 				while(sourceItr.hasNext()) {
 					Entry<TileEntity,EnumFacing> objSource = (Entry<TileEntity, EnumFacing>)sourceItr.next();
-					IFluidHandler fluidHandleSource = (IFluidHandler)objSource.getKey();
+					IFluidHandler fluidHandleSource = (IFluidHandler)objSource.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
 
 					if(fluidHandleSource.drain(maxFill, false) != null) {
 						int buffer;
