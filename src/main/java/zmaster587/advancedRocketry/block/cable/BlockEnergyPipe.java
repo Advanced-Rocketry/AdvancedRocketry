@@ -1,14 +1,14 @@
 package zmaster587.advancedRocketry.block.cable;
 
+import zmaster587.advancedRocketry.tile.cables.TileEnergyPipe;
+import zmaster587.advancedRocketry.tile.cables.TileLiquidPipe;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import zmaster587.advancedRocketry.tile.cables.TileDataPipe;
-import zmaster587.advancedRocketry.tile.cables.TileEnergyPipe;
 
-public class BlockDataCable extends BlockPipe {
+public class BlockEnergyPipe extends BlockPipe {
 	
-	public BlockDataCable(Material material) {
+	public BlockEnergyPipe(Material material) {
 		super(material);
 	}
 
@@ -18,5 +18,4 @@ public class BlockDataCable extends BlockPipe {
 	public TileEntity createTileEntity(World world, int metadata) {
 		return new TileEnergyPipe();
 	}
-
 }

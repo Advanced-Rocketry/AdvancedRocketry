@@ -20,6 +20,8 @@ public class CableTickHandler {
 	@SubscribeEvent
 	public void onTick(TickEvent.ServerTickEvent tick) {
 		NetworkRegistry.dataNetwork.tickAllNetworks();
+		NetworkRegistry.energyNetwork.tickAllNetworks();
+		NetworkRegistry.liquidNetwork.tickAllNetworks();
 	}
 	
         @SubscribeEvent

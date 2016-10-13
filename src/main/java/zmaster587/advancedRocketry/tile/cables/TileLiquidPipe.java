@@ -12,7 +12,6 @@ public class TileLiquidPipe extends TilePipe {
 
 	@Override
 	public boolean canExtract(ForgeDirection dir, TileEntity e) {
-		
 		return e instanceof IFluidHandler;
 	}
 

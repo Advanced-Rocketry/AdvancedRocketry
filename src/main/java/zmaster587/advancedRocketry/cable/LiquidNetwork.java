@@ -47,7 +47,7 @@ public class LiquidNetwork extends CableNetwork {
 		Iterator<Entry<TileEntity,ForgeDirection>> sinkItr = sinks.iterator();
 
 		//Go through all sinks, if one is not full attempt to fill it
-		
+
 		while(sinkItr.hasNext()) {
 
 			//Get tile and key
@@ -60,10 +60,12 @@ public class LiquidNetwork extends CableNetwork {
 			Fluid fluid = null;
 
 			//If the sink already has fluid in it then lets only try to fill it with that particular fluid
-			for(FluidTankInfo info : fluidHandleSink.getTankInfo(dir)) {
-				if(info != null && info.fluid != null) {
-					fluid = info.fluid.getFluid();
-					break;
+			if(fluidHandleSink.getTankInfo(dir) != null) {
+				for(FluidTankInfo info : fluidHandleSink.getTankInfo(dir)) {
+					if(info != null && info.fluid != null) {
+						fluid = info.fluid.getFluid();
+						break;
+					}
 				}
 			}
 
@@ -73,7 +75,7 @@ public class LiquidNetwork extends CableNetwork {
 					while(sourceItr.hasNext()) {
 						Entry<TileEntity,ForgeDirection> objSource = (Entry<TileEntity, ForgeDirection>)sourceItr.next();
 						IFluidHandler fluidHandleSource = (IFluidHandler)objSource.getKey();
-
+						if(fluidHandleSource.getTankInfo(objSource.getValue()) != null) {
 						for(FluidTankInfo srcInfo : fluidHandleSource.getTankInfo(objSource.getValue())) {
 							if(srcInfo != null && srcInfo.fluid != null) {
 								fluid = srcInfo.fluid.getFluid();
@@ -81,7 +83,7 @@ public class LiquidNetwork extends CableNetwork {
 							}
 						}
 					}
-
+					}
 			}
 
 			//No fluids can be moved
@@ -102,7 +104,7 @@ public class LiquidNetwork extends CableNetwork {
 					if(fluidHandleSource.canDrain(objSource.getValue(), fluid)) {
 						int buffer;
 						FluidStack fluid2 =  fluidHandleSource.drain(objSource.getValue(), maxFill, true);
-						
+
 						//drain sometimes returns a null value even when canDrain returns true
 						if(fluid2 == null)
 							buffer = 0;

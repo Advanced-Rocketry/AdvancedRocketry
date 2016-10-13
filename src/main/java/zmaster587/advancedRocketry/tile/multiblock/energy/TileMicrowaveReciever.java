@@ -27,6 +27,8 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.libVulpes.api.IUniversalEnergyTransmitter;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
@@ -48,12 +50,23 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 	List<Long> connectedSatellites;
 	boolean initialCheck;
 	int powerMadeLastTick, prevPowerMadeLastTick;
-
+	ModuleText textModule;
 	public TileMicrowaveReciever() {
 		connectedSatellites = new LinkedList<Long>();
 		initialCheck = false;
+		textModule = new ModuleText(40, 20, "Generating 0 RF/t", 0x2b2b2b);
 	}
 
+	@Override
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+		// TODO Auto-generated method stub
+		List<ModuleBase> modules = super.getModules(ID, player);
+		
+		modules.add(textModule);
+		
+		return modules;
+	}
+	
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		return super.getRenderBoundingBox().expand(0, 2000, 0).offset(0, 1000, 0);
@@ -178,6 +191,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 			}
 			producePower(powerMadeLastTick);
 		}
+		textModule.setText("Generating " + powerMadeLastTick + " RF/t");
 	}
 
 	@Override
