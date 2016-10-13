@@ -76,6 +76,7 @@ tile.orientationControl.name=Orientation Controller
 tile.gravityControl.name=Gravity Controller
 tile.drill.name=Drill
 tile.dataPipe.name=Data Cable
+tile.liquidPipe.name=Liquid Pipe
 tile.rfOutput.name=Redstone Flux Output Plug
 tile.microwaveReciever.name=Microwave Reciever
 tile.solarPanel.name=Solar Panel

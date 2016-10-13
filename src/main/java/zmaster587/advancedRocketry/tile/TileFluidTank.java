@@ -2,6 +2,8 @@ package zmaster587.advancedRocketry.tile;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
@@ -13,7 +15,7 @@ import zmaster587.libVulpes.util.IAdjBlockUpdate;
 public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
 
 	private long lastUpdateTime;
-	private static final int MAX_UPDATE = 20;
+	private static final int MAX_UPDATE = 5;
 	private boolean fluidChanged;
 
 	public TileFluidTank() {
@@ -29,11 +31,22 @@ public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
 	private void checkForUpdate() {
 		if(fluidChanged && worldObj instanceof WorldDummy || worldObj.getTotalWorldTime() - lastUpdateTime > MAX_UPDATE) {
 			this.markDirty();
+			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 2);
 			lastUpdateTime = worldObj.getTotalWorldTime();
 			fluidChanged = false;
 		}
 	}
 
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), getUpdateTag());
+	}
+	
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		readFromNBT(pkt.getNbtCompound());
+	}
+	
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
 		IFluidHandler handler = this.getFluidTankInDirection(EnumFacing.DOWN);
@@ -52,6 +65,7 @@ public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
 			fluidChanged = true;	
 		
 		checkForUpdate();
+		markDirty();
 		
 		return amt;
 	}

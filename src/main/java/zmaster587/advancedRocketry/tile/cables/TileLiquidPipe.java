@@ -7,19 +7,19 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 
 public class TileLiquidPipe extends TilePipe {
 
 	@Override
 	public boolean canExtract(EnumFacing dir, TileEntity e) {
-		
-		return e instanceof IFluidHandler;
+		return e.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir);
 	}
 
 	@Override
 	public boolean canInject(EnumFacing dir, TileEntity e) {
-		return  e instanceof IFluidHandler;
+		return e.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir);
 	}
 	
 	public HandlerCableNetwork getNetworkHandler() {

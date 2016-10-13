@@ -7,7 +7,7 @@ public class NetworkRegistry {
 	public static HandlerEnergyNetwork energyNetwork;
 	
 	public static void registerFluidNetwork() {
-		//liquidNetwork = new HandlerLiquidNetwork();
+		liquidNetwork = new HandlerLiquidNetwork();
 		energyNetwork = new HandlerEnergyNetwork();
 		dataNetwork = new HandlerDataNetwork();
 	}
@@ -15,5 +15,6 @@ public class NetworkRegistry {
 	public static void clearNetworks() {
 		energyNetwork.networks.clear();
 		dataNetwork.networks.clear();
+		liquidNetwork.networks.clear();
 	}
 }
