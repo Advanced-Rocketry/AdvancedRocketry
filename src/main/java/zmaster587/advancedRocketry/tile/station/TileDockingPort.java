@@ -123,7 +123,7 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.dockingPort.name";
+		return "tile.stationMarker.name";
 	}
 
 
