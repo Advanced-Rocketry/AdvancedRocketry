@@ -9,7 +9,6 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -59,7 +58,6 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		// TODO Auto-generated method stub
 		List<ModuleBase> modules = super.getModules(ID, player);
 		
 		modules.add(textModule);
@@ -191,6 +189,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 			}
 			producePower(powerMadeLastTick);
 		}
+		if(worldObj.isRemote)
 		textModule.setText("Generating " + powerMadeLastTick + " RF/t");
 	}
 
