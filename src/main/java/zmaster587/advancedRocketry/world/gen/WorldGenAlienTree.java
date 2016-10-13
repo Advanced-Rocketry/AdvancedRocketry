@@ -243,7 +243,7 @@ public class WorldGenAlienTree extends WorldGenAbstractTree {
 		Block block = state.getBlock();
 
 		if( block.isReplaceable(world, pos) ||  block.isLeaves(state, world, pos) || block == AdvancedRocketryBlocks.blockAlienWood) {
-			this.setBlockAndNotifyAdequately(world, pos, AdvancedRocketryBlocks.blockAlienWood.getDefaultState().withProperty(BlockLog.AXIS, direction.getAxis()));
+			this.setBlockAndNotifyAdequately(world, pos, AdvancedRocketryBlocks.blockAlienWood.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.fromFacingAxis(direction.getAxis())));
 			return true;
 		}
 		else
