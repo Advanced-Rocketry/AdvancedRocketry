@@ -93,6 +93,7 @@ tile.energyPipe.name=Energy Pipe
 tile.solarGenerator.name=Solar Generator
 tile.stationMarker.name=Station Docking Port
 tile.qcrucible.name=Quartz Crucible
+tile.altitudeController.name=Altitude Controller
 
 tile.Dilithium.name=Dilithium Ore
 

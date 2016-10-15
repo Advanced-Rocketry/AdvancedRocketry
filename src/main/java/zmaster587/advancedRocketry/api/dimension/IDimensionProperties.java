@@ -90,5 +90,7 @@ public interface IDimensionProperties {
 	public void writeToNBT(NBTTagCompound nbt);
 
 	public void readFromNBT(NBTTagCompound nbt);
+
+	public void setParentOrbitalDistance(int distance);
 	
 }
