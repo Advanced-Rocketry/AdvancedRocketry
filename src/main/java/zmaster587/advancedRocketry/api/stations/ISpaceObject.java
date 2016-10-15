@@ -12,6 +12,10 @@ public interface ISpaceObject {
 	 */
 	public int getId();
 	
+	public float getOrbitalDistance();
+	
+	public void setOrbitalDistance(float finalVel);
+	
 	/**
 	 * @return dimension properties of the object
 	 */

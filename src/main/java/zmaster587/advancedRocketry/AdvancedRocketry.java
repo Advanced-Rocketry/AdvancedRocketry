@@ -150,6 +150,7 @@ import zmaster587.advancedRocketry.tile.oxygen.TileOxygenCharger;
 import zmaster587.advancedRocketry.tile.oxygen.TileOxygenVent;
 import zmaster587.advancedRocketry.tile.station.TileDockingPort;
 import zmaster587.advancedRocketry.tile.station.TileLandingPad;
+import zmaster587.advancedRocketry.tile.station.TileStationAltitudeController;
 import zmaster587.advancedRocketry.tile.station.TileStationGravityController;
 import zmaster587.advancedRocketry.tile.station.TileStationOrientationControl;
 import zmaster587.advancedRocketry.tile.station.TileWarpShipMonitor;
@@ -388,7 +389,12 @@ public class AdvancedRocketry {
 		((BlockTile) AdvancedRocketryBlocks.blockGravityController).setTopTexture("libvulpes:machineGeneric");
 		((BlockTile) AdvancedRocketryBlocks.blockGravityController).setFrontTexture("advancedrocketry:machineOrientationControl");
 
+		AdvancedRocketryBlocks.blockAltitudeController = new BlockTile(TileStationAltitudeController.class,  GuiHandler.guiId.MODULAR.ordinal()).setBlockTextureName("advancedrocketry:machineScrubber").setCreativeTab(tabAdvRocketry).setBlockName("alititudeController").setHardness(3f);
+		((BlockTile) AdvancedRocketryBlocks.blockAltitudeController).setSideTexture("advancedrocketry:machineOrientationControl");
+		((BlockTile) AdvancedRocketryBlocks.blockAltitudeController).setTopTexture("libvulpes:machineGeneric");
+		((BlockTile) AdvancedRocketryBlocks.blockAltitudeController).setFrontTexture("advancedrocketry:machineOrientationControl");
 
+		
 		AdvancedRocketryBlocks.blockOxygenCharger = new BlockTile(TileOxygenCharger.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("oxygenCharger").setCreativeTab(tabAdvRocketry).setBlockTextureName("libvulpes:machineGeneric").setHardness(3f);
 		AdvancedRocketryBlocks.blockOxygenCharger.setBlockBounds(0, 0, 0, 1, 0.5f, 1);
 		((BlockTile) AdvancedRocketryBlocks.blockOxygenCharger).setSideTexture("advancedrocketry:panelSide");
@@ -675,7 +681,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockCircularLight, AdvancedRocketryBlocks.blockCircularLight.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockDockingPort, AdvancedRocketryBlocks.blockDockingPort.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockSolarGenerator, AdvancedRocketryBlocks.blockSolarGenerator.getUnlocalizedName());
-		
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockAltitudeController, AdvancedRocketryBlocks.blockAltitudeController.getUnlocalizedName());
 		
 		//TODO, use different mechanism to enable/disable drill
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
@@ -859,10 +865,11 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileRocketFluidLoader.class, "ARFluidLoader");
 		GameRegistry.registerTileEntity(TileDockingPort.class, "ARDockingPort");
 		GameRegistry.registerTileEntity(TileSolarPanel.class, "ARSolarGenerator");
+		GameRegistry.registerTileEntity(TileStationAltitudeController.class, "ARAltitudeController");
 
 		//OreDict stuff
 		OreDictionary.registerOre("waferSilicon", new ItemStack(AdvancedRocketryItems.itemWafer,1,0));
-		OreDictionary.registerOre("ingotCarbon", new ItemStack(AdvancedRocketryItems.itemMisc, 1, 1));
+		OreDictionary.registerOre("ingotCartileEntityClassbon", new ItemStack(AdvancedRocketryItems.itemMisc, 1, 1));
 		OreDictionary.registerOre("concrete", new ItemStack(AdvancedRocketryBlocks.blockConcrete));
 
 

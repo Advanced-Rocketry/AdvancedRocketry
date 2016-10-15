@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.client.render.planet;
 
 import org.lwjgl.opengl.GL11;
 
+import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -35,6 +36,12 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 	@Override
 	protected void renderPlanet(Tessellator tessellator1, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, boolean hasAtmosphere, boolean isGasgiant) {
 
+		ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
+		
+		if(object == null)
+			return;
+		
+		planetOrbitalDistance = object.getOrbitalDistance();
 
 		GL11.glPushMatrix();
 		//GL11.glDisable(GL11.GL_BLEND);
@@ -86,6 +93,8 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 
 			tessellator1.startDrawingQuads();
 			mc.renderEngine.bindTexture(DimensionProperties.getAtmosphereLEOResource());
+			double dist = -5D - 4*(planetOrbitalDistance)/200D;
+			double scalingMult = 1D - 0.9*(planetOrbitalDistance)/200D;
 			
 			int maxAmt = 6;
 			float lng = (float) (Minecraft.getSystemTime()/100000d % 1);
@@ -103,10 +112,10 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 
 				
 				
-				RenderHelper.renderTopFaceWithUV(tessellator1, -10D +i, -f10, -f10, 0, 0, f14, f15, f16, f17);
-				RenderHelper.renderTopFaceWithUV(tessellator1, -10D+ i, 0, 0, f10, f10, f14, f15, f16, f17);
-				RenderHelper.renderTopFaceWithUV(tessellator1, -10D+ i, -f10, 0, 0, f10, f14, f15, f16, f17);
-				RenderHelper.renderTopFaceWithUV(tessellator1, -10D+ i, 0, -f10, f10, 0, f14, f15, f16, f17);
+				RenderHelper.renderTopFaceWithUV(tessellator1, -10D + i*scalingMult, -f10, -f10, 0, 0, f14, f15, f16, f17);
+				RenderHelper.renderTopFaceWithUV(tessellator1, -10D+ i*scalingMult, 0, 0, f10, f10, f14, f15, f16, f17);
+				RenderHelper.renderTopFaceWithUV(tessellator1, -10D+ i*scalingMult, -f10, 0, 0, f10, f14, f15, f16, f17);
+				RenderHelper.renderTopFaceWithUV(tessellator1, -10D+ i*scalingMult, 0, -f10, f10, 0, f14, f15, f16, f17);
 			}
 
 			tessellator1.draw();
@@ -119,12 +128,12 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 			tessellator1.startDrawingQuads();
 			tessellator1.setColorRGBA_F(0.5f,0.5f,1, 0.08f);
 
-			f10 *= 100;
+
 			for(int i = 0; i < 5 ; i++) {
-				RenderHelper.renderTopFaceWithUV(tessellator1, -5D + i, -f10, -f10, 0, 0, f14, f15, f16, f17);
-				RenderHelper.renderTopFaceWithUV(tessellator1, -5D + i, 0, 0, f10, f10, f14, f15, f16, f17);
-				RenderHelper.renderTopFaceWithUV(tessellator1, -5D + i, -f10, 0, 0, f10, f14, f15, f16, f17);
-				RenderHelper.renderTopFaceWithUV(tessellator1, -5D + i, 0, -f10, f10, 0, f14, f15, f16, f17);
+				RenderHelper.renderTopFaceWithUV(tessellator1, dist + i*scalingMult, -f10, -f10, 0, 0, f14, f15, f16, f17);
+				RenderHelper.renderTopFaceWithUV(tessellator1, dist + i*scalingMult, 0, 0, f10, f10, f14, f15, f16, f17);
+				RenderHelper.renderTopFaceWithUV(tessellator1, dist + i*scalingMult, -f10, 0, 0, f10, f14, f15, f16, f17);
+				RenderHelper.renderTopFaceWithUV(tessellator1, dist + i*scalingMult, 0, -f10, f10, 0, f14, f15, f16, f17);
 			}
 			tessellator1.draw();
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -159,12 +168,13 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 			tessellator1.startDrawingQuads();
 			tessellator1.setColorRGBA_F(1,1,1, 0.08f);
 
-			f10 *= 100;
+			double dist = -5D - 4*(planetOrbitalDistance)/200D;
+			double scalingMult = 1D - 0.9*(planetOrbitalDistance)/200D;
 			for(int i = 0; i < 5 ; i++) {
-				RenderHelper.renderTopFaceWithUV(tessellator1, -5D + i, -f10, -f10, 0, 0, f14, f15, f16, f17);
-				RenderHelper.renderTopFaceWithUV(tessellator1, -5D + i, 0, 0, f10, f10, f14, f15, f16, f17);
-				RenderHelper.renderTopFaceWithUV(tessellator1, -5D + i, -f10, 0, 0, f10, f14, f15, f16, f17);
-				RenderHelper.renderTopFaceWithUV(tessellator1, -5D + i, 0, -f10, f10, 0, f14, f15, f16, f17);
+				RenderHelper.renderTopFaceWithUV(tessellator1, dist + i*scalingMult, -f10, -f10, 0, 0, f14, f15, f16, f17);
+				RenderHelper.renderTopFaceWithUV(tessellator1, dist + i*scalingMult, 0, 0, f10, f10, f14, f15, f16, f17);
+				RenderHelper.renderTopFaceWithUV(tessellator1, dist + i*scalingMult, -f10, 0, 0, f10, f14, f15, f16, f17);
+				RenderHelper.renderTopFaceWithUV(tessellator1, dist + i*scalingMult, 0, -f10, f10, 0, f14, f15, f16, f17);
 			}
 			tessellator1.draw();
 			GL11.glEnable(GL11.GL_TEXTURE_2D);

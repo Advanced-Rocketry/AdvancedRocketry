@@ -115,4 +115,13 @@ public class SpaceObjectAsteroid extends SpaceObjectBase implements IDataHandler
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public float getOrbitalDistance() {
+		return getProperties().getParentOrbitalDistance();
+	}
+
+	@Override
+	public void setOrbitalDistance(float finalVel) {
+	}
 }

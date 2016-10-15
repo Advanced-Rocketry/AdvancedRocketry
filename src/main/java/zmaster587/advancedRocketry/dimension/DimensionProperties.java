@@ -1103,4 +1103,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public void setId(int id) {
 		this.planetId = id;
 	}
+
+	public void setParentOrbitalDistance(int orbitalDistance) {
+		orbitalDist = orbitalDistance;
+	}
 }

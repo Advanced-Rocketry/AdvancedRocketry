@@ -28,7 +28,8 @@ public class PacketStationUpdate extends BasePacket {
 		SIGNAL_WHITE_BURST,
 		FUEL_UPDATE,
 		ROTANGLE_UPDATE, 
-		DIM_PROPERTY_UPDATE
+		DIM_PROPERTY_UPDATE,
+		ALTITUDE_UPDATE
 	}
 
 	public PacketStationUpdate() {}
@@ -58,6 +59,9 @@ public class PacketStationUpdate extends BasePacket {
 		case ROTANGLE_UPDATE:
 			out.writeDouble(spaceObject.getRotation());
 			out.writeDouble(spaceObject.getDeltaRotation());
+			break;
+		case ALTITUDE_UPDATE:
+			out.writeFloat(spaceObject.getOrbitalDistance());
 			break;
 		case DIM_PROPERTY_UPDATE:
 			NBTTagCompound nbt = new NBTTagCompound();
@@ -103,6 +107,9 @@ public class PacketStationUpdate extends BasePacket {
 			break;
 		case SIGNAL_WHITE_BURST:
 			PlanetEventHandler.runBurst(Minecraft.getMinecraft().theWorld.getTotalWorldTime() + 20, 20);
+			break;
+		case ALTITUDE_UPDATE:
+			spaceObject.setOrbitalDistance(in.readFloat());
 			break;
 		case DIM_PROPERTY_UPDATE:
 			PacketBuffer packetBuffer = new PacketBuffer(in);

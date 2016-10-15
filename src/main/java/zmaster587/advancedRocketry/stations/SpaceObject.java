@@ -36,6 +36,7 @@ public class SpaceObject implements ISpaceObject {
 	private int posX, posY;
 	private boolean created;
 	private int altitude;
+	private float orbitalDistance;
 	private int destinationDimId;
 	private int fuelAmount;
 	private final int MAX_FUEL = 1000;
@@ -520,6 +521,9 @@ public class SpaceObject implements ISpaceObject {
 	public void readFromNbt(NBTTagCompound nbt) {
 		properties.readFromNBT(nbt);
 
+		if((int)orbitalDistance != properties.getParentOrbitalDistance())
+			orbitalDistance = properties.getParentOrbitalDistance();
+		
 		created = nbt.getBoolean("created");
 		destinationDimId = nbt.getInteger("destinationDimId");
 		posX = nbt.getInteger("posX");
@@ -575,5 +579,17 @@ public class SpaceObject implements ISpaceObject {
 	@Override
 	public boolean hasCustomSpawnLocation() {
 		return false;
+	}
+	
+	@Override
+	public float getOrbitalDistance() {
+		return orbitalDistance;
+	}
+
+	@Override
+	public void setOrbitalDistance(float finalVel) {
+		if((int)orbitalDistance != properties.getParentOrbitalDistance())
+			properties.setParentOrbitalDistance((int)orbitalDistance);
+		orbitalDistance = finalVel;
 	}
 }
