@@ -18,7 +18,7 @@ buildscript {
 
 apply plugin: 'forge'
 def modversion
-modversion = version = "0.9.0"
+modversion = version = "0.9.1"
 group= "zmaster587.advancedRocketry" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "AdvancedRocketry"
 sourceCompatibility = 7
@@ -37,7 +37,7 @@ minecraft {
     
     replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"
     replace "%VERSION%", modversion
-    replace "%LIBVULPESVERSION%", "0.1.4"
+    replace "%LIBVULPESVERSION%", "0.1.5"
 }
 
 repositories {
