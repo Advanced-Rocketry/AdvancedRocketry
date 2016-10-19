@@ -65,6 +65,7 @@ public class MapGenGeode extends MapGenBase {
 
 					int count = ( depth - ( ((xCoord*16)+x)*((xCoord*16)+x) + ((zCoord*16)+z)*((zCoord*16)+z) ) )/(radius*2);
 
+					//Check for IOB exceptions early, in case it generates near bedrock or something
 					if(avgY-count < 1 || avgY+count > 255)
 						continue;
 					
