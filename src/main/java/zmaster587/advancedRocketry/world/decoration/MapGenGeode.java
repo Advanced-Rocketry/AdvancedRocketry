@@ -65,6 +65,9 @@ public class MapGenGeode extends MapGenBase {
 
 					int count = ( depth - ( ((xCoord*16)+x)*((xCoord*16)+x) + ((zCoord*16)+z)*((zCoord*16)+z) ) )/(radius*2);
 
+					if(avgY-count < 1 || avgY+count > 255)
+						continue;
+					
 					//Clears air for the ceiling
 					for(int dist = -count; dist < Math.min(count,3); dist++) {
 						index = (x * 16 + z) * 256 + avgY -dist;
@@ -95,7 +98,7 @@ public class MapGenGeode extends MapGenBase {
 							}
 
 						}
-
+						
 						chunkArray[(x * 16 + z) * 256 + avgY-count] = AdvancedRocketryBlocks.blocksGeode;
 						chunkArray[(x * 16 + z) * 256 + avgY+count] = AdvancedRocketryBlocks.blocksGeode;//world.getBiomeGenForCoords(rangeX, rangeZ).topBlock;
 					}
