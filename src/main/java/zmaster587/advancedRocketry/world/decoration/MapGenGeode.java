@@ -22,7 +22,7 @@ public class MapGenGeode extends MapGenBase {
 
 	public MapGenGeode(int chancePerChunk) {
 		this.chancePerChunk = chancePerChunk;
-		
+
 		if(ores == null) {
 			ores = new LinkedList<BlockMeta>();
 			for(int i = 0; i < Configuration.standardAsteroidOres.length; i++) {
@@ -35,7 +35,7 @@ public class MapGenGeode extends MapGenBase {
 			}
 		}
 	}
-	
+
 	@Override
 	protected void recursiveGenerate(World world, int chunkX,
 			int chunkZ, int p_180701_4_, int p_180701_5_,
@@ -51,7 +51,7 @@ public class MapGenGeode extends MapGenBase {
 
 			int xCoord = -chunkX + p_180701_4_;
 			int zCoord =  -chunkZ + p_180701_5_;
-			
+
 			BlockPos pos = new BlockPos(chunkX*16, 0, chunkZ*16);
 
 			int avgY = (int) ((world.getBiomeGenForCoords(pos).getBaseHeight() + 2) *32) - 3*radius/4;
@@ -67,6 +67,10 @@ public class MapGenGeode extends MapGenBase {
 					}
 
 					int count = ( depth - ( ((xCoord*16)+x)*((xCoord*16)+x) + ((zCoord*16)+z)*((zCoord*16)+z) ) )/(radius*2);
+
+					//Check for IOB exceptions early, in case it generates near bedrock or something
+					if(avgY-count < 1 || avgY+count > 255)
+						continue;
 
 					//Clears air for the ceiling
 					for(int dist = -count; dist < Math.min(count,3); dist++) {
@@ -90,13 +94,13 @@ public class MapGenGeode extends MapGenBase {
 									chunkPrimerIn.setBlockState(x, avgY + count - i, z, Blocks.STONE.getDefaultState());
 								}
 							}
-							
+
 							//Generates ore in the floor
 							if( (x+2) % 4 > 0 && (z+2) % 4 > 0) {
 								for(int i = 1; i < size; i++)
 									chunkPrimerIn.setBlockState(x, avgY - count + i, z, ores.get((x/4 + z/4) % ores.size()).getBlockState());
 							}
-							
+
 						}
 
 						chunkPrimerIn.setBlockState(x, avgY - count, z, AdvancedRocketryBlocks.blocksGeode.getDefaultState());
