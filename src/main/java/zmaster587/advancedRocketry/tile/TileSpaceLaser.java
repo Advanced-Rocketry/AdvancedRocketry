@@ -209,7 +209,7 @@ public class TileSpaceLaser extends TileInventoriedRFConsumer implements ISidedI
 	public void setRunning(boolean value) {
 		isRunning = value;
 		markDirty();
-		worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
+		//worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 	}
 	
 	@Override
