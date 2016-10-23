@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.tile;
+package zmaster587.advancedRocketry.tile.multiblock;
 
 import io.netty.buffer.ByteBuf;
 
@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -30,9 +31,10 @@ import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.integration.CompatibilityMgr;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.satellite.SatelliteLaser;
+import zmaster587.advancedRocketry.satellite.SatelliteLaserNoDrill;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
-import zmaster587.libVulpes.api.IUniversalEnergy;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.compat.InventoryCompat;
 import zmaster587.libVulpes.inventory.modules.IButtonInventory;
@@ -48,19 +50,18 @@ import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.inventory.modules.ModuleTextBox;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.util.INetworkMachine;
-import zmaster587.libVulpes.util.UniversalBattery;
-import cofh.api.energy.IEnergyHandler;
+import zmaster587.libVulpes.util.MultiInventory;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEnergyHandler, INetworkMachine, IModularInventory, IGuiCallback, IButtonInventory, IUniversalEnergy {
+public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInventory, INetworkMachine, IModularInventory, IGuiCallback, IButtonInventory {
 
 	private static final int INVSIZE = 9;
-	protected UniversalBattery storage = new UniversalBattery((int) (1000000 * Configuration.spaceLaserPowerMult));
 	ItemStack glassPanel;
 	//ItemStack invBuffer[];
-	SatelliteLaser laserSat;
+	SatelliteLaserNoDrill laserSat;
 	protected boolean isRunning, finished;
 	protected IInventory adjInv;
 	private int radius, xCenter, yCenter, numSteps;
@@ -70,7 +71,39 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	private static final int POWER_PER_OPERATION = (int) (10000  * Configuration.spaceLaserPowerMult); 
 	private ModuleTextBox locationX, locationZ;
 	private ModuleText updateText;
+	MultiInventory inv;
 
+	Object[][][] structure = new Object[][][]{
+			{
+				{null, null, null, null, null},
+				{null, null, LibVulpesBlocks.blockAdvStructureBlock, null, null},
+				{null, LibVulpesBlocks.blockAdvStructureBlock, LibVulpesBlocks.blockAdvStructureBlock, LibVulpesBlocks.blockAdvStructureBlock, null},
+				{null, null, LibVulpesBlocks.blockAdvStructureBlock, null, null},
+				{null, null, null, null, null}
+			},
+			{
+				{null, null,'c', null, null},
+				{null, 'P', Blocks.glass, 'P', null},
+				{'P', LibVulpesBlocks.blockAdvStructureBlock, Blocks.glass, LibVulpesBlocks.blockAdvStructureBlock, 'P'},
+				{null, 'P', LibVulpesBlocks.blockAdvStructureBlock, 'P', null},
+				{null, null, 'P', null, null}
+			},
+			{
+				{null, null, LibVulpesBlocks.blockAdvStructureBlock, null, null},
+				{null, LibVulpesBlocks.blockAdvStructureBlock, LibVulpesBlocks.blockAdvStructureBlock, LibVulpesBlocks.blockAdvStructureBlock, null},
+				{LibVulpesBlocks.blockAdvStructureBlock, LibVulpesBlocks.blockAdvStructureBlock, Blocks.glass, LibVulpesBlocks.blockAdvStructureBlock, LibVulpesBlocks.blockAdvStructureBlock},
+				{null, LibVulpesBlocks.blockAdvStructureBlock, LibVulpesBlocks.blockAdvStructureBlock, LibVulpesBlocks.blockAdvStructureBlock, null},
+				{null, null, LibVulpesBlocks.blockAdvStructureBlock, null, null}
+			},
+			{
+				{null, null, 'O', null, null},
+				{null, LibVulpesBlocks.blockAdvStructureBlock, Blocks.glass, LibVulpesBlocks.blockAdvStructureBlock, null},
+				{'O', Blocks.glass, Blocks.glass, Blocks.glass, 'O'},
+				{null, LibVulpesBlocks.blockAdvStructureBlock, Blocks.glass, LibVulpesBlocks.blockAdvStructureBlock, null},
+				{null, null, 'O', null, null}
+			},
+	};
+	
 	public enum MODE{
 		SINGLE,
 		LINE_X,
@@ -83,6 +116,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	Ticket ticket;
 
 	public TileSpaceLaser() {
+		super();
 		glassPanel = null;
 		//invBuffer = new ItemStack[INVSIZE];
 		radius = 0;
@@ -91,10 +125,16 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		numSteps = 0;
 		prevDir = ForgeDirection.UNKNOWN;
 
+		
+		inv = new MultiInventory(itemOutPorts);
 		tickSinceLastOperation = 0;
 		laserX = 0;
 		laserZ = 0;
-		laserSat = new SatelliteLaser(this);
+		if(Configuration.laserDrillPlanet)
+			laserSat = new SatelliteLaser(inv);
+		else
+			laserSat = new SatelliteLaserNoDrill(inv);
+		
 		isRunning = false;
 		finished = false;
 		mode = MODE.SINGLE;
@@ -104,38 +144,50 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	@SideOnly(Side.CLIENT)
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		return AxisAlignedBB.getBoundingBox(this.xCoord + 1, this.yCoord, this.zCoord + 1, this.xCoord, this.yCoord - 100, this.zCoord);
+		return AxisAlignedBB.getBoundingBox(this.xCoord -5, this.yCoord - 100, this.zCoord - 5, this.xCoord + 5, this.yCoord +5, this.zCoord + 5);
 	}
 
+	@Override
+	public Object[][][] getStructure() {
+		return structure;
+	}
+	
+	@Override
+	public String getMachineName() {
+		return getInventoryName();
+	}
+	
 	/*
-	 * ID 0: client changed xcoord in interface
-	 * ID 1: client changed ycoord in interface
-	 * ID 2: sync whether the machine is running
-	 * ID 3: sync Mode
-	 * ID 4: jam reset
+	 * ID 10: client changed xcoord in interface
+	 * ID 11: client changed ycoord in interface
+	 * ID 12: sync whether the machine is running
+	 * ID 13: sync Mode
+	 * ID 14: jam reset
 	 */
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {
-		if(id == 0)
+		super.writeDataToNetwork(out, id);
+		if(id == 10)
 			out.writeInt(this.laserX);
-		else if(id == 1)
+		else if(id == 11)
 			out.writeInt(this.laserZ);
-		else if(id == 2)
+		else if(id == 12)
 			out.writeBoolean(isRunning);
-		else if(id == 3)
+		else if(id == 13)
 			out.writeInt(mode.ordinal());
 	}
 
 	@Override
 	public void readDataFromNetwork(ByteBuf in, byte id,
 			NBTTagCompound nbt) {
-		if(id == 0)
+		super.readDataFromNetwork(in, id, nbt);
+		if(id == 10)
 			nbt.setInteger("laserX", in.readInt());
-		else if(id == 1)
+		else if(id == 11)
 			nbt.setInteger("laserZ", in.readInt());
-		else if(id == 2)
+		else if(id == 12)
 			nbt.setBoolean("isRunning", in.readBoolean());
-		else if(id == 3)
+		else if(id == 13)
 			nbt.setInteger("mode", in.readInt());
 
 	}
@@ -143,24 +195,25 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	@Override
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
-		if(id == 0) {
+		super.useNetworkData(player, side, id, nbt);
+		if(id == 10) {
 			this.laserX = nbt.getInteger("laserX");
 			finished = false;
 
 			if(mode == MODE.SPIRAL)
 				resetSpiral();
 		}
-		else if(id == 1) {
+		else if(id == 11) {
 			this.laserZ = nbt.getInteger("laserZ");
 			finished = false;
 			if(mode == MODE.SPIRAL)
 				resetSpiral();
 		}
-		else if(id == 2)
+		else if(id == 12)
 			this.isRunning = nbt.getBoolean("isRunning");
-		else if(id == 3 && !isRunning())
+		else if(id == 13 && !isRunning())
 			this.mode = MODE.values()[nbt.getInteger("mode")];
-		else if(id == 4)
+		else if(id == 14)
 			this.attempUnjam();
 
 		markDirty();
@@ -174,7 +227,8 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		numSteps = 0;
 	}
 
-	public boolean isRunning() {return isRunning;}
+	@Override
+	public boolean isRunning() {return isRunning && isComplete();}
 
 	public boolean isFinished() {return finished;}
 
@@ -222,6 +276,14 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	@Override
 	public void updateEntity() {
 		//TODO: drain energy
+		
+		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
+		if(timeAlive == 0 && !worldObj.isRemote) {
+			if(isComplete())
+				canRender = completeStructure = completeStructure();
+			timeAlive = 0x1;
+		}
+		
 		if(!this.worldObj.isRemote) {
 			tickSinceLastOperation++;
 
@@ -234,7 +296,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 				if(hasPowerForOperation() && isReadyForOperation() && laserSat.isAlive() && !laserSat.getJammed()) {
 					laserSat.performOperation();
 
-					storage.setEnergyStored(storage.getEnergyStored() - POWER_PER_OPERATION);
+					batteries.extractEnergy(POWER_PER_OPERATION, false);
 					tickSinceLastOperation = 0;
 				}
 		}
@@ -283,10 +345,10 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	}
 
 	public boolean isReadyForOperation() {
-		if(storage.getEnergyStored() == 0)
+		if(batteries.getEnergyStored() == 0)
 			return false;
 
-		return tickSinceLastOperation > (3*this.storage.getMaxEnergyStored()/(float)this.storage.getEnergyStored());
+		return tickSinceLastOperation > (3*this.batteries.getMaxEnergyStored()/(float)this.batteries.getEnergyStored());
 	}
 
 	public void onDestroy() {
@@ -298,6 +360,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 
 	@Override
 	public void onChunkUnload() {
+		super.onChunkUnload();
 		if(laserSat != null) {
 			laserSat.deactivateLaser();
 		}
@@ -306,7 +369,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 
 	@Override
 	public Packet getDescriptionPacket() {
-		NBTTagCompound nbt = new NBTTagCompound();
+		NBTTagCompound nbt = ((S35PacketUpdateTileEntity)super.getDescriptionPacket()).func_148857_g();
 		this.writeToNBT(nbt);
 
 		nbt.setBoolean("IsRunning", isRunning);
@@ -316,6 +379,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 
 	@Override 
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		super.onDataPacket(net, pkt);
 		this.readFromNBT(pkt.func_148857_g());
 		isRunning = pkt.func_148857_g().getBoolean("IsRunning");
 	}
@@ -323,7 +387,6 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		storage.writeToNBT(nbt);
 
 		NBTTagCompound laser = new NBTTagCompound();
 		laserSat.writeToNBT(laser);
@@ -331,18 +394,6 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		nbt.setTag("laser", laser);
 
 		NBTTagList list = new NBTTagList();
-		NBTTagList itemList = new NBTTagList();
-		/*for(int i = 0; i < invBuffer.length; i++)
-		{
-			ItemStack stack = invBuffer[i];
-			if(stack != null) {
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setByte("Slot", (byte)(i));
-				stack.writeToNBT(tag);
-				itemList.appendTag(tag);
-			}
-		}
-		nbt.setTag("InventoryBuffer", itemList);*/
 
 
 		if(glassPanel != null) {
@@ -367,18 +418,8 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		storage.readFromNBT(nbt);
 
 		laserSat.readFromNBT(nbt.getCompoundTag("laser"));
-
-		/*NBTTagList tagList = nbt.getTagList("Inventory");
-		for (int i = 0; i < tagList.tagCount(); i++) {
-			NBTTagCompound tag = (NBTTagCompound) tagList.tagAt(i);
-			byte slot = tag.getByte("Slot");
-			if (slot >= 0 && slot < invBuffer.length) {
-				invBuffer[slot] = ItemStack.loadItemStackFromNBT(tag);
-			}
-		}*/
 		if(nbt.hasKey("GlassPane")) {
 			NBTTagCompound tag = nbt.getCompoundTag("GlassPane");
 			glassPanel = ItemStack.loadItemStackFromNBT(tag);
@@ -480,15 +521,15 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	}
 
 	private boolean canMachineSeeEarth() {
-		for(int i = yCoord - 1; i > 0; i--) {
-			if(worldObj.isBlockNormalCubeDefault(xCoord, i, zCoord,true))
-				return false;
-		}
+		//for(int i = yCoord - 1; i > 0; i--) {
+		//	if(worldObj.isBlockNormalCubeDefault(xCoord, i, zCoord,true))
+		//		return false;
+		//}
 		return true;
 	}
 
 	private boolean isAllowedToRun() {
-		return !(glassPanel == null || storage.getEnergyStored() == 0 || !(this.worldObj.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(xCoord, zCoord).getParentPlanet()) ||
+		return !(glassPanel == null || batteries.getEnergyStored() == 0 || !(this.worldObj.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(xCoord, zCoord).getParentPlanet()) ||
 				Configuration.laserBlackListDims.contains(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(xCoord, zCoord).getParentPlanet()));
 	}
 	
@@ -529,35 +570,21 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		}
 
 		if(!this.worldObj.isRemote)
-			PacketHandler.sendToNearby(new PacketMachine(this, (byte)2), this.xCoord, this.yCoord, this.zCoord, 128, this.worldObj.provider.dimensionId);
+			PacketHandler.sendToNearby(new PacketMachine(this, (byte)12), this.xCoord, this.yCoord, this.zCoord, 128, this.worldObj.provider.dimensionId);
 	}
 
 	public int getEnergyPercentScaled(int max) {
-		return (int)(max * (storage.getEnergyStored() / (float)storage.getMaxEnergyStored()) );
+		return (int)(max * (batteries.getEnergyStored() / (float)batteries.getMaxEnergyStored()) );
 	}
 
 	public boolean hasEnergy() {
-		return storage.getEnergyStored() != 0;
+		return batteries.getEnergyStored() != 0;
 	}
 
 	//InventoryHandling start
 	@Override
 	public int getSizeInventory() {
-		int sizeInv = 0;
-		ForgeDirection front = RotatableBlock.getFront(this.getBlockMetadata());
-
-		for(ForgeDirection f : VALID_INVENTORY_DIRECTIONS) {
-			if(f == front)
-				continue;
-
-			TileEntity e = this.worldObj.getTileEntity(this.xCoord + f.offsetX, this.yCoord + f.offsetY, this.zCoord + f.offsetZ);
-
-			//TODO: may cause inf loop
-			if(e != null && e instanceof IInventory)
-				sizeInv += ((IInventory)e).getSizeInventory();
-		}
-
-		return sizeInv;
+		return inv.getSizeInventory();
 	}
 
 	@Override
@@ -565,25 +592,11 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		if(i == 0)
 			return glassPanel;
 		else {
-			ForgeDirection front = RotatableBlock.getFront(this.getBlockMetadata());
-
-			for(ForgeDirection f : VALID_INVENTORY_DIRECTIONS) {
-				if(f == front)
-					continue;
-
-				TileEntity e = this.worldObj.getTileEntity(this.xCoord + f.offsetX, this.yCoord + f.offsetY, this.zCoord + f.offsetZ);
-
-				//TODO: may cause inf loop
-				if(e != null && e instanceof IInventory)
-					if(i < ((IInventory)e).getSizeInventory())
-						return ((IInventory)e).getStackInSlot(i);
-					else
-						i -= ((IInventory)e).getSizeInventory();
-			}
-			return null;
+			i--;
+			return inv.getStackInSlot(i);
 		}
 	}
-
+	
 	@Override
 	public ItemStack decrStackSize(int i, int j) {
 		ItemStack ret;
@@ -617,19 +630,10 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 				if(f == front)
 					continue;
 
-				TileEntity e = this.worldObj.getTileEntity(this.xCoord + f.offsetX, this.yCoord + f.offsetY, this.zCoord + f.offsetZ);
+				//TileEntity e = this.worldObj.getTileEntity(this.xCoord + f.offsetX, this.yCoord + f.offsetY, this.zCoord + f.offsetZ);
 
-				if(InventoryCompat.canInjectItems(e, itemstack))
-					InventoryCompat.injectItem((IInventory)e, itemstack);
-
-				//TODO: may cause inf loop
-				/*if(e != null && e instanceof IInventory)
-					if(i < ((IInventory)e).getSizeInventory()) {
-						((IInventory)e).setInventorySlotContents(i, itemstack);
-						break;
-					}	
-					else
-						i -= ((IInventory)e).getSizeInventory();*/
+				if(InventoryCompat.canInjectItems(inv, itemstack))
+					InventoryCompat.injectItem(inv, itemstack);
 			}
 
 			this.checkCanRun();
@@ -683,22 +687,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		if(i == 0)
 			return CompatibilityMgr.gregtechLoaded ? OreDictionary.getOreName(OreDictionary.getOreID(itemstack)).equals("lenseRuby") : AdvancedRocketryItems.itemLens == itemstack.getItem() ? true : false;
 
-			ForgeDirection front = RotatableBlock.getFront(this.getBlockMetadata());
-
-			for(ForgeDirection f : VALID_INVENTORY_DIRECTIONS) {
-				if(f == front)
-					continue;
-
-				TileEntity e = this.worldObj.getTileEntity(this.xCoord + f.offsetX, this.yCoord + f.offsetY, this.zCoord + f.offsetZ);
-
-				//TODO: may cause inf loop
-				if(e != null && e instanceof IInventory)
-					if(i < ((IInventory)e).getSizeInventory())
-						return ((IInventory)e).isItemValidForSlot(i,itemstack);
-					else
-						i -= ((IInventory)e).getSizeInventory();
-			}
-			return false;
+			return inv.isItemValidForSlot(i, itemstack);
 	}
 	//InventoryHandling end
 
@@ -709,47 +698,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	 * @return returns whether enough power is stored for the next opertation
 	 */
 	public boolean hasPowerForOperation() {
-		return POWER_PER_OPERATION <= storage.getEnergyStored();
-	}
-
-	/**
-	 * DO NOT USE UNLESS YOU HAVE NO OTHER OPTION!!!
-	 * @param amt amount to set energy to
-	 */
-	public void setEnergy(int amt) {
-		storage.setEnergyStored(amt);
-	}
-
-	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive,
-			boolean simulate) {
-
-
-		if(from == ForgeDirection.DOWN || from == RotatableBlock.getFront(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord)))
-			return 0;
-
-		return acceptEnergy(maxReceive, simulate);
-	}
-
-	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract,
-			boolean simulate) {
-		return 0;
-	}
-
-	@Override
-	public int getEnergyStored(ForgeDirection from) {
-		return getEnergyStored();
-	}
-
-	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
-		return getMaxEnergyStored();
-	}
-
-	@Override
-	public void setMaxEnergyStored(int max) {
-		storage.setMaxEnergyStored(max);
+		return POWER_PER_OPERATION <= batteries.getEnergyStored();
 	}
 
 	//Redstone Flux end
@@ -769,22 +718,17 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 	}
 
 	@Override
-	public boolean canConnectEnergy(ForgeDirection from) {
-		return from != ForgeDirection.DOWN && from != RotatableBlock.getFront(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
-	}
-
-	@Override
 	public void onModuleUpdated(ModuleBase module) {
 
 		if(module == locationX) {
 			if(!((ModuleTextBox)module).getText().isEmpty() && !((ModuleTextBox)module).getText().contentEquals("-"))
 				laserX = Integer.parseInt(((ModuleTextBox)module).getText());
-			PacketHandler.sendToServer(new PacketMachine(this,(byte) 0));
+			PacketHandler.sendToServer(new PacketMachine(this,(byte) 10));
 		}
 		else if(module == locationZ) {
 			if(!((ModuleTextBox)module).getText().isEmpty() && !((ModuleTextBox)module).getText().contentEquals("-"))
 				laserZ = Integer.parseInt(((ModuleTextBox)module).getText());
-			PacketHandler.sendToServer(new PacketMachine(this,(byte) 1));
+			PacketHandler.sendToServer(new PacketMachine(this,(byte) 11));
 		}
 
 
@@ -811,7 +755,7 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 		modules.add(new ModuleButton(103, 20, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonLeft, 5, 8));
 		modules.add(new ModuleButton(157, 20, 1, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonRight, 5, 8));
 		modules.add(new ModuleButton(103, 62, 2, "Reset", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, 34, 20));
-		modules.add(new ModulePower(11, 25, this));
+		modules.add(new ModulePower(11, 25, getBatteries()));
 		modules.add(new ModuleSlotArray(56, 54, this, 0, 1));
 
 
@@ -842,38 +786,13 @@ public class TileSpaceLaser extends TileEntity implements ISidedInventory, IEner
 			updateText.setText(this.getMode().toString());
 		}
 		else if(buttonId == 2) {
-			PacketHandler.sendToServer(new PacketMachine(this, (byte)4));
+			PacketHandler.sendToServer(new PacketMachine(this, (byte)14));
 			return;
 		}
 		else 
 			return;
 
 		if(!this.isRunning())
-			PacketHandler.sendToServer(new PacketMachine(this, (byte)3));
-	}
-
-	@Override
-	public void setEnergyStored(int amt) {
-		storage.setEnergyStored(amt);
-	}
-
-	@Override
-	public int extractEnergy(int amt, boolean simulate) {
-		return storage.extractEnergy(amt, simulate);
-	}
-
-	@Override
-	public int getEnergyStored() {
-		return storage.getEnergyStored();
-	}
-
-	@Override
-	public int getMaxEnergyStored() {
-		return storage.getMaxEnergyStored();
-	}
-
-	@Override
-	public int acceptEnergy(int amt, boolean simulate) {
-		return storage.acceptEnergy(amt, simulate);
+			PacketHandler.sendToServer(new PacketMachine(this, (byte)13));
 	}
 }

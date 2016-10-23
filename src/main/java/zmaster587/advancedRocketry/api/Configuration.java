@@ -85,4 +85,6 @@ public class Configuration {
 	public static boolean canPlayerRespawnInSpace;
 	public static float spaceLaserPowerMult;
 	public static List<Integer> laserBlackListDims = new LinkedList<Integer>();
+	public static String[] standardLaserDrillOres;
+	public static boolean laserDrillPlanet;
 }

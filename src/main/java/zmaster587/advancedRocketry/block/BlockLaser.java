@@ -2,54 +2,32 @@ package zmaster587.advancedRocketry.block;
 
 import java.util.Random;
 
-import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.tile.TileSpaceLaser;
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.block.RotatableBlock;
-import zmaster587.libVulpes.inventory.GuiHandler.guiId;
+import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
+import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
+import zmaster587.libVulpes.inventory.GuiHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class BlockLaser extends RotatableBlock {
+public class BlockLaser extends BlockMultiblockMachine {
 
 	public BlockLaser() {
-		super(Material.iron);
+		super(TileSpaceLaser.class, (int)GuiHandler.guiId.MODULAR.ordinal());
 		setTickRandomly(true).setBlockName("spaceLaser");
 	}
-
-	@Override
-	public TileEntity createTileEntity(World world, int metadata) {
-		return new TileSpaceLaser();
-	}
-
-	@Override
-	public boolean hasTileEntity(int meta) {
-		return true;
-	}
-
+	
 	//can happen when lever is flipped... Update the state of the tile
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+		super.onNeighborBlockChange(world, x, y, z, block);
 		((TileSpaceLaser)world.getTileEntity(x, y, z)).checkCanRun();
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
-	{
-		if(!world.isRemote)
-			player.openGui(LibVulpes.instance, guiId.MODULAR.ordinal(), world, x, y, z);
-		return true;
-	}
-
-	@Override
-	public void onBlockPreDestroy(World world, int x, int y, int z, int par5) {
+	public void onBlockPreDestroy(World world, int x, int y, int z, int meta) {
+		super.onBlockPreDestroy(world, x, y, z, meta);
 		((TileSpaceLaser)world.getTileEntity(x, y, z)).onDestroy();
 	}
 
