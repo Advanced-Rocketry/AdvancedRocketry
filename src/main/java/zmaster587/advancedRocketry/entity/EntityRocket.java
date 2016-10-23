@@ -70,6 +70,7 @@ import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.mission.MissionOreMining;
 import zmaster587.advancedRocketry.network.PacketSatellite;
+import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
@@ -710,7 +711,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			//Make player confirm deorbit if a player is riding the rocket
 			if(hasHumanPassenger()) {
 				setInFlight(false);
-				
+
 				if(DimensionManager.getInstance().getDimensionProperties(destinationDimId).getName().equals("Luna")) {
 					for(Entity player : this.getPassengers()) {
 						if(player instanceof EntityPlayer) {
@@ -762,6 +763,18 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 		//TODO: make sure this doesn't break asteriod mining
 		if(!(DimensionManager.getInstance().canTravelTo(destinationDimId) || (destinationDimId == -1 && storage.getSatelliteHatches().size() != 0)))
+			return;
+
+		int finalDest = destinationDimId;
+		if(destinationDimId == Configuration.spaceDimId) {
+			
+			Vector3F<Float> vec = storage.getDestinationCoordinates(destinationDimId);
+			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(vec.x, vec.y, vec.z));
+			if(obj != null)
+				finalDest = obj.getOrbitingPlanetId();
+			else return;
+		}
+		if(!DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, this.worldObj.provider.getDimension()))
 			return;
 
 		//TODO: Clean this logic a bit?
@@ -905,13 +918,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					//minecraftserver.getPlayerList().transferPlayerToDimension((EntityPlayerMP)e, dimensionIn, teleporter);
 
 					//e.setLocationAndAngles(posX, Configuration.orbit, posZ, this.rotationYaw, this.rotationPitch);
-					
+
 					//e.startRiding(entity);
 
-					
+
 					//e.playerNetServerHandler.sendPacket(new SPacketRespawn(e.dimension, e.worldObj.getDifficulty(), worldserver1.getWorldInfo().getTerrainType(), ((EntityPlayerMP)e).interactionManager.getGameType()));
 					//((WorldServer)startWorld).getPlayerManager().removePlayer(player);
-					
+
 				}
 			}
 
@@ -1216,7 +1229,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			//modules.add(new ModuleText(180, 114, "Inventories", 0x404040));
 		}
 		else {
-			container = new ModulePlanetSelector(worldObj.provider.getDimension(), zmaster587.libVulpes.inventory.TextureResources.starryBG, this);
+			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension());
+			while(properties.getParentProperties() != null) properties = properties.getParentProperties();
+			
+			container = new ModulePlanetSelector(properties.getId(), zmaster587.libVulpes.inventory.TextureResources.starryBG, this, false);
 			container.setOffset(1000, 1000);
 			modules.add(container);
 		}

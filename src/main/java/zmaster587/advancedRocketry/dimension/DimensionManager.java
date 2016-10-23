@@ -41,7 +41,7 @@ public class DimensionManager {
 	public static final DimensionType PlanetDimensionType = DimensionType.register("planet", "planet", 2, WorldProviderPlanet.class, false);
 	public static final DimensionType spaceDimensionType = DimensionType.register("space", "space", 3, WorldProviderSpace.class, false);
 	private boolean hasBeenInitiallized = false;
-	
+
 	//Stat tracking
 	public static boolean hasReachedMoon;
 	public static boolean hasReachedWarp;
@@ -129,14 +129,14 @@ public class DimensionManager {
 	 * @return a reference to the satellite object with the supplied ID
 	 */
 	public SatelliteBase getSatellite(long satId) {
-		
+
 		//Hack to allow monitoring stations to properly reload after a server restart
 		//Because there should never be a tile in the world where no planets have been generated load file first
 		//Worst thing that can happen is there is no file and it gets genned later and the monitor does not reconnect
 		if(!hasBeenInitiallized) {
 			zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.filePath);
 		}
-		
+
 		SatelliteBase satellite = overworldProperties.getSatellite(satId);
 
 		if(satellite != null)
@@ -199,7 +199,7 @@ public class DimensionManager {
 		}
 		return GASGIANT_DIMID_OFFSET;
 	}
-	
+
 	public DimensionProperties generateRandom(int atmosphereFactor, int distanceFactor, int gravityFactor) {
 		return generateRandom(100, 100, 100, atmosphereFactor, distanceFactor, gravityFactor);
 	}
@@ -263,7 +263,7 @@ public class DimensionManager {
 	public DimensionProperties generateRandom(int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
 		return generateRandom("", baseAtmosphere, baseDistance, baseGravity, atmosphereFactor, distanceFactor, gravityFactor);
 	}
-	
+
 	public DimensionProperties generateRandomGasGiant(String name, int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
 		DimensionProperties properties = new DimensionProperties(getNextFreeGasGaintDim());
 
@@ -311,7 +311,7 @@ public class DimensionManager {
 	public boolean canTravelTo(int dimId){
 		return dimId < GASGIANT_DIMID_OFFSET && net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId) && dimId != -1;
 	}
-	
+
 	/**
 	 * Attempts to register a dimension with {@link DimensionProperties}, if the dimension has not yet been registered, sends a packet containing the dimension information to all connected clients
 	 * @param properties {@link DimensionProperties} to register
@@ -340,7 +340,7 @@ public class DimensionManager {
 
 		//Avoid registering gas giants as dimensions
 		if(registerWithForge && dimId < GASGIANT_DIMID_OFFSET && !net.minecraftforge.common.DimensionManager.isDimensionRegistered(dim)) {
-			
+
 			net.minecraftforge.common.DimensionManager.registerDimension(dimId, PlanetDimensionType);
 		}
 		dimensionList.put(dimId, properties);
@@ -483,7 +483,7 @@ public class DimensionManager {
 		}
 
 		nbt.setTag("dimList", dimListnbt);
-		
+
 		//Stats
 		NBTTagCompound stats = new NBTTagCompound();
 		stats.setBoolean("hasReachedMoon", hasReachedMoon);
@@ -528,7 +528,7 @@ public class DimensionManager {
 	 */
 	public boolean loadDimensions(String filePath) {
 		hasBeenInitiallized = true;
-		
+
 		FileInputStream inStream;
 		NBTTagCompound nbt;
 		try {
@@ -557,14 +557,14 @@ public class DimensionManager {
 
 		//Load SolarSystems first
 		NBTTagCompound solarSystem = nbt.getCompoundTag("starSystems");
-		
+
 		if(solarSystem.hasNoTags())
 			return false;
 
 		NBTTagCompound stats = nbt.getCompoundTag("stat");
 		hasReachedMoon = stats.getBoolean("hasReachedMoon");
 		hasReachedWarp = stats.getBoolean("hasReachedWarp");
-		
+
 		for(Object key : solarSystem.getKeySet()) {
 
 			NBTTagCompound solarNBT = solarSystem.getCompoundTag((String)key);
@@ -613,5 +613,22 @@ public class DimensionManager {
 		}
 
 		return true;
+	}
+
+	public boolean areDimensionsInSamePlanetMoonSystem(int destinationDimId,
+			int dimension) {
+		DimensionProperties properties = getDimensionProperties(dimension);
+		while(properties.getParentProperties() != null) properties = properties.getParentProperties();
+		return areDimensionsInSamePlanetMoonSystem(properties, destinationDimId);
+	}
+
+	private boolean areDimensionsInSamePlanetMoonSystem(DimensionProperties properties, int id) {
+		if(properties.getId() == id)
+			return true;
+
+		for(int child : properties.getChildPlanets()) {
+			if(areDimensionsInSamePlanetMoonSystem(getDimensionProperties(child), id)) return true;
+		}
+		return false;
 	}
 }

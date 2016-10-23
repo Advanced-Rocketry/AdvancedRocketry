@@ -71,7 +71,7 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
-		container = new ModulePlanetSelector(worldObj.provider.getDimension(), TextureResources.starryBG, this);
+		container = new ModulePlanetSelector(0, TextureResources.starryBG, this, true);
 		container.setOffset(1000, 1000);
 		modules.add(container);
 

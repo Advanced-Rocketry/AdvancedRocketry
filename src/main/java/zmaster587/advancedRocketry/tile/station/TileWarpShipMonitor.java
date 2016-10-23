@@ -213,7 +213,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 		}
 		else if (ID == guiId.MODULARFULLSCREEN.ordinal()) {
 			//Open planet selector menu
-			container = new ModulePlanetSelector(worldObj.provider.getDimension(), zmaster587.libVulpes.inventory.TextureResources.starryBG, this);
+			container = new ModulePlanetSelector(0, zmaster587.libVulpes.inventory.TextureResources.starryBG, this, true);
 			container.setOffset(1000, 1000);
 			modules.add(container);
 		}
