@@ -103,7 +103,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 				{null, null, 'O', null, null}
 			},
 	};
-	
+
 	public enum MODE{
 		SINGLE,
 		LINE_X,
@@ -125,7 +125,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 		numSteps = 0;
 		prevDir = ForgeDirection.UNKNOWN;
 
-		
+
 		inv = new MultiInventory(itemOutPorts);
 		tickSinceLastOperation = 0;
 		laserX = 0;
@@ -134,7 +134,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 			laserSat = new SatelliteLaser(inv);
 		else
 			laserSat = new SatelliteLaserNoDrill(inv);
-		
+
 		isRunning = false;
 		finished = false;
 		mode = MODE.SINGLE;
@@ -151,12 +151,12 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 	public Object[][][] getStructure() {
 		return structure;
 	}
-	
+
 	@Override
 	public String getMachineName() {
 		return getInventoryName();
 	}
-	
+
 	/*
 	 * ID 10: client changed xcoord in interface
 	 * ID 11: client changed ycoord in interface
@@ -276,14 +276,14 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 	@Override
 	public void updateEntity() {
 		//TODO: drain energy
-		
+
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0 && !worldObj.isRemote) {
 			if(isComplete())
 				canRender = completeStructure = completeStructure();
 			timeAlive = 0x1;
 		}
-		
+
 		if(!this.worldObj.isRemote) {
 			tickSinceLastOperation++;
 
@@ -532,7 +532,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 		return !(glassPanel == null || batteries.getEnergyStored() == 0 || !(this.worldObj.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(xCoord, zCoord).getParentPlanet()) ||
 				Configuration.laserBlackListDims.contains(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(xCoord, zCoord).getParentPlanet()));
 	}
-	
+
 	/**
 	 * Checks to see if the situation for firing the laser exists... and changes the state accordingly
 	 */
@@ -596,7 +596,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 			return inv.getStackInSlot(i);
 		}
 	}
-	
+
 	@Override
 	public ItemStack decrStackSize(int i, int j) {
 		ItemStack ret;
@@ -624,17 +624,12 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 			glassPanel = itemstack;
 		else {
 
-			ForgeDirection front = RotatableBlock.getFront(this.getBlockMetadata());
 
-			for(ForgeDirection f : VALID_INVENTORY_DIRECTIONS) {
-				if(f == front)
-					continue;
+			//TileEntity e = this.worldObj.getTileEntity(this.xCoord + f.offsetX, this.yCoord + f.offsetY, this.zCoord + f.offsetZ);
 
-				//TileEntity e = this.worldObj.getTileEntity(this.xCoord + f.offsetX, this.yCoord + f.offsetY, this.zCoord + f.offsetZ);
+			if(InventoryCompat.canInjectItems(inv, itemstack))
+				InventoryCompat.injectItem(inv, itemstack);
 
-				if(InventoryCompat.canInjectItems(inv, itemstack))
-					InventoryCompat.injectItem(inv, itemstack);
-			}
 
 			this.checkCanRun();
 		}
