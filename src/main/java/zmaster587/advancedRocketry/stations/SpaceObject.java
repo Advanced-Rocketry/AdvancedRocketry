@@ -200,7 +200,7 @@ public class SpaceObject implements ISpaceObject {
 	}
 
 	public boolean hasUsableWarpCore() {
-		return properties.getParentPlanet() != SpaceObjectManager.WARPDIMID && getDestOrbitingBody() != getOrbitingPlanetId();
+		return warpCoreLocation.size() > 0 && properties.getParentPlanet() != SpaceObjectManager.WARPDIMID && getDestOrbitingBody() != getOrbitingPlanetId();
 	}
 
 	public int getFuelAmount() {
