@@ -298,10 +298,11 @@ public class SpaceObject implements ISpaceObject {
 	/**
 	 * @return next viable place to land
 	 */
-	public BlockPosition getNextLandingPad() {
+	public BlockPosition getNextLandingPad(boolean commit) {
 		for(BlockPosition pos : spawnLocations) {
 			if(!occupiedLandingPads.get(pos)) {
-				occupiedLandingPads.put(pos, true);
+				if(commit)
+					occupiedLandingPads.put(pos, true);
 				return pos;
 			}
 		}
@@ -395,7 +396,7 @@ public class SpaceObject implements ISpaceObject {
 	 */
 	@Override
 	public void onModuleUnpack(IStorageChunk chunk) {
-		
+
 		if(DimensionManager.isDimensionRegistered(Configuration.spaceDimId) &&  DimensionManager.getWorld(Configuration.spaceDimId) == null)
 			DimensionManager.initDimension(Configuration.spaceDimId);
 		World worldObj = DimensionManager.getWorld(Configuration.spaceDimId);
@@ -523,7 +524,7 @@ public class SpaceObject implements ISpaceObject {
 
 		if((int)orbitalDistance != properties.getParentOrbitalDistance())
 			orbitalDistance = properties.getParentOrbitalDistance();
-		
+
 		created = nbt.getBoolean("created");
 		destinationDimId = nbt.getInteger("destinationDimId");
 		posX = nbt.getInteger("posX");
@@ -580,7 +581,7 @@ public class SpaceObject implements ISpaceObject {
 	public boolean hasCustomSpawnLocation() {
 		return false;
 	}
-	
+
 	@Override
 	public float getOrbitalDistance() {
 		return orbitalDistance;

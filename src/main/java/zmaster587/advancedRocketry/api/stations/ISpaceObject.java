@@ -91,7 +91,7 @@ public interface ISpaceObject {
 	/**
 	 * @return next viable place to land
 	 */
-	public BlockPosition getNextLandingPad();
+	public BlockPosition getNextLandingPad(boolean commit);
 	
 	/**
 	 * Adds a landing pad to the station

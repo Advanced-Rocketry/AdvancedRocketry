@@ -258,7 +258,7 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 	}
 
 	@Override
-	public BlockPosition getNextLandingPad() {
+	public BlockPosition getNextLandingPad(boolean commit) {
 		return null;
 	}
 
