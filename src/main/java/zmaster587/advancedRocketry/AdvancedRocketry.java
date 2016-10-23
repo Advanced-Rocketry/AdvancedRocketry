@@ -151,6 +151,7 @@ import zmaster587.advancedRocketry.tile.infrastructure.TileRocketFluidUnloader;
 import zmaster587.advancedRocketry.tile.infrastructure.TileRocketLoader;
 import zmaster587.advancedRocketry.tile.infrastructure.TileRocketUnloader;
 import zmaster587.advancedRocketry.tile.multiblock.*;
+import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
 import zmaster587.advancedRocketry.tile.multiblock.energy.TileMicrowaveReciever;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileChemicalReactor;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileCrystallizer;
@@ -303,6 +304,8 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.gasCollectionMult = config.get(GAS_MINING, "gasMissionMultiplier", 1.0, "Multiplier for the amount of time gas collection missions take").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.asteroidMiningMult = config.get(ASTEROID, "miningMissionMultiplier", 1.0, "Multiplier changing how much total material is brought back from a mining mission").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres = config.get(ASTEROID, "standardOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone"}, "List of oredictionary names of ores allowed to spawn in asteriods").getStringList();
+		zmaster587.advancedRocketry.api.Configuration.standardLaserDrillOres = config.get(Configuration.CATEGORY_GENERAL, "laserDrillOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone", "oreDiamond"}, "List of oredictionary names of ores allowed to be mined by the laser drill if surface drilling is disabled").getStringList();
+		zmaster587.advancedRocketry.api.Configuration.laserDrillPlanet = config.get(Configuration.CATEGORY_GENERAL, "laserDrillPlanet", false, "If true the orbital laser will actually mine blocks on the planet below").getBoolean();
 
 		//Client
 		zmaster587.advancedRocketry.api.Configuration.rocketRequireFuel = config.get(ROCKET, "rocketsRequireFuel", true, "Set to false if rockets should not require fuel to fly").getBoolean();
@@ -730,6 +733,8 @@ public class AdvancedRocketry {
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileBiomeScanner(), (BlockTile)AdvancedRocketryBlocks.blockBiomeScanner);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileAtmosphereTerraformer(), (BlockTile)AdvancedRocketryBlocks.blockAtmosphereTerraformer);
 
+		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
+			((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileSpaceLaser(), (BlockTile)AdvancedRocketryBlocks.blockSpaceLaser);
 		//End Items
 
 		//Entity Registration ---------------------------------------------------------------------------------------------

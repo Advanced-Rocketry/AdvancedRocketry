@@ -25,15 +25,14 @@ import zmaster587.advancedRocketry.event.BlockBreakEvent.LaserBreakEvent;
 import zmaster587.advancedRocketry.tile.TileSpaceLaser;
 import zmaster587.libVulpes.util.ZUtils;
 
-public class SatelliteLaser extends SatelliteBase {
+public class SatelliteLaser extends SatelliteLaserNoDrill {
 
 	private EntityLaserNode laser;
 	private Ticket ticketLaser;
-	private boolean finished, jammed;
-	IInventory boundChest;
+	protected boolean finished;
 
 	public SatelliteLaser(IInventory boundChest) {
-		this.boundChest = boundChest;
+		super(boundChest);
 		finished = false;
 	}
 

@@ -2,27 +2,21 @@ package zmaster587.advancedRocketry.block;
 
 import java.util.Random;
 
-import zmaster587.advancedRocketry.tile.TileSpaceLaser;
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.block.BlockFullyRotatable;
-import zmaster587.libVulpes.block.RotatableBlock;
-import zmaster587.libVulpes.inventory.GuiHandler.guiId;
-import net.minecraft.block.material.Material;
+import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
+import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
+import zmaster587.libVulpes.inventory.GuiHandler;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockLaser extends RotatableBlock {
+public class BlockLaser extends BlockMultiblockMachine {
 
 	public BlockLaser() {
-		super(Material.IRON);
+		super(TileSpaceLaser.class, (int)GuiHandler.guiId.MODULAR.ordinal());
 		setTickRandomly(true).setUnlocalizedName("spaceLaser");
 	}
 
@@ -36,6 +30,12 @@ public class BlockLaser extends RotatableBlock {
 		return true;
 	}
 	
+	@Override
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos,
+			Block blockIn) {
+		((TileSpaceLaser)worldIn.getTileEntity(pos)).checkCanRun();
+	}
+	
 	//can happen when lever is flipped... Update the state of the tile
 	@Override
 	public void onNeighborChange(IBlockAccess world, BlockPos pos,
@@ -44,19 +44,8 @@ public class BlockLaser extends RotatableBlock {
 	}
 	
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
-		if(!world.isRemote)
-			player.openGui(LibVulpes.instance, guiId.MODULAR.ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
-		return true;
-	}
-
-	@Override
-	public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos,
-			IBlockState state) {
-		super.onBlockDestroyedByPlayer(worldIn, pos, state);
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+		super.breakBlock(worldIn, pos, state);
 		((TileSpaceLaser)worldIn.getTileEntity(pos)).onDestroy();
 	}
 	
