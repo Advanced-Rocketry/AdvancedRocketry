@@ -14,10 +14,8 @@ import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
@@ -56,7 +54,6 @@ import zmaster587.advancedRocketry.item.ItemPackedStructure;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.mission.MissionOreMining;
 import zmaster587.advancedRocketry.network.PacketSatellite;
-import zmaster587.advancedRocketry.rocket.GuidanceComputer;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
@@ -64,7 +61,6 @@ import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
 import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.PacketID;
 import zmaster587.libVulpes.api.IDismountHandler;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.gui.CommonResources;
@@ -686,6 +682,18 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		if(!(DimensionManager.getInstance().canTravelTo(destinationDimId) || (destinationDimId == -1 && storage.getSatelliteHatches().size() != 0)))
 			return;
 
+		int finalDest = destinationDimId;
+		if(destinationDimId == Configuration.spaceDimId) {
+			
+			Vector3F<Float> vec = storage.getDestinationCoordinates(destinationDimId);
+			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)(float)vec.x, (int)(float)vec.z);
+			if(obj != null)
+				finalDest = obj.getOrbitingPlanetId();
+			else return;
+		}
+		if(!DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, this.worldObj.provider.dimensionId))
+			return;
+		
 		//TODO: Clean this logic a bit?
 		if(!stats.hasSeat() || ((DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || destinationDimId == Configuration.spaceDimId || destinationDimId == 0) ) { //Abort if destination is invalid
 
@@ -1104,7 +1112,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			//modules.add(new ModuleText(180, 114, "Inventories", 0x404040));
 		}
 		else {
-			container = new ModulePlanetSelector(worldObj.provider.dimensionId, zmaster587.libVulpes.inventory.TextureResources.starryBG, this);
+			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId);
+			while(properties.getParentProperties() != null) properties = properties.getParentProperties();
+			
+			container = new ModulePlanetSelector(properties.getId(), zmaster587.libVulpes.inventory.TextureResources.starryBG, this, false);
 			container.setOffset(1000, 1000);
 			modules.add(container);
 		}

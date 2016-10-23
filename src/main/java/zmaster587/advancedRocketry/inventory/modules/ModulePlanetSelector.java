@@ -34,7 +34,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class ModulePlanetSelector extends ModuleContainerPan implements IButtonInventory {
 
-	
+
 	//Closest thing i can get to a struct :/
 	private class PlanetRenderProperties {
 		int radius;
@@ -49,7 +49,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			this.posY = posY;
 		}
 	}
-	
+
 	private static final int size = 2000;
 	private static final int starIdOffset = 10000;
 	ISelectionNotify hostTile;
@@ -57,11 +57,12 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 	private double zoom;
 	private boolean currentSystemChanged = false;
 	private List<ModuleButton> planetList;
+	int topLevel;
 
 	private HashMap<Integer, PlanetRenderProperties> renderPropertiesMap;
 	PlanetRenderProperties currentlySelectedPlanet;
 
-	public ModulePlanetSelector(int planetId, ResourceLocation backdrop, ISelectionNotify tile) {
+	public ModulePlanetSelector(int planetId, ResourceLocation backdrop, ISelectionNotify tile, boolean star) {
 		super(0, 0, null, null, backdrop, 0, 0, 0, 0, size,size);
 
 		hostTile = tile;
@@ -90,8 +91,17 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		progressBar.setTooltipValueMultiplier(.02f);
 
 		//renderPlanetarySystem(properties, center, center, 3f);
-		if(FMLCommonHandler.instance().getSide().isClient())
-			renderStarSystem(DimensionManager.getInstance().getStar(0), center, center, 1f, 0.5f);
+		if(FMLCommonHandler.instance().getSide().isClient()) {
+			if(star) {
+				topLevel = -1;
+				renderStarSystem(DimensionManager.getInstance().getStar(planetId), center, center, 1f, 0.5f);
+			}
+			else {
+				currentSystem = planetId;
+				topLevel = planetId;
+				renderPlanetarySystem(DimensionManager.getInstance().getDimensionProperties(planetId), center, center, 1f, 3f);
+			}
+		}
 	}
 
 	@Override
@@ -173,7 +183,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		button.setSound("buttonBlipA");
 
 		renderPropertiesMap.put(planet.getId(), new PlanetRenderProperties(displaySize, offsetX, offsetY));
-		
+
 	}
 
 
@@ -226,7 +236,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		for(ModuleBase module : this.planetList) {
 			buttonList.addAll(module.addButtons(currentPosX, currentPosY));
 		}
-		
+
 		setOffset2(internalOffsetX - Minecraft.getMinecraft().displayWidth/4 , internalOffsetY - Minecraft.getMinecraft().displayHeight /4);
 
 
@@ -361,14 +371,15 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 		if(buttonId == -1) {
 			DimensionProperties properties =  DimensionManager.getInstance().getDimensionProperties(currentSystem);
+			if(topLevel == -1 || currentSystem != topLevel) {
+				if(properties.isMoon())
+					currentSystem = properties.getParentPlanet();
+				else
+					currentSystem = properties.getStar().getId() + starIdOffset;
 
-			if(properties.isMoon())
-				currentSystem = properties.getParentPlanet();
-			else
-				currentSystem = properties.getStar().getId() + starIdOffset;
-
-			currentSystemChanged=true;
-			selectedSystem = -1;
+				currentSystemChanged=true;
+				selectedSystem = -1;
+			}
 		}
 		else if(buttonId == -2) {
 			if(selectedSystem < starIdOffset) {

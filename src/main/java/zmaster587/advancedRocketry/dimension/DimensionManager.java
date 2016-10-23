@@ -613,4 +613,21 @@ public class DimensionManager {
 
 		return true;
 	}
+	
+	public boolean areDimensionsInSamePlanetMoonSystem(int destinationDimId,
+			int dimension) {
+		DimensionProperties properties = getDimensionProperties(dimension);
+		while(properties.getParentProperties() != null) properties = properties.getParentProperties();
+		return areDimensionsInSamePlanetMoonSystem(properties, destinationDimId);
+	}
+
+	private boolean areDimensionsInSamePlanetMoonSystem(DimensionProperties properties, int id) {
+		if(properties.getId() == id)
+			return true;
+
+		for(int child : properties.getChildPlanets()) {
+			if(areDimensionsInSamePlanetMoonSystem(getDimensionProperties(child), id)) return true;
+		}
+		return false;
+	}
 }
