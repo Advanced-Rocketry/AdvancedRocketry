@@ -339,27 +339,18 @@ public class RocketEventHandler extends Gui {
 				this.drawTexturedModalRect(3, 242 - size, 17, 75 - size, 3, size); //94 to 161
 
 				GL11.glDisable(GL11.GL_BLEND);
-
-				if(rocket.isInOrbit() && !rocket.isInFlight()) {
+				String str = rocket.getTextOverlay();
+				if(!str.isEmpty()) {
 					FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
-					String str = "Press Space to descend!";
-					int screenX = event.getResolution().getScaledWidth()/6 - fontRenderer.getStringWidth(str)/2;
-					int screenY = event.getResolution().getScaledHeight()/18;
+					
+					float scale = str.length() < 50 ? 1f : 0.5f;
+					
+					int screenX = (int) ((event.getResolution().getScaledWidth()/(scale*6) - fontRenderer.getStringWidth(str)/2));
+					int screenY = (int) ((event.getResolution().getScaledHeight()/18)/scale);
+					
 
 					GL11.glPushMatrix();
-					GL11.glScalef(3, 3, 3);
-
-					fontRenderer.drawStringWithShadow(str, screenX, screenY, 0xFFFFFF);
-
-					GL11.glPopMatrix();
-				}else if(!rocket.isInFlight()) {
-					FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
-					String str = "Press Space to take off!";
-					int screenX = event.getResolution().getScaledWidth()/6 - fontRenderer.getStringWidth(str)/2;
-					int screenY = event.getResolution().getScaledHeight()/18;
-
-					GL11.glPushMatrix();
-					GL11.glScalef(3, 3, 3);
+					GL11.glScalef(scale*3, scale*3, scale*3);
 
 					fontRenderer.drawStringWithShadow(str, screenX, screenY, 0xFFFFFF);
 

@@ -302,14 +302,15 @@ public class SpaceObject implements ISpaceObject {
 		HashedBlockPosition pos2 = new HashedBlockPosition(pos);
 		dockingPoints.remove(pos2);
 	}
-	
+
 	/**
 	 * @return next viable place to land
 	 */
-	public HashedBlockPosition getNextLandingPad() {
+	public HashedBlockPosition getNextLandingPad(boolean commit) {
 		for(HashedBlockPosition pos : spawnLocations) {
 			if(!occupiedLandingPads.get(pos)) {
-				occupiedLandingPads.put(pos, true);
+				if(commit)
+					occupiedLandingPads.put(pos, true);
 				return pos;
 			}
 		}
@@ -405,7 +406,7 @@ public class SpaceObject implements ISpaceObject {
 	 * @param chunk
 	 */
 	public void onModuleUnpack(IStorageChunk chunk) {
-		
+
 		if(DimensionManager.isDimensionRegistered(Configuration.spaceDimId) &&  DimensionManager.getWorld(Configuration.spaceDimId) == null)
 			DimensionManager.initDimension(Configuration.spaceDimId);
 		World worldObj = DimensionManager.getWorld(Configuration.spaceDimId);
@@ -447,12 +448,12 @@ public class SpaceObject implements ISpaceObject {
 				EnumFacing stationFacing = destTile.getBlockType().getStateFromMeta(destTile.getBlockMetadata()).getValue(BlockFullyRotatable.FACING);
 				EnumFacing moduleFacing = srcTile.getBlockType().getStateFromMeta(srcTile.getBlockMetadata()).getValue(BlockFullyRotatable.FACING);
 
-				
+
 				EnumFacing cross = moduleFacing.rotateAround(stationFacing.getAxis());
-				
+
 				if(stationFacing.getAxisDirection() == AxisDirection.NEGATIVE)
 					cross = cross.getOpposite();
-				
+
 				if(cross == moduleFacing) {
 					if(moduleFacing == stationFacing) {
 						if(cross == EnumFacing.DOWN || cross == EnumFacing.UP) {
@@ -517,7 +518,7 @@ public class SpaceObject implements ISpaceObject {
 			list.appendTag(tag);
 		}
 		nbt.setTag("warpCorePositions", list);
-		
+
 		list = new NBTTagList();
 		for(Entry<HashedBlockPosition, String> obj : this.dockingPoints.entrySet()) {
 			NBTTagCompound tag = new NBTTagCompound();
@@ -536,7 +537,7 @@ public class SpaceObject implements ISpaceObject {
 
 		if((int)orbitalDistance != properties.getParentOrbitalDistance())
 			orbitalDistance = properties.getParentOrbitalDistance();
-		
+
 		destinationDimId = nbt.getInteger("destinationDimId");
 		posX = nbt.getInteger("posX");
 		posY = nbt.getInteger("posY");
@@ -573,7 +574,7 @@ public class SpaceObject implements ISpaceObject {
 			HashedBlockPosition pos = new HashedBlockPosition(posInt[0], posInt[1], posInt[2]);
 			warpCoreLocation.add(pos);
 		}
-		
+
 		list = nbt.getTagList("dockingPositons", NBT.TAG_COMPOUND);
 		dockingPoints.clear();
 		for(int i = 0; i < list.tagCount(); i++) {

@@ -77,7 +77,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	 * returns the location the rocket should land
 	 * @return
 	 */
-	public Vector3F<Float> getLandingLocation(int landingDimension) {
+	public Vector3F<Float> getLandingLocation(int landingDimension, boolean commit) {
 		ItemStack stack = getStackInSlot(0);
 		if(stack != null && stack.getItem() instanceof ItemStationChip) {
 			ItemStationChip chip = (ItemStationChip)stack.getItem();
@@ -86,7 +86,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(ItemStationChip.getUUID(stack));
 				HashedBlockPosition vec = null;
 				if(object instanceof SpaceObject)
-					vec = ((SpaceObject)object).getNextLandingPad();
+					vec = ((SpaceObject)object).getNextLandingPad(commit);
 
 				if(vec == null)
 					vec = object.getSpawnLocation();

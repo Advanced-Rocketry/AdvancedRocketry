@@ -105,8 +105,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	//True if the rocket isn't on the ground
 	private boolean isInFlight;
 	public StorageChunk storage;
-	private boolean remounted = false;
-
+	private String errorStr;
+	private long lastErrorTime = Long.MIN_VALUE;
+	private static long ERROR_DISPLAY_TIME = 100;
+	
+	
 	protected long lastWorldTickTicked;
 
 	private SatelliteBase satallite;
@@ -222,6 +225,25 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			nbt.setIntArray("pos", pos);
 			//PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, (byte)PacketType.DISCONNECTINFRASTRUCTURE.ordinal(), nbt), this);
 		}
+	}
+	
+	@Override
+	public String getTextOverlay() {
+		
+		if(this.worldObj.getTotalWorldTime() < this.lastErrorTime + ERROR_DISPLAY_TIME)
+			return errorStr;
+		
+		if(isInOrbit() && !isInFlight())
+			return "Press Space to descend!";
+		else if(!isInFlight())
+			return "Press Space to take off!";
+		
+		return super.getTextOverlay();
+	}
+	
+	private void setError(String error) {
+		this.errorStr = error;
+		this.lastErrorTime = this.worldObj.getTotalWorldTime();
 	}
 
 	@Override
@@ -487,8 +509,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		//Hackish crap to make clients mount entities immediately after server transfer and fire events
 		//Known race condition... screw me...
 		if(!worldObj.isRemote && (this.isInFlight() || this.isInOrbit()) && this.ticksExisted  == 20) {
-
-			remounted = true;
 			//Deorbiting
 			MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketDeOrbitingEvent(this));
 			PacketHandler.sendToNearby(new PacketEntity(this, (byte)PacketType.ROCKETLANDEVENT.ordinal()), worldObj.provider.getDimension(), (int)posX, (int)posY, (int)posZ, 64);
@@ -582,7 +602,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					int dimId = worldObj.provider.getDimension();
 
 					if(dimId == Configuration.spaceDimId) {
-						Vector3F<Float> pos = storage.getDestinationCoordinates(dimId);
+						Vector3F<Float> pos = storage.getDestinationCoordinates(dimId, true);
 						storage.setDestinationCoordinates(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ));
 						if(pos != null) {
 							this.changeDimension(destinationDimId, pos.x, Configuration.orbit, pos.z);
@@ -673,7 +693,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 			destinationDimId = storage.getDestinationDimId(this.worldObj.provider.getDimension(), (int)this.posX, (int)this.posZ);
 			if(DimensionManager.getInstance().canTravelTo(destinationDimId)) {
-				Vector3F<Float> pos = storage.getDestinationCoordinates(destinationDimId);
+				Vector3F<Float> pos = storage.getDestinationCoordinates(destinationDimId, true);
 				storage.setDestinationCoordinates(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ));
 				if(pos != null) {
 					this.setInOrbit(true);
@@ -693,7 +713,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			//If going to a station or something make sure to set coords accordingly
 			//If in space land on the planet, if on the planet go to space
 			if(destinationDimId == Configuration.spaceDimId || this.worldObj.provider.getDimension() == Configuration.spaceDimId) {
-				Vector3F<Float> pos = storage.getDestinationCoordinates(destinationDimId);
+				Vector3F<Float> pos = storage.getDestinationCoordinates(destinationDimId, true);
 				storage.setDestinationCoordinates(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ));
 				if(pos != null) {
 
@@ -762,20 +782,27 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		destinationDimId = storage.getDestinationDimId(worldObj.provider.getDimension(), (int)this.posX, (int)this.posZ);
 
 		//TODO: make sure this doesn't break asteriod mining
-		if(!(DimensionManager.getInstance().canTravelTo(destinationDimId) || (destinationDimId == -1 && storage.getSatelliteHatches().size() != 0)))
+		if(!(DimensionManager.getInstance().canTravelTo(destinationDimId) || (destinationDimId == -1 && storage.getSatelliteHatches().size() != 0))) {
+			setError(LibVulpes.proxy.getLocalizedString("error.rocket.cannotGetThere"));
 			return;
+		}
 
 		int finalDest = destinationDimId;
 		if(destinationDimId == Configuration.spaceDimId) {
 			
-			Vector3F<Float> vec = storage.getDestinationCoordinates(destinationDimId);
+			Vector3F<Float> vec = storage.getDestinationCoordinates(destinationDimId,false);
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(vec.x, vec.y, vec.z));
 			if(obj != null)
 				finalDest = obj.getOrbitingPlanetId();
-			else return;
+			else { 
+				setError(LibVulpes.proxy.getLocalizedString("error.rocket.destinationNotExist"));
+				return;
+			}
 		}
-		if(!DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, this.worldObj.provider.getDimension()))
+		if(!DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, this.worldObj.provider.getDimension())) {
+			setError(LibVulpes.proxy.getLocalizedString("error.rocket.notSameSystem"));
 			return;
+		}
 
 		//TODO: Clean this logic a bit?
 		if(!stats.hasSeat() || ((DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || destinationDimId == Configuration.spaceDimId || destinationDimId == 0) ) { //Abort if destination is invalid

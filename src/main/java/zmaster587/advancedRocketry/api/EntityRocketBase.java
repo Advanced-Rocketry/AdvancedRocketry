@@ -83,6 +83,10 @@ public abstract class EntityRocketBase extends Entity {
 	 */
 	//Vector3F<Double> getVelocity();
 	
+	public String getTextOverlay() {
+		return "";
+	}
+	
 	/**
 	 * @return the stats used to represent the rocket
 	 */
