@@ -183,6 +183,10 @@ fluid.rocketFuel=Rocket Fuel
 mission.asteroidmining.name=Asteroid Mining
 mission.gascollection.name=Gas Collection
 
+error.rocket.cannotGetThere=Destination Unreachable
+error.rocket.destinationNotExist=Cannot launch: destination does not exist
+error.rocket.notSameSystem=Cannot launch: destination is not in the same planet system
+
 achievement.holographic=Holographic
 achievement.holographic.desc=Craft a Holo-Projector
 achievement.flattening=Flattening

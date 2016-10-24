@@ -27,6 +27,10 @@ public abstract class EntityRocketBase extends Entity {
 	public EntityRocketBase(World world) {
 		super(world);
 	}
+	
+	public String getTextOverlay() {
+		return "";
+	}
 
 	/**
 	 * AttempTs to add amt fuel points to the rocket

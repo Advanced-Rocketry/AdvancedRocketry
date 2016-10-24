@@ -91,7 +91,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	//True if the rocket isn't on the ground
 	private boolean isInFlight;
 	public StorageChunk storage;
-
+	private String errorStr;
+	private long lastErrorTime = Long.MIN_VALUE;
+	private static long ERROR_DISPLAY_TIME = 100;
+	
 	protected long lastWorldTickTicked;
 
 	private SatelliteBase satallite;
@@ -662,6 +665,25 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			launch();
 		}
 	}
+	
+	@Override
+	public String getTextOverlay() {
+		
+		if(this.worldObj.getTotalWorldTime() < this.lastErrorTime + ERROR_DISPLAY_TIME)
+			return errorStr;
+		
+		if(isInOrbit() && !isInFlight())
+			return "Press Space to descend!";
+		else if(!isInFlight())
+			return "Press Space to take off!";
+		
+		return super.getTextOverlay();
+	}
+	
+	private void setError(String error) {
+		this.errorStr = error;
+		this.lastErrorTime = this.worldObj.getTotalWorldTime();
+	}
 
 	@Override
 	public void launch() {
@@ -679,9 +701,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		destinationDimId = storage.getDestinationDimId(worldObj.provider.dimensionId, (int)this.posX, (int)this.posZ);
 
 		//TODO: make sure this doesn't break asteriod mining
-		if(!(DimensionManager.getInstance().canTravelTo(destinationDimId) || (destinationDimId == -1 && storage.getSatelliteHatches().size() != 0)))
+		if(!(DimensionManager.getInstance().canTravelTo(destinationDimId) || (destinationDimId == -1 && storage.getSatelliteHatches().size() != 0))) {
+			setError(LibVulpes.proxy.getLocalizedString("error.rocket.cannotGetThere"));
 			return;
-
+		}
+		
 		int finalDest = destinationDimId;
 		if(destinationDimId == Configuration.spaceDimId) {
 			
@@ -689,10 +713,15 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)(float)vec.x, (int)(float)vec.z);
 			if(obj != null)
 				finalDest = obj.getOrbitingPlanetId();
-			else return;
+			else { 
+				setError(LibVulpes.proxy.getLocalizedString("error.rocket.destinationNotExist"));
+				return;
+			}
 		}
-		if(!DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, this.worldObj.provider.dimensionId))
+		if(!DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, this.worldObj.provider.dimensionId)) {
+			setError(LibVulpes.proxy.getLocalizedString("error.rocket.notSameSystem"));
 			return;
+		}
 		
 		//TODO: Clean this logic a bit?
 		if(!stats.hasSeat() || ((DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || destinationDimId == Configuration.spaceDimId || destinationDimId == 0) ) { //Abort if destination is invalid
