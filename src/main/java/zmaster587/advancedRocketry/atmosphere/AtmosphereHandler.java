@@ -16,6 +16,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import zmaster587.advancedRocketry.api.AreaBlob;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
+import zmaster587.advancedRocketry.api.event.AtmosphereEvent;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.network.PacketAtmSync;
@@ -35,13 +36,13 @@ public class AtmosphereHandler {
 	private static final int MAX_BLOB_RADIUS = 64;
 	private static HashMap<Integer, AtmosphereHandler> dimensionOxygen = new HashMap<Integer, AtmosphereHandler>();
 	private static HashMap<EntityPlayer, IAtmosphere> prevAtmosphere = new HashMap<EntityPlayer, IAtmosphere>();
-	
+
 	private HashMap<IBlobHandler,AreaBlob> blobs;
 	int dimId;
 
 	//Stores current Atm on the CLIENT
 	public static IAtmosphere currentAtm;
-	
+
 	/**
 	 * Registers the Atmosphere handler for the dimension given
 	 * @param dimId the dimension id to register the dimension for
@@ -77,7 +78,7 @@ public class AtmosphereHandler {
 
 	@SubscribeEvent
 	public void onTick(LivingUpdateEvent event) {
-		
+
 		if(!event.entity.worldObj.isRemote && event.entity.worldObj.provider.dimensionId == this.dimId) {
 			IAtmosphere atmosType = getAtmosphereType(event.entity);
 
@@ -85,18 +86,22 @@ public class AtmosphereHandler {
 				PacketHandler.sendToPlayer(new PacketAtmSync(atmosType.getUnlocalizedName()), (EntityPlayer)event.entity);
 				prevAtmosphere.put((EntityPlayer)event.entity, atmosType);
 			}
-			
-			if(atmosType.canTick())
-				atmosType.onTick((EntityLivingBase)event.entityLiving);
+
+			if(atmosType.canTick()) {
+				AtmosphereEvent event2 = new AtmosphereEvent(event.entity, atmosType);
+				MinecraftForge.EVENT_BUS.post(event2);
+				if(!event2.isCanceled()) 
+					atmosType.onTick((EntityLivingBase)event.entityLiving);
+			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onPlayerChangeDim(PlayerChangedDimensionEvent event) {
 		prevAtmosphere.remove(event.player);
-		
+
 	}
-	
+
 	@SubscribeEvent
 	public void onPlayerLogoutEvent(PlayerLoggedOutEvent event) {
 		prevAtmosphere.remove(event.player);
@@ -126,7 +131,7 @@ public class AtmosphereHandler {
 			AtmosphereHandler handler = getOxygenHandler(world.provider.dimensionId);
 			BlockPosition pos = new BlockPosition(x, y, z);
 			int meta = world.getBlockMetadata(x, y, z);
-			
+
 
 			if(handler == null)
 				return; //WTF
@@ -154,7 +159,7 @@ public class AtmosphereHandler {
 
 			if(handler == null)
 				return; //WTF
-			
+
 			for(AreaBlob blob : handler.getBlobWithinRadius(pos, MAX_BLOB_RADIUS)) {
 
 				if(world.isAirBlock(x, y, z))
@@ -227,7 +232,7 @@ public class AtmosphereHandler {
 	 * @param handler the handler associated with this blob
 	 */
 	public void clearBlob(IBlobHandler handler) {
-		
+
 		if(blobs.containsKey(handler)) {
 			blobs.get(handler).clearBlob();
 		}
