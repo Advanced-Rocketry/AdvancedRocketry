@@ -308,9 +308,13 @@ public class RenderPlanetarySky extends IRenderHandler {
 		
 		GL11.glRotatef(isWarp ? 0 : mc.theWorld.getCelestialAngle(partialTicks) * 360.0F, axis.getFrontOffsetX(), axis.getFrontOffsetY(), axis.getFrontOffsetZ());
 
+
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		float f18 = mc.theWorld.getStarBrightness(partialTicks) * f6 * (atmosphere) + (1-atmosphere);
 
+		if(mc.theWorld.isRainingAt(mc.thePlayer.getPosition()))
+			f18 *= 1-mc.theWorld.getRainStrength(partialTicks);
+		
 		if (f18 > 0.0F)
 		{
 			GL11.glColor4f(f18, f18, f18, f18);
@@ -358,7 +362,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			//Set sun color and distance
 			GlStateManager.color((float)sunColor.xCoord * multiplier, (float)sunColor.yCoord * multiplier, (float)sunColor.zCoord * multiplier,multiplier);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
-			f10 = 30f*(200-solarOrbitalDistance)/100f;
+			f10 = 30f*(202-solarOrbitalDistance)/100f;
 			//multiplier = 2;
 			buffer.pos((double)(-f10), 100.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
 			buffer.pos((double)f10, 100.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
