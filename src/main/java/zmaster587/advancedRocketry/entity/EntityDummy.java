@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.entity;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -29,7 +30,10 @@ public class EntityDummy extends Entity {
 	public boolean isInvisible() {
 		return true;
 	}
-	
+	@Override
+	public boolean isInvisibleToPlayer(EntityPlayer player) {
+		return true;
+	}
 
 	/**
 	 * Checks if the entity is in range to render by using the past in distance and comparing it to its average edge

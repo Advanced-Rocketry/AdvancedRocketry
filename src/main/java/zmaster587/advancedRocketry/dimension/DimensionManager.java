@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
@@ -28,6 +29,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
+import net.minecraftforge.fml.common.Loader;
 
 
 public class DimensionManager {
@@ -41,6 +43,7 @@ public class DimensionManager {
 	public static final DimensionType PlanetDimensionType = DimensionType.register("planet", "planet", 2, WorldProviderPlanet.class, false);
 	public static final DimensionType spaceDimensionType = DimensionType.register("space", "space", 3, WorldProviderSpace.class, false);
 	private boolean hasBeenInitiallized = false;
+	public static String prevBuild;
 
 	//Stat tracking
 	public static boolean hasReachedMoon;
@@ -297,7 +300,7 @@ public class DimensionManager {
 
 		//Linear is easier. Earth is nominal!
 		properties.averageTemperature = (sol.getTemperature() + (100 - properties.orbitalDist)*15 + properties.getAtmosphereDensity()*18)/20;
-
+		properties.setGasGiant();
 		//TODO: add gasses
 		registerDim(properties, true);
 		return properties;
@@ -592,7 +595,7 @@ public class DimensionManager {
 
 				if(propeties != null) {
 					int keyInt = Integer.parseInt(keyString);
-					if(!net.minecraftforge.common.DimensionManager.isDimensionRegistered(keyInt) && propeties.isNativeDimension) {
+					if(!net.minecraftforge.common.DimensionManager.isDimensionRegistered(keyInt) && propeties.isNativeDimension && !propeties.isGasGiant()) {
 						net.minecraftforge.common.DimensionManager.registerDimension(keyInt, PlanetDimensionType);
 						//propeties.isNativeDimension = true;
 					}
@@ -611,6 +614,9 @@ public class DimensionManager {
 			NBTTagCompound nbtTag = nbt.getCompoundTag("spaceObjects");
 			SpaceObjectManager.getSpaceManager().readFromNBT(nbtTag);
 		}
+		
+		prevBuild = nbt.getString("prevVersion");
+		nbt.setString("prevVersion", AdvancedRocketry.version);
 
 		return true;
 	}
