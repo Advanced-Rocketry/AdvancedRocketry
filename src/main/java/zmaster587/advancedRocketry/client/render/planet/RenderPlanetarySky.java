@@ -303,6 +303,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		float f18 = mc.theWorld.getStarBrightness(partialTicks) * f6 * (atmosphere) + (1-atmosphere);
+		if(mc.theWorld.isRaining())
+			f18 *= 1-mc.theWorld.getRainStrength(partialTicks);
 
 		if (f18 > 0.0F)
 		{
@@ -349,7 +351,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		if(!isWarp) {
 			//Set sun color and distance
 			tessellator1.startDrawingQuads();		
-			f10 = 30f*(200-solarOrbitalDistance)/100f;
+			f10 = 30f*(202-solarOrbitalDistance)/100f;
 			//multiplier = 2;
 			tessellator1.setColorOpaque_F((float)sunColor.xCoord * multiplier, (float)sunColor.yCoord * multiplier, (float)sunColor.zCoord * multiplier);
 
