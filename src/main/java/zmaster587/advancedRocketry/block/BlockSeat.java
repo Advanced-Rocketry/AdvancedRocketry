@@ -2,6 +2,8 @@ package zmaster587.advancedRocketry.block;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import zmaster587.advancedRocketry.entity.EntityDummy;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -28,6 +30,23 @@ public class BlockSeat extends Block {
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
+	}
+	
+	@Override
+	public boolean isFullCube(IBlockState state) {
+		return false;
+	}
+	
+    @Nullable
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
+    {
+        return NULL_AABB;
+    }
+	
+	@Override
+	public boolean isSideSolid(IBlockState base_state, IBlockAccess world,
+			BlockPos pos, EnumFacing side) {
+		return side == EnumFacing.DOWN;
 	}
 	
 	//If the block is destroyed remove any mounting associated with it
