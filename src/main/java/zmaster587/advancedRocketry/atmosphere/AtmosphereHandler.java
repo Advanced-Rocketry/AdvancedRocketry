@@ -17,6 +17,9 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import zmaster587.advancedRocketry.api.AreaBlob;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
+import zmaster587.advancedRocketry.api.RocketEvent;
+import zmaster587.advancedRocketry.api.RocketEvent.RocketPreLaunchEvent;
+import zmaster587.advancedRocketry.api.event.AtmosphereEvent;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.network.PacketAtmSync;
@@ -87,8 +90,12 @@ public class AtmosphereHandler {
 				prevAtmosphere.put((EntityPlayer)entity, atmosType);
 			}
 			
-			if(atmosType.canTick())
-				atmosType.onTick((EntityLivingBase)event.getEntityLiving());
+			if(atmosType.canTick()) {
+				AtmosphereEvent event2 = new AtmosphereEvent(entity, atmosType);
+				MinecraftForge.EVENT_BUS.post(event2);
+				if(!event2.isCanceled())
+					atmosType.onTick((EntityLivingBase)event.getEntityLiving());
+			}
 		}
 	}
 	
