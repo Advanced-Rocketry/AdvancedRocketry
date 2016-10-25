@@ -17,6 +17,7 @@ public class VersionCompat {
 				if(dimId >= DimensionManager.GASGIANT_DIMID_OFFSET)
 					DimensionManager.getInstance().getDimensionProperties(dimId).setGasGiant();
 			}
+			DimensionManager.getSol().setName("Sol");
 		}
 	}
 }

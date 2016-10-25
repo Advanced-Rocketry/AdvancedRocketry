@@ -1,12 +1,14 @@
 package zmaster587.advancedRocketry.inventory.modules;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
+import zmaster587.advancedRocketry.api.dimension.solar.IGalaxy;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -60,6 +62,8 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 	private int currentSystem, selectedSystem;
 	private double zoom;
 	private boolean currentSystemChanged = false;
+	//If the current view is a starmap
+	private boolean stellarView;
 	private List<ModuleButton> planetList;
 
 	private HashMap<Integer, PlanetRenderProperties> renderPropertiesMap;
@@ -79,6 +83,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		currentlySelectedPlanet = new PlanetRenderProperties();
 		currentSystem = starIdOffset;
 		selectedSystem = -1;
+		stellarView = false;
 
 		staticModuleList.add(new ModuleButton(0, 0, -1, "<< Up", this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
 		staticModuleList.add(new ModuleButton(0, 18, -2, "Select", this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
@@ -122,6 +127,27 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		selectedSystem = id;
 	}
 
+	private void renderGalaxyMap(IGalaxy galaxy, int posX, int posY, float distanceZoomMultiplier, float planetSizeMultiplier) {
+		Collection<StellarBody> stars = galaxy.getStars();
+
+		for(StellarBody star : stars) {
+			int displaySize = (int)(planetSizeMultiplier*star.getDisplayRadius());
+			int offsetX = star.getPosX() + posX - displaySize/2; 
+			int offsetY = star.getPosZ() + posY - displaySize/2;
+			ModuleButton button;
+			planetList.add(button = new ModuleButton(offsetX, offsetY, star.getId() + starIdOffset, "", this, new ResourceLocation[] { TextureResources.locationSunPng }, String.format("Name: %s\nNumber of Planets: %d",star.getName(), star.getNumPlanets()), displaySize, displaySize));
+
+			button.setSound("buttonBlipA");
+			button.setBGColor(star.getColorRGB8());
+
+			renderPropertiesMap.put(star.getId() + starIdOffset, new PlanetRenderProperties(displaySize, offsetX, offsetY));
+			//prevMultiplier *= 0.25f;
+
+		}
+
+		moduleList.addAll(planetList);
+	}
+
 	@SideOnly(Side.CLIENT)
 	private void renderStarSystem(StellarBody star, int posX, int posY, float distanceZoomMultiplier, float planetSizeMultiplier) {
 
@@ -131,7 +157,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		int offsetY = posY - displaySize/2; 
 
 		ModuleButton button;
-		planetList.add(button = new ModuleButton(offsetX, offsetY, star.getId() + starIdOffset, "", this, new ResourceLocation[] { TextureResources.locationSunPng }, displaySize, displaySize));
+		planetList.add(button = new ModuleButton(offsetX, offsetY, star.getId() + starIdOffset, "", this, new ResourceLocation[] { TextureResources.locationSunPng }, String.format("Name: %s\nNumber of Planets: %d",star.getName(), star.getNumPlanets()), displaySize, displaySize));
 
 		button.setSound("buttonBlipA");
 		button.setBGColor(star.getColorRGB8());
@@ -224,12 +250,16 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		this.moduleList.removeAll(planetList);
 
 		planetList.clear();
-		if(currentSystem < starIdOffset) {
-			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(currentSystem);
-			renderPlanetarySystem(properties, size/2, size/2, 1f,3f*properties.getPathLengthToStar());
+		if(!stellarView) {
+			if(currentSystem < starIdOffset) {
+				DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(currentSystem);
+				renderPlanetarySystem(properties, size/2, size/2, 1f,3f*properties.getPathLengthToStar());
+			}
+			else
+				renderStarSystem(DimensionManager.getInstance().getStar(currentSystem - starIdOffset), size/2, size/2, 1f*(float) zoom, (float)zoom*.5f);
 		}
 		else
-			renderStarSystem(DimensionManager.getInstance().getStar(currentSystem - starIdOffset), size/2, size/2, 1f*(float) zoom, (float)zoom*.5f);
+			renderGalaxyMap(DimensionManager.getInstance(), size/2, size/2, 1f*(float) zoom, (float)zoom*.25f);
 
 
 		int x = currentPosX - size/2, y = currentPosY - size/2;
@@ -302,39 +332,41 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		//GL11.glTranslated(this.currentPosX/4, this.currentPosY/4, 0);
 
 		//Render orbits
-		for(int ii = 1; ii < planetList.size(); ii++) {
+		if(!stellarView) {
+			for(int ii = 1; ii < planetList.size(); ii++) {
 
-			ModuleButton base = planetList.get(ii);
+				ModuleButton base = planetList.get(ii);
 
-			int radius = (int) Math.sqrt(Math.pow(base.offsetX + 40 - center - currentPosX,2) + Math.pow(base.offsetY + 40 - center - currentPosY,2));
-			float x2 = radius;
-			float y2 = 0;
-			float t;
-			GL11.glPushMatrix();
-			GL11.glTranslatef(center + currentPosX, center + currentPosY, 0);
-			GlStateManager.disableTexture2D();
-			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glColor4f(0.8f, .8f, 1f, .2f);
-			GL11.glEnable(GL11.GL_LINE_STIPPLE);
-			GL11.glLineStipple(5, (short)0x5555);
+				int radius = (int) Math.sqrt(Math.pow(base.offsetX + 40 - center - currentPosX,2) + Math.pow(base.offsetY + 40 - center - currentPosY,2));
+				float x2 = radius;
+				float y2 = 0;
+				float t;
+				GL11.glPushMatrix();
+				GL11.glTranslatef(center + currentPosX, center + currentPosY, 0);
+				GlStateManager.disableTexture2D();
+				GlStateManager.enableBlend();
+				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				GL11.glColor4f(0.8f, .8f, 1f, .2f);
+				GL11.glEnable(GL11.GL_LINE_STIPPLE);
+				GL11.glLineStipple(5, (short)0x5555);
 
 
-			buffer.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION);
-			for(int i = 0; i < numSegments; i++)	{
-				buffer.pos(x2, y2, 0).endVertex();
-				t = x2;
-				x2 = cos*x2 - sin*y2;
-				y2 = sin*t + cos*y2;
+				buffer.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION);
+				for(int i = 0; i < numSegments; i++)	{
+					buffer.pos(x2, y2, 0).endVertex();
+					t = x2;
+					x2 = cos*x2 - sin*y2;
+					y2 = sin*t + cos*y2;
+				}
+				Tessellator.getInstance().draw();
+				//buffer.finishDrawing();
+				//Reset GL info
+				GlStateManager.enableTexture2D();
+				GlStateManager.disableBlend();
+				GL11.glColor4f(1f, 1f, 1f, 1f);
+				GL11.glPopMatrix();
+				GL11.glLineStipple(5, (short)0xFFFF);
 			}
-			Tessellator.getInstance().draw();
-			//buffer.finishDrawing();
-			//Reset GL info
-			GlStateManager.enableTexture2D();
-			GlStateManager.disableBlend();
-			GL11.glColor4f(1f, 1f, 1f, 1f);
-			GL11.glPopMatrix();
-			GL11.glLineStipple(5, (short)0xFFFF);
 		}
 
 		//Render Selection
@@ -383,8 +415,13 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			if(topLevel == -1 || currentSystem != topLevel) {
 				if(properties.isMoon())
 					currentSystem = properties.getParentPlanet();
-				else
+				else {
+					if(currentSystem >= starIdOffset) {
+						//if the star was the current system then go to stellar view
+						stellarView = true;
+					}
 					currentSystem = properties.getStar().getId() + starIdOffset;
+				}
 
 				currentSystemChanged=true;
 
@@ -401,6 +438,8 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			if(selectedSystem == buttonId) {
 				currentSystem = buttonId;
 				currentSystemChanged=true;
+				//Go back to planetary mapping
+				stellarView = false;
 				selectedSystem = -1;
 			}
 			else {

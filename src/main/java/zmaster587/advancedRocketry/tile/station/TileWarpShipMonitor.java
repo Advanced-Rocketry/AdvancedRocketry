@@ -82,6 +82,13 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			DimensionProperties properties = getSpaceObject().getProperties().getParentProperties();
 
 			DimensionProperties destProperties = DimensionManager.getInstance().getDimensionProperties(getSpaceObject().getDestOrbitingBody());
+			
+			if(properties == DimensionManager.defaultSpaceDimensionProperties)
+				return Integer.MAX_VALUE;
+			
+			if(destProperties.getStar() != properties.getStar())
+				return 500;
+			
 			while(destProperties.getParentProperties() != null && destProperties.getParentProperties().isMoon())
 				destProperties = destProperties.getParentProperties();
 
@@ -213,7 +220,11 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 		}
 		else if (ID == guiId.MODULARFULLSCREEN.ordinal()) {
 			//Open planet selector menu
-			container = new ModulePlanetSelector(0, zmaster587.libVulpes.inventory.TextureResources.starryBG, this, true);
+			SpaceObject station = getSpaceObject();
+			int starId = 0;
+			if(station != null)
+				starId = station.getProperties().getParentProperties().getStar().getId();
+			container = new ModulePlanetSelector(starId, zmaster587.libVulpes.inventory.TextureResources.starryBG, this, true);
 			container.setOffset(1000, 1000);
 			modules.add(container);
 		}

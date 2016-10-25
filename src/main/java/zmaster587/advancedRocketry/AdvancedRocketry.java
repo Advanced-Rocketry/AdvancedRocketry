@@ -1379,13 +1379,13 @@ public class AdvancedRocketry {
 				int baseAtm = 180;
 				int baseDistance = 100;
 
-				DimensionProperties	properties = DimensionManager.getInstance().generateRandomGasGiant("",baseDistance + 50,baseAtm,125,100,100,75);
+				DimensionProperties	properties = DimensionManager.getInstance().generateRandomGasGiant(0, "",baseDistance + 50,baseAtm,125,100,100,75);
 
 				if(properties.gravitationalMultiplier >= 1f) {
 					int numMoons = random.nextInt(8);
 
 					for(int ii = 0; ii < numMoons; ii++) {
-						DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
+						DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(0, properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
 						moonProperties.setParentPlanet(properties);
 					}
 				}
@@ -1408,13 +1408,13 @@ public class AdvancedRocketry {
 					baseDistance = 30;
 				}
 
-				DimensionProperties properties = DimensionManager.getInstance().generateRandom(baseDistance,baseAtm,125,100,100,75);
+				DimensionProperties properties = DimensionManager.getInstance().generateRandom(0, baseDistance,baseAtm,125,100,100,75);
 
 				if(properties.gravitationalMultiplier >= 1f) {
 					int numMoons = random.nextInt(4);
 
 					for(int ii = 0; ii < numMoons; ii++) {
-						DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
+						DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(0, properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
 						moonProperties.setParentPlanet(properties);
 					}
 				}

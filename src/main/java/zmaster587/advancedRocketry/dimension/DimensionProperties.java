@@ -435,11 +435,14 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				parent.childPlanets.remove(new Integer(getId()));
 
 			parentPlanet = parent.getId();
+			star = parent.getStar();
 			if(parent.getId() != -1)
 				parent.childPlanets.add(getId());
 		}
-		else 
+		else {
+			star = parent.getStar();
 			parentPlanet = parent.getId();
+		}
 	}
 
 	/**

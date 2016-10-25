@@ -256,7 +256,7 @@ public class PlanetEventHandler {
 	public void playerLoggedInEvent(ServerConnectionFromClientEvent event) {
 
 		//Make sure stars are sent first
-		for(int i : DimensionManager.getInstance().getStars()) {
+		for(int i : DimensionManager.getInstance().getStarIds()) {
 			//PacketHandler.sendToPlayer(new PacketStellarInfo(i, DimensionManager.getInstance().getStar(i)),  event.player);
 			PacketHandler.sendToDispatcher(new PacketStellarInfo(i, DimensionManager.getInstance().getStar(i)), event.getManager());
 		}
