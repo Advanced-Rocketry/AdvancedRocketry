@@ -718,7 +718,16 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				return;
 			}
 		}
-		if(!DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, this.worldObj.provider.dimensionId)) {
+		
+		
+		int thisDimId = this.worldObj.provider.dimensionId;
+		if(this.worldObj.provider.dimensionId == Configuration.spaceDimId) {
+			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
+			if(object != null)
+				thisDimId = object.getProperties().getParentProperties().getId();
+		}
+		
+		if(!DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, thisDimId)) {
 			setError(LibVulpes.proxy.getLocalizedString("error.rocket.notSameSystem"));
 			return;
 		}

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -16,6 +17,7 @@ import org.apache.commons.io.FileUtils;
 
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
+import zmaster587.advancedRocketry.api.dimension.solar.IGalaxy;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
@@ -27,7 +29,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.WorldProvider;
 
 
-public class DimensionManager {
+public class DimensionManager implements IGalaxy {
 
 	//TODO: fix satellites not unloading on disconnect
 	private Random random;
@@ -182,10 +184,18 @@ public class DimensionManager {
 	 */
 	public int getNextFreeDim() {
 		for(int i = dimOffset; i < 1024; i++) {
-			if(!net.minecraftforge.common.DimensionManager.isDimensionRegistered(i))
+			if(!net.minecraftforge.common.DimensionManager.isDimensionRegistered(i) && !dimensionList.containsKey(i))
 				return i;
 		}
 		return 0;
+	}
+	
+	public int getNextFreeStarId() {
+		for(int i = 0; i < Integer.MAX_VALUE; i++) {
+			if(!starList.containsKey(i))
+				return i;
+		}
+		return -1;
 	}
 
 	public int getNextFreeGasGaintDim() {
@@ -196,12 +206,12 @@ public class DimensionManager {
 		return GASGIANT_DIMID_OFFSET;
 	}
 	
-	public DimensionProperties generateRandom(int atmosphereFactor, int distanceFactor, int gravityFactor) {
-		return generateRandom(100, 100, 100, atmosphereFactor, distanceFactor, gravityFactor);
+	public DimensionProperties generateRandom(int starId, int atmosphereFactor, int distanceFactor, int gravityFactor) {
+		return generateRandom(starId, 100, 100, 100, atmosphereFactor, distanceFactor, gravityFactor);
 	}
 
-	public DimensionProperties generateRandom(String name, int atmosphereFactor, int distanceFactor, int gravityFactor) {
-		return generateRandom(name, 100, 100, 100, atmosphereFactor, distanceFactor, gravityFactor);
+	public DimensionProperties generateRandom(int starId, String name, int atmosphereFactor, int distanceFactor, int gravityFactor) {
+		return generateRandom(starId, name, 100, 100, 100, atmosphereFactor, distanceFactor, gravityFactor);
 	}
 
 	/**
@@ -215,7 +225,7 @@ public class DimensionManager {
 	 * @param gravityFactor
 	 * @return the new dimension properties created for this planet
 	 */
-	public DimensionProperties generateRandom(String name, int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
+	public DimensionProperties generateRandom(int starId, String name, int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
 		DimensionProperties properties = new DimensionProperties(getNextFreeDim());
 
 		if(name == "")
@@ -244,10 +254,10 @@ public class DimensionManager {
 		} while(minDistance < (Math.PI/40f));
 
 		//Get Star Color
-		properties.setStar(sol);
+		properties.setStar(getStar(starId));
 
 		//Linear is easier. Earth is nominal!
-		properties.averageTemperature = (sol.getTemperature() + (100 - properties.orbitalDist)*15 + properties.getAtmosphereDensity()*18)/20;
+		properties.averageTemperature = (properties.getStar().getTemperature() + (100 - properties.orbitalDist)*15 + properties.getAtmosphereDensity()*18)/20;
 
 		properties.addBiomes(properties.getViableBiomes());
 
@@ -256,11 +266,11 @@ public class DimensionManager {
 	}
 
 
-	public DimensionProperties generateRandom(int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
-		return generateRandom("", baseAtmosphere, baseDistance, baseGravity, atmosphereFactor, distanceFactor, gravityFactor);
+	public DimensionProperties generateRandom(int starId, int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
+		return generateRandom(starId, "", baseAtmosphere, baseDistance, baseGravity, atmosphereFactor, distanceFactor, gravityFactor);
 	}
 	
-	public DimensionProperties generateRandomGasGiant(String name, int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
+	public DimensionProperties generateRandomGasGiant(int starId, String name, int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
 		DimensionProperties properties = new DimensionProperties(getNextFreeGasGaintDim());
 
 		if(name == "")
@@ -289,10 +299,10 @@ public class DimensionManager {
 		} while(minDistance < (Math.PI/40f));
 
 		//Get Star Color
-		properties.setStar(sol);
+		properties.setStar(getStar(starId));
 
 		//Linear is easier. Earth is nominal!
-		properties.averageTemperature = (sol.getTemperature() + (100 - properties.orbitalDist)*15 + properties.getAtmosphereDensity()*18)/20;
+		properties.averageTemperature = (properties.getStar().getTemperature() + (100 - properties.orbitalDist)*15 + properties.getAtmosphereDensity()*18)/20;
 
 		//TODO: add gasses
 		registerDim(properties, true);
@@ -412,7 +422,7 @@ public class DimensionManager {
 		}
 		return properties == null ? overworldProperties : properties;
 	}
-
+	
 	/**
 	 * @param id star id for which to get the object
 	 * @return the {@link StellarBody} object
@@ -424,8 +434,14 @@ public class DimensionManager {
 	/**
 	 * @return a list of star ids
 	 */
-	public Set<Integer> getStars() {
+	public Set<Integer> getStarIds() {
 		return starList.keySet();
+	}
+	
+	
+	public Collection<StellarBody> getStars() {
+		
+		return starList.values();
 	}
 
 	/**

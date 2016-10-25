@@ -7,6 +7,8 @@ import java.util.Random;
 
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
+import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
+import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
@@ -27,6 +29,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.text.ChatComponentText;
+import net.minecraft.util.text.ChatComponentText;
+import net.minecraft.util.text.ChatComponentText;
 import net.minecraft.world.World;
 
 public class WorldCommand implements ICommand {
@@ -201,38 +206,57 @@ public class WorldCommand implements ICommand {
 				else if(string[1].equalsIgnoreCase("generate")) {
 
 					int gasOffset = 0;
+					boolean gassy = false;
+					int starId = 0;
 
-					if(string.length > 2 && string[2].equalsIgnoreCase("gas")) {
-						gasOffset = 1;
+					if(string.length > 2 ) {
+						try {
+							starId = Integer.parseInt(string[2]);
+							gasOffset++;
+							if(DimensionManager.getInstance().getStar(starId) == null) {
+								sender.addChatMessage(new ChatComponentText("Invalid star ID"));
+								sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + "[starId] [gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+
+								return;
+							}
+
+						} catch(NumberFormatException e) {
+
+						}
+					}
+
+					if(string.length > 2 + gasOffset && string[2 + gasOffset].equalsIgnoreCase("gas")) {
+						gasOffset++;
+						gassy = true;
 					}
 
 					try {
 						//Advancedrocketry planet generate <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>
 						if(string.length == 6 + gasOffset) {
-							if(gasOffset == 0)
-								DimensionManager.getInstance().generateRandom(string[2 + gasOffset], Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]));
+							if(!gassy)
+								DimensionManager.getInstance().generateRandom(starId,string[2 + gasOffset], Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]));
 							else
-								DimensionManager.getInstance().generateRandomGasGiant(string[2 + gasOffset], Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),0,0,0);
+								DimensionManager.getInstance().generateRandomGasGiant(starId,string[2 + gasOffset], Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),0,0,0);
 
 							sender.addChatMessage(new ChatComponentText("Dimension Generated!"));
 						}
 						else if(string.length == 9  + gasOffset) {
-							if(gasOffset == 0)
-								DimensionManager.getInstance().generateRandom(string[2 + gasOffset] ,Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),Integer.parseInt(string[6 + gasOffset]), Integer.parseInt(string[7 + gasOffset]), Integer.parseInt(string[8 + gasOffset]));
+							if(!gassy)
+								DimensionManager.getInstance().generateRandom(starId,string[2 + gasOffset] ,Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),Integer.parseInt(string[6 + gasOffset]), Integer.parseInt(string[7 + gasOffset]), Integer.parseInt(string[8 + gasOffset]));
 							else
-								DimensionManager.getInstance().generateRandomGasGiant(string[2 + gasOffset] ,Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),Integer.parseInt(string[6 + gasOffset]), Integer.parseInt(string[7 + gasOffset]), Integer.parseInt(string[8 + gasOffset]));
+								DimensionManager.getInstance().generateRandomGasGiant(starId, string[2 + gasOffset] ,Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),Integer.parseInt(string[6 + gasOffset]), Integer.parseInt(string[7 + gasOffset]), Integer.parseInt(string[8 + gasOffset]));
 
 							sender.addChatMessage(new ChatComponentText("Dimension: " + string[2 + gasOffset] + " Generated!"));
 						}
 						else {
-							sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + "[gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+							sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " [starId] [gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
 							sender.addChatMessage(new ChatComponentText(""));
-							sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + "[gas] <name> <atmosphere base value> <distance base value> <gravity base value> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+							sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " [starId] [gas] <name> <atmosphere base value> <distance base value> <gravity base value> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
 						}
 					} catch(NumberFormatException e) {
-						sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + "[gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+						sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " [starId] [gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
 						sender.addChatMessage(new ChatComponentText(""));
-						sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + "[gas] <name> <atmosphere base value> <distance base value> <gravity base value> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+						sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " [starId] [gas] <name> <atmosphere base value> <distance base value> <gravity base value> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
 					}
 				}
 				//Make sure player is in Dimension we have control over
@@ -324,10 +348,113 @@ public class WorldCommand implements ICommand {
 					}
 				}
 			} //string[0] = planet
+			else if(string[0].equals("star")) {
+				if(string.length > 1) {
+					if(string[1].equalsIgnoreCase("list")) {
+						for(StellarBody star : DimensionManager.getInstance().getStars())
+							sender.addChatMessage(new ChatComponentText(String.format("Star ID: %d   Name: %s  Num Planets: %d", star.getId(), star.getName(), star.getNumPlanets())));
+					}
+					else if(string[1].equalsIgnoreCase("help")) {
+						printStarHelp(sender);
+					}
+				}
+				if(string.length > 3) {
+					if(string[1].equalsIgnoreCase("get")) {
+						try {
+							int id = Integer.parseInt(string[3]);
+							StellarBody star =  DimensionManager.getInstance().getStar(id);
+							if(star == null)
+								sender.addChatMessage(new ChatComponentText("Error: " + string[3] + " is not a valid star ID"));
+							else {
+								if(string[2].equalsIgnoreCase("temp")) {
+									sender.addChatMessage(new ChatComponentText("Temp: " + star.getTemperature()));
+								}
+								else if(string[2].equalsIgnoreCase("planets")) {
+									sender.addChatMessage(new ChatComponentText("Planets orbiting the star:"));
+									for(IDimensionProperties planets : star.getPlanets()) {
+										sender.addChatMessage(new ChatComponentText("ID: " + planets.getId() + " : " + planets.getName()));
+									}
+								}
+								else if(string[2].equalsIgnoreCase("pos")) {
+									sender.addChatMessage(new ChatComponentText("Pos: " + star.getPosX() + "," + star.getPosZ()));
+								}
+							}// end star existance validation
+						} catch (NumberFormatException e) {
+							sender.addChatMessage(new ChatComponentText("Error: " + string[3] + " is not a valid star ID"));
+						}
+					} //get
+				} if(string.length > 4) {
+					if(string[1].equalsIgnoreCase("set")) {
+						try {
+							int id = Integer.parseInt(string[3]);
+							StellarBody star =  DimensionManager.getInstance().getStar(id);
+							if(star == null)
+								sender.addChatMessage(new ChatComponentText("Error: " + string[3] + " is not a valid star ID"));
+							else {
+								if(string[2].equalsIgnoreCase("temp")) {
+									try {
+										star.setTemperature(Integer.parseInt(string[4]));
+										sender.addChatMessage(new ChatComponentText("Temp set to " + star.getTemperature()));
+									} catch(NumberFormatException e) {
+										sender.addChatMessage(new ChatComponentText("star set temp <starId> <temp>"));
+									}
+								} else if(string.length > 5 && string[2].equalsIgnoreCase("pos")) {
+									try {
+										int x= Integer.parseInt(string[4]);
+										int z = Integer.parseInt(string[5]);
+										star.setPosX(x);
+										star.setPosZ(z);
+										sender.addChatMessage(new ChatComponentText("Position set to " + x + "," + z));
+									} catch(NumberFormatException e) {
+										sender.addChatMessage(new ChatComponentText("star set pos <starId> <x> <y>"));
+									}
+								}
+							}// end star existance validation
+						} catch (NumberFormatException e) {
+							sender.addChatMessage(new ChatComponentText("Error: " + string[3] + " is not a valid star ID"));
+						}
+					}
+				}
+				if(string.length > 5) {
+					if(string[1].equalsIgnoreCase("generate")) {
+						try {
+							String name = string[2];
+							int temp = Integer.parseInt(string[3]);
+							int x = Integer.parseInt(string[4]);
+							int z = Integer.parseInt(string[5]);
+							StellarBody star = new StellarBody();
+							star.setTemperature(temp);
+							star.setPosX(x);
+							star.setPosZ(z);
+							star.setName(name);
+							star.setId(DimensionManager.getInstance().getNextFreeStarId());
+							if(star.getId() != -1) {
+								DimensionManager.getInstance().addStar(star);
+								sender.addChatMessage(new ChatComponentText("star Added!"));
+							}
+							else
+								sender.addChatMessage(new ChatComponentText("Why can't I hold all these stars! (either you have an insane number of stars or something really broke!)"));
+
+						} catch(NumberFormatException e) {
+							sender.addChatMessage(new ChatComponentText("star generate <name> <temp> <x> <y>"));
+						}
+					}
+				}
+			} //string[0] = star
 		} // len > 2
 
 	}
 
+	private void printStarHelp(ICommandSender sender) {
+		sender.addChatMessage(new ChatComponentText("star list"));
+		sender.addChatMessage(new ChatComponentText("star get temp <star id>"));
+		sender.addChatMessage(new ChatComponentText("star get planets <star id>"));
+		sender.addChatMessage(new ChatComponentText("star get pos <star id>"));
+		sender.addChatMessage(new ChatComponentText("star set temp <star id> <temperature>"));
+		sender.addChatMessage(new ChatComponentText("star set pos <star id> <x> <y>"));
+		sender.addChatMessage(new ChatComponentText("star generate <name> <temp> <x> <y>"));
+	}
+	
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender sender) {
 		return !sender.getCommandSenderName().equalsIgnoreCase("RCon") && sender.canCommandSenderUseCommand(2, getCommandName());
@@ -342,23 +469,25 @@ public class WorldCommand implements ICommand {
 			list.add("planet");
 			list.add("goto");
 			list.add("fetch");
+			list.add("star");
 		} else if(string.length == 2) {
 			ArrayList<String> list2 = new ArrayList<String>();
 			list2.add("get");
 			list2.add("set");
-			list2.add("reset");
-			list2.add("new");
-			list2.add("delete");
 			list2.add("list");
 			list2.add("generate");
+			if(string[0].equalsIgnoreCase("planet")) {
+				list2.add("reset");
+				list2.add("new");
+				list2.add("delete");
 
 
-			for(String str : list2) {
-				if(str.startsWith(string[1]))
-					list.add(str);
+				for(String str : list2) {
+					if(str.startsWith(string[1]))
+						list.add(str);
+				}
 			}
-
-		} else if(( string[1].equalsIgnoreCase("get") || string[1].equalsIgnoreCase("set")) && string.length == 3) {
+		} else if(( string[1].equalsIgnoreCase("get") || string[1].equalsIgnoreCase("set")) && string[0].equalsIgnoreCase("planet") && string.length == 3) {
 			for(Field field : DimensionProperties.class.getFields()) {
 				if(field.getName().startsWith(string[2]))
 					list.add(field.getName());

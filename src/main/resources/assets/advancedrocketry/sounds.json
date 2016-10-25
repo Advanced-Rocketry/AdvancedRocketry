@@ -3,5 +3,6 @@
 "ElectricShockSmall": {"category": "master","sounds": [{"name": "ElectricShockSmall","stream": false}]},
 "MachineLarge": {"category": "master","sounds": [{"name": "MachineLarge","stream": false}]},
 "rollingMachine": {"category": "master","sounds": [{"name": "rollingMachine","stream": false}]},
-"airHissLoop": {"category": "master","sounds": [{"name": "airHissLoop","stream": false}]}
+"airHissLoop": {"category": "master","sounds": [{"name": "airHissLoop","stream": false}]},
+"laserDrill": {"category": "master","sounds": [{"name": "laserDrill","stream": false}]}
 }

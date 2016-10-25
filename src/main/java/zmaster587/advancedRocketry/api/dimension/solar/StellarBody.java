@@ -15,6 +15,8 @@ public class StellarBody {
 	int numPlanets;
 	int discoveredPlanets;
 	float color[];
+	String name;
+	short posX, posZ;
 	int id;
 
 	public StellarBody() {
@@ -25,17 +27,36 @@ public class StellarBody {
 		return 200;
 	}
 	
+	public void setPosX(int x) {
+		posX = (short)x;
+	}
+
+	public void setPosZ(int x) {
+		posZ = (short)x;
+	}
+
+	public int getPosX() {
+		return posX;
+	}
+
+	public int getPosZ() {
+		return posZ;
+	}
+
 	/**
 	 * @param temp the temperature, in Kelvin, of this star
 	 */
 	public void setTemperature(int temp) {
 		temperature = temp;
+		color = getColor();
 	}
 	
 	/**
 	 * @param planet registers this planet to be in orbit around this star
 	 */
 	public void addPlanet(IDimensionProperties planet) {
+		if(!planets.containsKey(planet.getId()))
+			numPlanets++;
 		planets.put(planet.getId(), planet);
 	}
 	
@@ -79,7 +100,9 @@ public class StellarBody {
 	 * @return the RGB color of this star represented as an int
 	 */
 	public int getColorRGB8() {
-		float[] color = getColor();
+		if(color == null) {
+			color = getColor();
+		}
 		
 		return (int)(color[0]*0xFF) | ((int)(color[1]*0xFF) << 8) | ((int)(color[2]*0xFF) << 16);
 	}
@@ -90,7 +113,6 @@ public class StellarBody {
 	 */
 	public float[] getColor() {
 
-		if(color == null) {
 			//Define
 			float color[] = new float[3];
 			float temperature = ((getTemperature() * .477f) + 10f); //0 -> 10 100 -> 57.7
@@ -129,10 +151,16 @@ public class StellarBody {
 				color[2] = (float) (138.51f * Math.log(color[2]) - 305.04f);
 				color[2] = MathHelper.clamp_float(color[2]/255f, 0f, 1f);
 			}
-
-			this.color = color;
-		}
+		
 		return color;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String str) {
+		name = str;
 	}
 
 	/**
@@ -145,12 +173,16 @@ public class StellarBody {
 	public void writeToNBT(NBTTagCompound nbt) {
 		nbt.setInteger("id", this.id);
 		nbt.setInteger("temperature", temperature);
-		nbt.setInteger("numPlanets", numPlanets);
+		nbt.setString("name", name);
+		nbt.setShort("posX", posX);
+		nbt.setShort("posZ", posZ);
 	}
 	
 	public void readFromNBT(NBTTagCompound nbt) {
 		id = nbt.getInteger("id");
 		temperature = nbt.getInteger("temperature");
-		numPlanets = nbt.getInteger("numPlanets");
+		name = nbt.getString("name");
+		posX = nbt.getShort("posX");
+		posZ = nbt.getShort("posZ");
 	}
 }
