@@ -202,6 +202,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	private int parentPlanet;
 	private int planetId;
 	private boolean isStation;
+	private boolean isGasGiant;
 
 	//Satallites
 	private HashMap<Long,SatelliteBase> satallites;
@@ -221,8 +222,17 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		satallites = new HashMap<>();
 		tickingSatallites = new HashMap<Long,SatelliteBase>();
 		isNativeDimension = true;
+		isGasGiant = false;
 	}
 
+	public boolean isGasGiant() {
+		return isGasGiant;
+	}
+	
+	public void setGasGiant() {
+		isGasGiant = true;
+	}
+	
 	public DimensionProperties(int id ,String name) {
 		this(id);
 		this.name = name;
@@ -287,10 +297,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 */
 	public StellarBody getStar() {
 		return star;
-	}
-
-	public boolean isGasGiant() {
-		return getId() >= DimensionManager.GASGIANT_DIMID_OFFSET;
 	}
 	
 	/**
@@ -949,6 +955,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		name = nbt.getString("name");
 		isNativeDimension = nbt.hasKey("isNative") ? nbt.getBoolean("isNative") : true; //Prevent world breakages when loading from old version
 
+		isGasGiant = nbt.getBoolean("isGasGiant");
 		isTerraformed = nbt.getBoolean("terraformed");
 		
 		//Hierarchy
@@ -1045,6 +1052,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setString("name", name);
 		nbt.setBoolean("isNative", isNativeDimension);
 		nbt.setBoolean("terraformed", isTerraformed);
+		nbt.setBoolean("isGasGiant", isGasGiant);
 
 		//Hierarchy
 		if(!childPlanets.isEmpty()) {

@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.IGalaxy;
@@ -38,6 +39,7 @@ public class DimensionManager implements IGalaxy {
 	public static final String filePath = workingPath + "/temp.dat";
 	public static int dimOffset = 0;
 	private boolean hasBeenInitiallized = false;
+	public static String prevBuild;
 
 	
 	//Stat tracking
@@ -303,7 +305,7 @@ public class DimensionManager implements IGalaxy {
 
 		//Linear is easier. Earth is nominal!
 		properties.averageTemperature = (properties.getStar().getTemperature() + (100 - properties.orbitalDist)*15 + properties.getAtmosphereDensity()*18)/20;
-
+		properties.setGasGiant();
 		//TODO: add gasses
 		registerDim(properties, true);
 		return properties;
@@ -606,7 +608,7 @@ public class DimensionManager implements IGalaxy {
 
 				if(propeties != null) {
 					int keyInt = Integer.parseInt(keyString);
-					if(!net.minecraftforge.common.DimensionManager.isDimensionRegistered(keyInt) && propeties.isNativeDimension) {
+					if(!net.minecraftforge.common.DimensionManager.isDimensionRegistered(keyInt) && propeties.isNativeDimension && !propeties.isGasGiant()) {
 						net.minecraftforge.common.DimensionManager.registerProviderType(keyInt, DimensionManager.planetWorldProvider, false);
 						net.minecraftforge.common.DimensionManager.registerDimension(keyInt, keyInt);
 						//propeties.isNativeDimension = true;
@@ -626,7 +628,10 @@ public class DimensionManager implements IGalaxy {
 			NBTTagCompound nbtTag = nbt.getCompoundTag("spaceObjects");
 			SpaceObjectManager.getSpaceManager().readFromNBT(nbtTag);
 		}
-
+		
+		prevBuild = nbt.getString("prevVersion");
+		nbt.setString("prevVersion", AdvancedRocketry.version);
+		
 		return true;
 	}
 	

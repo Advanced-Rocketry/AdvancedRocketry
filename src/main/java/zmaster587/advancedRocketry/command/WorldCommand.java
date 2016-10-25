@@ -3,35 +3,23 @@ package zmaster587.advancedRocketry.command;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
 import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
-import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
-import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
-import zmaster587.advancedRocketry.world.biome.BiomeGenAlienForest;
-import zmaster587.advancedRocketry.world.biome.BiomeGenDeepSwamp;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.BlockPosition;
-import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.text.ChatComponentText;
-import net.minecraft.util.text.ChatComponentText;
-import net.minecraft.util.text.ChatComponentText;
 import net.minecraft.world.World;
 
 public class WorldCommand implements ICommand {
