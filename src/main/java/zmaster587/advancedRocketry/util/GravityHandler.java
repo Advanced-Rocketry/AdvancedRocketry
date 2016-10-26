@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class GravityHandler {
 	public static void applyGravity(Entity entity) {
 
-		if(!entity.isInWater()) {
+		if(!entity.isInWater() || entity instanceof EntityItem) {
 			if(!(entity instanceof EntityPlayer) || !((EntityPlayer)entity).capabilities.isFlying) {
 				if(DimensionManager.getInstance().isDimensionCreated(entity.worldObj.provider.getDimension()) || entity.worldObj.provider instanceof WorldProviderSpace) {
 					double gravMult;
@@ -25,10 +25,14 @@ public class GravityHandler {
 						entity.motionY -= gravMult*0.075f;
 					return;
 				}
-				else
-					entity.motionY -= 0.08D;
+				else {
+					if(entity instanceof EntityItem)
+						entity.motionY -= 0.04f;
+					else
+						entity.motionY -= 0.08D;
+				}
 			}		
-			
+
 		}
 
 	}
