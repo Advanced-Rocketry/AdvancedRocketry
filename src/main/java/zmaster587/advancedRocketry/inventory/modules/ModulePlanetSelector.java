@@ -127,6 +127,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		selectedSystem = id;
 	}
 
+	@SideOnly(Side.CLIENT)
 	private void renderGalaxyMap(IGalaxy galaxy, int posX, int posY, float distanceZoomMultiplier, float planetSizeMultiplier) {
 		Collection<StellarBody> stars = galaxy.getStars();
 
