@@ -31,8 +31,7 @@ public class GravityHandler {
 					else
 						entity.motionY -= 0.08D;
 				}
-			}		
-
+			}
 		}
 
 	}

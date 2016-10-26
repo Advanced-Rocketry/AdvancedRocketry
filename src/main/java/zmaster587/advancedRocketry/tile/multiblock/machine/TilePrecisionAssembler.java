@@ -57,7 +57,6 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 		List<BlockMeta> list = super.getAllowableWildCardBlocks();
 
 		list.add(new BlockMeta(LibVulpesBlocks.blockStructureBlock, BlockMeta.WILDCARD));
-		list.add(new BlockMeta(LibVulpesBlocks.blockRFBattery, BlockMeta.WILDCARD));
 		list.addAll(TileMultiBlock.getMapping('O'));
 		list.addAll(TileMultiBlock.getMapping('I'));
 		list.addAll(TileMultiBlock.getMapping('P'));

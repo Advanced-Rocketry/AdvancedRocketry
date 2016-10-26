@@ -84,10 +84,10 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			DimensionProperties destProperties = DimensionManager.getInstance().getDimensionProperties(getSpaceObject().getDestOrbitingBody());
 			if(properties == DimensionManager.defaultSpaceDimensionProperties)
 				return Integer.MAX_VALUE;
-			
+
 			if(destProperties.getStar() != properties.getStar())
 				return 500;
-			
+
 			while(destProperties.getParentProperties() != null && destProperties.isMoon())
 				destProperties = destProperties.getParentProperties();
 
@@ -255,9 +255,10 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 		boolean flag = isOnStation && getSpaceObject().getFuelAmount() >= warpCost && getSpaceObject().hasUsableWarpCore();
 
-		if(canWarp != null)
+		if(canWarp != null) {
 			canWarp.setText(isOnStation && srcPlanet == dstPlanet ? "Nowhere to go" : flag ? "Ready!" : "Not ready");
-
+			canWarp.setColor(flag ? 0x1baa1b : 0xFF1b1b);
+		}
 
 		if(worldObj.isRemote) {
 			if(srcPlanetImg == null ) {
