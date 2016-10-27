@@ -123,7 +123,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 			if(satellite != null) {
 				if(getEnergyStored() < getPowerPerOperation()) 
 					moduleText.setText("Not Enough power!");
-				else if(satellite.getDimensionId() != this.worldObj.provider.getDimension()) {
+				else if(satellite.getDimensionId() != DimensionManager.getEffectiveDimId(worldObj, pos).getId()) {
 					moduleText.setText(satellite.getName() + "\n\nToo Far" );
 				}
 
