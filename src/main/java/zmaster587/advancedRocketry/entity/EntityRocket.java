@@ -580,7 +580,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 							//Vector3F<Integer> spawn = object.getSpawnLocation();
 
 							object.onModuleUnpack(storage);
-
+							
+							tile.setInventorySlotContents(0, null);
 						}
 					}
 					else {
@@ -599,7 +600,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				if(pos != null) {
 					this.setInOrbit(true);
 					this.motionY = -this.motionY;
-					this.travelToDimension(destinationDimId, pos.x, pos.y, pos.z);
+					this.travelToDimension(destinationDimId, pos.x, Configuration.orbit, pos.z);
 					return;
 				}
 			}
