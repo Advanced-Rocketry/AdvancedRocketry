@@ -21,12 +21,15 @@ import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.IGalaxy;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
+import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
+import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.network.PacketHandler;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 
 
@@ -650,5 +653,18 @@ public class DimensionManager implements IGalaxy {
 			if(areDimensionsInSamePlanetMoonSystem(getDimensionProperties(child), id)) return true;
 		}
 		return false;
+	}
+	
+	public static DimensionProperties getEffectiveDimId(World world, int x, int z) {
+		int dimId = world.provider.dimensionId;
+		
+		if(dimId == Configuration.spaceDimId) {
+			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(x, z);
+			if(obj != null)
+				return (DimensionProperties) obj.getProperties().getParentProperties();
+			else 
+				return defaultSpaceDimensionProperties;
+		}
+		else return getInstance().getDimensionProperties(dimId);
 	}
 }
