@@ -665,7 +665,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 			else {
 				List<TileSatelliteHatch> satelliteHatches = storage.getSatelliteHatches();
-
+				
 				for(TileSatelliteHatch tile : storage.getSatelliteHatches()) {
 					SatelliteBase satellite = tile.getSatellite();
 					if(satellite == null) {
@@ -679,7 +679,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 							//Vector3F<Integer> spawn = object.getSpawnLocation();
 
 							object.onModuleUnpack(storage);
-
+							tile.setInventorySlotContents(0, null);
 						}
 					}
 					else {
@@ -698,7 +698,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				if(pos != null) {
 					this.setInOrbit(true);
 					this.motionY = -this.motionY;
-					this.changeDimension(destinationDimId, pos.x, pos.y, pos.z);
+					this.changeDimension(destinationDimId, pos.x, Configuration.orbit, pos.z);
 					return;
 				}
 			}
