@@ -46,10 +46,12 @@ The "planets" tag should be at the root of the document, this tells AR you are d
 tag.  The "numPlanet" attribute defines how many random planets should be defined in the solar systems, if not specified then
 AR will default to six.
 
-Example usage; generates one random planet:
-<planets numPlanets="1">
+Example usage; generates one random planet around a star named Sol with the temperature of the sun at origin:
+<galaxy>
+<star name="Sol" temp="100" x="0" y="0" numPlanets="1">
     ...
-</planets>
+</star>
+</galaxy>
 
 ------------------------------------------------------------------------------------------------------------------------------
 
@@ -60,7 +62,8 @@ name of the planet.  If the name attribute is not present then the planet is aut
 Example usage; generates one random planet and one planet with manually specified properties named "Earth" with a moon
 named "Luna" and another manually specified planet "Mars"
 
-<planets numPlanets="1">
+<galaxy>
+<star name="Sol" temp="100" x="0" y="0" numPlanets="1">
     <planet name="Earth">
         ...
         <planet name="Luna">
@@ -70,7 +73,8 @@ named "Luna" and another manually specified planet "Mars"
     <planet name="Mars">
     ...
     </planet>
-</planets>
+</star>
+</galaxy>
 
 ------------------------------------------------------------------------------------------------------------------------------
 
@@ -79,20 +83,24 @@ Red, Green, and Blue respectivly.  These values can be any decimal number betwee
 Hex color can also be specified by prepending the code with "0x".
 
 Example usage; specifes a teal color fog using the RGB format.
-<planets numPlanets="1">
+<galaxy>
+<star name="Sol" temp="100" x="0" y="0" numPlanets="1">
     <planet name="Earth">
         <fogColor>0.5,1,1</fogColor>
         ...
     </planet>
-</planets>
+</star>
+</galaxy>
 
 Example usage; specifes the same teal color fog as the previous example using hex format.
-<planets numPlanets="1">
+<galaxy>
+<star name="Sol" temp="100" x="0" y="0" numPlanets="1">
     <planet name="Earth">
         <fogColor>0x7FFFFFF</fogColor>
         ...
     </planet>
-</planets>
+</star>
+</galaxy>
 
 ------------------------------------------------------------------------------------------------------------------------------
 
@@ -101,20 +109,23 @@ Red, Green, and Blue respectivly.  These values can be any decimal number betwee
 Hex color can also be specified by prepending the code with "0x".
 
 Example usage; specifes a teal color sky using the RGB format.
-<planets numPlanets="1">
+<galaxy>
+<star name="Sol" temp="100" x="0" y="0" numPlanets="1">
     <planet name="Earth">
         <skyColor>0.5,1,1</skyColor>
         ...
     </planet>
-</planets>
+</star>
 
 Example usage; specifes the same teal color sky as the previous example using hex format.
-<planets numPlanets="1">
+<galaxy>
+<star name="Sol" temp="100" x="0" y="0" numPlanets="1">
     <planet name="Earth">
         <fogColor>0x7FFFFFF</fogColor>
         ...
     </planet>
-</planets>
+</star>
+</galaxy>
 
 ------------------------------------------------------------------------------------------------------------------------------
 
@@ -130,12 +141,14 @@ Default: 100
 Min: 0
 
 Example usage; specifes an atmosphere with the same density as Earth
-<planets numPlanets="1">
+<galaxy>
+<star name="Sol" temp="100" x="0" y="0" numPlanets="1">
     <planet name="Earth">
         <atmosphereDensity>100</atmosphereDensity>
         ...
     </planet>
-</planets>
+</star>
+</galaxy>
 
 ------------------------------------------------------------------------------------------------------------------------------
 
@@ -151,12 +164,14 @@ Recommended Max: 110
 Recommended Min: 10
 
 Example usage; specifes an atmosphere with the same density as Earth
-<planets numPlanets="1">
+<galaxy>
+<star name="Sol" temp="100" x="0" y="0" numPlanets="1">
     <planet name="Earth">
         <gravitationalMultiplier>100</gravitationalMultiplier>
         ...
     </planet>
-</planets>
+</star>
+</galaxy>
 
 ------------------------------------------------------------------------------------------------------------------------------
 
@@ -181,12 +196,14 @@ Default: 100
 Min: 0
 
 Example usage; specifes a distance from the host star to be the same as Earth
-<planets numPlanets="1">
+<galaxy>
+<star name="Sol" temp="100" x="0" y="0" numPlanets="1">
     <planet name="Earth">
         <orbitalDistance>100</orbitalDistance>
         ...
     </planet>
-</planets>
+</star>
+</galaxy>
 
 ------------------------------------------------------------------------------------------------------------------------------
 
@@ -197,12 +214,14 @@ Default: 0
 Min: 0
 
 Example usage; specifes a planet to start exactly opposite the sun from Earth
-<planets numPlanets="1">
+<galaxy>
+<star name="Sol" temp="100" x="0" y="0" numPlanets="1">
     <planet name="Earth">
         <orbitalTheta>180</orbitalTheta>
         ...
     </planet>
-</planets>
+</star>
+</galaxy>
 
 ------------------------------------------------------------------------------------------------------------------------------
 
@@ -215,12 +234,14 @@ Default: 24000
 Min: 1
 
 Example usage; specifes a planet to start exactly opposite the sun from Earth
-<planets numPlanets="1">
+<galaxy>
+<star name="Sol" temp="100" x="0" y="0" numPlanets="1">
     <planet name="Earth">
         <orbitalTheta>180</orbitalTheta>
         ...
     </planet>
-</planets>
+</star>
+</galaxy>
 
 ------------------------------------------------------------------------------------------------------------------------------
 
@@ -231,9 +252,11 @@ atmosphere density, gravitationalMultiplier, and distance from the sun.
 A list of vanilla biomes can be found at http://minecraft.gamepedia.com/Biome
 
 Example usage; Planet will generate only ocean and ice plains
-<planets numPlanets="1">
+<galaxy>
+<star name="Sol" temp="100" x="0" y="0" numPlanets="1">
     <planet name="Earth">
         <biomeIds>0,12</biomeIds>
         ...
     </planet>
-</planets>
+</star>
+</galaxy>

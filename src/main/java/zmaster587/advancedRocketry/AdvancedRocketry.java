@@ -39,6 +39,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
+import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
@@ -1414,21 +1415,28 @@ public class AdvancedRocketry {
 			int numRandomGeneratedGasGiants = 1;
 			File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
 			logger.info("Checking for config at " + file.getAbsolutePath());
+
+			boolean loadedFromXML = false;
+
 			if(file.exists()) {
 				logger.info("File found!");
 				XMLPlanetLoader loader = new XMLPlanetLoader();
 				try {
 					loader.loadFile(file);
-					List<DimensionProperties> list = loader.readAllPlanets();
-					for(DimensionProperties properties : list)
-						DimensionManager.getInstance().registerDim(properties, true);
-					numRandomGeneratedPlanets = loader.getMaxNumPlanets();
-					numRandomGeneratedGasGiants = loader.getMaxNumGasGiants();
+					List<StellarBody> list = loader.readAllPlanets();
 
+					for(StellarBody star : list) {
+						DimensionManager.getInstance().addStar(star);
+						numRandomGeneratedPlanets = loader.getMaxNumPlanets(star);
+						numRandomGeneratedGasGiants = loader.getMaxNumGasGiants(star);
+						generateRandomPlanets(star, numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
+					}
+					loadedFromXML = true;
 				} catch(IOException e) {
 					logger.severe("XML planet config exists but cannot be loaded!  Defaulting to random gen.");
 				}
 			}
+
 
 			if(zmaster587.advancedRocketry.api.Configuration.MoonId == -1)
 				zmaster587.advancedRocketry.api.Configuration.MoonId = DimensionManager.getInstance().getNextFreeDim();
@@ -1444,62 +1452,69 @@ public class AdvancedRocketry {
 			dimensionProperties.setParentPlanet(DimensionManager.overworldProperties);
 			dimensionProperties.setStar(DimensionManager.getSol());
 			dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");
+
 			DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
+			if(!loadedFromXML) 
+				generateRandomPlanets(DimensionManager.getSol(), numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
 
-
-			Random random = new Random(System.currentTimeMillis());
-
-
-			for(int i = 0; i < numRandomGeneratedGasGiants; i++) {
-				int baseAtm = 180;
-				int baseDistance = 100;
-
-				DimensionProperties	properties = DimensionManager.getInstance().generateRandomGasGiant(0, "",baseDistance + 50,baseAtm,125,100,100,75);
-
-				if(properties.gravitationalMultiplier >= 1f) {
-					int numMoons = random.nextInt(8);
-
-					for(int ii = 0; ii < numMoons; ii++) {
-						DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(0, properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
-						moonProperties.setParentPlanet(properties);
-					}
-				}
-			}
-
-			for(int i = 0; i < numRandomGeneratedPlanets; i++) {
-				int baseAtm = 75;
-				int baseDistance = 100;
-
-				if(i % 4 == 0) {
-					baseAtm = 0;
-				}
-				else if(i != 6 && (i+2) % 4 == 0)
-					baseAtm = 120;
-
-				if(i % 3 == 0) {
-					baseDistance = 170;
-				}
-				else if((i + 1) % 3 == 0) {
-					baseDistance = 30;
-				}
-
-				DimensionProperties properties = DimensionManager.getInstance().generateRandom(0, baseDistance,baseAtm,125,100,100,75);
-
-				if(properties.gravitationalMultiplier >= 1f) {
-					int numMoons = random.nextInt(4);
-
-					for(int ii = 0; ii < numMoons; ii++) {
-						DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(0, properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
-						moonProperties.setParentPlanet(properties);
-					}
-				}
-			}
 		}
 		else if(Loader.isModLoaded("GalacticraftCore")  ) {
 			DimensionManager.getInstance().getDimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId).isNativeDimension = false;
 		}
 
 		VersionCompat.upgradeDimensionManagerPostLoad(DimensionManager.prevBuild);
+	}
+	
+	private void generateRandomPlanets(StellarBody star, int numRandomGeneratedPlanets, int numRandomGeneratedGasGiants) {
+		Random random = new Random(System.currentTimeMillis());
+
+
+		for(int i = 0; i < numRandomGeneratedGasGiants; i++) {
+			int baseAtm = 180;
+			int baseDistance = 100;
+
+			DimensionProperties	properties = DimensionManager.getInstance().generateRandomGasGiant(star.getId(), "",baseDistance + 50,baseAtm,125,100,100,75);
+
+			if(properties.gravitationalMultiplier >= 1f) {
+				int numMoons = random.nextInt(8);
+
+				for(int ii = 0; ii < numMoons; ii++) {
+					DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(star.getId(), properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
+					moonProperties.setParentPlanet(properties);
+					star.removePlanet(moonProperties);
+				}
+			}
+		}
+
+		for(int i = 0; i < numRandomGeneratedPlanets; i++) {
+			int baseAtm = 75;
+			int baseDistance = 100;
+
+			if(i % 4 == 0) {
+				baseAtm = 0;
+			}
+			else if(i != 6 && (i+2) % 4 == 0)
+				baseAtm = 120;
+
+			if(i % 3 == 0) {
+				baseDistance = 170;
+			}
+			else if((i + 1) % 3 == 0) {
+				baseDistance = 30;
+			}
+
+			DimensionProperties properties = DimensionManager.getInstance().generateRandom(star.getId(), baseDistance,baseAtm,125,100,100,75);
+
+			if(properties.gravitationalMultiplier >= 1f) {
+				int numMoons = random.nextInt(4);
+
+				for(int ii = 0; ii < numMoons; ii++) {
+					DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(star.getId(), properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
+					moonProperties.setParentPlanet(properties);
+					star.removePlanet(moonProperties);
+				}
+			}
+		}
 	}
 
 

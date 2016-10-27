@@ -61,7 +61,7 @@ public class DimensionManager implements IGalaxy {
 	public static DimensionProperties defaultSpaceDimensionProperties;
 
 	public static StellarBody getSol() {
-		return sol;
+		return getInstance().getStar(0);
 	}
 
 	public static DimensionManager getInstance() {
@@ -202,7 +202,7 @@ public class DimensionManager implements IGalaxy {
 
 	public int getNextFreeGasGaintDim() {
 		for(int i = GASGIANT_DIMID_OFFSET; i < Integer.MAX_VALUE; i++) {
-			if(this.getDimensionProperties(i) != overworldProperties)
+			if(this.getDimensionProperties(i) == overworldProperties)
 				return i;
 		}
 		return GASGIANT_DIMID_OFFSET;

@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -16,6 +17,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 
@@ -24,6 +26,10 @@ public class XMLPlanetLoader {
 	Document doc;
 	NodeList currentList;
 	int currentNodeIndex;
+	int starId;
+
+	HashMap<StellarBody, Integer> maxPlanetNumber = new HashMap<StellarBody, Integer>();
+	HashMap<StellarBody, Integer> maxGasPlanetNumber = new HashMap<StellarBody, Integer>();
 
 	public boolean loadFile(File xmlFile) throws IOException {
 		DocumentBuilder docBuilder;
@@ -45,57 +51,31 @@ public class XMLPlanetLoader {
 	public XMLPlanetLoader() {
 		doc = null;
 		currentNodeIndex = -1;
+		starId=0;
 	}
 
 	public boolean isValid() {
 		return doc != null;
 	}
 
-	public int getMaxNumPlanets() {
-		Node node = doc.getElementsByTagName("planets").item(0);
-		int returnValue = -1;
-
-		if(node.hasAttributes()) {
-			NamedNodeMap map = node.getAttributes();
-			Node attr = map.getNamedItem("numPlanets");
-
-			try {
-				returnValue= Integer.parseInt(attr.getNodeValue());
-			} catch (NumberFormatException e) {
-				AdvancedRocketry.logger.warning("Invalid number of planets specified in xml config!");
-			}
-		}
-		return returnValue;
-	}
-	
-
-	public int getMaxNumGasGiants() {
-		Node node = doc.getElementsByTagName("planets").item(0);
-		int returnValue = -1;
-
-		if(node.hasAttributes()) {
-			NamedNodeMap map = node.getAttributes();
-			Node attr = map.getNamedItem("numGasGiants");
-
-			try {
-				returnValue= Integer.parseInt(attr.getNodeValue());
-			} catch (NumberFormatException e) {
-				AdvancedRocketry.logger.warning("Invalid number of planets specified in xml config!");
-			}
-		}
-		return returnValue;
+	public int getMaxNumPlanets(StellarBody body) {
+		return maxPlanetNumber.get(body);
 	}
 
-	private List<DimensionProperties> readPlanetFromNode(Node planetNode) {
+
+	public int getMaxNumGasGiants(StellarBody body) {
+		return maxGasPlanetNumber.get(body);
+	}
+
+	private List<DimensionProperties> readPlanetFromNode(Node planetNode, StellarBody star) {
 		List<DimensionProperties> list = new ArrayList<DimensionProperties>();
 		Node planetPropertyNode = planetNode.getFirstChild();
-		
+
 
 		DimensionProperties properties = new DimensionProperties(DimensionManager.getInstance().getNextFreeDim());
-		properties.setStar(DimensionManager.getSol());
 		list.add(properties);
 		DimensionManager.dimOffset++;//Increment for dealing with child planets
-		
+
 
 		//Set name for dimension if exists
 		if(planetNode.hasAttributes()) {
@@ -196,7 +176,7 @@ public class XMLPlanetLoader {
 				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("planet")) {
-				List<DimensionProperties> childList = readPlanetFromNode(planetPropertyNode);
+				List<DimensionProperties> childList = readPlanetFromNode(planetPropertyNode, star);
 				if(childList.size() > 0) {
 					DimensionProperties child = childList.get(childList.size()-1); // Last entry in the list is the child planet
 					properties.addChildPlanet(child);
@@ -206,33 +186,110 @@ public class XMLPlanetLoader {
 
 			planetPropertyNode = planetPropertyNode.getNextSibling();
 		}
+		
+		properties.setStar(star);
 
 		//If no biomes are specified add some!
 		if(properties.getBiomes().isEmpty())
 			properties.addBiomes(properties.getViableBiomes());
-		
+
 		return list;
 	}
 
-	public List<DimensionProperties> readAllPlanets() {
-		List<DimensionProperties> list = new ArrayList<DimensionProperties>();
+	
+	public StellarBody readStar(Node planetNode) {
+		StellarBody star = new StellarBody();
+		if(planetNode.hasAttributes()) {
+			Node nameNode = planetNode.getAttributes().getNamedItem("name");
+			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
+				star.setName(nameNode.getNodeValue());
+			}
 
-		Node masterNode = doc.getElementsByTagName("planets").item(0);
-		NodeList planetNodeList = masterNode.getChildNodes();
+			nameNode = planetNode.getAttributes().getNamedItem("temp");
 
-		Node planetNode = planetNodeList.item(0);
+			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
+				try {
+					star.setTemperature(Integer.parseInt(nameNode.getNodeValue()));
+				} catch (NumberFormatException e) {
+					AdvancedRocketry.logger.warning("Error Reading star " + star.getName());
+				}
+			}
+
+			nameNode = planetNode.getAttributes().getNamedItem("x");
+
+			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
+				try {
+					star.setPosX(Integer.parseInt(nameNode.getNodeValue()));
+				} catch (NumberFormatException e) {
+					AdvancedRocketry.logger.warning("Error Reading star " + star.getName());
+				}
+			}
+
+			nameNode = planetNode.getAttributes().getNamedItem("y");
+
+			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
+				try {
+					star.setPosZ(Integer.parseInt(nameNode.getNodeValue()));
+				} catch (NumberFormatException e) {
+					AdvancedRocketry.logger.warning("Error Reading star " + star.getName());
+				}
+			}
+
+			nameNode = planetNode.getAttributes().getNamedItem("numPlanets");
+			
+			try {
+				maxPlanetNumber.put(star ,Integer.parseInt(nameNode.getNodeValue()));
+			} catch (Exception e) {
+				AdvancedRocketry.logger.warning("Invalid number of planets specified in xml config!");
+			}
+			
+			nameNode = planetNode.getAttributes().getNamedItem("numGasGiants");
+			try {
+				maxGasPlanetNumber.put(star ,Integer.parseInt(nameNode.getNodeValue()));
+			} catch (Exception e) {
+				AdvancedRocketry.logger.warning("Invalid number of planets specified in xml config!");
+			}
+		}
+
+		star.setId(starId++);
+		return star;
+	}
+
+	public List<StellarBody> readAllPlanets() {
+		List<StellarBody> list = new ArrayList<StellarBody>();
+
+		Node masterNode = doc.getElementsByTagName("galaxy").item(0).getFirstChild();
+
 		//readPlanetFromNode changes value
 		//Yes it's hacky but that's another reason why it's private
+
 		int offset = DimensionManager.dimOffset;
-		
-		while(planetNode != null) {
-			if(planetNode.getNodeName().equalsIgnoreCase("planet"))
-				list.addAll(readPlanetFromNode(planetNode));
-			planetNode = planetNode.getNextSibling();
+		while(masterNode != null) {
+			if(!masterNode.getNodeName().equals("star")) {
+				masterNode = masterNode.getNextSibling();
+				continue;
+			}
+
+			StellarBody star = readStar(masterNode);
+			list.add(star);
+
+			NodeList planetNodeList = masterNode.getChildNodes();
+
+			Node planetNode = planetNodeList.item(0);
+
+			while(planetNode != null) {
+				if(planetNode.getNodeName().equalsIgnoreCase("planet")) {
+					for(DimensionProperties properties : readPlanetFromNode(planetNode, star)) {
+						DimensionManager.getInstance().registerDim(properties, true);
+					}
+				}
+				planetNode = planetNode.getNextSibling();
+			}
+
+			masterNode = masterNode.getNextSibling();
 		}
-		
+
 		DimensionManager.dimOffset = offset; //Set back to its prev value
-		
 		return list;
 	}
 }

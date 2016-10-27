@@ -65,6 +65,7 @@ public class StellarBody {
 	 * @return the {@link DimensionProperties} of the planet orbiting this star, or null if the planet does not exist
 	 */
 	public IDimensionProperties removePlanet(IDimensionProperties planet) {
+		numPlanets--;
 		return planets.remove(planet.getId());
 	}
 
