@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
@@ -14,6 +15,8 @@ import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.item.ItemData;
+import zmaster587.advancedRocketry.item.ItemMultiData;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -28,7 +31,9 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
@@ -67,9 +72,25 @@ public class WorldCommand implements ICommand {
 		//advRocketry planet set <var value>
 		int opLevel = 2;
 
-
+		if(string.length >= 1 &&  string[0].equalsIgnoreCase("filldata")) {
+			ItemStack stack;
+			if(sender.getCommandSenderEntity() != null ) {
+				stack = ((EntityPlayer)sender.getCommandSenderEntity()).getHeldItem(EnumHand.MAIN_HAND);
+				if(stack != null && stack.getItem() instanceof ItemMultiData) {
+					ItemMultiData item = (ItemMultiData) stack.getItem();
+					for(DataType type : DataType.values())
+						item.setData(stack, 2000, type);
+					sender.addChatMessage(new TextComponentString("Data filled!"));
+				}
+				else
+					sender.addChatMessage(new TextComponentString("Not Holding data item"));
+			}
+			else
+				sender.addChatMessage(new TextComponentString("Ghosts don't have items!"));
+			return;
+		}
+		
 		if(string.length > 1) {
-
 			if(string[0].equalsIgnoreCase("goto") && (string.length == 2 || string.length == 3)) {
 				EntityPlayer player = (EntityPlayer) sender.getCommandSenderEntity();
 				if(player != null) {
@@ -465,6 +486,7 @@ public class WorldCommand implements ICommand {
 			list.add("goto");
 			list.add("fetch");
 			list.add("star");
+			list.add("filldata");
 		} else if(string.length == 2) {
 			ArrayList<String> list2 = new ArrayList<String>();
 			list2.add("get");
