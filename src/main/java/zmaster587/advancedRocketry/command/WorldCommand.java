@@ -13,6 +13,7 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.item.ItemMultiData;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
+import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
 import zmaster587.libVulpes.network.PacketHandler;
@@ -439,6 +440,7 @@ public class WorldCommand implements ICommand {
 							star.setId(DimensionManager.getInstance().getNextFreeStarId());
 							if(star.getId() != -1) {
 								DimensionManager.getInstance().addStar(star);
+								PacketHandler.sendToAll(new PacketStellarInfo(star.getId(), star));
 								sender.addChatMessage(new ChatComponentText("star Added!"));
 							}
 							else
