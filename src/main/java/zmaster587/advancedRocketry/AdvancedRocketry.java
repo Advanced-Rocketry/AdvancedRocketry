@@ -56,6 +56,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
+import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
@@ -226,7 +227,7 @@ public class AdvancedRocketry {
 	public static CommonProxy proxy;
 
 	public final static String version = "%VERSION%";
-	
+
 	@Instance(value = Constants.modId)
 	public static AdvancedRocketry instance;
 	public static WorldType planetWorldType;
@@ -237,7 +238,7 @@ public class AdvancedRocketry {
 	private static Configuration config;
 	private static final String BIOMECATETORY = "Biomes";
 	String[] sealableBlockWhileList;
-	
+
 	//static {
 	//	FluidRegistry.enableUniversalBucket(); // Must be called before preInit
 	//}
@@ -284,7 +285,7 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.scrubberRequiresCartrige = config.get(Configuration.CATEGORY_GENERAL, "scrubberRequiresCartrige", true, "If true the Oxygen scrubbers require a consumable carbon collection cartridge").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.enableLaserDrill = config.get(Configuration.CATEGORY_GENERAL, "EnableLaserDrill", true, "Enables the laser drill machine").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.spaceLaserPowerMult = (float)config.get(Configuration.CATEGORY_GENERAL, "LaserDrillPowerMultiplier", 1d, "Power multiplier for the laser drill machine").getDouble();
-		
+
 		zmaster587.advancedRocketry.api.Configuration.enableTerraforming = config.get(Configuration.CATEGORY_GENERAL, "EnableTerraforming", true,"Enables terraforming items and blocks").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.spaceSuitOxygenTime = config.get(Configuration.CATEGORY_GENERAL, "spaceSuitO2Buffer", 30, "Maximum time in minutes that the spacesuit's internal buffer can store O2 for").getInt();
 		zmaster587.advancedRocketry.api.Configuration.travelTimeMultiplier = (float)config.get(Configuration.CATEGORY_GENERAL, "warpTravelTime", 1f, "Multiplier for warp travel time").getDouble();
@@ -294,7 +295,7 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.terraformSpeed = config.get(Configuration.CATEGORY_GENERAL, "terraformMult", 1f, "Multplier for terraforming speed").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.terraformRequiresFluid = config.get(Configuration.CATEGORY_GENERAL, "TerraformerRequiresFluids", true).getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.canPlayerRespawnInSpace = config.get(Configuration.CATEGORY_GENERAL, "allowPlanetRespawn", false, "If true players will respawn near beds on planets IF the spawn location is in a breathable atmosphere").getBoolean();
-		
+
 		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 0xFFFF, "Dimensions including and after this number are allowed to be made into planets");
 		zmaster587.advancedRocketry.api.Configuration.blackListAllVanillaBiomes = config.getBoolean("blackListVanillaBiomes", PLANET, false, "Prevents any vanilla biomes from spawning on planets");
 		zmaster587.advancedRocketry.api.Configuration.overrideGCAir = config.get(MOD_INTERACTION, "OverrideGCAir", true, "If true Galaciticcraft's air will be disabled entirely requiring use of Advanced Rocketry's Oxygen system on GC planets").getBoolean();
@@ -341,19 +342,19 @@ public class AdvancedRocketry {
 
 		//Satellite config
 		zmaster587.advancedRocketry.api.Configuration.microwaveRecieverMulitplier = 10*(float)config.get(Configuration.CATEGORY_GENERAL, "MicrowaveRecieverMulitplier", 1f, "Multiplier for the amount of energy produced by the microwave reciever").getDouble();
-		
+
 		String str[] = config.getStringList("spaceLaserDimIdBlackList", Configuration.CATEGORY_GENERAL, new String[] {}, "Laser drill will not mine these dimension");
-		
+
 		//Load laser dimid blacklists
 		for(String s : str) {
-			
+
 			try {
-			zmaster587.advancedRocketry.api.Configuration.laserBlackListDims.add(Integer.parseInt(s));
+				zmaster587.advancedRocketry.api.Configuration.laserBlackListDims.add(Integer.parseInt(s));
 			} catch (NumberFormatException e) {
 				logger.warning("Invalid number \"" + s + "\" for laser dimid blacklist");
 			}
 		}
-		
+
 		config.save();
 
 		//Register Packets
@@ -488,8 +489,8 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockSolarPanel = new Block(Material.IRON).setUnlocalizedName("solarPanel").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockSolarGenerator = new BlockTile(TileSolarPanel.class, GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setHardness(3f).setUnlocalizedName("solarGenerator");
 		AdvancedRocketryBlocks.blockDockingPort = new BlockStationModuleDockingPort(Material.IRON).setUnlocalizedName("stationMarker").setCreativeTab(tabAdvRocketry).setHardness(3f);
-		
-		
+
+
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill) {
 			AdvancedRocketryBlocks.blockSpaceLaser = new BlockLaser();
 			AdvancedRocketryBlocks.blockSpaceLaser.setCreativeTab(tabAdvRocketry);
@@ -608,7 +609,7 @@ public class AdvancedRocketry {
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockSolarGenerator.setRegistryName("solarGenerator"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockDockingPort.setRegistryName("stationMarker"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockAltitudeController.setRegistryName("altitudeController"));
-		
+
 		//TODO, use different mechanism to enable/disable drill
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
 			LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockSpaceLaser.setRegistryName("spaceLaser"));
@@ -648,7 +649,7 @@ public class AdvancedRocketry {
 		//FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidNitrogen);
 		//FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidOxygen);
 		//FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidRocketFuel);
-		
+
 		//Suit Component Registration
 		AdvancedRocketryItems.itemJetpack = new ItemJetpack().setCreativeTab(tabAdvRocketry).setUnlocalizedName("jetPack");
 		AdvancedRocketryItems.itemPressureTank = new ItemPressureTank(4, 1000).setCreativeTab(tabAdvRocketry).setUnlocalizedName("advancedrocketry:pressureTank");
@@ -780,17 +781,17 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileSolarPanel.class, "ARSolarGenerator");
 		GameRegistry.registerTileEntity(TileDockingPort.class, "ARDockingPort");
 		GameRegistry.registerTileEntity(TileStationAltitudeController.class, "ARStationAltitudeController");
-		
+
 		//OreDict stuff
 		OreDictionary.registerOre("waferSilicon", new ItemStack(AdvancedRocketryItems.itemWafer,1,0));
 		OreDictionary.registerOre("ingotCarbon", new ItemStack(AdvancedRocketryItems.itemMisc, 1, 1));
 		OreDictionary.registerOre("concrete", new ItemStack(AdvancedRocketryBlocks.blockConcrete));
 
 
-		
+
 		//AUDIO
-		
-		
+
+
 		//MOD-SPECIFIC ENTRIES --------------------------------------------------------------------------------------------------------------------------
 
 
@@ -808,12 +809,12 @@ public class AdvancedRocketry {
 	@EventHandler
 	public void load(FMLInitializationEvent event)
 	{
-	
+
 		//TODO: move to proxy
 		//Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor) AdvancedRocketryBlocks.blockFuelFluid, new Block[] {AdvancedRocketryBlocks.blockFuelFluid});
-		
+
 		proxy.init();
-		
+
 		zmaster587.advancedRocketry.cable.NetworkRegistry.registerFluidNetwork();
 		ItemStack userInterface = new ItemStack(AdvancedRocketryItems.itemMisc, 1,0);
 		ItemStack basicCircuit = new ItemStack(AdvancedRocketryItems.itemIC, 1,0);
@@ -833,7 +834,7 @@ public class AdvancedRocketry {
 		//Register Alloys
 		MaterialRegistry.registerMixedMaterial(new MixedMaterial(TileElectricArcFurnace.class, "oreRutile", new ItemStack[] {MaterialRegistry.getMaterialFromName("Titanium").getProduct(AllowedProducts.getProductByName("INGOT"))}));
 
-		
+
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockBlastBrick,16), new ItemStack(Items.MAGMA_CREAM,1), new ItemStack(Items.MAGMA_CREAM,1), Blocks.BRICK_BLOCK, Blocks.BRICK_BLOCK, Blocks.BRICK_BLOCK, Blocks.BRICK_BLOCK);
@@ -926,7 +927,7 @@ public class AdvancedRocketry {
 		//Other blocks
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryItems.itemSmallAirlockDoor, "pp", "pp","pp", 'p', "plateSteel"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockCircleLight), "p  ", " l ", "   ", 'p', "sheetIron", 'l', Blocks.GLOWSTONE));
-		
+
 		//TEMP RECIPES
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryItems.itemSatelliteIdChip), new ItemStack(AdvancedRocketryItems.itemIC, 1, 0));
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryItems.itemPlanetIdChip), new ItemStack(AdvancedRocketryItems.itemIC, 1, 0), new ItemStack(AdvancedRocketryItems.itemIC, 1, 0), new ItemStack(AdvancedRocketryItems.itemSatelliteIdChip));
@@ -936,19 +937,19 @@ public class AdvancedRocketry {
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryBlocks.blockDataPipe, 8), "ggg", " d ", "ggg", 'g', Blocks.GLASS_PANE, 'd', AdvancedRocketryItems.itemDataUnit);
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockEnergyPipe, 32), "ggg", " d ", "ggg", 'g', Items.CLAY_BALL, 'd', "stickCopper"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockFluidPipe, 32), "ggg", " d ", "ggg", 'g', Items.CLAY_BALL, 'd', "sheetCopper"));
-		
+
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockDrill), LibVulpesBlocks.blockStructureBlock, Items.IRON_PICKAXE);
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockOrientationController), LibVulpesBlocks.blockStructureBlock, Items.COMPASS, userInterface);
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockGravityController), LibVulpesBlocks.blockStructureBlock, Blocks.PISTON, Blocks.REDSTONE_BLOCK);
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockAltitudeController), LibVulpesBlocks.blockStructureBlock, userInterface, basicCircuit);
-		
+
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryItems.itemLens), " g ", "g g", 'g', Blocks.GLASS_PANE);
 		GameRegistry.addShapelessRecipe(largeSolarPanel.copy(), smallSolarPanel, smallSolarPanel, smallSolarPanel, smallSolarPanel, smallSolarPanel, smallSolarPanel);
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockMicrowaveReciever), "ggg", "tbc", "aoa", 'g', "plateGold", 't', trackingCircuit, 'b', LibVulpesBlocks.blockStructureBlock, 'c', controlCircuitBoard, 'a', advancedCircuit, 'o', opticalSensor));
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockSolarPanel, "rrr", "gbg", "ppp", 'r' , Items.REDSTONE, 'g', Items.GLOWSTONE_DUST, 'b', LibVulpesBlocks.blockStructureBlock, 'p', "plateGold"));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(AdvancedRocketryBlocks.blockSolarGenerator, "itemBattery", LibVulpesBlocks.blockForgeOutputPlug, AdvancedRocketryBlocks.blockSolarPanel));
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockDockingPort), trackingCircuit, new ItemStack(AdvancedRocketryBlocks.blockLoader, 1,1));
-		
+
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryItems.itemOreScanner, "lwl", "bgb", "   ", 'l', Blocks.LEVER, 'g', userInterface, 'b', "itemBattery", 'w', advancedCircuit));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 4), " c ","sss", "tot", 'c', "stickCopper", 's', "sheetIron", 'o', AdvancedRocketryItems.itemOreScanner, 't', trackingCircuit));
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryBlocks.blockSuitWorkStation), "c","b", 'c', Blocks.CRAFTING_TABLE, 'b', LibVulpesBlocks.blockStructureBlock);
@@ -1025,7 +1026,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryBiomes.swampDeepBiome = new BiomeGenDeepSwamp(config.get(BIOMECATETORY, "deepSwampBiomeId", 96).getInt(), true);
 		AdvancedRocketryBiomes.marsh = new BiomeGenMarsh(config.get(BIOMECATETORY, "marsh", 97).getInt(), true);
 		AdvancedRocketryBiomes.oceanSpires = new BiomeGenOceanSpires(config.get(BIOMECATETORY, "oceanSpires", 98).getInt(), true);
-		
+
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.moonBiome);
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.alienForest);
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.hotDryBiome);
@@ -1035,12 +1036,12 @@ public class AdvancedRocketry {
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.swampDeepBiome);
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.marsh);
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.oceanSpires);
-		
+
 		String[] biomeBlackList = config.getStringList("BlacklistedBiomes", "Planet", new String[] {"7", "8", "9", "127", String.valueOf(Biome.getIdForBiome(AdvancedRocketryBiomes.alienForest))}, "List of Biomes to be blacklisted from spawning as BiomeIds, default is: river, sky, hell, void, alienForest");
 		String[] biomeHighPressure = config.getStringList("HighPressureBiomes", "Planet", new String[] { String.valueOf(Biome.getIdForBiome(AdvancedRocketryBiomes.swampDeepBiome)), String.valueOf(Biome.getIdForBiome(AdvancedRocketryBiomes.stormLandsBiome)) }, "Biomes that only spawn on worlds with pressures over 125, will override blacklist.  Defaults: StormLands, DeepSwamp");
 		String[] biomeSingle = config.getStringList("SingleBiomes", "Planet", new String[] { String.valueOf(Biome.getIdForBiome(AdvancedRocketryBiomes.swampDeepBiome)), String.valueOf(Biome.getIdForBiome(AdvancedRocketryBiomes.crystalChasms)),  String.valueOf(Biome.getIdForBiome(AdvancedRocketryBiomes.alienForest)), String.valueOf(Biome.getIdForBiome(Biomes.DESERT_HILLS)), 
 				String.valueOf(Biome.getIdForBiome(Biomes.MUSHROOM_ISLAND)), String.valueOf(Biome.getIdForBiome(Biomes.EXTREME_HILLS)), String.valueOf(Biome.getIdForBiome(Biomes.ICE_PLAINS)) }, "Some worlds have a chance of spawning single biomes contained in this list.  Defaults: deepSwamp, crystalChasms, alienForest, desert hills, mushroom island, extreme hills, ice plains");
-		
+
 		config.save();
 
 		//Prevent these biomes from spawning normally
@@ -1053,7 +1054,7 @@ public class AdvancedRocketry {
 			try {
 				int id = Integer.parseInt(string);
 				Biome biome = Biome.getBiome(id, null);
-				
+
 				if(biome == null)
 					logger.warning(String.format("Error blackListing biome id \"%d\", a biome with that ID does not exist!", id));
 				else
@@ -1062,18 +1063,18 @@ public class AdvancedRocketry {
 				logger.warning("Error blackListing \"" + string + "\".  It is not a valid number");
 			}
 		}
-		
+
 		if(zmaster587.advancedRocketry.api.Configuration.blackListAllVanillaBiomes) {
 			AdvancedRocketryBiomes.instance.blackListVanillaBiomes();
 		}
 
-		
+
 		//Read and Register High Pressure biomes from config
 		for(String string : biomeHighPressure) {
 			try {
 				int id = Integer.parseInt(string);
 				Biome biome = Biome.getBiome(id, null);
-				
+
 				if(biome == null)
 					logger.warning(String.format("Error registering high pressure biome id \"%d\", a biome with that ID does not exist!", id));
 				else
@@ -1082,13 +1083,13 @@ public class AdvancedRocketry {
 				logger.warning("Error registering high pressure biome \"" + string + "\".  It is not a valid number");
 			}
 		}
-		
+
 		//Read and Register Single biomes from config
 		for(String string : biomeSingle) {
 			try {
 				int id = Integer.parseInt(string);
 				Biome biome = Biome.getBiome(id, null);
-				
+
 				if(biome == null)
 					logger.warning(String.format("Error registering single biome id \"%d\", a biome with that ID does not exist!", id));
 				else
@@ -1097,8 +1098,8 @@ public class AdvancedRocketry {
 				logger.warning("Error registering single biome \"" + string + "\".  It is not a valid number");
 			}
 		}
-		
-		
+
+
 		//Data mapping 'D'
 
 		List<BlockMeta> list = new LinkedList<BlockMeta>();
@@ -1128,10 +1129,10 @@ public class AdvancedRocketry {
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
 			((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileSpaceLaser(), (BlockTile)AdvancedRocketryBlocks.blockSpaceLaser);
-		
+
 		proxy.registerEventHandlers();
 		proxy.registerKeyBindings();
-		
+
 		ARAchivements.register();
 		//TODO: debug
 		//ClientCommandHandler.instance.registerCommand(new Debugger());
@@ -1145,7 +1146,7 @@ public class AdvancedRocketry {
 
 		InputSyncHandler inputSync = new InputSyncHandler();
 		MinecraftForge.EVENT_BUS.register(inputSync);
-		
+
 		MinecraftForge.EVENT_BUS.register(new MapGenLander());
 
 		/*if(Loader.isModLoaded("GalacticraftCore") && zmaster587.advancedRocketry.api.Configuration.overrideGCAir) {
@@ -1339,21 +1340,28 @@ public class AdvancedRocketry {
 			int numRandomGeneratedGasGiants = 1;
 			File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
 			logger.info("Checking for config at " + file.getAbsolutePath());
+
+			boolean loadedFromXML = false;
+
 			if(file.exists()) {
 				logger.info("File found!");
 				XMLPlanetLoader loader = new XMLPlanetLoader();
 				try {
 					loader.loadFile(file);
-					List<DimensionProperties> list = loader.readAllPlanets();
-					for(DimensionProperties properties : list)
-						DimensionManager.getInstance().registerDim(properties, true);
-					numRandomGeneratedPlanets = loader.getMaxNumPlanets();
-					numRandomGeneratedGasGiants = loader.getMaxNumGasGiants();
+					List<StellarBody> list = loader.readAllPlanets();
 
+					for(StellarBody star : list) {
+						DimensionManager.getInstance().addStar(star);
+						numRandomGeneratedPlanets = loader.getMaxNumPlanets(star);
+						numRandomGeneratedGasGiants = loader.getMaxNumGasGiants(star);
+						generateRandomPlanets(star, numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
+					}
+					loadedFromXML = true;
 				} catch(IOException e) {
 					logger.severe("XML planet config exists but cannot be loaded!  Defaulting to random gen.");
 				}
 			}
+
 
 			if(zmaster587.advancedRocketry.api.Configuration.MoonId == -1)
 				zmaster587.advancedRocketry.api.Configuration.MoonId = DimensionManager.getInstance().getNextFreeDim();
@@ -1369,63 +1377,70 @@ public class AdvancedRocketry {
 			dimensionProperties.setParentPlanet(DimensionManager.overworldProperties);
 			dimensionProperties.setStar(DimensionManager.getSol());
 			dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");
+
 			DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
+			if(!loadedFromXML) 
+				generateRandomPlanets(DimensionManager.getSol(), numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
 
-
-			Random random = new Random(System.currentTimeMillis());
-
-
-			for(int i = 0; i < numRandomGeneratedGasGiants; i++) {
-				int baseAtm = 180;
-				int baseDistance = 100;
-
-				DimensionProperties	properties = DimensionManager.getInstance().generateRandomGasGiant(0, "",baseDistance + 50,baseAtm,125,100,100,75);
-
-				if(properties.gravitationalMultiplier >= 1f) {
-					int numMoons = random.nextInt(8);
-
-					for(int ii = 0; ii < numMoons; ii++) {
-						DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(0, properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
-						moonProperties.setParentPlanet(properties);
-					}
-				}
-			}
-
-			for(int i = 0; i < numRandomGeneratedPlanets; i++) {
-				int baseAtm = 75;
-				int baseDistance = 100;
-
-				if(i % 4 == 0) {
-					baseAtm = 0;
-				}
-				else if(i != 6 && (i+2) % 4 == 0)
-					baseAtm = 120;
-
-				if(i % 3 == 0) {
-					baseDistance = 170;
-				}
-				else if((i + 1) % 3 == 0) {
-					baseDistance = 30;
-				}
-
-				DimensionProperties properties = DimensionManager.getInstance().generateRandom(0, baseDistance,baseAtm,125,100,100,75);
-
-				if(properties.gravitationalMultiplier >= 1f) {
-					int numMoons = random.nextInt(4);
-
-					for(int ii = 0; ii < numMoons; ii++) {
-						DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(0, properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
-						moonProperties.setParentPlanet(properties);
-					}
-				}
-			}
 		}
 		else if(Loader.isModLoaded("GalacticraftCore")  ) {
 			DimensionManager.getInstance().getDimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId).isNativeDimension = false;
 		}
-		
+
 		VersionCompat.upgradeDimensionManagerPostLoad(DimensionManager.prevBuild);
 
+	}
+
+	private void generateRandomPlanets(StellarBody star, int numRandomGeneratedPlanets, int numRandomGeneratedGasGiants) {
+		Random random = new Random(System.currentTimeMillis());
+
+
+		for(int i = 0; i < numRandomGeneratedGasGiants; i++) {
+			int baseAtm = 180;
+			int baseDistance = 100;
+
+			DimensionProperties	properties = DimensionManager.getInstance().generateRandomGasGiant(star.getId(), "",baseDistance + 50,baseAtm,125,100,100,75);
+
+			if(properties.gravitationalMultiplier >= 1f) {
+				int numMoons = random.nextInt(8);
+
+				for(int ii = 0; ii < numMoons; ii++) {
+					DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(star.getId(), properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
+					moonProperties.setParentPlanet(properties);
+					star.removePlanet(moonProperties);
+				}
+			}
+		}
+
+		for(int i = 0; i < numRandomGeneratedPlanets; i++) {
+			int baseAtm = 75;
+			int baseDistance = 100;
+
+			if(i % 4 == 0) {
+				baseAtm = 0;
+			}
+			else if(i != 6 && (i+2) % 4 == 0)
+				baseAtm = 120;
+
+			if(i % 3 == 0) {
+				baseDistance = 170;
+			}
+			else if((i + 1) % 3 == 0) {
+				baseDistance = 30;
+			}
+
+			DimensionProperties properties = DimensionManager.getInstance().generateRandom(star.getId(), baseDistance,baseAtm,125,100,100,75);
+
+			if(properties.gravitationalMultiplier >= 1f) {
+				int numMoons = random.nextInt(4);
+
+				for(int ii = 0; ii < numMoons; ii++) {
+					DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(star.getId(), properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
+					moonProperties.setParentPlanet(properties);
+					star.removePlanet(moonProperties);
+				}
+			}
+		}
 	}
 
 
