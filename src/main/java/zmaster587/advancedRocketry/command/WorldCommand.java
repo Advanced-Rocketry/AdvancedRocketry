@@ -18,6 +18,7 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.item.ItemData;
 import zmaster587.advancedRocketry.item.ItemMultiData;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
+import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.world.biome.BiomeGenAlienForest;
@@ -445,6 +446,7 @@ public class WorldCommand implements ICommand {
 							star.setId(DimensionManager.getInstance().getNextFreeStarId());
 							if(star.getId() != -1) {
 								DimensionManager.getInstance().addStar(star);
+								PacketHandler.sendToAll(new PacketStellarInfo(star.getId(), star));
 								sender.addChatMessage(new TextComponentString("star Added!"));
 							}
 							else
