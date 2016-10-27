@@ -46,7 +46,7 @@ public class MissionOreMining extends MissionResourceCollection {
 
 				//fill the inventory of the rocket
 				if(distanceData/(double)maxData > Math.random()) {
-					int totalStacks = (int) (massData*Configuration.asteroidMiningMult*Math.random()*64);
+					int totalStacks = (int) ((1+(massData/100f))*Configuration.asteroidMiningMult*(Math.random()/0.5f + 0.5f)*5);
 					ItemStack[] stacks = new ItemStack[totalStacks];
 					for (int i = 0; i < totalStacks; i++) {
 						if((compositionData/(double)maxData)*0.9d > Math.random()) {

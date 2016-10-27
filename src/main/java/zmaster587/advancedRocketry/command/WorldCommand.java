@@ -3,12 +3,15 @@ package zmaster587.advancedRocketry.command;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.item.ItemMultiData;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
@@ -18,6 +21,7 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
@@ -61,6 +65,23 @@ public class WorldCommand implements ICommand {
 		//advRocketry planet set <var value>
 		int opLevel = 2;
 
+		if(string.length >= 1 &&  string[0].equalsIgnoreCase("filldata")) {
+			ItemStack stack;
+			if(sender instanceof EntityPlayer) {
+				stack = ((EntityPlayer)sender).getHeldItem();
+				if(stack != null && stack.getItem() instanceof ItemMultiData) {
+					ItemMultiData item = (ItemMultiData) stack.getItem();
+					for(DataType type : DataType.values())
+						item.setData(stack, 2000, type);
+					sender.addChatMessage(new ChatComponentText("Data filled!"));
+				}
+				else
+					sender.addChatMessage(new ChatComponentText("Not Holding data item"));
+			}
+			else
+				sender.addChatMessage(new ChatComponentText("Ghosts don't have items!"));
+			return;
+		}
 
 		if(string.length > 1) {
 
