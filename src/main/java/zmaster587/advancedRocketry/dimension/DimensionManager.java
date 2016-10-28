@@ -174,6 +174,14 @@ public class DimensionManager implements IGalaxy {
 		}
 	}
 
+	public void tickDimensionsClient() {
+		//Tick satellites
+		overworldProperties.updateOrbit();
+		for(int i : DimensionManager.getInstance().getLoadedDimensions()) {
+			DimensionManager.getInstance().getDimensionProperties(i).updateOrbit();
+		}
+	}
+
 	/**
 	 * Sets the properies supplied for the supplied dimensionID, if the dimension does not exist, it is added to the list but not registered with minecraft
 	 * @param dimId id to set the properties of

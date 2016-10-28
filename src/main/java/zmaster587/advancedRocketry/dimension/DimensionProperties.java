@@ -634,6 +634,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		this.prevOrbitalTheta = this.orbitTheta;
 		this.orbitTheta += (201-orbitalDist)*0.000005d;
 	}
+	
+	public void updateOrbit() {
+		this.prevOrbitalTheta = this.orbitTheta;
+		this.orbitTheta = AdvancedRocketry.proxy.getWorldTimeUniversal(getId())*(201-orbitalDist)*0.000005d;
+	}
 
 	/**
 	 * @return true if this dimension is allowed to have rivers
