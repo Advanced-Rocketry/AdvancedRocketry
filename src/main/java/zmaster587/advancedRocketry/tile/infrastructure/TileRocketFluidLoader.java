@@ -140,7 +140,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 		}
 
 		if(player.worldObj.isRemote)
-			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText("You program the linker with the fueling station at: " + this.xCoord + " " + this.yCoord + " " + this.zCoord)));
+			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText("You program the linker with the fluid loader at: " + this.xCoord + " " + this.yCoord + " " + this.zCoord)));
 		return true;
 	}
 

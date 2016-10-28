@@ -158,7 +158,7 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 		}
 
 		if(player.worldObj.isRemote)
-			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText("You program the linker with the fueling station at: " + this.xCoord + " " + this.yCoord + " " + this.zCoord)));
+			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText("You program the linker with the rocket loader at: " + this.xCoord + " " + this.yCoord + " " + this.zCoord)));
 		return true;
 	}
 
