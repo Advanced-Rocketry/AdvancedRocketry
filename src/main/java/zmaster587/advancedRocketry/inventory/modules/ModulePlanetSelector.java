@@ -272,7 +272,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		for(ModuleBase module : this.planetList) {
 			buttonList.addAll(module.addButtons(currentPosX, currentPosY));
 		}
-		
+
 		setOffset2(offsetX, offsetY);
 	}
 
@@ -374,7 +374,13 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			float radius = currentlySelectedPlanet.radius/2;
-			GL11.glTranslatef(currentlySelectedPlanet.posX + currentPosX + radius, currentlySelectedPlanet.posY  + currentPosY + radius, 0);
+
+			if(renderPropertiesMap.containsKey(selectedSystem)) {
+				PlanetRenderProperties base = renderPropertiesMap.get(selectedSystem);
+				GL11.glTranslatef(base.posX + currentPosX + base.radius/2, base.posY + currentPosY + base.radius/2, 0);
+			}
+			else 
+				GL11.glTranslatef(currentlySelectedPlanet.posX + currentPosX + radius, currentlySelectedPlanet.posY  + currentPosY + radius, 0);
 
 			double progress = System.currentTimeMillis() % 20000 / 50f;
 
