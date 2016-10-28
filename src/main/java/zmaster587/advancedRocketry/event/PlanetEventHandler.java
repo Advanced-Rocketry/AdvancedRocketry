@@ -250,6 +250,11 @@ public class PlanetEventHandler {
 		}
 	}
 
+	@SubscribeEvent
+	public void tickClient(TickEvent.ClientTickEvent event) {
+		if(event.phase == event.phase.END)
+			DimensionManager.getInstance().tickDimensionsClient();
+	}
 
 	//Make sure the player receives data about the dimensions
 	@SubscribeEvent
