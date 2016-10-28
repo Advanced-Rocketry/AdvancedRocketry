@@ -165,8 +165,8 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			//Status text
 			modules.add(new ModuleText(baseX, baseY + sizeY + 20, "Core Status:", 0x1b1b1b));
 			boolean flag = isOnStation && getSpaceObject().getFuelAmount() >= getTravelCost() && getSpaceObject().hasUsableWarpCore();
-
-			canWarp = new ModuleText(baseX, baseY + sizeY + 30, (isOnStation && getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()) ? "Nowhere to go" : flag ? "Ready!" : "Not ready", flag ? 0x1baa1b : 0xFF1b1b);
+			flag = flag && !(isOnStation && (getSpaceObject().getDestOrbitingBody() == -1 || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()));
+			canWarp = new ModuleText(baseX, baseY + sizeY + 30, (isOnStation && (getSpaceObject().getDestOrbitingBody() == -1 || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody())) ? "Nowhere to go" : flag ? "Ready!" : "Not ready", flag ? 0x1baa1b : 0xFF1b1b);
 			modules.add(canWarp);
 			modules.add(new ModuleProgress(baseX, baseY + sizeY + 40, 10, new IndicatorBarImage(70, 58, 53, 8, 122, 58, 5, 8, EnumFacing.EAST, TextureResources.progressBars), this));
 			modules.add(new ModuleText(baseX + 82, baseY + sizeY + 20, "Fuel Cost:", 0x1b1b1b));
@@ -256,7 +256,8 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 		boolean flag = isOnStation && getSpaceObject().getFuelAmount() >= warpCost && getSpaceObject().hasUsableWarpCore();
 
 		if(canWarp != null) {
-			canWarp.setText(isOnStation && srcPlanet == dstPlanet ? "Nowhere to go" : flag ? "Ready!" : "Not ready");
+			flag = flag && !(isOnStation && (getSpaceObject().getDestOrbitingBody() == -1 || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()));
+			canWarp.setText((isOnStation && (getSpaceObject().getDestOrbitingBody() == -1 || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody())) ? "Nowhere to go" : flag ? "Ready!" : "Not ready");
 			canWarp.setColor(flag ? 0x1baa1b : 0xFF1b1b);
 		}
 
