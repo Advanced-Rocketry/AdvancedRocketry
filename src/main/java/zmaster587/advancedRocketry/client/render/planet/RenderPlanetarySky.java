@@ -372,7 +372,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		for(DimensionProperties moons : children) {
 			GL11.glPushMatrix();
 			//DimensionProperties moons = children.get(0);
-			GL11.glRotatef((float)(moons.orbitTheta* 180F/Math.PI), 1f, 0f, 0f);
+			GL11.glRotatef((float)((partialTicks*moons.orbitTheta + ((1-partialTicks)*moons.prevOrbitalTheta)) * 180F/Math.PI), 1f, 0f, 0f);
 			renderPlanet(tessellator1, moons.getPlanetIcon(), moons.getParentOrbitalDistance()*(1/moons.gravitationalMultiplier), multiplier, moons.hasAtmosphere(), isGasGiant);
 			GL11.glPopMatrix();
 		}

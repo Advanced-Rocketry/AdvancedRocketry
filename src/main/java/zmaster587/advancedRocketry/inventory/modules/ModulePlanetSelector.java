@@ -237,6 +237,9 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 	@SideOnly(Side.CLIENT)
 	private void redrawSystem() {
 
+		int offsetX = -currentPosX;
+		int offsetY = -currentPosY;
+		setOffset2(0,0);
 
 		for(int i = 0; i< moduleList.size(); i++) {
 			ModuleBase module = planetList.get(i);
@@ -266,9 +269,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			buttonList.addAll(module.addButtons(currentPosX, currentPosY));
 		}
 
-		setOffset2(internalOffsetX - Minecraft.getMinecraft().displayWidth/4 , internalOffsetY - Minecraft.getMinecraft().displayHeight /4);
-
-
+		setOffset2(offsetX, offsetY);
 	}
 
 	@Override
@@ -283,6 +284,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			currentPosY = 0;
 			zoom = 1;
 			redrawSystem();
+			setOffset2(internalOffsetX - Minecraft.getMinecraft().displayWidth/4 , internalOffsetY - Minecraft.getMinecraft().displayHeight /4);
 			//redrawSystem();
 
 			selectedSystem = -1;
@@ -310,7 +312,9 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 	@SideOnly(Side.CLIENT)
 	public void renderBackground(GuiContainer gui, int x, int y, int mouseX,
 			int mouseY, FontRenderer font) {
-
+		
+		if(!stellarView && Minecraft.getSystemTime() % 5 == 0)
+			redrawSystem();
 		super.renderBackground(gui, x, y, mouseX, mouseY, font);
 
 		int center = size/2;
@@ -328,11 +332,8 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 		//Render orbits
 		if(!stellarView) {
-			for(int ii = 1; ii < planetList.size(); ii++) {
-
-				ModuleButton base = planetList.get(ii);
-
-				int radius = (int) Math.sqrt(Math.pow(base.offsetX + 40 - center - currentPosX,2) + Math.pow(base.offsetY + 40 - center - currentPosY,2));
+			for(int ii = 1; ii < 10; ii++) {
+				int radius = ii*80;
 				float x2 = radius;
 				float y2 = 0;
 				float t;

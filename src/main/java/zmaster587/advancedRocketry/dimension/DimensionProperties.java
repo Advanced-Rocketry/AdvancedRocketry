@@ -196,6 +196,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	private LinkedList<BiomeEntry> terraformedBiomes;
 	private boolean isRegistered = false;
 	private boolean isTerraformed = false;
+	public double prevOrbitalTheta;
 	
 	//Planet Heirachy
 	private HashSet<Integer> childPlanets;
@@ -629,6 +630,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			SatelliteBase satallite = iterator.next();
 			satallite.tickEntity();
 		}
+		
+		this.prevOrbitalTheta = this.orbitTheta;
+		this.orbitTheta += (201-orbitalDist)*0.000005d;
 	}
 
 	/**
