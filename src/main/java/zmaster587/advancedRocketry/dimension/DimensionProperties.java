@@ -187,6 +187,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public int rotationalPeriod;
 	//Stored in radians
 	public double orbitTheta;
+	public double prevOrbitalTheta;
+	
 	StellarBody star;
 	private String name;
 	public float[] sunriseSunsetColors;
@@ -628,6 +630,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			SatelliteBase satallite = iterator.next();
 			satallite.tickEntity();
 		}
+		this.prevOrbitalTheta = this.orbitTheta;
+		this.orbitTheta += (201-orbitalDist)*0.000005d;
 	}
 
 	/**

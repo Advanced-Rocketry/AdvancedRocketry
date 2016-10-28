@@ -241,7 +241,9 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 	@SideOnly(Side.CLIENT)
 	private void redrawSystem() {
 
-
+		int offsetX = -currentPosX;
+		int offsetY = -currentPosY;
+		setOffset2(0,0);
 		for(int i = 0; i< moduleList.size(); i++) {
 			ModuleBase module = planetList.get(i);
 			if(planetList.contains(module))
@@ -270,10 +272,8 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		for(ModuleBase module : this.planetList) {
 			buttonList.addAll(module.addButtons(currentPosX, currentPosY));
 		}
-
-		setOffset2(internalOffsetX - Minecraft.getMinecraft().displayWidth/4 , internalOffsetY - Minecraft.getMinecraft().displayHeight /4);
-
-
+		
+		setOffset2(offsetX, offsetY);
 	}
 
 	@Override
@@ -288,6 +288,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			currentPosY = 0;
 			zoom = 1;
 			redrawSystem();
+			setOffset2(internalOffsetX - Minecraft.getMinecraft().displayWidth/4 , internalOffsetY - Minecraft.getMinecraft().displayHeight /4);
 			//redrawSystem();
 
 			selectedSystem = -1;
@@ -316,6 +317,8 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 	public void renderBackground(GuiContainer gui, int x, int y, int mouseX,
 			int mouseY, FontRenderer font) {
 
+		if(!stellarView && Minecraft.getSystemTime() % 5 == 0)
+			redrawSystem();
 		super.renderBackground(gui, x, y, mouseX, mouseY, font);
 
 		int center = size/2;
@@ -328,17 +331,10 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
 		GL11.glPushMatrix();
 
-		//GL11.glTranslated(-this.currentPosX/4, -this.currentPosY/4, 0);
-		//GL11.glScaled(zoom, zoom, 1.0);
-		//GL11.glTranslated(this.currentPosX/4, this.currentPosY/4, 0);
-
 		//Render orbits
 		if(!stellarView) {
-			for(int ii = 1; ii < planetList.size(); ii++) {
-
-				ModuleButton base = planetList.get(ii);
-
-				int radius = (int) Math.sqrt(Math.pow(base.offsetX + 40 - center - currentPosX,2) + Math.pow(base.offsetY + 40 - center - currentPosY,2));
+			for(int ii = 1; ii < 10; ii++) {
+				int radius = ii*80;
 				float x2 = radius;
 				float y2 = 0;
 				float t;
@@ -354,7 +350,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 				buffer.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION);
 				for(int i = 0; i < numSegments; i++)	{
-					buffer.pos(x2, y2, 0).endVertex();
+					buffer.pos(x2, y2, 200).endVertex();
 					t = x2;
 					x2 = cos*x2 - sin*y2;
 					y2 = sin*t + cos*y2;
@@ -384,8 +380,6 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 			GL11.glPushMatrix();
 			GL11.glRotated(progress, 0, 0, 1);
-
-
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			RenderHelper.renderNorthFaceWithUVNoNormal(buffer, 1, -radius, -radius, radius, radius, 0, 1, 0, 1);
