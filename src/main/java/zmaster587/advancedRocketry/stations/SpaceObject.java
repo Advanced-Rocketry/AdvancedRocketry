@@ -59,7 +59,7 @@ public class SpaceObject implements ISpaceObject {
 		warpCoreLocation = new LinkedList<BlockPosition>();
 		dockingPoints = new HashMap<BlockPosition, String>();
 		transitionEta = -1;
-		destinationDimId = -1;
+		destinationDimId = 0;
 		created = false;
 	}
 

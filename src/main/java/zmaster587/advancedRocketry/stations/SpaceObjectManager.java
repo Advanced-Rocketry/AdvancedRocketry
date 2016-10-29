@@ -299,10 +299,10 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 
 	@SubscribeEvent
 	public void onServerTick(TickEvent.ServerTickEvent event) {
-		long worldTime;
+		long worldTime = DimensionManager.getWorld(Configuration.spaceDimId).getTotalWorldTime();
 		//Assuming server
 		//If no dim undergoing transition then nextTransitionTick = -1
-		if(nextStationTransitionTick != -1 && (worldTime = DimensionManager.getWorld(Configuration.spaceDimId).getTotalWorldTime()) >= nextStationTransitionTick && spaceStationOrbitMap.get(WARPDIMID) != null) {
+		if((nextStationTransitionTick != -1 && worldTime >= nextStationTransitionTick && spaceStationOrbitMap.get(WARPDIMID) != null) || (nextStationTransitionTick == -1 && spaceStationOrbitMap.get(WARPDIMID) != null && !spaceStationOrbitMap.get(WARPDIMID).isEmpty())) {
 			long newNextTransitionTick = -1;
 			for(ISpaceObject obj : spaceStationOrbitMap.get(WARPDIMID)) {
 				if(obj.getTransitionTime() <= worldTime) {
