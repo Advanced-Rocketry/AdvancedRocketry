@@ -154,6 +154,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		//TODO: properly handle this
 		float atmosphere;
 		int solarOrbitalDistance, planetOrbitalDistance = 0;
+		double myPhi = 0, myTheta = 0, myPrevOrbitalTheta = 0;
 		boolean hasAtmosphere = false, isMoon;
 		boolean isWarp = false;
 		boolean isGasGiant = false;
@@ -172,6 +173,10 @@ public class RenderPlanetarySky extends IRenderHandler {
 			atmosphere = planetaryProvider.getAtmosphereDensityFromHeight(mc.getRenderViewEntity().posY, mc.thePlayer.getPosition());
 			axis = getRotationAxis(properties, mc.thePlayer.getPosition());
 
+			myPhi = properties.orbitalPhi;
+			myTheta = properties.orbitTheta;
+			myPrevOrbitalTheta = properties.prevOrbitalTheta;
+			
 			children = new LinkedList<DimensionProperties>();
 			for (Integer i : properties.getChildPlanets()) {
 				children.add(DimensionManager.getInstance().getDimensionProperties(i));
@@ -307,8 +312,9 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GL11.glTranslatef(f7, f8, f9);
 		GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
 
+		GL11.glRotatef((float)myPhi, 0f, 1f, 0f);
 		GL11.glRotatef(isWarp ? 0 : mc.theWorld.getCelestialAngle(partialTicks) * 360.0F, axis.getFrontOffsetX(), axis.getFrontOffsetY(), axis.getFrontOffsetZ());
-
+		
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		float f18 = mc.theWorld.getStarBrightness(partialTicks) * f6 * (atmosphere) + (1-atmosphere);
@@ -356,7 +362,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 
 		float multiplier = atmosphere > 1 ? (2-atmosphere) : 1f;
-		if(mc.theWorld.isRainingAt(mc.thePlayer.getPosition()))
+		if(mc.theWorld.isRainingAt(mc.thePlayer.getPosition().add(0, 199, 0)))
 			multiplier *= 1-mc.theWorld.getRainStrength(partialTicks);
 
 		if(!isWarp) {
@@ -377,13 +383,20 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 
 		if(isMoon) {
+			GL11.glPushMatrix();
+			//GL11.glRotatef((float)myPhi, 0f, 0f, 1f);
+			GL11.glRotatef((float)((partialTicks*myTheta + ((1-partialTicks)*myPrevOrbitalTheta)) * 180F/Math.PI), 1f, 0f, 0f);
+			
 			renderPlanet(buffer, parentPlanetIcon, planetOrbitalDistance, multiplier, hasAtmosphere, isGasGiant);
+			GL11.glPopMatrix();
 		}
-		int i = 0;
+
 		for(DimensionProperties moons : children) {
 			GL11.glPushMatrix();
-			//DimensionProperties moons = children.get(0);
+			
+			GL11.glRotatef((float)moons.orbitalPhi, 0f, 0f, 1f);
 			GL11.glRotatef((float)((partialTicks*moons.orbitTheta + ((1-partialTicks)*moons.prevOrbitalTheta)) * 180F/Math.PI), 1f, 0f, 0f);
+			
 			renderPlanet(buffer, moons.getPlanetIcon(), moons.getParentOrbitalDistance()*(1/moons.gravitationalMultiplier), multiplier, moons.hasAtmosphere(), isGasGiant);
 			GL11.glPopMatrix();
 		}
@@ -479,7 +492,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		//int i1 = k / 4 % 2;
 
 		//Set planet Orbiting distance; size
-		float f10 = 30f*(200-planetOrbitalDistance)/100f;
+		float f10 = 10f*(200-planetOrbitalDistance)/100f;
 
 		float f14 = 1f;//(float)(l + 0) / 4.0F;
 		float f15 = 0f;//(float)(i1 + 0) / 2.0F;

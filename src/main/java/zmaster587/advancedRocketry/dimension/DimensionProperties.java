@@ -188,6 +188,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	//Stored in radians
 	public double orbitTheta;
 	public double prevOrbitalTheta;
+	public double orbitalPhi;
 	
 	StellarBody star;
 	private String name;
@@ -217,6 +218,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		planetId = id;
 		parentPlanet = -1;
 		childPlanets = new HashSet<Integer>();
+		orbitalPhi = 0;
 
 		allowedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
 		terraformedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
@@ -636,7 +638,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	
 	public void updateOrbit() {
 		this.prevOrbitalTheta = this.orbitTheta;
-		this.orbitTheta = AdvancedRocketry.proxy.getWorldTimeUniversal(getId())*(201-orbitalDist)*0.000005d;
+		this.orbitTheta = (AdvancedRocketry.proxy.getWorldTimeUniversal(getId())*(201-orbitalDist)*0.000002d) % (2*Math.PI);
 	}
 
 	/**
@@ -972,6 +974,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		gravitationalMultiplier = nbt.getFloat("gravitationalMultiplier");
 		orbitalDist = nbt.getInteger("orbitalDist");
 		orbitTheta = nbt.getDouble("orbitTheta");
+		orbitalPhi = nbt.getDouble("orbitPhi");
 		atmosphereDensity = nbt.getInteger("atmosphereDensity");
 		averageTemperature = nbt.getInteger("avgTemperature");
 		rotationalPeriod = nbt.getInteger("rotationalPeriod");
@@ -1069,6 +1072,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setFloat("gravitationalMultiplier", gravitationalMultiplier);
 		nbt.setInteger("orbitalDist", orbitalDist);
 		nbt.setDouble("orbitTheta", orbitTheta);
+		nbt.setDouble("orbitPhi", orbitalPhi);
 		nbt.setInteger("atmosphereDensity", atmosphereDensity);
 		nbt.setInteger("avgTemperature", averageTemperature);
 		nbt.setInteger("rotationalPeriod", rotationalPeriod);

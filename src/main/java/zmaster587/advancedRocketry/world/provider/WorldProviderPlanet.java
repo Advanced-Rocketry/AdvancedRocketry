@@ -74,8 +74,8 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	protected void createBiomeProvider()
 	{
 		worldObj.getWorldInfo().setTerrainType(AdvancedRocketry.planetWorldType);
-		
-		
+
+
 		this.biomeProvider = new ChunkManagerPlanet(worldObj, worldObj.getWorldInfo().getGeneratorOptions(), DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension()).getBiomes());
 		this.chunkMgrTerraformed = new ChunkManagerPlanet(worldObj, worldObj.getWorldInfo().getGeneratorOptions(), DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension()).getTerraformedBiomes());
 		//AdvancedRocketry.planetWorldType.getChunkManager(worldObj);
@@ -96,13 +96,13 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	public int getRespawnDimension(EntityPlayerMP player) {
 		if(AtmosphereHandler.hasAtmosphereHandler(getDimension()) && Configuration.canPlayerRespawnInSpace) {
 			BlockPos coords = player.getBedLocation(getDimension());
-			
+
 			if(coords != null && AtmosphereHandler.getOxygenHandler(player.worldObj.provider.getDimension()).getAtmosphereType(coords).isBreathable())
 				return getDimension();
 		}
 		return 0;
 	}
-	
+
 	@Override
 	public boolean canRespawnHere() {
 		return false;
@@ -143,26 +143,63 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	}
 
 	@Override
-	public float getSunBrightness(float par1) {
+	public float getSunBrightness(float partialTicks) {
 		float atmosphere = getAtmosphereDensity(new BlockPos(0,0,0));
 		Math.abs(1-atmosphere);
 		//calculateCelestialAngle(p_76563_1_, p_76563_3_)
-        float f1 = worldObj.getCelestialAngle(par1);
-        float f2 = 1.0F - (MathHelper.cos(f1 * (float)Math.PI * 2.0F) * 2.0F + 0.2F) - atmosphere/4f;
-        
-        if (f2 < 0.0F)
-        {
-            f2 = 0.0F ;
-        }
+		float f1 = worldObj.getCelestialAngle(partialTicks);
+		float f2 = 1.0F - (MathHelper.cos(f1 * (float)Math.PI * 2.0F) * 2.0F + 0.2F) - atmosphere/4f;
 
-        if (f2 > 1.0F)
-        {
-            f2 = 1.0F;
-        }
+		if (f2 < 0.0F)
+		{
+			f2 = 0.0F ;
+		}
 
-        f2 = 1.0F - f2;
-        
-		return f2*super.getSunBrightness(par1);
+		if (f2 > 1.0F)
+		{
+			f2 = 1.0F;
+		}
+
+		f2 = 1.0F - f2;
+
+		//Eclipse handling
+		if(this.worldObj.isRemote) {
+			DimensionProperties properties = getDimensionProperties(Minecraft.getMinecraft().thePlayer.getPosition());
+			if(properties.isMoon()) {
+				f2 = eclipseValue(properties, f2, partialTicks);
+			}
+			else {
+				for(int i : properties.getChildPlanets()) {
+					DimensionProperties childProps = DimensionManager.getInstance().getDimensionProperties(i);
+					f2 = eclipseValue(childProps, f2, partialTicks);
+				}
+			}
+		}
+
+		return f2*super.getSunBrightness(partialTicks);
+	}
+
+	private float eclipseValue(DimensionProperties properties, float lightValue, double partialTicks) {
+		
+		double currentTheta = (((partialTicks*properties.orbitTheta + ((1-partialTicks)*properties.prevOrbitalTheta)) * 180/Math.PI)  % 360d);
+		int solarDistance = properties.getSolarOrbitalDistance();
+		float planetaryDistance = properties.getParentOrbitalDistance();
+
+		float difference = solarDistance/(200-planetaryDistance + 0.00001f);
+		
+		
+		float phiMuliplier = (float) (Math.max(MathHelper.cos((float)(properties.orbitalPhi * 180/Math.PI))-0.95f, 0)*20);
+
+		int offset = (int)((200-planetaryDistance)/2f);
+
+		//1 is fast attenuation
+		//-1 is no atten
+		//solar distance conrols fade, planetary distance controls duration
+		if(phiMuliplier !=0 && currentTheta > 180 - offset && currentTheta < 180 + offset ) {
+			lightValue *= phiMuliplier*(MathHelper.clamp_float((float) ((difference/20f) + (Math.abs(currentTheta - 180)*difference)/(10f)) ,0,1)) + (1-phiMuliplier);
+			//f2 = 0;
+		}
+		return lightValue;
 	}
 
 	//No clouds
@@ -304,7 +341,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 		return new Vec3d(vec[0],vec[1],vec[2]);
 	}
 
-	
+
 	public int getSolarOrbitalDistance(BlockPos pos) {
 		return getDimensionProperties(pos).getSolarOrbitalDistance();
 	}

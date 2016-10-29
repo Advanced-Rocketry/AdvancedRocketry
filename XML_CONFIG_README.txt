@@ -225,6 +225,24 @@ Example usage; specifes a planet to start exactly opposite the sun from Earth
 
 ------------------------------------------------------------------------------------------------------------------------------
 
+The "orbitalTheta" tag specifes the angle of the plane on which the planet rotates around the star or it's host planet, 90 will cause the planet or sun to rise and set in the north and south (the planet would orbit such that it would pass over both poles) whereas 0 with be the normal procession (like orbit over the equator)
+
+Max: 360
+Default: 0
+Min: 0
+
+Example usage; specifes a planet to start exactly opposite the sun from Earth
+<galaxy>
+<star name="Sol" temp="100" x="0" y="0" numPlanets="1">
+    <planet name="Earth">
+        <orbitalPhi>180</orbitalPhi>
+        ...
+    </planet>
+</star>
+</galaxy>
+
+------------------------------------------------------------------------------------------------------------------------------
+
 The "rotationalPeriod" tag specifes length of a day night cycle for the planet in ticks.  Where 20 ticks = 1 second.  24,000/20 = 
 1,200 seconds = 20 minutes.  I strongly recommend not using values < 400 as I found them to be very disorienting and somewhat
 motion sickness inducing.
