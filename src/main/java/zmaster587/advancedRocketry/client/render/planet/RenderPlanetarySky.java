@@ -384,7 +384,6 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 		if(isMoon) {
 			GL11.glPushMatrix();
-			//GL11.glRotatef((float)myPhi, 0f, 0f, 1f);
 			GL11.glRotatef((float)((partialTicks*myTheta + ((1-partialTicks)*myPrevOrbitalTheta)) * 180F/Math.PI), 1f, 0f, 0f);
 			
 			renderPlanet(buffer, parentPlanetIcon, planetOrbitalDistance, multiplier, hasAtmosphere, isGasGiant);
