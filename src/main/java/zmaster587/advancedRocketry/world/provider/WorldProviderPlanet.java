@@ -140,11 +140,11 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	}
 
 	@Override
-	public float getSunBrightness(float par1) {
+	public float getSunBrightness(float partialTicks) {
 		float atmosphere = getAtmosphereDensity(0,0);
 		Math.abs(1-atmosphere);
 		//calculateCelestialAngle(p_76563_1_, p_76563_3_)
-        float f1 = worldObj.getCelestialAngle(par1);
+        float f1 = worldObj.getCelestialAngle(partialTicks);
         float f2 = 1.0F - (MathHelper.cos(f1 * (float)Math.PI * 2.0F) * 2.0F + 0.2F) - atmosphere/4f;
         
         if (f2 < 0.0F)
@@ -159,9 +159,46 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
         f2 = 1.0F - f2;
         
-		return f2*super.getSunBrightness(par1);
+		//Eclipse handling
+		if(this.worldObj.isRemote) {
+			DimensionProperties properties = getDimensionProperties((int)Minecraft.getMinecraft().thePlayer.posX, (int)Minecraft.getMinecraft().thePlayer.posZ);
+			if(properties.isMoon()) {
+				f2 = eclipseValue(properties, f2, partialTicks);
+			}
+			else {
+				for(int i : properties.getChildPlanets()) {
+					DimensionProperties childProps = DimensionManager.getInstance().getDimensionProperties(i);
+					f2 = eclipseValue(childProps, f2, partialTicks);
+				}
+			}
+		}
+        
+		return f2*super.getSunBrightness(partialTicks);
 	}
 
+	private float eclipseValue(DimensionProperties properties, float lightValue, double partialTicks) {
+		
+		double currentTheta = (((partialTicks*properties.orbitTheta + ((1-partialTicks)*properties.prevOrbitalTheta)) * 180/Math.PI)  % 360d);
+		int solarDistance = properties.getSolarOrbitalDistance();
+		float planetaryDistance = properties.getParentOrbitalDistance();
+
+		float difference = solarDistance/(200-planetaryDistance + 0.00001f);
+		
+		
+		float phiMuliplier = (float) (Math.max(MathHelper.cos((float)(properties.orbitalPhi * 180/Math.PI))-0.95f, 0)*20);
+
+		int offset = (int)((200-planetaryDistance)/2f);
+
+		//1 is fast attenuation
+		//-1 is no atten
+		//solar distance conrols fade, planetary distance controls duration
+		if(phiMuliplier !=0 && currentTheta > 180 - offset && currentTheta < 180 + offset ) {
+			lightValue *= phiMuliplier*(MathHelper.clamp_float((float) ((difference/20f) + (Math.abs(currentTheta - 180)*difference)/(10f)) ,0,1)) + (1-phiMuliplier);
+			//f2 = 0;
+		}
+		return lightValue;
+	}
+	
 	//No clouds
 	@Override
 	public float getCloudHeight() {

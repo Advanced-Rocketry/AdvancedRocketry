@@ -197,6 +197,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	private boolean isRegistered = false;
 	private boolean isTerraformed = false;
 	public double prevOrbitalTheta;
+	public double orbitalPhi;
+	
 	
 	//Planet Heirachy
 	private HashSet<Integer> childPlanets;
@@ -217,6 +219,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		planetId = id;
 		parentPlanet = -1;
 		childPlanets = new HashSet<Integer>();
+		orbitalPhi = 0;
 
 		allowedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
 		terraformedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
@@ -635,10 +638,12 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		this.orbitTheta += (201-orbitalDist)*0.000005d;
 	}
 	
+	
 	public void updateOrbit() {
 		this.prevOrbitalTheta = this.orbitTheta;
-		this.orbitTheta = AdvancedRocketry.proxy.getWorldTimeUniversal(getId())*(201-orbitalDist)*0.000005d;
+		this.orbitTheta = (AdvancedRocketry.proxy.getWorldTimeUniversal(getId())*(201-orbitalDist)*0.000002d) % (2*Math.PI);
 	}
+
 
 	/**
 	 * @return true if this dimension is allowed to have rivers
@@ -966,6 +971,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		isGasGiant = nbt.getBoolean("isGasGiant");
 		isTerraformed = nbt.getBoolean("terraformed");
+		orbitalPhi = nbt.getDouble("orbitPhi");
 		
 		//Hierarchy
 		if(nbt.hasKey("childrenPlanets")) {
@@ -1062,6 +1068,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setBoolean("isNative", isNativeDimension);
 		nbt.setBoolean("terraformed", isTerraformed);
 		nbt.setBoolean("isGasGiant", isGasGiant);
+		nbt.setDouble("orbitPhi", orbitalPhi);
 
 		//Hierarchy
 		if(!childPlanets.isEmpty()) {
