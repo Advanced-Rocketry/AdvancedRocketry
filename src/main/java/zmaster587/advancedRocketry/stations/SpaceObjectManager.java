@@ -318,6 +318,14 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 
 	}
 	
+	
+	public void onServerStopped() {
+		stationLocations.clear();
+		spaceStationOrbitMap.clear();
+		temporaryDimensions.clear();
+		nextStationTransitionTick = -1;
+	}
+	
 	/*@SubscribeEvent
 	public void onPlayerTransition(PlayerEvent.PlayerChangedDimensionEvent event) {
 		

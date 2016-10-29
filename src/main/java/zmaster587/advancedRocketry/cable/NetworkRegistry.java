@@ -11,4 +11,10 @@ public class NetworkRegistry {
 		dataNetwork = new HandlerDataNetwork();
 		energyNetwork = new HandlerEnergyNetwork();
 	}
+	
+	public static void clearNetworks() {
+		energyNetwork.networks.clear();
+		dataNetwork.networks.clear();
+		liquidNetwork.networks.clear();
+	}
 }

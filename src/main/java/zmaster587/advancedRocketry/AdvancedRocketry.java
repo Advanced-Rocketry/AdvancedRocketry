@@ -1521,6 +1521,8 @@ public class AdvancedRocketry {
 	@EventHandler
 	public void serverStopped(FMLServerStoppedEvent event) {
 		zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
+		zmaster587.advancedRocketry.cable.NetworkRegistry.clearNetworks();
+		SpaceObjectManager.getSpaceManager().onServerStopped();
 	}
 
 	@SubscribeEvent
