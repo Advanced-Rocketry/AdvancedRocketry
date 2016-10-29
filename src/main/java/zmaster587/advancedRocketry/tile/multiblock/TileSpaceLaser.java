@@ -282,6 +282,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 			if(isComplete())
 				canRender = completeStructure = completeStructure();
 			timeAlive = 0x1;
+			checkCanRun();
 		}
 
 		if(!this.worldObj.isRemote) {
