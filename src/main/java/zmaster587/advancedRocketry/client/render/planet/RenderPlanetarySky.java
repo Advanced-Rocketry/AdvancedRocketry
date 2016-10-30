@@ -146,7 +146,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		//TODO: properly handle this
 		float atmosphere;
 		int solarOrbitalDistance, planetOrbitalDistance = 0;
-		double myPhi = 0, myTheta = 0, myPrevOrbitalTheta = 0;
+		double myPhi = 0, myTheta = 0, myPrevOrbitalTheta = 0, myRotationalPhi = 0;;
 		boolean hasAtmosphere = false, isMoon;
 		float parentAtmColor[] = new float[]{1f,1f,1f};
 		boolean isWarp = false;
@@ -169,6 +169,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 			myPhi = properties.orbitalPhi;
 			myTheta = properties.orbitTheta;
+			myRotationalPhi = properties.rotationalPhi;
 			myPrevOrbitalTheta = properties.prevOrbitalTheta;
 			
 			children = new LinkedList<DimensionProperties>();
@@ -308,7 +309,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GL11.glTranslatef(f7, f8, f9);
 		GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
 		
-		GL11.glRotatef((float)myPhi, 0f, 1f, 0f);
+		GL11.glRotatef((float)myRotationalPhi, 0f, 1f, 0f);
 		GL11.glRotatef(isWarp ? 0 : mc.theWorld.getCelestialAngle(partialTicks) * 360.0F, axis.offsetX, axis.offsetY, axis.offsetZ);
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -377,6 +378,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 		if(isMoon) {
 			GL11.glPushMatrix();
+			GL11.glRotatef((float)myPhi, 0f, 0f, 1f);
 			GL11.glRotatef((float)((partialTicks*myTheta + ((1-partialTicks)*myPrevOrbitalTheta)) * 180F/Math.PI), 1f, 0f, 0f);
 			
 			renderPlanet(tessellator1, parentPlanetIcon, planetOrbitalDistance, multiplier, hasAtmosphere, parentAtmColor, isGasGiant);

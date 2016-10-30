@@ -1469,6 +1469,7 @@ public class AdvancedRocketry {
 			dimensionProperties.averageTemperature = 20;
 			dimensionProperties.gravitationalMultiplier = .166f; //Actual moon value
 			dimensionProperties.setName("Luna");
+			dimensionProperties.rotationalPeriod = 128000;
 			dimensionProperties.orbitalDist = 150;
 			dimensionProperties.addBiome(AdvancedRocketryBiomes.moonBiome);
 
@@ -1477,8 +1478,46 @@ public class AdvancedRocketry {
 			dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");
 
 			DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
-			if(!loadedFromXML) 
+			if(!loadedFromXML)  {
 				generateRandomPlanets(DimensionManager.getSol(), numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
+				
+				StellarBody star = new StellarBody();
+				star.setTemperature(10);
+				star.setPosX(300);
+				star.setPosZ(-200);
+				star.setId(DimensionManager.getInstance().getNextFreeStarId());
+				star.setName("Wolf 12");
+				DimensionManager.getInstance().addStar(star);
+				generateRandomPlanets(star, 5, 0);
+				
+				star = new StellarBody();
+				star.setTemperature(170);
+				star.setPosX(-200);
+				star.setPosZ(80);
+				star.setId(DimensionManager.getInstance().getNextFreeStarId());
+				star.setName("Epsilon ire");
+				DimensionManager.getInstance().addStar(star);
+				generateRandomPlanets(star, 7, 0);
+				
+				star = new StellarBody();
+				star.setTemperature(200);
+				star.setPosX(-150);
+				star.setPosZ(250);
+				star.setId(DimensionManager.getInstance().getNextFreeStarId());
+				star.setName("Proxima Centaurs");
+				DimensionManager.getInstance().addStar(star);
+				generateRandomPlanets(star, 3, 0);
+				
+				star = new StellarBody();
+				star.setTemperature(70);
+				star.setPosX(-150);
+				star.setPosZ(-250);
+				star.setId(DimensionManager.getInstance().getNextFreeStarId());
+				star.setName("Magnis Vulpes");
+				DimensionManager.getInstance().addStar(star);
+				generateRandomPlanets(star, 2, 0);
+				
+			}
 
 		}
 		else if(Loader.isModLoaded("GalacticraftCore")  ) {

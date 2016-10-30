@@ -198,7 +198,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	private boolean isTerraformed = false;
 	public double prevOrbitalTheta;
 	public double orbitalPhi;
-	
+	public double rotationalPhi;
 	
 	//Planet Heirachy
 	private HashSet<Integer> childPlanets;
@@ -210,6 +210,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	//Satallites
 	private HashMap<Long,SatelliteBase> satallites;
 	private HashMap<Long,SatelliteBase> tickingSatallites;
+
 
 
 	public DimensionProperties(int id) {
@@ -972,6 +973,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		isGasGiant = nbt.getBoolean("isGasGiant");
 		isTerraformed = nbt.getBoolean("terraformed");
 		orbitalPhi = nbt.getDouble("orbitPhi");
+		rotationalPhi = nbt.getDouble("rotationalPhi");
 		
 		//Hierarchy
 		if(nbt.hasKey("childrenPlanets")) {
@@ -1069,6 +1071,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setBoolean("terraformed", isTerraformed);
 		nbt.setBoolean("isGasGiant", isGasGiant);
 		nbt.setDouble("orbitPhi", orbitalPhi);
+		nbt.setDouble("rotationalPhi", rotationalPhi);
 
 		//Hierarchy
 		if(!childPlanets.isEmpty()) {
