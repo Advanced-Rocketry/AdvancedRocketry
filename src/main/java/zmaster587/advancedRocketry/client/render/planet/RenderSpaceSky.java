@@ -26,7 +26,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 	Minecraft mc = Minecraft.getMinecraft();
 
 	@Override
-	protected void renderPlanet(VertexBuffer buffer, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, boolean hasAtmosphere, boolean isGasgiant) {
+	protected void renderPlanet(VertexBuffer buffer, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, boolean hasAtmosphere, float[] atmColor, boolean isGasgiant) {
 
 		
 		ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.thePlayer.getPosition());
@@ -133,7 +133,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			mc.renderEngine.bindTexture(DimensionProperties.getAtmosphereLEOResource());
-			GlStateManager.color(1f, 1f, 1f, .8f);
+			GlStateManager.color(1,1,1, 0.5f);
 
 			Xoffset = (float)((System.currentTimeMillis()/100000d % 1));
 			
@@ -155,8 +155,8 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			GlStateManager.color(1,1,1, 0.08f);
-
+			
+			GlStateManager.color(atmColor[0], atmColor[1], atmColor[2], 0.08f);
 			//f10 *= 100;
 			double dist = -5D - 4*(planetOrbitalDistance)/200D;
 			double scalingMult = 1D - 0.9*(planetOrbitalDistance)/200D;
@@ -171,7 +171,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 		}
 
 
-
+		GlStateManager.color(1f,1f,1f,1f);
 		GL11.glEnable(GL11.GL_FOG);
 		//GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();

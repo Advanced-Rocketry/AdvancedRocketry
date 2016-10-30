@@ -187,7 +187,7 @@ public class DimensionManager implements IGalaxy {
 			DimensionManager.getInstance().getDimensionProperties(i).updateOrbit();
 		}
 	}
-	
+
 	/**
 	 * Sets the properies supplied for the supplied dimensionID, if the dimension does not exist, it is added to the list but not registered with minecraft
 	 * @param dimId id to set the properties of
@@ -208,7 +208,7 @@ public class DimensionManager implements IGalaxy {
 		}
 		return 0;
 	}
-	
+
 	public int getNextFreeStarId() {
 		for(int i = 0; i < Integer.MAX_VALUE; i++) {
 			if(!starList.containsKey(i))
@@ -253,31 +253,46 @@ public class DimensionManager implements IGalaxy {
 			properties.setName(name);
 		}
 		properties.setAtmosphereDensityDirect(MathHelper.clamp_int(baseAtmosphere + random.nextInt(atmosphereFactor) - atmosphereFactor/2, 0, 200)); 
-		properties.orbitalDist = MathHelper.clamp_int(baseDistance + random.nextInt(distanceFactor),0,200);
-		//System.out.println(properties.orbitalDist);
+		int newDist = properties.orbitalDist = MathHelper.clamp_int(baseDistance + random.nextInt(distanceFactor),0,200);
+
 		properties.gravitationalMultiplier = Math.min(Math.max(0.05f,(baseGravity + random.nextInt(gravityFactor) - gravityFactor/2)/100f), 1.3f);
 
 		double minDistance;
+		int walkDist = 0;
 
 		do {
 			minDistance = Double.MAX_VALUE;
 
-			properties.orbitTheta  = random.nextInt(360)*(2f*Math.PI)/360f;
-
 			for(IDimensionProperties properties2 : sol.getPlanets()) {
-				double dist = Math.abs(((DimensionProperties)properties2).orbitTheta - properties.orbitTheta);
-				if(dist < minDistance)
+				int dist = Math.abs(((DimensionProperties)properties2).orbitalDist - newDist);
+				if(minDistance > dist)
 					minDistance = dist;
 			}
 
-		} while(minDistance < (Math.PI/40f));
+			newDist = properties.orbitalDist + walkDist;
+			if(walkDist > -1)
+				walkDist = -walkDist - 1;
+			else
+				walkDist = -walkDist;
 
+		} while(minDistance < 4);
+
+		properties.orbitalDist = newDist;
+
+		properties.orbitalPhi = (random.nextGaussian() -0.5d)*180;
+		
 		//Get Star Color
 		properties.setStar(getStar(starId));
 
 		//Linear is easier. Earth is nominal!
 		properties.averageTemperature = (properties.getStar().getTemperature() + (100 - properties.orbitalDist)*15 + properties.getAtmosphereDensity()*18)/20;
-
+		
+		properties.skyColor[0] *= 1 - MathHelper.clamp_float(random.nextFloat()*0.1f + (70 - properties.averageTemperature)/100f,0.2f,1);
+		properties.skyColor[1] *= 1 - (random.nextFloat()*.5f);
+		properties.skyColor[2] *= 1 - MathHelper.clamp_float(random.nextFloat()*0.1f + (properties.averageTemperature - 70)/100f,0,1);
+		
+		properties.rotationalPeriod = (int) (Math.pow((1/properties.gravitationalMultiplier),3) * 24000);
+		
 		properties.addBiomes(properties.getViableBiomes());
 
 		registerDim(properties, true);
@@ -455,9 +470,9 @@ public class DimensionManager implements IGalaxy {
 	public Set<Integer> getStarIds() {
 		return starList.keySet();
 	}
-	
+
 	public Collection<StellarBody> getStars() {
-		
+
 		return starList.values();
 	}
 
@@ -642,7 +657,7 @@ public class DimensionManager implements IGalaxy {
 			NBTTagCompound nbtTag = nbt.getCompoundTag("spaceObjects");
 			SpaceObjectManager.getSpaceManager().readFromNBT(nbtTag);
 		}
-		
+
 		prevBuild = nbt.getString("prevVersion");
 		nbt.setString("prevVersion", AdvancedRocketry.version);
 
@@ -668,7 +683,7 @@ public class DimensionManager implements IGalaxy {
 
 	public static DimensionProperties getEffectiveDimId(World world, BlockPos pos) {
 		int dimId = world.provider.getDimension();
-		
+
 		if(dimId == Configuration.spaceDimId) {
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(obj != null)
