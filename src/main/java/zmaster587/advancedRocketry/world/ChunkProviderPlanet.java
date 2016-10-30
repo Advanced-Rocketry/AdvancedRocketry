@@ -281,6 +281,9 @@ public class ChunkProviderPlanet implements IChunkProvider {
 
 		//ChunkExtendedBiome
 		Chunk chunk = new Chunk(this.worldObj, ablock, abyte, p_73154_1_, p_73154_2_);
+		if(this.geodeGenerator != null)
+			geodeGenerator.setMetaPos(chunk, p_73154_1_, p_73154_2_);
+		
 		//TODO: convert back to int
 		byte[] abyte1 = chunk.getBiomeArray();
 
