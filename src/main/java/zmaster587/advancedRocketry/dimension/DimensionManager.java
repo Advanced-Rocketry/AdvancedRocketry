@@ -83,6 +83,7 @@ public class DimensionManager implements IGalaxy {
 		sol = new StellarBody();
 		sol.setTemperature(100);
 		sol.setId(0);
+		sol.setName("Sol");
 		addStar(sol);
 
 		overworldProperties = new DimensionProperties(0);
@@ -263,7 +264,7 @@ public class DimensionManager implements IGalaxy {
 		do {
 			minDistance = Double.MAX_VALUE;
 
-			for(IDimensionProperties properties2 : sol.getPlanets()) {
+			for(IDimensionProperties properties2 : getStar(starId).getPlanets()) {
 				int dist = Math.abs(((DimensionProperties)properties2).orbitalDist - newDist);
 				if(minDistance > dist)
 					minDistance = dist;
@@ -280,6 +281,7 @@ public class DimensionManager implements IGalaxy {
 		properties.orbitalDist = newDist;
 
 		properties.orbitalPhi = (random.nextGaussian() -0.5d)*180;
+		properties.rotationalPhi = (random.nextGaussian() -0.5d)*180;
 		
 		//Get Star Color
 		properties.setStar(getStar(starId));
@@ -324,7 +326,7 @@ public class DimensionManager implements IGalaxy {
 
 			properties.orbitTheta  = random.nextInt(360)*(2f*Math.PI)/360f;
 
-			for(IDimensionProperties properties2 : sol.getPlanets()) {
+			for(IDimensionProperties properties2 : getStar(starId).getPlanets()) {
 				double dist = Math.abs(((DimensionProperties)properties2).orbitTheta - properties.orbitTheta);
 				if(dist < minDistance)
 					minDistance = dist;
@@ -399,6 +401,7 @@ public class DimensionManager implements IGalaxy {
 		}
 		dimensionList.clear();
 		starList.clear();
+		starList.put(0, sol);
 	}
 
 	/**

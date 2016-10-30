@@ -189,6 +189,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public double orbitTheta;
 	public double prevOrbitalTheta;
 	public double orbitalPhi;
+	public double rotationalPhi;
 	
 	StellarBody star;
 	private String name;
@@ -975,6 +976,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		orbitalDist = nbt.getInteger("orbitalDist");
 		orbitTheta = nbt.getDouble("orbitTheta");
 		orbitalPhi = nbt.getDouble("orbitPhi");
+		rotationalPhi = nbt.getDouble("rotationalPhi");
 		atmosphereDensity = nbt.getInteger("atmosphereDensity");
 		averageTemperature = nbt.getInteger("avgTemperature");
 		rotationalPeriod = nbt.getInteger("rotationalPeriod");
@@ -1073,6 +1075,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setInteger("orbitalDist", orbitalDist);
 		nbt.setDouble("orbitTheta", orbitTheta);
 		nbt.setDouble("orbitPhi", orbitalPhi);
+		nbt.setDouble("rotationalPhi", rotationalPhi);
 		nbt.setInteger("atmosphereDensity", atmosphereDensity);
 		nbt.setInteger("avgTemperature", averageTemperature);
 		nbt.setInteger("rotationalPeriod", rotationalPeriod);

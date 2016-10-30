@@ -188,7 +188,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 		float difference = solarDistance/(200-planetaryDistance + 0.00001f);
 		
 		
-		float phiMuliplier = (float) (Math.max(MathHelper.cos((float)(properties.orbitalPhi * 180/Math.PI))-0.95f, 0)*20);
+		float phiMuliplier = (float) (Math.max(Math.abs(MathHelper.cos((float)(properties.orbitalPhi * Math.PI/180)))-0.95f, 0)*20);
 
 		int offset = (int)((200-planetaryDistance)/2f);
 
