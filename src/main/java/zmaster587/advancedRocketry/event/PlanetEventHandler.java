@@ -82,13 +82,13 @@ public class PlanetEventHandler {
 	public static void addDelayedTransition(long tick, TransitionEntity entity) {
 		transitionMap.put(tick, entity);
 	}
-	
+
 	@SubscribeEvent
 	public void onCrafting(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent event) {
 		if(event.crafting != null) {
 			Item item = event.crafting.getItem();
 			if(item == LibVulpesItems.itemHoloProjector) 
-			event.player.addStat(ARAchivements.holographic);
+				event.player.addStat(ARAchivements.holographic);
 			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockRollingMachine))
 				event.player.addStat(ARAchivements.rollin);
 			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockCrystallizer))
@@ -103,19 +103,19 @@ public class PlanetEventHandler {
 				event.player.addStat(ARAchivements.feelTheHeat);
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onPickup(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent event) {
 		if(event.pickedUp != null) {
 			Item item = event.pickedUp.getEntityItem().getItem();
-			
-			
+
+
 			zmaster587.libVulpes.api.material.Material mat = LibVulpes.materialRegistry.getMaterialFromItemStack( event.pickedUp.getEntityItem());
 			if(mat != null && mat.getUnlocalizedName().contains("Dilithium"))
 				event.player.addStat(ARAchivements.dilithiumCrystals);
 		}
 	}
-	
+
 	//Handle gravity
 	@SubscribeEvent
 	public void playerTick(LivingUpdateEvent event) {
@@ -134,7 +134,7 @@ public class PlanetEventHandler {
 				//event.getEntity().motionY += 0.075f - DimensionManager.overworldProperties.gravitationalMultiplier*0.075f;
 			}
 		}
-		
+
 		if(!event.getEntity().worldObj.isRemote && event.getEntity().worldObj.getTotalWorldTime() % 20 ==0 && event.getEntity() instanceof EntityPlayer) {
 			if(DimensionManager.getInstance().getDimensionProperties(event.getEntity().worldObj.provider.getDimension()).getName().equals("Luna") && 
 					event.getEntity().getPosition().distanceSq(67, 80, 2347) < 512 ) {
@@ -142,7 +142,7 @@ public class PlanetEventHandler {
 			}	
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void sleepEvent(PlayerSleepInBedEvent event) {
 
@@ -168,7 +168,7 @@ public class PlanetEventHandler {
 					event.setCanceled(true);
 			}
 		}
-		
+
 		if(!event.getWorld().isRemote && event.getItemStack() != null && event.getItemStack().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
 			event.getEntityPlayer().addStat(ARAchivements.beerOnTheSun);
 		}
@@ -231,10 +231,10 @@ public class PlanetEventHandler {
 		if(event.phase == event.phase.END) {
 			DimensionManager.getInstance().tickDimensions();
 			time++;
-			
+
 			if(!transitionMap.isEmpty()) {
 				Iterator<Entry<Long, TransitionEntity>> itr = transitionMap.entrySet().iterator();
-				
+
 				while(itr.hasNext()) {
 					Entry<Long, TransitionEntity> entry = itr.next();
 					TransitionEntity ent = entry.getValue();
@@ -242,7 +242,7 @@ public class PlanetEventHandler {
 						ent.entity.setLocationAndAngles(ent.location.getX(), ent.location.getY(), ent.location.getZ(), ent.entity.rotationYaw, ent.entity.rotationPitch);
 						ent.entity.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP)ent.entity, ent.dimId, new TeleporterNoPortal(ent.entity.getServer().worldServerForDimension(ent.dimId)));
 						ent.entity.startRiding(ent.entity2);
-						
+
 						itr.remove();
 					}
 				}
@@ -458,8 +458,13 @@ public class PlanetEventHandler {
 				}
 			}
 
+			//Check environment
+			if(AtmosphereHandler.currentPressure != -1) {
+				atmosphere = AtmosphereHandler.currentPressure;
+			}
+
 			if(atmosphere > 100) {
-				near = 0.75f*f1*(2.00f - properties.getAtmosphereDensity()*atmosphere/10000f);
+				near = 0.75f*f1*(2.00f - atmosphere*atmosphere/10000f);
 				far = f1;
 			}
 			else {

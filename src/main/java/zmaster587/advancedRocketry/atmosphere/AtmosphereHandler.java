@@ -45,6 +45,7 @@ public class AtmosphereHandler {
 
 	//Stores current Atm on the CLIENT
 	public static IAtmosphere currentAtm;
+	public static int currentPressure;
 	
 	/**
 	 * Registers the Atmosphere handler for the dimension given
@@ -86,7 +87,7 @@ public class AtmosphereHandler {
 			IAtmosphere atmosType = getAtmosphereType(entity);
 
 			if(entity instanceof EntityPlayer && atmosType != prevAtmosphere.get(entity)) {
-				PacketHandler.sendToPlayer(new PacketAtmSync(atmosType.getUnlocalizedName()), (EntityPlayer)entity);
+				PacketHandler.sendToPlayer(new PacketAtmSync(atmosType.getUnlocalizedName(), getAtmospherePressure(entity)), (EntityPlayer)entity);
 				prevAtmosphere.put((EntityPlayer)entity, atmosType);
 			}
 			
@@ -222,7 +223,7 @@ public class AtmosphereHandler {
 		if(blob == null) {
 			blob = new AtmosphereBlob(handler);
 			blobs.put(handler, blob);
-			blob.setData(AtmosphereType.AIR);
+			blob.setData(AtmosphereType.PRESSURIZEDAIR);
 		}
 	}
 
@@ -308,6 +309,23 @@ public class AtmosphereHandler {
 		return AtmosphereType.AIR;
 	}
 
+	/**
+	 * Gets the pressure at the location of this entity
+	 * @param entity the entity to check against
+	 * @return The atmosphere pressure this entity is inside of, or -1 to use default
+	 */
+	public int getAtmospherePressure(Entity entity) {
+		if(Configuration.enableOxygen) {
+			HashedBlockPosition pos = new HashedBlockPosition((int)(entity.posX - 1), (int)Math.ceil(entity.posY), (int)(entity.posZ - 1));
+			for(AreaBlob blob : blobs.values()) {
+				if(blob.contains(pos)) {
+					return ((AtmosphereBlob)blob).getPressure();
+				}
+			}
+		}
+		return -1;
+	}
+	
 	/**
 	 * @param entity entity to check against
 	 * @return true if the entity can breathe in the this atmosphere

@@ -34,6 +34,11 @@ public class AtmosphereVacuum extends AtmosphereType {
 			}
 		}
 	}
+	
+	@Override
+	public String getDisplayMessage() {
+		return "Warning: No Oxygen detected!";
+	}
 
 	@Override
 	public boolean isImmune(EntityLivingBase player) {

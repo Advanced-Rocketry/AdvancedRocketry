@@ -389,7 +389,12 @@ public class RocketEventHandler extends Gui {
 			//Tell the player he's suffocating if needed
 			if(Minecraft.getMinecraft().theWorld.getTotalWorldTime() - AtmosphereHandler.lastSuffocationTime < numTicksToDisplay) {
 				FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
-				String str = "Warning: No Oxygen detected!";
+				String str = "";
+				if(AtmosphereHandler.currentAtm != null) {
+					str = AtmosphereHandler.currentAtm.getDisplayMessage();
+				}
+				
+				
 				int screenX = event.getResolution().getScaledWidth()/6 - fontRenderer.getStringWidth(str)/2;
 				int screenY = event.getResolution().getScaledHeight()/18;
 

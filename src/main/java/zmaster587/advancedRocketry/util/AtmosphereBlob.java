@@ -32,6 +32,10 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 		super(blobHandler);
 		executing = false;
 	}
+	
+	public int getPressure() {
+		return 100;
+	}
 
 	@Override
 	public void removeBlock(HashedBlockPosition blockPos) {
