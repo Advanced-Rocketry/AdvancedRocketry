@@ -2,7 +2,9 @@ package zmaster587.advancedRocketry.util;
 
 import net.minecraft.block.BlockTorch;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.AdvancedRocketry;
@@ -149,6 +151,11 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 				IBlockState state  = world.getBlockState(pos.getBlockPos());
 				if(state.getBlock() == Blocks.TORCH) {
 					world.setBlockState(pos.getBlockPos(), AdvancedRocketryBlocks.blockUnlitTorch.getDefaultState().withProperty(BlockTorch.FACING, state.getValue(BlockTorch.FACING)));
+				}
+				else if(Configuration.torchBlocks.contains(state.getBlock())) {
+					EntityItem item = new EntityItem(world, pos.x, pos.y, pos.z, new ItemStack(state.getBlock()));
+					world.setBlockToAir(pos.getBlockPos());
+					world.spawnEntityInWorld(item);
 				}
 			}
 		}

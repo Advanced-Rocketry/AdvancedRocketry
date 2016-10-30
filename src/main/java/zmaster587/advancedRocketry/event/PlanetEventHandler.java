@@ -33,6 +33,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
@@ -164,6 +165,8 @@ public class PlanetEventHandler {
 					event.setCanceled(true);
 					event.getWorld().setBlockState(event.getPos().offset(direction), AdvancedRocketryBlocks.blockUnlitTorch.getDefaultState().withProperty(BlockTorch.FACING, direction));
 				}
+				else if(zmaster587.advancedRocketry.api.Configuration.torchBlocks.contains(Block.getBlockFromItem(event.getEntityPlayer().getHeldItem(event.getHand()).getItem())) )
+					event.setCanceled(true);
 				else if(event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE|| event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_POWDER || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_ROD || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.LAVA_BUCKET)
 					event.setCanceled(true);
 			}

@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.api;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraftforge.common.config.Property;
 
 /**
@@ -92,5 +93,7 @@ public class Configuration {
 	public static String[] standardLaserDrillOres;
 
 	public static boolean laserDrillPlanet;
+
+	public static List<Block> torchBlocks = new LinkedList<Block>();
 
 }

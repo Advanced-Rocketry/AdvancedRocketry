@@ -3,14 +3,6 @@ package zmaster587.advancedRocketry;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialLiquid;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
-import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
@@ -18,22 +10,17 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Item.ToolMaterial;
-import net.minecraft.stats.Achievement;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -67,7 +54,6 @@ import zmaster587.advancedRocketry.block.BlockCharcoalLog;
 import zmaster587.advancedRocketry.block.BlockCrystal;
 import zmaster587.advancedRocketry.block.BlockDoor2;
 import zmaster587.advancedRocketry.block.BlockElectricMushroom;
-import zmaster587.advancedRocketry.block.BlockFluid;
 import zmaster587.advancedRocketry.block.BlockHalfTile;
 import zmaster587.advancedRocketry.block.BlockIntake;
 import zmaster587.advancedRocketry.block.BlockLandingPad;
@@ -187,7 +173,6 @@ import zmaster587.advancedRocketry.world.biome.BiomeGenStormland;
 import zmaster587.advancedRocketry.world.decoration.MapGenLander;
 import zmaster587.advancedRocketry.world.ore.OreGenerator;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
-import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.advancedRocketry.world.type.WorldTypePlanetGen;
 import zmaster587.advancedRocketry.world.type.WorldTypeSpace;
 import zmaster587.libVulpes.LibVulpes;
@@ -199,7 +184,6 @@ import zmaster587.libVulpes.api.material.MixedMaterial;
 import zmaster587.libVulpes.block.BlockAlphaTexture;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.BlockTile;
-import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisible;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.network.PacketHandler;
@@ -215,8 +199,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
-
-import scala.Int;
 
 
 @Mod(modid="advancedRocketry", name="Advanced Rocketry", version="%VERSION%", dependencies="required-after:libVulpes@[%LIBVULPESVERSION%,)")
@@ -237,7 +219,7 @@ public class AdvancedRocketry {
 	public static Logger logger = Logger.getLogger(Constants.modId);
 	private static Configuration config;
 	private static final String BIOMECATETORY = "Biomes";
-	String[] sealableBlockWhileList;
+	String[] sealableBlockWhileList, breakableTorches;
 
 	//static {
 	//	FluidRegistry.enableUniversalBucket(); // Must be called before preInit
@@ -339,12 +321,13 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.rutileClumpSize = config.get(oreGen, "RutilePerClump", 3).getInt();
 		zmaster587.advancedRocketry.api.Configuration.rutilePerChunk = config.get(oreGen, "RutilePerChunk", 6).getInt();
 		sealableBlockWhileList = config.getStringList(Configuration.CATEGORY_GENERAL, "sealableBlockWhiteList", new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
+		breakableTorches = config.getStringList("torchBlocks", Configuration.CATEGORY_GENERAL, new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
 
 		//Satellite config
 		zmaster587.advancedRocketry.api.Configuration.microwaveRecieverMulitplier = 10*(float)config.get(Configuration.CATEGORY_GENERAL, "MicrowaveRecieverMulitplier", 1f, "Multiplier for the amount of energy produced by the microwave reciever").getDouble();
 
 		String str[] = config.getStringList("spaceLaserDimIdBlackList", Configuration.CATEGORY_GENERAL, new String[] {}, "Laser drill will not mine these dimension");
-
+		
 		//Load laser dimid blacklists
 		for(String s : str) {
 
@@ -1319,6 +1302,17 @@ public class AdvancedRocketry {
 				SealableBlockHandler.INSTANCE.addSealableBlock(block);
 		}
 		logger.fine("End registering sealable blocks");
+		sealableBlockWhileList = null;
+		
+		logger.fine("Start registering torch blocks");
+		for(String str : breakableTorches) {
+			Block block = Block.getBlockFromName(str);
+			if(block == null)
+				logger.warning("'" + str + "' is not a valid Block");
+			else
+				zmaster587.advancedRocketry.api.Configuration.torchBlocks.add(block);
+		}
+		logger.fine("End registering torch blocks");
 		sealableBlockWhileList = null;
 
 		//Add mappings for multiblockmachines
