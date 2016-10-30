@@ -528,7 +528,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return true if the planet has an atmosphere
 	 */
 	public boolean hasAtmosphere() {
-		return AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity).compareTo(AtmosphereTypes.LOW) < 0;
+		return AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity).compareTo(AtmosphereTypes.NONE) < 0;
 	}
 
 	/**

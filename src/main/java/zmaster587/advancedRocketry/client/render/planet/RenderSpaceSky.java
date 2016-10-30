@@ -34,7 +34,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 	}
 	
 	@Override
-	protected void renderPlanet(Tessellator tessellator1, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, boolean hasAtmosphere, boolean isGasgiant) {
+	protected void renderPlanet(Tessellator tessellator1, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, boolean hasAtmosphere, float atmColor[], boolean isGasgiant) {
 
 		ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
 		
@@ -166,7 +166,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 			tessellator1.startDrawingQuads();
-			tessellator1.setColorRGBA_F(1,1,1, 0.08f);
+			tessellator1.setColorRGBA_F(atmColor[0], atmColor[1], atmColor[2], 0.08f);
 
 			double dist = -5D - 4*(planetOrbitalDistance)/200D;
 			double scalingMult = 1D - 0.9*(planetOrbitalDistance)/200D;
@@ -181,7 +181,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 		}
 
 
-
+		tessellator1.setColorRGBA_F(1f,1f,1f,1f);
 		GL11.glEnable(GL11.GL_FOG);
 		//GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
