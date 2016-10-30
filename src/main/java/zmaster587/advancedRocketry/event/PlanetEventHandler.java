@@ -162,7 +162,7 @@ public class PlanetEventHandler {
 					event.setCanceled(true);
 					event.world.setBlock(event.x + direction.offsetX, event.y + direction.offsetY, event.z + direction.offsetZ, AdvancedRocketryBlocks.blockUnlitTorch);
 				}
-				else if(event.entityPlayer.getCurrentEquippedItem().getItem() == Items.flint_and_steel || event.entityPlayer.getCurrentEquippedItem().getItem() == Items.fire_charge)
+				else if(event.entityPlayer.getCurrentEquippedItem().getItem() == Items.flint_and_steel || event.entityPlayer.getCurrentEquippedItem().getItem() == Items.fire_charge || event.entityPlayer.getCurrentEquippedItem().getItem() == Items.blaze_powder || event.entityPlayer.getCurrentEquippedItem().getItem() == Items.blaze_rod || event.entityPlayer.getCurrentEquippedItem().getItem() == Items.lava_bucket)
 					event.setCanceled(true);
 			}
 		}
