@@ -1,6 +1,9 @@
 package zmaster587.advancedRocketry.util;
 
+import net.minecraft.block.Block;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.AdvancedRocketry;
@@ -140,8 +143,14 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	protected void runEffectOnWorldBlocks(World world, Collection<BlockPosition> blocks) {
 		if(!AtmosphereHandler.getOxygenHandler(world.provider.dimensionId).getDefaultAtmosphereType().allowsCombustion()) {
 			for(BlockPosition pos : new LinkedList<BlockPosition>(blocks)) {
-				if(world.getBlock(pos.x, pos.y, pos.z) == Blocks.torch) {
+				Block block = world.getBlock(pos.x, pos.y, pos.z);
+				if(block== Blocks.torch) {
 					world.setBlock(pos.x, pos.y, pos.z, AdvancedRocketryBlocks.blockUnlitTorch);
+				}
+				else if(Configuration.torchBlocks.contains(block)) {
+					EntityItem item = new EntityItem(world, pos.x, pos.y, pos.z, new ItemStack(block));
+					world.setBlockToAir(pos.x, pos.y, pos.z);
+					world.spawnEntityInWorld(item);
 				}
 			}
 		}

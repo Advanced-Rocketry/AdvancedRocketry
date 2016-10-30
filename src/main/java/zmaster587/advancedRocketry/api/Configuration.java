@@ -3,6 +3,8 @@ package zmaster587.advancedRocketry.api;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.block.Block;
+
 /**
  * Stores config variables
  *
@@ -87,4 +89,6 @@ public class Configuration {
 	public static List<Integer> laserBlackListDims = new LinkedList<Integer>();
 	public static String[] standardLaserDrillOres;
 	public static boolean laserDrillPlanet;
+
+	public static List<Block> torchBlocks = new LinkedList<Block>();
 }

@@ -219,7 +219,7 @@ public class AdvancedRocketry {
 	public static Logger logger = Logger.getLogger(Constants.modId);
 	private static Configuration config;
 	private static final String BIOMECATETORY = "Biomes";
-	String[] sealableBlockWhileList;
+	String[] sealableBlockWhileList, breakableTorches;
 
 	public MaterialRegistry materialRegistry = new MaterialRegistry(); 
 
@@ -317,6 +317,7 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.rutileClumpSize = config.get(oreGen, "RutilePerClump", 3).getInt();
 		zmaster587.advancedRocketry.api.Configuration.rutilePerChunk = config.get(oreGen, "RutilePerChunk", 6).getInt();
 		sealableBlockWhileList = config.getStringList(Configuration.CATEGORY_GENERAL, "sealableBlockWhiteList", new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
+		breakableTorches = config.getStringList("torchBlocks", Configuration.CATEGORY_GENERAL, new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
 
 		//Satellite config
 		zmaster587.advancedRocketry.api.Configuration.microwaveRecieverMulitplier = 10*(float)config.get(Configuration.CATEGORY_GENERAL, "MicrowaveRecieverMulitplier", 1f, "Multiplier for the amount of energy produced by the microwave reciever").getDouble();
@@ -1396,6 +1397,17 @@ public class AdvancedRocketry {
 		}
 		logger.fine("End registering sealable blocks");
 		sealableBlockWhileList = null;
+		
+		logger.fine("Start registering torch blocks");
+		for(String str : breakableTorches) {
+			Block block = Block.getBlockFromName(str);
+			if(block == null)
+				logger.warning("'" + str + "' is not a valid Block");
+			else
+				zmaster587.advancedRocketry.api.Configuration.torchBlocks.add(block);
+		}
+		logger.fine("End registering torch blocks");
+		breakableTorches = null;
 
 	}
 
