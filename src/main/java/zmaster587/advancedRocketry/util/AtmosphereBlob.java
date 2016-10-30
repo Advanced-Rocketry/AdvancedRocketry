@@ -152,4 +152,8 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 		super.clearBlob();
 	}
+
+	public int getPressure() {
+		return 100;
+	}
 }

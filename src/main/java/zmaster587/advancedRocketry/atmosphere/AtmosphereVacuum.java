@@ -36,6 +36,11 @@ public class AtmosphereVacuum extends AtmosphereType {
 	}
 
 	@Override
+	public String getDisplayMessage() {
+		return "Warning: No Oxygen detected!";
+	}
+	
+	@Override
 	public boolean isImmune(EntityLivingBase player) {
 
 		//Checks if player is wearing spacesuit or anything that extends ItemSpaceArmor

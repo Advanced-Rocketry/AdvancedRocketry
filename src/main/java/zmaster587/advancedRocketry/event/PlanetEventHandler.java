@@ -453,9 +453,14 @@ public class PlanetEventHandler {
 					}
 				}
 			}
+			
+			//Check environment
+			if(AtmosphereHandler.currentPressure != -1) {
+				atmosphere = AtmosphereHandler.currentPressure;
+			}
 
 			if(atmosphere > 100) {
-				near = 0.75f*f1*(2.00f - properties.getAtmosphereDensity()*atmosphere/10000f);
+				near = 0.75f*f1*(2.00f - atmosphere*atmosphere/10000f);
 				far = f1;
 			}
 			else {

@@ -57,7 +57,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	public boolean canPerformFunction() {
 		return AtmosphereHandler.hasAtmosphereHandler(this.worldObj.provider.dimensionId);
 	}
-	
+
 	@Override
 	public void updateEntity() {
 
@@ -79,22 +79,22 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public void onAdjacentBlockUpdated() {
-		if(isSealed) {
-
+		if(isSealed) 
 			activateAdjblocks();
-			scrubbers.clear();
-			TileEntity[] tiles = new TileEntity[4];
-			tiles[0] = worldObj.getTileEntity(this.xCoord + 1, this.yCoord, this.zCoord);
-			tiles[1] = worldObj.getTileEntity(this.xCoord - 1, this.yCoord, this.zCoord);
-			tiles[2] = worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord + 1);
-			tiles[3] = worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord - 1);
 
-			for(TileEntity tile : tiles) {
-				if(tile instanceof TileCO2Scrubber && worldObj.getBlock(tile.xCoord, tile.yCoord, tile.zCoord) == AdvancedRocketryBlocks.blockOxygenScrubber)
-					scrubbers.add((TileCO2Scrubber)tile);
-			}
+		scrubbers.clear();
+		TileEntity[] tiles = new TileEntity[4];
+		tiles[0] = worldObj.getTileEntity(this.xCoord + 1, this.yCoord, this.zCoord);
+		tiles[1] = worldObj.getTileEntity(this.xCoord - 1, this.yCoord, this.zCoord);
+		tiles[2] = worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord + 1);
+		tiles[3] = worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord - 1);
 
+		for(TileEntity tile : tiles) {
+			if(tile instanceof TileCO2Scrubber && worldObj.getBlock(tile.xCoord, tile.yCoord, tile.zCoord) == AdvancedRocketryBlocks.blockOxygenScrubber)
+				scrubbers.add((TileCO2Scrubber)tile);
 		}
+
+
 	}
 
 	private void activateAdjblocks() {
@@ -206,7 +206,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 						activateAdjblocks();
 
-						AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).setAtmosphereType(this, AtmosphereType.AIR);
+						AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).setAtmosphereType(this, AtmosphereType.PRESSURIZEDAIR);
 					}
 				}
 				else if(hasFluid){
@@ -226,7 +226,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public void notEnoughEnergyForFunction() {
-		if(isSealed && !worldObj.isRemote) {
+		if(!worldObj.isRemote) {
 			AtmosphereHandler handler = AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId);
 			if(handler != null)
 				handler.clearBlob(this);

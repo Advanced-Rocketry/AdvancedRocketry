@@ -44,7 +44,7 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 
 		String str[] = new String[2];
 
-		str[0] = "Atmosphere Type: " + LibVulpes.proxy.getLocalizedString(atm.getUnlocalizedName());
+		str[0] = "Atmosphere Type: " + LibVulpes.proxy.getLocalizedString(atm.getUnlocalizedName()) + " @ " + (AtmosphereHandler.currentPressure == -1 ? 0 : AtmosphereHandler.currentPressure/100f) + " atm";
 		str[1] = "Breathable: " + (atm.isBreathable() ? "Yes" : "No");
 
 		return str;
@@ -111,8 +111,8 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
 		Tessellator.instance.startDrawingQuads();
 		RenderHelper.renderNorthFaceWithUV(Tessellator.instance, -1, 0,  screenY - 12, 16,  screenY + 26, 0, 0.25f, 0, 1);
-		RenderHelper.renderNorthFaceWithUV(Tessellator.instance, -1, 16,  screenY - 12, 128,  screenY + 26, 0.5f, 0.5f, 0, 1);
-		RenderHelper.renderNorthFaceWithUV(Tessellator.instance, -1, 128,  screenY - 12, 144,  screenY + 26, 0.75f, 1f, 0, 1);
+		RenderHelper.renderNorthFaceWithUV(Tessellator.instance, -1, 16,  screenY - 12, 220,  screenY + 26, 0.5f, 0.5f, 0, 1);
+		RenderHelper.renderNorthFaceWithUV(Tessellator.instance, -1, 220,  screenY - 12, 236,  screenY + 26, 0.75f, 1f, 0, 1);
 		Tessellator.instance.draw();
 	}
 

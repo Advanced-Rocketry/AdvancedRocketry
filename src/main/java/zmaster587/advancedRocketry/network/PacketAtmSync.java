@@ -16,9 +16,11 @@ import net.minecraft.network.PacketBuffer;
 public class PacketAtmSync extends BasePacket {
 
 	String type;
+	int pressure;
 	
-	public PacketAtmSync(String type) {
+	public PacketAtmSync(String type, int pressure) {
 		this.type = type;
+		this.pressure = pressure;
 	}
 	
 	public PacketAtmSync() {
@@ -29,6 +31,7 @@ public class PacketAtmSync extends BasePacket {
 		NBTTagCompound nbt = new NBTTagCompound();
 		
 		nbt.setString("type", type);
+		nbt.setShort("pressure", (short)pressure);
 		PacketBuffer packetBuffer = new PacketBuffer(out);
 		
 		try {
@@ -46,6 +49,7 @@ public class PacketAtmSync extends BasePacket {
 		try {
 			nbt = packetBuffer.readNBTTagCompoundFromBuffer();
 			type = nbt.getString("type");
+			pressure = nbt.getShort("pressure");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -59,6 +63,7 @@ public class PacketAtmSync extends BasePacket {
 	@Override
 	public void executeClient(EntityPlayer thePlayer) {
 		AtmosphereHandler.currentAtm = AtmosphereRegister.getInstance().getAtmosphere(type);
+		AtmosphereHandler.currentPressure = pressure;
 	}
 
 	@Override

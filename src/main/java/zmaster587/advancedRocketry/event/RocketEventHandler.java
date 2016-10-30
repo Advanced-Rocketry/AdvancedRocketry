@@ -21,6 +21,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+
 import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.api.Configuration;
@@ -367,7 +368,12 @@ public class RocketEventHandler extends Gui {
 			//Tell the player he's suffocating if needed
 			if(Minecraft.getMinecraft().theWorld.getTotalWorldTime() - AtmosphereHandler.lastSuffocationTime < numTicksToDisplay) {
 				FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
-				String str = "Warning: No Oxygen detected!";
+				String str = "";
+				if(AtmosphereHandler.currentAtm != null) {
+					str = AtmosphereHandler.currentAtm.getDisplayMessage();
+				}
+				
+				
 				int screenX = event.resolution.getScaledWidth()/6 - fontRenderer.getStringWidth(str)/2;
 				int screenY = event.resolution.getScaledHeight()/18;
 

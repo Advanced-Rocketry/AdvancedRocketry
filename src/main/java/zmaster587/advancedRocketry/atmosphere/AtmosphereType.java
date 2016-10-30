@@ -11,10 +11,12 @@ import net.minecraft.entity.EntityLivingBase;
 public class AtmosphereType implements IAtmosphere {
 
 	public static final AtmosphereType AIR = new AtmosphereType(false, true, "air");
+	public static final AtmosphereType PRESSURIZEDAIR = new AtmosphereType(false, true, "PressurizedAir");
 	public static final AtmosphereType VACUUM = new AtmosphereVacuum();
 
 	static {
 		AtmosphereRegister.getInstance().registerAtmosphere(AIR);
+		AtmosphereRegister.getInstance().registerAtmosphere(PRESSURIZEDAIR);
 		AtmosphereRegister.getInstance().registerAtmosphere(VACUUM);
 	}
 	
@@ -80,6 +82,13 @@ public class AtmosphereType implements IAtmosphere {
 	 */
 	public void setAllowsCombustion(boolean allowsCombustion) {
 		this.allowsCombustion = allowsCombustion;
+	}
+	
+	/**
+	 * @return unlocalized message to display when player is in the gas with no protection
+	 */
+	public String getDisplayMessage() {
+		return "";
 	}
 
 	//TODO: tick for all entities
