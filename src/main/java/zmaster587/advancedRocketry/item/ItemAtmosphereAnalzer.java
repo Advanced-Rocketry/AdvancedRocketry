@@ -50,6 +50,7 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 
 		str[0] = "Atmosphere Type: " + LibVulpes.proxy.getLocalizedString(atm.getUnlocalizedName()) + " @ " + (AtmosphereHandler.currentPressure == -1 ? 0 : AtmosphereHandler.currentPressure/100f) + " atm";
 		str[1] = "Breathable: " + (atm.isBreathable() ? "Yes" : "No");
+		
 		return str;
 	}
 

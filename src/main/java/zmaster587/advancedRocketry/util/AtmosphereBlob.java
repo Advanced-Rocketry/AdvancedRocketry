@@ -10,6 +10,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AreaBlob;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
 import java.util.Collection;
@@ -22,9 +23,9 @@ import java.util.concurrent.TimeUnit;
 
 public class AtmosphereBlob extends AreaBlob implements Runnable {
 
-	
+
 	static ThreadPoolExecutor pool = (Configuration.atmosphereHandleBitMask & 1) == 1 ? new ThreadPoolExecutor(2, 16, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(2)) : null;
-	
+
 	boolean executing;
 	HashedBlockPosition blockPos;
 
@@ -32,14 +33,14 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 		super(blobHandler);
 		executing = false;
 	}
-	
+
 	public int getPressure() {
 		return 100;
 	}
 
 	@Override
 	public void removeBlock(HashedBlockPosition blockPos) {
-		
+
 		graph.remove(blockPos);
 		graph.contains(blockPos);
 
@@ -100,7 +101,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 					try {
 
 						sealed = SealableBlockHandler.INSTANCE.isBlockSealed(blobHandler.getWorldObj(), searchNextPosition.getBlockPos());
-						
+
 
 						if(!sealed) {
 							if(((Configuration.atmosphereHandleBitMask & 2) == 0 && searchNextPosition.getDistance(this.getRootPosition()) <= maxSize) ||
@@ -129,12 +130,12 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 		}
 
 		//only one instance can editing this at a time because this will not run again b/c "worker" is not null
-		
-			for(HashedBlockPosition blockPos2 : addableBlocks) {
-				super.addBlock(blockPos2);
-			}
-		
-			executing = false;
+
+		for(HashedBlockPosition blockPos2 : addableBlocks) {
+			super.addBlock(blockPos2);
+		}
+
+		executing = false;
 	}
 
 
@@ -143,10 +144,12 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	 * @param blocks Collection containing affected locations
 	 */
 	protected void runEffectOnWorldBlocks(World world, Collection<HashedBlockPosition> blocks) {
-		for(HashedBlockPosition pos : new LinkedList<HashedBlockPosition>(blocks)) {
-			IBlockState state  = world.getBlockState(pos.getBlockPos());
-			if(state.getBlock() == Blocks.TORCH) {
-				world.setBlockState(pos.getBlockPos(), AdvancedRocketryBlocks.blockUnlitTorch.getDefaultState().withProperty(BlockTorch.FACING, state.getValue(BlockTorch.FACING)));
+		if(!AtmosphereHandler.getOxygenHandler(world.provider.getDimension()).getDefaultAtmosphereType().allowsCombustion()) {
+			for(HashedBlockPosition pos : new LinkedList<HashedBlockPosition>(blocks)) {
+				IBlockState state  = world.getBlockState(pos.getBlockPos());
+				if(state.getBlock() == Blocks.TORCH) {
+					world.setBlockState(pos.getBlockPos(), AdvancedRocketryBlocks.blockUnlitTorch.getDefaultState().withProperty(BlockTorch.FACING, state.getValue(BlockTorch.FACING)));
+				}
 			}
 		}
 	}

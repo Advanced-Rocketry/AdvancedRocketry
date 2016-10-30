@@ -57,8 +57,6 @@ public class AtmosphereHandler {
 		if(Configuration.enableOxygen && (Configuration.overrideGCAir || dimId != Configuration.MoonId || DimensionManager.getInstance().getDimensionProperties(dimId).isNativeDimension)) {
 			dimensionOxygen.put(dimId, new AtmosphereHandler(dimId));
 			MinecraftForge.EVENT_BUS.register(dimensionOxygen.get(dimId));
-			FMLCommonHandler.instance().bus().register(dimensionOxygen.get(dimId));
-
 		}
 	}
 
@@ -284,12 +282,19 @@ public class AtmosphereHandler {
 			}
 
 
-			return DimensionManager.getInstance().getDimensionProperties(dimId).getAtmosphere();
+			return getDefaultAtmosphereType();
 		}
 
 		return AtmosphereType.AIR;
 	}
 
+	/**
+	 * @return the default atmosphere type used by this planet
+	 */
+	public IAtmosphere getDefaultAtmosphereType() {
+		return DimensionManager.getInstance().getDimensionProperties(dimId).getAtmosphere();
+	}
+	
 	/**
 	 * Gets the atmosphere type at the location of this entity
 	 * @param entity the entity to check against
