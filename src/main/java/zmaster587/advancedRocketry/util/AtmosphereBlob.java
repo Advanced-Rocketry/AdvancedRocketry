@@ -8,6 +8,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AreaBlob;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.libVulpes.util.BlockPosition;
 
 import java.util.Collection;
@@ -20,9 +21,9 @@ import java.util.concurrent.TimeUnit;
 
 public class AtmosphereBlob extends AreaBlob implements Runnable {
 
-	
+
 	static ThreadPoolExecutor pool = (Configuration.atmosphereHandleBitMask & 1) == 1 ? new ThreadPoolExecutor(2, 16, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(2)) : null;
-	
+
 	boolean executing;
 	BlockPosition blockPos;
 
@@ -94,7 +95,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 					try {
 
 						sealed = SealableBlockHandler.INSTANCE.isBlockSealed(blobHandler.getWorld(), searchNextPosition);
-						
+
 
 						if(!sealed) {
 							if(((Configuration.atmosphereHandleBitMask & 2) == 0 && searchNextPosition.getDistance(this.getRootPosition()) <= maxSize) ||
@@ -123,12 +124,12 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 		}
 
 		//only one instance can editing this at a time because this will not run again b/c "worker" is not null
-		
-			for(BlockPosition blockPos2 : addableBlocks) {
-				super.addBlock(blockPos2);
-			}
-		
-			executing = false;
+
+		for(BlockPosition blockPos2 : addableBlocks) {
+			super.addBlock(blockPos2);
+		}
+
+		executing = false;
 	}
 
 
@@ -137,9 +138,11 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	 * @param blocks Collection containing affected locations
 	 */
 	protected void runEffectOnWorldBlocks(World world, Collection<BlockPosition> blocks) {
-		for(BlockPosition pos : new LinkedList<BlockPosition>(blocks)) {
-			if(world.getBlock(pos.x, pos.y, pos.z) == Blocks.torch) {
-				world.setBlock(pos.x, pos.y, pos.z, AdvancedRocketryBlocks.blockUnlitTorch);
+		if(!AtmosphereHandler.getOxygenHandler(world.provider.dimensionId).getDefaultAtmosphereType().allowsCombustion()) {
+			for(BlockPosition pos : new LinkedList<BlockPosition>(blocks)) {
+				if(world.getBlock(pos.x, pos.y, pos.z) == Blocks.torch) {
+					world.setBlock(pos.x, pos.y, pos.z, AdvancedRocketryBlocks.blockUnlitTorch);
+				}
 			}
 		}
 	}

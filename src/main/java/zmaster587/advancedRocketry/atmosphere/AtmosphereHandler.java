@@ -302,6 +302,13 @@ public class AtmosphereHandler {
 
 
 	/**
+	 * @return the default atmosphere type used by this planet
+	 */
+	public IAtmosphere getDefaultAtmosphereType() {
+		return DimensionManager.getInstance().getDimensionProperties(dimId).getAtmosphere();
+	}
+	
+	/**
 	 * Gets the pressure at the location of this entity
 	 * @param entity the entity to check against
 	 * @return The atmosphere pressure this entity is inside of, or -1 to use default
