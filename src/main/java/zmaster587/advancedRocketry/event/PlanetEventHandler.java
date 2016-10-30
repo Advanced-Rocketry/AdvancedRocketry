@@ -164,7 +164,7 @@ public class PlanetEventHandler {
 					event.setCanceled(true);
 					event.getWorld().setBlockState(event.getPos().offset(direction), AdvancedRocketryBlocks.blockUnlitTorch.getDefaultState().withProperty(BlockTorch.FACING, direction));
 				}
-				else if(event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE|| event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_POWDER || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_ROD || event.getEntityPlayer()..getHeldItem(event.getHand()).getItem() == Items.LAVA_BUCKET)
+				else if(event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE|| event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_POWDER || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_ROD || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.LAVA_BUCKET)
 					event.setCanceled(true);
 			}
 		}
