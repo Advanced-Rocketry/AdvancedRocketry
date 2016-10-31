@@ -28,6 +28,7 @@ tile.loader.5.name=Rocket Fluid Loader
 tile.observatory.name=Observatory
 tile.satelliteBuilder.name=Satellite Builder
 tile.rocket.name=Liquid Fueled Engine
+tile.advRocket.name=Advanced Liquid Fueled Engine
 tile.fuelTank.name=Liquid Fuel Tank
 tile.monitoringstation.name=Rocket Monitoring Station
 tile.satelliteMonitor.name=Satellite Terminal
@@ -159,6 +160,7 @@ item.pressureTank.3.name=Super High Pressure Tank
 
 material.Dilithium.name=Dilithium
 material.TitaniumAluminide.name=Titanium Aluminide
+material.TitaniumIridium.name=Titanium Iridium Alloy
 
 container.crystallizer=Crystallizer
 container.cuttingmachine=Cutting Machine

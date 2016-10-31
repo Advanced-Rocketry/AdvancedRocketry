@@ -88,4 +88,5 @@ public class AdvancedRocketryBlocks {
 	public static Block blockAltitudeController;
 	public static Block blockRailgun;
 	public static Block blockAstroBed;
+	public static Block blockAdvEngine;
 }

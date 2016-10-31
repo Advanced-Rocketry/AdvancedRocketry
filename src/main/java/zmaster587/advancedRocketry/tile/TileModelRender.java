@@ -25,7 +25,8 @@ public class TileModelRender extends TileEntity {
 		TANKEND,
 		TANKTOP,
 		SAWBLADE,
-		MOTOR;
+		MOTOR, 
+		ADVROCKET;
 	}
 	
 	int type;

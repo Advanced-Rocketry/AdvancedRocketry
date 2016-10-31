@@ -23,6 +23,10 @@ public class BlockRocketMotor extends BlockRotatableModel implements IRocketEngi
 		super(mat,TileModelRender.models.ROCKET.ordinal());	
 	}
 	
+	protected BlockRocketMotor(Material mat, int i) {
+		super(mat,i);	
+	}
+	
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
 	}
