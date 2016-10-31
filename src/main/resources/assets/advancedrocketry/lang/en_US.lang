@@ -95,6 +95,7 @@ tile.stationMarker.name=Station Docking Port
 tile.qcrucible.name=Quartz Crucible
 tile.altitudeController.name=Altitude Controller
 tile.railgun.name=Railgun
+tile.advRocket.name=Advanced Rocket Engine
 
 tile.Dilithium.name=Dilithium Ore
 
@@ -159,6 +160,7 @@ item.pressureTank.3.name=Super High Pressure Tank
 
 material.Dilithium.name=Dilithium
 material.TitaniumAluminide.name=Titanium Aluminide
+material.TitaniumIridium.name=Titanium Iridium Alloy
 
 container.crystallizer=Crystallizer
 container.cuttingmachine=Cutting Machine
