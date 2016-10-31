@@ -27,6 +27,8 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.entity.EntityItemAbducted;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
 import zmaster587.libVulpes.inventory.modules.IGuiCallback;
@@ -52,26 +54,61 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	RedstoneState state;
 	ModuleRedstoneOutputButton redstoneControl;
 
-	public static final Object[][][] structure = { 
+	public static final Object[][][] structure = {
+		{	{null, null, null, null, null}, 
+			{null, null, "coilCopper" , null, null},
+			{null, "coilCopper", null , "coilCopper", null},
+			{null, null, "coilCopper" , null, null},
+			{null, null, null, null, null}},
 
-		{{null, null, null},
-			{null, "coilCopper", null},
-			{null, null, null}},
+			{	{null, null, null, null, null}, 
+				{null, null, "coilCopper" , null, null},
+				{null, "coilCopper", null , "coilCopper", null},
+				{null, null, "coilCopper" , null, null},
+				{null, null, null, null, null}},
 
-			{{null, null, null},
-				{null, "coilCopper", null},
-				{null, null, null}},
-				{{null, null, null},
-					{null, "coilCopper", null},
-					{null, null, null}},
+				{	{null, null, null, null, null}, 
+					{null, null, "coilCopper" , null, null},
+					{null, "coilCopper", null , "coilCopper", null},
+					{null, null, "coilCopper" , null, null},
+					{null, null, null, null, null}},
 
-					{{null, null, null},
-						{null, "coilCopper", null},
-						{null, null, null}},
+					{	{null, null, null, null, null}, 
+						{null, null, "coilCopper" , null, null},
+						{null, "coilCopper", null , "coilCopper", null},
+						{null, null, "coilCopper" , null, null},
+						{null, null, null, null, null}},
 
-						{{"blockTitanium", 'c', "blockTitanium"}, 
-							{'O', "blockTitanium", 'I'},
-							{"blockTitanium", 'P', "blockTitanium"}},
+						{	{null, null, null, null, null}, 
+							{null, null, "coilCopper" , null, null},
+							{null, "coilCopper", null , "coilCopper", null},
+							{null, null, "coilCopper" , null, null},
+							{null, null, null, null, null}},
+
+
+							{	{null, null, null, null, null}, 
+								{null, null, "coilCopper" , null, null},
+								{null, "coilCopper", null , "coilCopper", null},
+								{null, null, "coilCopper" , null, null},
+								{null, null, null, null, null}},
+
+								{	{null, null, null, null, null}, 
+									{null, null, "coilCopper" , null, null},
+									{null, "coilCopper", null , "coilCopper", null},
+									{null, null, "coilCopper" , null, null},
+									{null, null, null, null, null}},
+
+									{	{'*', '*', '*', '*', '*'}, 
+										{'*', "blockTitanium", "blockTitanium" , "blockTitanium", '*'},
+										{'*', "blockTitanium", "blockTitanium" , "blockTitanium", '*'},
+										{'*', "blockTitanium", "blockTitanium" , "blockTitanium", '*'},
+										{'*', '*', '*', '*', '*'}},
+
+										{{'*', '*', 'c', '*', '*'}, 
+											{'*', "blockTitanium", "blockTitanium" , "blockTitanium", '*'},
+											{'*', "blockTitanium", "blockTitanium" , "blockTitanium", '*'},
+											{'*', "blockTitanium", "blockTitanium" , "blockTitanium", '*'},
+											{'*', '*', '*', '*', '*'}}
 
 	};
 
@@ -81,6 +118,18 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		redstoneControl = new ModuleRedstoneOutputButton(174, 4, -1, "", this);
 		state = RedstoneState.OFF;
 		redstoneControl.setRedstoneState(state);
+	}
+
+	@Override
+	public List<BlockMeta> getAllowableWildCardBlocks() {
+		List<BlockMeta> blocks = super.getAllowableWildCardBlocks();
+
+		blocks.addAll(getAllowableBlocks('P'));
+		blocks.addAll(getAllowableBlocks('I'));
+		blocks.addAll(getAllowableBlocks('O'));
+		blocks.add(new BlockMeta(LibVulpesBlocks.blockAdvStructureBlock));
+
+		return blocks;
 	}
 
 	@Override
@@ -101,7 +150,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 			modules.add(new ModuleText(60, 25, "Min Transfer Size", 0x2b2b2b));
 			modules.add(textBox);
 		}
-		
+
 		modules.add(redstoneControl);
 
 		return modules;
@@ -133,13 +182,13 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	@Override
 	public void onInventoryButtonPressed(int buttonId) {
 		super.onInventoryButtonPressed(buttonId);
-		
+
 		if(buttonId == -1) {
 			state = redstoneControl.getState();
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)5));
 		}
 	}
-	
+
 	@Override
 	protected void onRunningPoweredTick() {
 		//Do nothing, or add charge effect
@@ -155,20 +204,20 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	public boolean isRunning() {
 		return isComplete();
 	}
-	
+
 	private boolean isRedstoneStateSatisfied() {
 		if(state == RedstoneState.OFF)
 			return true;
-		
+
 		boolean powered = worldObj.isBlockIndirectlyGettingPowered(pos) > 0;
-		
+
 		return (state == RedstoneState.ON && powered) || (!powered && state == RedstoneState.INVERTED);
 	}
 
 	private boolean attemptCargoTransfer() {
 		if(worldObj.isRemote)
 			return false;
-		
+
 		ItemStack tfrStack = null;
 		IInventory inv2 = null;
 		int index = 0;
@@ -212,10 +261,10 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 						inv2.setInventorySlotContents(index, null);
 						inv2.markDirty();
 						worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 2);
-						
+
 						EnumFacing dir = RotatableBlock.getFront(worldObj.getBlockState(pos));
 
-						EntityItemAbducted ent = new EntityItemAbducted(this.worldObj, this.pos.getX() - dir.getFrontOffsetX() + 0.5f, this.pos.getY() + 5, this.pos.getZ() - dir.getFrontOffsetZ() + 0.5f, tfrStack);
+						EntityItemAbducted ent = new EntityItemAbducted(this.worldObj, this.pos.getX() - 2*dir.getFrontOffsetX() + 0.5f, this.pos.getY() + 5, this.pos.getZ() - 2*dir.getFrontOffsetZ() + 0.5f, tfrStack);
 						this.worldObj.spawnEntityInWorld(ent);
 						PacketHandler.sendToNearby(new PacketMachine(this, (byte) 3), this.worldObj.provider.getDimension(), this.pos.getX() - dir.getFrontOffsetX(), this.pos.getY() + 5, this.pos.getZ() - dir.getFrontOffsetZ(),  64d);
 						return true;
@@ -251,7 +300,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		return new AxisAlignedBB(this.pos.getX() -3, this.pos.getY(), this.pos.getZ() - 3, this.pos.getX() + 3, this.pos.getY() +5, this.pos.getZ() + 3);
+		return new AxisAlignedBB(this.pos.getX() -5, this.pos.getY(), this.pos.getZ() - 5, this.pos.getX() + 5, this.pos.getY() +10, this.pos.getZ() + 5);
 	}
 
 	@Override
@@ -388,14 +437,14 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)4));
 		}
 	}
-	
+
 	@Override
 	protected void writeNetworkData(NBTTagCompound nbt) {
 		super.writeNetworkData(nbt);
 		nbt.setByte("state", (byte)state.ordinal());
 		nbt.setInteger("minTfrSize", minStackTransferSize);
 	}
-	
+
 	@Override
 	protected void readNetworkData(NBTTagCompound nbt) {
 		super.readNetworkData(nbt);
