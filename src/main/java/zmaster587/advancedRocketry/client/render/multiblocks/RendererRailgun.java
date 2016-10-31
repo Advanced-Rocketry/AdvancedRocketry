@@ -44,14 +44,14 @@ public class RendererRailgun extends TileEntitySpecialRenderer {
 		//Rotate and move the model into position
 		ForgeDirection front = RotatableBlock.getFront(tile.getBlockMetadata());
 		GL11.glRotatef((front.offsetX == 1 ? 180 : 0) + front.offsetZ*90f, 0, 1, 0);
-		GL11.glTranslated(1f, 0, 0f);
+		GL11.glTranslated(2f, 0, 0f);
 		bindTexture(texture);
 		
 		
 		if(tile.getWorldObj().getTotalWorldTime() - multiBlockTile.recoil - 20 <= 0) {
 			model.renderOnly("Base");
 			GL11.glPushMatrix();
-			GL11.glTranslated(0, (-20+(tile.getWorldObj().getTotalWorldTime() - multiBlockTile.recoil))/100f, 0);
+			GL11.glTranslated(0, (-20+(tile.getWorldObj().getTotalWorldTime() - multiBlockTile.recoil))/50f, 0);
 			model.renderOnly("Barrel");
 			GL11.glPopMatrix();
 		}

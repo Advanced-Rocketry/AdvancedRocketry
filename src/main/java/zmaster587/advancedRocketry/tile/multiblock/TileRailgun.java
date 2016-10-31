@@ -24,6 +24,8 @@ import net.minecraftforge.common.ForgeChunkManager.Type;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.entity.EntityItemAbducted;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
 import zmaster587.libVulpes.inventory.modules.IGuiCallback;
@@ -49,26 +51,61 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	RedstoneState state;
 	ModuleRedstoneOutputButton redstoneControl;
 
-	public static final Object[][][] structure = { 
+	public static final Object[][][] structure = {
+		{	{null, null, null, null, null}, 
+			{null, null, "coilCopper" , null, null},
+			{null, "coilCopper", null , "coilCopper", null},
+			{null, null, "coilCopper" , null, null},
+			{null, null, null, null, null}},
 
-		{{null, null, null},
-			{null, "coilCopper", null},
-			{null, null, null}},
+			{	{null, null, null, null, null}, 
+				{null, null, "coilCopper" , null, null},
+				{null, "coilCopper", null , "coilCopper", null},
+				{null, null, "coilCopper" , null, null},
+				{null, null, null, null, null}},
 
-			{{null, null, null},
-				{null, "coilCopper", null},
-				{null, null, null}},
-				{{null, null, null},
-					{null, "coilCopper", null},
-					{null, null, null}},
+				{	{null, null, null, null, null}, 
+					{null, null, "coilCopper" , null, null},
+					{null, "coilCopper", null , "coilCopper", null},
+					{null, null, "coilCopper" , null, null},
+					{null, null, null, null, null}},
 
-					{{null, null, null},
-						{null, "coilCopper", null},
-						{null, null, null}},
+					{	{null, null, null, null, null}, 
+						{null, null, "coilCopper" , null, null},
+						{null, "coilCopper", null , "coilCopper", null},
+						{null, null, "coilCopper" , null, null},
+						{null, null, null, null, null}},
 
-						{{"blockTitanium", 'c', "blockTitanium"}, 
-							{'O', "blockTitanium", 'I'},
-							{"blockTitanium", 'P', "blockTitanium"}},
+						{	{null, null, null, null, null}, 
+							{null, null, "coilCopper" , null, null},
+							{null, "coilCopper", null , "coilCopper", null},
+							{null, null, "coilCopper" , null, null},
+							{null, null, null, null, null}},
+
+
+							{	{null, null, null, null, null}, 
+								{null, null, "coilCopper" , null, null},
+								{null, "coilCopper", null , "coilCopper", null},
+								{null, null, "coilCopper" , null, null},
+								{null, null, null, null, null}},
+
+								{	{null, null, null, null, null}, 
+									{null, null, "coilCopper" , null, null},
+									{null, "coilCopper", null , "coilCopper", null},
+									{null, null, "coilCopper" , null, null},
+									{null, null, null, null, null}},
+
+									{	{'*', '*', '*', '*', '*'}, 
+										{'*', "blockTitanium", "blockTitanium" , "blockTitanium", '*'},
+										{'*', "blockTitanium", "blockTitanium" , "blockTitanium", '*'},
+										{'*', "blockTitanium", "blockTitanium" , "blockTitanium", '*'},
+										{'*', '*', '*', '*', '*'}},
+
+										{{'*', '*', 'c', '*', '*'}, 
+											{'*', "blockTitanium", "blockTitanium" , "blockTitanium", '*'},
+											{'*', "blockTitanium", "blockTitanium" , "blockTitanium", '*'},
+											{'*', "blockTitanium", "blockTitanium" , "blockTitanium", '*'},
+											{'*', '*', '*', '*', '*'}}
 
 	};
 
@@ -76,8 +113,21 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		inv = new EmbeddedInventory(1);
 		powerPerTick = 100000;
 		redstoneControl = new ModuleRedstoneOutputButton(174, 4, -1, "", this);
+		state = RedstoneState.OFF;
 	}
 
+	@Override
+	public List<BlockMeta> getAllowableWildCardBlocks() {
+		List<BlockMeta> blocks = super.getAllowableWildCardBlocks();
+
+		blocks.addAll(getAllowableBlocks('P'));
+		blocks.addAll(getAllowableBlocks('I'));
+		blocks.addAll(getAllowableBlocks('O'));
+		blocks.add(new BlockMeta(LibVulpesBlocks.blockAdvStructureBlock));
+
+		return blocks;
+	}
+	
 	@Override
 	public Object[][][] getStructure() {
 		return structure;
@@ -248,7 +298,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		return AxisAlignedBB.getBoundingBox(xCoord -2,yCoord, zCoord -2, xCoord + 2, yCoord + 5, zCoord + 2);
+		return AxisAlignedBB.getBoundingBox(xCoord -5,yCoord, zCoord -5, xCoord + 5, yCoord + 8, zCoord + 5);
 	}
 
 	@Override
@@ -408,6 +458,8 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	@Override
 	protected void readNetworkData(NBTTagCompound nbt) {
 		super.readNetworkData(nbt);
+		state = RedstoneState.values()[nbt.getInteger("state")];
 		redstoneControl.setRedstoneState(state);
+		
 	}
 }
