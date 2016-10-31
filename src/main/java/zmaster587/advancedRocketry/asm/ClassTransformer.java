@@ -601,47 +601,6 @@ public class ClassTransformer implements IClassTransformer {
 		 * }
 		 * */
 
-		if(false && changedName.equals(getName(CLASS_KEY_BLOCK_BED))) {
-			ClassNode cn = startInjection(bytes);
-			MethodNode onBlockActivated = getMethod(cn, getName(METHOD_KEY_ONBLOCKACTIVATED), "(L"+ getName(CLASS_KEY_WORLD) + ";IIIL" + getName(CLASS_KEY_ENTITY_PLAYER) + ";IFFF)Z");
-
-			if(onBlockActivated != null) {
-				int numVirtual = 4;
-
-				final InsnList nodeAdd = new InsnList();
-				LabelNode label = null;
-				AbstractInsnNode pos = null;
-
-				for(int i = 0; i < onBlockActivated.instructions.size(); i++) {
-					AbstractInsnNode ain = onBlockActivated.instructions.get(i);
-					if(ain.getOpcode() == Opcodes.INVOKEVIRTUAL && ((MethodInsnNode)ain).desc.equals("()Z") && ain.getPrevious().getOpcode() == Opcodes.GETFIELD && ((FieldInsnNode)ain.getPrevious()).desc.equals("L" + getName(CLASS_KEY_WORLDPROVIDER) + ";") ) {
-						pos = ain.getPrevious().getPrevious();
-						
-						//Screw it...
-						if(((LineNumberNode)pos.getPrevious().getPrevious()).line < 65)
-							continue;
-						
-						while((ain=onBlockActivated.instructions.get(i++)).getOpcode() != Opcodes.GETSTATIC);
-						while(!((ain=onBlockActivated.instructions.get(i++)) instanceof LabelNode));
-						label = (LabelNode)ain;
-
-						break;
-					}
-				}
-
-				//Super fricken hacky...
-				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 1));
-				nodeAdd.add(new FieldInsnNode(Opcodes.GETFIELD, getName(CLASS_KEY_WORLD), getName(FIELD_PROVIDER), "L" + getName(CLASS_KEY_WORLDPROVIDER) + ";"));
-				nodeAdd.add(new TypeInsnNode(Opcodes.INSTANCEOF, "zmaster587/advancedRocketry/world/provider/WorldProviderPlanet"));
-				nodeAdd.add(new JumpInsnNode(Opcodes.IFNE, label));
-				onBlockActivated.instructions.insertBefore(pos, nodeAdd);
-			}
-			else
-				AdvancedRocketry.logger.severe("ASM injection into BlockBed.onBlockActivated FAILED!");
-
-			return finishInjection(cn);
-		}
-
 		if(changedName.equals(getName(CLASS_KEY_ENTITY_PLAYER))) {
 			ClassNode cn = startInjection(bytes);
 			MethodNode mountEntityMethod = getMethod(cn, getName(METHOD_KEY_MOUNTENTITY), "(L"+ getName(CLASS_KEY_ENTITY) + ";)V");

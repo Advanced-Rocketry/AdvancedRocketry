@@ -170,7 +170,7 @@ public class PlanetEventHandler {
 			}
 		}
 		
-		if(!event.world.isRemote && event.entityPlayer != null && event.entityPlayer.getCurrentEquippedItem() != null && event.entityPlayer.getCurrentEquippedItem().getItem() == Items.bed && event.world.provider instanceof WorldProviderPlanet) {
+		if(!event.world.isRemote && event.entityPlayer != null && event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && event.entityPlayer.getCurrentEquippedItem() != null && event.entityPlayer.getCurrentEquippedItem().getItem() == Items.bed && event.world.provider instanceof WorldProviderPlanet) {
 			AdvancedRocketryItems.itemAstroBed.onItemUse( event.entityPlayer.getCurrentEquippedItem(),  event.entityPlayer,  event.entityPlayer.worldObj, event.x, event.y, event.z, event.face, 0, 0, 0);
 			event.setCanceled(true);
 		}
