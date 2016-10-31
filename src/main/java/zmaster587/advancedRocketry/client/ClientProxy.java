@@ -24,6 +24,7 @@ import zmaster587.advancedRocketry.client.render.RendererRocketBuilder;
 import zmaster587.advancedRocketry.client.render.RendererModelBlock;
 import zmaster587.advancedRocketry.client.render.RendererRocket;
 import zmaster587.advancedRocketry.client.render.RendererPipe;
+import zmaster587.advancedRocketry.client.render.entity.RendererItem;
 import zmaster587.advancedRocketry.client.render.item.RendererBucket;
 import zmaster587.advancedRocketry.client.render.multiblocks.RenderBiomeScanner;
 import zmaster587.advancedRocketry.client.render.multiblocks.RenderPlanetAnalyser;
@@ -31,6 +32,7 @@ import zmaster587.advancedRocketry.client.render.multiblocks.RenderTerraformerAt
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererChemicalReactor;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererElectrolyser;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererMicrowaveReciever;
+import zmaster587.advancedRocketry.client.render.multiblocks.RendererRailgun;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererRollingMachine;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererCrystallizer;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererCuttingMachine;
@@ -39,6 +41,7 @@ import zmaster587.advancedRocketry.client.render.multiblocks.RendererObservatory
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererPrecisionAssembler;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererWarpCore;
 import zmaster587.advancedRocketry.common.CommonProxy;
+import zmaster587.advancedRocketry.entity.EntityItemAbducted;
 import zmaster587.advancedRocketry.entity.EntityLaserNode;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.entity.FxSkyLaser;
@@ -62,6 +65,7 @@ import zmaster587.advancedRocketry.tile.multiblock.TileAtmosphereTerraformer;
 import zmaster587.advancedRocketry.tile.multiblock.TileBiomeScanner;
 import zmaster587.advancedRocketry.tile.multiblock.TileObservatory;
 import zmaster587.advancedRocketry.tile.multiblock.TilePlanetAnalyser;
+import zmaster587.advancedRocketry.tile.multiblock.TileRailgun;
 import zmaster587.advancedRocketry.tile.multiblock.TileWarpCore;
 import zmaster587.advancedRocketry.tile.multiblock.energy.TileMicrowaveReciever;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileChemicalReactor;
@@ -106,6 +110,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileFluidTank.class, new RenderTank());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileModelRenderRotatable.class, modelBlock);
 		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser.class, new zmaster587.advancedRocketry.client.render.multiblocks.RenderLaser());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileRailgun.class, new RendererRailgun());
 		
 		RendererModelBlock blockRenderer = new RendererModelBlock();
 
@@ -119,6 +124,7 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForgeClient.registerItemRenderer(AdvancedRocketryItems.itemBucketHydrogen, bucket);
 		MinecraftForgeClient.registerItemRenderer(AdvancedRocketryItems.itemBucketOxygen, bucket);
 		
+		RenderingRegistry.registerEntityRenderingHandler(EntityItemAbducted.class, new RendererItem());
 		RenderingRegistry.registerEntityRenderingHandler(EntityRocket.class, new RendererRocket());
 		RenderingRegistry.registerEntityRenderingHandler(EntityLaserNode.class, new RenderLaser(2.0, new float[] {1F, 0.25F, 0.25F, 0.2F}, new float[] {0.9F, 0.2F, 0.3F, 0.5F}));
 	}
