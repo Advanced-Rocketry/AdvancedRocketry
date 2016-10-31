@@ -171,6 +171,11 @@ public class PlanetEventHandler {
 					event.setCanceled(true);
 			}
 		}
+		
+		if(!event.getWorld().isRemote && event.getItemStack() != null && event instanceof PlayerInteractEvent.RightClickBlock && event.getItemStack().getItem() == Items.BED && event.getWorld().provider instanceof WorldProviderPlanet) {
+			AdvancedRocketryItems.itemAstroBed.onItemUse( event.getItemStack(),  event.getEntityPlayer(),  event.getEntityPlayer().worldObj, event.getPos(), event.getHand(), event.getFace(), 0, 0, 0);
+			event.setCanceled(true);
+		}
 
 		if(!event.getWorld().isRemote && event.getItemStack() != null && event.getItemStack().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
 			event.getEntityPlayer().addStat(ARAchivements.beerOnTheSun);

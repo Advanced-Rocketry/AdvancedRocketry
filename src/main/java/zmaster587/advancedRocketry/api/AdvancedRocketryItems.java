@@ -52,4 +52,6 @@ public class AdvancedRocketryItems {
 	public static Item itemBucketHydrogen;
 
 	public static Item itemBucketOxygen;
+
+	public static Item itemAstroBed;
 }

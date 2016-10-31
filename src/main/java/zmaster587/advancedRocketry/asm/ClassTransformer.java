@@ -619,43 +619,6 @@ public class ClassTransformer implements IClassTransformer {
 		 * }
 		 * */
 		
-		if(changedName.equals(getName(CLASS_KEY_BLOCK_BED))) {
-			ClassNode cn = startInjection(bytes);
-			MethodNode onBlockActivated = getMethod(cn, getName(METHOD_KEY_ONBLOCKACTIVATED), "(L"+ getName(CLASS_KEY_WORLD) + ";L" + getName(CLASS_KEY_BLOCKPOS) + ";L" + getName(CLASS_KEY_IBLOCKSTATE) + ";L" + getName(CLASS_KEY_ENTITY_PLAYER) + ";L" + getName(CLASS_KEY_ENUMHAND) + ";L" + getName(CLASS_KEY_ITEMSTACK) + ";L" + getName(CLASS_KEY_ENUMFACING) + ";FFF)Z");
-
-			if(onBlockActivated != null) {
-				int numVirtual = 3;
-				
-				final InsnList nodeAdd = new InsnList();
-				LabelNode label = null;
-				AbstractInsnNode pos = null;
-
-				for(int i = 0; i < onBlockActivated.instructions.size(); i++) {
-					AbstractInsnNode ain = onBlockActivated.instructions.get(i);
-					if(ain.getOpcode() == Opcodes.INVOKEVIRTUAL && --numVirtual == 0) {
-						pos = ain.getPrevious().getPrevious();
-						
-						while((ain=onBlockActivated.instructions.get(i++)).getOpcode() != Opcodes.INVOKEINTERFACE);
-						while(!((ain=onBlockActivated.instructions.get(i--)) instanceof LabelNode));
-						label = (LabelNode)ain;
-						
-						break;
-					}
-				}
-				
-				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 1));
-				nodeAdd.add(new FieldInsnNode(Opcodes.GETFIELD, getName(CLASS_KEY_WORLD), getName(FIELD_PROVIDER), "L" + getName(CLASS_KEY_WORLDPROVIDER) + ";"));
-				nodeAdd.add(new TypeInsnNode(Opcodes.INSTANCEOF, "zmaster587/advancedRocketry/world/provider/WorldProviderPlanet"));
-				nodeAdd.add(new JumpInsnNode(Opcodes.IFNE, label));
-				
-				onBlockActivated.instructions.insertBefore(pos, nodeAdd);
-			}
-			else
-				AdvancedRocketry.logger.severe("ASM injection into BlockBed.onBlockActivated FAILED!");
-
-			return finishInjection(cn);
-		}
-		
 		if(changedName.equals(getName(CLASS_KEY_RENDER_GLOBAL))) {
 			ClassNode cn = startInjection(bytes);
 			MethodNode setupTerrain = getMethod(cn, getName(METHOD_KEY_SETUPTERRAIN), "(L"+ getName(CLASS_KEY_ENTITY) + ";DL" + getName(CLASS_KEY_ICAMERA) + ";IZ)V");

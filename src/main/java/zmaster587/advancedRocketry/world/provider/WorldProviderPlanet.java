@@ -6,6 +6,7 @@ import java.util.Set;
 import org.apache.commons.lang3.ArrayUtils;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
@@ -96,8 +97,8 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	public int getRespawnDimension(EntityPlayerMP player) {
 		if(AtmosphereHandler.hasAtmosphereHandler(getDimension()) && Configuration.canPlayerRespawnInSpace) {
 			BlockPos coords = player.getBedLocation(getDimension());
-
-			if(coords != null && AtmosphereHandler.getOxygenHandler(player.worldObj.provider.getDimension()).getAtmosphereType(coords).isBreathable())
+			
+			if(coords != null && worldObj.getBlockState(coords)== AdvancedRocketryBlocks.blockAstroBed && AtmosphereHandler.getOxygenHandler(player.worldObj.provider.getDimension()).getAtmosphereType(coords).isBreathable())
 				return getDimension();
 		}
 		return 0;
