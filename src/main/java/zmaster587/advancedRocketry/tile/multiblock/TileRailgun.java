@@ -393,12 +393,15 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	protected void writeNetworkData(NBTTagCompound nbt) {
 		super.writeNetworkData(nbt);
 		nbt.setByte("state", (byte)state.ordinal());
+		nbt.setInteger("minTfrSize", minStackTransferSize);
 	}
 	
 	@Override
 	protected void readNetworkData(NBTTagCompound nbt) {
 		super.readNetworkData(nbt);
+		state = RedstoneState.values()[nbt.getByte("redstoneState")];
 		redstoneControl.setRedstoneState(state);
+		minStackTransferSize = nbt.getInteger("minTfrSize");
 	}
 
 	@Override
