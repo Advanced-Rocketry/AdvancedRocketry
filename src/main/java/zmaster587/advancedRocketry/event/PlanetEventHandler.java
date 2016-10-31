@@ -26,6 +26,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -167,6 +168,11 @@ public class PlanetEventHandler {
 				else if(event.entityPlayer.getCurrentEquippedItem().getItem() == Items.flint_and_steel || event.entityPlayer.getCurrentEquippedItem().getItem() == Items.fire_charge || event.entityPlayer.getCurrentEquippedItem().getItem() == Items.blaze_powder || event.entityPlayer.getCurrentEquippedItem().getItem() == Items.blaze_rod || event.entityPlayer.getCurrentEquippedItem().getItem() == Items.lava_bucket)
 					event.setCanceled(true);
 			}
+		}
+		
+		if(!event.world.isRemote && event.entityPlayer != null && event.entityPlayer.getCurrentEquippedItem() != null && event.entityPlayer.getCurrentEquippedItem().getItem() == Items.bed && event.world.provider instanceof WorldProviderPlanet) {
+			AdvancedRocketryItems.itemAstroBed.onItemUse( event.entityPlayer.getCurrentEquippedItem(),  event.entityPlayer,  event.entityPlayer.worldObj, event.x, event.y, event.z, event.face, 0, 0, 0);
+			event.setCanceled(true);
 		}
 		
 		if(!event.world.isRemote && event.entityPlayer != null && event.entityPlayer.getCurrentEquippedItem() != null && event.entityPlayer.getCurrentEquippedItem().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.world.getBlock(event.x, event.y, event.z) == Blocks.tnt) {

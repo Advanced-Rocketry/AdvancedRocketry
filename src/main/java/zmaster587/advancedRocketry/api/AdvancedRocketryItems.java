@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.api;
 
+import zmaster587.advancedRocketry.item.ItemAstroBed;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraftforge.common.util.EnumHelper;
@@ -48,4 +49,6 @@ public class AdvancedRocketryItems {
 	public static Item itemBucketHydrogen;
 
 	public static Item itemBucketOxygen;
+
+	public static Item itemAstroBed;
 }

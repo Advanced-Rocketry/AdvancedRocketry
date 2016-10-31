@@ -93,6 +93,7 @@ tile.circleLight.name=Station Light
 tile.stationMarker.name=Station Docking Port
 tile.solarGenerator.name=Solar Generator
 tile.altitudeController.name=Altitude Controller
+tile.railgun.name=Railgun
 
 tile.Dilithium.name=Dilithium Ore
 
