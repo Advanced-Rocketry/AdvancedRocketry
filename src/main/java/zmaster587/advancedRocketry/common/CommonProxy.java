@@ -10,24 +10,24 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
 public class CommonProxy {
-	
-	
+
+
 	public void registerRenderers() {
-		
+
 	}
 
 	public void registerEventHandlers() {
-		
+
 	}
 
 
 	public void spawnParticle(String particle, World world, double x, double y,
 			double z, double motionX, double motionY, double motionZ) {
-		
+
 	}
 
 	public void registerKeyBindings() {
-		
+
 	}
 
 	public Profiler getProfiler() {
@@ -35,13 +35,13 @@ public class CommonProxy {
 	}
 
 	public void changeClientPlayerWorld(World world) {
-		
+
 	}
 
 	public void fireFogBurst(ISpaceObject station) {
 		PacketHandler.sendToNearby(new PacketStationUpdate(station, PacketStationUpdate.Type.SIGNAL_WHITE_BURST), Configuration.spaceDimId, station.getSpawnLocation().x, 128, station.getSpawnLocation().z, Configuration.stationSize);
 	}
-	
+
 
 
 	public float calculateCelestialAngleSpaceStation() {
@@ -49,6 +49,8 @@ public class CommonProxy {
 	}
 
 	public long getWorldTimeUniversal(int id) {
-		return DimensionManager.getWorld(id).getTotalWorldTime();
+		if(DimensionManager.getWorld(id) != null)
+			return DimensionManager.getWorld(id).getTotalWorldTime();
+		return 0;
 	}
 }

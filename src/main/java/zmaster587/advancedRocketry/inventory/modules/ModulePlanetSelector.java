@@ -98,6 +98,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		if(FMLCommonHandler.instance().getSide().isClient()) {
 			if(star) {
 				topLevel = -1;
+				currentSystem = starIdOffset + planetId;
 				renderStarSystem(DimensionManager.getInstance().getStar(planetId), center, center, 1f, 0.5f);
 			}
 			else {
