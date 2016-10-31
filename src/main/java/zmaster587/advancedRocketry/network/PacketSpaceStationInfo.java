@@ -44,6 +44,7 @@ public class PacketSpaceStationInfo extends BasePacket {
 				packetBuffer.writeNBTTagCompoundToBuffer(nbt);
 				
 				packetBuffer.writeInt(spaceObject.getFuelAmount());
+				packetBuffer.writeBoolean(spaceObject.hasWarpCores);
 				
 				out.writeInt(spaceObject.getForwardDirection().ordinal());
 				
@@ -85,6 +86,8 @@ public class PacketSpaceStationInfo extends BasePacket {
 				return;
 			}
 			
+			boolean hasWarpCores = in.readBoolean();
+			
 			direction = in.readInt();
 			
 			
@@ -103,11 +106,13 @@ public class PacketSpaceStationInfo extends BasePacket {
 				
 				SpaceObjectManager.getSpaceManager().registerSpaceObjectClient(object, object.getOrbitingPlanetId(), stationNumber);
 				((SpaceObject)object).setFuelAmount(fuelAmt);
+				((SpaceObject)object).hasWarpCores = hasWarpCores;
 			}
 			else {
 				iObject.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
 				((SpaceObject)iObject).setForwardDirection(EnumFacing.values()[direction]);
 				((SpaceObject)iObject).setFuelAmount(fuelAmt);
+				((SpaceObject)iObject).hasWarpCores = hasWarpCores;
 			}
 		}
 	}

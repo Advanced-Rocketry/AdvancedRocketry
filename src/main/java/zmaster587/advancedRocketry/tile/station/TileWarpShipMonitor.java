@@ -13,6 +13,7 @@ import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
 import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.tile.multiblock.TileWarpCore;
@@ -185,6 +186,10 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			if(dimCache == null && isOnStation && station.getOrbitingPlanetId() != SpaceObjectManager.WARPDIMID )
 				dimCache = DimensionManager.getInstance().getDimensionProperties(station.getOrbitingPlanetId());
 
+			if(!worldObj.isRemote && isOnStation) {
+				PacketHandler.sendToPlayer(new PacketSpaceStationInfo(getSpaceObject().getId(), getSpaceObject()), player);
+			}
+			
 			if(worldObj.isRemote) {
 				warpFuel.setText(flag ? String.valueOf(warpCost) : "N/A");
 				modules.add(warpFuel);
@@ -228,6 +233,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			container.setOffset(1000, 1000);
 			modules.add(container);
 		}
+		
 		return modules;
 	}
 

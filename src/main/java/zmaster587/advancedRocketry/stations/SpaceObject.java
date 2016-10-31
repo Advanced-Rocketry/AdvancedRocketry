@@ -51,6 +51,7 @@ public class SpaceObject implements ISpaceObject {
 	private double angularVelocity;
 	private long lastTimeModification = 0;
 	private DimensionProperties properties;
+	public boolean hasWarpCores = false;
 
 	public SpaceObject() {
 		properties = (DimensionProperties) zmaster587.advancedRocketry.dimension.DimensionManager.defaultSpaceDimensionProperties.clone();
@@ -190,9 +191,12 @@ public class SpaceObject implements ISpaceObject {
 
 	public void addWarpCore(HashedBlockPosition position) {
 		warpCoreLocation.add(position);
+		hasWarpCores = true;
 	}
 	public void removeWarpCore(HashedBlockPosition position) {
 		warpCoreLocation.remove(position);
+		if(warpCoreLocation.size() == 0 )
+			hasWarpCores = false;
 	}
 
 	public List<HashedBlockPosition> getWarpCoreLocations() {
@@ -200,7 +204,7 @@ public class SpaceObject implements ISpaceObject {
 	}
 
 	public boolean hasUsableWarpCore() {
-		return warpCoreLocation.size() > 0 && properties.getParentPlanet() != SpaceObjectManager.WARPDIMID && getDestOrbitingBody() != getOrbitingPlanetId();
+		return hasWarpCores && properties.getParentPlanet() != SpaceObjectManager.WARPDIMID && getDestOrbitingBody() != getOrbitingPlanetId();
 	}
 
 	public int getFuelAmount() {
@@ -567,12 +571,14 @@ public class SpaceObject implements ISpaceObject {
 		}
 
 		list = nbt.getTagList("warpCorePositions", NBT.TAG_COMPOUND);
+		hasWarpCores = false;
 		warpCoreLocation.clear();
 		for(int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound tag = list.getCompoundTagAt(i);
 			int[] posInt = tag.getIntArray("pos");
 			HashedBlockPosition pos = new HashedBlockPosition(posInt[0], posInt[1], posInt[2]);
 			warpCoreLocation.add(pos);
+			hasWarpCores = true;
 		}
 
 		list = nbt.getTagList("dockingPositons", NBT.TAG_COMPOUND);

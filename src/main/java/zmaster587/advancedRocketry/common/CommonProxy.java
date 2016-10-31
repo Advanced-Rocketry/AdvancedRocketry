@@ -12,24 +12,24 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class CommonProxy {
-	
-	
+
+
 	public void registerRenderers() {
-		
+
 	}
 
 	public void registerEventHandlers() {
-		
+
 	}
 
 
 	public void spawnParticle(String particle, World world, double x, double y,
 			double z, double motionX, double motionY, double motionZ) {
-		
+
 	}
 
 	public void registerKeyBindings() {
-		
+
 	}
 
 	public Profiler getProfiler() {
@@ -37,13 +37,13 @@ public class CommonProxy {
 	}
 
 	public void changeClientPlayerWorld(World world) {
-		
+
 	}
 
 	public void fireFogBurst(ISpaceObject station) {
 		PacketHandler.sendToNearby(new PacketStationUpdate(station, PacketStationUpdate.Type.SIGNAL_WHITE_BURST), Configuration.spaceDimId, station.getSpawnLocation().x, 128, station.getSpawnLocation().z, Configuration.stationSize);
 	}
-	
+
 
 
 	public float calculateCelestialAngleSpaceStation() {
@@ -51,16 +51,18 @@ public class CommonProxy {
 	}
 
 	public long getWorldTimeUniversal(int id) {
-		return DimensionManager.getWorld(id).getTotalWorldTime();
+		if(DimensionManager.getWorld(id) != null)
+			return DimensionManager.getWorld(id).getTotalWorldTime();
+		return 0;
 	}
 
 	public void preinit() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void init() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
