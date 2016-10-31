@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "facing=north,state=false": { "model": "advancedrocketry:railgun" },
+        "facing=south,state=false": { "model": "advancedrocketry:railgun", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:railgun", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:railgun", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:railgun_on" },
+        "facing=south,state=true": { "model": "advancedrocketry:railgun_on", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:railgun_on", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:railgun_on", "y": 90 }
+    }
+}

@@ -10,6 +10,7 @@ public class AudioRegistry {
 	public static final SoundEvent electricShockSmall = createSoundEvent("ElectricShockSmall");
 	public static final SoundEvent laserDrill = createSoundEvent("laserDrill");
 	public static final SoundEvent airHissLoop = createSoundEvent("airHissLoop");
+	public static final SoundEvent railgunFire = createSoundEvent("railgunBang");
 	public static final SoundEvent machineLarge = createSoundEvent("MachineLarge");
 	public static final SoundEvent rollingMachine = createSoundEvent("rollingMachine"); 
 	

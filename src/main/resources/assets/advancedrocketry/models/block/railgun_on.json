@@ -1,0 +1,8 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+        "top": "libvulpes:blocks/machineGeneric",
+        "front": "advancedrocketry:blocks/railgun",
+        "side": "libvulpes:blocks/machineGeneric"
+    }
+}

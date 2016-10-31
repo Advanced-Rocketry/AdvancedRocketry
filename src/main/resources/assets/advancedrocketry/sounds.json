@@ -4,5 +4,6 @@
 "MachineLarge": {"category": "master","sounds": [{"name": "advancedrocketry:MachineLarge","stream": false}]},
 "rollingMachine": {"category": "master","sounds": [{"name": "advancedrocketry:rollingMachine","stream": false}]},
 "airHissLoop": {"category": "master","sounds": [{"name": "advancedrocketry:airHissLoop","stream": false}]},
+"railgunBang": {"category": "master","sounds": [{"name": "advancedrocketry:railgunBang","stream": false}]},
 "laserDrill": {"category": "master","sounds": [{"name": "advancedrocketry:laserDrill","stream": false}]}
 }

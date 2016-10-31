@@ -666,9 +666,19 @@ public class DimensionManager implements IGalaxy {
 
 		return true;
 	}
-
+	
+	/**
+	 * 
+	 * @param destinationDimId
+	 * @param dimension
+	 * @return true if the two dimensions are in the same planet/moon system
+	 */
 	public boolean areDimensionsInSamePlanetMoonSystem(int destinationDimId,
 			int dimension) {
+		
+		if(dimension == SpaceObjectManager.WARPDIMID || destinationDimId == SpaceObjectManager.WARPDIMID)
+			return false;
+		
 		DimensionProperties properties = getDimensionProperties(dimension);
 		while(properties.getParentProperties() != null) properties = properties.getParentProperties();
 		return areDimensionsInSamePlanetMoonSystem(properties, destinationDimId);
