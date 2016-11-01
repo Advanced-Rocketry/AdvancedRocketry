@@ -1551,14 +1551,17 @@ public class AdvancedRocketry {
 
 				for(StellarBody star : dimCouplingList.stars) {
 					DimensionManager.getInstance().addStar(star);
-					numRandomGeneratedPlanets = loader.getMaxNumPlanets(star);
-					numRandomGeneratedGasGiants = loader.getMaxNumGasGiants(star);
-					generateRandomPlanets(star, numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
 				}
 
 				for(DimensionProperties properties : dimCouplingList.dims) {
 					DimensionManager.getInstance().registerDimNoUpdate(properties, true);
 					properties.setStar(properties.getStar());
+				}
+				
+				for(StellarBody star : dimCouplingList.stars) {
+					numRandomGeneratedPlanets = loader.getMaxNumPlanets(star);
+					numRandomGeneratedGasGiants = loader.getMaxNumGasGiants(star);
+					generateRandomPlanets(star, numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
 				}
 
 				loadedFromXML = true;
@@ -1706,6 +1709,7 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
 		zmaster587.advancedRocketry.cable.NetworkRegistry.clearNetworks();
 		SpaceObjectManager.getSpaceManager().onServerStopped();
+		zmaster587.advancedRocketry.api.Configuration.MoonId = 1;
 	}
 
 	@SubscribeEvent

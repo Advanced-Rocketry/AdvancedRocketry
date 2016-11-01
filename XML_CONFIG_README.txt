@@ -278,3 +278,21 @@ Example usage; Planet will generate only ocean and ice plains
     </planet>
 </star>
 </galaxy>
+
+------------------------------------------------------------------------------------------------------------------------------
+
+The "biomeIds" tag specifes a comma seperated list of biome ids to generate on the planet.  This list can include both vanilla
+and modded biome ids.  If this tag is not included then the planet will automatically generate a list of biomes from its
+atmosphere density, gravitationalMultiplier, and distance from the sun.
+
+A list of vanilla biomes can be found at http://minecraft.gamepedia.com/Biome
+
+Example usage; Planet will generate only ocean and ice plains
+<galaxy>
+<star name="Sol" temp="100" x="0" y="0" numPlanets="1">
+    <planet name="Earth">
+        <biomeIds>0,12</biomeIds>
+        ...
+    </planet>
+</star>
+</galaxy>
