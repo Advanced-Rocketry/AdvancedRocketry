@@ -40,6 +40,7 @@ import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
+import net.minecraftforge.event.terraingen.OreGenEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -102,6 +103,29 @@ public class PlanetEventHandler {
 				event.player.addStat(ARAchivements.feelTheHeat);
 			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockWarpCore))
 				event.player.addStat(ARAchivements.feelTheHeat);
+		}
+	}
+	@SubscribeEvent
+	public void onWorldGen(OreGenEvent.GenerateMinable event) {
+
+		if(event.getWorld().provider instanceof WorldProviderPlanet && 
+				DimensionManager.getInstance().getDimensionProperties(event.getWorld().provider.getDimension()).getOreGenProperties(event.getWorld()) != null) {
+
+			switch(event.getType()) {
+			case COAL:
+			case DIAMOND:
+			case EMERALD:
+			case GOLD:
+			case IRON:
+			case LAPIS:
+			case QUARTZ:
+			case REDSTONE:
+			case CUSTOM:
+				event.setResult(Result.DENY);
+				break;
+			default:
+				event.setResult(Result.DEFAULT);
+			}
 		}
 	}
 
@@ -171,7 +195,7 @@ public class PlanetEventHandler {
 					event.setCanceled(true);
 			}
 		}
-		
+
 		if(!event.getWorld().isRemote && event.getItemStack() != null && event instanceof PlayerInteractEvent.RightClickBlock && event.getItemStack().getItem() == Items.BED && event.getWorld().provider instanceof WorldProviderPlanet) {
 			AdvancedRocketryItems.itemAstroBed.onItemUse( event.getItemStack(),  event.getEntityPlayer(),  event.getEntityPlayer().worldObj, event.getPos(), event.getHand(), event.getFace(), 0, 0, 0);
 			event.setCanceled(true);

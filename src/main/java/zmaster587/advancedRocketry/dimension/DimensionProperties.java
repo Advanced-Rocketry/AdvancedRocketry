@@ -24,11 +24,13 @@ import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketSatellite;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.util.OreGenProperties;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.VulpineMath;
 import zmaster587.libVulpes.util.ZUtils;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagIntArray;
@@ -182,6 +184,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public float[] fogColor;
 	public float gravitationalMultiplier;
 	public int orbitalDist;
+	private int originalAtmosphereDensity;
 	private int atmosphereDensity;
 	public int averageTemperature;
 	public int rotationalPeriod;
@@ -249,6 +252,14 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 
 	/**
+	 * @param world
+	 * @return null to use default world gen properties, otherwise a list of ores to generate
+	 */
+	public OreGenProperties getOreGenProperties(World world) {
+		return OreGenProperties.getOresForPressure(AtmosphereTypes.getAtmosphereTypeFromValue(originalAtmosphereDensity), Temps.getTempFromValue(averageTemperature));
+	}
+	
+	/**
 	 * Resets all properties to default
 	 */
 	public void resetProperties() {
@@ -258,7 +269,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		gravitationalMultiplier = 1;
 		rotationalPeriod = 24000;
 		orbitalDist = 100;
-		atmosphereDensity = 100;
+		originalAtmosphereDensity = atmosphereDensity = 100;
 	}
 
 	@Override
@@ -492,7 +503,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 	
 	public void setAtmosphereDensityDirect(int atmosphereDensity) {
-		this.atmosphereDensity = atmosphereDensity;
+		originalAtmosphereDensity = this.atmosphereDensity = atmosphereDensity;
 	}
 	
 	/**
@@ -646,7 +657,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return true if this dimension is allowed to have rivers
 	 */
 	public boolean hasRivers() {
-		return AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity).compareTo(AtmosphereTypes.LOW) <= 0 && Temps.getTempFromValue(averageTemperature).isInRange(Temps.COLD, Temps.HOT);
+		return AtmosphereTypes.getAtmosphereTypeFromValue(originalAtmosphereDensity).compareTo(AtmosphereTypes.LOW) <= 0 && Temps.getTempFromValue(averageTemperature).isInRange(Temps.COLD, Temps.HOT);
 	}
 
 
@@ -978,6 +989,12 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		orbitalPhi = nbt.getDouble("orbitPhi");
 		rotationalPhi = nbt.getDouble("rotationalPhi");
 		atmosphereDensity = nbt.getInteger("atmosphereDensity");
+		
+		if(nbt.hasKey("originalAtmosphereDensity"))
+			originalAtmosphereDensity = nbt.getInteger("originalAtmosphereDensity");
+		else 
+			originalAtmosphereDensity = atmosphereDensity;
+		
 		averageTemperature = nbt.getInteger("avgTemperature");
 		rotationalPeriod = nbt.getInteger("rotationalPeriod");
 		name = nbt.getString("name");
@@ -1077,6 +1094,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setDouble("orbitPhi", orbitalPhi);
 		nbt.setDouble("rotationalPhi", rotationalPhi);
 		nbt.setInteger("atmosphereDensity", atmosphereDensity);
+		nbt.setInteger("originalAtmosphereDensity", originalAtmosphereDensity);
 		nbt.setInteger("avgTemperature", averageTemperature);
 		nbt.setInteger("rotationalPeriod", rotationalPeriod);
 		nbt.setString("name", name);
