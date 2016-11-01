@@ -6,6 +6,7 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -57,44 +58,44 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	public static final Object[][][] structure = {
 		{	{null, null, null, null, null}, 
 			{null, null, "coilCopper" , null, null},
-			{null, "coilCopper", null , "coilCopper", null},
+			{null, "coilCopper", "coilCopper" , "coilCopper", null},
 			{null, null, "coilCopper" , null, null},
 			{null, null, null, null, null}},
 
 			{	{null, null, null, null, null}, 
 				{null, null, "coilCopper" , null, null},
-				{null, "coilCopper", null , "coilCopper", null},
+				{null, "coilCopper", Blocks.AIR , "coilCopper", null},
 				{null, null, "coilCopper" , null, null},
 				{null, null, null, null, null}},
 
 				{	{null, null, null, null, null}, 
 					{null, null, "coilCopper" , null, null},
-					{null, "coilCopper", null , "coilCopper", null},
+					{null, "coilCopper", Blocks.AIR , "coilCopper", null},
 					{null, null, "coilCopper" , null, null},
 					{null, null, null, null, null}},
 
 					{	{null, null, null, null, null}, 
 						{null, null, "coilCopper" , null, null},
-						{null, "coilCopper", null , "coilCopper", null},
+						{null, "coilCopper", Blocks.AIR , "coilCopper", null},
 						{null, null, "coilCopper" , null, null},
 						{null, null, null, null, null}},
 
 						{	{null, null, null, null, null}, 
 							{null, null, "coilCopper" , null, null},
-							{null, "coilCopper", null , "coilCopper", null},
+							{null, "coilCopper", Blocks.AIR , "coilCopper", null},
 							{null, null, "coilCopper" , null, null},
 							{null, null, null, null, null}},
 
 
 							{	{null, null, null, null, null}, 
 								{null, null, "coilCopper" , null, null},
-								{null, "coilCopper", null , "coilCopper", null},
+								{null, "coilCopper", Blocks.AIR , "coilCopper", null},
 								{null, null, "coilCopper" , null, null},
 								{null, null, null, null, null}},
 
 								{	{null, null, null, null, null}, 
 									{null, null, "coilCopper" , null, null},
-									{null, "coilCopper", null , "coilCopper", null},
+									{null, "coilCopper", Blocks.AIR , "coilCopper", null},
 									{null, null, "coilCopper" , null, null},
 									{null, null, null, null, null}},
 
