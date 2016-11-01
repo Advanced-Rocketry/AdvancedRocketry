@@ -84,6 +84,17 @@ public class XMLPlanetLoader {
 			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
 				properties.setName(nameNode.getNodeValue());
 			}
+			
+			nameNode = planetNode.getAttributes().getNamedItem("DIMID");
+			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
+				try {
+					properties.setId(Integer.parseInt(nameNode.getTextContent()));
+					//We're not using the offset so decrement to prepare for next planet
+					offset--;
+				} catch (NumberFormatException e) {
+					AdvancedRocketry.logger.warning("Invalid DIMID specified"); //TODO: more detailed error msg
+				}
+			}
 		}
 
 		while(planetPropertyNode != null) {

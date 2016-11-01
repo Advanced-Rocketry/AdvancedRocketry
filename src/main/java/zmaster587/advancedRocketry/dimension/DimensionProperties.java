@@ -274,6 +274,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		rotationalPeriod = 24000;
 		orbitalDist = 100;
 		originalAtmosphereDensity = atmosphereDensity = 100;
+		childPlanets = new HashSet<Integer>();
+		parentPlanet = -1;
+		starId = 0;
 	}
 
 	@Override
