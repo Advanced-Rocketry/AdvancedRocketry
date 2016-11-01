@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -26,6 +27,7 @@ public class XMLPlanetLoader {
 	NodeList currentList;
 	int currentNodeIndex;
 	int starId;
+	int offset;
 
 	HashMap<StellarBody, Integer> maxPlanetNumber = new HashMap<StellarBody, Integer>();
 	HashMap<StellarBody, Integer> maxGasPlanetNumber = new HashMap<StellarBody, Integer>();
@@ -71,9 +73,9 @@ public class XMLPlanetLoader {
 		Node planetPropertyNode = planetNode.getFirstChild();
 
 
-		DimensionProperties properties = new DimensionProperties(DimensionManager.getInstance().getNextFreeDim());
+		DimensionProperties properties = new DimensionProperties(DimensionManager.getInstance().getNextFreeDim(offset));
 		list.add(properties);
-		DimensionManager.dimOffset++;//Increment for dealing with child planets
+		offset++;//Increment for dealing with child planets
 
 
 		//Set name for dimension if exists
@@ -189,11 +191,15 @@ public class XMLPlanetLoader {
 					AdvancedRocketry.logger.warning("Invalid orbitalTheta specified"); //TODO: more detailed error msg
 				}
 			}
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("oreGen")) {
+				properties.oreProperties = XMLOreLoader.loadOre(planetPropertyNode);
+			}
 
 			planetPropertyNode = planetPropertyNode.getNextSibling();
 		}
 		
-		properties.setStar(star);
+		//Star may not be registered at this time, use ID version instead
+		properties.setStar(star.getId());
 
 		//If no biomes are specified add some!
 		if(properties.getBiomes().isEmpty())
@@ -260,16 +266,16 @@ public class XMLPlanetLoader {
 		star.setId(starId++);
 		return star;
 	}
-
-	public List<StellarBody> readAllPlanets() {
-		List<StellarBody> list = new ArrayList<StellarBody>();
+	
+	public DimensionPropertyCoupling readAllPlanets() {
+		DimensionPropertyCoupling coupling = new DimensionPropertyCoupling();
 
 		Node masterNode = doc.getElementsByTagName("galaxy").item(0).getFirstChild();
 
 		//readPlanetFromNode changes value
 		//Yes it's hacky but that's another reason why it's private
 
-		int offset = DimensionManager.dimOffset;
+		offset = DimensionManager.dimOffset;
 		while(masterNode != null) {
 			if(!masterNode.getNodeName().equals("star")) {
 				masterNode = masterNode.getNextSibling();
@@ -277,7 +283,7 @@ public class XMLPlanetLoader {
 			}
 
 			StellarBody star = readStar(masterNode);
-			list.add(star);
+			coupling.stars.add(star);
 
 			NodeList planetNodeList = masterNode.getChildNodes();
 
@@ -285,17 +291,21 @@ public class XMLPlanetLoader {
 
 			while(planetNode != null) {
 				if(planetNode.getNodeName().equalsIgnoreCase("planet")) {
-					for(DimensionProperties properties : readPlanetFromNode(planetNode, star)) {
-						DimensionManager.getInstance().registerDim(properties, true);
-					}
+					coupling.dims.addAll(readPlanetFromNode(planetNode, star));
 				}
 				planetNode = planetNode.getNextSibling();
 			}
 
 			masterNode = masterNode.getNextSibling();
 		}
-
-		DimensionManager.dimOffset = offset; //Set back to its prev value
-		return list;
+		return coupling;
+	}
+	
+	public static class DimensionPropertyCoupling {
+		
+		public List<StellarBody> stars = new LinkedList<StellarBody>();
+		public List<DimensionProperties> dims = new LinkedList<DimensionProperties>();
+		
+		
 	}
 }

@@ -167,6 +167,7 @@ import zmaster587.advancedRocketry.util.OreGenProperties;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
 import zmaster587.advancedRocketry.util.XMLOreLoader;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader;
+import zmaster587.advancedRocketry.util.XMLPlanetLoader.DimensionPropertyCoupling;
 import zmaster587.advancedRocketry.world.biome.BiomeGenAlienForest;
 import zmaster587.advancedRocketry.world.biome.BiomeGenCrystal;
 import zmaster587.advancedRocketry.world.biome.BiomeGenDeepSwamp;
@@ -446,7 +447,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockBlastBrick = new BlockMultiBlockComponentVisible(Material.ROCK).setCreativeTab(tabAdvRocketry).setUnlocalizedName("blastBrick").setHardness(3F).setResistance(15F);
 		AdvancedRocketryBlocks.blockQuartzCrucible = new BlockQuartzCrucible().setUnlocalizedName("qcrucible");
 		AdvancedRocketryBlocks.blockAstroBed = new BlockAstroBed().setHardness(0.2F).setUnlocalizedName("astroBed");
-		
+
 		AdvancedRocketryBlocks.blockPrecisionAssembler = new BlockMultiblockMachine(TilePrecisionAssembler.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("precisionAssemblingMachine").setCreativeTab(tabAdvRocketry).setHardness(3f);
 
 		AdvancedRocketryBlocks.blockCuttingMachine = new BlockMultiblockMachine(TileCuttingMachine.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("cuttingMachine").setCreativeTab(tabAdvRocketry).setHardness(3f);
@@ -609,7 +610,7 @@ public class AdvancedRocketry {
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockAltitudeController.setRegistryName("altitudeController"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockRailgun .setRegistryName("railgun"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockAstroBed .setRegistryName("astroBed"));
-		
+
 		//TODO, use different mechanism to enable/disable drill
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
 			LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockSpaceLaser.setRegistryName("spaceLaser"));
@@ -668,7 +669,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryItems.itemJackhammer = new ItemJackHammer(ToolMaterial.DIAMOND).setUnlocalizedName("jackhammer").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemJackhammer.setHarvestLevel("jackhammer", 3);
 		AdvancedRocketryItems.itemJackhammer.setHarvestLevel("pickaxe", 3);
-		
+
 		//Note: not registered
 		AdvancedRocketryItems.itemAstroBed = new ItemAstroBed();
 
@@ -813,7 +814,7 @@ public class AdvancedRocketry {
 		//Register Allowed Products
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("TitaniumAluminide", "pickaxe", 1, 0xaec2de, AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("GEAR").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue(), false));
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("TitaniumIridium", "pickaxe", 1, 0xd7dfe4, AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("GEAR").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue(), false));
-		
+
 		materialRegistry.registerOres(LibVulpes.tabLibVulpesOres);
 
 		//Regiser item/block crap
@@ -1016,7 +1017,7 @@ public class AdvancedRocketry {
 		//TODO add 2Al2O3 as output
 		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("TitaniumAluminide").getProduct(AllowedProducts.getProductByName("INGOT"), 3), 9000, 20, new NumberedOreDictStack("ingotAluminum", 7), new NumberedOreDictStack("ingotTitanium", 3)); //TODO titanium dioxide
 		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("TitaniumIridium").getProduct(AllowedProducts.getProductByName("INGOT"),2), 3000, 20, "ingotTitanium", "ingotIridium");
-		
+
 		//Chemical Reactor
 		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new Object[] {new ItemStack(AdvancedRocketryItems.itemCarbonScrubberCartridge,1, 0), new ItemStack(Items.COAL, 1, 1)}, 40, 20, new ItemStack(AdvancedRocketryItems.itemCarbonScrubberCartridge, 1, AdvancedRocketryItems.itemCarbonScrubberCartridge.getMaxDamage()));
 		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new ItemStack(Items.DYE,5,0xF), 100, 1, Items.BONE, new FluidStack(AdvancedRocketryFluids.fluidNitrogen, 10));
@@ -1362,15 +1363,17 @@ public class AdvancedRocketry {
 	@EventHandler
 	public void serverStarting(FMLServerStartingEvent event) {
 		event.registerServerCommand(new WorldCommand());
+		
+		int dimOffset = DimensionManager.dimOffset;
 
 		//Open ore files
 		File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/oreConfig.xml");
 		logger.fine("Checking for ore config at " + file.getAbsolutePath());
-		
+
 		if(!file.exists()) {
 			logger.fine(file.getAbsolutePath() + " not found, generating");
 			try {
-				
+
 				file.createNewFile();
 				BufferedWriter stream;
 				stream = new BufferedWriter(new FileWriter(file));
@@ -1384,13 +1387,13 @@ public class AdvancedRocketry {
 			XMLOreLoader oreLoader = new XMLOreLoader();
 			try {
 				oreLoader.loadFile(file);
-				
-				 List<SingleEntry<HashedBlockPosition, OreGenProperties>> mapping = oreLoader.loadPropertyFile();
-				
+
+				List<SingleEntry<HashedBlockPosition, OreGenProperties>> mapping = oreLoader.loadPropertyFile();
+
 				for(Entry<HashedBlockPosition, OreGenProperties> entry : mapping) {
 					int pressure = entry.getKey().x;
 					int temp = entry.getKey().y;
-					
+
 					if(pressure == -1) {
 						if(temp != -1) {
 							OreGenProperties.setOresForTemperature(Temps.values()[temp], entry.getValue());
@@ -1405,44 +1408,64 @@ public class AdvancedRocketry {
 						OreGenProperties.setOresForPressureAndTemp(AtmosphereTypes.values()[pressure], Temps.values()[temp], entry.getValue());
 					}
 				}
-				
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 		//End open and load ore files
+
+		//Load planet files
+		//Note: loading this modifies dimOffset
+		DimensionPropertyCoupling dimCouplingList = null;
+		XMLPlanetLoader loader = null;
 		
+		file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
+		logger.info("Checking for config at " + file.getAbsolutePath());
+		if(file.exists()) {
+			logger.info("Advanced Planet Config file Found!");
+			loader = new XMLPlanetLoader();
+			try {
+				loader.loadFile(file);
+				dimCouplingList = loader.readAllPlanets();
+				DimensionManager.dimOffset += dimCouplingList.dims.size();
+			} catch(IOException e) {
+
+			}
+		}
+
+		//End load planet files
+
 		//Register hard coded dimensions
 		if(!zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.filePath)) {
 			int numRandomGeneratedPlanets = 9;
 			int numRandomGeneratedGasGiants = 1;
-			file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
-			logger.info("Checking for config at " + file.getAbsolutePath());
+			
 
 			boolean loadedFromXML = false;
 
-			if(file.exists()) {
-				logger.info("File found!");
-				XMLPlanetLoader loader = new XMLPlanetLoader();
-				try {
-					loader.loadFile(file);
-					List<StellarBody> list = loader.readAllPlanets();
+			if(dimCouplingList != null) {
+				logger.info("Loading initial planet config!");
 
-					for(StellarBody star : list) {
-						DimensionManager.getInstance().addStar(star);
-						numRandomGeneratedPlanets = loader.getMaxNumPlanets(star);
-						numRandomGeneratedGasGiants = loader.getMaxNumGasGiants(star);
-						generateRandomPlanets(star, numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
-					}
-					loadedFromXML = true;
-				} catch(IOException e) {
-					logger.severe("XML planet config exists but cannot be loaded!  Defaulting to random gen.");
+				for(StellarBody star : dimCouplingList.stars) {
+					DimensionManager.getInstance().addStar(star);
+					numRandomGeneratedPlanets = loader.getMaxNumPlanets(star);
+					numRandomGeneratedGasGiants = loader.getMaxNumGasGiants(star);
+					generateRandomPlanets(star, numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
 				}
+
+				for(DimensionProperties properties : dimCouplingList.dims) {
+					DimensionManager.getInstance().registerDimNoUpdate(properties, true);
+					properties.setStar(properties.getStar());
+				}
+
+				loadedFromXML = true;
+
 			}
 
 
 			if(zmaster587.advancedRocketry.api.Configuration.MoonId == -1)
-				zmaster587.advancedRocketry.api.Configuration.MoonId = DimensionManager.getInstance().getNextFreeDim();
+				zmaster587.advancedRocketry.api.Configuration.MoonId = DimensionManager.getInstance().getNextFreeDim(DimensionManager.dimOffset);
 
 			DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId);
 			dimensionProperties.setAtmosphereDensityDirect(0);
@@ -1508,6 +1531,20 @@ public class AdvancedRocketry {
 		}
 
 
+		//Attempt to load ore config from adv planet XML
+		if(dimCouplingList != null) {
+			for(DimensionProperties properties : dimCouplingList.dims) {
+				if(properties.oreProperties != null) {
+					DimensionProperties loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
+
+					if(loadedProps != null)
+						loadedProps.oreProperties = properties.oreProperties;
+				}
+			}
+		}
+		
+		// make sure to set dim offset back to original to make things consistant
+		DimensionManager.dimOffset = dimOffset;
 
 	}
 

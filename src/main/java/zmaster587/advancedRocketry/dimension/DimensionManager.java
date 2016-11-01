@@ -202,8 +202,8 @@ public class DimensionManager implements IGalaxy {
 	 * Iterates though the list of existing dimIds, and returns the closest free id greater than two
 	 * @return next free id
 	 */
-	public int getNextFreeDim() {
-		for(int i = dimOffset; i < 1024; i++) {
+	public int getNextFreeDim(int startingValue) {
+		for(int i = startingValue; i < 1024; i++) {
 			if(!net.minecraftforge.common.DimensionManager.isDimensionRegistered(i) && !dimensionList.containsKey(i))
 				return i;
 		}
@@ -246,7 +246,7 @@ public class DimensionManager implements IGalaxy {
 	 * @return the new dimension properties created for this planet
 	 */
 	public DimensionProperties generateRandom(int starId, String name, int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
-		DimensionProperties properties = new DimensionProperties(getNextFreeDim());
+		DimensionProperties properties = new DimensionProperties(getNextFreeDim(dimOffset));
 
 		if(name == "")
 			properties.setName(getNextName(properties.getId()));
@@ -381,7 +381,7 @@ public class DimensionManager implements IGalaxy {
 			return false;
 
 		//Avoid registering gas giants as dimensions
-		if(registerWithForge && dimId < GASGIANT_DIMID_OFFSET && !net.minecraftforge.common.DimensionManager.isDimensionRegistered(dim)) {
+		if(registerWithForge && dimId < GASGIANT_DIMID_OFFSET && !properties.isGasGiant() && !net.minecraftforge.common.DimensionManager.isDimensionRegistered(dim)) {
 
 			net.minecraftforge.common.DimensionManager.registerDimension(dimId, PlanetDimensionType);
 		}
