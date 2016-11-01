@@ -191,6 +191,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	//Stored in radians
 	public double orbitTheta;
 	StellarBody star;
+	int starId;
 	private String name;
 	public float[] sunriseSunsetColors;
 	//public ExtendedBiomeProperties biomeProperties;
@@ -201,6 +202,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public double prevOrbitalTheta;
 	public double orbitalPhi;
 	public double rotationalPhi;
+	public OreGenProperties oreProperties = null;
 	
 	//Planet Heirachy
 	private HashSet<Integer> childPlanets;
@@ -264,6 +266,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return null to use default world gen properties, otherwise a list of ores to generate
 	 */
 	public OreGenProperties getOreGenProperties(World world) {
+		if(oreProperties != null)
+			return oreProperties;
 		return OreGenProperties.getOresForPressure(AtmosphereTypes.getAtmosphereTypeFromValue(originalAtmosphereDensity), Temps.getTempFromValue(averageTemperature));
 	}
 	
@@ -294,7 +298,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return the color of the sun as an array of floats represented as  {r,g,b}
 	 */
 	public float[] getSunColor() {
-		return star.getColor();
+		return getStar().getColor();
 	}
 
 	/**
@@ -302,15 +306,24 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @param star the star to set as the host for this planet
 	 */
 	public void setStar(StellarBody star) {
+		this.starId = star.getId();
 		this.star = star;
 		if(!this.isMoon() && !isStation())
 			this.star.addPlanet(this);
+	}
+
+	public void setStar(int id) {
+		this.starId = id;
+		if(DimensionManager.getInstance().getStar(id) != null)
+			setStar(DimensionManager.getInstance().getStar(id));
 	}
 
 	/**
 	 * @return the host star for this planet
 	 */
 	public StellarBody getStar() {
+		if(star == null)
+			star = DimensionManager.getInstance().getStar(starId);
 		return star;
 	}
 	
@@ -1074,7 +1087,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			nbt.setIntArray("biomesTerra", biomeId);
 		}
 		
-		nbt.setInteger("starId", star.getId());
+		nbt.setInteger("starId", starId);
 		nbt.setFloat("gravitationalMultiplier", gravitationalMultiplier);
 		nbt.setInteger("orbitalDist", orbitalDist);
 		nbt.setDouble("orbitTheta", orbitTheta);

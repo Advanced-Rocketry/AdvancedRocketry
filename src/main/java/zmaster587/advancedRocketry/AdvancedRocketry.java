@@ -167,6 +167,7 @@ import zmaster587.advancedRocketry.util.OreGenProperties;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
 import zmaster587.advancedRocketry.util.XMLOreLoader;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader;
+import zmaster587.advancedRocketry.util.XMLPlanetLoader.DimensionPropertyCoupling;
 import zmaster587.advancedRocketry.world.biome.BiomeGenAlienForest;
 import zmaster587.advancedRocketry.world.biome.BiomeGenCrystal;
 import zmaster587.advancedRocketry.world.biome.BiomeGenDeepSwamp;
@@ -200,6 +201,7 @@ import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.TileMaterial;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.InputSyncHandler;
 import zmaster587.libVulpes.util.SingleEntry;
 
@@ -1460,54 +1462,77 @@ public class AdvancedRocketry {
 	public void serverStarting(FMLServerStartingEvent event) {
 		event.registerServerCommand(new WorldCommand());
 
+		int dimOffset = DimensionManager.dimOffset;
+
 		//Open ore files
-				File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/oreConfig.xml");
-				logger.fine("Checking for ore config at " + file.getAbsolutePath());
-				
-				if(!file.exists()) {
-					logger.fine(file.getAbsolutePath() + " not found, generating");
-					try {
-						
-						file.createNewFile();
-						BufferedWriter stream;
-						stream = new BufferedWriter(new FileWriter(file));
-						stream.write("<OreConfig>\n</OreConfig>");
-						stream.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				else {
-					XMLOreLoader oreLoader = new XMLOreLoader();
-					try {
-						oreLoader.loadFile(file);
-						
-						 List<SingleEntry<BlockPosition, OreGenProperties>> mapping = oreLoader.loadPropertyFile();
-						
-						for(Entry<BlockPosition, OreGenProperties> entry : mapping) {
-							int pressure = entry.getKey().x;
-							int temp = entry.getKey().y;
-							
-							if(pressure == -1) {
-								if(temp != -1) {
-									OreGenProperties.setOresForTemperature(Temps.values()[temp], entry.getValue());
-								}
-							}
-							else if(temp == -1) {
-								if(pressure != -1) {
-									OreGenProperties.setOresForPressure(AtmosphereTypes.values()[pressure], entry.getValue());
-								}
-							}
-							else {
-								OreGenProperties.setOresForPressureAndTemp(AtmosphereTypes.values()[pressure], Temps.values()[temp], entry.getValue());
-							}
+		File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/oreConfig.xml");
+		logger.fine("Checking for ore config at " + file.getAbsolutePath());
+
+		if(!file.exists()) {
+			logger.fine(file.getAbsolutePath() + " not found, generating");
+			try {
+
+				file.createNewFile();
+				BufferedWriter stream;
+				stream = new BufferedWriter(new FileWriter(file));
+				stream.write("<OreConfig>\n</OreConfig>");
+				stream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		else {
+			XMLOreLoader oreLoader = new XMLOreLoader();
+			try {
+				oreLoader.loadFile(file);
+
+				List<SingleEntry<BlockPosition, OreGenProperties>> mapping = oreLoader.loadPropertyFile();
+
+				for(Entry<BlockPosition, OreGenProperties> entry : mapping) {
+					int pressure = entry.getKey().x;
+					int temp = entry.getKey().y;
+
+					if(pressure == -1) {
+						if(temp != -1) {
+							OreGenProperties.setOresForTemperature(Temps.values()[temp], entry.getValue());
 						}
-						
-					} catch (IOException e) {
-						e.printStackTrace();
+					}
+					else if(temp == -1) {
+						if(pressure != -1) {
+							OreGenProperties.setOresForPressure(AtmosphereTypes.values()[pressure], entry.getValue());
+						}
+					}
+					else {
+						OreGenProperties.setOresForPressureAndTemp(AtmosphereTypes.values()[pressure], Temps.values()[temp], entry.getValue());
 					}
 				}
-				//End open and load ore files
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		//End open and load ore files
+
+		//Load planet files
+		//Note: loading this modifies dimOffset
+		DimensionPropertyCoupling dimCouplingList = null;
+		XMLPlanetLoader loader = null;
+		
+		file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
+		logger.info("Checking for config at " + file.getAbsolutePath());
+		if(file.exists()) {
+			logger.info("Advanced Planet Config file Found!");
+			loader = new XMLPlanetLoader();
+			try {
+				loader.loadFile(file);
+				dimCouplingList = loader.readAllPlanets();
+				DimensionManager.dimOffset += dimCouplingList.dims.size();
+			} catch(IOException e) {
+
+			}
+		}
+
+		//End load planet files
 		
 		if(Loader.isModLoaded("GalacticraftCore") ) 
 			zmaster587.advancedRocketry.api.Configuration.MoonId = ConfigManagerCore.idDimensionMoon;
@@ -1522,28 +1547,28 @@ public class AdvancedRocketry {
 
 			boolean loadedFromXML = false;
 
-			if(file.exists()) {
-				logger.info("File found!");
-				XMLPlanetLoader loader = new XMLPlanetLoader();
-				try {
-					loader.loadFile(file);
-					List<StellarBody> list = loader.readAllPlanets();
+			if(dimCouplingList != null) {
+				logger.info("Loading initial planet config!");
 
-					for(StellarBody star : list) {
-						DimensionManager.getInstance().addStar(star);
-						numRandomGeneratedPlanets = loader.getMaxNumPlanets(star);
-						numRandomGeneratedGasGiants = loader.getMaxNumGasGiants(star);
-						generateRandomPlanets(star, numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
-					}
-					loadedFromXML = true;
-				} catch(IOException e) {
-					logger.severe("XML planet config exists but cannot be loaded!  Defaulting to random gen.");
+				for(StellarBody star : dimCouplingList.stars) {
+					DimensionManager.getInstance().addStar(star);
+					numRandomGeneratedPlanets = loader.getMaxNumPlanets(star);
+					numRandomGeneratedGasGiants = loader.getMaxNumGasGiants(star);
+					generateRandomPlanets(star, numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
 				}
+
+				for(DimensionProperties properties : dimCouplingList.dims) {
+					DimensionManager.getInstance().registerDimNoUpdate(properties, true);
+					properties.setStar(properties.getStar());
+				}
+
+				loadedFromXML = true;
+
 			}
 
 
 			if(zmaster587.advancedRocketry.api.Configuration.MoonId == -1)
-				zmaster587.advancedRocketry.api.Configuration.MoonId = DimensionManager.getInstance().getNextFreeDim();
+				zmaster587.advancedRocketry.api.Configuration.MoonId = DimensionManager.getInstance().getNextFreeDim(DimensionManager.dimOffset);
 
 			DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId);
 			dimensionProperties.setAtmosphereDensityDirect(0);
@@ -1607,7 +1632,20 @@ public class AdvancedRocketry {
 			VersionCompat.upgradeDimensionManagerPostLoad(DimensionManager.prevBuild);
 		}
 
+		//Attempt to load ore config from adv planet XML
+		if(dimCouplingList != null) {
+			for(DimensionProperties properties : dimCouplingList.dims) {
+				if(properties.oreProperties != null) {
+					DimensionProperties loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
 
+					if(loadedProps != null)
+						loadedProps.oreProperties = properties.oreProperties;
+				}
+			}
+		}
+		
+		// make sure to set dim offset back to original to make things consistant
+		DimensionManager.dimOffset = dimOffset;
 		
 	}
 
