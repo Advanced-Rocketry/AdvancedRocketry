@@ -15,8 +15,11 @@ import java.util.Random;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
+import zmaster587.advancedRocketry.util.OreGenProperties;
+import zmaster587.advancedRocketry.util.OreGenProperties.OreEntry;
 import zmaster587.advancedRocketry.world.decoration.MapGenCrater;
 import zmaster587.advancedRocketry.world.decoration.MapGenGeode;
+import zmaster587.advancedRocketry.world.gen.CustomizableOreGen;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import net.minecraft.block.Block;
@@ -462,6 +465,14 @@ public class ChunkProviderPlanet implements IChunkProvider {
 		if (populationFlag)
 			MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Post(p_73153_1_, worldObj, rand, p_73153_2_, p_73153_3_, flag));
 
+		OreGenProperties oreGenProperties = DimensionManager.getInstance().getDimensionProperties(this.worldObj.provider.dimensionId).getOreGenProperties(this.worldObj);
+		
+		if(oreGenProperties != null) {
+			for(OreEntry entry : oreGenProperties.getOreEntries()) {
+				new CustomizableOreGen(entry).generate(rand, p_73153_2_, p_73153_3_, this.worldObj, this, this.worldObj.getChunkProvider());
+			}
+		}
+		
 		BlockFalling.fallInstantly = false;
 	}
 

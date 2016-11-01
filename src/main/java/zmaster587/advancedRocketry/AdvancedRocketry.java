@@ -87,6 +87,8 @@ import zmaster587.advancedRocketry.command.WorldCommand;
 import zmaster587.advancedRocketry.common.CommonProxy;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.dimension.DimensionProperties.AtmosphereTypes;
+import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
 import zmaster587.advancedRocketry.entity.EntityDummy;
 import zmaster587.advancedRocketry.entity.EntityItemAbducted;
 import zmaster587.advancedRocketry.entity.EntityLaserNode;
@@ -161,7 +163,9 @@ import zmaster587.advancedRocketry.tile.station.TileStationGravityController;
 import zmaster587.advancedRocketry.tile.station.TileStationOrientationControl;
 import zmaster587.advancedRocketry.tile.station.TileWarpShipMonitor;
 import zmaster587.advancedRocketry.util.FluidColored;
+import zmaster587.advancedRocketry.util.OreGenProperties;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
+import zmaster587.advancedRocketry.util.XMLOreLoader;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader;
 import zmaster587.advancedRocketry.world.biome.BiomeGenAlienForest;
 import zmaster587.advancedRocketry.world.biome.BiomeGenCrystal;
@@ -195,9 +199,13 @@ import zmaster587.libVulpes.recipe.NumberedOreDictStack;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.TileMaterial;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
+import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.InputSyncHandler;
+import zmaster587.libVulpes.util.SingleEntry;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
@@ -1244,6 +1252,7 @@ public class AdvancedRocketry {
 		PlanetEventHandler handle = new PlanetEventHandler();
 		FMLCommonHandler.instance().bus().register(handle);
 		MinecraftForge.EVENT_BUS.register(handle);
+		MinecraftForge.ORE_GEN_BUS.register(handle);
 		MinecraftForge.EVENT_BUS.register(new BucketHandler());
 
 		CableTickHandler cable = new CableTickHandler();
@@ -1451,6 +1460,55 @@ public class AdvancedRocketry {
 	public void serverStarting(FMLServerStartingEvent event) {
 		event.registerServerCommand(new WorldCommand());
 
+		//Open ore files
+				File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/oreConfig.xml");
+				logger.fine("Checking for ore config at " + file.getAbsolutePath());
+				
+				if(!file.exists()) {
+					logger.fine(file.getAbsolutePath() + " not found, generating");
+					try {
+						
+						file.createNewFile();
+						BufferedWriter stream;
+						stream = new BufferedWriter(new FileWriter(file));
+						stream.write("<OreConfig>\n</OreConfig>");
+						stream.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				else {
+					XMLOreLoader oreLoader = new XMLOreLoader();
+					try {
+						oreLoader.loadFile(file);
+						
+						 List<SingleEntry<BlockPosition, OreGenProperties>> mapping = oreLoader.loadPropertyFile();
+						
+						for(Entry<BlockPosition, OreGenProperties> entry : mapping) {
+							int pressure = entry.getKey().x;
+							int temp = entry.getKey().y;
+							
+							if(pressure == -1) {
+								if(temp != -1) {
+									OreGenProperties.setOresForTemperature(Temps.values()[temp], entry.getValue());
+								}
+							}
+							else if(temp == -1) {
+								if(pressure != -1) {
+									OreGenProperties.setOresForPressure(AtmosphereTypes.values()[pressure], entry.getValue());
+								}
+							}
+							else {
+								OreGenProperties.setOresForPressureAndTemp(AtmosphereTypes.values()[pressure], Temps.values()[temp], entry.getValue());
+							}
+						}
+						
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				//End open and load ore files
+		
 		if(Loader.isModLoaded("GalacticraftCore") ) 
 			zmaster587.advancedRocketry.api.Configuration.MoonId = ConfigManagerCore.idDimensionMoon;
 
@@ -1459,7 +1517,7 @@ public class AdvancedRocketry {
 		if(!zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.filePath)) {
 			int numRandomGeneratedPlanets = 9;
 			int numRandomGeneratedGasGiants = 1;
-			File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
+			file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
 			logger.info("Checking for config at " + file.getAbsolutePath());
 
 			boolean loadedFromXML = false;

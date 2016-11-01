@@ -24,6 +24,7 @@ import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketSatellite;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.util.OreGenProperties;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.ChunkProviderPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
@@ -184,6 +185,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public float gravitationalMultiplier;
 	public int orbitalDist;
 	private int atmosphereDensity;
+	private int originalAtmosphereDensity;
 	public int averageTemperature;
 	public int rotationalPeriod;
 	//Stored in radians
@@ -258,6 +260,14 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 
 	/**
+	 * @param world
+	 * @return null to use default world gen properties, otherwise a list of ores to generate
+	 */
+	public OreGenProperties getOreGenProperties(World world) {
+		return OreGenProperties.getOresForPressure(AtmosphereTypes.getAtmosphereTypeFromValue(originalAtmosphereDensity), Temps.getTempFromValue(averageTemperature));
+	}
+	
+	/**
 	 * Resets all properties to default
 	 */
 	public void resetProperties() {
@@ -267,7 +277,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		gravitationalMultiplier = 1;
 		rotationalPeriod = 24000;
 		orbitalDist = 100;
-		atmosphereDensity = 100;
+		originalAtmosphereDensity = atmosphereDensity = 100;
 	}
 
 	@Override
@@ -493,7 +503,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 	
 	public void setAtmosphereDensityDirect(int atmosphereDensity) {
-		this.atmosphereDensity = atmosphereDensity;
+		originalAtmosphereDensity = this.atmosphereDensity = atmosphereDensity;
 	}
 	
 	/**
@@ -650,7 +660,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return true if this dimension is allowed to have rivers
 	 */
 	public boolean hasRivers() {
-		return AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity).compareTo(AtmosphereTypes.LOW) <= 0 && Temps.getTempFromValue(averageTemperature).isInRange(Temps.COLD, Temps.HOT);
+		return AtmosphereTypes.getAtmosphereTypeFromValue(originalAtmosphereDensity).compareTo(AtmosphereTypes.LOW) <= 0 && Temps.getTempFromValue(averageTemperature).isInRange(Temps.COLD, Temps.HOT);
 	}
 
 
@@ -970,6 +980,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		name = nbt.getString("name");
 		isNativeDimension = nbt.hasKey("isNative") ? nbt.getBoolean("isNative") : true; //Prevent world breakages when loading from old version
 
+		if(nbt.hasKey("originalAtmosphereDensity"))
+			originalAtmosphereDensity = nbt.getInteger("originalAtmosphereDensity");
+		else 
+			originalAtmosphereDensity = atmosphereDensity;
+		
 		isGasGiant = nbt.getBoolean("isGasGiant");
 		isTerraformed = nbt.getBoolean("terraformed");
 		orbitalPhi = nbt.getDouble("orbitPhi");
@@ -1064,6 +1079,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setInteger("orbitalDist", orbitalDist);
 		nbt.setDouble("orbitTheta", orbitTheta);
 		nbt.setInteger("atmosphereDensity", atmosphereDensity);
+		nbt.setInteger("originalAtmosphereDensity", originalAtmosphereDensity);
 		nbt.setInteger("avgTemperature", averageTemperature);
 		nbt.setInteger("rotationalPeriod", rotationalPeriod);
 		nbt.setString("name", name);

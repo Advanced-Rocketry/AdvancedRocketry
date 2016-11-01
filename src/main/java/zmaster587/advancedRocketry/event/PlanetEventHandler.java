@@ -36,6 +36,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
+import net.minecraftforge.event.terraingen.OreGenEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -109,6 +110,29 @@ public class PlanetEventHandler {
 				event.player.triggerAchievement(ARAchivements.feelTheHeat);
 			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockWarpCore))
 				event.player.triggerAchievement(ARAchivements.feelTheHeat);
+		}
+	}
+	
+	@SubscribeEvent
+	public void onWorldGen(OreGenEvent.GenerateMinable event) {
+
+		if(event.world.provider instanceof WorldProviderPlanet && 
+				DimensionManager.getInstance().getDimensionProperties(event.world.provider.dimensionId).getOreGenProperties(event.world) != null) {
+
+			switch(event.type) {
+			case COAL:
+			case DIAMOND:
+			case GOLD:
+			case IRON:
+			case LAPIS:
+			case QUARTZ:
+			case REDSTONE:
+			case CUSTOM:
+				event.setResult(Result.DENY);
+				break;
+			default:
+				event.setResult(Result.DEFAULT);
+			}
 		}
 	}
 	
