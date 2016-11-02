@@ -1454,6 +1454,7 @@ public class AdvancedRocketry {
 				AtmosphereRegister.getInstance().registerHarvestableFluid(fluid);
 		}
 		logger.fine("End registering Harvestable Gasses");
+		harvestableGasses = null;
 	}
 
 	@EventHandler
