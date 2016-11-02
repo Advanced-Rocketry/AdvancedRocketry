@@ -701,7 +701,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		//TODO: lock the computer
 		destinationDimId = storage.getDestinationDimId(worldObj.provider.dimensionId, (int)this.posX, (int)this.posZ);
 
-		//TODO: make sure this doesn't break asteriod mining
+		//TODO: make sure this doesn't break asteroid mining
 		if(!(DimensionManager.getInstance().canTravelTo(destinationDimId) || (destinationDimId == -1 && storage.getSatelliteHatches().size() != 0))) {
 			setError(LibVulpes.proxy.getLocalizedString("error.rocket.cannotGetThere"));
 			return;
@@ -728,7 +728,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				thisDimId = object.getProperties().getParentProperties().getId();
 		}
 		
-		if(!DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, thisDimId)) {
+		if(finalDest != -1 && !DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, thisDimId)) {
 			setError(LibVulpes.proxy.getLocalizedString("error.rocket.notSameSystem"));
 			return;
 		}
@@ -1151,7 +1151,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			//modules.add(new ModuleText(180, 114, "Inventories", 0x404040));
 		}
 		else {
-			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId);
+			
+			DimensionProperties properties = DimensionManager.getEffectiveDimId(worldObj, (int)this.posX, (int)this.posZ);
 			while(properties.getParentProperties() != null) properties = properties.getParentProperties();
 			
 			container = new ModulePlanetSelector(properties.getId(), zmaster587.libVulpes.inventory.TextureResources.starryBG, this, false);

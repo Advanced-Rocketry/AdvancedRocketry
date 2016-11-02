@@ -1449,9 +1449,9 @@ public class AdvancedRocketry {
 		for (int dimId : DimensionManager.getInstance().getLoadedDimensions()) {
 			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimId);
 			if(!properties.isNativeDimension) {
-				if(properties.getId() != zmaster587.advancedRocketry.api.Configuration.MoonId)
-					DimensionManager.getInstance().deleteDimension(properties.getId());
-				else if (!Loader.isModLoaded("GalacticraftCore"))
+				//if(properties.getId() != zmaster587.advancedRocketry.api.Configuration.MoonId)
+					//DimensionManager.getInstance().deleteDimension(properties.getId());
+				if (properties.getId() == zmaster587.advancedRocketry.api.Configuration.MoonId && !Loader.isModLoaded("GalacticraftCore"))
 					properties.isNativeDimension = true;
 			}
 		}
@@ -1637,6 +1637,19 @@ public class AdvancedRocketry {
 		//Attempt to load ore config from adv planet XML
 		if(dimCouplingList != null) {
 			for(DimensionProperties properties : dimCouplingList.dims) {
+			
+				//Register dimensions loaded by other mods if not already loaded
+				if(!properties.isNativeDimension && properties.getStar() != null && !DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
+					for(StellarBody star : dimCouplingList.stars) {
+						for(StellarBody loadedStar : DimensionManager.getInstance().getStars()) {
+							if(star.getId() == properties.getStarId() && star.getName().equals(loadedStar.getName())) {
+								DimensionManager.getInstance().registerDimNoUpdate(properties, false);
+								properties.setStar(loadedStar);
+							}
+						}
+					}
+				}
+				
 				if(properties.oreProperties != null) {
 					DimensionProperties loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
 

@@ -177,7 +177,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	
 	
 
-	//True if dimension is managed and created by AR (false otherwise)
+	/**True if dimension is managed and created by AR (false otherwise)**/
 	public boolean isNativeDimension;
 	//Gas giants DO NOT need a dimension registered to them
 	public float[] skyColor;
@@ -284,6 +284,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		originalAtmosphereDensity = atmosphereDensity = 100;		childPlanets = new HashSet<Integer>();
 		parentPlanet = -1;
 		starId = 0;
+		averageTemperature = 100;
 	}
 
 	@Override
@@ -327,6 +328,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		if(star == null)
 			star = DimensionManager.getInstance().getStar(starId);
 		return star;
+	}
+	
+	public int getStarId() {
+		return starId;
 	}
 	
 	/**

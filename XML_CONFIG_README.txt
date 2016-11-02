@@ -281,17 +281,29 @@ Example usage; Planet will generate only ocean and ice plains
 
 ------------------------------------------------------------------------------------------------------------------------------
 
-The "biomeIds" tag specifes a comma seperated list of biome ids to generate on the planet.  This list can include both vanilla
-and modded biome ids.  If this tag is not included then the planet will automatically generate a list of biomes from its
-atmosphere density, gravitationalMultiplier, and distance from the sun.
+The "DIMID" attribute allows a user to specify the exact dimension id that the planet is going to occupy, useful for custom ore gen mods
+and more control in general
 
-A list of vanilla biomes can be found at http://minecraft.gamepedia.com/Biome
-
-Example usage; Planet will generate only ocean and ice plains
+Example usage; Planet will generate with the dimid 99
 <galaxy>
 <star name="Sol" temp="100" x="0" y="0" numPlanets="1">
-    <planet name="Earth">
-        <biomeIds>0,12</biomeIds>
+    <planet name="Earth" DIMID="99">
+        ...
+    </planet>
+</star>
+</galaxy>
+
+------------------------------------------------------------------------------------------------------------------------------
+
+The "dimMapping" attribute allows a user to specify that the following planet is a dimension from another mod.  Note that it 
+must be accompanied by a DIMID tag!!!
+
+Be warned, if another mod does not have a dimension with that ID it will cause a crash if somebody tries to go there!
+
+Example usage; Adding Twilight forests (with default configs) as a planet around Sol
+<galaxy>
+<star name="Sol" temp="100" x="0" y="0" numPlanets="1">
+    <planet name="Earth" DIMID="7" dimMapping="">
         ...
     </planet>
 </star>
