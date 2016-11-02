@@ -29,6 +29,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -231,7 +232,7 @@ public class AdvancedRocketry {
 	public static Logger logger = Logger.getLogger(Constants.modId);
 	private static Configuration config;
 	private static final String BIOMECATETORY = "Biomes";
-	String[] sealableBlockWhiteList, breakableTorches;
+	String[] sealableBlockWhiteList, breakableTorches, harvestableGasses;
 
 	public MaterialRegistry materialRegistry = new MaterialRegistry(); 
 
@@ -330,7 +331,8 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.rutilePerChunk = config.get(oreGen, "RutilePerChunk", 6).getInt();
 		sealableBlockWhiteList = config.getStringList(Configuration.CATEGORY_GENERAL, "sealableBlockWhiteList", new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
 		breakableTorches = config.getStringList("torchBlocks", Configuration.CATEGORY_GENERAL, new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
-
+		harvestableGasses = config.getStringList("gasMissionMultiplier", GAS_MINING, new String[] {}, "list of fluid names that can be harvested as Gas");
+		
 		//Satellite config
 		zmaster587.advancedRocketry.api.Configuration.microwaveRecieverMulitplier = 10*(float)config.get(Configuration.CATEGORY_GENERAL, "MicrowaveRecieverMulitplier", 1f, "Multiplier for the amount of energy produced by the microwave reciever").getDouble();
 
@@ -1441,7 +1443,17 @@ public class AdvancedRocketry {
 		}
 		logger.fine("End registering torch blocks");
 		breakableTorches = null;
-
+		
+		
+		logger.fine("Start registering Harvestable Gasses");
+		for(String str : harvestableGasses) {
+			Fluid fluid = FluidRegistry.getFluid(str);
+			if(fluid == null)
+				logger.warning("'" + str + "' is not a valid Fluid");
+			else
+				AtmosphereRegister.getInstance().registerHarvestableFluid(fluid);
+		}
+		logger.fine("End registering Harvestable Gasses");
 	}
 
 	@EventHandler
