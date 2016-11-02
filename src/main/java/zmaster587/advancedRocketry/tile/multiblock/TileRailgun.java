@@ -39,6 +39,7 @@ import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
+import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.ZUtils;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
@@ -117,6 +118,40 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		state = RedstoneState.OFF;
 	}
 
+	@Override
+	protected int requiredPowerPerTick() {
+		BlockPosition pos = getDestPosition();
+		if(pos != null) {
+			int distance = (int)Math.sqrt(Math.pow(pos.x - this.xCoord,2) + Math.pow(pos.z - this.zCoord, 2));;
+			if(getDestDimId() == this.worldObj.provider.dimensionId)
+				distance = distance*10 + 50000;
+			return Math.min(distance, super.requiredPowerPerTick());
+		}
+		return super.requiredPowerPerTick();
+	}
+	
+	/**
+	 * @return the destionation DIMID or -1 if not valid
+	 */
+	private int getDestDimId() {
+		ItemStack stack = inv.getStackInSlot(0);
+		if(stack != null && stack.getItem() instanceof ItemLinker) {
+			return ItemLinker.getDimId(stack);
+		}
+		return -1;
+	}
+	
+	/**
+	 * @return the destionation DIMID or null if not valid
+	 */
+	private BlockPosition getDestPosition() {
+		ItemStack stack = inv.getStackInSlot(0);
+		if(stack != null && stack.getItem() instanceof ItemLinker && ItemLinker.isSet(stack)) {
+			return new BlockPosition(ItemLinker.getMasterX(stack), ItemLinker.getMasterY(stack), ItemLinker.getMasterZ(stack));
+		}
+		return null;
+	}
+	
 	@Override
 	public List<BlockMeta> getAllowableWildCardBlocks() {
 		List<BlockMeta> blocks = super.getAllowableWildCardBlocks();
@@ -238,21 +273,17 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 			}
 
 		if(tfrStack != null) {
-			ItemStack stack = inv.getStackInSlot(0);
-
-			if(stack != null && stack.getItem() instanceof ItemLinker) {
-				int x,y,z, dimId;
-
-				x = ItemLinker.getMasterX(stack);
-				y = ItemLinker.getMasterY(stack);
-				z = ItemLinker.getMasterZ(stack);
-				dimId = ItemLinker.getDimId(stack);
+			BlockPosition pos = getDestPosition();
+			if(pos != null) {
+				int dimId;
+				
+				dimId = getDestDimId();
 
 				if(dimId != -1) {
 					World world = DimensionManager.getWorld(dimId);
 					TileEntity tile;
 
-					if(world != null && (tile = world.getTileEntity(x, y, z)) instanceof TileRailgun && ((TileRailgun)tile).canRecieveCargo(tfrStack) &&
+					if(world != null && (tile = world.getTileEntity(pos.x, pos.y, pos.z)) instanceof TileRailgun && ((TileRailgun)tile).canRecieveCargo(tfrStack) &&
 							zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(this.worldObj.provider.dimensionId,
 									zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(world, tile.xCoord, tile.zCoord).getId())) {
 
