@@ -277,6 +277,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		childPlanets = new HashSet<Integer>();
 		parentPlanet = -1;
 		starId = 0;
+		averageTemperature = 100;
 	}
 
 	@Override
@@ -1183,5 +1184,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public void setParentOrbitalDistance(int distance) {
 		this.orbitalDist = distance;
 
+	}
+
+	public int getStarId() {
+		return starId;
 	}
 }

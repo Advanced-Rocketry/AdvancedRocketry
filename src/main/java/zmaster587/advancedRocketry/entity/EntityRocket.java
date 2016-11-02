@@ -807,7 +807,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				thisDimId = object.getProperties().getParentProperties().getId();
 		}
 		
-		if(!DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, thisDimId)) {
+		if(finalDest != -1 && !DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, thisDimId)) {
 			setError(LibVulpes.proxy.getLocalizedString("error.rocket.notSameSystem"));
 			return;
 		}
@@ -1264,7 +1264,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			//modules.add(new ModuleText(180, 114, "Inventories", 0x404040));
 		}
 		else {
-			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension());
+			DimensionProperties properties = DimensionManager.getEffectiveDimId(worldObj, this.getPosition());
 			while(properties.getParentProperties() != null) properties = properties.getParentProperties();
 			
 			container = new ModulePlanetSelector(properties.getId(), zmaster587.libVulpes.inventory.TextureResources.starryBG, this, false);

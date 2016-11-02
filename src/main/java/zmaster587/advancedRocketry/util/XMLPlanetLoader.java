@@ -95,6 +95,11 @@ public class XMLPlanetLoader {
 					AdvancedRocketry.logger.warning("Invalid DIMID specified"); //TODO: more detailed error msg
 				}
 			}
+			
+			nameNode = planetNode.getAttributes().getNamedItem("dimMapping");
+			if(nameNode != null) {
+				properties.isNativeDimension = false;
+			}
 		}
 
 		while(planetPropertyNode != null) {

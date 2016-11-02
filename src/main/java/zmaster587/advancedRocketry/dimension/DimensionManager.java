@@ -381,7 +381,7 @@ public class DimensionManager implements IGalaxy {
 			return false;
 
 		//Avoid registering gas giants as dimensions
-		if(registerWithForge && dimId < GASGIANT_DIMID_OFFSET && !properties.isGasGiant() && !net.minecraftforge.common.DimensionManager.isDimensionRegistered(dim)) {
+		if(registerWithForge && !properties.isGasGiant() && !net.minecraftforge.common.DimensionManager.isDimensionRegistered(dim)) {
 
 			net.minecraftforge.common.DimensionManager.registerDimension(dimId, PlanetDimensionType);
 		}
