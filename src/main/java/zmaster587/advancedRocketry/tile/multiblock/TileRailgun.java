@@ -120,6 +120,40 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		state = RedstoneState.OFF;
 		redstoneControl.setRedstoneState(state);
 	}
+	
+	@Override
+	protected int requiredPowerPerTick() {
+		BlockPos pos = getDestPosition();
+		if(pos != null) {
+			int distance = (int)Math.sqrt(Math.pow(pos.getX() - this.pos.getX(),2) + Math.pow(pos.getZ() - this.pos.getZ(), 2));
+			if(getDestDimId() == this.worldObj.provider.getDimension())
+				distance = distance*10 + 50000;
+			return Math.min(distance, super.requiredPowerPerTick());
+		}
+		return super.requiredPowerPerTick();
+	}
+	
+	/**
+	 * @return the destionation DIMID or -1 if not valid
+	 */
+	private int getDestDimId() {
+		ItemStack stack = inv.getStackInSlot(0);
+		if(stack != null && stack.getItem() instanceof ItemLinker) {
+			return ItemLinker.getDimId(stack);
+		}
+		return -1;
+	}
+	
+	/**
+	 * @return the destionation DIMID or null if not valid
+	 */
+	private BlockPos getDestPosition() {
+		ItemStack stack = inv.getStackInSlot(0);
+		if(stack != null && stack.getItem() instanceof ItemLinker && ItemLinker.isSet(stack)) {
+			return ItemLinker.getMasterCoords(stack);
+		}
+		return null;
+	}
 
 	@Override
 	public List<BlockMeta> getAllowableWildCardBlocks() {
@@ -222,7 +256,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		ItemStack tfrStack = null;
 		IInventory inv2 = null;
 		int index = 0;
-		BlockPos invPos;
+		//BlockPos invPos;
 
 		out:
 			for(IInventory inv : this.itemInPorts) {
@@ -231,7 +265,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 						inv2 = inv;
 						index = i;
 
-						invPos = ((TileEntity)inv).getPos();
+						//invPos = ((TileEntity)inv).getPos();
 
 						break out;
 					}
@@ -240,14 +274,11 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 			}
 
 		if(tfrStack != null) {
-			ItemStack stack = inv.getStackInSlot(0);
-
-			if(stack != null && stack.getItem() instanceof ItemLinker) {
-				int x,y,z, dimId;
-				BlockPos pos;
-
-				pos = ItemLinker.getMasterCoords(stack);
-				dimId = ItemLinker.getDimId(stack);
+			BlockPos pos = getDestPosition();
+			if(pos != null) {
+				int dimId;
+				
+				dimId = getDestDimId();
 
 				if(dimId != -1) {
 					World world = DimensionManager.getWorld(dimId);
