@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fluids.IFluidBlock;
@@ -130,27 +131,27 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
      */
     public static boolean isFulBlock(World world, BlockPosition pos)
     {
-        return isFulBlock(world.getBlock(pos.x, pos.y, pos.z));
+        return isFulBlock(world, world.getBlock(pos.x, pos.y, pos.z), pos);
     }
 
     /**
-     * Checks if a block is full sized based off of block bounds. This
-     * is not a perfect check as mods may have a full size. However,
-     * have a 3D model that doesn't look a full block in size. There
-     * is no way around this other than to make a black list check.
+     * Checks if a block is full sized based off of collision bounds. This
+     * is not a perfect check as some mods may have blocks that can be walked through.
+     * But should be air-tight like forcefields
      *
      * @param block - block to compare
      * @return true if full block
      */
-    public static boolean isFulBlock(Block block)
+    public static boolean isFulBlock(World world, Block block, BlockPosition pos)
     {
+    	AxisAlignedBB bb = block.getCollisionBoundingBoxFromPool(world, pos.x, pos.y, pos.z);
         //size * 100 to correct rounding errors
-        int minX = (int) (block.getBlockBoundsMinX() * 100);
-        int minY = (int) (block.getBlockBoundsMinY() * 100);
-        int minZ = (int) (block.getBlockBoundsMinZ() * 100);
-        int maxX = (int) (block.getBlockBoundsMaxX() * 100);
-        int maxY = (int) (block.getBlockBoundsMaxY() * 100);
-        int maxZ = (int) (block.getBlockBoundsMaxZ() * 100);
+        int minX = (int) ((bb.minX - pos.x) * 100);
+        int minY = (int) ((bb.minY - pos.y) * 100);
+        int minZ = (int) ((bb.minZ - pos.z) * 100);
+        int maxX = (int) ((bb.maxX - pos.x) * 100);
+        int maxY = (int) ((bb.maxY - pos.y) * 100);
+        int maxZ = (int) ((bb.maxZ - pos.z) * 100);
 
         return minX == 0 && minY == 0 && minZ == 0 && maxX == 100 && maxY == 100 && maxZ == 100;
     }
