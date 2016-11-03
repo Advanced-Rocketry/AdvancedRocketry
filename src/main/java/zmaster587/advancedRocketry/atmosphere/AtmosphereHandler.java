@@ -288,7 +288,7 @@ public class AtmosphereHandler {
 	 */
 	public IAtmosphere getAtmosphereType(Entity entity) {
 		if(Configuration.enableOxygen) {
-			BlockPosition pos = new BlockPosition((int)(entity.posX - 1), (int)Math.ceil(entity.posY), (int)(entity.posZ - 1));
+			BlockPosition pos = new BlockPosition((int)Math.floor(entity.posX), (int)Math.ceil(entity.posY), (int)Math.floor(entity.posZ ));
 			for(AreaBlob blob : blobs.values()) {
 				if(blob.contains(pos)) {
 					return (IAtmosphere)blob.getData();
@@ -315,7 +315,7 @@ public class AtmosphereHandler {
 	 */
 	public int getAtmospherePressure(Entity entity) {
 		if(Configuration.enableOxygen) {
-			BlockPosition pos = new BlockPosition((int)(entity.posX - 1), (int)Math.ceil(entity.posY), (int)(entity.posZ - 1));
+			BlockPosition pos = new BlockPosition((int)(entity.posX), (int)Math.ceil(entity.posY), (int)(entity.posZ));
 			for(AreaBlob blob : blobs.values()) {
 				if(blob.contains(pos)) {
 					return ((AtmosphereBlob)blob).getPressure();
@@ -331,7 +331,7 @@ public class AtmosphereHandler {
 	 */
 	public boolean canEntityBreathe(EntityLiving entity) {
 		if(Configuration.enableOxygen) {
-			BlockPosition pos = new BlockPosition((int)Math.ceil(entity.posX), (int)Math.ceil(entity.posY), (int)Math.ceil(entity.posZ));
+			BlockPosition pos = new BlockPosition((int)Math.floor(entity.posX), (int)Math.ceil(entity.posY), (int)Math.floor(entity.posZ));
 			for(AreaBlob blob : blobs.values()) {
 				if(blob.contains(pos) && ((IAtmosphere)blob.getData()).isImmune(entity)) {
 					return true;
