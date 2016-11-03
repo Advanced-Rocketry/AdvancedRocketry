@@ -65,6 +65,7 @@ import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.BiomeHandler;
+import zmaster587.advancedRocketry.util.RocketInventoryHelper;
 import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
@@ -211,50 +212,17 @@ public class PlanetEventHandler {
 		zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
 	}
 
+
+	//TODO: more robust way of inv checking
 	/*@SubscribeEvent
-	public void entityRegister(EntityConstructing event) {
-		if(event.getEntity() instanceof EntityPlayer) {
-			event.getEntity().registerExtendedProperties(PlayerDataHandler.IDENTIFIER, new PlayerDataHandler());
-		}
-	}*/
-
-	//TODO move
-	//Has weak refs so if the player gets killed/logsout etc the entry doesnt stay trapped in RAM
-	private static HashSet<WeakReference<EntityPlayer>> inventoryCheckPlayerBypassMap = new HashSet<WeakReference<EntityPlayer>>();
-
-	public static void addPlayerToInventoryBypass(EntityPlayer player) {
-		inventoryCheckPlayerBypassMap.add(new WeakReference<>(player));
-	}
-
-	public static void removePlayerFromInventoryBypass(EntityPlayer player) {
-		Iterator<WeakReference<EntityPlayer>> iter = inventoryCheckPlayerBypassMap.iterator();
-
-		while(iter.hasNext()) {
-			WeakReference<EntityPlayer> player2 = iter.next();
-			if(player2.get() == player || player2.get() == null)
-				iter.remove();
-		}
-	}
-
-	public static boolean canPlayerBypassInvChecks(EntityPlayer player) {
-		Iterator<WeakReference<EntityPlayer>> iter = inventoryCheckPlayerBypassMap.iterator();
-		while(iter.hasNext()) {
-			WeakReference<EntityPlayer> player2 = iter.next();
-			if(player2.get() == player)
-				return true;
-		}
-		return false;
-	}
-
-	@SubscribeEvent
 	public void containerOpen(PlayerContainerEvent event) {
 		//event.getEntity()Player.openContainer
-		if(canPlayerBypassInvChecks(event.getEntityPlayer()))
-			if(event.getEntityPlayer().openContainer.windowId == 0)
-				removePlayerFromInventoryBypass(event.getEntityPlayer());
-			else
-				event.setResult(Result.ALLOW);
-	}
+		if(RocketInventoryHelper.canPlayerBypassInvChecks(event.getEntityPlayer()) && event instanceof PlayerContainerEvent.Close)
+			RocketInventoryHelper.removePlayerFromInventoryBypass(event.getEntityPlayer());
+		if(event instanceof PlayerContainerEvent.Open) {
+			
+		}
+	}*/
 
 	//Tick dimensions, needed for satellites, and guis
 	@SubscribeEvent

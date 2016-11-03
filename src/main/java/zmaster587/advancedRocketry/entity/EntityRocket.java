@@ -74,6 +74,7 @@ import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
+import zmaster587.advancedRocketry.util.RocketInventoryHelper;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
@@ -424,7 +425,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 			//Only handle the bypass on the server
 			if(!worldObj.isRemote)
-				PlanetEventHandler.addPlayerToInventoryBypass(player);
+				RocketInventoryHelper.addPlayerToInventoryBypass(player);
 		}
 		else if(stats.hasSeat()) { //If pilot seat is open mount entity there
 			if(stats.hasSeat() && this.getPassengers().isEmpty()) {
@@ -1340,8 +1341,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	public boolean canInteractWithContainer(EntityPlayer entity) {
 		boolean ret = !this.isDead && this.getDistanceToEntity(entity) < 64;
 		if(!ret)
-			PlanetEventHandler.removePlayerFromInventoryBypass(entity);
+			RocketInventoryHelper.removePlayerFromInventoryBypass(entity);
 
+		RocketInventoryHelper.updateTime(entity, worldObj.getWorldTime());
+		
 		return ret;
 	}
 
