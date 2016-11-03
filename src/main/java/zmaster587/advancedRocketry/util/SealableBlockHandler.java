@@ -5,6 +5,7 @@ import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockDoor.EnumDoorHalf;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -131,7 +132,7 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 	 */
 	public static boolean isFulBlock(World world, BlockPos pos)
 	{
-		return isFulBlock(world, pos, world.getBlockState(pos));
+		return isFullBlock(world, pos, world.getBlockState(pos));
 	}
 
 	/**
@@ -143,18 +144,18 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 	 * @param block - block to compare
 	 * @return true if full block
 	 */
-	public static boolean isFulBlock(IBlockAccess world, BlockPos pos, IBlockState state)
+	public static boolean isFullBlock(IBlockAccess world, BlockPos pos, IBlockState state)
 	{
+		AxisAlignedBB bb = state.getCollisionBoundingBox((World) world, pos);
 		
-		//size * 100 to correct rounding errors
-		int minX = (int) (state.getBoundingBox(world, pos).minX * 100);
-		int minY = (int) (state.getBoundingBox(world, pos).minY * 100);
-		int minZ = (int) (state.getBoundingBox(world, pos).minZ * 100);
-		int maxX = (int) (state.getBoundingBox(world, pos).maxX * 100);
-		int maxY = (int) (state.getBoundingBox(world, pos).maxY * 100);
-		int maxZ = (int) (state.getBoundingBox(world, pos).maxZ * 100);
+        int minX = (int) (bb.minX * 100);
+        int minY = (int) (bb.minY * 100);
+        int minZ = (int) (bb.minZ * 100);
+        int maxX = (int) (bb.maxX * 100);
+        int maxY = (int) (bb.maxY * 100);
+        int maxZ = (int) (bb.maxZ * 100);
 
-		return minX == 0 && minY == 0 && minZ == 0 && maxX == 100 && maxY == 100 && maxZ == 100;
+        return minX == 0 && minY == 0 && minZ == 0 && maxX == 100 && maxY == 100 && maxZ == 100;
 	}
 
 	//TODO unit test, document, cleanup
