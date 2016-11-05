@@ -362,7 +362,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 		if(!Configuration.terraformRequiresFluid)
 			return;
 
-		int requiredN2 = 80, requiredO2 = 80;
+		int requiredN2 = 40, requiredO2 = 40;
 
 		for(IFluidHandler handler : fluidInPorts) {
 			FluidStack stack = handler.drain(ForgeDirection.UNKNOWN, new FluidStack(AdvancedRocketryFluids.fluidNitrogen, requiredN2), true);
