@@ -2,18 +2,18 @@ package zmaster587.advancedRocketry.item;
 
 import java.util.List;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-
-import zmaster587.advancedRocketry.api.ISatelliteIdItem;
-import zmaster587.advancedRocketry.api.SatelliteRegistry;
-import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
-import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import zmaster587.advancedRocketry.api.ISatelliteIdItem;
+import zmaster587.advancedRocketry.api.SatelliteRegistry;
+import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
+import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
+
+import com.mojang.realmsclient.gui.ChatFormatting;
 
 public class ItemSatelliteIdentificationChip extends Item implements ISatelliteIdItem {
 
@@ -47,9 +47,8 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 					nbt.setInteger("dimId", satellite.getDimensionId());
 				}
 
-				World world;
-				if( !nbt.hasKey(null) && (world = DimensionManager.getWorld(satellite.getDimensionId())) != null && world.isRemote)
-					nbt.setString(name, ChatFormatting.RED + "Dim names broken as of 1.10");
+				if( !nbt.hasKey(null) && zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId()) != null)
+					nbt.setString(name, zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId()).getName());
 			}
 
 
