@@ -89,7 +89,7 @@ public class AtmosphereHandler {
 			}
 
 			if(atmosType.canTick()) {
-				AtmosphereEvent event2 = new AtmosphereEvent(event.entity, atmosType);
+				AtmosphereEvent event2 = new AtmosphereEvent.AtmosphereTickEvent(event.entity, atmosType);
 				MinecraftForge.EVENT_BUS.post(event2);
 				if(!event2.isCanceled()) 
 					atmosType.onTick((EntityLivingBase)event.entityLiving);
