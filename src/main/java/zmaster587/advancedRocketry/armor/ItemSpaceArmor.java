@@ -306,9 +306,12 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 	}
 
 	@Override
-	public boolean protectsFromSubstance(IAtmosphere atmosphere) {
-		return atmosphere == AtmosphereType.VACUUM;
+	public boolean protectsFromSubstance(IAtmosphere atmosphere, ItemStack stack, boolean commitProtection) {
+		
+		return atmosphere == AtmosphereType.VACUUM && (this != AdvancedRocketryItems.itemSpaceSuit_Chest || (this == AdvancedRocketryItems.itemSpaceSuit_Chest && 
+				(commitProtection && ((IFillableArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).decrementAir(stack, 1) > 0)) || (!commitProtection && ((IFillableArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).getAirRemaining(stack) > 0));
 	}
+
 
 	@Override
 	public int getNumSlots(ItemStack stack) {

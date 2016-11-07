@@ -52,10 +52,10 @@ public class AtmosphereVacuum extends AtmosphereType {
 		//TODO change over to use API #ISealedArmor
 		return (player instanceof EntityPlayer && ((EntityPlayer)player).capabilities.isCreativeMode) 
 				|| player.ridingEntity instanceof EntityRocketBase ||
-				helm != null && (helm.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)helm.getItem()).protectsFromSubstance(this) || protectsFrom(helm, 1)) &&
-				chest != null && (chest.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)chest.getItem()).protectsFromSubstance(this) || protectsFrom(chest, 2)) &&
-				leg != null && (leg.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)leg.getItem()).protectsFromSubstance(this) || protectsFrom(leg, 3)) &&
-				feet != null && (feet.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)feet.getItem()).protectsFromSubstance(this) || protectsFrom(feet, 4)) &&
+				helm != null && (helm.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)helm.getItem()).protectsFromSubstance(this, helm, true) || protectsFrom(helm, 1)) &&
+				chest != null && (chest.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)chest.getItem()).protectsFromSubstance(this, chest, true) || protectsFrom(chest, 2)) &&
+				leg != null && (leg.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)leg.getItem()).protectsFromSubstance(this, leg, true) || protectsFrom(leg, 3)) &&
+				feet != null && (feet.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)feet.getItem()).protectsFromSubstance(this, feet, true) || protectsFrom(feet, 4)) &&
 				(protectsFrom(chest, 2) || ((chest.getItem() instanceof IFillableArmor) && ((IFillableArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).decrementAir(chest, 1) > 0));
 	}
 	
