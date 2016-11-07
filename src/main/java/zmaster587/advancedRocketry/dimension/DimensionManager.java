@@ -460,7 +460,10 @@ public class DimensionManager implements IGalaxy {
 	 * @return the {@link StellarBody} object
 	 */
 	public StellarBody getStar(int id) {
-		return starList.get(new Integer(id));
+		StellarBody star = starList.get(new Integer(id));
+		if(star == null)
+			AdvancedRocketry.logger.warning("Attempted to get null star for ID " + id);
+		return star;
 	}
 
 	/**
