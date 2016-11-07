@@ -49,9 +49,13 @@ public class TilePipe extends TileEntity {
 			if(tile != null)
 				getNetworkHandler().removeFromAllTypes(this, tile);
 		}
-		getNetworkHandler().getNetwork(networkID).removePipeFromNetwork(this);
-		//Recreate the network until a clean way to tranverse nets in unloaded chunk can be found
-		getNetworkHandler().removeNetworkByID(networkID);
+		
+		//Fix NPE on chunk unload
+		if(getNetworkHandler().getNetwork(networkID) != null) {
+			getNetworkHandler().getNetwork(networkID).removePipeFromNetwork(this);
+			//Recreate the network until a clean way to tranverse nets in unloaded chunk can be found
+			getNetworkHandler().removeNetworkByID(networkID);
+		}
 	}
 
 	@Override
@@ -209,7 +213,7 @@ public class TilePipe extends TileEntity {
 				connectedSides[dir.ordinal()] = false;
 		}
 	}
-	
+
 	public HandlerCableNetwork getNetworkHandler() {
 		return NetworkRegistry.liquidNetwork;
 	}
