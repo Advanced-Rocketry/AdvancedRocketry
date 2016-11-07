@@ -332,7 +332,7 @@ public class AdvancedRocketry {
 		sealableBlockWhiteList = config.getStringList(Configuration.CATEGORY_GENERAL, "sealableBlockWhiteList", new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
 		breakableTorches = config.getStringList("torchBlocks", Configuration.CATEGORY_GENERAL, new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
 		harvestableGasses = config.getStringList("gasMissionMultiplier", GAS_MINING, new String[] {}, "list of fluid names that can be harvested as Gas");
-		
+
 		//Satellite config
 		zmaster587.advancedRocketry.api.Configuration.microwaveRecieverMulitplier = 10*(float)config.get(Configuration.CATEGORY_GENERAL, "MicrowaveRecieverMulitplier", 1f, "Multiplier for the amount of energy produced by the microwave reciever").getDouble();
 
@@ -537,7 +537,7 @@ public class AdvancedRocketry {
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockRailgun).setSideTexture("libvulpes:machineGeneric");
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockRailgun).setTopTexture("libvulpes:machineGeneric");
 
-		
+
 		AdvancedRocketryBlocks.blockAtmosphereTerraformer = new BlockMultiblockMachine(TileAtmosphereTerraformer.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("atmosphereTerraformer").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockAtmosphereTerraformer).setFrontTexture("Advancedrocketry:machineElectrolzyer", "Advancedrocketry:machineElectrolzyer_active");
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockAtmosphereTerraformer).setSideTexture("libvulpes:machineGeneric");
@@ -714,7 +714,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockRailgun, AdvancedRocketryBlocks.blockRailgun.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockAstroBed, AdvancedRocketryBlocks.blockAstroBed.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockAdvEngine, AdvancedRocketryBlocks.blockAdvEngine.getUnlocalizedName());
-		
+
 		//TODO, use different mechanism to enable/disable drill
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
 			GameRegistry.registerBlock(AdvancedRocketryBlocks.blockSpaceLaser, "laserController");
@@ -769,7 +769,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryItems.itemJackhammer = new ItemJackHammer(ToolMaterial.EMERALD).setTextureName("advancedRocketry:jackHammer").setUnlocalizedName("jackhammer").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemJackhammer.setHarvestLevel("jackhammer", 3);
 		AdvancedRocketryItems.itemJackhammer.setHarvestLevel("pickaxe", 3);
-		
+
 		//Note: not registered
 		AdvancedRocketryItems.itemAstroBed = new ItemAstroBed();
 
@@ -887,7 +887,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileSolarPanel.class, "ARSolarGenerator");
 		GameRegistry.registerTileEntity(TileStationAltitudeController.class, "ARAltitudeController");
 		GameRegistry.registerTileEntity(TileRailgun.class, "ARRailgun");
-		
+
 		//OreDict stuff
 		OreDictionary.registerOre("waferSilicon", new ItemStack(AdvancedRocketryItems.itemWafer,1,0));
 		OreDictionary.registerOre("ingotCartileEntityClassbon", new ItemStack(AdvancedRocketryItems.itemMisc, 1, 1));
@@ -1112,7 +1112,7 @@ public class AdvancedRocketry {
 		//TODO add 2Al2O3 as output
 		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("TitaniumAluminide").getProduct(AllowedProducts.getProductByName("INGOT"), 3), 9000, 20, new NumberedOreDictStack("ingotAluminum", 7), new NumberedOreDictStack("ingotTitanium", 3)); //TODO titanium dioxide
 		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("TitaniumIridium").getProduct(AllowedProducts.getProductByName("INGOT"),2), 3000, 20, "ingotTitanium", "ingotIridium");
-		
+
 		//Chemical Reactor
 		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new Object[] {new ItemStack(AdvancedRocketryItems.itemCarbonScrubberCartridge,1, 0), new ItemStack(Items.coal, 1, 1)}, 40, 20, new ItemStack(AdvancedRocketryItems.itemCarbonScrubberCartridge, 1, AdvancedRocketryItems.itemCarbonScrubberCartridge.getMaxDamage()));
 		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new ItemStack(Items.dye,5,0xF), 100, 1, Items.bone, new FluidStack(AdvancedRocketryFluids.fluidNitrogen, 10));
@@ -1359,6 +1359,8 @@ public class AdvancedRocketry {
 				for(String str : ore.getOreDictNames()) {
 					if(AllowedProducts.getProductByName("ORE").isOfType(ore.getAllowedProducts()) || ore.isVanilla())
 						RecipesMachine.getInstance().addRecipe(BlockPress.class, ore.getProduct(AllowedProducts.getProductByName("DUST")), 0, 0, AllowedProducts.getProductByName("ORE").name().toLowerCase() + str);
+					if(AllowedProducts.getProductByName("INGOT").isOfType(ore.getAllowedProducts()) || ore.isVanilla())
+						GameRegistry.addSmelting(ore.getProduct(AllowedProducts.getProductByName("DUST")), ore.getProduct(AllowedProducts.getProductByName("INGOT")), 0);
 				}
 			}
 		}
@@ -1432,7 +1434,7 @@ public class AdvancedRocketry {
 		}
 		logger.fine("End registering sealable blocks");
 		sealableBlockWhiteList = null;
-		
+
 		logger.fine("Start registering torch blocks");
 		for(String str : breakableTorches) {
 			Block block = Block.getBlockFromName(str);
@@ -1443,8 +1445,8 @@ public class AdvancedRocketry {
 		}
 		logger.fine("End registering torch blocks");
 		breakableTorches = null;
-		
-		
+
+
 		logger.fine("Start registering Harvestable Gasses");
 		for(String str : harvestableGasses) {
 			Fluid fluid = FluidRegistry.getFluid(str);
@@ -1463,7 +1465,7 @@ public class AdvancedRocketry {
 			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimId);
 			if(!properties.isNativeDimension) {
 				//if(properties.getId() != zmaster587.advancedRocketry.api.Configuration.MoonId)
-					//DimensionManager.getInstance().deleteDimension(properties.getId());
+				//DimensionManager.getInstance().deleteDimension(properties.getId());
 				if (properties.getId() == zmaster587.advancedRocketry.api.Configuration.MoonId && !Loader.isModLoaded("GalacticraftCore"))
 					properties.isNativeDimension = true;
 			}
@@ -1529,7 +1531,7 @@ public class AdvancedRocketry {
 		//Note: loading this modifies dimOffset
 		DimensionPropertyCoupling dimCouplingList = null;
 		XMLPlanetLoader loader = null;
-		
+
 		file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
 		logger.info("Checking for config at " + file.getAbsolutePath());
 		if(file.exists()) {
@@ -1545,7 +1547,7 @@ public class AdvancedRocketry {
 		}
 
 		//End load planet files
-		
+
 		if(Loader.isModLoaded("GalacticraftCore") ) 
 			zmaster587.advancedRocketry.api.Configuration.MoonId = ConfigManagerCore.idDimensionMoon;
 
@@ -1570,7 +1572,7 @@ public class AdvancedRocketry {
 					DimensionManager.getInstance().registerDimNoUpdate(properties, true);
 					properties.setStar(properties.getStar());
 				}
-				
+
 				for(StellarBody star : dimCouplingList.stars) {
 					numRandomGeneratedPlanets = loader.getMaxNumPlanets(star);
 					numRandomGeneratedGasGiants = loader.getMaxNumGasGiants(star);
@@ -1601,7 +1603,7 @@ public class AdvancedRocketry {
 			DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
 			if(!loadedFromXML)  {
 				generateRandomPlanets(DimensionManager.getSol(), numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
-				
+
 				StellarBody star = new StellarBody();
 				star.setTemperature(10);
 				star.setPosX(300);
@@ -1610,7 +1612,7 @@ public class AdvancedRocketry {
 				star.setName("Wolf 12");
 				DimensionManager.getInstance().addStar(star);
 				generateRandomPlanets(star, 5, 0);
-				
+
 				star = new StellarBody();
 				star.setTemperature(170);
 				star.setPosX(-200);
@@ -1619,7 +1621,7 @@ public class AdvancedRocketry {
 				star.setName("Epsilon ire");
 				DimensionManager.getInstance().addStar(star);
 				generateRandomPlanets(star, 7, 0);
-				
+
 				star = new StellarBody();
 				star.setTemperature(200);
 				star.setPosX(-150);
@@ -1628,7 +1630,7 @@ public class AdvancedRocketry {
 				star.setName("Proxima Centaurs");
 				DimensionManager.getInstance().addStar(star);
 				generateRandomPlanets(star, 3, 0);
-				
+
 				star = new StellarBody();
 				star.setTemperature(70);
 				star.setPosX(-150);
@@ -1637,7 +1639,7 @@ public class AdvancedRocketry {
 				star.setName("Magnis Vulpes");
 				DimensionManager.getInstance().addStar(star);
 				generateRandomPlanets(star, 2, 0);
-				
+
 			}
 
 		}else {
@@ -1650,7 +1652,7 @@ public class AdvancedRocketry {
 		//Attempt to load ore config from adv planet XML
 		if(dimCouplingList != null) {
 			for(DimensionProperties properties : dimCouplingList.dims) {
-			
+
 				//Register dimensions loaded by other mods if not already loaded
 				if(!properties.isNativeDimension && properties.getStar() != null && !DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
 					for(StellarBody star : dimCouplingList.stars) {
@@ -1662,7 +1664,7 @@ public class AdvancedRocketry {
 						}
 					}
 				}
-				
+
 				if(properties.oreProperties != null) {
 					DimensionProperties loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
 
@@ -1671,10 +1673,10 @@ public class AdvancedRocketry {
 				}
 			}
 		}
-		
+
 		// make sure to set dim offset back to original to make things consistant
 		DimensionManager.dimOffset = dimOffset;
-		
+
 	}
 
 	private void generateRandomPlanets(StellarBody star, int numRandomGeneratedPlanets, int numRandomGeneratedGasGiants) {
