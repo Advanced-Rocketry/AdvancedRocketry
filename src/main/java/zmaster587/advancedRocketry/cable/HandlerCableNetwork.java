@@ -133,4 +133,8 @@ public class HandlerCableNetwork {
 			return networks.get(networkID).toString();
 		return "";
 	}
+	
+	public CableNetwork getNetwork(int id) {
+		return networks.get(id);
+	}
 }

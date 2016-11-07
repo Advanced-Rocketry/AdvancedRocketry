@@ -8,12 +8,14 @@ import java.util.Random;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
+import zmaster587.advancedRocketry.tile.cables.TilePipe;
 import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.SingleEntry;
 
 public class CableNetwork {
 
 	int networkID;
+	protected int numCables = 0;
 
 	protected static HashSet<Integer> usedIds = new HashSet<Integer>();
 
@@ -184,5 +186,13 @@ public class CableNetwork {
 	}
 
 	public void tick() {
+	}
+
+	public void removePipeFromNetwork(TilePipe tilePipe) {
+		numCables--;
+	}
+
+	public void addPipeToNetwork(TilePipe tilePipe) {
+		numCables++;
 	}
 }
