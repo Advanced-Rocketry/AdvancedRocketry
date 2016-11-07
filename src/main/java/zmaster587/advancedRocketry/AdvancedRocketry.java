@@ -1266,6 +1266,9 @@ public class AdvancedRocketry {
 				for(String str : ore.getOreDictNames()) {
 					if(AllowedProducts.getProductByName("ORE").isOfType(ore.getAllowedProducts()) || ore.isVanilla())
 						RecipesMachine.getInstance().addRecipe(BlockPress.class, ore.getProduct(AllowedProducts.getProductByName("DUST")), 0, 0, AllowedProducts.getProductByName("ORE").name().toLowerCase() + str);
+					
+					if(AllowedProducts.getProductByName("INGOT").isOfType(ore.getAllowedProducts()) || ore.isVanilla())
+						GameRegistry.addSmelting(ore.getProduct(AllowedProducts.getProductByName("DUST")), ore.getProduct(AllowedProducts.getProductByName("INGOT")), 0);
 				}
 			}
 		}
