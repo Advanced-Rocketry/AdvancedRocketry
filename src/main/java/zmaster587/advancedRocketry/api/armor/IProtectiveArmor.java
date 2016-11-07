@@ -1,7 +1,14 @@
 package zmaster587.advancedRocketry.api.armor;
 
+import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 
 public interface IProtectiveArmor {
-	public boolean protectsFromSubstance(IAtmosphere atmosphere);
+	/**
+	 * Called when checking for protection from an atmosphere
+	 * stack is the piece of armor being checked
+	 * commitProtection true if actually running protection, this exists so that it is possible to check if an armor protects
+	 * without performing actual item/fluid consumption.  This should only be true when called from AtmosphereHandler to prevent double consumtion
+	 */
+	public boolean protectsFromSubstance(IAtmosphere atmosphere, ItemStack stack, boolean commitProtection);
 }

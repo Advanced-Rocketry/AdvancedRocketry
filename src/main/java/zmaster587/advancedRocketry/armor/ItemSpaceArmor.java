@@ -11,6 +11,7 @@ import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
 import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
+import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.client.render.armor.RenderJetPack;
 import zmaster587.libVulpes.api.IArmorComponent;
@@ -29,8 +30,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -39,7 +43,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Any class that extends this will gain the ability to store oxygen and will protect players from the vacuum atmosphere type
  *
  */
-public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillableArmor, IProtectiveArmor, IModularArmor {
+public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabilityProvider, IFillableArmor, IProtectiveArmor, IModularArmor {
 
 	private final static String componentNBTName = "componentName";
 
@@ -316,8 +320,9 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 	}
 
 	@Override
-	public boolean protectsFromSubstance(IAtmosphere atmosphere) {
-		return atmosphere == AtmosphereType.VACUUM;
+	public boolean protectsFromSubstance(IAtmosphere atmosphere, ItemStack stack, boolean commitProtection) {
+		
+		return atmosphere == AtmosphereType.VACUUM && (this != AdvancedRocketryItems.itemSpaceSuit_Chest || (this == AdvancedRocketryItems.itemSpaceSuit_Chest && ((IFillableArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).decrementAir(stack, 1) > 0));
 	}
 
 	@Override
@@ -338,6 +343,19 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 	@Override
 	public void saveModuleInventory(ItemStack stack, IInventory inv) {
 		saveEmbeddedInventory(stack, (EmbeddedInventory)inv);
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		
+		return capability == CapabilitySpaceArmor.PROTECTIVEARMOR;
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if(capability == CapabilitySpaceArmor.PROTECTIVEARMOR)
+			return (T) this;
+		return null;
 	}
 
 }

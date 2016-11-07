@@ -44,6 +44,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
+import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
@@ -85,6 +86,7 @@ import zmaster587.advancedRocketry.block.plant.BlockAlienLeaves;
 import zmaster587.advancedRocketry.block.plant.BlockAlienSapling;
 import zmaster587.advancedRocketry.block.plant.BlockAlienWood;
 import zmaster587.advancedRocketry.block.BlockTorchUnlit;
+import zmaster587.advancedRocketry.capability.CapabilityProtectiveArmor;
 import zmaster587.advancedRocketry.command.WorldCommand;
 import zmaster587.advancedRocketry.common.CommonProxy;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -352,6 +354,9 @@ public class AdvancedRocketry {
 		}
 
 		config.save();
+		
+		//Register cap events
+		MinecraftForge.EVENT_BUS.register(new CapabilityProtectiveArmor());
 
 		//Register Packets
 		PacketHandler.INSTANCE.addDiscriminator(PacketDimInfo.class);
