@@ -1027,7 +1027,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		//Note: parent planet must be set before setting the star otherwise it would cause duplicate planets in the StellarBody's array
 		parentPlanet = nbt.getInteger("parentPlanet");
-		this.setStar( DimensionManager.getInstance().getStar(nbt.getInteger("starId")));
+		this.setStar(DimensionManager.getInstance().getStar(nbt.getInteger("starId")));
 
 		//Satallites
 
@@ -1188,5 +1188,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	public int getStarId() {
 		return starId;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("Dimension ID: %d.  Dimension Name: %s.  Parent Star %d ", getId(), getName(), getStarId());
 	}
 }

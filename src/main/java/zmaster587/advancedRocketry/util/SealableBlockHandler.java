@@ -148,6 +148,9 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 	{
 		AxisAlignedBB bb = state.getCollisionBoundingBox((World) world, pos);
 		
+    	if(bb == null)
+    		return false;
+		
         int minX = (int) (bb.minX * 100);
         int minY = (int) (bb.minY * 100);
         int minZ = (int) (bb.minZ * 100);
