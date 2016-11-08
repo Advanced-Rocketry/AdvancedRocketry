@@ -145,6 +145,10 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
     public static boolean isFulBlock(World world, Block block, BlockPosition pos)
     {
     	AxisAlignedBB bb = block.getCollisionBoundingBoxFromPool(world, pos.x, pos.y, pos.z);
+    	
+    	if(bb == null)
+    		return false;
+    	
         //size * 100 to correct rounding errors
         int minX = (int) ((bb.minX - pos.x) * 100);
         int minY = (int) ((bb.minY - pos.y) * 100);

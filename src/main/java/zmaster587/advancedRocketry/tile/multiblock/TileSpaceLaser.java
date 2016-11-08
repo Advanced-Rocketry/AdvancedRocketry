@@ -367,22 +367,17 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 		}
 		isRunning = false;
 	}
-
+	
 	@Override
-	public Packet getDescriptionPacket() {
-		NBTTagCompound nbt = ((S35PacketUpdateTileEntity)super.getDescriptionPacket()).func_148857_g();
-		this.writeToNBT(nbt);
-
+	protected void writeNetworkData(NBTTagCompound nbt) {
+		super.writeNetworkData(nbt);
 		nbt.setBoolean("IsRunning", isRunning);
-
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
 	}
-
-	@Override 
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		super.onDataPacket(net, pkt);
-		this.readFromNBT(pkt.func_148857_g());
-		isRunning = pkt.func_148857_g().getBoolean("IsRunning");
+	
+	@Override
+	protected void readNetworkData(NBTTagCompound nbt) {
+		super.readNetworkData(nbt);
+		isRunning = nbt.getBoolean("IsRunning");
 	}
 
 	@Override
