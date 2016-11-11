@@ -42,10 +42,6 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 				{'*', new BlockMeta(Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem()), MaterialRegistry.getMaterialFromName("Copper").getMeta()), new BlockMeta(Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem()), MaterialRegistry.getMaterialFromName("Copper").getMeta()), '*'},
 				{'*', AdvancedRocketryBlocks.blockMotor, AdvancedRocketryBlocks.blockMotor, '*'}}};
 
-	@Override
-	public List<IRecipe> getMachineRecipeList() {
-		return RecipesMachine.getInstance().getRecipes(this.getClass());
-	}
 
 	@Override
 	public Object[][][] getStructure() {

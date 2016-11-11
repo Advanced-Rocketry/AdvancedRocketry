@@ -38,21 +38,6 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 	}
 	
 	@Override
-	public List<IRecipe> getMachineRecipeList() {
-		return RecipesMachine.getInstance().getRecipes(this.getClass());
-	}
-
-	@Override
-	protected void integrateTile(TileEntity tile) {
-		super.integrateTile(tile);
-	}
-	
-	@Override
-	public boolean canProcessRecipe(IRecipe recipe) {
-		return super.canProcessRecipe(recipe);
-	}
-	
-	@Override
 	public Object[][][] getStructure() {
 		return structure;
 	}

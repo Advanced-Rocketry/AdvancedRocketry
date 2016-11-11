@@ -72,12 +72,6 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockBlastBrick, -1));
 		return list;
 	}
-
-	@Override
-	protected void integrateTile(TileEntity tile) {
-		super.integrateTile(tile);
-	}
-	
 	//Since this doesn't have a render just set the meta and masterBlock
 	@Override
 	protected void replaceStandardBlock(int xCoord, int yCoord, int zCoord,	Block block, TileEntity tile) {
