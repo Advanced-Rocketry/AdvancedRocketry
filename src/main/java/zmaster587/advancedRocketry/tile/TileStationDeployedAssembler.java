@@ -15,6 +15,7 @@ import zmaster587.advancedRocketry.api.IIntake;
 import zmaster587.advancedRocketry.api.IMiningDrill;
 import zmaster587.advancedRocketry.api.IRocketEngine;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
+import zmaster587.advancedRocketry.block.BlockRocketMotor;
 import zmaster587.advancedRocketry.block.BlockSeat;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.entity.EntityStationDeployedRocket;
@@ -124,7 +125,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 			for(int y = 0; y < storageChunk.getSizeY(); y++) {
 				for(int z = 0; z < storageChunk.getSizeZ(); z++) {
 
-					if(storageChunk.getBlock(x, y, z) == AdvancedRocketryBlocks.blockEngine) {
+					if(storageChunk.getBlock(x, y, z) instanceof BlockRocketMotor) {
 						storageChunk.setBlockMeta(x, y, z, rocket.forwardDirection.ordinal());
 						storageChunk.getTileEntity(x, y, z).blockMetadata = rocket.forwardDirection.ordinal();
 						((TileModelRenderRotatable)storageChunk.getTileEntity(x, y, z)).rotation = rocket.forwardDirection;
