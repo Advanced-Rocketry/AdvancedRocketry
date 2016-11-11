@@ -213,6 +213,8 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
+
 
 @Mod(modid="advancedRocketry", name="Advanced Rocketry", version="%VERSION%", dependencies="required-after:libVulpes@[%LIBVULPESVERSION%,)")
 public class AdvancedRocketry {
@@ -227,7 +229,7 @@ public class AdvancedRocketry {
 	public static AdvancedRocketry instance;
 	public static WorldType planetWorldType;
 	public static WorldType spaceWorldType;
-
+	private boolean resetFromXml;
 	public static CompatibilityMgr compat = new CompatibilityMgr();
 	public static Logger logger = Logger.getLogger(Constants.modId);
 	private static Configuration config;
@@ -301,7 +303,10 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres = config.get(ASTEROID, "standardOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone"}, "List of oredictionary names of ores allowed to spawn in asteriods").getStringList();
 		zmaster587.advancedRocketry.api.Configuration.standardLaserDrillOres = config.get(Configuration.CATEGORY_GENERAL, "laserDrillOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone", "oreDiamond"}, "List of oredictionary names of ores allowed to be mined by the laser drill if surface drilling is disabled").getStringList();
 		zmaster587.advancedRocketry.api.Configuration.laserDrillPlanet = config.get(Configuration.CATEGORY_GENERAL, "laserDrillPlanet", false, "If true the orbital laser will actually mine blocks on the planet below").getBoolean();
-
+		resetFromXml = config.getBoolean("resetPlanetsFromXML", Configuration.CATEGORY_GENERAL, false, "setting this to true will DELETE existing advancedrocketry planets and regen the solar system from the advanced planet XML file, satellites orbiting the overworld will remain intact and stations will be moved to the overworld.");
+		//Reset to false
+		config.get(Configuration.CATEGORY_GENERAL, "resetPlanetsFromXML",false).set(false);
+		
 		//Client
 		zmaster587.advancedRocketry.api.Configuration.rocketRequireFuel = config.get(ROCKET, "rocketsRequireFuel", true, "Set to false if rockets should not require fuel to fly").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.rocketThrustMultiplier = config.get(ROCKET, "thrustMultiplier", 1f, "Multiplier for per-engine thrust").getDouble();
@@ -1556,12 +1561,29 @@ public class AdvancedRocketry {
 
 
 		//Register hard coded dimensions
-		if(!zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.filePath)) {
+		if(!zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.filePath) || resetFromXml) {
 			int numRandomGeneratedPlanets = 9;
 			int numRandomGeneratedGasGiants = 1;
 			file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
 			logger.info("Checking for config at " + file.getAbsolutePath());
 
+			if(resetFromXml) {
+				zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
+				zmaster587.advancedRocketry.api.Configuration.MoonId = -1;
+				
+				//Delete old dimensions
+				File dir = new File(net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory() + "/" + DimensionManager.workingPath);
+				for(File file2 : dir.listFiles()) {
+					if(file2.getName().startsWith("DIM") && !file2.getName().equals("DIM" + zmaster587.advancedRocketry.api.Configuration.spaceDimId)) {
+						try {
+							FileUtils.deleteDirectory(file2);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+			
 			boolean loadedFromXML = false;
 
 			if(dimCouplingList != null) {
