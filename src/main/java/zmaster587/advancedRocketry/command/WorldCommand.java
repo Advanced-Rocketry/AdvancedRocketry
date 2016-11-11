@@ -217,6 +217,7 @@ public class WorldCommand implements ICommand {
 
 					int gasOffset = 0;
 					boolean gassy = false;
+					boolean moon = false;
 					int starId = 0;
 
 					if(string.length > 2 ) {
@@ -234,6 +235,13 @@ public class WorldCommand implements ICommand {
 
 						}
 					}
+					
+					if(string.length > 2 + gasOffset) {
+						if(string[2 + gasOffset].equalsIgnoreCase("moon")) {
+							gasOffset++;
+							moon = true;
+						}
+					}
 
 					if(string.length > 2 + gasOffset && string[2 + gasOffset].equalsIgnoreCase("gas")) {
 						gasOffset++;
@@ -243,30 +251,56 @@ public class WorldCommand implements ICommand {
 					try {
 						//Advancedrocketry planet generate <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>
 						if(string.length == 6 + gasOffset) {
+							
+							int planetId = starId;
+							if(moon)
+								starId = DimensionManager.getInstance().getDimensionProperties(planetId).getStarId();
+							
+							DimensionProperties properties;
 							if(!gassy)
-								DimensionManager.getInstance().generateRandom(starId,string[2 + gasOffset], Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]));
+								properties = DimensionManager.getInstance().generateRandom(starId, string[2 + gasOffset], Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]));
 							else
-								DimensionManager.getInstance().generateRandomGasGiant(starId,string[2 + gasOffset], Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),0,0,0);
+								properties = DimensionManager.getInstance().generateRandomGasGiant(starId, string[2 + gasOffset], Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),1,1,1);
 
+							sender.addChatMessage(new ChatComponentText("Dimension: " + string[2 + gasOffset] + " Generated!"));
+							
+							
+							if(moon) {
+								properties.setParentPlanet(DimensionManager.getInstance().getDimensionProperties(planetId));
+								DimensionManager.getInstance().getStar(starId).removePlanet(properties);
+							}
+							
 							sender.addChatMessage(new ChatComponentText("Dimension Generated!"));
 						}
 						else if(string.length == 9  + gasOffset) {
+							
+							int planetId = starId;
+							if(moon)
+								starId = DimensionManager.getInstance().getDimensionProperties(planetId).getStarId();
+							
+							DimensionProperties properties;
+							
 							if(!gassy)
-								DimensionManager.getInstance().generateRandom(starId,string[2 + gasOffset] ,Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),Integer.parseInt(string[6 + gasOffset]), Integer.parseInt(string[7 + gasOffset]), Integer.parseInt(string[8 + gasOffset]));
+								properties = DimensionManager.getInstance().generateRandom(starId,string[2 + gasOffset] ,Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),Integer.parseInt(string[6 + gasOffset]), Integer.parseInt(string[7 + gasOffset]), Integer.parseInt(string[8 + gasOffset]));
 							else
-								DimensionManager.getInstance().generateRandomGasGiant(starId, string[2 + gasOffset] ,Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),Integer.parseInt(string[6 + gasOffset]), Integer.parseInt(string[7 + gasOffset]), Integer.parseInt(string[8 + gasOffset]));
+								properties = DimensionManager.getInstance().generateRandomGasGiant(starId, string[2 + gasOffset] ,Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),Integer.parseInt(string[6 + gasOffset]), Integer.parseInt(string[7 + gasOffset]), Integer.parseInt(string[8 + gasOffset]));
 
 							sender.addChatMessage(new ChatComponentText("Dimension: " + string[2 + gasOffset] + " Generated!"));
+						
+							if(moon) {
+								properties.setParentPlanet(DimensionManager.getInstance().getDimensionProperties(planetId));
+								DimensionManager.getInstance().getStar(starId).removePlanet(properties);
+							}
 						}
 						else {
-							sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " [starId] [gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+							sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " [starId] [moon] [gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
 							sender.addChatMessage(new ChatComponentText(""));
-							sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " [starId] [gas] <name> <atmosphere base value> <distance base value> <gravity base value> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+							sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " [starId] [moon] [gas] <name> <atmosphere base value> <distance base value> <gravity base value> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
 						}
 					} catch(NumberFormatException e) {
-						sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " [starId] [gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+						sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " [starId] [moon] [gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
 						sender.addChatMessage(new ChatComponentText(""));
-						sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " [starId] [gas] <name> <atmosphere base value> <distance base value> <gravity base value> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+						sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + " [starId] [moon] [gas] <name> <atmosphere base value> <distance base value> <gravity base value> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
 					}
 				}
 				//Make sure player is in Dimension we have control over
