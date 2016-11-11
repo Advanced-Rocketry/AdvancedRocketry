@@ -153,8 +153,6 @@ public class DimensionManager implements IGalaxy {
 			return satellite;
 
 		for(int i : DimensionManager.getInstance().getLoadedDimensions()) {
-
-
 			if( (satellite = DimensionManager.getInstance().getDimensionProperties(i).getSatellite(satId)) != null )
 				return satellite;
 		}
