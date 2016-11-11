@@ -86,11 +86,6 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 	}
 
 	@Override
-	public List<IRecipe> getMachineRecipeList() {
-		return RecipesMachine.getInstance().getRecipes(this.getClass());
-	}
-
-	@Override
 	public String getMachineName() {
 		return "tile.electricArcFurnace.name";
 	}

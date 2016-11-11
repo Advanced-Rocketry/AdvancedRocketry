@@ -1366,6 +1366,17 @@ public class AdvancedRocketry {
 		}
 		logger.fine("End registering Harvestable Gasses");
 		harvestableGasses = null;
+	
+		
+		//Load XML recipes
+		LibVulpes.instance.loadXMLRecipe(TileCuttingMachine.class);
+		LibVulpes.instance.loadXMLRecipe(TilePrecisionAssembler.class);
+		LibVulpes.instance.loadXMLRecipe(TileChemicalReactor.class);
+		LibVulpes.instance.loadXMLRecipe(TileCrystallizer.class);
+		LibVulpes.instance.loadXMLRecipe(TileElectrolyser.class);
+		LibVulpes.instance.loadXMLRecipe(TileElectricArcFurnace.class);
+		LibVulpes.instance.loadXMLRecipe(TileLathe.class);
+		LibVulpes.instance.loadXMLRecipe(TileRollingMachine.class);
 		
 	}
 

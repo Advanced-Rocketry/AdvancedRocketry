@@ -43,11 +43,6 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 				{'*', AdvancedRocketryBlocks.blockMotor, AdvancedRocketryBlocks.blockMotor, '*'}}};
 
 	@Override
-	public List<IRecipe> getMachineRecipeList() {
-		return RecipesMachine.getInstance().getRecipes(this.getClass());
-	}
-
-	@Override
 	public Object[][][] getStructure() {
 		return structure;
 	}

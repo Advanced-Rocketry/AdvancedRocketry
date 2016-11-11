@@ -36,11 +36,6 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 	public TileCrystallizer() {
 		coil = new Material[2];
 	}
-	
-	@Override
-	public List<IRecipe> getMachineRecipeList() {
-		return RecipesMachine.getInstance().getRecipes(this.getClass());
-	}
 
 	@Override
 	protected void integrateTile(TileEntity tile) {
