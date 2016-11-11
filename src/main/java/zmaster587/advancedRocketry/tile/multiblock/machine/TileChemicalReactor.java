@@ -33,12 +33,7 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 			{'l', new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'O'}},
 
 	};
-	
-	@Override
-	public List<IRecipe> getMachineRecipeList() {
-		return RecipesMachine.getInstance().getRecipes(this.getClass());
-	}
-	
+
 	@Override
 	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
 		TileEntity tileEntity = world.getTileEntity(pos);

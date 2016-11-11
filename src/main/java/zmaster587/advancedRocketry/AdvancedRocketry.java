@@ -1395,7 +1395,6 @@ public class AdvancedRocketry {
 		event.registerServerCommand(new WorldCommand());
 		
 		int dimOffset = DimensionManager.dimOffset;
-
 		//Open ore files
 		File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/oreConfig.xml");
 		logger.fine("Checking for ore config at " + file.getAbsolutePath());
