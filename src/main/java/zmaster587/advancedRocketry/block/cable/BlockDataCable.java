@@ -16,7 +16,7 @@ public class BlockDataCable extends BlockPipe {
 	
 	@Override
 	public TileEntity createTileEntity(World world, int metadata) {
-		return new TileEnergyPipe();
+		return new TileDataPipe();
 	}
 
 }
