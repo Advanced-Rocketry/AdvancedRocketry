@@ -73,7 +73,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 			}
 		}
 		else {
-			zSize = 1+ ZUtils.getContinuousBlockLength(world, direction, xCurrent, yCurrent + yMax, zCurrent, MAX_SIZE, AdvancedRocketryBlocks.blockStructureTower);
+			zSize = ZUtils.getContinuousBlockLength(world, direction, xCurrent, yCurrent + yMax, zCurrent, MAX_SIZE, AdvancedRocketryBlocks.blockStructureTower);
 			xMin = ZUtils.getContinuousBlockLength(world, ForgeDirection.WEST, xCurrent - 1, yCurrent, zCurrent, MAX_SIZE, AdvancedRocketryBlocks.blockStructureTower) + 1;
 			xMax = ZUtils.getContinuousBlockLength(world, ForgeDirection.EAST, xCurrent + 1, yCurrent, zCurrent, MAX_SIZE - xMin, AdvancedRocketryBlocks.blockStructureTower);
 			xSize = xMin + xMax;
@@ -83,12 +83,12 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 
 
 			if(direction.offsetZ > 0) {
-				zMax = zCurrent + zSize + 1;
+				zMax = zCurrent + zSize - 1;
 				zMin++;
 			}
 
 			if(direction.offsetZ < 0) {
-				zMin = zCurrent - zSize-1;
+				zMin = zCurrent - zSize+1;
 				zMax --;
 			}
 		}
