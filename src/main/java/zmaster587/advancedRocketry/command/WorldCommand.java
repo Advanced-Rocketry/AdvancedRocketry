@@ -268,8 +268,10 @@ public class WorldCommand implements ICommand {
 							else
 								properties = DimensionManager.getInstance().generateRandomGasGiant(starId, string[2 + gasOffset], Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),1,1,1);
 
-							sender.addChatMessage(new TextComponentString("Dimension: " + string[2 + gasOffset] + " Generated!"));
-							
+							if(properties == null)
+								sender.addChatMessage(new TextComponentString("Dimension: " + string[2 + gasOffset] + " failed to generate!"));
+							else
+								sender.addChatMessage(new TextComponentString("Dimension: " + string[2 + gasOffset] + " Generated!"));
 							
 							if(moon) {
 								properties.setParentPlanet(DimensionManager.getInstance().getDimensionProperties(planetId));
@@ -291,7 +293,10 @@ public class WorldCommand implements ICommand {
 							else
 								properties = DimensionManager.getInstance().generateRandomGasGiant(starId, string[2 + gasOffset] ,Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),Integer.parseInt(string[6 + gasOffset]), Integer.parseInt(string[7 + gasOffset]), Integer.parseInt(string[8 + gasOffset]));
 
-							sender.addChatMessage(new TextComponentString("Dimension: " + string[2 + gasOffset] + " Generated!"));
+							if(properties == null)
+								sender.addChatMessage(new TextComponentString("Dimension: " + string[2 + gasOffset] + " failed to generate!"));
+							else
+								sender.addChatMessage(new TextComponentString("Dimension: " + string[2 + gasOffset] + " Generated!"));
 						
 							if(moon) {
 								properties.setParentPlanet(DimensionManager.getInstance().getDimensionProperties(planetId));

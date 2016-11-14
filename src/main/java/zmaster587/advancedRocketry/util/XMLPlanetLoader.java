@@ -74,6 +74,9 @@ public class XMLPlanetLoader {
 
 
 		DimensionProperties properties = new DimensionProperties(DimensionManager.getInstance().getNextFreeDim(offset));
+		
+		if(properties == null)
+			return list;
 		list.add(properties);
 		offset++;//Increment for dealing with child planets
 

@@ -201,11 +201,11 @@ public class DimensionManager implements IGalaxy {
 	 * @return next free id
 	 */
 	public int getNextFreeDim(int startingValue) {
-		for(int i = startingValue; i < 1024; i++) {
+		for(int i = startingValue; i < 10000; i++) {
 			if(!net.minecraftforge.common.DimensionManager.isDimensionRegistered(i) && !dimensionList.containsKey(i))
 				return i;
 		}
-		return 0;
+		return -1;
 	}
 
 	public int getNextFreeStarId() {
@@ -246,6 +246,9 @@ public class DimensionManager implements IGalaxy {
 	public DimensionProperties generateRandom(int starId, String name, int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
 		DimensionProperties properties = new DimensionProperties(getNextFreeDim(dimOffset));
 
+		if(properties.getId() == -1)
+			return null;
+		
 		if(name == "")
 			properties.setName(getNextName(properties.getId()));
 		else {

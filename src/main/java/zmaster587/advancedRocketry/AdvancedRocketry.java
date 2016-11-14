@@ -296,7 +296,7 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.terraformRequiresFluid = config.get(Configuration.CATEGORY_GENERAL, "TerraformerRequiresFluids", true).getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.canPlayerRespawnInSpace = config.get(Configuration.CATEGORY_GENERAL, "allowPlanetRespawn", false, "If true players will respawn near beds on planets IF the spawn location is in a breathable atmosphere").getBoolean();
 
-		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 0xFFFF, "Dimensions including and after this number are allowed to be made into planets");
+		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 8000, "Dimensions including and after this number are allowed to be made into planets");
 		zmaster587.advancedRocketry.api.Configuration.blackListAllVanillaBiomes = config.getBoolean("blackListVanillaBiomes", PLANET, false, "Prevents any vanilla biomes from spawning on planets");
 		zmaster587.advancedRocketry.api.Configuration.overrideGCAir = config.get(MOD_INTERACTION, "OverrideGCAir", true, "If true Galaciticcraft's air will be disabled entirely requiring use of Advanced Rocketry's Oxygen system on GC planets").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.fuelPointsPerDilithium = config.get(Configuration.CATEGORY_GENERAL, "pointsPerDilithium", 500, "How many units of fuel should each Dilithium Crystal give to warp ships", 1, 1000).getInt();
@@ -313,7 +313,7 @@ public class AdvancedRocketry {
 		resetFromXml = config.getBoolean("resetPlanetsFromXML", Configuration.CATEGORY_GENERAL, false, "setting this to true will DELETE existing advancedrocketry planets and regen the solar system from the advanced planet XML file, satellites orbiting the overworld will remain intact and stations will be moved to the overworld.");
 		//Reset to false
 		config.get(Configuration.CATEGORY_GENERAL, "resetPlanetsFromXML",false).set(false);
-		
+
 		//Client
 		zmaster587.advancedRocketry.api.Configuration.rocketRequireFuel = config.get(ROCKET, "rocketsRequireFuel", true, "Set to false if rockets should not require fuel to fly").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.rocketThrustMultiplier = config.get(ROCKET, "thrustMultiplier", 1f, "Multiplier for per-engine thrust").getDouble();
@@ -344,7 +344,7 @@ public class AdvancedRocketry {
 		sealableBlockWhiteList = config.getStringList(Configuration.CATEGORY_GENERAL, "sealableBlockWhiteList", new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
 		breakableTorches = config.getStringList("torchBlocks", Configuration.CATEGORY_GENERAL, new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
 		harvestableGasses = config.getStringList("harvestableGasses", GAS_MINING, new String[] {}, "list of fluid names that can be harvested as Gas");
-		
+
 		//Satellite config
 		zmaster587.advancedRocketry.api.Configuration.microwaveRecieverMulitplier = 10*(float)config.get(Configuration.CATEGORY_GENERAL, "MicrowaveRecieverMulitplier", 1f, "Multiplier for the amount of energy produced by the microwave reciever").getDouble();
 
@@ -361,7 +361,7 @@ public class AdvancedRocketry {
 		}
 
 		config.save();
-		
+
 		//Register cap events
 		MinecraftForge.EVENT_BUS.register(new CapabilityProtectiveArmor());
 
@@ -1373,8 +1373,8 @@ public class AdvancedRocketry {
 		}
 		logger.fine("End registering Harvestable Gasses");
 		harvestableGasses = null;
-	
-		
+
+
 		//Load XML recipes
 		LibVulpes.instance.loadXMLRecipe(TileCuttingMachine.class);
 		LibVulpes.instance.loadXMLRecipe(TilePrecisionAssembler.class);
@@ -1384,7 +1384,7 @@ public class AdvancedRocketry {
 		LibVulpes.instance.loadXMLRecipe(TileElectricArcFurnace.class);
 		LibVulpes.instance.loadXMLRecipe(TileLathe.class);
 		LibVulpes.instance.loadXMLRecipe(TileRollingMachine.class);
-		
+
 	}
 
 	@EventHandler
@@ -1392,7 +1392,7 @@ public class AdvancedRocketry {
 		for (int dimId : DimensionManager.getInstance().getLoadedDimensions()) {
 			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimId);
 			if(!properties.isNativeDimension && properties.getId() == zmaster587.advancedRocketry.api.Configuration.MoonId && !Loader.isModLoaded("GalacticraftCore")) {
-					properties.isNativeDimension = true;
+				properties.isNativeDimension = true;
 			}
 		}
 	}
@@ -1400,7 +1400,7 @@ public class AdvancedRocketry {
 	@EventHandler
 	public void serverStarting(FMLServerStartingEvent event) {
 		event.registerServerCommand(new WorldCommand());
-		
+
 		int dimOffset = DimensionManager.dimOffset;
 		//Open ore files
 		File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/oreConfig.xml");
@@ -1455,7 +1455,7 @@ public class AdvancedRocketry {
 		//Note: loading this modifies dimOffset
 		DimensionPropertyCoupling dimCouplingList = null;
 		XMLPlanetLoader loader = null;
-		
+
 		file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
 		logger.info("Checking for config at " + file.getAbsolutePath());
 		if(file.exists()) {
@@ -1476,11 +1476,11 @@ public class AdvancedRocketry {
 		if(!zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.filePath) || resetFromXml) {
 			int numRandomGeneratedPlanets = 9;
 			int numRandomGeneratedGasGiants = 1;
-			
+
 			if(resetFromXml) {
 				zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
 				zmaster587.advancedRocketry.api.Configuration.MoonId = -1;
-				
+
 				//Delete old dimensions
 				File dir = new File(net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory() + "/" + DimensionManager.workingPath);
 				for(File file2 : dir.listFiles()) {
@@ -1507,7 +1507,7 @@ public class AdvancedRocketry {
 					DimensionManager.getInstance().registerDimNoUpdate(properties, true);
 					properties.setStar(properties.getStar());
 				}
-				
+
 				for(StellarBody star : dimCouplingList.stars) {
 					numRandomGeneratedPlanets = loader.getMaxNumPlanets(star);
 					numRandomGeneratedGasGiants = loader.getMaxNumGasGiants(star);
@@ -1521,20 +1521,23 @@ public class AdvancedRocketry {
 			if(zmaster587.advancedRocketry.api.Configuration.MoonId == -1)
 				zmaster587.advancedRocketry.api.Configuration.MoonId = DimensionManager.getInstance().getNextFreeDim(DimensionManager.dimOffset);
 
-			DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId);
-			dimensionProperties.setAtmosphereDensityDirect(0);
-			dimensionProperties.averageTemperature = 20;
-			dimensionProperties.rotationalPeriod = 128000;
-			dimensionProperties.gravitationalMultiplier = .166f; //Actual moon value
-			dimensionProperties.setName("Luna");
-			dimensionProperties.orbitalDist = 150;
-			dimensionProperties.addBiome(AdvancedRocketryBiomes.moonBiome);
+			if(zmaster587.advancedRocketry.api.Configuration.MoonId != -1) {
+				DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId);
+				dimensionProperties.setAtmosphereDensityDirect(0);
+				dimensionProperties.averageTemperature = 20;
+				dimensionProperties.rotationalPeriod = 128000;
+				dimensionProperties.gravitationalMultiplier = .166f; //Actual moon value
+				dimensionProperties.setName("Luna");
+				dimensionProperties.orbitalDist = 150;
+				dimensionProperties.addBiome(AdvancedRocketryBiomes.moonBiome);
 
-			dimensionProperties.setParentPlanet(DimensionManager.overworldProperties);
-			dimensionProperties.setStar(DimensionManager.getSol());
-			dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");
+				dimensionProperties.setParentPlanet(DimensionManager.overworldProperties);
+				dimensionProperties.setStar(DimensionManager.getSol());
+				dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");
 
-			DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
+				DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
+			}
+
 			if(!loadedFromXML) {
 				generateRandomPlanets(DimensionManager.getSol(), numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
 
@@ -1583,8 +1586,8 @@ public class AdvancedRocketry {
 
 			}
 		}
-		
-		
+
+
 		//Clean up floating stations and satellites
 		if(resetFromXml) {
 			//Move all space stations to the overworld
@@ -1593,7 +1596,7 @@ public class AdvancedRocketry {
 					SpaceObjectManager.getSpaceManager().moveStationToBody(obj, 0, false);
 				}
 			}
-			
+
 			//Satellites are cleaned up on their own as dimension properties are reset
 		}
 
@@ -1601,7 +1604,7 @@ public class AdvancedRocketry {
 		//Attempt to load ore config from adv planet XML
 		if(dimCouplingList != null) {
 			for(DimensionProperties properties : dimCouplingList.dims) {
-				
+
 				//Register dimensions loaded by other mods if not already loaded
 				if(!properties.isNativeDimension && properties.getStar() != null && !DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
 					for(StellarBody star : dimCouplingList.stars) {
@@ -1613,7 +1616,7 @@ public class AdvancedRocketry {
 						}
 					}
 				}
-				
+
 				if(properties.oreProperties != null) {
 					DimensionProperties loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
 
@@ -1622,7 +1625,7 @@ public class AdvancedRocketry {
 				}
 			}
 		}
-		
+
 		// make sure to set dim offset back to original to make things consistant
 		DimensionManager.dimOffset = dimOffset;
 
@@ -1643,6 +1646,9 @@ public class AdvancedRocketry {
 
 				for(int ii = 0; ii < numMoons; ii++) {
 					DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(star.getId(), properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
+					if(moonProperties == null)
+						continue;
+
 					moonProperties.setParentPlanet(properties);
 					star.removePlanet(moonProperties);
 				}
@@ -1668,11 +1674,18 @@ public class AdvancedRocketry {
 
 			DimensionProperties properties = DimensionManager.getInstance().generateRandom(star.getId(), baseDistance,baseAtm,125,100,100,75);
 
+			if(properties == null)
+				continue;
+
 			if(properties.gravitationalMultiplier >= 1f) {
 				int numMoons = random.nextInt(4);
 
 				for(int ii = 0; ii < numMoons; ii++) {
 					DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(star.getId(), properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
+
+					if(moonProperties == null)
+						continue;
+
 					moonProperties.setParentPlanet(properties);
 					star.removePlanet(moonProperties);
 				}
