@@ -289,7 +289,7 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.terraformRequiresFluid = config.get(Configuration.CATEGORY_GENERAL, "TerraformerRequiresFluids", true).getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.canPlayerRespawnInSpace = config.get(Configuration.CATEGORY_GENERAL, "allowPlanetRespawn", false, "If true players will respawn near beds on planets IF the spawn location is in a breathable atmosphere").getBoolean();
 
-		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 0xFFFF, "Dimensions including and after this number are allowed to be made into planets");
+		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 8000, "Dimensions including and after this number are allowed to be made into planets");
 		zmaster587.advancedRocketry.api.Configuration.blackListAllVanillaBiomes = config.getBoolean("blackListVanillaBiomes", PLANET, false, "Prevents any vanilla biomes from spawning on planets");
 		zmaster587.advancedRocketry.api.Configuration.overrideGCAir = config.get(MOD_INTERACTION, "OverrideGCAir", true, "If true Galaciticcraft's air will be disabled entirely requiring use of Advanced Rocketry's Oxygen system on GC planets").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.fuelPointsPerDilithium = config.get(Configuration.CATEGORY_GENERAL, "pointsPerDilithium", 500, "How many units of fuel should each Dilithium Crystal give to warp ships", 1, 1000).getInt();
@@ -306,7 +306,7 @@ public class AdvancedRocketry {
 		resetFromXml = config.getBoolean("resetPlanetsFromXML", Configuration.CATEGORY_GENERAL, false, "setting this to true will DELETE existing advancedrocketry planets and regen the solar system from the advanced planet XML file, satellites orbiting the overworld will remain intact and stations will be moved to the overworld.");
 		//Reset to false
 		config.get(Configuration.CATEGORY_GENERAL, "resetPlanetsFromXML",false).set(false);
-		
+
 		//Client
 		zmaster587.advancedRocketry.api.Configuration.rocketRequireFuel = config.get(ROCKET, "rocketsRequireFuel", true, "Set to false if rockets should not require fuel to fly").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.rocketThrustMultiplier = config.get(ROCKET, "thrustMultiplier", 1f, "Multiplier for per-engine thrust").getDouble();
@@ -1570,7 +1570,7 @@ public class AdvancedRocketry {
 			if(resetFromXml) {
 				zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
 				zmaster587.advancedRocketry.api.Configuration.MoonId = -1;
-				
+
 				//Delete old dimensions
 				File dir = new File(net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory() + "/" + DimensionManager.workingPath);
 				for(File file2 : dir.listFiles()) {
@@ -1583,7 +1583,7 @@ public class AdvancedRocketry {
 					}
 				}
 			}
-			
+
 			boolean loadedFromXML = false;
 
 			if(dimCouplingList != null) {
@@ -1612,20 +1612,23 @@ public class AdvancedRocketry {
 			if(zmaster587.advancedRocketry.api.Configuration.MoonId == -1)
 				zmaster587.advancedRocketry.api.Configuration.MoonId = DimensionManager.getInstance().getNextFreeDim(DimensionManager.dimOffset);
 
-			DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId);
-			dimensionProperties.setAtmosphereDensityDirect(0);
-			dimensionProperties.averageTemperature = 20;
-			dimensionProperties.gravitationalMultiplier = .166f; //Actual moon value
-			dimensionProperties.setName("Luna");
-			dimensionProperties.rotationalPeriod = 128000;
-			dimensionProperties.orbitalDist = 150;
-			dimensionProperties.addBiome(AdvancedRocketryBiomes.moonBiome);
+			if(zmaster587.advancedRocketry.api.Configuration.MoonId != -1) {
+				DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId);
+				dimensionProperties.setAtmosphereDensityDirect(0);
+				dimensionProperties.averageTemperature = 20;
+				dimensionProperties.gravitationalMultiplier = .166f; //Actual moon value
+				dimensionProperties.setName("Luna");
+				dimensionProperties.rotationalPeriod = 128000;
+				dimensionProperties.orbitalDist = 150;
+				dimensionProperties.addBiome(AdvancedRocketryBiomes.moonBiome);
 
-			dimensionProperties.setParentPlanet(DimensionManager.overworldProperties);
-			dimensionProperties.setStar(DimensionManager.getSol());
-			dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");
-
-			DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
+				dimensionProperties.setParentPlanet(DimensionManager.overworldProperties);
+				dimensionProperties.setStar(DimensionManager.getSol());
+				dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");
+				DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
+				
+			}
+			
 			if(!loadedFromXML)  {
 				generateRandomPlanets(DimensionManager.getSol(), numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
 
@@ -1719,6 +1722,8 @@ public class AdvancedRocketry {
 
 				for(int ii = 0; ii < numMoons; ii++) {
 					DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(star.getId(), properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
+					if(moonProperties == null)
+						continue;
 					moonProperties.setParentPlanet(properties);
 					star.removePlanet(moonProperties);
 				}

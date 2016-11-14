@@ -127,17 +127,17 @@ public class WorldCommand implements ICommand {
 			else if(string[0].equalsIgnoreCase("fetch") && string.length == 2) {
 				EntityPlayer me = sender.getEntityWorld().getPlayerEntityByName(sender.getCommandSenderName());
 				EntityPlayer player = null;
-				
+
 				for(World world : MinecraftServer.getServer().worldServers) {
 					player = world.getPlayerEntityByName(string[1]);
 					if(player != null)
 						break;
 				}
-				
-				
-				
+
+
+
 				System.out.println(string[1] + "   " + sender.getCommandSenderName());
-				
+
 				if(player == null) {
 					sender.addChatMessage(new ChatComponentText("Invalid player name: " + string[1]));
 				}
@@ -235,7 +235,7 @@ public class WorldCommand implements ICommand {
 
 						}
 					}
-					
+
 					if(string.length > 2 + gasOffset) {
 						if(string[2 + gasOffset].equalsIgnoreCase("moon")) {
 							gasOffset++;
@@ -251,42 +251,47 @@ public class WorldCommand implements ICommand {
 					try {
 						//Advancedrocketry planet generate <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>
 						if(string.length == 6 + gasOffset) {
-							
+
 							int planetId = starId;
 							if(moon)
 								starId = DimensionManager.getInstance().getDimensionProperties(planetId).getStarId();
-							
+
 							DimensionProperties properties;
 							if(!gassy)
 								properties = DimensionManager.getInstance().generateRandom(starId, string[2 + gasOffset], Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]));
 							else
 								properties = DimensionManager.getInstance().generateRandomGasGiant(starId, string[2 + gasOffset], Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),1,1,1);
 
-							sender.addChatMessage(new ChatComponentText("Dimension: " + string[2 + gasOffset] + " Generated!"));
-							
-							
+							if(properties == null)
+								sender.addChatMessage(new ChatComponentText("Dimension: " + string[2 + gasOffset] + " failed to generate!"));
+							else
+								sender.addChatMessage(new ChatComponentText("Dimension: " + string[2 + gasOffset] + " Generated!"));
+
 							if(moon) {
 								properties.setParentPlanet(DimensionManager.getInstance().getDimensionProperties(planetId));
 								DimensionManager.getInstance().getStar(starId).removePlanet(properties);
 							}
-							
+
 							sender.addChatMessage(new ChatComponentText("Dimension Generated!"));
 						}
 						else if(string.length == 9  + gasOffset) {
-							
+
 							int planetId = starId;
 							if(moon)
 								starId = DimensionManager.getInstance().getDimensionProperties(planetId).getStarId();
-							
+
 							DimensionProperties properties;
-							
+
 							if(!gassy)
 								properties = DimensionManager.getInstance().generateRandom(starId,string[2 + gasOffset] ,Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),Integer.parseInt(string[6 + gasOffset]), Integer.parseInt(string[7 + gasOffset]), Integer.parseInt(string[8 + gasOffset]));
 							else
 								properties = DimensionManager.getInstance().generateRandomGasGiant(starId, string[2 + gasOffset] ,Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),Integer.parseInt(string[6 + gasOffset]), Integer.parseInt(string[7 + gasOffset]), Integer.parseInt(string[8 + gasOffset]));
 
-							sender.addChatMessage(new ChatComponentText("Dimension: " + string[2 + gasOffset] + " Generated!"));
-						
+							if(properties == null)
+								sender.addChatMessage(new ChatComponentText("Dimension: " + string[2 + gasOffset] + " failed to generate!"));
+							else
+								sender.addChatMessage(new ChatComponentText("Dimension: " + string[2 + gasOffset] + " Generated!"));
+
 							if(moon) {
 								properties.setParentPlanet(DimensionManager.getInstance().getDimensionProperties(planetId));
 								DimensionManager.getInstance().getStar(starId).removePlanet(properties);
@@ -501,7 +506,7 @@ public class WorldCommand implements ICommand {
 		sender.addChatMessage(new ChatComponentText("star set pos <star id> <x> <y>"));
 		sender.addChatMessage(new ChatComponentText("star generate <name> <temp> <x> <y>"));
 	}
-	
+
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender sender) {
 		return !sender.getCommandSenderName().equalsIgnoreCase("RCon") && sender.canCommandSenderUseCommand(2, getCommandName());
