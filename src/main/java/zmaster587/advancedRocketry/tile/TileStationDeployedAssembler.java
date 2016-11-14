@@ -79,7 +79,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 			}
 		}
 		else {
-			zSize = 1+ ZUtils.getContinuousBlockLength(world, direction, pos2.add(0, yMax, 0), MAX_SIZE, AdvancedRocketryBlocks.blockStructureTower);
+			zSize = ZUtils.getContinuousBlockLength(world, direction, pos2.add(0, yMax, 0), MAX_SIZE, AdvancedRocketryBlocks.blockStructureTower);
 			xMin = ZUtils.getContinuousBlockLength(world, EnumFacing.WEST, pos2.add(-1, 0, 0), MAX_SIZE, AdvancedRocketryBlocks.blockStructureTower) + 1;
 			xMax = ZUtils.getContinuousBlockLength(world, EnumFacing.EAST, pos2.add(1, 0, 0), MAX_SIZE - xMin, AdvancedRocketryBlocks.blockStructureTower);
 			xSize = xMin + xMax;
@@ -89,12 +89,12 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 
 
 			if(direction.getFrontOffsetZ() > 0) {
-				zMax = zCurrent + zSize + 1;
+				zMax = zCurrent + zSize - 1;
 				zMin++;
 			}
 
 			if(direction.getFrontOffsetZ() < 0) {
-				zMin = zCurrent - zSize-1;
+				zMin = zCurrent - zSize+1;
 				zMax --;
 			}
 		}
