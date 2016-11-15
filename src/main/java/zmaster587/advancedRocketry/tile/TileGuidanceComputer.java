@@ -87,6 +87,9 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				if(object instanceof SpaceObject)
 					vec = ((SpaceObject)object).getNextLandingPad(commit);
 
+				if(object == null)
+					return null;
+				
 				if(vec == null)
 					vec = object.getSpawnLocation();
 

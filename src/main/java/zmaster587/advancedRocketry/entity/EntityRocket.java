@@ -709,9 +709,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		
 		int finalDest = destinationDimId;
 		if(destinationDimId == Configuration.spaceDimId) {
-			
+			ISpaceObject obj = null;
 			Vector3F<Float> vec = storage.getDestinationCoordinates(destinationDimId,false);
-			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)(float)vec.x, (int)(float)vec.z);
+			if(vec != null)
+				obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)(float)vec.x, (int)(float)vec.z);
+			
 			if(obj != null)
 				finalDest = obj.getOrbitingPlanetId();
 			else { 
