@@ -109,8 +109,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	private String errorStr;
 	private long lastErrorTime = Long.MIN_VALUE;
 	private static long ERROR_DISPLAY_TIME = 100;
-	
-	
+
+
 	protected long lastWorldTickTicked;
 
 	private SatelliteBase satallite;
@@ -227,21 +227,21 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			//PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, (byte)PacketType.DISCONNECTINFRASTRUCTURE.ordinal(), nbt), this);
 		}
 	}
-	
+
 	@Override
 	public String getTextOverlay() {
-		
+
 		if(this.worldObj.getTotalWorldTime() < this.lastErrorTime + ERROR_DISPLAY_TIME)
 			return errorStr;
-		
+
 		if(isInOrbit() && !isInFlight())
 			return "Press Space to descend!";
 		else if(!isInFlight())
 			return "Press Space to take off!";
-		
+
 		return super.getTextOverlay();
 	}
-	
+
 	private void setError(String error) {
 		this.errorStr = error;
 		this.lastErrorTime = this.worldObj.getTotalWorldTime();
@@ -666,7 +666,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 			else {
 				List<TileSatelliteHatch> satelliteHatches = storage.getSatelliteHatches();
-				
+
 				for(TileSatelliteHatch tile : storage.getSatelliteHatches()) {
 					SatelliteBase satellite = tile.getSatellite();
 					if(satellite == null) {
@@ -790,24 +790,27 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 		int finalDest = destinationDimId;
 		if(destinationDimId == Configuration.spaceDimId) {
-			
+			ISpaceObject obj = null;
 			Vector3F<Float> vec = storage.getDestinationCoordinates(destinationDimId,false);
-			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(vec.x, vec.y, vec.z));
-			if(obj != null)
+
+			if(vec != null)
+				obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(vec.x, vec.y, vec.z));
+			
+			if( obj != null)
 				finalDest = obj.getOrbitingPlanetId();
 			else { 
 				setError(LibVulpes.proxy.getLocalizedString("error.rocket.destinationNotExist"));
 				return;
 			}
 		}
-		
+
 		int thisDimId = this.worldObj.provider.getDimension();
 		if(this.worldObj.provider.getDimension() == Configuration.spaceDimId) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.getPosition());
 			if(object != null)
 				thisDimId = object.getProperties().getParentProperties().getId();
 		}
-		
+
 		if(finalDest != -1 && !DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, thisDimId)) {
 			setError(LibVulpes.proxy.getLocalizedString("error.rocket.notSameSystem"));
 			return;
@@ -1267,7 +1270,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		else {
 			DimensionProperties properties = DimensionManager.getEffectiveDimId(worldObj, this.getPosition());
 			while(properties.getParentProperties() != null) properties = properties.getParentProperties();
-			
+
 			container = new ModulePlanetSelector(properties.getId(), zmaster587.libVulpes.inventory.TextureResources.starryBG, this, false);
 			container.setOffset(1000, 1000);
 			modules.add(container);
@@ -1344,7 +1347,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			RocketInventoryHelper.removePlayerFromInventoryBypass(entity);
 
 		RocketInventoryHelper.updateTime(entity, worldObj.getWorldTime());
-		
+
 		return ret;
 	}
 
