@@ -1749,11 +1749,18 @@ public class AdvancedRocketry {
 
 			DimensionProperties properties = DimensionManager.getInstance().generateRandom(star.getId(), baseDistance,baseAtm,125,100,100,75);
 
+			
+			if(properties == null)
+				continue;
+			
 			if(properties.gravitationalMultiplier >= 1f) {
 				int numMoons = random.nextInt(4);
 
 				for(int ii = 0; ii < numMoons; ii++) {
 					DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(star.getId(), properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
+					
+					if(moonProperties == null)
+						continue;
 					moonProperties.setParentPlanet(properties);
 					star.removePlanet(moonProperties);
 				}
@@ -1767,7 +1774,7 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
 		zmaster587.advancedRocketry.cable.NetworkRegistry.clearNetworks();
 		SpaceObjectManager.getSpaceManager().onServerStopped();
-		zmaster587.advancedRocketry.api.Configuration.MoonId = 1;
+		zmaster587.advancedRocketry.api.Configuration.MoonId = -1;
 	}
 
 	@SubscribeEvent

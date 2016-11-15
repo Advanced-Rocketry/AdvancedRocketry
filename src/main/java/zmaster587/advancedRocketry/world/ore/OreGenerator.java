@@ -3,6 +3,9 @@ package zmaster587.advancedRocketry.world.ore;
 import java.util.Random;
 
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.api.material.Material;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
@@ -16,6 +19,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.OreGenEvent;
 import net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable.EventType;
 import cpw.mods.fml.common.IWorldGenerator;
+import cpw.mods.fml.common.eventhandler.Event.Result;
 
 public class OreGenerator extends WorldGenerator implements IWorldGenerator {
 
@@ -35,8 +39,10 @@ public class OreGenerator extends WorldGenerator implements IWorldGenerator {
 	public void generate(Random random, int chunkX, int chunkZ, World world,
 			IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
 
-		if(MinecraftForge.ORE_GEN_BUS.post(new OreGenEvent.GenerateMinable(world, random, this, chunkX, chunkZ, EventType.CUSTOM))) {
-
+		OreGenEvent event = new OreGenEvent.GenerateMinable(world, random, this, chunkX, chunkZ, EventType.CUSTOM);
+		MinecraftForge.ORE_GEN_BUS.post(event);
+		if(event.getResult() != Result.DENY) {
+			
 			if(Configuration.generateCopper) {
 				generate(world, MaterialRegistry.getMaterialFromName("Copper"), Configuration.copperPerChunk, Configuration.copperClumpSize, chunkX, chunkZ, random);
 			}
@@ -49,7 +55,11 @@ public class OreGenerator extends WorldGenerator implements IWorldGenerator {
 			}
 
 			if(Configuration.generateDilithium) {
-				int dilithiumChance = world.provider.dimensionId == Configuration.MoonId ? Configuration.dilithiumPerChunkMoon : Configuration.dilithiumPerChunk;
+				int dilithiumChance = Configuration.dilithiumPerChunk;
+				if(world.provider instanceof WorldProviderPlanet) {
+					dilithiumChance = DimensionProperties.AtmosphereTypes.getAtmosphereTypeFromValue(DimensionManager.getInstance().getDimensionProperties(world.provider.dimensionId).getAtmosphereDensity()) == DimensionProperties.AtmosphereTypes.NONE ? Configuration.dilithiumPerChunkMoon : Configuration.dilithiumPerChunk;;
+				}
+				
 				for(int i = 0; i < dilithiumChance; i++) {
 					int coordX = 16*chunkX + random.nextInt(16);
 					int coordY = random.nextInt(64);
