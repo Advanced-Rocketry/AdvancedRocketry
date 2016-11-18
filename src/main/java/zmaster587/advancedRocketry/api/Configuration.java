@@ -94,6 +94,9 @@ public class Configuration {
 
 	public static boolean laserDrillPlanet;
 
+	/** list of entities of which atmospheric effects should not be applied **/
+	public static List<Class> bypassEntity = new LinkedList<Class>();
+	
 	public static List<Block> torchBlocks = new LinkedList<Block>();
 
 }

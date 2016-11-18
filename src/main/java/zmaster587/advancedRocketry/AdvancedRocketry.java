@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityList;
 import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -236,7 +237,7 @@ public class AdvancedRocketry {
 	private static Configuration config;
 	private static final String BIOMECATETORY = "Biomes";
 	private boolean resetFromXml;
-	String[] sealableBlockWhiteList, breakableTorches, harvestableGasses;
+	String[] sealableBlockWhiteList, breakableTorches, harvestableGasses, entityList;
 
 	//static {
 	//	FluidRegistry.enableUniversalBucket(); // Must be called before preInit
@@ -344,6 +345,8 @@ public class AdvancedRocketry {
 		breakableTorches = config.getStringList("torchBlocks", Configuration.CATEGORY_GENERAL, new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
 		harvestableGasses = config.getStringList("harvestableGasses", GAS_MINING, new String[] {}, "list of fluid names that can be harvested as Gas");
 
+		entityList = config.getStringList("entityAtmBypass", Configuration.CATEGORY_GENERAL, new String[] {}, "list entities which should not be affected by atmosphere properties");
+		
 		//Satellite config
 		zmaster587.advancedRocketry.api.Configuration.microwaveRecieverMulitplier = 10*(float)config.get(Configuration.CATEGORY_GENERAL, "MicrowaveRecieverMulitplier", 1f, "Multiplier for the amount of energy produced by the microwave reciever").getDouble();
 
@@ -1372,6 +1375,22 @@ public class AdvancedRocketry {
 		}
 		logger.fine("End registering Harvestable Gasses");
 		harvestableGasses = null;
+		
+		logger.fine("Start registering entity atmosphere bypass");
+		
+		for(String str : entityList) {
+			Class clazz = (Class) EntityList.NAME_TO_CLASS.get(str);
+			if(clazz != null) {
+				logger.fine("Registering " + clazz.getName() + " for atmosphere bypass");
+				zmaster587.advancedRocketry.api.Configuration.bypassEntity.add(clazz);
+			}
+			else
+				logger.warning("Cannot find " + str + " while registering entity for atmosphere bypass");
+		}
+		
+		//Free memory
+		entityList = null;
+		logger.fine("End registering entity atmosphere bypass");
 
 
 		//Load XML recipes
