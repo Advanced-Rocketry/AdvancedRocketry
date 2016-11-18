@@ -230,12 +230,6 @@ public class WorldCommand implements ICommand {
 						try {
 							starId = Integer.parseInt(string[2]);
 							gasOffset++;
-							if(DimensionManager.getInstance().getStar(starId) == null) {
-								sender.addChatMessage(new TextComponentString("Invalid star ID"));
-								sender.addChatMessage(new TextComponentString(string[0] + " " + string[1] + "[starId] [gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
-
-								return;
-							}
 
 						} catch(NumberFormatException e) {
 
@@ -246,7 +240,20 @@ public class WorldCommand implements ICommand {
 						if(string[2 + gasOffset].equalsIgnoreCase("moon")) {
 							gasOffset++;
 							moon = true;
+							
+							if(!DimensionManager.getInstance().isDimensionCreated(starId)) {
+								sender.addChatMessage(new TextComponentString("Invalid planet ID"));
+								sender.addChatMessage(new TextComponentString(string[0] + " " + string[1] + "[planetId] [moon] [gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+
+								return;
+							}
 						}
+						else if(DimensionManager.getInstance().getStar(starId) == null) {
+								sender.addChatMessage(new TextComponentString("Invalid star ID"));
+								sender.addChatMessage(new TextComponentString(string[0] + " " + string[1] + "[starId] [gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+
+								return;
+							}
 					}
 
 					if(string.length > 2 + gasOffset && string[2 + gasOffset].equalsIgnoreCase("gas")) {
