@@ -18,6 +18,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -234,7 +236,7 @@ public class AdvancedRocketry {
 	public static Logger logger = Logger.getLogger(Constants.modId);
 	private static Configuration config;
 	private static final String BIOMECATETORY = "Biomes";
-	String[] sealableBlockWhiteList, breakableTorches, harvestableGasses;
+	String[] sealableBlockWhiteList, breakableTorches, harvestableGasses, entityList;
 
 	public MaterialRegistry materialRegistry = new MaterialRegistry(); 
 
@@ -337,7 +339,9 @@ public class AdvancedRocketry {
 		sealableBlockWhiteList = config.getStringList(Configuration.CATEGORY_GENERAL, "sealableBlockWhiteList", new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
 		breakableTorches = config.getStringList("torchBlocks", Configuration.CATEGORY_GENERAL, new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
 		harvestableGasses = config.getStringList("harvestableGasses", GAS_MINING, new String[] {}, "list of fluid names that can be harvested as Gas");
-
+		
+		entityList = config.getStringList("entityAtmBypass", Configuration.CATEGORY_GENERAL, new String[] {}, "list entities which should not be affected by atmosphere properties");
+		
 		//Satellite config
 		zmaster587.advancedRocketry.api.Configuration.microwaveRecieverMulitplier = 10*(float)config.get(Configuration.CATEGORY_GENERAL, "MicrowaveRecieverMulitplier", 1f, "Multiplier for the amount of energy produced by the microwave reciever").getDouble();
 
@@ -1465,6 +1469,32 @@ public class AdvancedRocketry {
 		}
 		logger.fine("End registering Harvestable Gasses");
 		harvestableGasses = null;
+		
+		logger.fine("Start registering entity atmosphere bypass");
+		
+		for(String str : entityList) {
+			Class clazz = (Class) EntityList.stringToClassMapping.get(str);
+			if(clazz != null) {
+				logger.fine("Registering " + clazz.getName() + " for atmosphere bypass");
+				zmaster587.advancedRocketry.api.Configuration.bypassEntity.add(clazz);
+			}
+			else
+				logger.warning("Cannot find " + str + " while registering entity for atmosphere bypass");
+		}
+		
+		//Free memory
+		entityList = null;
+		logger.fine("End registering entity atmosphere bypass");
+		
+		//Load XML recipes
+		LibVulpes.instance.loadXMLRecipe(TileCuttingMachine.class);
+		LibVulpes.instance.loadXMLRecipe(TilePrecisionAssembler.class);
+		LibVulpes.instance.loadXMLRecipe(TileChemicalReactor.class);
+		LibVulpes.instance.loadXMLRecipe(TileCrystallizer.class);
+		LibVulpes.instance.loadXMLRecipe(TileElectrolyser.class);
+		LibVulpes.instance.loadXMLRecipe(TileElectricArcFurnace.class);
+		LibVulpes.instance.loadXMLRecipe(TileLathe.class);
+		LibVulpes.instance.loadXMLRecipe(TileRollingMachine.class);
 	}
 
 	@EventHandler
