@@ -8,8 +8,10 @@ import org.lwjgl.input.Keyboard;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Constants;
+import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.interfaces.INetworkEntity;
 import zmaster587.libVulpes.network.PacketChangeKeyState;
 import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
@@ -60,6 +62,12 @@ public class KeyBindings {
 					PacketHandler.sendToServer(new PacketChangeKeyState(0, false));
 			}
 			
+			if(openRocketUI.isPressed()) {
+				if(player.ridingEntity instanceof EntityRocketBase) {
+					PacketHandler.sendToServer(new PacketEntity((INetworkEntity) player.ridingEntity, (byte)EntityRocket.PacketType.OPENGUI.ordinal()));
+				}
+			}
+			
 			if(Keyboard.isKeyDown(Keyboard.KEY_SPACE) != prevState) {
 				prevState = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
 				InputSyncHandler.updateKeyPress(player, Keyboard.KEY_SPACE, prevState);
@@ -69,9 +77,11 @@ public class KeyBindings {
 		
 		//static KeyBinding launch = new KeyBinding("Launch", Keyboard.KEY_SPACE, "key.controls." + Constants.modId);
 		static KeyBinding toggleJetpack = new KeyBinding(LibVulpes.proxy.getLocalizedString("key.toggleJetpack"), Keyboard.KEY_X, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
+		static KeyBinding openRocketUI	= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.openRocketUI"), Keyboard.KEY_C, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
 		
 		public static final void init() {
 			//ClientRegistry.registerKeyBinding(launch);
 			ClientRegistry.registerKeyBinding(toggleJetpack);
+			ClientRegistry.registerKeyBinding(openRocketUI);
 		}
 	}

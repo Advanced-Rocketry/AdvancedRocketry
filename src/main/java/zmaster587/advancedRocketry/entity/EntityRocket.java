@@ -362,11 +362,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 		//If player is holding shift open GUI
 		if(player.isSneaking()) {
-			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULAR.ordinal(), player.worldObj, this.getEntityId(), -1,0);
-
-			//Only handle the bypass on the server
-			if(!worldObj.isRemote)
-				PlanetEventHandler.addPlayerToInventoryBypass(player);
+			openGui(player);
 		}
 		else if(stats.hasSeat()) { //If pilot seat is open mount entity there
 			if(stats.hasSeat() && this.riddenByEntity == null) {
@@ -385,6 +381,16 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		}
 		return true;
 	}
+	
+	
+	public void openGui(EntityPlayer player) {
+		player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULAR.ordinal(), player.worldObj, this.getEntityId(), -1,0);
+
+		//Only handle the bypass on the server
+		if(!worldObj.isRemote)
+			PlanetEventHandler.addPlayerToInventoryBypass(player);
+	}
+	
 
 	@Override
 	public boolean interactFirst(EntityPlayer player) {
@@ -1031,6 +1037,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		}
 		else if(id == PacketType.SENDINTERACT.ordinal()) {
 			interact(player);
+		}
+		else if(id == PacketType.OPENGUI.ordinal()) { //Used in key handler
+			if(player.ridingEntity == this) //Prevent cheating
+				openGui(player);
 		}
 		else if(id == PacketType.REQUESTNBT.ordinal()) {
 			if(storage != null) {
