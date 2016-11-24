@@ -211,14 +211,6 @@ public class DimensionManager implements IGalaxy {
 		}
 		return -1;
 	}
-
-	public int getNextFreeGasGaintDim() {
-		for(int i = GASGIANT_DIMID_OFFSET; i < Integer.MAX_VALUE; i++) {
-			if(this.getDimensionProperties(i) == overworldProperties)
-				return i;
-		}
-		return GASGIANT_DIMID_OFFSET;
-	}
 	
 	public DimensionProperties generateRandom(int starId, int atmosphereFactor, int distanceFactor, int gravityFactor) {
 		return generateRandom(starId, 100, 100, 100, atmosphereFactor, distanceFactor, gravityFactor);
@@ -304,7 +296,7 @@ public class DimensionManager implements IGalaxy {
 	}
 	
 	public DimensionProperties generateRandomGasGiant(int starId, String name, int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
-		DimensionProperties properties = new DimensionProperties(getNextFreeGasGaintDim());
+		DimensionProperties properties = new DimensionProperties(getNextFreeDim(dimOffset));
 
 		if(name == "")
 			properties.setName(getNextName(properties.getId()));
@@ -348,7 +340,7 @@ public class DimensionManager implements IGalaxy {
 	 * @return true if it can be traveled to, in general if it has a surface
 	 */
 	public boolean canTravelTo(int dimId){
-		return dimId < GASGIANT_DIMID_OFFSET && net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId) && dimId != -1;
+		return net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId) && dimId != -1 && getDimensionProperties(dimId).isGasGiant();
 	}
 	
 	/**
