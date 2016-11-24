@@ -42,21 +42,23 @@ public class BlockTorchUnlit extends BlockTorch {
 
 		return ret;
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos,
 			IBlockState state, EntityPlayer player, EnumHand hand,
 			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
 			float hitZ) {
 
-		Item item = player.getHeldItem(EnumHand.MAIN_HAND).getItem();
-		if(!world.isRemote && item != null && AtmosphereHandler.getOxygenHandler(world.provider.getDimension()).getAtmosphereType(pos).allowsCombustion() && (item == Item.getItemFromBlock(Blocks.TORCH) || 
-				item == Items.FLINT_AND_STEEL || 
-						item == Items.FIRE_CHARGE)) {
+		if(player.getHeldItem(EnumHand.MAIN_HAND) != null) {
+			Item item = player.getHeldItem(EnumHand.MAIN_HAND).getItem();
+			if(!world.isRemote && item != null && AtmosphereHandler.getOxygenHandler(world.provider.getDimension()).getAtmosphereType(pos).allowsCombustion() && (item == Item.getItemFromBlock(Blocks.TORCH) || 
+					item == Items.FLINT_AND_STEEL || 
+					item == Items.FIRE_CHARGE)) {
 
-			world.setBlockState(pos, Blocks.TORCH.getDefaultState().withProperty(FACING, state.getValue(FACING)));
+				world.setBlockState(pos, Blocks.TORCH.getDefaultState().withProperty(FACING, state.getValue(FACING)));
 
-			return true;
+				return true;
+			}
 		}
 
 		return true;
