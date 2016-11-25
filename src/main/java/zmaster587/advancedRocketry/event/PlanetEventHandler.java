@@ -91,13 +91,13 @@ public class PlanetEventHandler {
 			event.result = EnumStatus.OTHER_PROBLEM;
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onCrafting(PlayerEvent.ItemCraftedEvent event) {
 		if(event.crafting != null) {
 			Item item = event.crafting.getItem();
 			if(item == LibVulpesItems.itemHoloProjector) 
-			event.player.triggerAchievement(ARAchivements.holographic);
+				event.player.triggerAchievement(ARAchivements.holographic);
 			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockRollingMachine))
 				event.player.triggerAchievement(ARAchivements.rollin);
 			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockCrystallizer))
@@ -109,10 +109,12 @@ public class PlanetEventHandler {
 			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockArcFurnace))
 				event.player.triggerAchievement(ARAchivements.feelTheHeat);
 			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockWarpCore))
-				event.player.triggerAchievement(ARAchivements.feelTheHeat);
+				event.player.triggerAchievement(ARAchivements.warp);
+			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockPlatePress))
+				event.player.triggerAchievement(ARAchivements.blockPresser);
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onWorldGen(OreGenEvent.GenerateMinable event) {
 
@@ -135,13 +137,13 @@ public class PlanetEventHandler {
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onPickup(PlayerEvent.ItemPickupEvent event) {
 		if(event.pickedUp != null) {
 			Item item = event.pickedUp.getEntityItem().getItem();
-			
-			
+
+
 			zmaster587.libVulpes.api.material.Material mat = LibVulpes.materialRegistry.getMaterialFromItemStack( event.pickedUp.getEntityItem());
 			if(mat != null && mat.getUnlocalizedName().contains("Dilithium"))
 				event.player.triggerAchievement(ARAchivements.dilithiumCrystals);
@@ -166,7 +168,7 @@ public class PlanetEventHandler {
 				//event.entity.motionY += 0.075f - DimensionManager.overworldProperties.gravitationalMultiplier*0.075f;
 			}
 		}
-		
+
 		if(!event.entity.worldObj.isRemote && event.entity.worldObj.getTotalWorldTime() % 20 ==0 && event.entity instanceof EntityPlayer) {
 			if(DimensionManager.getInstance().getDimensionProperties(event.entity.worldObj.provider.dimensionId).getName().equals("Luna") && 
 					event.entity.getDistanceSq(67, 80, 2347) < 512 ) {
@@ -193,12 +195,12 @@ public class PlanetEventHandler {
 					event.setCanceled(true);
 			}
 		}
-		
+
 		if(!event.world.isRemote && event.entityPlayer != null && event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && event.entityPlayer.getCurrentEquippedItem() != null && event.entityPlayer.getCurrentEquippedItem().getItem() == Items.bed && event.world.provider instanceof WorldProviderPlanet) {
 			AdvancedRocketryItems.itemAstroBed.onItemUse( event.entityPlayer.getCurrentEquippedItem(),  event.entityPlayer,  event.entityPlayer.worldObj, event.x, event.y, event.z, event.face, 0, 0, 0);
 			event.setCanceled(true);
 		}
-		
+
 		if(!event.world.isRemote && event.entityPlayer != null && event.entityPlayer.getCurrentEquippedItem() != null && event.entityPlayer.getCurrentEquippedItem().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.world.getBlock(event.x, event.y, event.z) == Blocks.tnt) {
 			event.entityPlayer.triggerAchievement(ARAchivements.beerOnTheSun);
 		}
@@ -270,7 +272,7 @@ public class PlanetEventHandler {
 					TransitionEntity ent = entry.getValue();
 					if(ent.entity.worldObj.getTotalWorldTime() >= entry.getKey()) {
 						ent.entity.setLocationAndAngles(ent.location.x, ent.location.y, ent.location.z, ent.entity.rotationYaw, ent.entity.rotationPitch);
-						
+
 						MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP)ent.entity, ent.dimId, new TeleporterNoPortal(MinecraftServer.getServer().worldServerForDimension(ent.dimId)));
 
 						ent.entity.mountEntity(ent.entity2);
@@ -485,7 +487,7 @@ public class PlanetEventHandler {
 					}
 				}
 			}
-			
+
 			//Check environment
 			if(AtmosphereHandler.currentPressure != -1) {
 				atmosphere = AtmosphereHandler.currentPressure;
