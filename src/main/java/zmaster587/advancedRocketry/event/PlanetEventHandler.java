@@ -103,7 +103,9 @@ public class PlanetEventHandler {
 			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockArcFurnace))
 				event.player.addStat(ARAchivements.feelTheHeat);
 			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockWarpCore))
-				event.player.addStat(ARAchivements.feelTheHeat);
+				event.player.addStat(ARAchivements.warp);
+			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockPlatePress))
+				event.player.addStat(ARAchivements.blockPresser);
 		}
 	}
 	@SubscribeEvent
