@@ -13,6 +13,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -61,6 +63,9 @@ import zmaster587.advancedRocketry.entity.EntityLaserNode;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.entity.FxSkyLaser;
 import zmaster587.advancedRocketry.entity.fx.FxElectricArc;
+import zmaster587.advancedRocketry.entity.fx.FxLaser;
+import zmaster587.advancedRocketry.entity.fx.FxLaserHeat;
+import zmaster587.advancedRocketry.entity.fx.FxLaserSpark;
 import zmaster587.advancedRocketry.entity.fx.InverseTrailFx;
 import zmaster587.advancedRocketry.entity.fx.RocketFx;
 import zmaster587.advancedRocketry.entity.fx.TrailFx;
@@ -121,7 +126,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileFluidTank.class, new RenderTank());
 		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser.class, new zmaster587.advancedRocketry.client.render.multiblocks.RenderLaser());
 		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.TileRailgun.class, new zmaster587.advancedRocketry.client.render.multiblocks.RendererRailgun());
-		
+
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileModelRenderRotatable.class, modelBlock);
 
 		//RendererModelBlock blockRenderer = new RendererModelBlock();
@@ -143,15 +148,15 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void init() {
-		
+
 		//Colorizers
 		CrystalColorizer colorizer = new CrystalColorizer();
 		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)colorizer, new Block[] {AdvancedRocketryBlocks.blockCrystal});
 		Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)colorizer,  Item.getItemFromBlock(AdvancedRocketryBlocks.blockCrystal));
-		
+
 		AdvancedRocketry.materialRegistry.init();
 	}
-	
+
 	@Override
 	public void preinit() {
 		OBJLoader.INSTANCE.addDomain("advancedrocketry");
@@ -164,20 +169,20 @@ public class ClientProxy extends CommonProxy {
 		ModelLoader.setCustomModelResourceLocation(blockItem, 3, new ModelResourceLocation("libvulpes:outputHatch", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(blockItem, 4, new ModelResourceLocation("libvulpes:fluidInputHatch", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(blockItem, 5, new ModelResourceLocation("libvulpes:fluidOutputHatch", "inventory"));
-		
+
 		blockItem = Item.getItemFromBlock(AdvancedRocketryBlocks.blockCrystal);
 		for(int i = 0; i < BlockCrystal.numMetas; i++)
 			ModelLoader.setCustomModelResourceLocation(blockItem, i, new ModelResourceLocation("advancedrocketry:crystal", "inventory"));
-		
+
 
 		blockItem = Item.getItemFromBlock(AdvancedRocketryBlocks.blockAirLock);
-		
+
 		blockItem = Item.getItemFromBlock(AdvancedRocketryBlocks.blockLaunchpad);
 		ModelLoader.setCustomModelResourceLocation(blockItem, 0, new ModelResourceLocation("advancedrocketry:launchpad_all", "inventory"));
 
 		blockItem = Item.getItemFromBlock(AdvancedRocketryBlocks.blockPlatePress);
 		ModelLoader.setCustomModelResourceLocation(blockItem, 0, new ModelResourceLocation("advancedrocketry:platePress", "inventory"));
-		
+
 		//Register Item models
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSatellitePrimaryFunction, 0, new ModelResourceLocation("advancedrocketry:opticalSensor", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, new ModelResourceLocation("advancedrocketry:compositionSensor", "inventory"));
@@ -210,13 +215,13 @@ public class ClientProxy extends CommonProxy {
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemWafer, 0, new ModelResourceLocation("advancedrocketry:siliconWafer", "inventory"));
 
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSpaceStation, 0, new ModelResourceLocation("advancedrocketry:spaceStation", "inventory"));
-		
+
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBucketHydrogen, 0, new ModelResourceLocation("advancedrocketry:bucketHydrogen", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBucketOxygen, 0, new ModelResourceLocation("advancedrocketry:bucketOxygen", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBucketNitrogen, 0, new ModelResourceLocation("advancedrocketry:bucketNitrogen", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBucketRocketFuel, 0, new ModelResourceLocation("advancedrocketry:bucketRocketFuel", "inventory"));
-		
-		
+
+
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSpaceSuit_Chest, 0, new ModelResourceLocation("advancedrocketry:spaceChestplate", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSpaceSuit_Helmet, 0, new ModelResourceLocation("advancedrocketry:spaceHelmet", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSpaceSuit_Boots, 0, new ModelResourceLocation("advancedrocketry:spaceBoots", "inventory"));
@@ -229,7 +234,7 @@ public class ClientProxy extends CommonProxy {
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSawBlade, 0, new ModelResourceLocation("advancedrocketry:sawBladeIron", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemOreScanner, 0, new ModelResourceLocation("advancedrocketry:oreScanner", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSatellite, 0, new ModelResourceLocation("advancedrocketry:satellite", "inventory"));
-		
+
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemCarbonScrubberCartridge, 0, new ModelResourceLocation("advancedrocketry:carbonCartridge", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSealDetector, 0, new ModelResourceLocation("advancedrocketry:sealDetector", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemJackhammer, 0, new ModelResourceLocation("advancedrocketry:jackHammer", "inventory"));
@@ -246,7 +251,10 @@ public class ClientProxy extends CommonProxy {
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemPressureTank, 1, new ModelResourceLocation("advancedrocketry:pressureTank1", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemPressureTank, 2, new ModelResourceLocation("advancedrocketry:pressureTank2", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemPressureTank, 3, new ModelResourceLocation("advancedrocketry:pressureTank3", "inventory"));
-		
+
+		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBasicLaserGun, 0, new ModelResourceLocation("advancedrocketry:basicLaserGun", "inventory"));
+
+
 		//TODO fluids
 		/*ModelLoader.setCustomMeshDefinition(Item, new ItemMeshDefinition() {
 
@@ -299,7 +307,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void fireFogBurst(ISpaceObject station) {
 		try {
-		PlanetEventHandler.runBurst(Minecraft.getMinecraft().theWorld.getTotalWorldTime() + 20, 20);
+			PlanetEventHandler.runBurst(Minecraft.getMinecraft().theWorld.getTotalWorldTime() + 20, 20);
 		} catch (NullPointerException e) {}
 	}
 
@@ -349,6 +357,21 @@ public class ClientProxy extends CommonProxy {
 		else if(particle == "errorBox") {
 			FxErrorBlock fx = new FxErrorBlock(world, x, y, z);
 			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+		}
+	}
+
+	@Override
+	public void spawnLaser(Entity entity, Vec3d toPos) {
+		FxLaser fx = new FxLaser(entity.worldObj, toPos.xCoord, toPos.yCoord, toPos.zCoord, entity);
+		Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+
+		FxLaserHeat fx2 = new FxLaserHeat(entity.worldObj,  toPos.xCoord, toPos.yCoord, toPos.zCoord, 0.02f);
+		Minecraft.getMinecraft().effectRenderer.addEffect(fx2);
+		
+		for(int i = 0; i < 4; i++) {
+			FxLaserSpark fx3 = new FxLaserSpark(entity.worldObj,  toPos.xCoord, toPos.yCoord, toPos.zCoord, 
+					.125 - entity.worldObj.rand.nextFloat()/4f, .125 - entity.worldObj.rand.nextFloat()/4f, .125 - entity.worldObj.rand.nextFloat()/4f, .5f);
+			Minecraft.getMinecraft().effectRenderer.addEffect(fx3);
 		}
 	}
 

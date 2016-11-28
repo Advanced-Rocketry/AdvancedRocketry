@@ -12,7 +12,8 @@ public class AudioRegistry {
 	public static final SoundEvent airHissLoop = createSoundEvent("airHissLoop");
 	public static final SoundEvent railgunFire = createSoundEvent("railgunBang");
 	public static final SoundEvent machineLarge = createSoundEvent("MachineLarge");
-	public static final SoundEvent rollingMachine = createSoundEvent("rollingMachine"); 
+	public static final SoundEvent rollingMachine = createSoundEvent("rollingMachine");
+	public static final SoundEvent basicLaser = createSoundEvent("basicLaserGun");
 	
 	private static SoundEvent createSoundEvent(String name) {
 		final ResourceLocation soundID = new ResourceLocation("advancedrocketry", name);

@@ -151,6 +151,7 @@ item.itemUpgrade.3.name=Padded Landing Boots
 item.itemUpgrade.4.name=Anti-Fog Visor
 item.atmAnalyser.name=Atmosphere Analyzer
 item.biomeChanger.name=Biome Changer Remote
+item.basicLaserGun.name=Basic Laser Gun
 
 item.jetPack.name=Jet Pack
 item.pressureTank.0.name=Low Pressure Tank
