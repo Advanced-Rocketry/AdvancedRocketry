@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
@@ -26,6 +27,7 @@ import zmaster587.advancedRocketry.client.render.RendererRocket;
 import zmaster587.advancedRocketry.client.render.RendererPipe;
 import zmaster587.advancedRocketry.client.render.entity.RendererItem;
 import zmaster587.advancedRocketry.client.render.item.RendererBucket;
+import zmaster587.advancedRocketry.client.render.item.RendererLaserGun;
 import zmaster587.advancedRocketry.client.render.multiblocks.RenderBiomeScanner;
 import zmaster587.advancedRocketry.client.render.multiblocks.RenderPlanetAnalyser;
 import zmaster587.advancedRocketry.client.render.multiblocks.RenderTerraformerAtm;
@@ -46,6 +48,9 @@ import zmaster587.advancedRocketry.entity.EntityLaserNode;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.entity.FxSkyLaser;
 import zmaster587.advancedRocketry.entity.fx.FxElectricArc;
+import zmaster587.advancedRocketry.entity.fx.FxLaser;
+import zmaster587.advancedRocketry.entity.fx.FxLaserHeat;
+import zmaster587.advancedRocketry.entity.fx.FxLaserSpark;
 import zmaster587.advancedRocketry.entity.fx.InverseTrailFx;
 import zmaster587.advancedRocketry.entity.fx.RocketFx;
 import zmaster587.advancedRocketry.entity.fx.TrailFx;
@@ -78,6 +83,7 @@ import zmaster587.advancedRocketry.tile.multiblock.machine.TileRollingMachine;
 import zmaster587.libVulpes.entity.fx.FxErrorBlock;
 import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
 import zmaster587.libVulpes.tile.TileSchematic;
+import zmaster587.libVulpes.util.Vector3F;
 
 public class ClientProxy extends CommonProxy {
 
@@ -124,6 +130,8 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForgeClient.registerItemRenderer(AdvancedRocketryItems.itemBucketNitrogen, bucket);
 		MinecraftForgeClient.registerItemRenderer(AdvancedRocketryItems.itemBucketHydrogen, bucket);
 		MinecraftForgeClient.registerItemRenderer(AdvancedRocketryItems.itemBucketOxygen, bucket);
+		
+		MinecraftForgeClient.registerItemRenderer(AdvancedRocketryItems.itemBasicLaserGun, new RendererLaserGun());
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityItemAbducted.class, new RendererItem());
 		RenderingRegistry.registerEntityRenderingHandler(EntityRocket.class, new RendererRocket());
@@ -211,6 +219,21 @@ public class ClientProxy extends CommonProxy {
 		}
 	}
 
+	@Override
+	public void spawnLaser(Entity entity, Vec3 toPos) {
+		FxLaser fx = new FxLaser(entity.worldObj, toPos.xCoord, toPos.yCoord, toPos.zCoord, entity);
+		Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+
+		FxLaserHeat fx2 = new FxLaserHeat(entity.worldObj,  toPos.xCoord, toPos.yCoord, toPos.zCoord, 0.02f);
+		Minecraft.getMinecraft().effectRenderer.addEffect(fx2);
+		
+		for(int i = 0; i < 4; i++) {
+			FxLaserSpark fx3 = new FxLaserSpark(entity.worldObj,  toPos.xCoord, toPos.yCoord, toPos.zCoord, 
+					.125 - entity.worldObj.rand.nextFloat()/4f, .125 - entity.worldObj.rand.nextFloat()/4f, .125 - entity.worldObj.rand.nextFloat()/4f, .5f);
+			Minecraft.getMinecraft().effectRenderer.addEffect(fx3);
+		}
+	}
+	
 	@Override
 	public long getWorldTimeUniversal(int id) {
 		try {
