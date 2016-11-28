@@ -79,9 +79,9 @@ public class TilePipe extends TileEntity {
 					if(this.destroyed)
 						continue;
 
-					if(initialized && pipe.isInitialized() && pipe.getNetworkID() != networkID)
+					if(isInitialized() && pipe.isInitialized() && pipe.getNetworkID() != networkID)
 						getNetworkHandler().mergeNetworks(networkID,  pipe.getNetworkID());
-					else if(!initialized && pipe.isInitialized()) {
+					else if(!isInitialized() && pipe.isInitialized()) {
 						initialize(pipe.getNetworkID());
 					}
 				}
@@ -168,7 +168,7 @@ public class TilePipe extends TileEntity {
 						return;
 
 					if(pipe.isInitialized()) {
-						if(!initialized) {
+						if(!isInitialized()) {
 							initialize(pipe.getNetworkID());
 							linkSystems();
 							markDirty();
@@ -186,7 +186,7 @@ public class TilePipe extends TileEntity {
 				}
 			}
 			else {
-				if(!worldObj.isRemote && !initialized) {
+				if(!worldObj.isRemote && !isInitialized()) {
 					networkID = getNetworkHandler().getNewNetworkID();
 					initialized = true;
 				}
