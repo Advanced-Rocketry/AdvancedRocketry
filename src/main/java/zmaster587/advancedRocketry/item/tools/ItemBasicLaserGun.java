@@ -58,7 +58,7 @@ public class ItemBasicLaserGun extends Item {
 		setMaxDamage(0);
 		posMap = new WeakHashMap<EntityLivingBase, BlockPos>();
 	}
-	
+
 	@Override
 	public float getStrVsBlock(ItemStack stack, IBlockState state) {
 		return 0;
@@ -133,7 +133,8 @@ public class ItemBasicLaserGun extends Item {
 
 		if(rayTrace != null) {
 			rayTrace.entityHit.attackEntityFrom(DamageSource.generic, 1f);
-			LibVulpes.proxy.playSound(world, player.getPosition(), AudioRegistry.basicLaser, SoundCategory.PLAYERS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.PLAYERS), 1f);
+			if(world.isRemote)
+				LibVulpes.proxy.playSound(world, player.getPosition(), AudioRegistry.basicLaser, SoundCategory.PLAYERS, 1, 1f);
 			AdvancedRocketry.proxy.spawnLaser(player, rayTrace.hitVec);
 			player.resetActiveHand();
 			return;
@@ -155,8 +156,8 @@ public class ItemBasicLaserGun extends Item {
 		if(rayTrace.typeOfHit == Type.BLOCK) {
 			IBlockState state = world.getBlockState(rayTrace.getBlockPos());
 
-			if(count % 5 == 0)
-				LibVulpes.proxy.playSound(world, player.getPosition(), AudioRegistry.basicLaser, SoundCategory.PLAYERS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.PLAYERS), 1f);
+			if(count % 5 == 0 && world.isRemote)
+				LibVulpes.proxy.playSound(world, player.getPosition(), AudioRegistry.basicLaser, SoundCategory.PLAYERS, 1, 1f);
 			//
 			AdvancedRocketry.proxy.spawnLaser(player, rayTrace.hitVec);
 
@@ -170,8 +171,8 @@ public class ItemBasicLaserGun extends Item {
 	/**
 	 * How long it takes to use or consume an item
 	 */
-	 @Override
-	 public int getMaxItemUseDuration(ItemStack stack)
+	@Override
+	public int getMaxItemUseDuration(ItemStack stack)
 	{
 		return 16;
 	}
@@ -236,7 +237,7 @@ public class ItemBasicLaserGun extends Item {
 
 	public RayTraceResult rayTraceEntity(World world, Entity entity) {
 
-		Vec3d vec3d = entity.getPositionEyes(0);
+		Vec3d vec3d = new Vec3d(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
 		Vec3d vec3d1 = entity.getLook(0);
 		Vec3d vec3d2 = vec3d.addVector(vec3d1.xCoord * reachDistance, vec3d1.yCoord * reachDistance, vec3d1.zCoord * reachDistance);
 
@@ -288,7 +289,8 @@ public class ItemBasicLaserGun extends Item {
 
 		if(rayTrace != null) {
 			rayTrace.entityHit.attackEntityFrom(DamageSource.generic, .5f);
-			LibVulpes.proxy.playSound(worldIn, player.getPosition(), AudioRegistry.basicLaser, SoundCategory.PLAYERS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.PLAYERS), 1f);
+			if(world.isRemote)
+				LibVulpes.proxy.playSound(worldIn, player.getPosition(), AudioRegistry.basicLaser, SoundCategory.PLAYERS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.PLAYERS), 1f);
 
 			return new ActionResult(EnumActionResult.PASS, stack);
 		}
@@ -298,7 +300,8 @@ public class ItemBasicLaserGun extends Item {
 		if(rayTrace != null && rayTrace.typeOfHit == Type.BLOCK) {
 			IBlockState state = world.getBlockState(rayTrace.getBlockPos());
 
-			LibVulpes.proxy.playSound(worldIn, player.getPosition(), AudioRegistry.basicLaser, SoundCategory.PLAYERS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.PLAYERS), 1f);
+			if(world.isRemote)
+				LibVulpes.proxy.playSound(worldIn, player.getPosition(), AudioRegistry.basicLaser, SoundCategory.PLAYERS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.PLAYERS), 1f);
 
 			return new ActionResult(EnumActionResult.PASS, stack);
 		}

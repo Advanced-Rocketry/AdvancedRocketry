@@ -46,9 +46,9 @@ public class FxLaser extends Particle {
 		
 		double radius = .3f;
 		double fwdOffset = 0.075f;
-		double entityOffX = entityFrom.posX + MathHelper.cos((float) (entityFrom.rotationYaw * Math.PI/180f))*radius - fwdOffset*MathHelper.sin((float) (entityFrom.rotationYaw * Math.PI/180f));
-		double entityOffY = entityFrom.posY - (entityFrom.getEntityId() == entityIn.getEntityId() && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 ? entityIn.getEyeHeight() - 0.12f : 1.15f);
-		double entityOffZ = entityFrom.posZ + MathHelper.sin((float) (entityFrom.rotationYaw * Math.PI/180f))*radius + fwdOffset*MathHelper.cos((float) (entityFrom.rotationYaw * Math.PI/180f));
+		double entityOffX = entityFrom.posX - MathHelper.cos((float) (entityFrom.rotationYaw * Math.PI/180f))*radius + fwdOffset*MathHelper.sin((float) (entityFrom.rotationYaw * Math.PI/180f));
+		double entityOffY = entityFrom.posY + (entityFrom.getEntityId() == entityIn.getEntityId() && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 ? entityIn.getEyeHeight() - 0.12f : 1.15f);
+		double entityOffZ = entityFrom.posZ - MathHelper.sin((float) (entityFrom.rotationYaw * Math.PI/180f))*radius - fwdOffset*MathHelper.cos((float) (entityFrom.rotationYaw * Math.PI/180f));
 		
 		
 		GL11.glDisable(GL11.GL_LIGHTING);
@@ -62,7 +62,7 @@ public class FxLaser extends Particle {
 		GL11.glLineWidth(5);
 		GlStateManager.color(0.8f, 0.2f, 0.2f, .4f);
 		
-		buffer.pos(entityIn.posX - entityOffX, entityIn.posY - entityOffY, entityIn.posZ - entityOffZ).endVertex();
+		buffer.pos(entityOffX - entityIn.posX, entityOffY - entityIn.posY, entityOffZ - entityIn.posZ).endVertex();
 		buffer.pos(x, y, z).endVertex();
 		
 		
