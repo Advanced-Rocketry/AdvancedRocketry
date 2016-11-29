@@ -51,7 +51,7 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 
 		String str[] = new String[2];
 
-		str[0] = "Atmosphere Type: " + LibVulpes.proxy.getLocalizedString(atm.getUnlocalizedName()) + " @ " + (AtmosphereHandler.currentPressure == -1 ? DimensionManager.getInstance().isDimensionCreated(world.provider.getDimension()) ? DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getAtmosphereDensity()/100f : 1 : AtmosphereHandler.currentPressure/100f) + " atm";
+		str[0] = "Atmosphere Type: " + LibVulpes.proxy.getLocalizedString(atm.getUnlocalizedName()) + " @ " + (AtmosphereHandler.currentPressure == -1 ? (DimensionManager.getInstance().isDimensionCreated(world.provider.getDimension()) ? DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getAtmosphereDensity()/100f : 1) : AtmosphereHandler.currentPressure/100f) + " atm";
 		str[1] = "Breathable: " + (atm.isBreathable() ? "Yes" : "No");
 		
 		return str;
