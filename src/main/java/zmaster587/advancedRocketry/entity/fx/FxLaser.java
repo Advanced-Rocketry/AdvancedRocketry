@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.entity.fx;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -31,12 +32,15 @@ public class FxLaser extends EntityFX {
 			float rotationYZ, float rotationXY, float rotationXZ) {
 		//worldRendererIn.finishDrawing();
 		Entity entityIn = Minecraft.getMinecraft().thePlayer;
-		if(entityIn == entityFrom)
+		if(entityIn == entityFrom && Minecraft.getMinecraft().isSingleplayer())
 			return;
 		
 		boolean flag = false;
+		double offset = 0;
 		if(entityFrom.getEntityId() == entityIn.getEntityId() &&  Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 ) {
 			entityFrom = entityIn;
+			if(entityFrom.rotationPitch < 0)
+				offset = -entityFrom.rotationPitch/400f;
 			flag = true;
 		}
 		
@@ -49,10 +53,10 @@ public class FxLaser extends EntityFX {
 		int k = i & 65535;
 		
 		double radius = .3f;
-		double fwdOffset = 0.08f;
-		double entityOffX = entityFrom.posX + MathHelper.cos((float) (entityFrom.rotationYaw * Math.PI/180f))*radius - fwdOffset*MathHelper.sin((float) (entityFrom.rotationYaw * Math.PI/180f));
-		double entityOffY = entityFrom.posY - (flag ? entityIn.getEyeHeight() - 0.25f : -2f);
-		double entityOffZ = entityFrom.posZ + MathHelper.sin((float) (entityFrom.rotationYaw * Math.PI/180f))*radius + fwdOffset*MathHelper.cos((float) (entityFrom.rotationYaw * Math.PI/180f));
+		double fwdOffset = 0.075f - offset;
+		double entityOffX = entityFrom.posX - MathHelper.cos((float) (entityFrom.rotationYaw * Math.PI/180f))*radius + fwdOffset*MathHelper.sin((float) (entityFrom.rotationYaw * Math.PI/180f));
+		double entityOffY = entityFrom.posY + (flag ? - 0.12f : entityFrom.getEntityId() != entityIn.getEntityId() ? 1.15f : -0.55);
+		double entityOffZ = entityFrom.posZ - MathHelper.sin((float) (entityFrom.rotationYaw * Math.PI/180f))*radius - fwdOffset*MathHelper.cos((float) (entityFrom.rotationYaw * Math.PI/180f));
 		
 		
 		GL11.glDisable(GL11.GL_LIGHTING);
@@ -65,7 +69,14 @@ public class FxLaser extends EntityFX {
 		GL11.glLineWidth(5);
 		GL11.glColor4f(0.8f, 0.2f, 0.2f, .4f);
 		
-		worldRendererIn.addVertex(entityIn.posX - entityOffX, entityIn.posY - entityOffY, entityIn.posZ - entityOffZ);
+		/*if(flag) {
+			entityOffZ =   -0.05*MathHelper.sin((float) (entityFrom.rotationYaw * Math.PI/180f));
+			entityOffX = MathHelper.cos((float) (entityFrom.rotationYaw * Math.PI/180f))*-0.05;// - -0.02*MathHelper.cos((float) (entityFrom.rotationYaw * Math.PI/180f));
+			
+			worldRendererIn.addVertex(entityOffX, -0.02 ,entityOffZ);
+		}
+		else*/
+			worldRendererIn.addVertex(entityOffX - entityIn.posX, entityOffY - entityIn.posY, entityOffZ - entityIn.posZ);
 		worldRendererIn.addVertex(x, y, z);
 		
 		

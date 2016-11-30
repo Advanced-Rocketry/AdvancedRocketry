@@ -68,7 +68,6 @@ public class ItemBasicLaserGun extends Item {
 
 		if(rayTrace != null) {
 			rayTrace.entityHit.attackEntityFrom(DamageSource.generic, 1f);
-			//LibVulpes.proxy.playSound(world, player.getPosition(), AudioRegistry.basicLaser, SoundCategory.PLAYERS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.PLAYERS), 1f);
 			AdvancedRocketry.proxy.spawnLaser(player, rayTrace.hitVec);
 			return;
 		}

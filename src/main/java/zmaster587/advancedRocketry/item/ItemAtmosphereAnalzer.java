@@ -4,8 +4,11 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IArmorComponent;
@@ -38,13 +41,13 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 
 	}
 
-	private String[] getAtmosphereReadout(ItemStack stack, AtmosphereType atm) {
+	private String[] getAtmosphereReadout(ItemStack stack, AtmosphereType atm, World world) {
 		if(atm == null)
 			atm = AtmosphereType.AIR;
 
 		String str[] = new String[2];
 
-		str[0] = "Atmosphere Type: " + LibVulpes.proxy.getLocalizedString(atm.getUnlocalizedName()) + " @ " + (AtmosphereHandler.currentPressure == -1 ? 0 : AtmosphereHandler.currentPressure/100f) + " atm";
+		str[0] = "Atmosphere Type: " + LibVulpes.proxy.getLocalizedString(atm.getUnlocalizedName()) + " @ " + (AtmosphereHandler.currentPressure == -1 ? (DimensionManager.getInstance().isDimensionCreated(world.provider.dimensionId) ? DimensionManager.getInstance().getDimensionProperties(world.provider.dimensionId).getAtmosphereDensity()/100f : 1) : AtmosphereHandler.currentPressure/100f) + " atm";
 		str[1] = "Breathable: " + (atm.isBreathable() ? "Yes" : "No");
 
 		return str;
@@ -54,7 +57,7 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	public ItemStack onItemRightClick(ItemStack stack, World world,
 			EntityPlayer player) {
 		if(!world.isRemote) {
-			String str[] = getAtmosphereReadout(stack, (AtmosphereType) AtmosphereHandler.getOxygenHandler(world.provider.dimensionId).getAtmosphereType(player));
+			String str[] = getAtmosphereReadout(stack, (AtmosphereType) AtmosphereHandler.getOxygenHandler(world.provider.dimensionId).getAtmosphereType(player), world);
 			for(String str1 : str)
 					player.addChatMessage(new ChatComponentText(str1));
 		}
@@ -82,6 +85,7 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void renderScreen(ItemStack componentStack, List<ItemStack> modules,
 			RenderGameOverlayEvent event, Gui gui) {
 		
@@ -90,7 +94,7 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 		int screenX = 8;
 		int screenY = event.resolution.getScaledHeight() - fontRenderer.FONT_HEIGHT*3;
 
-		String str[] = getAtmosphereReadout(componentStack, (AtmosphereType) AtmosphereHandler.currentAtm);
+		String str[] = getAtmosphereReadout(componentStack, (AtmosphereType) AtmosphereHandler.currentAtm, Minecraft.getMinecraft().theWorld);
 		//Draw BG
 		gui.drawString(fontRenderer, str[0], screenX, screenY, 0xaaffff);
 		gui.drawString(fontRenderer, str[1], screenX, screenY + fontRenderer.FONT_HEIGHT*4/3, 0xaaffff);
