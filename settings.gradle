@@ -1,3 +1,0 @@
- 
-include 'libVulpes17'
-project(':libVulpes17').projectDir = new File('../libVulpes17');
