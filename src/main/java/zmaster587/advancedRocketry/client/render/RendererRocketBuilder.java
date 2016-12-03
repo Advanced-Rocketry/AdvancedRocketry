@@ -21,9 +21,7 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x,
 			double y, double z, float f) {
-
-
-
+		
 		TileRocketBuilder renderTile = (TileRocketBuilder)tile;
 		AxisAlignedBB bb;
 		
@@ -31,7 +29,7 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 		if(renderTile.isScanning() && (bb = renderTile.getBBCache()) != null) {
 
 			double xOffset = bb.minX - tile.xCoord;
-			double yOffset = bb.maxY - tile.yCoord;
+			double yOffset = bb.maxY - tile.yCoord + 1;
 			double zOffset = bb.minZ - tile.zCoord;
 
 			//Get size of the BB

@@ -473,7 +473,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			return null;
 		}
 
-		return AxisAlignedBB.getBoundingBox(xMin, yCurrent+1, zMin, xMax, yCurrent + maxTowerSize, zMax);
+		return AxisAlignedBB.getBoundingBox(xMin, yCurrent+1, zMin, xMax, yCurrent + maxTowerSize- 1, zMax);
 	}
 
 
