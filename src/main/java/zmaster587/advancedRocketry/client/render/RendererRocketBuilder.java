@@ -33,7 +33,7 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 		if(renderTile.isScanning() && (bb = renderTile.getBBCache()) != null) {
 
 			double xOffset = bb.minX - tile.getPos().getX();
-			double yOffset = bb.maxY - tile.getPos().getY();
+			double yOffset = bb.maxY - tile.getPos().getY() + 1;
 			double zOffset = bb.minZ - tile.getPos().getZ();
 
 			//Get size of the BB

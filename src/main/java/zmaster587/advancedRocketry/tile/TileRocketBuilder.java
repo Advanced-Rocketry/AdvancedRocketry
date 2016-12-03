@@ -476,7 +476,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			return null;
 		}
 
-		return new AxisAlignedBB(new BlockPos(xMin, yCurrent+1, zMin), new BlockPos(xMax, yCurrent + maxTowerSize, zMax));
+		return new AxisAlignedBB(new BlockPos(xMin, yCurrent+1, zMin), new BlockPos(xMax, yCurrent + maxTowerSize - 1, zMax));
 	}
 
 
