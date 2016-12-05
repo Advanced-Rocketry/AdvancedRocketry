@@ -340,7 +340,7 @@ public class DimensionManager implements IGalaxy {
 	 * @return true if it can be traveled to, in general if it has a surface
 	 */
 	public boolean canTravelTo(int dimId){
-		return net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId) && dimId != -1 && getDimensionProperties(dimId).isGasGiant();
+		return net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId) && dimId != -1 && !getDimensionProperties(dimId).isGasGiant();
 	}
 	
 	/**
