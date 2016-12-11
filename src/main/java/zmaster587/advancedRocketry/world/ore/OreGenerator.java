@@ -53,6 +53,10 @@ public class OreGenerator extends WorldGenerator implements IWorldGenerator {
 			if(Configuration.generateRutile) {
 				generate(world, MaterialRegistry.getMaterialFromName("Rutile"), Configuration.rutilePerChunk, Configuration.rutileClumpSize, chunkX, chunkZ, random);
 			}
+			
+			if(Configuration.generateAluminum) {
+				generate(world, MaterialRegistry.getMaterialFromName("Aluminum"), Configuration.aluminumPerChunk, Configuration.aluminumClumpSize, chunkX, chunkZ, random);
+			}
 
 			if(Configuration.generateDilithium) {
 				int dilithiumChance = Configuration.dilithiumPerChunk;
