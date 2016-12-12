@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
@@ -1385,6 +1386,19 @@ public class AdvancedRocketry {
 		
 		for(String str : entityList) {
 			Class clazz = (Class) EntityList.NAME_TO_CLASS.get(str);
+			
+			//If not using string name maybe it's a class name?
+			if(clazz == null) {
+				try {
+					clazz = Class.forName(str);
+					if(clazz != null && !Entity.class.isAssignableFrom(clazz))
+						clazz = null;
+					
+				} catch (Exception e) {
+					//Fail silently
+				}
+			}
+			
 			if(clazz != null) {
 				logger.fine("Registering " + clazz.getName() + " for atmosphere bypass");
 				zmaster587.advancedRocketry.api.Configuration.bypassEntity.add(clazz);
