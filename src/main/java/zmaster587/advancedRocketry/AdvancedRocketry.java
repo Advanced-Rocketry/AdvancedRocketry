@@ -341,9 +341,9 @@ public class AdvancedRocketry {
 		sealableBlockWhiteList = config.getStringList(Configuration.CATEGORY_GENERAL, "sealableBlockWhiteList", new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
 		breakableTorches = config.getStringList("torchBlocks", Configuration.CATEGORY_GENERAL, new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
 		harvestableGasses = config.getStringList("harvestableGasses", GAS_MINING, new String[] {}, "list of fluid names that can be harvested as Gas");
-		
+
 		entityList = config.getStringList("entityAtmBypass", Configuration.CATEGORY_GENERAL, new String[] {}, "list entities which should not be affected by atmosphere properties");
-		
+
 		//Satellite config
 		zmaster587.advancedRocketry.api.Configuration.microwaveRecieverMulitplier = 10*(float)config.get(Configuration.CATEGORY_GENERAL, "MicrowaveRecieverMulitplier", 1f, "Multiplier for the amount of energy produced by the microwave reciever").getDouble();
 
@@ -777,7 +777,7 @@ public class AdvancedRocketry {
 
 		AdvancedRocketryItems.itemSealDetector = new ItemSealDetector().setMaxStackSize(1).setCreativeTab(tabAdvRocketry).setUnlocalizedName("sealDetector").setTextureName("advancedRocketry:seal_detector");
 		AdvancedRocketryItems.itemBasicLaserGun = new ItemBasicLaserGun().setCreativeTab(tabAdvRocketry).setUnlocalizedName("basicLaserGun").setTextureName("advancedRocketry:basicLaserGun");
-		
+
 		//Tools
 		AdvancedRocketryItems.itemJackhammer = new ItemJackHammer(ToolMaterial.EMERALD).setTextureName("advancedRocketry:jackHammer").setUnlocalizedName("jackhammer").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemJackhammer.setHarvestLevel("jackhammer", 3);
@@ -835,7 +835,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerItem(AdvancedRocketryItems.itemUpgrade, AdvancedRocketryItems.itemUpgrade.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemAtmAnalyser, AdvancedRocketryItems.itemAtmAnalyser.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemBasicLaserGun, AdvancedRocketryItems.itemBasicLaserGun.getUnlocalizedName());
-		
+
 		if(zmaster587.advancedRocketry.api.Configuration.enableTerraforming)
 			GameRegistry.registerItem(AdvancedRocketryItems.itemBiomeChanger, AdvancedRocketryItems.itemBiomeChanger.getUnlocalizedName());
 
@@ -1474,11 +1474,24 @@ public class AdvancedRocketry {
 		}
 		logger.fine("End registering Harvestable Gasses");
 		harvestableGasses = null;
-		
+
 		logger.fine("Start registering entity atmosphere bypass");
-		
+
 		for(String str : entityList) {
 			Class clazz = (Class) EntityList.stringToClassMapping.get(str);
+			
+			//If not using string name maybe it's a class name?
+			if(clazz == null) {
+				try {
+					clazz = Class.forName(str);
+					if(clazz != null && !Entity.class.isAssignableFrom(clazz))
+						clazz = null;
+					
+				} catch (Exception e) {
+					//Fail silently
+				}
+			}
+			
 			if(clazz != null) {
 				logger.fine("Registering " + clazz.getName() + " for atmosphere bypass");
 				zmaster587.advancedRocketry.api.Configuration.bypassEntity.add(clazz);
@@ -1486,11 +1499,11 @@ public class AdvancedRocketry {
 			else
 				logger.warning("Cannot find " + str + " while registering entity for atmosphere bypass");
 		}
-		
+
 		//Free memory
 		entityList = null;
 		logger.fine("End registering entity atmosphere bypass");
-		
+
 		//Load XML recipes
 		LibVulpes.instance.loadXMLRecipe(TileCuttingMachine.class);
 		LibVulpes.instance.loadXMLRecipe(TilePrecisionAssembler.class);
@@ -1661,9 +1674,9 @@ public class AdvancedRocketry {
 				dimensionProperties.setStar(DimensionManager.getSol());
 				dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");
 				DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
-				
+
 			}
-			
+
 			if(!loadedFromXML)  {
 				generateRandomPlanets(DimensionManager.getSol(), numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
 
@@ -1784,16 +1797,16 @@ public class AdvancedRocketry {
 
 			DimensionProperties properties = DimensionManager.getInstance().generateRandom(star.getId(), baseDistance,baseAtm,125,100,100,75);
 
-			
+
 			if(properties == null)
 				continue;
-			
+
 			if(properties.gravitationalMultiplier >= 1f) {
 				int numMoons = random.nextInt(4);
 
 				for(int ii = 0; ii < numMoons; ii++) {
 					DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(star.getId(), properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
-					
+
 					if(moonProperties == null)
 						continue;
 					moonProperties.setParentPlanet(properties);
