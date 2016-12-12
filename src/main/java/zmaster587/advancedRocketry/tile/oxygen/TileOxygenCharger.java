@@ -190,7 +190,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 			stack.stackSize = 1;
 			
 			//Drain the tank into the item
-			if(fluidItem.getFluid(stack) == null) {
+			if(fluidItem.getFluid(stack) == null && tank.getFluid() != null) {
 				int amt = fluidItem.fill(stack, tank.getFluid(), true);
 				
 				
