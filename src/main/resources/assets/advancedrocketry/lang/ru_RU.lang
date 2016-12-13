@@ -1,6 +1,8 @@
 itemGroup.advancedRocketry=Advanced Rocketry
 itemGroup.advancedRocketryOres=Руды Advanced Rocketry
- 
+
+death.attack.Vacuum=Вас разгерметизировало
+death.attack.Vacuum.player=был разрегметизирован
 entity.advancedRocketry.rocket.name=Ракета
  
 tile.seat.name=Сиденье
@@ -21,9 +23,12 @@ tile.loader.0.name=Шина данных
 tile.loader.1.name=Отсек для спутника
 tile.loader.2.name=Разгрузчик ракет
 tile.loader.3.name=Погрузчик ракет
+tile.loader.4.name=Разгрузчик топлива
+tile.loader.5.name=Загрузчик топлива
 tile.observatory.name=Обсерватория
 tile.satelliteBuilder.name=Спутниковый сборщик
 tile.rocket.name=Жидкостный ракетный двигатель
+tile.advRocket.name=Улучшенный ракетный двигатель
 tile.fuelTank.name=Топливный бак
 tile.monitoringstation.name=Станция мониторинга
 tile.satelliteMonitor.name=Спутниковый терминал
@@ -51,6 +56,7 @@ tile.liquidHatch.name=Жидкостный клапан
 tile.rocketFuelBlock.name=Ракетное топливо
 tile.hydrogenFluidBlock.name=Водород
 tile.oxygenFluidBlock.name=Кислород
+tile.nitrogenFluidBlock.name=Азот
 tile.oxygenCharger.name=Кислородный наполнитель
 tile.dockingPad.name=Стыковочный узел
 tile.stationmonitor.name=Варп-контроллер
@@ -70,7 +76,9 @@ tile.amethyst.name=Блок аметиста
 tile.orientationControl.name=Контроллер ориентации
 tile.gravityControl.name=Контроллер гравитации
 tile.drill.name=Бур
-tile.dataCable.name=Кабель данных
+tile.dataPipe.name=Кабель данных
+tile.liquidPipe.name=Труба
+tile.energyPipe.name=Электрокабель
 tile.rfOutput.name=Выход RF
 tile.microwaveReciever.name=Микроволновый приёмник
 tile.solarPanel.name=Солнечная панель
@@ -78,6 +86,15 @@ tile.suitWorkStation.name=Станция модификации костюма
 tile.orientationControl.name=Контроллер ориентации
 tile.biomeScanner.name=Сканер биомов
 tile.atmoshereTerraformer.name=Терраформер атмосферы
+tile.deployableRocketAssembler.name=Сборщик ракет-носителей
+tile.pressurizedTank.name=Бак под давлением
+tile.gasIntake.name=Газовый впуск
+tile.atmosphereTerraformer.name=Терраформер атмосферы
+tile.circleLight.name=Комический светильник
+tile.stationMarker.name=Док-порт
+tile.solarGenerator.name=Солнечный генератор
+tile.altitudeController.name=Контроллер высоты
+tile.railgun.name=Рельсотон
 
 tile.Dilithium.name=Руда дилития
 
@@ -120,6 +137,9 @@ item.spaceLeggings.name=Штаны скафандра
 item.spaceChest.name=Скафандр
 item.spaceBoots.name=Ботинки скафандра
 item.bucketRocketFuel.name=Ведро ракетного топлива
+item.bucketNitrogen.name=Ведро жидкого азота
+item.bucketHydrogen.name=Ведро жидкого водорода
+item.bucketOxygen.name=Ведро жидкого кислорода
 item.smallAirlock.name=Малая гермодверь
 item.carbonScrubberCartridge.name=Поглощающий картридж
 item.jackhammer.name=Отбойный молоток
@@ -128,8 +148,10 @@ item.itemUpgrade.0.name=Улучшение "Полёт"
 item.itemUpgrade.1.name=Улучшение "Контроль скорости полёта"
 item.itemUpgrade.2.name=Улучшение "Бионические ноги"
 item.itemUpgrade.3.name=Улучшение "Гаситель падений"
+item.itemUpgrade.4.name=Улучшение "Противотуманный визор"
 item.atmAnalyser.name=Анализатор атмосферы
 item.biomeChanger.name=Дистанционный модификатор биома
+item.basicLaserGun.name=Лазерное орудие
 
 item.jetPack.name=Реактивный ранец
 item.pressureTank.0.name=Баллон низкого давления
@@ -139,6 +161,7 @@ item.pressureTank.3.name=Баллон сверхвысокого давлени�
 
 material.Dilithium.name=Дилитевый
 material.TitaniumAluminide.name=Титано-алюминиевый
+material.TitaniumIridium.name=Титано-иридиевый
 
 container.crystallizer=Кристаллизатор
 container.cuttingmachine=Резак
@@ -158,9 +181,49 @@ data.mass.name=Масса
 
 fluid.oxygen=Кислород
 fluid.hydrogen=Водород
+fluid.nitrogen=Азот
 fluid.rocketFuel=Ракетное топливо
 
 mission.asteroidmining.name=Освоение астероидов
+mission.gascollection.name=Добыча газа
+
+error.rocket.cannotGetThere=Пункт назначения недоступен
+error.rocket.destinationNotExist=Запуск невозможен: пункт назначения не существует
+error.rocket.notSameSystem=Запуск невозможен: пункт назначения не находится в этой же солнечной системе
+
+achievement.holographic=Голография
+achievement.holographic.desc=Создайте голопроектор
+achievement.flattening=Сплющивание
+achievement.flattening.desc=Создайте малый пресс
+achievement.feelTheHeat=Почувствуй тепло!
+achievement.feelTheHeat.desc=Создайте дуговую печь
+achievement.electrifying=Электрификация!
+achievement.electrifying.desc=Создайте элетролизер
+achievement.spinDoctor=Спин-доктор
+achievement.spinDoctor.desc=Создайте токарный станок
+achievement.rollin=Rollin'
+achievement.rollin.desc=Создайте прокатный стан
+achievement.crystalline=Кристалл
+achievement.crystalline.desc=Создайте кристаллизатор
+achievement.warp=Варп
+achievement.warp.desc=Постройте варп-ядро
+achievement.moonLanding=Прилунение!
+achievement.moonLanding.desc=Совершите посадку на луну
+achievement.oneSmallStep=Один маленький шаг...
+achievement.oneSmallStep.desc=Станьте первым человеком на луне!
+achievement.weReallyWentToTheMoon=На Луне всё-таки были люди!
+achievement.weReallyWentToTheMoon.desc=Найдите место посадки "Апполон-11"
+achievement.dilithium=Дилитий
+achievement.dilithium.desc=Найдите руду дилития
+achievement.givingItAllShesGot=Giving it all she's got!
+achievement.givingItAllShesGot.desc=Отправьтесь на корабле, способном к варпу
+achievement.flightOfThePhoenix=Полёт Феникса
+achievement.flightOfThePhoenix.desc=Постройте и отправьтесь первым на корабле, готовом к варпу
+achievement.beerOnTheSun=Adult Beverages on the sun
+achievement.beerOnTheSun.desc=Чтобы вылететь на орбиту, понадобится больше TNT
+achievement.suitedUp=Одетый
+achievement.suitedUp.desc=Наденьте скафандр
 
 key.controls.advancedRocketry=Advanced Rocketry
+key.openRocketUI=Открыть GUI ракеты
 key.toggleJetpack=Включить реактивный ранец
