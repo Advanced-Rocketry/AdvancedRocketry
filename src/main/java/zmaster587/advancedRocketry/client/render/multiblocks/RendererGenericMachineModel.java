@@ -10,8 +10,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import zmaster587.advancedRocketry.tile.multiblock.TileMultiblockMachine;
 import zmaster587.libVulpes.block.RotatableBlock;
+import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
 public class RendererGenericMachineModel extends TileEntitySpecialRenderer {
 	IModelCustom model;

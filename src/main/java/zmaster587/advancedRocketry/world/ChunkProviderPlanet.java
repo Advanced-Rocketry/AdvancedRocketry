@@ -12,7 +12,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.event.PlanetEventHandler;
+import zmaster587.advancedRocketry.util.OreGenProperties;
+import zmaster587.advancedRocketry.util.OreGenProperties.OreEntry;
 import zmaster587.advancedRocketry.world.decoration.MapGenCrater;
+import zmaster587.advancedRocketry.world.decoration.MapGenGeode;
+import zmaster587.advancedRocketry.world.gen.CustomizableOreGen;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import net.minecraft.block.Block;
@@ -75,6 +82,7 @@ public class ChunkProviderPlanet implements IChunkProvider {
 	private MapGenBase ravineGenerator = new MapGenRavine();
 
 	private MapGenCrater craterGenerator;
+	private MapGenGeode geodeGenerator;
 	/** The biomes that are used to generate the chunk */
 	private BiomeGenBase[] biomesForGeneration;
 	double[] field_147427_d;
@@ -132,9 +140,15 @@ public class ChunkProviderPlanet implements IChunkProvider {
 		float atmDensity = ((WorldProviderPlanet)worldObj.provider).getAtmosphereDensity(0,0);
 
 		if(atmDensity < 0.75f)
-			craterGenerator = new MapGenCrater( (int)(10 +  (26*atmDensity) ));
+			craterGenerator = new MapGenCrater( (int)(10 +  (26*(1-atmDensity)) ));
 		else 
 			craterGenerator = null;
+		
+		if(atmDensity > 1.25f) {
+			geodeGenerator = new MapGenGeode(800);
+		}
+		else
+			geodeGenerator = null;
 	}
 
 	public void func_147424_a(int p_147424_1_, int p_147424_2_, Block[] p_147424_3_)
@@ -259,6 +273,9 @@ public class ChunkProviderPlanet implements IChunkProvider {
 
 		if(this.craterGenerator != null)
 			this.craterGenerator.func_151539_a(this, this.worldObj, p_73154_1_, p_73154_2_, ablock);
+		
+		if(this.geodeGenerator != null)
+			this.geodeGenerator.func_151539_a(this, this.worldObj, p_73154_1_, p_73154_2_, ablock);
 
 		if (this.mapFeaturesEnabled)
 		{
@@ -267,6 +284,9 @@ public class ChunkProviderPlanet implements IChunkProvider {
 
 		//ChunkExtendedBiome
 		Chunk chunk = new Chunk(this.worldObj, ablock, abyte, p_73154_1_, p_73154_2_);
+		if(this.geodeGenerator != null)
+			geodeGenerator.setMetaPos(chunk, p_73154_1_, p_73154_2_);
+		
 		//TODO: convert back to int
 		byte[] abyte1 = chunk.getBiomeArray();
 
@@ -413,9 +433,11 @@ public class ChunkProviderPlanet implements IChunkProvider {
 		this.rand.setSeed((long)p_73153_2_ * i1 + (long)p_73153_3_ * j1 ^ this.worldObj.getSeed());
 		boolean flag = false;
 
-		MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Pre(p_73153_1_, worldObj, rand, p_73153_2_, p_73153_3_, flag));
-
-
+		//TODO: add registry for planets
+		boolean populationFlag = ((WorldProviderPlanet)worldObj.provider).getDimensionProperties(k, l).hasRivers();
+		
+		if(populationFlag )
+			MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Pre(p_73153_1_, worldObj, rand, p_73153_2_, p_73153_3_, flag));
 
 		if (this.mapFeaturesEnabled)
 		{
@@ -431,8 +453,26 @@ public class ChunkProviderPlanet implements IChunkProvider {
 		k += 8;
 		l += 8;
 
-		MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Post(p_73153_1_, worldObj, rand, p_73153_2_, p_73153_3_, flag));
+		//If a planet is terraformed chenge upper blocks
+		if(zmaster587.advancedRocketry.api.Configuration.allowTerraforming && worldObj.provider.getClass() == WorldProviderPlanet.class) {
 
+			if(DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId).isTerraformed()) {
+				Chunk chunk = worldObj.getChunkFromChunkCoords(p_73153_2_, p_73153_3_);
+				PlanetEventHandler.modifyChunk(worldObj, (WorldProviderPlanet)worldObj.provider, chunk);
+			}
+		}
+		
+		if (populationFlag)
+			MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Post(p_73153_1_, worldObj, rand, p_73153_2_, p_73153_3_, flag));
+
+		OreGenProperties oreGenProperties = DimensionManager.getInstance().getDimensionProperties(this.worldObj.provider.dimensionId).getOreGenProperties(this.worldObj);
+		
+		if(oreGenProperties != null) {
+			for(OreEntry entry : oreGenProperties.getOreEntries()) {
+				new CustomizableOreGen(entry).generate(rand, p_73153_2_, p_73153_3_, this.worldObj, this, this.worldObj.getChunkProvider());
+			}
+		}
+		
 		BlockFalling.fallInstantly = false;
 	}
 

@@ -11,17 +11,18 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.material.MaterialRegistry;
-import zmaster587.advancedRocketry.tile.multiblock.TileMultiblockMachine;
 import zmaster587.advancedRocketry.util.Debugger;
+import zmaster587.libVulpes.api.material.Material;
+import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.RotatableBlock;
+import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
 public class RendererRollingMachine extends TileEntitySpecialRenderer {
 	IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("advancedrocketry:models/rollingMachine.obj"));
 
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/rollingMachine.png");
-	ResourceLocation coilSide = new ResourceLocation("advancedrocketry:textures/blocks/coilSide.png");
-	
+	ResourceLocation coilSide = new ResourceLocation("libvulpes:textures/blocks/coilSide.png");
+	static int i = MaterialRegistry.getMaterialFromName("Copper").getColor();
 	private static int bodyList;
 
 	public RendererRollingMachine() {
@@ -53,7 +54,7 @@ public class RendererRollingMachine extends TileEntitySpecialRenderer {
 		GL11.glTranslated(-.5f, -1f, -0.5f);
 
 		bindTexture(coilSide);
-		int i = MaterialRegistry.Materials.COPPER.getColor();
+		
 		GL11.glColor3f(((i >>> 16) & 0xFF)/255f, ((i >>> 8) & 0xFF)/255f, (i & 0xFF)/255f);
 		model.renderOnly("Coil");
 		GL11.glColor3f(1f,1f,1f);

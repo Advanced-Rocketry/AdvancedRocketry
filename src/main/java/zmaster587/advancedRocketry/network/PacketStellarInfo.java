@@ -11,6 +11,7 @@ import net.minecraft.network.PacketBuffer;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.libVulpes.network.BasePacket;
 
 public class PacketStellarInfo extends BasePacket {
 	StellarBody star;
@@ -49,33 +50,34 @@ public class PacketStellarInfo extends BasePacket {
 		NBTTagCompound nbt;
 		starId = in.readInt();
 
-		if(in.readBoolean())
+		if(in.readBoolean()) {
 			if(DimensionManager.getInstance().isDimensionCreated(starId)) {
 				DimensionManager.getInstance().removeStar(starId);
 			}
-			else {
-				//TODO: error handling
-				try {
-					nbt = packetBuffer.readNBTTagCompoundFromBuffer();
+		}
+		else {
+			//TODO: error handling
+			try {
+				nbt = packetBuffer.readNBTTagCompoundFromBuffer();
 
-				} catch (IOException e) {
-					e.printStackTrace();
-					return;
-				}
-
-				StellarBody star;
-
-				if(starId == 0) {
-					DimensionManager.getSol().readFromNBT(nbt);
-				}
-				else if((star = DimensionManager.getInstance().getStar(starId)) != null) {
-					star.readFromNBT(nbt);
-				} else {
-					star = new StellarBody();
-					star.readFromNBT(nbt);
-					DimensionManager.getInstance().addStar(star);
-				}
+			} catch (IOException e) {
+				e.printStackTrace();
+				return;
 			}
+
+			StellarBody star;
+
+			if(starId == 0) {
+				DimensionManager.getSol().readFromNBT(nbt);
+			}
+			else if((star = DimensionManager.getInstance().getStar(starId)) != null) {
+				star.readFromNBT(nbt);
+			} else {
+				star = new StellarBody();
+				star.readFromNBT(nbt);
+				DimensionManager.getInstance().addStar(star);
+			}
+		}
 	}
 
 	@Override

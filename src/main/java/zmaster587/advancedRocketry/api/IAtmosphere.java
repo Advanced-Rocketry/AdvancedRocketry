@@ -32,4 +32,15 @@ public interface IAtmosphere {
 	 * @return unlocalized name of the gas
 	 */
 	public String getUnlocalizedName();
+	
+	
+	/**
+	 * @return true if the atmosphere is normally breathable without a suit
+	 */
+	public boolean isBreathable();
+	
+	/**
+	 * @return unlocalized message to display when player is in the gas with no protection
+	 */
+	public String getDisplayMessage();
 }

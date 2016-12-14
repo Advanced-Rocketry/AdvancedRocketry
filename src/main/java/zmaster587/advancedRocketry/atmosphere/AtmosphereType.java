@@ -11,11 +11,13 @@ import net.minecraft.entity.EntityLivingBase;
 public class AtmosphereType implements IAtmosphere {
 
 	public static final AtmosphereType AIR = new AtmosphereType(false, true, "air");
+	public static final AtmosphereType PRESSURIZEDAIR = new AtmosphereType(false, true, "PressurizedAir");
 	public static final AtmosphereType VACUUM = new AtmosphereVacuum();
 
 	static {
-		AtmosphereRegister.getInstance().registerAtmosphere(AIR, AIR.getUnlocalizedName());
-		AtmosphereRegister.getInstance().registerAtmosphere(VACUUM, VACUUM.getUnlocalizedName());
+		AtmosphereRegister.getInstance().registerAtmosphere(AIR);
+		AtmosphereRegister.getInstance().registerAtmosphere(PRESSURIZEDAIR);
+		AtmosphereRegister.getInstance().registerAtmosphere(VACUUM);
 	}
 	
 	private boolean allowsCombustion;
@@ -24,10 +26,15 @@ public class AtmosphereType implements IAtmosphere {
 	private String name;
 
 	public AtmosphereType(boolean canTick, boolean isBreathable, String name) {
-		this.allowsCombustion = false;
+		this.allowsCombustion = isBreathable;
 		this.isBreathable = isBreathable;
 		this.canTick = canTick;
 		this.name = name;
+	}
+	
+	public AtmosphereType(boolean canTick, boolean isBreathable, boolean allowsCombustion, String name) {
+		this(canTick, isBreathable, name);
+		this.allowsCombustion = allowsCombustion;
 	}
 
 	/**
@@ -45,6 +52,11 @@ public class AtmosphereType implements IAtmosphere {
 	 * @return true if the atmosphere does not affect the entity in any way
 	 */
 	public boolean isImmune(EntityLivingBase player) {
+		return isBreathable;
+	}
+	
+	@Override
+	public boolean isBreathable() {
 		return isBreathable;
 	}
 	
@@ -70,6 +82,13 @@ public class AtmosphereType implements IAtmosphere {
 	 */
 	public void setAllowsCombustion(boolean allowsCombustion) {
 		this.allowsCombustion = allowsCombustion;
+	}
+	
+	/**
+	 * @return unlocalized message to display when player is in the gas with no protection
+	 */
+	public String getDisplayMessage() {
+		return "";
 	}
 
 	//TODO: tick for all entities

@@ -2,10 +2,10 @@ package zmaster587.advancedRocketry.client.render;
 
 import org.lwjgl.opengl.GL11;
 
-import zmaster587.advancedRocketry.tile.multiblock.TileMultiBlock;
-import zmaster587.advancedRocketry.tile.multiblock.TilePlaceholder;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.render.RenderHelper;
+import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
+import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -58,9 +58,11 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 			//Render Each block
 			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 			renderBlocks.blockAccess = tileGhost.getWorldObj();
+			renderBlocks.renderAllFaces = true;
 
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_ONE_MINUS_SRC_COLOR, GL11.GL_SRC_ALPHA);
+			
 			Tessellator.instance.startDrawingQuads();
 
 			if(block.getRenderType() == 0) {

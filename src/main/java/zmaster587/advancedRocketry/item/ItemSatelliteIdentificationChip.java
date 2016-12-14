@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.item;
 
 import java.util.List;
 
+import zmaster587.advancedRocketry.api.ISatelliteIdItem;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
@@ -10,10 +11,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldProvider;
 import net.minecraftforge.common.DimensionManager;
 
-public class ItemSatelliteIdentificationChip extends Item {
+public class ItemSatelliteIdentificationChip extends Item implements ISatelliteIdItem {
 
 	private static String name = "name";
 
@@ -44,7 +44,6 @@ public class ItemSatelliteIdentificationChip extends Item {
 				if(!nbt.hasKey("dimId") || nbt.getInteger("dimId") == -1) {
 					nbt.setInteger("dimId", satellite.getDimensionId());
 				}
-
 
 				World world;
 				if( !nbt.hasKey(null) && (world = DimensionManager.getWorld(satellite.getDimensionId())) != null)

@@ -5,6 +5,7 @@ import java.util.List;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.DataStorage;
+import zmaster587.libVulpes.items.ItemIngredient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -55,7 +56,7 @@ public class ItemData extends ItemIngredient {
 	public int addData(ItemStack item, int amount, DataStorage.DataType dataType) {
 		DataStorage data = getDataStorage(item);
 
-		int amt = data.addData(amount, dataType);
+		int amt = data.addData(amount, dataType, true);
 
 		NBTTagCompound nbt = new NBTTagCompound();
 		data.writeToNBT(nbt);
@@ -67,7 +68,7 @@ public class ItemData extends ItemIngredient {
 	public int removeData(ItemStack item, int amount, DataStorage.DataType dataType) {
 		DataStorage data = getDataStorage(item);
 
-		int amt = data.removeData(amount);
+		int amt = data.removeData(amount, true);
 
 		NBTTagCompound nbt = new NBTTagCompound();
 		data.writeToNBT(nbt);

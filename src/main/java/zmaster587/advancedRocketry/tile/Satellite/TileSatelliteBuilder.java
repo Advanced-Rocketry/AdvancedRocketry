@@ -12,26 +12,28 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
+import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
-import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.inventory.modules.IButtonInventory;
-import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
-import zmaster587.advancedRocketry.inventory.modules.ModuleButton;
-import zmaster587.advancedRocketry.inventory.modules.ModuleOutputSlotArray;
-import zmaster587.advancedRocketry.inventory.modules.ModulePower;
-import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
-import zmaster587.advancedRocketry.inventory.modules.ModuleTexturedSlotArray;
+import zmaster587.advancedRocketry.item.ItemOreScanner;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemSatellite;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.network.PacketMachine;
-import zmaster587.advancedRocketry.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.client.util.ProgressBarImage;
+import zmaster587.libVulpes.inventory.modules.IButtonInventory;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleButton;
+import zmaster587.libVulpes.inventory.modules.ModuleOutputSlotArray;
+import zmaster587.libVulpes.inventory.modules.ModulePower;
+import zmaster587.libVulpes.inventory.modules.ModuleProgress;
+import zmaster587.libVulpes.inventory.modules.ModuleTexturedSlotArray;
+import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 
 public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IModularInventory, IInventory, IButtonInventory {
 
@@ -81,14 +83,14 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		}
 
 		//Make sure critical parts exist and output is empty
-		if(inventory[0] == null || inventory[holdingSlot] != null || inventory[outputSlot] != null || 
-				inventory[chipSlot] == null || !(inventory[chipSlot].getItem() instanceof ItemSatelliteIdentificationChip) 
-				|| SatelliteRegistry.getSatelliteProperty(inventory[0]).getSatelliteType() == null)
+		if(inventory[0] == null || inventory[holdingSlot] != null || inventory[outputSlot] != null || SatelliteRegistry.getSatelliteProperty(inventory[0]).getSatelliteType() == null)
 			return false;
 
+		String satType = SatelliteRegistry.getSatelliteProperty(inventory[0]).getSatelliteType();
+		SatelliteBase sat = SatelliteRegistry.getSatallite(satType);
+		
 		//TODO: UNDEBUG if 0 power gen also return false
-
-		return true;
+		return sat.isAcceptableControllerItemStack(inventory[chipSlot]);
 	}
 
 	/**
@@ -100,11 +102,15 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		SatelliteProperties properties;
 
 		String satType = SatelliteRegistry.getSatelliteProperty(inventory[0]).getSatelliteType();
+		SatelliteBase sat = SatelliteRegistry.getSatallite(satType);
 		for(int i = 0; i < 7; i++) {
 			ItemStack stack = getStackInSlot(i);
 			if(stack != null) {
 				properties = SatelliteRegistry.getSatelliteProperty(stack);
 
+				if(!sat.acceptsItemInConstruction(stack))
+					continue;
+				
 				powerStorage += properties.getPowerStorage();
 				powerGeneration += properties.getPowerGeneration();
 				maxData += properties.getMaxDataStorage();
@@ -112,21 +118,21 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 				decrStackSize(i, 1);
 			}
 		}
+		if(!worldObj.isRemote) {
+			//Set final satellite properties
+			properties = new SatelliteProperties(powerGeneration, powerStorage, satType,maxData);
+			properties.setId(DimensionManager.getInstance().getNextSatelliteId());
 
-		//Set final satellite properties
-		properties = new SatelliteProperties(powerGeneration, powerStorage, satType,maxData);
-		properties.setId(DimensionManager.getInstance().getNextSatelliteId());
+			//Create the output item
+			ItemSatellite satItem = (ItemSatellite)AdvancedRocketryItems.itemSatellite;
+			ItemStack output = new ItemStack(satItem);
+			satItem.setSatellite(output, properties);
 
-		//Create the output item
-		ItemSatellite satItem = (ItemSatellite)AdvancedRocketryItems.itemSatellite;
-		ItemStack output = new ItemStack(satItem);
-		satItem.setSatellite(output, properties);
+			//Set the ID chip
+			inventory[chipSlot] = sat.getContollerItemStack(inventory[chipSlot], properties);
 
-		//Set the ID chip
-		ItemSatelliteIdentificationChip idChipItem = (ItemSatelliteIdentificationChip)inventory[chipSlot].getItem();
-		idChipItem.setSatellite(inventory[chipSlot], properties);
-
-		inventory[holdingSlot] = output;
+			inventory[holdingSlot] = output;
+		}
 
 		completionTime = 100;
 	}
@@ -136,27 +142,30 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		ItemStack stack1 = getStackInSlot(chipCopySlot);
 		getStackInSlot(outputSlot);
 
-		boolean isSatellite = stack0 != null && stack1 != null && ((stack0.getItem() instanceof ItemSatellite || stack0.getItem() instanceof ItemSatelliteIdentificationChip) && stack1.getItem() instanceof ItemSatelliteIdentificationChip);
-		boolean isStation = stack0 != null && stack1 != null && stack0.getItem() instanceof ItemStationChip && stack0.getItemDamage() != 0 && stack1.getItem() instanceof ItemStationChip;
-		boolean isPlanet = stack0 != null && stack1 != null && (stack0.getItem() instanceof ItemPlanetIdentificationChip && stack1.getItem() instanceof ItemPlanetIdentificationChip);
-		
+		boolean chipsExist = stack0 != null && stack1 != null;
+		if(!chipsExist)
+			return false;
+		boolean isSatellite = ((stack0.getItem() instanceof ItemSatellite || stack0.getItem() instanceof ItemSatelliteIdentificationChip) && stack1.getItem().equals(stack0.getItem()));
+		boolean isStation = stack0.getItem() instanceof ItemStationChip && stack0.getItemDamage() != 0 && stack1.getItem() instanceof ItemStationChip;
+		boolean isPlanet = (stack0.getItem() instanceof ItemPlanetIdentificationChip && stack1.getItem() instanceof ItemPlanetIdentificationChip);
+		boolean isOreScanner = (stack0.getItem() instanceof ItemOreScanner && stack1.getItem() instanceof ItemOreScanner);
 		return !isRunning() && getStackInSlot(outputSlot) == null && (isStation || stack0.hasTagCompound()) && 
-				(isSatellite  || isStation || isPlanet);
+				(isSatellite  || isStation || isPlanet || isOreScanner);
 	}
 
 	private void copyChip() {
 
 		ItemStack slot0 = getStackInSlot(chipSlot);
 		ItemStack slot1 = getStackInSlot(chipCopySlot);
-		
-		if(slot0.getItem() instanceof ItemSatelliteIdentificationChip || slot0.getItem() instanceof ItemPlanetIdentificationChip || slot0.getItem() instanceof ItemStationChip) {
+
+		if(slot0.getItem() instanceof ItemSatelliteIdentificationChip || slot0.getItem() instanceof ItemOreScanner || slot0.getItem() instanceof ItemPlanetIdentificationChip || slot0.getItem() instanceof ItemStationChip) {
 			inventory[holdingSlot] = getStackInSlot(chipSlot).copy();
 		}
 		else {
 			ItemSatellite satelliteItem = (ItemSatellite)slot0.getItem();
-			
+
 			ItemSatelliteIdentificationChip itemIdChip = (ItemSatelliteIdentificationChip)slot1.getItem();
-			
+
 			itemIdChip.setSatellite(slot1, satelliteItem.getSatellite(slot0));
 			inventory[holdingSlot] = slot1;
 		}
@@ -177,7 +186,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID) {
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		modules.add(new ModulePower(18, 20, getBatteries()));
@@ -188,7 +197,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		modules.add(new ModuleTexturedSlotArray(58, 16, this, chipSlot, chipSlot + 1, TextureResources.idChip)); 	// Id chip
 		modules.add(new ModuleTexturedSlotArray(82, 16, this, chipCopySlot, chipCopySlot+1, TextureResources.idChip)); 	// Id chip
 		modules.add(new ModuleProgress(75, 36, 0, new ProgressBarImage(217,0, 17, 17, 234, 0, ForgeDirection.DOWN, TextureResources.progressBars), this));
-		modules.add(new ModuleButton(40, 56, 0, "Build", this, TextureResources.buttonBuild));
+		modules.add(new ModuleButton(40, 56, 0, "Build", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
 		modules.add(new ModuleButton(173, 3, 1, "", this, TextureResources.buttonCopy, "Write to Secondary Chip", 24, 24));
 
 		return modules;

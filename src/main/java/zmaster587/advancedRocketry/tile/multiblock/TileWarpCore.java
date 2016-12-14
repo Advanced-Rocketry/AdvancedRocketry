@@ -9,27 +9,31 @@ import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.api.material.MaterialRegistry;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.api.material.AllowedProducts;
+import zmaster587.libVulpes.api.material.Material;
+import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 
 public class TileWarpCore extends TileMultiBlock {
 	private SpaceObject station;
 
 	public static final Object[][][] structure = { 
-		{{new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock)},
-			{new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), 'I', new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock)},
-			{new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock)}},
+		{{"blockTitanium", "blockTitanium", "blockTitanium"},
+			{"blockTitanium", 'I', "blockTitanium"},
+			{"blockTitanium", "blockTitanium", "blockTitanium"}},
 
-			{{null, new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), null},
-				{new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), new BlockMeta(Blocks.gold_block), new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock)},
-				{null, new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), null}},
+			{{null, new BlockMeta(LibVulpesBlocks.blockStructureBlock), null},
+				{new BlockMeta(LibVulpesBlocks.blockStructureBlock), new BlockMeta(Blocks.gold_block), new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
+				{null, new BlockMeta(LibVulpesBlocks.blockStructureBlock), null}},
 
-				{{new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), 'c', new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock)}, 
-					{new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), new BlockMeta(Blocks.gold_block), new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock)},
-					{new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock), new BlockMeta(AdvancedRocketryBlocks.blockStructureBlock)}},
+				{{"blockTitanium", 'c', "blockTitanium"}, 
+					{"blockTitanium", new BlockMeta(Blocks.gold_block), "blockTitanium"},
+					{"blockTitanium", "blockTitanium", "blockTitanium"}},
 
 	};
 
@@ -65,10 +69,10 @@ public class TileWarpCore extends TileMultiBlock {
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
 				ItemStack stack = inv.getStackInSlot(i);
 				int amt = 0;
-				if(stack != null && OreDictionary.itemMatches(MaterialRegistry.getItemStackFromMaterialAndType(MaterialRegistry.Materials.DILITHIUM, MaterialRegistry.AllowedProducts.CRYSTAL), stack, false)) {
+				if(stack != null && OreDictionary.itemMatches(MaterialRegistry.getItemStackFromMaterialAndType("Dilithium", AllowedProducts.getProductByName("CRYSTAL")), stack, false)) {
 					int stackSize = stack.stackSize;
 					if(!worldObj.isRemote)
-						amt = getSpaceObject().addFuel(10*stack.stackSize);
+						amt = getSpaceObject().addFuel(Configuration.fuelPointsPerDilithium*stack.stackSize);
 					else
 						amt = Math.min(getSpaceObject().getFuelAmount() + 10*stack.stackSize, getSpaceObject().getMaxFuelAmount()) - getSpaceObject().getFuelAmount();//
 					inv.decrStackSize(i, amt/10);

@@ -2,9 +2,15 @@ package zmaster587.advancedRocketry.client.render.multiblocks;
 
 import org.lwjgl.opengl.GL11;
 
-import zmaster587.advancedRocketry.tile.multiblock.TileMultiBlock;
+import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.stations.ISpaceObject;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.render.RenderHelper;
+import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -56,30 +62,10 @@ public class RendererWarpCore extends TileEntitySpecialRenderer {
 		model.renderOnly("Base");
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glColor4f(0.4f, 0.4f, 1f, 0.6f);
+		
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-		GL11.glPushMatrix();
-		GL11.glRotated(0.25*System.currentTimeMillis() % 360, 0f, 1f, 0f);
-		model.renderOnly("Rotate1");
-		GL11.glPopMatrix();
-
-		GL11.glPushMatrix();
-		GL11.glRotated(180 + 0.25*System.currentTimeMillis() % 360, 0f, 1f, 0f);
-		model.renderOnly("Rotate1");
-		GL11.glPopMatrix();
 		
-		GL11.glPushMatrix();
-		GL11.glRotated(-0.25*System.currentTimeMillis() % 360, 0f, 1f, 0f);
-		model.renderOnly("Rotate2");
-		GL11.glPopMatrix();
-		
-		GL11.glPushMatrix();
-		GL11.glRotated(180 -0.25*System.currentTimeMillis() % 360, 0f, 1f, 0f);
-		model.renderOnly("Rotate2");
-		GL11.glPopMatrix();
-
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glColor4f(1f, 0.4f, 0.4f, 0.8f);
 		GL11.glPushMatrix();
@@ -88,24 +74,58 @@ public class RendererWarpCore extends TileEntitySpecialRenderer {
 		Tessellator.instance.draw();
 		GL11.glPopMatrix();
 		GL11.glEnable(GL11.GL_LIGHTING);
+
 		
-		GL11.glColor4f(0.4f, 1f, 0.4f, 0.8f);
-		int amt = 3;
-		float offset = 360/(float)amt;
-		for(int j = 0; j < 5; j++) {
-			for(int i = 0; i < amt; i++) {
+		if(tile.getWorldObj().provider instanceof WorldProviderSpace) {
+			
+			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(tile.xCoord, tile.zCoord);
+			if(obj instanceof SpaceObject && ((SpaceObject)obj).getFuelAmount() > 50) {
+
+				double speedMult = ((DimensionProperties)obj.getProperties()).getParentPlanet() == SpaceObjectManager.WARPDIMID ? 1.5d : 0.1d;
+				
+				double speedRotate = speedMult*0.25d;
+				
+				
+				GL11.glColor4f(0.4f, 0.4f, 1f, 0.6f);
 				GL11.glPushMatrix();
-				GL11.glRotated(((j+1)*0.03*System.currentTimeMillis() % 360) + (i + j/5f)*offset, 0f, 1f, 0f);
-				GL11.glTranslatef(0, 0.1f*j-.2f + (5-j)*0.02f*(float)Math.sin(0.001d*System.currentTimeMillis()), 0.2f);
-				//GL11.glTranslatef(0f, 0.1f*(0.5f - MathHelper.sin((float)(0.001*System.currentTimeMillis() % 100))), 0f);
-				model.renderOnly("Ball");
+				GL11.glRotated(speedRotate*System.currentTimeMillis() % 360, 0f, 1f, 0f);
+				model.renderOnly("Rotate1");
 				GL11.glPopMatrix();
+
+				GL11.glPushMatrix();
+				GL11.glRotated(180 + speedRotate*System.currentTimeMillis() % 360, 0f, 1f, 0f);
+				model.renderOnly("Rotate1");
+				GL11.glPopMatrix();
+
+				GL11.glPushMatrix();
+				GL11.glRotated(-speedRotate*System.currentTimeMillis() % 360, 0f, 1f, 0f);
+				model.renderOnly("Rotate2");
+				GL11.glPopMatrix();
+
+				GL11.glPushMatrix();
+				GL11.glRotated(180 -speedRotate*System.currentTimeMillis() % 360, 0f, 1f, 0f);
+				model.renderOnly("Rotate2");
+				GL11.glPopMatrix();
+
+				speedRotate = 0.03d*speedMult;
+				
+				GL11.glColor4f(0.4f, 1f, 0.4f, 0.8f);
+				int amt = 3;
+				float offset = 360/(float)amt;
+				for(int j = 0; j < 5; j++) {
+					for(int i = 0; i < amt; i++) {
+						GL11.glPushMatrix();
+						GL11.glRotated(((j+1)*speedRotate*System.currentTimeMillis() % 360) + (i + j/5f)*offset, 0f, 1f, 0f);
+						GL11.glTranslatef(0, 0.1f*j-.2f + (5-j)*0.02f*(float)Math.sin(0.001d*System.currentTimeMillis()), 0.2f);
+						//GL11.glTranslatef(0f, 0.1f*(0.5f - MathHelper.sin((float)(0.001*System.currentTimeMillis() % 100))), 0f);
+						model.renderOnly("Ball");
+						GL11.glPopMatrix();
+					}
+				}
 			}
 		}
-		
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-
 		GL11.glPopMatrix();
 	}
 }

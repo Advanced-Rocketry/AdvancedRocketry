@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.inventory.modules;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,11 +11,19 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
+import zmaster587.advancedRocketry.api.dimension.solar.IGalaxy;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.inventory.GuiModular;
 import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.libVulpes.inventory.GuiModular;
+import zmaster587.libVulpes.inventory.modules.IButtonInventory;
+import zmaster587.libVulpes.inventory.modules.IProgressBar;
+import zmaster587.libVulpes.inventory.modules.ISelectionNotify;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleButton;
+import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
+import zmaster587.libVulpes.inventory.modules.ModuleDualProgressBar;
 import zmaster587.libVulpes.render.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -27,6 +36,22 @@ import net.minecraft.util.ResourceLocation;
 
 public class ModulePlanetSelector extends ModuleContainerPan implements IButtonInventory {
 
+
+	//Closest thing i can get to a struct :/
+	private class PlanetRenderProperties {
+		int radius;
+		int posX;
+		int posY;
+
+		public PlanetRenderProperties() {}
+
+		public PlanetRenderProperties(int radius, int posX, int posY) {
+			this.radius = radius;
+			this.posX = posX;
+			this.posY = posY;
+		}
+	}
+
 	private static final int size = 2000;
 	private static final int starIdOffset = 10000;
 	ISelectionNotify hostTile;
@@ -34,11 +59,13 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 	private double zoom;
 	private boolean currentSystemChanged = false;
 	private List<ModuleButton> planetList;
+	int topLevel;
+	private boolean stellarView;
 
 	private HashMap<Integer, PlanetRenderProperties> renderPropertiesMap;
 	PlanetRenderProperties currentlySelectedPlanet;
 
-	public ModulePlanetSelector(int planetId, ResourceLocation backdrop, ISelectionNotify tile) {
+	public ModulePlanetSelector(int planetId, ResourceLocation backdrop, ISelectionNotify tile, boolean star) {
 		super(0, 0, null, null, backdrop, 0, 0, 0, 0, size,size);
 
 		hostTile = tile;
@@ -52,9 +79,10 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		currentlySelectedPlanet = new PlanetRenderProperties();
 		currentSystem = starIdOffset;
 		selectedSystem = -1;
+		stellarView = false;
 
-		staticModuleList.add(new ModuleButton(0, 0, -1, "<< Up", this, TextureResources.buttonBuild));
-		staticModuleList.add(new ModuleButton(0, 18, -2, "Select", this, TextureResources.buttonBuild));
+		staticModuleList.add(new ModuleButton(0, 0, -1, "<< Up", this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
+		staticModuleList.add(new ModuleButton(0, 18, -2, "Select", this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
 
 		ModuleDualProgressBar progressBar;
 		staticModuleList.add(progressBar = new ModuleDualProgressBar(100, 0, 0, TextureResources.atmIndicator, (IProgressBar)tile, "%b -> %a Earth's atmospheric pressure"));
@@ -67,8 +95,18 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		progressBar.setTooltipValueMultiplier(.02f);
 
 		//renderPlanetarySystem(properties, center, center, 3f);
-		if(FMLCommonHandler.instance().getSide().isClient())
-			renderStarSystem(DimensionManager.getInstance().getStar(0), center, center, 1f, 0.5f);
+		if(FMLCommonHandler.instance().getSide().isClient()) {
+			if(star) {
+				topLevel = -1;
+				currentSystem = starIdOffset + planetId;
+				renderStarSystem(DimensionManager.getInstance().getStar(planetId), center, center, 1f, 0.5f);
+			}
+			else {
+				currentSystem = planetId;
+				topLevel = planetId;
+				renderPlanetarySystem(DimensionManager.getInstance().getDimensionProperties(planetId), center, center, 1f, 3f);
+			}
+		}
 	}
 
 	@Override
@@ -87,6 +125,28 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 	}
 
 	@SideOnly(Side.CLIENT)
+	private void renderGalaxyMap(IGalaxy galaxy, int posX, int posY, float distanceZoomMultiplier, float planetSizeMultiplier) {
+		Collection<StellarBody> stars = galaxy.getStars();
+
+		for(StellarBody star : stars) {
+			int displaySize = (int)(planetSizeMultiplier*star.getDisplayRadius());
+			int offsetX = star.getPosX() + posX - displaySize/2; 
+			int offsetY = star.getPosZ() + posY - displaySize/2;
+			ModuleButton button;
+			planetList.add(button = new ModuleButton(offsetX, offsetY, star.getId() + starIdOffset, "", this, new ResourceLocation[] { TextureResources.locationSunPng }, String.format("Name: %s\nNumber of Planets: %d",star.getName(), star.getNumPlanets()), displaySize, displaySize));
+
+			button.setSound("buttonBlipA");
+			button.setBGColor(star.getColorRGB8());
+
+			renderPropertiesMap.put(star.getId() + starIdOffset, new PlanetRenderProperties(displaySize, offsetX, offsetY));
+			//prevMultiplier *= 0.25f;
+
+		}
+
+		moduleList.addAll(planetList);
+	}
+
+	@SideOnly(Side.CLIENT)
 	private void renderStarSystem(StellarBody star, int posX, int posY, float distanceZoomMultiplier, float planetSizeMultiplier) {
 
 		int displaySize = (int)(planetSizeMultiplier*star.getDisplayRadius());
@@ -95,7 +155,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		int offsetY = posY - displaySize/2; 
 
 		ModuleButton button;
-		planetList.add(button = new ModuleButton(offsetX, offsetY, star.getId() + starIdOffset, "", this, new ResourceLocation[] { TextureResources.locationSunPng }, displaySize, displaySize));
+		planetList.add(button = new ModuleButton(offsetX, offsetY, star.getId() + starIdOffset, "", this, new ResourceLocation[] { TextureResources.locationSunPng }, String.format("Name: %s\nNumber of Planets: %d",star.getName(), star.getNumPlanets()), displaySize, displaySize));
 
 		button.setSound("buttonBlipA");
 		button.setBGColor(star.getColorRGB8());
@@ -150,7 +210,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		button.setSound("buttonBlipA");
 
 		renderPropertiesMap.put(planet.getId(), new PlanetRenderProperties(displaySize, offsetX, offsetY));
-		
+
 	}
 
 
@@ -178,6 +238,9 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 	@SideOnly(Side.CLIENT)
 	private void redrawSystem() {
 
+		int offsetX = -currentPosX;
+		int offsetY = -currentPosY;
+		setOffset2(0,0);
 
 		for(int i = 0; i< moduleList.size(); i++) {
 			ModuleBase module = planetList.get(i);
@@ -188,13 +251,16 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		this.moduleList.removeAll(planetList);
 
 		planetList.clear();
-		if(currentSystem < starIdOffset) {
-			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(currentSystem);
-			renderPlanetarySystem(properties, size/2, size/2, 1f,3f*properties.getPathLengthToStar());
+		if(!stellarView) {
+			if(currentSystem < starIdOffset) {
+				DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(currentSystem);
+				renderPlanetarySystem(properties, size/2, size/2, 1f,3f*properties.getPathLengthToStar());
+			}
+			else
+				renderStarSystem(DimensionManager.getInstance().getStar(currentSystem - starIdOffset), size/2, size/2, 1f*(float) zoom, (float)zoom*.5f);
 		}
 		else
-			renderStarSystem(DimensionManager.getInstance().getStar(currentSystem - starIdOffset), size/2, size/2, 1f*(float) zoom, (float)zoom*.5f);
-
+			renderGalaxyMap(DimensionManager.getInstance(), size/2, size/2, 1f*(float) zoom, (float)zoom*.25f);
 
 		int x = currentPosX - size/2, y = currentPosY - size/2;
 
@@ -203,10 +269,8 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		for(ModuleBase module : this.planetList) {
 			buttonList.addAll(module.addButtons(currentPosX, currentPosY));
 		}
-		
-		setOffset2(internalOffsetX - Minecraft.getMinecraft().displayWidth/4 , internalOffsetY - Minecraft.getMinecraft().displayHeight /4);
 
-
+		setOffset2(offsetX, offsetY);
 	}
 
 	@Override
@@ -221,6 +285,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			currentPosY = 0;
 			zoom = 1;
 			redrawSystem();
+			setOffset2(internalOffsetX - Minecraft.getMinecraft().displayWidth/4 , internalOffsetY - Minecraft.getMinecraft().displayHeight /4);
 			//redrawSystem();
 
 			selectedSystem = -1;
@@ -248,7 +313,9 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 	@SideOnly(Side.CLIENT)
 	public void renderBackground(GuiContainer gui, int x, int y, int mouseX,
 			int mouseY, FontRenderer font) {
-
+		
+		if(!stellarView && Minecraft.getSystemTime() % 5 == 0)
+			redrawSystem();
 		super.renderBackground(gui, x, y, mouseX, mouseY, font);
 
 		int center = size/2;
@@ -265,40 +332,39 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		//GL11.glTranslated(this.currentPosX/4, this.currentPosY/4, 0);
 
 		//Render orbits
-		for(int ii = 1; ii < planetList.size(); ii++) {
+		if(!stellarView) {
+			for(int ii = 1; ii < 10; ii++) {
+				int radius = ii*80;
+				float x2 = radius;
+				float y2 = 0;
+				float t;
+				GL11.glPushMatrix();
+				GL11.glTranslatef(center + currentPosX, center + currentPosY, 0);
+				GL11.glDisable(GL11.GL_TEXTURE_2D);
+				GL11.glEnable(GL11.GL_BLEND);
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				GL11.glColor4f(0.8f, .8f, 1f, .2f);
+				GL11.glEnable(GL11.GL_LINE_STIPPLE);
+				GL11.glLineStipple(5, (short)0x5555);
 
-			ModuleButton base = planetList.get(ii);
+				Tessellator.instance.startDrawing(GL11.GL_LINE_LOOP);
+				for(int i = 0; i < numSegments; i++)	{
+					Tessellator.instance.addVertex(x2, y2, 0);
+					t = x2;
+					x2 = cos*x2 - sin*y2;
+					y2 = sin*t + cos*y2;
+				}
+				Tessellator.instance.draw();
+				//Reset GL info
+				GL11.glEnable(GL11.GL_TEXTURE_2D);
+				GL11.glDisable(GL11.GL_LINE_STIPPLE);
+				GL11.glColor4f(1f, 1f, 1f, 1f);
+				GL11.glDisable(GL11.GL_BLEND);
+				GL11.glPopMatrix();
 
-			int radius = (int) Math.sqrt(Math.pow(base.offsetX + 40 - center - currentPosX,2) + Math.pow(base.offsetY + 40 - center - currentPosY,2));
-			float x2 = radius;
-			float y2 = 0;
-			float t;
-			GL11.glPushMatrix();
-			GL11.glTranslatef(center + currentPosX, center + currentPosY, 0);
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glColor4f(0.8f, .8f, 1f, .2f);
-			GL11.glEnable(GL11.GL_LINE_STIPPLE);
-			GL11.glLineStipple(5, (short)0x5555);
-
-			Tessellator.instance.startDrawing(GL11.GL_LINE_LOOP);
-			for(int i = 0; i < numSegments; i++)	{
-				Tessellator.instance.addVertex(x2, y2, 0);
-				t = x2;
-				x2 = cos*x2 - sin*y2;
-				y2 = sin*t + cos*y2;
 			}
-			Tessellator.instance.draw();
-			//Reset GL info
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GL11.glDisable(GL11.GL_LINE_STIPPLE);
-			GL11.glColor4f(1f, 1f, 1f, 1f);
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glPopMatrix();
-
 		}
-
+		
 		//Render Selection
 		if(selectedSystem != -1) {
 
@@ -307,7 +373,13 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			float radius = currentlySelectedPlanet.radius/2;
-			GL11.glTranslatef(currentlySelectedPlanet.posX + currentPosX + radius, currentlySelectedPlanet.posY  + currentPosY + radius, 0);
+
+			if(renderPropertiesMap.containsKey(selectedSystem)) {
+				PlanetRenderProperties base = renderPropertiesMap.get(selectedSystem);
+				GL11.glTranslatef(base.posX + currentPosX + base.radius/2, base.posY + currentPosY + base.radius/2, 0);
+			}
+			else 
+				GL11.glTranslatef(currentlySelectedPlanet.posX + currentPosX + radius, currentlySelectedPlanet.posY  + currentPosY + radius, 0);
 
 			double progress = System.currentTimeMillis() % 20000 / 50f;
 
@@ -339,13 +411,21 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		if(buttonId == -1) {
 			DimensionProperties properties =  DimensionManager.getInstance().getDimensionProperties(currentSystem);
 
-			if(properties.isMoon())
-				currentSystem = properties.getParentPlanet();
-			else
-				currentSystem = properties.getStar().getId() + starIdOffset;
+			if(topLevel == -1 || currentSystem != topLevel) {
+				if(properties.isMoon())
+					currentSystem = properties.getParentPlanet();
+				else {
+					if(currentSystem >= starIdOffset) {
+						//if the star was the current system then go to stellar view
+						stellarView = true;
+					}
+					currentSystem = properties.getStar().getId() + starIdOffset;
+				}
 
-			currentSystemChanged=true;
-			selectedSystem = -1;
+				currentSystemChanged=true;
+
+				selectedSystem = -1;
+			}
 		}
 		else if(buttonId == -2) {
 			if(selectedSystem < starIdOffset) {
@@ -357,6 +437,8 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			if(selectedSystem == buttonId) {
 				currentSystem = buttonId;
 				currentSystemChanged=true;
+				//Go back to planetary mapping
+				stellarView = false;
 				selectedSystem = -1;
 			}
 			else {
@@ -369,7 +451,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 	}
 
 	@Override
-	protected boolean needsUpdate(int localId) {
+	public boolean needsUpdate(int localId) {
 		for(ModuleBase module : staticModuleList) {
 			if(localId >= 0 && localId < module.numberOfChangesToSend())
 				return module.needsUpdate(localId);
@@ -412,20 +494,5 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		}
 
 		return numChanges;
-	}
-
-	//Closest thing i can get to a struct :/
-	private class PlanetRenderProperties {
-		int radius;
-		int posX;
-		int posY;
-
-		public PlanetRenderProperties() {}
-
-		public PlanetRenderProperties(int radius, int posX, int posY) {
-			this.radius = radius;
-			this.posX = posX;
-			this.posY = posY;
-		}
 	}
 }

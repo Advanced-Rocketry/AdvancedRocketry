@@ -1,11 +1,11 @@
 package zmaster587.advancedRocketry.api.atmosphere;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraftforge.fluids.Fluid;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 
 public class AtmosphereRegister {
@@ -14,6 +14,7 @@ public class AtmosphereRegister {
 	private AtmosphereRegister() {
 		atmosphereRegistration = new HashMap<String, IAtmosphere>();
 		atmosphereList = new LinkedList<IAtmosphere>();
+		harvestableAtmosphere = new LinkedList<Fluid>();
 	}
 	
 	
@@ -22,6 +23,7 @@ public class AtmosphereRegister {
 	}
 	
 	Map<String, IAtmosphere> atmosphereRegistration;
+	List<Fluid> harvestableAtmosphere;
 	List<IAtmosphere> atmosphereList;
 	
 	/**
@@ -29,8 +31,8 @@ public class AtmosphereRegister {
 	 * @param atmosphere atmosphere to register
 	 * @param name name to register the atmosphere.  using the unlocalized name is HIGHLY recommended
 	 */
-	public void registerAtmosphere(IAtmosphere atmosphere, String name) {
-		atmosphereRegistration.put(name, atmosphere);
+	public void registerAtmosphere(IAtmosphere atmosphere) {
+		atmosphereRegistration.put(atmosphere.getUnlocalizedName(), atmosphere);
 		atmosphereList.add(atmosphere);
 	}
 	
@@ -44,7 +46,13 @@ public class AtmosphereRegister {
 		return atm == null ? getAtmosphere("air") : atm;
 	}
 	
+	public void registerHarvestableFluid(Fluid fluid) {
+		harvestableAtmosphere.add(fluid);
+	}
 	
+	public List<Fluid> getHarvestableGasses() {
+		return harvestableAtmosphere;
+	}
 	
 	/**
 	 * @return list of all registered atmospheres

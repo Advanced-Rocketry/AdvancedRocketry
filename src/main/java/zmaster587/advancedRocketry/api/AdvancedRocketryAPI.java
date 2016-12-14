@@ -10,4 +10,5 @@ public class AdvancedRocketryAPI
 {
     /** Used to check if a block is seal-able, including register & handle block sealing support */
     public static IAtmosphereSealHandler atomsphereSealHandler;
+    public static ISpaceObjectManager spaceObjectManager;
 }

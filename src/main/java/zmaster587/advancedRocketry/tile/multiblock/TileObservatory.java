@@ -9,18 +9,20 @@ import java.util.List;
 import cpw.mods.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
-import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.inventory.modules.IModularInventory;
-import zmaster587.advancedRocketry.inventory.modules.ModuleBase;
 import zmaster587.advancedRocketry.inventory.modules.ModuleData;
-import zmaster587.advancedRocketry.inventory.modules.ModuleProgress;
 import zmaster587.advancedRocketry.item.ItemData;
-import zmaster587.advancedRocketry.network.PacketHandler;
-import zmaster587.advancedRocketry.network.PacketMachine;
-import zmaster587.advancedRocketry.tile.data.TileDataBus;
+import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.client.util.ProgressBarImage;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleProgress;
+import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
+import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -36,34 +38,34 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	private static final Object[][][] structure = new Object[][][]{
 
 		{	{Blocks.air, Blocks.air, Blocks.air, Blocks.air, Blocks.air}, 
-			{Blocks.air, Blocks.iron_block, Blocks.coal_block, Blocks.iron_block, Blocks.air},
-			{Blocks.air, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.air},
-			{Blocks.air, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.air},
+			{Blocks.air, Blocks.stone, Blocks.glass, Blocks.stone, Blocks.air},
+			{Blocks.air, Blocks.stone, Blocks.stone, Blocks.stone, Blocks.air},
+			{Blocks.air, Blocks.stone, Blocks.stone, Blocks.stone, Blocks.air},
 			{Blocks.air, Blocks.air, Blocks.air, Blocks.air, Blocks.air}},
 
 			{	{Blocks.air,Blocks.air,Blocks.air,Blocks.air,Blocks.air}, 
-				{Blocks.air, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.air},
-				{Blocks.air, Blocks.iron_block, Blocks.coal_block, Blocks.iron_block, Blocks.air},
-				{Blocks.air, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.air},
+				{Blocks.air, Blocks.stone, Blocks.stone, Blocks.stone, Blocks.air},
+				{Blocks.air, Blocks.stone, Blocks.glass, Blocks.stone, Blocks.air},
+				{Blocks.air, Blocks.stone, Blocks.stone, Blocks.stone, Blocks.air},
 				{Blocks.air,Blocks.air,Blocks.air,Blocks.air,Blocks.air}},
 
-				{	{Blocks.air, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.air}, 
-					{Blocks.iron_block, Blocks.air, Blocks.air, Blocks.air, Blocks.iron_block},
-					{Blocks.iron_block, Blocks.air, Blocks.air, Blocks.air, Blocks.iron_block},
-					{Blocks.iron_block, Blocks.air, Blocks.coal_block, Blocks.air, Blocks.iron_block},
-					{Blocks.air, Blocks.iron_block, Blocks.iron_block, Blocks.iron_block, Blocks.air}},
+				{	{null, Blocks.stone, Blocks.stone, Blocks.stone, null}, 
+					{Blocks.stone, Blocks.air, Blocks.air, Blocks.air, Blocks.stone},
+					{Blocks.stone, Blocks.air, Blocks.air, Blocks.air, Blocks.stone},
+					{Blocks.stone, Blocks.air, Blocks.glass, Blocks.air, Blocks.stone},
+					{null, Blocks.stone, Blocks.stone, Blocks.stone, null}},
 
-					{	{ Blocks.air,'*', 'c', '*',Blocks.air}, 
-						{'*',Blocks.iron_block, Blocks.iron_block, Blocks.iron_block,'*'},
-						{'*',Blocks.iron_block, Blocks.iron_block, Blocks.iron_block,'*'},
-						{'*',Blocks.iron_block, Blocks.iron_block, Blocks.iron_block,'*'},
-						{Blocks.air,'*', '*', '*', Blocks.air}},
+					{	{ null,'*', 'c', '*',null}, 
+						{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
+						{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
+						{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
+						{null,'*', '*', '*', null}},
 
-						{	{Blocks.air,'*', '*', '*', Blocks.air}, 
-							{'*',Blocks.iron_block, Blocks.iron_block, Blocks.iron_block,'*'},
-							{'*',Blocks.iron_block, Blocks.iron_block, Blocks.iron_block,'*'},
-							{'*',Blocks.iron_block, Blocks.iron_block, Blocks.iron_block,'*'},
-							{Blocks.air,'*', '*', '*',Blocks.air}}};
+						{	{null,'*', '*', '*', null}, 
+							{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
+							{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
+							{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
+							{null,'*', '*', '*',null}}};
 
 	final static int openTime = 100;
 	final static int observationtime = 1000;
@@ -137,10 +139,10 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	protected void processComplete() {
 		super.processComplete();
 		completionTime = observationtime;
-		int amount = 1;
+		int amount = 25;
 
 		for( TileDataBus datum : dataCables ) {
-			amount -= datum.addData(amount, DataStorage.DataType.DISTANCE);
+			amount -= datum.addData(amount, DataStorage.DataType.DISTANCE, ForgeDirection.UNKNOWN, true);
 			if(amount == 0)
 				break;
 		}
@@ -159,7 +161,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		return AxisAlignedBB.getBoundingBox(xCoord -2,yCoord -2, zCoord -2, xCoord + 2, yCoord + 2, zCoord + 2);
+		return AxisAlignedBB.getBoundingBox(xCoord -5,yCoord -3, zCoord -5, xCoord +5, yCoord + 3, zCoord + 5);
 	}
 
 	@Override
@@ -167,8 +169,8 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 		List<BlockMeta> list = super.getAllowableWildCardBlocks();
 
 		list.add(new BlockMeta(Blocks.iron_block,BlockMeta.WILDCARD));
-		list.addAll(getPowerInputBlocks());
-		list.addAll(getDataBlocks());
+		list.addAll(TileMultiBlock.getMapping('P'));
+		list.addAll(TileMultiBlock.getMapping('D'));
 		return list;
 	}
 	
@@ -229,8 +231,8 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID) {
-		List<ModuleBase> modules = super.getModules(ID);
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+		List<ModuleBase> modules = super.getModules(ID, player);
 
 		DataStorage data[] = new DataStorage[dataCables.size()];
 
@@ -312,12 +314,12 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public int extractData(int maxAmount, DataType type) {
+	public int extractData(int maxAmount, DataType type, ForgeDirection dir, boolean commit) {
 		return 0;
 	}
 
 	@Override
-	public int addData(int maxAmount, DataType type) {
+	public int addData(int maxAmount, DataType type, ForgeDirection dir, boolean commit) {
 		return 0;
 	}
 
@@ -335,7 +337,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 			for(TileDataBus tile : dataCables) {
 				DataStorage.DataType dataType = tile.getDataObject().getDataType();
-				data.addData(tile.extractData(data.getMaxData() - data.getData(), data.getDataType()), dataType);
+				data.addData(tile.extractData(data.getMaxData() - data.getData(), data.getDataType(), ForgeDirection.UNKNOWN, true), dataType ,true);
 			}
 
 			dataItem.setData(dataChip, data.getData(), data.getDataType());

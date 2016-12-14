@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.api.dimension;
 
 import java.util.Set;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
@@ -70,10 +71,24 @@ public interface IDimensionProperties {
 	public Set<Integer> getChildPlanets();
 	
 	/**
+	 * sets the gravity multiplier of the object
+	 */
+	public void setGravitationalMultiplier(float mult);
+	
+	/**
+	 * gets the gravity multiplier of the object
+	 */
+	public float getGravitationalMultiplier();
+	
+	/**
 	 * Adds a satellite to this DIM
 	 * @param satellite satellite to add
 	 * @param world world to add the satellite to
 	 */
 	public void addSatallite(SatelliteBase satellite, World world);
+
+	public void writeToNBT(NBTTagCompound nbt);
+
+	public void readFromNBT(NBTTagCompound nbt);
 	
 }

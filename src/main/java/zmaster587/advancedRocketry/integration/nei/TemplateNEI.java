@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -20,16 +21,17 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import org.lwjgl.opengl.GL11;
 
-import zmaster587.advancedRocketry.client.render.util.ProgressBarImage;
-import zmaster587.advancedRocketry.inventory.GuiModular;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.recipe.RecipesMachine;
-import zmaster587.advancedRocketry.recipe.RecipesMachine.Recipe;
+import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.interfaces.IRecipe;
+import zmaster587.libVulpes.inventory.GuiModular;
+import zmaster587.libVulpes.recipe.RecipesMachine;
+import zmaster587.libVulpes.recipe.RecipesMachine.Recipe;
 import zmaster587.libVulpes.util.ZUtils;
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
+import codechicken.nei.recipe.ShapedRecipeHandler;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import codechicken.nei.recipe.TemplateRecipeHandler.RecipeTransferRect;
 
@@ -73,14 +75,16 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 			return getResults();
 		}
 		
+		
 		public PositionedStack getResult() {
 			return null;//result.get(0);
 		}
 
 		@Override
 		public List<PositionedStack> getIngredients() {
-			return ingredients;
+			return getCycledIngredients(TemplateNEI.this.cycleticks / 20, ingredients);
 		}
+		
 		public int getEnergy() {return energy;}
 		public int getTime() {return time;}
 
@@ -104,8 +108,8 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 
 	public void loadCraftingRecipes(ItemStack result) {
 		super.loadCraftingRecipes(result);
+		
 		for(IRecipe i : RecipesMachine.getInstance().getRecipes(getMachine())) {
-
 			IRecipe newRecipe = i;
 			
 			boolean match = false;
@@ -210,7 +214,7 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 		drawTexturedModalRect(65, 3, progressBar.getBackOffsetX(), progressBar.getBackOffsetY(), progressBar.getBackWidth(), progressBar.getBackHeight());
 
 
-		drawProgressBar(65 + progressBar.getInsetX(), 3 +  + progressBar.getInsetY(), progressBar.getForeOffsetX(), progressBar.getForeOffsetY(), progressBar.getForeWidth(),  progressBar.getForeHeight(), 50, progressBar.getDirection().ordinal());
+		drawProgressBar(65 + progressBar.getInsetX(), 3 +  + progressBar.getInsetY(), progressBar.getForeOffsetX(), progressBar.getForeOffsetY(), progressBar.getForeWidth(),  progressBar.getForeHeight(), 50, progressBar.getDirection().getRotation(ForgeDirection.SOUTH).ordinal());
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.api;
 
+import zmaster587.advancedRocketry.item.ItemAstroBed;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraftforge.common.util.EnumHelper;
@@ -24,10 +25,7 @@ public class AdvancedRocketryItems {
 	public static Item itemSatellite;
 	public static Item itemSatelliteIdChip;
 	public static Item itemPlanetIdChip;
-	public static Item[] itemOreProduct;
-	public static Item itemBattery;
 	public static Item itemMisc;
-	public static Item itemHoloProjector;
 	public static Item itemSawBlade;
 	public static Item itemSpaceStationChip;
 	public static Item itemSpaceStation;
@@ -39,4 +37,19 @@ public class AdvancedRocketryItems {
 	public static Item itemSmallAirlockDoor;
 	public static Item itemCarbonScrubberCartridge;
 	public static Item itemSealDetector;
+	public static Item itemJackhammer;
+	public static Item itemAsteroidChip;
+	public static Item itemLens;
+	public static Item itemJetpack;
+	public static Item itemPressureTank;
+	public static Item itemUpgrade;
+	public static Item itemAtmAnalyser;
+	public static Item itemBiomeChanger;
+	public static Item itemBucketNitrogen;
+	public static Item itemBucketHydrogen;
+
+	public static Item itemBucketOxygen;
+
+	public static Item itemAstroBed;
+	public static Item itemBasicLaserGun;
 }

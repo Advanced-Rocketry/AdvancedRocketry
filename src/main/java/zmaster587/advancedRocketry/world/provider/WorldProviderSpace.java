@@ -1,19 +1,28 @@
 package zmaster587.advancedRocketry.world.provider;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
+import zmaster587.advancedRocketry.client.render.planet.RenderSpaceSky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.world.ChunkProviderSpace;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.WorldChunkManager;
 import net.minecraft.world.biome.WorldChunkManagerHell;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.client.IRenderHandler;
 
 public class WorldProviderSpace extends WorldProviderPlanet {
+	private IRenderHandler skyRender;
+	
 	@Override
 	public double getHorizon() {
 		return 0;
@@ -37,13 +46,19 @@ public class WorldProviderSpace extends WorldProviderPlanet {
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
+	public IRenderHandler getSkyRenderer() {
+		return skyRender == null ? skyRender = new RenderSpaceSky() : skyRender;
+	}
+	
+	@Override
 	public float getAtmosphereDensity(int x, int z) {
 		return 0;
 	}
 	
 	@Override
-	public float calculateCelestialAngle(long p_76563_1_, float p_76563_3_) {
-		return 0f;//super.calculateCelestialAngle(p_76563_1_, p_76563_3_);
+	public float calculateCelestialAngle(long worldTime, float p_76563_3_) {
+		return AdvancedRocketry.proxy.calculateCelestialAngleSpaceStation();
 	}
 	
 	@Override

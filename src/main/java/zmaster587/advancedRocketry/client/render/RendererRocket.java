@@ -2,10 +2,15 @@ package zmaster587.advancedRocketry.client.render;
 
 import org.lwjgl.opengl.GL11;
 
+import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.util.StorageChunk;
+import zmaster587.libVulpes.render.RenderHelper;
+import zmaster587.libVulpes.util.BlockPosition;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
@@ -19,7 +24,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 
 public class RendererRocket extends Render {
 
-	
+
 	//TODO: possibly optimize with GL lists
 	@Override
 	public void doRender(Entity entity, double x,
@@ -28,36 +33,94 @@ public class RendererRocket extends Render {
 
 		StorageChunk storage  = ((EntityRocket)entity).storage;
 
-		if(storage == null)
+		if(storage == null || entity.isDead)
 			return;
+
+		if(Minecraft.getMinecraft().thePlayer == entity.riddenByEntity) {
+
+			y = -1.25 -((EntityRocket)entity).stats.getSeatY();
+		}
 
 		//Find the halfway point along the XZ plane
 		float halfx = storage.getSizeX()/2f;
 		float halfz = storage.getSizeZ()/2f;
 
 		GL11.glPushMatrix();
-		GL11.glTranslatef((float)x - halfx, (float)y, (float)z - halfz);
-		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+		GL11.glTranslatef((float)x, (float)y, (float)z);
 
-		//Render Each block
-		RenderBlocks.getInstance().blockAccess = storage;
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
-		for(int xx = 0; xx < storage.getSizeX(); xx++) {
-			for(int zz = 0; zz < storage.getSizeZ(); zz++) {
-				for(int yy = 0; yy < storage.getSizeY(); yy++) {
-					Block block  = storage.getBlock(xx, yy, zz);
-					if(block.canRenderInPass(MinecraftForgeClient.getRenderPass())) {
-						Tessellator.instance.startDrawingQuads();
-						RenderBlocks.getInstance().renderBlockByRenderType(block, xx, yy, zz);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
+		GL11.glColor4f(0.5f, 1f, .5f, .2f);
 
-						Tessellator.instance.draw();
-					}
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glEnable(GL11.GL_LINE_STIPPLE);
+		GL11.glLineWidth(1f);
+		GL11.glLineStipple(5, (short)0x2222);
+
+		if(!((EntityRocket)entity).isInFlight()) {
+			for(IInfrastructure inf : ((EntityRocket)entity).getConnectedInfrastructure()) {
+				if(inf.canRenderConnection()) {
+					TileEntity tile = (TileEntity)inf;
+
+					Tessellator.instance.startDrawing(GL11.GL_LINE_LOOP);
+					Tessellator.instance.addVertex(0, storage.getSizeY()/2f, 0);
+					Tessellator.instance.addVertex((tile.xCoord - entity.posX + 0.5f)/2f, storage.getSizeY()/2f, (tile.zCoord - entity.posZ + 0.5f)/2f);
+					Tessellator.instance.addVertex(tile.xCoord - entity.posX + 0.5f, tile.yCoord - entity.posY  + 0.5f, tile.zCoord - entity.posZ + 0.5f);
+					Tessellator.instance.addVertex((tile.xCoord - entity.posX + 0.5f)/2f, storage.getSizeY()/2f, (tile.zCoord - entity.posZ + 0.5f)/2f);
+					//RenderHelper.renderCrossXZ(Tessellator.instance, .2f, 0, storage.getSizeY()/2f, 0, tile.xCoord - entity.posX + 0.5f, tile.yCoord - entity.posY  + 0.5f, tile.zCoord - entity.posZ + 0.5f);
+					//RenderHelper.renderBlockWithEndPointers(Tessellator.instance, .2f, 0, storage.getSizeY()/2f, 0, tile.xCoord - entity.posX, tile.yCoord - entity.posY, tile.zCoord - entity.posZ);
+					Tessellator.instance.draw();
+					//RenderHelper.renderCubeWithUV(tess, 0, 0, 0, 2, 55, 2, 0, 1, 0, 1);
 				}
 			}
-
 		}
 
-		net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
+		GL11.glColor3f(1f, 1f, 1f);
+		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glDisable(GL11.GL_LINE_STIPPLE);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+
+		GL11.glPopMatrix();
+
+		//Initial setup
+
+		if(storage.world.glListID == -1) {
+			GL11.glPushMatrix();
+			storage.world.glListID  = GLAllocation.generateDisplayLists(1);
+			GL11.glNewList(storage.world.glListID, GL11.GL_COMPILE);
+			net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+
+			//Render Each block
+			RenderBlocks.getInstance().blockAccess = storage;
+			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+			for(int xx = 0; xx < storage.getSizeX(); xx++) {
+				for(int zz = 0; zz < storage.getSizeZ(); zz++) {
+					for(int yy = 0; yy < storage.getSizeY(); yy++) {
+						Block block  = storage.getBlock(xx, yy, zz);
+						if(block.canRenderInPass(MinecraftForgeClient.getRenderPass())) {
+							Tessellator.instance.startDrawingQuads();
+							//TOOD: fix lighting
+							RenderBlocks.getInstance().renderBlockByRenderType(block, xx, yy, zz);
+
+							Tessellator.instance.draw();
+						}
+					}
+				}
+				
+			}
+
+			GL11.glPushMatrix();
+			GL11.glTranslatef((float)x - halfx, (float)y, (float)z - halfz);
+			net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
+			GL11.glPopMatrix();
+			
+			GL11.glEndList();
+			GL11.glPopMatrix();
+		}
+		
+		GL11.glPushMatrix();
+		GL11.glTranslatef((float)x - halfx, (float)y, (float)z - halfz);
+		GL11.glCallList(storage.world.glListID);
 		
 		//Render tile entities if applicable
 		for(TileEntity tile : storage.getTileEntityList()) {
@@ -66,6 +129,7 @@ public class RendererRocket extends Render {
 				renderer.renderTileEntityAt(tile, tile.xCoord, tile.yCoord,  tile.zCoord, f1);
 			}
 		}
+		
 		GL11.glPopMatrix();
 	}
 

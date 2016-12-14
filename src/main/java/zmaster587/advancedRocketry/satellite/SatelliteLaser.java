@@ -22,20 +22,19 @@ import zmaster587.advancedRocketry.event.BlockBreakEvent.LaserBreakEvent;
 import zmaster587.advancedRocketry.tile.TileSpaceLaser;
 import zmaster587.libVulpes.util.ZUtils;
 
-public class SatelliteLaser extends SatelliteBase {
+public class SatelliteLaser extends SatelliteLaserNoDrill {
 
 	private EntityLaserNode laser;
 	private Ticket ticketLaser;
-	private boolean finished, jammed;
-	IInventory boundChest;
+	protected boolean finished;
 
 	public SatelliteLaser(IInventory boundChest) {
-		this.boundChest = boundChest;
+		super(boundChest);
 		finished = false;
 	}
 
 	public boolean isAlive() {
-		return laser != null && !laser.isDead;
+		return laser != null && !laser.isDead && laser.worldObj != null;
 	}
 	
 	public boolean isFinished() {
@@ -102,15 +101,6 @@ public class SatelliteLaser extends SatelliteBase {
 
 			Block dropBlock = laser.worldObj.getBlock(x, (int)laser.posY, z);//Block.blocksList[laser.worldObj.getBlockId(x, (int)laser.posY, z)];
 
-			if(dropBlock == null || dropBlock.getMaterial().isReplaceable() ||  dropBlock.getMaterial().isLiquid()) {
-				laser.worldObj.setBlock(x, (int)laser.posY, z, AdvancedRocketryBlocks.blockLightSource, 0, 3);
-				continue;
-			}
-
-			//TODO: may need to fix in later builds
-			if(!dropBlock.getMaterial().isOpaque() || dropBlock == Blocks.bedrock)
-				continue;
-
 			//Post an event to the eventbus to make protections easier
 			LaserBreakEvent event = new LaserBreakEvent(x, (int)laser.posY, z);
 			MinecraftForge.EVENT_BUS.post(event);
@@ -118,7 +108,20 @@ public class SatelliteLaser extends SatelliteBase {
 			if(event.isCanceled())
 				continue;
 
+			
+			
+			if(dropBlock == null || dropBlock.getMaterial().isReplaceable() ||  dropBlock.getMaterial().isLiquid()) {
+				laser.worldObj.setBlock(x, (int)laser.posY, z, AdvancedRocketryBlocks.blockLightSource, 0, 3);
+				continue;
+			}
+
 			ArrayList<ItemStack> items = dropBlock.getDrops(laser.worldObj, x, (int)laser.posY, z, laser.worldObj.getBlockMetadata(x, (int)laser.posY, z), 0);
+			
+			//TODO: may need to fix in later builds
+			if(!dropBlock.getMaterial().isOpaque() || dropBlock == Blocks.bedrock)
+				continue;
+
+
 
 			//creator.performOperation();
 
@@ -151,13 +154,14 @@ public class SatelliteLaser extends SatelliteBase {
 				ZUtils.mergeInventory(stacks, boundChest);
 
 				if(!ZUtils.isInvEmpty(stacks)) {
-					//TODO: drop exrta items
+					//TODO: drop extra items
 					this.deactivateLaser();
 					this.jammed = true;
 					return;
 				}
 			}
-			laser.worldObj.setBlockToAir(x, (int)laser.posY, z);
+			laser.worldObj.setBlock(x, (int)laser.posY, z, AdvancedRocketryBlocks.blockLightSource,0,3);
+			//laser.worldObj.setBlockToAir(x, (int)laser.posY, z);
 		}
 
 		boolean blockInWay = false;
@@ -209,7 +213,7 @@ public class SatelliteLaser extends SatelliteBase {
 	@Override
 	public boolean performAction(EntityPlayer player, World world, int x,
 			int y, int z) {
-		// TODO Auto-generated method stub
+		performOperation();
 		return false;
 	}
 

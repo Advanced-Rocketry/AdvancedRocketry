@@ -10,4 +10,5 @@ public class AdvancedRocketryFluids {
 	public static Fluid fluidOxygen;
 	public static Fluid fluidHydrogen;
 	public static Fluid fluidRocketFuel;
+	public static Fluid fluidNitrogen;
 }

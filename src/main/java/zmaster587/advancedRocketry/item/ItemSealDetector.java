@@ -9,6 +9,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.IFluidBlock;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
+import zmaster587.libVulpes.util.BlockPosition;
 
 /**
  * Detects if a block can be used to seal a room.
@@ -47,17 +48,17 @@ public class ItemSealDetector extends Item
                 {
                     player.addChatComponentMessage(new ChatComponentText("Block will not hold a seal."));
                 }
-                else if (SealableBlockHandler.isFulBlock(block))
+                else if (SealableBlockHandler.isFulBlock(world, block, new BlockPosition(x, y, z)))
                 {
                     player.addChatComponentMessage(new ChatComponentText("Air will pass around this block."));
                 }
                 else if (block instanceof IFluidBlock)
                 {
-                    player.addChatComponentMessage(new ChatComponentText("Air will bubble threw this block"));
+                    player.addChatComponentMessage(new ChatComponentText("Air will bubble through this block"));
                 }
                 else
                 {
-                    player.addChatComponentMessage(new ChatComponentText("Air will leak threw this block."));
+                    player.addChatComponentMessage(new ChatComponentText("Air will leak through this block."));
                 }
             }
         }

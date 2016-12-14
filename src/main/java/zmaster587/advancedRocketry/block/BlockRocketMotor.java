@@ -1,28 +1,34 @@
 package zmaster587.advancedRocketry.block;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import zmaster587.advancedRocketry.api.IRocketEngine;
 import zmaster587.advancedRocketry.tile.TileModelRender;
+import zmaster587.advancedRocketry.tile.TileModelRenderRotatable;
+import zmaster587.libVulpes.util.ZUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
-public class BlockRocketMotor extends Block implements IRocketEngine {
+public class BlockRocketMotor extends BlockRotatableModel implements IRocketEngine {
 
 	public BlockRocketMotor(Material mat) {
-		super(mat);	
+		super(mat,TileModelRender.models.ROCKET.ordinal());	
 	}
 	
-	//Futureproofing (ISBRHs being removed in 1.8) sadly now need a tile Entity just to render decent shapes
-	//Nope, ask the master of rendering fry in MinecraftForge you can use ISmartModel - Dark
+	protected BlockRocketMotor(Material mat, int i) {
+		super(mat,i);	
+	}
+	
 	@Override
-	public TileEntity createTileEntity(World world, int metadata) {
-		return new TileModelRender(TileModelRender.models.ROCKET.ordinal());
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
 	}
 	
 	@Override

@@ -1,14 +1,11 @@
 package zmaster587.advancedRocketry.block;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
-import zmaster587.advancedRocketry.api.material.MaterialRegistry;
-import zmaster587.advancedRocketry.api.material.MaterialRegistry.AllowedProducts;
-import zmaster587.advancedRocketry.api.material.MaterialRegistry.Materials;
-import zmaster587.advancedRocketry.recipe.RecipesMachine;
+import zmaster587.libVulpes.api.material.Material;
+import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.interfaces.IRecipe;
+import zmaster587.libVulpes.recipe.RecipesMachine;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
@@ -61,7 +58,8 @@ public class BlockPress extends BlockPistonBase {
 	private ItemStack getRecipe(World world, int x, int y, int z, int meta) {
 		if(world.isAirBlock(x, y-1, z))
 			return null;
-		Materials material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(world.getBlock(x, y-1, z), 1, world.getBlockMetadata(x, y-1, z)));
+		ItemStack stackInWorld = new ItemStack(world.getBlock(x, y-1, z), 1, world.getBlockMetadata(x, y-1, z));
+		Material material = MaterialRegistry.getMaterialFromItemStack(stackInWorld);
 
 
 		if(material == null)
@@ -71,7 +69,7 @@ public class BlockPress extends BlockPistonBase {
 		ItemStack stack = null;
 
 		for(IRecipe recipe : recipes) {
-			if(recipe.getIngredients().get(0).isItemEqual(material.getProduct(AllowedProducts.BLOCK))) {
+			if(recipe.getIngredients().get(0).get(0).isItemEqual(stackInWorld)) {
 				stack = recipe.getOutput().get(0);
 				break;
 			}

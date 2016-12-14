@@ -30,10 +30,10 @@ public class MapGenCrater extends MapGenBase {
 			
 			for(int x = 15; x >= 0; x--) {
 				for(int z = 15; z >= 0; z--) {
-					for(int y = 255; y >= 0; y--) {
+					for(int y = 254; y >= 0; y--) {
 						int index = (x * 16 + z) * 256 + y;
 						
-						if(chunkArray[index] != null) {
+						if(chunkArray[index] != null && chunkArray[index].isOpaqueCube()) {
 							int count = ( depth - ( ((xCoord*16)+x)*((xCoord*16)+x) + ((zCoord*16)+z)*((zCoord*16)+z) ) )/(radius*2);
 							
 							for(int dist = 0; dist < count; dist++) {

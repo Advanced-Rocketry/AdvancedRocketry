@@ -3,14 +3,18 @@ package zmaster587.advancedRocketry.satellite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.DataStorage;
+import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.satellite.IDataHandler;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
+import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.util.ZUtils;
 
@@ -30,6 +34,13 @@ public abstract class SatelliteData extends SatelliteBase {
 	}
 
 	@Override
+	public boolean acceptsItemInConstruction(ItemStack item) {
+		int flag = SatelliteRegistry.getSatelliteProperty(item).getPropertyFlag();
+		
+		return super.acceptsItemInConstruction(item) || SatelliteProperties.Property.DATA.isOfType(flag) || SatelliteProperties.Property.POWER_GEN.isOfType(flag);
+	}
+	
+	@Override
 	public void setProperties(SatelliteProperties satelliteProperties) {
 		super.setProperties(satelliteProperties);
 		data.setMaxData(satelliteProperties.getMaxDataStorage());
@@ -42,7 +53,7 @@ public abstract class SatelliteData extends SatelliteBase {
 
 		//Calculate Data Recieved
 		//TODO: pay attn to power
-		data.addData(dataCreated(world), data.getDataType());
+		data.addData(dataCreated(world), data.getDataType(), true);
 		lastActionTime = world.getTotalWorldTime();
 
 
@@ -51,12 +62,12 @@ public abstract class SatelliteData extends SatelliteBase {
 		if(tile instanceof IDataHandler) {
 			IDataInventory dataInv = (IDataInventory)tile;
 
-			data.removeData(dataInv.addData(data.getData(), data.getDataType()));
+			data.removeData(dataInv.addData(data.getData(), data.getDataType(), ForgeDirection.UNKNOWN, true), true);
 		}
 
 		return false;
 	}
-
+	
 	@Override
 	public void setDimensionId(World world) {
 		//TODO: send packet on orbit reached

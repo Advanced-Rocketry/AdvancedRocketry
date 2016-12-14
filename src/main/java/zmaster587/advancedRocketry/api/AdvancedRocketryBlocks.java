@@ -3,6 +3,9 @@ package zmaster587.advancedRocketry.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import zmaster587.advancedRocketry.block.BlockAstroBed;
+import zmaster587.libVulpes.block.BlockTile;
+import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import net.minecraft.block.Block;
 
 /**
@@ -20,10 +23,6 @@ public class AdvancedRocketryBlocks {
 	public static Block blockLathe;
 	public static Block blockCuttingMachine;
 	public static Block blockObservatory;
-	public static Block blockPlaceHolder;
-	public static Block blockHatch;
-	public static Block blockRFBattery;
-	public static Block blockStructureBlock;
 	public static Block blockPlanetAnalyser;
 	public static Block blockLaunchpad;
 	public static Block blockStructureTower;
@@ -44,12 +43,8 @@ public class AdvancedRocketryBlocks {
 	public static Block blockSawBlade;
 	public static Block blockMotor;
 	public static Block blockConcrete;
-	public static List<Block> blockOre = new ArrayList<Block>();
-	public static List<Block> blockMetal = new ArrayList<Block>();
 	public static Block blockRollingMachine;
-	public static Block blockPhantom;
 	public static Block blockPlatePress;
-	public static List<Block> blockCoil = new ArrayList<Block>();
 	public static Block blockStationBuilder;
 	public static Block blockElectrolyser;
 	public static Block blockOxygenFluid;
@@ -61,9 +56,37 @@ public class AdvancedRocketryBlocks {
 	public static Block blockOxygenScrubber;
 	public static Block blockOxygenCharger;
 	public static Block blockAirLock;
-	public static Block blockIC2Plug;
 	public static Block blockLandingPad;
 	public static Block blockWarpCore;
 	public static Block blockWarpShipMonitor;
 	public static Block blockOxygenDetection;
+	public static Block blockUnlitTorch;
+	public static Block blocksGeode;
+	public static Block blockVitrifiedSand;
+	public static Block blockCharcoalLog;
+	public static Block blockElectricMushroom;
+	public static Block blockCrystal;
+	public static Block blockOrientationController;
+	public static Block blockGravityController;
+	public static Block blockDrill;
+	public static Block blockFluidPipe;
+	public static Block blockDataPipe;
+	public static Block blockMicrowaveReciever;
+	public static Block blockSolarPanel;
+	public static Block blockSuitWorkStation;
+	public static Block blockLoader;
+	public static Block blockBiomeScanner;
+	public static Block blockAtmosphereTerraformer;
+	public static Block blockDeployableRocketBuilder;
+	public static Block blockPressureTank;
+	public static Block blockIntake;
+	public static Block blockNitrogenFluid;
+	public static Block blockCircularLight;
+	public static Block blockDockingPort;
+	public static Block blockEnergyPipe;
+	public static Block blockSolarGenerator;
+	public static Block blockAltitudeController;
+	public static Block blockRailgun;
+	public static Block blockAstroBed;
+	public static Block blockAdvEngine;
 }

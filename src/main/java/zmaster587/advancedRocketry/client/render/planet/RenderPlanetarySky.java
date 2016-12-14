@@ -8,12 +8,12 @@ import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
-import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GLAllocation;
@@ -146,11 +146,16 @@ public class RenderPlanetarySky extends IRenderHandler {
 		//TODO: properly handle this
 		float atmosphere;
 		int solarOrbitalDistance, planetOrbitalDistance = 0;
+		double myPhi = 0, myTheta = 0, myPrevOrbitalTheta = 0, myRotationalPhi = 0;;
 		boolean hasAtmosphere = false, isMoon;
+		float parentAtmColor[] = new float[]{1f,1f,1f};
 		boolean isWarp = false;
+		boolean isGasGiant = false;
 		ForgeDirection travelDirection = null;
 		ResourceLocation parentPlanetIcon = null;
 		List<DimensionProperties> children;
+
+		ForgeDirection axis = ForgeDirection.EAST;
 
 		Vec3 sunColor;
 		if(mc.theWorld.provider instanceof IPlanetaryProvider) {
@@ -160,6 +165,13 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 			atmosphere = planetaryProvider.getAtmosphereDensityFromHeight(mc.renderViewEntity.posY, (int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
 
+			axis = getRotationAxis(properties, (int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
+
+			myPhi = properties.orbitalPhi;
+			myTheta = properties.orbitTheta;
+			myRotationalPhi = properties.rotationalPhi;
+			myPrevOrbitalTheta = properties.prevOrbitalTheta;
+			
 			children = new LinkedList<DimensionProperties>();
 			for (Integer i : properties.getChildPlanets()) {
 				children.add(DimensionManager.getInstance().getDimensionProperties(i));
@@ -167,18 +179,20 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 			solarOrbitalDistance = properties.getSolarOrbitalDistance();
 
+
 			if(isMoon = properties.isMoon()) {
 				DimensionProperties parentProperties = properties.getParentProperties();
-
+				isGasGiant = parentProperties.isGasGiant();
 				hasAtmosphere = parentProperties.hasAtmosphere();
 				planetOrbitalDistance = properties.getParentOrbitalDistance();
-				parentPlanetIcon = parentProperties.getPlanetIcon();
+				parentAtmColor = parentProperties.skyColor;
+				parentPlanetIcon = getTextureForPlanet(parentProperties);
 
 			}
 
 			sunColor = planetaryProvider.getSunColor((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
 			if(world.provider.dimensionId == Configuration.spaceDimId) {
-				isWarp = properties.getParentPlanet() == -1;
+				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
 				if(isWarp) {
 					SpaceObject station = (SpaceObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
 					travelDirection = station.getForwardDirection();
@@ -219,6 +233,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GL11.glColor3f(f1, f2, f3);
 		Tessellator tessellator1 = Tessellator.instance;
 		GL11.glDepthMask(false);
+		
 		GL11.glEnable(GL11.GL_FOG);
 		GL11.glColor3f(f1, f2, f3);
 		GL11.glCallList(this.glSkyList);
@@ -293,10 +308,14 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, f6);
 		GL11.glTranslatef(f7, f8, f9);
 		GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(mc.theWorld.getCelestialAngle(partialTicks) * 360.0F, 1.0F, 0.0F, 0.0F);
+		
+		GL11.glRotatef((float)myRotationalPhi, 0f, 1f, 0f);
+		GL11.glRotatef(isWarp ? 0 : mc.theWorld.getCelestialAngle(partialTicks) * 360.0F, axis.offsetX, axis.offsetY, axis.offsetZ);
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		float f18 = mc.theWorld.getStarBrightness(partialTicks) * f6 * (atmosphere) + (1-atmosphere);
+		if(mc.theWorld.isRaining())
+			f18 *= 1-mc.theWorld.getRainStrength(partialTicks);
 
 		if (f18 > 0.0F)
 		{
@@ -312,8 +331,24 @@ public class RenderPlanetarySky extends IRenderHandler {
 				}
 				//GL11.glTranslated(((System.currentTimeMillis()/10) + 50) % 100, 0, 0);
 			}
-			else
+			else {
 				GL11.glCallList(this.starGLCallList);
+				//Extra stars for low ATM
+				if(atmosphere < 0.5) {
+					GL11.glColor4f(f18, f18, f18, f18/2f);
+					GL11.glPushMatrix();
+					GL11.glRotatef(-90, 0, 1, 0);
+					GL11.glCallList(this.starGLCallList);
+					GL11.glPopMatrix();
+				}
+				if(atmosphere < 0.25) {
+					GL11.glColor4f(f18, f18, f18, f18/4f);
+					GL11.glPushMatrix();
+					GL11.glRotatef(90, 0, 1, 0);
+					GL11.glCallList(this.starGLCallList);
+					GL11.glPopMatrix();
+				}
+			}
 			GL11.glPopMatrix();
 		}
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -322,11 +357,13 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 
 		float multiplier = atmosphere > 1 ? (2-atmosphere) : 1f;
+		multiplier *= 1-mc.theWorld.getRainStrength(partialTicks);
 
 		if(!isWarp) {
 			//Set sun color and distance
 			tessellator1.startDrawingQuads();		
-			f10 = 30f*(200-solarOrbitalDistance)/100f;
+			f10 = 30f*(202-solarOrbitalDistance)/100f;
+			//multiplier = 2;
 			tessellator1.setColorOpaque_F((float)sunColor.xCoord * multiplier, (float)sunColor.yCoord * multiplier, (float)sunColor.zCoord * multiplier);
 
 
@@ -338,19 +375,27 @@ public class RenderPlanetarySky extends IRenderHandler {
 		}
 		f10 = 20.0F;
 
-		GL11.glEnable(GL11.GL_FOG);
+
 		if(isMoon) {
-			renderPlanet(tessellator1, parentPlanetIcon, planetOrbitalDistance, multiplier, hasAtmosphere);
+			GL11.glPushMatrix();
+			GL11.glRotatef((float)myPhi, 0f, 0f, 1f);
+			GL11.glRotatef((float)((partialTicks*myTheta + ((1-partialTicks)*myPrevOrbitalTheta)) * 180F/Math.PI), 1f, 0f, 0f);
+			
+			renderPlanet(tessellator1, parentPlanetIcon, planetOrbitalDistance, multiplier, hasAtmosphere, parentAtmColor, isGasGiant);
+			GL11.glPopMatrix();
 		}
 
 		for(DimensionProperties moons : children) {
 			GL11.glPushMatrix();
-			//DimensionProperties moons = children.get(0);
-			GL11.glRotatef((float)(moons.orbitTheta* 180F/Math.PI), 1f, 0f, 0f);
-			renderPlanet(tessellator1, moons.getPlanetIcon(), moons.getParentOrbitalDistance()*(1/moons.gravitationalMultiplier), multiplier, moons.hasAtmosphere());
+			
+			GL11.glRotatef((float)moons.orbitalPhi, 0f, 0f, 1f);
+			GL11.glRotatef((float)((partialTicks*moons.orbitTheta + ((1-partialTicks)*moons.prevOrbitalTheta)) * 180F/Math.PI), 1f, 0f, 0f);
+			
+			renderPlanet(tessellator1, moons.getPlanetIcon(), moons.getParentOrbitalDistance()*(1/moons.gravitationalMultiplier), multiplier, moons.hasAtmosphere(), moons.skyColor, isGasGiant);
 			GL11.glPopMatrix();
 		}
 
+		GL11.glEnable(GL11.GL_FOG);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
@@ -415,7 +460,19 @@ public class RenderPlanetarySky extends IRenderHandler {
 		RocketEventHandler.onPostWorldRender(partialTicks);
 	}
 
-	private void renderPlanet(Tessellator tessellator1, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, boolean hasAtmosphere) {
+	protected ForgeDirection getRotationAxis(DimensionProperties properties, int posX, int posZ) {
+		return ForgeDirection.EAST;
+	}
+
+	protected ResourceLocation getTextureForPlanet(DimensionProperties properties) {
+		return properties.getPlanetIcon();
+	}
+
+	protected ResourceLocation getTextureForPlanetLEO(DimensionProperties properties) {
+		return properties.getPlanetIcon();
+	}
+
+	protected void renderPlanet(Tessellator tessellator1, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, boolean hasAtmosphere, float[] skyColor, boolean gasGiant) {
 		//GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -425,7 +482,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		//int i1 = k / 4 % 2;
 
 		//Set planet Orbiting distance; size
-		float f10 = 30f*(200-planetOrbitalDistance)/100f;
+		float f10 = 10f*(200-planetOrbitalDistance)/100f;
 
 		float f14 = 1f;//(float)(l + 0) / 4.0F;
 		float f15 = 0f;//(float)(i1 + 0) / 2.0F;
@@ -452,7 +509,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		if(hasAtmosphere) {
 			tessellator1.startDrawingQuads();
 			mc.renderEngine.bindTexture(DimensionProperties.getAtmosphereResource());
-			tessellator1.setColorRGBA_F(1f, 1f, 1f, alphaMultiplier);
+			tessellator1.setColorRGBA_F(skyColor[0], skyColor[1], skyColor[2], alphaMultiplier);
 
 			tessellator1.addVertexWithUV((double)(-f10), -100.0D, (double)f10, (double)f16, (double)f17);
 			tessellator1.addVertexWithUV((double)f10, -100.0D, (double)f10, (double)f14, (double)f17);
@@ -460,6 +517,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			tessellator1.addVertexWithUV((double)(-f10), -100.0D, (double)(-f10), (double)f16, (double)f15);
 			tessellator1.draw();
 		}
+		tessellator1.setColorRGBA_F(1f, 1f, 1f, 1f);
 	}
 
 }

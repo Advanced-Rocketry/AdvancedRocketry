@@ -15,7 +15,7 @@ public class RocketFx extends EntityFX {
 
 	
 	public RocketFx(World world, double x,
-			double y, double z, double motx, double moty, double motz) {
+			double y, double z, double motx, double moty, double motz, float scale) {
 		super(world, x, y, z, motx, moty, motz);
 		
 		this.prevPosX = this.posX = this.lastTickPosX = x;
@@ -25,12 +25,16 @@ public class RocketFx extends EntityFX {
         this.particleRed = 0.9F + this.rand.nextFloat()/10f;
         this.particleGreen = 0.6F + this.rand.nextFloat()/5f;
         this.particleBlue = 0.0F;
-        this.setSize(0.12F, 0.12F);
-        this.particleScale *= this.rand.nextFloat() * 0.6F + 6F;
+        this.setSize(0.12F*scale, 0.12F*scale);
+        this.particleScale *= (this.rand.nextFloat() * 0.6F + 6F)*scale;
         this.motionX = motx;
         this.motionY = moty;
         this.motionZ = motz;
         this.particleMaxAge = (int)(8.0D / (Math.random() * 0.8D + 0.6D));
+	}
+	public RocketFx(World world, double x,
+			double y, double z, double motx, double moty, double motz) {
+		this(world, x, y,z, motx, moty, motz, 1.0f);
 	}
 
 	@Override
@@ -41,7 +45,7 @@ public class RocketFx extends EntityFX {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(icon);
 		
 		GL11.glPushMatrix();
-		GL11.glDisable(GL11.GL_BLEND);
+		//GL11.glDisable(GL11.GL_BLEND);
 		GL11.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE );
 		
 		
@@ -58,7 +62,7 @@ public class RocketFx extends EntityFX {
         tess.addVertexWithUV((double)(f11 - y1 * f10 + y2 * f10), (double)(f12 + z1 * f10), (double)(f13 - x2 * f10 + z2 * f10), 1, 0);
         tess.addVertexWithUV((double)(f11 + y1 * f10 + y2 * f10), (double)(f12 + z1 * f10), (double)(f13 + x2 * f10 + z2 * f10), 0, 0);
         tess.addVertexWithUV((double)(f11 + y1 * f10 - y2 * f10), (double)(f12 - z1 * f10), (double)(f13 + x2 * f10 - z2 * f10), 0, 1);
-        GL11.glEnable(GL11.GL_BLEND);
+        //GL11.glEnable(GL11.GL_BLEND);
         
 		GL11.glPopMatrix();
 	}
@@ -83,6 +87,6 @@ public class RocketFx extends EntityFX {
             this.setDead();
         }
         
-        this.setPosition(posX + this.motionX, posY + this.motionY, posZ  + this.motionX);
+        this.setPosition(posX + this.motionX, posY + this.motionY, posZ  + this.motionZ);
 	}
 }

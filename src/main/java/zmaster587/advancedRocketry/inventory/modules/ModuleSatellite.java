@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.inventory.modules;
 
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
 import zmaster587.libVulpes.util.IconResource;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -54,7 +55,7 @@ public class ModuleSatellite extends ModuleSlotArray {
 	}
 	
 	@Override
-	protected boolean needsUpdate(int localId) {
+	public boolean needsUpdate(int localId) {
 		if(satellite != null)
 			return satellite.isUpdateRequired(localId);
 		

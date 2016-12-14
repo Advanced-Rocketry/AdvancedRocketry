@@ -25,7 +25,8 @@ public class TileModelRender extends TileEntity {
 		TANKEND,
 		TANKTOP,
 		SAWBLADE,
-		MOTOR;
+		MOTOR, 
+		ADVROCKET;
 	}
 	
 	int type;
@@ -46,7 +47,7 @@ public class TileModelRender extends TileEntity {
 	}
 	
 	public ForgeDirection getRotation() {
-		return ForgeDirection.SOUTH;
+		return ForgeDirection.DOWN;
 	}
 	
 	@Override

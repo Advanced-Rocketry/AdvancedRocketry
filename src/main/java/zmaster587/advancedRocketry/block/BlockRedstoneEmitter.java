@@ -1,8 +1,9 @@
 package zmaster587.advancedRocketry.block;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.inventory.GuiHandler;
 import zmaster587.advancedRocketry.tile.TileAtmosphereDetector;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.inventory.GuiHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -30,7 +31,7 @@ public class BlockRedstoneEmitter extends Block {
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
 	{
-		player.openGui(AdvancedRocketry.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), world, x, y, z);
+		player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), world, x, y, z);
 		return true;
 	}
 	

@@ -1,8 +1,8 @@
 package zmaster587.advancedRocketry.api.stations;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
-import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.libVulpes.util.BlockPosition;
 
 public interface ISpaceObject {
@@ -11,6 +11,10 @@ public interface ISpaceObject {
 	 * @return id of the space object (NOT the DIMID)
 	 */
 	public int getId();
+	
+	public float getOrbitalDistance();
+	
+	public void setOrbitalDistance(float finalVel);
 	
 	/**
 	 * @return dimension properties of the object
@@ -63,11 +67,21 @@ public interface ISpaceObject {
 	 * When the space stations are first created they are 'unpacked' from the storage chunk they reside in
 	 * @param chunk
 	 */
-	public void onFirstCreated(IStorageChunk chunk);
+	public void onModuleUnpack(IStorageChunk chunk);
 	
 	public void writeToNbt(NBTTagCompound nbt);
 	
 	public void readFromNbt(NBTTagCompound nbt);
+	
+	public double getRotation();
+	
+	public double getDeltaRotation();
+	
+	public void setRotation(double rotation);
+	
+	public double getMaxRotationalAcceleration();
+	
+	public void setDeltaRotation(double rotation);
 	
 	/**
 	 * @return true if there is an empty pad to land on
@@ -77,7 +91,7 @@ public interface ISpaceObject {
 	/**
 	 * @return next viable place to land
 	 */
-	public BlockPosition getNextLandingPad();
+	public BlockPosition getNextLandingPad(boolean commit);
 	
 	/**
 	 * Adds a landing pad to the station
@@ -128,5 +142,13 @@ public interface ISpaceObject {
 	 * Set the properties of the dimension
 	 * @param properties
 	 */
-	public void setProperties(DimensionProperties properties);
+	public void setProperties(IDimensionProperties properties);
+	
+	/**
+	 * Called when a check for a cleanup is performed on objects registered as temporary
+	 * @return worldtime expiration is to occur
+	 */
+	public long getExpireTime();
+
+	public ForgeDirection getForwardDirection();
 }

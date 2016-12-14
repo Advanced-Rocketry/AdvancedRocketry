@@ -1,17 +1,24 @@
 package zmaster587.advancedRocketry.network;
 
+import java.io.IOException;
+import java.util.logging.Logger;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.advancedRocketry.api.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.libVulpes.network.BasePacket;
 
 public class PacketStationUpdate extends BasePacket {
-	SpaceObject spaceObject;
+	ISpaceObject spaceObject;
 	int stationNumber;
 	Type type;
 
@@ -19,9 +26,12 @@ public class PacketStationUpdate extends BasePacket {
 		DEST_ORBIT_UPDATE,
 		ORBIT_UPDATE,
 		SIGNAL_WHITE_BURST,
-		FUEL_UPDATE
+		FUEL_UPDATE,
+		ROTANGLE_UPDATE, 
+		DIM_PROPERTY_UPDATE,
+		ALTITUDE_UPDATE
 	}
-	
+
 	public PacketStationUpdate() {}
 
 	public PacketStationUpdate(ISpaceObject dimProperties, Type type) {
@@ -34,30 +44,86 @@ public class PacketStationUpdate extends BasePacket {
 	public void write(ByteBuf out) {
 		out.writeInt(stationNumber);
 		out.writeInt(type.ordinal());
-		
-		if(type == Type.DEST_ORBIT_UPDATE)
+
+		switch(type) {
+		case DEST_ORBIT_UPDATE:
 			out.writeInt(spaceObject.getDestOrbitingBody());
-		else if(type == Type.ORBIT_UPDATE)
+			break;
+		case ORBIT_UPDATE:
 			out.writeInt(spaceObject.getOrbitingPlanetId());
-		else if(type == Type.FUEL_UPDATE)
-			out.writeInt(spaceObject.getFuelAmount());
+			break;
+		case FUEL_UPDATE:
+			if(spaceObject instanceof SpaceObject)
+				out.writeInt(((SpaceObject)spaceObject).getFuelAmount());
+			break;
+		case ROTANGLE_UPDATE:
+			out.writeDouble(spaceObject.getRotation());
+			out.writeDouble(spaceObject.getDeltaRotation());
+			break;
+		case ALTITUDE_UPDATE:
+			out.writeFloat(spaceObject.getOrbitalDistance());
+			break;
+		case DIM_PROPERTY_UPDATE:
+			NBTTagCompound nbt = new NBTTagCompound();
+			try {
+				spaceObject.getProperties().writeToNBT(nbt);
+				PacketBuffer packetBuffer = new PacketBuffer(out);
+				//TODO: error handling
+				try {
+					packetBuffer.writeNBTTagCompoundToBuffer(nbt);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} catch(NullPointerException e) {
+				out.writeBoolean(true);
+				Logger.getLogger("advancedRocketry").warning("Dimension " + stationNumber + " has thrown an exception trying to write NBT, deleting!");
+				DimensionManager.getInstance().deleteDimension(stationNumber);
+			}
+		default:
+		}
 	}
 
 	@Override
 	public void readClient(ByteBuf in) {
 		stationNumber = in.readInt();
-		spaceObject = (SpaceObject)SpaceObjectManager.getSpaceManager().getSpaceStation(stationNumber);
+		spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStation(stationNumber);
 		type = Type.values()[in.readInt()];
-		if(type == Type.DEST_ORBIT_UPDATE)
+
+
+		switch(type) {
+		case DEST_ORBIT_UPDATE:
 			spaceObject.setDestOrbitingBody(in.readInt());
-		else if(type == Type.ORBIT_UPDATE) {
+			break;
+		case ORBIT_UPDATE:
 			spaceObject.setOrbitingBody(in.readInt());
-		}
-		else if(type == Type.SIGNAL_WHITE_BURST) {
+			break;
+		case FUEL_UPDATE:
+			if(spaceObject instanceof SpaceObject)
+				((SpaceObject)spaceObject).setFuelAmount(in.readInt());
+			break;
+		case ROTANGLE_UPDATE:
+			spaceObject.setRotation(in.readDouble());
+			spaceObject.setDeltaRotation(in.readDouble());
+			break;
+		case SIGNAL_WHITE_BURST:
 			PlanetEventHandler.runBurst(Minecraft.getMinecraft().theWorld.getTotalWorldTime() + 20, 20);
-		}
-		else if(type == Type.FUEL_UPDATE)
-			spaceObject.setFuelAmount(in.readInt());
+			break;
+		case ALTITUDE_UPDATE:
+			spaceObject.setOrbitalDistance(in.readFloat());
+			break;
+		case DIM_PROPERTY_UPDATE:
+			PacketBuffer packetBuffer = new PacketBuffer(in);
+			NBTTagCompound nbt;
+			try {
+				nbt = packetBuffer.readNBTTagCompoundFromBuffer();
+
+			} catch (IOException e) {
+				e.printStackTrace();
+				return;
+			}
+			spaceObject.getProperties().readFromNBT(nbt);
+			break;
+		}	
 	}
 
 	@Override
