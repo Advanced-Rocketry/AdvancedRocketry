@@ -69,10 +69,11 @@ public class BlockPress extends BlockPistonBase {
 		ItemStack stack = null;
 
 		for(IRecipe recipe : recipes) {
-			if(recipe.getIngredients().get(0).get(0).isItemEqual(stackInWorld)) {
-				stack = recipe.getOutput().get(0);
-				break;
-			}
+			for(ItemStack stack2 : recipe.getIngredients().get(0))
+				if(stack2.isItemEqual(stackInWorld)) {
+					stack = recipe.getOutput().get(0);
+					break;
+				}
 		}
 
 

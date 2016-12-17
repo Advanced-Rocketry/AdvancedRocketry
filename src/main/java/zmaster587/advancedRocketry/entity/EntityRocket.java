@@ -415,9 +415,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		long deltaTime = worldObj.getTotalWorldTime() - lastWorldTickTicked;
 		lastWorldTickTicked = worldObj.getTotalWorldTime();
 
-		//TODO move
-		World.MAX_ENTITY_RADIUS = 100;
-
 		//Hackish crap to make clients mount entities immediately after server transfer and fire events
 		if(!worldObj.isRemote && (this.isInFlight() || this.isInOrbit()) && this.ticksExisted == 20) {
 			if(this.riddenByEntity instanceof EntityPlayer) {
