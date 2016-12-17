@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.client.render.multiblocks;
 
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -49,7 +50,9 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 180 : 0) + front.getFrontOffsetZ()*90f, 0, 1, 0);
 		GL11.glTranslated(-.5f, -1f, -2.5f);
 
-		if(multiBlockTile.isRunning()) {
+
+		ItemStack outputStack;
+		if(multiBlockTile.isRunning() && (outputStack = multiBlockTile.getOutputs().get(0)) != null) {
 
 			float progress = multiBlockTile.getProgress(0)/(float)multiBlockTile.getTotalProgress(0);
 
@@ -74,7 +77,7 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 			int color;
 			//Check for rare bug when outputs is null, usually occurs if player opens machine within 1st tick
 			if(multiBlockTile.getOutputs() != null)
-				color = MaterialRegistry.getColorFromItemMaterial(multiBlockTile.getOutputs().get(0));
+				color = MaterialRegistry.getColorFromItemMaterial(outputStack);
 			else
 				color = 0;
 			

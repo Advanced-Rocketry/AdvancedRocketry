@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.client.render.multiblocks;
 
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -56,7 +57,8 @@ public class RendererRollingMachine extends TileEntitySpecialRenderer {
 		model.renderOnly("Coil");
 		GL11.glColor3f(1f,1f,1f);
 
-		if(multiBlockTile.isRunning()) {
+		ItemStack outputStack;
+		if(multiBlockTile.isRunning() && (outputStack = multiBlockTile.getOutputs().get(0)) != null) {
 			float progress = multiBlockTile.getProgress(0)/(float)multiBlockTile.getTotalProgress(0);
 
 			bindTexture(texture);
@@ -81,14 +83,7 @@ public class RendererRollingMachine extends TileEntitySpecialRenderer {
 			GL11.glPopMatrix();
 
 
-
-			//DEBUG
-			int color = 0;
-			try  {
-				color = MaterialRegistry.getColorFromItemMaterial(multiBlockTile.getOutputs().get(0));
-			} catch (NullPointerException e) {
-
-			}
+			int color = MaterialRegistry.getColorFromItemMaterial(outputStack);
 			//int color = MaterialRegistry.getMaterialFromItemStack(multiBlockTile.getOutputs().get(0)).getColor();
 			GL11.glColor3d((0xff & color >> 16)/256f, (0xff & color >> 8)/256f , (color & 0xff)/256f);
 
