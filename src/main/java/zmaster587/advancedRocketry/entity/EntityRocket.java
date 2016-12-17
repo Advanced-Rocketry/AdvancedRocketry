@@ -494,9 +494,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		long deltaTime = worldObj.getTotalWorldTime() - lastWorldTickTicked;
 		lastWorldTickTicked = worldObj.getTotalWorldTime();
 
-		//TODO move
-		World.MAX_ENTITY_RADIUS = 100;
-
 		if(this.ticksExisted == 20) {
 			//problems with loading on other world then where the infrastructure was set?
 			ListIterator<HashedBlockPosition> itr = infrastructureCoords.listIterator();
