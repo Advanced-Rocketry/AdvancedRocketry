@@ -22,11 +22,13 @@ public class WorldDummy extends World {
 
 	StorageChunk storage;
 	
+	
 	public int glListID = -1;
 
 	public WorldDummy(Profiler p_i45368_5_, StorageChunk storage) {
 		super(new DummySaveHandler(), "dummy", new WorldSettings(0, WorldSettings.GameType.SURVIVAL, false, false, WorldType.FLAT), dummyProvider, p_i45368_5_);
 		this.storage = storage;
+		this.chunkProvider = new ChunkProviderDummy(this);
 	}
 
 	@Override
