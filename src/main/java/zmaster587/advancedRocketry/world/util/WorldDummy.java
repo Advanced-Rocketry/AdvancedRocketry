@@ -22,6 +22,7 @@ public class WorldDummy extends World {
 	public WorldDummy(Profiler p_i45368_5_, StorageChunk storage) {
 		super(new DummySaveHandler(), new WorldInfo(new NBTTagCompound()), dummyProvider, p_i45368_5_, false);
 		this.storage = storage;
+		this.chunkProvider = new ChunkProviderClient(this);
 	}
 
 	@Override
