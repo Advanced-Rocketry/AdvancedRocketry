@@ -135,8 +135,9 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		
-		if(!useBucket(slot, stack))
-			super.setInventorySlotContents(slot, stack);
+		super.setInventorySlotContents(slot, stack);
+		while(useBucket(0, getStackInSlot(0)));
+			
 	}
 
 	//Yes i was lazy
