@@ -84,7 +84,7 @@ public class TilePipe extends TileEntity {
 		}
 
 
-		if(!initialized) {
+		if(!isInitialized()) {
 			initialize(getNetworkHandler().getNewNetworkID());
 		}
 
