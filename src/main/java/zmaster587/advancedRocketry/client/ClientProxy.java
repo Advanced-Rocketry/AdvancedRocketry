@@ -62,7 +62,7 @@ import zmaster587.advancedRocketry.tile.TileFluidTank;
 import zmaster587.advancedRocketry.tile.TileModelRender;
 import zmaster587.advancedRocketry.tile.TileModelRenderRotatable;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
-import zmaster587.advancedRocketry.tile.TileSpaceLaser;
+import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
 import zmaster587.advancedRocketry.tile.cables.TileDataPipe;
 import zmaster587.advancedRocketry.tile.cables.TileEnergyPipe;
 import zmaster587.advancedRocketry.tile.cables.TileLiquidPipe;

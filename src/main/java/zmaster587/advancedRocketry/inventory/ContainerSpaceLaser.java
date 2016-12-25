@@ -3,7 +3,7 @@ package zmaster587.advancedRocketry.inventory;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.integration.CompatibilityMgr;
-import zmaster587.advancedRocketry.tile.TileSpaceLaser;
+import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
 import zmaster587.libVulpes.gui.SlotSingleItem;
 import zmaster587.libVulpes.gui.SlotOreDict;
 import net.minecraft.block.Block;
@@ -53,8 +53,8 @@ public class ContainerSpaceLaser extends Container {
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
-		if(laserTile.getEnergyStored(ForgeDirection.UNKNOWN) != prevEnergy) {
-			prevEnergy = laserTile.getEnergyStored(ForgeDirection.UNKNOWN);
+		if(laserTile.getBatteries().getEnergyStored() != prevEnergy) {
+			prevEnergy = laserTile.getBatteries().getEnergyStored();
 			for (int j = 0; j < this.crafters.size(); ++j)
 			{
 				((ICrafting)this.crafters.get(j)).sendProgressBarUpdate(this, 0, prevEnergy/100);
@@ -107,7 +107,7 @@ public class ContainerSpaceLaser extends Container {
 	@Override
 	public void updateProgressBar(int id, int value) {
 		if(id == 0) {
-			laserTile.setEnergy(value*100);
+			laserTile.getBatteries().setEnergyStored(value*100);
 		}
 		else if(id == 1) {
 			buildingX = value;

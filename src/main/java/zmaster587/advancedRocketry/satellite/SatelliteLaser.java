@@ -19,7 +19,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.entity.EntityLaserNode;
 import zmaster587.advancedRocketry.event.BlockBreakEvent.LaserBreakEvent;
-import zmaster587.advancedRocketry.tile.TileSpaceLaser;
+import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
 import zmaster587.libVulpes.util.ZUtils;
 
 public class SatelliteLaser extends SatelliteLaserNoDrill {
