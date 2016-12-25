@@ -2,7 +2,8 @@ package zmaster587.advancedRocketry.client.render;
 
 import org.lwjgl.opengl.GL11;
 
-import zmaster587.advancedRocketry.tile.TileSpaceLaser;
+import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
+
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;

@@ -3,7 +3,6 @@ package zmaster587.advancedRocketry.inventory;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
-import zmaster587.advancedRocketry.tile.TileSpaceLaser;
 import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.GuiModular;
 import zmaster587.libVulpes.inventory.GuiModularFullScreen;

@@ -13,6 +13,7 @@ import zmaster587.advancedRocketry.satellite.SatelliteLaser;
 import zmaster587.advancedRocketry.satellite.SatelliteLaserNoDrill;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.RotatableBlock;
@@ -615,7 +616,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 
 	@Override
 	public String getName() {
-		return "Orbital Laser";
+		return LibVulpes.proxy.getLocalizedString("tile.spaceLaser.name");
 	}
 
 

@@ -75,7 +75,7 @@ import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.tile.TileDrill;
 import zmaster587.advancedRocketry.tile.TileFluidTank;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
-import zmaster587.advancedRocketry.tile.TileSpaceLaser;
+import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
 import zmaster587.advancedRocketry.tile.cables.TileDataPipe;
 import zmaster587.advancedRocketry.tile.cables.TileEnergyPipe;
 import zmaster587.advancedRocketry.tile.cables.TileLiquidPipe;
