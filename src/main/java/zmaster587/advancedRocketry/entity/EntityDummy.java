@@ -20,10 +20,7 @@ public class EntityDummy extends Entity {
 
 	public EntityDummy(World world, double x, double y, double z) {
 		this(world);
-		
-		this.posX = this.lastTickPosX = x;
-		this.posY = this.lastTickPosY = y;
-		this.posZ = this.lastTickPosZ = z;
+		setPosition(x, y, z);
 	}
 	
 	@Override
