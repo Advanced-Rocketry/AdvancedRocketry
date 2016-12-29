@@ -125,16 +125,19 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * Contains default graphic {@link ResourceLocation} to display for different planet types
 	 *
 	 */
-	public static final ResourceLocation atmosphere = new ResourceLocation("advancedrocketry:textures/planets/Atmosphere.png");
+	public static final ResourceLocation atmosphere = new ResourceLocation("advancedrocketry:textures/planets/Atmosphere2.png");
 	public static final ResourceLocation atmosphereLEO = new ResourceLocation("advancedrocketry:textures/planets/AtmosphereLEO.png");
-
+	public static final ResourceLocation atmGlow = new ResourceLocation("advancedrocketry:textures/planets/atmGlow.png");
+	
+	public static final ResourceLocation shadow = new ResourceLocation("advancedrocketry:textures/planets/shadow.png");
+	
 	public static enum PlanetIcons {
-		EARTHLIKE(new ResourceLocation("advancedrocketry:textures/planets/Earthlike.png")),
-		LAVA(new ResourceLocation("advancedrocketry:textures/planets/Lava.png")),
-		MARSLIKE(new ResourceLocation("advancedrocketry:textures/planets/marslike.png")),
-		MOON(new ResourceLocation("advancedrocketry:textures/planets/moon.png")),
+		EARTHLIKE(new ResourceLocation("advancedrocketry:textures/planets/Earthlike2.png")),
+		LAVA(new ResourceLocation("advancedrocketry:textures/planets/lava2.png")),
+		MARSLIKE(new ResourceLocation("advancedrocketry:textures/planets/marslike2.png")),
+		MOON(new ResourceLocation("advancedrocketry:textures/planets/moon2.png")),
 		WATERWORLD(new ResourceLocation("advancedrocketry:textures/planets/WaterWorld.png")),
-		ICEWORLD(new ResourceLocation("advancedrocketry:textures/planets/IceWorld.png")),
+		ICEWORLD(new ResourceLocation("advancedrocketry:textures/planets/IceWorld2.png")),
 		GASGAINTBLUE(new ResourceLocation("advancedrocketry:textures/planets/GasGiantBlue.png")),
 		GASGAINTRED(new ResourceLocation("advancedrocketry:textures/planets/GasGiantOrange.png")),
 		UNKNOWN(new ResourceLocation("advancedrocketry:textures/planets/Unknown.png"))
@@ -448,6 +451,12 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		return orbitalDist;
 	}
 
+	public double getSolarTheta() {
+		if(parentPlanet != -1)
+			return getParentProperties().getSolarTheta();
+		return orbitTheta;
+	}
+	
 	/**
 	 * Sets this planet as a moon of the supplied planet's id.
 	 * @param parentId parent planet's DIMID, or -1 for none
@@ -547,6 +556,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public static ResourceLocation getAtmosphereResource() {
 		return atmosphere;
 	}
+	
+	public static ResourceLocation getShadowResource() {
+		return shadow;
+	}
+
 
 	public static ResourceLocation getAtmosphereLEOResource() {
 		return atmosphereLEO;

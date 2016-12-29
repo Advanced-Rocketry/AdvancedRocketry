@@ -185,7 +185,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		displaySize *=distanceZoomMultiplier;
 
 		ModuleButton button;
-		planetList.add(button = new ModuleButton(offsetX, offsetY, planet.getId(), "", this, new ResourceLocation[] { planet.getPlanetIcon() }, planet.getName(), displaySize, displaySize));
+		planetList.add(button = new ModuleButtonPlanet(offsetX, offsetY, planet.getId(), "", this, planet, planet.getName(), displaySize, displaySize));
 		button.setSound("buttonBlipA");
 
 		renderPropertiesMap.put(planet.getId(), new PlanetRenderProperties(displaySize, offsetX, offsetY));
@@ -210,7 +210,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 		ModuleButton button;
 
-		planetList.add(button = new ModuleButton(offsetX, offsetY, planet.getId(), "", this, new ResourceLocation[] { planet.getPlanetIcon() }, planet.getName() + "\nMoons: " + planet.getChildPlanets().size(), displaySize, displaySize));
+		planetList.add(button = new ModuleButtonPlanet(offsetX, offsetY, planet.getId(), "", this, planet, planet.getName() + "\nMoons: " + planet.getChildPlanets().size(), displaySize, displaySize));
 		button.setSound("buttonBlipA");
 
 		renderPropertiesMap.put(planet.getId(), new PlanetRenderProperties(displaySize, offsetX, offsetY));

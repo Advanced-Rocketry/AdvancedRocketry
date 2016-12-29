@@ -26,7 +26,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 	Minecraft mc = Minecraft.getMinecraft();
 
 	@Override
-	protected void renderPlanet(VertexBuffer buffer, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, boolean hasAtmosphere, float[] atmColor, boolean isGasgiant) {
+	protected void renderPlanet(VertexBuffer buffer, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, double angle, boolean hasAtmosphere, float[] atmColor, boolean isGasgiant) {
 
 		
 		ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.thePlayer.getPosition());
