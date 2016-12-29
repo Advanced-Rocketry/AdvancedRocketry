@@ -11,6 +11,7 @@ import zmaster587.advancedRocketry.api.atmosphere.IAtmosphereSealHandler;
 import zmaster587.libVulpes.util.BlockPosition;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -28,6 +29,8 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
     private List<Material> materialBanList = new ArrayList();
     /** List of block materials that are allowed regardless of properties. */
     private List<Material> materialAllowList = new ArrayList();
+    
+    private HashSet<BlockPosition> doorPositions = new HashSet<BlockPosition>();
     //TODO add meta support
     //TODO add complex logic support threw API interface
     //TODO add complex logic handler for integration support
@@ -85,7 +88,14 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
             //TODO replace with seal logic handler
             else if (block == AdvancedRocketryBlocks.blockAirLock)
             {
-                return checkDoorIsSealed(world, pos, meta);
+				
+				if(doorPositions.contains(pos))
+					return true;
+				doorPositions.add(pos);
+				
+				boolean doorIsSealed = checkDoorIsSealed(world, pos, meta);
+				doorPositions.remove(pos);
+				return doorIsSealed;
             }
             //TODO add is side solid check, which will require forge direction or side check. Eg more complex logic...
             return isFulBlock(world, pos);
