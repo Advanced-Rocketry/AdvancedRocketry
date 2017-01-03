@@ -128,6 +128,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public static final ResourceLocation atmosphere = new ResourceLocation("advancedrocketry:textures/planets/Atmosphere2.png");
 	public static final ResourceLocation atmosphereLEO = new ResourceLocation("advancedrocketry:textures/planets/AtmosphereLEO.png");
 	public static final ResourceLocation atmGlow = new ResourceLocation("advancedrocketry:textures/planets/atmGlow.png");
+	public static final ResourceLocation planetRings = new ResourceLocation("advancedrocketry:textures/planets/rings.png");
+	public static final ResourceLocation planetRingShadow = new ResourceLocation("advancedrocketry:textures/planets/ringShadow.png");
 	
 	public static final ResourceLocation shadow = new ResourceLocation("advancedrocketry:textures/planets/shadow.png");
 	
@@ -185,6 +187,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	//Gas giants DO NOT need a dimension registered to them
 	public float[] skyColor;
 	public float[] fogColor;
+	public float[] ringColor;
 	public float gravitationalMultiplier;
 	public int orbitalDist;
 	private int originalAtmosphereDensity;
@@ -207,6 +210,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	private LinkedList<BiomeEntry> terraformedBiomes;
 	private boolean isRegistered = false;
 	private boolean isTerraformed = false;
+	public boolean hasRings = false;
 
 	//Planet Heirachy
 	private HashSet<Integer> childPlanets;
@@ -273,6 +277,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		fogColor = new float[] {1f,1f,1f};
 		skyColor = new float[] {1f,1f,1f};
 		sunriseSunsetColors = new float[] {.7f,.2f,.2f,1};
+		ringColor = new float[] {.4f, .4f, .7f};
 		gravitationalMultiplier = 1;
 		rotationalPeriod = 24000;
 		orbitalDist = 100;
@@ -281,6 +286,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		parentPlanet = -1;
 		starId = 0;
 		averageTemperature = 100;
+		hasRings = false;
 	}
 
 	@Override
@@ -334,6 +340,14 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		this.isGasGiant = true;
 	}
 
+	public boolean hasRings() {
+		return this.hasRings;
+	}
+	
+	public void setHasRings(boolean value) {
+		this.hasRings = value;
+	}
+	
 	/**
 	 * @return the {@link ResourceLocation} representing this planet, generated from the planet's properties
 	 */
@@ -1132,6 +1146,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setBoolean("isNative", isNativeDimension);
 		nbt.setBoolean("terraformed", isTerraformed);
 		nbt.setBoolean("isGasGiant", isGasGiant);
+		nbt.setBoolean("hasRings", hasRings);
 
 		//Hierarchy
 		if(!childPlanets.isEmpty()) {

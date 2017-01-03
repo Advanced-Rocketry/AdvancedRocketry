@@ -54,7 +54,7 @@ public class GuiPlanetButton extends GuiImageButton {
 	        //GL11.glTranslatef(xPosition, 100 + this.zLevel, yPosition);
 	        float newWidth = width/2f;
 	        
-	        RenderPlanetarySky.renderPlanet2(vertexbuffer, properties.getPlanetIcon(), (int)(xPosition + newWidth), (int)(yPosition + newWidth), (double)this.zLevel, newWidth, 1f, properties.getSolarTheta(), properties.hasAtmosphere(), properties.skyColor, properties.isGasGiant());
+	        RenderPlanetarySky.renderPlanet2(vertexbuffer, properties.getPlanetIcon(), (int)(xPosition + newWidth), (int)(yPosition + newWidth), (double)this.zLevel, newWidth, 1f, properties.getSolarTheta(), properties.hasAtmosphere(), properties.skyColor, properties.ringColor, properties.isGasGiant(), properties.hasRings());
             GL11.glPopMatrix();
 	        
 	        /*vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
