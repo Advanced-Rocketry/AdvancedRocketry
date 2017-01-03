@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
@@ -49,7 +50,7 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 
-public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModularInventory, IInventory {
+public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implements IModularInventory, IInventory {
 
 	private static final Object[][][] structure = new Object[][][]{
 		{{Blocks.stone_slab, 'c', Blocks.stone_slab},
@@ -67,7 +68,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 	private EmbeddedInventory inventory;
 	TileInventoryHatch inputHatch, outputHatch;
 
-	public TilePlanetAnalyser() {
+	public TileAstrobodyDataProcessor() {
 		dataCables = new TileDataBus[3];
 		powerPerTick = 100;
 		massProgress = distanceProgress = atmosphereProgress = -1;
@@ -175,7 +176,7 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 		super.onInventoryUpdated();
 		if(inputHatch == null)
 			return;
-		
+
 		if(inventory.getStackInSlot(1) != null) {
 			for(int i = 0; i < outputHatch.getSizeInventory(); i++) {
 				if(outputHatch.getStackInSlot(i) == null) {
@@ -288,17 +289,34 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 
 		ItemAsteroidChip item = (ItemAsteroidChip)stack.getItem();
 
-		if(researchingAtmosphere && atmosphereProgress < 0 && dataCables[0].extractData(1, DataStorage.DataType.COMPOSITION, ForgeDirection.UNKNOWN, true) > 0 && !item.isFull(stack, DataStorage.DataType.COMPOSITION))
+		if(researchingAtmosphere && atmosphereProgress < 0 && extractData(1, DataStorage.DataType.COMPOSITION, false) > 0 && !item.isFull(stack, DataStorage.DataType.COMPOSITION))
 			atmosphereProgress = 0;
 
-		if(researchingDistance && distanceProgress < 0 && dataCables[1].extractData(1, DataStorage.DataType.DISTANCE, ForgeDirection.UNKNOWN, true) > 0 && !item.isFull(stack, DataStorage.DataType.DISTANCE))
+		if(researchingDistance && distanceProgress < 0 && extractData(1, DataStorage.DataType.DISTANCE, false) > 0 && !item.isFull(stack, DataStorage.DataType.DISTANCE))
 			distanceProgress = 0;
 
-		if(researchingMass && massProgress < 0 && dataCables[2].extractData(1, DataStorage.DataType.MASS, ForgeDirection.UNKNOWN, true) > 0 && !item.isFull(stack, DataStorage.DataType.MASS))
+		if(researchingMass && massProgress < 0 && extractData(1, DataStorage.DataType.MASS, false) > 0 && !item.isFull(stack, DataStorage.DataType.MASS))
 			massProgress = 0;
 
 		this.markDirty();
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
+
+	private int extractData(int amt, DataStorage.DataType type, boolean simulate) {
+		switch(type) {
+		case COMPOSITION:
+			if(dataCables[0] != null)
+				return dataCables[0].extractData(1, DataStorage.DataType.COMPOSITION, ForgeDirection.UNKNOWN, !simulate);
+		case DISTANCE:
+			if(dataCables[1] != null)
+				return dataCables[1].extractData(1, DataStorage.DataType.DISTANCE, ForgeDirection.UNKNOWN, !simulate);
+		case MASS:
+			if(dataCables[2] != null)
+				return dataCables[2].extractData(1, DataStorage.DataType.MASS, ForgeDirection.UNKNOWN, !simulate);
+
+		default:
+			return 0;
+		}
 	}
 
 	@Override
@@ -306,43 +324,49 @@ public class TilePlanetAnalyser extends TileMultiPowerConsumer implements IModul
 		if(completionTime > 0)
 			super.onRunningPoweredTick();
 
-		if(atmosphereProgress > -1) {
-			if(atmosphereProgress == maxResearchTime) {
-				atmosphereProgress = -1;
+		ItemStack stack = getStackInSlot(2);
 
-				if(!worldObj.isRemote) {
-					incrementDataOnChip(0, 1, DataType.COMPOSITION);
-					attemptAllResearchStart();
+		if(stack != null && stack.getItem().equals(AdvancedRocketryItems.itemAsteroidChip)) {
+			ItemAsteroidChip item = (ItemAsteroidChip) stack.getItem();
+
+			if(researchingAtmosphere && extractData(1, DataStorage.DataType.COMPOSITION, true) > 0 && !item.isFull(stack, DataStorage.DataType.COMPOSITION)) {
+				if(atmosphereProgress == maxResearchTime) {
+					atmosphereProgress = -1;
+
+					if(!worldObj.isRemote) {
+						incrementDataOnChip(0, 1, DataType.COMPOSITION);
+						//attemptAllResearchStart();
+					}
 				}
+				else
+					atmosphereProgress++;
 			}
-			else
-				atmosphereProgress++;
-		}
 
-		if(massProgress > -1) {
-			if(massProgress == maxResearchTime) {
+			if(researchingMass && extractData(1, DataStorage.DataType.MASS, true) > 0 && !item.isFull(stack, DataStorage.DataType.MASS)) {
+				if(massProgress == maxResearchTime) {
 
-				massProgress = -1;
+					massProgress = -1;
 
-				if(!worldObj.isRemote) {
-					incrementDataOnChip(0, 1, DataType.MASS);
-					attemptAllResearchStart();
+					if(!worldObj.isRemote) {
+						incrementDataOnChip(0, 1, DataType.MASS);
+						//attemptAllResearchStart();
+					}
 				}
+				else
+					massProgress++;
 			}
-			else
-				massProgress++;
-		}
 
-		if(distanceProgress > -1) {
-			if(distanceProgress == maxResearchTime) {
-				distanceProgress = -1;
-				if(!worldObj.isRemote) {
-					incrementDataOnChip(0, 1, DataType.DISTANCE);
-					attemptAllResearchStart();
+			if(researchingDistance && extractData(1, DataStorage.DataType.DISTANCE, true) > 0 && !item.isFull(stack, DataStorage.DataType.DISTANCE)) {
+				if(distanceProgress == maxResearchTime) {
+					distanceProgress = -1;
+					if(!worldObj.isRemote) {
+						incrementDataOnChip(0, 1, DataType.DISTANCE);
+						//attemptAllResearchStart();
+					}
 				}
+				else
+					distanceProgress++;
 			}
-			else
-				distanceProgress++;
 		}
 	}
 
