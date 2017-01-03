@@ -120,7 +120,7 @@ public class SpaceObject implements ISpaceObject {
 	 */
 	public ForgeDirection getForwardDirection() {
 		if(direction == null)
-			return ForgeDirection.UNKNOWN;
+			return ForgeDirection.NORTH;
 		return direction;
 	}
 	/**
