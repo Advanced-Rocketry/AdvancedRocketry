@@ -82,7 +82,7 @@ import zmaster587.advancedRocketry.tile.cables.TileLiquidPipe;
 import zmaster587.advancedRocketry.tile.multiblock.TileAtmosphereTerraformer;
 import zmaster587.advancedRocketry.tile.multiblock.TileBiomeScanner;
 import zmaster587.advancedRocketry.tile.multiblock.TileObservatory;
-import zmaster587.advancedRocketry.tile.multiblock.TilePlanetAnalyser;
+import zmaster587.advancedRocketry.tile.multiblock.TileAstrobodyDataProcessor;
 import zmaster587.advancedRocketry.tile.multiblock.TileWarpCore;
 import zmaster587.advancedRocketry.tile.multiblock.energy.TileMicrowaveReciever;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileChemicalReactor;
@@ -108,7 +108,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCuttingMachine.class, new RendererCuttingMachine());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrystallizer.class, new RendererCrystallizer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileObservatory.class, new RendererObservatory());
-		ClientRegistry.bindTileEntitySpecialRenderer(TilePlanetAnalyser.class, new RenderPlanetAnalyser());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileAstrobodyDataProcessor.class, new RenderPlanetAnalyser());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileLathe.class, new RendererLathe());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileRollingMachine.class, new RendererRollingMachine());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileElectrolyser.class, new RendererElectrolyser());
