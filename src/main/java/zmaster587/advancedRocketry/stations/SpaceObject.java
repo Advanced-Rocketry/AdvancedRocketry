@@ -120,7 +120,7 @@ public class SpaceObject implements ISpaceObject {
 	 */
 	public EnumFacing getForwardDirection() {
 		if(direction == null)
-			return EnumFacing.DOWN;
+			return EnumFacing.NORTH;
 		return direction;
 	}
 	/**
