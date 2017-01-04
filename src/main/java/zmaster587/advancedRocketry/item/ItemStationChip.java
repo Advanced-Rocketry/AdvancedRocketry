@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.stations.ISpaceObject;
+import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -89,6 +92,24 @@ public class ItemStationChip extends ItemIdWithName {
 		else {
 			list.add(ChatFormatting.GREEN + "Station " + getUUID(stack));
 			super.addInformation(stack, player, list, bool);
+			
+			if(player.worldObj.provider.getDimension() == Configuration.spaceDimId) {
+				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(player.getPosition());
+				
+				if(obj != null) {
+					Vector3F<Float> vec = getTakeoffCoords(stack, obj.getOrbitingPlanetId());
+					
+					if(vec != null) {
+						list.add("X: " + vec.x);
+						list.add("Z: " + vec.z);
+					}
+					else {
+						list.add("X: N/A");
+						list.add("Z: N/A");
+					}
+				}
+			}
+			
 		}
 	}
 }
