@@ -12,6 +12,7 @@ import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import zmaster587.advancedRocketry.cable.NetworkRegistry;
 import zmaster587.advancedRocketry.tile.cables.TilePipe;
 
@@ -19,6 +20,7 @@ public class CableTickHandler {
 
 	@SubscribeEvent
 	public void onTick(TickEvent.ServerTickEvent tick) {
+		if(tick.phase == Phase.END)
 		NetworkRegistry.dataNetwork.tickAllNetworks();
 		NetworkRegistry.energyNetwork.tickAllNetworks();
 		NetworkRegistry.liquidNetwork.tickAllNetworks();
