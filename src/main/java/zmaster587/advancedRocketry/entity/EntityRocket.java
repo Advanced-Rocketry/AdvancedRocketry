@@ -507,10 +507,18 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 					int dimId = worldObj.provider.dimensionId;
 
 					if(dimId == Configuration.spaceDimId) {
-						Vector3F<Float> pos = storage.getDestinationCoordinates(dimId, true);
-						storage.setDestinationCoordinates(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ));
-						if(pos != null) {
-							this.travelToDimension(destinationDimId, pos.x, Configuration.orbit, pos.z);
+
+						ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
+
+						if(obj != null) {
+							int targetDimID = obj.getOrbitingPlanetId();
+
+							Vector3F<Float> pos = storage.getDestinationCoordinates(targetDimID, true);
+							if(pos != null) {
+								this.travelToDimension(destinationDimId, pos.x, Configuration.orbit, pos.z);
+							}
+							else 
+								this.setDead();
 						}
 						else
 							this.setDead();
@@ -599,7 +607,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			destinationDimId = storage.getDestinationDimId(this.worldObj.provider.dimensionId, (int)this.posX, (int)this.posZ);
 			if(DimensionManager.getInstance().canTravelTo(destinationDimId)) {
 				Vector3F<Float> pos = storage.getDestinationCoordinates(destinationDimId,true);
-				storage.setDestinationCoordinates(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ));
+				storage.setDestinationCoordinates(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ), this.worldObj.provider.dimensionId);
 				if(pos != null) {
 					this.setInOrbit(true);
 					this.motionY = -this.motionY;
@@ -619,7 +627,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			//If in space land on the planet, if on the planet go to space
 			if(destinationDimId == Configuration.spaceDimId || this.worldObj.provider.dimensionId == Configuration.spaceDimId) {
 				Vector3F<Float> pos = storage.getDestinationCoordinates(destinationDimId, true);
-				storage.setDestinationCoordinates(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ));
+				storage.setDestinationCoordinates(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ), this.worldObj.provider.dimensionId);
 				if(pos != null) {
 
 					//Make player confirm deorbit if a player is riding the rocket

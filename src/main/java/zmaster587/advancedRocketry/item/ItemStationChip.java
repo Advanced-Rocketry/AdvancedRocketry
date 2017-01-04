@@ -20,11 +20,11 @@ public class ItemStationChip extends ItemIdWithName {
 		setHasSubtypes(true);
 	}
 
-	public void setTakeoffCoords(ItemStack stack, Vector3F<Float> pos) {
-		setTakeoffCoords(stack, pos.x, pos.y, pos.z);
+	public void setTakeoffCoords(ItemStack stack, Vector3F<Float> pos, int dimid) {
+		setTakeoffCoords(stack, pos.x, pos.y, pos.z, dimid);
 	}
 
-	public void setTakeoffCoords(ItemStack stack, float x, float y, float z) {
+	public void setTakeoffCoords(ItemStack stack, float x, float y, float z, int dimid) {
 		NBTTagCompound nbt;
 
 		if(stack.hasTagCompound()) 
@@ -32,9 +32,18 @@ public class ItemStationChip extends ItemIdWithName {
 		else 
 			nbt = new NBTTagCompound();
 
-		nbt.setFloat("x", x);
-		nbt.setFloat("y", y);
-		nbt.setFloat("z", z);
+		NBTTagCompound nbtEntry;
+		
+		if(nbt.hasKey("dimid" + dimid)) 
+			nbtEntry = nbt.getCompoundTag("dimid" + dimid);
+		else
+			nbtEntry = new NBTTagCompound();
+		
+		nbtEntry.setFloat("x", x);
+		nbtEntry.setFloat("y", y);
+		nbtEntry.setFloat("z", z);
+		
+		nbt.setTag("dimid" + dimid, nbtEntry);
 
 		stack.setTagCompound(nbt);
 	}
@@ -43,10 +52,11 @@ public class ItemStationChip extends ItemIdWithName {
 	 * @param stack
 	 * @return Vector3F containing the takeoff coords or null if there is none
 	 */
-	public Vector3F<Float> getTakeoffCoords(ItemStack stack) {
+	public Vector3F<Float> getTakeoffCoords(ItemStack stack, int dimid) {
 		if(stack.hasTagCompound()) {
 			NBTTagCompound nbt = stack.getTagCompound();
-			if(nbt.hasKey("x")) {
+			if(nbt.hasKey("dimid" + dimid)) {
+				nbt = nbt.getCompoundTag("dimid" + dimid);
 				return new Vector3F<Float>(nbt.getFloat("x"), nbt.getFloat("y"),nbt.getFloat("z"));
 			}
 		}
