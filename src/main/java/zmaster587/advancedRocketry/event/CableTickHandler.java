@@ -14,17 +14,20 @@ import zmaster587.advancedRocketry.cable.NetworkRegistry;
 import zmaster587.advancedRocketry.tile.cables.TilePipe;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 
 public class CableTickHandler {
 
 	@SubscribeEvent
 	public void onTick(TickEvent.ServerTickEvent tick) {
-		NetworkRegistry.dataNetwork.tickAllNetworks();
-		NetworkRegistry.energyNetwork.tickAllNetworks();
-		NetworkRegistry.liquidNetwork.tickAllNetworks();
+		if(tick.phase ==Phase.END) {
+			NetworkRegistry.dataNetwork.tickAllNetworks();
+			NetworkRegistry.energyNetwork.tickAllNetworks();
+			NetworkRegistry.liquidNetwork.tickAllNetworks();
+		}
 	}
-	
-        @SubscribeEvent
+
+	@SubscribeEvent
 	public void chunkLoadedEvent(ChunkEvent.Load event) {
 
 		Map map = event.getChunk().chunkTileEntityMap;
@@ -47,7 +50,7 @@ public class CableTickHandler {
 			TileEntity homeTile = event.world.getTileEntity(event.x , event.y, event.z);
 
 			if(homeTile instanceof TilePipe) {
-				
+
 				//removed in favor of pipecount
 				//boolean lastInNetwork =true;
 

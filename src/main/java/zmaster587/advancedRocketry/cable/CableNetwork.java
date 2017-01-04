@@ -153,15 +153,14 @@ public class CableNetwork {
 	 * Merges this network with the one specified.  Normally the specified one is removed
 	 * @param cableNetwork
 	 */
-	public void merge(CableNetwork cableNetwork) {
+	public boolean merge(CableNetwork cableNetwork) {
 		sinks.addAll(cableNetwork.getSinks());
 
 		for(Entry<TileEntity, ForgeDirection> obj : cableNetwork.getSinks()) {
 			boolean canMerge = true;
 			for(Entry<TileEntity, ForgeDirection> obj2 : sinks) {
 				if(obj.getKey().xCoord == obj2.getKey().xCoord && obj.getKey().yCoord == obj2.getKey().yCoord && obj.getKey().zCoord == obj2.getKey().zCoord && obj.getValue() == obj2.getValue()) {
-					canMerge = false;
-					break;
+					return false;
 				}
 			}
 
@@ -175,7 +174,7 @@ public class CableNetwork {
 			for(Entry<TileEntity, ForgeDirection> obj2 : sources) {
 				if(obj.getKey().xCoord == obj2.getKey().xCoord && obj.getKey().yCoord == obj2.getKey().yCoord && obj.getKey().zCoord == obj2.getKey().zCoord && obj.getValue() == obj2.getValue()) {
 					canMerge = false;
-					break;
+					return false;
 				}
 			}
 
@@ -183,6 +182,7 @@ public class CableNetwork {
 				sources.add(obj);
 			}
 		}
+		return true;
 	}
 
 	public void tick() {
