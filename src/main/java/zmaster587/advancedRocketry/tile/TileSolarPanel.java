@@ -41,6 +41,7 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 		}
 		else if(worldObj.isRemote)
 			text.setText("Unable to collect Energy");
+		transmitPower();
 	}
 	
 	@Override
