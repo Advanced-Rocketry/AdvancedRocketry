@@ -963,7 +963,6 @@ public class AdvancedRocketry {
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryItems.itemQuartzCrucible), " a ", "aba", " a ", Character.valueOf('a'), Items.quartz, Character.valueOf('b'), Items.cauldron);
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockPlatePress, "   ", " a ", "iii", 'a', Blocks.piston, 'i', Items.iron_ingot));
 		GameRegistry.addRecipe(new ShapedOreRecipe(MaterialRegistry.getItemStackFromMaterialAndType("Iron", AllowedProducts.getProductByName("STICK")), "x  ", " x ", "  x", 'x', "ingotIron"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(MaterialRegistry.getItemStackFromMaterialAndType("Steel", AllowedProducts.getProductByName("STICK")), "x  ", " x ", "  x", 'x', "ingotSteel"));
 		GameRegistry.addSmelting(MaterialRegistry.getMaterialFromName("Dilithium").getProduct(AllowedProducts.getProductByName("ORE")), MaterialRegistry.getMaterialFromName("Dilithium").getProduct(AllowedProducts.getProductByName("DUST")), 0);
 
 		//Supporting Materials
@@ -1327,8 +1326,11 @@ public class AdvancedRocketry {
 
 			if(AllowedProducts.getProductByName("STICK").isOfType(ore.getAllowedProducts()) && AllowedProducts.getProductByName("INGOT").isOfType(ore.getAllowedProducts())) {
 				for(String name : ore.getOreDictNames())
-					if(OreDictionary.doesOreNameExist(AllowedProducts.getProductByName("INGOT").name().toLowerCase() + name))
+					if(OreDictionary.doesOreNameExist(AllowedProducts.getProductByName("INGOT").name().toLowerCase() + name)) {
+						GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("STICK")), "x  ", " x ", "  x", 'x', AllowedProducts.getProductByName("INGOT").name().toLowerCase() + name));
+						
 						RecipesMachine.getInstance().addRecipe(TileLathe.class, ore.getProduct(AllowedProducts.getProductByName("STICK")), 300, 20, AllowedProducts.getProductByName("INGOT").name().toLowerCase() + name); //ore.getProduct(AllowedProducts.getProductByName("INGOT")));
+					}
 			}
 
 			if(AllowedProducts.getProductByName("PLATE").isOfType(ore.getAllowedProducts())) {
@@ -1481,19 +1483,19 @@ public class AdvancedRocketry {
 
 		for(String str : entityList) {
 			Class clazz = (Class) EntityList.stringToClassMapping.get(str);
-			
+
 			//If not using string name maybe it's a class name?
 			if(clazz == null) {
 				try {
 					clazz = Class.forName(str);
 					if(clazz != null && !Entity.class.isAssignableFrom(clazz))
 						clazz = null;
-					
+
 				} catch (Exception e) {
 					//Fail silently
 				}
 			}
-			
+
 			if(clazz != null) {
 				logger.fine("Registering " + clazz.getName() + " for atmosphere bypass");
 				zmaster587.advancedRocketry.api.Configuration.bypassEntity.add(clazz);
