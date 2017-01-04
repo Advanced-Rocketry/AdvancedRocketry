@@ -20,13 +20,14 @@ public class CableTickHandler {
 
 	@SubscribeEvent
 	public void onTick(TickEvent.ServerTickEvent tick) {
-		if(tick.phase == Phase.END)
-		NetworkRegistry.dataNetwork.tickAllNetworks();
-		NetworkRegistry.energyNetwork.tickAllNetworks();
-		NetworkRegistry.liquidNetwork.tickAllNetworks();
+		if(tick.phase == Phase.END) {
+			NetworkRegistry.dataNetwork.tickAllNetworks();
+			NetworkRegistry.energyNetwork.tickAllNetworks();
+			NetworkRegistry.liquidNetwork.tickAllNetworks();
+		}
 	}
-	
-        @SubscribeEvent
+
+	@SubscribeEvent
 	public void chunkLoadedEvent(ChunkEvent.Load event) {
 
 		Map map = event.getChunk().getTileEntityMap();
@@ -49,7 +50,7 @@ public class CableTickHandler {
 			TileEntity homeTile = event.getWorld().getTileEntity(event.getPos());
 
 			if(homeTile instanceof TilePipe) {
-				
+
 				//removed in favor of pipecount
 				//boolean lastInNetwork =true;
 

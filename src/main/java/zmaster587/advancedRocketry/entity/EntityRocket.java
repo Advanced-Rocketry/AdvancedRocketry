@@ -441,7 +441,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		return true;
 	}
 
-	
+
 	public void openGui(EntityPlayer player) {
 		player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULAR.ordinal(), player.worldObj, this.getEntityId(), -1,0);
 
@@ -604,10 +604,18 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					int dimId = worldObj.provider.getDimension();
 
 					if(dimId == Configuration.spaceDimId) {
-						Vector3F<Float> pos = storage.getDestinationCoordinates(dimId, true);
-						storage.setDestinationCoordinates(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ));
-						if(pos != null) {
-							this.changeDimension(destinationDimId, pos.x, Configuration.orbit, pos.z);
+
+						ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(getPosition());
+
+						if(obj != null) {
+							int targetDimID = obj.getOrbitingPlanetId();
+
+							Vector3F<Float> pos = storage.getDestinationCoordinates(targetDimID, true);
+							if(pos != null) {
+								this.changeDimension(destinationDimId, pos.x, Configuration.orbit, pos.z);
+							}
+							else 
+								this.setDead();
 						}
 						else
 							this.setDead();
@@ -696,7 +704,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			destinationDimId = storage.getDestinationDimId(this.worldObj.provider.getDimension(), (int)this.posX, (int)this.posZ);
 			if(DimensionManager.getInstance().canTravelTo(destinationDimId)) {
 				Vector3F<Float> pos = storage.getDestinationCoordinates(destinationDimId, true);
-				storage.setDestinationCoordinates(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ));
+				storage.setDestinationCoordinates(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ), this.worldObj.provider.getDimension());
 				if(pos != null) {
 					this.setInOrbit(true);
 					this.motionY = -this.motionY;
@@ -716,7 +724,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			//If in space land on the planet, if on the planet go to space
 			if(destinationDimId == Configuration.spaceDimId || this.worldObj.provider.getDimension() == Configuration.spaceDimId) {
 				Vector3F<Float> pos = storage.getDestinationCoordinates(destinationDimId, true);
-				storage.setDestinationCoordinates(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ));
+				storage.setDestinationCoordinates(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ), this.worldObj.provider.getDimension());
 				if(pos != null) {
 
 					//Make player confirm deorbit if a player is riding the rocket
@@ -796,7 +804,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 			if(vec != null)
 				obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(vec.x, vec.y, vec.z));
-			
+
 			if( obj != null)
 				finalDest = obj.getOrbitingPlanetId();
 			else { 
