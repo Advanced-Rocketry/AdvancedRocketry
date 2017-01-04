@@ -21,6 +21,11 @@ public class WorldGenAlienTree extends WorldGenAbstractTree {
 		super(p_i45461_1_);
 	}
 
+	
+	@Override
+	protected boolean canGrowInto(Block blockType) {
+		return super.canGrowInto(blockType) || blockType == AdvancedRocketryBlocks.blockAlienSapling || blockType == AdvancedRocketryBlocks.blockAlienWood || blockType == AdvancedRocketryBlocks.blockAlienLeaves;
+	}
 
 	@Override
 	public boolean generate(World world, Random random, BlockPos pos) {
@@ -57,7 +62,8 @@ public class WorldGenAlienTree extends WorldGenAbstractTree {
 						if (treeHeightIterator >= 0 && treeHeightIterator < 256)
 						{
 
-							if (!this.isReplaceable(world, new BlockPos(j1, treeHeightIterator, k1)))
+							BlockPos newPos =  new BlockPos(j1, treeHeightIterator, k1);
+							if (!this.isReplaceable(world,newPos))
 							{
 								flag = false;
 							}

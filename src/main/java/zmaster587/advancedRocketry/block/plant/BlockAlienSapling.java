@@ -48,38 +48,12 @@ public class BlockAlienSapling extends  BlockBush implements IGrowable {
         Object object = new WorldGenAlienTree(true);
         int i1 = 0;
         int j1 = 0;
-        boolean flag = false;
-
-        
-        Block block = Blocks.AIR;
-        
-        flag = true;
-
-        if (flag)
-        {
-        	world.setBlockState(pos.add(i1, 0, j1), block.getDefaultState(), 4);
-        	world.setBlockState(pos.add(i1+1, 0, j1), block.getDefaultState(), 4);
-        	world.setBlockState(pos.add(i1+1, 0, j1+1), block.getDefaultState(), 4);
-        	world.setBlockState(pos.add(i1, 0, j1+1), block.getDefaultState(), 4);
-        }
-        else
-        {
-            world.setBlockState(pos, block.getDefaultState(), 4);
-        }
 
         if (!((WorldGenerator)object).generate(world, random, pos.add(i1, 0, j1)))
         {
-            if (flag)
-            {
-            	world.setBlockState(pos.add(i1,0,j1), l, 4);
-            	world.setBlockState(pos.add(i1 + 1,0,j1), l, 4);
-            	world.setBlockState(pos.add(i1 + 1, 0,j1 + 1), l, 4);
-            	world.setBlockState(pos.add(i1, 0,j1 + 1), l, 4);
-            }
-            else
-            {
-            	world.setBlockState(pos, l, 4);
-            }
+            
+            world.setBlockState(pos, l, 4);
+            
         }
     }
     
