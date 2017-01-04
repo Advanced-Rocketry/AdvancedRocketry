@@ -18,6 +18,14 @@ public class WorldGenAlienTree extends WorldGenAbstractTree {
 	{
 		super(p_i45461_1_);
 	}
+	
+	
+	// CanGrowInto
+	@Override
+	protected boolean func_150523_a(Block blockType) {
+		return super.func_150523_a(blockType) || blockType == AdvancedRocketryBlocks.blockAlienSapling || blockType == AdvancedRocketryBlocks.blockAlienWood || blockType == AdvancedRocketryBlocks.blockAlienLeaves;
+	}
+
 
 
 	public boolean generate(World world, Random random, int x, int y, int z)
