@@ -17,6 +17,7 @@ import zmaster587.libVulpes.util.BlockPosition;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -29,6 +30,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 	boolean executing;
 	BlockPosition blockPos;
+	List<AreaBlob> nearbyBlobs;
 
 	public AtmosphereBlob(IBlobHandler blobHandler) {
 		super(blobHandler);
@@ -50,17 +52,23 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	}
 
 	@Override
-	public boolean isPositionAllowed(World world, BlockPosition pos) {
+	public boolean isPositionAllowed(World world, BlockPosition pos,  List<AreaBlob> otherBlobs) {
+		for(AreaBlob blob : otherBlobs) {
+			if(blob.contains(pos))
+				return false;
+		}
+		
 		return !SealableBlockHandler.INSTANCE.isBlockSealed(world, pos);
 	}
 
 	@Override
-	public void addBlock(BlockPosition blockPos) {
+	public void addBlock(BlockPosition blockPos, List<AreaBlob> otherBlobs) {
 
 		if(blobHandler.canFormBlob()) {
 
 			if(!this.contains(blockPos)) {
 				if(!executing) {
+					this.nearbyBlobs = otherBlobs;
 					this.blockPos = blockPos;
 					executing = true;
 					if((Configuration.atmosphereHandleBitMask & 1) == 1)
@@ -97,7 +105,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 					try {
 
-						sealed = SealableBlockHandler.INSTANCE.isBlockSealed(blobHandler.getWorld(), searchNextPosition);
+						sealed = !isPositionAllowed(blobHandler.getWorld(), searchNextPosition, nearbyBlobs);//SealableBlockHandler.INSTANCE.isBlockSealed(blobHandler.getWorld(), searchNextPosition);
 
 
 						if(!sealed) {
@@ -129,7 +137,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 		//only one instance can editing this at a time because this will not run again b/c "worker" is not null
 
 		for(BlockPosition blockPos2 : addableBlocks) {
-			super.addBlock(blockPos2);
+			super.addBlock(blockPos2, nearbyBlobs);
 		}
 
 		executing = false;

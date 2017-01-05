@@ -109,11 +109,12 @@ public class AtmosphereHandler {
 	}
 
 	private void onBlockRemove(BlockPosition pos) {
-		for(AreaBlob blob : getBlobWithinRadius(pos, MAX_BLOB_RADIUS)) {
+		List<AreaBlob> blobs = getBlobWithinRadius(pos, MAX_BLOB_RADIUS);
+		for(AreaBlob blob : blobs) {
 			//Make sure that a block can actually be attached to the blob
 			for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 				if(blob.contains(pos.getPositionAtOffset(dir.offsetX, dir.offsetY, dir.offsetZ))) {
-					blob.addBlock(pos);
+					blob.addBlock(pos, blobs);
 					break;
 				}
 		}
@@ -137,14 +138,15 @@ public class AtmosphereHandler {
 			if(handler == null)
 				return; //WTF
 
-			for(AreaBlob blob : handler.getBlobWithinRadius(pos, MAX_BLOB_RADIUS)) {
+			List<AreaBlob> nearbyBlobs = handler.getBlobWithinRadius(pos, MAX_BLOB_RADIUS);
+			for(AreaBlob blob : nearbyBlobs) {
 
-				if(blob.contains(pos) && !blob.isPositionAllowed(world, pos))
+				if(blob.contains(pos) && !blob.isPositionAllowed(world, pos, nearbyBlobs))
 					blob.removeBlock(x, y, z);
-				else if(!blob.contains(pos) && blob.isPositionAllowed(world, pos))
+				else if(!blob.contains(pos) && blob.isPositionAllowed(world, pos, nearbyBlobs))
 					handler.onBlockRemove(pos);
-				else if(!blob.contains(pos) && !blob.isPositionAllowed(world, pos) && blob.getBlobSize() == 0) {
-					blob.addBlock(blob.getRootPosition());
+				else if(!blob.contains(pos) && !blob.isPositionAllowed(world, pos ,nearbyBlobs) && blob.getBlobSize() == 0) {
+					blob.addBlock(blob.getRootPosition(), nearbyBlobs);
 				}
 			}
 		}
@@ -161,7 +163,8 @@ public class AtmosphereHandler {
 			if(handler == null)
 				return; //WTF
 
-			for(AreaBlob blob : handler.getBlobWithinRadius(pos, MAX_BLOB_RADIUS)) {
+			List<AreaBlob> nearbyBlobs = handler.getBlobWithinRadius(pos, MAX_BLOB_RADIUS);
+			for(AreaBlob blob : nearbyBlobs) {
 
 				if(world.isAirBlock(x, y, z))
 					handler.onBlockRemove(pos);
@@ -171,7 +174,7 @@ public class AtmosphereHandler {
 						blob.removeBlock(x, y, z);
 					}
 					else if(!blob.contains(blob.getRootPosition())) {
-						blob.addBlock(blob.getRootPosition());
+						blob.addBlock(blob.getRootPosition(), nearbyBlobs);
 					}
 				}
 			}
@@ -256,7 +259,7 @@ public class AtmosphereHandler {
 	 */
 	public void addBlock(IBlobHandler handler, BlockPosition pos){
 		AreaBlob blob = blobs.get(handler);
-		blob.addBlock(pos);
+		blob.addBlock(pos, getBlobWithinRadius(pos, MAX_BLOB_RADIUS));
 	}
 
 	/**

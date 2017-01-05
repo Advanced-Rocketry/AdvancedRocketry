@@ -28,7 +28,7 @@ public class AreaBlob {
 		data = obj;
 	}
 	
-	public boolean isPositionAllowed(World world, BlockPosition pos) {
+	public boolean isPositionAllowed(World world, BlockPosition pos,  List<AreaBlob> otherBlobs) {
 		return true;
 	}
 	
@@ -46,16 +46,16 @@ public class AreaBlob {
 	 * @param y
 	 * @param z
 	 */
-	public void addBlock(int x, int y , int z) {
+	public void addBlock(int x, int y , int z, List<AreaBlob> otherBlobs) {
 		BlockPosition blockPos = new BlockPosition(x, y, z);
-		addBlock(blockPos);
+		addBlock(blockPos, otherBlobs);
 	}
 	
 	/**
 	 * Adds a block to the graph
 	 * @param blockPos block to add
 	 */
-	public void addBlock(BlockPosition blockPos) {
+	public void addBlock(BlockPosition blockPos,  List<AreaBlob> otherBlobs) {
 		if(!graph.contains(blockPos) && blobHandler.canFormBlob()) {
 			graph.add(blockPos, getPositionsToAdd(blockPos));
 		}
