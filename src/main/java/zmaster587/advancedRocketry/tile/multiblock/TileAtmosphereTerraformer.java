@@ -17,6 +17,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
@@ -386,18 +387,14 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 		}
 	}
 	
-	public String getSound() {
-		return "advancedrocketry:MachineLarge";
-	};
+	@Override
+	public ResourceLocation getSound() {
+		return zmaster587.advancedRocketry.inventory.TextureResources.sndMachineLarge;
+	}
 	
 	@Override
 	public int getSoundDuration() {
 		return 80;
-	}
-	
-	@Override
-	protected void playMachineSound(String str) {
-    		worldObj.playSound(xCoord, yCoord + 7, zCoord, str, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.BLOCKS),  0.975f + worldObj.rand.nextFloat()*0.05f, false);
 	}
 
 	@Override

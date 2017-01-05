@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.inventory.TextureResources;
@@ -43,8 +44,8 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 	}
 	
 	@Override
-	public String getSound() {
-		return "advancedrocketry:rollingMachine";
+	public ResourceLocation getSound() {
+		return TextureResources.sndRollingMachine;
 	}
 
 	@Override

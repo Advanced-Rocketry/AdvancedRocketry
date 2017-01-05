@@ -3,6 +3,10 @@ package zmaster587.advancedRocketry.tile.oxygen;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -15,7 +19,11 @@ import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.api.AreaBlob;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.IToggleableMachine;
+import zmaster587.libVulpes.client.RepeatingSound;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleLiquidIndicator;
@@ -28,11 +36,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBlobHandler, IModularInventory, IAdjBlockUpdate {
+public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBlobHandler, IModularInventory, IAdjBlockUpdate, IToggleableMachine {
 
 	boolean isSealed;
 	boolean firstRun;
 	boolean hasFluid;
+	boolean soundInit;
 	int numScrubbers;
 	List<TileCO2Scrubber> scrubbers;
 
@@ -41,6 +50,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		isSealed = true;
 		firstRun = true;
 		hasFluid = true;
+		soundInit = false;
 		numScrubbers = 0;
 		scrubbers = new LinkedList<TileCO2Scrubber>();
 	}
@@ -50,6 +60,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		isSealed = false;
 		firstRun = false;
 		hasFluid = true;
+		soundInit = false;
 		scrubbers = new LinkedList<TileCO2Scrubber>();
 	}
 
@@ -62,7 +73,6 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	public void updateEntity() {
 
 		if(canPerformFunction()) {
-
 			if(hasEnoughEnergy(getPowerPerOperation())) {
 				performFunction();
 				if(!worldObj.isRemote && isSealed) this.energy.extractEnergy(getPowerPerOperation(), false);
@@ -70,8 +80,25 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 			else
 				notEnoughEnergyForFunction();
 		}
+		
+		if(!soundInit && worldObj.isRemote) {
+			LibVulpes.proxy.playSound(new RepeatingSound(TextureResources.sndHiss, this));
+		}
+		soundInit = true;
 	}
 
+	@Override
+	public Packet getDescriptionPacket() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setBoolean("sealed", isSealed);
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, nbt);
+	}
+	
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		isSealed = pkt.func_148857_g().getBoolean("sealed");
+	}
+	
 	@Override
 	public World getWorld() {
 		return getWorldObj();
@@ -103,6 +130,9 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		numScrubbers = toggleAdjBlock(this.xCoord - 1, this.yCoord, this.zCoord, true) ? numScrubbers + 1 : numScrubbers;
 		numScrubbers = toggleAdjBlock(this.xCoord, this.yCoord, this.zCoord + 1, true) ? numScrubbers + 1 : numScrubbers;
 		numScrubbers = toggleAdjBlock(this.xCoord, this.yCoord, this.zCoord - 1, true) ? numScrubbers + 1 : numScrubbers;
+		
+		markDirty();
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	private void deactivateAdjblocks() {
@@ -110,6 +140,9 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		toggleAdjBlock(this.xCoord - 1, this.yCoord, this.zCoord, false);
 		toggleAdjBlock(this.xCoord, this.yCoord, this.zCoord + 1, false);
 		toggleAdjBlock(this.xCoord, this.yCoord, this.zCoord - 1, false);
+		
+		markDirty();
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	private boolean toggleAdjBlock(int x, int y, int z, boolean on) {
@@ -155,12 +188,15 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		 */
 
 		//IF first tick then register the blob and check for scrubbers
-		if(firstRun && !worldObj.isRemote) {
-			AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).registerBlob(this, xCoord, yCoord, zCoord);
+		if(firstRun) {
+			if(!worldObj.isRemote) {
+				AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).registerBlob(this, xCoord, yCoord, zCoord);
 
-			onAdjacentBlockUpdated();
-			//isSealed starts as true so we can accurately check for scrubbers, we now set it to false to force the tile to check for a seal on first run
-			isSealed = false;
+				onAdjacentBlockUpdated();
+				//isSealed starts as true so we can accurately check for scrubbers, we now set it to false to force the tile to check for a seal on first run
+				isSealed = false;
+				
+			}
 			firstRun = false;
 		}
 
@@ -181,8 +217,8 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 			}
 
 			if(isSealed) {
-				if(worldObj.getTotalWorldTime() % 30 == 0)
-					worldObj.playSoundEffect(xCoord, yCoord, zCoord, "advancedrocketry:airHissLoop", 0.3f,  0.975f + worldObj.rand.nextFloat()*0.05f);
+				//if(worldObj.getTotalWorldTime() % 30 == 0)
+					//worldObj.playSoundEffect(xCoord, yCoord, zCoord, "advancedrocketry:airHissLoop", 0.3f,  0.975f + worldObj.rand.nextFloat()*0.05f);
 
 				//If scrubbers exist and the config allows then use the cartridge
 				if(Configuration.scrubberRequiresCartrige){
@@ -286,5 +322,10 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	@Override
 	public boolean canFormBlob() {
 		return worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+	}
+
+	@Override
+	public boolean isRunning() {
+		return isSealed;
 	}
 }

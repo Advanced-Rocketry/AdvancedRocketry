@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.inventory.TextureResources;
@@ -46,8 +47,8 @@ public class TileLathe extends TileMultiblockMachine implements IModularInventor
 	}
 	
 	@Override
-	public String getSound() {
-		return "advancedrocketry:rollingMachine";
+	public ResourceLocation getSound() {
+		return TextureResources.sndRollingMachine;
 	}
 
 	@Override

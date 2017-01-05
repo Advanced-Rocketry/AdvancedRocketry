@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -74,8 +75,8 @@ public class TileRollingMachine extends TileMultiblockMachine {
 	}
 
 	@Override
-	public String getSound() {
-		return "advancedrocketry:rollingMachine";
+	public ResourceLocation getSound() {
+		return TextureResources.sndRollingMachine;
 	}
 
 	@Override

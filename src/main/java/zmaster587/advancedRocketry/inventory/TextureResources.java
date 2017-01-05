@@ -31,6 +31,10 @@ public class TextureResources {
 	public static final  ResourceLocation diamondMetal = new ResourceLocation("advancedRocketry:textures/models/diamondMetal.png");
 	public static final  ResourceLocation fan = new ResourceLocation("advancedRocketry:textures/models/fan.png");
 	
+	public static final ResourceLocation sndMachineLarge = new ResourceLocation("advancedrocketry:MachineLarge");
+	public static final ResourceLocation sndRollingMachine = new ResourceLocation("advancedrocketry:rollingMachine");
+	public static final ResourceLocation sndHiss = new ResourceLocation("advancedrocketry:airHissLoop");
+	
 	public static final IconResource ioSlot = new IconResource(212, 0, 18, 18, null);
 	public static final IconResource idChip = new IconResource(230, 0, 18, 18, null);
 	public static final IconResource functionComponent = new IconResource(212, 18, 18, 18, null);
