@@ -24,10 +24,13 @@ import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.advancedRocketry.api.AreaBlob;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.IToggleableMachine;
 import zmaster587.libVulpes.block.BlockTile;
+import zmaster587.libVulpes.client.RepeatingSound;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleLiquidIndicator;
@@ -40,11 +43,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBlobHandler, IModularInventory, IAdjBlockUpdate {
+public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBlobHandler, IModularInventory, IAdjBlockUpdate, IToggleableMachine {
 
 	boolean isSealed;
 	boolean firstRun;
 	boolean hasFluid;
+	boolean soundInit;
 	int numScrubbers;
 	List<TileCO2Scrubber> scrubbers;
 
@@ -53,6 +57,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		isSealed = true;
 		firstRun = true;
 		hasFluid = true;
+		soundInit = false;
 		numScrubbers = 0;
 		scrubbers = new LinkedList<TileCO2Scrubber>();
 	}
@@ -62,6 +67,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		isSealed = false;
 		firstRun = false;
 		hasFluid = true;
+		soundInit = false;
 		scrubbers = new LinkedList<TileCO2Scrubber>();
 	}
 
@@ -224,8 +230,10 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 			else
 				notEnoughEnergyForFunction();
 		}
-		if(worldObj.isRemote && isSealed && worldObj.getTotalWorldTime() % 30 == 0)
-			LibVulpes.proxy.playSound(worldObj, pos, AudioRegistry.airHissLoop, SoundCategory.BLOCKS,  0.2f,  0.975f + worldObj.rand.nextFloat()*0.05f);
+		if(!soundInit && worldObj.isRemote) {
+			LibVulpes.proxy.playSound(new RepeatingSound(AudioRegistry.airHissLoop, SoundCategory.BLOCKS, this));
+		}
+		soundInit = true;
 	}
 
 
@@ -330,5 +338,10 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	@Override
 	public boolean canFormBlob() {
 		return worldObj.isBlockIndirectlyGettingPowered(pos) > 0;
+	}
+	
+	@Override
+	public boolean isRunning() {
+		return isSealed;
 	}
 }
