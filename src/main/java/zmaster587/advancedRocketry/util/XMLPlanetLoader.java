@@ -213,6 +213,9 @@ public class XMLPlanetLoader {
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("oreGen")) {
 				properties.oreProperties = XMLOreLoader.loadOre(planetPropertyNode);
 			}
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("hasRings")) {
+				properties.hasRings = Boolean.parseBoolean(planetPropertyNode.getTextContent());
+			}
 
 			planetPropertyNode = planetPropertyNode.getNextSibling();
 		}

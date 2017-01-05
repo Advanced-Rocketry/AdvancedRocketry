@@ -1046,6 +1046,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		isNativeDimension = nbt.hasKey("isNative") ? nbt.getBoolean("isNative") : true; //Prevent world breakages when loading from old version
 		isGasGiant = nbt.getBoolean("isGasGiant");
 		isTerraformed = nbt.getBoolean("terraformed");
+		hasRings = nbt.getBoolean("hasRings");
 
 		//Hierarchy
 		if(nbt.hasKey("childrenPlanets")) {
