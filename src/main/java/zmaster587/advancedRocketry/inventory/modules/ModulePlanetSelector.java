@@ -137,7 +137,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			int offsetX = star.getPosX() + posX - displaySize/2; 
 			int offsetY = star.getPosZ() + posY - displaySize/2;
 			ModuleButton button;
-			planetList.add(button = new ModuleButton(offsetX, offsetY, star.getId() + starIdOffset, "", this, new ResourceLocation[] { TextureResources.locationSunPng }, String.format("Name: %s\nNumber of Planets: %d",star.getName(), star.getNumPlanets()), displaySize, displaySize));
+			planetList.add(button = new ModuleButton(offsetX, offsetY, star.getId() + starIdOffset, "", this, new ResourceLocation[] { TextureResources.locationSunNew }, String.format("Name: %s\nNumber of Planets: %d",star.getName(), star.getNumPlanets()), displaySize, displaySize));
 
 			button.setSound("buttonBlipA");
 			button.setBGColor(star.getColorRGB8());
@@ -159,7 +159,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		int offsetY = posY - displaySize/2; 
 
 		ModuleButton button;
-		planetList.add(button = new ModuleButton(offsetX, offsetY, star.getId() + starIdOffset, "", this, new ResourceLocation[] { TextureResources.locationSunPng }, String.format("Name: %s\nNumber of Planets: %d",star.getName(), star.getNumPlanets()), displaySize, displaySize));
+		planetList.add(button = new ModuleButton(offsetX, offsetY, star.getId() + starIdOffset, "", this, new ResourceLocation[] { TextureResources.locationSunNew }, String.format("Name: %s\nNumber of Planets: %d",star.getName(), star.getNumPlanets()), displaySize, displaySize));
 
 		button.setSound("buttonBlipA");
 		button.setBGColor(star.getColorRGB8());

@@ -134,14 +134,14 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public static final ResourceLocation shadow = new ResourceLocation("advancedrocketry:textures/planets/shadow.png");
 	
 	public static enum PlanetIcons {
-		EARTHLIKE(new ResourceLocation("advancedrocketry:textures/planets/Earthlike2.png")),
-		LAVA(new ResourceLocation("advancedrocketry:textures/planets/lava2.png")),
-		MARSLIKE(new ResourceLocation("advancedrocketry:textures/planets/marslike2.png")),
-		MOON(new ResourceLocation("advancedrocketry:textures/planets/moon2.png")),
+		EARTHLIKE(new ResourceLocation("advancedrocketry:textures/planets/Earthlike.png")),
+		LAVA(new ResourceLocation("advancedrocketry:textures/planets/lava.png")),
+		MARSLIKE(new ResourceLocation("advancedrocketry:textures/planets/marslike.png")),
+		MOON(new ResourceLocation("advancedrocketry:textures/planets/moon.png")),
 		WATERWORLD(new ResourceLocation("advancedrocketry:textures/planets/WaterWorld.png")),
-		ICEWORLD(new ResourceLocation("advancedrocketry:textures/planets/IceWorld2.png")),
-		GASGAINTBLUE(new ResourceLocation("advancedrocketry:textures/planets/GasGiantBlue2.png")),
-		GASGAINTRED(new ResourceLocation("advancedrocketry:textures/planets/GasGiantOrange2.png")),
+		ICEWORLD(new ResourceLocation("advancedrocketry:textures/planets/IceWorld.png")),
+		GASGAINTBLUE(new ResourceLocation("advancedrocketry:textures/planets/GasGiantBlue.png")),
+		GASGAINTRED(new ResourceLocation("advancedrocketry:textures/planets/GasGiantOrange.png")),
 		UNKNOWN(new ResourceLocation("advancedrocketry:textures/planets/Unknown.png"))
 		;
 
