@@ -237,10 +237,29 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		if(this.worldObj.getTotalWorldTime() < this.lastErrorTime + ERROR_DISPLAY_TIME)
 			return errorStr;
 
+		//Get destination string
+		String displayStr = "N/A";
+		int dimid = storage.getDestinationDimId(this.worldObj.provider.getDimension(), (int)posX, (int)posZ);
+
+		if(dimid == Configuration.spaceDimId) {
+			Vector3F<Float> vec = storage.getDestinationCoordinates(dimid, false);
+			if(vec != null) {
+
+				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(vec.x,vec.y,vec.z));
+
+				if(obj != null) {
+					displayStr = "Station " + obj.getId();
+				}
+			}
+		}
+		else if(dimid != -1 && dimid != SpaceObjectManager.WARPDIMID) {
+			displayStr = DimensionManager.getInstance().getDimensionProperties(dimid).getName();
+		}
+
 		if(isInOrbit() && !isInFlight())
 			return "Press Space to descend!";
 		else if(!isInFlight())
-			return "Press Space to take off!";
+			return "Press Space to take off!\nDest: " + displayStr;
 
 		return super.getTextOverlay();
 	}
@@ -489,11 +508,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 		return false;
 	}
-	
+
 	public boolean isDescentPhase() {
 		return Configuration.automaticRetroRockets && isInOrbit() && this.posY < 300 && (this.motionY < -0.4f || worldObj.isRemote);
 	}
-	
+
 	public boolean areEnginesRunning() {
 		return (this.motionY > 0 || isDescentPhase() || (getPassengerMovingForward() > 0));
 	}
@@ -517,7 +536,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					itr.remove();
 				}
 			}
-			
+
 			if(worldObj.isRemote)
 				LibVulpes.proxy.playSound(new SoundRocketEngine( AudioRegistry.combustionRocket, SoundCategory.NEUTRAL,this));
 		}
@@ -1141,7 +1160,16 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			storage.writeToNetwork(out);
 		}
 		else if(id == PacketType.SENDPLANETDATA.ordinal()) {
-			out.writeInt(container.getSelectedSystem());
+			if(worldObj.isRemote)
+				out.writeInt(container.getSelectedSystem());
+			else {
+				if(storage.getGuidanceComputer() != null) {
+					ItemStack stack = storage.getGuidanceComputer().getStackInSlot(0);
+					if(stack != null && stack.getItem() == AdvancedRocketryItems.itemPlanetIdChip) {
+						out.writeInt(((ItemPlanetIdentificationChip)AdvancedRocketryItems.itemPlanetIdChip).getDimensionId(stack));
+					}
+				}
+			}
 		}
 	}
 
@@ -1200,6 +1228,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			ItemStack stack = storage.getGuidanceComputer().getStackInSlot(0);
 			if(stack != null && stack.getItem() == AdvancedRocketryItems.itemPlanetIdChip) {
 				((ItemPlanetIdentificationChip)AdvancedRocketryItems.itemPlanetIdChip).setDimensionId(stack, nbt.getInteger("selection"));
+
+				if(!worldObj.isRemote) {
+					PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, (byte)PacketType.SENDPLANETDATA.ordinal()), this);
+				}
 			}
 		}
 		else if(id == PacketType.DISCONNECTINFRASTRUCTURE.ordinal()) {
