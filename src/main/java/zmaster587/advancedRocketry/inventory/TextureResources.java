@@ -34,6 +34,12 @@ public class TextureResources {
 	public static final ResourceLocation sndMachineLarge = new ResourceLocation("advancedrocketry:MachineLarge");
 	public static final ResourceLocation sndRollingMachine = new ResourceLocation("advancedrocketry:rollingMachine");
 	public static final ResourceLocation sndHiss = new ResourceLocation("advancedrocketry:airHissLoop");
+	public static final ResourceLocation sndCombustionRocket = new ResourceLocation("advancedrocketry:combustionRocket");
+	public static final ResourceLocation sndCrystallizer = new ResourceLocation("advancedrocketry:crystallizer");
+	public static final ResourceLocation sndCuttingMachine = new ResourceLocation("advancedrocketry:cuttingMachine");
+	public static final ResourceLocation sndElectricArcFurnace = new ResourceLocation("advancedrocketry:electricArcFurnace");
+	public static final ResourceLocation sndElectrolyser = new ResourceLocation("advancedrocketry:electrolyser");
+	public static final ResourceLocation sndPrecAss = new ResourceLocation("advancedrocketry:precAss");
 	
 	public static final IconResource ioSlot = new IconResource(212, 0, 18, 18, null);
 	public static final IconResource idChip = new IconResource(230, 0, 18, 18, null);

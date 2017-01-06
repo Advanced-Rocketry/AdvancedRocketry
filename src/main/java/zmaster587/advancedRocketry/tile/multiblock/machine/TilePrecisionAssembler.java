@@ -26,6 +26,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class TilePrecisionAssembler extends TileMultiblockMachine implements IModularInventory, IProgressBar {
@@ -58,6 +59,11 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 		list.addAll(TileMultiBlock.getMapping('P'));
 
 		return list;
+	}
+	
+	@Override
+	public ResourceLocation getSound() {
+		return TextureResources.sndPrecAss;
 	}
 
 	@Override

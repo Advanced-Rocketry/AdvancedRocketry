@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
@@ -72,6 +73,12 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockBlastBrick, -1));
 		return list;
 	}
+	
+	@Override
+	public ResourceLocation getSound() {
+		return TextureResources.sndElectricArcFurnace;
+	}
+	
 	//Since this doesn't have a render just set the meta and masterBlock
 	@Override
 	protected void replaceStandardBlock(int xCoord, int yCoord, int zCoord,	Block block, TileEntity tile) {

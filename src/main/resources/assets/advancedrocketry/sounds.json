@@ -6,5 +6,11 @@
 "airHissLoop": {"category": "master","sounds": [{"name": "airHissLoop","stream": false}]},
 "railgunBang": {"category": "master","sounds": [{"name": "railgunBang","stream": false}]},
 "laserDrill": {"category": "master","sounds": [{"name": "laserDrill","stream": false}]},
-"basicLaserGun": {"category": "master","sounds": [{"name": "basicLaserGun","stream": false}]}
+"combustionRocket": {"category": "master","sounds": [{"name": "combustionRocket","stream": false}]},
+"crystallizer": {"category": "master","sounds": [{"name": "crystallizer","stream": false}]},
+"cuttingMachine": {"category": "master","sounds": [{"name": "cuttingMachine","stream": false}]},
+"electricArcFurnace": {"category": "master","sounds": [{"name": "electricArcFurnace","stream": false}]},
+"electrolyser": {"category": "master","sounds": [{"name": "electrolyser","stream": false}]},
+"precAss": {"category": "master","sounds": [{"name": "precAss","stream": false}]},
+"basicLaserGun": {"category": "master", "sounds": [{"name": "basicLaserGun", "stream": false}]}
 }

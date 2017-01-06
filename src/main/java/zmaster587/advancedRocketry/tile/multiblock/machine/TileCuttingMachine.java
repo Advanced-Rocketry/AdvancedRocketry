@@ -25,6 +25,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileCuttingMachine extends TileMultiblockMachine implements IModularInventory {
@@ -53,6 +54,11 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 				((EntityLivingBase)entity).attackEntityFrom(DamageSource.cactus, 1f);
 			}
 		}
+	}
+	
+	@Override
+	public ResourceLocation getSound() {
+		return TextureResources.sndCuttingMachine;
 	}
 	
 	@Override

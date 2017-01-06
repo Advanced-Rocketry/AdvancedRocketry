@@ -44,6 +44,7 @@ import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
+import zmaster587.advancedRocketry.client.SoundRocketEngine;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
@@ -407,7 +408,16 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	public boolean isBurningFuel() {
 		return (getFuelAmount() > 0 || !Configuration.rocketRequireFuel) && (!(this.riddenByEntity instanceof EntityPlayer) || !isInOrbit() || ((EntityPlayer)this.riddenByEntity).moveForward > 0);
 	}
+	
+	public boolean isDescentPhase() {
+		return Configuration.automaticRetroRockets && isInOrbit() && this.posY < 300 && (this.motionY < -0.4f || worldObj.isRemote);
+	}
 
+	public boolean areEnginesRunning() {
+		return (this.motionY > 0 || isDescentPhase() || (((EntityPlayer)riddenByEntity).moveForward > 0));
+	}
+
+	
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
@@ -415,6 +425,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		long deltaTime = worldObj.getTotalWorldTime() - lastWorldTickTicked;
 		lastWorldTickTicked = worldObj.getTotalWorldTime();
 
+		if(this.ticksExisted == 1 && worldObj.isRemote) {
+			
+			LibVulpes.proxy.playSound(new SoundRocketEngine( TextureResources.sndCombustionRocket,this));
+		}
+		
 		//Hackish crap to make clients mount entities immediately after server transfer and fire events
 		if(!worldObj.isRemote && (this.isInFlight() || this.isInOrbit()) && this.ticksExisted == 20) {
 			if(this.riddenByEntity instanceof EntityPlayer) {
@@ -432,7 +447,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		if(isInFlight()) {
 			boolean burningFuel = isBurningFuel();
 
-			boolean descentPhase = Configuration.automaticRetroRockets && isInOrbit() && this.posY < 300 && (this.motionY < -0.4f || worldObj.isRemote);
+			boolean descentPhase = isDescentPhase();
 
 			if(burningFuel || descentPhase) {
 				//Burn the rocket fuel
@@ -440,7 +455,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 					setFuelAmount(getFuelAmount() - stats.getFuelRate(FuelType.LIQUID));
 
 				//Spawn in the particle effects for the engines
-				if(worldObj.isRemote && Minecraft.getMinecraft().gameSettings.particleSetting < 2 && (this.motionY > 0 || descentPhase || (riddenByEntity instanceof EntityPlayer && ((EntityPlayer)riddenByEntity).moveForward > 0))) {
+				if(worldObj.isRemote && Minecraft.getMinecraft().gameSettings.particleSetting < 2 && areEnginesRunning()) {
 					int engineNum = 0;
 					for(Vector3F<Float> vec : stats.getEngineLocations()) {
 

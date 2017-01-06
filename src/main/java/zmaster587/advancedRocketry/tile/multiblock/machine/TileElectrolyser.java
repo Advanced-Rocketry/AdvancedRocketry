@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.inventory.TextureResources;
@@ -36,6 +37,11 @@ public class TileElectrolyser extends TileMultiblockMachine {
 	@Override
 	public Object[][][] getStructure() {
 		return structure;
+	}
+	
+	@Override
+	public ResourceLocation getSound() {
+		return TextureResources.sndElectrolyser;
 	}
 	
 	@Override
