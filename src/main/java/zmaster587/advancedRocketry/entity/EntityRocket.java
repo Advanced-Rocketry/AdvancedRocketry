@@ -239,21 +239,23 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 		//Get destination string
 		String displayStr = "N/A";
-		int dimid = storage.getDestinationDimId(this.worldObj.provider.getDimension(), (int)posX, (int)posZ);
+		if(storage != null) {
+			int dimid = storage.getDestinationDimId(this.worldObj.provider.getDimension(), (int)posX, (int)posZ);
 
-		if(dimid == Configuration.spaceDimId) {
-			Vector3F<Float> vec = storage.getDestinationCoordinates(dimid, false);
-			if(vec != null) {
+			if(dimid == Configuration.spaceDimId) {
+				Vector3F<Float> vec = storage.getDestinationCoordinates(dimid, false);
+				if(vec != null) {
 
-				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(vec.x,vec.y,vec.z));
+					ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(vec.x,vec.y,vec.z));
 
-				if(obj != null) {
-					displayStr = "Station " + obj.getId();
+					if(obj != null) {
+						displayStr = "Station " + obj.getId();
+					}
 				}
 			}
-		}
-		else if(dimid != -1 && dimid != SpaceObjectManager.WARPDIMID) {
-			displayStr = DimensionManager.getInstance().getDimensionProperties(dimid).getName();
+			else if(dimid != -1 && dimid != SpaceObjectManager.WARPDIMID) {
+				displayStr = DimensionManager.getInstance().getDimensionProperties(dimid).getName();
+			}
 		}
 
 		if(isInOrbit() && !isInFlight())
@@ -707,31 +709,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				//TODO: Move tracking stations over to the mission handler
 			}
 			else {
-				List<TileSatelliteHatch> satelliteHatches = storage.getSatelliteHatches();
-
-				for(TileSatelliteHatch tile : storage.getSatelliteHatches()) {
-					SatelliteBase satellite = tile.getSatellite();
-					if(satellite == null) {
-						ItemStack stack = tile.getStackInSlot(0);
-						if(stack != null && stack.getItem() == AdvancedRocketryItems.itemSpaceStation) {
-							StorageChunk storage = ((ItemPackedStructure)stack.getItem()).getStructure(stack);
-							ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation((int)ItemStationChip.getUUID(stack));
-
-							SpaceObjectManager.getSpaceManager().moveStationToBody(object, this.worldObj.provider.getDimension());
-
-							//Vector3F<Integer> spawn = object.getSpawnLocation();
-
-							object.onModuleUnpack(storage);
-							tile.setInventorySlotContents(0, null);
-						}
-					}
-					else {
-						satellite.setDimensionId(worldObj);
-						DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(this.worldObj.provider.getDimension());
-
-						properties.addSatallite(satellite, this.worldObj);
-					}
-				}
+				unpackSatellites();
 			}
 
 			destinationDimId = storage.getDestinationDimId(this.worldObj.provider.getDimension(), (int)this.posX, (int)this.posZ);
@@ -750,6 +728,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			//TODO: satellite event?
 		}
 		else {
+			unpackSatellites();
 			//TODO: maybe add orbit dimension
 			this.motionY = -this.motionY;
 			setInOrbit(true);
@@ -794,6 +773,34 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 	}
 
+	private void unpackSatellites() {
+		List<TileSatelliteHatch> satelliteHatches = storage.getSatelliteHatches();
+
+		for(TileSatelliteHatch tile : satelliteHatches) {
+			SatelliteBase satellite = tile.getSatellite();
+			if(satellite == null) {
+				ItemStack stack = tile.getStackInSlot(0);
+				if(stack != null && stack.getItem() == AdvancedRocketryItems.itemSpaceStation) {
+					StorageChunk storage = ((ItemPackedStructure)stack.getItem()).getStructure(stack);
+					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation((int)ItemStationChip.getUUID(stack));
+
+					SpaceObjectManager.getSpaceManager().moveStationToBody(object, this.worldObj.provider.getDimension());
+
+					//Vector3F<Integer> spawn = object.getSpawnLocation();
+
+					object.onModuleUnpack(storage);
+					tile.setInventorySlotContents(0, null);
+				}
+			}
+			else {
+				satellite.setDimensionId(worldObj);
+				DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(this.worldObj.provider.getDimension());
+
+				properties.addSatallite(satellite, this.worldObj);
+			}
+		}
+	}
+	
 	@Override
 	/**
 	 * Called immediately before launch
