@@ -6,5 +6,6 @@
 "airHissLoop": {"category": "master","sounds": [{"name": "advancedrocketry:airHissLoop","stream": false}]},
 "railgunBang": {"category": "master","sounds": [{"name": "advancedrocketry:railgunBang","stream": false}]},
 "laserDrill": {"category": "master","sounds": [{"name": "advancedrocketry:laserDrill","stream": false}]},
+"combustionRocket": {"category": "master","sounds": [{"name": "advancedrocketry:combustionRocket","stream": false}]},
 "basicLaserGun": {"category": "master", "sounds": [{"name": "advancedrocketry:basicLaserGun", "stream": false}]}
 }

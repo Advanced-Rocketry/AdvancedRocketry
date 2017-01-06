@@ -1153,7 +1153,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 
 	/**
-	 * Function for calculating atmosphere thinning with respect to hieght 
+	 * Function for calculating atmosphere thinning with respect to hieght, normallized
 	 * @param y
 	 * @return the density of the atmosphere at the given height
 	 */

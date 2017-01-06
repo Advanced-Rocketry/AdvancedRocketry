@@ -30,6 +30,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -59,6 +60,7 @@ import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
+import zmaster587.advancedRocketry.client.SoundRocketEngine;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
@@ -74,6 +76,7 @@ import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
+import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.advancedRocketry.util.RocketInventoryHelper;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.advancedRocketry.util.TransitionEntity;
@@ -467,7 +470,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		return (getFuelAmount() > 0 || !Configuration.rocketRequireFuel) && ((!this.getPassengers().isEmpty() && getPassengerMovingForward() > 0) || !isInOrbit());
 	}
 
-	private float getPassengerMovingForward() {
+	public float getPassengerMovingForward() {
 
 		for(Entity entity : this.getPassengers()) {
 			if(entity instanceof EntityPlayer) {
@@ -485,6 +488,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 		}
 		return false;
+	}
+	
+	public boolean isDescentPhase() {
+		return Configuration.automaticRetroRockets && isInOrbit() && this.posY < 300 && (this.motionY < -0.4f || worldObj.isRemote);
+	}
+	
+	public boolean areEnginesRunning() {
+		return (this.motionY > 0 || isDescentPhase() || (getPassengerMovingForward() > 0));
 	}
 
 	@Override
@@ -506,6 +517,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					itr.remove();
 				}
 			}
+			
+			if(worldObj.isRemote)
+				LibVulpes.proxy.playSound(new SoundRocketEngine( AudioRegistry.combustionRocket, SoundCategory.NEUTRAL,this));
 		}
 
 		//Hackish crap to make clients mount entities immediately after server transfer and fire events
@@ -530,7 +544,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		if(isInFlight()) {
 			boolean burningFuel = isBurningFuel();
 
-			boolean descentPhase = Configuration.automaticRetroRockets && isInOrbit() && this.posY < 300 && (this.motionY < -0.4f || worldObj.isRemote);
+			boolean descentPhase = isDescentPhase();
 
 			if(burningFuel || descentPhase) {
 				//Burn the rocket fuel
@@ -539,7 +553,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 				//Spawn in the particle effects for the engines
 				int engineNum = 0;
-				if(worldObj.isRemote && Minecraft.getMinecraft().gameSettings.particleSetting < 2 && (this.motionY > 0 || descentPhase || (getPassengerMovingForward() > 0))) {
+				if(worldObj.isRemote && Minecraft.getMinecraft().gameSettings.particleSetting < 2 && areEnginesRunning()) {
 					for(Vector3F<Float> vec : stats.getEngineLocations()) {
 
 						AtmosphereHandler handler;
