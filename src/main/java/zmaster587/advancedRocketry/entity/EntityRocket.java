@@ -1229,6 +1229,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			if(stack != null && stack.getItem() == AdvancedRocketryItems.itemPlanetIdChip) {
 				((ItemPlanetIdentificationChip)AdvancedRocketryItems.itemPlanetIdChip).setDimensionId(stack, nbt.getInteger("selection"));
 
+				//Send data back to sync destination dims
 				if(!worldObj.isRemote) {
 					PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, (byte)PacketType.SENDPLANETDATA.ordinal()), this);
 				}
