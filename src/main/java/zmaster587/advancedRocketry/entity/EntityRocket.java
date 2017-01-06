@@ -699,10 +699,29 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		if(this.worldObj.getTotalWorldTime() < this.lastErrorTime + ERROR_DISPLAY_TIME)
 			return errorStr;
 		
+		//Get destination string
+		String displayStr = "N/A";
+		int dimid = storage.getDestinationDimId(this.worldObj.provider.dimensionId, (int)posX, (int)posZ);
+
+		if(dimid == Configuration.spaceDimId) {
+			Vector3F<Float> vec = storage.getDestinationCoordinates(dimid, false);
+			if(vec != null) {
+
+				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)((float)vec.x),(int)((float)vec.x));
+
+				if(obj != null) {
+					displayStr = "Station " + obj.getId();
+				}
+			}
+		}
+		else if(dimid != -1 && dimid != SpaceObjectManager.WARPDIMID) {
+			displayStr = DimensionManager.getInstance().getDimensionProperties(dimid).getName();
+		}
+		
 		if(isInOrbit() && !isInFlight())
 			return "Press Space to descend!";
 		else if(!isInFlight())
-			return "Press Space to take off!";
+			return "Press Space to take off!\nDest: " + displayStr;
 		
 		return super.getTextOverlay();
 	}
@@ -1039,7 +1058,16 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			storage.writeToNetwork(out);
 		}
 		else if(id == PacketType.SENDPLANETDATA.ordinal()) {
-			out.writeInt(container.getSelectedSystem());
+			if(worldObj.isRemote)
+				out.writeInt(container.getSelectedSystem());
+			else {
+				if(storage.getGuidanceComputer() != null) {
+					ItemStack stack = storage.getGuidanceComputer().getStackInSlot(0);
+					if(stack != null && stack.getItem() == AdvancedRocketryItems.itemPlanetIdChip) {
+						out.writeInt(((ItemPlanetIdentificationChip)AdvancedRocketryItems.itemPlanetIdChip).getDimensionId(stack));
+					}
+				}
+			}
 		}
 	}
 
@@ -1093,6 +1121,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			ItemStack stack = storage.getGuidanceComputer().getStackInSlot(0);
 			if(stack != null && stack.getItem() == AdvancedRocketryItems.itemPlanetIdChip) {
 				((ItemPlanetIdentificationChip)AdvancedRocketryItems.itemPlanetIdChip).setDimensionId(stack, nbt.getInteger("selection"));
+			
+				//Send data back to sync destination dims
+				if(!worldObj.isRemote) {
+					PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, (byte)PacketType.SENDPLANETDATA.ordinal()), this);
+				}
 			}
 		}
 		else if(id == PacketType.DISCONNECTINFRASTRUCTURE.ordinal()) {

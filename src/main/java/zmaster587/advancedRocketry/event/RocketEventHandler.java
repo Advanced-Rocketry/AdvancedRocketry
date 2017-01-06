@@ -321,19 +321,26 @@ public class RocketEventHandler extends Gui {
 				GL11.glDisable(GL11.GL_BLEND);
 				String str = rocket.getTextOverlay();
 				if(!str.isEmpty()) {
-					FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
-					
-					float scale = str.length() < 50 ? 1f : 0.5f;
-					
-					int screenX = (int) ((event.resolution.getScaledWidth()/(scale*6) - fontRenderer.getStringWidth(str)/2));
-					int screenY = (int) ((event.resolution.getScaledHeight()/18)/scale);
-					
-					GL11.glPushMatrix();
-					GL11.glScalef(3*scale, 3*scale, 3*scale);
 
-					fontRenderer.drawStringWithShadow(str, screenX, screenY, 0xFFFFFF);
+					String[] strs = str.split("\n");
+					int numLines = 0;
 
-					GL11.glPopMatrix();
+					for(String partStr : strs) {
+						FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+
+						float scale = str.length() < 50 ? 1f : 0.5f;
+
+						int screenX = (int) ((event.resolution.getScaledWidth()/(scale*6) - fontRenderer.getStringWidth(partStr)/2));
+						int screenY = (int) ((event.resolution.getScaledHeight()/18)/scale) + numLines*18;
+
+						GL11.glPushMatrix();
+						GL11.glScalef(3*scale, 3*scale, 3*scale);
+
+						fontRenderer.drawStringWithShadow(partStr, screenX, screenY, 0xFFFFFF);
+
+						GL11.glPopMatrix();
+						numLines++;
+					}
 				}
 			}
 
@@ -372,8 +379,8 @@ public class RocketEventHandler extends Gui {
 				if(AtmosphereHandler.currentAtm != null) {
 					str = AtmosphereHandler.currentAtm.getDisplayMessage();
 				}
-				
-				
+
+
 				int screenX = event.resolution.getScaledWidth()/6 - fontRenderer.getStringWidth(str)/2;
 				int screenY = event.resolution.getScaledHeight()/18;
 
@@ -389,71 +396,71 @@ public class RocketEventHandler extends Gui {
 			}
 		}
 	}
-	
+
 	private void renderModuleSlots(ItemStack armorStack, int slot, RenderGameOverlayEvent event) {
 		int index = 1;
 		float color = 0.85f + 0.15F*MathHelper.sin( 2f*(float)Math.PI*((Minecraft.getMinecraft().theWorld.getTotalWorldTime()) % 60)/60f );
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		float alpha = 0.6f;
-		
+
 		//TODO other armor slots
 		if(armorStack != null && armorStack.getItem() instanceof IModularArmor) {
-			
+
 			int size = 24;
 			int screenY = 8 + slot*(size + 8);
 			int screenX = 8;
-			
+
 			//Draw BG
 			GL11.glColor4f(1f,1f,1f, 1f);
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
 			Tessellator.instance.startDrawingQuads();
 			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel-1, screenX - 4, screenY - 4, screenX + size, screenY + size + 4,0d,0.5d,0d,1d);
 			Tessellator.instance.draw();
-			
+
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
 			Tessellator.instance.startDrawingQuads();
 			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel-1, screenX + size, screenY - 3, screenX + 2 + size, screenY + size + 3,0.5d,0.5d,0d,0d);
 			Tessellator.instance.draw();
-			
+
 			//Draw Icon
 			GL11.glColor4f(color,color,color, 1f);
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.armorSlots[slot]);
 			Tessellator.instance.startDrawingQuads();
 			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel-1, screenX, screenY, screenX + size, screenY + size,0d,1d,1d,0d);
 			Tessellator.instance.draw();
-			
+
 			List<ItemStack> stacks = ((IModularArmor)armorStack.getItem()).getComponents(armorStack);
-			
+
 			for(ItemStack stack : stacks) {
 				GL11.glColor4f(1f, 1f, 1f, 1f);
 				((IArmorComponent)stack.getItem()).renderScreen(stack, stacks, event, this);
-				
+
 				ResourceIcon icon = ((IArmorComponent)stack.getItem()).getComponentIcon(stack);
 				ResourceLocation texture = icon.getResourceLocation();
-				
+
 				if(texture != null) {
-					
+
 					screenX = 12 + index*(size+2);
-					
+
 					//Draw BG
 					Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
 					Tessellator.instance.startDrawingQuads();
 					RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel -1, screenX - 4, screenY - 4, screenX + size - 2, screenY + size + 4,0.5d,0.5d,0d,1d);
 					Tessellator.instance.draw();
-					
+
 					Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-					
+
 					//Draw Icon
 					GL11.glColor4f(color,color,color, alpha);
 					Tessellator.instance.startDrawingQuads();
 					RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel-1, screenX, screenY, screenX + size, screenY + size, icon.getMinU(),icon.getMaxU(), icon.getMaxV(),icon.getMinV());
 					Tessellator.instance.draw();
-					
+
 					index++;
 				}
 			}
-			
+
 			screenX = (index)*(size+2) - 4;
 			//Draw BG
 			GL11.glColor4f(1f, 1f, 1f,1f);
@@ -462,7 +469,7 @@ public class RocketEventHandler extends Gui {
 			RenderHelper.renderNorthFaceWithUV(Tessellator.instance, this.zLevel-1, screenX + 12, screenY - 4, screenX + size, screenY + size + 4,0.75d,1d,0d,1d);
 			Tessellator.instance.draw();
 		}
-		
+
 		GL11.glDisable(GL11.GL_BLEND);
 	}
 }
