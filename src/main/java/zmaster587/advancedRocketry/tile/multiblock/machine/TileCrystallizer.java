@@ -5,9 +5,11 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.api.material.Material;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
@@ -45,6 +47,11 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 	@Override
 	protected float getTimeMultiplierForRecipe(IRecipe recipe) {
 		return super.getTimeMultiplierForRecipe(recipe);
+	}
+	
+	@Override
+	public SoundEvent getSound() {
+		return AudioRegistry.crystallizer;
 	}
 	
 	@Override

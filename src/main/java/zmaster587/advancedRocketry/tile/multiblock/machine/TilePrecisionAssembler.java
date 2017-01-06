@@ -6,6 +6,7 @@ import java.util.Set;
 
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.api.material.Material;
@@ -26,6 +27,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 
 public class TilePrecisionAssembler extends TileMultiblockMachine implements IModularInventory, IProgressBar {
@@ -106,6 +108,11 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 		return completionTime/3;
 	}
 
+	@Override
+	public SoundEvent getSound() {
+		return AudioRegistry.precAss;
+	}
+	
 	@Override
 	public void setTotalProgress(int id, int progress) {
 		if(id == 0)
