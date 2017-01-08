@@ -372,7 +372,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 
 	@Override
 	public boolean isRunning() {
-		return super.isRunning() || (getStackInSlot(2) != null && getStackInSlot(2).getItem().equals(AdvancedRocketryItems.itemAsteroidChip) && (atmosphereProgress > -1 || distanceProgress > -1 || massProgress > -1));
+		return super.isRunning() || (getStackInSlot(2) != null && getStackInSlot(2).getItem().equals(AdvancedRocketryItems.itemAsteroidChip) && (researchingAtmosphere || researchingDistance || researchingMass));
 	}
 
 	@Override
