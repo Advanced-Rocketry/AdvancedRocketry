@@ -414,7 +414,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	}
 
 	public boolean areEnginesRunning() {
-		return (this.motionY > 0 || isDescentPhase() || (((EntityPlayer)riddenByEntity).moveForward > 0));
+		return (this.motionY > 0 || isDescentPhase() || (riddenByEntity != null && ((EntityPlayer)riddenByEntity).moveForward > 0));
 	}
 
 
