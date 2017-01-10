@@ -242,7 +242,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 	@Override
 	public int extractData(int maxAmount, DataType type, ForgeDirection dir, boolean commit) {
 		//TODO
-		if(type == data.getDataType()) {
+		if(type == data.getDataType() || data.getDataType() == DataType.UNDEFINED) {
 			SatelliteBase satellite = getSatelliteFromSlot(0);
 			
 			if(satellite != null && satellite.getDimensionId() == this.worldObj.provider.dimensionId) {

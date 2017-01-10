@@ -407,7 +407,6 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 		if(id == 4) {
 			out.writeInt((researchingAtmosphere ? 1 : 0) | (researchingDistance ? 2 : 0) | (researchingMass ? 4 : 0));
 		}
-
 	}
 
 	@Override

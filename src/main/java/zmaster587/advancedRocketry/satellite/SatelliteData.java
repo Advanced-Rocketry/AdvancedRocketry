@@ -53,8 +53,11 @@ public abstract class SatelliteData extends SatelliteBase {
 
 		//Calculate Data Recieved
 		//TODO: pay attn to power
-		data.addData(dataCreated(world), data.getDataType(), true);
-		lastActionTime = world.getTotalWorldTime();
+		int dataCreated = dataCreated(world);
+		if(dataCreated > 0) {
+			data.addData(dataCreated(world), data.getDataType(), true);
+			lastActionTime = world.getTotalWorldTime();
+		}
 
 
 		TileEntity tile = world.getTileEntity(x, y, z);

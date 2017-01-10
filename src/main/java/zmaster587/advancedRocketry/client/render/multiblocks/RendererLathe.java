@@ -81,7 +81,8 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 
 			model.renderOnly("rod");
 			GL11.glPopMatrix();
-
+			
+			GL11.glColor4f(1f, 1f, 1f, 1f);
 		}
 		else {
 			bindTexture(texture);

@@ -532,11 +532,15 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 							if(pos != null) {
 								this.travelToDimension(destinationDimId, pos.x, Configuration.orbit, pos.z);
 							}
+						}
+						else {
+							Vector3F<Float> pos = storage.getDestinationCoordinates(0, true);
+							if(pos != null) {
+								this.travelToDimension(destinationDimId, pos.x, Configuration.orbit, pos.z);
+							}
 							else 
 								this.setDead();
 						}
-						else
-							this.setDead();
 					}
 					else
 						this.setDead();
