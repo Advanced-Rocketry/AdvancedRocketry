@@ -108,6 +108,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	private boolean isInOrbit;
 	//True if the rocket isn't on the ground
 	private boolean isInFlight;
+	//used in the rare case a player goes to a non-existant space station
+	private int lastDimensionFrom = 0;
 	public StorageChunk storage;
 	private String errorStr;
 	private long lastErrorTime = Long.MIN_VALUE;
@@ -647,7 +649,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 							Vector3F<Float> pos = storage.getDestinationCoordinates(targetDimID, true);
 							if(pos != null) {
-								this.changeDimension(destinationDimId, pos.x, Configuration.orbit, pos.z);
+								setInOrbit(true);
+								setInFlight(false);
+								this.changeDimension(targetDimID, pos.x, Configuration.orbit, pos.z);
 							}
 							else 
 								this.setDead();
@@ -655,7 +659,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 						else {
 							Vector3F<Float> pos = storage.getDestinationCoordinates(0, true);
 							if(pos != null) {
-								this.changeDimension(destinationDimId, pos.x, Configuration.orbit, pos.z);
+								setInOrbit(true);
+								setInFlight(false);
+								this.changeDimension(lastDimensionFrom, pos.x, Configuration.orbit, pos.z);
 							}
 							else 
 								this.setDead();
@@ -944,6 +950,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	{
 		if (!this.worldObj.isRemote && !this.isDead)
 		{			
+			
+			if(!DimensionManager.getInstance().canTravelTo(dimensionIn)) {
+				AdvancedRocketry.logger.warning("Rocket trying to travel from Dim" + this.worldObj.provider.getDimension() + " to Dim " + dimensionIn + ".  target not accessible by rocket from launch dim");
+				return null;
+			}
+			
+			lastDimensionFrom = this.worldObj.provider.getDimension();
+			
 			List<Entity> passengers = getPassengers();
 
 			if (!net.minecraftforge.common.ForgeHooks.onTravelToDimension(this, dimensionIn)) return null;
@@ -1093,6 +1107,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 		destinationDimId = nbt.getInteger("destinationDimId");
 
+		lastDimensionFrom = nbt.getInteger("lastDimensionFrom");
+		
 		//Satallite
 		if(nbt.hasKey("satallite")) {
 			NBTTagCompound satalliteNbt = nbt.getCompoundTag("satallite");
@@ -1151,6 +1167,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 		//TODO handle non tile Infrastructure
 
+		
+		nbt.setInteger("lastDimensionFrom", lastDimensionFrom);
 	}
 
 	@Override
