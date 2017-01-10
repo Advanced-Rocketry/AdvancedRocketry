@@ -91,11 +91,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	private boolean isInOrbit;
 	//True if the rocket isn't on the ground
 	private boolean isInFlight;
+	//used in the rare case a player goes to a non-existant space station
+	private int lastDimensionFrom = 0;
+	
 	public StorageChunk storage;
 	private String errorStr;
 	private long lastErrorTime = Long.MIN_VALUE;
 	private static long ERROR_DISPLAY_TIME = 100;
-
 	protected long lastWorldTickTicked;
 
 	private SatelliteBase satallite;
@@ -530,12 +532,18 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 							Vector3F<Float> pos = storage.getDestinationCoordinates(targetDimID, true);
 							if(pos != null) {
+								setInOrbit(true);
+								setInFlight(false);
 								this.travelToDimension(destinationDimId, pos.x, Configuration.orbit, pos.z);
 							}
+							else 
+								this.setDead();
 						}
 						else {
-							Vector3F<Float> pos = storage.getDestinationCoordinates(0, true);
+							Vector3F<Float> pos = storage.getDestinationCoordinates(lastDimensionFrom, true);
 							if(pos != null) {
+								setInOrbit(true);
+								setInFlight(false);
 								this.travelToDimension(destinationDimId, pos.x, Configuration.orbit, pos.z);
 							}
 							else 
@@ -884,9 +892,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		if (!this.worldObj.isRemote && !this.isDead)
 		{
 
-			if(!DimensionManager.getInstance().canTravelTo(newDimId))
+			if(!DimensionManager.getInstance().canTravelTo(newDimId)) {
+				AdvancedRocketry.logger.warning("Rocket trying to travel from Dim" + this.worldObj.provider.dimensionId + " to Dim " + newDimId + ".  target not accessible by rocket from launch dim");
 				return;
+			}
 
+			lastDimensionFrom = this.worldObj.provider.dimensionId;
+			
 			double x = posX, z = posZ;
 
 			Entity rider = this.riddenByEntity;
@@ -990,6 +1002,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		}
 
 		destinationDimId = nbt.getInteger("destinationDimId");
+		
+		lastDimensionFrom = nbt.getInteger("lastDimensionFrom");
 
 		//Satallite
 		if(nbt.hasKey("satallite")) {
@@ -1046,6 +1060,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			storage.writeToNBT(blocks);
 			nbt.setTag("data", blocks);
 		}
+		
+		nbt.setInteger("lastDimensionFrom", lastDimensionFrom);
 
 		//TODO handle non tile Infrastructure
 
