@@ -22,14 +22,14 @@ import zmaster587.libVulpes.util.ZUtils;
 public abstract class SatelliteData extends SatelliteBase {
 	DataStorage data;
 	long lastActionTime, prevLastActionTime;
-	
+
 	@Override
 	public String getInfo(World world) {
 		//tiles dont update unless ppl reopen
 		return "Power: " + satelliteProperties.getPowerStorage() + "\nData Storage: " + ZUtils.formatNumber(data.getMaxData()) +
 				"\nData: " + ZUtils.formatNumber((data.getData() + dataCreated(world)));
 	}
-	
+
 	private int dataCreated(World world) {
 		return Math.min(data.getMaxData() - data.getData() , (int)Math.max(0,  (world.getTotalWorldTime() - lastActionTime)/200)); //TODO: change from 10 seconds
 	}
@@ -37,25 +37,27 @@ public abstract class SatelliteData extends SatelliteBase {
 	@Override
 	public boolean acceptsItemInConstruction(ItemStack item) {
 		int flag = SatelliteRegistry.getSatelliteProperty(item).getPropertyFlag();
-		
+
 		return super.acceptsItemInConstruction(item) || SatelliteProperties.Property.DATA.isOfType(flag) || SatelliteProperties.Property.POWER_GEN.isOfType(flag);
 	}
-	
+
 	@Override
 	public void setProperties(SatelliteProperties satelliteProperties) {
 		super.setProperties(satelliteProperties);
 		data.setMaxData(satelliteProperties.getMaxDataStorage());
 	}
-	
-	
+
+
 	@Override
 	public boolean performAction(EntityPlayer player, World world, BlockPos pos) {
 
 		//Calculate Data Recieved
 		//TODO: pay attn to power
-		data.addData(dataCreated(world), data.getDataType(), true);
-		lastActionTime = world.getTotalWorldTime();
-
+		int dataCreated = dataCreated(world);
+		if(dataCreated > 0) {
+			data.addData(dataCreated(world), data.getDataType(), true);
+			lastActionTime = world.getTotalWorldTime();
+		}
 
 		TileEntity tile = world.getTileEntity(pos);
 
@@ -67,7 +69,7 @@ public abstract class SatelliteData extends SatelliteBase {
 
 		return false;
 	}
-	
+
 	@Override
 	public void setDimensionId(World world) {
 		//TODO: send packet on orbit reached
@@ -108,7 +110,7 @@ public abstract class SatelliteData extends SatelliteBase {
 	@Override
 	public void sendChanges(Container container, IContainerListener crafter, int variableId, int localId) {
 		crafter.sendProgressBarUpdate(container, variableId, (short)(( lastActionTime >>> (localId*16) ) & 0xffff));
-		
+
 		if(localId == 3)
 			prevLastActionTime=lastActionTime;
 	}
