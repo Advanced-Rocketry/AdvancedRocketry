@@ -416,6 +416,7 @@ public class SpaceObject implements ISpaceObject {
 		World worldObj = DimensionManager.getWorld(Configuration.spaceDimId);
 		if(!created) {
 			chunk.pasteInWorld(worldObj, spawnLocation.x - chunk.getSizeX()/2, spawnLocation.y - chunk.getSizeY()/2, spawnLocation.z - chunk.getSizeZ()/2);
+			
 			created = true;
 		}
 		else {
