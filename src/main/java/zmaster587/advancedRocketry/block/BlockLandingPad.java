@@ -42,9 +42,7 @@ public class BlockLandingPad extends Block {
 
 	}
 	
-	
-	
-	
+
 	@Override
 	public void onBlockAdded(World world, int x,
 			int y, int z) {
