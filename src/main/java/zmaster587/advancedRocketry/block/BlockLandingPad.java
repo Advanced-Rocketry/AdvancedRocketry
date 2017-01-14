@@ -39,8 +39,18 @@ public class BlockLandingPad extends Block {
 	public void onBlockPlacedBy(World world, int x,
 			int y, int z, EntityLivingBase player,
 			ItemStack items) {
-		super.onBlockPlacedBy(world, x, y, z,
-				player, items);
+
+	}
+	
+	
+	
+	
+	@Override
+	public void onBlockAdded(World world, int x,
+			int y, int z) {
+		// TODO Auto-generated method stub
+		super.onBlockAdded(world, x, y, z);
+		
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if(tile instanceof TileLandingPad) {
 			((TileLandingPad) tile).registerTileWithStation(world, x, y, z);
