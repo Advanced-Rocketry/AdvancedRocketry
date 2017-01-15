@@ -44,7 +44,7 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 	public void updateEntity() {
 		super.updateEntity();
 		
-		if(isRunning() && worldObj.getWorldTime() % 20 == 0) {
+		if(isRunning() && worldObj.getTotalWorldTime() % 20 == 0) {
 			ForgeDirection back = RotatableBlock.getFront(this.getBlockMetadata()).getOpposite();
 			
 			float xCoord = this.xCoord + (0.5f*back.offsetX); 
