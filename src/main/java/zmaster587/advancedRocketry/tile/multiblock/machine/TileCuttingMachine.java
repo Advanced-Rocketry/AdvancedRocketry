@@ -35,7 +35,7 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 	public void update() {
 		super.update();
 
-		if(isRunning() && worldObj.getWorldTime() % 20 == 0) {
+		if(isRunning() && worldObj.getTotalWorldTime() % 10 == 0) {
 			EnumFacing back = RotatableBlock.getFront(worldObj.getBlockState(pos)).getOpposite();
 
 			float xCoord = this.getPos().getX() + (0.5f*back.getFrontOffsetX()); 
