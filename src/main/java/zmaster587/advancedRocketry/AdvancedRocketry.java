@@ -869,6 +869,7 @@ public class AdvancedRocketry {
 		ItemStack smallBattery = new ItemStack(LibVulpesItems.itemBattery,1,0);
 		ItemStack battery2x = new ItemStack(LibVulpesItems.itemBattery,1,1);
 		ItemStack superHighPressureTime = new ItemStack(AdvancedRocketryItems.itemPressureTank,1,3);
+		ItemStack charcoal = new ItemStack(Items.COAL,1,1);
 
 		//Register Alloys
 		MaterialRegistry.registerMixedMaterial(new MixedMaterial(TileElectricArcFurnace.class, "oreRutile", new ItemStack[] {MaterialRegistry.getMaterialFromName("Titanium").getProduct(AllowedProducts.getProductByName("INGOT"))}));
@@ -970,7 +971,7 @@ public class AdvancedRocketry {
 		//TEMP RECIPES
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryItems.itemSatelliteIdChip), new ItemStack(AdvancedRocketryItems.itemIC, 1, 0));
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryItems.itemPlanetIdChip), new ItemStack(AdvancedRocketryItems.itemIC, 1, 0), new ItemStack(AdvancedRocketryItems.itemIC, 1, 0), new ItemStack(AdvancedRocketryItems.itemSatelliteIdChip));
-		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryItems.itemMisc,1,1), new ItemStack(Items.COAL,1,1), new ItemStack(Items.COAL,1,1), new ItemStack(Items.COAL,1,1), new ItemStack(Items.COAL,1,1) ,new ItemStack(Items.COAL,1,1) ,new ItemStack(Items.COAL,1,1));
+		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryItems.itemMisc,1,1), charcoal, charcoal, charcoal, charcoal ,charcoal ,charcoal);
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockLandingPad), new ItemStack(AdvancedRocketryBlocks.blockConcrete), trackingCircuit);
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryItems.itemAsteroidChip), trackingCircuit.copy(), AdvancedRocketryItems.itemDataUnit);
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryBlocks.blockDataPipe, 8), "ggg", " d ", "ggg", 'g', Blocks.GLASS_PANE, 'd', AdvancedRocketryItems.itemDataUnit);
@@ -1036,7 +1037,7 @@ public class AdvancedRocketry {
 
 		//BlastFurnace
 		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("Silicon").getProduct(AllowedProducts.getProductByName("INGOT")), 12000, 1, Blocks.SAND);
-		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("Steel").getProduct(AllowedProducts.getProductByName("INGOT")), 6000, 1, "ingotIron", Items.COAL);
+		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("Steel").getProduct(AllowedProducts.getProductByName("INGOT")), 6000, 1, "ingotIron", charcoal);
 		//TODO add 2Al2O3 as output
 		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("TitaniumAluminide").getProduct(AllowedProducts.getProductByName("INGOT"), 3), 9000, 20, new NumberedOreDictStack("ingotAluminum", 7), new NumberedOreDictStack("ingotTitanium", 3)); //TODO titanium dioxide
 		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("TitaniumIridium").getProduct(AllowedProducts.getProductByName("INGOT"),2), 3000, 20, "ingotTitanium", "ingotIridium");
