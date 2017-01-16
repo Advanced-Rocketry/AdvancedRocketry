@@ -32,14 +32,14 @@ public class BlockLandingPad extends Block {
 		return new TileLandingPad();
 	}
 	
+	
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
-			EntityLivingBase placer, ItemStack stack) {
-		super.onBlockPlacedBy(world, pos, state, placer, stack);
-		
-		TileEntity tile = world.getTileEntity(pos);
+	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
+		// TODO Auto-generated method stub
+		super.onBlockAdded(worldIn, pos, state);
+		TileEntity tile = worldIn.getTileEntity(pos);
 		if(tile instanceof TileLandingPad) {
-			((TileLandingPad) tile).registerTileWithStation(world, pos);
+			((TileLandingPad) tile).registerTileWithStation(worldIn, pos);
 		}
 	}
 	

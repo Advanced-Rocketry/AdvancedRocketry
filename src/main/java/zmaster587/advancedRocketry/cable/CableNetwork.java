@@ -154,7 +154,7 @@ public class CableNetwork {
 	 * Merges this network with the one specified.  Normally the specified one is removed
 	 * @param cableNetwork
 	 */
-	public void merge(CableNetwork cableNetwork) {
+	public boolean merge(CableNetwork cableNetwork) {
 		sinks.addAll(cableNetwork.getSinks());
 
 		for(Entry<TileEntity, EnumFacing> obj : cableNetwork.getSinks()) {
@@ -162,7 +162,7 @@ public class CableNetwork {
 			for(Entry<TileEntity, EnumFacing> obj2 : sinks) {
 				if(obj.getKey().getPos().compareTo(obj2.getKey().getPos()) == 0 && obj.getValue() == obj2.getValue()) {
 					canMerge = false;
-					break;
+					return false;
 				}
 			}
 
@@ -176,7 +176,7 @@ public class CableNetwork {
 			for(Entry<TileEntity, EnumFacing> obj2 : sources) {
 				if(obj.getKey().getPos().compareTo(obj2.getKey().getPos()) == 0 && obj.getValue() == obj2.getValue()) {
 					canMerge = false;
-					break;
+					return false;
 				}
 			}
 
@@ -184,6 +184,7 @@ public class CableNetwork {
 				sources.add(obj);
 			}
 		}
+		return true;
 	}
 
 	public void addPipeToNetwork(TilePipe tile) {

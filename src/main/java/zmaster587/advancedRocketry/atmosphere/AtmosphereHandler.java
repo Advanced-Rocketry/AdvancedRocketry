@@ -110,11 +110,12 @@ public class AtmosphereHandler {
 	}
 
 	private void onBlockRemove(HashedBlockPosition pos) {
-		for(AreaBlob blob : getBlobWithinRadius(pos, MAX_BLOB_RADIUS)) {
+		List<AreaBlob> blobs = getBlobWithinRadius(pos, MAX_BLOB_RADIUS);
+		for(AreaBlob blob : blobs) {
 			//Make sure that a block can actually be attached to the blob
 			for(EnumFacing dir : EnumFacing.VALUES)
 				if(blob.contains(pos.getPositionAtOffset(dir))) {
-					blob.addBlock(pos);
+					blob.addBlock(pos, blobs);
 					break;
 				}
 		}
@@ -164,20 +165,21 @@ public class AtmosphereHandler {
 			if(handler == null)
 				return; //WTF
 			
-			for(AreaBlob blob : handler.getBlobWithinRadius(pos, MAX_BLOB_RADIUS)) {
+			List<AreaBlob> nearbyBlobs = handler.getBlobWithinRadius(pos, MAX_BLOB_RADIUS);
+			for(AreaBlob blob : nearbyBlobs) {
 
 				if(world.isAirBlock(bpos))
 					handler.onBlockRemove(pos);
 				else {
 					//Place block
-					if( blob.contains(pos) && !blob.isPositionAllowed(world, pos)) {
+					if( blob.contains(pos) && !blob.isPositionAllowed(world, pos, nearbyBlobs)) {
 						blob.removeBlock(pos);
 					}
 					else if(!blob.contains(blob.getRootPosition())) {
-						blob.addBlock(blob.getRootPosition());
+						blob.addBlock(blob.getRootPosition(), nearbyBlobs);
 					}
-					else if(!blob.contains(pos) && blob.isPositionAllowed(world, pos))//isFulBlock(world, pos.getBlockPos()))
-						blob.addBlock(pos);
+					else if(!blob.contains(pos) && blob.isPositionAllowed(world, pos, nearbyBlobs))//isFulBlock(world, pos.getBlockPos()))
+						blob.addBlock(pos, nearbyBlobs);
 				}
 			}
 		}
@@ -262,7 +264,7 @@ public class AtmosphereHandler {
 	 */
 	public boolean addBlock(IBlobHandler handler, HashedBlockPosition pos){
 		AreaBlob blob = blobs.get(handler);
-		blob.addBlock(pos);
+		blob.addBlock(pos, getBlobWithinRadius(pos, MAX_BLOB_RADIUS));
 		return !blob.getLocations().isEmpty();
 	}
 

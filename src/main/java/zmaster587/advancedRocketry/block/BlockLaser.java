@@ -24,31 +24,34 @@ public class BlockLaser extends BlockMultiblockMachine {
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileSpaceLaser();
 	}
-	
+
 	@Override
 	public boolean hasTileEntity(IBlockState state) {
 		return true;
 	}
-	
+
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos,
 			Block blockIn) {
-		((TileSpaceLaser)worldIn.getTileEntity(pos)).checkCanRun();
+		if(blockIn != this)
+			((TileSpaceLaser)worldIn.getTileEntity(pos)).checkCanRun();
 	}
-	
+
 	//can happen when lever is flipped... Update the state of the tile
 	@Override
 	public void onNeighborChange(IBlockAccess world, BlockPos pos,
 			BlockPos neighbor) {
-		((TileSpaceLaser)world.getTileEntity(pos)).checkCanRun();
+		if(!(world.getTileEntity(neighbor) instanceof TileSpaceLaser))
+			((TileSpaceLaser)world.getTileEntity(pos)).checkCanRun();
 	}
-	
+
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		super.breakBlock(worldIn, pos, state);
-		((TileSpaceLaser)worldIn.getTileEntity(pos)).onDestroy();
+		if(worldIn.getTileEntity(pos) instanceof TileSpaceLaser)
+			((TileSpaceLaser)worldIn.getTileEntity(pos)).onDestroy();
 	}
-	
+
 	@Override
 	public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos,
 			Explosion explosionIn) {
@@ -56,13 +59,13 @@ public class BlockLaser extends BlockMultiblockMachine {
 		super.onBlockDestroyedByExplosion(worldIn, pos, explosionIn);
 		((TileSpaceLaser)worldIn.getTileEntity(pos)).onDestroy();
 	}
-	
+
 	//To check if the laser is jammed
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state,
 			Random rand) {
 		super.updateTick(worldIn, pos, state, rand);
-		
+
 		TileSpaceLaser tile = (TileSpaceLaser)worldIn.getTileEntity(pos);
 
 		if(tile.isJammed())

@@ -55,7 +55,7 @@ public class MissionOreMining extends MissionResourceCollection {
 							List<ItemStack> ores = OreDictionary.getOres(oreDictName);
 							if(ores != null && !ores.isEmpty()) {
 								stacks[i] = ores.get(0).copy();
-								stacks[i].stackSize = 64;
+								stacks[i].stackSize = stacks[i].getMaxStackSize();
 								continue;
 							}
 						}

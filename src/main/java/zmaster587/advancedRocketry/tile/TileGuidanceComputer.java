@@ -97,7 +97,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				return new Vector3F<Float>(new Float(vec.x), new Float(vec.y), new Float(vec.z));
 			}
 			else {
-				return chip.getTakeoffCoords(stack);
+				return chip.getTakeoffCoords(stack, landingDimension);
 			}
 		}
 		
@@ -142,12 +142,12 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 			destinationId = -1;
 	}
 	
-	public void setReturnPosition(Vector3F<Float> pos) {
+	public void setReturnPosition(Vector3F<Float> pos, int dimId) {
 		ItemStack stack = getStackInSlot(0);
 
 		if(stack != null && stack.getItem() instanceof ItemStationChip) {
 			ItemStationChip item = (ItemStationChip)stack.getItem();
-			item.setTakeoffCoords(stack, pos);
+			item.setTakeoffCoords(stack, pos, dimId);
 		}
 	}
 

@@ -8,10 +8,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisible;
@@ -85,6 +87,11 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 		return structure;
 	}
 
+	@Override
+	public SoundEvent getSound() {
+		return AudioRegistry.electricArcFurnace;
+	}
+	
 	@Override
 	public String getMachineName() {
 		return "tile.electricArcFurnace.name";

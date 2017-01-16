@@ -85,7 +85,7 @@ public class Configuration {
 	public static boolean terraformRequiresFluid;
 	public static float microwaveRecieverMulitplier;
 	public static boolean blackListAllVanillaBiomes;
-
+	public static double asteroidMiningTimeMult;
 	public static boolean canPlayerRespawnInSpace;
 	public static float spaceLaserPowerMult;
 	public static List<Integer> laserBlackListDims = new LinkedList<Integer>();
@@ -98,5 +98,7 @@ public class Configuration {
 	public static List<Class> bypassEntity = new LinkedList<Class>();
 	
 	public static List<Block> torchBlocks = new LinkedList<Block>();
+
+	
 
 }

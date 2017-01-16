@@ -15,9 +15,11 @@ import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -30,6 +32,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 	boolean executing;
 	HashedBlockPosition blockPos;
+	List<AreaBlob> nearbyBlobs;
 
 	public AtmosphereBlob(IBlobHandler blobHandler) {
 		super(blobHandler);
@@ -40,6 +43,9 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 		return 100;
 	}
 
+	/**
+	 * Called when a block can no longer be filled with air
+	 */
 	@Override
 	public void removeBlock(HashedBlockPosition blockPos) {
 
@@ -55,17 +61,23 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	}
 
 	@Override
-	public boolean isPositionAllowed(World world, HashedBlockPosition pos) {
+	public boolean isPositionAllowed(World world, HashedBlockPosition pos, List<AreaBlob> otherBlobs) {
+		for(AreaBlob blob : otherBlobs) {
+			if(blob.contains(pos))
+				return false;
+		}
+		
 		return !SealableBlockHandler.INSTANCE.isBlockSealed(world, pos.getBlockPos());
 	}
 
 	@Override
-	public void addBlock(HashedBlockPosition blockPos) {
+	public void addBlock(HashedBlockPosition blockPos, List<AreaBlob> nearbyBlobs) {
 
 		if(blobHandler.canFormBlob()) {
 
 			if(!this.contains(blockPos)) {
 				if(!executing) {
+					this.nearbyBlobs = nearbyBlobs;
 					this.blockPos = blockPos;
 					executing = true;
 					if((Configuration.atmosphereHandleBitMask & 1) == 1)
@@ -80,7 +92,9 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 	@Override
 	public void run() {
-
+		
+		//Nearby Blobs
+		
 		Stack<HashedBlockPosition> stack = new Stack<HashedBlockPosition>();
 		stack.push(blockPos);
 
@@ -102,7 +116,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 					try {
 
-						sealed = SealableBlockHandler.INSTANCE.isBlockSealed(blobHandler.getWorldObj(), searchNextPosition.getBlockPos());
+						sealed = !isPositionAllowed(blobHandler.getWorldObj(), searchNextPosition, nearbyBlobs);//SealableBlockHandler.INSTANCE.isBlockSealed(blobHandler.getWorldObj(), searchNextPosition.getBlockPos());
 
 
 						if(!sealed) {
@@ -134,7 +148,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 		//only one instance can editing this at a time because this will not run again b/c "worker" is not null
 
 		for(HashedBlockPosition blockPos2 : addableBlocks) {
-			super.addBlock(blockPos2);
+			super.addBlock(blockPos2, nearbyBlobs);
 		}
 
 		executing = false;

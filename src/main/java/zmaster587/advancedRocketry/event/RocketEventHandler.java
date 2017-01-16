@@ -126,16 +126,16 @@ public class RocketEventHandler extends Gui {
 				public void run() {
 
 					int numChunksLoaded = 0;
-					
-						table = earth.getByteBuffer();
-						outerBoundsTable = outerBounds.getByteBuffer();
 
-						//Get the average of each edge RGB
-						long topEdge[], bottomEdge[], leftEdge[], rightEdge[], total[];
-						total = topEdge = bottomEdge = leftEdge = rightEdge = new long[] {0,0,0};
+					table = earth.getByteBuffer();
+					outerBoundsTable = outerBounds.getByteBuffer();
+
+					//Get the average of each edge RGB
+					long topEdge[], bottomEdge[], leftEdge[], rightEdge[], total[];
+					total = topEdge = bottomEdge = leftEdge = rightEdge = new long[] {0,0,0};
 
 
-						do {
+					do {
 						for(int i = 0; i < getImgSize*getImgSize; i++) {
 							//TODO: Optimize
 							int xOffset = (i % getImgSize);
@@ -338,20 +338,28 @@ public class RocketEventHandler extends Gui {
 				GL11.glDisable(GL11.GL_BLEND);
 				String str = rocket.getTextOverlay();
 				if(!str.isEmpty()) {
-					FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
-					
-					float scale = str.length() < 50 ? 1f : 0.5f;
-					
-					int screenX = (int) ((event.getResolution().getScaledWidth()/(scale*6) - fontRenderer.getStringWidth(str)/2));
-					int screenY = (int) ((event.getResolution().getScaledHeight()/18)/scale);
-					
 
-					GL11.glPushMatrix();
-					GL11.glScalef(scale*3, scale*3, scale*3);
+					String[] strs = str.split("\n");
+					int vertPos = 0;
+					for(String strPart : strs) {
 
-					fontRenderer.drawStringWithShadow(str, screenX, screenY, 0xFFFFFF);
+						FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
 
-					GL11.glPopMatrix();
+						float scale = str.length() < 50 ? 1f : 0.5f;
+
+						int screenX = (int) ((event.getResolution().getScaledWidth()/(scale*6) - fontRenderer.getStringWidth(strPart)/2));
+						int screenY = (int) ((event.getResolution().getScaledHeight()/18)/scale) + 18*vertPos;
+
+
+						GL11.glPushMatrix();
+						GL11.glScalef(scale*3, scale*3, scale*3);
+
+						fontRenderer.drawStringWithShadow(strPart, screenX, screenY, 0xFFFFFF);
+
+						GL11.glPopMatrix();
+						
+						vertPos++;
+					}
 				}
 			}
 
@@ -390,8 +398,8 @@ public class RocketEventHandler extends Gui {
 				if(AtmosphereHandler.currentAtm != null) {
 					str = AtmosphereHandler.currentAtm.getDisplayMessage();
 				}
-				
-				
+
+
 				int screenX = event.getResolution().getScaledWidth()/6 - fontRenderer.getStringWidth(str)/2;
 				int screenY = event.getResolution().getScaledHeight()/18;
 
@@ -459,7 +467,7 @@ public class RocketEventHandler extends Gui {
 				screenX = 12 + index*(size+2);
 
 				//Draw BG
-				
+
 				Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel -1, screenX - 4, screenY - 4, screenX + size - 2, screenY + size + 4,0.5d,0.5d,0d,1d);

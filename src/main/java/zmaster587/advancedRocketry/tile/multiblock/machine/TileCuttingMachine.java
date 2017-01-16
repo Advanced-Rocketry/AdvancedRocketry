@@ -1,8 +1,10 @@
 package zmaster587.advancedRocketry.tile.multiblock.machine;
 
 import java.util.List;
+
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.interfaces.IRecipe;
@@ -15,6 +17,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 
 public class TileCuttingMachine extends TileMultiblockMachine implements IModularInventory {
@@ -32,7 +35,7 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 	public void update() {
 		super.update();
 
-		if(isRunning() && worldObj.getWorldTime() % 20 == 0) {
+		if(isRunning() && worldObj.getTotalWorldTime() % 10 == 0) {
 			EnumFacing back = RotatableBlock.getFront(worldObj.getBlockState(pos)).getOpposite();
 
 			float xCoord = this.getPos().getX() + (0.5f*back.getFrontOffsetX()); 
@@ -49,6 +52,11 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 		return new AxisAlignedBB(pos.add(-2,-2,-2), pos.add(2,2,2));
 	}
 
+	@Override
+	public SoundEvent getSound() {
+		return AudioRegistry.cuttingMachine;
+	}
+	
 	@Override
 	public String getMachineName() {
 		return "container.cuttingmachine";

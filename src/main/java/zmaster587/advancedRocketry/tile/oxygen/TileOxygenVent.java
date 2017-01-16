@@ -17,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.Configuration;
@@ -24,37 +25,55 @@ import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.advancedRocketry.api.AreaBlob;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.IToggleableMachine;
 import zmaster587.libVulpes.block.BlockTile;
+import zmaster587.libVulpes.client.RepeatingSound;
+import zmaster587.libVulpes.inventory.modules.IButtonInventory;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleLiquidIndicator;
 import zmaster587.libVulpes.inventory.modules.ModulePower;
+import zmaster587.libVulpes.inventory.modules.ModuleRedstoneOutputButton;
+import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.IAdjBlockUpdate;
+import zmaster587.libVulpes.util.INetworkMachine;
+import zmaster587.libVulpes.util.ZUtils.RedstoneState;
+import io.netty.buffer.ByteBuf;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBlobHandler, IModularInventory, IAdjBlockUpdate {
+public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBlobHandler, IModularInventory, IAdjBlockUpdate, IToggleableMachine, IButtonInventory, INetworkMachine {
 
 	boolean isSealed;
 	boolean firstRun;
 	boolean hasFluid;
+	boolean soundInit;
 	int numScrubbers;
 	List<TileCO2Scrubber> scrubbers;
-
+	
+	RedstoneState state;
+	ModuleRedstoneOutputButton redstoneControl;
+	
+	
 	public TileOxygenVent() {
 		super(1000,2, 1000);
 		isSealed = true;
 		firstRun = true;
 		hasFluid = true;
+		soundInit = false;
 		numScrubbers = 0;
 		scrubbers = new LinkedList<TileCO2Scrubber>();
+		state = RedstoneState.ON;
+		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 0, "", this);
 	}
 
 	public TileOxygenVent(int energy, int invSize, int tankSize) {
@@ -62,7 +81,10 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		isSealed = false;
 		firstRun = false;
 		hasFluid = true;
+		soundInit = false;
 		scrubbers = new LinkedList<TileCO2Scrubber>();
+		state = RedstoneState.ON;
+		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 0, "", this);
 	}
 
 	@Override
@@ -139,6 +161,17 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		return fluid == AdvancedRocketryFluids.fluidOxygen && super.canFill( fluid);
 	}
 
+	public boolean getEquivilentPower() {
+		if(state == RedstoneState.OFF)
+			return true;
+
+		boolean state2 = worldObj.isBlockIndirectlyGettingPowered(pos) > 0;
+
+		if(state == RedstoneState.INVERTED)
+			state2 = !state2;
+		return state2;
+	}
+	
 	@Override
 	public void performFunction() {
 
@@ -159,14 +192,14 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 				firstRun = false;
 			}
 
-			if(isSealed && worldObj.isBlockIndirectlyGettingPowered(pos) == 0) {
+			if(isSealed && !getEquivilentPower()) {
 				AtmosphereHandler.getOxygenHandler(this.worldObj.provider.getDimension()).clearBlob(this);
 
 				deactivateAdjblocks();
 
 				setSealed(false);
 			}
-			else if(!isSealed && worldObj.isBlockIndirectlyGettingPowered(pos) > 0 && hasEnoughEnergy(getPowerPerOperation())) {
+			else if(!isSealed && getEquivilentPower() && hasEnoughEnergy(getPowerPerOperation())) {
 				setSealed(AtmosphereHandler.getOxygenHandler(this.worldObj.provider.getDimension()).addBlock(this, new HashedBlockPosition(pos)));
 
 
@@ -224,8 +257,10 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 			else
 				notEnoughEnergyForFunction();
 		}
-		if(worldObj.isRemote && isSealed && worldObj.getTotalWorldTime() % 30 == 0)
-			LibVulpes.proxy.playSound(worldObj, pos, AudioRegistry.airHissLoop, SoundCategory.BLOCKS,  0.2f,  0.975f + worldObj.rand.nextFloat()*0.05f);
+		if(!soundInit && worldObj.isRemote) {
+			LibVulpes.proxy.playSound(new RepeatingSound(AudioRegistry.airHissLoop, SoundCategory.BLOCKS, this));
+		}
+		soundInit = true;
 	}
 
 
@@ -312,6 +347,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 		modules.add(new ModulePower(18, 20, this));
 		modules.add(new ModuleLiquidIndicator(32, 20, this));
+		modules.add(redstoneControl);
 		//modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this, TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
 		//TODO add itemStack slots for liqiuid
 		return modules;
@@ -329,6 +365,50 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public boolean canFormBlob() {
-		return worldObj.isBlockIndirectlyGettingPowered(pos) > 0;
+		return getEquivilentPower();
+	}
+	
+	@Override
+	public boolean isRunning() {
+		return isSealed;
+	}
+
+	@Override
+	public void onInventoryButtonPressed(int buttonId) {
+			state = redstoneControl.getState();
+			PacketHandler.sendToServer(new PacketMachine(this, (byte)2));
+	}
+	
+	@Override
+	public void writeDataToNetwork(ByteBuf out, byte id) {
+		out.writeByte(state.ordinal());
+	}
+
+	@Override
+	public void readDataFromNetwork(ByteBuf in, byte packetId,
+			NBTTagCompound nbt) {
+		nbt.setByte("state", in.readByte());
+	}
+
+	@Override
+	public void useNetworkData(EntityPlayer player, Side side, byte id,
+			NBTTagCompound nbt) {
+		state = RedstoneState.values()[nbt.getByte("state")];
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		
+		state = RedstoneState.values()[nbt.getByte("redstoneState")];
+		redstoneControl.setRedstoneState(state);
+
+	}
+	
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		nbt.setByte("redstoneState", (byte) state.ordinal());
+		return nbt;
 	}
 }

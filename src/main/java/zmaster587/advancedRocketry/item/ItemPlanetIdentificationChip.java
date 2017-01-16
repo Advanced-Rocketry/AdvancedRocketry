@@ -8,7 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class ItemPlanetIdentificationChip extends ItemMultiData {
+public class ItemPlanetIdentificationChip extends ItemIdWithName {
 
 	private static final String dimensionNameIdentifier = "DimensionName";
 	private static final String dimensionIdIdentifier = "dimId";
