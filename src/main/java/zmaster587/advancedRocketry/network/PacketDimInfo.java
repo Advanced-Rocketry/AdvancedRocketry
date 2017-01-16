@@ -16,6 +16,7 @@ public class PacketDimInfo extends BasePacket {
 
 	DimensionProperties dimProperties;
 	int dimNumber;
+	boolean deleteDim;
 
 	public PacketDimInfo() {}
 
@@ -56,13 +57,11 @@ public class PacketDimInfo extends BasePacket {
 		PacketBuffer packetBuffer = new PacketBuffer(in);
 		NBTTagCompound nbt;
 		dimNumber = in.readInt();
+		
 
-		if(in.readBoolean()) {
-			if(DimensionManager.getInstance().isDimensionCreated(dimNumber)) {
-				DimensionManager.getInstance().deleteDimension(dimNumber);
-			}
-		}
-		else {
+		deleteDim = in.readBoolean();
+		
+		if(!deleteDim) {
 			//TODO: error handling
 			try {
 				nbt = packetBuffer.readNBTTagCompoundFromBuffer();
@@ -71,15 +70,8 @@ public class PacketDimInfo extends BasePacket {
 				e.printStackTrace();
 				return;
 			}
-
-			if(dimNumber == 0) {
-				DimensionManager.overworldProperties.readFromNBT(nbt);
-			}
-			else if( DimensionManager.getInstance().isDimensionCreated(dimNumber) ) {
-				DimensionManager.getInstance().getDimensionProperties(dimNumber).readFromNBT(nbt);
-			} else {
-				DimensionManager.getInstance().registerDimNoUpdate(DimensionProperties.createFromNBT(dimNumber, nbt), true);
-			}
+			dimProperties = new DimensionProperties(dimNumber);
+			dimProperties.readFromNBT(nbt);
 		}
 	}
 
@@ -89,7 +81,25 @@ public class PacketDimInfo extends BasePacket {
 	}
 
 	@Override
-	public void executeClient(EntityPlayer thePlayer) {}
+	public void executeClient(EntityPlayer thePlayer) {
+		if(deleteDim) {
+			if(DimensionManager.getInstance().isDimensionCreated(dimNumber)) {
+				DimensionManager.getInstance().deleteDimension(dimNumber);
+			}
+		}
+		else if(dimProperties != null)
+		{
+			if(dimNumber == 0) {
+				DimensionManager.overworldProperties = dimProperties;
+			}
+			else if( DimensionManager.getInstance().isDimensionCreated(dimNumber) ) {
+				DimensionManager.getInstance().setDimProperties(dimNumber, dimProperties);
+			} else {
+				DimensionManager.getInstance().registerDimNoUpdate(dimProperties, true);
+			}
+		}
+		
+	}
 
 	@Override
 	public void executeServer(EntityPlayerMP player) {}
