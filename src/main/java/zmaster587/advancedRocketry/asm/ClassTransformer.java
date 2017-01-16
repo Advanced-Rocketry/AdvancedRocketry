@@ -601,7 +601,7 @@ public class ClassTransformer implements IClassTransformer {
 		 * }
 		 * */
 
-		if(changedName.equals(getName(CLASS_KEY_ENTITY_PLAYER))) {
+		/*if(changedName.equals(getName(CLASS_KEY_ENTITY_PLAYER))) {
 			ClassNode cn = startInjection(bytes);
 			MethodNode mountEntityMethod = getMethod(cn, getName(METHOD_KEY_MOUNTENTITY), "(L"+ getName(CLASS_KEY_ENTITY) + ";)V");
 
@@ -662,7 +662,7 @@ public class ClassTransformer implements IClassTransformer {
 				AdvancedRocketry.logger.severe("ASM injection into EntityPlayer.mountEntity FAILED!");
 
 			return finishInjection(cn);
-		}
+		}*/
 
 		if(changedName.equals(getName(CLASS_KEY_ENTITY_ITEM))) {
 			ClassNode cn = startInjection(bytes);
