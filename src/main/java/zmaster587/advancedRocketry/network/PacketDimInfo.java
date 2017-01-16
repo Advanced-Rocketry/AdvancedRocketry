@@ -16,6 +16,7 @@ public class PacketDimInfo extends BasePacket {
 
 	DimensionProperties dimProperties;
 	int dimNumber;
+	boolean deleteDim;
 
 	public PacketDimInfo() {}
 
@@ -29,20 +30,18 @@ public class PacketDimInfo extends BasePacket {
 		NBTTagCompound nbt = new NBTTagCompound();
 		out.writeInt(dimNumber);
 		boolean flag = dimProperties == null;
-		
+
 		if(!flag) {
-			
+
 			//Try to send the nbt data of the dimension to the client, if it fails(probably due to non existent Biome ids) then remove the dimension
 			try {
 				dimProperties.writeToNBT(nbt);
 				PacketBuffer packetBuffer = new PacketBuffer(out);
 				out.writeBoolean(false);
-				//TODO: error handling
 				try {
 					packetBuffer.writeNBTTagCompoundToBuffer(nbt);
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
+				catch(IOException e) {}
 			} catch(NullPointerException e) {
 				out.writeBoolean(true);
 				e.printStackTrace();
@@ -62,12 +61,10 @@ public class PacketDimInfo extends BasePacket {
 		NBTTagCompound nbt;
 		dimNumber = in.readInt();
 
-		if(in.readBoolean()) {
-			if(DimensionManager.getInstance().isDimensionCreated(dimNumber)) {
-				DimensionManager.getInstance().deleteDimension(dimNumber);
-			}
-		}
-		else {
+
+		deleteDim = in.readBoolean();
+
+		if(!deleteDim) {
 			//TODO: error handling
 			try {
 				nbt = packetBuffer.readNBTTagCompoundFromBuffer();
@@ -76,15 +73,8 @@ public class PacketDimInfo extends BasePacket {
 				e.printStackTrace();
 				return;
 			}
-
-			if(dimNumber == 0) {
-				DimensionManager.overworldProperties.readFromNBT(nbt);
-			}
-			else if( DimensionManager.getInstance().isDimensionCreated(dimNumber) ) {
-				DimensionManager.getInstance().getDimensionProperties(dimNumber).readFromNBT(nbt);
-			} else {
-				DimensionManager.getInstance().registerDimNoUpdate(DimensionProperties.createFromNBT(dimNumber, nbt), true);
-			}
+			dimProperties = new DimensionProperties(dimNumber);
+			dimProperties.readFromNBT(nbt);
 		}
 	}
 
@@ -94,7 +84,25 @@ public class PacketDimInfo extends BasePacket {
 	}
 
 	@Override
-	public void executeClient(EntityPlayer thePlayer) {}
+	public void executeClient(EntityPlayer thePlayer) {
+		if(deleteDim) {
+			if(DimensionManager.getInstance().isDimensionCreated(dimNumber)) {
+				DimensionManager.getInstance().deleteDimension(dimNumber);
+			}
+		}
+		else if(dimProperties != null)
+		{
+			if(dimNumber == 0) {
+				DimensionManager.overworldProperties = dimProperties;
+			}
+			else if( DimensionManager.getInstance().isDimensionCreated(dimNumber) ) {
+				DimensionManager.getInstance().setDimProperties(dimNumber, dimProperties);
+			} else {
+				DimensionManager.getInstance().registerDimNoUpdate(dimProperties, true);
+			}
+		}
+
+	}
 
 	@Override
 	public void executeServer(EntityPlayerMP player) {}
