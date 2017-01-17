@@ -25,12 +25,14 @@ public class MapGenGeode extends MapGenBase {
 
 		if(ores == null) {
 			ores = new LinkedList<BlockMeta>();
-			for(int i = 0; i < Configuration.standardAsteroidOres.length; i++) {
-				String oreDictName = Configuration.standardAsteroidOres[i];
+			for(int i = 0; i < Configuration.standardGeodeOres.length; i++) {
+				String oreDictName = Configuration.standardGeodeOres[i];
 				List<ItemStack> ores2 = OreDictionary.getOres(oreDictName);
 
 				if(ores2 != null && !ores2.isEmpty()) {
-					ores.add(new BlockMeta(Block.getBlockFromItem(ores2.get(0).getItem()), ores2.get(0).getItemDamage()));
+					Block block = Block.getBlockFromItem(ores2.get(0).getItem());
+					if(block != null)
+						ores.add(new BlockMeta(block, ores2.get(0).getItemDamage()));
 				}
 			}
 		}

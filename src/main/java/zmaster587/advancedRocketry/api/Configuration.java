@@ -98,6 +98,7 @@ public class Configuration {
 	public static List<Class> bypassEntity = new LinkedList<Class>();
 	
 	public static List<Block> torchBlocks = new LinkedList<Block>();
+	public static String[] standardGeodeOres;
 
 	
 
