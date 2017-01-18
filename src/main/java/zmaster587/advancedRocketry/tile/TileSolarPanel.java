@@ -14,13 +14,13 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 
 	int powerPerTick;
 	ModuleText text;
-	
+
 	public TileSolarPanel() {
 		super(10000, 1);
 		powerPerTick = 1;
 		text = new ModuleText(60, 40, "Collecting Energy", 0x2f2f2f);
 	}
-	
+
 	@Override
 	public boolean canGeneratePower() {
 		return worldObj.canBlockSeeSky(this.pos) && worldObj.isDaytime();
@@ -40,19 +40,21 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 		}
 		else if(worldObj.isRemote)
 			text.setText("Unable to collect Energy");
-		transmitPower();
+
+		if(!worldObj.isRemote)
+			transmitPower();
 	}
-	
+
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		List<ModuleBase> modules = super.getModules(ID, player);
-		
+
 		modules.add(text);
-		
+
 		return modules;
 	}
 
-	
+
 	@Override
 	public int getPowerPerOperation() {
 		return powerPerTick;
