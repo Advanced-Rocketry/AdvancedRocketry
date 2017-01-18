@@ -63,7 +63,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	@Override
 	public boolean isPositionAllowed(World world, HashedBlockPosition pos, List<AreaBlob> otherBlobs) {
 		for(AreaBlob blob : otherBlobs) {
-			if(blob.contains(pos))
+			if(blob.contains(pos) && blob != this)
 				return false;
 		}
 		
