@@ -12,6 +12,7 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
+import zmaster587.advancedRocketry.inventory.modules.ModulePanetImage;
 import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
@@ -56,7 +57,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 	private ModuleText canWarp;
 	DimensionProperties dimCache;
 	private SpaceObject station;
-	ModuleScaledImage srcPlanetImg, dstPlanetImg, srcAtmo, dstAtmo;
+	ModulePanetImage srcPlanetImg, dstPlanetImg;
 	ModuleSync sync1, sync2, sync3;
 	ModuleText srcPlanetText, dstPlanetText, warpFuel, status;
 	int warpCost = -1;
@@ -147,9 +148,6 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 				modules.add(new ModuleScaledImage(baseX,baseY,sizeX,sizeY, zmaster587.libVulpes.inventory.TextureResources.starryBG));
 				modules.add(srcPlanetImg);
 
-
-				modules.add(srcAtmo);
-
 				modules.add(new ModuleText(baseX + 4, baseY + 4, "Orbiting:", 0xFFFFFF));
 				modules.add(srcPlanetText);
 
@@ -200,8 +198,6 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 					if(worldObj.isRemote ) {
 						modules.add(dstPlanetImg);
-						modules.add(dstAtmo);
-
 					}
 
 					modules.add(new ModuleText(baseX + 4, baseY + 4, "Dest:", 0xFFFFFF));
@@ -241,18 +237,18 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 		ISpaceObject station = getSpaceObject();
 		boolean isOnStation = station != null;
-		ResourceLocation location;
+		DimensionProperties location;
 		boolean hasAtmo = true;
 		String planetName;
 
 		if(isOnStation) {
 			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(station.getOrbitingPlanetId());
-			location = properties.getPlanetIcon();
+			location = properties;
 			hasAtmo = properties.hasAtmosphere();
 			planetName = properties.getName();
 		}
 		else {
-			location = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId).getPlanetIcon();
+			location = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId);
 			planetName = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId).getName();
 
 			if(planetName.isEmpty())
@@ -272,28 +268,25 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 				//Source planet
 				int baseX = 10;
 				int baseY = 20;
-				int sizeX = 70;
-				int sizeY = 70;
+				int sizeX = 65;
+				int sizeY = 65;
 
-				srcPlanetImg = new ModuleScaledImage(baseX + 10,baseY + 10,sizeX - 20, sizeY - 20, location);
-				srcAtmo = new ModuleScaledImage(baseX + 10,baseY + 10,sizeX - 20, sizeY - 20,0.4f, DimensionProperties.getAtmosphereResource());
-				srcPlanetText = new ModuleText(baseX + 4, baseY + 16, "", 0xFFFFFF);
-				warpFuel = new ModuleText(baseX + 82, baseY + sizeY + 30, "", 0x1b1b1b);
+				srcPlanetImg = new ModulePanetImage(baseX + 10,baseY + 10,sizeX - 20, location);
+				srcPlanetText = new ModuleText(baseX + 4, baseY + 56, "", 0xFFFFFF);
+				warpFuel = new ModuleText(baseX + 82, baseY + sizeY + 35, "", 0x1b1b1b);
 
 				//DEST planet
 				baseX = 94;
 				baseY = 20;
-				sizeX = 70;
-				sizeY = 70;
+				sizeX = 65;
+				sizeY = 65;
 
-				dstPlanetImg = new ModuleScaledImage(baseX + 10,baseY + 10,sizeX - 20, sizeY - 20, location);
-				dstAtmo = new ModuleScaledImage(baseX + 10,baseY + 10,sizeX - 20, sizeY - 20,0.4f, DimensionProperties.getAtmosphereResource());
-				dstPlanetText = new ModuleText(baseX + 4, baseY + 16, "", 0xFFFFFF);
+				dstPlanetImg = new ModulePanetImage(baseX + 10,baseY + 10,sizeX - 20, location);
+				dstPlanetText = new ModuleText(baseX + 4, baseY + 56, "", 0xFFFFFF);
 
 			}
 
-			srcPlanetImg.setResourceLocation(location);
-			srcAtmo.setVisible(hasAtmo);
+			srcPlanetImg.setDimProperties(location);
 			srcPlanetText.setText(planetName);
 
 
@@ -309,22 +302,18 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			if(dstProps != null) {
 				hasAtmo = dstProps.hasAtmosphere();
 				planetName = dstProps.getName();
-				location = dstProps.getPlanetIcon();
+				location = dstProps;
 
 
-				dstPlanetImg.setResourceLocation(location);
-				dstAtmo.setVisible(hasAtmo);
+				dstPlanetImg.setDimProperties(location);
 				dstPlanetText.setText(planetName);
 
 				dstPlanetImg.setVisible(true);
-				dstAtmo.setVisible(true);
-
 
 			}
 			else {
 				dstPlanetText.setText("???");
 				dstPlanetImg.setVisible(false);
-				dstAtmo.setVisible(false);
 			}
 		}
 	}
