@@ -1,5 +1,7 @@
 package zmaster587.advancedRocketry.block;
 
+import java.util.Locale;
+
 import zmaster587.advancedRocketry.api.IFuelTank;
 import zmaster587.advancedRocketry.block.BlockLinkedHorizontalTexture.IconNames;
 import net.minecraft.block.Block;
@@ -99,7 +101,7 @@ public class BlockFuelTank extends Block implements IFuelTank{
 
 		@Override
 		public String getName() {
-			return name().toLowerCase();
+			return name().toLowerCase(Locale.ENGLISH);
 		}
 
 	}
