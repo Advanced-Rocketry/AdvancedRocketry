@@ -458,7 +458,7 @@ public class SpaceObject implements ISpaceObject {
 						}
 					}
 				}
-				else
+				else if(cross.getOpposite() != moduleFacing)
 					chunk.rotateBy(stationFacing.offsetY == 0 ? cross :  cross.getOpposite());
 
 				int xCoord = (stationFacing.offsetX == 0 ? -srcTile.xCoord : srcTile.xCoord*stationFacing.offsetX) + stationFacing.offsetX + destTile.xCoord;
