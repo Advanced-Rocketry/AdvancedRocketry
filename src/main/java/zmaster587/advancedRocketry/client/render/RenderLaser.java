@@ -88,6 +88,13 @@ public class RenderLaser extends Render {
 	}
 
 	@Override
+	public void doRenderShadowAndFire(Entity p_76979_1_, double p_76979_2_,
+			double p_76979_4_, double p_76979_6_, float p_76979_8_,
+			float p_76979_9_) {
+		//Do not render shadow or fire
+	}
+	
+	@Override
 	protected ResourceLocation getEntityTexture(Entity entity) {
 		return null;
 	}
