@@ -91,11 +91,16 @@ public class XMLPlanetLoader {
 			nameNode = planetNode.getAttributes().getNamedItem("DIMID");
 			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
 				try {
+					
+					if(nameNode.getTextContent().isEmpty()) throw new NumberFormatException();
 					properties.setId(Integer.parseInt(nameNode.getTextContent()));
 					//We're not using the offset so decrement to prepare for next planet
 					offset--;
 				} catch (NumberFormatException e) {
-					AdvancedRocketry.logger.warning("Invalid DIMID specified"); //TODO: more detailed error msg
+					AdvancedRocketry.logger.warning("Invalid DIMID specified for planet " + properties.getName()); //TODO: more detailed error msg
+					list.remove(properties);
+					offset--;
+					return list;
 				}
 			}
 			
@@ -213,7 +218,12 @@ public class XMLPlanetLoader {
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("oreGen")) {
 				properties.oreProperties = XMLOreLoader.loadOre(planetPropertyNode);
 			}
-
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("GasGiant")) {
+				String text = planetPropertyNode.getTextContent();
+				if(text != null && !text.isEmpty() && text.equalsIgnoreCase("true"))
+					properties.setGasGiant();
+			}
+			
 			planetPropertyNode = planetPropertyNode.getNextSibling();
 		}
 		

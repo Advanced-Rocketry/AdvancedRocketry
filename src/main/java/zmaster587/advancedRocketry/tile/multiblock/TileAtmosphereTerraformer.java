@@ -506,7 +506,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 
 	@Override
 	public String getMachineName() {
-		return "atmospherefiller";
+		return "tile.atmoshereTerraformer.name";
 	}
 
 }

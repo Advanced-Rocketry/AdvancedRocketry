@@ -74,7 +74,7 @@ public class GenLayerBiomePlanet extends GenLayer {
 
 		List<BiomeEntry> biomeList = biomeEntries;
 		int totalWeight = WeightedRandom.getTotalWeight(biomeList);
-		int weight = nextInt(totalWeight / 10) * 10;
+		int weight = nextInt(Math.max(totalWeight / 10,1)) * 10;
 		return (BiomeEntry)WeightedRandom.getItem(biomeList, weight);
 	}
 }
