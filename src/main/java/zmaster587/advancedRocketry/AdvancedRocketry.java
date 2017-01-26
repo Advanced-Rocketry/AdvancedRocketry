@@ -1558,7 +1558,7 @@ public class AdvancedRocketry {
 				}
 
 				for(DimensionProperties properties : dimCouplingList.dims) {
-					DimensionManager.getInstance().registerDimNoUpdate(properties, true);
+					DimensionManager.getInstance().registerDimNoUpdate(properties, properties.isNativeDimension);
 					properties.setStar(properties.getStar());
 				}
 
