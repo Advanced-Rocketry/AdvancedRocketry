@@ -24,7 +24,7 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 	@Override
 	public boolean canGeneratePower() {
 		float angle = worldObj.getCelestialAngle(0);
-		return worldObj.canBlockSeeTheSky(xCoord,yCoord,zCoord) && (angle > 0.75 || angle < 0.25);
+		return worldObj.canBlockSeeTheSky(xCoord,yCoord + 1,zCoord) && (angle > 0.75 || angle < 0.25);
 	}
 
 	@Override

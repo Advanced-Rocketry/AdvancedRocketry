@@ -40,7 +40,7 @@ public class RendererObservatory  extends TileEntitySpecialRenderer {
 		GL11.glPushMatrix();
 
 		//Initial setup
-		int bright = tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord + 1, tile.zCoord,0);
+		int bright = tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord + 2, tile.zCoord,0);
 		int brightX = bright % 65536;
 		int brightY = bright / 65536;
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
