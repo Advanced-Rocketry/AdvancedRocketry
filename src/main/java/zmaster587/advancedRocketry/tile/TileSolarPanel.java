@@ -23,7 +23,7 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 
 	@Override
 	public boolean canGeneratePower() {
-		return worldObj.canBlockSeeSky(this.pos) && worldObj.isDaytime();
+		return worldObj.canBlockSeeSky(this.pos.up()) && worldObj.isDaytime();
 	}
 
 	@Override
