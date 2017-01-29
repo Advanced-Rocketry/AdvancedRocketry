@@ -66,7 +66,7 @@ public class TileRocketUnloader extends TileInventoryHatch implements IInfrastru
 	public void update() {
 
 		//Move a stack of items
-		if(rocket != null ) {
+		if(!worldObj.isRemote && rocket != null ) {
 			List<TileEntity> tiles = rocket.storage.getInventoryTiles();
 			boolean foundStack = false;
 			boolean rocketContainsNoItems = true;
