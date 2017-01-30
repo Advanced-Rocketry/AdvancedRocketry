@@ -4,7 +4,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.color.IBlockColor;
@@ -22,6 +24,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -256,6 +259,10 @@ public class ClientProxy extends CommonProxy {
 
 
 		//TODO fluids
+		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockOxygenFluid);
+		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockNitrogenFluid);
+		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockHydrogenFluid);
+		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockFuelFluid);
 		/*ModelLoader.setCustomMeshDefinition(Item, new ItemMeshDefinition() {
 
 		@Override
@@ -284,6 +291,23 @@ public class ClientProxy extends CommonProxy {
 		}
 	});*/
 	}
+	
+	private void registerFluidModel(IFluidBlock fluidBlock) {
+		Item item = Item.getItemFromBlock((Block) fluidBlock);
+
+		ModelBakery.registerItemVariants(item);
+
+		final ModelResourceLocation modelResourceLocation = new ModelResourceLocation("advancedrocketry:fluid", fluidBlock.getFluid().getName());
+		
+		//ModelLoader.setCustomMeshDefinition(item, MeshDefinitionFix.create(stack -> modelResourceLocation));
+
+		ModelLoader.setCustomStateMapper((Block) fluidBlock, new StateMapperBase() {
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState p_178132_1_) {
+				return modelResourceLocation;
+			}
+		});
+}
 
 	@SubscribeEvent
 	public void modelBakeEvent(ModelBakeEvent event) {
