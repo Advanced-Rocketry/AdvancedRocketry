@@ -59,7 +59,7 @@ public class Configuration {
 
 	public static double asteroidMiningMult;
 
-	public static String[] standardAsteroidOres;
+	public static List<String> standardAsteroidOres = new LinkedList<String>();
 
 	public static int atmosphereHandleBitMask;
 
@@ -88,14 +88,20 @@ public class Configuration {
 	public static boolean canPlayerRespawnInSpace;
 	public static float spaceLaserPowerMult;
 	public static List<Integer> laserBlackListDims = new LinkedList<Integer>();
-	public static String[] standardLaserDrillOres;
+	public static List<String> standardLaserDrillOres = new LinkedList<String>();
 	public static boolean laserDrillPlanet;
 	public static double asteroidMiningTimeMult;
 
 	/** list of entities of which atmospheric effects should not be applied **/
 	public static List<Class> bypassEntity = new LinkedList<Class>();
 	public static List<Block> torchBlocks = new LinkedList<Block>();
-	public static String[] standardGeodeOres;
+	public static List<String> standardGeodeOres = new LinkedList<String>();
+
+	public static boolean asteriodOresBlackList;
+
+	public static boolean geodeOresBlackList;
+
+	public static boolean laserDrillOresBlackList;
 
 	
 }

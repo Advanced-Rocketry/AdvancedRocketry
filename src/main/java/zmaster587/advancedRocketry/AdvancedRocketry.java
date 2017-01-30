@@ -238,7 +238,7 @@ public class AdvancedRocketry {
 	public static Logger logger = Logger.getLogger(Constants.modId);
 	private static Configuration config;
 	private static final String BIOMECATETORY = "Biomes";
-	String[] sealableBlockWhiteList, breakableTorches, harvestableGasses, entityList;
+	String[] sealableBlockWhiteList, breakableTorches, harvestableGasses, entityList, asteriodOres, geodeOres, orbitalLaserOres;;
 
 	public MaterialRegistry materialRegistry = new MaterialRegistry(); 
 
@@ -305,9 +305,13 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.gasCollectionMult = config.get(GAS_MINING, "gasMissionMultiplier", 1.0, "Multiplier for the amount of time gas collection missions take").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.asteroidMiningMult = config.get(ASTEROID, "miningMissionMultiplier", 1.0, "Multiplier changing how much total material is brought back from a mining mission").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.asteroidMiningTimeMult = config.get(ASTEROID, "miningMissionTmeMultiplier", 1.0, "Multiplier changing how long a mining mission takes").getDouble();
-		zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres = config.get(ASTEROID, "standardOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone"}, "List of oredictionary names of ores allowed to spawn in asteriods").getStringList();
-		zmaster587.advancedRocketry.api.Configuration.standardGeodeOres = config.get(oreGen, "geodeOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone"}, "List of oredictionary names of ores allowed to spawn in geodes").getStringList();
-		zmaster587.advancedRocketry.api.Configuration.standardLaserDrillOres = config.get(Configuration.CATEGORY_GENERAL, "laserDrillOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone", "oreDiamond"}, "List of oredictionary names of ores allowed to be mined by the laser drill if surface drilling is disabled").getStringList();
+		asteriodOres = config.get(ASTEROID, "standardOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone"}, "List of oredictionary names of ores allowed to spawn in asteriods").getStringList();
+		zmaster587.advancedRocketry.api.Configuration.asteriodOresBlackList = config.get(ASTEROID, "standardOres_blacklist", false, "True if the ores in standardOres should a be blacklist, false for whitelist").getBoolean();
+		geodeOres = config.get(oreGen, "geodeOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone"}, "List of oredictionary names of ores allowed to spawn in geodes").getStringList();
+		zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList = config.get(oreGen, "geodeOres_blacklist", false, "True if the ores in geodeOres should be a blacklist, false for whitelist").getBoolean();
+
+		orbitalLaserOres = config.get(Configuration.CATEGORY_GENERAL, "laserDrillOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone", "oreDiamond"}, "List of oredictionary names of ores allowed to be mined by the laser drill if surface drilling is disabled").getStringList();
+		zmaster587.advancedRocketry.api.Configuration.laserDrillOresBlackList = config.get(Configuration.CATEGORY_GENERAL, "laserDrillOres_blacklist", false, "True if the ores in laserDrillOres should be a blacklist, false for whitelist").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.laserDrillPlanet = config.get(Configuration.CATEGORY_GENERAL, "laserDrillPlanet", false, "If true the orbital laser will actually mine blocks on the planet below").getBoolean();
 		resetFromXml = config.getBoolean("resetPlanetsFromXML", Configuration.CATEGORY_GENERAL, false, "setting this to true will DELETE existing advancedrocketry planets and regen the solar system from the advanced planet XML file, satellites orbiting the overworld will remain intact and stations will be moved to the overworld.");
 		//Reset to false
@@ -1512,6 +1516,64 @@ public class AdvancedRocketry {
 		entityList = null;
 		logger.fine("End registering entity atmosphere bypass");
 
+		//Register asteriodOres
+				if(!zmaster587.advancedRocketry.api.Configuration.asteriodOresBlackList) {
+					for(String str  : asteriodOres)
+						zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres.add(str);
+				}
+				
+				//Register geodeOres
+				if(!zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList) {
+					for(String str  : geodeOres)
+						zmaster587.advancedRocketry.api.Configuration.standardGeodeOres.add(str);
+				}
+				
+				//Register laserDrill ores
+				if(!zmaster587.advancedRocketry.api.Configuration.laserDrillOresBlackList) {
+					for(String str  : orbitalLaserOres)
+						zmaster587.advancedRocketry.api.Configuration.standardLaserDrillOres.add(str);
+				}
+				
+
+				//Do blacklist stuff for ore registration
+				for(String oreName : OreDictionary.getOreNames()) {
+					if(zmaster587.advancedRocketry.api.Configuration.asteriodOresBlackList && oreName.startsWith("ore")) {
+						boolean found = false;
+						for(String str : asteriodOres) {
+							if(oreName.equals(str)) {
+								found = true;
+								break;
+							}
+						}
+						if(!found)
+							zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres.add(oreName);
+					}
+					
+					if(zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList && oreName.startsWith("ore")) {
+						boolean found = false;
+						for(String str : geodeOres) {
+							if(oreName.equals(str)) {
+								found = true;
+								break;
+							}
+						}
+						if(!found)
+							zmaster587.advancedRocketry.api.Configuration.standardGeodeOres.add(oreName);
+					}
+					
+					if(zmaster587.advancedRocketry.api.Configuration.laserDrillOresBlackList && oreName.startsWith("ore")) {
+						boolean found = false;
+						for(String str : orbitalLaserOres) {
+							if(oreName.equals(str)) {
+								found = true;
+								break;
+							}
+						}
+						if(!found)
+							zmaster587.advancedRocketry.api.Configuration.standardLaserDrillOres.add(oreName);
+					}
+				}
+		
 		//Load XML recipes
 		LibVulpes.instance.loadXMLRecipe(TileCuttingMachine.class);
 		LibVulpes.instance.loadXMLRecipe(TilePrecisionAssembler.class);

@@ -30,8 +30,8 @@ public class MapGenGeode extends MapGenBase {
 		this.chancePerChunk = chancePerChunk;
 		if(ores == null) {
 			ores = new LinkedList<BlockMeta>();
-			for(int i = 0; i < Configuration.standardGeodeOres.length; i++) {
-				String oreDictName = Configuration.standardGeodeOres[i];
+			for(int i = 0; i < Configuration.standardGeodeOres.size(); i++) {
+				String oreDictName = Configuration.standardGeodeOres.get(i);
 				List<ItemStack> ores2 = OreDictionary.getOres(oreDictName);
 
 				if(ores2 != null && !ores2.isEmpty()) {

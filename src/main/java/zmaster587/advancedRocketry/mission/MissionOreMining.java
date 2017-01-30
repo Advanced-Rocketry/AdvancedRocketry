@@ -50,7 +50,7 @@ public class MissionOreMining extends MissionResourceCollection {
 					ItemStack[] stacks = new ItemStack[totalStacks];
 					for (int i = 0; i < totalStacks; i++) {
 						if((compositionData/(double)maxData)*0.9d > Math.random()) {
-							String oreDictName = Configuration.standardAsteroidOres[(int)(Math.random()*Configuration.standardAsteroidOres.length)];
+							String oreDictName = Configuration.standardAsteroidOres.get((int)(Math.random()*Configuration.standardAsteroidOres.size()));
 							List<ItemStack> ores = OreDictionary.getOres(oreDictName);
 							if(ores != null && !ores.isEmpty()) {
 								stacks[i] = ores.get(0).copy();

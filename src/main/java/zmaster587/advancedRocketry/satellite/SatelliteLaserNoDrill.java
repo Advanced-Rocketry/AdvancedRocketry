@@ -31,8 +31,8 @@ public class SatelliteLaserNoDrill extends SatelliteBase {
 
 		if(ores == null) {
 			ores = new LinkedList<BlockMeta>();
-			for(int i = 0; i < Configuration.standardLaserDrillOres.length; i++) {
-				String oreDictName = Configuration.standardLaserDrillOres[i];
+			for(int i = 0; i < Configuration.standardLaserDrillOres.size(); i++) {
+				String oreDictName = Configuration.standardLaserDrillOres.get(i);
 				List<ItemStack> ores2 = OreDictionary.getOres(oreDictName);
 
 				if(ores2 != null && !ores2.isEmpty()) {
