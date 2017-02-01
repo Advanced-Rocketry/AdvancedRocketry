@@ -96,7 +96,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 		if(AtmosphereHandler.hasAtmosphereHandler(getDimension()) && Configuration.canPlayerRespawnInSpace) {
 			BlockPos coords = player.getBedLocation(getDimension());
 			
-			if(coords != null && worldObj.getBlockState(coords)== AdvancedRocketryBlocks.blockAstroBed && AtmosphereHandler.getOxygenHandler(player.worldObj.provider.getDimension()).getAtmosphereType(coords).isBreathable())
+			if(coords != null && worldObj.getBlockState(coords).getBlock() == AdvancedRocketryBlocks.blockAstroBed && AtmosphereHandler.getOxygenHandler(player.worldObj.provider.getDimension()).getAtmosphereType(coords).isBreathable())
 				return getDimension();
 		}
 		return 0;
