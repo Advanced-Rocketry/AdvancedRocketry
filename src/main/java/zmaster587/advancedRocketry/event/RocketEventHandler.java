@@ -9,6 +9,7 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
@@ -19,9 +20,11 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.api.Configuration;
@@ -40,6 +43,7 @@ import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.ZUtils;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -53,6 +57,10 @@ public class RocketEventHandler extends Gui {
 	private static boolean mapReady = false;
 	private static boolean mapNeedsBinding = false;
 	private static IntBuffer table,outerBoundsTable;
+	public static GuiBox suitPanel = new GuiBox(8,8,24,24);
+	public static GuiBox oxygenBar = new GuiBox(8,-57, 80, 48);
+	private static GuiBox currentlySelectedBox = null;
+
 
 	private static final int numTicksToDisplay = 100;
 
@@ -353,8 +361,8 @@ public class RocketEventHandler extends Gui {
 				Minecraft.getMinecraft().renderEngine.bindTexture(background);
 				GL11.glColor3f(1f, 1f, 1f);
 				int width = 83;
-				int screenX = event.resolution.getScaledWidth()/2 + 8;
-				int screenY = event.resolution.getScaledHeight() - 57;
+				int screenX = oxygenBar.getRenderX();//+ 8;
+				int screenY = oxygenBar.getRenderY();//- 57;
 
 				//Draw BG
 				this.drawTexturedModalRect(screenX, screenY, 23, 0, width, 17);
@@ -395,6 +403,41 @@ public class RocketEventHandler extends Gui {
 				GL11.glPopMatrix();
 			}
 		}
+		
+		//Hacky... yes...
+		mouseInputEvent(new InputEvent.MouseInputEvent());
+	}
+	
+	@SubscribeEvent
+	public void mouseInputEvent(InputEvent.MouseInputEvent event) {
+		if(!Configuration.lockUI && !Mouse.isGrabbed()) {
+
+			if(Mouse.isButtonDown(2)) {
+				ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft(), Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
+				int i = scaledresolution.getScaledWidth();
+				int j = scaledresolution.getScaledHeight();
+				int mouseX =  Mouse.getX() * i / Minecraft.getMinecraft().displayWidth;
+				int mouseY = j - Mouse.getY() * j / Minecraft.getMinecraft().displayHeight - 1;
+
+				if(currentlySelectedBox == null && mouseX >= suitPanel.getX(i) && mouseX < suitPanel.getX(i) + suitPanel.sizeX &&
+						mouseY >= suitPanel.getY(j) && mouseY < suitPanel.getY(j) + suitPanel.sizeY) {
+					currentlySelectedBox = suitPanel;
+				}
+				
+				if(currentlySelectedBox == null && mouseX >= oxygenBar.getX(i) && mouseX < oxygenBar.getX(i) + oxygenBar.sizeX &&
+						mouseY >= oxygenBar.getY(j) && mouseY < oxygenBar.getY(j) + oxygenBar.sizeY) {
+					currentlySelectedBox = oxygenBar;
+				}
+
+				if(currentlySelectedBox != null) {
+
+					currentlySelectedBox.setRenderX(mouseX, i);
+					currentlySelectedBox.setRenderY(mouseY, j);
+				}
+			}
+			else
+				currentlySelectedBox = null;
+		}
 	}
 
 	private void renderModuleSlots(ItemStack armorStack, int slot, RenderGameOverlayEvent event) {
@@ -408,8 +451,8 @@ public class RocketEventHandler extends Gui {
 		if(armorStack != null && armorStack.getItem() instanceof IModularArmor) {
 
 			int size = 24;
-			int screenY = 8 + slot*(size + 8);
-			int screenX = 8;
+			int screenY = suitPanel.getRenderY() + (slot-1)*(size + 8) + 32;
+			int screenX = suitPanel.getRenderX();
 
 			//Draw BG
 			GL11.glColor4f(1f,1f,1f, 1f);
@@ -441,7 +484,7 @@ public class RocketEventHandler extends Gui {
 
 				if(texture != null) {
 
-					screenX = 12 + index*(size+2);
+					screenX = suitPanel.getRenderX() + 4 + index*(size+2);
 
 					//Draw BG
 					Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
@@ -461,7 +504,7 @@ public class RocketEventHandler extends Gui {
 				}
 			}
 
-			screenX = (index)*(size+2) - 4;
+			screenX = (index)*(size+2) + suitPanel.getRenderX() - 12;
 			//Draw BG
 			GL11.glColor4f(1f, 1f, 1f,1f);
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
@@ -471,5 +514,131 @@ public class RocketEventHandler extends Gui {
 		}
 
 		GL11.glDisable(GL11.GL_BLEND);
+	}
+	
+	public static class GuiBox {
+		private int x;
+		private int y;
+		int modeX = -1;
+		int modeY = -1;
+		int sizeX, sizeY;
+		boolean isVisible = true;
+		
+		public GuiBox(int x, int y, int sizeX, int sizeY) {
+			this.setRawX(x);
+			this.setRawY(y);
+			this.sizeX = sizeX;
+			this.sizeY = sizeY;
+		}
+
+		public int getX(int scaledW) { 
+			
+			if(modeX == 1)
+				return scaledW - getRawX();
+			else if(modeX == 0) {
+				return scaledW/2 - getRawX();
+			}
+			return getRawX();
+		}
+
+		public int getY(int scaledH) { 
+			
+			if(modeY == 1)
+				return scaledH - getRawY();
+			else if(modeY == 0) {
+				return scaledH/2 - getRawY();
+			}
+			return getRawY();
+		}
+
+		public void setRenderX(int x, double scaleX) {
+			double i = scaleX;
+			if(x < i/3) {
+				modeX = -1;
+				this.setRawX(x); 
+			}
+			else if(x > i*2/3) {
+				this.setRawX((int) (i - x));
+				modeX = 1;
+			}
+			else {
+				this.setRawX((int)(i/2 - x));
+				modeX = 0;
+			}
+		}
+
+		public void setRenderY(int y, double scaleY) {
+			double i = scaleY;
+			if(y < i/3) {
+				modeY = -1;
+				this.setRawY(y); 
+			}
+			else if(y > i*2/3) {
+				this.setRawY((int) (i - y));
+				modeY = 1;
+			}
+			else {
+				this.setRawY((int)(i/2 - y));
+				modeY = 0;
+			}
+		}
+
+		public int getRenderX() {
+			ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft(), Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
+			int i = scaledresolution.getScaledWidth();
+
+			if( modeX == 1) {
+				return i - getRawX();
+			}
+			else if (modeX == 0) {
+				return i/2 - getRawX();
+			}
+			return this.getRawX();
+		}
+
+		public int getRenderY() {
+			ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft(), Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
+			int i = scaledresolution.getScaledHeight();
+
+			if( modeY == 1) {
+				return i - getRawY();
+			}
+			else if (modeY == 0) {
+				return i/2 - getRawY();
+			}
+			return this.getRawY();
+		}
+
+		public int getRawX() {
+			return x;
+		}
+
+		public void setRawX(int x) {
+			this.x = x;
+		}
+
+		public int getRawY() {
+			return y;
+		}
+
+		public void setRawY(int y) {
+			this.y = y;
+		}
+
+		public void setSizeModeX(int int1) {
+			modeX = int1;
+		}
+		
+		public void setSizeModeY(int int1) {
+			modeY = int1;
+		}
+
+		public int getSizeModeX() {
+			return modeX;
+		}
+		
+		public int getSizeModeY() {
+			return modeY;
+		}
 	}
 }

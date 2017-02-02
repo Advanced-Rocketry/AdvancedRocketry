@@ -364,7 +364,8 @@ public class AdvancedRocketry {
 				logger.warning("Invalid number \"" + s + "\" for laser dimid blacklist");
 			}
 		}
-
+		proxy.loadUILayout(config);
+		
 		config.save();
 
 		//Register Packets
