@@ -73,4 +73,16 @@ public class CommonProxy {
 	public void spawnLaser(Entity entity, Vec3d toPos) {
 		PacketHandler.sendToPlayersTrackingEntity(new PacketLaserGun(entity, toPos), entity);
 	}
+
+	public void loadUILayout(
+			net.minecraftforge.common.config.Configuration config) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void saveUILayout(
+			net.minecraftforge.common.config.Configuration configuration) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -104,6 +104,8 @@ public class Configuration {
 	public static boolean geodeOresBlackList;
 	public static boolean laserDrillOresBlackList;
 
+	public static boolean lockUI;
+
 	
 
 }

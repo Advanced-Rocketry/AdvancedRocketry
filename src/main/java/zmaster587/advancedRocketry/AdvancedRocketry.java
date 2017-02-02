@@ -374,6 +374,9 @@ public class AdvancedRocketry {
 			}
 		}
 
+		//Load client and UI positioning stuff
+		proxy.loadUILayout(config);
+		
 		config.save();
 
 		//Register cap events
@@ -1818,6 +1821,8 @@ public class AdvancedRocketry {
 		SpaceObjectManager.getSpaceManager().onServerStopped();
 		zmaster587.advancedRocketry.api.Configuration.MoonId = -1;
 		DimensionManager.getInstance().overworldProperties.resetProperties();
+		
+		proxy.saveUILayout(config);
 	}
 
 	@SubscribeEvent
