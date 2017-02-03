@@ -74,7 +74,7 @@ public class XMLPlanetLoader {
 
 
 		DimensionProperties properties = new DimensionProperties(DimensionManager.getInstance().getNextFreeDim(offset));
-		
+
 		if(properties == null)
 			return list;
 		list.add(properties);
@@ -87,18 +87,22 @@ public class XMLPlanetLoader {
 			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
 				properties.setName(nameNode.getNodeValue());
 			}
-			
+
 			nameNode = planetNode.getAttributes().getNamedItem("DIMID");
 			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
 				try {
+					if(nameNode.getTextContent().isEmpty()) throw new NumberFormatException();
 					properties.setId(Integer.parseInt(nameNode.getTextContent()));
 					//We're not using the offset so decrement to prepare for next planet
 					offset--;
 				} catch (NumberFormatException e) {
-					AdvancedRocketry.logger.warning("Invalid DIMID specified"); //TODO: more detailed error msg
+					AdvancedRocketry.logger.warning("Invalid DIMID specified for planet " + properties.getName()); //TODO: more detailed error msg
+					list.remove(properties);
+					offset--;
+					return list;
 				}
 			}
-			
+
 			nameNode = planetNode.getAttributes().getNamedItem("dimMapping");
 			if(nameNode != null) {
 				properties.isNativeDimension = false;
@@ -108,35 +112,60 @@ public class XMLPlanetLoader {
 		while(planetPropertyNode != null) {
 			if(planetPropertyNode.getNodeName().equalsIgnoreCase("fogcolor")) {
 				String[] colors = planetPropertyNode.getTextContent().split(",");
-				if(colors.length >= 3) {
-					float rgb[] = new float[3];
+				try {
+					if(colors.length >= 3) {
+						float rgb[] = new float[3];
 
-					try {
+
 						for(int j = 0; j < 3; j++)
 							rgb[j] = Float.parseFloat(colors[j]);
 						properties.fogColor = rgb;
-					} catch (NumberFormatException e) {
-						AdvancedRocketry.logger.warning("Invalid fog color specified"); //TODO: more detailed error msg
+
 					}
+					else if(colors.length == 1) {
+						int cols = Integer.parseUnsignedInt(colors[0].substring(2), 16);
+						float rgb[] = new float[3];
+
+						rgb[0] = ((cols >>> 16) & 0xff) / 255f;
+						rgb[1] = ((cols >>> 8) & 0xff) / 255f;
+						rgb[2] = (cols & 0xff) / 255f;
+
+						properties.fogColor = rgb;
+					}
+					else
+						AdvancedRocketry.logger.warning("Invalid number of floats specified for fog color (Required 3, comma sperated)"); //TODO: more detailed error msg
+				} catch (NumberFormatException e) {
+					AdvancedRocketry.logger.warning("Invalid fog color specified"); //TODO: more detailed error msg
 				}
-				else
-					AdvancedRocketry.logger.warning("Invalid number of floats specified for fog color (Required 3, comma sperated)"); //TODO: more detailed error msg
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("skycolor")) {
 				String[] colors = planetPropertyNode.getTextContent().split(",");
-				if(colors.length >= 3) {
-					float rgb[] = new float[3];
+				try {
 
-					try {
+					if(colors.length >= 3) {
+						float rgb[] = new float[3];
+
 						for(int j = 0; j < 3; j++)
 							rgb[j] = Float.parseFloat(colors[j]);
 						properties.skyColor = rgb;
-					} catch (NumberFormatException e) {
-						AdvancedRocketry.logger.warning("Invalid sky color specified"); //TODO: more detailed error msg
+
 					}
+					else if(colors.length == 1) {
+						int cols = Integer.parseUnsignedInt(colors[0].substring(2), 16);
+						float rgb[] = new float[3];
+
+						rgb[0] = ((cols >>> 16) & 0xff) / 255f;
+						rgb[1] = ((cols >>> 8) & 0xff) / 255f;
+						rgb[2] = (cols & 0xff) / 255f;
+
+						properties.skyColor = rgb;
+					}
+					else
+						AdvancedRocketry.logger.warning("Invalid number of floats specified for sky color (Required 3, comma sperated)"); //TODO: more detailed error msg
+
+				} catch (NumberFormatException e) {
+					AdvancedRocketry.logger.warning("Invalid sky color specified"); //TODO: more detailed error msg
 				}
-				else
-					AdvancedRocketry.logger.warning("Invalid number of floats specified for sky color (Required 3, comma sperated)"); //TODO: more detailed error msg
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("atmosphereDensity")) {
 
@@ -215,11 +244,15 @@ public class XMLPlanetLoader {
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("hasRings")) {
 				properties.hasRings = Boolean.parseBoolean(planetPropertyNode.getTextContent());
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("GasGiant")) {
+				String text = planetPropertyNode.getTextContent();
+				if(text != null && !text.isEmpty() && text.equalsIgnoreCase("true"))
+					properties.setGasGiant();
 			}
 
 			planetPropertyNode = planetPropertyNode.getNextSibling();
 		}
-		
+
 		//Star may not be registered at this time, use ID version instead
 		properties.setStar(star.getId());
 
@@ -230,7 +263,7 @@ public class XMLPlanetLoader {
 		return list;
 	}
 
-	
+
 	public StellarBody readStar(Node planetNode) {
 		StellarBody star = new StellarBody();
 		if(planetNode.hasAttributes()) {
@@ -270,13 +303,13 @@ public class XMLPlanetLoader {
 			}
 
 			nameNode = planetNode.getAttributes().getNamedItem("numPlanets");
-			
+
 			try {
 				maxPlanetNumber.put(star ,Integer.parseInt(nameNode.getNodeValue()));
 			} catch (Exception e) {
 				AdvancedRocketry.logger.warning("Invalid number of planets specified in xml config!");
 			}
-			
+
 			nameNode = planetNode.getAttributes().getNamedItem("numGasGiants");
 			try {
 				maxGasPlanetNumber.put(star ,Integer.parseInt(nameNode.getNodeValue()));
@@ -288,7 +321,7 @@ public class XMLPlanetLoader {
 		star.setId(starId++);
 		return star;
 	}
-	
+
 	public DimensionPropertyCoupling readAllPlanets() {
 		DimensionPropertyCoupling coupling = new DimensionPropertyCoupling();
 
@@ -322,12 +355,12 @@ public class XMLPlanetLoader {
 		}
 		return coupling;
 	}
-	
+
 	public static class DimensionPropertyCoupling {
-		
+
 		public List<StellarBody> stars = new LinkedList<StellarBody>();
 		public List<DimensionProperties> dims = new LinkedList<DimensionProperties>();
-		
-		
+
+
 	}
 }

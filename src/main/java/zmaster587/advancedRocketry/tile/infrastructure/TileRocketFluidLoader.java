@@ -63,7 +63,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.loader.3.name";
+		return "tile.loader.5.name";
 	}
 
 	@Override

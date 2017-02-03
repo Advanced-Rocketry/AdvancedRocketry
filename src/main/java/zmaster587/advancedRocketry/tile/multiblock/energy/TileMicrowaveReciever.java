@@ -212,6 +212,24 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 		powerMadeLastTick = nbt.getInteger("amtPwr");
 		readNetworkData(nbt);
 	}
+	
+	@Override
+	public NBTTagCompound getUpdateTag() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setBoolean("canRender", canRender);
+		nbt.setInteger("amtPwr", powerMadeLastTick);
+		writeToNBT(nbt);
+		return nbt;
+	}
+
+	@Override
+	public void handleUpdateTag(NBTTagCompound nbt) {
+		powerMadeLastTick = nbt.getInteger("amtPwr");
+		canRender = nbt.getBoolean("canRender");
+		readNetworkData(nbt);
+	}
+	
+	
 
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {

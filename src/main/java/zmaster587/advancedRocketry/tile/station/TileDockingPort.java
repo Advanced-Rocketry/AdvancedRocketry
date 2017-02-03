@@ -135,7 +135,15 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 
 	@Override
 	public void invalidate() {
+		super.invalidate();
 		unregisterTileWithStation(worldObj, pos);
+	}
+
+	
+	@Override
+	public void onLoad() {
+		super.onLoad();
+		registerTileWithStation(worldObj, pos);
 	}
 
 	@Override

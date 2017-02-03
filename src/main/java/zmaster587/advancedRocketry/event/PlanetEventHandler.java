@@ -58,6 +58,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
@@ -151,16 +152,9 @@ public class PlanetEventHandler {
 		if(event.getEntity().worldObj.isRemote && event.getEntity().posY > 260 && event.getEntity().posY < 270 && event.getEntity().motionY < -.1) {
 			RocketEventHandler.destroyOrbitalTextures(event.getEntity().worldObj);
 		}
-		if(event.getEntity().worldObj.provider instanceof IPlanetaryProvider && !event.getEntity().isInWater()) {
-			IPlanetaryProvider planet = (IPlanetaryProvider)event.getEntity().worldObj.provider;
-			if(!(event.getEntity() instanceof EntityPlayer) || !((EntityPlayer)event.getEntity()).capabilities.isFlying) {
-				//event.getEntity().motionY += 0.075f - planet.getGravitationalMultiplier((int)event.getEntity().posX, (int)event.getEntity().posZ)*0.075f;
-			}
-		}
-		else if(event.getEntity().worldObj.provider.getDimension() == 0) {
-			if(!(event.getEntity() instanceof EntityPlayer) || !((EntityPlayer)event.getEntity()).capabilities.isFlying) {
-				//event.getEntity().motionY += 0.075f - DimensionManager.overworldProperties.gravitationalMultiplier*0.075f;
-			}
+		if(event.getEntity().isInWater()) {
+			if(AtmosphereType.LOWOXYGEN.isImmune(event.getEntityLiving()))
+				event.getEntity().setAir(300);
 		}
 
 		if(!event.getEntity().worldObj.isRemote && event.getEntity().worldObj.getTotalWorldTime() % 20 ==0 && event.getEntity() instanceof EntityPlayer) {

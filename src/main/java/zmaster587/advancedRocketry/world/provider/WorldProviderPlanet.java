@@ -54,7 +54,9 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IRenderHandler getSkyRenderer() {
-		return skyRender == null ? skyRender = new RenderPlanetarySky() : skyRender;
+		if(skyRender == null)
+			 setSkyRenderer(new RenderPlanetarySky());
+		return skyRender;
 	}
 
 	@Override
@@ -96,7 +98,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 		if(AtmosphereHandler.hasAtmosphereHandler(getDimension()) && Configuration.canPlayerRespawnInSpace) {
 			BlockPos coords = player.getBedLocation(getDimension());
 			
-			if(coords != null && worldObj.getBlockState(coords)== AdvancedRocketryBlocks.blockAstroBed && AtmosphereHandler.getOxygenHandler(player.worldObj.provider.getDimension()).getAtmosphereType(coords).isBreathable())
+			if(coords != null && worldObj.getBlockState(coords).getBlock() == AdvancedRocketryBlocks.blockAstroBed && AtmosphereHandler.getOxygenHandler(player.worldObj.provider.getDimension()).getAtmosphereType(coords).isBreathable())
 				return getDimension();
 		}
 		return 0;

@@ -471,7 +471,7 @@ public class SpaceObject implements ISpaceObject {
 						}
 					}
 				}
-				else
+				else if(cross.getOpposite() != moduleFacing)
 					chunk.rotateBy(stationFacing.getFrontOffsetY() == 0 ? cross : cross.getOpposite());
 
 				int xCoord = (stationFacing.getFrontOffsetX() == 0 ? -srcTile.getPos().getX() : srcTile.getPos().getX()*stationFacing.getFrontOffsetX()) + stationFacing.getFrontOffsetX() + destTile.getPos().getX();

@@ -1,5 +1,7 @@
 package zmaster587.advancedRocketry.api;
 
+import java.util.Locale;
+
 import net.minecraft.nbt.NBTTagCompound;
 
 public class DataStorage {
@@ -14,7 +16,7 @@ public class DataStorage {
 		MASS;
 
 		public String toString() {
-			return "data." + name().toLowerCase() + ".name";
+			return "data." + name().toLowerCase(Locale.ENGLISH) + ".name";
 		};
 	}
 

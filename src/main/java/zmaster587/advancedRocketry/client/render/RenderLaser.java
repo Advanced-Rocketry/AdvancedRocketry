@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.client.render;
 
 import org.lwjgl.opengl.GL11;
 
+import zmaster587.advancedRocketry.entity.EntityLaserNode;
 import zmaster587.libVulpes.render.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
@@ -16,7 +17,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderLaser extends Render implements IRenderFactory<Entity> {
+public class RenderLaser extends Render implements IRenderFactory<EntityLaserNode> {
 
 	private static final ResourceLocation flare = new ResourceLocation("advancedrocketry", "textures/entity/Flare.png");
 
@@ -156,6 +157,12 @@ public class RenderLaser extends Render implements IRenderFactory<Entity> {
 
 	}
 
+	@Override
+	public void doRenderShadowAndFire(Entity entityIn, double x, double y,
+			double z, float yaw, float partialTicks) {
+		//Do not render shadow or fire
+	}
+	
 	@Override
 	protected ResourceLocation getEntityTexture(Entity entity) {
 		return null;
