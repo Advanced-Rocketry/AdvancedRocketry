@@ -17,7 +17,7 @@ import zmaster587.libVulpes.network.PacketHandler;
  */
 public class AtmosphereVacuum extends AtmosphereType {
 
-	Class powerSuitItem;
+	static Class powerSuitItem;
 	public static int damageValue;
 	
 	public AtmosphereVacuum() {
@@ -59,7 +59,7 @@ public class AtmosphereVacuum extends AtmosphereType {
 				(protectsFrom(chest, 2) || ((chest.getItem() instanceof IFillableArmor) && ((IFillableArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).decrementAir(chest, 1) > 0));
 	}
 	
-	private boolean protectsFrom(ItemStack stack, int slot) {
+	public static boolean protectsFrom(ItemStack stack, int slot) {
 		
 		if(CompatibilityMgr.powerSuits) {
 			if( powerSuitItem == null)

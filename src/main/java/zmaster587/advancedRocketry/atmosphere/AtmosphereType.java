@@ -13,6 +13,7 @@ public class AtmosphereType implements IAtmosphere {
 	public static final AtmosphereType AIR = new AtmosphereType(false, true, "air");
 	public static final AtmosphereType PRESSURIZEDAIR = new AtmosphereType(false, true, "PressurizedAir");
 	public static final AtmosphereType VACUUM = new AtmosphereVacuum();
+	public static final AtmosphereType LOWOXYGEN = new AtmosphereLowOxygen(true, false, "lowO2");
 
 	static {
 		AtmosphereRegister.getInstance().registerAtmosphere(AIR);
