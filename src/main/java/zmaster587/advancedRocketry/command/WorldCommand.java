@@ -372,6 +372,8 @@ public class WorldCommand implements ICommand {
 										field.set(properties, Float.parseFloat(string[3]));
 									else if(Double.TYPE == field.getType()) 
 										field.set(properties, Double.parseDouble(string[3]));
+									else if(Boolean.TYPE == field.getType())
+										field.set(properties, Boolean.parseBoolean(string[3]));
 									else
 										field.set(properties, string[3]);
 								}

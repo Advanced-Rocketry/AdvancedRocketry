@@ -149,11 +149,16 @@ public class RenderPlanetarySky extends IRenderHandler {
 		double myPhi = 0, myTheta = 0, myPrevOrbitalTheta = 0, myRotationalPhi = 0;;
 		boolean hasAtmosphere = false, isMoon;
 		float parentAtmColor[] = new float[]{1f,1f,1f};
+		float ringColor[] = {0f,0f,0f};
+		float parentRingColor[] = {0f,0f,0f};
 		boolean isWarp = false;
 		boolean isGasGiant = false;
+		boolean hasRings = false;
+		boolean parentHasRings = false;
 		ForgeDirection travelDirection = null;
 		ResourceLocation parentPlanetIcon = null;
 		List<DimensionProperties> children;
+		float celestialAngle = mc.theWorld.getCelestialAngle(partialTicks);
 
 		ForgeDirection axis = ForgeDirection.EAST;
 
@@ -171,7 +176,9 @@ public class RenderPlanetarySky extends IRenderHandler {
 			myTheta = properties.orbitTheta;
 			myRotationalPhi = properties.rotationalPhi;
 			myPrevOrbitalTheta = properties.prevOrbitalTheta;
-			
+			hasRings = properties.hasRings();
+			ringColor = properties.ringColor;
+
 			children = new LinkedList<DimensionProperties>();
 			for (Integer i : properties.getChildPlanets()) {
 				children.add(DimensionManager.getInstance().getDimensionProperties(i));
@@ -187,6 +194,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 				planetOrbitalDistance = properties.getParentOrbitalDistance();
 				parentAtmColor = parentProperties.skyColor;
 				parentPlanetIcon = getTextureForPlanet(parentProperties);
+				parentHasRings = parentProperties.hasRings;
+				parentRingColor = parentProperties.ringColor;
 
 			}
 
@@ -233,7 +242,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GL11.glColor3f(f1, f2, f3);
 		Tessellator tessellator1 = Tessellator.instance;
 		GL11.glDepthMask(false);
-		
+
 		GL11.glEnable(GL11.GL_FOG);
 		GL11.glColor3f(f1, f2, f3);
 		GL11.glCallList(this.glSkyList);
@@ -242,7 +251,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GL11.glEnable(GL11.GL_BLEND);
 		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 		RenderHelper.disableStandardItemLighting();
-		float[] afloat = mc.theWorld.provider.calcSunriseSunsetColors(mc.theWorld.getCelestialAngle(partialTicks), partialTicks);
+		float[] afloat = mc.theWorld.provider.calcSunriseSunsetColors(celestialAngle, partialTicks);
 		float f7;
 		float f8;
 		float f9;
@@ -308,10 +317,53 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, f6);
 		GL11.glTranslatef(f7, f8, f9);
 		GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-		
-		GL11.glRotatef((float)myRotationalPhi, 0f, 1f, 0f);
-		GL11.glRotatef(isWarp ? 0 : mc.theWorld.getCelestialAngle(partialTicks) * 360.0F, axis.offsetX, axis.offsetY, axis.offsetZ);
 
+		GL11.glRotatef((float)myRotationalPhi, 0f, 1f, 0f);
+		
+		float multiplier = (2-atmosphere)/2f;//atmosphere > 1 ? (2-atmosphere) : 1f;
+		multiplier *= 1-mc.theWorld.getRainStrength(partialTicks);
+
+		if(hasRings) {
+			GL11.glPushMatrix();
+			GL11.glRotatef(90f, 0f, 1f, 0f);
+			
+			f10 = 100;
+			double ringDist = 0;
+			mc.renderEngine.bindTexture(DimensionProperties.planetRings);
+			
+			GL11.glRotated(70, 1, 0, 0);
+			GL11.glTranslated(0, -10, 50);
+			GL11.glColor4f(ringColor[0], ringColor[1], ringColor[2],multiplier);
+			tessellator1.startDrawing(GL11.GL_QUADS);
+			tessellator1.addVertexWithUV((double)f10, ringDist, (double)(-f10),1.0D, 0.0D);
+			tessellator1.addVertexWithUV((double)(-f10), ringDist, (double)(-f10), 0.0D, 0.0D);
+			tessellator1.addVertexWithUV((double)(-f10), ringDist, (double)f10, 0.0D, 1.0D);
+			tessellator1.addVertexWithUV((double)f10, ringDist, (double)f10, 1.0D, 1.0D);
+			tessellator1.draw();
+			GL11.glPopMatrix();
+			
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glPushMatrix();
+			
+			GL11.glRotatef(90f, 0f, 1f, 0f);
+			GL11.glRotated(70, 1, 0, 0);
+			GL11.glTranslated(0, -10, 50);
+			
+			mc.renderEngine.bindTexture(DimensionProperties.planetRingShadow);
+			GL11.glColor4f(0f, 0f, 0f,1);
+			tessellator1.startDrawing(GL11.GL_QUADS);
+			tessellator1.addVertexWithUV((double)f10, ringDist, (double)(-f10),1.0D, 0.0D);
+			tessellator1.addVertexWithUV((double)(-f10), ringDist, (double)(-f10), 0.0D, 0.0D);
+			tessellator1.addVertexWithUV((double)(-f10), ringDist, (double)f10, 0.0D, 1.0D);
+			tessellator1.addVertexWithUV((double)f10, ringDist, (double)f10, 1.0D, 1.0D);
+			tessellator1.draw();
+			GL11.glPopMatrix();
+			
+			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, 1, 0);
+		}
+		
+		GL11.glRotatef(isWarp ? 0 : celestialAngle * 360.0F, axis.offsetX, axis.offsetY, axis.offsetZ);
+		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		float f18 = mc.theWorld.getStarBrightness(partialTicks) * f6 * (atmosphere) + (1-atmosphere);
 		if(mc.theWorld.isRaining())
@@ -355,10 +407,6 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 		mc.renderEngine.bindTexture(TextureResources.locationSunPng);
 
-
-		float multiplier = atmosphere > 1 ? (2-atmosphere) : 1f;
-		multiplier *= 1-mc.theWorld.getRainStrength(partialTicks);
-
 		if(!isWarp) {
 			//Set sun color and distance
 			tessellator1.startDrawingQuads();		
@@ -378,20 +426,97 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 		if(isMoon) {
 			GL11.glPushMatrix();
+
 			GL11.glRotatef((float)myPhi, 0f, 0f, 1f);
 			GL11.glRotatef((float)((partialTicks*myTheta + ((1-partialTicks)*myPrevOrbitalTheta)) * 180F/Math.PI), 1f, 0f, 0f);
-			
-			renderPlanet(tessellator1, parentPlanetIcon, planetOrbitalDistance, multiplier, hasAtmosphere, parentAtmColor, isGasGiant);
+
+			float phiAngle = (float)((myPhi) * Math.PI/180f);
+
+			//Close enough approximation, I missed something but seems to off by no more than 30*
+			//Nobody will look
+			double x = MathHelper.sin(phiAngle)*MathHelper.cos((float)myTheta);
+			double y = -MathHelper.sin((float)myTheta);
+			double rotation = -Math.PI/2f + Math.atan2(x, y) - (myTheta - Math.PI )*MathHelper.sin(phiAngle);
+
+			//Draw Rings
+			if(parentHasRings) {
+				GL11.glPushMatrix();
+				GL11.glRotatef(90f, 0f, 1f, 0f);
+				
+				f10 = 100;
+				double ringDist = 0;
+				mc.renderEngine.bindTexture(DimensionProperties.planetRings);
+				
+				GL11.glRotated(70, 1, 0, 0);
+				GL11.glTranslated(0, -10, 50);
+				
+				GL11.glColor4f(parentRingColor[0], parentRingColor[1], parentRingColor[2],multiplier);
+				tessellator1.startDrawing(GL11.GL_QUADS);
+				tessellator1.addVertexWithUV((double)f10, ringDist, (double)(-f10),1.0D, 0.0D);
+				tessellator1.addVertexWithUV((double)(-f10), ringDist, (double)(-f10), 0.0D, 0.0D);
+				tessellator1.addVertexWithUV((double)(-f10), ringDist, (double)f10, 0.0D, 1.0D);
+				tessellator1.addVertexWithUV((double)f10, ringDist, (double)f10, 1.0D, 1.0D);
+				tessellator1.draw();
+				GL11.glPopMatrix();
+				
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				GL11.glPushMatrix();
+				
+				GL11.glRotatef(90f, 0f, 1f, 0f);
+				GL11.glRotated(70, 1, 0, 0);
+				GL11.glTranslated(0, -10, 50);
+				
+				mc.renderEngine.bindTexture(DimensionProperties.planetRingShadow);
+				GL11.glColor4f(0f, 0f, 0f,1);
+				tessellator1.startDrawing(GL11.GL_QUADS);
+				tessellator1.addVertexWithUV((double)f10, ringDist, (double)(-f10),1.0D, 0.0D);
+				tessellator1.addVertexWithUV((double)(-f10), ringDist, (double)(-f10), 0.0D, 0.0D);
+				tessellator1.addVertexWithUV((double)(-f10), ringDist, (double)f10, 0.0D, 1.0D);
+				tessellator1.addVertexWithUV((double)f10, ringDist, (double)f10, 1.0D, 1.0D);
+				tessellator1.draw();
+				GL11.glPopMatrix();
+				
+				OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, 1, 0);
+			}
+
+			renderPlanet2(tessellator1, parentPlanetIcon, 0,0,-100, (200-planetOrbitalDistance), multiplier, rotation, hasAtmosphere, parentAtmColor, parentRingColor, isGasGiant, false);
 			GL11.glPopMatrix();
 		}
 
 		for(DimensionProperties moons : children) {
 			GL11.glPushMatrix();
-			
+
+			moons.orbitalPhi = 10;
+			double rot = ((partialTicks*moons.orbitTheta + ((1-partialTicks)*moons.prevOrbitalTheta)) * 180F/Math.PI);
+
 			GL11.glRotatef((float)moons.orbitalPhi, 0f, 0f, 1f);
-			GL11.glRotatef((float)((partialTicks*moons.orbitTheta + ((1-partialTicks)*moons.prevOrbitalTheta)) * 180F/Math.PI), 1f, 0f, 0f);
-			
-			renderPlanet(tessellator1, moons.getPlanetIcon(), moons.getParentOrbitalDistance()*(1/moons.gravitationalMultiplier), multiplier, moons.hasAtmosphere(), moons.skyColor, isGasGiant);
+			GL11.glRotated(rot, 1f, 0f, 0f);
+
+
+			//Close enough approximation, I missed something but seems to off by no more than 30*
+			//Nobody will look
+			float phiAngle = (float)((moons.orbitalPhi) * Math.PI/180f);
+			double x = -MathHelper.sin(phiAngle)*MathHelper.cos((float)moons.orbitTheta);
+			double y = MathHelper.sin((float)moons.orbitTheta);
+			double rotation = -Math.PI/2f + Math.atan2(x, y) - (moons.orbitTheta - Math.PI)*MathHelper.sin(phiAngle);
+
+
+			//double x = -MathHelper.sin(phiAngle)*MathHelper.cos((float)moons.orbitTheta);
+			//double y = MathHelper.sin((float)moons.orbitTheta);
+
+
+			//double x = -MathHelper.cos((float)moons.orbitTheta)*MathHelper.sin(phiAngle);
+			//double y = -MathHelper.sin((float)moons.orbitTheta);
+			//double z = MathHelper.cos(phiAngle)*MathHelper.cos((float)moons.orbitTheta) - 1;
+
+
+
+			//double hyp = Math.sqrt(x*x +  y*y);
+			//System.out.println(x*x + z*z + y*y);
+			//double rotation = Math.atan2(z,hyp );// - MathHelper.sin((float)moons.orbitTheta);//-Math.PI/2f + Math.atan2(x, y) - (moons.orbitTheta - Math.PI)*MathHelper.sin(phiAngle)*hyp;
+
+
+			renderPlanet(tessellator1, moons.getPlanetIcon(), moons.getParentOrbitalDistance()*(1/moons.gravitationalMultiplier), multiplier, rotation, moons.hasAtmosphere(), moons.skyColor, moons.ringColor, isGasGiant, moons.hasRings());
 			GL11.glPopMatrix();
 		}
 
@@ -449,10 +574,10 @@ public class RenderPlanetarySky extends IRenderHandler {
 		}
 
 		//Blackness @ bottom of world
-		//GL11.glPushMatrix();
-		//GL11.glTranslatef(0.0F, -((float)(d0 - 16.0D)), 0.0F);
-		//GL11.glCallList(this.glSkyList2);
-		//GL11.glPopMatrix();
+		/*GL11.glPushMatrix();
+		GL11.glTranslatef(0.0F, -((float)(d0 - 16.0D)), 0.0F);
+		GL11.glCallList(this.glSkyList2);
+		GL11.glPopMatrix();*/
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDepthMask(true);
@@ -472,51 +597,123 @@ public class RenderPlanetarySky extends IRenderHandler {
 		return properties.getPlanetIcon();
 	}
 
-	protected void renderPlanet(Tessellator tessellator1, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, boolean hasAtmosphere, float[] skyColor, boolean gasGiant) {
-		//GL11.glDisable(GL11.GL_BLEND);
-		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		mc.renderEngine.bindTexture(icon);
-		//int k = mc.theWorld.getMoonPhase();
-		//int l = k % 4;
-		//int i1 = k / 4 % 2;
+	protected void renderPlanet(Tessellator buffer, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing) {
+		renderPlanet2(buffer, icon, 0, 0, -100, 10f*(200-planetOrbitalDistance)/100f, alphaMultiplier, shadowAngle, hasAtmosphere, skyColor, ringColor, gasGiant, hasRing);
+	}
 
+	protected void renderPlanet2(Tessellator buffer, ResourceLocation icon, int locationX, int locationY, double zLevel, float size, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing) {
+		renderPlanetPubHelper(buffer, icon, locationX, locationY, zLevel, size, alphaMultiplier, shadowAngle, hasAtmosphere, skyColor, ringColor, gasGiant, hasRing);
+	}
+		
+
+	public static void renderPlanetPubHelper(Tessellator tessellator1, ResourceLocation icon, int locationX, int locationY, double zLevel, float size, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing) {
+		GL11.glEnable(GL11.GL_BLEND);
+		
 		//Set planet Orbiting distance; size
-		float f10 = 10f*(200-planetOrbitalDistance)/100f;
+		float f10 = size;
 
 		float f14 = 1f;//(float)(l + 0) / 4.0F;
 		float f15 = 0f;//(float)(i1 + 0) / 2.0F;
 		float f16 = f15;//(float)(l + 1) / 4.0F;
 		float f17 = f14;//(float)(i1 + 1) / 2.0F;
 
+		GL11.glPushMatrix();
+		GL11.glTranslated(locationX, zLevel, locationY);
+		
+
+		//ATM Glow
+		GL11.glPushMatrix();
+		GL11.glRotated(90-shadowAngle* 180/Math.PI, 0, 1, 0);
+		
+		//Rings
+		if(hasRing) {
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glColor4f(ringColor[0], ringColor[1], ringColor[2], alphaMultiplier*0.2f);
+			float ringSize = f10 *1.4f;
+			Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.planetRings);
+			tessellator1.startDrawing(GL11.GL_QUADS);
+			
+			tessellator1.addVertexWithUV(-ringSize, zLevel-0.01f, ringSize, f16, f17);
+			tessellator1.addVertexWithUV(ringSize, zLevel-0.01f, ringSize, f14, f17);
+			tessellator1.addVertexWithUV(ringSize, zLevel-0.01f, -ringSize, f14, f15);
+			tessellator1.addVertexWithUV(-ringSize, zLevel-0.01f, -ringSize, f16, f15);
+			tessellator1.draw();
+			
+			
+			GL11.glColor4f(0f, 0f, 0f, alphaMultiplier);
+			Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.planetRingShadow);
+			tessellator1.startDrawing(GL11.GL_QUADS);
+			tessellator1.addVertexWithUV(-ringSize, zLevel-0.01f, ringSize, f16, f17);
+			tessellator1.addVertexWithUV(ringSize, zLevel-0.01f, ringSize, f14, f17);
+			tessellator1.addVertexWithUV(ringSize, zLevel-0.01f, -ringSize, f14, f15);
+			tessellator1.addVertexWithUV(-ringSize, zLevel-0.01f, -ringSize, f16, f15);
+			tessellator1.draw();
+		}
+		
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+		tessellator1.startDrawing(GL11.GL_QUADS);
+		Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.atmGlow);
+		
+		GL11.glColor4f(1f, 1f, 1f, alphaMultiplier);
+		tessellator1.addVertexWithUV(-f10, zLevel+0.01f, f10, f16, f17);
+		tessellator1.addVertexWithUV(f10, zLevel+0.01f, f10, f14, f17);
+		tessellator1.addVertexWithUV(f10, zLevel+0.01f, -f10, f14, f15);
+		tessellator1.addVertexWithUV(-f10, zLevel+0.01f, -f10, f16, f15);
+		tessellator1.draw();
+		GL11.glPopMatrix();
+
+		//End ATM glow
+		
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		Minecraft.getMinecraft().renderEngine.bindTexture(icon);
 		//TODO: draw sky planets
 
 		tessellator1.startDrawingQuads();
 
 		tessellator1.setColorRGBA_F(1f, 1f, 1f, alphaMultiplier);
 
-		tessellator1.addVertexWithUV((double)(-f10), -100.0D, (double)f10, (double)f16, (double)f17);
-		tessellator1.addVertexWithUV((double)f10, -100.0D, (double)f10, (double)f14, (double)f17);
-		tessellator1.addVertexWithUV((double)f10, -100.0D, (double)(-f10), (double)f14, (double)f15);
-		tessellator1.addVertexWithUV((double)(-f10), -100.0D, (double)(-f10), (double)f16, (double)f15);
+		tessellator1.addVertexWithUV((double)(-f10), zLevel, (double)f10, (double)f16, (double)f17);
+		tessellator1.addVertexWithUV((double)f10, zLevel, (double)f10, (double)f14, (double)f17);
+		tessellator1.addVertexWithUV((double)f10, zLevel, (double)(-f10), (double)f14, (double)f15);
+		tessellator1.addVertexWithUV((double)(-f10), zLevel, (double)(-f10), (double)f16, (double)f15);
 
 		tessellator1.draw();
 		//GL11.glEnable(GL11.GL_BLEND);
 
-		GL11.glPopAttrib();
+		//GL11.glPopAttrib();
 
 		//Draw atmosphere if applicable
 		if(hasAtmosphere) {
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+			
 			tessellator1.startDrawingQuads();
-			mc.renderEngine.bindTexture(DimensionProperties.getAtmosphereResource());
+			Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.getAtmosphereResource());
 			tessellator1.setColorRGBA_F(skyColor[0], skyColor[1], skyColor[2], alphaMultiplier);
 
-			tessellator1.addVertexWithUV((double)(-f10), -100.0D, (double)f10, (double)f16, (double)f17);
-			tessellator1.addVertexWithUV((double)f10, -100.0D, (double)f10, (double)f14, (double)f17);
-			tessellator1.addVertexWithUV((double)f10, -100.0D, (double)(-f10), (double)f14, (double)f15);
-			tessellator1.addVertexWithUV((double)(-f10), -100.0D, (double)(-f10), (double)f16, (double)f15);
+			tessellator1.addVertexWithUV((double)(-f10), zLevel, (double)f10, (double)f16, (double)f17);
+			tessellator1.addVertexWithUV((double)f10, zLevel, (double)f10, (double)f14, (double)f17);
+			tessellator1.addVertexWithUV((double)f10, zLevel, (double)(-f10), (double)f14, (double)f15);
+			tessellator1.addVertexWithUV((double)(-f10), zLevel, (double)(-f10), (double)f16, (double)f15);
 			tessellator1.draw();
 		}
+
+		GL11.glRotated(90-shadowAngle* 180/Math.PI, 0, 1, 0);
+
+		//Draw Shadow
+		Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.getShadowResource());
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glColor4f(1f, 1f, 1f, alphaMultiplier);
+		
+		tessellator1.startDrawing(GL11.GL_QUADS);
+		tessellator1.addVertexWithUV(-f10, zLevel-0.01f, f10, f16, f17);
+		tessellator1.addVertexWithUV(f10, zLevel-0.01f, f10, f14, f17);
+		tessellator1.addVertexWithUV(f10, zLevel-0.01f, -f10, f14, f15);
+		tessellator1.addVertexWithUV(-f10, zLevel-0.01f, -f10, f16, f15);
+		tessellator1.draw();
+
+		GL11.glPopMatrix();
+		
+		
 		tessellator1.setColorRGBA_F(1f, 1f, 1f, 1f);
 	}
 
