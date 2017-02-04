@@ -242,8 +242,37 @@ public class XMLPlanetLoader {
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("oreGen")) {
 				properties.oreProperties = XMLOreLoader.loadOre(planetPropertyNode);
 			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("hasRings")) {
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("hasRings"))
 				properties.hasRings = Boolean.parseBoolean(planetPropertyNode.getTextContent());
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("ringColor")) {
+				String[] colors = planetPropertyNode.getTextContent().split(",");
+				try {
+
+					if(colors.length >= 3) {
+						float rgb[] = new float[3];
+
+						for(int j = 0; j < 3; j++)
+							rgb[j] = Float.parseFloat(colors[j]);
+						properties.ringColor = rgb;
+
+					}
+					else if(colors.length == 1) {
+						int cols = Integer.parseUnsignedInt(colors[0].substring(2), 16);
+						float rgb[] = new float[3];
+
+						rgb[0] = ((cols >>> 16) & 0xff) / 255f;
+						rgb[1] = ((cols >>> 8) & 0xff) / 255f;
+						rgb[2] = (cols & 0xff) / 255f;
+
+						properties.ringColor = rgb;
+					}
+					else
+						AdvancedRocketry.logger.warning("Invalid number of floats specified for ring color (Required 3, comma sperated)"); //TODO: more detailed error msg
+
+				} catch (NumberFormatException e) {
+					AdvancedRocketry.logger.warning("Invalid sky color specified"); //TODO: more detailed error msg
+				}
+			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("GasGiant")) {
 				String text = planetPropertyNode.getTextContent();
 				if(text != null && !text.isEmpty() && text.equalsIgnoreCase("true"))

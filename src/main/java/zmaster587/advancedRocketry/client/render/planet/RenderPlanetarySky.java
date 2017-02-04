@@ -476,7 +476,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 				GL11.glRotated(70, 1, 0, 0);
 				GL11.glTranslated(0, -10, 50);
 				
-				GlStateManager.color(0.4f, 0.4f, 0.7f,multiplier);
+				GlStateManager.color(parentRingColor[0], parentRingColor[1], parentRingColor[2],multiplier);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 				buffer.pos((double)f10, ringDist, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
 				buffer.pos((double)(-f10), ringDist, (double)(-f10)).tex(0.0D, 0.0D).endVertex();

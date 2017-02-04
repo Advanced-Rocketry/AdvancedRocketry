@@ -130,9 +130,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public static final ResourceLocation atmGlow = new ResourceLocation("advancedrocketry:textures/planets/atmGlow.png");
 	public static final ResourceLocation planetRings = new ResourceLocation("advancedrocketry:textures/planets/rings.png");
 	public static final ResourceLocation planetRingShadow = new ResourceLocation("advancedrocketry:textures/planets/ringShadow.png");
-	
+
 	public static final ResourceLocation shadow = new ResourceLocation("advancedrocketry:textures/planets/shadow.png");
-	
+
 	public static enum PlanetIcons {
 		EARTHLIKE(new ResourceLocation("advancedrocketry:textures/planets/Earthlike.png")),
 		LAVA(new ResourceLocation("advancedrocketry:textures/planets/lava.png")),
@@ -232,6 +232,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		parentPlanet = -1;
 		childPlanets = new HashSet<Integer>();
 		orbitalPhi = 0;
+		ringColor = new float[] {.4f, .4f, .7f};
 
 		allowedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
 		terraformedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
@@ -239,6 +240,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		tickingSatallites = new HashMap<Long,SatelliteBase>();
 		isNativeDimension = true;
 		isGasGiant = false;
+		hasRings = false;
 	}
 
 	public DimensionProperties(int id ,String name) {
@@ -343,11 +345,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public boolean hasRings() {
 		return this.hasRings;
 	}
-	
+
 	public void setHasRings(boolean value) {
 		this.hasRings = value;
 	}
-	
+
 	/**
 	 * @return the {@link ResourceLocation} representing this planet, generated from the planet's properties
 	 */
@@ -470,7 +472,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			return getParentProperties().getSolarTheta();
 		return orbitTheta;
 	}
-	
+
 	/**
 	 * Sets this planet as a moon of the supplied planet's id.
 	 * @param parentId parent planet's DIMID, or -1 for none
@@ -570,7 +572,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public static ResourceLocation getAtmosphereResource() {
 		return atmosphere;
 	}
-	
+
 	public static ResourceLocation getShadowResource() {
 		return shadow;
 	}
@@ -980,6 +982,14 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				skyColor[f] = list.getFloatAt(f);
 			}
 		}
+		
+		if(nbt.hasKey("ringColor")) {
+			list = nbt.getTagList("ringColor", NBT.TAG_FLOAT);
+			ringColor = new float[list.tagCount()];
+			for(int f = 0 ; f < list.tagCount(); f++) {
+				ringColor[f] = list.getFloatAt(f);
+			}
+		}
 
 		if(nbt.hasKey("sunriseSunsetColors")) {
 			list = nbt.getTagList("sunriseSunsetColors", NBT.TAG_FLOAT);
@@ -1116,6 +1126,14 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		}
 		nbt.setTag("fogColor", list);
 
+		if(hasRings) {
+			list = new NBTTagList();
+			for(float f : ringColor) {
+				list.appendTag(new NBTTagFloat(f));
+			}
+			nbt.setTag("ringColor", list);
+		}
+
 		if(!allowedBiomes.isEmpty()) {
 			int biomeId[] = new int[allowedBiomes.size()];
 			for(int i = 0; i < allowedBiomes.size(); i++) {
@@ -1132,6 +1150,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			}
 			nbt.setIntArray("biomesTerra", biomeId);
 		}
+
+
 
 		nbt.setInteger("starId", starId);
 		nbt.setFloat("gravitationalMultiplier", gravitationalMultiplier);
@@ -1219,7 +1239,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public int getStarId() {
 		return starId;
 	}
-	
+
 	@Override
 	public String toString() {
 		return String.format("Dimension ID: %d.  Dimension Name: %s.  Parent Star %d ", getId(), getName(), getStarId());
