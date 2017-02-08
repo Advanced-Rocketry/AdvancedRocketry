@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -18,23 +21,23 @@ public class CableNetwork {
 
 	protected static HashSet<Integer> usedIds = new HashSet<Integer>();
 
-	HashSet<Entry<TileEntity, EnumFacing>> sources;
+	CopyOnWriteArraySet<Entry<TileEntity, EnumFacing>> sources;
 
 	protected int numCables = 0;
 	
-	HashSet<Entry<TileEntity, EnumFacing>> sinks;
+	CopyOnWriteArraySet<Entry<TileEntity, EnumFacing>> sinks;
 
 	protected CableNetwork() {
 
-		sources = new HashSet<Entry<TileEntity, EnumFacing>>();
-		sinks = new HashSet<Entry<TileEntity, EnumFacing>>();
+		sources = new CopyOnWriteArraySet<Entry<TileEntity, EnumFacing>>();
+		sinks = new CopyOnWriteArraySet<Entry<TileEntity, EnumFacing>>();
 	}
 
-	public HashSet<Entry<TileEntity, EnumFacing>> getSources() {
+	public Set<Entry<TileEntity, EnumFacing>> getSources() {
 		return sources;
 	}
 
-	public HashSet<Entry<TileEntity, EnumFacing>> getSinks() {
+	public Set<Entry<TileEntity, EnumFacing>> getSinks() {
 		return sinks;
 	}
 
@@ -54,7 +57,7 @@ public class CableNetwork {
 			}
 		}
 
-		sources.add(new SingleEntry(tile, dir));
+		sources.add(new SingleEntry<TileEntity, EnumFacing>(tile, dir));
 	}
 
 	public void addSink(TileEntity tile, EnumFacing dir) {
@@ -73,7 +76,7 @@ public class CableNetwork {
 			}
 		}
 
-		sinks.add(new SingleEntry(tile, dir));
+		sinks.add(new SingleEntry<TileEntity, EnumFacing>(tile, dir));
 	}
 
 	public void writeToNBT(NBTTagCompound nbt) {
