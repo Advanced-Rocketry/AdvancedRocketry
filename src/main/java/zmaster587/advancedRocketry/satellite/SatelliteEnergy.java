@@ -46,7 +46,7 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 	}
 
 	public int getPowerPerTick() {
-		return satelliteProperties.getPowerGeneration()/10;
+		return satelliteProperties.getPowerGeneration();
 	}
 
 	@Override
