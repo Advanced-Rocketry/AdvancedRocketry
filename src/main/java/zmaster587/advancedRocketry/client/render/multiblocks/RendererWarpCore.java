@@ -27,7 +27,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class RendererWarpCore extends TileEntitySpecialRenderer {
 
-	WavefrontObject model;
+	public static WavefrontObject model;
 
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/warpcore.png");
 

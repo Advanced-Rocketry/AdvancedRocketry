@@ -1,0 +1,8 @@
+{
+    "parent": "block/half_slab",
+    "textures": {
+        "top": "advancedrocketry:blocks/holoLamp",
+        "front": "advancedrocketry:blocks/panelSide",
+        "side": "advancedrocketry:blocks/panelSide"
+    }
+}
