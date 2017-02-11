@@ -106,6 +106,8 @@ public class Configuration {
 
 	public static boolean lockUI;
 
+	public static int oxygenVentSize;
+
 	
 
 }
