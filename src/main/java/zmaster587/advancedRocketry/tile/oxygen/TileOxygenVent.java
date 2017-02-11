@@ -320,7 +320,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements INe
 
 	@Override
 	public int getMaxBlobRadius() {
-		return 32;
+		return Configuration.oxygenVentSize;
 	}
 
 	@Override
