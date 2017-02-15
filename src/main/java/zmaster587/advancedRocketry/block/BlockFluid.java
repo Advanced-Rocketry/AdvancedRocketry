@@ -9,19 +9,19 @@ import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
-public class BlockFluid extends BlockFluidClassic implements IBlockColor {
+public class BlockFluid extends BlockFluidClassic {// implements IBlockColor {
 	
 	public BlockFluid(Fluid fluid, Material material) {
 		super(fluid, material);
 	}
 	
 
-	@Override
+	/*@Override
 	public int colorMultiplier(IBlockState state, IBlockAccess worldIn,
 			BlockPos pos, int tintIndex) {
 		
 		return ((BlockFluid)state.getBlock()).getFluid().getColor();
-	}
+	}*/
 	
 	
    

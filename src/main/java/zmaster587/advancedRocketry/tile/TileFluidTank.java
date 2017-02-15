@@ -64,8 +64,7 @@ public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
 		if(amt > 0 && doFill)
 			fluidChanged = true;	
 		
-		checkForUpdate();
-		markDirty();
+		//checkForUpdate();
 		
 		return amt;
 	}
@@ -153,7 +152,7 @@ public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
 				fluidTank.fill(tank.fluidTank.drain(fluidTank.getCapacity(), true), true);
 			}
 			else if(tank.getTankProperties()[0].getContents().getFluid() == fluidTank.getFluid().getFluid()) {
-				fluidTank.fill(tank.drain(fluidTank.getCapacity() - fluidTank.getFluidAmount(), false), true);
+				fluidTank.fill(tank.drain(fluidTank.getCapacity() - fluidTank.getFluidAmount(), true), true);
 				tank.fluidTank.drain(fluidTank.getCapacity() - fluidTank.getFluidAmount(), true);
 			}
 

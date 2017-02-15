@@ -288,6 +288,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	public NBTTagCompound getUpdateTag() {
 		NBTTagCompound tag = super.getUpdateTag();
 		tag.setBoolean("isSealed", isSealed);
+		
 		return tag;
 	}
 
@@ -295,6 +296,10 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	public void handleUpdateTag(NBTTagCompound tag) {
 		super.handleUpdateTag(tag);
 		isSealed = tag.getBoolean("isSealed");
+		
+		if(isSealed) {
+			activateAdjblocks();
+		}
 	}
 
 	public float getGasUsageMultiplier() {
