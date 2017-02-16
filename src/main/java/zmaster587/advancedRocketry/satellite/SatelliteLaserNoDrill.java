@@ -29,7 +29,8 @@ public class SatelliteLaserNoDrill extends SatelliteBase {
 		this.boundChest = boundChest;
 		random = new Random(System.currentTimeMillis());
 
-		if(ores == null) {
+		//isEmpty check because <init> is called in post init to register for holo projector
+		if(ores == null && !Configuration.standardLaserDrillOres.isEmpty()) {
 			ores = new LinkedList<BlockMeta>();
 			for(int i = 0; i < Configuration.standardLaserDrillOres.size(); i++) {
 				String oreDictName = Configuration.standardLaserDrillOres.get(i);
