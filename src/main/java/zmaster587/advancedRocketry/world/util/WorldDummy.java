@@ -36,6 +36,11 @@ public class WorldDummy extends World {
 	}
 
 	@Override
+	public long getWorldTime() {
+		return 0;
+	}
+	
+	@Override
 	public boolean isSideSolid(BlockPos pos, EnumFacing side, boolean bool) {
 		return storage.isSideSolid(pos, side, bool);
 	}
