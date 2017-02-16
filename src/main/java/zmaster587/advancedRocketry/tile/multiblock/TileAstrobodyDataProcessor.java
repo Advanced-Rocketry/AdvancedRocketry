@@ -334,6 +334,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 
 					if(!worldObj.isRemote) {
 						incrementDataOnChip(0, 1, DataType.COMPOSITION);
+						extractData(1, DataStorage.DataType.COMPOSITION, false);
 						//attemptAllResearchStart();
 					}
 				}
@@ -348,6 +349,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 
 					if(!worldObj.isRemote) {
 						incrementDataOnChip(0, 1, DataType.MASS);
+						extractData(1, DataStorage.DataType.MASS, false);
 						//attemptAllResearchStart();
 					}
 				}
@@ -360,6 +362,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 					distanceProgress = -1;
 					if(!worldObj.isRemote) {
 						incrementDataOnChip(0, 1, DataType.DISTANCE);
+						extractData(1, DataStorage.DataType.MASS, false);
 						//attemptAllResearchStart();
 					}
 				}
