@@ -25,26 +25,32 @@ import zmaster587.libVulpes.inventory.modules.IButtonInventory;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ISliderBar;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleRedstoneOutputButton;
 import zmaster587.libVulpes.inventory.modules.ModuleSlider;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
+import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
-public class TilePlanetaryHologram extends TileEntity implements ITickable, IModularInventory, ISliderBar, INetworkMachine {
+public class TilePlanetaryHologram extends TileEntity implements ITickable,IButtonInventory, IModularInventory, ISliderBar, INetworkMachine {
 
-	List<EntityUIPlanet> entities;
-	List<EntityUIStar> starEntities;
-	EntityUIPlanet centeredEntity;
-	EntityUIPlanet selectedPlanet;
-	EntityUIStar currentStar;
-	EntityUIButton backButton;
-	StellarBody currentStarBody;
-	
-	int selectedId;
+	private List<EntityUIPlanet> entities;
+	private List<EntityUIStar> starEntities;
+	private EntityUIPlanet centeredEntity;
+	private EntityUIPlanet selectedPlanet;
+	private EntityUIStar currentStar;
+	private EntityUIButton backButton;
+	private StellarBody currentStarBody;
+
+	private ModuleRedstoneOutputButton redstoneControl;
+	private RedstoneState state;
+	private int selectedId;
+	private float onTime;
 	private ModuleText targetGrav;
 	private float size;
 	private static final byte SCALEPACKET = 0;
+	private static final byte STATEUPDATE = 1;
 	private boolean allowUpdate = true;  //Hack to get around the delay in entity position
 	private boolean stellarMode;
 
@@ -55,11 +61,20 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable, IMod
 		selectedPlanet = null;
 		stellarMode = false;
 		selectedId = -1;
+		onTime = 1f;
+		size = 0.02f;
+		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 1, "", this);
+		state = RedstoneState.OFF;
+		redstoneControl.setRedstoneState(state);
 	}
 
 	@Override
 	public void invalidate() {
 		super.invalidate();
+		cleanup();
+	}
+
+	private void cleanup() {
 		for(EntityUIPlanet planet : entities) {
 			planet.setDead();
 		}
@@ -67,6 +82,12 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable, IMod
 
 		for(EntityUIStar star : starEntities) star.setDead();
 		starEntities.clear();
+		
+		selectedPlanet = null;
+		centeredEntity = null;
+		//currentStarBody = null;
+		selectedId = -1;
+		
 
 		if(currentStar != null) {
 			currentStar.setDead();
@@ -77,44 +98,58 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable, IMod
 			backButton = null;
 		}
 	}
+	
+	public boolean isEnabled() {
+		boolean powered = worldObj.isBlockIndirectlyGettingPowered(getPos()) > 0;
+		return (!powered && state == RedstoneState.INVERTED) || (powered && state == RedstoneState.ON) || state == RedstoneState.OFF;
+	}
 
 	@Override
 	public void update() {
 		if(!worldObj.isRemote) {
-			if(allowUpdate) {
-				for(EntityUIPlanet entity : entities) {
-					DimensionProperties properties = entity.getProperties();
-					if(entity != centeredEntity)
-						entity.setPositionPolar(this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5, getHologramSize()*properties.orbitalDist/100f, properties.orbitTheta);
-					entity.setScale(getHologramSize());
-				}
+			if(isEnabled()) {
+				
+				if(onTime < 1)
+					onTime += .2f/getHologramSize();//0.02f;
+				
+				if(allowUpdate) {
+					for(EntityUIPlanet entity : entities) {
+						DimensionProperties properties = entity.getProperties();
+						if(entity != centeredEntity)
+							entity.setPositionPolar(this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5, getInterpHologramSize()*properties.orbitalDist/100f, properties.orbitTheta);
+						entity.setScale(getInterpHologramSize());
+					}
 
-				if(stellarMode) {
-					for(EntityUIStar entity : starEntities) {
-						entity.setPosition(this.pos.getX() + .5 + getHologramSize()*entity.getStarProperties().getPosX()/100f, this.pos.getY() + 1, this.pos.getZ() + .5 + getHologramSize()*entity.getStarProperties().getPosZ()/100f);
-						entity.setScale(getHologramSize());
+					if(stellarMode) {
+						for(EntityUIStar entity : starEntities) {
+							entity.setPosition(this.pos.getX() + .5 + getInterpHologramSize()*entity.getStarProperties().getPosX()/100f, this.pos.getY() + 1, this.pos.getZ() + .5 + getInterpHologramSize()*entity.getStarProperties().getPosZ()/100f);
+							entity.setScale(getInterpHologramSize());
+						}
+					}
+
+					if(currentStar != null) {
+						currentStar.setScale(getInterpHologramSize());
+						currentStar.setPositionPolar(this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5, 0, 0);
+					}
+
+					if(centeredEntity != null) {
+						centeredEntity.setPositionPolar(this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5, 0, 0);
+					}
+
+					if(entities.isEmpty() && starEntities.isEmpty()) {
+						rebuildSystem();
+					}
+
+					if(backButton != null) {
+						backButton.setPosition(this.pos.getX() + .5, this.pos.getY() + 1.5 + getInterpHologramSize()/10f, this.pos.getZ() + .5);
 					}
 				}
-
-				if(currentStar != null) {
-					currentStar.setScale(getHologramSize());
-					currentStar.setPositionPolar(this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5, 0, 0);
-				}
-
-				if(centeredEntity != null) {
-					centeredEntity.setPositionPolar(this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5, 0, 0);
-				}
-
-				if(entities.isEmpty() && starEntities.isEmpty()) {
-					rebuildSystem();
-				}
-
-				if(backButton != null) {
-					backButton.setPosition(this.pos.getX() + .5, this.pos.getY() + 1.5 + getHologramSize()/10f, this.pos.getZ() + .5);
-				}
+				else
+					allowUpdate = true;
+			} else { //isenabled
+				if(backButton != null )
+					cleanup();
 			}
-			else
-				allowUpdate = true;
 		}
 	}
 
@@ -140,7 +175,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable, IMod
 					selectedId = -1;
 				}
 			}
-			
+
 		}
 		else {
 			ISpaceObject station = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.getPos());
@@ -166,6 +201,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable, IMod
 	}
 
 	private void rebuildSystem() {
+		onTime = 0;
 		for(EntityUIPlanet entity : entities)
 			entity.setDead();
 
@@ -198,6 +234,8 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable, IMod
 
 			}
 			else {
+				if(currentStarBody == null)
+					currentStarBody = DimensionManager.getSol();
 				currentStar = new EntityUIStar(worldObj, currentStarBody, this, this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5);
 				this.getWorld().spawnEntityInWorld(currentStar);
 			}
@@ -213,12 +251,12 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable, IMod
 			}
 		}
 		else {
-			
+
 			if(currentStar != null) {
 				currentStar.setDead();
 				currentStar = null;
 			}
-			
+
 			Collection<StellarBody> starList = DimensionManager.getInstance().getStars();
 
 			for(StellarBody body : starList) {
@@ -239,7 +277,8 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable, IMod
 
 		modules.add(targetGrav);
 		modules.add(new ModuleSlider(6, 60, 0, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
-
+		modules.add(redstoneControl);
+		
 		updateText();
 		return modules;
 	}
@@ -253,9 +292,13 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable, IMod
 	}
 
 	private float getHologramSize() {
-		return size*10 + 0.8f;
+		return (size*10 + 0.8f);
 	}
 
+	private float getInterpHologramSize() {
+		return getHologramSize()*onTime;
+	}
+	
 	@Override
 	public String getModularInventoryName() {
 		return "tile.planetHoloSelector.name";
@@ -304,6 +347,9 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable, IMod
 		if(id == SCALEPACKET) {
 			out.writeFloat(size);
 		}
+		if(id == STATEUPDATE) {
+			out.writeByte(state.ordinal());
+		}
 
 	}
 
@@ -313,6 +359,9 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable, IMod
 		if(packetId == SCALEPACKET) {
 			nbt.setFloat("scale", in.readFloat());
 		}
+		else if(packetId == STATEUPDATE) {
+			nbt.setByte("state", in.readByte());
+		}
 
 	}
 
@@ -321,6 +370,9 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable, IMod
 			NBTTagCompound nbt) {
 		if(id == SCALEPACKET) {
 			size = nbt.getFloat("scale");
+		}
+		else if (id == STATEUPDATE) {
+			state = RedstoneState.values()[nbt.getByte("state")];
 		}
 	}
 
@@ -332,5 +384,24 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable, IMod
 			selectedPlanet = null; centeredEntity = null;
 			rebuildSystem();
 		}
+		else if(buttonId == 1) {
+			state = redstoneControl.getState();
+			PacketHandler.sendToServer(new PacketMachine(this, (byte)STATEUPDATE));
+		}
+	}
+	
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+		compound = super.writeToNBT(compound);
+		state.writeToNBT(compound);
+		
+		return compound;
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
+		state = RedstoneState.createFromNBT(compound);
+		redstoneControl.setRedstoneState(state);
 	}
 }

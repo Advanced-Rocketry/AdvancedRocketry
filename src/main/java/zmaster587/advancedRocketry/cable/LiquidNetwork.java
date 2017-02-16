@@ -41,6 +41,7 @@ public class LiquidNetwork extends CableNetwork {
 	//TODO: balance tanks
 	@Override
 	public void tick() {
+		if(true) return;
 		int amount = MAX_TRANSFER;
 
 		//Return if there is nothing to do

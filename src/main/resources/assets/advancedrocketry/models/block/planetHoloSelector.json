@@ -3,6 +3,7 @@
     "textures": {
         "top": "advancedrocketry:blocks/holoLamp",
         "front": "advancedrocketry:blocks/panelSide",
-        "side": "advancedrocketry:blocks/panelSide"
+        "side": "advancedrocketry:blocks/panelSide",
+        "bottom": "advancedrocketry:blocks/panelSide"
     }
 }
