@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.tile;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
@@ -12,12 +13,10 @@ import zmaster587.libVulpes.tile.TileInventoriedForgePowerMachine;
 
 public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 
-	int powerPerTick;
 	ModuleText text;
 
 	public TileSolarPanel() {
 		super(10000, 1);
-		powerPerTick = 1;
 		text = new ModuleText(60, 40, "Collecting Energy", 0x2f2f2f);
 	}
 
@@ -31,7 +30,7 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 	public void updateEntity() {
 		if(canGeneratePower()) {
 			if(worldObj.isRemote)
-				text.setText("Collecting Energy:\n" + powerPerTick + " RF/t");
+				text.setText("Collecting Energy:\n" + getPowerPerOperation() + " RF/t");
 			if(hasEnoughEnergyBuffer(getPowerPerOperation())) {
 				if(!worldObj.isRemote) this.energy.acceptEnergy(getPowerPerOperation(), false);
 				onGeneratePower();
@@ -58,7 +57,7 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 
 	@Override
 	public int getPowerPerOperation() {
-		return powerPerTick;
+		return Configuration.solarGeneratorMult;
 	}
 
 	@Override
