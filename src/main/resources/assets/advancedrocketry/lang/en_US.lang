@@ -95,6 +95,7 @@ tile.stationMarker.name=Station Docking Port
 tile.solarGenerator.name=Solar Generator
 tile.altitudeController.name=Altitude Controller
 tile.railgun.name=Railgun
+tile.planetHoloSelector.name=Holographic Planet Selector
 
 tile.Dilithium.name=Dilithium Ore
 

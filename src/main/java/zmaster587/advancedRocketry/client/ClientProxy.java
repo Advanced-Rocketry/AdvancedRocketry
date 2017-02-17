@@ -26,6 +26,9 @@ import zmaster587.advancedRocketry.client.render.RendererRocketBuilder;
 import zmaster587.advancedRocketry.client.render.RendererModelBlock;
 import zmaster587.advancedRocketry.client.render.RendererRocket;
 import zmaster587.advancedRocketry.client.render.RendererPipe;
+import zmaster587.advancedRocketry.client.render.entity.RenderButtonUIEntity;
+import zmaster587.advancedRocketry.client.render.entity.RenderPlanetUIEntity;
+import zmaster587.advancedRocketry.client.render.entity.RenderStarUIEntity;
 import zmaster587.advancedRocketry.client.render.entity.RendererItem;
 import zmaster587.advancedRocketry.client.render.item.RendererBucket;
 import zmaster587.advancedRocketry.client.render.item.RendererLaserGun;
@@ -47,6 +50,9 @@ import zmaster587.advancedRocketry.common.CommonProxy;
 import zmaster587.advancedRocketry.entity.EntityItemAbducted;
 import zmaster587.advancedRocketry.entity.EntityLaserNode;
 import zmaster587.advancedRocketry.entity.EntityRocket;
+import zmaster587.advancedRocketry.entity.EntityUIButton;
+import zmaster587.advancedRocketry.entity.EntityUIPlanet;
+import zmaster587.advancedRocketry.entity.EntityUIStar;
 import zmaster587.advancedRocketry.entity.FxSkyLaser;
 import zmaster587.advancedRocketry.entity.fx.FxElectricArc;
 import zmaster587.advancedRocketry.entity.fx.FxLaser;
@@ -137,6 +143,9 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityItemAbducted.class, new RendererItem());
 		RenderingRegistry.registerEntityRenderingHandler(EntityRocket.class, new RendererRocket());
 		RenderingRegistry.registerEntityRenderingHandler(EntityLaserNode.class, new RenderLaser(2.0, new float[] {1F, 0.25F, 0.25F, 0.2F}, new float[] {0.9F, 0.2F, 0.3F, 0.5F}));
+		RenderingRegistry.registerEntityRenderingHandler(EntityUIPlanet.class, new RenderPlanetUIEntity());
+		RenderingRegistry.registerEntityRenderingHandler(EntityUIStar.class, new RenderStarUIEntity());
+		RenderingRegistry.registerEntityRenderingHandler(EntityUIButton.class, new RenderButtonUIEntity());
 	}
 
 	@Override

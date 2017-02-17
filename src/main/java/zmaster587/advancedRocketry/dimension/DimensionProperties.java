@@ -131,6 +131,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public static final ResourceLocation planetRings = new ResourceLocation("advancedrocketry:textures/planets/rings.png");
 	public static final ResourceLocation planetRingShadow = new ResourceLocation("advancedrocketry:textures/planets/ringShadow.png");
 	public static final ResourceLocation shadow = new ResourceLocation("advancedrocketry:textures/planets/shadow.png");
+	public static final ResourceLocation shadow3 = new ResourceLocation("advancedrocketry:textures/planets/shadow3.png");
 	
 	public static enum PlanetIcons {
 		EARTHLIKE(new ResourceLocation("advancedrocketry:textures/planets/Earthlike.png")),

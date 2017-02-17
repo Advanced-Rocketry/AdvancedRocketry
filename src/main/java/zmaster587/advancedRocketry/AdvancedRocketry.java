@@ -98,6 +98,9 @@ import zmaster587.advancedRocketry.entity.EntityItemAbducted;
 import zmaster587.advancedRocketry.entity.EntityLaserNode;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.entity.EntityStationDeployedRocket;
+import zmaster587.advancedRocketry.entity.EntityUIButton;
+import zmaster587.advancedRocketry.entity.EntityUIPlanet;
+import zmaster587.advancedRocketry.entity.EntityUIStar;
 import zmaster587.advancedRocketry.event.BucketHandler;
 import zmaster587.advancedRocketry.event.CableTickHandler;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
@@ -163,6 +166,7 @@ import zmaster587.advancedRocketry.tile.oxygen.TileOxygenCharger;
 import zmaster587.advancedRocketry.tile.oxygen.TileOxygenVent;
 import zmaster587.advancedRocketry.tile.station.TileDockingPort;
 import zmaster587.advancedRocketry.tile.station.TileLandingPad;
+import zmaster587.advancedRocketry.tile.station.TilePlanetaryHologram;
 import zmaster587.advancedRocketry.tile.station.TileStationAltitudeController;
 import zmaster587.advancedRocketry.tile.station.TileStationGravityController;
 import zmaster587.advancedRocketry.tile.station.TileStationOrientationControl;
@@ -587,6 +591,13 @@ public class AdvancedRocketry {
 		((BlockTile)AdvancedRocketryBlocks.blockBiomeScanner).setSideTexture("Advancedrocketry:MonitorSide");
 		((BlockTile)AdvancedRocketryBlocks.blockBiomeScanner).setFrontTexture("Advancedrocketry:guidanceComputer");
 
+		AdvancedRocketryBlocks.blockPlanetHoloSelector = new BlockTile(TilePlanetaryHologram.class,GuiHandler.guiId.MODULAR.ordinal()).setBlockName("planetHoloSelector").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		((BlockTile)AdvancedRocketryBlocks.blockPlanetHoloSelector).setTopTexture("advancedrocketry:holoLamp");
+		((BlockTile)AdvancedRocketryBlocks.blockPlanetHoloSelector).setSideTexture("advancedrocketry:panelSide");
+		((BlockTile)AdvancedRocketryBlocks.blockPlanetHoloSelector).setFrontTexture("advancedrocketry:panelSide");
+		AdvancedRocketryBlocks.blockPlanetHoloSelector.setBlockBounds(0, 0, 0, 1f, .5f, 1f);
+		
+		
 		AdvancedRocketryBlocks.blockDrill = new BlockMiningDrill().setBlockName("drill").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		((BlockTile)AdvancedRocketryBlocks.blockDrill).setTopTexture("Advancedrocketry:laserBottom", "Advancedrocketry:laserBottom");
 		((BlockTile)AdvancedRocketryBlocks.blockDrill).setSideTexture("Advancedrocketry:machineWarning");
@@ -733,6 +744,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockRailgun, AdvancedRocketryBlocks.blockRailgun.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockAstroBed, AdvancedRocketryBlocks.blockAstroBed.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockAdvEngine, AdvancedRocketryBlocks.blockAdvEngine.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockPlanetHoloSelector, AdvancedRocketryBlocks.blockPlanetHoloSelector.getUnlocalizedName());
 
 		//TODO, use different mechanism to enable/disable drill
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
@@ -854,7 +866,10 @@ public class AdvancedRocketry {
 		EntityRegistry.registerModEntity(EntityLaserNode.class, "laserNode", 2, instance, 256, 20, false);
 		EntityRegistry.registerModEntity(EntityStationDeployedRocket.class, "deployedRocket", 3, this, 256, 600, true);
 		EntityRegistry.registerModEntity(EntityItemAbducted.class, "ARAbductedItem", 4, this, 127, 600, false);
-
+		EntityRegistry.registerModEntity(EntityUIPlanet.class, "ARPlanetUIItem", 5, this, 64, 1, false);
+		EntityRegistry.registerModEntity(EntityUIButton.class, "ARPlanetUIButton", 6, this, 64, 20, false);
+		EntityRegistry.registerModEntity(EntityUIStar.class, "ARStarUIButton", 7, this, 64, 20, false);
+		
 		//TileEntity Registration ---------------------------------------------------------------------------------------------
 		GameRegistry.registerTileEntity(TileRocketBuilder.class, "ARrocketBuilder");
 		GameRegistry.registerTileEntity(TileWarpCore.class, "ARwarpCore");
@@ -908,6 +923,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileSolarPanel.class, "ARSolarGenerator");
 		GameRegistry.registerTileEntity(TileStationAltitudeController.class, "ARAltitudeController");
 		GameRegistry.registerTileEntity(TileRailgun.class, "ARRailgun");
+		GameRegistry.registerTileEntity(TilePlanetaryHologram.class, "ARplanetHoloSelector");
 
 
 
