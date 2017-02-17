@@ -2,7 +2,7 @@ package zmaster587.advancedRocketry.entity;
 
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.tile.multiblock.TilePlanetaryHologram;
+import zmaster587.advancedRocketry.tile.station.TilePlanetaryHologram;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -61,11 +61,6 @@ public class EntityUIPlanet extends Entity {
 	}
 
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound compound) {
-
-	}
-	
-	@Override
 	public boolean canBeCollidedWith() {
 		return true;
 	}
@@ -89,6 +84,15 @@ public class EntityUIPlanet extends Entity {
 
 	}
 
+	@Override
+	public boolean writeToNBTOptional(NBTTagCompound compound) {
+		return false;
+	}
+	
+	@Override
+	protected void readEntityFromNBT(NBTTagCompound compound) {
+	}
+	
 	public DimensionProperties getProperties() {
 		if((properties == null && getPlanetID() != -1) || (properties != null && getPlanetID() != properties.getId())) {
 			properties = DimensionManager.getInstance().getDimensionProperties(getPlanetID());

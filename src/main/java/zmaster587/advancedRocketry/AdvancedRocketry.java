@@ -169,6 +169,7 @@ import zmaster587.advancedRocketry.tile.multiblock.machine.TileRollingMachine;
 import zmaster587.advancedRocketry.tile.oxygen.TileCO2Scrubber;
 import zmaster587.advancedRocketry.tile.oxygen.TileOxygenCharger;
 import zmaster587.advancedRocketry.tile.oxygen.TileOxygenVent;
+import zmaster587.advancedRocketry.tile.station.TilePlanetaryHologram;
 import zmaster587.advancedRocketry.tile.station.TileStationAltitudeController;
 import zmaster587.advancedRocketry.tile.station.TileDockingPort;
 import zmaster587.advancedRocketry.tile.station.TileLandingPad;

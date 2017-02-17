@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.tile.multiblock;
+package zmaster587.advancedRocketry.tile.station;
 
 import io.netty.buffer.ByteBuf;
 
@@ -116,7 +116,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 					for(EntityUIPlanet entity : entities) {
 						DimensionProperties properties = entity.getProperties();
 						if(entity != centeredEntity)
-							entity.setPositionPolar(this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5, getInterpHologramSize()*properties.orbitalDist/100f, properties.orbitTheta);
+							entity.setPositionPolar(this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5, getInterpHologramSize()*(.1+ properties.orbitalDist/100f), properties.orbitTheta);
 						entity.setScale(getInterpHologramSize());
 					}
 

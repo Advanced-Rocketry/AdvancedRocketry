@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.entity;
 
-import zmaster587.advancedRocketry.tile.multiblock.TilePlanetaryHologram;
+import zmaster587.advancedRocketry.tile.station.TilePlanetaryHologram;
 import zmaster587.libVulpes.inventory.modules.IButtonInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

@@ -6,7 +6,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
-import zmaster587.advancedRocketry.tile.multiblock.TilePlanetaryHologram;
+import zmaster587.advancedRocketry.tile.station.TilePlanetaryHologram;
 
 public class EntityUIStar extends EntityUIPlanet {
 	
