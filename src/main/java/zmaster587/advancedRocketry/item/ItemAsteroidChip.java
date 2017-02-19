@@ -7,7 +7,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 public class ItemAsteroidChip  extends ItemMultiData {
 
 	private static final String uuidIdentifier = "UUID";
-
+	private static final String astType = "astype";
 	public ItemAsteroidChip() {
 	}
 
@@ -39,6 +39,23 @@ public class ItemAsteroidChip  extends ItemMultiData {
 			nbt = new NBTTagCompound();
 
 		nbt.setLong(uuidIdentifier,uuid);
+		stack.setTagCompound(nbt);
+	}
+	
+	public String getType(ItemStack stack) {
+		if(stack.hasTagCompound())
+			return stack.getTagCompound().getString(astType);
+		return null;
+	}
+
+	public void setType(ItemStack stack, String type) {
+		NBTTagCompound nbt;
+		if(stack.hasTagCompound())
+			nbt = stack.getTagCompound();
+		else
+			nbt = new NBTTagCompound();
+
+		nbt.setString(astType,type);
 		stack.setTagCompound(nbt);
 	}
 

@@ -11,12 +11,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.oredict.OreDictionary;
+import zmaster587.advancedRocketry.Test;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
+import zmaster587.advancedRocketry.util.AsteroidSmall;
+import zmaster587.advancedRocketry.util.AsteroidSmall.StackEntry;
 import zmaster587.libVulpes.util.HashedBlockPosition;
+import zmaster587.libVulpes.util.ZUtils;
 
 public class MissionOreMining extends MissionResourceCollection {
 
@@ -47,33 +51,42 @@ public class MissionOreMining extends MissionResourceCollection {
 
 				//fill the inventory of the rocket
 				if(distanceData/(double)maxData > Math.random()) {
-					int totalStacks = (int) ((1+(massData/100f))*Configuration.asteroidMiningMult*(Math.random()/0.5f + 0.5f)*5);
-					ItemStack[] stacks = new ItemStack[totalStacks];
-					for (int i = 0; i < totalStacks; i++) {
-						if((compositionData/(double)maxData)*0.9d > Math.random()) {
-							String oreDictName = Configuration.standardAsteroidOres.get((int)(Math.random()*Configuration.standardAsteroidOres.size()));
-							List<ItemStack> ores = OreDictionary.getOres(oreDictName);
-							if(ores != null && !ores.isEmpty()) {
-								stacks[i] = ores.get(0).copy();
-								stacks[i].stackSize = stacks[i].getMaxStackSize();
-								continue;
+					ItemStack[] stacks;
+					List<StackEntry> stacks2 = Configuration.asteroidTypes.get(((ItemAsteroidChip)stack.getItem()).getType(stack)).getHarvest(((ItemAsteroidChip)stack.getItem()).getUUID(stack));
+					List<ItemStack> totalStacksList = new LinkedList<ItemStack>();
+					for(StackEntry entry : stacks2) {
+						
+						if(compositionData/(float)maxData >= Math.random())
+							entry.stack.stackSize *= 1.25f;
+						
+						if(massData/(float)maxData >= Math.random())
+							entry.stack.stackSize *= 1.25f;
+						
+						//if(entry.stack.getMaxStackSize() < entry.stack.stackSize) {
+							for(int i = 0; i < entry.stack.stackSize/entry.stack.getMaxStackSize(); i++) {
+								ItemStack stack2 = new ItemStack(entry.stack.getItem(), entry.stack.getMaxStackSize(), entry.stack.getMetadata());
+								totalStacksList.add(stack2);
 							}
-						}
-
-						stacks[i] = new ItemStack(Blocks.STONE,64);
+						//}
+						entry.stack.stackSize %= entry.stack.getMaxStackSize();
+						totalStacksList.add(entry.stack);
 					}
 
+					stacks = new ItemStack[totalStacksList.size()];
+					totalStacksList.toArray(stacks);
+					
 					for(int i = 0,  g = 0; i < rocketStorage.getInventoryTiles().size(); i++) {
 						IInventory tile = (IInventory) rocketStorage.getInventoryTiles().get(i);
 
 
-						for(int offset = 0; offset < tile.getSizeInventory() && g < totalStacks; offset++, g++) {
+						for(int offset = 0; offset < tile.getSizeInventory() && g < stacks.length; offset++, g++) {
 							if(tile.getStackInSlot(offset) == null)
 								tile.setInventorySlotContents(offset, stacks[g]);
 						}
 					}
 				}
 			}
+			
 		}
 
 		rocketStorage.getGuidanceComputer().setInventorySlotContents(0, null);

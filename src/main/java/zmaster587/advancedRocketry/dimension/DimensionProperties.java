@@ -692,7 +692,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			SatelliteBase satallite = iterator.next();
 			satallite.tickEntity();
 		}
-
 		updateOrbit();
 	}
 

@@ -1,7 +1,12 @@
 package zmaster587.advancedRocketry;
 
+import java.util.LinkedList;
+
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.util.AsteroidSmall;
 public class Test {
 
 	public static void main(String[] args) {
@@ -74,5 +79,34 @@ public class Test {
 				x = radius;
 		}
 		return new BlockPos(2*Configuration.stationSize*x + Configuration.stationSize/2,0,2*Configuration.stationSize*z + Configuration.stationSize/2);
+	}
+	
+	public static AsteroidSmall testeroid = new AsteroidSmall();
+	
+	static {
+		testeroid.distance = 10;
+		testeroid.ID = "TEST";
+		testeroid.mass = 100;
+		testeroid.massVariability = .5f;
+		testeroid.minLevel = 0;
+		testeroid.probability = 1f;
+		testeroid.richness = 0.2f;
+		testeroid.richnessVariability = .5f;
+		testeroid.itemStacks = new LinkedList<ItemStack>();
+		
+		testeroid.itemStacks.add(new ItemStack(Blocks.IRON_ORE));
+		testeroid.itemStacks.add(new ItemStack(Blocks.GOLD_ORE));
+		testeroid.itemStacks.add(new ItemStack(Blocks.OBSIDIAN));
+		testeroid.itemStacks.add(new ItemStack(Blocks.DIAMOND_ORE));
+		testeroid.itemStacks.add(new ItemStack(Blocks.REDSTONE_ORE));
+		
+		testeroid.stackProbabilites = new LinkedList<Float>();
+		testeroid.stackProbabilites.add(15f);
+		testeroid.stackProbabilites.add(10f);
+		testeroid.stackProbabilites.add(10f);
+		testeroid.stackProbabilites.add(1f);
+		testeroid.stackProbabilites.add(6f);
+		
+		Configuration.asteroidTypes.put("Test", testeroid);
 	}
 }
