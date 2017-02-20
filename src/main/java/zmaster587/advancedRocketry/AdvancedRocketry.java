@@ -49,6 +49,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
+import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
@@ -1169,6 +1170,7 @@ public class AdvancedRocketry {
 	public void postInit(FMLPostInitializationEvent event)
 	{
 
+		CapabilitySpaceArmor.register();
 		//Need to raise the Max Entity Radius to allow player interaction with rockets
 		World.MAX_ENTITY_RADIUS = 20;
 
