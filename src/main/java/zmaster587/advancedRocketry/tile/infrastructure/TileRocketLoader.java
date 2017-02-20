@@ -98,7 +98,7 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 									rocketContainsItems = true;
 									break out;
 								}
-								else if(getStackInSlot(j) != null && inv.isItemValidForSlot(i, getStackInSlot(j)) && inv.getStackInSlot(i).getMaxStackSize() != inv.getStackInSlot(i).stackSize ) {
+								else if(getStackInSlot(j) != null && inv.isItemValidForSlot(i, getStackInSlot(j))&& inv.getStackInSlot(j).getItem() == getStackInSlot(j).getItem() && inv.getStackInSlot(i).getMaxStackSize() != inv.getStackInSlot(i).stackSize ) {
 									ItemStack stack2 = inventory.decrStackSize(j, inv.getStackInSlot(i).getMaxStackSize() - inv.getStackInSlot(i).stackSize);
 									inv.getStackInSlot(i).stackSize += stack2.stackSize;
 									rocketContainsItems = true;
