@@ -1511,7 +1511,6 @@ public class AdvancedRocketry {
 		LibVulpes.instance.loadXMLRecipe(TileElectricArcFurnace.class);
 		LibVulpes.instance.loadXMLRecipe(TileLathe.class);
 		LibVulpes.instance.loadXMLRecipe(TileRollingMachine.class);
-
 	}
 
 	@EventHandler
