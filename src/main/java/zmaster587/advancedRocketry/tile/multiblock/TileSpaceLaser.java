@@ -403,7 +403,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 		nbt.setInteger("laserZ", laserZ);
 		nbt.setByte("mode", (byte)mode.ordinal());
 
-		if(mode == MODE.SPIRAL) {
+		if(mode == MODE.SPIRAL && prevDir != null) {
 			nbt.setInteger("CenterX", xCenter);
 			nbt.setInteger("CenterY", yCenter);
 			nbt.setInteger("radius", radius);
@@ -426,7 +426,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 		laserZ = nbt.getInteger("laserZ");
 		mode = MODE.values()[nbt.getByte("mode")];
 
-		if(mode == MODE.SPIRAL){
+		if(mode == MODE.SPIRAL && nbt.hasKey("prevDir")){
 			xCenter = nbt.getInteger("CenterX");
 			yCenter = nbt.getInteger("CenterY");
 			radius = nbt.getInteger("radius");
