@@ -4,6 +4,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
 import zmaster587.advancedRocketry.network.PacketOxygenState;
@@ -43,7 +44,7 @@ public class AtmosphereLowOxygen extends AtmosphereType {
 
 		return (player instanceof EntityPlayer && ((EntityPlayer)player).capabilities.isCreativeMode) 
 				|| player.getRidingEntity() instanceof EntityRocketBase ||
-				helm != null && helm.hasCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null) && helm.getCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null).protectsFromSubstance(this, helm, true) &&
-				chest != null && chest.hasCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null) && chest.getCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null).protectsFromSubstance(this, chest, true);
+				helm != null && helm.hasCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, EnumFacing.DOWN) && helm.getCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, EnumFacing.DOWN).protectsFromSubstance(this, helm, true) &&
+				chest != null && chest.hasCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, EnumFacing.DOWN) && chest.getCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, EnumFacing.DOWN).protectsFromSubstance(this, chest, true);
 	}
 }
