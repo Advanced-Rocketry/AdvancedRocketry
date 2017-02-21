@@ -15,6 +15,7 @@ import net.minecraft.network.PacketBuffer;
 public class PacketDimInfo extends BasePacket {
 
 	DimensionProperties dimProperties;
+	NBTTagCompound dimNBT;
 	int dimNumber;
 	boolean deleteDim;
 
@@ -64,14 +65,14 @@ public class PacketDimInfo extends BasePacket {
 		if(!deleteDim) {
 			//TODO: error handling
 			try {
-				nbt = packetBuffer.readNBTTagCompoundFromBuffer();
+				dimNBT = packetBuffer.readNBTTagCompoundFromBuffer();
 
 			} catch (IOException e) {
 				e.printStackTrace();
 				return;
 			}
-			dimProperties = new DimensionProperties(dimNumber);
-			dimProperties.readFromNBT(nbt);
+			//dimProperties = new DimensionProperties(dimNumber);
+			//dimProperties.readFromNBT(nbt);
 		}
 	}
 
@@ -93,8 +94,10 @@ public class PacketDimInfo extends BasePacket {
 				DimensionManager.overworldProperties = dimProperties;
 			}
 			else if( DimensionManager.getInstance().isDimensionCreated(dimNumber) ) {
-				DimensionManager.getInstance().setDimProperties(dimNumber, dimProperties);
+				DimensionManager.getInstance().getDimensionProperties(dimNumber).readFromNBT(dimNBT);
 			} else {
+				dimProperties = new DimensionProperties(dimNumber);
+				dimProperties.readFromNBT(dimNBT);
 				DimensionManager.getInstance().registerDimNoUpdate(dimProperties, true);
 			}
 		}
