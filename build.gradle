@@ -37,7 +37,7 @@ minecraft {
     
     replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"
     replace "%VERSION%", modversion
-    replace "%LIBVULPESVERSION%", "0.1.14"
+    replace "%LIBVULPESVERSION%", "0.1.16"
 }
 
 repositories {

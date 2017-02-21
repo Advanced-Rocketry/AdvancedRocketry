@@ -58,7 +58,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 			if(blob.contains(pos) && blob != this)
 				return false;
 		}
-		
+
 		return !SealableBlockHandler.INSTANCE.isBlockSealed(world, pos);
 	}
 
@@ -137,10 +137,11 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 		//only one instance can editing this at a time because this will not run again b/c "worker" is not null
 
-		for(BlockPosition blockPos2 : addableBlocks) {
-			super.addBlock(blockPos2, nearbyBlobs);
+		synchronized(graph) {
+			for(BlockPosition blockPos2 : addableBlocks) {
+				super.addBlock(blockPos2, nearbyBlobs);
+			}
 		}
-
 		executing = false;
 	}
 
@@ -151,7 +152,15 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	 */
 	protected void runEffectOnWorldBlocks(World world, Collection<BlockPosition> blocks) {
 		if(!AtmosphereHandler.getOxygenHandler(world.provider.dimensionId).getDefaultAtmosphereType().allowsCombustion()) {
-			for(BlockPosition pos : new LinkedList<BlockPosition>(blocks)) {
+
+
+			List<BlockPosition> list;
+
+			synchronized (graph) {
+				list = new LinkedList<BlockPosition>(blocks);
+			}
+			
+			for(BlockPosition pos : list) {
 				Block block = world.getBlock(pos.x, pos.y, pos.z);
 				if(block== Blocks.torch) {
 					world.setBlock(pos.x, pos.y, pos.z, AdvancedRocketryBlocks.blockUnlitTorch);

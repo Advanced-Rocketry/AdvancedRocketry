@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -19,21 +21,21 @@ public class CableNetwork {
 
 	protected static HashSet<Integer> usedIds = new HashSet<Integer>();
 
-	HashSet<Entry<TileEntity, ForgeDirection>> sources;
+	CopyOnWriteArraySet<Entry<TileEntity, ForgeDirection>> sources;
 
-	HashSet<Entry<TileEntity, ForgeDirection>> sinks;
+	CopyOnWriteArraySet<Entry<TileEntity, ForgeDirection>> sinks;
 
 	protected CableNetwork() {
 
-		sources = new HashSet<Entry<TileEntity, ForgeDirection>>();
-		sinks = new HashSet<Entry<TileEntity, ForgeDirection>>();
+		sources = new CopyOnWriteArraySet<Entry<TileEntity, ForgeDirection>>();
+		sinks = new CopyOnWriteArraySet<Entry<TileEntity, ForgeDirection>>();
 	}
 
-	public HashSet<Entry<TileEntity, ForgeDirection>> getSources() {
+	public Set<Entry<TileEntity, ForgeDirection>> getSources() {
 		return sources;
 	}
 
-	public HashSet<Entry<TileEntity, ForgeDirection>> getSinks() {
+	public Set<Entry<TileEntity, ForgeDirection>> getSinks() {
 		return sinks;
 	}
 

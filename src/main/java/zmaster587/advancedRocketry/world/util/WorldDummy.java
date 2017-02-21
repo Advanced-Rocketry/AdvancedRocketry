@@ -67,6 +67,12 @@ public class WorldDummy extends World {
 		return storage.isSideSolid(x, y, z, side, _default);
 	}
 
+	
+	@Override
+	public long getWorldTime() {
+		return 0;
+	}
+	
 	@Override
 	public void notifyBlockOfNeighborChange(int p_147460_1_, int p_147460_2_, int p_147460_3_, final Block p_147460_4_) {
 
