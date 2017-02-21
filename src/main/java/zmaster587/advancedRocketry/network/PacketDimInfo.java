@@ -50,18 +50,13 @@ public class PacketDimInfo extends BasePacket {
 		}
 		else
 			out.writeBoolean(flag);
-
 	}
 
 	@Override
 	public void readClient(ByteBuf in) {
 		PacketBuffer packetBuffer = new PacketBuffer(in);
-		NBTTagCompound nbt;
 		dimNumber = in.readInt();
-		
-
 		deleteDim = in.readBoolean();
-		
 		if(!deleteDim) {
 			//TODO: error handling
 			try {
