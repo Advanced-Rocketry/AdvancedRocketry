@@ -67,7 +67,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 			if(blob.contains(pos) && blob != this)
 				return false;
 		}
-		
+
 		return !SealableBlockHandler.INSTANCE.isBlockSealed(world, pos.getBlockPos());
 	}
 
@@ -93,9 +93,10 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 	@Override
 	public void run() {
-		
+
 		//Nearby Blobs
-		
+
+
 		Stack<HashedBlockPosition> stack = new Stack<HashedBlockPosition>();
 		stack.push(blockPos);
 
@@ -147,9 +148,10 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 		}
 
 		//only one instance can editing this at a time because this will not run again b/c "worker" is not null
-
-		for(HashedBlockPosition blockPos2 : addableBlocks) {
-			super.addBlock(blockPos2, nearbyBlobs);
+		synchronized (graph) {
+			for(HashedBlockPosition blockPos2 : addableBlocks) {
+				super.addBlock(blockPos2, nearbyBlobs);
+			}
 		}
 
 		executing = false;
@@ -162,7 +164,15 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	 */
 	protected void runEffectOnWorldBlocks(World world, Collection<HashedBlockPosition> blocks) {
 		if(!AtmosphereHandler.getOxygenHandler(world.provider.getDimension()).getDefaultAtmosphereType().allowsCombustion()) {
-			for(HashedBlockPosition pos : new LinkedList<HashedBlockPosition>(blocks)) {
+
+			List<HashedBlockPosition> list;
+			
+			synchronized (graph) {
+				list = new LinkedList<HashedBlockPosition>(blocks);
+			}
+
+
+			for(HashedBlockPosition pos : list) {
 				IBlockState state  = world.getBlockState(pos.getBlockPos());
 				if(state.getBlock() == Blocks.TORCH) {
 					world.setBlockState(pos.getBlockPos(), AdvancedRocketryBlocks.blockUnlitTorch.getDefaultState().withProperty(BlockTorch.FACING, state.getValue(BlockTorch.FACING)));

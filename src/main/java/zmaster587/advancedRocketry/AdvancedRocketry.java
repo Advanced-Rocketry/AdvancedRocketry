@@ -49,6 +49,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
+import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
@@ -79,6 +80,7 @@ import zmaster587.advancedRocketry.block.BlockRocketMotor;
 import zmaster587.advancedRocketry.block.BlockRotatableModel;
 import zmaster587.advancedRocketry.block.BlockSeat;
 import zmaster587.advancedRocketry.block.BlockFuelTank;
+import zmaster587.advancedRocketry.block.BlockSolarGenerator;
 import zmaster587.advancedRocketry.block.BlockStationModuleDockingPort;
 import zmaster587.advancedRocketry.block.BlockTileNeighborUpdate;
 import zmaster587.advancedRocketry.block.BlockTileRedstoneEmitter;
@@ -307,6 +309,7 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.terraformSpeed = config.get(Configuration.CATEGORY_GENERAL, "terraformMult", 1f, "Multplier for terraforming speed").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.terraformRequiresFluid = config.get(Configuration.CATEGORY_GENERAL, "TerraformerRequiresFluids", true).getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.canPlayerRespawnInSpace = config.get(Configuration.CATEGORY_GENERAL, "allowPlanetRespawn", false, "If true players will respawn near beds on planets IF the spawn location is in a breathable atmosphere").getBoolean();
+		zmaster587.advancedRocketry.api.Configuration.solarGeneratorMult = config.get(Configuration.CATEGORY_GENERAL, "solarGeneratorMultiplier", 1, "Amount of power per tick the solar generator should produce").getInt();
 
 		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 8000, "Dimensions including and after this number are allowed to be made into planets");
 		zmaster587.advancedRocketry.api.Configuration.blackListAllVanillaBiomes = config.getBoolean("blackListVanillaBiomes", PLANET, false, "Prevents any vanilla biomes from spawning on planets");
@@ -316,6 +319,9 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.allowSawmillVanillaWood = config.get(Configuration.CATEGORY_GENERAL, "sawMillCutVanillaWood", true, "Should the cutting machine be able to cut vanilla wood into planks").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.automaticRetroRockets = config.get(ROCKET, "autoRetroRockets", true, "Setting to false will disable the retrorockets that fire automatically on reentry on both player and automated rockets").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.atmosphereHandleBitMask = config.get(PERFORMANCE, "atmosphereCalculationMethod", 0, "BitMask: 0: no threading, radius based; 1: threading, radius based (EXP); 2: no threading volume based; 3: threading volume based (EXP)").getInt();
+		zmaster587.advancedRocketry.api.Configuration.oxygenVentSize = config.get(PERFORMANCE, "oxygenVentSize", 32, "Radius of the O2 vent.  if atmosphereCalculationMethod is 2 or 3 then max volume is calculated from this radius.  WARNING: larger numbers can lead to lag").getInt();
+		
+		
 		zmaster587.advancedRocketry.api.Configuration.advancedVFX = config.get(PERFORMANCE, "advancedVFX", true, "Advanced visual effects").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.gasCollectionMult = config.get(GAS_MINING, "gasMissionMultiplier", 1.0, "Multiplier for the amount of time gas collection missions take").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.asteroidMiningMult = config.get(ASTEROID, "miningMissionMultiplier", 1.0, "Multiplier changing how much total material is brought back from a mining mission").getDouble();
@@ -525,7 +531,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockIntake = new BlockIntake(Material.IRON).setUnlocalizedName("gasIntake").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockPressureTank = new BlockPressurizedFluidTank(Material.IRON).setUnlocalizedName("pressurizedTank").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockSolarPanel = new Block(Material.IRON).setUnlocalizedName("solarPanel").setCreativeTab(tabAdvRocketry).setHardness(3f);
-		AdvancedRocketryBlocks.blockSolarGenerator = new BlockTile(TileSolarPanel.class, GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setHardness(3f).setUnlocalizedName("solarGenerator");
+		AdvancedRocketryBlocks.blockSolarGenerator = new BlockSolarGenerator(TileSolarPanel.class, GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setHardness(3f).setUnlocalizedName("solarGenerator");
 		AdvancedRocketryBlocks.blockDockingPort = new BlockStationModuleDockingPort(Material.IRON).setUnlocalizedName("stationMarker").setCreativeTab(tabAdvRocketry).setHardness(3f);
 
 
@@ -1177,6 +1183,7 @@ public class AdvancedRocketry {
 	public void postInit(FMLPostInitializationEvent event)
 	{
 
+		CapabilitySpaceArmor.register();
 		//Need to raise the Max Entity Radius to allow player interaction with rockets
 		World.MAX_ENTITY_RADIUS = 20;
 
@@ -1517,7 +1524,6 @@ public class AdvancedRocketry {
 		LibVulpes.instance.loadXMLRecipe(TileElectricArcFurnace.class);
 		LibVulpes.instance.loadXMLRecipe(TileLathe.class);
 		LibVulpes.instance.loadXMLRecipe(TileRollingMachine.class);
-		
 		//Load Asteroids from XML
 		File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/asteroidConfig.xml");
 		logger.fine("Checking for asteroid config at " + file.getAbsolutePath());

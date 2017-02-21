@@ -36,7 +36,14 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
 		//Initial setup
 		bindTexture(texture);
 		
-
+		//Initial setup
+        int i2 = this.getWorld().getCombinedLight(tile.getPos().add(0, 1, 0), 0);
+        int j = i2 % 65536;
+        int k = i2 / 65536;
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j, (float)k);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        
+        
 		//Draw heat FX
 		if(Configuration.advancedVFX && multiBlockTile.getPowerMadeLastTick() > 0) {
 			double distance = Math.sqrt(Minecraft.getMinecraft().thePlayer.getDistanceSq(tile.getPos()));

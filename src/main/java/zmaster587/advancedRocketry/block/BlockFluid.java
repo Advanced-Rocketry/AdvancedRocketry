@@ -9,7 +9,7 @@ import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
-public class BlockFluid extends BlockFluidClassic {
+public class BlockFluid extends BlockFluidClassic {// implements IBlockColor {
 	
 	public BlockFluid(Fluid fluid, Material material) {
 		super(fluid, material);

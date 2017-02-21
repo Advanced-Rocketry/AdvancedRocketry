@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.world.util;
 
+import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
@@ -10,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.storage.WorldInfo;
 
@@ -36,6 +38,11 @@ public class WorldDummy extends World {
 	}
 
 	@Override
+	public long getWorldTime() {
+		return 0;
+	}
+	
+	@Override
 	public boolean isSideSolid(BlockPos pos, EnumFacing side, boolean bool) {
 		return storage.isSideSolid(pos, side, bool);
 	}
@@ -54,6 +61,16 @@ public class WorldDummy extends World {
 	public boolean tickUpdates(boolean p_72955_1_) {
 		//Dont tick
 		return false;
+	}
+	
+	@Override
+	public Biome getBiomeForCoordsBody(BlockPos pos) {
+		return AdvancedRocketryBiomes.spaceBiome;
+	}
+	
+	@Override
+	public Biome getBiomeGenForCoords(BlockPos pos) {
+		return AdvancedRocketryBiomes.spaceBiome;
 	}
 
 	@Override

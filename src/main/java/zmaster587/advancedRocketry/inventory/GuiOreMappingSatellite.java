@@ -116,10 +116,10 @@ public class GuiOreMappingSatellite extends GuiContainer {
 	}
 
 	@Override
-	protected void mouseClickMove(int x, int y,
-			int button, long timeSinceLastClick) {
+	protected void mouseClicked(int x, int y,
+			int button) throws IOException {
 		// TODO Auto-generated method stub
-		super.mouseClickMove(x, y, button, timeSinceLastClick);
+		super.mouseClicked(x, y, button);
 		
 		if(tile == null)
 			return;
@@ -325,7 +325,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureId());
 		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
 		RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel, 47 + x, 20 + y, 47 + x + SCREEN_SIZE, 20 + y + SCREEN_SIZE, 0, 1, 0, 1);
-		buffer.finishDrawing();
+		Tessellator.getInstance().draw();
 
 
 		//Render sliders and controls
