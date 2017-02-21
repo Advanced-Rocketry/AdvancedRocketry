@@ -11,9 +11,6 @@ screenshots
 /gradle
 /asm
 /blueprints
-*.png
-*.obj
-*.ogg
 *.xcf
 /libs
 /models
