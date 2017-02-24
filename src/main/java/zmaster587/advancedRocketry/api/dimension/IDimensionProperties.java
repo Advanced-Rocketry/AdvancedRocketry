@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.api.dimension;
 import java.util.Set;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
@@ -86,11 +87,84 @@ public interface IDimensionProperties {
 	 * @param world world to add the satellite to
 	 */
 	public void addSatallite(SatelliteBase satellite, World world);
+	public void addSatallite(SatelliteBase satellte);
+	
+	/**
+	 * Returns the satellite with that ID
+	 * @param lng satellite ID
+	 * @return
+	 */
+	public SatelliteBase getSatellite(long lng);
+	
+	/**
+	 * Removes the satellite from orbit around this world
+	 * @param satalliteId ID # for this satellite
+	 * @return reference to the satellite object
+	 */
+	public SatelliteBase removeSatellite(long id);
 
 	public void writeToNBT(NBTTagCompound nbt);
 
 	public void readFromNBT(NBTTagCompound nbt);
 
 	public void setParentOrbitalDistance(int distance);
+
+	/**
+	 * @return true if the dimension is a gas giant
+	 */
+	public boolean isGasGiant();
+
+	/**
+	 * @param posY height
+	 * @return density of the atmosphere
+	 */
+	public float getAtmosphereDensityAtHeight(double posY);
+
+	/**
+	 * @return the integer id of the star
+	 */
+	public int getStarId();
+
+	/**
+	 * @return density of the atmosphere in the range 0 to 200
+	 */
+	public int getAtmosphereDensity();
+
+	/**
+	 * @return true if terraforming activity has changed the planet properties
+	 */
+	public boolean isTerraformed();
+
+	/**
+	 * @return reource location of the planet
+	 */
+	public ResourceLocation getPlanetIcon();
+
+	/**
+	 * @return the location along the orbit in radians
+	 */
+	public double getOrbitTheta();
+
+	/**
+	 * @return distance of the planet from sun or moon in the range 0 to 200
+	 */
+	public int getOrbitalDist();
+
+	
+	/**
+	 * @return depth in the tree planet is.  If the planet orbits the star directly, the result is 0, the moon 1, the moon of a moon 2, etc
+	 */
+	public int getPathLengthToStar();
+
+	/**
+	 * @return id of the parent planet
+	 */
+	public int getParentPlanet();
+
+	/**
+	 * Set the atmosphere like the terraformer does, can trigger terraform event
+	 * @param i new atmosphere density
+	 */
+	public void setAtmosphereDensity(int i);
 	
 }
