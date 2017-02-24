@@ -589,7 +589,9 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 	@Override
 	public List<SpawnListEntry> getPossibleCreatures(
 			EnumCreatureType creatureType, BlockPos pos) {
-		return null;
+		Biome biome = this.worldObj.getBiomeGenForCoords(pos);
+
+        return biome.getSpawnableList(creatureType);
 	}
 
 	@Override
