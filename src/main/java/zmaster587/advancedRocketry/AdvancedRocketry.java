@@ -1426,12 +1426,20 @@ public class AdvancedRocketry {
 						if(OreDictionary.doesOreNameExist("ingot" + str) && OreDictionary.getOres("ingot" + str).size() > 0 && (material == null || !AllowedProducts.getProductByName("STICK").isOfType(material.getAllowedProducts())) ) {
 
 							//GT registers rods as sticks
-							if(OreDictionary.doesOreNameExist("rod" + str) && OreDictionary.getOres("rod" + str).size() > 0)
-								RecipesMachine.getInstance().addRecipe(TileLathe.class, OreDictionary.getOres("rod" + str).get(0), 300, 20, "ingot" + str);
-							else if(OreDictionary.doesOreNameExist("stick" + str)  && OreDictionary.getOres("stick" + str).size() > 0) {
-								RecipesMachine.getInstance().addRecipe(TileLathe.class, OreDictionary.getOres("stick" + str).get(0), 300, 20, "ingot" + str);
+							ItemStack stackToAdd = null;
+							if(OreDictionary.doesOreNameExist("rod" + str) && OreDictionary.getOres("rod" + str).size() > 0) {
+								stackToAdd = OreDictionary.getOres("rod" + str).get(0).copy();
+								stackToAdd.stackSize = 2;
 							}
+							else if(OreDictionary.doesOreNameExist("stick" + str)  && OreDictionary.getOres("stick" + str).size() > 0) {
+								stackToAdd = OreDictionary.getOres("stick" + str).get(0).copy();
+								stackToAdd.stackSize = 2;
+								}
+							else 
+								continue;
 
+							RecipesMachine.getInstance().addRecipe(TileLathe.class, stackToAdd, 300, 20, "ingot" + str);
+							
 						}
 
 					}
