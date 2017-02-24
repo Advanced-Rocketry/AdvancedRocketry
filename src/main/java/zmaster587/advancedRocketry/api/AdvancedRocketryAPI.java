@@ -13,4 +13,5 @@ public class AdvancedRocketryAPI
     public static IAtmosphereSealHandler atomsphereSealHandler;
     public static ISpaceObjectManager spaceObjectManager;
 	public static IGalaxy dimensionManager;
+	public static IGravityManager gravityManager;
 }

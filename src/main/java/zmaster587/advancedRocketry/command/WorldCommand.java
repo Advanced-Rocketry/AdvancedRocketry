@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.IAtmosphere;
@@ -30,6 +31,7 @@ import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -90,7 +92,39 @@ public class WorldCommand implements ICommand {
 				sender.addChatMessage(new TextComponentString("Ghosts don't have items!"));
 			return;
 		}
-		
+
+		if(string.length >= 1 && string[0].equalsIgnoreCase("setGravity")) {
+			if(string.length >= 2) {
+				if(sender instanceof Entity) {
+					Entity player;
+					if(string.length > 2)
+						player = sender.getServer().getPlayerList().getPlayerByUsername(string[2]);
+					else
+						player = (Entity) sender;
+					if(player != null) {
+						try {
+							double d = Double.parseDouble(string[1]);
+							if(d == 0)
+								AdvancedRocketryAPI.gravityManager.clearGravityEffect(player);
+							else
+								AdvancedRocketryAPI.gravityManager.setGravityMultiplier((Entity) sender, d);
+						} catch(NumberFormatException e) {
+							sender.addChatMessage(new TextComponentString(string[1] + " is not a valid number"));
+						}
+					} else {
+						sender.addChatMessage(new TextComponentString("Not a valid player"));
+					}
+				}
+			}
+			else {
+				sender.addChatMessage(new TextComponentString("Help: "));
+				sender.addChatMessage(new TextComponentString("/advRocketry " + string[0] + " gravity_multiplier [playerName]"));
+				sender.addChatMessage(new TextComponentString(""));
+				sender.addChatMessage(new TextComponentString("use 0 as the gravity_multiplier to allow regular planet gravity to take over"));
+			}
+			return;
+		}
+
 		if(string.length > 1) {
 			if(string[0].equalsIgnoreCase("goto") && (string.length == 2 || string.length == 3)) {
 				EntityPlayer player = (EntityPlayer) sender.getCommandSenderEntity();
@@ -175,7 +209,7 @@ public class WorldCommand implements ICommand {
 				else if(string[1].equalsIgnoreCase("list")) { //Lists dimensions
 
 					sender.addChatMessage(new TextComponentString("Dimensions:"));
-					for(int i : DimensionManager.getInstance().getregisteredDimensions()) {
+					for(int i : DimensionManager.getInstance().getRegisteredDimensions()) {
 						sender.addChatMessage(new TextComponentString("DIM" + i + ":  " + DimensionManager.getInstance().getDimensionProperties(i).getName())); 
 					}
 				}
@@ -235,12 +269,12 @@ public class WorldCommand implements ICommand {
 
 						}
 					}
-					
+
 					if(string.length > 2 + gasOffset) {
 						if(string[2 + gasOffset].equalsIgnoreCase("moon")) {
 							gasOffset++;
 							moon = true;
-							
+
 							if(!DimensionManager.getInstance().isDimensionCreated(starId)) {
 								sender.addChatMessage(new TextComponentString("Invalid planet ID"));
 								sender.addChatMessage(new TextComponentString(string[0] + " " + string[1] + "[planetId] [moon] [gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
@@ -249,11 +283,11 @@ public class WorldCommand implements ICommand {
 							}
 						}
 						else if(DimensionManager.getInstance().getStar(starId) == null) {
-								sender.addChatMessage(new TextComponentString("Invalid star ID"));
-								sender.addChatMessage(new TextComponentString(string[0] + " " + string[1] + "[starId] [gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+							sender.addChatMessage(new TextComponentString("Invalid star ID"));
+							sender.addChatMessage(new TextComponentString(string[0] + " " + string[1] + "[starId] [gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
 
-								return;
-							}
+							return;
+						}
 					}
 
 					if(string.length > 2 + gasOffset && string[2 + gasOffset].equalsIgnoreCase("gas")) {
@@ -264,11 +298,11 @@ public class WorldCommand implements ICommand {
 					try {
 						//Advancedrocketry planet generate <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>
 						if(string.length == 6 + gasOffset) {
-							
+
 							int planetId = starId;
 							if(moon)
 								starId = DimensionManager.getInstance().getDimensionProperties(planetId).getStarId();
-							
+
 							DimensionProperties properties;
 							if(!gassy)
 								properties = DimensionManager.getInstance().generateRandom(starId, string[2 + gasOffset], Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]));
@@ -279,22 +313,22 @@ public class WorldCommand implements ICommand {
 								sender.addChatMessage(new TextComponentString("Dimension: " + string[2 + gasOffset] + " failed to generate!"));
 							else
 								sender.addChatMessage(new TextComponentString("Dimension: " + string[2 + gasOffset] + " Generated!"));
-							
+
 							if(moon) {
 								properties.setParentPlanet(DimensionManager.getInstance().getDimensionProperties(planetId));
 								DimensionManager.getInstance().getStar(starId).removePlanet(properties);
 							}
-							
+
 							sender.addChatMessage(new TextComponentString("Dimension Generated!"));
 						}
 						else if(string.length == 9  + gasOffset) {
-							
+
 							int planetId = starId;
 							if(moon)
 								starId = DimensionManager.getInstance().getDimensionProperties(planetId).getStarId();
-							
+
 							DimensionProperties properties;
-							
+
 							if(!gassy)
 								properties = DimensionManager.getInstance().generateRandom(starId,string[2 + gasOffset] ,Integer.parseInt(string[3 + gasOffset]), Integer.parseInt(string[4 + gasOffset]), Integer.parseInt(string[5 + gasOffset]),Integer.parseInt(string[6 + gasOffset]), Integer.parseInt(string[7 + gasOffset]), Integer.parseInt(string[8 + gasOffset]));
 							else
@@ -304,7 +338,7 @@ public class WorldCommand implements ICommand {
 								sender.addChatMessage(new TextComponentString("Dimension: " + string[2 + gasOffset] + " failed to generate!"));
 							else
 								sender.addChatMessage(new TextComponentString("Dimension: " + string[2 + gasOffset] + " Generated!"));
-						
+
 							if(moon) {
 								properties.setParentPlanet(DimensionManager.getInstance().getDimensionProperties(planetId));
 								DimensionManager.getInstance().getStar(starId).removePlanet(properties);
@@ -537,6 +571,7 @@ public class WorldCommand implements ICommand {
 			list.add("fetch");
 			list.add("star");
 			list.add("filldata");
+			list.add("setGravity");
 		} else if(string.length == 2) {
 			ArrayList<String> list2 = new ArrayList<String>();
 			list2.add("get");

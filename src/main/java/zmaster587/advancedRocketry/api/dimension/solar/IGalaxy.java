@@ -11,7 +11,7 @@ public interface IGalaxy {
 	/**
 	 * @return an Integer array of dimensions registered with this DimensionManager
 	 */
-	public Integer[] getregisteredDimensions();
+	public Integer[] getRegisteredDimensions();
 	
 	/**
 	 * @param satId long id of the satellite
