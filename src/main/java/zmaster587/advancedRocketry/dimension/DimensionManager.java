@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.IGalaxy;
@@ -37,8 +38,7 @@ public class DimensionManager implements IGalaxy {
 
 	//TODO: fix satellites not unloading on disconnect
 	private Random random;
-	private static DimensionManager instance = new DimensionManager();
-	public static final String workingPath = "advRocketry";
+	private static DimensionManager instance = (DimensionManager) (AdvancedRocketryAPI.dimensionManager = new DimensionManager());public static final String workingPath = "advRocketry";
 	public static final String filePath = workingPath + "/temp.dat";
 	public static int dimOffset = 0;
 	private boolean hasBeenInitiallized = false;
@@ -442,6 +442,7 @@ public class DimensionManager implements IGalaxy {
 	 * @param dimId id of the dimention of which to get the properties
 	 * @return DimensionProperties representing the dimId given
 	 */
+	@Override
 	public DimensionProperties getDimensionProperties(int dimId) {
 		DimensionProperties properties = dimensionList.get(new Integer(dimId));
 		if(dimId == Configuration.spaceDimId || dimId == Integer.MIN_VALUE) {

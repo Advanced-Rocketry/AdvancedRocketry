@@ -1178,4 +1178,14 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public String toString() {
 		return String.format("Dimension ID: %d.  Dimension Name: %s.  Parent Star %d ", getId(), getName(), getStarId());
 	}
+
+	@Override
+	public double getOrbitTheta() {
+		return orbitTheta;
+	}
+
+	@Override
+	public int getOrbitalDist() {
+		return orbitalDist;
+	}
 }
