@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
@@ -20,6 +21,7 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.BlockPosition;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -81,6 +83,38 @@ public class WorldCommand implements ICommand {
 			}
 			else
 				sender.addChatMessage(new ChatComponentText("Ghosts don't have items!"));
+			return;
+		}
+		
+		if(string.length >= 1 && string[0].equalsIgnoreCase("setGravity")) {
+			if(string.length >= 2) {
+				if(sender instanceof Entity) {
+					Entity player;
+					if(string.length > 2)
+						player = sender.getEntityWorld().getPlayerEntityByName(string[2]);
+					else
+						player = (Entity) sender;
+					if(player != null) {
+						try {
+							double d = Double.parseDouble(string[1]);
+							if(d == 0)
+								AdvancedRocketryAPI.gravityManager.clearGravityEffect(player);
+							else
+								AdvancedRocketryAPI.gravityManager.setGravityMultiplier((Entity) sender, d);
+						} catch(NumberFormatException e) {
+							sender.addChatMessage(new ChatComponentText(string[1] + " is not a valid number"));
+						}
+					} else {
+						sender.addChatMessage(new ChatComponentText("Not a valid player"));
+					}
+				}
+			}
+			else {
+				sender.addChatMessage(new ChatComponentText("Help: "));
+				sender.addChatMessage(new ChatComponentText("/advRocketry " + string[0] + " gravity_multiplier [playerName]"));
+				sender.addChatMessage(new ChatComponentText(""));
+				sender.addChatMessage(new ChatComponentText("use 0 as the gravity_multiplier to allow regular planet gravity to take over"));
+			}
 			return;
 		}
 
@@ -169,7 +203,7 @@ public class WorldCommand implements ICommand {
 				else if(string[1].equalsIgnoreCase("list")) { //Lists dimensions
 
 					sender.addChatMessage(new ChatComponentText("Dimensions:"));
-					for(int i : DimensionManager.getInstance().getregisteredDimensions()) {
+					for(int i : DimensionManager.getInstance().getRegisteredDimensions()) {
 						sender.addChatMessage(new ChatComponentText("DIM" + i + ":  " + DimensionManager.getInstance().getDimensionProperties(i).getName())); 
 					}
 				}

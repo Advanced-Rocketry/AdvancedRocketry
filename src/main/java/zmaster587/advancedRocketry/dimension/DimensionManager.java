@@ -108,7 +108,7 @@ public class DimensionManager implements IGalaxy {
 	/**
 	 * @return an Integer array of dimensions registered with this DimensionManager
 	 */
-	public Integer[] getregisteredDimensions() {
+	public Integer[] getRegisteredDimensions() {
 		Integer ret[] = new Integer[dimensionList.size()];
 		return dimensionList.keySet().toArray(ret);
 	}
@@ -117,7 +117,7 @@ public class DimensionManager implements IGalaxy {
 	 * @return List of dimensions registered with this manager that are currently loaded on the server/integrated server
 	 */
 	public Integer[] getLoadedDimensions() {
-		return getregisteredDimensions();
+		return getRegisteredDimensions();
 	}
 
 	/**
