@@ -110,6 +110,10 @@ public class Configuration {
 
 	public static int solarGeneratorMult;
 
+	public static boolean lowGravityBoots;
+
+	public static float jetPackThrust;
+
 	
 
 }
