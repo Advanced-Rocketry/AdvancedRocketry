@@ -28,6 +28,8 @@ import net.minecraftforge.fluids.IFluidContainerItem;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.api.IJetPack;
@@ -180,9 +182,10 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 		if(hasFuel) {
 
 			if(mode == MODES.HOVER)
-				player.capabilities.isFlying = true;
+				if(Configuration.jetPackThrust > DimensionManager.getInstance().getDimensionProperties(player.worldObj.provider.dimensionId).getGravitationalMultiplier())
+					player.capabilities.isFlying = true;
 			else 
-				player.addVelocity(0, 0.1, 0);
+				player.addVelocity(0, (double)Configuration.jetPackThrust, 0);
 
 			if(player.worldObj.isRemote) {
 				double xPos = player.posX;
