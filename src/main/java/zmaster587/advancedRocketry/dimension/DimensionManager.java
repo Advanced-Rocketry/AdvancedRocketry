@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.dimension;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -587,7 +588,12 @@ public class DimensionManager implements IGalaxy {
 			inStream = new FileInputStream(file);
 			nbt = CompressedStreamTools.readCompressed(inStream);
 			inStream.close();
-		} catch (FileNotFoundException e) {
+		} catch(EOFException e) {
+			//Silence you fool!
+			//Patch to fix JEI printing when trying to load planets too early
+			return false;
+		}
+		catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return false;
 
