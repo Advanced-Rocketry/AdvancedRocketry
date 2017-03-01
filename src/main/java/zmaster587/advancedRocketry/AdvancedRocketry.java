@@ -216,9 +216,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 @Mod(modid="advancedRocketry", name="Advanced Rocketry", version="%VERSION%", dependencies="required-after:libVulpes@[%LIBVULPESVERSION%,)")
@@ -236,7 +237,7 @@ public class AdvancedRocketry {
 	public static WorldType spaceWorldType;
 	private boolean resetFromXml;
 	public static CompatibilityMgr compat = new CompatibilityMgr();
-	public static Logger logger = Logger.getLogger(Constants.modId);
+	public static Logger logger = LogManager.getLogger(Constants.modId);
 	private static Configuration config;
 	private static final String BIOMECATETORY = "Biomes";
 	String[] sealableBlockWhiteList, breakableTorches, harvestableGasses, entityList, asteriodOres, geodeOres, orbitalLaserOres;;
@@ -366,7 +367,7 @@ public class AdvancedRocketry {
 			try {
 				zmaster587.advancedRocketry.api.Configuration.laserBlackListDims.add(Integer.parseInt(s));
 			} catch (NumberFormatException e) {
-				logger.warning("Invalid number \"" + s + "\" for laser dimid blacklist");
+				logger.warn("Invalid number \"" + s + "\" for laser dimid blacklist");
 			}
 		}
 		proxy.loadUILayout(config);
@@ -1196,11 +1197,11 @@ public class AdvancedRocketry {
 				BiomeGenBase biome = BiomeGenBase.getBiome(id);
 
 				if(biome == null || (biome.biomeID == 0 && id != 0))
-					logger.warning(String.format("Error blackListing biome id \"%d\", a biome with that ID does not exist!", id));
+					logger.warn(String.format("Error blackListing biome id \"%d\", a biome with that ID does not exist!", id));
 				else
 					AdvancedRocketryBiomes.instance.registerBlackListBiome(biome);
 			} catch (NumberFormatException e) {
-				logger.warning("Error blackListing \"" + string + "\".  It is not a valid number");
+				logger.warn("Error blackListing \"" + string + "\".  It is not a valid number");
 			}
 		}
 
@@ -1215,11 +1216,11 @@ public class AdvancedRocketry {
 				BiomeGenBase biome = BiomeGenBase.getBiome(id);
 
 				if(biome == null || (biome.biomeID == 0 && id != 0))
-					logger.warning(String.format("Error registering high pressure biome id \"%d\", a biome with that ID does not exist!", id));
+					logger.warn(String.format("Error registering high pressure biome id \"%d\", a biome with that ID does not exist!", id));
 				else
 					AdvancedRocketryBiomes.instance.registerHighPressureBiome(biome);
 			} catch (NumberFormatException e) {
-				logger.warning("Error registering high pressure biome \"" + string + "\".  It is not a valid number");
+				logger.warn("Error registering high pressure biome \"" + string + "\".  It is not a valid number");
 			}
 		}
 
@@ -1230,11 +1231,11 @@ public class AdvancedRocketry {
 				BiomeGenBase biome = BiomeGenBase.getBiome(id);
 
 				if(biome == null || (biome.biomeID == 0 && id != 0))
-					logger.warning(String.format("Error registering single biome id \"%d\", a biome with that ID does not exist!", id));
+					logger.warn(String.format("Error registering single biome id \"%d\", a biome with that ID does not exist!", id));
 				else
 					AdvancedRocketryBiomes.instance.registerSingleBiome(biome);
 			} catch (NumberFormatException e) {
-				logger.warning("Error registering single biome \"" + string + "\".  It is not a valid number");
+				logger.warn("Error registering single biome \"" + string + "\".  It is not a valid number");
 			}
 		}
 
@@ -1467,41 +1468,41 @@ public class AdvancedRocketry {
 
 		//Register Whitelisted Sealable Blocks
 
-		logger.fine("Start registering sealable blocks");
+		logger.info("Start registering sealable blocks");
 		for(String str : sealableBlockWhiteList) {
 			Block block = Block.getBlockFromName(str);
 			if(block == null)
-				logger.warning("'" + str + "' is not a valid Block");
+				logger.warn("'" + str + "' is not a valid Block");
 			else
 				SealableBlockHandler.INSTANCE.addSealableBlock(block);
 		}
-		logger.fine("End registering sealable blocks");
+		logger.info("End registering sealable blocks");
 		sealableBlockWhiteList = null;
 
-		logger.fine("Start registering torch blocks");
+		logger.info("Start registering torch blocks");
 		for(String str : breakableTorches) {
 			Block block = Block.getBlockFromName(str);
 			if(block == null)
-				logger.warning("'" + str + "' is not a valid Block");
+				logger.warn("'" + str + "' is not a valid Block");
 			else
 				zmaster587.advancedRocketry.api.Configuration.torchBlocks.add(block);
 		}
-		logger.fine("End registering torch blocks");
+		logger.info("End registering torch blocks");
 		breakableTorches = null;
 
 
-		logger.fine("Start registering Harvestable Gasses");
+		logger.info("Start registering Harvestable Gasses");
 		for(String str : harvestableGasses) {
 			Fluid fluid = FluidRegistry.getFluid(str);
 			if(fluid == null)
-				logger.warning("'" + str + "' is not a valid Fluid");
+				logger.warn("'" + str + "' is not a valid Fluid");
 			else
 				AtmosphereRegister.getInstance().registerHarvestableFluid(fluid);
 		}
-		logger.fine("End registering Harvestable Gasses");
+		logger.info("End registering Harvestable Gasses");
 		harvestableGasses = null;
 
-		logger.fine("Start registering entity atmosphere bypass");
+		logger.info("Start registering entity atmosphere bypass");
 
 		for(String str : entityList) {
 			Class clazz = (Class) EntityList.stringToClassMapping.get(str);
@@ -1519,16 +1520,16 @@ public class AdvancedRocketry {
 			}
 
 			if(clazz != null) {
-				logger.fine("Registering " + clazz.getName() + " for atmosphere bypass");
+				logger.info("Registering " + clazz.getName() + " for atmosphere bypass");
 				zmaster587.advancedRocketry.api.Configuration.bypassEntity.add(clazz);
 			}
 			else
-				logger.warning("Cannot find " + str + " while registering entity for atmosphere bypass");
+				logger.warn("Cannot find " + str + " while registering entity for atmosphere bypass");
 		}
 
 		//Free memory
 		entityList = null;
-		logger.fine("End registering entity atmosphere bypass");
+		logger.info("End registering entity atmosphere bypass");
 
 		//Register asteriodOres
 				if(!zmaster587.advancedRocketry.api.Configuration.asteriodOresBlackList) {
@@ -1620,10 +1621,10 @@ public class AdvancedRocketry {
 
 		//Open ore files
 		File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/oreConfig.xml");
-		logger.fine("Checking for ore config at " + file.getAbsolutePath());
+		logger.info("Checking for ore config at " + file.getAbsolutePath());
 
 		if(!file.exists()) {
-			logger.fine(file.getAbsolutePath() + " not found, generating");
+			logger.info(file.getAbsolutePath() + " not found, generating");
 			try {
 
 				file.createNewFile();

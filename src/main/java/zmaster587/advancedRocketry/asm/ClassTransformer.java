@@ -783,7 +783,7 @@ public class ClassTransformer implements IClassTransformer {
 				setBlockMethod.instructions.insertBefore(pos, nodeAdd);
 			}
 			else
-				AdvancedRocketry.logger.severe("ASM injection into World.setBlock FAILED!");
+				AdvancedRocketry.logger.fatal("ASM injection into World.setBlock FAILED!");
 
 			if(setBlockMetaMethod != null) {
 
@@ -809,7 +809,7 @@ public class ClassTransformer implements IClassTransformer {
 				setBlockMetaMethod.instructions.insertBefore(pos, nodeAdd);
 			}
 			else
-				AdvancedRocketry.logger.severe("ASM injection into World.setBlockMeta FAILED!");
+				AdvancedRocketry.logger.fatal("ASM injection into World.setBlockMeta FAILED!");
 
 			return finishInjection(cn);
 		}
