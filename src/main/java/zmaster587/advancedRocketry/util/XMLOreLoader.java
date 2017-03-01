@@ -78,7 +78,7 @@ public class XMLOreLoader {
 					try {
 						pressure = MathHelper.clamp_int(Integer.parseInt(node.getTextContent()),0, AtmosphereTypes.values().length);
 					} catch( NumberFormatException e ) {
-						AdvancedRocketry.logger.warning("Invalid format for pressure: \"" + node.getTextContent() + "\" Only numbers are allowed(" + doc.getDocumentURI() + ")");
+						AdvancedRocketry.logger.warn("Invalid format for pressure: \"" + node.getTextContent() + "\" Only numbers are allowed(" + doc.getDocumentURI() + ")");
 						childNode = childNode.getNextSibling();
 						continue;
 					}
@@ -90,14 +90,14 @@ public class XMLOreLoader {
 					try {
 						temp = MathHelper.clamp_int(Integer.parseInt(node.getTextContent()),0, Temps.values().length);
 					} catch( NumberFormatException e ) {
-						AdvancedRocketry.logger.warning("Invalid format for temp: \"" + node.getTextContent() + "\" Only numbers are allowed(" + doc.getDocumentURI() + ")");
+						AdvancedRocketry.logger.warn("Invalid format for temp: \"" + node.getTextContent() + "\" Only numbers are allowed(" + doc.getDocumentURI() + ")");
 						childNode = childNode.getNextSibling();
 						continue;
 					}
 				}
 
 				if(pressure == -1 && temp == -1) {
-					AdvancedRocketry.logger.warning("Invalid format for temp: \"" + node.getTextContent() + "\" Only numbers are allowed(" + doc.getDocumentURI() + ")");
+					AdvancedRocketry.logger.warn("Invalid format for temp: \"" + node.getTextContent() + "\" Only numbers are allowed(" + doc.getDocumentURI() + ")");
 					childNode = childNode.getNextSibling();
 					continue;
 				}
@@ -145,7 +145,7 @@ public class XMLOreLoader {
 				Node node = att.getNamedItem("block");
 
 				if(node == null) {
-					AdvancedRocketry.logger.warning("Missing \"block\" attribute from ore node");
+					AdvancedRocketry.logger.warn("Missing \"block\" attribute from ore node");
 					childNode = childNode.getNextSibling();
 					continue;
 				}
@@ -157,7 +157,7 @@ public class XMLOreLoader {
 					try {
 						meta = Integer.parseInt(node.getTextContent());
 					} catch(NumberFormatException e) {
-						AdvancedRocketry.logger.warning("Invalid \"meta\" attribute from ore node");
+						AdvancedRocketry.logger.warn("Invalid \"meta\" attribute from ore node");
 						childNode = childNode.getNextSibling();
 						continue;
 					}
@@ -169,13 +169,13 @@ public class XMLOreLoader {
 					try {
 						minHeight = Math.max(Integer.parseInt(node.getTextContent()), 1);
 					} catch(NumberFormatException e) {
-						AdvancedRocketry.logger.warning("Invalid \"minHeight\" attribute from ore node");
+						AdvancedRocketry.logger.warn("Invalid \"minHeight\" attribute from ore node");
 						childNode = childNode.getNextSibling();
 						continue;
 					}
 				}
 				else {
-					AdvancedRocketry.logger.warning("Missing \"minHeight\" attribute from ore node");
+					AdvancedRocketry.logger.warn("Missing \"minHeight\" attribute from ore node");
 					childNode = childNode.getNextSibling();
 					continue;
 				}
@@ -186,13 +186,13 @@ public class XMLOreLoader {
 					try {
 						maxHeight = MathHelper.clamp_int(Integer.parseInt(node.getTextContent()),  minHeight, 0xFF);
 					} catch(NumberFormatException e) {
-						AdvancedRocketry.logger.warning("Invalid \"maxHeight\" attribute from ore node");
+						AdvancedRocketry.logger.warn("Invalid \"maxHeight\" attribute from ore node");
 						childNode = childNode.getNextSibling();
 						continue;
 					}
 				}
 				else {
-					AdvancedRocketry.logger.warning("Missing \"maxHeight\" attribute from ore node");
+					AdvancedRocketry.logger.warn("Missing \"maxHeight\" attribute from ore node");
 					childNode = childNode.getNextSibling();
 					continue;
 				}
@@ -203,13 +203,13 @@ public class XMLOreLoader {
 					try {
 						clumpSize = MathHelper.clamp_int(Integer.parseInt(node.getTextContent()),  1, 0xFF);
 					} catch(NumberFormatException e) {
-						AdvancedRocketry.logger.warning("Invalid \"clumpSize\" attribute from ore node");
+						AdvancedRocketry.logger.warn("Invalid \"clumpSize\" attribute from ore node");
 						childNode = childNode.getNextSibling();
 						continue;
 					}
 				}
 				else {
-					AdvancedRocketry.logger.warning("Missing \"clumpSize\" attribute from ore node");
+					AdvancedRocketry.logger.warn("Missing \"clumpSize\" attribute from ore node");
 					childNode = childNode.getNextSibling();
 					continue;
 				}
@@ -220,13 +220,13 @@ public class XMLOreLoader {
 					try {
 						chancePerChunk = MathHelper.clamp_int(Integer.parseInt(node.getTextContent()),  1, 0xFF);
 					} catch(NumberFormatException e) {
-						AdvancedRocketry.logger.warning("Invalid \"chancePerChunk\" attribute from ore node");
+						AdvancedRocketry.logger.warn("Invalid \"chancePerChunk\" attribute from ore node");
 						childNode = childNode.getNextSibling();
 						continue;
 					}
 				}
 				else {
-					AdvancedRocketry.logger.warning("Missing \"chancePerChunk\" attribute from ore node");
+					AdvancedRocketry.logger.warn("Missing \"chancePerChunk\" attribute from ore node");
 					childNode = childNode.getNextSibling();
 					continue;
 				}
@@ -234,7 +234,7 @@ public class XMLOreLoader {
 				Block block2 = Block.getBlockFromName(block);
 
 				if(block2 == null) {
-					AdvancedRocketry.logger.warning(block + " is not a valid name for ore");
+					AdvancedRocketry.logger.warn(block + " is not a valid name for ore");
 					childNode = childNode.getNextSibling();
 					continue;
 				}
