@@ -320,14 +320,12 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.automaticRetroRockets = config.get(ROCKET, "autoRetroRockets", true, "Setting to false will disable the retrorockets that fire automatically on reentry on both player and automated rockets").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.atmosphereHandleBitMask = config.get(PERFORMANCE, "atmosphereCalculationMethod", 0, "BitMask: 0: no threading, radius based; 1: threading, radius based (EXP); 2: no threading volume based; 3: threading volume based (EXP)").getInt();
 		zmaster587.advancedRocketry.api.Configuration.oxygenVentSize = config.get(PERFORMANCE, "oxygenVentSize", 32, "Radius of the O2 vent.  if atmosphereCalculationMethod is 2 or 3 then max volume is calculated from this radius.  WARNING: larger numbers can lead to lag").getInt();
-		
+		zmaster587.advancedRocketry.api.Configuration.gravityAffectsFuel = config.get(Configuration.CATEGORY_GENERAL, "gravityAffectsFuels", true, "If true planets with higher gravity require more fuel and lower gravity would require less").getBoolean();
 		
 		zmaster587.advancedRocketry.api.Configuration.advancedVFX = config.get(PERFORMANCE, "advancedVFX", true, "Advanced visual effects").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.gasCollectionMult = config.get(GAS_MINING, "gasMissionMultiplier", 1.0, "Multiplier for the amount of time gas collection missions take").getDouble();
-		zmaster587.advancedRocketry.api.Configuration.asteroidMiningMult = config.get(ASTEROID, "miningMissionMultiplier", 1.0, "Multiplier changing how much total material is brought back from a mining mission").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.asteroidMiningTimeMult = config.get(ASTEROID, "miningMissionTmeMultiplier", 1.0, "Multiplier changing how long a mining mission takes").getDouble();
 		asteriodOres = config.get(ASTEROID, "standardOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone"}, "List of oredictionary names of ores allowed to spawn in asteriods").getStringList();
-		zmaster587.advancedRocketry.api.Configuration.asteriodOresBlackList = config.get(ASTEROID, "standardOres_blacklist", false, "True if the ores in standardOres should a be blacklist, false for whitelist").getBoolean();
 		geodeOres = config.get(oreGen, "geodeOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone"}, "List of oredictionary names of ores allowed to spawn in geodes").getStringList();
 		zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList = config.get(oreGen, "geodeOres_blacklist", false, "True if the ores in geodeOres should be a blacklist, false for whitelist").getBoolean();
 
@@ -1456,12 +1454,6 @@ public class AdvancedRocketry {
 		entityList = null;
 		logger.fine("End registering entity atmosphere bypass");
 		
-		//Register asteriodOres
-		if(!zmaster587.advancedRocketry.api.Configuration.asteriodOresBlackList) {
-			for(String str  : asteriodOres)
-				zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres.add(str);
-		}
-		
 		//Register geodeOres
 		if(!zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList) {
 			for(String str  : geodeOres)
@@ -1477,17 +1469,6 @@ public class AdvancedRocketry {
 
 		//Do blacklist stuff for ore registration
 		for(String oreName : OreDictionary.getOreNames()) {
-			if(zmaster587.advancedRocketry.api.Configuration.asteriodOresBlackList && oreName.startsWith("ore")) {
-				boolean found = false;
-				for(String str : asteriodOres) {
-					if(oreName.equals(str)) {
-						found = true;
-						break;
-					}
-				}
-				if(!found)
-					zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres.add(oreName);
-			}
 			
 			if(zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList && oreName.startsWith("ore")) {
 				boolean found = false;

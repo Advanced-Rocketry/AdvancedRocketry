@@ -572,7 +572,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			if(burningFuel || descentPhase) {
 				//Burn the rocket fuel
 				if(!worldObj.isRemote && !descentPhase)
-					setFuelAmount(getFuelAmount() - stats.getFuelRate(FuelType.LIQUID));
+					setFuelAmount((int) (getFuelAmount() - stats.getFuelRate(FuelType.LIQUID)*(Configuration.gravityAffectsFuel ? DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension()).getGravitationalMultiplier() : 1f)));
 
 				//Spawn in the particle effects for the engines
 				int engineNum = 0;
