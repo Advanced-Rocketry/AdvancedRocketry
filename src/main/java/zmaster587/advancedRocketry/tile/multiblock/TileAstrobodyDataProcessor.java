@@ -177,11 +177,11 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 		if(inputHatch == null)
 			return;
 
-		if(getStackInSlot(2) == null) {
+		if(getStackInSlot(0) == null) {
 			for(int j = 0; j < inputHatch.getSizeInventory(); j++) {
 				ItemStack stack2 = inputHatch.getStackInSlot(j);
 				if(stack2 != null && stack2.getItem() instanceof ItemAsteroidChip && ((ItemAsteroidChip)stack2.getItem()).getUUID(stack2) != null) {
-					setInventorySlotContents(2, inputHatch.decrStackSize(j, 1));
+					setInventorySlotContents(0, inputHatch.decrStackSize(j, 1));
 					break;
 				}
 			}
@@ -248,7 +248,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 	}
 
 	private void attemptAllResearchStart() {
-		ItemStack stack = getStackInSlot(2);
+		ItemStack stack = getStackInSlot(0);
 		if(stack == null || !(stack.getItem() instanceof ItemAsteroidChip))
 			return;
 

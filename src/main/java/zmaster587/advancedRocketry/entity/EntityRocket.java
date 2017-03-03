@@ -454,7 +454,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			if(burningFuel || descentPhase) {
 				//Burn the rocket fuel
 				if(!worldObj.isRemote && !descentPhase)
-					setFuelAmount(getFuelAmount() - stats.getFuelRate(FuelType.LIQUID));
+					setFuelAmount((int) (getFuelAmount() - stats.getFuelRate(FuelType.LIQUID)*(Configuration.gravityAffectsFuel ? DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId).getGravitationalMultiplier() : 1f)));
 
 				//Spawn in the particle effects for the engines
 				if(worldObj.isRemote && Minecraft.getMinecraft().gameSettings.particleSetting < 2 && areEnginesRunning()) {

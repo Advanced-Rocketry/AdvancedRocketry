@@ -58,11 +58,7 @@ public class Configuration {
 	public static boolean electricPlantsSpawnLightning;
 
 	public static boolean allowSawmillVanillaWood;
-
-	public static double asteroidMiningMult;
-
-	public static List<String> standardAsteroidOres = new LinkedList<String>();
-
+	
 	public static int atmosphereHandleBitMask;
 
 	public static boolean automaticRetroRockets;
@@ -99,8 +95,6 @@ public class Configuration {
 	public static List<Block> torchBlocks = new LinkedList<Block>();
 	public static List<String> standardGeodeOres = new LinkedList<String>();
 
-	public static boolean asteriodOresBlackList;
-
 	public static boolean geodeOresBlackList;
 
 	public static boolean laserDrillOresBlackList;
@@ -112,6 +106,8 @@ public class Configuration {
 	public static int solarGeneratorMult;
 
 	public static HashMap<String, AsteroidSmall> asteroidTypes = new HashMap<String, AsteroidSmall>();
+
+	public static boolean gravityAffectsFuel;
 
 	
 }
