@@ -172,9 +172,11 @@ import zmaster587.advancedRocketry.tile.station.TileStationAltitudeController;
 import zmaster587.advancedRocketry.tile.station.TileStationGravityController;
 import zmaster587.advancedRocketry.tile.station.TileStationOrientationControl;
 import zmaster587.advancedRocketry.tile.station.TileWarpShipMonitor;
+import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.advancedRocketry.util.FluidColored;
 import zmaster587.advancedRocketry.util.OreGenProperties;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
+import zmaster587.advancedRocketry.util.XMLAsteroidLoader;
 import zmaster587.advancedRocketry.util.XMLOreLoader;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader.DimensionPropertyCoupling;
@@ -574,7 +576,7 @@ public class AdvancedRocketry {
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockPlanetAnalyser).setSideTexture("libvulpes:machineGeneric");
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockPlanetAnalyser).setFrontTexture("advancedrocketry:MonitorPlanet","advancedrocketry:MonitorPlanet_active");
 
-		AdvancedRocketryBlocks.blockObservatory = (BlockMultiblockMachine) new BlockMultiblockMachine(TileObservatory.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("observatory").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		AdvancedRocketryBlocks.blockObservatory = (BlockMultiblockMachine) new BlockMultiblockMachine(TileObservatory.class, GuiHandler.guiId.MODULARNOINV.ordinal()).setBlockName("observatory").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockObservatory).setTopTexture("libvulpes:machineGeneric");
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockObservatory).setSideTexture("libvulpes:machineGeneric");
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockObservatory).setFrontTexture("advancedrocketry:MonitorFrontMid","advancedrocketry:MonitorFrontMid");
@@ -1603,6 +1605,39 @@ public class AdvancedRocketry {
 		LibVulpes.instance.loadXMLRecipe(TileElectricArcFurnace.class);
 		LibVulpes.instance.loadXMLRecipe(TileLathe.class);
 		LibVulpes.instance.loadXMLRecipe(TileRollingMachine.class);
+		
+		//Load Asteroids from XML
+		File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/asteroidConfig.xml");
+		logger.fine("Checking for asteroid config at " + file.getAbsolutePath());
+		if(!file.exists()) {
+			logger.fine(file.getAbsolutePath() + " not found, generating");
+			try {
+
+				file.createNewFile();
+				BufferedWriter stream;
+				stream = new BufferedWriter(new FileWriter(file));
+				stream.write("<Asteroids>\n\t<asteroid name=\"Small Asteroid\" distance=\"10\" mass=\"100\" massVariability=\"0.5\" minLevel=\"0\" probability=\"1\" richness=\"0.2\" richnessVariability=\"0.5\">"
+						+ "\n\t\t<ore itemStack=\"minecraft:iron_ore\" chance=\"15\" />"
+						+ "\n\t\t<ore itemStack=\"minecraft:gold_ore\" chance=\"10\" />"
+						+ "\n\t\t<ore itemStack=\"minecraft:redstone_ore\" chance=\"10\" />"
+						+ "\n\t</asteroid>\n</Asteroids>");
+				stream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		XMLAsteroidLoader load = new XMLAsteroidLoader();
+		try {
+			load.loadFile(file);
+			for(AsteroidSmall asteroid : load.loadPropertyFile()) {
+				zmaster587.advancedRocketry.api.Configuration.asteroidTypes.put(asteroid.ID, asteroid);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		// End load asteroids from XML
 	}
 
 	@EventHandler

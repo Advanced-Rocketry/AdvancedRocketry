@@ -1,8 +1,10 @@
 package zmaster587.advancedRocketry.api;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import zmaster587.advancedRocketry.util.AsteroidSmall;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 
@@ -108,6 +110,8 @@ public class Configuration {
 	public static int oxygenVentSize;
 
 	public static int solarGeneratorMult;
+
+	public static HashMap<String, AsteroidSmall> asteroidTypes = new HashMap<String, AsteroidSmall>();
 
 	
 }
