@@ -234,7 +234,6 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
-
 		inv.readFromNBT(nbt);
 	}
 
@@ -299,7 +298,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 			int g = 0;
 			if(lastButton != -1 && lastType != null && !lastType.isEmpty()) {
-				List<StackEntry> harvestList = Configuration.asteroidTypes.get(lastType).getHarvest(lastSeed + lastButton, Math.max(1 - ((Math.max(getDataAmt(DataType.COMPOSITION),2000)  + Math.max(getDataAmt(DataType.MASS), 2000) )/4000f), 0));
+				List<StackEntry> harvestList = Configuration.asteroidTypes.get(lastType).getHarvest(lastSeed + lastButton, Math.max(1 - ((Math.min(getDataAmt(DataType.COMPOSITION),2000)  + Math.min(getDataAmt(DataType.MASS), 2000) )/4000f), 0));
 				for(StackEntry entry : harvestList) {
 					//buttonList.add(new ModuleButton((g % 3)*24, 24*(g/3), -2, "",this, TextureResources.tabData, 24, 24));
 					buttonList.add(new ModuleSlotButton((g % 3)*24 + 1, 24*(g/3) + 1, -2, this, entry.stack, String.valueOf(entry.midpoint) + " +/-  " + String.valueOf(entry.variablility), getWorld()));
@@ -527,7 +526,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 	@Override
 	public int getSizeInventory() {
-		return 1;
+		return inv.getSizeInventory();
 	}
 
 	@Override
@@ -571,7 +570,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 	@Override
 	public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) {
-		return true;
+		return inv.isItemValidForSlot(p_94041_1_, p_94041_2_);
 	}
 
 	@Override

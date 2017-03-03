@@ -122,16 +122,28 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		data.writeToNBT(nbt);
+		
 		return nbt;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		data.readFromNBT(nbt);
 	}
-
+	
+	@Override
+	protected NBTTagCompound writeToNBTHelper(NBTTagCompound nbtTagCompound) {
+		super.writeToNBTHelper(nbtTagCompound);
+		data.writeToNBT(nbtTagCompound);
+		return nbtTagCompound;
+	}
+	
+	@Override
+	protected void readFromNBTHelper(NBTTagCompound nbtTagCompound) {
+		super.readFromNBTHelper(nbtTagCompound);
+		data.readFromNBT(nbtTagCompound);
+	}
+	
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {
 
