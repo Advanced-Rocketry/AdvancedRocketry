@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.api;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockGlass;
 
 /**
  * Stores references to Advanced Rocketry's blocks
@@ -84,4 +85,5 @@ public class AdvancedRocketryBlocks {
 	public static Block blockAstroBed;
 	public static Block blockAdvEngine;
 	public static Block blockPlanetHoloSelector;
+	public static Block blockLens;
 }

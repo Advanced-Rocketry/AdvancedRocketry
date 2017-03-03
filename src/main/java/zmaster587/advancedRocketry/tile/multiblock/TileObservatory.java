@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import zmaster587.advancedRocketry.Test;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
@@ -41,6 +41,7 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.util.EmbeddedInventory;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -50,29 +51,32 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class TileObservatory extends TileMultiPowerConsumer implements IModularInventory, IDataInventory, IGuiCallback {
 
-
+	private static final Block lens[] = { AdvancedRocketryBlocks.blockLens, Blocks.GLASS };
+	
 	private static final Object[][][] structure = new Object[][][]{
 
 		{	{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR}, 
-			{Blocks.AIR, Blocks.STONE, Blocks.GLASS, Blocks.STONE, Blocks.AIR},
+			{Blocks.AIR, Blocks.STONE, lens, Blocks.STONE, Blocks.AIR},
 			{Blocks.AIR, Blocks.STONE, Blocks.STONE, Blocks.STONE, Blocks.AIR},
 			{Blocks.AIR, Blocks.STONE, Blocks.STONE, Blocks.STONE, Blocks.AIR},
 			{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR}},
 
 			{	{Blocks.AIR,Blocks.AIR,Blocks.AIR,Blocks.AIR,Blocks.AIR}, 
 				{Blocks.AIR, Blocks.STONE, Blocks.STONE, Blocks.STONE, Blocks.AIR},
-				{Blocks.AIR, Blocks.STONE, Blocks.GLASS, Blocks.STONE, Blocks.AIR},
+				{Blocks.AIR, Blocks.STONE, lens, Blocks.STONE, Blocks.AIR},
 				{Blocks.AIR, Blocks.STONE, Blocks.STONE, Blocks.STONE, Blocks.AIR},
 				{Blocks.AIR,Blocks.AIR,Blocks.AIR,Blocks.AIR,Blocks.AIR}},
 
 				{	{null, Blocks.STONE, Blocks.STONE, Blocks.STONE, null}, 
 					{Blocks.STONE, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.STONE},
 					{Blocks.STONE, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.STONE},
-					{Blocks.STONE, Blocks.AIR, Blocks.GLASS, Blocks.AIR, Blocks.STONE},
+					{Blocks.STONE, Blocks.AIR, lens, Blocks.AIR, Blocks.STONE},
 					{null, Blocks.STONE, Blocks.STONE, Blocks.STONE, null}},
 
 					{	{ null,'*', 'c', '*',null}, 
@@ -94,6 +98,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	private static final short LIST_OFFSET = 100;
 	private static final byte PROCESS_CHIP = 12;
 	private static final byte SEED_CHANGE = 13;
+	private int viewDistance;
 	private int lastButton;
 	private long lastSeed;
 	private String lastType;
@@ -107,6 +112,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 	public TileObservatory() {
 		openProgress = 0;
+		viewDistance = 0;
 		lastButton = -1;
 		lastSeed = -1;
 		completionTime = observationtime;
@@ -127,7 +133,25 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			((TileDataBus)tile).lockData(((TileDataBus)tile).getDataObject().getDataType());
 		}
 	}
+	
+	@Override
+	public void deconstructMultiBlock(World world, BlockPos destroyedPos,
+			boolean blockBroken, IBlockState state) {
+		super.deconstructMultiBlock(world, destroyedPos, blockBroken, state);
+		viewDistance = 0;
+	}
 
+	@Override
+	protected void replaceStandardBlock(BlockPos newPos, IBlockState state,
+			TileEntity tile) {
+		
+		if(state.getBlock() == AdvancedRocketryBlocks.blockLens) {
+			viewDistance += 5;
+		}
+		
+		super.replaceStandardBlock(newPos, state, tile);
+	}
+	
 	@Override
 	public void update() {
 
@@ -205,6 +229,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 		nbt.setInteger("openProgress", openProgress);
 		nbt.setBoolean("isOpen", isOpen);
 
+		nbt.setInteger("viewableDist", viewDistance);
 		nbt.setLong("lastSeed", lastSeed);
 		nbt.setInteger("lastButton", lastButton);
 		if(lastType != null && !lastType.isEmpty())
@@ -218,6 +243,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 		isOpen = nbt.getBoolean("isOpen");
 
+		viewDistance = nbt.getInteger("viewableDist");
 		lastSeed = nbt.getLong("lastSeed");
 		lastButton = nbt.getInteger("lastButton");
 		lastType = nbt.getString("lastType");
@@ -409,6 +435,8 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			if(massStorage.size() > 0 ) {
 				modules.add(new ModuleData(120, 20, 0, this, (DataStorage[]) massStorage.toArray(new DataStorage[massStorage.size()])));
 			}
+			
+			modules.add(new ModuleText(10, 90, "Observable distance: " + getMaxDistance(), 0x2d2d2d, false));
 		}
 
 		/*DataStorage data[] = new DataStorage[dataCables.size()];
@@ -421,7 +449,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	public int getMaxDistance() {
-		return Integer.MAX_VALUE;
+		return viewDistance + 10;
 	}
 
 	@Override
