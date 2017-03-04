@@ -562,7 +562,7 @@ public class DimensionManager implements IGalaxy {
 	 * @return true if the dimension exists and is registered
 	 */
 	public boolean isDimensionCreated( int dimId) {
-		return dimensionList.containsKey(new Integer(dimId));
+		return dimensionList.containsKey(new Integer(dimId)) || dimId == Configuration.spaceDimId;
 	}
 
 	/**
