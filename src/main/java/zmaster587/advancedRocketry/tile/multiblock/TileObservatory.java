@@ -20,6 +20,7 @@ import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.advancedRocketry.util.AsteroidSmall.StackEntry;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
@@ -30,12 +31,14 @@ import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleButton;
 import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
 import zmaster587.libVulpes.inventory.modules.ModuleOutputSlotArray;
+import zmaster587.libVulpes.inventory.modules.ModulePower;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
 import zmaster587.libVulpes.inventory.modules.ModuleScaledImage;
 import zmaster587.libVulpes.inventory.modules.ModuleSlotButton;
 import zmaster587.libVulpes.inventory.modules.ModuleTab;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.inventory.modules.ModuleTexturedSlotArray;
+import zmaster587.libVulpes.inventory.modules.ModuleToggleSwitch;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
@@ -58,7 +61,6 @@ import net.minecraftforge.fml.relauncher.Side;
 public class TileObservatory extends TileMultiPowerConsumer implements IModularInventory, IDataInventory, IGuiCallback {
 
 	private static final Block lens[] = { AdvancedRocketryBlocks.blockLens, Blocks.GLASS };
-	private static final Block motor[] = { Blocks.STONE, AdvancedRocketryBlocks.blockMotor, AdvancedRocketryBlocks.blockAdvancedMotor, AdvancedRocketryBlocks.blockEnhancedMotor, AdvancedRocketryBlocks.blockEliteMotor };
 	
 	private static final Object[][][] structure = new Object[][][]{
 
@@ -88,7 +90,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 						{	{null,'*', '*', '*', null}, 
 							{'*',Blocks.STONE, Blocks.STONE, Blocks.STONE,'*'},
-							{'*',Blocks.STONE, motor, Blocks.STONE,'*'},
+							{'*',Blocks.STONE, LibVulpesBlocks.motors, Blocks.STONE,'*'},
 							{'*',Blocks.STONE, Blocks.STONE, Blocks.STONE,'*'},
 							{null,'*', '*', '*',null}}};
 
@@ -151,16 +153,16 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 		if(block == AdvancedRocketryBlocks.blockLens) {
 			viewDistance += 5;
 		}
-		else if( block == AdvancedRocketryBlocks.blockMotor ) {
+		else if( block == LibVulpesBlocks.blockMotor ) {
 			viewDistance += 25; 
 		}
-		else if( block == AdvancedRocketryBlocks.blockAdvancedMotor ) {
+		else if( block == LibVulpesBlocks.blockAdvancedMotor ) {
 			viewDistance += 50; 
 		}
-		else if( block == AdvancedRocketryBlocks.blockEnhancedMotor ) {
+		else if( block == LibVulpesBlocks.blockEnhancedMotor ) {
 			viewDistance += 100; 
 		}
-		else if( block == AdvancedRocketryBlocks.blockEliteMotor ) {
+		else if( block == LibVulpesBlocks.blockEliteMotor ) {
 			viewDistance += 175; 
 		}
 		
@@ -423,7 +425,9 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			ModuleContainerPan pan2 = new ModuleContainerPan(baseX, baseY, buttonList, new LinkedList<ModuleBase>(), null, 40, 48, 0, 0, 0, 72);
 			modules.add(pan2);
 		} else if(tabModule.getTab() == 0) {
-			modules.addAll(super.getModules(ID, player));
+			modules.add(new ModulePower(18, 20, getBatteries()));
+			modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
+			
 			List<DataStorage> distanceStorage = new LinkedList<DataStorage>();
 			List<DataStorage> compositionStorage = new LinkedList<DataStorage>();
 			List<DataStorage> massStorage = new LinkedList<DataStorage>();

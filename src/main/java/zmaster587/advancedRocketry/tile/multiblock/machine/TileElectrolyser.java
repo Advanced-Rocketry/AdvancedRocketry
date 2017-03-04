@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -12,6 +13,8 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.api.material.Material;
+import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -23,7 +26,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 public class TileElectrolyser extends TileMultiblockMachine {
 	public static final Object[][][] structure = { 
 		{{null,null,null},
-		{'P', new BlockMeta(LibVulpesBlocks.blockStructureBlock),'P'}},
+		{'P', "blockCoil",'P'}},
 		
 		{{'l', 'c', 'l'}, 
 			{new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'L', new BlockMeta(LibVulpesBlocks.blockStructureBlock)}},
@@ -35,6 +38,21 @@ public class TileElectrolyser extends TileMultiblockMachine {
 		return structure;
 	}
 	
+	@Override
+	public float getTimeMultiplierForBlock(IBlockState state, TileEntity tile) {
+
+		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(state.getBlock(),1, state.getBlock().getMetaFromState(state)));
+		if(material == MaterialRegistry.getMaterialFromName("Gold"))
+			return 0.9f;
+		else if(material == MaterialRegistry.getMaterialFromName("Aluiminum"))
+			return 0.8f;
+		else if(material == MaterialRegistry.getMaterialFromName("Titanium"))
+			return 0.75f;
+		else if(material == MaterialRegistry.getMaterialFromName("Iriudium"))
+			return 0.5f;
+
+		return super.getTimeMultiplierForBlock(state, tile);
+	}
 	
 	@Override
 	public boolean shouldHideBlock(World world, BlockPos pos2, IBlockState tile) {

@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -14,7 +15,10 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.api.material.Material;
+import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisible;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
@@ -30,6 +34,7 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
 
 public class TileElectricArcFurnace extends TileMultiblockMachine implements IModularInventory {
 
+
 	public static final Object[][][] structure = { 
 		{	{null,null,null,null,null},
 			{null,'P',AdvancedRocketryBlocks.blockBlastBrick,'P',null},
@@ -39,9 +44,9 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 		},
 
 		{	{null,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,null},
-			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.GOLD_BLOCK,Blocks.AIR,Blocks.GOLD_BLOCK,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick, "blockCoil",Blocks.AIR, "blockCoil",AdvancedRocketryBlocks.blockBlastBrick},
 			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.AIR,Blocks.AIR,Blocks.AIR,AdvancedRocketryBlocks.blockBlastBrick},
-			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.AIR,Blocks.GOLD_BLOCK,Blocks.AIR,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.AIR, "blockCoil",Blocks.AIR,AdvancedRocketryBlocks.blockBlastBrick},
 			{null,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,null},
 		},
 
@@ -67,7 +72,7 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 		}
 
 	};
-	
+
 	@Override
 	public List<BlockMeta> getAllowableWildCardBlocks() {
 		List<BlockMeta> list = super.getAllowableWildCardBlocks();
@@ -91,18 +96,34 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 	public SoundEvent getSound() {
 		return AudioRegistry.electricArcFurnace;
 	}
-	
+
 	@Override
 	public String getMachineName() {
 		return "tile.electricArcFurnace.name";
 	}
-	
+
+	@Override
+	public float getTimeMultiplierForBlock(IBlockState state, TileEntity tile) {
+
+		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(state.getBlock(),1, state.getBlock().getMetaFromState(state)));
+		if(material == MaterialRegistry.getMaterialFromName("Gold"))
+			return 0.9f;
+		else if(material == MaterialRegistry.getMaterialFromName("Aluiminum"))
+			return 0.8f;
+		else if(material == MaterialRegistry.getMaterialFromName("Titanium"))
+			return 0.75f;
+		else if(material == MaterialRegistry.getMaterialFromName("Iriudium"))
+			return 0.5f;
+
+		return super.getTimeMultiplierForBlock(state, tile);
+	}
+
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		// TODO Auto-generated method stub
 		List<ModuleBase> modules = super.getModules(ID, player);
-		
-		modules.add(new ModuleProgress(100, 20, 0, TextureResources.arcFurnaceProgressBar, this));
+
+		modules.add(new ModuleProgress(80, 20, 0, TextureResources.arcFurnaceProgressBar, this));
 		return modules;
 	}
 }

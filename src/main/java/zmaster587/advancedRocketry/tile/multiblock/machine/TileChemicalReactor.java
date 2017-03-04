@@ -29,7 +29,7 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 		{{null, 'c',null},
 		{'L', 'I','L'}},
 		
-		{{'P', AdvancedRocketryBlocks.blockMotor, 'P'}, 
+		{{'P', LibVulpesBlocks.blockMotor, 'P'}, 
 			{'l', new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'O'}},
 
 	};

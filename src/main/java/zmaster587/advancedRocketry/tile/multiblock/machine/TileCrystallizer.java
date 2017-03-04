@@ -3,7 +3,9 @@ package zmaster587.advancedRocketry.tile.multiblock.machine;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -29,7 +31,7 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 		{AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible}},
 		
 		{{'O', 'c', 'I'}, 
-			{new BlockMeta(Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem()), MaterialRegistry.getMaterialFromName("Copper").getMeta()), 'P', new BlockMeta(Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem()), MaterialRegistry.getMaterialFromName("Copper").getMeta())}},
+			{"blockCoil", 'P', "blockCoil"}},
 
 	};
 
@@ -42,6 +44,22 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 	@Override
 	public Object[][][] getStructure() {
 		return structure;
+	}
+	
+	@Override
+	public float getTimeMultiplierForBlock(IBlockState state, TileEntity tile) {
+
+		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(state.getBlock(),1, state.getBlock().getMetaFromState(state)));
+		if(material == MaterialRegistry.getMaterialFromName("Gold"))
+			return 0.9f;
+		else if(material == MaterialRegistry.getMaterialFromName("Aluiminum"))
+			return 0.8f;
+		else if(material == MaterialRegistry.getMaterialFromName("Titanium"))
+			return 0.75f;
+		else if(material == MaterialRegistry.getMaterialFromName("Iriudium"))
+			return 0.5f;
+
+		return super.getTimeMultiplierForBlock(state, tile);
 	}
 
 	@Override
