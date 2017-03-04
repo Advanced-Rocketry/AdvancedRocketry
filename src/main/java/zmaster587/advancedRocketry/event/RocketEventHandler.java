@@ -20,6 +20,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -56,6 +57,7 @@ public class RocketEventHandler extends Gui {
 	private static final int outerImgSize = getImgSize/8;
 	private static boolean mapReady = false;
 	private static boolean mapNeedsBinding = false;
+	private static IRenderHandler prevRenderHanlder = null;
 	private static IntBuffer table,outerBoundsTable;
 	public static GuiBox suitPanel = new GuiBox(8,8,24,24);
 	public static GuiBox oxygenBar = new GuiBox(8,-57, 80, 48);
@@ -75,6 +77,7 @@ public class RocketEventHandler extends Gui {
 			ForgeHooksClient.getSkyBlendColour(event.world, 0, 0, 0);
 
 			if(!(event.world.provider instanceof IPlanetaryProvider)) {
+				prevRenderHanlder = event.world.provider.getSkyRenderer();
 				event.world.provider.setSkyRenderer(new RenderPlanetarySky());
 			}
 		}
@@ -84,14 +87,17 @@ public class RocketEventHandler extends Gui {
 	public void onRocketLaunch(RocketEvent.RocketLaunchEvent event) {
 		if(event.world.isRemote && event.entity.ridingEntity != null && event.entity.ridingEntity.equals(Minecraft.getMinecraft().thePlayer)) {
 			prepareOrbitalMap(event);
+			prevRenderHanlder = event.world.provider.getSkyRenderer();
 			event.world.provider.setSkyRenderer(new RenderPlanetarySky());
 		}
 	}
 
 	@SideOnly(Side.CLIENT)
 	public static void destroyOrbitalTextures(World world) {
-		if(!(world.provider instanceof IPlanetaryProvider))
-			world.provider.setSkyRenderer(null);
+		if(!(world.provider instanceof IPlanetaryProvider)) {
+			world.provider.setSkyRenderer(prevRenderHanlder);
+			prevRenderHanlder = null;
+		}
 		if(earth != null)
 			GL11.glDeleteTextures(earth.getTextureId());
 		if(outerBounds != null)
