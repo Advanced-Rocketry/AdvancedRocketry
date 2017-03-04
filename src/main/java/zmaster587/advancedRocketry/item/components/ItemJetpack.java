@@ -181,11 +181,11 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 
 		if(hasFuel) {
 
-			if(mode == MODES.HOVER)
+			if(mode == MODES.HOVER) {
 				if(Configuration.jetPackThrust > DimensionManager.getInstance().getDimensionProperties(player.worldObj.provider.dimensionId).getGravitationalMultiplier())
 					player.capabilities.isFlying = true;
-			else 
-				player.addVelocity(0, (double)Configuration.jetPackThrust, 0);
+			} else 
+				player.addVelocity(0, (double)Configuration.jetPackThrust*0.1, 0);
 
 			if(player.worldObj.isRemote) {
 				double xPos = player.posX;
