@@ -86,4 +86,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockAdvEngine;
 	public static Block blockPlanetHoloSelector;
 	public static Block blockLens;
+	public static Block blockAdvancedMotor;
+	public static Block blockEnhancedMotor;
+	public static Block blockEliteMotor;
 }

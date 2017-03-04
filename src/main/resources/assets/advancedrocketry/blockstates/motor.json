@@ -13,7 +13,7 @@
         "facing=up":  { "model": "advancedrocketry:models/motor.obj", "x": 90 },
         "facing=down":  { "model": "advancedrocketry:models/motor.obj", "x": -90 },
         "inventory": {
-            "model": "advancedrocketry:models/motor.obj",
+            "model": "advancedrocketry:models/motor.obj", "y": 90,
             "transform": {
                     "translation": [ 0, 0, 0],
                     "scale": 1.0

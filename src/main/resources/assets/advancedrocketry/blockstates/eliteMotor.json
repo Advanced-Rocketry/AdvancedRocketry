@@ -1,0 +1,23 @@
+{
+    "defaults": {
+        "textures": {
+            "#None": "advancedrocketry:/models/eliteMotor"
+        },
+        "model": "advancedrocketry:models/eliteMotor.obj"
+    },
+    "variants": {
+        "facing=north": { "model": "advancedrocketry:models/eliteMotor.obj" },
+        "facing=south": { "model": "advancedrocketry:models/eliteMotor.obj", "y": 180 },
+        "facing=west":  { "model": "advancedrocketry:models/eliteMotor.obj", "y": 270 },
+        "facing=east":  { "model": "advancedrocketry:models/eliteMotor.obj", "y": 90 },
+        "facing=up":  { "model": "advancedrocketry:models/eliteMotor.obj", "x": 90 },
+        "facing=down":  { "model": "advancedrocketry:models/eliteMotor.obj", "x": -90 },
+        "inventory": {
+            "model": "advancedrocketry:models/eliteMotor.obj", "y": 90,
+            "transform": {
+                    "translation": [ 0, 0, 0],
+                    "scale": 1.0
+                }
+        }
+    }
+}

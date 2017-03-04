@@ -433,7 +433,12 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockAdvEngine = new BlockRocketMotor(Material.ROCK).setUnlocalizedName("advRocket").setCreativeTab(tabAdvRocketry).setHardness(2f);
 		AdvancedRocketryBlocks.blockFuelTank = new BlockFuelTank(Material.ROCK).setUnlocalizedName("fuelTank").setCreativeTab(tabAdvRocketry).setHardness(2f);
 		AdvancedRocketryBlocks.blockSawBlade = new BlockRotatableModel(Material.ROCK).setCreativeTab(tabAdvRocketry).setUnlocalizedName("sawBlade").setHardness(2f);
+		
 		AdvancedRocketryBlocks.blockMotor = new BlockRotatableModel(Material.ROCK).setCreativeTab(tabAdvRocketry).setUnlocalizedName("motor").setHardness(2f);
+		AdvancedRocketryBlocks.blockAdvancedMotor = new BlockRotatableModel(Material.ROCK).setCreativeTab(tabAdvRocketry).setUnlocalizedName("advancedMotor").setHardness(2f);
+		AdvancedRocketryBlocks.blockEnhancedMotor = new BlockRotatableModel(Material.ROCK).setCreativeTab(tabAdvRocketry).setUnlocalizedName("enhancedMotor").setHardness(2f);
+		AdvancedRocketryBlocks.blockEliteMotor = new BlockRotatableModel(Material.ROCK).setCreativeTab(tabAdvRocketry).setUnlocalizedName("eliteMotor").setHardness(2f);
+		
 		AdvancedRocketryBlocks.blockConcrete = new Block(Material.ROCK).setUnlocalizedName("concrete").setCreativeTab(tabAdvRocketry).setHardness(3f).setResistance(16f);
 		AdvancedRocketryBlocks.blockPlatePress = new BlockPress().setUnlocalizedName("blockHandPress").setCreativeTab(tabAdvRocketry).setHardness(2f);
 		AdvancedRocketryBlocks.blockAirLock = new BlockDoor2(Material.ROCK).setUnlocalizedName("smallAirlockDoor").setHardness(3f).setResistance(8f);
@@ -615,6 +620,9 @@ public class AdvancedRocketry {
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockArcFurnace.setRegistryName("arcFurnace"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockSawBlade.setRegistryName("sawBlade"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockMotor.setRegistryName("motor"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockAdvancedMotor.setRegistryName("advancedMotor"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockEnhancedMotor.setRegistryName("enhancedMotor"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockEliteMotor.setRegistryName("eliteMotor"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockLathe.setRegistryName("lathe"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockRollingMachine.setRegistryName("rollingMachine"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockPlatePress.setRegistryName("platePress"));
@@ -872,6 +880,13 @@ public class AdvancedRocketry {
 		OreDictionary.registerOre("ingotCarbon", new ItemStack(AdvancedRocketryItems.itemMisc, 1, 1));
 		OreDictionary.registerOre("concrete", new ItemStack(AdvancedRocketryBlocks.blockConcrete));
 		OreDictionary.registerOre("itemLens", AdvancedRocketryItems.itemLens);
+		
+		
+		OreDictionary.registerOre("blockMotor", AdvancedRocketryBlocks.blockMotor);
+		OreDictionary.registerOre("blockMotor", AdvancedRocketryBlocks.blockAdvancedMotor);
+		OreDictionary.registerOre("blockMotor", AdvancedRocketryBlocks.blockEnhancedMotor);
+		OreDictionary.registerOre("blockMotor", AdvancedRocketryBlocks.blockEliteMotor);
+		
 		OreDictionary.registerOre("itemSilicon", MaterialRegistry.getItemStackFromMaterialAndType("Silicon", AllowedProducts.getProductByName("INGOT")));
 
 		//Regiser item/block crap

@@ -58,6 +58,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class TileObservatory extends TileMultiPowerConsumer implements IModularInventory, IDataInventory, IGuiCallback {
 
 	private static final Block lens[] = { AdvancedRocketryBlocks.blockLens, Blocks.GLASS };
+	private static final Block motor[] = { Blocks.STONE, AdvancedRocketryBlocks.blockMotor, AdvancedRocketryBlocks.blockAdvancedMotor, AdvancedRocketryBlocks.blockEnhancedMotor, AdvancedRocketryBlocks.blockEliteMotor };
 	
 	private static final Object[][][] structure = new Object[][][]{
 
@@ -87,7 +88,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 						{	{null,'*', '*', '*', null}, 
 							{'*',Blocks.STONE, Blocks.STONE, Blocks.STONE,'*'},
-							{'*',Blocks.STONE, Blocks.STONE, Blocks.STONE,'*'},
+							{'*',Blocks.STONE, motor, Blocks.STONE,'*'},
 							{'*',Blocks.STONE, Blocks.STONE, Blocks.STONE,'*'},
 							{null,'*', '*', '*',null}}};
 
@@ -145,8 +146,22 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	protected void replaceStandardBlock(BlockPos newPos, IBlockState state,
 			TileEntity tile) {
 		
-		if(state.getBlock() == AdvancedRocketryBlocks.blockLens) {
+		Block block = state.getBlock();
+		
+		if(block == AdvancedRocketryBlocks.blockLens) {
 			viewDistance += 5;
+		}
+		else if( block == AdvancedRocketryBlocks.blockMotor ) {
+			viewDistance += 25; 
+		}
+		else if( block == AdvancedRocketryBlocks.blockAdvancedMotor ) {
+			viewDistance += 50; 
+		}
+		else if( block == AdvancedRocketryBlocks.blockEnhancedMotor ) {
+			viewDistance += 100; 
+		}
+		else if( block == AdvancedRocketryBlocks.blockEliteMotor ) {
+			viewDistance += 175; 
 		}
 		
 		super.replaceStandardBlock(newPos, state, tile);
