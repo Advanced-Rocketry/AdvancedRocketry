@@ -52,7 +52,7 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 
 
 		ItemStack outputStack;
-		if(multiBlockTile.isRunning() && (outputStack = multiBlockTile.getOutputs().get(0)) != null) {
+		if(multiBlockTile.isRunning()) {
 
 			float progress = multiBlockTile.getProgress(0)/(float)multiBlockTile.getTotalProgress(0);
 
@@ -76,7 +76,7 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 
 			int color;
 			//Check for rare bug when outputs is null, usually occurs if player opens machine within 1st tick
-			if(multiBlockTile.getOutputs() != null)
+			if(multiBlockTile.getOutputs() != null && (outputStack = multiBlockTile.getOutputs().get(0)) != null)
 				color = MaterialRegistry.getColorFromItemMaterial(outputStack);
 			else
 				color = 0;

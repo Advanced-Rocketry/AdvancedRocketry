@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.client.render.multiblocks;
 
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -9,10 +8,8 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
-import zmaster587.libVulpes.api.material.Material;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
@@ -58,7 +55,7 @@ public class RendererRollingMachine extends TileEntitySpecialRenderer {
 		GL11.glColor3f(1f,1f,1f);
 
 		ItemStack outputStack;
-		if(multiBlockTile.isRunning() && (outputStack = multiBlockTile.getOutputs().get(0)) != null) {
+		if(multiBlockTile.isRunning()) {
 			float progress = multiBlockTile.getProgress(0)/(float)multiBlockTile.getTotalProgress(0);
 
 			bindTexture(texture);
@@ -83,7 +80,12 @@ public class RendererRollingMachine extends TileEntitySpecialRenderer {
 			GL11.glPopMatrix();
 
 
-			int color = MaterialRegistry.getColorFromItemMaterial(outputStack);
+			int color;
+			if(multiBlockTile.getOutputs() != null && (outputStack = multiBlockTile.getOutputs().get(0)) != null)
+				color = MaterialRegistry.getColorFromItemMaterial(outputStack);
+			else
+				color = 0;
+			
 			//int color = MaterialRegistry.getMaterialFromItemStack(multiBlockTile.getOutputs().get(0)).getColor();
 			GL11.glColor3d((0xff & color >> 16)/256f, (0xff & color >> 8)/256f , (color & 0xff)/256f);
 
