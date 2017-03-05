@@ -35,8 +35,8 @@ public class TileRollingMachine extends TileMultiblockMachine {
 			{'I', Blocks.air, LibVulpesBlocks.blockStructureBlock, Blocks.air}},
 
 			{{LibVulpesBlocks.blockRFBattery, 'L', LibVulpesBlocks.blockStructureBlock, null},
-				{new BlockMeta(Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem()), MaterialRegistry.getMaterialFromName("Copper").getMeta()), LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'O'},
-				{new BlockMeta(Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem()), MaterialRegistry.getMaterialFromName("Copper").getMeta()), AdvancedRocketryBlocks.blockMotor, LibVulpesBlocks.blockStructureBlock, 'O'}}
+				{"blockCoil", LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'O'},
+				{"blockCoil", LibVulpesBlocks.motors, LibVulpesBlocks.blockStructureBlock, 'O'}}
 	};
 
 

@@ -6,6 +6,7 @@ import java.util.Set;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -13,6 +14,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.api.material.Material;
+import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.interfaces.IRecipe;
@@ -36,9 +39,9 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 		},
 
 		{	{null,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,null},
-			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.gold_block,Blocks.air,Blocks.gold_block,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick, "blockCoil",Blocks.air,"blockCoil",AdvancedRocketryBlocks.blockBlastBrick},
 			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.air,Blocks.air,Blocks.air,AdvancedRocketryBlocks.blockBlastBrick},
-			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.air,Blocks.gold_block,Blocks.air,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.air,"blockCoil",Blocks.air,AdvancedRocketryBlocks.blockBlastBrick},
 			{null,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,null},
 		},
 
@@ -79,10 +82,26 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 		return TextureResources.sndElectricArcFurnace;
 	}
 	
+	@Override
+	public float getTimeMultiplierForBlock(Block block, int meta,
+			TileEntity tile) {
+		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(block,1, meta));
+		if(material == MaterialRegistry.getMaterialFromName("Gold"))
+			return 0.9f;
+		else if(material == MaterialRegistry.getMaterialFromName("Aluiminum"))
+			return 0.8f;
+		else if(material == MaterialRegistry.getMaterialFromName("Titanium"))
+			return 0.75f;
+		else if(material == MaterialRegistry.getMaterialFromName("Iridium"))
+			return 0.5f;
+
+		return super.getTimeMultiplierForBlock(block, meta, tile);
+	}
+	
 	//Since this doesn't have a render just set the meta and masterBlock
 	@Override
-	protected void replaceStandardBlock(int xCoord, int yCoord, int zCoord,	Block block, TileEntity tile) {
-
+	protected void replaceStandardBlock(int xCoord, int yCoord, int zCoord,	Block block, int meta, TileEntity tile) {
+		super.replaceStandardBlock(xCoord, yCoord, zCoord, block, meta, tile);
 		if(block == AdvancedRocketryBlocks.blockBlastBrick) {
 			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 1, 2);
 
@@ -124,7 +143,7 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 		// TODO Auto-generated method stub
 		List<ModuleBase> modules = super.getModules(ID, player);
 		
-		modules.add(new ModuleProgress(100, 20, 0, TextureResources.arcFurnaceProgressBar, this));
+		modules.add(new ModuleProgress(80, 20, 0, TextureResources.arcFurnaceProgressBar, this));
 		return modules;
 	}
 }

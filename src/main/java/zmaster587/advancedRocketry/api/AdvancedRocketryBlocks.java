@@ -41,7 +41,6 @@ public class AdvancedRocketryBlocks {
 	public static Block blockLunarAnalyser;
 	public static Block blockPlanetSelector;
 	public static Block blockSawBlade;
-	public static Block blockMotor;
 	public static Block blockConcrete;
 	public static Block blockRollingMachine;
 	public static Block blockPlatePress;
@@ -90,4 +89,5 @@ public class AdvancedRocketryBlocks {
 	public static Block blockAstroBed;
 	public static Block blockAdvEngine;
 	public static Block blockPlanetHoloSelector;
+	public static Block blockLens;
 }

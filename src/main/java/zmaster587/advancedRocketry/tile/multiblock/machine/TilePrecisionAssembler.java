@@ -40,8 +40,8 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 			{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock}},
 
 			{{'c', '*', '*', '*'},
-				{'*', new BlockMeta(Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem()), MaterialRegistry.getMaterialFromName("Copper").getMeta()), new BlockMeta(Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem()), MaterialRegistry.getMaterialFromName("Copper").getMeta()), '*'},
-				{'*', AdvancedRocketryBlocks.blockMotor, AdvancedRocketryBlocks.blockMotor, '*'}}};
+				{'*', "blockCoil", "blockCoil", '*'},
+				{'*', LibVulpesBlocks.motors, LibVulpesBlocks.motors, '*'}}};
 
 
 	@Override

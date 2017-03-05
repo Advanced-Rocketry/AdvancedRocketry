@@ -22,7 +22,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 public class TileLathe extends TileMultiblockMachine implements IModularInventory {
 
 	public static final Object[][][] structure = { 
-		{{'I', AdvancedRocketryBlocks.blockMotor, Blocks.air, 'c'}},
+		{{'I', LibVulpesBlocks.motors, Blocks.air, 'c'}},
 		{{'O', LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'P'}},
 	};
 	

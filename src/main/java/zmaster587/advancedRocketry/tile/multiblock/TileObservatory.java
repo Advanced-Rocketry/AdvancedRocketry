@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 import cpw.mods.fml.relauncher.Side;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
@@ -21,6 +22,7 @@ import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.advancedRocketry.util.AsteroidSmall.StackEntry;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.inventory.GuiHandler;
@@ -30,12 +32,14 @@ import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleButton;
 import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
 import zmaster587.libVulpes.inventory.modules.ModuleOutputSlotArray;
+import zmaster587.libVulpes.inventory.modules.ModulePower;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
 import zmaster587.libVulpes.inventory.modules.ModuleScaledImage;
 import zmaster587.libVulpes.inventory.modules.ModuleSlotButton;
 import zmaster587.libVulpes.inventory.modules.ModuleTab;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.inventory.modules.ModuleTexturedSlotArray;
+import zmaster587.libVulpes.inventory.modules.ModuleToggleSwitch;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
@@ -50,29 +54,31 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileObservatory extends TileMultiPowerConsumer implements IModularInventory, IDataInventory, IGuiCallback {
 
-
+	private static final Block lens[] = { AdvancedRocketryBlocks.blockLens, Blocks.glass };
+	
 	private static final Object[][][] structure = new Object[][][]{
 
 		{	{Blocks.air, Blocks.air, Blocks.air, Blocks.air, Blocks.air}, 
-			{Blocks.air, Blocks.stone, Blocks.glass, Blocks.stone, Blocks.air},
+			{Blocks.air, Blocks.stone, lens, Blocks.stone, Blocks.air},
 			{Blocks.air, Blocks.stone, Blocks.stone, Blocks.stone, Blocks.air},
 			{Blocks.air, Blocks.stone, Blocks.stone, Blocks.stone, Blocks.air},
 			{Blocks.air, Blocks.air, Blocks.air, Blocks.air, Blocks.air}},
 
 			{	{Blocks.air,Blocks.air,Blocks.air,Blocks.air,Blocks.air}, 
 				{Blocks.air, Blocks.stone, Blocks.stone, Blocks.stone, Blocks.air},
-				{Blocks.air, Blocks.stone, Blocks.glass, Blocks.stone, Blocks.air},
+				{Blocks.air, Blocks.stone, lens, Blocks.stone, Blocks.air},
 				{Blocks.air, Blocks.stone, Blocks.stone, Blocks.stone, Blocks.air},
 				{Blocks.air,Blocks.air,Blocks.air,Blocks.air,Blocks.air}},
 
 				{	{null, Blocks.stone, Blocks.stone, Blocks.stone, null}, 
 					{Blocks.stone, Blocks.air, Blocks.air, Blocks.air, Blocks.stone},
 					{Blocks.stone, Blocks.air, Blocks.air, Blocks.air, Blocks.stone},
-					{Blocks.stone, Blocks.air, Blocks.glass, Blocks.air, Blocks.stone},
+					{Blocks.stone, Blocks.air, lens, Blocks.air, Blocks.stone},
 					{null, Blocks.stone, Blocks.stone, Blocks.stone, null}},
 
 					{	{ null,'*', 'c', '*',null}, 
@@ -83,7 +89,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 						{	{null,'*', '*', '*', null}, 
 							{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
-							{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
+							{'*',Blocks.stone, LibVulpesBlocks.motors, Blocks.stone,'*'},
 							{'*',Blocks.stone, Blocks.stone, Blocks.stone,'*'},
 							{null,'*', '*', '*',null}}};
 
@@ -95,6 +101,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	private int lastButton;
 	private long lastSeed;
 	private String lastType;
+	private int viewDistance;
 	final static int openTime = 100;
 	final static int observationtime = 1000;
 	int openProgress;
@@ -109,6 +116,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 		openProgress = 0;
 		lastButton = -1;
 		lastSeed = -1;
+		viewDistance = 0;
 		completionTime = observationtime;
 		dataCables = new LinkedList<TileDataBus>();
 		tabModule = new ModuleTab(4,0,0,this, 2, new String[]{"Data", "Asteroid Selection"}, new ResourceLocation[][] { TextureResources.tabData, TextureResources.tabAsteroid} );
@@ -127,6 +135,38 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			dataCables.add((TileDataBus)tile);
 			((TileDataBus)tile).lockData(((TileDataBus)tile).getDataObject().getDataType());
 		}
+	}
+	
+	@Override
+	public void deconstructMultiBlock(World world, int destroyedX,
+			int destroyedY, int destroyedZ, boolean blockBroken) {
+		// TODO Auto-generated method stub
+		super.deconstructMultiBlock(world, destroyedX, destroyedY, destroyedZ,
+				blockBroken);
+		viewDistance = 0;
+	}
+	
+	@Override
+	protected void replaceStandardBlock(int x, int y, int z, Block block,
+			int meta, TileEntity tile) {
+		
+		if(block == AdvancedRocketryBlocks.blockLens) {
+			viewDistance += 5;
+		}
+		else if( block == LibVulpesBlocks.blockMotor ) {
+			viewDistance += 25; 
+		}
+		else if( block == LibVulpesBlocks.blockAdvancedMotor ) {
+			viewDistance += 50; 
+		}
+		else if( block == LibVulpesBlocks.blockEnhancedMotor ) {
+			viewDistance += 100; 
+		}
+		else if( block == LibVulpesBlocks.blockEliteMotor ) {
+			viewDistance += 175; 
+		}
+		
+		super.replaceStandardBlock(x,y,z, block, meta, tile);
 	}
 
 	@Override
@@ -205,6 +245,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 		nbt.setInteger("openProgress", openProgress);
 		nbt.setBoolean("isOpen", isOpen);
 		
+		nbt.setInteger("viewableDist", viewDistance);
 		nbt.setLong("lastSeed", lastSeed);
 		nbt.setInteger("lastButton", lastButton);
 		if(lastType != null && !lastType.isEmpty())
@@ -218,6 +259,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 		isOpen = nbt.getBoolean("isOpen");
 		
+		viewDistance = nbt.getInteger("viewableDist");
 		lastSeed = nbt.getLong("lastSeed");
 		lastButton = nbt.getInteger("lastButton");
 		lastType = nbt.getString("lastType");
@@ -402,7 +444,8 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			ModuleContainerPan pan2 = new ModuleContainerPan(baseX, baseY, buttonList, new LinkedList<ModuleBase>(), null, 40, 48, 0, 0, 0, 72);
 			modules.add(pan2);
 		} else if(tabModule.getTab() == 0) {
-			modules.addAll(super.getModules(ID, player));
+			modules.add(new ModulePower(18, 20, getBatteries()));
+			modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
 			List<DataStorage> distanceStorage = new LinkedList<DataStorage>();
 			List<DataStorage> compositionStorage = new LinkedList<DataStorage>();
 			List<DataStorage> massStorage = new LinkedList<DataStorage>();
@@ -429,13 +472,15 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			if(massStorage.size() > 0 ) {
 				modules.add(new ModuleData(120, 20, 0, this, (DataStorage[]) massStorage.toArray(new DataStorage[massStorage.size()])));
 			}
+			
+			modules.add(new ModuleText(10, 90, "Observable distance: " + getMaxDistance(), 0x2d2d2d, false));
 		}
 
 		return modules;
 	}
 
 	public int getMaxDistance() {
-		return Integer.MAX_VALUE;
+		return viewDistance + 10;
 	}
 	
 	@Override

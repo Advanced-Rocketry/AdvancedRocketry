@@ -96,6 +96,7 @@ tile.solarGenerator.name=Solar Generator
 tile.altitudeController.name=Altitude Controller
 tile.railgun.name=Railgun
 tile.planetHoloSelector.name=Holographic Planet Selector
+tile.lens.name=Lens
 
 tile.Dilithium.name=Dilithium Ore
 

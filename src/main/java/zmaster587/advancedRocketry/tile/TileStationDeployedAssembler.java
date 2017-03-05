@@ -26,6 +26,7 @@ import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.interfaces.INetworkEntity;
 import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.tile.TileModelRenderRotatable;
 import zmaster587.libVulpes.util.ZUtils;
 
 public class TileStationDeployedAssembler extends TileRocketBuilder {

@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Set;
 
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.block.BlockRotatableModel;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.block.BlockRotatableModel;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.interfaces.IRecipe;
@@ -32,7 +32,7 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 
 	private static final Object[][][] structure = new Object[][][]{			
 		    	 			 {{'I', 'c', 'O'}, 
-							  {new BlockMeta(AdvancedRocketryBlocks.blockMotor, BlockMeta.WILDCARD), AdvancedRocketryBlocks.blockSawBlade, new BlockMeta(LibVulpesBlocks.blockRFBattery, 0)}}};
+							  {LibVulpesBlocks.motors, AdvancedRocketryBlocks.blockSawBlade, new BlockMeta(LibVulpesBlocks.blockRFBattery, 0)}}};
 	
 
 	@Override
@@ -80,7 +80,7 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		List<ModuleBase> modules = super.getModules(ID, player);
-		modules.add(new ModuleProgress(100, 20, 0, TextureResources.cuttingMachineProgressBar, this));
+		modules.add(new ModuleProgress(80, 20, 0, TextureResources.cuttingMachineProgressBar, this));
 		
 		return modules;
 	}
