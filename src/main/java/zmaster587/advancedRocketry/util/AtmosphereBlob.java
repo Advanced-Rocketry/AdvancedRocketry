@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 
-	static ThreadPoolExecutor pool = (Configuration.atmosphereHandleBitMask & 1) == 1 ? new ThreadPoolExecutor(2, 16, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(2)) : null;
+	static ThreadPoolExecutor pool = (Configuration.atmosphereHandleBitMask & 1) == 1 ? new ThreadPoolExecutor(2, 16, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(32)) : null;
 
 	boolean executing;
 	HashedBlockPosition blockPos;

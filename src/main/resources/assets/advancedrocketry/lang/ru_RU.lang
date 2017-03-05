@@ -39,7 +39,6 @@ tile.planetanalyser.name=Планетный анализатор
 tile.lunaranalyser.name=Лунный анализатор
 tile.guidanceComputer.name=Автопилот
 tile.electricArcFurnace.name=Электродуговая печь
-tile.motor.name=Электродвигатель
 tile.hotDryturf.name=Железистый грунт
 tile.concrete.name=Бетон
 tile.lathe.name=Токарный станок

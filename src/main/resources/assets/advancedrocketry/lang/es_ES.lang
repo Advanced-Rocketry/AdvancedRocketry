@@ -32,7 +32,6 @@ tile.planetanalyser.name=Procesador de datos de cuerpos celestiales
 tile.lunaranalyser.name=Analizador lunar
 tile.guidanceComputer.name=Computadora de orientación
 tile.electricArcFurnace.name=Horno de arco eléctrico
-tile.motor.name=Motor
 tile.hotDryturf.name=Arena ferrosa oxidada
 tile.concrete.name=Hormigón
 tile.lathe.name=Torno

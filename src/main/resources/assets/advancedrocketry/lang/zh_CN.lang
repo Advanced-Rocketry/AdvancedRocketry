@@ -39,7 +39,6 @@ tile.planetanalyser.name=天体数据处理器
 tile.lunaranalyser.name=月球分析器
 tile.guidanceComputer.name=导航电脑
 tile.electricArcFurnace.name=电弧高炉
-tile.motor.name=马达
 tile.hotDryturf.name=氧化铁砂
 tile.concrete.name=混凝土
 tile.lathe.name=车床
