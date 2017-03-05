@@ -306,7 +306,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 							numBlocks++;
 							//If rocketEngine increaseThrust
 							if(block instanceof IRocketEngine) {
-								thrust += ((IRocketEngine)block).getThrust(world, xCurr, yCurr, z);
+								thrust += ((IRocketEngine)block).getThrust(world, xCurr, yCurr, zCurr);
 								fuelUse += ((IRocketEngine)block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
 								stats.addEngineLocation(xCurr - actualMinX - ((actualMaxX - actualMinX)/2f), yCurr - actualMinY, zCurr - actualMinZ - ((actualMaxZ - actualMinZ)/2f));
 							}
@@ -494,8 +494,6 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	}
 
 	public int getVolume(World world, int x, int y, int z, AxisAlignedBB bb) {
-
-
 		return (int) ((bb.maxX - bb.minX) * (bb.maxY - bb.minY) * (bb.maxZ - bb.minZ));
 	}
 
@@ -636,7 +634,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			if(!canScan())
 				return;
 
-			totalProgress =(int) (Configuration.buildSpeedMultiplier*this.getVolume(worldObj, xCoord, yCoord, zCoord,bbCache)/10);
+			totalProgress = (int)(Configuration.buildSpeedMultiplier*this.getVolume(worldObj, xCoord, yCoord, zCoord,bbCache)/10);
 			this.markDirty();
 			this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 

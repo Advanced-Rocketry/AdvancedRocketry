@@ -18,7 +18,7 @@ public class BlockMiningDrill extends BlockTile implements IMiningDrill {
 	}
 	@Override
 	public float getMiningSpeed(World world, int x, int y, int z) {
-		return world.isAirBlock(x, y + 1, z) && world.isAirBlock(x, y + 2, z) ? 0.01f : 0f;
+		return 0.01f;
 	}
 
 	@Override
