@@ -59,7 +59,7 @@ public class AtmosphereVacuum extends AtmosphereType {
 				(protectsFrom(chest, 2) || ((chest.getItem() instanceof IFillableArmor) && ((IFillableArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).decrementAir(chest, 1) > 0));
 	}
 	
-	public static boolean protectsFrom(ItemStack stack, int slot) {
+	public boolean protectsFrom(ItemStack stack, int slot) {
 		
 		if(CompatibilityMgr.powerSuits) {
 			if( powerSuitItem == null)
