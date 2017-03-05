@@ -6,6 +6,8 @@ import java.util.Set;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -64,6 +66,22 @@ public class TileRollingMachine extends TileMultiblockMachine {
 		}
 
 		return super.canProcessRecipe(recipe);
+	}
+	
+	@Override
+	public float getTimeMultiplierForBlock(Block block, int meta,
+			TileEntity tile) {
+		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(block,1, meta));
+		if(material == MaterialRegistry.getMaterialFromName("Gold"))
+			return 0.9f;
+		else if(material == MaterialRegistry.getMaterialFromName("Aluiminum"))
+			return 0.8f;
+		else if(material == MaterialRegistry.getMaterialFromName("Titanium"))
+			return 0.75f;
+		else if(material == MaterialRegistry.getMaterialFromName("Iridium"))
+			return 0.5f;
+
+		return super.getTimeMultiplierForBlock(block, meta, tile);
 	}
 
 

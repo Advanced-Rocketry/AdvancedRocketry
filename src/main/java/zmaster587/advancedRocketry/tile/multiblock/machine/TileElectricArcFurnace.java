@@ -53,9 +53,9 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 		},
 
 		{	{AdvancedRocketryBlocks.blockBlastBrick,'*','c','*',AdvancedRocketryBlocks.blockBlastBrick},
-			{'*',Blocks.air,Blocks.air,Blocks.air,'*'},
-			{'*',Blocks.air,Blocks.air,Blocks.air, '*'},
-			{'*',Blocks.air, Blocks.air,Blocks.air, '*'},
+			{'*',AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,'*'},
+			{'*',AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick, '*'},
+			{'*',AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick, '*'},
 			{AdvancedRocketryBlocks.blockBlastBrick,'*','*','*',AdvancedRocketryBlocks.blockBlastBrick},
 		},
 
