@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
@@ -16,6 +18,7 @@ import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,6 +30,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -38,13 +42,54 @@ import net.minecraftforge.common.util.Constants.NBT;
 public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillableArmor, IProtectiveArmor, IModularArmor {
 
 	private final static String componentNBTName = "componentName";
+	private IIcon overlayIcon; 
 
 	public ItemSpaceArmor(ArmorMaterial material, int component) {
 		super(material, 0, component);
 	}
 	
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister p_94581_1_)
+    {
+        super.registerIcons(p_94581_1_);
+        this.overlayIcon = p_94581_1_.registerIcon(getIconString() + "_overlay");
+    }
 	
-	
+    /**
+     * Return the color for the specified armor ItemStack.
+     */
+    @Override
+    public int getColor(ItemStack p_82814_1_)
+    {
+        if (this.getArmorMaterial() != ItemArmor.ArmorMaterial.CLOTH)
+        {
+            return -1;
+        }
+        else
+        {
+            NBTTagCompound nbttagcompound = p_82814_1_.getTagCompound();
+
+            if (nbttagcompound == null)
+            {
+                return 0xFFFFFF;
+            }
+            else
+            {
+                NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag("display");
+                return nbttagcompound1 == null ? 10511680 : (nbttagcompound1.hasKey("color", 3) ? nbttagcompound1.getInteger("color") : 10511680);
+            }
+        }
+    }
+    
+    /**
+     * Gets an icon index based on an item's damage value and the given render pass
+     */
+    @SideOnly(Side.CLIENT)
+    public IIcon getIconFromDamageForRenderPass(int p_77618_1_, int p_77618_2_)
+    {
+        return p_77618_2_ == 1 ? this.overlayIcon : super.getIconFromDamageForRenderPass(p_77618_1_, p_77618_2_);
+    }
+    
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer p_77624_2_,
 			List list, boolean p_77624_4_) {
@@ -124,8 +169,15 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IFillabl
 	}
 
 	@Override
-	public String getArmorTexture(ItemStack stack, Entity entity, int slot,
-			String type) {
+	public String getArmorTexture(ItemStack stack, Entity entity,
+			int slot, String type) {
+		
+		if(type != null) {
+			if(stack.getItem() == AdvancedRocketryItems.itemSpaceSuit_Leggings)
+				return "advancedRocketry:textures/armor/spaceSuit_layer1_overlay.png";//super.getArmorTexture(stack, entity, slot, type);
+			return "advancedRocketry:textures/armor/spaceSuit_layer2_overlay.png";
+		}
+		
 		if(stack.getItem() == AdvancedRocketryItems.itemSpaceSuit_Leggings)
 			return "advancedRocketry:textures/armor/spaceSuit_layer1.png";//super.getArmorTexture(stack, entity, slot, type);
 		return "advancedRocketry:textures/armor/spaceSuit_layer2.png";
