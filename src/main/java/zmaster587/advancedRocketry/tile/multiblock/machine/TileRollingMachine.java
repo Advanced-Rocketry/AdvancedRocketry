@@ -7,6 +7,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -42,6 +44,21 @@ public class TileRollingMachine extends TileMultiblockMachine {
 				{"blockCoil", LibVulpesBlocks.motors, LibVulpesBlocks.blockStructureBlock, 'O'}}
 	};
 
+	@Override
+	public float getTimeMultiplierForBlock(IBlockState state, TileEntity tile) {
+
+		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(state.getBlock(),1, state.getBlock().getMetaFromState(state)));
+		if(material == MaterialRegistry.getMaterialFromName("Gold"))
+			return 0.9f;
+		else if(material == MaterialRegistry.getMaterialFromName("Aluiminum"))
+			return 0.8f;
+		else if(material == MaterialRegistry.getMaterialFromName("Titanium"))
+			return 0.75f;
+		else if(material == MaterialRegistry.getMaterialFromName("Iriudium"))
+			return 0.5f;
+
+		return super.getTimeMultiplierForBlock(state, tile);
+	}
 
 	@Override
 	public Object[][][] getStructure() {
