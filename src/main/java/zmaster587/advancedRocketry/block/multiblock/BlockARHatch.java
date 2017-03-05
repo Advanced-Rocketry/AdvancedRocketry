@@ -56,6 +56,9 @@ public class BlockARHatch extends BlockHatch {
 	@Override
 	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess,
 			BlockPos pos, EnumFacing side) {
+		if(blockAccess.getTileEntity(pos) instanceof TilePointer && !((TilePointer)blockAccess.getTileEntity(pos)).allowRedstoneOutputOnSide(side))
+			return 0;
+		
 		return blockState.getValue(VARIANT) >= 2 ? 15 : 0;
 	}
 	

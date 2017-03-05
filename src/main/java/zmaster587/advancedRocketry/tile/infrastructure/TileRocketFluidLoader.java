@@ -14,6 +14,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -28,7 +29,9 @@ import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.inventory.modules.IButtonInventory;
+import zmaster587.libVulpes.inventory.modules.IGuiCallback;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleBlockSideSelector;
 import zmaster587.libVulpes.inventory.modules.ModuleRedstoneOutputButton;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketHandler;
@@ -37,21 +40,34 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
-public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastructure,  ITickable,  IButtonInventory, INetworkMachine {
+public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastructure,  ITickable,  IButtonInventory, INetworkMachine, IGuiCallback {
 
 	EntityRocket rocket;
 	ModuleRedstoneOutputButton redstoneControl;
 	RedstoneState state;
+	ModuleRedstoneOutputButton inputRedstoneControl;
+	RedstoneState inputstate;
+	ModuleBlockSideSelector sideSelectorModule;
+	
+	private static int ALLOW_REDSTONEOUT = 2;
 
 	public TileRocketFluidLoader() {
-		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 0, "", this);
+		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 0, "", this, "Loading State: ");
 		state = RedstoneState.ON;
+		inputRedstoneControl = new ModuleRedstoneOutputButton(174, 32, 1, "", this, "Allow Loading: ");
+		inputstate = RedstoneState.OFF;
+		inputRedstoneControl.setRedstoneState(inputstate);
+		sideSelectorModule = new ModuleBlockSideSelector(90, 15, this, new String[] {"None", "Allow redstone output", "Allow redstone input"});
 	}
 
 	public TileRocketFluidLoader(int size) {
 		super(size);
-		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 0, "", this);
+		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 0, "", this, "Loading State: ");
 		state = RedstoneState.ON;
+		inputRedstoneControl = new ModuleRedstoneOutputButton(174, 32, 1, "", this, "Allow Loading: ");
+		inputstate = RedstoneState.OFF;
+		inputRedstoneControl.setRedstoneState(inputstate);
+		sideSelectorModule = new ModuleBlockSideSelector(90, 15, this, new String[] {"None", "Allow redstone output", "Allow redstone input"});
 	}
 
 	@Override
@@ -67,17 +83,34 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	}
 
 	@Override
+	public boolean allowRedstoneOutputOnSide(EnumFacing facing) {
+		return sideSelectorModule.getStateForSide(facing.getOpposite()) == 1;
+	}
+
+	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		List<ModuleBase> list = super.getModules(ID, player);
 		list.add(redstoneControl);
+		list.add(inputRedstoneControl);
+		list.add(sideSelectorModule);
 		return list;
+	}
+
+	protected boolean getStrongPowerForSides(World world, BlockPos pos) {
+		for(int i = 0; i < 6; i++) {
+			if(sideSelectorModule.getStateForSide(i) == ALLOW_REDSTONEOUT && world.getRedstonePower(pos.offset(EnumFacing.VALUES[i]), EnumFacing.VALUES[i]) > 0)
+				return true;
+		}
+		return false;
 	}
 	
 	@Override
 	public void update() {
-
 		//Move a stack of items
-		if(!worldObj.isRemote && rocket != null ) {
+		if(!worldObj.isRemote && rocket != null) {
+
+			boolean isAllowToOperate = (inputstate == RedstoneState.OFF || isStateActive(inputstate, getStrongPowerForSides(worldObj, getPos())));
+
 			List<TileEntity> tiles = rocket.storage.getFluidTiles();
 			boolean foundStack = false;
 			boolean rocketContainsItems = false;
@@ -91,9 +124,11 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 				if(stack == null || handler.fill(stack, false) > 0)
 					rocketContainsItems = true;
 
-				stack = fluidTank.drain(fluidTank.getCapacity(), false);
-				if(stack != null && stack.amount > 0)
-					fluidTank.drain(handler.fill(stack, true), true);
+				if(isAllowToOperate) {
+					stack = fluidTank.drain(fluidTank.getCapacity(), false);
+					if(stack != null && stack.amount > 0)
+						fluidTank.drain(handler.fill(stack, true), true);
+				}
 			}
 
 			//Update redstone state
@@ -118,15 +153,20 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 		return writeToNBT(new NBTTagCompound());
 	}
 
-	private void setRedstoneState(boolean condition) {
-		if(state == RedstoneState.INVERTED)
-			condition = !condition;
-		else if(state == RedstoneState.OFF)
-			condition = false;
+	protected void setRedstoneState(boolean condition) {
+		condition = isStateActive(state, condition);
 		((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj,worldObj.getBlockState(pos), pos, condition);
 
 	}
-	
+
+	protected boolean isStateActive(RedstoneState state, boolean condition) {
+		if(state == RedstoneState.INVERTED)
+			return !condition;
+		else if(state == RedstoneState.OFF)
+			return false;
+		return condition;
+	}
+
 	@Override
 	public boolean onLinkStart(ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
@@ -198,46 +238,75 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	public boolean canRenderConnection() {
 		return true;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
 		state = RedstoneState.values()[nbt.getByte("redstoneState")];
 		redstoneControl.setRedstoneState(state);
+
+
+		inputstate = RedstoneState.values()[nbt.getByte("inputRedstoneState")];
+		inputRedstoneControl.setRedstoneState(inputstate);
+
+		sideSelectorModule.readFromNBT(nbt);
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setByte("redstoneState", (byte) state.ordinal());
+		nbt.setByte("inputRedstoneState", (byte) inputstate.ordinal());
+		sideSelectorModule.writeToNBT(nbt);
 		return nbt;
 	}
 
 	@Override
 	public void onInventoryButtonPressed(int buttonId) {
-		state = redstoneControl.getState();
+		if(buttonId == 0)
+			state = redstoneControl.getState();
+		if(buttonId == 1)
+			inputstate = inputRedstoneControl.getState();
 		PacketHandler.sendToServer(new PacketMachine(this, (byte)0));
 	}
 
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {
 		out.writeByte(state.ordinal());
+		out.writeByte(inputstate.ordinal());
+		for(int i = 0; i < 6; i++)
+			out.writeByte(sideSelectorModule.getStateForSide(i));
 	}
 
 	@Override
 	public void readDataFromNetwork(ByteBuf in, byte packetId,
 			NBTTagCompound nbt) {
 		nbt.setByte("state", in.readByte());
+		nbt.setByte("inputstate", in.readByte());
+
+		byte bytes[] = new byte[6];
+		for(int i = 0; i < 6; i++)
+			bytes[i] = in.readByte();
+		nbt.setByteArray("bytes", bytes);
 	}
 
 	@Override
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
 		state = RedstoneState.values()[nbt.getByte("state")];
+		inputstate = RedstoneState.values()[nbt.getByte("inputstate")];
+
+		byte bytes[] = nbt.getByteArray("bytes");
+		for(int i = 0; i < 6; i++)
+			sideSelectorModule.setStateForSide(i, bytes[i]);
 
 		if(rocket == null)
 			setRedstoneState(state == RedstoneState.INVERTED);
 	}
 
+	@Override
+	public void onModuleUpdated(ModuleBase module) {
+		PacketHandler.sendToServer(new PacketMachine(this, (byte)0));
+	}
 }
