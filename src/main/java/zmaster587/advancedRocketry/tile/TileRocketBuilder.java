@@ -308,7 +308,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 							}
 
 							if(block instanceof IFuelTank) {
-								fuel+= ((IFuelTank)block).getMaxFill(world, currBlockPos, state);
+								fuel += ((IFuelTank)block).getMaxFill(world, currBlockPos, state);
 							}
 
 							if(block instanceof BlockSeat) {

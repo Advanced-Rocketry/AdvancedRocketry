@@ -27,7 +27,7 @@ public class BlockMiningDrill extends BlockFullyRotatable implements IMiningDril
 
 	@Override
 	public float getMiningSpeed(World world, BlockPos pos) {
-		return world.isAirBlock(pos.add(0,1,0)) && world.isAirBlock(pos.add(0,2,0)) ? 0.01f : 0f;
+		return 0.01f;
 	}
 
 	@Override
