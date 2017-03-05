@@ -23,13 +23,14 @@ import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 
-	static ThreadPoolExecutor pool = (Configuration.atmosphereHandleBitMask & 1) == 1 ? new ThreadPoolExecutor(2, 16, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(2)) : null;
+	static ThreadPoolExecutor pool = (Configuration.atmosphereHandleBitMask & 1) == 1 ? new ThreadPoolExecutor(2, 16, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(32)) : null;
 
 	boolean executing;
 	HashedBlockPosition blockPos;
@@ -82,7 +83,11 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 					this.blockPos = blockPos;
 					executing = true;
 					if((Configuration.atmosphereHandleBitMask & 1) == 1)
-						pool.execute(this);
+						try {
+							pool.execute(this);
+						} catch (RejectedExecutionException e) {
+							AdvancedRocketry.logger.warn("Atmosphere calculation at " + this.getRootPosition() + " aborted due to oversize queue!");
+						}
 					else
 						this.run();
 				}
