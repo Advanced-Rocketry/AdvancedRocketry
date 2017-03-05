@@ -303,6 +303,10 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 
 		if(rocket == null)
 			setRedstoneState(state == RedstoneState.INVERTED);
+		
+		
+		markDirty();
+		worldObj.notifyBlockOfStateChange(getPos(), worldObj.getBlockState(getPos()).getBlock());
 	}
 
 	@Override

@@ -323,6 +323,9 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 
 		if(rocket == null)
 			setRedstoneState(state == RedstoneState.INVERTED);
+		
+		markDirty();
+		worldObj.notifyBlockOfStateChange(getPos(), worldObj.getBlockState(getPos()).getBlock());
 	}
 
 
