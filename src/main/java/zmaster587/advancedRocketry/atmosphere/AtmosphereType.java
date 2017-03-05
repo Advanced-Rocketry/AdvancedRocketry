@@ -13,12 +13,14 @@ public class AtmosphereType implements IAtmosphere {
 	public static final AtmosphereType PRESSURIZEDAIR = new AtmosphereType(false, true, "PressurizedAir");
 	public static final AtmosphereType LOWOXYGEN = new AtmosphereLowOxygen(true, false, "lowO2");
 	public static final AtmosphereType VACUUM = new AtmosphereVacuum();
+	public static final AtmosphereType HIGHPRESSURE = new AtmosphereHighPressure(true, true, "HighPressure");
 
 	static {
 		AtmosphereRegister.getInstance().registerAtmosphere(AIR);
 		AtmosphereRegister.getInstance().registerAtmosphere(PRESSURIZEDAIR);
 		AtmosphereRegister.getInstance().registerAtmosphere(VACUUM);
 		AtmosphereRegister.getInstance().registerAtmosphere(LOWOXYGEN);
+		AtmosphereRegister.getInstance().registerAtmosphere(HIGHPRESSURE);
 	}
 	
 	private boolean allowsCombustion;

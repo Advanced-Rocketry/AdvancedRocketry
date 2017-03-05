@@ -562,8 +562,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return the default atmosphere of this dimension
 	 */
 	public IAtmosphere getAtmosphere() {
-		if(hasAtmosphere())
+		if(hasAtmosphere()) {
+			if(AtmosphereTypes.getAtmosphereTypeFromValue(getAtmosphereDensity()) == AtmosphereTypes.HIGHPRESSURE)
+				return AtmosphereType.HIGHPRESSURE;
 			return AtmosphereType.AIR;
+		}
 		return AtmosphereType.VACUUM;
 	}
 
