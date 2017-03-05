@@ -19,6 +19,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
@@ -710,10 +711,10 @@ public class AdvancedRocketry {
 		AdvancedRocketryItems.itemAtmAnalyser = new ItemAtmosphereAnalzer().setCreativeTab(tabAdvRocketry).setUnlocalizedName("atmAnalyser");
 
 		//Armor registration
-		AdvancedRocketryItems.itemSpaceSuit_Helmet = new ItemSpaceArmor(AdvancedRocketryItems.spaceSuit, EntityEquipmentSlot.HEAD).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceHelmet");
-		AdvancedRocketryItems.itemSpaceSuit_Chest = new ItemSpaceArmor(AdvancedRocketryItems.spaceSuit, EntityEquipmentSlot.CHEST).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceChest");
-		AdvancedRocketryItems.itemSpaceSuit_Leggings = new ItemSpaceArmor(AdvancedRocketryItems.spaceSuit, EntityEquipmentSlot.LEGS).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceLeggings");
-		AdvancedRocketryItems.itemSpaceSuit_Boots = new ItemSpaceArmor(AdvancedRocketryItems.spaceSuit, EntityEquipmentSlot.FEET).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceBoots");
+		AdvancedRocketryItems.itemSpaceSuit_Helmet = new ItemSpaceArmor(ArmorMaterial.LEATHER, EntityEquipmentSlot.HEAD).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceHelmet");
+		AdvancedRocketryItems.itemSpaceSuit_Chest = new ItemSpaceArmor(ArmorMaterial.LEATHER, EntityEquipmentSlot.CHEST).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceChest");
+		AdvancedRocketryItems.itemSpaceSuit_Leggings = new ItemSpaceArmor(ArmorMaterial.LEATHER, EntityEquipmentSlot.LEGS).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceLeggings");
+		AdvancedRocketryItems.itemSpaceSuit_Boots = new ItemSpaceArmor(ArmorMaterial.LEATHER, EntityEquipmentSlot.FEET).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceBoots");
 
 		AdvancedRocketryItems.itemSealDetector = new ItemSealDetector().setMaxStackSize(1).setCreativeTab(tabAdvRocketry).setUnlocalizedName("sealDetector");
 

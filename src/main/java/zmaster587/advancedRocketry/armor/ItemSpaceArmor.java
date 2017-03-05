@@ -138,6 +138,13 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity,
 			EntityEquipmentSlot slot, String type) {
+		
+		if(type != null) {
+			if(stack.getItem() == AdvancedRocketryItems.itemSpaceSuit_Leggings)
+				return "advancedRocketry:textures/armor/spaceSuit_layer1_overlay.png";//super.getArmorTexture(stack, entity, slot, type);
+			return "advancedRocketry:textures/armor/spaceSuit_layer2_overlay.png";
+		}
+		
 		if(stack.getItem() == AdvancedRocketryItems.itemSpaceSuit_Leggings)
 			return "advancedRocketry:textures/armor/spaceSuit_layer1.png";//super.getArmorTexture(stack, entity, slot, type);
 		return "advancedRocketry:textures/armor/spaceSuit_layer2.png";
@@ -345,7 +352,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 	public void saveModuleInventory(ItemStack stack, IInventory inv) {
 		saveEmbeddedInventory(stack, (EmbeddedInventory)inv);
 	}
-
+	
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 		

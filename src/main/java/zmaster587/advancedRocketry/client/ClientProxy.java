@@ -13,6 +13,8 @@ import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -164,6 +166,14 @@ public class ClientProxy extends CommonProxy {
 		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)colorizer, new Block[] {AdvancedRocketryBlocks.blockCrystal});
 		Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)colorizer,  Item.getItemFromBlock(AdvancedRocketryBlocks.blockCrystal));
 
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new IItemColor()
+        {
+            public int getColorFromItemstack(ItemStack stack, int tintIndex)
+            {
+                return tintIndex > 0 ? -1 : ((ItemArmor)stack.getItem()).getColor(stack);
+            }
+        }, AdvancedRocketryItems.itemSpaceSuit_Boots, AdvancedRocketryItems.itemSpaceSuit_Chest, AdvancedRocketryItems.itemSpaceSuit_Helmet, AdvancedRocketryItems.itemSpaceSuit_Leggings);
+		
 		AdvancedRocketry.materialRegistry.init();
 	}
 

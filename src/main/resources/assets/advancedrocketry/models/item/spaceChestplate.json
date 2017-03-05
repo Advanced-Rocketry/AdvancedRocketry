@@ -1,6 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "advancedrocketry:items/spaceChestplate"
+        "layer0": "advancedrocketry:items/spaceChestplate",
+        "layer1": "advancedrocketry:items/spaceChestplate_overlay"
     }
 }
