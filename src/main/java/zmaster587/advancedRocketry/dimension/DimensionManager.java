@@ -426,9 +426,9 @@ public class DimensionManager implements IGalaxy {
 		// If not native to AR let the mod it's registered to handle it
 		if(!properties.isNativeDimension && net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId)) {
 			net.minecraftforge.common.DimensionManager.unloadWorld(dimId);
-			net.minecraftforge.common.DimensionManager.unregisterDimension(dimId);
-			dimensionList.remove(new Integer(dimId));
+			net.minecraftforge.common.DimensionManager.unregisterDimension(dimId);	
 		}
+		dimensionList.remove(new Integer(dimId));
 
 		//Delete World Folder
 		File file = new File(net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory(), workingPath + "/DIM" + dimId );
