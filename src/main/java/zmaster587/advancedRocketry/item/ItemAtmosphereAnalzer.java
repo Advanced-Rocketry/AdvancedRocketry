@@ -18,6 +18,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -112,14 +113,14 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 		
 		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
 		
-		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		RenderHelper.renderNorthFaceWithUV(buffer, -1, -16,  -16, 16,  16, 0, 1, 0, 1);
 		Tessellator.getInstance().draw();
 		GL11.glPopMatrix();
 		
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
-		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		RenderHelper.renderNorthFaceWithUV(buffer, -1, 0,  screenY - 12, 16,  screenY + 26, 0, 0.25f, 0, 1);
 		RenderHelper.renderNorthFaceWithUV(buffer, -1, 16,  screenY - 12, 220,  screenY + 26, 0.5f, 0.5f, 0, 1);
 		RenderHelper.renderNorthFaceWithUV(buffer, -1, 220,  screenY - 12, 236,  screenY + 26, 0.75f, 1f, 0, 1);
