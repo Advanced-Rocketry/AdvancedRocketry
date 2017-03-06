@@ -44,11 +44,11 @@ public class DimensionManager implements IGalaxy {
 	private boolean hasBeenInitiallized = false;
 	public static String prevBuild;
 
-	
+
 	//Stat tracking
 	public static boolean hasReachedMoon;
 	public static boolean hasReachedWarp;
-	
+
 	//Reference to the worldProvider for any dimension created through this system, normally WorldProviderPlanet, set in AdvancedRocketry.java in preinit
 	public static Class<? extends WorldProvider> planetWorldProvider;
 	private HashMap<Integer,DimensionProperties> dimensionList;
@@ -133,14 +133,14 @@ public class DimensionManager implements IGalaxy {
 	 * @return a reference to the satellite object with the supplied ID
 	 */
 	public SatelliteBase getSatellite(long satId) {
-		
+
 		//Hack to allow monitoring stations to properly reload after a server restart
 		//Because there should never be a tile in the world where no planets have been generated load file first
 		//Worst thing that can happen is there is no file and it gets genned later and the monitor does not reconnect
 		if(!hasBeenInitiallized) {
 			zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.filePath);
 		}
-		
+
 		SatelliteBase satellite = overworldProperties.getSatellite(satId);
 
 		if(satellite != null)
@@ -203,7 +203,7 @@ public class DimensionManager implements IGalaxy {
 		}
 		return -1;
 	}
-	
+
 	public int getNextFreeStarId() {
 		for(int i = 0; i < Integer.MAX_VALUE; i++) {
 			if(!starList.containsKey(i))
@@ -211,7 +211,7 @@ public class DimensionManager implements IGalaxy {
 		}
 		return -1;
 	}
-	
+
 	public DimensionProperties generateRandom(int starId, int atmosphereFactor, int distanceFactor, int gravityFactor) {
 		return generateRandom(starId, 100, 100, 100, atmosphereFactor, distanceFactor, gravityFactor);
 	}
@@ -236,7 +236,7 @@ public class DimensionManager implements IGalaxy {
 
 		if(properties.getId() == -1)
 			return null;
-		
+
 		if(name == "")
 			properties.setName(getNextName(properties.getId()));
 		else {
@@ -244,7 +244,7 @@ public class DimensionManager implements IGalaxy {
 		}
 		properties.setAtmosphereDensityDirect(MathHelper.clamp_int(baseAtmosphere + random.nextInt(atmosphereFactor) - atmosphereFactor/2, 0, 200)); 
 		int newDist = properties.orbitalDist = MathHelper.clamp_int(baseDistance + random.nextInt(distanceFactor),0,200);
-		
+
 		properties.gravitationalMultiplier = Math.min(Math.max(0.05f,(baseGravity + random.nextInt(gravityFactor) - gravityFactor/2)/100f), 1.3f);
 
 		double minDistance;
@@ -281,9 +281,9 @@ public class DimensionManager implements IGalaxy {
 		properties.skyColor[0] *= 1 - MathHelper.clamp_float(random.nextFloat()*0.1f + (70 - properties.averageTemperature)/100f,0.2f,1);
 		properties.skyColor[1] *= 1 - (random.nextFloat()*.5f);
 		properties.skyColor[2] *= 1 - MathHelper.clamp_float(random.nextFloat()*0.1f + (properties.averageTemperature - 70)/100f,0,1);
-		
+
 		properties.rotationalPeriod = (int) (Math.pow((1/properties.gravitationalMultiplier),3) * 24000);
-		
+
 		properties.addBiomes(properties.getViableBiomes());
 
 		registerDim(properties, true);
@@ -294,7 +294,7 @@ public class DimensionManager implements IGalaxy {
 	public DimensionProperties generateRandom(int starId, int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
 		return generateRandom(starId, "", baseAtmosphere, baseDistance, baseGravity, atmosphereFactor, distanceFactor, gravityFactor);
 	}
-	
+
 	public DimensionProperties generateRandomGasGiant(int starId, String name, int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
 		DimensionProperties properties = new DimensionProperties(getNextFreeDim(dimOffset));
 
@@ -342,7 +342,7 @@ public class DimensionManager implements IGalaxy {
 	public boolean canTravelTo(int dimId){
 		return net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId) && dimId != -1 && !getDimensionProperties(dimId).isGasGiant();
 	}
-	
+
 	/**
 	 * Attempts to register a dimension with {@link DimensionProperties}, if the dimension has not yet been registered, sends a packet containing the dimension information to all connected clients
 	 * @param properties {@link DimensionProperties} to register
@@ -420,10 +420,12 @@ public class DimensionManager implements IGalaxy {
 
 		//TODO: check for world loaded
 		// If not native to AR let the mod it's registered to handle it
-		if(!properties.isNativeDimension && net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId)) {
-			net.minecraftforge.common.DimensionManager.unloadWorld(dimId);
-			net.minecraftforge.common.DimensionManager.unregisterProviderType(dimId);
-			net.minecraftforge.common.DimensionManager.unregisterDimension(dimId);
+		if(!properties.isNativeDimension) {
+			if(net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId)) {
+				net.minecraftforge.common.DimensionManager.unloadWorld(dimId);
+				net.minecraftforge.common.DimensionManager.unregisterProviderType(dimId);
+				net.minecraftforge.common.DimensionManager.unregisterDimension(dimId);
+			}
 			dimensionList.remove(new Integer(dimId));
 		}
 
@@ -449,7 +451,7 @@ public class DimensionManager implements IGalaxy {
 		}
 		return properties == null ? overworldProperties : properties;
 	}
-	
+
 	/**
 	 * @param id star id for which to get the object
 	 * @return the {@link StellarBody} object
@@ -457,7 +459,7 @@ public class DimensionManager implements IGalaxy {
 	public StellarBody getStar(int id) {
 		StellarBody star = starList.get(new Integer(id));
 		//if(star == null)
-			//AdvancedRocketry.logger.warning("Attempted to get null star for ID " + id);
+		//AdvancedRocketry.logger.warning("Attempted to get null star for ID " + id);
 		return star;
 	}
 
@@ -467,10 +469,10 @@ public class DimensionManager implements IGalaxy {
 	public Set<Integer> getStarIds() {
 		return starList.keySet();
 	}
-	
-	
+
+
 	public Collection<StellarBody> getStars() {
-		
+
 		return starList.values();
 	}
 
@@ -527,7 +529,7 @@ public class DimensionManager implements IGalaxy {
 		}
 
 		nbt.setTag("dimList", dimListnbt);
-		
+
 		//Stats
 		NBTTagCompound stats = new NBTTagCompound();
 		stats.setBoolean("hasReachedMoon", hasReachedMoon);
@@ -572,7 +574,7 @@ public class DimensionManager implements IGalaxy {
 	 */
 	public boolean loadDimensions(String filePath) {
 		hasBeenInitiallized = true;
-		
+
 		FileInputStream inStream;
 		NBTTagCompound nbt;
 		try {
@@ -601,10 +603,10 @@ public class DimensionManager implements IGalaxy {
 
 		//Load SolarSystems first
 		NBTTagCompound solarSystem = nbt.getCompoundTag("starSystems");
-		
+
 		if(solarSystem.hasNoTags())
 			return false;
-		
+
 		NBTTagCompound stats = nbt.getCompoundTag("stat");
 		hasReachedMoon = stats.getBoolean("hasReachedMoon");
 		hasReachedWarp = stats.getBoolean("hasReachedWarp");
@@ -656,10 +658,10 @@ public class DimensionManager implements IGalaxy {
 			NBTTagCompound nbtTag = nbt.getCompoundTag("spaceObjects");
 			SpaceObjectManager.getSpaceManager().readFromNBT(nbtTag);
 		}
-		
+
 		prevBuild = nbt.getString("prevVersion");
 		nbt.setString("prevVersion", AdvancedRocketry.version);
-		
+
 		return true;
 	}
 	/**
@@ -669,10 +671,10 @@ public class DimensionManager implements IGalaxy {
 	 */
 	public boolean areDimensionsInSamePlanetMoonSystem(int destinationDimId,
 			int dimension) {
-		
+
 		if(dimension == SpaceObjectManager.WARPDIMID || destinationDimId == SpaceObjectManager.WARPDIMID)
 			return false;
-		
+
 		DimensionProperties properties = getDimensionProperties(dimension);
 		while(properties.getParentProperties() != null) properties = properties.getParentProperties();
 		return areDimensionsInSamePlanetMoonSystem(properties, destinationDimId);
@@ -687,10 +689,10 @@ public class DimensionManager implements IGalaxy {
 		}
 		return false;
 	}
-	
+
 	public static DimensionProperties getEffectiveDimId(World world, int x, int z) {
 		int dimId = world.provider.dimensionId;
-		
+
 		if(dimId == Configuration.spaceDimId) {
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(x, z);
 			if(obj != null)
