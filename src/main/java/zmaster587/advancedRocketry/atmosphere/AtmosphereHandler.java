@@ -36,7 +36,7 @@ public class AtmosphereHandler {
 	public static final DamageSource vacuumDamage = new DamageSource("Vacuum").setDamageBypassesArmor().setDamageIsAbsolute();
 
 	public static long lastSuffocationTime = Integer.MIN_VALUE;
-	private static final int MAX_BLOB_RADIUS = 64;
+	private static final int MAX_BLOB_RADIUS = ((Configuration.atmosphereHandleBitMask & 1) == 1) ? 256 : Configuration.oxygenVentSize;
 	private static HashMap<Integer, AtmosphereHandler> dimensionOxygen = new HashMap<Integer, AtmosphereHandler>();
 	private static HashMap<EntityPlayer, IAtmosphere> prevAtmosphere = new HashMap<EntityPlayer, IAtmosphere>();
 	
