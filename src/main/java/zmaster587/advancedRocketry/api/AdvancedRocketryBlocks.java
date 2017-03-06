@@ -90,4 +90,6 @@ public class AdvancedRocketryBlocks {
 	public static Block blockAdvEngine;
 	public static Block blockPlanetHoloSelector;
 	public static Block blockLens;
+	public static Block blockForceField;
+	public static Block blockForceFieldProjector;
 }

@@ -97,6 +97,8 @@ tile.altitudeController.name=Altitude Controller
 tile.railgun.name=Railgun
 tile.planetHoloSelector.name=Holographic Planet Selector
 tile.lens.name=Lens
+tile.forceField.name=Force Field
+tile.forceFieldProjector.name=Force Field Projector
 
 tile.Dilithium.name=Dilithium Ore
 
