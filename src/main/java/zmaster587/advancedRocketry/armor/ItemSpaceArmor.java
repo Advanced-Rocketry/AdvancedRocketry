@@ -78,6 +78,24 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 		return super.getArmorModel(entityLiving, itemStack, armorSlot, _default);
 	}
 
+	public int getColor(ItemStack stack)
+	{
+
+		NBTTagCompound nbttagcompound = stack.getTagCompound();
+
+		if (nbttagcompound != null)
+		{
+			NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag("display");
+
+			if (nbttagcompound1 != null && nbttagcompound1.hasKey("color", 3))
+			{
+				return nbttagcompound1.getInteger("color");
+			}
+		}
+
+		return 0xFFFFFF;
+
+	}
 	@Override
 	public ArmorProperties getProperties(EntityLivingBase player,
 			ItemStack armor, DamageSource source, double damage, int slot) {
@@ -126,7 +144,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 
 			saveEmbeddedInventory(armor, inv);
 		}
-		
+
 		ItemStack feet = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
 		ItemStack leg = player.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
 		ItemStack chest = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
@@ -138,13 +156,13 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity,
 			EntityEquipmentSlot slot, String type) {
-		
+
 		if(type != null) {
 			if(stack.getItem() == AdvancedRocketryItems.itemSpaceSuit_Leggings)
 				return "advancedRocketry:textures/armor/spaceSuit_layer1_overlay.png";//super.getArmorTexture(stack, entity, slot, type);
 			return "advancedRocketry:textures/armor/spaceSuit_layer2_overlay.png";
 		}
-		
+
 		if(stack.getItem() == AdvancedRocketryItems.itemSpaceSuit_Leggings)
 			return "advancedRocketry:textures/armor/spaceSuit_layer1.png";//super.getArmorTexture(stack, entity, slot, type);
 		return "advancedRocketry:textures/armor/spaceSuit_layer2.png";
@@ -186,8 +204,8 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 			saveEmbeddedInventory(armor, inv);
 		}
 	}
-	
-	
+
+
 
 	public ItemStack removeComponent(World world, ItemStack armor, int index) {
 		NBTTagCompound nbt;
@@ -328,7 +346,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 
 	@Override
 	public boolean protectsFromSubstance(IAtmosphere atmosphere, ItemStack stack, boolean commitProtection) {
-		
+
 		return (atmosphere == AtmosphereType.HIGHPRESSURE || atmosphere == AtmosphereType.VACUUM || atmosphere == AtmosphereType.LOWOXYGEN) && (this != AdvancedRocketryItems.itemSpaceSuit_Chest || (this == AdvancedRocketryItems.itemSpaceSuit_Chest && 
 				(commitProtection && ((IFillableArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).decrementAir(stack, 1) > 0)) || (!commitProtection && ((IFillableArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).getAirRemaining(stack) > 0));
 	}
@@ -352,10 +370,10 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 	public void saveModuleInventory(ItemStack stack, IInventory inv) {
 		saveEmbeddedInventory(stack, (EmbeddedInventory)inv);
 	}
-	
+
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		
+
 		return capability == CapabilitySpaceArmor.PROTECTIVEARMOR;
 	}
 
