@@ -241,7 +241,7 @@ public class DimensionManager implements IGalaxy {
 
 		if(properties.getId() == -1)
 			return null;
-		
+
 		if(name == "")
 			properties.setName(getNextName(properties.getId()));
 		else {
@@ -276,19 +276,19 @@ public class DimensionManager implements IGalaxy {
 
 		properties.orbitalPhi = (random.nextGaussian() -0.5d)*180;
 		properties.rotationalPhi = (random.nextGaussian() -0.5d)*180;
-		
+
 		//Get Star Color
 		properties.setStar(getStar(starId));
 
 		//Linear is easier. Earth is nominal!
 		properties.averageTemperature = (properties.getStar().getTemperature() + (100 - properties.orbitalDist)*15 + properties.getAtmosphereDensity()*18)/20;
-		
+
 		properties.skyColor[0] *= 1 - MathHelper.clamp_float(random.nextFloat()*0.1f + (70 - properties.averageTemperature)/100f,0.2f,1);
 		properties.skyColor[1] *= 1 - (random.nextFloat()*.5f);
 		properties.skyColor[2] *= 1 - MathHelper.clamp_float(random.nextFloat()*0.1f + (properties.averageTemperature - 70)/100f,0,1);
-		
+
 		properties.rotationalPeriod = (int) (Math.pow((1/properties.gravitationalMultiplier),3) * 24000);
-		
+
 		properties.addBiomes(properties.getViableBiomes());
 
 		registerDim(properties, true);
@@ -424,11 +424,13 @@ public class DimensionManager implements IGalaxy {
 
 		//TODO: check for world loaded
 		// If not native to AR let the mod it's registered to handle it
-		if(!properties.isNativeDimension && net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId)) {
-			net.minecraftforge.common.DimensionManager.unloadWorld(dimId);
-			net.minecraftforge.common.DimensionManager.unregisterDimension(dimId);	
+		if(!properties.isNativeDimension ) {
+			if(net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId)) {
+				net.minecraftforge.common.DimensionManager.unloadWorld(dimId);
+				net.minecraftforge.common.DimensionManager.unregisterDimension(dimId);
+			}
+			dimensionList.remove(new Integer(dimId));
 		}
-		dimensionList.remove(new Integer(dimId));
 
 		//Delete World Folder
 		File file = new File(net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory(), workingPath + "/DIM" + dimId );
@@ -665,7 +667,7 @@ public class DimensionManager implements IGalaxy {
 
 		return true;
 	}
-	
+
 	/**
 	 * 
 	 * @param destinationDimId
@@ -674,10 +676,10 @@ public class DimensionManager implements IGalaxy {
 	 */
 	public boolean areDimensionsInSamePlanetMoonSystem(int destinationDimId,
 			int dimension) {
-		
+
 		if(dimension == SpaceObjectManager.WARPDIMID || destinationDimId == SpaceObjectManager.WARPDIMID)
 			return false;
-		
+
 		DimensionProperties properties = getDimensionProperties(dimension);
 		while(properties.getParentProperties() != null) properties = properties.getParentProperties();
 		return areDimensionsInSamePlanetMoonSystem(properties, destinationDimId);
