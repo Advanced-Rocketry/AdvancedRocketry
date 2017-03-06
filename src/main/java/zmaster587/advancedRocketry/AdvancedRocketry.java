@@ -69,6 +69,8 @@ import zmaster587.advancedRocketry.block.BlockCrystal;
 import zmaster587.advancedRocketry.block.BlockDoor2;
 import zmaster587.advancedRocketry.block.BlockElectricMushroom;
 import zmaster587.advancedRocketry.block.BlockFluid;
+import zmaster587.advancedRocketry.block.BlockForceField;
+import zmaster587.advancedRocketry.block.BlockForceFieldProjector;
 import zmaster587.advancedRocketry.block.BlockHalfTile;
 import zmaster587.advancedRocketry.block.BlockIntake;
 import zmaster587.advancedRocketry.block.BlockLandingPad;
@@ -457,6 +459,8 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockCircleLight = new Block(Material.IRON).setUnlocalizedName("circleLight").setCreativeTab(tabAdvRocketry).setHardness(2f).setLightLevel(1f);
 		AdvancedRocketryBlocks.blockLens = new BlockLens().setUnlocalizedName("lens").setCreativeTab(tabAdvRocketry).setHardness(0.3f);
 		AdvancedRocketryBlocks.blockRocketBuilder = new BlockTile(TileRocketBuilder.class, GuiHandler.guiId.MODULARNOINV.ordinal()).setUnlocalizedName("rocketAssembler").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		AdvancedRocketryBlocks.blockForceField = new BlockForceField(Material.ROCK).setBlockUnbreakable().setResistance(6000000.0F).setUnlocalizedName("forceField");
+		AdvancedRocketryBlocks.blockForceFieldProjector = new BlockForceFieldProjector(Material.ROCK).setUnlocalizedName("forceFieldProjector").setCreativeTab(tabAdvRocketry).setHardness(3f);
 
 		AdvancedRocketryBlocks.blockDeployableRocketBuilder = new BlockTile(TileStationDeployedAssembler.class, GuiHandler.guiId.MODULARNOINV.ordinal()).setUnlocalizedName("deployableRocketAssembler").setCreativeTab(tabAdvRocketry).setHardness(3f);
 
@@ -580,7 +584,6 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockFuelFluid = new BlockFluid(AdvancedRocketryFluids.fluidRocketFuel, new MaterialLiquid(MapColor.YELLOW)).setUnlocalizedName("rocketFuelBlock").setCreativeTab(CreativeTabs.MISC);
 		AdvancedRocketryBlocks.blockNitrogenFluid = new BlockFluid(AdvancedRocketryFluids.fluidNitrogen, Material.WATER).setUnlocalizedName("nitrogenFluidBlock").setCreativeTab(CreativeTabs.MISC);
 
-
 		//Cables
 		AdvancedRocketryBlocks.blockFluidPipe = new BlockLiquidPipe(Material.IRON).setUnlocalizedName("liquidPipe").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryBlocks.blockDataPipe = new BlockDataCable(Material.IRON).setUnlocalizedName("dataPipe").setCreativeTab(tabAdvRocketry);
@@ -662,6 +665,8 @@ public class AdvancedRocketry {
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockAstroBed .setRegistryName("astroBed"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockPlanetHoloSelector.setRegistryName("planetHoloSelector"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockLens.setRegistryName("blockLens"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockForceField.setRegistryName("forceField"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockForceFieldProjector.setRegistryName("forceFieldProjector"));
 		
 		//TODO, use different mechanism to enable/disable drill
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
@@ -845,6 +850,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileStationAltitudeController.class, "ARStationAltitudeController");
 		GameRegistry.registerTileEntity(TileRailgun.class, "ARRailgun");
 		GameRegistry.registerTileEntity(TilePlanetaryHologram.class, "ARplanetHoloSelector");
+		GameRegistry.registerTileEntity(TileForceFieldProjector.class, "ARForceFieldProjector");
 
 
 		//Register machine recipes
@@ -966,6 +972,9 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockOxygenVent), "bfb", "bmb", "btb", 'b', Blocks.IRON_BARS, 'f', "fanSteel", 'm', LibVulpesBlocks.blockMotor, 't', AdvancedRocketryBlocks.blockFuelTank));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockOxygenScrubber), "bfb", "bmb", "btb", 'b', Blocks.IRON_BARS, 'f', "fanSteel", 'm', LibVulpesBlocks.blockMotor, 't', "ingotCarbon"));
 
+		//Knicknacks
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockForceFieldProjector), " c ", "pdp","psp", 'c', "coilCopper", 'p', "plateAluminum", 'd', "crystalDilithium", 's', LibVulpesBlocks.blockStructureBlock));
+		
 		//MACHINES
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockPrecisionAssembler), "abc", "def", "ghi", 'a', Items.REPEATER, 'b', userInterface, 'c', Items.DIAMOND, 'd', itemIOBoard, 'e', LibVulpesBlocks.blockStructureBlock, 'f', controlCircuitBoard, 'g', Blocks.FURNACE, 'h', "gearSteel", 'i', Blocks.DROPPER));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockCrystallizer), "ada", "ecf","bgb", 'a', Items.QUARTZ, 'b', Items.REPEATER, 'c', LibVulpesBlocks.blockStructureBlock, 'd', userInterface, 'e', itemIOBoard, 'f', controlCircuitBoard, 'g', "plateSteel"));
