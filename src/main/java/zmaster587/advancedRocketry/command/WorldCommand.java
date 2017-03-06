@@ -225,7 +225,7 @@ public class WorldCommand implements ICommand {
 								if(net.minecraftforge.common.DimensionManager.getWorld(deletedDimId) == null || net.minecraftforge.common.DimensionManager.getWorld(deletedDimId).playerEntities.isEmpty()) {
 									DimensionManager.getInstance().deleteDimension(deletedDimId);
 									PacketHandler.sendToAll(new PacketDimInfo(deletedDimId, null));
-									sender.addChatMessage(new TextComponentString("Deleted!"));
+									sender.addChatMessage(new TextComponentString("Dim " + deletedDimId + " deleted!"));
 								}
 								else {
 									//If the world still has players abort and list players
