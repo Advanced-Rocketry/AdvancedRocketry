@@ -14,6 +14,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -322,7 +323,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 
 		//NOTE: if the controls are rendered first the display never shows up
 		//Draw the actual display
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureId());
+		GlStateManager.bindTexture( texture.getTextureId() );
 		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
 		RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel, 47 + x, 20 + y, 47 + x + SCREEN_SIZE, 20 + y + SCREEN_SIZE, 0, 1, 0, 1);
 		Tessellator.getInstance().draw();

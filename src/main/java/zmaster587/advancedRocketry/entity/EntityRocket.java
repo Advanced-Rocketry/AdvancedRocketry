@@ -952,7 +952,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		{			
 			
 			if(!DimensionManager.getInstance().canTravelTo(dimensionIn)) {
-				AdvancedRocketry.logger.warning("Rocket trying to travel from Dim" + this.worldObj.provider.getDimension() + " to Dim " + dimensionIn + ".  target not accessible by rocket from launch dim");
+				AdvancedRocketry.logger.warn("Rocket trying to travel from Dim" + this.worldObj.provider.getDimension() + " to Dim " + dimensionIn + ".  target not accessible by rocket from launch dim");
 				return null;
 			}
 			

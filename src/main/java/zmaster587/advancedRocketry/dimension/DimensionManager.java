@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.dimension;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,6 +18,7 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.IGalaxy;
@@ -35,14 +37,13 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
-import net.minecraftforge.fml.common.Loader;
 
 
 public class DimensionManager implements IGalaxy {
 
 	//TODO: fix satellites not unloading on disconnect
 	private Random random;
-	private static DimensionManager instance = new DimensionManager();
+	private static DimensionManager instance = (DimensionManager) (AdvancedRocketryAPI.dimensionManager = new DimensionManager());
 	public static final String workingPath = "advRocketry";
 	public static final String filePath = workingPath + "/temp.dat";
 	public static int dimOffset = 0;
@@ -114,7 +115,7 @@ public class DimensionManager implements IGalaxy {
 	/**
 	 * @return an Integer array of dimensions registered with this DimensionManager
 	 */
-	public Integer[] getregisteredDimensions() {
+	public Integer[] getRegisteredDimensions() {
 		Integer ret[] = new Integer[dimensionList.size()];
 		return dimensionList.keySet().toArray(ret);
 	}
@@ -123,7 +124,7 @@ public class DimensionManager implements IGalaxy {
 	 * @return List of dimensions registered with this manager that are currently loaded on the server/integrated server
 	 */
 	public Integer[] getLoadedDimensions() {
-		return getregisteredDimensions();
+		return getRegisteredDimensions();
 	}
 
 	/**
@@ -561,7 +562,7 @@ public class DimensionManager implements IGalaxy {
 	 * @return true if the dimension exists and is registered
 	 */
 	public boolean isDimensionCreated( int dimId) {
-		return dimensionList.containsKey(new Integer(dimId));
+		return dimensionList.containsKey(new Integer(dimId)) || dimId == Configuration.spaceDimId;
 	}
 
 	/**
@@ -587,7 +588,12 @@ public class DimensionManager implements IGalaxy {
 			inStream = new FileInputStream(file);
 			nbt = CompressedStreamTools.readCompressed(inStream);
 			inStream.close();
-		} catch (FileNotFoundException e) {
+		} catch(EOFException e) {
+			//Silence you fool!
+			//Patch to fix JEI printing when trying to load planets too early
+			return false;
+		}
+		catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return false;
 

@@ -167,7 +167,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 				tile.writeToNBT(tileNbt);
 				tileList.appendTag(tileNbt);
 			} catch(RuntimeException e) {
-				AdvancedRocketry.logger.warning("A tile entity has thrown an error: " + tile.getClass().getCanonicalName());
+				AdvancedRocketry.logger.warn("A tile entity has thrown an error: " + tile.getClass().getCanonicalName());
 				blocks[tile.getPos().getX()][tile.getPos().getY()][tile.getPos().getZ()] = Blocks.AIR;
 				metas[tile.getPos().getX()][tile.getPos().getY()][tile.getPos().getZ()] = 0;
 				tileEntityIterator.remove();
@@ -392,7 +392,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 				tileEntities.add(tile);
 				tile.setWorldObj(world);
 			} catch (Exception e) {
-				AdvancedRocketry.logger.warning("Rocket missing Tile (was a mod removed?)");
+				AdvancedRocketry.logger.warn("Rocket missing Tile (was a mod removed?)");
 			}
 
 		}
@@ -413,7 +413,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 
 					if(blockId != 0 && blocks[x][y][z] == Blocks.air) {
-						AdvancedRocketry.logger.warning("Removed pre-existing block with id " + blockId + " from a rocket (Was a mod removed?)");
+						AdvancedRocketry.logger.warn("Removed pre-existing block with id " + blockId + " from a rocket (Was a mod removed?)");
 					}
 					else if(tag.hasKey("tile")) {
 
@@ -750,7 +750,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 				}
 
 			} catch(RuntimeException e) {
-				AdvancedRocketry.logger.warning("A tile entity has thrown an error while writing to network: " + tile.getClass().getCanonicalName());
+				AdvancedRocketry.logger.warn("A tile entity has thrown an error while writing to network: " + tile.getClass().getCanonicalName());
 				tileIterator.remove();
 			}
 		}

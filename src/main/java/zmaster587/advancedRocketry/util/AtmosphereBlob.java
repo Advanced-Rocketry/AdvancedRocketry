@@ -86,7 +86,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 						try {
 							pool.execute(this);
 						} catch (RejectedExecutionException e) {
-							AdvancedRocketry.logger.warning("Atmosphere calculation at " + this.getRootPosition() + " aborted due to oversize queue!");
+							AdvancedRocketry.logger.warn("Atmosphere calculation at " + this.getRootPosition() + " aborted due to oversize queue!");
 						}
 					else
 						this.run();

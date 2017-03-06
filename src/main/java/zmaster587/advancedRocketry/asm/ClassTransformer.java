@@ -662,7 +662,7 @@ public class ClassTransformer implements IClassTransformer {
 				
 			}
 			else
-				AdvancedRocketry.logger.severe("ASM injection into RenderGlobal.setupTerrain FAILED!");
+				AdvancedRocketry.logger.fatal("ASM injection into RenderGlobal.setupTerrain FAILED!");
 
 			return finishInjection(cn);
 		}
@@ -785,7 +785,7 @@ public class ClassTransformer implements IClassTransformer {
 				
 			}
 			else
-				AdvancedRocketry.logger.severe("ASM injection into World.setBlock FAILED!");
+				AdvancedRocketry.logger.fatal("ASM injection into World.setBlock FAILED!");
 			
 			
 			return finishInjection(cn);
@@ -908,7 +908,7 @@ public class ClassTransformer implements IClassTransformer {
 				setBlockStateMethod.instructions.insertBefore(pos, nodeAdd);
 			}
 			else
-				AdvancedRocketry.logger.severe("ASM injection into World.setBlock FAILED!");
+				AdvancedRocketry.logger.fatal("ASM injection into World.setBlock FAILED!");
 
 			/*if(setBlockMetaMethod != null) {
 

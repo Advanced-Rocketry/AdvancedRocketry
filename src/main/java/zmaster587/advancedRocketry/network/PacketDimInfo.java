@@ -50,24 +50,29 @@ public class PacketDimInfo extends BasePacket {
 		}
 		else
 			out.writeBoolean(flag);
+
 	}
 
 	@Override
 	public void readClient(ByteBuf in) {
 		PacketBuffer packetBuffer = new PacketBuffer(in);
+		NBTTagCompound nbt;
 		dimNumber = in.readInt();
+		
+
 		deleteDim = in.readBoolean();
+		
 		if(!deleteDim) {
 			//TODO: error handling
 			try {
-				dimNBT = packetBuffer.readNBTTagCompoundFromBuffer();
+				dimNBT = nbt = packetBuffer.readNBTTagCompoundFromBuffer();
 
 			} catch (IOException e) {
 				e.printStackTrace();
 				return;
 			}
-			//dimProperties = new DimensionProperties(dimNumber);
-			//dimProperties.readFromNBT(nbt);
+			dimProperties = new DimensionProperties(dimNumber);
+			dimProperties.readFromNBT(nbt);
 		}
 	}
 
@@ -89,7 +94,8 @@ public class PacketDimInfo extends BasePacket {
 				DimensionManager.overworldProperties = dimProperties;
 			}
 			else if( DimensionManager.getInstance().isDimensionCreated(dimNumber) ) {
-				DimensionManager.getInstance().getDimensionProperties(dimNumber).readFromNBT(dimNBT);
+				dimProperties.oreProperties = DimensionManager.getInstance().getDimensionProperties(dimNumber).oreProperties;
+				DimensionManager.getInstance().setDimProperties(dimNumber, dimProperties);
 			} else {
 				dimProperties = new DimensionProperties(dimNumber);
 				dimProperties.readFromNBT(dimNBT);

@@ -91,7 +91,7 @@ public class ClientDynamicTexture {
 			GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, 0, 0, image.getWidth(), image.getHeight(), GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
 		} catch(IllegalArgumentException e) {
 			e.printStackTrace();
-			AdvancedRocketry.logger.warning("Planet image generation FX failed!");
+			AdvancedRocketry.logger.warn("Planet image generation FX failed!");
 		}
 	}
 	
