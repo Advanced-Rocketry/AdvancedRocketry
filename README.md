@@ -3,6 +3,8 @@ A mod about space, exploration, and resources
 
 # How to build for Minecraft 1.7.10:
 
+Before you start: It is assumed you know how to clone and checkout different branches
+
 1. Create a new Directory named advancedRocketryProject
 2. Enter the directory 'advancedRocketryProject'
 3. clone "https://github.com/zmaster587/libVulpes.git" (git clone https://github.com/zmaster587/libVulpes.git)
