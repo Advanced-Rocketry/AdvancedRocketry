@@ -19,8 +19,7 @@ public class FxGravityEffect extends Particle {
 			double y, double z, double motx, double moty, double motz) {
 		super(world, x, y, z, motx, moty, motz);
 		
-		float chroma = this.rand.nextFloat()*0.2f;
-        this.particleRed = .1F + chroma;
+        this.particleRed = .1F;
         this.particleGreen = 1F;
         this.particleBlue = 1F;
         this.particleAlpha = .2F;
