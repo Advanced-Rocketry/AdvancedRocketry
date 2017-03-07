@@ -13,10 +13,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.advancedRocketry.util.GravityHandler;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.inventory.modules.IGuiCallback;
@@ -68,6 +70,11 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 	}
 
 	@Override
+	public SoundEvent getSound() {
+		return AudioRegistry.gravityOhhh;
+	}
+
+	@Override
 	public Object[][][] getStructure() {
 		return structure;
 	}
@@ -95,7 +102,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 	public int getRadius() {
 		return radius + 10;
 	}
-	
+
 	protected boolean isStateActive(RedstoneState state, boolean condition) {
 		if(state == RedstoneState.INVERTED)
 			return !condition;
@@ -125,13 +132,33 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 	public String getMachineName() {
 		return getModularInventoryName();
 	}
+	
+	@Override
+	public boolean isRunning() {
+		return getMachineEnabled() && isStateActive(state, worldObj.isBlockIndirectlyGettingPowered(getPos()) > 0);
+	}
 
 	@Override
 	public void update() {
 
+		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
+		if(timeAlive == 0) {
+			if(!worldObj.isRemote) {
+				if(isComplete())
+					canRender = completeStructure = completeStructure(worldObj.getBlockState(pos));
+			}
+			else {
+				SoundEvent str;
+				if(worldObj.isRemote && (str = getSound()) != null) {
+					playMachineSound(str);
+				}
+			}
+
+			timeAlive = 0x1;
+		}
 		//if(this.worldObj.provider instanceof WorldProviderSpace) {
 
-		if(getMachineEnabled() && isStateActive(state, worldObj.isBlockIndirectlyGettingPowered(getPos()) > 0)) {
+		if(isRunning()) {
 			if(!worldObj.isRemote) {
 				//ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
@@ -190,18 +217,18 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 								e.motionY += dir.getFrontOffsetY()*GravityHandler.ITEM_GRAV_OFFSET*currentProgress;
 								e.motionZ += dir.getFrontOffsetZ()*GravityHandler.ITEM_GRAV_OFFSET*currentProgress;
 							}
-							
+
 							//Spawn particle effect
 							//TODO: tornados for planets
 							if(worldObj.isRemote) {
 								if(Minecraft.getMinecraft().gameSettings.particleSetting == 0 && !(Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 && Minecraft.getMinecraft().thePlayer == e))
-								AdvancedRocketry.proxy.spawnParticle("gravityEffect", worldObj, e.posX, e.posY, e.posZ, .2f*dir.getFrontOffsetX()*currentProgress, .2f*dir.getFrontOffsetY()*currentProgress, .2f*dir.getFrontOffsetZ()*currentProgress);
+									AdvancedRocketry.proxy.spawnParticle("gravityEffect", worldObj, e.posX, e.posY, e.posZ, .2f*dir.getFrontOffsetX()*currentProgress, .2f*dir.getFrontOffsetY()*currentProgress, .2f*dir.getFrontOffsetZ()*currentProgress);
 							}
-							
+
 						}
 					}
 				}
-				
+
 				//Only apply gravity if none of the directions are set and it's not a player in flight
 				if(allowApply && !additive)
 					e.motionY += (e instanceof EntityItem || e instanceof EntityArrow) ? GravityHandler.ITEM_GRAV_OFFSET :  GravityHandler.ENTITY_OFFSET + 0.005;

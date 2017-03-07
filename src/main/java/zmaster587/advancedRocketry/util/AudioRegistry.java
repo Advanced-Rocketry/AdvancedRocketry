@@ -20,6 +20,7 @@ public class AudioRegistry {
 	public static final SoundEvent electrolyser = createSoundEvent("electrolyser");
 	public static final SoundEvent precAss = createSoundEvent("precAss");
 	public static final SoundEvent electricArcFurnace = createSoundEvent("electricArcFurnace");
+	public static final SoundEvent gravityOhhh = createSoundEvent("gravityOhhh");
 	
 	private static SoundEvent createSoundEvent(String name) {
 		final ResourceLocation soundID = new ResourceLocation("advancedrocketry", name);
