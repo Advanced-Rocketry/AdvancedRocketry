@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.inventory.TextureResources;
@@ -127,9 +128,28 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 	}
 
 	@Override
+	public ResourceLocation getSound() {
+		return TextureResources.sndGravityOhh;
+	}
+	
+	@Override
 	public void updateEntity() {
 
-		//if(this.worldObj.provider instanceof WorldProviderSpace) {
+		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
+		if(timeAlive == 0) {
+			if(!worldObj.isRemote) {
+				if(isComplete())
+					canRender = completeStructure = completeStructure();
+				onCreated();
+			}
+			else {
+				ResourceLocation str = getSound();
+				if(str != null)
+					playMachineSound(getSound());
+			}
+
+			timeAlive = 0x1;
+		}
 
 		if(getMachineEnabled() && isStateActive(state, worldObj.getBlockPowerInput(xCoord, yCoord, zCoord) > 0)) {
 			if(!worldObj.isRemote) {
