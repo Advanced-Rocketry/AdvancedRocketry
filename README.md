@@ -8,10 +8,12 @@ A mod about space, exploration, and resources
 3. clone "https://github.com/zmaster587/libVulpes.git" (git clone https://github.com/zmaster587/libVulpes.git)
 4. clone "https://github.com/zmaster587/AdvancedRocketry.git" (git clone https://github.com/zmaster587/AdvancedRocketry.git)
 5. Enter AdvancedRocketry
-6. Run ./gradlew.bat build
+6. Download https://ci.micdoodle8.com/job/Galacticraft-1.7/lastSuccessfulBuild/artifact/Forge/build/libs/GalacticraftCore-1.7-3.0.12.474.jar into the AdvancedRocketry/libs folder
+7. Run ./gradlew.bat build
+
 
 # How to build for 1.10.2:
-The steps are the same as building for 1.7.10 except after step 4 you must make sure to checkout the MC1_10 branch of BOTH libVulpes and Advanced rocketry in their respective folders
+The steps are the same as building for 1.7.10 except you do not need Galacticcraft and after step 4 you must make sure to checkout the MC1_10 branch of BOTH libVulpes and Advanced rocketry in their respective folders
 
 
 MileStones:
