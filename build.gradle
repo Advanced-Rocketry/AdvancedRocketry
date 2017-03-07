@@ -50,6 +50,14 @@ repositories {
 		url = "http://addons-origin.cursecdn.com/files/2246/919/"
 		artifactPattern 'http://addons-origin.cursecdn.com/files/2246/919/[module]-[revision].[ext]'
 	}
+        ivy {
+            name "industrialcraft-2"
+            artifactPattern "http://jenkins.ic2.player.to/job/IC2_experimental/lastSuccessfulBuild/artifact/build/libs/[module]-[revision].[ext]"
+        }
+        ivy {
+            name "GalacticraftCore"
+            artifactPattern "https://ci.micdoodle8.com/job/Galacticraft-1.7/lastSuccessfulBuild/artifact/Forge/build/libs/[module]-[revision].[ext]"
+        }
 }
 
 dependencies {
@@ -57,7 +65,11 @@ dependencies {
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
     //compile "some.group:artifact:version"
-    compile project(':libVulpes17')
+    compile project(':libVulpes')
+    
+    //If for whatever reason gradle complains of "unable to find valid certification path to requested target"
+    //Just download https://ci.micdoodle8.com/job/Galacticraft-1.7/lastSuccessfulBuild/artifact/Forge/build/libs/GalacticraftCore-1.7-3.0.12.474.jar and stick in in AdvancedRocketry/libs and comment out the following line
+    //compile name: 'GalacticraftCore', version: '1.7-3.0.12.474', ext: 'jar'
       
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:7.0.20:dev'  // adds buildcraft to the dev env
