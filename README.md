@@ -79,4 +79,3 @@ The steps are the same as building for 1.7.10 except you do not need Galacticcra
     - rockets require life support
     - space ships require statis chamber and must be provided with food (unless warp) - tranz9999
     - heat system for machines and plasma engine
-    - 
