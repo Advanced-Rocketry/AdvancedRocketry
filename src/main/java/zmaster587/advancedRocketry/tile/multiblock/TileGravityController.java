@@ -14,21 +14,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
-import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
-import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.network.PacketStationUpdate;
-import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.GravityHandler;
-import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.inventory.modules.IGuiCallback;
 import zmaster587.libVulpes.inventory.modules.ISliderBar;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleBlockSideSelector;
+import zmaster587.libVulpes.inventory.modules.ModulePower;
 import zmaster587.libVulpes.inventory.modules.ModuleRedstoneOutputButton;
 import zmaster587.libVulpes.inventory.modules.ModuleSlider;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
+import zmaster587.libVulpes.inventory.modules.ModuleToggleSwitch;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
@@ -38,12 +35,13 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 
 	int gravity;
 	int progress;
+	int radius;
 	float currentProgress;
 	double rotation;
 
 	private ModuleRedstoneOutputButton redstoneControl;
 	private RedstoneState state;
-	private ModuleText moduleGrav, maxGravBuildSpeed, targetGrav;
+	private ModuleText targetGrav, textRadius;
 	private ModuleBlockSideSelector sideSelectorModule;
 
 	private static final Object[][][] structure = {
@@ -56,15 +54,15 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 	};
 
 	public TileGravityController() {
-		moduleGrav = new ModuleText(6, 95, "Artifical Gravity: ", 0xaa2020);
 		//numGravPylons = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
-		maxGravBuildSpeed = new ModuleText(6, 85, "Max Gravity Change Rate: ", 0xaa2020);
-		targetGrav = new ModuleText(6, 105, "Target Gravity:", 0x202020);
+		textRadius = new ModuleText(6, 82, "Radius: 5", 0x202020);
+		targetGrav = new ModuleText(6, 110, "Target Gravity:", 0x202020);
 		sideSelectorModule = new ModuleBlockSideSelector(90, 15, this, new String[] {"None", "Active: set", "Active: Additive"});
 
 		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 1, "", this);
 		state = RedstoneState.OFF;
 		redstoneControl.setRedstoneState(state);
+		radius = 5;
 	}
 
 	@Override
@@ -74,18 +72,28 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 
 	@Override
 	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		List<ModuleBase> modules = super.getModules(id, player);
+		List<ModuleBase> modules = new LinkedList<ModuleBase>();//super.getModules(id, player);
+		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
+		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(sideSelectorModule);
-		modules.add(moduleGrav);
+
 		modules.add(redstoneControl);
 
-		modules.add(targetGrav);
-		modules.add(new ModuleSlider(6, 120, 0, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
 
+		modules.add(new ModuleSlider(6, 120, 0, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
+		modules.add(new ModuleSlider(6, 90, 1, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
+
+		modules.add(new ModuleText(42, 20, "Target->\nDirection", 0x202020));
+		modules.add(targetGrav);
+		modules.add(textRadius);
 		updateText();
 		return modules;
 	}
 
+	public int getRadius() {
+		return radius + 10;
+	}
+	
 	protected boolean isStateActive(RedstoneState state, boolean condition) {
 		if(state == RedstoneState.INVERTED)
 			return !condition;
@@ -98,17 +106,16 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 		rotation = (rotation + 10f*currentProgress) % 360f;
 		return rotation;
 	}
-	
+
 	public double getGravityMultiplier() {
 		return currentProgress/2f;
 	}
 
 	private void updateText() {
 		if(worldObj.isRemote) {
-			moduleGrav.setText(String.format("Artifical Gravity: %.2f", currentProgress));
-			maxGravBuildSpeed.setText(String.format("Max Gravity Change Rate: %.1f", 1D));
+			textRadius.setText(String.format("Radius: %d", getRadius()));
 
-			targetGrav.setText(String.format("Target Gravity: %d", gravity));
+			targetGrav.setText(String.format("Target Gravity: %.2f/%d",currentProgress, gravity));
 		}
 	}
 
@@ -116,7 +123,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 	public String getMachineName() {
 		return getModularInventoryName();
 	}
-	
+
 	@Override
 	public void update() {
 
@@ -152,7 +159,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 			else
 				updateText();
 
-			List<Entity> entities = worldObj.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getPos()).expand(32, 32, 32));
+			List<Entity> entities = worldObj.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getPos()).expand(getRadius(), getRadius() , getRadius()));
 
 
 
@@ -162,7 +169,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 
 				for(EnumFacing dir : EnumFacing.VALUES) {
 					if(!(e instanceof EntityPlayer) || !((EntityPlayer)e).capabilities.isFlying) {
-						
+
 						if(sideSelectorModule.getStateForSide(dir) != 0) {
 							allowApply = true;
 							if(sideSelectorModule.getStateForSide(dir)  == 1)
@@ -183,7 +190,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 						}
 					}
 				}
-				
+
 				//Only apply gravity if none of the directions are set and it's not a player in flight
 				if(allowApply && !additive)
 					e.motionY += (e instanceof EntityItem || e instanceof EntityArrow) ? GravityHandler.ITEM_GRAV_OFFSET :  GravityHandler.ENTITY_OFFSET + 0.005;
@@ -191,6 +198,12 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 		}
 		else if (currentProgress > 0) {
 			currentProgress -= 0.01f;
+			if(!worldObj.isRemote) {
+				markDirty();
+				worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 2);
+			}
+			else
+				updateText();
 		}
 		else
 			currentProgress = 0;
@@ -217,6 +230,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 		super.writeDataToNetwork(out, id);
 		if(id == 3) {
 			out.writeShort(progress);
+			out.writeShort(radius);
 		}
 		else if(id == 4) {
 			for(int i = 0; i < 6; i++)
@@ -233,6 +247,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 		super.readDataFromNetwork(in, packetId, nbt);
 		if(packetId == 3) {
 			nbt.setShort("progress",  in.readShort());
+			nbt.setShort("radius", in.readShort());
 		}
 		else if(packetId == 4) {
 			byte bytes[] = new byte[6];
@@ -252,6 +267,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 
 		if(id == 3) {
 			setProgress(0, nbt.getShort("progress"));
+			setProgress(1, nbt.getShort("radius"));
 		}
 		else if(id == 4) {
 			byte bytes[] = nbt.getByteArray("bytes");
@@ -271,6 +287,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 		nbt.setShort("gravity", (short)gravity);
 		nbt.setFloat("currGravity", currentProgress);
 		nbt.setByte("redstoneState", (byte) state.ordinal());
+		nbt.setShort("radius", (short)radius);
 		sideSelectorModule.writeToNBT(nbt);
 	}
 
@@ -280,9 +297,11 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 		gravity = nbt.getShort("gravity");
 		currentProgress = nbt.getFloat("currGravity");
 		progress = gravity -5;
+		radius = nbt.getShort("radius");
 		sideSelectorModule.readFromNBT(nbt);
 		state = RedstoneState.values()[nbt.getByte("redstoneState")];
 		redstoneControl.setRedstoneState(state);
+
 	}
 
 	@Override
@@ -296,24 +315,34 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 
 	@Override
 	public float getNormallizedProgress(int id) {
-		return getProgress(0)/(float)getTotalProgress(0);
+		return getProgress(id)/(float)getTotalProgress(id);
 	}
 
 	@Override
 	public void setProgress(int id, int progress) {
 
-		this.progress = progress;
-		gravity = progress + 5;
+		if(id == 0) {
+			this.progress = progress;
+			gravity = progress + 5;
+		}
+		else
+			radius = progress;
 	}
 
 	@Override
 	public int getProgress(int id) {
-		return this.progress;
+		if(id == 0)
+			return this.progress;
+		else
+			return radius;
 	}
 
 	@Override
 	public int getTotalProgress(int id) {
-		return 190;
+		if(id == 0)
+			return 190;
+		else
+			return 22;
 	}
 
 	@Override
