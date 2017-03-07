@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -14,6 +15,7 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.util.ForgeDirection;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.GravityHandler;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -186,6 +188,11 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 								e.motionX += dir.offsetX*GravityHandler.ITEM_GRAV_OFFSET*currentProgress;
 								e.motionY += dir.offsetY*GravityHandler.ITEM_GRAV_OFFSET*currentProgress;
 								e.motionZ += dir.offsetZ*GravityHandler.ITEM_GRAV_OFFSET*currentProgress;
+							}
+							
+							if(worldObj.isRemote) {
+								if(Minecraft.getMinecraft().gameSettings.particleSetting == 0 && !(Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 && Minecraft.getMinecraft().thePlayer == e))
+								AdvancedRocketry.proxy.spawnParticle("gravityEffect", worldObj, e.posX, e.posY, e.posZ, .2f*dir.offsetX*currentProgress, .2f*dir.offsetY*currentProgress, .2f*dir.offsetZ*currentProgress);
 							}
 						}
 					}
