@@ -32,6 +32,7 @@ import zmaster587.advancedRocketry.client.render.entity.RendererItem;
 import zmaster587.advancedRocketry.client.render.item.RendererBucket;
 import zmaster587.advancedRocketry.client.render.item.RendererLaserGun;
 import zmaster587.advancedRocketry.client.render.multiblocks.RenderBiomeScanner;
+import zmaster587.advancedRocketry.client.render.multiblocks.RenderGravityMachine;
 import zmaster587.advancedRocketry.client.render.multiblocks.RenderPlanetAnalyser;
 import zmaster587.advancedRocketry.client.render.multiblocks.RenderTerraformerAtm;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererChemicalReactor;
@@ -72,6 +73,7 @@ import zmaster587.advancedRocketry.tile.cables.TileEnergyPipe;
 import zmaster587.advancedRocketry.tile.cables.TileLiquidPipe;
 import zmaster587.advancedRocketry.tile.multiblock.TileAtmosphereTerraformer;
 import zmaster587.advancedRocketry.tile.multiblock.TileBiomeScanner;
+import zmaster587.advancedRocketry.tile.multiblock.TileGravityController;
 import zmaster587.advancedRocketry.tile.multiblock.TileObservatory;
 import zmaster587.advancedRocketry.tile.multiblock.TileAstrobodyDataProcessor;
 import zmaster587.advancedRocketry.tile.multiblock.TileRailgun;
@@ -124,6 +126,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileModelRenderRotatable.class, modelBlock);
 		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser.class, new zmaster587.advancedRocketry.client.render.multiblocks.RenderLaser());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileRailgun.class, new RendererRailgun());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileGravityController.class, new RenderGravityMachine());
 		
 		RendererModelBlock blockRenderer = new RendererModelBlock();
 

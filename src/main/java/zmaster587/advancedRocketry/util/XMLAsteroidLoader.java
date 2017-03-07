@@ -82,7 +82,7 @@ public class XMLAsteroidLoader {
 					try {
 						asteroid.distance = Integer.parseInt(node.getTextContent());
 					} catch(NumberFormatException e) {
-						AdvancedRocketry.logger.warning("Asteroid " + asteroid.ID + " has invalid distance value");
+						AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid distance value");
 					}
 				}
 				
@@ -91,7 +91,7 @@ public class XMLAsteroidLoader {
 					try {
 						asteroid.mass = Integer.parseInt(node.getTextContent());
 					} catch(NumberFormatException e) {
-						AdvancedRocketry.logger.warning("Asteroid " + asteroid.ID + " has invalid mass value");
+						AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid mass value");
 					}
 				}
 				
@@ -100,7 +100,7 @@ public class XMLAsteroidLoader {
 					try {
 						asteroid.minLevel = Integer.parseInt(node.getTextContent());
 					} catch(NumberFormatException e) {
-						AdvancedRocketry.logger.warning("Asteroid " + asteroid.ID + " has invalid minLevel value");
+						AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid minLevel value");
 					}
 				}
 				
@@ -109,7 +109,7 @@ public class XMLAsteroidLoader {
 					try {
 						asteroid.massVariability = Float.parseFloat(node.getTextContent());
 					} catch(NumberFormatException e) {
-						AdvancedRocketry.logger.warning("Asteroid " + asteroid.ID + " has invalid massVariability value");
+						AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid massVariability value");
 					}
 				}
 				
@@ -118,7 +118,7 @@ public class XMLAsteroidLoader {
 					try {
 						asteroid.richness = Float.parseFloat(node.getTextContent());
 					} catch(NumberFormatException e) {
-						AdvancedRocketry.logger.warning("Asteroid " + asteroid.ID + " has invalid richness value");
+						AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid richness value");
 					}
 				}
 				
@@ -127,7 +127,7 @@ public class XMLAsteroidLoader {
 					try {
 						asteroid.richnessVariability = Float.parseFloat(node.getTextContent());
 					} catch(NumberFormatException e) {
-						AdvancedRocketry.logger.warning("Asteroid " + asteroid.ID + " has invalid richnessVariability value");
+						AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid richnessVariability value");
 					}
 				}
 				
@@ -136,7 +136,7 @@ public class XMLAsteroidLoader {
 					try {
 						asteroid.probability = Float.parseFloat(node.getTextContent());
 					} catch(NumberFormatException e) {
-						AdvancedRocketry.logger.warning("Asteroid " + asteroid.ID + " has invalid probability value");
+						AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid probability value");
 					}
 				}
 			}
@@ -190,7 +190,7 @@ public class XMLAsteroidLoader {
 							if(stack != null)
 								asteroid.itemStacks.add(stack);
 							else {
-								AdvancedRocketry.logger.warning("Asteroid " + asteroid.ID + " has invalid ore");
+								AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid ore");
 								break;
 							}
 					}
@@ -202,7 +202,7 @@ public class XMLAsteroidLoader {
 						try {
 							asteroid.stackProbabilites.add(Float.parseFloat(node.getTextContent()));
 						} catch (NumberFormatException e) {
-							AdvancedRocketry.logger.warning("Asteroid " + asteroid.ID + " has invalid ore");
+							AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid ore");
 							break;
 						}
 					}

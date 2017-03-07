@@ -178,6 +178,7 @@ import zmaster587.advancedRocketry.tile.station.TileStationOrientationControl;
 import zmaster587.advancedRocketry.tile.station.TileWarpShipMonitor;
 import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.advancedRocketry.util.FluidColored;
+import zmaster587.advancedRocketry.util.GravityHandler;
 import zmaster587.advancedRocketry.util.OreGenProperties;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
 import zmaster587.advancedRocketry.util.XMLAsteroidLoader;
@@ -299,7 +300,7 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.spaceLaserPowerMult = (float)config.get(Configuration.CATEGORY_GENERAL, "LaserDrillPowerMultiplier", 1d, "Power multiplier for the laser drill machine").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.lowGravityBoots = config.get(Configuration.CATEGORY_GENERAL, "lowGravityBoots", false, "If true the boots only protect the player on planets with low gravity").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.jetPackThrust = (float)config.get(Configuration.CATEGORY_GENERAL, "jetPackForce", 1.3, "Amount of force the jetpack provides with respect to gravity, 1 is the same acceleration as caused by Earth's gravity, 2 is 2x the acceleration caused by Earth's gravity, etc.  To make jetpack only work on low gravity planets, simply set it to a value less than 1").getDouble();
-		
+
 		zmaster587.advancedRocketry.api.Configuration.enableTerraforming = config.get(Configuration.CATEGORY_GENERAL, "EnableTerraforming", true,"Enables terraforming items and blocks").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.spaceSuitOxygenTime = config.get(Configuration.CATEGORY_GENERAL, "spaceSuitO2Buffer", 30, "Maximum time in minutes that the spacesuit's internal buffer can store O2 for").getInt();
 		zmaster587.advancedRocketry.api.Configuration.travelTimeMultiplier = (float)config.get(Configuration.CATEGORY_GENERAL, "warpTravelTime", 1f, "Multiplier for warp travel time").getDouble();
@@ -382,7 +383,7 @@ public class AdvancedRocketry {
 			}
 		}
 		proxy.loadUILayout(config);
-		
+
 		config.save();
 
 		//Register Packets
@@ -436,8 +437,8 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockElectricMushroom = new BlockElectricMushroom().setBlockName("electricMushroom").setCreativeTab(tabAdvRocketry).setBlockTextureName("advancedrocketry:mushroom_electric").setHardness(0.0F).setStepSound(Block.soundTypeGrass);
 		AdvancedRocketryBlocks.blockCrystal = new BlockCrystal().setBlockName("crystal").setCreativeTab(LibVulpes.tabLibVulpesOres).setBlockTextureName("advancedrocketry:crystal").setHardness(2f);
 		AdvancedRocketryBlocks.blockLens = new BlockGlass(Material.glass, true).setBlockName("lens").setBlockTextureName("advancedrocketry:lens1").setCreativeTab(tabAdvRocketry).setHardness(0.3f).setStepSound(Block.soundTypeGlass);
-		
-		
+
+
 		AdvancedRocketryBlocks.blockOrientationController = new BlockTile(TileStationOrientationControl.class,  GuiHandler.guiId.MODULAR.ordinal()).setBlockTextureName("advancedrocketry:machineScrubber").setCreativeTab(tabAdvRocketry).setBlockName("orientationControl").setHardness(3f);
 		((BlockTile) AdvancedRocketryBlocks.blockOrientationController).setSideTexture("advancedrocketry:machineOrientationControl");
 		((BlockTile) AdvancedRocketryBlocks.blockOrientationController).setTopTexture("libvulpes:machineGeneric");
@@ -610,8 +611,8 @@ public class AdvancedRocketry {
 		((BlockTile)AdvancedRocketryBlocks.blockPlanetHoloSelector).setSideTexture("advancedrocketry:panelSide");
 		((BlockTile)AdvancedRocketryBlocks.blockPlanetHoloSelector).setFrontTexture("advancedrocketry:panelSide");
 		AdvancedRocketryBlocks.blockPlanetHoloSelector.setBlockBounds(0, 0, 0, 1f, .5f, 1f);
-		
-		
+
+
 		AdvancedRocketryBlocks.blockDrill = new BlockMiningDrill().setBlockName("drill").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		((BlockTile)AdvancedRocketryBlocks.blockDrill).setTopTexture("Advancedrocketry:laserBottom", "Advancedrocketry:laserBottom");
 		((BlockTile)AdvancedRocketryBlocks.blockDrill).setSideTexture("Advancedrocketry:machineWarning");
@@ -635,9 +636,14 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockSolarPanel = new BlockSolarPanel(Material.iron).setBlockName("solarPanel").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockCircularLight = new BlockGeneric(Material.iron).setBlockName("circleLight").setCreativeTab(tabAdvRocketry).setHardness(2f).setBlockTextureName("advancedrocketry:stationLight").setLightLevel(1f);
 		AdvancedRocketryBlocks.blockForceField = new BlockForceField(Material.rock).setBlockUnbreakable().setResistance(6000000.0F).setBlockName("forceField").setBlockTextureName("advancedrocketry:forceField");
-		
-		AdvancedRocketryBlocks.blockForceFieldProjector = new BlockForceFieldProjector(Material.rock).setBlockName("forceFieldProjector").setCreativeTab(tabAdvRocketry).setHardness(3f);
 
+		AdvancedRocketryBlocks.blockForceFieldProjector = new BlockForceFieldProjector(Material.rock).setBlockName("forceFieldProjector").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		
+		AdvancedRocketryBlocks.blockGravityMachine = new BlockMultiblockMachine(TileGravityController.class,GuiHandler.guiId.MODULARNOINV.ordinal()).setBlockName("gravityMachine").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		((BlockTile)AdvancedRocketryBlocks.blockGravityMachine).setTopTexture("advancedrocketry:warpcore");
+		((BlockTile)AdvancedRocketryBlocks.blockGravityMachine).setSideTexture("Advancedrocketry:forcefieldProjector_off");
+		((BlockTile)AdvancedRocketryBlocks.blockGravityMachine).setFrontTexture("Advancedrocketry:forcefieldProjector_off");
+		
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill) {
 			AdvancedRocketryBlocks.blockSpaceLaser = new BlockLaser();
 			AdvancedRocketryBlocks.blockSpaceLaser.setCreativeTab(tabAdvRocketry);
@@ -764,6 +770,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockLens, AdvancedRocketryBlocks.blockLens.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockForceField, AdvancedRocketryBlocks.blockForceField.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockForceFieldProjector, AdvancedRocketryBlocks.blockForceFieldProjector.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockGravityMachine,AdvancedRocketryBlocks.blockGravityMachine.getUnlocalizedName());
 		
 		//TODO, use different mechanism to enable/disable drill
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
@@ -888,7 +895,7 @@ public class AdvancedRocketry {
 		EntityRegistry.registerModEntity(EntityUIPlanet.class, "ARPlanetUIItem", 5, this, 64, 1, false);
 		EntityRegistry.registerModEntity(EntityUIButton.class, "ARPlanetUIButton", 6, this, 64, 20, false);
 		EntityRegistry.registerModEntity(EntityUIStar.class, "ARStarUIButton", 7, this, 64, 20, false);
-		
+
 		//TileEntity Registration ---------------------------------------------------------------------------------------------
 		GameRegistry.registerTileEntity(TileRocketBuilder.class, "ARrocketBuilder");
 		GameRegistry.registerTileEntity(TileWarpCore.class, "ARwarpCore");
@@ -944,6 +951,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileRailgun.class, "ARRailgun");
 		GameRegistry.registerTileEntity(TilePlanetaryHologram.class, "ARplanetHoloSelector");
 		GameRegistry.registerTileEntity(TileForceFieldProjector.class, "ARForceFieldProjector");
+		GameRegistry.registerTileEntity(TileGravityController.class, "ARGravityMachine");
 
 
 		//Register machine recipes
@@ -967,7 +975,7 @@ public class AdvancedRocketry {
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("TitaniumAluminide", "pickaxe", 1, 0xaec2de, AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("GEAR").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue(), false));
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("TitaniumIridium", "pickaxe", 1, 0xd7dfe4, AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("GEAR").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue(), false));
 		materialRegistry.registerOres(LibVulpes.tabLibVulpesOres, "advancedRocketry");
-		
+
 		//OreDict stuff
 		OreDictionary.registerOre("waferSilicon", new ItemStack(AdvancedRocketryItems.itemWafer,1,0));
 		OreDictionary.registerOre("ingotCarbon", new ItemStack(AdvancedRocketryItems.itemMisc, 1, 1));
@@ -1022,7 +1030,7 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesItems.itemBattery,1,1), "bpb", "bpb", 'b', smallBattery, 'p', "plateCopper"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), "ppp", " g ", " l ", 'p', Blocks.glass_pane, 'g', Items.glowstone_dust, 'l', "plateGold"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockObservatory), "gug", "pbp", "rrr", 'g', "paneGlass", 'u', userInterface, 'b', LibVulpesBlocks.blockStructureBlock, 'r', "stickIron"));
-		
+
 		//Hatches
 		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,0), "c", "m"," ", 'c', Blocks.chest, 'm', LibVulpesBlocks.blockStructureBlock);
 		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,1), "m", "c"," ", 'c', Blocks.chest, 'm', LibVulpesBlocks.blockStructureBlock);
@@ -1056,8 +1064,8 @@ public class AdvancedRocketry {
 
 		//Knicknacks
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockForceFieldProjector), " c ", "pdp","psp", 'c', "coilCopper", 'p', "plateAluminum", 'd', "crystalDilithium", 's', LibVulpesBlocks.blockStructureBlock));
-				
-		
+
+
 		//MACHINES
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockPrecisionAssembler), "abc", "def", "ghi", 'a', Items.repeater, 'b', userInterface, 'c', Items.diamond, 'd', itemIOBoard, 'e', LibVulpesBlocks.blockStructureBlock, 'f', controlCircuitBoard, 'g', Blocks.furnace, 'h', "gearSteel", 'i', Blocks.dropper));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockCrystallizer), "ada", "ecf","bgb", 'a', Items.quartz, 'b', Items.repeater, 'c', LibVulpesBlocks.blockStructureBlock, 'd', userInterface, 'e', itemIOBoard, 'f', controlCircuitBoard, 'g', "plateSteel"));
@@ -1166,7 +1174,7 @@ public class AdvancedRocketry {
 		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemBiomeChanger), 1000, 1, smallBattery, advancedCircuit, "plateTin", trackingCircuit,  userInterface);
 		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, biomeChanger, 1000, 1, new NumberedOreDictStack("stickCopper", 2), "stickTitanium", new NumberedOreDictStack("waferSilicon", 2), advancedCircuit);
 		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryBlocks.blockLens,1,0), 100, 1, new ItemStack(Blocks.glass, 3), new NumberedOreDictStack("itemLens", 3), "stickIron");
-		
+
 		//BlastFurnace
 		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("Silicon").getProduct(AllowedProducts.getProductByName("INGOT")), 12000, 1, Blocks.sand);
 		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("Steel").getProduct(AllowedProducts.getProductByName("INGOT")), 6000, 1, "ingotIron", charcoal);
@@ -1303,6 +1311,7 @@ public class AdvancedRocketry {
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileBiomeScanner(), (BlockTile)AdvancedRocketryBlocks.blockBiomeScanner);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileAtmosphereTerraformer(), (BlockTile)AdvancedRocketryBlocks.blockAtmosphereTerraformer);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileRailgun(), (BlockTile)AdvancedRocketryBlocks.blockRailgun);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileGravityController(), (BlockTile)AdvancedRocketryBlocks.blockGravityMachine);
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
 			((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileSpaceLaser(), (BlockTile)AdvancedRocketryBlocks.blockSpaceLaser);
@@ -1330,7 +1339,8 @@ public class AdvancedRocketry {
 		MinecraftForge.EVENT_BUS.register(inputSync);
 
 		MinecraftForge.EVENT_BUS.register(new MapGenLander());
-
+		AdvancedRocketryAPI.gravityManager = new GravityHandler();
+		
 		if(Loader.isModLoaded("GalacticraftCore") && zmaster587.advancedRocketry.api.Configuration.overrideGCAir) {
 			GalacticCraftHandler eventHandler = new GalacticCraftHandler();
 			MinecraftForge.EVENT_BUS.register(eventHandler);
@@ -1376,7 +1386,7 @@ public class AdvancedRocketry {
 				for(String name : ore.getOreDictNames())
 					if(OreDictionary.doesOreNameExist(AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + name)) {
 						GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("STICK"),4), "x  ", " x ", "  x", 'x', AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + name));
-						
+
 						RecipesMachine.getInstance().addRecipe(TileLathe.class, ore.getProduct(AllowedProducts.getProductByName("STICK"),2), 300, 20, AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + name); //ore.getProduct(AllowedProducts.getProductByName("INGOT")));
 					}
 			}
@@ -1470,12 +1480,12 @@ public class AdvancedRocketry {
 							else if(OreDictionary.doesOreNameExist("stick" + str)  && OreDictionary.getOres("stick" + str).size() > 0) {
 								stackToAdd = OreDictionary.getOres("stick" + str).get(0).copy();
 								stackToAdd.stackSize = 2;
-								}
+							}
 							else 
 								continue;
 
 							RecipesMachine.getInstance().addRecipe(TileLathe.class, stackToAdd, 300, 20, "ingot" + str);
-							
+
 						}
 
 					}
@@ -1564,52 +1574,47 @@ public class AdvancedRocketry {
 		entityList = null;
 		logger.info("End registering entity atmosphere bypass");
 
-		//Register asteriodOres
-				if(!zmaster587.advancedRocketry.api.Configuration.asteriodOresBlackList) {
-					for(String str  : asteriodOres)
-						zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres.add(str);
-				}
-				
-				//Register geodeOres
-				if(!zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList) {
-					for(String str  : geodeOres)
-						zmaster587.advancedRocketry.api.Configuration.standardGeodeOres.add(str);
-				}
-				
-				//Register laserDrill ores
-				if(!zmaster587.advancedRocketry.api.Configuration.laserDrillOresBlackList) {
-					for(String str  : orbitalLaserOres)
-						zmaster587.advancedRocketry.api.Configuration.standardLaserDrillOres.add(str);
-				}
-				
 
-				//Do blacklist stuff for ore registration
-				for(String oreName : OreDictionary.getOreNames()) {
-					if(zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList && oreName.startsWith("ore")) {
-						boolean found = false;
-						for(String str : geodeOres) {
-							if(oreName.equals(str)) {
-								found = true;
-								break;
-							}
-						}
-						if(!found)
-							zmaster587.advancedRocketry.api.Configuration.standardGeodeOres.add(oreName);
-					}
-					
-					if(zmaster587.advancedRocketry.api.Configuration.laserDrillOresBlackList && oreName.startsWith("ore")) {
-						boolean found = false;
-						for(String str : orbitalLaserOres) {
-							if(oreName.equals(str)) {
-								found = true;
-								break;
-							}
-						}
-						if(!found)
-							zmaster587.advancedRocketry.api.Configuration.standardLaserDrillOres.add(oreName);
+		//Register geodeOres
+		if(!zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList) {
+			for(String str  : geodeOres)
+				zmaster587.advancedRocketry.api.Configuration.standardGeodeOres.add(str);
+		}
+
+		//Register laserDrill ores
+		if(!zmaster587.advancedRocketry.api.Configuration.laserDrillOresBlackList) {
+			for(String str  : orbitalLaserOres)
+				zmaster587.advancedRocketry.api.Configuration.standardLaserDrillOres.add(str);
+		}
+
+
+		//Do blacklist stuff for ore registration
+		for(String oreName : OreDictionary.getOreNames()) {
+			if(zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList && oreName.startsWith("ore")) {
+				boolean found = false;
+				for(String str : geodeOres) {
+					if(oreName.equals(str)) {
+						found = true;
+						break;
 					}
 				}
-		
+				if(!found)
+					zmaster587.advancedRocketry.api.Configuration.standardGeodeOres.add(oreName);
+			}
+
+			if(zmaster587.advancedRocketry.api.Configuration.laserDrillOresBlackList && oreName.startsWith("ore")) {
+				boolean found = false;
+				for(String str : orbitalLaserOres) {
+					if(oreName.equals(str)) {
+						found = true;
+						break;
+					}
+				}
+				if(!found)
+					zmaster587.advancedRocketry.api.Configuration.standardLaserDrillOres.add(oreName);
+			}
+		}
+
 		//Load XML recipes
 		LibVulpes.instance.loadXMLRecipe(TileCuttingMachine.class);
 		LibVulpes.instance.loadXMLRecipe(TilePrecisionAssembler.class);
@@ -1619,12 +1624,12 @@ public class AdvancedRocketry {
 		LibVulpes.instance.loadXMLRecipe(TileElectricArcFurnace.class);
 		LibVulpes.instance.loadXMLRecipe(TileLathe.class);
 		LibVulpes.instance.loadXMLRecipe(TileRollingMachine.class);
-		
+
 		//Load Asteroids from XML
 		File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/asteroidConfig.xml");
-		logger.fine("Checking for asteroid config at " + file.getAbsolutePath());
+		logger.info("Checking for asteroid config at " + file.getAbsolutePath());
 		if(!file.exists()) {
-			logger.fine(file.getAbsolutePath() + " not found, generating");
+			logger.info(file.getAbsolutePath() + " not found, generating");
 			try {
 
 				file.createNewFile();
@@ -1640,7 +1645,7 @@ public class AdvancedRocketry {
 				e.printStackTrace();
 			}
 		}
-		
+
 		XMLAsteroidLoader load = new XMLAsteroidLoader();
 		try {
 			load.loadFile(file);
@@ -1650,7 +1655,7 @@ public class AdvancedRocketry {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		// End load asteroids from XML
 	}
 

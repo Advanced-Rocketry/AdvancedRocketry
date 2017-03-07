@@ -267,10 +267,10 @@ public class XMLPlanetLoader {
 						properties.ringColor = rgb;
 					}
 					else
-						AdvancedRocketry.logger.warning("Invalid number of floats specified for ring color (Required 3, comma sperated)"); //TODO: more detailed error msg
+						AdvancedRocketry.logger.warn("Invalid number of floats specified for ring color (Required 3, comma sperated)"); //TODO: more detailed error msg
 
 				} catch (NumberFormatException e) {
-					AdvancedRocketry.logger.warning("Invalid sky color specified"); //TODO: more detailed error msg
+					AdvancedRocketry.logger.warn("Invalid sky color specified"); //TODO: more detailed error msg
 				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("GasGiant")) {

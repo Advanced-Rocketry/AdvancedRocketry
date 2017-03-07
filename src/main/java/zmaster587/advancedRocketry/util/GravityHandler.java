@@ -12,17 +12,23 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class GravityHandler implements IGravityManager {
-	
-	static {
-		AdvancedRocketryAPI.gravityManager = new GravityHandler();
-	}
 
+	public static final float ENTITY_OFFSET = 0.075f;
+	public static final float ITEM_GRAV_OFFSET = 0.04f;
 	private static WeakHashMap<Entity, Double> entityMap = new WeakHashMap<Entity, Double>();
 	public static void applyGravity(Entity entity) {
 
 		if(!entity.isInWater() || entity instanceof EntityItem) {
 			if(!(entity instanceof EntityPlayer) || !((EntityPlayer)entity).capabilities.isFlying) {
-				if(DimensionManager.getInstance().isDimensionCreated(entity.worldObj.provider.dimensionId) || entity.worldObj.provider instanceof WorldProviderSpace) {
+				Double d;
+				if(entityMap.containsKey(entity) && (d = entityMap.get(entity)) != null)  {
+
+					double multiplier = (entity instanceof EntityItem) ? ITEM_GRAV_OFFSET*d : 0.075f*d;
+
+					entity.motionY += multiplier;
+					
+				}
+				else if(DimensionManager.getInstance().isDimensionCreated(entity.worldObj.provider.dimensionId) || entity.worldObj.provider instanceof WorldProviderSpace) {
 					double gravMult;
 					if(entity.worldObj.provider instanceof IPlanetaryProvider)
 						gravMult = ((IPlanetaryProvider)entity.worldObj.provider).getGravitationalMultiplier((int)entity.posX, (int)entity.posZ);
@@ -30,16 +36,16 @@ public class GravityHandler implements IGravityManager {
 						gravMult = DimensionManager.getInstance().getDimensionProperties(entity.worldObj.provider.dimensionId).gravitationalMultiplier;
 
 					if(entity instanceof EntityItem)
-						entity.motionY -= gravMult*0.04f;
+						entity.motionY -= gravMult*ITEM_GRAV_OFFSET;
 					else
-						entity.motionY -= gravMult*0.075f;
+						entity.motionY -= gravMult*ENTITY_OFFSET;
 					return;
 				}
 				else {
 					if(entity instanceof EntityItem)
-						entity.motionY -= 0.04f;
+						entity.motionY -= ITEM_GRAV_OFFSET;
 					else
-						entity.motionY -= 0.08D;
+						entity.motionY -= ENTITY_OFFSET + 0.005f;
 				}
 			}
 		}
