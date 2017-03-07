@@ -75,6 +75,7 @@ import zmaster587.advancedRocketry.entity.EntityUIPlanet;
 import zmaster587.advancedRocketry.entity.EntityUIStar;
 import zmaster587.advancedRocketry.entity.FxSkyLaser;
 import zmaster587.advancedRocketry.entity.fx.FxElectricArc;
+import zmaster587.advancedRocketry.entity.fx.FxGravityEffect;
 import zmaster587.advancedRocketry.entity.fx.FxLaser;
 import zmaster587.advancedRocketry.entity.fx.FxLaserHeat;
 import zmaster587.advancedRocketry.entity.fx.FxLaserSpark;
@@ -372,6 +373,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void spawnParticle(String particle, World world, double x, double y, double z, double motionX, double motionY, double motionZ) {
+		//WTF how is == working?  Should be .equals
 		if(particle == "rocketFlame") {
 			RocketFx fx = new RocketFx(world, x, y, z, motionX, motionY, motionZ);
 			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
@@ -398,6 +400,10 @@ public class ClientProxy extends CommonProxy {
 		}
 		else if(particle == "errorBox") {
 			FxErrorBlock fx = new FxErrorBlock(world, x, y, z);
+			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+		}
+		else if(particle.equals("gravityEffect")) {
+			FxGravityEffect fx = new FxGravityEffect(world, x, y, z, motionX, motionY, motionZ);
 			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 		}
 	}

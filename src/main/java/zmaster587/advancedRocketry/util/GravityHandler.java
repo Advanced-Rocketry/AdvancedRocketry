@@ -14,10 +14,6 @@ import net.minecraft.util.EnumFacing;
 
 public class GravityHandler implements IGravityManager {
 
-	static {
-		AdvancedRocketryAPI.gravityManager = new GravityHandler();
-	}
-
 	public static final float ENTITY_OFFSET = 0.075f;
 	public static final float ITEM_GRAV_OFFSET = 0.04f;
 	private static WeakHashMap<Entity, Double> entityMap = new WeakHashMap<Entity, Double>();

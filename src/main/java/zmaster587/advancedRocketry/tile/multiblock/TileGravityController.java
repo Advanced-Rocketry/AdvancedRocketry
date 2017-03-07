@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -14,6 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.GravityHandler;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -166,6 +168,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 			for(Entity e : entities) {
 				boolean additive = true;
 				boolean allowApply = false;
+				e.fallDistance = 0;
 
 				for(EnumFacing dir : EnumFacing.VALUES) {
 					if(!(e instanceof EntityPlayer) || !((EntityPlayer)e).capabilities.isFlying) {
@@ -187,10 +190,18 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 								e.motionY += dir.getFrontOffsetY()*GravityHandler.ITEM_GRAV_OFFSET*currentProgress;
 								e.motionZ += dir.getFrontOffsetZ()*GravityHandler.ITEM_GRAV_OFFSET*currentProgress;
 							}
+							
+							//Spawn particle effect
+							//TODO: tornados for planets
+							if(worldObj.isRemote) {
+								if(Minecraft.getMinecraft().gameSettings.particleSetting == 0 && !(Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 && Minecraft.getMinecraft().thePlayer == e))
+								AdvancedRocketry.proxy.spawnParticle("gravityEffect", worldObj, e.posX, e.posY, e.posZ, .2f*dir.getFrontOffsetX()*currentProgress, .2f*dir.getFrontOffsetY()*currentProgress, .2f*dir.getFrontOffsetZ()*currentProgress);
+							}
+							
 						}
 					}
 				}
-
+				
 				//Only apply gravity if none of the directions are set and it's not a player in flight
 				if(allowApply && !additive)
 					e.motionY += (e instanceof EntityItem || e instanceof EntityArrow) ? GravityHandler.ITEM_GRAV_OFFSET :  GravityHandler.ENTITY_OFFSET + 0.005;
