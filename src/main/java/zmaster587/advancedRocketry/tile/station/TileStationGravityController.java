@@ -32,7 +32,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 	int gravity;
 	int progress;
 
-	private ModuleText moduleGrav, numGravPylons, maxGravBuildSpeed, targetGrav;
+	private ModuleText moduleGrav, maxGravBuildSpeed, targetGrav;
 
 	public TileStationGravityController() {
 		moduleGrav = new ModuleText(6, 15, "Artifical Gravity: ", 0xaa2020);

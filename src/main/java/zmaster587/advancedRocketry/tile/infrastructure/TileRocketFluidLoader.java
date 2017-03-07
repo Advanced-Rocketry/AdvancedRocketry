@@ -112,7 +112,6 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 			boolean isAllowToOperate = (inputstate == RedstoneState.OFF || isStateActive(inputstate, getStrongPowerForSides(worldObj, getPos())));
 
 			List<TileEntity> tiles = rocket.storage.getFluidTiles();
-			boolean foundStack = false;
 			boolean rocketContainsItems = false;
 
 			//Function returns if something can be moved

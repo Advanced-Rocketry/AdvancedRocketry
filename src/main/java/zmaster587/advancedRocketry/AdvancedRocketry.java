@@ -187,6 +187,7 @@ import zmaster587.advancedRocketry.tile.station.TileStationOrientationControl;
 import zmaster587.advancedRocketry.tile.station.TileWarpShipMonitor;
 import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.advancedRocketry.util.FluidColored;
+import zmaster587.advancedRocketry.util.GravityHandler;
 import zmaster587.advancedRocketry.util.OreGenProperties;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
 import zmaster587.advancedRocketry.util.XMLAsteroidLoader;
@@ -545,6 +546,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockSolarPanel = new Block(Material.IRON).setUnlocalizedName("solarPanel").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockSolarGenerator = new BlockSolarGenerator(TileSolarPanel.class, GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setHardness(3f).setUnlocalizedName("solarGenerator");
 		AdvancedRocketryBlocks.blockDockingPort = new BlockStationModuleDockingPort(Material.IRON).setUnlocalizedName("stationMarker").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		AdvancedRocketryBlocks.blockGravityMachine = new BlockMultiblockMachine(TileGravityController.class,GuiHandler.guiId.MODULARNOINV.ordinal()).setUnlocalizedName("gravityMachine").setCreativeTab(tabAdvRocketry).setHardness(3f);
 
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill) {
@@ -670,6 +672,7 @@ public class AdvancedRocketry {
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockLens.setRegistryName("blockLens"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockForceField.setRegistryName("forceField"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockForceFieldProjector.setRegistryName("forceFieldProjector"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockGravityMachine.setRegistryName("gravityMachine"));
 		
 		//TODO, use different mechanism to enable/disable drill
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
@@ -854,6 +857,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileRailgun.class, "ARRailgun");
 		GameRegistry.registerTileEntity(TilePlanetaryHologram.class, "ARplanetHoloSelector");
 		GameRegistry.registerTileEntity(TileForceFieldProjector.class, "ARForceFieldProjector");
+		GameRegistry.registerTileEntity(TileGravityController.class, "ARGravityMachine");
 
 
 		//Register machine recipes
@@ -1225,6 +1229,7 @@ public class AdvancedRocketry {
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileBiomeScanner(), (BlockTile)AdvancedRocketryBlocks.blockBiomeScanner);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileAtmosphereTerraformer(), (BlockTile)AdvancedRocketryBlocks.blockAtmosphereTerraformer);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileRailgun(), (BlockTile)AdvancedRocketryBlocks.blockRailgun);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileGravityController(), (BlockTile)AdvancedRocketryBlocks.blockGravityMachine);
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
 			((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileSpaceLaser(), (BlockTile)AdvancedRocketryBlocks.blockSpaceLaser);
@@ -1248,6 +1253,7 @@ public class AdvancedRocketry {
 		MinecraftForge.EVENT_BUS.register(inputSync);
 
 		MinecraftForge.EVENT_BUS.register(new MapGenLander());
+		AdvancedRocketryAPI.gravityManager = new GravityHandler();
 
 		/*if(Loader.isModLoaded("GalacticraftCore") && zmaster587.advancedRocketry.api.Configuration.overrideGCAir) {
 			GalacticCraftHandler eventHandler = new GalacticCraftHandler();
