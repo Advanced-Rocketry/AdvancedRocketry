@@ -9,7 +9,8 @@ A mod about space, exploration, and resources
 4. clone "https://github.com/zmaster587/AdvancedRocketry.git" (git clone https://github.com/zmaster587/AdvancedRocketry.git)
 5. Enter AdvancedRocketry
 6. Download https://ci.micdoodle8.com/job/Galacticraft-1.7/lastSuccessfulBuild/artifact/Forge/build/libs/GalacticraftCore-1.7-3.0.12.474.jar into the AdvancedRocketry/libs folder
-7. In the AdvancedRocketry folder, shift-rightclick and select open command window, from the command window run ./gradlew.bat build
+7. In the AdvancedRocketry folder, shift-rightclick and select open command window from the context menu, 
+8. From the command window run ./gradlew.bat build
 
 
 # How to build for Minecraft 1.10.2:
