@@ -1,7 +1,7 @@
 # AdvancedRocketry
 A mod about space, exploration, and resources
 
-# How to build for 1.7.10:
+# How to build for Minecraft 1.7.10:
 
 1. Create a new Directory named advancedRocketryProject
 2. Enter the directory 'advancedRocketryProject'
@@ -12,7 +12,7 @@ A mod about space, exploration, and resources
 7. Run ./gradlew.bat build
 
 
-# How to build for 1.10.2:
+# How to build for Minecraft 1.10.2:
 The steps are the same as building for 1.7.10 except you do not need Galacticcraft and after step 4 you must make sure to checkout the MC1_10 branch of BOTH libVulpes and Advanced rocketry in their respective folders
 
 
