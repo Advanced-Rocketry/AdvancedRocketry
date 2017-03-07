@@ -111,7 +111,7 @@ public class Configuration {
 
 	public static boolean gravityAffectsFuel;
 	public static boolean lowGravityBoots;
-
 	public static float jetPackThrust;
+	public static boolean enableGravityController;
 
 }
