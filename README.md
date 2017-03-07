@@ -16,11 +16,7 @@ A mod about space, exploration, and resources
 The steps are the same as building for 1.7.10 except you do not need Galacticcraft and after step 4 you must make sure to checkout the MC1_10 branch of BOTH libVulpes and Advanced rocketry in their respective folders
 
 
-MileStones:
-
-Roadmap:
-
-Current Features:
+## Current Features:
 - Rockets can be built from almost any block
 - Space stations orbiting any planet/moon
 - Warpships to take players between said planets
@@ -45,13 +41,17 @@ Current Features:
     - research system
         - random asteroid parameters ( size, composition, location (polar coords)
         - research can be done to determine properties
-
-Future Features:
-- Other engine types for space ships(ion/plasma)
 - Terraforming
+- collection of materials from gas giants
+- planets actually moving in their orbits
+- Railguns to transfer goods between planets and stations
+- config for mapping dims added by other mods to planets
+- Gravity generators for local areas on planets
+
+## Future Features:
+- Other engine types for space ships(ion/plasma)
 - Orbital factories
 - rovers (maybe? need a use)
-- collection of materials from gas giants
 - docking (maybe..)
 - planetary mapping system (feasible?)
 - more Satellites
@@ -61,12 +61,8 @@ Future Features:
 - research tree (possible use for planetary data, hire villagers as scientists for you lab!)
 - supports for more power systems
 - remove RF dependance
-- planets actually moving in their orbits
-- Railguns to transfer goods between planets and stations
 - stations can be positioned over certain locations on planets
 - colony management system (seed testificates throughout the universe?)
-- config for mapping dims added by other mods to planets
-- Gravity generators for local areas on planets
 - ground based telescopes
         - water detectors (increases info on %dry) space only
         - chemical detectors (increases chance of finding planets rich in certain ores) space only
