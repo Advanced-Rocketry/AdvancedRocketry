@@ -168,6 +168,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 			for(Entity e : entities) {
 				boolean additive = true;
 				boolean allowApply = false;
+				e.fallDistance = 0;
 
 				for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 					if(!(e instanceof EntityPlayer) || !((EntityPlayer)e).capabilities.isFlying) {

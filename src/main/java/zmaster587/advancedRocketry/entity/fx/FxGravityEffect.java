@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 public class FxGravityEffect extends EntityFX {
-	public static final ResourceLocation icon = new ResourceLocation("advancedrocketry:textures/particle/soft.png");
+	public static final ResourceLocation icon = new ResourceLocation("advancedrocketry:textures/particle/donut.png");
 
 	
 	public FxGravityEffect(World world, double x,
