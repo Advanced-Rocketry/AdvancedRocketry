@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.dimension;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,6 +17,7 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.IGalaxy;
@@ -37,8 +39,7 @@ public class DimensionManager implements IGalaxy {
 
 	//TODO: fix satellites not unloading on disconnect
 	private Random random;
-	private static DimensionManager instance = new DimensionManager();
-	public static final String workingPath = "advRocketry";
+	private static DimensionManager instance = (DimensionManager) (AdvancedRocketryAPI.dimensionManager = new DimensionManager());public static final String workingPath = "advRocketry";
 	public static final String filePath = workingPath + "/temp.dat";
 	public static int dimOffset = 0;
 	private boolean hasBeenInitiallized = false;
@@ -108,7 +109,7 @@ public class DimensionManager implements IGalaxy {
 	/**
 	 * @return an Integer array of dimensions registered with this DimensionManager
 	 */
-	public Integer[] getregisteredDimensions() {
+	public Integer[] getRegisteredDimensions() {
 		Integer ret[] = new Integer[dimensionList.size()];
 		return dimensionList.keySet().toArray(ret);
 	}
@@ -117,7 +118,7 @@ public class DimensionManager implements IGalaxy {
 	 * @return List of dimensions registered with this manager that are currently loaded on the server/integrated server
 	 */
 	public Integer[] getLoadedDimensions() {
-		return getregisteredDimensions();
+		return getRegisteredDimensions();
 	}
 
 	/**
@@ -444,6 +445,7 @@ public class DimensionManager implements IGalaxy {
 	 * @param dimId id of the dimention of which to get the properties
 	 * @return DimensionProperties representing the dimId given
 	 */
+	@Override
 	public DimensionProperties getDimensionProperties(int dimId) {
 		DimensionProperties properties = dimensionList.get(new Integer(dimId));
 		if(dimId == Configuration.spaceDimId || dimId == Integer.MIN_VALUE) {
@@ -565,7 +567,7 @@ public class DimensionManager implements IGalaxy {
 	 * @return true if the dimension exists and is registered
 	 */
 	public boolean isDimensionCreated( int dimId) {
-		return dimensionList.containsKey(new Integer(dimId));
+		return dimensionList.containsKey(new Integer(dimId)) || dimId == Configuration.spaceDimId;
 	}
 
 	/**
@@ -591,6 +593,10 @@ public class DimensionManager implements IGalaxy {
 			inStream = new FileInputStream(file);
 			nbt = CompressedStreamTools.readCompressed(inStream);
 			inStream.close();
+		} catch (EOFException e) {
+			//Silence you fool!
+			//Patch to fix JEI printing when trying to load planets too early
+			return false;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return false;

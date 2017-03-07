@@ -31,18 +31,17 @@ public class PacketDimInfo extends BasePacket {
 		NBTTagCompound nbt = new NBTTagCompound();
 		out.writeInt(dimNumber);
 		boolean flag = dimProperties == null;
-
+		
 		if(!flag) {
-
+			
 			//Try to send the nbt data of the dimension to the client, if it fails(probably due to non existent Biome ids) then remove the dimension
 			try {
 				dimProperties.writeToNBT(nbt);
 				PacketBuffer packetBuffer = new PacketBuffer(out);
 				out.writeBoolean(false);
 				try {
-					packetBuffer.writeNBTTagCompoundToBuffer(nbt);
-				}
-				catch(IOException e) {}
+				packetBuffer.writeNBTTagCompoundToBuffer(nbt);
+				} catch (Exception e){}
 			} catch(NullPointerException e) {
 				out.writeBoolean(true);
 				e.printStackTrace();
@@ -59,18 +58,23 @@ public class PacketDimInfo extends BasePacket {
 	@Override
 	public void readClient(ByteBuf in) {
 		PacketBuffer packetBuffer = new PacketBuffer(in);
+		NBTTagCompound nbt;
 		dimNumber = in.readInt();
-		deleteDim = in.readBoolean();
+		
 
+		deleteDim = in.readBoolean();
+		
 		if(!deleteDim) {
 			//TODO: error handling
 			try {
-				dimNBT = packetBuffer.readNBTTagCompoundFromBuffer();
+				dimNBT = nbt = packetBuffer.readNBTTagCompoundFromBuffer();
 
 			} catch (IOException e) {
 				e.printStackTrace();
 				return;
 			}
+			dimProperties = new DimensionProperties(dimNumber);
+			dimProperties.readFromNBT(nbt);
 		}
 	}
 
@@ -92,14 +96,15 @@ public class PacketDimInfo extends BasePacket {
 				DimensionManager.overworldProperties = dimProperties;
 			}
 			else if( DimensionManager.getInstance().isDimensionCreated(dimNumber) ) {
-				DimensionManager.getInstance().getDimensionProperties(dimNumber).readFromNBT(dimNBT);
+				dimProperties.oreProperties = DimensionManager.getInstance().getDimensionProperties(dimNumber).oreProperties;
+				DimensionManager.getInstance().setDimProperties(dimNumber, dimProperties);
 			} else {
 				dimProperties = new DimensionProperties(dimNumber);
 				dimProperties.readFromNBT(dimNBT);
 				DimensionManager.getInstance().registerDimNoUpdate(dimProperties, true);
 			}
 		}
-
+		
 	}
 
 	@Override

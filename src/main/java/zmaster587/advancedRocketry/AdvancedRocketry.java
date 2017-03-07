@@ -229,9 +229,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 @Mod(modid="advancedRocketry", name="Advanced Rocketry", version="%VERSION%", dependencies="required-after:libVulpes@[%LIBVULPESVERSION%,)")
@@ -249,7 +250,7 @@ public class AdvancedRocketry {
 	public static WorldType spaceWorldType;
 	private boolean resetFromXml;
 	public static CompatibilityMgr compat = new CompatibilityMgr();
-	public static Logger logger = Logger.getLogger(Constants.modId);
+	public static Logger logger = LogManager.getLogger(Constants.modId);
 	private static Configuration config;
 	private static final String BIOMECATETORY = "Biomes";
 	String[] sealableBlockWhiteList, breakableTorches, harvestableGasses, entityList, geodeOres, orbitalLaserOres;;
@@ -296,7 +297,9 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.scrubberRequiresCartrige = config.get(Configuration.CATEGORY_GENERAL, "scrubberRequiresCartrige", true, "If true the Oxygen scrubbers require a consumable carbon collection cartridge").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.enableLaserDrill = config.get(Configuration.CATEGORY_GENERAL, "EnableLaserDrill", true, "Enables the laser drill machine").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.spaceLaserPowerMult = (float)config.get(Configuration.CATEGORY_GENERAL, "LaserDrillPowerMultiplier", 1d, "Power multiplier for the laser drill machine").getDouble();
-
+		zmaster587.advancedRocketry.api.Configuration.lowGravityBoots = config.get(Configuration.CATEGORY_GENERAL, "lowGravityBoots", false, "If true the boots only protect the player on planets with low gravity").getBoolean();
+		zmaster587.advancedRocketry.api.Configuration.jetPackThrust = (float)config.get(Configuration.CATEGORY_GENERAL, "jetPackForce", 1.3, "Amount of force the jetpack provides with respect to gravity, 1 is the same acceleration as caused by Earth's gravity, 2 is 2x the acceleration caused by Earth's gravity, etc.  To make jetpack only work on low gravity planets, simply set it to a value less than 1").getDouble();
+		
 		zmaster587.advancedRocketry.api.Configuration.enableTerraforming = config.get(Configuration.CATEGORY_GENERAL, "EnableTerraforming", true,"Enables terraforming items and blocks").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.spaceSuitOxygenTime = config.get(Configuration.CATEGORY_GENERAL, "spaceSuitO2Buffer", 30, "Maximum time in minutes that the spacesuit's internal buffer can store O2 for").getInt();
 		zmaster587.advancedRocketry.api.Configuration.travelTimeMultiplier = (float)config.get(Configuration.CATEGORY_GENERAL, "warpTravelTime", 1f, "Multiplier for warp travel time").getDouble();
@@ -375,7 +378,7 @@ public class AdvancedRocketry {
 			try {
 				zmaster587.advancedRocketry.api.Configuration.laserBlackListDims.add(Integer.parseInt(s));
 			} catch (NumberFormatException e) {
-				logger.warning("Invalid number \"" + s + "\" for laser dimid blacklist");
+				logger.warn("Invalid number \"" + s + "\" for laser dimid blacklist");
 			}
 		}
 		proxy.loadUILayout(config);
@@ -1003,7 +1006,7 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockArcFurnace), "aga","ice", "aba", 'a', Items.netherbrick, 'g', userInterface, 'i', itemIOBoard, 'e',controlCircuitBoard, 'c', AdvancedRocketryBlocks.blockBlastBrick, 'b', "ingotCopper"));
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryItems.itemQuartzCrucible), " a ", "aba", " a ", Character.valueOf('a'), Items.quartz, Character.valueOf('b'), Items.cauldron);
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockPlatePress, "   ", " a ", "iii", 'a', Blocks.piston, 'i', Items.iron_ingot));
-		GameRegistry.addRecipe(new ShapedOreRecipe(MaterialRegistry.getItemStackFromMaterialAndType("Iron", AllowedProducts.getProductByName("STICK")), "x  ", " x ", "  x", 'x', "ingotIron"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(MaterialRegistry.getItemStackFromMaterialAndType("Iron", AllowedProducts.getProductByName("STICK"), 4), "x  ", " x ", "  x", 'x', "ingotIron"));
 		GameRegistry.addSmelting(MaterialRegistry.getMaterialFromName("Dilithium").getProduct(AllowedProducts.getProductByName("ORE")), MaterialRegistry.getMaterialFromName("Dilithium").getProduct(AllowedProducts.getProductByName("DUST")), 0);
 
 		//Supporting Materials
@@ -1227,11 +1230,11 @@ public class AdvancedRocketry {
 				BiomeGenBase biome = BiomeGenBase.getBiome(id);
 
 				if(biome == null || (biome.biomeID == 0 && id != 0))
-					logger.warning(String.format("Error blackListing biome id \"%d\", a biome with that ID does not exist!", id));
+					logger.warn(String.format("Error blackListing biome id \"%d\", a biome with that ID does not exist!", id));
 				else
 					AdvancedRocketryBiomes.instance.registerBlackListBiome(biome);
 			} catch (NumberFormatException e) {
-				logger.warning("Error blackListing \"" + string + "\".  It is not a valid number");
+				logger.warn("Error blackListing \"" + string + "\".  It is not a valid number");
 			}
 		}
 
@@ -1246,11 +1249,11 @@ public class AdvancedRocketry {
 				BiomeGenBase biome = BiomeGenBase.getBiome(id);
 
 				if(biome == null || (biome.biomeID == 0 && id != 0))
-					logger.warning(String.format("Error registering high pressure biome id \"%d\", a biome with that ID does not exist!", id));
+					logger.warn(String.format("Error registering high pressure biome id \"%d\", a biome with that ID does not exist!", id));
 				else
 					AdvancedRocketryBiomes.instance.registerHighPressureBiome(biome);
 			} catch (NumberFormatException e) {
-				logger.warning("Error registering high pressure biome \"" + string + "\".  It is not a valid number");
+				logger.warn("Error registering high pressure biome \"" + string + "\".  It is not a valid number");
 			}
 		}
 
@@ -1261,11 +1264,11 @@ public class AdvancedRocketry {
 				BiomeGenBase biome = BiomeGenBase.getBiome(id);
 
 				if(biome == null || (biome.biomeID == 0 && id != 0))
-					logger.warning(String.format("Error registering single biome id \"%d\", a biome with that ID does not exist!", id));
+					logger.warn(String.format("Error registering single biome id \"%d\", a biome with that ID does not exist!", id));
 				else
 					AdvancedRocketryBiomes.instance.registerSingleBiome(biome);
 			} catch (NumberFormatException e) {
-				logger.warning("Error registering single biome \"" + string + "\".  It is not a valid number");
+				logger.warn("Error registering single biome \"" + string + "\".  It is not a valid number");
 			}
 		}
 
@@ -1459,12 +1462,20 @@ public class AdvancedRocketry {
 						if(OreDictionary.doesOreNameExist("ingot" + str) && OreDictionary.getOres("ingot" + str).size() > 0 && (material == null || !AllowedProducts.getProductByName("STICK").isOfType(material.getAllowedProducts())) ) {
 
 							//GT registers rods as sticks
-							if(OreDictionary.doesOreNameExist("rod" + str) && OreDictionary.getOres("rod" + str).size() > 0)
-								RecipesMachine.getInstance().addRecipe(TileLathe.class, OreDictionary.getOres("rod" + str).get(0), 300, 20, "ingot" + str);
-							else if(OreDictionary.doesOreNameExist("stick" + str)  && OreDictionary.getOres("stick" + str).size() > 0) {
-								RecipesMachine.getInstance().addRecipe(TileLathe.class, OreDictionary.getOres("stick" + str).get(0), 300, 20, "ingot" + str);
+							ItemStack stackToAdd = null;
+							if(OreDictionary.doesOreNameExist("rod" + str) && OreDictionary.getOres("rod" + str).size() > 0) {
+								stackToAdd = OreDictionary.getOres("rod" + str).get(0).copy();
+								stackToAdd.stackSize = 2;
 							}
+							else if(OreDictionary.doesOreNameExist("stick" + str)  && OreDictionary.getOres("stick" + str).size() > 0) {
+								stackToAdd = OreDictionary.getOres("stick" + str).get(0).copy();
+								stackToAdd.stackSize = 2;
+								}
+							else 
+								continue;
 
+							RecipesMachine.getInstance().addRecipe(TileLathe.class, stackToAdd, 300, 20, "ingot" + str);
+							
 						}
 
 					}
@@ -1490,41 +1501,41 @@ public class AdvancedRocketry {
 
 		//Register Whitelisted Sealable Blocks
 
-		logger.fine("Start registering sealable blocks");
+		logger.info("Start registering sealable blocks");
 		for(String str : sealableBlockWhiteList) {
 			Block block = Block.getBlockFromName(str);
 			if(block == null)
-				logger.warning("'" + str + "' is not a valid Block");
+				logger.warn("'" + str + "' is not a valid Block");
 			else
 				SealableBlockHandler.INSTANCE.addSealableBlock(block);
 		}
-		logger.fine("End registering sealable blocks");
+		logger.info("End registering sealable blocks");
 		sealableBlockWhiteList = null;
 
-		logger.fine("Start registering torch blocks");
+		logger.info("Start registering torch blocks");
 		for(String str : breakableTorches) {
 			Block block = Block.getBlockFromName(str);
 			if(block == null)
-				logger.warning("'" + str + "' is not a valid Block");
+				logger.warn("'" + str + "' is not a valid Block");
 			else
 				zmaster587.advancedRocketry.api.Configuration.torchBlocks.add(block);
 		}
-		logger.fine("End registering torch blocks");
+		logger.info("End registering torch blocks");
 		breakableTorches = null;
 
 
-		logger.fine("Start registering Harvestable Gasses");
+		logger.info("Start registering Harvestable Gasses");
 		for(String str : harvestableGasses) {
 			Fluid fluid = FluidRegistry.getFluid(str);
 			if(fluid == null)
-				logger.warning("'" + str + "' is not a valid Fluid");
+				logger.warn("'" + str + "' is not a valid Fluid");
 			else
 				AtmosphereRegister.getInstance().registerHarvestableFluid(fluid);
 		}
-		logger.fine("End registering Harvestable Gasses");
+		logger.info("End registering Harvestable Gasses");
 		harvestableGasses = null;
 
-		logger.fine("Start registering entity atmosphere bypass");
+		logger.info("Start registering entity atmosphere bypass");
 
 		for(String str : entityList) {
 			Class clazz = (Class) EntityList.stringToClassMapping.get(str);
@@ -1542,16 +1553,22 @@ public class AdvancedRocketry {
 			}
 
 			if(clazz != null) {
-				logger.fine("Registering " + clazz.getName() + " for atmosphere bypass");
+				logger.info("Registering " + clazz.getName() + " for atmosphere bypass");
 				zmaster587.advancedRocketry.api.Configuration.bypassEntity.add(clazz);
 			}
 			else
-				logger.warning("Cannot find " + str + " while registering entity for atmosphere bypass");
+				logger.warn("Cannot find " + str + " while registering entity for atmosphere bypass");
 		}
 
 		//Free memory
 		entityList = null;
-		logger.fine("End registering entity atmosphere bypass");
+		logger.info("End registering entity atmosphere bypass");
+
+		//Register asteriodOres
+				if(!zmaster587.advancedRocketry.api.Configuration.asteriodOresBlackList) {
+					for(String str  : asteriodOres)
+						zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres.add(str);
+				}
 				
 				//Register geodeOres
 				if(!zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList) {
@@ -1658,10 +1675,10 @@ public class AdvancedRocketry {
 
 		//Open ore files
 		File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/oreConfig.xml");
-		logger.fine("Checking for ore config at " + file.getAbsolutePath());
+		logger.info("Checking for ore config at " + file.getAbsolutePath());
 
 		if(!file.exists()) {
-			logger.fine(file.getAbsolutePath() + " not found, generating");
+			logger.info(file.getAbsolutePath() + " not found, generating");
 			try {
 
 				file.createNewFile();

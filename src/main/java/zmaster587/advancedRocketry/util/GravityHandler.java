@@ -1,5 +1,9 @@
 package zmaster587.advancedRocketry.util;
 
+import java.util.WeakHashMap;
+
+import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
+import zmaster587.advancedRocketry.api.IGravityManager;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
@@ -7,7 +11,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class GravityHandler {
+public class GravityHandler implements IGravityManager {
+	
+	static {
+		AdvancedRocketryAPI.gravityManager = new GravityHandler();
+	}
+
+	private static WeakHashMap<Entity, Double> entityMap = new WeakHashMap<Entity, Double>();
 	public static void applyGravity(Entity entity) {
 
 		if(!entity.isInWater() || entity instanceof EntityItem) {
@@ -34,5 +44,15 @@ public class GravityHandler {
 			}
 		}
 
+	}
+
+	@Override
+	public void setGravityMultiplier(Entity entity, double multiplier) {
+		entityMap.put(entity, multiplier);
+	}
+
+	@Override
+	public void clearGravityEffect(Entity entity) {
+		entityMap.remove(entity);
 	}
 }

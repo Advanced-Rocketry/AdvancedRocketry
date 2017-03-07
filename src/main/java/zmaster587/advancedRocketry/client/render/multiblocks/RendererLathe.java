@@ -52,7 +52,7 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 		GL11.glTranslated(-.5f, -1f, -2.5f);
 
 		ItemStack outputStack;
-		if(multiBlockTile.isRunning() && (outputStack = multiBlockTile.getOutputs().get(0)) != null) {
+		if(multiBlockTile.isRunning()) {
 
 			float progress = multiBlockTile.getProgress(0)/(float)multiBlockTile.getTotalProgress(0);
 
@@ -76,7 +76,13 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 			GL11.glRotatef(progress*1500, 0, 0, 1);
 			model.renderOnly("Cylinder");
 
-			int color = MaterialRegistry.getColorFromItemMaterial(outputStack);
+			int color;
+			//Check for rare bug when outputs is null, usually occurs if player opens machine within 1st tick
+			if(multiBlockTile.getOutputs() != null && (outputStack = multiBlockTile.getOutputs().get(0)) != null)
+				color = MaterialRegistry.getColorFromItemMaterial(outputStack);
+			else
+				color = 0;
+			
 			GL11.glColor3d((0xff & color >> 16)/256f, (0xff & color >> 8)/256f , (color & 0xff)/256f);
 
 			model.renderOnly("rod");

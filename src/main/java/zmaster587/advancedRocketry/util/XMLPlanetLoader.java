@@ -96,7 +96,7 @@ public class XMLPlanetLoader {
 					//We're not using the offset so decrement to prepare for next planet
 					offset--;
 				} catch (NumberFormatException e) {
-					AdvancedRocketry.logger.warning("Invalid DIMID specified for planet " + properties.getName()); //TODO: more detailed error msg
+					AdvancedRocketry.logger.warn("Invalid DIMID specified for planet " + properties.getName()); //TODO: more detailed error msg
 					list.remove(properties);
 					offset--;
 					return list;
@@ -133,9 +133,9 @@ public class XMLPlanetLoader {
 						properties.fogColor = rgb;
 					}
 					else
-						AdvancedRocketry.logger.warning("Invalid number of floats specified for fog color (Required 3, comma sperated)"); //TODO: more detailed error msg
+						AdvancedRocketry.logger.warn("Invalid number of floats specified for fog color (Required 3, comma sperated)"); //TODO: more detailed error msg
 				} catch (NumberFormatException e) {
-					AdvancedRocketry.logger.warning("Invalid fog color specified"); //TODO: more detailed error msg
+					AdvancedRocketry.logger.warn("Invalid fog color specified"); //TODO: more detailed error msg
 				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("skycolor")) {
@@ -161,10 +161,10 @@ public class XMLPlanetLoader {
 						properties.skyColor = rgb;
 					}
 					else
-						AdvancedRocketry.logger.warning("Invalid number of floats specified for sky color (Required 3, comma sperated)"); //TODO: more detailed error msg
+						AdvancedRocketry.logger.warn("Invalid number of floats specified for sky color (Required 3, comma sperated)"); //TODO: more detailed error msg
 
 				} catch (NumberFormatException e) {
-					AdvancedRocketry.logger.warning("Invalid sky color specified"); //TODO: more detailed error msg
+					AdvancedRocketry.logger.warn("Invalid sky color specified"); //TODO: more detailed error msg
 				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("atmosphereDensity")) {
@@ -172,7 +172,7 @@ public class XMLPlanetLoader {
 				try {
 					properties.setAtmosphereDensityDirect(Math.min(Math.max(Integer.parseInt(planetPropertyNode.getTextContent()), DimensionProperties.MIN_ATM_PRESSURE), DimensionProperties.MAX_ATM_PRESSURE));
 				} catch (NumberFormatException e) {
-					AdvancedRocketry.logger.warning("Invalid atmosphereDensity specified"); //TODO: more detailed error msg
+					AdvancedRocketry.logger.warn("Invalid atmosphereDensity specified"); //TODO: more detailed error msg
 				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("gravitationalmultiplier")) {
@@ -180,7 +180,7 @@ public class XMLPlanetLoader {
 				try {
 					properties.gravitationalMultiplier = Math.min(Math.max(Integer.parseInt(planetPropertyNode.getTextContent()), DimensionProperties.MIN_GRAVITY), DimensionProperties.MAX_GRAVITY)/100f;
 				} catch (NumberFormatException e) {
-					AdvancedRocketry.logger.warning("Invalid gravitationalMultiplier specified"); //TODO: more detailed error msg
+					AdvancedRocketry.logger.warn("Invalid gravitationalMultiplier specified"); //TODO: more detailed error msg
 				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("orbitaldistance")) {
@@ -188,7 +188,7 @@ public class XMLPlanetLoader {
 				try {
 					properties.orbitalDist = Math.min(Math.max(Integer.parseInt(planetPropertyNode.getTextContent()), DimensionProperties.MIN_DISTANCE), DimensionProperties.MAX_DISTANCE);
 				} catch (NumberFormatException e) {
-					AdvancedRocketry.logger.warning("Invalid orbitalDist specified"); //TODO: more detailed error msg
+					AdvancedRocketry.logger.warn("Invalid orbitalDist specified"); //TODO: more detailed error msg
 				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("orbitaltheta")) {
@@ -196,7 +196,7 @@ public class XMLPlanetLoader {
 				try {
 					properties.orbitTheta = (Integer.parseInt(planetPropertyNode.getTextContent()) % 360) * 2/Math.PI;
 				} catch (NumberFormatException e) {
-					AdvancedRocketry.logger.warning("Invalid orbitalTheta specified"); //TODO: more detailed error msg
+					AdvancedRocketry.logger.warn("Invalid orbitalTheta specified"); //TODO: more detailed error msg
 				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("rotationalperiod")) {
@@ -205,9 +205,9 @@ public class XMLPlanetLoader {
 					if(properties.rotationalPeriod > 0)
 						properties.rotationalPeriod = rotationalPeriod;
 					else
-						AdvancedRocketry.logger.warning("rotational Period must be greater than 0"); //TODO: more detailed error msg
+						AdvancedRocketry.logger.warn("rotational Period must be greater than 0"); //TODO: more detailed error msg
 				} catch (NumberFormatException e) {
-					AdvancedRocketry.logger.warning("Invalid rotational period specified"); //TODO: more detailed error msg
+					AdvancedRocketry.logger.warn("Invalid rotational period specified"); //TODO: more detailed error msg
 				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("biomeids")) {
@@ -218,9 +218,9 @@ public class XMLPlanetLoader {
 						int biome =  Integer.parseInt(biomeList[j]);
 
 						if(!properties.addBiome(biome))
-							AdvancedRocketry.logger.warning(biomeList[j] + " is not a valid biome id"); //TODO: more detailed error msg
+							AdvancedRocketry.logger.warn(biomeList[j] + " is not a valid biome id"); //TODO: more detailed error msg
 					} catch (NumberFormatException e) {
-						AdvancedRocketry.logger.warning(biomeList[j] + " is not a valid biome id"); //TODO: more detailed error msg
+						AdvancedRocketry.logger.warn(biomeList[j] + " is not a valid biome id"); //TODO: more detailed error msg
 					}
 				}
 			}
@@ -236,7 +236,7 @@ public class XMLPlanetLoader {
 				try {
 					properties.orbitalPhi = (Integer.parseInt(planetPropertyNode.getTextContent()) % 360) * 2/Math.PI;
 				} catch (NumberFormatException e) {
-					AdvancedRocketry.logger.warning("Invalid orbitalTheta specified"); //TODO: more detailed error msg
+					AdvancedRocketry.logger.warn("Invalid orbitalTheta specified"); //TODO: more detailed error msg
 				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("oreGen")) {
@@ -307,7 +307,7 @@ public class XMLPlanetLoader {
 				try {
 					star.setTemperature(Integer.parseInt(nameNode.getNodeValue()));
 				} catch (NumberFormatException e) {
-					AdvancedRocketry.logger.warning("Error Reading star " + star.getName());
+					AdvancedRocketry.logger.warn("Error Reading star " + star.getName());
 				}
 			}
 
@@ -317,7 +317,7 @@ public class XMLPlanetLoader {
 				try {
 					star.setPosX(Integer.parseInt(nameNode.getNodeValue()));
 				} catch (NumberFormatException e) {
-					AdvancedRocketry.logger.warning("Error Reading star " + star.getName());
+					AdvancedRocketry.logger.warn("Error Reading star " + star.getName());
 				}
 			}
 
@@ -327,7 +327,7 @@ public class XMLPlanetLoader {
 				try {
 					star.setPosZ(Integer.parseInt(nameNode.getNodeValue()));
 				} catch (NumberFormatException e) {
-					AdvancedRocketry.logger.warning("Error Reading star " + star.getName());
+					AdvancedRocketry.logger.warn("Error Reading star " + star.getName());
 				}
 			}
 
@@ -336,14 +336,14 @@ public class XMLPlanetLoader {
 			try {
 				maxPlanetNumber.put(star ,Integer.parseInt(nameNode.getNodeValue()));
 			} catch (Exception e) {
-				AdvancedRocketry.logger.warning("Invalid number of planets specified in xml config!");
+				AdvancedRocketry.logger.warn("Invalid number of planets specified in xml config!");
 			}
 
 			nameNode = planetNode.getAttributes().getNamedItem("numGasGiants");
 			try {
 				maxGasPlanetNumber.put(star ,Integer.parseInt(nameNode.getNodeValue()));
 			} catch (Exception e) {
-				AdvancedRocketry.logger.warning("Invalid number of planets specified in xml config!");
+				AdvancedRocketry.logger.warn("Invalid number of planets specified in xml config!");
 			}
 		}
 

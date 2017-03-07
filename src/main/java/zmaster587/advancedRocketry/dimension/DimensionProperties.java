@@ -948,7 +948,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				for(BiomeManager.BiomeType types : BiomeManager.BiomeType.values()) {
 					for(BiomeEntry entry : BiomeManager.getBiomes(types)) {
 						if(biomes == null)
-							AdvancedRocketry.logger.warning("Null biomes loaded for DIMID: " + this.getId());
+							AdvancedRocketry.logger.warn("Null biomes loaded for DIMID: " + this.getId());
 						else if(entry.biome.biomeID == biomes.biomeID) {
 							biomeEntries.add(entry);
 							notFound = false;
@@ -1088,7 +1088,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 						}
 
 					} catch (NullPointerException e) {
-						AdvancedRocketry.logger.warning("Satellite with bad NBT detected, Removing");
+						AdvancedRocketry.logger.warn("Satellite with bad NBT detected, Removing");
 					}
 				}
 			}
@@ -1228,5 +1228,15 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	@Override
 	public String toString() {
 		return String.format("Dimension ID: %d.  Dimension Name: %s.  Parent Star %d ", getId(), getName(), getStarId());
+	}
+
+	@Override
+	public double getOrbitTheta() {
+		return orbitTheta;
+	}
+
+	@Override
+	public int getOrbitalDist() {
+		return orbitalDist;
 	}
 }

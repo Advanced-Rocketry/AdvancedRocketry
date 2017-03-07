@@ -292,7 +292,7 @@ public class PlanetEventHandler {
 			PacketHandler.sendToDispatcher(new PacketStellarInfo(i, DimensionManager.getInstance().getStar(i)), event.manager);
 		}
 
-		for(int i : DimensionManager.getInstance().getregisteredDimensions()) {
+		for(int i : DimensionManager.getInstance().getRegisteredDimensions()) {
 			PacketHandler.sendToDispatcher(new PacketDimInfo(i, DimensionManager.getInstance().getDimensionProperties(i)), event.manager);
 		}
 

@@ -108,6 +108,9 @@ public class Configuration {
 	public static HashMap<String, AsteroidSmall> asteroidTypes = new HashMap<String, AsteroidSmall>();
 
 	public static boolean gravityAffectsFuel;
+	public static boolean lowGravityBoots;
+
+	public static float jetPackThrust;
 
 	
 }

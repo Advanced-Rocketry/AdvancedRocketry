@@ -15,6 +15,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.items.ItemIngredient;
@@ -25,12 +27,12 @@ public class ItemUpgrade extends ItemIngredient implements IArmorComponent {
 	private int legUpgradeDamage = 2;
 	private int bootsUpgradeDamage = 3;
 	Field walkSpeed;
-	
+
 	public ItemUpgrade(int num) {
 		super(num);
 		icon = new ResourceIcon[num];
 		setMaxStackSize(1);
-		
+
 		walkSpeed = ReflectionHelper.findField(net.minecraft.entity.player.PlayerCapabilities.class, "walkSpeed", "field_75097_g");
 		walkSpeed.setAccessible(true);
 	}
@@ -68,9 +70,10 @@ public class ItemUpgrade extends ItemIngredient implements IArmorComponent {
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();
 				}
-				//ReflectionHelper.setPrivateValue(net.minecraft.entity.player.PlayerCapabilities.class, player.capabilities, 0.1f,"walkSpeed", "field_75097_g");
+			//ReflectionHelper.setPrivateValue(net.minecraft.entity.player.PlayerCapabilities.class, player.capabilities, 0.1f,"walkSpeed", "field_75097_g");
 		}
-		else if(componentStack.getItemDamage() == bootsUpgradeDamage)
+		else if(componentStack.getItemDamage() == bootsUpgradeDamage && 
+				(!Configuration.lowGravityBoots || DimensionManager.getInstance().getDimensionProperties(world.provider.dimensionId).getGravitationalMultiplier() < 1f))
 			player.fallDistance = 0;
 	}
 
@@ -110,6 +113,6 @@ public class ItemUpgrade extends ItemIngredient implements IArmorComponent {
 	@SideOnly(Side.CLIENT)
 	public void renderScreen(ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event, Gui gui) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
