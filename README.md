@@ -11,8 +11,9 @@ A mod about space, exploration, and resources
 6. Enter libVulpes
 7. Download https://ci.micdoodle8.com/job/Galacticraft-1.7/474/artifact/Forge/build/libs/GalacticraftCore-1.7-3.0.12.474.jar into the libVulpes/libs folder (if the libVulpes/libs folder doesn't exist, create it)
 8. Go up a directory then enter AdvancedRocketry
-9. In the AdvancedRocketry folder, shift-rightclick and select open command window from the context menu, 
-10. From the command window run ./gradlew.bat build
+9. Repeat step 7 but put the file in AdvancedRocketry/libs (you may also need to create that)
+10. In the AdvancedRocketry folder, shift-rightclick and select open command window from the context menu, 
+11. From the command window run ./gradlew.bat build
 
 
 # How to build for Minecraft 1.10.2:
