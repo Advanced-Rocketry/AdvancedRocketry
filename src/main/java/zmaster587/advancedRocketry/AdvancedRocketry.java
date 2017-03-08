@@ -85,6 +85,7 @@ import zmaster587.advancedRocketry.block.BlockPressurizedFluidTank;
 import zmaster587.advancedRocketry.block.BlockQuartzCrucible;
 import zmaster587.advancedRocketry.block.BlockRedstoneEmitter;
 import zmaster587.advancedRocketry.block.BlockRocketMotor;
+import zmaster587.advancedRocketry.block.BlockSeal;
 import zmaster587.advancedRocketry.block.BlockSeat;
 import zmaster587.advancedRocketry.block.BlockFuelTank;
 import zmaster587.advancedRocketry.block.BlockSolarGenerator;
@@ -547,7 +548,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockSolarPanel = new Block(Material.IRON).setUnlocalizedName("solarPanel").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockSolarGenerator = new BlockSolarGenerator(TileSolarPanel.class, GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setHardness(3f).setUnlocalizedName("solarGenerator");
 		AdvancedRocketryBlocks.blockDockingPort = new BlockStationModuleDockingPort(Material.IRON).setUnlocalizedName("stationMarker").setCreativeTab(tabAdvRocketry).setHardness(3f);
-		
+		AdvancedRocketryBlocks.blockPipeSealer = new BlockSeal(Material.IRON).setUnlocalizedName("pipeSeal").setCreativeTab(tabAdvRocketry).setHardness(0.5f);
 		
 		//Configurable stuff
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
@@ -677,6 +678,7 @@ public class AdvancedRocketry {
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockLens.setRegistryName("blockLens"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockForceField.setRegistryName("forceField"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockForceFieldProjector.setRegistryName("forceFieldProjector"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockPipeSealer.setRegistryName("pipeSealer"));
 		
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
 			LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockGravityMachine.setRegistryName("gravityMachine"));
@@ -864,6 +866,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileRailgun.class, "ARRailgun");
 		GameRegistry.registerTileEntity(TilePlanetaryHologram.class, "ARplanetHoloSelector");
 		GameRegistry.registerTileEntity(TileForceFieldProjector.class, "ARForceFieldProjector");
+		GameRegistry.registerTileEntity(TileSeal.class, "ARBlockSeal");
 		
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
 			GameRegistry.registerTileEntity(TileGravityController.class, "ARGravityMachine");
@@ -991,6 +994,7 @@ public class AdvancedRocketry {
 
 		//Knicknacks
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockForceFieldProjector), " c ", "pdp","psp", 'c', "coilCopper", 'p', "plateAluminum", 'd', "crystalDilithium", 's', LibVulpesBlocks.blockStructureBlock));
+		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockPipeSealer, " c ", "csc", " c ", 'c', Items.CLAY_BALL, 's', "stickIron"));
 		
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockGravityMachine), "sds", "sws", 's', "sheetTitanium", 'd', massDetector, 'w', AdvancedRocketryBlocks.blockWarpCore));
@@ -1901,6 +1905,7 @@ public class AdvancedRocketry {
 		SpaceObjectManager.getSpaceManager().onServerStopped();
 		zmaster587.advancedRocketry.api.Configuration.MoonId = -1;
 		DimensionManager.getInstance().overworldProperties.resetProperties();
+		((BlockSeal)AdvancedRocketryBlocks.blockPipeSealer).clearMap();
 		
 		proxy.saveUILayout(config);
 	}

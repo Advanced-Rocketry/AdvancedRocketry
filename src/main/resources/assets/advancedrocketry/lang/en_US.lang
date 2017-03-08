@@ -100,6 +100,7 @@ tile.lens.name=Lens
 tile.forceField.name=Force Field
 tile.forceFieldProjector.name=Force Field Projector
 tile.gravityMachine.name=Gravity Controller
+tile.pipeSeal.name=Pipe Seal
 
 tile.Dilithium.name=Dilithium Ore
 
