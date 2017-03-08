@@ -112,5 +112,7 @@ public class Configuration {
 
 	public static float jetPackThrust;
 
+	public static boolean enableGravityController;
+
 	
 }
