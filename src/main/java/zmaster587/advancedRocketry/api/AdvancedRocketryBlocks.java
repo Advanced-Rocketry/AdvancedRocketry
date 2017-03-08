@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import zmaster587.advancedRocketry.block.BlockAstroBed;
+import zmaster587.advancedRocketry.block.BlockSeal;
 import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import net.minecraft.block.Block;
@@ -93,4 +94,5 @@ public class AdvancedRocketryBlocks {
 	public static Block blockForceField;
 	public static Block blockForceFieldProjector;
 	public static Block blockGravityMachine;
+	public static Block blockPipeSealer;
 }
