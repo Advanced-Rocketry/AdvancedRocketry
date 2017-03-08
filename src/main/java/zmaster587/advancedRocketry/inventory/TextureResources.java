@@ -44,7 +44,7 @@ public class TextureResources {
 	public static final ResourceLocation sndElectricArcFurnace = new ResourceLocation("advancedrocketry:electricArcFurnace");
 	public static final ResourceLocation sndElectrolyser = new ResourceLocation("advancedrocketry:electrolyser");
 	public static final ResourceLocation sndPrecAss = new ResourceLocation("advancedrocketry:precAss");
-	public static final ResourceLocation sndGravityOhh = new ResourceLocation("advancedrocketry:gravityOhh");
+	public static final ResourceLocation sndGravityOhh = new ResourceLocation("advancedrocketry:gravityOhhh");
 	
 	public static final IconResource ioSlot = new IconResource(212, 0, 18, 18, null);
 	public static final IconResource idChip = new IconResource(230, 0, 18, 18, null);

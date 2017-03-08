@@ -133,6 +133,11 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 	}
 	
 	@Override
+	public boolean isRunning() {
+		return getMachineEnabled() && isStateActive(state, worldObj.getBlockPowerInput(xCoord, yCoord, zCoord) > 0);
+	}
+	
+	@Override
 	public void updateEntity() {
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
@@ -151,7 +156,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 			timeAlive = 0x1;
 		}
 
-		if(getMachineEnabled() && isStateActive(state, worldObj.getBlockPowerInput(xCoord, yCoord, zCoord) > 0)) {
+		if(isRunning()) {
 			if(!worldObj.isRemote) {
 				//ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
