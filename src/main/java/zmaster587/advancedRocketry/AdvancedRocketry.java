@@ -296,7 +296,7 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.spaceLaserPowerMult = (float)config.get(Configuration.CATEGORY_GENERAL, "LaserDrillPowerMultiplier", 1d, "Power multiplier for the laser drill machine").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.lowGravityBoots = config.get(Configuration.CATEGORY_GENERAL, "lowGravityBoots", false, "If true the boots only protect the player on planets with low gravity").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.jetPackThrust = (float)config.get(Configuration.CATEGORY_GENERAL, "jetPackForce", 1.3, "Amount of force the jetpack provides with respect to gravity, 1 is the same acceleration as caused by Earth's gravity, 2 is 2x the acceleration caused by Earth's gravity, etc.  To make jetpack only work on low gravity planets, simply set it to a value less than 1").getDouble();
-		
+
 		zmaster587.advancedRocketry.api.Configuration.enableTerraforming = config.get(Configuration.CATEGORY_GENERAL, "EnableTerraforming", true,"Enables terraforming items and blocks").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.spaceSuitOxygenTime = config.get(Configuration.CATEGORY_GENERAL, "spaceSuitO2Buffer", 30, "Maximum time in minutes that the spacesuit's internal buffer can store O2 for").getInt();
 		zmaster587.advancedRocketry.api.Configuration.travelTimeMultiplier = (float)config.get(Configuration.CATEGORY_GENERAL, "warpTravelTime", 1f, "Multiplier for warp travel time").getDouble();
@@ -317,8 +317,8 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.automaticRetroRockets = config.get(ROCKET, "autoRetroRockets", true, "Setting to false will disable the retrorockets that fire automatically on reentry on both player and automated rockets").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.atmosphereHandleBitMask = config.get(PERFORMANCE, "atmosphereCalculationMethod", 0, "BitMask: 0: no threading, radius based; 1: threading, radius based (EXP); 2: no threading volume based; 3: threading volume based (EXP)").getInt();
 		zmaster587.advancedRocketry.api.Configuration.oxygenVentSize = config.get(PERFORMANCE, "oxygenVentSize", 32, "Radius of the O2 vent.  if atmosphereCalculationMethod is 2 or 3 then max volume is calculated from this radius.  WARNING: larger numbers can lead to lag").getInt();
-		
-		
+
+
 		zmaster587.advancedRocketry.api.Configuration.advancedVFX = config.get(PERFORMANCE, "advancedVFX", true, "Advanced visual effects").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.gasCollectionMult = config.get(GAS_MINING, "gasMissionMultiplier", 1.0, "Multiplier for the amount of time gas collection missions take").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.asteroidMiningMult = config.get(ASTEROID, "miningMissionMultiplier", 1.0, "Multiplier changing how much total material is brought back from a mining mission").getDouble();
@@ -385,7 +385,7 @@ public class AdvancedRocketry {
 
 		//Load client and UI positioning stuff
 		proxy.loadUILayout(config);
-		
+
 		config.save();
 
 		//Register cap events
@@ -1052,9 +1052,12 @@ public class AdvancedRocketry {
 		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemUpgrade,1,3), 400, 1, Items.LEATHER_BOOTS, Items.FEATHER, advancedCircuit, controlCircuitBoard);
 		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemUpgrade,1,4), 400, 1, LibVulpesItems.itemBattery, AdvancedRocketryItems.itemLens, advancedCircuit, controlCircuitBoard);
 		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemAtmAnalyser), 1000, 1, smallBattery, advancedCircuit, "plateTin", AdvancedRocketryItems.itemLens,  userInterface);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemBiomeChanger), 1000, 1, smallBattery, advancedCircuit, "plateTin", trackingCircuit,  userInterface);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, biomeChanger, 1000, 1, new NumberedOreDictStack("stickCopper", 2), "stickTitanium", new NumberedOreDictStack("waferSilicon", 2), advancedCircuit);
 
+		if(zmaster587.advancedRocketry.api.Configuration.enableTerraforming) {
+			RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemBiomeChanger), 1000, 1, smallBattery, advancedCircuit, "plateTin", trackingCircuit,  userInterface);
+			RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, biomeChanger, 1000, 1, new NumberedOreDictStack("stickCopper", 2), "stickTitanium", new NumberedOreDictStack("waferSilicon", 2), advancedCircuit);
+		}
+		
 		//BlastFurnace
 		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("Silicon").getProduct(AllowedProducts.getProductByName("INGOT")), 12000, 1, Blocks.SAND);
 		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("Steel").getProduct(AllowedProducts.getProductByName("INGOT")), 6000, 1, "ingotIron", charcoal);
@@ -1357,7 +1360,7 @@ public class AdvancedRocketry {
 							else if(OreDictionary.doesOreNameExist("stick" + str)  && OreDictionary.getOres("stick" + str).size() > 0) {
 								stackToAdd = OreDictionary.getOres("stick" + str).get(0).copy();
 								stackToAdd.stackSize = 2;
-								}
+							}
 							else 
 								continue;
 
@@ -1451,25 +1454,25 @@ public class AdvancedRocketry {
 		//Free memory
 		entityList = null;
 		logger.info("End registering entity atmosphere bypass");
-		
+
 		//Register asteriodOres
 		if(!zmaster587.advancedRocketry.api.Configuration.asteriodOresBlackList) {
 			for(String str  : asteriodOres)
 				zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres.add(str);
 		}
-		
+
 		//Register geodeOres
 		if(!zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList) {
 			for(String str  : geodeOres)
 				zmaster587.advancedRocketry.api.Configuration.standardGeodeOres.add(str);
 		}
-		
+
 		//Register laserDrill ores
 		if(!zmaster587.advancedRocketry.api.Configuration.laserDrillOresBlackList) {
 			for(String str  : orbitalLaserOres)
 				zmaster587.advancedRocketry.api.Configuration.standardLaserDrillOres.add(str);
 		}
-		
+
 
 		//Do blacklist stuff for ore registration
 		for(String oreName : OreDictionary.getOreNames()) {
@@ -1484,7 +1487,7 @@ public class AdvancedRocketry {
 				if(!found)
 					zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres.add(oreName);
 			}
-			
+
 			if(zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList && oreName.startsWith("ore")) {
 				boolean found = false;
 				for(String str : geodeOres) {
@@ -1496,7 +1499,7 @@ public class AdvancedRocketry {
 				if(!found)
 					zmaster587.advancedRocketry.api.Configuration.standardGeodeOres.add(oreName);
 			}
-			
+
 			if(zmaster587.advancedRocketry.api.Configuration.laserDrillOresBlackList && oreName.startsWith("ore")) {
 				boolean found = false;
 				for(String str : orbitalLaserOres) {
@@ -1836,7 +1839,7 @@ public class AdvancedRocketry {
 		SpaceObjectManager.getSpaceManager().onServerStopped();
 		zmaster587.advancedRocketry.api.Configuration.MoonId = -1;
 		DimensionManager.getInstance().overworldProperties.resetProperties();
-		
+
 		proxy.saveUILayout(config);
 	}
 
