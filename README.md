@@ -1,24 +1,26 @@
 # AdvancedRocketry
 A mod about space, exploration, and resources
 
-# How to build for 1.7.10:
+# How to build for Minecraft 1.7.10:
+
+Before you start: It is assumed you know how to clone and checkout different branches
 
 1. Create a new Directory named advancedRocketryProject
 2. Enter the directory 'advancedRocketryProject'
 3. clone "https://github.com/zmaster587/libVulpes.git" (git clone https://github.com/zmaster587/libVulpes.git)
 4. clone "https://github.com/zmaster587/AdvancedRocketry.git" (git clone https://github.com/zmaster587/AdvancedRocketry.git)
-5. Enter AdvancedRocketry
-6. Run ./gradlew.bat build
+5. If step 3 and 4 were performed correctly you should now have the folders "libVulpes" and "AdvancedRocketry" inside the folder "advancedRocketryProject".  The libVulpes folder being properly named is important!
+6. Download https://ci.micdoodle8.com/job/Galacticraft-1.7/474/artifact/Forge/build/libs/GalacticraftCore-1.7-3.0.12.474.jar into the AdvancedRocketry/libs folder (if the AdvancedRocketry/libs folder doesn't exist, create it)
+7. Repeat step 7 but put the file in AdvancedRocketry/libs (you may also need to create that)
+8. In the AdvancedRocketry folder, shift-rightclick and select open command window from the context menu, 
+9. From the command window run ./gradlew.bat build
 
-# How to build for 1.10.2:
-The steps are the same as building for 1.7.10 except after step 4 you must make sure to checkout the MC1_10 branch of BOTH libVulpes and Advanced rocketry in their respective folders
+
+# How to build for Minecraft 1.10.2:
+The steps are the same as building for 1.7.10 except you do not need Galacticcraft and after step 4 you must make sure to checkout the MC1_10 branch of BOTH libVulpes and Advanced rocketry in their respective folders
 
 
-MileStones:
-
-Roadmap:
-
-Current Features:
+## Current Features:
 - Rockets can be built from almost any block
 - Space stations orbiting any planet/moon
 - Warpships to take players between said planets
@@ -43,13 +45,17 @@ Current Features:
     - research system
         - random asteroid parameters ( size, composition, location (polar coords)
         - research can be done to determine properties
-
-Future Features:
-- Other engine types for space ships(ion/plasma)
 - Terraforming
+- collection of materials from gas giants
+- planets actually moving in their orbits
+- Railguns to transfer goods between planets and stations
+- config for mapping dims added by other mods to planets
+- Gravity generators for local areas on planets
+
+## Future Features:
+- Other engine types for space ships(ion/plasma)
 - Orbital factories
 - rovers (maybe? need a use)
-- collection of materials from gas giants
 - docking (maybe..)
 - planetary mapping system (feasible?)
 - more Satellites
@@ -59,12 +65,8 @@ Future Features:
 - research tree (possible use for planetary data, hire villagers as scientists for you lab!)
 - supports for more power systems
 - remove RF dependance
-- planets actually moving in their orbits
-- Railguns to transfer goods between planets and stations
 - stations can be positioned over certain locations on planets
 - colony management system (seed testificates throughout the universe?)
-- config for mapping dims added by other mods to planets
-- Gravity generators for local areas on planets
 - ground based telescopes
         - water detectors (increases info on %dry) space only
         - chemical detectors (increases chance of finding planets rich in certain ores) space only
@@ -81,4 +83,3 @@ Future Features:
     - rockets require life support
     - space ships require statis chamber and must be provided with food (unless warp) - tranz9999
     - heat system for machines and plasma engine
-    - 
