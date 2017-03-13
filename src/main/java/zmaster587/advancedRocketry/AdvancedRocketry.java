@@ -286,7 +286,7 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.spaceLaserPowerMult = (float)config.get(Configuration.CATEGORY_GENERAL, "LaserDrillPowerMultiplier", 1d, "Power multiplier for the laser drill machine").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.lowGravityBoots = config.get(Configuration.CATEGORY_GENERAL, "lowGravityBoots", false, "If true the boots only protect the player on planets with low gravity").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.jetPackThrust = (float)config.get(Configuration.CATEGORY_GENERAL, "jetPackForce", 1.3, "Amount of force the jetpack provides with respect to gravity, 1 is the same acceleration as caused by Earth's gravity, 2 is 2x the acceleration caused by Earth's gravity, etc.  To make jetpack only work on low gravity planets, simply set it to a value less than 1").getDouble();
-		
+
 		zmaster587.advancedRocketry.api.Configuration.enableTerraforming = config.get(Configuration.CATEGORY_GENERAL, "EnableTerraforming", true,"Enables terraforming items and blocks").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.spaceSuitOxygenTime = config.get(Configuration.CATEGORY_GENERAL, "spaceSuitO2Buffer", 30, "Maximum time in minutes that the spacesuit's internal buffer can store O2 for").getInt();
 		zmaster587.advancedRocketry.api.Configuration.travelTimeMultiplier = (float)config.get(Configuration.CATEGORY_GENERAL, "warpTravelTime", 1f, "Multiplier for warp travel time").getDouble();
@@ -371,7 +371,7 @@ public class AdvancedRocketry {
 			}
 		}
 		proxy.loadUILayout(config);
-		
+
 		config.save();
 
 		//Register Packets
@@ -938,7 +938,7 @@ public class AdvancedRocketry {
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("TitaniumAluminide", "pickaxe", 1, 0xaec2de, AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("GEAR").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue(), false));
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("TitaniumIridium", "pickaxe", 1, 0xd7dfe4, AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("GEAR").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue(), false));
 		materialRegistry.registerOres(LibVulpes.tabLibVulpesOres, "advancedRocketry");
-		
+
 		//OreDict stuff
 		OreDictionary.registerOre("waferSilicon", new ItemStack(AdvancedRocketryItems.itemWafer,1,0));
 		OreDictionary.registerOre("ingotCarbon", new ItemStack(AdvancedRocketryItems.itemMisc, 1, 1));
@@ -993,7 +993,7 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesItems.itemBattery,1,1), "bpb", "bpb", 'b', smallBattery, 'p', "plateCopper"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), "ppp", " g ", " l ", 'p', Blocks.glass_pane, 'g', Items.glowstone_dust, 'l', "plateGold"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockObservatory), "gug", "pbp", "rrr", 'g', "paneGlass", 'u', userInterface, 'b', LibVulpesBlocks.blockStructureBlock, 'r', "stickIron"));
-		
+
 		//Hatches
 		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,0), "c", "m"," ", 'c', Blocks.chest, 'm', LibVulpesBlocks.blockStructureBlock);
 		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,1), "m", "c"," ", 'c', Blocks.chest, 'm', LibVulpesBlocks.blockStructureBlock);
@@ -1131,8 +1131,11 @@ public class AdvancedRocketry {
 		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemUpgrade,1,3), 400, 1, Items.leather_boots, Items.feather, advancedCircuit, controlCircuitBoard);
 		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemUpgrade,1,4), 400, 1, LibVulpesItems.itemBattery, AdvancedRocketryItems.itemLens, advancedCircuit, controlCircuitBoard);
 		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemAtmAnalyser), 1000, 1, smallBattery, advancedCircuit, "plateTin", AdvancedRocketryItems.itemLens,  userInterface);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemBiomeChanger), 1000, 1, smallBattery, advancedCircuit, "plateTin", trackingCircuit,  userInterface);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, biomeChanger, 1000, 1, new NumberedOreDictStack("stickCopper", 2), "stickTitanium", new NumberedOreDictStack("waferSilicon", 2), advancedCircuit);
+
+		if(zmaster587.advancedRocketry.api.Configuration.enableTerraforming) {
+			RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemBiomeChanger), 1000, 1, smallBattery, advancedCircuit, "plateTin", trackingCircuit,  userInterface);
+			RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, biomeChanger, 1000, 1, new NumberedOreDictStack("stickCopper", 2), "stickTitanium", new NumberedOreDictStack("waferSilicon", 2), advancedCircuit);
+		}
 
 		//BlastFurnace
 		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("Silicon").getProduct(AllowedProducts.getProductByName("INGOT")), 12000, 1, Blocks.sand);
@@ -1343,7 +1346,7 @@ public class AdvancedRocketry {
 				for(String name : ore.getOreDictNames())
 					if(OreDictionary.doesOreNameExist(AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + name)) {
 						GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("STICK"),4), "x  ", " x ", "  x", 'x', AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + name));
-						
+
 						RecipesMachine.getInstance().addRecipe(TileLathe.class, ore.getProduct(AllowedProducts.getProductByName("STICK"),2), 300, 20, AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + name); //ore.getProduct(AllowedProducts.getProductByName("INGOT")));
 					}
 			}
@@ -1437,12 +1440,12 @@ public class AdvancedRocketry {
 							else if(OreDictionary.doesOreNameExist("stick" + str)  && OreDictionary.getOres("stick" + str).size() > 0) {
 								stackToAdd = OreDictionary.getOres("stick" + str).get(0).copy();
 								stackToAdd.stackSize = 2;
-								}
+							}
 							else 
 								continue;
 
 							RecipesMachine.getInstance().addRecipe(TileLathe.class, stackToAdd, 300, 20, "ingot" + str);
-							
+
 						}
 
 					}
@@ -1532,63 +1535,63 @@ public class AdvancedRocketry {
 		logger.info("End registering entity atmosphere bypass");
 
 		//Register asteriodOres
-				if(!zmaster587.advancedRocketry.api.Configuration.asteriodOresBlackList) {
-					for(String str  : asteriodOres)
-						zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres.add(str);
-				}
-				
-				//Register geodeOres
-				if(!zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList) {
-					for(String str  : geodeOres)
-						zmaster587.advancedRocketry.api.Configuration.standardGeodeOres.add(str);
-				}
-				
-				//Register laserDrill ores
-				if(!zmaster587.advancedRocketry.api.Configuration.laserDrillOresBlackList) {
-					for(String str  : orbitalLaserOres)
-						zmaster587.advancedRocketry.api.Configuration.standardLaserDrillOres.add(str);
-				}
-				
+		if(!zmaster587.advancedRocketry.api.Configuration.asteriodOresBlackList) {
+			for(String str  : asteriodOres)
+				zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres.add(str);
+		}
 
-				//Do blacklist stuff for ore registration
-				for(String oreName : OreDictionary.getOreNames()) {
-					if(zmaster587.advancedRocketry.api.Configuration.asteriodOresBlackList && oreName.startsWith("ore")) {
-						boolean found = false;
-						for(String str : asteriodOres) {
-							if(oreName.equals(str)) {
-								found = true;
-								break;
-							}
-						}
-						if(!found)
-							zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres.add(oreName);
-					}
-					
-					if(zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList && oreName.startsWith("ore")) {
-						boolean found = false;
-						for(String str : geodeOres) {
-							if(oreName.equals(str)) {
-								found = true;
-								break;
-							}
-						}
-						if(!found)
-							zmaster587.advancedRocketry.api.Configuration.standardGeodeOres.add(oreName);
-					}
-					
-					if(zmaster587.advancedRocketry.api.Configuration.laserDrillOresBlackList && oreName.startsWith("ore")) {
-						boolean found = false;
-						for(String str : orbitalLaserOres) {
-							if(oreName.equals(str)) {
-								found = true;
-								break;
-							}
-						}
-						if(!found)
-							zmaster587.advancedRocketry.api.Configuration.standardLaserDrillOres.add(oreName);
+		//Register geodeOres
+		if(!zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList) {
+			for(String str  : geodeOres)
+				zmaster587.advancedRocketry.api.Configuration.standardGeodeOres.add(str);
+		}
+
+		//Register laserDrill ores
+		if(!zmaster587.advancedRocketry.api.Configuration.laserDrillOresBlackList) {
+			for(String str  : orbitalLaserOres)
+				zmaster587.advancedRocketry.api.Configuration.standardLaserDrillOres.add(str);
+		}
+
+
+		//Do blacklist stuff for ore registration
+		for(String oreName : OreDictionary.getOreNames()) {
+			if(zmaster587.advancedRocketry.api.Configuration.asteriodOresBlackList && oreName.startsWith("ore")) {
+				boolean found = false;
+				for(String str : asteriodOres) {
+					if(oreName.equals(str)) {
+						found = true;
+						break;
 					}
 				}
-		
+				if(!found)
+					zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres.add(oreName);
+			}
+
+			if(zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList && oreName.startsWith("ore")) {
+				boolean found = false;
+				for(String str : geodeOres) {
+					if(oreName.equals(str)) {
+						found = true;
+						break;
+					}
+				}
+				if(!found)
+					zmaster587.advancedRocketry.api.Configuration.standardGeodeOres.add(oreName);
+			}
+
+			if(zmaster587.advancedRocketry.api.Configuration.laserDrillOresBlackList && oreName.startsWith("ore")) {
+				boolean found = false;
+				for(String str : orbitalLaserOres) {
+					if(oreName.equals(str)) {
+						found = true;
+						break;
+					}
+				}
+				if(!found)
+					zmaster587.advancedRocketry.api.Configuration.standardLaserDrillOres.add(oreName);
+			}
+		}
+
 		//Load XML recipes
 		LibVulpes.instance.loadXMLRecipe(TileCuttingMachine.class);
 		LibVulpes.instance.loadXMLRecipe(TilePrecisionAssembler.class);
