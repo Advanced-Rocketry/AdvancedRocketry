@@ -57,6 +57,8 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 		list.addAll(TileMultiBlock.getMapping('O'));
 		list.addAll(TileMultiBlock.getMapping('I'));
 		list.addAll(TileMultiBlock.getMapping('P'));
+		list.addAll(TileMultiBlock.getMapping('l'));
+		list.addAll(TileMultiBlock.getMapping('L'));
 
 		return list;
 	}
