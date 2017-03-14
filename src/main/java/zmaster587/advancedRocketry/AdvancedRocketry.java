@@ -182,6 +182,7 @@ import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.advancedRocketry.util.FluidColored;
 import zmaster587.advancedRocketry.util.GravityHandler;
 import zmaster587.advancedRocketry.util.OreGenProperties;
+import zmaster587.advancedRocketry.util.RecipeHandler;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
 import zmaster587.advancedRocketry.util.XMLAsteroidLoader;
 import zmaster587.advancedRocketry.util.XMLOreLoader;
@@ -252,6 +253,7 @@ public class AdvancedRocketry {
 	public static WorldType planetWorldType;
 	public static WorldType spaceWorldType;
 	private boolean resetFromXml;
+	public static final RecipeHandler machineRecipes = new RecipeHandler();
 	public static CompatibilityMgr compat = new CompatibilityMgr();
 	public static Logger logger = LogManager.getLogger(Constants.modId);
 	private static Configuration config;
@@ -260,7 +262,7 @@ public class AdvancedRocketry {
 
 	public MaterialRegistry materialRegistry = new MaterialRegistry(); 
 
-	private HashMap<AllowedProducts, HashSet<String>> modProducts = new HashMap<AllowedProducts, HashSet<String>>();
+	public static HashMap<AllowedProducts, HashSet<String>> modProducts = new HashMap<AllowedProducts, HashSet<String>>();
 
 
 	private static CreativeTabs tabAdvRocketry = new CreativeTabs("advancedRocketry") {
@@ -1149,10 +1151,6 @@ public class AdvancedRocketry {
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryBlocks.blockSuitWorkStation), "c","b", 'c', Blocks.crafting_table, 'b', LibVulpesBlocks.blockStructureBlock);
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockDockingPort), trackingCircuit, new ItemStack(AdvancedRocketryBlocks.blockLoader, 1,1));
 
-		RecipesMachine.getInstance().addRecipe(TileElectrolyser.class, new Object[] {new FluidStack(AdvancedRocketryFluids.fluidOxygen, 100), new FluidStack(AdvancedRocketryFluids.fluidHydrogen, 100)}, 100, 20, new FluidStack(FluidRegistry.WATER, 10));
-		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new FluidStack(AdvancedRocketryFluids.fluidRocketFuel, 20), 100, 10, new FluidStack(AdvancedRocketryFluids.fluidOxygen, 10), new FluidStack(AdvancedRocketryFluids.fluidHydrogen, 10));
-
-
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill) {
 			GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockSpaceLaser, "ata", "bec", "gpg", 'a', advancedCircuit, 't', trackingCircuit, 'b', LibVulpesItems.itemBattery, 'e', Items.emerald, 'c', controlCircuitBoard, 'g', "gearTitanium", 'p', LibVulpesBlocks.blockStructureBlock));
 		}
@@ -1165,49 +1163,19 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(controlCircuitBoard, "rvr", "dwd", "dpd", 'r', Items.redstone, 'v', Items.diamond, 'd', "dustCopper", 'w', Blocks.wooden_slab, 'p', "plateIron"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(liquidIOBoard, "rvr", "dwd", "dpd", 'r', Items.redstone, 'v', Items.diamond, 'd', new ItemStack(Items.dye, 1, 4), 'w', Blocks.wooden_slab, 'p', "plateIron"));
 
-		//Cutting Machine
-		RecipesMachine.getInstance().addRecipe(TileCuttingMachine.class, new ItemStack(AdvancedRocketryItems.itemIC, 4, 0), 300, 100, new ItemStack(AdvancedRocketryItems.itemCircuitPlate,1,0));
-		RecipesMachine.getInstance().addRecipe(TileCuttingMachine.class, new ItemStack(AdvancedRocketryItems.itemIC, 4, 2), 300, 100, new ItemStack(AdvancedRocketryItems.itemCircuitPlate,1,1));
-		RecipesMachine.getInstance().addRecipe(TileCuttingMachine.class, new ItemStack(AdvancedRocketryItems.itemWafer, 4, 0), 300, 100, "bouleSilicon");
-
-		//Lathe
-		RecipesMachine.getInstance().addRecipe(TileLathe.class, MaterialRegistry.getItemStackFromMaterialAndType("Iron", AllowedProducts.getProductByName("STICK"),2), 300, 100, "ingotIron");
-
-		//Precision Assembler recipes
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemCircuitPlate,1,0), 900, 100, Items.gold_ingot, Items.redstone, "waferSilicon");
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemCircuitPlate,1,1), 900, 100, Items.gold_ingot, Blocks.redstone_block, "waferSilicon");
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemDataUnit, 1, 0), 500, 60, Items.emerald, basicCircuit, Items.redstone);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, trackingCircuit, 900, 50, new ItemStack(AdvancedRocketryItems.itemCircuitPlate,1,0), Items.ender_eye, Items.redstone);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, itemIOBoard, 200, 10, "plateSilicon", "plateGold", basicCircuit, Items.redstone);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, controlCircuitBoard, 200, 10, "plateSilicon", "plateCopper", basicCircuit, Items.redstone);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, liquidIOBoard, 200, 10, "plateSilicon", new ItemStack(Items.dye, 1, 4), basicCircuit, Items.redstone);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemUpgrade,1,0), 400, 1, Items.redstone, Blocks.redstone_torch, basicCircuit, controlCircuitBoard);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemUpgrade,1,1), 400, 1, Items.fire_charge, Items.diamond, advancedCircuit, controlCircuitBoard);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemUpgrade,1,2), 400, 1, LibVulpesBlocks.blockMotor, "rodTitanium", advancedCircuit, controlCircuitBoard);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemUpgrade,1,3), 400, 1, Items.leather_boots, Items.feather, advancedCircuit, controlCircuitBoard);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemUpgrade,1,4), 400, 1, LibVulpesItems.itemBattery, AdvancedRocketryItems.itemLens, advancedCircuit, controlCircuitBoard);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemAtmAnalyser), 1000, 1, smallBattery, advancedCircuit, "plateTin", AdvancedRocketryItems.itemLens,  userInterface);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemBiomeChanger), 1000, 1, smallBattery, advancedCircuit, "plateTin", trackingCircuit,  userInterface);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, biomeChanger, 1000, 1, new NumberedOreDictStack("stickCopper", 2), "stickTitanium", new NumberedOreDictStack("waferSilicon", 2), advancedCircuit);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryBlocks.blockLens,1,0), 100, 1, new ItemStack(Blocks.glass, 3), new NumberedOreDictStack("itemLens", 3), "stickIron");
-
-		//BlastFurnace
-		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("Silicon").getProduct(AllowedProducts.getProductByName("INGOT")), 12000, 1, Blocks.sand);
-		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("Steel").getProduct(AllowedProducts.getProductByName("INGOT")), 6000, 1, "ingotIron", charcoal);
-		//TODO add 2Al2O3 as output
-		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("TitaniumAluminide").getProduct(AllowedProducts.getProductByName("INGOT"), 3), 9000, 20, new NumberedOreDictStack("ingotAluminum", 7), new NumberedOreDictStack("ingotTitanium", 3)); //TODO titanium dioxide
-		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("TitaniumIridium").getProduct(AllowedProducts.getProductByName("INGOT"),2), 3000, 20, "ingotTitanium", "ingotIridium");
-
-		//Chemical Reactor
-		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new Object[] {new ItemStack(AdvancedRocketryItems.itemCarbonScrubberCartridge,1, 0), new ItemStack(Items.coal, 1, 1)}, 40, 20, new ItemStack(AdvancedRocketryItems.itemCarbonScrubberCartridge, 1, AdvancedRocketryItems.itemCarbonScrubberCartridge.getMaxDamage()));
-		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new ItemStack(Items.dye,5,0xF), 100, 1, Items.bone, new FluidStack(AdvancedRocketryFluids.fluidNitrogen, 10));
-
-		//Rolling Machine
-		RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 0), 100, 1, "sheetIron", "sheetIron");
-		RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 1), 200, 2, "sheetSteel", "sheetSteel");
-		RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 2), 100, 1, "sheetAluminum", "sheetAluminum");
-		RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 3), 1000, 8, "sheetTitanium", "sheetTitanium");
-
+		//Register machines
+		machineRecipes.registerMachine(TileElectrolyser.class);
+		machineRecipes.registerMachine(TileCuttingMachine.class);
+		machineRecipes.registerMachine(TileLathe.class);
+		machineRecipes.registerMachine(TilePrecisionAssembler.class);
+		machineRecipes.registerMachine(TileElectricArcFurnace.class);
+		machineRecipes.registerMachine(TileChemicalReactor.class);
+		machineRecipes.registerMachine(TileRollingMachine.class);
+		machineRecipes.registerMachine(TileCrystallizer.class);
+		
+		//Register the machine recipes
+		machineRecipes.registerAllMachineRecipes();
+	
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new zmaster587.advancedRocketry.inventory.GuiHandler());
 		planetWorldType = new WorldTypePlanetGen("PlanetCold");
 		spaceWorldType = new WorldTypeSpace("Space");
@@ -1305,6 +1273,8 @@ public class AdvancedRocketry {
 		TileMultiBlock.addMapping('D', list);
 	}
 
+
+
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
@@ -1373,141 +1343,7 @@ public class AdvancedRocketry {
 
 		ForgeChunkManager.setForcedChunkLoadingCallback(instance, new WorldEvents());
 
-
-		//AutoGenned Recipes
-		for(zmaster587.libVulpes.api.material.Material ore : MaterialRegistry.getAllMaterials()) {
-			if(AllowedProducts.getProductByName("ORE").isOfType(ore.getAllowedProducts()) && AllowedProducts.getProductByName("INGOT").isOfType(ore.getAllowedProducts()))
-				GameRegistry.addSmelting(ore.getProduct(AllowedProducts.getProductByName("ORE")), ore.getProduct(AllowedProducts.getProductByName("INGOT")), 0);
-
-			if(AllowedProducts.getProductByName("NUGGET").isOfType(ore.getAllowedProducts())) {
-				ItemStack nugget = ore.getProduct(AllowedProducts.getProductByName("NUGGET"));
-				nugget.stackSize = 9;
-				for(String str : ore.getOreDictNames()) {
-					GameRegistry.addRecipe(new ShapelessOreRecipe(nugget, AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + str));
-					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("INGOT")), "ooo", "ooo", "ooo", 'o', AllowedProducts.getProductByName("NUGGET").name().toLowerCase(Locale.ENGLISH) + str));
-				}
-			}
-
-			if(AllowedProducts.getProductByName("CRYSTAL").isOfType(ore.getAllowedProducts())) {
-				for(String str : ore.getOreDictNames())
-					RecipesMachine.getInstance().addRecipe(TileCrystallizer.class, ore.getProduct(AllowedProducts.getProductByName("CRYSTAL")), 300, 20, AllowedProducts.getProductByName("DUST").name().toLowerCase(Locale.ENGLISH) + str);
-			}
-
-			if(AllowedProducts.getProductByName("BOULE").isOfType(ore.getAllowedProducts())) {
-				for(String str : ore.getOreDictNames())
-					RecipesMachine.getInstance().addRecipe(TileCrystallizer.class, ore.getProduct(AllowedProducts.getProductByName("BOULE")), 300, 20, AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + str, AllowedProducts.getProductByName("NUGGET").name().toLowerCase(Locale.ENGLISH) + str);
-			}
-
-			if(AllowedProducts.getProductByName("STICK").isOfType(ore.getAllowedProducts()) && AllowedProducts.getProductByName("INGOT").isOfType(ore.getAllowedProducts())) {
-				for(String name : ore.getOreDictNames())
-					if(OreDictionary.doesOreNameExist(AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + name)) {
-						GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("STICK"),4), "x  ", " x ", "  x", 'x', AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + name));
-
-						RecipesMachine.getInstance().addRecipe(TileLathe.class, ore.getProduct(AllowedProducts.getProductByName("STICK"),2), 300, 20, AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + name); //ore.getProduct(AllowedProducts.getProductByName("INGOT")));
-					}
-			}
-
-			if(AllowedProducts.getProductByName("PLATE").isOfType(ore.getAllowedProducts())) {
-				for(String oreDictNames : ore.getOreDictNames()) {
-					if(OreDictionary.doesOreNameExist(AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + oreDictNames)) {
-						RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, ore.getProduct(AllowedProducts.getProductByName("PLATE")), 300, 20, AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + oreDictNames);
-						if(AllowedProducts.getProductByName("BLOCK").isOfType(ore.getAllowedProducts()) || ore.isVanilla())
-							RecipesMachine.getInstance().addRecipe(BlockPress.class, ore.getProduct(AllowedProducts.getProductByName("PLATE"),4), 0, 0, AllowedProducts.getProductByName("BLOCK").name().toLowerCase(Locale.ENGLISH) + oreDictNames);
-					}
-				}
-			}
-
-			if(AllowedProducts.getProductByName("SHEET").isOfType(ore.getAllowedProducts())) {
-				for(String oreDictNames : ore.getOreDictNames()) {
-					RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, ore.getProduct(AllowedProducts.getProductByName("SHEET")), 300, 200, AllowedProducts.getProductByName("PLATE").name().toLowerCase(Locale.ENGLISH) + oreDictNames);
-				}
-			}
-
-			if(AllowedProducts.getProductByName("COIL").isOfType(ore.getAllowedProducts())) {
-				for(String str : ore.getOreDictNames())
-					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("COIL")), "ooo", "o o", "ooo",'o', AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + str));
-			}
-
-			if(AllowedProducts.getProductByName("FAN").isOfType(ore.getAllowedProducts())) {
-				for(String str : ore.getOreDictNames()) {
-					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("FAN")), "p p", " r ", "p p", 'p', AllowedProducts.getProductByName("PLATE").name().toLowerCase(Locale.ENGLISH) + str, 'r', AllowedProducts.getProductByName("STICK").name().toLowerCase(Locale.ENGLISH) + str));
-				}
-			}
-			if(AllowedProducts.getProductByName("GEAR").isOfType(ore.getAllowedProducts())) {
-				for(String str : ore.getOreDictNames()) {
-					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("GEAR")), "sps", " r ", "sps", 'p', AllowedProducts.getProductByName("PLATE").name().toLowerCase(Locale.ENGLISH) + str, 's', AllowedProducts.getProductByName("STICK").name().toLowerCase(Locale.ENGLISH) + str, 'r', AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + str));
-				}
-			}
-			if(AllowedProducts.getProductByName("BLOCK").isOfType(ore.getAllowedProducts())) {
-				ItemStack ingot = ore.getProduct(AllowedProducts.getProductByName("INGOT"));
-				ingot.stackSize = 9;
-				for(String str : ore.getOreDictNames()) {
-					GameRegistry.addRecipe(new ShapelessOreRecipe(ingot, AllowedProducts.getProductByName("BLOCK").name().toLowerCase(Locale.ENGLISH) + str));
-					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("BLOCK")), "ooo", "ooo", "ooo", 'o', AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + str));
-				}
-			}
-
-			if(AllowedProducts.getProductByName("DUST").isOfType(ore.getAllowedProducts())) {
-				for(String str : ore.getOreDictNames()) {
-					if(AllowedProducts.getProductByName("ORE").isOfType(ore.getAllowedProducts()) || ore.isVanilla()) {
-						ItemStack stack = ore.getProduct(AllowedProducts.getProductByName("DUST"));
-						stack.stackSize = 2;
-						RecipesMachine.getInstance().addRecipe(BlockPress.class, stack, 0, 0, AllowedProducts.getProductByName("ORE").name().toLowerCase(Locale.ENGLISH) + str);
-					}
-					if(AllowedProducts.getProductByName("INGOT").isOfType(ore.getAllowedProducts()) || ore.isVanilla())
-						GameRegistry.addSmelting(ore.getProduct(AllowedProducts.getProductByName("DUST")), ore.getProduct(AllowedProducts.getProductByName("INGOT")), 0);
-				}
-			}
-		}
-
-		//Handle vanilla integration
-		if(zmaster587.advancedRocketry.api.Configuration.allowSawmillVanillaWood) {
-			for(int i = 0; i < 4; i++) {
-				RecipesMachine.getInstance().addRecipe(TileCuttingMachine.class, new ItemStack(Blocks.planks, 6, i), 80, 10, new ItemStack(Blocks.log,1, i));
-			}
-			RecipesMachine.getInstance().addRecipe(TileCuttingMachine.class, new ItemStack(Blocks.planks, 6, 4), 80, 10, new ItemStack(Blocks.log2,1, 0));
-		}
-
-		//Handle items from other mods
-		if(zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods) {
-			for(Entry<AllowedProducts, HashSet<String>> entry : modProducts.entrySet()) {
-				if(entry.getKey() == AllowedProducts.getProductByName("PLATE")) {
-					for(String str : entry.getValue()) {
-						zmaster587.libVulpes.api.material.Material material = zmaster587.libVulpes.api.material.Material.valueOfSafe(str.toUpperCase());
-
-						if(OreDictionary.doesOreNameExist("ingot" + str) && OreDictionary.getOres("ingot" + str).size() > 0 && (material == null || !AllowedProducts.getProductByName("PLATE").isOfType(material.getAllowedProducts())) ) {
-
-							RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, OreDictionary.getOres("plate" + str).get(0), 300, 20, "ingot" + str);
-						}
-					}
-				}
-				else if(entry.getKey() == AllowedProducts.getProductByName("STICK")) {
-					for(String str : entry.getValue()) {
-						zmaster587.libVulpes.api.material.Material material = zmaster587.libVulpes.api.material.Material.valueOfSafe(str.toUpperCase());
-
-						if(OreDictionary.doesOreNameExist("ingot" + str) && OreDictionary.getOres("ingot" + str).size() > 0 && (material == null || !AllowedProducts.getProductByName("STICK").isOfType(material.getAllowedProducts())) ) {
-
-							//GT registers rods as sticks
-							ItemStack stackToAdd = null;
-							if(OreDictionary.doesOreNameExist("rod" + str) && OreDictionary.getOres("rod" + str).size() > 0) {
-								stackToAdd = OreDictionary.getOres("rod" + str).get(0).copy();
-								stackToAdd.stackSize = 2;
-							}
-							else if(OreDictionary.doesOreNameExist("stick" + str)  && OreDictionary.getOres("stick" + str).size() > 0) {
-								stackToAdd = OreDictionary.getOres("stick" + str).get(0).copy();
-								stackToAdd.stackSize = 2;
-							}
-							else 
-								continue;
-
-							RecipesMachine.getInstance().addRecipe(TileLathe.class, stackToAdd, 300, 20, "ingot" + str);
-
-						}
-
-					}
-				}
-			}
-		}
+		machineRecipes.createAutoGennedRecipes(modProducts);
 
 		//Register buckets
 		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockFuelFluid, AdvancedRocketryItems.itemBucketRocketFuel);
@@ -1640,7 +1476,10 @@ public class AdvancedRocketry {
 		LibVulpes.instance.loadXMLRecipe(TileElectricArcFurnace.class);
 		LibVulpes.instance.loadXMLRecipe(TileLathe.class);
 		LibVulpes.instance.loadXMLRecipe(TileRollingMachine.class);
-
+		
+		machineRecipes.registerXMLRecipes();
+		
+		
 		//Load Asteroids from XML
 		File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/asteroidConfig.xml");
 		logger.info("Checking for asteroid config at " + file.getAbsolutePath());

@@ -12,6 +12,9 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -53,9 +56,16 @@ public class TileElectrolyser extends TileMultiblockMachine {
 	}
 	
 	@Override
+	public void registerRecipes() {
+		RecipesMachine.getInstance().addRecipe(TileElectrolyser.class, new Object[] {new FluidStack(AdvancedRocketryFluids.fluidOxygen, 100), new FluidStack(AdvancedRocketryFluids.fluidHydrogen, 100)}, 100, 20, new FluidStack(FluidRegistry.WATER, 10));
+	}
+	
+	@Override
 	public float getTimeMultiplierForBlock(Block block, int meta,
 			TileEntity tile) {
 		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(block,1, meta));
+
+
 		if(material == MaterialRegistry.getMaterialFromName("Gold"))
 			return 0.9f;
 		else if(material == MaterialRegistry.getMaterialFromName("Aluiminum"))
