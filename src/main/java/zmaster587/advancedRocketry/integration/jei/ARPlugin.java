@@ -57,6 +57,10 @@ public class ARPlugin extends BlankModPlugin {
 	public static final String arcFurnaceUUID = "zmaster587.AR.arcFurnace";
 	public static final String platePresser = "zmaster587.AR.platePresser";
 	
+	public static void reload() {
+		jeiHelpers.reload();
+	}
+	
 	@Override
 	public void register(IModRegistry registry) {
 		jeiHelpers = registry.getJeiHelpers();
@@ -92,6 +96,7 @@ public class ARPlugin extends BlankModPlugin {
 		registry.addRecipes(PlatePressRecipeMaker.getMachineRecipes(jeiHelpers, BlockPress.class));
 		registry.addRecipes(ElectrolyzerRecipeMaker.getMachineRecipes(jeiHelpers, TileElectrolyser.class));
 		registry.addRecipes(ChemicalReactorRecipeMaker.getMachineRecipes(jeiHelpers, TileChemicalReactor.class));
+		
 		
 		registry.addRecipeCategoryCraftingItem(new ItemStack(AdvancedRocketryBlocks.blockRollingMachine), rollingMachineUUID);
 		registry.addRecipeCategoryCraftingItem(new ItemStack(AdvancedRocketryBlocks.blockLathe), latheUUID);

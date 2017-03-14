@@ -17,6 +17,8 @@ import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.integration.CompatibilityMgr;
+import zmaster587.advancedRocketry.integration.jei.ARPlugin;
 import zmaster587.advancedRocketry.item.ItemData;
 import zmaster587.advancedRocketry.item.ItemMultiData;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
@@ -102,6 +104,9 @@ public class WorldCommand implements ICommand {
 				AdvancedRocketry.machineRecipes.registerXMLRecipes();
 				
 				sender.addChatMessage(new TextComponentString("Recipes Reloaded"));
+				
+				CompatibilityMgr.reloadRecipes();
+				
 			} catch (Exception e) {
 				sender.addChatMessage(new TextComponentString("Serious error has occured!  Possible recipe corruption"));
 				sender.addChatMessage(new TextComponentString("Please check logs!"));
@@ -378,6 +383,7 @@ public class WorldCommand implements ICommand {
 				//Make sure player is in Dimension we have control over
 				else if( DimensionManager.getInstance().isDimensionCreated((dimId = sender.getEntityWorld().provider.getDimension())) ) {
 
+					
 					if(string[1].equalsIgnoreCase("set") && string.length > 2) {
 
 						DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimId);
@@ -594,6 +600,7 @@ public class WorldCommand implements ICommand {
 			list.add("star");
 			list.add("filldata");
 			list.add("setGravity");
+			list.add("reloadRecipes");
 		} else if(string.length == 2) {
 			ArrayList<String> list2 = new ArrayList<String>();
 			list2.add("get");
