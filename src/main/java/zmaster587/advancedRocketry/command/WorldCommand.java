@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
@@ -90,6 +91,25 @@ public class WorldCommand implements ICommand {
 			}
 			else
 				sender.addChatMessage(new TextComponentString("Ghosts don't have items!"));
+			return;
+		}
+
+		if(string.length >= 1 &&  string[0].equalsIgnoreCase("reloadRecipes")) {
+			try {
+				AdvancedRocketry.machineRecipes.clearAllMachineRecipes();
+				AdvancedRocketry.machineRecipes.registerAllMachineRecipes();
+				AdvancedRocketry.machineRecipes.createAutoGennedRecipes(AdvancedRocketry.modProducts);
+				AdvancedRocketry.machineRecipes.registerXMLRecipes();
+				
+				sender.addChatMessage(new TextComponentString("Recipes Reloaded"));
+			} catch (Exception e) {
+				sender.addChatMessage(new TextComponentString("Serious error has occured!  Possible recipe corruption"));
+				sender.addChatMessage(new TextComponentString("Please check logs!"));
+				sender.addChatMessage(new TextComponentString("You may be able to recify this error by repairing the XML and/or"));
+				sender.addChatMessage(new TextComponentString("restarting the game"));
+			}
+
+			
 			return;
 		}
 
