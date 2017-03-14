@@ -33,7 +33,7 @@ public class ChemicalReactorRecipeMaker {
 		output.add(new ItemStack(AdvancedRocketryItems.itemBucketRocketFuel));
 		
 		
-		IRecipe rocketFuel = new RecipesMachine.Recipe(output, finalInput, 0, 0);
+		IRecipe rocketFuel = new RecipesMachine.Recipe(output, finalInput, 0, 0, null);
 		
 		list.add(new ChemicalReactorlWrapper(rocketFuel));
 		

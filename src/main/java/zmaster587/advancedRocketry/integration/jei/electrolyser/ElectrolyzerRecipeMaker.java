@@ -28,7 +28,7 @@ public class ElectrolyzerRecipeMaker {
 		input.add(new ItemStack(Items.WATER_BUCKET));
 		finalInput.add(input);
 		
-		IRecipe waterElectro = new RecipesMachine.Recipe(output, finalInput, 0, 0);
+		IRecipe waterElectro = new RecipesMachine.Recipe(output, finalInput, 0, 0, null);
 		
 		list.add(new ElectrolyzerWrapper(waterElectro));
 		
