@@ -28,8 +28,8 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 	public static final Object[][][] structure = { {{AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible},
 		{AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible}},
 
-		{{'O', 'c', 'I'}, 
-			{"blockCoil", MaterialRegistry.getMaterialFromName("Copper").getMeta(), 'P', "blockCoil"}},
+		{{'I', 'c', 'O'}, 
+			{"blockCoil", 'P', "blockCoil"}},
 
 	};
 
