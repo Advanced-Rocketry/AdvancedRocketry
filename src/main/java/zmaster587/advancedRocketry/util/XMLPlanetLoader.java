@@ -17,6 +17,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.dimension.solar.IGalaxy;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -384,12 +385,16 @@ public class XMLPlanetLoader {
 		}
 		return coupling;
 	}
+	
+	public static String writeXML(IGalaxy galaxy) {
+		//galaxy.
+		return "";
+	}
 
 	public static class DimensionPropertyCoupling {
 
 		public List<StellarBody> stars = new LinkedList<StellarBody>();
 		public List<DimensionProperties> dims = new LinkedList<DimensionProperties>();
-
 
 	}
 }
