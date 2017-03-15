@@ -65,7 +65,7 @@ public class DimensionManager implements IGalaxy {
 	public static DimensionProperties defaultSpaceDimensionProperties;
 
 	public static StellarBody getSol() {
-		return getInstance().getStar(0);
+		return sol;
 	}
 
 	public static DimensionManager getInstance() {
@@ -87,7 +87,6 @@ public class DimensionManager implements IGalaxy {
 		overworldProperties.gravitationalMultiplier = 1f;
 		overworldProperties.orbitalDist = 100;
 		overworldProperties.skyColor = new float[] {1f, 1f, 1f};
-		overworldProperties.setStar(sol);
 		overworldProperties.setName("Earth");
 		overworldProperties.isNativeDimension = false;
 
@@ -97,10 +96,8 @@ public class DimensionManager implements IGalaxy {
 		defaultSpaceDimensionProperties.gravitationalMultiplier = 0.1f;
 		defaultSpaceDimensionProperties.orbitalDist = 100;
 		defaultSpaceDimensionProperties.skyColor = new float[] {0f,0f,0f};
-		defaultSpaceDimensionProperties.setStar(sol);
 		defaultSpaceDimensionProperties.setName("Space");
 		defaultSpaceDimensionProperties.fogColor = new float[] {0f,0f,0f};
-		defaultSpaceDimensionProperties.setParentPlanet(overworldProperties,false);
 		defaultSpaceDimensionProperties.orbitalDist = 1;
 
 		random = new Random(System.currentTimeMillis());

@@ -1172,10 +1172,10 @@ public class AdvancedRocketry {
 		machineRecipes.registerMachine(TileChemicalReactor.class);
 		machineRecipes.registerMachine(TileRollingMachine.class);
 		machineRecipes.registerMachine(TileCrystallizer.class);
-		
+
 		//Register the machine recipes
 		machineRecipes.registerAllMachineRecipes();
-	
+
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new zmaster587.advancedRocketry.inventory.GuiHandler());
 		planetWorldType = new WorldTypePlanetGen("PlanetCold");
 		spaceWorldType = new WorldTypeSpace("Space");
@@ -1476,10 +1476,10 @@ public class AdvancedRocketry {
 		LibVulpes.instance.loadXMLRecipe(TileElectricArcFurnace.class);
 		LibVulpes.instance.loadXMLRecipe(TileLathe.class);
 		LibVulpes.instance.loadXMLRecipe(TileRollingMachine.class);
-		
+
 		machineRecipes.registerXMLRecipes();
-		
-		
+
+
 		//Load Asteroids from XML
 		File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/asteroidConfig.xml");
 		logger.info("Checking for asteroid config at " + file.getAbsolutePath());
@@ -1655,28 +1655,32 @@ public class AdvancedRocketry {
 
 			}
 
-
-			if(zmaster587.advancedRocketry.api.Configuration.MoonId == -1)
-				zmaster587.advancedRocketry.api.Configuration.MoonId = DimensionManager.getInstance().getNextFreeDim(DimensionManager.dimOffset);
-
-			if(zmaster587.advancedRocketry.api.Configuration.MoonId != -1) {
-				DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId);
-				dimensionProperties.setAtmosphereDensityDirect(0);
-				dimensionProperties.averageTemperature = 20;
-				dimensionProperties.gravitationalMultiplier = .166f; //Actual moon value
-				dimensionProperties.setName("Luna");
-				dimensionProperties.rotationalPeriod = 128000;
-				dimensionProperties.orbitalDist = 150;
-				dimensionProperties.addBiome(AdvancedRocketryBiomes.moonBiome);
-
-				dimensionProperties.setParentPlanet(DimensionManager.overworldProperties);
-				dimensionProperties.setStar(DimensionManager.getSol());
-				dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");
-				DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
-
-			}
-
 			if(!loadedFromXML)  {
+				
+				DimensionManager.getInstance().addStar(DimensionManager.getSol());
+				DimensionManager.getInstance().getDimensionProperties(0).setStar(DimensionManager.getSol());
+				
+				if(zmaster587.advancedRocketry.api.Configuration.MoonId == -1)
+					zmaster587.advancedRocketry.api.Configuration.MoonId = DimensionManager.getInstance().getNextFreeDim(DimensionManager.dimOffset);
+
+				if(zmaster587.advancedRocketry.api.Configuration.MoonId != -1) {
+					DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId);
+					dimensionProperties.setAtmosphereDensityDirect(0);
+					dimensionProperties.averageTemperature = 20;
+					dimensionProperties.gravitationalMultiplier = .166f; //Actual moon value
+					dimensionProperties.setName("Luna");
+					dimensionProperties.rotationalPeriod = 128000;
+					dimensionProperties.orbitalDist = 150;
+					dimensionProperties.addBiome(AdvancedRocketryBiomes.moonBiome);
+
+					dimensionProperties.setParentPlanet(DimensionManager.overworldProperties);
+					dimensionProperties.setStar(DimensionManager.getSol());
+					dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");
+					DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
+
+				}
+
+
 				generateRandomPlanets(DimensionManager.getSol(), numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
 
 				StellarBody star = new StellarBody();
