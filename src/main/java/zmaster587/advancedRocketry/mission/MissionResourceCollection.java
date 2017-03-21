@@ -104,7 +104,7 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 	@Override
 	public void tickEntity() {
 		if(getProgress(DimensionManager.getWorld(getDimensionId())) >= 1 && !DimensionManager.getWorld(0).isRemote) {
-			zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(getDimensionId()).removeSatellite(getId());
+			setDead();
 			onMissionComplete();
 		}
 	}
