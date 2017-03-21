@@ -696,6 +696,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		while(iterator.hasNext()) {
 			SatelliteBase satallite = iterator.next();
 			satallite.tickEntity();
+			if(satallite.isDead())
+				iterator.remove();
 		}
 		
 		this.prevOrbitalTheta = this.orbitTheta;

@@ -17,9 +17,12 @@ public abstract class SatelliteBase {
 	protected SatelliteProperties satelliteProperties;
 	private int dimId = -1;
 
+	private boolean isDead;
+	
 	public SatelliteBase() {
 		satelliteProperties = new SatelliteProperties();
 		satelliteProperties.setSatelliteType(SatelliteRegistry.getKey(this.getClass()));
+		isDead = false;
 	}
 	
 	public boolean acceptsItemInConstruction(ItemStack item) {
@@ -86,6 +89,14 @@ public abstract class SatelliteBase {
 	 */
 	public long getId() {
 		return satelliteProperties.getId();
+	}
+	
+	public void setDead(){
+		isDead = true;
+	}
+	
+	public boolean isDead() {
+		return isDead;
 	}
 	
 	/**
