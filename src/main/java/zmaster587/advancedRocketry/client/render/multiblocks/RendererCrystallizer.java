@@ -58,67 +58,67 @@ public class RendererCrystallizer extends TileEntitySpecialRenderer {
 
 			bindTexture(texture);
 			model.renderPart("Hull");
-			
-				List<ItemStack> outputList = multiBlockTile.getOutputs();
-				if(outputList != null && !outputList.isEmpty()) {
-					ItemStack stack = outputList.get(0);
-					EntityItem entity = new EntityItem(tile.getWorldObj());
 
-					entity.setEntityItemStack(stack);
-					entity.hoverStart = 0;
+			List<ItemStack> outputList = multiBlockTile.getOutputs();
+			if(outputList != null && !outputList.isEmpty()) {
+				ItemStack stack = outputList.get(0);
+				EntityItem entity = new EntityItem(tile.getWorldObj());
 
-					int rotation = (int)(tile.getWorldObj().getTotalWorldTime() % 360);
-					GL11.glPushMatrix();
-					GL11.glTranslatef(0, 1, 0);
-					
-					GL11.glPushMatrix();
-					GL11.glTranslated(1, 0.2, 0.7);
-					GL11.glRotatef(rotation, 0, 1, 0);
-					GL11.glScalef(progress, progress, progress);
-					dummyItem.doRender(entity, 0,0,0,  0.0F, 0.0F);
-					GL11.glPopMatrix();
-					
-					GL11.glPushMatrix();
-					GL11.glTranslated(1, 0.2, 1.5);
-					GL11.glRotatef(rotation, 0, 1, 0);
-					GL11.glScalef(progress, progress, progress);
-					dummyItem.doRender(entity, 0,0,0,  0.0F, 0.0F);
-					GL11.glPopMatrix();
+				entity.setEntityItemStack(stack);
+				entity.hoverStart = 0;
 
-					GL11.glPushMatrix();
-					GL11.glTranslated(1, 0.2, 2.3);
-					GL11.glRotatef(rotation, 0, 1, 0);
-					GL11.glScalef(progress, progress, progress);
-					dummyItem.doRender(entity, 0,0,0,  0.0F, 0.0F);
-					GL11.glPopMatrix();
-					
-					GL11.glPopMatrix();
-					
-				}
+				int rotation = (int)(tile.getWorldObj().getTotalWorldTime() % 360);
+				GL11.glPushMatrix();
+				GL11.glTranslatef(0, 1, 0);
 
-			GL11.glPushMatrix();
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA );
-			
-			ItemStack stack = multiBlockTile.getOutputs().get(0);
-			
-			int color = stack.getItem().getColorFromItemStack(stack, 0);
-			
-			float divisor = 1/255f;
-			
-			GL11.glColor4f((color & 0xFF)*divisor*.5f, ((color & 0xFF00) >>> 8)*divisor*.5f,  ((color & 0xFF0000) >>> 16)*divisor*.5f, 0xE4*divisor);
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glTranslatef(0, 1.1f, 0);
-			
-			//Fill before emptying
-			if(progress < 0.05)
-				GL11.glScaled(1, 20*progress, 1);
-			else
-				GL11.glScaled(1, (1.1-(progress*1.111)), 1);
-			
-			GL11.glTranslatef(0, -1.1f, 0);
-			model.renderPart("Liquid");
+				GL11.glPushMatrix();
+				GL11.glTranslated(1, 0.2, 0.7);
+				GL11.glRotatef(rotation, 0, 1, 0);
+				GL11.glScalef(progress, progress, progress);
+				dummyItem.doRender(entity, 0,0,0,  0.0F, 0.0F);
+				GL11.glPopMatrix();
 
+				GL11.glPushMatrix();
+				GL11.glTranslated(1, 0.2, 1.5);
+				GL11.glRotatef(rotation, 0, 1, 0);
+				GL11.glScalef(progress, progress, progress);
+				dummyItem.doRender(entity, 0,0,0,  0.0F, 0.0F);
+				GL11.glPopMatrix();
+
+				GL11.glPushMatrix();
+				GL11.glTranslated(1, 0.2, 2.3);
+				GL11.glRotatef(rotation, 0, 1, 0);
+				GL11.glScalef(progress, progress, progress);
+				dummyItem.doRender(entity, 0,0,0,  0.0F, 0.0F);
+				GL11.glPopMatrix();
+
+				GL11.glPopMatrix();
+
+
+
+				GL11.glPushMatrix();
+				GL11.glEnable(GL11.GL_BLEND);
+				GL11.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA );
+
+
+				int color = stack.getItem().getColorFromItemStack(stack, 0);
+
+				float divisor = 1/255f;
+
+				GL11.glColor4f((color & 0xFF)*divisor*.5f, ((color & 0xFF00) >>> 8)*divisor*.5f,  ((color & 0xFF0000) >>> 16)*divisor*.5f, 0xE4*divisor);
+				GL11.glDisable(GL11.GL_TEXTURE_2D);
+				GL11.glTranslatef(0, 1.1f, 0);
+
+				//Fill before emptying
+				if(progress < 0.05)
+					GL11.glScaled(1, 20*progress, 1);
+				else
+					GL11.glScaled(1, (1.1-(progress*1.111)), 1);
+
+				GL11.glTranslatef(0, -1.1f, 0);
+				model.renderPart("Liquid");
+			}
+			
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glDisable(GL11.GL_BLEND);
 			GL11.glPopMatrix();
@@ -128,6 +128,7 @@ public class RendererCrystallizer extends TileEntitySpecialRenderer {
 			bindTexture(texture);
 			model.renderPart("Hull");
 		}
+
 		GL11.glPopMatrix();
 	}
 
