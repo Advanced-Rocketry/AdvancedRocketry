@@ -103,31 +103,30 @@ public class RendererCrystallizer extends TileEntitySpecialRenderer {
 
 				GL11.glPopMatrix();
 
+
+
+				GL11.glPushMatrix();
+				GL11.glEnable(GL11.GL_BLEND);
+				GL11.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA );
+
+				int color = Minecraft.getMinecraft().getItemColors().getColorFromItemstack(stack, 0);
+
+				float divisor = 1/255f;
+
+				GL11.glColor4f((color & 0xFF)*divisor*.5f, ((color & 0xFF00) >>> 8)*divisor*.5f,  ((color & 0xFF0000) >>> 16)*divisor*.5f, 0xE4*divisor);
+				GL11.glDisable(GL11.GL_TEXTURE_2D);
+				GL11.glTranslatef(0, 1.1f, 0);
+
+				//Fill before emptying
+				if(progress < 0.05)
+					GL11.glScaled(1, 20*progress, 1);
+				else
+					GL11.glScaled(1, (1.1-(progress*1.111)), 1);
+
+				GL11.glTranslatef(0, -1.1f, 0);
+				model.renderPart("Liquid");
 			}
-
-			GL11.glPushMatrix();
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA );
-
-			ItemStack stack = multiBlockTile.getOutputs().get(0);
-
-			int color = Minecraft.getMinecraft().getItemColors().getColorFromItemstack(stack, 0);
-
-			float divisor = 1/255f;
-
-			GL11.glColor4f((color & 0xFF)*divisor*.5f, ((color & 0xFF00) >>> 8)*divisor*.5f,  ((color & 0xFF0000) >>> 16)*divisor*.5f, 0xE4*divisor);
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glTranslatef(0, 1.1f, 0);
-
-			//Fill before emptying
-			if(progress < 0.05)
-				GL11.glScaled(1, 20*progress, 1);
-			else
-				GL11.glScaled(1, (1.1-(progress*1.111)), 1);
-
-			GL11.glTranslatef(0, -1.1f, 0);
-			model.renderPart("Liquid");
-
+			
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glDisable(GL11.GL_BLEND);
 			GL11.glPopMatrix();
