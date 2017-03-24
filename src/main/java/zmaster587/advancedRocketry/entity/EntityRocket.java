@@ -58,6 +58,7 @@ import zmaster587.advancedRocketry.network.PacketSatellite;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
+import zmaster587.advancedRocketry.util.MobileAABB;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
@@ -155,7 +156,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	@Override
 	public AxisAlignedBB getBoundingBox() {
 		if(storage != null) {
-			return this.boundingBox;
+			MobileAABB aabb = new MobileAABB(this.boundingBox);
+			aabb.setStorageChunk(storage);
+			return aabb;
 		}
 		return null;
 	}
