@@ -77,6 +77,7 @@ import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.AudioRegistry;
+import zmaster587.advancedRocketry.util.MobileAABB;
 import zmaster587.advancedRocketry.util.RocketInventoryHelper;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.advancedRocketry.util.TransitionEntity;
@@ -179,7 +180,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	@Override
 	public AxisAlignedBB getEntityBoundingBox() {
 		if(storage != null) {
-			return super.getEntityBoundingBox();//.offset(0, -storage.getSizeY(), 0);
+			//MobileAABB aabb = new MobileAABB(super.getEntityBoundingBox());
+			//aabb.setStorageChunk(storage);
+			//aabb.setRemote(worldObj.isRemote);
+			//return aabb;
+			return super.getEntityBoundingBox();
 		}
 		return new AxisAlignedBB(0,0,0,1,1,1);
 	}
@@ -282,7 +287,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			float sizeX = storage.getSizeX()/2.0f;
 			float sizeY = storage.getSizeY();
 			float sizeZ = storage.getSizeZ()/2.0f;
-			//setEntityBoundingBox(new AxisAlignedBB(x - sizeX, y - (double)this.getYOffset() + this.height, z - sizeZ, x + sizeX, y + sizeY - (double)this.getYOffset() + this.height, z + sizeZ));
+			setEntityBoundingBox(new AxisAlignedBB(x - sizeX, y - (double)this.getYOffset(), z - sizeZ, x + sizeX, y + sizeY - (double)this.getYOffset(), z + sizeZ));
 		}
 	}
 
@@ -735,9 +740,17 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					return;
 				}
 			}
-			else
-				this.setDead();
-			//TODO: satellite event?
+			else {
+				//Make rocket return semi nearby
+				int offX = (worldObj.rand.nextInt() % 256) - 128;
+				int offZ = (worldObj.rand.nextInt() % 256) - 128;
+				this.setInOrbit(true);
+				this.motionY = -this.motionY;
+				this.setPosition(posX + offX, posY, posZ + offZ);
+				
+				//this.setDead();
+				//TODO: satellite event?
+			}
 		}
 		else {
 			unpackSatellites();
@@ -809,6 +822,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				World world = net.minecraftforge.common.DimensionManager.getWorld(properties.getId());
 				
 				properties.addSatallite(satellite, world);
+				tile.setInventorySlotContents(0, null);
 			}
 		}
 	}
