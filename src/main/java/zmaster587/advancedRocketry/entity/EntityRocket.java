@@ -156,9 +156,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	@Override
 	public AxisAlignedBB getBoundingBox() {
 		if(storage != null) {
-			MobileAABB aabb = new MobileAABB(this.boundingBox);
-			aabb.setStorageChunk(storage);
-			return aabb;
+			//MobileAABB aabb = new MobileAABB(this.boundingBox);
+			//aabb.setStorageChunk(storage);
+			//return aabb;
+			return this.boundingBox;
 		}
 		return null;
 	}
@@ -620,8 +621,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 					return;
 				}
 			}
-			else
-				this.setDead();
+			else {
+				//Make rocket return semi nearby
+				int offX = (worldObj.rand.nextInt() % 256) - 128;
+				int offZ = (worldObj.rand.nextInt() % 256) - 128;
+				this.setInOrbit(true);
+				this.motionY = -this.motionY;
+				this.setPosition(posX + offX, posY, posZ + offZ);
+			}
 			//TODO: satellite event?
 		}
 		else {
@@ -697,7 +704,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				World world = net.minecraftforge.common.DimensionManager.getWorld(properties.getId());
 				
 				properties.addSatallite(satellite, world);
-				
+				tile.setInventorySlotContents(0, null);
 			}
 		}
 	}
