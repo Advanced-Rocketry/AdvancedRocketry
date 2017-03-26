@@ -20,6 +20,7 @@ import zmaster587.advancedRocketry.inventory.modules.ModuleData;
 import zmaster587.advancedRocketry.inventory.modules.ModuleSatellite;
 import zmaster587.advancedRocketry.item.ItemData;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
+import zmaster587.advancedRocketry.satellite.SatelliteData;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.inventory.modules.IButtonInventory;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
@@ -245,7 +246,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 		if(type == data.getDataType() || data.getDataType() == DataType.UNDEFINED) {
 			SatelliteBase satellite = getSatelliteFromSlot(0);
 			
-			if(satellite != null && satellite.getDimensionId() == this.worldObj.provider.dimensionId) {
+			if(satellite != null && satellite instanceof SatelliteData && satellite.getDimensionId() == this.worldObj.provider.dimensionId) {
 				satellite.performAction(null, worldObj, this.xCoord, this.yCoord, this .zCoord);
 			}
 			return data.removeData(maxAmount, commit);
