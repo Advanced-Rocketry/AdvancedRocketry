@@ -5,17 +5,12 @@ import io.netty.buffer.ByteBuf;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.google.common.base.Predicate;
-
 import cpw.mods.fml.relauncher.Side;
-import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
-import zmaster587.advancedRocketry.api.satellite.IDataHandler;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.inventory.modules.ModuleData;
 import zmaster587.advancedRocketry.inventory.modules.ModulePanetImage;
@@ -29,13 +24,11 @@ import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.tile.multiblock.TileWarpCore;
 import zmaster587.advancedRocketry.util.IDataInventory;
-import zmaster587.advancedRocketry.util.ITilePlanetSystemSelectable;
 import zmaster587.advancedRocketry.world.util.MultiData;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.client.util.IndicatorBarImage;
-import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.IButtonInventory;
@@ -46,10 +39,8 @@ import zmaster587.libVulpes.inventory.modules.IProgressBar;
 import zmaster587.libVulpes.inventory.modules.ISelectionNotify;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleButton;
-import zmaster587.libVulpes.inventory.modules.ModuleImage;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
 import zmaster587.libVulpes.inventory.modules.ModuleScaledImage;
-import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
 import zmaster587.libVulpes.inventory.modules.ModuleSync;
 import zmaster587.libVulpes.inventory.modules.ModuleTab;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
@@ -59,17 +50,16 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.INetworkMachine;
-import zmaster587.libVulpes.util.IconResource;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileWarpShipMonitor extends TileEntity implements IModularInventory, ISelectionNotify, INetworkMachine, IButtonInventory, IProgressBar, IDataSync, IGuiCallback, IDataInventory, IPlanetDefiner {
+
 
 	protected ModulePlanetSelector container;
 	private ModuleText canWarp;
@@ -243,7 +233,6 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 						modules.add(new ModuleText(baseX + 4, baseY + 4, "Dest:", 0xFFFFFF));
 						modules.add(dstPlanetText);
-
 
 					}
 					else {
@@ -663,6 +652,35 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 
 
 	@Override
+	public ItemStack getStackInSlotOnClosing(int slot) {
+		return inv.getStackInSlotOnClosing(slot);
+	}
+
+
+	@Override
+	public String getInventoryName() {
+		return getModularInventoryName();
+	}
+
+
+	@Override
+	public boolean hasCustomInventoryName() {
+		return false;
+	}
+
+
+	@Override
+	public void openInventory() {
+		inv.openInventory();
+	}
+
+
+	@Override
+	public void closeInventory() {
+		inv.closeInventory();
+	}
+	
+	@Override
 	public int getSizeInventory() {
 		return inv.getSizeInventory();
 	}
@@ -697,12 +715,10 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 		return true;
 	}
 
-
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack) {
 		return inv.isItemValidForSlot(index, stack);
 	}
-
 
 	@Override
 	public void loadData(int id) {
@@ -807,35 +823,5 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 		if(obj != null)
 			return obj.isStarKnown(body);
 		return false;
-	}
-
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) {
-		return inv.getStackInSlotOnClosing(slot);
-	}
-
-
-	@Override
-	public String getInventoryName() {
-		return getModularInventoryName();
-	}
-
-
-	@Override
-	public boolean hasCustomInventoryName() {
-		return false;
-	}
-
-
-	@Override
-	public void openInventory() {
-		inv.openInventory();
-	}
-
-
-	@Override
-	public void closeInventory() {
-		inv.closeInventory();
 	}
 }

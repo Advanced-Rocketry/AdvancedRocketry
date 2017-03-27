@@ -1685,9 +1685,8 @@ public class AdvancedRocketry {
 					dimensionProperties.setStar(DimensionManager.getSol());
 					dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");
 					DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
-
 				}
-
+				
 				generateRandomPlanets(DimensionManager.getSol(), numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
 
 				StellarBody star = new StellarBody();

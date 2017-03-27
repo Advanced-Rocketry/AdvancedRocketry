@@ -115,14 +115,11 @@ public class Configuration {
 
 	public static float jetPackThrust;
 	public static boolean enableGravityController;
-<<<<<<< HEAD
 	public static boolean generateGeodes;
 	public static int geodeBaseSize;
 	public static int geodeVariation;
 	public static int terraformliquidRate;
-=======
 	public static boolean planetsMustBeDiscovered;
->>>>>>> 5e8f20b... Planets can now be discovered, #397
 
 	
 }
