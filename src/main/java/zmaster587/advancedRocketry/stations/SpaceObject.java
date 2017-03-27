@@ -1,38 +1,39 @@
 package zmaster587.advancedRocketry.stations;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.api.StatsRocket;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
+import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.IStorageChunk;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.inventory.IPlanetDefiner;
+import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.network.PacketStationUpdate.Type;
 import zmaster587.advancedRocketry.tile.station.TileDockingPort;
-import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.block.BlockFullyRotatable;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.BlockPosition;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class SpaceObject implements ISpaceObject {
+public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 	private int posX, posY;
 	private boolean created;
 	private int altitude;
@@ -43,6 +44,7 @@ public class SpaceObject implements ISpaceObject {
 	private BlockPosition spawnLocation;
 	private List<BlockPosition> spawnLocations;
 	private List<BlockPosition> warpCoreLocation;
+	private Set<Integer> knownPlanetList;
 	private HashMap<BlockPosition, String> dockingPoints;
 	private HashMap<BlockPosition,Boolean> occupiedLandingPads;
 	private long transitionEta;
@@ -62,6 +64,8 @@ public class SpaceObject implements ISpaceObject {
 		transitionEta = -1;
 		destinationDimId = 0;
 		created = false;
+		knownPlanetList = new HashSet<Integer>();
+		knownPlanetList.addAll(Configuration.initiallyKnownPlanets);
 	}
 
 	public long getExpireTime() { 
@@ -77,6 +81,11 @@ public class SpaceObject implements ISpaceObject {
 		return transitionEta;
 	}
 
+	public void discoverPlanet(int pid) {
+		knownPlanetList.add(pid);
+		PacketHandler.sendToAll(new PacketSpaceStationInfo(getId(), this));
+	}
+	
 	/**
 	 * @return id of the space object (NOT the DIMID)
 	 */
@@ -486,6 +495,13 @@ public class SpaceObject implements ISpaceObject {
 		nbt.setInteger("fuel", fuelAmount);
 		nbt.setDouble("rotation", rotation);
 		nbt.setDouble("deltaRotation", angularVelocity);
+		
+		//Set known planets
+		int array[] = new int[knownPlanetList.size()];
+		int j = 0;
+		for(int i : knownPlanetList)
+			array[j++] = i;
+		nbt.setIntArray("knownPlanets", array);
 
 
 		if(direction != null)
@@ -540,6 +556,14 @@ public class SpaceObject implements ISpaceObject {
 		properties.setId(nbt.getInteger("id"));
 		rotation = nbt.getDouble("rotation");
 		angularVelocity = nbt.getDouble("deltaRotation");
+		
+		
+		//get known planets
+		
+		int array[] = nbt.getIntArray("knownPlanets");
+		int j = 0;
+		for(int i : array)
+			knownPlanetList.add(i);
 
 		if(nbt.hasKey("direction"))
 			direction = ForgeDirection.getOrientation(nbt.getInteger("direction"));
@@ -599,5 +623,15 @@ public class SpaceObject implements ISpaceObject {
 		if((int)orbitalDistance != properties.getParentOrbitalDistance())
 			properties.setParentOrbitalDistance((int)orbitalDistance);
 		orbitalDistance = finalVel;
+	}
+
+	@Override
+	public boolean isPlanetKnown(IDimensionProperties properties) {
+		return !Configuration.planetsMustBeDiscovered || knownPlanetList.contains(properties.getId());
+	}
+
+	@Override
+	public boolean isStarKnown(StellarBody body) {
+		return true;
 	}
 }

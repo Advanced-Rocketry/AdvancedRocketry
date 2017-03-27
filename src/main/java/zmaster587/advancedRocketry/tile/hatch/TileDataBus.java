@@ -44,7 +44,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 
 	@Override
-	public void loadData() {
+	public void loadData(int id) {
 		
 		ItemStack itemStack = inventory.getStackInSlot(0);
 		
@@ -68,7 +68,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 
 	@Override
-	public void storeData() {
+	public void storeData(int id) {
 		ItemStack itemStack = inventory.getStackInSlot(0);
 		
 		if(itemStack != null && itemStack.getItem() instanceof ItemData && itemStack.stackSize == 1) {
@@ -161,10 +161,10 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 			NBTTagCompound nbt) {
 
 		if(id == -1) {
-			storeData();
+			storeData(0);
 		}
 		else if(id == -2)
-			loadData();
+			loadData(0);
 	}
 
 	@Override

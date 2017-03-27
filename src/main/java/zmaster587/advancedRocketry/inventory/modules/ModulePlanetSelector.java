@@ -15,6 +15,7 @@ import zmaster587.advancedRocketry.api.dimension.solar.IGalaxy;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.inventory.IPlanetDefiner;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.inventory.GuiModular;
 import zmaster587.libVulpes.inventory.modules.IButtonInventory;
@@ -64,6 +65,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 	private HashMap<Integer, PlanetRenderProperties> renderPropertiesMap;
 	PlanetRenderProperties currentlySelectedPlanet;
+	IPlanetDefiner planetDefiner;
 
 	public ModulePlanetSelector(int planetId, ResourceLocation backdrop, ISelectionNotify tile, boolean star) {
 		super(0, 0, null, null, backdrop, 0, 0, 0, 0, size,size);
@@ -71,6 +73,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		hostTile = tile;
 		int center = size/2;
 		zoom = 1.0;
+		planetDefiner = null;
 
 		planetList = new ArrayList<ModuleButton>();
 		moduleList = new ArrayList<ModuleBase>();
@@ -108,6 +111,11 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			}
 		}
 	}
+	
+	public ModulePlanetSelector(int planetId, ResourceLocation backdrop, ISelectionNotify tile, IPlanetDefiner definer, boolean star) {
+		this(planetId, backdrop, tile, star);
+		this.planetDefiner = definer;
+	}
 
 	@Override
 	public void onScroll(int dwheel) {
@@ -129,6 +137,10 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		Collection<StellarBody> stars = galaxy.getStars();
 
 		for(StellarBody star : stars) {
+			
+			if(planetDefiner != null && !planetDefiner.isStarKnown(star))
+				continue;
+			
 			int displaySize = (int)(planetSizeMultiplier*star.getDisplayRadius());
 			int offsetX = star.getPosX() + posX - displaySize/2; 
 			int offsetY = star.getPosZ() + posY - displaySize/2;
@@ -164,6 +176,10 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		//prevMultiplier *= 0.25f;
 
 		for(IDimensionProperties properties : star.getPlanets()) {
+			
+			if(planetDefiner != null && !planetDefiner.isPlanetKnown(properties))
+				continue;
+			
 			if(!properties.isMoon())
 				renderPlanets((DimensionProperties)properties, offsetX + displaySize/2, offsetY + displaySize/2, displaySize, distanceZoomMultiplier,planetSizeMultiplier);
 		}

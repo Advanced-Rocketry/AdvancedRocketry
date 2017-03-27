@@ -1,8 +1,10 @@
 package zmaster587.advancedRocketry.api;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import zmaster587.advancedRocketry.util.AsteroidSmall;
 import net.minecraft.block.Block;
@@ -94,6 +96,7 @@ public class Configuration {
 	public static List<Class> bypassEntity = new LinkedList<Class>();
 	public static List<Block> torchBlocks = new LinkedList<Block>();
 	public static List<String> standardGeodeOres = new LinkedList<String>();
+	public static Set<Integer> initiallyKnownPlanets = new HashSet<Integer>();
 
 	public static boolean geodeOresBlackList;
 
@@ -112,10 +115,14 @@ public class Configuration {
 
 	public static float jetPackThrust;
 	public static boolean enableGravityController;
+<<<<<<< HEAD
 	public static boolean generateGeodes;
 	public static int geodeBaseSize;
 	public static int geodeVariation;
 	public static int terraformliquidRate;
+=======
+	public static boolean planetsMustBeDiscovered;
+>>>>>>> 5e8f20b... Planets can now be discovered, #397
 
 	
 }

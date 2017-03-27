@@ -58,10 +58,10 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 	@Override
 	public void onInventoryButtonPressed(int buttonId) {
 		if(buttonId == 0) {
-			chipStorage.storeData();
+			chipStorage.storeData(slot);
 		}
 		else if(buttonId == 1) {
-			chipStorage.loadData();
+			chipStorage.loadData(slot);
 		}
 	}
 

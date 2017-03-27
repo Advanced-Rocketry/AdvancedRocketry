@@ -12,11 +12,15 @@ public class TextureResources {
 	public static final  ResourceLocation laserGui = new ResourceLocation("advancedrocketry", "textures/gui/LaserTile.png");
 	public static final  ResourceLocation buttonKill[] = {new ResourceLocation("advancedrocketry", "textures/gui/buttons/kill.png"), new ResourceLocation("advancedrocketry", "textures/gui/buttons/kill_hover.png"), null, null};
 	public static final  ResourceLocation buttonCopy[] = {new ResourceLocation("advancedrocketry", "textures/gui/buttons/copy.png"), new ResourceLocation("advancedrocketry", "textures/gui/buttons/copy_hover.png"), null, null};
-	public static final  ResourceLocation locationSunPng = new ResourceLocation("advancedrocketry:textures/env/sun.png");
-	public static final  ResourceLocation locationSunNew = new ResourceLocation("advancedrocketry:textures/env/sun2.png");
+	public static final  ResourceLocation buttonAsteroid[] = {new ResourceLocation("advancedrocketry", "textures/gui/buttons/buttonAsteroid.png"), new ResourceLocation("advancedrocketry", "textures/gui/buttons/buttonAsteroid_hover.png"), null, null};
 	public static final  ResourceLocation tabAsteroid[] = {new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabAsteroid.png"), new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabAsteroid_hover.png"), null, null};
 	public static final  ResourceLocation tabData[] = {new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabData.png"), new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabData_hover.png"), null, null};
-	public static final  ResourceLocation buttonAsteroid[] = {new ResourceLocation("advancedrocketry", "textures/gui/buttons/buttonAsteroid.png"), new ResourceLocation("advancedrocketry", "textures/gui/buttons/buttonAsteroid_hover.png"), null, null};
+	public static final  ResourceLocation tabWarp[] = {new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabWarp.png"), new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabWarp_hover.png"), null, null};
+	public static final  ResourceLocation tabPlanet[] = {new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabPlanet.png"), new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabPlanet_hover.png"), null, null};
+	
+
+	public static final  ResourceLocation locationSunPng = new ResourceLocation("advancedrocketry:textures/env/sun.png");
+	public static final  ResourceLocation locationSunNew = new ResourceLocation("advancedrocketry:textures/env/sun2.png");
 	public static final  ResourceLocation selectionCircle = new ResourceLocation("advancedrocketry:textures/gui/Selection.png");
 	public static final  ResourceLocation planetSelectorBar = new ResourceLocation("advancedrocketry:textures/gui/progressBars/PlanetSelectorBars.png");
 	public static final  ResourceLocation verticalBar = new ResourceLocation("advancedrocketry:textures/gui/BorderVertical.png");

@@ -516,7 +516,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 		super.useNetworkData(player, side, id, nbt);
 		
 		if(id == -1)
-			storeData();
+			storeData(-1);
 		else if(id == TAB_SWITCH && !worldObj.isRemote) {
 			tabModule.setTab(nbt.getShort("tab"));
 			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), worldObj, xCoord, yCoord, zCoord);
@@ -631,12 +631,12 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public void loadData() {
+	public void loadData(int id) {
 
 	}
 
 	@Override
-	public void storeData() {
+	public void storeData(int id) {
 		ItemStack dataChip = inv.getStackInSlot(0);
 		
 		if(dataChip != null && dataChip.getItem() instanceof ItemData && dataChip.stackSize == 1) {
