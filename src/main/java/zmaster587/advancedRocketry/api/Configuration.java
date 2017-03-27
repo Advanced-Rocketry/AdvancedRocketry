@@ -1,8 +1,10 @@
 package zmaster587.advancedRocketry.api;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import zmaster587.advancedRocketry.util.AsteroidSmall;
 import net.minecraft.block.Block;
@@ -97,6 +99,7 @@ public class Configuration {
 	
 	public static List<Block> torchBlocks = new LinkedList<Block>();
 	public static List<String> standardGeodeOres = new LinkedList<String>();
+	public static Set<Integer> initiallyKnownPlanets = new HashSet<Integer>();
 
 	public static boolean geodeOresBlackList;
 	public static boolean laserDrillOresBlackList;
@@ -113,5 +116,6 @@ public class Configuration {
 	public static boolean lowGravityBoots;
 	public static float jetPackThrust;
 	public static boolean enableGravityController;
+	public static boolean planetsMustBeDiscovered;
 
 }

@@ -58,6 +58,10 @@ public class MultiData implements IDataHandler {
 		return dataStorages.get(DataStorage.DataType.ATMOSPHEREDENSITY).getMaxData();
 	}
 	
+	public DataStorage getDataStorageForType(DataStorage.DataType dataType) {
+		return dataStorages.get(dataType);
+	}
+	
 	public void setDataAmount(int amount, DataType dataType) {
 		if(dataType != DataType.UNDEFINED)
 			dataStorages.get(dataType).setData(amount,dataType);
