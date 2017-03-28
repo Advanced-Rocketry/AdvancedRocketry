@@ -362,7 +362,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 					distanceProgress = -1;
 					if(!worldObj.isRemote) {
 						incrementDataOnChip(0, 1, DataType.DISTANCE);
-						extractData(1, DataStorage.DataType.MASS, false);
+						extractData(1, DataStorage.DataType.DISTANCE, false);
 						//attemptAllResearchStart();
 					}
 				}
