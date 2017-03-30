@@ -37,7 +37,7 @@ public class MissionOreMining extends MissionResourceCollection {
 
 			ItemStack stack = rocketStorage.getGuidanceComputer().getStackInSlot(0);
 
-			if(stack != null) {
+			if(stack != null && stack.getItem() instanceof ItemAsteroidChip) {
 
 				distanceData = ((ItemAsteroidChip)stack.getItem()).getData(stack,DataType.DISTANCE);
 				compositionData = ((ItemAsteroidChip)stack.getItem()).getData(stack,DataType.COMPOSITION);
