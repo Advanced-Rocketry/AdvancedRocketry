@@ -38,7 +38,7 @@ minecraft {
     mappings = "snapshot_20160518"
     replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"
     replace "%VERSION%", modversion
-    replace "%LIBVULPESVERSION%", "0.1.16"
+    replace "%LIBVULPESVERSION%", "0.1.17"
 }
 
 repositories {
