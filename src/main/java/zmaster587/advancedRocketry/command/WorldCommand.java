@@ -67,6 +67,12 @@ public class WorldCommand implements ICommand {
 
 		//advRocketry planet set <var value>
 		int opLevel = 2;
+		if(!(sender instanceof EntityPlayer))
+		{
+			if(sender != null)
+				sender.addChatMessage(new ChatComponentText("Commands can only be executed by a player"));
+			return;
+		}
 
 		if(string.length >= 1 &&  string[0].equalsIgnoreCase("filldata")) {
 			ItemStack stack;
