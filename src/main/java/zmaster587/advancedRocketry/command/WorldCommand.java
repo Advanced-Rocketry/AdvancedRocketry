@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale;
 
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
@@ -14,6 +15,7 @@ import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.item.ItemMultiData;
+import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -74,6 +76,17 @@ public class WorldCommand implements ICommand {
 				sender.addChatMessage(new ChatComponentText("Commands can only be executed by a player"));
 			return;
 		}
+		
+		if(string.length >= 1 && string[0].equalsIgnoreCase("givestation")) {
+			if(string.length >= 2) {
+				int stationId = Integer.parseInt(string[1]);
+				ItemStack stack = new ItemStack(AdvancedRocketryItems.itemSpaceStationChip);
+				((ItemStationChip)AdvancedRocketryItems.itemSpaceStationChip).setUUID(stack, stationId);
+				((EntityPlayer)sender).inventory.addItemStackToInventory(stack);
+			}
+			else
+				sender.addChatMessage(new ChatComponentText("Usage: /advRocketry " + string[0] + " <stationId>"));
+		}
 
 		if(string.length >= 1 &&  string[0].equalsIgnoreCase("filldata")) {
 			ItemStack stack;
@@ -83,7 +96,7 @@ public class WorldCommand implements ICommand {
 				if(string.length >= 2 && string[1].equalsIgnoreCase("help")) {
 					sender.addChatMessage(new ChatComponentText("Usage: /advRocketry" + string[0] + " [datatype] [amountFill]\n"));
 					sender.addChatMessage(new ChatComponentText("Fills the amount of the data type specifies into the chip being held."));
-					sender.addChatMessage(new ChatComponentText("If the datatype is not specified then fills all datatypes, if no amountFill is specified completely fills the chip"));
+					sender.addChatMessage(new ChatComponentText("If the datatype is not specified then command fills all datatypes, if no amountFill is specified completely fills the chip"));
 					return;
 				}
 				
