@@ -46,7 +46,6 @@ public class BlockLandingPad extends Block {
 	@Override
 	public void onBlockAdded(World world, int x,
 			int y, int z) {
-		// TODO Auto-generated method stub
 		super.onBlockAdded(world, x, y, z);
 		
 		TileEntity tile = world.getTileEntity(x, y, z);

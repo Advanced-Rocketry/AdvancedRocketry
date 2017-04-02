@@ -3,9 +3,11 @@ package zmaster587.advancedRocketry.command;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
@@ -14,6 +16,7 @@ import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.item.ItemMultiData;
+import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -68,15 +71,73 @@ public class WorldCommand implements ICommand {
 
 		//advRocketry planet set <var value>
 		int opLevel = 2;
+		if(!(sender instanceof EntityPlayer))
+		{
+			if(sender != null)
+				sender.addChatMessage(new ChatComponentText("Commands can only be executed by a player"));
+			return;
+		}
+		
+		if(string.length >= 1 && string[0].equalsIgnoreCase("givestation")) {
+			if(string.length >= 2) {
+				int stationId = Integer.parseInt(string[1]);
+				ItemStack stack = new ItemStack(AdvancedRocketryItems.itemSpaceStationChip);
+				((ItemStationChip)AdvancedRocketryItems.itemSpaceStationChip).setUUID(stack, stationId);
+				((EntityPlayer)sender).inventory.addItemStackToInventory(stack);
+			}
+			else
+				sender.addChatMessage(new ChatComponentText("Usage: /advRocketry " + string[0] + " <stationId>"));
+		}
 
 		if(string.length >= 1 &&  string[0].equalsIgnoreCase("filldata")) {
 			ItemStack stack;
-			if(sender instanceof EntityPlayer) {
+			if(sender instanceof EntityPlayer ) {
 				stack = ((EntityPlayer)sender).getHeldItem();
+				
+				if(string.length >= 2 && string[1].equalsIgnoreCase("help")) {
+					sender.addChatMessage(new ChatComponentText("Usage: /advRocketry" + string[0] + " [datatype] [amountFill]\n"));
+					sender.addChatMessage(new ChatComponentText("Fills the amount of the data type specifies into the chip being held."));
+					sender.addChatMessage(new ChatComponentText("If the datatype is not specified then command fills all datatypes, if no amountFill is specified completely fills the chip"));
+					return;
+				}
+				
 				if(stack != null && stack.getItem() instanceof ItemMultiData) {
 					ItemMultiData item = (ItemMultiData) stack.getItem();
-					for(DataType type : DataType.values())
-						item.setData(stack, 2000, type);
+					int dataAmount = item.getMaxData(stack);
+					DataType dataType = null;
+
+					if(string.length >= 2) {
+						try {
+							dataType = DataType.valueOf(string[1].toUpperCase(Locale.ENGLISH));
+						} catch (IllegalArgumentException e) {
+							sender.addChatMessage(new ChatComponentText("Did you mean: /advRocketry" + string[0] + " [datatype] [amountFill]"));
+							sender.addChatMessage(new ChatComponentText("Not a valid datatype"));
+							String value = "";
+							for(DataType data : DataType.values())
+								if(!data.name().equals("UNDEFINED"))
+								value += data.name().toLowerCase() + ", ";
+							
+							sender.addChatMessage(new ChatComponentText("Try " + value));
+							return;
+						}
+					}
+					if(string.length >= 3)
+						try {
+							dataAmount = Integer.parseInt(string[2]);
+						} catch(NumberFormatException e) {
+							sender.addChatMessage(new ChatComponentText("Did you mean: /advRocketry" + string[0] + " [datatype] [amountFill]"));
+							sender.addChatMessage(new ChatComponentText("Not a valid number"));
+							return;
+						}
+
+					if(dataType != null)
+						item.setData(stack, dataAmount, dataType);
+					else
+					{
+						for(DataType type : DataType.values())
+							item.setData(stack, dataAmount, type);
+					}
+					
 					sender.addChatMessage(new ChatComponentText("Data filled!"));
 				}
 				else
@@ -288,7 +349,7 @@ public class WorldCommand implements ICommand {
 						if(string[2 + gasOffset].equalsIgnoreCase("moon")) {
 							gasOffset++;
 							moon = true;
-							
+
 							if(!DimensionManager.getInstance().isDimensionCreated(starId)) {
 								sender.addChatMessage(new ChatComponentText("Invalid planet ID"));
 								sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + "[planetId] [moon] [gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
@@ -297,11 +358,11 @@ public class WorldCommand implements ICommand {
 							}
 						}
 						else if(DimensionManager.getInstance().getStar(starId) == null) {
-								sender.addChatMessage(new ChatComponentText("Invalid star ID"));
-								sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + "[starId] [gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
+							sender.addChatMessage(new ChatComponentText("Invalid star ID"));
+							sender.addChatMessage(new ChatComponentText(string[0] + " " + string[1] + "[starId] [gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
 
-								return;
-							}
+							return;
+						}
 					}
 
 					if(string.length > 2 + gasOffset && string[2 + gasOffset].equalsIgnoreCase("gas")) {
