@@ -68,9 +68,9 @@ dependencies {
     compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
     
     // compile against the JEI API
-    deobfCompile "mezz.jei:jei_1.10.2:3.11.2.280:api"
+    deobfCompile "mezz.jei:jei_1.10.2:3.14.7.416:api"
     // at runtime, use the full JEI jar
-    runtime "mezz.jei:jei_1.10.2:3.11.2.280"
+    runtime "mezz.jei:jei_1.10.2:3.14.7.416"
 
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
