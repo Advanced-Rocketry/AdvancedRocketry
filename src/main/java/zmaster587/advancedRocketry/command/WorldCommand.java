@@ -3,6 +3,8 @@ package zmaster587.advancedRocketry.command;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
@@ -76,10 +78,51 @@ public class WorldCommand implements ICommand {
 			ItemStack stack;
 			if(sender.getCommandSenderEntity() != null ) {
 				stack = ((EntityPlayer)sender.getCommandSenderEntity()).getHeldItem(EnumHand.MAIN_HAND);
+				
+				if(string.length >= 2 && string[1].equalsIgnoreCase("help")) {
+					sender.addChatMessage(new TextComponentString("Usage: /advRocketry" + string[0] + " [datatype] [amountFill]\n"));
+					sender.addChatMessage(new TextComponentString("Fills the amount of the data type specifies into the chip being held."));
+					sender.addChatMessage(new TextComponentString("If the datatype is not specified then fills all datatypes, if no amountFill is specified completely fills the chip"));
+					return;
+				}
+				
 				if(stack != null && stack.getItem() instanceof ItemMultiData) {
 					ItemMultiData item = (ItemMultiData) stack.getItem();
-					for(DataType type : DataType.values())
-						item.setData(stack, 2000, type);
+					int dataAmount = item.getMaxData(stack);
+					DataType dataType = null;
+
+					if(string.length >= 2) {
+						try {
+							dataType = DataType.valueOf(string[1].toUpperCase(Locale.ENGLISH));
+						} catch (IllegalArgumentException e) {
+							sender.addChatMessage(new TextComponentString("Did you mean: /advRocketry" + string[0] + " [datatype] [amountFill]"));
+							sender.addChatMessage(new TextComponentString("Not a valid datatype"));
+							String value = "";
+							for(DataType data : DataType.values())
+								if(!data.name().equals("UNDEFINED"))
+								value += data.name().toLowerCase() + ", ";
+							
+							sender.addChatMessage(new TextComponentString("Try " + value));
+							return;
+						}
+					}
+					if(string.length >= 3)
+						try {
+							dataAmount = Integer.parseInt(string[2]);
+						} catch(NumberFormatException e) {
+							sender.addChatMessage(new TextComponentString("Did you mean: /advRocketry" + string[0] + " [datatype] [amountFill]"));
+							sender.addChatMessage(new TextComponentString("Not a valid number"));
+							return;
+						}
+
+					if(dataType != null)
+						item.setData(stack, dataAmount, dataType);
+					else
+					{
+						for(DataType type : DataType.values())
+							item.setData(stack, dataAmount, type);
+					}
+					
 					sender.addChatMessage(new TextComponentString("Data filled!"));
 				}
 				else
