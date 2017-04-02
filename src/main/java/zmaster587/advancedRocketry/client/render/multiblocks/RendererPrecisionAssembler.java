@@ -77,7 +77,7 @@ public class RendererPrecisionAssembler extends TileEntitySpecialRenderer {
 				
 				GL11.glPushMatrix();
 				GL11.glRotatef(90, 1, 0, 0);
-				GL11.glTranslated(1, tray + .5, -1.2f);
+				GL11.glTranslated(1, tray + .75, -1.2f);
 				RenderHelper.renderItem(multiBlockTile, entity,  Minecraft.getMinecraft().getRenderItem());
 				GL11.glPopMatrix();
 			}

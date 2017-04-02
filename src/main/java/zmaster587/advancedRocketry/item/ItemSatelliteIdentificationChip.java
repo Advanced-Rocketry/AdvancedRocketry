@@ -47,7 +47,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 					nbt.setInteger("dimId", satellite.getDimensionId());
 				}
 
-				if( !nbt.hasKey(null) && zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId()) != null)
+				if( zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId()) != null)
 					nbt.setString(name, zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId()).getName());
 			}
 

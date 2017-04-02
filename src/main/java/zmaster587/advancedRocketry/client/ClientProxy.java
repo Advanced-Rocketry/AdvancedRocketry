@@ -16,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.profiler.Profiler;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -406,6 +407,8 @@ public class ClientProxy extends CommonProxy {
 			FxGravityEffect fx = new FxGravityEffect(world, x, y, z, motionX, motionY, motionZ);
 			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 		}
+		else
+			world.spawnParticle(EnumParticleTypes.getByName(particle), x, y, z, motionX, motionY, motionZ);
 	}
 
 	@Override

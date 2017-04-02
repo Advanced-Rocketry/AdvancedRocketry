@@ -90,6 +90,7 @@ import zmaster587.advancedRocketry.block.BlockSeat;
 import zmaster587.advancedRocketry.block.BlockFuelTank;
 import zmaster587.advancedRocketry.block.BlockSolarGenerator;
 import zmaster587.advancedRocketry.block.BlockStationModuleDockingPort;
+import zmaster587.advancedRocketry.block.BlockSuitWorkstation;
 import zmaster587.advancedRocketry.block.BlockTileNeighborUpdate;
 import zmaster587.advancedRocketry.block.BlockTileRedstoneEmitter;
 import zmaster587.advancedRocketry.block.BlockWarpCore;
@@ -388,7 +389,7 @@ public class AdvancedRocketry {
 		entityList = config.getStringList("entityAtmBypass", Configuration.CATEGORY_GENERAL, new String[] {}, "list entities which should not be affected by atmosphere properties");
 
 		//Satellite config
-		zmaster587.advancedRocketry.api.Configuration.microwaveRecieverMulitplier = 10*(float)config.get(Configuration.CATEGORY_GENERAL, "MicrowaveRecieverMulitplier", 1f, "Multiplier for the amount of energy produced by the microwave reciever").getDouble();
+		zmaster587.advancedRocketry.api.Configuration.microwaveRecieverMulitplier = 10*(float)config.get(Configuration.CATEGORY_GENERAL, "MicrowaveRecieverMultiplier", 1f, "Multiplier for the amount of energy produced by the microwave reciever").getDouble();
 
 		String str[] = config.getStringList("spaceLaserDimIdBlackList", Configuration.CATEGORY_GENERAL, new String[] {}, "Laser drill will not mine these dimension");
 
@@ -542,7 +543,7 @@ public class AdvancedRocketry {
 
 		AdvancedRocketryBlocks.blockDrill = new BlockMiningDrill().setUnlocalizedName("drill").setCreativeTab(tabAdvRocketry).setHardness(3f);
 
-		AdvancedRocketryBlocks.blockSuitWorkStation = new BlockTile(TileSuitWorkStation.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("suitWorkStation").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		AdvancedRocketryBlocks.blockSuitWorkStation = new BlockSuitWorkstation(TileSuitWorkStation.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("suitWorkStation").setCreativeTab(tabAdvRocketry).setHardness(3f);
 
 		AdvancedRocketryBlocks.blockRailgun = new BlockMultiblockMachine(TileRailgun.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("railgun").setCreativeTab(tabAdvRocketry).setHardness(3f);
 
@@ -1027,7 +1028,8 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockDeployableRocketBuilder), "gdg", "dad", "rdr", 'g', "gearTitaniumAluminide", 'd', "dustDilithium", 'r', "stickTitaniumAluminide", 'a', AdvancedRocketryBlocks.blockRocketBuilder));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockPressureTank), "tgt","tgt","tgt", 't', superHighPressureTime, 'g', Blocks.GLASS_PANE));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockIntake), "rhr", "hbh", "rhr", 'r', "stickTitanium", 'h', Blocks.HOPPER, 'b', LibVulpesBlocks.blockStructureBlock));
-
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockRailgun), " t ", "abc", "ded", 't', trackingCircuit, 'a', controlCircuitBoard, 'b', LibVulpesBlocks.blockAdvStructureBlock, 'c', itemIOBoard, 'd', "fanSteel", 'e', "coilCopper"));
+		
 
 		//Armor recipes
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryItems.itemSpaceSuit_Boots, " r ", "w w", "p p", 'r', "stickIron", 'w', Blocks.WOOL, 'p', "plateIron"));
@@ -1260,6 +1262,7 @@ public class AdvancedRocketry {
 		ForgeChunkManager.setForcedChunkLoadingCallback(instance, new WorldEvents());
 
 		machineRecipes.createAutoGennedRecipes(modProducts);
+
 
 		//Register buckets
 		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockFuelFluid, AdvancedRocketryItems.itemBucketRocketFuel);
