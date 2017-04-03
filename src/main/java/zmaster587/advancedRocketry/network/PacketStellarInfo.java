@@ -67,10 +67,7 @@ public class PacketStellarInfo extends BasePacket {
 
 			StellarBody star;
 
-			if(starId == 0) {
-				DimensionManager.getSol().readFromNBT(nbt);
-			}
-			else if((star = DimensionManager.getInstance().getStar(starId)) != null) {
+			if((star = DimensionManager.getInstance().getStar(starId)) != null) {
 				star.readFromNBT(nbt);
 			} else {
 				star = new StellarBody();
