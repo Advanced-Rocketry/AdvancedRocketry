@@ -15,7 +15,6 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import net.minecraft.block.Block;
-import net.minecraft.block.Block.SoundType;
 import net.minecraft.block.BlockGlass;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -38,7 +37,6 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -218,7 +216,6 @@ import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisible;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketItemModifcation;
-import zmaster587.libVulpes.recipe.NumberedOreDictStack;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.TileMaterial;
 import zmaster587.libVulpes.tile.TileModelRender;
@@ -1427,12 +1424,6 @@ public class AdvancedRocketry {
 		//Free memory
 		entityList = null;
 		logger.info("End registering entity atmosphere bypass");
-
-		//Register asteriodOres
-		if(!zmaster587.advancedRocketry.api.Configuration.asteriodOresBlackList) {
-			for(String str  : asteriodOres)
-				zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres.add(str);
-		}
 
 		//Register geodeOres
 		if(!zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList) {
