@@ -639,6 +639,12 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @param world world to add the satellite to
 	 */
 	public void addSatallite(SatelliteBase satellite, World world) {
+		//Prevent dupes
+		if(satallites.containsKey(satellite.getId())) {
+			satallites.remove(satellite.getId());
+			tickingSatallites.remove(satellite.getId());
+		}
+		
 		satallites.put(satellite.getId(), satellite);
 		satellite.setDimensionId(world);
 
@@ -655,6 +661,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @param satallite
 	 */
 	public void addSatallite(SatelliteBase satallite) {
+		if(satallites.containsKey(satallite.getId())) {
+			satallites.remove(satallite.getId());
+			tickingSatallites.remove(satallite.getId());
+		}
 		satallites.put(satallite.getId(), satallite);
 
 		if(satallite.canTick()) //TODO: check for dupes

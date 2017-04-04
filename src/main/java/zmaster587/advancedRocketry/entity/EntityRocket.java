@@ -714,6 +714,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension());
 
 				properties.addSatallite(miningMission, worldObj);
+				miningMission.setDimensionId(worldObj);
 
 				if(!worldObj.isRemote)
 					PacketHandler.sendToAll(new PacketSatellite(miningMission));

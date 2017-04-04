@@ -267,17 +267,21 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			return;
 
 		//Check again to make sure we are around a gas giant
-		ISpaceObject spaceObj;
-		if( worldObj.provider.getDimension() == Configuration.spaceDimId || ((spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.getPosition())) != null && !((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() )) { //Abort if destination is invalid
-			setInOrbit(true);
+		ISpaceObject spaceObj = null;
+		setInOrbit(true);
+		if( worldObj.provider.getDimension() == Configuration.spaceDimId && ((spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.getPosition())) != null && ((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() )) { //Abort if destination is invalid
 			this.setPosition(forwardDirection.getFrontOffsetX()*64d + this.launchLocation.x + (storage.getSizeX() % 2 == 0 ? 0 : 0.5d), posY, forwardDirection.getFrontOffsetZ()*64d + this.launchLocation.z + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5d));	
 		}
-		
+		else {
+			setInOrbit(true);
+			return;
+		}
 		//one intake with a 1 bucket tank should take 100 seconds
 		float intakePower = (Integer)stats.getStatTag("intakePower");
 		MissionGasCollection miningMission = new MissionGasCollection(intakePower == 0 ? 360 : (long)(2*((int)stats.getStatTag("liquidCapacity")/intakePower)), this, connectedInfrastructure, AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId));
-		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension()).getParentProperties();
+		DimensionProperties properties = (DimensionProperties)spaceObj.getProperties().getParentProperties();
 
+		miningMission.setDimensionId(spaceObj.getProperties().getParentProperties().getId());
 		properties.addSatallite(miningMission);
 
 		if(!worldObj.isRemote)
