@@ -368,7 +368,14 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		if(status != ErrorCodes.SUCCESS)
 			return;
 
-		StorageChunk storageChunk = StorageChunk.cutWorldBB(worldObj, bbCache);
+		StorageChunk storageChunk;
+
+		//Breaks if nothing is there
+		try {
+			storageChunk = StorageChunk.cutWorldBB(worldObj, bbCache);
+		} catch(NegativeArraySizeException e) {
+			return;
+		}
 
 		EntityRocket rocket = new EntityRocket(worldObj, storageChunk, stats.copy(),bbCache.minX + (bbCache.maxX-bbCache.minX)/2f +.5f, yCoord , bbCache.minZ + (bbCache.maxZ-bbCache.minZ)/2f +.5f);
 
