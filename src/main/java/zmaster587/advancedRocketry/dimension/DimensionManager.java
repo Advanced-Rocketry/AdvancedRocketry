@@ -517,8 +517,6 @@ public class DimensionManager implements IGalaxy {
 
 		//Save Overworld
 		NBTTagCompound dimNbt = new NBTTagCompound();
-		overworldProperties.writeToNBT(dimNbt);
-		dimListnbt.setTag("0", dimNbt);
 
 		for(Entry<Integer, DimensionProperties> dimSet : dimensionList.entrySet()) {
 
@@ -632,30 +630,24 @@ public class DimensionManager implements IGalaxy {
 
 		for(Object key : dimListNbt.func_150296_c()) {
 			String keyString = (String)key;
-			//Special Handling for overworld
-			if(keyString.equals("0")) {
-				overworldProperties.readFromNBT(dimListNbt.getCompoundTag(keyString));
-			} 
-			else {
 
-				DimensionProperties propeties = DimensionProperties.createFromNBT(Integer.parseInt(keyString) ,dimListNbt.getCompoundTag(keyString));
+			DimensionProperties propeties = DimensionProperties.createFromNBT(Integer.parseInt(keyString) ,dimListNbt.getCompoundTag(keyString));
 
-				if(propeties != null) {
-					int keyInt = Integer.parseInt(keyString);
-					if(!net.minecraftforge.common.DimensionManager.isDimensionRegistered(keyInt) && propeties.isNativeDimension && !propeties.isGasGiant()) {
-						net.minecraftforge.common.DimensionManager.registerProviderType(keyInt, DimensionManager.planetWorldProvider, false);
-						net.minecraftforge.common.DimensionManager.registerDimension(keyInt, keyInt);
-						//propeties.isNativeDimension = true;
-					}
-
-					dimensionList.put(new Integer(keyInt), propeties);
+			if(propeties != null) {
+				int keyInt = Integer.parseInt(keyString);
+				if(!net.minecraftforge.common.DimensionManager.isDimensionRegistered(keyInt) && propeties.isNativeDimension && !propeties.isGasGiant()) {
+					net.minecraftforge.common.DimensionManager.registerProviderType(keyInt, DimensionManager.planetWorldProvider, false);
+					net.minecraftforge.common.DimensionManager.registerDimension(keyInt, keyInt);
+					//propeties.isNativeDimension = true;
 				}
-				else{
-					Logger.getLogger("advancedRocketry").warning("Null Dimension Properties Recieved");
-				}
-				//TODO: print unable to register world
+
+				dimensionList.put(new Integer(keyInt), propeties);
+			}
+			else{
+				Logger.getLogger("advancedRocketry").warning("Null Dimension Properties Recieved");
 			}
 		}
+
 
 		//Check for tag in case old version of Adv rocketry is in use
 		if(nbt.hasKey("spaceObjects")) {
