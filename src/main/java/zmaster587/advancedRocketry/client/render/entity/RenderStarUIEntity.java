@@ -91,6 +91,7 @@ public class RenderStarUIEntity extends Render<EntityUIStar> implements IRenderF
 			GlStateManager.color(0, 1f, 1f, .2f*(1-myTime));
 			buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
 			RenderHelper.renderTopFace(buf, myTime, -.5f, -.5f, .5f, .5f);
+			RenderHelper.renderBottomFace(buf, myTime - 0.5, -.5f, -.5f, .5f, .5f);
 			Tessellator.getInstance().draw();
 		}
 		GlStateManager.alphaFunc(GL11.GL_GREATER, .1f);
