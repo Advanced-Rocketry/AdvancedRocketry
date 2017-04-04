@@ -278,6 +278,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		MissionGasCollection miningMission = new MissionGasCollection(intakePower == 0 ? 360 : (long)(2*((int)stats.getStatTag("liquidCapacity")/intakePower)), this, connectedInfrastructure, AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId));
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension()).getParentProperties();
 
+		miningMission.setDimensionId(properties.getId());
 		properties.addSatallite(miningMission);
 
 		if(!worldObj.isRemote)

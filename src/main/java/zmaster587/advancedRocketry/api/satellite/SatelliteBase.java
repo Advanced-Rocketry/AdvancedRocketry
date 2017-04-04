@@ -112,6 +112,14 @@ public abstract class SatelliteBase {
 		dimId = newId;
 	}
 	
+	public void setDimensionId(int world) {
+		int newId = world;
+		if(dimId != -1) {
+			//TODO: handle dim change
+		}
+		dimId = newId;
+	}
+	
 	/**
 	 * @param satelliteProperties satelliteProperties to assign to this satellite
 	 */
