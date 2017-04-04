@@ -64,8 +64,9 @@ public class DimensionManager implements IGalaxy {
 	//the default property for any dimension created in space, normally, space over earth
 	public static DimensionProperties defaultSpaceDimensionProperties;
 
+	@Deprecated
 	public static StellarBody getSol() {
-		return sol;
+		return instance.getStar(0);
 	}
 
 	public static DimensionManager getInstance() {
