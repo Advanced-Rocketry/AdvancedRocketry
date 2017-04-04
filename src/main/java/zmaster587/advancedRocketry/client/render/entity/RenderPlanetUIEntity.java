@@ -134,6 +134,7 @@ public class RenderPlanetUIEntity extends Render {
 			GL11.glColor4f(0, 1f, 1f, .2f*(1-myTime));
 			tess.startDrawingQuads();
 			RenderHelper.renderTopFace(tess, myTime - 0.5, -.5f, -.5f, .5f, .5f);
+			RenderHelper.renderBottomFace(tess, myTime - 0.5, -.5f, -.5f, .5f, .5f);
 			tess.draw();
 		}
 		

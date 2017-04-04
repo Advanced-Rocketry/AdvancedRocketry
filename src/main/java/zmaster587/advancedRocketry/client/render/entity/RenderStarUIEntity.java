@@ -74,6 +74,7 @@ public class RenderStarUIEntity extends RenderPlanetUIEntity {
 			GL11.glColor4f(0, 1f, 1f, .2f*(1-myTime));
 			buffer.startDrawingQuads();
 			RenderHelper.renderTopFace(buffer, myTime, -.5f, -.5f, .5f, .5f);
+			RenderHelper.renderBottomFace(buffer, myTime - 0.5, -.5f, -.5f, .5f, .5f);
 			buffer.draw();
 		}
 		GL11.glAlphaFunc(GL11.GL_GREATER, .1f);
