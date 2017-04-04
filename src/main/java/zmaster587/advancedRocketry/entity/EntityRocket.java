@@ -590,6 +590,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				MissionOreMining miningMission = new MissionOreMining((long)(Configuration.asteroidMiningTimeMult*(drillingPower == 0f ? 36000 : 360/stats.getDrillingPower())), this, connectedInfrastructure);
 				DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId);
 
+				miningMission.setDimensionId(worldObj);
 				properties.addSatallite(miningMission, worldObj);
 
 				if(!worldObj.isRemote)
