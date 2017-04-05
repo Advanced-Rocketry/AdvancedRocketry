@@ -281,7 +281,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		
 		DimensionProperties properties = (DimensionProperties)spaceObj.getProperties().getParentProperties();
 
-		miningMission.setDimensionId(spaceObj.getProperties().getParentProperties().getId());
+		miningMission.setDimensionId(properties.getId());
 		properties.addSatallite(miningMission);
 
 		if(!worldObj.isRemote)
