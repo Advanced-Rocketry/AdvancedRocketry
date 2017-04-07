@@ -390,7 +390,6 @@ public class DimensionManager implements IGalaxy {
 		}
 		dimensionList.clear();
 		starList.clear();
-		starList.put(0, sol);
 	}
 
 	/**

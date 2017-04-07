@@ -1656,10 +1656,14 @@ public class AdvancedRocketry {
 
 			}
 
-			if(!loadedFromXML)  {
+			if(!loadedFromXML) {
+				//Make Sol				
+				StellarBody sol = new StellarBody();
+				sol.setTemperature(100);
+				sol.setId(0);
+				sol.setName("Sol");
 				
-				DimensionManager.getInstance().addStar(DimensionManager.getSol());
-				DimensionManager.getInstance().getDimensionProperties(0).setStar(DimensionManager.getSol());
+				DimensionManager.getInstance().addStar(sol);
 				
 				if(zmaster587.advancedRocketry.api.Configuration.MoonId == -1)
 					zmaster587.advancedRocketry.api.Configuration.MoonId = DimensionManager.getInstance().getNextFreeDim(DimensionManager.dimOffset);
