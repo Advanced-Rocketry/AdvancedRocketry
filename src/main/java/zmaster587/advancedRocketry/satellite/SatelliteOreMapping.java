@@ -138,7 +138,7 @@ public class SatelliteOreMapping extends SatelliteBase  {
 		if(oreList.isEmpty()) {
 			String[] strings = OreDictionary.getOreNames();
 			for(String str : strings) {
-				if(str.contains("ore"))
+				if(str.startsWith("ore") || str.startsWith("dust") || str.startsWith("gem"))
 					oreList.add(OreDictionary.getOreID(str));
 			}
 		}
