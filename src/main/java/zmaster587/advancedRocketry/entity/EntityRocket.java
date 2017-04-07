@@ -715,7 +715,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 				miningMission.setDimensionId(worldObj);
 				properties.addSatallite(miningMission, worldObj);
-				miningMission.setDimensionId(worldObj);
 
 				if(!worldObj.isRemote)
 					PacketHandler.sendToAll(new PacketSatellite(miningMission));
