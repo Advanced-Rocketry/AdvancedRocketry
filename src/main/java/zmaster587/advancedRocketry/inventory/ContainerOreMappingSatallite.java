@@ -43,7 +43,7 @@ public class ContainerOreMappingSatallite extends Container {
 			}
 			else
 				for(int id : OreDictionary.getOreIDs(stack)) {
-					if(OreDictionary.getOreName(id).startsWith("ore") || OreDictionary.getOreName(id).startsWith("gem")) {
+					if(OreDictionary.getOreName(id).startsWith("ore") || OreDictionary.getOreName(id).startsWith("gem") || OreDictionary.getOreName(id).startsWith("dust")) {
 						inv.setSelectedSlot(slot);
 					}
 
