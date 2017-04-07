@@ -20,7 +20,7 @@ public class ContainerOreMappingSatallite extends Container {
 	ContainerOreMappingSatallite(SatelliteOreMapping inv, InventoryPlayer inventoryPlayer) {
 		super();
 		this.inv = inv;
-
+		inv.setSelectedSlot(-1);
 		// Player hotbar
 		for (int j1 = 0; j1 < 9; j1++) {
 			addSlotToContainer(new Slot(inventoryPlayer, j1, 13 + j1 * 18, 155));
@@ -43,7 +43,7 @@ public class ContainerOreMappingSatallite extends Container {
 					}
 					else
 						for(int id : OreDictionary.getOreIDs(stack)) {
-							if(OreDictionary.getOreName(id).startsWith("ore")) {
+							if(OreDictionary.getOreName(id).startsWith("ore") || OreDictionary.getOreName(id).startsWith("gem")) {
 								inv.setSelectedSlot(slot);
 							}
 
