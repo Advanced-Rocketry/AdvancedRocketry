@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -285,11 +286,11 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		if(tile != null && (slot = tile.getSelectedSlot()) != -1) {
 
 			GlStateManager.disableTexture2D();
-			GlStateManager.color(0f, 0.8f, 0f);
+			GlStateManager.color(0f, 0.8f, 0f, 1f);
 
-			buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel, 13 + (18*slot), 155, 13 + 16 + (18*slot), 155 + 16, 0, 1, 0, 1);
-			buffer.finishDrawing();
+			Tessellator.getInstance().draw();
 			GlStateManager.enableTexture2D();
 		}
 
