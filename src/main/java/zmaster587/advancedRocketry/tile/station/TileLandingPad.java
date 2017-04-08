@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
@@ -63,7 +64,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile 
 		ItemLinker.setDimId(item, world.provider.dimensionId);
 		return true;
 	}
-	
+
 	@Override
 	public String getModularInventoryName() {
 		return "tile.landingPad.name";
@@ -72,7 +73,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile 
 	@Override
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
-		
+
 		TileEntity tile = world.getTileEntity(((ItemLinker)item.getItem()).getMasterX(item), ((ItemLinker)item.getItem()).getMasterY(item), ((ItemLinker)item.getItem()).getMasterZ(item));
 
 		if(tile instanceof IInfrastructure) {
@@ -108,12 +109,19 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile 
 		EntityRocketBase rocket = (EntityRocketBase)event.entity;
 
 		AxisAlignedBB bbCache = AxisAlignedBB.getBoundingBox(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 1, this.yCoord + 2, this.zCoord + 1);
-		List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
+		if(worldObj != null)
+		{
+			List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
 
-		if(rockets.contains(rocket)) {
-			for(IInfrastructure infrastructure : getConnectedInfrastructure()) {
-				rocket.linkInfrastructure(infrastructure);
+			if(rockets.contains(rocket)) {
+				for(IInfrastructure infrastructure : getConnectedInfrastructure()) {
+					rocket.linkInfrastructure(infrastructure);
+				}
 			}
+		}
+		else
+		{
+			AdvancedRocketry.logger.fatal("WORLD IS NULL UPON ROCKET LAND, THIS IS VERY BAD AND SHOULD NEVER HAPPEN.  Is there some forge modifying coremod installed?  Location: " + xCoord + " " + yCoord + " " + zCoord);
 		}
 	}
 
@@ -135,23 +143,23 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile 
 			}
 		}
 	}
-	
+
 	public void registerTileWithStation(World world, int x, int y, int z) {
 		if(!world.isRemote && world.provider.dimensionId == Configuration.spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(x, z);
-		
+
 			if(spaceObj instanceof SpaceObject) {
 				((SpaceObject)spaceObj).addLandingPad(x, z);
-				
+
 				AxisAlignedBB bbCache = AxisAlignedBB.getBoundingBox(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 1, this.yCoord + 2, this.zCoord + 1);
 				List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
-				
+
 				if(rockets != null && !rockets.isEmpty())
 					((SpaceObject)spaceObj).setPadStatus(x, z, true);
 			}
 		}
 	}
-	
+
 	public void unregisterTileWithStation(World world, int x, int y, int z) {
 		if(!world.isRemote && world.provider.dimensionId == Configuration.spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(x, z);
@@ -159,18 +167,18 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile 
 				((SpaceObject)spaceObj).removeLandingPad(x, z);
 		}
 	}
-	
+
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		super.setInventorySlotContents(slot, stack);
-		
+
 		if(stack != null) {
 			unregisterTileWithStation(worldObj, xCoord, yCoord, zCoord);
 		}
 		else {
 			registerTileWithStation(worldObj, xCoord, yCoord, zCoord);
 		}
-			
+
 	}
 
 	@Override
