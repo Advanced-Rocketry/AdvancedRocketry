@@ -194,6 +194,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public double orbitalPhi;
 	public double rotationalPhi;
 	public OreGenProperties oreProperties = null;
+	public String customIcon;
 
 	StellarBody star;
 	int starId;
@@ -232,6 +233,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		tickingSatallites = new HashMap<Long,SatelliteBase>();
 		isNativeDimension = true;
 		isGasGiant = false;
+		customIcon = "";
 	}
 
 	public DimensionProperties(int id ,String name) {
@@ -335,6 +337,15 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return the {@link ResourceLocation} representing this planet, generated from the planet's properties
 	 */
 	public ResourceLocation getPlanetIcon() {
+		
+		
+		if(!customIcon.isEmpty())
+		{
+			PlanetIcons icons = PlanetIcons.valueOf(customIcon.toUpperCase());
+			return icons == null ? PlanetIcons.UNKNOWN.resource : icons.resource;
+			
+		}
+		
 		AtmosphereTypes atmType = AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity);
 		Temps tempType = Temps.getTempFromValue(averageTemperature);
 
@@ -365,6 +376,13 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return the {@link ResourceLocation} representing this planet, generated from the planet's properties
 	 */
 	public ResourceLocation getPlanetIconLEO() {
+		
+		if(!customIcon.isEmpty())
+		{
+			PlanetIcons icons = PlanetIcons.valueOf(customIcon.toUpperCase());
+			return icons == null ? PlanetIcons.UNKNOWN.resource : icons.resourceLEO;
+		}
+		
 		AtmosphereTypes atmType = AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity);
 		Temps tempType = Temps.getTempFromValue(averageTemperature);
 

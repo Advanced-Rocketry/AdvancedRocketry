@@ -1760,6 +1760,14 @@ public class AdvancedRocketry {
 					}
 				}
 
+				if(!properties.customIcon.isEmpty()) {
+					DimensionProperties loadedProps;
+					if(DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
+						loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
+						loadedProps.customIcon = properties.customIcon;
+					}
+				}
+				
 				if(properties.oreProperties != null) {
 					DimensionProperties loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
 
