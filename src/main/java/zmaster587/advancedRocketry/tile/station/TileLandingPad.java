@@ -109,7 +109,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile 
 		EntityRocketBase rocket = (EntityRocketBase)event.entity;
 
 		AxisAlignedBB bbCache = AxisAlignedBB.getBoundingBox(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 1, this.yCoord + 2, this.zCoord + 1);
-		if(worldObj != null)
+		if(this.hasWorldObj())
 		{
 			List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
 
@@ -121,7 +121,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile 
 		}
 		else
 		{
-			AdvancedRocketry.logger.fatal("WORLD IS NULL UPON ROCKET LAND, THIS IS VERY BAD AND SHOULD NEVER HAPPEN.  Is there some forge modifying coremod installed?  Location: " + xCoord + " " + yCoord + " " + zCoord);
+			AdvancedRocketry.logger.fatal("WORLD IS NULL UPON ROCKET LAND, THIS IS VERY BAD AND SHOULD NEVER HAPPEN.  Is there some forge modifying coremod installed?  Location: " + xCoord + " " + yCoord + " " + zCoord + "   Invalidated: " + this.tileEntityInvalid );
 		}
 	}
 
