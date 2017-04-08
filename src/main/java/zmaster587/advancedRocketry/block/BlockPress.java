@@ -21,6 +21,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityPiston;
@@ -129,16 +130,12 @@ public class BlockPress extends BlockPistonBase {
 
 		IBlockState state2 = world.getBlockState(pos.add(0, -1, 0));
 		Block block = state2.getBlock();
-		ItemStack stackInWorld = new ItemStack(block.getItemDropped(state, world.rand, 0),1, block.getMetaFromState(state2));
-		//DEBUG
-		if(stackInWorld.getItem() == null)
+		
+		Item item = Item.getItemFromBlock(block);
+		if(item == null)
 			return null;
-
-		Material material = MaterialRegistry.getMaterialFromItemStack(stackInWorld);
-
-
-		if(material == null)
-			return null;
+		
+		ItemStack stackInWorld = new ItemStack(item,1, block.getMetaFromState(state2));
 
 		List<IRecipe> recipes = RecipesMachine.getInstance().getRecipes(this.getClass());
 		ItemStack stack = null;
