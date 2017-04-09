@@ -111,8 +111,10 @@ public class Configuration {
 	public static boolean lowGravityBoots;
 
 	public static float jetPackThrust;
-
 	public static boolean enableGravityController;
+	public static boolean generateGeodes;
+	public static int geodeBaseSize;
+	public static int geodeVariation;
 
 	
 }

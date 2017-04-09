@@ -330,7 +330,11 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.asteroidMiningTimeMult = config.get(ASTEROID, "miningMissionTmeMultiplier", 1.0, "Multiplier changing how long a mining mission takes").getDouble();
 		geodeOres = config.get(oreGen, "geodeOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone"}, "List of oredictionary names of ores allowed to spawn in geodes").getStringList();
 		zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList = config.get(oreGen, "geodeOres_blacklist", false, "True if the ores in geodeOres should be a blacklist, false for whitelist").getBoolean();
-
+		zmaster587.advancedRocketry.api.Configuration.generateGeodes = config.get(oreGen, "generateGeodes", true, "If true then ore-containing geodes are generated on high pressure planets").getBoolean();
+		zmaster587.advancedRocketry.api.Configuration.geodeBaseSize = config.get(oreGen, "geodeBaseSize", 36, "average size of the geodes").getInt();
+		zmaster587.advancedRocketry.api.Configuration.geodeVariation = config.get(oreGen, "geodeVariation", 24, "variation in geode size").getInt();
+		
+		
 		orbitalLaserOres = config.get(Configuration.CATEGORY_GENERAL, "laserDrillOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone", "oreDiamond"}, "List of oredictionary names of ores allowed to be mined by the laser drill if surface drilling is disabled").getStringList();
 		zmaster587.advancedRocketry.api.Configuration.laserDrillOresBlackList = config.get(Configuration.CATEGORY_GENERAL, "laserDrillOres_blacklist", false, "True if the ores in laserDrillOres should be a blacklist, false for whitelist").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.laserDrillPlanet = config.get(Configuration.CATEGORY_GENERAL, "laserDrillPlanet", false, "If true the orbital laser will actually mine blocks on the planet below").getBoolean();
@@ -975,6 +979,7 @@ public class AdvancedRocketry {
 		LibVulpes.registerRecipeHandler(TileElectricArcFurnace.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/ElectricArcFurnace.xml");
 		LibVulpes.registerRecipeHandler(TileLathe.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/Lathe.xml");
 		LibVulpes.registerRecipeHandler(TileRollingMachine.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/RollingMachine.xml");
+		LibVulpes.registerRecipeHandler(BlockPress.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/SmallPlatePress.xml");
 
 
 		//MOD-SPECIFIC ENTRIES --------------------------------------------------------------------------------------------------------------------------
@@ -1469,15 +1474,6 @@ public class AdvancedRocketry {
 		}
 
 		//Load XML recipes
-		LibVulpes.instance.loadXMLRecipe(TileCuttingMachine.class);
-		LibVulpes.instance.loadXMLRecipe(TilePrecisionAssembler.class);
-		LibVulpes.instance.loadXMLRecipe(TileChemicalReactor.class);
-		LibVulpes.instance.loadXMLRecipe(TileCrystallizer.class);
-		LibVulpes.instance.loadXMLRecipe(TileElectrolyser.class);
-		LibVulpes.instance.loadXMLRecipe(TileElectricArcFurnace.class);
-		LibVulpes.instance.loadXMLRecipe(TileLathe.class);
-		LibVulpes.instance.loadXMLRecipe(TileRollingMachine.class);
-
 		machineRecipes.registerXMLRecipes();
 
 
@@ -1643,7 +1639,7 @@ public class AdvancedRocketry {
 
 				for(DimensionProperties properties : dimCouplingList.dims) {
 					DimensionManager.getInstance().registerDimNoUpdate(properties, properties.isNativeDimension);
-					properties.setStar(properties.getStar());
+					properties.setStar(properties.getStarId());
 				}
 
 				for(StellarBody star : dimCouplingList.stars) {

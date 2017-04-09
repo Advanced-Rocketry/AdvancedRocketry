@@ -11,6 +11,7 @@ import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
@@ -56,14 +57,15 @@ public class BlockPress extends BlockPistonBase {
 	}
 
 	private ItemStack getRecipe(World world, int x, int y, int z, int meta) {
+		
 		if(world.isAirBlock(x, y-1, z))
 			return null;
-		ItemStack stackInWorld = new ItemStack(world.getBlock(x, y-1, z), 1, world.getBlockMetadata(x, y-1, z));
-		Material material = MaterialRegistry.getMaterialFromItemStack(stackInWorld);
-
-
-		if(material == null)
+		
+		Item item = Item.getItemFromBlock(world.getBlock(x, y-1, z));
+		if(item == null)
 			return null;
+		
+		ItemStack stackInWorld = new ItemStack(item, 1, world.getBlockMetadata(x, y-1, z));
 
 		List<IRecipe> recipes = RecipesMachine.getInstance().getRecipes(this.getClass());
 		ItemStack stack = null;
