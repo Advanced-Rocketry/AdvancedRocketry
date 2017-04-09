@@ -109,6 +109,11 @@ public class XMLPlanetLoader {
 			if(nameNode != null) {
 				properties.isNativeDimension = false;
 			}
+			
+			nameNode = planetNode.getAttributes().getNamedItem("customIcon");
+			if(nameNode != null) {
+				properties.customIcon = nameNode.getTextContent();
+			}
 		}
 
 		while(planetPropertyNode != null) {
@@ -291,6 +296,9 @@ public class XMLPlanetLoader {
 
 		//Star may not be registered at this time, use ID version instead
 		properties.setStar(star.getId());
+		
+		//Set temperature
+		properties.averageTemperature = DimensionManager.getInstance().getTemperature(star, properties.getOrbitalDist(), properties.getAtmosphereDensity());
 
 		//If no biomes are specified add some!
 		if(properties.getBiomes().isEmpty())

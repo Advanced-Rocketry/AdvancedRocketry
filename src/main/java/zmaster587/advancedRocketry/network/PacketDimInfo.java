@@ -35,9 +35,9 @@ public class PacketDimInfo extends BasePacket {
 		if(!flag) {
 			
 			//Try to send the nbt data of the dimension to the client, if it fails(probably due to non existent Biome ids) then remove the dimension
+			PacketBuffer packetBuffer = new PacketBuffer(out);
 			try {
 				dimProperties.writeToNBT(nbt);
-				PacketBuffer packetBuffer = new PacketBuffer(out);
 				out.writeBoolean(false);
 				packetBuffer.writeNBTTagCompoundToBuffer(nbt);
 			} catch(NullPointerException e) {
@@ -46,6 +46,14 @@ public class PacketDimInfo extends BasePacket {
 				Logger.getLogger("advancedRocketry").warning("Dimension " + dimNumber + " has thrown an exception trying to write NBT, deleting!");
 				DimensionManager.getInstance().deleteDimension(dimNumber);
 			}
+			
+			if(!dimProperties.customIcon.isEmpty())
+			{
+				packetBuffer.writeShort(dimProperties.customIcon.length());
+				packetBuffer.writeString(dimProperties.customIcon);
+			}
+			else
+				packetBuffer.writeShort(0);
 
 		}
 		else
@@ -73,6 +81,12 @@ public class PacketDimInfo extends BasePacket {
 			}
 			dimProperties = new DimensionProperties(dimNumber);
 			dimProperties.readFromNBT(nbt);
+			
+			short strLen = packetBuffer.readShort();
+			if(strLen > 0)
+			{
+				dimProperties.customIcon = packetBuffer.readStringFromBuffer(strLen);
+			}
 		}
 	}
 

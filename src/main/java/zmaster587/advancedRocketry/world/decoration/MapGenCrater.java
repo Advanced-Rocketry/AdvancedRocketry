@@ -38,7 +38,8 @@ public class MapGenCrater extends MapGenBase {
 							int count = ( depth - ( ((xCoord*16)+x)*((xCoord*16)+x) + ((zCoord*16)+z)*((zCoord*16)+z) ) )/(radius*2);
 							
 							for(int dist = 0; dist < count; dist++) {
-								chunkPrimerIn.setBlockState(x, y-dist, z, Blocks.AIR.getDefaultState());
+								if(y-dist > 2)
+									chunkPrimerIn.setBlockState(x, y-dist, z, Blocks.AIR.getDefaultState());
 							}
 							
 							int ridgeSize = 12;

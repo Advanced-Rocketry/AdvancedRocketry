@@ -45,7 +45,7 @@ public class MapGenGeode extends MapGenBase {
 
 		if(rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk || rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk) {
 
-			int radius = rand.nextInt(24) + 24; //24; 24 -> 48
+			int radius = rand.nextInt(Configuration.geodeVariation) + Configuration.geodeBaseSize - (Configuration.geodeVariation/2); //24; 24 -> 48
 
 			//TODO: make hemisphere from surface and line the side with ore of some kind
 

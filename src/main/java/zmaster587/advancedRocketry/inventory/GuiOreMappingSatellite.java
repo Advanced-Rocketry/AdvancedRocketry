@@ -38,7 +38,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 	private int mouseValue;
 	private int scanSize = 2;
 	private int radius = 1;
-	private int xSelected, zSelected, xCenter, zCenter;
+	private int xSelected, zSelected, xCenter, zCenter, playerPosX, playerPosZ;
 	private static final ResourceLocation backdrop = new ResourceLocation("advancedrocketry", "textures/gui/VideoSatallite.png");
 	int[][] oreMap;
 	World world;
@@ -51,13 +51,13 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		prevSlot = -1;
 		this.tile = tile;
 		//masterConsole = tile;
-		xCenter = (int) inventoryPlayer.posX;
-		zCenter = (int) inventoryPlayer.posZ;
-		
+		playerPosX = xCenter = (int) inventoryPlayer.posX;
+		playerPosZ = zCenter = (int) inventoryPlayer.posZ;
+
 		//Max zoom is 128
 		if(tile != null)
 			maxZoom = (int) Math.pow(2, tile.getZoomRadius());
-		
+
 		if(maxZoom == 1)
 			this.tile = null;
 		scanSize = maxZoom;
@@ -102,7 +102,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 	private void runMapperWithSelection() {
 		if(tile == null)
 			return;
-		
+
 		currentMapping.interrupt();
 		resetTexture();
 		if(prevSlot == -1) {
@@ -122,7 +122,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 			int button) throws IOException {
 		// TODO Auto-generated method stub
 		super.mouseClicked(x, y, button);
-		
+
 		if(tile == null)
 			return;
 
@@ -148,9 +148,9 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		}
 
 	}
-	
-	
-	
+
+
+
 	@Override
 	protected void keyTyped(char c, int i) throws IOException {
 		if(i == Keyboard.KEY_W) {
@@ -251,7 +251,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		buffer.pos(-21, 81 + fancyScanOffset, (double)this.zLevel).endVertex();
 		buffer.finishDrawing();
 
-		
+
 		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
 		buffer.pos(-21, 82 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel).endVertex();
 		buffer.pos(0, 84 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel).endVertex();
@@ -263,7 +263,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
 		GlStateManager.color(0.5f, 0.5f, 0.0f,0.3f + ((float)Math.sin(Math.PI*(fancyScanOffset/(float)FANCYSCANMAXSIZE))/3f));
-		
+
 		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
 		RenderHelper.renderNorthFace(buffer, this.zLevel, 173, 82, 194, 141);
 		buffer.finishDrawing();
@@ -301,7 +301,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_,
 			int p_146976_2_, int p_146976_3_) {
 		int x = (width - 240) / 2, y = (height - 192) / 2;
-		
+
 		//If the scan is done then 
 		if(merged) {
 			IntBuffer buffer = texture.getByteBuffer();
@@ -325,10 +325,32 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		//NOTE: if the controls are rendered first the display never shows up
 		//Draw the actual display
 		GlStateManager.bindTexture( texture.getTextureId() );
-		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
+
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel, 47 + x, 20 + y, 47 + x + SCREEN_SIZE, 20 + y + SCREEN_SIZE, 0, 1, 0, 1);
 		Tessellator.getInstance().draw();
 
+
+		//Render player location
+		float offsetX = playerPosX - xCenter;
+		float offsetY = zCenter - playerPosZ ;
+		double numPixels = SCREEN_SIZE/scanSize;//(scanSize/(float)(SCREEN_SIZE*radius));
+
+
+		float radius = 2;
+		if(Math.abs(offsetX) < scanSize/2 && Math.abs(offsetY) < scanSize/2) {
+			offsetX *= numPixels;
+			offsetY *= numPixels;
+			
+			GlStateManager.disableTexture2D();
+			GlStateManager.color(0.4f, 1f, 0.4f);
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel, offsetX + 47 + x + SCREEN_SIZE/2 - radius,  offsetY + 20 + y + SCREEN_SIZE/2 - radius, offsetX + 47 + x + SCREEN_SIZE/2 + radius, offsetY + 20 + y + SCREEN_SIZE/2 + radius, 0, 1, 0, 1);
+			Tessellator.getInstance().draw();
+			GlStateManager.color(1, 1, 1);
+			GlStateManager.enableTexture2D();
+			this.drawCenteredString(this.fontRendererObj, "You", (int)(offsetX + 47 + x + SCREEN_SIZE/2 - radius), (int)(offsetY + 20 + y + SCREEN_SIZE/2 - radius) -10, 0xF0F0F0);
+		}
 
 		//Render sliders and controls
 		this.mc.renderEngine.bindTexture(backdrop);
@@ -341,7 +363,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		//this.drawString(this.fontRendererObj, "Clarity", 198 + x, 52 + y, 0xb0b0b0);
 		this.drawString(this.fontRendererObj, "X: " + xSelected, 6 + x, 33 + y, 0xF0F0F0);
 		this.drawString(this.fontRendererObj, "Z: " + zSelected, 6 + x, 49 + y, 0xF0F0F0);
-		this.drawString(this.fontRendererObj, "Value: ", 6 + x, 65 + y, 0xF0F0F0);
-		this.drawString(this.fontRendererObj, String.valueOf(mouseValue), 6 + x, 79 + y, 0xF0F0F0);
+		//this.drawString(this.fontRendererObj, "Value: ", 6 + x, 65 + y, 0xF0F0F0);
+		//this.drawString(this.fontRendererObj, String.valueOf(mouseValue), 6 + x, 79 + y, 0xF0F0F0);
 	}
 }

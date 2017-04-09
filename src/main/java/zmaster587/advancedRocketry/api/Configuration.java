@@ -118,4 +118,8 @@ public class Configuration {
 	public static boolean enableGravityController;
 	public static boolean planetsMustBeDiscovered;
 
+	public static boolean generateGeodes;
+	public static int geodeBaseSize;
+	public static int geodeVariation;
+
 }
