@@ -113,5 +113,9 @@ public class Configuration {
 
 	public static float jetPackThrust;
 
+	public static boolean generateGeodes;
+	public static int geodeBaseSize;
+	public static int geodeVariation;
+
 	
 }

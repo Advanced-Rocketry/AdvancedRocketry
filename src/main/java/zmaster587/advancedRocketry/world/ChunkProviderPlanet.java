@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
@@ -144,7 +145,7 @@ public class ChunkProviderPlanet implements IChunkProvider {
 		else 
 			craterGenerator = null;
 		
-		if(atmDensity > 1.25f) {
+		if(atmDensity > 1.25f && Configuration.generateGeodes) {
 			geodeGenerator = new MapGenGeode(800);
 		}
 		else
