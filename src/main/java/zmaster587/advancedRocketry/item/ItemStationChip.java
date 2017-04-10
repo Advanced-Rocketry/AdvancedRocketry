@@ -66,10 +66,10 @@ public class ItemStationChip extends ItemIdWithName {
 		return null;
 	}
 	
-	public Long getUUID(ItemStack stack) {
+	public static long getUUID(ItemStack stack) {
 		if(stack.hasTagCompound())
 			return stack.getTagCompound().getLong(uuidIdentifier);
-		return null;
+		return 0;
 	}
 
 	public void setUUID(ItemStack stack, long uuid) {
