@@ -114,6 +114,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	private String errorStr;
 	private long lastErrorTime = Long.MIN_VALUE;
 	private static long ERROR_DISPLAY_TIME = 100;
+	private static int DESCENT_TIMER = 500;
 
 
 	protected long lastWorldTickTicked;
@@ -122,6 +123,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	protected int destinationDimId;
 	//Offset for buttons linking to the tileEntityGrid
 	private int tilebuttonOffset = 3;
+	private int autoDescendTimer;
 	private WeakReference<Entity>[] mountedEntities;
 	protected ModulePlanetSelector container;
 	boolean acceptedPacket = false;
@@ -162,6 +164,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		mountedEntities = new WeakReference[stats.getNumPassengerSeats()];
 
 		lastWorldTickTicked = p_i1582_1_.getTotalWorldTime();
+		autoDescendTimer = 5000;
 	}
 
 	public EntityRocket(World world, StorageChunk storage, StatsRocket stats, double x, double y, double z) {
@@ -174,6 +177,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		isInFlight = false;
 		mountedEntities = new WeakReference[stats.getNumPassengerSeats()];
 		lastWorldTickTicked = world.getTotalWorldTime();
+		autoDescendTimer = 5000;
 	}
 
 	@Override
@@ -261,7 +265,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 
 		if(isInOrbit() && !isInFlight())
-			return "Press Space to descend!";
+			return "Press Space to descend!\n  Auto descend in " + ((DESCENT_TIMER - this.ticksExisted)/20);
 		else if(!isInFlight())
 			return "Press Space to take off!\nDest: " + displayStr;
 
@@ -544,6 +548,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			if(worldObj.isRemote)
 				LibVulpes.proxy.playSound(new SoundRocketEngine( AudioRegistry.combustionRocket, SoundCategory.NEUTRAL,this));
 		}
+		
+		if(this.ticksExisted > DESCENT_TIMER && isInOrbit() && !isInFlight())
+			setInFlight(true);
 
 		//Hackish crap to make clients mount entities immediately after server transfer and fire events
 		//Known race condition... screw me...
