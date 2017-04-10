@@ -5,7 +5,8 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 
 public class VersionCompat {
 	public static void upgradeDimensionManagerPostLoad(String prevVersion) {
-		if(AdvancedRocketry.version.equals(prevVersion) || AdvancedRocketry.version.startsWith("%"))
+		
+		/*if(AdvancedRocketry.version.equals(prevVersion) || AdvancedRocketry.version.startsWith("%"))
 			return;
 		String version = prevVersion;
 		
@@ -20,6 +21,6 @@ public class VersionCompat {
 					DimensionManager.getInstance().getDimensionProperties(dimId).setGasGiant();
 			}
 			DimensionManager.getSol().setName("Sol");
-		}
+		}*/
 	}
 }
