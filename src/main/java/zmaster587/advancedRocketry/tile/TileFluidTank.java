@@ -4,6 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
@@ -26,6 +27,11 @@ public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
 		fluidChanged = false;
 	}
 
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid) {
+		return true;
+	}
+	
 	private void checkForUpdate() {
 		if(fluidChanged && worldObj instanceof WorldDummy || worldObj.getTotalWorldTime() - lastUpdateTime > MAX_UPDATE) {
 			this.markDirty();
@@ -68,6 +74,9 @@ public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
 
 			stack = handler.drain(from, maxDrain, doDrain);
 		}
+		
+		if(stack != null)
+			return stack;
 
 		FluidStack stack2 = super.drain(from, maxDrain - (stack != null ? stack.amount : 0), doDrain);
 
