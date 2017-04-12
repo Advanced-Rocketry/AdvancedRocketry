@@ -17,8 +17,6 @@ buildscript {
 
 
 apply plugin: 'forge'
-def modversion
-modversion = version = "1.7.10-1.0.16"
 group= "zmaster587.advancedRocketry" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "AdvancedRocketry"
 sourceCompatibility = 7
@@ -31,14 +29,22 @@ jar {
     }
 }
 
+apply from: "gradle/scripts/getbuildnumber.gradle"
 minecraft {
     version = "1.7.10-10.13.4.1614-1.7.10"
     assetDir = "eclipse/assets"
     
     replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"
-    replace "%VERSION%", modversion
+    replace "@MAJOR@", version_major
+    replace "@MINOR@", version_minor
+    replace "@REVIS@", version_revis
+    replace "@BUILD@", project.getBuildNumber()
+    
     replace "%LIBVULPESVERSION%", "0.1.17"
 }
+
+
+apply from: "gradle/scripts/version.gradle"
 
 repositories {
     maven {
