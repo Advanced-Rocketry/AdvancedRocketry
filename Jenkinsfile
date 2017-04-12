@@ -5,7 +5,7 @@
         stage('Build') {
             steps {
                 sh 'gradle build' 
-                archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true 
+                archiveArtifacts artifacts: '**build/libs/*.jar', fingerprint: true 
             }
         }
     }
