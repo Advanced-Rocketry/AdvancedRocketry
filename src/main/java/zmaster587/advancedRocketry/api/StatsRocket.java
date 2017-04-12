@@ -76,7 +76,7 @@ public class StatsRocket {
 		return passengerSeats.size();
 	}
 
-	public int getThrust() {return thrust;}
+	public int getThrust() {return (int) (thrust*Configuration.rocketThrustMultiplier);}
 	public int getWeight() {return weight;}
 	public float getDrillingPower() {return drillingPower;}
 	public void setDrillingPower(float power) {drillingPower = power;}
