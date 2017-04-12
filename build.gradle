@@ -48,7 +48,7 @@ repositories {
         }
     ivy {
             name "industrialcraft-2"
-            artifactPattern "http://jenkins.ic2.player.to/job/IC2_110/lastSuccessfulBuild/artifact/build/libs/[module]-[revision].[ext]"
+            artifactPattern "http://jenkins.ic2.player.to/job/IC2_110/170/artifact/build/libs/[module]-[revision].[ext]"
         }
     ivy {
             name "Tesla"
