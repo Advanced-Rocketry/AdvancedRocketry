@@ -52,24 +52,28 @@ repositories {
 	}
         ivy {
             name "industrialcraft-2"
-            artifactPattern "http://jenkins.ic2.player.to/job/IC2_experimental/lastSuccessfulBuild/artifact/build/libs/[module]-[revision].[ext]"
+            artifactPattern "http://jenkins.ic2.player.to/job/IC2_experimental/801/artifact/build/libs/[module]-[revision].[ext]"
         }
+        //ivy {
+        //    name "GalacticraftCore"
+        //    artifactPattern "https://ci.micdoodle8.com/job/Galacticraft-1.7/474/artifact/Forge/build/libs/[module]-[revision].[ext]"
+        //}
         ivy {
-            name "GalacticraftCore"
-            artifactPattern "https://ci.micdoodle8.com/job/Galacticraft-1.7/lastSuccessfulBuild/artifact/Forge/build/libs/[module]-[revision].[ext]"
+            name "LibVulpes"
+            artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/master/2/artifact/output/[module]-[revision].[ext]"
         }
 }
 
 dependencies {
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    //compile "some.group:artifact:version:classifier"
-    //compile "some.group:artifact:version"
-    compile project(':libVulpes')
     
     //If for whatever reason gradle complains of "unable to find valid certification path to requested target"
     //Just download https://ci.micdoodle8.com/job/Galacticraft-1.7/lastSuccessfulBuild/artifact/Forge/build/libs/GalacticraftCore-1.7-3.0.12.474.jar and stick in in AdvancedRocketry/libs and comment out the following line
     //compile name: 'GalacticraftCore', version: '1.7-3.0.12.474', ext: 'jar'
+    compile name: 'LibVulpes', version: '1.7.10-0.1.17-deobf', ext: 'jar'
+    compile name: 'industrialcraft-2', version: '2.2.801-experimental-dev', ext: 'jar'
+    compile 'codechicken:CodeChickenLib:1.7.10-1.1.3.127:dev'
+    compile 'codechicken:CodeChickenCore:1.7.10-1.0.4.35:dev'
+    compile 'codechicken:NotEnoughItems:1.7.10-1.0.4.95:dev'
       
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:7.0.20:dev'  // adds buildcraft to the dev env
