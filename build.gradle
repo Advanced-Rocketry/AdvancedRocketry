@@ -60,7 +60,7 @@ repositories {
         }
     ivy {
             name "LibVulpes"
-            artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/MC1_10/4/artifact/output/[module]-[revision].[ext]"
+            artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/unstable1_10/1/artifact/output/[module]-[revision].[ext]"
         }
 }
 
