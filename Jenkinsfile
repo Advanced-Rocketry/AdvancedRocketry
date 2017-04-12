@@ -4,8 +4,8 @@
     stages {
         stage('Build') {
             steps {
-                mkdir libs
-                cp ../../libraries/*.jar ./
+                sh 'mkdir -p libs'
+                sh 'cp ../../libraries/*.jar ./libs'
                 sh 'gradle build' 
                 archiveArtifacts artifacts: '**build/libs/*.jar', fingerprint: true 
             }
