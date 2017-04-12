@@ -70,8 +70,8 @@ public class BlockPressurizedFluidTank extends Block {
 	public void onNeighborChange(IBlockAccess world, BlockPos pos,
 			BlockPos neighbor) {
 		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof IAdjBlockUpdate)
-			((IAdjBlockUpdate)tile).onAdjacentBlockUpdated();
+		if(tile instanceof TileFluidTank)
+			((TileFluidTank)tile).onAdjacentBlockUpdated(EnumFacing.getFacingFromVector(neighbor.getX() - pos.getX(), neighbor.getY() - pos.getY(), neighbor.getZ() - pos.getZ()));
 	}
 	
 	@Override

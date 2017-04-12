@@ -1271,7 +1271,6 @@ public class AdvancedRocketry {
 
 		machineRecipes.createAutoGennedRecipes(modProducts);
 
-
 		//Register buckets
 		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockFuelFluid, AdvancedRocketryItems.itemBucketRocketFuel);
 

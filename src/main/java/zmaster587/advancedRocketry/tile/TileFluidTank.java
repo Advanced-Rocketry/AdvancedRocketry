@@ -12,7 +12,7 @@ import zmaster587.advancedRocketry.world.util.WorldDummy;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.util.IAdjBlockUpdate;
 
-public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
+public class TileFluidTank extends TileFluidHatch {
 
 	private long lastUpdateTime;
 	private static final int MAX_UPDATE = 5;
@@ -64,7 +64,7 @@ public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
 		if(amt > 0 && doFill)
 			fluidChanged = true;	
 		
-		//checkForUpdate();
+		checkForUpdate();
 		
 		return amt;
 	}
@@ -80,6 +80,8 @@ public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
 
 			stack = handler.drain(maxDrain, doDrain);
 		}
+		if(stack != null)
+			return stack;
 
 		FluidStack stack2 = super.drain(maxDrain - (stack != null ? stack.amount : 0), doDrain);
 
@@ -143,8 +145,10 @@ public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
 		return bucketUsed;
 	}
 
-	@Override
-	public void onAdjacentBlockUpdated() {
+	public void onAdjacentBlockUpdated(EnumFacing dir) {
+		if(dir != EnumFacing.DOWN)
+			return;
+		
 		TileFluidTank tank = getFluidTankInDirection(EnumFacing.UP);
 
 		if(tank != null && tank.getTankProperties()[0].getContents() != null) {
