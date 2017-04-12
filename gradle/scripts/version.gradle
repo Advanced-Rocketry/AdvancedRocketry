@@ -1,0 +1,7 @@
+version = "${project.minecraft.version}-${version_major}.${version_minor}.${version_revis}" + project.getBuildNumber()
+
+//prints the version to the console
+println "version = "+ version
+
+//Grabs the archivebase and prints the version to the root of the project directory.
+file("${archivebase}.txt").text = version;
