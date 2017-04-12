@@ -658,7 +658,17 @@ public class DimensionManager implements IGalaxy {
 			NBTTagCompound nbtTag = nbt.getCompoundTag("spaceObjects");
 			SpaceObjectManager.getSpaceManager().readFromNBT(nbtTag);
 		}
-
+		
+		//Try to fix invalid objects
+		for(ISpaceObject i : SpaceObjectManager.getSpaceManager().getSpaceObjects())
+		{
+			if(!isDimensionCreated(i.getOrbitingPlanetId()) && i.getOrbitingPlanetId() != 0 && i.getOrbitingPlanetId() != SpaceObjectManager.WARPDIMID)
+			{
+				AdvancedRocketry.logger.warn("Dimension ID " + i.getOrbitingPlanetId() + " is not registered and a space station is orbiting it, moving to dimid 0");
+				i.setOrbitingBody(0);
+			}
+		}
+		
 		prevBuild = nbt.getString("prevVersion");
 		nbt.setString("prevVersion", AdvancedRocketry.version);
 
