@@ -58,6 +58,10 @@ repositories {
             name "EnderIO"
             artifactPattern "https://addons-origin.cursecdn.com/files/2238/375/[module]-[revision].[ext]"
         }
+    ivy {
+            name "LibVulpes"
+            artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/MC1_10/4/artifact/output/[module]-[revision].[ext]"
+        }
 }
 
 dependencies {
@@ -66,6 +70,7 @@ dependencies {
     compile name: 'industrialcraft-2', version: '2.6.170-ex110-api', ext: 'jar'
     compile name: 'Tesla', version: '1.10.2-1.2.1.50-deobf', ext: 'jar'
     compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
+    compile name: 'LibVulpes', version: '1.10.2-0.1.18-universal', ext: 'jar'
     
     // compile against the JEI API
     deobfCompile "mezz.jei:jei_1.10.2:3.14.7.416:api"
