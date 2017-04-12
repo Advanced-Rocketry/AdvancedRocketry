@@ -135,8 +135,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		MOON(new ResourceLocation("advancedrocketry:textures/planets/moon.png")),
 		WATERWORLD(new ResourceLocation("advancedrocketry:textures/planets/WaterWorld.png")),
 		ICEWORLD(new ResourceLocation("advancedrocketry:textures/planets/IceWorld.png")),
-		GASGAINTBLUE(new ResourceLocation("advancedrocketry:textures/planets/GasGiantBlue.png")),
-		GASGAINTRED(new ResourceLocation("advancedrocketry:textures/planets/GasGiantOrange.png")),
+		GASGIANTBLUE(new ResourceLocation("advancedrocketry:textures/planets/GasGiantBlue.png")),
+		GASGIANTRED(new ResourceLocation("advancedrocketry:textures/planets/GasGiantOrange.png")),
 		UNKNOWN(new ResourceLocation("advancedrocketry:textures/planets/Unknown.png"))
 		;
 
@@ -341,8 +341,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		
 		if(!customIcon.isEmpty())
 		{
-			PlanetIcons icons = PlanetIcons.valueOf(customIcon.toUpperCase());
-			return icons == null ? PlanetIcons.UNKNOWN.resource : icons.resource;
+			try {
+				return PlanetIcons.valueOf(customIcon.toUpperCase()).resource;
+			} catch(IllegalArgumentException e) {
+				return PlanetIcons.UNKNOWN.resource;
+			}
 			
 		}
 		
@@ -350,7 +353,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		Temps tempType = Temps.getTempFromValue(averageTemperature);
 
 		if(isGasGiant())
-			return PlanetIcons.GASGAINTBLUE.resource;
+			return PlanetIcons.GASGIANTBLUE.resource;
 
 		if(tempType == Temps.TOOHOT)
 			return PlanetIcons.MARSLIKE.resource;
@@ -379,8 +382,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		
 		if(!customIcon.isEmpty())
 		{
-			PlanetIcons icons = PlanetIcons.valueOf(customIcon.toUpperCase());
-			return icons == null ? PlanetIcons.UNKNOWN.resource : icons.resourceLEO;
+			try {
+				return PlanetIcons.valueOf(customIcon.toUpperCase()).resourceLEO;
+			} catch(IllegalArgumentException e) {
+				return PlanetIcons.UNKNOWN.resource;
+			}
 		}
 		
 		AtmosphereTypes atmType = AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity);
@@ -388,7 +394,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 
 		if(isGasGiant())
-			return PlanetIcons.GASGAINTBLUE.resourceLEO;
+			return PlanetIcons.GASGIANTBLUE.resourceLEO;
 
 		if(tempType == Temps.TOOHOT)
 			return PlanetIcons.MARSLIKE.resourceLEO;
