@@ -107,6 +107,11 @@ public class XMLPlanetLoader {
 			if(nameNode != null) {
 				properties.isNativeDimension = false;
 			}
+			
+			nameNode = planetNode.getAttributes().getNamedItem("customIcon");
+			if(nameNode != null) {
+				properties.customIcon = nameNode.getTextContent();
+			}
 		}
 
 		while(planetPropertyNode != null) {
