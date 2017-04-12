@@ -4,6 +4,7 @@
     stages {
         stage('Build') {
             steps {
+                sh 'gradle setupDecompWorkspace' 
                 sh 'gradle build' 
                 archiveArtifacts artifacts: '**build/libs/*.jar', fingerprint: true 
             }
