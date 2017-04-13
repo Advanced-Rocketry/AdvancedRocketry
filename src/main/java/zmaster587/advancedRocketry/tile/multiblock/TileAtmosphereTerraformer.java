@@ -369,7 +369,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 			return;
 
 		if(!worldObj.isRemote) {
-			int requiredN2 = 40, requiredO2 = 40;
+			int requiredN2 = Configuration.terraformliquidRate, requiredO2 =  Configuration.terraformliquidRate;
 
 			for(IFluidHandler handler : fluidInPorts) {
 				FluidStack stack = handler.drain(new FluidStack(AdvancedRocketryFluids.fluidNitrogen, requiredN2), true);

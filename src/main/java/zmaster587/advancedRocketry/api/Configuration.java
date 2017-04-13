@@ -117,6 +117,8 @@ public class Configuration {
 	public static int geodeBaseSize;
 	public static int geodeVariation;
 
+	public static int terraformliquidRate;
+
 	
 
 }
