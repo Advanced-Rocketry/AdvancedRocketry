@@ -6,8 +6,8 @@
         "model": "advancedrocketry:models/rocketmotor.obj"
     },
     "variants": {
-        "facing=north": { "model": "advancedrocketry:models/advRocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": 90, "y": 180 },
-        "facing=south": {  "model": "advancedrocketry:models/advRocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": 90 },
+        "facing=north": { "model": "advancedrocketry:models/advRocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": 90 },
+        "facing=south": {  "model": "advancedrocketry:models/advRocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": 90, "y": 180 },
         "facing=west":  { "model": "advancedrocketry:models/advRocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": 90, "y": 270 },
         "facing=east":  { "model": "advancedrocketry:models/advRocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": 90, "y": 90 },
         "facing=up":  { "model": "advancedrocketry:models/advRocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": 180 },
