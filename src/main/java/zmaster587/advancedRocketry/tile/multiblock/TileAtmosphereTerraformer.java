@@ -360,38 +360,40 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 			}
 		}
 
-		if(!Configuration.terraformRequiresFluid)
-			return;
+		if(!worldObj.isRemote) {
+			if(!Configuration.terraformRequiresFluid)
+				return;
 
-		int requiredN2 = 40, requiredO2 = 40;
+			int requiredN2 =  Configuration.terraformliquidRate, requiredO2 =  Configuration.terraformliquidRate;
 
-		for(IFluidHandler handler : fluidInPorts) {
-			FluidStack stack = handler.drain(ForgeDirection.UNKNOWN, new FluidStack(AdvancedRocketryFluids.fluidNitrogen, requiredN2), true);
+			for(IFluidHandler handler : fluidInPorts) {
+				FluidStack stack = handler.drain(ForgeDirection.UNKNOWN, new FluidStack(AdvancedRocketryFluids.fluidNitrogen, requiredN2), true);
 
-			if(stack != null)
-				requiredN2 -= stack.amount;
+				if(stack != null)
+					requiredN2 -= stack.amount;
 
-			stack = handler.drain(ForgeDirection.UNKNOWN, new FluidStack(AdvancedRocketryFluids.fluidOxygen, requiredO2), true);
+				stack = handler.drain(ForgeDirection.UNKNOWN, new FluidStack(AdvancedRocketryFluids.fluidOxygen, requiredO2), true);
 
-			if(stack != null)
-				requiredO2 -= stack.amount;
-		}
+				if(stack != null)
+					requiredO2 -= stack.amount;
+			}
 
-		ItemStack stack = inv.getStackInSlot(0);
-		SatelliteBase satellite;
-		if(!worldObj.isRemote && ( requiredN2 != 0 || requiredO2 != 0 || stack == null || stack.getItem() != AdvancedRocketryItems.itemBiomeChanger 
-				|| (satellite = ((ItemSatelliteIdentificationChip)AdvancedRocketryItems.itemBiomeChanger).getSatellite(stack)).getDimensionId() != worldObj.provider.dimensionId ||
-				!(satellite instanceof SatelliteBiomeChanger))) {
-			this.setMachineEnabled(false);
-			this.setMachineRunning(false);
+			ItemStack stack = inv.getStackInSlot(0);
+			SatelliteBase satellite;
+			if(( requiredN2 != 0 || requiredO2 != 0 || stack == null || stack.getItem() != AdvancedRocketryItems.itemBiomeChanger 
+					|| (satellite = ((ItemSatelliteIdentificationChip)AdvancedRocketryItems.itemBiomeChanger).getSatellite(stack)).getDimensionId() != worldObj.provider.dimensionId ||
+					!(satellite instanceof SatelliteBiomeChanger))) {
+				this.setMachineEnabled(false);
+				this.setMachineRunning(false);
+			}
 		}
 	}
-	
+
 	@Override
 	public ResourceLocation getSound() {
 		return zmaster587.advancedRocketry.inventory.TextureResources.sndMachineLarge;
 	}
-	
+
 	@Override
 	public int getSoundDuration() {
 		return 80;

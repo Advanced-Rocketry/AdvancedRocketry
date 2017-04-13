@@ -82,7 +82,10 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 			ItemStationChip chip = (ItemStationChip)stack.getItem();
 			if(landingDimension == Configuration.spaceDimId) {
 				//TODO: handle Exception
-				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(chip.getDamage(stack));
+				Long uuid = chip.getUUID(stack);
+				if(uuid == null)
+					return null;
+				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation((int)(long)uuid);
 				BlockPosition vec = null;
 				if(object instanceof SpaceObject)
 					vec = ((SpaceObject)object).getNextLandingPad(commit);

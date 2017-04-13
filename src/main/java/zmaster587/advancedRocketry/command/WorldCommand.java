@@ -647,6 +647,7 @@ public class WorldCommand implements ICommand {
 			list.add("fetch");
 			list.add("star");
 			list.add("reloadRecipes");
+			list.add("givestation");
 		} else if(string.length == 2) {
 			ArrayList<String> list2 = new ArrayList<String>();
 			list2.add("get");

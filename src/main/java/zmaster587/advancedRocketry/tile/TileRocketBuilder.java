@@ -178,7 +178,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	public int getWeight()  { return stats.getWeight(); }
 
-	public int getThrust() { return (int) (stats.getThrust()*Configuration.rocketThrustMultiplier); }
+	public int getThrust() { return (int) (stats.getThrust()); }
 
 	public float getNeededThrust() {return getWeight();}
 

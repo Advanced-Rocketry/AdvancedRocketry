@@ -178,7 +178,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 		if(id == 1 && canScan()) {
 			inventory.decrStackSize(0, 1);
-			storedId = (long)inventory.getStackInSlot(1).getItemDamage();
+			storedId = (long)ItemStationChip.getUUID(inventory.getStackInSlot(1));
 			if(storedId == 0) storedId = null;
 			if(storedId == null)
 				inventory.decrStackSize(1, 1);

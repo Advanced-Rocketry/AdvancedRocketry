@@ -16,7 +16,6 @@ buildscript {
 }
 
 apply plugin: 'forge'
-
 group= "zmaster587.advancedRocketry" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "AdvancedRocketry"
 sourceCompatibility = 7
@@ -35,7 +34,6 @@ minecraft {
     assetDir = "eclipse/assets"
     
     replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"
-
     replace "@MAJOR@", version_major
     replace "@MINOR@", version_minor
     replace "@REVIS@", version_revis

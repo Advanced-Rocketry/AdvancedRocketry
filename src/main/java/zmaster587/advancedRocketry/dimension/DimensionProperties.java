@@ -140,8 +140,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		MOON(new ResourceLocation("advancedrocketry:textures/planets/moon.png")),
 		WATERWORLD(new ResourceLocation("advancedrocketry:textures/planets/WaterWorld.png")),
 		ICEWORLD(new ResourceLocation("advancedrocketry:textures/planets/IceWorld.png")),
-		GASGAINTBLUE(new ResourceLocation("advancedrocketry:textures/planets/GasGiantBlue.png")),
-		GASGAINTRED(new ResourceLocation("advancedrocketry:textures/planets/GasGiantOrange.png")),
+		GASGIANTBLUE(new ResourceLocation("advancedrocketry:textures/planets/GasGiantBlue.png")),
+		GASGIANTRED(new ResourceLocation("advancedrocketry:textures/planets/GasGiantOrange.png")),
 		UNKNOWN(new ResourceLocation("advancedrocketry:textures/planets/Unknown.png"))
 		;
 
@@ -210,6 +210,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public double orbitalPhi;
 	public double rotationalPhi;
 	public OreGenProperties oreProperties = null;
+	public String customIcon;
 	
 	//Planet Heirachy
 	private HashSet<Integer> childPlanets;
@@ -357,12 +358,21 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return the {@link ResourceLocation} representing this planet, generated from the planet's properties
 	 */
 	public ResourceLocation getPlanetIcon() {
+		if(!customIcon.isEmpty())
+		{
+			try {
+				return PlanetIcons.valueOf(customIcon.toUpperCase()).resource;
+			} catch(IllegalArgumentException e) {
+				return PlanetIcons.UNKNOWN.resource;
+			}
+			
+		}
+		
 		AtmosphereTypes atmType = AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity);
 		Temps tempType = Temps.getTempFromValue(averageTemperature);
 
 		if(isGasGiant())
-			return PlanetIcons.GASGAINTBLUE.resource;
-			
+			return PlanetIcons.GASGIANTBLUE.resource;
 		if(tempType == Temps.TOOHOT)
 			return PlanetIcons.MARSLIKE.resource;
 		if(atmType != AtmosphereTypes.NONE && VulpineMath.isBetween(tempType.ordinal(), Temps.COLD.ordinal(), Temps.TOOHOT.ordinal()))
@@ -387,13 +397,21 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return the {@link ResourceLocation} representing this planet, generated from the planet's properties
 	 */
 	public ResourceLocation getPlanetIconLEO() {
+		if(!customIcon.isEmpty())
+		{
+			try {
+				return PlanetIcons.valueOf(customIcon.toUpperCase()).resourceLEO;
+			} catch(IllegalArgumentException e) {
+				return PlanetIcons.UNKNOWN.resource;
+			}
+		}
+		
 		AtmosphereTypes atmType = AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity);
 		Temps tempType = Temps.getTempFromValue(averageTemperature);
 
 
 		if(isGasGiant())
-			return PlanetIcons.GASGAINTBLUE.resourceLEO;
-		
+			return PlanetIcons.GASGIANTBLUE.resourceLEO;
 		if(tempType == Temps.TOOHOT)
 			return PlanetIcons.MARSLIKE.resourceLEO;
 		if(atmType != AtmosphereTypes.NONE && VulpineMath.isBetween(tempType.ordinal(), Temps.COLD.ordinal(), Temps.TOOHOT.ordinal()))

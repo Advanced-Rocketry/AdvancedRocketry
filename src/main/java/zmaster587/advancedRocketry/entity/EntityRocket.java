@@ -53,6 +53,7 @@ import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
 import zmaster587.advancedRocketry.item.ItemPackedStructure;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
+import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.mission.MissionOreMining;
 import zmaster587.advancedRocketry.network.PacketSatellite;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -99,12 +100,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	private String errorStr;
 	private long lastErrorTime = Long.MIN_VALUE;
 	private static long ERROR_DISPLAY_TIME = 100;
+	private static int DESCENT_TIMER = 500;
 	protected long lastWorldTickTicked;
 
 	private SatelliteBase satallite;
 	protected int destinationDimId;
 	//Offset for buttons linking to the tileEntityGrid
 	private int tilebuttonOffset = 3;
+	private int autoDescendTimer;
 	private WeakReference<Entity>[] mountedEntities;
 	protected ModulePlanetSelector container;
 
@@ -139,6 +142,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		mountedEntities = new WeakReference[stats.getNumPassengerSeats()];
 
 		lastWorldTickTicked = p_i1582_1_.getTotalWorldTime();
+		autoDescendTimer = 5000;
 	}
 
 	public EntityRocket(World world, StorageChunk storage, StatsRocket stats, double x, double y, double z) {
@@ -151,6 +155,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		isInFlight = false;
 		mountedEntities = new WeakReference[stats.getNumPassengerSeats()];
 		lastWorldTickTicked = world.getTotalWorldTime();
+		autoDescendTimer = 5000;
 	}
 
 	@Override
@@ -200,6 +205,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	}
 
 	@Override
+	
 	public void setPosition(double x, double y,
 			double z) {
 		super.setPosition(x, y, z);
@@ -435,6 +441,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 			LibVulpes.proxy.playSound(new SoundRocketEngine( TextureResources.sndCombustionRocket,this));
 		}
+		
+		if(this.ticksExisted > DESCENT_TIMER && isInOrbit() && !isInFlight())
+			setInFlight(true);
 
 		//Hackish crap to make clients mount entities immediately after server transfer and fire events
 		if(!worldObj.isRemote && (this.isInFlight() || this.isInOrbit()) && this.ticksExisted == 20) {
@@ -688,7 +697,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				ItemStack stack = tile.getStackInSlot(0);
 				if(stack != null && stack.getItem() == AdvancedRocketryItems.itemSpaceStation) {
 					StorageChunk storage = ((ItemPackedStructure)stack.getItem()).getStructure(stack);
-					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(stack.getItemDamage());
+					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation((int)ItemStationChip.getUUID(stack));
 
 					SpaceObjectManager.getSpaceManager().moveStationToBody(object, this.worldObj.provider.dimensionId);
 
@@ -753,7 +762,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		}
 
 		if(isInOrbit() && !isInFlight())
-			return "Press Space to descend!";
+			return "Press Space to descend!\n  Auto descend in " + ((DESCENT_TIMER - this.ticksExisted)/20);
 		else if(!isInFlight())
 			return "Press Space to take off!\nDest: " + displayStr;
 
