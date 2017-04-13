@@ -368,42 +368,44 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 		if(!Configuration.terraformRequiresFluid)
 			return;
 
-		int requiredN2 = 40, requiredO2 = 40;
+		if(!worldObj.isRemote) {
+			int requiredN2 = Configuration.terraformliquidRate, requiredO2 =  Configuration.terraformliquidRate;
 
-		for(IFluidHandler handler : fluidInPorts) {
-			FluidStack stack = handler.drain(new FluidStack(AdvancedRocketryFluids.fluidNitrogen, requiredN2), true);
+			for(IFluidHandler handler : fluidInPorts) {
+				FluidStack stack = handler.drain(new FluidStack(AdvancedRocketryFluids.fluidNitrogen, requiredN2), true);
 
-			if(stack != null)
-				requiredN2 -= stack.amount;
+				if(stack != null)
+					requiredN2 -= stack.amount;
 
-			stack = handler.drain(new FluidStack(AdvancedRocketryFluids.fluidOxygen, requiredO2), true);
+				stack = handler.drain(new FluidStack(AdvancedRocketryFluids.fluidOxygen, requiredO2), true);
 
-			if(stack != null)
-				requiredO2 -= stack.amount;
-		}
+				if(stack != null)
+					requiredO2 -= stack.amount;
+			}
 
-		ItemStack stack = inv.getStackInSlot(0);
-		SatelliteBase satellite;
-		if(!worldObj.isRemote && ( requiredN2 != 0 || requiredO2 != 0 || stack == null || stack.getItem() != AdvancedRocketryItems.itemBiomeChanger 
-				|| (satellite = ((ItemSatelliteIdentificationChip)AdvancedRocketryItems.itemBiomeChanger).getSatellite(stack)).getDimensionId() != worldObj.provider.getDimension() ||
-				!(satellite instanceof SatelliteBiomeChanger))) {
-			this.setMachineEnabled(false);
-			this.setMachineRunning(false);
+			ItemStack stack = inv.getStackInSlot(0);
+			SatelliteBase satellite;
+			if(!worldObj.isRemote && ( requiredN2 != 0 || requiredO2 != 0 || stack == null || stack.getItem() != AdvancedRocketryItems.itemBiomeChanger 
+					|| (satellite = ((ItemSatelliteIdentificationChip)AdvancedRocketryItems.itemBiomeChanger).getSatellite(stack)).getDimensionId() != worldObj.provider.getDimension() ||
+					!(satellite instanceof SatelliteBiomeChanger))) {
+				this.setMachineEnabled(false);
+				this.setMachineRunning(false);
+			}
 		}
 	}
-	
+
 	public SoundEvent getSound() {
 		return AudioRegistry.machineLarge;
 	}
-	
+
 	@Override
 	public int getSoundDuration() {
 		return 80;
 	}
-	
+
 	@Override
 	protected void playMachineSound(SoundEvent event) {
-    		worldObj.playSound(getPos().getX(), getPos().getY() + 7, getPos().getZ(), event, SoundCategory.BLOCKS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.BLOCKS),  0.975f + worldObj.rand.nextFloat()*0.05f, false);
+		worldObj.playSound(getPos().getX(), getPos().getY() + 7, getPos().getZ(), event, SoundCategory.BLOCKS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.BLOCKS),  0.975f + worldObj.rand.nextFloat()*0.05f, false);
 	}
 
 	@Override
@@ -501,7 +503,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 
 		nbt.setInteger("selected", radioButton.getOptionSelected());
 		inv.writeToNBT(nbt);
-		
+
 		return nbt;
 
 	}

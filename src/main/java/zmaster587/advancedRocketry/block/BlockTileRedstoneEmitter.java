@@ -27,6 +27,9 @@ public class BlockTileRedstoneEmitter extends BlockTile {
 	}
 	
 	public void setRedstoneState(World world, IBlockState state, BlockPos pos, boolean newState) {
+		if(world.getBlockState(pos).getBlock() != this)
+			return;
+		
 		world.setBlockState(pos, state.withProperty(STATE, newState));
 		world.notifyBlockUpdate(pos, state,  state, 3);
 	}
