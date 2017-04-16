@@ -16,9 +16,12 @@ public class BlockFluid extends BlockFluidClassic {
     protected IIcon stillIcon;
     @SideOnly(Side.CLIENT)
     protected IIcon flowingIcon;
+    
+    Fluid myFluid;
 	
 	public BlockFluid(Fluid fluid, Material material) {
 		super(fluid, material);
+		myFluid = fluid;
 	}
     @Override
     public IIcon getIcon(int side, int meta) {
@@ -30,12 +33,12 @@ public class BlockFluid extends BlockFluidClassic {
     public void registerBlockIcons(IIconRegister register) {
             stillIcon = register.registerIcon("advancedrocketry:fluid/oxygen_still");
             flowingIcon = register.registerIcon("advancedrocketry:fluid/oxygen_flow");
-            definedFluid.setIcons(stillIcon, flowingIcon);
+            myFluid.setIcons(stillIcon, flowingIcon);
     }
    
     @Override
     public int getBlockColor() {
-    	return definedFluid.getColor();
+    	return myFluid.getColor();
     }
     
     

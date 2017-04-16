@@ -56,6 +56,7 @@ import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.mission.MissionOreMining;
 import zmaster587.advancedRocketry.network.PacketSatellite;
+import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
@@ -689,6 +690,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 					StorageChunk storage = ((ItemPackedStructure)stack.getItem()).getStructure(stack);
 					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation((int)ItemStationChip.getUUID(stack));
 
+					//Can happen in case of weirdness with server backup restoration, we'll do  sanity check and try to recover
+					if(object == null)
+					{
+						AdvancedRocketry.logger.warn("Somehow a non existant space station is launched.  Attempting to recover.  Debug info: Station ID=" + (int)ItemStationChip.getUUID(stack) + " dimid=" + this.worldObj.provider.dimensionId);
+						object = new SpaceObject();
+						SpaceObjectManager.getSpaceManager().registerSpaceObject(object, -1);
+					}
+					
 					SpaceObjectManager.getSpaceManager().moveStationToBody(object, this.worldObj.provider.dimensionId);
 
 					//Vector3F<Integer> spawn = object.getSpawnLocation();
