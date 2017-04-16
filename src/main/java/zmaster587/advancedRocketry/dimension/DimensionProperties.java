@@ -339,7 +339,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return the {@link ResourceLocation} representing this planet, generated from the planet's properties
 	 */
 	public ResourceLocation getPlanetIcon() {
-		if(!customIcon.isEmpty())
+		if(customIcon != null && !customIcon.isEmpty())
 		{
 			try {
 				return PlanetIcons.valueOf(customIcon.toUpperCase()).resource;
@@ -378,7 +378,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return the {@link ResourceLocation} representing this planet, generated from the planet's properties
 	 */
 	public ResourceLocation getPlanetIconLEO() {
-		if(!customIcon.isEmpty())
+		if(customIcon != null && !customIcon.isEmpty())
 		{
 			try {
 				return PlanetIcons.valueOf(customIcon.toUpperCase()).resourceLEO;
