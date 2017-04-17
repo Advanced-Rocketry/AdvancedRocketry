@@ -52,7 +52,7 @@ public class MapGenCrater extends MapGenBase {
 								}
 							}
 							
-							if(count > 1)
+							if(count > 1 && (y-count > 2))
 								chunkPrimerIn.setBlockState(x, y - count, z, world.getBiomeGenForCoords(new BlockPos(chunkX*16,0, chunkZ*16)).topBlock);
 							break;
 						}
