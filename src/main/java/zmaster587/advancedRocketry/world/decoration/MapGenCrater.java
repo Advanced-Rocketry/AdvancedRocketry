@@ -56,7 +56,7 @@ public class MapGenCrater extends MapGenBase {
 
 							}
 
-							if(count > 1)
+							if(count > 1 && (y-count > 2))
 								chunkArray[(x * 16 + z) * 256 + y-count] = world.getBiomeGenForCoords(rangeX, rangeZ).topBlock;
 							break;
 						}
