@@ -1578,9 +1578,14 @@ public class AdvancedRocketry {
 				
 				DimensionManager.getInstance().addStar(sol);
 				
+				//Add the overworld
+				DimensionManager.getInstance().registerDimNoUpdate(DimensionManager.overworldProperties, false);
+				
 				if(zmaster587.advancedRocketry.api.Configuration.MoonId == -1)
 					zmaster587.advancedRocketry.api.Configuration.MoonId = DimensionManager.getInstance().getNextFreeDim(dimOffset);
 
+				
+				
 				//Register the moon
 				if(zmaster587.advancedRocketry.api.Configuration.MoonId != -1) {
 					DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId);
