@@ -688,7 +688,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				ItemStack stack = tile.getStackInSlot(0);
 				if(stack != null && stack.getItem() == AdvancedRocketryItems.itemSpaceStation) {
 					StorageChunk storage = ((ItemPackedStructure)stack.getItem()).getStructure(stack);
-					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation((int)ItemStationChip.getUUID(stack));
+					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation((int)stack.getItemDamage());
 
 					//Can happen in case of weirdness with server backup restoration, we'll do  sanity check and try to recover
 					if(object == null)

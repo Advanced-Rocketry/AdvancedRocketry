@@ -72,7 +72,7 @@ public class ItemStationChip extends ItemIdWithName {
 		return 0;
 	}
 
-	public void setUUID(ItemStack stack, long uuid) {
+	public static void setUUID(ItemStack stack, long uuid) {
 		NBTTagCompound nbt;
 		if(stack.hasTagCompound())
 			nbt = stack.getTagCompound();
@@ -86,10 +86,10 @@ public class ItemStationChip extends ItemIdWithName {
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list,
 			boolean bool) {
-		if(stack.getItemDamage() == 0)
+		if(getUUID(stack) == 0)
 			list.add(EnumChatFormatting.GRAY + "Unprogrammed");
 		else {
-			list.add(EnumChatFormatting.GREEN + "Station " + stack.getItemDamage());
+			list.add(EnumChatFormatting.GREEN + "Station " + getUUID(stack));
 			super.addInformation(stack, player, list, bool);
 			
 			if(player.worldObj.provider.dimensionId == Configuration.spaceDimId) {

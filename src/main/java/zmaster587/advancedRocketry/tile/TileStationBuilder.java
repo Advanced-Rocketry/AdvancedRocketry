@@ -118,8 +118,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 				object = new SpaceObject();
 				SpaceObjectManager.getSpaceManager().registerSpaceObject(object, -1);
 
-				outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStation,1, object.getId());
-				
+				outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStation,1,object.getId());
 			}
 			else
 				outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStation,1, (int)(long)storedId);
@@ -128,8 +127,11 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 			inventory.setInventorySlotContents(2, outputStack);
 
 
-			if(storedId == null)
-				inventory.setInventorySlotContents(3, new ItemStack(AdvancedRocketryItems.itemSpaceStationChip,1,object.getId()));
+			if(storedId == null) {
+				outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStationChip,1);
+				ItemStationChip.setUUID(outputStack, object.getId());
+				inventory.setInventorySlotContents(3, outputStack);
+			}
 
 			this.status = ErrorCodes.FINISHED;
 			storedId = null;
