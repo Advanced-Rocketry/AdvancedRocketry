@@ -48,7 +48,7 @@ public class TileLathe extends TileMultiblockMachine implements IModularInventor
 	
 	@Override
 	public ResourceLocation getSound() {
-		return TextureResources.sndRollingMachine;
+		return TextureResources.sndLathe;
 	}
 
 	@Override
