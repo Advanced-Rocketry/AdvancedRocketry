@@ -548,7 +548,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			if(worldObj.isRemote)
 				LibVulpes.proxy.playSound(new SoundRocketEngine( AudioRegistry.combustionRocket, SoundCategory.NEUTRAL,this));
 		}
-		
+
 		if(this.ticksExisted > DESCENT_TIMER && isInOrbit() && !isInFlight())
 			setInFlight(true);
 
@@ -803,7 +803,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				if(stack != null && stack.getItem() == AdvancedRocketryItems.itemSpaceStation) {
 					StorageChunk storage = ((ItemPackedStructure)stack.getItem()).getStructure(stack);
 					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation((int)ItemStationChip.getUUID(stack));
-
+					
+					//in case of no NBT data or the like
+					if(object == null) {
+						tile.setInventorySlotContents(0, null);
+						continue;
+					}
+					
 					SpaceObjectManager.getSpaceManager().moveStationToBody(object, this.worldObj.provider.getDimension());
 
 					//Vector3F<Integer> spawn = object.getSpawnLocation();
@@ -815,13 +821,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			else {
 				DimensionProperties properties = DimensionManager.getEffectiveDimId(worldObj, this.getPosition());
 				World world = net.minecraftforge.common.DimensionManager.getWorld(properties.getId());
-				
+
 				properties.addSatallite(satellite, world);
 				tile.setInventorySlotContents(0, null);
 			}
 		}
 	}
-	
+
 	@Override
 	/**
 	 * Called immediately before launch
@@ -959,14 +965,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	{
 		if (!this.worldObj.isRemote && !this.isDead)
 		{			
-			
+
 			if(!DimensionManager.getInstance().canTravelTo(dimensionIn)) {
 				AdvancedRocketry.logger.warn("Rocket trying to travel from Dim" + this.worldObj.provider.getDimension() + " to Dim " + dimensionIn + ".  target not accessible by rocket from launch dim");
 				return null;
 			}
-			
+
 			lastDimensionFrom = this.worldObj.provider.getDimension();
-			
+
 			List<Entity> passengers = getPassengers();
 
 			if (!net.minecraftforge.common.ForgeHooks.onTravelToDimension(this, dimensionIn)) return null;
@@ -1117,7 +1123,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		destinationDimId = nbt.getInteger("destinationDimId");
 
 		lastDimensionFrom = nbt.getInteger("lastDimensionFrom");
-		
+
 		//Satallite
 		if(nbt.hasKey("satallite")) {
 			NBTTagCompound satalliteNbt = nbt.getCompoundTag("satallite");
@@ -1176,7 +1182,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 		//TODO handle non tile Infrastructure
 
-		
+
 		nbt.setInteger("lastDimensionFrom", lastDimensionFrom);
 	}
 
