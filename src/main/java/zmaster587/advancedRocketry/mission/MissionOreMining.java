@@ -13,6 +13,7 @@ import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
+import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.advancedRocketry.util.AsteroidSmall.StackEntry;
 import zmaster587.libVulpes.util.BlockPosition;
 
@@ -48,41 +49,46 @@ public class MissionOreMining extends MissionResourceCollection {
 				//fill the inventory of the rocket
 				if(distanceData/(double)maxData > Math.random()) {
 					ItemStack[] stacks;
-					List<StackEntry> stacks2 = Configuration.asteroidTypes.get(((ItemAsteroidChip)stack.getItem()).getType(stack)).getHarvest(((ItemAsteroidChip)stack.getItem()).getUUID(stack));
-					List<ItemStack> totalStacksList = new LinkedList<ItemStack>();
-					for(StackEntry entry : stacks2) {
-						
-						if(compositionData/(float)maxData >= Math.random())
-							entry.stack.stackSize *= 1.25f;
-						
-						if(massData/(float)maxData >= Math.random())
-							entry.stack.stackSize *= 1.25f;
-						
-						//if(entry.stack.getMaxStackSize() < entry.stack.stackSize) {
+					AsteroidSmall asteroid = Configuration.asteroidTypes.get(((ItemAsteroidChip)stack.getItem()).getType(stack));
+
+					if(asteroid != null) {
+
+						List<StackEntry> stacks2 = asteroid.getHarvest(((ItemAsteroidChip)stack.getItem()).getUUID(stack));
+						List<ItemStack> totalStacksList = new LinkedList<ItemStack>();
+						for(StackEntry entry : stacks2) {
+
+							if(compositionData/(float)maxData >= Math.random())
+								entry.stack.stackSize *= 1.25f;
+
+							if(massData/(float)maxData >= Math.random())
+								entry.stack.stackSize *= 1.25f;
+
+							//if(entry.stack.getMaxStackSize() < entry.stack.stackSize) {
 							for(int i = 0; i < entry.stack.stackSize/entry.stack.getMaxStackSize(); i++) {
 								ItemStack stack2 = new ItemStack(entry.stack.getItem(), entry.stack.getMaxStackSize(), entry.stack.getItemDamage());
 								totalStacksList.add(stack2);
 							}
-						//}
-						entry.stack.stackSize %= entry.stack.getMaxStackSize();
-						totalStacksList.add(entry.stack);
-					}
+							//}
+							entry.stack.stackSize %= entry.stack.getMaxStackSize();
+							totalStacksList.add(entry.stack);
+						}
 
-					stacks = new ItemStack[totalStacksList.size()];
-					totalStacksList.toArray(stacks);
-					
-					for(int i = 0,  g = 0; i < rocketStorage.getInventoryTiles().size(); i++) {
-						IInventory tile = (IInventory) rocketStorage.getInventoryTiles().get(i);
+						stacks = new ItemStack[totalStacksList.size()];
+						totalStacksList.toArray(stacks);
+
+						for(int i = 0,  g = 0; i < rocketStorage.getInventoryTiles().size(); i++) {
+							IInventory tile = (IInventory) rocketStorage.getInventoryTiles().get(i);
 
 
-						for(int offset = 0; offset < tile.getSizeInventory() && g < stacks.length; offset++, g++) {
-							if(tile.getStackInSlot(offset) == null)
-								tile.setInventorySlotContents(offset, stacks[g]);
+							for(int offset = 0; offset < tile.getSizeInventory() && g < stacks.length; offset++, g++) {
+								if(tile.getStackInSlot(offset) == null)
+									tile.setInventorySlotContents(offset, stacks[g]);
+							}
 						}
 					}
 				}
 			}
-			
+
 		}
 
 		rocketStorage.getGuidanceComputer().setInventorySlotContents(0, null);
