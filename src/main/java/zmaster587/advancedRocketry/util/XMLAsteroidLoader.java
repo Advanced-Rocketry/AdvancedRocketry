@@ -78,7 +78,7 @@ public class XMLAsteroidLoader {
 				if(node != null) {
 					asteroid.ID = node.getTextContent();
 				}
-				
+
 				node = att.getNamedItem("distance");
 				if(node != null) {
 					try {
@@ -87,7 +87,7 @@ public class XMLAsteroidLoader {
 						AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid distance value");
 					}
 				}
-				
+
 				node = att.getNamedItem("mass");
 				if(node != null) {
 					try {
@@ -96,7 +96,7 @@ public class XMLAsteroidLoader {
 						AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid mass value");
 					}
 				}
-				
+
 				node = att.getNamedItem("minLevel");
 				if(node != null) {
 					try {
@@ -105,7 +105,7 @@ public class XMLAsteroidLoader {
 						AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid minLevel value");
 					}
 				}
-				
+
 				node = att.getNamedItem("massVariability");
 				if(node != null) {
 					try {
@@ -114,7 +114,7 @@ public class XMLAsteroidLoader {
 						AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid massVariability value");
 					}
 				}
-				
+
 				node = att.getNamedItem("richness");
 				if(node != null) {
 					try {
@@ -123,7 +123,7 @@ public class XMLAsteroidLoader {
 						AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid richness value");
 					}
 				}
-				
+
 				node = att.getNamedItem("richnessVariability");
 				if(node != null) {
 					try {
@@ -132,7 +132,7 @@ public class XMLAsteroidLoader {
 						AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid richnessVariability value");
 					}
 				}
-				
+
 				node = att.getNamedItem("probability");
 				if(node != null) {
 					try {
@@ -149,46 +149,26 @@ public class XMLAsteroidLoader {
 					asteroidNode = asteroidNode.getNextSibling();
 					continue;
 				}
-				
+
 				if(asteroidNode.getNodeName().equalsIgnoreCase("ore")) {
 					NamedNodeMap att = asteroidNode.getAttributes();
-					
+
 					//Add itemStacks
 					Node node = att.getNamedItem("itemStack");
 					if(node != null) {
-							String text = node.getTextContent();
-							String splitStr[] = text.split(" ");
-							int meta = 0;
-							int size = 1;
-							//format: "name meta size"
-							if(splitStr.length > 1) {
-								try {
-									meta = Integer.parseInt(splitStr[1]);
-								} catch( NumberFormatException e) {}
-							}
-
-							ItemStack stack = null;
-							Block block = Block.getBlockFromName(splitStr[0]);
-							if(block == null) {
-								Item item = Item.getByNameOrId(splitStr[0]);
-								if(item != null)
-									stack = new ItemStack(item, size, meta);
-							}
-							else
-								stack = new ItemStack(block, size, meta);
-							
-							if(stack != null)
-								asteroid.itemStacks.add(stack);
-							else {
-								AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid ore");
-								break;
-							}
+						ItemStack stack = getStack(node.getTextContent());
+						if(stack != null)
+							asteroid.itemStacks.add(stack);
+						else {
+							AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid ore");
+							break;
+						}
 					}
-					
+
 					node = att.getNamedItem("chance");
-					
+
 					if(node != null) {
-						
+
 						try {
 							asteroid.stackProbabilites.add(Float.parseFloat(node.getTextContent()));
 						} catch (NumberFormatException e) {
@@ -197,15 +177,39 @@ public class XMLAsteroidLoader {
 						}
 					}
 				}
-				
+
 				asteroidNode = asteroidNode.getNextSibling();
 			}
-			
+
 			mapping.add(asteroid);
-			
+
 			childNode = childNode.getNextSibling();
 		}
 
 		return mapping;
+	}
+
+	public static ItemStack getStack(String text) {
+		String splitStr[] = text.split(" ");
+		int meta = 0;
+		int size = 1;
+		//format: "name meta size"
+		if(splitStr.length > 1) {
+			try {
+				meta = Integer.parseInt(splitStr[1]);
+			} catch( NumberFormatException e) {}
+		}
+
+		ItemStack stack = null;
+		Block block = Block.getBlockFromName(splitStr[0]);
+		if(block == null) {
+			Item item = Item.getByNameOrId(splitStr[0]);
+			if(item != null)
+				stack = new ItemStack(item, size, meta);
+		}
+		else
+			stack = new ItemStack(block, size, meta);
+	
+		return stack;
 	}
 }

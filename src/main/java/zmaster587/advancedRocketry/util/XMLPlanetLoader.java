@@ -11,6 +11,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import net.minecraft.item.ItemStack;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -231,6 +233,12 @@ public class XMLPlanetLoader {
 					}
 				}
 			}
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("artifact")) {
+				ItemStack stack = XMLAsteroidLoader.getStack(planetPropertyNode.getTextContent());
+				
+				if(stack != null)
+					properties.getRequiredArtifacts().add(stack);
+			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("planet")) {
 				List<DimensionProperties> childList = readPlanetFromNode(planetPropertyNode, star);
 				if(childList.size() > 0) {
@@ -287,8 +295,9 @@ public class XMLPlanetLoader {
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("isKnown")) {
 				String text = planetPropertyNode.getTextContent();
-				if(text != null && !text.isEmpty() && text.equalsIgnoreCase("true"))
+				if(text != null && !text.isEmpty() && text.equalsIgnoreCase("true")) {
 					Configuration.initiallyKnownPlanets.add(properties.getId());
+				}
 			}
 
 			planetPropertyNode = planetPropertyNode.getNextSibling();

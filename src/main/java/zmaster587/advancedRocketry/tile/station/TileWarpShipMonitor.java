@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.tile.station;
 
 import io.netty.buffer.ByteBuf;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -76,6 +77,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 	private ModuleText canWarp;
 	DimensionProperties dimCache;
 	private SpaceObject station;
+	private static final int ARTIFACT_BEGIN_RANGE = 4, ARTIFACT_END_RANGE = 7;
 	ModulePanetImage srcPlanetImg, dstPlanetImg;
 	ModuleSync sync1, sync2, sync3;
 	ModuleText srcPlanetText, dstPlanetText, warpFuel, status;
@@ -90,10 +92,10 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 	private int progress;
 
 	public TileWarpShipMonitor() {
-		tabModule = new ModuleTab(4,0,0,this, 2, new String[]{"Warp Selection", "Planet Discovery"}, new ResourceLocation[][] { TextureResources.tabWarp, TextureResources.tabPlanet} );
+		tabModule = new ModuleTab(4,0,0,this, 3, new String[]{"Warp Selection", "Data", "Planet Tracking"}, new ResourceLocation[][] { TextureResources.tabWarp, TextureResources.tabData, TextureResources.tabPlanetTracking} );
 		data = new MultiData();
 		data.setMaxData(10000);
-		inv = new EmbeddedInventory(5);
+		inv = new EmbeddedInventory(9);
 		programmingProgress = new ModuleProgress(35, 80, 3, TextureResources.terraformProgressBar, this);
 		progress = -1;
 	}
@@ -209,11 +211,15 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				modules.add(new ModuleText(baseX, baseY + sizeY + 20, "Core Status:", 0x1b1b1b));
 				boolean flag = isOnStation && getSpaceObject().getFuelAmount() >= getTravelCost() && getSpaceObject().hasUsableWarpCore();
 				flag = flag && !(isOnStation && (getSpaceObject().getDestOrbitingBody() == -1 || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()));
-				canWarp = new ModuleText(baseX, baseY + sizeY + 30, (isOnStation && (getSpaceObject().getDestOrbitingBody() == -1 || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody())) ? "Nowhere to go" : flag ? "Ready!" : "Not ready", flag ? 0x1baa1b : 0xFF1b1b);
+				boolean artifactFlag = (dimCache != null && meetsArtifactReq(dimCache));
+				canWarp = new ModuleText(baseX, baseY + sizeY + 30, (isOnStation && (getSpaceObject().getDestOrbitingBody() == -1 || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody())) ? "Nowhere to go" : 
+					(!artifactFlag ? "Missing Artifact" : (flag ? "Ready!" : "Not ready")), flag && artifactFlag ? 0x1baa1b : 0xFF1b1b);
 				modules.add(canWarp);
 				modules.add(new ModuleProgress(baseX, baseY + sizeY + 40, 10, new IndicatorBarImage(70, 58, 53, 8, 122, 58, 5, 8, EnumFacing.EAST, TextureResources.progressBars), this));
 				modules.add(new ModuleText(baseX + 82, baseY + sizeY + 20, "Fuel Cost:", 0x1b1b1b));
 				warpCost = getTravelCost();
+				
+				
 
 
 				//DEST planet
@@ -261,18 +267,26 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 					modules.add(new ModuleScaledImage(baseX,baseY + sizeY - 3,70,-3, TextureResources.horizontalBar));
 				}
 			}
-			else {
+			else if(tabModule.getTab() == 1) {
 				modules.add(tabModule);
 				modules.add(new ModuleData(35, 20, 0, this, data.getDataStorageForType(DataType.DISTANCE)));
 				modules.add(new ModuleData(75, 20, 1, this, data.getDataStorageForType(DataType.MASS)));
 				modules.add(new ModuleData(115, 20, 2, this, data.getDataStorageForType(DataType.COMPOSITION)));
+			}
+			else {
+				modules.add(tabModule);
+				modules.add(new ModuleText(65, 20, "Artifacts", 0x202020));
+				modules.add(new ModuleSlotArray(30, 35, this, 4, 5));
+				modules.add(new ModuleSlotArray(55, 60, this, 5, 6));
+				modules.add(new ModuleSlotArray(80, 35, this, 6, 7));
+				modules.add(new ModuleSlotArray(105, 60, this, 6, 7));
+				modules.add(new ModuleSlotArray(130, 35, this, 7, 8));
 
 				modules.add(new ModuleButton(50, 117, 3, "Search for planet", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, "100 of each datatype required", 100, 10));
 				modules.add(new ModuleButton(50, 127, 4, "Program from chip", this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild,100, 10));
 				modules.add(new ModuleTexturedSlotArray(30, 120, this, 3, 4, TextureResources.idChip));
 				modules.add(programmingProgress);
 			}
-
 		}
 		else if (ID == guiId.MODULARFULLSCREEN.ordinal()) {
 			//Open planet selector menu
@@ -314,8 +328,10 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 
 		if(canWarp != null) {
 			flag = flag && !(isOnStation && (getSpaceObject().getDestOrbitingBody() == -1 || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()));
-			canWarp.setText((isOnStation && (getSpaceObject().getDestOrbitingBody() == -1 || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody())) ? "Nowhere to go" : flag ? "Ready!" : "Not ready");
-			canWarp.setColor(flag ? 0x1baa1b : 0xFF1b1b);
+			boolean artifactFlag = (dimCache != null && meetsArtifactReq(dimCache));
+			canWarp.setText(isOnStation && (getSpaceObject().getDestOrbitingBody() == -1 || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()) ? "Nowhere to go" : 
+				(!artifactFlag ? "Missing Artifact" : (flag ? "Ready!" : "Not ready")));
+			canWarp.setColor(flag && artifactFlag ? 0x1baa1b : 0xFF1b1b);
 		}
 
 
@@ -816,7 +832,29 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 		}
 	}
 
-
+	private boolean meetsArtifactReq(DimensionProperties properties) {
+		//Make sure we have all the artifacts
+		
+		if(properties.getRequiredArtifacts().isEmpty())
+			return true;
+		
+		List<ItemStack> list = new LinkedList<ItemStack>(properties.getRequiredArtifacts());
+		for(int i = ARTIFACT_BEGIN_RANGE; i <= ARTIFACT_END_RANGE; i++) {
+			ItemStack stack2 = getStackInSlot(i);
+			if(stack2 != null) {
+				Iterator<ItemStack> itr = list.iterator();
+				while(itr.hasNext()) {
+					ItemStack stackInList = itr.next();
+					if(stackInList.getItem().equals(stack2.getItem()) && stackInList.getItemDamage() == stack2.getItemDamage()
+							&& ItemStack.areItemStackTagsEqual(stackInList, stack2))
+						itr.remove();
+				}
+			}
+		}
+		
+		return list.isEmpty();
+	}
+	
 	@Override
 	public void update() {
 		if(!worldObj.isRemote && progress != -1) {
@@ -824,20 +862,33 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 			if(progress >= MAX_PROGRESS) {
 				//Do the thing
 				SpaceObject obj = getSpaceObject();
-				if(Math.abs(worldObj.rand.nextInt()) % 50 == 0 && obj != null) {
+				if(/*Math.abs(worldObj.rand.nextInt()) % 50 == 0 &&*/ obj != null) {
 					ItemStack stack = getStackInSlot(PLANETSLOT);
 					if(stack != null && stack.getItem() instanceof ItemPlanetIdentificationChip) {
 						ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)stack.getItem();
-
 						List<Integer> unknownPlanets = new LinkedList<Integer>();
+						
+						//Check to see if any planets with artifacts can be discovered
 						for(int id : DimensionManager.getInstance().getLoadedDimensions()) {
-							if(!isPlanetKnown(DimensionManager.getInstance().getDimensionProperties(id))) {
-								unknownPlanets.add(id);
+							DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(id);
+							if(!isPlanetKnown(props) && !props.getRequiredArtifacts().isEmpty()) {
+								//If all artifacts are met, then add
+								if(meetsArtifactReq(props))
+									unknownPlanets.add(id);
+							}
+						}
+
+						//if there are not any planets requiring artifacts then get the regular planets
+						if(unknownPlanets.isEmpty()) {
+							for(int id : DimensionManager.getInstance().getLoadedDimensions()) {
+								DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(id);
+								if(!isPlanetKnown(props) && props.getRequiredArtifacts().isEmpty()) {
+									unknownPlanets.add(id);
+								}
 							}
 						}
 
 						if(!unknownPlanets.isEmpty()) {
-
 							int newId = (int)(worldObj.rand.nextFloat()*unknownPlanets.size());
 							newId = unknownPlanets.get(newId);
 							item.setDimensionId(stack, newId);
