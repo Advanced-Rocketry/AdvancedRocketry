@@ -34,11 +34,20 @@ public class SatelliteLaserNoDrill extends SatelliteBase {
 			ores = new LinkedList<ItemStack>();
 			for(int i = 0; i < Configuration.standardLaserDrillOres.size(); i++) {
 				String oreDictName = Configuration.standardLaserDrillOres.get(i);
-				List<ItemStack> ores2 = OreDictionary.getOres(oreDictName);
 				
+				String args[] = oreDictName.split(":");
+				
+				List<ItemStack> ores2 = OreDictionary.getOres(args[0]);
 
 				if(ores2 != null && !ores2.isEmpty()) {
-					ores.add(new ItemStack(ores2.get(0).getItem(),1, ores2.get(0).getItemDamage()));
+					int amt = 1;
+					if(args.length > 1)
+					{
+						try {
+							amt = Integer.parseInt(args[1]);
+						} catch (NumberFormatException e) {}
+					}
+					ores.add(new ItemStack(ores2.get(0).getItem(), amt, ores2.get(0).getItemDamage()));
 				}
 				else
 				{
@@ -123,7 +132,6 @@ public class SatelliteLaserNoDrill extends SatelliteBase {
 		if(random.nextInt(10) == 0) {
 			ItemStack item = ores.get(random.nextInt(ores.size()));
 			ItemStack newStack = item.copy();
-			newStack.stackSize = 5;
 			items.add(newStack);
 		}
 		else
