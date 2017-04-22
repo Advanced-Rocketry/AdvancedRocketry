@@ -40,7 +40,7 @@ public class SatelliteLaserNoDrill extends SatelliteBase {
 				List<ItemStack> ores2 = OreDictionary.getOres(args[0]);
 
 				if(ores2 != null && !ores2.isEmpty()) {
-					int amt = 1;
+					int amt = 5;
 					if(args.length > 1)
 					{
 						try {
