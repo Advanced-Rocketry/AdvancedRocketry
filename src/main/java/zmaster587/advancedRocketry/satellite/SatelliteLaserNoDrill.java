@@ -112,7 +112,6 @@ public class SatelliteLaserNoDrill extends SatelliteBase {
 		if(random.nextInt(10) == 0) {
 			ItemStack item = ores.get(random.nextInt(ores.size()));
 			ItemStack newStack = item.copy();
-			newStack.stackSize = 5;
 			items.add(newStack);
 		}
 		else
