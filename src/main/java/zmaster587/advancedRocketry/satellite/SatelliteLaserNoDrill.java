@@ -61,9 +61,21 @@ public class SatelliteLaserNoDrill extends SatelliteBase {
 					ItemStack stack = null;
 					Block block = Block.getBlockFromName(name);
 					if(block == null) {
-						Item item = Item.getByNameOrId(name);
+
+						//Try getting item by name first
+						Item item = (Item) Item.itemRegistry.getObject(splitStr[0]);
+
 						if(item != null)
 							stack = new ItemStack(item, size, meta);
+						else {
+							try {
+
+								item = Item.getItemById(Integer.parseInt(splitStr[0]));
+								if(item != null)
+									stack = new ItemStack(item, size, meta);
+							} catch (NumberFormatException e) { continue; }
+
+						}
 					}
 					else
 						stack = new ItemStack(block, size, meta);
