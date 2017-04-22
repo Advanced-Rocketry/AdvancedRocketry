@@ -17,7 +17,7 @@ public class TextureResources {
 	public static final  ResourceLocation tabData[] = {new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabData.png"), new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabData_hover.png"), null, null};
 	public static final  ResourceLocation tabWarp[] = {new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabWarp.png"), new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabWarp_hover.png"), null, null};
 	public static final  ResourceLocation tabPlanet[] = {new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabPlanet.png"), new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabPlanet_hover.png"), null, null};
-	
+	public static final  ResourceLocation tabPlanetTracking[] = {new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabGuidance.png"), new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabGuidance_hover.png"), null, null};
 
 	public static final  ResourceLocation locationSunPng = new ResourceLocation("advancedrocketry:textures/env/sun.png");
 	public static final  ResourceLocation locationSunNew = new ResourceLocation("advancedrocketry:textures/env/sun2.png");

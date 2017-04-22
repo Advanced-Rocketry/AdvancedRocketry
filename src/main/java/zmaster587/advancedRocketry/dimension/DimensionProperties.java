@@ -31,6 +31,8 @@ import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.VulpineMath;
 import zmaster587.libVulpes.util.ZUtils;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagIntArray;
@@ -211,7 +213,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public double rotationalPhi;
 	public OreGenProperties oreProperties = null;
 	public String customIcon;
-	
+	public List<ItemStack> requiredArtifacts;
+
 	//Planet Heirachy
 	private HashSet<Integer> childPlanets;
 	private int parentPlanet;
@@ -238,10 +241,12 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		allowedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
 		terraformedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
 		satallites = new HashMap<>();
+		requiredArtifacts = new LinkedList<ItemStack>();
 		tickingSatallites = new HashMap<Long,SatelliteBase>();
 		isNativeDimension = true;
 		isGasGiant = false;
 		hasRings = false;
+		customIcon = "";
 	}
 
 	public boolean isGasGiant() {
@@ -300,11 +305,17 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		gravitationalMultiplier = 1;
 		rotationalPeriod = 24000;
 		orbitalDist = 100;
-		originalAtmosphereDensity = atmosphereDensity = 100;		childPlanets = new HashSet<Integer>();
+		originalAtmosphereDensity = atmosphereDensity = 100;
+		childPlanets = new HashSet<Integer>();
+		requiredArtifacts = new LinkedList<ItemStack>();
 		parentPlanet = -1;
 		starId = 0;
 		averageTemperature = 100;
 		hasRings = false;
+	}
+	
+	public List<ItemStack> getRequiredArtifacts() {
+		return requiredArtifacts;
 	}
 
 	@Override

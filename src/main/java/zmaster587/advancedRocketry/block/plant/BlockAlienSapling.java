@@ -37,7 +37,7 @@ public class BlockAlienSapling extends BlockSapling {
 	public IIcon getIcon(int side, int meta)
 	{
 		meta &= 7;
-		return icons[MathHelper.clamp_int(meta, 0, names.length)];
+		return icons[MathHelper.clamp_int(meta, 0, names.length-1)];
 	}
 
 	@SideOnly(Side.CLIENT)

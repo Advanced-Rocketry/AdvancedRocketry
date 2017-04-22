@@ -105,7 +105,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 			return DimensionManager.getInstance().getDimensionProperties(stack.getTagCompound().getInteger(dimensionIdIdentifier));
 		return null;
 	}
-	
+
 	public Long getUUID(ItemStack stack) {
 		if(stack.hasTagCompound())
 			return stack.getTagCompound().getLong(uuidIdentifier);
@@ -122,7 +122,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 		nbt.setLong(uuidIdentifier,uuid);
 		stack.setTagCompound(nbt);
 	}
-	
+
 	@Override
 	public void addInformation(ItemStack stack, net.minecraft.entity.player.EntityPlayer player, java.util.List list, boolean bool) {
 
@@ -134,12 +134,21 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 		}
 		else {
 			if(stack.getItemDamage()  == 0) {
+				DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(getDimensionId(stack));
+
 				String unknown = ChatFormatting.YELLOW + "???";
 				String dimName = stack.getTagCompound().getString(dimensionNameIdentifier);
 
 				list.add("Planet Name: " + ChatFormatting.DARK_GREEN  + dimName);
+				if( !props.getRequiredArtifacts().isEmpty()) {
+					list.add("Artifacts:");
+					for(ItemStack stack2 : props.getRequiredArtifacts())
+					{
+						list.add(ChatFormatting.DARK_PURPLE + "    " + stack2.getDisplayName());
+					}
+				}
 
-				super.addInformation(stack, player, list, bool);
+				//super.addInformation(stack, player, list, bool);
 
 				//list.add("Mass: " + unknown);
 				//list.add("Atmosphere Density: " + unknown);
