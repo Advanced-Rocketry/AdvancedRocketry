@@ -862,7 +862,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 			if(progress >= MAX_PROGRESS) {
 				//Do the thing
 				SpaceObject obj = getSpaceObject();
-				if(/*Math.abs(worldObj.rand.nextInt()) % 50 == 0 &&*/ obj != null) {
+				if(Math.abs(worldObj.rand.nextInt()) % 50 == 0 && obj != null) {
 					ItemStack stack = getStackInSlot(PLANETSLOT);
 					if(stack != null && stack.getItem() instanceof ItemPlanetIdentificationChip) {
 						ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)stack.getItem();
