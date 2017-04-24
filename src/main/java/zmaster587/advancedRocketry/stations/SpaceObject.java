@@ -51,8 +51,8 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 	private HashMap<HashedBlockPosition,Boolean> occupiedLandingPads;
 	private long transitionEta;
 	private EnumFacing direction;
-	private double rotation;
-	private double angularVelocity;
+	private double rotation[];
+	private double angularVelocity[];
 	private long lastTimeModification = 0;
 	private DimensionProperties properties;
 	public boolean hasWarpCores = false;
@@ -68,6 +68,8 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 		created = false;
 		knownPlanetList = new HashSet<Integer>();
 		knownPlanetList.addAll(Configuration.initiallyKnownPlanets);
+		angularVelocity = new double[3];
+		rotation = new double[3];
 	}
 
 	public long getExpireTime() { 
@@ -87,7 +89,7 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 		knownPlanetList.add(pid);
 		PacketHandler.sendToAll(new PacketSpaceStationInfo(getId(), this));
 	}
-	
+
 	/**
 	 * @return id of the space object (NOT the DIMID)
 	 */
@@ -144,31 +146,42 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 	/**
 	 * @return rotation of the station in degrees
 	 */
-	public double getRotation() {
-		return (rotation + getDeltaRotation()*(getWorldTime() - lastTimeModification)) % (360D);
+	public double getRotation(EnumFacing dir) {
+		
+		return (rotation[getIDFromDir(dir)] + getDeltaRotation(dir)*(getWorldTime() - lastTimeModification)) % (360D);
 	}
 
+	private int getIDFromDir(EnumFacing facing){
+		if(facing == EnumFacing.EAST)
+			return 0;
+		else if(facing == EnumFacing.UP)
+			return 1;
+		else
+			return 2;
+	}
+	
 	/**
 	 * @param rotation rotation of the station in degrees
 	 */
-	public void setRotation(double rotation) {
-		this.rotation = rotation;
+	public void setRotation(double rotation, EnumFacing facing) {
+		this.rotation[getIDFromDir(facing)] = rotation;
 	}
 
 	/**
 	 * @return anglarVelocity of the station in degrees per tick
 	 */
-	public double getDeltaRotation() {
-		return angularVelocity;
+	public double getDeltaRotation(EnumFacing facing) {
+		return this.angularVelocity[getIDFromDir(facing)];
 	}
 
 	/**
 	 * @param rotation anglarVelocity of the station in degrees per tick
 	 */
-	public void setDeltaRotation(double rotation) {
-		this.rotation = getRotation();
+	public void setDeltaRotation(double rotation, EnumFacing facing) {
+		this.rotation[getIDFromDir(facing)] = getRotation(facing);
 		this.lastTimeModification = getWorldTime();
-		this.angularVelocity = rotation;
+		
+		this.angularVelocity[getIDFromDir(facing)] = rotation;
 	}
 
 	public double getMaxRotationalAcceleration() {
@@ -427,7 +440,7 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 		World worldObj = DimensionManager.getWorld(Configuration.spaceDimId);
 		if(!created) {
 			chunk.pasteInWorld(worldObj, spawnLocation.x - chunk.getSizeX()/2, spawnLocation.y - chunk.getSizeY()/2, spawnLocation.z - chunk.getSizeZ()/2);
-			
+
 			created = true;
 		}
 		else {
@@ -508,9 +521,13 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 		nbt.setInteger("spawnZ", spawnLocation.z);
 		nbt.setInteger("destinationDimId", destinationDimId);
 		nbt.setInteger("fuel", fuelAmount);
-		nbt.setDouble("rotation", rotation);
-		nbt.setDouble("deltaRotation", angularVelocity);
-		
+		nbt.setDouble("rotationX", rotation[0]);
+		nbt.setDouble("rotationY", rotation[1]);
+		nbt.setDouble("rotationZ", rotation[2]);
+		nbt.setDouble("deltaRotationX", angularVelocity[0]);
+		nbt.setDouble("deltaRotationY", angularVelocity[1]);
+		nbt.setDouble("deltaRotationZ", angularVelocity[2]);
+
 		//Set known planets
 		int array[] = new int[knownPlanetList.size()];
 		int j = 0;
@@ -569,12 +586,15 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 		fuelAmount = nbt.getInteger("fuel");
 		spawnLocation = new HashedBlockPosition(nbt.getInteger("spawnX"), nbt.getInteger("spawnY"), nbt.getInteger("spawnZ"));
 		properties.setId(nbt.getInteger("id"));
-		rotation = nbt.getDouble("rotation");
-		angularVelocity = nbt.getDouble("deltaRotation");
-		
-		
+		rotation[0] = nbt.getDouble("rotationX");
+		rotation[1] = nbt.getDouble("rotationY");
+		rotation[2] = nbt.getDouble("rotationZ");
+		angularVelocity[0] = nbt.getDouble("deltaRotationX");
+		angularVelocity[1] = nbt.getDouble("deltaRotationY");
+		angularVelocity[2] = nbt.getDouble("deltaRotationZ");
+
 		//get known planets
-		
+
 		int array[] = nbt.getIntArray("knownPlanets");
 		int j = 0;
 		for(int i : array)

@@ -17,6 +17,7 @@ import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GLAllocation;
@@ -40,6 +41,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 	private int glSkyList;
 	private int glSkyList2;
 	ResourceLocation currentlyBoundTex = null;
+	float celestialAngle;
+	Vector3F<Float> axis;
 
 	public static WavefrontObject obj;
 
@@ -55,7 +58,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 	//Mostly vanilla code
 	//TODO: make usable on other planets
 	public RenderPlanetarySky() {
-
+		axis = new Vector3F<Float>(1f, 0f, 0f);
+		
 		this.starGLCallList = GLAllocation.generateDisplayLists(3);
 		GL11.glPushMatrix();
 		GL11.glNewList(this.starGLCallList, GL11.GL_COMPILE);
@@ -178,9 +182,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		EnumFacing travelDirection = null;
 		ResourceLocation parentPlanetIcon = null;
 		List<DimensionProperties> children;
-		float celestialAngle = mc.theWorld.getCelestialAngle(partialTicks);
-
-		EnumFacing axis = EnumFacing.EAST;
+		celestialAngle = mc.theWorld.getCelestialAngle(partialTicks);
 
 		Vec3d sunColor;
 		if(mc.theWorld.provider instanceof IPlanetaryProvider) {
@@ -189,7 +191,10 @@ public class RenderPlanetarySky extends IRenderHandler {
 			DimensionProperties properties = (DimensionProperties)planetaryProvider.getDimensionProperties(mc.thePlayer.getPosition());
 
 			atmosphere = planetaryProvider.getAtmosphereDensityFromHeight(mc.getRenderViewEntity().posY, mc.thePlayer.getPosition());
-			axis = getRotationAxis(properties, mc.thePlayer.getPosition());
+			EnumFacing dir = getRotationAxis(properties, mc.thePlayer.getPosition());
+			axis.x = (float) dir.getFrontOffsetX();
+			axis.y = (float) dir.getFrontOffsetY();
+			axis.z = (float) dir.getFrontOffsetZ();
 
 			myPhi = properties.orbitalPhi;
 			myTheta = properties.orbitTheta;
@@ -386,8 +391,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, 1, 0);
 		}
 
-		
-		GL11.glRotatef(isWarp ? 0 : celestialAngle * 360.0F, axis.getFrontOffsetX(), axis.getFrontOffsetY(), axis.getFrontOffsetZ());
+		if(!isWarp)
+			rotateAroundAxis();
 
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -635,6 +640,18 @@ public class RenderPlanetarySky extends IRenderHandler {
 		renderPlanetPubHelper(buffer, icon, locationX, locationY, zLevel, size, alphaMultiplier, shadowAngle, hasAtmosphere, skyColor, ringColor, gasGiant, hasRing);
 	}
 		
+	protected void rotateAroundAxis() {
+		Vector3F<Float> axis = getRotateAxis();
+		GL11.glRotatef(getSkyRotationAmount() * 360.0F, axis.x, axis.y, axis.z);
+	}
+	
+	protected float getSkyRotationAmount() {
+		return celestialAngle;
+	}
+	
+	protected Vector3F<Float> getRotateAxis() {
+		return axis;
+	}
 	
 	public static void renderPlanetPubHelper(VertexBuffer buffer, ResourceLocation icon, int locationX, int locationY, double zLevel, float size, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing) {
 		GL11.glEnable(GL11.GL_BLEND);

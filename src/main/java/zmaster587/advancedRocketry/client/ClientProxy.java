@@ -16,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.profiler.Profiler;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -431,7 +432,7 @@ public class ClientProxy extends CommonProxy {
 	public float calculateCelestialAngleSpaceStation() {
 		Entity player = Minecraft.getMinecraft().thePlayer;
 		try {
-			return (float) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(player.getPosition()).getRotation();
+			return (float) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(player.getPosition()).getRotation(EnumFacing.EAST);
 		} catch (NullPointerException e) {
 
 			/*While waiting for network packets various variables required to continue with rendering may be null,

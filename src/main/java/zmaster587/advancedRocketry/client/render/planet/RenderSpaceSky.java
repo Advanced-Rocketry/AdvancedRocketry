@@ -6,6 +6,7 @@ import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.render.RenderHelper;
+import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -187,6 +188,19 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 		}
 	}
 
+	@Override
+	protected void rotateAroundAxis() {
+		Vector3F<Float> axis = getRotateAxis();
+		//GL11.glRotatef(90f, axis.x, axis.y, axis.z);
+		ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.thePlayer.getPosition());
+		
+		GL11.glRotated(obj.getRotation(EnumFacing.UP)*360, 0, 1, 0);
+		GL11.glRotated(obj.getRotation(EnumFacing.EAST)*360, 1, 0, 0);
+		
+		//GL11.glRotated(360, obj.getRotation(EnumFacing.EAST), obj.getRotation(EnumFacing.UP), obj.getRotation(EnumFacing.NORTH));
+		
+	}
+	
 	@Override
 	protected ResourceLocation getTextureForPlanet(DimensionProperties properties) {
 		return properties.getPlanetIconLEO();

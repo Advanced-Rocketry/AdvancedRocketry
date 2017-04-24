@@ -4,6 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.libVulpes.util.HashedBlockPosition;
+import zmaster587.libVulpes.util.Vector3F;
 
 public interface ISpaceObject {
 	
@@ -73,15 +74,14 @@ public interface ISpaceObject {
 	
 	public void readFromNbt(NBTTagCompound nbt);
 	
-	public double getRotation();
+	public double getRotation(EnumFacing dir);
+	public double getDeltaRotation(EnumFacing dir);
 	
-	public double getDeltaRotation();
-	
-	public void setRotation(double rotation);
+	public void setRotation(double rotation, EnumFacing dir);
 	
 	public double getMaxRotationalAcceleration();
 	
-	public void setDeltaRotation(double rotation);
+	public void setDeltaRotation(double rotation, EnumFacing dir);
 	
 	/**
 	 * @return true if there is an empty pad to land on
