@@ -14,6 +14,7 @@ import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GLAllocation;
@@ -32,11 +33,14 @@ public class RenderPlanetarySky extends IRenderHandler {
 	private int starGLCallList;
 	private int glSkyList;
 	private int glSkyList2;
+	float celestialAngle;
+	Vector3F<Float> axis;
 
 	//Mostly vanilla code
 	//TODO: make usable on other planets
 	public RenderPlanetarySky() {
-
+		axis = new Vector3F<Float>(1f, 0f, 0f);
+		
 		this.starGLCallList = GLAllocation.generateDisplayLists(3);
 		GL11.glPushMatrix();
 		GL11.glNewList(this.starGLCallList, GL11.GL_COMPILE);
@@ -158,9 +162,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		ForgeDirection travelDirection = null;
 		ResourceLocation parentPlanetIcon = null;
 		List<DimensionProperties> children;
-		float celestialAngle = mc.theWorld.getCelestialAngle(partialTicks);
-
-		ForgeDirection axis = ForgeDirection.EAST;
+		celestialAngle = mc.theWorld.getCelestialAngle(partialTicks);
 
 		Vec3 sunColor;
 		if(mc.theWorld.provider instanceof IPlanetaryProvider) {
@@ -170,7 +172,10 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 			atmosphere = planetaryProvider.getAtmosphereDensityFromHeight(mc.renderViewEntity.posY, (int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
 
-			axis = getRotationAxis(properties, (int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
+			ForgeDirection dir = getRotationAxis(properties, (int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
+			axis.x = (float) dir.offsetX;
+			axis.y = (float) dir.offsetY;
+			axis.z = (float) dir.offsetZ;
 
 			myPhi = properties.orbitalPhi;
 			myTheta = properties.orbitTheta;
@@ -361,8 +366,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 			
 			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, 1, 0);
 		}
-		
-		GL11.glRotatef(isWarp ? 0 : celestialAngle * 360.0F, axis.offsetX, axis.offsetY, axis.offsetZ);
+		if(!isWarp)
+			rotateAroundAxis();
 		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		float f18 = mc.theWorld.getStarBrightness(partialTicks) * f6 * (atmosphere) + (1-atmosphere);
@@ -604,7 +609,19 @@ public class RenderPlanetarySky extends IRenderHandler {
 	protected void renderPlanet2(Tessellator buffer, ResourceLocation icon, int locationX, int locationY, double zLevel, float size, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing) {
 		renderPlanetPubHelper(buffer, icon, locationX, locationY, zLevel, size, alphaMultiplier, shadowAngle, hasAtmosphere, skyColor, ringColor, gasGiant, hasRing);
 	}
-		
+
+	protected void rotateAroundAxis() {
+		Vector3F<Float> axis = getRotateAxis();
+		GL11.glRotatef(getSkyRotationAmount() * 360.0F, axis.x, axis.y, axis.z);
+	}
+	
+	protected float getSkyRotationAmount() {
+		return celestialAngle;
+	}
+	
+	protected Vector3F<Float> getRotateAxis() {
+		return axis;
+	}
 
 	public static void renderPlanetPubHelper(Tessellator tessellator1, ResourceLocation icon, int locationX, int locationY, double zLevel, float size, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing) {
 		GL11.glEnable(GL11.GL_BLEND);

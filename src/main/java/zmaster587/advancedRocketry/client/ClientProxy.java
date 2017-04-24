@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -225,7 +226,7 @@ public class ClientProxy extends CommonProxy {
 	public float calculateCelestialAngleSpaceStation() {
 		Entity player = Minecraft.getMinecraft().thePlayer;
 		try {
-			return (float) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)player.posX, (int)player.posZ).getRotation();
+			return (float) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)player.posX, (int)player.posZ).getRotation(ForgeDirection.EAST);
 		} catch (NullPointerException e) {
 
 			/*While waiting for network packets various variables required to continue with rendering may be null,

@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
@@ -57,8 +58,12 @@ public class PacketStationUpdate extends BasePacket {
 				out.writeInt(((SpaceObject)spaceObject).getFuelAmount());
 			break;
 		case ROTANGLE_UPDATE:
-			out.writeDouble(spaceObject.getRotation());
-			out.writeDouble(spaceObject.getDeltaRotation());
+			out.writeDouble(spaceObject.getRotation(ForgeDirection.EAST));
+			out.writeDouble(spaceObject.getRotation(ForgeDirection.UP));
+			out.writeDouble(spaceObject.getRotation(ForgeDirection.NORTH));
+			out.writeDouble(spaceObject.getDeltaRotation(ForgeDirection.EAST));
+			out.writeDouble(spaceObject.getDeltaRotation(ForgeDirection.UP));
+			out.writeDouble(spaceObject.getDeltaRotation(ForgeDirection.NORTH));
 			break;
 		case ALTITUDE_UPDATE:
 			out.writeFloat(spaceObject.getOrbitalDistance());
@@ -102,8 +107,12 @@ public class PacketStationUpdate extends BasePacket {
 				((SpaceObject)spaceObject).setFuelAmount(in.readInt());
 			break;
 		case ROTANGLE_UPDATE:
-			spaceObject.setRotation(in.readDouble());
-			spaceObject.setDeltaRotation(in.readDouble());
+			spaceObject.setRotation(in.readDouble(), ForgeDirection.EAST);
+			spaceObject.setRotation(in.readDouble(), ForgeDirection.UP);
+			spaceObject.setRotation(in.readDouble(), ForgeDirection.NORTH);
+			spaceObject.setDeltaRotation(in.readDouble(), ForgeDirection.EAST);
+			spaceObject.setDeltaRotation(in.readDouble(), ForgeDirection.UP);
+			spaceObject.setDeltaRotation(in.readDouble(), ForgeDirection.NORTH);
 			break;
 		case SIGNAL_WHITE_BURST:
 			PlanetEventHandler.runBurst(Minecraft.getMinecraft().theWorld.getTotalWorldTime() + 20, 20);

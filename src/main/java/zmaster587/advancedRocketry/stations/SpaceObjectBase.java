@@ -21,13 +21,15 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 	private int posX, posY;
 	private int altitude;
 	private BlockPosition spawnLocation;
-	private double rotation;
-	private double angularVelocity;
+	private double rotation[];
+	private double angularVelocity[];
 	private long lastTimeModification = 0;
 	private DimensionProperties properties;
 
 	public SpaceObjectBase() {
 		properties = (DimensionProperties) zmaster587.advancedRocketry.dimension.DimensionManager.defaultSpaceDimensionProperties.clone();
+		angularVelocity = new double[3];
+		rotation = new double[3];
 	}
 
 	public long getExpireTime() { 
@@ -95,31 +97,41 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 	/**
 	 * @return rotation of the station in degrees
 	 */
-	public double getRotation() {
-		return (rotation + getDeltaRotation()*(getWorldTime() - lastTimeModification)) % (360D);
+	public double getRotation(ForgeDirection dir) {
+		return (rotation[getIDFromDir(dir)] + getDeltaRotation(dir)*(getWorldTime() - lastTimeModification)) % (360D);
+	}
+	
+	protected int getIDFromDir(ForgeDirection facing){
+		if(facing == ForgeDirection.EAST)
+			return 0;
+		else if(facing == ForgeDirection.UP)
+			return 1;
+		else
+			return 2;
 	}
 	
 	/**
 	 * @param rotation rotation of the station in degrees
 	 */
-	public void setRotation(double rotation) {
-		this.rotation = rotation;
+	public void setRotation(double rotation, ForgeDirection facing) {
+		this.rotation[getIDFromDir(facing)] = rotation;
 	}
 	
 	/**
 	 * @return anglarVelocity of the station in degrees per tick
 	 */
-	public double getDeltaRotation() {
-		return angularVelocity;
+	public double getDeltaRotation(ForgeDirection facing) {
+		return this.angularVelocity[getIDFromDir(facing)];
 	}
 	
 	/**
 	 * @param rotation anglarVelocity of the station in degrees per tick
 	 */
-	public void setDeltaRotation(double rotation) {
-		this.rotation = getRotation();
+	public void setDeltaRotation(double rotation, ForgeDirection facing) {
+		this.rotation[getIDFromDir(facing)] = getRotation(facing);
 		this.lastTimeModification = getWorldTime();
-		this.angularVelocity = rotation;
+		
+		this.angularVelocity[getIDFromDir(facing)] = rotation;
 	}
 	
 	public double getMaxRotationalAcceleration() {
@@ -226,8 +238,12 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 		nbt.setInteger("spawnX", spawnLocation.x);
 		nbt.setInteger("spawnY", spawnLocation.y);
 		nbt.setInteger("spawnZ", spawnLocation.z);
-		nbt.setDouble("rotation", rotation);
-		nbt.setDouble("deltaRotation", angularVelocity);
+		nbt.setDouble("rotationX", rotation[0]);
+		nbt.setDouble("rotationY", rotation[1]);
+		nbt.setDouble("rotationZ", rotation[2]);
+		nbt.setDouble("deltaRotationX", angularVelocity[0]);
+		nbt.setDouble("deltaRotationY", angularVelocity[1]);
+		nbt.setDouble("deltaRotationZ", angularVelocity[2]);
 	}
 
 	@Override
@@ -239,8 +255,12 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 		altitude = nbt.getInteger("altitude");
 		spawnLocation = new BlockPosition(nbt.getInteger("spawnX"), nbt.getInteger("spawnY"), nbt.getInteger("spawnZ"));
 		properties.setId(nbt.getInteger("id"));
-		rotation = nbt.getDouble("rotation");
-		angularVelocity = nbt.getDouble("deltaRotation");
+		rotation[0] = nbt.getDouble("rotationX");
+		rotation[1] = nbt.getDouble("rotationY");
+		rotation[2] = nbt.getDouble("rotationZ");
+		angularVelocity[0] = nbt.getDouble("deltaRotationX");
+		angularVelocity[1] = nbt.getDouble("deltaRotationY");
+		angularVelocity[2] = nbt.getDouble("deltaRotationZ");
 	}
 
 	/**
