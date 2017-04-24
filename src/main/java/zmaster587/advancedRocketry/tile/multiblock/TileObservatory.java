@@ -341,7 +341,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			//ADD io slots
 			modules.add(new ModuleTexturedSlotArray(5, 120, this, 1, 2, TextureResources.idChip));
 			modules.add(new ModuleOutputSlotArray(45, 120 , this, 2, 3));
-			modules.add(new ModuleProgress(25, 120, 0, new ProgressBarImage(217,0, 17, 17, 234, 0, EnumFacing.DOWN, TextureResources.progressBars), this));
+			modules.add(new ModuleProgress(25, 120, 0, new ProgressBarImage(217,0, 17, 17, 234, 0, ForgeDirection.DOWN, TextureResources.progressBars), this));
 			modules.add(new ModuleButton(25, 120, 1, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonNull,  LibVulpes.proxy.getLocalizedString("msg.observetory.text.processdiscovery"), 17, 17));
 
 			
