@@ -233,3 +233,12 @@ achievement.suitedUp.desc=Wear a full spacesuit
 key.controls.advancedRocketry=Advanced Rocketry
 key.openRocketUI=Open Rocket GUI
 key.toggleJetpack=Toggle Jetpack
+
+msg.observetory.scan.tooltip=Scans for new asteroids, consumes 100 distance data
+msg.observetory.scan.button=Scan!
+msg.observetory.text.asteroids=Asteroids
+msg.observetory.text.composition=Composition
+msg.observetory.text.processdiscovery=Process discovery
+msg.observetory.text.observabledistance=Observable distance:
+msg.tooltip.data=Data
+msg.tooltip.asteroidselection=Asteroid Selection

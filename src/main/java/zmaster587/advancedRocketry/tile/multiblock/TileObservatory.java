@@ -120,7 +120,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 		lastSeed = -1;
 		completionTime = observationtime;
 		dataCables = new LinkedList<TileDataBus>();
-		tabModule = new ModuleTab(4,0,0,this, 2, new String[]{"Data", "Asteroid Selection"}, new ResourceLocation[][] { TextureResources.tabData, TextureResources.tabAsteroid} );
+		tabModule = new ModuleTab(4,0,0,this, 2, new String[]{LibVulpes.proxy.getLocalizedString("msg.tooltip.data"), LibVulpes.proxy.getLocalizedString("msg.tooltip.asteroidselection")}, new ResourceLocation[][] { TextureResources.tabData, TextureResources.tabAsteroid} );
 	}
 
 	public float getOpenProgress() {
@@ -324,10 +324,10 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			modules.add(new ModuleTexturedSlotArray(5, 120, this, 1, 2, TextureResources.idChip));
 			modules.add(new ModuleOutputSlotArray(45, 120 , this, 2, 3));
 			modules.add(new ModuleProgress(25, 120, 0, new ProgressBarImage(217,0, 17, 17, 234, 0, EnumFacing.DOWN, TextureResources.progressBars), this));
-			modules.add(new ModuleButton(25, 120, 1, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonNull, "Process discovery", 17, 17));
+			modules.add(new ModuleButton(25, 120, 1, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonNull,  LibVulpes.proxy.getLocalizedString("msg.observetory.text.processdiscovery"), 17, 17));
 
 			
-			ModuleButton scanButton = new ModuleButton(100, 120, 2, "Scan!", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, "Scans for new asteroids, consumes distance data", 64, 18);
+			ModuleButton scanButton = new ModuleButton(100, 120, 2, LibVulpes.proxy.getLocalizedString("msg.observetory.scan.button"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, LibVulpes.proxy.getLocalizedString("msg.observetory.scan.tooltip"), 64, 18);
 			
 			scanButton.setColor(extractData(dataConsumedPerRefresh, DataType.DISTANCE, EnumFacing.DOWN, false) == dataConsumedPerRefresh ? 0x00ff00 : 0xff0000);
 			
@@ -387,8 +387,8 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			}
 
 
-			modules.add(new ModuleText(10, 18, "Asteroids", 0x2d2d2d));
-			modules.add(new ModuleText(105, 18, "Composition", 0x2d2d2d));
+			modules.add(new ModuleText(10, 18, LibVulpes.proxy.getLocalizedString("msg.observetory.text.asteroids"), 0x2d2d2d));
+			modules.add(new ModuleText(105, 18, LibVulpes.proxy.getLocalizedString("msg.observetory.text.composition"), 0x2d2d2d));
 
 			//Add borders for asteroid
 			int baseX = 5;
@@ -455,7 +455,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 				modules.add(new ModuleData(120, 20, 0, this, (DataStorage[]) massStorage.toArray(new DataStorage[massStorage.size()])));
 			}
 			
-			modules.add(new ModuleText(10, 90, "Observable distance: " + getMaxDistance(), 0x2d2d2d, false));
+			modules.add(new ModuleText(10, 90, LibVulpes.proxy.getLocalizedString("msg.observetory.text.observabledistance") + " " + getMaxDistance(), 0x2d2d2d, false));
 		}
 
 		/*DataStorage data[] = new DataStorage[dataCables.size()];
