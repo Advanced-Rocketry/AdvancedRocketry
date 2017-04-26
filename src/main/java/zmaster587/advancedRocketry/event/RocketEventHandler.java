@@ -379,7 +379,7 @@ public class RocketEventHandler extends Gui {
 			//Draw the O2 Bar if needed
 			ItemStack chestPiece = Minecraft.getMinecraft().thePlayer.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 			if(!Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode && chestPiece != null && chestPiece.getItem() instanceof IFillableArmor) {
-				float size = ((IFillableArmor)chestPiece.getItem()).getAirRemaining(chestPiece)/(float)((IFillableArmor)chestPiece.getItem()).getMaxAir();
+				float size = ((IFillableArmor)chestPiece.getItem()).getAirRemaining(chestPiece)/(float)((IFillableArmor)chestPiece.getItem()).getMaxAir(chestPiece);
 
 				GL11.glEnable(GL11.GL_BLEND);
 				Minecraft.getMinecraft().renderEngine.bindTexture(background);

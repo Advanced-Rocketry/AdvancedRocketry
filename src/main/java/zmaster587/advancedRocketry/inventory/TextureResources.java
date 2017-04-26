@@ -41,6 +41,8 @@ public class TextureResources {
 	
 	public static final IconResource ioSlot = new IconResource(212, 0, 18, 18, null);
 	public static final IconResource idChip = new IconResource(230, 0, 18, 18, null);
+	public static final IconResource slotO2 = new IconResource(238, 238, 18, 18, progressBars);
+	
 	public static final IconResource functionComponent = new IconResource(212, 18, 18, 18, null);
 	public static final IconResource powercomponent = new IconResource(230, 18, 18, 18, null);
 	public static final IconResource laserGuiBG = new IconResource(8, 16, 65, 70, laserGui);

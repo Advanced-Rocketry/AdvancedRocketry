@@ -6,6 +6,7 @@ import java.util.List;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import zmaster587.advancedRocketry.achievements.ARAchivements;
+import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
@@ -14,10 +15,12 @@ import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
 import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.client.render.armor.RenderJetPack;
+import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.api.IJetPack;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.util.EmbeddedInventory;
+import zmaster587.libVulpes.util.IconResource;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -36,6 +39,9 @@ import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 /**
@@ -43,12 +49,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Any class that extends this will gain the ability to store oxygen and will protect players from the vacuum atmosphere type
  *
  */
-public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabilityProvider, IFillableArmor, IProtectiveArmor, IModularArmor {
+
+public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabilityProvider, IProtectiveArmor, IModularArmor {
 
 	private final static String componentNBTName = "componentName";
-
-	public ItemSpaceArmor(ArmorMaterial material, EntityEquipmentSlot component) {
+	private int numModules;
+	public ItemSpaceArmor(ArmorMaterial material, EntityEquipmentSlot component, int numModules) {
 		super(material, 0, component);
+		this.numModules = numModules;
+	}
+
+	@Override
+	public boolean canBeExternallyModified(ItemStack armor, int slot) {
+		return true;
 	}
 
 	@Override
@@ -106,14 +119,14 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 
 	private EmbeddedInventory loadEmbeddedInventory(ItemStack stack) {
 		if(stack.hasTagCompound()) {
-			EmbeddedInventory inv = new EmbeddedInventory(4);
+			EmbeddedInventory inv = new EmbeddedInventory(numModules);
 			inv.readFromNBT(stack.getTagCompound());
 			return inv;
 		}
-		return new EmbeddedInventory(4);
+		return new EmbeddedInventory(numModules);
 	}
 
-	private void saveEmbeddedInventory(ItemStack stack, EmbeddedInventory inv) {
+	protected void saveEmbeddedInventory(ItemStack stack, EmbeddedInventory inv) {
 		if(stack.hasTagCompound()) {
 			inv.writeToNBT(stack.getTagCompound());
 		}
@@ -154,8 +167,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 	}
 
 	@Override
-	public String getArmorTexture(ItemStack stack, Entity entity,
-			EntityEquipmentSlot slot, String type) {
+	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
 
 		if(type != null) {
 			if(stack.getItem() == AdvancedRocketryItems.itemSpaceSuit_Leggings)
@@ -252,102 +264,10 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 		return list;
 	}
 
-	/**
-	 * gets the amount of air remaining in the suit.
-	 * @param stack stack from which to get an amount of air
-	 * @return the amount of air in the stack
-	 */
-	@Override
-	public int getAirRemaining(ItemStack stack) {
-		if(stack.hasTagCompound()) {
-			return stack.getTagCompound().getInteger("air");
-		}
-		else {
-			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setInteger("air", 0);
-			stack.setTagCompound(nbt);
-			return getMaxAir();
-		}
-	}
-
-	/**
-	 * Sets the amount of air remaining in the suit (WARNING: DOES NOT BOUNDS CHECK!)
-	 * @param stack the stack to operate on
-	 * @param amt amount of air to set the suit to
-	 */
-	@Override
-	public void setAirRemaining(ItemStack stack, int amt) {
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound()) {
-			nbt = stack.getTagCompound();
-		}
-		else {
-			nbt = new NBTTagCompound();
-		}
-		nbt.setInteger("air", amt);
-		stack.setTagCompound(nbt);
-	}
-
-	/**
-	 * Decrements air in the suit by amt
-	 * @param stack the item stack to operate on
-	 * @param amt amount of air by which to decrement
-	 * @return The amount of air extracted from the suit
-	 */
-	@Override
-	public int decrementAir(ItemStack stack, int amt) {
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound()) {
-			nbt = stack.getTagCompound();
-		}
-		else {
-			nbt = new NBTTagCompound();
-		}
-
-		int prevAmt = nbt.getInteger("air");
-		int newAmt = Math.max(prevAmt - amt,0);
-		nbt.setInteger("air", newAmt);
-		stack.setTagCompound(nbt);
-
-		return prevAmt - newAmt;
-	}
-
-	/**
-	 * Increments air in the suit by amt
-	 * @param stack the item stack to operate on
-	 * @param amt amount of air by which to decrement
-	 * @return The amount of air inserted into the suit
-	 */
-	@Override
-	public int increment(ItemStack stack, int amt) {
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound()) {
-			nbt = stack.getTagCompound();
-		}
-		else {
-			nbt = new NBTTagCompound();
-		}
-
-		int prevAmt = nbt.getInteger("air");
-		int newAmt = Math.min(prevAmt + amt, getMaxAir());
-		nbt.setInteger("air", newAmt);
-		stack.setTagCompound(nbt);
-
-		return newAmt - prevAmt;
-	}
-
-	/**
-	 * @return the maximum amount of air allowed in this suit
-	 */
-	@Override
-	public int getMaxAir() {
-		return Configuration.spaceSuitOxygenTime*1200; //30 minutes;
-	}
-
 	@Override
 	public boolean protectsFromSubstance(IAtmosphere atmosphere, ItemStack stack, boolean commitProtection) {
-
 		return (atmosphere == AtmosphereType.HIGHPRESSURE || atmosphere == AtmosphereType.VACUUM || atmosphere == AtmosphereType.LOWOXYGEN) && (this != AdvancedRocketryItems.itemSpaceSuit_Chest || (this == AdvancedRocketryItems.itemSpaceSuit_Chest && 
+
 				(commitProtection && ((IFillableArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).decrementAir(stack, 1) > 0)) || (!commitProtection && ((IFillableArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).getAirRemaining(stack) > 0));
 	}
 
@@ -384,4 +304,12 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 		return null;
 	}
 
+	public boolean isItemValidForSlot(ItemStack stack, int slot) {
+		return true;	
+	}
+
+	@Override
+	public IconResource getResourceForSlot(int slot) {
+		return null;
+	}
 }
