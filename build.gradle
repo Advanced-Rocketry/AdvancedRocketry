@@ -61,7 +61,7 @@ repositories {
         }
         //ivy {
         //    name "GalacticraftCore"
-        //    artifactPattern "https://ci.micdoodle8.com/job/Galacticraft-1.7/474/artifact/Forge/build/libs/[module]-[revision].[ext]"
+        //    artifactPattern "https://ci.micdoodle8.com/job/Galacticraft-1.7/484/artifact/Forge/build/libs/[module]-[revision].[ext]"
         //}
         ivy {
             name "LibVulpes"

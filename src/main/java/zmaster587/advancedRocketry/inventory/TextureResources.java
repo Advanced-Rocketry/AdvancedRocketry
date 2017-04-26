@@ -41,6 +41,7 @@ public class TextureResources {
 	
 	public static final ResourceLocation sndMachineLarge = new ResourceLocation("advancedrocketry:MachineLarge");
 	public static final ResourceLocation sndRollingMachine = new ResourceLocation("advancedrocketry:rollingMachine");
+	public static final ResourceLocation sndLathe = new ResourceLocation("advancedrocketry:lathe");
 	public static final ResourceLocation sndHiss = new ResourceLocation("advancedrocketry:airHissLoop");
 	public static final ResourceLocation sndCombustionRocket = new ResourceLocation("advancedrocketry:combustionRocket");
 	public static final ResourceLocation sndCrystallizer = new ResourceLocation("advancedrocketry:crystallizer");

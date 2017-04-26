@@ -12,6 +12,6 @@
 "electricArcFurnace": {"category": "master","sounds": [{"name": "electricArcFurnace","stream": false}]},
 "electrolyser": {"category": "master","sounds": [{"name": "electrolyser","stream": false}]},
 "precAss": {"category": "master","sounds": [{"name": "precAss","stream": false}]},
-"basicLaserGun": {"category": "master", "sounds": [{"name": "basicLaserGun", "stream": false}]},
-"gravityOhhh": {"category": "master", "sounds": [{"name": "gravityOhhh", "stream": false}]}
+"lathe": {"category": "master","sounds": [{"name": "lathe","stream": false}]},
+"basicLaserGun": {"category": "master", "sounds": [{"name": "basicLaserGun", "stream": false}]}
 }

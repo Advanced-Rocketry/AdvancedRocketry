@@ -700,6 +700,12 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 					StorageChunk storage = ((ItemPackedStructure)stack.getItem()).getStructure(stack);
 					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation((int)stack.getItemDamage());
 					
+					//in case of no NBT data or the like
+					if(object == null) {
+						tile.setInventorySlotContents(0, null);
+						continue;
+					}
+					
 					SpaceObjectManager.getSpaceManager().moveStationToBody(object, this.worldObj.provider.dimensionId);
 
 					//Vector3F<Integer> spawn = object.getSpawnLocation();
