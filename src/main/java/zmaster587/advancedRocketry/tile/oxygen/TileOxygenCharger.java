@@ -15,6 +15,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
+import zmaster587.advancedRocketry.armor.ItemSpaceChest;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
@@ -67,25 +68,29 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 				ItemStack stack = ((EntityPlayer)player).getEquipmentInSlot(3);
 
 				//Check for O2 fill
-				if(stack != null && stack.getItem() instanceof ItemSpaceArmor) {
+				if(stack != null && stack.getItem() instanceof ItemSpaceChest) {
 					FluidStack fluidStack = this.drain(ForgeDirection.UNKNOWN, 1, false);
 
-					if(((ItemSpaceArmor)stack.getItem()).getAirRemaining(stack) < ((ItemSpaceArmor)stack.getItem()).getMaxAir() &&
+					if(((ItemSpaceChest)stack.getItem()).getAirRemaining(stack) < ((ItemSpaceChest)stack.getItem()).getMaxAir(stack) &&
 							fluidStack != null && fluidStack.getFluid().getID() == AdvancedRocketryFluids.fluidOxygen.getID() && fluidStack.amount > 0)  {
-						this.drain(ForgeDirection.UNKNOWN, 1, true);
-						((ItemSpaceArmor)stack.getItem()).increment(stack, 100);
+						this.drain(ForgeDirection.UNKNOWN, ((ItemSpaceChest)stack.getItem()).increment(stack, 100)/100, true);
 						
 						return true;
 					}
 				}
 
 				//Check for H2 fill (possibly merge with O2 fill
-				if(stack != null && stack.getItem() instanceof IModularArmor) {
+				//Fix conflict with O2 fill
+				if(this.tank.getFluid() != null && this.tank.getFluid().getFluid() != AdvancedRocketryFluids.fluidOxygen && stack != null && stack.getItem() instanceof IModularArmor) {
 					IInventory inv = ((IModularArmor)stack.getItem()).loadModuleInventory(stack);
 
 					FluidStack fluidStack = this.drain(ForgeDirection.UNKNOWN, 100, false);
 					if(fluidStack != null) {
 						for(int i = 0; i < inv.getSizeInventory(); i++) {
+							
+							if(!((IModularArmor)stack.getItem()).canBeExternallyModified(stack, i))
+								continue;
+							
 							ItemStack module = inv.getStackInSlot(i);
 							if(module != null && module.getItem() instanceof IFluidContainerItem) {
 								int amtFilled = ((IFluidContainerItem)module.getItem()).fill(module, fluidStack, true);

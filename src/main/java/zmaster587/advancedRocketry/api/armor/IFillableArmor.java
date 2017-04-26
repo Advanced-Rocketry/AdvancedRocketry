@@ -36,6 +36,6 @@ public interface IFillableArmor {
 	/**
 	 * @return the maximum amount of air allowed in this suit
 	 */
-	public int getMaxAir();
+	public int getMaxAir(ItemStack stack);
 	
 }
