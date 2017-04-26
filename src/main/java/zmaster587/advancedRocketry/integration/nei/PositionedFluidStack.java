@@ -6,10 +6,13 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import codechicken.lib.gui.GuiDraw;
@@ -75,7 +78,8 @@ public class PositionedFluidStack {
 		} else if (this.tank.getFluid().getStillIcon() != null) {
 			fluidIcon = this.tank.getFluid().getStillIcon();
 		} else {
-			return;
+			//Really hacky
+			fluidIcon = AdvancedRocketryFluids.fluidRocketFuel.getFlowingIcon();
 		}
 
 		GuiDraw.changeTexture(TextureMap.locationBlocksTexture);
