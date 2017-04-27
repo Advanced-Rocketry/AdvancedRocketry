@@ -348,6 +348,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 					GL11.glCallList(this.starGLCallList);
 					GL11.glPopMatrix();
 				}
+				GL11.glColor4f(f18, f18, f18, f18);
 			}
 			GL11.glPopMatrix();
 		}
