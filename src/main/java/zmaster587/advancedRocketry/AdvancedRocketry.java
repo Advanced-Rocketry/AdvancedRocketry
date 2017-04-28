@@ -236,6 +236,7 @@ import zmaster587.libVulpes.util.SingleEntry;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -1509,11 +1510,46 @@ public class AdvancedRocketry {
 		DimensionPropertyCoupling dimCouplingList = null;
 		XMLPlanetLoader loader = null;
 
-		file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
+		//Check advRocketry folder first
+		File localFile;
+		localFile = file = new File(net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory() + "/" + DimensionManager.workingPath + "/planetDefs.xml");
 		logger.info("Checking for config at " + file.getAbsolutePath());
 
+		if(!file.exists()) { //Hi, I'm if check #42
+			file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
+			logger.info("File not found.  Now checking for config at " + file.getAbsolutePath());
+
+			//Copy file to local dir
+			if(file.exists()) {
+				logger.info("Advanced Planet Config file Found!  Copying to world specific directory");
+				try {
+					File dir = new File(localFile.getAbsolutePath().substring(0, localFile.getAbsolutePath().length() - localFile.getName().length()));
+					
+					//File cannot exist due to if check #42
+					if((dir.exists() || dir.mkdir()) && localFile.createNewFile()) {
+						char buffer[] = new char[1024];
+
+						FileReader reader = new FileReader(file);
+						FileWriter writer = new FileWriter(localFile);
+						int numChars = 0;
+						while((numChars = reader.read(buffer)) > 0) {
+							writer.write(buffer, 0, numChars);
+						}
+
+						reader.close();
+						writer.close();
+						logger.info("Copy success!");
+					}
+					else
+						logger.warn("Unable to create file " + localFile.getAbsolutePath());
+				} catch(IOException e) {
+					logger.warn("Unable to write file " + localFile.getAbsolutePath());
+				}
+			}
+		}
+
 		if(file.exists()) {
-			logger.info("Advanced Planet Config file Found!");
+			logger.info("Advanced Planet Config file Found!  Loading from file.");
 			loader = new XMLPlanetLoader();
 			try {
 				loader.loadFile(file);
