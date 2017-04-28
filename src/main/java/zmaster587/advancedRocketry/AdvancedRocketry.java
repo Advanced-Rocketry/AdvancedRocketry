@@ -262,6 +262,14 @@ public class AdvancedRocketry {
 	public static WorldType spaceWorldType;
 	public static final RecipeHandler machineRecipes = new RecipeHandler();
 
+	final String oreGen = "Ore Generation";
+	final String ROCKET = "Rockets";
+	final String MOD_INTERACTION = "Mod Interaction";
+	final String PLANET = "Planet";
+	final String ASTEROID = "Asteroid";
+	final String GAS_MINING = "GasMining";
+	final String PERFORMANCE = "Performance";
+	
 	public static CompatibilityMgr compat = new CompatibilityMgr();
 	public static Logger logger = LogManager.getLogger(Constants.modId);
 	private static Configuration config;
@@ -298,14 +306,6 @@ public class AdvancedRocketry {
 
 		config = new Configuration(new File(event.getModConfigurationDirectory(), "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/advancedRocketry.cfg"));
 		config.load();
-
-		final String oreGen = "Ore Generation";
-		final String ROCKET = "Rockets";
-		final String MOD_INTERACTION = "Mod Interaction";
-		final String PLANET = "Planet";
-		final String ASTEROID = "Asteroid";
-		final String GAS_MINING = "GasMining";
-		final String PERFORMANCE = "Performance";
 
 		AtmosphereVacuum.damageValue = (int) config.get(Configuration.CATEGORY_GENERAL, "vacuumDamage", 1, "Amount of damage taken every second in a vacuum").getInt();
 		zmaster587.advancedRocketry.api.Configuration.buildSpeedMultiplier = (float) config.get(Configuration.CATEGORY_GENERAL, "buildSpeedMultiplier", 1f, "Multiplier for the build speed of the Rocket Builder (0.5 is twice as fast 2 is half as fast").getDouble();
@@ -1823,6 +1823,7 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.MoonId = -1;
 		DimensionManager.getInstance().overworldProperties.resetProperties();
 		((BlockSeal)AdvancedRocketryBlocks.blockPipeSealer).clearMap();
+		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 8000, "Dimensions including and after this number are allowed to be made into planets");
 
 		proxy.saveUILayout(config);
 	}
