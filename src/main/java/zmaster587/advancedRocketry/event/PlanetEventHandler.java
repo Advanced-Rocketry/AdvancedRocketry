@@ -485,7 +485,7 @@ public class PlanetEventHandler {
 		//TODO: save only the one dimension
 		if(event.getWorld().provider.getDimension() == 0)
 			//DimensionManager.getInstance().getDimensionProperties(event.getWorld().provider.getDimension()).
-			DimensionManager.getInstance().saveDimensions(DimensionManager.filePath);
+			DimensionManager.getInstance().saveDimensions(DimensionManager.workingPath);
 	}
 
 

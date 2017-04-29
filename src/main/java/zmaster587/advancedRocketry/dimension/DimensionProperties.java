@@ -134,7 +134,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	public static final ResourceLocation shadow = new ResourceLocation("advancedrocketry:textures/planets/shadow.png");
 	public static final ResourceLocation shadow3 = new ResourceLocation("advancedrocketry:textures/planets/shadow3.png");
-	
+
 	public static enum PlanetIcons {
 		EARTHLIKE(new ResourceLocation("advancedrocketry:textures/planets/Earthlike.png")),
 		LAVA(new ResourceLocation("advancedrocketry:textures/planets/lava.png")),
@@ -297,7 +297,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		averageTemperature = 100;
 		hasRings = false;
 	}
-	
+
 	public List<ItemStack> getRequiredArtifacts() {
 		return requiredArtifacts;
 	}
@@ -365,8 +365,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return the {@link ResourceLocation} representing this planet, generated from the planet's properties
 	 */
 	public ResourceLocation getPlanetIcon() {
-		
-		
+
+
 		if(!customIcon.isEmpty())
 		{
 			try {
@@ -374,9 +374,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			} catch(IllegalArgumentException e) {
 				return PlanetIcons.UNKNOWN.resource;
 			}
-			
+
 		}
-		
+
 		AtmosphereTypes atmType = AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity);
 		Temps tempType = Temps.getTempFromValue(averageTemperature);
 
@@ -407,7 +407,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return the {@link ResourceLocation} representing this planet, generated from the planet's properties
 	 */
 	public ResourceLocation getPlanetIconLEO() {
-		
+
 		if(!customIcon.isEmpty())
 		{
 			try {
@@ -416,7 +416,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				return PlanetIcons.UNKNOWN.resource;
 			}
 		}
-		
+
 		AtmosphereTypes atmType = AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity);
 		Temps tempType = Temps.getTempFromValue(averageTemperature);
 
@@ -523,16 +523,26 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		if(update) {
 			if(parentPlanet != -1)
-				parent.childPlanets.remove(new Integer(getId()));
+				getParentProperties().childPlanets.remove(new Integer(getId()));
 
-			parentPlanet = parent.getId();
-			star = parent.getStar();
-			if(parent.getId() != -1)
-				parent.childPlanets.add(getId());
+			if(parent == null) {
+				parentPlanet = -1;
+			}
+			else {
+				parentPlanet = parent.getId();
+				star = parent.getStar();
+				if(parent.getId() != -1)
+					parent.childPlanets.add(getId());
+			}
 		}
 		else {
-			star = parent.getStar();
-			parentPlanet = parent.getId();
+			if(parent == null) {
+				parentPlanet = -1;
+			}
+			else {
+				star = parent.getStar();
+				parentPlanet = parent.getId();
+			}
 		}
 	}
 
@@ -676,7 +686,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			satallites.remove(satellite.getId());
 			tickingSatallites.remove(satellite.getId());
 		}
-		
+
 		satallites.put(satellite.getId(), satellite);
 		satellite.setDimensionId(world);
 
@@ -736,7 +746,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		while(iterator.hasNext()) {
 			SatelliteBase satallite = iterator.next();
 			satallite.tickEntity();
-			
+
 			if(satallite.isDead()) {
 				iterator.remove();
 				satallites.remove(satallite.getId());
@@ -916,6 +926,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		addBiomes(biomes);
 	}
 
+	public void setBiomeEntries(List<BiomeEntry> biomes) {
+		allowedBiomes.clear();
+		allowedBiomes.addAll(biomes);
+	}
+
 	public void setTerraformedBiomes(List<Biome> biomes) {
 		terraformedBiomes.clear();
 		terraformedBiomes.addAll(getBiomesEntries(biomes));
@@ -1032,7 +1047,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				skyColor[f] = list.getFloatAt(f);
 			}
 		}
-		
+
 		if(nbt.hasKey("ringColor")) {
 			list = nbt.getTagList("ringColor", NBT.TAG_FLOAT);
 			ringColor = new float[list.tagCount()];

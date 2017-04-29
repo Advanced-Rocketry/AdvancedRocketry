@@ -21,6 +21,7 @@ import org.xml.sax.SAXException;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.AtmosphereTypes;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
+import zmaster587.advancedRocketry.util.OreGenProperties.OreEntry;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.SingleEntry;
 
@@ -246,5 +247,41 @@ public class XMLOreLoader {
 		}
 
 		return oreGen.getOreEntries().isEmpty() ? null : oreGen;
+	}
+	
+	public static String writeXML(OreGenProperties gen, int numTabs) {
+		
+		String outputString = "";
+		
+		String tabLen = "";
+		for(int i = 0; i < numTabs; i++) {
+			tabLen += "\t";
+		}
+		
+		outputString = tabLen + "<oreGen ";
+		
+		return outputString;
+	}
+	
+	public static String writeOreEntryXML(OreGenProperties gen, int numTabs) {
+		
+		String outputString = "";
+		
+		String tabLen = "";
+		for(int i = 0; i < numTabs; i++) {
+			tabLen += "\t";
+		}
+		
+		for(OreEntry ore : gen.getOreEntries()) {
+			int meta = ore.getBlockState().getBlock().getMetaFromState(ore.getBlockState());
+			outputString += tabLen + "<ore block=\"" + ore.getBlockState().getBlock().getRegistryName() +
+							(meta == 0 ? "" : "\" meta=\"" + meta)
+							+ "\" minHeight=\"" +
+							ore.getMinHeight() + "\" maxHeight=\"" + ore.getMaxHeight() + "\" clumpSize=\"" + ore.getClumpSize() + "\"" +
+							" chancePerChunk=\"" + ore.getChancePerChunk() + "\" />\n";
+			
+		}
+		
+		return outputString;
 	}
 }

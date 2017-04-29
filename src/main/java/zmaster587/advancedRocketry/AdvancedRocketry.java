@@ -1509,13 +1509,14 @@ public class AdvancedRocketry {
 		//Note: loading this modifies dimOffset
 		DimensionPropertyCoupling dimCouplingList = null;
 		XMLPlanetLoader loader = null;
+		boolean loadedFromXML = false;
 
 		//Check advRocketry folder first
 		File localFile;
 		localFile = file = new File(net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory() + "/" + DimensionManager.workingPath + "/planetDefs.xml");
 		logger.info("Checking for config at " + file.getAbsolutePath());
 
-		if(!file.exists()) { //Hi, I'm if check #42
+		if(!file.exists()) { //Hi, I'm if check #42, I am true if the config is not in the world/advRocketry folder
 			file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
 			logger.info("File not found.  Now checking for config at " + file.getAbsolutePath());
 
@@ -1559,33 +1560,14 @@ public class AdvancedRocketry {
 
 			}
 		}
-
 		//End load planet files
 
 		//Register hard coded dimensions
-		if(!zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.filePath) || resetFromXml) {
+		if(!zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.workingPath)) {
 			int numRandomGeneratedPlanets = 9;
 			int numRandomGeneratedGasGiants = 1;
 
-			if(resetFromXml) {
-				zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
-				zmaster587.advancedRocketry.api.Configuration.MoonId = -1;
-
-				//Delete old dimensions
-				File dir = new File(net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory() + "/" + DimensionManager.workingPath);
-				for(File file2 : dir.listFiles()) {
-					if(file2.getName().startsWith("DIM") && !file2.getName().equals("DIM" + zmaster587.advancedRocketry.api.Configuration.spaceDimId)) {
-						try {
-							FileUtils.deleteDirectory(file2);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-
-			boolean loadedFromXML = false;
-
+		
 			if(dimCouplingList != null) {
 				logger.info("Loading initial planet config!");
 
@@ -1601,7 +1583,7 @@ public class AdvancedRocketry {
 				for(StellarBody star : dimCouplingList.stars) {
 					numRandomGeneratedPlanets = loader.getMaxNumPlanets(star);
 					numRandomGeneratedGasGiants = loader.getMaxNumGasGiants(star);
-					generateRandomPlanets(star, numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
+					dimCouplingList.dims.addAll(generateRandomPlanets(star, numRandomGeneratedPlanets, numRandomGeneratedGasGiants));
 				}
 
 				loadedFromXML = true;
@@ -1683,10 +1665,6 @@ public class AdvancedRocketry {
 		}
 		else {
 			VersionCompat.upgradeDimensionManagerPostLoad(DimensionManager.prevBuild);
-			if(Loader.isModLoaded("GalacticraftCore")  ) {
-				DimensionManager.getInstance().getDimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId).isNativeDimension = false;
-
-			}
 		}
 
 
@@ -1698,13 +1676,19 @@ public class AdvancedRocketry {
 					SpaceObjectManager.getSpaceManager().moveStationToBody(obj, 0, false);
 				}
 			}
-
 			//Satellites are cleaned up on their own as dimension properties are reset
 		}
 
 
 		//Attempt to load ore config from adv planet XML
 		if(dimCouplingList != null) {
+			
+			//Register new stars
+			for(StellarBody star : dimCouplingList.stars) {
+				if(DimensionManager.getInstance().getStar(star.getId()) == null)
+					DimensionManager.getInstance().addStar(star);
+			}
+			
 			for(DimensionProperties properties : dimCouplingList.dims) {
 
 				//Register dimensions loaded by other mods if not already loaded
@@ -1718,6 +1702,33 @@ public class AdvancedRocketry {
 						}
 					}
 				}
+				
+				//Overwrite with loaded XML
+				if(DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
+					DimensionProperties loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
+					
+					loadedProps.fogColor = properties.fogColor;
+					loadedProps.gravitationalMultiplier = properties.gravitationalMultiplier;
+					loadedProps.hasRings = properties.hasRings;
+					loadedProps.orbitalDist = properties.getOrbitalDist();
+					loadedProps.ringColor = properties.ringColor;
+					loadedProps.orbitalPhi = properties.orbitalPhi;
+					loadedProps.rotationalPeriod = properties.rotationalPeriod;
+					loadedProps.skyColor = properties.skyColor;
+					loadedProps.setBiomeEntries(properties.getBiomes());
+					loadedProps.setAtmosphereDensityDirect(properties.getAtmosphereDensity());
+					loadedProps.setName(properties.getName());
+					
+					if(properties.isGasGiant()) loadedProps.setGasGiant();
+					if(!loadedProps.isMoon() && properties.isMoon()) loadedProps.setParentPlanet(properties.getParentProperties());
+					if(loadedProps.isMoon() && !properties.isMoon()) {
+						loadedProps.getParentProperties().removeChild(loadedProps.getId());
+						loadedProps.setParentPlanet(null);
+					}
+				}
+				else {
+					DimensionManager.getInstance().registerDim(properties, properties.isNativeDimension);
+				}
 
 				if(!properties.customIcon.isEmpty()) {
 					DimensionProperties loadedProps;
@@ -1726,9 +1737,9 @@ public class AdvancedRocketry {
 						loadedProps.customIcon = properties.customIcon;
 					}
 				}
-
-
-
+				//TODO: add properties fromXML
+				
+				
 				//Add artifacts if needed
 				if(DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
 					DimensionProperties loadedProps;
@@ -1746,13 +1757,52 @@ public class AdvancedRocketry {
 						loadedProps.oreProperties = properties.oreProperties;
 				}
 			}
+			
+			//Remove dimensions not in the XML
+			for(int i : DimensionManager.getInstance().getRegisteredDimensions()) {
+				boolean found = false;
+				for(DimensionProperties properties : dimCouplingList.dims) {
+					if(properties.getId() == i) {
+						found = true;
+						break;
+					}
+				}
+				
+				if(!found) {
+					DimensionManager.getInstance().deleteDimension(i);
+				}
+			}
+			
+			//Remove stars not in the XML
+			for(int i : new HashSet<Integer>(DimensionManager.getInstance().getStarIds())) {
+				boolean found = false;
+				for(StellarBody properties : dimCouplingList.stars) {
+					if(properties.getId() == i) {
+						found = true;
+						break;
+					}
+				}
+				
+				if(!found) {
+					DimensionManager.getInstance().removeStar(i);
+				}
+			}
+
+			//Add planets
+			for(StellarBody star : dimCouplingList.stars) {
+				int numRandomGeneratedPlanets = loader.getMaxNumPlanets(star);
+				int numRandomGeneratedGasGiants = loader.getMaxNumGasGiants(star);
+				generateRandomPlanets(star, numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
+			}
 		}
 
 		// make sure to set dim offset back to original to make things consistant
 		DimensionManager.dimOffset = dimOffset;
 	}
 
-	private void generateRandomPlanets(StellarBody star, int numRandomGeneratedPlanets, int numRandomGeneratedGasGiants) {
+	private List<DimensionProperties> generateRandomPlanets(StellarBody star, int numRandomGeneratedPlanets, int numRandomGeneratedGasGiants) {
+		List<DimensionProperties> dimPropList = new LinkedList<DimensionProperties>();
+		
 		Random random = new Random(System.currentTimeMillis());
 
 
@@ -1762,6 +1812,7 @@ public class AdvancedRocketry {
 
 			DimensionProperties	properties = DimensionManager.getInstance().generateRandomGasGiant(star.getId(), "",baseDistance + 50,baseAtm,125,100,100,75);
 
+			dimPropList.add(properties);
 			if(properties.gravitationalMultiplier >= 1f) {
 				int numMoons = random.nextInt(8);
 
@@ -1769,6 +1820,8 @@ public class AdvancedRocketry {
 					DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(star.getId(), properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
 					if(moonProperties == null)
 						continue;
+					
+					dimPropList.add(moonProperties);
 
 					moonProperties.setParentPlanet(properties);
 					star.removePlanet(moonProperties);
@@ -1798,6 +1851,8 @@ public class AdvancedRocketry {
 			if(properties == null)
 				continue;
 
+			dimPropList.add(properties);
+			
 			if(properties.gravitationalMultiplier >= 1f) {
 				int numMoons = random.nextInt(4);
 
@@ -1807,11 +1862,14 @@ public class AdvancedRocketry {
 					if(moonProperties == null)
 						continue;
 
+					dimPropList.add(moonProperties);
 					moonProperties.setParentPlanet(properties);
 					star.removePlanet(moonProperties);
 				}
 			}
 		}
+		
+		return dimPropList;
 	}
 
 
