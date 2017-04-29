@@ -558,7 +558,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 							if(pos != null) {
 								setInOrbit(true);
 								setInFlight(false);
-								this.travelToDimension(destinationDimId, pos.x, Configuration.orbit, pos.z);
+								this.travelToDimension(lastDimensionFrom, pos.x, Configuration.orbit, pos.z);
 							}
 							else 
 								this.setDead();

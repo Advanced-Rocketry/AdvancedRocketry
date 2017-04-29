@@ -254,7 +254,6 @@ public class AdvancedRocketry {
 	public static WorldType spaceWorldType;
 	private boolean resetFromXml;
 	public static final RecipeHandler machineRecipes = new RecipeHandler();
-
 	final String oreGen = "Ore Generation";
 	final String ROCKET = "Rockets";
 	final String MOD_INTERACTION = "Mod Interaction";
@@ -262,6 +261,7 @@ public class AdvancedRocketry {
 	final String ASTEROID = "Asteroid";
 	final String GAS_MINING = "GasMining";
 	final String PERFORMANCE = "Performance";
+
 	public static CompatibilityMgr compat = new CompatibilityMgr();
 	public static Logger logger = LogManager.getLogger(Constants.modId);
 	private static Configuration config;
@@ -1952,6 +1952,7 @@ public class AdvancedRocketry {
 		SpaceObjectManager.getSpaceManager().onServerStopped();
 		((BlockSeal)AdvancedRocketryBlocks.blockPipeSealer).clearMap();
 		zmaster587.advancedRocketry.api.Configuration.MoonId = -1;
+		DimensionManager.getInstance().overworldProperties.resetProperties();
 		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 8000, "Dimensions including and after this number are allowed to be made into planets");
 
 		proxy.saveUILayout(config);
