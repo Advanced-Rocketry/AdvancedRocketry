@@ -16,6 +16,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidContainerItem;
+
 import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.integration.nei.PositionedFluidStack;
@@ -133,11 +135,18 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 					break;
 			}
 
-			if(!match && (FluidContainerRegistry.isFilledContainer(result) || 
+			if(!match && (FluidContainerRegistry.isFilledContainer(result) || result.getItem() instanceof IFluidContainerItem || 
 					(Block.getBlockFromItem(result.getItem()) != Blocks.air && FluidRegistry.lookupFluidForBlock(Block.getBlockFromItem(result.getItem())) != null  ))) {
 				
+				FluidStack fluidStack = null;
+				
+				if(result.getItem() instanceof IFluidContainerItem)
+					fluidStack  = ((IFluidContainerItem)result.getItem()).getFluid(result);
+				else if(FluidContainerRegistry.isFilledContainer(result) && FluidContainerRegistry.isFilledContainer(result))
+					fluidStack = FluidContainerRegistry.getFluidForFilledItem(result);
+					
 				for(FluidStack stack : ((Recipe)i).getFluidOutputs() ) {
-					if(FluidContainerRegistry.isFilledContainer(result) && FluidContainerRegistry.containsFluid(result, stack) ||
+					if((fluidStack != null && fluidStack.getFluid() == stack.getFluid()) ||
 							(Block.getBlockFromItem(result.getItem()) != Blocks.air && FluidRegistry.lookupFluidForBlock(Block.getBlockFromItem(result.getItem())) == stack.getFluid() )) {
 						match = true;
 						break;
@@ -184,11 +193,18 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 				}
 			}
 			
-			if(!match && (FluidContainerRegistry.isFilledContainer(ingredient) || 
+			if(!match && (FluidContainerRegistry.isFilledContainer(ingredient) || ingredient.getItem() instanceof IFluidContainerItem || 
 					(Block.getBlockFromItem(ingredient.getItem()) != Blocks.air && FluidRegistry.lookupFluidForBlock(Block.getBlockFromItem(ingredient.getItem())) != null  ))) {
 				
+				FluidStack fluidStack = null;
+				
+				if(ingredient.getItem() instanceof IFluidContainerItem)
+					fluidStack  = ((IFluidContainerItem)ingredient.getItem()).getFluid(ingredient);
+				else if(FluidContainerRegistry.isFilledContainer(ingredient) && FluidContainerRegistry.isFilledContainer(ingredient))
+					fluidStack = FluidContainerRegistry.getFluidForFilledItem(ingredient);
+				
 				for(FluidStack stack : ((Recipe)irecipe).getFluidIngredients() ) {
-					if(FluidContainerRegistry.isFilledContainer(ingredient) && FluidContainerRegistry.containsFluid(ingredient, stack) ||
+					if((fluidStack != null && fluidStack.getFluid() == stack.getFluid()) ||
 							(Block.getBlockFromItem(ingredient.getItem()) != Blocks.air && FluidRegistry.lookupFluidForBlock(Block.getBlockFromItem(ingredient.getItem())) == stack.getFluid() )) {
 						recipe.setIngredientPermutation(recipe.ingredients, ingredient);
 						arecipes.add(recipe);
