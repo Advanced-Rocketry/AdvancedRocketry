@@ -92,7 +92,12 @@ public class AreaBlob {
 	 * @return true if the block exists in the blob
 	 */
 	public boolean contains(HashedBlockPosition position) {
-		return graph.contains(position);
+		boolean contains = false;
+		
+		synchronized (graph) {
+			contains = graph.contains(position);
+		}
+		return contains;
 	}
 	
 	/**

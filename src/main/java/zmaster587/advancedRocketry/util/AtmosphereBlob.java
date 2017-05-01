@@ -51,14 +51,15 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	@Override
 	public void removeBlock(HashedBlockPosition blockPos) {
 
-		graph.remove(blockPos);
-		graph.contains(blockPos);
+		synchronized (graph) {
+			graph.remove(blockPos);
 
-		for(EnumFacing direction : EnumFacing.values()) {
+			for(EnumFacing direction : EnumFacing.values()) {
 
-			HashedBlockPosition newBlock = blockPos.getPositionAtOffset(direction);
-			if(graph.contains(newBlock) && !graph.doesPathExist(newBlock, blobHandler.getRootPosition()))
-				runEffectOnWorldBlocks(blobHandler.getWorldObj(), graph.removeAllNodesConnectedTo(newBlock));
+				HashedBlockPosition newBlock = blockPos.getPositionAtOffset(direction);
+				if(graph.contains(newBlock) && !graph.doesPathExist(newBlock, blobHandler.getRootPosition()))
+					runEffectOnWorldBlocks(blobHandler.getWorldObj(), graph.removeAllNodesConnectedTo(newBlock));
+			}
 		}
 	}
 
@@ -171,7 +172,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 		if(!AtmosphereHandler.getOxygenHandler(world.provider.getDimension()).getDefaultAtmosphereType().allowsCombustion()) {
 
 			List<HashedBlockPosition> list;
-			
+
 			synchronized (graph) {
 				list = new LinkedList<HashedBlockPosition>(blocks);
 			}
