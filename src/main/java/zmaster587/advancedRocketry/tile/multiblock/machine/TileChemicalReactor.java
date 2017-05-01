@@ -30,8 +30,7 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 	public static final Object[][][] structure = { 
 		{{null, 'c',null},
 		{'L', 'I','L'}},
-		
-		{{'P',  LibVulpesBlocks.motors, 'P'}, 
+		{{'P',  LibVulpesBlocks.motors, 'P'},
 			{'l', new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'O'}},
 
 	};
