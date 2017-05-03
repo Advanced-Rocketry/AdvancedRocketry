@@ -294,7 +294,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 						world.markBlockForUpdate(xPos, yPos, zPos);
 						ForgeDirection dir = RotatableBlock.getFront(this.getBlockMetadata());
 
-						EntityItemAbducted ent = new EntityItemAbducted(this.worldObj, this.xCoord - dir.offsetX + 0.5f, this.yCoord + 5, this.zCoord - dir.offsetZ + 0.5f, tfrStack);
+						EntityItemAbducted ent = new EntityItemAbducted(this.worldObj, this.xCoord - 2*dir.offsetX + 0.5f, this.yCoord + 9, this.zCoord - 2*dir.offsetZ + 0.5f, tfrStack);
 						this.worldObj.spawnEntityInWorld(ent);
 						PacketHandler.sendToNearby(new PacketMachine(this, (byte) 3), this.worldObj.provider.dimensionId, this.xCoord - dir.offsetX, this.yCoord + 5, this.zCoord - dir.offsetZ, 64);
 						return true;
