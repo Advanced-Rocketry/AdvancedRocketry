@@ -49,8 +49,10 @@ public class MapGenCrater extends MapGenBase {
 
 
 								for(int dist = 0; dist < ((ridgeSize*ridgeSize) - (count+ridgeSize)*(count+ridgeSize))/(ridgeSize*2); dist++) {
-									index = (x * 16 + z) * 256 + y + dist;
-									chunkArray[index] = world.getBiomeGenForCoords(rangeX, rangeZ).topBlock;
+									if(y + dist < 255) {
+										index = (x * 16 + z) * 256 + y + dist;
+										chunkArray[index] = world.getBiomeGenForCoords(rangeX, rangeZ).topBlock;
+									}
 								}
 
 
