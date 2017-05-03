@@ -14,6 +14,7 @@ import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
@@ -67,7 +68,7 @@ public class RendererWarpCore extends TileEntitySpecialRenderer {
 		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
 		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glColor4f(1f, 0.4f, 0.4f, 0.8f);
+		GlStateManager.color(1f, 0.4f, 0.4f, 0.8f);
 		GL11.glPushMatrix();
 		
 		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
@@ -77,7 +78,7 @@ public class RendererWarpCore extends TileEntitySpecialRenderer {
 		Tessellator.getInstance().draw();
 		GL11.glPopMatrix();
 		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glColor4f(1f, 1f,1f, 1f);
+		GlStateManager.color(1f, 1f,1f, 1f);
 		
 		if(tile.getWorld().provider instanceof WorldProviderSpace) {
 			
@@ -89,7 +90,7 @@ public class RendererWarpCore extends TileEntitySpecialRenderer {
 				double speedRotate = speedMult*0.25d;
 				
 				
-				GL11.glColor4f(0.4f, 0.4f, 1f, 0.6f);
+				GlStateManager.color(0.4f, 0.4f, 1f, 0.6f);
 				GL11.glPushMatrix();
 				GL11.glRotated(speedRotate*System.currentTimeMillis() % 360, 0f, 1f, 0f);
 				model.renderOnly("Rotate1");
@@ -112,7 +113,7 @@ public class RendererWarpCore extends TileEntitySpecialRenderer {
 
 				speedRotate = 0.03d*speedMult;
 				
-				GL11.glColor4f(0.4f, 1f, 0.4f, 0.8f);
+				GlStateManager.color(0.4f, 1f, 0.4f, 0.8f);
 				int amt = 3;
 				float offset = 360/(float)amt;
 				for(int j = 0; j < 5; j++) {
@@ -127,6 +128,8 @@ public class RendererWarpCore extends TileEntitySpecialRenderer {
 				}
 			}
 		}
+		
+		GlStateManager.color(1f, 1f, 1f, 1f);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glPopMatrix();
