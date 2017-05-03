@@ -48,7 +48,8 @@ public class MapGenCrater extends MapGenBase {
 
 								
 								for(int dist = 0; dist < ((ridgeSize*ridgeSize) - (count+ridgeSize)*(count+ridgeSize))/(ridgeSize*2); dist++) {
-									chunkPrimerIn.setBlockState(x, y + dist, z, world.getBiomeGenForCoords(new BlockPos(chunkX*16,0, chunkZ*16)).topBlock);
+									if(y + dist < 255)
+										chunkPrimerIn.setBlockState(x, y + dist, z, world.getBiomeGenForCoords(new BlockPos(chunkX*16,0, chunkZ*16)).topBlock);
 								}
 							}
 							
