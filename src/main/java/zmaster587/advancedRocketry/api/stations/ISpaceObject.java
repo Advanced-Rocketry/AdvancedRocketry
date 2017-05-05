@@ -97,8 +97,9 @@ public interface ISpaceObject {
 	 * Adds a landing pad to the station
 	 * @param x
 	 * @param z
+	 * @param name the name of the landing pad
 	 */
-	public void addLandingPad(int x, int z);
+	public void addLandingPad(int x, int z, String name);
 	
 	/**
 	 * Removes an existing landing pad from the station

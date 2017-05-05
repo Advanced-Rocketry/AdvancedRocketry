@@ -242,3 +242,4 @@ msg.observetory.text.processdiscovery=Process discovery
 msg.observetory.text.observabledistance=Observable distance:
 msg.tooltip.data=Data
 msg.tooltip.asteroidselection=Asteroid Selection
+msg.label.name=Name

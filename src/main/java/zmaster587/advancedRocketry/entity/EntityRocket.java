@@ -50,6 +50,7 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
+import zmaster587.advancedRocketry.inventory.modules.ModuleStellarBackground;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
 import zmaster587.advancedRocketry.item.ItemPackedStructure;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
@@ -61,6 +62,7 @@ import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.MobileAABB;
+import zmaster587.advancedRocketry.util.StationLandingLocation;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
@@ -76,9 +78,11 @@ import zmaster587.libVulpes.inventory.modules.IProgressBar;
 import zmaster587.libVulpes.inventory.modules.ISelectionNotify;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleButton;
+import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
 import zmaster587.libVulpes.inventory.modules.ModuleImage;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
 import zmaster587.libVulpes.inventory.modules.ModuleSlotButton;
+import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
@@ -102,6 +106,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	private long lastErrorTime = Long.MIN_VALUE;
 	private static long ERROR_DISPLAY_TIME = 100;
 	private static int DESCENT_TIMER = 500;
+	private static int BUTTON_ID_OFFSET = 25;
+	private static final int STATION_LOC_OFFSET = 50;
+	private ModuleText landingPadDisplayText;
 	protected long lastWorldTickTicked;
 
 	private SatelliteBase satallite;
@@ -144,6 +151,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 		lastWorldTickTicked = p_i1582_1_.getTotalWorldTime();
 		autoDescendTimer = 5000;
+		landingPadDisplayText = new ModuleText(256, 16, "", 0x00FF00, 2f);
+		landingPadDisplayText.setColor(0x00ff00);
 	}
 
 	public EntityRocket(World world, StorageChunk storage, StatsRocket stats, double x, double y, double z) {
@@ -157,6 +166,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		mountedEntities = new WeakReference[stats.getNumPassengerSeats()];
 		lastWorldTickTicked = world.getTotalWorldTime();
 		autoDescendTimer = 5000;
+		landingPadDisplayText = new ModuleText(256, 16, "", 0x00FF00, 2f);
+		landingPadDisplayText.setColor(0x00ff00);
 	}
 
 	@Override
@@ -206,7 +217,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	}
 
 	@Override
-	
 	public void setPosition(double x, double y,
 			double z) {
 		super.setPosition(x, y, z);
@@ -442,7 +452,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 			LibVulpes.proxy.playSound(new SoundRocketEngine( TextureResources.sndCombustionRocket,this));
 		}
-		
+
 		if(this.ticksExisted > DESCENT_TIMER && isInOrbit() && !isInFlight())
 			setInFlight(true);
 
@@ -719,7 +729,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				
 				DimensionProperties properties = DimensionManager.getEffectiveDimId(worldObj, (int)this.posX, (int)this.posZ);
 				World world = net.minecraftforge.common.DimensionManager.getWorld(properties.getId());
-				
+
 				properties.addSatallite(satellite, world);
 				tile.setInventorySlotContents(0, null);
 			}
@@ -760,6 +770,12 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 
 					if(obj != null) {
 						displayStr = "Station " + obj.getId();
+						
+						StationLandingLocation location = storage.getGuidanceComputer().getLandingLocation(obj.getId());
+						
+						if(location != null) {
+							displayStr = displayStr + "\nPad: " + location;
+						}
 					}
 				}
 			}
@@ -1031,7 +1047,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		}
 
 		destinationDimId = nbt.getInteger("destinationDimId");
-		
 		lastDimensionFrom = nbt.getInteger("lastDimensionFrom");
 
 		//Satallite
@@ -1093,7 +1108,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		nbt.setInteger("lastDimensionFrom", lastDimensionFrom);
 
 		//TODO handle non tile Infrastructure
-
 	}
 
 	@Override
@@ -1200,14 +1214,47 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		else if(id == PacketType.ROCKETLANDEVENT.ordinal() && worldObj.isRemote) {
 			MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketLandedEvent(this));
 		}
-		else if(id > 100) {
-			TileEntity tile = storage.getGUItiles().get(id - 100 - tilebuttonOffset);
+		else if(id >= STATION_LOC_OFFSET + BUTTON_ID_OFFSET) {
+			int id2 = id - (STATION_LOC_OFFSET + BUTTON_ID_OFFSET) - 1;
+			setDestLandingPad(id2);
+
+			//propagate change back to the clients
+			if(!worldObj.isRemote)
+				PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, id), this);
+		}
+		else if(id > BUTTON_ID_OFFSET) {
+			TileEntity tile = storage.getGUItiles().get(id - BUTTON_ID_OFFSET - tilebuttonOffset);
 
 			//Welcome to super hack time with packets
 			//Due to the fact the client uses the player's current world to open the gui, we have to move the client between worlds for a bit
 			PacketHandler.sendToPlayer(new PacketEntity(this, (byte)PacketType.CHANGEWORLD.ordinal()), player);
 			storage.getBlock(tile.xCoord, tile.yCoord, tile.zCoord).onBlockActivated(storage.world, tile.xCoord, tile.yCoord,  tile.zCoord, player, 0, 0, 0, 0);
 			PacketHandler.sendToPlayer(new PacketEntity(this, (byte)PacketType.REVERTWORLD.ordinal()), player);
+		}
+	}
+
+	private void setDestLandingPad(int padIndex) {
+		ItemStack slot0 = storage.getGuidanceComputer().getStackInSlot(0);
+		int uuid;
+		//Station location select
+		if( slot0 != null && slot0.getItem() instanceof ItemStationChip && (uuid = (int)ItemStationChip.getUUID(slot0)) != 0) {
+			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStation(uuid);
+
+			if(obj instanceof SpaceObject) {
+
+				if(padIndex == -1) {
+					storage.getGuidanceComputer().setLandingLocation(uuid, null);
+				}
+				else {
+
+					StationLandingLocation location = ((SpaceObject) obj).getLandingPads().get(padIndex);
+					if(location != null && !location.getOccupied())
+						storage.getGuidanceComputer().setLandingLocation(uuid, location);
+				}
+			}
+			
+			StationLandingLocation location = storage.getGuidanceComputer().getLandingLocation(uuid);
+			landingPadDisplayText.setText(location != null ? location.toString() : "None Selected");
 		}
 	}
 
@@ -1274,13 +1321,50 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			//modules.add(new ModuleText(180, 114, "Inventories", 0x404040));
 		}
 		else {
+			ItemStack slot0 = storage.getGuidanceComputer().getStackInSlot(0);
+			int uuid;
+			//Station location select
+			if( slot0 != null && slot0.getItem() instanceof ItemStationChip && (uuid = (int)ItemStationChip.getUUID(slot0)) != 0) {
+				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStation(uuid);
 
-			DimensionProperties properties = DimensionManager.getEffectiveDimId(worldObj, (int)this.posX, (int)this.posZ);
-			while(properties.getParentProperties() != null) properties = properties.getParentProperties();
+				modules.add(new ModuleStellarBackground(0, 0, zmaster587.libVulpes.inventory.TextureResources.starryBG));
+				//modules.add(new ModuleImage(0, 0, icon));
 
-			container = new ModulePlanetSelector(properties.getId(), zmaster587.libVulpes.inventory.TextureResources.starryBG, this, false);
-			container.setOffset(1000, 1000);
-			modules.add(container);
+				if(obj == null)
+					return modules;
+
+				List<ModuleBase> list2 = new LinkedList<ModuleBase>();
+				ModuleButton button = new ModuleButton(0, 0, STATION_LOC_OFFSET, "Clear", this, TextureResources.buttonGeneric, 72, 18);
+				list2.add(button);
+
+				int i = 1;
+				for( StationLandingLocation pos : ((SpaceObject)obj).getLandingPads()) 
+				{
+					button = new ModuleButton(0, i*18, i + STATION_LOC_OFFSET, pos.toString(), this, TextureResources.buttonGeneric, 72, 18);
+					list2.add(button);
+
+					if(pos.getOccupied())
+						button.setColor(0xFF0000);
+					
+					i++;
+				}
+
+				ModuleContainerPan pan = new ModuleContainerPan(25, 25, list2, new LinkedList<ModuleBase>(), null, 256, 256, 0, -48, 258, 256);
+				modules.add(pan);
+				
+				StationLandingLocation location = storage.getGuidanceComputer().getLandingLocation(uuid);
+	
+				landingPadDisplayText.setText(location != null ? location.toString() : "None Selected");
+				modules.add(landingPadDisplayText);
+			}
+			else {
+				DimensionProperties properties = DimensionManager.getEffectiveDimId(worldObj, (int)this.posX, (int)this.posZ);
+				while(properties.getParentProperties() != null) properties = properties.getParentProperties();
+
+				container = new ModulePlanetSelector(properties.getId(), zmaster587.libVulpes.inventory.TextureResources.starryBG, this, false);
+				container.setOffset(1000, 1000);
+				modules.add(container);
+			}
 		}
 		return modules;
 	}
@@ -1326,12 +1410,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			PacketHandler.sendToServer(new PacketEntity(this, (byte)EntityRocket.PacketType.OPENPLANETSELECTION.ordinal()));
 			break;
 		default:
-			PacketHandler.sendToServer(new PacketEntity(this, (byte)(buttonId + 100)));
-
+			PacketHandler.sendToServer(new PacketEntity(this, (byte)(buttonId + BUTTON_ID_OFFSET)));
 			//Minecraft.getMinecraft().thePlayer.closeScreen();
 
-			TileEntity tile = storage.getGUItiles().get(buttonId - tilebuttonOffset);
-			storage.getBlock(tile.xCoord, tile.yCoord, tile.zCoord).onBlockActivated(storage.world, tile.xCoord, tile.yCoord,  tile.zCoord, Minecraft.getMinecraft().thePlayer, 0, 0, 0, 0);
+			if(buttonId < STATION_LOC_OFFSET) {
+				TileEntity tile = storage.getGUItiles().get(buttonId - tilebuttonOffset);
+				storage.getBlock(tile.xCoord, tile.yCoord, tile.zCoord).onBlockActivated(storage.world, tile.xCoord, tile.yCoord,  tile.zCoord, Minecraft.getMinecraft().thePlayer, 0, 0, 0, 0);
+			}
 		}
 	}
 
