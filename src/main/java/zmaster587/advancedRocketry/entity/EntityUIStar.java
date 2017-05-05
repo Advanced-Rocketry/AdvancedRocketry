@@ -2,6 +2,9 @@ package zmaster587.advancedRocketry.entity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
@@ -11,18 +14,34 @@ import zmaster587.advancedRocketry.tile.station.TilePlanetaryHologram;
 public class EntityUIStar extends EntityUIPlanet {
 	
 	StellarBody star;
+	int subStar = -1;
 	public final static int starIDoffset = 10000;
+
+	protected static final DataParameter<Integer> subStarData =  EntityDataManager.<Integer>createKey(EntityUIStar.class, DataSerializers.VARINT);
 	
 	public EntityUIStar(World worldIn, StellarBody properties, TilePlanetaryHologram tile, double x, double y, double z) {
 		this(worldIn);
 		setPosition(x, y, z);
 		setProperties(properties);
 		this.tile = tile;
+		subStar = -1;
+	}
+	
+	public EntityUIStar(World worldIn, StellarBody properties, int subStar, TilePlanetaryHologram tile, double x, double y, double z) {
+		this(worldIn, properties, tile, x,y,z);
+		this.dataManager.set(subStarData, (this.subStar = subStar));
+	}
+	
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		this.dataManager.register(subStarData, -1);
 	}
 	
 	public EntityUIStar(World worldIn) {
 		super(worldIn);
 		setSize(0.2f, 0.2f);
+		subStar = -1;
 	}
 	
 	public void setProperties(StellarBody properties) {
@@ -54,6 +73,8 @@ public class EntityUIStar extends EntityUIPlanet {
 	public StellarBody getStarProperties() {
 		if((star == null && getPlanetID() != -1) || (star != null && getPlanetID() != star.getId())) {
 			star = DimensionManager.getInstance().getStar(getPlanetID());
+			if((subStar = this.dataManager.get(subStarData)) != -1)
+				star = star.getSubStars().get(subStar);
 		}
 
 		return star;

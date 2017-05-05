@@ -1687,6 +1687,8 @@ public class AdvancedRocketry {
 			for(StellarBody star : dimCouplingList.stars) {
 				if(DimensionManager.getInstance().getStar(star.getId()) == null)
 					DimensionManager.getInstance().addStar(star);
+				
+				DimensionManager.getInstance().getStar(star.getId()).subStars = star.subStars;
 			}
 			
 			for(DimensionProperties properties : dimCouplingList.dims) {

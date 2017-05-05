@@ -2,11 +2,14 @@ package zmaster587.advancedRocketry.api.dimension.solar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.common.util.Constants.NBT;
 
 public class StellarBody {
 
@@ -16,15 +19,47 @@ public class StellarBody {
 	int discoveredPlanets;
 	float color[];
 	int id;
+	float size;
 	String name;
 	short posX, posZ;
+	public List<StellarBody> subStars;
+	float starSeperation;
 
 	public StellarBody() {
 		planets = new HashMap<Integer,IDimensionProperties>();
+		size = 1f;
+		subStars = new LinkedList<StellarBody>();
+		starSeperation = 5f;
+	}
+	
+	public List<StellarBody> getSubStars() {
+		return subStars;
 	}
 
+	public void addSubStar(StellarBody star) {
+		star.setName(name);
+		subStars.add(star);
+	}
+	
 	public int getDisplayRadius() {
-		return 200;
+		return (int)(100*size);
+	}
+	
+	//Returns the distance between the star and sub stars
+	public float getStarSeperation() {
+		return starSeperation;
+	}
+	
+	public void setStarSeperation(float seperation) {
+		this.starSeperation = seperation;
+	}
+	
+	public float getSize() {
+		return size;
+	}
+	
+	public void setSize(float size) {
+		this.size = size;
 	}
 
 	public void setPosX(int x) {
@@ -178,6 +213,19 @@ public class StellarBody {
 		nbt.setString("name", name);
 		nbt.setShort("posX", posX);
 		nbt.setShort("posZ", posZ);
+		nbt.setFloat("size", size);
+		nbt.setFloat("seperation", starSeperation);
+		
+		NBTTagList list = new NBTTagList();
+		
+		for(StellarBody body : subStars) {
+			NBTTagCompound tag = new NBTTagCompound();
+			body.writeToNBT(tag);
+			list.appendTag(tag);
+		}
+		
+		if(!list.hasNoTags())
+			nbt.setTag("subStars", list);
 	}
 
 	public void readFromNBT(NBTTagCompound nbt) {
@@ -186,5 +234,22 @@ public class StellarBody {
 		name = nbt.getString("name");
 		posX = nbt.getShort("posX");
 		posZ = nbt.getShort("posZ");
+		
+		if(nbt.hasKey("size"))
+			size = nbt.getFloat("size");
+		
+		if(nbt.hasKey("seperation"))
+			starSeperation = nbt.getFloat("seperation");
+		
+		subStars.clear();
+		if(nbt.hasKey("subStars")) {
+			NBTTagList list = nbt.getTagList("subStars", NBT.TAG_COMPOUND);
+			
+			for(int i = 0; i < list.tagCount(); i++) {
+				StellarBody star = new StellarBody();
+				star.readFromNBT(list.getCompoundTagAt(i));
+				subStars.add(star);
+			}
+		}
 	}
 }

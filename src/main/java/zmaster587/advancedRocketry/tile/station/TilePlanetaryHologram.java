@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
@@ -82,12 +83,12 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 
 		for(EntityUIStar star : starEntities) star.setDead();
 		starEntities.clear();
-		
+
 		selectedPlanet = null;
 		centeredEntity = null;
 		//currentStarBody = null;
 		selectedId = -1;
-		
+
 
 		if(currentStar != null) {
 			currentStar.setDead();
@@ -98,7 +99,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 			backButton = null;
 		}
 	}
-	
+
 	public boolean isEnabled() {
 		boolean powered = worldObj.isBlockIndirectlyGettingPowered(getPos()) > 0;
 		return (!powered && state == RedstoneState.INVERTED) || (powered && state == RedstoneState.ON) || state == RedstoneState.OFF;
@@ -108,10 +109,10 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 	public void update() {
 		if(!worldObj.isRemote) {
 			if(isEnabled()) {
-				
+
 				if(onTime < 1)
 					onTime += .2f/getHologramSize();//0.02f;
-				
+
 				if(allowUpdate) {
 					for(EntityUIPlanet entity : entities) {
 						DimensionProperties properties = entity.getProperties();
@@ -124,6 +125,21 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 						for(EntityUIStar entity : starEntities) {
 							entity.setPosition(this.pos.getX() + .5 + getInterpHologramSize()*entity.getStarProperties().getPosX()/100f, this.pos.getY() + 1, this.pos.getZ() + .5 + getInterpHologramSize()*entity.getStarProperties().getPosZ()/100f);
 							entity.setScale(getInterpHologramSize());
+						}
+					}
+					else {
+						if(!starEntities.isEmpty()) {
+							float phaseInc = 4*360/starEntities.size();
+							float phase = 0;
+							for(EntityUIStar entity : starEntities) {
+								double deltaX, deltaY;
+								deltaX = (entity.getStarProperties().getStarSeperation()*MathHelper.cos(phase)*0.01);
+								deltaY = (entity.getStarProperties().getStarSeperation()*MathHelper.sin(phase)*0.01);
+
+								entity.setPosition(this.pos.getX() + .5 + getInterpHologramSize()*deltaX, this.pos.getY() + 1, this.pos.getZ() + .5 + getInterpHologramSize()*deltaY);
+								entity.setScale(getInterpHologramSize()*entity.getStarProperties().getSize());
+								phase += phaseInc;
+							}
 						}
 					}
 
@@ -238,6 +254,25 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 					currentStarBody = DimensionManager.getSol();
 				currentStar = new EntityUIStar(worldObj, currentStarBody, this, this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5);
 				this.getWorld().spawnEntityInWorld(currentStar);
+
+				//Spawn substars
+				if(currentStarBody.getSubStars() != null && !currentStarBody.getSubStars().isEmpty()) {
+					float phaseInc = 360/currentStarBody.getSubStars().size();
+					float phase = 0;
+					int count = 0;
+					Collection<StellarBody> starList = currentStarBody.getSubStars();
+					for(StellarBody body : starList) {
+
+						int deltaX, deltaY;
+						deltaX = (int)(body.getStarSeperation()*MathHelper.cos(phase)*0.05);
+						deltaY = (int)(body.getStarSeperation()*MathHelper.sin(phase)*0.05);
+						EntityUIStar entity = new EntityUIStar(worldObj, body, count++, this, this.pos.getX() + .5 + deltaX, this.pos.getY() + 1, this.pos.getZ() + .5 + deltaY);
+
+						this.getWorld().spawnEntityInWorld(entity);
+						starEntities.add(entity);
+						phase += phaseInc;
+					}
+				}
 			}
 
 			for(IDimensionProperties properties : planetList) {
@@ -278,7 +313,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 		modules.add(targetGrav);
 		modules.add(new ModuleSlider(6, 60, 0, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
 		modules.add(redstoneControl);
-		
+
 		updateText();
 		return modules;
 	}
@@ -298,7 +333,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 	private float getInterpHologramSize() {
 		return getHologramSize()*onTime;
 	}
-	
+
 	@Override
 	public String getModularInventoryName() {
 		return "tile.planetHoloSelector.name";
@@ -389,15 +424,15 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)STATEUPDATE));
 		}
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound = super.writeToNBT(compound);
 		state.writeToNBT(compound);
-		
+
 		return compound;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
