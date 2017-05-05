@@ -1,5 +1,7 @@
 package zmaster587.advancedRocketry.tile.station;
 
+import io.netty.buffer.ByteBuf;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,15 +16,27 @@ import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.util.StationLandingLocation;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesItems;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
+import zmaster587.libVulpes.inventory.modules.IGuiCallback;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleText;
+import zmaster587.libVulpes.inventory.modules.ModuleTextBox;
 import zmaster587.libVulpes.items.ItemLinker;
+import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.util.HashedBlockPosition;
+import zmaster587.libVulpes.util.INetworkMachine;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -30,15 +44,19 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
-public class TileLandingPad extends TileInventoryHatch implements ILinkableTile {
+public class TileLandingPad extends TileInventoryHatch implements ILinkableTile, IGuiCallback, INetworkMachine {
 
 	private List<HashedBlockPosition> blockPos;
-
+	ModuleTextBox moduleNameTextbox;
+	String name;
+	
 	public TileLandingPad() {
 		super(1);
 		MinecraftForge.EVENT_BUS.register(this);
 		blockPos = new LinkedList<HashedBlockPosition>();
+		moduleNameTextbox = new ModuleTextBox(this, 40, 30, 60, 12, 9);
 	}
 	@Override
 	public void invalidate() {
@@ -50,7 +68,24 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile 
 				((IMultiblock)tile).setIncomplete();
 		}
 	}
+	
+	@Override
+	public void onModuleUpdated(ModuleBase module) {
+		if(module == moduleNameTextbox) {
+			name =  moduleNameTextbox.getText();
+			PacketHandler.sendToServer(new PacketMachine(this, (byte)0));
+		}
+	}
 
+	@Override
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+		List<ModuleBase> modules = super.getModules(ID, player);
+		
+		modules.add(new ModuleText(40, 20, LibVulpes.proxy.getLocalizedString("msg.label.name") + ":", 0x2f2f2f));
+		modules.add(moduleNameTextbox);
+		return modules;
+	}
+	
 	@Override
 	public void onChunkUnload() {
 		super.onChunkUnload();
@@ -142,7 +177,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile 
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 		
 			if(spaceObj instanceof SpaceObject) {
-				((SpaceObject)spaceObj).addLandingPad(pos);
+				((SpaceObject)spaceObj).addLandingPad(pos, name);
 				
 				AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
 				List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
@@ -197,6 +232,67 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile 
 		return infrastructure;
 	}
 
+	@Override
+	public void writeDataToNetwork(ByteBuf out, byte id) {
+		if(id == 0) {
+			PacketBuffer buff = new PacketBuffer(out);
+			buff.writeInt(name.length());
+			buff.writeString(name);
+		}
+	}
+
+	@Override
+	public void readDataFromNetwork(ByteBuf in, byte packetId,
+			NBTTagCompound nbt) {
+		int len = in.readInt();
+		PacketBuffer buff = new PacketBuffer(in);
+		nbt.setString("id", buff.readStringFromBuffer(len));
+	}
+
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		return new SPacketUpdateTileEntity(pos, getBlockMetadata(), writeToNBT(new NBTTagCompound()));
+	}
+	
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		super.onDataPacket(net, pkt);
+		readFromNBT(pkt.getNbtCompound());
+		moduleNameTextbox.setText(name);
+	}
+	
+	@Override
+	public NBTTagCompound getUpdateTag() {
+		return writeToNBT(new NBTTagCompound());
+	}
+	
+	@Override
+	public void handleUpdateTag(NBTTagCompound tag) {
+		super.handleUpdateTag(tag);
+		moduleNameTextbox.setText(name);
+	}
+
+	
+	@Override
+	public void useNetworkData(EntityPlayer player, Side side, byte id,
+			NBTTagCompound nbt) {
+		if(id == 0) {
+			name = nbt.getString("id");
+			if(!worldObj.isRemote && worldObj.provider.getDimension() == Configuration.spaceDimId) {
+				ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+
+				if(spaceObj instanceof SpaceObject) {
+					StationLandingLocation loc = ((SpaceObject)spaceObj).getPadAtLocation(new HashedBlockPosition(pos));
+					if(loc != null)
+						((SpaceObject)spaceObj).setPadName(this.worldObj, new HashedBlockPosition(pos), name);
+					else
+						((SpaceObject)spaceObj).addLandingPad(pos, name);
+				}
+			}
+		}
+		markDirty();
+		worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
+	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
@@ -209,6 +305,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile 
 				blockPos.add(new HashedBlockPosition(array[counter], array[counter+1], array[counter+2]));
 			}
 		}
+		name = nbt.getString("name");
 	}
 
 	@Override
@@ -227,6 +324,8 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile 
 
 			nbt.setIntArray("infrastructureLocations", array);
 		}
+		
+		nbt.setString("name", name);
 		
 		return nbt;
 

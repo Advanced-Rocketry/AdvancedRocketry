@@ -10,5 +10,10 @@ public class ProviderDummy extends WorldProvider {
 	public DimensionType getDimensionType() {
 		return DimensionType.NETHER;
 	}
+	
+	@Override
+	public int getDimension() {
+		return super.getDimension();
+	}
 
 }

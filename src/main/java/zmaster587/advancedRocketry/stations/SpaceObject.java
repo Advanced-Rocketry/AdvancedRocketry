@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.stations;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -19,6 +20,7 @@ import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.network.PacketStationUpdate.Type;
 import zmaster587.advancedRocketry.tile.station.TileDockingPort;
+import zmaster587.advancedRocketry.util.StationLandingLocation;
 import zmaster587.libVulpes.block.BlockFullyRotatable;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
@@ -44,11 +46,10 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 	private int fuelAmount;
 	private final int MAX_FUEL = 1000;
 	private HashedBlockPosition spawnLocation;
-	private List<HashedBlockPosition> spawnLocations;
+	private List<StationLandingLocation> spawnLocations;
 	private List<HashedBlockPosition> warpCoreLocation;
 	private Set<Integer> knownPlanetList;
 	private HashMap<HashedBlockPosition, String> dockingPoints;
-	private HashMap<HashedBlockPosition,Boolean> occupiedLandingPads;
 	private long transitionEta;
 	private EnumFacing direction;
 	private double rotation[];
@@ -59,8 +60,7 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 
 	public SpaceObject() {
 		properties = (DimensionProperties) zmaster587.advancedRocketry.dimension.DimensionManager.defaultSpaceDimensionProperties.clone();
-		spawnLocations = new LinkedList<HashedBlockPosition>();
-		occupiedLandingPads = new HashMap<HashedBlockPosition,Boolean>();
+		spawnLocations = new LinkedList<StationLandingLocation>();
 		warpCoreLocation = new LinkedList<HashedBlockPosition>(); 
 		dockingPoints = new HashMap<HashedBlockPosition, String>();
 		transitionEta = -1;
@@ -278,8 +278,8 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 		return amt;
 	}
 
-	public void addLandingPad(BlockPos pos) {
-		addLandingPad(pos.getX(), pos.getZ());
+	public void addLandingPad(BlockPos pos, String name) {
+		addLandingPad(pos.getX(), pos.getZ(), name);
 	}
 
 	/**
@@ -287,11 +287,11 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 	 * @param x
 	 * @param z
 	 */
-	public void addLandingPad(int x, int z) {
-		HashedBlockPosition pos = new HashedBlockPosition(x, 0, z);
+	public void addLandingPad(int x, int z, String name) {
+		StationLandingLocation pos = new StationLandingLocation(new HashedBlockPosition(x, 0, z), name);
 		if(!spawnLocations.contains(pos)) {
 			spawnLocations.add(pos);
-			occupiedLandingPads.put(pos, false);
+			pos.setOccupied(false);
 		}
 	}
 
@@ -306,8 +306,15 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 	 */
 	public void removeLandingPad(int x, int z) {
 		HashedBlockPosition pos = new HashedBlockPosition(x, 0, z);
-		spawnLocations.remove(pos);
-		occupiedLandingPads.remove(pos);
+		
+		Iterator<StationLandingLocation> itr = spawnLocations.iterator();
+		
+		while(itr.hasNext()) {
+			StationLandingLocation loc = itr.next();
+			if(loc.getPos().equals(pos))
+				itr.remove();
+		}
+		//spawnLocations.remove(pos);
 	}
 
 	/**
@@ -335,22 +342,26 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 	 * @return next viable place to land
 	 */
 	public HashedBlockPosition getNextLandingPad(boolean commit) {
-		for(HashedBlockPosition pos : spawnLocations) {
-			if(!occupiedLandingPads.get(pos)) {
+		for(StationLandingLocation pos : spawnLocations) {
+			if(!pos.getOccupied()) {
 				if(commit)
-					occupiedLandingPads.put(pos, true);
-				return pos;
+					pos.setOccupied(true);
+				return pos.getPos();
 			}
 		}
 		return null;
 	}
 
+	public List<StationLandingLocation> getLandingPads() {
+		return spawnLocations;
+	}
+	
 	/**
 	 * @return true if there is an empty pad to land on
 	 */
 	public boolean hasFreeLandingPad() {
-		for(HashedBlockPosition pos : spawnLocations) {
-			if(!occupiedLandingPads.get(pos)) {
+		for(StationLandingLocation pos : spawnLocations) {
+			if(!pos.getOccupied()) {
 				return true;
 			}
 		}
@@ -361,15 +372,37 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 		setPadStatus(pos.getX(), pos.getZ(), full);
 	}
 
+	public StationLandingLocation getPadAtLocation(HashedBlockPosition pos) {
+		pos.y = 0;
+		for(StationLandingLocation loc : spawnLocations) {
+			if(loc.equals(pos))
+				return loc;
+		}
+		return null;
+	}
+	
+	public void setPadName(World worldObj, HashedBlockPosition pos, String name) {
+		StationLandingLocation loc = getPadAtLocation(pos);
+		if(loc != null)
+			loc.setName(name);
+		
+		//Make sure our remote uses get the data
+		if(!worldObj.isRemote)
+			PacketHandler.sendToAll(new PacketSpaceStationInfo(getId(), this));
+	}
+	
 	/**
 	 * @param x
 	 * @param z
 	 * @param full true if the pad is avalible to use
 	 */
 	public void setPadStatus(int x, int z, boolean full) {
-		HashedBlockPosition pos = new HashedBlockPosition(x, 0, z);
-		if(occupiedLandingPads.containsKey(pos))
-			occupiedLandingPads.put(pos, full);
+		StationLandingLocation pos = new StationLandingLocation(new HashedBlockPosition(x, 0, z));
+		
+		for(StationLandingLocation loc : spawnLocations) {
+			if(loc.equals(pos))
+				loc.setOccupied(full);
+		}
 	}
 
 	/**
@@ -543,10 +576,11 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 			nbt.setLong("transitionEta", transitionEta);
 
 		NBTTagList list = new NBTTagList();
-		for(HashedBlockPosition pos : this.spawnLocations) {
+		for(StationLandingLocation pos : this.spawnLocations) {
 			NBTTagCompound tag = new NBTTagCompound();
-			tag.setBoolean("occupied", occupiedLandingPads.get(pos));
-			tag.setIntArray("pos", new int[] {pos.x, pos.z});
+			tag.setBoolean("occupied", pos.getOccupied());
+			tag.setIntArray("pos", new int[] {pos.getPos().x, pos.getPos().z});
+			tag.setString("name", pos.getName());
 			list.appendTag(tag);
 		}
 		nbt.setTag("spawnPositions", list);
@@ -608,13 +642,13 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 
 		NBTTagList list = nbt.getTagList("spawnPositions", NBT.TAG_COMPOUND);
 		spawnLocations.clear();
-		occupiedLandingPads.clear();
 		for(int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound tag = list.getCompoundTagAt(i);
 			int[] posInt = tag.getIntArray("pos");
 			HashedBlockPosition pos = new HashedBlockPosition(posInt[0], 0, posInt[1]);
-			spawnLocations.add(pos);
-			occupiedLandingPads.put(pos, tag.getBoolean("occupied"));
+			StationLandingLocation loc = new StationLandingLocation(pos, tag.getString("name"));
+			spawnLocations.add(loc);
+			loc.setOccupied(tag.getBoolean("occupied"));
 		}
 
 		list = nbt.getTagList("warpCorePositions", NBT.TAG_COMPOUND);

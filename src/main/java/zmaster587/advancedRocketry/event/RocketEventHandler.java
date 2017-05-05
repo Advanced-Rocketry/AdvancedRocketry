@@ -175,6 +175,8 @@ public class RocketEventHandler extends Gui {
 										break;
 									}
 								}
+								if(block == null)
+									continue;
 
 								int intColor;
 

@@ -283,7 +283,7 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 	}
 
 	@Override
-	public void addLandingPad(int x, int z) {
+	public void addLandingPad(int x, int z, String name) {
 		
 	}
 

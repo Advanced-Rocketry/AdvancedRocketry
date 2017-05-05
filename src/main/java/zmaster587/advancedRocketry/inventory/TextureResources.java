@@ -13,6 +13,7 @@ public class TextureResources {
 	public static final  ResourceLocation buttonKill[] = {new ResourceLocation("advancedrocketry", "textures/gui/buttons/kill.png"), new ResourceLocation("advancedrocketry", "textures/gui/buttons/kill_hover.png"), null, null};
 	public static final  ResourceLocation buttonCopy[] = {new ResourceLocation("advancedrocketry", "textures/gui/buttons/copy.png"), new ResourceLocation("advancedrocketry", "textures/gui/buttons/copy_hover.png"), null, null};
 	public static final  ResourceLocation buttonAsteroid[] = {new ResourceLocation("advancedrocketry", "textures/gui/buttons/buttonAsteroid.png"), new ResourceLocation("advancedrocketry", "textures/gui/buttons/buttonAsteroid_hover.png"), null, null};
+	public static final  ResourceLocation buttonGeneric[] = {new ResourceLocation("advancedrocketry", "textures/gui/buttons/buttonGeneric.png"), new ResourceLocation("advancedrocketry", "textures/gui/buttons/buttonGeneric_hover.png"), null, null};
 	public static final  ResourceLocation tabAsteroid[] = {new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabAsteroid.png"), new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabAsteroid_hover.png"), null, null};
 	public static final  ResourceLocation tabData[] = {new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabData.png"), new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabData_hover.png"), null, null};
 	public static final  ResourceLocation tabWarp[] = {new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabWarp.png"), new ResourceLocation("advancedrocketry", "textures/gui/buttons/tabWarp_hover.png"), null, null};
@@ -38,6 +39,8 @@ public class TextureResources {
 	public static final  ResourceLocation metalPlate = new ResourceLocation("advancedRocketry:textures/models/metalPlate.png");
 	public static final  ResourceLocation diamondMetal = new ResourceLocation("advancedRocketry:textures/models/diamondMetal.png");
 	public static final  ResourceLocation fan = new ResourceLocation("advancedRocketry:textures/models/fan.png");
+	public static final  ResourceLocation genericStation = new ResourceLocation("advancedRocketry:textures/gui/genericStation.png");
+	
 	
 	public static final IconResource ioSlot = new IconResource(212, 0, 18, 18, null);
 	public static final IconResource idChip = new IconResource(230, 0, 18, 18, null);

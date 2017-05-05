@@ -1,22 +1,36 @@
 package zmaster587.advancedRocketry.tile;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import com.sun.org.apache.bcel.internal.generic.LAND;
+import com.sun.xml.internal.bind.v2.schemagen.xmlschema.Occurs;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.util.Constants.NBT;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.util.StationLandingLocation;
+import zmaster587.libVulpes.inventory.modules.IButtonInventory;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleButton;
+import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
@@ -25,22 +39,50 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 
 	int destinationId;
 	Vector3F<Float> landingPos;
-	
+	Map<Integer, HashedBlockPosition> landingLoc;
+
 	public TileGuidanceComputer() {
 		super(1);
 		landingPos = new Vector3F<Float>(0f, 0f, 0f);
 		destinationId = -1;
+		landingLoc = new HashMap<Integer, HashedBlockPosition>();
 	}
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		return super.getModules(ID, player);
+		List<ModuleBase> modules = super.getModules(ID, player);
+
+		return modules;
 	}
 
 	@Override
 	public int getInventoryStackLimit() {
 		return 1;
 	}
-	
+
+	public void setLandingLocation(int stationId, StationLandingLocation loc) {
+		if(loc == null)
+			landingLoc.remove(stationId);
+		else
+			landingLoc.put(stationId, loc.getPos());
+	}
+
+	public StationLandingLocation getLandingLocation(int stationId) {
+		
+		//Due to the fact that stations are not garunteed to be loaded on startup, we get a real reference now
+		ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStation(stationId);
+		if(obj == null) {
+			landingLoc.remove(stationId);
+			return null;
+		}
+		
+		HashedBlockPosition myLoc = landingLoc.get(stationId);
+		
+		if(myLoc == null)
+			return null;
+		
+		return ((SpaceObject)obj).getPadAtLocation(myLoc);
+	}
+
 	/**
 	 * Gets the dimension to travel to if applicable
 	 * @return The dimension to travel to or -1 if not valid
@@ -69,7 +111,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 			}
 
 		}
-		
+
 		return destinationId;
 	}
 
@@ -85,12 +127,20 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				//TODO: handle Exception
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(ItemStationChip.getUUID(stack));
 				HashedBlockPosition vec = null;
-				if(object instanceof SpaceObject)
-					vec = ((SpaceObject)object).getNextLandingPad(commit);
+				if(object instanceof SpaceObject) {
+					if(landingLoc.get(object.getId()) != null) {
+						vec = landingLoc.get(object.getId());
+
+						if(commit)
+							((SpaceObject)object).getPadAtLocation(landingLoc.get(object.getId())).setOccupied(true);
+					}
+					else
+						vec = ((SpaceObject)object).getNextLandingPad(commit);
+				}
 
 				if(object == null)
 					return null;
-				
+
 				if(vec == null)
 					vec = object.getSpawnLocation();
 
@@ -100,26 +150,37 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				return chip.getTakeoffCoords(stack, landingDimension);
 			}
 		}
-		
+
 		if(destinationId != -1)
 			return landingPos;
 		return null;
 	}
-	
+
 	public void setFallbackDestination(int dimID, Vector3F<Float> coords) {
 		this.destinationId = dimID;
 		this.landingPos = coords;
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setInteger("destDimId", destinationId);
-		
+
 		nbt.setFloat("landingx", landingPos.x);
 		nbt.setFloat("landingy", landingPos.y);
 		nbt.setFloat("landingz", landingPos.z);
-		
+
+		NBTTagList stationList = new NBTTagList();
+
+		for(int locationID : landingLoc.keySet()) {
+			NBTTagCompound tag = new NBTTagCompound();
+			HashedBlockPosition loc = landingLoc.get(locationID);
+
+			tag.setIntArray("pos", new int[] { loc.x, loc.y, loc.z });
+			tag.setInteger("id", locationID);
+			stationList.appendTag(tag);
+		}
+		nbt.setTag("stationMapping", stationList);
 		return nbt;
 	}
 
@@ -127,21 +188,31 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		destinationId = nbt.getInteger("destDimId");
-		
+
 		landingPos.x = nbt.getFloat("landingx");
 		landingPos.y = nbt.getFloat("landingy");
 		landingPos.z = nbt.getFloat("landingz");
+
+		NBTTagList stationList = nbt.getTagList("stationMapping", NBT.TAG_COMPOUND);
+
+		for(int i = 0; i < stationList.tagCount(); i++) {
+			NBTTagCompound tag = stationList.getCompoundTagAt(i);
+			int pos[];
+			pos = tag.getIntArray("pos");
+			int id = tag.getInteger("id");
+			landingLoc.put(id, new HashedBlockPosition(pos[0], pos[1], pos[2]));
+		}
 	}
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		super.setInventorySlotContents(slot, stack);
-		
+
 		//If the item in the slot is modified then reset dimid
 		if(stack != null)
 			destinationId = -1;
 	}
-	
+
 	public void setReturnPosition(Vector3F<Float> pos, int dimId) {
 		ItemStack stack = getStackInSlot(0);
 
