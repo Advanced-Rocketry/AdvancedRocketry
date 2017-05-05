@@ -322,22 +322,9 @@ public class XMLPlanetLoader {
 
 
 	public StellarBody readStar(Node planetNode) {
-		StellarBody star = new StellarBody();
+		StellarBody star = readSubStar(planetNode);
 		if(planetNode.hasAttributes()) {
-			Node nameNode = planetNode.getAttributes().getNamedItem("name");
-			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
-				star.setName(nameNode.getNodeValue());
-			}
-
-			nameNode = planetNode.getAttributes().getNamedItem("temp");
-
-			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
-				try {
-					star.setTemperature(Integer.parseInt(nameNode.getNodeValue()));
-				} catch (NumberFormatException e) {
-					AdvancedRocketry.logger.warn("Error Reading star " + star.getName());
-				}
-			}
+			Node nameNode;
 
 			nameNode = planetNode.getAttributes().getNamedItem("x");
 
@@ -378,6 +365,46 @@ public class XMLPlanetLoader {
 		star.setId(starId++);
 		return star;
 	}
+	
+	public StellarBody readSubStar(Node planetNode) {
+		StellarBody star = new StellarBody();
+		if(planetNode.hasAttributes()) {
+			Node nameNode = planetNode.getAttributes().getNamedItem("name");
+			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
+				star.setName(nameNode.getNodeValue());
+			}
+
+			nameNode = planetNode.getAttributes().getNamedItem("temp");
+
+			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
+				try {
+					star.setTemperature(Integer.parseInt(nameNode.getNodeValue()));
+				} catch (NumberFormatException e) {
+					AdvancedRocketry.logger.warn("Error Reading star " + star.getName());
+				}
+			}
+			
+			nameNode = planetNode.getAttributes().getNamedItem("size");
+			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
+				try {
+					star.setSize(Float.parseFloat(nameNode.getNodeValue()));
+				} catch (NumberFormatException e) {
+					AdvancedRocketry.logger.warn("Error Reading star " + star.getName());
+				}
+			}
+			
+			nameNode = planetNode.getAttributes().getNamedItem("seperation");
+			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
+				try {
+					star.setStarSeperation(Float.parseFloat(nameNode.getNodeValue()));
+				} catch (NumberFormatException e) {
+					AdvancedRocketry.logger.warn("Error Reading star " + star.getName());
+				}
+			}
+		}
+		
+		return star;
+	}
 
 	public DimensionPropertyCoupling readAllPlanets() {
 		DimensionPropertyCoupling coupling = new DimensionPropertyCoupling();
@@ -405,6 +432,10 @@ public class XMLPlanetLoader {
 				if(planetNode.getNodeName().equalsIgnoreCase("planet")) {
 					coupling.dims.addAll(readPlanetFromNode(planetNode, star));
 				}
+				if(planetNode.getNodeName().equalsIgnoreCase("star")) {
+					StellarBody star2 = readSubStar(planetNode);
+					star.addSubStar(star2);
+				}
 				planetNode = planetNode.getNextSibling();
 			}
 
@@ -421,8 +452,14 @@ public class XMLPlanetLoader {
 
 		for(StellarBody star : stars) {
 			outputString = outputString + "\t<star name=\"" + star.getName() + "\" temp=\"" + star.getTemperature() + "\" x=\"" + star.getPosX() 
-					+ "\" y=\"" + star.getPosZ() + "\" numPlanets=\"0\" numGasGiants=\"0\">\n";
+					+ "\" y=\"" + star.getPosZ() + "\" size=\"" + star.getSize() + "\" numPlanets=\"0\" numGasGiants=\"0\">\n";
 
+			for(StellarBody star2 : star.getSubStars()) {
+				outputString = outputString + "\t\t<star temp=\"" + star2.getTemperature() + 
+						"\" size=\"" + star2.getSize() + "\" seperation=\"" + star2.getStarSeperation() + "\" />\n";
+
+			}
+			
 			for(IDimensionProperties properties : star.getPlanets()) {
 				if(!properties.isMoon())
 					outputString = outputString + writePlanet((DimensionProperties)properties, 2);

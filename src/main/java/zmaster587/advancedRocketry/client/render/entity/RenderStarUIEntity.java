@@ -48,8 +48,9 @@ public class RenderStarUIEntity extends RenderPlanetUIEntity {
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 0, 0);
 		
-		GL11.glColor3ub((byte)(body.getColorRGB8() & 0xff), (byte)((body.getColorRGB8() >>> 8) & 0xff), (byte)((body.getColorRGB8() >>> 16) & 0xff));
-		//GL11.glColor4f();
+		GL11.glColor3d(body.getColor()[0], body.getColor()[1], body.getColor()[2]);
+		//GL11.glColor3ub((byte)(body.getColorRGB8() & 0xff), (byte)((body.getColorRGB8() >>> 8) & 0xff), (byte)((body.getColorRGB8() >>> 16) & 0xff));
+		//GlStateManager.color();
 		
 		buffer.startDrawingQuads();
 		RenderHelper.renderNorthFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1);

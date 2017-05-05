@@ -13,6 +13,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
@@ -84,12 +85,12 @@ public class TilePlanetaryHologram extends TileEntity implements IButtonInventor
 
 		for(EntityUIStar star : starEntities) star.setDead();
 		starEntities.clear();
-		
+
 		selectedPlanet = null;
 		centeredEntity = null;
 		//currentStarBody = null;
 		selectedId = -1;
-		
+
 
 		if(currentStar != null) {
 			currentStar.setDead();
@@ -100,7 +101,7 @@ public class TilePlanetaryHologram extends TileEntity implements IButtonInventor
 			backButton = null;
 		}
 	}
-	
+
 	public boolean isEnabled() {
 		boolean powered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 		return (!powered && state == RedstoneState.INVERTED) || (powered && state == RedstoneState.ON) || state == RedstoneState.OFF;
@@ -115,10 +116,10 @@ public class TilePlanetaryHologram extends TileEntity implements IButtonInventor
 	public void updateEntity() {
 		if(!worldObj.isRemote) {
 			if(isEnabled()) {
-				
+
 				if(onTime < 1)
 					onTime += .5f/getHologramSize();//0.02f;
-				
+
 				if(allowUpdate) {
 					for(EntityUIPlanet entity : entities) {
 						DimensionProperties properties = entity.getProperties();
@@ -131,6 +132,21 @@ public class TilePlanetaryHologram extends TileEntity implements IButtonInventor
 						for(EntityUIStar entity : starEntities) {
 							entity.setPosition(this.xCoord + .5 + getInterpHologramSize()*entity.getStarProperties().getPosX()/100f, this.yCoord + 1, this.zCoord + .5 + getInterpHologramSize()*entity.getStarProperties().getPosZ()/100f);
 							entity.setScale(getInterpHologramSize());
+						}
+					}
+					else {
+						if(!starEntities.isEmpty()) {
+							float phaseInc = 4*360/starEntities.size();
+							float phase = 0;
+							for(EntityUIStar entity : starEntities) {
+								double deltaX, deltaY;
+								deltaX = (entity.getStarProperties().getStarSeperation()*MathHelper.cos(phase)*0.01);
+								deltaY = (entity.getStarProperties().getStarSeperation()*MathHelper.sin(phase)*0.01);
+
+								entity.setPosition(xCoord + .5 + getInterpHologramSize()*deltaX, yCoord + 1, zCoord + .5 + getInterpHologramSize()*deltaY);
+								entity.setScale(getInterpHologramSize()*entity.getStarProperties().getSize());
+								phase += phaseInc;
+							}
 						}
 					}
 
@@ -243,8 +259,27 @@ public class TilePlanetaryHologram extends TileEntity implements IButtonInventor
 			else {
 				if(currentStarBody == null)
 					currentStarBody = DimensionManager.getSol();
-				currentStar = new EntityUIStar(worldObj, currentStarBody, this, this.xCoord + .5, this.yCoord + 1, this.zCoord + .5);
+				currentStar = new EntityUIStar(worldObj, currentStarBody, this, xCoord + .5, yCoord + 1, zCoord + .5);
 				this.worldObj.spawnEntityInWorld(currentStar);
+
+				//Spawn substars
+				if(currentStarBody.getSubStars() != null && !currentStarBody.getSubStars().isEmpty()) {
+					float phaseInc = 360/currentStarBody.getSubStars().size();
+					float phase = 0;
+					int count = 0;
+					Collection<StellarBody> starList = currentStarBody.getSubStars();
+					for(StellarBody body : starList) {
+
+						int deltaX, deltaY;
+						deltaX = (int)(body.getStarSeperation()*MathHelper.cos(phase)*0.05);
+						deltaY = (int)(body.getStarSeperation()*MathHelper.sin(phase)*0.05);
+						EntityUIStar entity = new EntityUIStar(worldObj, body, count++, this, xCoord + .5 + deltaX, yCoord + 1, zCoord + .5 + deltaY);
+
+						this.worldObj.spawnEntityInWorld(entity);
+						starEntities.add(entity);
+						phase += phaseInc;
+					}
+				}
 			}
 
 			for(IDimensionProperties properties : planetList) {
@@ -285,7 +320,7 @@ public class TilePlanetaryHologram extends TileEntity implements IButtonInventor
 		modules.add(targetGrav);
 		modules.add(new ModuleSlider(6, 60, 0, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
 		modules.add(redstoneControl);
-		
+
 		updateText();
 		return modules;
 	}
@@ -305,7 +340,7 @@ public class TilePlanetaryHologram extends TileEntity implements IButtonInventor
 	private float getInterpHologramSize() {
 		return getHologramSize()*onTime;
 	}
-	
+
 	@Override
 	public String getModularInventoryName() {
 		return "tile.planetHoloSelector.name";
@@ -396,7 +431,7 @@ public class TilePlanetaryHologram extends TileEntity implements IButtonInventor
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)STATEUPDATE));
 		}
 	}
-	
+
 	@Override
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
@@ -418,9 +453,8 @@ public class TilePlanetaryHologram extends TileEntity implements IButtonInventor
 	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		state.writeToNBT(compound);
-		
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);

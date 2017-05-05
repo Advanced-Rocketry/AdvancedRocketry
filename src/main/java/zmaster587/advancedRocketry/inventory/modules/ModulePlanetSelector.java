@@ -33,6 +33,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 
 public class ModulePlanetSelector extends ModuleContainerPan implements IButtonInventory {
@@ -111,7 +112,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			}
 		}
 	}
-	
+
 	public ModulePlanetSelector(int planetId, ResourceLocation backdrop, ISelectionNotify tile, IPlanetDefiner definer, boolean star) {
 		this(planetId, backdrop, tile, star);
 		this.planetDefiner = definer;
@@ -137,10 +138,10 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		Collection<StellarBody> stars = galaxy.getStars();
 
 		for(StellarBody star : stars) {
-			
+
 			if(planetDefiner != null && !planetDefiner.isStarKnown(star))
 				continue;
-			
+
 			int displaySize = (int)(planetSizeMultiplier*star.getDisplayRadius());
 			int offsetX = star.getPosX() + posX - displaySize/2; 
 			int offsetY = star.getPosZ() + posY - displaySize/2;
@@ -167,19 +168,43 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		int offsetY = posY - displaySize/2; 
 
 		ModuleButton button;
-		planetList.add(button = new ModuleButton(offsetX, offsetY, star.getId() + starIdOffset, "", this, new ResourceLocation[] { TextureResources.locationSunNew }, String.format("Name: %s\nNumber of Planets: %d",star.getName(), star.getNumPlanets()), displaySize, displaySize));
 
+		if(star.getSubStars() != null && !star.getSubStars().isEmpty()) {
+			float phaseInc = 360/star.getSubStars().size();
+			float phase = 0;
+			for(StellarBody star2 : star.getSubStars()) {
+				displaySize = (int)(planetSizeMultiplier*star2.getDisplayRadius());
+
+				int deltaX, deltaY;
+				deltaX = (int)(star2.getStarSeperation()*MathHelper.cos(phase)*0.5);
+				deltaY = (int)(star2.getStarSeperation()*MathHelper.sin(phase)*0.5);
+
+				planetList.add(button = new ModuleButton(offsetX + deltaX, offsetY + deltaY, star.getId() + starIdOffset, "", this, new ResourceLocation[] { TextureResources.locationSunNew }, String.format("Name: %s\nNumber of Planets: %d",star.getName(), star.getNumPlanets()), displaySize, displaySize));
+				button.setSound("buttonBlipA");
+				button.setBGColor(star2.getColorRGB8());
+				phase += phaseInc;
+			}
+		}
+		displaySize = (int)(planetSizeMultiplier*star.getDisplayRadius());
+		offsetX = posX - displaySize/2; 
+		offsetY = posY - displaySize/2; 
+		
+		planetList.add(button = new ModuleButton(offsetX, offsetY, star.getId() + starIdOffset, "", this, new ResourceLocation[] { TextureResources.locationSunNew }, String.format("Name: %s\nNumber of Planets: %d",star.getName(), star.getNumPlanets()), displaySize, displaySize));
 		button.setSound("buttonBlipA");
 		button.setBGColor(star.getColorRGB8());
-
 		renderPropertiesMap.put(star.getId() + starIdOffset, new PlanetRenderProperties(displaySize, offsetX, offsetY));
+		
+		
 		//prevMultiplier *= 0.25f;
+		displaySize = (int)(planetSizeMultiplier*100);
+		offsetX = posX - displaySize/2; 
+		offsetY = posY - displaySize/2;
 
 		for(IDimensionProperties properties : star.getPlanets()) {
-			
+
 			if(planetDefiner != null && !planetDefiner.isPlanetKnown(properties))
 				continue;
-			
+
 			if(!properties.isMoon())
 				renderPlanets((DimensionProperties)properties, offsetX + displaySize/2, offsetY + displaySize/2, displaySize, distanceZoomMultiplier,planetSizeMultiplier);
 		}

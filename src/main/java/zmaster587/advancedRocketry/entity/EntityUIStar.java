@@ -10,18 +10,33 @@ import zmaster587.advancedRocketry.tile.station.TilePlanetaryHologram;
 public class EntityUIStar extends EntityUIPlanet {
 	
 	StellarBody star;
+	int subStar = -1;
 	public final static int starIDoffset = 10000;
+	protected static final int subStarData = 4;
 	
 	public EntityUIStar(World worldIn, StellarBody properties, TilePlanetaryHologram tile, double x, double y, double z) {
 		this(worldIn);
 		setPosition(x, y, z);
 		setProperties(properties);
 		this.tile = tile;
+		subStar = -1;
+	}
+	
+	public EntityUIStar(World worldIn, StellarBody properties, int subStar, TilePlanetaryHologram tile, double x, double y, double z) {
+		this(worldIn, properties, tile, x,y,z);
+		this.dataWatcher.updateObject(subStarData, new Integer((this.subStar = subStar)));
+	}
+	
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		this.dataWatcher.addObject(subStarData, new Integer(-1));
 	}
 	
 	public EntityUIStar(World worldIn) {
 		super(worldIn);
 		setSize(0.2f, 0.2f);
+		subStar = -1;
 	}
 	
 	public void setProperties(StellarBody properties) {
@@ -53,6 +68,8 @@ public class EntityUIStar extends EntityUIPlanet {
 	public StellarBody getStarProperties() {
 		if((star == null && getPlanetID() != -1) || (star != null && getPlanetID() != star.getId())) {
 			star = DimensionManager.getInstance().getStar(getPlanetID());
+			if((subStar = this.dataWatcher.getWatchableObjectInt(subStarData)) != -1)
+				star = star.getSubStars().get(subStar);
 		}
 
 		return star;
