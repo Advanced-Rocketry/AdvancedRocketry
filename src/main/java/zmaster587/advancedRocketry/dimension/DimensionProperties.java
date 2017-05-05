@@ -137,7 +137,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	public static enum PlanetIcons {
 		EARTHLIKE(new ResourceLocation("advancedrocketry:textures/planets/Earthlike.png")),
-		LAVA(new ResourceLocation("advancedrocketry:textures/planets/lava.png")),
+		LAVA(new ResourceLocation("advancedrocketry:textures/planets/Lava.png")),
 		MARSLIKE(new ResourceLocation("advancedrocketry:textures/planets/marslike.png")),
 		MOON(new ResourceLocation("advancedrocketry:textures/planets/moon.png")),
 		WATERWORLD(new ResourceLocation("advancedrocketry:textures/planets/WaterWorld.png")),
