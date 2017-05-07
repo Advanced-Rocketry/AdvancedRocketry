@@ -195,7 +195,11 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 					modules.add(new ModuleScaledImage(baseX,baseY,sizeX,sizeY, zmaster587.libVulpes.inventory.TextureResources.starryBG));
 					modules.add(srcPlanetImg);
 
-					modules.add(new ModuleText(baseX + 4, baseY + 4, "Orbiting:", 0xFFFFFF));
+					
+					ModuleText text = new ModuleText(baseX + 4, baseY + 4, "Orbiting:", 0xFFFFFF);
+					text.setAlwaysOnTop(true);
+					modules.add(text);
+					
 					modules.add(srcPlanetText);
 
 					//Border
@@ -243,20 +247,14 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 					modules.add(warpFuel);
 
 					modules.add(new ModuleScaledImage(baseX,baseY,sizeX,sizeY, zmaster587.libVulpes.inventory.TextureResources.starryBG));
-					if(dimCache != null) {
-
-						if(worldObj.isRemote ) {
+					
+					ModuleText text = new ModuleText(baseX + 4, baseY + 4, "Dest:", 0xFFFFFF);
+					text.setAlwaysOnTop(true);
+					modules.add(text);
+					modules.add(dstPlanetText);
+					
+					if(dimCache != null && worldObj.isRemote) {
 							modules.add(dstPlanetImg);
-						}
-
-						modules.add(new ModuleText(baseX + 4, baseY + 4, "Dest:", 0xFFFFFF));
-						modules.add(dstPlanetText);
-
-
-					}
-					else {
-						modules.add(new ModuleText(baseX + 4, baseY + 4, "Dest:", 0xFFFFFF));
-						modules.add(dstPlanetText);
 					}
 
 
@@ -345,6 +343,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 
 				srcPlanetImg = new ModulePanetImage(baseX + 10,baseY + 10,sizeX - 20, location);
 				srcPlanetText = new ModuleText(baseX + 4, baseY + 56, "", 0xFFFFFF);
+				srcPlanetText.setAlwaysOnTop(true);
 				warpFuel = new ModuleText(baseX + 82, baseY + sizeY + 35, "", 0x1b1b1b);
 
 				//DEST planet
@@ -355,6 +354,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 
 				dstPlanetImg = new ModulePanetImage(baseX + 10,baseY + 10,sizeX - 20, location);
 				dstPlanetText = new ModuleText(baseX + 4, baseY + 56, "", 0xFFFFFF);
+				dstPlanetText.setAlwaysOnTop(true);
 
 			}
 
