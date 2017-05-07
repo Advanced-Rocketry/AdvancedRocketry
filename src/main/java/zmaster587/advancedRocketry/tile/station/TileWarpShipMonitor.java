@@ -235,16 +235,16 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 					warpFuel.setText(flag ? String.valueOf(warpCost) : "N/A");
 					modules.add(warpFuel);
 
+					if(dimCache != null && worldObj.isRemote) {
+						modules.add(dstPlanetImg);
+					}
+					
 					modules.add(new ModuleScaledImage(baseX,baseY,sizeX,sizeY, zmaster587.libVulpes.inventory.TextureResources.starryBG));
 					
 					ModuleText text = new ModuleText(baseX + 4, baseY + 4, "Dest:", 0xFFFFFF);
 					text.setAlwaysOnTop(true);
 					modules.add(text);
 					modules.add(dstPlanetText);
-					
-					if(dimCache != null && worldObj.isRemote) {
-							modules.add(dstPlanetImg);
-					}
 
 
 					//Border
