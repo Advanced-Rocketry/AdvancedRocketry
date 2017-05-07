@@ -1,14 +1,8 @@
 package zmaster587.advancedRocketry.tile;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import com.sun.org.apache.bcel.internal.generic.LAND;
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.Occurs;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,19 +12,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants.NBT;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.advancedRocketry.dimension.DimensionManager;
-import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.StationLandingLocation;
-import zmaster587.libVulpes.inventory.modules.IButtonInventory;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleButton;
-import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
