@@ -927,8 +927,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 
 	public void setBiomeEntries(List<BiomeEntry> biomes) {
-		allowedBiomes.clear();
-		allowedBiomes.addAll(biomes);
+		//If list is itself DO NOT CLEAR IT
+		if(biomes != allowedBiomes) {
+			allowedBiomes.clear();
+			allowedBiomes.addAll(biomes);
+		}
 	}
 
 	public void setTerraformedBiomes(List<Biome> biomes) {
