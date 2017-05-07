@@ -105,7 +105,10 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 				BlockPosition searchNextPosition = stackElement.getPositionAtOffset(dir2.offsetX, dir2.offsetY, dir2.offsetZ);
 
 				//Don't path areas we have already scanned
-				if(!graph.contains(searchNextPosition) && !addableBlocks.contains(searchNextPosition)) {
+				if(!graph.contains(searchNextPosition) && !addableBlocks.contains(searchNextPosition) && 
+						(contains(searchNextPosition.getPositionAtOffset(0, 1, 0)) || contains(searchNextPosition.getPositionAtOffset(0, -1, 0)) ||
+								contains(searchNextPosition.getPositionAtOffset(1, 0, 0)) || contains(searchNextPosition.getPositionAtOffset(-1, 0, 0)) ||
+								contains(searchNextPosition.getPositionAtOffset(0, 0, 1)) || contains(searchNextPosition.getPositionAtOffset(0, 0, -1)))) {
 
 					boolean sealed;
 
