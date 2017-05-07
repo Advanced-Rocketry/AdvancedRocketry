@@ -269,7 +269,7 @@ public class AdvancedRocketry {
 	final String ASTEROID = "Asteroid";
 	final String GAS_MINING = "GasMining";
 	final String PERFORMANCE = "Performance";
-	
+
 	public static CompatibilityMgr compat = new CompatibilityMgr();
 	public static Logger logger = LogManager.getLogger(Constants.modId);
 	private static Configuration config;
@@ -1525,7 +1525,7 @@ public class AdvancedRocketry {
 				logger.info("Advanced Planet Config file Found!  Copying to world specific directory");
 				try {
 					File dir = new File(localFile.getAbsolutePath().substring(0, localFile.getAbsolutePath().length() - localFile.getName().length()));
-					
+
 					//File cannot exist due to if check #42
 					if((dir.exists() || dir.mkdir()) && localFile.createNewFile()) {
 						char buffer[] = new char[1024];
@@ -1567,7 +1567,7 @@ public class AdvancedRocketry {
 			int numRandomGeneratedPlanets = 9;
 			int numRandomGeneratedGasGiants = 1;
 
-		
+
 			if(dimCouplingList != null) {
 				logger.info("Loading initial planet config!");
 
@@ -1682,15 +1682,15 @@ public class AdvancedRocketry {
 
 		//Attempt to load ore config from adv planet XML
 		if(dimCouplingList != null) {
-			
+
 			//Register new stars
 			for(StellarBody star : dimCouplingList.stars) {
 				if(DimensionManager.getInstance().getStar(star.getId()) == null)
 					DimensionManager.getInstance().addStar(star);
-				
+
 				DimensionManager.getInstance().getStar(star.getId()).subStars = star.subStars;
 			}
-			
+
 			for(DimensionProperties properties : dimCouplingList.dims) {
 
 				//Register dimensions loaded by other mods if not already loaded
@@ -1704,11 +1704,11 @@ public class AdvancedRocketry {
 						}
 					}
 				}
-				
+
 				//Overwrite with loaded XML
 				if(DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
 					DimensionProperties loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
-					
+
 					loadedProps.fogColor = properties.fogColor;
 					loadedProps.gravitationalMultiplier = properties.gravitationalMultiplier;
 					loadedProps.hasRings = properties.hasRings;
@@ -1720,7 +1720,7 @@ public class AdvancedRocketry {
 					loadedProps.setBiomeEntries(properties.getBiomes());
 					loadedProps.setAtmosphereDensityDirect(properties.getAtmosphereDensity());
 					loadedProps.setName(properties.getName());
-					
+
 					if(properties.isGasGiant()) loadedProps.setGasGiant();
 					if(!loadedProps.isMoon() && properties.isMoon()) loadedProps.setParentPlanet(properties.getParentProperties());
 					if(loadedProps.isMoon() && !properties.isMoon()) {
@@ -1740,8 +1740,8 @@ public class AdvancedRocketry {
 					}
 				}
 				//TODO: add properties fromXML
-				
-				
+
+
 				//Add artifacts if needed
 				if(DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
 					DimensionProperties loadedProps;
@@ -1759,7 +1759,7 @@ public class AdvancedRocketry {
 						loadedProps.oreProperties = properties.oreProperties;
 				}
 			}
-			
+
 			//Remove dimensions not in the XML
 			for(int i : DimensionManager.getInstance().getRegisteredDimensions()) {
 				boolean found = false;
@@ -1769,12 +1769,12 @@ public class AdvancedRocketry {
 						break;
 					}
 				}
-				
+
 				if(!found) {
 					DimensionManager.getInstance().deleteDimension(i);
 				}
 			}
-			
+
 			//Remove stars not in the XML
 			for(int i : new HashSet<Integer>(DimensionManager.getInstance().getStarIds())) {
 				boolean found = false;
@@ -1784,7 +1784,7 @@ public class AdvancedRocketry {
 						break;
 					}
 				}
-				
+
 				if(!found) {
 					DimensionManager.getInstance().removeStar(i);
 				}
@@ -1804,7 +1804,7 @@ public class AdvancedRocketry {
 
 	private List<DimensionProperties> generateRandomPlanets(StellarBody star, int numRandomGeneratedPlanets, int numRandomGeneratedGasGiants) {
 		List<DimensionProperties> dimPropList = new LinkedList<DimensionProperties>();
-		
+
 		Random random = new Random(System.currentTimeMillis());
 
 
@@ -1822,7 +1822,7 @@ public class AdvancedRocketry {
 					DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(star.getId(), properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
 					if(moonProperties == null)
 						continue;
-					
+
 					dimPropList.add(moonProperties);
 
 					moonProperties.setParentPlanet(properties);
@@ -1854,7 +1854,7 @@ public class AdvancedRocketry {
 				continue;
 
 			dimPropList.add(properties);
-			
+
 			if(properties.gravitationalMultiplier >= 1f) {
 				int numMoons = random.nextInt(4);
 
@@ -1870,7 +1870,7 @@ public class AdvancedRocketry {
 				}
 			}
 		}
-		
+
 		return dimPropList;
 	}
 
@@ -1885,7 +1885,8 @@ public class AdvancedRocketry {
 		((BlockSeal)AdvancedRocketryBlocks.blockPipeSealer).clearMap();
 		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 8000, "Dimensions including and after this number are allowed to be made into planets");
 
-		proxy.saveUILayout(config);
+		if(!zmaster587.advancedRocketry.api.Configuration.lockUI)
+			proxy.saveUILayout(config);
 	}
 
 	@SubscribeEvent
