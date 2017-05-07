@@ -1923,7 +1923,8 @@ public class AdvancedRocketry {
 		DimensionManager.getInstance().overworldProperties.resetProperties();
 		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 8000, "Dimensions including and after this number are allowed to be made into planets");
 
-		proxy.saveUILayout(config);
+		if(!zmaster587.advancedRocketry.api.Configuration.lockUI)
+			proxy.saveUILayout(config);
 	}
 
 	@SubscribeEvent
