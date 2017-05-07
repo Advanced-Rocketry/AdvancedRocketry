@@ -34,4 +34,9 @@ public class ItemJackHammer extends ItemTool {
     	return  state.getMaterial() == Material.IRON || state.getMaterial() == Material.ROCK || state.getMaterial() == MaterialGeode.geode  ? this.efficiencyOnProperMaterial : super.getStrVsBlock(stack, state);
     	   
     }
+    
+    public boolean canHarvestBlock(IBlockState blockIn)
+    {
+            return true;
+    }
 }
