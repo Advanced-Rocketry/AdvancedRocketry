@@ -249,7 +249,7 @@ public class AdvancedRocketry {
 	final String ASTEROID = "Asteroid";
 	final String GAS_MINING = "GasMining";
 	final String PERFORMANCE = "Performance";
-	
+
 	public static CompatibilityMgr compat = new CompatibilityMgr();
 	public static Logger logger = LogManager.getLogger(Constants.modId);
 	private static Configuration config;
@@ -1626,7 +1626,7 @@ public class AdvancedRocketry {
 		if(!zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.filePath) || resetFromXml) {
 			int numRandomGeneratedPlanets = 9;
 			int numRandomGeneratedGasGiants = 1;
-
+			
 			if(resetFromXml) {
 				zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
 				zmaster587.advancedRocketry.api.Configuration.MoonId = -1;
@@ -1775,6 +1775,7 @@ public class AdvancedRocketry {
 					}
 				}
 				
+
 				if(properties.oreProperties != null) {
 					DimensionProperties loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
 
@@ -1861,8 +1862,8 @@ public class AdvancedRocketry {
 		DimensionManager.getInstance().overworldProperties.resetProperties();
 		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 8000, "Dimensions including and after this number are allowed to be made into planets");
 
-
-		proxy.saveUILayout(config);
+		if(!zmaster587.advancedRocketry.api.Configuration.lockUI)
+			proxy.saveUILayout(config);
 	}
 
 	@SubscribeEvent
