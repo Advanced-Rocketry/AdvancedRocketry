@@ -248,16 +248,15 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 
 					modules.add(new ModuleScaledImage(baseX,baseY,sizeX,sizeY, zmaster587.libVulpes.inventory.TextureResources.starryBG));
 					
+					if(dimCache != null && worldObj.isRemote) {
+						modules.add(dstPlanetImg);
+					}
+					
 					ModuleText text = new ModuleText(baseX + 4, baseY + 4, "Dest:", 0xFFFFFF);
 					text.setAlwaysOnTop(true);
 					modules.add(text);
 					modules.add(dstPlanetText);
 					
-					if(dimCache != null && worldObj.isRemote) {
-							modules.add(dstPlanetImg);
-					}
-
-
 					//Border
 					modules.add(new ModuleScaledImage(baseX - 3,baseY,3,sizeY, TextureResources.verticalBar));
 					modules.add(new ModuleScaledImage(baseX + sizeX, baseY, -3,sizeY, TextureResources.verticalBar));
