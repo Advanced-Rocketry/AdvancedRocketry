@@ -12,7 +12,7 @@ public class EntityUIStar extends EntityUIPlanet {
 	StellarBody star;
 	int subStar = -1;
 	public final static int starIDoffset = 10000;
-	protected static final int subStarData = 4;
+	protected static final int subStarData = 5;
 	
 	public EntityUIStar(World worldIn, StellarBody properties, TilePlanetaryHologram tile, double x, double y, double z) {
 		this(worldIn);
