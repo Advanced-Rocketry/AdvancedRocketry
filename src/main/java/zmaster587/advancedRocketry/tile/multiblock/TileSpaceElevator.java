@@ -198,9 +198,9 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 	}
 
 	public boolean attemptLaunch() {
-		if(!hasEnergy(5000))
+		if(!isComplete() || !enabled || !hasEnergy(50000))
 			return false;
-		useEnergy(5000);
+		useEnergy(50000);
 		return true;
 	}
 	
