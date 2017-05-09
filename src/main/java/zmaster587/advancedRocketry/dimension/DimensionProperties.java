@@ -317,7 +317,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		starId = 0;
 		averageTemperature = 100;
 		hasRings = false;
-		harvestableAtmosphere.clear();
+		harvestableAtmosphere = new LinkedList<Fluid>();
 	}
 
 	public List<Fluid> getHarvestableGasses() {
