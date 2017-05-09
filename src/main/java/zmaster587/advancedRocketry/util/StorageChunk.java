@@ -18,6 +18,7 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.IStorageChunk;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
+import zmaster587.advancedRocketry.tile.multiblock.TileWarpCore;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
@@ -679,6 +680,19 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		return null;
 	}
 
+	public boolean hasWarpCore() {
+		Iterator<TileEntity> iterator = getTileEntityList().iterator();
+		while(iterator.hasNext()) {
+			TileEntity tile = iterator.next();
+
+			if(tile instanceof TileWarpCore) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	
 	/**
 	 * @return destination ID or -1 if none
 	 */

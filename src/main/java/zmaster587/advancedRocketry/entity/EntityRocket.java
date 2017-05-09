@@ -911,7 +911,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				thisDimId = object.getProperties().getParentProperties().getId();
 		}
 
-		if(finalDest != -1 && !DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, thisDimId)) {
+		if(finalDest != -1 && !storage.hasWarpCore() && !DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, thisDimId)) {
 			setError(LibVulpes.proxy.getLocalizedString("error.rocket.notSameSystem"));
 			return;
 		}
