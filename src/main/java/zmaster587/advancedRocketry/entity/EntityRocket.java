@@ -55,6 +55,8 @@ import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketPreLaunchEvent;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.StatsRocket;
+import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
+import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
@@ -64,6 +66,7 @@ import zmaster587.advancedRocketry.client.SoundRocketEngine;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
+import zmaster587.advancedRocketry.inventory.IPlanetDefiner;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
 import zmaster587.advancedRocketry.inventory.modules.ModuleStellarBackground;
@@ -107,7 +110,7 @@ import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.IconResource;
 import zmaster587.libVulpes.util.Vector3F;
 
-public class EntityRocket extends EntityRocketBase implements INetworkEntity, IModularInventory, IProgressBar, IButtonInventory, ISelectionNotify {
+public class EntityRocket extends EntityRocketBase implements INetworkEntity, IModularInventory, IProgressBar, IButtonInventory, ISelectionNotify, IPlanetDefiner {
 
 	//true if the rocket is on decent
 	private boolean isInOrbit;
@@ -272,9 +275,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 					if(obj != null) {
 						displayStr = "Station " + obj.getId();
-						
+
 						StationLandingLocation location = storage.getGuidanceComputer().getLandingLocation(obj.getId());
-						
+
 						if(location != null) {
 							displayStr = displayStr + "\nPad: " + location;
 						}
@@ -1361,7 +1364,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 						storage.getGuidanceComputer().setLandingLocation(uuid, location);
 				}
 			}
-			
+
 			StationLandingLocation location = storage.getGuidanceComputer().getLandingLocation(uuid);
 			landingPadDisplayText.setText(location != null ? location.toString() : "None Selected");
 		}
@@ -1461,9 +1464,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 				ModuleContainerPan pan = new ModuleContainerPan(25, 25, list2, new LinkedList<ModuleBase>(), null, 256, 256, 0, -48, 258, 256);
 				modules.add(pan);
-				
+
 				StationLandingLocation location = storage.getGuidanceComputer().getLandingLocation(uuid);
-	
+
 				landingPadDisplayText.setText(location != null ? location.toString() : "None Selected");
 				modules.add(landingPadDisplayText);
 			}
@@ -1471,7 +1474,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				DimensionProperties properties = DimensionManager.getEffectiveDimId(worldObj, this.getPosition());
 				while(properties.getParentProperties() != null) properties = properties.getParentProperties();
 
-				container = new ModulePlanetSelector(properties.getId(), zmaster587.libVulpes.inventory.TextureResources.starryBG, this, false);
+				if(storage.hasWarpCore())
+					container = new ModulePlanetSelector(properties.getId(), zmaster587.libVulpes.inventory.TextureResources.starryBG, this, this, true);
+				else
+					container = new ModulePlanetSelector(properties.getId(), zmaster587.libVulpes.inventory.TextureResources.starryBG, this, false);
 				container.setOffset(1000, 1000);
 				modules.add(container);
 			}
@@ -1576,5 +1582,15 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 	public LinkedList<IInfrastructure> getConnectedInfrastructure() {
 		return connectedInfrastructure;
+	}
+
+	@Override
+	public boolean isPlanetKnown(IDimensionProperties properties) {
+		return !Configuration.planetsMustBeDiscovered || DimensionManager.getInstance().knownPlanets.contains(properties.getId());
+	}
+
+	@Override
+	public boolean isStarKnown(StellarBody body) {
+		return true;
 	}
 }

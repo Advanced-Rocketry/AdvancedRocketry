@@ -102,6 +102,7 @@ tile.forceFieldProjector.name=Force Field Projector
 tile.gravityMachine.name=Gravity Controller
 tile.pipeSeal.name=Pipe Seal
 tile.spaceElevator.name=Space Elevator
+tile.beacon.name=Beacon
 
 tile.Dilithium.name=Dilithium Ore
 

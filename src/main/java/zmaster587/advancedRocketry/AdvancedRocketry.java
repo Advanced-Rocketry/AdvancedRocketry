@@ -65,6 +65,7 @@ import zmaster587.advancedRocketry.armor.ItemSpaceChest;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereVacuum;
 import zmaster587.advancedRocketry.backwardCompat.VersionCompat;
 import zmaster587.advancedRocketry.block.BlockAstroBed;
+import zmaster587.advancedRocketry.block.BlockBeacon;
 import zmaster587.advancedRocketry.block.BlockCharcoalLog;
 import zmaster587.advancedRocketry.block.BlockCrystal;
 import zmaster587.advancedRocketry.block.BlockDoor2;
@@ -556,6 +557,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockRailgun = new BlockMultiblockMachine(TileRailgun.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("railgun").setCreativeTab(tabAdvRocketry).setHardness(3f);
 
 		AdvancedRocketryBlocks.blockSpaceElevatorController = new BlockMultiblockMachine(TileSpaceElevator.class,  GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceElevatorController").setHardness(3f);
+		AdvancedRocketryBlocks.blockBeacon = new BlockBeacon(TileBeacon.class,  GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setUnlocalizedName("beacon").setHardness(3f);
 		
 		AdvancedRocketryBlocks.blockIntake = new BlockIntake(Material.IRON).setUnlocalizedName("gasIntake").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockPressureTank = new BlockPressurizedFluidTank(Material.IRON).setUnlocalizedName("pressurizedTank").setCreativeTab(tabAdvRocketry).setHardness(3f);
@@ -694,6 +696,7 @@ public class AdvancedRocketry {
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockForceFieldProjector.setRegistryName("forceFieldProjector"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockPipeSealer.setRegistryName("pipeSealer"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockSpaceElevatorController.setRegistryName("spaceElevatorController"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockBeacon.setRegistryName("beacon"));
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
 			LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockGravityMachine.setRegistryName("gravityMachine"));
@@ -887,6 +890,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileForceFieldProjector.class, "ARForceFieldProjector");
 		GameRegistry.registerTileEntity(TileSeal.class, "ARBlockSeal");
 		GameRegistry.registerTileEntity(TileSpaceElevator.class, "ARSpaceElevator");
+		GameRegistry.registerTileEntity(TileBeacon.class, "ARBeacon");
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
 			GameRegistry.registerTileEntity(TileGravityController.class, "ARGravityMachine");
@@ -1238,6 +1242,7 @@ public class AdvancedRocketry {
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileAtmosphereTerraformer(), (BlockTile)AdvancedRocketryBlocks.blockAtmosphereTerraformer);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileRailgun(), (BlockTile)AdvancedRocketryBlocks.blockRailgun);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileSpaceElevator(), (BlockTile)AdvancedRocketryBlocks.blockSpaceElevatorController);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileBeacon(), (BlockTile)AdvancedRocketryBlocks.blockBeacon);
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
 			((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileGravityController(), (BlockTile)AdvancedRocketryBlocks.blockGravityMachine);
@@ -1815,6 +1820,9 @@ public class AdvancedRocketry {
 
 		// make sure to set dim offset back to original to make things consistant
 		DimensionManager.dimOffset = dimOffset;
+		
+		DimensionManager.getInstance().knownPlanets.addAll(zmaster587.advancedRocketry.api.Configuration.initiallyKnownPlanets);
+		
 	}
 
 	private List<DimensionProperties> generateRandomPlanets(StellarBody star, int numRandomGeneratedPlanets, int numRandomGeneratedGasGiants) {
@@ -1899,7 +1907,9 @@ public class AdvancedRocketry {
 		DimensionManager.getInstance().overworldProperties.resetProperties();
 		((BlockSeal)AdvancedRocketryBlocks.blockPipeSealer).clearMap();
 		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 8000, "Dimensions including and after this number are allowed to be made into planets");
-
+		
+		DimensionManager.getInstance().knownPlanets.clear();
+		
 		if(!zmaster587.advancedRocketry.api.Configuration.lockUI)
 			proxy.saveUILayout(config);
 	}

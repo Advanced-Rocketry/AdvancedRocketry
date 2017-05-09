@@ -15,6 +15,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import scala.util.Random;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
@@ -29,6 +30,7 @@ import zmaster587.advancedRocketry.util.OreGenProperties;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.VulpineMath;
 import zmaster587.libVulpes.util.ZUtils;
 import net.minecraft.init.Blocks;
@@ -231,6 +233,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	private HashMap<Long,SatelliteBase> satallites;
 	private HashMap<Long,SatelliteBase> tickingSatallites;
 	private List<Fluid> harvestableAtmosphere;
+	private HashSet<HashedBlockPosition> beaconLocations;
 
 	public DimensionProperties(int id) {
 		name = "Temp";
@@ -252,6 +255,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		hasRings = false;
 		customIcon = "";
 		harvestableAtmosphere = new LinkedList<Fluid>();
+		beaconLocations = new HashSet<HashedBlockPosition>();
 	}
 
 	public DimensionProperties(int id ,String name) {
@@ -302,6 +306,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		averageTemperature = 100;
 		hasRings = false;
 		harvestableAtmosphere = new LinkedList<Fluid>();
+		beaconLocations = new HashSet<HashedBlockPosition>();
 	}
 
 	public List<Fluid> getHarvestableGasses() {
@@ -369,6 +374,28 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	public void setHasRings(boolean value) {
 		this.hasRings = value;
+	}
+	
+	//Adds a beacon location to the planet's surface
+	public void addBeaconLocation(World world, HashedBlockPosition pos) {
+		beaconLocations.add(pos);
+		DimensionManager.getInstance().knownPlanets.add(getId());
+		
+		//LAAZZY
+		if(!world.isRemote)
+			PacketHandler.sendToAll(new PacketDimInfo(getId(), this));
+	}
+	
+	//Removes a beacon location to the planet's surface
+	public void removeBeaconLocation(World world, HashedBlockPosition pos) {
+		beaconLocations.remove(pos);
+		
+		if(beaconLocations.isEmpty() && !Configuration.initiallyKnownPlanets.contains(getId()))
+			DimensionManager.getInstance().knownPlanets.remove(getId());
+		
+		//LAAZZY
+		if(!world.isRemote)
+			PacketHandler.sendToAll(new PacketDimInfo(getId(), this));
 	}
 
 	/**
@@ -1099,6 +1126,18 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 			allowedBiomes.addAll(getBiomesEntries(biomesList));
 		}
+		
+		if(nbt.hasKey("beaconLocations")) {
+			list = nbt.getTagList("beaconLocations", NBT.TAG_INT_ARRAY);
+			
+			for(int i = 0 ; i < list.tagCount(); i++) {
+				int[] location = list.getIntArrayAt(i);
+				beaconLocations.add(new HashedBlockPosition(location[0], location[1], location[2]));
+			}
+			DimensionManager.getInstance().knownPlanets.add(getId());
+		}
+		else
+			beaconLocations.clear();
 
 		//Load biomes
 		if(nbt.hasKey("biomesTerra")) {
@@ -1226,6 +1265,16 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			}
 			nbt.setTag("ringColor", list);
 		}
+		
+		if(!beaconLocations.isEmpty()) {
+			list = new NBTTagList();
+			
+			for(HashedBlockPosition pos : beaconLocations) {
+				list.appendTag(new NBTTagIntArray(new int[] {pos.x, pos.y, pos.z}));
+			}
+			nbt.setTag("beaconLocations", list);
+		}
+		
 
 		if(!allowedBiomes.isEmpty()) {
 			int biomeId[] = new int[allowedBiomes.size()];

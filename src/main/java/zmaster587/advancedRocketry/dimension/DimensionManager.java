@@ -10,14 +10,17 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
@@ -36,6 +39,7 @@ import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.network.PacketHandler;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DimensionType;
@@ -69,6 +73,7 @@ public class DimensionManager implements IGalaxy {
 	public static final int GASGIANT_DIMID_OFFSET = 0x100; //Offset by 256
 	private static long nextSatelliteId;
 	private static StellarBody sol;
+	public Set<Integer> knownPlanets;
 
 	//The default properties belonging to the overworld
 	public static DimensionProperties overworldProperties;
@@ -113,6 +118,7 @@ public class DimensionManager implements IGalaxy {
 		defaultSpaceDimensionProperties.orbitalDist = 1;
 
 		random = new Random(System.currentTimeMillis());
+		knownPlanets = new HashSet<Integer>();
 	}
 
 	/**
