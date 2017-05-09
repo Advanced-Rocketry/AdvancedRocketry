@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.event;
 
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -10,6 +11,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.ChunkEvent;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.cable.NetworkRegistry;
 import zmaster587.advancedRocketry.tile.cables.TilePipe;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -33,13 +35,18 @@ public class CableTickHandler {
 		Map map = event.getChunk().chunkTileEntityMap;
 		Iterator<Entry> iter = map.entrySet().iterator();
 
-		while(iter.hasNext()) {
-			Object obj = iter.next().getValue();
+		try {
+			while(iter.hasNext()) {
+				Object obj = iter.next().getValue();
 
-			if(obj instanceof TilePipe) {
-				((TilePipe)obj).markForUpdate();
+				if(obj instanceof TilePipe) {
+					((TilePipe)obj).markForUpdate();
+				}
 			}
+		} catch ( ConcurrentModificationException e) {
+			AdvancedRocketry.logger.warn("You have been visited by the rare pepe.. I mean error of pipes not loading, this is not good, some pipe systems may not work right away.  But it's better than a corrupt world");
 		}
+
 	}
 
 	@SubscribeEvent
