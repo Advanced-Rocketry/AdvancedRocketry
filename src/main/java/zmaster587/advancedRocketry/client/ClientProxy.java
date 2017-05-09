@@ -27,6 +27,7 @@ import zmaster587.advancedRocketry.client.render.RendererRocketBuilder;
 import zmaster587.advancedRocketry.client.render.RendererRocket;
 import zmaster587.advancedRocketry.client.render.RendererPipe;
 import zmaster587.advancedRocketry.client.render.entity.RenderButtonUIEntity;
+import zmaster587.advancedRocketry.client.render.entity.RenderElevatorCapsule;
 import zmaster587.advancedRocketry.client.render.entity.RenderPlanetUIEntity;
 import zmaster587.advancedRocketry.client.render.entity.RenderStarUIEntity;
 import zmaster587.advancedRocketry.client.render.entity.RendererItem;
@@ -46,8 +47,10 @@ import zmaster587.advancedRocketry.client.render.multiblocks.RendererCuttingMach
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererLathe;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererObservatory;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererPrecisionAssembler;
+import zmaster587.advancedRocketry.client.render.multiblocks.RendererSpaceElevator;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererWarpCore;
 import zmaster587.advancedRocketry.common.CommonProxy;
+import zmaster587.advancedRocketry.entity.EntityElevatorCapsule;
 import zmaster587.advancedRocketry.entity.EntityItemAbducted;
 import zmaster587.advancedRocketry.entity.EntityLaserNode;
 import zmaster587.advancedRocketry.entity.EntityRocket;
@@ -79,6 +82,7 @@ import zmaster587.advancedRocketry.tile.multiblock.TileGravityController;
 import zmaster587.advancedRocketry.tile.multiblock.TileObservatory;
 import zmaster587.advancedRocketry.tile.multiblock.TileAstrobodyDataProcessor;
 import zmaster587.advancedRocketry.tile.multiblock.TileRailgun;
+import zmaster587.advancedRocketry.tile.multiblock.TileSpaceElevator;
 import zmaster587.advancedRocketry.tile.multiblock.TileWarpCore;
 import zmaster587.advancedRocketry.tile.multiblock.energy.TileMicrowaveReciever;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileChemicalReactor;
@@ -129,6 +133,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser.class, new zmaster587.advancedRocketry.client.render.multiblocks.RenderLaser());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileRailgun.class, new RendererRailgun());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileGravityController.class, new RenderGravityMachine());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileSpaceElevator.class, new RendererSpaceElevator());
 		
 		RendererModelBlock blockRenderer = new RendererModelBlock();
 
@@ -150,6 +155,7 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityUIPlanet.class, new RenderPlanetUIEntity());
 		RenderingRegistry.registerEntityRenderingHandler(EntityUIStar.class, new RenderStarUIEntity());
 		RenderingRegistry.registerEntityRenderingHandler(EntityUIButton.class, new RenderButtonUIEntity());
+		RenderingRegistry.registerEntityRenderingHandler(EntityElevatorCapsule.class, new RenderElevatorCapsule());
 	}
 
 	@Override
@@ -292,5 +298,10 @@ public class ClientProxy extends CommonProxy {
 		configuration.get(CLIENT, "oxygenBarModeX", 1).set(RocketEventHandler.oxygenBar.getSizeModeX());
 		configuration.get(CLIENT, "oxygenBarModeY", 1).set(RocketEventHandler.oxygenBar.getSizeModeY());
 		configuration.save();
+	}
+	
+	@Override
+	public void displayMessage(String msg, int time) {
+		RocketEventHandler.setOverlay(Minecraft.getMinecraft().theWorld.getTotalWorldTime() + time, msg);
 	}
 }

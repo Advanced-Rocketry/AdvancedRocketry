@@ -66,6 +66,9 @@ public class RocketEventHandler extends Gui {
 
 	private static final int numTicksToDisplay = 100;
 
+	private static String displayString = "";
+	private static long lastDisplayTime = -1000;
+
 
 	@SubscribeEvent
 	public void onRocketDeorbit(RocketEvent.RocketDeOrbitingEvent event) {
@@ -93,11 +96,18 @@ public class RocketEventHandler extends Gui {
 	}
 
 	@SideOnly(Side.CLIENT)
+	public static void setOverlay(long endTime, String msg) {
+		displayString = msg;
+		lastDisplayTime = endTime;
+	}
+
+	@SideOnly(Side.CLIENT)
 	public static void destroyOrbitalTextures(World world) {
 		if(!(world.provider instanceof IPlanetaryProvider)) {
 			world.provider.setSkyRenderer(prevRenderHanlder);
 			prevRenderHanlder = null;
 		}
+		
 		if(earth != null)
 			GL11.glDeleteTextures(earth.getTextureId());
 		if(outerBounds != null)
@@ -394,7 +404,6 @@ public class RocketEventHandler extends Gui {
 					str = AtmosphereHandler.currentAtm.getDisplayMessage();
 				}
 
-
 				int screenX = event.resolution.getScaledWidth()/6 - fontRenderer.getStringWidth(str)/2;
 				int screenY = event.resolution.getScaledHeight()/18;
 
@@ -406,6 +415,27 @@ public class RocketEventHandler extends Gui {
 				Minecraft.getMinecraft().getTextureManager().bindTexture(TextureResources.progressBars);
 				this.drawTexturedModalRect(screenX + fontRenderer.getStringWidth(str)/2 -8, screenY - 16, 0, 156, 16, 16);
 
+				GL11.glPopMatrix();
+			}
+
+			//Draw arbitrary string
+			if(Minecraft.getMinecraft().theWorld.getTotalWorldTime() <= lastDisplayTime) {
+				FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+				GL11.glPushMatrix();
+				GL11.glScalef(2,2,2);
+				int loc = 0;
+				for(String str : displayString.split("\n")) {
+
+					int screenX = event.resolution.getScaledWidth()/4 - fontRenderer.getStringWidth(str)/2;
+					int screenY = event.resolution.getScaledHeight()/12 + loc*(event.resolution.getScaledHeight())/12;
+
+					
+
+					fontRenderer.drawStringWithShadow(str, screenX, screenY, 0xFF5656);
+					loc++;
+				}
+				
+				GL11.glColor3f(1f, 1f, 1f);
 				GL11.glPopMatrix();
 			}
 		}
@@ -429,7 +459,7 @@ public class RocketEventHandler extends Gui {
 						mouseY >= suitPanel.getY(j) && mouseY < suitPanel.getY(j) + suitPanel.sizeY) {
 					currentlySelectedBox = suitPanel;
 				}
-				
+
 				if(currentlySelectedBox == null && mouseX >= oxygenBar.getX(i) && mouseX < oxygenBar.getX(i) + oxygenBar.sizeX &&
 						mouseY >= oxygenBar.getY(j) && mouseY < oxygenBar.getY(j) + oxygenBar.sizeY) {
 					currentlySelectedBox = oxygenBar;
@@ -529,7 +559,7 @@ public class RocketEventHandler extends Gui {
 		int modeY = -1;
 		int sizeX, sizeY;
 		boolean isVisible = true;
-		
+
 		public GuiBox(int x, int y, int sizeX, int sizeY) {
 			this.setRawX(x);
 			this.setRawY(y);
@@ -538,7 +568,7 @@ public class RocketEventHandler extends Gui {
 		}
 
 		public int getX(int scaledW) { 
-			
+
 			if(modeX == 1)
 				return scaledW - getRawX();
 			else if(modeX == 0) {
@@ -548,7 +578,7 @@ public class RocketEventHandler extends Gui {
 		}
 
 		public int getY(int scaledH) { 
-			
+
 			if(modeY == 1)
 				return scaledH - getRawY();
 			else if(modeY == 0) {
@@ -634,7 +664,7 @@ public class RocketEventHandler extends Gui {
 		public void setSizeModeX(int int1) {
 			modeX = int1;
 		}
-		
+
 		public void setSizeModeY(int int1) {
 			modeY = int1;
 		}
@@ -642,7 +672,7 @@ public class RocketEventHandler extends Gui {
 		public int getSizeModeX() {
 			return modeX;
 		}
-		
+
 		public int getSizeModeY() {
 			return modeY;
 		}

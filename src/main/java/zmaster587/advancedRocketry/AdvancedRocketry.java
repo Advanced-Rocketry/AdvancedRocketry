@@ -100,6 +100,7 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.AtmosphereTypes;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
 import zmaster587.advancedRocketry.entity.EntityDummy;
+import zmaster587.advancedRocketry.entity.EntityElevatorCapsule;
 import zmaster587.advancedRocketry.entity.EntityItemAbducted;
 import zmaster587.advancedRocketry.entity.EntityLaserNode;
 import zmaster587.advancedRocketry.entity.EntityRocket;
@@ -587,7 +588,6 @@ public class AdvancedRocketry {
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockRailgun).setSideTexture("libvulpes:machineGeneric");
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockRailgun).setTopTexture("libvulpes:machineGeneric");
 
-
 		AdvancedRocketryBlocks.blockAtmosphereTerraformer = new BlockMultiblockMachine(TileAtmosphereTerraformer.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("atmosphereTerraformer").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockAtmosphereTerraformer).setFrontTexture("Advancedrocketry:machineElectrolzyer", "Advancedrocketry:machineElectrolzyer_active");
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockAtmosphereTerraformer).setSideTexture("libvulpes:machineGeneric");
@@ -643,6 +643,11 @@ public class AdvancedRocketry {
 		((BlockTile)AdvancedRocketryBlocks.blockSolarGenerator).setFrontTexture("Advancedrocketry:panelSide");
 		((BlockTile)AdvancedRocketryBlocks.blockSolarGenerator).setBottomTexture("Advancedrocketry:qcrucible_inner");
 
+		AdvancedRocketryBlocks.blockSpaceElevatorController = new BlockMultiblockMachine(TileSpaceElevator.class,  GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setBlockName("spaceElevatorController").setHardness(3f);
+		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockSpaceElevatorController).setFrontTexture("Advancedrocketry:controlPanel");
+		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockSpaceElevatorController).setSideTexture("libvulpes:machineGeneric");
+		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockSpaceElevatorController).setTopTexture("libvulpes:machineGeneric");
+		
 		AdvancedRocketryBlocks.blockIntake = new BlockIntake(Material.iron).setBlockTextureName("advancedrocketry:intake").setBlockName("gasIntake").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockPressureTank = new BlockPressurizedFluidTank(Material.iron).setBlockName("pressurizedTank").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockSolarPanel = new BlockSolarPanel(Material.iron).setBlockName("solarPanel").setCreativeTab(tabAdvRocketry).setHardness(3f);
@@ -698,7 +703,6 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockHydrogenFluid = new BlockFluid(AdvancedRocketryFluids.fluidHydrogen, Material.water).setBlockName("hydrogenFluidBlock").setCreativeTab(CreativeTabs.tabMisc);
 		AdvancedRocketryBlocks.blockFuelFluid = new BlockFluid(AdvancedRocketryFluids.fluidRocketFuel, Material.water).setBlockName("rocketFuelBlock").setCreativeTab(CreativeTabs.tabMisc);
 		AdvancedRocketryBlocks.blockNitrogenFluid = new BlockFluid(AdvancedRocketryFluids.fluidNitrogen, Material.water).setBlockName("nitrogenFluidBlock").setCreativeTab(CreativeTabs.tabMisc);
-
 
 		//Cables
 		//AdvancedRocketryBlocks.blockFluidPipe = new BlockLiquidPipe(Material.iron).setBlockName("liquidPipe").setCreativeTab(CreativeTabs.tabTransport);
@@ -786,6 +790,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockForceField, AdvancedRocketryBlocks.blockForceField.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockForceFieldProjector, AdvancedRocketryBlocks.blockForceFieldProjector.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockPipeSealer,AdvancedRocketryBlocks.blockPipeSealer.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockSpaceElevatorController, AdvancedRocketryBlocks.blockSpaceElevatorController.getUnlocalizedName());
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController) 
 			GameRegistry.registerBlock(AdvancedRocketryBlocks.blockGravityMachine,AdvancedRocketryBlocks.blockGravityMachine.getUnlocalizedName());
@@ -802,6 +807,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryItems.itemMisc = new ItemIngredient(2).setUnlocalizedName("advancedrocketry:miscpart").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemSawBlade = new ItemIngredient(1).setUnlocalizedName("advancedrocketry:sawBlade").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemSpaceStationChip = new ItemStationChip().setUnlocalizedName("stationChip").setTextureName("advancedRocketry:stationIdChip").setCreativeTab(tabAdvRocketry);
+		AdvancedRocketryItems.itemSpaceElevatorChip = new ItemSpaceElevatorChip().setUnlocalizedName("elevatorChip").setTextureName("advancedRocketry:elevatorChip").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemAsteroidChip = new ItemAsteroidChip().setUnlocalizedName("asteroidChip").setTextureName("advancedRocketry:stationIdChip").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemSpaceStation = new ItemPackedStructure().setUnlocalizedName("station").setTextureName("advancedRocketry:SpaceStation");
 		AdvancedRocketryItems.itemSmallAirlockDoor = new ItemDoor2(Material.rock).setUnlocalizedName("smallAirlock").setTextureName("advancedRocketry:smallAirlock").setCreativeTab(tabAdvRocketry);
@@ -898,6 +904,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerItem(AdvancedRocketryItems.itemUpgrade, AdvancedRocketryItems.itemUpgrade.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemAtmAnalyser, AdvancedRocketryItems.itemAtmAnalyser.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemBasicLaserGun, AdvancedRocketryItems.itemBasicLaserGun.getUnlocalizedName());
+		GameRegistry.registerItem(AdvancedRocketryItems.itemSpaceElevatorChip, AdvancedRocketryItems.itemSpaceElevatorChip.getUnlocalizedName());
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableTerraforming)
 			GameRegistry.registerItem(AdvancedRocketryItems.itemBiomeChanger, AdvancedRocketryItems.itemBiomeChanger.getUnlocalizedName());
@@ -913,7 +920,8 @@ public class AdvancedRocketry {
 		EntityRegistry.registerModEntity(EntityUIPlanet.class, "ARPlanetUIItem", 5, this, 64, 1, false);
 		EntityRegistry.registerModEntity(EntityUIButton.class, "ARPlanetUIButton", 6, this, 64, 20, false);
 		EntityRegistry.registerModEntity(EntityUIStar.class, "ARStarUIButton", 7, this, 64, 20, false);
-
+		EntityRegistry.registerModEntity(EntityElevatorCapsule.class, "ARSpaceElevatorCapsule", 8, this, 64, 20, true);
+		
 		//TileEntity Registration ---------------------------------------------------------------------------------------------
 		GameRegistry.registerTileEntity(TileRocketBuilder.class, "ARrocketBuilder");
 		GameRegistry.registerTileEntity(TileWarpCore.class, "ARwarpCore");
@@ -970,6 +978,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TilePlanetaryHologram.class, "ARplanetHoloSelector");
 		GameRegistry.registerTileEntity(TileForceFieldProjector.class, "ARForceFieldProjector");
 		GameRegistry.registerTileEntity(TileSeal.class, "ARBlockSeal");
+		GameRegistry.registerTileEntity(TileSpaceElevator.class, "ARSpaceElevator");
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
 			GameRegistry.registerTileEntity(TileGravityController.class, "ARGravityMachine");
@@ -1306,6 +1315,7 @@ public class AdvancedRocketry {
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileBiomeScanner(), (BlockTile)AdvancedRocketryBlocks.blockBiomeScanner);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileAtmosphereTerraformer(), (BlockTile)AdvancedRocketryBlocks.blockAtmosphereTerraformer);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileRailgun(), (BlockTile)AdvancedRocketryBlocks.blockRailgun);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileSpaceElevator(), (BlockTile)AdvancedRocketryBlocks.blockSpaceElevatorController);
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
 			((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileGravityController(), (BlockTile)AdvancedRocketryBlocks.blockGravityMachine);

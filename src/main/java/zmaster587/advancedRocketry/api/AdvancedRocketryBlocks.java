@@ -88,4 +88,5 @@ public class AdvancedRocketryBlocks {
 	public static Block blockForceFieldProjector;
 	public static Block blockGravityMachine;
 	public static Block blockPipeSealer;
+	public static Block blockSpaceElevatorController;
 }

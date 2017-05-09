@@ -101,6 +101,7 @@ tile.forceField.name=Force Field
 tile.forceFieldProjector.name=Force Field Projector
 tile.gravityMachine.name=Gravity Controller
 tile.pipeSeal.name=Pipe Seal
+tile.spaceElevatorController.name=Space Elevator
 
 tile.Dilithium.name=Dilithium Ore
 
@@ -164,6 +165,7 @@ item.pressureTank.0.name=Low Pressure Tank
 item.pressureTank.1.name=Pressure Tank
 item.pressureTank.2.name=High Pressure Tank
 item.pressureTank.3.name=Super High Pressure Tank
+item.elevatorChip.name=Space Elevator Chip
 
 material.Dilithium.name=Dilithium
 material.TitaniumAluminide.name=Titanium Aluminide
@@ -243,3 +245,12 @@ msg.observetory.text.observabledistance=Observable distance:
 msg.tooltip.data=Data
 msg.tooltip.asteroidselection=Asteroid Selection
 msg.label.name=Name
+msg.label.clear=Clear
+msg.label.noneSelected=No Destination Selected
+msg.label.selectDst=Select dst
+msg.spaceElevator.button.summon=Summon Capsule
+msg.spaceElevator.sameDimensionError=Cannot connect two elevators in the same dimension!
+msg.spaceElevator.noChipError=One or both of the space elevators has no chip installed
+msg.spaceElevator.newDstAdded=New Destination Added!
+msg.spaceElevator.ascentReady=Getting ready for ascent 
+msg.spaceElevator.label.chip=Elevator Chip
