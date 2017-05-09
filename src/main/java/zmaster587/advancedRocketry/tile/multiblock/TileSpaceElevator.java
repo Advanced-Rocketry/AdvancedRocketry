@@ -5,6 +5,8 @@ import io.netty.buffer.ByteBuf;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
@@ -60,11 +62,11 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 			},
 			{
 				{null,null,'*','*','*',null,null},
-				{null,'*','*',Blocks.AIR,'*','*',null},
+				{null,'*','*','*','*','*',null},
 				{'*','*',Blocks.AIR,Blocks.AIR,Blocks.AIR,'*','*'},
-				{'*',Blocks.AIR,Blocks.AIR,Blocks.AIR,Blocks.AIR,Blocks.AIR,'*'},
 				{'*','*',Blocks.AIR,Blocks.AIR,Blocks.AIR,'*','*'},
-				{null,'*','*',Blocks.AIR,'*','*',null},
+				{'*','*',Blocks.AIR,Blocks.AIR,Blocks.AIR,'*','*'},
+				{null,'*','*','*','*','*',null},
 				{null,null,'*','*','*',null,null},
 			},
 			{
@@ -115,6 +117,17 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 		landingPadDisplayText = new ModuleText(256, 16, "", 0x00FF00, 2f);
 		landingPadDisplayText.setColor(0x00ff00);
 		dimBlockPos = null;
+	}
+	
+	@Override
+	public void deconstructMultiBlock(World world, BlockPos destroyedPos,
+			boolean blockBroken, IBlockState state) {
+		super.deconstructMultiBlock(world, destroyedPos, blockBroken, state);
+		
+		Entity e = getCapsuleOnLine();
+		
+		if(e != null)
+			e.setDead();
 	}
 
 	@Override
