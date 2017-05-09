@@ -85,4 +85,8 @@ public class CommonProxy {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void displayMessage(String msg, int time) {
+		
+	}
 }

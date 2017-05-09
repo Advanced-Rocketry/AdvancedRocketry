@@ -90,6 +90,7 @@ public class RenderLaser extends Render implements IRenderFactory<EntityLaserNod
 		GL11.glEnable(GL11.GL_FOG);
 		GL11.glDepthMask(true);
 		GL11.glPopMatrix();
+		GlStateManager.color(1, 1, 1,1);
 
 	}
 	

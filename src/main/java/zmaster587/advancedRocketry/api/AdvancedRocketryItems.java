@@ -54,4 +54,5 @@ public class AdvancedRocketryItems {
 	public static Item itemBucketOxygen;
 	public static Item itemAstroBed;
 	public static Item itemBasicLaserGun;
+	public static Item itemSpaceElevatorChip;
 }

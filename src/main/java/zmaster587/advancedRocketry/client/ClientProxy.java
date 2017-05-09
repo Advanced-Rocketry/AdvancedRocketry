@@ -52,6 +52,7 @@ import zmaster587.advancedRocketry.client.render.RendererRocketBuilder;
 import zmaster587.advancedRocketry.client.render.RendererRocket;
 import zmaster587.advancedRocketry.client.render.RendererPipe;
 import zmaster587.advancedRocketry.client.render.entity.RenderButtonUIEntity;
+import zmaster587.advancedRocketry.client.render.entity.RenderElevatorCapsule;
 import zmaster587.advancedRocketry.client.render.entity.RenderPlanetUIEntity;
 import zmaster587.advancedRocketry.client.render.entity.RenderStarUIEntity;
 import zmaster587.advancedRocketry.client.render.entity.RendererItem;
@@ -69,6 +70,7 @@ import zmaster587.advancedRocketry.client.render.multiblocks.RendererObservatory
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererPrecisionAssembler;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererWarpCore;
 import zmaster587.advancedRocketry.common.CommonProxy;
+import zmaster587.advancedRocketry.entity.EntityElevatorCapsule;
 import zmaster587.advancedRocketry.entity.EntityItemAbducted;
 import zmaster587.advancedRocketry.entity.EntityLaserNode;
 import zmaster587.advancedRocketry.entity.EntityRocket;
@@ -142,6 +144,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser.class, new zmaster587.advancedRocketry.client.render.multiblocks.RenderLaser());
 		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.TileRailgun.class, new zmaster587.advancedRocketry.client.render.multiblocks.RendererRailgun());
 		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.TileGravityController.class, new zmaster587.advancedRocketry.client.render.multiblocks.RenderGravityMachine());
+		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.TileSpaceElevator.class, new zmaster587.advancedRocketry.client.render.multiblocks.RendererSpaceElevator());
 
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileModelRenderRotatable.class, modelBlock);
 
@@ -159,7 +162,7 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityUIPlanet.class, (IRenderFactory<EntityUIPlanet>)new RenderPlanetUIEntity(null));
 		RenderingRegistry.registerEntityRenderingHandler(EntityUIButton.class, (IRenderFactory<EntityUIButton>)new RenderButtonUIEntity(null));
 		RenderingRegistry.registerEntityRenderingHandler(EntityUIStar.class, (IRenderFactory<EntityUIStar>)new RenderStarUIEntity(null));
-		
+		RenderingRegistry.registerEntityRenderingHandler(EntityElevatorCapsule.class, (IRenderFactory<EntityElevatorCapsule>)new RenderElevatorCapsule(null));
 	}
 
 	@Override
@@ -255,6 +258,8 @@ public class ClientProxy extends CommonProxy {
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSatelliteIdChip, 0, new ModelResourceLocation("advancedrocketry:satelliteIdChip", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemPlanetIdChip, 0, new ModelResourceLocation("advancedrocketry:planetIdChip", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSpaceStationChip, 0, new ModelResourceLocation("advancedrocketry:asteroidChip", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSpaceElevatorChip, 0, new ModelResourceLocation("advancedrocketry:elevatorChip", "inventory"));
+		
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSawBlade, 0, new ModelResourceLocation("advancedrocketry:sawBladeIron", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemOreScanner, 0, new ModelResourceLocation("advancedrocketry:oreScanner", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSatellite, 0, new ModelResourceLocation("advancedrocketry:satellite", "inventory"));
@@ -483,5 +488,10 @@ public class ClientProxy extends CommonProxy {
 		configuration.get(CLIENT, "oxygenBarModeX", 1).set(RocketEventHandler.oxygenBar.getSizeModeX());
 		configuration.get(CLIENT, "oxygenBarModeY", 1).set(RocketEventHandler.oxygenBar.getSizeModeY());
 		configuration.save();
+	}
+	
+	@Override
+	public void displayMessage(String msg, int time) {
+		RocketEventHandler.setOverlay(Minecraft.getMinecraft().theWorld.getTotalWorldTime() + time, msg);
 	}
 }
