@@ -168,6 +168,12 @@ public class TilePipe extends TileEntity {
 						} else if(pipe.getNetworkID() != networkID)
 							mergeNetworks(pipe.getNetworkID(), networkID);
 					}
+					else if(pipe.destroyed) {
+						getNetworkHandler().removeNetworkByID(pipe.networkID);
+
+						onPlaced();
+						markDirty();
+					}
 					else if(isInitialized()) {
 						pipe.initialize(networkID);
 					}
