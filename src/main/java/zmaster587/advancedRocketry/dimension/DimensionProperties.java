@@ -17,6 +17,7 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
+import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
@@ -36,6 +37,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -46,6 +48,8 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 
 public class DimensionProperties implements Cloneable, IDimensionProperties {
 
@@ -226,7 +230,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	//Satallites
 	private HashMap<Long,SatelliteBase> satallites;
 	private HashMap<Long,SatelliteBase> tickingSatallites;
-
+	private List<Fluid> harvestableAtmosphere;
 
 	public DimensionProperties(int id) {
 		name = "Temp";
@@ -247,6 +251,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		isGasGiant = false;
 		hasRings = false;
 		customIcon = "";
+		harvestableAtmosphere = new LinkedList<Fluid>();
 	}
 
 	public DimensionProperties(int id ,String name) {
@@ -296,8 +301,13 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		starId = 0;
 		averageTemperature = 100;
 		hasRings = false;
+		harvestableAtmosphere.clear();
 	}
 
+	public List<Fluid> getHarvestableGasses() {
+		return harvestableAtmosphere;
+	}
+	
 	public List<ItemStack> getRequiredArtifacts() {
 		return requiredArtifacts;
 	}
@@ -1167,6 +1177,21 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				}
 			}
 		}
+		
+		if(isGasGiant) {
+			NBTTagList fluidList = nbt.getTagList("fluids", NBT.TAG_STRING);
+			getHarvestableGasses().clear();
+			
+			for(int i = 0; i < fluidList.tagCount(); i++) {
+				Fluid f = FluidRegistry.getFluid(fluidList.getStringTagAt(i));
+				if(f != null)
+				getHarvestableGasses().add(f);
+			}
+			
+			//Do not allow empty atmospheres, at least not yet
+			if(getHarvestableGasses().isEmpty())
+				getHarvestableGasses().addAll(AtmosphereRegister.getInstance().getHarvestableGasses());
+		}
 	}
 
 	public void writeToNBT(NBTTagCompound nbt) {
@@ -1258,6 +1283,16 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				allSatalliteNbt.setTag(entry.getKey().toString(), satalliteNbt);
 			}
 			nbt.setTag("satallites", allSatalliteNbt);
+		}
+		
+		if(isGasGiant) {
+			NBTTagList fluidList = new NBTTagList();
+			
+			for(Fluid f : getHarvestableGasses()) {
+				fluidList.appendTag(new NBTTagString(f.getName()));
+			}
+			
+			nbt.setTag("fluids", fluidList);
 		}
 
 	}

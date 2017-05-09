@@ -16,6 +16,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -150,6 +152,15 @@ public class XMLPlanetLoader {
 						AdvancedRocketry.logger.warn("Invalid number of floats specified for fog color (Required 3, comma sperated)"); //TODO: more detailed error msg
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid fog color specified"); //TODO: more detailed error msg
+				}
+			}
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("gas")) {
+				Fluid f = FluidRegistry.getFluid(planetPropertyNode.getTextContent());
+				
+				if(f == null)
+					AdvancedRocketry.logger.warn( "\"" + planetPropertyNode.getTextContent() + "\" is not a valid fluid"); //TODO: more detailed error msg
+				else {
+					properties.getHarvestableGasses().add(f);
 				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("skycolor")) {

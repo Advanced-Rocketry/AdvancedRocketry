@@ -220,7 +220,17 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				break;
 			}
 		}
-		atmText.setText(AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId).getLocalizedName(new FluidStack(AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId), 1)));
+		
+		
+		DimensionProperties props = DimensionManager.getEffectiveDimId(worldObj, this.getPosition());
+		if(props.isGasGiant()) {
+			try {
+				atmText.setText(props.getHarvestableGasses().get(gasId).getLocalizedName(new FluidStack(props.getHarvestableGasses().get(gasId), 1)));
+			} catch (IndexOutOfBoundsException e) {
+				gasId = 0;
+				atmText.setText(props.getHarvestableGasses().get(gasId).getLocalizedName(new FluidStack(props.getHarvestableGasses().get(gasId), 1)));
+			}
+		}
 		modules.add(new ModuleButton(170, 114, 1, "", this, zmaster587.libVulpes.inventory.TextureResources.buttonLeft, 5, 8));
 		modules.add(atmText);
 		modules.add(new ModuleButton(240, 114, 2, "", this, zmaster587.libVulpes.inventory.TextureResources.buttonRight,  5, 8));
