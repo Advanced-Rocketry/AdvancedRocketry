@@ -7,6 +7,7 @@ import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
@@ -59,11 +60,11 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 			},
 			{
 				{null,null,'*','*','*',null,null},
-				{null,'*','*',Blocks.air,'*','*',null},
+				{null,'*','*','*','*','*',null},
 				{'*','*',Blocks.air,Blocks.air,Blocks.air,'*','*'},
-				{'*',Blocks.air,Blocks.air,Blocks.air,Blocks.air,Blocks.air,'*'},
 				{'*','*',Blocks.air,Blocks.air,Blocks.air,'*','*'},
-				{null,'*','*',Blocks.air,'*','*',null},
+				{'*','*',Blocks.air,Blocks.air,Blocks.air,'*','*'},
+				{null,'*','*','*','*','*',null},
 				{null,null,'*','*','*',null,null},
 			},
 			{
@@ -126,6 +127,18 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 		return "tile.spaceElevator.name";
 	}
 
+	@Override
+	public void deconstructMultiBlock(World world, int destroyedX,
+			int destroyedY, int destroyedZ, boolean blockBroken) {
+		super.deconstructMultiBlock(world, destroyedX, destroyedY, destroyedZ,
+				blockBroken);
+		
+		Entity e = getCapsuleOnLine();
+		
+		if(e != null)
+			e.setDead();
+	}
+	
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		
