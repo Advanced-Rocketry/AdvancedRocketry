@@ -66,7 +66,6 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 		destinationDimId = 0;
 		created = false;
 		knownPlanetList = new HashSet<Integer>();
-		knownPlanetList.addAll(Configuration.initiallyKnownPlanets);
 		angularVelocity = new double[3];
 		rotation = new double[3];
 	}
@@ -696,7 +695,7 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 
 	@Override
 	public boolean isPlanetKnown(IDimensionProperties properties) {
-		return !Configuration.planetsMustBeDiscovered || knownPlanetList.contains(properties.getId());
+		return !Configuration.planetsMustBeDiscovered || knownPlanetList.contains(properties.getId()) || zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().knownPlanets.contains(properties.getId());
 	}
 
 	@Override

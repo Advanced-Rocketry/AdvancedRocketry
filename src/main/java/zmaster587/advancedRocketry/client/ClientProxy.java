@@ -134,6 +134,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileRailgun.class, new RendererRailgun());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileGravityController.class, new RenderGravityMachine());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSpaceElevator.class, new RendererSpaceElevator());
+		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.TileBeacon.class, new zmaster587.advancedRocketry.client.render.multiblocks.RenderBeacon());
 		
 		RendererModelBlock blockRenderer = new RendererModelBlock();
 

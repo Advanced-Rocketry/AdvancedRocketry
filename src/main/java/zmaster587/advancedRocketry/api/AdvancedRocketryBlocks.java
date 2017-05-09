@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.api;
 
+import zmaster587.libVulpes.block.BlockTile;
 import net.minecraft.block.Block;
 
 /**
@@ -89,4 +90,5 @@ public class AdvancedRocketryBlocks {
 	public static Block blockGravityMachine;
 	public static Block blockPipeSealer;
 	public static Block blockSpaceElevatorController;
+	public static Block blockBeacon;
 }

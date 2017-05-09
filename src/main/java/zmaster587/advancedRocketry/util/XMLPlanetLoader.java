@@ -497,7 +497,7 @@ public class XMLPlanetLoader {
 				(properties.customIcon.isEmpty() ? "" : " customIcon=\"" + properties.customIcon + "\"") + ">\n";
 
 
-		outputString = outputString + tabLen + "\t<isKnown>" + Configuration.initiallyKnownPlanets.contains(properties) + "</isKnown>\n";	
+		outputString = outputString + tabLen + "\t<isKnown>" + Configuration.initiallyKnownPlanets.contains(properties.getId()) + "</isKnown>\n";	
 		if(properties.hasRings) {
 			outputString = outputString + tabLen + "\t<hasRings>true</hasRings>\n";
 			outputString = outputString + tabLen + "\t<ringColor>" + properties.ringColor[0] + "," + properties.ringColor[1] + "," + properties.ringColor[2] + "</ringColor>\n";
