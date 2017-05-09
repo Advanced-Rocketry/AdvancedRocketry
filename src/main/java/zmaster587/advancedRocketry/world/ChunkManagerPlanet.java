@@ -68,6 +68,9 @@ public class ChunkManagerPlanet extends BiomeProvider {
 		this.genBiomes = agenlayer[0];
 		this.biomeIndexLayer = agenlayer[1];
 
+		ReflectionHelper.setPrivateValue(BiomeProvider.class, this, this.genBiomes, "genBiomes", "field_76944_d");
+		ReflectionHelper.setPrivateValue(BiomeProvider.class, this, this.biomeIndexLayer, "biomeIndexLayer", "field_76945_e");
+		
 		fBiomeCache = ReflectionHelper.findField(BiomeCache.class, "cache", "field_76841_d");
 		fBiomeCache.setAccessible(true);
 
