@@ -34,6 +34,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
 
 public class EntityStationDeployedRocket extends EntityRocket {
 
@@ -219,7 +220,17 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				break;
 			}
 		}
-		atmText.setText(AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId).getLocalizedName());
+		
+		
+		DimensionProperties props = DimensionManager.getEffectiveDimId(worldObj, (int)posX, (int)posZ);
+		if(props.isGasGiant()) {
+			try {
+				atmText.setText(props.getHarvestableGasses().get(gasId).getLocalizedName(new FluidStack(props.getHarvestableGasses().get(gasId), 1)));
+			} catch (IndexOutOfBoundsException e) {
+				gasId = 0;
+				atmText.setText(props.getHarvestableGasses().get(gasId).getLocalizedName(new FluidStack(props.getHarvestableGasses().get(gasId), 1)));
+			}
+		}
 		modules.add(new ModuleButton(170, 114, 1, "", this, zmaster587.libVulpes.inventory.TextureResources.buttonLeft, 5, 8));
 		modules.add(atmText);
 		modules.add(new ModuleButton(240, 114, 2, "", this, zmaster587.libVulpes.inventory.TextureResources.buttonRight,  5, 8));

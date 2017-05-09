@@ -1805,6 +1805,13 @@ public class AdvancedRocketry {
 					loadedProps.setName(properties.getName());
 					
 					if(properties.isGasGiant()) loadedProps.setGasGiant();
+					
+					//Register gasses if needed
+					if(!properties.getHarvestableGasses().isEmpty() && properties.getHarvestableGasses() != loadedProps.getHarvestableGasses()) {
+						loadedProps.getHarvestableGasses().clear();
+						loadedProps.getHarvestableGasses().addAll(properties.getHarvestableGasses());
+					}
+					
 					if(!loadedProps.isMoon() && properties.isMoon()) loadedProps.setParentPlanet(properties.getParentProperties());
 					if(loadedProps.isMoon() && !properties.isMoon()) {
 						loadedProps.getParentProperties().removeChild(loadedProps.getId());
@@ -1822,7 +1829,6 @@ public class AdvancedRocketry {
 						loadedProps.customIcon = properties.customIcon;
 					}
 				}
-				
 				
 				//Add artifacts if needed
 				if(DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
