@@ -624,7 +624,9 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	public int extractData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {
 		int amt = 0;
 		for(TileDataBus tile : getDataBus()) {
-			amt += tile.extractData(maxAmount, type, dir, commit);
+			int dataAmt = tile.extractData(maxAmount, type, dir, commit);
+			amt += dataAmt;
+			maxAmount -= dataAmt;
 		}
 		return amt;
 	}
