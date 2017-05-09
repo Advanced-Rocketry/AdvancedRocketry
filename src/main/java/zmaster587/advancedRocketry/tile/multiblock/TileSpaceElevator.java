@@ -250,10 +250,10 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 			capsule.rotationYaw = 180;
 			break;
 		case SOUTH:
-			capsule.rotationYaw = 270;
+			capsule.rotationYaw = 90;
 			break;
 		case NORTH:
-			capsule.rotationYaw = 90;
+			capsule.rotationYaw = 270;
 			break;
 		default:
 			capsule.rotationYaw = 0;
@@ -354,7 +354,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 
 	public double getLandingLocationX() {
 		EnumFacing facing = RotatableBlock.getFront(worldObj.getBlockState(getPos()));
-		return getPos().getX() + facing.getFrontOffsetX()*-3 + facing.getFrontOffsetZ() + 0.5;
+		return getPos().getX() + facing.getFrontOffsetX()*3 - facing.getFrontOffsetZ() + 0.5;
 
 	}
 
@@ -376,10 +376,10 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 			capsule.rotationYaw = 180;
 			break;
 		case SOUTH:
-			capsule.rotationYaw = 270;
+			capsule.rotationYaw = 90;
 			break;
 		case NORTH:
-			capsule.rotationYaw = 90;
+			capsule.rotationYaw = 270;
 			break;
 		default:
 			capsule.rotationYaw = 0;
