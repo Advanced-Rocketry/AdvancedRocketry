@@ -274,12 +274,15 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 		}
 	}
 
+	@Override
+	public AxisAlignedBB getRenderBoundingBox() {
+		return getEntityBoundingBox().addCoord(posX, 2000, posZ);
+	}
 
 	@Override
 	public void onEntityUpdate() {
 		// TODO Auto-generated method stub
 		super.onEntityUpdate();
-		ignoreFrustumCheck = true;
 
 		if(isAscending()) {
 

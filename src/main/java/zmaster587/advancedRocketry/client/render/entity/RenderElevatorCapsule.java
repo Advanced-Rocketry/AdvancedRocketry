@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -29,7 +30,7 @@ public class RenderElevatorCapsule extends Render<EntityElevatorCapsule> impleme
 	private static WavefrontObject sphere;
 	public ResourceLocation capsuleTexture =  new ResourceLocation("advancedRocketry:textures/models/spaceElevatorCapsule.png");
 
-	RenderLaser laser;
+	
 	static {
 
 		try {
@@ -43,7 +44,6 @@ public class RenderElevatorCapsule extends Render<EntityElevatorCapsule> impleme
 
 	public RenderElevatorCapsule(RenderManager renderManager) {
 		super(renderManager);
-		laser = new RenderLaser(1, new float[] { 0,0 , 0, 0}, new float[] { 1, 1 , 0, 0.11f} );
 	}
 
 	@Override
@@ -56,11 +56,17 @@ public class RenderElevatorCapsule extends Render<EntityElevatorCapsule> impleme
 	protected ResourceLocation getEntityTexture(EntityElevatorCapsule entity) {
 		return capsuleTexture;
 	}
+	@Override
+	public boolean shouldRender(EntityElevatorCapsule livingEntity,
+			ICamera camera, double camX, double camY, double camZ) {
+		// TODO Auto-generated method stub
+		//return super.shouldRender(livingEntity, camera, camX, camY, camZ);
+		return true;
+	}
 
 	@Override
 	public void doRender(EntityElevatorCapsule entity, double x, double y, double z,
 			float entityYaw, float partialTicks) {
-		laser.doRender(entity, x - 0.5, y+2.5, z - 0.5, entityYaw, partialTicks);
 
 		
 		GL11.glPushMatrix();
@@ -71,46 +77,6 @@ public class RenderElevatorCapsule extends Render<EntityElevatorCapsule> impleme
 
 		if(entity.isInMotion())
 			sphere.renderOnly("Door");
-
-
-		//Render Beads
-		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_FOG);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDepthMask(false);
-
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
-		GlStateManager.color(1, 1 , 1 , 0.11f);
-
-		double position = (System.currentTimeMillis() % 16000)/200f;
-
-		for(int i = 0 ; i < 10; i++) {
-			for(float radius = 0.25F; radius < 1.25; radius += .25F) {
-
-				RenderHelper.renderCube(buffer, -radius, -radius + position + i*80 + 4, -radius, radius, radius + position + i*80 + 4, radius);
-
-			}
-		}
-		for(int i = 1 ; i < 11; i++) {
-			for(float radius = 0.25F; radius < 1.25; radius += .25F) {
-
-				RenderHelper.renderCube(buffer, -radius, -radius - position + i*80 + 4, -radius, radius, radius - position + i*80 + 4, radius);
-
-			}
-		}
-
-		Tessellator.getInstance().draw();
-
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_FOG);
-		GL11.glDepthMask(true);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		GL11.glPopMatrix();
 
