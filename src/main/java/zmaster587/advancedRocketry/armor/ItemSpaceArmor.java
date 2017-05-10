@@ -89,7 +89,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IProtect
 			else
 			{
 				NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag("display");
-				return nbttagcompound1 == null ? 10511680 : (nbttagcompound1.hasKey("color", 3) ? nbttagcompound1.getInteger("color") : 10511680);
+				return nbttagcompound1 == null ? 0xFFFFFF : (nbttagcompound1.hasKey("color", 3) ? nbttagcompound1.getInteger("color") : 0xFFFFFF);
 			}
 		}
 	}
