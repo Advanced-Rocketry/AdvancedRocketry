@@ -268,7 +268,8 @@ public class AdvancedRocketry {
 	public static Logger logger = LogManager.getLogger(Constants.modId);
 	private static Configuration config;
 	private static final String BIOMECATETORY = "Biomes";
-	String[] sealableBlockWhiteList, breakableTorches, harvestableGasses, entityList, geodeOres, orbitalLaserOres;;
+	String[] sealableBlockWhiteList, breakableTorches, harvestableGasses, entityList, geodeOres, orbitalLaserOres,liquidRocketFuel;
+
 
 	public MaterialRegistry materialRegistry = new MaterialRegistry(); 
 
@@ -316,7 +317,8 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.terraformSpeed = config.get(Configuration.CATEGORY_GENERAL, "terraformMult", 1f, "Multplier for terraforming speed").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.terraformRequiresFluid = config.get(Configuration.CATEGORY_GENERAL, "TerraformerRequiresFluids", true).getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.terraformliquidRate = config.get(Configuration.CATEGORY_GENERAL, "TerraformerFluidConsumeRate", 40, "how many millibuckets/t are required to keep the terraformer running").getInt();
-
+		liquidRocketFuel = config.get(ROCKET, "rocketFuels", new String[] {"rocketfuel"}, "List of fluid names for fluids that can be used as rocket fuel").getStringList();
+		
 		zmaster587.advancedRocketry.api.Configuration.canPlayerRespawnInSpace = config.get(Configuration.CATEGORY_GENERAL, "allowPlanetRespawn", false, "If true players will respawn near beds on planets IF the spawn location is in a breathable atmosphere").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.solarGeneratorMult = config.get(Configuration.CATEGORY_GENERAL, "solarGeneratorMultiplier", 1, "Amount of power per tick the solar generator should produce").getInt();
 		zmaster587.advancedRocketry.api.Configuration.enableGravityController = config.get(Configuration.CATEGORY_GENERAL, "enableGravityMachine", true, "If false the gravity controller cannot be built or used").getBoolean();
@@ -1370,7 +1372,6 @@ public class AdvancedRocketry {
 		FMLCommonHandler.instance().bus().register(SpaceObjectManager.getSpaceManager());
 
 		PacketHandler.init();
-		FuelRegistry.instance.registerFuel(FuelType.LIQUID, AdvancedRocketryFluids.fluidRocketFuel, 1);
 
 		GameRegistry.registerWorldGenerator(new OreGenerator(), 100);
 
@@ -1393,6 +1394,21 @@ public class AdvancedRocketry {
 		net.minecraftforge.common.DimensionManager.registerProviderType(zmaster587.advancedRocketry.api.Configuration.spaceDimId, WorldProviderSpace.class, true);
 		net.minecraftforge.common.DimensionManager.registerDimension(zmaster587.advancedRocketry.api.Configuration.spaceDimId,zmaster587.advancedRocketry.api.Configuration.spaceDimId);
 
+		//Register fuels
+		logger.info("Start registering liquid rocket fuels");
+		for(String str : liquidRocketFuel) {
+			Fluid fluid = FluidRegistry.getFluid(str);
+			
+			if(fluid != null) {
+				logger.info("Registering fluid "+ str + " as rocket fuel");
+				FuelRegistry.instance.registerFuel(FuelType.LIQUID, fluid, 1f);
+			}
+			else
+				logger.warn("Fluid name" + str  + " is not a registered fluid!");
+		}
+		logger.info("Finished registering liquid rocket fuels");
+		liquidRocketFuel = null; //clean up
+		
 		//Register Whitelisted Sealable Blocks
 
 		logger.info("Start registering sealable blocks");
