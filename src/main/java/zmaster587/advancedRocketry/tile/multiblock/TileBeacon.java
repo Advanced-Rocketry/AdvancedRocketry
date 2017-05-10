@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
 import net.minecraft.init.Blocks;
+import net.minecraft.util.AxisAlignedBB;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -66,6 +67,12 @@ public class TileBeacon extends TileMultiPowerConsumer {
 			else
 				props.removeBeaconLocation(worldObj,new BlockPosition(xCoord, yCoord, zCoord));
 		}
+	}
+	
+	@Override
+	public AxisAlignedBB getRenderBoundingBox() {
+
+		return AxisAlignedBB.getBoundingBox(xCoord-5, yCoord, zCoord-5, xCoord + 5, yCoord + 5, zCoord + 5);
 	}
 
 }

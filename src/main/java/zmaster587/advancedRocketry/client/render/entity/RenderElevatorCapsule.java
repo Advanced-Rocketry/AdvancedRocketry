@@ -58,50 +58,7 @@ public class RenderElevatorCapsule extends Render {
 		if(entity.isInMotion())
 			sphere.renderOnly("Door");
 
-
-		//Render Beads
-		Tessellator buffer = Tessellator.instance;
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_FOG);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDepthMask(false);
-
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-
-		buffer.startDrawingQuads();
-		GL11.glColor4f(1, 1 , 1 , 0.11f);
-
-		double position = (System.currentTimeMillis() % 16000)/200f;
-
-		for(int i = 0 ; i < 10; i++) {
-			for(float radius = 0.25F; radius < 1.25; radius += .25F) {
-
-				RenderHelper.renderCubeWithUV(buffer, -radius, -radius + position + i*80 + 4f, -radius, radius, radius + position + i*80 + 4f, radius,0,0,0,0);
-
-			}
-		}
-		for(int i = 1 ; i < 11; i++) {
-			for(float radius = 0.25F; radius < 1.25; radius += .25F) {
-
-				RenderHelper.renderCubeWithUV(buffer, -radius, -radius - position + i*80 + 4, -radius, radius, radius - position + i*80 + 4, radius, 0,0,0,0);
-
-			}
-		}
-
-		buffer.draw();
-
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_FOG);
-		GL11.glDepthMask(true);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
 		GL11.glPopMatrix();
-
-
-
 	}
 
 
