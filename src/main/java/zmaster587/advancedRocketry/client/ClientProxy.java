@@ -226,6 +226,8 @@ public class ClientProxy extends CommonProxy {
 			FxGravityEffect fx = new FxGravityEffect(world, x, y, z, motionX, motionY, motionZ);
 			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 		}
+		else
+			world.spawnParticle(particle, x, y, z, motionX, motionY, motionZ);
 	}
 
 
