@@ -101,12 +101,8 @@ tile.forceField.name=Force Field
 tile.forceFieldProjector.name=Force Field Projector
 tile.gravityMachine.name=Gravity Controller
 tile.pipeSeal.name=Pipe Seal
-<<<<<<< HEAD
 tile.spaceElevatorController.name=Space Elevator
-=======
-tile.spaceElevator.name=Space Elevator
 tile.beacon.name=Beacon
->>>>>>> 48b638e... Add Beacon
 
 tile.Dilithium.name=Dilithium Ore
 

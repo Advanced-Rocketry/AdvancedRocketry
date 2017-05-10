@@ -124,7 +124,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 
 	@Override
 	public String getMachineName() {
-		return "tile.spaceElevator.name";
+		return "tile.spaceElevatorController.name";
 	}
 
 	@Override
