@@ -386,6 +386,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			PacketHandler.sendToAll(new PacketDimInfo(getId(), this));
 	}
 	
+	public HashSet<HashedBlockPosition> getBeacons() {
+		return beaconLocations;
+	}
+	
 	//Removes a beacon location to the planet's surface
 	public void removeBeaconLocation(World world, HashedBlockPosition pos) {
 		beaconLocations.remove(pos);

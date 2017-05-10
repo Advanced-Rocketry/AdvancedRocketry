@@ -344,7 +344,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 
 		double capsulePosX = getLandingLocationX();
 		double capsulePosZ = getLandingLocationZ();
-		for (EntityElevatorCapsule e :worldObj.getEntitiesWithinAABB(EntityElevatorCapsule.class, new AxisAlignedBB(capsulePosX - 1, getPos().getY() - 1, capsulePosZ - 1, capsulePosX + 1, EntityElevatorCapsule.MAX_HEIGHT, capsulePosZ + 1))) {
+		for (EntityElevatorCapsule e :worldObj.getEntitiesWithinAABB(EntityElevatorCapsule.class, new AxisAlignedBB(capsulePosX - 3, getPos().getY() - 1, capsulePosZ - 3, capsulePosX + 3, EntityElevatorCapsule.MAX_HEIGHT, capsulePosZ + 3))) {
 			if(!e.isInMotion() && !e.isDead)
 				capsule = e;
 		}

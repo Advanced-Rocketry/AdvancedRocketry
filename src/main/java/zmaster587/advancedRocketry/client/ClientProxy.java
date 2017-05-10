@@ -239,6 +239,7 @@ public class ClientProxy extends CommonProxy {
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSatellitePowerSource, 1, new ModelResourceLocation("advancedrocketry:advancedSolarPanel", "inventory"));
 
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemLens, 0, new ModelResourceLocation("advancedrocketry:basicLens", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBeaconFinder, 0, new ModelResourceLocation("advancedrocketry:beaconFinder", "inventory"));
 
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemWafer, 0, new ModelResourceLocation("advancedrocketry:siliconWafer", "inventory"));
 
