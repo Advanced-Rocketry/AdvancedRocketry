@@ -15,6 +15,7 @@ import zmaster587.libVulpes.util.BlockPosition;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -27,6 +28,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class ItemBeaconFinder extends Item implements IArmorComponent {
 
+	ResourceIcon icon;
+	
 	@Override
 	public void onTick(World world, EntityPlayer player, ItemStack armorStack,
 			IInventory modules, ItemStack componentStack) {
@@ -50,7 +53,7 @@ public class ItemBeaconFinder extends Item implements IArmorComponent {
 	
 	@Override
 	public boolean isAllowedInSlot(ItemStack componentStack, int targetSlot) {
-		return targetSlot == 1;
+		return targetSlot == 0;
 	}
 	
 	@Override
@@ -95,7 +98,10 @@ public class ItemBeaconFinder extends Item implements IArmorComponent {
 
 	@Override
 	public ResourceIcon getComponentIcon(ItemStack armorStack) {
-		return null;
+		if(icon == null)
+			this.icon = new ResourceIcon(TextureMap.locationItemsTexture, this.getIcon(armorStack, 0));
+		
+		return this.icon;
 	}
 
 }

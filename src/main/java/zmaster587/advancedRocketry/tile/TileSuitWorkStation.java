@@ -123,7 +123,8 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 			inventory.setInventorySlotContents(slot, contents);
 			
 		}
-		else if(inventory.getStackInSlot(0) != null && inventory.getStackInSlot(0).getItem() instanceof IModularArmor) {
+		else if(inventory.getStackInSlot(0) != null && inventory.getStackInSlot(0).getItem() instanceof IModularArmor &&
+				slot - 1 < ((IModularArmor)inventory.getStackInSlot(0).getItem()).getNumSlots(inventory.getStackInSlot(0))) {
 			//TODO
 			if(contents != null && contents.getItem() instanceof IArmorComponent)
 				((IModularArmor)inventory.getStackInSlot(0).getItem()).addArmorComponent(worldObj, inventory.getStackInSlot(0), contents, slot - 1);
