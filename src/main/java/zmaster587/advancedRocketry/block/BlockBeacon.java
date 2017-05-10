@@ -24,7 +24,7 @@ public class BlockBeacon extends BlockMultiblockMachine {
 	public BlockBeacon(Class<? extends TileMultiBlock> tileClass, int guiId) {
 		super(tileClass, guiId);
 	}
-	
+
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block block,
 			int meta) {
@@ -34,15 +34,16 @@ public class BlockBeacon extends BlockMultiblockMachine {
 		}
 		super.breakBlock(world, x, y, z, block, meta);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void randomDisplayTick(World world, int x,
 			int y, int z, Random random) {
 
-		ForgeDirection dir = RotatableBlock.getFront(world.getBlockMetadata(x, y, z));
-        for(int i = 0; i < 10; i++)
-        AdvancedRocketry.proxy.spawnParticle("reddust", world,  x - dir.offsetX + random.nextDouble(), y + 5 - world.rand.nextDouble(), z - dir.offsetZ + random.nextDouble(), 0, 0, 0);
-	}
-    
+		if(world.getTileEntity(x, y, z) instanceof TileBeacon && ((TileBeacon)world.getTileEntity(x, y, z)).getMachineEnabled()) {
+			ForgeDirection dir = RotatableBlock.getFront(world.getBlockMetadata(x, y, z));
+			for(int i = 0; i < 10; i++)
+				AdvancedRocketry.proxy.spawnParticle("reddust", world,  x - dir.offsetX + random.nextDouble(), y + 5 - world.rand.nextDouble(), z - dir.offsetZ + random.nextDouble(), 0, 0, 0);
+		}
+	}   
 }
