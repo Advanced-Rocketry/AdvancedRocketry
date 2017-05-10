@@ -914,7 +914,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				thisDimId = object.getProperties().getParentProperties().getId();
 		}
 
-		if(finalDest != -1 && !storage.hasWarpCore() && !DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, thisDimId)) {
+		if(finalDest != -1 && (!storage.hasWarpCore() || DimensionManager.getInstance().getDimensionProperties(finalDest).getStarId() != DimensionManager.getInstance().getDimensionProperties(thisDimId).getStarId()) && !DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, thisDimId)) {
 			setError(LibVulpes.proxy.getLocalizedString("error.rocket.notSameSystem"));
 			return;
 		}
@@ -1475,7 +1475,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				while(properties.getParentProperties() != null) properties = properties.getParentProperties();
 
 				if(storage.hasWarpCore())
-					container = new ModulePlanetSelector(properties.getId(), zmaster587.libVulpes.inventory.TextureResources.starryBG, this, this, true);
+					container = new ModulePlanetSelector(properties.getStarId(), zmaster587.libVulpes.inventory.TextureResources.starryBG, this, this, true);
 				else
 					container = new ModulePlanetSelector(properties.getId(), zmaster587.libVulpes.inventory.TextureResources.starryBG, this, false);
 				container.setOffset(1000, 1000);
