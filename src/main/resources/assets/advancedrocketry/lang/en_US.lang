@@ -180,6 +180,8 @@ container.satellite=Satellite Bay
 container.monitoringstation=Monitoring Station
 container.satelliteMonitor=Satellite Terminal
 
+enchantment.spaceBreathing=Airtight Seal
+
 data.undefined.name=Some Random Data
 data.distance.name=Distance
 data.humidity.name=Humidity

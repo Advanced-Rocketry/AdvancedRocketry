@@ -1,14 +1,19 @@
 package zmaster587.advancedRocketry.atmosphere;
 
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
 import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
 import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
+import zmaster587.advancedRocketry.entity.EntityElevatorCapsule;
 import zmaster587.advancedRocketry.network.PacketOxygenState;
 import zmaster587.libVulpes.network.PacketHandler;
 
@@ -18,9 +23,9 @@ import zmaster587.libVulpes.network.PacketHandler;
  */
 public class AtmosphereVacuum extends AtmosphereType {
 
-	
+
 	public static int damageValue;
-	
+
 	public AtmosphereVacuum() {
 		super(true, false, "vacuum");
 	}
@@ -35,7 +40,7 @@ public class AtmosphereVacuum extends AtmosphereType {
 			}
 		}
 	}
-	
+
 	@Override
 	public String getDisplayMessage() {
 		return "Warning: No Oxygen detected!";
@@ -52,10 +57,29 @@ public class AtmosphereVacuum extends AtmosphereType {
 		ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
 		return (player instanceof EntityPlayer && ((EntityPlayer)player).capabilities.isCreativeMode) 
-				|| player.getRidingEntity() instanceof EntityRocketBase ||
-				helm != null && helm.hasCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null) && helm.getCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null).protectsFromSubstance(this, helm, true) &&
-				chest != null && chest.hasCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null) && chest.getCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null).protectsFromSubstance(this, chest, true) &&
-				leg != null && leg.hasCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null) && leg.getCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null).protectsFromSubstance(this, leg, true) &&
-				feet != null && feet.hasCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null) && feet.getCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null).protectsFromSubstance(this, feet, true);
+				|| player.getRidingEntity() instanceof EntityRocketBase || player.getRidingEntity() instanceof EntityElevatorCapsule ||
+				protectsFrom(helm) && protectsFrom(leg) && protectsFrom(feet) && protectsFrom(chest);
+		}
+
+	public boolean protectsFrom(ItemStack stack) {
+
+		if(stack == null)
+			return false;
+		
+		//Check for enchantment
+		boolean isEnchanted = false;
+		NBTTagList enchList = stack.getEnchantmentTagList();
+		if(enchList != null) {
+			for(int i = 0 ; i < enchList.tagCount(); i++) {
+				NBTTagCompound compound = enchList.getCompoundTagAt(i);
+				isEnchanted = compound.getShort("id") == Enchantment.getEnchantmentID(AdvancedRocketryAPI.enchantmentSpaceProtection);
+				if(isEnchanted)
+					break;
+			}
+		}
+
+
+		return isEnchanted || (stack != null && stack.hasCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null) &&
+				stack.getCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null).protectsFromSubstance(this, stack, true));
 	}
 }
