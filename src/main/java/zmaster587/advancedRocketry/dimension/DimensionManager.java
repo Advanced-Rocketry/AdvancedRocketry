@@ -690,13 +690,17 @@ public class DimensionManager implements IGalaxy {
 	 */
 	public boolean areDimensionsInSamePlanetMoonSystem(int destinationDimId,
 			int dimension) {
-		
+		//This is a mess, clean up later
 		if(dimension == SpaceObjectManager.WARPDIMID || destinationDimId == SpaceObjectManager.WARPDIMID)
 			return false;
 		
 		DimensionProperties properties = getDimensionProperties(dimension);
+		DimensionProperties properties2 = getDimensionProperties(destinationDimId);
+		
 		while(properties.getParentProperties() != null) properties = properties.getParentProperties();
-		return areDimensionsInSamePlanetMoonSystem(properties, destinationDimId);
+		while(properties2.getParentProperties() != null) properties2 = properties2.getParentProperties();
+		
+		return areDimensionsInSamePlanetMoonSystem(properties, destinationDimId) || areDimensionsInSamePlanetMoonSystem(properties2, dimension);
 	}
 
 	private boolean areDimensionsInSamePlanetMoonSystem(DimensionProperties properties, int id) {
