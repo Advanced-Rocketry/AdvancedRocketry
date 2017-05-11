@@ -603,7 +603,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			}
 		}
 
-		boolean enabled = clickablePlanetList != null && !clickablePlanetList.isEnabled();
+		boolean enabled = clickablePlanetList != null && clickablePlanetList.isEnabled();
 
 		int offX = 0, offY = 0;
 		
@@ -623,7 +623,8 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		else
 			clickablePlanetList.setOffset2(0, 64);
 		
-		//clickablePlanetList.setEnabled(enabled);
+		clickablePlanetList.setEnabled(enabled);
+		bgTexture.setEnabled(enabled);
 	}
 
 	@Override
