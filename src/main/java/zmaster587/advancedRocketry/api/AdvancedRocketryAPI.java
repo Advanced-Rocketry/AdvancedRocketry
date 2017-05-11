@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.api;
 
+import net.minecraft.enchantment.Enchantment;
 import zmaster587.advancedRocketry.api.atmosphere.IAtmosphereSealHandler;
 import zmaster587.advancedRocketry.api.dimension.solar.IGalaxy;
 
@@ -14,4 +15,5 @@ public class AdvancedRocketryAPI
     public static ISpaceObjectManager spaceObjectManager;
 	public static IGalaxy dimensionManager;
 	public static IGravityManager gravityManager;
+	public static Enchantment enchantmentSpaceProtection;
 }
