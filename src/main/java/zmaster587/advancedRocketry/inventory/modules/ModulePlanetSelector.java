@@ -117,7 +117,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		//renderPlanetarySystem(properties, center, center, 3f);
 		if(FMLCommonHandler.instance().getSide().isClient()) {
 			
-			bgTexture = new ModuleImage(0, 54, zmaster587.libVulpes.inventory.TextureResources.buttonScan[0], 128,256);
+			bgTexture = new ModuleImage(0, 54, zmaster587.libVulpes.inventory.TextureResources.buttonScan[0], 128, 210);
 			
 			staticModuleList.add(bgTexture);
 			
