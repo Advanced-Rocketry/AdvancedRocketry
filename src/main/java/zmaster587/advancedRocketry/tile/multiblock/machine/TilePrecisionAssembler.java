@@ -74,6 +74,8 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemBiomeChanger), 1000, 1, smallBattery, advancedCircuit, "plateTin", trackingCircuit,  userInterface);
 		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, biomeChanger, 1000, 1, new NumberedOreDictStack("stickCopper", 2), "stickTitanium", new NumberedOreDictStack("waferSilicon", 2), advancedCircuit);
 		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryBlocks.blockLens,1,0), 100, 1, new ItemStack(Blocks.glass, 3), new NumberedOreDictStack("itemLens", 3), "stickIron");
+		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemSpaceElevatorChip,1,0), 100, 1, trackingCircuit, AdvancedRocketryItems.itemSpaceStationChip);
+		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemBeaconFinder,1,0), 100, 1, trackingCircuit, new ItemStack(AdvancedRocketryItems.itemUpgrade,1,4));
 		
 	}
 	
