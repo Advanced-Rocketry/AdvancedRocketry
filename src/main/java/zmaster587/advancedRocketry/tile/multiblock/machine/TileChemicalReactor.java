@@ -21,6 +21,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.LibVulpes;
@@ -61,10 +62,10 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 		for(ResourceLocation key : Item.REGISTRY.getKeys()) {
 			Item item = Item.REGISTRY.getObject(key);
 			
-			if(item instanceof ItemArmor) {
+			if(item instanceof ItemArmor && !(item instanceof ItemSpaceArmor)) {
 				ItemStack enchanted = new ItemStack(item);
 				enchanted.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
-				RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, item);
+				RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, item, "gemDiamond");
 			}
 		}
 	}
