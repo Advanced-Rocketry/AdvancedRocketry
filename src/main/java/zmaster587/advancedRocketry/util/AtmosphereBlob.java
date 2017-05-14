@@ -68,7 +68,10 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 		if(blobHandler.canFormBlob()) {
 
-			if(!this.contains(blockPos)) {
+			if(!this.contains(blockPos) &&
+					(this.graph.size() == 0 || contains(blockPos.getPositionAtOffset(0, 1, 0)) || contains(blockPos.getPositionAtOffset(0, -1, 0)) ||
+							contains(blockPos.getPositionAtOffset(1, 0, 0)) || contains(blockPos.getPositionAtOffset(-1, 0, 0)) ||
+							contains(blockPos.getPositionAtOffset(0, 0, 1)) || contains(blockPos.getPositionAtOffset(0, 0, -1)))) {
 				if(!executing) {
 					this.nearbyBlobs = otherBlobs;
 					this.blockPos = blockPos;
@@ -105,10 +108,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 				BlockPosition searchNextPosition = stackElement.getPositionAtOffset(dir2.offsetX, dir2.offsetY, dir2.offsetZ);
 
 				//Don't path areas we have already scanned
-				if(!graph.contains(searchNextPosition) && !addableBlocks.contains(searchNextPosition) && 
-						(contains(searchNextPosition.getPositionAtOffset(0, 1, 0)) || contains(searchNextPosition.getPositionAtOffset(0, -1, 0)) ||
-								contains(searchNextPosition.getPositionAtOffset(1, 0, 0)) || contains(searchNextPosition.getPositionAtOffset(-1, 0, 0)) ||
-								contains(searchNextPosition.getPositionAtOffset(0, 0, 1)) || contains(searchNextPosition.getPositionAtOffset(0, 0, -1)))) {
+				if(!graph.contains(searchNextPosition) && !addableBlocks.contains(searchNextPosition)) {
 
 					boolean sealed;
 
