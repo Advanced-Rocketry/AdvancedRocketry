@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -65,7 +66,12 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 			if(item instanceof ItemArmor && !(item instanceof ItemSpaceArmor)) {
 				ItemStack enchanted = new ItemStack(item);
 				enchanted.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
-				RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, item, "gemDiamond");
+				
+				if(((ItemArmor)item).getEquipmentSlot() == EntityEquipmentSlot.CHEST)
+					RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, item, "gemDiamond", new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 3));
+				else
+					RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, item, "gemDiamond");
+				
 			}
 		}
 	}

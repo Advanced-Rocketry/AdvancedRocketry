@@ -15,8 +15,10 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
+import zmaster587.advancedRocketry.api.armor.IFillableArmor;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.armor.ItemSpaceChest;
+import zmaster587.advancedRocketry.util.ItemAirUtils;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
@@ -51,7 +53,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 			return super.fill(resource, doFill);
 		return 0;
 	}
-	
+
 	@Override
 	public boolean canFill(Fluid fluid) {
 		return fluid == AdvancedRocketryFluids.fluidOxygen || fluid == AdvancedRocketryFluids.fluidHydrogen;
@@ -68,16 +70,25 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 			for( Object player : this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos, pos.add(1,2,1)))) {
 				ItemStack stack = ((EntityPlayer)player).getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 
-				//Check for O2 fill
-				if(stack != null && stack.getItem() instanceof ItemSpaceArmor) {
-					FluidStack fluidStack = this.drain(1, false);
+				if(stack != null) {
+					IFillableArmor fillable = null;
 
-					if(((ItemSpaceChest)stack.getItem()).getAirRemaining(stack) < ((ItemSpaceChest)stack.getItem()).getMaxAir(stack) &&
-							fluidStack != null && fluidStack.getFluid() == AdvancedRocketryFluids.fluidOxygen && fluidStack.amount > 0)  {
-						this.drain(1, true);
-						((ItemSpaceChest)stack.getItem()).increment(stack, 100);
-						
-						return true;
+					if(stack.getItem() instanceof ItemSpaceArmor)
+						fillable = (IFillableArmor)stack.getItem();
+					else if(ItemAirUtils.INSTANCE.isStackValidAirContainer(stack))
+						fillable = new ItemAirUtils.ItemAirWrapper(stack);
+					
+					//Check for O2 fill
+					if(fillable != null ) {
+						FluidStack fluidStack = this.drain(1, false);
+
+						if(fillable.getAirRemaining(stack) < fillable.getMaxAir(stack) &&
+								fluidStack != null && fluidStack.getFluid() == AdvancedRocketryFluids.fluidOxygen && fluidStack.amount > 0)  {
+							this.drain(1, true);
+							fillable.increment(stack, 100);
+
+							return true;
+						}
 					}
 				}
 
@@ -89,25 +100,25 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 					FluidStack fluidStack = this.drain(100, false);
 					if(fluidStack != null) {
 						for(int i = 0; i < inv.getSizeInventory(); i++) {
-							
+
 							if(!((IModularArmor)stack.getItem()).canBeExternallyModified(stack, i))
 								continue;
-							
+
 							ItemStack module = inv.getStackInSlot(i);
 							if(module != null && module.getItem() instanceof IFluidContainerItem) {
 								int amtFilled = ((IFluidContainerItem)module.getItem()).fill(module, fluidStack, true);
 								if(amtFilled == 100) {
 									this.drain(100, true);
-									
+
 									((IModularArmor)stack.getItem()).saveModuleInventory(stack, inv);
-									
+
 									return true;
 								}
 							}
 						}
 					}
 				}
-				
+
 				return false;
 			}
 		}
@@ -122,15 +133,15 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		ArrayList<ModuleBase> modules = new ArrayList<ModuleBase>();
-		
+
 		modules.add(new ModuleSlotArray(50, 21, this, 0, 1));
 		modules.add(new ModuleSlotArray(50, 57, this, 1, 2));
 		if(worldObj.isRemote)
 			modules.add(new ModuleImage(49, 38, new IconResource(194, 0, 18, 18, CommonResources.genericBackground)));
-		
+
 		//modules.add(new ModulePower(18, 20, this));
 		modules.add(new ModuleLiquidIndicator(32, 20, this));
-		
+
 		//modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this, TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
 		//TODO add itemStack slots for liqiuid
 		return modules;
@@ -145,13 +156,13 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	public boolean canInteractWithContainer(EntityPlayer entity) {
 		return true;
 	}
-	
+
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		super.setInventorySlotContents(slot, stack);
 		while(useBucket(0, getStackInSlot(0)));
 	}
-	
+
 	//Yes i was lazy
 	//TODO: make better
 	private boolean useBucket( int slot, ItemStack stack) {
@@ -194,16 +205,16 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 			FluidStack fluidStack;
 			stack = stack.copy();
 			stack.stackSize = 1;
-			
+
 			//Drain the tank into the item
 			if(fluidItem.getFluid(stack) == null && tank.getFluid() != null) {
 				int amt = fluidItem.fill(stack, tank.getFluid(), true);
-				
-				
+
+
 				//If the container is full move it down and try again for a new one
 				if(amt != 0 && fluidItem.getCapacity(stack) == fluidItem.getFluid(stack).amount) {
-					
-					
+
+
 					if(getStackInSlot(1) == null) {
 						inventory.setInventorySlotContents(1, stack);
 					}
@@ -218,7 +229,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 
 					return true;
 				}
-				
+
 			}
 			else {
 				fluidStack = fluidItem.drain(stack, tank.getCapacity() - tank.getFluidAmount(), false);

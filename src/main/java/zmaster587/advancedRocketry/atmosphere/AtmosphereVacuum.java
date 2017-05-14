@@ -15,6 +15,7 @@ import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
 import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
 import zmaster587.advancedRocketry.entity.EntityElevatorCapsule;
 import zmaster587.advancedRocketry.network.PacketOxygenState;
+import zmaster587.advancedRocketry.util.ItemAirUtils;
 import zmaster587.libVulpes.network.PacketHandler;
 
 /**
@@ -62,24 +63,7 @@ public class AtmosphereVacuum extends AtmosphereType {
 		}
 
 	public boolean protectsFrom(ItemStack stack) {
-
-		if(stack == null)
-			return false;
-		
-		//Check for enchantment
-		boolean isEnchanted = false;
-		NBTTagList enchList = stack.getEnchantmentTagList();
-		if(enchList != null) {
-			for(int i = 0 ; i < enchList.tagCount(); i++) {
-				NBTTagCompound compound = enchList.getCompoundTagAt(i);
-				isEnchanted = compound.getShort("id") == Enchantment.getEnchantmentID(AdvancedRocketryAPI.enchantmentSpaceProtection);
-				if(isEnchanted)
-					break;
-			}
-		}
-
-
-		return isEnchanted || (stack != null && stack.hasCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null) &&
+		return (ItemAirUtils.INSTANCE.isStackValidAirContainer(stack) && new ItemAirUtils.ItemAirWrapper(stack).protectsFromSubstance(this, stack, true) ) || (stack != null && stack.hasCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null) &&
 				stack.getCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null).protectsFromSubstance(this, stack, true));
 	}
 }
