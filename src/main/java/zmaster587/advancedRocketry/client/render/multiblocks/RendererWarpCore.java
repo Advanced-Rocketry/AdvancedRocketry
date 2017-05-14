@@ -124,6 +124,7 @@ public class RendererWarpCore extends TileEntitySpecialRenderer {
 				}
 			}
 		}
+		GL11.glColor4f(1f, 1f, 1f, 1f);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glPopMatrix();
