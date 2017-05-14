@@ -59,7 +59,7 @@ public class TileLathe extends TileMultiblockMachine implements IModularInventor
 	
 	@Override
 	public SoundEvent getSound() {
-		return AudioRegistry.rollingMachine;
+		return AudioRegistry.lathe;
 	}
 
 	@Override
