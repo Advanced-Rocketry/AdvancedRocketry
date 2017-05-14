@@ -836,7 +836,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				if(stack != null && stack.getItem() == AdvancedRocketryItems.itemSpaceStation) {
 					StorageChunk storage = ((ItemPackedStructure)stack.getItem()).getStructure(stack);
 					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation((int)ItemStationChip.getUUID(stack));
-
+					
+					//in case of no NBT data or the like
+					if(object == null) {
+						tile.setInventorySlotContents(0, null);
+						continue;
+					}
+					
 					SpaceObjectManager.getSpaceManager().moveStationToBody(object, this.worldObj.provider.getDimension());
 
 					//Vector3F<Integer> spawn = object.getSpawnLocation();

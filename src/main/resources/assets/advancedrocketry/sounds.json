@@ -14,4 +14,5 @@
 "precAss": {"category": "master","sounds": [{"name": "advancedrocketry:precAss","stream": false}]},
 "basicLaserGun": {"category": "master", "sounds": [{"name": "advancedrocketry:basicLaserGun", "stream": false}]},
 "gravityOhhh": {"category": "master", "sounds": [{"name": "advancedrocketry:gravityOhhh", "stream": false}]}
+"lathe": {"category": "master","sounds": [{"name": "advancedrocketry:lathe","stream": false}]},
 }

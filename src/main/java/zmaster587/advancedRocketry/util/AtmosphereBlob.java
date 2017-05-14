@@ -78,7 +78,10 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 		if(blobHandler.canFormBlob()) {
 
-			if(!this.contains(blockPos)) {
+			if(!this.contains(blockPos) && 
+					(this.graph.size() == 0 || this.contains(blockPos.getPositionAtOffset(EnumFacing.UP)) || this.contains(blockPos.getPositionAtOffset(EnumFacing.DOWN)) ||
+							this.contains(blockPos.getPositionAtOffset(EnumFacing.EAST)) || this.contains(blockPos.getPositionAtOffset(EnumFacing.WEST)) ||
+							this.contains(blockPos.getPositionAtOffset(EnumFacing.NORTH)) || this.contains(blockPos.getPositionAtOffset(EnumFacing.SOUTH)))) {
 				if(!executing) {
 					this.nearbyBlobs = nearbyBlobs;
 					this.blockPos = blockPos;
