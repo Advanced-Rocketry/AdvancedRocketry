@@ -77,8 +77,6 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 	private boolean stellarView;
 	private List<ModuleButton> planetList;
 	private ModuleContainerPan clickablePlanetList;
-	//Keep it module base to prevent issues on server
-	ModuleBase bgTexture;
 
 	private HashMap<Integer, PlanetRenderProperties> renderPropertiesMap;
 	PlanetRenderProperties currentlySelectedPlanet;
@@ -91,7 +89,6 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 	public ModulePlanetSelector(int planetId, ResourceLocation backdrop, ISelectionNotify tile, IPlanetDefiner definer, boolean star) {
 		super(0, 0, null, null, backdrop, 0, 0, 0, 0, size,size);
 		this.planetDefiner = definer;
-
 		hostTile = tile;
 		int center = size/2;
 		zoom = 1.0;
@@ -122,9 +119,9 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		//renderPlanetarySystem(properties, center, center, 3f);
 		if(FMLCommonHandler.instance().getSide().isClient()) {
 			
-			bgTexture = new ModuleImage(0, 54, zmaster587.libVulpes.inventory.TextureResources.buttonScan[0], 128,256);
+			//bgTexture = new ModuleImage(0, 54, zmaster587.libVulpes.inventory.TextureResources.buttonScan[0], 128,256);
 			
-			staticModuleList.add(bgTexture);
+			//staticModuleList.add(bgTexture);
 			
 			if(star) {
 				topLevel = -1;
@@ -517,7 +514,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			if(clickablePlanetList != null) {
 				boolean flag = !clickablePlanetList.isEnabled();
 				clickablePlanetList.setEnabled(flag);
-				bgTexture.setEnabled(flag);
+				//bgTexture.setEnabled(flag);
 			}
 		}
 		else {
@@ -539,6 +536,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	private void refreshSideBar(boolean planetChanged, int selectedPlanet) {
 		List<ModuleBase> list2 = new LinkedList<ModuleBase>();
 
@@ -624,7 +622,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			clickablePlanetList.setOffset2(0, 64);
 		
 		clickablePlanetList.setEnabled(enabled);
-		bgTexture.setEnabled(enabled);
+		//bgTexture.setEnabled(enabled);
 	}
 
 	@Override

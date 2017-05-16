@@ -196,7 +196,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 	}
 
 	public static boolean isDstValid(World worldObj, DimensionBlockPosition pos, HashedBlockPosition myPos) {
-		if(pos == null || pos.pos == null)
+		if(pos == null || pos.pos == null || worldObj.isRemote)
 			return false;
 
 		World world;
