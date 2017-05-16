@@ -132,16 +132,16 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 			int destroyedY, int destroyedZ, boolean blockBroken) {
 		super.deconstructMultiBlock(world, destroyedX, destroyedY, destroyedZ,
 				blockBroken);
-		
+
 		Entity e = getCapsuleOnLine();
-		
+
 		if(e != null)
 			e.setDead();
 	}
-	
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		
+
 		return AxisAlignedBB.getBoundingBox(xCoord - 5, yCoord - 3,zCoord - 5, xCoord + 5, yCoord + 3000, zCoord + 5);
 	}
 
@@ -195,6 +195,9 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 	}
 
 	public static boolean isDstValid(World worldObj, DimensionBlockPosition pos, BlockPosition myPos) {
+		if(worldObj.isRemote)
+			return true;
+		
 		if(pos == null || pos.pos == null)
 			return false;
 
@@ -203,7 +206,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 			DimensionManager.initDimension(pos.dimid);
 			world = DimensionManager.getWorld(pos.dimid);
 		}
-		
+
 		if(world == null)
 			return false;
 		return worldObj.provider.dimensionId != pos.dimid && zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(world, pos.pos.x, pos.pos.z) == zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(worldObj, myPos.x, myPos.z);
@@ -215,7 +218,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 		useEnergy(50000);
 		return true;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void onInventoryButtonPressed(int buttonId) {
@@ -443,7 +446,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 						addEntryToList(new DimensionBlockPosition(worldObj.provider.dimensionId, new BlockPosition(xCoord, yCoord, zCoord)));
 						((TileSpaceElevator) tile).addEntryToList(new DimensionBlockPosition(worldObj.provider.dimensionId, new BlockPosition(xCoord, yCoord, zCoord)));
 						((TileSpaceElevator) tile).addEntryToList(dimPos);
-						
+
 						player.addChatMessage(new ChatComponentText(LibVulpes.proxy.getLocalizedString("msg.spaceElevator.newDstAdded")));
 						return true;
 					}
