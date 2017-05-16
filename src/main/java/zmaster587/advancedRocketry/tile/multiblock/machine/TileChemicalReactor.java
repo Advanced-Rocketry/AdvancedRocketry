@@ -67,7 +67,7 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 				ItemStack enchanted = new ItemStack(item);
 				enchanted.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
 				
-				if(((ItemArmor)item).getEquipmentSlot() == EntityEquipmentSlot.CHEST)
+				if(((ItemArmor)item).armorType == EntityEquipmentSlot.CHEST)
 					RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, item, "gemDiamond", new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 3));
 				else
 					RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, item, "gemDiamond");

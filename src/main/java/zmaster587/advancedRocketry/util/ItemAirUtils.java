@@ -166,7 +166,7 @@ public class ItemAirUtils implements IFillableArmor {
 		public boolean protectsFromSubstance(IAtmosphere atmosphere,
 				ItemStack stack, boolean commitProtection) {
 			if(stack != null && stack.getItem() instanceof ItemArmor) {
-				if(((ItemArmor) stack.getItem()).getEquipmentSlot() == EntityEquipmentSlot.CHEST )
+				if(((ItemArmor) stack.getItem()).armorType == EntityEquipmentSlot.CHEST )
 					return decrementAir(stack, 1) == 1;
 				
 				return true;
