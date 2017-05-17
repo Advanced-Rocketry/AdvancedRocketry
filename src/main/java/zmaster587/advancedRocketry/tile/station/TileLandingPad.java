@@ -324,11 +324,11 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 			nbt.setIntArray("infrastructureLocations", array);
 		}
-		
-		nbt.setString("name", name);
+
+		if(name != null && !name.isEmpty())
+			nbt.setString("name", name);
 		
 		return nbt;
-
 	}
 
 }
