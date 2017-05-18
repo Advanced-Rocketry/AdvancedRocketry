@@ -579,7 +579,8 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setBoolean("occupied", pos.getOccupied());
 			tag.setIntArray("pos", new int[] {pos.getPos().x, pos.getPos().z});
-			tag.setString("name", pos.getName());
+			if(pos.getName() != null && !pos.getName().isEmpty())
+				tag.setString("name", pos.getName());
 			list.appendTag(tag);
 		}
 		nbt.setTag("spawnPositions", list);
