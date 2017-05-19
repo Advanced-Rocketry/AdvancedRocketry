@@ -22,7 +22,7 @@ public class PacketOxygenState extends BasePacket {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void readClient(ByteBuf in) {
-		AtmosphereHandler.lastSuffocationTime = Minecraft.getMinecraft().theWorld.getTotalWorldTime();
+		AtmosphereHandler.lastSuffocationTime = Minecraft.getMinecraft().world.getTotalWorldTime();
 	}
 
 	@Override

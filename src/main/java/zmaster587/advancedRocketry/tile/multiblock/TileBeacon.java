@@ -59,13 +59,13 @@ public class TileBeacon extends TileMultiPowerConsumer {
 	public void setMachineEnabled(boolean enabled) {
 		super.setMachineEnabled(enabled);
 
-		if(DimensionManager.getInstance().isDimensionCreated(worldObj.provider.getDimension())) {
-			DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension());
+		if(DimensionManager.getInstance().isDimensionCreated(world.provider.getDimension())) {
+			DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
 			if(enabled) {
-				props.addBeaconLocation(worldObj,new HashedBlockPosition(this.getPos()));
+				props.addBeaconLocation(world,new HashedBlockPosition(this.getPos()));
 			}
 			else
-				props.removeBeaconLocation(worldObj,new HashedBlockPosition(getPos()));
+				props.removeBeaconLocation(world,new HashedBlockPosition(getPos()));
 		}
 	}
 	

@@ -46,13 +46,13 @@ public class PacketDimInfo extends BasePacket {
 			try {
 				dimProperties.writeToNBT(nbt);
 				out.writeBoolean(false);
-				packetBuffer.writeNBTTagCompoundToBuffer(nbt);
+				packetBuffer.writeCompoundTag(nbt);
 				
 				out.writeShort(dimProperties.getRequiredArtifacts().size());
 				for(ItemStack i : dimProperties.getRequiredArtifacts()) {
 					NBTTagCompound nbt2 = new NBTTagCompound(); 
 					i.writeToNBT(nbt2);
-					packetBuffer.writeNBTTagCompoundToBuffer(nbt2);
+					packetBuffer.writeCompoundTag(nbt2);
 				}
 				
 			} catch(NullPointerException e) {
@@ -88,12 +88,12 @@ public class PacketDimInfo extends BasePacket {
 		if(!deleteDim) {
 			//TODO: error handling
 			try {
-				dimNBT = nbt = packetBuffer.readNBTTagCompoundFromBuffer();
+				dimNBT = nbt = packetBuffer.readCompoundTag();
 
 				int number = packetBuffer.readShort();
 				for(int i = 0; i < number; i++) {
-					NBTTagCompound nbt2 = packetBuffer.readNBTTagCompoundFromBuffer();
-					artifacts.add(ItemStack.loadItemStackFromNBT(nbt2));
+					NBTTagCompound nbt2 = packetBuffer.readCompoundTag();
+					artifacts.add(new ItemStack(nbt2));
 				}
 				
 			} catch (IOException e) {
@@ -106,7 +106,7 @@ public class PacketDimInfo extends BasePacket {
 			short strLen = packetBuffer.readShort();
 			if(strLen > 0)
 			{
-				dimProperties.customIcon = packetBuffer.readStringFromBuffer(strLen);
+				dimProperties.customIcon = packetBuffer.readString(strLen);
 			}
 		}
 	}

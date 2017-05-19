@@ -34,7 +34,7 @@ public class PacketStellarInfo extends BasePacket {
 		if((star != null)) {
 			star.writeToNBT(nbt);
 			PacketBuffer packetBuffer = new PacketBuffer(out);
-			packetBuffer.writeNBTTagCompoundToBuffer(nbt);
+			packetBuffer.writeCompoundTag(nbt);
 		}
 
 	}
@@ -53,7 +53,7 @@ public class PacketStellarInfo extends BasePacket {
 		else {
 			//TODO: error handling
 			try {
-				nbt = packetBuffer.readNBTTagCompoundFromBuffer();
+				nbt = packetBuffer.readCompoundTag();
 
 			} catch (IOException e) {
 				e.printStackTrace();

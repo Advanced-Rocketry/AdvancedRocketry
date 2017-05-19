@@ -89,7 +89,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public boolean canPerformFunction() {
-		return AtmosphereHandler.hasAtmosphereHandler(this.worldObj.provider.getDimension());
+		return AtmosphereHandler.hasAtmosphereHandler(this.world.provider.getDimension());
 	}
 
 	@Override
@@ -104,13 +104,13 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 			activateAdjblocks();
 		scrubbers.clear();
 		TileEntity[] tiles = new TileEntity[4];
-		tiles[0] = worldObj.getTileEntity(pos.add(1,0,0));
-		tiles[1] = worldObj.getTileEntity(pos.add(-1,0,0));
-		tiles[2] = worldObj.getTileEntity(pos.add(0,0,1));
-		tiles[3] = worldObj.getTileEntity(pos.add(0,0,-1));
+		tiles[0] = world.getTileEntity(pos.add(1,0,0));
+		tiles[1] = world.getTileEntity(pos.add(-1,0,0));
+		tiles[2] = world.getTileEntity(pos.add(0,0,1));
+		tiles[3] = world.getTileEntity(pos.add(0,0,-1));
 
 		for(TileEntity tile : tiles) {
-			if(tile instanceof TileCO2Scrubber && worldObj.getBlockState(tile.getPos()).getBlock() == AdvancedRocketryBlocks.blockOxygenScrubber)
+			if(tile instanceof TileCO2Scrubber && world.getBlockState(tile.getPos()).getBlock() == AdvancedRocketryBlocks.blockOxygenScrubber)
 				scrubbers.add((TileCO2Scrubber)tile);
 		}
 	}
@@ -131,10 +131,10 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	}
 
 	private boolean toggleAdjBlock(BlockPos pos, boolean on) {
-		IBlockState state = this.worldObj.getBlockState(pos);
+		IBlockState state = this.world.getBlockState(pos);
 		Block block = state.getBlock();
 		if(block == AdvancedRocketryBlocks.blockOxygenScrubber) {
-			((BlockTile)block).setBlockState(worldObj, state, pos, on);
+			((BlockTile)block).setBlockState(world, state, pos, on);
 
 			return true;
 		}
@@ -145,9 +145,9 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	public void invalidate() {
 		super.invalidate();
 
-		AtmosphereHandler handler = AtmosphereHandler.getOxygenHandler(this.worldObj.provider.getDimension());
+		AtmosphereHandler handler = AtmosphereHandler.getOxygenHandler(this.world.provider.getDimension());
 		if(handler != null)
-			AtmosphereHandler.getOxygenHandler(this.worldObj.provider.getDimension()).unregisterBlob(this);
+			AtmosphereHandler.getOxygenHandler(this.world.provider.getDimension()).unregisterBlob(this);
 		deactivateAdjblocks();
 	}
 
@@ -165,7 +165,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		if(state == RedstoneState.OFF)
 			return true;
 
-		boolean state2 = worldObj.isBlockIndirectlyGettingPowered(pos) > 0;
+		boolean state2 = world.isBlockIndirectlyGettingPowered(pos) > 0;
 
 		if(state == RedstoneState.INVERTED)
 			state2 = !state2;
@@ -182,9 +182,9 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 		//IF first tick then register the blob and check for scrubbers
 
-		if(!worldObj.isRemote) {
+		if(!world.isRemote) {
 			if(firstRun) {
-				AtmosphereHandler.getOxygenHandler(this.worldObj.provider.getDimension()).registerBlob(this, pos);
+				AtmosphereHandler.getOxygenHandler(this.world.provider.getDimension()).registerBlob(this, pos);
 
 				onAdjacentBlockUpdated();
 				//isSealed starts as true so we can accurately check for scrubbers, we now set it to false to force the tile to check for a seal on first run
@@ -193,14 +193,14 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 			}
 
 			if(isSealed && !getEquivilentPower()) {
-				AtmosphereHandler.getOxygenHandler(this.worldObj.provider.getDimension()).clearBlob(this);
+				AtmosphereHandler.getOxygenHandler(this.world.provider.getDimension()).clearBlob(this);
 
 				deactivateAdjblocks();
 
 				setSealed(false);
 			}
 			else if(!isSealed && getEquivilentPower() && hasEnoughEnergy(getPowerPerOperation())) {
-				setSealed(AtmosphereHandler.getOxygenHandler(this.worldObj.provider.getDimension()).addBlock(this, new HashedBlockPosition(pos)));
+				setSealed(AtmosphereHandler.getOxygenHandler(this.world.provider.getDimension()).addBlock(this, new HashedBlockPosition(pos)));
 
 
 				if(isSealed)
@@ -212,7 +212,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 				//If scrubbers exist and the config allows then use the cartridge
 				if(Configuration.scrubberRequiresCartrige){
 					//TODO: could be optimized
-					if(worldObj.getTotalWorldTime() % 20 == 0) {
+					if(world.getTotalWorldTime() % 20 == 0) {
 						numScrubbers = 0;
 						for(TileCO2Scrubber scrubber : scrubbers) {
 							numScrubbers = scrubber.useCharge() ? numScrubbers + 1 : numScrubbers;
@@ -221,7 +221,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 				}
 
-				int amtToDrain = (int) (AtmosphereHandler.getOxygenHandler(this.worldObj.provider.getDimension()).getBlobSize(this)*getGasUsageMultiplier());
+				int amtToDrain = (int) (AtmosphereHandler.getOxygenHandler(this.world.provider.getDimension()).getBlobSize(this)*getGasUsageMultiplier());
 				FluidStack drainedFluid = this.drain(amtToDrain, false);
 
 				if( (drainedFluid != null && drainedFluid.amount >= amtToDrain) || amtToDrain == 0) {
@@ -231,11 +231,11 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 						activateAdjblocks();
 
-						AtmosphereHandler.getOxygenHandler(this.worldObj.provider.getDimension()).setAtmosphereType(this, AtmosphereType.PRESSURIZEDAIR);
+						AtmosphereHandler.getOxygenHandler(this.world.provider.getDimension()).setAtmosphereType(this, AtmosphereType.PRESSURIZEDAIR);
 					}
 				}
 				else if(hasFluid){
-					AtmosphereHandler.getOxygenHandler(this.worldObj.provider.getDimension()).setAtmosphereType(this, DimensionManager.getInstance().getDimensionProperties(this.worldObj.provider.getDimension()).getAtmosphere());
+					AtmosphereHandler.getOxygenHandler(this.world.provider.getDimension()).setAtmosphereType(this, DimensionManager.getInstance().getDimensionProperties(this.world.provider.getDimension()).getAtmosphere());
 
 					deactivateAdjblocks();
 
@@ -252,12 +252,12 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 			if(hasEnoughEnergy(getPowerPerOperation())) {
 				performFunction();
-				if(!worldObj.isRemote && isSealed) this.energy.extractEnergy(getPowerPerOperation(), false);
+				if(!world.isRemote && isSealed) this.energy.extractEnergy(getPowerPerOperation(), false);
 			}
 			else
 				notEnoughEnergyForFunction();
 		}
-		if(!soundInit && worldObj.isRemote) {
+		if(!soundInit && world.isRemote) {
 			LibVulpes.proxy.playSound(new RepeatingSound(AudioRegistry.airHissLoop, SoundCategory.BLOCKS, this));
 		}
 		soundInit = true;
@@ -268,7 +268,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		boolean prevSealed = isSealed;
 		if((prevSealed != sealed)) {
 			markDirty();
-			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 2);
+			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 2);
 		}
 		isSealed = sealed;
 	}
@@ -308,8 +308,8 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public void notEnoughEnergyForFunction() {
-		if(!worldObj.isRemote) {
-			AtmosphereHandler handler = AtmosphereHandler.getOxygenHandler(this.worldObj.provider.getDimension());
+		if(!world.isRemote) {
+			AtmosphereHandler handler = AtmosphereHandler.getOxygenHandler(this.world.provider.getDimension());
 			if(handler != null)
 				handler.clearBlob(this);
 
@@ -415,5 +415,10 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		super.writeToNBT(nbt);
 		nbt.setByte("redstoneState", (byte) state.ordinal());
 		return nbt;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return inventory.isEmpty();
 	}
 }

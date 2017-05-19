@@ -178,7 +178,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 					button = new ModuleButton(0, i*18, i + BUTTON_ID_OFFSET, pos.toString(), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 256, 18);
 					list2.add(button);
 
-					if(!isDstValid(worldObj, pos, new HashedBlockPosition(getPos())))
+					if(!isDstValid(world, pos, new HashedBlockPosition(getPos())))
 						button.setColor(0xFFFF2222);
 
 					i++;
@@ -241,12 +241,12 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 			e.setDead();
 		else {
 			capsule = e;
-			capsule.setSourceTile(new DimensionBlockPosition(worldObj.provider.getDimension(), new HashedBlockPosition(pos)));
+			capsule.setSourceTile(new DimensionBlockPosition(world.provider.getDimension(), new HashedBlockPosition(pos)));
 			capsule.setDst(dimBlockPos);
 		}
 		capsule.setPosition(getLandingLocationX(), getPos().getY() - 1, getLandingLocationZ());
 
-		EnumFacing facing = RotatableBlock.getFront(worldObj.getBlockState(getPos()));
+		EnumFacing facing = RotatableBlock.getFront(world.getBlockState(getPos()));
 		switch(facing) {
 		case EAST:
 			capsule.rotationYaw = 180;
@@ -287,14 +287,14 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 		}
 		else if (id == SELECT_DST) {
 			player.closeScreen();
-			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARFULLSCREEN.ordinal(), player.worldObj, this.pos.getX(), this.pos.getY(), this.pos.getZ());
+			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARFULLSCREEN.ordinal(), player.world, this.pos.getX(), this.pos.getY(), this.pos.getZ());
 		}
 		else if(id == BUTTON_ID_OFFSET) {
 			dimBlockPos = null;
 			capsule.setDst(null);
 
 			markDirty();
-			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
+			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 		}
 		else if(id > BUTTON_ID_OFFSET) {
 			ItemStack stack = inv.getStackInSlot(0);
@@ -305,7 +305,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 
 				try {
 					DimensionBlockPosition dstpos = list.get(id - BUTTON_ID_OFFSET - 1);
-					if(isDstValid(worldObj,dstpos, new HashedBlockPosition(getPos()))) {
+					if(isDstValid(world,dstpos, new HashedBlockPosition(getPos()))) {
 
 						dimBlockPos = dstpos;
 						World world;
@@ -324,7 +324,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 								capsule.setDst(dimBlockPos);
 								capsule.setSourceTile(new DimensionBlockPosition(this.getWorld().provider.getDimension(), new HashedBlockPosition(getPos())));
 								markDirty();
-								worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
+								world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 								return;
 							}
 						}
@@ -346,7 +346,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 
 		double capsulePosX = getLandingLocationX();
 		double capsulePosZ = getLandingLocationZ();
-		for (EntityElevatorCapsule e :worldObj.getEntitiesWithinAABB(EntityElevatorCapsule.class, new AxisAlignedBB(capsulePosX - 3, getPos().getY() - 1, capsulePosZ - 3, capsulePosX + 3, EntityElevatorCapsule.MAX_HEIGHT, capsulePosZ + 3))) {
+		for (EntityElevatorCapsule e :world.getEntitiesWithinAABB(EntityElevatorCapsule.class, new AxisAlignedBB(capsulePosX - 3, getPos().getY() - 1, capsulePosZ - 3, capsulePosX + 3, EntityElevatorCapsule.MAX_HEIGHT, capsulePosZ + 3))) {
 			if(!e.isInMotion() && !e.isDead)
 				capsule = e;
 		}
@@ -355,13 +355,13 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 	}
 
 	public double getLandingLocationX() {
-		EnumFacing facing = RotatableBlock.getFront(worldObj.getBlockState(getPos()));
+		EnumFacing facing = RotatableBlock.getFront(world.getBlockState(getPos()));
 		return getPos().getX() + facing.getFrontOffsetX()*3 - facing.getFrontOffsetZ() + 0.5;
 
 	}
 
 	public double getLandingLocationZ() {
-		EnumFacing facing = RotatableBlock.getFront(worldObj.getBlockState(getPos()));
+		EnumFacing facing = RotatableBlock.getFront(world.getBlockState(getPos()));
 		return getPos().getZ() + facing.getFrontOffsetX()*1 + facing.getFrontOffsetZ()*-3 + 0.5;
 	}
 
@@ -371,8 +371,8 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 		if(getCapsuleOnLine() != null)
 			return;
 
-		capsule = new EntityElevatorCapsule(worldObj);
-		EnumFacing facing = RotatableBlock.getFront(worldObj.getBlockState(getPos()));
+		capsule = new EntityElevatorCapsule(world);
+		EnumFacing facing = RotatableBlock.getFront(world.getBlockState(getPos()));
 		switch(facing) {
 		case EAST:
 			capsule.rotationYaw = 180;
@@ -391,9 +391,9 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 		double capsulePosZ = getLandingLocationZ();
 		capsule.setPosition(capsulePosX, getPos().getY() - 1, capsulePosZ);
 
-		capsule.setSourceTile(new DimensionBlockPosition(worldObj.provider.getDimension(), new HashedBlockPosition(this.getPos())));
+		capsule.setSourceTile(new DimensionBlockPosition(world.provider.getDimension(), new HashedBlockPosition(this.getPos())));
 
-		worldObj.spawnEntityInWorld(capsule);
+		world.spawnEntity(capsule);
 	}
 
 	@Override
@@ -414,7 +414,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 		ItemLinker.setMasterCoords(item, this.getPos());
 		ItemLinker.setDimId(item, world.provider.getDimension());
 		if(!world.isRemote)
-			player.addChatMessage(new TextComponentString("Coordinates programmed into Linker"));
+			player.sendMessage(new TextComponentString("Coordinates programmed into Linker"));
 		return true;
 	}
 
@@ -429,9 +429,9 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 
 			DimensionBlockPosition dimPos = new DimensionBlockPosition(dimid, new HashedBlockPosition(pos));
 
-			if(dimPos.dimid == worldObj.provider.getDimension())
+			if(dimPos.dimid == world.provider.getDimension())
 			{
-				player.addChatMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.spaceElevator.sameDimensionError")));
+				player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.spaceElevator.sameDimensionError")));
 				return false;
 			}
 
@@ -448,16 +448,16 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 					boolean flag = getChip() != null && ((TileSpaceElevator) tile).getChip() != null;
 					if(flag) {
 						addEntryToList(dimPos);
-						addEntryToList(new DimensionBlockPosition(worldObj.provider.getDimension(), new HashedBlockPosition(getPos())));
-						((TileSpaceElevator) tile).addEntryToList(new DimensionBlockPosition(worldObj.provider.getDimension(), new HashedBlockPosition(getPos())));
+						addEntryToList(new DimensionBlockPosition(world.provider.getDimension(), new HashedBlockPosition(getPos())));
+						((TileSpaceElevator) tile).addEntryToList(new DimensionBlockPosition(world.provider.getDimension(), new HashedBlockPosition(getPos())));
 						((TileSpaceElevator) tile).addEntryToList(dimPos);
 						
-						player.addChatMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.spaceElevator.newDstAdded")));
+						player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.spaceElevator.newDstAdded")));
 						return true;
 					}
 					else
 					{
-						player.addChatMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.spaceElevator.noChipError")));
+						player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.spaceElevator.noChipError")));
 						return false;
 					}
 				}
@@ -528,8 +528,13 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		return true;
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return inv.isEmpty();
 	}
 
 	@Override

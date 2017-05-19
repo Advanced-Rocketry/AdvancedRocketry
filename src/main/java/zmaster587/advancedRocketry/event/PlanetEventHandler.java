@@ -149,16 +149,16 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	public void playerTick(LivingUpdateEvent event) {
 
-		if(event.getEntity().worldObj.isRemote && event.getEntity().posY > 260 && event.getEntity().posY < 270 && event.getEntity().motionY < -.1) {
-			RocketEventHandler.destroyOrbitalTextures(event.getEntity().worldObj);
+		if(event.getEntity().world.isRemote && event.getEntity().posY > 260 && event.getEntity().posY < 270 && event.getEntity().motionY < -.1) {
+			RocketEventHandler.destroyOrbitalTextures(event.getEntity().world);
 		}
 		if(event.getEntity().isInWater()) {
 			if(AtmosphereType.LOWOXYGEN.isImmune(event.getEntityLiving()))
 				event.getEntity().setAir(300);
 		}
 
-		if(!event.getEntity().worldObj.isRemote && event.getEntity().worldObj.getTotalWorldTime() % 20 ==0 && event.getEntity() instanceof EntityPlayer) {
-			if(DimensionManager.getInstance().getDimensionProperties(event.getEntity().worldObj.provider.getDimension()).getName().equals("Luna") && 
+		if(!event.getEntity().world.isRemote && event.getEntity().world.getTotalWorldTime() % 20 ==0 && event.getEntity() instanceof EntityPlayer) {
+			if(DimensionManager.getInstance().getDimensionProperties(event.getEntity().world.provider.getDimension()).getName().equals("Luna") && 
 					event.getEntity().getPosition().distanceSq(67, 80, 2347) < 512 ) {
 				((EntityPlayer)event.getEntity()).addStat(ARAchivements.weReallyWentToTheMoon);
 			}	
@@ -168,8 +168,8 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	public void sleepEvent(PlayerSleepInBedEvent event) {
 
-		if(event.getEntity().worldObj.provider instanceof WorldProviderPlanet && 
-				AtmosphereHandler.hasAtmosphereHandler(event.getEntity().worldObj.provider.getDimension()) && !AtmosphereHandler.getOxygenHandler(event.getEntity().worldObj.provider.getDimension()).getAtmosphereType(event.getPos()).isBreathable()) {
+		if(event.getEntity().world.provider instanceof WorldProviderPlanet && 
+				AtmosphereHandler.hasAtmosphereHandler(event.getEntity().world.provider.getDimension()) && !AtmosphereHandler.getOxygenHandler(event.getEntity().world.provider.getDimension()).getAtmosphereType(event.getPos()).isBreathable()) {
 			event.setResult(SleepResult.OTHER_PROBLEM);
 		}
 	}
@@ -194,7 +194,7 @@ public class PlanetEventHandler {
 		}
 
 		if(!event.getWorld().isRemote && event.getItemStack() != null && event instanceof PlayerInteractEvent.RightClickBlock && event.getItemStack().getItem() == Items.BED && event.getWorld().provider instanceof WorldProviderPlanet) {
-			AdvancedRocketryItems.itemAstroBed.onItemUse( event.getItemStack(),  event.getEntityPlayer(),  event.getEntityPlayer().worldObj, event.getPos(), event.getHand(), event.getFace(), 0, 0, 0);
+			AdvancedRocketryItems.itemAstroBed.onItemUse( event.getEntityPlayer(),  event.getEntityPlayer().world, event.getPos(), event.getHand(), event.getFace(), 0, 0, 0);
 			event.setCanceled(true);
 		}
 
@@ -234,7 +234,7 @@ public class PlanetEventHandler {
 				while(itr.hasNext()) {
 					Entry<Long, TransitionEntity> entry = itr.next();
 					TransitionEntity ent = entry.getValue();
-					if(ent.entity.worldObj.getTotalWorldTime() >= entry.getKey()) {
+					if(ent.entity.world.getTotalWorldTime() >= entry.getKey()) {
 						ent.entity.setLocationAndAngles(ent.location.getX(), ent.location.getY(), ent.location.getZ(), ent.entity.rotationYaw, ent.entity.rotationPitch);
 						ent.entity.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP)ent.entity, ent.dimId, new TeleporterNoPortal(ent.entity.getServer().worldServerForDimension(ent.dimId)));
 						ent.entity.startRiding(ent.entity2);
@@ -343,7 +343,7 @@ public class PlanetEventHandler {
 	public void fogColor(FogColors event) {
 
 
-		IBlockState state = ActiveRenderInfo.getBlockStateAtEntityViewpoint(event.getEntity().worldObj, event.getEntity(), (float)event.getRenderPartialTicks());
+		IBlockState state = ActiveRenderInfo.getBlockStateAtEntityViewpoint(event.getEntity().world, event.getEntity(), (float)event.getRenderPartialTicks());
 
 		Block block = state.getBlock();
 		if(block.getMaterial(state) == Material.WATER)
@@ -353,15 +353,15 @@ public class PlanetEventHandler {
 		if(properties != null) {
 			float fog = properties.getAtmosphereDensityAtHeight(event.getEntity().posY);
 
-			if(event.getEntity().worldObj.provider instanceof IPlanetaryProvider) {
-				Vec3d color = event.getEntity().worldObj.provider.getSkyColor(event.getEntity(), 0f);
+			if(event.getEntity().world.provider instanceof IPlanetaryProvider) {
+				Vec3d color = event.getEntity().world.provider.getSkyColor(event.getEntity(), 0f);
 				event.setRed((float) Math.min(color.xCoord*1.4f,1f));
 				event.setGreen((float) Math.min(color.yCoord*1.4f, 1f));
 				event.setBlue((float) Math.min(color.zCoord*1.4f, 1f));
 			}
 
 			if(endTime > 0) {
-				double amt = (endTime - Minecraft.getMinecraft().theWorld.getTotalWorldTime()) / (double)duration;
+				double amt = (endTime - Minecraft.getMinecraft().world.getTotalWorldTime()) / (double)duration;
 				if(amt < 0) {
 					endTime = 0;
 				}
@@ -388,8 +388,8 @@ public class PlanetEventHandler {
 				if(list.size() > 0) {
 					for(Chunk chunk : list) {
 						int coord = event.world.rand.nextInt(256);
-						int x = (coord & 0xF) + chunk.xPosition*16;
-						int z = (coord >> 4) + chunk.zPosition*16;
+						int x = (coord & 0xF) + chunk.x*16;
+						int z = (coord >> 4) + chunk.z*16;
 
 						BiomeHandler.changeBiome(event.world, Biome.getIdForBiome(((ChunkManagerPlanet)((WorldProviderPlanet)event.world.provider).chunkMgrTerraformed).getBiomeGenAt(x,z)), x, z);
 					}
@@ -416,7 +416,7 @@ public class PlanetEventHandler {
 	public static void modifyChunk(World world ,WorldProviderPlanet provider, Chunk chunk) {
 		for(int x = 0; x < 16; x++) {
 			for(int z = 0; z < 16; z++) {
-				BiomeHandler.changeBiome(world, Biome.getIdForBiome(((ChunkManagerPlanet)((WorldProviderPlanet)world.provider).chunkMgrTerraformed).getBiomeGenAt(x + chunk.xPosition*16,z + chunk.zPosition*16)), chunk, x + chunk.xPosition* 16, z + chunk.zPosition*16);
+				BiomeHandler.changeBiome(world, Biome.getIdForBiome(((ChunkManagerPlanet)((WorldProviderPlanet)world.provider).chunkMgrTerraformed).getBiomeGenAt(x + chunk.x*16,z + chunk.z*16)), chunk, x + chunk.x* 16, z + chunk.z*16);
 			}
 		}
 	}
@@ -443,7 +443,7 @@ public class PlanetEventHandler {
 			float far;
 
 			int atmosphere = properties.getAtmosphereDensity();
-			ItemStack armor = Minecraft.getMinecraft().thePlayer.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+			ItemStack armor = Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
 			if(armor != null && armor.getItem() instanceof IModularArmor) {
 				for(ItemStack i : ((IModularArmor)armor.getItem()).getComponents(armor)) {
@@ -492,8 +492,8 @@ public class PlanetEventHandler {
 	//Make sure the player doesnt die on low gravity worlds
 	@SubscribeEvent
 	public void fallEvent(LivingFallEvent event) {
-		if(event.getEntity().worldObj.provider instanceof IPlanetaryProvider) {
-			IPlanetaryProvider planet = (IPlanetaryProvider)event.getEntity().worldObj.provider;
+		if(event.getEntity().world.provider instanceof IPlanetaryProvider) {
+			IPlanetaryProvider planet = (IPlanetaryProvider)event.getEntity().world.provider;
 			event.setDistance((float) (event.getDistance() * planet.getGravitationalMultiplier(event.getEntity().getPosition())));
 		}
 	}

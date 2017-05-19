@@ -15,10 +15,10 @@ public class BiomeGenSpace extends Biome {
 		registerBiome(biomeId, "Space", this);
 		
 		//cold and dry
-		this.theBiomeDecorator.generateLakes=false;
-		this.theBiomeDecorator.flowersPerChunk=0;
-		this.theBiomeDecorator.grassPerChunk=0;
-		this.theBiomeDecorator.treesPerChunk=0;
+		this.decorator.generateLakes=false;
+		this.decorator.flowersPerChunk=0;
+		this.decorator.grassPerChunk=0;
+		this.decorator.treesPerChunk=0;
 		this.fillerBlock = this.topBlock = Blocks.AIR.getDefaultState();
 	}
 	

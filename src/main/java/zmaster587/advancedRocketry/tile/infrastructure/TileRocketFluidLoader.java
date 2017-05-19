@@ -107,9 +107,9 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	@Override
 	public void update() {
 		//Move a stack of items
-		if(!worldObj.isRemote && rocket != null) {
+		if(!world.isRemote && rocket != null) {
 
-			boolean isAllowToOperate = (inputstate == RedstoneState.OFF || isStateActive(inputstate, getStrongPowerForSides(worldObj, getPos())));
+			boolean isAllowToOperate = (inputstate == RedstoneState.OFF || isStateActive(inputstate, getStrongPowerForSides(world, getPos())));
 
 			List<TileEntity> tiles = rocket.storage.getFluidTiles();
 			boolean rocketContainsItems = false;
@@ -154,7 +154,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 
 	protected void setRedstoneState(boolean condition) {
 		condition = isStateActive(state, condition);
-		((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj,worldObj.getBlockState(pos), pos, condition);
+		((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(world,world.getBlockState(pos), pos, condition);
 
 	}
 
@@ -177,7 +177,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 			this.unlinkRocket();
 		}
 
-		if(player.worldObj.isRemote)
+		if(player.world.isRemote)
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new TextComponentString("You program the linker with the fluid loader at: " + getPos().getX() + " " + getPos().getY() + " " + getPos().getZ())));
 		return true;
 	}
@@ -185,7 +185,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	@Override
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
-		if(player.worldObj.isRemote)
+		if(player.world.isRemote)
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new TextComponentString("This must be the first machine to link!")));
 		return false;
 	}
@@ -193,7 +193,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	@Override
 	public void unlinkRocket() {
 		rocket = null;
-		((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj, worldObj.getBlockState(pos), pos, false);
+		((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(world, world.getBlockState(pos), pos, false);
 		//On unlink prevent the tile from ticking anymore
 
 		//if(!worldObj.isRemote)
@@ -305,7 +305,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 		
 		
 		markDirty();
-		worldObj.notifyBlockOfStateChange(getPos(), worldObj.getBlockState(getPos()).getBlock());
+		world.markChunkDirty(getPos(), this);
 	}
 
 	@Override

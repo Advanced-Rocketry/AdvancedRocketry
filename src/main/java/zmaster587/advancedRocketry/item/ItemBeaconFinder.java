@@ -63,17 +63,17 @@ public class ItemBeaconFinder extends Item implements IArmorComponent {
 	public void renderScreen(ItemStack componentStack, List<ItemStack> modules,
 			RenderGameOverlayEvent event, Gui gui) {
 		
-		int dimid = Minecraft.getMinecraft().theWorld.provider.getDimension();
+		int dimid = Minecraft.getMinecraft().world.provider.getDimension();
 		
 		if(DimensionManager.getInstance().isDimensionCreated(dimid)) {
 			for(HashedBlockPosition pos : DimensionManager.getInstance().getDimensionProperties(dimid).getBeacons()) {
 				
 				GL11.glPushMatrix();
 				
-				double deltaX = Minecraft.getMinecraft().thePlayer.posX - pos.x;
-				double deltaZ = Minecraft.getMinecraft().thePlayer.posZ - pos.z;
+				double deltaX = Minecraft.getMinecraft().player.posX - pos.x;
+				double deltaZ = Minecraft.getMinecraft().player.posZ - pos.z;
 				
-				double angle = MathHelper.wrapDegrees(MathHelper.atan2(deltaZ, deltaX)*180/Math.PI + 90 - Minecraft.getMinecraft().thePlayer.rotationYawHead);
+				double angle = MathHelper.wrapDegrees(MathHelper.atan2(deltaZ, deltaX)*180/Math.PI + 90 - Minecraft.getMinecraft().player.rotationYawHead);
 				
 				//GL11.glTranslatef(pos.x, pos.y, pos.z);
 				GL11.glTranslated((event.getResolution().getScaledWidth_double()*angle/180f) + event.getResolution().getScaledWidth()/2,0,5);

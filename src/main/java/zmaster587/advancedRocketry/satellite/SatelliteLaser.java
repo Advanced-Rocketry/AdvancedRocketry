@@ -90,7 +90,7 @@ public class SatelliteLaser extends SatelliteLaserNoDrill {
 			
 			laser = new EntityLaserNode(world, x, y, z);
 			laser.forceSpawn = true;
-			world.spawnEntityInWorld(laser);
+			world.spawnEntity(laser);
 			return true;
 		}
 		return false;
@@ -103,7 +103,7 @@ public class SatelliteLaser extends SatelliteLaserNoDrill {
 			
 			BlockPos laserPos = new BlockPos(x, (int)laser.posY, z);
 
-			 IBlockState state = laser.worldObj.getBlockState(laserPos);//Block.blocksList[laser.worldObj.getBlockId(x, (int)laser.posY, z)];
+			 IBlockState state = laser.world.getBlockState(laserPos);//Block.blocksList[laser.worldObj.getBlockId(x, (int)laser.posY, z)];
 			 Block dropBlock;
 			//Post an event to the eventbus to make protections easier
 			LaserBreakEvent event = new LaserBreakEvent(x, (int)laser.posY, z);
@@ -115,11 +115,11 @@ public class SatelliteLaser extends SatelliteLaserNoDrill {
 			
 			
 			if(state == Blocks.AIR.getDefaultState() || state.getMaterial().isReplaceable() ||  state.getMaterial().isLiquid()) {
-				laser.worldObj.setBlockState(laserPos, AdvancedRocketryBlocks.blockLightSource.getDefaultState());
+				laser.world.setBlockState(laserPos, AdvancedRocketryBlocks.blockLightSource.getDefaultState());
 				continue;
 			}
 
-			List<ItemStack> items = state.getBlock().getDrops(laser.worldObj, laserPos, state, 0);
+			List<ItemStack> items = state.getBlock().getDrops(laser.world, laserPos, state, 0);
 			
 			//TODO: may need to fix in later builds
 			if(!state.getMaterial().isOpaque() || state.getBlock() == Blocks.BEDROCK)
@@ -130,7 +130,7 @@ public class SatelliteLaser extends SatelliteLaserNoDrill {
 			//creator.performOperation();
 
 			if(items.isEmpty()) {
-				laser.worldObj.setBlockState(laserPos, AdvancedRocketryBlocks.blockLightSource.getDefaultState());
+				laser.world.setBlockState(laserPos, AdvancedRocketryBlocks.blockLightSource.getDefaultState());
 				continue;
 			}
 
@@ -164,7 +164,7 @@ public class SatelliteLaser extends SatelliteLaserNoDrill {
 					return;
 				}
 			}
-			laser.worldObj.setBlockState(laserPos, AdvancedRocketryBlocks.blockLightSource.getDefaultState());
+			laser.world.setBlockState(laserPos, AdvancedRocketryBlocks.blockLightSource.getDefaultState());
 			//laser.worldObj.setBlockToAir(x, (int)laser.posY, z);
 		}
 
@@ -186,13 +186,13 @@ public class SatelliteLaser extends SatelliteLaserNoDrill {
 				
 				BlockPos laserPos = new BlockPos(x, (int)laser.posY, z);
 
-				IBlockState state = laser.worldObj.getBlockState(laserPos);
+				IBlockState state = laser.world.getBlockState(laserPos);
 				
 				if(!state.getMaterial().isOpaque() || state.getBlock() == Blocks.BEDROCK)
 					continue;
 
 				if(state == Blocks.AIR.getDefaultState() ||  state.getMaterial().isLiquid()) {
-					laser.worldObj.setBlockToAir(laserPos);
+					laser.world.setBlockToAir(laserPos);
 					continue;
 				}
 

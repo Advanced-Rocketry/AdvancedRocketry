@@ -78,7 +78,7 @@ public class RenderPlanetUIEntity extends Render<EntityUIPlanet> implements IRen
 		GlStateManager.color(1f, 1, 1f, .5f);
 
 		GL11.glPushMatrix();
-		GL11.glRotatef(entity.worldObj.getTotalWorldTime() & 0xFF, 0, 1, 0);
+		GL11.glRotatef(entity.world.getTotalWorldTime() & 0xFF, 0, 1, 0);
 		sphere.renderAll();
 		GL11.glPopMatrix();
 
@@ -146,10 +146,10 @@ public class RenderPlanetUIEntity extends Render<EntityUIPlanet> implements IRen
 		VertexBuffer buf = Tessellator.getInstance().getBuffer();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
-		float myTime = ((entity.worldObj.getTotalWorldTime() & 0xF)/16f);
+		float myTime = ((entity.world.getTotalWorldTime() & 0xF)/16f);
 
 		for(int i = 0; i < 4; i++ ) {
-			myTime = ((i*4 + entity.worldObj.getTotalWorldTime() & 0xF)/16f);
+			myTime = ((i*4 + entity.world.getTotalWorldTime() & 0xF)/16f);
 
 			GlStateManager.color(0, 1f, 1f, .2f*(1-myTime));
 			buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
@@ -197,7 +197,7 @@ public class RenderPlanetUIEntity extends Render<EntityUIPlanet> implements IRen
 			//GL11.glDepthMask(false);
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
 
-			RenderHelper.setupPlayerFacingMatrix(Minecraft.getMinecraft().thePlayer.getDistanceSq(hitObj.hitVec.xCoord, hitObj.hitVec.yCoord, hitObj.hitVec.zCoord), 0, 0, 0);
+			RenderHelper.setupPlayerFacingMatrix(Minecraft.getMinecraft().player.getDistanceSq(hitObj.hitVec.xCoord, hitObj.hitVec.yCoord, hitObj.hitVec.zCoord), 0, 0, 0);
 			buffer = Tessellator.getInstance().getBuffer();
 
 			//Draw Mass indicator
@@ -223,8 +223,8 @@ public class RenderPlanetUIEntity extends Render<EntityUIPlanet> implements IRen
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			//GL11.glDepthMask(true);
 			RenderHelper.cleanupPlayerFacingMatrix();
-			RenderHelper.renderTag(Minecraft.getMinecraft().thePlayer.getDistanceSq(hitObj.hitVec.xCoord, hitObj.hitVec.yCoord, hitObj.hitVec.zCoord), properties.getName(), 0, .9, 0, 5);
-			RenderHelper.renderTag(Minecraft.getMinecraft().thePlayer.getDistanceSq(hitObj.hitVec.xCoord, hitObj.hitVec.yCoord, hitObj.hitVec.zCoord), "NumMoons: " + properties.getChildPlanets().size(), 0, .6, 0, 5);
+			RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(hitObj.hitVec.xCoord, hitObj.hitVec.yCoord, hitObj.hitVec.zCoord), properties.getName(), 0, .9, 0, 5);
+			RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(hitObj.hitVec.xCoord, hitObj.hitVec.yCoord, hitObj.hitVec.zCoord), "NumMoons: " + properties.getChildPlanets().size(), 0, .6, 0, 5);
 
 			GL11.glPopMatrix();
 		}

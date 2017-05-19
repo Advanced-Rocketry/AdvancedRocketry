@@ -57,8 +57,7 @@ public class BlockRedstoneEmitter extends Block {
 	
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
+			IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
 			float hitZ) {
 		if(!world.isRemote) {
 			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), world, pos.getX(), pos.getY(), pos.getZ());

@@ -54,20 +54,20 @@ public class EntityLaserNode extends Entity {
 	 * For the love of all things good... do NOT call this twice
 	 */
 	public void cleanUp() {
-		if(!this.worldObj.isRemote)
+		if(!this.world.isRemote)
 			new Thread(cleanThread).run();
 	}
 
 	Runnable cleanThread = new Runnable() {
 		@Override
 		public void run() {
-			for(int h = 0; h < worldObj.getHeight(); h++) {
+			for(int h = 0; h < world.getHeight(); h++) {
 				for(int i = 0; i < 9; i++) {
 					int x = (int)posX + (i % 3) - 1;
 					int z = (int)posZ + (i / 3) - 1;
 					BlockPos pos = new BlockPos(x, h, z);
-					if(worldObj.getBlockState(pos).getBlock() == AdvancedRocketryBlocks.blockLightSource)
-						worldObj.setBlockToAir(pos);
+					if(world.getBlockState(pos).getBlock() == AdvancedRocketryBlocks.blockLightSource)
+						world.setBlockToAir(pos);
 				}
 			}
 		}
@@ -84,19 +84,19 @@ public class EntityLaserNode extends Entity {
 
 		super.onUpdate();
 		
-		if(this.worldObj.isRemote)	{
+		if(this.world.isRemote)	{
 			if(Minecraft.getMinecraft().gameSettings.particleSetting < 2){
 				final double spread = 3;
 				final double initialSpeed = .5;
 				for(int i = 0; i < (Minecraft.getMinecraft().gameSettings.particleSetting == 0 ? 20 : 5); i++)
-					AdvancedRocketry.proxy.spawnParticle("fireworksSpark",worldObj, this.posX + (this.rand.nextDouble()*spread) - (spread/2), this.posY, this.posZ + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble() - (initialSpeed/2), initialSpeed * this.rand.nextDouble() * 20 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
+					AdvancedRocketry.proxy.spawnParticle("fireworksSpark",world, this.posX + (this.rand.nextDouble()*spread) - (spread/2), this.posY, this.posZ + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble() - (initialSpeed/2), initialSpeed * this.rand.nextDouble() * 20 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
 
 
 				//this.worldObj.spawnParticle("tilecrack_" + this.worldObj.getBlockId((int)this.posX, (int)this.posY - 1, (int)this.posZ) + "_" + 0, this.posX + (this.rand.nextDouble()*spread) - (spread/2), this.posY + 5, this.posZ + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble(), initialSpeed * this.rand.nextDouble() * 20 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
-				AdvancedRocketry.proxy.spawnParticle("hugeexplosion", worldObj, this.posX + (this.rand.nextDouble()*spread) - (spread/2), this.posY, this.posZ + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble(), initialSpeed * this.rand.nextDouble() * 4 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
+				AdvancedRocketry.proxy.spawnParticle("hugeexplosion", world, this.posX + (this.rand.nextDouble()*spread) - (spread/2), this.posY, this.posZ + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble(), initialSpeed * this.rand.nextDouble() * 4 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
 			}
 			//TODO: use sound setting
-			LibVulpes.proxy.playSound(worldObj, getPosition(), AudioRegistry.laserDrill, SoundCategory.NEUTRAL, 1.0f, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
+			LibVulpes.proxy.playSound(world, getPosition(), AudioRegistry.laserDrill, SoundCategory.NEUTRAL, 1.0f, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 			
 		}
 	}

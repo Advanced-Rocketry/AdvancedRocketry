@@ -45,8 +45,7 @@ public class BlockTorchUnlit extends BlockTorch {
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
+			IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
 			float hitZ) {
 
 		if(player.getHeldItem(EnumHand.MAIN_HAND) != null) {

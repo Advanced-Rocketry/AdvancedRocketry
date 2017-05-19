@@ -359,7 +359,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void fireFogBurst(ISpaceObject station) {
 		try {
-			PlanetEventHandler.runBurst(Minecraft.getMinecraft().theWorld.getTotalWorldTime() + 20, 20);
+			PlanetEventHandler.runBurst(Minecraft.getMinecraft().world.getTotalWorldTime() + 20, 20);
 		} catch (NullPointerException e) {}
 	}
 
@@ -377,7 +377,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void changeClientPlayerWorld(World world) {
-		Minecraft.getMinecraft().thePlayer.worldObj = world;
+		Minecraft.getMinecraft().player.world = world;
 	}
 
 	@Override
@@ -421,15 +421,15 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void spawnLaser(Entity entity, Vec3d toPos) {
-		FxLaser fx = new FxLaser(entity.worldObj, toPos.xCoord, toPos.yCoord, toPos.zCoord, entity);
+		FxLaser fx = new FxLaser(entity.world, toPos.xCoord, toPos.yCoord, toPos.zCoord, entity);
 		Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 
-		FxLaserHeat fx2 = new FxLaserHeat(entity.worldObj,  toPos.xCoord, toPos.yCoord, toPos.zCoord, 0.02f);
+		FxLaserHeat fx2 = new FxLaserHeat(entity.world,  toPos.xCoord, toPos.yCoord, toPos.zCoord, 0.02f);
 		Minecraft.getMinecraft().effectRenderer.addEffect(fx2);
 		
 		for(int i = 0; i < 4; i++) {
-			FxLaserSpark fx3 = new FxLaserSpark(entity.worldObj,  toPos.xCoord, toPos.yCoord, toPos.zCoord, 
-					.125 - entity.worldObj.rand.nextFloat()/4f, .125 - entity.worldObj.rand.nextFloat()/4f, .125 - entity.worldObj.rand.nextFloat()/4f, .5f);
+			FxLaserSpark fx3 = new FxLaserSpark(entity.world,  toPos.xCoord, toPos.yCoord, toPos.zCoord, 
+					.125 - entity.world.rand.nextFloat()/4f, .125 - entity.world.rand.nextFloat()/4f, .125 - entity.world.rand.nextFloat()/4f, .5f);
 			Minecraft.getMinecraft().effectRenderer.addEffect(fx3);
 		}
 	}
@@ -437,7 +437,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public float calculateCelestialAngleSpaceStation() {
-		Entity player = Minecraft.getMinecraft().thePlayer;
+		Entity player = Minecraft.getMinecraft().player;
 		try {
 			return (float) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(player.getPosition()).getRotation(EnumFacing.EAST);
 		} catch (NullPointerException e) {
@@ -453,7 +453,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public long getWorldTimeUniversal(int id) {
 		try {
-			return Minecraft.getMinecraft().theWorld.getTotalWorldTime();
+			return Minecraft.getMinecraft().world.getTotalWorldTime();
 		} catch (NullPointerException e) {
 			return 0;
 		}
@@ -494,6 +494,6 @@ public class ClientProxy extends CommonProxy {
 	
 	@Override
 	public void displayMessage(String msg, int time) {
-		RocketEventHandler.setOverlay(Minecraft.getMinecraft().theWorld.getTotalWorldTime() + time, msg);
+		RocketEventHandler.setOverlay(Minecraft.getMinecraft().world.getTotalWorldTime() + time, msg);
 	}
 }

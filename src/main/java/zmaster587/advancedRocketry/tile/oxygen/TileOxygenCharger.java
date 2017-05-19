@@ -10,10 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
@@ -21,6 +19,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.armor.ItemSpaceChest;
+import zmaster587.advancedRocketry.util.FluidUtils;
 import zmaster587.advancedRocketry.util.ItemAirUtils;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.gui.CommonResources;
@@ -69,8 +68,8 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 
 	@Override
 	public boolean canPerformFunction() {
-		if(!worldObj.isRemote) {
-			for( Object player : this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos, pos.add(1,2,1)))) {
+		if(!world.isRemote) {
+			for( Object player : this.world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos, pos.add(1,2,1)))) {
 				ItemStack stack = ((EntityPlayer)player).getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 
 				if(stack != null) {
@@ -107,8 +106,8 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 								continue;
 
 							ItemStack module = inv.getStackInSlot(i);
-							if(module != null && module.getItem() instanceof IFluidContainerItem) {
-								int amtFilled = ((IFluidContainerItem)module.getItem()).fill(module, fluidStack, true);
+							if(FluidUtils.containsFluid(module)) {
+								int amtFilled = module.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP).fill(fluidStack, true);
 								if(amtFilled == 100) {
 									this.drain(100, true);
 
@@ -138,7 +137,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 
 		modules.add(new ModuleSlotArray(50, 21, this, 0, 1));
 		modules.add(new ModuleSlotArray(50, 57, this, 1, 2));
-		if(worldObj.isRemote)
+		if(world.isRemote)
 			modules.add(new ModuleImage(49, 38, new IconResource(194, 0, 18, 18, CommonResources.genericBackground)));
 
 		//modules.add(new ModulePower(18, 20, this));
@@ -230,92 +229,11 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 			}
 		}*/
 
-		if(FluidContainerRegistry.isFilledContainer(stack)) {
-			if(slot == 0 && tank.getFluidAmount() + FluidContainerRegistry.getContainerCapacity(stack) <= tank.getCapacity()) {
-				ItemStack emptyContainer = FluidContainerRegistry.drainFluidContainer(stack);
+		return FluidUtils.attemptDrainContainerIInv(this, tank, stack, 0, 1);
+	}
 
-				if(emptyContainer != null && getStackInSlot(1) == null || (emptyContainer.isItemEqual(getStackInSlot(1)) && getStackInSlot(1).stackSize < getStackInSlot(1).getMaxStackSize())) {
-					tank.fill(FluidContainerRegistry.getFluidForFilledItem(stack), true);
-
-					if(getStackInSlot(1) == null)
-						inventory.setInventorySlotContents(1, emptyContainer);
-					else
-						getStackInSlot(1).stackSize++;
-					decrStackSize(0, 1);
-					return true;
-				}
-			}
-		}
-		else if(FluidContainerRegistry.isContainer(stack)) {
-			if(slot == 0 && tank.getFluidAmount() >= FluidContainerRegistry.BUCKET_VOLUME) {
-				ItemStack fullContainer = FluidContainerRegistry.fillFluidContainer(tank.drain(FluidContainerRegistry.BUCKET_VOLUME, false), stack);
-
-
-				if(fullContainer != null && (getStackInSlot(1) == null || (fullContainer.isItemEqual(getStackInSlot(1)) && getStackInSlot(1).stackSize < getStackInSlot(1).getMaxStackSize())) ) {
-					tank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
-
-					if(getStackInSlot(1) == null)
-						inventory.setInventorySlotContents(1, fullContainer);
-					else
-						getStackInSlot(1).stackSize++;
-					decrStackSize(0, 1);
-					return true;
-				}
-			}
-		}
-		else if(stack != null && stack.getItem() instanceof IFluidContainerItem) {
-			IFluidContainerItem fluidItem = ((IFluidContainerItem)stack.getItem());
-			FluidStack fluidStack;
-			stack = stack.copy();
-			stack.stackSize = 1;
-
-			//Drain the tank into the item
-			if(fluidItem.getFluid(stack) == null && tank.getFluid() != null) {
-				int amt = fluidItem.fill(stack, tank.getFluid(), true);
-
-
-				//If the container is full move it down and try again for a new one
-				if(amt != 0 && fluidItem.getCapacity(stack) == fluidItem.getFluid(stack).amount) {
-
-
-					if(getStackInSlot(1) == null) {
-						inventory.setInventorySlotContents(1, stack);
-					}
-					else if(ItemStack.areItemStackTagsEqual(getStackInSlot(1), stack) && getStackInSlot(1).getItem().equals(stack.getItem()) && getStackInSlot(1).getItemDamage() == stack.getItemDamage() && stack.getItem().getItemStackLimit(stack) < getStackInSlot(1).stackSize) {
-						getStackInSlot(1).stackSize++;
-
-					}
-					else
-						return false;
-					tank.drain(amt, true);
-					decrStackSize(0, 1);
-
-					return true;
-				}
-
-			}
-			else {
-				fluidStack = fluidItem.drain(stack, tank.getCapacity() - tank.getFluidAmount(), false);
-
-				int amountDrained = tank.fill(fluidStack, true);
-				fluidItem.drain(stack, amountDrained, true);
-				if (fluidItem.getFluid(stack) == null || fluidItem.getFluid(stack).amount == 0) {
-					if(getStackInSlot(1) == null) {
-						inventory.setInventorySlotContents(1, stack);
-					}
-					else if(ItemStack.areItemStackTagsEqual(getStackInSlot(1), stack) && getStackInSlot(1).getItem().equals(stack.getItem()) && getStackInSlot(1).getItemDamage() == stack.getItemDamage() && stack.getItem().getItemStackLimit(stack) < getStackInSlot(1).stackSize) {
-						getStackInSlot(1).stackSize++;
-
-					}
-					else
-						return false;
-
-					decrStackSize(0, 1);
-
-					return true;
-				}
-			}
-		}
-		return false;
+	@Override
+	public boolean isEmpty() {
+		return inventory.isEmpty();
 	}
 }

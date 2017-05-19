@@ -30,7 +30,7 @@ public class KeyBindings {
 		@SubscribeEvent
 		public void onKeyInput(InputEvent.KeyInputEvent event) {
 			final Minecraft minecraft = FMLClientHandler.instance().getClient();
-			final EntityPlayerSP player = minecraft.thePlayer;
+			final EntityPlayerSP player = minecraft.player;
 
 
 			//Prevent control when a GUI is open
@@ -48,7 +48,7 @@ public class KeyBindings {
 			if(player.getRidingEntity() != null && player.getRidingEntity() instanceof EntityRocket) {
 				EntityRocket rocket = (EntityRocket)player.getRidingEntity();
 				if(!rocket.isInFlight() && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-					if(Minecraft.getMinecraft().inGameHasFocus && player.equals(Minecraft.getMinecraft().thePlayer)) {
+					if(Minecraft.getMinecraft().inGameHasFocus && player.equals(Minecraft.getMinecraft().player)) {
 						rocket.prepareLaunch();
 					}
 				}

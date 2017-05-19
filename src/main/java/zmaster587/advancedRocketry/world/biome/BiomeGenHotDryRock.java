@@ -12,10 +12,10 @@ public class BiomeGenHotDryRock extends Biome {
 		registerBiome(biomeId, "Hot Dry Rock", this);
 		
 		//hot and stinks
-		this.theBiomeDecorator.generateLakes=false;
-		this.theBiomeDecorator.flowersPerChunk=0;
-		this.theBiomeDecorator.grassPerChunk=0;
-		this.theBiomeDecorator.treesPerChunk=0;
+		this.decorator.generateLakes=false;
+		this.decorator.flowersPerChunk=0;
+		this.decorator.grassPerChunk=0;
+		this.decorator.treesPerChunk=0;
 		this.fillerBlock = this.topBlock = AdvancedRocketryBlocks.blockHotTurf.getDefaultState();
 	}
 	

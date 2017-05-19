@@ -261,8 +261,8 @@ public class DimensionManager implements IGalaxy {
 		else {
 			properties.setName(name);
 		}
-		properties.setAtmosphereDensityDirect(MathHelper.clamp_int(baseAtmosphere + random.nextInt(atmosphereFactor) - atmosphereFactor/2, 0, 200)); 
-		int newDist = properties.orbitalDist = MathHelper.clamp_int(baseDistance + random.nextInt(distanceFactor),0,200);
+		properties.setAtmosphereDensityDirect(MathHelper.clamp(baseAtmosphere + random.nextInt(atmosphereFactor) - atmosphereFactor/2, 0, 200)); 
+		int newDist = properties.orbitalDist = MathHelper.clamp(baseDistance + random.nextInt(distanceFactor),0,200);
 
 		properties.gravitationalMultiplier = Math.min(Math.max(0.05f,(baseGravity + random.nextInt(gravityFactor) - gravityFactor/2)/100f), 1.3f);
 
@@ -297,9 +297,9 @@ public class DimensionManager implements IGalaxy {
 		//Linear is easier. Earth is nominal!
 		properties.averageTemperature = getTemperature(properties.getStar(), properties.orbitalDist, properties.getAtmosphereDensity());
 
-		properties.skyColor[0] *= 1 - MathHelper.clamp_float(random.nextFloat()*0.1f + (70 - properties.averageTemperature)/100f,0.2f,1);
+		properties.skyColor[0] *= 1 - MathHelper.clamp(random.nextFloat()*0.1f + (70 - properties.averageTemperature)/100f,0.2f,1);
 		properties.skyColor[1] *= 1 - (random.nextFloat()*.5f);
-		properties.skyColor[2] *= 1 - MathHelper.clamp_float(random.nextFloat()*0.1f + (properties.averageTemperature - 70)/100f,0,1);
+		properties.skyColor[2] *= 1 - MathHelper.clamp(random.nextFloat()*0.1f + (properties.averageTemperature - 70)/100f,0,1);
 
 		properties.rotationalPeriod = (int) (Math.pow((1/properties.gravitationalMultiplier),3) * 24000);
 
@@ -322,8 +322,8 @@ public class DimensionManager implements IGalaxy {
 		else {
 			properties.setName(name);
 		}
-		properties.setAtmosphereDensityDirect(MathHelper.clamp_int(baseAtmosphere + random.nextInt(atmosphereFactor) - atmosphereFactor/2, 0, 200)); 
-		properties.orbitalDist = MathHelper.clamp_int(baseDistance + random.nextInt(distanceFactor),0,200);
+		properties.setAtmosphereDensityDirect(MathHelper.clamp(baseAtmosphere + random.nextInt(atmosphereFactor) - atmosphereFactor/2, 0, 200)); 
+		properties.orbitalDist = MathHelper.clamp(baseDistance + random.nextInt(distanceFactor),0,200);
 		//System.out.println(properties.orbitalDist);
 		properties.gravitationalMultiplier = Math.min(Math.max(0.05f,(baseGravity + random.nextInt(gravityFactor) - gravityFactor/2)/100f), 1.3f);
 
@@ -573,8 +573,28 @@ public class DimensionManager implements IGalaxy {
 			if(!file.exists())
 				file.createNewFile();
 
-			outStream = new FileOutputStream(file);
-			CompressedStreamTools.writeCompressed(nbt, outStream);
+			//Getting real sick of my planet file getting toasted during debug...
+			File tmpFile = File.createTempFile("dimprops", null);
+			outStream = new FileOutputStream(tmpFile);
+			try {
+				CompressedStreamTools.writeCompressed(nbt, outStream);
+				
+				//copy the correctly written output
+				FileOutputStream properOstream = new FileOutputStream(file);
+				FileInputStream inStream = new FileInputStream(tmpFile);
+				byte buffer[] = new byte[1024];
+				int numRead = 0;
+				while((numRead = inStream.read(buffer)) > 0) {
+					properOstream.write(buffer, 0, numRead);
+				}
+				inStream.close();
+				properOstream.close();
+				
+			} catch(Exception e) {
+				AdvancedRocketry.logger.error("Cannot save advanced rocketry planet file");
+				e.printStackTrace();
+			}
+			
 			outStream.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

@@ -64,12 +64,7 @@ public class InverseTrailFx extends Particle {
 		Tessellator.getInstance().draw();
 		worldRendererIn.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
 	}
-	
-	@Override
-    public boolean isTransparent()
-    {
-        return true;
-    }
+
 	
 	
 	

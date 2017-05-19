@@ -154,16 +154,16 @@ public class ContainerSpaceLaser extends Container {
 				return null;
 			}
 
-			if (stackInSlot.stackSize == 0) {
+			if (stackInSlot.getCount() == 0) {
 				slotObject.putStack(null);
 			} else {
 				slotObject.onSlotChanged();
 			}
 
-			if (stackInSlot.stackSize == stack.stackSize) {
+			if (stackInSlot.getCount() == stack.getCount()) {
 				return null;
 			}
-			slotObject.onPickupFromSlot(player, stackInSlot);
+			slotObject.onTake(player, stackInSlot);
 		}
 
 		return stack;
@@ -172,6 +172,6 @@ public class ContainerSpaceLaser extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) {
-		return laserTile.isUseableByPlayer(entityplayer);
+		return laserTile.isUsableByPlayer(entityplayer);
 	}
 }

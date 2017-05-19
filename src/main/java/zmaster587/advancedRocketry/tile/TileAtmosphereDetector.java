@@ -46,23 +46,23 @@ public class TileAtmosphereDetector extends TileEntity implements ITickable, IMo
 
 	@Override
 	public void update() {
-		if(!worldObj.isRemote && worldObj.getWorldTime() % 10 == 0) {
-			IBlockState state = worldObj.getBlockState(pos);
+		if(!world.isRemote && world.getWorldTime() % 10 == 0) {
+			IBlockState state = world.getBlockState(pos);
 			boolean detectedAtm = false;
 
 			//TODO: Galacticcraft support
-			if(AtmosphereHandler.getOxygenHandler(worldObj.provider.getDimension()) == null) {
+			if(AtmosphereHandler.getOxygenHandler(world.provider.getDimension()) == null) {
 				detectedAtm = atmosphereToDetect == AtmosphereType.AIR;
 			}
 			else {
 				for(EnumFacing  direction : EnumFacing.values()) {
-					detectedAtm = (!worldObj.getBlockState(pos.offset(direction)).isOpaqueCube() && atmosphereToDetect == AtmosphereHandler.getOxygenHandler(worldObj.provider.getDimension()).getAtmosphereType(pos.offset(direction)));
+					detectedAtm = (!world.getBlockState(pos.offset(direction)).isOpaqueCube() && atmosphereToDetect == AtmosphereHandler.getOxygenHandler(world.provider.getDimension()).getAtmosphereType(pos.offset(direction)));
 					if(detectedAtm) break;
 				}
 			}
 
-			if(((BlockRedstoneEmitter)state.getBlock()).getState(worldObj, state, pos) != detectedAtm) {
-				((BlockRedstoneEmitter)state.getBlock()).setState(worldObj, state, pos, detectedAtm);
+			if(((BlockRedstoneEmitter)state.getBlock()).getState(world, state, pos) != detectedAtm) {
+				((BlockRedstoneEmitter)state.getBlock()).setState(world, state, pos, detectedAtm);
 			}
 		}
 	}
@@ -123,7 +123,7 @@ public class TileAtmosphereDetector extends TileEntity implements ITickable, IMo
 			NBTTagCompound nbt) {
 		if(packetId == 0) {
 			PacketBuffer buf = new PacketBuffer(in);
-			nbt.setString("uName", buf.readStringFromBuffer(buf.readShort()));
+			nbt.setString("uName", buf.readString(buf.readShort()));
 		}
 	}
 

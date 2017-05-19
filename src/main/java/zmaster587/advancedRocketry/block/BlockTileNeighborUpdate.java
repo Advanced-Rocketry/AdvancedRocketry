@@ -21,9 +21,9 @@ public class BlockTileNeighborUpdate extends BlockTile {
 	
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos,
-			Block blockIn) {
+			Block blockIn, BlockPos fromPos) {
 		
-		super.neighborChanged(state, worldIn, pos, blockIn);
+		super.neighborChanged(state, worldIn, pos, blockIn, fromPos);
 		TileEntity tile = worldIn.getTileEntity(pos);
 		
 		if(tile instanceof IAdjBlockUpdate)

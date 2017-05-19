@@ -116,10 +116,15 @@ public class ChunkManagerPlanet extends BiomeProvider {
 		GenLayer genlayer4 = GenLayerZoom.magnify(1000L, genlayerdeepocean, 0);
 		int i = 4;
 		int j = i;
+		ChunkProviderSettings chunkprovidersettings = null;
+		
+		
+		if(!p_180781_3_.isEmpty()) {
+			chunkprovidersettings = ChunkProviderSettings.Factory.jsonToFactory(p_180781_3_).build();
+		}
 
 		if (p_180781_2_ == WorldType.CUSTOMIZED && !p_180781_3_.isEmpty())
 		{
-			ChunkProviderSettings chunkprovidersettings = ChunkProviderSettings.Factory.jsonToFactory(p_180781_3_).build();
 			i = chunkprovidersettings.biomeSize;
 			j = chunkprovidersettings.riverSize;
 		}
@@ -138,7 +143,7 @@ public class ChunkManagerPlanet extends BiomeProvider {
 		//if(hasRivers) {
 		GenLayerRiverInit genlayerriverinit = new GenLayerRiverInit(100L, lvt_8_1_);
 		GenLayer lvt_10_1_ = GenLayerZoom.magnify(1000L, genlayerriverinit, 2);
-		GenLayer genlayerbiomeedge = p_180781_2_.getBiomeLayer(seed, genlayer4, p_180781_3_);
+		GenLayer genlayerbiomeedge = p_180781_2_.getBiomeLayer(seed, genlayer4, chunkprovidersettings);
 		genlayerhills = new GenLayerHills(1000L, genlayerbiomeedge, lvt_10_1_);
 		genlayer5 = GenLayerZoom.magnify(1000L, genlayerriverinit, 2);
 		//}
@@ -254,7 +259,7 @@ public class ChunkManagerPlanet extends BiomeProvider {
 	 */
 	public Biome[] loadBlockGeneratorData(@Nullable Biome[] oldBiomeList, int x, int z, int width, int depth)
 	{
-		return this.getBiomeGenAt(oldBiomeList, x, z, width, depth, true);
+		return this.getBiomes(oldBiomeList, x, z, width, depth, true);
 	}
 
 
@@ -262,14 +267,13 @@ public class ChunkManagerPlanet extends BiomeProvider {
 	{
 		return this.biomeCache.getBiome(x, z, Biomes.OCEAN);
 	}
-
 	//TODO: make it allow more biomes later
 	/**
 	 * Return a list of biomes for the specified blocks. Args: listToReuse, x, y, width, length, cacheFlag (if false,
 	 * don't check biomeCache to avoid infinite loop in BiomeCacheBlock)
 	 */
 	@Override
-	public Biome[] getBiomeGenAt(@Nullable Biome[] listToReuse, int x, int z, int width, int length, boolean cacheFlag) {
+	public Biome[] getBiomes(@Nullable Biome[] listToReuse, int x, int z, int width, int length, boolean cacheFlag) {
 
 		GenLayerBiomePlanet.setupBiomesForUse(biomes);
 		//return super.getBiomeGenAt(biomeGenBase, x, y, width, length, p_76931_6_);

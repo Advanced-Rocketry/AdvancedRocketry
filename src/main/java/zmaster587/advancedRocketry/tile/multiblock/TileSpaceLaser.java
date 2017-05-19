@@ -282,15 +282,15 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 	public void update() {
 		
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
-		if(timeAlive == 0 && !worldObj.isRemote) {
+		if(timeAlive == 0 && !world.isRemote) {
 			if(isComplete())
-				canRender = completeStructure = completeStructure(worldObj.getBlockState(pos));
+				canRender = completeStructure = completeStructure(world.getBlockState(pos));
 			timeAlive = 0x1;
 			checkCanRun();
 		}
 		
 		//TODO: drain energy
-		if(!this.worldObj.isRemote) {
+		if(!this.world.isRemote) {
 			tickSinceLastOperation++;
 
 			if(!isAllowedToRun()) {
@@ -315,7 +315,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 				if(mode == MODE.SINGLE) 
 					finished = true;
 
-				if(this.worldObj.getStrongPower(getPos()) != 0) {
+				if(this.world.getStrongPower(getPos()) != 0) {
 					if(mode == MODE.LINE_X) {
 						this.laserX += 3;
 					}
@@ -424,7 +424,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 		laserSat.readFromNBT(nbt.getCompoundTag("laser"));
 		if(nbt.hasKey("GlassPane")) {
 			NBTTagCompound tag = nbt.getCompoundTag("GlassPane");
-			glassPanel = ItemStack.loadItemStackFromNBT(tag);
+			glassPanel = new ItemStack(tag);
 		}
 
 		laserX = nbt.getInteger("laserX");
@@ -471,13 +471,13 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 	 * @return first available inventory or null
 	 */
 	private Object getAvalibleInv() {
-		EnumFacing front = RotatableBlock.getFront(worldObj.getBlockState(getPos()));
+		EnumFacing front = RotatableBlock.getFront(world.getBlockState(getPos()));
 
 		for(EnumFacing f : VALID_INVENTORY_DIRECTIONS) {
 			if(f == front)
 				continue;
 
-			TileEntity e = this.worldObj.getTileEntity(getPos().offset(f));
+			TileEntity e = this.world.getTileEntity(getPos().offset(f));
 
 
 			if(InventoryCompat.canInjectItems(e))
@@ -495,13 +495,13 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 		if(item == null)
 			return getAvalibleInv();
 
-		EnumFacing front = RotatableBlock.getFront(worldObj.getBlockState(pos));
+		EnumFacing front = RotatableBlock.getFront(world.getBlockState(pos));
 
 		for(EnumFacing f : VALID_INVENTORY_DIRECTIONS) {
 			if(f == front)
 				continue;
 
-			TileEntity e = this.worldObj.getTileEntity(getPos());
+			TileEntity e = this.world.getTileEntity(getPos());
 
 
 			if(InventoryCompat.canInjectItems(e, item))
@@ -519,8 +519,8 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 	}
 
 	private boolean isAllowedToRun() {
-		return !(glassPanel == null || batteries.getEnergyStored() == 0 || !(this.worldObj.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(getPos()).getParentPlanet()) ||
-				Configuration.laserBlackListDims.contains(((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(getPos()).getParentPlanet()));
+		return !(glassPanel == null || batteries.getEnergyStored() == 0 || !(this.world.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.world.provider).getDimensionProperties(getPos()).getParentPlanet()) ||
+				Configuration.laserBlackListDims.contains(((WorldProviderSpace)this.world.provider).getDimensionProperties(getPos()).getParentPlanet()));
 	}
 	
 	/**
@@ -528,16 +528,16 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 	 */
 	public void checkCanRun() {
 		//Laser requires lense, redstone power, not be jammed, and be in orbit and energy to function
-		if(worldObj.isBlockIndirectlyGettingPowered(getPos()) == 0 || !isAllowedToRun()) {
+		if(world.isBlockIndirectlyGettingPowered(getPos()) == 0 || !isAllowedToRun()) {
 			if(laserSat.isAlive()) {
 				laserSat.deactivateLaser();
 			}
 
 			setRunning(false);
-		} else if(!laserSat.isAlive() && !finished && !laserSat.getJammed() && worldObj.isBlockIndirectlyGettingPowered(getPos()) > 0 && canMachineSeeEarth()) {
+		} else if(!laserSat.isAlive() && !finished && !laserSat.getJammed() && world.isBlockIndirectlyGettingPowered(getPos()) > 0 && canMachineSeeEarth()) {
 
 			//Laser will be on at this point
-			int orbitDimId = ((WorldProviderSpace)this.worldObj.provider).getDimensionProperties(getPos()).getParentPlanet();
+			int orbitDimId = ((WorldProviderSpace)this.world.provider).getDimensionProperties(getPos()).getParentPlanet();
 			if(orbitDimId == SpaceObjectManager.WARPDIMID)
 				return;
 			WorldServer orbitWorld = DimensionManager.getWorld(orbitDimId);
@@ -551,7 +551,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 
 
 			if(ticket == null) {
-				ticket = ForgeChunkManager.requestTicket(AdvancedRocketry.instance, this.worldObj, Type.NORMAL);
+				ticket = ForgeChunkManager.requestTicket(AdvancedRocketry.instance, this.world, Type.NORMAL);
 				if(ticket != null)
 					ForgeChunkManager.forceChunk(ticket, new ChunkPos(getPos().getX() / 16 - (getPos().getX() < 0 ? 1 : 0), getPos().getZ() / 16 - (getPos().getZ() < 0 ? 1 : 0)));
 			}
@@ -559,8 +559,8 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 			setRunning(laserSat.activateLaser(orbitWorld, laserX, laserZ));
 		}
 
-		if(!this.worldObj.isRemote)
-			PacketHandler.sendToNearby(new PacketMachine(this, (byte)12), 128, pos, this.worldObj.provider.getDimension());
+		if(!this.world.isRemote)
+			PacketHandler.sendToNearby(new PacketMachine(this, (byte)12), 128, pos, this.world.provider.getDimension());
 	}
 
 	public int getEnergyPercentScaled(int max) {
@@ -626,10 +626,15 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
+	public boolean isUsableByPlayer(EntityPlayer entityplayer) {
 		return entityplayer.getDistanceSq(pos) <= 64;
 	}
 
+	@Override
+	public boolean isEmpty() {
+		return glassPanel != null;
+	}
+	
 	@Override
 	public void openInventory(EntityPlayer entity) {
 		// TODO Perhaps make sure laser isn't running
@@ -723,7 +728,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 	public List<ModuleBase> getModules(int id, EntityPlayer player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
-		if(worldObj.isRemote) {
+		if(world.isRemote) {
 			modules.add(locationX = new ModuleNumericTextbox(this, 113, 31, 50, 10, 16));
 			modules.add(locationZ = new ModuleNumericTextbox(this, 113, 41, 50, 10, 16));
 			

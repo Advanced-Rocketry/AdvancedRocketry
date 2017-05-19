@@ -76,7 +76,7 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 		modules.add(container);
 
 		//Transfer discovery values
-		if(!worldObj.isRemote) {
+		if(!world.isRemote) {
 			markDirty();
 		}
 
@@ -106,7 +106,7 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 	@Override
 	public int getProgress(int id) {
 
-		if(!worldObj.isRemote) {
+		if(!world.isRemote) {
 			return 25; /*
 			if(getMasterBlock() != null) {
 

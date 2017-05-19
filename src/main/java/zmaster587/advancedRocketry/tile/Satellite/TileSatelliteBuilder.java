@@ -118,7 +118,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 				decrStackSize(i, 1);
 			}
 		}
-		if(!worldObj.isRemote) {
+		if(!world.isRemote) {
 			//Set final satellite properties
 			properties = new SatelliteProperties(powerGeneration, powerStorage, satType,maxData);
 			properties.setId(DimensionManager.getInstance().getNextSatelliteId());
@@ -204,7 +204,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 
 	@Override
 	public void onInventoryButtonPressed(int buttonId) {
-		if(worldObj.isRemote)
+		if(world.isRemote)
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)(buttonId + 100)) );
 
 		if(buttonId == 0) {
@@ -254,7 +254,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		return player.getDistanceSq(pos) < 4192;
 	}
 
@@ -317,5 +317,10 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	@Override
 	public void clear() {
 		inventory.clear();
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return inventory.isEmpty();
 	}
 }

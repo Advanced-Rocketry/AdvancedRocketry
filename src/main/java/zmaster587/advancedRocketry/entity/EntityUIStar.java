@@ -55,7 +55,7 @@ public class EntityUIStar extends EntityUIPlanet {
 	public int getPlanetID() {
 		//this.dataManager.set(planetID, 256);
 
-		if(!worldObj.isRemote)
+		if(!world.isRemote)
 			return star == null ? -1 : star.getId();
 
 		int planetId = this.dataManager.get(planetID);
@@ -81,9 +81,8 @@ public class EntityUIStar extends EntityUIPlanet {
 	}
 	
 	@Override
-	public boolean processInitialInteract(EntityPlayer player, ItemStack stack,
-			EnumHand hand) {
-		if(!worldObj.isRemote && tile != null) {
+	public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
+		if(!world.isRemote && tile != null) {
 			tile.selectSystem(star.getId() + starIDoffset);
 		}
 		return true;

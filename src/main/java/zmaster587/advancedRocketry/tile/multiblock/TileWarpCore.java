@@ -40,7 +40,7 @@ public class TileWarpCore extends TileMultiBlock {
 	};
 
 	private SpaceObject getSpaceObject() {
-		if(station == null && worldObj.provider.getDimension() == Configuration.spaceDimId) {
+		if(station == null && world.provider.getDimension() == Configuration.spaceDimId) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceObject)
 				station = (SpaceObject) object;
@@ -63,7 +63,7 @@ public class TileWarpCore extends TileMultiBlock {
 	public void onInventoryUpdated() {
 		//Needs completion
 		if(itemInPorts.isEmpty() /*&& !worldObj.isRemote*/) {
-			attemptCompleteStructure(worldObj.getBlockState(pos));
+			attemptCompleteStructure(world.getBlockState(pos));
 		}
 		
 		if(getSpaceObject() == null || getSpaceObject().getFuelAmount() == getSpaceObject().getMaxFuelAmount())
@@ -73,11 +73,11 @@ public class TileWarpCore extends TileMultiBlock {
 				ItemStack stack = inv.getStackInSlot(i);
 				int amt = 0;
 				if(stack != null && OreDictionary.itemMatches(MaterialRegistry.getItemStackFromMaterialAndType("Dilithium", AllowedProducts.getProductByName("CRYSTAL")), stack, false)) {
-					int stackSize = stack.stackSize;
-					if(!worldObj.isRemote)
-						amt = getSpaceObject().addFuel(Configuration.fuelPointsPerDilithium*stack.stackSize);
+					int stackSize = stack.getCount();
+					if(!world.isRemote)
+						amt = getSpaceObject().addFuel(Configuration.fuelPointsPerDilithium*stack.getCount());
 					else
-						amt = Math.min(getSpaceObject().getFuelAmount() + 10*stack.stackSize, getSpaceObject().getMaxFuelAmount()) - getSpaceObject().getFuelAmount();//
+						amt = Math.min(getSpaceObject().getFuelAmount() + 10*stack.getCount(), getSpaceObject().getMaxFuelAmount()) - getSpaceObject().getFuelAmount();//
 					inv.decrStackSize(i, amt/10);
 					inv.markDirty();
 					

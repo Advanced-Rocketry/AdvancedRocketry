@@ -93,7 +93,7 @@ public class ItemStationChip extends ItemIdWithName {
 			list.add(ChatFormatting.GREEN + "Station " + getUUID(stack));
 			super.addInformation(stack, player, list, bool);
 			
-			if(player.worldObj.provider.getDimension() == Configuration.spaceDimId) {
+			if(player.world.provider.getDimension() == Configuration.spaceDimId) {
 				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(player.getPosition());
 				
 				if(obj != null) {

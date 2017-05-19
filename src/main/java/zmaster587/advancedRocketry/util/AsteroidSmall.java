@@ -55,7 +55,7 @@ public class AsteroidSmall {
 		
 		StackEntry entry = new StackEntry();
 		entry.stack = new ItemStack(Blocks.COBBLESTONE, myMass - numOres);
-		entry.variablility = (int)(uncertainty*entry.stack.stackSize);
+		entry.variablility = (int)(uncertainty*entry.stack.getCount());
 		entry.midpoint =  (int)(entry.variablility*rand.nextFloat() - uncertainty*entry.variablility/2f);
 		
 		if(entry.midpoint + myMass - numOres < entry.variablility)

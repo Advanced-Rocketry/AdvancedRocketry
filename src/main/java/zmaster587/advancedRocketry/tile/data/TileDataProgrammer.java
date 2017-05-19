@@ -45,8 +45,13 @@ public class TileDataProgrammer extends TileEntity implements IInventory {
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		return player.getDistanceSq(pos) < 4096;
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return false;
 	}
 
 	@Override

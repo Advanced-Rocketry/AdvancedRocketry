@@ -27,8 +27,9 @@ public class BlockAstroBed extends BlockBed {
 	}
 	
 	@Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
+    public boolean onBlockActivated(World worldIn, BlockPos pos,
+			IBlockState state, EntityPlayer playerIn, EnumHand hand,
+			EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (worldIn.isRemote)
         {
             return true;
@@ -54,7 +55,7 @@ public class BlockAstroBed extends BlockBed {
 
                     if (entityplayer != null)
                     {
-                        playerIn.addChatComponentMessage(new TextComponentTranslation("tile.bed.occupied", new Object[0]));
+                        playerIn.sendMessage(new TextComponentTranslation("tile.bed.occupied", new Object[0]));
                         return true;
                     }
 
@@ -74,11 +75,11 @@ public class BlockAstroBed extends BlockBed {
                 {
                     if (entityplayer$sleepresult == EntityPlayer.SleepResult.NOT_POSSIBLE_NOW)
                     {
-                        playerIn.addChatComponentMessage(new TextComponentTranslation("tile.bed.noSleep", new Object[0]));
+                        playerIn.sendMessage(new TextComponentTranslation("tile.bed.noSleep", new Object[0]));
                     }
                     else if (entityplayer$sleepresult == EntityPlayer.SleepResult.NOT_SAFE)
                     {
-                        playerIn.addChatComponentMessage(new TextComponentTranslation("tile.bed.notSafe", new Object[0]));
+                        playerIn.sendMessage(new TextComponentTranslation("tile.bed.notSafe", new Object[0]));
                     }
 
                     return true;
@@ -93,7 +94,7 @@ public class BlockAstroBed extends BlockBed {
     {
         for (EntityPlayer entityplayer : worldIn.playerEntities)
         {
-            if (entityplayer.isPlayerSleeping() && entityplayer.playerLocation.equals(pos))
+            if (entityplayer.isPlayerSleeping() && entityplayer.bedLocation.equals(pos))
             {
                 return entityplayer;
             }

@@ -48,7 +48,7 @@ public class BlockElectricMushroom extends BlockMushroom implements IGrowable {
 	@Override
 	public void updateTick(World world, BlockPos pos, IBlockState state,
 			Random rand) {
-		if(!world.isRemote && Configuration.electricPlantsSpawnLightning && world.isRaining() && world.getBiomeGenForCoords(pos) == AdvancedRocketryBiomes.stormLandsBiome) {
+		if(!world.isRemote && Configuration.electricPlantsSpawnLightning && world.isRaining() && world.getBiome(pos) == AdvancedRocketryBiomes.stormLandsBiome) {
 			int lightningX = pos.getX() + rand.nextInt(24) - 12;
 			int lightningZ = pos.getZ() + rand.nextInt(24) - 12;
 			BlockPos lightning = new BlockPos(lightningX, 0, lightningZ );
@@ -76,9 +76,9 @@ public class BlockElectricMushroom extends BlockMushroom implements IGrowable {
 			BlockPos pos, Random rand) {
 		
 		super.randomDisplayTick(stateIn, world, pos, rand);
-		if(world.getTotalWorldTime() % 100 == 0 && world.getBiomeGenForCoords(pos) == AdvancedRocketryBiomes.stormLandsBiome) {
+		if(world.getTotalWorldTime() % 100 == 0 && world.getBiome(pos) == AdvancedRocketryBiomes.stormLandsBiome) {
 			FxSystemElectricArc.spawnArc(world, pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, .3, 7);
-			world.playSound(Minecraft.getMinecraft().thePlayer, pos, AudioRegistry.electricShockSmall, SoundCategory.BLOCKS, .7f,  0.975f + world.rand.nextFloat()*0.05f);
+			world.playSound(Minecraft.getMinecraft().player, pos, AudioRegistry.electricShockSmall, SoundCategory.BLOCKS, .7f,  0.975f + world.rand.nextFloat()*0.05f);
 		}
 	}
 }

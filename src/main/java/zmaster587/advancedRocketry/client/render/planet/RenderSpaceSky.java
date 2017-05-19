@@ -30,7 +30,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 	public void renderPlanet2(VertexBuffer buffer, ResourceLocation icon, int locationX, int locationY, double zLevel, float planetOrbitalDistance, float alphaMultiplier, double angle, boolean hasAtmosphere, float[] atmColor, float[] ringColor, boolean isGasgiant, boolean hasRings) {
 
 		
-		ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.thePlayer.getPosition());
+		ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.player.getPosition());
 		
 		if(object == null)
 			return;
@@ -192,7 +192,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 	protected void rotateAroundAxis() {
 		Vector3F<Float> axis = getRotateAxis();
 		//GL11.glRotatef(90f, axis.x, axis.y, axis.z);
-		ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.thePlayer.getPosition());
+		ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.player.getPosition());
 		
 		GL11.glRotated(obj.getRotation(EnumFacing.UP)*360, 0, 1, 0);
 		GL11.glRotated(obj.getRotation(EnumFacing.EAST)*360, 1, 0, 0);

@@ -13,7 +13,7 @@ public class AtmosphereEvent  extends EntityEvent {
 	
 	public AtmosphereEvent(Entity entity, IAtmosphere atmosphere) {
 		super(entity);
-		world = entity.worldObj;
+		world = entity.world;
 		this.atmosphere = atmosphere;
 	}
 	

@@ -29,10 +29,10 @@ public class BlockLaser extends BlockMultiblockMachine {
 	public boolean hasTileEntity(IBlockState state) {
 		return true;
 	}
-
+	
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos,
-			Block blockIn) {
+			Block blockIn, BlockPos fromPos) {
 		if(blockIn != this)
 			((TileSpaceLaser)worldIn.getTileEntity(pos)).checkCanRun();
 	}

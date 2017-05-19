@@ -174,17 +174,17 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0 ) {
-			attemptCompleteStructure(worldObj.getBlockState(pos));
+			attemptCompleteStructure(world.getBlockState(pos));
 			timeAlive = 0x1;
 		}
 
-		if((worldObj.isRemote && isOpen) || (!worldObj.isRemote && isRunning() && getMachineEnabled() && !worldObj.isRaining() && worldObj.canBlockSeeSky(pos.add(0,1,0)) && !worldObj.isDaytime()) ) {
+		if((world.isRemote && isOpen) || (!world.isRemote && isRunning() && getMachineEnabled() && !world.isRaining() && world.canBlockSeeSky(pos.add(0,1,0)) && !world.isDaytime()) ) {
 
 			if(!isOpen) {
 				isOpen= true;
 
 				markDirty();
-				worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
+				world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 			}
 
 			if(openProgress < openTime)
@@ -196,7 +196,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 				isOpen = false;
 
 				markDirty();
-				worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
+				world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 			}
 
 			openProgress--;
@@ -297,10 +297,10 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	public boolean completeStructure(IBlockState state) {
 		boolean result = super.completeStructure(state);
 		if(result) {
-			((BlockMultiblockMachine)worldObj.getBlockState(pos).getBlock()).setBlockState(worldObj, worldObj.getBlockState(pos), pos, true);
+			((BlockMultiblockMachine)world.getBlockState(pos).getBlock()).setBlockState(world, world.getBlockState(pos), pos, true);
 		}
 		else
-			((BlockMultiblockMachine)worldObj.getBlockState(pos).getBlock()).setBlockState(worldObj, worldObj.getBlockState(pos), pos, false);
+			((BlockMultiblockMachine)world.getBlockState(pos).getBlock()).setBlockState(world, world.getBlockState(pos), pos, false);
 
 
 		completionTime = observationtime;
@@ -395,7 +395,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			int baseY = 32;
 			int sizeX = 72;
 			int sizeY = 46;
-			if(worldObj.isRemote) {
+			if(world.isRemote) {
 				//Border
 				modules.add(new ModuleScaledImage(baseX - 3,baseY - 3,3, baseY + sizeY  +6, TextureResources.verticalBar));
 				modules.add(new ModuleScaledImage(baseX + sizeX, baseY- 3, -3, baseY + sizeY + 6, TextureResources.verticalBar));
@@ -414,7 +414,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			baseY = 32;
 			sizeX = 72;
 			sizeY = 46;
-			if(worldObj.isRemote) {
+			if(world.isRemote) {
 				//Border
 				modules.add(new ModuleScaledImage(baseX - 3,baseY - 3,3, baseY + sizeY  +6, TextureResources.verticalBar));
 				modules.add(new ModuleScaledImage(baseX + sizeX, baseY- 3, -3, baseY + sizeY + 6, TextureResources.verticalBar));
@@ -489,7 +489,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			
 			//for(TileDataBus bus : getDataBus()) {
 				if(extractData(dataConsumedPerRefresh, DataType.DISTANCE, EnumFacing.UP, false) == dataConsumedPerRefresh) {
-					lastSeed = worldObj.getTotalWorldTime()/100;
+					lastSeed = world.getTotalWorldTime()/100;
 					lastButton = -1;
 					lastType = "";
 					PacketHandler.sendToServer(new PacketMachine(this, (byte)SEED_CHANGE));
@@ -506,32 +506,32 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 		if(id == -1)
 			storeData(-1);
-		else if(id == TAB_SWITCH && !worldObj.isRemote) {
+		else if(id == TAB_SWITCH && !world.isRemote) {
 			tabModule.setTab(nbt.getShort("tab"));
 			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), getWorld(), pos.getX(), pos.getY(), pos.getZ());
 		}
-		else if(id == BUTTON_PRESS && !worldObj.isRemote) {
+		else if(id == BUTTON_PRESS && !world.isRemote) {
 			lastButton = nbt.getShort("button");
 			lastType = buttonType.get(lastButton - LIST_OFFSET);
 			markDirty();
-			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 2);
+			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 2);
 			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), getWorld(), pos.getX(), pos.getY(), pos.getZ());
 
 		}
 		else if(id == SEED_CHANGE) {
 			if(extractData(dataConsumedPerRefresh, DataType.DISTANCE, EnumFacing.UP, false) >= dataConsumedPerRefresh) {
-				lastSeed = worldObj.getTotalWorldTime()/100;
+				lastSeed = world.getTotalWorldTime()/100;
 				lastButton = -1;
 				lastType = "";
 				extractData(dataConsumedPerRefresh, DataType.DISTANCE, EnumFacing.UP, true);
-				worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 2);
+				world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 2);
 				markDirty();
 				player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), getWorld(), pos.getX(), pos.getY(), pos.getZ());
 			}
 
 
 		}
-		else if(id == PROCESS_CHIP && !worldObj.isRemote) {
+		else if(id == PROCESS_CHIP && !world.isRemote) {
 
 			if(inv.getStackInSlot(2) == null && isOpen && hasEnergy(500) && lastButton != -1) {
 				ItemStack stack = inv.decrStackSize(1, 1);
@@ -602,8 +602,13 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		return true;
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return inv.isEmpty();
 	}
 
 	@Override
@@ -645,7 +650,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	public void storeData(int id) {
 		ItemStack dataChip = inv.getStackInSlot(0);
 
-		if(dataChip != null && dataChip.getItem() instanceof ItemData && dataChip.stackSize == 1) {
+		if(dataChip != null && dataChip.getItem() instanceof ItemData && dataChip.getCount() == 1) {
 
 			ItemData dataItem = (ItemData)dataChip.getItem();
 			DataStorage data = dataItem.getDataStorage(dataChip);
@@ -658,7 +663,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			dataItem.setData(dataChip, data.getData(), data.getDataType());
 		}
 
-		if(worldObj.isRemote) {
+		if(world.isRemote) {
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)-1));
 		}
 	}

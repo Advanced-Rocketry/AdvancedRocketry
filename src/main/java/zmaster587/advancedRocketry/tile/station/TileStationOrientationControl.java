@@ -64,7 +64,7 @@ public class TileStationOrientationControl extends TileEntity implements ITickab
 	}
 
 	private void updateText() {
-		if(worldObj.isRemote) {
+		if(world.isRemote) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object != null) {
 				moduleAngularVelocity.setText(String.format("Angular Velocity: %.1f %.1f %.1f", 72000D*object.getDeltaRotation(EnumFacing.EAST), 72000D*object.getDeltaRotation(EnumFacing.UP), 7200D*object.getDeltaRotation(EnumFacing.NORTH)));
@@ -80,8 +80,8 @@ public class TileStationOrientationControl extends TileEntity implements ITickab
 	@Override
 	public void update() {
 
-		if(this.worldObj.provider instanceof WorldProviderSpace) {
-			if(!worldObj.isRemote) {
+		if(this.world.provider instanceof WorldProviderSpace) {
+			if(!world.isRemote) {
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 				boolean update = false;
 
@@ -108,7 +108,7 @@ public class TileStationOrientationControl extends TileEntity implements ITickab
 						}
 					}
 					
-					if(!worldObj.isRemote && update) {
+					if(!world.isRemote && update) {
 						//PacketHandler.sendToNearby(new PacketStationUpdate(object, PacketStationUpdate.Type.ROTANGLE_UPDATE), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 1024);
 						PacketHandler.sendToAll(new PacketStationUpdate(object, PacketStationUpdate.Type.ROTANGLE_UPDATE));
 					}

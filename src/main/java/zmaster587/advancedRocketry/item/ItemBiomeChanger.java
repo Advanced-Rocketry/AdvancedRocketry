@@ -42,7 +42,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 		List<ModuleBase> list = new LinkedList<ModuleBase>();
 
 		SatelliteBiomeChanger sat = (SatelliteBiomeChanger) getSatellite(player.getHeldItem(EnumHand.MAIN_HAND));
-		if(player.worldObj.isRemote) {
+		if(player.world.isRemote) {
 			list.add(new ModuleImage(24, 14, zmaster587.advancedRocketry.inventory.TextureResources.earthCandyIcon));
 		}
 
@@ -77,7 +77,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 			list.add("Unprogrammed");
 		else if(mapping == null)
 			list.add("Satellite not yet launched");
-		else if(mapping.getDimensionId() == player.worldObj.provider.getDimension()) {
+		else if(mapping.getDimensionId() == player.world.provider.getDimension()) {
 			list.add("Connected");
 			list.add("Selected Biome: " + Biome.getBiome(mapping.getBiome()).getBiomeName());
 			list.add("Num Biomes Scanned: " + mapping.discoveredBiomes().size());
@@ -90,8 +90,8 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack stack,
-			World world, EntityPlayer player, EnumHand hand) {
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+		ItemStack stack = player.getHeldItem(hand);
 		if(!world.isRemote) {
 			SatelliteBase sat = DimensionManager.getInstance().getSatellite(this.getSatelliteId(stack));
 			if(sat != null) {
@@ -108,7 +108,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 				}
 			}
 		}
-		return super.onItemRightClick(stack, world, player, hand);
+		return super.onItemRightClick(world, player, hand);
 	}
 
 	private int getBiomeId(ItemStack stack) {
@@ -141,10 +141,10 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void onInventoryButtonPressed(int buttonId) {
-		ItemStack stack = Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.MAIN_HAND);
+		ItemStack stack = Minecraft.getMinecraft().player.getHeldItem(EnumHand.MAIN_HAND);
 		if(stack != null && stack.getItem() == this) {
 			setBiomeId(stack, buttonId);
-			PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getMinecraft().thePlayer, (byte)(buttonId  == -1 ? -1 : 0)));
+			PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getMinecraft().player, (byte)(buttonId  == -1 ? -1 : 0)));
 		}
 	}
 
@@ -168,7 +168,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 			NBTTagCompound nbt, ItemStack stack) {
 		if(id == -1) {
 			//If -1 then discover current biome
-			((SatelliteBiomeChanger)getSatellite(stack)).addBiome(Biome.getIdForBiome(player.worldObj.getBiomeGenForCoords(new BlockPos((int)player.posX, 0, (int)player.posZ))));
+			((SatelliteBiomeChanger)getSatellite(stack)).addBiome(Biome.getIdForBiome(player.world.getBiome(new BlockPos((int)player.posX, 0, (int)player.posZ))));
 			player.closeScreen();
 		}
 		if(id == 0) {

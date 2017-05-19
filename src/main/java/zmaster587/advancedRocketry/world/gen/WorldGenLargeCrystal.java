@@ -21,7 +21,7 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 	@Override
 	public boolean generate(World world, Random rand, BlockPos pos) {
 
-		IBlockState state = world.getBiomeGenForCoords(pos).fillerBlock;
+		IBlockState state = world.getBiome(pos).fillerBlock;
 		Block fillerBlock = state.getBlock();
 
 		int height = rand.nextInt(40) + 10;

@@ -33,8 +33,8 @@ public class PacketBiomeIDChange extends BasePacket {
 	@Override
 	public void write(ByteBuf out) {
 		out.writeInt(worldId);
-		out.writeInt(chunk.xPosition);
-		out.writeInt(chunk.zPosition);
+		out.writeInt(chunk.x);
+		out.writeInt(chunk.z);
 		out.writeInt(pos.x);
 		out.writeShort(pos.y);
 		out.writeInt(pos.z);
@@ -61,15 +61,15 @@ public class PacketBiomeIDChange extends BasePacket {
 
 	@Override
 	public void executeClient(EntityPlayer thePlayer) {
-		if(thePlayer.worldObj.provider.getDimension() == worldId) {
-			chunk = thePlayer.worldObj.getChunkFromChunkCoords(xPos, zPos);
+		if(thePlayer.world.provider.getDimension() == worldId) {
+			chunk = thePlayer.world.getChunkFromChunkCoords(xPos, zPos);
 			if(chunk.isLoaded()) {
 				chunk.setBiomeArray(array);
 				BlockPos pos2 = pos.getBlockPos();// new BlockPos(chunk.xPosition << 4, 48, chunk.zPosition << 4);
-				thePlayer.worldObj.markBlockRangeForRenderUpdate(pos2, pos2.add(1, 64, 1));
+				thePlayer.world.markBlockRangeForRenderUpdate(pos2, pos2.add(1, 64, 1));
 				
 				if(Minecraft.getMinecraft().gameSettings.particleSetting < 2)
-					AdvancedRocketry.proxy.spawnParticle("smallLazer", thePlayer.worldObj, pos.x, pos.y, pos.z, 0,0,0);
+					AdvancedRocketry.proxy.spawnParticle("smallLazer", thePlayer.world, pos.x, pos.y, pos.z, 0,0,0);
 			}
 		}
 	}

@@ -26,10 +26,10 @@ public class BiomeGenStormland extends Biome {
 		spawnableMonsterList.clear();
 		this.spawnableMonsterList.add(new Biome.SpawnListEntry(EntityCreeper.class, 5, 1, 1));
 		this.spawnableCreatureList.clear();
-		this.theBiomeDecorator.generateLakes=false;
-		this.theBiomeDecorator.flowersPerChunk=0;
-		this.theBiomeDecorator.grassPerChunk=0;
-		this.theBiomeDecorator.treesPerChunk=6;
+		this.decorator.generateLakes=false;
+		this.decorator.flowersPerChunk=0;
+		this.decorator.grassPerChunk=0;
+		this.decorator.treesPerChunk=6;
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class BiomeGenStormland extends Biome {
 	}
 	
 	@Override
-	public WorldGenAbstractTree genBigTreeChance(Random rand) {
+	public WorldGenAbstractTree getRandomTreeFeature(Random rand) {
 		return charTree;
 	}
 	

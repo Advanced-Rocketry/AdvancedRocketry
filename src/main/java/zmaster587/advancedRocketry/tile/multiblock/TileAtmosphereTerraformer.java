@@ -305,7 +305,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 
 
 		//Backgrounds
-		if(worldObj.isRemote) {
+		if(world.isRemote) {
 			modules.add(new ModuleImage(173, 0, new IconResource(90, 0, 84, 48, CommonResources.genericBackground)));
 		}
 
@@ -320,7 +320,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 	}
 
 	private void setText() {
-		text.setText(String.format("Pressure: %.2f" ,DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension()).getAtmosphereDensity()/100f));
+		text.setText(String.format("Pressure: %.2f" ,DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getAtmosphereDensity()/100f));
 	}
 
 	@Override
@@ -337,30 +337,30 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 	protected void onRunningPoweredTick() {
 		super.onRunningPoweredTick();
 
-		if(worldObj.isRemote) {
+		if(world.isRemote) {
 			if(Minecraft.getMinecraft().gameSettings.particleSetting < 2) {
-				EnumFacing dir = RotatableBlock.getFront(worldObj.getBlockState(pos)).getOpposite();
+				EnumFacing dir = RotatableBlock.getFront(world.getBlockState(pos)).getOpposite();
 
 				if(radioButton.getOptionSelected() == 0) {
-					if(worldObj.getTotalWorldTime() % 20 == 0) {
-						float xMot = (float) ((0.5f - worldObj.rand.nextGaussian())/40f);
-						float zMot = (float) ((0.5f - worldObj.rand.nextGaussian())/40f);
+					if(world.getTotalWorldTime() % 20 == 0) {
+						float xMot = (float) ((0.5f - world.rand.nextGaussian())/40f);
+						float zMot = (float) ((0.5f - world.rand.nextGaussian())/40f);
 						BlockPos offsetPos = pos.offset(dir);
-						AdvancedRocketry.proxy.spawnParticle("rocketSmoke", worldObj, offsetPos.getX() + 5, pos.getY() + 7, offsetPos.getZ() + 0.5, xMot, 0.02f, zMot);
-						AdvancedRocketry.proxy.spawnParticle("rocketSmoke", worldObj, offsetPos.getX() - 4, pos.getY() + 7, offsetPos.getZ() + 0.5, xMot, 0.02f, zMot);
-						AdvancedRocketry.proxy.spawnParticle("rocketSmoke", worldObj, offsetPos.getX() + 0.5f, pos.getY() + 7, offsetPos.getZ() - 4, xMot, 0.02f, zMot);
-						AdvancedRocketry.proxy.spawnParticle("rocketSmoke", worldObj, offsetPos.getX() + 0.5f, pos.getY() + 7, offsetPos.getZ() + 5, xMot, 0.02f, zMot);
+						AdvancedRocketry.proxy.spawnParticle("rocketSmoke", world, offsetPos.getX() + 5, pos.getY() + 7, offsetPos.getZ() + 0.5, xMot, 0.02f, zMot);
+						AdvancedRocketry.proxy.spawnParticle("rocketSmoke", world, offsetPos.getX() - 4, pos.getY() + 7, offsetPos.getZ() + 0.5, xMot, 0.02f, zMot);
+						AdvancedRocketry.proxy.spawnParticle("rocketSmoke", world, offsetPos.getX() + 0.5f, pos.getY() + 7, offsetPos.getZ() - 4, xMot, 0.02f, zMot);
+						AdvancedRocketry.proxy.spawnParticle("rocketSmoke", world, offsetPos.getX() + 0.5f, pos.getY() + 7, offsetPos.getZ() + 5, xMot, 0.02f, zMot);
 					}
 				}
 				else {
-					float xMot = (float) ((0.5f - worldObj.rand.nextGaussian())/4f);
-					float yMot = (float) (worldObj.rand.nextGaussian()/20f);
-					float zMot = (float) ((0.5f - worldObj.rand.nextGaussian())/4f);
+					float xMot = (float) ((0.5f - world.rand.nextGaussian())/4f);
+					float yMot = (float) (world.rand.nextGaussian()/20f);
+					float zMot = (float) ((0.5f - world.rand.nextGaussian())/4f);
 					BlockPos offsetPos = pos.offset(dir);
-					AdvancedRocketry.proxy.spawnParticle("rocketSmokeInverse", worldObj, offsetPos.getX() + 5, pos.getY() + 7, offsetPos.getZ() + 0.5, xMot, 0.4f + yMot, zMot);
-					AdvancedRocketry.proxy.spawnParticle("rocketSmokeInverse", worldObj, offsetPos.getX() - 4, pos.getY() + 7, offsetPos.getZ() + 0.5, xMot, 0.4f + yMot, zMot);
-					AdvancedRocketry.proxy.spawnParticle("rocketSmokeInverse", worldObj, offsetPos.getX() + 0.5f, pos.getY() + 7, offsetPos.getZ() - 4, xMot, 0.4f + yMot, zMot);
-					AdvancedRocketry.proxy.spawnParticle("rocketSmokeInverse", worldObj, offsetPos.getX() + 0.5f, pos.getY() + 7, offsetPos.getZ() + 5, xMot, 0.4f + yMot, zMot);
+					AdvancedRocketry.proxy.spawnParticle("rocketSmokeInverse", world, offsetPos.getX() + 5, pos.getY() + 7, offsetPos.getZ() + 0.5, xMot, 0.4f + yMot, zMot);
+					AdvancedRocketry.proxy.spawnParticle("rocketSmokeInverse", world, offsetPos.getX() - 4, pos.getY() + 7, offsetPos.getZ() + 0.5, xMot, 0.4f + yMot, zMot);
+					AdvancedRocketry.proxy.spawnParticle("rocketSmokeInverse", world, offsetPos.getX() + 0.5f, pos.getY() + 7, offsetPos.getZ() - 4, xMot, 0.4f + yMot, zMot);
+					AdvancedRocketry.proxy.spawnParticle("rocketSmokeInverse", world, offsetPos.getX() + 0.5f, pos.getY() + 7, offsetPos.getZ() + 5, xMot, 0.4f + yMot, zMot);
 				}
 			}
 		}
@@ -368,7 +368,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 		if(!Configuration.terraformRequiresFluid)
 			return;
 
-		if(!worldObj.isRemote) {
+		if(!world.isRemote) {
 			int requiredN2 = Configuration.terraformliquidRate, requiredO2 =  Configuration.terraformliquidRate;
 
 			for(IFluidHandler handler : fluidInPorts) {
@@ -385,8 +385,8 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 
 			ItemStack stack = inv.getStackInSlot(0);
 			SatelliteBase satellite;
-			if(!worldObj.isRemote && ( requiredN2 != 0 || requiredO2 != 0 || stack == null || stack.getItem() != AdvancedRocketryItems.itemBiomeChanger 
-					|| (satellite = ((ItemSatelliteIdentificationChip)AdvancedRocketryItems.itemBiomeChanger).getSatellite(stack)).getDimensionId() != worldObj.provider.getDimension() ||
+			if(!world.isRemote && ( requiredN2 != 0 || requiredO2 != 0 || stack == null || stack.getItem() != AdvancedRocketryItems.itemBiomeChanger 
+					|| (satellite = ((ItemSatelliteIdentificationChip)AdvancedRocketryItems.itemBiomeChanger).getSatellite(stack)).getDimensionId() != world.provider.getDimension() ||
 					!(satellite instanceof SatelliteBiomeChanger))) {
 				this.setMachineEnabled(false);
 				this.setMachineRunning(false);
@@ -405,7 +405,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 
 	@Override
 	protected void playMachineSound(SoundEvent event) {
-		worldObj.playSound(getPos().getX(), getPos().getY() + 7, getPos().getZ(), event, SoundCategory.BLOCKS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.BLOCKS),  0.975f + worldObj.rand.nextFloat()*0.05f, false);
+		world.playSound(getPos().getX(), getPos().getY() + 7, getPos().getZ(), event, SoundCategory.BLOCKS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.BLOCKS),  0.975f + world.rand.nextFloat()*0.05f, false);
 	}
 
 	@Override
@@ -437,7 +437,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 		completionTime = getCompletionTime();
 
 		DimensionProperties properties ;
-		if( !worldObj.isRemote && worldObj.provider.getClass().equals(WorldProviderPlanet.class) && (properties=DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension())).isNativeDimension ) {
+		if( !world.isRemote && world.provider.getClass().equals(WorldProviderPlanet.class) && (properties=DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension())).isNativeDimension ) {
 			if(buttonIncrease.getState() && properties.getAtmosphereDensity() < 200)
 				properties.setAtmosphereDensity(properties.getAtmosphereDensity()+1);
 			else if(buttonDecrease.getState() && properties.getAtmosphereDensity() > 0) {
@@ -484,7 +484,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
 		super.useNetworkData(player, side, id, nbt);
-		if(!worldObj.isRemote && id == NetworkPackets.TOGGLE.ordinal()) {
+		if(!world.isRemote && id == NetworkPackets.TOGGLE.ordinal()) {
 			setMachineRunning(isRunning());
 		}
 	}

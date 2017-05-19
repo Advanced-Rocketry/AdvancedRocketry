@@ -74,7 +74,7 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 	}
 	
 	private void updateText() {
-		if(worldObj.isRemote) {
+		if(world.isRemote) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object != null) {
 				moduleGrav.setText(String.format("Altitude: %.0fKm", object.getOrbitalDistance()*200 + 100 ));
@@ -89,9 +89,9 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 
 	@Override
 	public void update() {
-		if(this.worldObj.provider instanceof WorldProviderSpace) {
+		if(this.world.provider instanceof WorldProviderSpace) {
 
-			if(!worldObj.isRemote) {
+			if(!world.isRemote) {
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 				if(object != null) {
@@ -112,7 +112,7 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 						}
 
 						object.setOrbitalDistance((float)finalVel);
-						if(!worldObj.isRemote) {
+						if(!world.isRemote) {
 							//PacketHandler.sendToNearby(new PacketStationUpdate(object, PacketStationUpdate.Type.ROTANGLE_UPDATE), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 1024);
 							PacketHandler.sendToAll(new PacketStationUpdate(object, PacketStationUpdate.Type.ALTITUDE_UPDATE));
 						}

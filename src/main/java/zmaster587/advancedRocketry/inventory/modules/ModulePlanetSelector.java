@@ -507,7 +507,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		else if(buttonId == -2) {
 			if(selectedSystem < starIdOffset) {
 				hostTile.onSelectionConfirmed(this);
-				Minecraft.getMinecraft().thePlayer.closeScreen();
+				Minecraft.getMinecraft().player.closeScreen();
 			}
 		}
 		else if(buttonId == -3) {

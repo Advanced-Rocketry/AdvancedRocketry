@@ -132,7 +132,7 @@ public class ItemBasicLaserGun extends Item {
 		RayTraceResult rayTrace = rayTraceEntity(world,player);
 
 		if(rayTrace != null) {
-			rayTrace.entityHit.attackEntityFrom(DamageSource.generic, 1f);
+			rayTrace.entityHit.attackEntityFrom(DamageSource.GENERIC, 1f);
 			if(world.isRemote)
 				LibVulpes.proxy.playSound(world, player.getPosition(), AudioRegistry.basicLaser, SoundCategory.PLAYERS, 1, 1f);
 			AdvancedRocketry.proxy.spawnLaser(player, rayTrace.hitVec);
@@ -272,12 +272,12 @@ public class ItemBasicLaserGun extends Item {
 
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack stack,
-			World worldIn, EntityPlayer player, EnumHand hand) {
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand hand) {
 
 		player.setActiveHand(hand);
 
 		posMap.remove(player);
+		ItemStack stack = player.getHeldItem(hand);
 
 
 
@@ -288,7 +288,7 @@ public class ItemBasicLaserGun extends Item {
 		RayTraceResult rayTrace = rayTraceEntity(world,player);
 
 		if(rayTrace != null) {
-			rayTrace.entityHit.attackEntityFrom(DamageSource.generic, .5f);
+			rayTrace.entityHit.attackEntityFrom(DamageSource.GENERIC, .5f);
 			if(world.isRemote)
 				LibVulpes.proxy.playSound(worldIn, player.getPosition(), AudioRegistry.basicLaser, SoundCategory.PLAYERS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.PLAYERS), 1f);
 

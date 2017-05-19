@@ -26,7 +26,7 @@ public class TileMachineChipInfo extends TileEntity implements IModularInventory
 	@Override
 	public List<ModuleBase> getModules(int id, EntityPlayer player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-		if(worldObj.isRemote) {
+		if(world.isRemote) {
 			//Source planet
 			int baseX = 10;
 			int baseY = 20;

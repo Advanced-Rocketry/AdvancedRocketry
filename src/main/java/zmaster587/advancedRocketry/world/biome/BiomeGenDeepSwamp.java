@@ -30,16 +30,15 @@ public class BiomeGenDeepSwamp extends Biome {
 
 		registerBiome(biomeId, "DeepSwamp", this);
 		
-		this.theBiomeDecorator.treesPerChunk = 10;
-        this.theBiomeDecorator.flowersPerChunk = 1;
-        this.theBiomeDecorator.deadBushPerChunk = 1;
-        this.theBiomeDecorator.mushroomsPerChunk = 8;
-        this.theBiomeDecorator.reedsPerChunk = 10;
-        this.theBiomeDecorator.clayPerChunk = 1;
-        this.theBiomeDecorator.waterlilyPerChunk = 4;
-        this.theBiomeDecorator.sandPerChunk2 = 0;
-        this.theBiomeDecorator.sandPerChunk = 0;
-        this.theBiomeDecorator.grassPerChunk = 5;
+		this.decorator.treesPerChunk = 10;
+        this.decorator.flowersPerChunk = 1;
+        this.decorator.deadBushPerChunk = 1;
+        this.decorator.mushroomsPerChunk = 8;
+        this.decorator.reedsPerChunk = 10;
+        this.decorator.clayPerChunk = 1;
+        this.decorator.waterlilyPerChunk = 4;
+        this.decorator.sandPatchesPerChunk = 0;
+        this.decorator.grassPerChunk = 5;
         this.spawnableMonsterList.add(new Biome.SpawnListEntry(EntitySlime.class, 1, 1, 1));
         this.flowers.clear();
         this.addFlower(Blocks.RED_FLOWER.getDefaultState(), 10);
@@ -53,7 +52,7 @@ public class BiomeGenDeepSwamp extends Biome {
 	}
 	
 	@Override
-	public WorldGenAbstractTree genBigTreeChance(Random rand) {
+	public WorldGenAbstractTree getRandomTreeFeature(Random rand) {
 		return this.SWAMP_FEATURE;
 	}
 	

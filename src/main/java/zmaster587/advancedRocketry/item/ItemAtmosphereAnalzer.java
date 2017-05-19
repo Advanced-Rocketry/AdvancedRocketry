@@ -59,14 +59,14 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack stack,
-			World worldIn, EntityPlayer playerIn, EnumHand hand) {
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
+		ItemStack stack = playerIn.getHeldItem(hand);
 		if(!worldIn.isRemote) {
 			String str[] = getAtmosphereReadout(stack, (AtmosphereType) AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension()).getAtmosphereType(playerIn),worldIn);
 			for(String str1 : str)
-				playerIn.addChatMessage(new TextComponentString(str1));
+				playerIn.sendMessage(new TextComponentString(str1));
 		}
-		return super.onItemRightClick(stack, worldIn, playerIn, hand);
+		return super.onItemRightClick(worldIn, playerIn, hand);
 	}
 
 	@Override
@@ -94,12 +94,12 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	public void renderScreen(ItemStack componentStack, List<ItemStack> modules,
 			RenderGameOverlayEvent event, Gui gui) {
 		
-		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
+		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 		
 		int screenX = 8;
 		int screenY = event.getResolution().getScaledHeight() - fontRenderer.FONT_HEIGHT*3;
 
-		String str[] = getAtmosphereReadout(componentStack, (AtmosphereType) AtmosphereHandler.currentAtm, Minecraft.getMinecraft().theWorld);
+		String str[] = getAtmosphereReadout(componentStack, (AtmosphereType) AtmosphereHandler.currentAtm, Minecraft.getMinecraft().world);
 		//Draw BG
 		gui.drawString(fontRenderer, str[0], screenX, screenY, 0xaaffff);
 		gui.drawString(fontRenderer, str[1], screenX, screenY + fontRenderer.FONT_HEIGHT*4/3, 0xaaffff);

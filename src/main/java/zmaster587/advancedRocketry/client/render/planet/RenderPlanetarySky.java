@@ -186,16 +186,16 @@ public class RenderPlanetarySky extends IRenderHandler {
 		ResourceLocation parentPlanetIcon = null;
 		List<DimensionProperties> children;
 		List<StellarBody> subStars = new LinkedList<StellarBody>();
-		celestialAngle = mc.theWorld.getCelestialAngle(partialTicks);
+		celestialAngle = mc.world.getCelestialAngle(partialTicks);
 
 		Vec3d sunColor;
-		if(mc.theWorld.provider instanceof IPlanetaryProvider) {
-			IPlanetaryProvider planetaryProvider = (IPlanetaryProvider)mc.theWorld.provider;
+		if(mc.world.provider instanceof IPlanetaryProvider) {
+			IPlanetaryProvider planetaryProvider = (IPlanetaryProvider)mc.world.provider;
 
-			DimensionProperties properties = (DimensionProperties)planetaryProvider.getDimensionProperties(mc.thePlayer.getPosition());
+			DimensionProperties properties = (DimensionProperties)planetaryProvider.getDimensionProperties(mc.player.getPosition());
 
-			atmosphere = planetaryProvider.getAtmosphereDensityFromHeight(mc.getRenderViewEntity().posY, mc.thePlayer.getPosition());
-			EnumFacing dir = getRotationAxis(properties, mc.thePlayer.getPosition());
+			atmosphere = planetaryProvider.getAtmosphereDensityFromHeight(mc.getRenderViewEntity().posY, mc.player.getPosition());
+			EnumFacing dir = getRotationAxis(properties, mc.player.getPosition());
 			axis.x = (float) dir.getFrontOffsetX();
 			axis.y = (float) dir.getFrontOffsetY();
 			axis.z = (float) dir.getFrontOffsetZ();
@@ -226,14 +226,14 @@ public class RenderPlanetarySky extends IRenderHandler {
 				parentRingColor = parentProperties.ringColor;
 			}
 
-			sunColor = planetaryProvider.getSunColor(mc.thePlayer.getPosition());
+			sunColor = planetaryProvider.getSunColor(mc.player.getPosition());
 			sunSize = properties.getStar().getSize();
 			subStars = properties.getStar().getSubStars();
 			starSeperation = properties.getStar().getStarSeperation();
 			if(world.provider.getDimension() == Configuration.spaceDimId) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
 				if(isWarp) {
-					SpaceObject station = (SpaceObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.thePlayer.getPosition());
+					SpaceObject station = (SpaceObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.player.getPosition());
 					travelDirection = station.getForwardDirection();
 				}
 			}
@@ -248,7 +248,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		}
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		Vec3d vec3 = Minecraft.getMinecraft().theWorld.getSkyColor(this.mc.getRenderViewEntity(), partialTicks);
+		Vec3d vec3 = Minecraft.getMinecraft().world.getSkyColor(this.mc.getRenderViewEntity(), partialTicks);
 		float f1 = (float)vec3.xCoord;
 		float f2 = (float)vec3.yCoord;
 		float f3 = (float)vec3.zCoord;
@@ -281,7 +281,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GL11.glEnable(GL11.GL_BLEND);
 		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 		RenderHelper.disableStandardItemLighting();
-		float[] afloat = mc.theWorld.provider.calcSunriseSunsetColors(celestialAngle, partialTicks);
+		float[] afloat = mc.world.provider.calcSunriseSunsetColors(celestialAngle, partialTicks);
 		float f7;
 		float f8;
 		float f9;
@@ -293,7 +293,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			GL11.glShadeModel(GL11.GL_SMOOTH);
 			GL11.glPushMatrix();
 			GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
-			GL11.glRotatef(MathHelper.sin(mc.theWorld.getCelestialAngleRadians(partialTicks)) < 0.0F ? 180.0F : 0.0F, 0.0F, 0.0F, 1.0F);
+			GL11.glRotatef(MathHelper.sin(mc.world.getCelestialAngleRadians(partialTicks)) < 0.0F ? 180.0F : 0.0F, 0.0F, 0.0F, 1.0F);
 			GL11.glRotatef(90.0F, 0.0F, 0.0F, 0.0F);
 
 			//Sim atmospheric thickness
@@ -337,7 +337,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 
 		if(atmosphere > 0)
-			f6 = 1.0F - (mc.theWorld.getRainStrength(partialTicks)*(atmosphere/100f));
+			f6 = 1.0F - (mc.world.getRainStrength(partialTicks)*(atmosphere/100f));
 		else
 			f6 = 1f;
 
@@ -349,8 +349,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
 
 		float multiplier = (2-atmosphere)/2f;//atmosphere > 1 ? (2-atmosphere) : 1f;
-		if(mc.theWorld.isRainingAt(mc.thePlayer.getPosition().add(0, 199, 0)))
-			multiplier *= 1-mc.theWorld.getRainStrength(partialTicks);
+		if(mc.world.isRainingAt(mc.player.getPosition().add(0, 199, 0)))
+			multiplier *= 1-mc.world.getRainStrength(partialTicks);
 
 		GL11.glRotatef((float)myRotationalPhi, 0f, 1f, 0f);
 
@@ -403,10 +403,10 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		float f18 = mc.theWorld.getStarBrightness(partialTicks) * f6 * (atmosphere) + (1-atmosphere);
+		float f18 = mc.world.getStarBrightness(partialTicks) * f6 * (atmosphere) + (1-atmosphere);
 
-		if(mc.theWorld.isRainingAt(mc.thePlayer.getPosition()))
-			f18 *= 1-mc.theWorld.getRainStrength(partialTicks);
+		if(mc.world.isRainingAt(mc.player.getPosition()))
+			f18 *= 1-mc.world.getRainStrength(partialTicks);
 
 		if (f18 > 0.0F)
 		{
@@ -576,7 +576,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GL11.glPopMatrix();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glColor3f(0.0F, 0.0F, 0.0F);
-		double d0 = this.mc.thePlayer.getPositionEyes(partialTicks).yCoord - mc.theWorld.getHorizon();
+		double d0 = this.mc.player.getPositionEyes(partialTicks).yCoord - mc.world.getHorizon();
 
 		if (d0 < 0.0D)
 		{
@@ -614,7 +614,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			Tessellator.getInstance().draw();
 		}
 
-		if (mc.theWorld.provider.isSkyColored())
+		if (mc.world.provider.isSkyColored())
 		{
 			GL11.glColor3f(f1 * 0.2F + 0.04F, f2 * 0.2F + 0.04F, f3 * 0.6F + 0.1F);
 		}

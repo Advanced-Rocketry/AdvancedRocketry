@@ -14,7 +14,7 @@ public class BiomeHandler {
 	public static void changeBiome(World world, int biomeId, BlockPos pos) {
 		Chunk chunk = world.getChunkFromBlockCoords(pos);
 
-		Biome biome = world.getBiomeGenForCoords(pos);
+		Biome biome = world.getBiome(pos);
 		Biome biomeTo = Biome.getBiome(biomeId);
 		
 		if(biome == biomeTo)
@@ -51,7 +51,7 @@ public class BiomeHandler {
 	
 	public static void changeBiome(World world, int biomeId, Chunk chunk, BlockPos pos) {
 
-		Biome biome = world.getBiomeGenForCoords(pos);
+		Biome biome = world.getBiome(pos);
 		Biome biomeTo = Biome.getBiome(biomeId);
 		
 		int x = pos.getX();

@@ -148,7 +148,7 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 		buttonStore.renderBackground(gui, x, y, mouseX, mouseY, font);
 
 		for(Slot slot : slotList) {
-			gui.drawTexturedModalRect(x + slot.xDisplayPosition - 1, y + slot.yDisplayPosition - 1, icon.getxLoc(), icon.getyLoc(), icon.getxSize(), icon.getySize());
+			gui.drawTexturedModalRect(x + slot.xPos - 1, y + slot.yPos - 1, icon.getxLoc(), icon.getyLoc(), icon.getxSize(), icon.getySize());
 		}
 
 		int totalData = 0, totalMaxData = 0;

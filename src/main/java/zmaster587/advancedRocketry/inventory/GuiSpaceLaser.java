@@ -45,8 +45,8 @@ public class GuiSpaceLaser extends GuiContainer {
 		int y = (height - ySize) / 2;
 
 		//Create and setup the textboxes
-		xbox = new GuiTextField(0,this.fontRendererObj, x + 113, y + 31, 50, 10);
-		ybox = new GuiTextField(1,this.fontRendererObj, x + 113, y + 41, 50, 10);
+		xbox = new GuiTextField(0,this.fontRenderer, x + 113, y + 31, 50, 10);
+		ybox = new GuiTextField(1,this.fontRenderer, x + 113, y + 41, 50, 10);
 		xbox.setMaxStringLength(15);
 		xbox.setEnableBackgroundDrawing(true);
 		xbox.setFocused(true);
@@ -144,7 +144,7 @@ public class GuiSpaceLaser extends GuiContainer {
 		if(a > x + 11 && a < x + 27 && b < y + 85 && b > y + 43) {
 			LinkedList<String> text = new LinkedList<String>();
 			text.add(laserTile.getBatteries().getEnergyStored()  + " / " + laserTile.getBatteries().getMaxEnergyStored() + " RF");
-			this.drawHoveringText(text, a, b, this.fontRendererObj);
+			this.drawHoveringText(text, a, b, this.fontRenderer);
 		}
 
 		//Buttons don't need to be drawn because that is taken care of by super
@@ -194,14 +194,14 @@ public class GuiSpaceLaser extends GuiContainer {
 			this.drawTexturedModalRect(x + 145, y + 64, 0, 171, 16, 16);
 
 		//Draw labels next to the input boxes
-		this.drawString(this.fontRendererObj, "X:", x + 103, y + 31, 0xffffff);
-		this.drawString(this.fontRendererObj, "Y:", x + 103, y + 41, 0xffffff);
+		this.drawString(this.fontRenderer, "X:", x + 103, y + 31, 0xffffff);
+		this.drawString(this.fontRenderer, "Y:", x + 103, y + 41, 0xffffff);
 
 		//Draw jamming indicator if jammed
 		if(laserTile.isJammed())
-			this.drawString(this.fontRendererObj, "Jam!", x + 143, y + 68, 0xffffff);
+			this.drawString(this.fontRenderer, "Jam!", x + 143, y + 68, 0xffffff);
 
 		//Draw mode indicator
-		this.drawCenteredString(this.fontRendererObj, laserTile.getMode().toString(), x + 130, y + 20, 0xffffff);
+		this.drawCenteredString(this.fontRenderer, laserTile.getMode().toString(), x + 130, y + 20, 0xffffff);
 	}
 }

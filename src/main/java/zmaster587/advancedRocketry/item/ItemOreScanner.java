@@ -39,7 +39,7 @@ public class ItemOreScanner extends Item implements IModularInventory {
 			list.add("Unprogrammed");
 		else if(mapping == null)
 			list.add("Satellite not yet launched");
-		else if(mapping.getDimensionId() == player.worldObj.provider.getDimension()) {
+		else if(mapping.getDimensionId() == player.world.provider.getDimension()) {
 			list.add("Connected");
 			list.add("Max Zoom: " + mapping.getZoomRadius());
 			list.add("Can filter ore: " + mapping.canFilterOre());
@@ -72,22 +72,22 @@ public class ItemOreScanner extends Item implements IModularInventory {
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn,
-			World worldIn, EntityPlayer playerIn, EnumHand hand) {
-		if(!playerIn.worldObj.isRemote)
-			playerIn.openGui(AdvancedRocketry.instance, GuiHandler.guiId.OreMappingSatellite.ordinal(), worldIn, (int)playerIn.getPosition().getX(), (int)getSatelliteID(itemStackIn), (int)playerIn.getPosition().getZ());
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
+		ItemStack stack = playerIn.getHeldItem(hand);
+		if(!playerIn.world.isRemote && stack != null)
+			playerIn.openGui(AdvancedRocketry.instance, GuiHandler.guiId.OreMappingSatellite.ordinal(), worldIn, (int)playerIn.getPosition().getX(), (int)getSatelliteID(stack), (int)playerIn.getPosition().getZ());
 
-		return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
+		return super.onItemRightClick(worldIn, playerIn, hand);
 	}
 	
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn,
+	public EnumActionResult onItemUse(EntityPlayer playerIn,
 			World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
 			float hitX, float hitY, float hitZ) {
-		if(!playerIn.worldObj.isRemote && hand == EnumHand.MAIN_HAND)
+		if(!playerIn.world.isRemote && hand == EnumHand.MAIN_HAND)
 			playerIn.openGui(AdvancedRocketry.instance, GuiHandler.guiId.OreMappingSatellite.ordinal(), worldIn, (int)playerIn.getPosition().getX(), (int)getSatelliteID(playerIn.getHeldItem(hand)), (int)playerIn.getPosition().getZ());
 
-		return super.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY,
+		return super.onItemUse(playerIn, worldIn, pos, hand, facing, hitX, hitY,
 				hitZ);
 	}
 

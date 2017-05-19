@@ -72,7 +72,7 @@ public class PacketStationUpdate extends BasePacket {
 			try {
 				spaceObject.getProperties().writeToNBT(nbt);
 				PacketBuffer packetBuffer = new PacketBuffer(out);
-				packetBuffer.writeNBTTagCompoundToBuffer(nbt);
+				packetBuffer.writeCompoundTag(nbt);
 			} catch(NullPointerException e) {
 				out.writeBoolean(true);
 				Logger.getLogger("advancedRocketry").warning("Dimension " + stationNumber + " has thrown an exception trying to write NBT, deleting!");
@@ -109,7 +109,7 @@ public class PacketStationUpdate extends BasePacket {
 			spaceObject.setDeltaRotation(in.readDouble(), EnumFacing.NORTH);
 			break;
 		case SIGNAL_WHITE_BURST:
-			PlanetEventHandler.runBurst(Minecraft.getMinecraft().theWorld.getTotalWorldTime() + 20, 20);
+			PlanetEventHandler.runBurst(Minecraft.getMinecraft().world.getTotalWorldTime() + 20, 20);
 			break;
 		case ALTITUDE_UPDATE:
 			spaceObject.setOrbitalDistance(in.readFloat());
@@ -118,7 +118,7 @@ public class PacketStationUpdate extends BasePacket {
 			PacketBuffer packetBuffer = new PacketBuffer(in);
 			NBTTagCompound nbt;
 			try {
-				nbt = packetBuffer.readNBTTagCompoundFromBuffer();
+				nbt = packetBuffer.readCompoundTag();
 
 			} catch (IOException e) {
 				e.printStackTrace();

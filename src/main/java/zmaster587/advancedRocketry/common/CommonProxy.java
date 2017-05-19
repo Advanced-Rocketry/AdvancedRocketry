@@ -37,7 +37,7 @@ public class CommonProxy {
 	}
 
 	public Profiler getProfiler() {
-		return FMLCommonHandler.instance().getMinecraftServerInstance().theProfiler;
+		return FMLCommonHandler.instance().getMinecraftServerInstance().profiler;
 	}
 
 	public void changeClientPlayerWorld(World world) {

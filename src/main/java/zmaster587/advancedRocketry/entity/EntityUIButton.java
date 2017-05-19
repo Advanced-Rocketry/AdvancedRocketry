@@ -32,9 +32,8 @@ public class EntityUIButton extends EntityUIPlanet {
 	}
 	
 	@Override
-	public boolean processInitialInteract(EntityPlayer player, ItemStack stack,
-			EnumHand hand) {
-		if(!worldObj.isRemote && tile != null) {
+	public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
+		if(!world.isRemote && tile != null) {
 			tile.onInventoryButtonPressed(getPlanetID());
 		}
 		return true;

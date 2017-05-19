@@ -76,7 +76,7 @@ public class RecipeHandler {
 
 			if(AllowedProducts.getProductByName("NUGGET").isOfType(ore.getAllowedProducts())) {
 				ItemStack nugget = ore.getProduct(AllowedProducts.getProductByName("NUGGET"));
-				nugget.stackSize = 9;
+				nugget.setCount(9);
 				for(String str : ore.getOreDictNames()) {
 					GameRegistry.addRecipe(new ShapelessOreRecipe(nugget, AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + str));
 					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("INGOT")), "ooo", "ooo", "ooo", 'o', AllowedProducts.getProductByName("NUGGET").name().toLowerCase(Locale.ENGLISH) + str));
@@ -136,7 +136,7 @@ public class RecipeHandler {
 			}
 			if(AllowedProducts.getProductByName("BLOCK").isOfType(ore.getAllowedProducts())) {
 				ItemStack ingot = ore.getProduct(AllowedProducts.getProductByName("INGOT"));
-				ingot.stackSize = 9;
+				ingot.setCount(9);
 				for(String str : ore.getOreDictNames()) {
 					GameRegistry.addRecipe(new ShapelessOreRecipe(ingot, AllowedProducts.getProductByName("BLOCK").name().toLowerCase(Locale.ENGLISH) + str));
 					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("BLOCK")), "ooo", "ooo", "ooo", 'o', AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + str));
@@ -147,7 +147,7 @@ public class RecipeHandler {
 				for(String str : ore.getOreDictNames()) {
 					if(AllowedProducts.getProductByName("ORE").isOfType(ore.getAllowedProducts()) || ore.isVanilla()) {
 						ItemStack stack = ore.getProduct(AllowedProducts.getProductByName("DUST"));
-						stack.stackSize = 2;
+						stack.setCount(2);
 						RecipesMachine.getInstance().addRecipe(BlockPress.class, stack, 0, 0, AllowedProducts.getProductByName("ORE").name().toLowerCase(Locale.ENGLISH) + str);
 					}
 					if(AllowedProducts.getProductByName("INGOT").isOfType(ore.getAllowedProducts()) || ore.isVanilla())
@@ -188,11 +188,11 @@ public class RecipeHandler {
 							ItemStack stackToAdd = null;
 							if(OreDictionary.doesOreNameExist("rod" + str) && OreDictionary.getOres("rod" + str).size() > 0) {
 								stackToAdd = OreDictionary.getOres("rod" + str).get(0).copy();
-								stackToAdd.stackSize = 2;
+								stackToAdd.setCount(2);
 							}
 							else if(OreDictionary.doesOreNameExist("stick" + str)  && OreDictionary.getOres("stick" + str).size() > 0) {
 								stackToAdd = OreDictionary.getOres("stick" + str).get(0).copy();
-								stackToAdd.stackSize = 2;
+								stackToAdd.setCount(2);
 								}
 							else 
 								continue;

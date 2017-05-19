@@ -106,9 +106,9 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 	@Override
 	public void update() {
 		//Move a stack of items
-		if(!worldObj.isRemote && rocket != null ) {
+		if(!world.isRemote && rocket != null ) {
 
-			boolean isAllowedToOperate = (inputstate == RedstoneState.OFF || isStateActive(inputstate, getStrongPowerForSides(worldObj, getPos())));
+			boolean isAllowedToOperate = (inputstate == RedstoneState.OFF || isStateActive(inputstate, getStrongPowerForSides(world, getPos())));
 
 			List<TileEntity> tiles = rocket.storage.getInventoryTiles();
 			boolean foundStack = false;
@@ -134,10 +134,10 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 									break out;
 								}
 								else if(getStackInSlot(j) != null && inv.isItemValidForSlot(i, getStackInSlot(j)) && inv.getStackInSlot(i).getItem() == getStackInSlot(j).getItem() &&
-										ItemStack.areItemStackTagsEqual(inv.getStackInSlot(i), getStackInSlot(j)) && inv.getStackInSlot(i).getMaxStackSize() != inv.getStackInSlot(i).stackSize ) {
+										ItemStack.areItemStackTagsEqual(inv.getStackInSlot(i), getStackInSlot(j)) && inv.getStackInSlot(i).getMaxStackSize() != inv.getStackInSlot(i).getCount() ) {
 									if(isAllowedToOperate) {
-										ItemStack stack2 = inventory.decrStackSize(j, inv.getStackInSlot(i).getMaxStackSize() - inv.getStackInSlot(i).stackSize);
-										inv.getStackInSlot(i).stackSize += stack2.stackSize;
+										ItemStack stack2 = inventory.decrStackSize(j, inv.getStackInSlot(i).getMaxStackSize() - inv.getStackInSlot(i).getCount());
+										inv.getStackInSlot(i).setCount(inv.getStackInSlot(i).getCount() + stack2.getCount());
 									}
 									rocketContainsItems = true;
 
@@ -176,7 +176,7 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 
 	protected void setRedstoneState(boolean condition) {
 		condition = isStateActive(state, condition);
-		((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj,worldObj.getBlockState(pos), pos, condition);
+		((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(world,world.getBlockState(pos), pos, condition);
 
 	}
 
@@ -199,7 +199,7 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 			this.unlinkRocket();
 		}
 
-		if(player.worldObj.isRemote)
+		if(player.world.isRemote)
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new TextComponentString("You program the linker with the rocket loader at: " + this.getPos().getX() + " " + this.getPos().getY() + " " + this.getPos().getZ())));
 		return true;
 	}
@@ -207,7 +207,7 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 	@Override
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
-		if(player.worldObj.isRemote)
+		if(player.world.isRemote)
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new TextComponentString("This must be the first machine to link!")));
 		return false;
 	}
@@ -215,7 +215,7 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 	@Override
 	public void unlinkRocket() {
 		rocket = null;
-		((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj, worldObj.getBlockState(pos), pos, false);
+		((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(world, world.getBlockState(pos), pos, false);
 		//On unlink prevent the tile from ticking anymore
 
 		//if(!worldObj.isRemote)
@@ -325,7 +325,7 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 			setRedstoneState(state == RedstoneState.INVERTED);
 		
 		markDirty();
-		worldObj.notifyBlockOfStateChange(getPos(), worldObj.getBlockState(getPos()).getBlock());
+		world.markChunkDirty(getPos(), this);
 	}
 
 

@@ -116,7 +116,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
         {
             for (int j = -2; j <= 2; ++j)
             {
-                float f = 10.0F / MathHelper.sqrt_float((float)(i * i + j * j) + 0.2F);
+                float f = 10.0F / MathHelper.sqrt((float)(i * i + j * j) + 0.2F);
                 this.biomeWeights[i + 2 + (j + 2) * 5] = f;
             }
         }
@@ -251,7 +251,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		this.rand.setSeed((long)x * 341873128712L + (long)z * 132897987541L);
 		ChunkPrimer chunkprimer = new ChunkPrimer();
 		this.setBlocksInChunk(x, z, chunkprimer);
-		this.biomesForGeneration = this.worldObj.getBiomeProvider().loadBlockGeneratorData(this.biomesForGeneration, x * 16, z * 16, 16, 16);
+		this.biomesForGeneration = this.worldObj.getBiomeProvider().getBiomesForGeneration(this.biomesForGeneration, x * 16, z * 16, 16, 16);
 		this.replaceBiomeBlocks(x, z, chunkprimer, this.biomesForGeneration);
 
 		if (this.settings.useCaves)
@@ -390,7 +390,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 					double d2 = this.minLimitRegion[i] / (double)this.settings.lowerLimitScale;
 					double d3 = this.maxLimitRegion[i] / (double)this.settings.upperLimitScale;
 					double d4 = (this.mainNoiseRegion[i] / 10.0D + 1.0D) / 2.0D;
-					double d5 = MathHelper.denormalizeClamp(d2, d3, d4) - d1;
+					double d5 = MathHelper.clamp(d2, d3, d4) - d1;
 
 					if (l1 > 29)
 					{
@@ -423,7 +423,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		int i = x * 16;
 		int j = z * 16;
 		BlockPos blockpos = new BlockPos(i, 0, j);
-		Biome biome = this.worldObj.getBiomeGenForCoords(blockpos.add(16, 0, 16));
+		Biome biome = this.worldObj.getBiome(blockpos.add(16, 0, 16));
 		this.rand.setSeed(this.worldObj.getSeed());
 		long k = this.rand.nextLong() / 2L * 2L + 1L;
 		long l = this.rand.nextLong() / 2L * 2L + 1L;
@@ -590,7 +590,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 	@Override
 	public List<SpawnListEntry> getPossibleCreatures(
 			EnumCreatureType creatureType, BlockPos pos) {
-		Biome biome = this.worldObj.getBiomeGenForCoords(pos);
+		Biome biome = this.worldObj.getBiome(pos);
 
         return biome.getSpawnableList(creatureType);
 	}
@@ -600,9 +600,10 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		return false;
 	}
 
+	
 	@Override
 	public BlockPos getStrongholdGen(World worldIn, String structureName,
-			BlockPos position) {
+			BlockPos position, boolean p_180513_4_) {
 		return null;
 	}
 

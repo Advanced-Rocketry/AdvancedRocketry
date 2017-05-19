@@ -38,7 +38,7 @@ public class WorldProviderSpace extends WorldProviderPlanet {
 	
 	@Override
 	public IChunkGenerator createChunkGenerator() {
-		return new ChunkProviderSpace(this.worldObj, this.worldObj.getSeed());
+		return new ChunkProviderSpace(this.world, this.world.getSeed());
 	}
 	
 	@Override
@@ -58,10 +58,10 @@ public class WorldProviderSpace extends WorldProviderPlanet {
 	}
 	
 	@Override
-	protected void createBiomeProvider() {
+	protected void init() {
 		// TODO Auto-generated method stub
 		//super.createBiomeProvider();
-		worldObj.getWorldInfo().setTerrainType(AdvancedRocketry.spaceWorldType);
+		world.getWorldInfo().setTerrainType(AdvancedRocketry.spaceWorldType);
 		
 		this.biomeProvider = new BiomeProviderSingle(AdvancedRocketryBiomes.spaceBiome);//new ChunkManagerPlanet(worldObj, worldObj.getWorldInfo().getGeneratorOptions(), DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension()).getBiomes());
 		

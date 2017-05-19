@@ -28,7 +28,7 @@ public class ModuleSatellite extends ModuleSlotArray {
 			FontRenderer font) {
 		
 		for(Slot slot : slotList) {
-			gui.drawTexturedModalRect(x + slot.xDisplayPosition - 1, y + slot.yDisplayPosition - 1, satelliteSlot.getxLoc(), satelliteSlot.getyLoc(), satelliteSlot.getxSize(), satelliteSlot.getySize());
+			gui.drawTexturedModalRect(x + slot.xPos - 1, y + slot.yPos - 1, satelliteSlot.getxLoc(), satelliteSlot.getyLoc(), satelliteSlot.getxSize(), satelliteSlot.getySize());
 		}
 	}
 	

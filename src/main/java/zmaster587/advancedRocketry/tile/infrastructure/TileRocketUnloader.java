@@ -37,8 +37,8 @@ public class TileRocketUnloader extends TileRocketLoader implements IInfrastruct
 	public void update() {
 
 		//Move a stack of items
-		if(!worldObj.isRemote && rocket != null ) {
-			boolean isAllowedToOperate = (inputstate == RedstoneState.OFF || isStateActive(inputstate, getStrongPowerForSides(worldObj, getPos())));
+		if(!world.isRemote && rocket != null ) {
+			boolean isAllowedToOperate = (inputstate == RedstoneState.OFF || isStateActive(inputstate, getStrongPowerForSides(world, getPos())));
 
 			List<TileEntity> tiles = rocket.storage.getInventoryTiles();
 			boolean foundStack = false;
@@ -62,8 +62,8 @@ public class TileRocketUnloader extends TileRocketLoader implements IInfrastruct
 									}
 									else if(inv.getStackInSlot(i) != null && isItemValidForSlot(j, inv.getStackInSlot(i))) {
 										if(isAllowedToOperate) {
-											ItemStack stack2 = inv.decrStackSize(i, getStackInSlot(j).getMaxStackSize() - getStackInSlot(j).stackSize);
-											getStackInSlot(j).stackSize += stack2.stackSize;
+											ItemStack stack2 = inv.decrStackSize(i, getStackInSlot(j).getMaxStackSize() - getStackInSlot(j).getCount());
+											getStackInSlot(j).setCount(getStackInSlot(j).getCount() + stack2.getCount());
 										}
 										if(inv.getStackInSlot(i) == null)
 											break out;

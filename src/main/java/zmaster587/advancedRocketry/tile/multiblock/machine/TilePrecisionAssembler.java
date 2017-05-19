@@ -114,7 +114,7 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 		int yOffset = 16;
 		int xOffset = 65;
 
-		if(worldObj.isRemote)
+		if(world.isRemote)
 			modules.add(new ModuleImage(xOffset, yOffset, new IconResource(132, 0, 53, 66, TextureResources.progressBars)));
 		modules.add(new ModuleProgress(xOffset + 35, yOffset + 22, 1, new ProgressBarImage(167, 22, 13, 15, 54, 42, 13, 15, EnumFacing.DOWN, TextureResources.progressBars), this));
 		modules.add(new ModuleProgress(xOffset + 36, yOffset + 41, 2, new ProgressBarImage(168, 41, 11, 15, 67, 42, 11, 15, EnumFacing.DOWN, TextureResources.progressBars), this));

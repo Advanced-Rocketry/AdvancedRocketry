@@ -43,7 +43,7 @@ public class PacketLaserGun extends BasePacket {
 
 	@Override
 	public void executeClient(EntityPlayer thePlayer) {
-		Entity entity = thePlayer.worldObj.getEntityByID(entityId);
+		Entity entity = thePlayer.world.getEntityByID(entityId);
 		if(entity != null) {
 			AdvancedRocketry.proxy.spawnLaser(entity, toPos);
 		}

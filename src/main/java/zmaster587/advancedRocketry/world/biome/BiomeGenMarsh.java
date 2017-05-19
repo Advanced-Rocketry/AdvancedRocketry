@@ -16,14 +16,13 @@ public class BiomeGenMarsh extends Biome {
 		
 		registerBiome(id, "Marsh", this);
 		
-		this.theBiomeDecorator.clayPerChunk = 10;
-		this.theBiomeDecorator.flowersPerChunk = 0;
-		this.theBiomeDecorator.mushroomsPerChunk = 0;
-		this.theBiomeDecorator.treesPerChunk = 0;
-		this.theBiomeDecorator.grassPerChunk = 0;
-		this.theBiomeDecorator.waterlilyPerChunk = 10;
-		this.theBiomeDecorator.sandPerChunk = 0;
-		this.theBiomeDecorator.sandPerChunk2 = 0;
+		this.decorator.clayPerChunk = 10;
+		this.decorator.flowersPerChunk = 0;
+		this.decorator.mushroomsPerChunk = 0;
+		this.decorator.treesPerChunk = 0;
+		this.decorator.grassPerChunk = 0;
+		this.decorator.waterlilyPerChunk = 10;
+		this.decorator.sandPatchesPerChunk = 0;
 		
 		this.spawnableCreatureList.clear();
 	}
@@ -50,7 +49,7 @@ public class BiomeGenMarsh extends Biome {
 	}
 	
 	@Override
-	public WorldGenAbstractTree genBigTreeChance(Random rand) {
+	public WorldGenAbstractTree getRandomTreeFeature(Random rand) {
 		return new WorldGenShrub(Blocks.LOG.getDefaultState(), Blocks.LEAVES.getDefaultState());
 	}
 }

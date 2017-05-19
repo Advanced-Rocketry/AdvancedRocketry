@@ -126,7 +126,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		BlockPos pos = getDestPosition();
 		if(pos != null) {
 			int distance = (int)Math.sqrt(Math.pow(pos.getX() - this.pos.getX(),2) + Math.pow(pos.getZ() - this.pos.getZ(), 2));
-			if(getDestDimId() == this.worldObj.provider.getDimension())
+			if(getDestDimId() == this.world.provider.getDimension())
 				distance = distance*10 + 50000;
 			return Math.min(distance, super.requiredPowerPerTick());
 		}
@@ -177,7 +177,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		List<ModuleBase> modules = super.getModules(ID, player);
 
 		modules.add(new ModuleSlotArray(40, 40, this, 0, 1));
-		if(worldObj.isRemote) {
+		if(world.isRemote) {
 			//if(textBox == null) {
 			textBox = new ModuleNumericTextbox(this, 80, 40, 32, 12, 2);
 			//}
@@ -194,7 +194,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	@Override
 	public void onLoad() {
 		if(ticket == null) {
-			ticket = ForgeChunkManager.requestTicket(AdvancedRocketry.instance, this.worldObj, Type.NORMAL);
+			ticket = ForgeChunkManager.requestTicket(AdvancedRocketry.instance, this.world, Type.NORMAL);
 			if(ticket != null)
 				ForgeChunkManager.forceChunk(ticket, new ChunkPos(getPos().getX() / 16 - (getPos().getX() < 0 ? 1 : 0), getPos().getZ() / 16 - (getPos().getZ() < 0 ? 1 : 0)));
 		}
@@ -210,7 +210,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	public void onInventoryUpdated() {
 		//Needs completion
 		if(itemInPorts.isEmpty()) {
-			attemptCompleteStructure(worldObj.getBlockState(pos));
+			attemptCompleteStructure(world.getBlockState(pos));
 		}
 	}
 
@@ -231,7 +231,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 
 	@Override
 	public void useEnergy(int amt) {
-		if(!worldObj.isRemote && enabled && isRedstoneStateSatisfied() && attemptCargoTransfer())
+		if(!world.isRemote && enabled && isRedstoneStateSatisfied() && attemptCargoTransfer())
 			super.useEnergy(amt);
 	}
 
@@ -244,13 +244,13 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		if(state == RedstoneState.OFF)
 			return true;
 
-		boolean powered = worldObj.isBlockIndirectlyGettingPowered(pos) > 0;
+		boolean powered = world.isBlockIndirectlyGettingPowered(pos) > 0;
 
 		return (state == RedstoneState.ON && powered) || (!powered && state == RedstoneState.INVERTED);
 	}
 
 	private boolean attemptCargoTransfer() {
-		if(worldObj.isRemote)
+		if(world.isRemote)
 			return false;
 
 		ItemStack tfrStack = null;
@@ -261,7 +261,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		out:
 			for(IInventory inv : this.itemInPorts) {
 				for(int i = inv.getSizeInventory() - 1; i >= 0 ; i--) {
-					if((tfrStack = inv.getStackInSlot(i)) != null && inv.getStackInSlot(i).stackSize >= minStackTransferSize) {
+					if((tfrStack = inv.getStackInSlot(i)) != null && inv.getStackInSlot(i).getCount() >= minStackTransferSize) {
 						inv2 = inv;
 						index = i;
 
@@ -285,20 +285,20 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 					TileEntity tile;
 
 					if(world != null && (tile = world.getTileEntity(pos)) instanceof TileRailgun && ((TileRailgun)tile).canRecieveCargo(tfrStack) &&
-							zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(this.worldObj.provider.getDimension(),
+							zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(this.world.provider.getDimension(),
 									zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(world, pos).getId())) {
 
 
 						((TileRailgun)tile).onRecieveCargo(tfrStack);
 						inv2.setInventorySlotContents(index, null);
 						inv2.markDirty();
-						worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 2);
+						world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 2);
 
-						EnumFacing dir = RotatableBlock.getFront(worldObj.getBlockState(pos));
+						EnumFacing dir = RotatableBlock.getFront(world.getBlockState(pos));
 
-						EntityItemAbducted ent = new EntityItemAbducted(this.worldObj, this.pos.getX() - 2*dir.getFrontOffsetX() + 0.5f, this.pos.getY() + 5, this.pos.getZ() - 2*dir.getFrontOffsetZ() + 0.5f, tfrStack);
-						this.worldObj.spawnEntityInWorld(ent);
-						PacketHandler.sendToNearby(new PacketMachine(this, (byte) 3), this.worldObj.provider.getDimension(), this.pos.getX() - dir.getFrontOffsetX(), this.pos.getY() + 5, this.pos.getZ() - dir.getFrontOffsetZ(),  64d);
+						EntityItemAbducted ent = new EntityItemAbducted(this.world, this.pos.getX() - 2*dir.getFrontOffsetX() + 0.5f, this.pos.getY() + 5, this.pos.getZ() - 2*dir.getFrontOffsetZ() + 0.5f, tfrStack);
+						this.world.spawnEntity(ent);
+						PacketHandler.sendToNearby(new PacketMachine(this, (byte) 3), this.world.provider.getDimension(), this.pos.getX() - dir.getFrontOffsetX(), this.pos.getY() + 5, this.pos.getZ() - dir.getFrontOffsetZ(),  64d);
 						return true;
 					}
 				}
@@ -363,8 +363,13 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		return true;
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return inv.isEmpty();
 	}
 
 	@Override
@@ -388,7 +393,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		ItemLinker.setMasterCoords(item, this.getPos());
 		ItemLinker.setDimId(item, world.provider.getDimension());
 		if(!world.isRemote)
-			player.addChatMessage(new TextComponentString("Coordinates programmed into Linker"));
+			player.sendMessage(new TextComponentString("Coordinates programmed into Linker"));
 		return true;
 	}
 
@@ -443,9 +448,9 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 			NBTTagCompound nbt) {
 		if(side.isClient()) {
 			if(id == 3) {
-				EnumFacing dir = RotatableBlock.getFront(worldObj.getBlockState(pos));
-				LibVulpes.proxy.playSound(worldObj, pos, AudioRegistry.railgunFire, SoundCategory.BLOCKS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.BLOCKS), 0.975f + worldObj.rand.nextFloat()*0.05f);
-				recoil = worldObj.getTotalWorldTime();
+				EnumFacing dir = RotatableBlock.getFront(world.getBlockState(pos));
+				LibVulpes.proxy.playSound(world, pos, AudioRegistry.railgunFire, SoundCategory.BLOCKS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.BLOCKS), 0.975f + world.rand.nextFloat()*0.05f);
+				recoil = world.getTotalWorldTime();
 			}
 		}
 		else if(id == 4) {
@@ -465,7 +470,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 			if(textBox.getText().isEmpty())
 				minStackTransferSize = 1;
 			else
-				minStackTransferSize = MathHelper.clamp_int(Integer.parseInt(textBox.getText()),1, 64);
+				minStackTransferSize = MathHelper.clamp(Integer.parseInt(textBox.getText()),1, 64);
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)4));
 		}
 	}

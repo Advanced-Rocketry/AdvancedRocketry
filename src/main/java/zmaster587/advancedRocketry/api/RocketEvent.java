@@ -13,7 +13,7 @@ public class RocketEvent extends EntityEvent {
 	public final World world;
 	public RocketEvent(Entity entity) {
 		super(entity);
-		world = entity.worldObj;
+		world = entity.world;
 	}
 
 	/**

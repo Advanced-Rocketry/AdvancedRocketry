@@ -29,7 +29,7 @@ public class AtmosphereHighPressure extends AtmosphereType{
 	
 	@Override
 	public void onTick(EntityLivingBase player) {
-		if(player.worldObj.getTotalWorldTime() % 20  == 0 && !isImmune(player)) {
+		if(player.world.getTotalWorldTime() % 20  == 0 && !isImmune(player)) {
 			if(!isImmune(player)) {
 				player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 40, 3));
 				player.addPotionEffect(new PotionEffect(Potion.getPotionById(4), 40, 3));

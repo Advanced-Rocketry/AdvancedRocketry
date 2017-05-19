@@ -380,7 +380,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 			try {
 				TileEntity tile = ZUtils.createTile(tileList.getCompoundTagAt(i));
-				tile.setWorldObj(world);
+				tile.setWorld(world);
 
 				if(isInventoryBlock(tile)) {
 					inventoryTiles.add(tile);
@@ -391,7 +391,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 				}
 
 				tileEntities.add(tile);
-				tile.setWorldObj(world);
+				tile.setWorld(world);
 			} catch (Exception e) {
 				AdvancedRocketry.logger.warn("Rocket missing Tile (was a mod removed?)");
 			}
@@ -499,7 +499,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 						TileEntity newTile = ZUtils.createTile(nbt);
 
-						newTile.setWorldObj(ret.world);
+						newTile.setWorld(ret.world);
 
 						if(isInventoryBlock(newTile)) {
 							ret.inventoryTiles.add(newTile);
@@ -580,7 +580,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	}
 
 	@Override
-	public Biome getBiomeGenForCoords(BlockPos pos) {
+	public Biome getBiome(BlockPos pos) {
 		//Don't care, gen ocean
 		return Biome.getBiome(0);
 	}
@@ -595,7 +595,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 				|| z + side.getFrontOffsetZ() < 0 || z + side.getFrontOffsetZ() >= sizeZ)
 			return false;
 
-		return blocks[x + side.getFrontOffsetX()][y + side.getFrontOffsetY()][z + side.getFrontOffsetZ()].isBlockSolid(this, pos.offset(side), side.getOpposite());
+		return blocks[x + side.getFrontOffsetX()][y + side.getFrontOffsetY()][z + side.getFrontOffsetZ()].isSideSolid(blocks[x + side.getFrontOffsetX()][y + side.getFrontOffsetY()][z + side.getFrontOffsetZ()].getStateFromMeta(metas[x + side.getFrontOffsetX()][y + side.getFrontOffsetY()][z + side.getFrontOffsetZ()]), this, pos.offset(side), side.getOpposite());
 	
 	}
 	
@@ -758,7 +758,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 				tile.writeToNBT(nbt);
 
 				try {
-					buffer.writeNBTTagCompoundToBuffer(nbt);
+					buffer.writeCompoundTag(nbt);
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
@@ -792,10 +792,10 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 		for(short i = 0; i < numTiles; i++) {
 			try {
-				NBTTagCompound nbt = buffer.readNBTTagCompoundFromBuffer();
+				NBTTagCompound nbt = buffer.readCompoundTag();
 
 				TileEntity tile = ZUtils.createTile(nbt);
-				tile.setWorldObj(world);
+				tile.setWorld(world);
 				tileEntities.add(tile);
 
 				if(isInventoryBlock(tile)) {
@@ -804,7 +804,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 				if(isLiquidContainerBlock(tile))
 					liquidTiles.add(tile);
-				tile.setWorldObj(world);
+				tile.setWorld(world);
 
 			} catch(Exception e) {
 				e.printStackTrace();

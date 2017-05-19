@@ -109,10 +109,10 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 
 	public void assembleRocket() {
 
-		if(bbCache == null || worldObj.isRemote)
+		if(bbCache == null || world.isRemote)
 			return;
 		//Need to scan again b/c something may have changed
-		scanRocket(worldObj, getPos(), bbCache);
+		scanRocket(world, getPos(), bbCache);
 
 		if(status != ErrorCodes.SUCCESS)
 			return;
@@ -120,16 +120,16 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 
 		//Breaks if nothing is there
 		try {
-			storageChunk = StorageChunk.cutWorldBB(worldObj, bbCache);
+			storageChunk = StorageChunk.cutWorldBB(world, bbCache);
 		} catch(NegativeArraySizeException e) {
 			return;
 		}
 
 
-		EntityStationDeployedRocket rocket = new EntityStationDeployedRocket(worldObj, storageChunk, stats.copy(),bbCache.minX + (bbCache.maxX-bbCache.minX)/2f +.5f, getPos().getY() , bbCache.minZ + (bbCache.maxZ-bbCache.minZ)/2f +.5f);
+		EntityStationDeployedRocket rocket = new EntityStationDeployedRocket(world, storageChunk, stats.copy(),bbCache.minX + (bbCache.maxX-bbCache.minX)/2f +.5f, getPos().getY() , bbCache.minZ + (bbCache.maxZ-bbCache.minZ)/2f +.5f);
 
 		//TODO: setRocketDirection
-		rocket.forwardDirection = RotatableBlock.getFront(worldObj.getBlockState(getPos())).getOpposite();
+		rocket.forwardDirection = RotatableBlock.getFront(world.getBlockState(getPos())).getOpposite();
 		rocket.launchDirection = EnumFacing.DOWN;
 
 		//Change engine direction
@@ -145,11 +145,11 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 			}	
 		}
 
-		worldObj.spawnEntityInWorld(rocket);
+		world.spawnEntity(rocket);
 		NBTTagCompound nbtdata = new NBTTagCompound();
 
 		rocket.writeToNBT(nbtdata);
-		PacketHandler.sendToNearby(new PacketEntity((INetworkEntity)rocket, (byte)0, nbtdata), rocket.worldObj.provider.getDimension(), this.pos, 64);
+		PacketHandler.sendToNearby(new PacketEntity((INetworkEntity)rocket, (byte)0, nbtdata), rocket.world.provider.getDimension(), this.pos, 64);
 
 		stats.reset();
 		this.status = ErrorCodes.UNSCANNED;

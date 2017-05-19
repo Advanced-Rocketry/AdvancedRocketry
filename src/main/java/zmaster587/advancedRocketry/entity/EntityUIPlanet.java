@@ -71,9 +71,9 @@ public class EntityUIPlanet extends Entity {
 	}
 	
 	@Override
-	public boolean processInitialInteract(EntityPlayer player, ItemStack stack,
+	public boolean processInitialInteract(EntityPlayer player, 
 			EnumHand hand) {
-		if(!worldObj.isRemote && tile != null) {
+		if(!world.isRemote && tile != null) {
 			tile.selectSystem(properties.getId());
 		}
 		return true;
@@ -104,7 +104,7 @@ public class EntityUIPlanet extends Entity {
 	public int getPlanetID() {
 		//this.dataManager.set(planetID, 256);
 
-		if(!worldObj.isRemote)
+		if(!world.isRemote)
 			return properties == null ? -1 : properties.getId();
 
 		int planetId = this.dataManager.get(planetID);

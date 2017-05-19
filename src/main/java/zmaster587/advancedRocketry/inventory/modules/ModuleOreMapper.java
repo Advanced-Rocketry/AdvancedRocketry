@@ -48,7 +48,7 @@ public class ModuleOreMapper extends ModuleBase {
 	
 	public ModuleOreMapper(int offsetX, int offsetY) {
 		super(offsetX, offsetY);
-		world = Minecraft.getMinecraft().theWorld;
+		world = Minecraft.getMinecraft().world;
 
 		prevSlot = -1;
 		this.tile = tile;

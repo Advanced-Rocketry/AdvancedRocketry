@@ -80,7 +80,7 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 		}
 		else if(inventory.getStackInSlot(0) != null && inventory.getStackInSlot(0).getItem() instanceof IModularArmor) {
 
-			return ((IModularArmor)inventory.getStackInSlot(0).getItem()).removeComponent(worldObj, inventory.getStackInSlot(0), slot - 1);
+			return ((IModularArmor)inventory.getStackInSlot(0).getItem()).removeComponent(world, inventory.getStackInSlot(0), slot - 1);
 		}
 		return null;
 
@@ -122,12 +122,12 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 			slot - 1 < ((IModularArmor)inventory.getStackInSlot(0).getItem()).getNumSlots(inventory.getStackInSlot(0))) {
 			//TODO
 			if(contents != null && contents.getItem() instanceof IArmorComponent)
-				((IModularArmor)inventory.getStackInSlot(0).getItem()).addArmorComponent(worldObj, inventory.getStackInSlot(0), contents, slot - 1);
+				((IModularArmor)inventory.getStackInSlot(0).getItem()).addArmorComponent(world, inventory.getStackInSlot(0), contents, slot - 1);
 			else if(contents != null) {
 				//If somehow an item gets forced into the slot 
 				
 			} else
-				((IModularArmor)inventory.getStackInSlot(0).getItem()).removeComponent(worldObj, inventory.getStackInSlot(0), slot - 1);
+				((IModularArmor)inventory.getStackInSlot(0).getItem()).removeComponent(world, inventory.getStackInSlot(0), slot - 1);
 		}
 	}
 
@@ -162,10 +162,15 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer p_70300_1_) {
+	public boolean isUsableByPlayer(EntityPlayer p_70300_1_) {
 		return true;
 	}
 
+	@Override
+	public boolean isEmpty() {
+		return inventory.isEmpty();
+	}
+	
 	@Override
 	public void openInventory(EntityPlayer player) {
 		inventory.openInventory(player);

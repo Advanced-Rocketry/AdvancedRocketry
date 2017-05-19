@@ -27,6 +27,7 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -83,7 +84,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			return;
 
 		ISpaceObject spaceObj;
-		if( worldObj.provider.getDimension() == Configuration.spaceDimId && (spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(getPosition())) != null && ((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() ) { //Abort if destination is invalid
+		if( world.provider.getDimension() == Configuration.spaceDimId && (spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(getPosition())) != null && ((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() ) { //Abort if destination is invalid
 
 
 			setInFlight(true);
@@ -107,7 +108,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 
 	@Override
 	public void onUpdate() {
-		lastWorldTickTicked = worldObj.getTotalWorldTime();
+		lastWorldTickTicked = world.getTotalWorldTime();
 
 		if(isInFlight()) {
 			boolean burningFuel = isBurningFuel();
@@ -120,7 +121,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				//Burn the rocket fuel
 
 				//Spawn in the particle effects for the engines
-				if(worldObj.isRemote && Minecraft.getMinecraft().gameSettings.particleSetting < 2) {
+				if(world.isRemote && Minecraft.getMinecraft().gameSettings.particleSetting < 2) {
 					for(Vector3F<Float> vec : stats.getEngineLocations()) {
 
 						float xMult = Math.abs(forwardDirection.getFrontOffsetX());
@@ -131,7 +132,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 							xVel = (1-xMult)*((this.rand.nextFloat() - 0.5f)/8f) + xMult*-.15f;
 							zVel = (1-zMult)*((this.rand.nextFloat() - 0.5f)/8f) + zMult*-.15f;
 
-							AdvancedRocketry.proxy.spawnParticle("rocketFlame", worldObj, this.posX + vec.x + motionX, this.posY + vec.y, this.posZ +vec.z, xVel,(this.rand.nextFloat() - 0.5f)/8f, zVel +  motionZ);
+							AdvancedRocketry.proxy.spawnParticle("rocketFlame", world, this.posX + vec.x + motionX, this.posY + vec.y, this.posZ +vec.z, xVel,(this.rand.nextFloat() - 0.5f)/8f, zVel +  motionZ);
 
 						}
 					}
@@ -166,7 +167,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				}
 
 				if(this.posY > launchLocation.y ) {
-					if(!worldObj.isRemote) {
+					if(!world.isRemote) {
 						this.setInFlight(false);
 						this.setInOrbit(false);
 						MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketLandedEvent(this));
@@ -195,14 +196,14 @@ public class EntityStationDeployedRocket extends EntityRocket {
 
 				}
 
-				if(!worldObj.isRemote && this.getDistance(launchLocation.x, launchLocation.y, launchLocation.z) > 128) {
+				if(!world.isRemote && this.getDistance(launchLocation.x, launchLocation.y, launchLocation.z) > 128) {
 					onOrbitReached();
 					return;
 				}
 			}
 
 
-			this.moveEntity(motionX, motionY, motionZ);
+			this.move(MoverType.SELF, motionX, motionY, motionZ);
 		}
 	}
 
@@ -222,7 +223,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		}
 
 
-		DimensionProperties props = DimensionManager.getEffectiveDimId(worldObj, this.getPosition());
+		DimensionProperties props = DimensionManager.getEffectiveDimId(world, this.getPosition());
 		if(props.isGasGiant()) {
 			try {
 				atmText.setText(props.getHarvestableGasses().get(gasId).getLocalizedName(new FluidStack(props.getHarvestableGasses().get(gasId), 1)));
@@ -247,7 +248,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			PacketHandler.sendToServer(new PacketEntity(this, (byte)EntityRocket.PacketType.DECONSTRUCT.ordinal()));
 			break;
 		case 1:
-			props = DimensionManager.getEffectiveDimId(worldObj, this.getPosition());
+			props = DimensionManager.getEffectiveDimId(world, this.getPosition());
 			if(props.isGasGiant()) {
 				gasId++;
 				if(gasId < 0)
@@ -258,7 +259,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			}
 			break;
 		case 2:
-			props = DimensionManager.getEffectiveDimId(worldObj, this.getPosition());
+			props = DimensionManager.getEffectiveDimId(world, this.getPosition());
 			if(props.isGasGiant()) {
 				gasId--;
 				if(gasId < 0)
@@ -286,7 +287,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		//Check again to make sure we are around a gas giant
 		ISpaceObject spaceObj = null;
 		setInOrbit(true);
-		if( worldObj.provider.getDimension() == Configuration.spaceDimId && ((spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.getPosition())) != null && ((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() )) { //Abort if destination is invalid
+		if( world.provider.getDimension() == Configuration.spaceDimId && ((spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.getPosition())) != null && ((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() )) { //Abort if destination is invalid
 			this.setPosition(forwardDirection.getFrontOffsetX()*64d + this.launchLocation.x + (storage.getSizeX() % 2 == 0 ? 0 : 0.5d), posY, forwardDirection.getFrontOffsetZ()*64d + this.launchLocation.z + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5d));	
 		}
 		else {
@@ -302,7 +303,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		miningMission.setDimensionId(properties.getId());
 		properties.addSatallite(miningMission);
 
-		if(!worldObj.isRemote)
+		if(!world.isRemote)
 			PacketHandler.sendToAll(new PacketSatellite(miningMission));
 
 		for(IInfrastructure i : connectedInfrastructure) {
@@ -354,7 +355,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 
 		if(id == PacketType.MENU_CHANGE.ordinal()) {
 
-			DimensionProperties props = DimensionManager.getEffectiveDimId(worldObj, this.getPosition());
+			DimensionProperties props = DimensionManager.getEffectiveDimId(world, this.getPosition());
 			if(props.isGasGiant()) {
 
 				gasId = nbt.getShort("gas");
@@ -363,8 +364,8 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				else if(gasId > props.getHarvestableGasses().size() - 1)
 					gasId = 0;
 
-				if(!worldObj.isRemote)
-					PacketHandler.sendToNearby(new PacketEntity(this, (byte) PacketType.MENU_CHANGE.ordinal()), worldObj.provider.getDimension(), (int)posX, (int)posY, (int)posZ, 64d);
+				if(!world.isRemote)
+					PacketHandler.sendToNearby(new PacketEntity(this, (byte) PacketType.MENU_CHANGE.ordinal()), world.provider.getDimension(), (int)posX, (int)posY, (int)posZ, 64d);
 				else
 					atmText.setText(props.getHarvestableGasses().get(gasId).getLocalizedName(new FluidStack(AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId),1)));
 			}

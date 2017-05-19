@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import com.google.common.base.Optional;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -16,7 +17,7 @@ import net.minecraft.world.World;
 
 public class EntityItemAbducted extends Entity {
 
-	private static final DataParameter<Optional<ItemStack>> ITEM = EntityDataManager.<Optional<ItemStack>>createKey(EntityItem.class, DataSerializers.OPTIONAL_ITEM_STACK);
+	private static final DataParameter<ItemStack> ITEM = EntityDataManager.<ItemStack>createKey(EntityItem.class, DataSerializers.OPTIONAL_ITEM_STACK);
 	public int lifespan = 6000;
 	public int age = 0;
 	EntityItem itemEntity;
@@ -46,12 +47,12 @@ public class EntityItemAbducted extends Entity {
 	
     protected void entityInit()
     {
-        this.getDataManager().register(ITEM, Optional.<ItemStack>absent());
+        this.getDataManager().register(ITEM,  ItemStack.EMPTY);
     }
     
 	@Override
 	public void onUpdate() {
-		ItemStack stack = this.getDataManager().get(ITEM).orNull();
+		ItemStack stack = this.getDataManager().get(ITEM);
 		
         if (this.getEntityItem() == null)
         {
@@ -63,16 +64,16 @@ public class EntityItemAbducted extends Entity {
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
         
-        this.moveEntity(this.motionX, this.motionY, this.motionZ);
+        this.move(MoverType.SELF,this.motionX, this.motionY, this.motionZ);
 
         ++this.age;
 
-        if (!this.worldObj.isRemote && this.age >= lifespan)
+        if (!this.world.isRemote && this.age >= lifespan)
         {
         	this.setDead();
         }
 
-        if (stack != null && stack.stackSize <= 0)
+        if (stack != null && stack.getCount() <= 0)
         {
             this.setDead();
         }
@@ -84,7 +85,7 @@ public class EntityItemAbducted extends Entity {
      */
     public ItemStack getEntityItem()
     {
-        ItemStack itemstack = (ItemStack)((Optional)this.getDataManager().get(ITEM)).orNull();
+        ItemStack itemstack = (ItemStack)(this.getDataManager().get(ITEM));
 
         if (itemstack == null)
         {
@@ -99,9 +100,9 @@ public class EntityItemAbducted extends Entity {
     /**
      * Sets the ItemStack for this entity
      */
-    public void setEntityItemStack(@Nullable ItemStack stack)
+    public void setEntityItemStack( ItemStack stack)
     {
-        this.getDataManager().set(ITEM, Optional.fromNullable(stack));
+        this.getDataManager().set(ITEM, stack);
         this.getDataManager().setDirty(ITEM);
     }
     
@@ -129,11 +130,11 @@ public class EntityItemAbducted extends Entity {
 
 
         NBTTagCompound nbttagcompound1 = p_70037_1_.getCompoundTag("Item");
-        this.setEntityItemStack(ItemStack.loadItemStackFromNBT(nbttagcompound1));
+        this.setEntityItemStack(new ItemStack(nbttagcompound1));
 
-        ItemStack item = (ItemStack)((Optional)this.getDataManager().get(ITEM)).orNull();
+        ItemStack item = (ItemStack)(this.getDataManager().get(ITEM));
 
-        if (item == null || item.stackSize <= 0)
+        if (item == null || item.getCount() <= 0)
         {
             this.setDead();
         }
@@ -146,7 +147,7 @@ public class EntityItemAbducted extends Entity {
     
     public EntityItem getItemEntity() {
     	if(itemEntity == null) {
-    		itemEntity = new EntityItem(worldObj, this.posX, this.posY, this.posZ, getEntityItem());
+    		itemEntity = new EntityItem(world, this.posX, this.posY, this.posZ, getEntityItem());
     	}
     	return itemEntity;
     }

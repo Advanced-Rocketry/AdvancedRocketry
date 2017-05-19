@@ -102,7 +102,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 
 
 	private SpaceObject getSpaceObject() {
-		if(station == null && worldObj.provider.getDimension() == Configuration.spaceDimId) {
+		if(station == null && world.provider.getDimension() == Configuration.spaceDimId) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceObject)
 				station = (SpaceObject) object;
@@ -182,7 +182,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				ISpaceObject station = getSpaceObject();
 				boolean isOnStation = station != null;
 
-				if(worldObj.isRemote)
+				if(world.isRemote)
 					setPlanetModuleInfo();
 
 				//Source planet
@@ -191,7 +191,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				int sizeX = 70;
 				int sizeY = 70;
 
-				if(worldObj.isRemote) {
+				if(world.isRemote) {
 					modules.add(new ModuleScaledImage(baseX,baseY,sizeX,sizeY, zmaster587.libVulpes.inventory.TextureResources.starryBG));
 					modules.add(srcPlanetImg);
 
@@ -238,17 +238,17 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				if(dimCache == null && isOnStation && station.getOrbitingPlanetId() != SpaceObjectManager.WARPDIMID )
 					dimCache = DimensionManager.getInstance().getDimensionProperties(station.getOrbitingPlanetId());
 
-				if(!worldObj.isRemote && isOnStation) {
+				if(!world.isRemote && isOnStation) {
 					PacketHandler.sendToPlayer(new PacketSpaceStationInfo(getSpaceObject().getId(), getSpaceObject()), player);
 				}
 
-				if(worldObj.isRemote) {
+				if(world.isRemote) {
 					warpFuel.setText(flag ? String.valueOf(warpCost) : "N/A");
 					modules.add(warpFuel);
 
 					modules.add(new ModuleScaledImage(baseX,baseY,sizeX,sizeY, zmaster587.libVulpes.inventory.TextureResources.starryBG));
 					
-					if(dimCache != null && worldObj.isRemote) {
+					if(dimCache != null && world.isRemote) {
 						modules.add(dstPlanetImg);
 					}
 					
@@ -314,8 +314,8 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 			planetName = properties.getName();
 		}
 		else {
-			location = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension());
-			planetName = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension()).getName();
+			location = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
+			planetName = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getName();
 
 			if(planetName.isEmpty())
 				planetName = "???";
@@ -332,7 +332,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 		}
 
 
-		if(worldObj.isRemote) {
+		if(world.isRemote) {
 			if(srcPlanetImg == null ) {
 				//Source planet
 				int baseX = 10;
@@ -451,7 +451,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
 		if(id == 0)
-			player.openGui(LibVulpes.instance, guiId.MODULARFULLSCREEN.ordinal(), worldObj, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
+			player.openGui(LibVulpes.instance, guiId.MODULARFULLSCREEN.ordinal(), world, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
 		else if(id == 1 || id == 3) {
 			int dimId = nbt.getInteger("id");
 
@@ -463,7 +463,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 			//Update known planets
 			markDirty();
 			if(id == 3)
-				player.openGui(LibVulpes.instance, guiId.MODULARNOINV.ordinal(), worldObj, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
+				player.openGui(LibVulpes.instance, guiId.MODULARNOINV.ordinal(), world, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
 		}
 		else if(id == 2) {
 			final SpaceObject station = getSpaceObject();
@@ -471,7 +471,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 			if(station != null && station.hasUsableWarpCore() && station.useFuel(getTravelCost()) != 0) {
 				SpaceObjectManager.getSpaceManager().moveStationToBody(station, station.getDestOrbitingBody(), 200);
 
-				for (EntityPlayer player2 : worldObj.getPlayers(EntityPlayer.class, new Predicate<EntityPlayer>() {
+				for (EntityPlayer player2 : world.getPlayers(EntityPlayer.class, new Predicate<EntityPlayer>() {
 					public boolean apply(EntityPlayer input) {
 						return SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(input.getPosition()) == station;
 					};
@@ -484,14 +484,14 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				DimensionManager.hasReachedWarp = true;
 
 				for(HashedBlockPosition vec : station.getWarpCoreLocations()) {
-					TileEntity tile = worldObj.getTileEntity(vec.getBlockPos());
+					TileEntity tile = world.getTileEntity(vec.getBlockPos());
 					if(tile != null && tile instanceof TileWarpCore) {
 						((TileWarpCore)tile).onInventoryUpdated();
 					}
 				}
 			}
 		}
-		else if(id == TAB_SWITCH && !worldObj.isRemote) {
+		else if(id == TAB_SWITCH && !world.isRemote) {
 			tabModule.setTab(nbt.getShort("tab"));
 			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), getWorld(), pos.getX(), pos.getY(), pos.getZ());
 		}
@@ -580,7 +580,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 	@Override
 	public float getNormallizedProgress(int id) {
 		//Screw it, the darn thing will stop updating inv in certain circumstances
-		if(worldObj.isRemote) {
+		if(world.isRemote) {
 			setPlanetModuleInfo();
 		}
 
@@ -722,10 +722,14 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		return true;
 	}
 
+	@Override
+	public boolean isEmpty() {
+		return inv.isEmpty();
+	}
 
 	@Override
 	public void openInventory(EntityPlayer player) {
@@ -798,7 +802,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 			item.removeData(stack, this.addData(item.getData(stack), item.getDataType(stack), EnumFacing.UP, true), item.getDataType(stack));
 		}
 
-		if(worldObj.isRemote) {
+		if(world.isRemote) {
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)(LOAD_DATA + id)));
 		}
 	}
@@ -826,7 +830,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 			data.extractData(item.addData(stack, data.getDataAmount(type), type), type, EnumFacing.UP, true);
 		}
 
-		if(worldObj.isRemote) {
+		if(world.isRemote) {
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)(STORE_DATA + id)));
 		}
 	}
@@ -856,12 +860,12 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 	
 	@Override
 	public void update() {
-		if(!worldObj.isRemote && progress != -1) {
+		if(!world.isRemote && progress != -1) {
 			progress++;
 			if(progress >= MAX_PROGRESS) {
 				//Do the thing
 				SpaceObject obj = getSpaceObject();
-				if(Math.abs(worldObj.rand.nextInt()) % 50 == 0 && obj != null) {
+				if(Math.abs(world.rand.nextInt()) % 50 == 0 && obj != null) {
 					ItemStack stack = getStackInSlot(PLANETSLOT);
 					if(stack != null && stack.getItem() instanceof ItemPlanetIdentificationChip) {
 						ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)stack.getItem();
@@ -888,7 +892,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 						}
 
 						if(!unknownPlanets.isEmpty()) {
-							int newId = (int)(worldObj.rand.nextFloat()*unknownPlanets.size());
+							int newId = (int)(world.rand.nextFloat()*unknownPlanets.size());
 							newId = unknownPlanets.get(newId);
 							item.setDimensionId(stack, newId);
 							obj.discoverPlanet(newId);

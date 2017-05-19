@@ -81,7 +81,7 @@ public class AtmosphereHandler {
 	@SubscribeEvent
 	public void onTick(LivingUpdateEvent event) {
 		Entity entity = event.getEntity();
-		if(!entity.worldObj.isRemote && entity.worldObj.provider.getDimension() == this.dimId) {
+		if(!entity.world.isRemote && entity.world.provider.getDimension() == this.dimId) {
 			IAtmosphere atmosType = getAtmosphereType(entity);
 
 			if(entity instanceof EntityPlayer && atmosType != prevAtmosphere.get(entity)) {

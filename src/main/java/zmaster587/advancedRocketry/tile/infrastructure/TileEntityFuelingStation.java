@@ -17,7 +17,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
@@ -53,7 +55,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	HashedBlockPosition masterBlock;
 	ModuleRedstoneOutputButton redstoneControl;
 	RedstoneState state;
-	
+
 	public TileEntityFuelingStation() {
 		super(1000,3, 5000);
 		masterBlock = new HashedBlockPosition(0, -1, 0);
@@ -65,19 +67,19 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	public int getMaxLinkDistance() {
 		return 10;
 	}
-	
+
 	private void setRedstoneState(boolean condition) {
 		if(state == RedstoneState.INVERTED)
 			condition = !condition;
 		else if(state == RedstoneState.OFF)
 			condition = false;
-		((BlockTileRedstoneEmitter)AdvancedRocketryBlocks.blockFuelingStation).setRedstoneState(worldObj, worldObj.getBlockState(pos), pos, condition);
-		
+		((BlockTileRedstoneEmitter)AdvancedRocketryBlocks.blockFuelingStation).setRedstoneState(world, world.getBlockState(pos), pos, condition);
+
 	}
-	
+
 	@Override
 	public void performFunction() {
-		if(!worldObj.isRemote) {
+		if(!world.isRemote) {
 			if(tank.getFluid() != null) {
 				float multiplier = FuelRegistry.instance.getMultiplier(FuelType.LIQUID, tank.getFluid().getFluid());
 
@@ -93,23 +95,23 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	public int getPowerPerOperation() {
 		return 30;
 	}
-	
+
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		return new SPacketUpdateTileEntity(pos, getBlockMetadata(), getUpdateTag());
 	}
-	
+
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		handleUpdateTag(pkt.getNbtCompound());
 	}
-	
+
 	@Override
 	public NBTTagCompound getUpdateTag() {
 		return writeToNBT(new NBTTagCompound());
 	}
-	
-	
+
+
 	@Override
 	public boolean canPerformFunction() {
 		// TODO Solid fuel?
@@ -134,48 +136,62 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
-		
+
 		super.setInventorySlotContents(slot, stack);
 		while(useBucket(0, getStackInSlot(0)));
-			
+
 	}
 
 	//Yes i was lazy
 	//TODO: make better
+	//Returns true if bucket was actually used
 	private boolean useBucket( int slot, ItemStack stack) {
-		if(slot == 0 && FluidContainerRegistry.isFilledContainer(stack) && FuelRegistry.instance.isFuel(FuelType.LIQUID,FluidContainerRegistry.getFluidForFilledItem(stack).getFluid()) && tank.getFluidAmount() + FluidContainerRegistry.getContainerCapacity(stack) <= tank.getCapacity()) {
-			ItemStack emptyContainer = FluidContainerRegistry.drainFluidContainer(stack);
+		if(slot == 0 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP)) {
+			IFluidHandlerItem fluidItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
+			FluidStack fluidStack = fluidItem.getTankProperties()[0].getContents();
+			
+			if(FuelRegistry.instance.isFuel(FuelType.LIQUID, fluidStack.getFluid()) && tank.getFluidAmount() + fluidItem.getTankProperties()[0].getCapacity() <= tank.getCapacity()) {
 
-			if(emptyContainer != null && inventory.getStackInSlot(1) == null || (emptyContainer.isItemEqual(inventory.getStackInSlot(1)) && inventory.getStackInSlot(1).stackSize < inventory.getStackInSlot(1).getMaxStackSize())) {
-				tank.fill(FluidContainerRegistry.getFluidForFilledItem(stack), true);
+				ItemStack emptyContainer = stack.copy();
+				emptyContainer.setCount(1);
+				emptyContainer.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP).drain(8000, true);
 
-				if(inventory.getStackInSlot(1) == null)
-					super.setInventorySlotContents(1, emptyContainer);
-				else
-					inventory.getStackInSlot(1).stackSize++;
-				decrStackSize(0, 1);
+				if(emptyContainer != null && inventory.getStackInSlot(1) == null || (emptyContainer.isItemEqual(inventory.getStackInSlot(1)) && inventory.getStackInSlot(1).getCount() < inventory.getStackInSlot(1).getMaxStackSize())) {
+					tank.fill(fluidStack, true);
+
+					if(inventory.getStackInSlot(1) == null)
+						super.setInventorySlotContents(1, emptyContainer);
+					else {
+						inventory.getStackInSlot(1).setCount(inventory.getStackInSlot(1).getCount() + 1);
+					}
+					decrStackSize(0, 1);
+				}
+				else 
+					return false;
 			}
 			else
 				return false;
 		}
 		else
 			return false;
-		
+
 		return true;
 	}
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		if(FluidContainerRegistry.isFilledContainer(stack))
-			return FuelRegistry.instance.isFuel(FuelType.LIQUID, FluidContainerRegistry.getFluidForFilledItem(stack).getFluid());
+		if(stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP)) {
+			FluidStack fstack = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP).getTankProperties()[0].getContents();
+			return fstack != null && FuelRegistry.instance.isFuel(FuelType.LIQUID, fstack.getFluid());
+		}
 		return FuelRegistry.instance.isFuel(FuelType.LIQUID,stack);
 	}
 
 	@Override
 	public void unlinkRocket() {
 		this.linkedRocket = null;
-		((BlockTileRedstoneEmitter)AdvancedRocketryBlocks.blockFuelingStation).setRedstoneState(worldObj, worldObj.getBlockState(pos), pos, false);
-		
+		((BlockTileRedstoneEmitter)AdvancedRocketryBlocks.blockFuelingStation).setRedstoneState(world, world.getBlockState(pos), pos, false);
+
 	}
 
 	@Override
@@ -200,8 +216,8 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 			this.linkedRocket.unlinkInfrastructure(this);
 			this.unlinkRocket();
 		}
-		
-		if(player.worldObj.isRemote)
+
+		if(player.world.isRemote)
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new TextComponentString("You program the linker with the fueling station at: " + this.pos.getX() + " " + this.pos.getY() + " " + this.pos.getZ())));
 		return true;
 	}
@@ -211,16 +227,16 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 		super.invalidate();
 		if(getMasterBlock() instanceof TileRocketBuilder)
 			((TileRocketBuilder)getMasterBlock()).removeConnectedInfrastructure(this);
-		
+
 		//Mostly for client rendering stuff
 		if(linkedRocket != null)
 			linkedRocket.unlinkInfrastructure(this);
 	}
-	
+
 	@Override
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
-		if(player.worldObj.isRemote)
+		if(player.world.isRemote)
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new TextComponentString("This must be the first machine to link!")));
 		return false;
 	}
@@ -235,16 +251,16 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		List<ModuleBase> list = new ArrayList<ModuleBase>();
-		
+
 		list.add(new ModulePower(156, 12, this));
 		list.add(new ModuleSlotArray(45, 18, this, 0, 1));
 		list.add(new ModuleSlotArray(45, 54, this, 1, 2));
 		list.add(redstoneControl);
-		
-		if(worldObj.isRemote)
+
+		if(world.isRemote)
 			list.add(new ModuleImage(44, 35, new IconResource(194, 0, 18, 18, CommonResources.genericBackground)));
 		list.add(new ModuleLiquidIndicator(27, 18, this));
-		
+
 		return list;
 	}
 
@@ -262,7 +278,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	public boolean linkMission(IMission misson) {
 		return false;
 	}
-	
+
 	@Override
 	public void unlinkMission() {
 	}
@@ -276,19 +292,19 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 		}
 		return nbt;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		state = RedstoneState.values()[nbt.getByte("redstoneState")];
 		redstoneControl.setRedstoneState(state);
-		
+
 		if(nbt.hasKey("masterPos")) {
 			int[] pos = nbt.getIntArray("masterPos");
 			setMasterBlock(new BlockPos(pos[0], pos[1], pos[2]));
 		}
 	}
-	
+
 	@Override
 	public boolean hasMaster() {
 		return masterBlock.y > -1;
@@ -296,12 +312,12 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 
 	@Override
 	public TileEntity getMasterBlock() {
-		return worldObj.getTileEntity(new BlockPos(masterBlock.x, masterBlock.y, masterBlock.z));
+		return world.getTileEntity(new BlockPos(masterBlock.x, masterBlock.y, masterBlock.z));
 	}
 
 	@Override
 	public void setComplete(BlockPos pos) {
-		
+
 	}
 
 	@Override
@@ -313,11 +329,11 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	public void setMasterBlock(BlockPos pos) {
 		masterBlock = new HashedBlockPosition(pos);
 	}
-	
+
 	public boolean canRenderConnection() {
 		return true;
 	}
-	
+
 	@Override
 	public void onInventoryButtonPressed(int buttonId) {
 		state = redstoneControl.getState();
@@ -339,8 +355,13 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
 		state = RedstoneState.values()[nbt.getByte("state")];
-		
+
 		if(linkedRocket != null)
 			setRedstoneState(linkedRocket.getFuelAmount() == linkedRocket.getFuelCapacity());
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return inventory.isEmpty();
 	}
 }

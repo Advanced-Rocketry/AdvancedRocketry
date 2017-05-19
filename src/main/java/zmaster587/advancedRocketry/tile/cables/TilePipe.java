@@ -45,7 +45,7 @@ public class TilePipe extends TileEntity {
 			return;
 
 		for(EnumFacing dir : EnumFacing.VALUES) {
-			TileEntity tile = worldObj.getTileEntity(this.getPos().offset(dir));
+			TileEntity tile = world.getTileEntity(this.getPos().offset(dir));
 			if(tile != null)
 				getNetworkHandler().removeFromAllTypes(this, tile);
 		}
@@ -62,15 +62,15 @@ public class TilePipe extends TileEntity {
 	public void markDirty() {
 		super.markDirty();
 
-		if(!worldObj.isRemote) {
-			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
+		if(!world.isRemote) {
+			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 		}
 	}
 
 	public void onPlaced() {
 
 		for(EnumFacing dir : EnumFacing.values()) {
-			TileEntity tile = worldObj.getTileEntity(getPos().offset(dir));
+			TileEntity tile = world.getTileEntity(getPos().offset(dir));
 
 
 			if(tile != null) {
@@ -98,7 +98,7 @@ public class TilePipe extends TileEntity {
 
 	public void linkSystems() {
 		for(EnumFacing dir : EnumFacing.values()) {
-			TileEntity tile = worldObj.getTileEntity(getPos().offset(dir));
+			TileEntity tile = world.getTileEntity(getPos().offset(dir));
 
 			if(tile != null) {
 				attemptLink(dir, tile);
@@ -111,8 +111,8 @@ public class TilePipe extends TileEntity {
 		//if(!(tile instanceof IFluidHandler))
 		//return;
 
-		if(canExtract(dir, tile) && (worldObj.isBlockIndirectlyGettingPowered(pos) > 0 || worldObj.getStrongPower(pos) > 0)) {
-			if(worldObj.isRemote)
+		if(canExtract(dir, tile) && (world.isBlockIndirectlyGettingPowered(pos) > 0 || world.getStrongPower(pos) > 0)) {
+			if(world.isRemote)
 				connectedSides[dir.ordinal()]=true;
 			else {
 				getNetworkHandler().removeFromAllTypes(this, tile);
@@ -120,8 +120,8 @@ public class TilePipe extends TileEntity {
 			}
 		}
 
-		if(canInject(dir, tile) && worldObj.isBlockIndirectlyGettingPowered(pos) == 0 && worldObj.getStrongPower(pos) == 0) {
-			if(worldObj.isRemote)
+		if(canInject(dir, tile) && world.isBlockIndirectlyGettingPowered(pos) == 0 && world.getStrongPower(pos) == 0) {
+			if(world.isRemote)
 				connectedSides[dir.ordinal()]=true;
 			else {
 				getNetworkHandler().removeFromAllTypes(this, tile);
@@ -139,9 +139,9 @@ public class TilePipe extends TileEntity {
 		//if(worldObj.isRemote)
 		//return;
 
-		TileEntity tile = worldObj.getTileEntity(pos);
+		TileEntity tile = world.getTileEntity(pos);
 
-		if(!worldObj.isRemote && !getNetworkHandler().doesNetworkExist(networkID)) {
+		if(!world.isRemote && !getNetworkHandler().doesNetworkExist(networkID)) {
 			initialized = false;
 		}
 
@@ -152,7 +152,7 @@ public class TilePipe extends TileEntity {
 
 				TilePipe pipe = ((TilePipe) tile);
 
-				if(worldObj.isRemote) {
+				if(world.isRemote) {
 					EnumFacing dir = null;
 					for(EnumFacing dir2 : EnumFacing.values()) {
 
@@ -192,7 +192,7 @@ public class TilePipe extends TileEntity {
 				}
 			}
 			else {
-				if(!worldObj.isRemote && !isInitialized()) {
+				if(!world.isRemote && !isInitialized()) {
 					networkID = getNetworkHandler().getNewNetworkID();
 					initialized = true;
 				}
@@ -208,7 +208,7 @@ public class TilePipe extends TileEntity {
 					attemptLink(dir, tile);
 			}
 		}
-		else if(worldObj.isRemote) {
+		else if(world.isRemote) {
 
 			EnumFacing dir = null;
 			for(EnumFacing dir2 : EnumFacing.values()) {

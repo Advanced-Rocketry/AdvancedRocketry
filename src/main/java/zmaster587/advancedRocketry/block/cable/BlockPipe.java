@@ -79,7 +79,7 @@ public class BlockPipe extends Block {
 
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos,
-			Block blockIn) {
+			Block blockIn, BlockPos fromPos) {
 		((TilePipe)worldIn.getTileEntity(pos)).onPlaced();
 	}
 

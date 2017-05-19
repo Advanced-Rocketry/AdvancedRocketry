@@ -21,25 +21,25 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 
 	@Override
 	public boolean canGeneratePower() {
-		return worldObj.canBlockSeeSky(this.pos.up()) && worldObj.isDaytime();
+		return world.canBlockSeeSky(this.pos.up()) && world.isDaytime();
 	}
 
 	@Override
 	public void update() {
 		if(canGeneratePower()) {
-			if(worldObj.isRemote)
+			if(world.isRemote)
 				text.setText("Collecting Energy:\n" + getPowerPerOperation() + " RF/t");
 			if(hasEnoughEnergyBuffer(getPowerPerOperation())) {
-				if(!worldObj.isRemote) this.energy.acceptEnergy(getPowerPerOperation(), false);
+				if(!world.isRemote) this.energy.acceptEnergy(getPowerPerOperation(), false);
 				onGeneratePower();
 			}
 			else
 				notEnoughBufferForFunction();
 		}
-		else if(worldObj.isRemote)
+		else if(world.isRemote)
 			text.setText("Unable to collect Energy");
 
-		if(!worldObj.isRemote)
+		if(!world.isRemote)
 			transmitPower();
 	}
 

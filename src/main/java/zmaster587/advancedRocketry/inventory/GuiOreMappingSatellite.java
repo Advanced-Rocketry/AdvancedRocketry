@@ -46,7 +46,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 
 	public GuiOreMappingSatellite(SatelliteOreMapping tile,EntityPlayer inventoryPlayer) {
 		super( new ContainerOreMappingSatallite(tile,inventoryPlayer.inventory));
-		world = inventoryPlayer.worldObj;
+		world = inventoryPlayer.world;
 
 		prevSlot = -1;
 		this.tile = tile;
@@ -349,7 +349,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 			Tessellator.getInstance().draw();
 			GlStateManager.color(1, 1, 1);
 			GlStateManager.enableTexture2D();
-			this.drawCenteredString(this.fontRendererObj, "You", (int)(offsetX + 47 + x + SCREEN_SIZE/2 - radius), (int)(offsetY + 20 + y + SCREEN_SIZE/2 - radius) -10, 0xF0F0F0);
+			this.drawCenteredString(this.fontRenderer, "You", (int)(offsetX + 47 + x + SCREEN_SIZE/2 - radius), (int)(offsetY + 20 + y + SCREEN_SIZE/2 - radius) -10, 0xF0F0F0);
 		}
 
 		//Render sliders and controls
@@ -359,10 +359,10 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		this.drawVerticalLine((int)(32*VulpineMath.log2(scanSize-1)/8F) + 199 + x, 34 + y, 45 + y, 0xFFC00F0F);
 		//this.drawTexturedModalRect(197 + x, 63 + y, 0, 192, 32, 14);
 		//this.drawVerticalLine((int)(28*MathVulpes.log2(radius)/4F) + 199 + x, 67 + y, 77 + y, 0xFF000000);
-		this.drawString(this.fontRendererObj, "Zoom", 198 + x, 22 + y, 0xF0F0F0);
+		this.drawString(this.fontRenderer, "Zoom", 198 + x, 22 + y, 0xF0F0F0);
 		//this.drawString(this.fontRendererObj, "Clarity", 198 + x, 52 + y, 0xb0b0b0);
-		this.drawString(this.fontRendererObj, "X: " + xSelected, 6 + x, 33 + y, 0xF0F0F0);
-		this.drawString(this.fontRendererObj, "Z: " + zSelected, 6 + x, 49 + y, 0xF0F0F0);
+		this.drawString(this.fontRenderer, "X: " + xSelected, 6 + x, 33 + y, 0xF0F0F0);
+		this.drawString(this.fontRenderer, "Z: " + zSelected, 6 + x, 49 + y, 0xF0F0F0);
 		//this.drawString(this.fontRendererObj, "Value: ", 6 + x, 65 + y, 0xF0F0F0);
 		//this.drawString(this.fontRendererObj, String.valueOf(mouseValue), 6 + x, 79 + y, 0xF0F0F0);
 	}

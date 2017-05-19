@@ -24,7 +24,7 @@ public class RocketInventoryHelper {
 		//If a small amount of time is passed since interfacing with the rocket and the player has moved then assume the player is no longer accessing the rocket
 		//and possibly trying to abuse AR to circumvent inv checks
 		if(inventoryTimingMap.containsKey(player)) {
-			if(inventoryTimingMap.get(player) + 10 < player.worldObj.getTotalWorldTime() && 
+			if(inventoryTimingMap.get(player) + 10 < player.world.getTotalWorldTime() && 
 					inventoryDismapping.get(player).getDistance(player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ()) > 3)
 				removePlayerFromInventoryBypass(player);
 		}

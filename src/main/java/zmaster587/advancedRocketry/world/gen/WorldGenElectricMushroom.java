@@ -28,7 +28,7 @@ public class WorldGenElectricMushroom extends WorldGenerator {
         {
             BlockPos blockpos = position.add(rand.nextInt(8) - rand.nextInt(8), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(8) - rand.nextInt(8));
 
-            if (worldIn.isAirBlock(blockpos) && (!worldIn.provider.getHasNoSky() || blockpos.getY() < 255) && ((BlockElectricMushroom)this.state.getBlock()).canBlockStay(worldIn, blockpos, this.state))
+            if (worldIn.isAirBlock(blockpos) && (!worldIn.provider.hasNoSky() || blockpos.getY() < 255) && ((BlockElectricMushroom)this.state.getBlock()).canBlockStay(worldIn, blockpos, this.state))
             {
                 worldIn.setBlockState(blockpos, state, 2);
             }

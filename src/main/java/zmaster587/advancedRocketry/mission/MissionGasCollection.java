@@ -68,7 +68,7 @@ public class MissionGasCollection extends MissionResourceCollection {
 		rocket.forceSpawn = true;
 
 		rocket.setPosition(dir.getFrontOffsetX()*64d + rocket.launchLocation.x + (rocketStorage.getSizeX() % 2 == 0 ? 0 : 0.5d), y, dir.getFrontOffsetZ()*64d + rocket.launchLocation.z + (rocketStorage.getSizeZ() % 2 == 0 ? 0 : 0.5d));
-		world.spawnEntityInWorld(rocket);
+		world.spawnEntity(rocket);
 		rocket.setInOrbit(true);
 		rocket.setInFlight(true);
 		//rocket.motionY = -1.0;

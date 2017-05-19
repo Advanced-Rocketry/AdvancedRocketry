@@ -161,7 +161,7 @@ public class StellarBody {
 			color[0] = temperature - 60;
 			color[0] = 329.69f * (float)Math.pow(color[0], -0.1332f);
 
-			color[0] = MathHelper.clamp_float(color[0]/255f, 0f, 1f);
+			color[0] = MathHelper.clamp(color[0]/255f, 0f, 1f);
 		}
 
 		//Calc Green
@@ -174,7 +174,7 @@ public class StellarBody {
 			color[1] = 288f * (float)Math.pow(color[1], -0.07551);
 
 		}
-		color[1] = MathHelper.clamp_float(color[1]/255f, 0f, 1f);
+		color[1] = MathHelper.clamp(color[1]/255f, 0f, 1f);
 
 
 		//Calculate Blue
@@ -186,7 +186,7 @@ public class StellarBody {
 		else {
 			color[2] = temperature - 10;
 			color[2] = (float) (138.51f * Math.log(color[2]) - 305.04f);
-			color[2] = MathHelper.clamp_float(color[2]/255f, 0f, 1f);
+			color[2] = MathHelper.clamp(color[2]/255f, 0f, 1f);
 		}
 
 		return color;

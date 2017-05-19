@@ -101,13 +101,13 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 	}
 
 	public boolean isEnabled() {
-		boolean powered = worldObj.isBlockIndirectlyGettingPowered(getPos()) > 0;
+		boolean powered = world.isBlockIndirectlyGettingPowered(getPos()) > 0;
 		return (!powered && state == RedstoneState.INVERTED) || (powered && state == RedstoneState.ON) || state == RedstoneState.OFF;
 	}
 
 	@Override
 	public void update() {
-		if(!worldObj.isRemote) {
+		if(!world.isRemote) {
 			if(isEnabled()) {
 
 				if(onTime < 1)
@@ -229,9 +229,9 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 		selectedPlanet = null;
 
 		if(backButton == null) {
-			backButton = new EntityUIButton(worldObj, 0, this);
+			backButton = new EntityUIButton(world, 0, this);
 			backButton.setPosition(this.pos.getX() + .5, this.pos.getY() + 1.5, this.pos.getZ() + .5);
-			this.getWorld().spawnEntityInWorld(backButton);
+			this.getWorld().spawnEntity(backButton);
 		}
 
 		if(!stellarMode) {
@@ -252,8 +252,8 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 			else {
 				if(currentStarBody == null)
 					currentStarBody = DimensionManager.getSol();
-				currentStar = new EntityUIStar(worldObj, currentStarBody, this, this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5);
-				this.getWorld().spawnEntityInWorld(currentStar);
+				currentStar = new EntityUIStar(world, currentStarBody, this, this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5);
+				this.getWorld().spawnEntity(currentStar);
 
 				//Spawn substars
 				if(currentStarBody.getSubStars() != null && !currentStarBody.getSubStars().isEmpty()) {
@@ -266,9 +266,9 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 						int deltaX, deltaY;
 						deltaX = (int)(body.getStarSeperation()*MathHelper.cos(phase)*0.05);
 						deltaY = (int)(body.getStarSeperation()*MathHelper.sin(phase)*0.05);
-						EntityUIStar entity = new EntityUIStar(worldObj, body, count++, this, this.pos.getX() + .5 + deltaX, this.pos.getY() + 1, this.pos.getZ() + .5 + deltaY);
+						EntityUIStar entity = new EntityUIStar(world, body, count++, this, this.pos.getX() + .5 + deltaX, this.pos.getY() + 1, this.pos.getZ() + .5 + deltaY);
 
-						this.getWorld().spawnEntityInWorld(entity);
+						this.getWorld().spawnEntity(entity);
 						starEntities.add(entity);
 						phase += phaseInc;
 					}
@@ -276,9 +276,9 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 			}
 
 			for(IDimensionProperties properties : planetList) {
-				EntityUIPlanet entity = new EntityUIPlanet(worldObj, (DimensionProperties)properties, this, this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5);
+				EntityUIPlanet entity = new EntityUIPlanet(world, (DimensionProperties)properties, this, this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5);
 				//entity.setPositionPolar(this.pos.getX() + .5, this.pos.getY() + 10, this.pos.getZ() + .5,  ((DimensionProperties)properties).orbitalDist/100f, ( (DimensionProperties)properties).orbitTheta);
-				this.getWorld().spawnEntityInWorld(entity);
+				this.getWorld().spawnEntity(entity);
 				entities.add(entity);
 
 				if(centeredEntity != null && properties == centeredEntity.getProperties())
@@ -295,9 +295,9 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 			Collection<StellarBody> starList = DimensionManager.getInstance().getStars();
 
 			for(StellarBody body : starList) {
-				EntityUIStar entity = new EntityUIStar(worldObj, body, this, this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5);
+				EntityUIStar entity = new EntityUIStar(world, body, this, this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5);
 
-				this.getWorld().spawnEntityInWorld(entity);
+				this.getWorld().spawnEntity(entity);
 				starEntities.add(entity);
 			}
 		}
@@ -319,7 +319,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 	}
 
 	private void updateText() {
-		if(worldObj.isRemote) {
+		if(world.isRemote) {
 
 			//numThrusters.setText("Number Of Thrusters: 0");
 			targetGrav.setText(String.format("Hologram Size: %f", getHologramSize()));

@@ -45,8 +45,10 @@ public class BlockPress extends BlockPistonBase {
 		}
 	}
 
+	
+	
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos,
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos,
 			EnumFacing facing, float hitX, float hitY, float hitZ, int meta,
 			EntityLivingBase placer) {
 		return this.getDefaultState().withProperty(FACING, EnumFacing.DOWN).withProperty(EXTENDED, Boolean.valueOf(false));
@@ -102,7 +104,7 @@ public class BlockPress extends BlockPistonBase {
 			worldIn.setBlockToAir(pos.down());
 
 			if(!worldIn.isRemote)
-				worldIn.spawnEntityInWorld(new EntityItem(worldIn, pos.getX(), pos.getY() - 0.5, pos.getZ(), stack));
+				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY() - 0.5, pos.getZ(), stack));
 			if ((new BlockPistonStructureHelper(worldIn, pos, enumfacing, true)).canMove())
 			{
 				worldIn.addBlockEvent(pos, this, 0, enumfacing.getIndex());
@@ -113,10 +115,10 @@ public class BlockPress extends BlockPistonBase {
 			worldIn.addBlockEvent(pos, this, 1, enumfacing.getIndex());
 		}
 	}
-
+	
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos,
-			Block blockIn) {
+			Block blockIn, BlockPos fromPos) {
 		if (!((World)world).isRemote)
 		{
 			this.checkForMove(world, pos, state);
@@ -221,18 +223,18 @@ public class BlockPress extends BlockPistonBase {
 
 			for (int i1 = list2.size() - 1; i1 >= 0; --i1)
 			{
-				worldIn.notifyNeighborsOfStateChange((BlockPos)list2.get(i1), aiblockstate[k++].getBlock());
+				worldIn.notifyNeighborsOfStateChange((BlockPos)list2.get(i1), aiblockstate[k++].getBlock(), true);
 			}
 
 			for (int j1 = list.size() - 1; j1 >= 0; --j1)
 			{
-				worldIn.notifyNeighborsOfStateChange((BlockPos)list.get(j1), aiblockstate[k++].getBlock());
+				worldIn.notifyNeighborsOfStateChange((BlockPos)list.get(j1), aiblockstate[k++].getBlock(), true);
 			}
 
 			if (extending)
 			{
-				worldIn.notifyNeighborsOfStateChange(blockpos2, Blocks.PISTON_HEAD);
-				worldIn.notifyNeighborsOfStateChange(pos, this);
+				worldIn.notifyNeighborsOfStateChange(blockpos2, Blocks.PISTON_HEAD, true);
+				worldIn.notifyNeighborsOfStateChange(pos, this, true);
 			}
 
 			return true;

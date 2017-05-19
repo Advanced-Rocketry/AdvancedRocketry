@@ -77,7 +77,7 @@ public class XMLOreLoader {
 
 				if(node != null) {
 					try {
-						pressure = MathHelper.clamp_int(Integer.parseInt(node.getTextContent()),0, AtmosphereTypes.values().length);
+						pressure = MathHelper.clamp(Integer.parseInt(node.getTextContent()),0, AtmosphereTypes.values().length);
 					} catch( NumberFormatException e ) {
 						AdvancedRocketry.logger.warn("Invalid format for pressure: \"" + node.getTextContent() + "\" Only numbers are allowed(" + doc.getDocumentURI() + ")");
 						childNode = childNode.getNextSibling();
@@ -89,7 +89,7 @@ public class XMLOreLoader {
 
 				if(node != null) {
 					try {
-						temp = MathHelper.clamp_int(Integer.parseInt(node.getTextContent()),0, Temps.values().length);
+						temp = MathHelper.clamp(Integer.parseInt(node.getTextContent()),0, Temps.values().length);
 					} catch( NumberFormatException e ) {
 						AdvancedRocketry.logger.warn("Invalid format for temp: \"" + node.getTextContent() + "\" Only numbers are allowed(" + doc.getDocumentURI() + ")");
 						childNode = childNode.getNextSibling();
@@ -185,7 +185,7 @@ public class XMLOreLoader {
 
 				if(node != null) {
 					try {
-						maxHeight = MathHelper.clamp_int(Integer.parseInt(node.getTextContent()),  minHeight, 0xFF);
+						maxHeight = MathHelper.clamp(Integer.parseInt(node.getTextContent()),  minHeight, 0xFF);
 					} catch(NumberFormatException e) {
 						AdvancedRocketry.logger.warn("Invalid \"maxHeight\" attribute from ore node");
 						childNode = childNode.getNextSibling();
@@ -202,7 +202,7 @@ public class XMLOreLoader {
 
 				if(node != null) {
 					try {
-						clumpSize = MathHelper.clamp_int(Integer.parseInt(node.getTextContent()),  1, 0xFF);
+						clumpSize = MathHelper.clamp(Integer.parseInt(node.getTextContent()),  1, 0xFF);
 					} catch(NumberFormatException e) {
 						AdvancedRocketry.logger.warn("Invalid \"clumpSize\" attribute from ore node");
 						childNode = childNode.getNextSibling();
@@ -219,7 +219,7 @@ public class XMLOreLoader {
 
 				if(node != null) {
 					try {
-						chancePerChunk = MathHelper.clamp_int(Integer.parseInt(node.getTextContent()),  1, 0xFF);
+						chancePerChunk = MathHelper.clamp(Integer.parseInt(node.getTextContent()),  1, 0xFF);
 					} catch(NumberFormatException e) {
 						AdvancedRocketry.logger.warn("Invalid \"chancePerChunk\" attribute from ore node");
 						childNode = childNode.getNextSibling();

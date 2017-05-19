@@ -28,10 +28,10 @@ public class BlockLightSource extends Block {
 
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState,
-			World worldIn, BlockPos pos) {
+			IBlockAccess worldIn, BlockPos pos) {
 		return null;
 	}
-    
+	
 	@Override
 	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
 		return 15;

@@ -866,7 +866,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			Iterator<Biome> itr = Biome.REGISTRY.iterator();
 			while( itr.hasNext()) {
 				Biome biome = itr.next();
-				if(biome != null && (BiomeDictionary.isBiomeOfType(biome,BiomeDictionary.Type.HOT) || BiomeDictionary.isBiomeOfType(biome,BiomeDictionary.Type.OCEAN))  && !isBiomeblackListed(biome)) {
+				if(biome != null && (BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.HOT) || BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.OCEAN))  && !isBiomeblackListed(biome)) {
 					viableBiomes.add(biome);
 				}
 			}
@@ -875,28 +875,28 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			Iterator<Biome> itr = Biome.REGISTRY.iterator();
 			while( itr.hasNext()) {
 				Biome biome = itr.next();
-				if(biome != null && !BiomeDictionary.isBiomeOfType(biome,BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
+				if(biome != null && !BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
 					viableBiomes.add(biome);
 				}
 			}
-			viableBiomes.addAll(Arrays.asList(BiomeDictionary.getBiomesForType(BiomeDictionary.Type.OCEAN)));
+			viableBiomes.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN));
 		}
 		else if(averageTemperature > Temps.COLD.getTemp()) {
 			Iterator<Biome> itr = Biome.REGISTRY.iterator();
 			while( itr.hasNext()) {
 				Biome biome = itr.next();
-				if(biome != null && !BiomeDictionary.isBiomeOfType(biome,BiomeDictionary.Type.HOT) && !isBiomeblackListed(biome)) {
+				if(biome != null && !BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.HOT) && !isBiomeblackListed(biome)) {
 					viableBiomes.add(biome);
 				}
 			}
-			viableBiomes.addAll(Arrays.asList(BiomeDictionary.getBiomesForType(BiomeDictionary.Type.OCEAN)));
+			viableBiomes.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN));
 		}
 		else if(averageTemperature > Temps.FRIGID.getTemp()) {
 
 			Iterator<Biome> itr = Biome.REGISTRY.iterator();
 			while( itr.hasNext()) {
 				Biome biome = itr.next();
-				if(biome != null && !BiomeDictionary.isBiomeOfType(biome,BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
+				if(biome != null && !BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
 					viableBiomes.add(biome);
 				}
 			}
@@ -905,7 +905,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			Iterator<Biome> itr = Biome.REGISTRY.iterator();
 			while( itr.hasNext()) {
 				Biome biome = itr.next();
-				if(biome != null && !BiomeDictionary.isBiomeOfType(biome,BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
+				if(biome != null && !BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
 					viableBiomes.add(biome);
 				}
 			}
@@ -988,7 +988,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		ArrayList<Biome> entryList = new ArrayList<Biome>();
 
-		entryList.addAll(Arrays.asList(BiomeDictionary.getBiomesForType(type)));
+		entryList.addAll(BiomeDictionary.getBiomes(type));
 
 		//Neither are acceptable on planets
 		entryList.remove(Biome.getBiome(8));
@@ -999,7 +999,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		while(iter.hasNext()) {
 			Biome nextbiome = iter.next();
 			for(BiomeEntry entry : allowedBiomes) {
-				if(BiomeDictionary.areBiomesEquivalent(entry.biome, nextbiome))
+				if(BiomeDictionary.areSimilar(entry.biome, nextbiome))
 					iter.remove();
 			}
 
@@ -1016,14 +1016,14 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		ArrayList<Biome> entryList = new ArrayList<Biome>();
 
-		entryList.addAll(Arrays.asList(BiomeDictionary.getBiomesForType(type)));
+		entryList.addAll(BiomeDictionary.getBiomes(type));
 
 		Iterator<Biome> itr = Biome.REGISTRY.iterator();
 		while(itr.hasNext()) {
 			Biome biome = itr.next();
 			Iterator<BiomeEntry> iterator = allowedBiomes.iterator();
 			while(iterator.hasNext()) {
-				if(BiomeDictionary.areBiomesEquivalent(iterator.next().biome, biome))
+				if(BiomeDictionary.areSimilar(iterator.next().biome, biome))
 					iterator.remove();
 			}
 		}
@@ -1364,7 +1364,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return the density of the atmosphere at the given height
 	 */
 	public float getAtmosphereDensityAtHeight(double y) {
-		return atmosphereDensity*MathHelper.clamp_float((float) ( 1 + (256 - y)/200f), 0f,1f)/100f;
+		return atmosphereDensity*MathHelper.clamp((float) ( 1 + (256 - y)/200f), 0f,1f)/100f;
 	}
 
 	/**

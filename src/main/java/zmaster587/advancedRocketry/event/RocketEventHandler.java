@@ -94,7 +94,7 @@ public class RocketEventHandler extends Gui {
 
 	@SubscribeEvent
 	public void onRocketLaunch(RocketEvent.RocketLaunchEvent event) {
-		if(event.world.isRemote && !event.getEntity().getPassengers().isEmpty() && event.getEntity().getPassengers().contains(Minecraft.getMinecraft().thePlayer)) {
+		if(event.world.isRemote && !event.getEntity().getPassengers().isEmpty() && event.getEntity().getPassengers().contains(Minecraft.getMinecraft().player)) {
 			prepareOrbitalMap(event);
 			prevRenderHanlder = event.world.provider.getSkyRenderer();
 			event.world.provider.setSkyRenderer(new RenderPlanetarySky());
@@ -172,7 +172,7 @@ public class RocketEventHandler extends Gui {
 							if(chunk.isLoaded() && !chunk.isEmpty()) {
 								//Get Xcoord and ZCoords in the chunk
 								numChunksLoaded++;
-								int heightValue = chunk.getHeightValue( xPosition + (chunk.xPosition >= 0 ? - (Math.abs( chunk.xPosition )<< 4) : (Math.abs( chunk.xPosition )<< 4)), zPosition + (chunk.zPosition >= 0 ? - (Math.abs(chunk.zPosition )<< 4) : (Math.abs(chunk.zPosition )<< 4)));
+								int heightValue = chunk.getHeightValue( xPosition + (chunk.x >= 0 ? - (Math.abs( chunk.x )<< 4) : (Math.abs( chunk.x )<< 4)), zPosition + (chunk.z >= 0 ? - (Math.abs(chunk.z )<< 4) : (Math.abs(chunk.z )<< 4)));
 								MapColor color = MapColor.AIR;
 								int yPosition;
 
@@ -191,14 +191,14 @@ public class RocketEventHandler extends Gui {
 								int intColor;
 
 								if(block.getBlock() == Blocks.GRASS || block.getBlock() == Blocks.TALLGRASS) {
-									int color2 = worldObj.getBiomeGenForCoords(thisPos).getGrassColorAtPos(thisPos.add(0, yPosition, 0));
+									int color2 = worldObj.getBiome(thisPos).getGrassColorAtPos(thisPos.add(0, yPosition, 0));
 									int r = (color2 & 0xFF);
 									int g = ( (color2 >>> 8) & 0xFF);
 									int b = ( (color2 >>> 16) & 0xFF);
 									intColor = b | (g << 8) | (r << 16);
 								}
 								else if(block.getBlock() == Blocks.LEAVES || block.getBlock() == Blocks.LEAVES2) {
-									int color2 = worldObj.getBiomeGenForCoords(thisPos).getFoliageColorAtPos(thisPos.add(0, yPosition, 0));
+									int color2 = worldObj.getBiome(thisPos).getFoliageColorAtPos(thisPos.add(0, yPosition, 0));
 									int r = (color2 & 0xFF);
 									int g = ( (color2 >>> 8) & 0xFF);
 									int b = ( (color2 >>> 16) & 0xFF);
@@ -236,9 +236,9 @@ public class RocketEventHandler extends Gui {
 						int randB = ( randomMax - random.nextInt(randomMax) /2 ) << 16;
 
 
-						int color = (int)( MathHelper.clamp_int((int) ( (total[0] & 0xFF) + randR ),0, 0xFF ) |
-								MathHelper.clamp_int((int)(total[0] & 0xFF00) + randG, 0x0100, 0xFF00)  | 
-								MathHelper.clamp_int( (int)(( total[0] & 0xFF0000) + randB), 0x010000, 0xFF0000) );
+						int color = (int)( MathHelper.clamp((int) ( (total[0] & 0xFF) + randR ),0, 0xFF ) |
+								MathHelper.clamp((int)(total[0] & 0xFF00) + randG, 0x0100, 0xFF00)  | 
+								MathHelper.clamp( (int)(( total[0] & 0xFF0000) + randB), 0x010000, 0xFF0000) );
 
 						outerBoundsTable.put(i, color | 0xff000000);
 					}
@@ -275,7 +275,7 @@ public class RocketEventHandler extends Gui {
 		GL11.glAlphaFunc(GL11.GL_GREATER, .01f);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-		float brightness = Minecraft.getMinecraft().getRenderViewEntity().worldObj.getSunBrightness(partialTicks);
+		float brightness = Minecraft.getMinecraft().getRenderViewEntity().world.getSunBrightness(partialTicks);
 
 		double deltaY = (Minecraft.getMinecraft().getRenderViewEntity().posY - Minecraft.getMinecraft().getRenderViewEntity().lastTickPosY)*partialTicks;
 
@@ -290,7 +290,7 @@ public class RocketEventHandler extends Gui {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, outerBounds.getTextureId());
 		double size2 = size*16;
 		float brightness2 =brightness*.43f;
-		GlStateManager.color(brightness2, brightness2, brightness2, MathHelper.clamp_float(((float)Minecraft.getMinecraft().getRenderViewEntity().posY -200f)/50f, 0f, 1f));
+		GlStateManager.color(brightness2, brightness2, brightness2, MathHelper.clamp(((float)Minecraft.getMinecraft().getRenderViewEntity().posY -200f)/50f, 0f, 1f));
 		RenderHelper.renderTopFaceWithUV(buffer, -10.1, size2, size2, -size2, -size2, 0, 1, 0, 1);
 		Tessellator.getInstance().draw();
 
@@ -298,16 +298,16 @@ public class RocketEventHandler extends Gui {
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, earth.getTextureId());
 
-		float opacityFromHeight = MathHelper.clamp_float(((float)Minecraft.getMinecraft().getRenderViewEntity().posY -200f)/100f, 0f, 1f);
+		float opacityFromHeight = MathHelper.clamp(((float)Minecraft.getMinecraft().getRenderViewEntity().posY -200f)/100f, 0f, 1f);
 
 		//Detailed Land
-		GlStateManager.color(brightness2, brightness2, brightness2, MathHelper.clamp_float(((float)Minecraft.getMinecraft().getRenderViewEntity().posY -200f)/50f, 0f, 1f));
+		GlStateManager.color(brightness2, brightness2, brightness2, MathHelper.clamp(((float)Minecraft.getMinecraft().getRenderViewEntity().posY -200f)/50f, 0f, 1f));
 		RenderHelper.renderTopFaceWithUV(buffer, -10 , size, size, -size,  -size, 0f, 1f, 0f, 1f);
 
 		Tessellator.getInstance().draw();
 
 		//AtmosphereGlow
-		Vec3d skyColor = Minecraft.getMinecraft().getRenderViewEntity().worldObj.provider.getSkyColor(Minecraft.getMinecraft().getRenderViewEntity(), partialTicks);
+		Vec3d skyColor = Minecraft.getMinecraft().getRenderViewEntity().world.provider.getSkyColor(Minecraft.getMinecraft().getRenderViewEntity(), partialTicks);
 
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -319,7 +319,7 @@ public class RocketEventHandler extends Gui {
 		size = (getImgSize*100/(180-Minecraft.getMinecraft().getRenderViewEntity().posY - deltaY));
 
 
-		for(int i = 0; i < 5 * MathHelper.clamp_float(( ( DimensionManager.getInstance().getDimensionProperties(Minecraft.getMinecraft().getRenderViewEntity().worldObj.provider.getDimension()).getAtmosphereDensity() *.01f * (float)Minecraft.getMinecraft().getRenderViewEntity().posY -280f) )/150f, 0f, 2f); i++) {
+		for(int i = 0; i < 5 * MathHelper.clamp(( ( DimensionManager.getInstance().getDimensionProperties(Minecraft.getMinecraft().getRenderViewEntity().world.provider.getDimension()).getAtmosphereDensity() *.01f * (float)Minecraft.getMinecraft().getRenderViewEntity().posY -280f) )/150f, 0f, 2f); i++) {
 			RenderHelper.renderTopFace(buffer, -9 + i*.6, size, size, -size , -size);
 		}
 
@@ -338,7 +338,7 @@ public class RocketEventHandler extends Gui {
 	public void onScreenRender(RenderGameOverlayEvent.Post event) {
 		Entity ride;
 		if(event.getType() == ElementType.HOTBAR) {
-			if((ride = Minecraft.getMinecraft().thePlayer.getRidingEntity()) instanceof EntityRocket) {
+			if((ride = Minecraft.getMinecraft().player.getRidingEntity()) instanceof EntityRocket) {
 				EntityRocket rocket = (EntityRocket)ride;
 
 				GL11.glEnable(GL11.GL_BLEND);
@@ -350,11 +350,11 @@ public class RocketEventHandler extends Gui {
 				this.drawTexturedModalRect(0, 0, 0, 0, 17, 252);
 
 				//Draw altitude indicator
-				float percentOrbit = MathHelper.clamp_float((float) ((rocket.posY - rocket.worldObj.provider.getAverageGroundLevel())/(float)(Configuration.orbit-rocket.worldObj.provider.getAverageGroundLevel())), 0f, 1f);
+				float percentOrbit = MathHelper.clamp((float) ((rocket.posY - rocket.world.provider.getAverageGroundLevel())/(float)(Configuration.orbit-rocket.world.provider.getAverageGroundLevel())), 0f, 1f);
 				this.drawTexturedModalRect(3, 8 + (int)(79*(1 - percentOrbit)), 17, 0, 6, 6); //6 to 83
 
 				//Draw Velocity indicator
-				this.drawTexturedModalRect(3, 94 + (int)(69*(0.5 - (MathHelper.clamp_float((float) (rocket.motionY), -1f, 1f)/2f))), 17, 0, 6, 6); //94 to 161
+				this.drawTexturedModalRect(3, 94 + (int)(69*(0.5 - (MathHelper.clamp((float) (rocket.motionY), -1f, 1f)/2f))), 17, 0, 6, 6); //94 to 161
 
 				//Draw fuel indicator
 				int size = (int)(68*(rocket.getFuelAmount() /(float)rocket.getFuelCapacity()));
@@ -368,7 +368,7 @@ public class RocketEventHandler extends Gui {
 					int vertPos = 0;
 					for(String strPart : strs) {
 
-						FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
+						FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 
 						float scale = str.length() < 50 ? 1f : 0.5f;
 
@@ -389,8 +389,8 @@ public class RocketEventHandler extends Gui {
 			}
 
 			//Draw the O2 Bar if needed
-			if(!Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode) {
-				ItemStack chestPiece = Minecraft.getMinecraft().thePlayer.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+			if(!Minecraft.getMinecraft().player.capabilities.isCreativeMode) {
+				ItemStack chestPiece = Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 				IFillableArmor fillable = null;
 				if(chestPiece != null && chestPiece.getItem() instanceof IFillableArmor)
 					fillable = (IFillableArmor)chestPiece.getItem();
@@ -414,18 +414,18 @@ public class RocketEventHandler extends Gui {
 			}
 
 			//Draw module icons
-			if(!Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode && Minecraft.getMinecraft().thePlayer.getItemStackFromSlot(EntityEquipmentSlot.HEAD) != null && Minecraft.getMinecraft().thePlayer.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof IModularArmor) {
+			if(!Minecraft.getMinecraft().player.capabilities.isCreativeMode && Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD) != null && Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof IModularArmor) {
 				for(EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
-					renderModuleSlots(Minecraft.getMinecraft().thePlayer.getItemStackFromSlot(slot), 4-slot.getIndex(), event);
+					renderModuleSlots(Minecraft.getMinecraft().player.getItemStackFromSlot(slot), 4-slot.getIndex(), event);
 				}
 			}
 
 			//In event of world change make sure the warning isn't displayed
-			if(Minecraft.getMinecraft().theWorld.getTotalWorldTime() - AtmosphereHandler.lastSuffocationTime < 0)
+			if(Minecraft.getMinecraft().world.getTotalWorldTime() - AtmosphereHandler.lastSuffocationTime < 0)
 				AtmosphereHandler.lastSuffocationTime = 0;
 			//Tell the player he's suffocating if needed
-			if(Minecraft.getMinecraft().theWorld.getTotalWorldTime() - AtmosphereHandler.lastSuffocationTime < numTicksToDisplay) {
-				FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
+			if(Minecraft.getMinecraft().world.getTotalWorldTime() - AtmosphereHandler.lastSuffocationTime < numTicksToDisplay) {
+				FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 				String str = "";
 				if(AtmosphereHandler.currentAtm != null) {
 					str = AtmosphereHandler.currentAtm.getDisplayMessage();
@@ -446,8 +446,8 @@ public class RocketEventHandler extends Gui {
 			}
 
 			//Draw arbitrary string
-			if(Minecraft.getMinecraft().theWorld.getTotalWorldTime() <= lastDisplayTime) {
-				FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
+			if(Minecraft.getMinecraft().world.getTotalWorldTime() <= lastDisplayTime) {
+				FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 				GL11.glPushMatrix();
 				GL11.glScalef(2,2,2);
 				int loc = 0;
@@ -502,7 +502,7 @@ public class RocketEventHandler extends Gui {
 
 	private void renderModuleSlots(ItemStack armorStack, int slot, RenderGameOverlayEvent event) {
 		int index = 1;
-		float color = 0.85f + 0.15F*MathHelper.sin( 2f*(float)Math.PI*((Minecraft.getMinecraft().theWorld.getTotalWorldTime()) % 60)/60f );
+		float color = 0.85f + 0.15F*MathHelper.sin( 2f*(float)Math.PI*((Minecraft.getMinecraft().world.getTotalWorldTime()) % 60)/60f );
 		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
 		GlStateManager.enableBlend();
 		GlStateManager.enableAlpha();

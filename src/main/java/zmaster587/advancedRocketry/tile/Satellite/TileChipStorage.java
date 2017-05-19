@@ -109,7 +109,7 @@ public class TileChipStorage extends TileMultiPowerConsumer  implements IModular
 		if(inventory[slot] != null) {
 			ItemStack stack = inventory[slot].splitStack(amt);
 
-			if(inventory[slot].stackSize == 0)
+			if(inventory[slot].getCount() == 0)
 				inventory[slot] = null;
 			return stack;
 		}
@@ -136,7 +136,7 @@ public class TileChipStorage extends TileMultiPowerConsumer  implements IModular
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		return player.getDistanceSq(pos) < 4092;
 	}
 
@@ -182,7 +182,7 @@ public class TileChipStorage extends TileMultiPowerConsumer  implements IModular
 			NBTTagCompound tag = (NBTTagCompound) list.getCompoundTagAt(i);
 			byte slot = tag.getByte("Slot");
 			if (slot >= 0 && slot < inventory.length) {
-				inventory[slot] = ItemStack.loadItemStackFromNBT(tag);
+				inventory[slot] = new ItemStack(tag);
 			}
 		}
 	}
@@ -220,5 +220,10 @@ public class TileChipStorage extends TileMultiPowerConsumer  implements IModular
 	public void clear() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return false;
 	}
 }

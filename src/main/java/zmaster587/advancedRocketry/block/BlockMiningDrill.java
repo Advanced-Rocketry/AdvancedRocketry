@@ -31,16 +31,6 @@ public class BlockMiningDrill extends BlockFullyRotatable implements IMiningDril
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
-		// TODO Auto-generated method stub
-		return super.onBlockActivated(world, pos, state, player, hand, heldItem, side,
-				hitX, hitY, hitZ);
-	}
-
-	@Override
 	public int powerConsumption() {
 		return 0;
 	}

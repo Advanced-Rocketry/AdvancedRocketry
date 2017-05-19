@@ -55,14 +55,14 @@ public class GravityHandler implements IGravityManager {
 					entity.motionY += multiplier;
 					
 				}
-				else if(DimensionManager.getInstance().isDimensionCreated(entity.worldObj.provider.getDimension()) || entity.worldObj.provider instanceof WorldProviderSpace) {
+				else if(DimensionManager.getInstance().isDimensionCreated(entity.world.provider.getDimension()) || entity.world.provider instanceof WorldProviderSpace) {
 					double gravMult;
 
 
-					if(entity.worldObj.provider instanceof IPlanetaryProvider)
-						gravMult = ((IPlanetaryProvider)entity.worldObj.provider).getGravitationalMultiplier(entity.getPosition());
+					if(entity.world.provider instanceof IPlanetaryProvider)
+						gravMult = ((IPlanetaryProvider)entity.world.provider).getGravitationalMultiplier(entity.getPosition());
 					else
-						gravMult = DimensionManager.getInstance().getDimensionProperties(entity.worldObj.provider.getDimension()).gravitationalMultiplier;
+						gravMult = DimensionManager.getInstance().getDimensionProperties(entity.world.provider.getDimension()).gravitationalMultiplier;
 
 					if(entity instanceof EntityItem)
 						entity.motionY -= gravMult*ITEM_GRAV_OFFSET;
@@ -72,9 +72,9 @@ public class GravityHandler implements IGravityManager {
 				}
 				else {
 					//GC handling
-					if(gcWorldProvider != null && gcWorldProvider.isAssignableFrom(entity.worldObj.provider.getClass())) {
+					if(gcWorldProvider != null && gcWorldProvider.isAssignableFrom(entity.world.provider.getClass())) {
 						try {
-							entity.motionY -= 0.075f - (float)gcGetGravity.invoke(entity.worldObj.provider);
+							entity.motionY -= 0.075f - (float)gcGetGravity.invoke(entity.world.provider);
 						} catch (IllegalAccessException | IllegalArgumentException
 								| InvocationTargetException e) {
 							e.printStackTrace();

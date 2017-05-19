@@ -104,17 +104,17 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 	@Override
 	public void assembleRocket() {
-		if(!worldObj.isRemote) {
+		if(!world.isRemote) {
 			if(bbCache == null)
 				return;
 			//Need to scan again b/c something may have changed
-			scanRocket(worldObj, pos, bbCache);
+			scanRocket(world, pos, bbCache);
 
 			if(status != ErrorCodes.SUCCESS_STATION)
 				return;
 			StorageChunk storageChunk;
 			try {
-				storageChunk = StorageChunk.cutWorldBB(worldObj, bbCache);
+				storageChunk = StorageChunk.cutWorldBB(world, bbCache);
 			} catch( NegativeArraySizeException e) {
 				return;
 			}
@@ -148,7 +148,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 			this.status = ErrorCodes.FINISHED;
 			storedId = null;
 			this.markDirty();
-			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);	
+			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);	
 		}
 	}
 
@@ -260,10 +260,14 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return inventory.isUseableByPlayer(player);
+	public boolean isUsableByPlayer(EntityPlayer player) {
+		return inventory.isUsableByPlayer(player);
 	}
 
+	@Override
+	public boolean isEmpty() {
+		return inventory.isEmpty();
+	}
 
 	@Override
 	public void openInventory(EntityPlayer pos) {

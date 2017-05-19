@@ -54,7 +54,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 			//this.data.removeData(itemData.removeData(inv[0], this.data.getData(), this.data.getDataType()));
 		}
 
-		if(worldObj.isRemote) {
+		if(world.isRemote) {
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)-2));
 		}
 	}
@@ -68,13 +68,13 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	public void storeData(int id) {
 		ItemStack itemStack = inventory.getStackInSlot(0);
 		
-		if(itemStack != null && itemStack.getItem() instanceof ItemData && itemStack.stackSize == 1) {
+		if(itemStack != null && itemStack.getItem() instanceof ItemData && itemStack.getCount() == 1) {
 			ItemData itemData = (ItemData)itemStack.getItem();
 
 			this.data.removeData(itemData.addData(itemStack, this.data.getData(), this.data.getDataType()), true);
 		}
 
-		if(worldObj.isRemote) {
+		if(world.isRemote) {
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)-1));
 		}
 	}

@@ -121,7 +121,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 	}
 
 	private void updateText() {
-		if(worldObj.isRemote) {
+		if(world.isRemote) {
 			textRadius.setText(String.format("Radius: %d", getRadius()));
 
 			targetGrav.setText(String.format("Target Gravity: %.2f/%d",currentProgress, gravity));
@@ -135,7 +135,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 	
 	@Override
 	public boolean isRunning() {
-		return getMachineEnabled() && isStateActive(state, worldObj.isBlockIndirectlyGettingPowered(getPos()) > 0);
+		return getMachineEnabled() && isStateActive(state, world.isBlockIndirectlyGettingPowered(getPos()) > 0);
 	}
 
 	@Override
@@ -143,13 +143,13 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0) {
-			if(!worldObj.isRemote) {
+			if(!world.isRemote) {
 				if(isComplete())
-					canRender = completeStructure = completeStructure(worldObj.getBlockState(pos));
+					canRender = completeStructure = completeStructure(world.getBlockState(pos));
 			}
 			else {
 				SoundEvent str;
-				if(worldObj.isRemote && (str = getSound()) != null) {
+				if(world.isRemote && (str = getSound()) != null) {
 					playMachineSound(str);
 				}
 			}
@@ -159,7 +159,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 		//if(this.worldObj.provider instanceof WorldProviderSpace) {
 
 		if(isRunning()) {
-			if(!worldObj.isRemote) {
+			if(!world.isRemote) {
 				//ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 				if(gravity == 0)
@@ -181,14 +181,14 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 
 					currentProgress = (float)finalVel;
 					markDirty();
-					worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 2);
+					world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 2);
 				}
 
 			}
 			else
 				updateText();
 
-			List<Entity> entities = worldObj.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getPos()).expand(getRadius(), getRadius() , getRadius()));
+			List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getPos()).expand(getRadius(), getRadius() , getRadius()));
 
 
 
@@ -220,9 +220,9 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 
 							//Spawn particle effect
 							//TODO: tornados for planets
-							if(worldObj.isRemote) {
-								if(Minecraft.getMinecraft().gameSettings.particleSetting == 0 && !(Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 && Minecraft.getMinecraft().thePlayer == e))
-									AdvancedRocketry.proxy.spawnParticle("gravityEffect", worldObj, e.posX, e.posY, e.posZ, .2f*dir.getFrontOffsetX()*currentProgress, .2f*dir.getFrontOffsetY()*currentProgress, .2f*dir.getFrontOffsetZ()*currentProgress);
+							if(world.isRemote) {
+								if(Minecraft.getMinecraft().gameSettings.particleSetting == 0 && !(Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 && Minecraft.getMinecraft().player == e))
+									AdvancedRocketry.proxy.spawnParticle("gravityEffect", world, e.posX, e.posY, e.posZ, .2f*dir.getFrontOffsetX()*currentProgress, .2f*dir.getFrontOffsetY()*currentProgress, .2f*dir.getFrontOffsetZ()*currentProgress);
 							}
 
 						}
@@ -236,9 +236,9 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 		}
 		else if (currentProgress > 0) {
 			currentProgress -= 0.01f;
-			if(!worldObj.isRemote) {
+			if(!world.isRemote) {
 				markDirty();
-				worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 2);
+				world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 2);
 			}
 			else
 				updateText();

@@ -178,12 +178,12 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 
 		//The machine is done re-enable user input
 
-		if(!worldObj.isRemote) {
+		if(!world.isRemote) {
 			ItemStack outputItem = new ItemStack(AdvancedRocketryItems.itemAsteroidChip);
 			ItemAsteroidChip item = (ItemAsteroidChip)outputItem.getItem();
 
 			//Get UUID
-			item.setUUID(outputItem, (new Random(worldObj.getTotalWorldTime())).nextLong() % 10000);
+			item.setUUID(outputItem, (new Random(world.getTotalWorldTime())).nextLong() % 10000);
 			item.setMaxData(outputItem, 2000);
 			//TODO: fix naming system
 			//int dimensionId = DimensionManager.getInstance().generateRandom("", baseAtmosphere, baseDistance, baseGravity, atmosphereFactor, distanceFactor, gravityFactor);
@@ -203,10 +203,10 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 	public boolean completeStructure(IBlockState state) {
 		boolean result = super.completeStructure(state);
 		if(result) {
-			((BlockMultiblockMachine)worldObj.getBlockState(pos).getBlock()).setBlockState(worldObj, worldObj.getBlockState(pos), pos, true);
+			((BlockMultiblockMachine)world.getBlockState(pos).getBlock()).setBlockState(world, world.getBlockState(pos), pos, true);
 		}
 		else
-			((BlockMultiblockMachine)worldObj.getBlockState(pos).getBlock()).setBlockState(worldObj, worldObj.getBlockState(pos), pos, false);
+			((BlockMultiblockMachine)world.getBlockState(pos).getBlock()).setBlockState(world, world.getBlockState(pos), pos, false);
 		return result;
 	}
 
@@ -280,7 +280,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 				if(atmosphereProgress == maxResearchTime) {
 					atmosphereProgress = -1;
 
-					if(!worldObj.isRemote) {
+					if(!world.isRemote) {
 						incrementDataOnChip(0, 1, DataType.COMPOSITION);
 						extractData(1, DataStorage.DataType.COMPOSITION, false);
 						//attemptAllResearchStart();
@@ -295,7 +295,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 
 					massProgress = -1;
 
-					if(!worldObj.isRemote) {
+					if(!world.isRemote) {
 						incrementDataOnChip(0, 1, DataType.MASS);
 						extractData(1, DataStorage.DataType.MASS, false);
 						//attemptAllResearchStart();
@@ -308,7 +308,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 			if(researchingDistance && extractData(1, DataStorage.DataType.DISTANCE, true) > 0  && !item.isFull(stack, DataStorage.DataType.DISTANCE)) {
 				if(distanceProgress == maxResearchTime) {
 					distanceProgress = -1;
-					if(!worldObj.isRemote) {
+					if(!world.isRemote) {
 						incrementDataOnChip(0, 1, DataType.DISTANCE);
 						extractData(1, DataStorage.DataType.DISTANCE, false);
 						//attemptAllResearchStart();
@@ -558,8 +558,12 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		return player.getDistanceSq(pos) < 4096;
+	}
+	@Override
+	public boolean isEmpty() {
+		return inventory.isEmpty();
 	}
 
 	@Override

@@ -21,7 +21,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -170,26 +169,26 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 		for(int i = 0; i < inv.getSizeInventory(); i++) {
 			ItemStack fuelTank = inv.getStackInSlot(i);
 
-			if(fuelTank != null && fuelTank.getItem() instanceof IFluidContainerItem) {
+			/*if(fuelTank != null && fuelTank.getItem() instanceof IFluidContainerItem) {
 				FluidStack fluid = ((IFluidContainerItem)fuelTank.getItem()).drain(fuelTank, 1, false);
 				if(fluid != null && fluid.getFluid() == AdvancedRocketryFluids.fluidHydrogen) {
 					((IFluidContainerItem)fuelTank.getItem()).drain(fuelTank, 1, true);
 					hasFuel = true;
 					break;
 				}
-			}
+			}*/
 
 		}
 
 		if(hasFuel) {
 
 			if(mode == MODES.HOVER) {
-				if(Configuration.jetPackThrust > DimensionManager.getInstance().getDimensionProperties(player.worldObj.provider.getDimension()).getGravitationalMultiplier())
+				if(Configuration.jetPackThrust > DimensionManager.getInstance().getDimensionProperties(player.world.provider.getDimension()).getGravitationalMultiplier())
 					player.capabilities.isFlying = true;
 			} else 
 				player.addVelocity(0, (double)Configuration.jetPackThrust*0.1f, 0);
 
-			if(player.worldObj.isRemote) {
+			if(player.world.isRemote) {
 				double xPos = player.posX;
 				double zPos = player.posZ;
 				float playerRot = (float) ((Math.PI/180f)*(player.rotationYaw - 55));
@@ -199,13 +198,13 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 				float ejectSpeed = mode == MODES.HOVER ? 0.1f : 0.3f;
 				//AdvancedRocketry.proxy.spawnParticle("smallRocketFlame", player.worldObj, xPos, player.posY - 0.75, zPos, (player.worldObj.rand.nextFloat() - 0.5f)/18f,-.1 ,(player.worldObj.rand.nextFloat() - 0.5f)/18f);
 
-				AdvancedRocketry.proxy.spawnParticle("smallRocketFlame", player.worldObj, xPos, player.posY + 0.75, zPos, 0, player.motionY -ejectSpeed ,0);
+				AdvancedRocketry.proxy.spawnParticle("smallRocketFlame", player.world, xPos, player.posY + 0.75, zPos, 0, player.motionY -ejectSpeed ,0);
 
 				playerRot = (float) ((Math.PI/180f)*(player.rotationYaw - 125));
 				xPos = player.posX + MathHelper.cos(playerRot)*.4f;
 				zPos = player.posZ + MathHelper.sin(playerRot)*.4f;
 				
-				AdvancedRocketry.proxy.spawnParticle("smallRocketFlame", player.worldObj, xPos, player.posY + 0.75, zPos, 0, player.motionY -ejectSpeed ,0);
+				AdvancedRocketry.proxy.spawnParticle("smallRocketFlame", player.world, xPos, player.posY + 0.75, zPos, 0, player.motionY -ejectSpeed ,0);
 			}
 
 			if(player.motionY > -1) {
@@ -327,7 +326,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 		for(int i = 0; i < inv.size(); i++) {
 			ItemStack currentStack = inv.get(i);
 
-			if(currentStack != null && currentStack.getItem() instanceof IFluidContainerItem ) {
+			/*if(currentStack != null && currentStack.getItem() instanceof IFluidContainerItem ) {
 				FluidStack fluid = ((IFluidContainerItem)currentStack.getItem()).getFluid(currentStack);
 				if(fluid == null)
 					maxAmt += ((IFluidContainerItem)currentStack.getItem()).getCapacity(currentStack);
@@ -335,7 +334,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 					maxAmt += ((IFluidContainerItem)currentStack.getItem()).getCapacity(currentStack);
 					amt += fluid.amount;
 				}
-			}
+			}*/
 		}
 
 		if(maxAmt > 0) {

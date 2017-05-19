@@ -67,7 +67,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 
 	@Override
 	public boolean canPerformFunction() {
-		return worldObj.getTotalWorldTime() % 16 == 0 && getSatelliteFromSlot(0) != null;
+		return world.getTotalWorldTime() % 16 == 0 && getSatelliteFromSlot(0) != null;
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 
 	@Override
 	public void performFunction() {
-		if(worldObj.isRemote)
+		if(world.isRemote)
 			updateInventoryInfo();
 	}
 
@@ -101,8 +101,8 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 
 			SatelliteBase satellite = moduleSatellite.getSatellite();
 
-			if(satellite != null && satellite.getDimensionId() == this.worldObj.provider.getDimension()) {
-				satellite.performAction(player, worldObj, pos);
+			if(satellite != null && satellite.getDimensionId() == this.world.provider.getDimension()) {
+				satellite.performAction(player, world, pos);
 			}
 		}
 		else if( id == 101) {
@@ -124,12 +124,12 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 			if(satellite != null) {
 				if(getEnergyStored() < getPowerPerOperation()) 
 					moduleText.setText("Not Enough power!");
-				else if(satellite.getDimensionId() != DimensionManager.getEffectiveDimId(worldObj, pos).getId()) {
+				else if(satellite.getDimensionId() != DimensionManager.getEffectiveDimId(world, pos).getId()) {
 					moduleText.setText(satellite.getName() + "\n\nToo Far" );
 				}
 
 				else
-					moduleText.setText(satellite.getName() + "\n\nInfo:\n" + satellite.getInfo(worldObj));
+					moduleText.setText(satellite.getName() + "\n\nInfo:\n" + satellite.getInfo(world));
 			}
 			else
 				moduleText.setText("No Link...");
@@ -223,9 +223,9 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 
 	@Override
 	public void storeData(int id) {
-		if(!worldObj.isRemote) {
+		if(!world.isRemote) {
 			ItemStack inv = getStackInSlot(1);
-			if(inv != null && inv.getItem() instanceof ItemData && inv.stackSize == 1) {
+			if(inv != null && inv.getItem() instanceof ItemData && inv.getCount() == 1) {
 				ItemData dataItem = (ItemData)inv.getItem();
 				data.removeData(dataItem.addData(inv, data.getData(), data.getDataType()), true);
 			}
@@ -240,8 +240,8 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 		//TODO
 		if(type == data.getDataType() ||  data.getDataType() == DataType.UNDEFINED) {
 			SatelliteBase satellite = getSatelliteFromSlot(0);
-			if(satellite != null && satellite instanceof SatelliteData && satellite.getDimensionId() == this.worldObj.provider.getDimension()) {
-				satellite.performAction(null, worldObj, pos);
+			if(satellite != null && satellite instanceof SatelliteData && satellite.getDimensionId() == this.world.provider.getDimension()) {
+				satellite.performAction(null, world, pos);
 			}
 			
 			return data.removeData(maxAmount, commit);

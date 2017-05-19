@@ -66,13 +66,13 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 
 		boolean suitable = true;
 		for(int y = this.getPos().getY() - 4; y > 0; y--) {
-			if(!worldObj.isAirBlock(new BlockPos( this.getPos().getX(), y, this.getPos().getZ()))) {
+			if(!world.isAirBlock(new BlockPos( this.getPos().getX(), y, this.getPos().getZ()))) {
 				suitable = false;
 				break;
 			}
 		}
 
-		if(worldObj.isRemote) {
+		if(world.isRemote) {
 			list.add(new ModuleImage(24, 14, zmaster587.advancedRocketry.inventory.TextureResources.earthCandyIcon));
 		}
 

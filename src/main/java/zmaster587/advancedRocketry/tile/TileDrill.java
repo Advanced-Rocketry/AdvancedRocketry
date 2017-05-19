@@ -98,8 +98,8 @@ public class TileDrill extends TileEntity implements IModularInventory, IToggleB
 		toggleSwitch.setToggleState(drillExtended());
 
 		//Last ditch effort to update the toggle switch when it's flipped
-		if(!worldObj.isRemote)
-			PacketHandler.sendToNearby(new PacketMachine(this, (byte)0), worldObj.provider.getDimension(), pos, 64);
+		if(!world.isRemote)
+			PacketHandler.sendToNearby(new PacketMachine(this, (byte)0), world.provider.getDimension(), pos, 64);
 
 	}
 	

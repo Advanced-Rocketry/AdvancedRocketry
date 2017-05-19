@@ -54,11 +54,11 @@ public class TileEnergyPipe extends TilePipe implements IUniversalEnergy {
 		//If the pipe can inject or extract, add to the cache
 		//if(!(tile instanceof IFluidHandler))
 		//return;
-		if(worldObj.isRemote && tile instanceof TileEnergyPipe)
+		if(world.isRemote && tile instanceof TileEnergyPipe)
 			connectedSides[dir.ordinal()]=true;
 
 		if(canExtract(dir, tile)) {
-			if(worldObj.isRemote)
+			if(world.isRemote)
 				connectedSides[dir.ordinal()]=true;
 			else {
 				getNetworkHandler().removeFromAllTypes(this, tile);
@@ -67,7 +67,7 @@ public class TileEnergyPipe extends TilePipe implements IUniversalEnergy {
 		}
 
 		if(canInject(dir, tile)) {
-			if(worldObj.isRemote)
+			if(world.isRemote)
 				connectedSides[dir.ordinal()]=true;
 			else {
 				getNetworkHandler().removeFromAllTypes(this, tile);

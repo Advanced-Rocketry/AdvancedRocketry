@@ -69,7 +69,7 @@ public class WorldDummy extends World {
 	}
 	
 	@Override
-	public Biome getBiomeGenForCoords(BlockPos pos) {
+	public Biome getBiome(BlockPos pos) {
 		return AdvancedRocketryBiomes.spaceBiome;
 	}
 

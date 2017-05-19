@@ -42,7 +42,7 @@ public class PacketSatellite extends BasePacket {
 		NBTTagCompound nbt = new NBTTagCompound();
 		machine.writeToNBT(nbt);
 		
-		packetBuffer.writeNBTTagCompoundToBuffer(nbt);
+		packetBuffer.writeCompoundTag(nbt);
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class PacketSatellite extends BasePacket {
 		
 		//TODO: error handling
 		try {
-			nbt = packetBuffer.readNBTTagCompoundFromBuffer();
+			nbt = packetBuffer.readCompoundTag();
 			SatelliteBase satellite = SatelliteRegistry.createFromNBT(nbt);
 			
 			zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId()).addSatallite(satellite);

@@ -189,7 +189,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 				else if(Configuration.torchBlocks.contains(state.getBlock())) {
 					EntityItem item = new EntityItem(world, pos.x, pos.y, pos.z, new ItemStack(state.getBlock()));
 					world.setBlockToAir(pos.getBlockPos());
-					world.spawnEntityInWorld(item);
+					world.spawnEntity(item);
 				}
 			}
 		}

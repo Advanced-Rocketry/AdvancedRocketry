@@ -35,16 +35,16 @@ public class BlockSuitWorkstation extends BlockTile {
 				float f1 = world.rand.nextFloat() * 0.8F + 0.1F;
 				EntityItem entityitem;
 
-				for (float f2 = world.rand.nextFloat() * 0.8F + 0.1F; itemstack.stackSize > 0; world.spawnEntityInWorld(entityitem))
+				for (float f2 = world.rand.nextFloat() * 0.8F + 0.1F; itemstack.getCount() > 0; world.spawnEntity(entityitem))
 				{
 					int j1 = world.rand.nextInt(21) + 10;
 
-					if (j1 > itemstack.stackSize)
+					if (j1 > itemstack.getCount())
 					{
-						j1 = itemstack.stackSize;
+						j1 = itemstack.getCount();
 					}
 
-					itemstack.stackSize -= j1;
+					itemstack.setCount(itemstack.getCount() - j1 );
 					entityitem = new EntityItem(world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), new ItemStack(itemstack.getItem(), j1, itemstack.getItemDamage()));
 					float f3 = 0.05F;
 					entityitem.motionX = (double)((float)world.rand.nextGaussian() * f3);

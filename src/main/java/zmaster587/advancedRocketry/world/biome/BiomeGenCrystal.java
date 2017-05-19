@@ -28,10 +28,10 @@ public class BiomeGenCrystal extends Biome  {
 		fillerBlock = Blocks.PACKED_ICE.getDefaultState();
 		this.spawnableMonsterList.clear();
 		this.spawnableCreatureList.clear();
-		this.theBiomeDecorator.generateLakes=false;
-		this.theBiomeDecorator.flowersPerChunk=0;
-		this.theBiomeDecorator.grassPerChunk=0;
-		this.theBiomeDecorator.treesPerChunk=0;
+		this.decorator.generateLakes=false;
+		this.decorator.flowersPerChunk=0;
+		this.decorator.grassPerChunk=0;
+		this.decorator.treesPerChunk=0;
 		
 		crystalGenerator = new WorldGenLargeCrystal();
 		crystalGenBase = new MapGenLargeCrystal(fillerBlock, AdvancedRocketryBlocks.blockCrystal.getDefaultState());

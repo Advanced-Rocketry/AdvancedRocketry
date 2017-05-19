@@ -41,7 +41,7 @@ public class PacketSpaceStationInfo extends BasePacket {
 				PacketBuffer packetBuffer = new PacketBuffer(out);
 				out.writeBoolean(false);
 				packetBuffer.writeString(SpaceObjectManager.getSpaceManager().getItentifierFromClass(spaceObject.getClass()));
-				packetBuffer.writeNBTTagCompoundToBuffer(nbt);
+				packetBuffer.writeCompoundTag(nbt);
 				
 				packetBuffer.writeInt(spaceObject.getFuelAmount());
 				packetBuffer.writeBoolean(spaceObject.hasWarpCores);
@@ -78,8 +78,8 @@ public class PacketSpaceStationInfo extends BasePacket {
 			String clazzId;
 			int fuelAmt;
 			try {
-				clazzId = packetBuffer.readStringFromBuffer(127);
-				nbt = packetBuffer.readNBTTagCompoundFromBuffer();
+				clazzId = packetBuffer.readString(127);
+				nbt = packetBuffer.readCompoundTag();
 				fuelAmt = packetBuffer.readInt();
 			} catch (IOException e) {
 				e.printStackTrace();

@@ -131,8 +131,8 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 	@Override
 	public void update() {
 
-		if(!initialCheck && !worldObj.isRemote) {
-			completeStructure = attemptCompleteStructure(worldObj.getBlockState(pos));
+		if(!initialCheck && !world.isRemote) {
+			completeStructure = attemptCompleteStructure(world.getBlockState(pos));
 			onInventoryUpdated();
 			initialCheck = true;
 		}
@@ -141,11 +141,11 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 			return;
 
 		//Periodically check for obstructing blocks above the panel
-		if(!worldObj.isRemote && getPowerMadeLastTick() > 0 && worldObj.getTotalWorldTime() % 100 == 0) {
+		if(!world.isRemote && getPowerMadeLastTick() > 0 && world.getTotalWorldTime() % 100 == 0) {
 			Vector3F<Integer> offset = getControllerOffset(getStructure());
 
 
-			List<Entity> entityList = worldObj.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(this.getPos().getX() - offset.x, this.getPos().getY(), this.getPos().getZ() - offset.z, this.getPos().getX() - offset.x + getStructure()[0][0].length, 256, this.getPos().getZ() - offset.z + getStructure()[0].length));
+			List<Entity> entityList = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(this.getPos().getX() - offset.x, this.getPos().getY(), this.getPos().getZ() - offset.z, this.getPos().getX() - offset.x + getStructure()[0][0].length, 256, this.getPos().getZ() - offset.z + getStructure()[0].length));
 
 			for(Entity e : entityList) {
 				e.setFire(5);
@@ -155,12 +155,12 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 				for(int z=0 ; z < getStructure()[0].length; z++) {
 
 					BlockPos pos2;
-					IBlockState state = worldObj.getBlockState(pos2 = (worldObj.getHeight(pos.add(x - offset.x, 128, z - offset.z)).add(0, -1, 0)));
+					IBlockState state = world.getBlockState(pos2 = (world.getHeight(pos.add(x - offset.x, 128, z - offset.z)).add(0, -1, 0)));
 
 					if(pos2.getY() > this.getPos().getY()) {
-						if(!worldObj.isAirBlock(pos2.add(0,1,0))) {
-							worldObj.setBlockToAir(pos2);
-							worldObj.playSound((double)pos2.getX(), (double)pos2.getY(), (double)pos2.getZ(), new SoundEvent(new ResourceLocation("fire.fire")), SoundCategory.BLOCKS, 1f, 3f, false);
+						if(!world.isAirBlock(pos2.add(0,1,0))) {
+							world.setBlockToAir(pos2);
+							world.playSound((double)pos2.getX(), (double)pos2.getY(), (double)pos2.getZ(), new SoundEvent(new ResourceLocation("fire.fire")), SoundCategory.BLOCKS, 1f, 3f, false);
 						}
 					}
 				}
@@ -168,8 +168,8 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 		}
 
 		DimensionProperties properties;
-		if(!worldObj.isRemote && (DimensionManager.getInstance().isDimensionCreated(worldObj.provider.getDimension()) || worldObj.provider.getDimension() == 0)) {
-			properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension());
+		if(!world.isRemote && (DimensionManager.getInstance().isDimensionCreated(world.provider.getDimension()) || world.provider.getDimension() == 0)) {
+			properties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
 
 			int energyRecieved = 0;
 
@@ -186,12 +186,12 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 
 			if(powerMadeLastTick != prevPowerMadeLastTick) {
 				prevPowerMadeLastTick = powerMadeLastTick;
-				PacketHandler.sendToNearby(new PacketMachine(this, (byte)1), worldObj.provider.getDimension(),pos, 128);
+				PacketHandler.sendToNearby(new PacketMachine(this, (byte)1), world.provider.getDimension(),pos, 128);
 
 			}
 			producePower(powerMadeLastTick);
 		}
-		if(worldObj.isRemote)
+		if(world.isRemote)
 			textModule.setText("Generating " + powerMadeLastTick + " RF/t");
 	}
 

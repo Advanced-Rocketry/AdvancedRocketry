@@ -10,7 +10,7 @@ public class WorldTypeSpace extends WorldType {
 
 	
 	@Override
-	public boolean getCanBeCreated() {
+	public boolean canBeCreated() {
 		return false;
 	}
 }

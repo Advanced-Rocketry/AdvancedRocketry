@@ -35,7 +35,7 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 		else {
 			ItemStack stack;
 			stack = inv.splitStack(amount);
-			if(inv.stackSize == 0)
+			if(inv.getCount() == 0)
 				inv = null;
 			return stack;
 		}
@@ -72,7 +72,7 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		return true;
 	}
 
@@ -100,8 +100,8 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 	
 	public void readFromNBT(NBTTagCompound nbt) {
-		if(nbt.hasKey(destinationSlot))
-			ItemStack.loadItemStackFromNBT(nbt.getCompoundTag(destinationSlot));
+		//if(nbt.hasKey(destinationSlot))
+			//ItemStack.loadItemStackFromNBT(nbt.getCompoundTag(destinationSlot));
 	}
 
 	@Override
@@ -148,5 +148,10 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	@Override
 	public void clear() {
 		
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return inv.isEmpty();
 	}
 }

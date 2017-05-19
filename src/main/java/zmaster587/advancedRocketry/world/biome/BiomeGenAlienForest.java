@@ -21,8 +21,8 @@ public class BiomeGenAlienForest extends Biome {
 		registerBiome(biomeId, "Alien Forest", this);
 		
 		this.fillerBlock = Blocks.GRASS.getDefaultState();
-		this.theBiomeDecorator.grassPerChunk = 50;
-		this.theBiomeDecorator.flowersPerChunk = 0;
+		this.decorator.grassPerChunk = 50;
+		this.decorator.flowersPerChunk = 0;
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class BiomeGenAlienForest extends Biome {
 	}
 
 	@Override
-	public WorldGenAbstractTree genBigTreeChance(Random rand) {
+	public WorldGenAbstractTree getRandomTreeFeature(Random rand) {
 		return noTree;
 	}
 

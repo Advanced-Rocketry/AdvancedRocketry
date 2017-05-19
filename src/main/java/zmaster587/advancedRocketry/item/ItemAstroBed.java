@@ -39,7 +39,7 @@ public class ItemAstroBed extends Item {
 	                pos = pos.up();
 	            }
 
-	            int i = MathHelper.floor_double((double)(playerIn.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+	            int i = MathHelper.floor((double)(playerIn.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 	            EnumFacing enumfacing = EnumFacing.getHorizontal(i);
 	            BlockPos blockpos = pos.offset(enumfacing);
 
@@ -49,7 +49,7 @@ public class ItemAstroBed extends Item {
 	                boolean flag2 = flag || worldIn.isAirBlock(pos);
 	                boolean flag3 = flag1 || worldIn.isAirBlock(blockpos);
 
-	                if (flag2 && flag3 && worldIn.getBlockState(pos.down()).isFullyOpaque() && worldIn.getBlockState(blockpos.down()).isFullyOpaque())
+	                if (flag2 && flag3 && worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos.down(), EnumFacing.UP) && worldIn.getBlockState(blockpos.down()).isSideSolid(worldIn, blockpos.down(), EnumFacing.UP))
 	                {
 	                    IBlockState iblockstate1 = AdvancedRocketryBlocks.blockAstroBed.getDefaultState().withProperty(BlockBed.OCCUPIED, Boolean.valueOf(false)).withProperty(BlockBed.FACING, enumfacing).withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
 
@@ -61,7 +61,7 @@ public class ItemAstroBed extends Item {
 
 	                    SoundType soundtype = iblockstate1.getBlock().getSoundType();
 	                    worldIn.playSound((EntityPlayer)null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-	                    --stack.stackSize;
+	                    stack.setCount(stack.getCount() - 1);
 	                    return EnumActionResult.SUCCESS;
 	                }
 	                else

@@ -31,9 +31,9 @@ public class TileRocketFluidUnloader extends TileRocketFluidLoader implements II
 	public void update() {
 
 		//Move a stack of items
-		if( !worldObj.isRemote && rocket != null ) {
+		if( !world.isRemote && rocket != null ) {
 
-			boolean isAllowToOperate = (inputstate == RedstoneState.OFF || isStateActive(inputstate, getStrongPowerForSides(worldObj, getPos())));
+			boolean isAllowToOperate = (inputstate == RedstoneState.OFF || isStateActive(inputstate, getStrongPowerForSides(world, getPos())));
 
 			List<TileEntity> tiles = rocket.storage.getFluidTiles();
 			boolean rocketContainsItems = false;

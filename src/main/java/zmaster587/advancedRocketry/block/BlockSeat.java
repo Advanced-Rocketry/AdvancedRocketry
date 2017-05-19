@@ -74,8 +74,7 @@ public class BlockSeat extends Block {
 	
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
+			IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
 			float hitZ) {
 		
 		if(!world.isRemote) {
@@ -96,7 +95,7 @@ public class BlockSeat extends Block {
 				}
 			}
 			EntityDummy entity = new EntityDummy(world, pos.getX() + 0.5f, pos.getY() + 0.2f, pos.getZ() + 0.5f);
-			world.spawnEntityInWorld(entity);
+			world.spawnEntity(entity);
 			player.startRiding(entity);
 		}
 

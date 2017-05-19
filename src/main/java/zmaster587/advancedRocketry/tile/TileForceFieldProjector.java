@@ -23,8 +23,8 @@ public class TileForceFieldProjector extends TileEntity implements ITickable {
 		while(extensionRange > 0) {
 			BlockPos nextPos = pos.offset(facing, extensionRange);
 
-			if(worldObj.getBlockState(nextPos).getBlock() == AdvancedRocketryBlocks.blockForceField)
-				worldObj.setBlockToAir(nextPos);
+			if(world.getBlockState(nextPos).getBlock() == AdvancedRocketryBlocks.blockForceField)
+				world.setBlockToAir(nextPos);
 			extensionRange--;
 		}
 	}
@@ -32,20 +32,20 @@ public class TileForceFieldProjector extends TileEntity implements ITickable {
 	@Override
 	public void update() {
 
-		if(worldObj.getTotalWorldTime() % 5 == 0) {
-			if(worldObj.isBlockPowered(getPos())) {
+		if(world.getTotalWorldTime() % 5 == 0) {
+			if(world.isBlockPowered(getPos())) {
 				if(extensionRange < MAX_RANGE) {
 					if(extensionRange == 0)
 						extensionRange = 1;
 
-					IBlockState state = worldObj.getBlockState(getPos());
+					IBlockState state = world.getBlockState(getPos());
 					if(state.getBlock() == AdvancedRocketryBlocks.blockForceFieldProjector) {
 						EnumFacing facing = BlockFullyRotatable.getFront(state);
 						BlockPos nextPos = pos.offset(facing, extensionRange);
-						if(worldObj.getBlockState(nextPos).getBlock().isReplaceable(worldObj, nextPos) ) {
-							worldObj.setBlockState(nextPos, AdvancedRocketryBlocks.blockForceField.getDefaultState());
+						if(world.getBlockState(nextPos).getBlock().isReplaceable(world, nextPos) ) {
+							world.setBlockState(nextPos, AdvancedRocketryBlocks.blockForceField.getDefaultState());
 							extensionRange++;
-						} else if(worldObj.getBlockState(nextPos).getBlock() == AdvancedRocketryBlocks.blockForceField) {
+						} else if(world.getBlockState(nextPos).getBlock() == AdvancedRocketryBlocks.blockForceField) {
 							extensionRange++;
 						}
 					}
@@ -53,13 +53,13 @@ public class TileForceFieldProjector extends TileEntity implements ITickable {
 			}
 			else if(extensionRange > 0) {
 
-				IBlockState state = worldObj.getBlockState(getPos());
+				IBlockState state = world.getBlockState(getPos());
 				if(state.getBlock() == AdvancedRocketryBlocks.blockForceFieldProjector) {
 					EnumFacing facing = BlockFullyRotatable.getFront(state);
 					BlockPos nextPos = pos.offset(facing, extensionRange);
 
-					if(worldObj.getBlockState(nextPos).getBlock() == AdvancedRocketryBlocks.blockForceField)
-						worldObj.setBlockToAir(nextPos);
+					if(world.getBlockState(nextPos).getBlock() == AdvancedRocketryBlocks.blockForceField)
+						world.setBlockToAir(nextPos);
 					extensionRange--;
 				}
 			}

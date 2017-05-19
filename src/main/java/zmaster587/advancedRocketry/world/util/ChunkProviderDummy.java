@@ -23,13 +23,18 @@ public class ChunkProviderDummy implements IChunkProvider {
 	}
 
 	@Override
-	public boolean unloadQueuedChunks() {
+	public String makeString() {
+		return null;
+	}
+
+	@Override
+	public boolean tick() {
 		return false;
 	}
 
 	@Override
-	public String makeString() {
-		return null;
+	public boolean isChunkGeneratedAt(int x, int z) {
+		return false;
 	}
 
 }

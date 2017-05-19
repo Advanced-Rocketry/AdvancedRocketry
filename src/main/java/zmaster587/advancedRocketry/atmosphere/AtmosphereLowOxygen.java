@@ -25,7 +25,7 @@ public class AtmosphereLowOxygen extends AtmosphereType {
 	
 	@Override
 	public void onTick(EntityLivingBase player) {
-		if(player.worldObj.getTotalWorldTime() % 10  == 0 && !isImmune(player)) {
+		if(player.world.getTotalWorldTime() % 10  == 0 && !isImmune(player)) {
 			if(!isImmune(player)) {
 				player.attackEntityFrom(AtmosphereHandler.vacuumDamage, 1);
 				if(player instanceof EntityPlayer)

@@ -49,13 +49,13 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 
 		startWorldTime = DimensionManager.getWorld(0).getTotalWorldTime();
 		this.duration = duration;
-		this.launchDimension = entity.worldObj.provider.getDimension();
+		this.launchDimension = entity.world.provider.getDimension();
 		rocketStorage = entity.storage;
 		rocketStats = entity.stats;
 		x = entity.posX;
 		y = entity.posY;
 		z = entity.posZ;
-		worldId = entity.worldObj.provider.getDimension();
+		worldId = entity.world.provider.getDimension();
 
 		this.infrastructureCoords = new LinkedList<HashedBlockPosition>();
 

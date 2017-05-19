@@ -19,7 +19,7 @@ public class TileSeal extends TileEntity implements ITickable {
 	
 	@Override
 	public void update() {
-		if(!worldObj.isRemote && !ticked && !isInvalid()) {
+		if(!world.isRemote && !ticked && !isInvalid()) {
 			for(EnumFacing dir : EnumFacing.VALUES) {
 				((BlockSeal) AdvancedRocketryBlocks.blockPipeSealer).fireCheckAllDirections(getWorld(), pos.offset(dir), dir);
 			}

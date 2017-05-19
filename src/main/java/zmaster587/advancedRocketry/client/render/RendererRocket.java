@@ -48,7 +48,7 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 		if(storage == null || !storage.finalized)
 			return;
 
-		if(entity.getPassengers().contains(Minecraft.getMinecraft().thePlayer)) {
+		if(entity.getPassengers().contains(Minecraft.getMinecraft().player)) {
 
 			y = +0.5 -((EntityRocket)entity).stats.getSeatY();
 		}

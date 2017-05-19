@@ -58,7 +58,7 @@ public class ChunkProviderSpace implements IChunkGenerator {
 
 	@Override
 	public BlockPos getStrongholdGen(World worldIn, String structureName,
-			BlockPos position) {
+			BlockPos position, boolean bool) {
 		return null;
 	}
 

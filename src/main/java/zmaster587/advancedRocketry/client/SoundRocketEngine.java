@@ -23,7 +23,7 @@ public class SoundRocketEngine extends MovingSound {
 			this.donePlaying = true;
 
 		if(rocket.isInFlight() && rocket.areEnginesRunning())
-			this.volume = Math.max(DimensionManager.getInstance().getDimensionProperties(rocket.worldObj.provider.getDimension()).getAtmosphereDensityAtHeight(rocket.posY), 0.05f);
+			this.volume = Math.max(DimensionManager.getInstance().getDimensionProperties(rocket.world.provider.getDimension()).getAtmosphereDensityAtHeight(rocket.posY), 0.05f);
 		else
 			this.volume = 0;
 

@@ -35,7 +35,7 @@ public class PacketAtmSync extends BasePacket {
 		nbt.setShort("pressure", (short)pressure);
 		PacketBuffer packetBuffer = new PacketBuffer(out);
 		
-		packetBuffer.writeNBTTagCompoundToBuffer(nbt);
+		packetBuffer.writeCompoundTag(nbt);
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class PacketAtmSync extends BasePacket {
 		PacketBuffer packetBuffer = new PacketBuffer(in);
 		
 		try {
-			nbt = packetBuffer.readNBTTagCompoundFromBuffer();
+			nbt = packetBuffer.readCompoundTag();
 			type = nbt.getString("type");
 			pressure = nbt.getShort("pressure");
 		} catch (IOException e) {

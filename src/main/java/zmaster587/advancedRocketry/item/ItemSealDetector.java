@@ -25,20 +25,19 @@ public class ItemSealDetector extends Item
     //TODO make consume power?
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn,
-			World worldIn, EntityPlayer playerIn, EnumHand hand) {
-		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
+		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
 	}
 	
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player,
+	public EnumActionResult onItemUse(EntityPlayer player,
 			World world, BlockPos pos, EnumHand hand, EnumFacing facing,
 			float hitX, float hitY, float hitZ) {
         if (!world.isRemote)
         {
             if (SealableBlockHandler.INSTANCE.isBlockSealed(world, pos))
             {
-                player.addChatComponentMessage(new TextComponentString("Should hold a nice seal."));
+                player.sendMessage(new TextComponentString("Should hold a nice seal."));
             }
             else
             {
@@ -46,23 +45,23 @@ public class ItemSealDetector extends Item
                 Material mat = state.getMaterial();
                 if (SealableBlockHandler.INSTANCE.isMaterialBanned(mat))
                 {
-                    player.addChatComponentMessage(new TextComponentString("Material will not hold a seal."));
+                    player.sendMessage(new TextComponentString("Material will not hold a seal."));
                 }
                 else if (SealableBlockHandler.INSTANCE.isBlockBanned(state.getBlock()))
                 {
-                    player.addChatComponentMessage(new TextComponentString("Block will not hold a seal."));
+                    player.sendMessage(new TextComponentString("Block will not hold a seal."));
                 }
                 else if (SealableBlockHandler.isFulBlock(world, pos))
                 {
-                    player.addChatComponentMessage(new TextComponentString("Air will pass around this block."));
+                    player.sendMessage(new TextComponentString("Air will pass around this block."));
                 }
                 else if (state.getBlock() instanceof IFluidBlock)
                 {
-                    player.addChatComponentMessage(new TextComponentString("Air will bubble through this block"));
+                    player.sendMessage(new TextComponentString("Air will bubble through this block"));
                 }
                 else
                 {
-                    player.addChatComponentMessage(new TextComponentString("Air will leak through this block."));
+                    player.sendMessage(new TextComponentString("Air will leak through this block."));
                 }
             }
         }

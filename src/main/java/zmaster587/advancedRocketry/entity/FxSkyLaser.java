@@ -33,7 +33,7 @@ public class FxSkyLaser extends Particle {
 			float partialTicks, float rotationX, float rotationZ,
 			float rotationYZ, float rotationXY, float rotationXZ) {
 		//Will this break rendering?
-		EntityPlayer player  = Minecraft.getMinecraft().thePlayer;
+		EntityPlayer player  = Minecraft.getMinecraft().player;
 		//worldRendererIn.finishDrawing();
 		render.doRender(this, this.posX - player.posX, this.posY - player.posY, this.posZ - player.posZ, 0, 0);
 		GL11.glDisable(GL11.GL_LIGHTING);

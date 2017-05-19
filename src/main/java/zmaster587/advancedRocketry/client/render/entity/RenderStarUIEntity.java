@@ -54,7 +54,7 @@ public class RenderStarUIEntity extends Render<EntityUIStar> implements IRenderF
 		GL11.glTranslated(x,y,z);
 		GL11.glScalef(sizeScale,sizeScale,sizeScale);
 		
-		RenderHelper.setupPlayerFacingMatrix(Minecraft.getMinecraft().thePlayer.getDistanceSqToEntity(entity), 0,-.45,0);
+		RenderHelper.setupPlayerFacingMatrix(Minecraft.getMinecraft().player.getDistanceSqToEntity(entity), 0,-.45,0);
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.locationSunNew);
 		
 		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
@@ -84,10 +84,10 @@ public class RenderStarUIEntity extends Render<EntityUIStar> implements IRenderF
 		VertexBuffer buf = Tessellator.getInstance().getBuffer();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
-		float myTime = ((entity.worldObj.getTotalWorldTime() & 0xF)/16f);
+		float myTime = ((entity.world.getTotalWorldTime() & 0xF)/16f);
 		
 		for(int i = 0; i < 4; i++ ) {
-			myTime = ((i*4 + entity.worldObj.getTotalWorldTime() & 0xF)/16f);
+			myTime = ((i*4 + entity.world.getTotalWorldTime() & 0xF)/16f);
 
 			GlStateManager.color(0, 1f, 1f, .2f*(1-myTime));
 			buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
@@ -135,7 +135,7 @@ public class RenderStarUIEntity extends Render<EntityUIStar> implements IRenderF
 			//GL11.glDepthMask(false);
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
 			
-			RenderHelper.setupPlayerFacingMatrix(Minecraft.getMinecraft().thePlayer.getDistanceSq(hitObj.hitVec.xCoord, hitObj.hitVec.yCoord, hitObj.hitVec.zCoord), 0, 0, 0);
+			RenderHelper.setupPlayerFacingMatrix(Minecraft.getMinecraft().player.getDistanceSq(hitObj.hitVec.xCoord, hitObj.hitVec.yCoord, hitObj.hitVec.zCoord), 0, 0, 0);
 			buffer = Tessellator.getInstance().getBuffer();
 			
 			//Draw Mass indicator
@@ -154,8 +154,8 @@ public class RenderStarUIEntity extends Render<EntityUIStar> implements IRenderF
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			//GL11.glDepthMask(true);
 			RenderHelper.cleanupPlayerFacingMatrix();
-			RenderHelper.renderTag(Minecraft.getMinecraft().thePlayer.getDistanceSq(hitObj.hitVec.xCoord, hitObj.hitVec.yCoord, hitObj.hitVec.zCoord), body.getName(), 0, .9, 0, 5);
-			RenderHelper.renderTag(Minecraft.getMinecraft().thePlayer.getDistanceSq(hitObj.hitVec.xCoord, hitObj.hitVec.yCoord, hitObj.hitVec.zCoord), "Num Planets: " + body.getNumPlanets(), 0, .6, 0, 5);
+			RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(hitObj.hitVec.xCoord, hitObj.hitVec.yCoord, hitObj.hitVec.zCoord), body.getName(), 0, .9, 0, 5);
+			RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(hitObj.hitVec.xCoord, hitObj.hitVec.yCoord, hitObj.hitVec.zCoord), "Num Planets: " + body.getNumPlanets(), 0, .6, 0, 5);
 
 			GL11.glPopMatrix();
 		}

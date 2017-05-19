@@ -33,7 +33,7 @@ public class ContainerOreMappingSatallite extends Container {
 		//Check if slot exists
 				ItemStack stack;
 				if(slot != -999)
-					stack =  player.inventory.mainInventory[slot];
+					stack =  player.inventory.getStackInSlot(slot);
 				else stack = null;
 
 				if(inv != null && dragType == 0)
@@ -82,7 +82,7 @@ public class ContainerOreMappingSatallite extends Container {
 			}
 
 
-			if (stackInSlot.stackSize == 0)
+			if (stackInSlot.getCount() == 0)
 			{
 				slot.putStack((ItemStack)null);
 			}

@@ -58,18 +58,18 @@ public class MissionOreMining extends MissionResourceCollection {
 						for(StackEntry entry : stacks2) {
 
 							if(compositionData/(float)maxData >= Math.random())
-								entry.stack.stackSize *= 1.25f;
+								entry.stack.setCount((int) (entry.stack.getCount() * 1.25f));
 
 							if(massData/(float)maxData >= Math.random())
-								entry.stack.stackSize *= 1.25f;
+								entry.stack.setCount((int) (entry.stack.getCount() * 1.25f));
 
 							//if(entry.stack.getMaxStackSize() < entry.stack.stackSize) {
-							for(int i = 0; i < entry.stack.stackSize/entry.stack.getMaxStackSize(); i++) {
+							for(int i = 0; i < entry.stack.getCount()/entry.stack.getMaxStackSize(); i++) {
 								ItemStack stack2 = new ItemStack(entry.stack.getItem(), entry.stack.getMaxStackSize(), entry.stack.getMetadata());
 								totalStacksList.add(stack2);
 							}
 							//}
-							entry.stack.stackSize %= entry.stack.getMaxStackSize();
+							entry.stack.setCount( entry.stack.getCount() % entry.stack.getMaxStackSize());
 							totalStacksList.add(entry.stack);
 						}
 
@@ -95,7 +95,7 @@ public class MissionOreMining extends MissionResourceCollection {
 		EntityRocket rocket = new EntityRocket(DimensionManager.getWorld(launchDimension), rocketStorage, rocketStats, x, 999, z);
 
 		World world = DimensionManager.getWorld(launchDimension);
-		world.spawnEntityInWorld(rocket);
+		world.spawnEntity(rocket);
 		rocket.setInOrbit(true);
 		rocket.setInFlight(true);
 		rocket.motionY = -1.0;

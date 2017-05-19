@@ -21,14 +21,13 @@ public class BiomeGenOceanSpires extends Biome {
 		
 		registerBiome(id, "OceanSpires", this);
 		
-		this.theBiomeDecorator.clayPerChunk = 0;
-		this.theBiomeDecorator.flowersPerChunk = 0;
-		this.theBiomeDecorator.mushroomsPerChunk = 0;
-		this.theBiomeDecorator.treesPerChunk = 0;
-		this.theBiomeDecorator.grassPerChunk = 7;
-		this.theBiomeDecorator.waterlilyPerChunk = 0;
-		this.theBiomeDecorator.sandPerChunk = 0;
-		this.theBiomeDecorator.sandPerChunk2 = 0;
+		this.decorator.clayPerChunk = 0;
+		this.decorator.flowersPerChunk = 0;
+		this.decorator.mushroomsPerChunk = 0;
+		this.decorator.treesPerChunk = 0;
+		this.decorator.grassPerChunk = 7;
+		this.decorator.waterlilyPerChunk = 0;
+		this.decorator.sandPatchesPerChunk = 0;
 		this.spawnableCreatureList.clear();
 		this.topBlock = GRAVEL;
 		this.fillerBlock = GRAVEL;
@@ -47,7 +46,7 @@ public class BiomeGenOceanSpires extends Biome {
 	}
 	
 	@Override
-	public WorldGenAbstractTree genBigTreeChance(Random rand) {
+	public WorldGenAbstractTree getRandomTreeFeature(Random rand) {
 		return new WorldGenShrub(Blocks.LOG.getDefaultState(), Blocks.LEAVES.getDefaultState());
 	}
 }
