@@ -50,12 +50,12 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 			fluids = new ArrayList<PositionedFluidStack>();
 			int inputIndex = 0;
 			int outputIndex = 0;
-			for(int i = 0; i < rec.getOutput().size(); i++, inputIndex++ ) {
+			for(int i = 0; i < rec.getOutput().size(); i++, outputIndex++ ) {
 				result.add(new PositionedStack(rec.getOutput().get(i), 112+ 18*(i%3), 4 + 18*(i/3)));
 			}
 			
 			ingredients = new ArrayList<PositionedStack>();
-			for(int i = 0; i < rec.getIngredients().size(); i++, outputIndex++ ) {
+			for(int i = 0; i < rec.getIngredients().size(); i++, inputIndex++ ) {
 				ingredients.add(new PositionedStack(rec.getIngredients().get(i), 4 + 18*(i%3), 4 + 18*(i/3)));
 			}
 			
