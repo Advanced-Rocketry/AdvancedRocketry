@@ -32,9 +32,9 @@ jar {
 
 apply from: "gradle/scripts/getbuildnumber.gradle"
 minecraft {
-    version = "1.10.2-12.18.2.2104"
+    version = "1.11.2-13.20.0.2228"
     runDir = "run"
-    mappings = "snapshot_20160518"
+    mappings = "snapshot_20170518"
     replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"
     replace "@MAJOR@", version_major
     replace "@MINOR@", version_minor
@@ -54,27 +54,27 @@ repositories {
         }
     ivy {
             name "industrialcraft-2"
-            artifactPattern "http://jenkins.ic2.player.to/job/IC2_110/170/artifact/build/libs/[module]-[revision].[ext]"
+            artifactPattern "http://jenkins.ic2.player.to/job/IC2_111/39/artifact/build/libs/[module]-[revision].[ext]"
         }
     ivy {
             name "Tesla"
-            artifactPattern "https://addons-origin.cursecdn.com/files/2343/273/[module]-[revision].[ext]"
+            artifactPattern "https://addons-origin.cursecdn.com/files/2347/256/[module]-[revision].[ext]"
         }
-    ivy {
-            name "EnderIO"
-            artifactPattern "https://addons-origin.cursecdn.com/files/2238/375/[module]-[revision].[ext]"
-        }
+//    ivy {
+//            name "EnderIO"
+//            artifactPattern "https://addons-origin.cursecdn.com/files/2238/375/[module]-[revision].[ext]"
+//        }
     ivy {
             name "LibVulpes"
-            artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/unstable1_10/9/artifact/output/[module]-[revision].[ext]"
+            artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/MC1.11/2/artifact/output/[module]-[revision].[ext]"
         }
 }
 
 dependencies {
-    compile name: 'industrialcraft-2', version: '2.6.170-ex110-api', ext: 'jar'
-    compile name: 'Tesla', version: '1.10.2-1.2.1.50-deobf', ext: 'jar'
-    compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
-    compile name: 'LibVulpes', version: '1.10.2-0.2.3-9-deobf', ext: 'jar'
+    compile name: 'industrialcraft-2', version: '2.7.39-ex111-api', ext: 'jar'
+    compile name: 'Tesla', version: '1.11-1.3.0.51-deobf', ext: 'jar'
+    //compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
+    compile name: 'LibVulpes', version: '1.11.2-0.2.3-2-deobf', ext: 'jar'
     
     // compile against the JEI API
     deobfCompile "mezz.jei:jei_1.10.2:3.14.7.416:api"
