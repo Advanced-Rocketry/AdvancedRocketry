@@ -20,6 +20,7 @@ import zmaster587.advancedRocketry.capability.TankCapabilityItemStack;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.items.ItemIngredient;
+import zmaster587.libVulpes.util.FluidUtils;
 
 public class ItemPressureTank extends ItemIngredient implements IArmorComponent {
 
@@ -37,11 +38,12 @@ public class ItemPressureTank extends ItemIngredient implements IArmorComponent 
 			List list, boolean bool) {
 		super.addInformation(stack, player, list, bool);
 		
-		if(stack.getTagCompound() == null) {
+		FluidStack fluidStack = FluidUtils.getFluidForItem(stack);
+		
+		if(fluidStack == null) {
 			list.add("Empty");
 		}
 		else {
-			FluidStack fluidStack = FluidStack.loadFluidStackFromNBT(stack.getTagCompound());
 			list.add(fluidStack.getLocalizedName() + ": " + fluidStack.amount);
 		}
 	}

@@ -29,6 +29,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
@@ -611,7 +612,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 					if(tile instanceof IInventory) {
 						IInventory inv = (IInventory) tile;
 						for(int i = 0; i < inv.getSizeInventory(); i++) {
-							inv.setInventorySlotContents(i, null);
+							inv.setInventorySlotContents(i, ItemStack.EMPTY);
 						}
 					}
 

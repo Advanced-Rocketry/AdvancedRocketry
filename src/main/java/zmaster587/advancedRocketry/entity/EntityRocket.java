@@ -442,7 +442,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					player.sendMessage(new TextComponentString("Nothing to be linked"));
 				return false;
 			}
-			
+
 			else if((FluidUtils.containsFluid(heldItem) && (fluidStack = FluidUtils.getFluidForItem(heldItem)) != null && (fuelMult = FuelRegistry.instance.getMultiplier(FuelType.LIQUID, fluidStack.getFluid())) > 0 )) { 
 
 
@@ -451,22 +451,18 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 				//if the player is not in creative then try to use the fluid container
 				if(!player.capabilities.isCreativeMode) {
-					
+					heldItem = heldItem.copy();
+					heldItem.setCount(1);
 					IFluidHandlerItem handler = FluidUtils.getFluidHandler(heldItem);
 					handler.drain(fluidStack.amount, true);
-					heldItem = handler.getContainer();
-					if(FluidUtils.getFluidForItem(heldItem) == null) {
-						handler.drain(1000, true);
-					}
-					else {
-						ItemStack emptyStack = handler.getContainer();
+					ItemStack emptyStack = handler.getContainer();
 
-						if(player.inventory.addItemStackToInventory(emptyStack)) {
-							player.getHeldItem(EnumHand.MAIN_HAND).splitStack(1);
-							if(player.getHeldItem(EnumHand.MAIN_HAND).isEmpty())
-								player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY); 
-						}
+					if(player.inventory.addItemStackToInventory(emptyStack)) {
+						player.getHeldItem(EnumHand.MAIN_HAND).splitStack(1);
+						if(player.getHeldItem(EnumHand.MAIN_HAND).isEmpty())
+							player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY); 
 					}
+
 				}
 
 				return true;
@@ -834,13 +830,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				if(stack != null && stack.getItem() == AdvancedRocketryItems.itemSpaceStation) {
 					StorageChunk storage = ((ItemPackedStructure)stack.getItem()).getStructure(stack);
 					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation((int)ItemStationChip.getUUID(stack));
-					
+
 					//in case of no NBT data or the like
 					if(object == null) {
 						tile.setInventorySlotContents(0, null);
 						continue;
 					}
-					
+
 					SpaceObjectManager.getSpaceManager().moveStationToBody(object, this.world.provider.getDimension());
 
 					//Vector3F<Integer> spawn = object.getSpawnLocation();

@@ -72,7 +72,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 			for( Object player : this.world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos, pos.add(1,2,1)))) {
 				ItemStack stack = ((EntityPlayer)player).getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 
-				if(stack != null) {
+				if(!stack.isEmpty()) {
 					IFillableArmor fillable = null;
 
 					if(stack.getItem() instanceof ItemSpaceArmor)
@@ -87,6 +87,8 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 						if(fillable.getAirRemaining(stack) < fillable.getMaxAir(stack) &&
 								fluidStack != null && fluidStack.getFluid() == AdvancedRocketryFluids.fluidOxygen && fluidStack.amount > 0)  {
 							this.drain(1, true);
+							this.markDirty();
+							world.markChunkDirty(getPos(), this);
 							fillable.increment(stack, 100);
 							return true;
 						}
@@ -110,7 +112,10 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 								int amtFilled = module.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP).fill(fluidStack, true);
 								if(amtFilled == 100) {
 									this.drain(100, true);
-
+									
+									this.markDirty();
+									world.markChunkDirty(getPos(), this);
+									
 									((IModularArmor)stack.getItem()).saveModuleInventory(stack, inv);
 
 									return true;

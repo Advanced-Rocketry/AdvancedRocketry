@@ -28,7 +28,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 			return true;
 
 		FluidStack fstack;
-		return stack != null && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP) && 
+		return !stack.isEmpty() && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP) && 
 				((fstack = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP).getTankProperties()[0].getContents()) == null || fstack.getFluid() == AdvancedRocketryFluids.fluidOxygen);
 	}
 
@@ -115,7 +115,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 			for(ItemStack component : list) {
 				if(component.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP)) {
 					IFluidHandlerItem fluidItem = component.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
-					FluidStack fluidStack = fluidItem.getTankProperties()[0].getContents();
+					FluidStack fluidStack = FluidUtils.getFluidForItem(stack);
 
 					FluidStack fluidDrained = null;
 
@@ -171,9 +171,9 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 					if( i < 2 && inv.getStackInSlot(i).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP)) {
 						list.add(inv.getStackInSlot(i));
 					}
-					else if(inv.getStackInSlot(i).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP)) {
+					else if(FluidUtils.containsFluid(stack)) {
 						
-						FluidStack fstack = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP).getTankProperties()[0].getContents();
+						FluidStack fstack = FluidUtils.getFluidForItem(stack);
 						if(fstack != null && fstack.getFluid() == AdvancedRocketryFluids.fluidOxygen)
 							list.add(inv.getStackInSlot(i));
 					}
@@ -238,7 +238,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 					}
 					else if(inv.getStackInSlot(i).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP)) {
 						
-						FluidStack fstack = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP).getTankProperties()[0].getContents();
+						FluidStack fstack = FluidUtils.getFluidForItem(stack);
 						if(fstack != null && fstack.getFluid() == AdvancedRocketryFluids.fluidOxygen)
 							list.add(inv.getStackInSlot(i));
 					}

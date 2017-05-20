@@ -34,6 +34,7 @@ import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.api.IJetPack;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.client.ResourceIcon;
+import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.InputSyncHandler;
 
 public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
@@ -169,14 +170,11 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 		for(int i = 0; i < inv.getSizeInventory(); i++) {
 			ItemStack fuelTank = inv.getStackInSlot(i);
 
-			/*if(fuelTank != null && fuelTank.getItem() instanceof IFluidContainerItem) {
-				FluidStack fluid = ((IFluidContainerItem)fuelTank.getItem()).drain(fuelTank, 1, false);
-				if(fluid != null && fluid.getFluid() == AdvancedRocketryFluids.fluidHydrogen) {
-					((IFluidContainerItem)fuelTank.getItem()).drain(fuelTank, 1, true);
-					hasFuel = true;
+			if(FluidUtils.containsFluid(fuelTank, AdvancedRocketryFluids.fluidHydrogen)) {
+				hasFuel = FluidUtils.getFluidHandler(fuelTank).drain(1,true) != null;
+				if(hasFuel)
 					break;
-				}
-			}*/
+			}
 
 		}
 
@@ -326,6 +324,13 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 		for(int i = 0; i < inv.size(); i++) {
 			ItemStack currentStack = inv.get(i);
 
+			if(FluidUtils.containsFluid(currentStack, AdvancedRocketryFluids.fluidHydrogen)) {
+				FluidStack fluidStack = FluidUtils.getFluidForItem(currentStack);
+				if(fluidStack != null)
+					amt+= fluidStack.amount;
+				maxAmt += FluidUtils.getFluidItemCapacity(currentStack);
+			}
+			
 			/*if(currentStack != null && currentStack.getItem() instanceof IFluidContainerItem ) {
 				FluidStack fluid = ((IFluidContainerItem)currentStack.getItem()).getFluid(currentStack);
 				if(fluid == null)

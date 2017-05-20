@@ -392,7 +392,7 @@ public class RocketEventHandler extends Gui {
 			if(!Minecraft.getMinecraft().player.capabilities.isCreativeMode) {
 				ItemStack chestPiece = Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 				IFillableArmor fillable = null;
-				if(chestPiece != null && chestPiece.getItem() instanceof IFillableArmor)
+				if(!chestPiece.isEmpty() && chestPiece.getItem() instanceof IFillableArmor)
 					fillable = (IFillableArmor)chestPiece.getItem();
 				else if(ItemAirUtils.INSTANCE.isStackValidAirContainer(chestPiece))
 					fillable = new ItemAirUtils.ItemAirWrapper(chestPiece);

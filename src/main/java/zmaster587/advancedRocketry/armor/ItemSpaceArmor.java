@@ -142,7 +142,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 			EmbeddedInventory inv = loadEmbeddedInventory(armor);
 			for(int i = 0; i < inv.getSizeInventory(); i++ ) {
 				ItemStack stack = inv.getStackInSlot(i);
-				if(stack != null) {
+				if(!stack.isEmpty()) {
 					IArmorComponent component = (IArmorComponent)stack.getItem();
 					component.onTick(world, player, armor, inv, stack);
 				}
@@ -155,7 +155,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 		ItemStack leg = player.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
 		ItemStack chest = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 		ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-		if(feet != null && feet.getItem() instanceof ItemSpaceArmor && leg != null && leg.getItem() instanceof ItemSpaceArmor && chest != null && chest.getItem() instanceof ItemSpaceArmor && helm != null && helm.getItem() instanceof ItemSpaceArmor)
+		if(!feet.isEmpty() && feet.getItem() instanceof ItemSpaceArmor && !leg.isEmpty() && leg.getItem() instanceof ItemSpaceArmor && !chest.isEmpty() && chest.getItem() instanceof ItemSpaceArmor && !helm.isEmpty() && helm.getItem() instanceof ItemSpaceArmor)
 			player.addStat(ARAchivements.suitedUp);
 	}
 
@@ -188,7 +188,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 			EmbeddedInventory inv = loadEmbeddedInventory(armor);
 			for(int i = 0; i < inv.getSizeInventory(); i++ ) {
 				ItemStack stack = inv.getStackInSlot(i);
-				if(stack != null) {
+				if(!stack.isEmpty()) {
 					IArmorComponent component = (IArmorComponent)stack.getItem();
 					component.onArmorDamaged(entity, armor, stack, source, damage);
 				}
@@ -221,14 +221,14 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 			componentList = nbt.getTagList(componentNBTName, NBT.TAG_COMPOUND);
 		}
 		else {
-			return null;
+			return ItemStack.EMPTY;
 		}
 
 		EmbeddedInventory inv = loadEmbeddedInventory(armor);
 		ItemStack stack = inv.getStackInSlot(index);
-		inv.setInventorySlotContents(index, null);
+		inv.setInventorySlotContents(index, ItemStack.EMPTY);
 
-		if(stack != null) {
+		if(!stack.isEmpty()) {
 			IArmorComponent component = (IArmorComponent) stack.getItem();
 			component.onComponentRemoved(world, armor);
 			saveEmbeddedInventory(armor, inv);
@@ -249,7 +249,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 			EmbeddedInventory inv = loadEmbeddedInventory(armor);
 
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
-				if(inv.getStackInSlot(i) != null)
+				if(!inv.getStackInSlot(i).isEmpty())
 					list.add(inv.getStackInSlot(i));
 			}
 		}

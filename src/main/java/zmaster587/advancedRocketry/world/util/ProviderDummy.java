@@ -12,6 +12,11 @@ public class ProviderDummy extends WorldProvider {
 	}
 	
 	@Override
+	public float[] getLightBrightnessTable() {
+		return super.getLightBrightnessTable();
+	}
+	
+	@Override
 	public int getDimension() {
 		return super.getDimension();
 	}
