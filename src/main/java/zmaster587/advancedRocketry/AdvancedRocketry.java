@@ -17,6 +17,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Item.ToolMaterial;
@@ -251,7 +252,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-@Mod(modid="advancedRocketry", name="Advanced Rocketry", version="@MAJOR@.@MINOR@.@REVIS@@BUILD@", dependencies="required-after:libVulpes@[%LIBVULPESVERSION%,)")
+@Mod(modid="advancedrocketry", name="Advanced Rocketry", version="@MAJOR@.@MINOR@.@REVIS@@BUILD@", dependencies="required-after:libvulpes@[%LIBVULPESVERSION%,)")
 public class AdvancedRocketry {
 
 
@@ -740,10 +741,10 @@ public class AdvancedRocketry {
 		AdvancedRocketryItems.itemBasicLaserGun = new ItemBasicLaserGun().setUnlocalizedName("basicLaserGun").setCreativeTab(tabAdvRocketry);
 
 		//Fluids
-		AdvancedRocketryItems.itemBucketRocketFuel = new Item().setCreativeTab(LibVulpes.tabLibVulpesOres).setUnlocalizedName("bucketRocketFuel").setContainerItem(Items.BUCKET);
-		AdvancedRocketryItems.itemBucketNitrogen = new Item().setCreativeTab(LibVulpes.tabLibVulpesOres).setUnlocalizedName("bucketNitrogen").setContainerItem(Items.BUCKET);
-		AdvancedRocketryItems.itemBucketHydrogen = new Item().setCreativeTab(LibVulpes.tabLibVulpesOres).setUnlocalizedName("bucketHydrogen").setContainerItem(Items.BUCKET);
-		AdvancedRocketryItems.itemBucketOxygen = new Item().setCreativeTab(LibVulpes.tabLibVulpesOres).setUnlocalizedName("bucketOxygen").setContainerItem(Items.BUCKET);
+		AdvancedRocketryItems.itemBucketRocketFuel = new ItemARBucket(AdvancedRocketryFluids.fluidRocketFuel).setCreativeTab(LibVulpes.tabLibVulpesOres).setUnlocalizedName("bucketRocketFuel").setContainerItem(Items.BUCKET);
+		AdvancedRocketryItems.itemBucketNitrogen = new ItemARBucket(AdvancedRocketryFluids.fluidNitrogen).setCreativeTab(LibVulpes.tabLibVulpesOres).setUnlocalizedName("bucketNitrogen").setContainerItem(Items.BUCKET);
+		AdvancedRocketryItems.itemBucketHydrogen = new ItemARBucket(AdvancedRocketryFluids.fluidHydrogen).setCreativeTab(LibVulpes.tabLibVulpesOres).setUnlocalizedName("bucketHydrogen").setContainerItem(Items.BUCKET);
+		AdvancedRocketryItems.itemBucketOxygen = new ItemARBucket(AdvancedRocketryFluids.fluidOxygen).setCreativeTab(LibVulpes.tabLibVulpesOres).setUnlocalizedName("bucketOxygen").setContainerItem(Items.BUCKET);
 		//FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidHydrogen);
 		//FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidNitrogen);
 		//FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidOxygen);

@@ -135,8 +135,7 @@ public class PlanetEventHandler {
 
 	@SubscribeEvent
 	public void onPickup(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent event) {
-		if(event.pickedUp != null) {
-			Item item = event.pickedUp.getEntityItem().getItem();
+		if(event.pickedUp != null && !event.pickedUp.getEntityItem().isEmpty()) {
 
 
 			zmaster587.libVulpes.api.material.Material mat = LibVulpes.materialRegistry.getMaterialFromItemStack( event.pickedUp.getEntityItem());

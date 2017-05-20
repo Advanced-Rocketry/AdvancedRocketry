@@ -32,6 +32,7 @@ public class BiomeGenCrystal extends Biome  {
 		this.decorator.flowersPerChunk=0;
 		this.decorator.grassPerChunk=0;
 		this.decorator.treesPerChunk=0;
+		this.decorator.mushroomsPerChunk=0;
 		
 		crystalGenerator = new WorldGenLargeCrystal();
 		crystalGenBase = new MapGenLargeCrystal(fillerBlock, AdvancedRocketryBlocks.blockCrystal.getDefaultState());

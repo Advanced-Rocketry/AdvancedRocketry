@@ -73,6 +73,11 @@ public class InverseTrailFx extends Particle {
 		return 2;
 	}
 	
+    public boolean shouldDisableDepth()
+    {
+        return true;
+    }
+	
 	@Override
 	public void onUpdate() {
         this.prevPosX = this.posX;

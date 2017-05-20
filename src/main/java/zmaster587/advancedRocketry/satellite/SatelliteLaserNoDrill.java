@@ -68,7 +68,7 @@ public class SatelliteLaserNoDrill extends SatelliteBase {
 						} catch (NumberFormatException e) {}
 					}
 
-					ItemStack stack = null;
+					ItemStack stack = ItemStack.EMPTY;
 					Block block = Block.getBlockFromName(name);
 					if(block == null) {
 						Item item = Item.getByNameOrId(name);
@@ -78,7 +78,7 @@ public class SatelliteLaserNoDrill extends SatelliteBase {
 					else
 						stack = new ItemStack(block, size, meta);
 					
-					if(stack != null)
+					if(!stack.isEmpty())
 						ores.add(stack);
 				}
 			}

@@ -31,6 +31,11 @@ public class TrailFx extends InverseTrailFx {
 		return 0;
 	}
 	
+    public boolean shouldDisableDepth()
+    {
+        return true;
+    }
+	
 	@Override
 	public void onUpdate() {
         this.prevPosX = this.posX;

@@ -61,6 +61,7 @@ public class WorldProviderSpace extends WorldProviderPlanet {
 	protected void init() {
 		// TODO Auto-generated method stub
 		//super.createBiomeProvider();
+		this.hasSkyLight=true;
 		world.getWorldInfo().setTerrainType(AdvancedRocketry.spaceWorldType);
 		
 		this.biomeProvider = new BiomeProviderSingle(AdvancedRocketryBiomes.spaceBiome);//new ChunkManagerPlanet(worldObj, worldObj.getWorldInfo().getGeneratorOptions(), DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension()).getBiomes());

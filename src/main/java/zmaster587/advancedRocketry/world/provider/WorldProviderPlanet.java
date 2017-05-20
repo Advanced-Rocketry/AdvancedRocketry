@@ -31,7 +31,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProvider {
-	private IRenderHandler skyRender;
 	public BiomeProvider chunkMgrTerraformed;
 
 	/*@Override
@@ -76,6 +75,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	@Override
 	protected void init()
 	{
+		this.hasSkyLight = true;
 		world.getWorldInfo().setTerrainType(AdvancedRocketry.planetWorldType);
 
 
@@ -147,6 +147,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	public float getSunBrightness(float partialTicks) {
+		
 		float atmosphere = getAtmosphereDensity(new BlockPos(0,0,0));
 		Math.abs(1-atmosphere);
 		//calculateCelestialAngle(p_76563_1_, p_76563_3_)

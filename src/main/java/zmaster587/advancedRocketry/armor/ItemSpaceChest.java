@@ -12,8 +12,8 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.util.FluidUtils;
 import zmaster587.libVulpes.util.EmbeddedInventory;
+import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.IconResource;
 
 public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {

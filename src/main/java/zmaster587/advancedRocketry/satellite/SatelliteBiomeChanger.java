@@ -80,7 +80,7 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 
 	@Override
 	public boolean isAcceptableControllerItemStack(ItemStack stack) {
-		return stack != null && stack.getItem() instanceof ItemBiomeChanger;
+		return !stack.isEmpty() && stack.getItem() instanceof ItemBiomeChanger;
 	}
 
 	@Override

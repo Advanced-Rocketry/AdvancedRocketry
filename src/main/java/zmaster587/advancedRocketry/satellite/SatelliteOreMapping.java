@@ -52,7 +52,7 @@ public class SatelliteOreMapping extends SatelliteBase  {
 
 	@Override
 	public boolean isAcceptableControllerItemStack(ItemStack stack) {
-		return stack != null && stack.getItem() instanceof ItemOreScanner;
+		return !stack.isEmpty() && stack.getItem() instanceof ItemOreScanner;
 	}
 
 	@Override

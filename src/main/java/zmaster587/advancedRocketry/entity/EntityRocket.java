@@ -16,17 +16,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SPacketRespawn;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -41,6 +38,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
@@ -80,7 +78,6 @@ import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.AudioRegistry;
-import zmaster587.advancedRocketry.util.MobileAABB;
 import zmaster587.advancedRocketry.util.RocketInventoryHelper;
 import zmaster587.advancedRocketry.util.StationLandingLocation;
 import zmaster587.advancedRocketry.util.StorageChunk;
@@ -105,6 +102,7 @@ import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.IconResource;
 import zmaster587.libVulpes.util.Vector3F;
@@ -443,6 +441,35 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				else if(!world.isRemote)
 					player.sendMessage(new TextComponentString("Nothing to be linked"));
 				return false;
+			}
+			
+			else if((FluidUtils.containsFluid(heldItem) && (fluidStack = FluidUtils.getFluidForItem(heldItem)) != null && (fuelMult = FuelRegistry.instance.getMultiplier(FuelType.LIQUID, fluidStack.getFluid())) > 0 )) { 
+
+
+				int amountToAdd = (int) (fuelMult*fluidStack.amount);
+				this.addFuelAmount(amountToAdd);
+
+				//if the player is not in creative then try to use the fluid container
+				if(!player.capabilities.isCreativeMode) {
+					
+					IFluidHandlerItem handler = FluidUtils.getFluidHandler(heldItem);
+					handler.drain(fluidStack.amount, true);
+					heldItem = handler.getContainer();
+					if(FluidUtils.getFluidForItem(heldItem) == null) {
+						handler.drain(1000, true);
+					}
+					else {
+						ItemStack emptyStack = handler.getContainer();
+
+						if(player.inventory.addItemStackToInventory(emptyStack)) {
+							player.getHeldItem(EnumHand.MAIN_HAND).splitStack(1);
+							if(player.getHeldItem(EnumHand.MAIN_HAND).isEmpty())
+								player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY); 
+						}
+					}
+				}
+
+				return true;
 			}
 		}
 

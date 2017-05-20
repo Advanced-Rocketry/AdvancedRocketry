@@ -19,6 +19,7 @@ public class BiomeGenSpace extends Biome {
 		this.decorator.flowersPerChunk=0;
 		this.decorator.grassPerChunk=0;
 		this.decorator.treesPerChunk=0;
+		this.decorator.mushroomsPerChunk=0;
 		this.fillerBlock = this.topBlock = Blocks.AIR.getDefaultState();
 	}
 	

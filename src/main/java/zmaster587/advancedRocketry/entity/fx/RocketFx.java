@@ -102,6 +102,11 @@ public class RocketFx extends Particle {
         //GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 	}
 	
+    public boolean shouldDisableDepth()
+    {
+        return true;
+    }
+	
 	@Override
 	public void onUpdate() {
         this.prevPosX = this.posX;

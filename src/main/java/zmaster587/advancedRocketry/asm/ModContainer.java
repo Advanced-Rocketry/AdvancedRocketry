@@ -22,8 +22,8 @@ public class ModContainer extends DummyModContainer {
 		
 		ModMetadata meta = getMetadata();
 		
-		meta.modId = "AdvancedRocketryCore";
-		meta.name = "Advanced Rocketry";
+		meta.modId = "advancedrocketrycore";
+		meta.name = "Advanced Rocketry Core";
 		meta.version = "1";
 		meta.credits = "Created by Zmaster587";
 		meta.authorList = Arrays.asList("Zmaster587");

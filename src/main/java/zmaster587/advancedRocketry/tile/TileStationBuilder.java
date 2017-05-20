@@ -46,16 +46,16 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 	public boolean canScan() {
 		ItemStack stack = new ItemStack(AdvancedRocketryBlocks.blockLoader,1,1);
 
-		if(inventory.getStackInSlot(0) == null || !stack.isItemEqual(inventory.getStackInSlot(0))) {
+		if(inventory.getStackInSlot(0).isEmpty() || !stack.isItemEqual(inventory.getStackInSlot(0))) {
 			status = ErrorCodes.NOSATELLITEHATCH;
 			return false;
 		}
 
-		if(inventory.getStackInSlot(1) == null || AdvancedRocketryItems.itemSpaceStationChip != inventory.getStackInSlot(1).getItem()) {
+		if(inventory.getStackInSlot(1).isEmpty() || AdvancedRocketryItems.itemSpaceStationChip != inventory.getStackInSlot(1).getItem()) {
 			status = ErrorCodes.NOSATELLITECHIP;
 			return false;
 		}
-		if( inventory.getStackInSlot(2) != null || inventory.getStackInSlot(3) != null) {
+		if( !inventory.getStackInSlot(2).isEmpty() || !inventory.getStackInSlot(3).isEmpty()) {
 			status = ErrorCodes.OUTPUTBLOCKED;
 			return false;
 		}
