@@ -8,6 +8,7 @@ import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.util.UniversalBattery;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
+import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -69,7 +70,7 @@ public class EnergyNetwork extends CableNetwork implements IUniversalEnergy {
 		while(sinkItr.hasNext()) {
 			//Get tile and key
 			Entry<TileEntity,ForgeDirection> obj = (Entry<TileEntity, ForgeDirection>)sinkItr.next();
-			IEnergyHandler dataHandlerSink = (IEnergyHandler) obj.getKey();
+			IEnergyReceiver dataHandlerSink = (IEnergyReceiver) obj.getKey();
 
 			demand += dataHandlerSink.receiveEnergy(obj.getValue(), amount, true);
 		}
@@ -90,7 +91,7 @@ public class EnergyNetwork extends CableNetwork implements IUniversalEnergy {
 
 			//Get tile and key
 			Entry<TileEntity,ForgeDirection> obj = (Entry<TileEntity, ForgeDirection>)sinkItr.next();
-			IEnergyHandler dataHandlerSink = (IEnergyHandler) obj.getKey();
+			IEnergyReceiver dataHandlerSink = (IEnergyReceiver) obj.getKey();
 
 
 			amountToMove -= dataHandlerSink.receiveEnergy(obj.getValue(), amountToMove, false);
