@@ -803,13 +803,13 @@ public class ClassTransformer implements IClassTransformer {
 				int firstALoadIndex = 0;
 				AbstractInsnNode ain;
 
-				for(int i = onUpdate.instructions.size() - 1; i >= 0; i--) {
+				for(int i = 0; i < onUpdate.instructions.size(); i++) {
 					ain = onUpdate.instructions.get(i);
-					if(ain.getOpcode() == Opcodes.ALOAD) {
+					if(ain.getOpcode() == Opcodes.GETFIELD) {
 						if(numALoadsInARow == 0)
 							firstALoadIndex = i;
 						numALoadsInARow++;
-						if(numALoadsInARow == 3) {
+						if(numALoadsInARow == 2) {
 							pos = ain;
 							break;
 						}
