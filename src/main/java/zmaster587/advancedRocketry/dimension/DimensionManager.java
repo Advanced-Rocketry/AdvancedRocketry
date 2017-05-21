@@ -589,6 +589,7 @@ public class DimensionManager implements IGalaxy {
 				}
 				inStream.close();
 				properOstream.close();
+				tmpFile.delete();
 				
 			} catch(Exception e) {
 				AdvancedRocketry.logger.error("Cannot save advanced rocketry planet file");
