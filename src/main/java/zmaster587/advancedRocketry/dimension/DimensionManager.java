@@ -577,9 +577,30 @@ public class DimensionManager implements IGalaxy {
 
 			if(!file.exists())
 				file.createNewFile();
-
-			outStream = new FileOutputStream(file);
-			CompressedStreamTools.writeCompressed(nbt, outStream);
+			
+			//Getting real sick of my planet file getting toasted during debug...
+			File tmpFile = File.createTempFile("dimprops", null);
+			outStream = new FileOutputStream(tmpFile);
+			try {
+				CompressedStreamTools.writeCompressed(nbt, outStream);
+				
+				//copy the correctly written output
+				FileOutputStream properOstream = new FileOutputStream(file);
+				FileInputStream inStream = new FileInputStream(tmpFile);
+				byte buffer[] = new byte[1024];
+				int numRead = 0;
+				while((numRead = inStream.read(buffer)) > 0) {
+					properOstream.write(buffer, 0, numRead);
+				}
+				inStream.close();
+				properOstream.close();
+				tmpFile.delete();
+				
+			} catch(Exception e) {
+				AdvancedRocketry.logger.error("Cannot save advanced rocketry planet file");
+				e.printStackTrace();
+			}
+			
 			outStream.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
