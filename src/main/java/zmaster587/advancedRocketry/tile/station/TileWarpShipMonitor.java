@@ -468,7 +468,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 		else if(id == 2) {
 			final SpaceObject station = getSpaceObject();
 
-			if(station != null && station.hasUsableWarpCore() && station.useFuel(getTravelCost()) != 0) {
+			if(station != null && station.hasUsableWarpCore() && station.useFuel(getTravelCost()) != 0 && meetsArtifactReq(DimensionManager.getInstance().getDimensionProperties(station.getDestOrbitingBody()))) {
 				SpaceObjectManager.getSpaceManager().moveStationToBody(station, station.getDestOrbitingBody(), 200);
 
 				for (EntityPlayer player2 : worldObj.getPlayers(EntityPlayer.class, new Predicate<EntityPlayer>() {
