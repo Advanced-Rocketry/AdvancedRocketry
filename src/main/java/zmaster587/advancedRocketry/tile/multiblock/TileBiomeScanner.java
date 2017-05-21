@@ -95,15 +95,15 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 					}
 				}
 				else {
-					Iterator<Biome> itr = Biome.REGISTRY.iterator();
+					Iterator<BiomeEntry> itr = properties.getBiomes().iterator();
 					while (itr.hasNext()) {
-						Biome biome = itr.next();
-						list2.add(new ModuleText(32, 16 + 12*(i++), biome.getBiomeName(), 0x202020));
+						BiomeEntry biome = itr.next();
+						list2.add(new ModuleText(32, 16 + 12*(i++), biome.biome.getBiomeName(), 0x202020));
 					}
 				}
 			}
 			//Relying on a bug, is this safe?
-			ModuleContainerPan pan = new ModuleContainerPan(0, 16, list2, new LinkedList<ModuleBase>(), null, 148, 128, 0, -64, 0, 1000);
+			ModuleContainerPan pan = new ModuleContainerPan(0, 16, list2, new LinkedList<ModuleBase>(), null, 148, 110, 0, -64, 0, 1000);
 			list.add(pan);
 		}
 		else
