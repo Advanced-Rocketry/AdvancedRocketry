@@ -161,5 +161,5 @@ fluid.rocketFuel=Ракетне паливо
 
 mission.asteroidmining.name=Вивчення астероїдів
 
-key.controls.advancedRocketry = Advanced Rocketry
+key.controls.advancedrocketry=Advanced Rocketry
 key.toggleJetpack=Ввімкнути реактивний ранець
