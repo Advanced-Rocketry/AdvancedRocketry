@@ -31,9 +31,9 @@ public abstract class MachineCategoryTemplate<T extends MachineRecipe> extends B
 	public IDrawable getBackground() {
 		return background;
 	}
-
+	
 	@Override
-	public void drawAnimations(Minecraft minecraft) {
+	public void drawExtras(Minecraft minecraft) {
 		
 		ProgressBarImage progressBar = bar;
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureResources.progressBars);
@@ -66,7 +66,7 @@ public abstract class MachineCategoryTemplate<T extends MachineRecipe> extends B
 		
 		i = 9;
 		
-		for(ItemStack stacks : ingredients.getOutputs(ItemStack.class)) {
+		for(List<ItemStack> stacks : ingredients.getOutputs(ItemStack.class)) {
 			guiItemStacks.set(i++, stacks);
 		}
 	}

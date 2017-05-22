@@ -12,11 +12,6 @@ public class PlatePressRecipeHandler implements IRecipeHandler<PlatePressWrapper
 	}
 
 	@Override
-	public String getRecipeCategoryUid() {
-		return ARPlugin.platePresser;
-	}
-
-	@Override
 	public String getRecipeCategoryUid(PlatePressWrapper recipe) {
 		return ARPlugin.platePresser;
 	}

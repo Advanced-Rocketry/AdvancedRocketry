@@ -12,11 +12,6 @@ public class LatheRecipeHandler implements IRecipeHandler<LatheWrapper> {
 	}
 
 	@Override
-	public String getRecipeCategoryUid() {
-		return ARPlugin.latheUUID;
-	}
-
-	@Override
 	public String getRecipeCategoryUid(LatheWrapper recipe) {
 		return ARPlugin.latheUUID;
 	}

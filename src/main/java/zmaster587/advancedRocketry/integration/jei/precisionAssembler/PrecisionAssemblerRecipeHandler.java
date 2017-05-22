@@ -12,11 +12,6 @@ public class PrecisionAssemblerRecipeHandler implements IRecipeHandler<Precision
 	}
 
 	@Override
-	public String getRecipeCategoryUid() {
-		return ARPlugin.precisionAssemblerUUID;
-	}
-
-	@Override
 	public String getRecipeCategoryUid(PrecisionAssemblerWrapper recipe) {
 		return ARPlugin.precisionAssemblerUUID;
 	}

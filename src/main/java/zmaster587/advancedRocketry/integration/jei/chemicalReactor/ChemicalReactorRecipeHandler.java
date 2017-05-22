@@ -12,11 +12,6 @@ public class ChemicalReactorRecipeHandler implements IRecipeHandler<ChemicalReac
 	}
 
 	@Override
-	public String getRecipeCategoryUid() {
-		return ARPlugin.chemicalReactorUUID;
-	}
-
-	@Override
 	public String getRecipeCategoryUid(ChemicalReactorlWrapper recipe) {
 		return ARPlugin.chemicalReactorUUID;
 	}
