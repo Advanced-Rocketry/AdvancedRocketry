@@ -12,11 +12,6 @@ public class CrystallizerRecipeHandler implements IRecipeHandler<CrystallizerWra
 	}
 
 	@Override
-	public String getRecipeCategoryUid() {
-		return ARPlugin.crystallizerUUID;
-	}
-
-	@Override
 	public String getRecipeCategoryUid(CrystallizerWrapper recipe) {
 		return ARPlugin.crystallizerUUID;
 	}

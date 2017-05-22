@@ -10,12 +10,7 @@ public class ElectrolyzerRecipeHandler implements IRecipeHandler<ElectrolyzerWra
 	public Class<ElectrolyzerWrapper> getRecipeClass() {
 		return ElectrolyzerWrapper.class;
 	}
-
-	@Override
-	public String getRecipeCategoryUid() {
-		return ARPlugin.electrolyzerUUID;
-	}
-
+	
 	@Override
 	public String getRecipeCategoryUid(ElectrolyzerWrapper recipe) {
 		return ARPlugin.electrolyzerUUID;

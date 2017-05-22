@@ -12,11 +12,6 @@ public class SawMillRecipeHandler implements IRecipeHandler<SawMillWrapper> {
 	}
 
 	@Override
-	public String getRecipeCategoryUid() {
-		return ARPlugin.sawMillUUID;
-	}
-
-	@Override
 	public String getRecipeCategoryUid(SawMillWrapper recipe) {
 		return ARPlugin.sawMillUUID;
 	}

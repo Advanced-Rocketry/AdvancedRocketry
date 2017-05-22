@@ -12,11 +12,6 @@ public class BlastFurnaceRecipeHandler implements IRecipeHandler<BlastFurnaceWra
 	}
 
 	@Override
-	public String getRecipeCategoryUid() {
-		return ARPlugin.arcFurnaceUUID;
-	}
-
-	@Override
 	public String getRecipeCategoryUid(BlastFurnaceWrapper recipe) {
 		return ARPlugin.arcFurnaceUUID;
 	}

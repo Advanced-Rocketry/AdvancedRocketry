@@ -12,12 +12,6 @@ public class MachineTemplate implements IRecipeHandler<MachineRecipe> {
 	}
 
 	@Override
-	public String getRecipeCategoryUid() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public String getRecipeCategoryUid(MachineRecipe recipe) {
 		// TODO Auto-generated method stub
 		return null;
