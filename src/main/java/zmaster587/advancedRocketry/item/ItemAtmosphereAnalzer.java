@@ -9,6 +9,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.event.RocketEventHandler;
+import zmaster587.advancedRocketry.event.RocketEventHandler.GuiBox;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IArmorComponent;
@@ -91,8 +93,8 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 		
 		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 		
-		int screenX = 8;
-		int screenY = event.resolution.getScaledHeight() - fontRenderer.FONT_HEIGHT*3;
+		int screenX = RocketEventHandler.atmBar.getRenderX();//8;
+		int screenY = RocketEventHandler.atmBar.getRenderY();//event.getResolution().getScaledHeight() - fontRenderer.FONT_HEIGHT*3;
 
 		String str[] = getAtmosphereReadout(componentStack, (AtmosphereType) AtmosphereHandler.currentAtm, Minecraft.getMinecraft().theWorld);
 		//Draw BG
@@ -103,7 +105,7 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 		GL11.glColor3f(1f, 1f, 1f);
 		GL11.glPushMatrix();
 		Minecraft.getMinecraft().renderEngine.bindTexture(eyeCandySpinner);
-		GL11.glTranslatef(20, screenY + 8, 0);
+		GL11.glTranslatef(screenX + 12, screenY + 8, 0);
 		GL11.glRotatef(( System.currentTimeMillis() / 100 ) % 360, 0, 0, 1);
 		
 		Tessellator.instance.startDrawingQuads();
@@ -114,9 +116,9 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
 		Tessellator.instance.startDrawingQuads();
-		RenderHelper.renderNorthFaceWithUV(Tessellator.instance, -1, 0,  screenY - 12, 16,  screenY + 26, 0, 0.25f, 0, 1);
-		RenderHelper.renderNorthFaceWithUV(Tessellator.instance, -1, 16,  screenY - 12, 220,  screenY + 26, 0.5f, 0.5f, 0, 1);
-		RenderHelper.renderNorthFaceWithUV(Tessellator.instance, -1, 220,  screenY - 12, 236,  screenY + 26, 0.75f, 1f, 0, 1);
+		RenderHelper.renderNorthFaceWithUV(Tessellator.instance, -1, screenX - 8,  screenY - 12, screenX + 8,  screenY + 26, 0, 0.25f, 0, 1);
+		RenderHelper.renderNorthFaceWithUV(Tessellator.instance, -1, screenX + 8,  screenY - 12, screenX + 212,  screenY + 26, 0.5f, 0.5f, 0, 1);
+		RenderHelper.renderNorthFaceWithUV(Tessellator.instance, -1, screenX + 212,  screenY - 12, screenX + 228,  screenY + 26, 0.75f, 1f, 0, 1);
 		Tessellator.instance.draw();
 	}
 

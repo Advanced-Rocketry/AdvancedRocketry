@@ -61,6 +61,8 @@ public class RocketEventHandler extends Gui {
 	private static IntBuffer table,outerBoundsTable;
 	public static GuiBox suitPanel = new GuiBox(8,8,24,24);
 	public static GuiBox oxygenBar = new GuiBox(8,-57, 80, 48);
+	public static GuiBox hydrogenBar = new GuiBox(8,-74, 80, 48);
+	public static GuiBox atmBar = new GuiBox(8, 27, 200, 48);
 	private static GuiBox currentlySelectedBox = null;
 
 
@@ -465,6 +467,16 @@ public class RocketEventHandler extends Gui {
 					currentlySelectedBox = oxygenBar;
 				}
 
+				if(currentlySelectedBox == null && mouseX >= hydrogenBar.getX(i) && mouseX < hydrogenBar.getX(i) + hydrogenBar.sizeX &&
+						mouseY >= hydrogenBar.getY(j) && mouseY < hydrogenBar.getY(j) + hydrogenBar.sizeY) {
+					currentlySelectedBox = hydrogenBar;
+				}
+				
+				if(currentlySelectedBox == null && mouseX >= atmBar.getX(i) && mouseX < atmBar.getX(i) + atmBar.sizeX &&
+						mouseY >= atmBar.getY(j) && mouseY < atmBar.getY(j) + atmBar.sizeY) {
+					currentlySelectedBox = atmBar;
+				}
+				
 				if(currentlySelectedBox != null) {
 
 					currentlySelectedBox.setRenderX(mouseX, i);
