@@ -30,6 +30,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.api.IJetPack;
@@ -311,8 +312,8 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 			Minecraft.getMinecraft().renderEngine.bindTexture(background);
 			GL11.glColor3f(1f, 1f, 1f);
 			int width = 83;
-			int screenX = event.resolution.getScaledWidth()/2 + 8;
-			int screenY = event.resolution.getScaledHeight() - 74;
+			int screenX = RocketEventHandler.hydrogenBar.getRenderX();
+			int screenY = RocketEventHandler.hydrogenBar.getRenderY();
 
 			//Draw BG
 			gui.drawTexturedModalRect(screenX, screenY, 23, 34, width, 17);
