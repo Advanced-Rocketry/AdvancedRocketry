@@ -108,14 +108,14 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 			List<ItemStack> list = new LinkedList<ItemStack>();
 
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
-				if(inv.getStackInSlot(i) != null)
+				if(!inv.getStackInSlot(i).isEmpty())
 					list.add(inv.getStackInSlot(i));
 			}
 			int amtDrained = amt;
 			for(ItemStack component : list) {
 				if(component.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP)) {
 					IFluidHandlerItem fluidItem = component.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
-					FluidStack fluidStack = FluidUtils.getFluidForItem(stack);
+					FluidStack fluidStack = FluidUtils.getFluidForItem(component);
 
 					FluidStack fluidDrained = null;
 
@@ -166,14 +166,14 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 			List<ItemStack> list = new LinkedList<ItemStack>();
 
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
-				if(inv.getStackInSlot(i) != null) {
+				if(!inv.getStackInSlot(i).isEmpty()) {
 					
 					if( i < 2 && inv.getStackInSlot(i).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP)) {
 						list.add(inv.getStackInSlot(i));
 					}
-					else if(FluidUtils.containsFluid(stack)) {
+					else if(FluidUtils.containsFluid(inv.getStackInSlot(i))) {
 						
-						FluidStack fstack = FluidUtils.getFluidForItem(stack);
+						FluidStack fstack = FluidUtils.getFluidForItem(inv.getStackInSlot(i));
 						if(fstack != null && fstack.getFluid() == AdvancedRocketryFluids.fluidOxygen)
 							list.add(inv.getStackInSlot(i));
 					}
@@ -231,14 +231,14 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 			List<ItemStack> list = new LinkedList<ItemStack>();
 
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
-				if(inv.getStackInSlot(i) != null) {
+				if(!inv.getStackInSlot(i).isEmpty()) {
 					
 					if( i < 2 && inv.getStackInSlot(i).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP)) {
 						list.add(inv.getStackInSlot(i));
 					}
 					else if(inv.getStackInSlot(i).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP)) {
 						
-						FluidStack fstack = FluidUtils.getFluidForItem(stack);
+						FluidStack fstack = FluidUtils.getFluidForItem(inv.getStackInSlot(i));
 						if(fstack != null && fstack.getFluid() == AdvancedRocketryFluids.fluidOxygen)
 							list.add(inv.getStackInSlot(i));
 					}
