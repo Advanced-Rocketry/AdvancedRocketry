@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.ISatelliteIdItem;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
+import zmaster587.advancedRocketry.item.ItemSatellite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
@@ -17,6 +18,8 @@ public abstract class SatelliteBase {
 	
 	protected SatelliteProperties satelliteProperties;
 	private int dimId = -1;
+	//Will always be of type ItemSatellite
+	protected ItemStack satellite;
 
 	private boolean isDead;
 	
@@ -24,6 +27,7 @@ public abstract class SatelliteBase {
 		satelliteProperties = new SatelliteProperties();
 		satelliteProperties.setSatelliteType(SatelliteRegistry.getKey(this.getClass()));
 		isDead = false;
+		satellite = ItemStack.EMPTY;
 	}
 	
 	public boolean acceptsItemInConstruction(ItemStack item) {
@@ -70,7 +74,7 @@ public abstract class SatelliteBase {
 	 * @return true if the item stack is a valid controller for the satellite
 	 */
 	public boolean isAcceptableControllerItemStack(ItemStack stack) {
-		return stack != null && stack.getItem() == AdvancedRocketryItems.itemSatelliteIdChip;
+		return !stack.isEmpty() && stack.getItem() == AdvancedRocketryItems.itemSatelliteIdChip;
 	}
 	
 	/**
@@ -123,8 +127,13 @@ public abstract class SatelliteBase {
 	/**
 	 * @param satelliteProperties satelliteProperties to assign to this satellite
 	 */
-	public void setProperties(SatelliteProperties satelliteProperties) {
-		this.satelliteProperties = satelliteProperties;
+	public void setProperties(ItemStack stack) {
+		this.satelliteProperties = ((ItemSatellite)stack.getItem()).getSatellite(stack);
+		this.satellite = stack;
+	}
+	
+	public ItemStack getItemStackFromSatellite() {
+		return satellite;
 	}
 	
 	/**
@@ -145,11 +154,18 @@ public abstract class SatelliteBase {
 		nbt.setTag("properties", properties);
 		nbt.setInteger("dimId", dimId);
 		
+		NBTTagCompound itemNBT = new NBTTagCompound();
+		//Transition
+		if(!satellite.isEmpty())
+			satellite.writeToNBT(itemNBT);
+		nbt.setTag("item", itemNBT);
+		
 	}
 	
 	public void readFromNBT(NBTTagCompound nbt) {
 		satelliteProperties.readFromNBT(nbt.getCompoundTag("properties"));
 		dimId = nbt.getInteger("dimId");
+		satellite = new ItemStack(nbt.getCompoundTag("item"));
 	}
 	
 	public void writeDataToNetwork(ByteBuf out, byte packetId) {

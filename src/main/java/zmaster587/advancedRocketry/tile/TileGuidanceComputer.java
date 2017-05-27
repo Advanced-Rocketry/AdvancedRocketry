@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.tile;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,9 +12,12 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants.NBT;
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
+import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -72,6 +76,14 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		return ((SpaceObject)obj).getPadAtLocation(myLoc);
 	}
 
+	public long getTargetSatellite() {
+		ItemStack stack = getStackInSlot(0);
+		if(!stack.isEmpty() && stack.getItem() instanceof ItemSatelliteIdentificationChip) {
+			return ((ItemSatelliteIdentificationChip)stack.getItem()).getSatelliteId(stack);
+		}
+		return -1;
+	}
+	
 	/**
 	 * Gets the dimension to travel to if applicable
 	 * @return The dimension to travel to or -1 if not valid
@@ -79,7 +91,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	public int getDestinationDimId(int currentDimension, BlockPos pos) {
 		ItemStack stack = getStackInSlot(0);
 
-		if(stack != null){
+		if(!stack.isEmpty()){
 			Item itemType = stack.getItem();
 			if (itemType instanceof ItemPlanetIdentificationChip) {
 				ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)itemType;
@@ -98,6 +110,13 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 			else if(itemType instanceof ItemAsteroidChip) {
 				return currentDimension;
 			}
+			else if(itemType instanceof ItemSatelliteIdentificationChip) {
+				long l = getTargetSatellite();
+				if(l != -1) {
+					SatelliteBase sat = DimensionManager.getInstance().getSatellite(l);
+					return sat.getDimensionId();
+				}
+			}
 
 		}
 
@@ -110,7 +129,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	 */
 	public Vector3F<Float> getLandingLocation(int landingDimension, boolean commit) {
 		ItemStack stack = getStackInSlot(0);
-		if(stack != null && stack.getItem() instanceof ItemStationChip) {
+		if(!stack.isEmpty() && stack.getItem() instanceof ItemStationChip) {
 			ItemStationChip chip = (ItemStationChip)stack.getItem();
 			if(landingDimension == Configuration.spaceDimId) {
 				//TODO: handle Exception
@@ -198,14 +217,14 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		super.setInventorySlotContents(slot, stack);
 
 		//If the item in the slot is modified then reset dimid
-		if(stack != null)
+		if(!stack.isEmpty())
 			destinationId = -1;
 	}
 
 	public void setReturnPosition(Vector3F<Float> pos, int dimId) {
 		ItemStack stack = getStackInSlot(0);
 
-		if(stack != null && stack.getItem() instanceof ItemStationChip) {
+		if(!stack.isEmpty() && stack.getItem() instanceof ItemStationChip) {
 			ItemStationChip item = (ItemStationChip)stack.getItem();
 			item.setTakeoffCoords(stack, pos, dimId);
 		}

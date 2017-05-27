@@ -7,6 +7,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
+import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.ZUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -15,8 +16,10 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class ItemSatellite extends ItemIdWithName {
 
+	@Deprecated
 	public SatelliteProperties getSatellite(ItemStack stack) {
 
+		//return getSatelliteProperties(stack);
 		if(stack.hasTagCompound()) {
 			NBTTagCompound nbt = stack.getTagCompound();
 
@@ -29,12 +32,76 @@ public class ItemSatellite extends ItemIdWithName {
 		return null;
 	}
 
+	public SatelliteProperties getSatelliteProperties(ItemStack stackIn) {
+		if(stackIn.hasTagCompound()) {
+			int powerStorage = 0, powerGeneration = 0, maxData = 0;
+			EmbeddedInventory inv = readInvFromNBT(stackIn);
+
+			if(inv.getStackInSlot(0).isEmpty())
+				return null;
+			
+			String satType = SatelliteRegistry.getSatelliteProperty(inv.getStackInSlot(0)).getSatelliteType();
+			SatelliteBase sat = SatelliteRegistry.getSatallite(satType);
+
+			for(int i = 0; i < inv.getSizeInventory(); i++) {
+				ItemStack stack = inv.getStackInSlot(i);
+				if(!stack.isEmpty()) {
+					SatelliteProperties properties = SatelliteRegistry.getSatelliteProperty(stack);
+
+					if(!sat.acceptsItemInConstruction(stack))
+						continue;
+
+					powerStorage += properties.getPowerStorage();
+					powerGeneration += properties.getPowerGeneration();
+					maxData += properties.getMaxDataStorage();
+				}
+			}
+
+			return new SatelliteProperties(powerGeneration, powerStorage, satType, maxData);
+		}
+		
+		return null;
+	}
+
+	public EmbeddedInventory readInvFromNBT(ItemStack stackIn) {
+		EmbeddedInventory inv = new EmbeddedInventory(7);
+		if(!stackIn.hasTagCompound() || !stackIn.getTagCompound().hasKey("inv"))
+			return inv;
+
+		inv.readFromNBT(stackIn.getTagCompound().getCompoundTag("inv"));
+		return inv;
+	}
+
+	public void writeInvToNBT(ItemStack stackIn, EmbeddedInventory inv) {
+		NBTTagCompound nbt = new NBTTagCompound();
+		if(!stackIn.hasTagCompound())
+			stackIn.setTagCompound(nbt);
+		else
+			nbt = stackIn.getTagCompound();
+
+		NBTTagCompound tag = new NBTTagCompound(); 
+		inv.writeToNBT(tag);
+		nbt.setTag("inv", tag);
+	}
+
 	public void setSatellite(ItemStack stack, SatelliteProperties satellite) {
 
 		SatelliteBase satellite2 = SatelliteRegistry.getSatallite(satellite.getSatelliteType());
 		if(satellite2 != null) {
-			NBTTagCompound nbt = new NBTTagCompound();
+				
+			NBTTagCompound nbt;
+			if(stack.hasTagCompound())
+				nbt = stack.getTagCompound();
+			else
+				nbt = new NBTTagCompound();
 
+			SatelliteProperties internalProps = getSatelliteProperties(stack);
+			if(internalProps != null) {
+				satellite.setMaxData(internalProps.getMaxDataStorage());
+				satellite.setPowerGeneration(internalProps.getPowerGeneration());
+				satellite.setPowerStorage(internalProps.getMaxDataStorage());
+			}
+			
 			satellite.writeToNBT(nbt);
 			stack.setTagCompound(nbt);
 
@@ -78,7 +145,9 @@ public class ItemSatellite extends ItemIdWithName {
 				else
 					list.add(ChatFormatting.YELLOW + "No Data Storage!");
 			}
-
+		}
+		else {
+			list.add(ChatFormatting.RED + "Empty Chassis");
 		}
 	}
 }

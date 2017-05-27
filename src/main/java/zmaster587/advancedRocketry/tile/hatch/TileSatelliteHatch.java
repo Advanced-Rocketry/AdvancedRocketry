@@ -25,7 +25,7 @@ public class TileSatelliteHatch extends TileInventoryHatch {
 	public SatelliteBase getSatellite() {
 
 		ItemStack itemStack = inventory.getStackInSlot(0);
-		if(itemStack != null && itemStack.getItem() instanceof ItemSatellite) {
+		if(!itemStack.isEmpty() && itemStack.getItem() instanceof ItemSatellite) {
 			SatelliteProperties properties = ((ItemSatellite)itemStack.getItem()).getSatellite(itemStack);
 
 			SatelliteBase satellite = SatelliteRegistry.getSatallite(properties.getSatelliteType());
@@ -33,7 +33,7 @@ public class TileSatelliteHatch extends TileInventoryHatch {
 			if(satellite == null)
 				return null;
 			
-			satellite.setProperties(properties);
+			satellite.setProperties(itemStack);
 			return satellite;
 		}
 		else

@@ -29,9 +29,9 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 	}
 	
 	@Override
-	public void setProperties(SatelliteProperties satelliteProperties) {
+	public void setProperties(ItemStack satelliteProperties) {
 		super.setProperties(satelliteProperties);
-		battery = new UniversalBattery(Math.max(satelliteProperties.getPowerStorage(),1));
+		battery = new UniversalBattery(Math.max(this.satelliteProperties.getPowerStorage(),1));
 	}
 	
 	@Override
