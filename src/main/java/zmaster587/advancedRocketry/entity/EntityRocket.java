@@ -19,6 +19,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -730,7 +731,21 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		super.onOrbitReached();
 
 		//TODO: support multiple riders and rider/satellite combo
-		if(!stats.hasSeat()) {
+		long targetSatellite;
+		if(storage.getGuidanceComputer() != null && (targetSatellite = storage.getGuidanceComputer().getTargetSatellite()) != -1L) {
+			SatelliteBase sat = DimensionManager.getInstance().getSatellite(targetSatellite);
+			for(TileEntity tile : storage.getTileEntityList()) {
+				if(tile instanceof TileSatelliteHatch && ((IInventory)tile).getStackInSlot(0) == null) {
+					((IInventory)tile).setInventorySlotContents(0, sat.getItemStackFromSatellite());
+					DimensionManager.getInstance().getDimensionProperties(sat.getDimensionId()).removeSatellite(targetSatellite);
+					break;
+				}
+			}
+			this.motionY = -this.motionY;
+			setInOrbit(true);
+			
+		}
+		else if(!stats.hasSeat()) {
 
 			TileGuidanceComputer computer = storage.getGuidanceComputer();
 			if(computer != null && computer.getStackInSlot(0) != null &&
@@ -913,6 +928,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 		}
 
+		//If we're on a space station get the id of the planet, not the station
 		int thisDimId = this.worldObj.provider.getDimension();
 		if(this.worldObj.provider.getDimension() == Configuration.spaceDimId) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.getPosition());
@@ -920,6 +936,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				thisDimId = object.getProperties().getParentProperties().getId();
 		}
 
+		//Check to see if it's possible to reach
 		if(finalDest != -1 && (!storage.hasWarpCore() || DimensionManager.getInstance().getDimensionProperties(finalDest).getStarId() != DimensionManager.getInstance().getDimensionProperties(thisDimId).getStarId()) && !DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, thisDimId)) {
 			setError(LibVulpes.proxy.getLocalizedString("error.rocket.notSameSystem"));
 			return;
