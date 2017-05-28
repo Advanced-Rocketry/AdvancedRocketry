@@ -78,9 +78,9 @@ dependencies {
     compile name: 'LibVulpes', version: '1.10.2-0.1.19-13-deobf', ext: 'jar'
     
     // compile against the JEI API
-    deobfCompile "mezz.jei:jei_1.10.2:3.14.7.416:api"
+    deobfCompile "mezz.jei:jei_1.10.2:3.14.7.419:api"
     // at runtime, use the full JEI jar
-    runtime "mezz.jei:jei_1.10.2:3.14.7.416"
+    runtime "mezz.jei:jei_1.10.2:3.14.7.419"
 
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
