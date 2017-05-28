@@ -6,8 +6,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidStack;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
+import mezz.jei.api.gui.IGuiFluidStackGroup;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
@@ -49,13 +51,16 @@ public abstract class MachineCategoryTemplate<T extends MachineRecipe> extends B
 	public void setRecipe(IRecipeLayout recipeLayout,
 			T recipeWrapper, IIngredients ingredients) {
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
+		IGuiFluidStackGroup guiFluidStacks = recipeLayout.getFluidStacks();
 		
 		for(int i = 0; i < 10; i++ ) {
 			guiItemStacks.init(i, true,   18*(i%3),  18*(i/3));
+			guiFluidStacks.init(i, true, 18*(i%3) + 1,  18*(i/3) + 1, 16, 16, 1000, false, new fluidDrawable());
 		}
 		
 		for(int i = 0; i < 10; i++ ) {
 			guiItemStacks.init(i+9, false, 108 + 18*(i%3),  18*(i/3));
+			guiFluidStacks.init(i+9, false, 108 + 18*(i%3) + 1,  18*(i/3) + 1, 16, 16, 1000, false, new fluidDrawable());
 		}
 		
 		int i = 0;
@@ -64,11 +69,47 @@ public abstract class MachineCategoryTemplate<T extends MachineRecipe> extends B
 			guiItemStacks.set(i++, stacks);
 		}
 		
+		for(List<FluidStack> stacks : ingredients.getInputs(FluidStack.class)) {
+			guiFluidStacks.set(i++, stacks);
+		}
+		
 		i = 9;
 		
 		for(ItemStack stacks : ingredients.getOutputs(ItemStack.class)) {
 			guiItemStacks.set(i++, stacks);
 		}
+		
+		for(FluidStack stacks : ingredients.getOutputs(FluidStack.class)) {
+			guiFluidStacks.set(i++, stacks);
+		}
 	}
 
+	static class fluidDrawable implements IDrawable {
+
+		@Override
+		public int getWidth() {
+			// TODO Auto-generated method stub
+			return 18;
+		}
+
+		@Override
+		public int getHeight() {
+			// TODO Auto-generated method stub
+			return 18;
+		}
+
+		@Override
+		public void draw(Minecraft minecraft) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void draw(Minecraft minecraft, int xOffset, int yOffset) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
 }
