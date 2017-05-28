@@ -63,10 +63,11 @@ public class TileRollingMachine extends TileMultiblockMachine {
 
 	@Override
 	public void registerRecipes() {
-		RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 0), 100, 1, "sheetIron", "sheetIron");
-		RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 1), 200, 2, "sheetSteel", "sheetSteel");
-		RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 2), 100, 1, "sheetAluminum", "sheetAluminum");
-		RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 3), 1000, 8, "sheetTitanium", "sheetTitanium");
+		FluidStack water = new FluidStack(FluidRegistry.WATER, 100);
+		RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 0), 100, 1, "sheetIron", "sheetIron", water);
+		RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 1), 200, 2, "sheetSteel", "sheetSteel", water);
+		RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 2), 100, 1, "sheetAluminum", "sheetAluminum", water);
+		RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 3), 1000, 8, "sheetTitanium", "sheetTitanium", water);
 	}
 	
 	@Override
@@ -95,13 +96,6 @@ public class TileRollingMachine extends TileMultiblockMachine {
 		return super.canProcessRecipe(recipe);
 	}
 
-
-	@Override
-	public void consumeItems(IRecipe recipe) {
-		super.consumeItems(recipe);
-		IFluidHandler fluidHandler = fluidInPorts.get(0);
-		fluidHandler.drain(new FluidStack(FluidRegistry.WATER, 100), true);
-	}
 
 	@Override
 	public SoundEvent getSound() {

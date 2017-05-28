@@ -7,7 +7,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
+import zmaster587.advancedRocketry.entity.EntityElevatorCapsule;
 import zmaster587.advancedRocketry.network.PacketOxygenState;
+import zmaster587.advancedRocketry.util.ItemAirUtils;
 import zmaster587.libVulpes.network.PacketHandler;
 
 public class AtmosphereLowOxygen extends AtmosphereType {
@@ -39,12 +41,18 @@ public class AtmosphereLowOxygen extends AtmosphereType {
 
 		//Checks if player is wearing spacesuit or anything that extends ItemSpaceArmor
 
+		ItemStack feet = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
+		ItemStack leg = player.getItemStackFromSlot(EntityEquipmentSlot.LEGS /*so hot you can fry an egg*/ );
 		ItemStack chest = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 		ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
 		return (player instanceof EntityPlayer && ((EntityPlayer)player).capabilities.isCreativeMode) 
-				|| player.getRidingEntity() instanceof EntityRocketBase ||
-				helm != null && helm.hasCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, EnumFacing.DOWN) && helm.getCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, EnumFacing.DOWN).protectsFromSubstance(this, helm, true) &&
-				chest != null && chest.hasCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, EnumFacing.DOWN) && chest.getCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, EnumFacing.DOWN).protectsFromSubstance(this, chest, true);
+				|| player.getRidingEntity() instanceof EntityRocketBase || player.getRidingEntity() instanceof EntityElevatorCapsule ||
+				protectsFrom(helm) && protectsFrom(leg) && protectsFrom(feet) && protectsFrom(chest);
+		}
+
+	public boolean protectsFrom(ItemStack stack) {
+		return (ItemAirUtils.INSTANCE.isStackValidAirContainer(stack) && new ItemAirUtils.ItemAirWrapper(stack).protectsFromSubstance(this, stack, true) ) || (!stack.isEmpty() && stack.hasCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null) &&
+				stack.getCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null).protectsFromSubstance(this, stack, true));
 	}
 }
