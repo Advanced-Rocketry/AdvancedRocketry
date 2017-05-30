@@ -743,7 +743,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 			this.motionY = -this.motionY;
 			setInOrbit(true);
-			
+
 		}
 		else if(!stats.hasSeat()) {
 
@@ -851,13 +851,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				if(stack != null && stack.getItem() == AdvancedRocketryItems.itemSpaceStation) {
 					StorageChunk storage = ((ItemPackedStructure)stack.getItem()).getStructure(stack);
 					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation((int)ItemStationChip.getUUID(stack));
-					
+
 					//in case of no NBT data or the like
 					if(object == null) {
 						tile.setInventorySlotContents(0, null);
 						continue;
 					}
-					
+
 					SpaceObjectManager.getSpaceManager().moveStationToBody(object, this.worldObj.provider.getDimension());
 
 					//Vector3F<Integer> spawn = object.getSpawnLocation();
@@ -867,9 +867,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				}
 			}
 			else {
+				int destinationId = storage.getDestinationDimId(worldObj.provider.getDimension(), (int)posX, (int)posZ);
 				DimensionProperties properties = DimensionManager.getEffectiveDimId(worldObj, this.getPosition());
-				World world = net.minecraftforge.common.DimensionManager.getWorld(properties.getId());
-
+				World world;
+				if(destinationId == Configuration.spaceDimId || destinationId == -1)
+					world = net.minecraftforge.common.DimensionManager.getWorld(properties.getId());
+				else
+					world = net.minecraftforge.common.DimensionManager.getWorld(destinationId);
+				
 				properties.addSatallite(satellite, world);
 				tile.setInventorySlotContents(0, null);
 			}

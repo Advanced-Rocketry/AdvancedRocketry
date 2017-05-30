@@ -54,7 +54,7 @@ public class MachineRecipe extends BlankRecipeWrapper {
 			int recipeHeight, int mouseX, int mouseY) {
 		
 			String powerString = String.format("Power: %d RF/t", energy);
-			FontRenderer fontRendererObj = minecraft.fontRenderer;
+			FontRenderer fontRendererObj = minecraft.fontRendererObj;
 			int stringWidth = fontRendererObj.getStringWidth(powerString);
 			fontRendererObj.drawString(powerString, 0, 55, Color.black.getRGB());
 			
