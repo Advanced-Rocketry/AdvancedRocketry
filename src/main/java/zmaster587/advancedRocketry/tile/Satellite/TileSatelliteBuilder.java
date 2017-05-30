@@ -9,6 +9,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
@@ -188,10 +189,11 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		modules.add(new ModulePower(18, 20, getBatteries()));
-		modules.add(new ModuleTexturedSlotArray(152, 10, this, 0, 1, TextureResources.functionComponent)); //Functional Piece
-		modules.add(new ModuleTexturedSlotArray(116, 30, this, 1, 4, TextureResources.powercomponent));  //Generators
-		modules.add(new ModuleTexturedSlotArray(116, 50, this, 4, 7, TextureResources.ioSlot));
+		modules.add(new ModuleTexturedLimitedSlotArray(152, 10, this, 0, 1, TextureResources.functionComponent)); //Functional Piece
+		modules.add(new ModuleTexturedLimitedSlotArray(116, 30, this, 1, 4, TextureResources.powercomponent));  //Generators
+		modules.add(new ModuleTexturedLimitedSlotArray(116, 50, this, 4, 7, TextureResources.ioSlot));
 		modules.add(new ModuleOutputSlotArray(58, 36, this, 7, 8));   // Output
+		modules.add(new ModuleTexturedSlotArray(38, 16, this, chassisSlot, chassisSlot + 1, TextureResources.ioSlot)); 	// Id chip
 		modules.add(new ModuleTexturedSlotArray(58, 16, this, chipSlot, chipSlot + 1, TextureResources.idChip)); 	// Id chip
 		modules.add(new ModuleTexturedSlotArray(82, 16, this, chipCopySlot, chipCopySlot+1, TextureResources.idChip)); 	// Id chip
 		modules.add(new ModuleProgress(75, 36, 0, new ProgressBarImage(217,0, 17, 17, 234, 0, ForgeDirection.DOWN, TextureResources.progressBars), this));
