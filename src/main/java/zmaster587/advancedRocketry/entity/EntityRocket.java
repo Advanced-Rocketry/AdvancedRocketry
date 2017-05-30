@@ -861,10 +861,15 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				}
 			}
 			else {
+				int destinationId = storage.getDestinationDimId(world.provider.getDimension(), (int)posX, (int)posZ);
 				DimensionProperties properties = DimensionManager.getEffectiveDimId(world, this.getPosition());
-				World world = net.minecraftforge.common.DimensionManager.getWorld(properties.getId());
-
-				properties.addSatallite(satellite, world);
+				World world2;
+				if(destinationId == Configuration.spaceDimId || destinationId == -1)
+					world2 = net.minecraftforge.common.DimensionManager.getWorld(properties.getId());
+				else
+					world2 = net.minecraftforge.common.DimensionManager.getWorld(destinationId);
+				
+				properties.addSatallite(satellite, world2);
 				tile.setInventorySlotContents(0, null);
 			}
 		}
