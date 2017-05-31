@@ -32,6 +32,7 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.entity.fx.FxSystemElectricArc;
+import zmaster587.advancedRocketry.item.ItemBiomeChanger;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.satellite.SatelliteBiomeChanger;
@@ -44,6 +45,7 @@ import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleImage;
 import zmaster587.libVulpes.inventory.modules.ModuleLimitedSlotArray;
+import zmaster587.libVulpes.inventory.modules.ModuleLiquidIndicator;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
 import zmaster587.libVulpes.inventory.modules.ModuleRadioButton;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
@@ -53,15 +55,17 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine.NetworkPackets;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.IconResource;
 
-public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
+public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements IInventory {
 
 	private ModuleToggleSwitch buttonIncrease, buttonDecrease;
 	private ModuleRadioButton radioButton;
 	private ModuleText text;
 	private EmbeddedInventory inv;
+	private boolean outOfFluid;
 
 	private static final Object[][][] structure = new Object[][][]{                                                                                                                                                                                                                                                                                                        
 		{   {null,         null,          null,              null,               null,                                      null,                                    null,                null,                                 null,                                   null,                                    null,                null,                                      null,                                    null,               null,              null,           null},
@@ -285,7 +289,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 		completionTime = (int) (18000 * Configuration.terraformSpeed);
 		buttonIncrease = new ModuleToggleSwitch(40, 20, 1, "Increase Atm", this, TextureResources.buttonScan, 80, 16,true);
 		buttonDecrease = new ModuleToggleSwitch(40, 38, 2, "Decrease Atm", this, TextureResources.buttonScan, 80, 16, false);
-		text = new ModuleText(180, 30, "", 0x282828);
+		text = new ModuleText(10, 100, "", 0x282828);
 		powerPerTick = 1000;
 
 		List<ModuleToggleSwitch> buttons = new LinkedList<ModuleToggleSwitch>();
@@ -293,6 +297,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 		buttons.add(buttonDecrease);
 		radioButton = new ModuleRadioButton(this, buttons);
 		inv = new EmbeddedInventory(1);
+		outOfFluid = false;
 	}
 
 	private int getCompletionTime() {
@@ -302,25 +307,43 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		List<ModuleBase> modules =  super.getModules(ID, player);
-
-
+		
 		//Backgrounds
 		if(world.isRemote) {
-			modules.add(new ModuleImage(173, 0, new IconResource(90, 0, 84, 48, CommonResources.genericBackground)));
+			modules.add(new ModuleImage(173, 0, new IconResource(90, 0, 84, 88, CommonResources.genericBackground)));
 		}
-
+		
 		modules.add(radioButton);
 		modules.add(new ModuleProgress(30, 57, 0, zmaster587.advancedRocketry.inventory.TextureResources.terraformProgressBar, this));
 		modules.add(text);
+		
 		setText();
 
-		modules.add(new ModuleLimitedSlotArray(150, 64, inv, 0, 1));
+		modules.add(new ModuleLimitedSlotArray(150, 64, this, 0, 1));
+		int i = 0;
+		modules.add(new ModuleText(180, 10, "Gas Status", 0x282828));
+		for(IFluidHandler tile : fluidInPorts) {
+			modules.add(new ModuleLiquidIndicator(180 + i*16, 30, tile));
+			i++;
+		}
 
 		return modules;
 	}
 
 	private void setText() {
-		text.setText(String.format("Pressure: %.2f" ,DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getAtmosphereDensity()/100f));
+
+		String statusText;
+		ItemStack biomeChanger = inv.getStackInSlot(0);
+		if(isRunning())
+			statusText = "Running";
+		else if(!hasValidBiomeChanger())
+			statusText = "Missing biome changer link";
+		else if(outOfFluid)
+			statusText = "Aborted: Ran out of gasses";
+		else
+			statusText = "Not running";
+
+		text.setText(String.format("Status:\n%s\n\nPressure: %.2f" , statusText,DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getAtmosphereDensity()/100f));
 	}
 
 	@Override
@@ -383,13 +406,17 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 					requiredO2 -= stack.amount;
 			}
 
-			ItemStack stack = inv.getStackInSlot(0);
-			SatelliteBase satellite;
-			if(!world.isRemote && ( requiredN2 != 0 || requiredO2 != 0 || stack == null || stack.getItem() != AdvancedRocketryItems.itemBiomeChanger 
-					|| (satellite = ((ItemSatelliteIdentificationChip)AdvancedRocketryItems.itemBiomeChanger).getSatellite(stack)).getDimensionId() != world.provider.getDimension() ||
-					!(satellite instanceof SatelliteBiomeChanger))) {
-				this.setMachineEnabled(false);
-				this.setMachineRunning(false);
+			if(!world.isRemote) {
+				if(requiredN2 != 0 || requiredO2 != 0) {
+					outOfFluid = true;
+					this.setMachineEnabled(false);
+					this.setMachineRunning(false);
+					markDirty();
+				}
+				else if(!hasValidBiomeChanger()) {
+					this.setMachineEnabled(false);
+					this.setMachineRunning(false);
+				}
 			}
 		}
 	}
@@ -401,6 +428,15 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 	@Override
 	public int getSoundDuration() {
 		return 80;
+	}
+
+	private boolean hasValidBiomeChanger() {
+		ItemStack biomeChanger = inv.getStackInSlot(0);
+		SatelliteBase satellite;
+				
+		return biomeChanger != null && (biomeChanger.getItem() instanceof ItemBiomeChanger) && DimensionManager.getInstance().getSatellite(((ItemBiomeChanger)biomeChanger.getItem()).getSatelliteId(biomeChanger)) != null &&
+				(satellite = ((ItemSatelliteIdentificationChip)AdvancedRocketryItems.itemBiomeChanger).getSatellite(biomeChanger)).getDimensionId() == world.provider.getDimension() &&
+				satellite instanceof SatelliteBiomeChanger;
 	}
 
 	@Override
@@ -429,6 +465,8 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		NBTTagCompound nbt = pkt.getNbtCompound();
 		readFromNBT(nbt);
+		setText();
+		
 	}
 
 	@Override
@@ -485,15 +523,20 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 			NBTTagCompound nbt) {
 		super.useNetworkData(player, side, id, nbt);
 		if(!world.isRemote && id == NetworkPackets.TOGGLE.ordinal()) {
+			outOfFluid = false;
 			setMachineRunning(isRunning());
 		}
 	}
 
 	@Override
 	public void onInventoryButtonPressed(int buttonId) {
-		super.onInventoryButtonPressed(buttonId);
-		if(buttonId == 1 || buttonId == 2) {
-			PacketHandler.sendToServer(new PacketMachine(this,(byte)TileMultiblockMachine.NetworkPackets.TOGGLE.ordinal()));
+		if(hasValidBiomeChanger()) {
+			super.onInventoryButtonPressed(buttonId);
+			outOfFluid = false;
+			if(buttonId == 1 || buttonId == 2) {
+				PacketHandler.sendToServer(new PacketMachine(this,(byte)TileMultiblockMachine.NetworkPackets.TOGGLE.ordinal()));
+			}
+			setText();
 		}
 	}
 
@@ -504,6 +547,8 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 		nbt.setInteger("selected", radioButton.getOptionSelected());
 		inv.writeToNBT(nbt);
 
+		nbt.setBoolean("oofluid", outOfFluid);
+		
 		return nbt;
 
 	}
@@ -514,11 +559,98 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer {
 
 		radioButton.setOptionSelected(nbt.getInteger("selected"));
 		inv.readFromNBT(nbt);
+		outOfFluid = nbt.getBoolean("oofluid");
+		
 	}
 
 	@Override
 	public String getMachineName() {
 		return "tile.atmoshereTerraformer.name";
+	}
+
+	@Override
+	public String getName() {
+		return getMachineName();
+	}
+
+	@Override
+	public boolean hasCustomName() {
+		return false;
+	}
+
+	@Override
+	public int getSizeInventory() {
+		return inv.getSizeInventory();
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int index) {
+		return inv.getStackInSlot(index);
+	}
+
+	@Override
+	public ItemStack decrStackSize(int index, int count) {
+		return inv.decrStackSize(index, count);
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		ItemStack stack = inv.removeStackFromSlot(index);
+		if(world.isRemote)
+			setText();
+		return stack;
+	}
+
+	@Override
+	public void setInventorySlotContents(int index, ItemStack stack) {
+		inv.setInventorySlotContents(index, stack);
+		if(world.isRemote)
+			setText();
+	}
+
+	@Override
+	public int getInventoryStackLimit() {
+		return 1;
+	}
+
+	@Override
+	public void openInventory(EntityPlayer player) {
+
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player) {
+
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int index, ItemStack stack) {
+		return inv.isItemValidForSlot(index, stack);
+	}
+
+	@Override
+	public int getField(int id) {
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+
+	}
+
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		inv.clear();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return inv.isEmpty();
 	}
 
 }
