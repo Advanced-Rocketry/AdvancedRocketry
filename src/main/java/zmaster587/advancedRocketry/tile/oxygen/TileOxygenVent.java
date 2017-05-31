@@ -194,7 +194,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements INe
 
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid) {
-		return fluid == AdvancedRocketryFluids.fluidOxygen && super.canFill(from, fluid);
+		return fluid.getID() == AdvancedRocketryFluids.fluidOxygen.getID() && super.canFill(from, fluid);
 	}
 	
 	public boolean getEquivilentPower() {
