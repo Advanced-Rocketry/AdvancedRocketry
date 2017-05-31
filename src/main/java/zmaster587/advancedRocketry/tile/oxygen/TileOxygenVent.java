@@ -41,6 +41,7 @@ import zmaster587.libVulpes.inventory.modules.ModuleRedstoneOutputButton;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
+import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.IAdjBlockUpdate;
 import zmaster587.libVulpes.util.INetworkMachine;
@@ -158,7 +159,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public boolean canFill( Fluid fluid) {
-		return fluid == AdvancedRocketryFluids.fluidOxygen && super.canFill( fluid);
+		return FluidUtils.areFluidsSameType(fluid, AdvancedRocketryFluids.fluidOxygen) && super.canFill( fluid);
 	}
 
 	public boolean getEquivilentPower() {

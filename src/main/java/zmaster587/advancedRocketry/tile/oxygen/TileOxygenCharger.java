@@ -50,15 +50,14 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
 
-		if(resource.getFluid() == AdvancedRocketryFluids.fluidOxygen ||
-				resource.getFluid() == AdvancedRocketryFluids.fluidHydrogen)
+		if(canFill(resource.getFluid()))
 			return super.fill(resource, doFill);
 		return 0;
 	}
 
 	@Override
 	public boolean canFill(Fluid fluid) {
-		return fluid == AdvancedRocketryFluids.fluidOxygen || fluid == AdvancedRocketryFluids.fluidHydrogen;
+		return FluidUtils.areFluidsSameType(fluid, AdvancedRocketryFluids.fluidOxygen) || FluidUtils.areFluidsSameType(fluid, AdvancedRocketryFluids.fluidHydrogen);
 	}	
 
 	@Override
@@ -85,7 +84,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 						FluidStack fluidStack = this.drain(1, false);
 
 						if(fillable.getAirRemaining(stack) < fillable.getMaxAir(stack) &&
-								fluidStack != null && fluidStack.getFluid() == AdvancedRocketryFluids.fluidOxygen && fluidStack.amount > 0)  {
+								fluidStack != null && FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.fluidOxygen) && fluidStack.amount > 0)  {
 							this.drain(1, true);
 							this.markDirty();
 							world.markChunkDirty(getPos(), this);
@@ -97,7 +96,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 
 				//Check for H2 fill (possibly merge with O2 fill
 				//Fix conflict with O2 fill
-				if(this.tank.getFluid() != null && this.tank.getFluid().getFluid() != AdvancedRocketryFluids.fluidOxygen && stack != null && stack.getItem() instanceof IModularArmor) {
+				if(this.tank.getFluid() != null && !FluidUtils.areFluidsSameType(this.tank.getFluid().getFluid(), AdvancedRocketryFluids.fluidOxygen) && stack != null && stack.getItem() instanceof IModularArmor) {
 					IInventory inv = ((IModularArmor)stack.getItem()).loadModuleInventory(stack);
 
 					FluidStack fluidStack = this.drain(100, false);
