@@ -41,7 +41,7 @@ minecraft {
     replace "@REVIS@", version_revis
     replace "@BUILD@", project.getBuildNumber()
     
-    replace "%LIBVULPESVERSION%", "0.2.3"
+    replace "%LIBVULPESVERSION%", "0.2.4"
 }
 
 
@@ -66,7 +66,7 @@ repositories {
 //        }
     ivy {
             name "LibVulpes"
-            artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/MC1.11/2/artifact/output/[module]-[revision].[ext]"
+            artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/MC1.11/4/artifact/output/[module]-[revision].[ext]"
         }
 }
 
@@ -74,7 +74,7 @@ dependencies {
     compile name: 'industrialcraft-2', version: '2.7.39-ex111-api', ext: 'jar'
     compile name: 'Tesla', version: '1.11-1.3.0.51-deobf', ext: 'jar'
     //compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
-    compile name: 'LibVulpes', version: '1.11.2-0.2.3-2-deobf', ext: 'jar'
+    compile name: 'LibVulpes', version: '1.11.2-0.2.4-4-deobf', ext: 'jar'
     
     // compile against the JEI API
     deobfCompile "mezz.jei:jei_1.11.2:4.3.5.277:api"
