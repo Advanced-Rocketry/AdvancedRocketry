@@ -19,6 +19,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
+import zmaster587.advancedRocketry.util.FluidUtils;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
@@ -48,15 +49,14 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
 
-		if(resource.getFluid() == AdvancedRocketryFluids.fluidOxygen ||
-				resource.getFluid() == AdvancedRocketryFluids.fluidHydrogen)
+		if(canFill(resource.getFluid()))
 			return super.fill(resource, doFill);
 		return 0;
 	}
 
 	@Override
 	public boolean canFill(Fluid fluid) {
-		return fluid == AdvancedRocketryFluids.fluidOxygen || fluid == AdvancedRocketryFluids.fluidHydrogen;
+		return FluidUtils.areFluidsSameType(fluid, AdvancedRocketryFluids.fluidOxygen) || FluidUtils.areFluidsSameType(fluid, AdvancedRocketryFluids.fluidHydrogen);
 	}	
 
 	@Override
@@ -75,7 +75,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 					FluidStack fluidStack = this.drain(1, false);
 
 					if(((ItemSpaceArmor)stack.getItem()).getAirRemaining(stack) < ((ItemSpaceArmor)stack.getItem()).getMaxAir() &&
-							fluidStack != null && fluidStack.getFluid() == AdvancedRocketryFluids.fluidOxygen && fluidStack.amount > 0)  {
+							fluidStack != null && FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.fluidOxygen) && fluidStack.amount > 0)  {
 						this.drain(1, true);
 						((ItemSpaceArmor)stack.getItem()).increment(stack, 100);
 

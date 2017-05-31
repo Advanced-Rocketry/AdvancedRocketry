@@ -32,6 +32,7 @@ import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.util.FluidUtils;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.api.IJetPack;
 import zmaster587.libVulpes.api.IModularArmor;
@@ -173,7 +174,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 
 			if(fuelTank != null && fuelTank.getItem() instanceof IFluidContainerItem) {
 				FluidStack fluid = ((IFluidContainerItem)fuelTank.getItem()).drain(fuelTank, 1, false);
-				if(fluid != null && fluid.getFluid() == AdvancedRocketryFluids.fluidHydrogen) {
+				if(fluid != null && FluidUtils.areFluidsSameType(fluid.getFluid(), AdvancedRocketryFluids.fluidHydrogen)) {
 					((IFluidContainerItem)fuelTank.getItem()).drain(fuelTank, 1, true);
 					hasFuel = true;
 					break;
@@ -332,7 +333,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 				FluidStack fluid = ((IFluidContainerItem)currentStack.getItem()).getFluid(currentStack);
 				if(fluid == null)
 					maxAmt += ((IFluidContainerItem)currentStack.getItem()).getCapacity(currentStack);
-				else if(fluid.getFluid() == AdvancedRocketryFluids.fluidHydrogen) {
+				else if(FluidUtils.areFluidsSameType(fluid.getFluid(), AdvancedRocketryFluids.fluidHydrogen)) {
 					maxAmt += ((IFluidContainerItem)currentStack.getItem()).getCapacity(currentStack);
 					amt += fluid.amount;
 				}
