@@ -27,7 +27,7 @@ import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
-import zmaster587.advancedRocketry.util.FluidUtils;
+import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.advancedRocketry.api.AreaBlob;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IToggleableMachine;
