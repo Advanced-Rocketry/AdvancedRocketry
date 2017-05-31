@@ -22,6 +22,7 @@ import zmaster587.advancedRocketry.api.armor.IFillableArmor;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.armor.ItemSpaceChest;
 import zmaster587.advancedRocketry.util.ItemAirUtils;
+import zmaster587.advancedRocketry.util.FluidUtils;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
@@ -51,15 +52,14 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
 
-		if(resource.getFluid() == AdvancedRocketryFluids.fluidOxygen ||
-				resource.getFluid() == AdvancedRocketryFluids.fluidHydrogen)
+		if(canFill(resource.getFluid()))
 			return super.fill(resource, doFill);
 		return 0;
 	}
 
 	@Override
 	public boolean canFill(Fluid fluid) {
-		return fluid == AdvancedRocketryFluids.fluidOxygen || fluid == AdvancedRocketryFluids.fluidHydrogen;
+		return FluidUtils.areFluidsSameType(fluid, AdvancedRocketryFluids.fluidOxygen) || FluidUtils.areFluidsSameType(fluid, AdvancedRocketryFluids.fluidHydrogen);
 	}	
 
 	@Override
@@ -72,7 +72,6 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 		if(!worldObj.isRemote) {
 			for( Object player : this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos, pos.add(1,2,1)))) {
 				ItemStack stack = ((EntityPlayer)player).getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-
 				if(stack != null) {
 					IFillableArmor fillable = null;
 
@@ -86,7 +85,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 						FluidStack fluidStack = this.drain(1, false);
 
 						if(fillable.getAirRemaining(stack) < fillable.getMaxAir(stack) &&
-								fluidStack != null && fluidStack.getFluid() == AdvancedRocketryFluids.fluidOxygen && fluidStack.amount > 0)  {
+								fluidStack != null && FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.fluidOxygen) && fluidStack.amount > 0)  {
 							this.drain(1, true);
 							fillable.increment(stack, 100);
 							return true;
