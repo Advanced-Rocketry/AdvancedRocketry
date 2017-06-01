@@ -37,7 +37,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class SpaceObject implements ISpaceObject, IPlanetDefiner {
-	private int posX, posY;
+	private int launchPosX, launchPosZ, posX, posZ;
 	private boolean created;
 	private int altitude;
 	private float orbitalDistance;
@@ -190,20 +190,42 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 		return AdvancedRocketry.proxy.getWorldTimeUniversal(Configuration.spaceDimId);
 	}
 
+
 	/**
-	 * @return the X postion on the graph the object is stored in {@link SpaceObjectManager}
+	 * @return the X location the station was launched from
 	 */
-	public int getPosX() {
+	public int getLaunchPosX() {
+		return launchPosX;
+	}
+
+	/**
+	 * @return the Z location the station was launched from
+	 */
+	public int getLaunchPosZ() {
+		return launchPosZ;
+	}
+	
+	/**
+	 * @return the X coordinate over the planet the station is orbiting
+	 */
+	public int getOrbitalPosX() {
 		return posX;
 	}
 
 	/**
-	 * @return the Y postion on the graph the object is stored in {@link SpaceObjectManager}
+	 * @return the Z coordinate over the planet the station is orbiting
 	 */
-	public int getPosY() {
-		return posY;
+	public int getOrbitalPosZ() {
+		return posZ;
 	}
-
+	
+	/**
+	 * @return orbital velocity in meter per second with respect to the surface
+	 */
+	public double getOrbitalVelocity() {
+		return 0;
+	}
+	
 	/**
 	 * @return the spawn location of the object
 	 */
@@ -422,7 +444,17 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 	@Override
 	public void setPos(int posX, int posY) {
 		this.posX = posX;
-		this.posY = posY;
+		this.posZ = posY;
+	}
+	
+	/**
+	 * Sets the launch coordinates of the space object
+	 * @param posX
+	 * @param posY
+	 */
+	public void setLaunchPos(int posX, int posY) {
+		this.launchPosX = posX;
+		this.launchPosZ = posY;
 	}
 
 	/**
@@ -479,6 +511,8 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 		if(!created) {
 			chunk.pasteInWorld(worldObj, spawnLocation.x - chunk.getSizeX()/2, spawnLocation.y - chunk.getSizeY()/2, spawnLocation.z - chunk.getSizeZ()/2);
 			created = true;
+			setLaunchPos((int)posX, (int)posZ);
+			setPos((int)posX, (int)posZ);
 		}
 		else {
 			List<TileEntity> tiles = chunk.getTileEntityList();
@@ -545,8 +579,10 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 		properties.writeToNBT(nbt);
 		nbt.setBoolean("created", created);
 		nbt.setInteger("id", getId());
+		nbt.setInteger("launchposX", launchPosX);
+		nbt.setInteger("launchposY", launchPosZ);
 		nbt.setInteger("posX", posX);
-		nbt.setInteger("posY", posY);
+		nbt.setInteger("posY", posZ);
 		nbt.setInteger("alitude", altitude);
 		nbt.setInteger("spawnX", spawnLocation.x);
 		nbt.setInteger("spawnY", spawnLocation.y);
@@ -612,10 +648,12 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 		if((int)orbitalDistance != properties.getParentOrbitalDistance())
 			orbitalDistance = properties.getParentOrbitalDistance();
 
-		created = nbt.getBoolean("created");
 		destinationDimId = nbt.getInteger("destinationDimId");
+		launchPosX = nbt.getInteger("launchposX");
+		launchPosZ = nbt.getInteger("launchposY");
 		posX = nbt.getInteger("posX");
-		posY = nbt.getInteger("posY");
+		posZ = nbt.getInteger("posY");
+		created = nbt.getBoolean("created");
 		altitude = nbt.getInteger("altitude");
 		fuelAmount = nbt.getInteger("fuel");
 		spawnLocation = new BlockPosition(nbt.getInteger("spawnX"), nbt.getInteger("spawnY"), nbt.getInteger("spawnZ"));
