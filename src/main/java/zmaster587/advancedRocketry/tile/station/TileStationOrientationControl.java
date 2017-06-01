@@ -9,6 +9,7 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
@@ -27,17 +28,21 @@ import zmaster587.libVulpes.util.INetworkMachine;
 
 public class TileStationOrientationControl extends TileEntity implements IModularInventory, INetworkMachine, ISliderBar {
 
-	int numRotationsPerHour;
-	int progress;
+	int numRotationsPerHour[];
+	int progress[];
 
 	private ModuleText moduleAngularVelocity, numThrusters, maxAngularAcceleration, targetRotations;
 
 	public TileStationOrientationControl() {
 		moduleAngularVelocity = new ModuleText(6, 15, "Angular Velocity: ", 0xaa2020);
 		//numThrusters = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
-		maxAngularAcceleration = new ModuleText(6, 25, "Maximum Angular Acceleration: ", 0xaa2020);
-		targetRotations = new ModuleText(6, 35, "Target Ang Vel:", 0x202020);
-		progress = getTotalProgress(0)/2;
+		targetRotations = new ModuleText(6, 25, "Target Ang Vel:", 0x202020);
+		progress = new int[3];
+		numRotationsPerHour = new int[3];
+
+		progress[0] = getTotalProgress(0)/2;
+		progress[1] = getTotalProgress(1)/2;
+		progress[2] = getTotalProgress(2)/2;
 	}
 
 	@Override
@@ -45,10 +50,15 @@ public class TileStationOrientationControl extends TileEntity implements IModula
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(moduleAngularVelocity);
 		//modules.add(numThrusters);
-		modules.add(maxAngularAcceleration);
-
+		//modules.add(maxAngularAcceleration);
 		modules.add(targetRotations);
-		modules.add(new ModuleSlider(6, 60, 0, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
+		
+		modules.add(new ModuleText(10, 54, "X:", 0x202020));
+		modules.add(new ModuleText(10, 69, "Y:", 0x202020)); //AYYYY
+		
+		modules.add(new ModuleSlider(24, 50, 0, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
+		modules.add(new ModuleSlider(24, 65, 1, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
+		//modules.add(new ModuleSlider(24, 35, 2, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
 
 		updateText();
 		return modules;
@@ -63,13 +73,13 @@ public class TileStationOrientationControl extends TileEntity implements IModula
 		if(worldObj.isRemote) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.xCoord, this.zCoord);
 			if(object != null) {
-				moduleAngularVelocity.setText(String.format("Angular Velocity: %.1f", 7200D*object.getDeltaRotation()));
-				maxAngularAcceleration.setText(String.format("Maximum Angular Acceleration: %.1f", 7200D*object.getMaxRotationalAcceleration()));
+				moduleAngularVelocity.setText(String.format("Angular Velocity: %.1f %.1f %.1f", 72000D*object.getDeltaRotation(ForgeDirection.EAST), 72000D*object.getDeltaRotation(ForgeDirection.UP), 7200D*object.getDeltaRotation(ForgeDirection.NORTH)));
+				//maxAngularAcceleration.setText(String.format("Maximum Angular Acceleration: %.1f", 7200D*object.getMaxRotationalAcceleration()));
 			}
 
 			//numThrusters.setText("Number Of Thrusters: 0");
 
-			targetRotations.setText(String.format("Target Ang Vel: %d", numRotationsPerHour));
+			targetRotations.setText(String.format("Target Ang Vel: %d %d %d", numRotationsPerHour[0], numRotationsPerHour[1], numRotationsPerHour[2]));
 		}
 	}
 
@@ -80,28 +90,34 @@ public class TileStationOrientationControl extends TileEntity implements IModula
 		if(this.worldObj.provider instanceof WorldProviderSpace) {
 			if(!worldObj.isRemote) {
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.xCoord, this.zCoord);
+				boolean update = false;
 
 				if(object != null) {
-					double targetAngularVelocity = numRotationsPerHour/7200D;
-					double angVel = object.getDeltaRotation();
-					double acc = object.getMaxRotationalAcceleration();
+					ForgeDirection dirs[] = { ForgeDirection.EAST, ForgeDirection.UP, ForgeDirection.NORTH };
+					for(int i = 0; i < 3; i++) {
+						double targetAngularVelocity = numRotationsPerHour[i]/72000D;
+						double angVel = object.getDeltaRotation(dirs[i]);
+						double acc = object.getMaxRotationalAcceleration();
 
-					double difference = targetAngularVelocity - angVel;
+						double difference = targetAngularVelocity - angVel;
 
-					if(difference != 0) {
-						double finalVel = angVel;
-						if(difference < 0) {
-							finalVel = angVel + Math.max(difference, -acc);
-						}
-						else if(difference > 0) {
-							finalVel = angVel + Math.min(difference, acc);
-						}
+						if(difference != 0) {
+							double finalVel = angVel;
+							if(difference < 0) {
+								finalVel = angVel + Math.max(difference, -acc);
+							}
+							else if(difference > 0) {
+								finalVel = angVel + Math.min(difference, acc);
+							}
 
-						object.setDeltaRotation(finalVel);
-						if(!worldObj.isRemote) {
-							//PacketHandler.sendToNearby(new PacketStationUpdate(object, PacketStationUpdate.Type.ROTANGLE_UPDATE), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 1024);
-							PacketHandler.sendToAll(new PacketStationUpdate(object, PacketStationUpdate.Type.ROTANGLE_UPDATE));
+							object.setDeltaRotation(finalVel, dirs[i]);
+							update = true;
 						}
+					}
+					
+					if(!worldObj.isRemote && update) {
+						//PacketHandler.sendToNearby(new PacketStationUpdate(object, PacketStationUpdate.Type.ROTANGLE_UPDATE), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 1024);
+						PacketHandler.sendToAll(new PacketStationUpdate(object, PacketStationUpdate.Type.ROTANGLE_UPDATE));
 					}
 				}
 				else
@@ -124,7 +140,9 @@ public class TileStationOrientationControl extends TileEntity implements IModula
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {
 		if(id == 0) {
-			out.writeShort(progress);
+			out.writeShort(progress[0]);
+			out.writeShort(progress[1]);
+			out.writeShort(progress[2]);
 		}
 	}
 
@@ -133,6 +151,8 @@ public class TileStationOrientationControl extends TileEntity implements IModula
 			NBTTagCompound nbt) {
 		if(packetId == 0) {
 			setProgress(0, in.readShort());
+			setProgress(1, in.readShort());
+			setProgress(2, in.readShort());
 		}
 	}
 
@@ -145,32 +165,40 @@ public class TileStationOrientationControl extends TileEntity implements IModula
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setShort("numRotations", (short)numRotationsPerHour);
+		nbt.setShort("numRotationsX", (short)numRotationsPerHour[0]);
+		nbt.setShort("numRotationsY", (short)numRotationsPerHour[1]);
+		nbt.setShort("numRotationsZ", (short)numRotationsPerHour[2]);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		numRotationsPerHour = nbt.getShort("numRotations");
-		progress = numRotationsPerHour + getTotalProgress(0)/2;
+		numRotationsPerHour[0] = nbt.getShort("numRotationsX");
+		progress[0] = numRotationsPerHour[0] + getTotalProgress(0)/2;
+
+		numRotationsPerHour[1] = nbt.getShort("numRotationsX");
+		progress[1] = numRotationsPerHour[1] + getTotalProgress(1)/2;
+
+		numRotationsPerHour[2] = nbt.getShort("numRotationsX");
+		progress[2] = numRotationsPerHour[2] + getTotalProgress(2)/2;
 	}
 
 
 	@Override
 	public float getNormallizedProgress(int id) {
-		return getProgress(0)/(float)getTotalProgress(0);
+		return getProgress(id)/(float)getTotalProgress(id);
 	}
 
 	@Override
 	public void setProgress(int id, int progress) {
 
-		this.progress = progress;
-		numRotationsPerHour = 1*(progress - getTotalProgress(id)/2);
+		this.progress[id] = progress;
+		numRotationsPerHour[id] = (progress - getTotalProgress(id)/2);
 	}
 
 	@Override
 	public int getProgress(int id) {
-		return this.progress;
+		return this.progress[id];
 	}
 
 	@Override

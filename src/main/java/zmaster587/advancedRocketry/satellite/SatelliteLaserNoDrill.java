@@ -9,20 +9,20 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
-import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.util.ZUtils;
 
 public class SatelliteLaserNoDrill extends SatelliteBase {
 	protected boolean  jammed;
 	protected IInventory boundChest;
 	World world;
-	private static List<BlockMeta> ores;
+	private static List<ItemStack> ores;
 	Random random;
 
 	public SatelliteLaserNoDrill(IInventory boundChest) {
@@ -31,13 +31,66 @@ public class SatelliteLaserNoDrill extends SatelliteBase {
 
 		//isEmpty check because <init> is called in post init to register for holo projector
 		if(ores == null && !Configuration.standardLaserDrillOres.isEmpty()) {
-			ores = new LinkedList<BlockMeta>();
+			ores = new LinkedList<ItemStack>();
 			for(int i = 0; i < Configuration.standardLaserDrillOres.size(); i++) {
 				String oreDictName = Configuration.standardLaserDrillOres.get(i);
-				List<ItemStack> ores2 = OreDictionary.getOres(oreDictName);
+				
+				String args[] = oreDictName.split(":");
+				
+				List<ItemStack> ores2 = OreDictionary.getOres(args[0]);
 
 				if(ores2 != null && !ores2.isEmpty()) {
-					ores.add(new BlockMeta(Block.getBlockFromItem(ores2.get(0).getItem()), ores2.get(0).getItemDamage()));
+					int amt = 5;
+					if(args.length > 1)
+					{
+						try {
+							amt = Integer.parseInt(args[1]);
+						} catch (NumberFormatException e) {}
+					}
+					ores.add(new ItemStack(ores2.get(0).getItem(), amt, ores2.get(0).getItemDamage()));
+				}
+				else
+				{
+					String splitStr[] = oreDictName.split(":");
+					String name = splitStr[0] + ":" + splitStr[1];
+					int meta = 0;
+					int size = 1;
+					//format: "name meta size"
+					if(splitStr.length > 2) {
+						try {
+							meta = Integer.parseInt(splitStr[2]);
+						} catch( NumberFormatException e) {}
+					}
+					if(splitStr.length > 3) {
+						try {
+							size= Integer.parseInt(splitStr[3]);
+						} catch (NumberFormatException e) {}
+					}
+
+					ItemStack stack = null;
+					Block block = Block.getBlockFromName(name);
+					if(block == null) {
+
+						//Try getting item by name first
+						Item item = (Item) Item.itemRegistry.getObject(splitStr[0]);
+
+						if(item != null)
+							stack = new ItemStack(item, size, meta);
+						else {
+							try {
+
+								item = Item.getItemById(Integer.parseInt(splitStr[0]));
+								if(item != null)
+									stack = new ItemStack(item, size, meta);
+							} catch (NumberFormatException e) { continue; }
+
+						}
+					}
+					else
+						stack = new ItemStack(block, size, meta);
+					
+					if(stack != null)
+						ores.add(stack);
 				}
 			}
 		}
@@ -77,8 +130,9 @@ public class SatelliteLaserNoDrill extends SatelliteBase {
 
 		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
 		if(random.nextInt(10) == 0) {
-			BlockMeta item = ores.get(random.nextInt(ores.size()));
-			items.add(new ItemStack(item.getBlock(), 5, item.getMeta()));
+			ItemStack item = ores.get(random.nextInt(ores.size()));
+			ItemStack newStack = item.copy();
+			items.add(newStack);
 		}
 		else
 			items.add(new ItemStack(Blocks.cobblestone, 5));

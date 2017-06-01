@@ -23,6 +23,7 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties.AtmosphereTypes
 import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.advancedRocketry.util.OreGenProperties.OreEntry;
 import zmaster587.libVulpes.util.SingleEntry;
 
 public class XMLOreLoader {
@@ -247,5 +248,42 @@ public class XMLOreLoader {
 		}
 
 		return oreGen.getOreEntries().isEmpty() ? null : oreGen;
+	}
+	
+	public static String writeXML(OreGenProperties gen, int numTabs) {
+		
+		String outputString = "";
+		
+		String tabLen = "";
+		for(int i = 0; i < numTabs; i++) {
+			tabLen += "\t";
+		}
+		
+		outputString = tabLen + "<oreGen ";
+		
+		return outputString;
+	}
+	
+	public static String writeOreEntryXML(OreGenProperties gen, int numTabs) {
+		
+		String outputString = "";
+		
+		String tabLen = "";
+		for(int i = 0; i < numTabs; i++) {
+			tabLen += "\t";
+		}
+		
+		for(OreEntry ore : gen.getOreEntries()) {
+			int meta = ore.getBlockState().getMeta();
+			
+			outputString += tabLen + "<ore block=\"" + Block.blockRegistry.getNameForObject(ore.getBlockState().getBlock()) +
+							(meta == 0 ? "" : "\" meta=\"" + meta)
+							+ "\" minHeight=\"" +
+							ore.getMinHeight() + "\" maxHeight=\"" + ore.getMaxHeight() + "\" clumpSize=\"" + ore.getClumpSize() + "\"" +
+							" chancePerChunk=\"" + ore.getChancePerChunk() + "\" />\n";
+			
+		}
+		
+		return outputString;
 	}
 }

@@ -95,7 +95,7 @@ public class DataStorage {
 	 * @return data amount added
 	 */
 	public int addData(int data, DataType dataType, boolean commit) {
-		if(this.dataType == DataStorage.DataType.UNDEFINED || dataType == DataStorage.DataType.UNDEFINED || dataType == this.dataType) {
+		if((!this.locked && (dataType == DataStorage.DataType.UNDEFINED)) || dataType == this.dataType || this.dataType == DataStorage.DataType.UNDEFINED) {
 
 			if(this.dataType == DataStorage.DataType.UNDEFINED)
 				this.dataType = dataType;

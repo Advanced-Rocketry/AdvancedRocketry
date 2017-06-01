@@ -15,14 +15,17 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockGlass;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Item.ToolMaterial;
@@ -35,7 +38,6 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -48,15 +50,19 @@ import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
+import zmaster587.advancedRocketry.armor.ItemSpaceChest;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereVacuum;
 import zmaster587.advancedRocketry.backwardCompat.VersionCompat;
 import zmaster587.advancedRocketry.block.BlockAdvRocketMotor;
 import zmaster587.advancedRocketry.block.BlockAstroBed;
+import zmaster587.advancedRocketry.block.BlockBeacon;
 import zmaster587.advancedRocketry.block.BlockCharcoalLog;
 import zmaster587.advancedRocketry.block.BlockCrystal;
 import zmaster587.advancedRocketry.block.BlockDoor2;
 import zmaster587.advancedRocketry.block.BlockElectricMushroom;
 import zmaster587.advancedRocketry.block.BlockFluid;
+import zmaster587.advancedRocketry.block.BlockForceField;
+import zmaster587.advancedRocketry.block.BlockForceFieldProjector;
 import zmaster587.advancedRocketry.block.BlockGeneric;
 import zmaster587.advancedRocketry.block.BlockIntake;
 import zmaster587.advancedRocketry.block.BlockLandingPad;
@@ -70,7 +76,7 @@ import zmaster587.advancedRocketry.block.BlockPressurizedFluidTank;
 import zmaster587.advancedRocketry.block.BlockQuartzCrucible;
 import zmaster587.advancedRocketry.block.BlockRedstoneEmitter;
 import zmaster587.advancedRocketry.block.BlockRocketMotor;
-import zmaster587.advancedRocketry.block.BlockRotatableModel;
+import zmaster587.advancedRocketry.block.BlockSeal;
 import zmaster587.advancedRocketry.block.BlockSeat;
 import zmaster587.advancedRocketry.block.BlockFuelTank;
 import zmaster587.advancedRocketry.block.BlockSolarGenerator;
@@ -95,11 +101,16 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.AtmosphereTypes;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
+import zmaster587.advancedRocketry.enchant.EnchantmentSpaceBreathing;
 import zmaster587.advancedRocketry.entity.EntityDummy;
+import zmaster587.advancedRocketry.entity.EntityElevatorCapsule;
 import zmaster587.advancedRocketry.entity.EntityItemAbducted;
 import zmaster587.advancedRocketry.entity.EntityLaserNode;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.entity.EntityStationDeployedRocket;
+import zmaster587.advancedRocketry.entity.EntityUIButton;
+import zmaster587.advancedRocketry.entity.EntityUIPlanet;
+import zmaster587.advancedRocketry.entity.EntityUIStar;
 import zmaster587.advancedRocketry.event.BucketHandler;
 import zmaster587.advancedRocketry.event.CableTickHandler;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
@@ -163,15 +174,21 @@ import zmaster587.advancedRocketry.tile.multiblock.machine.TileRollingMachine;
 import zmaster587.advancedRocketry.tile.oxygen.TileCO2Scrubber;
 import zmaster587.advancedRocketry.tile.oxygen.TileOxygenCharger;
 import zmaster587.advancedRocketry.tile.oxygen.TileOxygenVent;
+import zmaster587.advancedRocketry.tile.oxygen.TileSeal;
 import zmaster587.advancedRocketry.tile.station.TileDockingPort;
 import zmaster587.advancedRocketry.tile.station.TileLandingPad;
+import zmaster587.advancedRocketry.tile.station.TilePlanetaryHologram;
 import zmaster587.advancedRocketry.tile.station.TileStationAltitudeController;
 import zmaster587.advancedRocketry.tile.station.TileStationGravityController;
 import zmaster587.advancedRocketry.tile.station.TileStationOrientationControl;
 import zmaster587.advancedRocketry.tile.station.TileWarpShipMonitor;
+import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.advancedRocketry.util.FluidColored;
+import zmaster587.advancedRocketry.util.GravityHandler;
 import zmaster587.advancedRocketry.util.OreGenProperties;
+import zmaster587.advancedRocketry.util.RecipeHandler;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
+import zmaster587.advancedRocketry.util.XMLAsteroidLoader;
 import zmaster587.advancedRocketry.util.XMLOreLoader;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader.DimensionPropertyCoupling;
@@ -198,14 +215,16 @@ import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.api.material.MixedMaterial;
 import zmaster587.libVulpes.block.BlockAlphaTexture;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.block.BlockRotatableModel;
 import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisible;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketItemModifcation;
-import zmaster587.libVulpes.recipe.NumberedOreDictStack;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.TileMaterial;
+import zmaster587.libVulpes.tile.TileModelRender;
+import zmaster587.libVulpes.tile.TileModelRenderRotatable;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.InputSyncHandler;
@@ -213,6 +232,7 @@ import zmaster587.libVulpes.util.SingleEntry;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -237,6 +257,7 @@ public class AdvancedRocketry {
 	public static WorldType planetWorldType;
 	public static WorldType spaceWorldType;
 	private boolean resetFromXml;
+	public static final RecipeHandler machineRecipes = new RecipeHandler();
 	final String oreGen = "Ore Generation";
 	final String ROCKET = "Rockets";
 	final String MOD_INTERACTION = "Mod Interaction";
@@ -244,16 +265,17 @@ public class AdvancedRocketry {
 	final String ASTEROID = "Asteroid";
 	final String GAS_MINING = "GasMining";
 	final String PERFORMANCE = "Performance";
-	
+
 	public static CompatibilityMgr compat = new CompatibilityMgr();
 	public static Logger logger = LogManager.getLogger(Constants.modId);
 	private static Configuration config;
 	private static final String BIOMECATETORY = "Biomes";
-	String[] sealableBlockWhiteList, breakableTorches, harvestableGasses, entityList, asteriodOres, geodeOres, orbitalLaserOres;;
+	String[] sealableBlockWhiteList, breakableTorches, harvestableGasses, entityList, geodeOres, orbitalLaserOres,liquidRocketFuel;
+
 
 	public MaterialRegistry materialRegistry = new MaterialRegistry(); 
 
-	private HashMap<AllowedProducts, HashSet<String>> modProducts = new HashMap<AllowedProducts, HashSet<String>>();
+	public static HashMap<AllowedProducts, HashSet<String>> modProducts = new HashMap<AllowedProducts, HashSet<String>>();
 
 
 	private static CreativeTabs tabAdvRocketry = new CreativeTabs("advancedRocketry") {
@@ -288,6 +310,8 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.lowGravityBoots = config.get(Configuration.CATEGORY_GENERAL, "lowGravityBoots", false, "If true the boots only protect the player on planets with low gravity").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.jetPackThrust = (float)config.get(Configuration.CATEGORY_GENERAL, "jetPackForce", 1.3, "Amount of force the jetpack provides with respect to gravity, 1 is the same acceleration as caused by Earth's gravity, 2 is 2x the acceleration caused by Earth's gravity, etc.  To make jetpack only work on low gravity planets, simply set it to a value less than 1").getDouble();
 
+		int spaceBreathingId = config.get(Configuration.CATEGORY_GENERAL, "AirtightSealEnchantID", 128, "Enchantment ID for the airtight seal effect").getInt();
+		
 		zmaster587.advancedRocketry.api.Configuration.enableTerraforming = config.get(Configuration.CATEGORY_GENERAL, "EnableTerraforming", true,"Enables terraforming items and blocks").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.spaceSuitOxygenTime = config.get(Configuration.CATEGORY_GENERAL, "spaceSuitO2Buffer", 30, "Maximum time in minutes that the spacesuit's internal buffer can store O2 for").getInt();
 		zmaster587.advancedRocketry.api.Configuration.travelTimeMultiplier = (float)config.get(Configuration.CATEGORY_GENERAL, "warpTravelTime", 1f, "Multiplier for warp travel time").getDouble();
@@ -297,8 +321,13 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.terraformSpeed = config.get(Configuration.CATEGORY_GENERAL, "terraformMult", 1f, "Multplier for terraforming speed").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.terraformRequiresFluid = config.get(Configuration.CATEGORY_GENERAL, "TerraformerRequiresFluids", true).getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.terraformliquidRate = config.get(Configuration.CATEGORY_GENERAL, "TerraformerFluidConsumeRate", 40, "how many millibuckets/t are required to keep the terraformer running").getInt();
+		liquidRocketFuel = config.get(ROCKET, "rocketFuels", new String[] {"rocketfuel"}, "List of fluid names for fluids that can be used as rocket fuel").getStringList();
+		
+		zmaster587.advancedRocketry.api.Configuration.stationSize = config.get(Configuration.CATEGORY_GENERAL, "SpaceStationBuildRadius", 1024, "The largest size a space station can be.  Should also be a power of 2 (512, 1024, 2048, 4192, ...).  CAUTION: CHANGING THIS OPTION WILL DAMAGE EXISTING STATIONS!!!").getInt();
 		zmaster587.advancedRocketry.api.Configuration.canPlayerRespawnInSpace = config.get(Configuration.CATEGORY_GENERAL, "allowPlanetRespawn", false, "If true players will respawn near beds on planets IF the spawn location is in a breathable atmosphere").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.solarGeneratorMult = config.get(Configuration.CATEGORY_GENERAL, "solarGeneratorMultiplier", 1, "Amount of power per tick the solar generator should produce").getInt();
+		zmaster587.advancedRocketry.api.Configuration.enableGravityController = config.get(Configuration.CATEGORY_GENERAL, "enableGravityMachine", true, "If false the gravity controller cannot be built or used").getBoolean();
+		zmaster587.advancedRocketry.api.Configuration.planetsMustBeDiscovered = config.get(Configuration.CATEGORY_GENERAL, "planetsMustBeDiscovered", false, "If true planets must be discovered in the warp controller before being visible").getBoolean();
 
 		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 8000, "Dimensions including and after this number are allowed to be made into planets");
 		zmaster587.advancedRocketry.api.Configuration.blackListAllVanillaBiomes = config.getBoolean("blackListVanillaBiomes", PLANET, false, "Prevents any vanilla biomes from spawning on planets");
@@ -310,19 +339,17 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.atmosphereHandleBitMask = config.get(PERFORMANCE, "atmosphereCalculationMethod", 0, "BitMask: 0: no threading, radius based; 1: threading, radius based (EXP); 2: no threading volume based; 3: threading volume based (EXP)").getInt();
 		zmaster587.advancedRocketry.api.Configuration.oxygenVentSize = config.get(PERFORMANCE, "oxygenVentSize", 32, "Radius of the O2 vent.  if atmosphereCalculationMethod is 2 or 3 then max volume is calculated from this radius.  WARNING: larger numbers can lead to lag").getInt();
 		zmaster587.advancedRocketry.api.Configuration.advancedVFX = config.get(PERFORMANCE, "advancedVFX", true, "Advanced visual effects").getBoolean();
+		zmaster587.advancedRocketry.api.Configuration.gravityAffectsFuel = config.get(Configuration.CATEGORY_GENERAL, "gravityAffectsFuels", true, "If true planets with higher gravity require more fuel and lower gravity would require less").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.gasCollectionMult = config.get(GAS_MINING, "gasMissionMultiplier", 1.0, "Multiplier for the amount of time gas collection missions take").getDouble();
-		zmaster587.advancedRocketry.api.Configuration.asteroidMiningMult = config.get(ASTEROID, "miningMissionMultiplier", 1.0, "Multiplier changing how much total material is brought back from a mining mission").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.asteroidMiningTimeMult = config.get(ASTEROID, "miningMissionTmeMultiplier", 1.0, "Multiplier changing how long a mining mission takes").getDouble();
-		asteriodOres = config.get(ASTEROID, "standardOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone"}, "List of oredictionary names of ores allowed to spawn in asteriods").getStringList();
-		zmaster587.advancedRocketry.api.Configuration.asteriodOresBlackList = config.get(ASTEROID, "standardOres_blacklist", false, "True if the ores in standardOres should a be blacklist, false for whitelist").getBoolean();
 		geodeOres = config.get(oreGen, "geodeOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone"}, "List of oredictionary names of ores allowed to spawn in geodes").getStringList();
 		zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList = config.get(oreGen, "geodeOres_blacklist", false, "True if the ores in geodeOres should be a blacklist, false for whitelist").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.generateGeodes = config.get(oreGen, "generateGeodes", true, "If true then ore-containing geodes are generated on high pressure planets").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.geodeBaseSize = config.get(oreGen, "geodeBaseSize", 36, "average size of the geodes").getInt();
 		zmaster587.advancedRocketry.api.Configuration.geodeVariation = config.get(oreGen, "geodeVariation", 24, "variation in geode size").getInt();
 		
-		
-		orbitalLaserOres = config.get(Configuration.CATEGORY_GENERAL, "laserDrillOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone", "oreDiamond"}, "List of oredictionary names of ores allowed to be mined by the laser drill if surface drilling is disabled").getStringList();
+
+		orbitalLaserOres = config.get(Configuration.CATEGORY_GENERAL, "laserDrillOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone", "oreDiamond"}, "List of oredictionary names of ores allowed to be mined by the laser drill if surface drilling is disabled.  Ores can be specified by just the oreName:<size> or by <modname>:<blockname>:<meta>:<size> where size is optional").getStringList();
 		zmaster587.advancedRocketry.api.Configuration.laserDrillOresBlackList = config.get(Configuration.CATEGORY_GENERAL, "laserDrillOres_blacklist", false, "True if the ores in laserDrillOres should be a blacklist, false for whitelist").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.laserDrillPlanet = config.get(Configuration.CATEGORY_GENERAL, "laserDrillPlanet", false, "If true the orbital laser will actually mine blocks on the planet below").getBoolean();
 		resetFromXml = config.getBoolean("resetPlanetsFromXML", Configuration.CATEGORY_GENERAL, false, "setting this to true will DELETE existing advancedrocketry planets and regen the solar system from the advanced planet XML file, satellites orbiting the overworld will remain intact and stations will be moved to the overworld.");
@@ -419,7 +446,6 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockAdvEngine = new BlockAdvRocketMotor(Material.rock).setBlockName("advRocket").setCreativeTab(tabAdvRocketry).setHardness(2f);
 		AdvancedRocketryBlocks.blockFuelTank = new BlockFuelTank(Material.rock).setBlockName("fuelTank").setCreativeTab(tabAdvRocketry).setHardness(2f);
 		AdvancedRocketryBlocks.blockSawBlade = new BlockRotatableModel(Material.rock, TileModelRender.models.SAWBLADE.ordinal()).setCreativeTab(tabAdvRocketry).setBlockName("sawBlade").setHardness(2f);
-		AdvancedRocketryBlocks.blockMotor = new BlockRotatableModel(Material.rock, TileModelRender.models.MOTOR.ordinal()).setCreativeTab(tabAdvRocketry).setBlockName("motor").setHardness(2f);
 		AdvancedRocketryBlocks.blockConcrete = new BlockGeneric(Material.rock).setBlockName("concrete").setBlockTextureName("advancedRocketry:rocketPad_noEdge").setCreativeTab(tabAdvRocketry).setHardness(3f).setResistance(16f);
 		AdvancedRocketryBlocks.blockPlatePress = new BlockPress().setBlockName("blockHandPress").setCreativeTab(tabAdvRocketry).setHardness(2f);
 		AdvancedRocketryBlocks.blockAirLock = new BlockDoor2(Material.rock).setBlockName("smallAirlockDoor").setBlockTextureName("advancedRocketry:smallAirlockDoor").setHardness(3f).setResistance(8f);
@@ -431,6 +457,8 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockCharcoalLog = new BlockCharcoalLog().setBlockName("charcoallog").setCreativeTab(CreativeTabs.tabBlock);
 		AdvancedRocketryBlocks.blockElectricMushroom = new BlockElectricMushroom().setBlockName("electricMushroom").setCreativeTab(tabAdvRocketry).setBlockTextureName("advancedrocketry:mushroom_electric").setHardness(0.0F).setStepSound(Block.soundTypeGrass);
 		AdvancedRocketryBlocks.blockCrystal = new BlockCrystal().setBlockName("crystal").setCreativeTab(LibVulpes.tabLibVulpesOres).setBlockTextureName("advancedrocketry:crystal").setHardness(2f);
+		AdvancedRocketryBlocks.blockLens = new BlockGlass(Material.glass, true).setBlockName("lens").setBlockTextureName("advancedrocketry:lens1").setCreativeTab(tabAdvRocketry).setHardness(0.3f).setStepSound(Block.soundTypeGlass);
+
 
 		AdvancedRocketryBlocks.blockOrientationController = new BlockTile(TileStationOrientationControl.class,  GuiHandler.guiId.MODULAR.ordinal()).setBlockTextureName("advancedrocketry:machineScrubber").setCreativeTab(tabAdvRocketry).setBlockName("orientationControl").setHardness(3f);
 		((BlockTile) AdvancedRocketryBlocks.blockOrientationController).setSideTexture("advancedrocketry:machineOrientationControl");
@@ -567,7 +595,6 @@ public class AdvancedRocketry {
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockRailgun).setSideTexture("libvulpes:machineGeneric");
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockRailgun).setTopTexture("libvulpes:machineGeneric");
 
-
 		AdvancedRocketryBlocks.blockAtmosphereTerraformer = new BlockMultiblockMachine(TileAtmosphereTerraformer.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("atmosphereTerraformer").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockAtmosphereTerraformer).setFrontTexture("Advancedrocketry:machineElectrolzyer", "Advancedrocketry:machineElectrolzyer_active");
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockAtmosphereTerraformer).setSideTexture("libvulpes:machineGeneric");
@@ -578,7 +605,7 @@ public class AdvancedRocketry {
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockPlanetAnalyser).setSideTexture("libvulpes:machineGeneric");
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockPlanetAnalyser).setFrontTexture("advancedrocketry:MonitorPlanet","advancedrocketry:MonitorPlanet_active");
 
-		AdvancedRocketryBlocks.blockObservatory = (BlockMultiblockMachine) new BlockMultiblockMachine(TileObservatory.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("observatory").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		AdvancedRocketryBlocks.blockObservatory = (BlockMultiblockMachine) new BlockMultiblockMachine(TileObservatory.class, GuiHandler.guiId.MODULARNOINV.ordinal()).setBlockName("observatory").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockObservatory).setTopTexture("libvulpes:machineGeneric");
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockObservatory).setSideTexture("libvulpes:machineGeneric");
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockObservatory).setFrontTexture("advancedrocketry:MonitorFrontMid","advancedrocketry:MonitorFrontMid");
@@ -598,6 +625,13 @@ public class AdvancedRocketry {
 		((BlockTile)AdvancedRocketryBlocks.blockBiomeScanner).setSideTexture("Advancedrocketry:MonitorSide");
 		((BlockTile)AdvancedRocketryBlocks.blockBiomeScanner).setFrontTexture("Advancedrocketry:guidanceComputer");
 
+		AdvancedRocketryBlocks.blockPlanetHoloSelector = new BlockTile(TilePlanetaryHologram.class,GuiHandler.guiId.MODULAR.ordinal()).setBlockName("planetHoloSelector").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		((BlockTile)AdvancedRocketryBlocks.blockPlanetHoloSelector).setTopTexture("advancedrocketry:holoLamp");
+		((BlockTile)AdvancedRocketryBlocks.blockPlanetHoloSelector).setSideTexture("advancedrocketry:panelSide");
+		((BlockTile)AdvancedRocketryBlocks.blockPlanetHoloSelector).setFrontTexture("advancedrocketry:panelSide");
+		AdvancedRocketryBlocks.blockPlanetHoloSelector.setBlockBounds(0, 0, 0, 1f, .5f, 1f);
+
+
 		AdvancedRocketryBlocks.blockDrill = new BlockMiningDrill().setBlockName("drill").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		((BlockTile)AdvancedRocketryBlocks.blockDrill).setTopTexture("Advancedrocketry:laserBottom", "Advancedrocketry:laserBottom");
 		((BlockTile)AdvancedRocketryBlocks.blockDrill).setSideTexture("Advancedrocketry:machineWarning");
@@ -616,10 +650,31 @@ public class AdvancedRocketry {
 		((BlockTile)AdvancedRocketryBlocks.blockSolarGenerator).setFrontTexture("Advancedrocketry:panelSide");
 		((BlockTile)AdvancedRocketryBlocks.blockSolarGenerator).setBottomTexture("Advancedrocketry:qcrucible_inner");
 
+		AdvancedRocketryBlocks.blockSpaceElevatorController = new BlockMultiblockMachine(TileSpaceElevator.class,  GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setBlockName("spaceElevatorController").setHardness(3f);
+		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockSpaceElevatorController).setFrontTexture("Advancedrocketry:controlPanel");
+		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockSpaceElevatorController).setSideTexture("libvulpes:machineGeneric");
+		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockSpaceElevatorController).setTopTexture("libvulpes:machineGeneric");
+		
+		AdvancedRocketryBlocks.blockBeacon = new BlockBeacon(TileBeacon.class,  GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setBlockName("beacon").setHardness(3f);
+		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockBeacon).setFrontTexture("Advancedrocketry:beacon");
+		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockBeacon).setSideTexture("libvulpes:machineGeneric");
+		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockBeacon).setTopTexture("libvulpes:machineGeneric");
+		
 		AdvancedRocketryBlocks.blockIntake = new BlockIntake(Material.iron).setBlockTextureName("advancedrocketry:intake").setBlockName("gasIntake").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockPressureTank = new BlockPressurizedFluidTank(Material.iron).setBlockName("pressurizedTank").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockSolarPanel = new BlockSolarPanel(Material.iron).setBlockName("solarPanel").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockCircularLight = new BlockGeneric(Material.iron).setBlockName("circleLight").setCreativeTab(tabAdvRocketry).setHardness(2f).setBlockTextureName("advancedrocketry:stationLight").setLightLevel(1f);
+		AdvancedRocketryBlocks.blockForceField = new BlockForceField(Material.rock).setBlockUnbreakable().setResistance(6000000.0F).setBlockName("forceField").setBlockTextureName("advancedrocketry:forceField");
+		AdvancedRocketryBlocks.blockPipeSealer = new BlockSeal(Material.iron).setBlockName("pipeSeal").setCreativeTab(tabAdvRocketry).setHardness(0.5f).setBlockTextureName("advancedrocketry:seal");
+
+		AdvancedRocketryBlocks.blockForceFieldProjector = new BlockForceFieldProjector(Material.rock).setBlockName("forceFieldProjector").setCreativeTab(tabAdvRocketry).setHardness(3f);
+
+		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController) {
+			AdvancedRocketryBlocks.blockGravityMachine = new BlockMultiblockMachine(TileGravityController.class,GuiHandler.guiId.MODULARNOINV.ordinal()).setBlockName("gravityMachine").setCreativeTab(tabAdvRocketry).setHardness(3f);
+			((BlockTile)AdvancedRocketryBlocks.blockGravityMachine).setTopTexture("advancedrocketry:warpcore");
+			((BlockTile)AdvancedRocketryBlocks.blockGravityMachine).setSideTexture("Advancedrocketry:forcefieldProjector_off");
+			((BlockTile)AdvancedRocketryBlocks.blockGravityMachine).setFrontTexture("Advancedrocketry:forcefieldProjector_off");
+		}
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill) {
 			AdvancedRocketryBlocks.blockSpaceLaser = new BlockLaser();
@@ -661,7 +716,6 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockFuelFluid = new BlockFluid(AdvancedRocketryFluids.fluidRocketFuel, Material.water).setBlockName("rocketFuelBlock").setCreativeTab(CreativeTabs.tabMisc);
 		AdvancedRocketryBlocks.blockNitrogenFluid = new BlockFluid(AdvancedRocketryFluids.fluidNitrogen, Material.water).setBlockName("nitrogenFluidBlock").setCreativeTab(CreativeTabs.tabMisc);
 
-
 		//Cables
 		//AdvancedRocketryBlocks.blockFluidPipe = new BlockLiquidPipe(Material.iron).setBlockName("liquidPipe").setCreativeTab(CreativeTabs.tabTransport);
 		AdvancedRocketryBlocks.blockDataPipe = new BlockDataCable(Material.iron).setBlockName("dataPipe").setCreativeTab(tabAdvRocketry).setBlockTextureName("AdvancedRocketry:pipeData");
@@ -700,7 +754,6 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockGuidanceComputer, AdvancedRocketryBlocks.blockGuidanceComputer.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockArcFurnace, AdvancedRocketryBlocks.blockArcFurnace.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockSawBlade, AdvancedRocketryBlocks.blockSawBlade.getUnlocalizedName());
-		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockMotor, AdvancedRocketryBlocks.blockMotor.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockLathe, AdvancedRocketryBlocks.blockLathe.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockRollingMachine, AdvancedRocketryBlocks.blockRollingMachine.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockPlatePress, AdvancedRocketryBlocks.blockPlatePress .getUnlocalizedName());
@@ -744,6 +797,17 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockRailgun, AdvancedRocketryBlocks.blockRailgun.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockAstroBed, AdvancedRocketryBlocks.blockAstroBed.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockAdvEngine, AdvancedRocketryBlocks.blockAdvEngine.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockPlanetHoloSelector, AdvancedRocketryBlocks.blockPlanetHoloSelector.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockLens, AdvancedRocketryBlocks.blockLens.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockForceField, AdvancedRocketryBlocks.blockForceField.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockForceFieldProjector, AdvancedRocketryBlocks.blockForceFieldProjector.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockPipeSealer,AdvancedRocketryBlocks.blockPipeSealer.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockSpaceElevatorController, AdvancedRocketryBlocks.blockSpaceElevatorController.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockBeacon, AdvancedRocketryBlocks.blockBeacon.getUnlocalizedName());
+
+		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController) 
+			GameRegistry.registerBlock(AdvancedRocketryBlocks.blockGravityMachine,AdvancedRocketryBlocks.blockGravityMachine.getUnlocalizedName());
+
 
 		//TODO, use different mechanism to enable/disable drill
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
@@ -757,6 +821,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryItems.itemMisc = new ItemIngredient(2).setUnlocalizedName("advancedrocketry:miscpart").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemSawBlade = new ItemIngredient(1).setUnlocalizedName("advancedrocketry:sawBlade").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemSpaceStationChip = new ItemStationChip().setUnlocalizedName("stationChip").setTextureName("advancedRocketry:stationIdChip").setCreativeTab(tabAdvRocketry);
+		AdvancedRocketryItems.itemSpaceElevatorChip = new ItemSpaceElevatorChip().setUnlocalizedName("elevatorChip").setTextureName("advancedRocketry:elevatorChip").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemAsteroidChip = new ItemAsteroidChip().setUnlocalizedName("asteroidChip").setTextureName("advancedRocketry:stationIdChip").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemSpaceStation = new ItemPackedStructure().setUnlocalizedName("station").setTextureName("advancedRocketry:SpaceStation");
 		AdvancedRocketryItems.itemSmallAirlockDoor = new ItemDoor2(Material.rock).setUnlocalizedName("smallAirlock").setTextureName("advancedRocketry:smallAirlock").setCreativeTab(tabAdvRocketry);
@@ -786,12 +851,14 @@ public class AdvancedRocketry {
 		AdvancedRocketryItems.itemPressureTank = new ItemPressureTank(4, 1000).setCreativeTab(tabAdvRocketry).setUnlocalizedName("advancedrocketry:pressureTank").setTextureName("advancedRocketry:pressureTank");
 		AdvancedRocketryItems.itemUpgrade = new ItemUpgrade(5).setCreativeTab(tabAdvRocketry).setUnlocalizedName("advancedrocketry:itemUpgrade").setTextureName("advancedRocketry:itemUpgrade");
 		AdvancedRocketryItems.itemAtmAnalyser = new ItemAtmosphereAnalzer().setCreativeTab(tabAdvRocketry).setUnlocalizedName("atmAnalyser").setTextureName("advancedRocketry:atmosphereAnalyzer");
+		AdvancedRocketryItems.itemBeaconFinder = new ItemBeaconFinder().setCreativeTab(tabAdvRocketry).setUnlocalizedName("beaconFinder").setTextureName("advancedRocketry:beaconFinder");
 
+		
 		//Armor registration
-		AdvancedRocketryItems.itemSpaceSuit_Helmet = new ItemSpaceArmor(AdvancedRocketryItems.spaceSuit, 0).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceHelmet").setTextureName("advancedRocketry:space_helmet");
-		AdvancedRocketryItems.itemSpaceSuit_Chest = new ItemSpaceArmor(AdvancedRocketryItems.spaceSuit, 1).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceChest").setTextureName("advancedRocketry:space_chestplate");
-		AdvancedRocketryItems.itemSpaceSuit_Leggings = new ItemSpaceArmor(AdvancedRocketryItems.spaceSuit, 2).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceLeggings").setTextureName("advancedRocketry:space_leggings");
-		AdvancedRocketryItems.itemSpaceSuit_Boots = new ItemSpaceArmor(AdvancedRocketryItems.spaceSuit, 3).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceBoots").setTextureName("advancedRocketry:space_boots");
+		AdvancedRocketryItems.itemSpaceSuit_Helmet = new ItemSpaceArmor(ArmorMaterial.CLOTH, 0, 4).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceHelmet").setTextureName("advancedRocketry:space_helmet");
+		AdvancedRocketryItems.itemSpaceSuit_Chest = new ItemSpaceChest(ArmorMaterial.CLOTH, 1, 6).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceChest").setTextureName("advancedRocketry:space_chestplate");
+		AdvancedRocketryItems.itemSpaceSuit_Leggings = new ItemSpaceArmor(ArmorMaterial.CLOTH, 2, 4).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceLeggings").setTextureName("advancedRocketry:space_leggings");
+		AdvancedRocketryItems.itemSpaceSuit_Boots = new ItemSpaceArmor(ArmorMaterial.CLOTH, 3, 4).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceBoots").setTextureName("advancedRocketry:space_boots");
 
 		AdvancedRocketryItems.itemSealDetector = new ItemSealDetector().setMaxStackSize(1).setCreativeTab(tabAdvRocketry).setUnlocalizedName("sealDetector").setTextureName("advancedRocketry:seal_detector");
 		AdvancedRocketryItems.itemBasicLaserGun = new ItemBasicLaserGun().setCreativeTab(tabAdvRocketry).setUnlocalizedName("basicLaserGun").setTextureName("advancedRocketry:basicLaserGun");
@@ -853,6 +920,8 @@ public class AdvancedRocketry {
 		GameRegistry.registerItem(AdvancedRocketryItems.itemUpgrade, AdvancedRocketryItems.itemUpgrade.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemAtmAnalyser, AdvancedRocketryItems.itemAtmAnalyser.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemBasicLaserGun, AdvancedRocketryItems.itemBasicLaserGun.getUnlocalizedName());
+		GameRegistry.registerItem(AdvancedRocketryItems.itemSpaceElevatorChip, AdvancedRocketryItems.itemSpaceElevatorChip.getUnlocalizedName());
+		GameRegistry.registerItem(AdvancedRocketryItems.itemBeaconFinder, AdvancedRocketryItems.itemBeaconFinder.getUnlocalizedName());
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableTerraforming)
 			GameRegistry.registerItem(AdvancedRocketryItems.itemBiomeChanger, AdvancedRocketryItems.itemBiomeChanger.getUnlocalizedName());
@@ -865,7 +934,11 @@ public class AdvancedRocketry {
 		EntityRegistry.registerModEntity(EntityLaserNode.class, "laserNode", 2, instance, 256, 20, false);
 		EntityRegistry.registerModEntity(EntityStationDeployedRocket.class, "deployedRocket", 3, this, 256, 600, true);
 		EntityRegistry.registerModEntity(EntityItemAbducted.class, "ARAbductedItem", 4, this, 127, 600, false);
-
+		EntityRegistry.registerModEntity(EntityUIPlanet.class, "ARPlanetUIItem", 5, this, 64, 1, false);
+		EntityRegistry.registerModEntity(EntityUIButton.class, "ARPlanetUIButton", 6, this, 64, 20, false);
+		EntityRegistry.registerModEntity(EntityUIStar.class, "ARStarUIButton", 7, this, 64, 20, false);
+		EntityRegistry.registerModEntity(EntityElevatorCapsule.class, "ARSpaceElevatorCapsule", 8, this, 64, 20, true);
+		
 		//TileEntity Registration ---------------------------------------------------------------------------------------------
 		GameRegistry.registerTileEntity(TileRocketBuilder.class, "ARrocketBuilder");
 		GameRegistry.registerTileEntity(TileWarpCore.class, "ARwarpCore");
@@ -919,7 +992,14 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileSolarPanel.class, "ARSolarGenerator");
 		GameRegistry.registerTileEntity(TileStationAltitudeController.class, "ARAltitudeController");
 		GameRegistry.registerTileEntity(TileRailgun.class, "ARRailgun");
+		GameRegistry.registerTileEntity(TilePlanetaryHologram.class, "ARplanetHoloSelector");
+		GameRegistry.registerTileEntity(TileForceFieldProjector.class, "ARForceFieldProjector");
+		GameRegistry.registerTileEntity(TileSeal.class, "ARBlockSeal");
+		GameRegistry.registerTileEntity(TileSpaceElevator.class, "ARSpaceElevator");
+		GameRegistry.registerTileEntity(TileBeacon.class, "ARBeacon");
 
+		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
+			GameRegistry.registerTileEntity(TileGravityController.class, "ARGravityMachine");
 
 
 		//Register machine recipes
@@ -933,6 +1013,9 @@ public class AdvancedRocketry {
 		LibVulpes.registerRecipeHandler(TileRollingMachine.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/RollingMachine.xml");
 		LibVulpes.registerRecipeHandler(BlockPress.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/SmallPlatePress.xml");
 
+		//Enchantments
+		AdvancedRocketryAPI.enchantmentSpaceProtection = new EnchantmentSpaceBreathing(spaceBreathingId);
+	
 
 		//MOD-SPECIFIC ENTRIES --------------------------------------------------------------------------------------------------------------------------
 
@@ -966,6 +1049,7 @@ public class AdvancedRocketry {
 		ItemStack liquidIOBoard = new ItemStack(AdvancedRocketryItems.itemIC,1,5);
 		ItemStack trackingCircuit = new ItemStack(AdvancedRocketryItems.itemIC,1,1);
 		ItemStack opticalSensor = new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0);
+		ItemStack massDetector = new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 2);
 		ItemStack biomeChanger = new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 5);
 		ItemStack smallSolarPanel =  new ItemStack(AdvancedRocketryItems.itemSatellitePowerSource,1,0); 
 		ItemStack largeSolarPanel = new ItemStack(AdvancedRocketryItems.itemSatellitePowerSource,1,1);
@@ -987,7 +1071,7 @@ public class AdvancedRocketry {
 		GameRegistry.addSmelting(MaterialRegistry.getMaterialFromName("Dilithium").getProduct(AllowedProducts.getProductByName("ORE")), MaterialRegistry.getMaterialFromName("Dilithium").getProduct(AllowedProducts.getProductByName("DUST")), 0);
 
 		//Supporting Materials
-		GameRegistry.addRecipe(new ShapedOreRecipe(userInterface, "lrl", "fgf", 'l', "dyeLime", 'r', Items.redstone, 'g', Blocks.glass_pane, 'f', Items.glowstone_dust));
+		GameRegistry.addRecipe(new ShapedOreRecipe(userInterface, "lrl", "fgf", 'l', "dyeLime", 'r', "dustRedstone", 'g', Blocks.glass_pane, 'f', Items.glowstone_dust));
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryBlocks.blockGenericSeat), "xxx", 'x', Blocks.wool);
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockConcrete, 16), Blocks.sand, Blocks.gravel, Items.water_bucket);
 		GameRegistry.addRecipe(new ShapelessOreRecipe(AdvancedRocketryBlocks.blockLaunchpad, "concrete", "dyeBlack", "dyeYellow"));
@@ -995,7 +1079,7 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockEngine, "sss", " t ","t t", 's', "ingotSteel", 't', "plateTitanium"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockAdvEngine, "sss", " t ","t t", 's', "ingotTitaniumAluminide", 't', "plateTitaniumIridium"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockFuelTank, "s s", "p p", "s s", 'p', "plateSteel", 's', "stickSteel"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesItems.itemBattery,4,0), " c ","prp", "prp", 'c', "stickIron", 'r', Items.redstone, 'p', "plateTin"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesItems.itemBattery,4,0), " c ","prp", "prp", 'c', "stickIron", 'r', "dustRedstone", 'p', "plateTin"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesItems.itemBattery,1,1), "bpb", "bpb", 'b', smallBattery, 'p', "plateCopper"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), "ppp", " g ", " l ", 'p', Blocks.glass_pane, 'g', Items.glowstone_dust, 'l', "plateGold"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockObservatory), "gug", "pbp", "rrr", 'g', "paneGlass", 'u', userInterface, 'b', LibVulpesBlocks.blockStructureBlock, 'r', "stickIron"));
@@ -1008,11 +1092,10 @@ public class AdvancedRocketry {
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockLoader,1,4), new ItemStack(LibVulpesBlocks.blockHatch,1,3), trackingCircuit);
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockLoader,1,5), new ItemStack(LibVulpesBlocks.blockHatch,1,2), trackingCircuit);
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockMotor), " cp", "rrp"," cp", 'c', "coilCopper", 'p', "plateSteel", 'r', "stickSteel"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePowerSource,1,0), "rrr", "ggg","ppp", 'r', Items.redstone, 'g', Items.glowstone_dust, 'p', "plateGold"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePowerSource,1,0), "rrr", "ggg","ppp", 'r', "dustRedstone", 'g', Items.glowstone_dust, 'p', "plateGold"));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesItems.itemHoloProjector), "oro", "rpr", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'r', Items.redstone, 'p', "plateIron"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 2), "odo", "pcp", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'p', new ItemStack(AdvancedRocketryItems.itemWafer,1,0), 'c', basicCircuit, 'd', "crystalDilithium"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesItems.itemHoloProjector), "oro", "rpr", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'r', "dustRedstone", 'p', "plateIron"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(massDetector, "odo", "pcp", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'p', new ItemStack(AdvancedRocketryItems.itemWafer,1,0), 'c', basicCircuit, 'd', "crystalDilithium"));
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 1), "odo", "pcp", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'p', new ItemStack(AdvancedRocketryItems.itemWafer,1,0), 'c', basicCircuit, 'd', trackingCircuit);
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 3), "odo", "pcp", 'o', new ItemStack(AdvancedRocketryItems.itemLens, 1, 0), 'p', new ItemStack(AdvancedRocketryItems.itemWafer,1,0), 'c', basicCircuit, 'd', trackingCircuit);
 
@@ -1025,11 +1108,18 @@ public class AdvancedRocketry {
 		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockRFBattery), " x ", "xmx"," x ", 'x', LibVulpesItems.itemBattery, 'm', LibVulpesBlocks.blockStructureBlock);
 
 		//O2 Support
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockOxygenVent), "bfb", "bmb", "btb", 'b', Blocks.iron_bars, 'f', "fanSteel", 'm', AdvancedRocketryBlocks.blockMotor, 't', AdvancedRocketryBlocks.blockFuelTank));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockOxygenScrubber), "bfb", "bmb", "btb", 'b', Blocks.iron_bars, 'f', "fanSteel", 'm', AdvancedRocketryBlocks.blockMotor, 't', "ingotCarbon"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockOxygenVent), "bfb", "bmb", "btb", 'b', Blocks.iron_bars, 'f', "fanSteel", 'm', LibVulpesBlocks.blockMotor, 't', AdvancedRocketryBlocks.blockFuelTank));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockOxygenScrubber), "bfb", "bmb", "btb", 'b', Blocks.iron_bars, 'f', "fanSteel", 'm', LibVulpesBlocks.blockMotor, 't', "ingotCarbon"));
+
+		//Knicknacks
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockForceFieldProjector), " c ", "pdp","psp", 'c', "coilCopper", 'p', "plateAluminum", 'd', "crystalDilithium", 's', LibVulpesBlocks.blockStructureBlock));
+		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockPipeSealer, " c ", "csc", " c ", 'c', Items.clay_ball, 's', "stickIron"));
+
+		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockGravityMachine), "sds", "sws", 's', "sheetTitanium", 'd', massDetector, 'w', AdvancedRocketryBlocks.blockWarpCore));
 
 		//MACHINES
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockPrecisionAssembler), "abc", "def", "ghi", 'a', Items.repeater, 'b', userInterface, 'c', Items.diamond, 'd', itemIOBoard, 'e', LibVulpesBlocks.blockStructureBlock, 'f', controlCircuitBoard, 'g', Blocks.furnace, 'h', "gearSteel", 'i', Blocks.dropper));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockPrecisionAssembler), "abc", "def", "ghi", 'a', Items.repeater, 'b', userInterface, 'c', "gemDiamond", 'd', itemIOBoard, 'e', LibVulpesBlocks.blockStructureBlock, 'f', controlCircuitBoard, 'g', Blocks.furnace, 'h', "gearSteel", 'i', Blocks.dropper));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockCrystallizer), "ada", "ecf","bgb", 'a', Items.quartz, 'b', Items.repeater, 'c', LibVulpesBlocks.blockStructureBlock, 'd', userInterface, 'e', itemIOBoard, 'f', controlCircuitBoard, 'g', "plateSteel"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockCuttingMachine), "aba", "cde", "opo", 'a', "gearSteel", 'b', userInterface, 'c', itemIOBoard, 'e', controlCircuitBoard, 'p', "plateSteel", 'o', Blocks.obsidian, 'd', LibVulpesBlocks.blockStructureBlock));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockLathe), "rsr", "abc", "pgp", 'r', "stickIron",'a', itemIOBoard, 'c', controlCircuitBoard, 'g', "gearSteel", 'p', "plateSteel", 'b', LibVulpesBlocks.blockStructureBlock, 's', userInterface));
@@ -1037,9 +1127,9 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockMonitoringStation), "coc", "cbc", "cpc", 'c', "stickCopper", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'b', LibVulpesBlocks.blockStructureBlock, 'p', LibVulpesItems.itemBattery));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockFuelingStation), "bgb", "lbf", "ppp", 'p', "plateTin", 'f', "fanSteel", 'l', liquidIOBoard, 'g', AdvancedRocketryItems.itemMisc, 'x', AdvancedRocketryBlocks.blockFuelTank, 'b', LibVulpesBlocks.blockStructureBlock));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockSatelliteControlCenter), "oso", "cbc", "rtr", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 's', userInterface, 'c', "stickCopper", 'b', LibVulpesBlocks.blockStructureBlock, 'r', Items.repeater, 't', LibVulpesItems.itemBattery));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockSatelliteBuilder), "dht", "cbc", "mas", 'd', AdvancedRocketryItems.itemDataUnit, 'h', Blocks.hopper, 'c', basicCircuit, 'b', LibVulpesBlocks.blockStructureBlock, 'm', AdvancedRocketryBlocks.blockMotor, 'a', Blocks.anvil, 's', AdvancedRocketryBlocks.blockSawBlade, 't', "plateTitanium"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockSatelliteBuilder), "dht", "cbc", "mas", 'd', AdvancedRocketryItems.itemDataUnit, 'h', Blocks.hopper, 'c', basicCircuit, 'b', LibVulpesBlocks.blockStructureBlock, 'm', LibVulpesBlocks.blockMotor, 'a', Blocks.anvil, 's', AdvancedRocketryBlocks.blockSawBlade, 't', "plateTitanium"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockPlanetAnalyser), "tst", "pbp", "cpc", 't', trackingCircuit, 's', userInterface, 'b', LibVulpesBlocks.blockStructureBlock, 'p', "plateTin", 'c', AdvancedRocketryItems.itemPlanetIdChip));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockGuidanceComputer), "ctc", "rbr", "crc", 'c', trackingCircuit, 't', "plateTitanium", 'r', Items.redstone, 'b', LibVulpesBlocks.blockStructureBlock));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockGuidanceComputer), "ctc", "rbr", "crc", 'c', trackingCircuit, 't', "plateTitanium", 'r', "dustRedstone", 'b', LibVulpesBlocks.blockStructureBlock));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockPlanetSelector), "cpc", "lbl", "coc", 'c', trackingCircuit, 'o',new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'l', Blocks.lever, 'b', AdvancedRocketryBlocks.blockGuidanceComputer, 'p', Blocks.stone_button));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockRocketBuilder), "sgs", "cbc", "tdt", 's', "stickTitanium", 'g', AdvancedRocketryItems.itemMisc, 'c', controlCircuitBoard, 'b', LibVulpesBlocks.blockStructureBlock, 't', "gearTitanium", 'd', AdvancedRocketryBlocks.blockConcrete));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockStationBuilder), "gdg", "dsd", "ada", 'g', "gearTitanium", 'a', advancedCircuit, 'd', "dustDilithium", 's', new ItemStack(AdvancedRocketryBlocks.blockRocketBuilder)));
@@ -1054,7 +1144,8 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockPressureTank), "tgt","tgt","tgt", 't', superHighPressureTime, 'g', Blocks.glass_pane));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockIntake), "rhr", "hbh", "rhr", 'r', "stickTitanium", 'h', Blocks.hopper, 'b', LibVulpesBlocks.blockStructureBlock));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockRailgun), " t ", "abc", "ded", 't', trackingCircuit, 'a', controlCircuitBoard, 'b', LibVulpesBlocks.blockAdvStructureBlock, 'c', itemIOBoard, 'd', "fanSteel", 'e', "coilCopper"));
-		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockSpaceElevatorController), " d ", "aba", "ccc", 'd', controlCircuitBoard, 'a', advancedCircuit, 'b', LibVulpesBlocks.blockAdvStructureBlock, 'c', "coilAluminum"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockBeacon), " c ", "dbt", "scs", 'c', "coilCopper", 'd', controlCircuitBoard, 't', trackingCircuit, 'b', LibVulpesBlocks.blockStructureBlock, 's', "sheetIron" ));
 
 		//Armor recipes
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryItems.itemSpaceSuit_Boots, " r ", "w w", "p p", 'r', "stickIron", 'w', Blocks.wool, 'p', "plateIron"));
@@ -1064,7 +1155,7 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryItems.itemJetpack, "cpc", "lsl", "f f", 'c', AdvancedRocketryItems.itemPressureTank, 'f', Items.fire_charge, 's', Items.string, 'l', Blocks.lever, 'p', "plateSteel"));
 
 		//Tool Recipes
-		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryItems.itemJackhammer, " pt","imp","di ",'d', Items.diamond, 'm', AdvancedRocketryBlocks.blockMotor, 'p', "plateBronze", 't', "stickTitanium", 'i', "stickIron"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryItems.itemJackhammer, " pt","imp","di ",'d', "gemDiamond", 'm', LibVulpesBlocks.blockMotor, 'p', "plateAluminum", 't', "stickTitanium", 'i', "stickIron"));
 
 		//Other blocks
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryItems.itemSmallAirlockDoor, "pp", "pp","pp", 'p', "plateSteel"));
@@ -1089,16 +1180,12 @@ public class AdvancedRocketry {
 		GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockRFOutput), new ItemStack(LibVulpesBlocks.blockRFBattery));
 		GameRegistry.addShapelessRecipe(largeSolarPanel.copy(), smallSolarPanel, smallSolarPanel, smallSolarPanel, smallSolarPanel, smallSolarPanel, smallSolarPanel);
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockMicrowaveReciever), "ggg", "tbc", "aoa", 'g', "plateGold", 't', trackingCircuit, 'b', LibVulpesBlocks.blockStructureBlock, 'c', controlCircuitBoard, 'a', advancedCircuit, 'o', opticalSensor));
-		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockSolarPanel, "rrr", "gbg", "ppp", 'r' , Items.redstone, 'g', Items.glowstone_dust, 'b', LibVulpesBlocks.blockStructureBlock, 'p', "plateGold"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockSolarPanel, "rrr", "gbg", "ppp", 'r' , "dustRedstone", 'g', Items.glowstone_dust, 'b', LibVulpesBlocks.blockStructureBlock, 'p', "plateGold"));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(AdvancedRocketryBlocks.blockSolarGenerator, "itemBattery", LibVulpesBlocks.blockRFOutput, AdvancedRocketryBlocks.blockSolarPanel));
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryItems.itemOreScanner, "lwl", "bgb", "   ", 'l', Blocks.lever, 'g', userInterface, 'b', "itemBattery", 'w', advancedCircuit));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 4), " c ","sss", "tot", 'c', "stickCopper", 's', "sheetIron", 'o', AdvancedRocketryItems.itemOreScanner, 't', trackingCircuit));
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryBlocks.blockSuitWorkStation), "c","b", 'c', Blocks.crafting_table, 'b', LibVulpesBlocks.blockStructureBlock);
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockDockingPort), trackingCircuit, new ItemStack(AdvancedRocketryBlocks.blockLoader, 1,1));
-
-		RecipesMachine.getInstance().addRecipe(TileElectrolyser.class, new Object[] {new FluidStack(AdvancedRocketryFluids.fluidOxygen, 100), new FluidStack(AdvancedRocketryFluids.fluidHydrogen, 100)}, 100, 20, new FluidStack(FluidRegistry.WATER, 10));
-		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new FluidStack(AdvancedRocketryFluids.fluidRocketFuel, 20), 100, 10, new FluidStack(AdvancedRocketryFluids.fluidOxygen, 10), new FluidStack(AdvancedRocketryFluids.fluidHydrogen, 10));
-
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill) {
 			GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockSpaceLaser, "ata", "bec", "gpg", 'a', advancedCircuit, 't', trackingCircuit, 'b', LibVulpesItems.itemBattery, 'e', Items.emerald, 'c', controlCircuitBoard, 'g', "gearTitanium", 'p', LibVulpesBlocks.blockStructureBlock));
@@ -1108,53 +1195,22 @@ public class AdvancedRocketry {
 		}
 
 		//Control boards
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemIOBoard, "rvr", "dwd", "dpd", 'r', Items.redstone, 'v', Items.diamond, 'd', "dustGold", 'w', Blocks.wooden_slab, 'p', "plateIron"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(controlCircuitBoard, "rvr", "dwd", "dpd", 'r', Items.redstone, 'v', Items.diamond, 'd', "dustCopper", 'w', Blocks.wooden_slab, 'p', "plateIron"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(liquidIOBoard, "rvr", "dwd", "dpd", 'r', Items.redstone, 'v', Items.diamond, 'd', new ItemStack(Items.dye, 1, 4), 'w', Blocks.wooden_slab, 'p', "plateIron"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemIOBoard, "rvr", "dwd", "dpd", 'r', "dustRedstone", 'v', "gemDiamond", 'd', "dustGold", 'w', Blocks.wooden_slab, 'p', "plateIron"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(controlCircuitBoard, "rvr", "dwd", "dpd", 'r', "dustRedstone", 'v', "gemDiamond", 'd', "dustCopper", 'w', Blocks.wooden_slab, 'p', "plateIron"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(liquidIOBoard, "rvr", "dwd", "dpd", 'r', "dustRedstone", 'v', "gemDiamond", 'd', new ItemStack(Items.dye, 1, 4), 'w', Blocks.wooden_slab, 'p', "plateIron"));
 
-		//Cutting Machine
-		RecipesMachine.getInstance().addRecipe(TileCuttingMachine.class, new ItemStack(AdvancedRocketryItems.itemIC, 4, 0), 300, 100, new ItemStack(AdvancedRocketryItems.itemCircuitPlate,1,0));
-		RecipesMachine.getInstance().addRecipe(TileCuttingMachine.class, new ItemStack(AdvancedRocketryItems.itemIC, 4, 2), 300, 100, new ItemStack(AdvancedRocketryItems.itemCircuitPlate,1,1));
-		RecipesMachine.getInstance().addRecipe(TileCuttingMachine.class, new ItemStack(AdvancedRocketryItems.itemWafer, 4, 0), 300, 100, "bouleSilicon");
+		//Register machines
+		machineRecipes.registerMachine(TileElectrolyser.class);
+		machineRecipes.registerMachine(TileCuttingMachine.class);
+		machineRecipes.registerMachine(TileLathe.class);
+		machineRecipes.registerMachine(TilePrecisionAssembler.class);
+		machineRecipes.registerMachine(TileElectricArcFurnace.class);
+		machineRecipes.registerMachine(TileChemicalReactor.class);
+		machineRecipes.registerMachine(TileRollingMachine.class);
+		machineRecipes.registerMachine(TileCrystallizer.class);
 
-		//Lathe
-		RecipesMachine.getInstance().addRecipe(TileLathe.class, MaterialRegistry.getItemStackFromMaterialAndType("Iron", AllowedProducts.getProductByName("STICK"),2), 300, 100, "ingotIron");
-
-		//Precision Assembler recipes
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemCircuitPlate,1,0), 900, 100, Items.gold_ingot, Items.redstone, "waferSilicon");
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemCircuitPlate,1,1), 900, 100, Items.gold_ingot, Blocks.redstone_block, "waferSilicon");
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemDataUnit, 1, 0), 500, 60, Items.emerald, basicCircuit, Items.redstone);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, trackingCircuit, 900, 50, new ItemStack(AdvancedRocketryItems.itemCircuitPlate,1,0), Items.ender_eye, Items.redstone);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, itemIOBoard, 200, 10, "plateSilicon", "plateGold", basicCircuit, Items.redstone);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, controlCircuitBoard, 200, 10, "plateSilicon", "plateCopper", basicCircuit, Items.redstone);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, liquidIOBoard, 200, 10, "plateSilicon", new ItemStack(Items.dye, 1, 4), basicCircuit, Items.redstone);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemUpgrade,1,0), 400, 1, Items.redstone, Blocks.redstone_torch, basicCircuit, controlCircuitBoard);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemUpgrade,1,1), 400, 1, Items.fire_charge, Items.diamond, advancedCircuit, controlCircuitBoard);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemUpgrade,1,2), 400, 1, AdvancedRocketryBlocks.blockMotor, "rodTitanium", advancedCircuit, controlCircuitBoard);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemUpgrade,1,3), 400, 1, Items.leather_boots, Items.feather, advancedCircuit, controlCircuitBoard);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemUpgrade,1,4), 400, 1, LibVulpesItems.itemBattery, AdvancedRocketryItems.itemLens, advancedCircuit, controlCircuitBoard);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemAtmAnalyser), 1000, 1, smallBattery, advancedCircuit, "plateTin", AdvancedRocketryItems.itemLens,  userInterface);
-		RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, biomeChanger, 1000, 1, new NumberedOreDictStack("stickCopper", 2), "stickTitanium", new NumberedOreDictStack("waferSilicon", 2), advancedCircuit);
-		if(zmaster587.advancedRocketry.api.Configuration.enableTerraforming) {
-			RecipesMachine.getInstance().addRecipe(TilePrecisionAssembler.class, new ItemStack(AdvancedRocketryItems.itemBiomeChanger), 1000, 1, smallBattery, advancedCircuit, "plateTin", trackingCircuit,  userInterface);
-		}
-
-		//BlastFurnace
-		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("Silicon").getProduct(AllowedProducts.getProductByName("INGOT")), 12000, 1, Blocks.sand);
-		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("Steel").getProduct(AllowedProducts.getProductByName("INGOT")), 6000, 1, "ingotIron", charcoal);
-		//TODO add 2Al2O3 as output
-		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("TitaniumAluminide").getProduct(AllowedProducts.getProductByName("INGOT"), 3), 9000, 20, new NumberedOreDictStack("ingotAluminum", 7), new NumberedOreDictStack("ingotTitanium", 3)); //TODO titanium dioxide
-		RecipesMachine.getInstance().addRecipe(TileElectricArcFurnace.class, MaterialRegistry.getMaterialFromName("TitaniumIridium").getProduct(AllowedProducts.getProductByName("INGOT"),2), 3000, 20, "ingotTitanium", "ingotIridium");
-
-		//Chemical Reactor
-		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new Object[] {new ItemStack(AdvancedRocketryItems.itemCarbonScrubberCartridge,1, 0), new ItemStack(Items.coal, 1, 1)}, 40, 20, new ItemStack(AdvancedRocketryItems.itemCarbonScrubberCartridge, 1, AdvancedRocketryItems.itemCarbonScrubberCartridge.getMaxDamage()));
-		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new ItemStack(Items.dye,5,0xF), 100, 1, Items.bone, new FluidStack(AdvancedRocketryFluids.fluidNitrogen, 10));
-
-		//Rolling Machine
-		RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 0), 100, 1, "sheetIron", "sheetIron");
-		RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 1), 200, 2, "sheetSteel", "sheetSteel");
-		RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 2), 100, 1, "sheetAluminum", "sheetAluminum");
-		RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 3), 1000, 8, "sheetTitanium", "sheetTitanium");
+		//Register the machine recipes
+		machineRecipes.registerAllMachineRecipes();
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new zmaster587.advancedRocketry.inventory.GuiHandler());
 		planetWorldType = new WorldTypePlanetGen("PlanetCold");
@@ -1253,6 +1309,8 @@ public class AdvancedRocketry {
 		TileMultiBlock.addMapping('D', list);
 	}
 
+
+
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
@@ -1275,7 +1333,12 @@ public class AdvancedRocketry {
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileBiomeScanner(), (BlockTile)AdvancedRocketryBlocks.blockBiomeScanner);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileAtmosphereTerraformer(), (BlockTile)AdvancedRocketryBlocks.blockAtmosphereTerraformer);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileRailgun(), (BlockTile)AdvancedRocketryBlocks.blockRailgun);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileSpaceElevator(), (BlockTile)AdvancedRocketryBlocks.blockSpaceElevatorController);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileBeacon(), (BlockTile)AdvancedRocketryBlocks.blockBeacon);
 
+		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
+			((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileGravityController(), (BlockTile)AdvancedRocketryBlocks.blockGravityMachine);
+		
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
 			((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileSpaceLaser(), (BlockTile)AdvancedRocketryBlocks.blockSpaceLaser);
 
@@ -1302,6 +1365,7 @@ public class AdvancedRocketry {
 		MinecraftForge.EVENT_BUS.register(inputSync);
 
 		MinecraftForge.EVENT_BUS.register(new MapGenLander());
+		AdvancedRocketryAPI.gravityManager = new GravityHandler();
 
 		if(Loader.isModLoaded("GalacticraftCore") && zmaster587.advancedRocketry.api.Configuration.overrideGCAir) {
 			GalacticCraftHandler eventHandler = new GalacticCraftHandler();
@@ -1313,148 +1377,11 @@ public class AdvancedRocketry {
 		FMLCommonHandler.instance().bus().register(SpaceObjectManager.getSpaceManager());
 
 		PacketHandler.init();
-		FuelRegistry.instance.registerFuel(FuelType.LIQUID, AdvancedRocketryFluids.fluidRocketFuel, 1);
 
 		GameRegistry.registerWorldGenerator(new OreGenerator(), 100);
 
 		ForgeChunkManager.setForcedChunkLoadingCallback(instance, new WorldEvents());
-
-
-		//AutoGenned Recipes
-		for(zmaster587.libVulpes.api.material.Material ore : MaterialRegistry.getAllMaterials()) {
-			if(AllowedProducts.getProductByName("ORE").isOfType(ore.getAllowedProducts()) && AllowedProducts.getProductByName("INGOT").isOfType(ore.getAllowedProducts()))
-				GameRegistry.addSmelting(ore.getProduct(AllowedProducts.getProductByName("ORE")), ore.getProduct(AllowedProducts.getProductByName("INGOT")), 0);
-
-			if(AllowedProducts.getProductByName("NUGGET").isOfType(ore.getAllowedProducts())) {
-				ItemStack nugget = ore.getProduct(AllowedProducts.getProductByName("NUGGET"));
-				nugget.stackSize = 9;
-				for(String str : ore.getOreDictNames()) {
-					GameRegistry.addRecipe(new ShapelessOreRecipe(nugget, AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + str));
-					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("INGOT")), "ooo", "ooo", "ooo", 'o', AllowedProducts.getProductByName("NUGGET").name().toLowerCase(Locale.ENGLISH) + str));
-				}
-			}
-
-			if(AllowedProducts.getProductByName("CRYSTAL").isOfType(ore.getAllowedProducts())) {
-				for(String str : ore.getOreDictNames())
-					RecipesMachine.getInstance().addRecipe(TileCrystallizer.class, ore.getProduct(AllowedProducts.getProductByName("CRYSTAL")), 300, 20, AllowedProducts.getProductByName("DUST").name().toLowerCase(Locale.ENGLISH) + str);
-			}
-
-			if(AllowedProducts.getProductByName("BOULE").isOfType(ore.getAllowedProducts())) {
-				for(String str : ore.getOreDictNames())
-					RecipesMachine.getInstance().addRecipe(TileCrystallizer.class, ore.getProduct(AllowedProducts.getProductByName("BOULE")), 300, 20, AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + str, AllowedProducts.getProductByName("NUGGET").name().toLowerCase(Locale.ENGLISH) + str);
-			}
-
-			if(AllowedProducts.getProductByName("STICK").isOfType(ore.getAllowedProducts()) && AllowedProducts.getProductByName("INGOT").isOfType(ore.getAllowedProducts())) {
-				for(String name : ore.getOreDictNames())
-					if(OreDictionary.doesOreNameExist(AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + name)) {
-						GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("STICK"),4), "x  ", " x ", "  x", 'x', AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + name));
-
-						RecipesMachine.getInstance().addRecipe(TileLathe.class, ore.getProduct(AllowedProducts.getProductByName("STICK"),2), 300, 20, AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + name); //ore.getProduct(AllowedProducts.getProductByName("INGOT")));
-					}
-			}
-
-			if(AllowedProducts.getProductByName("PLATE").isOfType(ore.getAllowedProducts())) {
-				for(String oreDictNames : ore.getOreDictNames()) {
-					if(OreDictionary.doesOreNameExist(AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + oreDictNames)) {
-						RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, ore.getProduct(AllowedProducts.getProductByName("PLATE")), 300, 20, AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + oreDictNames);
-						if(AllowedProducts.getProductByName("BLOCK").isOfType(ore.getAllowedProducts()) || ore.isVanilla())
-							RecipesMachine.getInstance().addRecipe(BlockPress.class, ore.getProduct(AllowedProducts.getProductByName("PLATE"),4), 0, 0, AllowedProducts.getProductByName("BLOCK").name().toLowerCase(Locale.ENGLISH) + oreDictNames);
-					}
-				}
-			}
-
-			if(AllowedProducts.getProductByName("SHEET").isOfType(ore.getAllowedProducts())) {
-				for(String oreDictNames : ore.getOreDictNames()) {
-					RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, ore.getProduct(AllowedProducts.getProductByName("SHEET")), 300, 200, AllowedProducts.getProductByName("PLATE").name().toLowerCase(Locale.ENGLISH) + oreDictNames);
-				}
-			}
-
-			if(AllowedProducts.getProductByName("COIL").isOfType(ore.getAllowedProducts())) {
-				for(String str : ore.getOreDictNames())
-					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("COIL")), "ooo", "o o", "ooo",'o', AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + str));
-			}
-
-			if(AllowedProducts.getProductByName("FAN").isOfType(ore.getAllowedProducts())) {
-				for(String str : ore.getOreDictNames()) {
-					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("FAN")), "p p", " r ", "p p", 'p', AllowedProducts.getProductByName("PLATE").name().toLowerCase(Locale.ENGLISH) + str, 'r', AllowedProducts.getProductByName("STICK").name().toLowerCase(Locale.ENGLISH) + str));
-				}
-			}
-			if(AllowedProducts.getProductByName("GEAR").isOfType(ore.getAllowedProducts())) {
-				for(String str : ore.getOreDictNames()) {
-					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("GEAR")), "sps", " r ", "sps", 'p', AllowedProducts.getProductByName("PLATE").name().toLowerCase(Locale.ENGLISH) + str, 's', AllowedProducts.getProductByName("STICK").name().toLowerCase(Locale.ENGLISH) + str, 'r', AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + str));
-				}
-			}
-			if(AllowedProducts.getProductByName("BLOCK").isOfType(ore.getAllowedProducts())) {
-				ItemStack ingot = ore.getProduct(AllowedProducts.getProductByName("INGOT"));
-				ingot.stackSize = 9;
-				for(String str : ore.getOreDictNames()) {
-					GameRegistry.addRecipe(new ShapelessOreRecipe(ingot, AllowedProducts.getProductByName("BLOCK").name().toLowerCase(Locale.ENGLISH) + str));
-					GameRegistry.addRecipe(new ShapedOreRecipe(ore.getProduct(AllowedProducts.getProductByName("BLOCK")), "ooo", "ooo", "ooo", 'o', AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + str));
-				}
-			}
-
-			if(AllowedProducts.getProductByName("DUST").isOfType(ore.getAllowedProducts())) {
-				for(String str : ore.getOreDictNames()) {
-					if(AllowedProducts.getProductByName("ORE").isOfType(ore.getAllowedProducts()) || ore.isVanilla()) {
-						ItemStack stack = ore.getProduct(AllowedProducts.getProductByName("DUST"));
-						stack.stackSize = 2;
-						RecipesMachine.getInstance().addRecipe(BlockPress.class, stack, 0, 0, AllowedProducts.getProductByName("ORE").name().toLowerCase(Locale.ENGLISH) + str);
-					}
-					if(AllowedProducts.getProductByName("INGOT").isOfType(ore.getAllowedProducts()) || ore.isVanilla())
-						GameRegistry.addSmelting(ore.getProduct(AllowedProducts.getProductByName("DUST")), ore.getProduct(AllowedProducts.getProductByName("INGOT")), 0);
-				}
-			}
-		}
-
-		//Handle vanilla integration
-		if(zmaster587.advancedRocketry.api.Configuration.allowSawmillVanillaWood) {
-			for(int i = 0; i < 4; i++) {
-				RecipesMachine.getInstance().addRecipe(TileCuttingMachine.class, new ItemStack(Blocks.planks, 6, i), 80, 10, new ItemStack(Blocks.log,1, i));
-			}
-			RecipesMachine.getInstance().addRecipe(TileCuttingMachine.class, new ItemStack(Blocks.planks, 6, 4), 80, 10, new ItemStack(Blocks.log2,1, 0));
-			RecipesMachine.getInstance().addRecipe(TileCuttingMachine.class, new ItemStack(Blocks.planks, 6, 5), 80, 10, new ItemStack(Blocks.log2,1, 1));
-		}
-
-		//Handle items from other mods
-		if(zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods) {
-			for(Entry<AllowedProducts, HashSet<String>> entry : modProducts.entrySet()) {
-				if(entry.getKey() == AllowedProducts.getProductByName("PLATE")) {
-					for(String str : entry.getValue()) {
-						zmaster587.libVulpes.api.material.Material material = zmaster587.libVulpes.api.material.Material.valueOfSafe(str.toUpperCase());
-
-						if(OreDictionary.doesOreNameExist("ingot" + str) && OreDictionary.getOres("ingot" + str).size() > 0 && (material == null || !AllowedProducts.getProductByName("PLATE").isOfType(material.getAllowedProducts())) ) {
-
-							RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, OreDictionary.getOres("plate" + str).get(0), 300, 20, "ingot" + str);
-						}
-					}
-				}
-				else if(entry.getKey() == AllowedProducts.getProductByName("STICK")) {
-					for(String str : entry.getValue()) {
-						zmaster587.libVulpes.api.material.Material material = zmaster587.libVulpes.api.material.Material.valueOfSafe(str.toUpperCase());
-
-						if(OreDictionary.doesOreNameExist("ingot" + str) && OreDictionary.getOres("ingot" + str).size() > 0 && (material == null || !AllowedProducts.getProductByName("STICK").isOfType(material.getAllowedProducts())) ) {
-
-							//GT registers rods as sticks
-							ItemStack stackToAdd = null;
-							if(OreDictionary.doesOreNameExist("rod" + str) && OreDictionary.getOres("rod" + str).size() > 0) {
-								stackToAdd = OreDictionary.getOres("rod" + str).get(0).copy();
-								stackToAdd.stackSize = 2;
-							}
-							else if(OreDictionary.doesOreNameExist("stick" + str)  && OreDictionary.getOres("stick" + str).size() > 0) {
-								stackToAdd = OreDictionary.getOres("stick" + str).get(0).copy();
-								stackToAdd.stackSize = 2;
-							}
-							else 
-								continue;
-
-							RecipesMachine.getInstance().addRecipe(TileLathe.class, stackToAdd, 300, 20, "ingot" + str);
-
-						}
-
-					}
-				}
-			}
-		}
+		machineRecipes.createAutoGennedRecipes(modProducts);
 
 		//Register buckets
 		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockFuelFluid, AdvancedRocketryItems.itemBucketRocketFuel);
@@ -1472,6 +1399,21 @@ public class AdvancedRocketry {
 		net.minecraftforge.common.DimensionManager.registerProviderType(zmaster587.advancedRocketry.api.Configuration.spaceDimId, WorldProviderSpace.class, true);
 		net.minecraftforge.common.DimensionManager.registerDimension(zmaster587.advancedRocketry.api.Configuration.spaceDimId,zmaster587.advancedRocketry.api.Configuration.spaceDimId);
 
+		//Register fuels
+		logger.info("Start registering liquid rocket fuels");
+		for(String str : liquidRocketFuel) {
+			Fluid fluid = FluidRegistry.getFluid(str);
+			
+			if(fluid != null) {
+				logger.info("Registering fluid "+ str + " as rocket fuel");
+				FuelRegistry.instance.registerFuel(FuelType.LIQUID, fluid, 1f);
+			}
+			else
+				logger.warn("Fluid name" + str  + " is not a registered fluid!");
+		}
+		logger.info("Finished registering liquid rocket fuels");
+		liquidRocketFuel = null; //clean up
+		
 		//Register Whitelisted Sealable Blocks
 
 		logger.info("Start registering sealable blocks");
@@ -1537,12 +1479,6 @@ public class AdvancedRocketry {
 		entityList = null;
 		logger.info("End registering entity atmosphere bypass");
 
-		//Register asteriodOres
-		if(!zmaster587.advancedRocketry.api.Configuration.asteriodOresBlackList) {
-			for(String str  : asteriodOres)
-				zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres.add(str);
-		}
-
 		//Register geodeOres
 		if(!zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList) {
 			for(String str  : geodeOres)
@@ -1558,18 +1494,6 @@ public class AdvancedRocketry {
 
 		//Do blacklist stuff for ore registration
 		for(String oreName : OreDictionary.getOreNames()) {
-			if(zmaster587.advancedRocketry.api.Configuration.asteriodOresBlackList && oreName.startsWith("ore")) {
-				boolean found = false;
-				for(String str : asteriodOres) {
-					if(oreName.equals(str)) {
-						found = true;
-						break;
-					}
-				}
-				if(!found)
-					zmaster587.advancedRocketry.api.Configuration.standardAsteroidOres.add(oreName);
-			}
-
 			if(zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList && oreName.startsWith("ore")) {
 				boolean found = false;
 				for(String str : geodeOres) {
@@ -1596,15 +1520,44 @@ public class AdvancedRocketry {
 		}
 
 		//Load XML recipes
-		LibVulpes.instance.loadXMLRecipe(TileCuttingMachine.class);
-		LibVulpes.instance.loadXMLRecipe(TilePrecisionAssembler.class);
-		LibVulpes.instance.loadXMLRecipe(TileChemicalReactor.class);
-		LibVulpes.instance.loadXMLRecipe(TileCrystallizer.class);
-		LibVulpes.instance.loadXMLRecipe(TileElectrolyser.class);
-		LibVulpes.instance.loadXMLRecipe(TileElectricArcFurnace.class);
-		LibVulpes.instance.loadXMLRecipe(TileLathe.class);
-		LibVulpes.instance.loadXMLRecipe(TileRollingMachine.class);
-		LibVulpes.instance.loadXMLRecipe(BlockPress.class);
+		machineRecipes.registerXMLRecipes();
+
+
+		//Load Asteroids from XML
+		File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/asteroidConfig.xml");
+		logger.info("Checking for asteroid config at " + file.getAbsolutePath());
+		if(!file.exists()) {
+			logger.info(file.getAbsolutePath() + " not found, generating");
+			try {
+
+				file.createNewFile();
+				BufferedWriter stream;
+				stream = new BufferedWriter(new FileWriter(file));
+				stream.write("<Asteroids>\n\t<asteroid name=\"Small Asteroid\" distance=\"10\" mass=\"100\" massVariability=\"0.5\" minLevel=\"0\" probability=\"1\" richness=\"0.2\" richnessVariability=\"0.5\">"
+						+ "\n\t\t<ore itemStack=\"minecraft:iron_ore\" chance=\"15\" />"
+						+ "\n\t\t<ore itemStack=\"minecraft:gold_ore\" chance=\"10\" />"
+						+ "\n\t\t<ore itemStack=\"minecraft:redstone_ore\" chance=\"10\" />"
+						+ "\n\t</asteroid>\n</Asteroids>");
+				stream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		XMLAsteroidLoader load = new XMLAsteroidLoader();
+		try {
+			load.loadFile(file);
+			for(AsteroidSmall asteroid : load.loadPropertyFile()) {
+				zmaster587.advancedRocketry.api.Configuration.asteroidTypes.put(asteroid.ID, asteroid);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		// End load asteroids from XML
+
+		//Add the overworld as a discovered planet
+		zmaster587.advancedRocketry.api.Configuration.initiallyKnownPlanets.add(0);
 	}
 
 	@EventHandler
@@ -1679,11 +1632,47 @@ public class AdvancedRocketry {
 		//Note: loading this modifies dimOffset
 		DimensionPropertyCoupling dimCouplingList = null;
 		XMLPlanetLoader loader = null;
+		boolean loadedFromXML = false;
 
-		file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
+		//Check advRocketry folder first
+		File localFile;
+		localFile = file = new File(net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory() + "/" + DimensionManager.workingPath + "/planetDefs.xml");
 		logger.info("Checking for config at " + file.getAbsolutePath());
+
+		if(!file.exists()) { //Hi, I'm if check #42, I am true if the config is not in the world/advRocketry folder
+			file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
+			logger.info("File not found.  Now checking for config at " + file.getAbsolutePath());
+
+			//Copy file to local dir
+			if(file.exists()) {
+				logger.info("Advanced Planet Config file Found!  Copying to world specific directory");
+				try {
+					File dir = new File(localFile.getAbsolutePath().substring(0, localFile.getAbsolutePath().length() - localFile.getName().length()));
+					
+					//File cannot exist due to if check #42
+					if((dir.exists() || dir.mkdir()) && localFile.createNewFile()) {
+						char buffer[] = new char[1024];
+
+						FileReader reader = new FileReader(file);
+						FileWriter writer = new FileWriter(localFile);
+						int numChars = 0;
+						while((numChars = reader.read(buffer)) > 0) {
+							writer.write(buffer, 0, numChars);
+						}
+
+						reader.close();
+						writer.close();
+						logger.info("Copy success!");
+					}
+					else
+						logger.warn("Unable to create file " + localFile.getAbsolutePath());
+				} catch(IOException e) {
+					logger.warn("Unable to write file " + localFile.getAbsolutePath());
+				}
+			}
+		}
 		if(file.exists()) {
-			logger.info("Advanced Planet Config file Found!");
+			logger.info("Advanced Planet Config file Found!  Loading from file.");
 			loader = new XMLPlanetLoader();
 			try {
 				loader.loadFile(file);
@@ -1693,7 +1682,6 @@ public class AdvancedRocketry {
 
 			}
 		}
-
 		//End load planet files
 
 		if(Loader.isModLoaded("GalacticraftCore") ) 
@@ -1701,31 +1689,13 @@ public class AdvancedRocketry {
 
 
 		//Register hard coded dimensions
-		if(!zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.filePath) || resetFromXml) {
+		if(!zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.workingPath)) {
 			int numRandomGeneratedPlanets = 9;
 			int numRandomGeneratedGasGiants = 1;
 			file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
 			logger.info("Checking for config at " + file.getAbsolutePath());
 
-			if(resetFromXml) {
-				zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
-				zmaster587.advancedRocketry.api.Configuration.MoonId = -1;
-
-				//Delete old dimensions
-				File dir = new File(net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory() + "/" + DimensionManager.workingPath);
-				for(File file2 : dir.listFiles()) {
-					if(file2.getName().startsWith("DIM") && !file2.getName().equals("DIM" + zmaster587.advancedRocketry.api.Configuration.spaceDimId)) {
-						try {
-							FileUtils.deleteDirectory(file2);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-
-			boolean loadedFromXML = false;
-
+		
 			if(dimCouplingList != null) {
 				logger.info("Loading initial planet config!");
 
@@ -1741,35 +1711,45 @@ public class AdvancedRocketry {
 				for(StellarBody star : dimCouplingList.stars) {
 					numRandomGeneratedPlanets = loader.getMaxNumPlanets(star);
 					numRandomGeneratedGasGiants = loader.getMaxNumGasGiants(star);
-					generateRandomPlanets(star, numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
+					dimCouplingList.dims.addAll(generateRandomPlanets(star, numRandomGeneratedPlanets, numRandomGeneratedGasGiants));
 				}
 
 				loadedFromXML = true;
 
 			}
 
+			if(!loadedFromXML) {
+				//Make Sol				
+				StellarBody sol = new StellarBody();
+				sol.setTemperature(100);
+				sol.setId(0);
+				sol.setName("Sol");
 
-			if(zmaster587.advancedRocketry.api.Configuration.MoonId == -1)
-				zmaster587.advancedRocketry.api.Configuration.MoonId = DimensionManager.getInstance().getNextFreeDim(DimensionManager.dimOffset);
+				DimensionManager.getInstance().addStar(sol);
 
-			if(zmaster587.advancedRocketry.api.Configuration.MoonId != -1) {
-				DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId);
-				dimensionProperties.setAtmosphereDensityDirect(0);
-				dimensionProperties.averageTemperature = 20;
-				dimensionProperties.gravitationalMultiplier = .166f; //Actual moon value
-				dimensionProperties.setName("Luna");
-				dimensionProperties.rotationalPeriod = 128000;
-				dimensionProperties.orbitalDist = 150;
-				dimensionProperties.addBiome(AdvancedRocketryBiomes.moonBiome);
+				//Add the overworld
+				DimensionManager.getInstance().registerDimNoUpdate(DimensionManager.overworldProperties, false);
 
-				dimensionProperties.setParentPlanet(DimensionManager.overworldProperties);
-				dimensionProperties.setStar(DimensionManager.getSol());
-				dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");
-				DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
+				if(zmaster587.advancedRocketry.api.Configuration.MoonId == -1)
+					zmaster587.advancedRocketry.api.Configuration.MoonId = DimensionManager.getInstance().getNextFreeDim(DimensionManager.dimOffset);
 
-			}
+				//Register the moon
+				if(zmaster587.advancedRocketry.api.Configuration.MoonId != -1) {
+					DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId);
+					dimensionProperties.setAtmosphereDensityDirect(0);
+					dimensionProperties.averageTemperature = 20;
+					dimensionProperties.gravitationalMultiplier = .166f; //Actual moon value
+					dimensionProperties.setName("Luna");
+					dimensionProperties.rotationalPeriod = 128000;
+					dimensionProperties.orbitalDist = 150;
+					dimensionProperties.addBiome(AdvancedRocketryBiomes.moonBiome);
 
-			if(!loadedFromXML)  {
+					dimensionProperties.setParentPlanet(DimensionManager.overworldProperties);
+					dimensionProperties.setStar(DimensionManager.getSol());
+					dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");
+					DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
+				}
+				
 				generateRandomPlanets(DimensionManager.getSol(), numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
 
 				StellarBody star = new StellarBody();
@@ -1807,7 +1787,6 @@ public class AdvancedRocketry {
 				star.setName("Magnis Vulpes");
 				DimensionManager.getInstance().addStar(star);
 				generateRandomPlanets(star, 2, 0);
-
 			}
 
 		}else {
@@ -1819,6 +1798,15 @@ public class AdvancedRocketry {
 
 		//Attempt to load ore config from adv planet XML
 		if(dimCouplingList != null) {
+			
+			//Register new stars
+			for(StellarBody star : dimCouplingList.stars) {
+				if(DimensionManager.getInstance().getStar(star.getId()) == null)
+					DimensionManager.getInstance().addStar(star);
+				
+				DimensionManager.getInstance().getStar(star.getId()).subStars = star.subStars;
+			}
+			
 			for(DimensionProperties properties : dimCouplingList.dims) {
 
 				//Register dimensions loaded by other mods if not already loaded
@@ -1832,6 +1820,57 @@ public class AdvancedRocketry {
 						}
 					}
 				}
+				
+				//Overwrite with loaded XML
+				if(DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
+					DimensionProperties loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
+					
+					loadedProps.fogColor = properties.fogColor;
+					loadedProps.gravitationalMultiplier = properties.gravitationalMultiplier;
+					loadedProps.hasRings = properties.hasRings;
+					loadedProps.orbitalDist = properties.getOrbitalDist();
+					loadedProps.ringColor = properties.ringColor;
+					loadedProps.orbitalPhi = properties.orbitalPhi;
+					loadedProps.rotationalPeriod = properties.rotationalPeriod;
+					loadedProps.skyColor = properties.skyColor;
+					loadedProps.setBiomeEntries(properties.getBiomes());
+					loadedProps.setAtmosphereDensityDirect(properties.getAtmosphereDensity());
+					loadedProps.setName(properties.getName());
+					
+					if(properties.isGasGiant()) loadedProps.setGasGiant();
+					
+					//Register gasses if needed
+					if(!properties.getHarvestableGasses().isEmpty() && properties.getHarvestableGasses() != loadedProps.getHarvestableGasses()) {
+						loadedProps.getHarvestableGasses().clear();
+						loadedProps.getHarvestableGasses().addAll(properties.getHarvestableGasses());
+					}
+					
+					if(!loadedProps.isMoon() && properties.isMoon()) loadedProps.setParentPlanet(properties.getParentProperties());
+					if(loadedProps.isMoon() && !properties.isMoon()) {
+						loadedProps.getParentProperties().removeChild(loadedProps.getId());
+						loadedProps.setParentPlanet(null);
+					}
+				}
+				else {
+					DimensionManager.getInstance().registerDim(properties, properties.isNativeDimension);
+				}
+
+				if(!properties.customIcon.isEmpty()) {
+					DimensionProperties loadedProps;
+					if(DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
+						loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
+						loadedProps.customIcon = properties.customIcon;
+					}
+				}
+				
+				//Add artifacts if needed
+				if(DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
+					DimensionProperties loadedProps;
+					loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
+					List<ItemStack> list = new LinkedList<ItemStack>(properties.getRequiredArtifacts());
+					loadedProps.getRequiredArtifacts().clear();
+					loadedProps.getRequiredArtifacts().addAll(list);
+				}
 
 				if(properties.oreProperties != null) {
 					DimensionProperties loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
@@ -1840,14 +1879,54 @@ public class AdvancedRocketry {
 						loadedProps.oreProperties = properties.oreProperties;
 				}
 			}
+			
+			//Remove dimensions not in the XML
+			for(int i : DimensionManager.getInstance().getRegisteredDimensions()) {
+				boolean found = false;
+				for(DimensionProperties properties : dimCouplingList.dims) {
+					if(properties.getId() == i) {
+						found = true;
+						break;
+					}
+				}
+				
+				if(!found) {
+					DimensionManager.getInstance().deleteDimension(i);
+				}
+			}
+			
+			//Remove stars not in the XML
+			for(int i : new HashSet<Integer>(DimensionManager.getInstance().getStarIds())) {
+				boolean found = false;
+				for(StellarBody properties : dimCouplingList.stars) {
+					if(properties.getId() == i) {
+						found = true;
+						break;
+					}
+				}
+				
+				if(!found) {
+					DimensionManager.getInstance().removeStar(i);
+				}
+			}
+
+			//Add planets
+			for(StellarBody star : dimCouplingList.stars) {
+				int numRandomGeneratedPlanets = loader.getMaxNumPlanets(star);
+				int numRandomGeneratedGasGiants = loader.getMaxNumGasGiants(star);
+				generateRandomPlanets(star, numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
+			}
 		}
 
 		// make sure to set dim offset back to original to make things consistant
 		DimensionManager.dimOffset = dimOffset;
-
+		
+		DimensionManager.getInstance().knownPlanets.addAll(zmaster587.advancedRocketry.api.Configuration.initiallyKnownPlanets);
 	}
 
-	private void generateRandomPlanets(StellarBody star, int numRandomGeneratedPlanets, int numRandomGeneratedGasGiants) {
+	private List<DimensionProperties> generateRandomPlanets(StellarBody star, int numRandomGeneratedPlanets, int numRandomGeneratedGasGiants) {
+		List<DimensionProperties> dimPropList = new LinkedList<DimensionProperties>();
+		
 		Random random = new Random(System.currentTimeMillis());
 
 
@@ -1857,6 +1936,7 @@ public class AdvancedRocketry {
 
 			DimensionProperties	properties = DimensionManager.getInstance().generateRandomGasGiant(star.getId(), "",baseDistance + 50,baseAtm,125,100,100,75);
 
+			dimPropList.add(properties);
 			if(properties.gravitationalMultiplier >= 1f) {
 				int numMoons = random.nextInt(8);
 
@@ -1864,6 +1944,8 @@ public class AdvancedRocketry {
 					DimensionProperties moonProperties = DimensionManager.getInstance().generateRandom(star.getId(), properties.getName() + ": " + ii, 25,100, (int)(properties.gravitationalMultiplier/.02f), 25, 100, 50);
 					if(moonProperties == null)
 						continue;
+					
+					dimPropList.add(moonProperties);
 					moonProperties.setParentPlanet(properties);
 					star.removePlanet(moonProperties);
 				}
@@ -1893,6 +1975,8 @@ public class AdvancedRocketry {
 			if(properties == null)
 				continue;
 
+			dimPropList.add(properties);
+			
 			if(properties.gravitationalMultiplier >= 1f) {
 				int numMoons = random.nextInt(4);
 
@@ -1901,11 +1985,15 @@ public class AdvancedRocketry {
 
 					if(moonProperties == null)
 						continue;
+					
+					dimPropList.add(moonProperties);
 					moonProperties.setParentPlanet(properties);
 					star.removePlanet(moonProperties);
 				}
 			}
 		}
+		
+		return dimPropList;
 	}
 
 
@@ -1914,10 +2002,11 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
 		zmaster587.advancedRocketry.cable.NetworkRegistry.clearNetworks();
 		SpaceObjectManager.getSpaceManager().onServerStopped();
+		((BlockSeal)AdvancedRocketryBlocks.blockPipeSealer).clearMap();
 		zmaster587.advancedRocketry.api.Configuration.MoonId = -1;
 		DimensionManager.getInstance().overworldProperties.resetProperties();
 		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 8000, "Dimensions including and after this number are allowed to be made into planets");
-
+		DimensionManager.getInstance().knownPlanets.clear();
 		if(!zmaster587.advancedRocketry.api.Configuration.lockUI)
 			proxy.saveUILayout(config);
 	}

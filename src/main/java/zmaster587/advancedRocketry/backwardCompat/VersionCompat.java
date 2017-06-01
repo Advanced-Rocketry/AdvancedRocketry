@@ -5,7 +5,6 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 
 public class VersionCompat {
 	public static void upgradeDimensionManagerPostLoad(String prevVersion) {
-		
 		/*if(AdvancedRocketry.version.equals(prevVersion) || AdvancedRocketry.version.startsWith("%"))
 			return;
 		String version = prevVersion;

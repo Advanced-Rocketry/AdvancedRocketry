@@ -33,7 +33,7 @@ public class TileSatelliteHatch extends TileInventoryHatch {
 			if(satellite == null)
 				return null;
 			
-			satellite.setProperties(properties);
+			satellite.setProperties(itemStack);
 			return satellite;
 		}
 		else

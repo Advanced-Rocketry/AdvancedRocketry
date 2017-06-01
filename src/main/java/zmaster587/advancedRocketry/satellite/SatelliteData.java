@@ -41,9 +41,9 @@ public abstract class SatelliteData extends SatelliteBase {
 	}
 	
 	@Override
-	public void setProperties(SatelliteProperties satelliteProperties) {
+	public void setProperties(ItemStack satelliteProperties) {
 		super.setProperties(satelliteProperties);
-		data.setMaxData(satelliteProperties.getMaxDataStorage());
+		data.setMaxData(this.satelliteProperties.getMaxDataStorage());
 	}
 	
 	

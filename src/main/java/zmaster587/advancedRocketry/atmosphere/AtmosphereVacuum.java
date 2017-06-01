@@ -1,8 +1,12 @@
 package zmaster587.advancedRocketry.atmosphere;
 
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
@@ -18,8 +22,9 @@ import zmaster587.libVulpes.network.PacketHandler;
 public class AtmosphereVacuum extends AtmosphereType {
 
 	static Class powerSuitItem;
+
 	public static int damageValue;
-	
+
 	public AtmosphereVacuum() {
 		super(true, false, "vacuum");
 	}
@@ -50,16 +55,31 @@ public class AtmosphereVacuum extends AtmosphereType {
 		ItemStack helm = player.getEquipmentInSlot(4);
 
 		//TODO change over to use API #ISealedArmor
-		return (player instanceof EntityPlayer && ((EntityPlayer)player).capabilities.isCreativeMode) 
+		return (player instanceof EntityPlayer && ((EntityPlayer)player).capabilities.isCreativeMode)
 				|| player.ridingEntity instanceof EntityRocketBase ||
-				helm != null && (helm.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)helm.getItem()).protectsFromSubstance(this, helm, true) || protectsFrom(helm, 1)) &&
-				chest != null && (chest.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)chest.getItem()).protectsFromSubstance(this, chest, true) || protectsFrom(chest, 2)) &&
-				leg != null && (leg.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)leg.getItem()).protectsFromSubstance(this, leg, true) || protectsFrom(leg, 3)) &&
-				feet != null && (feet.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)feet.getItem()).protectsFromSubstance(this, feet, true) || protectsFrom(feet, 4)) &&
-				(protectsFrom(chest, 2) || ((chest.getItem() instanceof IFillableArmor) && ((IFillableArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).decrementAir(chest, 1) > 0));
+				protectsFrom(helm) &&
+				protectsFrom(chest) &&
+				protectsFrom(leg) &&
+				protectsFrom(feet) &&
+				(protectsFrom(chest) || ((chest.getItem() instanceof IFillableArmor) && ((IFillableArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).decrementAir(chest, 1) > 0));
 	}
 	
-	public static boolean protectsFrom(ItemStack stack, int slot) {
+	public boolean protectsFrom(ItemStack stack) {
+		
+		if(stack == null)
+			return false;
+		
+		//Check for enchantment
+		boolean isEnchanted = false;
+		NBTTagList enchList = stack.getEnchantmentTagList();
+		if(enchList != null) {
+			for(int i = 0 ; i < enchList.tagCount(); i++) {
+				NBTTagCompound compound = enchList.getCompoundTagAt(i);
+				isEnchanted = compound.getShort("id") == AdvancedRocketryAPI.enchantmentSpaceProtection.effectId;
+				if(isEnchanted)
+					break;
+			}
+		}
 		
 		if(CompatibilityMgr.powerSuits) {
 			if( powerSuitItem == null)
@@ -73,6 +93,8 @@ public class AtmosphereVacuum extends AtmosphereType {
 			if(powerSuitItem.isInstance(stack.getItem()))
 				return true;
 		}
-		return false;
+		
+		
+		return isEnchanted || (stack != null && (stack.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)stack.getItem()).protectsFromSubstance(this, stack, true)));
 	}
 }

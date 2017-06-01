@@ -7,6 +7,7 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.render.RenderHelper;
+import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.EnumFacing;
@@ -23,18 +24,9 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 	}
 
 	Minecraft mc = Minecraft.getMinecraft();
-
-	@Override
-	protected ForgeDirection getRotationAxis(DimensionProperties properties, int x, int z) {
-		try {
-			return SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(x,z).getForwardDirection().getRotation(ForgeDirection.UP);
-		} catch(NullPointerException e) {
-			return ForgeDirection.EAST;
-		}
-	}
 	
 	@Override
-	protected void renderPlanet(Tessellator tessellator1, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, boolean hasAtmosphere, float atmColor[], boolean isGasgiant) {
+	protected void renderPlanet2(Tessellator tessellator1, ResourceLocation icon, int locationX, int locationY, double zLevel, float planetOrbitalDistance, float alphaMultiplier, double angle, boolean hasAtmosphere, float[] atmColor, float[] ringColor, boolean isGasgiant, boolean hasRings)  {
 
 		ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
 		
@@ -187,6 +179,29 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 		GL11.glPopMatrix();
 	}
 
+	@Override
+	protected ForgeDirection getRotationAxis(DimensionProperties properties,
+			int x, int z) {
+		try {
+			return SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(x,z).getForwardDirection().getRotation(ForgeDirection.UP);
+		} catch(Exception e) {
+			return ForgeDirection.EAST;
+		}
+	}
+
+	@Override
+	protected void rotateAroundAxis() {
+		Vector3F<Float> axis = getRotateAxis();
+		//GL11.glRotatef(90f, axis.x, axis.y, axis.z);
+		ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
+		
+		GL11.glRotated(obj.getRotation(ForgeDirection.UP)*360, 0, 1, 0);
+		GL11.glRotated(obj.getRotation(ForgeDirection.EAST)*360, 1, 0, 0);
+		
+		//GL11.glRotated(360, obj.getRotation(EnumFacing.EAST), obj.getRotation(EnumFacing.UP), obj.getRotation(EnumFacing.NORTH));
+		
+	}
+	
 	@Override
 	protected ResourceLocation getTextureForPlanet(DimensionProperties properties) {
 		return properties.getPlanetIconLEO();

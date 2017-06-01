@@ -101,7 +101,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 			NBTTagCompound nbt) {
 
 		if(id == 0) {
-			storeData();
+			storeData(0);
 		}
 		else if( id == 100 ) {
 
@@ -223,11 +223,11 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 	}
 
 	@Override
-	public void loadData() {
+	public void loadData(int id) {
 	}
 
 	@Override
-	public void storeData() {
+	public void storeData(int id) {
 		if(!worldObj.isRemote) {
 			ItemStack inv = getStackInSlot(1);
 			if(inv != null && inv.getItem() instanceof ItemData && inv.stackSize == 1) {

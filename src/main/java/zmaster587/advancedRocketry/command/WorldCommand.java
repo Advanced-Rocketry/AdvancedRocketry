@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
@@ -144,6 +145,25 @@ public class WorldCommand implements ICommand {
 			}
 			else
 				sender.addChatMessage(new ChatComponentText("Ghosts don't have items!"));
+			return;
+		}
+		
+		if(string.length >= 1 &&  string[0].equalsIgnoreCase("reloadRecipes")) {
+			try {
+				AdvancedRocketry.machineRecipes.clearAllMachineRecipes();
+				AdvancedRocketry.machineRecipes.registerAllMachineRecipes();
+				AdvancedRocketry.machineRecipes.createAutoGennedRecipes(AdvancedRocketry.modProducts);
+				AdvancedRocketry.machineRecipes.registerXMLRecipes();
+				
+				sender.addChatMessage(new ChatComponentText("Recipes Reloaded"));
+			} catch (Exception e) {
+				sender.addChatMessage(new ChatComponentText("Serious error has occured!  Possible recipe corruption"));
+				sender.addChatMessage(new ChatComponentText("Please check logs!"));
+				sender.addChatMessage(new ChatComponentText("You may be able to recify this error by repairing the XML and/or"));
+				sender.addChatMessage(new ChatComponentText("restarting the game"));
+			}
+
+			
 			return;
 		}
 
@@ -467,6 +487,8 @@ public class WorldCommand implements ICommand {
 										field.set(properties, Float.parseFloat(string[3]));
 									else if(Double.TYPE == field.getType()) 
 										field.set(properties, Double.parseDouble(string[3]));
+									else if(Boolean.TYPE == field.getType())
+										field.set(properties, Boolean.parseBoolean(string[3]));
 									else
 										field.set(properties, string[3]);
 								}
@@ -624,6 +646,7 @@ public class WorldCommand implements ICommand {
 			list.add("goto");
 			list.add("fetch");
 			list.add("star");
+			list.add("reloadRecipes");
 			list.add("givestation");
 		} else if(string.length == 2) {
 			ArrayList<String> list2 = new ArrayList<String>();

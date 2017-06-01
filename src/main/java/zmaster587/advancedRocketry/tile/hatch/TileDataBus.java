@@ -9,6 +9,9 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
@@ -41,7 +44,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 
 	@Override
-	public void loadData() {
+	public void loadData(int id) {
 		
 		ItemStack itemStack = inventory.getStackInSlot(0);
 		
@@ -58,14 +61,14 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)-2));
 		}
 	}
-
+	
 	@Override
 	public String getModularInventoryName() {
 		return "tile.loader.0.name";
 	}
 
 	@Override
-	public void storeData() {
+	public void storeData(int id) {
 		ItemStack itemStack = inventory.getStackInSlot(0);
 		
 		if(itemStack != null && itemStack.getItem() instanceof ItemData && itemStack.stackSize == 1) {
@@ -122,13 +125,24 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		data.writeToNBT(nbt);
+		
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		data.readFromNBT(nbt);
+	}
+	
+	@Override
+	protected void writeToNBTHelper(NBTTagCompound nbtTagCompound) {
+		super.writeToNBTHelper(nbtTagCompound);
+		data.writeToNBT(nbtTagCompound);
+	}
+	
+	@Override
+	protected void readFromNBTHelper(NBTTagCompound nbtTagCompound) {
+		super.readFromNBTHelper(nbtTagCompound);
+		data.readFromNBT(nbtTagCompound);
 	}
 
 	@Override
@@ -147,10 +161,10 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 			NBTTagCompound nbt) {
 
 		if(id == -1) {
-			storeData();
+			storeData(0);
 		}
 		else if(id == -2)
-			loadData();
+			loadData(0);
 	}
 
 	@Override

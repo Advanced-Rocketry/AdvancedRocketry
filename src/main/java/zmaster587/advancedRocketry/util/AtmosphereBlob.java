@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 
-	static ThreadPoolExecutor pool = (Configuration.atmosphereHandleBitMask & 1) == 1 ? new ThreadPoolExecutor(3, 16, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(2)) : null;
+	static ThreadPoolExecutor pool = (Configuration.atmosphereHandleBitMask & 1) == 1 ? new ThreadPoolExecutor(3, 16, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(32)) : null;
 
 	boolean executing;
 	BlockPosition blockPos;
@@ -42,14 +42,17 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	@Override
 	public void removeBlock(int x, int y, int z) {
 		BlockPosition blockPos = new BlockPosition(x, y, z);
-		graph.remove(blockPos);
-		graph.contains(blockPos);
+		synchronized (graph) {
+			graph.remove(blockPos);
+			graph.contains(blockPos);
 
-		for(ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
 
-			BlockPosition newBlock = blockPos.getPositionAtOffset(direction.offsetX, direction.offsetY, direction.offsetZ);
-			if(graph.contains(newBlock) && !graph.doesPathExist(newBlock, blobHandler.getRootPosition()))
-				runEffectOnWorldBlocks(blobHandler.getWorld(), graph.removeAllNodesConnectedTo(newBlock));
+			for(ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
+
+				BlockPosition newBlock = blockPos.getPositionAtOffset(direction.offsetX, direction.offsetY, direction.offsetZ);
+				if(graph.contains(newBlock) && !graph.doesPathExist(newBlock, blobHandler.getRootPosition()))
+					runEffectOnWorldBlocks(blobHandler.getWorld(), graph.removeAllNodesConnectedTo(newBlock));
+			}
 		}
 	}
 
@@ -160,14 +163,12 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	 */
 	protected void runEffectOnWorldBlocks(World world, Collection<BlockPosition> blocks) {
 		if(!AtmosphereHandler.getOxygenHandler(world.provider.dimensionId).getDefaultAtmosphereType().allowsCombustion()) {
-
-
 			List<BlockPosition> list;
 
 			synchronized (graph) {
 				list = new LinkedList<BlockPosition>(blocks);
 			}
-			
+
 			for(BlockPosition pos : list) {
 				Block block = world.getBlock(pos.x, pos.y, pos.z);
 				if(block== Blocks.torch) {

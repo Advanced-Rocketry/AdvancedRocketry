@@ -47,8 +47,25 @@ public class AtmosphereLowOxygen extends AtmosphereType {
 		//TODO change over to use API #ISealedArmor
 		return (player instanceof EntityPlayer && ((EntityPlayer)player).capabilities.isCreativeMode) 
 				|| player.ridingEntity instanceof EntityRocketBase ||
-				helm != null && (helm.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)helm.getItem()).protectsFromSubstance(this, helm, true) || AtmosphereVacuum.protectsFrom(helm, 1)) &&
-				chest != null && (chest.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)chest.getItem()).protectsFromSubstance(this, chest, true) || AtmosphereVacuum.protectsFrom(chest, 2)) &&
+				helm != null && (helm.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)helm.getItem()).protectsFromSubstance(this, helm, true) || protectsFrom(helm, 1)) &&
+				chest != null && (chest.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)chest.getItem()).protectsFromSubstance(this, chest, true) || protectsFrom(chest, 2)) &&
 				((chest.getItem() instanceof IFillableArmor) && ((IFillableArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).decrementAir(chest, 1) > 0);
+	}
+	
+	public boolean protectsFrom(ItemStack stack, int slot) {
+		
+		if(CompatibilityMgr.powerSuits) {
+			if( AtmosphereVacuum.powerSuitItem == null)
+				try {
+					AtmosphereVacuum.powerSuitItem = Class.forName("net.machinemuse.powersuits.item.ItemPowerArmor");
+				} catch (ClassNotFoundException e) {
+					//Silently fail to prevent spam
+					return false;
+				}
+			
+			if(AtmosphereVacuum.powerSuitItem.isInstance(stack.getItem()))
+				return true;
+		}
+		return false;
 	}
 }

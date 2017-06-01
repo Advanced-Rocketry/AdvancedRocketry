@@ -6,6 +6,8 @@ import java.util.Set;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -15,6 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.IFluidHandler;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.material.AllowedProducts;
@@ -35,11 +38,19 @@ public class TileRollingMachine extends TileMultiblockMachine {
 			{'I', Blocks.air, LibVulpesBlocks.blockStructureBlock, Blocks.air}},
 
 			{{LibVulpesBlocks.blockRFBattery, 'L', LibVulpesBlocks.blockStructureBlock, null},
-				{new BlockMeta(Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem()), MaterialRegistry.getMaterialFromName("Copper").getMeta()), LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'O'},
-				{new BlockMeta(Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem()), MaterialRegistry.getMaterialFromName("Copper").getMeta()), AdvancedRocketryBlocks.blockMotor, LibVulpesBlocks.blockStructureBlock, 'O'}}
+				{"blockCoil", LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'O'},
+				{"blockCoil", LibVulpesBlocks.motors, LibVulpesBlocks.blockStructureBlock, 'O'}}
 	};
 
 
+	@Override
+	public void registerRecipes() {
+		RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 0), 100, 1, "sheetIron", "sheetIron");
+		RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 1), 200, 2, "sheetSteel", "sheetSteel");
+		RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 2), 100, 1, "sheetAluminum", "sheetAluminum");
+		RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 3), 1000, 8, "sheetTitanium", "sheetTitanium");
+	}
+	
 	@Override
 	public Object[][][] getStructure() {
 		return structure;
@@ -64,6 +75,22 @@ public class TileRollingMachine extends TileMultiblockMachine {
 		}
 
 		return super.canProcessRecipe(recipe);
+	}
+	
+	@Override
+	public float getTimeMultiplierForBlock(Block block, int meta,
+			TileEntity tile) {
+		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(block,1, meta));
+		if(material == MaterialRegistry.getMaterialFromName("Gold"))
+			return 0.9f;
+		else if(material == MaterialRegistry.getMaterialFromName("Aluiminum"))
+			return 0.8f;
+		else if(material == MaterialRegistry.getMaterialFromName("Titanium"))
+			return 0.75f;
+		else if(material == MaterialRegistry.getMaterialFromName("Iridium"))
+			return 0.5f;
+
+		return super.getTimeMultiplierForBlock(block, meta, tile);
 	}
 
 

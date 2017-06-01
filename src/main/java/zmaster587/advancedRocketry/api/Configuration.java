@@ -1,8 +1,12 @@
 package zmaster587.advancedRocketry.api;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
+import zmaster587.advancedRocketry.util.AsteroidSmall;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 
@@ -56,11 +60,7 @@ public class Configuration {
 	public static boolean electricPlantsSpawnLightning;
 
 	public static boolean allowSawmillVanillaWood;
-
-	public static double asteroidMiningMult;
-
-	public static List<String> standardAsteroidOres = new LinkedList<String>();
-
+	
 	public static int atmosphereHandleBitMask;
 
 	public static boolean automaticRetroRockets;
@@ -96,8 +96,7 @@ public class Configuration {
 	public static List<Class> bypassEntity = new LinkedList<Class>();
 	public static List<Block> torchBlocks = new LinkedList<Block>();
 	public static List<String> standardGeodeOres = new LinkedList<String>();
-
-	public static boolean asteriodOresBlackList;
+	public static Set<Integer> initiallyKnownPlanets = new HashSet<Integer>();
 
 	public static boolean geodeOresBlackList;
 
@@ -109,14 +108,18 @@ public class Configuration {
 
 	public static int solarGeneratorMult;
 
+	public static HashMap<String, AsteroidSmall> asteroidTypes = new HashMap<String, AsteroidSmall>();
+
+	public static boolean gravityAffectsFuel;
 	public static boolean lowGravityBoots;
 
 	public static float jetPackThrust;
-
+	public static boolean enableGravityController;
 	public static boolean generateGeodes;
 	public static int geodeBaseSize;
 	public static int geodeVariation;
 	public static int terraformliquidRate;
+	public static boolean planetsMustBeDiscovered;
 
 	
 }

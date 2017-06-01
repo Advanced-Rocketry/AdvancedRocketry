@@ -1,11 +1,6 @@
 package zmaster587.advancedRocketry.api;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import zmaster587.advancedRocketry.block.BlockAstroBed;
 import zmaster587.libVulpes.block.BlockTile;
-import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import net.minecraft.block.Block;
 
 /**
@@ -41,7 +36,6 @@ public class AdvancedRocketryBlocks {
 	public static Block blockLunarAnalyser;
 	public static Block blockPlanetSelector;
 	public static Block blockSawBlade;
-	public static Block blockMotor;
 	public static Block blockConcrete;
 	public static Block blockRollingMachine;
 	public static Block blockPlatePress;
@@ -89,4 +83,12 @@ public class AdvancedRocketryBlocks {
 	public static Block blockRailgun;
 	public static Block blockAstroBed;
 	public static Block blockAdvEngine;
+	public static Block blockPlanetHoloSelector;
+	public static Block blockLens;
+	public static Block blockForceField;
+	public static Block blockForceFieldProjector;
+	public static Block blockGravityMachine;
+	public static Block blockPipeSealer;
+	public static Block blockSpaceElevatorController;
+	public static Block blockBeacon;
 }

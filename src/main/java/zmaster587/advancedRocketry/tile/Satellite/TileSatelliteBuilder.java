@@ -9,6 +9,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
@@ -30,10 +31,12 @@ import zmaster587.libVulpes.inventory.modules.ModuleButton;
 import zmaster587.libVulpes.inventory.modules.ModuleOutputSlotArray;
 import zmaster587.libVulpes.inventory.modules.ModulePower;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
+import zmaster587.libVulpes.inventory.modules.ModuleTexturedLimitedSlotArray;
 import zmaster587.libVulpes.inventory.modules.ModuleTexturedSlotArray;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
+import zmaster587.libVulpes.util.EmbeddedInventory;
 
 public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IModularInventory, IInventory, IButtonInventory {
 
@@ -42,7 +45,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		{{'P'}}
 	};
 
-	ItemStack inventory[];
+	EmbeddedInventory inventory;
 	//Slot 0: functional Piece
 	//Slot 1 -> 3: power
 	//Slot 4 -> 7: data Storage
@@ -55,9 +58,10 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	private static final byte outputSlot = 7;
 	private static final byte chipSlot = 8;
 	private static final byte chipCopySlot = 9;
+	private static final byte chassisSlot = 11;
 
 	public TileSatelliteBuilder() {
-		inventory = new ItemStack[11];
+		inventory = new EmbeddedInventory(5);
 		powerPerTick = 10;
 	}
 
@@ -69,11 +73,14 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	@Override
 	protected void processComplete() {
 		super.processComplete();
-		setInventorySlotContents(outputSlot, inventory[holdingSlot]);
-		inventory[holdingSlot] = null;
+		setInventorySlotContents(outputSlot, getStackInSlot(holdingSlot));
+		setInventorySlotContents(holdingSlot, null);
 	}
 
 	public boolean canAssembleSatellite() {
+
+		if(getStackInSlot(chassisSlot) == null)
+			return false;
 
 		//First make sure everything is a satellite part
 		for(int i = 0; i < 7; i++) {
@@ -83,14 +90,14 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		}
 
 		//Make sure critical parts exist and output is empty
-		if(inventory[0] == null || inventory[holdingSlot] != null || inventory[outputSlot] != null || SatelliteRegistry.getSatelliteProperty(inventory[0]).getSatelliteType() == null)
+		if(getStackInSlot(0) == null || getStackInSlot(holdingSlot) != null || getStackInSlot(outputSlot) != null || SatelliteRegistry.getSatelliteProperty(getStackInSlot(0)).getSatelliteType() == null)
 			return false;
 
-		String satType = SatelliteRegistry.getSatelliteProperty(inventory[0]).getSatelliteType();
+		String satType = SatelliteRegistry.getSatelliteProperty(getStackInSlot(0)).getSatelliteType();
 		SatelliteBase sat = SatelliteRegistry.getSatallite(satType);
-		
+
 		//TODO: UNDEBUG if 0 power gen also return false
-		return sat.isAcceptableControllerItemStack(inventory[chipSlot]);
+		return sat.isAcceptableControllerItemStack(getStackInSlot(chipSlot));
 	}
 
 	/**
@@ -99,39 +106,31 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	 */
 	public void assembleSatellite() {
 		int powerStorage = 0, powerGeneration = 0, maxData = 0;
-		SatelliteProperties properties;
+		ItemStack stack = getStackInSlot(chassisSlot);
+		ItemSatellite item = (ItemSatellite) stack.getItem();
 
-		String satType = SatelliteRegistry.getSatelliteProperty(inventory[0]).getSatelliteType();
+		SatelliteProperties properties = item.getSatellite(stack);
+
+		String satType = SatelliteRegistry.getSatelliteProperty(getStackInSlot(0)).getSatelliteType();
 		SatelliteBase sat = SatelliteRegistry.getSatallite(satType);
-		for(int i = 0; i < 7; i++) {
-			ItemStack stack = getStackInSlot(i);
-			if(stack != null) {
-				properties = SatelliteRegistry.getSatelliteProperty(stack);
 
-				if(!sat.acceptsItemInConstruction(stack))
-					continue;
-				
-				powerStorage += properties.getPowerStorage();
-				powerGeneration += properties.getPowerGeneration();
-				maxData += properties.getMaxDataStorage();
-
-				decrStackSize(i, 1);
-			}
-		}
 		if(!worldObj.isRemote) {
 			//Set final satellite properties
-			properties = new SatelliteProperties(powerGeneration, powerStorage, satType,maxData);
-			properties.setId(DimensionManager.getInstance().getNextSatelliteId());
+			if(properties == null || properties.getSatelliteType().isEmpty()) {
+				properties = new SatelliteProperties(powerGeneration, powerStorage, satType,maxData);
+				properties.setId(DimensionManager.getInstance().getNextSatelliteId());
+			}
 
 			//Create the output item
 			ItemSatellite satItem = (ItemSatellite)AdvancedRocketryItems.itemSatellite;
-			ItemStack output = new ItemStack(satItem);
+			ItemStack output = getStackInSlot(chassisSlot);
 			satItem.setSatellite(output, properties);
+			setInventorySlotContents(chassisSlot, null);
 
 			//Set the ID chip
-			inventory[chipSlot] = sat.getContollerItemStack(inventory[chipSlot], properties);
+			setInventorySlotContents(chipSlot, sat.getContollerItemStack(getStackInSlot(chipSlot), properties));
 
-			inventory[holdingSlot] = output;
+			setInventorySlotContents(holdingSlot, output);
 		}
 
 		completionTime = 100;
@@ -159,7 +158,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		ItemStack slot1 = getStackInSlot(chipCopySlot);
 
 		if(slot0.getItem() instanceof ItemSatelliteIdentificationChip || slot0.getItem() instanceof ItemOreScanner || slot0.getItem() instanceof ItemPlanetIdentificationChip || slot0.getItem() instanceof ItemStationChip) {
-			inventory[holdingSlot] = getStackInSlot(chipSlot).copy();
+			setInventorySlotContents(holdingSlot, getStackInSlot(chipSlot).copy());
 		}
 		else {
 			ItemSatellite satelliteItem = (ItemSatellite)slot0.getItem();
@@ -167,7 +166,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 			ItemSatelliteIdentificationChip itemIdChip = (ItemSatelliteIdentificationChip)slot1.getItem();
 
 			itemIdChip.setSatellite(slot1, satelliteItem.getSatellite(slot0));
-			inventory[holdingSlot] = slot1;
+			setInventorySlotContents(holdingSlot, slot1);
 		}
 		decrStackSize(chipCopySlot, 1);
 		completionTime = 100;
@@ -190,10 +189,11 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		modules.add(new ModulePower(18, 20, getBatteries()));
-		modules.add(new ModuleTexturedSlotArray(152, 10, this, 0, 1, TextureResources.functionComponent)); //Functional Piece
-		modules.add(new ModuleTexturedSlotArray(116, 30, this, 1, 4, TextureResources.powercomponent));  //Generators
-		modules.add(new ModuleTexturedSlotArray(116, 50, this, 4, 7, TextureResources.ioSlot));
+		modules.add(new ModuleTexturedLimitedSlotArray(152, 10, this, 0, 1, TextureResources.functionComponent)); //Functional Piece
+		modules.add(new ModuleTexturedLimitedSlotArray(116, 30, this, 1, 4, TextureResources.powercomponent));  //Generators
+		modules.add(new ModuleTexturedLimitedSlotArray(116, 50, this, 4, 7, TextureResources.ioSlot));
 		modules.add(new ModuleOutputSlotArray(58, 36, this, 7, 8));   // Output
+		modules.add(new ModuleTexturedSlotArray(38, 16, this, chassisSlot, chassisSlot + 1, TextureResources.ioSlot)); 	// Id chip
 		modules.add(new ModuleTexturedSlotArray(58, 16, this, chipSlot, chipSlot + 1, TextureResources.idChip)); 	// Id chip
 		modules.add(new ModuleTexturedSlotArray(82, 16, this, chipCopySlot, chipCopySlot+1, TextureResources.idChip)); 	// Id chip
 		modules.add(new ModuleProgress(75, 36, 0, new ProgressBarImage(217,0, 17, 17, 234, 0, ForgeDirection.DOWN, TextureResources.progressBars), this));
@@ -225,34 +225,59 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 
 	@Override
 	public int getSizeInventory() {
-		return inventory.length - 1;
+		return inventory.getSizeInventory();
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return inventory[slot];
+		if(slot < outputSlot) {
+			ItemStack chassis = getStackInSlot(chassisSlot);
+
+			if(chassis != null && chassis.getItem() instanceof ItemSatellite) {
+				EmbeddedInventory inv = ((ItemSatellite)chassis.getItem()).readInvFromNBT(chassis);
+				return inv.getStackInSlot(slot);
+			}
+			return null;
+		}
+		return inventory.getStackInSlot(slot - 7);
 	}
 
 	@Override
 	public ItemStack decrStackSize(int slot, int amt) {
-		if(inventory[slot] != null) {
-			ItemStack stack = inventory[slot].splitStack(amt);
+		if(slot < outputSlot) {
+			ItemStack chassis = getStackInSlot(chassisSlot);
 
-			if(inventory[slot].stackSize == 0)
-				inventory[slot] = null;
-			return stack;
+			if(chassis != null && chassis.getItem() instanceof ItemSatellite) {
+				EmbeddedInventory inv = ((ItemSatellite)chassis.getItem()).readInvFromNBT(chassis);
+				ItemStack stack = inv.decrStackSize(slot, amt);
+				((ItemSatellite)chassis.getItem()).writeInvToNBT(chassis, inv);
+				return stack;
+			}
+
+			return null;
 		}
-		return null;
+
+		return inventory.decrStackSize(slot - 7, amt);
 	}
 
 	@Override
 	public ItemStack getStackInSlotOnClosing(int slot) {
-		return inventory[slot];
+		return null;
 	}
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
-		inventory[slot] = stack;
+		if(slot < outputSlot) {
+			ItemStack chassis = getStackInSlot(chassisSlot);
+
+			if(chassis != null && chassis.getItem() instanceof ItemSatellite) {
+				EmbeddedInventory inv = ((ItemSatellite)chassis.getItem()).readInvFromNBT(chassis);
+				inv.setInventorySlotContents(slot, stack);
+				((ItemSatellite)chassis.getItem()).writeInvToNBT(chassis, inv);
+			}
+			return;
+		}
+		inventory.setInventorySlotContents(slot-7, stack);
 	}
 
 	@Override
@@ -278,42 +303,28 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		return true;
+		if(slot < outputSlot) {
+			ItemStack chassis = getStackInSlot(chassisSlot);
+
+			if(chassis != null && chassis.getItem() instanceof ItemSatellite) {
+				EmbeddedInventory inv = ((ItemSatellite)chassis.getItem()).readInvFromNBT(chassis);
+				return inv.isItemValidForSlot(slot, stack);
+			}
+			return false;
+		}
+		return inventory.isItemValidForSlot(slot - 7, stack);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-
-		NBTTagList list = new NBTTagList();
-		for(int i = 0; i < inventory.length; i++)
-		{
-			ItemStack stack = inventory[i];
-
-			if(stack != null) {
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setByte("Slot", (byte)(i));
-				stack.writeToNBT(tag);
-				list.appendTag(tag);
-			}
-		}
-
-		nbt.setTag("outputItems", list);
+		inventory.writeToNBT(nbt);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-
-		NBTTagList list = nbt.getTagList("outputItems", 10);
-
-		for (int i = 0; i < list.tagCount(); i++) {
-			NBTTagCompound tag = (NBTTagCompound) list.getCompoundTagAt(i);
-			byte slot = tag.getByte("Slot");
-			if (slot >= 0 && slot < inventory.length) {
-				inventory[slot] = ItemStack.loadItemStackFromNBT(tag);
-			}
-		}
+		inventory.readFromNBT(nbt);
 	}
 
 	@Override

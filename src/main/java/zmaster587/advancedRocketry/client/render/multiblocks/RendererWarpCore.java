@@ -26,7 +26,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class RendererWarpCore extends TileEntitySpecialRenderer {
 
-	IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("advancedrocketry:models/warpcore.obj"));
+	public static IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("advancedrocketry:models/warpcore.obj"));
 
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/warpcore.png");
 

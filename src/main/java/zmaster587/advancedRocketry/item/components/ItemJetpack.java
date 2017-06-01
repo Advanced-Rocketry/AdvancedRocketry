@@ -102,7 +102,9 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 			e.printStackTrace();
 		}
 		//ObfuscationReflectionHelper.setPrivateValue(net.minecraft.entity.player.PlayerCapabilities.class, player.capabilities, speedUpgrades*0.02f, "flySpeed");
-		player.capabilities.isFlying = false;
+		
+		if(hasModeSwitched(componentStack))
+			player.capabilities.isFlying = false;
 
 		if(isEnabled(componentStack)) {
 			if(mode == MODES.HOVER) {
@@ -152,11 +154,13 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 		if(stack.hasTagCompound()) {
 			nbt = stack.getTagCompound();
 			nbt.setBoolean("enabled", state);
+			flagModeSwitched(stack);
 		}
 		else if(state) {
 			nbt = new NBTTagCompound();
 			nbt.setBoolean("enabled", state);
 			stack.setTagCompound(nbt);
+			flagModeSwitched(stack);
 		}
 	}
 
@@ -269,15 +273,45 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 			}
 
 			nbt.setInteger("mode", mode);
+			flagModeSwitched(stack);
 		}
 		else {
 			nbt = new NBTTagCompound();
 			nbt.setInteger("mode", mode);
 			stack.setTagCompound(nbt);
+			flagModeSwitched(stack);
 		}
 
 		if(mode == MODES.HOVER.ordinal())
 			setHeight(stack, (float)player.posY + player.height);
+	}
+	
+	private void flagModeSwitched(ItemStack stack) {
+		NBTTagCompound nbt;
+		if(stack.hasTagCompound()) {
+			nbt = stack.getTagCompound();
+
+			nbt.setBoolean("modeSwitch", true);
+		}
+		else {
+			nbt = new NBTTagCompound();
+			nbt.setBoolean("modeSwitch", true);
+			stack.setTagCompound(nbt);
+		}
+	}
+	
+	
+	private boolean hasModeSwitched(ItemStack stack) {
+		NBTTagCompound nbt;
+		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("modeSwitch")) {
+			nbt = stack.getTagCompound();
+
+			boolean hasSwitched = nbt.getBoolean("modeSwitch");
+			
+			nbt.setBoolean("modeSwitch", false);
+			return hasSwitched;
+		}
+		return false;
 	}
 
 	@Override

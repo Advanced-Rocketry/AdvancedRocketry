@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import zmaster587.advancedRocketry.api.IFuelTank;
-import zmaster587.advancedRocketry.tile.TileModelRender;
+import zmaster587.libVulpes.tile.TileModelRender;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;

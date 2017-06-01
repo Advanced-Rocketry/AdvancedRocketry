@@ -4,6 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.Vector3F;
 
 public interface ISpaceObject {
 	
@@ -73,15 +74,14 @@ public interface ISpaceObject {
 	
 	public void readFromNbt(NBTTagCompound nbt);
 	
-	public double getRotation();
+	public double getRotation(ForgeDirection dir);
+	public double getDeltaRotation(ForgeDirection dir);
 	
-	public double getDeltaRotation();
-	
-	public void setRotation(double rotation);
+	public void setRotation(double rotation, ForgeDirection dir);
 	
 	public double getMaxRotationalAcceleration();
 	
-	public void setDeltaRotation(double rotation);
+	public void setDeltaRotation(double rotation, ForgeDirection dir);
 	
 	/**
 	 * @return true if there is an empty pad to land on
@@ -97,8 +97,9 @@ public interface ISpaceObject {
 	 * Adds a landing pad to the station
 	 * @param x
 	 * @param z
+	 * @param name the name of the landing pad
 	 */
-	public void addLandingPad(int x, int z);
+	public void addLandingPad(int x, int z, String name);
 	
 	/**
 	 * Removes an existing landing pad from the station

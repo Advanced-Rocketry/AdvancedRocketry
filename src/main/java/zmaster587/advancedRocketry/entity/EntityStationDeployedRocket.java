@@ -34,6 +34,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
 
 public class EntityStationDeployedRocket extends EntityRocket {
 
@@ -219,7 +220,17 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				break;
 			}
 		}
-		atmText.setText(AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId).getLocalizedName());
+
+		DimensionProperties props = DimensionManager.getEffectiveDimId(worldObj, (int)posX, (int)posZ);
+
+		if(props.isGasGiant()) {
+			try {
+				atmText.setText(props.getHarvestableGasses().get(gasId).getLocalizedName(new FluidStack(props.getHarvestableGasses().get(gasId), 1)));
+			} catch (IndexOutOfBoundsException e) {
+				gasId = 0;
+				atmText.setText(props.getHarvestableGasses().get(gasId).getLocalizedName(new FluidStack(props.getHarvestableGasses().get(gasId), 1)));
+			}
+		}
 		modules.add(new ModuleButton(170, 114, 1, "", this, zmaster587.libVulpes.inventory.TextureResources.buttonLeft, 5, 8));
 		modules.add(atmText);
 		modules.add(new ModuleButton(240, 114, 2, "", this, zmaster587.libVulpes.inventory.TextureResources.buttonRight,  5, 8));
@@ -230,25 +241,32 @@ public class EntityStationDeployedRocket extends EntityRocket {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void onInventoryButtonPressed(int buttonId) {
+		DimensionProperties props;
 		switch(buttonId) {
 		case 0:
 			PacketHandler.sendToServer(new PacketEntity(this, (byte)EntityRocket.PacketType.DECONSTRUCT.ordinal()));
 			break;
 		case 1:
-			gasId++;
-			if(gasId < 0)
-				gasId = (short)(AtmosphereRegister.getInstance().getHarvestableGasses().size() - 1);
-			else if(gasId > AtmosphereRegister.getInstance().getHarvestableGasses().size() - 1)
-				gasId = 0;
-			PacketHandler.sendToServer(new PacketEntity(this, (byte)EntityRocket.PacketType.MENU_CHANGE.ordinal()));
+			props = DimensionManager.getEffectiveDimId(worldObj, (int)posX, (int)posZ);
+			if(props.isGasGiant()) {
+				gasId++;
+				if(gasId < 0)
+					gasId = (short)(props.getHarvestableGasses().size() - 1);
+				else if(gasId > props.getHarvestableGasses().size() - 1)
+					gasId = 0;
+				PacketHandler.sendToServer(new PacketEntity(this, (byte)EntityRocket.PacketType.MENU_CHANGE.ordinal()));
+			}
 			break;
 		case 2:
-			gasId--;
-			if(gasId < 0)
-				gasId = (short)(AtmosphereRegister.getInstance().getHarvestableGasses().size() - 1);
-			else if(gasId > AtmosphereRegister.getInstance().getHarvestableGasses().size() - 1)
-				gasId = 0;
-			PacketHandler.sendToServer(new PacketEntity(this, (byte)EntityRocket.PacketType.MENU_CHANGE.ordinal()));
+			props = DimensionManager.getEffectiveDimId(worldObj, (int)posX, (int)posZ);
+			if(props.isGasGiant()) {
+				gasId--;
+				if(gasId < 0)
+					gasId = (short)(props.getHarvestableGasses().size() - 1);
+				else if(gasId > props.getHarvestableGasses().size() - 1)
+					gasId = 0;
+				PacketHandler.sendToServer(new PacketEntity(this, (byte)EntityRocket.PacketType.MENU_CHANGE.ordinal()));
+			}
 			break;
 		default:
 			super.onInventoryButtonPressed(buttonId);
@@ -267,22 +285,26 @@ public class EntityStationDeployedRocket extends EntityRocket {
 
 		//Check again to make sure we are around a gas giant
 		ISpaceObject spaceObj;
-		if( worldObj.provider.dimensionId == Configuration.spaceDimId || ((spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)posX, (int)posZ)) != null && !((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() )) { //Abort if destination is invalid
+		if( worldObj.provider.dimensionId == Configuration.spaceDimId && ((spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)posX, (int)posZ)) != null && ((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() )) { //Abort if destination is invalid
 			setInOrbit(true);
 			this.setPosition(forwardDirection.offsetX*64d + this.launchLocation.x + (storage.getSizeX() % 2 == 0 ? 0 : 0.5d), posY, forwardDirection.offsetZ*64d + this.launchLocation.z + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5d));	
 		}
-		
+		else {
+			setInOrbit(true);
+			return;
+		}
 		//one intake with a 1 bucket tank should take 100 seconds
 		float intakePower = (Integer)stats.getStatTag("intakePower");
 		MissionGasCollection miningMission = new MissionGasCollection(intakePower == 0 ? 360 : (long)(2*((int)stats.getStatTag("liquidCapacity")/intakePower)), this, connectedInfrastructure, AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId));
-		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId).getParentProperties();
+
+		DimensionProperties properties = (DimensionProperties)spaceObj.getProperties().getParentProperties();
 
 		miningMission.setDimensionId(properties.getId());
 		properties.addSatallite(miningMission);
 
 		if(!worldObj.isRemote)
 			PacketHandler.sendToAll(new PacketSatellite(miningMission));
-		
+
 		for(IInfrastructure i : connectedInfrastructure) {
 			i.linkMission(miningMission);
 		}
@@ -294,13 +316,13 @@ public class EntityStationDeployedRocket extends EntityRocket {
 	@Override
 	protected void writeNetworkableNBT(NBTTagCompound nbt) {
 		super.writeNetworkableNBT(nbt);
-		
+
 	}
-	
+
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		
+
 	}
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {
@@ -332,18 +354,20 @@ public class EntityStationDeployedRocket extends EntityRocket {
 
 		if(id == PacketType.MENU_CHANGE.ordinal()) {
 
-			gasId = nbt.getShort("gas");
+			DimensionProperties props = DimensionManager.getEffectiveDimId(worldObj, (int)posX, (int)posZ);
+			if(props.isGasGiant()) {
 
-			if(gasId < 0)
-				gasId = (short)(AtmosphereRegister.getInstance().getHarvestableGasses().size() - 1);
-			else if(gasId > AtmosphereRegister.getInstance().getHarvestableGasses().size() - 1)
-				gasId = 0;
+				gasId = nbt.getShort("gas");
+				if(gasId < 0)
+					gasId = (short)(props.getHarvestableGasses().size() - 1);
+				else if(gasId > props.getHarvestableGasses().size() - 1)
+					gasId = 0;
 
-			if(!worldObj.isRemote)
-				PacketHandler.sendToNearby(new PacketEntity(this, (byte) PacketType.MENU_CHANGE.ordinal()), worldObj.provider.dimensionId, (int)posX, (int)posY, (int)posZ, 64d);
-			else
-				atmText.setText(AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId).getLocalizedName());
-
+				if(!worldObj.isRemote)
+					PacketHandler.sendToNearby(new PacketEntity(this, (byte) PacketType.MENU_CHANGE.ordinal()), worldObj.provider.dimensionId, (int)posX, (int)posY, (int)posZ, 64d);
+				else
+					atmText.setText(props.getHarvestableGasses().get(gasId).getLocalizedName(new FluidStack(AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId),1)));
+			}
 		}
 		else
 			super.useNetworkData(player, side, id, nbt);
@@ -359,7 +383,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		nbt.setInteger("launchX", launchLocation.x);
 		nbt.setInteger("launchY", launchLocation.y);
 		nbt.setInteger("launchZ", launchLocation.z);
-		
+
 		nbt.setShort("gas", gasId);
 	}
 

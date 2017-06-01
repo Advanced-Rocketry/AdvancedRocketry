@@ -140,13 +140,14 @@ public class AtmosphereHandler {
 
 			List<AreaBlob> nearbyBlobs = handler.getBlobWithinRadius(pos, MAX_BLOB_RADIUS);
 			for(AreaBlob blob : nearbyBlobs) {
-
-				if(blob.contains(pos) && !blob.isPositionAllowed(world, pos, nearbyBlobs))
-					blob.removeBlock(x, y, z);
-				else if(!blob.contains(pos) && blob.isPositionAllowed(world, pos, nearbyBlobs))
-					handler.onBlockRemove(pos);
-				else if(!blob.contains(pos) && !blob.isPositionAllowed(world, pos ,nearbyBlobs) && blob.getBlobSize() == 0) {
-					blob.addBlock(blob.getRootPosition(), nearbyBlobs);
+				if(blob.getBlobMaxRadius() > pos.getDistance(blob.getRootPosition())) {
+					if(blob.contains(pos) && !blob.isPositionAllowed(world, pos, nearbyBlobs))
+						blob.removeBlock(x, y, z);
+					else if(!blob.contains(pos) && blob.isPositionAllowed(world, pos, nearbyBlobs))
+						handler.onBlockRemove(pos);
+					else if(!blob.contains(pos) && !blob.isPositionAllowed(world, pos ,nearbyBlobs) && blob.getBlobSize() == 0) {
+						blob.addBlock(blob.getRootPosition(), nearbyBlobs);
+					}
 				}
 			}
 		}
@@ -222,6 +223,24 @@ public class AtmosphereHandler {
 			blob.setData(AtmosphereType.PRESSURIZEDAIR);
 		}
 	}
+
+	/**
+	 * Registers a Blob with the atmosphere handler.  
+	 * Must be called before use
+	 * @param handler IBlobHander to register with
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	public void registerBlob(IBlobHandler handler, int x, int y, int z, AreaBlob blob2) {
+		AreaBlob blob = blobs.get(handler);
+		if(blob == null) {
+			blob = blob2;
+			blobs.put(handler, blob);
+			blob.setData(AtmosphereType.PRESSURIZEDAIR);
+		}
+	}
+
 
 	/**
 	 * Unregisters a blob from the atmosphere handler
@@ -310,7 +329,7 @@ public class AtmosphereHandler {
 	public IAtmosphere getDefaultAtmosphereType() {
 		return DimensionManager.getInstance().getDimensionProperties(dimId).getAtmosphere();
 	}
-	
+
 	/**
 	 * Gets the pressure at the location of this entity
 	 * @param entity the entity to check against
@@ -320,14 +339,14 @@ public class AtmosphereHandler {
 		if(Configuration.enableOxygen) {
 			BlockPosition pos = new BlockPosition((int)(entity.posX), (int)Math.ceil(entity.posY), (int)(entity.posZ));
 			for(AreaBlob blob : blobs.values()) {
-				if(blob.contains(pos)) {
+				if(blob.contains(pos) && blob instanceof AtmosphereBlob) {
 					return ((AtmosphereBlob)blob).getPressure();
 				}
 			}
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * @param entity entity to check against
 	 * @return true if the entity can breathe in the this atmosphere

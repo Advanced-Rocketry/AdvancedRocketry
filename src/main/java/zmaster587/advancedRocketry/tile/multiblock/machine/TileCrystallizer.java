@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
@@ -22,22 +23,38 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
 public class TileCrystallizer extends TileMultiblockMachine implements IModularInventory {
 
-	
-	
+
+
 	public static final Object[][][] structure = { {{AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible},
 		{AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible}},
-		
-		{{'O', 'c', 'I'}, 
-			{new BlockMeta(Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem()), MaterialRegistry.getMaterialFromName("Copper").getMeta()), 'P', new BlockMeta(Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem()), MaterialRegistry.getMaterialFromName("Copper").getMeta())}},
+
+		{{'I', 'c', 'O'}, 
+			{"blockCoil", 'P', "blockCoil"}},
 
 	};
 
 	Material coil[];
-	
+
 	public TileCrystallizer() {
 		coil = new Material[2];
 	}
-	
+
+	@Override
+	public float getTimeMultiplierForBlock(Block block, int meta,
+			TileEntity tile) {
+		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(block,1, meta));
+		if(material == MaterialRegistry.getMaterialFromName("Gold"))
+			return 0.9f;
+		else if(material == MaterialRegistry.getMaterialFromName("Aluiminum"))
+			return 0.8f;
+		else if(material == MaterialRegistry.getMaterialFromName("Titanium"))
+			return 0.75f;
+		else if(material == MaterialRegistry.getMaterialFromName("Iridium"))
+			return 0.5f;
+
+		return super.getTimeMultiplierForBlock(block, meta, tile);
+	}
+
 	@Override
 	public Object[][][] getStructure() {
 		return structure;
@@ -47,12 +64,12 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 	protected float getTimeMultiplierForRecipe(IRecipe recipe) {
 		return super.getTimeMultiplierForRecipe(recipe);
 	}
-	
+
 	@Override
 	public ResourceLocation getSound() {
 		return TextureResources.sndCrystallizer;
 	}
-	
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		return AxisAlignedBB.getBoundingBox(xCoord -2,yCoord -2, zCoord -2, xCoord + 2, yCoord + 2, zCoord + 2);

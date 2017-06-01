@@ -2,11 +2,13 @@ package zmaster587.advancedRocketry.item;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 public class ItemAsteroidChip  extends ItemMultiData {
 
 	private static final String uuidIdentifier = "UUID";
+	private static final String astType = "astype";
 
 	public ItemAsteroidChip() {
 	}
@@ -42,6 +44,24 @@ public class ItemAsteroidChip  extends ItemMultiData {
 		stack.setTagCompound(nbt);
 	}
 
+	public String getType(ItemStack stack) {
+		if(stack.hasTagCompound())
+			return stack.getTagCompound().getString(astType);
+		return null;
+	}
+
+	public void setType(ItemStack stack, String type) {
+		NBTTagCompound nbt;
+		if(stack.hasTagCompound())
+			nbt = stack.getTagCompound();
+		else
+			nbt = new NBTTagCompound();
+
+		nbt.setString(astType,type);
+		stack.setTagCompound(nbt);
+	}
+	
+	
 	@Override
 	public void addInformation(ItemStack stack, net.minecraft.entity.player.EntityPlayer player, java.util.List list, boolean bool) {
 

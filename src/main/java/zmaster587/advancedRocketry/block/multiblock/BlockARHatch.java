@@ -9,7 +9,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.tile.infrastructure.TileRocketFluidLoader;
@@ -17,6 +19,7 @@ import zmaster587.advancedRocketry.tile.infrastructure.TileRocketFluidUnloader;
 import zmaster587.advancedRocketry.tile.infrastructure.TileRocketLoader;
 import zmaster587.advancedRocketry.tile.infrastructure.TileRocketUnloader;
 import zmaster587.libVulpes.block.multiblock.BlockHatch;
+import zmaster587.libVulpes.tile.TilePointer;
 
 public class BlockARHatch extends BlockHatch {
 
@@ -33,6 +36,15 @@ public class BlockARHatch extends BlockHatch {
 		satellite = iconRegister.registerIcon("advancedrocketry:satelliteBay");
 		fluidLoader = iconRegister.registerIcon("libvulpes:fluidInput");
 		fluidUnloader = iconRegister.registerIcon("libvulpes:fluidOutput");
+	}
+	
+	@Override
+	public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z,
+			int dir) {
+		if(world.getTileEntity(x,y,z) instanceof TilePointer && !((TilePointer)world.getTileEntity(x,y,z)).allowRedstoneOutputOnSide(ForgeDirection.getOrientation(dir)))
+			return 0;
+		
+		return world.getBlockMetadata(x, y, z) >= 7 ? 15 : 0;
 	}
 	
 	@Override

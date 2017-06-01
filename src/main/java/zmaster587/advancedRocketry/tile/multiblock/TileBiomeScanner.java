@@ -14,6 +14,7 @@ import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
@@ -34,7 +35,7 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 
 			{	{null, null, null, null, null}, 
 				{null, null, null, null, null},
-				{null, null, AdvancedRocketryBlocks.blockMotor, null, null},
+				{null, null, LibVulpesBlocks.motors, null, null},
 				{null, null, null, null, null},
 				{null, null, null, null, null}},
 
