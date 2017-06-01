@@ -10,6 +10,7 @@ import zmaster587.advancedRocketry.item.ItemPackedStructure;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.tile.TileRocketBuilder.ErrorCodes;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -44,6 +45,8 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 	@Override
 	public boolean canScan() {
+		if(!super.canScan())
+			return false;
 		ItemStack stack = new ItemStack(AdvancedRocketryBlocks.blockLoader,1,1);
 
 		if(inventory.getStackInSlot(0).isEmpty() || !stack.isItemEqual(inventory.getStackInSlot(0))) {
@@ -60,7 +63,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 			return false;
 		}
 
-		return super.canScan();
+		return true;
 	}
 
 	@Override
@@ -154,6 +157,13 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 	@Override
 	protected void updateText() {
+		if(!worldObj.isRemote) { 
+			if(getRocketPadBounds(worldObj, pos) == null)
+				setStatus(ErrorCodes.INCOMPLETESTRCUTURE.ordinal());
+			else if( ErrorCodes.INCOMPLETESTRCUTURE.equals(getStatus()))
+				setStatus(ErrorCodes.UNSCANNED.ordinal());
+		}
+		
 		errorText.setText(status.getErrorCode());
 	}
 
@@ -170,13 +180,13 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 		ModuleButton buttonBuild;
 		modules.add(buttonBuild = new ModuleButton(5, 60, 1, "Build", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
 		buttonBuild.setColor(0xFFFF2222);
-		modules.add(errorText = new ModuleText(5, 24, "", 0xFFFFFF22));
+		modules.add(errorText = new ModuleText(5, 22, "", 0xFFFFFF22));
 		modules.add(new ModuleSync(4, this));
 
 		updateText();
 
-		modules.add(new ModuleSlotArray(90, 20, inventory, 0, 1));
-		modules.add(new ModuleTexturedSlotArray(108, 20, inventory, 1, 2, TextureResources.idChip));
+		modules.add(new ModuleSlotArray(90, 40, inventory, 0, 1));
+		modules.add(new ModuleTexturedSlotArray(108, 40, inventory, 1, 2, TextureResources.idChip));
 
 		modules.add(new ModuleSlotArray(90, 60, inventory, 2, 4));
 
@@ -187,9 +197,9 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 	@Override
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
-		super.useNetworkData(player, side, id, nbt);
+		
 
-		if(id == 1) {
+		if(id == 1 && isScanning() && !canScan()) {
 			inventory.decrStackSize(0, 1);
 
 			storedId = (long)ItemStationChip.getUUID(inventory.getStackInSlot(1));
@@ -197,6 +207,8 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 			if(storedId == null)
 				inventory.decrStackSize(1, 1);
 		}
+		
+		super.useNetworkData(player, side, id, nbt);
 	}
 
 	@Override

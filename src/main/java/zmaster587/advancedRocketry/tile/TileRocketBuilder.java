@@ -380,7 +380,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		PacketHandler.sendToNearby(new PacketEntity((INetworkEntity)rocket, (byte)0, nbtdata), rocket.world.provider.getDimension(), this.pos, 64);
 
 		stats.reset();
-		this.status = ErrorCodes.UNSCANNED;
+		this.status = ErrorCodes.FINISHED;
 		this.markDirty();
 		world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 
@@ -508,6 +508,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		nbt.setInteger("scanTime", progress);
 		nbt.setInteger("scanTotalBlocks", totalProgress);
 		nbt.setBoolean("building", building);
+		nbt.setInteger("status", status.ordinal());
 
 		if(bbCache != null) {
 			NBTTagCompound tag = new NBTTagCompound();
@@ -545,6 +546,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 		prevProgress = progress = nbt.getInteger("scanTime");
 		totalProgress = nbt.getInteger("scanTotalBlocks");
+		status = ErrorCodes.values()[nbt.getInteger("status")];
 
 		building = nbt.getBoolean("building");
 		if(nbt.hasKey("bb")) {
