@@ -182,8 +182,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 			else
 				x = radius;
 		}
-
-		object.setPos(2*x, 2*z);
+		
 		if(!object.hasCustomSpawnLocation())
 			object.setSpawnLocation(2*Configuration.stationSize*x + Configuration.stationSize/2, 128, 2*Configuration.stationSize*z + Configuration.stationSize/2);
 
