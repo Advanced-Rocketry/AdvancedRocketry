@@ -199,7 +199,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 			NBTTagCompound nbt) {
 		
 
-		if(id == 1 && isScanning() && !canScan()) {
+		if(id == 1 && !isScanning() && canScan()) {
 			inventory.decrStackSize(0, 1);
 
 			storedId = (long)ItemStationChip.getUUID(inventory.getStackInSlot(1));
