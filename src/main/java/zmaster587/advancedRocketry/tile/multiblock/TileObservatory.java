@@ -533,7 +533,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 		}
 		else if(id == PROCESS_CHIP && !world.isRemote) {
 
-			if(inv.getStackInSlot(2) == null && isOpen && hasEnergy(500) && lastButton != -1) {
+			if(inv.getStackInSlot(2).isEmpty() && isOpen && hasEnergy(500) && lastButton != -1) {
 				ItemStack stack = inv.decrStackSize(1, 1);
 				if(stack != null && stack.getItem() instanceof ItemAsteroidChip) {
 					((ItemAsteroidChip)(stack.getItem())).setUUID(stack, lastSeed);
