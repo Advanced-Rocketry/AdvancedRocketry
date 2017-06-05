@@ -37,7 +37,7 @@ public class BlockARHatch extends BlockHatch {
 		satellite = iconRegister.registerIcon("advancedrocketry:satelliteBay");
 		fluidLoader = iconRegister.registerIcon("libvulpes:fluidInput");
 		fluidUnloader = iconRegister.registerIcon("libvulpes:fluidOutput");
-		guidanceHatch = iconRegister.registerIcon("libvulpes:guidanceHatch");
+		guidanceHatch = iconRegister.registerIcon("advancedrocketry:guidancecomputeraccesshatch");
 	}
 	
 	@Override
@@ -62,6 +62,8 @@ public class BlockARHatch extends BlockHatch {
 		}
 		else if((meta & 7) == 5)
 			return fluidLoader;
+		else if((meta & 7) == 6)
+			return guidanceHatch;
 		else
 			return blockIcon;
 	}
