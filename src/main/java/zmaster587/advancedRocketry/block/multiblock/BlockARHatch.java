@@ -14,6 +14,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
+import zmaster587.advancedRocketry.tile.infrastructure.TileGuidanceComputerHatch;
 import zmaster587.advancedRocketry.tile.infrastructure.TileRocketFluidLoader;
 import zmaster587.advancedRocketry.tile.infrastructure.TileRocketFluidUnloader;
 import zmaster587.advancedRocketry.tile.infrastructure.TileRocketLoader;
@@ -38,6 +39,7 @@ public class BlockARHatch extends BlockHatch {
 		list.add(new ItemStack(item, 1, 3));
 		list.add(new ItemStack(item, 1, 4));
 		list.add(new ItemStack(item, 1, 5));
+		list.add(new ItemStack(item, 1, 6));
 	}
 	
 	@Override
@@ -84,6 +86,8 @@ public class BlockARHatch extends BlockHatch {
 			return new TileRocketFluidUnloader();
 		else if((metadata & 7) == 5)
 			return new TileRocketFluidLoader();
+		else if((metadata & 7) == 6)
+			return new TileGuidanceComputerHatch();
 		
 		return null;
 	}
