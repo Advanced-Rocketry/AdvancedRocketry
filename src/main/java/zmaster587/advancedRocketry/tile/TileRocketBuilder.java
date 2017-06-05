@@ -96,6 +96,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	private int prevProgress; // Used for client/server sync
 	private boolean building; //True is rocket is being built, false if only scanning or otherwise
 
+	private int lastRocketID;
 	protected StatsRocket stats;
 	protected AxisAlignedBB bbCache;
 	protected ErrorCodes status;
@@ -599,6 +600,9 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			out.writeInt(energy.getEnergyStored());
 			out.writeInt(this.progress);
 		}
+		else if(id == 3) {
+			out.writeInt(lastRocketID);
+		}
 
 	}
 
@@ -609,6 +613,9 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		if(id == 2) {
 			nbt.setInteger("pwr", in.readInt());
 			nbt.setInteger("tik", in.readInt());
+		}
+		else if(id == 3 ) {
+			nbt.setInteger("id", in.readInt());
 		}
 
 	}
@@ -648,9 +655,15 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 
 		}
-		else if(id == 2){
+		else if(id == 2) {
 			energy.setEnergyStored(nbt.getInteger("pwr"));
 			this.progress = nbt.getInteger("tik");
+		}
+		else if(id == 3) {
+			EntityRocket rocket = (EntityRocket) worldObj.getEntityByID(nbt.getInteger("id"));
+			for(IInfrastructure infrastructure : getConnectedInfrastructure()) {
+				rocket.linkInfrastructure(infrastructure);
+			}
 		}
 	}
 
@@ -904,9 +917,12 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
 
 			if(rockets.contains(rocket)) {
+				lastRocketID = rocket.getEntityId();
 				for(IInfrastructure infrastructure : getConnectedInfrastructure()) {
 					rocket.linkInfrastructure(infrastructure);
 				}
+				
+				PacketHandler.sendToPlayersTrackingEntity(new PacketMachine(this, (byte)3), rocket);
 			}
 		}
 	}

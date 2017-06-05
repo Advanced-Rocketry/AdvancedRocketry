@@ -157,6 +157,7 @@ import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.tile.infrastructure.TileEntityFuelingStation;
 import zmaster587.advancedRocketry.tile.infrastructure.TileEntityMoniteringStation;
+import zmaster587.advancedRocketry.tile.infrastructure.TileGuidanceComputerHatch;
 import zmaster587.advancedRocketry.tile.infrastructure.TileRocketFluidLoader;
 import zmaster587.advancedRocketry.tile.infrastructure.TileRocketFluidUnloader;
 import zmaster587.advancedRocketry.tile.infrastructure.TileRocketLoader;
@@ -955,6 +956,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileEnergyPipe.class, "AREnergyPipe");
 		GameRegistry.registerTileEntity(TileLiquidPipe.class, "ARLiquidPipe");
 		GameRegistry.registerTileEntity(TileSatelliteHatch.class, "ARsatelliteHatch");
+		GameRegistry.registerTileEntity(TileGuidanceComputerHatch.class, "ARguidanceComputerHatch");
 		GameRegistry.registerTileEntity(TileSatelliteBuilder.class, "ARsatelliteBuilder");
 		GameRegistry.registerTileEntity(TileEntitySatelliteControlCenter.class, "ARTileEntitySatelliteControlCenter");
 		GameRegistry.registerTileEntity(TileAstrobodyDataProcessor.class, "ARplanetAnalyser");

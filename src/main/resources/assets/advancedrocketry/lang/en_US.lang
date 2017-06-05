@@ -25,6 +25,7 @@ tile.loader.2.name=Rocket Unloader
 tile.loader.3.name=Rocket Loader
 tile.loader.4.name=Rocket Fluid Unloader
 tile.loader.5.name=Rocket Fluid Loader
+tile.loader.6.name=Guidance Computer Access Hatch
 tile.observatory.name=Observatory
 tile.satelliteBuilder.name=Satellite Builder
 tile.rocket.name=Liquid Fueled Engine

@@ -221,6 +221,60 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	}
 
 	@Override
+	public void linkInfrastructure(IInfrastructure tile) {
+		super.linkInfrastructure(tile);
+		BlockPosition pos =new BlockPosition(((TileEntity)tile).xCoord, ((TileEntity)tile).yCoord, ((TileEntity)tile).zCoord);
+		if(tile instanceof TileEntity && !infrastructureCoords.contains(pos))
+			infrastructureCoords.add(pos);
+	}
+	
+	@Override
+	public String getTextOverlay() {
+
+		if(this.worldObj.getTotalWorldTime() < this.lastErrorTime + ERROR_DISPLAY_TIME)
+			return errorStr;
+
+		//Get destination string
+		String displayStr = "N/A";
+		if(storage != null) {
+			int dimid = storage.getDestinationDimId(this.worldObj.provider.dimensionId, (int)posX, (int)posZ);
+
+			if(dimid == Configuration.spaceDimId) {
+				Vector3F<Float> vec = storage.getDestinationCoordinates(dimid, false);
+				if(vec != null) {
+
+					ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)((float)vec.x),(int)((float)vec.x));
+
+					if(obj != null) {
+						displayStr = "Station " + obj.getId();
+						
+						StationLandingLocation location = storage.getGuidanceComputer().getLandingLocation(obj.getId());
+						
+						if(location != null) {
+							displayStr = displayStr + "\nPad: " + location;
+						}
+					}
+				}
+			}
+			else if(dimid != -1 && dimid != SpaceObjectManager.WARPDIMID) {
+				displayStr = DimensionManager.getInstance().getDimensionProperties(dimid).getName();
+			}
+		}
+
+		if(isInOrbit() && !isInFlight())
+			return "Press Space to descend!\n  Auto descend in " + ((DESCENT_TIMER - this.ticksExisted)/20);
+		else if(!isInFlight())
+			return "Press Space to take off!\nDest: " + displayStr;
+
+		return super.getTextOverlay();
+	}
+
+	private void setError(String error) {
+		this.errorStr = error;
+		this.lastErrorTime = this.worldObj.getTotalWorldTime();
+	}
+
+	@Override
 	public void setPosition(double x, double y,
 			double z) {
 		super.setPosition(x, y, z);
@@ -452,6 +506,19 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		long deltaTime = worldObj.getTotalWorldTime() - lastWorldTickTicked;
 		lastWorldTickTicked = worldObj.getTotalWorldTime();
 
+		if(this.ticksExisted == 20) {
+			//problems with loading on other world then where the infrastructure was set?
+			ListIterator<BlockPosition> itr = (new LinkedList<BlockPosition>(infrastructureCoords)).listIterator();
+			while(itr.hasNext()) {
+				BlockPosition temp = itr.next();
+
+				TileEntity tile = this.worldObj.getTileEntity(temp.x, temp.y, temp.z);
+				if(tile instanceof IInfrastructure) {
+					this.linkInfrastructure((IInfrastructure)tile);
+				}
+			}
+		}
+		
 		if(this.ticksExisted == 1 && worldObj.isRemote) {
 
 			LibVulpes.proxy.playSound(new SoundRocketEngine( TextureResources.sndCombustionRocket,this));
@@ -744,7 +811,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				}
 			}
 			else {
-				
 				DimensionProperties properties = DimensionManager.getEffectiveDimId(worldObj, (int)this.posX, (int)this.posZ);
 				World world = net.minecraftforge.common.DimensionManager.getWorld(properties.getId());
 
@@ -767,52 +833,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				PacketHandler.sendToServer(new PacketEntity(this, (byte)EntityRocket.PacketType.LAUNCH.ordinal()));
 			launch();
 		}
-	}
-
-	@Override
-	public String getTextOverlay() {
-
-		if(this.worldObj.getTotalWorldTime() < this.lastErrorTime + ERROR_DISPLAY_TIME)
-			return errorStr;
-
-		//Get destination string
-		String displayStr = "N/A";
-		if(storage != null) {
-			int dimid = storage.getDestinationDimId(this.worldObj.provider.dimensionId, (int)posX, (int)posZ);
-
-			if(dimid == Configuration.spaceDimId) {
-				Vector3F<Float> vec = storage.getDestinationCoordinates(dimid, false);
-				if(vec != null) {
-
-					ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)((float)vec.x),(int)((float)vec.x));
-
-					if(obj != null) {
-						displayStr = "Station " + obj.getId();
-						
-						StationLandingLocation location = storage.getGuidanceComputer().getLandingLocation(obj.getId());
-						
-						if(location != null) {
-							displayStr = displayStr + "\nPad: " + location;
-						}
-					}
-				}
-			}
-			else if(dimid != -1 && dimid != SpaceObjectManager.WARPDIMID) {
-				displayStr = DimensionManager.getInstance().getDimensionProperties(dimid).getName();
-			}
-		}
-
-		if(isInOrbit() && !isInFlight())
-			return "Press Space to descend!\n  Auto descend in " + ((DESCENT_TIMER - this.ticksExisted)/20);
-		else if(!isInFlight())
-			return "Press Space to take off!\nDest: " + displayStr;
-
-		return super.getTextOverlay();
-	}
-
-	private void setError(String error) {
-		this.errorStr = error;
-		this.lastErrorTime = this.worldObj.getTotalWorldTime();
 	}
 
 	@Override
@@ -926,14 +946,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		super.onChunkLoad();
 
 		//problems with loading on other world then where the infrastructure was set?
-		ListIterator<BlockPosition> itr = infrastructureCoords.listIterator();
+		ListIterator<BlockPosition> itr = new LinkedList<BlockPosition>(infrastructureCoords).listIterator();
 		while(itr.hasNext()) {
 			BlockPosition temp = itr.next();
 
 			TileEntity tile = this.worldObj.getTileEntity(temp.x, temp.y, temp.z);
 			if(tile instanceof IInfrastructure) {
 				this.linkInfrastructure((IInfrastructure)tile);
-				itr.remove();
 			}
 		}
 	}
@@ -1049,22 +1068,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			this.setSize(Math.max(storage.getSizeX(), storage.getSizeZ()), storage.getSizeY());
 		}
 
-		NBTTagList tagList = nbt.getTagList("infrastructure", 10);
-		for (int i = 0; i < tagList.tagCount(); i++) {
-			int coords[] = tagList.getCompoundTagAt(i).getIntArray("loc");
-
-			//If called on server causes recursive loop, use hackish workaround with tempcoords and onChunkLoad if on server
-			if(worldObj.isRemote) {
-
-				TileEntity tile = this.worldObj.getTileEntity(coords[0], coords[1], coords[2]);
-				if(tile instanceof IInfrastructure)
-					this.linkInfrastructure((IInfrastructure)tile);
-
-			}
-			else
+		if(nbt.hasKey("infrastructure")) {
+			NBTTagList tagList = nbt.getTagList("infrastructure", 10);
+			for (int i = 0; i < tagList.tagCount(); i++) {
+				int coords[] = tagList.getCompoundTagAt(i).getIntArray("loc");
 				infrastructureCoords.add(new BlockPosition(coords[0], coords[1], coords[2]));
+			}
 		}
-
 		destinationDimId = nbt.getInteger("destinationDimId");
 		lastDimensionFrom = nbt.getInteger("lastDimensionFrom");
 
@@ -1081,19 +1091,20 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		nbt.setBoolean("flight", isInFlight());
 		stats.writeToNBT(nbt);
 
-		NBTTagList itemList = new NBTTagList();
-		for(int i = 0; i < connectedInfrastructure.size(); i++)
-		{
-			IInfrastructure inf = connectedInfrastructure.get(i);
+		if(!infrastructureCoords.isEmpty()) {
+			NBTTagList itemList = new NBTTagList();
+			for(int i = 0; i < infrastructureCoords.size(); i++)
+			{
+				BlockPosition inf = infrastructureCoords.get(i);
 
-			if(inf instanceof TileEntity) {
-				TileEntity ent = (TileEntity)inf;
 				NBTTagCompound tag = new NBTTagCompound();
-				tag.setIntArray("loc", new int[] {ent.xCoord, ent.yCoord, ent.zCoord});
+				tag.setIntArray("loc", new int[] {inf.x, inf.y, inf.z});
 				itemList.appendTag(tag);
+
 			}
+			nbt.setTag("infrastructure", itemList);
 		}
-		nbt.setTag("infrastructure", itemList);
+
 		nbt.setInteger("destinationDimId", destinationDimId);
 
 		//Satallite
