@@ -260,8 +260,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	@Override
 	public void linkInfrastructure(IInfrastructure tile) {
 		super.linkInfrastructure(tile);
-		if(tile instanceof TileEntity)
-			infrastructureCoords.add(new HashedBlockPosition(((TileEntity)tile).getPos()));
+		
+		HashedBlockPosition pos =  new HashedBlockPosition(((TileEntity)tile).getPos());
+		if(tile instanceof TileEntity && !infrastructureCoords.contains(pos))
+			infrastructureCoords.add(pos);
 	}
 	
 	@Override
