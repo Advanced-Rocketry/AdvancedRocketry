@@ -49,8 +49,8 @@ public abstract class EntityRocketBase extends Entity {
 	 * @param tile
 	 */
 	public void linkInfrastructure(IInfrastructure tile) {
-		if(tile.linkRocket(this));
-		connectedInfrastructure.add(tile);
+		if(!connectedInfrastructure.contains(tile) && tile.linkRocket(this))
+			connectedInfrastructure.add(tile);
 	}
 	
 	/**

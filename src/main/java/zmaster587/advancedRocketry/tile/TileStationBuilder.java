@@ -157,8 +157,8 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 	@Override
 	protected void updateText() {
-		if(!worldObj.isRemote) { 
-			if(getRocketPadBounds(worldObj, pos) == null)
+		if(!world.isRemote) { 
+			if(getRocketPadBounds(world, pos) == null)
 				setStatus(ErrorCodes.INCOMPLETESTRCUTURE.ordinal());
 			else if( ErrorCodes.INCOMPLETESTRCUTURE.equals(getStatus()))
 				setStatus(ErrorCodes.UNSCANNED.ordinal());

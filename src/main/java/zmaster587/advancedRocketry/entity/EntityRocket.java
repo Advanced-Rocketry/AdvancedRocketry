@@ -255,6 +255,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	}
 
 	@Override
+	public void linkInfrastructure(IInfrastructure tile) {
+		super.linkInfrastructure(tile);
+		if(tile instanceof TileEntity)
+			infrastructureCoords.add(new HashedBlockPosition(((TileEntity)tile).getPos()));
+	}
+	
+	@Override
 	public String getTextOverlay() {
 
 		if(this.world.getTotalWorldTime() < this.lastErrorTime + ERROR_DISPLAY_TIME)
@@ -554,14 +561,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 		if(this.ticksExisted == 20) {
 			//problems with loading on other world then where the infrastructure was set?
-			ListIterator<HashedBlockPosition> itr = infrastructureCoords.listIterator();
+			ListIterator<HashedBlockPosition> itr = (new LinkedList<HashedBlockPosition>(infrastructureCoords)).listIterator();
 			while(itr.hasNext()) {
 				HashedBlockPosition temp = itr.next();
 
 				TileEntity tile = this.world.getTileEntity(new BlockPos(temp.x, temp.y, temp.z));
 				if(tile instanceof IInfrastructure) {
 					this.linkInfrastructure((IInfrastructure)tile);
-					itr.remove();
 				}
 			}
 
@@ -870,6 +876,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					world2 = net.minecraftforge.common.DimensionManager.getWorld(destinationId);
 				
 				properties.addSatallite(satellite, world2);
+
 				tile.setInventorySlotContents(0, null);
 			}
 		}
@@ -1153,22 +1160,16 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			this.setSize(Math.max(storage.getSizeX(), storage.getSizeZ()), storage.getSizeY());
 		}
 
-		NBTTagList tagList = nbt.getTagList("infrastructure", 10);
-		for (int i = 0; i < tagList.tagCount(); i++) {
-			int coords[] = tagList.getCompoundTagAt(i).getIntArray("loc");
+		if(nbt.hasKey("infrastructure")) {
+			NBTTagList tagList = nbt.getTagList("infrastructure", 10);
+			for (int i = 0; i < tagList.tagCount(); i++) {
+				int coords[] = tagList.getCompoundTagAt(i).getIntArray("loc");
 
-			//If called on server causes recursive loop, use hackish workaround with tempcoords and onChunkLoad if on server
-			if(world.isRemote) {
-
-				TileEntity tile = this.world.getTileEntity(new BlockPos(coords[0], coords[1], coords[2]));
-				if(tile instanceof IInfrastructure)
-					this.linkInfrastructure((IInfrastructure)tile);
-
+				if(world.isRemote) {
+					infrastructureCoords.add(new HashedBlockPosition(coords[0], coords[1], coords[2]));
+				}
 			}
-			else
-				infrastructureCoords.add(new HashedBlockPosition(coords[0], coords[1], coords[2]));
 		}
-
 		destinationDimId = nbt.getInteger("destinationDimId");
 
 		lastDimensionFrom = nbt.getInteger("lastDimensionFrom");
@@ -1186,19 +1187,20 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		nbt.setBoolean("flight", isInFlight());
 		stats.writeToNBT(nbt);
 
-		NBTTagList itemList = new NBTTagList();
-		for(int i = 0; i < connectedInfrastructure.size(); i++)
-		{
-			IInfrastructure inf = connectedInfrastructure.get(i);
+		if(!infrastructureCoords.isEmpty()) {
+			NBTTagList itemList = new NBTTagList();
+			for(int i = 0; i < infrastructureCoords.size(); i++)
+			{
+				HashedBlockPosition inf = infrastructureCoords.get(i);
 
-			if(inf instanceof TileEntity) {
-				TileEntity ent = (TileEntity)inf;
 				NBTTagCompound tag = new NBTTagCompound();
-				tag.setIntArray("loc", new int[] {ent.getPos().getX(), ent.getPos().getY(), ent.getPos().getZ()});
+				tag.setIntArray("loc", new int[] {inf.x, inf.y, inf.z});
 				itemList.appendTag(tag);
+
 			}
+			nbt.setTag("infrastructure", itemList);
 		}
-		nbt.setTag("infrastructure", itemList);
+
 		nbt.setInteger("destinationDimId", destinationDimId);
 
 		//Satallite
