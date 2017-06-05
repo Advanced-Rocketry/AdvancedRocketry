@@ -216,7 +216,7 @@ public class PlanetEventHandler {
 		if(RocketInventoryHelper.canPlayerBypassInvChecks(event.getEntityPlayer()) && event instanceof PlayerContainerEvent.Close)
 			RocketInventoryHelper.removePlayerFromInventoryBypass(event.getEntityPlayer());
 		if(event instanceof PlayerContainerEvent.Open) {
-			
+
 		}
 	}*/
 
@@ -386,12 +386,16 @@ public class PlanetEventHandler {
 			if(DimensionManager.getInstance().getDimensionProperties(event.world.provider.getDimension()).isTerraformed()) {
 				Collection<Chunk> list = ((WorldServer)event.world).getChunkProvider().getLoadedChunks();
 				if(list.size() > 0) {
-					for(Chunk chunk : list) {
-						int coord = event.world.rand.nextInt(256);
-						int x = (coord & 0xF) + chunk.xPosition*16;
-						int z = (coord >> 4) + chunk.zPosition*16;
+					try {
+						for(Chunk chunk : list) {
+							int coord = event.world.rand.nextInt(256);
+							int x = (coord & 0xF) + chunk.xPosition*16;
+							int z = (coord >> 4) + chunk.zPosition*16;
 
-						BiomeHandler.changeBiome(event.world, Biome.getIdForBiome(((ChunkManagerPlanet)((WorldProviderPlanet)event.world.provider).chunkMgrTerraformed).getBiomeGenAt(x,z)), x, z);
+							BiomeHandler.changeBiome(event.world, Biome.getIdForBiome(((ChunkManagerPlanet)((WorldProviderPlanet)event.world.provider).chunkMgrTerraformed).getBiomeGenAt(x,z)), x, z);
+						}
+					} catch (NullPointerException e) {
+						//Ghost
 					}
 				}
 			}
