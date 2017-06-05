@@ -1164,10 +1164,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			NBTTagList tagList = nbt.getTagList("infrastructure", 10);
 			for (int i = 0; i < tagList.tagCount(); i++) {
 				int coords[] = tagList.getCompoundTagAt(i).getIntArray("loc");
-
-				if(world.isRemote) {
-					infrastructureCoords.add(new HashedBlockPosition(coords[0], coords[1], coords[2]));
-				}
+				
+				infrastructureCoords.add(new HashedBlockPosition(coords[0], coords[1], coords[2]));
+				
 			}
 		}
 		destinationDimId = nbt.getInteger("destinationDimId");

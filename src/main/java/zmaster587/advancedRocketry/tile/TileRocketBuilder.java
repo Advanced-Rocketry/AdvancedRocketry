@@ -656,7 +656,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			this.progress = nbt.getInteger("tik");
 		}
 		else if(id == 3) {
-			EntityRocket rocket = (EntityRocket) worldObj.getEntityByID(nbt.getInteger("id"));
+			EntityRocket rocket = (EntityRocket) world.getEntityByID(nbt.getInteger("id"));
 			for(IInfrastructure infrastructure : getConnectedInfrastructure()) {
 				rocket.linkInfrastructure(infrastructure);
 			}
