@@ -123,7 +123,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 
 	public TileSpaceLaser() { 
 		super();
-		glassPanel = null;
+		glassPanel = ItemStack.EMPTY;
 		//invBuffer = new ItemStack[INVSIZE];
 		radius = 0;
 		xCenter = 0;
