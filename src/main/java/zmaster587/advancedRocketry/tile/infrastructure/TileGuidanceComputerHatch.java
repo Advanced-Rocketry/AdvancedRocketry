@@ -340,7 +340,7 @@ public class TileGuidanceComputerHatch extends TilePointer implements IInfrastru
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.loader.5.name";
+		return "tile.loader.6.name";
 	}
 
 	@Override

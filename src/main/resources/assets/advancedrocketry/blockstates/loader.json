@@ -6,7 +6,7 @@
         "varient=3": { "model": "libvulpes:inputHatch" },
         "varient=4": { "model": "libvulpes:fluidOutputHatch" },
         "varient=5": { "model": "libvulpes:fluidInputHatch" },
-        "varient=6": { "model": "advancedrocketry:guidanceComputerHatch" },
+        "varient=6": { "model": "advancedrocketry:guidancecomputeraccesshatch" },
         "varient=7": { "model": "libvulpes:oreDilithium" },
         "varient=8": { "model": "advancedrocketry:databus" },
         "varient=9": { "model": "advancedrocketry:satelliteHatch" },
@@ -14,7 +14,7 @@
         "varient=11": { "model": "libvulpes:inputHatch" },
         "varient=12": { "model": "libvulpes:fluidOutputHatch" },
         "varient=13": { "model": "libvulpes:fluidInputHatch" },
-        "varient=14": { "model": "advancedrocketry:guidanceComputerHatch" },
+        "varient=14": { "model": "advancedrocketry:guidancecomputeraccesshatch" },
         "varient=15": { "model": "libvulpes:oreDilithium" }
     }
 }
