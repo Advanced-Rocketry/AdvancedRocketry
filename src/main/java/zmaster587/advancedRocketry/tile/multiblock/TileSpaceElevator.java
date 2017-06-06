@@ -356,8 +356,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 
 	public double getLandingLocationX() {
 		EnumFacing facing = RotatableBlock.getFront(world.getBlockState(getPos()));
-		return getPos().getX() + facing.getFrontOffsetX()*3 - facing.getFrontOffsetZ() + 0.5;
-
+		return getPos().getX() + facing.getFrontOffsetX()*-3 - facing.getFrontOffsetZ() + 0.5;
 	}
 
 	public double getLandingLocationZ() {
