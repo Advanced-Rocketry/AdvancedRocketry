@@ -18,6 +18,7 @@ public class AsteroidSmall {
 	public float richness;					//factor of the ratio of ore to stone
 	public float richnessVariability;		//variability of richness
 	public float probability;				//probability of the asteroid spawning
+	public float timeMultiplier;
 	public List<Float> stackProbabilites;	//
 	public List<ItemStack> itemStacks;
 	public static Random rand = new Random();
