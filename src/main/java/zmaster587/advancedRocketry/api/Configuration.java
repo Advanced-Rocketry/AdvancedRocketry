@@ -120,6 +120,5 @@ public class Configuration {
 	public static int geodeVariation;
 	public static int terraformliquidRate;
 	public static boolean planetsMustBeDiscovered;
-
-	
+	public static boolean dropExTorches;
 }
