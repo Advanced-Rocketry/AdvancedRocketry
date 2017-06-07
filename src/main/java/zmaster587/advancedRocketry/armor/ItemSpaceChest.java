@@ -11,6 +11,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.util.EmbeddedInventory;
+import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.IconResource;
 
 public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
@@ -56,7 +57,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 			if(component.getItem() instanceof IFluidContainerItem) {
 				IFluidContainerItem fluidItem = (IFluidContainerItem)component.getItem();
 				FluidStack fluidStack = fluidItem.getFluid(component);
-				if(fluidStack != null && fluidStack.getFluid() == AdvancedRocketryFluids.fluidOxygen)
+				if(fluidStack != null && FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.fluidOxygen))
 					airRemaining += fluidStack.amount;
 			}
 		}
@@ -118,7 +119,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 
 					FluidStack fluidDrained = null;
 
-					if(fluidStack != null && fluidStack.getFluid() == AdvancedRocketryFluids.fluidOxygen)
+					if(fluidStack != null && FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.fluidOxygen))
 						fluidDrained = fluidItem.drain(component, amtDrained, true);
 
 					if(fluidDrained != null)
@@ -169,7 +170,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 						(i < 2 || 
 								(inv.getStackInSlot(i).getItem() instanceof IFluidContainerItem && 
 										((IFluidContainerItem)inv.getStackInSlot(i).getItem()).getFluid(inv.getStackInSlot(i)) != null && 
-										((IFluidContainerItem)inv.getStackInSlot(i).getItem()).getFluid(inv.getStackInSlot(i)).getFluid() == AdvancedRocketryFluids.fluidOxygen)))
+												FluidUtils.areFluidsSameType(((IFluidContainerItem)inv.getStackInSlot(i).getItem()).getFluid(inv.getStackInSlot(i)).getFluid(), AdvancedRocketryFluids.fluidOxygen))))
 					
 					list.add(inv.getStackInSlot(i));
 			}
@@ -181,7 +182,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 					IFluidContainerItem fluidItem = (IFluidContainerItem)component.getItem();
 					FluidStack fluidStack = fluidItem.getFluid(component);
 
-					if(fluidStack == null || fluidStack.getFluid() == AdvancedRocketryFluids.fluidOxygen)
+					if(fluidStack == null || FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.fluidOxygen))
 						amtDrained -= fluidItem.fill(component, new FluidStack(AdvancedRocketryFluids.fluidOxygen, amtDrained), true);
 
 					if(amtDrained == 0)
@@ -229,7 +230,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 						(i < 2 || 
 								(inv.getStackInSlot(i).getItem() instanceof IFluidContainerItem && 
 										((IFluidContainerItem)inv.getStackInSlot(i).getItem()).getFluid(inv.getStackInSlot(i)) != null && 
-										((IFluidContainerItem)inv.getStackInSlot(i).getItem()).getFluid(inv.getStackInSlot(i)).getFluid() == AdvancedRocketryFluids.fluidOxygen)))
+										FluidUtils.areFluidsSameType(((IFluidContainerItem)inv.getStackInSlot(i).getItem()).getFluid(inv.getStackInSlot(i)).getFluid(), AdvancedRocketryFluids.fluidOxygen))))
 					list.add(inv.getStackInSlot(i));
 			}
 			
@@ -239,7 +240,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 					IFluidContainerItem fluidItem = (IFluidContainerItem)component.getItem();
 					FluidStack fluidStack = fluidItem.getFluid(component);
 
-					if(fluidStack == null || fluidStack.getFluid() == null || fluidStack.getFluid() == AdvancedRocketryFluids.fluidOxygen)
+					if(fluidStack == null || fluidStack.getFluid() == null || FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.fluidOxygen))
 						maxAir += fluidItem.getCapacity(component);
 				}
 			}
