@@ -251,7 +251,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 					IFluidHandlerItem fHandler = component.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
 					FluidStack fluidStack = fHandler.getTankProperties()[0].getContents();
 
-					if(fluidStack == null || fluidStack.getFluid() == null || fluidStack.getFluid() == AdvancedRocketryFluids.fluidOxygen)
+					if(fluidStack == null || fluidStack.getFluid() == null || FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.fluidOxygen))
 						maxAir += fHandler.getTankProperties()[0].getCapacity();
 			}
 
