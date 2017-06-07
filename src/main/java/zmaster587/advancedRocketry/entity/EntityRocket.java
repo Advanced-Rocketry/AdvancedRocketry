@@ -78,6 +78,7 @@ import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
+import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.advancedRocketry.util.RocketInventoryHelper;
 import zmaster587.advancedRocketry.util.StationLandingLocation;
@@ -752,7 +753,18 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					computer.getStackInSlot(0).getItem() instanceof ItemAsteroidChip) {
 				//make it 30 minutes with one drill
 				float drillingPower = stats.getDrillingPower();
-				MissionOreMining miningMission = new MissionOreMining((long)(Configuration.asteroidMiningTimeMult*(drillingPower == 0f ? 36000 : 360/stats.getDrillingPower())), this, connectedInfrastructure);
+				
+				float asteroidDrillingMult = 1f;
+				
+				ItemStack stack = storage.getGuidanceComputer().getStackInSlot(0);
+
+				AsteroidSmall asteroid = Configuration.asteroidTypes.get(((ItemAsteroidChip)stack.getItem()).getType(stack));
+
+				if(asteroid != null) {
+					asteroidDrillingMult = asteroid.timeMultiplier;
+				}
+				
+				MissionOreMining miningMission = new MissionOreMining((long)(asteroidDrillingMult*Configuration.asteroidMiningTimeMult*(drillingPower == 0f ? 36000 : 360/stats.getDrillingPower())), this, connectedInfrastructure);
 				DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
 
 				miningMission.setDimensionId(world);
