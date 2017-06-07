@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import net.minecraft.block.BlockTorch;
 import net.minecraft.block.state.IBlockState;
@@ -29,7 +31,7 @@ public class BlockTorchUnlit extends BlockTorch {
 	@Override
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target,
 			World world, BlockPos pos, EntityPlayer player) {
-		return new ItemStack(Blocks.TORCH);
+		return Configuration.dropExTorches ? super.getPickBlock(state, target, world, pos, player) : new ItemStack(Blocks.TORCH);
 	}
 
 	@Override
@@ -37,8 +39,8 @@ public class BlockTorchUnlit extends BlockTorch {
 			IBlockState state, int fortune) {
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
 
-
-		ret.add(new ItemStack(Blocks.TORCH));
+		
+		ret.add(new ItemStack(Configuration.dropExTorches ? AdvancedRocketryBlocks.blockUnlitTorch : Blocks.TORCH));
 
 		return ret;
 	}
