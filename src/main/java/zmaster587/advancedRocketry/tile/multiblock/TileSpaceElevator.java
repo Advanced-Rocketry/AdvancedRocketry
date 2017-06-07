@@ -196,20 +196,10 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 	}
 
 	public static boolean isDstValid(World worldObj, DimensionBlockPosition pos, HashedBlockPosition myPos) {
-		if(worldObj.isRemote)
-			return true;
 		if(pos == null || pos.pos == null)
 			return false;
-
-		World world;
-		if((world = DimensionManager.getWorld(pos.dimid)) == null) {
-			DimensionManager.initDimension(pos.dimid);
-			world = DimensionManager.getWorld(pos.dimid);
-		}
 		
-		if(world == null)
-			return false;
-		return worldObj.provider.getDimension() != pos.dimid && zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(world, pos.pos.getBlockPos()) == zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(worldObj, myPos.getBlockPos());
+		return worldObj.provider.getDimension() != pos.dimid && zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(pos.dimid, pos.pos.getBlockPos()) == zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(worldObj, myPos.getBlockPos());
 	}
 
 	public boolean attemptLaunch() {
