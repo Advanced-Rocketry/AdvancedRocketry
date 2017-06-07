@@ -131,7 +131,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				if(ticket != null) {
 					ticket.bindEntity(this);
 					for(int i = 0; i < 9; i++)
-						ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(-launchDirection.offsetX*i + (launchLocation.x >> 4), -launchDirection.offsetY*i + (launchLocation.z >> 4)));
+						ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(forwardDirection.offsetX*i + (launchLocation.x >> 4), forwardDirection.offsetZ*i + (launchLocation.z >> 4)));
 				}
 			}
 			
@@ -225,6 +225,13 @@ public class EntityStationDeployedRocket extends EntityRocket {
 
 				if(!worldObj.isRemote && this.getDistance(launchLocation.x, launchLocation.y, launchLocation.z) > 128) {
 					onOrbitReached();
+					
+					//Release ticket on landing
+					if(ticket != null) {
+						ForgeChunkManager.releaseTicket(ticket);
+						ticket = null;
+					}
+					
 					return;
 				}
 			}
