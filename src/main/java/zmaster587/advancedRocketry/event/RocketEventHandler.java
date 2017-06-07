@@ -261,7 +261,12 @@ public class RocketEventHandler extends Gui {
 		GL11.glAlphaFunc(GL11.GL_GREATER, .01f);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-		float brightness = Minecraft.getMinecraft().renderViewEntity.worldObj.getSunBrightness(partialTicks);
+		float brightness = 16;
+		
+		if(Minecraft.getMinecraft().renderViewEntity != null && Minecraft.getMinecraft().renderViewEntity.worldObj != null)
+			brightness = Minecraft.getMinecraft().renderViewEntity.worldObj.getSunBrightness(partialTicks);
+
+
 
 		double deltaY = (Minecraft.getMinecraft().renderViewEntity.posY - Minecraft.getMinecraft().renderViewEntity.lastTickPosY)*partialTicks;
 
