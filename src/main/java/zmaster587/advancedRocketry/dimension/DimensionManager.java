@@ -751,6 +751,18 @@ public class DimensionManager implements IGalaxy {
 		}
 		return false;
 	}
+	
+	public static DimensionProperties getEffectiveDimId(int dimId, int x, int z) {
+
+		if(dimId == Configuration.spaceDimId) {
+			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(x, z);
+			if(obj != null)
+				return (DimensionProperties) obj.getProperties().getParentProperties();
+			else 
+				return defaultSpaceDimensionProperties;
+		}
+		else return getInstance().getDimensionProperties(dimId);
+	}
 
 	public static DimensionProperties getEffectiveDimId(World world, int x, int z) {
 		int dimId = world.provider.dimensionId;

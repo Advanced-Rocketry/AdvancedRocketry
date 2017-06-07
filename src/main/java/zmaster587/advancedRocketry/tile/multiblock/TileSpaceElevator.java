@@ -201,15 +201,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 		if(pos == null || pos.pos == null)
 			return false;
 
-		World world;
-		if((world = DimensionManager.getWorld(pos.dimid)) == null) {
-			DimensionManager.initDimension(pos.dimid);
-			world = DimensionManager.getWorld(pos.dimid);
-		}
-
-		if(world == null)
-			return false;
-		return worldObj.provider.dimensionId != pos.dimid && zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(world, pos.pos.x, pos.pos.z) == zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(worldObj, myPos.x, myPos.z);
+		return worldObj.provider.dimensionId != pos.dimid && zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(pos.dimid, pos.pos.x, pos.pos.z) == zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(worldObj, myPos.x, myPos.z);
 	}
 
 	public boolean attemptLaunch() {
