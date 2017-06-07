@@ -141,6 +141,17 @@ public class XMLAsteroidLoader {
 						AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid probability value");
 					}
 				}
+				
+				node = att.getNamedItem("timeMultiplier");
+				if(node != null) {
+					try {
+						asteroid.timeMultiplier = Float.parseFloat(node.getTextContent());
+					} catch(NumberFormatException e) {
+						AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid timeMultiplier value");
+					}
+				}
+				else
+					asteroid.timeMultiplier = 1f;
 			}
 			Node asteroidNode = childNode.getFirstChild();
 
