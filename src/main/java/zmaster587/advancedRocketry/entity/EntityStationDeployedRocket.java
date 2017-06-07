@@ -31,7 +31,11 @@ import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.ForgeChunkManager.Ticket;
+import net.minecraftforge.common.ForgeChunkManager.Type;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -45,6 +49,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 	private ModuleText atmText;
 	private short gasId;
 	boolean coastMode;
+	private Ticket ticket;
 
 	public EntityStationDeployedRocket(World world) {
 		super(world);
@@ -52,6 +57,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		launchLocation = new HashedBlockPosition(0,0,0);
 		atmText = new ModuleText(182, 114, "", 0x2d2d2d);
 		gasId = 0;
+		ticket = null;
 	}
 
 	public EntityStationDeployedRocket(World world, StorageChunk storage, StatsRocket stats, double x, double y, double z) {
@@ -67,6 +73,8 @@ public class EntityStationDeployedRocket extends EntityRocket {
 	@Override
 	public void setDead() {
 		super.setDead();
+		if(ticket != null)
+			ForgeChunkManager.releaseTicket(ticket);
 	}
 
 	@Override
@@ -110,11 +118,24 @@ public class EntityStationDeployedRocket extends EntityRocket {
 	public void onUpdate() {
 		lastWorldTickTicked = world.getTotalWorldTime();
 
+
 		if(isInFlight()) {
+
 			boolean burningFuel = isBurningFuel();
 
 			if(launchLocation == null || storage == null)
 				return;
+			
+			//Grab a ticket when we take off
+			if(!world.isRemote && ticket == null) {
+				ticket = ForgeChunkManager.requestTicket(AdvancedRocketry.instance, world, Type.ENTITY);
+				if(ticket != null) {
+					ticket.bindEntity(this);
+					for(int i = 0; i < 9; i++)
+						ForgeChunkManager.forceChunk(ticket, new ChunkPos(forwardDirection.getFrontOffsetX()*i + (launchLocation.x >> 4), forwardDirection.getFrontOffsetZ()*i + (launchLocation.z >> 4)));
+				}
+			}
+			
 			boolean isCoasting = Math.abs(this.posX - launchLocation.x) < 4*storage.getSizeX() && Math.abs(this.posY - launchLocation.y) < 4*storage.getSizeY() && Math.abs(this.posZ - launchLocation.z) < 4*storage.getSizeZ();
 
 			if(!isCoasting) {
@@ -171,7 +192,14 @@ public class EntityStationDeployedRocket extends EntityRocket {
 						this.setInFlight(false);
 						this.setInOrbit(false);
 						MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketLandedEvent(this));
-						//PacketHandler.sendToNearby(new PacketEntity(this, (byte)PacketType.ROCKETLANDEVENT.ordinal()), worldObj.provider.dimensionId, (int)posX, (int)posY, (int)posZ, 64);
+						
+						//Release ticket on landing
+						if(ticket != null) {
+							ForgeChunkManager.releaseTicket(ticket);
+							ticket = null;
+						}
+						
+						//PacketHandler.sendToNearby(new PacketEntity(this, (byte)PacketType.ROCKETLANDEVENT.ordinal()), world.provider.dimensionId, (int)posX, (int)posY, (int)posZ, 64);
 						//PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, (byte)PacketType.ROCKETLANDEVENT.ordinal()), this);
 					}
 
@@ -195,8 +223,14 @@ public class EntityStationDeployedRocket extends EntityRocket {
 					motionZ += acc*forwardDirection.getFrontOffsetZ();
 
 				}
-
 				if(!world.isRemote && this.getDistance(launchLocation.x, launchLocation.y, launchLocation.z) > 128) {
+					
+					
+					//Release ticket on landing
+					if(ticket != null) {
+						ForgeChunkManager.releaseTicket(ticket);
+						ticket = null;
+					}
 					onOrbitReached();
 					return;
 				}
