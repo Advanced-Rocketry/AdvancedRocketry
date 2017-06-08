@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.Map.Entry;
 
+import zmaster587.libVulpes.util.FluidUtils;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
@@ -102,16 +103,18 @@ public class LiquidNetwork extends CableNetwork {
 				while(sourceItr.hasNext()) {
 					Entry<TileEntity,EnumFacing> objSource = (Entry<TileEntity, EnumFacing>)sourceItr.next();
 					IFluidHandler fluidHandleSource = (IFluidHandler)objSource.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
-
-					if(fluidHandleSource.drain(maxFill, false) != null) {
+					
+					FluidStack fluid2;
+					if((fluid2 = fluidHandleSource.drain(maxFill, false)) != null) {
 						int buffer;
-						FluidStack fluid2 =  fluidHandleSource.drain(maxFill, true);
 						
 						//drain sometimes returns a null value even when canDrain returns true
-						if(fluid2 == null)
+						if(fluid2 == null || !FluidUtils.areFluidsSameType(fluid, fluid2.getFluid()))
 							buffer = 0;
-						else
+						else {
+							fluidHandleSource.drain(maxFill, true);
 							buffer=fluid2.amount;
+						}
 
 						maxFill -= buffer;
 						actualFill += buffer;
