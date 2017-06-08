@@ -64,6 +64,19 @@ public class BlockARHatch extends BlockHatch {
 		return blockState.getValue(VARIANT) >= 2 ? 15 : 0;
 	}
 	
+	public void setRedstoneState(World world, IBlockState bstate , BlockPos pos, boolean state) {
+		if(bstate.getBlock() == this) {
+			if(state && (bstate.getValue(VARIANT) & 8) == 0) {
+				world.setBlockState(pos, bstate.withProperty(VARIANT, bstate.getValue(VARIANT) | 8));
+				world.notifyBlockUpdate(pos, bstate,  bstate, 3);
+			}
+			else if(!state && (bstate.getValue(VARIANT) & 8) != 0) {
+				world.setBlockState(pos, bstate.withProperty(VARIANT, bstate.getValue(VARIANT) & 7));
+				world.notifyBlockUpdate(pos, bstate,  bstate, 3);
+			}
+		}
+	}
+	
 	@Override
 	public boolean canProvidePower(IBlockState state) {
 		return state.getValue(VARIANT) >= 10;
