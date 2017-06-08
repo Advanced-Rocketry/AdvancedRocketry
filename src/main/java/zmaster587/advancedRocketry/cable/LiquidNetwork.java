@@ -102,10 +102,10 @@ public class LiquidNetwork extends CableNetwork {
 
 					if(fluidHandleSource.canDrain(objSource.getValue(), fluid)) {
 						int buffer;
-						FluidStack fluid2 =  fluidHandleSource.drain(objSource.getValue(), maxFill, true);
+						FluidStack fluid2 = fluidHandleSource.drain(objSource.getValue(), maxFill, true);
 
 						//drain sometimes returns a null value even when canDrain returns true
-						if(fluid2 == null)
+						if(fluid2 == null || fluid2.getFluidID() != fluid.getID())
 							buffer = 0;
 						else
 							buffer=fluid2.amount;
