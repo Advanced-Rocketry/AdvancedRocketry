@@ -1116,9 +1116,9 @@ public class AdvancedRocketry {
 		}
 
 		//Control boards
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemIOBoard, "rvr", "dwd", "dpd", 'r', "dustRedstone", 'v', "gemDiamond", 'd', "dustGold", 'w', Blocks.WOODEN_SLAB, 'p', "plateIron"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(controlCircuitBoard, "rvr", "dwd", "dpd", 'r', "dustRedstone", 'v', "gemDiamond", 'd', "dustCopper", 'w', Blocks.WOODEN_SLAB, 'p', "plateIron"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(liquidIOBoard, "rvr", "dwd", "dpd", 'r', "dustRedstone", 'v', "gemDiamond", 'd', new ItemStack(Items.DYE, 1, 4), 'w', Blocks.WOODEN_SLAB, 'p', "plateIron"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemIOBoard, "rvr", "dwd", "dpd", 'r', "dustRedstone", 'v', "gemDiamond", 'd', "dustGold", 'w', "slabWood", 'p', "plateIron"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(controlCircuitBoard, "rvr", "dwd", "dpd", 'r', "dustRedstone", 'v', "gemDiamond", 'd', "dustCopper", 'w', "slabWood", 'p', "plateIron"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(liquidIOBoard, "rvr", "dwd", "dpd", 'r', "dustRedstone", 'v', "gemDiamond", 'd', new ItemStack(Items.DYE, 1, 4), 'w', "slabWood", 'p', "plateIron"));
 
 		//Register machines
 		machineRecipes.registerMachine(TileElectrolyser.class);
