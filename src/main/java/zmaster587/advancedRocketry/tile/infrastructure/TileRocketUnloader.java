@@ -15,7 +15,6 @@ import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
 public class TileRocketUnloader extends TileRocketLoader implements IInfrastructure, ITickable, IButtonInventory, INetworkMachine   {
-	EntityRocket rocket;
 	ModuleRedstoneOutputButton redstoneControl;
 	RedstoneState state;
 
