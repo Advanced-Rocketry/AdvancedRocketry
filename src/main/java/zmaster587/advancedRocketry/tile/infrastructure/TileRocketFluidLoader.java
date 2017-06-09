@@ -24,6 +24,7 @@ import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.api.IMission;
+import zmaster587.advancedRocketry.block.multiblock.BlockARHatch;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.inventory.modules.IButtonInventory;
@@ -92,7 +93,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 
 	protected void setRedstoneState(boolean condition) {
 		condition = isStateActive(state, condition);
-		((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj, xCoord,yCoord,zCoord, condition);
+		((BlockARHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj, xCoord,yCoord,zCoord, condition);
 
 	}
 	
@@ -194,7 +195,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	@Override
 	public void unlinkRocket() {
 		rocket = null;
-		((BlockHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj, xCoord, yCoord, zCoord, false);
+		((BlockARHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(worldObj, xCoord, yCoord, zCoord, false);
 		//On unlink prevent the tile from ticking anymore
 
 		//if(!worldObj.isRemote)

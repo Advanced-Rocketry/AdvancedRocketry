@@ -46,7 +46,20 @@ public class BlockARHatch extends BlockHatch {
 		if(world.getTileEntity(x,y,z) instanceof TilePointer && !((TilePointer)world.getTileEntity(x,y,z)).allowRedstoneOutputOnSide(ForgeDirection.getOrientation(dir)))
 			return 0;
 		
-		return world.getBlockMetadata(x, y, z) >= 7 ? 15 : 0;
+		return world.getBlockMetadata(x, y, z) > 7 ? 15 : 0;
+	}
+	
+	public void setRedstoneState(World world, int x, int y, int z, boolean state) {
+		if(world.getBlock(x, y, z) == this) {
+			if(state && (world.getBlockMetadata(x, y, z) & 8) == 0) {
+				world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z) | 8, 3);
+				world.markBlockForUpdate(x, y, z);
+			}
+			else if(!state && (world.getBlockMetadata(x, y, z) & 8) != 0) {
+				world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z) & 7, 3);
+				world.markBlockForUpdate(x, y, z);
+			}
+		}
 	}
 	
 	@Override
