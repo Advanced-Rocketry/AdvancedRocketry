@@ -680,7 +680,7 @@ public class AdvancedRocketry {
 		}
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill) {
-			AdvancedRocketryBlocks.blockSpaceLaser = new BlockLaser();
+			AdvancedRocketryBlocks.blockSpaceLaser = new BlockLaser().setHardness(2f);
 			AdvancedRocketryBlocks.blockSpaceLaser.setCreativeTab(tabAdvRocketry);
 		}
 
