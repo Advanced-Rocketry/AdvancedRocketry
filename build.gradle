@@ -39,7 +39,7 @@ minecraft {
     replace "@REVIS@", version_revis
     replace "@BUILD@", project.getBuildNumber()
     
-    replace "%LIBVULPESVERSION%", "0.2.4"
+    replace "%LIBVULPESVERSION%", "0.2.5"
 }
 
 
@@ -65,7 +65,7 @@ repositories {
         //}
         ivy {
             name "LibVulpes"
-            artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/unstable1_7/10/artifact/output/[module]-[revision].[ext]"
+            artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/unstable1_7/16/artifact/output/[module]-[revision].[ext]"
         }
 }
 
@@ -74,7 +74,7 @@ dependencies {
     //If for whatever reason gradle complains of "unable to find valid certification path to requested target"
     //Just download https://ci.micdoodle8.com/job/Galacticraft-1.7/lastSuccessfulBuild/artifact/Forge/build/libs/GalacticraftCore-1.7-3.0.12.474.jar and stick in in AdvancedRocketry/libs and comment out the following line
     //compile name: 'GalacticraftCore', version: '1.7-3.0.12.474', ext: 'jar'
-    compile name: 'LibVulpes', version: '1.7.10-0.2.3-10-deobf', ext: 'jar'
+    compile name: 'LibVulpes', version: '1.7.10-0.2.5-16-deobf', ext: 'jar'
     compile name: 'industrialcraft-2', version: '2.2.801-experimental-dev', ext: 'jar'
     compile 'codechicken:CodeChickenLib:1.7.10-1.1.3.127:dev'
     compile 'codechicken:CodeChickenCore:1.7.10-1.0.4.35:dev'
