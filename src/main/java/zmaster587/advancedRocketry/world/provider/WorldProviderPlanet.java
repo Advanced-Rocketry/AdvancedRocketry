@@ -10,6 +10,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
+import zmaster587.advancedRocketry.capability.DimensionCompat;
 import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -103,7 +104,8 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 			if(coords != null && world.getBlockState(coords).getBlock() == AdvancedRocketryBlocks.blockAstroBed && AtmosphereHandler.getOxygenHandler(player.world.provider.getDimension()).getAtmosphereType(coords).isBreathable())
 				return getDimension();
 		}
-		return 0;
+		
+		return DimensionCompat.getDefaultSpawnDimension();
 	}
 
 	@Override
