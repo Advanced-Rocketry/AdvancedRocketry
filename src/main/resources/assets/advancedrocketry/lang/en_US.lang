@@ -35,6 +35,7 @@ tile.monitoringstation.name=Rocket Monitoring Station
 tile.satelliteMonitor.name=Satellite Terminal
 tile.sapling.name=Lightwood Sapling
 tile.leaves2.name=Lightwood Leaves
+tile.planks.name=Lightwood planks
 tile.chipStorage.name=Satellite Id Storage
 tile.planetanalyser.name=Astrobody Data processor
 tile.lunaranalyser.name=Lunar Analyser
