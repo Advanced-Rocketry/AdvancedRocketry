@@ -1460,11 +1460,16 @@ public class AdvancedRocketry {
 				file.createNewFile();
 				BufferedWriter stream;
 				stream = new BufferedWriter(new FileWriter(file));
-				stream.write("<Asteroids>\n\t<asteroid name=\"Small Asteroid\" distance=\"10\" mass=\"100\" massVariability=\"0.5\" minLevel=\"0\" probability=\"1\" richness=\"0.2\" richnessVariability=\"0.5\">"
+				stream.write("<Asteroids>\n\t<asteroid name=\"Small Asteroid\" distance=\"10\" mass=\"100\" massVariability=\"0.5\" minLevel=\"0\" probability=\"10\" richness=\"0.2\" richnessVariability=\"0.5\">"
 						+ "\n\t\t<ore itemStack=\"minecraft:iron_ore\" chance=\"15\" />"
 						+ "\n\t\t<ore itemStack=\"minecraft:gold_ore\" chance=\"10\" />"
 						+ "\n\t\t<ore itemStack=\"minecraft:redstone_ore\" chance=\"10\" />"
-						+ "\n\t</asteroid>\n</Asteroids>");
+						+ "\n\t</asteroid>"
+						+ "\n\t<asteroid name=\"Iridium Enriched asteroid\" distance=\"100\" mass=\"25\" massVariability=\"0.5\" minLevel=\"0\" probability=\"0.75\" richness=\"0.2\" richnessVariability=\"0.3\">"
+						+ "\n\t\t<ore itemStack=\"minecraft:iron_ore\" chance=\"25\" />"
+						+ "\n\t\t<ore itemStack=\"libvulpes:ore0 10\" chance=\"5\" />"
+						+ "\n\t</asteroid>"
+						+ "\n</Asteroids>");
 				stream.close();
 			} catch (IOException e) {
 				e.printStackTrace();
