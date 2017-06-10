@@ -43,6 +43,10 @@ public class TileFluidTank extends TileFluidHatch implements IAdjBlockUpdate {
 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+		
+		if(resource == null)
+			return 0;
+		
 		IFluidHandler handler = this.getFluidTankInDirection(ForgeDirection.DOWN);
 		int amt = 0;
 

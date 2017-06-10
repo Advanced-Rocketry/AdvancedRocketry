@@ -791,7 +791,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockBiomeScanner, AdvancedRocketryBlocks.blockBiomeScanner.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockAtmosphereTerraformer, AdvancedRocketryBlocks.blockAtmosphereTerraformer.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockDeployableRocketBuilder, AdvancedRocketryBlocks.blockDeployableRocketBuilder.getUnlocalizedName());
-		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockPressureTank, AdvancedRocketryBlocks.blockPressureTank.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockPressureTank, ItemBlockFluidTank.class, AdvancedRocketryBlocks.blockPressureTank.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockIntake, AdvancedRocketryBlocks.blockIntake.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockCircularLight, AdvancedRocketryBlocks.blockCircularLight.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockDockingPort, AdvancedRocketryBlocks.blockDockingPort.getUnlocalizedName());
