@@ -381,7 +381,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			List<AsteroidSmall> viableTypes = new LinkedList<AsteroidSmall>();
 			for(String str :  Configuration.asteroidTypes.keySet()) {
 				AsteroidSmall asteroid = Configuration.asteroidTypes.get(str);
-				if(asteroid.distance < getMaxDistance()) {
+				if(asteroid.distance <= getMaxDistance()) {
 					totalWeight += asteroid.getProbability();
 					viableTypes.add(asteroid);
 				}
