@@ -49,6 +49,8 @@ public class TileFluidTank extends TileFluidHatch {
 	
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
+		if(resource == null)
+			return 0;
 		IFluidHandler handler = this.getFluidTankInDirection(EnumFacing.DOWN);
 		int amt = 0;
 
