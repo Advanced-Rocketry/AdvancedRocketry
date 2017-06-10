@@ -260,3 +260,4 @@ msg.spaceElevator.newDstAdded=New Destination Added!
 msg.spaceElevator.ascentReady=Getting ready for ascent 
 msg.spaceElevator.label.chip=Elevator Chip
 msg.spaceElevator.turnedoff=Elevator is turned off
+msg.entityDeployedRocket.notGasGiant=No Gas Here
