@@ -186,8 +186,10 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 	@Override
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
+		boolean isScanningFlag = !isScanning() && canScan();
+		super.useNetworkData(player, side, id, nbt);
 		
-		if(id == 1 && !isScanning() && canScan()) {
+		if(id == 1 && isScanningFlag ) {
 			inventory.decrStackSize(0, 1);
 			storedId = (long)ItemStationChip.getUUID(inventory.getStackInSlot(1));
 			if(storedId == 0) storedId = null;
@@ -195,7 +197,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 				inventory.decrStackSize(1, 1);
 		}
 		
-		super.useNetworkData(player, side, id, nbt);
+		
 	}
 
 	@Override
