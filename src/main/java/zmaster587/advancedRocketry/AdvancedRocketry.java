@@ -92,6 +92,7 @@ import zmaster587.advancedRocketry.block.cable.BlockEnergyPipe;
 import zmaster587.advancedRocketry.block.cable.BlockLiquidPipe;
 import zmaster587.advancedRocketry.block.multiblock.BlockARHatch;
 import zmaster587.advancedRocketry.block.plant.BlockAlienLeaves;
+import zmaster587.advancedRocketry.block.plant.BlockAlienPlanks;
 import zmaster587.advancedRocketry.block.plant.BlockAlienSapling;
 import zmaster587.advancedRocketry.block.plant.BlockAlienWood;
 import zmaster587.advancedRocketry.block.BlockTorchUnlit;
@@ -552,7 +553,11 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockAlienWood = new BlockAlienWood().setBlockName("log").setBlockTextureName("advancedrocketry:log").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockAlienLeaves = new BlockAlienLeaves().setBlockName("leaves2").setBlockTextureName("leaves").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockAlienSapling = new BlockAlienSapling().setBlockName("sapling").setBlockTextureName("advancedrocketry:sapling").setCreativeTab(tabAdvRocketry).setHardness(3f);
-
+		AdvancedRocketryBlocks.blockAlienPlanks = new BlockAlienPlanks().setBlockName("planks").setBlockTextureName("advancedrocketry:plank").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		
+		
+		
+		
 		AdvancedRocketryBlocks.blockLightSource = new BlockLightSource();
 		AdvancedRocketryBlocks.blockBlastBrick = new BlockMultiBlockComponentVisible(Material.rock).setCreativeTab(tabAdvRocketry).setBlockName("blastBrick").setBlockTextureName("advancedRocketry:BlastBrick").setHardness(3F).setResistance(15F);
 		AdvancedRocketryBlocks.blockQuartzCrucible = new BlockQuartzCrucible();
@@ -807,7 +812,8 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockPipeSealer,AdvancedRocketryBlocks.blockPipeSealer.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockSpaceElevatorController, AdvancedRocketryBlocks.blockSpaceElevatorController.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockBeacon, AdvancedRocketryBlocks.blockBeacon.getUnlocalizedName());
-
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockAlienPlanks, AdvancedRocketryBlocks.blockAlienPlanks.getUnlocalizedName());
+		
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController) 
 			GameRegistry.registerBlock(AdvancedRocketryBlocks.blockGravityMachine,AdvancedRocketryBlocks.blockGravityMachine.getUnlocalizedName());
 
@@ -1121,7 +1127,8 @@ public class AdvancedRocketry {
 		//Knicknacks
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockForceFieldProjector), " c ", "pdp","psp", 'c', "coilCopper", 'p', "plateAluminum", 'd', "crystalDilithium", 's', LibVulpesBlocks.blockStructureBlock));
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockPipeSealer, " c ", "csc", " c ", 'c', Items.clay_ball, 's', "stickIron"));
-
+		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockAlienPlanks, 4), AdvancedRocketryBlocks.blockAlienWood);
+		
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockGravityMachine), "sds", "sws", 's', "sheetTitanium", 'd', massDetector, 'w', AdvancedRocketryBlocks.blockWarpCore));
 

@@ -91,4 +91,5 @@ public class AdvancedRocketryBlocks {
 	public static Block blockPipeSealer;
 	public static Block blockSpaceElevatorController;
 	public static Block blockBeacon;
+	public static Block blockAlienPlanks;
 }
