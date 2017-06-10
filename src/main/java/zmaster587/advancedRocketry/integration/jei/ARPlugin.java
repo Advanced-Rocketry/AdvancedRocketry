@@ -1,5 +1,8 @@
 package zmaster587.advancedRocketry.integration.jei;
 
+import java.awt.Rectangle;
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.block.BlockPress;
@@ -38,11 +41,13 @@ import zmaster587.advancedRocketry.tile.multiblock.machine.TileElectrolyser;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileLathe;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TilePrecisionAssembler;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileRollingMachine;
+import zmaster587.libVulpes.inventory.GuiModular;
 import mezz.jei.api.BlankModPlugin;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
+import mezz.jei.api.gui.IAdvancedGuiHandler;
 
 @JEIPlugin
 public class ARPlugin extends BlankModPlugin {
@@ -66,6 +71,24 @@ public class ARPlugin extends BlankModPlugin {
 		jeiHelpers = registry.getJeiHelpers();
 		IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
 		
+		
+		registry.addAdvancedGuiHandlers(new IAdvancedGuiHandler<GuiModular>() {
+			@Override
+			public Class<GuiModular> getGuiContainerClass() {
+				return GuiModular.class;
+			}
+
+			@Override
+			public List<Rectangle> getGuiExtraAreas(GuiModular guiContainer) {
+				return guiContainer.getExtraAreasCovered();
+			}
+
+			@Override
+			public Object getIngredientUnderMouse(GuiModular guiContainer,
+					int mouseX, int mouseY) {
+				return null;
+			}
+		});
 		
 		registry.addRecipeCategories(new RollingMachineCategory(guiHelper),
 		new LatheCategory(guiHelper),
