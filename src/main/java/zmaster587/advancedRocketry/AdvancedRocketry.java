@@ -1749,6 +1749,7 @@ public class AdvancedRocketry {
 
 				//Add the overworld
 				DimensionManager.getInstance().registerDimNoUpdate(DimensionManager.overworldProperties, false);
+				sol.addPlanet(DimensionManager.overworldProperties);
 
 				if(zmaster587.advancedRocketry.api.Configuration.MoonId == -1)
 					zmaster587.advancedRocketry.api.Configuration.MoonId = DimensionManager.getInstance().getNextFreeDim(DimensionManager.dimOffset);
