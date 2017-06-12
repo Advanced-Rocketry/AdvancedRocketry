@@ -364,7 +364,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			setOffset2(internalOffsetX - Minecraft.getMinecraft().displayWidth/4 , internalOffsetY - Minecraft.getMinecraft().displayHeight /4);
 			//redrawSystem();
 
-			selectedSystem = -1;
+			//selectedSystem = -1;
 
 			currentSystemChanged = false;
 
@@ -524,7 +524,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 				currentSystemChanged=true;
 				//Go back to planetary mapping
 				stellarView = false;
-				selectedSystem = -1;
+				//selectedSystem = -1;
 			}
 			else {
 				//Make clicked planet selected
@@ -554,13 +554,12 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 					if(planetDefiner != null && !planetDefiner.isPlanetKnown(properties))
 						continue;
 
-					if(!properties.isMoon()) {
 						ModuleButton button = new ModuleButton(0, i*18, properties.getId(), properties.getName(), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 128, 18);
 						list2.add(button);
 
 						if(properties.getId() == selectedPlanet)
 							button.setColor(0xFFFF2222);
-					}
+					
 					i++;
 				}
 			}
