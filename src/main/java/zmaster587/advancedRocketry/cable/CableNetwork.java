@@ -46,13 +46,14 @@ public class CableNetwork {
 		Iterator<Entry<TileEntity, EnumFacing>> iter = sources.iterator();
 
 		while(iter.hasNext()) {
-			Entry<TileEntity, EnumFacing> entry;
-			TileEntity tile2 =  iter.next().getKey();
+			Entry<TileEntity, EnumFacing> entry = iter.next();
+			TileEntity tile2 =  entry.getKey();
 			if(tile2.equals(tile)) {
 				return;
 			}
 			if(tile2.getPos().compareTo(tile.getPos()) == 0) {
-				iter.remove();
+				sources.remove(entry);
+				//iter.remove();
 				break;
 			}
 		}
@@ -65,13 +66,14 @@ public class CableNetwork {
 		Iterator<Entry<TileEntity, EnumFacing>> iter = sinks.iterator();
 
 		while(iter.hasNext()) {
-			Entry<TileEntity, EnumFacing> entry;
-			TileEntity tile2 =  iter.next().getKey();
+			Entry<TileEntity, EnumFacing> entry = iter.next();
+			TileEntity tile2 = entry.getKey();
 			if(tile2.equals(tile)) {
 				return;
 			}
 			if(tile2.getPos().compareTo(tile.getPos()) == 0) {
-				iter.remove();
+				sinks.remove(entry);
+				//iter.remove();
 				break;
 			}
 		}
