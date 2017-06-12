@@ -44,13 +44,13 @@ public class CableNetwork {
 		Iterator<Entry<TileEntity, ForgeDirection>> iter = sources.iterator();
 
 		while(iter.hasNext()) {
-			Entry<TileEntity, ForgeDirection> entry;
-			TileEntity tile2 =  iter.next().getKey();
+			Entry<TileEntity, ForgeDirection> entry = iter.next();
+			TileEntity tile2 =  entry.getKey();
 			if(tile2.equals(tile)) {
 				return;
 			}
 			if(tile2.xCoord == tile.xCoord && tile2.yCoord == tile.yCoord && tile2.zCoord == tile.zCoord) {
-				iter.remove();
+				sources.remove(entry);
 				break;
 			}
 		}
@@ -63,13 +63,13 @@ public class CableNetwork {
 		Iterator<Entry<TileEntity, ForgeDirection>> iter = sinks.iterator();
 
 		while(iter.hasNext()) {
-			Entry<TileEntity, ForgeDirection> entry;
-			TileEntity tile2 =  iter.next().getKey();
+			Entry<TileEntity, ForgeDirection> entry = iter.next();
+			TileEntity tile2 =  entry.getKey();
 			if(tile2.equals(tile)) {
 				return;
 			}
 			if(tile2.xCoord == tile.xCoord && tile2.yCoord == tile.yCoord && tile2.zCoord == tile.zCoord) {
-				iter.remove();
+				sinks.remove(entry);
 				break;
 			}
 		}
