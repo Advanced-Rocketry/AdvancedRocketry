@@ -894,7 +894,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				else
 					world = net.minecraftforge.common.DimensionManager.getWorld(destinationId);
 
-				properties.addSatallite(satellite, world);
+				if(world != null)
+					properties.addSatallite(satellite, world);
 				tile.setInventorySlotContents(0, null);
 			}
 		}
