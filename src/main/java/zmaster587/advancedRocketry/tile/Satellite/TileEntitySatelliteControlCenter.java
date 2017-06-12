@@ -101,7 +101,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 
 			SatelliteBase satellite = moduleSatellite.getSatellite();
 
-			if(satellite != null && satellite.getDimensionId() == this.world.provider.getDimension()) {
+			if(satellite != null && satellite.getDimensionId() == DimensionManager.getEffectiveDimId(this.world.provider.getDimension(), getPos()).getId()) {
 				satellite.performAction(player, world, pos);
 			}
 		}
