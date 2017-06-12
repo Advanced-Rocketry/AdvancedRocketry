@@ -2049,14 +2049,13 @@ public class AdvancedRocketry {
 		}
 
 		//GT uses stick instead of Rod
-		if(event.Name.startsWith("stick")) {
+		if(event.Name.startsWith("rod")) {
 			HashSet<String> list = modProducts.get(AllowedProducts.getProductByName("STICK"));
 			if(list == null) {
 				list = new HashSet<String>();
 				modProducts.put(AllowedProducts.getProductByName("STICK"), list);
 			}
-
-			list.add(event.Name.substring("stick".length()));
+			list.add(event.Name.substring("rod".length()));
 		}
 	}
 
