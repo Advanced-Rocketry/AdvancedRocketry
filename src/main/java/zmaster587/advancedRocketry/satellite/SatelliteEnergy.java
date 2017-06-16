@@ -4,11 +4,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-<<<<<<< HEAD
 import net.minecraftforge.common.util.ForgeDirection;
-=======
 import zmaster587.advancedRocketry.api.Configuration;
->>>>>>> 25f71bd... fix energy transmission in energy satellites
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
