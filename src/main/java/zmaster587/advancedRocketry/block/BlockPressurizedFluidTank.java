@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.block;
 
 import java.util.LinkedList;
 import java.util.List;
+
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.tile.TileFluidTank;
 import zmaster587.libVulpes.LibVulpes;
@@ -115,6 +116,11 @@ public class BlockPressurizedFluidTank extends Block {
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source,
 			BlockPos pos) {
 		return bb;
+	}
+	
+	@Override
+	public boolean isFullCube(IBlockState state) {
+		return false;
 	}
 
 	@Override
