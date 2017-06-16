@@ -118,7 +118,12 @@ public class BlockPressurizedFluidTank extends Block {
 			BlockPos pos) {
 		return bb;
 	}
-	
+
+	@Override
+	public boolean isFullCube(IBlockState state) {
+		return false;
+	}
+
 	@Override
 	public void onNeighborChange(IBlockAccess world, BlockPos pos,
 			BlockPos neighbor) {
