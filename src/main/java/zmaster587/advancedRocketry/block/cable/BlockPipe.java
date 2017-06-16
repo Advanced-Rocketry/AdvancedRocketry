@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
@@ -21,11 +22,19 @@ import net.minecraft.world.World;
 
 public class BlockPipe extends Block {
 
+	private static AxisAlignedBB bb = new AxisAlignedBB(0.15, 0.15, 0.15, 0.85, 0.85, 0.85);
+	
 	protected BlockPipe(Material material) {
 		super(material);
 
 	}
 
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source,
+			BlockPos pos) {
+		return bb;
+	}
+	
 	@Override
 	public boolean isNormalCube(IBlockState state, IBlockAccess world,
 			BlockPos pos) {
