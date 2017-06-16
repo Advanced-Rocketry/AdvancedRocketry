@@ -1001,7 +1001,7 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapelessOreRecipe(AdvancedRocketryBlocks.blockLaunchpad, "concrete", "dyeBlack", "dyeYellow"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockStructureTower, 8), "ooo", " o ", "ooo", 'o', "stickSteel"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockEngine, "sss", " t ","t t", 's', "ingotSteel", 't', "plateTitanium"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockAdvEngine, "sss", " t ","t t", 's', "TitaniumAluminide", 't', "plateTitaniumIridium"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockAdvEngine, "sss", " t ","t t", 's', "ingotTitaniumAluminide", 't', "plateTitaniumIridium"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(AdvancedRocketryBlocks.blockFuelTank, "s s", "p p", "s s", 'p', "plateSteel", 's', "stickSteel"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesItems.itemBattery,4,0), " c ","prp", "prp", 'c', "stickIron", 'r', "dustRedstone", 'p', "plateTin"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesItems.itemBattery,1,1), "bpb", "bpb", 'b', smallBattery, 'p', "plateCopper"));
