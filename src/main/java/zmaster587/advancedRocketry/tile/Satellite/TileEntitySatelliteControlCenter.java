@@ -101,7 +101,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 
 			SatelliteBase satellite = moduleSatellite.getSatellite();
 			
-			if(satellite != null && satellite.getDimensionId() == DimensionManager.getEffectiveDimId(this.worldObj.provider.getDimension(), getPos()).getId()) {
+			if(satellite != null && DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(worldObj, pos).getId())) {
 				satellite.performAction(player, worldObj, pos);
 			}
 		}
@@ -124,7 +124,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 			if(satellite != null) {
 				if(getEnergyStored() < getPowerPerOperation()) 
 					moduleText.setText("Not Enough power!");
-				else if(satellite.getDimensionId() != DimensionManager.getEffectiveDimId(worldObj, pos).getId()) {
+				else if(!DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(worldObj, pos).getId())) {
 					moduleText.setText(satellite.getName() + "\n\nToo Far" );
 				}
 
@@ -240,7 +240,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 		//TODO
 		if(type == data.getDataType() ||  data.getDataType() == DataType.UNDEFINED) {
 			SatelliteBase satellite = getSatelliteFromSlot(0);
-			if(satellite != null && satellite instanceof SatelliteData && satellite.getDimensionId() == this.worldObj.provider.getDimension()) {
+			if(satellite != null && satellite instanceof SatelliteData && DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(worldObj, pos).getId())) {
 				satellite.performAction(null, worldObj, pos);
 			}
 			
