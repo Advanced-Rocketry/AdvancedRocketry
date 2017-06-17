@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.item.ItemBlockFluidTank;
 import zmaster587.advancedRocketry.tile.TileFluidTank;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.GuiHandler.guiId;
@@ -73,9 +74,8 @@ public class BlockPressurizedFluidTank extends Block {
 
 
 			ItemStack itemstack = new ItemStack(AdvancedRocketryBlocks.blockPressureTank);
-			IFluidHandler fluidItem = itemstack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN);
-
-			fluidItem.fill(fluid.drain(Integer.MAX_VALUE, false), true);
+			
+			((ItemBlockFluidTank)itemstack.getItem()).fill(itemstack, fluid.drain(Integer.MAX_VALUE, false));
 			
 			EntityItem entityitem;
 

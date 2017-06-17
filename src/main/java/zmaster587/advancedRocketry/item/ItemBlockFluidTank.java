@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
@@ -33,7 +34,7 @@ public class ItemBlockFluidTank extends ItemBlock {
 			List list, boolean bool) {
 		super.addInformation(stack, player, list, bool);
 
-		FluidStack fluidStack = FluidUtils.getFluidForItem(stack);
+		FluidStack fluidStack = getFluid(stack);
 
 		if(fluidStack == null) {
 			list.add("Empty");
@@ -56,16 +57,57 @@ public class ItemBlockFluidTank extends ItemBlock {
 			IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN);
 			ItemStack stack2 = stack.copy();
 			stack2.setCount(1);
-			IFluidHandler itemFluidHandler = stack2.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN);
-			handler.fill(itemFluidHandler.drain(Integer.MAX_VALUE, false), true);
+			handler.fill(drain(stack2, Integer.MAX_VALUE), true);
 		}
 		
 		return true;
 	}
-
-	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack,
-			NBTTagCompound nbt) {
-		return new TankCapabilityItemStack(stack, 64000);
+	
+	public void fill(ItemStack stack, FluidStack fluid) {
+		
+		NBTTagCompound nbt;
+		FluidTank tank = new FluidTank(640000);
+		if(stack.hasTagCompound()) {
+			nbt = stack.getTagCompound();
+			tank.readFromNBT(nbt);
+		}
+		else
+			nbt = new NBTTagCompound();
+		
+		tank.fill(fluid, true);
+		
+		tank.writeToNBT(nbt);
+		stack.setTagCompound(nbt);
+	}
+	
+	public FluidStack drain(ItemStack stack, int amt) {
+		NBTTagCompound nbt;
+		FluidTank tank = new FluidTank(640000);
+		if(stack.hasTagCompound()) {
+			nbt = stack.getTagCompound();
+			tank.readFromNBT(nbt);
+		}
+		else
+			nbt = new NBTTagCompound();
+		
+		FluidStack stack2 = tank.drain(amt, true);
+		
+		tank.writeToNBT(nbt);
+		stack.setTagCompound(nbt);
+		
+		return stack2;
+	}
+	
+	public FluidStack getFluid(ItemStack stack) {
+		NBTTagCompound nbt;
+		FluidTank tank = new FluidTank(640000);
+		if(stack.hasTagCompound()) {
+			nbt = stack.getTagCompound();
+			tank.readFromNBT(nbt);
+		}
+		else
+			nbt = new NBTTagCompound();
+		
+		return tank.getFluid();
 	}
 }
