@@ -6,7 +6,7 @@ death.attack.Vacuum.player=减压死了
 entity.advancedRocketry.rocket.name=火箭
 
 tile.seat.name=座位
-tile.pad.name=发射台
+tile.launchpad.name=发射台
 tile.structuretower.name=结构塔
 tile.rocketAssembler.name=火箭组装机
 tile.turf.name=月面土

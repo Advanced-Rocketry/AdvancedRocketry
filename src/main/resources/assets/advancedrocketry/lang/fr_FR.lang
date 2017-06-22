@@ -6,7 +6,7 @@ death.attack.Vacuum.player=Est mort dans un accident de décompression
 entity.advancedRocketry.rocket.name=Fusée
 
 tile.seat.name=Siège
-tile.pad.name=Pas de tir
+tile.launchpad.name=Pas de tir
 tile.structuretower.name=Structure métallique
 tile.rocketAssembler.name=Contrôleur de pas de tir
 tile.turf.name=Régolithe
