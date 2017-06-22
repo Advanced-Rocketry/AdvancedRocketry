@@ -4,7 +4,7 @@ itemGroup.advancedRocketryOres=Руди Advanced Rocketry
 entity.advancedRocketry.rocket.name = Ракета
  
 tile.seat.name=Сидіння
-tile.pad.name=Стартовий майданчик
+tile.launchpad.name=Стартовий майданчик
 tile.structuretower.name=Структурна вежа
 tile.rocketAssembler.name=Збирач ракети
 tile.turf.name=Місячний грунт

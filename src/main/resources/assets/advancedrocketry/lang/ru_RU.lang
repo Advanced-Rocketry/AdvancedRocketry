@@ -6,7 +6,7 @@ death.attack.Vacuum.player=был разрегметизирован
 entity.advancedRocketry.rocket.name=Ракета
  
 tile.seat.name=Сиденье
-tile.pad.name=Стартовая площадка
+tile.launchpad.name=Стартовая площадка
 tile.structuretower.name=Структурная башня
 tile.rocketAssembler.name=Сборщик ракеты
 tile.turf.name=Лунный грунт
