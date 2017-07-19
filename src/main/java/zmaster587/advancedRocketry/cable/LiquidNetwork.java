@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.Map.Entry;
 
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.libVulpes.util.FluidUtils;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -64,6 +65,12 @@ public class LiquidNetwork extends CableNetwork {
 
 			Fluid fluid = null;
 
+			if(fluidHandleSink == null) {
+				sinkItr.remove();
+				AdvancedRocketry.logger.info("Tile at " + obj.getKey().getPos().toString() + " is added as a sink but has no fluid capabilities on the side connected");
+				continue;
+			}
+			
 			//If the sink already has fluid in it then lets only try to fill it with that particular fluid
 			for(IFluidTankProperties info : fluidHandleSink.getTankProperties()) {
 				if(info != null && info.getContents() != null) {
@@ -79,6 +86,12 @@ public class LiquidNetwork extends CableNetwork {
 						Entry<TileEntity,EnumFacing> objSource = (Entry<TileEntity, EnumFacing>)sourceItr.next();
 						IFluidHandler fluidHandleSource = (IFluidHandler)objSource.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
 
+						if(fluidHandleSink == null) {
+							sourceItr.remove();
+							AdvancedRocketry.logger.info("Tile at " + obj.getKey().getPos().toString() + " is added as a source but has no fluid capabilities on the side connected");
+							continue;
+						}
+						
 						for(IFluidTankProperties srcInfo : fluidHandleSource.getTankProperties()) {
 							if(srcInfo != null && srcInfo.getContents() != null) {
 								fluid = srcInfo.getContents().getFluid();
