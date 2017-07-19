@@ -86,7 +86,7 @@ public class LiquidNetwork extends CableNetwork {
 						Entry<TileEntity,EnumFacing> objSource = (Entry<TileEntity, EnumFacing>)sourceItr.next();
 						IFluidHandler fluidHandleSource = (IFluidHandler)objSource.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
 
-						if(fluidHandleSink == null) {
+						if(fluidHandleSource == null) {
 							sourceItr.remove();
 							AdvancedRocketry.logger.info("Tile at " + obj.getKey().getPos().toString() + " is added as a source but has no fluid capabilities on the side connected");
 							continue;
