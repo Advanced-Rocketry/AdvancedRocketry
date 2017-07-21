@@ -52,7 +52,7 @@ public class CableNetwork {
 				return;
 			}
 			if(tile2.getPos().compareTo(tile.getPos()) == 0) {
-				iter.remove();
+				sources.remove(tile2);
 				break;
 			}
 		}
@@ -63,7 +63,9 @@ public class CableNetwork {
 	public void addSink(TileEntity tile, EnumFacing dir) {
 
 		Iterator<Entry<TileEntity, EnumFacing>> iter = sinks.iterator();
-
+		
+		
+		
 		while(iter.hasNext()) {
 			Entry<TileEntity, EnumFacing> entry;
 			TileEntity tile2 =  iter.next().getKey();
@@ -71,10 +73,12 @@ public class CableNetwork {
 				return;
 			}
 			if(tile2.getPos().compareTo(tile.getPos()) == 0) {
-				iter.remove();
+				sinks.remove(tile2);
 				break;
 			}
 		}
+		
+		
 
 		sinks.add(new SingleEntry<TileEntity, EnumFacing>(tile, dir));
 	}
