@@ -16,6 +16,14 @@ buildscript {
 }
 
 
+plugins {
+  //id 'com.gradle.build-scan' version '1.4'
+  id "com.matthewprenger.cursegradle" version "1.0.8"
+  id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.50"
+  id 'net.saliman.cobertura' version '2.2.5'
+  id 'com.github.kt3k.coveralls' version '2.0.1'
+}
+
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 group= "zmaster587.advancedRocketry" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -106,3 +114,44 @@ processResources
         exclude 'mcmod.info'
     }
 }
+
+curseforge{
+  if (project.hasProperty("bbmcurse")) {
+        apiKey = project.bbmcurse
+    }
+    else {
+    apiKey = ""
+    }
+  project {
+  //AdvancedRocketry
+    id = "236542"
+    changelog = file('changelog.html')
+    changelogType = 'html'
+    releaseType = "alpha"
+    addGameVersion minecraft.version
+    /*mainArtifact(jar) {
+      displayName = "AdvancedRocketry ${project.version}-UNSTABLE build " + project.getBuildNumber() +  " for " + minecraft.version
+    }*/
+  }
+}
+
+task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
+    file = new File ("changelog.html")
+    untaggedName = "Current release ${project.version}"
+    fromCommit = startGitRev
+    toRef =  "HEAD"
+    templateContent = """
+{{#tags}}
+<h1> Highly untested and may break world</h1>
+  <h3>{{name}}</h3>
+  <ul>
+    {{#commits}}
+    <li> <a href="https://github.com/{{ownerName}}/{{repoName}}/commit/{{hash}}" target=_blank> {{{message}}}</a>
+</li>
+    {{/commits}}
+  </ul>
+{{/tags}}
+"""
+}
+
+tasks.build.dependsOn makeChangelog
