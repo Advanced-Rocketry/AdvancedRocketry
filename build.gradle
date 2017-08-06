@@ -116,8 +116,8 @@ processResources
 }
 
 curseforge{
-  if (project.hasProperty("bbmcurse")) {
-        apiKey = project.bbmcurse
+  if (project.hasProperty("thecursedkey")) {
+        apiKey = project.thecursedkey
     }
     else {
     apiKey = ""
