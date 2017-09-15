@@ -91,7 +91,7 @@ public class MissionOreMining extends MissionResourceCollection {
 
 		}
 
-		rocketStorage.getGuidanceComputer().setInventorySlotContents(0, null);
+		rocketStorage.getGuidanceComputer().setInventorySlotContents(0, ItemStack.EMPTY);
 		EntityRocket rocket = new EntityRocket(DimensionManager.getWorld(launchDimension), rocketStorage, rocketStats, x, 999, z);
 
 		World world = DimensionManager.getWorld(launchDimension);
