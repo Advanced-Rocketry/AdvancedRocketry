@@ -1,11 +1,14 @@
 package zmaster587.advancedRocketry.tile.multiblock.machine;
 
 import java.util.List;
+
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.LibVulpesItems;
+import zmaster587.libVulpes.api.material.Material;
+import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
@@ -18,13 +21,16 @@ import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 import zmaster587.libVulpes.util.IconResource;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+
 
 public class TilePrecisionAssembler extends TileMultiblockMachine implements IModularInventory, IProgressBar {
 
@@ -44,6 +50,22 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 	@Override
 	public Object[][][] getStructure() {
 		return structure;
+	}
+	
+	@Override
+	public float getTimeMultiplierForBlock(Block block, int meta,
+			TileEntity tile) {
+		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(block,1, meta));
+		if(material == MaterialRegistry.getMaterialFromName("Gold"))
+			return 0.9f;
+		else if(material == MaterialRegistry.getMaterialFromName("Aluminum"))
+			return 0.8f;
+		else if(material == MaterialRegistry.getMaterialFromName("Titanium"))
+			return 0.75f;
+		else if(material == MaterialRegistry.getMaterialFromName("Iridium"))
+			return 0.5f;
+
+		return super.getTimeMultiplierForBlock(block, meta, tile);
 	}
 
 	@Override
