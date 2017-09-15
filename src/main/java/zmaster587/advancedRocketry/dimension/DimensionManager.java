@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.Configuration;
@@ -37,11 +38,13 @@ import zmaster587.advancedRocketry.util.XMLPlanetLoader;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.network.PacketHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
+import net.minecraftforge.common.MinecraftForge;
 
 
 public class DimensionManager implements IGalaxy {
@@ -53,7 +56,7 @@ public class DimensionManager implements IGalaxy {
 	public static final String tempFile = "/temp.dat";
 	public static final String worldXML = "/planetDefs.xml";
 	public static int dimOffset = 0;
-	private boolean hasBeenInitiallized = false;
+	public boolean hasBeenInitiallized = true;
 	public static String prevBuild;
 
 
@@ -149,7 +152,7 @@ public class DimensionManager implements IGalaxy {
 		//Hack to allow monitoring stations to properly reload after a server restart
 		//Because there should never be a tile in the world where no planets have been generated load file first
 		//Worst thing that can happen is there is no file and it gets genned later and the monitor does not reconnect
-		if(!hasBeenInitiallized) {
+		if(!hasBeenInitiallized && FMLCommonHandler.instance().getSide().isServer()) {
 			zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.workingPath);
 		}
 
