@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
@@ -17,7 +18,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class HandlerCableNetwork {
-	protected HashMap<Integer,CableNetwork> networks = new HashMap<Integer,CableNetwork>();
+	protected Hashtable<Integer,CableNetwork> networks = new Hashtable<Integer,CableNetwork>();
 
 	//private static final String FILENAME = "/data/insanityCraft.dat";
 	
