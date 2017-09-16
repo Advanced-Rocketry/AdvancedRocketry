@@ -111,8 +111,10 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 			}
 			else {
 				for(ModuleTexturedLimitedSlotArray slot2 : slotArray) {
-					slot2.setEnabled(false);
-					slot2.setResource(null);
+					if(slot2 != null) {
+						slot2.setEnabled(false);
+						slot2.setResource(null);
+					}
 				}
 			}
 			inventory.setInventorySlotContents(slot, contents);
