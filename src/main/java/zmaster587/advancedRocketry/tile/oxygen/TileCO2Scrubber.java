@@ -22,9 +22,8 @@ public class TileCO2Scrubber extends TileInventoryHatch {
 	public boolean useCharge() {
 		ItemStack stack = getStackInSlot(0);
 		if(stack != null && stack.getItem() == AdvancedRocketryItems.itemCarbonScrubberCartridge) {
-			int newDamage = stack.getItemDamage() + 1;
-			if(newDamage != stack.getMaxDamage()) {
-				stack.setItemDamage(newDamage);
+			if(stack.getItemDamage() != stack.getMaxDamage()) {
+				stack.setItemDamage(stack.getItemDamage() + 1);
 				this.markDirty();
 				return true;
 			}
