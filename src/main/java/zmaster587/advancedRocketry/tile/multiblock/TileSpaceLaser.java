@@ -788,7 +788,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 
 	@Override
 	public ItemStack removeStackFromSlot(int index) {
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
