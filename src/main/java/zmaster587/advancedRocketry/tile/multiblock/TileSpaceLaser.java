@@ -519,7 +519,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 	}
 
 	private boolean isAllowedToRun() {
-		return !(glassPanel == null || batteries.getEnergyStored() == 0 || !(this.world.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.world.provider).getDimensionProperties(getPos()).getParentPlanet()) ||
+		return !(glassPanel.isEmpty()|| batteries.getEnergyStored() == 0 || !(this.world.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.world.provider).getDimensionProperties(getPos()).getParentPlanet()) ||
 				Configuration.laserBlackListDims.contains(((WorldProviderSpace)this.world.provider).getDimensionProperties(getPos()).getParentPlanet()));
 	}
 	
@@ -593,10 +593,10 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 
 		if(i == 0) {
 			ret = glassPanel.copy();
-			glassPanel = null;
+			glassPanel = ItemStack.EMPTY;
 			return ret;
 		}
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
@@ -632,7 +632,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 
 	@Override
 	public boolean isEmpty() {
-		return glassPanel != null;
+		return glassPanel.isEmpty();
 	}
 	
 	@Override
