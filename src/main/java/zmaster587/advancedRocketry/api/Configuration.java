@@ -123,4 +123,6 @@ public class Configuration {
 	public static int geodeVariation;
 	public static int terraformliquidRate;
 	public static boolean dropExTorches;
+
+	public static double oxygenVentConsumptionMult;
 }
