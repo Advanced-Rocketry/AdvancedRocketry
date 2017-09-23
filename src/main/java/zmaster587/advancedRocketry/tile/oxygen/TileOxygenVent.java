@@ -287,7 +287,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements INe
 	}
 
 	public float getGasUsageMultiplier() {
-		return Math.max(0.05f - numScrubbers*0.025f,0);
+		return (float) (Math.max(0.01f - numScrubbers*0.005f,0)*Configuration.oxygenVentConsumptionMult);
 	}
 
 	@Override

@@ -121,4 +121,6 @@ public class Configuration {
 	public static int terraformliquidRate;
 	public static boolean planetsMustBeDiscovered;
 	public static boolean dropExTorches;
+
+	public static double oxygenVentConsumptionMult;
 }
