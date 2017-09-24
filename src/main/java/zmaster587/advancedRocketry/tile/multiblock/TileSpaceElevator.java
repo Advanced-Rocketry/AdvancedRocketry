@@ -437,8 +437,8 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 					boolean flag = getChip() != null && ((TileSpaceElevator) tile).getChip() != null;
 					if(flag) {
 						addEntryToList(dimPos);
-						addEntryToList(new DimensionBlockPosition(world.provider.getDimension(), new HashedBlockPosition(getPos())));
-						((TileSpaceElevator) tile).addEntryToList(new DimensionBlockPosition(world.provider.getDimension(), new HashedBlockPosition(getPos())));
+						addEntryToList(new DimensionBlockPosition(this.world.provider.getDimension(), new HashedBlockPosition(getPos())));
+						((TileSpaceElevator) tile).addEntryToList(new DimensionBlockPosition(this.world.provider.getDimension(), new HashedBlockPosition(getPos())));
 						((TileSpaceElevator) tile).addEntryToList(dimPos);
 						
 						player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.spaceElevator.newDstAdded")));
