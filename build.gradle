@@ -17,13 +17,11 @@ buildscript {
 
 
 plugins {
-  //id 'com.gradle.build-scan' version '1.4'
-  id "com.matthewprenger.cursegradle" version "1.0.8"
+  id "com.gradle.build-scan" version "1.9"
+  id "com.matthewprenger.cursegradle" version "1.0.9"
   id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.50"
-  id 'net.saliman.cobertura' version '2.2.5'
-  id 'com.github.kt3k.coveralls' version '2.0.1'
 }
-
+apply plugin: 'java'
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 group= "zmaster587.advancedRocketry" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -135,7 +133,7 @@ curseforge{
   }
 }
 
-/*task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
+task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     file = new File ("changelog.html")
     untaggedName = "Current release ${project.version}"
     fromCommit = startGitRev
@@ -154,4 +152,20 @@ curseforge{
 """
 }
 
-tasks.build.dependsOn makeChangelog*/
+tasks.build.dependsOn makeChangelog
+
+/*buildScan {
+    licenseAgreementUrl = 'https://gradle.com/terms-of-service' 
+    licenseAgree = 'yes'                                        
+
+    publishAlways() 
+
+    if (System.getenv('CI')) {
+        tag 'CI'
+    } else {
+        tag 'Local'
+    }
+
+    tag System.getProperty('os.name')                                            
+}
+*/
