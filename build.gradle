@@ -49,7 +49,7 @@ minecraft {
     replace "@REVIS@", version_revis
     replace "@BUILD@", project.getBuildNumber()
     
-    replace "%LIBVULPESVERSION%", "0.2.5"
+    replace "%LIBVULPESVERSION%", project.libVulpesVersion
 }
 
 
