@@ -43,8 +43,8 @@ public class RendererPrecisionAssembler extends TileEntitySpecialRenderer {
 	}
 
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double x,
-			double y, double z, float f, int damage) {
+	public void render(TileEntity tile, double x,
+			double y, double z, float f, int damage, float a) {
 
 		TileMultiblockMachine multiBlockTile = (TileMultiblockMachine)tile;
 
@@ -72,7 +72,7 @@ public class RendererPrecisionAssembler extends TileEntitySpecialRenderer {
 				ItemStack stack = outputList.get(0);
 				EntityItem entity = new EntityItem(tile.getWorld());
 				
-				entity.setEntityItemStack(stack);
+				entity.setItem(stack);
 				entity.hoverStart = 0;
 				
 				GL11.glPushMatrix();

@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.resources.IResource;
@@ -178,7 +178,7 @@ public class WavefrontObject
     @SideOnly(Side.CLIENT)
     public void renderAll()
     {
-        VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+        BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
         if (currentGroupObject != null)
         {
@@ -195,7 +195,7 @@ public class WavefrontObject
     }
 
     @SideOnly(Side.CLIENT)
-    public void tessellateAll(VertexBuffer tessellator)
+    public void tessellateAll(BufferBuilder tessellator)
     {
         for (GroupObject groupObject : groupObjects)
         {
@@ -219,7 +219,7 @@ public class WavefrontObject
     }
 
     @SideOnly(Side.CLIENT)
-    public void tessellateOnly(VertexBuffer buffer, String... groupNames) {
+    public void tessellateOnly(BufferBuilder buffer, String... groupNames) {
         for (GroupObject groupObject : groupObjects)
         {
             for (String groupName : groupNames)
@@ -245,7 +245,7 @@ public class WavefrontObject
     }
 
     @SideOnly(Side.CLIENT)
-    public void tessellatePart(VertexBuffer buffer, String partName) {
+    public void tessellatePart(BufferBuilder buffer, String partName) {
         for (GroupObject groupObject : groupObjects)
         {
             if (partName.equalsIgnoreCase(groupObject.name))
@@ -276,7 +276,7 @@ public class WavefrontObject
     }
 
     @SideOnly(Side.CLIENT)
-    public void tessellateAllExcept(VertexBuffer buffer, String... excludedGroupNames)
+    public void tessellateAllExcept(BufferBuilder buffer, String... excludedGroupNames)
     {
         boolean exclude;
         for (GroupObject groupObject : groupObjects)

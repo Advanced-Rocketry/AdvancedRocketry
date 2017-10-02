@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.world.biome;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 
@@ -8,11 +9,10 @@ public class BiomeGenHotDryRock extends Biome {
 	public BiomeGenHotDryRock(int biomeId, boolean register) {
 		super(new BiomeProperties("Hot Dry Rock").setRainDisabled().setBaseHeight(1f).setHeightVariation(0.01f).setRainfall(0).setTemperature(0.9f));
 		
-
-		registerBiome(biomeId, "Hot Dry Rock", this);
+        this.setRegistryName(new ResourceLocation("advancedrocketry:Hot Dry Rock"));
 		
 		//hot and stinks
-		this.decorator.generateLakes=false;
+		this.decorator.generateFalls=false;
 		this.decorator.flowersPerChunk=0;
 		this.decorator.grassPerChunk=0;
 		this.decorator.treesPerChunk=0;

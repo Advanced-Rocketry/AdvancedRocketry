@@ -1,8 +1,11 @@
 package zmaster587.advancedRocketry.item;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
+
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import com.mojang.realmsclient.gui.ChatFormatting;
+import net.minecraft.world.World;
 
 public class ItemAsteroidChip  extends ItemMultiData {
 
@@ -60,7 +63,7 @@ public class ItemAsteroidChip  extends ItemMultiData {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, net.minecraft.entity.player.EntityPlayer player, java.util.List list, boolean bool) {
+	public void addInformation(ItemStack stack, World player, java.util.List list, ITooltipFlag bool) {
 
 		if(!stack.hasTagCompound()) {
 			list.add("Unprogrammed");

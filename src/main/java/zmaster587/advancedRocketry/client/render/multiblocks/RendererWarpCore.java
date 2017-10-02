@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -44,8 +44,8 @@ public class RendererWarpCore extends TileEntitySpecialRenderer {
 	}
 
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double x,
-			double y, double z, float f, int damage) {
+	public void render(TileEntity tile, double x,
+			double y, double z, float f, int damage, float a) {
 		TileMultiBlock multiBlockTile = (TileMultiBlock)tile;
 
 		if(!multiBlockTile.canRender())
@@ -71,7 +71,7 @@ public class RendererWarpCore extends TileEntitySpecialRenderer {
 		GlStateManager.color(1f, 0.4f, 0.4f, 0.8f);
 		GL11.glPushMatrix();
 		
-		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		RenderHelper.renderCubeWithUV(buffer, -0.1f, 1, -0.1f, 0.1f, 2, 0.1f, 0, 1, 0, 1);

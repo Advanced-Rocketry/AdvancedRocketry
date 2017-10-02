@@ -35,8 +35,8 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 	}
 
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double x,
-			double y, double z, float f, int damage) {
+	public void render(TileEntity tile, double x,
+			double y, double z, float f, int damage, float a) {
 		TileMultiblockMachine multiBlockTile = (TileMultiblockMachine)tile;
 
 		if(!multiBlockTile.canRender())

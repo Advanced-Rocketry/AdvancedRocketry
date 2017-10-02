@@ -100,9 +100,9 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 	public void sendChanges(Container container, IContainerListener crafter,
 			int variableId, int localId) {
 		if(localId < data.length)
-			crafter.sendProgressBarUpdate(container, variableId, data[localId].getData());
+			crafter.sendWindowProperty(container, variableId, data[localId].getData());
 		else
-			crafter.sendProgressBarUpdate(container, variableId, data[0].getDataType().ordinal());
+			crafter.sendWindowProperty(container, variableId, data[0].getDataType().ordinal());
 	}
 
 	@Override

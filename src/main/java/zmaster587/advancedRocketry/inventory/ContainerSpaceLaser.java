@@ -54,7 +54,7 @@ public class ContainerSpaceLaser extends Container {
 			prevEnergy = laserTile.getBatteries().getEnergyStored() ;
 			for (int j = 0; j < this.listeners.size(); ++j)
 			{
-				((IContainerListener)this.listeners.get(j)).sendProgressBarUpdate(this, 0, prevEnergy/100);
+				((IContainerListener)this.listeners.get(j)).sendWindowProperty(this, 0, prevEnergy/100);
 			}
 		}
 
@@ -63,11 +63,11 @@ public class ContainerSpaceLaser extends Container {
 
 
 			for(int i = 0; i < this.listeners.size(); i++) {
-				((IContainerListener)this.listeners.get(i)).sendProgressBarUpdate(this, 1, prevLaserX & 65535);
+				((IContainerListener)this.listeners.get(i)).sendWindowProperty(this, 1, prevLaserX & 65535);
 
 				int j = prevLaserX >>> 16;
 			//if(j != 0)
-			((IContainerListener)this.listeners.get(i)).sendProgressBarUpdate(this, 2, j);
+			((IContainerListener)this.listeners.get(i)).sendWindowProperty(this, 2, j);
 			}
 		}
 
@@ -75,28 +75,28 @@ public class ContainerSpaceLaser extends Container {
 			prevLaserZ = laserTile.laserZ;
 
 			for(int i = 0; i < this.listeners.size(); i++) {
-				((IContainerListener)this.listeners.get(i)).sendProgressBarUpdate(this, 3, prevLaserZ & 65535);
+				((IContainerListener)this.listeners.get(i)).sendWindowProperty(this, 3, prevLaserZ & 65535);
 
 				int j = prevLaserZ >>> 16;
 			//if(j != 0)
-			((IContainerListener)this.listeners.get(i)).sendProgressBarUpdate(this, 4, j);
+			((IContainerListener)this.listeners.get(i)).sendWindowProperty(this, 4, j);
 			}
 		}
 		if(currMode.compareTo(laserTile.getMode()) != 0) {
 			for(int i = 0; i < this.listeners.size(); i++) {
-				((IContainerListener)this.listeners.get(i)).sendProgressBarUpdate(this, 5, laserTile.getMode().ordinal());
+				((IContainerListener)this.listeners.get(i)).sendWindowProperty(this, 5, laserTile.getMode().ordinal());
 			}
 		}
 		if(jammed != laserTile.isJammed()) {
 			jammed = laserTile.isJammed();
 			for(int i = 0; i < this.listeners.size(); i++) {
-				((IContainerListener)this.listeners.get(i)).sendProgressBarUpdate(this, 6, laserTile.isJammed() ? 1 : 0);
+				((IContainerListener)this.listeners.get(i)).sendWindowProperty(this, 6, laserTile.isJammed() ? 1 : 0);
 			}
 		}
 		if(finished != laserTile.isFinished()) {
 			finished = laserTile.isFinished();
 			for(int i = 0; i < this.listeners.size(); i++) {
-				((IContainerListener)this.listeners.get(i)).sendProgressBarUpdate(this, 7, laserTile.isFinished() ? 1 : 0);
+				((IContainerListener)this.listeners.get(i)).sendWindowProperty(this, 7, laserTile.isFinished() ? 1 : 0);
 			}
 		}
 	}

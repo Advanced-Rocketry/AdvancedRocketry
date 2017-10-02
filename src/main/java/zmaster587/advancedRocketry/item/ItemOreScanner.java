@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.item;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,8 +27,8 @@ public class ItemOreScanner extends Item implements IModularInventory {
 
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player,
-			List list, boolean arg5) {
+	public void addInformation(ItemStack stack, World player,
+			List list, ITooltipFlag arg5) {
 		
 		SatelliteBase sat = DimensionManager.getInstance().getSatellite(this.getSatelliteID(stack));
 		
@@ -39,7 +40,7 @@ public class ItemOreScanner extends Item implements IModularInventory {
 			list.add("Unprogrammed");
 		else if(mapping == null)
 			list.add("Satellite not yet launched");
-		else if(mapping.getDimensionId() == player.world.provider.getDimension()) {
+		else if(mapping.getDimensionId() == player.provider.getDimension()) {
 			list.add("Connected");
 			list.add("Max Zoom: " + mapping.getZoomRadius());
 			list.add("Can filter ore: " + mapping.canFilterOre());

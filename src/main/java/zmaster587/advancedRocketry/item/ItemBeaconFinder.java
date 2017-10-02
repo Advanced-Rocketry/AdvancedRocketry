@@ -14,7 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -84,7 +84,7 @@ public class ItemBeaconFinder extends Item implements IArmorComponent {
 				GlStateManager.color(0.5f, 0.5f, 1, 1);
 				
 		        Tessellator tessellator = Tessellator.getInstance();
-		        VertexBuffer vertexbuffer = tessellator.getBuffer();
+		        BufferBuilder vertexbuffer = tessellator.getBuffer();
 		        
 		        vertexbuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		        RenderHelper.renderNorthFaceWithUV(vertexbuffer, -1000, -10, 0, 10, 20, 0, 1, 0, 1);

@@ -13,7 +13,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
@@ -183,7 +183,7 @@ public class RocketEventHandler extends Gui {
 								//Get the first non-air block
 								for(yPosition = heightValue; yPosition > 0; yPosition-- ) {
 									block = worldObj.getBlockState(new BlockPos(xPosition, yPosition, zPosition));
-									if((color = block.getMapColor()) != MapColor.AIR) {
+									if((color = block.getMapColor(worldObj, thisPos)) != MapColor.AIR) {
 										break;
 									}
 								}
@@ -287,7 +287,7 @@ public class RocketEventHandler extends Gui {
 		double size = (getImgSize*5/(72-Minecraft.getMinecraft().getRenderViewEntity().posY - deltaY));
 
 
-		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
 		//Less detailed land
 
@@ -319,7 +319,7 @@ public class RocketEventHandler extends Gui {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D,0);
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
-		GlStateManager.color((float)skyColor.xCoord, (float)skyColor.yCoord, (float)skyColor.zCoord, 0.05f);
+		GlStateManager.color((float)skyColor.x, (float)skyColor.y, (float)skyColor.z, 0.05f);
 
 		size = (getImgSize*100/(180-Minecraft.getMinecraft().getRenderViewEntity().posY - deltaY));
 
@@ -518,7 +518,7 @@ public class RocketEventHandler extends Gui {
 	private void renderModuleSlots(ItemStack armorStack, int slot, RenderGameOverlayEvent event) {
 		int index = 1;
 		float color = 0.85f + 0.15F*MathHelper.sin( 2f*(float)Math.PI*((Minecraft.getMinecraft().world.getTotalWorldTime()) % 60)/60f );
-		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		GlStateManager.enableBlend();
 		GlStateManager.enableAlpha();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

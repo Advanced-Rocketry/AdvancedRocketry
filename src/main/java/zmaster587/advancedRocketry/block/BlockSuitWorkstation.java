@@ -53,7 +53,7 @@ public class BlockSuitWorkstation extends BlockTile {
 
 					if (itemstack.hasTagCompound())
 					{
-						entityitem.getEntityItem().setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
+						entityitem.getItem().setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
 					}
 				}
 			}

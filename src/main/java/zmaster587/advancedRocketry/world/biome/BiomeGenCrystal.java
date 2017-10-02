@@ -6,6 +6,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.world.decoration.MapGenLargeCrystal;
 import zmaster587.advancedRocketry.world.gen.WorldGenLargeCrystal;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -20,15 +21,14 @@ public class BiomeGenCrystal extends Biome  {
 	
 	public BiomeGenCrystal(int biomeId, boolean register) {
 		super(new BiomeProperties("CrystalChasms").setHeightVariation(0.1f).setBaseHeight(1f).setRainfall(0.2f).setTemperature(0.1f));
-		
-		registerBiome(biomeId, "CrystalChasms", this);
-		
+
+        this.setRegistryName(new ResourceLocation("advancedrocketry:CrystalChasms"));
 		
 		topBlock = Blocks.SNOW.getDefaultState();
 		fillerBlock = Blocks.PACKED_ICE.getDefaultState();
 		this.spawnableMonsterList.clear();
 		this.spawnableCreatureList.clear();
-		this.decorator.generateLakes=false;
+		this.decorator.generateFalls=false;
 		this.decorator.flowersPerChunk=0;
 		this.decorator.grassPerChunk=0;
 		this.decorator.treesPerChunk=0;

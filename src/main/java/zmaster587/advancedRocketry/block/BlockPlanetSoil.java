@@ -19,8 +19,8 @@ public class BlockPlanetSoil extends Block {
 		return this;
 	}
 	
-	@Override
-	public MapColor getMapColor(IBlockState state) {
-		return extraMapColor == null ? super.getMapColor(state) : extraMapColor;
-	}
+//	@Override//TODO colour for soil?
+//	public MapColor getMapColor(IBlockState state) {
+//		return extraMapColor == null ? super.getMapColor(state) : extraMapColor;
+//	}
 }

@@ -22,4 +22,10 @@ public class LatheCategory extends MachineCategoryTemplate<LatheWrapper> {
 		return LibVulpes.proxy.getLocalizedString("tile.lathe.name");
 	}
 
+    @Override
+    public String getModName()
+    {
+        return "Advanced Rocketry";
+    }
+
 }

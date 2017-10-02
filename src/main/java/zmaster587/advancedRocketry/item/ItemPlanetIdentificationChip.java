@@ -1,12 +1,16 @@
 package zmaster587.advancedRocketry.item;
 
+import java.util.List;
+
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
 public class ItemPlanetIdentificationChip extends ItemIdWithName {
 
@@ -124,7 +128,8 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, net.minecraft.entity.player.EntityPlayer player, java.util.List list, boolean bool) {
+	public void addInformation(ItemStack stack, World player, List list,
+            ITooltipFlag bool){
 
 		if(!stack.hasTagCompound()) {
 			list.add("Unprogrammed");

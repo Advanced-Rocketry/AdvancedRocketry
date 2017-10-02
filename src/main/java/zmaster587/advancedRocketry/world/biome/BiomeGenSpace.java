@@ -5,17 +5,17 @@ import java.util.List;
 
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 
 public class BiomeGenSpace extends Biome {
 	public BiomeGenSpace(int biomeId, boolean register) {
 		super(new BiomeProperties("Space").setRainDisabled().setBaseHeight(-2f).setHeightVariation(0f).setTemperature(1f));
 		
-
-		registerBiome(biomeId, "Space", this);
+        this.setRegistryName(new ResourceLocation("advancedrocketry:Space"));
 		
 		//cold and dry
-		this.decorator.generateLakes=false;
+		this.decorator.generateFalls=false;
 		this.decorator.flowersPerChunk=0;
 		this.decorator.grassPerChunk=0;
 		this.decorator.treesPerChunk=0;

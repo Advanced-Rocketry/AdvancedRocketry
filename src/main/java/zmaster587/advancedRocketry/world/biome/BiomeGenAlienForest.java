@@ -5,6 +5,7 @@ import java.util.Random;
 import zmaster587.advancedRocketry.world.gen.WorldGenAlienTree;
 import zmaster587.advancedRocketry.world.gen.WorldGenNoTree;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -18,7 +19,7 @@ public class BiomeGenAlienForest extends Biome {
 	public BiomeGenAlienForest(int biomeId, boolean register) {
 		super(new BiomeProperties("Alien Forest").setWaterColor(0x8888FF));
 
-		registerBiome(biomeId, "Alien Forest", this);
+        this.setRegistryName(new ResourceLocation("advancedrocketry:Alien Forest"));
 		
 		this.fillerBlock = Blocks.GRASS.getDefaultState();
 		this.decorator.grassPerChunk = 50;

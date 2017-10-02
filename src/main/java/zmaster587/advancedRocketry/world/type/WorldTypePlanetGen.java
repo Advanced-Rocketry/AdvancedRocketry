@@ -1,17 +1,14 @@
 package zmaster587.advancedRocketry.world.type;
 
-import zmaster587.advancedRocketry.world.ChunkProviderPlanet;
-import zmaster587.advancedRocketry.world.GenLayerBiomePlanet;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeProvider;
-import net.minecraft.world.chunk.IChunkGenerator;
-import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.ChunkProviderSettings;
+import net.minecraft.world.gen.ChunkGeneratorSettings;
+import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.layer.GenLayer;
-import net.minecraft.world.gen.layer.GenLayerEdge;
-import net.minecraft.world.gen.layer.GenLayerEdge.Mode;
 import net.minecraft.world.gen.layer.GenLayerZoom;
+import zmaster587.advancedRocketry.world.ChunkProviderPlanet;
+import zmaster587.advancedRocketry.world.GenLayerBiomePlanet;
 
 public class WorldTypePlanetGen extends WorldType {
 
@@ -45,7 +42,7 @@ public class WorldTypePlanetGen extends WorldType {
 	 * @return A GenLayer that will return ints representing the Biomes to be generated, see GenLayerBiome
 	 */
 	@Override
-	public GenLayer getBiomeLayer(long worldSeed, GenLayer parentLayer, ChunkProviderSettings chunkProviderSettings)
+	public GenLayer getBiomeLayer(long worldSeed, GenLayer parentLayer, ChunkGeneratorSettings chunkProviderSettings)
 	{
 		//return super.getBiomeLayer(worldSeed, parentLayer);
 		GenLayer ret = new GenLayerBiomePlanet(200L, parentLayer, this);

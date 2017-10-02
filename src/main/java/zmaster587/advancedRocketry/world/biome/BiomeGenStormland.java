@@ -7,6 +7,7 @@ import zmaster587.advancedRocketry.world.gen.WorldGenCharredTree;
 import zmaster587.advancedRocketry.world.gen.WorldGenElectricMushroom;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -21,12 +22,12 @@ public class BiomeGenStormland extends Biome {
 	public BiomeGenStormland(int biomeId, boolean register) {
 		super(new BiomeProperties("Stormland").setBaseHeight(1f).setHeightVariation(0.1f).setRainfall(0.9f).setTemperature(0.9f));
 		
-		registerBiome(biomeId, "Stormland", this);
+        this.setRegistryName(new ResourceLocation("advancedrocketry:Stormland"));
 		
 		spawnableMonsterList.clear();
 		this.spawnableMonsterList.add(new Biome.SpawnListEntry(EntityCreeper.class, 5, 1, 1));
 		this.spawnableCreatureList.clear();
-		this.decorator.generateLakes=false;
+		this.decorator.generateFalls=false;
 		this.decorator.flowersPerChunk=0;
 		this.decorator.grassPerChunk=0;
 		this.decorator.treesPerChunk=6;

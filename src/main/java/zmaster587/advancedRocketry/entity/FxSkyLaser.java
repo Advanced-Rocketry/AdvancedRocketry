@@ -7,7 +7,7 @@ import zmaster587.advancedRocketry.client.render.RenderLaser;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,7 +29,7 @@ public class FxSkyLaser extends Particle {
 	}
 	
 	@Override
-	public void renderParticle(VertexBuffer worldRendererIn, Entity entityIn,
+	public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn,
 			float partialTicks, float rotationX, float rotationZ,
 			float rotationYZ, float rotationXY, float rotationXZ) {
 		//Will this break rendering?

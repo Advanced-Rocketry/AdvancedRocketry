@@ -2,26 +2,22 @@ package zmaster587.advancedRocketry.item;
 
 import java.util.List;
 
-import zmaster587.advancedRocketry.capability.TankCapabilityItemStack;
-import zmaster587.advancedRocketry.tile.TileFluidTank;
-import zmaster587.libVulpes.util.FluidUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import zmaster587.advancedRocketry.tile.TileFluidTank;
 
 public class ItemBlockFluidTank extends ItemBlock {
 
@@ -30,8 +26,8 @@ public class ItemBlockFluidTank extends ItemBlock {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player,
-			List list, boolean bool) {
+	public void addInformation(ItemStack stack, World player,
+			List list, ITooltipFlag bool) {
 		super.addInformation(stack, player, list, bool);
 
 		FluidStack fluidStack = getFluid(stack);

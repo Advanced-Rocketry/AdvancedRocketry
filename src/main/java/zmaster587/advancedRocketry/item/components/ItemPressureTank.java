@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.item.components;
 import java.util.List;
 
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -34,8 +35,8 @@ public class ItemPressureTank extends ItemIngredient implements IArmorComponent 
 	}
 	
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player,
-			List list, boolean bool) {
+	public void addInformation(ItemStack stack, World player, List list,
+            ITooltipFlag bool) {
 		super.addInformation(stack, player, list, bool);
 		
 		FluidStack fluidStack = FluidUtils.getFluidForItem(stack);

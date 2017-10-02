@@ -93,7 +93,7 @@ public class BlockPressurizedFluidTank extends Block {
 
 			if (itemstack.hasTagCompound())
 			{
-				entityitem.getEntityItem().setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
+				entityitem.getItem().setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
 			}
 			world.spawnEntity(entityitem);
 		}

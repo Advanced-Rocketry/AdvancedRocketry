@@ -12,7 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -28,8 +28,8 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 	private static BlockRendererDispatcher renderBlocks = Minecraft.getMinecraft().getBlockRendererDispatcher();
 
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double x,
-			double y, double z, float t, int damage) {
+	public void render(TileEntity tile, double x,
+			double y, double z, float t, int damage, float a) {
 
 		renderBlocks = Minecraft.getMinecraft().getBlockRendererDispatcher();
 		TilePlaceholder tileGhost = (TilePlaceholder)tile;
@@ -56,7 +56,7 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_ONE_MINUS_SRC_COLOR, GL11.GL_SRC_ALPHA);
 		Tessellator tess = Tessellator.getInstance();
-		VertexBuffer buffer =tess.getBuffer();
+		BufferBuilder buffer =tess.getBuffer();
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 		IBakedModel model = renderBlocks.getModelForState(state);
@@ -77,9 +77,9 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 
 					ItemStack stack = tile.getWorld().getBlockState(tile.getPos()).getBlock().getPickBlock(tile.getWorld().getBlockState(tile.getPos()), movingObjPos, Minecraft.getMinecraft().world, tile.getPos(), Minecraft.getMinecraft().player);
 					if(stack == null)
-						RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(movingObjPos.hitVec.xCoord, movingObjPos.hitVec.yCoord, movingObjPos.hitVec.zCoord), "THIS IS AN ERROR, CONTACT THE DEV!!!", x,y,z, 10);
+						RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(movingObjPos.hitVec.x, movingObjPos.hitVec.y, movingObjPos.hitVec.z), "THIS IS AN ERROR, CONTACT THE DEV!!!", x,y,z, 10);
 					else
-						RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(movingObjPos.hitVec.xCoord, movingObjPos.hitVec.yCoord, movingObjPos.hitVec.zCoord), stack.getDisplayName(), x+ 0.5f,y,z+ 0.5f, 10);
+						RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(movingObjPos.hitVec.x, movingObjPos.hitVec.y, movingObjPos.hitVec.z), stack.getDisplayName(), x+ 0.5f,y,z+ 0.5f, 10);
 				}
 			} catch (NullPointerException e) {
 				//silence you fool

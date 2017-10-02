@@ -46,8 +46,8 @@ public class RendererCrystallizer extends TileEntitySpecialRenderer {
 	}
 
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double x,
-			double y, double z, float f,  int destroyStage) {
+	public void render(TileEntity tile, double x,
+			double y, double z, float f,  int destroyStage, float a) {
 		TileMultiblockMachine multiBlockTile = (TileMultiblockMachine)tile;
 
 		if(!multiBlockTile.canRender())
@@ -73,7 +73,7 @@ public class RendererCrystallizer extends TileEntitySpecialRenderer {
 				ItemStack stack = outputList.get(0);
 				EntityItem entity = new EntityItem(tile.getWorld());
 
-				entity.setEntityItemStack(stack);
+				entity.setItem(stack);
 				entity.hoverStart = 0;
 
 				int rotation = (int)(tile.getWorld().getTotalWorldTime() % 360);

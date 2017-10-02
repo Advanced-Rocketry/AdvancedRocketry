@@ -28,8 +28,8 @@ public class RendererChemicalReactor  extends TileEntitySpecialRenderer {
 	}
 	
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double x, double y, double z,
-			float partialTicks, int destroyStage) {
+	public void render(TileEntity tile, double x, double y, double z,
+			float partialTicks, int destroyStage, float a) {
 		
 		TileChemicalReactor multiBlockTile = (TileChemicalReactor)tile;
 

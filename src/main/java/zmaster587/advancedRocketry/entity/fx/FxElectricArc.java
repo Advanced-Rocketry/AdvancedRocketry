@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -32,7 +32,7 @@ public class FxElectricArc  extends Particle {
 	}
 
 	@Override
-	public void renderParticle(VertexBuffer worldRendererIn, Entity entityIn,
+	public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn,
 			float x1,
 			float rotX, float rotXZ, float rotZ,
 			float rotYZ, float rotXY) {
@@ -50,7 +50,7 @@ public class FxElectricArc  extends Particle {
 		render(worldRendererIn,x,y,z, f10, rotX, rotXZ, rotZ, rotYZ, rotXY, 0);
 	}
 
-	private void render(VertexBuffer tess, float x, float y, float z, float scale,
+	private void render(BufferBuilder tess, float x, float y, float z, float scale,
 			float rotX, float rotXZ, float rotZ,
 			float rotYZ, float rotXY, float shearX) {
 		

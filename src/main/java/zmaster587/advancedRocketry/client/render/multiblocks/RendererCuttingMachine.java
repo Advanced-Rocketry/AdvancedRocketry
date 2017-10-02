@@ -39,8 +39,8 @@ public class RendererCuttingMachine extends TileEntitySpecialRenderer {
 	}
 
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double x, double y, double z,
-			float partialTicks, int destroyStage) {
+	public void render(TileEntity tile, double x, double y, double z,
+			float partialTicks, int destroyStage, float a) {
 		TileMultiblockMachine multiBlockTile = (TileMultiblockMachine)tile;
 
 		if(!multiBlockTile.canRender())

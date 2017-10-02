@@ -1,9 +1,7 @@
 package zmaster587.advancedRocketry.event;
 
-import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,10 +14,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.EntityPlayer.SleepResult;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -33,11 +30,8 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.event.entity.player.PlayerContainerEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
@@ -53,7 +47,6 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerConnectionFromClientEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
@@ -67,15 +60,12 @@ import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.BiomeHandler;
-import zmaster587.advancedRocketry.util.RocketInventoryHelper;
 import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IModularArmor;
-import zmaster587.libVulpes.api.LibVulpesItems;
-import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.network.PacketHandler;
 
 public class PlanetEventHandler {
@@ -91,23 +81,23 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	public void onCrafting(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent event) {
 		if(event.crafting != null) {
-			Item item = event.crafting.getItem();
-			if(item == LibVulpesItems.itemHoloProjector) 
-				event.player.addStat(ARAchivements.holographic);
-			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockRollingMachine))
-				event.player.addStat(ARAchivements.rollin);
-			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockCrystallizer))
-				event.player.addStat(ARAchivements.crystalline);
-			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockLathe))
-				event.player.addStat(ARAchivements.spinDoctor);
-			else if(item ==Item.getItemFromBlock(AdvancedRocketryBlocks.blockElectrolyser))
-				event.player.addStat(ARAchivements.electrifying);
-			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockArcFurnace))
-				event.player.addStat(ARAchivements.feelTheHeat);
-			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockWarpCore))
-				event.player.addStat(ARAchivements.warp);
-			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockPlatePress))
-				event.player.addStat(ARAchivements.blockPresser);
+			Item item = event.crafting.getItem();//TODO Advancments for crafting.
+//			if(item == LibVulpesItems.itemHoloProjector) 
+//				event.player.addStat(ARAchivements.holographic);
+//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockRollingMachine))
+//				event.player.addStat(ARAchivements.rollin);
+//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockCrystallizer))
+//				event.player.addStat(ARAchivements.crystalline);
+//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockLathe))
+//				event.player.addStat(ARAchivements.spinDoctor);
+//			else if(item ==Item.getItemFromBlock(AdvancedRocketryBlocks.blockElectrolyser))
+//				event.player.addStat(ARAchivements.electrifying);
+//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockArcFurnace))
+//				event.player.addStat(ARAchivements.feelTheHeat);
+//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockWarpCore))
+//				event.player.addStat(ARAchivements.warp);
+//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockPlatePress))
+//				event.player.addStat(ARAchivements.blockPresser);
 		}
 	}
 	@SubscribeEvent
@@ -136,12 +126,12 @@ public class PlanetEventHandler {
 
 	@SubscribeEvent
 	public void onPickup(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent event) {
-		if(event.pickedUp != null && !event.pickedUp.getEntityItem().isEmpty()) {
+		if(event.pickedUp != null && !event.pickedUp.getItem().isEmpty()) {
 
-
-			zmaster587.libVulpes.api.material.Material mat = LibVulpes.materialRegistry.getMaterialFromItemStack( event.pickedUp.getEntityItem());
-			if(mat != null && mat.getUnlocalizedName().contains("Dilithium"))
-				event.player.addStat(ARAchivements.dilithiumCrystals);
+//TODO pickup advancment
+//			zmaster587.libVulpes.api.material.Material mat = LibVulpes.materialRegistry.getMaterialFromItemStack( event.pickedUp.getEntityItem());
+//			if(mat != null && mat.getUnlocalizedName().contains("Dilithium"))
+//				event.player.addStat(ARAchivements.dilithiumCrystals);
 		}
 	}
 
@@ -160,7 +150,7 @@ public class PlanetEventHandler {
 		if(!event.getEntity().world.isRemote && event.getEntity().world.getTotalWorldTime() % 20 ==0 && event.getEntity() instanceof EntityPlayer) {
 			if(DimensionManager.getInstance().getDimensionProperties(event.getEntity().world.provider.getDimension()).getName().equals("Luna") && 
 					event.getEntity().getPosition().distanceSq(67, 80, 2347) < 512 ) {
-				((EntityPlayer)event.getEntity()).addStat(ARAchivements.weReallyWentToTheMoon);
+//				((EntityPlayer)event.getEntity()).addStat(ARAchivements.weReallyWentToTheMoon);//TODO advancment trigger
 			}	
 		}
 	}
@@ -199,7 +189,7 @@ public class PlanetEventHandler {
 		}
 
 		if(!event.getWorld().isRemote && event.getItemStack() != null && event.getItemStack().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
-			event.getEntityPlayer().addStat(ARAchivements.beerOnTheSun);
+//			event.getEntityPlayer().addStat(ARAchivements.beerOnTheSun);
 		}
 	}
 
@@ -236,7 +226,7 @@ public class PlanetEventHandler {
 					TransitionEntity ent = entry.getValue();
 					if(ent.entity.world.getTotalWorldTime() >= entry.getKey()) {
 						ent.entity.setLocationAndAngles(ent.location.getX(), ent.location.getY(), ent.location.getZ(), ent.entity.rotationYaw, ent.entity.rotationPitch);
-						ent.entity.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP)ent.entity, ent.dimId, new TeleporterNoPortal(ent.entity.getServer().worldServerForDimension(ent.dimId)));
+						ent.entity.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP)ent.entity, ent.dimId, new TeleporterNoPortal(ent.entity.getServer().getWorld(ent.dimId)));
 						ent.entity.startRiding(ent.entity2);
 
 						itr.remove();
@@ -355,9 +345,9 @@ public class PlanetEventHandler {
 
 			if(event.getEntity().world.provider instanceof IPlanetaryProvider) {
 				Vec3d color = event.getEntity().world.provider.getSkyColor(event.getEntity(), 0f);
-				event.setRed((float) Math.min(color.xCoord*1.4f,1f));
-				event.setGreen((float) Math.min(color.yCoord*1.4f, 1f));
-				event.setBlue((float) Math.min(color.zCoord*1.4f, 1f));
+				event.setRed((float) Math.min(color.x*1.4f,1f));
+				event.setGreen((float) Math.min(color.y*1.4f, 1f));
+				event.setBlue((float) Math.min(color.z*1.4f, 1f));
 			}
 
 			if(endTime > 0) {

@@ -6,6 +6,7 @@ import java.util.List;
 
 import net.minecraft.init.Biomes;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.registries.IForgeRegistry;
 
 
 /**
@@ -40,9 +41,11 @@ public class AdvancedRocketryBiomes {
 	 * TODO: support id's higher than 255.  
 	 * Any biome registered through vanilla forge does not need to be registered here
 	 * @param biome Biome to register with AdvancedRocketry's Biome registry
+	 * @param iForgeRegistry 
 	 */
-	public void registerBiome(Biome biome) {
+	public void registerBiome(Biome biome, IForgeRegistry<Biome> iForgeRegistry) {
 		registeredBiomes.add(biome);
+		iForgeRegistry.register(biome);
 	}
 
 

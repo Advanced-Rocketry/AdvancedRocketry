@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.backwardCompat;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -14,13 +14,13 @@ public class Face
     public TextureCoordinate[] textureCoordinates;
 
     @SideOnly(Side.CLIENT)
-    public void addFaceForRender(VertexBuffer tessellator)
+    public void addFaceForRender(BufferBuilder tessellator)
     {
         addFaceForRender(tessellator, 0.0005F);
     }
 
     @SideOnly(Side.CLIENT)
-    public void addFaceForRender(VertexBuffer tessellator, float textureOffset)
+    public void addFaceForRender(BufferBuilder tessellator, float textureOffset)
     {
         if (faceNormal == null)
         {
@@ -82,6 +82,6 @@ public class Face
 
         normalVector = v1.crossProduct(v2).normalize();
 
-        return new Vertex((float) normalVector.xCoord, (float) normalVector.yCoord, (float) normalVector.zCoord);
+        return new Vertex((float) normalVector.x, (float) normalVector.y, (float) normalVector.z);
     }
 }

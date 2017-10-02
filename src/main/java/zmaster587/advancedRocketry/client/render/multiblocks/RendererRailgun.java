@@ -30,8 +30,8 @@ public class RendererRailgun extends TileEntitySpecialRenderer {
 	}
 	
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double x,
-			double y, double z, float f, int damage) {
+	public void render(TileEntity tile, double x,
+			double y, double z, float f, int damage, float a) {
 		TileRailgun multiBlockTile = (TileRailgun)tile;
 
 		if(!multiBlockTile.canRender())

@@ -4,7 +4,7 @@ package zmaster587.advancedRocketry.client.render.multiblocks;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
@@ -36,8 +36,8 @@ public class RendererElectrolyser extends TileEntitySpecialRenderer {
 	}
 	
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double x,
-			double y, double z, float f, int destroyState) {
+	public void render(TileEntity tile, double x,
+			double y, double z, float f, int destroyState, float a) {
 		TileMultiblockMachine multiBlockTile = (TileMultiblockMachine)tile;
 
 		if(!multiBlockTile.canRender())
@@ -56,7 +56,7 @@ public class RendererElectrolyser extends TileEntitySpecialRenderer {
 		//Lightning effect
 
 		if(multiBlockTile.isRunning()) {
-			VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+			BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
 			double width = 0.01;
 

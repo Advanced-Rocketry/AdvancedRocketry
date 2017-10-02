@@ -22,4 +22,10 @@ public class SawMillCategory extends MachineCategoryTemplate<SawMillWrapper> {
 		return LibVulpes.proxy.getLocalizedString("tile.cuttingMachine.name");
 	}
 
+    @Override
+    public String getModName()
+    {
+        return "Advanced Rocketry";
+    }
+
 }
