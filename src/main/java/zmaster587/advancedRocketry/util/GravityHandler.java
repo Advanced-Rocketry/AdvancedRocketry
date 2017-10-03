@@ -80,7 +80,6 @@ public class GravityHandler implements IGravityManager {
 						}
 					}
 					else {
-	                    if(entity instanceof EntityPlayer) System.out.println("test");
 						if(entity instanceof EntityItem)
 							entity.motionY -= ITEM_GRAV_OFFSET;
 						else
