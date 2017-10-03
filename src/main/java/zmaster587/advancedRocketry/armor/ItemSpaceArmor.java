@@ -5,20 +5,8 @@ import java.util.List;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import zmaster587.advancedRocketry.achievements.ARAchivements;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.api.IAtmosphere;
-import zmaster587.advancedRocketry.api.armor.IFillableArmor;
-import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
-import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
-import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
-import zmaster587.advancedRocketry.client.render.armor.RenderJetPack;
-import zmaster587.libVulpes.api.IArmorComponent;
-import zmaster587.libVulpes.api.IJetPack;
-import zmaster587.libVulpes.api.IModularArmor;
-import zmaster587.libVulpes.util.EmbeddedInventory;
-import zmaster587.libVulpes.util.IconResource;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,6 +25,18 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.IAtmosphere;
+import zmaster587.advancedRocketry.api.armor.IFillableArmor;
+import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
+import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
+import zmaster587.advancedRocketry.client.render.armor.RenderJetPack;
+import zmaster587.libVulpes.api.IArmorComponent;
+import zmaster587.libVulpes.api.IJetPack;
+import zmaster587.libVulpes.api.IModularArmor;
+import zmaster587.libVulpes.util.EmbeddedInventory;
+import zmaster587.libVulpes.util.IconResource;
 /**
  * Space Armor
  * Any class that extends this will gain the ability to store oxygen and will protect players from the vacuum atmosphere type
@@ -58,8 +58,8 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer p_77624_2_,
-			List list, boolean p_77624_4_) {
+	public void addInformation(ItemStack stack, World p_77624_2_,
+			List list, ITooltipFlag p_77624_4_) {
 		super.addInformation(stack, p_77624_2_, list, p_77624_4_);
 
 		list.add("Modules:");
@@ -155,8 +155,8 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 		ItemStack leg = player.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
 		ItemStack chest = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 		ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-		if(!feet.isEmpty() && feet.getItem() instanceof ItemSpaceArmor && !leg.isEmpty() && leg.getItem() instanceof ItemSpaceArmor && !chest.isEmpty() && chest.getItem() instanceof ItemSpaceArmor && !helm.isEmpty() && helm.getItem() instanceof ItemSpaceArmor)
-			player.addStat(ARAchivements.suitedUp);
+//		if(!feet.isEmpty() && feet.getItem() instanceof ItemSpaceArmor && !leg.isEmpty() && leg.getItem() instanceof ItemSpaceArmor && !chest.isEmpty() && chest.getItem() instanceof ItemSpaceArmor && !helm.isEmpty() && helm.getItem() instanceof ItemSpaceArmor)
+//			player.addStat(ARAchivements.suitedUp);TODO Advancement Trigger
 	}
 
 	@Override

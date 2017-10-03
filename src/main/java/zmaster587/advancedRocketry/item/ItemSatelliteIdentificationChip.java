@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.item;
 
 import java.util.List;
 
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -127,8 +128,8 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player,
-			List list, boolean bool) {
+	public void addInformation(ItemStack stack, World player,
+			List list, ITooltipFlag bool) {
 		int worldId = getWorldId(stack);
 		long satId = getSatelliteId(stack);
 

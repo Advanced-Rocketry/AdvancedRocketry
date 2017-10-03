@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.world.biome;
 import java.util.Random;
 
 import net.minecraft.init.Blocks;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.ChunkPrimer;
@@ -13,8 +14,8 @@ public class BiomeGenMarsh extends Biome {
 
 	public BiomeGenMarsh(int id, boolean b) {
 		super(new BiomeProperties("Marsh").setBaseHeight(-0.4f).setHeightVariation(0f));
-		
-		registerBiome(id, "Marsh", this);
+
+        this.setRegistryName(new ResourceLocation("advancedrocketry:Marsh"));
 		
 		this.decorator.clayPerChunk = 10;
 		this.decorator.flowersPerChunk = 0;

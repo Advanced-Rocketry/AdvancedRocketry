@@ -22,4 +22,10 @@ public class BlastFurnaceCategory extends MachineCategoryTemplate<BlastFurnaceWr
 		return LibVulpes.proxy.getLocalizedString("tile.electricArcFurnace.name");
 	}
 
+    @Override
+    public String getModName()
+    {
+        return "Advanced Rocketry";
+    }
+
 }

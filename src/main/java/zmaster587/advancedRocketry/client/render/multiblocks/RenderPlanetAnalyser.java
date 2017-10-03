@@ -28,8 +28,8 @@ public class RenderPlanetAnalyser extends TileEntitySpecialRenderer {
 	}
 	
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double x,
-			double y, double z, float f, int distance) {
+	public void render(TileEntity tile, double x,
+			double y, double z, float f, int distance, float a) {
 		TileMultiPowerConsumer multiBlockTile = (TileMultiPowerConsumer)tile;
 
 		if(!multiBlockTile.canRender())

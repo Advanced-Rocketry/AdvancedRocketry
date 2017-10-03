@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 import zmaster587.libVulpes.render.RenderHelper;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.EnumFacing;
@@ -48,11 +48,21 @@ public abstract class GuiProgressBarContainer extends GuiContainer {
      */
     public void drawTexturedModalRectWithCustomSize(int x, int y, int u, int v, int width, int height)
     {
-    	VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+    	BufferBuilder buffer = Tessellator.getInstance().getBuffer();
         float f = 0.00390625F;
         float f1 = 0.00390625F;
         buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
         RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel, x, y, x + width, y + height, (u + 0) * f, (u + width) * f, (v + 0) * f1, (v + height) * f1);
         buffer.finishDrawing();
+    }
+
+    /**
+     * Draws the screen and all the components in it.
+     */
+    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    {
+        this.drawDefaultBackground();
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
     }
 }

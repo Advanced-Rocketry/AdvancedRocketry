@@ -2,16 +2,15 @@ package zmaster587.advancedRocketry.item;
 
 import java.util.List;
 
-import zmaster587.advancedRocketry.api.DataStorage;
-import zmaster587.libVulpes.items.ItemIngredient;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import zmaster587.advancedRocketry.api.DataStorage;
+import zmaster587.libVulpes.items.ItemIngredient;
 
 public class ItemData extends ItemIngredient {
 
@@ -89,8 +88,8 @@ public class ItemData extends ItemIngredient {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player,
-			List list, boolean bool) {
+	public void addInformation(ItemStack stack, World player,
+			List list, ITooltipFlag bool) {
 		super.addInformation(stack, player, list, bool);
 
 		DataStorage data = getDataStorage(stack);

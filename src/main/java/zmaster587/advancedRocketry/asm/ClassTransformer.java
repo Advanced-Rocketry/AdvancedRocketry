@@ -62,7 +62,7 @@ public class ClassTransformer implements IClassTransformer {
 	private static final String METHOD_KEY_ONUPDATE = "net.minecraft.client.entity.Entity.onUpdate";
 	private static final String METHOD_KEY_GETLOOKVEC = "net.minecraft.entity.EntityLivingBase.getLookVec";
 	private static final String METHOD_KEY_DORENDER  = "net.minecraft.client.renderer.entity.RenderLivingEntity.doRender";
-	private static final String METHOD_KEY_MOVEENTITYWITHHEADING = "net.minecraft.entity.EntityLivingBase.moveEntityWithHeading";
+//	private static final String METHOD_KEY_TRAVEL = "net.minecraft.entity.EntityLivingBase.travel";
 	private static final String METHOD_KEY_MOVEFLYING = "net.minecraft.entity.Entity.moveFlying";
 	private static final String METHOD_KEY_SETBLOCKSTATE = CLASS_KEY_WORLD + ".setBlockState";
 	private static final String METHOD_KEY_SETBLOCKMETADATAWITHNOTIFY = CLASS_KEY_WORLD + ".setBlockMetadataWithNotify";
@@ -130,7 +130,7 @@ public class ClassTransformer implements IClassTransformer {
 		//entryMap.put(METHOD_KEY_SETPOSITION, new SimpleEntry<String, String>("setPosition",""));
 		//entryMap.put(METHOD_KEY_GETLOOKVEC, new SimpleEntry<String, String>("getLook", ""));
 		//entryMap.put(METHOD_KEY_DORENDER, new SimpleEntry<String, String>("doRender",""));
-		entryMap.put(METHOD_KEY_MOVEENTITYWITHHEADING, new SimpleEntry<String, String>("moveEntityWithHeading","g"));
+		//entryMap.put(METHOD_KEY_TRAVEL, new SimpleEntry<String, String>("travel","g"));
 		//entryMap.put(METHOD_KEY_MOVEFLYING, new SimpleEntry<String, String>("moveFlying",""));
 		//entryMap.put(METHOD_KEY_ONLIVINGUPDATE, new SimpleEntry<String, String>("onLivingUpdate","e"));
 		entryMap.put(METHOD_KEY_ONUPDATE, new SimpleEntry<String, String>("onUpdate","A_"));
@@ -834,47 +834,6 @@ public class ClassTransformer implements IClassTransformer {
 				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 0));
 				nodeAdd.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "zmaster587/advancedRocketry/util/GravityHandler", "applyGravity", "(L" + getName(CLASS_KEY_ENTITY) + ";)V", false));
 				onUpdate.instructions.insert(pos, nodeAdd);
-			}
-
-			return finishInjection(cn);
-		}
-
-		if(changedName.equals(getName(CLASS_KEY_ENTITYLIVEINGBASE))) {
-			ClassNode cn = startInjection(bytes);
-
-			MethodNode moveEntityWithHeading = getMethod(cn, getName(METHOD_KEY_MOVEENTITYWITHHEADING), "(FF)V");
-
-			if(moveEntityWithHeading != null) {
-				final InsnList nodeAdd = new InsnList();
-				AbstractInsnNode pos = null;
-				List<AbstractInsnNode> removeNodes = new LinkedList<AbstractInsnNode>();
-				int numGoto = 4;
-
-				for(int i = moveEntityWithHeading.instructions.size() - 1; i >= 0; i--) {
-					AbstractInsnNode ain = moveEntityWithHeading.instructions.get(i);
-					if(ain.getOpcode() == Opcodes.GOTO && --numGoto == 0) {
-						pos = ain;
-
-
-						while(moveEntityWithHeading.instructions.get(--i).getOpcode() != Opcodes.ALOAD);
-
-						pos = moveEntityWithHeading.instructions.get(i-1);
-						ain = moveEntityWithHeading.instructions.get(i);
-						do {
-							moveEntityWithHeading.instructions.remove(ain);
-							removeNodes.add(ain);
-							ain = moveEntityWithHeading.instructions.get(i);
-						} while(ain.getOpcode() != Opcodes.PUTFIELD);
-
-						moveEntityWithHeading.instructions.remove(ain);
-
-						break;
-					}
-				}
-
-				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 0));
-				nodeAdd.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "zmaster587/advancedRocketry/util/GravityHandler", "applyGravity", "(L" + getName(CLASS_KEY_ENTITY) + ";)V", false));
-				moveEntityWithHeading.instructions.insert(pos, nodeAdd);
 			}
 
 			return finishInjection(cn);

@@ -22,4 +22,10 @@ public class PlatePressCategory extends MachineCategoryTemplate<PlatePressWrappe
 		return LibVulpes.proxy.getLocalizedString("tile.blockHandPress.name");
 	}
 
+    @Override
+    public String getModName()
+    {
+        return "Advanced Rocketry";
+    }
+
 }

@@ -25,9 +25,9 @@ public class PacketLaserGun extends BasePacket {
 	@Override
 	public void write(ByteBuf out) {
 		out.writeInt(fromEntity.getEntityId());
-		out.writeFloat((float)toPos.xCoord);
-		out.writeFloat((float)toPos.yCoord);
-		out.writeFloat((float)toPos.zCoord);
+		out.writeFloat((float)toPos.x);
+		out.writeFloat((float)toPos.y);
+		out.writeFloat((float)toPos.z);
 	}
 
 	@Override

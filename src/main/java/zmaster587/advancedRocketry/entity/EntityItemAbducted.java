@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 
 public class EntityItemAbducted extends Entity {
 
-	private static final DataParameter<ItemStack> ITEM = EntityDataManager.<ItemStack>createKey(EntityItem.class, DataSerializers.OPTIONAL_ITEM_STACK);
+	private static final DataParameter<ItemStack> ITEM = EntityDataManager.<ItemStack>createKey(EntityItem.class, DataSerializers.ITEM_STACK);
 	public int lifespan = 6000;
 	public int age = 0;
 	EntityItem itemEntity;

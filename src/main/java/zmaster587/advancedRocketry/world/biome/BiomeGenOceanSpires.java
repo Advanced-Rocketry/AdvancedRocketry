@@ -5,6 +5,7 @@ import java.util.Random;
 import zmaster587.advancedRocketry.world.decoration.MapGenInvertedPillar;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.ChunkPrimer;
@@ -18,8 +19,8 @@ public class BiomeGenOceanSpires extends Biome {
 	
 	public BiomeGenOceanSpires(int id, boolean register) {
 		super(new BiomeProperties("OceanSpires").setBaseHeight(-0.5f).setHeightVariation(0f));
-		
-		registerBiome(id, "OceanSpires", this);
+
+        this.setRegistryName(new ResourceLocation("advancedrocketry:OceanSpires"));
 		
 		this.decorator.clayPerChunk = 0;
 		this.decorator.flowersPerChunk = 0;

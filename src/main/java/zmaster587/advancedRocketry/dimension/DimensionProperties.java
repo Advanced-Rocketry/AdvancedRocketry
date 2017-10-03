@@ -1375,7 +1375,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 */
 	public float[] getFogColorAtHeight(double y, Vec3d fogColor) {
 		float atmDensity = getAtmosphereDensityAtHeight(y);
-		return new float[] { (float) (atmDensity * fogColor.xCoord), (float) (atmDensity * fogColor.yCoord), (float) (atmDensity * fogColor.zCoord) };
+		return new float[] { (float) (atmDensity * fogColor.x), (float) (atmDensity * fogColor.y), (float) (atmDensity * fogColor.z) };
 	}
 
 	/**

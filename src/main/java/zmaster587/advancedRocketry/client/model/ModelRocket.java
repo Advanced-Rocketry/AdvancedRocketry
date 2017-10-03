@@ -3,9 +3,8 @@ package zmaster587.advancedRocketry.client.model;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
+import java.util.Optional;
+import java.util.function.Function;
 
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -64,7 +63,7 @@ public class ModelRocket implements IModel {
 		@Override
 		public Optional<TRSRTransformation> apply(
 				Optional<? extends IModelPart> part) {
-			return Optional.absent();
+			return Optional.empty();
 		}
 		
 	}

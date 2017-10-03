@@ -1,7 +1,5 @@
 package zmaster587.advancedRocketry.entity;
 
-import io.netty.buffer.ByteBuf;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,6 +9,7 @@ import java.util.ListIterator;
 
 import javax.annotation.Nullable;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GLAllocation;
@@ -43,7 +42,6 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
@@ -837,9 +835,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				if(DimensionManager.getInstance().getDimensionProperties(destinationDimId).getName().equals("Luna")) {
 					for(Entity player : this.getPassengers()) {
 						if(player instanceof EntityPlayer) {
-							((EntityPlayer)player).addStat(ARAchivements.moonLanding);
-							if(!DimensionManager.hasReachedMoon)
-								((EntityPlayer)player).addStat(ARAchivements.oneSmallStep);
+//							((EntityPlayer)player).addStat(ARAchivements.moonLanding);
+//							if(!DimensionManager.hasReachedMoon)//TODO advancment triggers here.
+//								((EntityPlayer)player).addStat(ARAchivements.oneSmallStep);
 						}
 					}
 					DimensionManager.hasReachedMoon = true;
@@ -1047,13 +1045,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			this.world.profiler.startSection("changeDimension");
 			MinecraftServer minecraftserver = this.getServer();
 			int i = this.dimension;
-			WorldServer worldserver = minecraftserver.worldServerForDimension(i);
-			WorldServer worldserver1 = minecraftserver.worldServerForDimension(dimensionIn);
+			WorldServer worldserver = minecraftserver.getWorld(i);
+			WorldServer worldserver1 = minecraftserver.getWorld(dimensionIn);
 			this.dimension = dimensionIn;
 
 			if (i == 1 && dimensionIn == 1)
 			{
-				worldserver1 = minecraftserver.worldServerForDimension(0);
+				worldserver1 = minecraftserver.getWorld(0);
 				this.dimension = 0;
 			}
 

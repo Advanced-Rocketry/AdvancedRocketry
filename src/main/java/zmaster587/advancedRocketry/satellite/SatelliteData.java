@@ -109,7 +109,7 @@ public abstract class SatelliteData extends SatelliteBase {
 
 	@Override
 	public void sendChanges(Container container, IContainerListener crafter, int variableId, int localId) {
-		crafter.sendProgressBarUpdate(container, variableId, (short)(( lastActionTime >>> (localId*16) ) & 0xffff));
+		crafter.sendWindowProperty(container, variableId, (short)(( lastActionTime >>> (localId*16) ) & 0xffff));
 
 		if(localId == 3)
 			prevLastActionTime=lastActionTime;

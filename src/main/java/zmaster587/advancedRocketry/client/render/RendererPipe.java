@@ -7,7 +7,7 @@ import zmaster587.libVulpes.render.RenderHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
@@ -26,10 +26,10 @@ public class RendererPipe extends TileEntitySpecialRenderer {
 
 
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double x, double y,
-			double z, float f, int damage) {
+	public void render(TileEntity tile, double x, double y,
+			double z, float f, int damage, float a) {
 		
-		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
 		GL11.glPushMatrix();
 

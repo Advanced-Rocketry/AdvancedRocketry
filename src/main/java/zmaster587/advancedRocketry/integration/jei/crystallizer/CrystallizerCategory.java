@@ -22,4 +22,10 @@ public class CrystallizerCategory extends MachineCategoryTemplate<CrystallizerWr
 		return LibVulpes.proxy.getLocalizedString("tile.Crystallizer.name");
 	}
 
+    @Override
+    public String getModName()
+    {
+        return "Advanced Rocketry";
+    }
+
 }

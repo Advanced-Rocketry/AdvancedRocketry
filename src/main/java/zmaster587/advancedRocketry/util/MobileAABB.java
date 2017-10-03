@@ -280,7 +280,7 @@ public class MobileAABB extends AxisAlignedBB {
 	}
 
 	@Override
-	public boolean intersectsWith(AxisAlignedBB aabb) {
+	public boolean intersects(AxisAlignedBB aabb) {
 
 		//if(chunk == null || true)
 		//	return super.intersectsWith(aabb);
@@ -308,7 +308,7 @@ public class MobileAABB extends AxisAlignedBB {
 
 
 						bb = bb.offset(this.minX + x + diffX, this.minY + y, this.minZ + z + diffZ);
-						if(bb.intersectsWith(aabb)) {
+						if(bb.intersects(aabb)) {
 							collides = true;
 							break out;
 						}

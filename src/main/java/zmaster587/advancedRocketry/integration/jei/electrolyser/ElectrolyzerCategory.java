@@ -22,4 +22,10 @@ public class ElectrolyzerCategory extends MachineCategoryTemplate<ElectrolyzerWr
 		return LibVulpes.proxy.getLocalizedString("tile.electrolyser.name");
 	}
 
+    @Override
+    public String getModName()
+    {
+        return "Advanced Rocketry";
+    }
+
 }

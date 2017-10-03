@@ -11,6 +11,7 @@ import net.minecraft.block.BlockFlower.EnumFlowerType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -28,7 +29,7 @@ public class BiomeGenDeepSwamp extends Biome {
 	public BiomeGenDeepSwamp(int biomeId, boolean register) {
 		super(new BiomeProperties("DeepSwamp").setBaseHeight(-0.1f).setHeightVariation(0.2f).setRainfall(0.9f).setTemperature(0.9f).setWaterColor(14745518));
 
-		registerBiome(biomeId, "DeepSwamp", this);
+        this.setRegistryName(new ResourceLocation("advancedrocketry:DeepSwamp"));
 		
 		this.decorator.treesPerChunk = 10;
         this.decorator.flowersPerChunk = 1;

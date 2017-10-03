@@ -46,7 +46,7 @@ public class SpySatellite extends SatelliteBase {
 			worldserver.getEntityTracker().removePlayerFromTrackers((EntityPlayerMP) player);
 			worldserver.getEntityTracker().removeEntityFromAllTrackingPlayers((EntityPlayerMP) player);
 			//((EntityPlayerMP)player).getServerForPlayer().getPlayerManager().removePlayer((EntityPlayerMP) player);
-			//MinecraftServer.getServer().worldServerForDimension(player.dimension).removePlayerEntityDangerously(player);
+			//MinecraftServer.getServer().getWorld(player.dimension).removePlayerEntityDangerously(player);
 
 			//MinecraftServer.getServer().getConfigurationManager().playerEntityList.remove(player);
 			//worldserver.removePlayerEntityDangerously(player);

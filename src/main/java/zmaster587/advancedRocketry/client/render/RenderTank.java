@@ -21,8 +21,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 public class RenderTank extends TileEntitySpecialRenderer {
 
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double x,
-			double y, double z, float f, int damage) {
+	public void render(TileEntity tile, double x,
+			double y, double z, float f, int damage, float a) {
 
 		IFluidHandler fluidTile = (IFluidHandler)tile;
 		FluidStack fluid = fluidTile.getTankProperties()[0].getContents();

@@ -26,7 +26,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -67,7 +67,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		this.renderStars();
 		GL11.glEndList();
 		GL11.glPopMatrix();
-		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		this.glSkyList = this.starGLCallList + 1;
 		GL11.glNewList(this.glSkyList, GL11.GL_COMPILE);
 		byte b2 = 64;
@@ -115,7 +115,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 	private void renderStars()
 	{
 		Random random = new Random(10842L);
-		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 
 		for (int i = 0; i < 2000; ++i)
@@ -249,9 +249,9 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		Vec3d vec3 = Minecraft.getMinecraft().world.getSkyColor(this.mc.getRenderViewEntity(), partialTicks);
-		float f1 = (float)vec3.xCoord;
-		float f2 = (float)vec3.yCoord;
-		float f3 = (float)vec3.zCoord;
+		float f1 = (float)vec3.x;
+		float f2 = (float)vec3.y;
+		float f3 = (float)vec3.z;
 		float f6;
 
 		if (this.mc.gameSettings.anaglyph)
@@ -270,7 +270,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		f3 *= atmosphere;
 
 		GL11.glColor3f(f1, f2, f3);
-		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
 		GL11.glDepthMask(false);
 		GL11.glEnable(GL11.GL_FOG);
@@ -576,7 +576,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GL11.glPopMatrix();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glColor3f(0.0F, 0.0F, 0.0F);
-		double d0 = this.mc.player.getPositionEyes(partialTicks).yCoord - mc.world.getHorizon();
+		double d0 = this.mc.player.getPositionEyes(partialTicks).y - mc.world.getHorizon();
 
 		if (d0 < 0.0D)
 		{
@@ -649,11 +649,11 @@ public class RenderPlanetarySky extends IRenderHandler {
 		return EnumFacing.EAST;
 	}
 
-	protected void renderPlanet(VertexBuffer buffer, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing) {
+	protected void renderPlanet(BufferBuilder buffer, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing) {
 		renderPlanet2(buffer, icon, 0, 0, -100, 10f*(200-planetOrbitalDistance)/100f, alphaMultiplier, shadowAngle, hasAtmosphere, skyColor, ringColor, gasGiant, hasRing);
 	}
 
-	protected void renderPlanet2(VertexBuffer buffer, ResourceLocation icon, int locationX, int locationY, double zLevel, float size, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing) {
+	protected void renderPlanet2(BufferBuilder buffer, ResourceLocation icon, int locationX, int locationY, double zLevel, float size, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing) {
 		renderPlanetPubHelper(buffer, icon, locationX, locationY, zLevel, size, alphaMultiplier, shadowAngle, hasAtmosphere, skyColor, ringColor, gasGiant, hasRing);
 	}
 
@@ -670,7 +670,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		return axis;
 	}
 
-	public static void renderPlanetPubHelper(VertexBuffer buffer, ResourceLocation icon, int locationX, int locationY, double zLevel, float size, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing) {
+	public static void renderPlanetPubHelper(BufferBuilder buffer, ResourceLocation icon, int locationX, int locationY, double zLevel, float size, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing) {
 		GL11.glEnable(GL11.GL_BLEND);
 
 		//int k = mc.theWorld.getMoonPhase();
@@ -786,9 +786,9 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GlStateManager.color(1f, 1f, 1f, 1f);
 	}
 
-	private void drawStar(VertexBuffer buffer, int solarOrbitalDistance, float sunSize, Vec3d sunColor, float multiplier) {
+	private void drawStar(BufferBuilder buffer, int solarOrbitalDistance, float sunSize, Vec3d sunColor, float multiplier) {
 		//Set sun color and distance
-		GlStateManager.color((float)sunColor.xCoord, (float)sunColor.yCoord , (float)sunColor.zCoord ,Math.min((multiplier)*2f,1f));
+		GlStateManager.color((float)sunColor.x, (float)sunColor.y , (float)sunColor.z ,Math.min((multiplier)*2f,1f));
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 		float f10 = sunSize*30f*(202-solarOrbitalDistance)/100f;
 		//multiplier = 2;

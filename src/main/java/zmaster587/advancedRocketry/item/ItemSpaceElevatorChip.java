@@ -2,15 +2,13 @@ package zmaster587.advancedRocketry.item;
 
 import java.util.List;
 
-import zmaster587.advancedRocketry.util.DimensionBlockPosition;
-import zmaster587.advancedRocketry.util.NBTStorableListList;
-import zmaster587.libVulpes.util.HashedBlockPosition;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraft.world.World;
+import zmaster587.advancedRocketry.util.DimensionBlockPosition;
+import zmaster587.advancedRocketry.util.NBTStorableListList;
 
 public class ItemSpaceElevatorChip extends Item {
 
@@ -53,8 +51,8 @@ public class ItemSpaceElevatorChip extends Item {
 	}
 	
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player,
-			List list, boolean bool) {
+	public void addInformation(ItemStack stack, World player,
+			List list, ITooltipFlag bool) {
 		
 		int numPos = getBlockPositions(stack).size();
 		

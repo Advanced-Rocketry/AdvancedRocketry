@@ -193,13 +193,13 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 			this.world.profiler.startSection("changeDimension");
 			MinecraftServer minecraftserver = this.getServer();
 			int i = this.dimension;
-			WorldServer worldserver = minecraftserver.worldServerForDimension(i);
-			WorldServer worldserver1 = minecraftserver.worldServerForDimension(dimensionIn);
+			WorldServer worldserver = minecraftserver.getWorld(i);
+			WorldServer worldserver1 = minecraftserver.getWorld(dimensionIn);
 			this.dimension = dimensionIn;
 
 			if (i == 1 && dimensionIn == 1)
 			{
-				worldserver1 = minecraftserver.worldServerForDimension(0);
+				worldserver1 = minecraftserver.getWorld(0);
 				this.dimension = 0;
 			}
 
@@ -280,7 +280,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		return getEntityBoundingBox().addCoord(posX, 2000, posZ);
+		return getEntityBoundingBox().expand(posX, 2000, posZ);
 	}
 
 	@Override

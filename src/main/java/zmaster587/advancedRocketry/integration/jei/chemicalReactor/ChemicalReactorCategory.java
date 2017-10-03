@@ -22,4 +22,10 @@ public class ChemicalReactorCategory extends MachineCategoryTemplate<ChemicalRea
 		return LibVulpes.proxy.getLocalizedString("tile.chemreactor.name");
 	}
 
+    @Override
+    public String getModName()
+    {
+        return "Advanced Rocketry";
+    }
+
 }

@@ -16,7 +16,7 @@ public class BiomeGenWatermelon extends Biome {
 		
 		//cold and dry
 		
-		this.decorator.generateLakes=false;
+		this.decorator.generateFalls=false;
 		this.decorator.flowersPerChunk=0;
 		this.decorator.grassPerChunk=0;
 		this.decorator.treesPerChunk=0;

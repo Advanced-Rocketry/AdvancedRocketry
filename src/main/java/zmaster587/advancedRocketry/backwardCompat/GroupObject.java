@@ -3,7 +3,7 @@ package zmaster587.advancedRocketry.backwardCompat;
 import java.util.ArrayList;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraftforge.fml.relauncher.Side;
@@ -36,7 +36,7 @@ public class GroupObject
     {
         if (faces.size() > 0)
         {
-            VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+            BufferBuilder buffer = Tessellator.getInstance().getBuffer();
             buffer.begin(glDrawingMode, drawMode);
             render(buffer);
             Tessellator.getInstance().draw();
@@ -44,7 +44,7 @@ public class GroupObject
     }
 
     @SideOnly(Side.CLIENT)
-    public void render(VertexBuffer tessellator)
+    public void render(BufferBuilder tessellator)
     {
         if (faces.size() > 0)
         {

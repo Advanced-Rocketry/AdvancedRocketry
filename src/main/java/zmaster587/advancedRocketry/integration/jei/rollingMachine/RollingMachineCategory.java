@@ -22,4 +22,10 @@ public class RollingMachineCategory extends MachineCategoryTemplate<RollingMachi
 		return LibVulpes.proxy.getLocalizedString("tile.rollingMachine.name");
 	}
 
+    @Override
+    public String getModName()
+    {
+        return "Advanced Rocketry";
+    }
+
 }

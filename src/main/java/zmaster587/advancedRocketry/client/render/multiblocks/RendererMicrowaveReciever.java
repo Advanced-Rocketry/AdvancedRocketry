@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
@@ -23,8 +23,8 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
 	ResourceLocation panelSide = new ResourceLocation("advancedrocketry:textures/blocks/panelSide.png");
 
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double x,
-			double y, double z, float f, int damage) {
+	public void render(TileEntity tile, double x,
+			double y, double z, float f, int damage, float a) {
 		TileMicrowaveReciever multiBlockTile = (TileMicrowaveReciever)tile;
 
 		if(!multiBlockTile.canRender())
@@ -32,7 +32,7 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
 
 		GL11.glPushMatrix();
 		GL11.glTranslated(x, y, z);
-		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		//Initial setup
 		bindTexture(texture);
 		

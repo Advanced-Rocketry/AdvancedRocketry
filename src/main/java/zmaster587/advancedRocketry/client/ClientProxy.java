@@ -422,14 +422,14 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void spawnLaser(Entity entity, Vec3d toPos) {
-		FxLaser fx = new FxLaser(entity.world, toPos.xCoord, toPos.yCoord, toPos.zCoord, entity);
+		FxLaser fx = new FxLaser(entity.world, toPos.x, toPos.y, toPos.z, entity);
 		Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 
-		FxLaserHeat fx2 = new FxLaserHeat(entity.world,  toPos.xCoord, toPos.yCoord, toPos.zCoord, 0.02f);
+		FxLaserHeat fx2 = new FxLaserHeat(entity.world,  toPos.x, toPos.y, toPos.z, 0.02f);
 		Minecraft.getMinecraft().effectRenderer.addEffect(fx2);
 		
 		for(int i = 0; i < 4; i++) {
-			FxLaserSpark fx3 = new FxLaserSpark(entity.world,  toPos.xCoord, toPos.yCoord, toPos.zCoord, 
+			FxLaserSpark fx3 = new FxLaserSpark(entity.world,  toPos.x, toPos.y, toPos.z, 
 					.125 - entity.world.rand.nextFloat()/4f, .125 - entity.world.rand.nextFloat()/4f, .125 - entity.world.rand.nextFloat()/4f, .5f);
 			Minecraft.getMinecraft().effectRenderer.addEffect(fx3);
 		}

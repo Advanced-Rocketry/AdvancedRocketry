@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
@@ -13,15 +13,15 @@ import net.minecraft.tileentity.TileEntity;
 public class RenderLaserTile extends TileEntitySpecialRenderer {
 
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double x, double y,
-			double z, float f, int damage) {
+	public void render(TileEntity tileentity, double x, double y,
+			double z, float f, int damage, float a) {
 
 		if(!((TileSpaceLaser)tileentity).isRunning())
 			return;
 		
 		GL11.glPushMatrix();
 		GL11.glTranslated(x, y, z);
-		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_FOG);
 		GL11.glEnable(GL11.GL_BLEND);

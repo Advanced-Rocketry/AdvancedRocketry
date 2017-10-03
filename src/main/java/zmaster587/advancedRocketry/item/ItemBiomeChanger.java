@@ -1,11 +1,11 @@
 package zmaster587.advancedRocketry.item;
 
-import io.netty.buffer.ByteBuf;
-
 import java.util.LinkedList;
 import java.util.List;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -64,8 +64,8 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player,
-			List list, boolean arg5) {
+	public void addInformation(ItemStack stack, World player,
+			List list, ITooltipFlag arg5) {
 
 		SatelliteBase sat = DimensionManager.getInstance().getSatellite(this.getSatelliteId(stack));
 
@@ -77,7 +77,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 			list.add("Unprogrammed");
 		else if(mapping == null)
 			list.add("Satellite not yet launched");
-		else if(mapping.getDimensionId() == player.world.provider.getDimension()) {
+		else if(mapping.getDimensionId() == player.provider.getDimension()) {
 			list.add("Connected");
 			list.add("Selected Biome: " + Biome.getBiome(mapping.getBiome()).getBiomeName());
 			list.add("Num Biomes Scanned: " + mapping.discoveredBiomes().size());

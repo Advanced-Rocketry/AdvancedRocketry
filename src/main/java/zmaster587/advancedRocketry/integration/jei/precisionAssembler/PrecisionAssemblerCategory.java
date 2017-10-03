@@ -24,4 +24,10 @@ public class PrecisionAssemblerCategory extends MachineCategoryTemplate<Precisio
 		return LibVulpes.proxy.getLocalizedString("tile.precisionAssemblingMachine.name");
 	}
 
+    @Override
+    public String getModName()
+    {
+        return "Advanced Rocketry";
+    }
+
 }

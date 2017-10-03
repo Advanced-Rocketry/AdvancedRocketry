@@ -6,7 +6,7 @@ import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.libVulpes.render.RenderHelper;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
@@ -21,8 +21,8 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 	private ResourceLocation round_h = new ResourceLocation("advancedrocketry:textures/models/round_h.png");
 	
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double x,
-			double y, double z, float f, int dist) {
+	public void render(TileEntity tile, double x,
+			double y, double z, float f, int dist, float a) {
 
 
 
@@ -41,7 +41,7 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			double zSize = bb.maxZ - bb.minZ+1;
 			
 			double yLocation = -(bb.maxY - bb.minY + 1.12)*renderTile.getNormallizedProgress();
-			VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+			BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 			
 			double xMin = xOffset;
 			double yMin = yOffset + yLocation;

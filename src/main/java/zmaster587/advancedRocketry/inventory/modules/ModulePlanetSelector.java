@@ -37,7 +37,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
@@ -338,7 +338,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		this.screenSizeY = Minecraft.getMinecraft().displayHeight;
 		for(ModuleBase module : this.planetList) {
 			for(GuiButton module2 : module.addButtons(currentPosX, currentPosY)) {
-				if(module2.xPosition > 128 + offsetX || clickablePlanetList == null || !clickablePlanetList.isEnabled())
+				if(module2.x > 128 + offsetX || clickablePlanetList == null || !clickablePlanetList.isEnabled())
 					buttonList.add( module2 );
 			}
 		}
@@ -401,7 +401,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		float cos = (float) Math.cos(theta);
 		float sin = (float) Math.sin(theta);
 
-		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		GL11.glPushMatrix();
 
 		//Render orbits

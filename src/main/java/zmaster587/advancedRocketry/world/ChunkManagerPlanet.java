@@ -1,17 +1,11 @@
 package zmaster587.advancedRocketry.world;
 
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-
 import java.lang.reflect.Field;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
-import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
-import zmaster587.advancedRocketry.dimension.DimensionManager;
-import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.world.type.WorldTypePlanetGen;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.init.Biomes;
@@ -21,7 +15,7 @@ import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeCache;
 import net.minecraft.world.biome.BiomeProvider;
-import net.minecraft.world.gen.ChunkProviderSettings;
+import net.minecraft.world.gen.ChunkGeneratorSettings;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.GenLayerAddIsland;
 import net.minecraft.world.gen.layer.GenLayerAddMushroomIsland;
@@ -43,6 +37,10 @@ import net.minecraft.world.gen.layer.GenLayerZoom;
 import net.minecraft.world.gen.layer.IntCache;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.world.type.WorldTypePlanetGen;
 
 public class ChunkManagerPlanet extends BiomeProvider {
 	//TODO: make higher biome ids work
@@ -116,11 +114,11 @@ public class ChunkManagerPlanet extends BiomeProvider {
 		GenLayer genlayer4 = GenLayerZoom.magnify(1000L, genlayerdeepocean, 0);
 		int i = 4;
 		int j = i;
-		ChunkProviderSettings chunkprovidersettings = null;
+		ChunkGeneratorSettings chunkprovidersettings = null;
 		
 		
 		if(!p_180781_3_.isEmpty()) {
-			chunkprovidersettings = ChunkProviderSettings.Factory.jsonToFactory(p_180781_3_).build();
+			chunkprovidersettings = ChunkGeneratorSettings.Factory.jsonToFactory(p_180781_3_).build();
 		}
 
 		if (p_180781_2_ == WorldType.CUSTOMIZED && !p_180781_3_.isEmpty())

@@ -11,6 +11,7 @@ import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
@@ -43,8 +44,7 @@ public class GravityHandler implements IGravityManager {
 	private static WeakHashMap<Entity, Double> entityMap = new WeakHashMap<Entity, Double>();
 
 	public static void applyGravity(Entity entity) {
-		
-		
+
 		if(!entity.isInWater() || entity instanceof EntityItem) {
 			if(!(entity instanceof EntityPlayer) || !((EntityPlayer)entity).capabilities.isFlying) {
 				Double d;
@@ -63,11 +63,10 @@ public class GravityHandler implements IGravityManager {
 						gravMult = ((IPlanetaryProvider)entity.world.provider).getGravitationalMultiplier(entity.getPosition());
 					else
 						gravMult = DimensionManager.getInstance().getDimensionProperties(entity.world.provider.getDimension()).gravitationalMultiplier;
-
 					if(entity instanceof EntityItem)
 						entity.motionY -= gravMult*ITEM_GRAV_OFFSET;
-					else
-						entity.motionY -= gravMult*ENTITY_OFFSET;
+					else//Not-Items are not ASMed, so they have to subtract the original gravity.
+						entity.motionY -= (gravMult*ENTITY_OFFSET - ENTITY_OFFSET);
 					return;
 				}
 				else {

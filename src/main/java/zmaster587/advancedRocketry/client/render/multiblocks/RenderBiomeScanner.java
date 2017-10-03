@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.client.render.multiblocks;
 
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -29,14 +29,8 @@ public class RenderBiomeScanner extends TileEntitySpecialRenderer {
 	}
 	
 	@Override
-	public void renderTileEntityFast(TileEntity te, double x, double y,
-			double z, float partialTicks, int destroyStage, VertexBuffer buffer) {
-		super.renderTileEntityFast(te, x, y, z, partialTicks, destroyStage, buffer);
-	}
-	
-	@Override
-	public void renderTileEntityAt(TileEntity tile, double x, double y, double z,
-			float partialTicks, int destroyStage) {
+	public void render(TileEntity tile, double x, double y, double z,
+			float partialTicks, int destroyStage, float a) {
 		TileMultiPowerConsumer multiBlockTile = (TileMultiPowerConsumer)tile;
 
 		if(!multiBlockTile.canRender())

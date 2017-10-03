@@ -10,15 +10,6 @@ import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.VILL
 import java.util.List;
 import java.util.Random;
 
-import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.dimension.DimensionManager;
-import zmaster587.advancedRocketry.event.PlanetEventHandler;
-import zmaster587.advancedRocketry.util.OreGenProperties;
-import zmaster587.advancedRocketry.util.OreGenProperties.OreEntry;
-import zmaster587.advancedRocketry.world.decoration.MapGenCrater;
-import zmaster587.advancedRocketry.world.decoration.MapGenGeode;
-import zmaster587.advancedRocketry.world.ore.CustomizableOreGen;
-import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EnumCreatureType;
@@ -35,8 +26,8 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
-import net.minecraft.world.chunk.IChunkGenerator;
-import net.minecraft.world.gen.ChunkProviderSettings;
+import net.minecraft.world.gen.ChunkGeneratorSettings;
+import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.MapGenBase;
 import net.minecraft.world.gen.MapGenCaves;
 import net.minecraft.world.gen.MapGenRavine;
@@ -50,6 +41,15 @@ import net.minecraft.world.gen.structure.MapGenStronghold;
 import net.minecraft.world.gen.structure.MapGenVillage;
 import net.minecraft.world.gen.structure.StructureOceanMonument;
 import net.minecraftforge.event.terraingen.TerrainGen;
+import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.event.PlanetEventHandler;
+import zmaster587.advancedRocketry.util.OreGenProperties;
+import zmaster587.advancedRocketry.util.OreGenProperties.OreEntry;
+import zmaster587.advancedRocketry.world.decoration.MapGenCrater;
+import zmaster587.advancedRocketry.world.decoration.MapGenGeode;
+import zmaster587.advancedRocketry.world.ore.CustomizableOreGen;
+import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 
 public class ChunkProviderPlanet implements IChunkGenerator {
 	/** RNG. */
@@ -67,7 +67,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 	private final WorldType terrainType;
 	private final double[] heightMap;
 	private final float[] biomeWeights;
-	private ChunkProviderSettings settings;
+	private ChunkGeneratorSettings settings;
 	private IBlockState oceanBlock = Blocks.WATER.getDefaultState();
 	private double[] depthBuffer = new double[256];
 	private MapGenBase caveGenerator = new MapGenCaves();
@@ -123,7 +123,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 
         if (p_i46668_5_ != null)
         {
-            this.settings = ChunkProviderSettings.Factory.jsonToFactory(p_i46668_5_).build();
+            this.settings = ChunkGeneratorSettings.Factory.jsonToFactory(p_i46668_5_).build();
             this.oceanBlock = this.settings.useLavaOceans ? Blocks.LAVA.getDefaultState() : Blocks.WATER.getDefaultState();
             worldIn.setSeaLevel(this.settings.seaLevel);
         }
@@ -246,7 +246,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 	 * specified chunk from the map seed and chunk seed
 	 */
 	@Override
-	public Chunk provideChunk(int x, int z)
+	public Chunk generateChunk(int x, int z)
 	{
 		this.rand.setSeed((long)x * 341873128712L + (long)z * 132897987541L);
 		ChunkPrimer chunkprimer = new ChunkPrimer();
@@ -600,15 +600,23 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		return false;
 	}
 
-	
-	@Override
-	public BlockPos getStrongholdGen(World worldIn, String structureName,
-			BlockPos position, boolean p_180513_4_) {
-		return null;
-	}
-
 	@Override
 	public void recreateStructures(Chunk chunkIn, int x, int z) {
 		
 	}
+
+    @Override
+    public BlockPos getNearestStructurePos(World worldIn, String structureName, BlockPos position,
+            boolean findUnexplored)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean isInsideStructure(World worldIn, String structureName, BlockPos pos)
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

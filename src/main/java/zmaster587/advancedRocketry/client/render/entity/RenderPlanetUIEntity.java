@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -93,7 +93,7 @@ public class RenderPlanetUIEntity extends Render<EntityUIPlanet> implements IRen
 		GlStateManager.color(.1f, .1f, .1f,0.75f);
 		sphere.renderAll();
 
-		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
 		if(properties.hasRings) {
 			//Rotate for rings
@@ -143,7 +143,7 @@ public class RenderPlanetUIEntity extends Render<EntityUIPlanet> implements IRen
 		GL11.glPushMatrix();
 		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 0, 0);
 
-		VertexBuffer buf = Tessellator.getInstance().getBuffer();
+		BufferBuilder buf = Tessellator.getInstance().getBuffer();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 
 		float myTime = ((entity.world.getTotalWorldTime() & 0xF)/16f);
@@ -197,7 +197,7 @@ public class RenderPlanetUIEntity extends Render<EntityUIPlanet> implements IRen
 			//GL11.glDepthMask(false);
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
 
-			RenderHelper.setupPlayerFacingMatrix(Minecraft.getMinecraft().player.getDistanceSq(hitObj.hitVec.xCoord, hitObj.hitVec.yCoord, hitObj.hitVec.zCoord), 0, 0, 0);
+			RenderHelper.setupPlayerFacingMatrix(Minecraft.getMinecraft().player.getDistanceSq(hitObj.hitVec.z, hitObj.hitVec.y, hitObj.hitVec.x), 0, 0, 0);
 			buffer = Tessellator.getInstance().getBuffer();
 
 			//Draw Mass indicator
@@ -223,8 +223,8 @@ public class RenderPlanetUIEntity extends Render<EntityUIPlanet> implements IRen
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			//GL11.glDepthMask(true);
 			RenderHelper.cleanupPlayerFacingMatrix();
-			RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(hitObj.hitVec.xCoord, hitObj.hitVec.yCoord, hitObj.hitVec.zCoord), properties.getName(), 0, .9, 0, 5);
-			RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(hitObj.hitVec.xCoord, hitObj.hitVec.yCoord, hitObj.hitVec.zCoord), "NumMoons: " + properties.getChildPlanets().size(), 0, .6, 0, 5);
+			RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(hitObj.hitVec.z, hitObj.hitVec.y, hitObj.hitVec.x), properties.getName(), 0, .9, 0, 5);
+			RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(hitObj.hitVec.z, hitObj.hitVec.y, hitObj.hitVec.x), "NumMoons: " + properties.getChildPlanets().size(), 0, .6, 0, 5);
 
 			GL11.glPopMatrix();
 		}
@@ -236,7 +236,7 @@ public class RenderPlanetUIEntity extends Render<EntityUIPlanet> implements IRen
 		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 0, 0);
 	}
 
-	protected void renderMassIndicator(VertexBuffer buffer, float percent) {
+	protected void renderMassIndicator(BufferBuilder buffer, float percent) {
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
 		float maxUV = (1-percent)*0.5f;
@@ -245,7 +245,7 @@ public class RenderPlanetUIEntity extends Render<EntityUIPlanet> implements IRen
 		Tessellator.getInstance().draw();
 	}
 
-	protected void renderATMIndicator(VertexBuffer buffer, float percent) {
+	protected void renderATMIndicator(BufferBuilder buffer, float percent) {
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
 		float maxUV = (1-percent)*0.406f + .578f;
@@ -254,7 +254,7 @@ public class RenderPlanetUIEntity extends Render<EntityUIPlanet> implements IRen
 		Tessellator.getInstance().draw();
 	}
 
-	protected void renderTemperatureIndicator(VertexBuffer buffer, float percent) {
+	protected void renderTemperatureIndicator(BufferBuilder buffer, float percent) {
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
 		float maxUV = (1-percent)*0.406f + .578f;

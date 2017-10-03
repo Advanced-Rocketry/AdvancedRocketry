@@ -4,13 +4,16 @@ import java.util.List;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.util.Vector3F;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * MetaData corresponds to the id
@@ -85,16 +88,16 @@ public class ItemStationChip extends ItemIdWithName {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List list,
-			boolean bool) {
+	public void addInformation(ItemStack stack, World player, List list,
+			ITooltipFlag bool) {
 		if(getUUID(stack) == 0)
 			list.add(ChatFormatting.GRAY + "Unprogrammed");
 		else {
 			list.add(ChatFormatting.GREEN + "Station " + getUUID(stack));
 			super.addInformation(stack, player, list, bool);
-			
-			if(player.world.provider.getDimension() == Configuration.spaceDimId) {
-				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(player.getPosition());
+			if(player.provider.getDimension() == Configuration.spaceDimId) {
+	            Entity p = Minecraft.getMinecraft().player;
+				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(p.getPosition());
 				
 				if(obj != null) {
 					Vector3F<Float> vec = getTakeoffCoords(stack, obj.getOrbitingPlanetId());

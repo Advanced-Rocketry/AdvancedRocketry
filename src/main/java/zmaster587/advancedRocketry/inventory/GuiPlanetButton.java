@@ -3,7 +3,7 @@ package zmaster587.advancedRocketry.inventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 import org.lwjgl.opengl.GL11;
@@ -23,12 +23,12 @@ public class GuiPlanetButton extends GuiImageButton {
 	}
 
 	@Override
-	public void drawButton(Minecraft minecraft, int par2, int par3)
+	public void drawButton(Minecraft minecraft, int par2, int par3, float f)
 	{
 		if (this.visible)
 		{
 			//
-			this.hovered = par2 >= this.xPosition && par3 >= this.yPosition && par2 < this.xPosition + this.width && par3 < this.yPosition + this.height;
+			this.hovered = par2 >= this.x && par3 >= this.y && par2 < this.x + this.width && par3 < this.y + this.height;
 			int hoverState = this.getHoverState(this.hovered);
 
 			/*if(mousePressed(minecraft, par2, par3) && buttonTexture[2] != null)
@@ -48,13 +48,13 @@ public class GuiPlanetButton extends GuiImageButton {
            
 	
 	        Tessellator tessellator = Tessellator.getInstance();
-	        VertexBuffer vertexbuffer = tessellator.getBuffer();
+	        BufferBuilder vertexbuffer = tessellator.getBuffer();
 	        GL11.glPushMatrix();
 	        GL11.glRotated(90, -1, 0, 0);
 	        //GL11.glTranslatef(xPosition, 100 + this.zLevel, yPosition);
 	        float newWidth = width/2f;
 	        
-	        RenderPlanetarySky.renderPlanetPubHelper(vertexbuffer, properties.getPlanetIcon(), (int)(xPosition + newWidth), (int)(yPosition + newWidth), (double)this.zLevel, newWidth, 1f, properties.getSolarTheta(), properties.hasAtmosphere(), properties.skyColor, properties.ringColor, properties.isGasGiant(), properties.hasRings());
+	        RenderPlanetarySky.renderPlanetPubHelper(vertexbuffer, properties.getPlanetIcon(), (int)(x + newWidth), (int)(y + newWidth), (double)this.zLevel, newWidth, 1f, properties.getSolarTheta(), properties.hasAtmosphere(), properties.skyColor, properties.ringColor, properties.isGasGiant(), properties.hasRings());
             GL11.glPopMatrix();
 	        
 	        /*vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);

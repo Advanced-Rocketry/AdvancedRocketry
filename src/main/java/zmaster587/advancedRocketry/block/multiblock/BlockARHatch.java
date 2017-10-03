@@ -31,15 +31,15 @@ public class BlockARHatch extends BlockHatch {
 	}
 	
 	@Override
-	public void getSubBlocks(Item item, CreativeTabs tab,
+	public void getSubBlocks(CreativeTabs tab,
 			NonNullList<ItemStack> list) {
-		list.add(new ItemStack(item, 1, 0));
-		list.add(new ItemStack(item, 1, 1));
-		list.add(new ItemStack(item, 1, 2));
-		list.add(new ItemStack(item, 1, 3));
-		list.add(new ItemStack(item, 1, 4));
-		list.add(new ItemStack(item, 1, 5));
-		list.add(new ItemStack(item, 1, 6));
+		list.add(new ItemStack(this, 1, 0));
+		list.add(new ItemStack(this, 1, 1));
+		list.add(new ItemStack(this, 1, 2));
+		list.add(new ItemStack(this, 1, 3));
+		list.add(new ItemStack(this, 1, 4));
+		list.add(new ItemStack(this, 1, 5));
+		list.add(new ItemStack(this, 1, 6));
 	}
 	
 	@Override

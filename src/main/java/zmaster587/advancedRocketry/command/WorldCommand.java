@@ -261,7 +261,7 @@ public class WorldCommand implements ICommand {
 					sender.sendMessage(new TextComponentString("Invalid player name: " + string[1]));
 				}
 				else {
-					player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  me.world.provider.getDimension() , new TeleporterNoPortal(me.getServer().worldServerForDimension(me.world.provider.getDimension())));
+					player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  me.world.provider.getDimension() , new TeleporterNoPortal(me.getServer().getWorld(me.world.provider.getDimension())));
 					player.setPosition(me.posX, me.posY, me.posZ);
 				}
 			}
