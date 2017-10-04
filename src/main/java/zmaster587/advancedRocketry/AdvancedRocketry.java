@@ -1293,6 +1293,19 @@ public class AdvancedRocketry {
         {
             GameData.register_impl(recipe);
         }
+
+        //Register machines
+        machineRecipes.registerMachine(TileElectrolyser.class);
+        machineRecipes.registerMachine(TileCuttingMachine.class);
+        machineRecipes.registerMachine(TileLathe.class);
+        machineRecipes.registerMachine(TilePrecisionAssembler.class);
+        machineRecipes.registerMachine(TileElectricArcFurnace.class);
+        machineRecipes.registerMachine(TileChemicalReactor.class);
+        machineRecipes.registerMachine(TileRollingMachine.class);
+        machineRecipes.registerMachine(TileCrystallizer.class);
+
+        //Register the machine recipes
+        machineRecipes.registerAllMachineRecipes();
     }
 
 	@EventHandler
@@ -1311,19 +1324,6 @@ public class AdvancedRocketry {
 
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
-
-		//Register machines
-		machineRecipes.registerMachine(TileElectrolyser.class);
-		machineRecipes.registerMachine(TileCuttingMachine.class);
-		machineRecipes.registerMachine(TileLathe.class);
-		machineRecipes.registerMachine(TilePrecisionAssembler.class);
-		machineRecipes.registerMachine(TileElectricArcFurnace.class);
-		machineRecipes.registerMachine(TileChemicalReactor.class);
-		machineRecipes.registerMachine(TileRollingMachine.class);
-		machineRecipes.registerMachine(TileCrystallizer.class);
-
-		//Register the machine recipes
-		machineRecipes.registerAllMachineRecipes();
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new zmaster587.advancedRocketry.inventory.GuiHandler());
 		planetWorldType = new WorldTypePlanetGen("PlanetCold");
