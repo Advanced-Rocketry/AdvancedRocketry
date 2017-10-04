@@ -14,6 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
 
 public class GravityHandler implements IGravityManager {
@@ -58,7 +59,6 @@ public class GravityHandler implements IGravityManager {
 				else if(DimensionManager.getInstance().isDimensionCreated(entity.world.provider.getDimension()) || entity.world.provider instanceof WorldProviderSpace) {
 					double gravMult;
 
-
 					if(entity.world.provider instanceof IPlanetaryProvider)
 						gravMult = ((IPlanetaryProvider)entity.world.provider).getGravitationalMultiplier(entity.getPosition());
 					else
@@ -82,8 +82,8 @@ public class GravityHandler implements IGravityManager {
 					else {
 						if(entity instanceof EntityItem)
 							entity.motionY -= ITEM_GRAV_OFFSET;
-						else
-							entity.motionY -= ENTITY_OFFSET + 0.005d;
+						else//Without the ASM, this added extra gravity in overworld on SMP
+							entity.motionY -= 0.005d;
 					}
 				}
 			}		
