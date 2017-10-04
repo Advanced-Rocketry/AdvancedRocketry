@@ -23,7 +23,6 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityArmorStand;
@@ -63,9 +62,9 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
-import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 import net.minecraftforge.registries.GameData;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
@@ -1011,13 +1010,6 @@ public class AdvancedRocketry {
 
 		materialRegistry.registerOres(LibVulpes.tabLibVulpesOres);
 
-		//OreDict stuff
-		OreDictionary.registerOre("waferSilicon", new ItemStack(AdvancedRocketryItems.itemWafer,1,0));
-		OreDictionary.registerOre("ingotCarbon", new ItemStack(AdvancedRocketryItems.itemMisc, 1, 1));
-		OreDictionary.registerOre("concrete", new ItemStack(AdvancedRocketryBlocks.blockConcrete));
-		OreDictionary.registerOre("itemLens", AdvancedRocketryItems.itemLens);
-		OreDictionary.registerOre("itemSilicon", MaterialRegistry.getItemStackFromMaterialAndType("Silicon", AllowedProducts.getProductByName("INGOT")));
-
 		//Regiser item/block crap
 		proxy.preinit();
 	}
@@ -1289,6 +1281,13 @@ public class AdvancedRocketry {
             setRegistryName(new ResourceLocation("advancedrocketry", "controlCircuitBoard")));
         toRegister.add(new ShapedOreRecipe(null, liquidIOBoard, "rvr", "dwd", "dpd", 'r', "dustRedstone", 'v', "gemDiamond", 'd', new ItemStack(Items.DYE, 1, 4), 'w', "slabWood", 'p', "plateIron").
             setRegistryName(new ResourceLocation("advancedrocketry", "liquidIOBoard")));
+
+        //OreDict stuff
+        OreDictionary.registerOre("waferSilicon", new ItemStack(AdvancedRocketryItems.itemWafer,1,0));
+        OreDictionary.registerOre("ingotCarbon", new ItemStack(AdvancedRocketryItems.itemMisc, 1, 1));
+        OreDictionary.registerOre("concrete", new ItemStack(AdvancedRocketryBlocks.blockConcrete));
+        OreDictionary.registerOre("itemLens", AdvancedRocketryItems.itemLens);
+        OreDictionary.registerOre("itemSilicon", MaterialRegistry.getItemStackFromMaterialAndType("Silicon", AllowedProducts.getProductByName("INGOT")));
         
         for(net.minecraft.item.crafting.IRecipe recipe: toRegister)
         {
