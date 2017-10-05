@@ -864,7 +864,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 					//in case of no NBT data or the like
 					if(object == null) {
-						tile.setInventorySlotContents(0, null);
+						tile.setInventorySlotContents(0, ItemStack.EMPTY);
 						continue;
 					}
 
@@ -873,7 +873,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					//Vector3F<Integer> spawn = object.getSpawnLocation();
 
 					object.onModuleUnpack(storage);
-					tile.setInventorySlotContents(0, null);
+					tile.setInventorySlotContents(0, ItemStack.EMPTY);
 				}
 			}
 			else {
@@ -887,7 +887,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				
 				if(world != null)
 					properties.addSatallite(satellite, world2);
-				tile.setInventorySlotContents(0, null);
+				tile.setInventorySlotContents(0, ItemStack.EMPTY);
 			}
 		}
 	}
