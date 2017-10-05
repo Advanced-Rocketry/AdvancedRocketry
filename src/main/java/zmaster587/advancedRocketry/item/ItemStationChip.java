@@ -10,6 +10,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -88,6 +90,7 @@ public class ItemStationChip extends ItemIdWithName {
 	}
 
 	@Override
+    @SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World player, List list,
 			ITooltipFlag bool) {
 		if(getUUID(stack) == 0)
