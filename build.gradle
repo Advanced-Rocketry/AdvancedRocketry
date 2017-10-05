@@ -11,7 +11,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
 
@@ -26,8 +26,8 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 group= "zmaster587.advancedRocketry" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "AdvancedRocketry"
-sourceCompatibility = 7
-targetCompatibility = 7
+sourceCompatibility = 8
+targetCompatibility = 8
 
 jar {
         manifest {
@@ -38,9 +38,11 @@ jar {
 
 apply from: "gradle/scripts/getbuildnumber.gradle"
 minecraft {
-    version = "1.11.2-13.20.0.2228"
+    version = "1.12.2-14.23.0.2501"
     runDir = "run"
-    mappings = "snapshot_20170518"
+    mappings = "snapshot_20170624"
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
     replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"
     replace "@MAJOR@", version_major
     replace "@MINOR@", version_minor
@@ -72,7 +74,7 @@ repositories {
 //        }
     ivy {
             name "LibVulpes"
-            artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/MC1.11/8/artifact/output/[module]-[revision].[ext]"
+            artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/1.12/3/artifact/output/[module]-[revision].[ext]"
         }
 }
 
@@ -80,12 +82,12 @@ dependencies {
     compile name: 'industrialcraft-2', version: '2.7.39-ex111-api', ext: 'jar'
     compile name: 'Tesla', version: '1.11-1.3.0.51-deobf', ext: 'jar'
     //compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
-    compile name: 'LibVulpes', version: '1.11.2-0.2.5-8-deobf', ext: 'jar'
+    compile name: 'LibVulpes', version: '1.12.2-0.2.6-3-deobf', ext: 'jar'
     
     // compile against the JEI API
-    deobfCompile "mezz.jei:jei_1.11.2:4.3.5.277:api"
+    deobfCompile "mezz.jei:jei_1.12.2:4.8.0.105:api"
     // at runtime, use the full JEI jar
-    runtime "mezz.jei:jei_1.11.2:4.3.5.277"
+    runtime "mezz.jei:jei_1.12.2:4.8.0.105"
 
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
@@ -133,7 +135,7 @@ curseforge{
   }
 }
 
-task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
+/*task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     file = new File ("changelog.html")
     untaggedName = "Current release ${project.version}"
     fromCommit = startGitRev
@@ -154,7 +156,7 @@ task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
 
 tasks.build.dependsOn makeChangelog
 
-/*buildScan {
+buildScan {
     licenseAgreementUrl = 'https://gradle.com/terms-of-service' 
     licenseAgree = 'yes'                                        
 
