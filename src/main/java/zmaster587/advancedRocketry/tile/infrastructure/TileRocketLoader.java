@@ -140,7 +140,7 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 									}
 									rocketContainsItems = true;
 
-									if(inv.getStackInSlot(j).isEmpty())
+									if(inventory.getStackInSlot(j).isEmpty())
 										break out;
 
 									foundStack = true;
