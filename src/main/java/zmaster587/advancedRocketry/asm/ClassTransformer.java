@@ -103,26 +103,26 @@ public class ClassTransformer implements IClassTransformer {
 		obf = !(boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment");
 		//TODO: obf names
 		//entryMap.put(CLASS_KEY_ENTITYRENDERER, new SimpleEntry<String, String>("net/minecraft/client/renderer/EntityRenderer", "blt"));
-		entryMap.put(CLASS_KEY_ENTITYLIVEINGBASE, new SimpleEntry<String, String>("net/minecraft/entity/EntityLivingBase", "sw"));
+		entryMap.put(CLASS_KEY_ENTITYLIVEINGBASE, new SimpleEntry<String, String>("net/minecraft/entity/EntityLivingBase", "vp"));
 		//entryMap.put(CLASS_KEY_ENTITYLIVINGRENDERER, new SimpleEntry<String, String>("net/minecraft/client/renderer/entity/RendererLivingEntity", ""));
-		entryMap.put(CLASS_KEY_ENTITY, new SimpleEntry<String, String>("net/minecraft/entity/Entity","sn"));
+		entryMap.put(CLASS_KEY_ENTITY, new SimpleEntry<String, String>("net/minecraft/entity/Entity","vg"));
 		//entryMap.put(CLASS_KEY_ENTITY_PLAYER_SP, new SimpleEntry<String, String>("net/minecraft/client/entity/EntityPlayerSP",""));
-		entryMap.put(CLASS_KEY_ENTITY_PLAYER_MP, new SimpleEntry<String, String>("net/minecraft/entity/player/EntityPlayerMP","ly"));
-		entryMap.put(CLASS_KEY_ENTITY_PLAYER, new SimpleEntry<String, String>("net/minecraft/entity/player/EntityPlayer","aay"));
-		entryMap.put(CLASS_KEY_ENTITY_ITEM, new SimpleEntry<String, String>("net/minecraft/entity/item/EntityItem","bvf"));
+		entryMap.put(CLASS_KEY_ENTITY_PLAYER_MP, new SimpleEntry<String, String>("net/minecraft/entity/player/EntityPlayerMP","og"));
+		entryMap.put(CLASS_KEY_ENTITY_PLAYER, new SimpleEntry<String, String>("net/minecraft/entity/player/EntityPlayer","aed"));
+		entryMap.put(CLASS_KEY_ENTITY_ITEM, new SimpleEntry<String, String>("net/minecraft/entity/item/EntityItem","acl"));
 		//entryMap.put(CLASS_KEY_NETHANDLERPLAYSERVER, new SimpleEntry<String, String>("net/minecraft/network/NetHandlerPlayServer",""));
 		//entryMap.put(CLASS_KEY_C03PACKETPLAYER, new SimpleEntry<String, String>("net/minecraft/network/play/client/C03PacketPlayer",""));
-		entryMap.put(CLASS_KEY_WORLD, new SimpleEntry<String, String>("net/minecraft/world/World","ajs"));
-		entryMap.put(CLASS_KEY_BLOCK, new SimpleEntry<String, String>("net/minecraft/block/Block","alu"));
-		entryMap.put(CLASS_KEY_BLOCKPOS, new SimpleEntry<String, String>("net/minecraft/util/math/BlockPos","co"));
-		entryMap.put(CLASS_KEY_IBLOCKSTATE, new SimpleEntry<String, String>("net/minecraft/block/state/IBlockState","atl"));
-		entryMap.put(CLASS_KEY_RENDER_GLOBAL, new SimpleEntry<String, String>("net/minecraft/client/renderer/RenderGlobal","bqm"));
-		entryMap.put(CLASS_KEY_ICAMERA, new SimpleEntry<String, String>("net/minecraft/client/renderer/culling/ICamera","btl"));
-		entryMap.put(CLASS_KEY_BLOCK_BED, new SimpleEntry<String, String>("net/minecraft/block/BlockBed","als"));
-		entryMap.put(CLASS_KEY_WORLDPROVIDER, new SimpleEntry<String, String>("net/minecraft/world/WorldProvider","avf"));
-		entryMap.put(CLASS_KEY_ENUMHAND, new SimpleEntry<String, String>("net/minecraft/util/EnumHand","ri"));
-		entryMap.put(CLASS_KEY_ITEMSTACK, new SimpleEntry<String, String>("net/minecraft/item/ItemStack","afj"));
-		entryMap.put(CLASS_KEY_ENUMFACING, new SimpleEntry<String, String>("net/minecraft/util/EnumFacing","cv"));
+		entryMap.put(CLASS_KEY_WORLD, new SimpleEntry<String, String>("net/minecraft/world/World","amu"));
+		entryMap.put(CLASS_KEY_BLOCK, new SimpleEntry<String, String>("net/minecraft/block/Block","aow"));
+		entryMap.put(CLASS_KEY_BLOCKPOS, new SimpleEntry<String, String>("net/minecraft/util/math/BlockPos","et"));
+		entryMap.put(CLASS_KEY_IBLOCKSTATE, new SimpleEntry<String, String>("net/minecraft/block/state/IBlockState","awt"));
+		entryMap.put(CLASS_KEY_RENDER_GLOBAL, new SimpleEntry<String, String>("net/minecraft/client/renderer/RenderGlobal","buy"));
+		entryMap.put(CLASS_KEY_ICAMERA, new SimpleEntry<String, String>("net/minecraft/client/renderer/culling/ICamera","bxy"));
+		entryMap.put(CLASS_KEY_BLOCK_BED, new SimpleEntry<String, String>("net/minecraft/block/BlockBed","aou"));
+		entryMap.put(CLASS_KEY_WORLDPROVIDER, new SimpleEntry<String, String>("net/minecraft/world/WorldProvider","aym"));
+		entryMap.put(CLASS_KEY_ENUMHAND, new SimpleEntry<String, String>("net/minecraft/util/EnumHand","ub"));
+		entryMap.put(CLASS_KEY_ITEMSTACK, new SimpleEntry<String, String>("net/minecraft/item/ItemStack","aip"));
+		entryMap.put(CLASS_KEY_ENUMFACING, new SimpleEntry<String, String>("net/minecraft/util/EnumFacing","fa"));
 		
 		
 		//entryMap.put(METHOD_KEY_PROCESSPLAYER, new SimpleEntry<String, String>("processPlayer",""));
@@ -133,7 +133,7 @@ public class ClassTransformer implements IClassTransformer {
 		//entryMap.put(METHOD_KEY_TRAVEL, new SimpleEntry<String, String>("travel","g"));
 		//entryMap.put(METHOD_KEY_MOVEFLYING, new SimpleEntry<String, String>("moveFlying",""));
 		//entryMap.put(METHOD_KEY_ONLIVINGUPDATE, new SimpleEntry<String, String>("onLivingUpdate","e"));
-		entryMap.put(METHOD_KEY_ONUPDATE, new SimpleEntry<String, String>("onUpdate","A_"));
+		entryMap.put(METHOD_KEY_ONUPDATE, new SimpleEntry<String, String>("onUpdate","B_"));
 		//entryMap.put(METHOD_KEY_MOUNTENTITY, new SimpleEntry<String, String>("mountEntity", "a"));
 		//entryMap.put(METHOD_KEY_JUMP, new SimpleEntry<String, String>("jump",""));
 		entryMap.put(METHOD_KEY_SETBLOCKSTATE, new SimpleEntry<String, String>("setBlockState", "a"));
@@ -619,7 +619,7 @@ public class ClassTransformer implements IClassTransformer {
 		 * }
 		 * */
 		
-		if(changedName.equals(getName(CLASS_KEY_RENDER_GLOBAL))) {
+		/*if(changedName.equals(getName(CLASS_KEY_RENDER_GLOBAL))) {
 			ClassNode cn = startInjection(bytes);
 			MethodNode setupTerrain = getMethod(cn, getName(METHOD_KEY_SETUPTERRAIN), "(L"+ getName(CLASS_KEY_ENTITY) + ";DL" + getName(CLASS_KEY_ICAMERA) + ";IZ)V");
 			if(setupTerrain != null) {
@@ -665,7 +665,7 @@ public class ClassTransformer implements IClassTransformer {
 				AdvancedRocketry.logger.fatal("ASM injection into RenderGlobal.setupTerrain FAILED!");
 
 			return finishInjection(cn);
-		}
+		}*/
 		
 		/*if(changedName.equals(getName(CLASS_KEY_ENTITY_PLAYER))) {
 			ClassNode cn = startInjection(bytes);
