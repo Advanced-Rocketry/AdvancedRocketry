@@ -1,9 +1,8 @@
 package zmaster587.advancedRocketry.tile.infrastructure;
 
-import io.netty.buffer.ByteBuf;
-
 import java.util.List;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -21,12 +20,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
-import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.api.IMission;
 import zmaster587.advancedRocketry.block.multiblock.BlockARHatch;
+import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
-import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.inventory.modules.IButtonInventory;
 import zmaster587.libVulpes.inventory.modules.IGuiCallback;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -121,20 +119,20 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 						IInventory inv = ((IInventory)tile);
 
 						for(int i = 0; i < inv.getSizeInventory(); i++) {
-							if(inv.getStackInSlot(i) == null)
+							if(inv.getStackInSlot(i).isEmpty())
 								rocketContainsItems = true;
 
 							//Loop though this inventory's slots and find a suitible one
 							for(int j = 0; j < getSizeInventory(); j++) {
-								if(inv.getStackInSlot(i) == null && inventory.getStackInSlot(j) != null) {
+								if((inv.getStackInSlot(i).isEmpty()) && !inventory.getStackInSlot(j).isEmpty()) {
 									if(isAllowedToOperate) {
 										inv.setInventorySlotContents(i, inventory.getStackInSlot(j));
-										inventory.setInventorySlotContents(j,null);
+										inventory.setInventorySlotContents(j,ItemStack.EMPTY);
 									}
 									rocketContainsItems = true;
 									break out;
 								}
-								else if(getStackInSlot(j) != null && inv.isItemValidForSlot(i, getStackInSlot(j)) && inv.getStackInSlot(i).getItem() == getStackInSlot(j).getItem() &&
+								else if(!getStackInSlot(j).isEmpty() && inv.isItemValidForSlot(i, getStackInSlot(j)) && inv.getStackInSlot(i).getItem() == getStackInSlot(j).getItem() &&
 										ItemStack.areItemStackTagsEqual(inv.getStackInSlot(i), getStackInSlot(j)) && inv.getStackInSlot(i).getMaxStackSize() != inv.getStackInSlot(i).getCount() ) {
 									if(isAllowedToOperate) {
 										ItemStack stack2 = inventory.decrStackSize(j, inv.getStackInSlot(i).getMaxStackSize() - inv.getStackInSlot(i).getCount());
@@ -142,7 +140,7 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 									}
 									rocketContainsItems = true;
 
-									if(inventory.getStackInSlot(j) == null)
+									if(inventory.getStackInSlot(j).isEmpty())
 										break out;
 
 									foundStack = true;

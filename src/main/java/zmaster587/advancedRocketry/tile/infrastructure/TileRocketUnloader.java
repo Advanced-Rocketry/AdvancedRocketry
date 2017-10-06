@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import zmaster587.advancedRocketry.api.IInfrastructure;
-import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.libVulpes.inventory.modules.IButtonInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleRedstoneOutputButton;
@@ -52,19 +51,19 @@ public class TileRocketUnloader extends TileRocketLoader implements IInfrastruct
 								rocketContainsNoItems = false;
 								//Loop though this inventory's slots and find a suitible one
 								for(int j = 0; j < getSizeInventory(); j++) {
-									if(getStackInSlot(j) == null) {
+									if(getStackInSlot(j).isEmpty()) {
 										if(isAllowedToOperate) {
 											inventory.setInventorySlotContents(j, inv.getStackInSlot(i));
-											inv.setInventorySlotContents(i,null);
+											inv.setInventorySlotContents(i,ItemStack.EMPTY);
 										}
 										break out;
 									}
-									else if(inv.getStackInSlot(i) != null && isItemValidForSlot(j, inv.getStackInSlot(i))) {
+									else if(!inv.getStackInSlot(i).isEmpty() && isItemValidForSlot(j, inv.getStackInSlot(i))) {
 										if(isAllowedToOperate) {
 											ItemStack stack2 = inv.decrStackSize(i, getStackInSlot(j).getMaxStackSize() - getStackInSlot(j).getCount());
 											getStackInSlot(j).setCount(getStackInSlot(j).getCount() + stack2.getCount());
 										}
-										if(inv.getStackInSlot(i) == null)
+										if(inv.getStackInSlot(i).isEmpty())
 											break out;
 										foundStack = true;
 									}

@@ -290,7 +290,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 
 
 						((TileRailgun)tile).onRecieveCargo(tfrStack);
-						inv2.setInventorySlotContents(index, null);
+						inv2.setInventorySlotContents(index, ItemStack.EMPTY);
 						inv2.markDirty();
 						world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 2);
 
