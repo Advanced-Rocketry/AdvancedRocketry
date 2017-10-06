@@ -132,7 +132,12 @@ public class DataStorage {
 	public void readFromNBT(NBTTagCompound nbt) {
 		data = nbt.getInteger("Data");
 		maxData = nbt.getInteger("maxData");
-		dataType = DataType.values()[nbt.getInteger("DataType")];
+		try {
+			dataType = DataType.values()[nbt.getInteger("DataType")];
+		} catch(ArrayIndexOutOfBoundsException e)
+		{
+			dataType = DataType.UNDEFINED;
+		}
 
 
 		///TODO: dev compat
