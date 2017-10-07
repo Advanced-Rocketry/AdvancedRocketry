@@ -159,6 +159,7 @@ public class ClassTransformer implements IClassTransformer {
 		//Vanilla deobf
 		String changedName = name.replace('.','/');
 
+		//Old stuff for directional gravity in 1.7.10 or 1.6.4
 		//Need to override setPosition to fix bounding boxes
 
 		/*if(changedName.equals(getName(CLASS_KEY_NETHANDLERPLAYSERVER))) {
@@ -588,36 +589,9 @@ public class ClassTransformer implements IClassTransformer {
 			return finishInjection(cn);
 		}*/
 
-		/*
-		 * from  net.minecraft.entity.player.EntityPlayer
-		 *  
-		 * public void mountEntity(Entity p_70078_1_)
-		 * {
-		 *     if (this.ridingEntity != null && p_70078_1_ == null)
-		 *     {
-		 *         if (!this.worldObj.isRemote)
-		 *         {
-		 *             this.dismountEntity(this.ridingEntity);
-		 *         }
-		 * 
-		 *         if (this.ridingEntity != null)
-		 *         {
-		 *         	//Begin insert
-		 *         	if(this.ridingEntity instanceof IDismountHandler)
-		 *         			this.ridingEntity.onDismount(this)
-		 *         			return;
-		 *         	//End Insert
-		 *             	this.ridingEntity.riddenByEntity = null;
-		 *         }
-		 * 
-		 *         this.ridingEntity = null;
-		 *     }
-		 *     else
-		 *     {
-		 *         super.mountEntity(p_70078_1_);
-		 *     }
-		 * }
-		 * */
+		
+		//was causing problems on startup, no idea what it does anymore,
+		//I need to apply better documentation practices
 		
 		/*if(changedName.equals(getName(CLASS_KEY_RENDER_GLOBAL))) {
 			ClassNode cn = startInjection(bytes);
@@ -667,44 +641,8 @@ public class ClassTransformer implements IClassTransformer {
 			return finishInjection(cn);
 		}*/
 		
-		/*if(changedName.equals(getName(CLASS_KEY_ENTITY_PLAYER))) {
-			ClassNode cn = startInjection(bytes);
-			MethodNode mountEntityMethod = getMethod(cn, getName(METHOD_KEY_MOUNTENTITY), "(L"+ getName(CLASS_KEY_ENTITY) + ";)V");
-
-			if(mountEntityMethod != null) {
-				final InsnList nodeAdd = new InsnList();
-				AbstractInsnNode pos = null;
-
-				for(int i = mountEntityMethod.instructions.size() - 1; i >= 0; i--) {
-					AbstractInsnNode ain = mountEntityMethod.instructions.get(i);
-					if(ain.getOpcode() == Opcodes.IFNULL) {
-						pos = ain;
-						break;
-					}
-				}
-
-				LabelNode jumpLabel = new LabelNode();
-				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 0));
-				nodeAdd.add(new FieldInsnNode(Opcodes.GETFIELD, getName(CLASS_KEY_ENTITY), getName(FIELD_RIDINGENTITY), "L" + getName(CLASS_KEY_ENTITY) + ";"));
-				nodeAdd.add(new TypeInsnNode(Opcodes.INSTANCEOF, "zmaster587/libVulpes/api/IDismountHandler"));
-				nodeAdd.add(new JumpInsnNode(Opcodes.IFEQ, jumpLabel));
-
-
-				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 0));
-				nodeAdd.add(new FieldInsnNode(Opcodes.GETFIELD, getName(CLASS_KEY_ENTITY), getName(FIELD_RIDINGENTITY), "L" + getName(CLASS_KEY_ENTITY) + ";"));
-				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 0));
-				nodeAdd.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "zmaster587/libVulpes/api/IDismountHandler", "handleDismount", "(L" + getName(CLASS_KEY_ENTITY) + ";)V", true));
-				nodeAdd.add(new InsnNode(Opcodes.RETURN));
-				nodeAdd.add(jumpLabel);
-
-				mountEntityMethod.instructions.insert(pos, nodeAdd);
-			}
-			else
-				AdvancedRocketry.logger.severe("ASM injection into EntityPlayer.mountEntity FAILED!");
-
-			return finishInjection(cn);
-		}*/
-		
+		//Inserts a hook to register inventories with rockets so they can be accessed from the UI
+		//By default in most cases inventories check for distance and rockets have their own coordinate system.
 		if(changedName.equals(getName(CLASS_KEY_ENTITY_PLAYER_MP))) {
 			ClassNode cn = startInjection(bytes);
 			MethodNode onUpdate = getMethod(cn, getName(METHOD_KEY_ONUPDATE), "()V");
@@ -746,6 +684,9 @@ public class ClassTransformer implements IClassTransformer {
 			
 			return finishInjection(cn);
 		}
+		
+		//Inserts a hook to register inventories with rockets so they can be accessed from the UI
+		//By default in most cases inventories check for distance and rockets have their own coordinate system.
 		if(changedName.equals(getName(CLASS_KEY_ENTITY_PLAYER))) {
 			ClassNode cn = startInjection(bytes);
 			MethodNode onUpdate = getMethod(cn, getName(METHOD_KEY_ONUPDATE), "()V");
@@ -790,6 +731,9 @@ public class ClassTransformer implements IClassTransformer {
 			
 			return finishInjection(cn);
 		}
+		
+		//Allows items to be affected by gravity
+		//Why isn't this handled by the onEntityUpdate call?
 		if(changedName.equals(getName(CLASS_KEY_ENTITY_ITEM))) {
 			ClassNode cn = startInjection(bytes);
 
@@ -868,32 +812,6 @@ public class ClassTransformer implements IClassTransformer {
 			}
 			else
 				AdvancedRocketry.logger.fatal("ASM injection into World.setBlock FAILED!");
-
-			/*if(setBlockMetaMethod != null) {
-
-				final InsnList nodeAdd = new InsnList();
-				AbstractInsnNode pos = null;
-				int fmulNum = 2;
-
-				for (int i = setBlockMetaMethod.instructions.size()-1; i >= 0 ; i--) {
-					AbstractInsnNode ain = setBlockMetaMethod.instructions.get(i);
-					if (ain.getOpcode() == Opcodes.IRETURN && --fmulNum == 0) {
-						pos = ain;
-						break;
-					}
-				}
-
-
-				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 0)); //this
-				nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 1)); //x
-				nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 2)); //y
-				nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 3)); //z
-				nodeAdd.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "zmaster587/advancedRocketry/atmosphere/AtmosphereHandler", "onBlockMetaChange", "(L" + getName(CLASS_KEY_WORLD) + ";III)V", false));
-
-				setBlockMetaMethod.instructions.insertBefore(pos, nodeAdd);
-			}			
-			else
-				AdvancedRocketry.logger.severe("ASM injection into World.setBlockMeta FAILED!");*/
 
 			return finishInjection(cn);
 		}
