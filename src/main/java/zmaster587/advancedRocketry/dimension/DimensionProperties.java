@@ -198,6 +198,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public float[] ringColor;
 	public float gravitationalMultiplier;
 	public int orbitalDist;
+	public float displaySizeMult;
 	private int originalAtmosphereDensity;
 	private int atmosphereDensity;
 	public int averageTemperature;
@@ -256,6 +257,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		customIcon = "";
 		harvestableAtmosphere = new LinkedList<Fluid>();
 		beaconLocations = new HashSet<HashedBlockPosition>();
+		displaySizeMult = 1f;
 	}
 
 	public DimensionProperties(int id ,String name) {
@@ -307,6 +309,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		hasRings = false;
 		harvestableAtmosphere = new LinkedList<Fluid>();
 		beaconLocations = new HashSet<HashedBlockPosition>();
+		displaySizeMult = 1f;
 	}
 
 	public List<Fluid> getHarvestableGasses() {
@@ -1409,5 +1412,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	@Override
 	public int getOrbitalDist() {
 		return orbitalDist;
+	}
+
+	public float getVisualSizeMultiplier() {
+		return displaySizeMult;
 	}
 }

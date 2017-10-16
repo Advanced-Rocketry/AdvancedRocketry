@@ -230,7 +230,12 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 				continue;
 
 			if(!properties.isMoon())
-				renderPlanets((DimensionProperties)properties, offsetX + displaySize/2, offsetY + displaySize/2, displaySize, distanceZoomMultiplier,planetSizeMultiplier);
+			{
+				
+				renderPlanets((DimensionProperties)properties, offsetX + (int)(((DimensionProperties)properties).getVisualSizeMultiplier()*displaySize/2), 
+						offsetY + (int)(((DimensionProperties)properties).getVisualSizeMultiplier()*displaySize/2), 
+						(int)(((DimensionProperties)properties).getVisualSizeMultiplier()*displaySize), distanceZoomMultiplier,planetSizeMultiplier);
+			}
 		}
 
 		moduleList.addAll(planetList);
@@ -255,7 +260,9 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 		for(Integer childId : planet.getChildPlanets()) {
 			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(childId);
-			renderPlanets(properties, offsetX + displaySize/2, offsetY + displaySize/2, displaySize, distanceZoomMultiplier, planetSizeMultiplier);
+			renderPlanets((DimensionProperties)properties, offsetX + (int)(((DimensionProperties)properties).getVisualSizeMultiplier()*displaySize/2), 
+					offsetY + (int)(((DimensionProperties)properties).getVisualSizeMultiplier()*displaySize/2), 
+					(int)(((DimensionProperties)properties).getVisualSizeMultiplier()*displaySize), distanceZoomMultiplier,planetSizeMultiplier);
 		}
 
 		moduleList.addAll(planetList);

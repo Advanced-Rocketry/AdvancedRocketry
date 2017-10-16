@@ -178,6 +178,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		float ringColor[] = new float[] {1f,1f,1f};
 		float sunSize = 1.0f;
 		float starSeperation = 0f;
+		float planetSize = 1f;
 		boolean isWarp = false;
 		boolean isGasGiant = false;
 		boolean hasRings = false;
@@ -220,6 +221,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 				isGasGiant = parentProperties.isGasGiant();
 				hasAtmosphere = parentProperties.hasAtmosphere();
 				planetOrbitalDistance = properties.getParentOrbitalDistance();
+				planetSize = properties.getVisualSizeMultiplier();
 				parentAtmColor = parentProperties.skyColor;
 				parentPlanetIcon = getTextureForPlanet(parentProperties);
 				parentHasRings = parentProperties.hasRings;
@@ -528,7 +530,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			}
 
 
-			renderPlanet2(buffer, parentPlanetIcon, 0,0,-100, (200-planetOrbitalDistance), multiplier, rotation, hasAtmosphere, parentAtmColor, parentRingColor, isGasGiant, false);
+			renderPlanet2(buffer, parentPlanetIcon, 0,0,-100, (200-planetOrbitalDistance)*planetSize, multiplier, rotation, hasAtmosphere, parentAtmColor, parentRingColor, isGasGiant, false);
 			GL11.glPopMatrix();
 		}
 
@@ -564,7 +566,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			//double rotation = Math.atan2(z,hyp );// - MathHelper.sin((float)moons.orbitTheta);//-Math.PI/2f + Math.atan2(x, y) - (moons.orbitTheta - Math.PI)*MathHelper.sin(phiAngle)*hyp;
 
 
-			renderPlanet(buffer, moons.getPlanetIcon(), moons.getParentOrbitalDistance()*(1/moons.gravitationalMultiplier), multiplier, rotation, moons.hasAtmosphere(), moons.skyColor, moons.ringColor, isGasGiant, moons.hasRings());
+			renderPlanet(buffer, moons.getPlanetIcon(), moons.getParentOrbitalDistance()*(1/(moons.gravitationalMultiplier*moons.getVisualSizeMultiplier())), multiplier, rotation, moons.hasAtmosphere(), moons.skyColor, moons.ringColor, isGasGiant, moons.hasRings());
 			GL11.glPopMatrix();
 		}
 
