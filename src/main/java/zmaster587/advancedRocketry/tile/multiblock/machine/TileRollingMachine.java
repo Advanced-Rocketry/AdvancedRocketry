@@ -6,7 +6,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundEvent;
@@ -60,37 +59,11 @@ public class TileRollingMachine extends TileMultiblockMachine {
 	@Override
 	public void registerRecipes() {
 		FluidStack water = new FluidStack(FluidRegistry.WATER, 100);
-        Item sheet = Item.getByNameOrId("libvulpes:productsheet");
-        Item plate = Item.getByNameOrId("libvulpes:productplate");
-        Item sheet2 = Item.getByNameOrId("advancedrocketry:productsheet");
-        Item plate2 = Item.getByNameOrId("advancedrocketry:productplate");
 		//Tanks
         RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 0), 100, 1, "sheetIron", "sheetIron", water);
         RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 1), 200, 2, "sheetSteel", "sheetSteel", water);
         RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 2), 100, 1, "sheetAluminum", "sheetAluminum", water);
         RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 3), 1000, 8, "sheetTitanium", "sheetTitanium", water);
-        
-        //Plates
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(plate, 1, 1), 100, 20, "ingotIron", water);
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(plate, 1, 2), 100, 20, "ingotGold", water);
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(plate, 1, 3), 100, 20, "ingotSilicon", water);
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(plate, 1, 4), 100, 20, "ingotCopper", water);
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(plate, 1, 5), 100, 20, "ingotTin", water);
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(plate, 1, 6), 100, 20, "ingotSteel", water);
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(plate, 1, 7), 100, 20, "ingotTitanium", water);
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(plate, 1, 9), 100, 20, "ingotAluminum", water);
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(plate, 1, 10), 100, 20, "ingotIridium", water);
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(plate2, 1, 0), 100, 20, "ingotTitaniumAluminide", water);
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(plate2, 1, 1), 100, 20, "ingotTitaniumIridium", water);
-        
-        //Sheets
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(sheet, 1, 1), 100, 200, "plateIron", water);
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(sheet, 1, 4), 100, 200, "plateCopper", water);
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(sheet, 1, 6), 100, 200, "plateSteel", water);
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(sheet, 1, 7), 100, 200, "plateTitanium", water);
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(sheet, 1, 9), 100, 200, "plateAluminum", water);
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(sheet2, 1, 0), 100, 200, "plateTitaniumAluminide", water);
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(sheet2, 1, 1), 100, 200, "plateTitaniumIridium", water);
 	}
 	
 	@Override
