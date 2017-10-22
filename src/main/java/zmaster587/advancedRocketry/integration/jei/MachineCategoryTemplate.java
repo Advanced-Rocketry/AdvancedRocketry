@@ -2,9 +2,10 @@ package zmaster587.advancedRocketry.integration.jei;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import mezz.jei.api.IGuiHelper;
@@ -13,11 +14,11 @@ import mezz.jei.api.gui.IGuiFluidStackGroup;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeCategory;
+import mezz.jei.api.recipe.IRecipeCategory;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 
-public abstract class MachineCategoryTemplate<T extends MachineRecipe> extends BlankRecipeCategory<T> {
+public abstract class MachineCategoryTemplate<T extends MachineRecipe> implements IRecipeCategory<T> {
 
 	IDrawable background;
 	ProgressBarImage bar;
@@ -55,12 +56,14 @@ public abstract class MachineCategoryTemplate<T extends MachineRecipe> extends B
 		
 		for(int i = 0; i < 10; i++ ) {
 			guiItemStacks.init(i, true,   18*(i%3),  18*(i/3));
-			guiFluidStacks.init(i, true,   18*(i%3) + 1,  18*(i/3) + 1);
+			
+			//Set capacity to 1mb to make sure it fills the screen
+			guiFluidStacks.init(i, true,   18*(i%3) + 1,  18*(i/3) + 1, 16, 16, 1, false, null);
 		}
 		
 		for(int i = 0; i < 10; i++ ) {
 			guiItemStacks.init(i+9, false, 108 + 18*(i%3),  18*(i/3));
-			guiFluidStacks.init(i+9, false, 108 + 18*(i%3) + 1,  18*(i/3) + 1);
+			guiFluidStacks.init(i+9, false, 108 + 18*(i%3) + 1,  18*(i/3) + 1, 16, 16, 1, false, null);
 		}
 		
 		int i = 0;
