@@ -213,7 +213,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 				//If scrubbers exist and the config allows then use the cartridge
 				if(Configuration.scrubberRequiresCartrige){
 					//TODO: could be optimized
-					if(world.getTotalWorldTime() % 20 == 0) {
+					if(world.getTotalWorldTime() % 200 == 0) {
 						numScrubbers = 0;
 						for(TileCO2Scrubber scrubber : scrubbers) {
 							numScrubbers = scrubber.useCharge() ? numScrubbers + 1 : numScrubbers;
