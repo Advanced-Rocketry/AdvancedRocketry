@@ -253,7 +253,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements INe
 				//If scrubbers exist and the config allows then use the cartridge
 				if(Configuration.scrubberRequiresCartrige){
 					//TODO: could be optimized
-					if(worldObj.getTotalWorldTime() % 20 == 0) {
+					if(worldObj.getTotalWorldTime() % 200 == 0) {
 						numScrubbers = 0;
 						for(TileCO2Scrubber scrubber : scrubbers) {
 							numScrubbers =  scrubber.useCharge() ? numScrubbers + 1 : numScrubbers;
