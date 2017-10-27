@@ -765,8 +765,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public SatelliteBase removeSatellite(long satalliteId) {
 		SatelliteBase satallite = satallites.remove(satalliteId);
 
-		//if(satallite != null && satallite.canTick())
-		tickingSatallites.remove(satalliteId);
+		if(satallite != null && satallite.canTick() && tickingSatallites.containsKey(satalliteId))
+			tickingSatallites.get(satalliteId).setDead();
 
 		return satallite;
 	}
