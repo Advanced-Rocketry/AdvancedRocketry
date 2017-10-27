@@ -203,7 +203,9 @@ public class RecipeHandler {
                                 .valueOfSafe(str.toUpperCase());
 
                         if (OreDictionary.doesOreNameExist("ingot" + str)
-                                && OreDictionary.getOres("ingot" + str).size() > 0
+                                && OreDictionary.getOres("ingot" + str).size() > 0 &&
+                                (OreDictionary.doesOreNameExist("plate" + str)
+                                        && OreDictionary.getOres("plate" + str).size() > 0)
                                 && (material == null || !AllowedProducts.getProductByName("PLATE")
                                         .isOfType(material.getAllowedProducts())))
                         {
