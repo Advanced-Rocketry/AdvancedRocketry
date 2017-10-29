@@ -134,11 +134,8 @@ curseforge{
   }
 }
 
-<<<<<<< HEAD
-task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
-=======
+
 task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask){
->>>>>>> 0f58df32c46cfcc229d26f7d7f06a12fecc9854b
     file = new File ("changelog.html")
     untaggedName = "Current release ${project.version}"
     fromCommit = startGitRev
