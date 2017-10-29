@@ -483,7 +483,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			DimensionProperties properties =  DimensionManager.getInstance().getDimensionProperties(currentSystem);
 
 			if(topLevel == -1 || currentSystem != topLevel) {
-				if(properties.isMoon())
+				if(currentSystem < starIdOffset && properties.isMoon())
 					currentSystem = properties.getParentPlanet();
 				else {
 					if(currentSystem >= starIdOffset) {
