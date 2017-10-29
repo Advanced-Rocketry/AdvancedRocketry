@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.world.biome;
 
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 
@@ -9,10 +10,8 @@ public class BiomeGenPumpkin extends Biome {
 	
 	public BiomeGenPumpkin(int biomeId, boolean register) {
 		super(new BiomeProperties("Pumpkin").setBaseHeight(1f).setHeightVariation(0.1f).setTemperature(0.9f).setRainDisabled());
-		
-		//cold and dry
-		registerBiome(biomeId, "Pumpkin", this);
-		
+	
+		this.setRegistryName(new ResourceLocation("advancedrocketry:Pumpkin"));
 		
 		this.decorator.generateFalls=false;
 		this.decorator.flowersPerChunk=0;
