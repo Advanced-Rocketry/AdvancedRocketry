@@ -150,6 +150,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		ICEWORLD(new ResourceLocation("advancedrocketry:textures/planets/IceWorld.png")),
 		GASGIANTBLUE(new ResourceLocation("advancedrocketry:textures/planets/GasGiantBlue.png")),
 		GASGIANTRED(new ResourceLocation("advancedrocketry:textures/planets/GasGiantOrange.png")),
+		SPOOPY(new ResourceLocation("advancedrocketry:textures/planets/spoopy.png")),
 		UNKNOWN(new ResourceLocation("advancedrocketry:textures/planets/Unknown.png"))
 		;
 
@@ -209,6 +210,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public double rotationalPhi;
 	public OreGenProperties oreProperties = null;
 	public String customIcon;
+	public boolean savePlanet;
 
 	StellarBody star;
 	int starId;
@@ -256,6 +258,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		customIcon = "";
 		harvestableAtmosphere = new LinkedList<Fluid>();
 		beaconLocations = new HashSet<HashedBlockPosition>();
+		savePlanet = true;
 	}
 
 	public DimensionProperties(int id ,String name) {
