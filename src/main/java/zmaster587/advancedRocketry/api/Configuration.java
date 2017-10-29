@@ -125,4 +125,8 @@ public class Configuration {
 	public static boolean dropExTorches;
 
 	public static double oxygenVentConsumptionMult;
+
+	public static boolean enableEvents;
+
+	public static int spoopyDimId;
 }

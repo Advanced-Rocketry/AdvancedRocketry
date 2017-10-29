@@ -473,7 +473,7 @@ public class XMLPlanetLoader {
 			}
 			
 			for(IDimensionProperties properties : star.getPlanets()) {
-				if(!properties.isMoon())
+				if(!properties.isMoon() && ((DimensionProperties)properties).savePlanet)
 					outputString = outputString + writePlanet((DimensionProperties)properties, 2);
 			}
 

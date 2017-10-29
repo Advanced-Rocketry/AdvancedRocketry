@@ -539,10 +539,12 @@ public class DimensionManager implements IGalaxy {
 
 		for(Entry<Integer, DimensionProperties> dimSet : dimensionList.entrySet()) {
 
-			dimNbt = new NBTTagCompound();
-			dimSet.getValue().writeToNBT(dimNbt);
-
-			dimListnbt.setTag(dimSet.getKey().toString(), dimNbt);
+			if(dimSet.getValue().savePlanet) {
+				dimNbt = new NBTTagCompound();
+				dimSet.getValue().writeToNBT(dimNbt);
+	
+				dimListnbt.setTag(dimSet.getKey().toString(), dimNbt);
+			}
 		}
 
 		nbt.setTag("dimList", dimListnbt);

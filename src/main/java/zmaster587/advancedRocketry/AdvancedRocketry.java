@@ -264,6 +264,7 @@ import zmaster587.advancedRocketry.world.biome.BiomeGenHotDryRock;
 import zmaster587.advancedRocketry.world.biome.BiomeGenMarsh;
 import zmaster587.advancedRocketry.world.biome.BiomeGenMoon;
 import zmaster587.advancedRocketry.world.biome.BiomeGenOceanSpires;
+import zmaster587.advancedRocketry.world.biome.BiomeGenPumpkin;
 import zmaster587.advancedRocketry.world.biome.BiomeGenSpace;
 import zmaster587.advancedRocketry.world.biome.BiomeGenStormland;
 import zmaster587.advancedRocketry.world.decoration.MapGenLander;
@@ -295,6 +296,10 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.InputSyncHandler;
 import zmaster587.libVulpes.util.SingleEntry;
+import java.time.Instant;
+import java.util.*;
+import org.apache.commons.io.FileUtils;
+
 
 
 @Mod(modid="advancedrocketry", name="Advanced Rocketry", version="@MAJOR@.@MINOR@.@REVIS@.@BUILD@", dependencies="required-after:libvulpes@[%LIBVULPESVERSION%,)")
@@ -357,7 +362,8 @@ public class AdvancedRocketry {
         AdvancedRocketryBiomes.swampDeepBiome = new BiomeGenDeepSwamp(config.get(BIOMECATETORY, "deepSwampBiomeId", 96).getInt(), true);
         AdvancedRocketryBiomes.marsh = new BiomeGenMarsh(config.get(BIOMECATETORY, "marsh", 97).getInt(), true);
         AdvancedRocketryBiomes.oceanSpires = new BiomeGenOceanSpires(config.get(BIOMECATETORY, "oceanSpires", 98).getInt(), true);
-
+        AdvancedRocketryBiomes.pumpkin = new BiomeGenPumpkin(config.get(BIOMECATETORY, "pumpkin", 99).getInt(), true);
+        
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.moonBiome, evt.getRegistry());
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.alienForest, evt.getRegistry());
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.hotDryBiome, evt.getRegistry());
@@ -426,7 +432,9 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.oxygenVentSize = config.get(PERFORMANCE, "oxygenVentSize", 32, "Radius of the O2 vent.  if atmosphereCalculationMethod is 2 or 3 then max volume is calculated from this radius.  WARNING: larger numbers can lead to lag").getInt();
 		zmaster587.advancedRocketry.api.Configuration.oxygenVentConsumptionMult = config.get(Configuration.CATEGORY_GENERAL, "oxygenVentConsumptionMultiplier", 1f, "Multiplier on how much O2 an oxygen vent consumes per tick").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.gravityAffectsFuel = config.get(Configuration.CATEGORY_GENERAL, "gravityAffectsFuels", true, "If true planets with higher gravity require more fuel and lower gravity would require less").getBoolean();
-
+		zmaster587.advancedRocketry.api.Configuration.enableEvents = config.get(Configuration.CATEGORY_GENERAL, "AllowSeasonalEvents", true, "Enables spoopiness and cheer").getBoolean();
+		zmaster587.advancedRocketry.api.Configuration.spoopyDimId = config.get(Configuration.CATEGORY_GENERAL, "HalloweenPlanetID", 5003).getInt();
+		
 		zmaster587.advancedRocketry.api.Configuration.advancedVFX = config.get(PERFORMANCE, "advancedVFX", true, "Advanced visual effects").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.gasCollectionMult = config.get(GAS_MINING, "gasMissionMultiplier", 1.0, "Multiplier for the amount of time gas collection missions take").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.asteroidMiningTimeMult = config.get(ASTEROID, "miningMissionTmeMultiplier", 1.0, "Multiplier changing how long a mining mission takes").getDouble();
@@ -2023,6 +2031,26 @@ public class AdvancedRocketry {
 				int numRandomGeneratedGasGiants = loader.getMaxNumGasGiants(star);
 				generateRandomPlanets(star, numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
 			}
+		}
+		
+		//Halloween event registration
+		if(zmaster587.advancedRocketry.api.Configuration.enableEvents && zmaster587.advancedRocketry.api.Configuration.spoopyDimId != -1 && Date.from(Instant.now()).getMonth() == 9 )
+		{
+			DimensionProperties pumpkinSpice = new DimensionProperties(zmaster587.advancedRocketry.api.Configuration.spoopyDimId, "Spoopy World");
+			pumpkinSpice.orbitalDist = 204;
+			pumpkinSpice.skyColor = new float[]{0.6f, 0.1f, 0.1f};
+			pumpkinSpice.savePlanet = false;
+			pumpkinSpice.rotationalPeriod = 5000;
+			pumpkinSpice.setAtmosphereDensityDirect(80);
+			pumpkinSpice.customIcon = "spoopy";
+			List<Biome> biomes = new LinkedList<Biome>();
+			biomes.add(AdvancedRocketryBiomes.pumpkin);
+			pumpkinSpice.setBiomes(biomes);
+			pumpkinSpice.setStar(DimensionManager.getInstance().getStar(0));
+			
+			DimensionManager.getInstance().registerDimNoUpdate(pumpkinSpice, true);
+			
+			DimensionManager.getInstance().knownPlanets.add(pumpkinSpice.getId());
 		}
 
 		// make sure to set dim offset back to original to make things consistant
