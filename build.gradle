@@ -86,6 +86,7 @@ dependencies {
     deobfCompile "mezz.jei:jei_1.11.2:4.3.5.277:api"
     // at runtime, use the full JEI jar
     runtime "mezz.jei:jei_1.11.2:4.3.5.277"
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
 
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
@@ -133,7 +134,11 @@ curseforge{
   }
 }
 
+<<<<<<< HEAD
 task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
+=======
+task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask){
+>>>>>>> 0f58df32c46cfcc229d26f7d7f06a12fecc9854b
     file = new File ("changelog.html")
     untaggedName = "Current release ${project.version}"
     fromCommit = startGitRev
@@ -166,6 +171,5 @@ tasks.build.dependsOn makeChangelog
         tag 'Local'
     }
 
-    tag System.getProperty('os.name')                                            
-}
-*/
+    tag System.getProperty('os.name')
+}*/
