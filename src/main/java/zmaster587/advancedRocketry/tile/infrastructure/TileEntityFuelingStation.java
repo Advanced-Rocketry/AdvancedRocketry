@@ -145,30 +145,40 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	//Yes i was lazy
 	//TODO: make better
 	//Returns true if bucket was actually used
+	//TODO centralize
 	private boolean useBucket( int slot, ItemStack stack) {
 		if(slot == 0 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP)) {
 			IFluidHandlerItem fluidItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
 			FluidStack fluidStack = fluidItem.getTankProperties()[0].getContents();
-			
+
 			if(fluidStack != null && FuelRegistry.instance.isFuel(FuelType.LIQUID, fluidStack.getFluid()) && tank.getFluidAmount() + fluidItem.getTankProperties()[0].getCapacity() <= tank.getCapacity()) {
 
 				ItemStack emptyContainer = stack.copy();
 				emptyContainer.setCount(1);
 				emptyContainer.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP).drain(8000, true);
-				emptyContainer = emptyContainer.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP).getContainer();
 
-				if(!emptyContainer.isEmpty() && inventory.getStackInSlot(1).isEmpty() || (emptyContainer.isItemEqual(inventory.getStackInSlot(1)) && inventory.getStackInSlot(1).getCount() < inventory.getStackInSlot(1).getMaxStackSize())) {
+				//disposable tank
+				if(emptyContainer.isEmpty()) {
 					tank.fill(fluidStack, true);
-
-					if(inventory.getStackInSlot(1).isEmpty())
-						super.setInventorySlotContents(1, emptyContainer);
-					else {
-						inventory.getStackInSlot(1).setCount(inventory.getStackInSlot(1).getCount() + 1);
-					}
 					decrStackSize(0, 1);
 				}
-				else 
-					return false;
+				else
+				{
+					emptyContainer = emptyContainer.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP).getContainer();
+
+					if(!emptyContainer.isEmpty() && inventory.getStackInSlot(1).isEmpty() || (emptyContainer.isItemEqual(inventory.getStackInSlot(1)) && inventory.getStackInSlot(1).getCount() < inventory.getStackInSlot(1).getMaxStackSize())) {
+						tank.fill(fluidStack, true);
+
+						if(inventory.getStackInSlot(1).isEmpty())
+							super.setInventorySlotContents(1, emptyContainer);
+						else {
+							inventory.getStackInSlot(1).setCount(inventory.getStackInSlot(1).getCount() + 1);
+						}
+						decrStackSize(0, 1);
+					}
+					else 
+						return false;
+				}
 			}
 			else
 				return false;
