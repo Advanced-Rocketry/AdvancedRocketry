@@ -130,7 +130,6 @@ public class PacketDimInfo extends BasePacket {
 			}
 			else if( DimensionManager.getInstance().isDimensionCreated(dimNumber) ) {
 				dimProperties.oreProperties = DimensionManager.getInstance().getDimensionProperties(dimNumber).oreProperties;
-				dimProperties.savePlanet = DimensionManager.getInstance().getDimensionProperties(dimNumber).savePlanet;
 				dimProperties.getRequiredArtifacts().clear();
 				dimProperties.getRequiredArtifacts().addAll(artifacts);
 				dimProperties.customIcon = DimensionManager.getInstance().getDimensionProperties(dimNumber).customIcon;

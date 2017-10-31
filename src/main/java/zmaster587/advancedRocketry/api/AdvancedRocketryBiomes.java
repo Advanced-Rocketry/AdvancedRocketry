@@ -29,7 +29,6 @@ public class AdvancedRocketryBiomes {
 	public static Biome swampDeepBiome;
 	public static Biome marsh;
 	public static Biome oceanSpires;
-	public static Biome pumpkin;
 
 	private AdvancedRocketryBiomes() {
 		registeredBiomes = new ArrayList<Biome>();

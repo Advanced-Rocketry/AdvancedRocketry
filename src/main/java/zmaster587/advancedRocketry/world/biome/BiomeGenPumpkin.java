@@ -13,7 +13,7 @@ public class BiomeGenPumpkin extends Biome {
 	
 		this.setRegistryName(new ResourceLocation("advancedrocketry:Pumpkin"));
 		
-		this.decorator.generateFalls=false;
+		this.decorator.generateLakes=false;
 		this.decorator.flowersPerChunk=0;
 		this.decorator.grassPerChunk=5;
 		this.decorator.treesPerChunk=0;
