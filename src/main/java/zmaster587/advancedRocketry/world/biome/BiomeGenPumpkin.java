@@ -14,10 +14,10 @@ public class BiomeGenPumpkin extends Biome {
 		registerBiome(biomeId, "Pumpkin", this);
 		
 		
-		this.decorator.generateLakes=false;
-		this.decorator.flowersPerChunk=0;
-		this.decorator.grassPerChunk=5;
-		this.decorator.treesPerChunk=0;
+		this.theBiomeDecorator.generateLakes=false;
+		this.theBiomeDecorator.flowersPerChunk=0;
+		this.theBiomeDecorator.grassPerChunk=5;
+		this.theBiomeDecorator.treesPerChunk=0;
 		this.fillerBlock = Blocks.DIRT.getDefaultState();
 		this.topBlock = Blocks.PUMPKIN.getDefaultState();
 		
