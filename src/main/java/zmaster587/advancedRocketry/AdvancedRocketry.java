@@ -367,7 +367,6 @@ public class AdvancedRocketry {
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.swampDeepBiome, evt.getRegistry());
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.marsh, evt.getRegistry());
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.oceanSpires, evt.getRegistry());
-        AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.pumpkin, evt.getRegistry());
 	}
 
 	@EventHandler
