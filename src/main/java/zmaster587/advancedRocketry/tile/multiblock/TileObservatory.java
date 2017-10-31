@@ -189,6 +189,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 			if(openProgress < openTime)
 				openProgress++;
+			else super.update();
 		}
 		else if(openProgress > 0) {
 
@@ -211,6 +212,14 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 	@Override
 	protected void processComplete() {
+		super.processComplete();
+		completionTime = observationtime;
+		int amount = 25;
+
+		for (TileDataBus datum : dataCables) {
+		    amount -= datum.addData(amount, DataStorage.DataType.DISTANCE, EnumFacing.UP, true);
+		    if (amount == 0) break;
+		}
 	}
 
 	@Override
