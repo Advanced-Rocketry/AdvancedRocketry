@@ -44,7 +44,7 @@ public class GravityHandler implements IGravityManager {
 
 	public static void applyGravity(Entity entity) {
 		
-		
+		if(entity.hasNoGravity()) return;
 		if(!entity.isInWater() || entity instanceof EntityItem) {
 			if(!(entity instanceof EntityPlayer) || !((EntityPlayer)entity).capabilities.isFlying) {
 				Double d;
