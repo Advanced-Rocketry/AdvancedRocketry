@@ -129,6 +129,7 @@ import zmaster587.advancedRocketry.item.components.ItemUpgrade;
 import zmaster587.advancedRocketry.item.tools.ItemBasicLaserGun;
 import zmaster587.advancedRocketry.mission.MissionGasCollection;
 import zmaster587.advancedRocketry.mission.MissionOreMining;
+import zmaster587.advancedRocketry.network.PacketAsteroidInfo;
 import zmaster587.advancedRocketry.network.PacketAtmSync;
 import zmaster587.advancedRocketry.network.PacketBiomeIDChange;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
@@ -425,6 +426,7 @@ public class AdvancedRocketry {
 		PacketHandler.addDiscriminator(PacketBiomeIDChange.class);
 		PacketHandler.addDiscriminator(PacketStorageTileUpdate.class);
 		PacketHandler.addDiscriminator(PacketLaserGun.class);
+		PacketHandler.addDiscriminator(PacketAsteroidInfo.class);
 
 		//if(zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods)
 		MinecraftForge.EVENT_BUS.register(this);

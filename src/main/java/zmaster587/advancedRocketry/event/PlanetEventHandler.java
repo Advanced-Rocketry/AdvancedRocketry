@@ -51,10 +51,12 @@ import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.network.PacketAsteroidInfo;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.advancedRocketry.util.BiomeHandler;
 import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
@@ -70,6 +72,7 @@ import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -301,9 +304,27 @@ public class PlanetEventHandler {
 		}
 
 		PacketHandler.sendToDispatcher(new PacketDimInfo(0, DimensionManager.getInstance().getDimensionProperties(0)), event.manager);
-
+		
+		
+		for(Entry<String, AsteroidSmall> ent : zmaster587.advancedRocketry.api.Configuration.asteroidTypes.entrySet())
+		{
+			PacketHandler.sendToDispatcher(new PacketAsteroidInfo(ent.getValue()), event.manager);
+		}
 	}
 
+	@SubscribeEvent
+	public void connectToServer(ClientConnectedToServerEvent event) 
+	{
+		zmaster587.advancedRocketry.api.Configuration.prevAsteroidTypes = zmaster587.advancedRocketry.api.Configuration.asteroidTypes;
+		zmaster587.advancedRocketry.api.Configuration.asteroidTypes = new HashMap<String, AsteroidSmall>();
+	}
+	
+	@SubscribeEvent
+	public void disconnectFromServer(ClientDisconnectionFromServerEvent event)
+	{
+		zmaster587.advancedRocketry.api.Configuration.asteroidTypes = zmaster587.advancedRocketry.api.Configuration.prevAsteroidTypes;
+	}
+	
 
 	// Used to save extra biome data
 	/*@SubscribeEvent
