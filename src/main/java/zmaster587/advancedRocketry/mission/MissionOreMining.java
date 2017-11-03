@@ -81,7 +81,7 @@ public class MissionOreMining extends MissionResourceCollection {
 
 
 							for(int offset = 0; offset < tile.getSizeInventory() && g < stacks.length; offset++, g++) {
-								if(tile.getStackInSlot(offset) == null)
+								if(tile.getStackInSlot(offset).isEmpty())
 									tile.setInventorySlotContents(offset, stacks[g]);
 							}
 						}
