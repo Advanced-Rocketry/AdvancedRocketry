@@ -126,4 +126,6 @@ public class Configuration {
 	public static boolean dropExTorches;
 
 	public static double oxygenVentConsumptionMult;
+
+	public static int terraformPlanetSpeed;
 }
