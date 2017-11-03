@@ -33,7 +33,6 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
@@ -57,6 +56,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
@@ -141,7 +141,6 @@ public class PlanetEventHandler {
 	public void onPickup(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent event) {
 		if(event.pickedUp != null && !event.pickedUp.getEntityItem().isEmpty()) {
 
-
 			zmaster587.libVulpes.api.material.Material mat = LibVulpes.materialRegistry.getMaterialFromItemStack( event.pickedUp.getEntityItem());
 			if(mat != null && mat.getUnlocalizedName().contains("Dilithium"))
 				event.player.addStat(ARAchivements.dilithiumCrystals);
@@ -203,6 +202,7 @@ public class PlanetEventHandler {
 
 		if(!event.getWorld().isRemote && event.getItemStack() != null && event.getItemStack().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
 			event.getEntityPlayer().addStat(ARAchivements.beerOnTheSun);
+
 		}
 	}
 
@@ -275,8 +275,8 @@ public class PlanetEventHandler {
 		}
 
 		PacketHandler.sendToDispatcher(new PacketDimInfo(0, DimensionManager.getInstance().getDimensionProperties(0)), event.getManager());
-		
-		
+
+
 		for(Entry<String, AsteroidSmall> ent : zmaster587.advancedRocketry.api.Configuration.asteroidTypes.entrySet())
 		{
 			PacketHandler.sendToDispatcher(new PacketAsteroidInfo(ent.getValue()), event.getManager());
@@ -289,13 +289,13 @@ public class PlanetEventHandler {
 		zmaster587.advancedRocketry.api.Configuration.prevAsteroidTypes = zmaster587.advancedRocketry.api.Configuration.asteroidTypes;
 		zmaster587.advancedRocketry.api.Configuration.asteroidTypes = new HashMap<String, AsteroidSmall>();
 	}
-	
+
 	@SubscribeEvent
 	public void disconnectFromServer(ClientDisconnectionFromServerEvent event)
 	{
 		zmaster587.advancedRocketry.api.Configuration.asteroidTypes = zmaster587.advancedRocketry.api.Configuration.prevAsteroidTypes;
 	}
-	
+
 
 	// Used to save extra biome data
 	/*@SubscribeEvent
@@ -406,15 +406,21 @@ public class PlanetEventHandler {
 
 			if(DimensionManager.getInstance().getDimensionProperties(event.world.provider.getDimension()).isTerraformed()) {
 				Collection<Chunk> list = ((WorldServer)event.world).getChunkProvider().getLoadedChunks();
+				int listSize = list.size();
+
 				if(list.size() > 0) {
 					try {
-					for(Chunk chunk : list) {
-						int coord = event.world.rand.nextInt(256);
-						int x = (coord & 0xF) + chunk.x*16;
-						int z = (coord >> 4) + chunk.z*16;
+						if(Configuration.terraformingBlockSpeed > listSize || event.world.rand.nextFloat() < Configuration.terraformingBlockSpeed/(float)listSize)
+						{
+							for(Chunk chunk : list) {
+								int coord = event.world.rand.nextInt(256);
+								int x = (coord & 0xF) + chunk.x*16;
+								int z = (coord >> 4) + chunk.z*16;
 
-						BiomeHandler.changeBiome(event.world, Biome.getIdForBiome(((ChunkManagerPlanet)((WorldProviderPlanet)event.world.provider).chunkMgrTerraformed).getBiomeGenAt(x,z)), x, z);
-					}
+								BiomeHandler.changeBiome(event.world, Biome.getIdForBiome(((ChunkManagerPlanet)((WorldProviderPlanet)event.world.provider).chunkMgrTerraformed).getBiomeGenAt(x,z)), x, z);
+							}
+						}
+
 					} catch (NullPointerException e) {
 						//Ghost
 					}
