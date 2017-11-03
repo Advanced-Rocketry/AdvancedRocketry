@@ -38,7 +38,7 @@ public class MissionOreMining extends MissionResourceCollection {
 
 			ItemStack stack = rocketStorage.getGuidanceComputer().getStackInSlot(0);
 
-			if(stack != null && stack.getItem() instanceof ItemAsteroidChip) {
+			if(!stack.isEmpty() && stack.getItem() instanceof ItemAsteroidChip) {
 
 				distanceData = ((ItemAsteroidChip)stack.getItem()).getData(stack,DataType.DISTANCE);
 				compositionData = ((ItemAsteroidChip)stack.getItem()).getData(stack,DataType.COMPOSITION);
@@ -81,7 +81,7 @@ public class MissionOreMining extends MissionResourceCollection {
 
 
 							for(int offset = 0; offset < tile.getSizeInventory() && g < stacks.length; offset++, g++) {
-								if(tile.getStackInSlot(offset) == null)
+								if(tile.getStackInSlot(offset).isEmpty())
 									tile.setInventorySlotContents(offset, stacks[g]);
 							}
 						}
