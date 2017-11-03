@@ -50,7 +50,7 @@ public class AtmosphereHighPressure extends AtmosphereType{
 		ItemStack chest = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 		ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
-		return (player instanceof EntityPlayer && ((EntityPlayer)player).capabilities.isCreativeMode) 
+		return (player instanceof EntityPlayer && (((EntityPlayer)player).capabilities.isCreativeMode) || ((EntityPlayer)player).isSpectator()) 
 				|| player.getRidingEntity() instanceof EntityRocketBase || player.getRidingEntity() instanceof EntityElevatorCapsule ||
 				protectsFrom(helm) && protectsFrom(leg) && protectsFrom(feet) && protectsFrom(chest);
 	}
