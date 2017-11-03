@@ -107,7 +107,8 @@ public class Configuration {
 	public static boolean lockUI;
 
 	public static HashMap<String, AsteroidSmall> asteroidTypes = new HashMap<String, AsteroidSmall>();
-
+	public static HashMap<String, AsteroidSmall> prevAsteroidTypes = new HashMap<String, AsteroidSmall>();
+	
 	public static int oxygenVentSize;
 
 	public static int solarGeneratorMult;
