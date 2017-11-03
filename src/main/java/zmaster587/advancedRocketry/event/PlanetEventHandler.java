@@ -50,6 +50,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
@@ -86,22 +87,22 @@ public class PlanetEventHandler {
 	public void onCrafting(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent event) {
 		if(event.crafting != null) {
 			Item item = event.crafting.getItem();//TODO Advancments for crafting.
-//			if(item == LibVulpesItems.itemHoloProjector) 
-//				event.player.addStat(ARAchivements.holographic);
-//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockRollingMachine))
-//				event.player.addStat(ARAchivements.rollin);
-//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockCrystallizer))
-//				event.player.addStat(ARAchivements.crystalline);
-//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockLathe))
-//				event.player.addStat(ARAchivements.spinDoctor);
-//			else if(item ==Item.getItemFromBlock(AdvancedRocketryBlocks.blockElectrolyser))
-//				event.player.addStat(ARAchivements.electrifying);
-//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockArcFurnace))
-//				event.player.addStat(ARAchivements.feelTheHeat);
-//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockWarpCore))
-//				event.player.addStat(ARAchivements.warp);
-//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockPlatePress))
-//				event.player.addStat(ARAchivements.blockPresser);
+			//			if(item == LibVulpesItems.itemHoloProjector) 
+			//				event.player.addStat(ARAchivements.holographic);
+			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockRollingMachine))
+			//				event.player.addStat(ARAchivements.rollin);
+			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockCrystallizer))
+			//				event.player.addStat(ARAchivements.crystalline);
+			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockLathe))
+			//				event.player.addStat(ARAchivements.spinDoctor);
+			//			else if(item ==Item.getItemFromBlock(AdvancedRocketryBlocks.blockElectrolyser))
+			//				event.player.addStat(ARAchivements.electrifying);
+			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockArcFurnace))
+			//				event.player.addStat(ARAchivements.feelTheHeat);
+			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockWarpCore))
+			//				event.player.addStat(ARAchivements.warp);
+			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockPlatePress))
+			//				event.player.addStat(ARAchivements.blockPresser);
 		}
 	}
 	@SubscribeEvent
@@ -132,10 +133,10 @@ public class PlanetEventHandler {
 	public void onPickup(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent event) {
 		if(event.pickedUp != null && !event.pickedUp.getItem().isEmpty()) {
 
-//TODO pickup advancment
-//			zmaster587.libVulpes.api.material.Material mat = LibVulpes.materialRegistry.getMaterialFromItemStack( event.pickedUp.getEntityItem());
-//			if(mat != null && mat.getUnlocalizedName().contains("Dilithium"))
-//				event.player.addStat(ARAchivements.dilithiumCrystals);
+			//TODO pickup advancment
+			//			zmaster587.libVulpes.api.material.Material mat = LibVulpes.materialRegistry.getMaterialFromItemStack( event.pickedUp.getEntityItem());
+			//			if(mat != null && mat.getUnlocalizedName().contains("Dilithium"))
+			//				event.player.addStat(ARAchivements.dilithiumCrystals);
 		}
 	}
 
@@ -154,10 +155,10 @@ public class PlanetEventHandler {
 		if(!event.getEntity().world.isRemote && event.getEntity().world.getTotalWorldTime() % 20 ==0 && event.getEntity() instanceof EntityPlayer) {
 			if(DimensionManager.getInstance().getDimensionProperties(event.getEntity().world.provider.getDimension()).getName().equals("Luna") && 
 					event.getEntity().getPosition().distanceSq(67, 80, 2347) < 512 ) {
-//				((EntityPlayer)event.getEntity()).addStat(ARAchivements.weReallyWentToTheMoon);//TODO advancment trigger
+				//				((EntityPlayer)event.getEntity()).addStat(ARAchivements.weReallyWentToTheMoon);//TODO advancment trigger
 			}	
 		}
-		
+
 		GravityHandler.applyGravity(event.getEntity());
 	}
 
@@ -195,7 +196,7 @@ public class PlanetEventHandler {
 		}
 
 		if(!event.getWorld().isRemote && event.getItemStack() != null && event.getItemStack().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
-//			event.getEntityPlayer().addStat(ARAchivements.beerOnTheSun);
+			//			event.getEntityPlayer().addStat(ARAchivements.beerOnTheSun);
 		}
 	}
 
@@ -268,8 +269,8 @@ public class PlanetEventHandler {
 		}
 
 		PacketHandler.sendToDispatcher(new PacketDimInfo(0, DimensionManager.getInstance().getDimensionProperties(0)), event.getManager());
-		
-		
+
+
 		for(Entry<String, AsteroidSmall> ent : zmaster587.advancedRocketry.api.Configuration.asteroidTypes.entrySet())
 		{
 			PacketHandler.sendToDispatcher(new PacketAsteroidInfo(ent.getValue()), event.getManager());
@@ -282,13 +283,13 @@ public class PlanetEventHandler {
 		zmaster587.advancedRocketry.api.Configuration.prevAsteroidTypes = zmaster587.advancedRocketry.api.Configuration.asteroidTypes;
 		zmaster587.advancedRocketry.api.Configuration.asteroidTypes = new HashMap<String, AsteroidSmall>();
 	}
-	
+
 	@SubscribeEvent
 	public void disconnectFromServer(ClientDisconnectionFromServerEvent event)
 	{
 		zmaster587.advancedRocketry.api.Configuration.asteroidTypes = zmaster587.advancedRocketry.api.Configuration.prevAsteroidTypes;
 	}
-	
+
 
 	// Used to save extra biome data
 	/*@SubscribeEvent
@@ -401,13 +402,19 @@ public class PlanetEventHandler {
 				Collection<Chunk> list = ((WorldServer)event.world).getChunkProvider().getLoadedChunks();
 				if(list.size() > 0) {
 					try {
-					for(Chunk chunk : list) {
-						int coord = event.world.rand.nextInt(256);
-						int x = (coord & 0xF) + chunk.x*16;
-						int z = (coord >> 4) + chunk.z*16;
+						int listSize = list.size();
 
-						BiomeHandler.changeBiome(event.world, Biome.getIdForBiome(((ChunkManagerPlanet)((WorldProviderPlanet)event.world.provider).chunkMgrTerraformed).getBiomeGenAt(x,z)), x, z);
-					}
+						for(Chunk chunk : list) {
+
+							if(Configuration.terraformingBlockSpeed > listSize || event.world.rand.nextFloat() < Configuration.terraformingBlockSpeed/(float)listSize)
+							{
+								int coord = event.world.rand.nextInt(256);
+								int x = (coord & 0xF) + chunk.x*16;
+								int z = (coord >> 4) + chunk.z*16;
+
+								BiomeHandler.changeBiome(event.world, Biome.getIdForBiome(((ChunkManagerPlanet)((WorldProviderPlanet)event.world.provider).chunkMgrTerraformed).getBiomeGenAt(x,z)), x, z);
+							}
+						}
 					} catch (NullPointerException e) {
 						//Ghost
 					}
