@@ -42,7 +42,7 @@ public class PacketAsteroidInfo extends BasePacket {
 		packetBuffer.writeInt(asteroid.stackProbabilites.size());
 		for(int i = 0; i < asteroid.stackProbabilites.size(); i++)
 		{
-			packetBuffer.writeItemStackToBuffer(asteroid.itemStacks.get(i));
+			packetBuffer.writeItemStack(asteroid.itemStacks.get(i));
 			packetBuffer.writeFloat(asteroid.stackProbabilites.get(i));
 		}
 	}
@@ -51,7 +51,7 @@ public class PacketAsteroidInfo extends BasePacket {
 	public void readClient(ByteBuf in) {
 		PacketBuffer packetBuffer = new PacketBuffer(in);
 		
-		asteroid.ID = packetBuffer.readStringFromBuffer(128);
+		asteroid.ID = packetBuffer.readString(128);
 		asteroid.distance = packetBuffer.readInt();
 		asteroid.mass = packetBuffer.readInt();
 		asteroid.minLevel = packetBuffer.readInt();
@@ -65,7 +65,7 @@ public class PacketAsteroidInfo extends BasePacket {
 		for(int i = 0; i < size; i++)
 		{
 			try {
-				asteroid.itemStacks.add(packetBuffer.readItemStackFromBuffer());
+				asteroid.itemStacks.add(packetBuffer.readItemStack());
 				asteroid.stackProbabilites.add(packetBuffer.readFloat());
 			} catch (IOException e) {
 				e.printStackTrace();
