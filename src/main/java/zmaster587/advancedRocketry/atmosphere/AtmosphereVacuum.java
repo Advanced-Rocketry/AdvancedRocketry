@@ -16,6 +16,7 @@ import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
 import zmaster587.advancedRocketry.entity.EntityElevatorCapsule;
 import zmaster587.advancedRocketry.network.PacketOxygenState;
 import zmaster587.advancedRocketry.util.ItemAirUtils;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.network.PacketHandler;
 
 /**
@@ -44,7 +45,7 @@ public class AtmosphereVacuum extends AtmosphereType {
 
 	@Override
 	public String getDisplayMessage() {
-		return "Warning: No Oxygen detected!";
+		return LibVulpes.proxy.getLocalizedString("msg.noOxygen");
 	}
 
 	@Override
