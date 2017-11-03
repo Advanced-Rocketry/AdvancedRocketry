@@ -147,7 +147,6 @@ public class PlanetEventHandler {
 		if(event.pickedUp != null) {
 			Item item = event.pickedUp.getEntityItem().getItem();
 
-
 			zmaster587.libVulpes.api.material.Material mat = LibVulpes.materialRegistry.getMaterialFromItemStack( event.pickedUp.getEntityItem());
 			if(mat != null && mat.getUnlocalizedName().contains("Dilithium"))
 				event.player.triggerAchievement(ARAchivements.dilithiumCrystals);
@@ -197,7 +196,6 @@ public class PlanetEventHandler {
 			AdvancedRocketryItems.itemAstroBed.onItemUse( event.entityPlayer.getCurrentEquippedItem(),  event.entityPlayer,  event.entityPlayer.worldObj, event.x, event.y, event.z, event.face, 0, 0, 0);
 			event.setCanceled(true);
 		}
-
 		if(!event.world.isRemote && event.entityPlayer != null && event.entityPlayer.getCurrentEquippedItem() != null && event.entityPlayer.getCurrentEquippedItem().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.world.getBlock(event.x, event.y, event.z) == Blocks.tnt) {
 			event.entityPlayer.triggerAchievement(ARAchivements.beerOnTheSun);
 		}
@@ -304,8 +302,8 @@ public class PlanetEventHandler {
 		}
 
 		PacketHandler.sendToDispatcher(new PacketDimInfo(0, DimensionManager.getInstance().getDimensionProperties(0)), event.manager);
-		
-		
+
+
 		for(Entry<String, AsteroidSmall> ent : zmaster587.advancedRocketry.api.Configuration.asteroidTypes.entrySet())
 		{
 			PacketHandler.sendToDispatcher(new PacketAsteroidInfo(ent.getValue()), event.manager);
@@ -318,13 +316,13 @@ public class PlanetEventHandler {
 		zmaster587.advancedRocketry.api.Configuration.prevAsteroidTypes = zmaster587.advancedRocketry.api.Configuration.asteroidTypes;
 		zmaster587.advancedRocketry.api.Configuration.asteroidTypes = new HashMap<String, AsteroidSmall>();
 	}
-	
+
 	@SubscribeEvent
 	public void disconnectFromServer(ClientDisconnectionFromServerEvent event)
 	{
 		zmaster587.advancedRocketry.api.Configuration.asteroidTypes = zmaster587.advancedRocketry.api.Configuration.prevAsteroidTypes;
 	}
-	
+
 
 	// Used to save extra biome data
 	/*@SubscribeEvent
@@ -431,14 +429,18 @@ public class PlanetEventHandler {
 
 			if(DimensionManager.getInstance().getDimensionProperties(event.world.provider.dimensionId).isTerraformed()) {
 				List<Chunk> list = ((WorldServer)event.world).theChunkProviderServer.loadedChunks;
+				int listSize = list.size();
 				if(list.size() > 0) {
-					for(int i = 0; i < Configuration.terraformingBlockSpeed; i++) {
-						Chunk chunk = list.get(event.world.rand.nextInt(list.size()));
-						int coord = event.world.rand.nextInt(256);
-						int x = (coord & 0xF) + chunk.xPosition*16;
-						int z = (coord >> 4) + chunk.zPosition*16;
+					if(Configuration.terraformingBlockSpeed > listSize || event.world.rand.nextFloat() < Configuration.terraformingBlockSpeed/(float)listSize)
+					{
+						for(int i = 0; i < Configuration.terraformingBlockSpeed; i++) {
+							Chunk chunk = list.get(event.world.rand.nextInt(list.size()));
+							int coord = event.world.rand.nextInt(256);
+							int x = (coord & 0xF) + chunk.xPosition*16;
+							int z = (coord >> 4) + chunk.zPosition*16;
 
-						BiomeHandler.changeBiome(event.world, ((WorldProviderPlanet)event.world.provider).chunkMgrTerraformed.getBiomeGenAt(x,z).biomeID, x, z);
+							BiomeHandler.changeBiome(event.world, ((WorldProviderPlanet)event.world.provider).chunkMgrTerraformed.getBiomeGenAt(x,z).biomeID, x, z);
+						}
 					}
 				}
 			}
