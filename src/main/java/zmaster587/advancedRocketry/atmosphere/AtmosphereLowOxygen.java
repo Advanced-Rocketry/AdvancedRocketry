@@ -9,6 +9,7 @@ import zmaster587.advancedRocketry.api.armor.IFillableArmor;
 import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
 import zmaster587.advancedRocketry.integration.CompatibilityMgr;
 import zmaster587.advancedRocketry.network.PacketOxygenState;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.network.PacketHandler;
 
 public class AtmosphereLowOxygen extends AtmosphereType {
@@ -21,7 +22,7 @@ public class AtmosphereLowOxygen extends AtmosphereType {
 
 	@Override
 	public String getDisplayMessage() {
-		return "Warning: No Oxygen detected!";
+		return LibVulpes.proxy.getLocalizedString("msg.noOxygen");
 	}
 	
 	@Override

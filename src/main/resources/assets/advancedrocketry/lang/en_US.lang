@@ -37,7 +37,7 @@ tile.sapling.name=Lightwood Sapling
 tile.leaves2.name=Lightwood Leaves
 tile.planks.name=Lightwood planks
 tile.chipStorage.name=Satellite Id Storage
-tile.planetanalyser.name=Astrobody Data processor
+tile.planetanalyser.name=Astrobody Data Processor
 tile.lunaranalyser.name=Lunar Analyser
 tile.guidanceComputer.name=Guidance Computer
 tile.electricArcFurnace.name=Electric Arc Furnace
@@ -82,7 +82,7 @@ tile.dataPipe.name=Data Cable
 tile.liquidPipe.name=Liquid Pipe
 tile.energyPipe.name=Energy Pipe
 tile.rfOutput.name=Redstone Flux Output Plug
-tile.microwaveReciever.name=Microwave Reciever
+tile.microwaveReciever.name=Microwave Receiver
 tile.solarPanel.name=Solar Panel
 tile.suitWorkStation.name=Suit Workstation
 tile.orientationControl.name=Orientation Controller
@@ -262,3 +262,7 @@ msg.spaceElevator.ascentReady=Getting ready for ascent
 msg.spaceElevator.label.chip=Elevator Chip
 msg.spaceElevator.turnedoff=Elevator is turned off
 msg.entityDeployedRocket.notGasGiant=No Gas Here
+<<<<<<< HEAD
+=======
+msg.noOxygen=Warning: No Oxygen detected!
+>>>>>>> c28c79d... Fix https://github.com/zmaster587/libVulpes/issues/25 locally O2 warning
