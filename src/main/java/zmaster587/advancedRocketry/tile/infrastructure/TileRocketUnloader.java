@@ -48,23 +48,23 @@ public class TileRocketUnloader extends TileRocketLoader implements IInfrastruct
 					if(tile instanceof IInventory && !(tile instanceof TileGuidanceComputer)) {
 						IInventory inv = ((IInventory)tile);
 						for(int i = 0; i < inv.getSizeInventory(); i++) {
-							if(inv.getStackInSlot(i) != null) {
+							if(!inv.getStackInSlot(i).isEmpty()) {
 								rocketContainsNoItems = false;
 								//Loop though this inventory's slots and find a suitible one
 								for(int j = 0; j < getSizeInventory(); j++) {
-									if(getStackInSlot(j) == null) {
+									if(getStackInSlot(j).isEmpty()) {
 										if(isAllowedToOperate) {
 											inventory.setInventorySlotContents(j, inv.getStackInSlot(i));
-											inv.setInventorySlotContents(i,null);
+											inv.setInventorySlotContents(i,ItemStack.EMPTY);
 										}
 										break out;
 									}
-									else if(inv.getStackInSlot(i) != null && isItemValidForSlot(j, inv.getStackInSlot(i))) {
+									else if(!inv.getStackInSlot(i).isEmpty() && isItemValidForSlot(j, inv.getStackInSlot(i))) {
 										if(isAllowedToOperate) {
 											ItemStack stack2 = inv.decrStackSize(i, getStackInSlot(j).getMaxStackSize() - getStackInSlot(j).getCount());
 											getStackInSlot(j).setCount(getStackInSlot(j).getCount() + stack2.getCount());
 										}
-										if(inv.getStackInSlot(i) == null)
+										if(inv.getStackInSlot(i).isEmpty())
 											break out;
 										foundStack = true;
 									}
