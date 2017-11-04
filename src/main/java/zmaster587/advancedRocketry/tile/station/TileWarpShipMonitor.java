@@ -538,13 +538,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 	}
 
 	private void selectSystem(int id) {
-
-		if(getSpaceObject().getOrbitingPlanetId() == SpaceObjectManager.WARPDIMID) {
-			dimCache = null;
-			//return;
-		}
-
-		if(id == SpaceObjectManager.WARPDIMID)
+		if(getSpaceObject().getOrbitingPlanetId() == SpaceObjectManager.WARPDIMID || id == SpaceObjectManager.WARPDIMID)
 			dimCache = null;
 		else {
 			dimCache = DimensionManager.getInstance().getDimensionProperties(container.getSelectedSystem());
