@@ -285,6 +285,7 @@ public class ClientProxy extends CommonProxy {
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemPressureTank, 3, new ModelResourceLocation("advancedrocketry:pressureTank3", "inventory"));
 
 		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBasicLaserGun, 0, new ModelResourceLocation("advancedrocketry:basicLaserGun", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemThermite, 0, new ModelResourceLocation("advancedrocketry:thermite", "inventory"));
 
 
 		//TODO fluids
