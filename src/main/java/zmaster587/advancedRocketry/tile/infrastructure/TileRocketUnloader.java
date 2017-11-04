@@ -47,7 +47,7 @@ public class TileRocketUnloader extends TileRocketLoader implements IInfrastruct
 					if(tile instanceof IInventory && !(tile instanceof TileGuidanceComputer)) {
 						IInventory inv = ((IInventory)tile);
 						for(int i = 0; i < inv.getSizeInventory(); i++) {
-							if(inv.getStackInSlot(i) != null) {
+							if(!inv.getStackInSlot(i).isEmpty()) {
 								rocketContainsNoItems = false;
 								//Loop though this inventory's slots and find a suitible one
 								for(int j = 0; j < getSizeInventory(); j++) {
