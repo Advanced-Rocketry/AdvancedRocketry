@@ -105,6 +105,7 @@ tile.gravityMachine.name=Gravity Controller
 tile.pipeSeal.name=Pipe Seal
 tile.spaceElevatorController.name=Space Elevator
 tile.beacon.name=Beacon
+tile.thermiteTorch.name=Thermite Torch
 
 tile.Dilithium.name=Dilithium Ore
 
@@ -163,6 +164,7 @@ item.atmAnalyser.name=Atmosphere Analyzer
 item.biomeChanger.name=Biome Changer Remote
 item.basicLaserGun.name=Basic Laser Gun
 item.beaconFinder.name=Beacon Finder
+item.thermite.name=Thermite
 
 item.jetPack.name=Jet Pack
 item.pressureTank.0.name=Low Pressure Tank

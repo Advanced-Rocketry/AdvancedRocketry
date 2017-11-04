@@ -83,6 +83,7 @@ import zmaster587.advancedRocketry.block.BlockSolarGenerator;
 import zmaster587.advancedRocketry.block.BlockSolarPanel;
 import zmaster587.advancedRocketry.block.BlockStationModuleDockingPort;
 import zmaster587.advancedRocketry.block.BlockSuitWorkstation;
+import zmaster587.advancedRocketry.block.BlockThermiteTorch;
 import zmaster587.advancedRocketry.block.BlockTileNeighborUpdate;
 import zmaster587.advancedRocketry.block.BlockTileRedstoneEmitter;
 import zmaster587.advancedRocketry.block.BlockWarpCore;
@@ -241,7 +242,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -679,7 +679,8 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockCircularLight = new BlockGeneric(Material.iron).setBlockName("circleLight").setCreativeTab(tabAdvRocketry).setHardness(2f).setBlockTextureName("advancedrocketry:stationLight").setLightLevel(1f);
 		AdvancedRocketryBlocks.blockForceField = new BlockForceField(Material.rock).setBlockUnbreakable().setResistance(6000000.0F).setBlockName("forceField").setBlockTextureName("advancedrocketry:forceField");
 		AdvancedRocketryBlocks.blockPipeSealer = new BlockSeal(Material.iron).setBlockName("pipeSeal").setCreativeTab(tabAdvRocketry).setHardness(0.5f).setBlockTextureName("advancedrocketry:seal");
-
+		AdvancedRocketryBlocks.blockThermiteTorch = new BlockThermiteTorch().setBlockName("thermiteTorch").setCreativeTab(tabAdvRocketry).setHardness(0.1f).setLightLevel(1f).setBlockTextureName("advancedrocketry:thermitetorch");
+		
 		AdvancedRocketryBlocks.blockForceFieldProjector = new BlockForceFieldProjector(Material.rock).setBlockName("forceFieldProjector").setCreativeTab(tabAdvRocketry).setHardness(3f);
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController) {
@@ -818,6 +819,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockSpaceElevatorController, AdvancedRocketryBlocks.blockSpaceElevatorController.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockBeacon, AdvancedRocketryBlocks.blockBeacon.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockAlienPlanks, AdvancedRocketryBlocks.blockAlienPlanks.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockThermiteTorch, AdvancedRocketryBlocks.blockThermiteTorch.getUnlocalizedName());
 		
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController) 
 			GameRegistry.registerBlock(AdvancedRocketryBlocks.blockGravityMachine,AdvancedRocketryBlocks.blockGravityMachine.getUnlocalizedName());
@@ -843,7 +845,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryItems.itemLens = new ItemIngredient(1).setUnlocalizedName("advancedrocketry:lens").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemSatellitePowerSource = new ItemIngredient(2).setUnlocalizedName("advancedrocketry:satellitePowerSource").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemSatellitePrimaryFunction = new ItemIngredient(6).setUnlocalizedName("advancedrocketry:satellitePrimaryFunction").setCreativeTab(tabAdvRocketry);
-
+		AdvancedRocketryItems.itemThermite = new Item().setUnlocalizedName("thermite").setCreativeTab(tabAdvRocketry).setTextureName("advancedrocketry:thermite");
 
 		//TODO: move registration in the case we have more than one chip type
 		AdvancedRocketryItems.itemDataUnit = new ItemData().setUnlocalizedName("advancedrocketry:dataUnit").setCreativeTab(tabAdvRocketry);
@@ -936,6 +938,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerItem(AdvancedRocketryItems.itemBasicLaserGun, AdvancedRocketryItems.itemBasicLaserGun.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemSpaceElevatorChip, AdvancedRocketryItems.itemSpaceElevatorChip.getUnlocalizedName());
 		GameRegistry.registerItem(AdvancedRocketryItems.itemBeaconFinder, AdvancedRocketryItems.itemBeaconFinder.getUnlocalizedName());
+		GameRegistry.registerItem(AdvancedRocketryItems.itemThermite, AdvancedRocketryItems.itemThermite.getUnlocalizedName());
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableTerraforming)
 			GameRegistry.registerItem(AdvancedRocketryItems.itemBiomeChanger, AdvancedRocketryItems.itemBiomeChanger.getUnlocalizedName());
@@ -1047,6 +1050,8 @@ public class AdvancedRocketry {
 		OreDictionary.registerOre("waferSilicon", new ItemStack(AdvancedRocketryItems.itemWafer,1,0));
 		OreDictionary.registerOre("ingotCarbon", new ItemStack(AdvancedRocketryItems.itemMisc, 1, 1));
 		OreDictionary.registerOre("concrete", new ItemStack(AdvancedRocketryBlocks.blockConcrete));
+		OreDictionary.registerOre("itemLens", AdvancedRocketryItems.itemLens);
+		OreDictionary.registerOre("dustThermite", new ItemStack(AdvancedRocketryItems.itemThermite));
 		OreDictionary.registerOre("itemSilicon", MaterialRegistry.getItemStackFromMaterialAndType("Silicon", AllowedProducts.getProductByName("INGOT")));
 
 		CompatibilityMgr.getLoadedMods();
@@ -1098,7 +1103,9 @@ public class AdvancedRocketry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesItems.itemBattery,1,1), "bpb", "bpb", 'b', smallBattery, 'p', "plateCopper"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), "ppp", " g ", " l ", 'p', Blocks.glass_pane, 'g', Items.glowstone_dust, 'l', "plateGold"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockObservatory), "gug", "pbp", "rrr", 'g', "paneGlass", 'u', userInterface, 'b', LibVulpesBlocks.blockStructureBlock, 'r', "stickIron"));
-
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(AdvancedRocketryItems.itemThermite, 3), "dustAluminum", "dustIron","dustIron"));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockThermiteTorch, 4), new ItemStack(Items.stick), "dustThermite"));
+        
 		//Hatches
 		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryBlocks.blockLoader,1,0), "m", "c"," ", 'c', AdvancedRocketryItems.itemDataUnit, 'm', LibVulpesBlocks.blockStructureBlock);
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockLoader,1,1), " x ", "xmx"," x ", 'x', "stickTitanium", 'm', LibVulpesBlocks.blockStructureBlock));
