@@ -80,7 +80,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 	private static final int ARTIFACT_BEGIN_RANGE = 4, ARTIFACT_END_RANGE = 7;
 	ModulePanetImage srcPlanetImg, dstPlanetImg;
 	ModuleSync sync1, sync2, sync3;
-	ModuleText srcPlanetText, dstPlanetText, warpFuel, status;
+	ModuleText srcPlanetText, dstPlanetText, warpFuel, status, warpCapacity;
 	int warpCost = -1;
 	int dstPlanet, srcPlanet;
 	private ModuleTab tabModule;
@@ -220,7 +220,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 					(!artifactFlag ? "Missing Artifact" : (flag ? "Ready!" : "Not ready")), flag && artifactFlag ? 0x1baa1b : 0xFF1b1b);
 				modules.add(canWarp);
 				modules.add(new ModuleProgress(baseX, baseY + sizeY + 40, 10, new IndicatorBarImage(70, 58, 53, 8, 122, 58, 5, 8, EnumFacing.EAST, TextureResources.progressBars), this));
-				modules.add(new ModuleText(baseX + 82, baseY + sizeY + 20, "Fuel Cost:", 0x1b1b1b));
+				//modules.add(new ModuleText(baseX + 82, baseY + sizeY + 20, "Fuel Cost:", 0x1b1b1b));
 				warpCost = getTravelCost();
 				
 				
@@ -243,8 +243,10 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				}
 
 				if(worldObj.isRemote) {
-					warpFuel.setText(flag ? String.valueOf(warpCost) : "N/A");
+					warpFuel.setText("Fuel Cost: " + (flag ? String.valueOf(warpCost) : "N/A"));
+					warpCapacity.setText("Fuel: " + (isOnStation ? getSpaceObject().getFuelAmount() : "N/A"));
 					modules.add(warpFuel);
+					modules.add(warpCapacity);
 
 					modules.add(new ModuleScaledImage(baseX,baseY,sizeX,sizeY, zmaster587.libVulpes.inventory.TextureResources.starryBG));
 					
@@ -343,7 +345,8 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				srcPlanetImg = new ModulePanetImage(baseX + 10,baseY + 10,sizeX - 20, location);
 				srcPlanetText = new ModuleText(baseX + 4, baseY + 56, "", 0xFFFFFF);
 				srcPlanetText.setAlwaysOnTop(true);
-				warpFuel = new ModuleText(baseX + 82, baseY + sizeY + 35, "", 0x1b1b1b);
+				warpFuel = new ModuleText(baseX + 82, baseY + sizeY + 25, "", 0x1b1b1b);
+				warpCapacity = new ModuleText(baseX + 82, baseY + sizeY + 35, "", 0x1b1b1b);
 
 				//DEST planet
 				baseX = 94;
@@ -361,8 +364,8 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 			srcPlanetText.setText(planetName);
 
 
-			warpFuel.setText(warpCost < Integer.MAX_VALUE ? String.valueOf(warpCost) : "N/A");
-
+			warpFuel.setText("Fuel cost: " + (warpCost < Integer.MAX_VALUE ? String.valueOf(warpCost) : "N/A"));
+			warpCapacity.setText("Fuel: " + (isOnStation ? ((SpaceObject)station).getFuelAmount() : "N/A"));
 
 
 
