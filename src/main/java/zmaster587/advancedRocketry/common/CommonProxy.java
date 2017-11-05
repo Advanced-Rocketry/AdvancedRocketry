@@ -89,4 +89,14 @@ public class CommonProxy {
 	public void displayMessage(String msg, int time) {
 		
 	}
+
+	public void preInitBlocks() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void preInitItems() {
+		// TODO Auto-generated method stub
+		
+	}
 }
