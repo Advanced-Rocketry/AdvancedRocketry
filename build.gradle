@@ -135,7 +135,7 @@ curseforge{
   }
 }
 
-/*task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
+task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     file = new File ("changelog.html")
     untaggedName = "Current release ${project.version}"
     fromCommit = startGitRev
@@ -146,7 +146,7 @@ curseforge{
   <h3>{{name}}</h3>
   <ul>
     {{#commits}}
-    <li> <a href="https://github.com/{{ownerName}}/{{repoName}}/commit/{{hash}}" target=_blank> {{{message}}}</a>
+    <li> <a href="https://github.com/zmaster587/AdvancedRocketry/commit/{{hash}}" target=_blank> {{{message}}}</a>
 </li>
     {{/commits}}
   </ul>
@@ -155,7 +155,7 @@ curseforge{
 }
 
 tasks.build.dependsOn makeChangelog
-
+/*
 buildScan {
     licenseAgreementUrl = 'https://gradle.com/terms-of-service' 
     licenseAgree = 'yes'                                        
