@@ -140,6 +140,7 @@ task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     untaggedName = "Current release ${project.version}"
     fromCommit = startGitRev
     toRef =  "HEAD"
+    gitHubIssuePattern = "nonada123";
     templateContent = """
 {{#tags}}
 <h1> Highly untested and may break world</h1>
