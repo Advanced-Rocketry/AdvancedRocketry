@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -170,7 +171,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		stats = new StatsRocket();
 		isInFlight = false;
 		connectedInfrastructure = new LinkedList<IInfrastructure>();
-		infrastructureCoords = new LinkedList<HashedBlockPosition>();
+		infrastructureCoords = new HashSet<HashedBlockPosition>();
 		mountedEntities = new WeakReference[stats.getNumPassengerSeats()];
 
 		lastWorldTickTicked = p_i1582_1_.getTotalWorldTime();
@@ -1200,9 +1201,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 		if(!infrastructureCoords.isEmpty()) {
 			NBTTagList itemList = new NBTTagList();
-			for(int i = 0; i < infrastructureCoords.size(); i++)
+			for(HashedBlockPosition inf : infrastructureCoords)
 			{
-				HashedBlockPosition inf = infrastructureCoords.get(i);
 
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setIntArray("loc", new int[] {inf.x, inf.y, inf.z});
