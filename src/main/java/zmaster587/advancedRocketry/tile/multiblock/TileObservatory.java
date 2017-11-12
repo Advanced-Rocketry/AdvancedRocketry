@@ -64,17 +64,17 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	
 	private static final Object[][][] structure = new Object[][][]{
 
-		{	{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR}, 
-			{Blocks.AIR, Blocks.STONE, lens, Blocks.STONE, Blocks.AIR},
-			{Blocks.AIR, Blocks.STONE, Blocks.STONE, Blocks.STONE, Blocks.AIR},
-			{Blocks.AIR, Blocks.STONE, Blocks.STONE, Blocks.STONE, Blocks.AIR},
-			{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR}},
+		{	{null, null, null, null, null}, 
+			{null, Blocks.STONE, lens, Blocks.STONE, null},
+			{null, Blocks.STONE, Blocks.STONE, Blocks.STONE, null},
+			{null, Blocks.STONE, Blocks.STONE, Blocks.STONE, null},
+			{null, null, null, null, null}},
 
-			{	{Blocks.AIR,Blocks.AIR,Blocks.AIR,Blocks.AIR,Blocks.AIR}, 
-				{Blocks.AIR, Blocks.STONE, Blocks.STONE, Blocks.STONE, Blocks.AIR},
-				{Blocks.AIR, Blocks.STONE, lens, Blocks.STONE, Blocks.AIR},
-				{Blocks.AIR, Blocks.STONE, Blocks.STONE, Blocks.STONE, Blocks.AIR},
-				{Blocks.AIR,Blocks.AIR,Blocks.AIR,Blocks.AIR,Blocks.AIR}},
+			{	{null,null,null,null,null}, 
+				{null, Blocks.STONE, Blocks.STONE, Blocks.STONE, null},
+				{null, Blocks.STONE, lens, Blocks.STONE, null},
+				{null, Blocks.STONE, Blocks.STONE, Blocks.STONE, null},
+				{null,null,null,null,null}},
 
 				{	{null, Blocks.STONE, Blocks.STONE, Blocks.STONE, null}, 
 					{Blocks.STONE, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.STONE},
