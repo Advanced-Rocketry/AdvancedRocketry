@@ -22,6 +22,7 @@ import zmaster587.advancedRocketry.api.RocketEvent.RocketPreLaunchEvent;
 import zmaster587.advancedRocketry.api.event.AtmosphereEvent;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketAtmSync;
 import zmaster587.advancedRocketry.util.AtmosphereBlob;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
@@ -54,7 +55,8 @@ public class AtmosphereHandler {
 	public static void registerWorld(int dimId) {
 
 		//If O2 is allowed and
-		if(Configuration.enableOxygen && (Configuration.overrideGCAir || dimId != Configuration.MoonId || DimensionManager.getInstance().getDimensionProperties(dimId).isNativeDimension)) {
+		DimensionProperties dimProp = DimensionManager.getInstance().getDimensionProperties(dimId);
+		if(Configuration.enableOxygen && !dimProp.isGasGiant() && (Configuration.overrideGCAir || dimId != Configuration.MoonId || dimProp.isNativeDimension)) {
 			dimensionOxygen.put(dimId, new AtmosphereHandler(dimId));
 			MinecraftForge.EVENT_BUS.register(dimensionOxygen.get(dimId));
 		}
