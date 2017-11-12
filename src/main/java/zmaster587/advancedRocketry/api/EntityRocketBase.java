@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.api;
 
 import java.util.LinkedList;
+import java.util.Set;
 
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.libVulpes.util.HashedBlockPosition;
@@ -17,7 +18,7 @@ public abstract class EntityRocketBase extends Entity {
 	protected LinkedList<IInfrastructure> connectedInfrastructure;
 	
 	//stores the coordinates of infrastructures, used for when the world loads/saves
-	protected LinkedList<HashedBlockPosition> infrastructureCoords;
+	protected Set<HashedBlockPosition> infrastructureCoords;
 	
 	//Stores the blocks and tiles that make up the rocket
 	//public StorageChunk storage;
