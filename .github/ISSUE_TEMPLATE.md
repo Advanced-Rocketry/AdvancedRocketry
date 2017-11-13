@@ -6,8 +6,9 @@ Advanced Rocketry Version:
 -
 LibVulpes Version:
 -
-*is this the latest curseforge build?*
-**Please Pastebin crash**
+**is this the latest curseforge build?**
+
+#Please Pastebin crash
 ---------------------
 Crash Report:
 ----------
