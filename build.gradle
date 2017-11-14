@@ -118,8 +118,7 @@ processResources
 task deobfJar(type: Jar) {
      from sourceSets.main.output
      //if project name is BBM-Dev it makes the deobf jar deobf-dev if not its just deobf
-     if (project.getProperty("bambooshortPlanName") == "BBM-Dev") classifier = "deobf-dev"
-     else classifier = "deobf"
+     classifier = "deobf"
      //sets where the jars go to.
      destinationDir = file 'output'
      manifest = project.manifest {
