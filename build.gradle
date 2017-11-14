@@ -115,6 +115,19 @@ processResources
     }
 }
 
+task deobfJar(type: Jar) {
+     from sourceSets.main.output
+     //if project name is BBM-Dev it makes the deobf jar deobf-dev if not its just deobf
+     if (project.getProperty("bambooshortPlanName") == "BBM-Dev") classifier = "deobf-dev"
+     else classifier = "deobf"
+     //sets where the jars go to.
+     destinationDir = file 'output'
+     manifest = project.manifest {
+        from sharedManifest
+    }
+     mustRunAfter "jar" 
+}
+
 curseforge{
   if (project.hasProperty("thecursedkey")) {
         apiKey = project.thecursedkey
@@ -125,14 +138,20 @@ curseforge{
   project {
   //AdvancedRocketry
     id = "236542"
+    relations {
+        requiredLibrary 'libvulpes'
+    }
     changelog = file('changelog.html')
     changelogType = 'html'
     releaseType = "alpha"
     addGameVersion minecraft.version
-    /*mainArtifact(jar) {
+    mainArtifact(jar) {
       displayName = "AdvancedRocketry ${project.version}-UNSTABLE build " + project.getBuildNumber() +  " for " + minecraft.version
-    }*/
-  }
+    }
+    addArtifact (deobfJar){
+    	 displayName = "AdvancedRocketry ${project.version}-UNSTABLE-deobf build " + project.getBuildNumber() + " for " + minecraft.version
+    }
+   }
 }
 
 task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
