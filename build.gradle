@@ -121,8 +121,9 @@ task deobfJar(type: Jar) {
      classifier = "deobf"
      //sets where the jars go to.
      destinationDir = file 'output'
-     manifest = project.manifest {
-        from sharedManifest
+     manifest {
+        attributes 'FMLCorePlugin': 'zmaster587.advancedRocketry.asm.AdvancedRocketryPlugin'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
      mustRunAfter "jar" 
 }
