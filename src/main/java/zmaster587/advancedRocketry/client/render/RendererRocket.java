@@ -113,7 +113,12 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 						IBlockState block  = storage.getBlockState(new BlockPos(xx, yy, zz));
 
 						buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-						Minecraft.getMinecraft().getBlockRendererDispatcher().renderBlock(block, new BlockPos(xx, yy, zz), storage.world, buffer);
+						try {
+							Minecraft.getMinecraft().getBlockRendererDispatcher().renderBlock(block, new BlockPos(xx, yy, zz), storage.world, buffer);
+						} 
+						catch (NullPointerException e) {
+							System.out.println(block.getBlock().getUnlocalizedName() + " cannot be rendered on rocket at " + entity.getPosition());
+						}
 						Tessellator.getInstance().draw();
 					}
 
