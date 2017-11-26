@@ -593,14 +593,15 @@ public class ClassTransformer implements IClassTransformer {
 		//was causing problems on startup, no idea what it does anymore,
 		//I need to apply better documentation practices
 		
-		/*if(changedName.equals(getName(CLASS_KEY_RENDER_GLOBAL))) {
+		if(changedName.equals(getName(CLASS_KEY_RENDER_GLOBAL))) {
 			ClassNode cn = startInjection(bytes);
 			MethodNode setupTerrain = getMethod(cn, getName(METHOD_KEY_SETUPTERRAIN), "(L"+ getName(CLASS_KEY_ENTITY) + ";DL" + getName(CLASS_KEY_ICAMERA) + ";IZ)V");
 			if(setupTerrain != null) {
 				final InsnList nodeAdd = new InsnList();
 				
 				AbstractInsnNode pos1 = null;
-				LabelNode pos2 = null;
+				AbstractInsnNode pos3 = null;
+				AbstractInsnNode pos2 = null;
 				
 				int ifnull = 3;
 				int aload = 3;
@@ -609,8 +610,8 @@ public class ClassTransformer implements IClassTransformer {
 				for(int i = setupTerrain.instructions.size() - 1; i >= 0; i--) {
 					AbstractInsnNode ain = setupTerrain.instructions.get(i);
 					if(ain.getOpcode() == Opcodes.IFNULL && --ifnull == 0) {
-						pos1 = ain;
-						indexPos1 = i;
+						pos1 = ain.getNext();
+						indexPos1 = i+1;
 						break;
 					}
 				}
@@ -618,28 +619,34 @@ public class ClassTransformer implements IClassTransformer {
 				for(int i = indexPos1; i < setupTerrain.instructions.size(); i++) {
 					AbstractInsnNode ain = setupTerrain.instructions.get(i);
 					if(ain.getOpcode() == Opcodes.ALOAD && --aload == 0) {
-						pos2 = (LabelNode)setupTerrain.instructions.get(i-2);;
+						pos2 = setupTerrain.instructions.get(i-1);
 						break;
 					}
 				}
 				
+				while(pos1 != pos2)
+				{
+					pos3 = pos1;
+					pos1 = pos1.getNext();
+					setupTerrain.instructions.remove(pos3);
+				}
 				
 				//Lack of robustness, this could go really wrong. To future me: told you so!
 				//pos2 = setupTerrain.instructions.get(914);
 				
 				//nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 25));
-				nodeAdd.add(new JumpInsnNode(Opcodes.GOTO, pos2));
+				//nodeAdd.add(new JumpInsnNode(Opcodes.GOTO, pos2));
 				//nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 27));
 				//nodeAdd.add(new JumpInsnNode(Opcodes.IFEQ, pos2));
 				
-				setupTerrain.instructions.insert(pos1, nodeAdd);
+				//setupTerrain.instructions.insert(pos1, nodeAdd);
 				
 			}
 			else
 				AdvancedRocketry.logger.fatal("ASM injection into RenderGlobal.setupTerrain FAILED!");
 
 			return finishInjection(cn);
-		}*/
+		}
 		
 		//Inserts a hook to register inventories with rockets so they can be accessed from the UI
 		//By default in most cases inventories check for distance and rockets have their own coordinate system.
