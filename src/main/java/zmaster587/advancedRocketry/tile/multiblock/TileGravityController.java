@@ -188,7 +188,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 			else
 				updateText();
 
-			List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getPos()).expand(getRadius(), getRadius() , getRadius()));
+			List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getPos()).grow(getRadius(), getRadius() , getRadius()));
 
 
 

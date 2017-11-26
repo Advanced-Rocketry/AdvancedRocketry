@@ -622,7 +622,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		}
 
 		//Carpenter's block's dupe
-		for(Object entity : worldObj.getEntitiesWithinAABB(EntityItem.class, bb.expand(5, 5, 5)) ) {
+		for(Object entity : worldObj.getEntitiesWithinAABB(EntityItem.class, bb.grow(5, 5, 5)) ) {
 			((Entity)entity).setDead();
 		}
 

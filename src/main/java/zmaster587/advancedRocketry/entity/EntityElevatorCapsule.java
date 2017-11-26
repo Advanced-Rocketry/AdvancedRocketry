@@ -280,7 +280,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		return getEntityBoundingBox().expand(posX, 2000, posZ);
+		return getEntityBoundingBox().grow(posX, 2000, posZ);
 	}
 
 	@Override

@@ -74,7 +74,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		return super.getRenderBoundingBox().expand(0, 2000, 0).offset(0, 1000, 0);
+		return super.getRenderBoundingBox().grow(0, 2000, 0).offset(0, 1000, 0);
 	}
 
 	@Override
