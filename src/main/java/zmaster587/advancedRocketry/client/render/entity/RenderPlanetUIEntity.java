@@ -32,9 +32,7 @@ public class RenderPlanetUIEntity extends Render<EntityUIPlanet> implements IRen
 		try {
 			sphere = new WavefrontObject(new ResourceLocation("advancedrocketry:models/atmosphere.obj"));
 		} catch(ModelFormatException e) {
-			sphere = null;
-			e.printStackTrace();
-			System.exit(0);
+			throw new RuntimeException(e);
 		}
 	}
 
