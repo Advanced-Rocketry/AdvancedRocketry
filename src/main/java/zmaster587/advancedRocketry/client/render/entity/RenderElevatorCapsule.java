@@ -36,9 +36,7 @@ public class RenderElevatorCapsule extends Render<EntityElevatorCapsule> impleme
 		try {
 			sphere = new WavefrontObject(new ResourceLocation("advancedrocketry:models/spaceElevator.obj"));
 		} catch(ModelFormatException e) {
-			sphere = null;
-			e.printStackTrace();
-			System.exit(0);
+			throw new RuntimeException(e);
 		}
 	}
 
