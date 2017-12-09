@@ -96,7 +96,7 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 				
 
 				markDirty();
-				world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
+				worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 
 				setMachineRunning(true); //turn on machine
 
@@ -123,8 +123,8 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 				for(int i = 0; i < hatch.getSizeInventory(); i++) {
 					ItemStack stackInSlot = hatch.getStackInSlot(i);
 					for (ItemStack stack : ingredient) {
-						if(stackInSlot != null && stackInSlot.getCount() >= stack.getCount() && stackInSlot.isItemEqual(stack)) {
-							ItemStack stack2 = hatch.decrStackSize(i, stack.getCount());
+						if(stackInSlot != null && stackInSlot.stackSize >= stack.stackSize && stackInSlot.isItemEqual(stack)) {
+							ItemStack stack2 = hatch.decrStackSize(i, stack.stackSize);
 							
 							if(stack2.getItem() instanceof ItemArmor)
 							{
@@ -135,7 +135,7 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 							}
 							
 							hatch.markDirty();
-							world.notifyBlockUpdate(pos, world.getBlockState(((TileEntity)hatch).getPos()),  world.getBlockState(((TileEntity)hatch).getPos()), 6);
+							worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(((TileEntity)hatch).getPos()),  worldObj.getBlockState(((TileEntity)hatch).getPos()), 6);
 							break ingredientCheck;
 						}
 					}
