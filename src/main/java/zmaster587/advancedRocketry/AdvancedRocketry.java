@@ -1335,6 +1335,8 @@ public class AdvancedRocketry {
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockLoader, 0));
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockLoader, 8));
 		TileMultiBlock.addMapping('D', list);
+		
+		machineRecipes.createAutoGennedRecipes(modProducts);
 	}
 
 
