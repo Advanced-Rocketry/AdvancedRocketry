@@ -1236,6 +1236,8 @@ public class AdvancedRocketry {
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockLoader, 0));
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockLoader, 8));
 		TileMultiBlock.addMapping('D', list);
+		
+		machineRecipes.createAutoGennedRecipes(modProducts);
 	}
 
 
@@ -1309,7 +1311,7 @@ public class AdvancedRocketry {
 
 		ForgeChunkManager.setForcedChunkLoadingCallback(instance, new WorldEvents());
 
-		machineRecipes.createAutoGennedRecipes(modProducts);
+		
 
 		//Register buckets
 		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockFuelFluid, AdvancedRocketryItems.itemBucketRocketFuel);
