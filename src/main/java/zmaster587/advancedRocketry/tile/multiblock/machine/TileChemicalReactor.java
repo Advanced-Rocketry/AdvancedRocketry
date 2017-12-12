@@ -28,6 +28,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
@@ -151,18 +152,20 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new ItemStack(Items.DYE,5,0xF), 100, 1, Items.BONE, new FluidStack(AdvancedRocketryFluids.fluidNitrogen, 10));
 		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new FluidStack(AdvancedRocketryFluids.fluidRocketFuel, 20), 100, 10, new FluidStack(AdvancedRocketryFluids.fluidOxygen, 10), new FluidStack(AdvancedRocketryFluids.fluidHydrogen, 10));
 
-		for(ResourceLocation key : Item.REGISTRY.getKeys()) {
-			Item item = Item.REGISTRY.getObject(key);
-
-			if(item instanceof ItemArmor && !(item instanceof ItemSpaceArmor)) {
-				ItemStack enchanted = new ItemStack(item);
-				enchanted.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
-
-				if(((ItemArmor)item).armorType == EntityEquipmentSlot.CHEST)
-					RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, item, "gemDiamond", new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 3));
-				else
-					RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, item, "gemDiamond");
-
+		if(Configuration.enableOxygen) {
+			for(ResourceLocation key : Item.REGISTRY.getKeys()) {
+				Item item = Item.REGISTRY.getObject(key);
+	
+				if(item instanceof ItemArmor && !(item instanceof ItemSpaceArmor)) {
+					ItemStack enchanted = new ItemStack(item);
+					enchanted.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
+	
+					if(((ItemArmor)item).armorType == EntityEquipmentSlot.CHEST)
+						RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, item, "gemDiamond", new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 3));
+					else
+						RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, item, "gemDiamond");
+	
+				}
 			}
 		}
 	}
