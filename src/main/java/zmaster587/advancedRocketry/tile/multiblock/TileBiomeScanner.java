@@ -74,48 +74,49 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 
 		if(world.isRemote) {
 			list.add(new ModuleImage(24, 14, zmaster587.advancedRocketry.inventory.TextureResources.earthCandyIcon));
-		}
-
-		ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-		if(suitable && SpaceObjectManager.WARPDIMID != spaceObject.getOrbitingPlanetId()) {
-
-			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(spaceObject.getOrbitingPlanetId());
-			List<ModuleBase> list2 = new LinkedList<ModuleBase>();
-			if(properties.isGasGiant()) {
-				list2.add(new ModuleText(32, 16, "nyehhh, Gassy, ain't it?", 0x202020));
-			} else {
 
 
-				int i = 0;
-				if(properties.getId() == 0) {
-					Iterator<Biome> itr = Biome.REGISTRY.iterator();
-					while (itr.hasNext()) {
-						Biome biome = itr.next();
-						if(biome != null)
-							list2.add(new ModuleText(32, 16 + 12*(i++), biome.getBiomeName(), 0x202020));
+			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+			if(suitable && SpaceObjectManager.WARPDIMID != spaceObject.getOrbitingPlanetId()) {
+
+				DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(spaceObject.getOrbitingPlanetId());
+				List<ModuleBase> list2 = new LinkedList<ModuleBase>();
+				if(properties.isGasGiant()) {
+					list2.add(new ModuleText(32, 16, "nyehhh, Gassy, ain't it?", 0x202020));
+				} else {
+
+
+					int i = 0;
+					if(properties.getId() == 0) {
+						Iterator<Biome> itr = Biome.REGISTRY.iterator();
+						while (itr.hasNext()) {
+							Biome biome = itr.next();
+							if(biome != null)
+								list2.add(new ModuleText(32, 16 + 12*(i++), biome.getBiomeName(), 0x202020));
+						}
+					}
+					else {
+						Iterator<BiomeEntry> itr = properties.getBiomes().iterator();
+						while (itr.hasNext()) {
+							BiomeEntry biome = itr.next();
+							list2.add(new ModuleText(32, 16 + 12*(i++), biome.biome.getBiomeName(), 0x202020));
+						}
 					}
 				}
-				else {
-					Iterator<BiomeEntry> itr = properties.getBiomes().iterator();
-					while (itr.hasNext()) {
-						BiomeEntry biome = itr.next();
-						list2.add(new ModuleText(32, 16 + 12*(i++), biome.biome.getBiomeName(), 0x202020));
-					}
-				}
+				//Relying on a bug, is this safe?
+				ModuleContainerPan pan = new ModuleContainerPan(0, 16, list2, new LinkedList<ModuleBase>(), null, 148, 110, 0, -64, 0, 1000);
+				list.add(pan);
 			}
-			//Relying on a bug, is this safe?
-			ModuleContainerPan pan = new ModuleContainerPan(0, 16, list2, new LinkedList<ModuleBase>(), null, 148, 110, 0, -64, 0, 1000);
-			list.add(pan);
+			else
+				list.add(new ModuleText(32, 16, ChatFormatting.OBFUSCATED + "Foxes, that is all", 0x202020));
 		}
-		else
-			list.add(new ModuleText(32, 16, ChatFormatting.OBFUSCATED + "Foxes, that is all", 0x202020));
 
 		return list;
 	}
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		
+
 		return new AxisAlignedBB(pos.add(-5,-3,-5),pos.add(5,3,5));
 	}
 
