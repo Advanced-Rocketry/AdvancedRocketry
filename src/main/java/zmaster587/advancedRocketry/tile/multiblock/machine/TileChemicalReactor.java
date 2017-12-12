@@ -22,6 +22,7 @@ import net.minecraftforge.fluids.FluidStack;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -139,14 +140,17 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new Object[] {new ItemStack(AdvancedRocketryItems.itemCarbonScrubberCartridge,1, 0), new ItemStack(Items.coal, 1, 1)}, 40, 20, new ItemStack(AdvancedRocketryItems.itemCarbonScrubberCartridge, 1, AdvancedRocketryItems.itemCarbonScrubberCartridge.getMaxDamage()));
 		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new ItemStack(Items.dye,5,0xF), 100, 1, Items.bone, new FluidStack(AdvancedRocketryFluids.fluidNitrogen, 10));
 		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new FluidStack(AdvancedRocketryFluids.fluidRocketFuel, 20), 100, 10, new FluidStack(AdvancedRocketryFluids.fluidOxygen, 10), new FluidStack(AdvancedRocketryFluids.fluidHydrogen, 10));
+
+		if(Configuration.enableOxygen) {	
+			for(Object key : Item.itemRegistry.getKeys()) {
+				Item item = (Item) Item.itemRegistry.getObject(key);
+				
+				if(item instanceof ItemArmor && !(item instanceof ItemSpaceArmor)) {
+					ItemStack enchanted = new ItemStack(item);
+					enchanted.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
+					RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, item, "gemDiamond");
 	
-		for(Object key : Item.itemRegistry.getKeys()) {
-			Item item = (Item) Item.itemRegistry.getObject(key);
-			
-			if(item instanceof ItemArmor && !(item instanceof ItemSpaceArmor)) {
-				ItemStack enchanted = new ItemStack(item);
-				enchanted.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
-				RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, item, "gemDiamond");
+				}
 			}
 		}
 	}
