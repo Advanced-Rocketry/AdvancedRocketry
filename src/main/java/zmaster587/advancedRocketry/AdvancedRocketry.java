@@ -1651,7 +1651,29 @@ public class AdvancedRocketry {
 //TODO recipes?
 //		machineRecipes.registerXMLRecipes();
 
+		//Add the overworld as a discovered planet
+		zmaster587.advancedRocketry.api.Configuration.initiallyKnownPlanets.add(0);
+	}
 
+
+	@EventHandler
+	public void serverStarted(FMLServerStartedEvent event) {
+		for (int dimId : DimensionManager.getInstance().getLoadedDimensions()) {
+			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimId);
+			if(!properties.isNativeDimension && properties.getId() == zmaster587.advancedRocketry.api.Configuration.MoonId && !Loader.isModLoaded("GalacticraftCore")) {
+				properties.isNativeDimension = true;
+			}
+		}
+	}
+
+	@EventHandler
+	public void serverStarting(FMLServerStartingEvent event) {
+		event.registerServerCommand(new WorldCommand());
+
+		int dimOffset = DimensionManager.dimOffset;
+		//Open ore files
+
+		
 		//Load Asteroids from XML
 		File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/asteroidConfig.xml");
 		logger.info("Checking for asteroid config at " + file.getAbsolutePath());
@@ -1687,33 +1709,11 @@ public class AdvancedRocketry {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		// End load asteroids from XML
-
-		//Add the overworld as a discovered planet
-		zmaster587.advancedRocketry.api.Configuration.initiallyKnownPlanets.add(0);
-	}
-
-
-	@EventHandler
-	public void serverStarted(FMLServerStartedEvent event) {
-		for (int dimId : DimensionManager.getInstance().getLoadedDimensions()) {
-			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimId);
-			if(!properties.isNativeDimension && properties.getId() == zmaster587.advancedRocketry.api.Configuration.MoonId && !Loader.isModLoaded("GalacticraftCore")) {
-				properties.isNativeDimension = true;
-			}
-		}
-	}
-
-	@EventHandler
-	public void serverStarting(FMLServerStartingEvent event) {
-		event.registerServerCommand(new WorldCommand());
-
-		int dimOffset = DimensionManager.dimOffset;
-		//Open ore files
-		File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/oreConfig.xml");
+		
+		
+		file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/oreConfig.xml");
 		logger.info("Checking for ore config at " + file.getAbsolutePath());
-
 		if(!file.exists()) {
 			logger.info(file.getAbsolutePath() + " not found, generating");
 			try {
