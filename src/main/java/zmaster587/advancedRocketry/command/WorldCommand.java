@@ -15,6 +15,7 @@ import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.item.ItemData;
 import zmaster587.advancedRocketry.item.ItemMultiData;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
@@ -101,7 +102,46 @@ public class WorldCommand implements ICommand {
 					return;
 				}
 				
-				if(stack != null && stack.getItem() instanceof ItemMultiData) {
+				if(stack != null && stack.getItem() instanceof ItemData) {
+					ItemData item = (ItemData) stack.getItem();
+					int dataAmount = item.getMaxData(stack.getItemDamage());
+					DataType dataType = null;
+
+					if(string.length >= 2) {
+						try {
+							dataType = DataType.valueOf(string[1].toUpperCase(Locale.ENGLISH));
+						} catch (IllegalArgumentException e) {
+							sender.addChatMessage(new ChatComponentText("Did you mean: /advRocketry" + string[0] + " [datatype] [amountFill]"));
+							sender.addChatMessage(new ChatComponentText("Not a valid datatype"));
+							String value = "";
+							for(DataType data : DataType.values())
+								if(!data.name().equals("UNDEFINED"))
+								value += data.name().toLowerCase() + ", ";
+							
+							sender.addChatMessage(new ChatComponentText("Try " + value));
+							return;
+						}
+					}
+					if(string.length >= 3)
+						try {
+							dataAmount = Integer.parseInt(string[2]);
+						} catch(NumberFormatException e) {
+							sender.addChatMessage(new ChatComponentText("Did you mean: /advRocketry" + string[0] + " [datatype] [amountFill]"));
+							sender.addChatMessage(new ChatComponentText("Not a valid number"));
+							return;
+						}
+
+					if(dataType != null)
+						item.setData(stack, dataAmount, dataType);
+					else
+					{
+						for(DataType type : DataType.values())
+							item.setData(stack, dataAmount, type);
+					}
+					
+					sender.addChatMessage(new ChatComponentText("Data filled!"));
+				}
+				else if(stack != null && stack.getItem() instanceof ItemMultiData) {
 					ItemMultiData item = (ItemMultiData) stack.getItem();
 					int dataAmount = item.getMaxData(stack);
 					DataType dataType = null;

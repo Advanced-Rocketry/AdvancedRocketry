@@ -1572,9 +1572,10 @@ public class AdvancedRocketry {
 	@EventHandler
 	public void serverStarting(FMLServerStartingEvent event) {
 		event.registerServerCommand(new WorldCommand());
-
 		int dimOffset = DimensionManager.dimOffset;
+		//Open ore files
 
+		
 		//Load Asteroids from XML
 		File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/asteroidConfig.xml");
 		logger.info("Checking for asteroid config at " + file.getAbsolutePath());
@@ -1610,13 +1611,11 @@ public class AdvancedRocketry {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		// End load asteroids from XML
 		
 		//Open ore files
 		file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/oreConfig.xml");
 		logger.info("Checking for ore config at " + file.getAbsolutePath());
-
 		if(!file.exists()) {
 			logger.info(file.getAbsolutePath() + " not found, generating");
 			try {
