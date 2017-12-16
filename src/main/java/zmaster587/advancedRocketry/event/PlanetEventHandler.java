@@ -283,7 +283,7 @@ public class PlanetEventHandler {
 		}
 	}
 
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public void connectToServer(ClientConnectedToServerEvent event) 
 	{
 		zmaster587.advancedRocketry.api.Configuration.prevAsteroidTypes = zmaster587.advancedRocketry.api.Configuration.asteroidTypes;
@@ -294,7 +294,7 @@ public class PlanetEventHandler {
 	public void disconnectFromServer(ClientDisconnectionFromServerEvent event)
 	{
 		zmaster587.advancedRocketry.api.Configuration.asteroidTypes = zmaster587.advancedRocketry.api.Configuration.prevAsteroidTypes;
-	}
+	}*/
 
 
 	// Used to save extra biome data
