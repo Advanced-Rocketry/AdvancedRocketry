@@ -112,14 +112,14 @@ public class WorldCommand implements ICommand {
 						try {
 							dataType = DataType.valueOf(string[1].toUpperCase(Locale.ENGLISH));
 						} catch (IllegalArgumentException e) {
-							sender.sendMessage(new TextComponentString("Did you mean: /advRocketry" + string[0] + " [datatype] [amountFill]"));
-							sender.sendMessage(new TextComponentString("Not a valid datatype"));
+							sender.addChatMessage(new TextComponentString("Did you mean: /advRocketry" + string[0] + " [datatype] [amountFill]"));
+							sender.addChatMessage(new TextComponentString("Not a valid datatype"));
 							String value = "";
 							for(DataType data : DataType.values())
 								if(!data.name().equals("UNDEFINED"))
 								value += data.name().toLowerCase() + ", ";
 							
-							sender.sendMessage(new TextComponentString("Try " + value));
+							sender.addChatMessage(new TextComponentString("Try " + value));
 							return;
 						}
 					}
@@ -127,8 +127,8 @@ public class WorldCommand implements ICommand {
 						try {
 							dataAmount = Integer.parseInt(string[2]);
 						} catch(NumberFormatException e) {
-							sender.sendMessage(new TextComponentString("Did you mean: /advRocketry" + string[0] + " [datatype] [amountFill]"));
-							sender.sendMessage(new TextComponentString("Not a valid number"));
+							sender.addChatMessage(new TextComponentString("Did you mean: /advRocketry" + string[0] + " [datatype] [amountFill]"));
+							sender.addChatMessage(new TextComponentString("Not a valid number"));
 							return;
 						}
 
@@ -140,7 +140,7 @@ public class WorldCommand implements ICommand {
 							item.setData(stack, dataAmount, type);
 					}
 					
-					sender.sendMessage(new TextComponentString("Data filled!"));
+					sender.addChatMessage(new TextComponentString("Data filled!"));
 				}
 				else if(stack != null && stack.getItem() instanceof ItemMultiData) {
 					ItemMultiData item = (ItemMultiData) stack.getItem();
