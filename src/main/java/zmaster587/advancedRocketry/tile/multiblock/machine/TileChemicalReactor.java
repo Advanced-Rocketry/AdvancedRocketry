@@ -59,6 +59,7 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 		boolean flag = false;
 		if(getOutputs() == null && (recipe = getRecipe(getMachineRecipeList())) != null && canProcessRecipe(recipe))
 		{
+			if(!recipe.getOutput().isEmpty()) {
 			NBTTagList list = recipe.getOutput().get(0).getEnchantmentTagList();
 			
 			if(list != null) {
@@ -70,7 +71,7 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 						break;
 					}
 				}
-				
+			}
 				
 			}
 		}
