@@ -107,8 +107,8 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 		battery.readFromNBT(nbt);
 		
 		//Fix breakages with earlier version of the mod
-		if(battery.getMaxEnergyStored() != this.satelliteProperties.getPowerStorage())
-			battery.setMaxEnergyStored(this.satelliteProperties.getPowerStorage());
+		if(battery.getMaxEnergyStored() != this.satelliteProperties.getPowerStorage() || battery.getMaxEnergyStored() == 0)
+			battery.setMaxEnergyStored(Math.max(this.satelliteProperties.getPowerStorage(),1));
 		
 		lastActionTime = nbt.getLong("lastActionTime");
 		teir = nbt.getByte("teir");
