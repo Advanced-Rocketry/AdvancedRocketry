@@ -16,6 +16,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 
 public class GravityHandler implements IGravityManager {
 
@@ -82,8 +83,8 @@ public class GravityHandler implements IGravityManager {
 					else {
 						if(entity instanceof EntityItem)
 							entity.motionY -= ITEM_GRAV_OFFSET;
-						else//Without the ASM, this added extra gravity in overworld on SMP
-							entity.motionY -= 0.005d;
+						//else//Without the ASM, this added extra gravity in overworld on SMP
+							//entity.motionY -= 0.005d;
 					}
 				}
 			}		
