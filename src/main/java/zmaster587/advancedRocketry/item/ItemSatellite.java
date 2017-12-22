@@ -99,7 +99,7 @@ public class ItemSatellite extends ItemIdWithName {
 			if(internalProps != null) {
 				satellite.setMaxData(internalProps.getMaxDataStorage());
 				satellite.setPowerGeneration(internalProps.getPowerGeneration());
-				satellite.setPowerStorage(internalProps.getMaxDataStorage());
+				satellite.setPowerStorage(internalProps.getPowerGeneration());
 			}
 			
 			satellite.writeToNBT(nbt);
