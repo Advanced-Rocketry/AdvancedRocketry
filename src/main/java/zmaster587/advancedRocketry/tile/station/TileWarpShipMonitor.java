@@ -462,7 +462,7 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 			SpaceObject station = getSpaceObject();
 
 			if(station != null && station.hasUsableWarpCore() && station.useFuel(getTravelCost()) != 0 && meetsArtifactReq(DimensionManager.getInstance().getDimensionProperties(station.getDestOrbitingBody()))) {
-				SpaceObjectManager.getSpaceManager().moveStationToBody(station, station.getDestOrbitingBody(), 200);
+				SpaceObjectManager.getSpaceManager().moveStationToBody(station, station.getDestOrbitingBody(), Math.max(Math.min(getTravelCost()*5, 5000),0));
 
 
 				for (Object plr : worldObj.playerEntities) {
