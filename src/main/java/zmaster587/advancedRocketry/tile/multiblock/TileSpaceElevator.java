@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.entity.EntityElevatorCapsule;
 import zmaster587.advancedRocketry.inventory.modules.ModuleStellarBackground;
@@ -314,12 +315,13 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 								capsule.setDst(dimBlockPos);
 								capsule.setSourceTile(new DimensionBlockPosition(this.getWorld().provider.getDimension(), new HashedBlockPosition(getPos())));
 								markDirty();
-								world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
+								this.world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 								return;
 							}
 						}
 					}
 				} catch (IndexOutOfBoundsException e) {
+					AdvancedRocketry.logger.warn("Space Elevator at location " + this.pos + " recieved invalid button press!");
 					//Sigh...
 				}
 				dimBlockPos = null;
