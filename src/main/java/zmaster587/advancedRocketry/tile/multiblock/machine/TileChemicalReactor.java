@@ -23,6 +23,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
@@ -150,8 +151,8 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 	public void registerRecipes() {
 		//Chemical Reactor
 		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new Object[] {new ItemStack(AdvancedRocketryItems.itemCarbonScrubberCartridge,1, 0), new ItemStack(Items.COAL, 1, 1)}, 40, 20, new ItemStack(AdvancedRocketryItems.itemCarbonScrubberCartridge, 1, AdvancedRocketryItems.itemCarbonScrubberCartridge.getMaxDamage()));
-		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new ItemStack(Items.DYE,5,0xF), 100, 1, Items.BONE, new FluidStack(AdvancedRocketryFluids.fluidNitrogen, 10));
-		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new FluidStack(AdvancedRocketryFluids.fluidRocketFuel, 20), 100, 10, new FluidStack(AdvancedRocketryFluids.fluidOxygen, 10), new FluidStack(AdvancedRocketryFluids.fluidHydrogen, 10));
+		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, new ItemStack(Items.DYE,5,0xF), 100, 1, Items.BONE, FluidRegistry.getFluidStack("nitrogen", 10));
+		RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, FluidRegistry.getFluidStack("rocketFuel", 20), 100, 10, FluidRegistry.getFluidStack("oxygen", 10), FluidRegistry.getFluidStack("hydrogen", 10));
 
 		if(Configuration.enableOxygen) {
 			for(ResourceLocation key : Item.REGISTRY.getKeys()) {
