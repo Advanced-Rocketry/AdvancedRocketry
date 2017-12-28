@@ -14,7 +14,9 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -156,7 +158,7 @@ public class XMLPlanetLoader {
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("gas")) {
 				Fluid f = FluidRegistry.getFluid(planetPropertyNode.getTextContent());
-				
+
 				if(f == null)
 					AdvancedRocketry.logger.warn( "\"" + planetPropertyNode.getTextContent() + "\" is not a valid fluid"); //TODO: more detailed error msg
 				else {
@@ -239,13 +241,23 @@ public class XMLPlanetLoader {
 
 				String biomeList[] = planetPropertyNode.getTextContent().split(",");
 				for(int j = 0; j < biomeList.length; j++) {
-					try {
-						int biome =  Integer.parseInt(biomeList[j]);
 
-						if(!properties.addBiome(biome))
-							AdvancedRocketry.logger.warn(biomeList[j] + " is not a valid biome id"); //TODO: more detailed error msg
-					} catch (NumberFormatException e) {
-						AdvancedRocketry.logger.warn(biomeList[j] + " is not a valid biome id"); //TODO: more detailed error msg
+					ResourceLocation location = new ResourceLocation(biomeList[j]);
+					if(Biome.REGISTRY.containsKey(location)) {
+						Biome biome = Biome.REGISTRY.getObject(location);
+						if(biome == null || !properties.addBiome(Biome.getIdForBiome(biome)))
+							AdvancedRocketry.logger.warn("Error adding " + biomeList[j]); //TODO: more detailed error msg
+					}
+					else
+					{
+						try {
+							int biome =  Integer.parseInt(biomeList[j]);
+
+							if(!properties.addBiome(biome))
+								AdvancedRocketry.logger.warn(biomeList[j] + " is not a valid biome id"); //TODO: more detailed error msg
+						} catch (NumberFormatException e) {
+							AdvancedRocketry.logger.warn(biomeList[j] + " is not a valid biome id or name"); //TODO: more detailed error msg
+						}
 					}
 				}
 			}
@@ -377,7 +389,7 @@ public class XMLPlanetLoader {
 		star.setId(starId++);
 		return star;
 	}
-	
+
 	public StellarBody readSubStar(Node planetNode) {
 		StellarBody star = new StellarBody();
 		if(planetNode.hasAttributes()) {
@@ -395,7 +407,7 @@ public class XMLPlanetLoader {
 					AdvancedRocketry.logger.warn("Error Reading star " + star.getName());
 				}
 			}
-			
+
 			nameNode = planetNode.getAttributes().getNamedItem("size");
 			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
 				try {
@@ -404,7 +416,7 @@ public class XMLPlanetLoader {
 					AdvancedRocketry.logger.warn("Error Reading star " + star.getName());
 				}
 			}
-			
+
 			nameNode = planetNode.getAttributes().getNamedItem("seperation");
 			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
 				try {
@@ -414,7 +426,7 @@ public class XMLPlanetLoader {
 				}
 			}
 		}
-		
+
 		return star;
 	}
 
@@ -471,7 +483,7 @@ public class XMLPlanetLoader {
 						"\" size=\"" + star2.getSize() + "\" seperation=\"" + star2.getStarSeperation() + "\" />\n";
 
 			}
-			
+
 			for(IDimensionProperties properties : star.getPlanets()) {
 				if(!properties.isMoon())
 					outputString = outputString + writePlanet((DimensionProperties)properties, 2);
@@ -520,24 +532,24 @@ public class XMLPlanetLoader {
 			outputString = outputString + XMLOreLoader.writeOreEntryXML(properties.oreProperties, numTabs+2);
 			outputString = outputString + tabLen + "\t</oreGen>\n";
 		}
-		
+
 		if(properties.isNativeDimension && !properties.isGasGiant()) {
 			String biomeIds = "";
 			for(BiomeEntry biome : properties.getBiomes()) {
-				biomeIds = biomeIds + "," + Biome.getIdForBiome(biome.biome);
+				biomeIds = biomeIds + "," + Biome.REGISTRY.getNameForObject(biome.biome).toString();//Biome.getIdForBiome(biome.biome);
 			}
 			if(!biomeIds.isEmpty())
 				biomeIds = biomeIds.substring(1);
 			else
 				AdvancedRocketry.logger.warn("Dim " + properties.getId() + " has no biomes to save!");
-			
+
 			outputString = outputString + tabLen + "\t<biomeIds>" + biomeIds + "</biomeIds>\n";
 		}
 
 		for(ItemStack stack : properties.getRequiredArtifacts()) {
 			outputString = outputString + tabLen + "\t<artifact>" + stack.getItem().getRegistryName() + " " + stack.getItemDamage() + "</artifact>\n";
 		}
-		
+
 		for(Integer properties2 : properties.getChildPlanets()) {
 			outputString = outputString + writePlanet(DimensionManager.getInstance().getDimensionProperties(properties2), numTabs+1);
 		}
