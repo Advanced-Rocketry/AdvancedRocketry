@@ -1338,6 +1338,7 @@ public class AdvancedRocketry {
 
         //Register the machine recipes
         machineRecipes.registerAllMachineRecipes();
+        AdvancedRocketry.machineRecipes.registerXMLRecipes();
     }
 
 	@EventHandler
