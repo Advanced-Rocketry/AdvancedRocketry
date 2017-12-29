@@ -228,7 +228,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 
 			worldserver.updateEntityWithOptionalForce(this, false);
 			this.world.profiler.endStartSection("reloading");
-			Entity entity = EntityList.createEntityByID(EntityList.getID(this.getClass()), worldserver1);
+			Entity entity = EntityList.newEntity(this.getClass(), worldserver1);
 
 			if (entity != null)
 			{
