@@ -130,4 +130,6 @@ public class Configuration {
 	public static int terraformPlanetSpeed;
 
 	public static int planetDiscoveryChance;
+
+	public static double oxygenVentPowerMultiplier;
 }
