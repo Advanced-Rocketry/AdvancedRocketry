@@ -189,7 +189,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements INe
 
 	@Override
 	public int getPowerPerOperation() {
-		return isSealed ? numScrubbers*10 + 1 : 1;
+		return (int)((numScrubbers*10 + 1)*Configuration.oxygenVentPowerMultiplier);
 	}
 
 	@Override
