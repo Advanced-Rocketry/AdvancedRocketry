@@ -72,36 +72,53 @@ public class WorldCommand implements ICommand {
 
 		//advRocketry planet set <var value>
 		int opLevel = 2;
-		if(!(sender instanceof EntityPlayer))
-		{
-			if(sender != null)
-				sender.addChatMessage(new ChatComponentText("Commands can only be executed by a player"));
-			return;
-		}
+
 		
-		if(string.length >= 1 && string[0].equalsIgnoreCase("givestation")) {
-			if(string.length >= 2) {
+		if(string.length >= 1 && string[0].equalsIgnoreCase("help")) {
+			sender.addChatMessage(new ChatComponentText("Subcommands:"));
+			sender.addChatMessage(new ChatComponentText("planet"));
+			sender.addChatMessage(new ChatComponentText("filldata"));
+			sender.addChatMessage(new ChatComponentText("goto"));
+			sender.addChatMessage(new ChatComponentText("star"));
+			sender.addChatMessage(new ChatComponentText("fetch"));
+			sender.addChatMessage(new ChatComponentText("giveStation"));
+			sender.addChatMessage(new ChatComponentText("reloadRecipes"));
+			sender.addChatMessage(new ChatComponentText("setGravity"));
+			
+		}
+		else if(string.length >= 1 && string[0].equalsIgnoreCase("givestation")) {
+			EntityPlayer player = null;
+			if(string.length >= 3) {
+				player = getPlayerByName(string[2]);
+				if(player == null) {
+					sender.addChatMessage(new ChatComponentText("Player " + string[2] + " not found"));
+					return;
+				}
+			}
+			else if(sender instanceof Entity)
+				player = ((EntityPlayer)sender);
+			
+			if(string.length >= 2 && player != null) {
 				int stationId = Integer.parseInt(string[1]);
 				ItemStack stack = new ItemStack(AdvancedRocketryItems.itemSpaceStationChip);
 				((ItemStationChip)AdvancedRocketryItems.itemSpaceStationChip).setUUID(stack, stationId);
-				((EntityPlayer)sender).inventory.addItemStackToInventory(stack);
+				player.inventory.addItemStackToInventory(stack);
 			}
 			else
-				sender.addChatMessage(new ChatComponentText("Usage: /advRocketry " + string[0] + " <stationId>"));
+				sender.addChatMessage(new ChatComponentText("Usage: /advRocketry " + string[0] + " <stationId> [PlayerName]"));
 		}
-
-		if(string.length >= 1 &&  string[0].equalsIgnoreCase("filldata")) {
+		else if(string.length >= 1 &&  string[0].equalsIgnoreCase("filldata")) {
 			ItemStack stack;
 			if(sender instanceof EntityPlayer ) {
 				stack = ((EntityPlayer)sender).getHeldItem();
-				
+
 				if(string.length >= 2 && string[1].equalsIgnoreCase("help")) {
 					sender.addChatMessage(new ChatComponentText("Usage: /advRocketry" + string[0] + " [datatype] [amountFill]\n"));
 					sender.addChatMessage(new ChatComponentText("Fills the amount of the data type specifies into the chip being held."));
 					sender.addChatMessage(new ChatComponentText("If the datatype is not specified then command fills all datatypes, if no amountFill is specified completely fills the chip"));
 					return;
 				}
-				
+
 				if(stack != null && stack.getItem() instanceof ItemData) {
 					ItemData item = (ItemData) stack.getItem();
 					int dataAmount = item.getMaxData(stack.getItemDamage());
@@ -116,8 +133,8 @@ public class WorldCommand implements ICommand {
 							String value = "";
 							for(DataType data : DataType.values())
 								if(!data.name().equals("UNDEFINED"))
-								value += data.name().toLowerCase() + ", ";
-							
+									value += data.name().toLowerCase() + ", ";
+
 							sender.addChatMessage(new ChatComponentText("Try " + value));
 							return;
 						}
@@ -138,7 +155,7 @@ public class WorldCommand implements ICommand {
 						for(DataType type : DataType.values())
 							item.setData(stack, dataAmount, type);
 					}
-					
+
 					sender.addChatMessage(new ChatComponentText("Data filled!"));
 				}
 				else if(stack != null && stack.getItem() instanceof ItemMultiData) {
@@ -155,8 +172,8 @@ public class WorldCommand implements ICommand {
 							String value = "";
 							for(DataType data : DataType.values())
 								if(!data.name().equals("UNDEFINED"))
-								value += data.name().toLowerCase() + ", ";
-							
+									value += data.name().toLowerCase() + ", ";
+
 							sender.addChatMessage(new ChatComponentText("Try " + value));
 							return;
 						}
@@ -177,7 +194,7 @@ public class WorldCommand implements ICommand {
 						for(DataType type : DataType.values())
 							item.setData(stack, dataAmount, type);
 					}
-					
+
 					sender.addChatMessage(new ChatComponentText("Data filled!"));
 				}
 				else
@@ -187,14 +204,14 @@ public class WorldCommand implements ICommand {
 				sender.addChatMessage(new ChatComponentText("Ghosts don't have items!"));
 			return;
 		}
-		
+
 		if(string.length >= 1 &&  string[0].equalsIgnoreCase("reloadRecipes")) {
 			try {
 				AdvancedRocketry.machineRecipes.clearAllMachineRecipes();
 				AdvancedRocketry.machineRecipes.registerAllMachineRecipes();
 				AdvancedRocketry.machineRecipes.createAutoGennedRecipes(AdvancedRocketry.modProducts);
 				AdvancedRocketry.machineRecipes.registerXMLRecipes();
-				
+
 				sender.addChatMessage(new ChatComponentText("Recipes Reloaded"));
 			} catch (Exception e) {
 				sender.addChatMessage(new ChatComponentText("Serious error has occured!  Possible recipe corruption"));
@@ -203,31 +220,29 @@ public class WorldCommand implements ICommand {
 				sender.addChatMessage(new ChatComponentText("restarting the game"));
 			}
 
-			
+
 			return;
 		}
 
 		if(string.length >= 1 && string[0].equalsIgnoreCase("setGravity")) {
 			if(string.length >= 2) {
-				if(sender instanceof Entity) {
-					Entity player;
-					if(string.length > 2)
-						player = sender.getEntityWorld().getPlayerEntityByName(string[2]);
-					else
-						player = (Entity) sender;
-					if(player != null) {
-						try {
-							double d = Double.parseDouble(string[1]);
-							if(d == 0)
-								AdvancedRocketryAPI.gravityManager.clearGravityEffect(player);
-							else
-								AdvancedRocketryAPI.gravityManager.setGravityMultiplier((Entity) sender, d);
-						} catch(NumberFormatException e) {
-							sender.addChatMessage(new ChatComponentText(string[1] + " is not a valid number"));
-						}
-					} else {
-						sender.addChatMessage(new ChatComponentText("Not a valid player"));
+				Entity player = null;
+				if(string.length > 2)
+					player = getPlayerByName(string[2]);
+				else if (sender instanceof Entity)
+					player = (Entity) sender;
+				if(player != null) {
+					try {
+						double d = Double.parseDouble(string[1]);
+						if(d == 0)
+							AdvancedRocketryAPI.gravityManager.clearGravityEffect(player);
+						else
+							AdvancedRocketryAPI.gravityManager.setGravityMultiplier((Entity) sender, d);
+					} catch(NumberFormatException e) {
+						sender.addChatMessage(new ChatComponentText(string[1] + " is not a valid number"));
 					}
+				} else {
+					sender.addChatMessage(new ChatComponentText("Not a valid player"));
 				}
 			}
 			else {
@@ -242,8 +257,8 @@ public class WorldCommand implements ICommand {
 		if(string.length > 1) {
 
 			if(string[0].equalsIgnoreCase("goto") && (string.length == 2 || string.length == 3)) {
-				EntityPlayer player = sender.getEntityWorld().getPlayerEntityByName(sender.getCommandSenderName());
-				if(player != null) {
+				EntityPlayer player;
+				if(sender instanceof Entity && (player = sender.getEntityWorld().getPlayerEntityByName(sender.getCommandSenderName())) != null) {
 					try {
 						int dim;
 
@@ -280,31 +295,43 @@ public class WorldCommand implements ICommand {
 					sender.addChatMessage(new ChatComponentText("Must be a player to use this command"));
 			}
 			else if(string[0].equalsIgnoreCase("fetch") && string.length == 2) {
-				EntityPlayer me = sender.getEntityWorld().getPlayerEntityByName(sender.getCommandSenderName());
-				EntityPlayer player = null;
+				if(sender instanceof Entity) {
+					EntityPlayer me = sender.getEntityWorld().getPlayerEntityByName(sender.getCommandSenderName());
+					EntityPlayer player = null;
 
-				for(World world : MinecraftServer.getServer().worldServers) {
-					player = world.getPlayerEntityByName(string[1]);
-					if(player != null)
-						break;
+					for(World world : MinecraftServer.getServer().worldServers) {
+						player = world.getPlayerEntityByName(string[1]);
+						if(player != null)
+							break;
+					}
+
+					System.out.println(string[1] + "   " + sender.getCommandSenderName());
+
+					if(player == null) {
+						sender.addChatMessage(new ChatComponentText("Invalid player name: " + string[1]));
+					}
+					else {
+						MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player,  me.worldObj.provider.dimensionId , new TeleporterNoPortal(MinecraftServer.getServer().worldServerForDimension(me.worldObj.provider.dimensionId)));
+						player.setPosition(me.posX, me.posY, me.posZ);
+					}
 				}
-
-
-
-				System.out.println(string[1] + "   " + sender.getCommandSenderName());
-
-				if(player == null) {
-					sender.addChatMessage(new ChatComponentText("Invalid player name: " + string[1]));
-				}
-				else {
-					MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player,  me.worldObj.provider.dimensionId , new TeleporterNoPortal(MinecraftServer.getServer().worldServerForDimension(me.worldObj.provider.dimensionId)));
-					player.setPosition(me.posX, me.posY, me.posZ);
-				}
+				else
+					sender.addChatMessage(new ChatComponentText("Server cannot fetch players!"));
 			}
 			else if(string[0].equalsIgnoreCase("planet")) {
 
 				int dimId;
-				if(string[1].equalsIgnoreCase("reset")) {
+				if(string[1].equalsIgnoreCase("help")) {
+					sender.addChatMessage(new ChatComponentText("Planet:"));
+					sender.addChatMessage(new ChatComponentText("planet delete [dimid]"));
+					sender.addChatMessage(new ChatComponentText("planet generate [starId] (moon/gas) [name] [atmosphere randomness] [distance Randomness] [gravity randomness] (atmosphere base) (distance base) (gravity base)"));
+					sender.addChatMessage(new ChatComponentText("planet list"));
+					sender.addChatMessage(new ChatComponentText("planet reset [dimid]"));
+					sender.addChatMessage(new ChatComponentText("planet set [property]"));
+					sender.addChatMessage(new ChatComponentText("planet get [property]"));
+					
+				}
+				else if(string[1].equalsIgnoreCase("reset")) {
 					if(string.length == 3) {
 						try {
 							dimId = Integer.parseInt(string[2]);
@@ -315,9 +342,14 @@ public class WorldCommand implements ICommand {
 						}
 					}
 					else if(string.length == 2) {
-						if(DimensionManager.getInstance().isDimensionCreated((dimId = sender.getEntityWorld().provider.dimensionId))) {
-							DimensionManager.getInstance().getDimensionProperties(dimId).resetProperties();
-							PacketHandler.sendToAll(new PacketDimInfo(dimId, DimensionManager.getInstance().getDimensionProperties(dimId)));
+						if(sender instanceof Entity) {
+							if(DimensionManager.getInstance().isDimensionCreated((dimId = sender.getEntityWorld().provider.dimensionId))) {
+								DimensionManager.getInstance().getDimensionProperties(dimId).resetProperties();
+								PacketHandler.sendToAll(new PacketDimInfo(dimId, DimensionManager.getInstance().getDimensionProperties(dimId)));
+							}
+						}
+						else {
+							sender.addChatMessage(new ChatComponentText("Please specify dimension ID"));
 						}
 					}
 				}
@@ -474,29 +506,43 @@ public class WorldCommand implements ICommand {
 				else if( DimensionManager.getInstance().isDimensionCreated((dimId = sender.getEntityWorld().provider.dimensionId)) ) {
 
 					if(string[1].equalsIgnoreCase("set") && string.length > 2) {
+						
+						int commandOffset = 0;
+						if(string.length > 3) {
+							try {
+								dimId = Integer.parseInt(string[2]);
+								commandOffset = 1;
+							} 
+							catch (NumberFormatException e) {
+								sender.addChatMessage(new ChatComponentText("Invalid Dimensions"));
+							}
+						}
 
+						if(!DimensionManager.getInstance().isDimensionCreated(dimId)) {
+							sender.addChatMessage(new ChatComponentText("Invalid Dimensions"));
+							return;
+						}
+						
 						DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimId);
-
-
 						try {
-							if(string[2].equalsIgnoreCase("atmosphereDensity")) {
-								properties.setAtmosphereDensityDirect(Integer.parseUnsignedInt(string[3]));
+							if(string[2 + commandOffset].equalsIgnoreCase("atmosphereDensity")) {
+								properties.setAtmosphereDensityDirect(Integer.parseUnsignedInt(string[3 + commandOffset]));
 								PacketHandler.sendToAll(new PacketDimInfo(dimId, properties));
 							}
 							else {
 
-								Field field = properties.getClass().getDeclaredField(string[2]);
+								Field field = properties.getClass().getDeclaredField(string[2 + commandOffset]);
 
 								if(field.getType().isArray()) {
 
 									if(Float.TYPE == field.getType().getComponentType()) {
 										float var[] = (float[])field.get(properties);
 
-										if(string.length - 3 == var.length) {
+										if(string.length - 3 - commandOffset == var.length) {
 
 											//Make sure we catch if some invalid arg is entered
 											for(int i = 0; i < var.length; i++) {
-												var[i] = Float.parseFloat(string[3+i]);
+												var[i] = Float.parseFloat(string[3+i + commandOffset]);
 											}
 
 											field.set(properties, var);
@@ -507,12 +553,12 @@ public class WorldCommand implements ICommand {
 									if(Integer.TYPE == field.getType().getComponentType()) {
 										int var[] = (int[])field.get(properties);
 
-										if(string.length - 3 == var.length) {
+										if(string.length - 3 - commandOffset == var.length) {
 
 											//Make sure we catch if some invalid arg is entered
 
 											for(int i = 0; i < var.length; i++) {
-												var[i] = Integer.parseInt(string[3+i]);
+												var[i] = Integer.parseInt(string[3+i + commandOffset]);
 											}
 
 											field.set(properties, var);
@@ -522,15 +568,15 @@ public class WorldCommand implements ICommand {
 								}
 								else {
 									if(Integer.TYPE == field.getType() )
-										field.set(properties, Integer.parseInt(string[3]));
+										field.set(properties, Integer.parseInt(string[3 + commandOffset]));
 									else if(Float.TYPE == field.getType())
-										field.set(properties, Float.parseFloat(string[3]));
+										field.set(properties, Float.parseFloat(string[3 + commandOffset]));
 									else if(Double.TYPE == field.getType()) 
-										field.set(properties, Double.parseDouble(string[3]));
+										field.set(properties, Double.parseDouble(string[3 + commandOffset]));
 									else if(Boolean.TYPE == field.getType())
-										field.set(properties, Boolean.parseBoolean(string[3]));
+										field.set(properties, Boolean.parseBoolean(string[3 + commandOffset]));
 									else
-										field.set(properties, string[3]);
+										field.set(properties, string[3 + commandOffset]);
 								}
 
 								PacketHandler.sendToAll(new PacketDimInfo(dimId, properties));
@@ -538,26 +584,44 @@ public class WorldCommand implements ICommand {
 							}
 						} catch (NumberFormatException e) {
 
-							sender.addChatMessage(new ChatComponentText("Invalid Argument for parameter " + string[2]));
+							sender.addChatMessage(new ChatComponentText("Invalid Argument for parameter " + string[2 + commandOffset]));
 						} catch (Exception e) {
 
 							e.printStackTrace();
 						}
 					}
-					else if(string[1].equalsIgnoreCase("get") && string.length == 3) {
+					else if(string[1].equalsIgnoreCase("get") && string.length >= 3) {
+						
+						int commandOffset = 0;
+						if(string.length > 3) {
+							try {
+								dimId = Integer.parseInt(string[2]);
+								commandOffset = 1;
+							} 
+							catch (NumberFormatException e) {
+								sender.addChatMessage(new ChatComponentText("Invalid Dimensions"));
+							}
+						}
+
+						if(!DimensionManager.getInstance().isDimensionCreated(dimId)) {
+							sender.addChatMessage(new ChatComponentText("Invalid Dimensions"));
+							return;
+						}
+						
 						DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimId);
-						if(string[2].equalsIgnoreCase("atmosphereDensity")) {
+						if(string[2 + commandOffset].equalsIgnoreCase("atmosphereDensity")) {
 							sender.addChatMessage(new ChatComponentText(Integer.toString(properties.getAtmosphereDensity())));
 						} 
 						else {
 							try {
-								Field field = properties.getClass().getDeclaredField(string[2]);
+								Field field = properties.getClass().getDeclaredField(string[2 + commandOffset]);
 
 								sender.addChatMessage(new ChatComponentText(field.get(properties).toString()));
 
 							} catch (Exception e) {
 
 								e.printStackTrace();
+								sender.addChatMessage(new ChatComponentText("An error has occured, please check logs"));
 							}
 						}
 					}
@@ -661,6 +725,10 @@ public class WorldCommand implements ICommand {
 
 	}
 
+	private void isPlayerAndWarn(ICommandSender sender) {
+
+	}
+
 	private void printStarHelp(ICommandSender sender) {
 		sender.addChatMessage(new ChatComponentText("star list"));
 		sender.addChatMessage(new ChatComponentText("star get temp <star id>"));
@@ -720,5 +788,16 @@ public class WorldCommand implements ICommand {
 	@Override
 	public boolean isUsernameIndex(String[] string, int number) {
 		return number == 1 && string[0].equalsIgnoreCase("fetch");
+	}
+
+
+	private EntityPlayer getPlayerByName(String name) {
+		EntityPlayer player = null;
+		for(World world : net.minecraftforge.common.DimensionManager.getWorlds()) {
+			player = world.getPlayerEntityByName(name);
+			if ( player != null) break;
+		}
+
+		return player;
 	}
 }
