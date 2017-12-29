@@ -154,7 +154,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public int getPowerPerOperation() {
-		return numScrubbers*10 + 1;
+		return (int)((numScrubbers*10 + 1)*Configuration.oxygenVentPowerMultiplier);
 	}
 
 	@Override
