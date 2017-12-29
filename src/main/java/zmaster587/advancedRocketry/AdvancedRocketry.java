@@ -1338,7 +1338,6 @@ public class AdvancedRocketry {
 
         //Register the machine recipes
         machineRecipes.registerAllMachineRecipes();
-        AdvancedRocketry.machineRecipes.registerXMLRecipes();
     }
 
 	@EventHandler
@@ -1651,7 +1650,7 @@ public class AdvancedRocketry {
 			}
 		}
 //TODO recipes?
-//		machineRecipes.registerXMLRecipes();
+		machineRecipes.registerXMLRecipes();
 
 		//Add the overworld as a discovered planet
 		zmaster587.advancedRocketry.api.Configuration.initiallyKnownPlanets.add(0);
