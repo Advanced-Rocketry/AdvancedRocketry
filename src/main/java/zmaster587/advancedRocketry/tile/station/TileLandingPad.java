@@ -146,7 +146,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 		AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
 
-		if(bbCache.intersects(rocket.getEntityBoundingBox())) {
+		if(bbCache.intersectsWith(rocket.getEntityBoundingBox())) {
 			if(!world.isRemote)
 				for(IInfrastructure infrastructure : getConnectedInfrastructure()) {
 					rocket.linkInfrastructure(infrastructure);
@@ -169,7 +169,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			EntityRocketBase rocket = (EntityRocketBase)event.getEntity();
 			AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
 
-			if(bbCache.intersects(rocket.getEntityBoundingBox())) {
+			if(bbCache.intersectsWith(rocket.getEntityBoundingBox())) {
 				if(event.getEntity() instanceof EntityRocket) {
 					((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), 
 							ItemLinker.getMasterX(stack) + 0.5f, Configuration.orbit, ItemLinker.getMasterZ(stack) + 0.5f);
