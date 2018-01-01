@@ -24,6 +24,7 @@ import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
+import zmaster587.advancedRocketry.world.util.TeleporterNoPortalSeekBlock;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import net.minecraft.command.CommandException;
@@ -266,7 +267,12 @@ public class WorldCommand implements ICommand {
 						if(string.length == 2) {
 							dim = Integer.parseInt(string[1]);
 							if(net.minecraftforge.common.DimensionManager.isDimensionRegistered(dim))
-								player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal((WorldServer) player.worldObj));
+							{
+								if(net.minecraftforge.common.DimensionManager.getWorld(dim) == null) {
+									net.minecraftforge.common.DimensionManager.initDimension(dim);
+								}
+								player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortalSeekBlock((WorldServer) net.minecraftforge.common.DimensionManager.getWorld(dim)));
+							}
 							else
 								sender.addChatMessage(new TextComponentString("Dimension does not exist"));
 						}
@@ -277,7 +283,7 @@ public class WorldCommand implements ICommand {
 
 							if(object != null) {
 								if(player.worldObj.provider.getDimension() != Configuration.spaceDimId)
-									player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal((WorldServer) player.worldObj));
+									player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortalSeekBlock((WorldServer) net.minecraftforge.common.DimensionManager.getWorld(Configuration.spaceDimId)));
 								HashedBlockPosition vec = object.getSpawnLocation();
 								player.setPositionAndUpdate(vec.x, vec.y, vec.z);
 							}
