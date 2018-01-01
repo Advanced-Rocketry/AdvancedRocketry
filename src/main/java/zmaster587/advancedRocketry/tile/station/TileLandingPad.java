@@ -70,7 +70,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 				((IMultiblock)tile).setIncomplete();
 		}
 	}
-	
+
 	@Override
 	public void onModuleUpdated(ModuleBase module) {
 		if(module == moduleNameTextbox) {
@@ -82,12 +82,12 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		List<ModuleBase> modules = super.getModules(ID, player);
-		
+
 		modules.add(new ModuleText(40, 20, LibVulpes.proxy.getLocalizedString("msg.label.name") + ":", 0x2f2f2f));
 		modules.add(moduleNameTextbox);
 		return modules;
 	}
-	
+
 	@Override
 	public void onChunkUnload() {
 		super.onChunkUnload();
@@ -110,7 +110,6 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	@Override
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
-
 		TileEntity tile = world.getTileEntity(((ItemLinker)item.getItem()).getMasterX(item), ((ItemLinker)item.getItem()).getMasterY(item), ((ItemLinker)item.getItem()).getMasterZ(item));
 
 		if(tile instanceof IInfrastructure) {
@@ -144,15 +143,21 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	@SubscribeEvent
 	public void onRocketLand(RocketLandedEvent event) {
 		EntityRocketBase rocket = (EntityRocketBase)event.entity;
-
 		AxisAlignedBB bbCache = AxisAlignedBB.getBoundingBox(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 1, this.yCoord + 2, this.zCoord + 1);
 		if(this.hasWorldObj())
 		{
 			List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
 
-			if(rockets.contains(rocket)) {
-				for(IInfrastructure infrastructure : getConnectedInfrastructure()) {
-					rocket.linkInfrastructure(infrastructure);
+			if(bbCache.intersectsWith(rocket.getBoundingBox())) {
+				if(!worldObj.isRemote)
+					for(IInfrastructure infrastructure : getConnectedInfrastructure()) {
+						rocket.linkInfrastructure(infrastructure);
+					}
+				ItemStack stack = getStackInSlot(0);
+				if(stack != null && stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != -1 &&
+						event.entity instanceof EntityRocket) {
+					((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), 
+							ItemLinker.getMasterX(stack) + 0.5f, Configuration.orbit, ItemLinker.getMasterZ(stack) + 0.5f);
 				}
 			}
 		}
@@ -172,7 +177,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			AxisAlignedBB bbCache = AxisAlignedBB.getBoundingBox(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 1, this.yCoord + 2, this.zCoord + 1);
 			List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
 
-			if(rockets.contains(rocket)) {
+			if(bbCache.intersectsWith(rocket.getBoundingBox())) {
 				if(event.entity instanceof EntityRocket) {
 					((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), 
 							ItemLinker.getMasterX(stack) + 0.5f, Configuration.orbit, ItemLinker.getMasterZ(stack) + 0.5f);
@@ -180,7 +185,6 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			}
 		}
 	}
-
 	public void registerTileWithStation(World world, int x, int y, int z) {
 		if(!world.isRemote && world.provider.dimensionId == Configuration.spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(x, z);
@@ -211,9 +215,32 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 		if(stack != null) {
 			unregisterTileWithStation(worldObj, xCoord, yCoord, zCoord);
+
+			AxisAlignedBB bbCache = AxisAlignedBB.getBoundingBox(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 1, this.yCoord + 2, this.zCoord + 1);
+			List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
+
+			for(EntityRocketBase rocket : rockets) {
+				if(rocket instanceof EntityRocket) {
+					if(stack != null && stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != -1) {
+						((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), 
+								ItemLinker.getMasterX(stack) + 0.5f, Configuration.orbit, ItemLinker.getMasterZ(stack) + 0.5f);
+					}
+					else
+						((EntityRocket)rocket).setOverriddenCoords(-1, 0,0,0);
+				}
+			}
 		}
 		else {
 			registerTileWithStation(worldObj, xCoord, yCoord, zCoord);
+			
+			AxisAlignedBB bbCache = AxisAlignedBB.getBoundingBox(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 1, this.yCoord + 2, this.zCoord + 1);
+			List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
+
+			for(EntityRocketBase rocket : rockets) {
+				if(rocket instanceof EntityRocket) {
+					((EntityRocket)rocket).setOverriddenCoords(-1, 0,0,0);
+				}
+			}
 		}
 
 	}
@@ -265,14 +292,14 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public S35PacketUpdateTileEntity getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		writeToNBT(nbt);
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, getBlockMetadata(), nbt);
 	}
-	
+
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		super.onDataPacket(net, pkt);
@@ -334,7 +361,6 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 		
 		if(name != null && !name.isEmpty())
 			nbt.setString("name", name);
-
 	}
 
 }
