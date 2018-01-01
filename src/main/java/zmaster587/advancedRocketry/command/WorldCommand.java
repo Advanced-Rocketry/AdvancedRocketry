@@ -1,5 +1,9 @@
 package zmaster587.advancedRocketry.command;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +28,7 @@ import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
+import zmaster587.advancedRocketry.world.util.TeleporterNoPortalSeekBlock;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import net.minecraft.command.CommandException;
@@ -35,10 +40,12 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.biome.Biome;
 
 public class WorldCommand implements ICommand {
 
@@ -83,6 +90,27 @@ public class WorldCommand implements ICommand {
 			sender.sendMessage(new TextComponentString("reloadRecipes"));
 			sender.sendMessage(new TextComponentString("setGravity"));
 		}
+		else if(string.length >= 1 && string[0].equalsIgnoreCase("dumpBiomes")) {
+
+			try {
+				File file = new File("./BiomeDump.txt");
+				if(!file.exists())
+					file.createNewFile();
+
+				BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+				
+				writer.append("ID\tResource name\n");
+				for(ResourceLocation resource : Biome.REGISTRY.getKeys()) {
+					writer.append(Biome.getIdForBiome(Biome.REGISTRY.getObject(resource)) + "\t" + resource.toString() + "\n");
+				}
+				
+				writer.close();
+				sender.sendMessage(new TextComponentString("The File \"BiomeDump.txt\" has been written to the current directory"));
+			} 
+			catch(Exception e) {
+				sender.sendMessage(new TextComponentString("An error has occured writing to the file"));
+			}
+		}
 		else if(string.length >= 1 && string[0].equalsIgnoreCase("givestation")) {
 			EntityPlayer player = null;
 			if(string.length >= 3) {
@@ -94,7 +122,7 @@ public class WorldCommand implements ICommand {
 			}
 			else if(sender.getCommandSenderEntity() != null)
 				player = ((EntityPlayer)sender);
-			
+
 			if(string.length >= 2 && player != null) {
 				int stationId = Integer.parseInt(string[1]);
 				ItemStack stack = new ItemStack(AdvancedRocketryItems.itemSpaceStationChip);
@@ -108,7 +136,7 @@ public class WorldCommand implements ICommand {
 			ItemStack stack;
 			if(sender.getCommandSenderEntity() != null ) {
 				stack = ((EntityPlayer)sender.getCommandSenderEntity()).getHeldItem(EnumHand.MAIN_HAND);
-				
+
 				if(string.length >= 2 && string[1].equalsIgnoreCase("help")) {
 					sender.sendMessage(new TextComponentString("Usage: /advRocketry" + string[0] + " [datatype] [amountFill]\n"));
 					sender.sendMessage(new TextComponentString("Fills the amount of the data type specifies into the chip being held."));
@@ -131,7 +159,7 @@ public class WorldCommand implements ICommand {
 							for(DataType data : DataType.values())
 								if(!data.name().equals("UNDEFINED"))
 									value += data.name().toLowerCase() + ", ";
-							
+
 							sender.sendMessage(new TextComponentString("Try " + value));
 
 							return;
@@ -170,7 +198,7 @@ public class WorldCommand implements ICommand {
 							for(DataType data : DataType.values())
 								if(!data.name().equals("UNDEFINED"))
 									value += data.name().toLowerCase() + ", ";
-							
+
 							sender.sendMessage(new TextComponentString("Try " + value));
 							return;
 						}
@@ -191,7 +219,7 @@ public class WorldCommand implements ICommand {
 						for(DataType type : DataType.values())
 							item.setData(stack, dataAmount, type);
 					}
-					
+
 					sender.sendMessage(new TextComponentString("Data filled!"));
 				}
 				else
@@ -208,9 +236,9 @@ public class WorldCommand implements ICommand {
 				AdvancedRocketry.machineRecipes.registerAllMachineRecipes();
 				AdvancedRocketry.machineRecipes.createAutoGennedRecipes(AdvancedRocketry.modProducts);
 				AdvancedRocketry.machineRecipes.registerXMLRecipes();
-				
+
 				sender.sendMessage(new TextComponentString("Recipes Reloaded"));
-				
+
 				CompatibilityMgr.reloadRecipes();
 			} catch (Exception e) {
 				sender.sendMessage(new TextComponentString("Serious error has occured!  Possible recipe corruption"));
@@ -267,7 +295,12 @@ public class WorldCommand implements ICommand {
 						if(string.length == 2) {
 							dim = Integer.parseInt(string[1]);
 							if(net.minecraftforge.common.DimensionManager.isDimensionRegistered(dim))
-								player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal((WorldServer) player.world));
+							{
+								if(net.minecraftforge.common.DimensionManager.getWorld(dim) == null) {
+									net.minecraftforge.common.DimensionManager.initDimension(dim);
+								}
+								player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortalSeekBlock((WorldServer) net.minecraftforge.common.DimensionManager.getWorld(dim)));
+							}
 							else
 								sender.sendMessage(new TextComponentString("Dimension does not exist"));
 						}
@@ -278,7 +311,7 @@ public class WorldCommand implements ICommand {
 
 							if(object != null) {
 								if(player.world.provider.getDimension() != Configuration.spaceDimId)
-									player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal((WorldServer) player.world));
+									player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortalSeekBlock((WorldServer) net.minecraftforge.common.DimensionManager.getWorld(Configuration.spaceDimId)));
 								HashedBlockPosition vec = object.getSpawnLocation();
 								player.setPositionAndUpdate(vec.x, vec.y, vec.z);
 							}
@@ -320,7 +353,7 @@ public class WorldCommand implements ICommand {
 					sender.sendMessage(new TextComponentString("planet reset [dimid]"));
 					sender.sendMessage(new TextComponentString("planet set [property]"));
 					sender.sendMessage(new TextComponentString("planet get [property]"));
-					
+
 				}
 				else if(string[1].equalsIgnoreCase("reset")) {
 					if(string.length == 3) {
@@ -496,9 +529,9 @@ public class WorldCommand implements ICommand {
 				//Make sure player is in Dimension we have control over
 				else if( DimensionManager.getInstance().isDimensionCreated((dimId = sender.getEntityWorld().provider.getDimension())) ) {
 
-					
+
 					if(string[1].equalsIgnoreCase("set") && string.length > 2) {
-						
+
 						int commandOffset = 0;
 						if(string.length > 3) {
 							try {
@@ -514,7 +547,7 @@ public class WorldCommand implements ICommand {
 							sender.sendMessage(new TextComponentString("Invalid Dimensions"));
 							return;
 						}
-						
+
 						DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimId);
 						try {
 							if(string[2 + commandOffset].equalsIgnoreCase("atmosphereDensity")) {
@@ -582,7 +615,7 @@ public class WorldCommand implements ICommand {
 						}
 					}
 					else if(string[1].equalsIgnoreCase("get") && string.length >= 3) {
-						
+
 						int commandOffset = 0;
 						if(string.length > 3) {
 							try {
@@ -598,7 +631,7 @@ public class WorldCommand implements ICommand {
 							sender.sendMessage(new TextComponentString("Invalid Dimensions"));
 							return;
 						}
-						
+
 						DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimId);
 						if(string[2 + commandOffset].equalsIgnoreCase("atmosphereDensity")) {
 							sender.sendMessage(new TextComponentString(Integer.toString(properties.getAtmosphereDensity())));
@@ -731,7 +764,7 @@ public class WorldCommand implements ICommand {
 		return sender.canUseCommand(2, getName());
 
 	}
-	
+
 	@Override
 	public List<String> getTabCompletions(MinecraftServer server,
 			ICommandSender sender, String[] string, BlockPos targetPos) {
@@ -746,6 +779,7 @@ public class WorldCommand implements ICommand {
 			list.add("setGravity");
 			list.add("reloadRecipes");
 			list.add("givestation");
+			list.add("dumpBiomes");
 		} else if(string.length == 2) {
 			ArrayList<String> list2 = new ArrayList<String>();
 			list2.add("get");
