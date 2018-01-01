@@ -903,6 +903,8 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	@SubscribeEvent
 	public void onRocketLand(RocketLandedEvent event) {
+		if(worldObj.isRemote)
+			return;
 		EntityRocketBase rocket = (EntityRocketBase)event.getEntity();
 
 		if(getBBCache() == null) {

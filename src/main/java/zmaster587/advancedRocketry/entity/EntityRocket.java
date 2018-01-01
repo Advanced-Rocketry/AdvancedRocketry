@@ -669,8 +669,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 				//Check to see if it's landed
 				if((isInOrbit() || !burningFuel) && isInFlight() && lastPosY + prevMotion != this.posY && this.posY < 256) {
+					//Did  sending this packet cause problems?
+					PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, (byte)PacketType.ROCKETLANDEVENT.ordinal()), this);
 					MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketLandedEvent(this));
-					//PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, (byte)PacketType.ROCKETLANDEVENT.ordinal()), this);
 					this.setInFlight(false);
 					this.setInOrbit(false);
 				}
@@ -838,8 +839,15 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					return;
 				}
 			}
-			//Make player confirm deorbit if a player is riding the rocket
+			
+			
+			//if coordinates are overridden, make sure we grab them
+			Vector3F<Float> destPos = storage.getDestinationCoordinates(destinationDimId, true);
+			if(destPos == null)
+				destPos = new Vector3F<Float>((float)posX, (float)Configuration.orbit, (float)posZ);
+			
 			if(hasHumanPassenger()) {
+				//Make player confirm deorbit if a player is riding the rocket
 				setInFlight(false);
 
 				if(DimensionManager.getInstance().getDimensionProperties(destinationDimId).getName().equals("Luna")) {
@@ -853,11 +861,12 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					DimensionManager.hasReachedMoon = true;
 				}
 			}
-			else
-				setPosition(posX, Configuration.orbit, posZ);
-
+			
+			//Reset override coords
+			setOverriddenCoords(-1, 0, 0, 0);
+			
 			if(destinationDimId != this.worldObj.provider.getDimension())
-				this.changeDimension(this.worldObj.provider.getDimension() == destinationDimId ? 0 : destinationDimId);
+				this.changeDimension(this.worldObj.provider.getDimension() == destinationDimId ? 0 : destinationDimId, destPos.x, destPos.y, destPos.z);
 		}
 	}
 

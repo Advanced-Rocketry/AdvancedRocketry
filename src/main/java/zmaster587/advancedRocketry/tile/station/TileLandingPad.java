@@ -51,7 +51,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	private List<HashedBlockPosition> blockPos;
 	ModuleTextBox moduleNameTextbox;
 	String name;
-	
+
 	public TileLandingPad() {
 		super(1);
 		MinecraftForge.EVENT_BUS.register(this);
@@ -69,7 +69,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 				((IMultiblock)tile).setIncomplete();
 		}
 	}
-	
+
 	@Override
 	public void onModuleUpdated(ModuleBase module) {
 		if(module == moduleNameTextbox) {
@@ -81,12 +81,12 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		List<ModuleBase> modules = super.getModules(ID, player);
-		
+
 		modules.add(new ModuleText(40, 20, LibVulpes.proxy.getLocalizedString("msg.label.name") + ":", 0x2f2f2f));
 		modules.add(moduleNameTextbox);
 		return modules;
 	}
-	
+
 	@Override
 	public void onChunkUnload() {
 		super.onChunkUnload();
@@ -100,7 +100,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 		ItemLinker.setDimId(item, world.provider.getDimension());
 		return true;
 	}
-	
+
 	@Override
 	public String getModularInventoryName() {
 		return "tile.landingPad.name";
@@ -109,7 +109,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	@Override
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
-		
+
 		TileEntity tile = world.getTileEntity(ItemLinker.getMasterCoords(item));
 
 		if(tile instanceof IInfrastructure) {
@@ -145,11 +145,17 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 		EntityRocketBase rocket = (EntityRocketBase)event.getEntity();
 
 		AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
-		List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
 
-		if(rockets.contains(rocket)) {
-			for(IInfrastructure infrastructure : getConnectedInfrastructure()) {
-				rocket.linkInfrastructure(infrastructure);
+		if(bbCache.intersectsWith(rocket.getEntityBoundingBox())) {
+			if(!worldObj.isRemote)
+				for(IInfrastructure infrastructure : getConnectedInfrastructure()) {
+					rocket.linkInfrastructure(infrastructure);
+				}
+			ItemStack stack = getStackInSlot(0);
+			if(stack != null && stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != -1 &&
+					event.getEntity() instanceof EntityRocket) {
+				((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), 
+						ItemLinker.getMasterX(stack) + 0.5f, Configuration.orbit, ItemLinker.getMasterZ(stack) + 0.5f);
 			}
 		}
 	}
@@ -162,9 +168,8 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 			EntityRocketBase rocket = (EntityRocketBase)event.getEntity();
 			AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
-			List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
 
-			if(rockets.contains(rocket)) {
+			if(bbCache.intersectsWith(rocket.getEntityBoundingBox())) {
 				if(event.getEntity() instanceof EntityRocket) {
 					((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), 
 							ItemLinker.getMasterX(stack) + 0.5f, Configuration.orbit, ItemLinker.getMasterZ(stack) + 0.5f);
@@ -172,14 +177,14 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			}
 		}
 	}
-	
+
 	public void registerTileWithStation(World world, BlockPos pos) {
 		if(!world.isRemote && world.provider.getDimension() == Configuration.spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-		
+
 			if(spaceObj instanceof SpaceObject) {
 				((SpaceObject)spaceObj).addLandingPad(pos, name);
-				
+
 				AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
 				List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
 				
@@ -188,7 +193,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			}
 		}
 	}
-	
+
 	public void unregisterTileWithStation(World world, BlockPos pos) {
 		if(!world.isRemote && world.provider.getDimension() == Configuration.spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
@@ -196,18 +201,41 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 				((SpaceObject)spaceObj).removeLandingPad(pos);
 		}
 	}
-	
+
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		super.setInventorySlotContents(slot, stack);
-		
+
 		if(stack != null) {
 			unregisterTileWithStation(worldObj, pos);
+
+			AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
+			List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
+
+			for(EntityRocketBase rocket : rockets) {
+				if(rocket instanceof EntityRocket) {
+					if(stack != null && stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != -1) {
+						((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), 
+								ItemLinker.getMasterX(stack) + 0.5f, Configuration.orbit, ItemLinker.getMasterZ(stack) + 0.5f);
+					}
+					else
+						((EntityRocket)rocket).setOverriddenCoords(-1, 0,0,0);
+				}
+			}
 		}
 		else {
 			registerTileWithStation(worldObj, pos);
-		}
 			
+			AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
+			List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
+
+			for(EntityRocketBase rocket : rockets) {
+				if(rocket instanceof EntityRocket) {
+					((EntityRocket)rocket).setOverriddenCoords(-1, 0,0,0);
+				}
+			}
+		}
+
 	}
 
 	@Override
@@ -254,26 +282,26 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		return new SPacketUpdateTileEntity(pos, getBlockMetadata(), writeToNBT(new NBTTagCompound()));
 	}
-	
+
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		super.onDataPacket(net, pkt);
 		readFromNBT(pkt.getNbtCompound());
 		moduleNameTextbox.setText(name);
 	}
-	
+
 	@Override
 	public NBTTagCompound getUpdateTag() {
 		return writeToNBT(new NBTTagCompound());
 	}
-	
+
 	@Override
 	public void handleUpdateTag(NBTTagCompound tag) {
 		super.handleUpdateTag(tag);
 		moduleNameTextbox.setText(name);
 	}
 
-	
+
 	@Override
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
@@ -328,7 +356,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 		if(name != null && !name.isEmpty())
 			nbt.setString("name", name);
-		
+
 		return nbt;
 	}
 
