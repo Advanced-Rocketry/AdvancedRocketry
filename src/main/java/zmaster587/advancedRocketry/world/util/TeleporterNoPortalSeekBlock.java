@@ -13,9 +13,11 @@ import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
 
 public class TeleporterNoPortalSeekBlock extends Teleporter {
-
+	private final WorldServer world;
+	
 	public TeleporterNoPortalSeekBlock(WorldServer p_i1963_1_) {
 		super(p_i1963_1_);
+		world = p_i1963_1_;
 	}
 
 	public void teleport(Entity entity, WorldServer world) {
