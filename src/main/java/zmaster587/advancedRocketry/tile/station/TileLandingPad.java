@@ -152,7 +152,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 					rocket.linkInfrastructure(infrastructure);
 				}
 			ItemStack stack = getStackInSlot(0);
-			if(stack != null && stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != -1 &&
+			if(stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != -1 &&
 					event.getEntity() instanceof EntityRocket) {
 				((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), 
 						ItemLinker.getMasterX(stack) + 0.5f, Configuration.orbit, ItemLinker.getMasterZ(stack) + 0.5f);
@@ -164,7 +164,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	public void onRocketLaunch(RocketPreLaunchEvent event) {
 
 		ItemStack stack = getStackInSlot(0);
-		if(stack != null && stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != -1) {
+		if(stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != -1) {
 
 			EntityRocketBase rocket = (EntityRocketBase)event.getEntity();
 			AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
@@ -206,7 +206,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		super.setInventorySlotContents(slot, stack);
 
-		if(stack != null) {
+		if(!stack.isEmpty()) {
 			unregisterTileWithStation(world, pos);
 
 			AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
@@ -214,7 +214,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 			for(EntityRocketBase rocket : rockets) {
 				if(rocket instanceof EntityRocket) {
-					if(stack != null && stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != -1) {
+					if(stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != -1) {
 						((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), 
 								ItemLinker.getMasterX(stack) + 0.5f, Configuration.orbit, ItemLinker.getMasterZ(stack) + 0.5f);
 					}
@@ -240,7 +240,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		return stack != null && stack.getItem() == LibVulpesItems.itemLinker;
+		return stack.getItem() == LibVulpesItems.itemLinker;
 	}
 
 	public List<IInfrastructure> getConnectedInfrastructure() {
