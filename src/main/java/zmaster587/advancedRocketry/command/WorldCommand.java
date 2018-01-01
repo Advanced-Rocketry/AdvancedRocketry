@@ -22,6 +22,7 @@ import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
+import zmaster587.advancedRocketry.world.util.TeleporterNoPortalSeekBlock;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.BlockPosition;
 import net.minecraft.command.ICommand;
@@ -265,7 +266,12 @@ public class WorldCommand implements ICommand {
 						if(string.length == 2) {
 							dim = Integer.parseInt(string[1]);
 							if(net.minecraftforge.common.DimensionManager.isDimensionRegistered(dim))
-								MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal(MinecraftServer.getServer().worldServerForDimension(dim)));
+							{
+								if(net.minecraftforge.common.DimensionManager.getWorld(dim) == null) {
+									net.minecraftforge.common.DimensionManager.initDimension(dim);
+								}
+								MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortalSeekBlock(net.minecraftforge.common.DimensionManager.getWorld(dim)));
+							}
 							else
 								sender.addChatMessage(new ChatComponentText("Dimension does not exist"));
 						}
@@ -276,7 +282,7 @@ public class WorldCommand implements ICommand {
 
 							if(object != null) {
 								if(player.worldObj.provider.dimensionId != Configuration.spaceDimId)
-									MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal(MinecraftServer.getServer().worldServerForDimension(dim)));
+									MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortalSeekBlock(net.minecraftforge.common.DimensionManager.getWorld(Configuration.spaceDimId)));
 								BlockPosition vec = object.getSpawnLocation();
 								player.setPositionAndUpdate(vec.x, vec.y, vec.z);
 							}
