@@ -802,7 +802,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			setOverriddenCoords(-1, 0, 0, 0);
 			
 			if(destinationDimId != this.worldObj.provider.dimensionId)
-				this.travelToDimension(this.worldObj.provider.dimensionId == destinationDimId ? 0 : destinationDimId, destPos.x, destPos.y, destPos.z);
+				this.travelToDimension(!DimensionManager.getInstance().isDimensionCreated(this.worldObj.provider.dimensionId) ? 0 : destinationDimId, destPos.x, destPos.y, destPos.z);
+			else
+			{
+				if(this.riddenByEntity != null)
+					this.riddenByEntity.setPosition(destPos.x, destPos.y, destPos.z);
+				this.setPosition(destPos.x, destPos.y, destPos.z);
+			}
 		}
 	}
 
