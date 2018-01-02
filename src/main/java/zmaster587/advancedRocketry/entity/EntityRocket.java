@@ -864,9 +864,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			
 			//Reset override coords
 			setOverriddenCoords(-1, 0, 0, 0);
-			
 			if(destinationDimId != this.worldObj.provider.getDimension())
-				this.changeDimension(this.worldObj.provider.getDimension() == destinationDimId ? 0 : destinationDimId, destPos.x, destPos.y, destPos.z);
+				this.changeDimension(!DimensionManager.getInstance().isDimensionCreated(this.worldObj.provider.getDimension()) ? 0 : destinationDimId, destPos.x, destPos.y, destPos.z);
+			else
+			{
+				for(Entity e : this.getPassengers())
+					e.setPosition(destPos.x, destPos.y, destPos.z);
+				this.setPosition(destPos.x, destPos.y, destPos.z);
+			}
 		}
 	}
 
