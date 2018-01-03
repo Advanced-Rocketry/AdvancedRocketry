@@ -34,6 +34,7 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.VulpineMath;
 import zmaster587.libVulpes.util.ZUtils;
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -220,6 +221,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public OreGenProperties oreProperties = null;
 	public String customIcon;
 	public List<ItemStack> requiredArtifacts;
+	private Block oceanBlock;
+	private int seaLevel;
 
 	//Planet Heirachy
 	private HashSet<Integer> childPlanets;
@@ -256,6 +259,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		customIcon = "";
 		harvestableAtmosphere = new LinkedList<Fluid>();
 		beaconLocations = new HashSet<BlockPosition>();
+		seaLevel = 63;
 	}
 
 	public boolean isGasGiant() {
@@ -323,6 +327,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		hasRings = false;
 		harvestableAtmosphere = new LinkedList<Fluid>();
 		beaconLocations = new HashSet<BlockPosition>();
+		seaLevel = 63;
 	}
 
 	public List<Fluid> getHarvestableGasses() {
@@ -1174,6 +1179,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		orbitalPhi = nbt.getDouble("orbitPhi");
 		rotationalPhi = nbt.getDouble("rotationalPhi");
 		hasRings = nbt.getBoolean("hasRings");
+		seaLevel = nbt.getInteger("seaLevel");
 
 		//Hierarchy
 		if(nbt.hasKey("childrenPlanets")) {
@@ -1230,6 +1236,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			//Do not allow empty atmospheres, at least not yet
 			if(getHarvestableGasses().isEmpty())
 				getHarvestableGasses().addAll(AtmosphereRegister.getInstance().getHarvestableGasses());
+		}
+		
+		if(nbt.hasKey("oceanBlockId")) {
+			oceanBlock = Block.getBlockById(nbt.getInteger("oceanBlockId"));
 		}
 	}
 
@@ -1307,6 +1317,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setDouble("orbitPhi", orbitalPhi);
 		nbt.setDouble("rotationalPhi", rotationalPhi);
 		nbt.setBoolean("hasRings", hasRings);
+		nbt.setInteger("seaLevel", seaLevel);
 
 		//Hierarchy
 		if(!childPlanets.isEmpty()) {
@@ -1339,6 +1350,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			}
 			
 			nbt.setTag("fluids", fluidList);
+		}
+		
+		if(oceanBlock != null) {
+			nbt.setInteger("oceanBlockId", Block.getIdFromBlock(oceanBlock));
 		}
 
 	}
@@ -1396,5 +1411,21 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	@Override
 	public int getOrbitalDist() {
 		return orbitalDist;
+	}
+	
+	public int getSeaLevel() {
+		return this.seaLevel;
+	}
+	
+	public void setSeaLevel(int seaLevel) {
+		this.seaLevel = seaLevel;
+	}
+	
+	public Block getOceanBlock() {
+		return oceanBlock;
+	}
+	
+	public void setOceanBlock(Block oceanBlock) {
+		this.oceanBlock = oceanBlock;
 	}
 }

@@ -81,6 +81,8 @@ public class ChunkProviderPlanet implements IChunkProvider {
 	private MapGenScatteredFeature scatteredFeatureGenerator = new MapGenScatteredFeature();
 	/** Holds ravine generator */
 	private MapGenBase ravineGenerator = new MapGenRavine();
+	private int seaLevel;
+	private Block oceanBlock;
 
 	private MapGenCrater craterGenerator;
 	private MapGenGeode geodeGenerator;
@@ -126,7 +128,12 @@ public class ChunkProviderPlanet implements IChunkProvider {
 				this.parabolicField[j + 2 + (k + 2) * 5] = f;
 			}
 		}
-
+		
+		DimensionProperties dimProperties = DimensionManager.getInstance().getDimensionProperties(p_i2006_1_.provider.dimensionId);
+		
+		seaLevel = dimProperties.getSeaLevel();
+		oceanBlock = dimProperties.getOceanBlock();
+		
 		NoiseGenerator[] noiseGens = {field_147431_j, field_147432_k, field_147429_l, field_147430_m, noiseGen5, noiseGen6, mobSpawnerNoise};
 		noiseGens = TerrainGen.getModdedNoiseGenerators(p_i2006_1_, this.rand, noiseGens);
 		this.field_147431_j = (NoiseGeneratorOctaves)noiseGens[0];
@@ -154,7 +161,7 @@ public class ChunkProviderPlanet implements IChunkProvider {
 
 	public void func_147424_a(int p_147424_1_, int p_147424_2_, Block[] p_147424_3_)
 	{
-		byte b0 = 63;
+		int b0 = seaLevel;
 		//TODO: may break for little planets
 		this.biomesForGeneration = ((ChunkManagerPlanet)this.worldObj.getWorldChunkManager()).getBiomesForGeneration(this.biomesForGeneration, p_147424_1_ * 4 - 2, p_147424_2_ * 4 - 2, 10, 10, ((WorldProviderPlanet)worldObj.provider).getDimensionProperties(0,0));
 		this.func_147423_a(p_147424_1_ * 4, 0, p_147424_2_ * 4);
@@ -208,7 +215,7 @@ public class ChunkProviderPlanet implements IChunkProvider {
 								}
 								else if (k2 * 8 + l2 < b0)
 								{
-									p_147424_3_[j3 += short1] = Blocks.water;
+									p_147424_3_[j3 += short1] = oceanBlock;
 								}
 								else
 								{
