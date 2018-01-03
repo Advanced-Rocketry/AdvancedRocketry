@@ -58,6 +58,16 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 	public WorldDummy world;
 	private Entity entity;
+	private static List<Class> invBlackList;
+	
+	static {
+		try {
+			invBlackList.add(Class.forName("codechicken.enderstorage.storage.item.TileEnderChest"));
+		} catch(ClassNotFoundException e)
+		{
+			//silence you fool
+		}
+	}
 
 	public StorageChunk() {
 		sizeX = 0;
@@ -341,7 +351,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 
 	private static boolean isInventoryBlock(TileEntity tile) {
-		return tile instanceof IInventory && !(tile instanceof TileGuidanceComputer);
+		return tile instanceof IInventory && !(tile instanceof TileGuidanceComputer) && !invBlackList.contains(tile.getClass());
 	}
 
 	private static boolean isLiquidContainerBlock(TileEntity tile) {
