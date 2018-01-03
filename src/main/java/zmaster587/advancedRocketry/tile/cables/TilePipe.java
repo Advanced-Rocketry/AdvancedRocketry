@@ -14,6 +14,7 @@ public class TilePipe extends TileEntity {
 	int networkID;
 	boolean initialized, destroyed;
 
+	static boolean debug = false;
 	boolean connectedSides[];
 
 	public TilePipe() {
@@ -209,7 +210,7 @@ public class TilePipe extends TileEntity {
 							linkSystems();
 							markDirty();
 							
-							if(!world.isRemote)
+							if(debug && !world.isRemote)
 								System.out.println(" pos1 " + getPos());
 
 						} else if(pipe.getNetworkID() != networkID)
@@ -218,21 +219,21 @@ public class TilePipe extends TileEntity {
 					else if(pipe.destroyed) {
 						getNetworkHandler().removeNetworkByID(pipe.networkID);
 
-						if(!world.isRemote)
+						if( debug && !world.isRemote)
 							System.out.println(" pos2 " + getPos());
 						
 						onPlaced();
 						markDirty();
 					}
 					else if(isInitialized()) {
-						if(!world.isRemote)
+						if(debug && !world.isRemote)
 							System.out.println(" pos3 " + getPos());
 						
 						pipe.initialize(networkID);
 					}
 					else {		
-						if(!world.isRemote)
-						System.out.println(" pos4 " + getPos());
+						if(debug && !world.isRemote)
+							System.out.println(" pos4 " + getPos());
 						onPlaced();
 						markDirty();
 					}
