@@ -1972,6 +1972,8 @@ public class AdvancedRocketry {
 					loadedProps.orbitalPhi = properties.orbitalPhi;
 					loadedProps.rotationalPeriod = properties.rotationalPeriod;
 					loadedProps.skyColor = properties.skyColor;
+					loadedProps.setSeaLevel(properties.getSeaLevel());
+					loadedProps.setOceanBlock(properties.getOceanBlock());
 					loadedProps.setBiomeEntries(properties.getBiomes());
 					loadedProps.setAtmosphereDensityDirect(properties.getAtmosphereDensity());
 					loadedProps.setName(properties.getName());

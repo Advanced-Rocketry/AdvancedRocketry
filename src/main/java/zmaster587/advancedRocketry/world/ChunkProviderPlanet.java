@@ -43,6 +43,7 @@ import net.minecraft.world.gen.structure.StructureOceanMonument;
 import net.minecraftforge.event.terraingen.TerrainGen;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.util.OreGenProperties;
 import zmaster587.advancedRocketry.util.OreGenProperties.OreEntry;
@@ -68,7 +69,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 	private final double[] heightMap;
 	private final float[] biomeWeights;
 	private ChunkGeneratorSettings settings;
-	private IBlockState oceanBlock = Blocks.WATER.getDefaultState();
+	private IBlockState oceanBlock = Blocks.LAVA.getDefaultState();
 	private double[] depthBuffer = new double[256];
 	private MapGenBase caveGenerator = new MapGenCaves();
 	private MapGenStronghold strongholdGenerator = new MapGenStronghold();
@@ -112,6 +113,8 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		this.heightMap = new double[825];
 		this.biomeWeights = new float[25];
 		
+		DimensionProperties dimProps = DimensionManager.getInstance().getDimensionProperties(worldIn.provider.getDimension());
+		
         for (int i = -2; i <= 2; ++i)
         {
             for (int j = -2; j <= 2; ++j)
@@ -120,13 +123,17 @@ public class ChunkProviderPlanet implements IChunkGenerator {
                 this.biomeWeights[i + 2 + (j + 2) * 5] = f;
             }
         }
-
+        
         if (p_i46668_5_ != null)
         {
             this.settings = ChunkGeneratorSettings.Factory.jsonToFactory(p_i46668_5_).build();
             this.oceanBlock = this.settings.useLavaOceans ? Blocks.LAVA.getDefaultState() : Blocks.WATER.getDefaultState();
-            worldIn.setSeaLevel(this.settings.seaLevel);
+            worldIn.setSeaLevel(dimProps.getSeaLevel());
         }
+        
+        IBlockState oceanBlock = dimProps.getOceanBlock();
+        if(oceanBlock != null)
+        	this.oceanBlock = oceanBlock;
 
 		net.minecraftforge.event.terraingen.InitNoiseGensEvent.ContextOverworld ctx =
 				new net.minecraftforge.event.terraingen.InitNoiseGensEvent.ContextOverworld(minLimitPerlinNoise, maxLimitPerlinNoise, mainPerlinNoise, surfaceNoise, scaleNoise, depthNoise, forestNoise);
@@ -205,7 +212,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
                                 {
                                     primer.setBlockState(i * 4 + k2, i2 * 8 + j2, l * 4 + l2, STONE);
                                 }
-                                else if (i2 * 8 + j2 < this.settings.seaLevel)
+                                else if (i2 * 8 + j2 < worldObj.getSeaLevel())
                                 {
                                     primer.setBlockState(i * 4 + k2, i2 * 8 + j2, l * 4 + l2, this.oceanBlock);
                                 }
