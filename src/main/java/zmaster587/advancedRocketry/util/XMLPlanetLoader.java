@@ -555,7 +555,11 @@ public class XMLPlanetLoader {
 		if(properties.isNativeDimension && !properties.isGasGiant()) {
 			String biomeIds = "";
 			for(BiomeEntry biome : properties.getBiomes()) {
-				biomeIds = biomeIds + "," + Biome.REGISTRY.getNameForObject(biome.biome).toString();//Biome.getIdForBiome(biome.biome);
+				try {
+					biomeIds = biomeIds + "," + Biome.REGISTRY.getNameForObject(biome.biome).toString();//Biome.getIdForBiome(biome.biome);
+				} catch (NullPointerException e) {
+					AdvancedRocketry.logger.warn("Error saving biomes for world, biomes list saved may be incomplete.  World: " + properties.getId());
+				}
 			}
 			if(!biomeIds.isEmpty())
 				biomeIds = biomeIds.substring(1);
