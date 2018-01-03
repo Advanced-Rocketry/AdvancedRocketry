@@ -263,7 +263,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		harvestableAtmosphere = new LinkedList<Fluid>();
 		beaconLocations = new HashSet<HashedBlockPosition>();
 		displaySizeMult = 1f;
-		sealevel = 64;
+		sealevel = 63;
 	}
 
 	public DimensionProperties(int id ,String name) {
@@ -316,7 +316,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		harvestableAtmosphere = new LinkedList<Fluid>();
 		beaconLocations = new HashSet<HashedBlockPosition>();
 		displaySizeMult = 1f;
-		sealevel = 64;
+		sealevel = 63;
 		oceanBlock = null;
 	}
 
