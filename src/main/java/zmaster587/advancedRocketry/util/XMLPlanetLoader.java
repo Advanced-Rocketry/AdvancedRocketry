@@ -12,8 +12,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.fluids.Fluid;
@@ -163,6 +166,15 @@ public class XMLPlanetLoader {
 					properties.getHarvestableGasses().add(f);
 				}
 			}
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("oceanBlock")) {
+				String blockName = planetPropertyNode.getTextContent();
+				Block block = Block.REGISTRY.getObject(new ResourceLocation(blockName));
+				
+				if(block == Blocks.AIR)
+					AdvancedRocketry.logger.warn("Invalid ocean block: " + blockName); //TODO: more detailed error msg
+				
+				properties.setOceanBlock(block.getDefaultState());
+			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("skycolor")) {
 				String[] colors = planetPropertyNode.getTextContent().split(",");
 				try {
@@ -233,6 +245,13 @@ public class XMLPlanetLoader {
 						AdvancedRocketry.logger.warn("rotational Period must be greater than 0"); //TODO: more detailed error msg
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid rotational period specified"); //TODO: more detailed error msg
+				}
+			}
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("seaLevel")) {
+				try {
+					properties.setSeaLevel(Integer.parseInt(planetPropertyNode.getTextContent()));
+				} catch (NumberFormatException e) {
+					AdvancedRocketry.logger.warn("Invalid sealeve specified"); //TODO: more detailed error msg
 				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("biomeids")) {
@@ -514,6 +533,7 @@ public class XMLPlanetLoader {
 		outputString = outputString + tabLen + "\t<orbitalPhi>" + (int)(properties.orbitalPhi* Math.PI/180) + "</orbitalPhi>\n";
 		outputString = outputString + tabLen + "\t<rotationalPeriod>" + (int)properties.rotationalPeriod + "</rotationalPeriod>\n";
 		outputString = outputString + tabLen + "\t<atmosphereDensity>" + (int)properties.getAtmosphereDensity() + "</atmosphereDensity>\n";
+		outputString = outputString + tabLen + "\t<seaLevel>" + properties.getSeaLevel() + "</seaLevel>\n";
 
 		if(properties.oreProperties != null) {
 			outputString = outputString + tabLen + "\t<oreGen>\n";
@@ -542,6 +562,10 @@ public class XMLPlanetLoader {
 			outputString = outputString + writePlanet(DimensionManager.getInstance().getDimensionProperties(properties2), numTabs+1);
 		}
 
+		if(properties.getOceanBlock() != null) {
+			outputString = outputString + tabLen + "\t<oceanBlock>" + Block.REGISTRY.getNameForObject(properties.getOceanBlock().getBlock()) + "</oceanBlock>\n";
+		}
+		
 		outputString = outputString + tabLen + "</planet>\n";
 		return outputString;
 	}
