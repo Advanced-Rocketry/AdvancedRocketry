@@ -42,6 +42,7 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
@@ -535,8 +536,12 @@ public class PlanetEventHandler {
 	public void worldSaveEvent(WorldEvent.Save event) {
 		//TODO: save only the one dimension
 		if(event.world.provider.dimensionId == 0)
-			//DimensionManager.getInstance().getDimensionProperties(event.getWorld().provider.getDimension()).
-			DimensionManager.getInstance().saveDimensions(DimensionManager.workingPath);
+			try {
+				DimensionManager.getInstance().saveDimensions(DimensionManager.workingPath);
+			} catch (Exception e) {
+				AdvancedRocketry.logger.fatal("!!!!!!!!!!!!!! An error has occured saving planet data, please report to the mod dev with the entire fml-latest.log file!  This report may contain information relevent to solving a longstanding bug.");
+				e.printStackTrace();
+			}
 	}
 
 

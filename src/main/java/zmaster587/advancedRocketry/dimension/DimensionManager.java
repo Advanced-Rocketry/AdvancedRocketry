@@ -523,7 +523,12 @@ public class DimensionManager implements IGalaxy {
 	 * Saves all dimension data, satellites, and space stations to disk, SHOULD NOT BE CALLED OUTSIDE OF WORLDSAVEEVENT
 	 * @param filePath file path to which to save the data
 	 */
-	public void saveDimensions(String filePath) {
+	public void saveDimensions(String filePath) throws Exception {
+		
+		if(starList.isEmpty() || dimensionList.isEmpty()) {
+			throw new Exception("Missing Stars");
+		}
+		
 		NBTTagCompound nbt = new NBTTagCompound();
 		NBTTagCompound dimListnbt = new NBTTagCompound();
 
