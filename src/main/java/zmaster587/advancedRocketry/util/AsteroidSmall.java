@@ -1,10 +1,12 @@
 package zmaster587.advancedRocketry.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import zmaster587.libVulpes.block.BlockMeta;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -65,7 +67,7 @@ public class AsteroidSmall {
 			entry.midpoint += myMass - numOres;
 		entries.add(entry);
 		
-		HashMap<Item, Integer> ores = new HashMap<Item, Integer>();
+		int ores[] = new int[itemStacks.size()];
 		
 		float normFactor = 0;
 		for(Float prob : stackProbabilites)
@@ -90,21 +92,18 @@ public class AsteroidSmall {
 				currentLocation += prob/normFactor;
 			}
 			
-			Integer number = ores.get(item);
-			if(number == null)
-				ores.put(item, 1);
-			else
-				ores.put(item, number + 1);
+			if(counter < itemStacks.size())
+				ores[counter]++;
 		}
 		
-		for(ItemStack iterStack : itemStacks) {
+		for(int i = 0; i < itemStacks.size(); i++) {
 			
-			Integer num = ores.get(iterStack.getItem());
+			int num = ores[i];
 			
-			if(num == null)
+			if(num == 0)
 				continue;
 			
-			ItemStack stack = new ItemStack(iterStack.getItem(), num, iterStack.getItemDamage());
+			ItemStack stack = new ItemStack(itemStacks.get(i).getItem(), num, itemStacks.get(i).getItemDamage());
 			entry = new StackEntry();
 			
 			entry.stack = stack;
