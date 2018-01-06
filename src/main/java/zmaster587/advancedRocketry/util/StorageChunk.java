@@ -58,7 +58,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 	public WorldDummy world;
 	private Entity entity;
-	private static List<Class> invBlackList;
+	private static List<Class> invBlackList = new LinkedList<Class>();
 	
 	static {
 		try {
