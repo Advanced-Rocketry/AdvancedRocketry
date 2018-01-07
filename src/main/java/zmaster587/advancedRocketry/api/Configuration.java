@@ -48,6 +48,10 @@ public class Configuration {
 	public static int aluminumClumpSize;
 	public static boolean generateAluminum;
 	
+	public static boolean generateIridium;
+	public static int IridiumClumpSize;
+	public static int IridiumPerChunk;
+	
 	public static boolean generateRutile;
 	public static int rutilePerChunk;
 	public static int rutileClumpSize;
