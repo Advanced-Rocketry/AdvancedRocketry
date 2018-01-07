@@ -55,6 +55,15 @@ public class RocketEvent extends EntityEvent {
 	}
 	
 	/**
+	 * Fired right before the rocket is dismantled on the Minecraft Forge EVENT_BUS
+	 */
+	public static class RocketDismantleEvent extends RocketEvent {
+		public RocketDismantleEvent(Entity entity) {
+			super(entity);
+		}
+	}
+	
+	/**
 	 * Fired when the rocket is about to be teleported to its destination on the Minecraft Forge EVENT_BUS
 	 */
 	public static class RocketReachesOrbitEvent extends RocketEvent {

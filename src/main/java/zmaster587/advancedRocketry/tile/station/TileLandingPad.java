@@ -13,6 +13,7 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
+import zmaster587.advancedRocketry.api.RocketEvent.RocketDismantleEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketPreLaunchEvent;
@@ -185,6 +186,26 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			}
 		}
 	}
+
+
+	@SubscribeEvent
+	public void onRocketDismantle(RocketDismantleEvent event) {
+		if(!worldObj.isRemote && worldObj.provider.dimensionId == Configuration.spaceDimId) {
+
+			EntityRocketBase rocket = (EntityRocketBase)event.entity;
+			AxisAlignedBB bbCache = AxisAlignedBB.getBoundingBox(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 1, this.yCoord + 2, this.zCoord + 1);
+
+			if(bbCache.intersectsWith(rocket.getBoundingBox())) {
+
+				ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(xCoord, zCoord);
+
+				if(spaceObj instanceof SpaceObject) {
+					((SpaceObject)spaceObj).setPadStatus(xCoord, zCoord, false);
+				}
+			}
+		}
+	}
+
 	public void registerTileWithStation(World world, int x, int y, int z) {
 		if(!world.isRemote && world.provider.dimensionId == Configuration.spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(x, z);
@@ -200,7 +221,6 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			}
 		}
 	}
-	
 
 	public void unregisterTileWithStation(World world, int x, int y, int z) {
 		if(!world.isRemote && world.provider.dimensionId == Configuration.spaceDimId) {

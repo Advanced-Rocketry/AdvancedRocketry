@@ -109,12 +109,6 @@ public abstract class EntityRocketBase extends Entity {
 	 * Deconstructs the rocket, replacing it with actual blocks
 	 */
 	public void deconstructRocket() {
-		if(this.worldObj.provider.dimensionId == Configuration.spaceDimId) {
-			ISpaceObject station = AdvancedRocketryAPI.spaceObjectManager.getSpaceStationFromBlockCoords((int)this.posX, (int)this.posZ);
-			
-			if(station instanceof ISpaceObject) {
-				((ISpaceObject)station).setPadStatus((int)this.posX, (int)this.posZ, false);
-			}
-		}
+		MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketDismantleEvent(this));
 	}
 }
