@@ -186,7 +186,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			EntityRocketBase rocket = (EntityRocketBase)event.getEntity();
 			AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
 
-			if(bbCache.intersects(rocket.getEntityBoundingBox())) {
+			if(bbCache.intersectsWith(rocket.getEntityBoundingBox())) {
 
 				ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
