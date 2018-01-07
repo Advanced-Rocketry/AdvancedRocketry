@@ -311,7 +311,7 @@ public class WorldCommand implements ICommand {
 
 							if(object != null) {
 								if(player.world.provider.getDimension() != Configuration.spaceDimId)
-									player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortalSeekBlock((WorldServer) net.minecraftforge.common.DimensionManager.getWorld(Configuration.spaceDimId)));
+									player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal((WorldServer)player.world));
 								HashedBlockPosition vec = object.getSpawnLocation();
 								player.setPositionAndUpdate(vec.x, vec.y, vec.z);
 							}
