@@ -282,8 +282,9 @@ public class WorldCommand implements ICommand {
 							ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(stationId);
 
 							if(object != null) {
+
 								if(player.worldObj.provider.getDimension() != Configuration.spaceDimId)
-									player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortalSeekBlock((WorldServer) net.minecraftforge.common.DimensionManager.getWorld(Configuration.spaceDimId)));
+									player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal((WorldServer)player.worldObj));
 								HashedBlockPosition vec = object.getSpawnLocation();
 								player.setPositionAndUpdate(vec.x, vec.y, vec.z);
 							}

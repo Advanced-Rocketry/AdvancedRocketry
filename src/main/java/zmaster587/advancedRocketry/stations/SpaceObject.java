@@ -298,6 +298,22 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 			PacketHandler.sendToAll(new PacketStationUpdate(this, Type.FUEL_UPDATE));
 		return amt;
 	}
+	
+	public void setLandingPadAutoLandStatus(BlockPos pos, boolean status) {
+		setLandingPadAutoLandStatus(pos.getX(), pos.getZ(), status);
+	}
+	
+	public void setLandingPadAutoLandStatus(int x, int z, boolean status) {
+		HashedBlockPosition pos = new HashedBlockPosition(x, 0, z);
+		
+		Iterator<StationLandingLocation> itr = spawnLocations.iterator();
+		
+		while(itr.hasNext()) {
+			StationLandingLocation loc = itr.next();
+			if(loc.getPos().equals(pos))
+				loc.setAllowedForAutoLand(status);
+		}
+	}
 
 	public void addLandingPad(BlockPos pos, String name) {
 		addLandingPad(pos.getX(), pos.getZ(), name);
@@ -364,7 +380,7 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 	 */
 	public HashedBlockPosition getNextLandingPad(boolean commit) {
 		for(StationLandingLocation pos : spawnLocations) {
-			if(!pos.getOccupied()) {
+			if(!pos.getOccupied() && pos.getAllowedForAutoLand()) {
 				if(commit)
 					pos.setOccupied(true);
 				return pos.getPos();
@@ -614,6 +630,7 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 		for(StationLandingLocation pos : this.spawnLocations) {
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setBoolean("occupied", pos.getOccupied());
+			tag.setBoolean("autoLand", pos.getAllowedForAutoLand());
 			tag.setIntArray("pos", new int[] {pos.getPos().x, pos.getPos().z});
 			if(pos.getName() != null && !pos.getName().isEmpty())
 				tag.setString("name", pos.getName());
@@ -687,6 +704,7 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 			StationLandingLocation loc = new StationLandingLocation(pos, tag.getString("name"));
 			spawnLocations.add(loc);
 			loc.setOccupied(tag.getBoolean("occupied"));
+			loc.setAllowedForAutoLand( tag.hasKey("occupied") ? tag.getBoolean("occupied") : true);
 		}
 
 		list = nbt.getTagList("warpCorePositions", NBT.TAG_COMPOUND);
