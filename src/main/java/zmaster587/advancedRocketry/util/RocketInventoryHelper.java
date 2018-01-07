@@ -28,8 +28,8 @@ public class RocketInventoryHelper {
 					inventoryDismapping.get(player).getDistance(player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ()) > 3)
 				removePlayerFromInventoryBypass(player);
 		}
-		else
-			removePlayerFromInventoryBypass(player);
+		//else
+		//	removePlayerFromInventoryBypass(player);
 		
 		//return !player.worldObj.getEntitiesWithinAABB(EntityRocketBase.class, new AxisAlignedBB(player.getPosition().add(-64,-64,-64), player.getPosition().add(64,64,64))).isEmpty();
 		
