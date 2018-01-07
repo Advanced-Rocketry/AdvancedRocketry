@@ -10,12 +10,13 @@ import net.minecraft.world.gen.structure.template.TemplateManager;
 import net.minecraft.world.storage.IPlayerFileData;
 import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.WorldInfo;
+import net.minecraftforge.common.DimensionManager;
 
 public class DummySaveHandler implements ISaveHandler {
 
 	@Override
 	public WorldInfo loadWorldInfo() {
-		return null;
+		return new WorldInfo(DimensionManager.getWorld(0).getWorldInfo());
 	}
 
 	@Override
