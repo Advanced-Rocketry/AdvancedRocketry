@@ -45,7 +45,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
 
-		if(resource.getFluidID() == AdvancedRocketryFluids.fluidOxygen.getID() ||
+		if(resource.getFluid().getUnlocalizedName().contains("oxygen") ||
 				resource.getFluidID() == AdvancedRocketryFluids.fluidHydrogen.getID())
 			return super.fill(from, resource, doFill);
 		return 0;
@@ -53,7 +53,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid) {
-		return fluid.getID() == FluidRegistry.getFluidID(AdvancedRocketryFluids.fluidOxygen) || fluid.getID() == FluidRegistry.getFluidID(AdvancedRocketryFluids.fluidHydrogen);
+		return fluid.getUnlocalizedName().contains("oxygen") || fluid.getID() == FluidRegistry.getFluidID(AdvancedRocketryFluids.fluidHydrogen);
 	}	
 
 	@Override
@@ -72,7 +72,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 					FluidStack fluidStack = this.drain(ForgeDirection.UNKNOWN, 1, false);
 
 					if(((ItemSpaceChest)stack.getItem()).getAirRemaining(stack) < ((ItemSpaceChest)stack.getItem()).getMaxAir(stack) &&
-							fluidStack != null && fluidStack.getFluid().getID() == AdvancedRocketryFluids.fluidOxygen.getID() && fluidStack.amount > 0)  {
+							fluidStack != null && fluidStack.getFluid().getUnlocalizedName().contains("oxygen") && fluidStack.amount > 0)  {
 						this.drain(ForgeDirection.UNKNOWN, ((ItemSpaceChest)stack.getItem()).increment(stack, 100)/100, true);
 						
 						return true;
