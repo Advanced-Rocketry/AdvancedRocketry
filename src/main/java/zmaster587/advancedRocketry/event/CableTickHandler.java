@@ -22,10 +22,14 @@ public class CableTickHandler {
 
 	@SubscribeEvent
 	public void onTick(TickEvent.ServerTickEvent tick) {
-		if(tick.phase ==Phase.END) {
-			NetworkRegistry.dataNetwork.tickAllNetworks();
-			NetworkRegistry.energyNetwork.tickAllNetworks();
-			NetworkRegistry.liquidNetwork.tickAllNetworks();
+		try {
+			if(tick.phase == Phase.END) {
+				NetworkRegistry.dataNetwork.tickAllNetworks();
+				NetworkRegistry.energyNetwork.tickAllNetworks();
+				NetworkRegistry.liquidNetwork.tickAllNetworks();
+			}
+		} catch (ConcurrentModificationException e) {
+			e.printStackTrace();
 		}
 	}
 
