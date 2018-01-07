@@ -806,7 +806,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			setInOrbit(true);
 			//If going to a station or something make sure to set coords accordingly
 			//If in space land on the planet, if on the planet go to space
-			if(destinationDimId == Configuration.spaceDimId || this.worldObj.provider.dimensionId == Configuration.spaceDimId) {
+			if((destinationDimId == Configuration.spaceDimId || this.worldObj.provider.dimensionId == Configuration.spaceDimId) && this.worldObj.provider.dimensionId != destinationDimId) {
 				Vector3F<Float> pos = storage.getDestinationCoordinates(destinationDimId, true);
 				storage.setDestinationCoordinates(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ), this.worldObj.provider.dimensionId);
 				if(pos != null) {
@@ -885,7 +885,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 						continue;
 					}
 					
-					SpaceObjectManager.getSpaceManager().moveStationToBody(object, this.worldObj.provider.dimensionId);
+					SpaceObjectManager.getSpaceManager().moveStationToBody(object, 
+									DimensionManager.getEffectiveDimId(this.worldObj.provider.dimensionId, (int)posX, (int)posZ).getId() );
 
 					//Vector3F<Integer> spawn = object.getSpawnLocation();
 

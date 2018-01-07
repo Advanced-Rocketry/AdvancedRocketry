@@ -72,10 +72,8 @@ public class HandlerCableNetwork {
 	}
 
 	public int mergeNetworks(int a, int b) {
-		
-		if(!(doesNetworkExist(a) && doesNetworkExist(b))) {
-			
-		}
+	
+		assert(networks.get(Math.max(a, b)) != null && networks.get(Math.min(a, b)) != null);
 		
 		networks.get(Math.min(a, b)).merge(networks.get(Math.max(a, b)));
 		networks.get(Math.min(a, b)).numCables += networks.get(Math.max(a, b)).numCables;

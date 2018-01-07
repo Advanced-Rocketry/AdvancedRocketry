@@ -77,6 +77,9 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 	public void beginTransition(long time) {
 		if(time > 0)
 			transitionEta = time;
+		
+		//Hack because somehow created ends up being false
+		created = true;
 	}
 
 	public long getTransitionTime() {
@@ -114,7 +117,7 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 	 */
 	@Override
 	public int getOrbitingPlanetId() {
-		return properties.getParentPlanet();
+		return created ? properties.getParentPlanet() : -1;
 	}
 
 	/**
