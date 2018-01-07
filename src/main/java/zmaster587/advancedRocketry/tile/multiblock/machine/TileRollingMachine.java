@@ -50,7 +50,7 @@ public class TileRollingMachine extends TileMultiblockMachine {
 			return 0.8f;
 		else if(material == MaterialRegistry.getMaterialFromName("Titanium"))
 			return 0.75f;
-		else if(material == MaterialRegistry.getMaterialFromName("Iriudium"))
+		else if(material == MaterialRegistry.getMaterialFromName("Iridium"))
 			return 0.5f;
 
 		return super.getTimeMultiplierForBlock(state, tile);
