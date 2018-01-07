@@ -405,6 +405,9 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	 * @return AxisAlignedBB bounds of structure if valid  otherwise null
 	 */
 	public AxisAlignedBB getRocketPadBounds(World world,int x, int y, int z) {
+		if(world == null || world.isRemote)
+			return null;
+		
 		ForgeDirection direction = RotatableBlock.getFront(world.getBlockMetadata(x, y, z)).getOpposite();
 		int xMin, zMin, xMax, zMax;
 		int yCurrent = y -1;
@@ -413,9 +416,6 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		xMax = xMin = xCurrent;
 		zMax = zMin = zCurrent;
 		int xSize, zSize;
-
-		if(world.isRemote)
-			return null;
 
 		//Get min and maximum Z/X bounds
 		if(direction.offsetX != 0) {
