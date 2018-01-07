@@ -869,7 +869,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			setInOrbit(true);
 			//If going to a station or something make sure to set coords accordingly
 			//If in space land on the planet, if on the planet go to space
-			if(destinationDimId == Configuration.spaceDimId || this.worldObj.provider.getDimension() == Configuration.spaceDimId) {
+			if((destinationDimId == Configuration.spaceDimId || this.worldObj.provider.getDimension() == Configuration.spaceDimId) && this.worldObj.provider.getDimension() != destinationDimId) {
 				Vector3F<Float> pos = storage.getDestinationCoordinates(destinationDimId, true);
 				storage.setDestinationCoordinates(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ), this.worldObj.provider.getDimension());
 				if(pos != null) {
@@ -917,9 +917,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				List<Entity> eList = this.getPassengers();
 				for(Entity e : eList) {
 					e.dismountRidingEntity();
-					e.setPositionAndUpdate(destPos.x, destPos.y, destPos.z);
+					e.setPositionAndUpdate(destPos.x, Configuration.orbit, destPos.z);
 				}
-				this.setPositionAndUpdate(destPos.x, destPos.y, destPos.z);
+				this.setPositionAndUpdate(destPos.x, Configuration.orbit, destPos.z);
 				this.ticksExisted = 0;
 				((WorldServer)worldObj).resetUpdateEntityTick();
 				for(Entity e : eList) {
@@ -945,8 +945,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 						tile.setInventorySlotContents(0, null);
 						continue;
 					}
-
-					SpaceObjectManager.getSpaceManager().moveStationToBody(object, this.worldObj.provider.getDimension());
+					
+					SpaceObjectManager.getSpaceManager().moveStationToBody(object, 
+									DimensionManager.getEffectiveDimId(this.worldObj.provider.getDimension(), getPosition()).getId() );
 
 					//Vector3F<Integer> spawn = object.getSpawnLocation();
 
