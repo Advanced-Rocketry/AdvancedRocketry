@@ -9,6 +9,7 @@ import java.util.List;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
+import zmaster587.advancedRocketry.api.RocketEvent.RocketDismantleEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketPreLaunchEvent;
@@ -178,6 +179,24 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 		}
 	}
 
+	@SubscribeEvent
+	public void onRocketDismantle(RocketDismantleEvent event) {
+		if(!worldObj.isRemote && worldObj.provider.getDimension() == Configuration.spaceDimId) {
+
+			EntityRocketBase rocket = (EntityRocketBase)event.getEntity();
+			AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
+
+			if(bbCache.intersectsWith(rocket.getEntityBoundingBox())) {
+
+				ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+
+				if(spaceObj instanceof SpaceObject) {
+					((SpaceObject)spaceObj).setPadStatus(pos, false);
+				}
+			}
+		}
+	}
+
 	public void registerTileWithStation(World world, BlockPos pos) {
 		if(!world.isRemote && world.provider.getDimension() == Configuration.spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
@@ -193,7 +212,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			}
 		}
 	}
-	
+
 	public void setAllowAutoLand(World world, BlockPos pos, boolean allow) {
 		if(!world.isRemote && world.provider.getDimension() == Configuration.spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
@@ -234,8 +253,9 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			}
 		}
 		else {
+
 			setAllowAutoLand(worldObj, pos, true);
-			
+
 			AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
 			List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
 
