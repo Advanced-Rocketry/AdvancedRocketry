@@ -23,6 +23,7 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityArmorStand;
@@ -399,8 +400,6 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.lowGravityBoots = config.get(Configuration.CATEGORY_GENERAL, "lowGravityBoots", false, "If true the boots only protect the player on planets with low gravity").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.jetPackThrust = (float)config.get(Configuration.CATEGORY_GENERAL, "jetPackForce", 1.3, "Amount of force the jetpack provides with respect to gravity, 1 is the same acceleration as caused by Earth's gravity, 2 is 2x the acceleration caused by Earth's gravity, etc.  To make jetpack only work on low gravity planets, simply set it to a value less than 1").getDouble();
 
-		int spaceBreathingId = config.get(Configuration.CATEGORY_GENERAL, "AirtightSealEnchantID", 128, "Enchantment ID for the airtight seal effect").getInt();
-		
 		zmaster587.advancedRocketry.api.Configuration.enableTerraforming = config.get(Configuration.CATEGORY_GENERAL, "EnableTerraforming", true,"Enables terraforming items and blocks").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.oxygenVentPowerMultiplier = config.get(Configuration.CATEGORY_GENERAL, "OxygenVentPowerMultiplier", 1.0f, "Power consumption multiplier for the oxygen vent", 0, Float.MAX_VALUE).getDouble();
 		zmaster587.advancedRocketry.api.Configuration.spaceSuitOxygenTime = config.get(Configuration.CATEGORY_GENERAL, "spaceSuitO2Buffer", 30, "Maximum time in minutes that the spacesuit's internal buffer can store O2 for").getInt();
@@ -629,10 +628,7 @@ public class AdvancedRocketry {
 		LibVulpes.registerRecipeHandler(TileRollingMachine.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/RollingMachine.xml");
 		LibVulpes.registerRecipeHandler(BlockPress.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/SmallPlatePress.xml");
 
-		//Enchantments
-		AdvancedRocketryAPI.enchantmentSpaceProtection = new EnchantmentSpaceBreathing();
-		AdvancedRocketryAPI.enchantmentSpaceProtection.setRegistryName(new ResourceLocation("advancedrocketry:spacebreathing"));
-		GameData.register_impl(AdvancedRocketryAPI.enchantmentSpaceProtection);
+
 		
 		//AUDIO
 
@@ -646,6 +642,15 @@ public class AdvancedRocketry {
 
 		//Regiser item/block crap
 		proxy.preinit();
+	}
+	
+	@SubscribeEvent(priority=EventPriority.HIGH)
+	public void registerEnchants(RegistryEvent.Register<Enchantment> evt)
+	{
+		//Enchantments
+		AdvancedRocketryAPI.enchantmentSpaceProtection = new EnchantmentSpaceBreathing();
+		AdvancedRocketryAPI.enchantmentSpaceProtection.setRegistryName(new ResourceLocation("advancedrocketry:spacebreathing"));
+		evt.getRegistry().register(AdvancedRocketryAPI.enchantmentSpaceProtection);
 	}
 	
 	@SubscribeEvent(priority=EventPriority.HIGH)
