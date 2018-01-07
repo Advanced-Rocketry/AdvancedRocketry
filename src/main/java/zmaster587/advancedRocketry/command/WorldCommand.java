@@ -34,6 +34,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 public class WorldCommand implements ICommand {
 
@@ -282,7 +283,7 @@ public class WorldCommand implements ICommand {
 
 							if(object != null) {
 								if(player.worldObj.provider.dimensionId != Configuration.spaceDimId)
-									MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortalSeekBlock(net.minecraftforge.common.DimensionManager.getWorld(Configuration.spaceDimId)));
+									MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal((WorldServer)player.worldObj));
 								BlockPosition vec = object.getSpawnLocation();
 								player.setPositionAndUpdate(vec.x, vec.y, vec.z);
 							}

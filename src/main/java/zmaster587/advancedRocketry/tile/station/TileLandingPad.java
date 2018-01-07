@@ -200,6 +200,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			}
 		}
 	}
+	
 
 	public void unregisterTileWithStation(World world, int x, int y, int z) {
 		if(!world.isRemote && world.provider.dimensionId == Configuration.spaceDimId) {
@@ -209,12 +210,22 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 		}
 	}
 
+	public void setAllowAutoLand(World world, int x, int z, boolean allow) {
+		if(!world.isRemote && world.provider.dimensionId == Configuration.spaceDimId) {
+			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(x,z);
+
+			if(spaceObj instanceof SpaceObject) {
+				((SpaceObject)spaceObj).setLandingPadAutoLandStatus(x,z, allow);
+			}
+		}
+	}
+	
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		super.setInventorySlotContents(slot, stack);
 
 		if(stack != null) {
-			unregisterTileWithStation(worldObj, xCoord, yCoord, zCoord);
+			setAllowAutoLand(worldObj, xCoord, zCoord, false);
 
 			AxisAlignedBB bbCache = AxisAlignedBB.getBoundingBox(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 1, this.yCoord + 2, this.zCoord + 1);
 			List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
@@ -231,7 +242,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			}
 		}
 		else {
-			registerTileWithStation(worldObj, xCoord, yCoord, zCoord);
+			setAllowAutoLand(worldObj, xCoord, zCoord, true);
 			
 			AxisAlignedBB bbCache = AxisAlignedBB.getBoundingBox(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 1, this.yCoord + 2, this.zCoord + 1);
 			List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);

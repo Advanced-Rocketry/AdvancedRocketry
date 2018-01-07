@@ -676,6 +676,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 	 */
 	public void onOrbitReached() {
 		super.onOrbitReached();
+		
+		//unlink any connected tiles
+		Iterator<IInfrastructure> connectedTiles = connectedInfrastructure.iterator();
+		while(connectedTiles.hasNext()) {
+			connectedTiles.next().unlinkRocket();
+			connectedTiles.remove();
+		}
 
 		//TODO: support multiple riders and rider/satellite combo
 		long targetSatellite;
@@ -731,13 +738,52 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 			}
 
 			destinationDimId = storage.getDestinationDimId(this.worldObj.provider.dimensionId, (int)this.posX, (int)this.posZ);
-			if(DimensionManager.getInstance().canTravelTo(destinationDimId)) {
-				Vector3F<Float> pos = storage.getDestinationCoordinates(destinationDimId,true);
+			if(destinationDimId == this.worldObj.provider.dimensionId) {
+				Vector3F<Float> pos = storage.getDestinationCoordinates(destinationDimId, true);
+				storage.setDestinationCoordinates(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ), this.worldObj.provider.dimensionId);
+				if(pos != null) {
+					this.setInOrbit(true);
+					this.motionY = -this.motionY;
+					this.setPosition(pos.x, Configuration.orbit, pos.z);
+					return;
+				}
+				else {
+
+					//Make player confirm deorbit if a player is riding the rocket
+					if(this.riddenByEntity != null) {
+						setInFlight(false);
+						pos.y = (float) Configuration.orbit;
+
+					}
+					this.setInOrbit(true);
+					this.motionY = -this.motionY;
+					
+					this.setPosition(this.posX, Configuration.orbit, this.posZ);
+					return;
+				}
+				
+			}
+			else if(DimensionManager.getInstance().canTravelTo(destinationDimId)) {
+				Vector3F<Float> pos = storage.getDestinationCoordinates(destinationDimId, true);
 				storage.setDestinationCoordinates(new Vector3F<Float>((float)this.posX, (float)this.posY, (float)this.posZ), this.worldObj.provider.dimensionId);
 				if(pos != null) {
 					this.setInOrbit(true);
 					this.motionY = -this.motionY;
 					this.travelToDimension(destinationDimId, pos.x, Configuration.orbit, pos.z);
+					return;
+				}
+				else {
+
+					//Make player confirm deorbit if a player is riding the rocket
+					if(this.riddenByEntity != null) {
+						setInFlight(false);
+						pos.y = (float) Configuration.orbit;
+
+					}
+					this.setInOrbit(true);
+					this.motionY = -this.motionY;
+					
+					this.travelToDimension(destinationDimId, this.posX, Configuration.orbit, this.posZ);
 					return;
 				}
 			}
@@ -805,9 +851,19 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 				this.travelToDimension(!DimensionManager.getInstance().isDimensionCreated(this.worldObj.provider.dimensionId) ? 0 : destinationDimId, destPos.x, destPos.y, destPos.z);
 			else
 			{
-				if(this.riddenByEntity != null)
-					this.riddenByEntity.setPosition(destPos.x, destPos.y, destPos.z);
 				this.setPosition(destPos.x, destPos.y, destPos.z);
+				if(this.riddenByEntity != null) {
+					
+					Entity rider = this.riddenByEntity;
+					rider.mountEntity(null);
+					rider.setPosition(destPos.x, destPos.y, destPos.z);
+					
+					this.setPosition(destPos.x, destPos.y, destPos.z);
+					
+					this.ticksExisted = 0;
+					((WorldServer)worldObj).resetUpdateEntityTick();
+					rider.mountEntity(this);
+				}
 			}
 		}
 	}

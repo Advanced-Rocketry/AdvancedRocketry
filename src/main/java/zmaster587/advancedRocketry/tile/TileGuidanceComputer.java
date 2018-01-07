@@ -105,10 +105,13 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 			}
 			else if(itemType instanceof ItemStationChip) {
 				if(Configuration.spaceDimId == currentDimension) {
-					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)x, (int)z);
-					if(object != null)
-						return object.getOrbitingPlanetId();
-					return -1;
+					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(x, z);
+					if(object != null) {
+						if(ItemStationChip.getUUID(stack) == object.getId())
+							return object.getOrbitingPlanetId();
+					}
+					else
+						return -1;
 				}
 				return Configuration.spaceDimId;
 			}
