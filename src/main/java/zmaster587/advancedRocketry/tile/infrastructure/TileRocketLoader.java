@@ -17,6 +17,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
@@ -115,10 +117,10 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 			out:
 				//Function returns if something can be moved
 				for(TileEntity tile : tiles) {
-					if(tile instanceof IInventory && !(tile instanceof TileGuidanceComputer)) {
-						IInventory inv = ((IInventory)tile);
+					if(tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP)) {
+						IItemHandler inv = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
 
-						for(int i = 0; i < inv.getSizeInventory(); i++) {
+						for(int i = 0; i < inv.getSlots(); i++) {
 							if(inv.getStackInSlot(i).isEmpty())
 								rocketContainsItems = true;
 
@@ -126,13 +128,13 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 							for(int j = 0; j < getSizeInventory(); j++) {
 								if((inv.getStackInSlot(i).isEmpty()) && !inventory.getStackInSlot(j).isEmpty()) {
 									if(isAllowedToOperate) {
-										inv.setInventorySlotContents(i, inventory.getStackInSlot(j));
+										inv.insertItem(i, inventory.getStackInSlot(j), false);
 										inventory.setInventorySlotContents(j,ItemStack.EMPTY);
 									}
 									rocketContainsItems = true;
 									break out;
 								}
-								else if(!getStackInSlot(j).isEmpty() && inv.isItemValidForSlot(i, getStackInSlot(j)) && inv.getStackInSlot(i).getItem() == getStackInSlot(j).getItem() &&
+								else if(!getStackInSlot(j).isEmpty() && inv.getStackInSlot(i).getItem() == getStackInSlot(j).getItem() &&
 										ItemStack.areItemStackTagsEqual(inv.getStackInSlot(i), getStackInSlot(j)) && inv.getStackInSlot(i).getMaxStackSize() != inv.getStackInSlot(i).getCount() ) {
 									if(isAllowedToOperate) {
 										ItemStack stack2 = inventory.decrStackSize(j, inv.getStackInSlot(i).getMaxStackSize() - inv.getStackInSlot(i).getCount());
@@ -148,6 +150,43 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 							}
 							if(foundStack)
 								break out;
+						}
+					}
+					else {
+						if(tile instanceof IInventory && !(tile instanceof TileGuidanceComputer)) {
+							IInventory inv = ((IInventory)tile);
+
+							for(int i = 0; i < inv.getSizeInventory(); i++) {
+								if(inv.getStackInSlot(i).isEmpty())
+									rocketContainsItems = true;
+
+								//Loop though this inventory's slots and find a suitible one
+								for(int j = 0; j < getSizeInventory(); j++) {
+									if((inv.getStackInSlot(i).isEmpty()) && !inventory.getStackInSlot(j).isEmpty()) {
+										if(isAllowedToOperate) {
+											inv.setInventorySlotContents(i, inventory.getStackInSlot(j));
+											inventory.setInventorySlotContents(j,ItemStack.EMPTY);
+										}
+										rocketContainsItems = true;
+										break out;
+									}
+									else if(!getStackInSlot(j).isEmpty() && inv.isItemValidForSlot(i, getStackInSlot(j)) && inv.getStackInSlot(i).getItem() == getStackInSlot(j).getItem() &&
+											ItemStack.areItemStackTagsEqual(inv.getStackInSlot(i), getStackInSlot(j)) && inv.getStackInSlot(i).getMaxStackSize() != inv.getStackInSlot(i).getCount() ) {
+										if(isAllowedToOperate) {
+											ItemStack stack2 = inventory.decrStackSize(j, inv.getStackInSlot(i).getMaxStackSize() - inv.getStackInSlot(i).getCount());
+											inv.getStackInSlot(i).setCount(inv.getStackInSlot(i).getCount() + stack2.getCount());
+										}
+										rocketContainsItems = true;
+
+										if(inventory.getStackInSlot(j).isEmpty())
+											break out;
+
+										foundStack = true;
+									}
+								}
+								if(foundStack)
+									break out;
+							}
 						}
 					}
 				}
@@ -321,7 +360,7 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 
 		if(rocket == null)
 			setRedstoneState(state == RedstoneState.INVERTED);
-		
+
 		markDirty();
 		world.markChunkDirty(getPos(), this);
 	}

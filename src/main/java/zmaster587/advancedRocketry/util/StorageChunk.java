@@ -44,6 +44,7 @@ import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 public class StorageChunk implements IBlockAccess, IStorageChunk {
 
@@ -344,7 +345,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	
 
 	private static boolean isInventoryBlock(TileEntity tile) {
-		return tile instanceof IInventory && !(tile instanceof TileGuidanceComputer);
+		return tile instanceof IInventory || tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP) && !(tile instanceof TileGuidanceComputer);
 	}
 
 	private static boolean isLiquidContainerBlock(TileEntity tile) {

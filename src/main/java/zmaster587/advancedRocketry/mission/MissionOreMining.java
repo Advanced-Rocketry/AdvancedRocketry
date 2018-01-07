@@ -6,9 +6,12 @@ import java.util.List;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.IInfrastructure;
@@ -77,12 +80,22 @@ public class MissionOreMining extends MissionResourceCollection {
 						totalStacksList.toArray(stacks);
 
 						for(int i = 0,  g = 0; i < rocketStorage.getInventoryTiles().size(); i++) {
-							IInventory tile = (IInventory) rocketStorage.getInventoryTiles().get(i);
+							if(rocketStorage.getInventoryTiles().get(i).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP)) {
+								IItemHandler capabilityItemHandle = rocketStorage.getInventoryTiles().get(i).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+
+								for(int offset = 0; offset < capabilityItemHandle.getSlots() && g < stacks.length; offset++, g++) {
+									if(capabilityItemHandle.getStackInSlot(offset).isEmpty())
+										capabilityItemHandle.insertItem(offset, stacks[g], false);
+								}
+							}
+							else {
+								IInventory tile = (IInventory) rocketStorage.getInventoryTiles().get(i);
 
 
-							for(int offset = 0; offset < tile.getSizeInventory() && g < stacks.length; offset++, g++) {
-								if(tile.getStackInSlot(offset).isEmpty())
-									tile.setInventorySlotContents(offset, stacks[g]);
+								for(int offset = 0; offset < tile.getSizeInventory() && g < stacks.length; offset++, g++) {
+									if(tile.getStackInSlot(offset).isEmpty())
+										tile.setInventorySlotContents(offset, stacks[g]);
+								}
 							}
 						}
 					}
