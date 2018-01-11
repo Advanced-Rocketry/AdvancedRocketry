@@ -125,10 +125,7 @@ public class PacketDimInfo extends BasePacket {
 		}
 		else if(dimProperties != null)
 		{
-			if(dimNumber == 0) {
-				DimensionManager.overworldProperties = dimProperties;
-			}
-			else if( DimensionManager.getInstance().isDimensionCreated(dimNumber) ) {
+			if( DimensionManager.getInstance().isDimensionCreated(dimNumber) ) {
 				dimProperties.oreProperties = DimensionManager.getInstance().getDimensionProperties(dimNumber).oreProperties;
 				dimProperties.getRequiredArtifacts().clear();
 				dimProperties.getRequiredArtifacts().addAll(artifacts);
