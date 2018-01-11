@@ -56,7 +56,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 			if(component.getItem() instanceof IFluidContainerItem) {
 				IFluidContainerItem fluidItem = (IFluidContainerItem)component.getItem();
 				FluidStack fluidStack = fluidItem.getFluid(component);
-				if(fluidStack != null && (((IFluidContainerItem)stack.getItem()).getFluid(stack).getUnlocalizedName().contains("oxygen")))
+				if(fluidStack != null && (((IFluidContainerItem)component.getItem()).getFluid(component).getUnlocalizedName().contains("oxygen")))
 					airRemaining += fluidStack.amount;
 			}
 		}
@@ -118,7 +118,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 
 					FluidStack fluidDrained = null;
 
-					if(fluidStack != null && ((IFluidContainerItem)stack.getItem()).getFluid(stack).getUnlocalizedName().contains("oxygen"))
+					if(fluidStack != null && ((IFluidContainerItem)component.getItem()).getFluid(component).getUnlocalizedName().contains("oxygen"))
 						fluidDrained = fluidItem.drain(component, amtDrained, true);
 
 					if(fluidDrained != null)
@@ -169,7 +169,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 						(i < 2 || 
 								(inv.getStackInSlot(i).getItem() instanceof IFluidContainerItem && 
 										((IFluidContainerItem)inv.getStackInSlot(i).getItem()).getFluid(inv.getStackInSlot(i)) != null && 
-												((IFluidContainerItem)stack.getItem()).getFluid(stack).getUnlocalizedName().contains("oxygen"))))
+												((IFluidContainerItem)inv.getStackInSlot(i).getItem()).getFluid(inv.getStackInSlot(i)).getUnlocalizedName().contains("oxygen"))))
 					
 					list.add(inv.getStackInSlot(i));
 			}
@@ -181,7 +181,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 					IFluidContainerItem fluidItem = (IFluidContainerItem)component.getItem();
 					FluidStack fluidStack = fluidItem.getFluid(component);
 
-					if(fluidStack == null || ((IFluidContainerItem)stack.getItem()).getFluid(stack).getUnlocalizedName().contains("oxygen"))
+					if(fluidStack == null || ((IFluidContainerItem)component.getItem()).getFluid(component).getUnlocalizedName().contains("oxygen"))
 						amtDrained -= fluidItem.fill(component, new FluidStack(AdvancedRocketryFluids.fluidOxygen, amtDrained), true);
 
 					if(amtDrained == 0)
@@ -229,7 +229,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 						(i < 2 || 
 								(inv.getStackInSlot(i).getItem() instanceof IFluidContainerItem && 
 										((IFluidContainerItem)inv.getStackInSlot(i).getItem()).getFluid(inv.getStackInSlot(i)) != null && 
-												((IFluidContainerItem)stack.getItem()).getFluid(stack).getUnlocalizedName().contains("oxygen"))))
+												((IFluidContainerItem)inv.getStackInSlot(i).getItem()).getFluid(inv.getStackInSlot(i)).getUnlocalizedName().contains("oxygen"))))
 					list.add(inv.getStackInSlot(i));
 			}
 			
@@ -239,7 +239,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 					IFluidContainerItem fluidItem = (IFluidContainerItem)component.getItem();
 					FluidStack fluidStack = fluidItem.getFluid(component);
 
-					if(fluidStack == null || fluidStack.getFluid() == null || ((IFluidContainerItem)stack.getItem()).getFluid(stack).getUnlocalizedName().contains("oxygen"))
+					if(fluidStack == null || fluidStack.getFluid() == null || fluidStack.getFluid().getUnlocalizedName().contains("oxygen"))
 						maxAir += fluidItem.getCapacity(component);
 				}
 			}
