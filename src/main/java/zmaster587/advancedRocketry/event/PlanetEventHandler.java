@@ -50,6 +50,7 @@ import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
+import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketAsteroidInfo;
@@ -367,6 +368,8 @@ public class PlanetEventHandler {
 	public void worldLoadEvent(WorldEvent.Load event) {
 		if(!event.world.isRemote)
 			AtmosphereHandler.registerWorld(event.world.provider.dimensionId);
+		else if(Configuration.skyOverride)
+			event.world.provider.setSkyRenderer(new RenderPlanetarySky());
 	}
 
 	@SubscribeEvent

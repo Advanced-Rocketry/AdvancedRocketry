@@ -133,4 +133,6 @@ public class Configuration {
 	public static int planetDiscoveryChance;
 
 	public static double oxygenVentPowerMultiplier;
+
+	public static boolean skyOverride;
 }

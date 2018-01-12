@@ -22,6 +22,7 @@ import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
@@ -219,6 +220,49 @@ public class RenderPlanetarySky extends IRenderHandler {
 					travelDirection = station.getForwardDirection();
 				}
 			}
+		}
+		else if(DimensionManager.getInstance().isDimensionCreated(mc.theWorld.provider.dimensionId)) {
+
+			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(mc.theWorld.provider.dimensionId);
+
+			atmosphere = properties.getAtmosphereDensityAtHeight(mc.renderViewEntity.posY);//planetaryProvider.getAtmosphereDensityFromHeight(mc.getRenderViewEntity().posY, mc.player.getPosition());
+			ForgeDirection dir = getRotationAxis(properties, (int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
+			axis.x = (float) dir.offsetX;
+			axis.y = (float) dir.offsetY;
+			axis.z = (float) dir.offsetZ;
+
+			myPhi = properties.orbitalPhi;
+			myTheta = properties.orbitTheta;
+			myRotationalPhi = properties.rotationalPhi;
+			myPrevOrbitalTheta = properties.prevOrbitalTheta;
+			hasRings = properties.hasRings();
+			ringColor = properties.ringColor;
+
+			children = new LinkedList<DimensionProperties>();
+			for (Integer i : properties.getChildPlanets()) {
+				children.add(DimensionManager.getInstance().getDimensionProperties(i));
+			}
+
+			solarOrbitalDistance = properties.getSolarOrbitalDistance();
+
+
+			if(isMoon = properties.isMoon()) {
+				DimensionProperties parentProperties = properties.getParentProperties();
+				isGasGiant = parentProperties.isGasGiant();
+				hasAtmosphere = parentProperties.hasAtmosphere();
+				planetOrbitalDistance = properties.getParentOrbitalDistance();
+				parentAtmColor = parentProperties.skyColor;
+				parentPlanetIcon = getTextureForPlanet(parentProperties);
+				parentHasRings = parentProperties.hasRings;
+				parentRingColor = parentProperties.ringColor;
+			}
+
+			float sunColorFloat[] = properties.getSunColor();
+			
+			sunColor = Vec3.createVectorHelper(sunColorFloat[0], sunColorFloat[1], sunColorFloat[2]);//planetaryProvider.getSunColor(mc.player.getPosition());
+			sunSize = properties.getStar().getSize();
+			subStars = properties.getStar().getSubStars();
+			starSeperation = properties.getStar().getStarSeperation();
 		}
 		else {
 			children = new LinkedList<DimensionProperties>();
