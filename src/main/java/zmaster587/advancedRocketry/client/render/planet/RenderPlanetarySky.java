@@ -189,6 +189,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 		celestialAngle = mc.world.getCelestialAngle(partialTicks);
 
 		Vec3d sunColor;
+		
+		
 		if(mc.world.provider instanceof IPlanetaryProvider) {
 			IPlanetaryProvider planetaryProvider = (IPlanetaryProvider)mc.world.provider;
 
@@ -227,6 +229,55 @@ public class RenderPlanetarySky extends IRenderHandler {
 			}
 
 			sunColor = planetaryProvider.getSunColor(mc.player.getPosition());
+			sunSize = properties.getStar().getSize();
+			subStars = properties.getStar().getSubStars();
+			starSeperation = properties.getStar().getStarSeperation();
+			if(world.provider.getDimension() == Configuration.spaceDimId) {
+				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
+				if(isWarp) {
+					SpaceObject station = (SpaceObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.player.getPosition());
+					travelDirection = station.getForwardDirection();
+				}
+			}
+		}
+		else if(DimensionManager.getInstance().isDimensionCreated(mc.world.provider.getDimension())) {
+
+			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(mc.world.provider.getDimension());
+
+			atmosphere = properties.getAtmosphereDensityAtHeight(mc.getRenderViewEntity().posY);//planetaryProvider.getAtmosphereDensityFromHeight(mc.getRenderViewEntity().posY, mc.player.getPosition());
+			EnumFacing dir = getRotationAxis(properties, mc.player.getPosition());
+			axis.x = (float) dir.getFrontOffsetX();
+			axis.y = (float) dir.getFrontOffsetY();
+			axis.z = (float) dir.getFrontOffsetZ();
+
+			myPhi = properties.orbitalPhi;
+			myTheta = properties.orbitTheta;
+			myRotationalPhi = properties.rotationalPhi;
+			myPrevOrbitalTheta = properties.prevOrbitalTheta;
+			hasRings = properties.hasRings();
+			ringColor = properties.ringColor;
+
+			children = new LinkedList<DimensionProperties>();
+			for (Integer i : properties.getChildPlanets()) {
+				children.add(DimensionManager.getInstance().getDimensionProperties(i));
+			}
+
+			solarOrbitalDistance = properties.getSolarOrbitalDistance();
+
+
+			if(isMoon = properties.isMoon()) {
+				DimensionProperties parentProperties = properties.getParentProperties();
+				isGasGiant = parentProperties.isGasGiant();
+				hasAtmosphere = parentProperties.hasAtmosphere();
+				planetOrbitalDistance = properties.getParentOrbitalDistance();
+				parentAtmColor = parentProperties.skyColor;
+				parentPlanetIcon = getTextureForPlanet(parentProperties);
+				parentHasRings = parentProperties.hasRings;
+				parentRingColor = parentProperties.ringColor;
+			}
+
+			float sunColorFloat[] = properties.getSunColor();
+			sunColor = new Vec3d(sunColorFloat[0], sunColorFloat[1], sunColorFloat[2]);//planetaryProvider.getSunColor(mc.player.getPosition());
 			sunSize = properties.getStar().getSize();
 			subStars = properties.getStar().getSubStars();
 			starSeperation = properties.getStar().getStarSeperation();
