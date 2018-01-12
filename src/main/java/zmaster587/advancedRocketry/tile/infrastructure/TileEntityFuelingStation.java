@@ -28,6 +28,7 @@ import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.api.IMission;
 import zmaster587.advancedRocketry.block.BlockTileRedstoneEmitter;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
 import zmaster587.libVulpes.inventory.modules.IButtonInventory;
@@ -203,9 +204,8 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 			this.linkedRocket.unlinkInfrastructure(this);
 			this.unlinkRocket();
 		}
-		
 		if(player.worldObj.isRemote)
-			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText("You program the linker with the fueling station at: " + this.xCoord + " " + this.yCoord + " " + this.zCoord)));
+			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText(LibVulpes.proxy.getLocalizedString("msg.fuelingStation.link") + ": " + xCoord + " " + yCoord + " " + zCoord)));
 		return true;
 	}
 
@@ -224,7 +224,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 		if(player.worldObj.isRemote)
-			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText("This must be the first machine to link!")));
+			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText("msg.linker.error.firstMachine")));
 		return false;
 	}
 

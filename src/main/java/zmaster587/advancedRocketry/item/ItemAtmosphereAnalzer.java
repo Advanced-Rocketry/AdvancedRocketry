@@ -36,6 +36,11 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 
 	private static ResourceIcon icon;
 	private static ResourceLocation eyeCandySpinner = new ResourceLocation("advancedrocketry:textures/gui/eyeCandy/spinnyThing.png");
+	
+	private static String breathable = LibVulpes.proxy.getLocalizedString("msg.atmanal.canbreathe");
+	private static String atmtype = LibVulpes.proxy.getLocalizedString("msg.atmanal.atmType");
+	private static String yes = LibVulpes.proxy.getLocalizedString("msg.yes");
+	private static String no = LibVulpes.proxy.getLocalizedString("msg.no");
 
 	@Override
 	public void onTick(World world, EntityPlayer player, ItemStack armorStack,
@@ -49,9 +54,9 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 
 		String str[] = new String[2];
 
-		str[0] = "Atmosphere Type: " + LibVulpes.proxy.getLocalizedString(atm.getUnlocalizedName()) + " @ " + (AtmosphereHandler.currentPressure == -1 ? (DimensionManager.getInstance().isDimensionCreated(world.provider.dimensionId) ? DimensionManager.getInstance().getDimensionProperties(world.provider.dimensionId).getAtmosphereDensity()/100f : 1) : AtmosphereHandler.currentPressure/100f) + " atm";
-		str[1] = "Breathable: " + (atm.isBreathable() ? "Yes" : "No");
-
+		str[0] = atmtype + LibVulpes.proxy.getLocalizedString(atm.getUnlocalizedName()) + " @ " + (AtmosphereHandler.currentPressure == -1 ? ((DimensionManager.getInstance().isDimensionCreated(world.provider.dimensionId)) ? DimensionManager.getInstance().getDimensionProperties(world.provider.dimensionId).getAtmosphereDensity()/100f : 1) : AtmosphereHandler.currentPressure/100f) + " atm";
+		str[1] = breathable + (atm.isBreathable() ? yes : no);
+		
 		return str;
 	}
 

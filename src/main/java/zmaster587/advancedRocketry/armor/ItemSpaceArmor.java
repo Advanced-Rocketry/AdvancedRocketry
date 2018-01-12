@@ -15,7 +15,7 @@ import zmaster587.advancedRocketry.api.armor.IFillableArmor;
 import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.client.render.armor.RenderJetPack;
-import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.util.EmbeddedInventory;
@@ -108,7 +108,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, IProtect
 			List list, boolean p_77624_4_) {
 		super.addInformation(stack, p_77624_2_, list, p_77624_4_);
 
-		list.add("Modules:");
+		list.add(LibVulpes.proxy.getLocalizedString("msg.modules"));
 
 		for(ItemStack componentStack : getComponents(stack)) {
 			list.add(EnumChatFormatting.DARK_GRAY + componentStack.getDisplayName());

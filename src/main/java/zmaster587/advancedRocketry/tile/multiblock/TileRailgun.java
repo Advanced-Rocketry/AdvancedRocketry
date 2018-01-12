@@ -25,6 +25,7 @@ import net.minecraftforge.common.ForgeChunkManager.Type;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.entity.EntityItemAbducted;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.RotatableBlock;
@@ -179,7 +180,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 			textBox = new ModuleNumericTextbox(this, 80, 40, 32, 12, 2);
 			//}
 			textBox.setText(String.valueOf(minStackTransferSize));
-			modules.add(new ModuleText(60, 25, "Min Transfer Size", 0x2b2b2b));
+			modules.add(new ModuleText(60, 25, LibVulpes.proxy.getLocalizedString("msg.railgun.transfermin"), 0x2b2b2b));
 			modules.add(textBox);
 		}
 		
@@ -400,7 +401,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		ItemLinker.setMasterCoords(item, this.xCoord, this.yCoord, this.zCoord);
 		ItemLinker.setDimId(item, world.provider.dimensionId);
 		if(!world.isRemote)
-			player.addChatMessage(new ChatComponentText("Coordinates programmed into Linker"));
+			player.addChatMessage(new ChatComponentText(LibVulpes.proxy.getLocalizedString("msg.linker.program")));
 		return true;
 	}
 

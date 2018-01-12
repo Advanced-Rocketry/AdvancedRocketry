@@ -24,6 +24,7 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IUniversalEnergyTransmitter;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -53,7 +54,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 	public TileMicrowaveReciever() {
 		connectedSatellites = new LinkedList<Long>();
 		initialCheck = false;
-		textModule = new ModuleText(40, 20, "Generating 0 RF/t", 0x2b2b2b);
+		textModule = new ModuleText(40, 20, LibVulpes.proxy.getLocalizedString("msg.microwaverec.notgenerating"), 0x2b2b2b);
 	}
 
 	@Override
@@ -190,7 +191,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 			producePower(powerMadeLastTick);
 		}
 		if(worldObj.isRemote)
-		textModule.setText("Generating " + powerMadeLastTick + " RF/t");
+			textModule.setText(LibVulpes.proxy.getLocalizedString("msg.microwaverec.generating") + powerMadeLastTick + " " + LibVulpes.proxy.getLocalizedString("msg.powerunit.rfpertick"));
 	}
 
 	@Override

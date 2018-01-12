@@ -12,6 +12,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import zmaster587.libVulpes.LibVulpes;
+
+import com.mojang.realmsclient.gui.ChatFormatting;
 
 public class ItemSatelliteIdentificationChip extends Item implements ISatelliteIdItem {
 
@@ -139,22 +142,22 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 
 				if(stack.getTagCompound().hasKey(name)) {
 
-					list.add("ID: " + satId);
-					list.add("Planet: " + stack.getTagCompound().getString(name));
-					list.add("Satellite: " + satelliteName);
+					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.id") + satId);
+					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.planet") + stack.getTagCompound().getString(name));
+					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.sat") + satelliteName);
 				}
 				else {
-					list.add("Planet: " +  "Unknown");
-					list.add("Satellite: " + "Contact Lost"); //TODO: make satellite respond with name until
+					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.planetunk"));
+					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.satlost")); //TODO: make satellite respond with name until
 				}
 			}
 			else {
-				list.add("ID: " + satId);
-				list.add("Planet: Unknown");
-				list.add("Satellite: " + satelliteName);
+				list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.id") + satId);
+				list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.planetunk"));
+				list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.sat") + satelliteName);
 			}
 		}
 		else
-			list.add("Unprogrammed");
+			list.add(LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
 	}
 }

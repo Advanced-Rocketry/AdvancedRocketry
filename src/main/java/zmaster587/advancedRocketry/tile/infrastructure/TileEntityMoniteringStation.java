@@ -24,6 +24,7 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.api.IMission;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.client.util.IndicatorBarImage;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
@@ -58,7 +59,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 
 	public TileEntityMoniteringStation() {
 		mission = null;
-		missionText = new ModuleText(20, 90, "Mission Progress: N/A", 0x2b2b2b);
+		missionText = new ModuleText(20, 90, LibVulpes.proxy.getLocalizedString("msg.monitoringStation.missionProgressNA"), 0x2b2b2b);
 		redstoneControl = new ModuleRedstoneOutputButton(174, 4, -1, "", this);
 		state = RedstoneState.ON;
 	}
@@ -107,7 +108,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 		ItemLinker.setMasterCoords(item, this.xCoord, this.yCoord, this.zCoord);
 
 		if(player.worldObj.isRemote)
-			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText("You program the linker with the monitoring station at: " + this.xCoord + " " + this.yCoord + " " + this.zCoord)));
+			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText(LibVulpes.proxy.getLocalizedString("msg.monitoringStation.link") + ": " + this.xCoord + " " + this.yCoord + " " + this.zCoord)));
 		return true;
 	}
 
@@ -115,7 +116,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 		if(player.worldObj.isRemote)
-			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText("This must be the first machine to link!")));
+			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText(LibVulpes.proxy.getLocalizedString("msg.linker.error.firstMachine"))));
 		return false;
 	}
 
@@ -254,11 +255,11 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 			int seconds = time % 60;
 			int minutes = (time/60) % 60;
 			int hours = time/3600;
-
-			missionText.setText(((SatelliteBase)mission).getName() + " Progress: " + String.format("\n%02dhr:%02dm:%02ds", hours, minutes, seconds));
+			
+			missionText.setText(((SatelliteBase)mission).getName() + LibVulpes.proxy.getLocalizedString("msg.monitoringStation.progress") + String.format("\n%02dhr:%02dm:%02ds", hours, minutes, seconds));
 		}
 		else
-			missionText.setText("Mission Progess: N/A");
+			missionText.setText(LibVulpes.proxy.getLocalizedString("msg.monitoringStation.missionProgressNA"));
 	}
 
 	@Override

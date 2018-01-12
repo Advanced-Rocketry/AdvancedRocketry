@@ -5,6 +5,7 @@ import java.util.List;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.ZUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -126,27 +127,27 @@ public class ItemSatellite extends ItemIdWithName {
 
 			if(SatelliteProperties.Property.BATTERY.isOfType(properties.getPropertyFlag())) {
 				if( (powerStorage = properties.getPowerStorage()) > 0)
-					list.add("Power Storage: " + powerStorage);
+					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatellite.pwr") + powerStorage);
 				else
-					list.add(EnumChatFormatting.RED + "No Power Storage");
+					list.add(EnumChatFormatting.RED + LibVulpes.proxy.getLocalizedString("msg.itemsatellite.nopwr"));
 			}
 
 			if(SatelliteProperties.Property.POWER_GEN.isOfType(properties.getPropertyFlag())) {
 				if( ( powerGeneration=properties.getPowerGeneration() ) > 0)
-					list.add("Power Generation: " + powerGeneration);
+					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatellite.pwr") + powerGeneration);
 				else
-					list.add(EnumChatFormatting.RED + "No Power Generation!");
+					list.add(EnumChatFormatting.RED + LibVulpes.proxy.getLocalizedString("msg.itemsatellite.nopwrgen"));
 			}
 
 			if(SatelliteProperties.Property.DATA.isOfType(properties.getPropertyFlag())) {
 				if( (dataStorage = properties.getMaxDataStorage()) > 0 ) 
-					list.add("Data Storage: " + ZUtils.formatNumber(dataStorage));
+					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatellite.data") + ZUtils.formatNumber(dataStorage));
 				else
-					list.add(EnumChatFormatting.YELLOW + "No Data Storage!");
+					list.add(EnumChatFormatting.YELLOW + LibVulpes.proxy.getLocalizedString("msg.itemsatellite.nodata"));
 			}
 		}
 		else {
-			list.add(EnumChatFormatting.RED + "Empty Chassis");
+			list.add(EnumChatFormatting.RED + LibVulpes.proxy.getLocalizedString("msg.itemsatellite.empty"));
 		}
 	}
 }

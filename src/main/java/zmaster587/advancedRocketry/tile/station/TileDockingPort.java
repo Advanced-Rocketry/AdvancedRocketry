@@ -21,6 +21,7 @@ import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.IGuiCallback;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -51,7 +52,7 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 	@Override
 	public List<ModuleBase> getModules(int id, EntityPlayer player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-		modules.add(new ModuleText(20, 50, "Target Id", 0x2a2a2a));
+		modules.add(new ModuleText(20, 50, LibVulpes.proxy.getLocalizedString("msg.dockingport.target"), 0x2a2a2a));
 		if(worldObj.isRemote) {
 			myId = new ModuleTextBox(this, 20, 30, 60, 12, 9);
 			targetId = new ModuleTextBox(this, 20, 60, 60, 12, 9);
@@ -63,7 +64,7 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 		}
 
 
-		modules.add(new ModuleText(20, 20, "My Id", 0x2a2a2a));
+		modules.add(new ModuleText(20, 20, LibVulpes.proxy.getLocalizedString("msg.dockingport.me"), 0x2a2a2a));
 
 		return modules;
 	}

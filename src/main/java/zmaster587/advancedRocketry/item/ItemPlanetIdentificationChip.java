@@ -4,6 +4,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.libVulpes.LibVulpes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -127,10 +128,10 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	public void addInformation(ItemStack stack, net.minecraft.entity.player.EntityPlayer player, java.util.List list, boolean bool) {
 
 		if(!stack.hasTagCompound()) {
-			list.add("Unprogrammed");
+			list.add(LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
 		}
 		else if(!hasValidDimension(stack)) {
-			list.add(ChatFormatting.RED + "Programming Failed");
+			list.add(ChatFormatting.RED + LibVulpes.proxy.getLocalizedString("msg.programfail"));
 		}
 		else {
 			if(stack.getItemDamage()  == 0) {
@@ -139,9 +140,9 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 				String unknown = ChatFormatting.YELLOW + "???";
 				String dimName = stack.getTagCompound().getString(dimensionNameIdentifier);
 
-				list.add("Planet Name: " + ChatFormatting.DARK_GREEN  + dimName);
+				list.add(LibVulpes.proxy.getLocalizedString("msg.itemplanetidchip.planetname") + ChatFormatting.DARK_GREEN  + dimName);
 				if( !props.getRequiredArtifacts().isEmpty()) {
-					list.add("Artifacts:");
+					list.add(LibVulpes.proxy.getLocalizedString("msg.itemplanetidchip.artifacts"));
 					for(ItemStack stack2 : props.getRequiredArtifacts())
 					{
 						list.add(ChatFormatting.DARK_PURPLE + "    " + stack2.getDisplayName());
@@ -156,7 +157,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 
 			}
 			else { //Space station
-				list.add("Station Id: " + ChatFormatting.DARK_GREEN + stack.getTagCompound().getString(dimensionNameIdentifier));
+				list.add(LibVulpes.proxy.getLocalizedString("msg.itemplanetidchip.stationid") + ChatFormatting.DARK_GREEN + stack.getTagCompound().getString(dimensionNameIdentifier));
 			}
 		}
 	}

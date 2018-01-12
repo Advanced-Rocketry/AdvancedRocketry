@@ -9,6 +9,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.IFluidBlock;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.util.BlockPosition;
 
 /**
@@ -34,7 +35,7 @@ public class ItemSealDetector extends Item
         {
             if (SealableBlockHandler.INSTANCE.isBlockSealed(world, x, y, z))
             {
-                player.addChatComponentMessage(new ChatComponentText("Should hold a nice seal."));
+                player.addChatComponentMessage(new ChatComponentText(LibVulpes.proxy.getLocalizedString("msg.sealdetector.sealed")));
             }
             else
             {
@@ -42,23 +43,23 @@ public class ItemSealDetector extends Item
                 Material mat = block.getMaterial();
                 if (SealableBlockHandler.INSTANCE.isMaterialBanned(mat))
                 {
-                    player.addChatComponentMessage(new ChatComponentText("Material will not hold a seal."));
+                    player.addChatComponentMessage(new ChatComponentText(LibVulpes.proxy.getLocalizedString("msg.sealdetector.notsealmat")));
                 }
                 else if (SealableBlockHandler.INSTANCE.isBlockBanned(block))
                 {
-                    player.addChatComponentMessage(new ChatComponentText("Block will not hold a seal."));
+                    player.addChatComponentMessage(new ChatComponentText(LibVulpes.proxy.getLocalizedString("msg.sealdetector.notsealblock")));
                 }
                 else if (SealableBlockHandler.isFulBlock(world, block, new BlockPosition(x, y, z)))
                 {
-                    player.addChatComponentMessage(new ChatComponentText("Air will pass around this block."));
+                    player.addChatComponentMessage(new ChatComponentText(LibVulpes.proxy.getLocalizedString("msg.sealdetector.notfullblock")));
                 }
                 else if (block instanceof IFluidBlock)
                 {
-                    player.addChatComponentMessage(new ChatComponentText("Air will bubble through this block"));
+                    player.addChatComponentMessage(new ChatComponentText(LibVulpes.proxy.getLocalizedString("msg.sealdetector.fluid")));
                 }
                 else
                 {
-                    player.addChatComponentMessage(new ChatComponentText("Air will leak through this block."));
+                    player.addChatComponentMessage(new ChatComponentText(LibVulpes.proxy.getLocalizedString("msg.sealdetector.other")));
                 }
             }
         }

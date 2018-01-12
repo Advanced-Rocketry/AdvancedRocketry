@@ -29,6 +29,7 @@ import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.StorageChunk;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
@@ -104,19 +105,19 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	private List<BlockPosition> blockPos;
 
 	protected static enum ErrorCodes {
-		SUCCESS("Clear for liftoff!"),
-		NOFUEL("Not enough fuel capacity!"),
-		NOSEAT("Missing Seat or satellite!"),
-		NOENGINES("You do not have enough thrust!"),
-		NOGUIDANCE("Missing Guidance Computer"),
-		UNSCANNED("Rocket unscanned."),
-		SUCCESS_STATION("Ready!"),
-		EMPTY("Nothing here"),
-		FINISHED("Build Complete!"),
-		INCOMPLETESTRCUTURE("Invalid Launch Pad Structure!"),
-		NOSATELLITEHATCH("Missing Sat Bay"),
-		NOSATELLITECHIP("Missing Chip"),
-		OUTPUTBLOCKED("Output slot blocked");
+		SUCCESS(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.success")),
+		NOFUEL(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.nofuel")),
+		NOSEAT(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.noseat")),
+		NOENGINES(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.noengines")),
+		NOGUIDANCE(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.noguidance")),
+		UNSCANNED(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.unscanned")),
+		SUCCESS_STATION(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.success_station")),
+		EMPTY(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.empty")),
+		FINISHED(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.finished")),
+		INCOMPLETESTRCUTURE(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.incompletestructure")),
+		NOSATELLITEHATCH(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.nosatellitehatch")),
+		NOSATELLITECHIP(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.nosatellitechip")),
+		OUTPUTBLOCKED(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.outputblocked"));
 
 		String code;
 		private ErrorCodes(String code) {
@@ -668,10 +669,10 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	}
 
 	protected void updateText() {
-		thrustText.setText(isScanning() ? "Thrust: ???" :  String.format("Thrust: %dN",getThrust()));
-		weightText.setText(isScanning() ? "Weight: ???"  : String.format("Weight: %dN",getWeight()));
-		fuelText.setText(isScanning() ? "Fuel: ???" :  String.format("Fuel: %dmb/s", getRocketStats().getFuelRate(FuelType.LIQUID)));
-		accelerationText.setText(isScanning() ? "Acc: ???" : String.format("Acc: %.2fm/s\u00b2", getAcceleration()*20f));
+		thrustText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.thrust") + ": ???") :  String.format("%s: %dN",LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.thrust"), getThrust()));
+		weightText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.weight") + ": ???")  : String.format("%s: %dN", LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.weight"),getWeight()));
+		fuelText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.fuel") + ": ???") :  String.format("%s: %dmb/s", LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.fuel"), getRocketStats().getFuelRate(FuelType.LIQUID)));
+		accelerationText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.acc") + ": ???") : String.format("%s: %.2fm/s\u00b2", LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.acc"), getAcceleration()*20f));
 		if(!worldObj.isRemote) { 
 			if(getRocketPadBounds(worldObj, xCoord, yCoord, zCoord) == null)
 				setStatus(ErrorCodes.INCOMPLETESTRCUTURE.ordinal());
@@ -699,10 +700,10 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		modules.add(new ModuleProgress(149, 90, 2, verticalProgressBar, this));
 
 
-		modules.add(new ModuleButton(5, 94, 0, "Scan", this,  zmaster587.libVulpes.inventory.TextureResources.buttonScan));
+		modules.add(new ModuleButton(5, 94, 0, LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.scan"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonScan));
 
 		ModuleButton buttonBuild;
-		modules.add(buttonBuild = new ModuleButton(5, 120, 1, "Build", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
+		modules.add(buttonBuild = new ModuleButton(5, 120, 1, LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.build"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
 		buttonBuild.setColor(0xFFFF2222);
 
 		modules.add(thrustText = new ModuleText(8, 15, "", 0xFF22FF22));
@@ -857,8 +858,8 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 				}
 			}
 
-			if(!worldObj.isRemote) {
-				player.addChatMessage(new ChatComponentText("Linked Sucessfully"));
+			if(!world.isRemote) {
+				player.addChatMessage(new ChatComponentText(LibVulpes.proxy.getLocalizedString("msg.linker.success")));
 
 				if(tile instanceof IMultiblock)
 					((IMultiblock)tile).setMasterBlock(xCoord, yCoord, zCoord);

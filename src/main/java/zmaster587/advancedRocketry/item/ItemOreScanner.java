@@ -14,6 +14,7 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.GuiHandler;
 import zmaster587.advancedRocketry.inventory.modules.ModuleOreMapper;
 import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 
@@ -31,16 +32,16 @@ public class ItemOreScanner extends Item implements IModularInventory {
 			mapping = (SatelliteOreMapping)sat;
 		
 		if(!stack.hasTagCompound())
-			list.add("Unprogrammed");
+			list.add(LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
 		else if(mapping == null)
-			list.add("Satellite not yet launched");
+			list.add(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.nosat"));
 		else if(mapping.getDimensionId() == player.worldObj.provider.dimensionId) {
-			list.add("Connected");
-			list.add("Max Zoom: " + mapping.getZoomRadius());
-			list.add("Can filter ore: " + mapping.canFilterOre());
+			list.add(LibVulpes.proxy.getLocalizedString("msg.connected"));
+			list.add(LibVulpes.proxy.getLocalizedString("msg.maxzoom") + mapping.getZoomRadius());
+			list.add(LibVulpes.proxy.getLocalizedString("msg.filter") + mapping.canFilterOre());
 		}
 		else
-			list.add("Not Connected");
+			list.add(LibVulpes.proxy.getLocalizedString("msg.notconnected"));
 
 		super.addInformation(stack, player, list, arg5);
 	}

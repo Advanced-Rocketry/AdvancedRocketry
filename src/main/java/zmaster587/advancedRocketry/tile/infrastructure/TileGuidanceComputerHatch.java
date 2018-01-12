@@ -60,12 +60,12 @@ public class TileGuidanceComputerHatch extends TilePointer implements IInfrastru
 		buttonState = new boolean[4];
 		chipEjected = false;
 
-		redstoneControl = new ModuleRedstoneOutputButton(174, 4, redstoneState, "", this, "Loading State: ");
+		redstoneControl = new ModuleRedstoneOutputButton(174, 4, redstoneState, "", this, LibVulpes.proxy.getLocalizedString("msg.guidanceComputerHatch.loadingState"));
 		state = RedstoneState.ON;
-		module_autoEject = new ModuleToggleSwitch(90, 15, buttonAutoEject, "", this, TextureResources.buttonAutoEject, LibVulpes.proxy.getLocalizedString("Auto Eject Upon Landing"), 24, 24, false);
-		module_satellite = new ModuleToggleSwitch(64, 41, buttonSatellite, "", this, TextureResources.buttonAutoEject, LibVulpes.proxy.getLocalizedString("Allow Ejection of Satellite Chips"), 24, 24, false); 
-		module_planet = new ModuleToggleSwitch(90, 41, buttonPlanet, "", this, TextureResources.buttonAutoEject, LibVulpes.proxy.getLocalizedString("Allow Ejection of Planet Chips"), 24, 24, false);
-		module_station = new ModuleToggleSwitch(116, 41, buttonStation, "", this, TextureResources.buttonAutoEject, LibVulpes.proxy.getLocalizedString("Allow Ejection of Station Chips"), 24, 24, false);
+		module_autoEject = new ModuleToggleSwitch(90, 15, buttonAutoEject, "", this, TextureResources.buttonAutoEject, LibVulpes.proxy.getLocalizedString("msg.guidanceComputerHatch.ejectonlanding"), 24, 24, false);
+		module_satellite = new ModuleToggleSwitch(64, 41, buttonSatellite, "", this, TextureResources.buttonAutoEject, LibVulpes.proxy.getLocalizedString("msg.guidanceComputerHatch.ejectonsatlanding"), 24, 24, false); 
+		module_planet = new ModuleToggleSwitch(90, 41, buttonPlanet, "", this, TextureResources.buttonAutoEject, LibVulpes.proxy.getLocalizedString("msg.guidanceComputerHatch.ejectonplanetlanding"), 24, 24, false);
+		module_station = new ModuleToggleSwitch(116, 41, buttonStation, "", this, TextureResources.buttonAutoEject, LibVulpes.proxy.getLocalizedString("msg.guidanceComputerHatch.ejectonstationlanding"), 24, 24, false);
 	}
 
 	
@@ -177,8 +177,9 @@ public class TileGuidanceComputerHatch extends TilePointer implements IInfrastru
 			this.unlinkRocket();
 		}
 
+
 		if(player.worldObj.isRemote)
-			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText("You program the linker with the fluid loader at: " + xCoord + " " + yCoord + " " + zCoord)));
+			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText(LibVulpes.proxy.getLocalizedString("msg.guidanceComputerHatch.link") + ": " + xCoord + " " + yCoord + " " + zCoord)));
 		return true;
 	}
 
@@ -186,7 +187,7 @@ public class TileGuidanceComputerHatch extends TilePointer implements IInfrastru
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 		if(player.worldObj.isRemote)
-			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText("This must be the first machine to link!")));
+			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new ChatComponentText(LibVulpes.proxy.getLocalizedString("msg.linker.error.firstMachine"))));
 		return false;
 	}
 

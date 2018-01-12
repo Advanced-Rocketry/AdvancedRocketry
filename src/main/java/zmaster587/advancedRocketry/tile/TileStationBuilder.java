@@ -13,6 +13,7 @@ import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder.ErrorCodes;
 import zmaster587.advancedRocketry.util.StorageChunk;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleButton;
@@ -164,10 +165,10 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 		modules.add(new ModuleProgress(149, 30, 2, verticalProgressBar, this));
 
-		modules.add(new ModuleButton(5, 34, 0, "Scan", this,  zmaster587.libVulpes.inventory.TextureResources.buttonScan));
+		modules.add(new ModuleButton(5, 34, 0, LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.scan"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonScan));
 
 		ModuleButton buttonBuild;
-		modules.add(buttonBuild = new ModuleButton(5, 60, 1, "Build", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
+		modules.add(buttonBuild = new ModuleButton(5, 60, 1, LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.build"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
 		buttonBuild.setColor(0xFFFF2222);
 		modules.add(errorText = new ModuleText(5, 22, "", 0xFFFFFF22));
 		modules.add(new ModuleSync(4, this));

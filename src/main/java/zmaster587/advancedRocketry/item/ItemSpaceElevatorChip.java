@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import zmaster587.libVulpes.LibVulpes;
 
 public class ItemSpaceElevatorChip extends Item {
 
@@ -58,7 +59,7 @@ public class ItemSpaceElevatorChip extends Item {
 		if(numPos > 0)
 			list.add("Contains " + numPos + " entries");
 		else
-			list.add("Empty");
+			list.add(LibVulpes.proxy.getLocalizedString("msg.empty"));
 	}
 	
 }
