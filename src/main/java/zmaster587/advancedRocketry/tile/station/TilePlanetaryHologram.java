@@ -22,6 +22,7 @@ import zmaster587.advancedRocketry.entity.EntityUIPlanet;
 import zmaster587.advancedRocketry.entity.EntityUIStar;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.IButtonInventory;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ISliderBar;
@@ -58,7 +59,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 	public TilePlanetaryHologram() {
 		entities = new LinkedList<EntityUIPlanet>();
 		starEntities = new LinkedList<EntityUIStar>();
-		targetGrav = new ModuleText(6, 45, "Hologram Size:", 0x202020);
+		targetGrav = new ModuleText(6, 45, LibVulpes.proxy.getLocalizedString("msg.planetholo.size"), 0x202020);
 		selectedPlanet = null;
 		stellarMode = false;
 		selectedId = -1;
@@ -322,7 +323,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 		if(worldObj.isRemote) {
 
 			//numThrusters.setText("Number Of Thrusters: 0");
-			targetGrav.setText(String.format("Hologram Size: %f", getHologramSize()));
+			targetGrav.setText(String.format("%s %f", LibVulpes.proxy.getLocalizedString("msg.planetholo.size"), getHologramSize()));
 		}
 	}
 

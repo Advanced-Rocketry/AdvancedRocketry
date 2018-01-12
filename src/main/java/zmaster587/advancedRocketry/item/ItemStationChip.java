@@ -7,6 +7,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -88,9 +89,9 @@ public class ItemStationChip extends ItemIdWithName {
 	public void addInformation(ItemStack stack, EntityPlayer player, List list,
 			boolean bool) {
 		if(getUUID(stack) == 0)
-			list.add(ChatFormatting.GRAY + "Unprogrammed");
+			list.add(ChatFormatting.GRAY + LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
 		else {
-			list.add(ChatFormatting.GREEN + "Station " + getUUID(stack));
+			list.add(ChatFormatting.GREEN + LibVulpes.proxy.getLocalizedString("msg.stationchip.sation") + getUUID(stack));
 			super.addInformation(stack, player, list, bool);
 			
 			if(player.worldObj.provider.getDimension() == Configuration.spaceDimId) {

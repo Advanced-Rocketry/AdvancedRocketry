@@ -351,7 +351,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 				
 				float time = Configuration.asteroidTypes.get(lastType).timeMultiplier;
 				
-				buttonList.add(new ModuleText(0, 24*(1+(g/3)), String.format("Mission Time:\n%.2fx",time), 0x2f2f2f));
+				buttonList.add(new ModuleText(0, 24*(1+(g/3)), String.format("%s\n%.2fx", LibVulpes.proxy.getLocalizedString("msg.observetory.text.missionTime") ,time), 0x2f2f2f));
 			}
 			
 			

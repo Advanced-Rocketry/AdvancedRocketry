@@ -18,6 +18,7 @@ import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ISliderBar;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -35,10 +36,10 @@ public class TileStationGravityController extends TileEntity implements IModular
 	private ModuleText moduleGrav, maxGravBuildSpeed, targetGrav;
 
 	public TileStationGravityController() {
-		moduleGrav = new ModuleText(6, 15, "Artifical Gravity: ", 0xaa2020);
+		moduleGrav = new ModuleText(6, 15, LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.alt"), 0xaa2020);
 		//numGravPylons = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
-		maxGravBuildSpeed = new ModuleText(6, 25, "Max Gravity Change Rate: ", 0xaa2020);
-		targetGrav = new ModuleText(6, 35, "Target Gravity:", 0x202020);
+		maxGravBuildSpeed = new ModuleText(6, 25, LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.maxaltrate"), 0xaa2020);
+		targetGrav = new ModuleText(6, 35, LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.tgtalt"), 0x202020);
 	}
 
 	@Override
@@ -77,13 +78,13 @@ public class TileStationGravityController extends TileEntity implements IModular
 		if(worldObj.isRemote) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object != null) {
-				moduleGrav.setText(String.format("Artifical Gravity: %.2f", object.getProperties().getGravitationalMultiplier()));
-				maxGravBuildSpeed.setText(String.format("Max Gravity Change Rate: %.1f", 7200D*object.getMaxRotationalAcceleration()));
+				moduleGrav.setText(String.format("%s%.2f", LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.alt"), object.getProperties().getGravitationalMultiplier()));
+				maxGravBuildSpeed.setText(String.format("%s%.1f",LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.maxaltrate"), 7200D*object.getMaxRotationalAcceleration()));
 			}
 
 			//numThrusters.setText("Number Of Thrusters: 0");
 
-			targetGrav.setText(String.format("Target Gravity: %d", gravity));
+			targetGrav.setText(String.format("%s%d", LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.tgtalt"), gravity));
 		}
 	}
 

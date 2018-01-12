@@ -1,4 +1,7 @@
 package zmaster587.advancedRocketry.item;
+import zmaster587.libVulpes.LibVulpes;
+
+import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -63,12 +66,12 @@ public class ItemAsteroidChip  extends ItemMultiData {
 	public void addInformation(ItemStack stack, net.minecraft.entity.player.EntityPlayer player, java.util.List list, boolean bool) {
 
 		if(!stack.hasTagCompound()) {
-			list.add("Unprogrammed");
+			list.add(LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
 		}
 		else {
 			if(stack.getItemDamage()  == 0) {
 
-				list.add("Asteroid-" + ChatFormatting.DARK_GREEN  + getUUID(stack));
+				list.add(LibVulpes.proxy.getLocalizedString("msg.asteroidChip.asteroid") + "-" + ChatFormatting.DARK_GREEN  + getUUID(stack));
 
 				super.addInformation(stack, player, list, bool);
 

@@ -22,6 +22,7 @@ import zmaster587.advancedRocketry.item.ItemData;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.advancedRocketry.satellite.SatelliteData;
 import zmaster587.advancedRocketry.util.IDataInventory;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.IButtonInventory;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -123,16 +124,17 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 			SatelliteBase satellite = moduleSatellite.getSatellite();
 			if(satellite != null) {
 				if(getEnergyStored() < getPowerPerOperation()) 
-					moduleText.setText("Not Enough power!");
+					moduleText.setText(LibVulpes.proxy.getLocalizedString("msg.notenoughpower"));
+
 				else if(!DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(worldObj, pos).getId())) {
-					moduleText.setText(satellite.getName() + "\n\nToo Far" );
+					moduleText.setText(satellite.getName() + "\n\n" + LibVulpes.proxy.getLocalizedString("msg.satctrlcenter.toofar") );
 				}
 
 				else
-					moduleText.setText(satellite.getName() + "\n\nInfo:\n" + satellite.getInfo(worldObj));
+					moduleText.setText(satellite.getName() + "\n\n" + LibVulpes.proxy.getLocalizedString("msg.satctrlcenter.info") + "\n" + satellite.getInfo(worldObj));
 			}
 			else
-				moduleText.setText("No Link...");
+				moduleText.setText(LibVulpes.proxy.getLocalizedString("msg.satctrlcenter.nolink"));
 		}
 	}
 
@@ -154,8 +156,8 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModulePower(18, 20, this.energy));
-		modules.add(new ModuleButton(116, 70, 0, "Connect!", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
-		modules.add(new ModuleButton(173, 3, 1, "", this, TextureResources.buttonKill, "Destroy Satellite", 24, 24));
+		modules.add(new ModuleButton(116, 70, 0, LibVulpes.proxy.getLocalizedString("msg.satctrlcenter.connect"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
+		modules.add(new ModuleButton(173, 3, 1, "", this, TextureResources.buttonKill, LibVulpes.proxy.getLocalizedString("msg.satctrlcenter.destroysat"), 24, 24));
 		modules.add(new ModuleData(28, 20, 1, this, data));
 
 		moduleSatellite = new ModuleSatellite(152, 10, this, 0);
@@ -164,7 +166,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 		//Try to assign a satellite ASAP
 		moduleSatellite.setSatellite(getSatelliteFromSlot(0));
 
-		moduleText = new ModuleText(60, 20, "No Link...", 0x404040);
+		moduleText = new ModuleText(60, 20, LibVulpes.proxy.getLocalizedString("msg.satctrlcenter.nolink"), 0x404040);
 		modules.add(moduleText);
 
 		updateInventoryInfo();
