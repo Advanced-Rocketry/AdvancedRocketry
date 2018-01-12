@@ -31,6 +31,7 @@ import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
 import zmaster587.advancedRocketry.util.ITilePlanetSystemSelectable;
 import zmaster587.advancedRocketry.world.util.MultiData;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
@@ -406,9 +407,9 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 
 		modules.add(new ModuleText(15, 76, "Research",0x404040));
 
-		modules.add(new ModuleToggleSwitch(15, 86, 4, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, "Composition Research", 11, 26, researchingAtmosphere));
-		modules.add(new ModuleToggleSwitch(65, 86, 5, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage,"Distance Research", 11, 26, researchingDistance));
-		modules.add(new ModuleToggleSwitch(125, 86, 6, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, "Mass Research", 11, 26, researchingMass));
+		modules.add(new ModuleToggleSwitch(15, 86, 4, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, LibVulpes.proxy.getLocalizedString("msg.abdp.compositionresearch"), 11, 26, researchingAtmosphere));
+		modules.add(new ModuleToggleSwitch(65, 86, 5, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, LibVulpes.proxy.getLocalizedString("msg.abdp.distanceresearch"), 11, 26, researchingDistance));
+		modules.add(new ModuleToggleSwitch(125, 86, 6, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, LibVulpes.proxy.getLocalizedString("msg.abdp.massresearch"), 11, 26, researchingMass));
 
 		//Research indicators
 		modules.add(new ModuleProgress(26, 86, 1, TextureResources.progressScience, this));

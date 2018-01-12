@@ -38,6 +38,7 @@ import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.satellite.SatelliteBiomeChanger;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.gui.CommonResources;
@@ -287,8 +288,8 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 
 	public TileAtmosphereTerraformer() {
 		completionTime = (int) (18000 * Configuration.terraformSpeed);
-		buttonIncrease = new ModuleToggleSwitch(40, 20, 1, "Increase Atm", this, TextureResources.buttonScan, 80, 16,true);
-		buttonDecrease = new ModuleToggleSwitch(40, 38, 2, "Decrease Atm", this, TextureResources.buttonScan, 80, 16, false);
+		buttonIncrease = new ModuleToggleSwitch(40, 20, 1, LibVulpes.proxy.getLocalizedString("msg.terraformer.atminc"), this, TextureResources.buttonScan, 80, 16,true);
+		buttonDecrease = new ModuleToggleSwitch(40, 38, 2, LibVulpes.proxy.getLocalizedString("msg.terraformer.atmdec"), this, TextureResources.buttonScan, 80, 16, false);
 		text = new ModuleText(10, 100, "", 0x282828);
 		powerPerTick = 1000;
 
@@ -335,15 +336,15 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 		String statusText;
 		ItemStack biomeChanger = inv.getStackInSlot(0);
 		if(isRunning())
-			statusText = "Running";
+			statusText = LibVulpes.proxy.getLocalizedString("msg.terraformer.running");
 		else if(!hasValidBiomeChanger())
-			statusText = "Missing biome changer link";
+			statusText = LibVulpes.proxy.getLocalizedString("msg.terraformer.missingbiome");
 		else if(outOfFluid)
-			statusText = "Aborted: Ran out of gasses";
+			statusText = LibVulpes.proxy.getLocalizedString("msg.terraformer.outofgas");
 		else
-			statusText = "Not running";
+			statusText = LibVulpes.proxy.getLocalizedString("msg.terraformer.notrunning");
 
-		text.setText(String.format("Status:\n%s\n\nPressure: %.2f" , statusText,DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getAtmosphereDensity()/100f));
+		text.setText(String.format("%s:\n%s\n\n%s: %.2f" , LibVulpes.proxy.getLocalizedString("msg.terraformer.status"), statusText, LibVulpes.proxy.getLocalizedString("msg.terraformer.pressure"), DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getAtmosphereDensity()/100f));
 	}
 
 	@Override

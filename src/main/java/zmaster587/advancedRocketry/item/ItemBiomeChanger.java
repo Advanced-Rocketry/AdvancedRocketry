@@ -57,7 +57,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 		ModuleContainerPan pan = new ModuleContainerPan(32, 16, list2, new LinkedList<ModuleBase>(), null, 128, 128, 0, -64, 0, 1000);
 
 		list.add(pan);
-		list.add(new ModuleButton(120, 124, -1, "Scan Biome", this, TextureResources.buttonScan));
+		list.add(new ModuleButton(120, 124, -1, LibVulpes.proxy.getLocalizedString("msg.biomechanger.scan"), this, TextureResources.buttonScan));
 		list.add(new ModulePower(16, 48, (IUniversalEnergy) sat));
 
 		return list;
@@ -74,16 +74,16 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 			mapping = (SatelliteBiomeChanger)sat;
 
 		if(!stack.hasTagCompound())
-			list.add("Unprogrammed");
+			list.add( LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
 		else if(mapping == null)
-			list.add("Satellite not yet launched");
+			list.add(LibVulpes.proxy.getLocalizedString("msg.biomechanger.nosat"));
 		else if(mapping.getDimensionId() == player.provider.getDimension()) {
-			list.add("Connected");
-			list.add("Selected Biome: " + Biome.getBiome(mapping.getBiome()).getBiomeName());
-			list.add("Num Biomes Scanned: " + mapping.discoveredBiomes().size());
+			list.add(LibVulpes.proxy.getLocalizedString("msg.connected"));
+			list.add(LibVulpes.proxy.getLocalizedString("msg.biomechanger.selBiome") + Biome.getBiome(mapping.getBiome()).getBiomeName());
+			list.add(LibVulpes.proxy.getLocalizedString("msg.biomechanger.numBiome") + mapping.discoveredBiomes().size());
 		}
 		else
-			list.add("Not Connected");
+			list.add(LibVulpes.proxy.getLocalizedString("msg.notconnected"));
 
 		super.addInformation(stack, player, list, arg5);
 	}

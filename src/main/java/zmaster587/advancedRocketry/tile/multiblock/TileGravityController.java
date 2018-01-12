@@ -20,6 +20,7 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.advancedRocketry.util.GravityHandler;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.inventory.modules.IGuiCallback;
 import zmaster587.libVulpes.inventory.modules.ISliderBar;
@@ -59,9 +60,9 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 
 	public TileGravityController() {
 		//numGravPylons = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
-		textRadius = new ModuleText(6, 82, "Radius: 5", 0x202020);
-		targetGrav = new ModuleText(6, 110, "Target Gravity:", 0x202020);
-		sideSelectorModule = new ModuleBlockSideSelector(90, 15, this, new String[] {"None", "Active: set", "Active: Additive"});
+		textRadius = new ModuleText(6, 82, LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.radius") + "5", 0x202020);
+		targetGrav = new ModuleText(6, 110, LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.targetgrav"), 0x202020);
+		sideSelectorModule = new ModuleBlockSideSelector(90, 15, this, new String[] {LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.none"), LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.activeset"), LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.activeadd")});
 
 		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 1, "", this);
 		state = RedstoneState.OFF;
@@ -92,7 +93,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 		modules.add(new ModuleSlider(6, 120, 0, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
 		modules.add(new ModuleSlider(6, 90, 1, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
 
-		modules.add(new ModuleText(42, 20, "Target->\nDirection", 0x202020));
+		modules.add(new ModuleText(42, 20, LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.targetdir"), 0x202020));
 		modules.add(targetGrav);
 		modules.add(textRadius);
 		updateText();
@@ -122,9 +123,9 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 
 	private void updateText() {
 		if(world.isRemote) {
-			textRadius.setText(String.format("Radius: %d", getRadius()));
+			textRadius.setText(String.format("%s%d",LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.radius"), getRadius()));
 
-			targetGrav.setText(String.format("Target Gravity: %.2f/%d",currentProgress, gravity));
+			targetGrav.setText(String.format("%s%.2f/%d", LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.targetgrav" ),currentProgress, gravity));
 		}
 	}
 

@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.util.DimensionBlockPosition;
 import zmaster587.advancedRocketry.util.NBTStorableListList;
+import zmaster587.libVulpes.LibVulpes;
 
 public class ItemSpaceElevatorChip extends Item {
 
@@ -59,7 +60,7 @@ public class ItemSpaceElevatorChip extends Item {
 		if(numPos > 0)
 			list.add("Contains " + numPos + " entries");
 		else
-			list.add("Empty");
+			list.add(LibVulpes.proxy.getLocalizedString("msg.empty"));
 	}
 	
 }

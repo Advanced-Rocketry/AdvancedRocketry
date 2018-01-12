@@ -744,7 +744,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 		
 		modules.add(new ModuleButton(103, 20, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonLeft, 5, 8));
 		modules.add(new ModuleButton(157, 20, 1, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonRight, 5, 8));
-		modules.add(new ModuleButton(103, 62, 2, "Reset", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, 34, 20));
+		modules.add(new ModuleButton(103, 62, 2, LibVulpes.proxy.getLocalizedString("msg.spacelaser.reset"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, 34, 20));
 		modules.add(new ModulePower(11, 25, batteries));
 		modules.add(new ModuleSlotArray(56, 54, this, 0, 1));
 		

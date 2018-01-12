@@ -16,6 +16,7 @@ import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ISliderBar;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -33,9 +34,9 @@ public class TileStationOrientationControl extends TileEntity implements ITickab
 	private ModuleText moduleAngularVelocity, numThrusters, maxAngularAcceleration, targetRotations;
 
 	public TileStationOrientationControl() {
-		moduleAngularVelocity = new ModuleText(6, 15, "Angular Velocity: ", 0xaa2020);
+		moduleAngularVelocity = new ModuleText(6, 15, LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.alt"), 0xaa2020);
 		//numThrusters = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
-		targetRotations = new ModuleText(6, 25, "Target Ang Vel:", 0x202020);
+		targetRotations = new ModuleText(6, 25, LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.tgtalt"), 0x202020);
 		progress = new int[3];
 		numRotationsPerHour = new int[3];
 
@@ -67,13 +68,13 @@ public class TileStationOrientationControl extends TileEntity implements ITickab
 		if(world.isRemote) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object != null) {
-				moduleAngularVelocity.setText(String.format("Angular Velocity: %.1f %.1f %.1f", 72000D*object.getDeltaRotation(EnumFacing.EAST), 72000D*object.getDeltaRotation(EnumFacing.UP), 7200D*object.getDeltaRotation(EnumFacing.NORTH)));
+				moduleAngularVelocity.setText(String.format("%s%.1f %.1f %.1f", LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.alt"), 72000D*object.getDeltaRotation(EnumFacing.EAST), 72000D*object.getDeltaRotation(EnumFacing.UP), 7200D*object.getDeltaRotation(EnumFacing.NORTH)));
 				//maxAngularAcceleration.setText(String.format("Maximum Angular Acceleration: %.1f", 7200D*object.getMaxRotationalAcceleration()));
 			}
 
 			//numThrusters.setText("Number Of Thrusters: 0");
 
-			targetRotations.setText(String.format("Target Ang Vel: %d %d %d", numRotationsPerHour[0], numRotationsPerHour[1], numRotationsPerHour[2]));
+			targetRotations.setText(String.format("%s%d %d %d", LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.tgtalt"), numRotationsPerHour[0], numRotationsPerHour[1], numRotationsPerHour[2]));
 		}
 	}
 

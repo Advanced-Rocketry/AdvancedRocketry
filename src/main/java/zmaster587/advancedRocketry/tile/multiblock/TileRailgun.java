@@ -182,7 +182,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 			textBox = new ModuleNumericTextbox(this, 80, 40, 32, 12, 2);
 			//}
 			textBox.setText(String.valueOf(minStackTransferSize));
-			modules.add(new ModuleText(60, 25, "Min Transfer Size", 0x2b2b2b));
+			modules.add(new ModuleText(60, 25, LibVulpes.proxy.getLocalizedString("msg.railgun.transfermin"), 0x2b2b2b));
 			modules.add(textBox);
 		}
 
@@ -393,7 +393,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		ItemLinker.setMasterCoords(item, this.getPos());
 		ItemLinker.setDimId(item, world.provider.getDimension());
 		if(!world.isRemote)
-			player.sendMessage(new TextComponentString("Coordinates programmed into Linker"));
+			player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.linker.program")));
 		return true;
 	}
 

@@ -405,7 +405,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 		ItemLinker.setMasterCoords(item, this.getPos());
 		ItemLinker.setDimId(item, world.provider.getDimension());
 		if(!world.isRemote)
-			player.sendMessage(new TextComponentString("Coordinates programmed into Linker"));
+			player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.linker.program")));
 		return true;
 	}
 

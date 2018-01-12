@@ -15,6 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.util.Vector3F;
 
 /**
@@ -94,9 +95,9 @@ public class ItemStationChip extends ItemIdWithName {
 	public void addInformation(ItemStack stack, World player, List list,
 			ITooltipFlag bool) {
 		if(getUUID(stack) == 0)
-			list.add(ChatFormatting.GRAY + "Unprogrammed");
+			list.add(ChatFormatting.GRAY + LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
 		else {
-			list.add(ChatFormatting.GREEN + "Station " + getUUID(stack));
+			list.add(ChatFormatting.GREEN + LibVulpes.proxy.getLocalizedString("msg.stationchip.sation") + getUUID(stack));
 			super.addInformation(stack, player, list, bool);
 			if(player.provider.getDimension() == Configuration.spaceDimId) {
 	            Entity p = Minecraft.getMinecraft().player;
