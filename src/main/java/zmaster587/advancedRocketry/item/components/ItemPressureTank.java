@@ -17,6 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.capability.TankCapabilityItemStack;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.items.ItemIngredient;
@@ -41,7 +42,7 @@ public class ItemPressureTank extends ItemIngredient implements IArmorComponent 
 		FluidStack fluidStack = FluidUtils.getFluidForItem(stack);
 		
 		if(fluidStack == null) {
-			list.add("Empty");
+			list.add(LibVulpes.proxy.getLocalizedString("msg.empty"));
 		}
 		else {
 			list.add(fluidStack.getLocalizedName() + ": " + fluidStack.amount);

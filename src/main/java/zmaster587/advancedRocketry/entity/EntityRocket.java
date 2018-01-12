@@ -270,7 +270,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			return errorStr;
 
 		//Get destination string
-		String displayStr = "N/A";
+		String displayStr = LibVulpes.proxy.getLocalizedString("msg.na");
 		if(storage != null) {
 			int dimid = storage.getDestinationDimId(this.world.provider.getDimension(), (int)posX, (int)posZ);
 
@@ -281,12 +281,12 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(vec.x,vec.y,vec.z));
 
 					if(obj != null) {
-						displayStr = "Station " + obj.getId();
+						displayStr =  LibVulpes.proxy.getLocalizedString("msg.entity.rocket.station") + obj.getId();
 
 						StationLandingLocation location = storage.getGuidanceComputer().getLandingLocation(obj.getId());
 
 						if(location != null) {
-							displayStr = displayStr + "\nPad: " + location;
+							displayStr = displayStr + "\n" + LibVulpes.proxy.getLocalizedString("msg.entity.rocket.pad") + location;
 						}
 					}
 				}
@@ -297,9 +297,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 
 		if(isInOrbit() && !isInFlight())
-			return "Press Space to descend!\n  Auto descend in " + ((DESCENT_TIMER - this.ticksExisted)/20);
+			return LibVulpes.proxy.getLocalizedString("msg.entity.rocket.descend") + ((DESCENT_TIMER - this.ticksExisted)/20);
 		else if(!isInFlight())
-			return "Press Space to take off!\nDest: " + displayStr;
+			return LibVulpes.proxy.getLocalizedString("msg.entity.rocket.ascend") + displayStr;
 
 		return super.getTextOverlay();
 	}
@@ -1530,12 +1530,12 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 
 			//Add buttons
-			modules.add(new ModuleButton(180, 140, 0, "Dissassemble", this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild, 64, 20));
+			modules.add(new ModuleButton(180, 140, 0, LibVulpes.proxy.getLocalizedString("msg.entity.rocket.disass"), this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild, 64, 20));
 
 			//modules.add(new ModuleButton(180, 95, 1, "", this, TextureResources.buttonLeft, 10, 16));
 			//modules.add(new ModuleButton(202, 95, 2, "", this, TextureResources.buttonRight, 10, 16));
 
-			modules.add(new ModuleButton(180, 114, 1, "Select Dst", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, 64,20));
+			modules.add(new ModuleButton(180, 114, 1, LibVulpes.proxy.getLocalizedString("msg.entity.rocket.seldst"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, 64,20));
 			//modules.add(new ModuleText(180, 114, "Inventories", 0x404040));
 		}
 		else {
@@ -1552,7 +1552,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					return modules;
 
 				List<ModuleBase> list2 = new LinkedList<ModuleBase>();
-				ModuleButton button = new ModuleButton(0, 0, STATION_LOC_OFFSET, "Clear", this, TextureResources.buttonGeneric, 72, 18);
+				ModuleButton button = new ModuleButton(0, 0, STATION_LOC_OFFSET, LibVulpes.proxy.getLocalizedString("msg.entity.rocket.clear"), this, TextureResources.buttonGeneric, 72, 18);
 				list2.add(button);
 
 				int i = 1;
@@ -1572,7 +1572,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 				StationLandingLocation location = storage.getGuidanceComputer().getLandingLocation(uuid);
 
-				landingPadDisplayText.setText(location != null ? location.toString() : "None Selected");
+				landingPadDisplayText.setText(location != null ? location.toString() : LibVulpes.proxy.getLocalizedString("msg.entity.rocket.none"));
 				modules.add(landingPadDisplayText);
 			}
 			else {

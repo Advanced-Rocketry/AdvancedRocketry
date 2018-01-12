@@ -18,6 +18,7 @@ import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ISliderBar;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -37,8 +38,8 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 	public TileStationAltitudeController() {
 		moduleGrav = new ModuleText(6, 15, "Altitude: ", 0xaa2020);
 		//numGravPylons = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
-		maxGravBuildSpeed = new ModuleText(6, 25, "Max Altitude Change Rate: ", 0xaa2020);
-		targetGrav = new ModuleText(6, 35, "Target Altitude:", 0x202020);
+		maxGravBuildSpeed = new ModuleText(6, 25, LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.maxaltrate"), 0xaa2020);
+		targetGrav = new ModuleText(6, 35, LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.tgtalt"), 0x202020);
 	}
 
 	@Override
@@ -77,13 +78,13 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 		if(world.isRemote) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object != null) {
-				moduleGrav.setText(String.format("Altitude: %.0fKm", object.getOrbitalDistance()*200 + 100 ));
-				maxGravBuildSpeed.setText(String.format("Max Altitude Change Rate: %.1f", 7200D*object.getMaxRotationalAcceleration()));
+				moduleGrav.setText(String.format("%s %.0fKm",LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.alt"), object.getOrbitalDistance()*200 + 100 ));
+				maxGravBuildSpeed.setText(String.format("%s%.1f", LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.maxaltrate"), 7200D*object.getMaxRotationalAcceleration()));
 			}
 
 			//numThrusters.setText("Number Of Thrusters: 0");
 
-			targetGrav.setText(String.format("Target Altitude: %d", gravity*200 + 100));
+			targetGrav.setText(String.format("%s %d", LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.tgtalt"), gravity*200 + 100));
 		}
 	}
 

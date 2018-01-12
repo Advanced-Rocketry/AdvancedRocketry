@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.tile;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
@@ -16,7 +17,7 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 
 	public TileSolarPanel() {
 		super(10000, 1);
-		text = new ModuleText(60, 40, "Collecting Energy", 0x2f2f2f);
+		text = new ModuleText(60, 40, LibVulpes.proxy.getLocalizedString("msg.solar=collectingEnergy"), 0x2f2f2f);
 	}
 
 	@Override
@@ -28,7 +29,7 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 	public void update() {
 		if(canGeneratePower()) {
 			if(world.isRemote)
-				text.setText("Collecting Energy:\n" + getPowerPerOperation() + " RF/t");
+				text.setText(LibVulpes.proxy.getLocalizedString("msg.solar=collectingEnergy") + "\n" + getPowerPerOperation() + " " + LibVulpes.proxy.getLocalizedString("msg.powerunit.rfpertick"));
 			if(hasEnoughEnergyBuffer(getPowerPerOperation())) {
 				if(!world.isRemote) this.energy.acceptEnergy(getPowerPerOperation(), false);
 				onGeneratePower();
@@ -37,7 +38,7 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 				notEnoughBufferForFunction();
 		}
 		else if(world.isRemote)
-			text.setText("Unable to collect Energy");
+			text.setText(LibVulpes.proxy.getLocalizedString("msg.solar.cannotcollectEnergy"));
 
 		if(!world.isRemote)
 			transmitPower();

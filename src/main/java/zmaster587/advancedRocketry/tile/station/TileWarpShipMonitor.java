@@ -92,7 +92,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 	private int progress;
 
 	public TileWarpShipMonitor() {
-		tabModule = new ModuleTab(4,0,0,this, 3, new String[]{"Warp Selection", "Data", "Planet Tracking"}, new ResourceLocation[][] { TextureResources.tabWarp, TextureResources.tabData, TextureResources.tabPlanetTracking} );
+		tabModule = new ModuleTab(4,0,0,this, 3, new String[]{LibVulpes.proxy.getLocalizedString("msg.warpmon.tab.warp"), LibVulpes.proxy.getLocalizedString("msg.warpmon.tab.data"), LibVulpes.proxy.getLocalizedString("msg.warpmon.tab.tracking")}, new ResourceLocation[][] { TextureResources.tabWarp, TextureResources.tabData, TextureResources.tabPlanetTracking} );
 		data = new MultiData();
 		data.setMaxData(10000);
 		inv = new EmbeddedInventory(9);
@@ -208,16 +208,16 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 					modules.add(new ModuleScaledImage(baseX,baseY,70,3, TextureResources.horizontalBar));
 					modules.add(new ModuleScaledImage(baseX,baseY + sizeY - 3,70,-3, TextureResources.horizontalBar));
 				}
-				modules.add(new ModuleButton(baseX - 3, baseY + sizeY, 0, "Select Planet", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, sizeX + 6, 16));
+				modules.add(new ModuleButton(baseX - 3, baseY + sizeY, 0, LibVulpes.proxy.getLocalizedString("msg.warpmon.selectplanet"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, sizeX + 6, 16));
 
 
 				//Status text
-				modules.add(new ModuleText(baseX, baseY + sizeY + 20, "Core Status:", 0x1b1b1b));
+				modules.add(new ModuleText(baseX, baseY + sizeY + 20, LibVulpes.proxy.getLocalizedString("msg.warpmon.corestatus"), 0x1b1b1b));
 				boolean flag = isOnStation && getSpaceObject().getFuelAmount() >= getTravelCost() && getSpaceObject().hasUsableWarpCore();
 				flag = flag && !(isOnStation && (getSpaceObject().getDestOrbitingBody() == -1 || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()));
 				boolean artifactFlag = (dimCache != null && meetsArtifactReq(dimCache));
-				canWarp = new ModuleText(baseX, baseY + sizeY + 30, (isOnStation && (getSpaceObject().getDestOrbitingBody() == -1 || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody())) ? "Nowhere to go" : 
-					(!artifactFlag ? "Missing Artifact" : (flag ? "Ready!" : "Not ready")), flag && artifactFlag ? 0x1baa1b : 0xFF1b1b);
+				canWarp = new ModuleText(baseX, baseY + sizeY + 30, (isOnStation && (getSpaceObject().getDestOrbitingBody() == -1 || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody())) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.nowhere") : 
+					(!artifactFlag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.missingart") : (flag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.ready") : LibVulpes.proxy.getLocalizedString("msg.warpmon.notready"))), flag && artifactFlag ? 0x1baa1b : 0xFF1b1b);
 				modules.add(canWarp);
 				modules.add(new ModuleProgress(baseX, baseY + sizeY + 40, 10, new IndicatorBarImage(70, 58, 53, 8, 122, 58, 5, 8, EnumFacing.EAST, TextureResources.progressBars), this));
 				//modules.add(new ModuleText(baseX + 82, baseY + sizeY + 20, "Fuel Cost:", 0x1b1b1b));
@@ -231,7 +231,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				baseY = 20;
 				sizeX = 70;
 				sizeY = 70;
-				ModuleButton warp = new ModuleButton(baseX - 3, baseY + sizeY,1, "Warp!", this ,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, sizeX + 6, 16);
+				ModuleButton warp = new ModuleButton(baseX - 3, baseY + sizeY,1, LibVulpes.proxy.getLocalizedString("msg.warpmon.warp"), this ,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, sizeX + 6, 16);
 
 				modules.add(warp);
 
@@ -243,8 +243,8 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				}
 
 				if(world.isRemote) {
-					warpFuel.setText("Fuel Cost: " + (flag ? String.valueOf(warpCost) : "N/A"));
-					warpCapacity.setText("Fuel: " + (isOnStation ? getSpaceObject().getFuelAmount() : "N/A"));
+					warpFuel.setText(LibVulpes.proxy.getLocalizedString("msg.warpmon.fuelcost") + (flag ? String.valueOf(warpCost) : LibVulpes.proxy.getLocalizedString("msg.warpmon.na")));
+					warpCapacity.setText(LibVulpes.proxy.getLocalizedString("msg.warpmon.fuel") + (isOnStation ? getSpaceObject().getFuelAmount() : LibVulpes.proxy.getLocalizedString("msg.warpmon.na")));
 					modules.add(warpFuel);
 					modules.add(warpCapacity);
 
@@ -254,7 +254,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 						modules.add(dstPlanetImg);
 					}
 					
-					ModuleText text = new ModuleText(baseX + 4, baseY + 4, "Dest:", 0xFFFFFF);
+					ModuleText text = new ModuleText(baseX + 4, baseY + 4, LibVulpes.proxy.getLocalizedString("msg.warpmon.dest"), 0xFFFFFF);
 					text.setAlwaysOnTop(true);
 					modules.add(text);
 					modules.add(dstPlanetText);
@@ -274,15 +274,15 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 			}
 			else {
 				modules.add(tabModule);
-				modules.add(new ModuleText(65, 20, "Artifacts", 0x202020));
+				modules.add(new ModuleText(65, 20, LibVulpes.proxy.getLocalizedString("msg.warpmon.artifact"), 0x202020));
 				modules.add(new ModuleSlotArray(30, 35, this, 4, 5));
 				modules.add(new ModuleSlotArray(55, 60, this, 5, 6));
 				modules.add(new ModuleSlotArray(80, 35, this, 6, 7));
 				modules.add(new ModuleSlotArray(105, 60, this, 6, 7));
 				modules.add(new ModuleSlotArray(130, 35, this, 7, 8));
 
-				modules.add(new ModuleButton(50, 117, 3, "Search for planet", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, "100 of each datatype required", 100, 10));
-				modules.add(new ModuleButton(50, 127, 4, "Program from chip", this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild,100, 10));
+				modules.add(new ModuleButton(50, 117, 3, LibVulpes.proxy.getLocalizedString("msg.warpmon.search"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, LibVulpes.proxy.getLocalizedString("msg.warpmon.datareq"), 100, 10));
+				modules.add(new ModuleButton(50, 127, 4, LibVulpes.proxy.getLocalizedString("msg.warpmon.chip"), this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild,100, 10));
 				modules.add(new ModuleTexturedSlotArray(30, 120, this, 3, 4, TextureResources.idChip));
 				modules.add(programmingProgress);
 			}
@@ -328,8 +328,8 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 		if(canWarp != null) {
 			flag = flag && !(isOnStation && (getSpaceObject().getDestOrbitingBody() == -1 || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()));
 			boolean artifactFlag = (dimCache != null && meetsArtifactReq(dimCache));
-			canWarp.setText(isOnStation && (getSpaceObject().getDestOrbitingBody() == -1 || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()) ? "Nowhere to go" : 
-				(!artifactFlag ? "Missing Artifact" : (flag ? "Ready!" : "Not ready")));
+			canWarp.setText(isOnStation && (getSpaceObject().getDestOrbitingBody() == -1 || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.nowhere") : 
+				(!artifactFlag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.missingart") : (flag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.ready") : LibVulpes.proxy.getLocalizedString("msg.warpmon.notready"))));
 			canWarp.setColor(flag && artifactFlag ? 0x1baa1b : 0xFF1b1b);
 		}
 
@@ -364,8 +364,8 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 			srcPlanetText.setText(planetName);
 
 
-			warpFuel.setText("Fuel cost: " + (warpCost < Integer.MAX_VALUE ? String.valueOf(warpCost) : "N/A"));
-			warpCapacity.setText("Fuel: " + (isOnStation ? ((SpaceObject)station).getFuelAmount() : "N/A"));
+			warpFuel.setText(LibVulpes.proxy.getLocalizedString("msg.warpmon.fuelcost") + (warpCost < Integer.MAX_VALUE ? String.valueOf(warpCost) : LibVulpes.proxy.getLocalizedString("msg.warpmon.na")));
+			warpCapacity.setText(LibVulpes.proxy.getLocalizedString("msg.warpmon.fuel") + (isOnStation ? ((SpaceObject)station).getFuelAmount() : LibVulpes.proxy.getLocalizedString("msg.warpmon.na")));
 
 
 

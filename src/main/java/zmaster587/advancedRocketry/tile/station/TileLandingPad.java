@@ -129,7 +129,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 
 			if(!world.isRemote) {
-				player.sendMessage(new TextComponentString("Linked Sucessfully"));
+				player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.linker.success")));
 
 				if(tile instanceof IMultiblock)
 					((IMultiblock)tile).setMasterBlock(getPos());

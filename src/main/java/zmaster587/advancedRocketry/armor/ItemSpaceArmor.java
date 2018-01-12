@@ -13,6 +13,7 @@ import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
 import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.client.render.armor.RenderJetPack;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.api.IJetPack;
 import zmaster587.libVulpes.api.IModularArmor;
@@ -37,6 +38,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
 /**
  * Space Armor
  * Any class that extends this will gain the ability to store oxygen and will protect players from the vacuum atmosphere type
@@ -62,7 +64,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 			List list, boolean p_77624_4_) {
 		super.addInformation(stack, p_77624_2_, list, p_77624_4_);
 
-		list.add("Modules:");
+		list.add(LibVulpes.proxy.getLocalizedString("msg.modules"));
 
 		for(ItemStack componentStack : getComponents(stack)) {
 			list.add(ChatFormatting.DARK_GRAY + componentStack.getDisplayName());
