@@ -111,7 +111,7 @@ public class RocketEventHandler extends Gui {
 
 	@SideOnly(Side.CLIENT)
 	public static void destroyOrbitalTextures(World world) {
-		if(!(world.provider instanceof IPlanetaryProvider)) {
+		if(!Configuration.skyOverride && !(world.provider instanceof IPlanetaryProvider)) {
 			world.provider.setSkyRenderer(prevRenderHanlder);
 			prevRenderHanlder = null;
 		}
