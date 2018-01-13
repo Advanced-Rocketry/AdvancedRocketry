@@ -49,6 +49,22 @@ public class BlockSeal extends Block {
 			fireCheckAllDirections(worldIn, pos.offset(dir), dir);
 		}
 	}
+	
+	public void removeSeal(World worldIn, BlockPos pos) {
+		for(EnumFacing dir : EnumFacing.VALUES) {
+			BlobHandler handler = blobList.remove(new HashedBlockPosition(pos.offset(dir)));
+			if (handler != null) AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension()).unregisterBlob(handler);
+		}
+	}
+	
+	public void clearBlob(World worldIn, BlockPos pos, IBlockState state) {
+		for(EnumFacing dir : EnumFacing.VALUES) {
+			BlobHandler handler = blobList.remove(new HashedBlockPosition(pos.offset(dir)));
+			if (handler != null) AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension()).unregisterBlob(handler);
+			
+			//fireCheckAllDirections(worldIn, pos.offset(dir), dir);
+		}
+	}
 
 	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
@@ -84,8 +100,8 @@ public class BlockSeal extends Block {
 				
 				(worldIn.getBlockState(pos.up().north()).getBlock() == this && 
 				worldIn.getBlockState(pos.up().south()).getBlock() == this &&
-				worldIn.getBlockState(pos.up().up()).getBlock() == this)) &&
-				!blobList.containsKey(new HashedBlockPosition(pos.up()))) {
+				worldIn.getBlockState(pos.up().up()).getBlock() == this &&
+				!blobList.containsKey(new HashedBlockPosition(pos.up()))))) {
 			
 			pos = pos.up();
 			HashedBlockPosition hashPos = new HashedBlockPosition(pos);

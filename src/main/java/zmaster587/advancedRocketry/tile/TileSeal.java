@@ -14,6 +14,7 @@ public class TileSeal extends TileEntity implements ITickable {
 
 	@Override
 	public void onChunkUnload() {
+		((BlockSeal) AdvancedRocketryBlocks.blockPipeSealer).removeSeal(getWorld(), getPos());
 		ticked = false;
 	}
 	
