@@ -14,6 +14,7 @@ public class TileSeal extends TileEntity {
 
 	@Override
 	public void onChunkUnload() {
+		((BlockSeal) AdvancedRocketryBlocks.blockPipeSealer).clearBlob(worldObj, xCoord, yCoord, zCoord);
 		ticked = false;
 	}
 	

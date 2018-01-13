@@ -48,6 +48,15 @@ public class BlockSeal extends Block {
 			fireCheckAllDirections(worldIn, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, dir);
 		}
 	}
+	
+	
+	public void clearBlob(World worldIn, int x, int y, int z) {
+		
+		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+			BlobHandler handler = blobList.remove(new BlockPosition(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ));
+			if (handler != null) AtmosphereHandler.getOxygenHandler(worldIn.provider.dimensionId).unregisterBlob(handler);
+		}
+	}
 
 	
 	@Override
