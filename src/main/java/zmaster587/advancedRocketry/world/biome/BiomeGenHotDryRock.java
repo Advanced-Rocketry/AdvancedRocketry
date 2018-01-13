@@ -7,9 +7,9 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 public class BiomeGenHotDryRock extends Biome {
 
 	public BiomeGenHotDryRock(int biomeId, boolean register) {
-		super(new BiomeProperties("Hot Dry Rock").setRainDisabled().setBaseHeight(1f).setHeightVariation(0.01f).setRainfall(0).setTemperature(0.9f));
+		super(new BiomeProperties("HotDryRock").setRainDisabled().setBaseHeight(1f).setHeightVariation(0.01f).setRainfall(0).setTemperature(0.9f));
 		
-        this.setRegistryName(new ResourceLocation("advancedrocketry:Hot Dry Rock"));
+        this.setRegistryName(new ResourceLocation("advancedrocketry:HotDryRock"));
 		
 		//hot and stinks
 		this.decorator.generateFalls=false;
