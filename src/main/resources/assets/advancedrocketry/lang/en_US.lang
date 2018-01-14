@@ -380,6 +380,7 @@ msg.itemorescanner.filter=Can filter ore:
 msg.itemplanetidchip.planetname=Planet Name: 
 msg.itemplanetidchip.stationid=Station Id: 
 msg.itemplanetidchip.artifacts=Artifacts:
+msg.vent.trace=Oxygen Trace
 
 msg.itemsatellite.pwr=Power Storage: 
 msg.itemsatellite.nopwr=No Power Storage

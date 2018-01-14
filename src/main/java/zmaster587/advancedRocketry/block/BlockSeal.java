@@ -167,5 +167,10 @@ public class BlockSeal extends Block {
 		public HashedBlockPosition getRootPosition() {
 			return new HashedBlockPosition(pos);
 		}
+		
+		@Override
+		public int getTraceDistance() {
+			return -1;
+		}
 	}
 }
