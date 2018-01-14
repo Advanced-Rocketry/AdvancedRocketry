@@ -1,0 +1,27 @@
+{
+    "display": {
+        "icon": {
+            "item": "libvulpes:productcrystal"
+        },
+        "title": {
+            "translate": "achievement.dilithium"
+        },
+        "description": {
+            "translate": "achievement.dilithium.desc"
+        }
+    },
+    "parent": "advancedrocketry:normal/root",
+    "criteria": {
+        "dilithium": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "libvulpes:productcrystal",
+                        "data": 0
+                    }
+                ]
+            }
+        }
+    }
+} 

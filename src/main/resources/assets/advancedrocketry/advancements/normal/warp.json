@@ -1,0 +1,26 @@
+{
+    "display": {
+        "icon": {
+            "item": "advancedrocketry:warpCore"
+        },
+        "title": {
+            "translate": "achievement.warp"
+        },
+        "description": {
+            "translate": "achievement.warp.desc"
+        }
+    },
+    "parent": "advancedrocketry:normal/dilithium",
+    "criteria": {
+        "warp": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "advancedrocketry:warpCore"
+                    }
+                ]
+            }
+        }
+    }
+} 

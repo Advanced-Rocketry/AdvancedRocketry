@@ -1,0 +1,19 @@
+{
+    "display": {
+        "icon": {
+            "item": "advancedrocketry:warpCore"
+        },
+        "title": {
+            "translate": "achievement.givingItAllShesGot"
+        },
+        "description": {
+            "translate": "achievement.givingItAllShesGot.desc"
+        }
+    },
+    "parent": "advancedrocketry:normal/warp",
+    "criteria": {
+        "givingitallshesgot": {
+            "trigger": "givingitallshesgot"
+        }
+    }
+}

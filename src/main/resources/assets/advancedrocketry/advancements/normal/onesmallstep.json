@@ -1,0 +1,20 @@
+{
+    "display": {
+        "icon": {
+            "item": "advancedrocketry:moonTurf"
+        },
+        "title": {
+            "translate": "achievement.oneSmallStep"
+        },
+        "description": {
+            "translate": "achievement.oneSmallStep.desc"
+        },
+        "frame": "challenge"
+    },
+    "parent": "advancedrocketry:normal/moonlanding",
+    "criteria": {
+        "onesmallstep": {
+            "trigger": "onesmallstep"
+        }
+    }
+}

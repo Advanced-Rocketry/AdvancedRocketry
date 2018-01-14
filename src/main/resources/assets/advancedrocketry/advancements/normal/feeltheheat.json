@@ -1,0 +1,26 @@
+{
+    "display": {
+        "icon": {
+            "item": "advancedrocketry:arcFurnace"
+        },
+        "title": {
+            "translate": "achievement.feelTheHeat"
+        },
+        "description": {
+            "translate": "achievement.feelTheHeat.desc"
+        }
+    },
+    "parent": "advancedrocketry:normal/holographic",
+    "criteria": {
+        "warp": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "advancedrocketry:arcFurnace"
+                    }
+                ]
+            }
+        }
+    }
+} 

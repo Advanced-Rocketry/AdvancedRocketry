@@ -1,0 +1,20 @@
+{
+    "display": {
+        "icon": {
+            "item": "advancedrocketry:warpCore"
+        },
+        "title": {
+            "translate": "achievement.flightOfThePhoenix"
+        },
+        "description": {
+            "translate": "achievement.flightOfThePhoenix.desc"
+        },
+        "frame": "challenge"
+    },
+    "parent": "advancedrocketry:normal/warp",
+    "criteria": {
+        "flightofpheonix": {
+            "trigger": "flightofpheonix"
+        }
+    }
+}

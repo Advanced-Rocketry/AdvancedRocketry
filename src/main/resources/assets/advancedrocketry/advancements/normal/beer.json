@@ -1,0 +1,20 @@
+{
+    "display": {
+        "icon": {
+            "item": "tnt"
+        },
+        "title": {
+            "translate": "beerOnTheSun.warp"
+        },
+        "description": {
+            "translate": "beerOnTheSun.warp.desc"
+        },
+        "hidden": true
+    },
+    "parent": "advancedrocketry:normal/root",
+    "criteria": {
+        "beer": {
+            "trigger": "beer"
+        }
+    }
+} 

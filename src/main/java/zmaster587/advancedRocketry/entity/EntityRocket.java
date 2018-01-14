@@ -18,6 +18,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -43,6 +44,7 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
@@ -890,9 +892,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				if(DimensionManager.getInstance().getDimensionProperties(destinationDimId).getName().equals("Luna")) {
 					for(Entity player : this.getPassengers()) {
 						if(player instanceof EntityPlayer) {
-//							((EntityPlayer)player).addStat(ARAchivements.moonLanding);
-//							if(!DimensionManager.hasReachedMoon)//TODO advancment triggers here.
-//								((EntityPlayer)player).addStat(ARAchivements.oneSmallStep);
+							ARAchivements.MOON_LANDING.trigger((EntityPlayerMP) player);
+							if(!DimensionManager.hasReachedMoon)
+								ARAchivements.ONE_SMALL_STEP.trigger((EntityPlayerMP) player);
 						}
 					}
 					DimensionManager.hasReachedMoon = true;

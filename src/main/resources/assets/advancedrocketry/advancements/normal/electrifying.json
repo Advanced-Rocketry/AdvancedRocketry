@@ -1,0 +1,26 @@
+{
+    "display": {
+        "icon": {
+            "item": "advancedrocketry:electrolyser"
+        },
+        "title": {
+            "translate": "achievement.electrifying"
+        },
+        "description": {
+            "translate": "achievement.electrifying.desc"
+        }
+    },
+    "parent": "advancedrocketry:normal/holographic",
+    "criteria": {
+        "warp": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "advancedrocketry:electrolyser"
+                    }
+                ]
+            }
+        }
+    }
+} 

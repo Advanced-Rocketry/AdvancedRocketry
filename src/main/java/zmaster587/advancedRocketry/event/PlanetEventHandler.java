@@ -49,6 +49,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerConnectionFro
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Configuration;
@@ -157,7 +158,7 @@ public class PlanetEventHandler {
 		if(!event.getEntity().world.isRemote && event.getEntity().world.getTotalWorldTime() % 20 ==0 && event.getEntity() instanceof EntityPlayer) {
 			if(DimensionManager.getInstance().getDimensionProperties(event.getEntity().world.provider.getDimension()).getName().equals("Luna") && 
 					event.getEntity().getPosition().distanceSq(67, 80, 2347) < 512 ) {
-				//				((EntityPlayer)event.getEntity()).addStat(ARAchivements.weReallyWentToTheMoon);//TODO advancment trigger
+				ARAchivements.WENT_TO_THE_MOON.trigger((EntityPlayerMP)event.getEntity());
 			}	
 		}
 
@@ -198,7 +199,7 @@ public class PlanetEventHandler {
 		}
 
 		if(!event.getWorld().isRemote && event.getItemStack() != null && event.getItemStack().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
-			//			event.getEntityPlayer().addStat(ARAchivements.beerOnTheSun);
+			ARAchivements.BEER.trigger((EntityPlayerMP) event.getEntityPlayer());
 		}
 	}
 

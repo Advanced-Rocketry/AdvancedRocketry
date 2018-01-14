@@ -68,6 +68,7 @@ import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.GameData;
+import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
@@ -1362,6 +1363,7 @@ public class AdvancedRocketry {
 		//TODO: move to proxy
 		//Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor) AdvancedRocketryBlocks.blockFuelFluid, new Block[] {AdvancedRocketryBlocks.blockFuelFluid});
 
+		ARAchivements.register();
 		proxy.init();
 
 		zmaster587.advancedRocketry.cable.NetworkRegistry.registerFluidNetwork();
@@ -1488,9 +1490,6 @@ public class AdvancedRocketry {
 
 		proxy.registerEventHandlers();
 		proxy.registerKeyBindings();
-
-		//TODO advancments
-//		ARAchivements.register();
 		//TODO: debug
 		//ClientCommandHandler.instance.registerCommand(new Debugger());
 

@@ -1,0 +1,26 @@
+{
+    "display": {
+        "icon": {
+            "item": "advancedrocketry:rollingMachine"
+        },
+        "title": {
+            "translate": "achievement.rollin"
+        },
+        "description": {
+            "translate": "achievement.rollin.desc"
+        }
+    },
+    "parent": "advancedrocketry:normal/holographic",
+    "criteria": {
+        "warp": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "advancedrocketry:rollingMachine"
+                    }
+                ]
+            }
+        }
+    }
+} 

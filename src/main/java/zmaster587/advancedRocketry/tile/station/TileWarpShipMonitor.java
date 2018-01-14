@@ -8,6 +8,7 @@ import com.google.common.base.Predicate;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -16,6 +17,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
@@ -470,9 +472,9 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 						return SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(input.getPosition()) == station;
 					};
 				})) {
-//					player2.addStat(ARAchivements.givingItAllShesGot);//TODO Advancment trigger
-//					if(!DimensionManager.hasReachedWarp)
-//						player2.addStat(ARAchivements.flightOfThePhoenix);
+					ARAchivements.ALL_SHE_GOT.trigger((EntityPlayerMP) player2);
+					if(!DimensionManager.hasReachedWarp)
+						ARAchivements.FLIGHT_OF_PHEONIX.trigger((EntityPlayerMP) player2);
 				}
 
 				DimensionManager.hasReachedWarp = true;

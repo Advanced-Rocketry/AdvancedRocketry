@@ -1,0 +1,26 @@
+{
+    "display": {
+        "icon": {
+            "item": "advancedrocketry:lathe"
+        },
+        "title": {
+            "translate": "achievement.spinDoctor"
+        },
+        "description": {
+            "translate": "achievement.spinDoctor.desc"
+        }
+    },
+    "parent": "advancedrocketry:normal/holographic",
+    "criteria": {
+        "warp": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "advancedrocketry:lathe"
+                    }
+                ]
+            }
+        }
+    }
+} 

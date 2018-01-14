@@ -1,0 +1,20 @@
+{
+    "display": {
+        "icon": {
+            "item": "libvulpes:itemSpaceSuit_Boots"
+        },
+        "title": {
+            "translate": "achievement.weReallyWentToTheMoon"
+        },
+        "description": {
+            "translate": "achievement.weReallyWentToTheMoon.desc"
+        },
+        "frame": "challenge"
+    },
+    "parent": "advancedrocketry:normal/moonlanding",
+    "criteria": {
+        "wenttothemoon": {
+            "trigger": "wenttothemoon"
+        }
+    }
+} 
