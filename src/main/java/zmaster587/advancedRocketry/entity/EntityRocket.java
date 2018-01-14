@@ -263,9 +263,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, ID
 		}
 
 		if(isInOrbit() && !isInFlight())
-			return LibVulpes.proxy.getLocalizedString("msg.entity.rocket.descend") + ((DESCENT_TIMER - this.ticksExisted)/20);
+			return LibVulpes.proxy.getLocalizedString("msg.entity.rocket.descend.1") + "\n" + LibVulpes.proxy.getLocalizedString("msg.entity.rocket.descend.2") + ((DESCENT_TIMER - this.ticksExisted)/20);
 		else if(!isInFlight())
-			return LibVulpes.proxy.getLocalizedString("msg.entity.rocket.ascend") + displayStr;
+			return LibVulpes.proxy.getLocalizedString("msg.entity.rocket.ascend.1") + "\n" + LibVulpes.proxy.getLocalizedString("msg.entity.rocket.ascend.2") + displayStr;
 
 		return super.getTextOverlay();
 	}
