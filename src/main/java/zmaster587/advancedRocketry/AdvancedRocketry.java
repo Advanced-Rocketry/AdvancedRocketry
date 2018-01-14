@@ -1882,7 +1882,8 @@ public class AdvancedRocketry {
 					loadedProps.setAtmosphereDensityDirect(properties.getAtmosphereDensity());
 					loadedProps.setName(properties.getName());
 					
-					for(int i : properties.getChildPlanets())
+					//Avoid CME
+					for(int i : new HashSet<Integer>(properties.getChildPlanets()))
 						loadedProps.addChildPlanet(DimensionManager.getInstance().getDimensionProperties(i));
 					
 					if(properties.isGasGiant()) loadedProps.setGasGiant();
