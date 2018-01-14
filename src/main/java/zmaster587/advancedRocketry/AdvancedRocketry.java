@@ -1602,7 +1602,7 @@ public class AdvancedRocketry {
 						+ "\n\t</asteroid>"
 						+ "\n\t<asteroid name=\"Iridium Enriched asteroid\" distance=\"100\" mass=\"25\" massVariability=\"0.5\" minLevel=\"0\" probability=\"0.75\" richness=\"0.2\" richnessVariability=\"0.3\">"
 						+ "\n\t\t<ore itemStack=\"minecraft:iron_ore\" chance=\"25\" />"
-						+ "\n\t\t<ore itemStack=\"libvulpes:ore0 10\" chance=\"5\" />"
+						+ "\n\t\t<ore itemStack=\"libVulpes:ore0 10\" chance=\"5\" />"
 						+ "\n\t</asteroid>"
 						+ "\n</Asteroids>");
 				stream.close();
