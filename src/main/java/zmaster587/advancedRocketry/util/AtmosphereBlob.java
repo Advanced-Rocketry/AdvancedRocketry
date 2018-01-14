@@ -12,6 +12,8 @@ import zmaster587.advancedRocketry.api.AreaBlob;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
+import zmaster587.advancedRocketry.network.PacketX;
+import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.BlockPosition;
 
 import java.util.Collection;
@@ -119,6 +121,13 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 						sealed = !isPositionAllowed(blobHandler.getWorld(), searchNextPosition, nearbyBlobs);//SealableBlockHandler.INSTANCE.isBlockSealed(blobHandler.getWorld(), searchNextPosition);
 
+						if(blobHandler.getTraceDistance() > 0 && blobHandler.getWorld().getTotalWorldTime() % 20 == 0) {
+							if((int)searchNextPosition.getDistance(this.getRootPosition()) == blobHandler.getTraceDistance())	{
+								PacketHandler.sendToNearby(new PacketX(searchNextPosition), blobHandler.getWorld().provider.dimensionId, blobHandler.getRootPosition().x,blobHandler.getRootPosition().y, blobHandler.getRootPosition().z, 128);
+							}
+								
+						}
+						
 
 						if(!sealed) {
 							if(((Configuration.atmosphereHandleBitMask & 2) == 0 && searchNextPosition.getDistance(this.getRootPosition()) <= maxSize) ||

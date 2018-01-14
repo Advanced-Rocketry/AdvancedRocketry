@@ -269,17 +269,18 @@ public class AtmosphereHandler {
 	 * @param y
 	 * @param z
 	 */
-	public void addBlock(IBlobHandler handler, int x, int y, int z){
-		addBlock(handler, new BlockPosition(x, y, z));
+	public boolean addBlock(IBlobHandler handler, int x, int y, int z){
+		return addBlock(handler, new BlockPosition(x, y, z));
 	}
 
 	/**
 	 * Adds a block to the blob
 	 * @param handler
 	 */
-	public void addBlock(IBlobHandler handler, BlockPosition pos){
+	public boolean addBlock(IBlobHandler handler, BlockPosition pos){
 		AreaBlob blob = blobs.get(handler);
 		blob.addBlock(pos, getBlobWithinRadius(pos, MAX_BLOB_RADIUS));
+		return !blob.getLocations().isEmpty();
 	}
 
 	/**

@@ -26,10 +26,13 @@ import zmaster587.libVulpes.api.IToggleableMachine;
 import zmaster587.libVulpes.client.RepeatingSound;
 import zmaster587.libVulpes.inventory.modules.IButtonInventory;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
+import zmaster587.libVulpes.inventory.modules.IToggleButton;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleButton;
 import zmaster587.libVulpes.inventory.modules.ModuleLiquidIndicator;
 import zmaster587.libVulpes.inventory.modules.ModulePower;
 import zmaster587.libVulpes.inventory.modules.ModuleRedstoneOutputButton;
+import zmaster587.libVulpes.inventory.modules.ModuleToggleSwitch;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
@@ -42,32 +45,40 @@ import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
 import cpw.mods.fml.relauncher.Side;
 
-public class TileOxygenVent extends TileInventoriedRFConsumerTank implements INetworkMachine, IBlobHandler, IModularInventory, IAdjBlockUpdate, IToggleableMachine, IButtonInventory {
+public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBlobHandler, IModularInventory, INetworkMachine, IAdjBlockUpdate, IToggleableMachine, IButtonInventory, IToggleButton {
+
 
 	boolean isSealed;
 	boolean firstRun;
 	boolean hasFluid;
 	boolean soundInit;
+	boolean allowTrace;
 	int numScrubbers;
 	List<TileCO2Scrubber> scrubbers;
+	int radius = 0;
+	
+	final static byte PACKET_REDSTONE_ID = 2;
+	final static byte PACKET_TRACE_ID = 3;
 	
 	RedstoneState state;
 	ModuleRedstoneOutputButton redstoneControl;
-
+	ModuleToggleSwitch traceToggle;
+	
 	public TileOxygenVent() {
 		super(1000,2, 1000);
 		isSealed = true;
 		firstRun = true;
 		hasFluid = true;
 		soundInit = false;
+		allowTrace = false;
 		numScrubbers = 0;
 		scrubbers = new LinkedList<TileCO2Scrubber>();
 		
 		state = RedstoneState.ON;
-		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 0, "", this);
+		redstoneControl = new ModuleRedstoneOutputButton(174, 4, PACKET_REDSTONE_ID, "", this);
+		traceToggle = new ModuleToggleSwitch(80, 20, PACKET_TRACE_ID, LibVulpes.proxy.getLocalizedString("msg.vent.trace"), this, TextureResources.buttonGeneric, 80, 18, false);
 	}
 
 	public TileOxygenVent(int energy, int invSize, int tankSize) {
@@ -76,10 +87,12 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements INe
 		firstRun = false;
 		hasFluid = true;
 		soundInit = false;
+		allowTrace = false;
 		scrubbers = new LinkedList<TileCO2Scrubber>();
 		
 		state = RedstoneState.ON;
 		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 0, "", this);
+		traceToggle = new ModuleToggleSwitch(80, 20, 5, LibVulpes.proxy.getLocalizedString("msg.vent.trace"), this, TextureResources.buttonGeneric, 80, 18, false);
 	}
 
 	@Override
@@ -218,19 +231,25 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements INe
 		 */
 
 		//IF first tick then register the blob and check for scrubbers
-		if(firstRun) {
-			if(!worldObj.isRemote) {
-				AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).registerBlob(this, xCoord, yCoord, zCoord);
 
-				onAdjacentBlockUpdated();
-				//isSealed starts as true so we can accurately check for scrubbers, we now set it to false to force the tile to check for a seal on first run
-				isSealed = false;
-				
-			}
-			firstRun = false;
-		}
 
 		if(!worldObj.isRemote) {
+			if(firstRun) {
+				if(!worldObj.isRemote) {
+					AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).registerBlob(this, xCoord, yCoord, zCoord);
+
+					onAdjacentBlockUpdated();
+					//isSealed starts as true so we can accurately check for scrubbers, we now set it to false to force the tile to check for a seal on first run
+					isSealed = false;
+					
+				}
+				firstRun = false;
+			}
+			
+			if(isSealed && AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).getBlobSize(this) == 0) {
+				deactivateAdjblocks();
+				setSealed(false);
+			}
 
 			if(isSealed && !getEquivilentPower() ) {
 				AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).clearBlob(this);
@@ -240,10 +259,18 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements INe
 				isSealed = false;
 			}
 			else if(!isSealed && getEquivilentPower() ) {
-				AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).addBlock(this, new BlockPosition(this.xCoord, this.yCoord, this.zCoord));
-				isSealed = true;
+				
+				setSealed(AtmosphereHandler.getOxygenHandler(this.worldObj.provider.dimensionId).addBlock(this, new BlockPosition(this.xCoord, this.yCoord, this.zCoord)));
 
-				activateAdjblocks();
+
+				if(isSealed) {
+					activateAdjblocks();
+				}
+				else if(worldObj.getTotalWorldTime() % 10 == 0 && allowTrace) {
+					radius++;
+					if(radius > 128)
+						radius = 0;
+				}
 			}
 
 			if(isSealed) {
@@ -284,6 +311,24 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements INe
 				}
 			}
 		}
+	}
+	
+	@Override
+	public int getTraceDistance() {
+		return allowTrace ? radius : -1;
+	}
+
+	
+	private void setSealed(boolean sealed) {
+		boolean prevSealed = isSealed;
+		if((prevSealed != sealed)) {
+			markDirty();
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			
+			if(isSealed)
+				radius = -1;
+		}
+		isSealed = sealed;
 	}
 
 	public float getGasUsageMultiplier() {
@@ -334,6 +379,8 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements INe
 
 		modules.add(new ModulePower(18, 20, this));
 		modules.add(new ModuleLiquidIndicator(32, 20, this));
+		modules.add(redstoneControl);
+		modules.add(traceToggle);
 		//modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this, TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
 		//TODO add itemStack slots for liqiuid
 		return modules;
@@ -361,25 +408,43 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements INe
 	
 	@Override
 	public void onInventoryButtonPressed(int buttonId) {
+		if(buttonId == PACKET_REDSTONE_ID) {
 			state = redstoneControl.getState();
-			PacketHandler.sendToServer(new PacketMachine(this, (byte)2));
+			PacketHandler.sendToServer(new PacketMachine(this, PACKET_REDSTONE_ID));
+		}
+		if(buttonId == PACKET_TRACE_ID) {
+			allowTrace = traceToggle.getState();
+			PacketHandler.sendToServer(new PacketMachine(this, PACKET_TRACE_ID));
+		}
 	}
 	
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {
-		out.writeByte(state.ordinal());
+		if(id == PACKET_REDSTONE_ID)
+			out.writeByte(state.ordinal());
+		else if(id == PACKET_TRACE_ID)
+			out.writeBoolean(allowTrace);
 	}
 
 	@Override
 	public void readDataFromNetwork(ByteBuf in, byte packetId,
 			NBTTagCompound nbt) {
-		nbt.setByte("state", in.readByte());
+		if(packetId == PACKET_REDSTONE_ID)
+			nbt.setByte("state", in.readByte());
+		else if(packetId == PACKET_TRACE_ID)
+			nbt.setBoolean("trace", in.readBoolean());
 	}
 
 	@Override
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
-		state = RedstoneState.values()[nbt.getByte("state")];
+		if(id == PACKET_REDSTONE_ID)
+			state = RedstoneState.values()[nbt.getByte("state")];
+		else if(id == PACKET_TRACE_ID) {
+			allowTrace = nbt.getBoolean("trace");
+			if(!allowTrace)
+				radius = -1;
+		}
 	}
 	
 	@Override
@@ -388,6 +453,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements INe
 		
 		state = RedstoneState.values()[nbt.getByte("redstoneState")];
 		redstoneControl.setRedstoneState(state);
+		allowTrace = nbt.getBoolean("allowtrace");
 
 	}
 	
@@ -395,5 +461,14 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements INe
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setByte("redstoneState", (byte) state.ordinal());
+		nbt.setBoolean("allowtrace", allowTrace);
+	}
+
+	@Override
+	public void stateUpdated(ModuleBase module) {
+		if(module.equals(traceToggle)) {
+			allowTrace = ((ModuleToggleSwitch)module).getState();
+			PacketHandler.sendToServer(new PacketMachine(this, PACKET_TRACE_ID));
+		}
 	}
 }
