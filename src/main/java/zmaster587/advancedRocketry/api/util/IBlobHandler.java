@@ -48,4 +48,6 @@ public interface IBlobHandler {
 	 * @return the position to use as root
 	 */
 	public HashedBlockPosition getRootPosition();
+	
+	public int getTraceDistance();
 }

@@ -190,6 +190,7 @@ import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.network.PacketStorageTileUpdate;
+import zmaster587.advancedRocketry.network.PacketX;
 import zmaster587.advancedRocketry.satellite.SatelliteBiomeChanger;
 import zmaster587.advancedRocketry.satellite.SatelliteComposition;
 import zmaster587.advancedRocketry.satellite.SatelliteDensity;
@@ -528,6 +529,7 @@ public class AdvancedRocketry {
 		PacketHandler.INSTANCE.addDiscriminator(PacketStorageTileUpdate.class);
 		PacketHandler.INSTANCE.addDiscriminator(PacketLaserGun.class);
 		PacketHandler.INSTANCE.addDiscriminator(PacketAsteroidInfo.class);
+		PacketHandler.INSTANCE.addDiscriminator(PacketX.class);
 		
 		//if(zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods)
 		MinecraftForge.EVENT_BUS.register(this);
