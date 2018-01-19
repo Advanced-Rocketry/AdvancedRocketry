@@ -49,6 +49,8 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 
 		data = new DataStorage();
 		data.setMaxData(1000);
+		
+		moduleSatellite = new ModuleSatellite(152, 10, this, 0);
 	}
 
 	@Override
@@ -160,7 +162,6 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 		modules.add(new ModuleButton(173, 3, 1, "", this, TextureResources.buttonKill, LibVulpes.proxy.getLocalizedString("msg.satctrlcenter.destroysat"), 24, 24));
 		modules.add(new ModuleData(28, 20, 1, this, data));
 
-		moduleSatellite = new ModuleSatellite(152, 10, this, 0);
 		modules.add(moduleSatellite);
 
 		//Try to assign a satellite ASAP
