@@ -6,6 +6,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.entity.fx.FxLaserHeat;
 import zmaster587.advancedRocketry.entity.fx.OxygenCloudFX;
@@ -43,6 +45,7 @@ public class PacketX extends BasePacket {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void executeClient(EntityPlayer thePlayer) {
 
 		if(Minecraft.getMinecraft().gameSettings.particleSetting < 1) {
