@@ -81,7 +81,7 @@ public class RocketEventHandler extends Gui {
 			//So fix that...
 			ForgeHooksClient.getSkyBlendColour(event.world, 0, 0, 0);
 
-			if(!(event.world.provider instanceof IPlanetaryProvider)) {
+			if(Configuration.planetSkyOverride && !(event.world.provider instanceof IPlanetaryProvider)) {
 				prevRenderHanlder = event.world.provider.getSkyRenderer();
 				event.world.provider.setSkyRenderer(new RenderPlanetarySky());
 			}
@@ -90,7 +90,7 @@ public class RocketEventHandler extends Gui {
 
 	@SubscribeEvent
 	public void onRocketLaunch(RocketEvent.RocketLaunchEvent event) {
-		if(event.world.isRemote && event.entity.ridingEntity != null && event.entity.ridingEntity.equals(Minecraft.getMinecraft().thePlayer)) {
+		if(Configuration.planetSkyOverride && event.world.isRemote && event.entity.ridingEntity != null && event.entity.ridingEntity.equals(Minecraft.getMinecraft().thePlayer)) {
 			prepareOrbitalMap(event);
 			prevRenderHanlder = event.world.provider.getSkyRenderer();
 			event.world.provider.setSkyRenderer(new RenderPlanetarySky());

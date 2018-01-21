@@ -65,9 +65,11 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IRenderHandler getSkyRenderer() {
+		if(!Configuration.planetSkyOverride)
+			return null;
 		if(super.getSkyRenderer() == null && Configuration.planetSkyOverride)
 			super.setSkyRenderer( new RenderPlanetarySky());
-
+		
 		return super.getSkyRenderer();
 	}
 
