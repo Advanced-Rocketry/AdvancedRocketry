@@ -359,6 +359,8 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.oxygenVentConsumptionMult = config.get(Configuration.CATEGORY_GENERAL, "oxygenVentConsumptionMultiplier", 1f, "Multiplier on how much O2 an oxygen vent consumes per tick").getDouble();
 		zmaster587.advancedRocketry.api.Configuration.gravityAffectsFuel = config.get(Configuration.CATEGORY_GENERAL, "gravityAffectsFuels", true, "If true planets with higher gravity require more fuel and lower gravity would require less").getBoolean();
 
+		zmaster587.advancedRocketry.api.Configuration.stationSkyOverride = config.get(CLIENT, "StationSkyOverride", true, "If true, AR will use a custom skybox on space stations").getBoolean();
+		zmaster587.advancedRocketry.api.Configuration.planetSkyOverride = config.get(CLIENT, "PlanetSkyOverride", true, "If true, AR will use a custom skybox on planets").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.skyOverride = config.get(CLIENT, "overworldSkyOverride", true).getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.advancedVFX = config.get(PERFORMANCE, "advancedVFX", true, "Advanced visual effects").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.gasCollectionMult = config.get(GAS_MINING, "gasMissionMultiplier", 1.0, "Multiplier for the amount of time gas collection missions take").getDouble();
