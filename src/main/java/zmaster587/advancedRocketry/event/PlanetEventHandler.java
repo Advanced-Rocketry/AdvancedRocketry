@@ -342,7 +342,7 @@ public class PlanetEventHandler {
 	public void worldLoadEvent(WorldEvent.Load event) {
 		if(!event.getWorld().isRemote)
 			AtmosphereHandler.registerWorld(event.getWorld().provider.getDimension());
-		else if(Configuration.skyOverride)
+		else if(Configuration.skyOverride && event.getWorld().provider.getDimension() == 0)
 			event.getWorld().provider.setSkyRenderer(new RenderPlanetarySky());
 	}
 
