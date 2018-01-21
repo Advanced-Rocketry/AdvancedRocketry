@@ -1,5 +1,7 @@
 package zmaster587.advancedRocketry.network;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -42,6 +44,7 @@ public class PacketX extends BasePacket {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void executeClient(EntityPlayer thePlayer) {
 
 		if(Minecraft.getMinecraft().gameSettings.particleSetting < 1) {
