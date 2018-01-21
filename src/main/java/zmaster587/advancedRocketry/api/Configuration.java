@@ -135,4 +135,6 @@ public class Configuration {
 	public static double oxygenVentPowerMultiplier;
 
 	public static boolean skyOverride;
+	public static boolean planetSkyOverride;
+	public static boolean stationSkyOverride;
 }
