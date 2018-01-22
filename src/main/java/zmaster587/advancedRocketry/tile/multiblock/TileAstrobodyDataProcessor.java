@@ -240,7 +240,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 					if(outputHatch.getStackInSlot(i) == null) {
 						outputHatch.setInventorySlotContents(i, stack);
 
-						setInventorySlotContents(2, null);
+						setInventorySlotContents(0, null);
 						return;
 					}
 				}
