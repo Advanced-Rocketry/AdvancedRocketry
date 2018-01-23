@@ -87,7 +87,10 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 						if(fillable.getAirRemaining(stack) < fillable.getMaxAir(stack) &&
 								fluidStack != null && FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.fluidOxygen) && fluidStack.amount > 0)  {
 							this.drain(1, true);
-							fillable.increment(stack, 100);
+
+							this.markDirty();
+							worldObj.markChunkDirty(getPos(), this);
+							fillable.increment(stack, 1);
 							return true;
 						}
 					}
