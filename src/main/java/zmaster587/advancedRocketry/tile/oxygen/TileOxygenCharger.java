@@ -88,7 +88,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 							this.drain(1, true);
 							this.markDirty();
 							world.markChunkDirty(getPos(), this);
-							fillable.increment(stack, 100);
+							fillable.increment(stack, 1);
 							return true;
 						}
 					}
