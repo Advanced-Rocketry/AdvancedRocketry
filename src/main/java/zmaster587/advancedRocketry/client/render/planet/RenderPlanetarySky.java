@@ -85,7 +85,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 				buffer.pos((double)(j + b2), (double)f, (double)(k + 0)).endVertex();
 				buffer.pos((double)(j + b2), (double)f, (double)(k + b2)).endVertex();
 				buffer.pos((double)(j + 0), (double)f, (double)(k + b2)).endVertex();
-				buffer.finishDrawing();
+				Tessellator.getInstance().draw();
 			}
 		}
 
@@ -106,7 +106,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			}
 		}
 
-		buffer.finishDrawing();
+		Tessellator.getInstance().draw();
 		GL11.glEndList();
 	}
 
@@ -347,7 +347,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			GL11.glPushMatrix();
 			GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
 			GL11.glRotatef(MathHelper.sin(mc.world.getCelestialAngleRadians(partialTicks)) < 0.0F ? 180.0F : 0.0F, 0.0F, 0.0F, 1.0F);
-			GL11.glRotatef(90.0F, 0.0F, 0.0F, 0.0F);
+			GL11.glRotated(90.0F - myRotationalPhi, 0.0F, 0.0F, 1.0F);
 
 			//Sim atmospheric thickness
 			f6 = afloat[0];
@@ -377,7 +377,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 				buffer.pos((double)(f12 * 120.0F), (double)(f13 * 120.0F), (double)(-f13 * 40.0F * afloat[3])).color(afloat[0], afloat[1], afloat[2], 0.0F).endVertex();
 			}
 
-			buffer.finishDrawing();
+			Tessellator.getInstance().draw();
 			GL11.glPopMatrix();
 			GL11.glShadeModel(GL11.GL_FLAT);
 		}
