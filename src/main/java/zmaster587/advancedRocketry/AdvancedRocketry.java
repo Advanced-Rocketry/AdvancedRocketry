@@ -1338,6 +1338,7 @@ public class AdvancedRocketry {
         OreDictionary.registerOre("itemLens", AdvancedRocketryItems.itemLens);
         OreDictionary.registerOre("itemSilicon", MaterialRegistry.getItemStackFromMaterialAndType("Silicon", AllowedProducts.getProductByName("INGOT")));
         OreDictionary.registerOre("dustThermite", new ItemStack(AdvancedRocketryItems.itemThermite));
+        OreDictionary.registerOre("turfMoon", new ItemStack(AdvancedRocketryBlocks.blockMoonTurf));
         
         for(net.minecraft.item.crafting.IRecipe recipe: toRegister)
         {
