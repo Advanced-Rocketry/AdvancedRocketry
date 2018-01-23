@@ -846,7 +846,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				while(itr.hasNext()) {
 					ItemStack stackInList = itr.next();
 					if(stackInList.getItem().equals(stack2.getItem()) && stackInList.getItemDamage() == stack2.getItemDamage()
-							&& ItemStack.areItemStackTagsEqual(stackInList, stack2))
+							&& ItemStack.areItemStackTagsEqual(stackInList, stack2) && stack2.getCount() >= stackInList.getCount())
 						itr.remove();
 				}
 			}
