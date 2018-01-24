@@ -78,6 +78,15 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 	}
 
 	@Override
+	public boolean isDamageable() {
+		return false;
+	}
+	@Override
+	public void setDamage(ItemStack stack, int damage) {
+		//Dummy out
+	}
+	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public ModelBiped getArmorModel(EntityLivingBase entityLiving,
 			ItemStack itemStack, EntityEquipmentSlot armorSlot,
