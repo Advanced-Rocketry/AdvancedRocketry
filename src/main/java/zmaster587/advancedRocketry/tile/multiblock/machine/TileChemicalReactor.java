@@ -65,11 +65,11 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 			if(list != null) {
 				for( int i = 0 ; i < list.tagCount(); i++ ) {
 					NBTTagCompound tag = (NBTTagCompound)list.getCompoundTagAt(i);
-					if(tag.getInteger("id") == AdvancedRocketryAPI.enchantmentSpaceProtection.effectId ) {
+					//if(tag.getInteger("id") == AdvancedRocketryAPI.enchantmentSpaceProtection.effectId ) {
 
 						flag = true;
 						break;
-					}
+					//}
 				}
 			}
 				
