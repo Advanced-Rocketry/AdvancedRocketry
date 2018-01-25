@@ -96,6 +96,8 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	protected StatsRocket stats;
 	protected AxisAlignedBB bbCache;
 	protected ErrorCodes status;
+	
+	static final Block viableBlocks[] = {AdvancedRocketryBlocks.blockLaunchpad, AdvancedRocketryBlocks.blockLandingPad};
 
 	private List<HashedBlockPosition> blockPos;
 
@@ -416,11 +418,11 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 		//Get min and maximum Z/X bounds
 		if(direction.getFrontOffsetX() != 0) {
-			xSize = ZUtils.getContinuousBlockLength(world, direction, currPos, MAX_SIZE, AdvancedRocketryBlocks.blockLaunchpad);
-			zMin = ZUtils.getContinuousBlockLength(world, EnumFacing.NORTH, currPos, MAX_SIZE, AdvancedRocketryBlocks.blockLaunchpad);
-			zMax = ZUtils.getContinuousBlockLength(world, EnumFacing.SOUTH, currPos.add(0,0,1), MAX_SIZE - zMin, AdvancedRocketryBlocks.blockLaunchpad);
+			xSize = ZUtils.getContinuousBlockLength(world, direction, currPos, MAX_SIZE, viableBlocks);
+			zMin = ZUtils.getContinuousBlockLength(world, EnumFacing.NORTH, currPos, MAX_SIZE, viableBlocks);
+			zMax = ZUtils.getContinuousBlockLength(world, EnumFacing.SOUTH, currPos.add(0,0,1), MAX_SIZE - zMin, viableBlocks);
 			zSize = zMin + zMax;
-
+			
 			zMin = zCurrent - zMin + 1;
 			zMax = zCurrent + zMax;
 
@@ -433,9 +435,9 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			}
 		}
 		else {
-			zSize = ZUtils.getContinuousBlockLength(world, direction, currPos, MAX_SIZE, AdvancedRocketryBlocks.blockLaunchpad);
-			xMin = ZUtils.getContinuousBlockLength(world, EnumFacing.WEST, currPos, MAX_SIZE, AdvancedRocketryBlocks.blockLaunchpad);
-			xMax = ZUtils.getContinuousBlockLength(world, EnumFacing.EAST, currPos.add(1,0,0), MAX_SIZE - xMin, AdvancedRocketryBlocks.blockLaunchpad);
+			zSize = ZUtils.getContinuousBlockLength(world, direction, currPos, MAX_SIZE, viableBlocks);
+			xMin = ZUtils.getContinuousBlockLength(world, EnumFacing.WEST, currPos, MAX_SIZE, viableBlocks);
+			xMax = ZUtils.getContinuousBlockLength(world, EnumFacing.EAST, currPos.add(1,0,0), MAX_SIZE - xMin, viableBlocks);
 			xSize = xMin + xMax;
 
 			xMin = xCurrent - xMin + 1;
@@ -488,7 +490,16 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		boundLoop:
 			for(int xx = (int)bb.minX; xx <= (int)bb.maxX; xx++) {
 				for(int zz = (int)bb.minZ; zz <= (int)bb.maxZ && whole; zz++) {
-					if(world.getBlockState(new BlockPos(xx, (int)bb.minY-1, zz)).getBlock() != AdvancedRocketryBlocks.blockLaunchpad) {
+					Block blockAtSpot = world.getBlockState(new BlockPos(xx, (int)bb.minY-1, zz)).getBlock();
+					boolean contained = false;
+					for(Block b : viableBlocks) {
+						if(blockAtSpot == b) {
+							contained = true;
+							break;
+						}
+					}
+					
+					if(!contained) {
 						whole = false;
 						break boundLoop;
 					}
