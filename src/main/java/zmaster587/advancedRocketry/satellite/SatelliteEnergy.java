@@ -26,7 +26,7 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 	public boolean acceptsItemInConstruction(ItemStack item) {
 		int flag = SatelliteRegistry.getSatelliteProperty(item).getPropertyFlag();
 		
-		return super.acceptsItemInConstruction(item) || SatelliteProperties.Property.BATTERY.isOfType(flag) || (SatelliteProperties.Property.POWER_GEN.isOfType(flag) && SatelliteRegistry.getSatelliteProperty(item).getPowerGeneration() >= 10);
+		return super.acceptsItemInConstruction(item) || SatelliteProperties.Property.BATTERY.isOfType(flag) || (SatelliteProperties.Property.POWER_GEN.isOfType(flag));
 	}
 	
 	@Override
