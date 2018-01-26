@@ -134,6 +134,9 @@ public class ChunkProviderPlanet implements IChunkProvider {
 		seaLevel = dimProperties.getSeaLevel();
 		oceanBlock = dimProperties.getOceanBlock();
 		
+		if (oceanBlock == null)
+			oceanBlock = Blocks.water;
+		
 		NoiseGenerator[] noiseGens = {field_147431_j, field_147432_k, field_147429_l, field_147430_m, noiseGen5, noiseGen6, mobSpawnerNoise};
 		noiseGens = TerrainGen.getModdedNoiseGenerators(p_i2006_1_, this.rand, noiseGens);
 		this.field_147431_j = (NoiseGeneratorOctaves)noiseGens[0];
