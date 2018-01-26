@@ -100,7 +100,7 @@ public class ItemSatellite extends ItemIdWithName {
 			if(internalProps != null) {
 				satellite.setMaxData(internalProps.getMaxDataStorage());
 				satellite.setPowerGeneration(internalProps.getPowerGeneration());
-				satellite.setPowerStorage(internalProps.getPowerGeneration());
+				satellite.setPowerStorage(internalProps.getPowerStorage());
 			}
 			
 			satellite.writeToNBT(nbt);
@@ -135,7 +135,7 @@ public class ItemSatellite extends ItemIdWithName {
 
 			if(SatelliteProperties.Property.POWER_GEN.isOfType(properties.getPropertyFlag())) {
 				if( ( powerGeneration=properties.getPowerGeneration() ) > 0)
-					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatellite.pwr") + powerGeneration);
+					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatellite.pwrgen") + powerGeneration);
 				else
 					list.add(ChatFormatting.RED + LibVulpes.proxy.getLocalizedString("msg.itemsatellite.nopwrgen"));
 			}
