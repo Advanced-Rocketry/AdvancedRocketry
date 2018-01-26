@@ -1,7 +1,7 @@
 {
     "display": {
         "icon": {
-            "item": "libvulpes:itemSpaceSuit_Boots"
+            "item": "advancedrocketry:spaceBoots"
         },
         "title": {
             "translate": "achievement.weReallyWentToTheMoon"
