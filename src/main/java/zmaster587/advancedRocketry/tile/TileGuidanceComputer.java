@@ -116,6 +116,8 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				return Configuration.spaceDimId;
 			}
 			else if(itemType instanceof ItemAsteroidChip) {
+				destinationId = currentDimension;
+				landingPos = new Vector3F<Float>((float)x,1000f, (float)z);
 				return currentDimension;
 			}
 			else if(itemType instanceof ItemSatelliteIdentificationChip) {
