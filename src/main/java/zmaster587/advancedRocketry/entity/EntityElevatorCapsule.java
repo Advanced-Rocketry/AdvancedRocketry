@@ -357,9 +357,9 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 			this.moveEntity(0, this.motionY, 0);
 		}
 		else if(isDescending()) {
-
-
-
+			
+			this.onGround = false;
+			
 			if(this.posY > 255)
 				this.motionY = -2.85;
 			else
@@ -477,7 +477,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox() {
 		AxisAlignedBB aabb = new AxisAlignedBB(getEntityBoundingBox().minX, getEntityBoundingBox().minY, getEntityBoundingBox().minZ, getEntityBoundingBox().maxX, getEntityBoundingBox().maxY-3, getEntityBoundingBox().maxZ);
-		return aabb;
+		return isAscending() || isDescending() ? null : aabb;
 	}
 
 	@SideOnly(Side.CLIENT)
