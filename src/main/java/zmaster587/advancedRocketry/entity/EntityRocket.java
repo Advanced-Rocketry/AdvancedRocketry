@@ -740,13 +740,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	 */
 	public void onOrbitReached() {
 		super.onOrbitReached();
-		
-		//unlink any connected tiles
-		Iterator<IInfrastructure> connectedTiles = connectedInfrastructure.iterator();
-		while(connectedTiles.hasNext()) {
-			connectedTiles.next().unlinkRocket();
-			connectedTiles.remove();
-		}
 
 		//TODO: support multiple riders and rider/satellite combo
 		long targetSatellite;
@@ -781,7 +774,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				}
 				
 				MissionOreMining miningMission = new MissionOreMining((long)(asteroidDrillingMult*Configuration.asteroidMiningTimeMult*(drillingPower == 0f ? 36000 : 360/stats.getDrillingPower())), this, connectedInfrastructure);
-				DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension());
+				DimensionProperties properties = DimensionManager.getEffectiveDimId(worldObj, getPosition());
 
 				miningMission.setDimensionId(worldObj);
 				properties.addSatallite(miningMission, worldObj);
@@ -807,6 +800,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				if(pos != null) {
 					this.setInOrbit(true);
 					this.motionY = -this.motionY;
+					
+					//unlink any connected tiles
+					Iterator<IInfrastructure> connectedTiles = connectedInfrastructure.iterator();
+					while(connectedTiles.hasNext()) {
+						connectedTiles.next().unlinkRocket();
+						connectedTiles.remove();
+					}
+					
 					this.setPositionAndUpdate(pos.x, Configuration.orbit, pos.z);
 					return;
 				}
@@ -820,6 +821,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					}
 					this.setInOrbit(true);
 					this.motionY = -this.motionY;
+					//unlink any connected tiles
+					
+					Iterator<IInfrastructure> connectedTiles = connectedInfrastructure.iterator();
+					while(connectedTiles.hasNext()) {
+						connectedTiles.next().unlinkRocket();
+						connectedTiles.remove();
+					}
 					
 					this.setPositionAndUpdate(this.posX, Configuration.orbit, this.posZ);
 					return;
@@ -857,6 +865,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				this.setInOrbit(true);
 				this.motionY = -this.motionY;
 				this.setPosition(posX + offX, posY, posZ + offZ);
+				
+				//unlink any connected tiles
+				Iterator<IInfrastructure> connectedTiles = connectedInfrastructure.iterator();
+				while(connectedTiles.hasNext()) {
+					connectedTiles.next().unlinkRocket();
+					connectedTiles.remove();
+				}
 
 				//this.setDead();
 				//TODO: satellite event?
