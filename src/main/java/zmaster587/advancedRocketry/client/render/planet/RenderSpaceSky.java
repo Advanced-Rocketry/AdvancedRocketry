@@ -194,9 +194,11 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 		Vector3F<Float> axis = getRotateAxis();
 		//GL11.glRotatef(90f, axis.x, axis.y, axis.z);
 		ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
-		
+		if(obj != null)
+		{
 		GL11.glRotated(obj.getRotation(ForgeDirection.UP)*360, 0, 1, 0);
 		GL11.glRotated(obj.getRotation(ForgeDirection.EAST)*360, 1, 0, 0);
+		}
 		
 		//GL11.glRotated(360, obj.getRotation(EnumFacing.EAST), obj.getRotation(EnumFacing.UP), obj.getRotation(EnumFacing.NORTH));
 		
