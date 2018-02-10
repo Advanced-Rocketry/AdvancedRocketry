@@ -81,14 +81,14 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 					
 					//Check for O2 fill
 					if(fillable != null ) {
-						FluidStack fluidStack = this.drain(1, false);
+						FluidStack fluidStack = this.drain(100, false);
 
 						if(fillable.getAirRemaining(stack) < fillable.getMaxAir(stack) &&
 								fluidStack != null && FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.fluidOxygen) && fluidStack.amount > 0)  {
 							this.drain(1, true);
 							this.markDirty();
 							world.markChunkDirty(getPos(), this);
-							fillable.increment(stack, 1);
+							fillable.increment(stack, 100);
 							return true;
 						}
 					}
