@@ -140,4 +140,6 @@ public class Configuration {
 	public static boolean skyOverride;
 	public static boolean planetSkyOverride;
 	public static boolean stationSkyOverride;
+
+	public static boolean allowTerraformNonAR;
 }
