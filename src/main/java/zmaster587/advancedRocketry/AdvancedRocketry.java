@@ -142,6 +142,7 @@ import zmaster587.advancedRocketry.network.PacketAsteroidInfo;
 import zmaster587.advancedRocketry.network.PacketAtmSync;
 import zmaster587.advancedRocketry.network.PacketBiomeIDChange;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
+import zmaster587.advancedRocketry.network.PacketInvalidLocationNotify;
 import zmaster587.advancedRocketry.network.PacketLaserGun;
 import zmaster587.advancedRocketry.network.PacketOxygenState;
 import zmaster587.advancedRocketry.network.PacketSatellite;
@@ -149,7 +150,7 @@ import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.network.PacketStorageTileUpdate;
-import zmaster587.advancedRocketry.network.PacketX;
+import zmaster587.advancedRocketry.network.PacketAirParticle;
 import zmaster587.advancedRocketry.satellite.SatelliteBiomeChanger;
 import zmaster587.advancedRocketry.satellite.SatelliteComposition;
 import zmaster587.advancedRocketry.satellite.SatelliteDensity;
@@ -280,7 +281,7 @@ public class AdvancedRocketry {
 	private static Configuration config;
 	private static final String BIOMECATETORY = "Biomes";
 	private boolean resetFromXml;
-	String[] sealableBlockWhiteList, breakableTorches, harvestableGasses, entityList, asteriodOres, geodeOres, orbitalLaserOres, liquidRocketFuel;
+	String[] sealableBlockWhiteList, breakableTorches,  blackListRocketBlocks, harvestableGasses, entityList, asteriodOres, geodeOres, orbitalLaserOres, liquidRocketFuel;
 
 	//static {
 	//	FluidRegistry.enableUniversalBucket(); // Must be called before preInit
@@ -414,7 +415,9 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.rutileClumpSize = config.get(oreGen, "RutilePerClump", 6).getInt();
 		zmaster587.advancedRocketry.api.Configuration.rutilePerChunk = config.get(oreGen, "RutilePerChunk", 6).getInt();
 		sealableBlockWhiteList = config.getStringList(Configuration.CATEGORY_GENERAL, "sealableBlockWhiteList", new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
+		blackListRocketBlocks = config.getStringList("rocketBlockBlackList", Configuration.CATEGORY_GENERAL, new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
 		breakableTorches = config.getStringList("torchBlocks", Configuration.CATEGORY_GENERAL, new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
+		
 		harvestableGasses = config.getStringList("harvestableGasses", GAS_MINING, new String[] {}, "list of fluid names that can be harvested as Gas");
 
 		entityList = config.getStringList("entityAtmBypass", Configuration.CATEGORY_GENERAL, new String[] {}, "list entities which should not be affected by atmosphere properties");
@@ -455,7 +458,8 @@ public class AdvancedRocketry {
 		PacketHandler.INSTANCE.addDiscriminator(PacketStorageTileUpdate.class);
 		PacketHandler.INSTANCE.addDiscriminator(PacketLaserGun.class);
 		PacketHandler.INSTANCE.addDiscriminator(PacketAsteroidInfo.class);
-		PacketHandler.INSTANCE.addDiscriminator(PacketX.class);
+		PacketHandler.INSTANCE.addDiscriminator(PacketAirParticle.class);
+		PacketHandler.INSTANCE.addDiscriminator(PacketInvalidLocationNotify.class);
 		
 		//if(zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods)
 		MinecraftForge.EVENT_BUS.register(this);
@@ -1378,6 +1382,18 @@ public class AdvancedRocketry {
 				zmaster587.advancedRocketry.api.Configuration.torchBlocks.add(block);
 		}
 		logger.info("End registering torch blocks");
+		breakableTorches = null;
+		
+		
+		logger.info("Start registering rocket blacklist blocks");
+		for(String str : blackListRocketBlocks) {
+			Block block = Block.getBlockFromName(str);
+			if(block == null)
+				logger.warn("'" + str + "' is not a valid Block");
+			else
+				zmaster587.advancedRocketry.api.Configuration.blackListRocketBlocks.add(block);
+		}
+		logger.info("End registering rocket blacklist blocks");
 		breakableTorches = null;
 
 		logger.info("Start registering Harvestable Gasses");
