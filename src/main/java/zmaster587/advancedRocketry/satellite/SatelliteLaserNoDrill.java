@@ -15,6 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.libVulpes.util.ZUtils;
@@ -53,7 +54,15 @@ public class SatelliteLaserNoDrill extends SatelliteBase {
 				else
 				{
 					String splitStr[] = oreDictName.split(":");
-					String name = splitStr[0] + ":" + splitStr[1];
+					String name;
+					try {
+						name = splitStr[0] + ":" + splitStr[1];
+					}
+					catch(IndexOutOfBoundsException e) {
+						AdvancedRocketry.logger.warn("Unexpected ore name: \"" + oreDictName + "\" during laser drill harvesting");
+						continue;
+					}
+					
 					int meta = 0;
 					int size = 1;
 					//format: "name meta size"
