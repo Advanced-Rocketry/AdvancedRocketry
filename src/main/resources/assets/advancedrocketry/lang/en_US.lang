@@ -355,6 +355,7 @@ msg.rocketbuilder.unscanned=Rocket unscanned
 msg.rocketbuilder.success_station=Ready!
 msg.rocketbuilder.empty=Nothing here
 msg.rocketbuilder.finished=Build Complete!
+msg.rocketbuild.invalidblock=Invalid block!
 msg.rocketbuilder.incompletestructure=Invalid Launch Pad Structure!
 msg.rocketbuilder.nosatellitehatch=Missing Sat Bay
 msg.rocketbuilder.nosatellitechip=Missing Chip

@@ -99,6 +99,7 @@ public class Configuration {
 	/** list of entities of which atmospheric effects should not be applied **/
 	public static List<Class> bypassEntity = new LinkedList<Class>();
 	public static List<Block> torchBlocks = new LinkedList<Block>();
+	public static List<Block> blackListRocketBlocks = new LinkedList<Block>();
 	public static List<String> standardGeodeOres = new LinkedList<String>();
 	public static Set<Integer> initiallyKnownPlanets = new HashSet<Integer>();
 

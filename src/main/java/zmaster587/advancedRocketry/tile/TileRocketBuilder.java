@@ -27,6 +27,8 @@ import zmaster587.advancedRocketry.api.StatsRocket;
 import zmaster587.advancedRocketry.block.BlockSeat;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.network.PacketAirParticle;
+import zmaster587.advancedRocketry.network.PacketInvalidLocationNotify;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.LibVulpes;
@@ -119,8 +121,9 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		INCOMPLETESTRCUTURE(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.incompletestructure")),
 		NOSATELLITEHATCH(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.nosatellitehatch")),
 		NOSATELLITECHIP(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.nosatellitechip")),
-		OUTPUTBLOCKED(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.outputblocked"));
-
+		OUTPUTBLOCKED(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.outputblocked")),
+		INVALIDBLOCK(LibVulpes.proxy.getLocalizedString("msg.rocketbuild.invalidblock"));
+		
 		String code;
 		private ErrorCodes(String code) {
 			this.code = code;
@@ -299,6 +302,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 		boolean hasSatellite = false;
 		boolean hasGuidance = false;
+		boolean invalidBlock = false;
 
 		if(verifyScan(bb, world)) {
 			for(int yCurr = (int) bb.minY; yCurr <= bb.maxY; yCurr++) {
@@ -336,6 +340,13 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 								hasSatellite = true;
 							if(tile instanceof TileGuidanceComputer)
 								hasGuidance = true;
+							
+							if(Configuration.blackListRocketBlocks.contains(block))
+							{
+								invalidBlock = true;
+								if(!world.isRemote)
+									PacketHandler.sendToNearby(new PacketInvalidLocationNotify(new BlockPosition(xCurr, yCurr, zCurr)), world.provider.dimensionId, xCoord, yCoord, zCoord, 64);
+							}
 						}
 					}
 				}
@@ -350,7 +361,10 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			//TODO: warn if seat OR satellite missing
 			//if(!stats.hasSeat() && !hasSatellite) 
 			//status = ErrorCodes.NOSEAT;
-			/*else*/ if(!hasGuidance && !hasSatellite)
+			/*else*/ 
+			if(invalidBlock)
+				status = ErrorCodes.INVALIDBLOCK;
+			else if(!hasGuidance && !hasSatellite)
 				status = ErrorCodes.NOGUIDANCE;
 			else if(getFuel() < getNeededFuel()) 
 				status = ErrorCodes.NOFUEL;

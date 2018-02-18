@@ -15,15 +15,14 @@ import zmaster587.libVulpes.entity.fx.FxErrorBlock;
 import zmaster587.libVulpes.network.BasePacket;
 import zmaster587.libVulpes.util.BlockPosition;
 
-public class PacketX extends BasePacket {
+public class PacketAirParticle extends BasePacket {
 
 	BlockPosition toPos;
-
-	public PacketX(BlockPosition toPos) {
+	public PacketAirParticle(BlockPosition toPos) {
 		this.toPos = toPos;
 	}
 
-	public PacketX() {
+	public PacketAirParticle() {
 	}
 
 	@Override
