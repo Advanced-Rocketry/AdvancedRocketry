@@ -934,7 +934,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	@SubscribeEvent
 	public void onRocketLand(RocketLandedEvent event) {
-		if(worldObj.isRemote)
+		if(event.world == null || event.world.isRemote)
 			return;
 		
 		EntityRocketBase rocket = (EntityRocketBase)event.entity;
@@ -943,7 +943,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		}
 
 		if(getBBCache() != null) {
-			List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
+			List<EntityRocketBase> rockets = event.world.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
 
 			if(rockets.contains(rocket)) {
 				lastRocketID = rocket.getEntityId();
