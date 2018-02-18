@@ -48,7 +48,7 @@ public class PacketInvalidLocationNotify extends BasePacket {
 	@SideOnly(Side.CLIENT)
 	public void executeClient(EntityPlayer thePlayer) {
 
-	FxErrorBlock fx3 = new FxErrorBlock(thePlayer.world,  toPos.x, toPos.y, toPos.z );
+	FxErrorBlock fx3 = new FxErrorBlock(thePlayer.worldObj,  toPos.x, toPos.y, toPos.z );
 	Minecraft.getMinecraft().effectRenderer.addEffect(fx3);
 		
 	}
