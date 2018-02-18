@@ -13,7 +13,7 @@ import zmaster587.advancedRocketry.api.AreaBlob;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
-import zmaster587.advancedRocketry.network.PacketX;
+import zmaster587.advancedRocketry.network.PacketAirParticle;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
@@ -133,7 +133,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 						if(blobHandler.getTraceDistance() > 0 && blobHandler.getWorldObj().getTotalWorldTime() % 20 == 0) {
 							if((int)searchNextPosition.getDistance(this.getRootPosition()) == blobHandler.getTraceDistance())	{
-								PacketHandler.sendToNearby(new PacketX(searchNextPosition), blobHandler.getWorldObj().provider.getDimension(), blobHandler.getRootPosition().getBlockPos(), 128);
+								PacketHandler.sendToNearby(new PacketAirParticle(searchNextPosition), blobHandler.getWorldObj().provider.getDimension(), blobHandler.getRootPosition().getBlockPos(), 128);
 							}
 								
 						}
