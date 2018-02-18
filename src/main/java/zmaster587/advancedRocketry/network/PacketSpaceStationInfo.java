@@ -37,7 +37,8 @@ public class PacketSpaceStationInfo extends BasePacket {
 			
 			//Try to send the nbt data of the dimension to the client, if it fails(probably due to non existent Biome ids) then remove the dimension
 			try {
-				spaceObject.getProperties().writeToNBT(nbt);
+				spaceObject.writeToNbt(nbt);
+				//spaceObject.getProperties().writeToNBT(nbt);
 				PacketBuffer packetBuffer = new PacketBuffer(out);
 				out.writeBoolean(false);
 				packetBuffer.writeString(SpaceObjectManager.getSpaceManager().getItentifierFromClass(spaceObject.getClass()));
@@ -101,6 +102,7 @@ public class PacketSpaceStationInfo extends BasePacket {
 			//Station needs to be created
 			if( iObject == null ) {
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getNewSpaceObjectFromIdentifier(clazzId);
+				object.readFromNbt(nbt);
 				object.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
 				((SpaceObject)object).setForwardDirection(EnumFacing.values()[direction]);
 				
@@ -109,7 +111,8 @@ public class PacketSpaceStationInfo extends BasePacket {
 				((SpaceObject)object).hasWarpCores = hasWarpCores;
 			}
 			else {
-				iObject.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
+				iObject.readFromNbt(nbt);
+				//iObject.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
 				((SpaceObject)iObject).setForwardDirection(EnumFacing.values()[direction]);
 				((SpaceObject)iObject).setFuelAmount(fuelAmt);
 				((SpaceObject)iObject).hasWarpCores = hasWarpCores;
