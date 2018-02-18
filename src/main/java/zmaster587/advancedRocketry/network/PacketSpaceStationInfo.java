@@ -37,7 +37,8 @@ public class PacketSpaceStationInfo extends BasePacket {
 			
 			//Try to send the nbt data of the dimension to the client, if it fails(probably due to non existent Biome ids) then remove the dimension
 			try {
-				spaceObject.getProperties().writeToNBT(nbt);
+				spaceObject.writeToNbt(nbt);
+				//spaceObject.getProperties().writeToNBT(nbt);
 				PacketBuffer packetBuffer = new PacketBuffer(out);
 				out.writeBoolean(false);
 				//TODO: error handling
@@ -50,6 +51,7 @@ public class PacketSpaceStationInfo extends BasePacket {
 				packetBuffer.writeBoolean(spaceObject.hasWarpCores);
 				
 				out.writeInt(spaceObject.getForwardDirection().ordinal());
+				out.writeInt(spaceObject.getFuelAmount());
 				
 			} catch(NullPointerException e) {
 				out.writeBoolean(true);
@@ -89,6 +91,7 @@ public class PacketSpaceStationInfo extends BasePacket {
 			}
 			boolean hasWarpCores = in.readBoolean();
 			direction = in.readInt();
+			int fuelAmt = in.readInt();
 			
 			
 			ISpaceObject iObject = SpaceObjectManager.getSpaceManager().getSpaceStation(stationNumber);
@@ -101,14 +104,17 @@ public class PacketSpaceStationInfo extends BasePacket {
 			//Station needs to be created
 			if( iObject == null ) {
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getNewSpaceObjectFromIdentifier(clazzId);
+				object.readFromNbt(nbt);
 				object.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
 				((SpaceObject)object).setForwardDirection(ForgeDirection.values()[direction]);
 				((SpaceObject)object).hasWarpCores = hasWarpCores;
 				SpaceObjectManager.getSpaceManager().registerSpaceObjectClient(object, object.getOrbitingPlanetId(), stationNumber);
 			}
 			else {
-				iObject.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
+				iObject.readFromNbt(nbt);
+				//iObject.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
 				((SpaceObject)iObject).setForwardDirection(ForgeDirection.values()[direction]);
+				((SpaceObject)iObject).setFuelAmount(fuelAmt);
 				((SpaceObject)iObject).hasWarpCores = hasWarpCores;
 			}
 		}
