@@ -45,7 +45,8 @@ public class ItemPressureTank extends ItemIngredient implements IArmorComponent,
 		}
 		else {
 			FluidStack fluidStack = FluidStack.loadFluidStackFromNBT(stack.getTagCompound());
-			list.add(fluidStack.getLocalizedName() + ": " + fluidStack.amount);
+			if(fluidStack != null)
+				list.add(fluidStack.getLocalizedName() + ": " + fluidStack.amount);
 		}
 	}
 	
