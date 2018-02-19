@@ -535,7 +535,17 @@ public class XMLPlanetLoader {
 		}
 
 		if(properties.isGasGiant())
+		{
 			outputString = outputString + tabLen + "\t<GasGiant>true</GasGiant>\n";
+			if(!properties.getHarvestableGasses().isEmpty())
+			{
+				for(Fluid f : properties.getHarvestableGasses())
+				{
+					outputString = outputString + tabLen + "\t<gas>" + f.getName() + "</gas>\n";
+				}
+				
+			}
+		}
 
 		outputString = outputString + tabLen + "\t<fogColor>" + properties.fogColor[0] + "," + properties.fogColor[1] + "," + properties.fogColor[2] + "</fogColor>\n";
 		outputString = outputString + tabLen + "\t<skyColor>" + properties.skyColor[0] + "," + properties.skyColor[1] + "," + properties.skyColor[2] + "</skyColor>\n";
