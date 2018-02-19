@@ -74,6 +74,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -934,7 +935,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	@SubscribeEvent
 	public void onRocketLand(RocketLandedEvent event) {
-		if(event.world == null || event.world.isRemote)
+		if(event.world == null || !(event.world instanceof WorldServer) || event.world.isRemote)
 			return;
 		
 		EntityRocketBase rocket = (EntityRocketBase)event.entity;
