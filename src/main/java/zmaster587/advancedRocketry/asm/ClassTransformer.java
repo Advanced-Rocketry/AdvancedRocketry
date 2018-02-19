@@ -785,7 +785,7 @@ public class ClassTransformer implements IClassTransformer {
 				
 			}
 			else
-				AdvancedRocketry.logger.fatal("ASM injection into World.setBlock FAILED!");
+				AdvancedRocketry.logger.fatal("ASM injection into EntityPlayer.onupdate FAILED!");
 			
 			
 			return finishInjection(cn);
