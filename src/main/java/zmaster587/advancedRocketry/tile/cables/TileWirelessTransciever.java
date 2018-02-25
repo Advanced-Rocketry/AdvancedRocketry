@@ -32,6 +32,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -59,6 +60,9 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 	public boolean onLinkStart(ItemStack item, TileEntity entity, EntityPlayer player, World worldObj) {
 
 		ItemLinker.setMasterCoords(item, this.xCoord, this.yCoord, this.zCoord);
+		
+		if(!worldObj.isRemote)
+			player.addChatMessage(new ChatComponentText(LibVulpes.proxy.getLocalizedString("msg.linker.program")));
 
 		return true;
 	}
@@ -104,6 +108,9 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 			}
 			addToNetwork();
 			((TileWirelessTransciever)tile).addToNetwork();
+			
+			player.addChatMessage(new ChatComponentText(LibVulpes.proxy.getLocalizedString("msg.linker.success")));
+			
 			return true;
 		}
 
