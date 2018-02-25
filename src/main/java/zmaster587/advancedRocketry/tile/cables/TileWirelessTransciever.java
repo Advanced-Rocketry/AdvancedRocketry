@@ -32,6 +32,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -59,6 +60,9 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 	public boolean onLinkStart(ItemStack item, TileEntity entity, EntityPlayer player, World worldObj) {
 
 		ItemLinker.setMasterCoords(item, getPos());
+		
+		if(!world.isRemote)
+			player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.linker.program")));
 
 		return true;
 	}
@@ -104,6 +108,9 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 			}
 			addToNetwork();
 			((TileWirelessTransciever)tile).addToNetwork();
+			
+			player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.linker.success")));
+			
 			return true;
 		}
 
