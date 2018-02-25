@@ -70,6 +70,7 @@ public class HandlerCableNetwork {
 
 		return net.networkID;
 	}
+	
 
 	public int mergeNetworks(int a, int b) {
 		
