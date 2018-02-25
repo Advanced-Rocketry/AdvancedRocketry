@@ -331,12 +331,37 @@ public class ClientProxy extends CommonProxy {
 		
 		//ModelLoader.setCustomMeshDefinition(item, MeshDefinitionFix.create(stack -> modelResourceLocation));
 
-		ModelLoader.setCustomStateMapper((Block) fluidBlock, new StateMapperBase() {
-			@Override
-			protected ModelResourceLocation getModelResourceLocation(IBlockState p_178132_1_) {
-				return modelResourceLocation;
-			}
-		});
+		
+		StateMapperBase ignoreState = new FluidStateMapper(modelResourceLocation);
+		ModelLoader.setCustomStateMapper((Block) fluidBlock, ignoreState);
+		ModelLoader.setCustomMeshDefinition(item, new FluidItemMeshDefinition(modelResourceLocation));
+		ModelBakery.registerItemVariants(item, modelResourceLocation);
+	}
+	
+	private static class FluidStateMapper extends StateMapperBase {
+		private final ModelResourceLocation fluidLocation;
+
+		public FluidStateMapper(ModelResourceLocation fluidLocation) {
+			this.fluidLocation = fluidLocation;
+		}
+
+		@Override
+		protected ModelResourceLocation getModelResourceLocation(IBlockState iBlockState) {
+			return fluidLocation;
+		}
+	}
+
+	private static class FluidItemMeshDefinition implements ItemMeshDefinition {
+		private final ModelResourceLocation fluidLocation;
+
+		public FluidItemMeshDefinition(ModelResourceLocation fluidLocation) {
+			this.fluidLocation = fluidLocation;
+		}
+
+		@Override
+		public ModelResourceLocation getModelLocation(ItemStack stack) {
+			return fluidLocation;
+		}
 }
 
 	@SubscribeEvent

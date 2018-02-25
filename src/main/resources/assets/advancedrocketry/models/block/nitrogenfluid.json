@@ -1,0 +1,7 @@
+{
+    "parent": "minecraft:block/cube_all",
+    "textures": {
+        "all": "advancedrocketry:blocks/fluid/oxygen_still.png",
+		"flowing": "advancedrocketry:blocks/oxygen_flow.png"
+    }
+}
