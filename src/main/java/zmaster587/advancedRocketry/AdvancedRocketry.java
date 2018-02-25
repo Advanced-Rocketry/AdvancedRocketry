@@ -609,25 +609,25 @@ public class AdvancedRocketry {
 
 
 		//Fluid Registration
-		AdvancedRocketryFluids.fluidOxygen = new FluidColored("oxygen",0x8f94b9).setUnlocalizedName("oxygen").setGaseous(true);
+		AdvancedRocketryFluids.fluidOxygen = new FluidColored("oxygen",0xFF8f94b9).setUnlocalizedName("oxygen").setGaseous(false).setLuminosity(10).setDensity(800).setViscosity(1500);
 		if(!FluidRegistry.registerFluid(AdvancedRocketryFluids.fluidOxygen))
 		{
 			AdvancedRocketryFluids.fluidOxygen = FluidRegistry.getFluid("oxygen");
 		}
 
-		AdvancedRocketryFluids.fluidHydrogen = new FluidColored("hydrogen",0xdbc1c1).setUnlocalizedName("hydrogen").setGaseous(true);
+		AdvancedRocketryFluids.fluidHydrogen = new FluidColored("hydrogen",0xFFdbc1c1).setUnlocalizedName("hydrogen").setGaseous(false).setLuminosity(10).setDensity(800).setViscosity(1500);
 		if(!FluidRegistry.registerFluid(AdvancedRocketryFluids.fluidHydrogen))
 		{
 			AdvancedRocketryFluids.fluidHydrogen = FluidRegistry.getFluid("hydrogen");
 		}
 
-		AdvancedRocketryFluids.fluidRocketFuel = new FluidColored("rocketFuel", 0xe5d884).setUnlocalizedName("rocketFuel").setGaseous(false);
+		AdvancedRocketryFluids.fluidRocketFuel = new FluidColored("rocketFuel", 0xFFe5d884).setUnlocalizedName("rocketFuel").setGaseous(false).setLuminosity(10).setDensity(800).setViscosity(1500);
 		if(!FluidRegistry.registerFluid(AdvancedRocketryFluids.fluidRocketFuel))
 		{
 			AdvancedRocketryFluids.fluidRocketFuel = FluidRegistry.getFluid("rocketFuel");
 		}
 
-		AdvancedRocketryFluids.fluidNitrogen = new FluidColored("nitrogen", 0x97a7e7);
+		AdvancedRocketryFluids.fluidNitrogen = new FluidColored("nitrogen", 0xFF97a7e7).setUnlocalizedName("nitrogen").setGaseous(false).setLuminosity(10).setDensity(800).setViscosity(1500);
 		if(!FluidRegistry.registerFluid(AdvancedRocketryFluids.fluidNitrogen))
 		{
 			AdvancedRocketryFluids.fluidNitrogen = FluidRegistry.getFluid("nitrogen");
@@ -1306,7 +1306,7 @@ public class AdvancedRocketry {
 		PlanetEventHandler handle = new PlanetEventHandler();
 		MinecraftForge.EVENT_BUS.register(handle);
 		MinecraftForge.ORE_GEN_BUS.register(handle);
-		//MinecraftForge.EVENT_BUS.register(new BucketHandler());
+		MinecraftForge.EVENT_BUS.register(new BucketHandler());
 
 		CableTickHandler cable = new CableTickHandler();
 		MinecraftForge.EVENT_BUS.register(cable);
@@ -1336,12 +1336,15 @@ public class AdvancedRocketry {
 
 		//Register buckets
 		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockFuelFluid, AdvancedRocketryItems.itemBucketRocketFuel);
-
-		FluidContainerRegistry.registerFluidContainer(AdvancedRocketryFluids.fluidRocketFuel, new ItemStack(AdvancedRocketryItems.itemBucketRocketFuel), new ItemStack(Items.BUCKET));
-		FluidContainerRegistry.registerFluidContainer(AdvancedRocketryFluids.fluidNitrogen, new ItemStack(AdvancedRocketryItems.itemBucketNitrogen), new ItemStack(Items.BUCKET));
-		FluidContainerRegistry.registerFluidContainer(AdvancedRocketryFluids.fluidHydrogen, new ItemStack(AdvancedRocketryItems.itemBucketHydrogen), new ItemStack(Items.BUCKET));
-		FluidContainerRegistry.registerFluidContainer(AdvancedRocketryFluids.fluidOxygen, new ItemStack(AdvancedRocketryItems.itemBucketOxygen), new ItemStack(Items.BUCKET));
-
+		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockHydrogenFluid, AdvancedRocketryItems.itemBucketHydrogen);
+		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockOxygenFluid, AdvancedRocketryItems.itemBucketOxygen);
+		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockNitrogenFluid, AdvancedRocketryItems.itemBucketNitrogen);
+		
+		//FluidContainerRegistry.registerFluidContainer(AdvancedRocketryFluids.fluidRocketFuel, new ItemStack(AdvancedRocketryItems.itemBucketRocketFuel), new ItemStack(Items.BUCKET));
+		//FluidContainerRegistry.registerFluidContainer(AdvancedRocketryFluids.fluidNitrogen, new ItemStack(AdvancedRocketryItems.itemBucketNitrogen), new ItemStack(Items.BUCKET));
+		//FluidContainerRegistry.registerFluidContainer(AdvancedRocketryFluids.fluidHydrogen, new ItemStack(AdvancedRocketryItems.itemBucketHydrogen), new ItemStack(Items.BUCKET));
+		//FluidContainerRegistry.registerFluidContainer(AdvancedRocketryFluids.fluidOxygen, new ItemStack(AdvancedRocketryItems.itemBucketOxygen), new ItemStack(Items.BUCKET));
+		
 		//Register mixed material's recipes
 		for(MixedMaterial material : MaterialRegistry.getMixedMaterialList()) {
 			RecipesMachine.getInstance().addRecipe(material.getMachine(), material.getProducts(), 100, 10, material.getInput());
