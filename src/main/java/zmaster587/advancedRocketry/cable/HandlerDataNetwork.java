@@ -12,6 +12,16 @@ public class HandlerDataNetwork extends HandlerCableNetwork {
 
 		return net.networkID;
 	}
+	
+	
+	public int getNewNetworkID(int id) {
+		DataNetwork net = new DataNetwork();
+		net.networkID = id;
+
+		networks.put(net.networkID, net);
+
+		return net.networkID;
+	}
 
 
 	public void tickAllNetworks() {

@@ -86,6 +86,7 @@ import zmaster587.advancedRocketry.block.BlockSuitWorkstation;
 import zmaster587.advancedRocketry.block.BlockThermiteTorch;
 import zmaster587.advancedRocketry.block.BlockTileNeighborUpdate;
 import zmaster587.advancedRocketry.block.BlockTileRedstoneEmitter;
+import zmaster587.advancedRocketry.block.BlockTransciever;
 import zmaster587.advancedRocketry.block.BlockWarpCore;
 import zmaster587.advancedRocketry.block.BlockWarpShipMonitor;
 import zmaster587.advancedRocketry.block.cable.BlockDataCable;
@@ -158,6 +159,7 @@ import zmaster587.advancedRocketry.tile.*;
 import zmaster587.advancedRocketry.tile.cables.TileDataPipe;
 import zmaster587.advancedRocketry.tile.cables.TileEnergyPipe;
 import zmaster587.advancedRocketry.tile.cables.TileLiquidPipe;
+import zmaster587.advancedRocketry.tile.cables.TileWirelessTransciever;
 import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.tile.infrastructure.TileEntityFuelingStation;
@@ -700,6 +702,12 @@ public class AdvancedRocketry {
 		
 		AdvancedRocketryBlocks.blockForceFieldProjector = new BlockForceFieldProjector(Material.rock).setBlockName("forceFieldProjector").setCreativeTab(tabAdvRocketry).setHardness(3f);
 
+		AdvancedRocketryBlocks.blockTransciever = new BlockTransciever(TileWirelessTransciever.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("wirelessTransciever").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		((BlockTile) AdvancedRocketryBlocks.blockTransciever).setFrontTexture("advancedrocketry:wirelesstransciever_front");
+		((BlockTile) AdvancedRocketryBlocks.blockTransciever).setSideTexture("advancedrocketry:wirelesstransciever_front");
+		((BlockTile) AdvancedRocketryBlocks.blockTransciever).setTopTexture("advancedrocketry:wirelesstransciever_front");
+		((BlockTile) AdvancedRocketryBlocks.blockTransciever).setRearTexture("advancedrocketry:wirelesstransciever_rear");
+		
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController) {
 			AdvancedRocketryBlocks.blockGravityMachine = new BlockMultiblockMachine(TileGravityController.class,GuiHandler.guiId.MODULARNOINV.ordinal()).setBlockName("gravityMachine").setCreativeTab(tabAdvRocketry).setHardness(3f);
 			((BlockTile)AdvancedRocketryBlocks.blockGravityMachine).setTopTexture("advancedrocketry:warpcore");
@@ -837,6 +845,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockBeacon, AdvancedRocketryBlocks.blockBeacon.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockAlienPlanks, AdvancedRocketryBlocks.blockAlienPlanks.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockThermiteTorch, AdvancedRocketryBlocks.blockThermiteTorch.getUnlocalizedName());
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockTransciever, AdvancedRocketryBlocks.blockTransciever.getUnlocalizedName());
 		
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController) 
 			GameRegistry.registerBlock(AdvancedRocketryBlocks.blockGravityMachine,AdvancedRocketryBlocks.blockGravityMachine.getUnlocalizedName());
@@ -1032,6 +1041,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileSeal.class, "ARBlockSeal");
 		GameRegistry.registerTileEntity(TileSpaceElevator.class, "ARSpaceElevator");
 		GameRegistry.registerTileEntity(TileBeacon.class, "ARBeacon");
+		GameRegistry.registerTileEntity(TileWirelessTransciever.class, "ARTransciever");
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
 			GameRegistry.registerTileEntity(TileGravityController.class, "ARGravityMachine");
@@ -1211,9 +1221,9 @@ public class AdvancedRocketry {
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryItems.itemMisc,1,1), charcoal, charcoal, charcoal, charcoal ,charcoal ,charcoal);
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockLandingPad), new ItemStack(AdvancedRocketryBlocks.blockConcrete), trackingCircuit);
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryItems.itemAsteroidChip), trackingCircuit.copy(), AdvancedRocketryItems.itemDataUnit);
-		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryBlocks.blockDataPipe, 8), "ggg", " d ", "ggg", 'g', Blocks.glass_pane, 'd', AdvancedRocketryItems.itemDataUnit);
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockEnergyPipe, 32), "ggg", " d ", "ggg", 'g', Items.clay_ball, 'd', "stickCopper"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockFluidPipe, 32), "ggg", " d ", "ggg", 'g', Items.clay_ball, 'd', "sheetCopper"));
+		GameRegistry.addShapedRecipe(new ItemStack(AdvancedRocketryBlocks.blockTransciever, 8), "ggg", " d ", "ggg", 'g', Blocks.glass_pane, 'd', AdvancedRocketryItems.itemDataUnit);
+		//GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockEnergyPipe, 32), "ggg", " d ", "ggg", 'g', Items.clay_ball, 'd', "stickCopper"));
+		//GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdvancedRocketryBlocks.blockFluidPipe, 32), "ggg", " d ", "ggg", 'g', Items.clay_ball, 'd', "sheetCopper"));
 
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockDrill), LibVulpesBlocks.blockStructureBlock, Items.iron_pickaxe);
 		GameRegistry.addShapelessRecipe(new ItemStack(AdvancedRocketryBlocks.blockOrientationController), LibVulpesBlocks.blockStructureBlock, Items.compass, userInterface);

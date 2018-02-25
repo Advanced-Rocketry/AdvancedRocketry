@@ -12,6 +12,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
@@ -102,6 +103,8 @@ import zmaster587.libVulpes.util.Vector3F;
 
 public class ClientProxy extends CommonProxy {
 
+	public static int transcieverRenderType;
+	
 	@Override
 	public void registerRenderers() {
 		
@@ -157,6 +160,9 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityUIStar.class, new RenderStarUIEntity());
 		RenderingRegistry.registerEntityRenderingHandler(EntityUIButton.class, new RenderButtonUIEntity());
 		RenderingRegistry.registerEntityRenderingHandler(EntityElevatorCapsule.class, new RenderElevatorCapsule());
+		
+		transcieverRenderType = RenderingRegistry.getNextAvailableRenderId();
+		RenderingRegistry.registerBlockHandler(transcieverRenderType, (ISimpleBlockRenderingHandler) AdvancedRocketryBlocks.blockTransciever);
 	}
 
 	@Override

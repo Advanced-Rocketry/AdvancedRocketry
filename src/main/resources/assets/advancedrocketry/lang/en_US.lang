@@ -78,9 +78,9 @@ tile.amethyst.name=Violet Crystal Block
 tile.orientationControl.name=Orientation Controller
 tile.gravityControl.name=Gravity Controller
 tile.drill.name=Drill
-tile.dataPipe.name=Data Cable
-tile.liquidPipe.name=Liquid Pipe
-tile.energyPipe.name=Energy Pipe
+tile.dataPipe.name=Data Cable(Deprecated)
+tile.liquidPipe.name=Liquid Pipe(Deprecated)
+tile.energyPipe.name=Energy Pipe(Deprecated)
 tile.rfOutput.name=Redstone Flux Output Plug
 tile.microwaveReciever.name=Microwave Receiver
 tile.solarPanel.name=Solar Panel
@@ -106,6 +106,7 @@ tile.pipeSeal.name=Pipe Seal
 tile.spaceElevatorController.name=Space Elevator
 tile.beacon.name=Beacon
 tile.thermiteTorch.name=Thermite Torch
+tile.wirelessTransciever.name=Wireless Transciever
 
 tile.Dilithium.name=Dilithium Ore
 
@@ -412,6 +413,7 @@ msg.entity.rocket.disass=Dissassemble
 msg.entity.rocket.seldst=Select Dst
 msg.entity.rocket.clear=Clear
 msg.entity.rocket.none=None Selected
+msg.wirelessTransciever.extract=extract
 
 msg.entityDeployedRocket.notGasGiant=No Gas Here
 msg.noOxygen=Warning: No Oxygen detected!
