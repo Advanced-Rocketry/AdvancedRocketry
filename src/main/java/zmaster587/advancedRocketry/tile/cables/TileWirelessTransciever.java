@@ -61,8 +61,8 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 
 		ItemLinker.setMasterCoords(item, getPos());
 		
-		if(!world.isRemote)
-			player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.linker.program")));
+		if(!worldObj.isRemote)
+			player.addChatMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.linker.program")));
 
 		return true;
 	}
@@ -109,7 +109,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 			addToNetwork();
 			((TileWirelessTransciever)tile).addToNetwork();
 			
-			player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.linker.success")));
+			player.addChatMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.linker.success")));
 			
 			return true;
 		}
