@@ -1860,6 +1860,17 @@ public class AdvancedRocketry {
 				star.setName("Magnis Vulpes");
 				DimensionManager.getInstance().addStar(star);
 				generateRandomPlanets(star, 2, 0);
+				
+				
+				star = new StellarBody();
+				star.setTemperature(200);
+				star.setPosX(50);
+				star.setPosZ(-250);
+				star.setId(DimensionManager.getInstance().getNextFreeStarId());
+				star.setName("Ma-Roo");
+				DimensionManager.getInstance().addStar(star);
+				generateRandomPlanets(star, 6, 0);
+				
 			}
 
 		}else {
