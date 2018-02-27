@@ -41,9 +41,13 @@ public class BlockSeal extends Block {
 	public void breakBlock(World worldIn, int x, int y, int z, Block block, int meta) {
 		super.breakBlock(worldIn, x, y, z, block, meta);
 		
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn.provider.dimensionId);
+		if(atmhandler == null)
+			return;
+		
 		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 			BlobHandler handler = blobList.remove(new BlockPosition(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ));
-			if (handler != null) AtmosphereHandler.getOxygenHandler(worldIn.provider.dimensionId).unregisterBlob(handler);
+			if (handler != null) atmhandler.unregisterBlob(handler);
 			
 			fireCheckAllDirections(worldIn, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, dir);
 		}
@@ -52,9 +56,13 @@ public class BlockSeal extends Block {
 	
 	public void clearBlob(World worldIn, int x, int y, int z) {
 		
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn.provider.dimensionId);
+		if(atmhandler == null)
+			return;
+		
 		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 			BlobHandler handler = blobList.remove(new BlockPosition(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ));
-			if (handler != null) AtmosphereHandler.getOxygenHandler(worldIn.provider.dimensionId).unregisterBlob(handler);
+			if (handler != null) atmhandler.unregisterBlob(handler);
 		}
 	}
 
@@ -86,6 +94,10 @@ public class BlockSeal extends Block {
 	}
 
 	private boolean checkCompleteness(World worldIn, int x, int y, int z) {
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn.provider.dimensionId);
+		if(atmhandler == null)
+			return false;
+		
 		// check along XY axis
 		if(((worldIn.getBlock(x - 1, y + 1, z) == this && 
 				worldIn.getBlock(x + 1, y + 1, z) == this &&
@@ -103,7 +115,7 @@ public class BlockSeal extends Block {
 			
 			AreaBlob blob = new AreaBlob(handler);
 			blob.addBlock(hashPos, new LinkedList<AreaBlob>());
-			AtmosphereHandler.getOxygenHandler(worldIn.provider.dimensionId).registerBlob(handler, x, y, z, blob);
+			atmhandler.registerBlob(handler, x, y, z, blob);
 			
 			return true;
 		}
@@ -121,7 +133,7 @@ public class BlockSeal extends Block {
 			
 			AreaBlob blob = new AreaBlob(handler);
 			blob.addBlock(hashPos, new LinkedList<AreaBlob>());
-			AtmosphereHandler.getOxygenHandler(worldIn.provider.dimensionId).registerBlob(handler, x,y,z, blob);
+			atmhandler.registerBlob(handler, x,y,z, blob);
 			return true;
 		}
 		return false;
