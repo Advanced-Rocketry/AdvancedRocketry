@@ -42,25 +42,37 @@ public class BlockSeal extends Block {
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		super.breakBlock(worldIn, pos, state);
 		
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension());
+		if(atmhandler == null)
+			return;
+		
 		for(EnumFacing dir : EnumFacing.VALUES) {
 			BlobHandler handler = blobList.remove(new HashedBlockPosition(pos.offset(dir)));
-			if (handler != null) AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension()).unregisterBlob(handler);
+			if (handler != null) atmhandler.unregisterBlob(handler);
 			
 			fireCheckAllDirections(worldIn, pos.offset(dir), dir);
 		}
 	}
 	
 	public void removeSeal(World worldIn, BlockPos pos) {
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension());
+		if(atmhandler == null)
+			return;
+		
 		for(EnumFacing dir : EnumFacing.VALUES) {
 			BlobHandler handler = blobList.remove(new HashedBlockPosition(pos.offset(dir)));
-			if (handler != null) AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension()).unregisterBlob(handler);
+			if (handler != null) atmhandler.unregisterBlob(handler);
 		}
 	}
 	
 	public void clearBlob(World worldIn, BlockPos pos, IBlockState state) {
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension());
+		if(atmhandler == null)
+			return;
+		
 		for(EnumFacing dir : EnumFacing.VALUES) {
 			BlobHandler handler = blobList.remove(new HashedBlockPosition(pos.offset(dir)));
-			if (handler != null) AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension()).unregisterBlob(handler);
+			if (handler != null) atmhandler.unregisterBlob(handler);
 			
 			//fireCheckAllDirections(worldIn, pos.offset(dir), dir);
 		}
@@ -93,6 +105,10 @@ public class BlockSeal extends Block {
 	}
 
 	private boolean checkCompleteness(World worldIn, BlockPos pos) {
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension());
+		if(atmhandler == null)
+			return false;
+		
 		// check along XY axis
 		if(((worldIn.getBlockState(pos.up().west()).getBlock() == this && 
 				worldIn.getBlockState(pos.up().east()).getBlock() == this &&
@@ -110,7 +126,7 @@ public class BlockSeal extends Block {
 			
 			AreaBlob blob = new AreaBlob(handler);
 			blob.addBlock(hashPos, new LinkedList<AreaBlob>());
-			AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension()).registerBlob(handler, pos, blob);
+			atmhandler.registerBlob(handler, pos, blob);
 			
 			return true;
 		}
@@ -128,7 +144,7 @@ public class BlockSeal extends Block {
 			
 			AreaBlob blob = new AreaBlob(handler);
 			blob.addBlock(hashPos, new LinkedList<AreaBlob>());
-			AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension()).registerBlob(handler, pos, blob);
+			atmhandler.registerBlob(handler, pos, blob);
 			return true;
 		}
 		return false;
