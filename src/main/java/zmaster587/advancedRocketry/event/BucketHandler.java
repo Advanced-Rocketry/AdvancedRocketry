@@ -21,7 +21,7 @@ public class BucketHandler {
 
 	@SubscribeEvent
 	public void onBucketFill(FillBucketEvent event) {
-		if(Type.BLOCK != event.getTarget().typeOfHit)
+		if(event.getTarget() == null || Type.BLOCK != event.getTarget().typeOfHit)
 			return;
 		IBlockState state =  event.getWorld().getBlockState(new BlockPos(event.getTarget().getBlockPos()));
 		Block block = state.getBlock();
