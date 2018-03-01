@@ -320,7 +320,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 		
 		setText();
 
-		modules.add(new ModuleLimitedSlotArray(150, 64, this, 0, 1));
+		modules.add(new ModuleLimitedSlotArray(150, 114, this, 0, 1));
 		int i = 0;
 		modules.add(new ModuleText(180, 10, "Gas Status", 0x282828));
 		for(IFluidHandler tile : fluidInPorts) {
@@ -475,9 +475,9 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 		super.processComplete();
 		completionTime = getCompletionTime();
 
-		DimensionProperties properties ;
-		if( !world.isRemote && world.provider.getClass().equals(WorldProviderPlanet.class) && 
-				((properties=DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension())).isNativeDimension || Configuration.allowTerraformNonAR) ) {
+		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
+		if( !world.isRemote && properties != null && properties.getId() == world.provider.getDimension() && ((world.provider.getClass().equals(WorldProviderPlanet.class) && 
+				properties.isNativeDimension) || Configuration.allowTerraformNonAR) ) {
 			if(buttonIncrease.getState() && properties.getAtmosphereDensity() < 200)
 				properties.setAtmosphereDensity(properties.getAtmosphereDensity()+1);
 			else if(buttonDecrease.getState() && properties.getAtmosphereDensity() > 0) {
