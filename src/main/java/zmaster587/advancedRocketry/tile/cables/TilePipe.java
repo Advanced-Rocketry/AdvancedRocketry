@@ -1,13 +1,11 @@
 package zmaster587.advancedRocketry.tile.cables;
 
-import zmaster587.advancedRocketry.cable.HandlerCableNetwork;
-import zmaster587.advancedRocketry.cable.NetworkRegistry;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import zmaster587.advancedRocketry.cable.HandlerCableNetwork;
+import zmaster587.advancedRocketry.cable.NetworkRegistry;
 
 public class TilePipe extends TileEntity {
 

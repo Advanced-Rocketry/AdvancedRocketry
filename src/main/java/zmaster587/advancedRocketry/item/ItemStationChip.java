@@ -1,9 +1,6 @@
 package zmaster587.advancedRocketry.item;
 
-import java.util.List;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -17,6 +14,8 @@ import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.util.Vector3F;
+
+import java.util.List;
 
 /**
  * MetaData corresponds to the id

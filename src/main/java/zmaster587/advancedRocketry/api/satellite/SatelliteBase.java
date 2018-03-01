@@ -1,10 +1,6 @@
 package zmaster587.advancedRocketry.api.satellite;
 
 import io.netty.buffer.ByteBuf;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.api.ISatelliteIdItem;
-import zmaster587.advancedRocketry.api.SatelliteRegistry;
-import zmaster587.advancedRocketry.item.ItemSatellite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
@@ -13,6 +9,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.ISatelliteIdItem;
+import zmaster587.advancedRocketry.api.SatelliteRegistry;
+import zmaster587.advancedRocketry.item.ItemSatellite;
 
 public abstract class SatelliteBase {
 	

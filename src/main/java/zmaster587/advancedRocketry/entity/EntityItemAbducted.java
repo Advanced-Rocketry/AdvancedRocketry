@@ -1,9 +1,5 @@
 package zmaster587.advancedRocketry.entity;
 
-import javax.annotation.Nullable;
-
-import com.google.common.base.Optional;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;

@@ -1,10 +1,5 @@
 package zmaster587.advancedRocketry.block;
 
-import java.util.Random;
-
-import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
-import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
-import zmaster587.libVulpes.inventory.GuiHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
@@ -12,6 +7,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
+import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
+import zmaster587.libVulpes.inventory.GuiHandler;
+
+import java.util.Random;
 
 public class BlockLaser extends BlockMultiblockMachine {
 

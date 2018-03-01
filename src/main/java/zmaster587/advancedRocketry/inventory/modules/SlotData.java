@@ -1,9 +1,9 @@
 package zmaster587.advancedRocketry.inventory.modules;
 
-import zmaster587.advancedRocketry.item.ItemData;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import zmaster587.advancedRocketry.item.ItemData;
 
 public class SlotData extends Slot {
 

@@ -1,7 +1,5 @@
 package zmaster587.advancedRocketry.item;
 
-import java.util.List;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -11,6 +9,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.libVulpes.items.ItemIngredient;
+
+import java.util.List;
 
 public class ItemData extends ItemIngredient {
 

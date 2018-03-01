@@ -1,17 +1,14 @@
 package zmaster587.advancedRocketry.entity;
 
 
-import org.lwjgl.opengl.GL11;
-
-import zmaster587.advancedRocketry.client.render.RenderLaser;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import org.lwjgl.opengl.GL11;
+import zmaster587.advancedRocketry.client.render.RenderLaser;
 
 public class FxSkyLaser extends Particle {
 	

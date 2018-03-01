@@ -1,14 +1,13 @@
 package zmaster587.advancedRocketry.inventory;
 
-import org.lwjgl.opengl.GL11;
-
-import zmaster587.libVulpes.render.RenderHelper;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.EnumFacing;
+import org.lwjgl.opengl.GL11;
+import zmaster587.libVulpes.render.RenderHelper;
 
 public abstract class GuiProgressBarContainer extends GuiContainer {
 	

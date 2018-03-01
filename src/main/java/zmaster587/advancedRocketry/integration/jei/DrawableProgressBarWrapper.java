@@ -1,8 +1,8 @@
 package zmaster587.advancedRocketry.integration.jei;
 
-import zmaster587.libVulpes.client.util.ProgressBarImage;
-import net.minecraft.client.Minecraft;
 import mezz.jei.api.gui.IDrawableAnimated;
+import net.minecraft.client.Minecraft;
+import zmaster587.libVulpes.client.util.ProgressBarImage;
 
 public class DrawableProgressBarWrapper implements IDrawableAnimated {
 

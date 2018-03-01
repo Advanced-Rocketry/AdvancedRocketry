@@ -1,25 +1,10 @@
 package zmaster587.advancedRocketry.item;
 
-import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-
-import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
-import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
-import zmaster587.advancedRocketry.dimension.DimensionManager;
-import zmaster587.advancedRocketry.event.RocketEventHandler;
-import zmaster587.advancedRocketry.event.RocketEventHandler.GuiBox;
-import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.api.IArmorComponent;
-import zmaster587.libVulpes.client.ResourceIcon;
-import zmaster587.libVulpes.render.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,6 +21,18 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.event.RocketEventHandler;
+import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.IArmorComponent;
+import zmaster587.libVulpes.client.ResourceIcon;
+import zmaster587.libVulpes.render.RenderHelper;
+
+import java.util.List;
 
 public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 

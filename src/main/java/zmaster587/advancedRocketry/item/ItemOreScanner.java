@@ -1,8 +1,5 @@
 package zmaster587.advancedRocketry.item;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -23,6 +20,9 @@ import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class ItemOreScanner extends Item implements IModularInventory {
 

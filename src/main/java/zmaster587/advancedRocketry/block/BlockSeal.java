@@ -1,13 +1,5 @@
 package zmaster587.advancedRocketry.block;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-
-import zmaster587.advancedRocketry.api.AreaBlob;
-import zmaster587.advancedRocketry.api.util.IBlobHandler;
-import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
-import zmaster587.advancedRocketry.tile.TileSeal;
-import zmaster587.libVulpes.util.HashedBlockPosition;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -15,6 +7,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.api.AreaBlob;
+import zmaster587.advancedRocketry.api.util.IBlobHandler;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
+import zmaster587.advancedRocketry.tile.TileSeal;
+import zmaster587.libVulpes.util.HashedBlockPosition;
+
+import java.util.HashMap;
+import java.util.LinkedList;
 
 public class BlockSeal extends Block {
 

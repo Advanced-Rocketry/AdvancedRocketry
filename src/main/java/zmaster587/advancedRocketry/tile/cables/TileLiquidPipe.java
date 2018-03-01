@@ -1,12 +1,10 @@
 package zmaster587.advancedRocketry.tile.cables;
 
-import zmaster587.advancedRocketry.cable.HandlerCableNetwork;
-import zmaster587.advancedRocketry.cable.NetworkRegistry;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import zmaster587.advancedRocketry.cable.HandlerCableNetwork;
+import zmaster587.advancedRocketry.cable.NetworkRegistry;
 
 
 public class TileLiquidPipe extends TilePipe {

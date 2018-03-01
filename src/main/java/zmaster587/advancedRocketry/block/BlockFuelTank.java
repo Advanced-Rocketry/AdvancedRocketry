@@ -1,9 +1,5 @@
 package zmaster587.advancedRocketry.block;
 
-import java.util.Locale;
-
-import zmaster587.advancedRocketry.api.IFuelTank;
-import zmaster587.advancedRocketry.block.BlockLinkedHorizontalTexture.IconNames;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -14,6 +10,9 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.api.IFuelTank;
+
+import java.util.Locale;
 
 public class BlockFuelTank extends Block implements IFuelTank{
 

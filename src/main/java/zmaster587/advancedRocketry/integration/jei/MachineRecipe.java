@@ -1,15 +1,16 @@
 package zmaster587.advancedRocketry.integration.jei;
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
 
+import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.BlankRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
 import zmaster587.libVulpes.interfaces.IRecipe;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MachineRecipe extends BlankRecipeWrapper {
 	

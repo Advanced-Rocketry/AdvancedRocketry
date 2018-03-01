@@ -1,17 +1,15 @@
 package zmaster587.advancedRocketry.inventory.modules;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.inventory.GuiPlanetButton;
-import zmaster587.libVulpes.gui.GuiImageButton;
 import zmaster587.libVulpes.inventory.modules.IButtonInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleButton;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class ModuleButtonPlanet extends ModuleButton {
 

@@ -1,11 +1,5 @@
 package zmaster587.advancedRocketry.world.decoration;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.libVulpes.block.BlockMeta;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -14,6 +8,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.MapGenBase;
 import net.minecraftforge.oredict.OreDictionary;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.libVulpes.block.BlockMeta;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class MapGenGeode extends MapGenBase {
 	int chancePerChunk;

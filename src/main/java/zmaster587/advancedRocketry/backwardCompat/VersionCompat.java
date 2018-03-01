@@ -1,8 +1,5 @@
 package zmaster587.advancedRocketry.backwardCompat;
 
-import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.dimension.DimensionManager;
-
 public class VersionCompat {
 	public static void upgradeDimensionManagerPostLoad(String prevVersion) {
 		/*if(AdvancedRocketry.version.equals(prevVersion) || AdvancedRocketry.version.startsWith("%"))

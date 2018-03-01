@@ -1,36 +1,5 @@
 package zmaster587.advancedRocketry.command;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.api.DataStorage.DataType;
-import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
-import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
-import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.advancedRocketry.dimension.DimensionManager;
-import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.integration.CompatibilityMgr;
-import zmaster587.advancedRocketry.integration.jei.ARPlugin;
-import zmaster587.advancedRocketry.item.ItemData;
-import zmaster587.advancedRocketry.item.ItemMultiData;
-import zmaster587.advancedRocketry.item.ItemStationChip;
-import zmaster587.advancedRocketry.network.PacketDimInfo;
-import zmaster587.advancedRocketry.network.PacketStellarInfo;
-import zmaster587.advancedRocketry.stations.SpaceObjectManager;
-import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
-import zmaster587.advancedRocketry.world.util.TeleporterNoPortalSeekBlock;
-import zmaster587.libVulpes.network.PacketHandler;
-import zmaster587.libVulpes.util.HashedBlockPosition;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -46,6 +15,35 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
+import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.DataStorage.DataType;
+import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
+import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
+import zmaster587.advancedRocketry.api.stations.ISpaceObject;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.integration.CompatibilityMgr;
+import zmaster587.advancedRocketry.item.ItemData;
+import zmaster587.advancedRocketry.item.ItemMultiData;
+import zmaster587.advancedRocketry.item.ItemStationChip;
+import zmaster587.advancedRocketry.network.PacketDimInfo;
+import zmaster587.advancedRocketry.network.PacketStellarInfo;
+import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
+import zmaster587.advancedRocketry.world.util.TeleporterNoPortalSeekBlock;
+import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.util.HashedBlockPosition;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class WorldCommand implements ICommand {
 

@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.api.satellite;
 
-import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import net.minecraft.nbt.NBTTagCompound;
+import zmaster587.advancedRocketry.api.SatelliteRegistry;
 
 public class SatelliteProperties {
 

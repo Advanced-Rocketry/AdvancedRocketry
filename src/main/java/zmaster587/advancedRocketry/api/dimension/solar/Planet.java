@@ -1,9 +1,9 @@
 package zmaster587.advancedRocketry.api.dimension.solar;
 
+import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
+
 import java.util.Iterator;
 import java.util.List;
-
-import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 
 public class Planet {
 	private int dimId;

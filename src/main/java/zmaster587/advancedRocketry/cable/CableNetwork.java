@@ -1,19 +1,17 @@
 package zmaster587.advancedRocketry.cable;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import zmaster587.advancedRocketry.tile.cables.TilePipe;
+import zmaster587.libVulpes.util.SingleEntry;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
-
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import zmaster587.advancedRocketry.tile.cables.TilePipe;
-import zmaster587.libVulpes.util.HashedBlockPosition;
-import zmaster587.libVulpes.util.SingleEntry;
 
 public class CableNetwork {
 

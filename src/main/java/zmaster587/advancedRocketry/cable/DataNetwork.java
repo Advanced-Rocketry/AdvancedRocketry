@@ -1,13 +1,13 @@
 package zmaster587.advancedRocketry.cable;
 
-import java.util.Iterator;
-import java.util.Random;
-import java.util.Map.Entry;
-
-import zmaster587.advancedRocketry.api.DataStorage.DataType;
-import zmaster587.advancedRocketry.api.satellite.IDataHandler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import zmaster587.advancedRocketry.api.DataStorage.DataType;
+import zmaster587.advancedRocketry.api.satellite.IDataHandler;
+
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Random;
 
 public class DataNetwork extends CableNetwork  {
 	/**

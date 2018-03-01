@@ -1,17 +1,15 @@
 package zmaster587.advancedRocketry.network;
 
-import java.io.IOException;
-
-import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
-import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
-import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
-import zmaster587.libVulpes.network.BasePacket;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.PacketBuffer;
+import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
+import zmaster587.libVulpes.network.BasePacket;
+
+import java.io.IOException;
 
 public class PacketAtmSync extends BasePacket {
 

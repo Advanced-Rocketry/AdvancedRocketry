@@ -1,22 +1,17 @@
 package zmaster587.advancedRocketry.network;
 
-import java.io.IOException;
-
-import zmaster587.advancedRocketry.api.SatelliteRegistry;
-import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
-import zmaster587.libVulpes.network.BasePacket;
-import zmaster587.libVulpes.util.INetworkMachine;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import zmaster587.advancedRocketry.api.SatelliteRegistry;
+import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
+import zmaster587.libVulpes.network.BasePacket;
+
+import java.io.IOException;
 
 public class PacketSatellite extends BasePacket {
 

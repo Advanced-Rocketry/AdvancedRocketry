@@ -1,32 +1,5 @@
 package zmaster587.advancedRocketry.tile.multiblock.machine;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.util.AudioRegistry;
-import zmaster587.libVulpes.api.LibVulpesBlocks;
-import zmaster587.libVulpes.api.LibVulpesItems;
-import zmaster587.libVulpes.api.material.AllowedProducts;
-import zmaster587.libVulpes.api.material.Material;
-import zmaster587.libVulpes.api.material.MaterialRegistry;
-import zmaster587.libVulpes.block.BlockMeta;
-import zmaster587.libVulpes.client.util.ProgressBarImage;
-import zmaster587.libVulpes.interfaces.IRecipe;
-import zmaster587.libVulpes.inventory.modules.IModularInventory;
-import zmaster587.libVulpes.inventory.modules.IProgressBar;
-import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleImage;
-import zmaster587.libVulpes.inventory.modules.ModuleProgress;
-import zmaster587.libVulpes.recipe.NumberedOreDictStack;
-import zmaster587.libVulpes.recipe.RecipesMachine;
-import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
-import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
-import zmaster587.libVulpes.util.IconResource;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -36,6 +9,24 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.util.AudioRegistry;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.api.LibVulpesItems;
+import zmaster587.libVulpes.api.material.Material;
+import zmaster587.libVulpes.api.material.MaterialRegistry;
+import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.client.util.ProgressBarImage;
+import zmaster587.libVulpes.inventory.modules.*;
+import zmaster587.libVulpes.recipe.NumberedOreDictStack;
+import zmaster587.libVulpes.recipe.RecipesMachine;
+import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
+import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
+import zmaster587.libVulpes.util.IconResource;
+
+import java.util.List;
 
 public class TilePrecisionAssembler extends TileMultiblockMachine implements IModularInventory, IProgressBar {
 

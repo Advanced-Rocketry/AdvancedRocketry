@@ -1,13 +1,9 @@
 package zmaster587.advancedRocketry.inventory;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-
+import net.minecraft.client.renderer.Tessellator;
 import org.lwjgl.opengl.GL11;
-
 import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.libVulpes.gui.GuiImageButton;

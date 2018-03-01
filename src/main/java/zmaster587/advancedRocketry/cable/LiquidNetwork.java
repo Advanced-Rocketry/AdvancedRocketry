@@ -1,21 +1,18 @@
 package zmaster587.advancedRocketry.cable;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.Map.Entry;
-
-import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.libVulpes.util.FluidUtils;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.libVulpes.util.FluidUtils;
+
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Random;
 
 public class LiquidNetwork extends CableNetwork {
 

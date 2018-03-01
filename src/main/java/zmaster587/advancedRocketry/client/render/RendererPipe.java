@@ -1,18 +1,16 @@
 package zmaster587.advancedRocketry.client.render;
 
-import org.lwjgl.opengl.GL11;
-
-import zmaster587.advancedRocketry.tile.cables.TilePipe;
-import zmaster587.libVulpes.render.RenderHelper;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
+import zmaster587.advancedRocketry.tile.cables.TilePipe;
+import zmaster587.libVulpes.render.RenderHelper;
 
 public class RendererPipe extends TileEntitySpecialRenderer {
 

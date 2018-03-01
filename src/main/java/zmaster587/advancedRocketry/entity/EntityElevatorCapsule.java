@@ -1,27 +1,6 @@
 package zmaster587.advancedRocketry.entity;
 
 import io.netty.buffer.ByteBuf;
-
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import com.google.common.base.Predicate;
-
-import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.api.RocketEvent;
-import zmaster587.advancedRocketry.entity.EntityRocket.PacketType;
-import zmaster587.advancedRocketry.event.PlanetEventHandler;
-import zmaster587.advancedRocketry.tile.multiblock.TileSpaceElevator;
-import zmaster587.advancedRocketry.util.DimensionBlockPosition;
-import zmaster587.advancedRocketry.util.TransitionEntity;
-import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.interfaces.INetworkEntity;
-import zmaster587.libVulpes.network.PacketEntity;
-import zmaster587.libVulpes.network.PacketHandler;
-import zmaster587.libVulpes.util.HashedBlockPosition;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.MoverType;
@@ -42,6 +21,22 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.RocketEvent;
+import zmaster587.advancedRocketry.event.PlanetEventHandler;
+import zmaster587.advancedRocketry.tile.multiblock.TileSpaceElevator;
+import zmaster587.advancedRocketry.util.DimensionBlockPosition;
+import zmaster587.advancedRocketry.util.TransitionEntity;
+import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.interfaces.INetworkEntity;
+import zmaster587.libVulpes.network.PacketEntity;
+import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.util.HashedBlockPosition;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 

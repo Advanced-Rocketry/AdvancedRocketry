@@ -1,7 +1,5 @@
 package zmaster587.advancedRocketry.item;
 
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -18,6 +16,8 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import zmaster587.advancedRocketry.tile.TileFluidTank;
+
+import java.util.List;
 
 public class ItemBlockFluidTank extends ItemBlock {
 

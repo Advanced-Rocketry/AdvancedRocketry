@@ -1,15 +1,15 @@
 package zmaster587.advancedRocketry.inventory.modules;
 
-import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
-import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
-import zmaster587.libVulpes.util.IconResource;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
+import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
+import zmaster587.libVulpes.util.IconResource;
 
 public class ModuleSatellite extends ModuleSlotArray {
 

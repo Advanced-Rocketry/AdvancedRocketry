@@ -1,20 +1,19 @@
 package zmaster587.advancedRocketry.stations;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
-
-import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.api.DataStorage.DataType;
-import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
-import zmaster587.advancedRocketry.api.satellite.IDataHandler;
-import zmaster587.advancedRocketry.dimension.DimensionManager;
-import zmaster587.advancedRocketry.world.util.MultiData;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
+import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.DataStorage.DataType;
+import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
+import zmaster587.advancedRocketry.api.satellite.IDataHandler;
+import zmaster587.advancedRocketry.world.util.MultiData;
+
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class SpaceObjectAsteroid extends SpaceObjectBase implements IDataHandler {
 	HashMap<Block, Integer> compositionMapping;

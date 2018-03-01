@@ -1,8 +1,5 @@
 package zmaster587.advancedRocketry.mission;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -20,6 +17,9 @@ import zmaster587.advancedRocketry.item.ItemAsteroidChip;
 import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.advancedRocketry.util.AsteroidSmall.StackEntry;
 import zmaster587.libVulpes.util.HashedBlockPosition;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class MissionOreMining extends MissionResourceCollection {
 

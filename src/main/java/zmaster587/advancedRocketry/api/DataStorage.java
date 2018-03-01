@@ -1,8 +1,8 @@
 package zmaster587.advancedRocketry.api;
 
-import java.util.Locale;
-
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.Locale;
 
 public class DataStorage {
 

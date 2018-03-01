@@ -1,18 +1,15 @@
 package zmaster587.advancedRocketry.inventory;
 
-import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
-import zmaster587.advancedRocketry.dimension.DimensionManager;
-import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
-import zmaster587.libVulpes.inventory.ContainerModular;
-import zmaster587.libVulpes.inventory.GuiModular;
-import zmaster587.libVulpes.inventory.GuiModularFullScreen;
-import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
+import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
 
 public class GuiHandler implements IGuiHandler {
 

@@ -1,12 +1,12 @@
 package zmaster587.advancedRocketry.world.biome;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class BiomeGenSpace extends Biome {
 	public BiomeGenSpace(int biomeId, boolean register) {

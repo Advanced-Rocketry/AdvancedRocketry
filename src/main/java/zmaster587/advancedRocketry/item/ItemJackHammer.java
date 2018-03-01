@@ -1,11 +1,6 @@
 package zmaster587.advancedRocketry.item;
 
-import java.util.Set;
-
-import zmaster587.advancedRocketry.api.MaterialGeode;
-
 import com.google.common.collect.Sets;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -13,6 +8,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraftforge.oredict.OreDictionary;
+import zmaster587.advancedRocketry.api.MaterialGeode;
+
+import java.util.Set;
 
 public class ItemJackHammer extends ItemTool {
 	

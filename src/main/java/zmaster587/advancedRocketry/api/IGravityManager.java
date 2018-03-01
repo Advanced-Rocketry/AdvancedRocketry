@@ -1,7 +1,6 @@
 package zmaster587.advancedRocketry.api;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.util.EnumFacing;
 
 public interface IGravityManager {
 	

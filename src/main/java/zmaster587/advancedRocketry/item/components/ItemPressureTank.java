@@ -1,7 +1,5 @@
 package zmaster587.advancedRocketry.item.components;
 
-import java.util.List;
-
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
@@ -23,6 +21,8 @@ import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.items.ItemIngredient;
 import zmaster587.libVulpes.util.FluidUtils;
+
+import java.util.List;
 
 public class ItemPressureTank extends ItemIngredient implements IArmorComponent {
 

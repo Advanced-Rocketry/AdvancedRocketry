@@ -1,13 +1,12 @@
 package zmaster587.advancedRocketry.client.render;
 
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+import zmaster587.advancedRocketry.AdvancedRocketry;
+
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-
-import zmaster587.advancedRocketry.AdvancedRocketry;
 
 public class ClientDynamicTexture {
 

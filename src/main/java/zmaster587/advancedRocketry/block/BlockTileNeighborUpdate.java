@@ -1,13 +1,12 @@
 package zmaster587.advancedRocketry.block;
 
-import zmaster587.libVulpes.block.BlockTile;
-import zmaster587.libVulpes.util.IAdjBlockUpdate;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import zmaster587.libVulpes.block.BlockTile;
+import zmaster587.libVulpes.util.IAdjBlockUpdate;
 
 public class BlockTileNeighborUpdate extends BlockTile {
 

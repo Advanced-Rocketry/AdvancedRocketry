@@ -1,13 +1,13 @@
 package zmaster587.advancedRocketry.tile;
 
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.libVulpes.block.BlockFullyRotatable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.libVulpes.block.BlockFullyRotatable;
 
 public class TileForceFieldProjector extends TileEntity implements ITickable {
 

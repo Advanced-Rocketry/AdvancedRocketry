@@ -1,7 +1,5 @@
 package zmaster587.advancedRocketry.tile.infrastructure;
 
-import java.util.List;
-
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -12,6 +10,8 @@ import zmaster587.libVulpes.inventory.modules.IButtonInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleRedstoneOutputButton;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
+
+import java.util.List;
 
 public class TileRocketUnloader extends TileRocketLoader implements IInfrastructure, ITickable, IButtonInventory, INetworkMachine   {
 	ModuleRedstoneOutputButton redstoneControl;

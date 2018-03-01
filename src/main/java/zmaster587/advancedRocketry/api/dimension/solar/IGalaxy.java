@@ -1,9 +1,9 @@
 package zmaster587.advancedRocketry.api.dimension.solar;
 
-import java.util.Collection;
-
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
+
+import java.util.Collection;
 
 public interface IGalaxy {
 	Collection<StellarBody> getStars();

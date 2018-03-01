@@ -1,12 +1,12 @@
 package zmaster587.advancedRocketry.world.decoration;
 
-import zmaster587.advancedRocketry.block.BlockCrystal;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.MapGenBase;
+import zmaster587.advancedRocketry.block.BlockCrystal;
 
 public class MapGenLargeCrystal extends MapGenBase {
 

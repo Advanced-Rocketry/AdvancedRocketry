@@ -1,13 +1,8 @@
 package zmaster587.advancedRocketry.world.biome;
 
-import java.util.List;
-
-import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.monster.EntityEnderman;
-import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.biome.Biome;
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 
 public class BiomeGenWatermelon extends Biome {
 	

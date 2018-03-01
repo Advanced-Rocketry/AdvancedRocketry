@@ -1,12 +1,5 @@
 package zmaster587.advancedRocketry.world.biome;
 
-import java.util.Random;
-
-import zmaster587.advancedRocketry.world.decoration.MapGenCrater;
-import zmaster587.advancedRocketry.world.gen.WorldGenNoTree;
-import zmaster587.advancedRocketry.world.gen.WorldGenSwampTree;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockFlower.EnumFlowerType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.monster.EntitySlime;
@@ -20,6 +13,10 @@ import net.minecraft.world.gen.MapGenBase;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import zmaster587.advancedRocketry.world.gen.WorldGenNoTree;
+import zmaster587.advancedRocketry.world.gen.WorldGenSwampTree;
+
+import java.util.Random;
 
 public class BiomeGenDeepSwamp extends Biome {
 

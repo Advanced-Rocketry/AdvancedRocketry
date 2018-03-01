@@ -1,12 +1,12 @@
 package zmaster587.advancedRocketry.util;
 
-import java.util.LinkedList;
-import java.util.List;
-
+import net.minecraft.block.state.IBlockState;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.AtmosphereTypes;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
-import net.minecraft.block.state.IBlockState;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class OreGenProperties {
 

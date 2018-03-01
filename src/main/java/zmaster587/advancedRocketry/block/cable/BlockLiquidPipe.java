@@ -1,10 +1,10 @@
 package zmaster587.advancedRocketry.block.cable;
 
-import zmaster587.advancedRocketry.tile.cables.TileLiquidPipe;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.tile.cables.TileLiquidPipe;
 
 public class BlockLiquidPipe extends BlockPipe {
 	

@@ -1,8 +1,7 @@
 package zmaster587.advancedRocketry.integration.jei;
 
-import java.awt.Rectangle;
-import java.util.List;
-
+import mezz.jei.api.*;
+import mezz.jei.api.gui.IAdvancedGuiHandler;
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.block.BlockPress;
@@ -33,21 +32,11 @@ import zmaster587.advancedRocketry.integration.jei.rollingMachine.RollingMachine
 import zmaster587.advancedRocketry.integration.jei.sawmill.SawMillCategory;
 import zmaster587.advancedRocketry.integration.jei.sawmill.SawMillRecipeHandler;
 import zmaster587.advancedRocketry.integration.jei.sawmill.SawMillRecipeMaker;
-import zmaster587.advancedRocketry.tile.multiblock.machine.TileChemicalReactor;
-import zmaster587.advancedRocketry.tile.multiblock.machine.TileCrystallizer;
-import zmaster587.advancedRocketry.tile.multiblock.machine.TileCuttingMachine;
-import zmaster587.advancedRocketry.tile.multiblock.machine.TileElectricArcFurnace;
-import zmaster587.advancedRocketry.tile.multiblock.machine.TileElectrolyser;
-import zmaster587.advancedRocketry.tile.multiblock.machine.TileLathe;
-import zmaster587.advancedRocketry.tile.multiblock.machine.TilePrecisionAssembler;
-import zmaster587.advancedRocketry.tile.multiblock.machine.TileRollingMachine;
+import zmaster587.advancedRocketry.tile.multiblock.machine.*;
 import zmaster587.libVulpes.inventory.GuiModular;
-import mezz.jei.api.BlankModPlugin;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.IJeiHelpers;
-import mezz.jei.api.IModRegistry;
-import mezz.jei.api.JEIPlugin;
-import mezz.jei.api.gui.IAdvancedGuiHandler;
+
+import java.awt.*;
+import java.util.List;
 
 @JEIPlugin
 public class ARPlugin extends BlankModPlugin {

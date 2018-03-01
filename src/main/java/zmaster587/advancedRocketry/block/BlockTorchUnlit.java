@@ -1,12 +1,5 @@
 package zmaster587.advancedRocketry.block;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import net.minecraft.block.BlockTorch;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,6 +13,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class BlockTorchUnlit extends BlockTorch {
 

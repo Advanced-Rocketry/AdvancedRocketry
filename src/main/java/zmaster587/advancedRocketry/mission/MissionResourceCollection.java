@@ -1,8 +1,6 @@
 package zmaster587.advancedRocketry.mission;
 
 
-import java.util.LinkedList;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -19,6 +17,8 @@ import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.util.HashedBlockPosition;
+
+import java.util.LinkedList;
 
 
 public abstract class MissionResourceCollection extends SatelliteBase implements IMission {
