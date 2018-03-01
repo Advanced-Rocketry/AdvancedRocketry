@@ -13,6 +13,9 @@ import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -787,11 +790,6 @@ public class AdvancedRocketry {
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableTerraforming)
 			LibVulpesBlocks.registerItem(AdvancedRocketryItems.itemBiomeChanger.setRegistryName("biomeChanger"));
-
-		//End Items
-
-		proxy.preInitItems();
-		
 	}
 	
 	@SubscribeEvent(priority=EventPriority.HIGH)
@@ -1067,7 +1065,12 @@ public class AdvancedRocketry {
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("TitaniumIridium", "pickaxe", 1, 0xd7dfe4, AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("GEAR").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue(), false));
 
 		materialRegistry.registerOres(LibVulpes.tabLibVulpesOres);
-		
+	}
+
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void registerModels(ModelRegistryEvent event) {
+		proxy.preInitItems();
 		proxy.preInitBlocks();
 	}
 	
