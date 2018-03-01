@@ -1,32 +1,19 @@
 package zmaster587.advancedRocketry.client.render.multiblocks;
 
-import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-
-import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
-import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
-import zmaster587.libVulpes.block.RotatableBlock;
-import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityItemFrame;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemSkull;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.MapData;
+import org.lwjgl.opengl.GL11;
+import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
+import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
+import zmaster587.libVulpes.block.RotatableBlock;
+import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
+
+import java.util.List;
 
 public class RendererCrystallizer extends TileEntitySpecialRenderer {
 

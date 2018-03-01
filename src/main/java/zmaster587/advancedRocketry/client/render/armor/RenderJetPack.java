@@ -1,22 +1,12 @@
 package zmaster587.advancedRocketry.client.render.armor;
 
-import org.lwjgl.opengl.GL11;
-
-import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
-import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.renderer.BlockModelRenderer;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
-import net.minecraftforge.client.model.b3d.B3DLoader;
-import net.minecraftforge.client.model.obj.OBJLoader;
-import net.minecraftforge.client.model.obj.OBJModel;
+import org.lwjgl.opengl.GL11;
+import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
+import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 
 public class RenderJetPack extends ModelBiped {
 	static WavefrontObject model;

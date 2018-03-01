@@ -1,12 +1,12 @@
 package zmaster587.advancedRocketry.integration.jei.precisionAssembler;
 
+import mezz.jei.api.IGuiHelper;
 import net.minecraft.util.EnumFacing;
 import zmaster587.advancedRocketry.integration.jei.ARPlugin;
 import zmaster587.advancedRocketry.integration.jei.MachineCategoryTemplate;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
-import mezz.jei.api.IGuiHelper;
 
 public class PrecisionAssemblerCategory extends MachineCategoryTemplate<PrecisionAssemblerWrapper> {
 

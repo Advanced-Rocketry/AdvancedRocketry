@@ -1,14 +1,14 @@
 package zmaster587.advancedRocketry.integration.jei.electrolyser;
 
-import java.util.LinkedList;
-import java.util.List;
-
+import mezz.jei.api.IJeiHelpers;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
-import mezz.jei.api.IJeiHelpers;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class ElectrolyzerRecipeMaker {
 

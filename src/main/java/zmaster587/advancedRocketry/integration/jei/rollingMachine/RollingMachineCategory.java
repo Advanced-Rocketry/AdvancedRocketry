@@ -1,10 +1,10 @@
 package zmaster587.advancedRocketry.integration.jei.rollingMachine;
 
+import mezz.jei.api.IGuiHelper;
 import zmaster587.advancedRocketry.integration.jei.ARPlugin;
 import zmaster587.advancedRocketry.integration.jei.MachineCategoryTemplate;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.LibVulpes;
-import mezz.jei.api.IGuiHelper;
 
 public class RollingMachineCategory extends MachineCategoryTemplate<RollingMachineWrapper> {
 
