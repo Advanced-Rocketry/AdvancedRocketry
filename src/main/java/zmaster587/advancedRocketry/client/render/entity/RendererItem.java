@@ -4,7 +4,6 @@
 
 package zmaster587.advancedRocketry.client.render.entity;
 
-import java.util.Random;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.entity.Render;
@@ -12,11 +11,12 @@ import net.minecraft.client.renderer.entity.RenderEntityItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
-
-import zmaster587.advancedRocketry.entity.EntityItemAbducted;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import zmaster587.advancedRocketry.entity.EntityItemAbducted;
+
+import java.util.Random;
 
 @SideOnly(Side.CLIENT)
 public class RendererItem extends Render<EntityItemAbducted> implements IRenderFactory<EntityItemAbducted>

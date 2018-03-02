@@ -1,15 +1,5 @@
 package zmaster587.advancedRocketry.inventory.modules;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import zmaster587.advancedRocketry.api.DataStorage;
-import zmaster587.advancedRocketry.util.IDataInventory;
-import zmaster587.libVulpes.inventory.TextureResources;
-import zmaster587.libVulpes.inventory.modules.IButtonInventory;
-import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleButton;
-import zmaster587.libVulpes.util.IconResource;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -19,6 +9,16 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import zmaster587.advancedRocketry.api.DataStorage;
+import zmaster587.advancedRocketry.util.IDataInventory;
+import zmaster587.libVulpes.inventory.TextureResources;
+import zmaster587.libVulpes.inventory.modules.IButtonInventory;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleButton;
+import zmaster587.libVulpes.util.IconResource;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class ModuleData extends ModuleBase implements IButtonInventory {
 

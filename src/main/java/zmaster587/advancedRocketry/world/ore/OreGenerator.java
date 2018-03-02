@@ -1,7 +1,5 @@
 package zmaster587.advancedRocketry.world.ore;
 
-import java.util.Random;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
@@ -22,6 +20,8 @@ import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.api.material.Material;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
+
+import java.util.Random;
 
 public class OreGenerator extends WorldGenerator implements IWorldGenerator {
 

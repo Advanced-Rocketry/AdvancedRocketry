@@ -1,27 +1,20 @@
 package zmaster587.advancedRocketry.satellite;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
-import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
-import zmaster587.advancedRocketry.item.ItemBiomeChanger;
-import zmaster587.advancedRocketry.network.PacketBiomeIDChange;
-import zmaster587.advancedRocketry.util.BiomeHandler;
-import zmaster587.libVulpes.api.IUniversalEnergy;
-import zmaster587.libVulpes.network.PacketHandler;
-import zmaster587.libVulpes.util.HashedBlockPosition;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Biomes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
+import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
+import zmaster587.advancedRocketry.item.ItemBiomeChanger;
+import zmaster587.advancedRocketry.util.BiomeHandler;
+import zmaster587.libVulpes.api.IUniversalEnergy;
+import zmaster587.libVulpes.util.HashedBlockPosition;
+
+import java.util.*;
 
 public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversalEnergy {
 

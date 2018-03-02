@@ -1,17 +1,14 @@
 package zmaster587.advancedRocketry.world.decoration;
 
-import java.util.Random;
-
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.dimension.DimensionManager;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockSlab.EnumBlockHalf;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 
 public class MapGenLander {
 

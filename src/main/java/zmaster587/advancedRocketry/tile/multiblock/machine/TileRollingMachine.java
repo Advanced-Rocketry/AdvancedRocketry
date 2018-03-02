@@ -1,7 +1,5 @@
 package zmaster587.advancedRocketry.tile.multiblock.machine;
 
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,6 +25,8 @@ import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
+
+import java.util.List;
 
 public class TileRollingMachine extends TileMultiblockMachine {
 

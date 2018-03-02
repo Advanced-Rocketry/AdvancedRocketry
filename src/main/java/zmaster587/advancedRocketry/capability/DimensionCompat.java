@@ -1,8 +1,8 @@
 package zmaster587.advancedRocketry.capability;
 
-import java.lang.reflect.Field;
-
 import zmaster587.advancedRocketry.AdvancedRocketry;
+
+import java.lang.reflect.Field;
 
 public class DimensionCompat {
 

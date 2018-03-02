@@ -1,10 +1,5 @@
 package zmaster587.advancedRocketry.world;
 
-import java.lang.reflect.Field;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
@@ -16,31 +11,17 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeCache;
 import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.gen.ChunkGeneratorSettings;
-import net.minecraft.world.gen.layer.GenLayer;
-import net.minecraft.world.gen.layer.GenLayerAddIsland;
-import net.minecraft.world.gen.layer.GenLayerAddMushroomIsland;
-import net.minecraft.world.gen.layer.GenLayerAddSnow;
-import net.minecraft.world.gen.layer.GenLayerDeepOcean;
-import net.minecraft.world.gen.layer.GenLayerEdge;
-import net.minecraft.world.gen.layer.GenLayerFuzzyZoom;
-import net.minecraft.world.gen.layer.GenLayerHills;
-import net.minecraft.world.gen.layer.GenLayerIsland;
-import net.minecraft.world.gen.layer.GenLayerRareBiome;
-import net.minecraft.world.gen.layer.GenLayerRemoveTooMuchOcean;
-import net.minecraft.world.gen.layer.GenLayerRiver;
-import net.minecraft.world.gen.layer.GenLayerRiverInit;
-import net.minecraft.world.gen.layer.GenLayerRiverMix;
-import net.minecraft.world.gen.layer.GenLayerShore;
-import net.minecraft.world.gen.layer.GenLayerSmooth;
-import net.minecraft.world.gen.layer.GenLayerVoronoiZoom;
-import net.minecraft.world.gen.layer.GenLayerZoom;
-import net.minecraft.world.gen.layer.IntCache;
+import net.minecraft.world.gen.layer.*;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.world.type.WorldTypePlanetGen;
+
+import javax.annotation.Nullable;
+import java.lang.reflect.Field;
+import java.util.List;
 
 public class ChunkManagerPlanet extends BiomeProvider {
 	//TODO: make higher biome ids work

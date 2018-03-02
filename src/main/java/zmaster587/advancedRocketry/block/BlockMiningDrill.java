@@ -1,17 +1,11 @@
 package zmaster587.advancedRocketry.block;
 
-import zmaster587.advancedRocketry.api.IMiningDrill;
-import zmaster587.advancedRocketry.tile.TileDrill;
-import zmaster587.libVulpes.block.BlockTile;
-import zmaster587.libVulpes.block.BlockFullyRotatable;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.api.IMiningDrill;
+import zmaster587.libVulpes.block.BlockFullyRotatable;
 
 public class BlockMiningDrill extends BlockFullyRotatable implements IMiningDrill {
 

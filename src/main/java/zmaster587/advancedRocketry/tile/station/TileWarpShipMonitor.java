@@ -1,11 +1,6 @@
 package zmaster587.advancedRocketry.tile.station;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.google.common.base.Predicate;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -42,26 +37,16 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.client.util.IndicatorBarImage;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.GuiHandler.guiId;
-import zmaster587.libVulpes.inventory.modules.IButtonInventory;
-import zmaster587.libVulpes.inventory.modules.IDataSync;
-import zmaster587.libVulpes.inventory.modules.IGuiCallback;
-import zmaster587.libVulpes.inventory.modules.IModularInventory;
-import zmaster587.libVulpes.inventory.modules.IProgressBar;
-import zmaster587.libVulpes.inventory.modules.ISelectionNotify;
-import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleButton;
-import zmaster587.libVulpes.inventory.modules.ModuleProgress;
-import zmaster587.libVulpes.inventory.modules.ModuleScaledImage;
-import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
-import zmaster587.libVulpes.inventory.modules.ModuleSync;
-import zmaster587.libVulpes.inventory.modules.ModuleTab;
-import zmaster587.libVulpes.inventory.modules.ModuleText;
-import zmaster587.libVulpes.inventory.modules.ModuleTexturedSlotArray;
+import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.INetworkMachine;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class TileWarpShipMonitor extends TileEntity implements ITickable, IModularInventory, ISelectionNotify, INetworkMachine, IButtonInventory, IProgressBar, IDataSync, IGuiCallback, IDataInventory, IPlanetDefiner {
 

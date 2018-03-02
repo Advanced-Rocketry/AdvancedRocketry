@@ -1,11 +1,5 @@
 package zmaster587.advancedRocketry.block;
 
-import java.util.Random;
-
-import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
-import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.entity.fx.FxSystemElectricArc;
-import zmaster587.advancedRocketry.util.AudioRegistry;
 import net.minecraft.block.BlockMushroom;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
@@ -21,6 +15,12 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
+import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.entity.fx.FxSystemElectricArc;
+import zmaster587.advancedRocketry.util.AudioRegistry;
+
+import java.util.Random;
 
 public class BlockElectricMushroom extends BlockMushroom implements IGrowable {
 

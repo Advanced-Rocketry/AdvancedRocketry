@@ -1,10 +1,6 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
 import io.netty.buffer.ByteBuf;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -12,10 +8,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -31,10 +25,8 @@ import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.entity.fx.FxSystemElectricArc;
 import zmaster587.advancedRocketry.item.ItemBiomeChanger;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
-import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.satellite.SatelliteBiomeChanger;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
@@ -43,22 +35,17 @@ import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.inventory.TextureResources;
-import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleImage;
-import zmaster587.libVulpes.inventory.modules.ModuleLimitedSlotArray;
-import zmaster587.libVulpes.inventory.modules.ModuleLiquidIndicator;
-import zmaster587.libVulpes.inventory.modules.ModuleProgress;
-import zmaster587.libVulpes.inventory.modules.ModuleRadioButton;
-import zmaster587.libVulpes.inventory.modules.ModuleText;
-import zmaster587.libVulpes.inventory.modules.ModuleToggleSwitch;
+import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine.NetworkPackets;
-import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.IconResource;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements IInventory {
 

@@ -1,17 +1,15 @@
 package zmaster587.advancedRocketry.item;
 
-import java.util.List;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
-import zmaster587.advancedRocketry.dimension.DimensionManager;
-import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.libVulpes.LibVulpes;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.libVulpes.LibVulpes;
+
+import java.util.List;
 
 public class ItemPlanetIdentificationChip extends ItemIdWithName {
 

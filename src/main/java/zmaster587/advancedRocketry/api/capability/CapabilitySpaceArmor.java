@@ -1,13 +1,13 @@
 package zmaster587.advancedRocketry.api.capability;
 
-import zmaster587.advancedRocketry.api.IAtmosphere;
-import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import zmaster587.advancedRocketry.api.IAtmosphere;
+import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
 
 public class CapabilitySpaceArmor {
 

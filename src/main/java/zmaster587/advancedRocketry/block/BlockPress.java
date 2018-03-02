@@ -1,19 +1,7 @@
 package zmaster587.advancedRocketry.block;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
-import zmaster587.libVulpes.api.material.Material;
-import zmaster587.libVulpes.api.material.MaterialRegistry;
-import zmaster587.libVulpes.interfaces.IRecipe;
-import zmaster587.libVulpes.recipe.RecipesMachine;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockPistonBase;
-import net.minecraft.block.BlockPistonExtension;
-import net.minecraft.block.BlockPistonMoving;
-import net.minecraft.block.BlockSnow;
-import net.minecraft.block.material.EnumPushReaction;
+import net.minecraft.block.*;
 import net.minecraft.block.state.BlockPistonStructureHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -23,13 +11,14 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityPiston;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import zmaster587.libVulpes.interfaces.IRecipe;
+import zmaster587.libVulpes.recipe.RecipesMachine;
+
+import java.util.List;
 
 public class BlockPress extends BlockPistonBase {
 

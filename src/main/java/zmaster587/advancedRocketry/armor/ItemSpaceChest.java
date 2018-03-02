@@ -1,8 +1,5 @@
 package zmaster587.advancedRocketry.armor;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -15,6 +12,9 @@ import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.IconResource;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 

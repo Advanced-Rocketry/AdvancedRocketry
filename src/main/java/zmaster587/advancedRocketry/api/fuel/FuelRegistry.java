@@ -1,10 +1,10 @@
 package zmaster587.advancedRocketry.api.fuel;
 
-import java.util.HashSet;
-import java.util.Iterator;
-
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
+
+import java.util.HashSet;
+import java.util.Iterator;
 
 public class FuelRegistry {
 

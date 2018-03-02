@@ -1,12 +1,12 @@
 package zmaster587.advancedRocketry.api.atmosphere;
 
+import net.minecraftforge.fluids.Fluid;
+import zmaster587.advancedRocketry.api.IAtmosphere;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import net.minecraftforge.fluids.Fluid;
-import zmaster587.advancedRocketry.api.IAtmosphere;
 
 public class AtmosphereRegister {
 	private static final AtmosphereRegister instance = new AtmosphereRegister();

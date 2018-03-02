@@ -1,15 +1,15 @@
 package zmaster587.advancedRocketry.world.gen;
 
-import java.util.Random;
-
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.block.BlockCrystal;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.feature.WorldGenerator;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.block.BlockCrystal;
+
+import java.util.Random;
 
 public class WorldGenLargeCrystal extends WorldGenerator {
 

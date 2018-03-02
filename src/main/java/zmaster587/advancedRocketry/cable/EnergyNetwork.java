@@ -1,15 +1,15 @@
 package zmaster587.advancedRocketry.cable;
 
-import java.util.Iterator;
-import java.util.Random;
-import java.util.Map.Entry;
-
-import zmaster587.libVulpes.api.IUniversalEnergy;
-import zmaster587.libVulpes.util.UniversalBattery;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import zmaster587.libVulpes.api.IUniversalEnergy;
+import zmaster587.libVulpes.util.UniversalBattery;
+
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Random;
 
 public class EnergyNetwork extends CableNetwork implements IUniversalEnergy {
 	/**

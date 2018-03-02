@@ -1,16 +1,16 @@
 package zmaster587.advancedRocketry.api;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagFloat;
+import net.minecraft.nbt.NBTTagInt;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagFloat;
-import net.minecraft.nbt.NBTTagInt;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class StatsRocket {
 

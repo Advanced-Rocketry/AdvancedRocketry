@@ -1,8 +1,5 @@
 package zmaster587.advancedRocketry.world;
 
-import java.util.Arrays;
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.math.BlockPos;
@@ -13,6 +10,9 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.IChunkGenerator;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class ChunkProviderSpace implements IChunkGenerator {
 

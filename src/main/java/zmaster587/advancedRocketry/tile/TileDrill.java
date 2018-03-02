@@ -1,11 +1,10 @@
 package zmaster587.advancedRocketry.tile;
 
 import io.netty.buffer.ByteBuf;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import zmaster587.advancedRocketry.inventory.TextureResources;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.IToggleButton;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -13,10 +12,9 @@ import zmaster587.libVulpes.inventory.modules.ModuleToggleSwitch;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class TileDrill extends TileEntity implements IModularInventory, IToggleButton, INetworkMachine {
 

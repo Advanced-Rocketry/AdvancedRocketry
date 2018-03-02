@@ -1,21 +1,13 @@
 package zmaster587.advancedRocketry.satellite;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
@@ -23,6 +15,9 @@ import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.item.ItemOreScanner;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SatelliteOreMapping extends SatelliteBase  {
 

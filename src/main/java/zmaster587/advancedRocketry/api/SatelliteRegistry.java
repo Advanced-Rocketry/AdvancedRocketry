@@ -1,13 +1,13 @@
 package zmaster587.advancedRocketry.api;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.logging.Logger;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
+
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 public class SatelliteRegistry {
 	static HashMap<String, Class<? extends SatelliteBase>> registry = new HashMap<String, Class<? extends SatelliteBase>>();

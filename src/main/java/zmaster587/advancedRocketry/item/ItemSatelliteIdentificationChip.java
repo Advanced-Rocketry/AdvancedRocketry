@@ -1,21 +1,17 @@
 package zmaster587.advancedRocketry.item;
 
-import java.util.List;
-
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 import zmaster587.advancedRocketry.api.ISatelliteIdItem;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.libVulpes.LibVulpes;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
+import java.util.List;
 
 public class ItemSatelliteIdentificationChip extends Item implements ISatelliteIdItem {
 

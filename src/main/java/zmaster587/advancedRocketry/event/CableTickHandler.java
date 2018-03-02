@@ -1,14 +1,7 @@
 package zmaster587.advancedRocketry.event;
 
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -17,6 +10,11 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.cable.NetworkRegistry;
 import zmaster587.advancedRocketry.tile.cables.TilePipe;
+
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class CableTickHandler {
 

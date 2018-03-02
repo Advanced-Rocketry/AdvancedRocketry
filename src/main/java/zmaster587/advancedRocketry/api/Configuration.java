@@ -1,14 +1,9 @@
 package zmaster587.advancedRocketry.api;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import zmaster587.advancedRocketry.util.AsteroidSmall;
 import net.minecraft.block.Block;
-import net.minecraftforge.common.config.Property;
+import zmaster587.advancedRocketry.util.AsteroidSmall;
+
+import java.util.*;
 
 /**
  * Stores config variables

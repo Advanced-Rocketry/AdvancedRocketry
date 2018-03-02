@@ -1,12 +1,8 @@
 package zmaster587.advancedRocketry.tile.infrastructure;
 
 import io.netty.buffer.ByteBuf;
-
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -23,24 +19,20 @@ import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
-import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.api.IMission;
 import zmaster587.advancedRocketry.block.multiblock.BlockARHatch;
-import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
+import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.block.multiblock.BlockHatch;
-import zmaster587.libVulpes.inventory.modules.IButtonInventory;
-import zmaster587.libVulpes.inventory.modules.IGuiCallback;
-import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleBlockSideSelector;
-import zmaster587.libVulpes.inventory.modules.ModuleRedstoneOutputButton;
+import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
+
+import java.util.List;
 
 public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastructure,  ITickable,  IButtonInventory, INetworkMachine, IGuiCallback {
 

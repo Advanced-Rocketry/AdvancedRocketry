@@ -1,8 +1,5 @@
 package zmaster587.advancedRocketry.tile.oxygen;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
@@ -10,27 +7,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
-import zmaster587.advancedRocketry.armor.ItemSpaceChest;
 import zmaster587.advancedRocketry.util.ItemAirUtils;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.gui.CommonResources;
-import zmaster587.libVulpes.inventory.modules.IModularInventory;
-import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleImage;
-import zmaster587.libVulpes.inventory.modules.ModuleLiquidIndicator;
-import zmaster587.libVulpes.inventory.modules.ModulePower;
-import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
+import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
 import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.IconResource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements IModularInventory {
 	public TileOxygenCharger() {

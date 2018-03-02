@@ -1,7 +1,5 @@
 package zmaster587.advancedRocketry.world.biome;
 
-import java.util.Random;
-
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -9,6 +7,8 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraft.world.gen.feature.WorldGenShrub;
+
+import java.util.Random;
 
 public class BiomeGenMarsh extends Biome {
 

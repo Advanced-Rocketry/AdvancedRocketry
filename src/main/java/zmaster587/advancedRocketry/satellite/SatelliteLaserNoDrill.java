@@ -1,10 +1,5 @@
 package zmaster587.advancedRocketry.satellite;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -19,6 +14,11 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.libVulpes.util.ZUtils;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 public class SatelliteLaserNoDrill extends SatelliteBase {
 	protected boolean  jammed;

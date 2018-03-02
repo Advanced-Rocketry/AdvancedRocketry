@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.backwardCompat;
 
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;

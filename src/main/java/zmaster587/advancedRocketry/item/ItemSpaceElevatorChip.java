@@ -1,7 +1,5 @@
 package zmaster587.advancedRocketry.item;
 
-import java.util.List;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,6 +8,8 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.util.DimensionBlockPosition;
 import zmaster587.advancedRocketry.util.NBTStorableListList;
 import zmaster587.libVulpes.LibVulpes;
+
+import java.util.List;
 
 public class ItemSpaceElevatorChip extends Item {
 

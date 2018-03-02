@@ -1,14 +1,12 @@
 package zmaster587.advancedRocketry.client.render;
 
-import org.lwjgl.opengl.GL11;
-
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.client.render.armor.RenderJetPack;
-import zmaster587.libVulpes.api.IModularArmor;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.lwjgl.opengl.GL11;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.libVulpes.api.IModularArmor;
 
 public class RenderComponents {
 

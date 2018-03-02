@@ -1,9 +1,9 @@
 package zmaster587.advancedRocketry.util;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStackSimple;
+
+import javax.annotation.Nonnull;
 
 public class FluidHandlerBucketClone extends FluidHandlerItemStackSimple {
 

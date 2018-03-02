@@ -1,15 +1,12 @@
 package zmaster587.advancedRocketry.tile;
 
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
 import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleProgress;
-import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.tile.TileInventoriedForgePowerMachine;
+
+import java.util.List;
 
 public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 

@@ -1,12 +1,12 @@
 package zmaster587.advancedRocketry.util;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
+
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.WeakHashMap;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.BlockPos;
 
 public class RocketInventoryHelper {
 	

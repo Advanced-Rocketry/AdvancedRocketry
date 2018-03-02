@@ -1,16 +1,13 @@
 package zmaster587.advancedRocketry.inventory;
 
-import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.oredict.OreDictionary;
+import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
 
 public class ContainerOreMappingSatallite extends Container {
 

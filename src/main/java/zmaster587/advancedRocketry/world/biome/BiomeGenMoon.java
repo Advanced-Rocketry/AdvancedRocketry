@@ -1,16 +1,12 @@
 package zmaster587.advancedRocketry.world.biome;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-
-import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class BiomeGenMoon extends Biome {
 

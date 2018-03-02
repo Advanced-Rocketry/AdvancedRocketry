@@ -1,15 +1,15 @@
 package zmaster587.advancedRocketry.api.dimension.solar;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-
-import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants.NBT;
+import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class StellarBody {
 

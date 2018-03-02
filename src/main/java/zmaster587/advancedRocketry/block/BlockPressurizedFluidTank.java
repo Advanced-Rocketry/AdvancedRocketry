@@ -1,15 +1,5 @@
 package zmaster587.advancedRocketry.block;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.item.ItemBlockFluidTank;
-import zmaster587.advancedRocketry.tile.TileFluidTank;
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.inventory.GuiHandler.guiId;
-import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
-import zmaster587.libVulpes.util.IAdjBlockUpdate;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -27,6 +17,14 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.item.ItemBlockFluidTank;
+import zmaster587.advancedRocketry.tile.TileFluidTank;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.inventory.GuiHandler.guiId;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class BlockPressurizedFluidTank extends Block {
 

@@ -1,21 +1,14 @@
 package zmaster587.advancedRocketry.inventory;
 
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.integration.CompatibilityMgr;
-import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
-import zmaster587.libVulpes.gui.SlotSingleItem;
-import zmaster587.libVulpes.gui.SlotOreDict;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
+import zmaster587.libVulpes.gui.SlotSingleItem;
 
 public class ContainerSpaceLaser extends Container {
 

@@ -1,12 +1,19 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
 import io.netty.buffer.ByteBuf;
-
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.DataStorage;
@@ -25,38 +32,17 @@ import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.inventory.GuiHandler;
-import zmaster587.libVulpes.inventory.modules.IGuiCallback;
-import zmaster587.libVulpes.inventory.modules.IModularInventory;
-import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleButton;
-import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
-import zmaster587.libVulpes.inventory.modules.ModuleOutputSlotArray;
-import zmaster587.libVulpes.inventory.modules.ModulePower;
-import zmaster587.libVulpes.inventory.modules.ModuleProgress;
-import zmaster587.libVulpes.inventory.modules.ModuleScaledImage;
-import zmaster587.libVulpes.inventory.modules.ModuleSlotButton;
-import zmaster587.libVulpes.inventory.modules.ModuleTab;
-import zmaster587.libVulpes.inventory.modules.ModuleText;
-import zmaster587.libVulpes.inventory.modules.ModuleTexturedSlotArray;
-import zmaster587.libVulpes.inventory.modules.ModuleToggleSwitch;
+import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.util.EmbeddedInventory;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 public class TileObservatory extends TileMultiPowerConsumer implements IModularInventory, IDataInventory, IGuiCallback {
 

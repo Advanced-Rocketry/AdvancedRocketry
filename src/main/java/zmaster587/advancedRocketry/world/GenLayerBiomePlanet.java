@@ -1,7 +1,5 @@
 package zmaster587.advancedRocketry.world;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.init.Biomes;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.WorldType;
@@ -10,6 +8,9 @@ import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.IntCache;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GenLayerBiomePlanet extends GenLayer {
 

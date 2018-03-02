@@ -1,21 +1,12 @@
 package zmaster587.advancedRocketry.cable;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import zmaster587.advancedRocketry.tile.cables.TilePipe;
+
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map.Entry;
-
-import zmaster587.advancedRocketry.tile.cables.TilePipe;
-import zmaster587.libVulpes.util.HashedBlockPosition;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 
 public class HandlerCableNetwork {
 	protected Hashtable<Integer,CableNetwork> networks = new Hashtable<Integer,CableNetwork>();

@@ -1,19 +1,13 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
 import io.netty.buffer.ByteBuf;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import org.apache.commons.lang3.ArrayUtils;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.commons.lang3.ArrayUtils;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
@@ -27,6 +21,9 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.util.INetworkMachine;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class TilePlanetSelector extends TilePointer implements ISelectionNotify, IModularInventory, IProgressBar, INetworkMachine {
 

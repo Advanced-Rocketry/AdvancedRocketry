@@ -1,8 +1,7 @@
 package zmaster587.advancedRocketry.integration;
 
-import zmaster587.advancedRocketry.integration.jei.ARPlugin;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Loader;
+import zmaster587.advancedRocketry.integration.jei.ARPlugin;
 
 public class CompatibilityMgr {
 

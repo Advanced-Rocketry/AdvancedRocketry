@@ -1,9 +1,6 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
 import io.netty.buffer.ByteBuf;
-
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -32,12 +29,7 @@ import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
-import zmaster587.libVulpes.inventory.modules.IGuiCallback;
-import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleNumericTextbox;
-import zmaster587.libVulpes.inventory.modules.ModuleRedstoneOutputButton;
-import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
-import zmaster587.libVulpes.inventory.modules.ModuleText;
+import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
@@ -45,6 +37,8 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.ZUtils;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
+
+import java.util.List;
 
 public class TileRailgun extends TileMultiPowerConsumer implements IInventory, ILinkableTile, IGuiCallback {
 	private EmbeddedInventory inv;

@@ -1,16 +1,16 @@
 package zmaster587.advancedRocketry.rocket;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import zmaster587.libVulpes.inventory.modules.IModularInventory;
-import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class GuidanceComputer implements IInventory, IModularInventory {
 

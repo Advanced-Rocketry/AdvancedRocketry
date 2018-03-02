@@ -1,13 +1,11 @@
 package zmaster587.advancedRocketry.item;
 
-import zmaster587.libVulpes.LibVulpes;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import zmaster587.libVulpes.LibVulpes;
 
 public class ItemAsteroidChip  extends ItemMultiData {
 

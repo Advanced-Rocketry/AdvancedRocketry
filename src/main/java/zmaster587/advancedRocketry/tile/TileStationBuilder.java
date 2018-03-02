@@ -1,30 +1,5 @@
 package zmaster587.advancedRocketry.tile;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.item.ItemPackedStructure;
-import zmaster587.advancedRocketry.item.ItemStationChip;
-import zmaster587.advancedRocketry.stations.SpaceObject;
-import zmaster587.advancedRocketry.stations.SpaceObjectManager;
-import zmaster587.advancedRocketry.tile.TileRocketBuilder.ErrorCodes;
-import zmaster587.advancedRocketry.util.StorageChunk;
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.api.LibVulpesBlocks;
-import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleButton;
-import zmaster587.libVulpes.inventory.modules.ModulePower;
-import zmaster587.libVulpes.inventory.modules.ModuleProgress;
-import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
-import zmaster587.libVulpes.inventory.modules.ModuleSync;
-import zmaster587.libVulpes.inventory.modules.ModuleText;
-import zmaster587.libVulpes.inventory.modules.ModuleTexturedSlotArray;
-import zmaster587.libVulpes.util.EmbeddedInventory;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -33,6 +8,20 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.item.ItemPackedStructure;
+import zmaster587.advancedRocketry.item.ItemStationChip;
+import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.util.StorageChunk;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.inventory.modules.*;
+import zmaster587.libVulpes.util.EmbeddedInventory;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class TileStationBuilder extends TileRocketBuilder implements IInventory {
 

@@ -1,29 +1,6 @@
 package zmaster587.advancedRocketry.tile;
 
 import io.netty.buffer.ByteBuf;
-
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
-import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.IAtmosphere;
-import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
-import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
-import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
-import zmaster587.advancedRocketry.block.BlockRedstoneEmitter;
-import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.inventory.modules.IButtonInventory;
-import zmaster587.libVulpes.inventory.modules.IModularInventory;
-import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleButton;
-import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
-import zmaster587.libVulpes.network.PacketHandler;
-import zmaster587.libVulpes.network.PacketMachine;
-import zmaster587.libVulpes.util.INetworkMachine;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,6 +11,20 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.advancedRocketry.api.IAtmosphere;
+import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
+import zmaster587.advancedRocketry.block.BlockRedstoneEmitter;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.inventory.modules.*;
+import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.util.INetworkMachine;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class TileAtmosphereDetector extends TileEntity implements ITickable, IModularInventory, IButtonInventory, INetworkMachine {
 

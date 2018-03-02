@@ -6,53 +6,7 @@
 
 package zmaster587.advancedRocketry.tile;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import io.netty.buffer.ByteBuf;
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
-import zmaster587.advancedRocketry.api.Configuration;
-import zmaster587.advancedRocketry.api.EntityRocketBase;
-import zmaster587.advancedRocketry.api.IFuelTank;
-import zmaster587.advancedRocketry.api.IInfrastructure;
-import zmaster587.advancedRocketry.api.IMiningDrill;
-import zmaster587.advancedRocketry.api.IRocketEngine;
-import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
-import zmaster587.advancedRocketry.api.StatsRocket;
-import zmaster587.advancedRocketry.block.BlockSeat;
-import zmaster587.advancedRocketry.entity.EntityRocket;
-import zmaster587.advancedRocketry.network.PacketAirParticle;
-import zmaster587.advancedRocketry.network.PacketInvalidLocationNotify;
-import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
-import zmaster587.advancedRocketry.util.StorageChunk;
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.block.RotatableBlock;
-import zmaster587.libVulpes.client.util.ProgressBarImage;
-import zmaster587.libVulpes.interfaces.ILinkableTile;
-import zmaster587.libVulpes.interfaces.INetworkEntity;
-import zmaster587.libVulpes.inventory.modules.IButtonInventory;
-import zmaster587.libVulpes.inventory.modules.IDataSync;
-import zmaster587.libVulpes.inventory.modules.IModularInventory;
-import zmaster587.libVulpes.inventory.modules.IProgressBar;
-import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleButton;
-import zmaster587.libVulpes.inventory.modules.ModuleImage;
-import zmaster587.libVulpes.inventory.modules.ModulePower;
-import zmaster587.libVulpes.inventory.modules.ModuleProgress;
-import zmaster587.libVulpes.inventory.modules.ModuleSync;
-import zmaster587.libVulpes.inventory.modules.ModuleText;
-import zmaster587.libVulpes.items.ItemLinker;
-import zmaster587.libVulpes.network.PacketEntity;
-import zmaster587.libVulpes.network.PacketHandler;
-import zmaster587.libVulpes.network.PacketMachine;
-import zmaster587.libVulpes.tile.IMultiblock;
-import zmaster587.libVulpes.tile.TileEntityRFConsumer;
-import zmaster587.libVulpes.util.HashedBlockPosition;
-import zmaster587.libVulpes.util.INetworkMachine;
-import zmaster587.libVulpes.util.IconResource;
-import zmaster587.libVulpes.util.ZUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -71,6 +25,34 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.advancedRocketry.api.*;
+import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
+import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
+import zmaster587.advancedRocketry.block.BlockSeat;
+import zmaster587.advancedRocketry.entity.EntityRocket;
+import zmaster587.advancedRocketry.network.PacketInvalidLocationNotify;
+import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
+import zmaster587.advancedRocketry.util.StorageChunk;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.block.RotatableBlock;
+import zmaster587.libVulpes.client.util.ProgressBarImage;
+import zmaster587.libVulpes.interfaces.ILinkableTile;
+import zmaster587.libVulpes.interfaces.INetworkEntity;
+import zmaster587.libVulpes.inventory.modules.*;
+import zmaster587.libVulpes.items.ItemLinker;
+import zmaster587.libVulpes.network.PacketEntity;
+import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.tile.IMultiblock;
+import zmaster587.libVulpes.tile.TileEntityRFConsumer;
+import zmaster587.libVulpes.util.HashedBlockPosition;
+import zmaster587.libVulpes.util.INetworkMachine;
+import zmaster587.libVulpes.util.IconResource;
+import zmaster587.libVulpes.util.ZUtils;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonInventory, INetworkMachine, IDataSync, IModularInventory, IProgressBar, ILinkableTile {
 

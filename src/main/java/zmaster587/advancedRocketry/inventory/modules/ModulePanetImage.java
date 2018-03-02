@@ -1,14 +1,10 @@
 package zmaster587.advancedRocketry.inventory.modules;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;

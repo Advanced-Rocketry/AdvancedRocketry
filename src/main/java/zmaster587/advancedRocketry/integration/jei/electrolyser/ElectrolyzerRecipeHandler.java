@@ -1,8 +1,8 @@
 package zmaster587.advancedRocketry.integration.jei.electrolyser;
 
-import zmaster587.advancedRocketry.integration.jei.ARPlugin;
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
+import zmaster587.advancedRocketry.integration.jei.ARPlugin;
 
 public class ElectrolyzerRecipeHandler implements IRecipeHandler<ElectrolyzerWrapper> {
 

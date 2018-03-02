@@ -1,21 +1,20 @@
 package zmaster587.advancedRocketry.client.render;
 
-import org.lwjgl.opengl.GL11;
-
-import zmaster587.advancedRocketry.entity.EntityLaserNode;
-import zmaster587.libVulpes.render.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
+import org.lwjgl.opengl.GL11;
+import zmaster587.advancedRocketry.entity.EntityLaserNode;
+import zmaster587.libVulpes.render.RenderHelper;
 
 public class RenderLaser extends Render implements IRenderFactory<EntityLaserNode> {
 

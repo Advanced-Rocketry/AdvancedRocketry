@@ -1,12 +1,5 @@
 package zmaster587.advancedRocketry.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map.Entry;
-
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -17,19 +10,15 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.GameData;
 import zmaster587.advancedRocketry.block.BlockPress;
-import zmaster587.advancedRocketry.tile.multiblock.machine.TileChemicalReactor;
-import zmaster587.advancedRocketry.tile.multiblock.machine.TileCrystallizer;
-import zmaster587.advancedRocketry.tile.multiblock.machine.TileCuttingMachine;
-import zmaster587.advancedRocketry.tile.multiblock.machine.TileElectricArcFurnace;
-import zmaster587.advancedRocketry.tile.multiblock.machine.TileElectrolyser;
-import zmaster587.advancedRocketry.tile.multiblock.machine.TileLathe;
-import zmaster587.advancedRocketry.tile.multiblock.machine.TilePrecisionAssembler;
-import zmaster587.advancedRocketry.tile.multiblock.machine.TileRollingMachine;
+import zmaster587.advancedRocketry.tile.multiblock.machine.*;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public class RecipeHandler {
 	

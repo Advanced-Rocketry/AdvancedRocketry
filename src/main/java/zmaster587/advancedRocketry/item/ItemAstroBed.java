@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.item;
 
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.SoundType;
@@ -15,6 +14,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 
 public class ItemAstroBed extends Item {
 

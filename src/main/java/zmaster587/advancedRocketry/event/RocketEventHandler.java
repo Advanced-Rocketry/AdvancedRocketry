@@ -1,19 +1,15 @@
 package zmaster587.advancedRocketry.event;
 
-import java.nio.IntBuffer;
-import java.util.List;
-import java.util.Random;
-
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
@@ -33,10 +29,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.MouseInputEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.RocketEvent;
@@ -53,6 +47,10 @@ import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.ZUtils;
+
+import java.nio.IntBuffer;
+import java.util.List;
+import java.util.Random;
 
 public class RocketEventHandler extends Gui {
 

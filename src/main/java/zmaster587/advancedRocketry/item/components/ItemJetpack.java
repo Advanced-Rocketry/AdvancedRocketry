@@ -1,10 +1,5 @@
 package zmaster587.advancedRocketry.item.components;
 
-import java.lang.reflect.Field;
-import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,11 +14,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
@@ -37,6 +32,9 @@ import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.InputSyncHandler;
+
+import java.lang.reflect.Field;
+import java.util.List;
 
 public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 

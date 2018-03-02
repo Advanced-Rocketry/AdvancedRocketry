@@ -1,11 +1,11 @@
 package zmaster587.advancedRocketry.integration.jei.blastFurnace;
 
-import java.util.LinkedList;
-import java.util.List;
-
+import mezz.jei.api.IJeiHelpers;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
-import mezz.jei.api.IJeiHelpers;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class BlastFurnaceRecipeMaker {
 

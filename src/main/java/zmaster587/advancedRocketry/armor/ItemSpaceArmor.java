@@ -1,10 +1,6 @@
 package zmaster587.advancedRocketry.armor;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -38,6 +34,9 @@ import zmaster587.libVulpes.api.IJetPack;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.IconResource;
+
+import java.util.LinkedList;
+import java.util.List;
 /**
  * Space Armor
  * Any class that extends this will gain the ability to store oxygen and will protect players from the vacuum atmosphere type

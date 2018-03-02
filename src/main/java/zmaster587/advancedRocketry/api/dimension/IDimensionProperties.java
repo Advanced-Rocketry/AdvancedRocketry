@@ -1,13 +1,13 @@
 package zmaster587.advancedRocketry.api.dimension;
 
-import java.util.Set;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
+
+import java.util.Set;
 
 public interface IDimensionProperties {
 	/**

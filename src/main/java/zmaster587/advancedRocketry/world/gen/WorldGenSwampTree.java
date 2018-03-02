@@ -1,23 +1,18 @@
 package zmaster587.advancedRocketry.world.gen;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Random;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
-import net.minecraft.block.BlockSapling;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.MapGenBase;
-import net.minecraft.world.gen.feature.WorldGenAbstractTree;
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.libVulpes.block.BlockMeta;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Random;
 
 public class WorldGenSwampTree extends MapGenBase {
 

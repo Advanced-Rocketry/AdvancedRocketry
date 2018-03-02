@@ -1,19 +1,16 @@
 package zmaster587.advancedRocketry.entity.fx;
 
-import org.lwjgl.opengl.GL11;
-
-import zmaster587.libVulpes.render.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import org.lwjgl.opengl.GL11;
 
 public class FxLaser extends Particle {
 	

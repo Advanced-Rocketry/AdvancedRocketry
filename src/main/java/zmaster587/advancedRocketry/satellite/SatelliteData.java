@@ -11,11 +11,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
-import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.satellite.IDataHandler;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
-import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.util.ZUtils;
 

@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.api;
 
-import zmaster587.advancedRocketry.api.IInfrastructure;
 import net.minecraft.world.World;
 
 public interface IMission {

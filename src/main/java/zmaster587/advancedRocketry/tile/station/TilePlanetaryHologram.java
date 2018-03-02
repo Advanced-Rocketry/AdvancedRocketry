@@ -1,11 +1,6 @@
 package zmaster587.advancedRocketry.tile.station;
 
 import io.netty.buffer.ByteBuf;
-
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -23,17 +18,15 @@ import zmaster587.advancedRocketry.entity.EntityUIStar;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.inventory.modules.IButtonInventory;
-import zmaster587.libVulpes.inventory.modules.IModularInventory;
-import zmaster587.libVulpes.inventory.modules.ISliderBar;
-import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleRedstoneOutputButton;
-import zmaster587.libVulpes.inventory.modules.ModuleSlider;
-import zmaster587.libVulpes.inventory.modules.ModuleText;
+import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
+
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 public class TilePlanetaryHologram extends TileEntity implements ITickable,IButtonInventory, IModularInventory, ISliderBar, INetworkMachine {
 

@@ -1,8 +1,7 @@
 package zmaster587.advancedRocketry.util;
 
-import zmaster587.advancedRocketry.api.satellite.IDataHandler;
-import zmaster587.libVulpes.util.INetworkMachine;
 import net.minecraft.inventory.IInventory;
+import zmaster587.advancedRocketry.api.satellite.IDataHandler;
 
 public interface IDataInventory extends IInventory, IDataHandler {
 	

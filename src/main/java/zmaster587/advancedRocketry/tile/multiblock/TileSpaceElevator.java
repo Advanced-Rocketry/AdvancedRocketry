@@ -1,10 +1,6 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
 import io.netty.buffer.ByteBuf;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,18 +31,16 @@ import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.TextureResources;
-import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleButton;
-import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
-import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
-import zmaster587.libVulpes.inventory.modules.ModuleText;
-import zmaster587.libVulpes.inventory.modules.ModuleTexturedSlotArray;
+import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.HashedBlockPosition;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkableTile, IInventory, ITickable {
 

@@ -1,20 +1,5 @@
 package zmaster587.advancedRocketry.tile.multiblock.machine;
 
-import java.util.List;
-
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.util.AudioRegistry;
-import zmaster587.libVulpes.api.LibVulpesBlocks;
-import zmaster587.libVulpes.block.BlockMeta;
-import zmaster587.libVulpes.block.RotatableBlock;
-import zmaster587.libVulpes.interfaces.IRecipe;
-import zmaster587.libVulpes.inventory.modules.IModularInventory;
-import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleProgress;
-import zmaster587.libVulpes.recipe.RecipesMachine;
-import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -22,7 +7,19 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.util.AudioRegistry;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.block.RotatableBlock;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleProgress;
+import zmaster587.libVulpes.recipe.RecipesMachine;
+import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
+
+import java.util.List;
 
 public class TileCuttingMachine extends TileMultiblockMachine implements IModularInventory {
 

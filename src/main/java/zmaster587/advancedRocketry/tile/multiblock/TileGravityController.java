@@ -1,10 +1,6 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
 import io.netty.buffer.ByteBuf;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -22,19 +18,14 @@ import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.advancedRocketry.util.GravityHandler;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
-import zmaster587.libVulpes.inventory.modules.IGuiCallback;
-import zmaster587.libVulpes.inventory.modules.ISliderBar;
-import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleBlockSideSelector;
-import zmaster587.libVulpes.inventory.modules.ModulePower;
-import zmaster587.libVulpes.inventory.modules.ModuleRedstoneOutputButton;
-import zmaster587.libVulpes.inventory.modules.ModuleSlider;
-import zmaster587.libVulpes.inventory.modules.ModuleText;
-import zmaster587.libVulpes.inventory.modules.ModuleToggleSwitch;
+import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class TileGravityController extends TileMultiPowerConsumer implements ISliderBar, IGuiCallback {
 

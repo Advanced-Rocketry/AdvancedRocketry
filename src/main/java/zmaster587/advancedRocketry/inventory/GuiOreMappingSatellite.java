@@ -1,26 +1,24 @@
 package zmaster587.advancedRocketry.inventory;
 
-import java.io.IOException;
-import java.nio.IntBuffer;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
-
-import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
-import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
-import zmaster587.libVulpes.render.RenderHelper;
-import zmaster587.libVulpes.util.VulpineMath;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
+import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
+import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
+import zmaster587.libVulpes.render.RenderHelper;
+import zmaster587.libVulpes.util.VulpineMath;
+
+import java.io.IOException;
+import java.nio.IntBuffer;
 
 public class GuiOreMappingSatellite extends GuiContainer {
 

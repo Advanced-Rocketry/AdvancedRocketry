@@ -1,11 +1,8 @@
 package zmaster587.advancedRocketry.atmosphere;
 
-import zmaster587.advancedRocketry.AdvancedRocketry;
+import net.minecraft.entity.EntityLivingBase;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
-import net.minecraft.client.resources.Language;
-import net.minecraft.client.resources.LanguageManager;
-import net.minecraft.entity.EntityLivingBase;
 
 public class AtmosphereType implements IAtmosphere {
 

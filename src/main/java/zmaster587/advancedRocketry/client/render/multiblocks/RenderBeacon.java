@@ -4,13 +4,10 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
-
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import zmaster587.advancedRocketry.client.render.RenderLaser;
-import zmaster587.advancedRocketry.tile.multiblock.TileSpaceElevator;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 

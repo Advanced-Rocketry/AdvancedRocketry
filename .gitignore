@@ -1,17 +1,24 @@
-/asm
-/blueprints
-/build
-/config
-/gradle
-/logs
-/mods
-/resourcepacks
-/saves
-screenshots
-/gradle
-/asm
-/blueprints
-*.xcf
-/libs
-/models
-/crash-reports
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
+build
+.gradle
+
+# other
+eclipse
+run
+refresh.bat
+AdvancedRocketry.txt

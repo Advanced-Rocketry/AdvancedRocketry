@@ -1,10 +1,6 @@
 package zmaster587.advancedRocketry.item.components;
 
-import java.lang.reflect.Field;
-import java.util.List;
-
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -21,6 +17,9 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.items.ItemIngredient;
+
+import java.lang.reflect.Field;
+import java.util.List;
 
 public class ItemUpgrade extends ItemIngredient implements IArmorComponent {
 
