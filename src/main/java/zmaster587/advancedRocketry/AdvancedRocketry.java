@@ -498,7 +498,7 @@ public class AdvancedRocketry {
 		((BlockTile) AdvancedRocketryBlocks.blockGravityController).setTopTexture("libvulpes:machineGeneric");
 		((BlockTile) AdvancedRocketryBlocks.blockGravityController).setFrontTexture("advancedrocketry:machineOrientationControl");
 
-		AdvancedRocketryBlocks.blockAltitudeController = new BlockTile(TileStationAltitudeController.class,  GuiHandler.guiId.MODULAR.ordinal()).setBlockTextureName("advancedrocketry:machineScrubber").setCreativeTab(tabAdvRocketry).setBlockName("alititudeController").setHardness(3f);
+		AdvancedRocketryBlocks.blockAltitudeController = new BlockTile(TileStationAltitudeController.class,  GuiHandler.guiId.MODULAR.ordinal()).setBlockTextureName("advancedrocketry:machineScrubber").setCreativeTab(tabAdvRocketry).setBlockName("altitudeController").setHardness(3f);
 		((BlockTile) AdvancedRocketryBlocks.blockAltitudeController).setSideTexture("advancedrocketry:machineOrientationControl");
 		((BlockTile) AdvancedRocketryBlocks.blockAltitudeController).setTopTexture("libvulpes:machineGeneric");
 		((BlockTile) AdvancedRocketryBlocks.blockAltitudeController).setFrontTexture("advancedrocketry:machineOrientationControl");
