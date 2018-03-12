@@ -102,13 +102,16 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	public int getRespawnDimension(EntityPlayerMP player) {
-		if(AtmosphereHandler.hasAtmosphereHandler(getDimension()) && Configuration.canPlayerRespawnInSpace) {
+		if(Configuration.canPlayerRespawnInSpace) {
 			BlockPos coords = player.getBedLocation(getDimension());
-			
-			if(coords != null && world.getBlockState(coords).getBlock() == AdvancedRocketryBlocks.blockAstroBed && AtmosphereHandler.getOxygenHandler(player.world.provider.getDimension()).getAtmosphereType(coords).isBreathable())
-				return getDimension();
+
+			if(coords != null && world.getBlockState(coords).getBlock() == AdvancedRocketryBlocks.blockAstroBed) {
+				if (Configuration.forcePlayerRespawnInSpace || AtmosphereHandler.hasAtmosphereHandler(player.world.provider.getDimension()) && AtmosphereHandler.getOxygenHandler(player.world.provider.getDimension()).getAtmosphereType(coords).isBreathable()) {
+					return getDimension();
+				}
+			}
 		}
-		
+
 		return DimensionCompat.getDefaultSpawnDimension();
 	}
 
