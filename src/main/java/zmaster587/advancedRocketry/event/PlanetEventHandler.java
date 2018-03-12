@@ -1,14 +1,10 @@
 package zmaster587.advancedRocketry.event;
 
-import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.lwjgl.opengl.GL11;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTorch;
@@ -16,7 +12,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.entity.EntityTracker;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.EntityPlayer.SleepResult;
@@ -35,8 +31,6 @@ import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.event.entity.player.PlayerContainerEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
@@ -48,7 +42,6 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerConnectionFromClientEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -72,7 +65,6 @@ import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.advancedRocketry.util.BiomeHandler;
-import zmaster587.advancedRocketry.util.RocketInventoryHelper;
 import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
@@ -80,7 +72,6 @@ import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.api.LibVulpesItems;
-import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.network.PacketHandler;
 
 public class PlanetEventHandler {
@@ -470,7 +461,7 @@ public class PlanetEventHandler {
 		if(properties != null && event.getState().getBlock() != Blocks.WATER && event.getState().getBlock() != Blocks.LAVA) {//& properties.atmosphereDensity > 125) {
 			float fog = properties.getAtmosphereDensityAtHeight(event.getEntity().posY);
 			//GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP);
-			GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
+			GlStateManager.setFog(GlStateManager.FogMode.LINEAR);
 
 
 
@@ -504,13 +495,14 @@ public class PlanetEventHandler {
 				far = f1*(2.002f - atmosphere/100f);
 			}
 
-			GL11.glFogf(GL11.GL_FOG_START, near);
-			GL11.glFogf(GL11.GL_FOG_END, far);
-			GL11.glFogf(GL11.GL_FOG_DENSITY, 0);
+			GlStateManager.setFogStart(near);
+			GlStateManager.setFogEnd(far);
+			GlStateManager.setFogDensity(0);
 
 
 			//event.setCanceled(false);
 		}
+			
 	}
 
 
