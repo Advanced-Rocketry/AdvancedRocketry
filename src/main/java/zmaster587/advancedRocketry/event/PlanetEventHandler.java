@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayer.SleepResult;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -39,7 +40,9 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerConnectionFromClientEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
 import org.lwjgl.opengl.GL11;
+
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
@@ -463,7 +466,7 @@ public class PlanetEventHandler {
 		if(properties != null && event.getState().getBlock() != Blocks.WATER && event.getState().getBlock() != Blocks.LAVA) {//& properties.atmosphereDensity > 125) {
 			float fog = properties.getAtmosphereDensityAtHeight(event.getEntity().posY);
 			//GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP);
-			GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
+			GlStateManager.setFog(GlStateManager.FogMode.LINEAR);
 
 
 
@@ -497,13 +500,14 @@ public class PlanetEventHandler {
 				far = f1*(2.002f - atmosphere/100f);
 			}
 
-			GL11.glFogf(GL11.GL_FOG_START, near);
-			GL11.glFogf(GL11.GL_FOG_END, far);
-			GL11.glFogf(GL11.GL_FOG_DENSITY, 0);
+			GlStateManager.setFogStart(near);
+			GlStateManager.setFogEnd(far);
+			GlStateManager.setFogDensity(0);
 
 
 			//event.setCanceled(false);
 		}
+			
 	}
 
 
