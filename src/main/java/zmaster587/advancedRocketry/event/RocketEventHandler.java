@@ -31,6 +31,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.MouseInputEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -94,6 +95,12 @@ public class RocketEventHandler extends Gui {
 		}
 	}
 
+	@SubscribeEvent
+	public void playerTeleportEvent(PlayerEvent.PlayerChangedDimensionEvent event) {
+		//Fix O2, space elevator popup displaying after teleporting
+		lastDisplayTime = -1000;
+	}
+	
 	@SubscribeEvent
 	public void onRocketLaunch(RocketEvent.RocketLaunchEvent event) {
 		if(Configuration.planetSkyOverride && event.world.isRemote && !event.getEntity().getPassengers().isEmpty() && event.getEntity().getPassengers().contains(Minecraft.getMinecraft().thePlayer)) {
