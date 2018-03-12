@@ -52,11 +52,11 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	public int getRespawnDimension(EntityPlayerMP player) {
-		Configuration.canPlayerRespawnInSpace = true;
+
 		if(AtmosphereHandler.hasAtmosphereHandler(dimensionId) && Configuration.canPlayerRespawnInSpace) {
 			ChunkCoordinates coords = player.getBedLocation(dimensionId);
 			
-			if(coords != null && AtmosphereHandler.getOxygenHandler(player.worldObj.provider.dimensionId).getAtmosphereType(coords.posX, coords.posY, coords.posZ).isBreathable())
+			if(Configuration.forcePlayerRespawnInSpace || coords != null && AtmosphereHandler.getOxygenHandler(player.worldObj.provider.dimensionId).getAtmosphereType(coords.posX, coords.posY, coords.posZ).isBreathable())
 				return dimensionId;
 		}
 		return 0;

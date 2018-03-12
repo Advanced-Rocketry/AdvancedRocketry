@@ -140,4 +140,5 @@ public class Configuration {
 	public static boolean stationSkyOverride;
 
 	public static boolean allowTerraformNonAR;
+	public static boolean forcePlayerRespawnInSpace;
 }
