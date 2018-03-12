@@ -45,6 +45,7 @@ import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.ZUtils;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -88,6 +89,12 @@ public class RocketEventHandler extends Gui {
 		}
 	}
 
+	@SubscribeEvent
+	public void playerTeleportEvent(PlayerEvent.PlayerChangedDimensionEvent event) {
+		//Fix O2, space elevator popup displaying after teleporting
+		lastDisplayTime = -1000;
+	}
+	
 	@SubscribeEvent
 	public void onRocketLaunch(RocketEvent.RocketLaunchEvent event) {
 		if(Configuration.planetSkyOverride && event.world.isRemote && event.entity.ridingEntity != null && event.entity.ridingEntity.equals(Minecraft.getMinecraft().thePlayer)) {
