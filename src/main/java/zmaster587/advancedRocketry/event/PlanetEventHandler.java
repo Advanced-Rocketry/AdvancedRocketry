@@ -165,9 +165,11 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	public void sleepEvent(PlayerSleepInBedEvent event) {
 
-		if(event.getEntity().world.provider instanceof WorldProviderPlanet && 
-				AtmosphereHandler.hasAtmosphereHandler(event.getEntity().world.provider.getDimension()) && !AtmosphereHandler.getOxygenHandler(event.getEntity().world.provider.getDimension()).getAtmosphereType(event.getPos()).isBreathable()) {
-			event.setResult(SleepResult.OTHER_PROBLEM);
+		if(event.getEntity().world.provider instanceof WorldProviderPlanet) {
+			if (!Configuration.forcePlayerRespawnInSpace && AtmosphereHandler.hasAtmosphereHandler(event.getEntity().world.provider.getDimension()) && 
+					!AtmosphereHandler.getOxygenHandler(event.getEntity().world.provider.getDimension()).getAtmosphereType(event.getPos()).isBreathable()) {
+				event.setResult(SleepResult.OTHER_PROBLEM);
+			}
 		}
 	}
 

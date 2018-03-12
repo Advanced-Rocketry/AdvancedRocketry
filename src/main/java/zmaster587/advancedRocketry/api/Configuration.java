@@ -86,6 +86,7 @@ public class Configuration {
 	public static boolean blackListAllVanillaBiomes;
 	public static double asteroidMiningTimeMult;
 	public static boolean canPlayerRespawnInSpace;
+	public static boolean forcePlayerRespawnInSpace;
 	public static float spaceLaserPowerMult;
 	public static List<Integer> laserBlackListDims = new LinkedList<Integer>();
 
