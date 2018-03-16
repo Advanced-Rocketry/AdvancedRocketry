@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.libVulpes.render.RenderHelper;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -12,6 +13,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+
 
 public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 
@@ -59,9 +61,9 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			
 			
 			//Draw Supports
-			GL11.glColor4f(0.78f, 0.5f, 0.34f, 1f);
+			GlStateManager.color(0.78f, 0.5f, 0.34f, 1f);
 			bindTexture(girder);
-			GL11.glDepthMask(true);
+			GlStateManager.enableDepth();
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			
 			float size = 0.25f;
@@ -107,15 +109,15 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			}
 			Tessellator.getInstance().draw();
 			
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_FOG);
-			GL11.glDepthMask(true);
+			GlStateManager.disableBlend();
+			GlStateManager.disableLighting();
+			GlStateManager.enableFog();
+			GlStateManager.enableDepth();
 			
 
 			
 			
-			GL11.glColor4f(1f, 1f, 1f, 1f);
+			GlStateManager.color(1f, 1f, 1f, 1f);
 			bindTexture(round_h);
 			uMax = 1f;
 			vMax = 1f;
@@ -138,9 +140,9 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
 			if(renderTile.isBuilding())
-				GL11.glColor4f(3f, 1f, 1f, 1f);
+				GlStateManager.color(3f, 1f, 1f, 1f);
 			else
-				GL11.glColor4f(1f, 3f, 1f, 1f);
+				GlStateManager.color(1f, 3f, 1f, 1f);
 			
 			RenderHelper.renderEastFace(buffer, xMax, yMin, zMin, yMax, zMax);
 			
@@ -151,8 +153,8 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			RenderHelper.renderWestFace(buffer, xMin, yMin, zMin, yMax, zMax);
 			Tessellator.getInstance().draw();
 			
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GL11.glColor4f(1f, 1f, 1f, 1f);
+			GlStateManager.enableTexture2D();
+			GlStateManager.color(1f, 1f, 1f, 1f);
 			
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			RenderHelper.renderBottomFaceWithUV(buffer, yMin, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
@@ -162,9 +164,10 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			RenderHelper.renderTopFaceWithUV(buffer, yMax, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
 			Tessellator.getInstance().draw();
 			
-			GL11.glAlphaFunc(GL11.GL_GEQUAL, 0.1f);
-			GL11.glDepthMask(false);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
+
+			GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.1f);
+			GlStateManager.enableDepth();
+			GlStateManager.enableTexture2D();
 			GL11.glPopMatrix();
 		}
 	}
