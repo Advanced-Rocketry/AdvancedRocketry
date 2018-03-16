@@ -40,11 +40,11 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 		//GL11.glDisable(GL11.GL_BLEND);
 
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-		GL11.glDisable(GL11.GL_FOG);
+		GlStateManager.disableFog();
 
 		//GL11.glDisable(GL11.GL_LIGHTING);
 
-		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ZERO);
+		GlStateManager.blendFunc(GL11.GL_ONE, GL11.GL_ZERO);
 		mc.renderEngine.bindTexture(icon);
 
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
@@ -78,7 +78,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 
 		//Draw atmosphere if applicable
 		if(isGasgiant) {
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 			//GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -110,9 +110,9 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 			Tessellator.getInstance().draw();
 
 
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GlStateManager.disableTexture2D();
 			//GL11.glDisable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			GlStateManager.color(0.5f,0.5f,1, 0.08f);
@@ -125,10 +125,10 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 				RenderHelper.renderTopFaceWithUV(buffer, dist + i*scalingMult, 0, -f10, f10, 0, f14, f15, f16, f17);
 			}
 			Tessellator.getInstance().draw();
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GlStateManager.enableTexture2D();
 		}
 		else if(hasAtmosphere) {
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 			//GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -150,9 +150,9 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 			Tessellator.getInstance().draw();
 
 
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GlStateManager.disableTexture2D();
 			//GL11.glDisable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			
@@ -167,12 +167,12 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 				RenderHelper.renderTopFaceWithUV(buffer, dist + i*scalingMult, 0, -f10, f10, 0, f14, f15, f16, f17);
 			}
 			Tessellator.getInstance().draw();
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GlStateManager.enableTexture2D();
 		}
 
 
 		GlStateManager.color(1f,1f,1f,1f);
-		GL11.glEnable(GL11.GL_FOG);
+		GlStateManager.enableFog();
 		//GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
 	}

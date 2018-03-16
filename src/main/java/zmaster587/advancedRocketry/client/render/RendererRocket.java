@@ -14,7 +14,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
+
 import org.lwjgl.opengl.GL11;
+
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.util.StorageChunk;
@@ -54,11 +56,11 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float)x, (float)y, (float)z);
 
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
-		GL11.glColor4f(0.5f, 1f, .5f, .2f);
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GL11.GL_ONE, GL11.GL_ONE);
+		GlStateManager.color(0.5f, 1f, .5f, .2f);
 
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GlStateManager.disableTexture2D();
 		GL11.glEnable(GL11.GL_LINE_STIPPLE);
 		GL11.glLineWidth(1f);
 		GL11.glLineStipple(5, (short)0x2222);
@@ -83,10 +85,10 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 			}
 		}
 
-		GL11.glColor3f(1f, 1f, 1f);
-		GL11.glDisable(GL11.GL_BLEND);
+		GlStateManager.color(1f, 1f, 1f);
+		GlStateManager.disableBlend();
 		GL11.glDisable(GL11.GL_LINE_STIPPLE);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GlStateManager.enableTexture2D();
 
 		GL11.glPopMatrix();
 

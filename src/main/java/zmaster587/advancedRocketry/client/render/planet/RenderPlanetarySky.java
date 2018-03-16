@@ -3,6 +3,8 @@ package zmaster587.advancedRocketry.client.render.planet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.GlStateManager.DestFactor;
+import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -10,7 +12,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.IRenderHandler;
+
 import org.lwjgl.opengl.GL11;
+
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
@@ -291,7 +295,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			sunColor = new Vec3d(1, 1, 1);
 		}
 
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GlStateManager.disableTexture2D();
 		Vec3d vec3 = Minecraft.getMinecraft().world.getSkyColor(this.mc.getRenderViewEntity(), partialTicks);
 		float f1 = (float)vec3.x;
 		float f2 = (float)vec3.y;
@@ -317,12 +321,12 @@ public class RenderPlanetarySky extends IRenderHandler {
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
 		GL11.glDepthMask(false);
-		GL11.glEnable(GL11.GL_FOG);
+		GlStateManager.enableFog();
 		GL11.glColor3f(f1, f2, f3);
 		GL11.glCallList(this.glSkyList);
-		GL11.glDisable(GL11.GL_FOG);
-		GL11.glDisable(GL11.GL_ALPHA_TEST);
-		GL11.glEnable(GL11.GL_BLEND);
+		GlStateManager.disableFog();
+		GlStateManager.disableAlpha();
+		GlStateManager.enableBlend();
 		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 		RenderHelper.disableStandardItemLighting();
 		float[] afloat = mc.world.provider.calcSunriseSunsetColors(celestialAngle, partialTicks);
@@ -333,7 +337,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 		if (afloat != null)
 		{
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GlStateManager.disableTexture2D();
 			GL11.glShadeModel(GL11.GL_SMOOTH);
 			GL11.glPushMatrix();
 			GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
@@ -372,10 +376,9 @@ public class RenderPlanetarySky extends IRenderHandler {
 			GL11.glPopMatrix();
 			GL11.glShadeModel(GL11.GL_FLAT);
 		}
-
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		//OpenGlHelper.glBlendFunc(770, 1, 1, 0);
-		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, 1, 0);
+		
+		GlStateManager.enableTexture2D();
+		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
 
 		GL11.glPushMatrix();
 
@@ -419,7 +422,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			Tessellator.getInstance().draw();
 			GL11.glPopMatrix();
 
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 			GL11.glPushMatrix();
 
 			GL11.glRotatef(90f, 0f, 1f, 0f);
@@ -439,14 +442,14 @@ public class RenderPlanetarySky extends IRenderHandler {
 			Tessellator.getInstance().draw();
 			GL11.glPopMatrix();
 
-			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, 1, 0);
+			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
 		}
 
 		if(!isWarp)
 			rotateAroundAxis();
 
 
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GlStateManager.disableTexture2D();
 		float f18 = mc.world.getStarBrightness(partialTicks) * f6 * (atmosphere) + (1-atmosphere);
 
 		if(mc.world.isRainingAt(mc.player.getPosition()))
@@ -487,7 +490,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			}
 			GL11.glPopMatrix();
 		}
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GlStateManager.enableTexture2D();
 
 		mc.renderEngine.bindTexture(TextureResources.locationSunPng);
 
@@ -568,7 +571,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 				Tessellator.getInstance().draw();
 				GL11.glPopMatrix();
 
-				OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, 1, 0);
+				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 			}
 
 
@@ -612,13 +615,13 @@ public class RenderPlanetarySky extends IRenderHandler {
 			GL11.glPopMatrix();
 		}
 
-		GL11.glEnable(GL11.GL_FOG);
+		GlStateManager.enableFog();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GlStateManager.disableBlend();
+		GlStateManager.enableAlpha();
 
 		GL11.glPopMatrix();
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GlStateManager.disableTexture2D();
 		GL11.glColor3f(0.0F, 0.0F, 0.0F);
 		double d0 = this.mc.player.getPositionEyes(partialTicks).y - mc.world.getHorizon();
 
@@ -673,7 +676,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GL11.glCallList(this.glSkyList2);
 		GL11.glPopMatrix();
 
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GlStateManager.enableTexture2D();
 		GL11.glDepthMask(true);
 
 		RocketEventHandler.onPostWorldRender(partialTicks);
