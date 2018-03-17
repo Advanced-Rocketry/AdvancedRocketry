@@ -65,7 +65,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 				if(!stack.isEmpty()) {
 					IFillableArmor fillable = null;
 
-					if(stack.getItem() instanceof ItemSpaceArmor)
+					if(stack.getItem() instanceof IFillableArmor)
 						fillable = (IFillableArmor)stack.getItem();
 					else if(ItemAirUtils.INSTANCE.isStackValidAirContainer(stack))
 						fillable = new ItemAirUtils.ItemAirWrapper(stack);
