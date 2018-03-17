@@ -222,7 +222,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public String customIcon;
 	public List<ItemStack> requiredArtifacts;
 	private Block oceanBlock;
+	private Block fillerBlock;
 	private int seaLevel;
+	private int generatorType;
 
 	//Planet Heirachy
 	private HashSet<Integer> childPlanets;
@@ -237,7 +239,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	private List<Fluid> harvestableAtmosphere;
 	private HashSet<BlockPosition> beaconLocations;
 
-
 	public DimensionProperties(int id) {
 		name = "Temp";
 		resetProperties();
@@ -247,6 +248,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		childPlanets = new HashSet<Integer>();
 		orbitalPhi = 0;
 		ringColor = new float[] {.4f, .4f, .7f};
+		oceanBlock = null;
+		fillerBlock = null;
 
 		allowedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
 		terraformedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
@@ -260,6 +263,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		harvestableAtmosphere = new LinkedList<Fluid>();
 		beaconLocations = new HashSet<BlockPosition>();
 		seaLevel = 63;
+		generatorType = 0;
 	}
 
 	public boolean isGasGiant() {
@@ -328,6 +332,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		harvestableAtmosphere = new LinkedList<Fluid>();
 		beaconLocations = new HashSet<BlockPosition>();
 		seaLevel = 63;
+		oceanBlock = null;
+		fillerBlock = null;
+		generatorType = 0;
 	}
 
 	public List<Fluid> getHarvestableGasses() {
@@ -1180,6 +1187,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		rotationalPhi = nbt.getDouble("rotationalPhi");
 		hasRings = nbt.getBoolean("hasRings");
 		seaLevel = nbt.getInteger("seaLevel");
+		generatorType = nbt.getInteger("genType");
 
 		//Hierarchy
 		if(nbt.hasKey("childrenPlanets")) {
@@ -1241,6 +1249,17 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		if(nbt.hasKey("oceanBlockId")) {
 			oceanBlock = Block.getBlockById(nbt.getInteger("oceanBlockId"));
 		}
+		else
+			oceanBlock = null;
+		
+		if(nbt.hasKey("fillBlockId")) {
+			Block block = Block.getBlockById(nbt.getInteger("fillBlockId"));
+			if(block == Blocks.air) {
+				fillerBlock = null;
+			}
+		}
+		else
+			fillerBlock = null;
 	}
 
 	public void writeToNBT(NBTTagCompound nbt) {
@@ -1318,7 +1337,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setDouble("rotationalPhi", rotationalPhi);
 		nbt.setBoolean("hasRings", hasRings);
 		nbt.setInteger("seaLevel", seaLevel);
-
+		nbt.setInteger("genType", generatorType);
 		//Hierarchy
 		if(!childPlanets.isEmpty()) {
 			Integer intList[] = new Integer[childPlanets.size()];
@@ -1354,6 +1373,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		
 		if(oceanBlock != null) {
 			nbt.setInteger("oceanBlockId", Block.getIdFromBlock(oceanBlock));
+		}
+		
+		if(fillerBlock != null) {
+			nbt.setInteger("fillBlockId", Block.getIdFromBlock(fillerBlock));
 		}
 
 	}
@@ -1427,5 +1450,22 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	
 	public void setOceanBlock(Block oceanBlock) {
 		this.oceanBlock = oceanBlock;
+	}
+	
+	public Block getStoneBlock() {
+		return fillerBlock;
+	}
+	
+	public void setStoneBlock(Block block) {
+		fillerBlock = block;
+	}
+	
+	public void setGenType(int genType)
+	{
+		this.generatorType = genType;
+	}
+
+	public int getGenType() {
+		return generatorType;
 	}
 }

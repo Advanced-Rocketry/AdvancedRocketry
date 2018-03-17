@@ -15,6 +15,7 @@ import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
+import zmaster587.advancedRocketry.world.ChunkProviderCavePlanet;
 import zmaster587.advancedRocketry.world.ChunkProviderPlanet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -45,22 +46,16 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	}*/
 
 	@Override
+
 	public IChunkProvider createChunkGenerator() {
-		return new ChunkProviderPlanet(this.worldObj, this.worldObj.getSeed(), false);
+		if(DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId).getGenType() == 1)
+		{
+			return new ChunkProviderCavePlanet(this.worldObj,this.worldObj.getSeed());
+		}
+		else
+			return new ChunkProviderPlanet(this.worldObj, this.worldObj.getSeed(), false);
 	}
 	
-
-	@Override
-	public int getRespawnDimension(EntityPlayerMP player) {
-
-		if(AtmosphereHandler.hasAtmosphereHandler(dimensionId) && Configuration.canPlayerRespawnInSpace) {
-			ChunkCoordinates coords = player.getBedLocation(dimensionId);
-			
-			if(Configuration.forcePlayerRespawnInSpace || coords != null && AtmosphereHandler.getOxygenHandler(player.worldObj.provider.dimensionId).getAtmosphereType(coords.posX, coords.posY, coords.posZ).isBreathable())
-				return dimensionId;
-		}
-		return 0;
-	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -106,6 +101,18 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 			super.updateWeather();
 	}
 
+	@Override
+	public int getRespawnDimension(EntityPlayerMP player) {
+
+		if(AtmosphereHandler.hasAtmosphereHandler(dimensionId) && Configuration.canPlayerRespawnInSpace) {
+			ChunkCoordinates coords = player.getBedLocation(dimensionId);
+			
+			if(Configuration.forcePlayerRespawnInSpace || coords != null && AtmosphereHandler.getOxygenHandler(player.worldObj.provider.dimensionId).getAtmosphereType(coords.posX, coords.posY, coords.posZ).isBreathable())
+				return dimensionId;
+		}
+		return 0;
+	}
+	
 	@Override
 	public boolean canRespawnHere() {
 		return false;

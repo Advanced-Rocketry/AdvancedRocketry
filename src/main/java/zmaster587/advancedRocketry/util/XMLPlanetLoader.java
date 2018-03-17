@@ -174,6 +174,15 @@ public class XMLPlanetLoader {
 				
 				properties.setOceanBlock(block);
 			}
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("fillerBlock")) {
+				String blockName = planetPropertyNode.getTextContent();
+				Block block = (Block) Block.blockRegistry.getObject(blockName);
+				
+				if(block == Blocks.air || block == null)
+					AdvancedRocketry.logger.warn("Invalid ocean block: " + blockName); //TODO: more detailed error msg
+				
+				properties.setStoneBlock(block);
+			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("skycolor")) {
 				String[] colors = planetPropertyNode.getTextContent().split(",");
 				try {
@@ -290,6 +299,13 @@ public class XMLPlanetLoader {
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("oreGen")) {
 				properties.oreProperties = XMLOreLoader.loadOre(planetPropertyNode);
+			}
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("genType")) {
+				try {
+					properties.setGenType(Integer.parseInt(planetPropertyNode.getTextContent()));
+				} catch (NumberFormatException e) {
+					AdvancedRocketry.logger.warn("Invalid generator type specified"); //TODO: more detailed error msg
+				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("hasRings"))
 				properties.hasRings = Boolean.parseBoolean(planetPropertyNode.getTextContent());
@@ -543,7 +559,8 @@ public class XMLPlanetLoader {
 		outputString = outputString + tabLen + "\t<rotationalPeriod>" + (int)properties.rotationalPeriod + "</rotationalPeriod>\n";
 		outputString = outputString + tabLen + "\t<atmosphereDensity>" + (int)properties.getAtmosphereDensity() + "</atmosphereDensity>\n";
 		outputString = outputString + tabLen + "\t<seaLevel>" + properties.getSeaLevel() + "</seaLevel>\n";
-
+		outputString = outputString + tabLen + "\t<genType>" + properties.getGenType() + "</genType>\n";
+		
 		if(properties.oreProperties != null) {
 			outputString = outputString + tabLen + "\t<oreGen>\n";
 			outputString = outputString + XMLOreLoader.writeOreEntryXML(properties.oreProperties, numTabs+2);
@@ -573,6 +590,10 @@ public class XMLPlanetLoader {
 
 		if(properties.getOceanBlock() != null) {
 			outputString = outputString + tabLen + "\t<oceanBlock>" + Block.blockRegistry.getNameForObject(properties.getOceanBlock()) + "</oceanBlock>\n";
+		}
+		
+		if(properties.getStoneBlock() != null) {
+			outputString = outputString + tabLen + "\t<fillerBlock>" + Block.blockRegistry.getNameForObject(properties.getStoneBlock()) + "</fillerBlock>\n";
 		}
 		
 		outputString = outputString + tabLen + "</planet>\n";
