@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.world.biome.BiomeGenBase;
-
 /**
  * Stores information relating to the biomes and biome registry of AdvancedRocketry
  */
@@ -26,7 +25,7 @@ public class AdvancedRocketryBiomes {
 	public static BiomeGenBase swampDeepBiome;
 	public static BiomeGenBase marsh;
 	public static BiomeGenBase oceanSpires;
-	
+	public static BiomeGenBase moonBiomeDark;
 	private AdvancedRocketryBiomes() {
 		registeredBiomes = new ArrayList<BiomeGenBase>();
 		registeredHighPressureBiomes = new LinkedList<BiomeGenBase>();

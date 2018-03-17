@@ -572,6 +572,8 @@ public class AdvancedRocketry {
 		((BlockMultiblockMachine) AdvancedRocketryBlocks.blockArcFurnace).setFrontTexture("Advancedrocketry:BlastBrickFront", "Advancedrocketry:BlastBrickFrontActive");
 
 		AdvancedRocketryBlocks.blockMoonTurf = new BlockPlanetSoil().setMapColor(MapColor.snowColor).setHardness(0.5F).setStepSound(Block.soundTypeGravel).setBlockName("turf").setBlockTextureName("advancedrocketry:moon_turf").setCreativeTab(tabAdvRocketry);
+		AdvancedRocketryBlocks.blockMoonTurfDark = new BlockPlanetSoil().setMapColor(MapColor.snowColor).setHardness(0.5F).setStepSound(Block.soundTypeGravel).setBlockName("turfDark").setBlockTextureName("advancedrocketry:moon_turf_dark").setCreativeTab(tabAdvRocketry);
+		
 		AdvancedRocketryBlocks.blockHotTurf = new BlockPlanetSoil().setMapColor(MapColor.netherrackColor).setHardness(0.5F).setStepSound(Block.soundTypeGravel).setBlockName("hotDryturf").setBlockTextureName("advancedrocketry:hotdry_turf").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryBlocks.blockLoader = new BlockARHatch(Material.rock).setBlockName("loader").setCreativeTab(tabAdvRocketry).setHardness(3f);
 
@@ -581,8 +583,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockAlienPlanks = new BlockAlienPlanks().setBlockName("planks").setBlockTextureName("advancedrocketry:plank").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		
 		
-		
-		
+
 		AdvancedRocketryBlocks.blockLightSource = new BlockLightSource();
 		AdvancedRocketryBlocks.blockBlastBrick = new BlockMultiBlockComponentVisible(Material.rock).setCreativeTab(tabAdvRocketry).setBlockName("blastBrick").setBlockTextureName("advancedRocketry:BlastBrick").setHardness(3F).setResistance(15F);
 		AdvancedRocketryBlocks.blockQuartzCrucible = new BlockQuartzCrucible();
@@ -776,6 +777,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockMonitoringStation, "blockMonitoringStation");
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockSatelliteBuilder, "blockSatelliteBuilder");
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockMoonTurf, "moonTurf");
+		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockMoonTurfDark, "moonTurf_dark");
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockHotTurf, "blockHotTurf");
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockLoader, ItemBlockMeta.class, AdvancedRocketryBlocks.blockLoader.getUnlocalizedName());
 		GameRegistry.registerBlock(AdvancedRocketryBlocks.blockPrecisionAssembler, "precisionassemblingmachine");
@@ -1082,8 +1084,10 @@ public class AdvancedRocketry {
 		OreDictionary.registerOre("dustThermite", new ItemStack(AdvancedRocketryItems.itemThermite));
 		OreDictionary.registerOre("itemSilicon", MaterialRegistry.getItemStackFromMaterialAndType("Silicon", AllowedProducts.getProductByName("INGOT")));
 		OreDictionary.registerOre("turfMoon", new ItemStack(AdvancedRocketryBlocks.blockMoonTurf));
+		OreDictionary.registerOre("turfMoon", new ItemStack(AdvancedRocketryBlocks.blockMoonTurfDark));
 
 		CompatibilityMgr.getLoadedMods();
+
 	}
 
 	@EventHandler
@@ -1283,7 +1287,8 @@ public class AdvancedRocketry {
 		AdvancedRocketryBiomes.swampDeepBiome = new BiomeGenDeepSwamp(config.get(BIOMECATETORY, "deepSwampBiomeId", 116).getInt(), true);
 		AdvancedRocketryBiomes.marsh = new BiomeGenMarsh(config.get(BIOMECATETORY, "marsh", 117).getInt(), true);
 		AdvancedRocketryBiomes.oceanSpires = new BiomeGenOceanSpires(config.get(BIOMECATETORY, "oceanSpires", 118).getInt(), true);
-
+		AdvancedRocketryBiomes.moonBiomeDark = new BiomeGenMoon(config.get(BIOMECATETORY, "moonBiomeDarkId", 119).getInt(), true);
+		
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.moonBiome);
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.alienForest);
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.hotDryBiome);
@@ -1293,6 +1298,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.swampDeepBiome);
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.marsh);
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.oceanSpires);
+		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.moonBiomeDark);
 
 
 		String[] biomeBlackList = config.getStringList("BlacklistedBiomes", "Planet", new String[] {"7", "8", "9", "127", String.valueOf(AdvancedRocketryBiomes.alienForest.biomeID)}, "List of Biomes to be blacklisted from spawning as BiomeIds, default is: river, sky, hell, void, alienForest");
@@ -1304,6 +1310,7 @@ public class AdvancedRocketry {
 
 		//Prevent these biomes from spawning normally
 		AdvancedRocketryBiomes.instance.registerBlackListBiome(AdvancedRocketryBiomes.moonBiome);
+		AdvancedRocketryBiomes.instance.registerBlackListBiome(AdvancedRocketryBiomes.moonBiomeDark);
 		AdvancedRocketryBiomes.instance.registerBlackListBiome(AdvancedRocketryBiomes.hotDryBiome);
 		AdvancedRocketryBiomes.instance.registerBlackListBiome(AdvancedRocketryBiomes.spaceBiome);
 
@@ -1817,7 +1824,8 @@ public class AdvancedRocketry {
 					dimensionProperties.rotationalPeriod = 128000;
 					dimensionProperties.orbitalDist = 150;
 					dimensionProperties.addBiome(AdvancedRocketryBiomes.moonBiome);
-
+					dimensionProperties.addBiome(AdvancedRocketryBiomes.moonBiomeDark);
+					
 					dimensionProperties.setParentPlanet(DimensionManager.overworldProperties);
 					dimensionProperties.setStar(DimensionManager.getSol());
 					dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");

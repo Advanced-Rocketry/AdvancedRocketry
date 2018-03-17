@@ -11,6 +11,7 @@ public class BlockPlanetSoil extends Block {
 	public BlockPlanetSoil() {
 		super(Material.ground);
 		setHarvestLevel("shovel", 0);
+		setStepSound(soundTypeSand);
 	}
 	
 	public Block setMapColor(MapColor color) {
