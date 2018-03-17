@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.init.Biomes;
 import net.minecraft.world.biome.Biome;
 
 
@@ -28,6 +27,7 @@ public class AdvancedRocketryBiomes {
 	public static Biome swampDeepBiome;
 	public static Biome marsh;
 	public static Biome oceanSpires;
+	public static Biome moonBiomeDark;
 
 	private AdvancedRocketryBiomes() {
 		registeredBiomes = new ArrayList<Biome>();

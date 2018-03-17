@@ -870,7 +870,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 
 		if(atmosphereDensity <= AtmosphereTypes.LOW.value)
+		{
 			viableBiomes.add(AdvancedRocketryBiomes.moonBiome);
+			viableBiomes.add(AdvancedRocketryBiomes.moonBiomeDark);
+		}
 
 		else if(averageTemperature > Temps.TOOHOT.getTemp()) {
 			viableBiomes.add(AdvancedRocketryBiomes.hotDryBiome);
