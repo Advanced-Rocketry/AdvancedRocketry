@@ -1836,9 +1836,11 @@ public class AdvancedRocketry {
 					loadedProps.skyColor = properties.skyColor;
 					loadedProps.setSeaLevel(properties.getSeaLevel());
 					loadedProps.setOceanBlock(properties.getOceanBlock());
+					loadedProps.setStoneBlock(properties.getStoneBlock());
 					loadedProps.setBiomeEntries(properties.getBiomes());
 					loadedProps.setAtmosphereDensityDirect(properties.getAtmosphereDensity());
 					loadedProps.setName(properties.getName());
+					loadedProps.setGenType(properties.getGenType());
 					
 					//Avoid CME
 					for(int i : new HashSet<Integer>(properties.getChildPlanets()))
