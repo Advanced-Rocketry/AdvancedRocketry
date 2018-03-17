@@ -93,4 +93,5 @@ public class AdvancedRocketryBlocks {
 	public static Block blockAlienPlanks;
 	public static Block blockThermiteTorch;
 	public static Block blockTransciever;
+	public static Block blockMoonTurfDark;
 }

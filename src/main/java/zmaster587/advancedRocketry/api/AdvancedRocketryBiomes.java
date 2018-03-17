@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import zmaster587.advancedRocketry.world.biome.BiomeGenMoon;
+
 
 /**
  * Stores information relating to the biomes and biome registry of AdvancedRocketry
@@ -28,6 +30,7 @@ public class AdvancedRocketryBiomes {
 	public static Biome swampDeepBiome;
 	public static Biome marsh;
 	public static Biome oceanSpires;
+	public static Biome moonBiomeDark;
 
 	private AdvancedRocketryBiomes() {
 		registeredBiomes = new ArrayList<Biome>();

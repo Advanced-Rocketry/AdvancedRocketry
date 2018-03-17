@@ -8,12 +8,12 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import java.util.LinkedList;
 import java.util.List;
 
-public class BiomeGenMoon extends Biome {
+public class BiomeGenMoonDark extends Biome {
 
-	public BiomeGenMoon(int biomeId, boolean register) {
-		super(new BiomeProperties("Moon").setRainDisabled().setBaseHeight(1f).setHeightVariation(0.2f).setRainfall(0).setTemperature(0.3f));
+	public BiomeGenMoonDark(int biomeId, boolean register) {
+		super(new BiomeProperties("MoonDark").setRainDisabled().setBaseHeight(0.5f).setHeightVariation(0.01f).setRainfall(0).setTemperature(0.3f));
 
-		this.setRegistryName(new ResourceLocation("advancedrocketry:Moon"));
+		this.setRegistryName(new ResourceLocation("advancedrocketry:MoonDark"));
 //		registerBiome(biomeId, "Moon", this);
 		
 		//cold and dry
@@ -22,8 +22,10 @@ public class BiomeGenMoon extends Biome {
 		this.decorator.grassPerChunk=0;
 		this.decorator.treesPerChunk=0;
 		this.decorator.mushroomsPerChunk=0;
-		this.fillerBlock = this.topBlock = AdvancedRocketryBlocks.blockMoonTurf.getDefaultState();
+		this.fillerBlock = this.topBlock = AdvancedRocketryBlocks.blockMoonTurfDark.getDefaultState();
 	}
+	
+	
 	
 	@Override
 	public List getSpawnableList(EnumCreatureType p_76747_1_) {
