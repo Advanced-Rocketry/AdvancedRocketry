@@ -27,8 +27,10 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.util.OreGenProperties;
 import zmaster587.advancedRocketry.util.OreGenProperties.OreEntry;
+import zmaster587.advancedRocketry.world.decoration.MapGenCaveExt;
 import zmaster587.advancedRocketry.world.decoration.MapGenCrater;
 import zmaster587.advancedRocketry.world.decoration.MapGenGeode;
+import zmaster587.advancedRocketry.world.decoration.MapGenRavineExt;
 import zmaster587.advancedRocketry.world.ore.CustomizableOreGen;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 
@@ -54,20 +56,23 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 	private final double[] heightMap;
 	private final float[] biomeWeights;
 	private ChunkGeneratorSettings settings;
-	private IBlockState oceanBlock = Blocks.LAVA.getDefaultState();
+	private IBlockState oceanBlock = Blocks.WATER.getDefaultState();
+	private IBlockState fillblock = Blocks.STONE.getDefaultState();
 	private double[] depthBuffer = new double[256];
-	private MapGenBase caveGenerator = new MapGenCaves();
+	private MapGenBase caveGenerator = new MapGenCaveExt();
 	private MapGenStronghold strongholdGenerator = new MapGenStronghold();
 	private MapGenVillage villageGenerator = new MapGenVillage();
 	private MapGenMineshaft mineshaftGenerator = new MapGenMineshaft();
 	private MapGenScatteredFeature scatteredFeatureGenerator = new MapGenScatteredFeature();
-	private MapGenBase ravineGenerator = new MapGenRavine();
+	private MapGenBase ravineGenerator = new MapGenRavineExt();
 	private StructureOceanMonument oceanMonumentGenerator = new StructureOceanMonument();
 	private Biome[] biomesForGeneration;
 	double[] mainNoiseRegion;
 	double[] minLimitRegion;
 	double[] maxLimitRegion;
 	double[] depthRegion;
+	protected int heightmapOffset = 0;
+	protected float heightmapMult = 1f;
 
 
 	private MapGenCrater craterGenerator;
@@ -118,7 +123,20 @@ public class ChunkProviderPlanet implements IChunkGenerator {
         
         IBlockState oceanBlock = dimProps.getOceanBlock();
         if(oceanBlock != null)
+        {
         	this.oceanBlock = oceanBlock;
+        	((MapGenCaveExt)caveGenerator).setOceanBlock(this.oceanBlock);
+        	((MapGenRavineExt)ravineGenerator).setOceanBlock(this.oceanBlock);
+        }
+        
+        IBlockState fillBlock = dimProps.getStoneBlock();
+        if(fillBlock != null)
+        {
+        	this.fillblock = fillBlock;
+        	((MapGenCaveExt)caveGenerator).setFillerBlock(this.fillblock);
+        	((MapGenRavineExt)ravineGenerator).setFillerBlock(this.fillblock);
+        }
+        
 
 		net.minecraftforge.event.terraingen.InitNoiseGensEvent.ContextOverworld ctx =
 				new net.minecraftforge.event.terraingen.InitNoiseGensEvent.ContextOverworld(minLimitPerlinNoise, maxLimitPerlinNoise, mainPerlinNoise, surfaceNoise, scaleNoise, depthNoise, forestNoise);
@@ -195,11 +213,11 @@ public class ChunkProviderPlanet implements IChunkGenerator {
                             {
                                 if ((lvt_45_1_ += d16) > 0.0D)
                                 {
-                                    primer.setBlockState(i * 4 + k2, i2 * 8 + j2, l * 4 + l2, STONE);
+                                    primer.setBlockState(i * 4 + k2, heightmapOffset + i2 * 8 + j2, l * 4 + l2, this.fillblock);
                                 }
                                 else if (i2 * 8 + j2 < worldObj.getSeaLevel())
                                 {
-                                    primer.setBlockState(i * 4 + k2, i2 * 8 + j2, l * 4 + l2, this.oceanBlock);
+                                    primer.setBlockState(i * 4 + k2, heightmapOffset + i2 * 8 + j2, l * 4 + l2, this.oceanBlock);
                                 }
                             }
 
@@ -233,14 +251,8 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		}
 	}
 
-	/**
-	 * Will return back a chunk, if it doesn't exist and its not a MP client it will generates all the blocks for the
-	 * specified chunk from the map seed and chunk seed
-	 */
-	@Override
-	public Chunk generateChunk(int x, int z)
+	protected ChunkPrimer getChunkPrimer(int x, int z) 
 	{
-		this.rand.setSeed((long)x * 341873128712L + (long)z * 132897987541L);
 		ChunkPrimer chunkprimer = new ChunkPrimer();
 		this.setBlocksInChunk(x, z, chunkprimer);
 		this.biomesForGeneration = this.worldObj.getBiomeProvider().getBiomesForGeneration(this.biomesForGeneration, x * 16, z * 16, 16, 16);
@@ -266,9 +278,22 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		{
 			//TODO: structures
 		}
+		
+		return chunkprimer;
+	}
+	
+	/**
+	 * Will return back a chunk, if it doesn't exist and its not a MP client it will generates all the blocks for the
+	 * specified chunk from the map seed and chunk seed
+	 */
+	@Override
+	public Chunk generateChunk(int x, int z)
+	{
+		this.rand.setSeed((long)x * 341873128712L + (long)z * 132897987541L);
+
 
 		//ChunkExtendedBiome
-		Chunk chunk = new Chunk(this.worldObj, chunkprimer, x, z);
+		Chunk chunk = new Chunk(this.worldObj, getChunkPrimer(x, z), x, z);
 		byte[] abyte = chunk.getBiomeArray();
 
 		for (int i = 0; i < abyte.length; ++i)
@@ -284,7 +309,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 	{
 		this.depthRegion = this.depthNoise.generateNoiseOctaves(this.depthRegion, p_185978_1_, p_185978_3_, 5, 5, (double)this.settings.depthNoiseScaleX, (double)this.settings.depthNoiseScaleZ, (double)this.settings.depthNoiseScaleExponent);
 		float f = this.settings.coordinateScale;
-		float f1 = this.settings.heightScale;
+		float f1 = this.settings.heightScale * heightmapMult;
 		this.mainNoiseRegion = this.mainPerlinNoise.generateNoiseOctaves(this.mainNoiseRegion, p_185978_1_, p_185978_2_, p_185978_3_, 5, 33, 5, (double)(f / this.settings.mainNoiseScaleX), (double)(f1 / this.settings.mainNoiseScaleY), (double)(f / this.settings.mainNoiseScaleZ));
 		this.minLimitRegion = this.minLimitPerlinNoise.generateNoiseOctaves(this.minLimitRegion, p_185978_1_, p_185978_2_, p_185978_3_, 5, 33, 5, (double)f, (double)f1, (double)f);
 		this.maxLimitRegion = this.maxLimitPerlinNoise.generateNoiseOctaves(this.maxLimitRegion, p_185978_1_, p_185978_2_, p_185978_3_, 5, 33, 5, (double)f, (double)f1, (double)f);

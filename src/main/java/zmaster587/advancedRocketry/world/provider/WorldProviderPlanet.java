@@ -15,7 +15,9 @@ import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
 import org.apache.commons.lang3.ArrayUtils;
+
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.Configuration;
@@ -26,6 +28,7 @@ import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
+import zmaster587.advancedRocketry.world.ChunkProviderCavePlanet;
 import zmaster587.advancedRocketry.world.ChunkProviderPlanet;
 
 import java.util.Set;
@@ -47,7 +50,12 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	public IChunkGenerator createChunkGenerator() {
-		return new ChunkProviderPlanet(this.world, this.world.getSeed(), false, world.getWorldInfo().getGeneratorOptions());
+		if(DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGenType() == 1)
+		{
+			return new ChunkProviderCavePlanet(this.world, false, this.world.getSeed(),world.getWorldInfo().getGeneratorOptions());
+		}
+		else
+			return new ChunkProviderPlanet(this.world, this.world.getSeed(), false, world.getWorldInfo().getGeneratorOptions());
 	}
 
 	@Override
@@ -113,7 +121,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 		return DimensionCompat.getDefaultSpawnDimension();
 	}
-
+	
 	@Override
 	public boolean canRespawnHere() {
 		return false;
