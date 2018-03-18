@@ -430,6 +430,11 @@ public class DimensionManager implements IGalaxy {
 	 */
 	public void deleteDimension(int dimId) {
 
+		if(net.minecraftforge.common.DimensionManager.getWorld(dimId) != null) {
+			AdvancedRocketry.logger.warn("Cannot delete dimension " + dimId + " it is still loaded");
+			return;
+		}
+		
 		DimensionProperties properties = dimensionList.get(dimId);
 		
 		//Can happen in some rare cases
@@ -458,7 +463,9 @@ public class DimensionManager implements IGalaxy {
 		// If not native to AR let the mod it's registered to handle it
 		if(properties.isNativeDimension ) {
 			if(net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId)) {
-				net.minecraftforge.common.DimensionManager.unloadWorld(dimId);
+				if(net.minecraftforge.common.DimensionManager.getWorld(dimId) != null)
+					net.minecraftforge.common.DimensionManager.unloadWorld(dimId);
+				
 				net.minecraftforge.common.DimensionManager.unregisterDimension(dimId);
 			}
 		}
