@@ -561,8 +561,12 @@ public class XMLPlanetLoader {
 		outputString = outputString + tabLen + "\t<orbitalPhi>" + (int)(properties.orbitalPhi* Math.PI/180) + "</orbitalPhi>\n";
 		outputString = outputString + tabLen + "\t<rotationalPeriod>" + (int)properties.rotationalPeriod + "</rotationalPeriod>\n";
 		outputString = outputString + tabLen + "\t<atmosphereDensity>" + (int)properties.getAtmosphereDensity() + "</atmosphereDensity>\n";
-		outputString = outputString + tabLen + "\t<seaLevel>" + properties.getSeaLevel() + "</seaLevel>\n";
-		outputString = outputString + tabLen + "\t<genType>" + properties.getGenType() + "</genType>\n";
+		
+		if(properties.getSeaLevel() != 63)
+			outputString = outputString + tabLen + "\t<seaLevel>" + properties.getSeaLevel() + "</seaLevel>\n";
+		
+		if(properties.getGenType() != 0)
+			outputString = outputString + tabLen + "\t<genType>" + properties.getGenType() + "</genType>\n";
 		
 		if(properties.oreProperties != null) {
 			outputString = outputString + tabLen + "\t<oreGen>\n";
