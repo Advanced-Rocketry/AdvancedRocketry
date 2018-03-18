@@ -296,13 +296,6 @@ public class DimensionManager implements IGalaxy {
 		if(properties.averageTemperature > 100)
 			properties.setOceanBlock(Blocks.lava);
 		
-		if(random.nextInt() % 50 == 0)
-		{
-			properties.setHasRings(true);
-			properties.ringColor[0] = random.nextFloat();
-			properties.ringColor[1] = random.nextFloat();
-			properties.ringColor[2] = random.nextFloat();
-		}
 		
 		if( AtmosphereTypes.getAtmosphereTypeFromValue(properties.getAtmosphereDensity()) == AtmosphereTypes.NONE && random.nextInt() % 5 == 0)
 		{
@@ -319,6 +312,14 @@ public class DimensionManager implements IGalaxy {
 		properties.skyColor[1] *= 1 - (random.nextFloat()*.5f);
 		properties.skyColor[2] *= 1 - MathHelper.clamp_float(random.nextFloat()*0.1f + (properties.averageTemperature - 70)/100f,0,1);
 
+		if(random.nextInt() % 50 == 0)
+		{
+			properties.setHasRings(true);
+			properties.ringColor[0] = properties.skyColor[0];
+			properties.ringColor[1] = properties.skyColor[1];
+			properties.ringColor[2] = properties.skyColor[2];
+		}
+		
 		properties.rotationalPeriod = (int) (Math.pow((1/properties.gravitationalMultiplier),3) * 24000);
 
 		properties.addBiomes(properties.getViableBiomes());
