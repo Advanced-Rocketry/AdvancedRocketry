@@ -310,7 +310,7 @@ public class AdvancedRocketry {
 		orbitalLaserOres = config.get(Configuration.CATEGORY_GENERAL, "laserDrillOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone", "oreDiamond"}, "List of oredictionary names of ores allowed to be mined by the laser drill if surface drilling is disabled.  Ores can be specified by just the oreName:<size> or by <modname>:<blockname>:<meta>:<size> where size is optional").getStringList();
 		zmaster587.advancedRocketry.api.Configuration.laserDrillOresBlackList = config.get(Configuration.CATEGORY_GENERAL, "laserDrillOres_blacklist", false, "True if the ores in laserDrillOres should be a blacklist, false for whitelist").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.laserDrillPlanet = config.get(Configuration.CATEGORY_GENERAL, "laserDrillPlanet", false, "If true the orbital laser will actually mine blocks on the planet below").getBoolean();
-		resetFromXml = config.getBoolean("resetPlanetsFromXML", Configuration.CATEGORY_GENERAL, false, "setting this to true will DELETE existing advancedrocketry planets and regen the solar system from the advanced planet XML file, satellites orbiting the overworld will remain intact and stations will be moved to the overworld.");
+		resetFromXml = config.getBoolean("resetPlanetsFromXML", Configuration.CATEGORY_GENERAL, false, "setting this to true will force AR to read from the XML file in the config/advRocketry instead of the local data, intended for use pack developers to ensure updates are pushed through");
 		//Reset to false
 		config.get(Configuration.CATEGORY_GENERAL, "resetPlanetsFromXML",false).set(false);
 
@@ -1664,9 +1664,12 @@ public class AdvancedRocketry {
 		localFile = file = new File(net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory() + "/" + DimensionManager.workingPath + "/planetDefs.xml");
 		logger.info("Checking for config at " + file.getAbsolutePath());
 
-		if(!file.exists()) { //Hi, I'm if check #42, I am true if the config is not in the world/advRocketry folder
+		if(!file.exists() || resetFromXml) { //Hi, I'm if check #42, I am true if the config is not in the world/advRocketry folder
+			
+			if(!file.exists())
+				logger.info("File not found.  Now checking for config at " + file.getAbsolutePath());
+			
 			file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
-			logger.info("File not found.  Now checking for config at " + file.getAbsolutePath());
 
 			//Copy file to local dir
 			if(file.exists()) {
@@ -1973,11 +1976,16 @@ public class AdvancedRocketry {
 				}
 			}
 
-			//Add planets
-			for(StellarBody star : dimCouplingList.stars) {
-				int numRandomGeneratedPlanets = loader.getMaxNumPlanets(star);
-				int numRandomGeneratedGasGiants = loader.getMaxNumGasGiants(star);
-				generateRandomPlanets(star, numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
+			//Don't load random planets twice on initial load
+			//TODO: rework the logic, low priority because low time cost and one time run per world
+			if(!loadedFromXML)
+			{
+				//Add planets
+				for(StellarBody star : dimCouplingList.stars) {
+					int numRandomGeneratedPlanets = loader.getMaxNumPlanets(star);
+					int numRandomGeneratedGasGiants = loader.getMaxNumGasGiants(star);
+					generateRandomPlanets(star, numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
+				}
 			}
 		}
 
