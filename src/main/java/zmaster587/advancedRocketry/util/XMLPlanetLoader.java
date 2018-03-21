@@ -2,16 +2,19 @@ package zmaster587.advancedRocketry.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
@@ -23,6 +26,7 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -280,7 +284,7 @@ public class XMLPlanetLoader {
 				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("artifact")) {
-				ItemStack stack = XMLAsteroidLoader.getStack(planetPropertyNode.getTextContent());
+				ItemStack stack = XMLPlanetLoader.getStack(planetPropertyNode.getTextContent());
 
 				if(stack != null)
 					properties.getRequiredArtifacts().add(stack);
@@ -592,7 +596,7 @@ public class XMLPlanetLoader {
 		}
 
 		for(ItemStack stack : properties.getRequiredArtifacts()) {
-			outputString = outputString + tabLen + "\t<artifact>" + stack.getItem().getRegistryName() + " " + stack.getItemDamage() + "</artifact>\n";
+			outputString = outputString + tabLen + "\t<artifact>" + stack.getItem().getRegistryName() + " " + stack.getItemDamage() + stack.getCount() + "</artifact>\n";
 		}
 
 		for(Integer properties2 : properties.getChildPlanets()) {
@@ -616,5 +620,36 @@ public class XMLPlanetLoader {
 		public List<StellarBody> stars = new LinkedList<StellarBody>();
 		public List<DimensionProperties> dims = new LinkedList<DimensionProperties>();
 
+	}
+	
+	public static ItemStack getStack(String text) {
+		String splitStr[] = text.split(" ");
+		int meta = 0;
+		int size = 1;
+		//format: "name meta size"
+		if(splitStr.length > 1) {
+			try {
+				meta = Integer.parseInt(splitStr[1]);
+			} catch( NumberFormatException e) {}
+			
+			if(splitStr.length > 2)
+			{
+				try {
+					size = Integer.parseInt(splitStr[2]);
+				} catch( NumberFormatException e) {}
+			}
+		}
+
+		ItemStack stack = null;
+		Block block = Block.getBlockFromName(splitStr[0]);
+		if(block == null) {
+			Item item = Item.getByNameOrId(splitStr[0]);
+			if(item != null)
+				stack = new ItemStack(item, size, meta);
+		}
+		else
+			stack = new ItemStack(block, size, meta);
+	
+		return stack;
 	}
 }
