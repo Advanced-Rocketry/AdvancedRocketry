@@ -278,7 +278,7 @@ public class XMLPlanetLoader {
 				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("artifact")) {
-				ItemStack stack = XMLAsteroidLoader.getStack(planetPropertyNode.getTextContent());
+				ItemStack stack = XMLPlanetLoader.getStack(planetPropertyNode.getTextContent());
 
 				if(stack != null)
 					properties.getRequiredArtifacts().add(stack);
@@ -586,7 +586,7 @@ public class XMLPlanetLoader {
 		}
 
 		for(ItemStack stack : properties.getRequiredArtifacts()) {
-			outputString = outputString + tabLen + "\t<artifact>" + stack.getItem().getRegistryName() + " " + stack.getItemDamage() + "</artifact>\n";
+			outputString = outputString + tabLen + "\t<artifact>" + stack.getItem().getRegistryName() + " " + stack.getItemDamage() + stack.stackSize + "</artifact>\n";
 		}
 		
 		for(Integer properties2 : properties.getChildPlanets()) {
@@ -610,5 +610,36 @@ public class XMLPlanetLoader {
 		public List<StellarBody> stars = new LinkedList<StellarBody>();
 		public List<DimensionProperties> dims = new LinkedList<DimensionProperties>();
 
+	}
+	
+	public static ItemStack getStack(String text) {
+		String splitStr[] = text.split(" ");
+		int meta = 0;
+		int size = 1;
+		//format: "name meta size"
+		if(splitStr.length > 1) {
+			try {
+				meta = Integer.parseInt(splitStr[1]);
+			} catch( NumberFormatException e) {}
+			
+			if(splitStr.length > 2)
+			{
+				try {
+					size = Integer.parseInt(splitStr[2]);
+				} catch( NumberFormatException e) {}
+			}
+		}
+
+		ItemStack stack = null;
+		Block block = Block.getBlockFromName(splitStr[0]);
+		if(block == null) {
+			Item item = Item.getByNameOrId(splitStr[0]);
+			if(item != null)
+				stack = new ItemStack(item, size, meta);
+		}
+		else
+			stack = new ItemStack(block, size, meta);
+	
+		return stack;
 	}
 }
