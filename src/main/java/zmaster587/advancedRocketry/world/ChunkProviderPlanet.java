@@ -140,16 +140,20 @@ public class ChunkProviderPlanet implements IChunkGenerator {
         if(oceanBlock != null)
         {
         	this.oceanBlock = oceanBlock;
-        	((MapGenCaveExt)caveGenerator).setOceanBlock(this.oceanBlock);
-        	((MapGenRavineExt)ravineGenerator).setOceanBlock(this.oceanBlock);
+        	if(caveGenerator instanceof MapGenCaveExt)
+        		((MapGenCaveExt)caveGenerator).setOceanBlock(this.oceanBlock);
+        	if(ravineGenerator instanceof MapGenRavineExt)
+        		((MapGenRavineExt)ravineGenerator).setOceanBlock(this.oceanBlock);
         }
         
         IBlockState fillBlock = dimProps.getStoneBlock();
         if(fillBlock != null)
         {
         	this.fillblock = fillBlock;
-        	((MapGenCaveExt)caveGenerator).setFillerBlock(this.fillblock);
-        	((MapGenRavineExt)ravineGenerator).setFillerBlock(this.fillblock);
+        	if(caveGenerator instanceof MapGenCaveExt)
+        		((MapGenCaveExt)caveGenerator).setFillerBlock(this.fillblock);
+        	if(ravineGenerator instanceof MapGenRavineExt)
+        		((MapGenRavineExt)ravineGenerator).setFillerBlock(this.fillblock);
         }
         
 
