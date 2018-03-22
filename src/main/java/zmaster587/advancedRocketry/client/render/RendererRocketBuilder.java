@@ -78,16 +78,16 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			
 			
 			//Draw scanning grid
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glDisable(GL11.GL_FOG);
-			GL11.glEnable(GL11.GL_BLEND);
+			GlStateManager.disableLighting();
+			GlStateManager.disableFog();
+			GlStateManager.enableBlend();
 			if(renderTile.isBuilding())
-				GL11.glColor4f(1, 0.5f, 0.5f, .05f);
+				GlStateManager.color(1, 0.5f, 0.5f, .05f);
 			else
-				GL11.glColor4f(0.5f, 1, 0.5f, .05f);
-			GL11.glDepthMask(false);
-			GL11.glAlphaFunc(GL11.GL_GEQUAL, 0.0f);
-			GL11.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA );
+				GlStateManager.color(0.5f, 1, 0.5f, .05f);
+			GlStateManager.disableDepth();
+			GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.0f);
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			
 			bindTexture(grid);
 
@@ -95,7 +95,7 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			float maxU = (float)(1*xSize);
 			float maxV = (float)(1*zSize);
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 0xf0, 0xf0);
-			
+			GlStateManager.enableDepth();
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			for(int i = 0; i < 20; i++) {
 				
@@ -110,9 +110,9 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			Tessellator.getInstance().draw();
 			
 			GlStateManager.disableBlend();
-			GlStateManager.disableLighting();
+			GlStateManager.enableLighting();
 			GlStateManager.enableFog();
-			GlStateManager.enableDepth();
+			
 			
 
 			
@@ -134,7 +134,7 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			RenderHelper.renderTopFaceWithUV(buffer, yMax, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
 			Tessellator.getInstance().draw();
 			
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GlStateManager.disableTexture2D();
 			//Set ignore light then draw the glowy bits
 			
 			
@@ -168,6 +168,7 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.1f);
 			GlStateManager.enableDepth();
 			GlStateManager.enableTexture2D();
+			GlStateManager.enableBlend();
 			GL11.glPopMatrix();
 		}
 	}
