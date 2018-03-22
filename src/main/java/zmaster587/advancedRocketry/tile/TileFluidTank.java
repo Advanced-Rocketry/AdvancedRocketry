@@ -70,6 +70,11 @@ public class TileFluidTank extends TileFluidHatch {
 		
 		return amt;
 	}
+	
+	@Override
+	public String getModularInventoryName() {
+		return "tile.pressurizedTank.name";
+	}
 
 	@Override
 	public FluidStack drain(int maxDrain, boolean doDrain) {
