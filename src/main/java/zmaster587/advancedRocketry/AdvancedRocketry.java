@@ -215,6 +215,7 @@ import zmaster587.advancedRocketry.world.biome.BiomeGenDeepSwamp;
 import zmaster587.advancedRocketry.world.biome.BiomeGenHotDryRock;
 import zmaster587.advancedRocketry.world.biome.BiomeGenMoon;
 import zmaster587.advancedRocketry.world.biome.BiomeGenMarsh;
+import zmaster587.advancedRocketry.world.biome.BiomeGenMoonDark;
 import zmaster587.advancedRocketry.world.biome.BiomeGenOceanSpires;
 import zmaster587.advancedRocketry.world.biome.BiomeGenSpace;
 import zmaster587.advancedRocketry.world.biome.BiomeGenStormland;
@@ -1184,7 +1185,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryBiomes.swampDeepBiome = new BiomeGenDeepSwamp(config.get(BIOMECATETORY, "deepSwampBiomeId", 116).getInt(), true);
 		AdvancedRocketryBiomes.marsh = new BiomeGenMarsh(config.get(BIOMECATETORY, "marsh", 117).getInt(), true);
 		AdvancedRocketryBiomes.oceanSpires = new BiomeGenOceanSpires(config.get(BIOMECATETORY, "oceanSpires", 118).getInt(), true);
-		AdvancedRocketryBiomes.moonBiomeDark = new BiomeGenMoon(config.get(BIOMECATETORY, "moonBiomeDarkId", 119).getInt(), true);
+		AdvancedRocketryBiomes.moonBiomeDark = new BiomeGenMoonDark(config.get(BIOMECATETORY, "moonBiomeDarkId", 119).getInt(), true);
 		
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.moonBiome);
 		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.alienForest);
