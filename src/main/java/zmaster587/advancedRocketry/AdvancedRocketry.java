@@ -1909,6 +1909,11 @@ public class AdvancedRocketry {
 				if(DimensionManager.getInstance().getStar(star.getId()) == null)
 					DimensionManager.getInstance().addStar(star);
 				
+				DimensionManager.getInstance().getStar(star.getId()).setName(star.getName());
+				DimensionManager.getInstance().getStar(star.getId()).setPosX(star.getPosX());
+				DimensionManager.getInstance().getStar(star.getId()).setPosZ(star.getPosZ());
+				DimensionManager.getInstance().getStar(star.getId()).setSize(star.getSize());
+				DimensionManager.getInstance().getStar(star.getId()).setTemperature(star.getTemperature());
 				DimensionManager.getInstance().getStar(star.getId()).subStars = star.subStars;
 			}
 			
@@ -1945,6 +1950,7 @@ public class AdvancedRocketry {
 					loadedProps.setAtmosphereDensityDirect(properties.getAtmosphereDensity());
 					loadedProps.setName(properties.getName());
 					loadedProps.setGenType(properties.getGenType());
+					loadedProps.setStar(properties.getStarId());
 					
 					//Avoid CME
 					for(int i : new HashSet<Integer>(properties.getChildPlanets()))
