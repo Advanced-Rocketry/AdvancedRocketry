@@ -1759,10 +1759,13 @@ public class AdvancedRocketry {
 			loader = new XMLPlanetLoader();
 			try {
 				loader.loadFile(file);
+				if(!loader.isValid())
+					throw new Exception("Cannot read XML");
 				dimCouplingList = loader.readAllPlanets();
 				DimensionManager.dimOffset += dimCouplingList.dims.size();
-			} catch(IOException e) {
-
+			} catch(Exception e) {
+				logger.fatal(e.getMessage());
+				FMLCommonHandler.instance().exitJava(-1, false);
 			}
 		}
 		//End load planet files

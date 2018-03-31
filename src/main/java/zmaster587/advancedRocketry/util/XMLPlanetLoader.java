@@ -585,7 +585,7 @@ public class XMLPlanetLoader {
 		}
 
 		for(ItemStack stack : properties.getRequiredArtifacts()) {
-			outputString = outputString + tabLen + "\t<artifact>" + Item.itemRegistry.getNameForObject(stack.getItem()) + " " + stack.getItemDamage() + stack.stackSize + "</artifact>\n";
+			outputString = outputString + tabLen + "\t<artifact>" + Item.itemRegistry.getNameForObject(stack.getItem()) + " " + stack.getItemDamage() + " " + stack.stackSize + "</artifact>\n";
 		}
 		
 		for(Integer properties2 : properties.getChildPlanets()) {
