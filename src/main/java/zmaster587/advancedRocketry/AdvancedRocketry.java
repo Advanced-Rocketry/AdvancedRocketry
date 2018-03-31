@@ -28,6 +28,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -1661,10 +1662,13 @@ public class AdvancedRocketry {
 			loader = new XMLPlanetLoader();
 			try {
 				loader.loadFile(file);
+				if(!loader.isValid())
+					throw new Exception("Cannot read XML");
 				dimCouplingList = loader.readAllPlanets();
 				DimensionManager.dimOffset += dimCouplingList.dims.size();
-			} catch(IOException e) {
-
+			} catch(Exception e) {
+				logger.fatal(e.getMessage());
+				FMLCommonHandler.instance().exitJava(-1, false);
 			}
 		}
 		//End load planet files
