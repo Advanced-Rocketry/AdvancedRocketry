@@ -2,10 +2,12 @@ package zmaster587.advancedRocketry.asm;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.launchwrapper.Launch;
+
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
+
 import zmaster587.advancedRocketry.AdvancedRocketry;
 
 import java.util.AbstractMap.SimpleEntry;
@@ -37,7 +39,7 @@ public class ClassTransformer implements IClassTransformer {
 	private static final String CLASS_KEY_ENUMHAND = "net.minecraft.util.EnumHand";
 	private static final String CLASS_KEY_ITEMSTACK = "net.minecraft.item.ItemStack";
 	private static final String CLASS_KEY_ENUMFACING = "net.minecraft.util.EnumFacing";
-	
+
 	private static final String METHOD_KEY_PROCESSPLAYER = "processPlayer";
 	private static final String METHOD_KEY_JUMP = "jump";
 	private static final String METHOD_KEY_MOVEENTITY = "moveEntity";
@@ -47,13 +49,13 @@ public class ClassTransformer implements IClassTransformer {
 	private static final String METHOD_KEY_ONUPDATE = "net.minecraft.client.entity.Entity.onUpdate";
 	private static final String METHOD_KEY_GETLOOKVEC = "net.minecraft.entity.EntityLivingBase.getLookVec";
 	private static final String METHOD_KEY_DORENDER  = "net.minecraft.client.renderer.entity.RenderLivingEntity.doRender";
-//	private static final String METHOD_KEY_TRAVEL = "net.minecraft.entity.EntityLivingBase.travel";
+	//	private static final String METHOD_KEY_TRAVEL = "net.minecraft.entity.EntityLivingBase.travel";
 	private static final String METHOD_KEY_MOVEFLYING = "net.minecraft.entity.Entity.moveFlying";
 	private static final String METHOD_KEY_SETBLOCKSTATE = CLASS_KEY_WORLD + ".setBlockState";
 	private static final String METHOD_KEY_SETBLOCKMETADATAWITHNOTIFY = CLASS_KEY_WORLD + ".setBlockMetadataWithNotify";
 	private static final String METHOD_KEY_SETUPTERRAIN = "setupTerrain";
 	private static final String METHOD_KEY_ONBLOCKACTIVATED = CLASS_KEY_BLOCK_BED  + "onBlockActivated";
-	
+
 	private static final String FIELD_YAW = "net.minecraft.client.renderer.EntityRenderer.rotationYaw";
 	private static final String FIELD_PITCH = "net.minecraft.client.renderer.EntityRenderer.rotationPitch";
 	private static final String FIELD_PREV_YAW = "net.minecraft.client.renderer.EntityRenderer.prevRotationYaw";
@@ -62,9 +64,9 @@ public class ClassTransformer implements IClassTransformer {
 	private static final String FIELD_HASMOVED = "net.minecraft.network.NetHandlerPlayServer.hasMoved";
 	private static final String FIELD_RIDINGENTITY = "net.minecraft.entity.Entity.ridingEntity";
 	private static final String FIELD_PROVIDER = CLASS_KEY_WORLD + "provider";
-	
+
 	private static final HashMap<String, SimpleEntry<String, String>> entryMap = new HashMap<String, SimpleEntry<String, String>>();
-	
+
 
 
 	private boolean obf;
@@ -108,8 +110,8 @@ public class ClassTransformer implements IClassTransformer {
 		entryMap.put(CLASS_KEY_ENUMHAND, new SimpleEntry<String, String>("net/minecraft/util/EnumHand","ub"));
 		entryMap.put(CLASS_KEY_ITEMSTACK, new SimpleEntry<String, String>("net/minecraft/item/ItemStack","aip"));
 		entryMap.put(CLASS_KEY_ENUMFACING, new SimpleEntry<String, String>("net/minecraft/util/EnumFacing","fa"));
-		
-		
+
+
 		//entryMap.put(METHOD_KEY_PROCESSPLAYER, new SimpleEntry<String, String>("processPlayer",""));
 		//entryMap.put(METHOD_KEY_MOVEENTITY, new SimpleEntry<String, String>("moveEntity",""));
 		//entryMap.put(METHOD_KEY_SETPOSITION, new SimpleEntry<String, String>("setPosition",""));
@@ -125,7 +127,7 @@ public class ClassTransformer implements IClassTransformer {
 		//entryMap.put(METHOD_KEY_SETBLOCKMETADATAWITHNOTIFY, new SimpleEntry<String, String>("setBlockMetadataWithNotify", "a"));
 		entryMap.put(METHOD_KEY_SETUPTERRAIN, new SimpleEntry<String, String>("setupTerrain", "a"));
 		entryMap.put(METHOD_KEY_ONBLOCKACTIVATED, new SimpleEntry<String, String>("onBlockActivated", "a"));
-		
+
 		//entryMap.put(FIELD_YAW, new SimpleEntry<String, String>("rotationYaw", "blt"));
 		//entryMap.put(FIELD_PITCH, new SimpleEntry <String, String>("rotationPitch", "blt"));
 		//entryMap.put(FIELD_PREV_YAW, new SimpleEntry<String, String>("prevRotationYaw", "blt"));
@@ -574,24 +576,23 @@ public class ClassTransformer implements IClassTransformer {
 			return finishInjection(cn);
 		}*/
 
-		
+
 		//was causing problems on startup, no idea what it does anymore,
 		//I need to apply better documentation practices
-		
-		if(changedName.equals(getName(CLASS_KEY_RENDER_GLOBAL))) {
+		if(changedName.equals(getName(CLASS_KEY_RENDER_GLOBAL)) && net.minecraftforge.common.ForgeVersion.getVersion().compareTo("14.23.2.2642") < 0) {
 			ClassNode cn = startInjection(bytes);
 			MethodNode setupTerrain = getMethod(cn, getName(METHOD_KEY_SETUPTERRAIN), "(L"+ getName(CLASS_KEY_ENTITY) + ";DL" + getName(CLASS_KEY_ICAMERA) + ";IZ)V");
 			if(setupTerrain != null) {
 				final InsnList nodeAdd = new InsnList();
-				
+
 				AbstractInsnNode pos1 = null;
 				AbstractInsnNode pos3 = null;
 				AbstractInsnNode pos2 = null;
-				
+
 				int ifnull = 3;
 				int aload = 3;
 				int indexPos1 = 0;;
-				
+
 				for(int i = setupTerrain.instructions.size() - 1; i >= 0; i--) {
 					AbstractInsnNode ain = setupTerrain.instructions.get(i);
 					if(ain.getOpcode() == Opcodes.IFNULL && --ifnull == 0) {
@@ -600,7 +601,7 @@ public class ClassTransformer implements IClassTransformer {
 						break;
 					}
 				}
-				
+
 				for(int i = indexPos1; i < setupTerrain.instructions.size(); i++) {
 					AbstractInsnNode ain = setupTerrain.instructions.get(i);
 					if(ain.getOpcode() == Opcodes.ALOAD && --aload == 0) {
@@ -608,31 +609,31 @@ public class ClassTransformer implements IClassTransformer {
 						break;
 					}
 				}
-				
+
 				while(pos1 != pos2)
 				{
 					pos3 = pos1;
 					pos1 = pos1.getNext();
 					setupTerrain.instructions.remove(pos3);
 				}
-				
+
 				//Lack of robustness, this could go really wrong. To future me: told you so!
 				//pos2 = setupTerrain.instructions.get(914);
-				
+
 				//nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 25));
 				//nodeAdd.add(new JumpInsnNode(Opcodes.GOTO, pos2));
 				//nodeAdd.add(new VarInsnNode(Opcodes.ILOAD, 27));
 				//nodeAdd.add(new JumpInsnNode(Opcodes.IFEQ, pos2));
-				
+
 				//setupTerrain.instructions.insert(pos1, nodeAdd);
-				
+
 			}
 			else
 				AdvancedRocketry.logger.fatal("ASM injection into RenderGlobal.setupTerrain FAILED!");
 
 			return finishInjection(cn);
 		}
-		
+
 		//Inserts a hook to register inventories with rockets so they can be accessed from the UI
 		//By default in most cases inventories check for distance and rockets have their own coordinate system.
 		if(changedName.equals(getName(CLASS_KEY_ENTITY_PLAYER_MP))) {
@@ -646,11 +647,11 @@ public class ClassTransformer implements IClassTransformer {
 				AbstractInsnNode ain = null;
 				int numSpec = 1;
 				int numAload = 7;
-				
+
 				for(int i = 0; i < onUpdate.instructions.size(); i++) {
 					ain = onUpdate.instructions.get(i);
 					if(ain.getOpcode() == Opcodes.INVOKEVIRTUAL && numSpec-- == 0) {
-						
+
 						while( i < onUpdate.instructions.size() ) {
 							pos = onUpdate.instructions.get(i++);
 							if( pos.getOpcode()  == Opcodes.ALOAD && numAload-- == 0 ) {
@@ -661,22 +662,22 @@ public class ClassTransformer implements IClassTransformer {
 						break;
 					}
 				}
-				
-				
+
+
 				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 0));
 				nodeAdd.add(new TypeInsnNode(Opcodes.CHECKCAST, "java/lang/Object"));
 				nodeAdd.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "zmaster587/advancedRocketry/util/RocketInventoryHelper", "allowAccess", "(Ljava/lang/Object;)Z", false));
 				nodeAdd.add(new JumpInsnNode(Opcodes.IFNE, label));
-				
+
 				onUpdate.instructions.insert(ain, nodeAdd);
-				
+
 				//onUpdate.instructions.insertBefore(pos, label);
-				
+
 			}
-			
+
 			return finishInjection(cn);
 		}
-		
+
 		//Inserts a hook to register inventories with rockets so they can be accessed from the UI
 		//By default in most cases inventories check for distance and rockets have their own coordinate system.
 		if(changedName.equals(getName(CLASS_KEY_ENTITY_PLAYER))) {
@@ -689,41 +690,41 @@ public class ClassTransformer implements IClassTransformer {
 				AbstractInsnNode ain = null;
 				int numSpec = 1;
 				int numAload = 7;
-				
+
 				for(int i = 0; i < onUpdate.instructions.size(); i++) {
 					ain = onUpdate.instructions.get(i);
 					if(ain.getOpcode() == Opcodes.INVOKESPECIAL && numSpec-- == 0) {
-						
+
 						while( i < onUpdate.instructions.size() ) {
 							pos = onUpdate.instructions.get(i++);
 							if( pos.getOpcode()  == Opcodes.ALOAD && numAload-- == 0 ) {
 								label = (LabelNode)pos.getPrevious().getPrevious().getPrevious();
 								break;
 							}
-								
+
 						}
 						break;
 					}
 				}
-				
-				
+
+
 				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 0));
 				nodeAdd.add(new TypeInsnNode(Opcodes.CHECKCAST, "java/lang/Object"));
 				nodeAdd.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "zmaster587/advancedRocketry/util/RocketInventoryHelper", "allowAccess", "(Ljava/lang/Object;)Z", false));
 				nodeAdd.add(new JumpInsnNode(Opcodes.IFNE, label));
-				
+
 				onUpdate.instructions.insert(ain, nodeAdd);
-				
+
 				//onUpdate.instructions.insertBefore(pos, label);
-				
+
 			}
 			else
 				AdvancedRocketry.logger.fatal("ASM injection into EntityPlayer.onupdate FAILED!");
-			
-			
+
+
 			return finishInjection(cn);
 		}
-		
+
 		//Allows items to be affected by gravity
 		//Why isn't this handled by the onEntityUpdate call?
 		if(changedName.equals(getName(CLASS_KEY_ENTITY_ITEM))) {
