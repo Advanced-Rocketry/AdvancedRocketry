@@ -93,14 +93,10 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 		MODES mode = getMode(componentStack);
 		boolean isActive = isActive(componentStack, player);
 
-		try {
-			flySpeed.setFloat(player.capabilities, speedUpgrades*0.02f);
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
-		//ObfuscationReflectionHelper.setPrivateValue(net.minecraft.entity.player.PlayerCapabilities.class, player.capabilities, speedUpgrades*0.02f, "flySpeed");
+		
+		//Apply speed upgrades
+		player.motionX *= 1 + speedUpgrades*0.02f;
+		player.motionZ *= 1 + speedUpgrades*0.02f;
 		
 		if(hasModeSwitched(componentStack))
 			player.capabilities.isFlying = false;
@@ -112,13 +108,15 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 
 				if((isActive || player.isSneaking()) && !player.onGround)
 					setHeight(componentStack, (int)player.posY + player.height);
-
 				onAccelerate(componentStack, inv, player);
 			}
 			else if(isActive) {
 				onAccelerate(componentStack, inv, player);
 			}
 		}
+		else if(mode == MODES.HOVER)
+			if(!isActive)
+				player.capabilities.isFlying = false;
 	}
 
 
@@ -214,6 +212,8 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 				player.fallDistance = 0;
 			}
 		}
+		else if(mode == MODES.HOVER)
+			player.capabilities.isFlying = false;
 
 	}
 
