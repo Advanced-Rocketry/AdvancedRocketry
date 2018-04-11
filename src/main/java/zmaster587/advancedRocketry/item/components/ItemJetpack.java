@@ -18,7 +18,9 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
 import org.lwjgl.opengl.GL11;
+
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
@@ -37,8 +39,6 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
-
-	Field flySpeed;
 	
 	private static enum MODES {
 		NORMAL,
@@ -46,8 +46,6 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 	}
 
 	public ItemJetpack() {
-		flySpeed = ReflectionHelper.findField(net.minecraft.entity.player.PlayerCapabilities.class, "flySpeed", "field_75096_f");
-		flySpeed.setAccessible(true);
 	}
 	
 
@@ -58,13 +56,6 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 			ItemStack armorStack, IInventory inv, ItemStack componentStack) {
 
 		if(player.capabilities.isCreativeMode) {
-			try {
-				flySpeed.setFloat(player.capabilities, 0.05f);
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
 			return;
 		}
 
@@ -102,10 +93,26 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 			if(mode == MODES.HOVER) {
 				if(!allowsHover)
 					changeMode(componentStack, inv, player);
-
-				if((isActive || player.isSneaking()) && !player.onGround)
+				
+				if (InputSyncHandler.isSpaceDown(player))
+				{
+					System.out.println("shit");
+					onAccelerate(componentStack, inv, player);
 					setHeight(componentStack, (int)player.posY + player.height);
-				onAccelerate(componentStack, inv, player);
+				}
+				else if ((isActive || player.isSneaking()) && !player.onGround) {
+					setHeight(componentStack, (int)player.posY + player.height);
+					
+					if(player.motionY < -0.6)
+						onAccelerate(componentStack, inv, player);
+				}
+				else if(player.posY < getHeight(componentStack)) {
+					onAccelerate(componentStack, inv, player);
+					
+					if( player.motionY < 0.1 && player.motionY > -0.1)
+						player.motionY *= 0.01;
+				}
+				
 			}
 			else if(isActive) {
 				onAccelerate(componentStack, inv, player);
@@ -177,12 +184,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 
 		if(hasFuel) {
 
-			if(mode == MODES.HOVER) {
-				if(Configuration.jetPackThrust > DimensionManager.getInstance().getDimensionProperties(player.world.provider.getDimension()).getGravitationalMultiplier())
-					player.capabilities.isFlying = true;
-			} else 
-				player.addVelocity(0, (double)Configuration.jetPackThrust*0.1f, 0);
-
+			player.addVelocity(0, (double)Configuration.jetPackThrust*0.1f, 0);
 			if(player.world.isRemote) {
 				double xPos = player.posX;
 				double zPos = player.posZ;
@@ -206,8 +208,6 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 				player.fallDistance = 0;
 			}
 		}
-		else if(mode == MODES.HOVER)
-			player.capabilities.isFlying = false;
 
 	}
 
