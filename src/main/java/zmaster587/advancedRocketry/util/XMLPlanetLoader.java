@@ -348,7 +348,7 @@ public class XMLPlanetLoader {
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("GasGiant")) {
 				String text = planetPropertyNode.getTextContent();
 				if(text != null && !text.isEmpty() && text.equalsIgnoreCase("true"))
-					properties.setGasGiant();
+					properties.setGasGiant(true);
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("isKnown")) {
 				String text = planetPropertyNode.getTextContent();

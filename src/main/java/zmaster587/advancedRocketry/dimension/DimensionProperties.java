@@ -366,8 +366,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		return isGasGiant;
 	}
 
-	public void setGasGiant() {
-		this.isGasGiant = true;
+	public void setGasGiant(boolean gas) {
+		this.isGasGiant = gas;
 	}
 
 	public boolean hasRings() {
