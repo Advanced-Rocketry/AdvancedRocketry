@@ -266,20 +266,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		generatorType = 0;
 	}
 
-	public boolean isGasGiant() {
-		return isGasGiant;
-	}
-
 	public void setGasGiant() {
 		isGasGiant = true;
-	}
-
-	public boolean hasRings() {
-		return this.hasRings;
-	}
-
-	public void setHasRings(boolean value) {
-		this.hasRings = value;
 	}
 
 	public DimensionProperties(int id ,String name) {
@@ -390,6 +378,22 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	public int getStarId() {
 		return starId;
+	}
+		
+	public boolean isGasGiant() {
+		return isGasGiant;
+	}
+
+	public void setGasGiant(boolean gas) {
+		this.isGasGiant = gas;
+	}
+
+	public boolean hasRings() {
+		return this.hasRings;
+	}
+
+	public void setHasRings(boolean value) {
+		this.hasRings = value;
 	}
 	
 	//Adds a beacon location to the planet's surface
