@@ -1,5 +1,7 @@
 package zmaster587.advancedRocketry.world.util;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.network.PacketStorageTileUpdate;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.network.PacketHandler;
@@ -155,6 +157,12 @@ public class WorldDummy extends World {
 			return new ChunkProviderClient(this);
 		else 
 			return null;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public float getSunBrightness(float partialTicks) {
+		return 0;
 	}
 
 	@Override
