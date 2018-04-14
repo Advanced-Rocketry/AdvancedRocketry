@@ -14,6 +14,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.storage.WorldInfo;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class WorldDummy extends World {
 
@@ -79,6 +81,12 @@ public class WorldDummy extends World {
 			return new ChunkProviderClient(this);
 		else 
 			return null;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public float getSunBrightness(float partialTicks) {
+		return 0;
 	}
 
 	//No entities exist
