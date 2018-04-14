@@ -24,6 +24,9 @@ public class TankCapabilityItemStack implements ICapabilityProvider {
 
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		return (T) fluidHandler;
+		if (hasCapability(capability, facing)) {
+			return CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY.cast(fluidHandler);
+		}
+		return null;
 	}
 }
