@@ -259,7 +259,11 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		//prevMultiplier *= 0.25f;
 
 		for(Integer childId : planet.getChildPlanets()) {
+			
 			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(childId);
+			if(planetDefiner != null && !planetDefiner.isPlanetKnown(properties))
+				continue;
+			
 			renderPlanets((DimensionProperties)properties, offsetX + (int)(((DimensionProperties)properties).getVisualSizeMultiplier()*displaySize/2), 
 					offsetY + (int)(((DimensionProperties)properties).getVisualSizeMultiplier()*displaySize/2), 
 					(int)(((DimensionProperties)properties).getVisualSizeMultiplier()*displaySize), distanceZoomMultiplier,planetSizeMultiplier);
