@@ -794,7 +794,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 		else if(id == 2)
 			stack = inv.getStackInSlot(COMPOSITION);
 
-		if(stack != null && stack.getItem() instanceof ItemData) {
+		if(!stack.isEmpty() && stack.getItem() instanceof ItemData) {
 			ItemData item = (ItemData) stack.getItem();
 			item.removeData(stack, this.addData(item.getData(stack), item.getDataType(stack), EnumFacing.UP, true), item.getDataType(stack));
 		}
