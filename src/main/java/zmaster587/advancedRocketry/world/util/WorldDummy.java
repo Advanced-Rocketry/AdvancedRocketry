@@ -91,6 +91,12 @@ public class WorldDummy extends World {
 		else 
 			return null;
 	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public float getSunBrightness(float partialTicks) {
+		return 0;
+	}
 
 	@Override
 	public int getLight(BlockPos pos, boolean checkNeighbors) {
