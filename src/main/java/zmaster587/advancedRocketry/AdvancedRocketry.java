@@ -1814,7 +1814,6 @@ public class AdvancedRocketry {
 
 		//Attempt to load ore config from adv planet XML
 		if(dimCouplingList != null) {
-
 			//Register new stars
 			for(StellarBody star : dimCouplingList.stars) {
 				if(DimensionManager.getInstance().getStar(star.getId()) == null)
@@ -1845,6 +1844,7 @@ public class AdvancedRocketry {
 				//Overwrite with loaded XML
 				if(DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
 					DimensionProperties loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
+					DimensionManager.getInstance().setDimProperties(properties.getId(), properties);
 
 					loadedProps.fogColor = properties.fogColor;
 					loadedProps.gravitationalMultiplier = properties.gravitationalMultiplier;
@@ -1854,6 +1854,8 @@ public class AdvancedRocketry {
 					loadedProps.orbitalPhi = properties.orbitalPhi;
 					loadedProps.rotationalPeriod = properties.rotationalPeriod;
 					loadedProps.skyColor = properties.skyColor;
+					loadedProps.getChildPlanets().addAll(properties.getChildPlanets());
+					loadedProps.getChildPlanets().retainAll(properties.getChildPlanets());
 					loadedProps.setSeaLevel(properties.getSeaLevel());
 					loadedProps.setOceanBlock(properties.getOceanBlock());
 					loadedProps.setStoneBlock(properties.getStoneBlock());
@@ -1862,12 +1864,7 @@ public class AdvancedRocketry {
 					loadedProps.setName(properties.getName());
 					loadedProps.setGenType(properties.getGenType());
 					loadedProps.setStar(properties.getStarId());
-					
-					//Avoid CME
-					for(int i : new HashSet<Integer>(properties.getChildPlanets()))
-						loadedProps.addChildPlanet(DimensionManager.getInstance().getDimensionProperties(i));
-
-					if(properties.isGasGiant()) loadedProps.setGasGiant();
+					loadedProps.setGasGiant(properties.isGasGiant());
 					
 					//Register gasses if needed
 					if(!properties.getHarvestableGasses().isEmpty() && properties.getHarvestableGasses() != loadedProps.getHarvestableGasses()) {

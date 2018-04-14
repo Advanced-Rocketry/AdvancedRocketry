@@ -255,6 +255,10 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 		for(Integer childId : planet.getChildPlanets()) {
 			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(childId);
+			
+			if(planetDefiner != null && !planetDefiner.isPlanetKnown(properties))
+				continue;
+			
 			renderPlanets(properties, offsetX + displaySize/2, offsetY + displaySize/2, displaySize, distanceZoomMultiplier, planetSizeMultiplier);
 		}
 

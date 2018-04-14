@@ -369,7 +369,7 @@ public class DimensionManager implements IGalaxy {
 
 		//Linear is easier. Earth is nominal!
 		properties.averageTemperature = getTemperature(properties.getStar(), properties.orbitalDist, properties.getAtmosphereDensity());
-		properties.setGasGiant();
+		properties.setGasGiant(true);
 		//TODO: add gasses
 		registerDim(properties, true);
 		return properties;
