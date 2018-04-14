@@ -61,7 +61,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 
 		ItemLinker.setMasterCoords(item, getPos());
 		
-		if(!worldObj.isRemote)
+		if(worldObj.isRemote)
 			player.addChatMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.linker.program")));
 
 		return true;
@@ -83,7 +83,10 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 		if(tile instanceof TileWirelessTransciever )
 		{
 			if(worldObj.isRemote)
+			{
+				player.addChatMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.linker.success")));
 				return true;
+			}
 
 			int othernetworkid = ((TileWirelessTransciever)tile).networkID;
 
@@ -109,7 +112,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 			addToNetwork();
 			((TileWirelessTransciever)tile).addToNetwork();
 			
-			player.addChatMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.linker.success")));
+			ItemLinker.resetPosition(item);
 			
 			return true;
 		}
@@ -120,7 +123,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 	private void addToNetwork()
 	{
 
-		if(networkID == -1 || !enabled)
+		if(networkID == -1)
 			return;
 		else if(!NetworkRegistry.dataNetwork.doesNetworkExist(networkID))
 			NetworkRegistry.dataNetwork.getNewNetworkID(networkID);
@@ -220,13 +223,6 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 			else if(id == 1)
 			{
 				enabled = nbt.getBoolean("state");
-				if(!enabled)
-				{
-					if(NetworkRegistry.dataNetwork.doesNetworkExist(networkID))
-						NetworkRegistry.dataNetwork.getNetwork(networkID).removeFromAll(this);
-				}
-				else
-					addToNetwork();
 			}
 		}
 	}
@@ -248,6 +244,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		nbt.setBoolean("mode", extractMode);
+		nbt.setBoolean("enabled", enabled);
 		nbt.setInteger("networkID", networkID);
 		data.writeToNBT(nbt);
 		return super.writeToNBT(nbt);
@@ -256,13 +253,13 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 	@Override
 	public int extractData(int maxAmount, DataType type, EnumFacing dir,
 			boolean commit) {
-		return data.extractData(maxAmount, type, dir, commit);
+		return enabled ? data.extractData(maxAmount, type, dir, commit) : 0;
 	}
 
 	@Override
 	public int addData(int maxAmount, DataType type, EnumFacing dir,
 			boolean commit) {
-		return data.addData(maxAmount, type, dir, commit);
+		return enabled ? data.addData(maxAmount, type, dir, commit) : 0;
 	}
 
 
