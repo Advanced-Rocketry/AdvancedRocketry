@@ -1947,6 +1947,8 @@ public class AdvancedRocketry {
 					loadedProps.orbitalPhi = properties.orbitalPhi;
 					loadedProps.rotationalPeriod = properties.rotationalPeriod;
 					loadedProps.skyColor = properties.skyColor;
+					loadedProps.orbitTheta = properties.orbitTheta;
+					loadedProps.customIcon = properties.customIcon;
 					loadedProps.getChildPlanets().addAll(properties.getChildPlanets());
 					loadedProps.getChildPlanets().retainAll(properties.getChildPlanets());
 					loadedProps.setSeaLevel(properties.getSeaLevel());
