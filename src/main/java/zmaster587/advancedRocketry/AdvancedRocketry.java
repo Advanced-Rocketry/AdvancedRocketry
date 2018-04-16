@@ -91,6 +91,7 @@ import zmaster587.advancedRocketry.event.CableTickHandler;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.event.WorldEvents;
 import zmaster587.advancedRocketry.integration.CompatibilityMgr;
+import zmaster587.advancedRocketry.integration.GalacticCraftHandler;
 import zmaster587.advancedRocketry.item.*;
 import zmaster587.advancedRocketry.item.components.ItemJetpack;
 import zmaster587.advancedRocketry.item.components.ItemPressureTank;
@@ -1373,12 +1374,12 @@ public class AdvancedRocketry {
 		MinecraftForge.EVENT_BUS.register(new MapGenLander());
 		AdvancedRocketryAPI.gravityManager = new GravityHandler();
 
-		/*if(Loader.isModLoaded("GalacticraftCore") && zmaster587.advancedRocketry.api.Configuration.overrideGCAir) {
+		if(Loader.isModLoaded("galacticraftcore") && zmaster587.advancedRocketry.api.Configuration.overrideGCAir) {
 			GalacticCraftHandler eventHandler = new GalacticCraftHandler();
 			MinecraftForge.EVENT_BUS.register(eventHandler);
 			if(event.getSide().isClient())
 				FMLCommonHandler.instance().bus().register(eventHandler);
-		}*/
+		}
 
 		MinecraftForge.EVENT_BUS.register(SpaceObjectManager.getSpaceManager());
 

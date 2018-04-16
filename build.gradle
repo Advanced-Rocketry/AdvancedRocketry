@@ -68,6 +68,10 @@ repositories {
             name "Tesla"
             artifactPattern "https://addons-origin.cursecdn.com/files/2347/256/[module]-[revision].[ext]"
         }
+    ivy {
+	    name "GalacticraftCore"
+            artifactPattern "https://ci.micdoodle8.com/job/Galacticraft-1.12/174/artifact/Forge/build/libs/[module]-[revision].[ext]"
+        }
 //    ivy {
 //            name "EnderIO"
 //            artifactPattern "https://addons-origin.cursecdn.com/files/2238/375/[module]-[revision].[ext]"
@@ -83,6 +87,7 @@ dependencies {
     //compile name: 'Tesla', version: '1.11-1.3.0.51-deobf', ext: 'jar'
     //compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
     compile name: 'LibVulpes', version: '1.12.2-' + project.libVulpesVersion  + '-' + project.libVulpesBuildNum + '-deobf', ext: 'jar'
+    compile name: 'GalacticraftCore', version: '1.12.2-4.0.1.174', ext: 'jar'
     
     // compile against the JEI API
     deobfCompile "mezz.jei:jei_1.12.2:4.8.0.110:api"
