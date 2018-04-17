@@ -149,7 +149,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 		{
 			List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
 
-			if(bbCache.intersectsWith(rocket.getBoundingBox())) {
+			if(bbCache.intersectsWith(rocket.boundingBox)) {
 				if(!worldObj.isRemote)
 					for(IInfrastructure infrastructure : getConnectedInfrastructure()) {
 						rocket.linkInfrastructure(infrastructure);
@@ -178,7 +178,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			AxisAlignedBB bbCache = AxisAlignedBB.getBoundingBox(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 1, this.yCoord + 2, this.zCoord + 1);
 			List<EntityRocketBase> rockets = worldObj.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
 
-			if(bbCache.intersectsWith(rocket.getBoundingBox())) {
+			if(bbCache.intersectsWith(rocket.boundingBox)) {
 				if(event.entity instanceof EntityRocket) {
 					((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), 
 							ItemLinker.getMasterX(stack) + 0.5f, Configuration.orbit, ItemLinker.getMasterZ(stack) + 0.5f);
@@ -195,7 +195,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			EntityRocketBase rocket = (EntityRocketBase)event.entity;
 			AxisAlignedBB bbCache = AxisAlignedBB.getBoundingBox(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 1, this.yCoord + 2, this.zCoord + 1);
 
-			if(bbCache.intersectsWith(rocket.getBoundingBox())) {
+			if(bbCache.intersectsWith(rocket.boundingBox)) {
 
 				ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(xCoord, zCoord);
 
