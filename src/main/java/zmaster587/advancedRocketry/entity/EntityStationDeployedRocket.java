@@ -3,7 +3,9 @@ package zmaster587.advancedRocketry.entity;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -15,6 +17,7 @@ import zmaster587.advancedRocketry.api.StatsRocket;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
+import zmaster587.advancedRocketry.client.SoundRocketEngine;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.mission.MissionGasCollection;
@@ -32,6 +35,7 @@ import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -118,6 +122,18 @@ public class EntityStationDeployedRocket extends EntityRocket {
 	public void onUpdate() {
 		lastWorldTickTicked = worldObj.getTotalWorldTime();
 
+		if(this.ticksExisted == 20) {
+			//problems with loading on other world then where the infrastructure was set?
+			ListIterator<BlockPosition> itr = (new LinkedList<BlockPosition>(infrastructureCoords)).listIterator();
+			while(itr.hasNext()) {
+				BlockPosition temp = itr.next();
+
+				TileEntity tile = this.worldObj.getTileEntity(temp.x, temp.y, temp.z);
+				if(tile instanceof IInfrastructure) {
+					this.linkInfrastructure((IInfrastructure)tile);
+				}
+			}
+		}
 
 		if(isInFlight()) {
 

@@ -135,6 +135,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 		this.linkedRocket = rocket;
 		return true;
 	}
+	
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
@@ -203,6 +204,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 		}
 		else if(id == 2) {
 			state = RedstoneState.values()[nbt.getByte("state")];
+			redstoneControl.setRedstoneState(state);
 		}
 		if(id == 100) {
 			if(linkedRocket != null)
