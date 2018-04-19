@@ -1,8 +1,8 @@
 package zmaster587.advancedRocketry.integration;
 
-import micdoodle8.mods.galacticraft.api.event.oxygen.GCCoreOxygenSuffocationEvent;
-import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
-import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStatsClient;
+//import micdoodle8.mods.galacticraft.api.event.oxygen.GCCoreOxygenSuffocationEvent;
+//import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
+//import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStatsClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GalacticCraftHandler {
 
 
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public void GCSuffocationEvent(GCCoreOxygenSuffocationEvent.Pre event) {
 		
 		if(event.getEntity() instanceof EntityPlayer) {
@@ -36,6 +36,6 @@ public class GalacticCraftHandler {
 			if(stats != null)
 				stats.setOxygenSetupValid(true);
 		}
-	}
+	}*/
 
 }
