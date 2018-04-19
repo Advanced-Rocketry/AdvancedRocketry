@@ -131,6 +131,11 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 		this.linkedRocket = rocket;
 		return true;
 	}
+	
+	@Override
+	public NBTTagCompound getUpdateTag() {
+		return writeToNBT(new NBTTagCompound());
+	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
@@ -190,9 +195,6 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 				mission = null;
 				setMissionText();
 			}
-			else if(id == 2) {
-				state = RedstoneState.values()[nbt.getByte("state")];
-			}
 			else {
 				SatelliteBase base = DimensionManager.getInstance().getSatellite(idNum);
 
@@ -201,6 +203,10 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 					setMissionText();
 				}
 			}
+		}
+		else if(id == 2) {
+			state = RedstoneState.values()[nbt.getByte("state")];
+			redstoneControl.setRedstoneState(state);
 		}
 		if(id == 100) {
 			if(linkedRocket != null)

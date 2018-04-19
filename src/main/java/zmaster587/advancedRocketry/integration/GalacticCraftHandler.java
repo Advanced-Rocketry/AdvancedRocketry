@@ -29,6 +29,7 @@ public class GalacticCraftHandler {
 			if(stats != null)
 				stats.oxygenSetupValid = true;
 		}
+<<<<<<< HEAD
 	}
 */
 }

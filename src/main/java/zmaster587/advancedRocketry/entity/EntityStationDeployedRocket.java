@@ -3,7 +3,9 @@ package zmaster587.advancedRocketry.entity;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
@@ -13,11 +15,13 @@ import zmaster587.advancedRocketry.api.StatsRocket;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
+import zmaster587.advancedRocketry.client.SoundRocketEngine;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.mission.MissionGasCollection;
 import zmaster587.advancedRocketry.network.PacketSatellite;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -31,7 +35,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -119,6 +126,21 @@ public class EntityStationDeployedRocket extends EntityRocket {
 	public void onUpdate() {
 		lastWorldTickTicked = world.getTotalWorldTime();
 
+		if(this.ticksExisted == 20) {
+			//problems with loading on other world then where the infrastructure was set?
+			ListIterator<HashedBlockPosition> itr = (new LinkedList<HashedBlockPosition>(infrastructureCoords)).listIterator();
+			while(itr.hasNext()) {
+				HashedBlockPosition temp = itr.next();
+
+				TileEntity tile = this.world.getTileEntity(new BlockPos(temp.x, temp.y, temp.z));
+				if(tile instanceof IInfrastructure) {
+					this.linkInfrastructure((IInfrastructure)tile);
+				}
+			}
+
+			if(world.isRemote)
+				LibVulpes.proxy.playSound(new SoundRocketEngine( AudioRegistry.combustionRocket, SoundCategory.NEUTRAL,this));
+		}
 
 		if(isInFlight()) {
 
