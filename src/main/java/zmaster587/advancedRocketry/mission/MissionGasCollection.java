@@ -59,9 +59,15 @@ public class MissionGasCollection extends MissionResourceCollection {
 			}
 		}
 
-		EntityStationDeployedRocket rocket = new EntityStationDeployedRocket(DimensionManager.getWorld(launchDimension), rocketStorage, rocketStats, x, y, z);
-		rocket.setFuelAmount(0);
 		World world = DimensionManager.getWorld(launchDimension);
+		if (world == null)
+		{
+			DimensionManager.initDimension(launchDimension);
+			world = DimensionManager.getWorld(launchDimension);
+		}
+		
+		EntityStationDeployedRocket rocket = new EntityStationDeployedRocket(world, rocketStorage, rocketStats, x, y, z);
+		rocket.setFuelAmount(0);
 		rocket.readMissionPersistantNBT(missionPersistantNBT);
 
 		EnumFacing dir = rocket.forwardDirection;
