@@ -131,13 +131,13 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			while(itr.hasNext()) {
 				HashedBlockPosition temp = itr.next();
 
-				TileEntity tile = this.world.getTileEntity(new BlockPos(temp.x, temp.y, temp.z));
+				TileEntity tile = this.worldObj.getTileEntity(new BlockPos(temp.x, temp.y, temp.z));
 				if(tile instanceof IInfrastructure) {
 					this.linkInfrastructure((IInfrastructure)tile);
 				}
 			}
 
-			if(world.isRemote)
+			if(worldObj.isRemote)
 				LibVulpes.proxy.playSound(new SoundRocketEngine( AudioRegistry.combustionRocket, SoundCategory.NEUTRAL,this));
 		}
 
