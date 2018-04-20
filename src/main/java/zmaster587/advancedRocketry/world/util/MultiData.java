@@ -34,6 +34,9 @@ public class MultiData implements IDataHandler {
 	public int extractData(int maxAmount, DataType type, ForgeDirection dir, boolean commit) {
 
 		DataStorage storage = dataStorages.get(type);
+		
+		if(storage == null)
+			return 0;
 
 		return storage.removeData(maxAmount, commit);
 	}
@@ -42,6 +45,9 @@ public class MultiData implements IDataHandler {
 	public int addData(int maxAmount, DataType type, ForgeDirection dir, boolean commit) {
 		DataStorage storage = dataStorages.get(type);
 
+		if(storage == null)
+			return 0;
+		
 		return storage.addData(maxAmount, type, commit);
 	}
 
