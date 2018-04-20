@@ -787,16 +787,32 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 	@Override
 	public void loadData(int id) {
 		ItemStack stack = null;
+		
+		//Use an unused datatype for now
+		DataType type = DataType.HUMIDITY;
+		
 		if(id == 0) 
+		{
 			stack = inv.getStackInSlot(DISTANCESLOT);
+			type = DataType.DISTANCE;
+		}
 		else if (id == 1)
+		{
 			stack = inv.getStackInSlot(MASSSLOT);
+			type = DataType.MASS;
+		}
 		else if(id == 2)
+		{
 			stack = inv.getStackInSlot(COMPOSITION);
+			type = DataType.COMPOSITION;
+		}
 
+		
+		
 		if(!stack.isEmpty() && stack.getItem() instanceof ItemData) {
 			ItemData item = (ItemData) stack.getItem();
-			item.removeData(stack, this.addData(item.getData(stack), item.getDataType(stack), EnumFacing.UP, true), item.getDataType(stack));
+			if(item.getDataType(stack) == type)
+				item.removeData(stack, this.addData(item.getData(stack), item.getDataType(stack), EnumFacing.UP, true), type);
 		}
 
 		if(world.isRemote) {
