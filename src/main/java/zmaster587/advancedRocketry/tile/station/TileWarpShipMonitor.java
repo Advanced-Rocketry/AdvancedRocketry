@@ -54,7 +54,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 	private ModuleText canWarp;
 	DimensionProperties dimCache;
 	private SpaceObject station;
-	private static final int ARTIFACT_BEGIN_RANGE = 4, ARTIFACT_END_RANGE = 7;
+	private static final int ARTIFACT_BEGIN_RANGE = 4, ARTIFACT_END_RANGE = 8;
 	ModulePanetImage srcPlanetImg, dstPlanetImg;
 	ModuleSync sync1, sync2, sync3;
 	ModuleText srcPlanetText, dstPlanetText, warpFuel, status, warpCapacity;
@@ -256,8 +256,8 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				modules.add(new ModuleSlotArray(30, 35, this, 4, 5));
 				modules.add(new ModuleSlotArray(55, 60, this, 5, 6));
 				modules.add(new ModuleSlotArray(80, 35, this, 6, 7));
-				modules.add(new ModuleSlotArray(105, 60, this, 6, 7));
-				modules.add(new ModuleSlotArray(130, 35, this, 7, 8));
+				modules.add(new ModuleSlotArray(105, 60, this, 7, 8));
+				modules.add(new ModuleSlotArray(130, 35, this, 8, 9));
 
 				modules.add(new ModuleButton(50, 117, 3, LibVulpes.proxy.getLocalizedString("msg.warpmon.search"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, LibVulpes.proxy.getLocalizedString("msg.warpmon.datareq"), 100, 10));
 				modules.add(new ModuleButton(50, 127, 4, LibVulpes.proxy.getLocalizedString("msg.warpmon.chip"), this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild,100, 10));
