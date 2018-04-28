@@ -176,10 +176,13 @@ public class XMLPlanetLoader {
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("fillerBlock")) {
 				String blockName = planetPropertyNode.getTextContent();
-				Block block = (Block) Block.blockRegistry.getObject(blockName);
+				Block block = (Block) Block.getBlockFromName(blockName);
 				
 				if(block == Blocks.air || block == null)
-					AdvancedRocketry.logger.warn("Invalid ocean block: " + blockName); //TODO: more detailed error msg
+				{
+					AdvancedRocketry.logger.warn("Invalid filler block: " + blockName); //TODO: more detailed error msg
+					block = null;
+				}
 				
 				properties.setStoneBlock(block);
 			}

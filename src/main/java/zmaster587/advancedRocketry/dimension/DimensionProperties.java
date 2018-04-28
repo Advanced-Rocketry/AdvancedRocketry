@@ -1261,6 +1261,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		
 		if(nbt.hasKey("fillBlockId")) {
 			Block block = Block.getBlockById(nbt.getInteger("fillBlockId"));
+			fillerBlock = block;
 			if(block == Blocks.air) {
 				fillerBlock = null;
 			}

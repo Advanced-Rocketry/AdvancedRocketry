@@ -206,10 +206,6 @@ public class ChunkManagerPlanet extends WorldChunkManager {
 			{
 				BiomeGenBase biome = AdvancedRocketryBiomes.instance.getBiomeById(aint[i1]);
 
-				//TODO: debug
-				if(biome == null)
-					System.out.println("shit");
-
 				float f = (float)biome.getIntRainfall() / 65536.0F;
 
 				if (f > 1.0F)
