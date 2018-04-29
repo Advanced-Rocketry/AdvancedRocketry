@@ -1,5 +1,7 @@
 package zmaster587.advancedRocketry.client;
 
+import java.util.LinkedList;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -11,6 +13,7 @@ import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -156,6 +159,93 @@ public class ClientProxy extends CommonProxy {
 
 		blockItem = Item.getItemFromBlock(AdvancedRocketryBlocks.blockPlatePress);
 		ModelLoader.setCustomModelResourceLocation(blockItem, 0, new ModelResourceLocation("advancedrocketry:platePress", "inventory"));
+		
+		blockItem = Item.getItemFromBlock(AdvancedRocketryBlocks.blockAdvEngine);
+		
+		
+		LinkedList<Item> blockItems = new LinkedList<Item>();
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockAdvEngine));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockAlienLeaves));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockAlienPlanks));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockAlienSapling));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockAlienWood));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockAltitudeController));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockArcFurnace));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockAtmosphereTerraformer));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockBeacon));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockBiomeScanner));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockBlastBrick));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockCharcoalLog));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockChemicalReactor));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockChipStorage));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockCircleLight));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockConcrete));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockCrystallizer));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockCuttingMachine));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockDataPipe));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockDeployableRocketBuilder));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockDockingPort));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockDrill));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockElectricMushroom));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockElectrolyser));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockEnergyPipe));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockEngine));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockFluidPipe));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockForceField));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockForceFieldProjector));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockFuelingStation));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockFuelTank));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockGravityController));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockGravityMachine));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockGuidanceComputer));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockHotTurf));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockIntake));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockLandingPad));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockLathe));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockLens));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockMicrowaveReciever));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockMissionComp));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockMonitoringStation));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockMoonTurf));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockMoonTurfDark));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockObservatory));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockOrientationController));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockOxygenCharger));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockOxygenDetection));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockOxygenScrubber));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockOxygenVent));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockPipeSealer));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockPlanetAnalyser));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockPlanetHoloSelector));	
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockPlanetSelector));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockPrecisionAssembler));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockPressureTank));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockQuartzCrucible));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockRailgun));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockRocketBuilder));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockRollingMachine));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockSatelliteBuilder));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockSatelliteControlCenter));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockSawBlade));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blocksGeode));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockSolarGenerator));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockSolarPanel));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockSpaceElevatorController));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockSpaceLaser));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockStationBuilder));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockStructureTower));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockSuitWorkStation));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockThermiteTorch));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockTransciever));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockUnlitTorch));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockVitrifiedSand));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockWarpCore));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockWarpShipMonitor));
+		
+		for(Item blockItem2 : blockItems)
+			ModelLoader.setCustomModelResourceLocation(blockItem2, 0, new ModelResourceLocation(blockItem2.getRegistryName(), "inventory"));
+		
 		
 		//TODO fluids
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockOxygenFluid);
