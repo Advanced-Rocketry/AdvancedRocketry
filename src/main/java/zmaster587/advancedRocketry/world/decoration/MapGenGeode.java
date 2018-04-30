@@ -105,7 +105,7 @@ public class MapGenGeode extends MapGenBase {
 							if( x % 4 > 0 && z % 4 > 0) {
 								for(int i = 1; i < size; i++) {
 									chunkArray[(x * 16 + z) * 256 + avgY + count - i] = ores.get((x/4 + z/4) % ores.size()).getBlock();
-									byte meta = ores.get((x/4 + z/4) % ores.size()).getMeta();
+									byte meta = (byte)ores.get((x/4 + z/4) % ores.size()).getMeta();
 									if(meta != 0)
 										metaPos.put(new BlockPosition((chunkX << 4) + x, avgY + count - i, (chunkZ << 4) + z), meta);
 								}
@@ -121,7 +121,7 @@ public class MapGenGeode extends MapGenBase {
 							if( (x+2) % 4 > 0 && (z+2) % 4 > 0) {
 								for(int i = 1; i < size; i++) {
 									chunkArray[(x * 16 + z) * 256 + avgY - count + i] = ores.get(((x+2)/4 + (z+2)/4) % ores.size()).getBlock();
-									byte meta = ores.get((x/4 + z/4) % ores.size()).getMeta();
+									byte meta = (byte)ores.get((x/4 + z/4) % ores.size()).getMeta();
 									if(meta != 0)
 										metaPos.put(new BlockPosition((chunkX << 4) + x, avgY - count + i, (chunkZ << 4) + z), meta);
 								}

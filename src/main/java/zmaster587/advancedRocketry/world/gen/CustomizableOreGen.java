@@ -5,7 +5,9 @@ import java.util.Random;
 import cpw.mods.fml.common.IWorldGenerator;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.integration.CompatibilityMgr;
 import zmaster587.advancedRocketry.util.OreGenProperties;
+import zmaster587.advancedRocketry.world.WorldGenMineableSpecial;
 import zmaster587.libVulpes.block.BlockMeta;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -52,7 +54,11 @@ public class CustomizableOreGen implements IWorldGenerator {
 			int coordY = heightLevel + random.nextInt(difference);
 			int coordZ = 16*chunkZ + random.nextInt(16);
 			
-			new WorldGenMinable(oreToGen.getBlock(), oreToGen.getMeta(), clumpSize, block).generate(world, random, coordX, coordY, coordZ);
+			//Generate GT ores if needed
+			if(CompatibilityMgr.gregtechLoaded && oreToGen.getMeta() > 15)
+				new WorldGenMineableSpecial(oreToGen.getBlock(), oreToGen.getMeta(), clumpSize, block).generate(world, random, coordX, coordY, coordZ);
+			else
+				new WorldGenMinable(oreToGen.getBlock(), oreToGen.getMeta(), clumpSize, block).generate(world, random, coordX, coordY, coordZ);
 		}
 
 	}
