@@ -60,7 +60,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 	public boolean onLinkStart(ItemStack item, TileEntity entity, EntityPlayer player, World worldObj) {
 
 		ItemLinker.setMasterCoords(item, getPos());
-		
+
 		if(worldObj.isRemote)
 			player.addChatMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.linker.program")));
 
@@ -111,9 +111,9 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 			}
 			addToNetwork();
 			((TileWirelessTransciever)tile).addToNetwork();
-			
+
 			ItemLinker.resetPosition(item);
-			
+
 			return true;
 		}
 
@@ -123,7 +123,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 	private void addToNetwork()
 	{
 
-		if(networkID == -1)
+		if(networkID == -1 || worldObj.isRemote)
 			return;
 		else if(!NetworkRegistry.dataNetwork.doesNetworkExist(networkID))
 			NetworkRegistry.dataNetwork.getNewNetworkID(networkID);
@@ -235,7 +235,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 		enabled = nbt.getBoolean("enabled");
 		networkID = nbt.getInteger("networkID");
 		data.readFromNBT(nbt);
-		addToNetwork();
+		//addToNetwork();
 
 		toggle.setToggleState(extractMode);
 		toggleSwitch.setToggleState(enabled);
@@ -262,32 +262,52 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 		return enabled ? data.addData(maxAmount, type, dir, commit) : 0;
 	}
 
+	@Override
+	public void onLoad() {
+		super.onLoad();
+		if(!worldObj.isRemote)
+		{
+
+			if(!NetworkRegistry.dataNetwork.doesNetworkExist(networkID))
+				NetworkRegistry.dataNetwork.getNewNetworkID(networkID);
+
+			NetworkRegistry.dataNetwork.getNetwork(networkID).removeFromAll(this);
+
+			if(extractMode) 
+				NetworkRegistry.dataNetwork.getNetwork(networkID).addSource(this, EnumFacing.UP);
+			else
+				NetworkRegistry.dataNetwork.getNetwork(networkID).addSink(this, EnumFacing.UP);
+
+		}
+	}
 
 	@Override
 	public void update() {
-
 		IBlockState state = worldObj.getBlockState(getPos());
-		if (state.getBlock() instanceof RotatableBlock) {
-			EnumFacing facing = RotatableBlock.getFront(state).getOpposite();
+		if(!worldObj.isRemote) {
+			if (state.getBlock() instanceof RotatableBlock) {
+				EnumFacing facing = RotatableBlock.getFront(state).getOpposite();
 
-			TileEntity tile = worldObj.getTileEntity(getPos().add(facing.getFrontOffsetX(),facing.getFrontOffsetY(),facing.getFrontOffsetZ()));
+				TileEntity tile = worldObj.getTileEntity(getPos().add(facing.getFrontOffsetX(),facing.getFrontOffsetY(),facing.getFrontOffsetZ()));
 
-			if( tile instanceof IDataHandler && !(tile instanceof TileWirelessTransciever))
-			{
-				for(DataType data : DataType.values())
+
+				if( tile instanceof IDataHandler && !(tile instanceof TileWirelessTransciever))
 				{
-
-					if(data == DataStorage.DataType.UNDEFINED)
-						continue;
-
-					if(!extractMode) {
-						int amt = ((IDataHandler)tile).addData(this.data.getDataAmount(data), data, facing.getOpposite(), true);
-						this.data.extractData(amt, data, facing.getOpposite(), true);
-					}
-					else
+					for(DataType data : DataType.values())
 					{
-						int amt = ((IDataHandler)tile).extractData(this.data.getMaxData() - this.data.getDataAmount(data), data, facing.getOpposite(), true);
-						this.data.addData(amt, data, facing.getOpposite(), true);
+
+						if(data == DataStorage.DataType.UNDEFINED)
+							continue;
+
+						if(!extractMode) {
+							int amt = ((IDataHandler)tile).addData(this.data.getDataAmount(data), data, facing.getOpposite(), true);
+							this.data.extractData(amt, data, facing.getOpposite(), true);
+						}
+						else
+						{
+							int amt = ((IDataHandler)tile).extractData(this.data.getMaxData() - this.data.getDataAmount(data), data, facing.getOpposite(), true);
+							this.data.addData(amt, data, facing.getOpposite(), true);
+						}
 					}
 				}
 			}
