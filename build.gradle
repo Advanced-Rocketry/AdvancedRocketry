@@ -52,7 +52,7 @@ minecraft {
     replace "%LIBVULPESVERSION%", project.libVulpesVersion
 }
 
-
+apply from: "gradle/scripts/jars.gradle"
 apply from: "gradle/scripts/version.gradle"
 
 repositories {
@@ -120,7 +120,7 @@ processResources
     }
 }
 
-task deobfJar(type: Jar) {
+/*task deobfJar(type: Jar) {
      from sourceSets.main.output
      //if project name is BBM-Dev it makes the deobf jar deobf-dev if not its just deobf
      classifier = "deobf"
@@ -131,7 +131,7 @@ task deobfJar(type: Jar) {
         attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
      mustRunAfter "jar" 
-}
+}*/
 
 curseforge{
   if (project.hasProperty("thecursedkey")) {
