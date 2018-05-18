@@ -416,7 +416,7 @@ public class DimensionManager implements IGalaxy {
 	 */
 	public void unregisterAllDimensions() {
 		for(Entry<Integer, DimensionProperties> dimSet : dimensionList.entrySet()) {
-			if(dimSet.getValue().isNativeDimension && !dimSet.getValue().isGasGiant()) {
+			if(dimSet.getValue().isNativeDimension && !dimSet.getValue().isGasGiant() && net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimSet.getKey())) {
 				net.minecraftforge.common.DimensionManager.unregisterDimension(dimSet.getKey());
 			}
 		}
