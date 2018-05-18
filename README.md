@@ -1,6 +1,8 @@
 # AdvancedRocketry
 A mod about space, exploration, and resources
 
+Discord link: https://discord.gg/BbBUmbX
+
 MileStones:
 
 
