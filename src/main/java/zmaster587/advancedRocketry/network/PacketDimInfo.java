@@ -129,12 +129,16 @@ public class PacketDimInfo extends BasePacket {
 				dimProperties.oreProperties = DimensionManager.getInstance().getDimensionProperties(dimNumber).oreProperties;
 				dimProperties.getRequiredArtifacts().clear();
 				dimProperties.getRequiredArtifacts().addAll(artifacts);
-				dimProperties.customIcon = DimensionManager.getInstance().getDimensionProperties(dimNumber).customIcon;
+				
+				if(DimensionManager.getInstance().getDimensionProperties(dimNumber).customIcon != null && !DimensionManager.getInstance().getDimensionProperties(dimNumber).customIcon.isEmpty())
+					dimProperties.customIcon = DimensionManager.getInstance().getDimensionProperties(dimNumber).customIcon;
 				
 				DimensionManager.getInstance().setDimProperties(dimNumber, dimProperties);
 			} else {
-				dimProperties = new DimensionProperties(dimNumber);
-				dimProperties.readFromNBT(dimNBT);
+				//dimProperties = new DimensionProperties(dimNumber);
+				//dimProperties.readFromNBT(dimNBT);
+				
+				
 				DimensionManager.getInstance().registerDimNoUpdate(dimProperties, true);
 			}
 		}
