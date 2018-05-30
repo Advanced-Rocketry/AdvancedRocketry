@@ -16,11 +16,13 @@ buildscript {
 }
 
 plugins {
-  id "com.gradle.build-scan" version "1.9"
-  id "com.matthewprenger.cursegradle" version "1.0.9"
+  //id "com.gradle.build-scan" version "1.9"
+  id "com.matthewprenger.cursegradle" version "1.0.10"
   id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.50"
 }
+
 apply plugin: 'forge'
+apply plugin: 'java'
 group= "zmaster587.advancedRocketry" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "AdvancedRocketry"
 sourceCompatibility = 7
@@ -187,18 +189,18 @@ curseforge{
 }
 
 task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
-    file = new File ("changelog.html")
+    //filePath = "changelog.html"
+    file = new File("changelog.html");
     untaggedName = "Current release ${project.version}"
     fromCommit = startGitRev
     toRef =  "HEAD"
-    gitHubIssuePattern = "nonada123";
     templateContent = """
 {{#tags}}
 <h1> Highly untested and may break world</h1>
   <h3>{{name}}</h3>
   <ul>
     {{#commits}}
-    <li> <a href="https://github.com/zmaster587/AdvancedRocketry/commit/{{hash}}" target=_blank> {{{message}}}</a>
+    <li> <a href="https://github.com/{{ownerName}}/{{repoName}}/commit/{{hash}}" target=_blank> {{{message}}}</a>
 </li>
     {{/commits}}
   </ul>
