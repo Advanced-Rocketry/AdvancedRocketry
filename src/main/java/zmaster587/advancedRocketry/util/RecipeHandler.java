@@ -200,7 +200,7 @@ public class RecipeHandler {
                         {
 
                             RecipesMachine.getInstance().addRecipe(TileRollingMachine.class,
-                                    OreDictionary.getOres("plate" + str).get(0), 300, 20, "ingot" + str);
+                                    OreDictionary.getOres("plate" + str).get(0), 300, 20, "ingot" + str, new FluidStack(FluidRegistry.WATER, 100));
                         }
                     }
                 }

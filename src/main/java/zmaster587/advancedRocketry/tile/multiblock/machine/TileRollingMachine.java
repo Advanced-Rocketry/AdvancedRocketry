@@ -79,19 +79,6 @@ public class TileRollingMachine extends TileMultiblockMachine {
 		return modules;
 	}
 
-	@Override
-	public boolean canProcessRecipe(IRecipe recipe) {
-		if(!fluidInPorts.isEmpty()) {
-			IFluidHandler fluidHandler = fluidInPorts.get(0);
-			FluidStack fluid;
-			if(fluidHandler == null || (fluid = fluidHandler.drain(new FluidStack(FluidRegistry.WATER, 100), false)) == null 
-					|| fluid.amount != 100)
-				return false;
-		}
-
-		return super.canProcessRecipe(recipe);
-	}
-
 
 	@Override
 	public SoundEvent getSound() {
