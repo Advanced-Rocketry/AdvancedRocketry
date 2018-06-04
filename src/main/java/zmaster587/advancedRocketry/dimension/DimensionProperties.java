@@ -277,6 +277,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		this(id);
 		isStation = !shouldRegister;
 	}
+	
+	public void copySatellites(DimensionProperties props) {
+		this.satallites = props.satallites;
+	}
 
 	@Override
 	public Object clone() {
