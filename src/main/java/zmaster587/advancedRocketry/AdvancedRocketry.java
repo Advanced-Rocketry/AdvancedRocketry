@@ -1937,6 +1937,8 @@ public class AdvancedRocketry {
 				//Overwrite with loaded XML
 				if(DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
 					DimensionProperties loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
+					
+					properties.copySatellites(loadedProps);
 					DimensionManager.getInstance().setDimProperties(properties.getId(), properties);
 
 					loadedProps.fogColor = properties.fogColor;
