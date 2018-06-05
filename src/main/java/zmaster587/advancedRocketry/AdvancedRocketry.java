@@ -1892,40 +1892,8 @@ public class AdvancedRocketry {
 					
 					properties.copySatellites(loadedProps);
 					DimensionManager.getInstance().setDimProperties(properties.getId(), properties);
-
-					loadedProps.fogColor = properties.fogColor;
-					loadedProps.gravitationalMultiplier = properties.gravitationalMultiplier;
-					loadedProps.hasRings = properties.hasRings;
-					loadedProps.orbitalDist = properties.getOrbitalDist();
-					loadedProps.ringColor = properties.ringColor;
-					loadedProps.orbitalPhi = properties.orbitalPhi;
-					loadedProps.rotationalPeriod = properties.rotationalPeriod;
-					loadedProps.skyColor = properties.skyColor;
-					loadedProps.orbitTheta = properties.orbitTheta;
-					loadedProps.customIcon = properties.customIcon;
-					loadedProps.getChildPlanets().addAll(properties.getChildPlanets());
-					loadedProps.getChildPlanets().retainAll(properties.getChildPlanets());
-					loadedProps.setSeaLevel(properties.getSeaLevel());
-					loadedProps.setOceanBlock(properties.getOceanBlock());
-					loadedProps.setStoneBlock(properties.getStoneBlock());
-					loadedProps.setBiomeEntries(properties.getBiomes());
-					loadedProps.setAtmosphereDensityDirect(properties.getAtmosphereDensity());
-					loadedProps.setName(properties.getName());
-					loadedProps.setGenType(properties.getGenType());
-					loadedProps.setStar(properties.getStarId());
-					loadedProps.setGasGiant(properties.isGasGiant());
+					properties.setStar(properties.getStar());
 					
-					//Register gasses if needed
-					if(!properties.getHarvestableGasses().isEmpty() && properties.getHarvestableGasses() != loadedProps.getHarvestableGasses()) {
-						loadedProps.getHarvestableGasses().clear();
-						loadedProps.getHarvestableGasses().addAll(properties.getHarvestableGasses());
-					}
-					
-					if(!loadedProps.isMoon() && properties.isMoon()) loadedProps.setParentPlanet(properties.getParentProperties());
-					if(loadedProps.isMoon() && !properties.isMoon()) {
-						loadedProps.getParentProperties().removeChild(loadedProps.getId());
-						loadedProps.setParentPlanet(null);
-					}
 				}
 				else {
 					DimensionManager.getInstance().registerDim(properties, properties.isNativeDimension);
