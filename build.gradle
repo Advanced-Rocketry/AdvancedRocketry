@@ -52,7 +52,7 @@ minecraft {
     replace "%LIBVULPESVERSION%", project.libVulpesVersion
 }
 
-
+throw NullPointerException
 apply from: "gradle/scripts/version.gradle"
 
 repositories {
