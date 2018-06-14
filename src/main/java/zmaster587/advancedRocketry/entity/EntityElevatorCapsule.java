@@ -23,6 +23,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.tile.multiblock.TileSpaceElevator;
@@ -105,7 +106,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 		setCapsuleMotion(nbt.getByte("motionDir"));
 
 		if(nbt.hasKey("dstDimid")) {
-			dstTilePos = new DimensionBlockPosition(-1, null);
+			dstTilePos = new DimensionBlockPosition(Constants.INVALID_PLANET, null);
 			dstTilePos.dimid = nbt.getInteger("dstDimid");
 			int[] loc = nbt.getIntArray("dstLoc");
 			dstTilePos.pos = new HashedBlockPosition(loc[0], loc[1], loc[2]);
@@ -114,7 +115,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 			dstTilePos = null;
 
 		if(nbt.hasKey("srcDimid")) {
-			srcTilePos = new DimensionBlockPosition(-1, null);
+			srcTilePos = new DimensionBlockPosition(Constants.INVALID_PLANET, null);
 			srcTilePos.dimid = nbt.getInteger("srcDimid");
 			int[] loc = nbt.getIntArray("srcLoc");
 			srcTilePos.pos = new HashedBlockPosition(loc[0], loc[1], loc[2]);

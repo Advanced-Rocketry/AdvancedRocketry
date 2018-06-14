@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.api.stations;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
@@ -22,7 +23,7 @@ public interface ISpaceObject {
 	public IDimensionProperties getProperties();
 	
 	/**
-	 * @return the DIMID of the planet the object is currently orbiting, -1 if none
+	 * @return the DIMID of the planet the object is currently orbiting, Constants.INVALID_PLANET if none
 	 */
 	public int getOrbitingPlanetId();
 	

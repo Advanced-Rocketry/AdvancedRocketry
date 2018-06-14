@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.ISatelliteIdItem;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
@@ -41,7 +42,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 
 			if(satellite != null) {
 
-				if(!nbt.hasKey("dimId") || nbt.getInteger("dimId") == -1) {
+				if(!nbt.hasKey("dimId") || nbt.getInteger("dimId") == Constants.INVALID_PLANET) {
 					nbt.setInteger("dimId", satellite.getDimensionId());
 				}
 
@@ -121,7 +122,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 
 			return nbt.getInteger("dimId");
 		}
-		return -1; // Cant have a nether satellite anyway
+		return Constants.INVALID_PLANET; // Cant have a [strike]nether[/strike] satellite anyway...ofc you can
 	}
 
 	@Override
@@ -134,7 +135,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 
 		if(satId != -1) {
 
-			if(worldId != -1) {
+			if(worldId != Constants.INVALID_PLANET) {
 
 				if(stack.getTagCompound().hasKey(name)) {
 

@@ -17,6 +17,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.IGalaxy;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
@@ -81,7 +82,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		renderPropertiesMap = new HashMap<Integer, PlanetRenderProperties>();
 		currentlySelectedPlanet = new PlanetRenderProperties();
 		currentSystem = starIdOffset;
-		selectedSystem = -1;
+		selectedSystem = Constants.INVALID_PLANET;
 		stellarView = false;
 
 		staticModuleList.add(new ModuleButton(0, 0, -1, "<< Up", this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
@@ -106,7 +107,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			//staticModuleList.add(bgTexture);
 			
 			if(star) {
-				topLevel = -1;
+				topLevel = Constants.INVALID_PLANET;
 				currentSystem = starIdOffset + planetId;
 				renderStarSystem(DimensionManager.getInstance().getStar(planetId), center, center, 1f, 0.5f);
 			}
@@ -350,7 +351,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			setOffset2(internalOffsetX - Minecraft.getMinecraft().displayWidth/4 , internalOffsetY - Minecraft.getMinecraft().displayHeight /4);
 			//redrawSystem();
 
-			//selectedSystem = -1;
+			//selectedSystem = Constants.INVALID_PLANET;
 
 			currentSystemChanged = false;
 
@@ -426,7 +427,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		}
 
 		//Render Selection
-		if(selectedSystem != -1) {
+		if(selectedSystem != Constants.INVALID_PLANET) {
 
 			gui.mc.getTextureManager().bindTexture(TextureResources.selectionCircle);
 			GL11.glPushMatrix();
@@ -470,10 +471,10 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 	public void onInventoryButtonPressed(int buttonId) {
 
 		//Go Up a level
-		if(buttonId == -1) {
+		if(buttonId == Constants.INVALID_PLANET) {
 			DimensionProperties properties =  DimensionManager.getInstance().getDimensionProperties(currentSystem);
 
-			if(topLevel == -1 || currentSystem != topLevel) {
+			if(topLevel == Constants.INVALID_PLANET || currentSystem != topLevel) {
 				if(currentSystem < starIdOffset && properties.isMoon())
 					currentSystem = properties.getParentPlanet();
 				else {
@@ -486,7 +487,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 				currentSystemChanged=true;
 
-				selectedSystem = -1;
+				selectedSystem = Constants.INVALID_PLANET;
 			}
 		}
 		//Confirm selection
@@ -510,7 +511,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 				currentSystemChanged=true;
 				//Go back to planetary mapping
 				stellarView = false;
-				//selectedSystem = -1;
+				//selectedSystem = Constants.INVALID_PLANET;
 			}
 			else {
 				//Make clicked planet selected

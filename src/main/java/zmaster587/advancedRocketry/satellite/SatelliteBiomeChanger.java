@@ -8,6 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.item.ItemBiomeChanger;
 import zmaster587.advancedRocketry.util.BiomeHandler;
@@ -205,7 +206,7 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 
 	@Override
 	public int extractEnergy(int amt, boolean simulate) {
-		if(getDimensionId() != -1) {
+		if(getDimensionId() != Constants.INVALID_PLANET) {
 			World world = net.minecraftforge.common.DimensionManager.getWorld(getDimensionId());
 			if(world != null) {
 				battery.acceptEnergy(energyCreated(world), false);
@@ -217,7 +218,7 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 	@Override
 	public int getEnergyStored() {
 
-		if(getDimensionId() != -1) {
+		if(getDimensionId() != Constants.INVALID_PLANET) {
 			World world = net.minecraftforge.common.DimensionManager.getWorld(getDimensionId());
 			if(world != null) {
 				battery.acceptEnergy(energyCreated(world), false);

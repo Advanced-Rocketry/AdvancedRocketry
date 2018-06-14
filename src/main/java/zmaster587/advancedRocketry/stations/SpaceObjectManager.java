@@ -14,6 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.ISpaceObjectManager;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -200,7 +201,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	/**
 	 * Registers a space station and updates clients
 	 * @param object
-	 * @param dimId dimension to place it in orbit around, -1 for undefined
+	 * @param dimId dimension to place it in orbit around, Constants.INVALID_PLANET for undefined
 	 */
 	public void registerSpaceObject(ISpaceObject object, int dimId) {
 		registerSpaceObject(object, dimId, getNextStationId());
@@ -220,7 +221,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * Used on client to create stations on packet recieve from server
 	 * FOR INTERNAL USE ONLY
 	 * @param object
-	 * @param dimId dimension to place it in orbit around, -1 for undefined
+	 * @param dimId dimension to place it in orbit around, Constants.INVALID_PLANET for undefined
 	 */
 	@SideOnly(Side.CLIENT)
 	public void registerSpaceObjectClient(ISpaceObject object, int dimId, int stationId) {

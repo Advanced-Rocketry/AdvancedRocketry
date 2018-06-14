@@ -5,6 +5,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.libVulpes.LibVulpes;
@@ -66,7 +67,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	public void setDimensionId(ItemStack stack, int dimensionId) {
 
 		NBTTagCompound nbt;
-		if(dimensionId == -1) {
+		if(dimensionId == Constants.INVALID_PLANET) {
 			nbt = new NBTTagCompound();
 			nbt.setInteger(dimensionIdIdentifier, dimensionId);
 			return;
@@ -90,12 +91,12 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 
 	/**
 	 * @param stack stack to get the dimId from
-	 * @return id of the dimension stored or -1 if invalid
+	 * @return id of the dimension stored or Constants.INVALID_PLANET if invalid
 	 */
 	public int getDimensionId(ItemStack stack) {
 		if(stack.hasTagCompound())
 			return stack.getTagCompound().getInteger(dimensionIdIdentifier);
-		return -1;
+		return Constants.INVALID_PLANET;
 	}
 
 	/**

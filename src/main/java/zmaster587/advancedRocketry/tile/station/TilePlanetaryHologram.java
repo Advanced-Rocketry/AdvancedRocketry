@@ -7,6 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
@@ -55,7 +56,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 		targetGrav = new ModuleText(6, 45, LibVulpes.proxy.getLocalizedString("msg.planetholo.size"), 0x202020);
 		selectedPlanet = null;
 		stellarMode = false;
-		selectedId = -1;
+		selectedId = Constants.INVALID_PLANET;
 		onTime = 1f;
 		size = 0.02f;
 		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 1, "", this);
@@ -81,7 +82,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 		selectedPlanet = null;
 		centeredEntity = null;
 		//currentStarBody = null;
-		selectedId = -1;
+		selectedId = Constants.INVALID_PLANET;
 
 
 		if(currentStar != null) {
@@ -182,7 +183,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 					stellarMode = false;
 					currentStarBody = DimensionManager.getInstance().getStar(id - EntityUIStar.starIDoffset);
 					rebuildSystem();
-					selectedId = -1;
+					selectedId = Constants.INVALID_PLANET;
 				}
 			}
 

@@ -7,6 +7,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
@@ -78,7 +79,7 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 	
 	@Override
 	public int transmitEnergy(EnumFacing dir, boolean simulate) {
-		if(getDimensionId() != -1) {
+		if(getDimensionId() != Constants.INVALID_PLANET) {
 			World world = net.minecraftforge.common.DimensionManager.getWorld(getDimensionId());
 			if(world != null) {
 				battery.acceptEnergy(energyCreated(world), simulate);

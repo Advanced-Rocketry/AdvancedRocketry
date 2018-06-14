@@ -6,6 +6,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.tile.station.TilePlanetaryHologram;
@@ -48,7 +49,7 @@ public class EntityUIStar extends EntityUIPlanet {
 		if(properties != null)
 			this.dataManager.set(planetID, star.getId());
 		else
-			this.dataManager.set(planetID, -1);
+			this.dataManager.set(planetID, Constants.INVALID_PLANET);
 	}
 	
 	public int getPlanetID() {
@@ -60,7 +61,7 @@ public class EntityUIStar extends EntityUIPlanet {
 		int planetId = this.dataManager.get(planetID);
 
 		if(star != null && star.getId() != planetId) {
-			if(planetId == -1 )
+			if(planetId == Constants.INVALID_PLANET )
 				star = null;
 			else
 				star = DimensionManager.getInstance().getStar(planetId);
@@ -70,7 +71,7 @@ public class EntityUIStar extends EntityUIPlanet {
 	}
 	
 	public StellarBody getStarProperties() {
-		if((star == null && getPlanetID() != -1) || (star != null && getPlanetID() != star.getId())) {
+		if((star == null && getPlanetID() != Constants.INVALID_PLANET) || (star != null && getPlanetID() != star.getId())) {
 			star = DimensionManager.getInstance().getStar(getPlanetID());
 			if((subStar = this.dataManager.get(subStarData)) != -1)
 				star = star.getSubStars().get(subStar);

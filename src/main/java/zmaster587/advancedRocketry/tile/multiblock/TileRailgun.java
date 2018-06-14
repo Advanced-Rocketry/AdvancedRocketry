@@ -22,6 +22,7 @@ import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.entity.EntityItemAbducted;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.LibVulpes;
@@ -128,14 +129,14 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 	
 	/**
-	 * @return the destionation DIMID or -1 if not valid
+	 * @return the destionation DIMID or Constants.INVALID_PLANET if not valid
 	 */
 	private int getDestDimId() {
 		ItemStack stack = inv.getStackInSlot(0);
 		if(stack != null && stack.getItem() instanceof ItemLinker) {
 			return ItemLinker.getDimId(stack);
 		}
-		return -1;
+		return Constants.INVALID_PLANET;
 	}
 	
 	/**
@@ -274,7 +275,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 				
 				dimId = getDestDimId();
 
-				if(dimId != -1) {
+				if(dimId != Constants.INVALID_PLANET) {
 					World world = DimensionManager.getWorld(dimId);
 					TileEntity tile;
 

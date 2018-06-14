@@ -1757,13 +1757,13 @@ public class AdvancedRocketry {
 				DimensionManager.getInstance().registerDimNoUpdate(DimensionManager.overworldProperties, false);
 				sol.addPlanet(DimensionManager.overworldProperties);
 
-				if(zmaster587.advancedRocketry.api.Configuration.MoonId == -1)
+				if(zmaster587.advancedRocketry.api.Configuration.MoonId == Constants.INVALID_PLANET)
 					zmaster587.advancedRocketry.api.Configuration.MoonId = DimensionManager.getInstance().getNextFreeDim(dimOffset);
 
 
 
 				//Register the moon
-				if(zmaster587.advancedRocketry.api.Configuration.MoonId != -1) {
+				if(zmaster587.advancedRocketry.api.Configuration.MoonId != Constants.INVALID_PLANET) {
 					DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId);
 					dimensionProperties.setAtmosphereDensityDirect(0);
 					dimensionProperties.averageTemperature = 20;
@@ -2054,7 +2054,7 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
 		zmaster587.advancedRocketry.cable.NetworkRegistry.clearNetworks();
 		SpaceObjectManager.getSpaceManager().onServerStopped();
-		zmaster587.advancedRocketry.api.Configuration.MoonId = -1;
+		zmaster587.advancedRocketry.api.Configuration.MoonId = Constants.INVALID_PLANET;
 		DimensionManager.getInstance().overworldProperties.resetProperties();
 		((BlockSeal)AdvancedRocketryBlocks.blockPipeSealer).clearMap();
 		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 8000, "Dimensions including and after this number are allowed to be made into planets");

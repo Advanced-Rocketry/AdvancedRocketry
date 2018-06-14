@@ -10,6 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.ISatelliteIdItem;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.item.ItemSatellite;
@@ -17,7 +18,7 @@ import zmaster587.advancedRocketry.item.ItemSatellite;
 public abstract class SatelliteBase {
 	
 	protected SatelliteProperties satelliteProperties;
-	private int dimId = -1;
+	private int dimId = Constants.INVALID_PLANET;
 	//Will always be of type ItemSatellite
 	protected ItemStack satellite;
 
@@ -110,7 +111,7 @@ public abstract class SatelliteBase {
 	 */
 	public void setDimensionId(World world) {
 		int newId = world.provider.getDimension();
-		if(dimId != -1) {
+		if(dimId != Constants.INVALID_PLANET) {
 			//TODO: handle dim change
 		}
 		dimId = newId;
@@ -118,7 +119,7 @@ public abstract class SatelliteBase {
 	
 	public void setDimensionId(int world) {
 		int newId = world;
-		if(dimId != -1) {
+		if(dimId != Constants.INVALID_PLANET) {
 			//TODO: handle dim change
 		}
 		dimId = newId;
@@ -137,7 +138,7 @@ public abstract class SatelliteBase {
 	}
 	
 	/**
-	 * @return dimensionID of the satellite, -1 if none
+	 * @return dimensionID of the satellite, Constants.INVALID_PLANET if none
 	 */
 	public int getDimensionId() {
 		return dimId;

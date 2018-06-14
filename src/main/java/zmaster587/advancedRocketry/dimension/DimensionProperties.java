@@ -22,6 +22,7 @@ import scala.util.Random;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
@@ -234,7 +235,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		resetProperties();
 
 		planetId = id;
-		parentPlanet = -1;
+		parentPlanet = Constants.INVALID_PLANET;
 		childPlanets = new HashSet<Integer>();
 		orbitalPhi = 0;
 		ringColor = new float[] {.4f, .4f, .7f};
@@ -303,7 +304,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		originalAtmosphereDensity = atmosphereDensity = 100;
 		childPlanets = new HashSet<Integer>();
 		requiredArtifacts = new LinkedList<ItemStack>();
-		parentPlanet = -1;
+		parentPlanet = Constants.INVALID_PLANET;
 		starId = 0;
 		averageTemperature = 100;
 		hasRings = false;
@@ -525,7 +526,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return the {@link DimensionProperties} of the parent planet
 	 */
 	public DimensionProperties getParentProperties() {
-		if(parentPlanet != -1)
+		if(parentPlanet != Constants.INVALID_PLANET)
 			return DimensionManager.getInstance().getDimensionProperties(parentPlanet);
 		return null;
 	}
@@ -542,20 +543,20 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return if a planet, the same as getParentOrbitalDistance(), if a moon, the moon's distance from the host star
 	 */
 	public int getSolarOrbitalDistance() {
-		if(parentPlanet != -1)
+		if(parentPlanet != Constants.INVALID_PLANET)
 			return getParentProperties().getSolarOrbitalDistance();
 		return orbitalDist;
 	}
 
 	public double getSolarTheta() {
-		if(parentPlanet != -1)
+		if(parentPlanet != Constants.INVALID_PLANET)
 			return getParentProperties().getSolarTheta();
 		return orbitTheta;
 	}
 
 	/**
 	 * Sets this planet as a moon of the supplied planet's id.
-	 * @param parentId parent planet's DIMID, or -1 for none
+	 * @param parentId parent planet's DIMID, or Constants.INVALID_PLANET for none
 	 */
 	public void setParentPlanet(DimensionProperties parent) {
 		this.setParentPlanet(parent, true);
@@ -569,22 +570,22 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public void setParentPlanet(DimensionProperties parent, boolean update) {
 
 		if(update) {
-			if(parentPlanet != -1)
+			if(parentPlanet != Constants.INVALID_PLANET)
 				getParentProperties().childPlanets.remove(new Integer(getId()));
 
 			if(parent == null) {
-				parentPlanet = -1;
+				parentPlanet = Constants.INVALID_PLANET;
 			}
 			else {
 				parentPlanet = parent.getId();
 				star = parent.getStar();
-				if(parent.getId() != -1)
+				if(parent.getId() != Constants.INVALID_PLANET)
 					parent.childPlanets.add(getId());
 			}
 		}
 		else {
 			if(parent == null) {
-				parentPlanet = -1;
+				parentPlanet = Constants.INVALID_PLANET;
 			}
 			else {
 				star = parent.getStar();
@@ -604,7 +605,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return true if this DIM orbits another
 	 */
 	public boolean isMoon() {
-		return parentPlanet != -1 && parentPlanet != SpaceObjectManager.WARPDIMID;
+		return parentPlanet != Constants.INVALID_PLANET && parentPlanet != SpaceObjectManager.WARPDIMID;
 	}
 
 	/**

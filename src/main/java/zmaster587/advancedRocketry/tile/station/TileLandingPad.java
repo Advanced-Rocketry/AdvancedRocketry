@@ -16,6 +16,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketDismantleEvent;
@@ -151,7 +152,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 					rocket.linkInfrastructure(infrastructure);
 				}
 			ItemStack stack = getStackInSlot(0);
-			if(stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != -1 &&
+			if(stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != Constants.INVALID_PLANET &&
 					event.getEntity() instanceof EntityRocket) {
 				((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), 
 						ItemLinker.getMasterX(stack) + 0.5f, Configuration.orbit, ItemLinker.getMasterZ(stack) + 0.5f);
@@ -163,7 +164,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	public void onRocketLaunch(RocketPreLaunchEvent event) {
 
 		ItemStack stack = getStackInSlot(0);
-		if(stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != -1) {
+		if(stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != Constants.INVALID_PLANET) {
 
 			EntityRocketBase rocket = (EntityRocketBase)event.getEntity();
 			AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
@@ -241,12 +242,12 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 			for(EntityRocketBase rocket : rockets) {
 				if(rocket instanceof EntityRocket) {
-					if(stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != -1) {
+					if(stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != Constants.INVALID_PLANET) {
 						((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), 
 								ItemLinker.getMasterX(stack) + 0.5f, Configuration.orbit, ItemLinker.getMasterZ(stack) + 0.5f);
 					}
 					else
-						((EntityRocket)rocket).setOverriddenCoords(-1, 0,0,0);
+						((EntityRocket)rocket).setOverriddenCoords(Constants.INVALID_PLANET, 0,0,0);
 				}
 			}
 		}
@@ -258,7 +259,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 			for(EntityRocketBase rocket : rockets) {
 				if(rocket instanceof EntityRocket) {
-					((EntityRocket)rocket).setOverriddenCoords(-1, 0,0,0);
+					((EntityRocket)rocket).setOverriddenCoords(Constants.INVALID_PLANET, 0,0,0);
 				}
 			}
 		}

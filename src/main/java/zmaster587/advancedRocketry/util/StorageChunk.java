@@ -29,6 +29,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.IStorageChunk;
@@ -695,7 +696,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	}
 	
 	/**
-	 * @return destination ID or -1 if none
+	 * @return destination ID or Constants.INVALID_PLANET if none
 	 */
 	public int getDestinationDimId(int currentDimId, int x, int z) {
 		Iterator<TileEntity> iterator = getTileEntityList().iterator();
@@ -707,7 +708,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 			}
 		}
 
-		return -1;
+		return Constants.INVALID_PLANET;
 	}
 
 	public Vector3F<Float> getDestinationCoordinates(int destDimID, boolean commit) {

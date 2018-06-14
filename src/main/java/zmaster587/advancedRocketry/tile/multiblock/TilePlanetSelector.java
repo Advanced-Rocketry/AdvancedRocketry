@@ -8,6 +8,8 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.commons.lang3.ArrayUtils;
+
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
@@ -57,7 +59,7 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 	}
 
 	private void selectSystem(int id) {
-		if(id == -1)
+		if(id == Constants.INVALID_PLANET)
 			dimCache = null;
 		else
 			dimCache = DimensionManager.getInstance().getDimensionProperties(container.getSelectedSystem());

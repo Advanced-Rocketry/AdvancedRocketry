@@ -14,6 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
@@ -109,11 +110,11 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 	}
 
 	/**
-	 * @return the DIMID of the planet the object is currently orbiting, -1 if none
+	 * @return the DIMID of the planet the object is currently orbiting, Constants.INVALID_PLANET if none
 	 */
 	@Override
 	public int getOrbitingPlanetId() {
-		return created ? properties.getParentPlanet() : -1;
+		return created ? properties.getParentPlanet() : Constants.INVALID_PLANET;
 	}
 
 	/**

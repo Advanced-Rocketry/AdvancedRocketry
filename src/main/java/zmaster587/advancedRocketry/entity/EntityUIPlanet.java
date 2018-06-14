@@ -9,6 +9,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.tile.station.TilePlanetaryHologram;
@@ -53,7 +54,7 @@ public class EntityUIPlanet extends Entity {
 
 	@Override
 	protected void entityInit() {
-		this.dataManager.register(planetID, properties == null ? -1 : properties.getId());
+		this.dataManager.register(planetID, properties == null ? Constants.INVALID_PLANET : properties.getId());
 		this.dataManager.register(scale, 1f);
 		this.dataManager.register(selected, false);
 		
@@ -93,7 +94,7 @@ public class EntityUIPlanet extends Entity {
 	}
 	
 	public DimensionProperties getProperties() {
-		if((properties == null && getPlanetID() != -1) || (properties != null && getPlanetID() != properties.getId())) {
+		if((properties == null && getPlanetID() != Constants.INVALID_PLANET) || (properties != null && getPlanetID() != properties.getId())) {
 			properties = DimensionManager.getInstance().getDimensionProperties(getPlanetID());
 		}
 
@@ -104,12 +105,12 @@ public class EntityUIPlanet extends Entity {
 		//this.dataManager.set(planetID, 256);
 
 		if(!world.isRemote)
-			return properties == null ? -1 : properties.getId();
+			return properties == null ? Constants.INVALID_PLANET : properties.getId();
 
 		int planetId = this.dataManager.get(planetID);
 
 		if(properties != null && properties.getId() != planetId) {
-			if(planetId == -1 )
+			if(planetId == Constants.INVALID_PLANET )
 				properties = null;
 			else
 				properties = DimensionManager.getInstance().getDimensionProperties(planetId);
@@ -123,7 +124,7 @@ public class EntityUIPlanet extends Entity {
 		if(properties != null)
 			this.dataManager.set(planetID, properties.getId());
 		else
-			this.dataManager.set(planetID, -1);
+			this.dataManager.set(planetID, Constants.INVALID_PLANET);
 	}
 	
 	public void setSelected(boolean isSelected) {

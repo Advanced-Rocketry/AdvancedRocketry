@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants.NBT;
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -37,7 +38,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	public TileGuidanceComputer() {
 		super(1);
 		landingPos = new Vector3F<Float>(0f, 0f, 0f);
-		destinationId = -1;
+		destinationId = Constants.INVALID_PLANET;
 		landingLoc = new HashMap<Integer, HashedBlockPosition>();
 	}
 	@Override
@@ -86,7 +87,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	
 	/**
 	 * Gets the dimension to travel to if applicable
-	 * @return The dimension to travel to or -1 if not valid
+	 * @return The dimension to travel to or Constants.INVALID_PLANET if not valid
 	 */
 	public int getDestinationDimId(int currentDimension, BlockPos pos) {
 		ItemStack stack = getStackInSlot(0);
@@ -106,7 +107,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 							return object.getOrbitingPlanetId();
 					}
 					else
-						return -1;
+						return Constants.INVALID_PLANET;
 				}
 				return Configuration.spaceDimId;
 			}
@@ -117,7 +118,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 			}
 			else if(itemType instanceof ItemSatelliteIdentificationChip) {
 				long l = getTargetSatellite();
-				if(l != -1) {
+				if(l != Constants.INVALID_PLANET) {
 					SatelliteBase sat = DimensionManager.getInstance().getSatellite(l);
 					return sat.getDimensionId();
 				}
@@ -164,7 +165,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 			}
 		}
 
-		if(destinationId != -1)
+		if(destinationId != Constants.INVALID_PLANET)
 			return landingPos;
 		return null;
 	}
@@ -223,7 +224,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 
 		//If the item in the slot is modified then reset dimid
 		if(!stack.isEmpty())
-			destinationId = -1;
+			destinationId = Constants.INVALID_PLANET;
 	}
 
 	public void setReturnPosition(Vector3F<Float> pos, int dimId) {

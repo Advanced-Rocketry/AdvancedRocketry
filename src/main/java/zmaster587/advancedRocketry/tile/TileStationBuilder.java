@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.item.ItemPackedStructure;
 import zmaster587.advancedRocketry.item.ItemStationChip;
@@ -116,7 +117,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 			SpaceObject object = null;
 			if(storedId == null) {
 				object = new SpaceObject();
-				SpaceObjectManager.getSpaceManager().registerSpaceObject(object, -1);
+				SpaceObjectManager.getSpaceManager().registerSpaceObject(object, Constants.INVALID_PLANET);
 
 				outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStation,1);
 				ItemStationChip.setUUID(outputStack, object.getId());

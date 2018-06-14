@@ -264,7 +264,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					}
 				}
 			}
-			else if(dimid != -1 && dimid != SpaceObjectManager.WARPDIMID) {
+			else if(dimid != Constants.INVALID_PLANET && dimid != SpaceObjectManager.WARPDIMID) {
 				displayStr = DimensionManager.getInstance().getDimensionProperties(dimid).getName();
 			}
 		}
@@ -941,7 +941,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				int destinationId = storage.getDestinationDimId(world.provider.getDimension(), (int)posX, (int)posZ);
 				DimensionProperties properties = DimensionManager.getEffectiveDimId(world, this.getPosition());
 				World world2;
-				if(destinationId == Configuration.spaceDimId || destinationId == -1)
+				if(destinationId == Configuration.spaceDimId || destinationId == Constants.INVALID_PLANET)
 					world2 = net.minecraftforge.common.DimensionManager.getWorld(properties.getId());
 				else
 					world2 = net.minecraftforge.common.DimensionManager.getWorld(destinationId);
@@ -984,7 +984,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		destinationDimId = storage.getDestinationDimId(world.provider.getDimension(), (int)this.posX, (int)this.posZ);
 
 		//TODO: make sure this doesn't break asteriod mining
-		if(!(DimensionManager.getInstance().canTravelTo(destinationDimId) || (destinationDimId == -1 && storage.getSatelliteHatches().size() != 0))) {
+		if(!(DimensionManager.getInstance().canTravelTo(destinationDimId) || (destinationDimId == Constants.INVALID_PLANET && storage.getSatelliteHatches().size() != 0))) {
 			setError(LibVulpes.proxy.getLocalizedString("error.rocket.cannotGetThere"));
 			return;
 		}
@@ -1014,7 +1014,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 
 		//Check to see if it's possible to reach
-		if(finalDest != -1 && (!storage.hasWarpCore() || DimensionManager.getInstance().getDimensionProperties(finalDest).getStarId() != DimensionManager.getInstance().getDimensionProperties(thisDimId).getStarId()) && !DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, thisDimId)) {
+		if(finalDest != Constants.INVALID_PLANET && (!storage.hasWarpCore() || DimensionManager.getInstance().getDimensionProperties(finalDest).getStarId() != DimensionManager.getInstance().getDimensionProperties(thisDimId).getStarId()) && !DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, thisDimId)) {
 			setError(LibVulpes.proxy.getLocalizedString("error.rocket.notSameSystem"));
 			return;
 		}
