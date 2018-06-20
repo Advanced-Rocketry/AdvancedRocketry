@@ -85,9 +85,9 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		selectedSystem = Constants.INVALID_PLANET;
 		stellarView = false;
 
-		staticModuleList.add(new ModuleButton(0, 0, -1, "<< Up", this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
-		staticModuleList.add(new ModuleButton(0, 18, -2, "Select", this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
-		staticModuleList.add(new ModuleButton(0, 36, -3, "PlanetList", this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
+		staticModuleList.add(new ModuleButton(0, 0, Constants.INVALID_PLANET, "<< Up", this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
+		staticModuleList.add(new ModuleButton(0, 18, Constants.INVALID_PLANET + 1, "Select", this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
+		staticModuleList.add(new ModuleButton(0, 36, Constants.INVALID_PLANET + 2, "PlanetList", this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
 
 		ModuleDualProgressBar progressBar;
 		staticModuleList.add(progressBar = new ModuleDualProgressBar(100, 0, 0, TextureResources.atmIndicator, (IProgressBar)tile, "%b -> %a Earth's atmospheric pressure"));
@@ -491,13 +491,13 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			}
 		}
 		//Confirm selection
-		else if(buttonId == -2) {
+		else if(buttonId == Constants.INVALID_PLANET + 1) {
 			if(selectedSystem < starIdOffset) {
 				hostTile.onSelectionConfirmed(this);
 				Minecraft.getMinecraft().player.closeScreen();
 			}
 		}
-		else if(buttonId == -3) {
+		else if(buttonId == Constants.INVALID_PLANET + 2) {
 			if(clickablePlanetList != null) {
 				boolean flag = !clickablePlanetList.isEnabled();
 				clickablePlanetList.setEnabled(flag);
