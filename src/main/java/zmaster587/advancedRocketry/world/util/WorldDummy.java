@@ -26,6 +26,7 @@ public class WorldDummy extends World {
 	public int displayListIndex = -1;
 	public WorldDummy(Profiler p_i45368_5_, StorageChunk storage) {
 		super(new DummySaveHandler(), new WorldInfo(new NBTTagCompound()), dummyProvider, p_i45368_5_, false);
+		dummyProvider.setWorld(this);
 		this.storage = storage;
 		this.chunkProvider = new ChunkProviderDummy(this);
 	}
