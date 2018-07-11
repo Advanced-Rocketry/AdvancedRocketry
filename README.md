@@ -11,7 +11,7 @@ Before you start: It is assumed you know how to clone and checkout different bra
 4. clone "https://github.com/zmaster587/AdvancedRocketry.git" (git clone https://github.com/zmaster587/AdvancedRocketry.git)
 5. If step 3 and 4 were performed correctly you should now have the folders "libVulpes" and "AdvancedRocketry" inside the folder "advancedRocketryProject".  The libVulpes folder being properly named is important!
 6. Download https://ci.micdoodle8.com/job/Galacticraft-1.7/474/artifact/Forge/build/libs/GalacticraftCore-1.7-3.0.12.474.jar into the AdvancedRocketry/libs folder (if the AdvancedRocketry/libs folder doesn't exist, create it)
-7. Repeat step 7 but put the file in AdvancedRocketry/libs (you may also need to create that)
+7. Repeat step 6 but put the file in libVulpes/libs (you may also need to create that)
 8. In the AdvancedRocketry folder, shift-rightclick and select open command window from the context menu, 
 9. From the command window run ./gradlew.bat build
 
