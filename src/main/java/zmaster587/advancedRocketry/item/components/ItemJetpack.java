@@ -96,7 +96,6 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 				
 				if (InputSyncHandler.isSpaceDown(player))
 				{
-					System.out.println("shit");
 					onAccelerate(componentStack, inv, player);
 					setHeight(componentStack, (int)player.posY + player.height);
 				}
