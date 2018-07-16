@@ -940,14 +940,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			else {
 				int destinationId = storage.getDestinationDimId(world.provider.getDimension(), (int)posX, (int)posZ);
 				DimensionProperties properties = DimensionManager.getEffectiveDimId(world, this.getPosition());
-				World world2;
+				int world2;
 				if(destinationId == Configuration.spaceDimId || destinationId == Constants.INVALID_PLANET)
-					world2 = net.minecraftforge.common.DimensionManager.getWorld(properties.getId());
+					world2 = properties.getId();
 				else
-					world2 = net.minecraftforge.common.DimensionManager.getWorld(destinationId);
+					world2 = destinationId;
 				
-				if(world2 != null)
-					properties.addSatallite(satellite, world2);
+				properties.addSatallite(satellite, world2, world.isRemote);
 				tile.setInventorySlotContents(0, ItemStack.EMPTY);
 			}
 		}

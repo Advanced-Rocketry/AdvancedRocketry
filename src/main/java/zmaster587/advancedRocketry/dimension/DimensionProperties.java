@@ -745,6 +745,29 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		if(!world.isRemote)
 			PacketHandler.sendToAll(new PacketSatellite(satellite));
 	}
+	
+	/**
+	 * Adds a satellite to this DIM
+	 * @param satellite satellite to add
+	 * @param world world to add the satellite to
+	 */
+	public void addSatallite(SatelliteBase satellite, int world, boolean isRemote) {
+		//Prevent dupes
+		if(satallites.containsKey(satellite.getId())) {
+			satallites.remove(satellite.getId());
+			tickingSatallites.remove(satellite.getId());
+		}
+
+		satallites.put(satellite.getId(), satellite);
+		satellite.setDimensionId(world);
+
+
+		if(satellite.canTick())
+			tickingSatallites.put(satellite.getId(),satellite);
+
+		if(!isRemote)
+			PacketHandler.sendToAll(new PacketSatellite(satellite));
+	}
 
 	/**
 	 * Really only meant to be used on the client when recieving a packet
