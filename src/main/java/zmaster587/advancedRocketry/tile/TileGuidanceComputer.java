@@ -120,7 +120,9 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				long l = getTargetSatellite();
 				if(l != Constants.INVALID_PLANET) {
 					SatelliteBase sat = DimensionManager.getInstance().getSatellite(l);
-					return sat.getDimensionId();
+					
+					if(sat != null)
+						return sat.getDimensionId();
 				}
 			}
 
