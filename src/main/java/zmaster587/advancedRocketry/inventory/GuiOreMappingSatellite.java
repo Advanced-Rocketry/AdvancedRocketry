@@ -14,6 +14,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
 import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.VulpineMath;
 
@@ -70,7 +71,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		@Override
 		public void run() {
 			oreMap = SatelliteOreMapping.scanChunk(world, xCenter, zCenter, scanSize/2, radius);
-			if(oreMap != null)
+			if(oreMap != null && !Thread.interrupted())
 				merged = true;
 			else merged = false;
 		}
@@ -88,7 +89,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		@Override
 		public void run() {
 			oreMap = SatelliteOreMapping.scanChunk(world, xCenter, zCenter, scanSize/2, radius, myBlock);
-			if(oreMap != null)
+			if(oreMap != null && !Thread.interrupted())
 				merged = true;
 			else merged = false;
 		}
@@ -120,9 +121,6 @@ public class GuiOreMappingSatellite extends GuiContainer {
 			int button) throws IOException {
 		// TODO Auto-generated method stub
 		super.mouseClicked(x, y, button);
-
-		if(tile == null)
-			return;
 
 		int xOffset = 47 + (width - 240) / 2, yOffset = 20 + (height - 192) / 2;
 
@@ -242,29 +240,29 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		//Draw fancy things
 		GlStateManager.disableTexture2D();
 		GlStateManager.color(0f, 0.8f, 0f);
-		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 		buffer.pos(-21, 82 + fancyScanOffset, (double)this.zLevel).endVertex();
 		buffer.pos(0, 84 + fancyScanOffset, (double)this.zLevel).endVertex();
 		buffer.pos(0, 81 + fancyScanOffset, (double)this.zLevel).endVertex();
 		buffer.pos(-21, 81 + fancyScanOffset, (double)this.zLevel).endVertex();
-		buffer.finishDrawing();
+		Tessellator.getInstance().draw();
 
 
-		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 		buffer.pos(-21, 82 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel).endVertex();
 		buffer.pos(0, 84 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel).endVertex();
 		buffer.pos(0, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel).endVertex();
 		buffer.pos(-21, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel).endVertex();
-		buffer.finishDrawing();
+		Tessellator.getInstance().draw();
 
 
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
 		GlStateManager.color(0.5f, 0.5f, 0.0f,0.3f + ((float)Math.sin(Math.PI*(fancyScanOffset/(float)FANCYSCANMAXSIZE))/3f));
 
-		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
 		RenderHelper.renderNorthFace(buffer, this.zLevel, 173, 82, 194, 141);
-		buffer.finishDrawing();
+		Tessellator.getInstance().draw();
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_BLEND);
@@ -287,7 +285,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 			GlStateManager.color(0f, 0.8f, 0f, 1f);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel, 13 + (18*slot), 155, 13 + 16 + (18*slot), 155 + 16, 0, 1, 0, 1);
+			RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel, 13 + (18*slot), 155, 13 + 16 + (18*slot), 155 + 16, 0, 0, 0, 0);
 			Tessellator.getInstance().draw();
 			GlStateManager.enableTexture2D();
 		}
@@ -305,11 +303,16 @@ public class GuiOreMappingSatellite extends GuiContainer {
 			IntBuffer buffer = texture.getByteBuffer();
 			int scanWidth = Math.max(scanSize/radius,1);
 
-			for(int yt = 0; yt < (texture.getImage().getHeight() * texture.getImage().getWidth()); yt++) {
-				buffer.put(yt, oreMap[yt % scanWidth][yt / scanWidth] | 0xFF000000);
+			try {
+				for(int yt = 0; yt < (texture.getImage().getHeight() * texture.getImage().getWidth()); yt++) {
+					buffer.put(yt, oreMap[yt % scanWidth][scanWidth - 1 - yt / scanWidth] | 0xFF000000);
+				}
+				buffer.flip();
+				texture.setByteBuffer(buffer);
+			} catch (IndexOutOfBoundsException e)
+			{
+				
 			}
-			buffer.flip();
-			texture.setByteBuffer(buffer);
 			merged = false;
 		}
 
@@ -330,8 +333,8 @@ public class GuiOreMappingSatellite extends GuiContainer {
 
 
 		//Render player location
-		float offsetX = playerPosX - xCenter;
-		float offsetY = zCenter - playerPosZ ;
+		float offsetX = playerPosX - xCenter + 0.5f;
+		float offsetY = zCenter - playerPosZ + 0.5f;
 		double numPixels = SCREEN_SIZE/scanSize;//(scanSize/(float)(SCREEN_SIZE*radius));
 
 
@@ -339,7 +342,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		if(Math.abs(offsetX) < scanSize/2 && Math.abs(offsetY) < scanSize/2) {
 			offsetX *= numPixels;
 			offsetY *= numPixels;
-			
+
 			GlStateManager.disableTexture2D();
 			GlStateManager.color(0.4f, 1f, 0.4f);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -361,17 +364,17 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		//this.drawString(this.fontRendererObj, "Clarity", 198 + x, 52 + y, 0xb0b0b0);
 		this.drawString(this.fontRenderer, "X: " + xSelected, 6 + x, 33 + y, 0xF0F0F0);
 		this.drawString(this.fontRenderer, "Z: " + zSelected, 6 + x, 49 + y, 0xF0F0F0);
-		//this.drawString(this.fontRendererObj, "Value: ", 6 + x, 65 + y, 0xF0F0F0);
-		//this.drawString(this.fontRendererObj, String.valueOf(mouseValue), 6 + x, 79 + y, 0xF0F0F0);
+		this.drawString(this.fontRenderer,  LibVulpes.proxy.getLocalizedString("msg.itemorescanner.value"), 6 + x, 65 + y, 0xF0F0F0);
+		this.drawString(this.fontRenderer, String.valueOf(mouseValue), 6 + x, 79 + y, 0xF0F0F0);
 	}
 
-    /**
-     * Draws the screen and all the components in it.
-     */
-    public void drawScreen(int mouseX, int mouseY, float partialTicks)
-    {
-        this.drawDefaultBackground();
-        super.drawScreen(mouseX, mouseY, partialTicks);
-        this.renderHoveredToolTip(mouseX, mouseY);
-    }
+	/**
+	 * Draws the screen and all the components in it.
+	 */
+	public void drawScreen(int mouseX, int mouseY, float partialTicks)
+	{
+		this.drawDefaultBackground();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		this.renderHoveredToolTip(mouseX, mouseY);
+	}
 }

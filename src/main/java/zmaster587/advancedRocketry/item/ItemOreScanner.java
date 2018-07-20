@@ -43,8 +43,8 @@ public class ItemOreScanner extends Item implements IModularInventory {
 			list.add(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.nosat"));
 		else if(mapping.getDimensionId() == player.provider.getDimension()) {
 			list.add(LibVulpes.proxy.getLocalizedString("msg.connected"));
-			list.add(LibVulpes.proxy.getLocalizedString("msg.maxzoom") + mapping.getZoomRadius());
-			list.add(LibVulpes.proxy.getLocalizedString("msg.filter") + mapping.canFilterOre());
+			list.add(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.maxzoom") + mapping.getZoomRadius());
+			list.add(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.filter") + mapping.canFilterOre());
 		}
 		else
 			list.add(LibVulpes.proxy.getLocalizedString("msg.notconnected"));

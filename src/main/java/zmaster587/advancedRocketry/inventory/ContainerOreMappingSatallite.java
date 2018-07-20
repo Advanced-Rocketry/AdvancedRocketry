@@ -31,11 +31,11 @@ public class ContainerOreMappingSatallite extends Container {
 				ItemStack stack;
 				if(slot != -999)
 					stack =  player.inventory.getStackInSlot(slot);
-				else stack = null;
+				else stack = ItemStack.EMPTY;
 
 				if(inv != null && dragType == 0)
 					//Check if anything is in the slot and set the slot value if it is
-					if(stack == null) {
+					if(stack.isEmpty()) {
 						inv.setSelectedSlot(-1);
 					}
 					else
