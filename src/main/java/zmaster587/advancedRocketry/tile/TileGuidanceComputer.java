@@ -166,9 +166,6 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				return chip.getTakeoffCoords(stack, landingDimension);
 			}
 		}
-
-		if(destinationId != Constants.INVALID_PLANET)
-			return landingPos;
 		return null;
 	}
 
