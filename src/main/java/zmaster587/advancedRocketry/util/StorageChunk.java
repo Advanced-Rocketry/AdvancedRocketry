@@ -25,6 +25,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -51,6 +52,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	Block blocks[][][];
 	short metas[][][];
 	int sizeX, sizeY, sizeZ;
+	public Chunk chunk;
 
 
 	ArrayList<TileEntity> tileEntities;
@@ -72,6 +74,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		liquidTiles = new ArrayList<TileEntity>();
 
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
+		this.chunk = new Chunk(world, 0, 0);
 	}
 
 	protected StorageChunk(int xSize, int ySize, int zSize) {
@@ -87,6 +90,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		liquidTiles = new ArrayList<TileEntity>();
 
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
+		this.chunk = new Chunk(world, 0, 0);
 	}
 
 	public void setEntity(EntityRocketBase entity) {
@@ -136,9 +140,8 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		int x = pos.getX();
 		int y = pos.getY();
 		int z = pos.getZ();
-		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ)
+		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ || blocks[x][y][z] == null)
 			return Blocks.AIR.getDefaultState();
-
 		if(blocks[x][y][z] != Blocks.AIR)
 			return blocks[x][y][z].getStateFromMeta(metas[x][y][z]);
 		return blocks[x][y][z].getStateFromMeta(metas[x][y][z]);
@@ -363,6 +366,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		tileEntities.clear();
 		inventoryTiles.clear();
 		liquidTiles.clear();
+		chunk = new Chunk(world, 0, 0);
 
 		int[] blockId = nbt.getIntArray("idList");
 		int[] metasId = nbt.getIntArray("metaList");
@@ -372,6 +376,8 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 				for(int z = 0; z < sizeZ; z++) {
 					blocks[x][y][z] = Block.getBlockById(blockId[z + (sizeZ*y) + (sizeZ*sizeY*x)]);
 					metas[x][y][z] = (short)metasId[z + (sizeZ*y) + (sizeZ*sizeY*x)];
+					
+					chunk.setBlockState(new BlockPos(x, y, z), this.blocks[x][y][z].getStateFromMeta(this.metas[x][y][z]));
 				}
 			}
 		}
@@ -394,6 +400,9 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 				tileEntities.add(tile);
 				tile.setWorld(world);
+				
+				chunk.addTileEntity(tile);
+				
 			} catch (Exception e) {
 				AdvancedRocketry.logger.warn("Rocket missing Tile (was a mod removed?)");
 			}
@@ -436,7 +445,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 				}
 			}
 		}*/
-
+		this.chunk.generateSkylightMap();
 	}
 
 	public static StorageChunk copyWorldBB(World world, AxisAlignedBB bb) {
@@ -498,6 +507,10 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 						nbt.setInteger("x",nbt.getInteger("x") - actualMinX);
 						nbt.setInteger("y",nbt.getInteger("y") - actualMinY);
 						nbt.setInteger("z",nbt.getInteger("z") - actualMinZ);
+						
+						//XXX: Hack to make chisels & bits renderable
+						if (nbt.getString("id").equals("minecraft:mod.chiselsandbits.tileentitychiseled"))
+							nbt.setString("id", "minecraft:mod.chiselsandbits.tileentitychiseled.tesr");
 
 						TileEntity newTile = ZUtils.createTile(nbt);
 
@@ -529,7 +542,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 			for(int z = 0; z < sizeZ; z++) {
 				for(int y = 0; y< sizeY; y++) {
 
-					if(blocks[x][y][z] != null) {
+					if(blocks[x][y][z] != Blocks.AIR) {
 						world.setBlockState(new BlockPos(xCoord + x, yCoord + y, zCoord + z), blocks[x][y][z].getStateFromMeta(metas[x][y][z]), 2);
 					}
 				}
@@ -782,12 +795,16 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 		this.blocks = new Block[sizeX][sizeY][sizeZ];
 		this.metas = new short[sizeX][sizeY][sizeZ];
+		chunk = new Chunk(world, 0, 0);
 
 		for(int x = 0; x < sizeX; x++) {
 			for(int y = 0; y < sizeY; y++) {
 				for(int z = 0; z < sizeZ; z++) {
+					
 					this.blocks[x][y][z] = Block.getBlockById(buffer.readInt());
 					this.metas[x][y][z] = buffer.readShort();
+					
+					chunk.setBlockState(new BlockPos(x, y, z), this.blocks[x][y][z].getStateFromMeta(this.metas[x][y][z]));
 				}
 			}
 		}
@@ -807,12 +824,15 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 				if(isLiquidContainerBlock(tile))
 					liquidTiles.add(tile);
 				tile.setWorld(world);
+				
+				chunk.addTileEntity(tile);
 
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
 		}
 		//We are now ready to render
+		this.chunk.generateSkylightMap();
 		finalized = true;
 	}
 
