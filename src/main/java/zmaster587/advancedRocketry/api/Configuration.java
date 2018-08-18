@@ -12,6 +12,26 @@ import java.util.*;
 public class Configuration {
 	public static final String configFolder = "advRocketry";
 	
+	//Only to be set in preinit
+	public static net.minecraftforge.common.config.Configuration config;
+	
+	public static void save()
+	{
+		config.save();
+	}
+	
+	public static void addTorchblock(Block newblock) {
+		torchBlocks.add(newblock);
+		String[] blocks = new String[torchBlocks.size()];
+		int index = 0;
+		for( Block block : torchBlocks)
+		{
+			blocks[index++] = block.getRegistryName().toString();
+		}
+		config.get(net.minecraftforge.common.config.Configuration.CATEGORY_GENERAL, "torchBlocks","").set(blocks);
+		Configuration.save();
+	}
+	
 	public static int orbit = 1000;
 	public static int MoonId = Constants.INVALID_PLANET;
 	public static int spaceDimId = -2;

@@ -1,11 +1,13 @@
 package zmaster587.advancedRocketry.command;
 
+import net.minecraft.block.Block;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumHand;
@@ -79,6 +81,7 @@ public class WorldCommand implements ICommand {
 		int opLevel = 2;
 		if(string.length >= 1 && string[0].equalsIgnoreCase("help")) {
 			sender.sendMessage(new TextComponentString("Subcommands:"));
+			
 			sender.sendMessage(new TextComponentString("planet"));
 			sender.sendMessage(new TextComponentString("filldata"));
 			sender.sendMessage(new TextComponentString("goto"));
@@ -87,6 +90,8 @@ public class WorldCommand implements ICommand {
 			sender.sendMessage(new TextComponentString("giveStation"));
 			sender.sendMessage(new TextComponentString("reloadRecipes"));
 			sender.sendMessage(new TextComponentString("setGravity"));
+			sender.sendMessage(new TextComponentString("addTorch"));
+			sender.sendMessage(new TextComponentString("[Enter /advRocketry <subcommand> help for more info]"));
 		}
 		else if(string.length >= 1 && string[0].equalsIgnoreCase("dumpBiomes")) {
 
@@ -109,7 +114,44 @@ public class WorldCommand implements ICommand {
 				sender.sendMessage(new TextComponentString("An error has occured writing to the file"));
 			}
 		}
+		else if (string.length >= 1 && string[0].equalsIgnoreCase("addTorch")) {
+			
+			if(string.length >= 2 && string[1].equalsIgnoreCase("help"))
+			{
+				sender.sendMessage(new TextComponentString( aliases.get(0) + " " + string[0] +  " - Adds the currently held block to the list of objects that drop when there's no atmosphere"));
+				return;
+			}
+			
+			Entity player = sender.getCommandSenderEntity();
+			if(!(player instanceof EntityPlayer)) {
+				sender.sendMessage(new TextComponentString("Not a player entity"));
+				return;
+			}
+			
+			Block block = Block.getBlockFromItem(((EntityPlayer)player).getHeldItemMainhand().getItem());
+			if (block != Blocks.AIR)
+			{
+				if(Configuration.torchBlocks.contains(block) )
+					sender.sendMessage(new TextComponentString(block.getLocalizedName() + " is already in the torch list"));
+				else
+				{
+					
+					Configuration.addTorchblock(block);
+					
+					sender.sendMessage(new TextComponentString(block.getLocalizedName() + " added to the torch list"));
+				}
+			}
+			else
+				sender.sendMessage(new TextComponentString("Held block cannot be added to torch list"));
+		}
 		else if(string.length >= 1 && string[0].equalsIgnoreCase("givestation")) {
+			if(string.length >= 2 && string[1].equalsIgnoreCase("help"))
+			{
+				sender.sendMessage(new TextComponentString(aliases.get(0) + " " + string[0] +  " - Gives the player playerName (if supplied) a spacestation with ID stationID"));
+				sender.sendMessage(new TextComponentString("Usage: /advRocketry " + string[0] + " <stationId> [PlayerName]"));
+				return;
+			}
+			
 			EntityPlayer player = null;
 			if(string.length >= 3) {
 				player = getPlayerByName(string[2]);
@@ -136,7 +178,7 @@ public class WorldCommand implements ICommand {
 				stack = ((EntityPlayer)sender.getCommandSenderEntity()).getHeldItem(EnumHand.MAIN_HAND);
 
 				if(string.length >= 2 && string[1].equalsIgnoreCase("help")) {
-					sender.sendMessage(new TextComponentString("Usage: /advRocketry" + string[0] + " [datatype] [amountFill]\n"));
+					sender.sendMessage(new TextComponentString(aliases.get(0) + " " + string[0] + " [datatype] [amountFill]\n"));
 					sender.sendMessage(new TextComponentString("Fills the amount of the data type specifies into the chip being held."));
 					sender.sendMessage(new TextComponentString("If the datatype is not specified then command fills all datatypes, if no amountFill is specified completely fills the chip"));
 					return;
@@ -229,6 +271,12 @@ public class WorldCommand implements ICommand {
 		}
 
 		if(string.length >= 1 &&  string[0].equalsIgnoreCase("reloadRecipes")) {
+			
+			if(string.length >= 2 && string[1].equalsIgnoreCase("help")) {
+				sender.sendMessage(new TextComponentString(aliases.get(0) + " " + string[0] + " - Reloads recipes from the XML files in the config folder"));
+				return;
+			}
+			
 			try {
 				AdvancedRocketry.machineRecipes.clearAllMachineRecipes();
 				AdvancedRocketry.machineRecipes.registerAllMachineRecipes();
@@ -251,6 +299,10 @@ public class WorldCommand implements ICommand {
 
 		if(string.length >= 1 && string[0].equalsIgnoreCase("setGravity")) {
 			if(string.length >= 2) {
+				if( string[1].equalsIgnoreCase("help")) {
+					sender.sendMessage(new TextComponentString(string[0] + " <amount> - sets your gravity to amount where 1 is earthlike"));
+					return;
+				}
 				if(sender instanceof Entity) {
 					Entity player = null;
 					if(string.length > 2)
@@ -275,8 +327,7 @@ public class WorldCommand implements ICommand {
 				}
 			}
 			else {
-				sender.sendMessage(new TextComponentString("Help: "));
-				sender.sendMessage(new TextComponentString("/advRocketry " + string[0] + " gravity_multiplier [playerName]"));
+				sender.sendMessage(new TextComponentString(aliases.get(0) + " " + string[0] + " gravity_multiplier [playerName]"));
 				sender.sendMessage(new TextComponentString(""));
 				sender.sendMessage(new TextComponentString("use 0 as the gravity_multiplier to allow regular planet gravity to take over"));
 			}
@@ -287,6 +338,11 @@ public class WorldCommand implements ICommand {
 			if(string[0].equalsIgnoreCase("goto") && (string.length == 2 || string.length == 3)) {
 				EntityPlayer player;
 				if(sender instanceof Entity && (player = sender.getEntityWorld().getPlayerEntityByName(sender.getName())) != null) {
+					if(string.length >= 2 && string[1].equalsIgnoreCase("help")) {
+						sender.sendMessage(new TextComponentString(string[0] + " <dimId> - teleports the player to the supplied dimension"));
+						sender.sendMessage(new TextComponentString(string[0] + "station <station ID> - teleports the player to the supplied station"));
+						return;
+					}
 					try {
 						int dim;
 
@@ -778,6 +834,7 @@ public class WorldCommand implements ICommand {
 			list.add("reloadRecipes");
 			list.add("givestation");
 			list.add("dumpBiomes");
+			list.add("addTorch");
 		} else if(string.length == 2) {
 			ArrayList<String> list2 = new ArrayList<String>();
 			list2.add("get");

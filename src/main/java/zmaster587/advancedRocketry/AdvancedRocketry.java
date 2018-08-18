@@ -245,6 +245,7 @@ public class AdvancedRocketry {
 		//Configuration  ---------------------------------------------------------------------------------------------
 
 		config = new Configuration(new File(event.getModConfigurationDirectory(), "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/advancedRocketry.cfg"));
+		zmaster587.advancedRocketry.api.Configuration.config = config;
 		config.load();
 
 		AtmosphereVacuum.damageValue = (int) config.get(Configuration.CATEGORY_GENERAL, "vacuumDamage", 1, "Amount of damage taken every second in a vacuum").getInt();
