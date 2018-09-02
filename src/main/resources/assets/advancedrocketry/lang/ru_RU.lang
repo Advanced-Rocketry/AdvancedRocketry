@@ -1,8 +1,8 @@
 itemGroup.advancedRocketry=Advanced Rocketry
 itemGroup.advancedRocketryOres=Руды Advanced Rocketry
 
-death.attack.Vacuum=Вас разгерметизировало
-death.attack.Vacuum.player=был разгерметизирован
+death.attack.Vacuum=Вас настигла смерть в вакууме
+death.attack.Vacuum.player=Погиб в безвоздушном пространстве
 entity.advancedRocketry.rocket.name=Ракета
 
 tile.landingPad.name=Посадочная площадка
@@ -11,6 +11,7 @@ tile.pad.name=Стартовая площадка
 tile.structuretower.name=Структурная башня
 tile.rocketAssembler.name=Сборщик ракет
 tile.turf.name=Лунный грунт
+tile.turfDark.name=Тёмный лунный грунт
 tile.cuttingMachine.name=Режущий аппарат
 tile.sawBlade.name=Узел циркулярной пилы
 tile.controlComp.name=Компьютер управления миссией
@@ -107,6 +108,7 @@ tile.pipeSeal.name=Заглушка для трубы
 tile.spaceElevatorController.name=Космический лифт
 tile.beacon.name=Маяк
 tile.thermiteTorch.name=Термитный факел
+tile.wirelessTransciever.name=Беспроводной приемопередатчик
 
 tile.Dilithium.name=Руда дилития
 
@@ -241,7 +243,8 @@ achievement.suitedUp=А вот и одёжка!
 achievement.suitedUp.desc=Наденьте полный скафандр
 
 
-key.controls.advancedrocketry=Advanced Rocketry
+
+key.controls.advancedRocketry=Advanced Rocketry
 key.openRocketUI=Откройте графический интерфейс ракеты
 key.toggleJetpack=Переключить реактивный ранец
 
@@ -305,7 +308,6 @@ msg.terraformer.pressure=Давление
 msg.biomescanner.gas=И чё, вроде пахнет газом?
 msg.gravitycontroller.radius=Радиус:
 msg.gravitycontroller.targetgrav=Целевая сила тяжести:
-msg.gravitycontroller.none
 msg.gravitycontroller.activeset=Active: задать
 msg.gravitycontroller.activeadd=Active: добавить
 msg.gravitycontroller.targetdir.1=Цель ->
@@ -325,7 +327,7 @@ msg.stationaltctrl.maxaltrate=Максимальная скорость изме
 msg.stationaltctrl.tgtalt=Целевая высота:
 msg.stationaltctrl.alt=Высота:
 msg.stationgravctrl.maxaltrate=Максимальная скорость изменения силы тяжести:
-msg.stationgravyctrl.tgtalt=Целевая сила тяжести:
+msg.stationgravctrl.tgtalt=Сила тяжести цели:
 msg.stationgravctrl.alt=Искусственная сила тяжести:
 msg.stationorientctrl.alt=Угловая скорость:
 msg.stationorientctrl.tgtalt=целевая угловая скорость:
@@ -356,6 +358,7 @@ msg.rocketbuilder.unscanned=Ракета не просканирована
 msg.rocketbuilder.success_station=Готов!
 msg.rocketbuilder.empty=Тут ничего нет :(
 msg.rocketbuilder.finished=Постройка завершена!
+msg.rocketbuild.invalidblock=Недопустимый блок!
 msg.rocketbuilder.incompletestructure=Неверная структура пусковой площадки!
 msg.rocketbuilder.nosatellitehatch=Отсутствует отсек спутника
 msg.rocketbuilder.nosatellitechip=Отсутствует чип
@@ -378,6 +381,7 @@ msg.biomechanger.numBiome=Количество отсканированных б
 msg.itemorescanner.nosat=Спутник еще не запущен
 msg.itemorescanner.maxzoom=Максимальное увеличение:
 msg.itemorescanner.filter=Может фильтровать руду:
+msg.itemorescanner.value=Расход:
 msg.itemplanetidchip.planetname=Название планеты:
 msg.itemplanetidchip.stationid=id станции:
 msg.itemplanetidchip.artifacts=Артефакты:
@@ -412,6 +416,7 @@ msg.entity.rocket.disass=Разборка
 msg.entity.rocket.seldst=Выбрать пункт назначения
 msg.entity.rocket.clear=Очистить
 msg.entity.rocket.none=Ракета не выбрана
+msg.wirelessTransciever.extract=Разгрузить
 
 msg.entityDeployedRocket.notGasGiant=Тут нет газа
 msg.powerunit.rfpertick=RF/t
@@ -429,3 +434,4 @@ msg.unprogrammed=Убрана программа
 msg.programfail=Ошибка программирования
 msg.modules=модулей
 msg.na=Н/Д
+msg.entityDeployedRocket.notGasGiant=Тут нет газа
