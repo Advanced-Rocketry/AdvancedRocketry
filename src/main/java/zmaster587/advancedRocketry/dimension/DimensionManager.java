@@ -14,6 +14,8 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import org.apache.commons.io.FileUtils;
 
+import com.google.common.io.Files;
+
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
@@ -586,13 +588,18 @@ public class DimensionManager implements IGalaxy {
 		String xmlOutput = XMLPlanetLoader.writeXML(this);
 		
 		try {
-
 			File planetXMLOutput = new File(net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory(), filePath + worldXML);
 			if(!planetXMLOutput.exists())
 				planetXMLOutput.createNewFile();
-			PrintWriter bufoutStream = new PrintWriter(planetXMLOutput);
+			
+			File tmpFileXml = File.createTempFile("ARXMLdata_", ".DAT", net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory());
+			PrintWriter bufoutStream = new PrintWriter(tmpFileXml);
 			bufoutStream.write(xmlOutput);
 			bufoutStream.close();
+			
+			//Temp file was written OK, commit
+			Files.copy(tmpFileXml, planetXMLOutput);
+			tmpFileXml.delete();
 			
 			File file = new File(net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory(), filePath + tempFile);
 
@@ -600,33 +607,24 @@ public class DimensionManager implements IGalaxy {
 				file.createNewFile();
 
 			//Getting real sick of my planet file getting toasted during debug...
-			File tmpFile = File.createTempFile("dimprops", null);
+			File tmpFile = File.createTempFile("dimprops", ".DAT", net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory());
 			outStream = new FileOutputStream(tmpFile);
 			try {
 				CompressedStreamTools.writeCompressed(nbt, outStream);
 				
 				//copy the correctly written output
-				FileOutputStream properOstream = new FileOutputStream(file);
-				FileInputStream inStream = new FileInputStream(tmpFile);
-				byte buffer[] = new byte[1024];
-				int numRead = 0;
-				while((numRead = inStream.read(buffer)) > 0) {
-					properOstream.write(buffer, 0, numRead);
-				}
-				inStream.close();
-				properOstream.close();
+				Files.copy(tmpFile, file);
 				tmpFile.delete();
 				
 			} catch(Exception e) {
-				AdvancedRocketry.logger.error("Cannot save advanced rocketry planet file");
+				AdvancedRocketry.logger.error("Cannot save advanced rocketry planet file, you may be able to find backups in " + net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory());
 				e.printStackTrace();
 			}
 			
 			outStream.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 
 		} catch (IOException e) {
+			AdvancedRocketry.logger.error("Cannot save advanced rocketry planet files, you may be able to find backups in " + net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory());
 			e.printStackTrace();
 		}
 	}
