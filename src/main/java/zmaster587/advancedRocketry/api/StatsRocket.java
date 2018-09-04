@@ -93,6 +93,8 @@ public class StatsRocket {
 	}
 
 	public void addPassengerSeat(int x, int y, int z) {
+		if(!hasSeat())
+			setSeatLocation(x, y, z);
 		passengerSeats.add(new HashedBlockPosition(x, y, z));
 	}
 

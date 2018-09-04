@@ -457,7 +457,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			openGui(player);
 		}
 		else if(stats.hasSeat()) { //If pilot seat is open mount entity there
-			if(stats.hasSeat() && this.getPassengers().isEmpty()) {
+			if(this.getPassengers().size() < stats.getNumPassengerSeats()) {
 				if(!world.isRemote)
 					player.startRiding(this);
 			}
@@ -474,6 +474,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		return true;
 	}
 
+    protected boolean canFitPassenger(Entity passenger)
+    {
+        return this.getPassengers().size() < stats.getNumPassengerSeats();
+    }
 
 	public void openGui(EntityPlayer player) {
 		player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULAR.ordinal(), player.world, this.getEntityId(), -1,0);
@@ -1152,7 +1156,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				worldserver1.spawnEntity(entity);
 				worldserver1.updateEntityWithOptionalForce(entity, true);
 
-				int timeOffset = 1;
+				int timeOffset = 0;
 				for(Entity e : passengers) {
 					//Fix that darn random crash?
 					worldserver.resetUpdateEntityTick();
@@ -1162,7 +1166,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					//Need to handle our own removal to avoid race condition where player is mounted on client on the old entity but is already mounted to the new one on server
 					//PacketHandler.sendToPlayer(new PacketEntity(this, (byte)PacketType.DISMOUNTCLIENT.ordinal()), (EntityPlayer) e);
 
-					PlanetEventHandler.addDelayedTransition(worldserver.getTotalWorldTime(), new TransitionEntity(worldserver.getTotalWorldTime(), e, dimensionIn, new BlockPos(posX + 16, y, posZ), entity));
+					PlanetEventHandler.addDelayedTransition(new TransitionEntity(worldserver.getTotalWorldTime(), e, dimensionIn, new BlockPos(posX + 16, y, posZ), entity));
 
 					//minecraftserver.getPlayerList().transferPlayerToDimension((EntityPlayerMP)e, dimensionIn, teleporter);
 
@@ -1469,21 +1473,18 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		{
 			//Bind player to the seat
 			if(this.storage != null) {
-				//Conditional b/c for some reason client/server positions do not match
-				float xOffset = this.storage.getSizeX() % 2 == 0 ? 0.5f : 0f;
-				float zOffset = this.storage.getSizeZ() % 2 == 0 ? 0.5f : 0f;
-				entity.setPosition(this.posX  + stats.getSeatX() + xOffset, this.posY + stats.getSeatY() - 0.5f, this.posZ + stats.getSeatZ() + zOffset );
+				try {
+					HashedBlockPosition seatPos = stats.getPassengerSeat(this.getPassengers().indexOf(entity));
+					//Conditional b/c for some reason client/server positions do not match
+					float xOffset = this.storage.getSizeX() % 2 == 0 ? 0.5f : 0f;
+					float zOffset = this.storage.getSizeZ() % 2 == 0 ? 0.5f : 0f;
+					entity.setPosition(this.posX  + seatPos.x + xOffset, this.posY + seatPos.y - 0.5f, this.posZ + seatPos.z + zOffset );
+				} catch (IndexOutOfBoundsException e) {
+					entity.setPosition(this.posX , this.posY , this.posZ );
+				}
 			}
 			else
 				entity.setPosition(this.posX , this.posY , this.posZ );
-		}
-
-		for(int i = 0; i < this.stats.getNumPassengerSeats(); i++) {
-			HashedBlockPosition pos = this.stats.getPassengerSeat(i);
-			if(mountedEntities[i] != null && mountedEntities[i].get() != null) {
-				mountedEntities[i].get().setPosition(this.posX + pos.x, this.posY + pos.y, this.posZ + pos.z); 
-				System.out.println("Additional: " + mountedEntities[i].get());
-			}
 		}
 	}
 

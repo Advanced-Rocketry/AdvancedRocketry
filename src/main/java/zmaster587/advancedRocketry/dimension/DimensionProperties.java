@@ -10,6 +10,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.biome.Biome.TempCategory;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
@@ -224,6 +225,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	private HashMap<Long,SatelliteBase> satallites;
 	private HashMap<Long,SatelliteBase> tickingSatallites;
 	private List<Fluid> harvestableAtmosphere;
+	private List<SpawnListEntry> spawnableEntities;
 	private HashSet<HashedBlockPosition> beaconLocations;
 	private IBlockState oceanBlock;
 	private IBlockState fillerBlock;
@@ -252,6 +254,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		hasRings = false;
 		customIcon = "";
 		harvestableAtmosphere = new LinkedList<Fluid>();
+		spawnableEntities = new LinkedList<SpawnListEntry>();
 		beaconLocations = new HashSet<HashedBlockPosition>();
 		sealevel = 63;
 		generatorType = 0;
@@ -309,6 +312,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		averageTemperature = 100;
 		hasRings = false;
 		harvestableAtmosphere = new LinkedList<Fluid>();
+		spawnableEntities = new LinkedList<SpawnListEntry>();
 		beaconLocations = new HashSet<HashedBlockPosition>();
 		sealevel = 63;
 		oceanBlock = null;
@@ -334,6 +338,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		gravitationalMultiplier = mult;
 	}
 
+	public List<SpawnListEntry> getSpawnListEntries() {
+		return spawnableEntities;
+	}
+	
 	/**
 	 * @return the color of the sun as an array of floats represented as  {r,g,b}
 	 */
