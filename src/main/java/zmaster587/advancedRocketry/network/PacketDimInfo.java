@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.libVulpes.network.BasePacket;
@@ -129,6 +130,10 @@ public class PacketDimInfo extends BasePacket {
 				dimProperties.oreProperties = DimensionManager.getInstance().getDimensionProperties(dimNumber).oreProperties;
 				dimProperties.getRequiredArtifacts().clear();
 				dimProperties.getRequiredArtifacts().addAll(artifacts);
+				
+				List<SpawnListEntry> list = new LinkedList<SpawnListEntry>(DimensionManager.getInstance().getDimensionProperties(dimNumber).getSpawnListEntries());
+				dimProperties.getSpawnListEntries().clear();
+				dimProperties.getSpawnListEntries().addAll(list);
 				
 				if(DimensionManager.getInstance().getDimensionProperties(dimNumber).customIcon != null && !DimensionManager.getInstance().getDimensionProperties(dimNumber).customIcon.isEmpty())
 					dimProperties.customIcon = DimensionManager.getInstance().getDimensionProperties(dimNumber).customIcon;

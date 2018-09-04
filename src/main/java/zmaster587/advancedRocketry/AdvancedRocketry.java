@@ -25,6 +25,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -1916,6 +1917,11 @@ public class AdvancedRocketry {
 					List<ItemStack> list = new LinkedList<ItemStack>(properties.getRequiredArtifacts());
 					loadedProps.getRequiredArtifacts().clear();
 					loadedProps.getRequiredArtifacts().addAll(list);
+					
+					List<SpawnListEntry> list2 = new LinkedList<SpawnListEntry>(properties.getSpawnListEntries());
+					loadedProps.getSpawnListEntries().clear();
+					loadedProps.getSpawnListEntries().addAll(list2);
+					
 				}
 
 

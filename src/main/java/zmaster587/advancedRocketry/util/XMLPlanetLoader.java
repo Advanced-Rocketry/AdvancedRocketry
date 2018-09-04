@@ -1,14 +1,18 @@
 package zmaster587.advancedRocketry.util;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -282,6 +286,64 @@ public class XMLPlanetLoader {
 						}
 					}
 				}
+			}
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("spawnable")) {
+				int weight = 100;
+				int groupMin = 1, groupMax = 1;
+				Node weightNode = planetPropertyNode.getAttributes().getNamedItem("weight");
+				Node groupMinNode = planetPropertyNode.getAttributes().getNamedItem("groupMin");
+				Node groupMaxNode = planetPropertyNode.getAttributes().getNamedItem("groupMax");
+				
+				//Get spawn properties
+				if(weightNode != null) {
+					try {
+						weight = Integer.parseInt(weightNode.getTextContent());
+						weight = Math.max(1, weight);
+					} catch(NumberFormatException e) {
+					}
+				}
+				if(groupMinNode != null) {
+					try {
+						groupMin = Integer.parseInt(groupMinNode.getTextContent());
+						groupMin = Math.max(1, groupMin);
+					} catch(NumberFormatException e) {
+					}
+				}
+				if(groupMaxNode != null) {
+					try {
+						groupMax = Integer.parseInt(groupMaxNode.getTextContent());
+						groupMax = Math.max(1, groupMax);
+					} catch(NumberFormatException e) {
+					}
+				}
+				
+				if (groupMax < groupMin) {
+					groupMax = groupMin;
+				}
+				
+				Class clazz = (Class) EntityList.getClass(new ResourceLocation(planetPropertyNode.getTextContent()));
+
+				//If not using string name maybe it's a class name?
+				if(clazz == null) {
+					try {
+						clazz = Class.forName(planetPropertyNode.getTextContent());
+						if(clazz != null && !Entity.class.isAssignableFrom(clazz))
+							clazz = null;
+
+					} catch (Exception e) {
+						//Fail silently
+					}
+				}
+
+				if(clazz != null) {
+					//AdvancedRocketry.logger.info("Registering " + clazz.getName() + " for atmosphere bypass");
+					properties.getSpawnListEntries().add(new SpawnListEntry(clazz, weight, groupMin, groupMax));
+				}
+				else
+					AdvancedRocketry.logger.warn("Cannot find " + planetPropertyNode.getTextContent() + " while registering entity for planet spawn");
+				
+				
+				
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("artifact")) {
 				ItemStack stack = XMLPlanetLoader.getStack(planetPropertyNode.getTextContent());
@@ -609,6 +671,10 @@ public class XMLPlanetLoader {
 		
 		if(properties.getStoneBlock() != null) {
 			outputString = outputString + tabLen + "\t<fillerBlock>" + Block.REGISTRY.getNameForObject(properties.getStoneBlock().getBlock()) + "</fillerBlock>\n";
+		}
+		
+		for(SpawnListEntry e : properties.getSpawnListEntries()) {
+			outputString = outputString + tabLen + "\t<spawnable weight=\"" + e.itemWeight + "\" groupMin=\"" + e.minGroupCount + "\" groupMax=\"" + e.maxGroupCount +  "\" >" + EntityRegistry.getEntry(e.entityClass).getRegistryName() + "</spawnable>\n";
 		}
 		
 		outputString = outputString + tabLen + "</planet>\n";

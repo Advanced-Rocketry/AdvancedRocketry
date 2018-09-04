@@ -7,6 +7,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayer.SleepResult;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -20,6 +21,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent;
@@ -73,6 +75,8 @@ import zmaster587.libVulpes.network.PacketHandler;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -80,10 +84,10 @@ public class PlanetEventHandler {
 
 	public static long time = 0;
 	private static long endTime, duration;
-	private static Map<Long,TransitionEntity> transitionMap = new HashMap<Long,TransitionEntity>();
+	private static List<TransitionEntity> transitionMap = new LinkedList<TransitionEntity>();
 
-	public static void addDelayedTransition(long tick, TransitionEntity entity) {
-		transitionMap.put(tick, entity);
+	public static void addDelayedTransition(TransitionEntity entity) {
+		transitionMap.add(entity);
 	}
 
 	@SubscribeEvent
@@ -108,6 +112,22 @@ public class PlanetEventHandler {
 			//				event.player.addStat(ARAchivements.blockPresser);
 		}
 	}
+
+	@SubscribeEvent
+	public void SpawnEntity(WorldEvent.PotentialSpawns event) {
+		World world = event.getWorld();
+
+		if (event.getType() != EnumCreatureType.MONSTER)
+			return;
+		
+		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
+		if(properties != null) {
+			List<SpawnListEntry> entries = properties.getSpawnListEntries();
+			if(!entries.isEmpty())
+				event.getList().addAll(entries);
+		}
+	}
+
 	@SubscribeEvent
 	public void onWorldGen(OreGenEvent.GenerateMinable event) {
 
@@ -231,12 +251,11 @@ public class PlanetEventHandler {
 			time++;
 
 			if(!transitionMap.isEmpty()) {
-				Iterator<Entry<Long, TransitionEntity>> itr = transitionMap.entrySet().iterator();
+				Iterator<TransitionEntity> itr = transitionMap.iterator();
 
 				while(itr.hasNext()) {
-					Entry<Long, TransitionEntity> entry = itr.next();
-					TransitionEntity ent = entry.getValue();
-					if(ent.entity.world.getTotalWorldTime() >= entry.getKey()) {
+					TransitionEntity ent = itr.next();
+					if(ent.entity.world.getTotalWorldTime() >= ent.time) {
 						ent.entity.setLocationAndAngles(ent.location.getX(), ent.location.getY(), ent.location.getZ(), ent.entity.rotationYaw, ent.entity.rotationPitch);
 						ent.entity.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP)ent.entity, ent.dimId, new TeleporterNoPortal(ent.entity.getServer().getWorld(ent.dimId)));
 						ent.entity.startRiding(ent.entity2);
@@ -507,7 +526,7 @@ public class PlanetEventHandler {
 
 			//event.setCanceled(false);
 		}
-			
+
 	}
 
 
