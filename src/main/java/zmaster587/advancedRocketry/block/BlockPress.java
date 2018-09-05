@@ -93,7 +93,7 @@ public class BlockPress extends BlockPistonBase {
 			worldIn.setBlockToAir(pos.down());
 
 			if(!worldIn.isRemote)
-				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY() - 0.5, pos.getZ(), stack));
+				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX() + 0.5, pos.getY() - 0.5, pos.getZ() + 0.5, stack));
 			if ((new BlockPistonStructureHelper(worldIn, pos, enumfacing, true)).canMove())
 			{
 				worldIn.addBlockEvent(pos, this, 0, enumfacing.getIndex());
