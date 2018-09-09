@@ -90,7 +90,7 @@ public class BlockFuelTank extends Block implements IFuelTank{
 
 	@Override
 	public int getMaxFill(World world, BlockPos pos , IBlockState state) {
-		return 500;
+		return 1000;
 	}
 
 	public enum TankStates implements IStringSerializable {

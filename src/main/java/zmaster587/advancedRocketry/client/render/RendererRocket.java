@@ -18,6 +18,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
@@ -70,15 +71,18 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 
 		if(storage == null || !storage.finalized)
 			return;
-
-		if(entity.getPassengers().contains(Minecraft.getMinecraft().player)) {
-
-			y = +0.5 -((EntityRocket)entity).stats.getSeatY();
-		}
-
+		
 		//Find the halfway point along the XZ plane
 		float halfx = storage.getSizeX()/2f;
+		float halfy = storage.getSizeY()/2f;
 		float halfz = storage.getSizeZ()/2f;
+
+		/*if(entity.getPassengers().contains(Minecraft.getMinecraft().player)) {
+			float angle = (float)(((EntityRocket)entity).getRCSRotateProgress()*0.9f*Math.PI/180f);
+			y = ((EntityRocket)entity).stats.getSeatY();
+			y= (0.5-((EntityRocket)entity).stats.getSeatY())*MathHelper.cos(angle) + (0)*MathHelper.sin(angle);
+			//y = +0.5 -((EntityRocket)entity).stats.getSeatY();
+		}*/
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float)x, (float)y, (float)z);
@@ -161,7 +165,10 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 		}
 
 		GL11.glPushMatrix();
-		GL11.glTranslatef((float)x - halfx, (float)y, (float)z - halfz);
+		GL11.glTranslatef((float)x, (float)y + halfy, (float)z);
+		GL11.glRotatef(((EntityRocket)entity).getRCSRotateProgress()*0.9f, 1f, 0f, 0f);
+		GL11.glRotatef(((EntityRocket)entity).rotationYaw, 0f, 0f, 1f);
+		GL11.glTranslatef((float)- halfx, (float)0 - halfy, (float)- halfz);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		GL11.glCallList(storage.world.displayListIndex);
 

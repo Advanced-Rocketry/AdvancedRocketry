@@ -26,16 +26,16 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 	Minecraft mc = Minecraft.getMinecraft();
 
 	@Override
-	public void renderPlanet2(BufferBuilder buffer, ResourceLocation icon, int locationX, int locationY, double zLevel, float planetOrbitalDistance, float alphaMultiplier, double angle, boolean hasAtmosphere, float[] atmColor, float[] ringColor, boolean isGasgiant, boolean hasRings) {
+	public void renderPlanet2(BufferBuilder buffer, ResourceLocation icon, int locationX, int locationY, double zLevel, float planetOrbitalDistance, float alphaMultiplier, double angle, boolean hasAtmosphere, float[] atmColor, float[] ringColor, boolean isGasgiant, boolean hasRings, boolean hasDecorators) {
 
-		
+
 		ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.player.getPosition());
-		
+
 		if(object == null)
 			return;
-		
+
 		planetOrbitalDistance = object.getOrbitalDistance();
-		
+
 		GL11.glPushMatrix();
 		//GL11.glDisable(GL11.GL_BLEND);
 
@@ -76,98 +76,101 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 		Tessellator.getInstance().draw();
 		GL11.glPopAttrib();
 
-		//Draw atmosphere if applicable
-		if(isGasgiant) {
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-			//GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
+		if(hasDecorators) {
 
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			mc.renderEngine.bindTexture(DimensionProperties.getAtmosphereLEOResource());
-			
-			double dist = -5D - 4*(planetOrbitalDistance)/200D;
-			double scalingMult = 1D - 0.9*(planetOrbitalDistance)/200D;
+			//Draw atmosphere if applicable
+			if(isGasgiant) {
+				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+				//GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
 
-			int maxAmt = 6;
-			float lng = (float) (Minecraft.getSystemTime()/100000d % 1);
-			for(int i = 0; i < maxAmt; i++) {
-				GlStateManager.color(0.05f*(maxAmt-i/6f), .4f*(i/6f), 1f, 0.4f);
+				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+				mc.renderEngine.bindTexture(DimensionProperties.getAtmosphereLEOResource());
 
-				//IDK it looks pretty
-				Xoffset = lng*(i-(maxAmt/4f));
-				float Yoffset = -lng*i;
+				double dist = -5D - 4*(planetOrbitalDistance)/200D;
+				double scalingMult = 1D - 0.9*(planetOrbitalDistance)/200D;
 
-				f14 = i + Yoffset;
-				f15 = 0f + Yoffset;
-				f16 = 0f + Xoffset;
-				f17 = i + Xoffset;
+				int maxAmt = 6;
+				float lng = (float) (Minecraft.getSystemTime()/100000d % 1);
+				for(int i = 0; i < maxAmt; i++) {
+					GlStateManager.color(0.05f*(maxAmt-i/6f), .4f*(i/6f), 1f, 0.4f);
 
-				RenderHelper.renderTopFaceWithUV(buffer, -10D + i*scalingMult, -f10, -f10, 0, 0, f14, f15, f16, f17);
-				RenderHelper.renderTopFaceWithUV(buffer, -10D + i*scalingMult, 0, 0, f10, f10, f14, f15, f16, f17);
-				RenderHelper.renderTopFaceWithUV(buffer, -10D + i*scalingMult, -f10, 0, 0, f10, f14, f15, f16, f17);
-				RenderHelper.renderTopFaceWithUV(buffer, -10D + i*scalingMult, 0, -f10, f10, 0, f14, f15, f16, f17);
+					//IDK it looks pretty
+					Xoffset = lng*(i-(maxAmt/4f));
+					float Yoffset = -lng*i;
+
+					f14 = i + Yoffset;
+					f15 = 0f + Yoffset;
+					f16 = 0f + Xoffset;
+					f17 = i + Xoffset;
+
+					RenderHelper.renderTopFaceWithUV(buffer, -10D + i*scalingMult, -f10, -f10, 0, 0, f14, f15, f16, f17);
+					RenderHelper.renderTopFaceWithUV(buffer, -10D + i*scalingMult, 0, 0, f10, f10, f14, f15, f16, f17);
+					RenderHelper.renderTopFaceWithUV(buffer, -10D + i*scalingMult, -f10, 0, 0, f10, f14, f15, f16, f17);
+					RenderHelper.renderTopFaceWithUV(buffer, -10D + i*scalingMult, 0, -f10, f10, 0, f14, f15, f16, f17);
+				}
+
+				Tessellator.getInstance().draw();
+
+
+				GlStateManager.disableTexture2D();
+				//GL11.glDisable(GL11.GL_BLEND);
+				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+				GlStateManager.color(0.5f,0.5f,1, 0.08f);
+
+
+				for(int i = 0; i < 5 ; i++) {
+					RenderHelper.renderTopFaceWithUV(buffer, dist + i*scalingMult, -f10, -f10, 0, 0, f14, f15, f16, f17);
+					RenderHelper.renderTopFaceWithUV(buffer, dist + i*scalingMult, 0, 0, f10, f10, f14, f15, f16, f17);
+					RenderHelper.renderTopFaceWithUV(buffer, dist + i*scalingMult, -f10, 0, 0, f10, f14, f15, f16, f17);
+					RenderHelper.renderTopFaceWithUV(buffer, dist + i*scalingMult, 0, -f10, f10, 0, f14, f15, f16, f17);
+				}
+				Tessellator.getInstance().draw();
+				GlStateManager.enableTexture2D();
 			}
+			else if(hasAtmosphere) {
+				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+				//GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
 
-			Tessellator.getInstance().draw();
+				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+				mc.renderEngine.bindTexture(DimensionProperties.getAtmosphereLEOResource());
+				GlStateManager.color(1,1,1, 0.5f);
+
+				Xoffset = (float)((System.currentTimeMillis()/100000d % 1));
+
+				f14 = 1f + Xoffset;
+				f15 = 0f + Xoffset;
+				f16 = f15;
+				f17 = f14;
+
+				RenderHelper.renderTopFaceWithUV(buffer, -10D, -f10, -f10, 0, 0, f14, f15, f16, f17);
+				RenderHelper.renderTopFaceWithUV(buffer, -10D, 0, 0, f10, f10, f14, f15, f16, f17);
+				RenderHelper.renderTopFaceWithUV(buffer, -10D, -f10, 0, 0, f10, f14, f15, f16, f17);
+				RenderHelper.renderTopFaceWithUV(buffer, -10D, 0, -f10, f10, 0, f14, f15, f16, f17);
+
+				Tessellator.getInstance().draw();
 
 
-			GlStateManager.disableTexture2D();
-			//GL11.glDisable(GL11.GL_BLEND);
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				GlStateManager.disableTexture2D();
+				//GL11.glDisable(GL11.GL_BLEND);
+				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			GlStateManager.color(0.5f,0.5f,1, 0.08f);
+				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
-
-			for(int i = 0; i < 5 ; i++) {
-				RenderHelper.renderTopFaceWithUV(buffer, dist + i*scalingMult, -f10, -f10, 0, 0, f14, f15, f16, f17);
-				RenderHelper.renderTopFaceWithUV(buffer, dist + i*scalingMult, 0, 0, f10, f10, f14, f15, f16, f17);
-				RenderHelper.renderTopFaceWithUV(buffer, dist + i*scalingMult, -f10, 0, 0, f10, f14, f15, f16, f17);
-				RenderHelper.renderTopFaceWithUV(buffer, dist + i*scalingMult, 0, -f10, f10, 0, f14, f15, f16, f17);
+				GlStateManager.color(atmColor[0], atmColor[1], atmColor[2], 0.08f);
+				//f10 *= 100;
+				double dist = -5D - 4*(planetOrbitalDistance)/200D;
+				double scalingMult = 1D - 0.9*(planetOrbitalDistance)/200D;
+				for(int i = 0; i < 5 ; i++) {
+					RenderHelper.renderTopFaceWithUV(buffer, dist + i*scalingMult, -f10, -f10, 0, 0, f14, f15, f16, f17);
+					RenderHelper.renderTopFaceWithUV(buffer, dist + i*scalingMult, 0, 0, f10, f10, f14, f15, f16, f17);
+					RenderHelper.renderTopFaceWithUV(buffer, dist + i*scalingMult, -f10, 0, 0, f10, f14, f15, f16, f17);
+					RenderHelper.renderTopFaceWithUV(buffer, dist + i*scalingMult, 0, -f10, f10, 0, f14, f15, f16, f17);
+				}
+				Tessellator.getInstance().draw();
+				GlStateManager.enableTexture2D();
 			}
-			Tessellator.getInstance().draw();
-			GlStateManager.enableTexture2D();
-		}
-		else if(hasAtmosphere) {
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-			//GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
-
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			mc.renderEngine.bindTexture(DimensionProperties.getAtmosphereLEOResource());
-			GlStateManager.color(1,1,1, 0.5f);
-
-			Xoffset = (float)((System.currentTimeMillis()/100000d % 1));
-			
-			f14 = 1f + Xoffset;
-			f15 = 0f + Xoffset;
-			f16 = f15;
-			f17 = f14;
-
-			RenderHelper.renderTopFaceWithUV(buffer, -10D, -f10, -f10, 0, 0, f14, f15, f16, f17);
-			RenderHelper.renderTopFaceWithUV(buffer, -10D, 0, 0, f10, f10, f14, f15, f16, f17);
-			RenderHelper.renderTopFaceWithUV(buffer, -10D, -f10, 0, 0, f10, f14, f15, f16, f17);
-			RenderHelper.renderTopFaceWithUV(buffer, -10D, 0, -f10, f10, 0, f14, f15, f16, f17);
-
-			Tessellator.getInstance().draw();
-
-
-			GlStateManager.disableTexture2D();
-			//GL11.glDisable(GL11.GL_BLEND);
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			
-			GlStateManager.color(atmColor[0], atmColor[1], atmColor[2], 0.08f);
-			//f10 *= 100;
-			double dist = -5D - 4*(planetOrbitalDistance)/200D;
-			double scalingMult = 1D - 0.9*(planetOrbitalDistance)/200D;
-			for(int i = 0; i < 5 ; i++) {
-				RenderHelper.renderTopFaceWithUV(buffer, dist + i*scalingMult, -f10, -f10, 0, 0, f14, f15, f16, f17);
-				RenderHelper.renderTopFaceWithUV(buffer, dist + i*scalingMult, 0, 0, f10, f10, f14, f15, f16, f17);
-				RenderHelper.renderTopFaceWithUV(buffer, dist + i*scalingMult, -f10, 0, 0, f10, f14, f15, f16, f17);
-				RenderHelper.renderTopFaceWithUV(buffer, dist + i*scalingMult, 0, -f10, f10, 0, f14, f15, f16, f17);
-			}
-			Tessellator.getInstance().draw();
-			GlStateManager.enableTexture2D();
 		}
 
 
@@ -193,13 +196,13 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 		//GL11.glRotatef(90f, axis.x, axis.y, axis.z);
 		ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.player.getPosition());
 		if(obj != null) {
-		GL11.glRotated(obj.getRotation(EnumFacing.UP)*360, 0, 1, 0);
-		GL11.glRotated(obj.getRotation(EnumFacing.EAST)*360, 1, 0, 0);
+			GL11.glRotated(obj.getRotation(EnumFacing.UP)*360, 0, 1, 0);
+			GL11.glRotated(obj.getRotation(EnumFacing.EAST)*360, 1, 0, 0);
 		}
 		//GL11.glRotated(360, obj.getRotation(EnumFacing.EAST), obj.getRotation(EnumFacing.UP), obj.getRotation(EnumFacing.NORTH));
-		
+
 	}
-	
+
 	@Override
 	protected ResourceLocation getTextureForPlanet(DimensionProperties properties) {
 		return properties.getPlanetIconLEO();

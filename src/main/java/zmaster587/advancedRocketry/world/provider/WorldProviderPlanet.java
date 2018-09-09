@@ -24,10 +24,12 @@ import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.capability.DimensionCompat;
+import zmaster587.advancedRocketry.client.render.planet.RenderAsteroidSky;
 import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
+import zmaster587.advancedRocketry.world.ChunkProviderAsteroids;
 import zmaster587.advancedRocketry.world.ChunkProviderCavePlanet;
 import zmaster587.advancedRocketry.world.ChunkProviderPlanet;
 
@@ -50,7 +52,8 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	public IChunkGenerator createChunkGenerator() {
-		if(DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGenType() == 1)
+		int genType = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGenType();
+		if(genType == 1)
 		{
 			return new ChunkProviderCavePlanet(this.world, false, this.world.getSeed(),world.getWorldInfo().getGeneratorOptions());
 		}
@@ -63,6 +66,8 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	public IRenderHandler getSkyRenderer() {
 		if(!Configuration.planetSkyOverride)
 			return null;
+		
+		int genType = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGenType();
 		
 		
 		if(super.getSkyRenderer() == null)
@@ -269,6 +274,9 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	public double getHorizon() {
+		int genType = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGenType();
+		if (genType == 2)
+			return 0;
 		return 63;
 	}
 

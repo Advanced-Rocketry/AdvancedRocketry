@@ -42,7 +42,6 @@ public class TextureResources {
 	public static final  ResourceLocation fan = new ResourceLocation("advancedRocketry:textures/models/fan.png");
 	public static final  ResourceLocation genericStation = new ResourceLocation("advancedRocketry:textures/gui/genericStation.png");
 	
-	
 	public static final IconResource ioSlot = new IconResource(212, 0, 18, 18, null);
 	public static final IconResource idChip = new IconResource(230, 0, 18, 18, null);
 	public static final IconResource slotO2 = new IconResource(238, 238, 18, 18, progressBars);

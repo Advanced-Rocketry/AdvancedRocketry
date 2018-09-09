@@ -166,7 +166,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	public float getNeededThrust() {return getWeight();}
 
-	public float getNeededFuel() { return getAcceleration() > 0 ? stats.getFuelRate(FuelType.LIQUID)*MathHelper.sqrt((2*(Configuration.orbit-this.getPos().getY()))/getAcceleration()) : 0; }
+	public float getNeededFuel() { return getAcceleration() > 0 ? 2*stats.getFuelRate(FuelType.LIQUID)*MathHelper.sqrt((2*(Configuration.orbit-this.getPos().getY()))/getAcceleration()) : 0; }
 
 	public int getFuel() {return (int) (stats.getFuelCapacity(FuelType.LIQUID)*Configuration.fuelCapacityMultiplier);}
 

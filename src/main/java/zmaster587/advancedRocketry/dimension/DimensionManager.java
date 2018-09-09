@@ -30,6 +30,7 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties.AtmosphereTypes
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader;
+import zmaster587.advancedRocketry.world.provider.WorldProviderAsteroid;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.network.PacketHandler;
@@ -51,6 +52,7 @@ public class DimensionManager implements IGalaxy {
 	public static int dimOffset = 0;
 	public static final DimensionType PlanetDimensionType = DimensionType.register("planet", "planet", 2, WorldProviderPlanet.class, false);
 	public static final DimensionType spaceDimensionType = DimensionType.register("space", "space", 3, WorldProviderSpace.class, false);
+	public static final DimensionType AsteroidDimensionType = DimensionType.register("asteroid", "asteroid", 4, WorldProviderAsteroid.class, false);
 	private boolean hasBeenInitiallized = false;
 	public static String prevBuild;
 
@@ -407,7 +409,10 @@ public class DimensionManager implements IGalaxy {
 		//Avoid registering gas giants as dimensions
 		if(registerWithForge && !properties.isGasGiant() && !net.minecraftforge.common.DimensionManager.isDimensionRegistered(dim)) {
 
-			net.minecraftforge.common.DimensionManager.registerDimension(dimId, PlanetDimensionType);
+			if(properties.isAsteroid())
+				net.minecraftforge.common.DimensionManager.registerDimension(dimId, AsteroidDimensionType);
+			else
+				net.minecraftforge.common.DimensionManager.registerDimension(dimId, PlanetDimensionType);
 		}
 		dimensionList.put(dimId, properties);
 
@@ -709,8 +714,10 @@ public class DimensionManager implements IGalaxy {
 			if(propeties != null) {
 				int keyInt = Integer.parseInt(keyString);
 				if(!net.minecraftforge.common.DimensionManager.isDimensionRegistered(keyInt) && propeties.isNativeDimension && !propeties.isGasGiant()) {
-					net.minecraftforge.common.DimensionManager.registerDimension(keyInt, PlanetDimensionType);
-					//propeties.isNativeDimension = true;
+					if(propeties.isAsteroid())
+						net.minecraftforge.common.DimensionManager.registerDimension(keyInt, AsteroidDimensionType);
+					else
+						net.minecraftforge.common.DimensionManager.registerDimension(keyInt, PlanetDimensionType);
 				}
 
 				dimensionList.put(new Integer(keyInt), propeties);

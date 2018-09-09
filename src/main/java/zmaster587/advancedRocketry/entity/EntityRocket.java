@@ -77,6 +77,7 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.IconResource;
+import zmaster587.libVulpes.util.InputSyncHandler;
 import zmaster587.libVulpes.util.Vector3F;
 
 import javax.annotation.Nullable;
@@ -91,6 +92,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	private boolean isInFlight;
 	//used in the rare case a player goes to a non-existant space station
 	private int lastDimensionFrom = 0;
+	private boolean turningLeft, turningRight;
 	public StorageChunk storage;
 	private String errorStr;
 	private long lastErrorTime = Long.MIN_VALUE;
@@ -108,9 +110,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	//Offset for buttons linking to the tileEntityGrid
 	private int tilebuttonOffset = 3;
 	private int autoDescendTimer;
-	private WeakReference<Entity>[] mountedEntities;
 	protected ModulePlanetSelector container;
 	boolean acceptedPacket = false;
+	
+	//0 to 100, 100 is fully rotated and ready to go, 0 is normal mode
+	private int rcs_mode_counter = 0;
+	//Used to most of the logic, determining if in RCS mode or not
+	private boolean rcs_mode = false;
 
 	public static enum PacketType {
 		RECIEVENBT,
@@ -131,12 +137,15 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		UPDATE_ATM,
 		UPDATE_ORBIT,
 		UPDATE_FLIGHT,
-		DISMOUNTCLIENT
+		DISMOUNTCLIENT,
+		TOGGLE_RCS,
+		TURNUPDATE
 	}
 
 	private static final DataParameter<Integer> fuelLevel =  EntityDataManager.<Integer>createKey(EntityRocket.class, DataSerializers.VARINT);
 	private static final DataParameter<Boolean> INFLIGHT =  EntityDataManager.<Boolean>createKey(EntityRocket.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Boolean> INORBIT =  EntityDataManager.<Boolean>createKey(EntityRocket.class, DataSerializers.BOOLEAN);
+	private static final DataParameter<Boolean> RCS_MODE =  EntityDataManager.<Boolean>createKey(EntityRocket.class, DataSerializers.BOOLEAN);
 
 	public EntityRocket(World p_i1582_1_) {
 		super(p_i1582_1_);
@@ -145,7 +154,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		isInFlight = false;
 		connectedInfrastructure = new LinkedList<IInfrastructure>();
 		infrastructureCoords = new HashSet<HashedBlockPosition>();
-		mountedEntities = new WeakReference[stats.getNumPassengerSeats()];
 
 		lastWorldTickTicked = p_i1582_1_.getTotalWorldTime();
 		autoDescendTimer = 5000;
@@ -161,13 +169,39 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		this.storage.setEntity(this);
 		initFromBounds();
 		isInFlight = false;
-		mountedEntities = new WeakReference[stats.getNumPassengerSeats()];
 		lastWorldTickTicked = world.getTotalWorldTime();
 		autoDescendTimer = 5000;
 		landingPadDisplayText = new ModuleText(256, 16, "", 0x00FF00, 2f);
 		landingPadDisplayText.setColor(0x00ff00);
 	}
 
+	
+	public void toggleRCS() {
+		if(DimensionManager.getInstance().getDimensionProperties(this.world.provider.getDimension()).isAsteroid()) {
+			rcs_mode = !rcs_mode;
+			setRCS(rcs_mode);
+			setPosition(this.posX, this.posY, this.posZ);
+		}
+		else
+		{
+			rcs_mode = false;
+			setRCS(rcs_mode);
+		}
+		
+	}
+	
+	private void setRCS(boolean status) {
+		dataManager.set(RCS_MODE, status);
+	}
+	
+	public boolean getRCS() {
+		return dataManager.get(RCS_MODE);
+	}
+	
+	public int getRCSRotateProgress() {
+		return rcs_mode_counter;
+	}
+	
 	@Override
 	public AxisAlignedBB getEntityBoundingBox() {
 		if(storage != null) {
@@ -269,6 +303,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 		}
 
+		if(DimensionManager.getInstance().getDimensionProperties(this.world.provider.getDimension()).isAsteroid()) {
+			if(getRCS())
+				return LibVulpes.proxy.getLocalizedString("msg.entity.rocket.rcs") + ": " + getRCS();
+			else
+				displayStr += "\n" + LibVulpes.proxy.getLocalizedString("msg.entity.rocket.rcs") + ": " + getRCS();
+		}
+		
 		if(isInOrbit() && !isInFlight())
 			return LibVulpes.proxy.getLocalizedString("msg.entity.rocket.descend.1") + "\n" + LibVulpes.proxy.getLocalizedString("msg.entity.rocket.descend.2") + ((DESCENT_TIMER - this.ticksExisted)/20);
 		else if(!isInFlight())
@@ -288,13 +329,42 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		super.setPosition(x, y, z);
 
 		if(storage != null) {
-			float sizeX = storage.getSizeX()/2.0f;
-			float sizeY = storage.getSizeY();
-			float sizeZ = storage.getSizeZ()/2.0f;
-			setEntityBoundingBox(new AxisAlignedBB(x - sizeX, y - (double)this.getYOffset(), z - sizeZ, x + sizeX, y + sizeY - (double)this.getYOffset(), z + sizeZ));
+			if(getRCS())
+			{
+				float sizeX = storage.getSizeX()/2.0f;
+				float sizeY = storage.getSizeY()/2.0f;
+				float sizeZ = storage.getSizeZ();
+				setEntityBoundingBox(new AxisAlignedBB(x - sizeX, y - (double)this.getYOffset() + sizeZ*0.5 + 0.5, z - sizeY, x + sizeX, y + sizeZ*1.5 + .5 - (double)this.getYOffset(), z + sizeY));
+			}
+			else {
+				float sizeX = storage.getSizeX()/2.0f;
+				float sizeY = storage.getSizeY();
+				float sizeZ = storage.getSizeZ()/2.0f;
+				setEntityBoundingBox(new AxisAlignedBB(x - sizeX, y - (double)this.getYOffset(), z - sizeZ, x + sizeX, y + sizeY - (double)this.getYOffset(), z + sizeZ));
+			}
 		}
 	}
 
+	@Override
+    public void resetPositionToBB()
+    {
+        AxisAlignedBB axisalignedbb = this.getEntityBoundingBox();
+		if(storage!= null && getRCS())
+		{
+			float sizeX = storage.getSizeX()/2.0f;
+			float sizeY = storage.getSizeY()/2.0f;
+			float sizeZ = storage.getSizeZ();
+			//setEntityBoundingBox(new AxisAlignedBB(x - sizeX, y - (double)this.getYOffset() + sizeZ*0.5 + 0.5, z - sizeY, x + sizeX, y + sizeZ*1.5 + .5 - (double)this.getYOffset(), z + sizeY));
+			
+	        this.posX = (axisalignedbb.minX + axisalignedbb.maxX) / 2.0D;
+	        this.posY = axisalignedbb.minY - sizeZ*0.5 - 0.5;
+	        this.posZ = (axisalignedbb.minZ + axisalignedbb.maxZ) / 2.0D;
+		}
+		else {
+			super.resetPositionToBB();
+		}
+    }
+	
 	/**
 	 * Updates the data option
 	 * @param amt sets the amount of fuel in the rocket
@@ -373,6 +443,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		this.dataManager.register(INFLIGHT, false);
 		this.dataManager.register(fuelLevel, 0);
 		this.dataManager.register(INORBIT, false);
+		this.dataManager.register(RCS_MODE, false);
 	}
 
 	//Set the size and position of the rocket from storage
@@ -575,6 +646,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 		}
 
+		//Update RCS mode
+		if(getRCS() && rcs_mode_counter < 100)
+			rcs_mode_counter++;
+		else if(!getRCS() && rcs_mode_counter > 0)
+		{
+			rcs_mode_counter--;
+			this.rotationYaw = 0;
+		}
 
 		if(isInFlight()) {
 			boolean burningFuel = isBurningFuel();
@@ -636,11 +715,15 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				double prevMotion = this.motionY;
 				this.move(MoverType.SELF , 0, prevMotion*deltaTime, 0);
 
+				
+				boolean landedInSpace = DimensionManager.getInstance().getDimensionProperties(this.world.provider.getDimension()).isAsteroid() && this.posY < 64;
+				boolean landedOnGround = lastPosY + prevMotion != this.posY && this.posY < 256;
 				//Check to see if it's landed
-				if((isInOrbit() || !burningFuel) && isInFlight() && lastPosY + prevMotion != this.posY && this.posY < 256) {
+				if((isInOrbit() || !burningFuel) && isInFlight() && (landedOnGround || landedInSpace)) {
 					//Did  sending this packet cause problems?
 					PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, (byte)PacketType.ROCKETLANDEVENT.ordinal()), this);
 					MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketLandedEvent(this));
+					this.motionY = 0;
 					this.setInFlight(false);
 					this.setInOrbit(false);
 				}
@@ -688,8 +771,30 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				this.move(MoverType.SELF , 0, this.motionY, 0);
 			}
 		}
+		else if(DimensionManager.getInstance().getDimensionProperties(this.world.provider.getDimension()).isAsteroid() && getRCS()) {
+		
+			this.rotationYaw += (turningRight ? 5 : 0) - (turningLeft ? 5 : 0);
+			double acc = this.getPassengerMovingForward()*.02;
+			//RCS mode, steer like boat
+			float yawAngle = (float)(this.rotationYaw*Math.PI/180f);
+			this.motionX += acc*MathHelper.sin(-yawAngle);
+			this.motionZ += acc*MathHelper.cos(-yawAngle);
+			this.motionX *= 0.9;
+			this.motionZ *= 0.9;
+			
+			this.move(MoverType.SELF , this.motionX, 0, this.motionZ);
+		}
 	}
 
+	public void onTurnRight(boolean state) {
+		turningRight = state;
+		PacketHandler.sendToServer(new PacketEntity((INetworkEntity) this, (byte)EntityRocket.PacketType.TURNUPDATE.ordinal()));
+	}
+	
+	public void onTurnLeft(boolean state) {
+		turningLeft = state;
+		PacketHandler.sendToServer(new PacketEntity((INetworkEntity) this, (byte)EntityRocket.PacketType.TURNUPDATE.ordinal()));
+	}
 
 	/**
 	 * @return a list of satellites stores in this rocket
@@ -1215,9 +1320,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 
 		setInOrbit(isInOrbit = nbt.getBoolean("orbit"));
+		rcs_mode = nbt.getBoolean("rcs_mode");
+		setRCS(rcs_mode);
+		rcs_mode_counter = nbt.getInteger("rcs_mode_cnt");
+		
 		stats.readFromNBT(nbt);
-
-		mountedEntities = new WeakReference[stats.getNumPassengerSeats()];
 
 		setFuelAmount(stats.getFuelAmount(FuelType.LIQUID));
 
@@ -1258,6 +1365,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		writeMissionPersistantNBT(nbt);
 		nbt.setBoolean("orbit", isInOrbit());
 		nbt.setBoolean("flight", isInFlight());
+		nbt.setBoolean("rcs_mode", rcs_mode);
+		nbt.setInteger("rcs_mode_cnt", rcs_mode_counter);
 		stats.writeToNBT(nbt);
 
 		if(!infrastructureCoords.isEmpty()) {
@@ -1320,6 +1429,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		else if(packetId == PacketType.SENDPLANETDATA.ordinal()) {
 			nbt.setInteger("selection", in.readInt());
 		}
+		else if(packetId == PacketType.TURNUPDATE.ordinal()) {
+			nbt.setBoolean("left", in.readBoolean());
+			nbt.setBoolean("right", in.readBoolean());
+		}
 	}
 
 	@Override
@@ -1339,6 +1452,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					}
 				}
 			}
+		}
+		else if(id == PacketType.TURNUPDATE.ordinal()) {
+			out.writeBoolean(turningLeft);
+			out.writeBoolean(turningRight);
 		}
 	}
 
@@ -1422,6 +1539,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			player.dismountRidingEntity();
 			//this.removePassenger(player);
 		}
+		else if(id == PacketType.TOGGLE_RCS.ordinal() && !world.isRemote) {
+			this.toggleRCS();
+		}
+		else if(id == PacketType.TURNUPDATE.ordinal()) {
+			this.turningLeft = nbt.getBoolean("left");
+			this.turningRight = nbt.getBoolean("right");
+		}
 		else if(id >= STATION_LOC_OFFSET + BUTTON_ID_OFFSET) {
 			int id2 = id - (STATION_LOC_OFFSET + BUTTON_ID_OFFSET) - 1;
 			setDestLandingPad(id2);
@@ -1478,7 +1602,30 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					//Conditional b/c for some reason client/server positions do not match
 					float xOffset = this.storage.getSizeX() % 2 == 0 ? 0.5f : 0f;
 					float zOffset = this.storage.getSizeZ() % 2 == 0 ? 0.5f : 0f;
-					entity.setPosition(this.posX  + seatPos.x + xOffset, this.posY + seatPos.y - 0.5f, this.posZ + seatPos.z + zOffset );
+					
+					float halfx = storage.getSizeX()/2f;
+					float halfy = storage.getSizeZ()/2f;
+					float halfz = storage.getSizeZ()/2f;
+					
+					double xPos = seatPos.x + xOffset;
+					double yPos = seatPos.y  - 0.5f - halfy;
+					double zPos = seatPos.z + zOffset + halfz;
+					float angle = (float)(getRCSRotateProgress()*0.9f*Math.PI/180f);
+					
+					double yNew = (yPos - halfy)*MathHelper.cos(angle) + (-zPos + 1)*MathHelper.sin(angle);
+					double zNew = zPos*MathHelper.cos(angle) + (yPos + 0.5)*MathHelper.sin(angle);
+					yPos = yNew + this.posY + halfy*2;
+					zPos = zNew - halfz;
+					
+					//Now do yaw
+					float yawAngle = (float)(this.rotationYaw*Math.PI/180f);
+					double xNew = (xPos)*MathHelper.cos(-yawAngle) + (zPos)*MathHelper.sin(-yawAngle);
+					zNew = zPos*MathHelper.cos(yawAngle) + (xPos)*MathHelper.sin(yawAngle);
+					xPos = this.posX + xNew ;
+					zPos = this.posZ + zNew;
+					
+					
+					entity.setPosition(xPos, yPos, zPos );
 				} catch (IndexOutOfBoundsException e) {
 					entity.setPosition(this.posX , this.posY , this.posZ );
 				}

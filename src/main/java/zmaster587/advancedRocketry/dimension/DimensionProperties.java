@@ -142,6 +142,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		ICEWORLD(new ResourceLocation("advancedrocketry:textures/planets/IceWorld.png")),
 		GASGIANTBLUE(new ResourceLocation("advancedrocketry:textures/planets/GasGiantBlue.png")),
 		GASGIANTRED(new ResourceLocation("advancedrocketry:textures/planets/GasGiantOrange.png")),
+		ASTEROID(new ResourceLocation("advancedrocketry:textures/planets/asteroid_field.png")),
 		UNKNOWN(new ResourceLocation("advancedrocketry:textures/planets/Unknown.png"))
 		;
 
@@ -438,6 +439,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		if(isGasGiant())
 			return PlanetIcons.GASGIANTBLUE.resource;
+		
+		if(isAsteroid())
+			return PlanetIcons.ASTEROID.resource;
 
 		if(tempType == Temps.TOOHOT)
 			return PlanetIcons.MARSLIKE.resource;
@@ -691,6 +695,17 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		return AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity).compareTo(AtmosphereTypes.NONE) < 0;
 	}
 
+	public boolean isAsteroid() {
+		return generatorType == Constants.GENTYPE_ASTEROID;
+	}
+	
+	/**
+	 * @return true if the planet should be rendered with shadows, atmosphere glow, clouds, etc
+	 */
+	public boolean hasDecorators() {
+		return !isAsteroid();
+	}
+	
 	/**
 	 * @return set of all moons orbiting this planet
 	 */

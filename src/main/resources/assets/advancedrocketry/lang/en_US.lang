@@ -244,9 +244,12 @@ achievement.suitedUp.desc=Wear a full spacesuit
 
 
 
-key.controls.advancedRocketry=Advanced Rocketry
+key.controls.advancedrocketry=Advanced Rocketry
 key.openRocketUI=Open Rocket GUI
 key.toggleJetpack=Toggle Jetpack
+key.togglercs=Toggle RCS
+key.turnRocketLeft=Rotate Rocket Left
+key.turnRocketRight=Rotate Rocket Right
 
 enchantment.advancedrocketry.spacebreathing.desc=Allows the piece of armor to form an airtight seal
 
@@ -416,6 +419,7 @@ msg.entity.rocket.pad=Pad:
 msg.entity.rocket.disass=Dissassemble
 msg.entity.rocket.seldst=Select Dst
 msg.entity.rocket.clear=Clear
+msg.entity.rocket.rcs=RCS Mode
 msg.entity.rocket.none=None Selected
 msg.wirelessTransciever.extract=extract
 
