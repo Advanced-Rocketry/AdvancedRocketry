@@ -51,6 +51,8 @@ public class KeyBindings {
 				}
 				rocket.onTurnLeft(Keyboard.isKeyDown(turnRocketLeft.getKeyCode()));
 				rocket.onTurnRight(Keyboard.isKeyDown(turnRocketRight.getKeyCode()));
+				rocket.onUp(Keyboard.isKeyDown(turnRocketUp.getKeyCode()));
+				rocket.onDown(Keyboard.isKeyDown(turnRocketDown.getKeyCode()));
 			}
 		}
 
@@ -87,6 +89,8 @@ public class KeyBindings {
 	static KeyBinding toggleRCS		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.togglercs"), Keyboard.KEY_R, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
 	static KeyBinding turnRocketLeft		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnRocketLeft"), Keyboard.KEY_A, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
 	static KeyBinding turnRocketRight		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnRocketRight"), Keyboard.KEY_D, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
+	static KeyBinding turnRocketUp		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnRocketUp"), Keyboard.KEY_Z, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
+	static KeyBinding turnRocketDown		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnRocketDown"), Keyboard.KEY_X, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
 
 	public static final void init() {
 		//ClientRegistry.registerKeyBinding(launch);

@@ -92,7 +92,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	private boolean isInFlight;
 	//used in the rare case a player goes to a non-existant space station
 	private int lastDimensionFrom = 0;
-	private boolean turningLeft, turningRight;
+	private boolean turningLeft, turningRight, turningUp, turningDownforWhat;
 	public StorageChunk storage;
 	private String errorStr;
 	private long lastErrorTime = Long.MIN_VALUE;
@@ -778,11 +778,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			//RCS mode, steer like boat
 			float yawAngle = (float)(this.rotationYaw*Math.PI/180f);
 			this.motionX += acc*MathHelper.sin(-yawAngle);
+			this.motionY += (turningUp ? 0.02 : 0) - (turningDownforWhat ? 0.02 : 0);
 			this.motionZ += acc*MathHelper.cos(-yawAngle);
 			this.motionX *= 0.9;
+			this.motionY *= 0.9;
 			this.motionZ *= 0.9;
 			
-			this.move(MoverType.SELF , this.motionX, 0, this.motionZ);
+			this.move(MoverType.SELF , this.motionX, this.motionY, this.motionZ);
 		}
 	}
 
@@ -793,6 +795,16 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	
 	public void onTurnLeft(boolean state) {
 		turningLeft = state;
+		PacketHandler.sendToServer(new PacketEntity((INetworkEntity) this, (byte)EntityRocket.PacketType.TURNUPDATE.ordinal()));
+	}
+	
+	public void onUp(boolean state) {
+		turningUp = state;
+		PacketHandler.sendToServer(new PacketEntity((INetworkEntity) this, (byte)EntityRocket.PacketType.TURNUPDATE.ordinal()));
+	}
+	
+	public void onDown(boolean state) {
+		turningDownforWhat = state;
 		PacketHandler.sendToServer(new PacketEntity((INetworkEntity) this, (byte)EntityRocket.PacketType.TURNUPDATE.ordinal()));
 	}
 
@@ -1432,6 +1444,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		else if(packetId == PacketType.TURNUPDATE.ordinal()) {
 			nbt.setBoolean("left", in.readBoolean());
 			nbt.setBoolean("right", in.readBoolean());
+			nbt.setBoolean("up", in.readBoolean());
+			nbt.setBoolean("down", in.readBoolean());
 		}
 	}
 
@@ -1456,6 +1470,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		else if(id == PacketType.TURNUPDATE.ordinal()) {
 			out.writeBoolean(turningLeft);
 			out.writeBoolean(turningRight);
+			out.writeBoolean(turningUp);
+			out.writeBoolean(turningDownforWhat);
 		}
 	}
 
@@ -1545,6 +1561,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		else if(id == PacketType.TURNUPDATE.ordinal()) {
 			this.turningLeft = nbt.getBoolean("left");
 			this.turningRight = nbt.getBoolean("right");
+			this.turningUp = nbt.getBoolean("up");
+			this.turningDownforWhat = nbt.getBoolean("down");
 		}
 		else if(id >= STATION_LOC_OFFSET + BUTTON_ID_OFFSET) {
 			int id2 = id - (STATION_LOC_OFFSET + BUTTON_ID_OFFSET) - 1;
@@ -1604,18 +1622,18 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					float zOffset = this.storage.getSizeZ() % 2 == 0 ? 0.5f : 0f;
 					
 					float halfx = storage.getSizeX()/2f;
-					float halfy = storage.getSizeZ()/2f;
+					float halfy = storage.getSizeY()/2f;
 					float halfz = storage.getSizeZ()/2f;
 					
 					double xPos = seatPos.x + xOffset;
 					double yPos = seatPos.y  - 0.5f - halfy;
-					double zPos = seatPos.z + zOffset + halfz;
+					double zPos = seatPos.z + zOffset ;
 					float angle = (float)(getRCSRotateProgress()*0.9f*Math.PI/180f);
 					
-					double yNew = (yPos - halfy)*MathHelper.cos(angle) + (-zPos + 1)*MathHelper.sin(angle);
-					double zNew = zPos*MathHelper.cos(angle) + (yPos + 0.5)*MathHelper.sin(angle);
-					yPos = yNew + this.posY + halfy*2;
-					zPos = zNew - halfz;
+					double yNew = (yPos)*MathHelper.cos(angle) + (-zPos - 0.5)*MathHelper.sin(angle);
+					double zNew = zPos*MathHelper.cos(angle) + (yPos + 1)*MathHelper.sin(angle);
+					yPos = yNew + this.posY + halfy;
+					zPos = zNew;
 					
 					//Now do yaw
 					float yawAngle = (float)(this.rotationYaw*Math.PI/180f);
