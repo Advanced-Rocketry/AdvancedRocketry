@@ -100,6 +100,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	private static int DESCENT_TIMER = 500;
 	private static int BUTTON_ID_OFFSET = 25;
 	private static final int STATION_LOC_OFFSET = 50;
+	private static final int ENGINE_IGNITION_CNT = 100;
 	private ModuleText landingPadDisplayText;
 
 
@@ -139,14 +140,16 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		UPDATE_FLIGHT,
 		DISMOUNTCLIENT,
 		TOGGLE_RCS,
-		TURNUPDATE
+		TURNUPDATE,
+		ABORTLAUNCH
 	}
 
 	private static final DataParameter<Integer> fuelLevel =  EntityDataManager.<Integer>createKey(EntityRocket.class, DataSerializers.VARINT);
 	private static final DataParameter<Boolean> INFLIGHT =  EntityDataManager.<Boolean>createKey(EntityRocket.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Boolean> INORBIT =  EntityDataManager.<Boolean>createKey(EntityRocket.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Boolean> RCS_MODE =  EntityDataManager.<Boolean>createKey(EntityRocket.class, DataSerializers.BOOLEAN);
-
+	private static final DataParameter<Integer> LAUNCH_COUNTER =  EntityDataManager.<Integer>createKey(EntityRocket.class, DataSerializers.VARINT);
+	
 	public EntityRocket(World p_i1582_1_) {
 		super(p_i1582_1_);
 		isInOrbit = false;
@@ -303,6 +306,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 		}
 
+		if(dataManager.get(LAUNCH_COUNTER) >= 0) {
+			return LibVulpes.proxy.getLocalizedString("msg.entity.rocket.launch") + (dataManager.get(LAUNCH_COUNTER)/20) + "\n" +
+					LibVulpes.proxy.getLocalizedString("msg.entity.rocket.launch2");
+		}
+		
 		if(DimensionManager.getInstance().getDimensionProperties(this.world.provider.getDimension()).isAsteroid()) {
 			if(getRCS())
 				return LibVulpes.proxy.getLocalizedString("msg.entity.rocket.rcs") + ": " + getRCS();
@@ -444,6 +452,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		this.dataManager.register(fuelLevel, 0);
 		this.dataManager.register(INORBIT, false);
 		this.dataManager.register(RCS_MODE, false);
+		this.dataManager.register(LAUNCH_COUNTER, -1);
 	}
 
 	//Set the size and position of the rocket from storage
@@ -597,11 +606,46 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	public boolean isDescentPhase() {
 		return Configuration.automaticRetroRockets && isInOrbit() && this.posY < 300 && (this.motionY < -0.4f || world.isRemote);
 	}
-
-	public boolean areEnginesRunning() {
-		return (this.motionY > 0 || isDescentPhase() || (getPassengerMovingForward() > 0));
+	
+	public boolean isStartupPhase() {
+		return this.dataManager.get(LAUNCH_COUNTER) < ENGINE_IGNITION_CNT && this.dataManager.get(LAUNCH_COUNTER) != -1;
+	}
+	
+	public float getEnginePower() {
+		float mult = 1;
+		int countdown = this.dataManager.get(LAUNCH_COUNTER);
+		if(countdown > -1 && isStartupPhase()) {
+			mult = (ENGINE_IGNITION_CNT - countdown)/(float)ENGINE_IGNITION_CNT;
+		}
+		
+		if(this.areEnginesRunning())
+			return mult*Math.max(DimensionManager.getInstance().getDimensionProperties(this.world.provider.getDimension()).getAtmosphereDensityAtHeight(this.posY), 0.05f);
+		else
+			return 0;
 	}
 
+	public boolean areEnginesRunning() {
+		return this.motionY > 0 || isDescentPhase() || (getPassengerMovingForward() > 0) || isStartupPhase();
+	}
+
+	private void runEngines() {
+		//Spawn in the particle effects for the engines
+		int engineNum = 0;
+		if(world.isRemote && Minecraft.getMinecraft().gameSettings.particleSetting < 2 && areEnginesRunning()) {
+			for(Vector3F<Float> vec : stats.getEngineLocations()) {
+
+				AtmosphereHandler handler;
+				if(Minecraft.getMinecraft().gameSettings.particleSetting < 1 && world.getTotalWorldTime() % 10 == 0 && (engineNum < 8 || ((world.getTotalWorldTime()/10) % Math.max((stats.getEngineLocations().size()/8),1)) == (engineNum/8)) && ( (handler = AtmosphereHandler.getOxygenHandler(world.provider.getDimension())) == null || (handler.getAtmosphereType(this) != null && handler.getAtmosphereType(this).allowsCombustion())) )
+					AdvancedRocketry.proxy.spawnParticle("rocketSmoke", world, this.posX + vec.x, this.posY + vec.y - 0.75, this.posZ +vec.z,0,0,0);
+
+				for(int i = 0; i < 4; i++) {
+					AdvancedRocketry.proxy.spawnParticle("rocketFlame", world, this.posX + vec.x, this.posY + vec.y - 0.75, this.posZ +vec.z,(this.rand.nextFloat() - 0.5f)/8f,-.75 ,(this.rand.nextFloat() - 0.5f)/8f);
+
+				}
+			}
+		}
+	}
+	
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
@@ -654,7 +698,15 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			rcs_mode_counter--;
 			this.rotationYaw = 0;
 		}
-
+		
+		//Count down
+		int launchCount = this.dataManager.get(LAUNCH_COUNTER);
+		if(launchCount >= 0) {
+			if(launchCount == 0) 
+				launch();
+			launchCount--;
+			this.dataManager.set(LAUNCH_COUNTER, launchCount);
+		}
 		if(isInFlight()) {
 			boolean burningFuel = isBurningFuel();
 
@@ -665,21 +717,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				if(!world.isRemote && !descentPhase)
 					setFuelAmount((int) (getFuelAmount() - stats.getFuelRate(FuelType.LIQUID)*(Configuration.gravityAffectsFuel ? DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier() : 1f)));
 
-				//Spawn in the particle effects for the engines
-				int engineNum = 0;
-				if(world.isRemote && Minecraft.getMinecraft().gameSettings.particleSetting < 2 && areEnginesRunning()) {
-					for(Vector3F<Float> vec : stats.getEngineLocations()) {
-
-						AtmosphereHandler handler;
-						if(Minecraft.getMinecraft().gameSettings.particleSetting < 1 && world.getTotalWorldTime() % 10 == 0 && (engineNum < 8 || ((world.getTotalWorldTime()/10) % Math.max((stats.getEngineLocations().size()/8),1)) == (engineNum/8)) && ( (handler = AtmosphereHandler.getOxygenHandler(world.provider.getDimension())) == null || (handler.getAtmosphereType(this) != null && handler.getAtmosphereType(this).allowsCombustion())) )
-							AdvancedRocketry.proxy.spawnParticle("rocketSmoke", world, this.posX + vec.x, this.posY + vec.y - 0.75, this.posZ +vec.z,0,0,0);
-
-						for(int i = 0; i < 4; i++) {
-							AdvancedRocketry.proxy.spawnParticle("rocketFlame", world, this.posX + vec.x, this.posY + vec.y - 0.75, this.posZ +vec.z,(this.rand.nextFloat() - 0.5f)/8f,-.75 ,(this.rand.nextFloat() - 0.5f)/8f);
-
-						}
-					}
-				}
+				runEngines();
 			}
 
 			if(!this.getPassengers().isEmpty()) {
@@ -786,6 +824,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			
 			this.move(MoverType.SELF , this.motionX, this.motionY, this.motionZ);
 		}
+		else if(isStartupPhase())
+			runEngines();
 	}
 
 	public void onTurnRight(boolean state) {
@@ -1078,13 +1118,25 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	 * Called immediately before launch
 	 */
 	public void prepareLaunch() {
+		
+		if(this.dataManager.get(LAUNCH_COUNTER) > 0) {
+			this.dataManager.set(LAUNCH_COUNTER, -1);
+			PacketHandler.sendToServer(new PacketEntity(this, (byte)EntityRocket.PacketType.ABORTLAUNCH.ordinal()));
+			return;
+		}
+		
+		if(isInOrbit()) {
+			setInFlight(true);
+			return;
+		}
+		
 		RocketPreLaunchEvent event = new RocketEvent.RocketPreLaunchEvent(this);
 		MinecraftForge.EVENT_BUS.post(event);
 
 		if(!event.isCanceled()) {
 			if(world.isRemote)
 				PacketHandler.sendToServer(new PacketEntity(this, (byte)EntityRocket.PacketType.LAUNCH.ordinal()));
-			launch();
+			this.dataManager.set(LAUNCH_COUNTER, 200);
 		}
 	}
 
@@ -1093,11 +1145,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 		if(isInFlight())
 			return;
-
-		if(isInOrbit()) {
-			setInFlight(true);
-			return;
-		}
 
 		//Get destination dimid and lock the computer
 		//TODO: lock the computer
@@ -1563,6 +1610,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			this.turningRight = nbt.getBoolean("right");
 			this.turningUp = nbt.getBoolean("up");
 			this.turningDownforWhat = nbt.getBoolean("down");
+		}
+		else if(id == PacketType.ABORTLAUNCH.ordinal()) {
+			this.dataManager.set(LAUNCH_COUNTER, -1);
 		}
 		else if(id >= STATION_LOC_OFFSET + BUTTON_ID_OFFSET) {
 			int id2 = id - (STATION_LOC_OFFSET + BUTTON_ID_OFFSET) - 1;
