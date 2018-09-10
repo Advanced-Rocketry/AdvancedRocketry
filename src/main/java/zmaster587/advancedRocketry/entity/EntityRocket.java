@@ -1620,10 +1620,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					//Conditional b/c for some reason client/server positions do not match
 					float xOffset = this.storage.getSizeX() % 2 == 0 ? 0.5f : 0f;
 					float zOffset = this.storage.getSizeZ() % 2 == 0 ? 0.5f : 0f;
-					
-					float halfx = storage.getSizeX()/2f;
 					float halfy = storage.getSizeY()/2f;
-					float halfz = storage.getSizeZ()/2f;
 					
 					double xPos = seatPos.x + xOffset;
 					double yPos = seatPos.y  - 0.5f - halfy;

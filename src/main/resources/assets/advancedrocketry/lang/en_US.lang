@@ -250,6 +250,8 @@ key.toggleJetpack=Toggle Jetpack
 key.togglercs=Toggle RCS
 key.turnRocketLeft=Rotate Rocket Left
 key.turnRocketRight=Rotate Rocket Right
+key.turnRocketUp=Move Rocket Up
+key.turnRocketDown=Move Rocket Down
 
 enchantment.advancedrocketry.spacebreathing.desc=Allows the piece of armor to form an airtight seal
 
