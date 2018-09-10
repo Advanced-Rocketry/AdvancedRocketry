@@ -31,6 +31,7 @@ import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
+import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketSatellite;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -141,8 +142,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		WATERWORLD(new ResourceLocation("advancedrocketry:textures/planets/WaterWorld.png")),
 		ICEWORLD(new ResourceLocation("advancedrocketry:textures/planets/IceWorld.png")),
 		GASGIANTBLUE(new ResourceLocation("advancedrocketry:textures/planets/GasGiantBlue.png")),
-		GASGIANTRED(new ResourceLocation("advancedrocketry:textures/planets/GasGiantOrange.png")),
-		ASTEROID(new ResourceLocation("advancedrocketry:textures/planets/asteroid_field.png")),
+		GASGIANTRED(new ResourceLocation("advancedrocketry:textures/planets/GasGiantred.png")),
+		ASTEROID(new ResourceLocation("advancedrocketry:textures/planets/asteroid.png")),
 		UNKNOWN(new ResourceLocation("advancedrocketry:textures/planets/Unknown.png"))
 		;
 
@@ -427,7 +428,13 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		if(!customIcon.isEmpty())
 		{
 			try {
-				return PlanetIcons.valueOf(customIcon.toUpperCase()).resource;
+				String resource_location = "advancedrocketry:textures/planets/" + customIcon.toLowerCase() + ".png";
+				if(TextureResources.planetResources.containsKey(resource_location))
+					return TextureResources.planetResources.get(resource_location);
+				
+				ResourceLocation new_resource = new ResourceLocation(resource_location);
+				TextureResources.planetResources.put(resource_location, new_resource);
+				return new_resource;
 			} catch(IllegalArgumentException e) {
 				return PlanetIcons.UNKNOWN.resource;
 			}
@@ -471,7 +478,14 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		if(!customIcon.isEmpty())
 		{
 			try {
-				return PlanetIcons.valueOf(customIcon.toUpperCase()).resourceLEO;
+				String resource_location = "advancedrocketry:textures/planets/" + customIcon.toLowerCase() + "leo.png";
+				if(TextureResources.planetResources.containsKey(resource_location))
+					return TextureResources.planetResources.get(resource_location);
+				
+				ResourceLocation new_resource = new ResourceLocation(resource_location);
+				TextureResources.planetResources.put(resource_location, new_resource);
+				return new_resource;
+				
 			} catch(IllegalArgumentException e) {
 				return PlanetIcons.UNKNOWN.resource;
 			}

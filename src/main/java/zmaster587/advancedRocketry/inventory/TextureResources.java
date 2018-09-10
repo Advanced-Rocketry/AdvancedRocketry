@@ -1,5 +1,8 @@
 package zmaster587.advancedRocketry.inventory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import zmaster587.libVulpes.client.util.IndicatorBarImage;
@@ -73,4 +76,6 @@ public class TextureResources {
 	public static final ProgressBarImage rollingMachineProgressBar = new ProgressBarImage(84, 66, 41, 32, 125, 66, 41, 32, EnumFacing.EAST, TextureResources.progressBars);
 	public static final ProgressBarImage terraformProgressBar = new ProgressBarImage(16, 109, 106, 30, 16, 138, 106, 30, EnumFacing.EAST, TextureResources.progressBars);
 
+	
+	public static final Map<String, ResourceLocation> planetResources = new HashMap<String, ResourceLocation>();
 }
