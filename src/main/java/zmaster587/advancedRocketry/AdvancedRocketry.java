@@ -1068,7 +1068,7 @@ public class AdvancedRocketry {
           setRegistryName(new ResourceLocation("advancedrocketry", "blockRollingMachine")));
         toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockMonitoringStation), "coc", "cbc", "cpc", 'c', "stickCopper", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'b', LibVulpesBlocks.blockStructureBlock, 'p', LibVulpesItems.itemBattery).
           setRegistryName(new ResourceLocation("advancedrocketry", "blockMonitoringStation")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockFuelingStation), "bgb", "lbf", "ppp", 'p', "plateTin", 'f', "fanSteel", 'l', liquidIOBoard, 'g', AdvancedRocketryItems.itemMisc, 'b', LibVulpesBlocks.blockStructureBlock).
+        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockFuelingStation), "bgb", "lbf", "ppp", 'p', "plateTin", 'f', "fanSteel", 'l', liquidIOBoard, 'g', userInterface, 'b', LibVulpesBlocks.blockStructureBlock).
           setRegistryName(new ResourceLocation("advancedrocketry", "blockFuelingStation")));
         toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockSatelliteControlCenter), "oso", "cbc", "rtr", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 's', userInterface, 'c', "stickCopper", 'b', LibVulpesBlocks.blockStructureBlock, 'r', Items.REPEATER, 't', LibVulpesItems.itemBattery).
           setRegistryName(new ResourceLocation("advancedrocketry", "blockSatelliteControlCenter")));
@@ -1080,7 +1080,7 @@ public class AdvancedRocketry {
           setRegistryName(new ResourceLocation("advancedrocketry", "blockGuidanceComputer")));
         toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockPlanetSelector), "cpc", "lbl", "coc", 'c', trackingCircuit, 'o',new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'l', Blocks.LEVER, 'b', AdvancedRocketryBlocks.blockGuidanceComputer, 'p', Blocks.STONE_BUTTON).
           setRegistryName(new ResourceLocation("advancedrocketry", "blockPlanetSelector")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockRocketBuilder), "sgs", "cbc", "tdt", 's', "stickTitanium", 'g', AdvancedRocketryItems.itemMisc, 'c', controlCircuitBoard, 'b', LibVulpesBlocks.blockStructureBlock, 't', "gearTitanium", 'd', AdvancedRocketryBlocks.blockConcrete).
+        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockRocketBuilder), "sgs", "cbc", "tdt", 's', "stickTitanium", 'g', userInterface, 'c', controlCircuitBoard, 'b', LibVulpesBlocks.blockStructureBlock, 't', "gearTitanium", 'd', AdvancedRocketryBlocks.blockConcrete).
           setRegistryName(new ResourceLocation("advancedrocketry", "blockRocketBuilder")));
         toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockStationBuilder), "gdg", "dsd", "ada", 'g', "gearTitanium", 'a', advancedCircuit, 'd', "dustDilithium", 's', new ItemStack(AdvancedRocketryBlocks.blockRocketBuilder)).
           setRegistryName(new ResourceLocation("advancedrocketry", "blockStationBuilder")));
