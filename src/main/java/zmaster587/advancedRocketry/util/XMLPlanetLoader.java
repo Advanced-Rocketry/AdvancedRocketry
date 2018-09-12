@@ -74,11 +74,17 @@ public class XMLPlanetLoader {
 	}
 
 	public int getMaxNumPlanets(StellarBody body) {
+		if(!maxPlanetNumber.containsKey(body)) {
+			AdvancedRocketry.logger.warn("Star ID " + body.getId() + " has no entry for numPlanets");
+		}
 		return maxPlanetNumber.get(body);
 	}
 
 
 	public int getMaxNumGasGiants(StellarBody body) {
+		if(!maxGasPlanetNumber.containsKey(body)) {
+			AdvancedRocketry.logger.warn("Star ID " + body.getId() + " has no entry for numGasGiants");
+		}
 		return maxGasPlanetNumber.get(body);
 	}
 
