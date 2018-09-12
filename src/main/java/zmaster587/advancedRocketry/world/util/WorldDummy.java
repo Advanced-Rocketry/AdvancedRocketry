@@ -1,5 +1,7 @@
 package zmaster587.advancedRocketry.world.util;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.entity.Entity;
@@ -13,22 +15,38 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.storage.WorldInfo;
+import net.minecraftforge.common.capabilities.CapabilityDispatcher;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.util.StorageChunk;
 
-public class WorldDummy extends World {
+public class WorldDummy extends World  {
 
 	private final static ProviderDummy dummyProvider = new ProviderDummy();
 
 	StorageChunk storage;
 	public int displayListIndex = -1;
+	private final CapabilityDispatcher capabilities;
+	
 	public WorldDummy(Profiler p_i45368_5_, StorageChunk storage) {
 		super(new DummySaveHandler(), new WorldInfo(new NBTTagCompound()), dummyProvider, p_i45368_5_, false);
 		dummyProvider.setWorld(this);
 		this.storage = storage;
 		this.chunkProvider = new ChunkProviderDummy(this, storage);
+		this.capabilities = ForgeEventFactory.gatherCapabilities(this, null);
+	}
+	
+	@Override
+	public boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, @Nullable EnumFacing facing) {
+		return capabilities != null && capabilities.hasCapability(capability, facing);
+	}
+
+	@Override
+	@Nullable
+	public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable EnumFacing facing) {
+		return capabilities == null ? null : capabilities.getCapability(capability, facing);
 	}
 
 	@Override
