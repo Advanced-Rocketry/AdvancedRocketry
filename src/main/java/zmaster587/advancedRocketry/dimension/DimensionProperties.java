@@ -478,7 +478,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		if(!customIcon.isEmpty())
 		{
 			try {
-				String resource_location = "advancedrocketry:textures/planets/" + customIcon.toLowerCase() + "leo.png";
+				String resource_location = "advancedrocketry:textures/planets/" + customIcon.toLowerCase() + "leo.jpg";
 				if(TextureResources.planetResources.containsKey(resource_location))
 					return TextureResources.planetResources.get(resource_location);
 				
