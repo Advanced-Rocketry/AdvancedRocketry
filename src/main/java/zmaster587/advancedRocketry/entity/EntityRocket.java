@@ -872,7 +872,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		if(storage.getGuidanceComputer() != null && (targetSatellite = storage.getGuidanceComputer().getTargetSatellite()) != -1L) {
 			SatelliteBase sat = DimensionManager.getInstance().getSatellite(targetSatellite);
 			for(TileEntity tile : storage.getTileEntityList()) {
-				if(tile instanceof TileSatelliteHatch && !((IInventory)tile).getStackInSlot(0).isEmpty()) {
+				if(tile instanceof TileSatelliteHatch && ((IInventory)tile).getStackInSlot(0).isEmpty()) {
 					((IInventory)tile).setInventorySlotContents(0, sat.getItemStackFromSatellite());
 					DimensionManager.getInstance().getDimensionProperties(sat.getDimensionId()).removeSatellite(targetSatellite);
 					break;
@@ -880,6 +880,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 			this.motionY = -this.motionY;
 			setInOrbit(true);
+			return;
 			
 		}
 		else if(!stats.hasSeat()) {

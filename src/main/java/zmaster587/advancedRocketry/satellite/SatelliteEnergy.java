@@ -41,9 +41,10 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 		return "Collecting Energy";
 	}
 
-	protected int energyCreated(World world) {
+	protected int energyCreated(World world, boolean simulate) {
 		int amt =(int) ((world.getTotalWorldTime() - lastActionTime)*getPowerPerTick());
-		lastActionTime = world.getTotalWorldTime();
+		if(!simulate)
+			lastActionTime = world.getTotalWorldTime();
 		return amt;
 	}
 
@@ -82,9 +83,10 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 		if(getDimensionId() != Constants.INVALID_PLANET) {
 			World world = net.minecraftforge.common.DimensionManager.getWorld(getDimensionId());
 			if(world != null) {
-				battery.acceptEnergy(energyCreated(world), simulate);
-				int energy = battery.extractEnergy(getEnergyMTU(EnumFacing.DOWN), simulate);
-				return energy;
+				int energyCreated = energyCreated(world, simulate);
+				battery.acceptEnergy(Math.max((energyCreated - getEnergyMTU(EnumFacing.DOWN)), 0), simulate);
+				int energy = battery.extractEnergy(Math.max(getEnergyMTU(EnumFacing.DOWN) - energyCreated,0), simulate);
+				return energy + energyCreated;
 			}
 		}
 		return 0;
