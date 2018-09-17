@@ -146,12 +146,12 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 			return blocks[x][y][z].getStateFromMeta(metas[x][y][z]);
 		return blocks[x][y][z].getStateFromMeta(metas[x][y][z]);
 	}
-	
+
 	public void setBlockState(BlockPos pos, IBlockState state) {
 		int x = pos.getX();
 		int y = pos.getY();
 		int z = pos.getZ();
-		
+
 		blocks[x][y][z] = state.getBlock();
 		metas[x][y][z] = (short) state.getBlock().getMetaFromState(state);
 	}
@@ -234,15 +234,15 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	}
 
 	public void rotateBy(EnumFacing dir) {
-		
+
 		HashedBlockPosition newSizes = new HashedBlockPosition(getSizeX(), getSizeY(), getSizeZ());
-		
+
 		HashedBlockPosition newerSize = remapCoord(newSizes, dir);
 		newSizes = remapCoord(newSizes, dir);
-		
+
 		Block blocks[][][] = new Block[newSizes.x][newSizes.y][newSizes.z];
 		short metas[][][] = new short[newSizes.x][newSizes.y][newSizes.z];
-		
+
 		for(int y = 0; y < getSizeY(); y++) {
 			for(int z = 0; z < getSizeZ(); z++) {
 				for(int x = 0; x < getSizeX(); x++) {
@@ -255,21 +255,21 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		this.blocks = blocks;
 		this.metas = metas;
 
-		
+
 		for(TileEntity e : tileEntities) {
 			newSizes = getNewCoord(new HashedBlockPosition(e.getPos()), dir);
 			e.setPos(newSizes.getBlockPos());
 		}
-		
+
 		this.sizeX = newerSize.x;
 		this.sizeY = newerSize.y;
 		this.sizeZ = newerSize.z;
 	}
-	
+
 	private HashedBlockPosition remapCoord(HashedBlockPosition in, EnumFacing dir) {
-		
+
 		HashedBlockPosition out = new HashedBlockPosition(0, 0, 0);
-		
+
 		switch(dir) {
 		case DOWN:
 			out.x = in.z;
@@ -302,14 +302,14 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 			out.z = in.y;
 			break;
 		}
-			
+
 		return out;
 	}
-	
+
 	public HashedBlockPosition getNewCoord(HashedBlockPosition in, EnumFacing dir) {
-		
+
 		HashedBlockPosition out = new HashedBlockPosition(0, 0, 0);
-		
+
 		switch(dir) {
 		case DOWN:
 			out.x = in.z;
@@ -342,10 +342,10 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 			out.z = getSizeY()-in.y-1;
 			break;
 		}
-			
+
 		return out;
 	}
-	
+
 
 	private static boolean isInventoryBlock(TileEntity tile) {
 		return tile instanceof IInventory || tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP) && !(tile instanceof TileGuidanceComputer);
@@ -376,7 +376,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 				for(int z = 0; z < sizeZ; z++) {
 					blocks[x][y][z] = Block.getBlockById(blockId[z + (sizeZ*y) + (sizeZ*sizeY*x)]);
 					metas[x][y][z] = (short)metasId[z + (sizeZ*y) + (sizeZ*sizeY*x)];
-					
+
 					chunk.setBlockState(new BlockPos(x, y, z), this.blocks[x][y][z].getStateFromMeta(this.metas[x][y][z]));
 				}
 			}
@@ -400,9 +400,9 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 				tileEntities.add(tile);
 				tile.setWorld(world);
-				
+
 				chunk.addTileEntity(tile);
-				
+
 			} catch (Exception e) {
 				AdvancedRocketry.logger.warn("Rocket missing Tile (was a mod removed?)");
 			}
@@ -462,7 +462,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 			for(int z = (int)bb.minZ; z <= bb.maxZ; z++) {
 				for(int y = (int)bb.minY; y<= bb.maxY; y++) {
 					BlockPos pos = new BlockPos(x,y,z);
-					
+
 					Block block = world.getBlockState(pos).getBlock();
 
 					if(!block.isAir(world.getBlockState(pos) ,world, pos)) {
@@ -507,24 +507,25 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 						nbt.setInteger("x",nbt.getInteger("x") - actualMinX);
 						nbt.setInteger("y",nbt.getInteger("y") - actualMinY);
 						nbt.setInteger("z",nbt.getInteger("z") - actualMinZ);
-						
+
 						//XXX: Hack to make chisels & bits renderable
 						if (nbt.getString("id").equals("minecraft:mod.chiselsandbits.tileentitychiseled"))
 							nbt.setString("id", "minecraft:mod.chiselsandbits.tileentitychiseled.tesr");
 
 						TileEntity newTile = ZUtils.createTile(nbt);
+						if(newTile != null) {
+							newTile.setWorld(ret.world);
 
-						newTile.setWorld(ret.world);
+							if(isInventoryBlock(newTile)) {
+								ret.inventoryTiles.add(newTile);
+							}
 
-						if(isInventoryBlock(newTile)) {
-							ret.inventoryTiles.add(newTile);
+							if(isLiquidContainerBlock(newTile)) {
+								ret.liquidTiles.add(newTile);
+							}
+
+							ret.tileEntities.add(newTile);
 						}
-
-						if(isLiquidContainerBlock(newTile)) {
-							ret.liquidTiles.add(newTile);
-						}
-
-						ret.tileEntities.add(newTile);
 					}
 				}
 			}
@@ -585,7 +586,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		}
 		return null;
 	}
-	
+
 
 	@Override
 	public boolean isAirBlock(BlockPos pos) {
@@ -599,7 +600,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		//Don't care, gen ocean
 		return Biome.getBiome(0);
 	}
-	
+
 	@Override
 	public boolean isSideSolid(BlockPos pos, EnumFacing side, boolean _default) {
 		int x = pos.getX();
@@ -611,9 +612,9 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 			return false;
 
 		return blocks[x + side.getFrontOffsetX()][y + side.getFrontOffsetY()][z + side.getFrontOffsetZ()].isSideSolid(blocks[x + side.getFrontOffsetX()][y + side.getFrontOffsetY()][z + side.getFrontOffsetZ()].getStateFromMeta(metas[x + side.getFrontOffsetX()][y + side.getFrontOffsetY()][z + side.getFrontOffsetZ()]), this, pos.offset(side), side.getOpposite());
-	
+
 	}
-	
+
 	public static StorageChunk cutWorldBB(World worldObj, AxisAlignedBB bb) {
 		StorageChunk chunk = StorageChunk.copyWorldBB(worldObj, bb);
 		for(int x = (int)bb.minX; x <= bb.maxX; x++) {
@@ -707,7 +708,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 		return false;
 	}
-	
+
 	/**
 	 * @return destination ID or Constants.INVALID_PLANET if none
 	 */
@@ -800,10 +801,10 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		for(int x = 0; x < sizeX; x++) {
 			for(int y = 0; y < sizeY; y++) {
 				for(int z = 0; z < sizeZ; z++) {
-					
+
 					this.blocks[x][y][z] = Block.getBlockById(buffer.readInt());
 					this.metas[x][y][z] = buffer.readShort();
-					
+
 					chunk.setBlockState(new BlockPos(x, y, z), this.blocks[x][y][z].getStateFromMeta(this.metas[x][y][z]));
 				}
 			}
@@ -824,7 +825,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 				if(isLiquidContainerBlock(tile))
 					liquidTiles.add(tile);
 				tile.setWorld(world);
-				
+
 				chunk.addTileEntity(tile);
 
 			} catch(Exception e) {
