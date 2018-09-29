@@ -1331,7 +1331,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					//Need to handle our own removal to avoid race condition where player is mounted on client on the old entity but is already mounted to the new one on server
 					//PacketHandler.sendToPlayer(new PacketEntity(this, (byte)PacketType.DISMOUNTCLIENT.ordinal()), (EntityPlayer) e);
 
-					PlanetEventHandler.addDelayedTransition(new TransitionEntity(worldserver.getTotalWorldTime(), e, dimensionIn, new BlockPos(posX + 16, y, posZ), entity));
+					PlanetEventHandler.addDelayedTransition(new TransitionEntity(worldserver.getTotalWorldTime() + ++timeOffset, e, dimensionIn, new BlockPos(posX + 16, y, posZ), entity));
 
 					//minecraftserver.getPlayerList().transferPlayerToDimension((EntityPlayerMP)e, dimensionIn, teleporter);
 

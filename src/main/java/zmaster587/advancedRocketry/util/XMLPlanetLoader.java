@@ -175,20 +175,37 @@ public class XMLPlanetLoader {
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("oceanBlock")) {
 				String blockName = planetPropertyNode.getTextContent();
 				Block block = Block.REGISTRY.getObject(new ResourceLocation(blockName));
-				
+
 				if(block == Blocks.AIR)
 					AdvancedRocketry.logger.warn("Invalid ocean block: " + blockName); //TODO: more detailed error msg
-				
+
 				properties.setOceanBlock(block.getDefaultState());
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("fillerBlock")) {
 				String blockName = planetPropertyNode.getTextContent();
-				Block block = Block.REGISTRY.getObject(new ResourceLocation(blockName));
-				
-				if(block == Blocks.AIR)
-					AdvancedRocketry.logger.warn("Invalid filler block: " + blockName); //TODO: more detailed error msg
-				
-				properties.setStoneBlock(block.getDefaultState());
+				String splitBlockName[] = blockName.split(":");
+
+				if(splitBlockName.length < 2) {
+					AdvancedRocketry.logger.warn("Invalid resource location for fillerBlock: " + blockName);
+				}
+				else {
+					Block block = Block.REGISTRY.getObject(new ResourceLocation(splitBlockName[0],splitBlockName[1]));
+					int metaValue = 0;
+					
+					if(splitBlockName.length > 2) {
+						try {
+							metaValue = Integer.parseInt(splitBlockName[2]);
+						}
+						catch(NumberFormatException e) {
+							AdvancedRocketry.logger.warn("Invalid meta value location for fillerBlock: " + blockName + " using " + splitBlockName[2] );
+						}
+					}
+					
+					if(block == Blocks.AIR)
+						AdvancedRocketry.logger.warn("Invalid filler block: " + blockName); //TODO: more detailed error msg
+
+					properties.setStoneBlock(block.getStateFromMeta(metaValue));
+				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("skycolor")) {
 				String[] colors = planetPropertyNode.getTextContent().split(",");
@@ -299,7 +316,7 @@ public class XMLPlanetLoader {
 				Node weightNode = planetPropertyNode.getAttributes().getNamedItem("weight");
 				Node groupMinNode = planetPropertyNode.getAttributes().getNamedItem("groupMin");
 				Node groupMaxNode = planetPropertyNode.getAttributes().getNamedItem("groupMax");
-				
+
 				//Get spawn properties
 				if(weightNode != null) {
 					try {
@@ -322,11 +339,11 @@ public class XMLPlanetLoader {
 					} catch(NumberFormatException e) {
 					}
 				}
-				
+
 				if (groupMax < groupMin) {
 					groupMax = groupMin;
 				}
-				
+
 				Class clazz = (Class) EntityList.getClass(new ResourceLocation(planetPropertyNode.getTextContent()));
 
 				//If not using string name maybe it's a class name?
@@ -347,9 +364,9 @@ public class XMLPlanetLoader {
 				}
 				else
 					AdvancedRocketry.logger.warn("Cannot find " + planetPropertyNode.getTextContent() + " while registering entity for planet spawn");
-				
-				
-				
+
+
+
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("artifact")) {
 				ItemStack stack = XMLPlanetLoader.getStack(planetPropertyNode.getTextContent());
@@ -573,7 +590,7 @@ public class XMLPlanetLoader {
 
 		for(StellarBody star : stars) {
 			outputString = outputString + "\t<star name=\"" + star.getName() + "\" temp=\"" + star.getTemperature() + "\" x=\"" + star.getPosX() 
-					+ "\" y=\"" + star.getPosZ() + "\" size=\"" + star.getSize() + "\" numPlanets=\"0\" numGasGiants=\"0\">\n";
+			+ "\" y=\"" + star.getPosZ() + "\" size=\"" + star.getSize() + "\" numPlanets=\"0\" numGasGiants=\"0\">\n";
 
 			for(StellarBody star2 : star.getSubStars()) {
 				outputString = outputString + "\t\t<star temp=\"" + star2.getTemperature() + 
@@ -622,7 +639,7 @@ public class XMLPlanetLoader {
 				{
 					outputString = outputString + tabLen + "\t<gas>" + f.getName() + "</gas>\n";
 				}
-				
+
 			}
 		}
 
@@ -633,13 +650,13 @@ public class XMLPlanetLoader {
 		outputString = outputString + tabLen + "\t<orbitalPhi>" + (int)(properties.orbitalPhi* Math.PI/180) + "</orbitalPhi>\n";
 		outputString = outputString + tabLen + "\t<rotationalPeriod>" + (int)properties.rotationalPeriod + "</rotationalPeriod>\n";
 		outputString = outputString + tabLen + "\t<atmosphereDensity>" + (int)properties.getAtmosphereDensity() + "</atmosphereDensity>\n";
-		
+
 		if(properties.getSeaLevel() != 63)
 			outputString = outputString + tabLen + "\t<seaLevel>" + properties.getSeaLevel() + "</seaLevel>\n";
-		
+
 		if(properties.getGenType() != 0)
 			outputString = outputString + tabLen + "\t<genType>" + properties.getGenType() + "</genType>\n";
-		
+
 		if(properties.oreProperties != null) {
 			outputString = outputString + tabLen + "\t<oreGen>\n";
 			outputString = outputString + XMLOreLoader.writeOreEntryXML(properties.oreProperties, numTabs+2);
@@ -674,15 +691,19 @@ public class XMLPlanetLoader {
 		if(properties.getOceanBlock() != null) {
 			outputString = outputString + tabLen + "\t<oceanBlock>" + Block.REGISTRY.getNameForObject(properties.getOceanBlock().getBlock()) + "</oceanBlock>\n";
 		}
-		
+
 		if(properties.getStoneBlock() != null) {
-			outputString = outputString + tabLen + "\t<fillerBlock>" + Block.REGISTRY.getNameForObject(properties.getStoneBlock().getBlock()) + "</fillerBlock>\n";
+			int meta = properties.getStoneBlock().getBlock().getMetaFromState(properties.getStoneBlock());
+			if(meta != 0)
+				outputString = outputString + tabLen + "\t<fillerBlock>" + Block.REGISTRY.getNameForObject(properties.getStoneBlock().getBlock()) + ":" + meta + "</fillerBlock>\n";
+			else
+				outputString = outputString + tabLen + "\t<fillerBlock>" + Block.REGISTRY.getNameForObject(properties.getStoneBlock().getBlock()) + "</fillerBlock>\n";
 		}
-		
+
 		for(SpawnListEntry e : properties.getSpawnListEntries()) {
 			outputString = outputString + tabLen + "\t<spawnable weight=\"" + e.itemWeight + "\" groupMin=\"" + e.minGroupCount + "\" groupMax=\"" + e.maxGroupCount +  "\" >" + EntityRegistry.getEntry(e.entityClass).getRegistryName() + "</spawnable>\n";
 		}
-		
+
 		outputString = outputString + tabLen + "</planet>\n";
 		return outputString;
 	}
@@ -693,7 +714,7 @@ public class XMLPlanetLoader {
 		public List<DimensionProperties> dims = new LinkedList<DimensionProperties>();
 
 	}
-	
+
 	public static ItemStack getStack(String text) {
 		String splitStr[] = text.split(" ");
 		int meta = 0;
@@ -703,7 +724,7 @@ public class XMLPlanetLoader {
 			try {
 				meta = Integer.parseInt(splitStr[1]);
 			} catch( NumberFormatException e) {}
-			
+
 			if(splitStr.length > 2)
 			{
 				try {
@@ -721,7 +742,7 @@ public class XMLPlanetLoader {
 		}
 		else
 			stack = new ItemStack(block, size, meta);
-	
+
 		return stack;
 	}
 }
