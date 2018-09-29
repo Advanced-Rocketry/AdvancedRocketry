@@ -235,11 +235,13 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 				}
 
-				int amtToDrain = (int) (AtmosphereHandler.getOxygenHandler(this.world.provider.getDimension()).getBlobSize(this)*getGasUsageMultiplier());
-				FluidStack drainedFluid = this.drain(amtToDrain, false);
+				float amtToDrain = (AtmosphereHandler.getOxygenHandler(this.world.provider.getDimension()).getBlobSize(this)*getGasUsageMultiplier());
+				if (amtToDrain > 0 && amtToDrain < 1)
+					amtToDrain = 1;
+				FluidStack drainedFluid = this.drain((int)amtToDrain, false);
 
 				if( (drainedFluid != null && drainedFluid.amount >= amtToDrain) || amtToDrain == 0) {
-					this.drain(amtToDrain, true);
+					this.drain((int)amtToDrain, true);
 					if(!hasFluid) {
 						hasFluid = true;
 
