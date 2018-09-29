@@ -8,6 +8,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
@@ -26,6 +27,8 @@ public class TileStationGravityController extends TileEntity implements IModular
 
 	int gravity;
 	int progress;
+	
+	public static int minGravity = 10;
 
 	private ModuleText moduleGrav, maxGravBuildSpeed, targetGrav;
 
@@ -34,6 +37,8 @@ public class TileStationGravityController extends TileEntity implements IModular
 		//numGravPylons = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
 		maxGravBuildSpeed = new ModuleText(6, 25, LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.maxaltrate"), 0xaa2020);
 		targetGrav = new ModuleText(6, 35, LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.tgtalt"), 0x202020);
+		
+		minGravity = Configuration.allowZeroGSpacestations ? 0 : 10;
 	}
 
 	@Override
@@ -91,8 +96,8 @@ public class TileStationGravityController extends TileEntity implements IModular
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 				if(object != null) {
-					if(gravity == 0)
-						gravity = 15;
+					if(gravity < 11  && !Configuration.allowZeroGSpacestations)
+						gravity = 11;
 					double targetGravity = gravity/100D;
 					double angVel = object.getProperties().getGravitationalMultiplier();
 					double acc = 0.001;
@@ -164,7 +169,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		gravity = nbt.getShort("numRotations");
-		progress = gravity -10;
+		progress = gravity -minGravity;
 	}
 
 
@@ -177,7 +182,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 	public void setProgress(int id, int progress) {
 
 		this.progress = progress;
-		gravity = progress + 10;
+		gravity = progress + minGravity;
 	}
 
 	@Override
@@ -187,7 +192,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 
 	@Override
 	public int getTotalProgress(int id) {
-		return 90;
+		return 100 - minGravity;
 	}
 
 	@Override

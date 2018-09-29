@@ -16,7 +16,7 @@ import java.util.WeakHashMap;
 
 public class GravityHandler implements IGravityManager {
 
-	public static final float ENTITY_OFFSET = 0.075f;
+	public static final float ENTITY_OFFSET = 0.0755f;
 	public static final float ITEM_GRAV_OFFSET = 0.04f;
 	static Class gcWorldProvider;
 	static Method gcGetGravity;
