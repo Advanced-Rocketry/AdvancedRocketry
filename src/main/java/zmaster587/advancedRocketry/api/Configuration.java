@@ -1,6 +1,9 @@
 package zmaster587.advancedRocketry.api;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.BlockStateBase;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.util.AsteroidSmall;
 
 import java.util.*;
@@ -159,4 +162,8 @@ public class Configuration {
 	public static boolean stationSkyOverride;
 	public static boolean allowTerraformNonAR;
 	public static boolean allowZeroGSpacestations;
+	public static float blackHolePowerMultiplier;
+	public static int defaultItemTimeBlackHole;
+
+	public static Map<ItemStack, Integer> blackHoleGeneratorBlocks = new HashMap<ItemStack, Integer>();
 }

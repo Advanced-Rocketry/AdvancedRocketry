@@ -115,6 +115,7 @@ import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.tile.infrastructure.*;
 import zmaster587.advancedRocketry.tile.multiblock.*;
+import zmaster587.advancedRocketry.tile.multiblock.energy.TileBlackHoleGenerator;
 import zmaster587.advancedRocketry.tile.multiblock.energy.TileMicrowaveReciever;
 import zmaster587.advancedRocketry.tile.multiblock.machine.*;
 import zmaster587.advancedRocketry.tile.oxygen.TileCO2Scrubber;
@@ -179,6 +180,7 @@ public class AdvancedRocketry {
 	final String MOD_INTERACTION = "Mod Interaction";
 	final String PLANET = "Planet";
 	final String ASTEROID = "Asteroid";
+	final String BLACK_HOLE = "Black_hole_generator";
 	final String GAS_MINING = "GasMining";
 	final String PERFORMANCE = "Performance";
 	final String CLIENT = "Client";
@@ -188,7 +190,7 @@ public class AdvancedRocketry {
 	private static Configuration config;
 	private static final String BIOMECATETORY = "Biomes";
 	private boolean resetFromXml;
-	String[] sealableBlockWhiteList, breakableTorches,  blackListRocketBlocks, harvestableGasses, entityList, asteriodOres, geodeOres, orbitalLaserOres, liquidRocketFuel;
+	String[] sealableBlockWhiteList, breakableTorches,  blackListRocketBlocks, harvestableGasses, entityList, asteriodOres, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres, liquidRocketFuel;
 
 	//static {
 	//	FluidRegistry.enableUniversalBucket(); // Must be called before preInit
@@ -279,6 +281,7 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.canPlayerRespawnInSpace = config.get(Configuration.CATEGORY_GENERAL, "allowPlanetRespawn", false, "If true players will respawn near beds on planets IF the spawn location is in a breathable atmosphere").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.forcePlayerRespawnInSpace = config.get(Configuration.CATEGORY_GENERAL, "forcePlanetRespawn", false, "If true players will respawn near beds on planets REGARDLESS of the spawn location being in a non-breathable atmosphere. Requires 'allowPlanetRespawn' being true.").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.solarGeneratorMult = config.get(Configuration.CATEGORY_GENERAL, "solarGeneratorMultiplier", 1, "Amount of power per tick the solar generator should produce").getInt();
+		zmaster587.advancedRocketry.api.Configuration.blackHolePowerMultiplier = config.get(Configuration.CATEGORY_GENERAL, "blackHoleGeneratorMultiplier", 1, "Multiplier for the amount of power per tick the black hole generator should produce").getInt();
 		zmaster587.advancedRocketry.api.Configuration.enableGravityController = config.get(Configuration.CATEGORY_GENERAL, "enableGravityMachine", true, "If false the gravity controller cannot be built or used").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.planetsMustBeDiscovered = config.get(Configuration.CATEGORY_GENERAL, "planetsMustBeDiscovered", false, "If true planets must be discovered in the warp controller before being visible").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.dropExTorches = config.get(Configuration.CATEGORY_GENERAL, "dropExtinguishedTorches", false, "If true, breaking an extinguished torch will drop an extinguished torch instead of a vanilla torch").getBoolean();
@@ -305,6 +308,9 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.asteroidMiningTimeMult = config.get(ASTEROID, "miningMissionTmeMultiplier", 1.0, "Multiplier changing how long a mining mission takes").getDouble();
 		asteriodOres = config.get(ASTEROID, "standardOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone"}, "List of oredictionary names of ores allowed to spawn in asteriods").getStringList();
 		geodeOres = config.get(oreGen, "geodeOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone"}, "List of oredictionary names of ores allowed to spawn in geodes").getStringList();
+		blackHoleGeneratorTiming = config.get(BLACK_HOLE, "blackHoleTimings", new String[] {"minecraft:stone;1", "minecraft:dirt;1", "minecraft:netherrack;1", "minecraft:cobblestone;1"}, "List of blocks and the amount of ticks they can power the black hole generator format: 'modname:block:meta;number_of_ticks'").getStringList();
+		zmaster587.advancedRocketry.api.Configuration.defaultItemTimeBlackHole = config.get(BLACK_HOLE, "defaultBurnTime", 500, "List of blocks and the amount of ticks they can power the black hole generator format: 'modname:block:meta;number_of_ticks'").getInt();
+		
 		zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList = config.get(oreGen, "geodeOres_blacklist", false, "True if the ores in geodeOres should be a blacklist, false for whitelist").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.generateGeodes = config.get(oreGen, "generateGeodes", true, "If true then ore-containing geodes are generated on high pressure planets").getBoolean();
 		zmaster587.advancedRocketry.api.Configuration.geodeBaseSize = config.get(oreGen, "geodeBaseSize", 36, "average size of the geodes").getInt();
@@ -484,6 +490,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileSpaceElevator.class, "ARSpaceElevator");
 		GameRegistry.registerTileEntity(TileBeacon.class, "ARBeacon");
 		GameRegistry.registerTileEntity(TileWirelessTransciever.class, "ARTransciever");
+		GameRegistry.registerTileEntity(TileBlackHoleGenerator.class, "ARblackholegenerator");
 		
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
 			GameRegistry.registerTileEntity(TileGravityController.class, "ARGravityMachine");
@@ -512,7 +519,7 @@ public class AdvancedRocketry {
 
 
 
-		//Regiser item/block crap
+		//Register item/block crap
 		proxy.preinit();
 	}
 	
@@ -722,44 +729,27 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockAstroBed = new BlockAstroBed().setHardness(0.2F).setUnlocalizedName("astroBed");
 
 		AdvancedRocketryBlocks.blockPrecisionAssembler = new BlockMultiblockMachine(TilePrecisionAssembler.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("precisionAssemblingMachine").setCreativeTab(tabAdvRocketry).setHardness(3f);
-
 		AdvancedRocketryBlocks.blockCuttingMachine = new BlockMultiblockMachine(TileCuttingMachine.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("cuttingMachine").setCreativeTab(tabAdvRocketry).setHardness(3f);
-
 		AdvancedRocketryBlocks.blockCrystallizer = new BlockMultiblockMachine(TileCrystallizer.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("Crystallizer").setCreativeTab(tabAdvRocketry).setHardness(3f);
-
 		AdvancedRocketryBlocks.blockWarpCore = new BlockWarpCore(TileWarpCore.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("warpCore").setCreativeTab(tabAdvRocketry).setHardness(3f);
-
 		AdvancedRocketryBlocks.blockChemicalReactor = new BlockMultiblockMachine(TileChemicalReactor.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("chemreactor").setCreativeTab(tabAdvRocketry).setHardness(3f);
-
 		AdvancedRocketryBlocks.blockLathe = new BlockMultiblockMachine(TileLathe.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("lathe").setCreativeTab(tabAdvRocketry).setHardness(3f);
-
 		AdvancedRocketryBlocks.blockRollingMachine = new BlockMultiblockMachine(TileRollingMachine.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("rollingMachine").setCreativeTab(tabAdvRocketry).setHardness(3f);
-
 		AdvancedRocketryBlocks.blockElectrolyser = new BlockMultiblockMachine(TileElectrolyser.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("electrolyser").setCreativeTab(tabAdvRocketry).setHardness(3f);
-
 		AdvancedRocketryBlocks.blockAtmosphereTerraformer = new BlockMultiblockMachine(TileAtmosphereTerraformer.class, GuiHandler.guiId.MODULARNOINV.ordinal()).setUnlocalizedName("atmosphereTerraformer").setCreativeTab(tabAdvRocketry).setHardness(3f);
-
 		AdvancedRocketryBlocks.blockPlanetAnalyser = new BlockMultiblockMachine(TileAstrobodyDataProcessor.class, GuiHandler.guiId.MODULARNOINV.ordinal()).setUnlocalizedName("planetanalyser").setCreativeTab(tabAdvRocketry).setHardness(3f);
-
-		AdvancedRocketryBlocks.blockObservatory = (BlockMultiblockMachine) new BlockMultiblockMachine(TileObservatory.class, GuiHandler.guiId.MODULARNOINV.ordinal()).setUnlocalizedName("observatory").setCreativeTab(tabAdvRocketry).setHardness(3f);
-
+		AdvancedRocketryBlocks.blockObservatory = new BlockMultiblockMachine(TileObservatory.class, GuiHandler.guiId.MODULARNOINV.ordinal()).setUnlocalizedName("observatory").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		AdvancedRocketryBlocks.blockBlackHoleGenerator = new BlockMultiblockMachine(TileBlackHoleGenerator.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("blackholegenerator").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		
 		AdvancedRocketryBlocks.blockGuidanceComputer = new BlockTile(TileGuidanceComputer.class,GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("guidanceComputer").setCreativeTab(tabAdvRocketry).setHardness(3f);
-
 		AdvancedRocketryBlocks.blockPlanetSelector = new BlockTile(TilePlanetSelector.class,GuiHandler.guiId.MODULARFULLSCREEN.ordinal()).setUnlocalizedName("planetSelector").setCreativeTab(tabAdvRocketry).setHardness(3f);
-
 		AdvancedRocketryBlocks.blockPlanetHoloSelector = new BlockHalfTile(TilePlanetaryHologram.class,GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("planetHoloSelector").setCreativeTab(tabAdvRocketry).setHardness(3f);
-
 		AdvancedRocketryBlocks.blockBiomeScanner = new BlockMultiblockMachine(TileBiomeScanner.class,GuiHandler.guiId.MODULARNOINV.ordinal()).setUnlocalizedName("biomeScanner").setCreativeTab(tabAdvRocketry).setHardness(3f);
-
 		AdvancedRocketryBlocks.blockDrill = new BlockMiningDrill().setUnlocalizedName("drill").setCreativeTab(tabAdvRocketry).setHardness(3f);
-
 		AdvancedRocketryBlocks.blockSuitWorkStation = new BlockSuitWorkstation(TileSuitWorkStation.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("suitWorkStation").setCreativeTab(tabAdvRocketry).setHardness(3f);
-
 		AdvancedRocketryBlocks.blockRailgun = new BlockMultiblockMachine(TileRailgun.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("railgun").setCreativeTab(tabAdvRocketry).setHardness(3f);
-
 		AdvancedRocketryBlocks.blockSpaceElevatorController = new BlockMultiblockMachine(TileSpaceElevator.class,  GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setUnlocalizedName("spaceElevatorController").setHardness(3f);
 		AdvancedRocketryBlocks.blockBeacon = new BlockBeacon(TileBeacon.class,  GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setUnlocalizedName("beacon").setHardness(3f);
-		
 		AdvancedRocketryBlocks.blockIntake = new BlockIntake(Material.IRON).setUnlocalizedName("gasIntake").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockPressureTank = new BlockPressurizedFluidTank(Material.IRON).setUnlocalizedName("pressurizedTank").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockSolarPanel = new Block(Material.IRON).setUnlocalizedName("solarPanel").setCreativeTab(tabAdvRocketry).setHardness(3f);
@@ -846,6 +836,7 @@ public class AdvancedRocketry {
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockAlienLeaves.setRegistryName("alienLeaves"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockAlienSapling.setRegistryName("alienSapling"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockObservatory.setRegistryName("observatory"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockBlackHoleGenerator.setRegistryName("blackholegenerator"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockConcrete.setRegistryName("concrete"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockPlanetSelector.setRegistryName("planetSelector"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockSatelliteControlCenter.setRegistryName("satelliteControlCenter"));
@@ -1111,6 +1102,8 @@ public class AdvancedRocketry {
           setRegistryName(new ResourceLocation("advancedrocketry", "blockSpaceElevatorController")));
         toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockBeacon), " c ", "dbt", "scs", 'c', "coilCopper", 'd', controlCircuitBoard, 't', trackingCircuit, 'b', LibVulpesBlocks.blockStructureBlock, 's', "sheetIron" ).
           setRegistryName(new ResourceLocation("advancedrocketry", "blockBeacon")));
+        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockBlackHoleGenerator), "bgb", "pcp", "msm", 'c', LibVulpesBlocks.blockAdvStructureBlock, 'b', battery2x, 'g', AdvancedRocketryBlocks.blockStructureTower, 'p', "plateTitaniumAluminide", 'm', "blockMotor", 's', userInterface ).
+                setRegistryName(new ResourceLocation("advancedrocketry", "blockBlackHoleGenerator")));
 //      //Armor recipes
         toRegister.add(new ShapedOreRecipe(null, AdvancedRocketryItems.itemSpaceSuit_Boots, " r ", "w w", "p p", 'r', "stickIron", 'w', Blocks.WOOL, 'p', "plateIron").
             setRegistryName(new ResourceLocation("advancedrocketry", "itemSpaceSuit_Boots")));
@@ -1351,6 +1344,7 @@ public class AdvancedRocketry {
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileRailgun(), (BlockTile)AdvancedRocketryBlocks.blockRailgun);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileSpaceElevator(), (BlockTile)AdvancedRocketryBlocks.blockSpaceElevatorController);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileBeacon(), (BlockTile)AdvancedRocketryBlocks.blockBeacon);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileBlackHoleGenerator(), (BlockTile)AdvancedRocketryBlocks.blockBlackHoleGenerator);
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
 			((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileGravityController(), (BlockTile)AdvancedRocketryBlocks.blockGravityMachine);
@@ -1450,6 +1444,40 @@ public class AdvancedRocketry {
 				zmaster587.advancedRocketry.api.Configuration.torchBlocks.add(block);
 		}
 		logger.info("End registering torch blocks");
+		breakableTorches = null;
+		
+		logger.info("Start registering blackhole generator blocks");
+		for(String str : blackHoleGeneratorTiming) {
+			String splitStr[] = str.split(";");
+			
+			String blockString[] = splitStr[0].split(":");
+			
+			Item block = Item.REGISTRY.getObject(new ResourceLocation(blockString[0],blockString[1]));
+			int metaValue = 0;
+			
+			if(blockString.length > 2) {
+				try {
+					metaValue = Integer.parseInt(blockString[2]);
+				}
+				catch(NumberFormatException e) {
+					logger.warn("Invalid meta value location for black hole generator: " + splitStr[0] + " using " + blockString[2] );
+				}
+			}
+			
+			int time = 0;
+			
+			try {
+				time = Integer.parseInt(splitStr[1]);
+			} catch (NumberFormatException e) {
+				logger.warn("Invalid time value for black hole generator: " + str );
+			}
+			
+			if(block == null)
+				logger.warn("'" + splitStr[0] + "' is not a valid Block");
+			else
+				zmaster587.advancedRocketry.api.Configuration.blackHoleGeneratorBlocks.put(new ItemStack(block, 1, metaValue), time);
+		}
+		logger.info("End registering blackhole generator blocks");
 		breakableTorches = null;
 		
 		
@@ -1873,6 +1901,7 @@ public class AdvancedRocketry {
 				DimensionManager.getInstance().getStar(star.getId()).setSize(star.getSize());
 				DimensionManager.getInstance().getStar(star.getId()).setTemperature(star.getTemperature());
 				DimensionManager.getInstance().getStar(star.getId()).subStars = star.subStars;
+				DimensionManager.getInstance().getStar(star.getId()).setBlackHole(star.isBlackHole());
 			}
 
 			for(DimensionProperties properties : dimCouplingList.dims) {

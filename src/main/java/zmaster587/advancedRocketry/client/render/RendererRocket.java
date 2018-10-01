@@ -221,9 +221,12 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 			}
 			TileEntityRendererDispatcher.instance.drawBatch(0);
 		}
-		//net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+		
+		//Clean up
+		GlStateManager.disableBlend();
+		GlStateManager.enableTexture2D();
 		GlStateManager.enableLighting();
-		GlStateManager.color(1, 1, 1);
+		GlStateManager.resetColor();
 		GL11.glPopMatrix();
 
 

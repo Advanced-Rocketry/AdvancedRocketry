@@ -372,13 +372,27 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return the host star for this planet
 	 */
 	public StellarBody getStar() {
+		if(isStar())
+			return getStarData();
 		if(star == null)
 			star = DimensionManager.getInstance().getStar(starId);
 		return star;
 	}
 
+	public boolean hasSurface() {
+		return !(isGasGiant() || isStar());
+	}
+	
 	public boolean isGasGiant() {
 		return isGasGiant;
+	}
+	
+	public boolean isStar() {
+		return planetId >= Constants.STAR_ID_OFFSET;
+	}
+	
+	public StellarBody getStarData() {
+		return DimensionManager.getInstance().getStar(planetId - Constants.STAR_ID_OFFSET);
 	}
 
 	public void setGasGiant(boolean gas) {
@@ -444,6 +458,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		AtmosphereTypes atmType = AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity);
 		Temps tempType = Temps.getTempFromValue(averageTemperature);
 
+		if(isStar() && getStarData().isBlackHole())
+			return TextureResources.locationBlackHole_icon;
+		
 		if(isGasGiant())
 			return PlanetIcons.GASGIANTBLUE.resource;
 		
@@ -615,6 +632,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			}
 			else {
 				star = parent.getStar();
+				starId = star.getId();
 				parentPlanet = parent.getId();
 			}
 		}
@@ -717,7 +735,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return true if the planet should be rendered with shadows, atmosphere glow, clouds, etc
 	 */
 	public boolean hasDecorators() {
-		return !isAsteroid();
+		return !isAsteroid() && !isStar();
 	}
 	
 	/**

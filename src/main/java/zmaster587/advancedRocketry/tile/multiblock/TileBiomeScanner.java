@@ -80,6 +80,9 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 				List<ModuleBase> list2 = new LinkedList<ModuleBase>();
 				if(properties.isGasGiant()) {
 					list2.add(new ModuleText(32, 16, LibVulpes.proxy.getLocalizedString("msg.biomescanner.gas"), 0x202020));
+				} 
+				else if (properties.isStar()) {
+					list2.add(new ModuleText(32, 16, LibVulpes.proxy.getLocalizedString("msg.biomescanner.star"), 0x202020));
 				} else {
 
 

@@ -274,6 +274,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				starId = station.getProperties().getParentProperties().getStar().getId();
 			container = new ModulePlanetSelector(starId, zmaster587.libVulpes.inventory.TextureResources.starryBG, this, this, true);
 			container.setOffset(1000, 1000);
+			container.setAllowStarSelection(true);
 			modules.add(container);
 		}
 
@@ -285,13 +286,11 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 		ISpaceObject station = getSpaceObject();
 		boolean isOnStation = station != null;
 		DimensionProperties location;
-		boolean hasAtmo = true;
 		String planetName;
 
 		if(isOnStation) {
 			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(station.getOrbitingPlanetId());
 			location = properties;
-			hasAtmo = properties.hasAtmosphere();
 			planetName = properties.getName();
 		}
 		else {
@@ -307,8 +306,11 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 		if(canWarp != null) {
 			flag = flag && !(isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()));
 			boolean artifactFlag = (dimCache != null && meetsArtifactReq(dimCache));
-			canWarp.setText(isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.nowhere") : 
-				(!artifactFlag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.missingart") : (flag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.ready") : LibVulpes.proxy.getLocalizedString("msg.warpmon.notready"))));
+			
+			canWarp.setText(isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || 
+					getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.nowhere") : 
+				(!artifactFlag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.missingart") : 
+					(flag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.ready") : LibVulpes.proxy.getLocalizedString("msg.warpmon.notready"))));
 			canWarp.setColor(flag && artifactFlag ? 0x1baa1b : 0xFF1b1b);
 		}
 
@@ -353,7 +355,6 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				dstProps = DimensionManager.getInstance().getDimensionProperties(dstPlanet);
 
 			if(dstProps != null) {
-				hasAtmo = dstProps.hasAtmosphere();
 				planetName = dstProps.getName();
 				location = dstProps;
 

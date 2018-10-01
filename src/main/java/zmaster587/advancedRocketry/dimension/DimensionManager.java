@@ -377,7 +377,7 @@ public class DimensionManager implements IGalaxy {
 	 * @return true if it can be traveled to, in general if it has a surface
 	 */
 	public boolean canTravelTo(int dimId){
-		return net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId) && dimId != Constants.INVALID_PLANET && !getDimensionProperties(dimId).isGasGiant();
+		return net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId) && dimId != Constants.INVALID_PLANET && getDimensionProperties(dimId).hasSurface();
 	}
 
 	/**
@@ -407,7 +407,7 @@ public class DimensionManager implements IGalaxy {
 			return false;
 
 		//Avoid registering gas giants as dimensions
-		if(registerWithForge && !properties.isGasGiant() && !net.minecraftforge.common.DimensionManager.isDimensionRegistered(dim)) {
+		if(registerWithForge && properties.hasSurface() && !net.minecraftforge.common.DimensionManager.isDimensionRegistered(dim)) {
 
 			if(properties.isAsteroid())
 				net.minecraftforge.common.DimensionManager.registerDimension(dimId, AsteroidDimensionType);
@@ -424,7 +424,7 @@ public class DimensionManager implements IGalaxy {
 	 */
 	public void unregisterAllDimensions() {
 		for(Entry<Integer, DimensionProperties> dimSet : dimensionList.entrySet()) {
-			if(dimSet.getValue().isNativeDimension && !dimSet.getValue().isGasGiant() && net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimSet.getKey())) {
+			if(dimSet.getValue().isNativeDimension && dimSet.getValue().hasSurface() && net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimSet.getKey())) {
 				net.minecraftforge.common.DimensionManager.unregisterDimension(dimSet.getKey());
 			}
 		}
@@ -495,6 +495,19 @@ public class DimensionManager implements IGalaxy {
 	 * @return DimensionProperties representing the dimId given
 	 */
 	public DimensionProperties getDimensionProperties(int dimId) {
+		
+		//If we're trying to get star properties for orbit and such, this is a proxy
+		if(dimId >= Constants.STAR_ID_OFFSET)
+		{
+			StellarBody star = getStar(dimId - Constants.STAR_ID_OFFSET);
+			if (star == null)
+				return overworldProperties;
+			
+			DimensionProperties newprops = new DimensionProperties(dimId);
+			newprops.setName(star.getName());
+			return newprops;
+		}
+		
 		DimensionProperties properties = dimensionList.get(new Integer(dimId));
 		if(dimId == Configuration.spaceDimId || dimId == Integer.MIN_VALUE) {
 			return defaultSpaceDimensionProperties;
@@ -738,7 +751,8 @@ public class DimensionManager implements IGalaxy {
 		//Try to fix invalid objects
 		for(ISpaceObject i : SpaceObjectManager.getSpaceManager().getSpaceObjects())
 		{
-			if(!isDimensionCreated(i.getOrbitingPlanetId()) && i.getOrbitingPlanetId() != 0 && i.getOrbitingPlanetId() != SpaceObjectManager.WARPDIMID)
+			int orbitingId = i.getOrbitingPlanetId(); 
+			if(!isDimensionCreated(orbitingId) && orbitingId != 0 && orbitingId != SpaceObjectManager.WARPDIMID && orbitingId < Constants.STAR_ID_OFFSET)
 			{
 				AdvancedRocketry.logger.warn("Dimension ID " + i.getOrbitingPlanetId() + " is not registered and a space station is orbiting it, moving to dimid 0");
 				i.setOrbitingBody(0);

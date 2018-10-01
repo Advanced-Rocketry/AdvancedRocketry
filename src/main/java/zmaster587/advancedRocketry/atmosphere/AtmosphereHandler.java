@@ -53,7 +53,7 @@ public class AtmosphereHandler {
 
 		//If O2 is allowed and
 		DimensionProperties dimProp = DimensionManager.getInstance().getDimensionProperties(dimId);
-		if(Configuration.enableOxygen && !dimProp.isGasGiant() && (Configuration.overrideGCAir || dimId != Configuration.MoonId || dimProp.isNativeDimension)) {
+		if(Configuration.enableOxygen && dimProp.hasSurface() && (Configuration.overrideGCAir || dimId != Configuration.MoonId || dimProp.isNativeDimension)) {
 			dimensionOxygen.put(dimId, new AtmosphereHandler(dimId));
 			MinecraftForge.EVENT_BUS.register(dimensionOxygen.get(dimId));
 		}

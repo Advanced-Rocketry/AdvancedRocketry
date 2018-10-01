@@ -42,17 +42,6 @@ public class RenderAsteroidSky extends IRenderHandler {
 	ResourceLocation currentlyBoundTex = null;
 	float celestialAngle;
 	Vector3F<Float> axis;
-
-	public static WavefrontObject obj;
-
-	static {
-		if(obj == null)
-			try {
-				obj = new WavefrontObject(new ResourceLocation("advancedrocketry:models/atmosphere.obj"));
-			} catch(ModelFormatException e) {
-
-			}
-	}
 	
 	public static final  ResourceLocation asteroid1 = new ResourceLocation("advancedRocketry:textures/planets/asteroid_a.png");
 	public static final  ResourceLocation asteroid2 = new ResourceLocation("advancedRocketry:textures/planets/asteroid_b.png");
