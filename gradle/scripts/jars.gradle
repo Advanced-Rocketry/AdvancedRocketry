@@ -29,7 +29,9 @@ ext.sharedManifest = manifest {
                "Created-By": currentJvm,
                "Implementation-Title": archivesBaseName,
                "Implementation-Version": project.version,
-               "Git-Hash": gitHash)
+               "Git-Hash": gitHash,
+		'FMLCorePlugin': 'zmaster587.advancedRocketry.asm.AdvancedRocketryPlugin',
+		'FMLCorePluginContainsFMLMod': 'true')
 }
 
 task deobfJar(type: Jar) {
