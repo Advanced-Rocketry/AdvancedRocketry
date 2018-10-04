@@ -104,7 +104,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 
 					double difference = targetGravity - angVel;
 
-					if(difference > 0.01) {
+					if(Math.abs(difference) > 0.01) {
 						double finalVel = angVel;
 						if(difference < 0) {
 							finalVel = angVel + Math.max(difference, -acc);
