@@ -42,6 +42,7 @@ Current Features:
 
 Future Features:
 
+-Black holes that you can use for power
 -Other engine types for space ships(ion/plasma)
 -Terraforming
 -Orbital factories
@@ -64,6 +65,7 @@ Future Features:
   -Atmospheric Detectors (increases info on pressure; when combined with chemical can detect if planet has harvestable/hazardous gasses) ground and space - 
   -Temperature Detector (increases info on planetary temperature) space only - 
   -Star Scanner (increases the likelihood of finding planets orbiting a star; higher level allows for smaller planets) ground and Space
+  -Radio interferometry (lets you discover black holes and get any data quickly) ground only-
 -Hardmode
   -Must protect space stations from meteors
   -Rockets require life support
