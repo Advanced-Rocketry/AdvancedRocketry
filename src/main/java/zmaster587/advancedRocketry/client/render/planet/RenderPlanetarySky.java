@@ -688,7 +688,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		float skyColor[] = properties.skyColor;
 		float ringColor[] = properties.skyColor;
 
-		renderPlanetPubHelper(buffer, icon, 0, 0, -100, size, alphaMultiplier, shadowAngle, hasAtmosphere, skyColor, ringColor, hasRing, gasGiant, hasDecorators);
+		renderPlanetPubHelper(buffer, icon, 0, 0, -20, size*0.2f, alphaMultiplier, shadowAngle, hasAtmosphere, skyColor, ringColor, gasGiant, hasRing, hasDecorators);
 	}
 
 	protected void rotateAroundAxis() {

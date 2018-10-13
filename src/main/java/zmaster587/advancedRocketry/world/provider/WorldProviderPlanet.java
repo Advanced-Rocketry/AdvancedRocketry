@@ -22,6 +22,7 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
+import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.capability.DimensionCompat;
 import zmaster587.advancedRocketry.client.render.planet.RenderAsteroidSky;
@@ -200,7 +201,20 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 				}
 			}
 		}
-
+		
+		StellarBody star = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getStar();
+		boolean blackHole = star.isBlackHole();
+		for(StellarBody star2 : star.getSubStars())
+			if(!star2.isBlackHole())
+			{
+				blackHole = false;
+				break;
+			}
+			
+		
+		if(blackHole)
+			f2 *=0.25;
+		
 		return f2*super.getSunBrightness(partialTicks);
 	}
 
