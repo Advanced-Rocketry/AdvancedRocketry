@@ -174,7 +174,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		EnumFacing travelDirection = null;
 		ResourceLocation parentPlanetIcon = null;
 		List<DimensionProperties> children;
-		StellarBody primaryStar;
+		StellarBody primaryStar = DimensionManager.getSol();
 		List<StellarBody> subStars = new LinkedList<StellarBody>();
 		celestialAngle = mc.world.getCelestialAngle(partialTicks);
 
