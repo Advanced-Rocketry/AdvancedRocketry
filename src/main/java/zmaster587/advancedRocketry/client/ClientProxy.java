@@ -23,6 +23,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
@@ -591,5 +592,9 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void displayMessage(String msg, int time) {
 		RocketEventHandler.setOverlay(Minecraft.getMinecraft().world.getTotalWorldTime() + time, msg);
+	}
+	
+	public String getNameFromBiome(Biome biome) {
+		return biome.getBiomeName();
 	}
 }

@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import zmaster587.advancedRocketry.api.Configuration;
@@ -95,5 +96,9 @@ public class CommonProxy {
 	public void preInitItems() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public String getNameFromBiome(Biome biome) {
+		return "";
 	}
 }

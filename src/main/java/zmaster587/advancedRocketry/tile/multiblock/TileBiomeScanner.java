@@ -7,6 +7,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -92,14 +93,14 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 						while (itr.hasNext()) {
 							Biome biome = itr.next();
 							if(biome != null)
-								list2.add(new ModuleText(32, 16 + 12*(i++), biome.getBiomeName(), 0x202020));
+								list2.add(new ModuleText(32, 16 + 12*(i++), AdvancedRocketry.proxy.getNameFromBiome(biome), 0x202020));
 						}
 					}
 					else {
 						Iterator<BiomeEntry> itr = properties.getBiomes().iterator();
 						while (itr.hasNext()) {
 							BiomeEntry biome = itr.next();
-							list2.add(new ModuleText(32, 16 + 12*(i++), biome.biome.getBiomeName(), 0x202020));
+							list2.add(new ModuleText(32, 16 + 12*(i++), AdvancedRocketry.proxy.getNameFromBiome(biome.biome), 0x202020));
 						}
 					}
 				}

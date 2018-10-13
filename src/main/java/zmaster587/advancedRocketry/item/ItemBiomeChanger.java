@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.network.PacketSatellite;
@@ -44,7 +45,10 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 		int j = 0;
 		for(byte biomeByte : sat.discoveredBiomes()) {
 			Biome biome = Biome.getBiome(biomeByte);
-			list2.add(new ModuleButton(32, 16 + 24*(j++), Biome.getIdForBiome(biome), biome.getBiomeName(), this, TextureResources.buttonBuild));
+			String biomeName = AdvancedRocketry.proxy.getNameFromBiome(biome);
+			
+			
+			list2.add(new ModuleButton(32, 16 + 24*(j++), Biome.getIdForBiome(biome), biomeName, this, TextureResources.buttonBuild));
 		}
 
 		//Relying on a bug, is this safe?
