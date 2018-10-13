@@ -27,6 +27,7 @@ import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -234,6 +235,44 @@ public class AdvancedRocketry {
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.marsh, evt.getRegistry());
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.oceanSpires, evt.getRegistry());
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.moonBiomeDark, evt.getRegistry());
+        
+        BiomeDictionary.addTypes(AdvancedRocketryBiomes.moonBiome, 
+        		BiomeDictionary.Type.WASTELAND,
+        		BiomeDictionary.Type.DRY,
+        		BiomeDictionary.Type.COLD
+        		);
+        BiomeDictionary.addTypes(AdvancedRocketryBiomes.moonBiomeDark, 
+        		BiomeDictionary.Type.WASTELAND,
+        		BiomeDictionary.Type.DRY,
+        		BiomeDictionary.Type.COLD
+        		);
+        BiomeDictionary.addTypes(AdvancedRocketryBiomes.alienForest, 
+        		BiomeDictionary.Type.MAGICAL,
+        		BiomeDictionary.Type.FOREST
+        		);
+        BiomeDictionary.addTypes(AdvancedRocketryBiomes.hotDryBiome, 
+        		BiomeDictionary.Type.WASTELAND,
+        		BiomeDictionary.Type.DRY,
+        		BiomeDictionary.Type.COLD
+        		);
+        BiomeDictionary.addTypes(AdvancedRocketryBiomes.spaceBiome, BiomeDictionary.Type.VOID);
+        BiomeDictionary.addTypes(AdvancedRocketryBiomes.stormLandsBiome, 
+        		BiomeDictionary.Type.WASTELAND,
+        		BiomeDictionary.Type.WET,
+        		BiomeDictionary.Type.HOT
+        		);
+        
+        BiomeDictionary.addTypes(AdvancedRocketryBiomes.swampDeepBiome,
+        		BiomeDictionary.Type.WET,
+        		BiomeDictionary.Type.HOT
+        		);
+        BiomeDictionary.addTypes(AdvancedRocketryBiomes.marsh,
+        		BiomeDictionary.Type.WET,
+        		BiomeDictionary.Type.HOT
+        		);
+        BiomeDictionary.addTypes(AdvancedRocketryBiomes.oceanSpires,
+        		BiomeDictionary.Type.OCEAN
+        		);
 	}
 
 	@EventHandler
