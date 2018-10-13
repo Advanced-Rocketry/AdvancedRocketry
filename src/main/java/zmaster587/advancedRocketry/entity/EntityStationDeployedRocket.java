@@ -353,10 +353,20 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			setInOrbit(true);
 			return;
 		}
-		//one intake with a 1 bucket tank should take 100 seconds
-		float intakePower = (Integer)stats.getStatTag("intakePower");
+
 
 		DimensionProperties properties = (DimensionProperties)spaceObj.getProperties().getParentProperties();
+		
+		//Make sure gas id is valid, or abort
+		if(gasId >= properties.getHarvestableGasses().size() || gasId < 0)
+		{
+			setInOrbit(true);
+			return;
+		}
+		
+		//one intake with a 1 bucket tank should take 100 seconds
+		float intakePower = (Integer)stats.getStatTag("intakePower");
+		
 		MissionGasCollection miningMission = new MissionGasCollection(intakePower == 0 ? 360 : (long)(2*((int)stats.getStatTag("liquidCapacity")/intakePower)), this, connectedInfrastructure, properties.getHarvestableGasses().get(gasId));
 
 		miningMission.setDimensionId(properties.getId());
