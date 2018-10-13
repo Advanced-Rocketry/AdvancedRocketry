@@ -11,6 +11,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.IFluidBlock;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
@@ -37,7 +38,7 @@ public class ItemSealDetector extends Item
         {
             if (SealableBlockHandler.INSTANCE.isBlockSealed(world, pos))
             {
-                player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.sealdetector.sealed")));
+                player.sendMessage(new TextComponentTranslation("msg.sealdetector.sealed"));
             }
             else
             {
@@ -45,23 +46,23 @@ public class ItemSealDetector extends Item
                 Material mat = state.getMaterial();
                 if (SealableBlockHandler.INSTANCE.isMaterialBanned(mat))
                 {
-                    player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.sealdetector.notsealmat")));
+                    player.sendMessage(new TextComponentTranslation("msg.sealdetector.notsealmat"));
                 }
                 else if (SealableBlockHandler.INSTANCE.isBlockBanned(state.getBlock()))
                 {
-                    player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.sealdetector.notsealblock")));
+                    player.sendMessage(new TextComponentTranslation("msg.sealdetector.notsealblock"));
                 }
                 else if (SealableBlockHandler.isFulBlock(world, pos))
                 {
-                    player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.sealdetector.notfullblock")));
+                    player.sendMessage(new TextComponentTranslation("msg.sealdetector.notfullblock"));
                 }
                 else if (state.getBlock() instanceof IFluidBlock)
                 {
-                    player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.sealdetector.fluid")));
+                    player.sendMessage(new TextComponentTranslation("msg.sealdetector.fluid"));
                 }
                 else
                 {
-                    player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.sealdetector.other")));
+                    player.sendMessage(new TextComponentTranslation("msg.sealdetector.other"));
                 }
             }
         }

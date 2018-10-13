@@ -12,6 +12,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.DataStorage;
@@ -61,7 +62,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 		ItemLinker.setMasterCoords(item, getPos());
 
 		if(world.isRemote)
-			player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.linker.program")));
+			player.sendMessage(new TextComponentTranslation("msg.linker.program"));
 
 		return true;
 	}
@@ -83,7 +84,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 		{
 			if(world.isRemote)
 			{
-				player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.linker.success")));
+				player.sendMessage(new TextComponentTranslation("msg.linker.success"));
 				return true;
 			}
 

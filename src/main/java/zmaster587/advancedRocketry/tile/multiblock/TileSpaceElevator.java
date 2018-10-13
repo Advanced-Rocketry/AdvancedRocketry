@@ -14,6 +14,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.relauncher.Side;
@@ -399,7 +400,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 		ItemLinker.setMasterCoords(item, this.getPos());
 		ItemLinker.setDimId(item, world.provider.getDimension());
 		if(!world.isRemote)
-			player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.linker.program")));
+			player.sendMessage(new TextComponentTranslation("msg.linker.program"));
 		return true;
 	}
 
@@ -416,7 +417,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 
 			if(dimPos.dimid == world.provider.getDimension())
 			{
-				player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.spaceElevator.sameDimensionError")));
+				player.sendMessage(new TextComponentTranslation("msg.spaceElevator.sameDimensionError"));
 				return false;
 			}
 
@@ -437,12 +438,12 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 						((TileSpaceElevator) tile).addEntryToList(new DimensionBlockPosition(this.world.provider.getDimension(), new HashedBlockPosition(getPos())));
 						((TileSpaceElevator) tile).addEntryToList(dimPos);
 						
-						player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.spaceElevator.newDstAdded")));
+						player.sendMessage(new TextComponentTranslation("msg.spaceElevator.newDstAdded"));
 						return true;
 					}
 					else
 					{
-						player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.spaceElevator.noChipError")));
+						player.sendMessage(new TextComponentTranslation("msg.spaceElevator.noChipError"));
 						return false;
 					}
 				}
