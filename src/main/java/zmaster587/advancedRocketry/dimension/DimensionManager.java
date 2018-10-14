@@ -613,6 +613,9 @@ public class DimensionManager implements IGalaxy {
 			File tmpFileXml = File.createTempFile("ARXMLdata_", ".DAT", net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory());
 			FileOutputStream bufoutStream = new FileOutputStream(tmpFileXml);
 			bufoutStream.write(xmlOutput.getBytes());
+			
+			//Commit to OS, tell OS to commit to disk, release and close stream
+			bufoutStream.flush();
 			bufoutStream.getFD().sync();
 			bufoutStream.close();
 			
@@ -639,6 +642,9 @@ public class DimensionManager implements IGalaxy {
 				AdvancedRocketry.logger.error("Cannot save advanced rocketry planet file, you may be able to find backups in " + net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory());
 				e.printStackTrace();
 			}
+			
+			//Commit to OS, tell OS to commit to disk, release and close stream
+			outStream.flush();
 			outStream.getFD().sync();
 			outStream.close();
 
