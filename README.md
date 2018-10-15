@@ -37,12 +37,12 @@ Current Features:
 -Railguns to transfer goods between planets and stations
 -Config for mapping dims added by other mods to planets
 -Gravity generators for local areas on planets
+-Black holes that you can use for power
 
 
 
 Future Features:
 
--Black holes that you can use for power
 -Other engine types for space ships(ion/plasma)
 -Terraforming
 -Orbital factories
