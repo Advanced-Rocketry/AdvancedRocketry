@@ -162,8 +162,10 @@ public class XMLAsteroidLoader {
 						if(stack != null)
 							asteroid.itemStacks.add(stack);
 						else {
-							AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid ore");
-							break;
+							AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid ore: " + node.getTextContent());
+							//Don't need to remove anything here
+							asteroidNode = asteroidNode.getNextSibling();
+							continue;
 						}
 					}
 
@@ -174,8 +176,11 @@ public class XMLAsteroidLoader {
 						try {
 							asteroid.stackProbabilites.add(Float.parseFloat(node.getTextContent()));
 						} catch (NumberFormatException e) {
-							AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid ore");
-							break;
+							AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid stack probability: " + node.getTextContent());
+							//Make sure the list size syncs
+							asteroid.itemStacks.remove(asteroid.itemStacks.size()-1);
+							asteroidNode = asteroidNode.getNextSibling();
+							continue;
 						}
 					}
 				}
