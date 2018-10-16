@@ -156,33 +156,32 @@ public class XMLAsteroidLoader {
 					NamedNodeMap att = asteroidNode.getAttributes();
 
 					//Add itemStacks
-					Node node = att.getNamedItem("itemStack");
-					if(node != null) {
-						ItemStack stack = getStack(node.getTextContent());
+					Node nodeStack = att.getNamedItem("itemStack");
+					Node nodeChance = att.getNamedItem("chance");
+					if(nodeStack != null && nodeChance != null)
+					{
+						ItemStack stack = getStack(nodeStack.getTextContent());
 						if(stack != null)
 							asteroid.itemStacks.add(stack);
 						else {
-							AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid ore: " + node.getTextContent());
+							AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid ore: " + nodeStack.getTextContent());
 							//Don't need to remove anything here
 							asteroidNode = asteroidNode.getNextSibling();
 							continue;
 						}
-					}
-
-					node = att.getNamedItem("chance");
-
-					if(node != null) {
-
+						
 						try {
-							asteroid.stackProbabilites.add(Float.parseFloat(node.getTextContent()));
+							asteroid.stackProbabilites.add(Float.parseFloat(nodeChance.getTextContent()));
 						} catch (NumberFormatException e) {
-							AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid stack probability: " + node.getTextContent());
+							AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid stack probability: " + nodeChance.getTextContent());
 							//Make sure the list size syncs
 							asteroid.itemStacks.remove(asteroid.itemStacks.size()-1);
 							asteroidNode = asteroidNode.getNextSibling();
 							continue;
 						}
 					}
+					else
+						AdvancedRocketry.logger.warn("Expected 'itemStack' and 'chance' tags, at least one is missing in  " + asteroid.ID );
 				}
 
 				asteroidNode = asteroidNode.getNextSibling();
