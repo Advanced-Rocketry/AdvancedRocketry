@@ -39,6 +39,7 @@ import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
+import java.util.zip.GZIPOutputStream;
 
 
 public class DimensionManager implements IGalaxy {
@@ -601,8 +602,7 @@ public class DimensionManager implements IGalaxy {
 		NBTTagCompound nbtTag = new NBTTagCompound();
 		SpaceObjectManager.getSpaceManager().writeToNBT(nbtTag);
 		nbt.setTag("spaceObjects", nbtTag);
-
-		FileOutputStream outStream;
+		
 		String xmlOutput = XMLPlanetLoader.writeXML(this);
 		
 		try {
@@ -630,11 +630,17 @@ public class DimensionManager implements IGalaxy {
 
 			//Getting real sick of my planet file getting toasted during debug...
 			File tmpFile = File.createTempFile("dimprops", ".DAT", net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory());
-			outStream = new FileOutputStream(tmpFile);
+			FileOutputStream tmpFileOut = new FileOutputStream(tmpFile);
+			DataOutputStream outStream = new DataOutputStream(new BufferedOutputStream(new GZIPOutputStream(tmpFileOut)));
 			try {
-				CompressedStreamTools.writeCompressed(nbt, outStream);
+				//Closes output stream internally without flush... why tho...
+				CompressedStreamTools.write(nbt, outStream);
 				
-				//copy the correctly written output
+				//Open in append mode to make sure the file syncs, hacky AF
+				outStream.flush();
+				tmpFileOut.getFD().sync();
+				outStream.close();
+				
 				Files.copy(tmpFile, file);
 				tmpFile.delete();
 				
@@ -643,10 +649,7 @@ public class DimensionManager implements IGalaxy {
 				e.printStackTrace();
 			}
 			
-			//Commit to OS, tell OS to commit to disk, release and close stream
-			outStream.flush();
-			outStream.getFD().sync();
-			outStream.close();
+
 
 		} catch (IOException e) {
 			AdvancedRocketry.logger.error("Cannot save advanced rocketry planet files, you may be able to find backups in " + net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory());
