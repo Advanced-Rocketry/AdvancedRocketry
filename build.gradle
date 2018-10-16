@@ -162,7 +162,21 @@ curseforge{
 task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     file = new File ("changelog.html")
     untaggedName = "Current release ${project.version}"
-    fromCommit = startGitRev
+    
+    //Get the last commit from the cache or config if no cache exists
+    File newFile = rootProject.file('lasthash.txt')
+    if (!newFile.exists()) fromCommit = startGitRev
+    else fromCommit = newFile.text.trim()
+    
+    //get the latest commit and write it to the cache file
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    newFile.delete()
+    newFile << stdout.toString().trim()
+    
     toRef =  "HEAD"
     gitHubIssuePattern = "nonada123";
     templateContent = """
