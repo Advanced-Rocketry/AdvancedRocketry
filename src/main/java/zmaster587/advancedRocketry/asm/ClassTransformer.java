@@ -94,7 +94,7 @@ public class ClassTransformer implements IClassTransformer {
 		//entryMap.put(CLASS_KEY_ENTITYLIVINGRENDERER, new SimpleEntry<String, String>("net/minecraft/client/renderer/entity/RendererLivingEntity", ""));
 		entryMap.put(CLASS_KEY_ENTITY, new SimpleEntry<String, String>("net/minecraft/entity/Entity","vg"));
 		//entryMap.put(CLASS_KEY_ENTITY_PLAYER_SP, new SimpleEntry<String, String>("net/minecraft/client/entity/EntityPlayerSP",""));
-		entryMap.put(CLASS_KEY_ENTITY_PLAYER_MP, new SimpleEntry<String, String>("net/minecraft/entity/player/EntityPlayerMP","og"));
+		entryMap.put(CLASS_KEY_ENTITY_PLAYER_MP, new SimpleEntry<String, String>("net/minecraft/entity/player/EntityPlayerMP","oq"));
 		entryMap.put(CLASS_KEY_ENTITY_PLAYER, new SimpleEntry<String, String>("net/minecraft/entity/player/EntityPlayer","aed"));
 		entryMap.put(CLASS_KEY_ENTITY_ITEM, new SimpleEntry<String, String>("net/minecraft/entity/item/EntityItem","acl"));
 		//entryMap.put(CLASS_KEY_NETHANDLERPLAYSERVER, new SimpleEntry<String, String>("net/minecraft/network/NetHandlerPlayServer",""));
@@ -665,16 +665,16 @@ public class ClassTransformer implements IClassTransformer {
 
 
 				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 0));
-				nodeAdd.add(new TypeInsnNode(Opcodes.CHECKCAST, "java/lang/Object"));
 				nodeAdd.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "zmaster587/advancedRocketry/util/RocketInventoryHelper", "allowAccess", "(Ljava/lang/Object;)Z", false));
-				nodeAdd.add(new JumpInsnNode(Opcodes.IFNE, label));
+				nodeAdd.add(new JumpInsnNode(Opcodes.IFEQ, label));
 
 				onUpdate.instructions.insert(ain, nodeAdd);
 
 				//onUpdate.instructions.insertBefore(pos, label);
 
 			}
-
+			else
+				AdvancedRocketry.logger.fatal("ASM injection into EntityPlayerMP.onupdate FAILED!");
 			return finishInjection(cn);
 		}
 
@@ -709,9 +709,9 @@ public class ClassTransformer implements IClassTransformer {
 
 
 				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 0));
-				nodeAdd.add(new TypeInsnNode(Opcodes.CHECKCAST, "java/lang/Object"));
+				//nodeAdd.add(new TypeInsnNode(Opcodes.CHECKCAST, "java/lang/Object"));
 				nodeAdd.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "zmaster587/advancedRocketry/util/RocketInventoryHelper", "allowAccess", "(Ljava/lang/Object;)Z", false));
-				nodeAdd.add(new JumpInsnNode(Opcodes.IFNE, label));
+				nodeAdd.add(new JumpInsnNode(Opcodes.IFEQ, label));
 
 				onUpdate.instructions.insert(ain, nodeAdd);
 

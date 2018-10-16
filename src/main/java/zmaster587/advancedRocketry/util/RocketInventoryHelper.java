@@ -33,7 +33,7 @@ public class RocketInventoryHelper {
 		
 		//return !player.worldObj.getEntitiesWithinAABB(EntityRocketBase.class, new AxisAlignedBB(player.getPosition().add(-64,-64,-64), player.getPosition().add(64,64,64))).isEmpty();
 		
-		return canPlayerBypassInvChecks((EntityPlayer)tile);
+		return !canPlayerBypassInvChecks((EntityPlayer)tile);
 	}
 	
 	public static boolean canPlayerBypassInvChecks(EntityPlayer player) {
