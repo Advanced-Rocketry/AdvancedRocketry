@@ -9,6 +9,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
 import zmaster587.libVulpes.network.BasePacket;
 
 import java.io.IOException;
@@ -131,7 +132,7 @@ public class PacketDimInfo extends BasePacket {
 				dimProperties.getRequiredArtifacts().clear();
 				dimProperties.getRequiredArtifacts().addAll(artifacts);
 				
-				List<SpawnListEntry> list = new LinkedList<SpawnListEntry>(DimensionManager.getInstance().getDimensionProperties(dimNumber).getSpawnListEntries());
+				List<SpawnListEntryNBT> list = new LinkedList<SpawnListEntryNBT>(DimensionManager.getInstance().getDimensionProperties(dimNumber).getSpawnListEntries());
 				dimProperties.getSpawnListEntries().clear();
 				dimProperties.getSpawnListEntries().addAll(list);
 				

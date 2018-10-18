@@ -65,6 +65,7 @@ import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.advancedRocketry.util.BiomeHandler;
 import zmaster587.advancedRocketry.util.GravityHandler;
+import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
 import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
@@ -122,7 +123,7 @@ public class PlanetEventHandler {
 		
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
 		if(properties != null) {
-			List<SpawnListEntry> entries = properties.getSpawnListEntries();
+			List<SpawnListEntryNBT> entries = properties.getSpawnListEntries();
 			if(!entries.isEmpty())
 				event.getList().addAll(entries);
 		}

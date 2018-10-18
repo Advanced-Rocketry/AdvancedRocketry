@@ -6,14 +6,20 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTException;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -313,9 +319,11 @@ public class XMLPlanetLoader {
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("spawnable")) {
 				int weight = 100;
 				int groupMin = 1, groupMax = 1;
+				String nbtString = "";
 				Node weightNode = planetPropertyNode.getAttributes().getNamedItem("weight");
 				Node groupMinNode = planetPropertyNode.getAttributes().getNamedItem("groupMin");
 				Node groupMaxNode = planetPropertyNode.getAttributes().getNamedItem("groupMax");
+				Node nbtNode = planetPropertyNode.getAttributes().getNamedItem("nbt");
 
 				//Get spawn properties
 				if(weightNode != null) {
@@ -340,6 +348,10 @@ public class XMLPlanetLoader {
 					}
 				}
 
+				if(nbtNode != null) {
+					nbtString = nbtNode.getTextContent();
+				}
+				
 				if (groupMax < groupMin) {
 					groupMax = groupMin;
 				}
@@ -359,8 +371,21 @@ public class XMLPlanetLoader {
 				}
 
 				if(clazz != null) {
-					//AdvancedRocketry.logger.info("Registering " + clazz.getName() + " for atmosphere bypass");
-					properties.getSpawnListEntries().add(new SpawnListEntry(clazz, weight, groupMin, groupMax));
+					SpawnListEntryNBT entry = new SpawnListEntryNBT(clazz, weight, groupMin, groupMax);
+					if(!nbtString.isEmpty())
+						try {
+							entry.setNbt(nbtString);
+						} catch (DOMException e) {
+							AdvancedRocketry.logger.fatal("===== Configuration Error!  Please check your save's planetDefs.xml config file =====\n"
+									+ e.getLocalizedMessage()
+									+ "\nThe following is not valid JSON:\n" + nbtString);
+						} catch (NBTException e) {
+							AdvancedRocketry.logger.fatal("===== Configuration Error!  Please check your save's planetDefs.xml config file =====\n"
+									+ e.getLocalizedMessage()
+									+ "\nThe following is not valid NBT data:\n" + nbtString);
+						}
+						
+					properties.getSpawnListEntries().add(entry);
 				}
 				else
 					AdvancedRocketry.logger.warn("Cannot find " + planetPropertyNode.getTextContent() + " while registering entity for planet spawn");
@@ -717,8 +742,11 @@ public class XMLPlanetLoader {
 				outputString = outputString + tabLen + "\t<fillerBlock>" + Block.REGISTRY.getNameForObject(properties.getStoneBlock().getBlock()) + "</fillerBlock>\n";
 		}
 
-		for(SpawnListEntry e : properties.getSpawnListEntries()) {
-			outputString = outputString + tabLen + "\t<spawnable weight=\"" + e.itemWeight + "\" groupMin=\"" + e.minGroupCount + "\" groupMax=\"" + e.maxGroupCount +  "\" >" + EntityRegistry.getEntry(e.entityClass).getRegistryName() + "</spawnable>\n";
+		for(SpawnListEntryNBT e : properties.getSpawnListEntries()) {
+			String nbtString = e.getNBTString();
+			if (!nbtString.isEmpty())
+				nbtString = " nbt=\"" + nbtString + "\"";
+			outputString = outputString + tabLen + "\t<spawnable weight=\"" + e.itemWeight + "\" groupMin=\"" + e.minGroupCount + "\" groupMax=\"" + e.maxGroupCount +  "\"" + nbtString + ">" + EntityRegistry.getEntry(e.entityClass).getRegistryName() + "</spawnable>\n";
 		}
 
 		outputString = outputString + tabLen + "</planet>\n";

@@ -36,6 +36,7 @@ import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketSatellite;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.OreGenProperties;
+import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.libVulpes.network.PacketHandler;
@@ -227,7 +228,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	private HashMap<Long,SatelliteBase> satallites;
 	private HashMap<Long,SatelliteBase> tickingSatallites;
 	private List<Fluid> harvestableAtmosphere;
-	private List<SpawnListEntry> spawnableEntities;
+	private List<SpawnListEntryNBT> spawnableEntities;
 	private HashSet<HashedBlockPosition> beaconLocations;
 	private IBlockState oceanBlock;
 	private IBlockState fillerBlock;
@@ -256,7 +257,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		hasRings = false;
 		customIcon = "";
 		harvestableAtmosphere = new LinkedList<Fluid>();
-		spawnableEntities = new LinkedList<SpawnListEntry>();
+		spawnableEntities = new LinkedList<SpawnListEntryNBT>();
 		beaconLocations = new HashSet<HashedBlockPosition>();
 		sealevel = 63;
 		generatorType = 0;
@@ -314,7 +315,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		averageTemperature = 100;
 		hasRings = false;
 		harvestableAtmosphere = new LinkedList<Fluid>();
-		spawnableEntities = new LinkedList<SpawnListEntry>();
+		spawnableEntities = new LinkedList<SpawnListEntryNBT>();
 		beaconLocations = new HashSet<HashedBlockPosition>();
 		sealevel = 63;
 		oceanBlock = null;
@@ -340,7 +341,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		gravitationalMultiplier = mult;
 	}
 
-	public List<SpawnListEntry> getSpawnListEntries() {
+	public List<SpawnListEntryNBT> getSpawnListEntries() {
 		return spawnableEntities;
 	}
 	

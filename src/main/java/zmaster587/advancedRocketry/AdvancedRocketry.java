@@ -1987,7 +1987,7 @@ public class AdvancedRocketry {
 					loadedProps.getRequiredArtifacts().clear();
 					loadedProps.getRequiredArtifacts().addAll(list);
 					
-					List<SpawnListEntry> list2 = new LinkedList<SpawnListEntry>(properties.getSpawnListEntries());
+					List<SpawnListEntryNBT> list2 = new LinkedList<SpawnListEntryNBT>(properties.getSpawnListEntries());
 					loadedProps.getSpawnListEntries().clear();
 					loadedProps.getSpawnListEntries().addAll(list2);
 					
