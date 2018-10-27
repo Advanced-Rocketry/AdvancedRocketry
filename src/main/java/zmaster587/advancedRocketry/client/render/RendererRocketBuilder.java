@@ -64,6 +64,7 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			GlStateManager.color(0.78f, 0.5f, 0.34f, 1f);
 			bindTexture(girder);
 			GlStateManager.enableDepth();
+			GlStateManager.disableBlend();
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			
 			float size = 0.25f;
@@ -86,7 +87,7 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			else
 				GlStateManager.color(0.5f, 1, 0.5f, .05f);
 			GlStateManager.disableDepth();
-			GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.0f);
+			GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.05f);
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			
 			bindTexture(grid);
@@ -140,9 +141,9 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
 			if(renderTile.isBuilding())
-				GlStateManager.color(3f, 1f, 1f, 1f);
+				GlStateManager.color(1, 0.333f, 0.333f, 1f);
 			else
-				GlStateManager.color(1f, 3f, 1f, 1f);
+				GlStateManager.color(0.333f, 1f, 0.333f, 1f);
 			
 			RenderHelper.renderEastFace(buffer, xMax, yMin, zMin, yMax, zMax);
 			

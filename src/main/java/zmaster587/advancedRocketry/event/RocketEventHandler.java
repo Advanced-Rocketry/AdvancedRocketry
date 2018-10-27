@@ -279,10 +279,10 @@ public class RocketEventHandler extends Gui {
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0, -5, 0);
 		GL11.glPushAttrib(GL11.GL_ALPHA_TEST_FUNC);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_FOG);
-		GL11.glAlphaFunc(GL11.GL_GREATER, .01f);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GlStateManager.enableBlend();
+		GlStateManager.disableFog();
+		GlStateManager.alphaFunc(GL11.GL_GREATER, .01f);
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		float brightness = 16;
 		
@@ -299,7 +299,7 @@ public class RocketEventHandler extends Gui {
 		//Less detailed land
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, outerBounds.getTextureId());
+		GlStateManager.bindTexture(outerBounds.getTextureId());
 		double size2 = size*16;
 		float brightness2 =brightness*.43f;
 		GlStateManager.color(brightness2, brightness2, brightness2, MathHelper.clamp(((float)Minecraft.getMinecraft().getRenderViewEntity().posY -200f)/50f, 0f, 1f));
@@ -308,7 +308,7 @@ public class RocketEventHandler extends Gui {
 
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, earth.getTextureId());
+		GlStateManager.bindTexture(earth.getTextureId());
 
 		float opacityFromHeight = MathHelper.clamp(((float)Minecraft.getMinecraft().getRenderViewEntity().posY -200f)/100f, 0f, 1f);
 
@@ -321,9 +321,9 @@ public class RocketEventHandler extends Gui {
 		//AtmosphereGlow
 		Vec3d skyColor = Minecraft.getMinecraft().getRenderViewEntity().world.provider.getSkyColor(Minecraft.getMinecraft().getRenderViewEntity(), partialTicks);
 
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D,0);
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GlStateManager.disableTexture2D();
+		GlStateManager.bindTexture(0);
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
 		GlStateManager.color((float)skyColor.x, (float)skyColor.y, (float)skyColor.z, 0.05f);
@@ -336,11 +336,11 @@ public class RocketEventHandler extends Gui {
 		}
 
 		//
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GlStateManager.enableTexture2D();
 
 		Tessellator.getInstance().draw();
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_FOG);
+		GlStateManager.disableBlend();
+		GlStateManager.enableFog();
 		GL11.glPopAttrib();
 		GL11.glPopMatrix();
 		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 0, 0);
@@ -353,7 +353,7 @@ public class RocketEventHandler extends Gui {
 			if((ride = Minecraft.getMinecraft().player.getRidingEntity()) instanceof EntityRocket) {
 				EntityRocket rocket = (EntityRocket)ride;
 
-				GL11.glEnable(GL11.GL_BLEND);
+				GlStateManager.enableBlend();
 				//GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
 				Minecraft.getMinecraft().renderEngine.bindTexture(background);
@@ -372,7 +372,7 @@ public class RocketEventHandler extends Gui {
 				int size = (int)(68*(rocket.getFuelAmount() /(float)rocket.getFuelCapacity()));
 				this.drawTexturedModalRect(3, 242 - size, 17, 75 - size, 3, size); //94 to 161
 
-				GL11.glDisable(GL11.GL_BLEND);
+				GlStateManager.disableBlend();
 				String str = rocket.getTextOverlay();
 				if(!str.isEmpty()) {
 
@@ -412,9 +412,9 @@ public class RocketEventHandler extends Gui {
 				if(fillable != null) {
 					float size = fillable.getAirRemaining(chestPiece)/(float)fillable.getMaxAir(chestPiece);
 
-					GL11.glEnable(GL11.GL_BLEND);
+					GlStateManager.enableBlend();
 					Minecraft.getMinecraft().renderEngine.bindTexture(background);
-					GL11.glColor3f(1f, 1f, 1f);
+					GlStateManager.color(1f, 1f, 1f);
 					int width = 83;
 					int screenX = oxygenBar.getRenderX();//+ 8;
 					int screenY = oxygenBar.getRenderY();//- 57;
@@ -450,7 +450,7 @@ public class RocketEventHandler extends Gui {
 				GL11.glScalef(3, 3, 3);
 
 				fontRenderer.drawStringWithShadow(str, screenX, screenY, 0xFF5656);
-				GL11.glColor3f(1f, 1f, 1f);
+				GlStateManager.color(1f, 1f, 1f);
 				Minecraft.getMinecraft().getTextureManager().bindTexture(TextureResources.progressBars);
 				this.drawTexturedModalRect(screenX + fontRenderer.getStringWidth(str)/2 -8, screenY - 16, 0, 156, 16, 16);
 
@@ -474,7 +474,7 @@ public class RocketEventHandler extends Gui {
 					loc++;
 				}
 
-				GL11.glColor3f(1f, 1f, 1f);
+				GlStateManager.color(1f, 1f, 1f);
 				GL11.glPopMatrix();
 			}
 		}
@@ -543,7 +543,7 @@ public class RocketEventHandler extends Gui {
 				int screenX = suitPanel.getRenderX();
 
 				//Draw BG
-				GL11.glColor4f(1f,1f,1f, 1f);
+				GlStateManager.color(1f, 1f, 1f, 1f);
 				Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.frameHUDBG);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel-1, screenX - 4, screenY - 4, screenX + size, screenY + size + 4,0d,0.5d,0d,1d);
@@ -564,7 +564,7 @@ public class RocketEventHandler extends Gui {
 				if(modularArmorFlag) {
 					List<ItemStack> stacks = ((IModularArmor)armorStack.getItem()).getComponents(armorStack);
 					for(ItemStack stack : stacks) {
-						GL11.glColor4f(1f, 1f, 1f, 1f);
+						GlStateManager.color(1f, 1f, 1f, 1f);
 						((IArmorComponent)stack.getItem()).renderScreen(stack, stacks, event, this);
 
 						ResourceIcon icon = ((IArmorComponent)stack.getItem()).getComponentIcon(stack);

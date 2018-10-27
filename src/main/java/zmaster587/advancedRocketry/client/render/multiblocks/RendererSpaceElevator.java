@@ -63,13 +63,13 @@ public class RendererSpaceElevator extends TileEntitySpecialRenderer {
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + multiBlockTile.getLandingLocationX() - multiBlockTile.getPos().getX(), y, z + multiBlockTile.getLandingLocationZ() - multiBlockTile.getPos().getZ());
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_FOG);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDepthMask(false);
+		GlStateManager.disableLighting();
+		GlStateManager.disableFog();
+		GlStateManager.enableBlend();
+		GlStateManager.depthMask(false);
 
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+		GlStateManager.disableTexture2D();
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
 		GlStateManager.color(1, 1 , 1 , 0.11f);
@@ -93,12 +93,12 @@ public class RendererSpaceElevator extends TileEntitySpecialRenderer {
 
 		Tessellator.getInstance().draw();
 
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_FOG);
-		GL11.glDepthMask(true);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GlStateManager.disableBlend();
+		GlStateManager.enableLighting();
+		GlStateManager.enableTexture2D();
+		GlStateManager.enableFog();
+		GlStateManager.depthMask(true);
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glPopMatrix();
 		
 		
