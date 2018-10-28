@@ -43,8 +43,8 @@ public class ContainerSpaceLaser extends Container {
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
-		if(laserTile.getBatteries().getEnergyStored() != prevEnergy) {
-			prevEnergy = laserTile.getBatteries().getEnergyStored() ;
+		if(laserTile.getBatteries().getUniversalEnergyStored() != prevEnergy) {
+			prevEnergy = laserTile.getBatteries().getUniversalEnergyStored() ;
 			for (int j = 0; j < this.listeners.size(); ++j)
 			{
 				((IContainerListener)this.listeners.get(j)).sendWindowProperty(this, 0, prevEnergy/100);

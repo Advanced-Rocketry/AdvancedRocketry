@@ -174,7 +174,7 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 		
 		private boolean isEnergyFull() {
 			MultiBattery battery = getBatteries();
-			return battery.getMaxEnergyStored() == battery.getEnergyStored();
+			return battery.getMaxEnergyStored() == battery.getUniversalEnergyStored();
 		}
 		
 		public boolean isProducingPower() {

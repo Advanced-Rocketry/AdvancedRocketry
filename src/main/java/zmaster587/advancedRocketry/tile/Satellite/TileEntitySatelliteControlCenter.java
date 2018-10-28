@@ -115,7 +115,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 
 			SatelliteBase satellite = moduleSatellite.getSatellite();
 			if(satellite != null) {
-				if(getEnergyStored() < getPowerPerOperation()) 
+				if(getUniversalEnergyStored() < getPowerPerOperation()) 
 					moduleText.setText(LibVulpes.proxy.getLocalizedString("msg.notenoughpower"));
 
 				else if(!DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(world, pos).getId())) {

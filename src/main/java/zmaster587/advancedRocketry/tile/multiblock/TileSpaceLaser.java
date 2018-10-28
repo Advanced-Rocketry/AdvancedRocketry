@@ -280,7 +280,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 			if(hasPowerForOperation() && isReadyForOperation() && laserSat.isAlive() && !laserSat.getJammed()) {
 				laserSat.performOperation();
 				
-				batteries.setEnergyStored(batteries.getEnergyStored() - POWER_PER_OPERATION);
+				batteries.setEnergyStored(batteries.getUniversalEnergyStored() - POWER_PER_OPERATION);
 				tickSinceLastOperation = 0;
 			}
 		}
@@ -329,10 +329,10 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 	}
 
 	public boolean isReadyForOperation() {
-		if(batteries.getEnergyStored() == 0)
+		if(batteries.getUniversalEnergyStored() == 0)
 			return false;
 
-		return tickSinceLastOperation > (3*this.batteries.getMaxEnergyStored()/(float)this.batteries.getEnergyStored());
+		return tickSinceLastOperation > (3*this.batteries.getMaxEnergyStored()/(float)this.batteries.getUniversalEnergyStored());
 	}
 
 	public void onDestroy() {
@@ -497,7 +497,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 	}
 
 	private boolean isAllowedToRun() {
-		return !(glassPanel.isEmpty()|| batteries.getEnergyStored() == 0 || !(this.world.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.world.provider).getDimensionProperties(getPos()).getParentPlanet()) ||
+		return !(glassPanel.isEmpty()|| batteries.getUniversalEnergyStored() == 0 || !(this.world.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.world.provider).getDimensionProperties(getPos()).getParentPlanet()) ||
 				Configuration.laserBlackListDims.contains(((WorldProviderSpace)this.world.provider).getDimensionProperties(getPos()).getParentPlanet()));
 	}
 	
@@ -542,11 +542,11 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 	}
 
 	public int getEnergyPercentScaled(int max) {
-		return (int)(max * (batteries.getEnergyStored() / (float)batteries.getMaxEnergyStored()) );
+		return (int)(max * (batteries.getUniversalEnergyStored() / (float)batteries.getMaxEnergyStored()) );
 	}
 
 	public boolean hasEnergy() {
-		return batteries.getEnergyStored() != 0;
+		return batteries.getUniversalEnergyStored() != 0;
 	}
 
 	//InventoryHandling start
@@ -658,7 +658,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 	 * @return returns whether enough power is stored for the next opertation
 	 */
 	public boolean hasPowerForOperation() {
-		return POWER_PER_OPERATION <= batteries.getEnergyStored();
+		return POWER_PER_OPERATION <= batteries.getUniversalEnergyStored();
 	}
 
 	/**

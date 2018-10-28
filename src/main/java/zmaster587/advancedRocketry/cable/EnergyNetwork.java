@@ -41,7 +41,7 @@ public class EnergyNetwork extends CableNetwork implements IUniversalEnergy {
 	public boolean merge(CableNetwork cableNetwork) {
 		//Try not to lose power
 		if(super.merge(cableNetwork)) {
-			battery.acceptEnergy(((EnergyNetwork)cableNetwork).battery.getEnergyStored(), false);
+			battery.acceptEnergy(((EnergyNetwork)cableNetwork).battery.getUniversalEnergyStored(), false);
 			return true;
 		}
 		
@@ -53,7 +53,7 @@ public class EnergyNetwork extends CableNetwork implements IUniversalEnergy {
 	public void tick() {
 		int amount = 1000;
 		//Return if there is nothing to do
-		if(sinks.isEmpty() || (sources.isEmpty() && battery.getEnergyStored() == 0))
+		if(sinks.isEmpty() || (sources.isEmpty() && battery.getUniversalEnergyStored() == 0))
 			return;
 
 
@@ -61,7 +61,7 @@ public class EnergyNetwork extends CableNetwork implements IUniversalEnergy {
 		//Go through all sinks, if one is not full attempt to fill it
 
 		int demand = 0;
-		int supply = battery.getEnergyStored();
+		int supply = battery.getUniversalEnergyStored();
 		Iterator<Entry<TileEntity,EnumFacing>> sinkItr = sinks.iterator();
 		Iterator<Entry<TileEntity,EnumFacing>> sourceItr = sources.iterator();
 
@@ -119,7 +119,7 @@ public class EnergyNetwork extends CableNetwork implements IUniversalEnergy {
 	}
 
 	@Override
-	public int getEnergyStored() {
+	public int getUniversalEnergyStored() {
 		return 0;
 	}
 

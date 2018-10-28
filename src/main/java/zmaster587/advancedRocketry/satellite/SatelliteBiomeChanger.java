@@ -216,7 +216,7 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 	}
 
 	@Override
-	public int getEnergyStored() {
+	public int getUniversalEnergyStored() {
 
 		if(getDimensionId() != Constants.INVALID_PLANET) {
 			World world = net.minecraftforge.common.DimensionManager.getWorld(getDimensionId());
@@ -225,7 +225,7 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 			}
 		}
 
-		return battery.getEnergyStored();
+		return battery.getUniversalEnergyStored();
 	}
 
 	@Override

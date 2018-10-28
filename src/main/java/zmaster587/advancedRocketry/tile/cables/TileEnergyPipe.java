@@ -82,7 +82,7 @@ public class TileEnergyPipe extends TilePipe implements IUniversalEnergy {
 	}
 
 	@Override
-	public int getEnergyStored() {
+	public int getUniversalEnergyStored() {
 		return 0;
 	}
 

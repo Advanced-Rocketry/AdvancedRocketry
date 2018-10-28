@@ -140,7 +140,7 @@ public class GuiSpaceLaser extends GuiContainer {
 		
 		if(a > x + 11 && a < x + 27 && b < y + 85 && b > y + 43) {
 			LinkedList<String> text = new LinkedList<String>();
-			text.add(laserTile.getBatteries().getEnergyStored()  + " / " + laserTile.getBatteries().getMaxEnergyStored() + " RF");
+			text.add(laserTile.getBatteries().getUniversalEnergyStored()  + " / " + laserTile.getBatteries().getMaxEnergyStored() + " RF");
 			this.drawHoveringText(text, a, b, this.fontRenderer);
 		}
 
