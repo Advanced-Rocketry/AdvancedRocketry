@@ -343,7 +343,7 @@ public class RocketEventHandler extends Gui {
 		GlStateManager.enableFog();
 		GL11.glPopAttrib();
 		GL11.glPopMatrix();
-		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 0, 0);
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	@SubscribeEvent

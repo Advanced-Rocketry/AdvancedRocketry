@@ -56,20 +56,20 @@ public class KeyBindings {
 			}
 		}
 
-		if(toggleJetpack.isPressed()) {
+		if(Keyboard.isKeyDown(toggleJetpack.getKeyCode())) {
 			if(player.isSneaking())
 				PacketHandler.sendToServer(new PacketChangeKeyState(1, false));
 			else
 				PacketHandler.sendToServer(new PacketChangeKeyState(0, false));
 		}
 
-		if(openRocketUI.isPressed()) {
+		if(Keyboard.isKeyDown(openRocketUI.getKeyCode())) {
 			if(player.getRidingEntity() instanceof EntityRocketBase) {
 				PacketHandler.sendToServer(new PacketEntity((INetworkEntity) player.getRidingEntity(), (byte)EntityRocket.PacketType.OPENGUI.ordinal()));
 			}
 		}
 
-		if(toggleRCS.isPressed()) {
+		if(Keyboard.isKeyDown(toggleRCS.getKeyCode())) {
 			if(player.getRidingEntity() instanceof EntityRocketBase) {
 				PacketHandler.sendToServer(new PacketEntity((INetworkEntity) player.getRidingEntity(), (byte)EntityRocket.PacketType.TOGGLE_RCS.ordinal()));
 			}
@@ -99,5 +99,7 @@ public class KeyBindings {
 		ClientRegistry.registerKeyBinding(toggleRCS);
 		ClientRegistry.registerKeyBinding(turnRocketRight);
 		ClientRegistry.registerKeyBinding(turnRocketLeft);
+		ClientRegistry.registerKeyBinding(turnRocketUp);
+		ClientRegistry.registerKeyBinding(turnRocketDown);
 	}
 }
