@@ -1561,7 +1561,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 		}
 		else if(id == PacketType.LAUNCH.ordinal()) {
-
 			if(this.getPassengers().contains(player))
 				this.prepareLaunch();
 		}

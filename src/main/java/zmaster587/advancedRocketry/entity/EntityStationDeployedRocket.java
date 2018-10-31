@@ -23,6 +23,7 @@ import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
+import zmaster587.advancedRocketry.api.RocketEvent.RocketPreLaunchEvent;
 import zmaster587.advancedRocketry.api.StatsRocket;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
@@ -84,6 +85,22 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			ForgeChunkManager.releaseTicket(ticket);
 	}
 
+	@Override
+	/**
+	 * Called immediately before launch
+	 */
+	public void prepareLaunch() {
+		
+		RocketPreLaunchEvent event = new RocketEvent.RocketPreLaunchEvent(this);
+		MinecraftForge.EVENT_BUS.post(event);
+
+		if(!event.isCanceled()) {
+			if(world.isRemote)
+				PacketHandler.sendToServer(new PacketEntity(this, (byte)EntityRocket.PacketType.LAUNCH.ordinal()));
+			launch();
+		}
+	}
+	
 	@Override
 	public void launch() {
 
