@@ -103,7 +103,6 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	}
 	@Override
 	public boolean canDoRainSnowIce(Chunk chunk) {
-		// TODO Auto-generated method stub
 		return getAtmosphereDensity(new BlockPos(0,0,0)) > 75 ? super.canDoRainSnowIce(chunk) : false;
 	}
 	@Override
@@ -111,6 +110,8 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 		if(getAtmosphereDensity(new BlockPos(0,0,0)) > 75)
 			super.updateWeather();
+		else if (world.isRaining())
+			this.world.getWorldInfo().setRaining(false);
 	}
 
 	@Override
