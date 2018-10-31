@@ -315,12 +315,12 @@ public class RenderPlanetarySky extends IRenderHandler {
 		f2 *= atmosphere;
 		f3 *= atmosphere;
 
-		GL11.glColor3f(f1, f2, f3);
+		GlStateManager.color(f1, f2, f3);
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
-		GL11.glDepthMask(false);
+		GlStateManager.depthMask(false);
 		GlStateManager.enableFog();
-		GL11.glColor3f(f1, f2, f3);
+		GlStateManager.color(f1, f2, f3);
 		GL11.glCallList(this.glSkyList);
 		GlStateManager.disableFog();
 		GlStateManager.disableAlpha();
@@ -336,7 +336,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		if (afloat != null)
 		{
 			GlStateManager.disableTexture2D();
-			GL11.glShadeModel(GL11.GL_SMOOTH);
+			GlStateManager.shadeModel(GL11.GL_SMOOTH);
 			GL11.glPushMatrix();
 			GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
 			GL11.glRotatef(MathHelper.sin(mc.world.getCelestialAngleRadians(partialTicks)) < 0.0F ? 180.0F : 0.0F, 0.0F, 0.0F, 1.0F);
@@ -372,7 +372,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 			Tessellator.getInstance().draw();
 			GL11.glPopMatrix();
-			GL11.glShadeModel(GL11.GL_FLAT);
+			GlStateManager.shadeModel(GL11.GL_FLAT);
 		}
 
 		GlStateManager.enableTexture2D();
@@ -389,7 +389,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		f7 = 0.0F;
 		f8 = 0.0F;
 		f9 = 0.0F;
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, f6);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, f6);
 		GL11.glTranslatef(f7, f8, f9);
 		GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
 
@@ -455,7 +455,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 		if (f18 > 0.0F)
 		{
-			GL11.glColor4f(f18, f18, f18, f18);
+			GlStateManager.color(f18, f18, f18, f18);
 			GL11.glPushMatrix();
 			if(isWarp) {
 				for(int i = -3; i < 5; i++) {
@@ -471,20 +471,20 @@ public class RenderPlanetarySky extends IRenderHandler {
 				GL11.glCallList(this.starGLCallList);
 				//Extra stars for low ATM
 				if(atmosphere < 0.5) {
-					GL11.glColor4f(f18, f18, f18, f18/2f);
+					GlStateManager.color(f18, f18, f18, f18/2f);
 					GL11.glPushMatrix();
 					GL11.glRotatef(-90, 0, 1, 0);
 					GL11.glCallList(this.starGLCallList);
 					GL11.glPopMatrix();
 				}
 				if(atmosphere < 0.25) {
-					GL11.glColor4f(f18, f18, f18, f18/4f);
+					GlStateManager.color(f18, f18, f18, f18/4f);
 					GL11.glPushMatrix();
 					GL11.glRotatef(90, 0, 1, 0);
 					GL11.glCallList(this.starGLCallList);
 					GL11.glPopMatrix();
 				}
-				GL11.glColor4f(f18, f18, f18, f18);
+				GlStateManager.color(f18, f18, f18, f18);
 			}
 			GL11.glPopMatrix();
 		}
@@ -550,7 +550,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 				Tessellator.getInstance().draw();
 				GL11.glPopMatrix();
 
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				GL11.glPushMatrix();
 
 				GL11.glRotatef(90f, 0f, 1f, 0f);
@@ -596,13 +596,13 @@ public class RenderPlanetarySky extends IRenderHandler {
 		}
 
 		GlStateManager.enableFog();
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		GlStateManager.disableBlend();
 		GlStateManager.enableAlpha();
 
 		GL11.glPopMatrix();
 		GlStateManager.disableTexture2D();
-		GL11.glColor3f(0.0F, 0.0F, 0.0F);
+		GlStateManager.color(0.0F, 0.0F, 0.0F);
 		double d0 = this.mc.player.getPositionEyes(partialTicks).y - mc.world.getHorizon();
 
 		if (d0 < 0.0D)
@@ -643,11 +643,11 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 		if (mc.world.provider.isSkyColored())
 		{
-			GL11.glColor3f(f1 * 0.2F + 0.04F, f2 * 0.2F + 0.04F, f3 * 0.6F + 0.1F);
+			GlStateManager.color(f1 * 0.2F + 0.04F, f2 * 0.2F + 0.04F, f3 * 0.6F + 0.1F);
 		}
 		else
 		{
-			GL11.glColor3f(f1, f2, f3);
+			GlStateManager.color(f1, f2, f3);
 		}
 
 		//Blackness @ bottom of world
@@ -657,11 +657,11 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GL11.glPopMatrix();
 
 		GlStateManager.enableTexture2D();
-		GL11.glDepthMask(true);
+		GlStateManager.depthMask(true);
 
 		RocketEventHandler.onPostWorldRender(partialTicks);
 		//Fix player/items going transparent
-		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 0, 0);
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	protected ResourceLocation getTextureForPlanet(DimensionProperties properties) {
@@ -705,7 +705,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 	}
 
 	public static void renderPlanetPubHelper(BufferBuilder buffer, ResourceLocation icon, int locationX, int locationY, double zLevel, float size, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing, boolean hasDecorators) {
-		GL11.glEnable(GL11.GL_BLEND);
+		GlStateManager.enableBlend();
 
 		//int k = mc.theWorld.getMoonPhase();
 		//int l = k % 4;
@@ -730,7 +730,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 			//Rings
 			if(hasRing) {
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				GlStateManager.color(ringColor[0], ringColor[1], ringColor[2], alphaMultiplier*0.2f);
 				float ringSize = f10 *1.4f;
 				Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.planetRings);
@@ -752,7 +752,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 				Tessellator.getInstance().draw();
 			}
 
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.atmGlow);
 
@@ -768,7 +768,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		//End ATM glow
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(icon);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		//TODO: draw sky planets
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -786,8 +786,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		if (hasDecorators) {
 			//Draw atmosphere if applicable
 			if(hasAtmosphere) {
-
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.getAtmosphereResource());
@@ -807,7 +806,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			//Draw Shadow
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.getShadowResource());
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GlStateManager.color(1f, 1f, 1f, alphaMultiplier);
 			buffer.pos(-f10, zLevel-0.01f, f10).tex((double)f16, (double)f17).endVertex();
 			buffer.pos(f10, zLevel-0.01f, f10).tex((double)f14, (double)f17).endVertex();
@@ -824,9 +823,9 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 	protected void drawStar(BufferBuilder buffer, StellarBody sun, DimensionProperties properties, int solarOrbitalDistance, float sunSize, Vec3d sunColor, float multiplier) {
 		if(sun.isBlackHole()) {
-			GL11.glDepthMask(true);
-			GL11.glEnable(GL11.GL_ALPHA_TEST);
-			GL11.glAlphaFunc(GL11.GL_GREATER, 0.01f);
+			GlStateManager.depthMask(true);
+			GlStateManager.enableAlpha();
+			GlStateManager.alphaFunc(GL11.GL_GREATER, 0.01f);
 			mc.renderEngine.bindTexture(TextureResources.locationBlackHole);
 
 			GL11.glPushMatrix();
@@ -853,7 +852,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 			//Render accretion disk
 			mc.renderEngine.bindTexture(TextureResources.locationAccretionDisk);
-			GL11.glDepthMask(false);
+			GlStateManager.depthMask(false);
 			for(int i = 0; i < 3; i++)
 			{
 				float speedMult = (i)*1.01f + 1;
