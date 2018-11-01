@@ -14,6 +14,8 @@ import java.io.IOException;
 public class PacketStellarInfo extends BasePacket {
 	StellarBody star;
 	int starId;
+	NBTTagCompound nbt;
+	boolean removeStar;
 
 	public PacketStellarInfo() {}
 
@@ -40,32 +42,17 @@ public class PacketStellarInfo extends BasePacket {
 	@Override
 	public void readClient(ByteBuf in) {
 		PacketBuffer packetBuffer = new PacketBuffer(in);
-		NBTTagCompound nbt;
-		starId = in.readInt();
 
-		if(in.readBoolean()) {
-			if(DimensionManager.getInstance().isDimensionCreated(starId)) {
-				DimensionManager.getInstance().removeStar(starId);
-			}
-		}
-		else {
-			//TODO: error handling
+		starId = in.readInt();
+		removeStar = in.readBoolean();
+
+		if(!in.readBoolean()) {
 			try {
 				nbt = packetBuffer.readCompoundTag();
-
 			} catch (IOException e) {
 				e.printStackTrace();
+				nbt = null;
 				return;
-			}
-
-			StellarBody star;
-
-			if((star = DimensionManager.getInstance().getStar(starId)) != null) {
-				star.readFromNBT(nbt);
-			} else {
-				star = new StellarBody();
-				star.readFromNBT(nbt);
-				DimensionManager.getInstance().addStar(star);
 			}
 		}
 	}
@@ -76,7 +63,24 @@ public class PacketStellarInfo extends BasePacket {
 	}
 
 	@Override
-	public void executeClient(EntityPlayer thePlayer) {}
+	public void executeClient(EntityPlayer thePlayer) {
+		StellarBody star;
+		
+		if(removeStar) {
+			if(DimensionManager.getInstance().isDimensionCreated(starId)) {
+				DimensionManager.getInstance().removeStar(starId);
+			}
+		}
+		else if(nbt != null) {
+			if((star = DimensionManager.getInstance().getStar(starId)) != null) {
+				star.readFromNBT(nbt);
+			} else {
+				star = new StellarBody();
+				star.readFromNBT(nbt);
+				DimensionManager.getInstance().addStar(star);
+			}
+		}
+	}
 
 	@Override
 	public void executeServer(EntityPlayerMP player) {}

@@ -19,7 +19,13 @@ import java.util.logging.Logger;
 public class PacketSpaceStationInfo extends BasePacket {
 	SpaceObject spaceObject;
 	int stationNumber;
-
+	boolean isBeingDeleted;
+	int direction;
+	String clazzId;
+	int fuelAmt;
+	NBTTagCompound nbt;
+	boolean hasWarpCores;
+	
 	public PacketSpaceStationInfo() {}
 
 	public PacketSpaceStationInfo(int stationNumber, ISpaceObject spaceObject) {
@@ -64,20 +70,14 @@ public class PacketSpaceStationInfo extends BasePacket {
 	@Override
 	public void readClient(ByteBuf in) {
 		PacketBuffer packetBuffer = new PacketBuffer(in);
-		NBTTagCompound nbt;
+		
 		stationNumber = in.readInt();
 
 		//Is dimension being deleted
-		if(in.readBoolean()) {
-			if(DimensionManager.getInstance().isDimensionCreated(stationNumber)) {
-				DimensionManager.getInstance().deleteDimension(stationNumber);
-			}
-		}
-		else {
+		isBeingDeleted = in.readBoolean();
+		if(!isBeingDeleted) {
 			//TODO: error handling
-			int direction;
-			String clazzId;
-			int fuelAmt;
+
 			try {
 				clazzId = packetBuffer.readString(127);
 				nbt = packetBuffer.readCompoundTag();
@@ -87,16 +87,26 @@ public class PacketSpaceStationInfo extends BasePacket {
 				return;
 			}
 			
-			boolean hasWarpCores = in.readBoolean();
+			hasWarpCores = in.readBoolean();
 			
 			direction = in.readInt();
-			
-			
+		}
+	}
+
+	@Override
+	public void read(ByteBuf in) {
+		//Should never be read on the server!
+	}
+
+	@Override
+	public void executeClient(EntityPlayer thePlayer) {
+		if(isBeingDeleted) {
+			if(DimensionManager.getInstance().isDimensionCreated(stationNumber)) {
+				DimensionManager.getInstance().deleteDimension(stationNumber);
+			}
+		}
+		else {
 			ISpaceObject iObject = SpaceObjectManager.getSpaceManager().getSpaceStation(stationNumber);
-			
-			
-			
-			//TODO: interface
 			spaceObject = (SpaceObject)iObject;
 			
 			//Station needs to be created
@@ -118,15 +128,8 @@ public class PacketSpaceStationInfo extends BasePacket {
 				((SpaceObject)iObject).hasWarpCores = hasWarpCores;
 			}
 		}
+			
 	}
-
-	@Override
-	public void read(ByteBuf in) {
-		//Should never be read on the server!
-	}
-
-	@Override
-	public void executeClient(EntityPlayer thePlayer) {}
 
 	@Override
 	public void executeServer(EntityPlayerMP player) {}

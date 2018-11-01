@@ -58,6 +58,7 @@ import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketAsteroidInfo;
+import zmaster587.advancedRocketry.network.PacketConfigSync;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
@@ -278,14 +279,15 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	public void playerLoggedInEvent(ServerConnectionFromClientEvent event) {
 
-		//Make sure stars are sent first
+		//Send config first
+		PacketHandler.sendToDispatcher(new PacketConfigSync(), event.getManager());
+		
+		//Make sure stars are sent next
 		for(int i : DimensionManager.getInstance().getStarIds()) {
-			//PacketHandler.sendToPlayer(new PacketStellarInfo(i, DimensionManager.getInstance().getStar(i)),  event.player);
 			PacketHandler.sendToDispatcher(new PacketStellarInfo(i, DimensionManager.getInstance().getStar(i)), event.getManager());
 		}
 
 		for(int i : DimensionManager.getInstance().getRegisteredDimensions()) {
-			//PacketHandler.sendToPlayer(new PacketDimInfo(i, DimensionManager.getInstance().getDimensionProperties(i)),  event.player);
 			PacketHandler.sendToDispatcher(new PacketDimInfo(i, DimensionManager.getInstance().getDimensionProperties(i)), event.getManager());
 		}
 

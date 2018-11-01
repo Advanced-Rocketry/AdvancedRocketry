@@ -441,6 +441,7 @@ public class AdvancedRocketry {
 		PacketHandler.INSTANCE.addDiscriminator(PacketAsteroidInfo.class);
 		PacketHandler.INSTANCE.addDiscriminator(PacketAirParticle.class);
 		PacketHandler.INSTANCE.addDiscriminator(PacketInvalidLocationNotify.class);
+		PacketHandler.INSTANCE.addDiscriminator(PacketConfigSync.class);
 		
 		//if(zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods)
 		MinecraftForge.EVENT_BUS.register(this);
@@ -2134,6 +2135,7 @@ public class AdvancedRocketry {
 		DimensionManager.getInstance().overworldProperties.resetProperties();
 		((BlockSeal)AdvancedRocketryBlocks.blockPipeSealer).clearMap();
 		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 8000, "Dimensions including and after this number are allowed to be made into planets");
+		zmaster587.advancedRocketry.api.Configuration.spaceDimId = config.get(Configuration.CATEGORY_GENERAL,"spaceStationId" , -2,"Dimension ID to use for space stations").getInt();
 		
 		DimensionManager.getInstance().knownPlanets.clear();
 		
