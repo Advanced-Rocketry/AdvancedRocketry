@@ -105,13 +105,21 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	public boolean canDoRainSnowIce(Chunk chunk) {
 		return getAtmosphereDensity(new BlockPos(0,0,0)) > 75 ? super.canDoRainSnowIce(chunk) : false;
 	}
+	
+	@Override
+	public void calculateInitialWeather() {
+		if (getAtmosphereDensity(new BlockPos(0,0,0)) <= 75 && world.isRaining()) {
+			this.world.getWorldInfo().setRaining(false);
+		}
+		super.calculateInitialWeather();
+	}
+	
 	@Override
 	public void updateWeather() {
-
-		if(getAtmosphereDensity(new BlockPos(0,0,0)) > 75)
-			super.updateWeather();
-		else if (world.isRaining())
+		super.updateWeather();
+		if (getAtmosphereDensity(new BlockPos(0,0,0)) <= 75 && world.isRaining()) {
 			this.world.getWorldInfo().setRaining(false);
+		}
 	}
 
 	@Override
