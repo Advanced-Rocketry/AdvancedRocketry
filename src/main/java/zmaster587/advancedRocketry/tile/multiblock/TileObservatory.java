@@ -326,8 +326,9 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 
 			int g = 0;
-			if(lastButton != -1 && lastType != null && !lastType.isEmpty()) {
-				List<StackEntry> harvestList = Configuration.asteroidTypes.get(lastType).getHarvest(lastSeed + lastButton, Math.max(1 - ((Math.min(getDataAmt(DataType.COMPOSITION),2000)  + Math.min(getDataAmt(DataType.MASS), 2000) )/4000f), 0));
+			AsteroidSmall asteroidSmol;
+			if(lastButton != -1 && lastType != null && !lastType.isEmpty() && (asteroidSmol = Configuration.asteroidTypes.get(lastType)) != null) {
+				List<StackEntry> harvestList = asteroidSmol.getHarvest(lastSeed + lastButton, Math.max(1 - ((Math.min(getDataAmt(DataType.COMPOSITION),2000)  + Math.min(getDataAmt(DataType.MASS), 2000) )/4000f), 0));
 				for(StackEntry entry : harvestList) {
 					//buttonList.add(new ModuleButton((g % 3)*24, 24*(g/3), -2, "",this, TextureResources.tabData, 24, 24));
 					buttonList.add(new ModuleSlotButton((g % 3)*24 + 1, 24*(g/3) + 1, -2, this, entry.stack, String.valueOf(entry.midpoint) + " +/-  " + String.valueOf(entry.variablility), getWorld()));
@@ -335,7 +336,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 					g++;
 				}
 				
-				float time = Configuration.asteroidTypes.get(lastType).timeMultiplier;
+				float time = asteroidSmol.timeMultiplier;
 				
 				buttonList.add(new ModuleText(0, 24*(1+(g/3)), String.format("%s\n%.2fx", LibVulpes.proxy.getLocalizedString("msg.observetory.text.missionTime") ,time), 0x2f2f2f));
 			}
