@@ -23,7 +23,7 @@ public class BiomeGenDeepSwamp extends Biome {
 	public static MapGenBase swampTree;
 	private final static WorldGenNoTree noTree = new WorldGenNoTree(false);
 	
-	public BiomeGenDeepSwamp(int biomeId, boolean register) {
+	public BiomeGenDeepSwamp() {
 		super(new BiomeProperties("DeepSwamp").setBaseHeight(-0.1f).setHeightVariation(0.2f).setRainfall(0.9f).setTemperature(0.9f).setWaterColor(14745518));
 
         this.setRegistryName(new ResourceLocation("advancedrocketry:DeepSwamp"));

@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class BiomeGenSpace extends Biome {
-	public BiomeGenSpace(int biomeId, boolean register) {
+	public BiomeGenSpace() {
 		super(new BiomeProperties("Space").setRainDisabled().setBaseHeight(-2f).setHeightVariation(0f).setTemperature(1f));
 		
         this.setRegistryName(new ResourceLocation("advancedrocketry:Space"));

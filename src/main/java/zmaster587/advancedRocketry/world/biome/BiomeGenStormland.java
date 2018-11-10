@@ -18,7 +18,7 @@ public class BiomeGenStormland extends Biome {
 
 	WorldGenAbstractTree charTree = new WorldGenCharredTree(false, 6);
 	
-	public BiomeGenStormland(int biomeId, boolean register) {
+	public BiomeGenStormland() {
 		super(new BiomeProperties("Stormland").setBaseHeight(1f).setHeightVariation(0.1f).setRainfall(0.9f).setTemperature(0.9f));
 		
         this.setRegistryName(new ResourceLocation("advancedrocketry:Stormland"));

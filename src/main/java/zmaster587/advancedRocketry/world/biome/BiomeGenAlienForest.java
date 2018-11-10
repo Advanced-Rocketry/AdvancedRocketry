@@ -16,7 +16,7 @@ public class BiomeGenAlienForest extends Biome {
 	public final static WorldGenAbstractTree alienTree = new WorldGenAlienTree(false);
 	private final static WorldGenNoTree noTree = new WorldGenNoTree(false);
 
-	public BiomeGenAlienForest(int biomeId, boolean register) {
+	public BiomeGenAlienForest() {
 		super(new BiomeProperties("Alien Forest").setWaterColor(0x8888FF));
 
         this.setRegistryName(new ResourceLocation("advancedrocketry:Alien Forest"));

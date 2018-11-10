@@ -214,16 +214,16 @@ public class AdvancedRocketry {
 	public void register(RegistryEvent.Register<Biome> evt)
 	{
 	    System.out.println("REGISTERING BIOMES");
-        AdvancedRocketryBiomes.moonBiome = new BiomeGenMoon(config.get(BIOMECATETORY, "moonBiomeId", 110).getInt(), true);
-        AdvancedRocketryBiomes.alienForest = new BiomeGenAlienForest(config.get(BIOMECATETORY, "alienForestBiomeId", 111).getInt(), true);
-        AdvancedRocketryBiomes.hotDryBiome = new BiomeGenHotDryRock(config.get(BIOMECATETORY, "hotDryBiome", 112).getInt(), true);
-        AdvancedRocketryBiomes.spaceBiome = new BiomeGenSpace(config.get(BIOMECATETORY, "spaceBiomeId", 113).getInt(), true);
-        AdvancedRocketryBiomes.stormLandsBiome = new BiomeGenStormland(config.get(BIOMECATETORY, "stormLandsBiomeId", 114).getInt(), true);
-        AdvancedRocketryBiomes.crystalChasms = new BiomeGenCrystal(config.get(BIOMECATETORY, "crystalChasmsBiomeId", 115).getInt(), true);
-        AdvancedRocketryBiomes.swampDeepBiome = new BiomeGenDeepSwamp(config.get(BIOMECATETORY, "deepSwampBiomeId", 116).getInt(), true);
-        AdvancedRocketryBiomes.marsh = new BiomeGenMarsh(config.get(BIOMECATETORY, "marsh", 117).getInt(), true);
-        AdvancedRocketryBiomes.oceanSpires = new BiomeGenOceanSpires(config.get(BIOMECATETORY, "oceanSpires", 118).getInt(), true);
-        AdvancedRocketryBiomes.moonBiomeDark = new BiomeGenMoonDark(config.get(BIOMECATETORY, "moonBiomeDarkId", 119).getInt(), true);
+        AdvancedRocketryBiomes.moonBiome = new BiomeGenMoon();
+        AdvancedRocketryBiomes.alienForest = new BiomeGenAlienForest();
+        AdvancedRocketryBiomes.hotDryBiome = new BiomeGenHotDryRock();
+        AdvancedRocketryBiomes.spaceBiome = new BiomeGenSpace();
+        AdvancedRocketryBiomes.stormLandsBiome = new BiomeGenStormland();
+        AdvancedRocketryBiomes.crystalChasms = new BiomeGenCrystal();
+        AdvancedRocketryBiomes.swampDeepBiome = new BiomeGenDeepSwamp();
+        AdvancedRocketryBiomes.marsh = new BiomeGenMarsh();
+        AdvancedRocketryBiomes.oceanSpires = new BiomeGenOceanSpires();
+        AdvancedRocketryBiomes.moonBiomeDark = new BiomeGenMoonDark();
 
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.moonBiome, evt.getRegistry());
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.alienForest, evt.getRegistry());

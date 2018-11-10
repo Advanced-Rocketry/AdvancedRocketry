@@ -18,7 +18,7 @@ public class BiomeGenCrystal extends Biome  {
 	WorldGenerator crystalGenerator;
 	MapGenBase crystalGenBase;
 	
-	public BiomeGenCrystal(int biomeId, boolean register) {
+	public BiomeGenCrystal() {
 		super(new BiomeProperties("CrystalChasms").setHeightVariation(0.1f).setBaseHeight(1f).setRainfall(0.2f).setTemperature(0.1f));
 
         this.setRegistryName(new ResourceLocation("advancedrocketry:CrystalChasms"));

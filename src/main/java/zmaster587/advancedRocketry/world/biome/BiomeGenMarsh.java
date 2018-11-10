@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class BiomeGenMarsh extends Biome {
 
-	public BiomeGenMarsh(int id, boolean b) {
+	public BiomeGenMarsh() {
 		super(new BiomeProperties("Marsh").setBaseHeight(-0.4f).setHeightVariation(0f));
 
         this.setRegistryName(new ResourceLocation("advancedrocketry:Marsh"));

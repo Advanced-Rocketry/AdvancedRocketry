@@ -10,7 +10,7 @@ import java.util.List;
 
 public class BiomeGenMoon extends Biome {
 
-	public BiomeGenMoon(int biomeId, boolean register) {
+	public BiomeGenMoon() {
 		super(new BiomeProperties("Moon").setRainDisabled().setBaseHeight(1f).setHeightVariation(0.2f).setRainfall(0).setTemperature(0.3f));
 
 		this.setRegistryName(new ResourceLocation("advancedrocketry:Moon"));
