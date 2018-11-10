@@ -46,7 +46,7 @@ public class PacketStellarInfo extends BasePacket {
 		starId = in.readInt();
 		removeStar = in.readBoolean();
 
-		if(!in.readBoolean()) {
+		if(!removeStar) {
 			try {
 				nbt = packetBuffer.readCompoundTag();
 			} catch (IOException e) {
