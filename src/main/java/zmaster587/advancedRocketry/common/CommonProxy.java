@@ -1,6 +1,9 @@
 package zmaster587.advancedRocketry.common;
 
+import java.util.Map.Entry;
+
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -9,8 +12,15 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
+import zmaster587.advancedRocketry.network.PacketAsteroidInfo;
+import zmaster587.advancedRocketry.network.PacketConfigSync;
+import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketLaserGun;
+import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
+import zmaster587.advancedRocketry.network.PacketStellarInfo;
+import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.libVulpes.network.PacketHandler;
 
 public class CommonProxy {
@@ -96,6 +106,35 @@ public class CommonProxy {
 	public void preInitItems() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void loginEvent(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
+		EntityPlayerMP playerMP = (EntityPlayerMP)event.player;
+		net.minecraft.network.NetworkManager manager = playerMP.connection.netManager;
+		
+		//Send config first
+		PacketHandler.sendToDispatcher(new PacketConfigSync(), manager);
+		
+		//Make sure stars are sent next
+		for(int i : zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getStarIds()) {
+			PacketHandler.sendToDispatcher(new PacketStellarInfo(i, zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getStar(i)), manager);
+		}
+
+		for(int i : zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getRegisteredDimensions()) {
+			PacketHandler.sendToDispatcher(new PacketDimInfo(i, zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(i)), manager);
+		}
+
+		for(ISpaceObject obj : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
+			PacketHandler.sendToDispatcher(new PacketSpaceStationInfo(obj.getId(), obj), manager);
+		}
+
+		PacketHandler.sendToDispatcher(new PacketDimInfo(0, zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(0)), manager);
+
+
+		for(Entry<String, AsteroidSmall> ent : zmaster587.advancedRocketry.api.Configuration.asteroidTypes.entrySet())
+		{
+			PacketHandler.sendToDispatcher(new PacketAsteroidInfo(ent.getValue()), manager);
+		}
 	}
 
 	public String getNameFromBiome(Biome biome) {

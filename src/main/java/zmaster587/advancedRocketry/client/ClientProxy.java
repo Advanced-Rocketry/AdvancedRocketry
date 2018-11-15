@@ -138,6 +138,10 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
+	public void loginEvent(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
+	}
+	
+	@Override
 	public void preInitBlocks()
 	{
 		//Register Block models

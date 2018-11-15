@@ -303,6 +303,12 @@ public class PlanetEventHandler {
 			PacketHandler.sendToDispatcher(new PacketAsteroidInfo(ent.getValue()), event.getManager());
 		}
 	}
+	
+	//Make sure the player receives data about the dimensions
+	@SubscribeEvent
+	public void playerLoggedInEvent(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
+		AdvancedRocketry.proxy.loginEvent(event);
+	}
 
 	/*@SubscribeEvent
 	public void connectToServer(ClientConnectedToServerEvent event) 
