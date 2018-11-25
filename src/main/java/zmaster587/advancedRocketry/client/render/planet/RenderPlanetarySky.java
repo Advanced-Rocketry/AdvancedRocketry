@@ -822,7 +822,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 	}
 
 	protected void drawStar(BufferBuilder buffer, StellarBody sun, DimensionProperties properties, int solarOrbitalDistance, float sunSize, Vec3d sunColor, float multiplier) {
-		if(sun.isBlackHole()) {
+		if(sun != null && sun.isBlackHole()) {
 			GlStateManager.depthMask(true);
 			GlStateManager.enableAlpha();
 			GlStateManager.alphaFunc(GL11.GL_GREATER, 0.01f);
