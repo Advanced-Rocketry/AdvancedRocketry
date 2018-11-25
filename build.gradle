@@ -133,32 +133,6 @@ processResources
      mustRunAfter "jar" 
 }*/
 
-curseforge{
-  if (project.hasProperty("thecursedkey")) {
-        apiKey = project.thecursedkey
-    }
-    else {
-    apiKey = ""
-    }
-  project {
-  //AdvancedRocketry
-    id = "236542"
-    relations {
-        requiredDependency 'libvulpes'
-    }
-    changelog = file('changelog.html')
-    changelogType = 'html'
-    releaseType = "alpha"
-    addGameVersion minecraft.version
-    mainArtifact(jar) {
-      displayName = "AdvancedRocketry ${project.version}-UNSTABLE build " + project.getBuildNumber() +  " for " + minecraft.version
-    }
-    addArtifact (deobfJar){
-    	 displayName = "AdvancedRocketry ${project.version}-UNSTABLE-deobf build " + project.getBuildNumber() + " for " + minecraft.version
-    }
-   }
-}
-
 task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     file = new File ("changelog.html")
     untaggedName = "Current release ${project.version}"
