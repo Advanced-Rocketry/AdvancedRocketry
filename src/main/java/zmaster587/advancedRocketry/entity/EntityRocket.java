@@ -1122,7 +1122,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		
 		if(this.dataManager.get(LAUNCH_COUNTER) > 0) {
 			this.dataManager.set(LAUNCH_COUNTER, -1);
-			PacketHandler.sendToServer(new PacketEntity(this, (byte)EntityRocket.PacketType.ABORTLAUNCH.ordinal()));
+			if(world.isRemote)
+				PacketHandler.sendToServer(new PacketEntity(this, (byte)EntityRocket.PacketType.ABORTLAUNCH.ordinal()));
 			return;
 		}
 		
