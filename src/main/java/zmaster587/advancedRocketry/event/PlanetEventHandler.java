@@ -542,7 +542,7 @@ public class PlanetEventHandler {
 			try {
 				DimensionManager.getInstance().saveDimensions(DimensionManager.workingPath);
 			} catch (Exception e) {
-				AdvancedRocketry.logger.fatal("!!!!!!!!!!!!!! An error has occured saving planet data, please report to the mod dev with the entire fml-latest.log file!  This report may contain information relevent to solving a longstanding bug.");
+				AdvancedRocketry.logger.fatal("An error has occured saving planet data, this can happen if another mod causes the game to crash during game load.  If the game has fully loaded, then this is a serious error, Advanced Rocketry data has not been saved.");
 				e.printStackTrace();
 			}
 	}
