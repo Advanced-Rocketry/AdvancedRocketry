@@ -221,9 +221,12 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 			sunColor = planetaryProvider.getSunColor(mc.player.getPosition());
 			primaryStar = properties.getStar();
-			sunSize = properties.getStar().getSize();
-			subStars = properties.getStar().getSubStars();
-			starSeperation = properties.getStar().getStarSeperation();
+			if (primaryStar != null)
+			{
+				sunSize = properties.getStar().getSize();
+				subStars = properties.getStar().getSubStars();
+				starSeperation = properties.getStar().getStarSeperation();
+			}
 			if(world.provider.getDimension() == Configuration.spaceDimId) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
 				if(isWarp) {
@@ -271,9 +274,12 @@ public class RenderPlanetarySky extends IRenderHandler {
 			float sunColorFloat[] = properties.getSunColor();
 			sunColor = new Vec3d(sunColorFloat[0], sunColorFloat[1], sunColorFloat[2]);//planetaryProvider.getSunColor(mc.player.getPosition());
 			primaryStar = properties.getStar();
-			sunSize = properties.getStar().getSize();
-			subStars = properties.getStar().getSubStars();
-			starSeperation = properties.getStar().getStarSeperation();
+			if (primaryStar != null)
+			{
+				sunSize = properties.getStar().getSize();
+				subStars = properties.getStar().getSubStars();
+				starSeperation = properties.getStar().getStarSeperation();
+			}
 			if(world.provider.getDimension() == Configuration.spaceDimId) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
 				if(isWarp) {
