@@ -24,9 +24,11 @@ public class PacketDimInfo extends BasePacket {
 	int dimNumber;
 	boolean deleteDim;
 	List<ItemStack> artifacts;
+	String customIcon;
 
 	public PacketDimInfo() {
 		artifacts = new LinkedList<ItemStack>();
+		customIcon = "";
 	}
 
 	public PacketDimInfo(int dimNumber,DimensionProperties dimProperties) {
@@ -81,16 +83,13 @@ public class PacketDimInfo extends BasePacket {
 	@Override
 	public void readClient(ByteBuf in) {
 		PacketBuffer packetBuffer = new PacketBuffer(in);
-		NBTTagCompound nbt;
 		dimNumber = in.readInt();
-		
-
 		deleteDim = in.readBoolean();
 		
 		if(!deleteDim) {
 			//TODO: error handling
 			try {
-				dimNBT = nbt = packetBuffer.readCompoundTag();
+				dimNBT  = packetBuffer.readCompoundTag();
 
 				int number = packetBuffer.readShort();
 				for(int i = 0; i < number; i++) {
@@ -102,13 +101,12 @@ public class PacketDimInfo extends BasePacket {
 				e.printStackTrace();
 				return;
 			}
-			dimProperties = new DimensionProperties(dimNumber);
-			dimProperties.readFromNBT(nbt);
+
 			
 			short strLen = packetBuffer.readShort();
 			if(strLen > 0)
 			{
-				dimProperties.customIcon = packetBuffer.readString(strLen);
+				customIcon = packetBuffer.readString(strLen);
 			}
 		}
 	}
@@ -125,8 +123,13 @@ public class PacketDimInfo extends BasePacket {
 				DimensionManager.getInstance().deleteDimension(dimNumber);
 			}
 		}
-		else if(dimProperties != null)
+		else
 		{
+			dimProperties = new DimensionProperties(dimNumber);
+			dimProperties.readFromNBT(dimNBT);
+			if(!customIcon.isEmpty())
+				dimProperties.customIcon = customIcon;
+			
 			if( DimensionManager.getInstance().isDimensionCreated(dimNumber) ) {
 				dimProperties.oreProperties = DimensionManager.getInstance().getDimensionProperties(dimNumber).oreProperties;
 				dimProperties.getRequiredArtifacts().clear();
