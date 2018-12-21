@@ -1238,6 +1238,10 @@ public class AdvancedRocketry {
         OreDictionary.registerOre("dustThermite", new ItemStack(AdvancedRocketryItems.itemThermite));
         OreDictionary.registerOre("turfMoon", new ItemStack(AdvancedRocketryBlocks.blockMoonTurf));
         OreDictionary.registerOre("turfMoon", new ItemStack(AdvancedRocketryBlocks.blockMoonTurfDark));
+        OreDictionary.registerOre("logWood", new ItemStack(AdvancedRocketryBlocks.blockAlienWood));
+        OreDictionary.registerOre("plankWood", new ItemStack(AdvancedRocketryBlocks.blockAlienPlanks));
+        OreDictionary.registerOre("treeLeaves", new ItemStack(AdvancedRocketryBlocks.blockAlienLeaves));
+        OreDictionary.registerOre("treeSapling", new ItemStack(AdvancedRocketryBlocks.blockAlienSapling));
         
         for(net.minecraft.item.crafting.IRecipe recipe: toRegister)
         {
