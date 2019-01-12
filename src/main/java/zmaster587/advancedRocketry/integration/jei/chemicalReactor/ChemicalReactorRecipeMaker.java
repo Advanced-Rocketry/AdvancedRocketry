@@ -18,25 +18,6 @@ public class ChemicalReactorRecipeMaker {
 			list.add(new ChemicalReactorlWrapper(rec));
 		}
 		
-		List<ItemStack> input = new LinkedList<ItemStack>();
-		input.add(new ItemStack(AdvancedRocketryItems.itemBucketHydrogen));
-		
-		
-		
-		List<List<ItemStack>> finalInput  = new LinkedList<List<ItemStack>>();
-		finalInput.add(input);
-		input = new LinkedList<ItemStack>();
-		input.add(new ItemStack(AdvancedRocketryItems.itemBucketOxygen));
-		finalInput.add(input);
-		
-		List<ItemStack> output = new LinkedList<ItemStack>();
-		output.add(new ItemStack(AdvancedRocketryItems.itemBucketRocketFuel));
-		
-		
-		IRecipe rocketFuel = new RecipesMachine.Recipe(output, finalInput, 0, 0, null);
-		
-		list.add(new ChemicalReactorlWrapper(rocketFuel));
-		
 		return list;
 	}
 	

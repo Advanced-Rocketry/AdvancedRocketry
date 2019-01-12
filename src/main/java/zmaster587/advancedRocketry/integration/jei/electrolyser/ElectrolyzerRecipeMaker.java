@@ -19,19 +19,6 @@ public class ElectrolyzerRecipeMaker {
 			list.add(new ElectrolyzerWrapper(rec));
 		}
 		
-		List<ItemStack> output = new LinkedList<ItemStack>();
-		output.add(new ItemStack(AdvancedRocketryItems.itemBucketHydrogen));
-		output.add(new ItemStack(AdvancedRocketryItems.itemBucketOxygen));
-		
-		List<ItemStack> input = new LinkedList<ItemStack>();
-		List<List<ItemStack>> finalInput  = new LinkedList<List<ItemStack>>();
-		input.add(new ItemStack(Items.WATER_BUCKET));
-		finalInput.add(input);
-		
-		IRecipe waterElectro = new RecipesMachine.Recipe(output, finalInput, 0, 0, null);
-		
-		list.add(new ElectrolyzerWrapper(waterElectro));
-		
 		return list;
 	}
 	
