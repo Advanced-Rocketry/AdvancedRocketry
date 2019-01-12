@@ -42,6 +42,8 @@ public class StatsRocket {
 
 	private static final String TAGNAME = "rocketStats";
 	private HashMap<String, Object> statTags;
+	
+	private static final int INVALID_SEAT = Integer.MIN_VALUE;
 
 	public StatsRocket() {
 		thrust = 0;
@@ -49,7 +51,7 @@ public class StatsRocket {
 		fuelLiquid = 0;
 		drillingPower = 0f;
 		pilotSeatPos = new HashedBlockPosition(0,0,0);
-		pilotSeatPos.x = -1;
+		pilotSeatPos.x = INVALID_SEAT;
 		engineLoc = new ArrayList<Vector3F<Float>>();
 		statTags = new HashMap<String, Object>();
 	}
@@ -312,7 +314,7 @@ public class StatsRocket {
 	 * @return true if a seat exists on this stat
 	 */
 	public boolean hasSeat() {
-		return pilotSeatPos.x != -1;
+		return pilotSeatPos.x != INVALID_SEAT;
 	}
 
 	/**
@@ -330,7 +332,7 @@ public class StatsRocket {
 		}
 
 		fuelLiquid = 0;
-		pilotSeatPos.x = -1;
+		pilotSeatPos.x = INVALID_SEAT;
 		clearEngineLocations();
 		passengerSeats.clear();
 		statTags.clear();
