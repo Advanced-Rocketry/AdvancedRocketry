@@ -1,8 +1,6 @@
 package zmaster587.advancedRocketry.integration.jei.chemicalReactor;
 
 import mezz.jei.api.IJeiHelpers;
-import net.minecraft.item.ItemStack;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 

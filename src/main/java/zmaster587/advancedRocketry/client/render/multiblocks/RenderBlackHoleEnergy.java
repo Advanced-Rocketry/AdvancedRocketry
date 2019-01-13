@@ -47,7 +47,7 @@ public class RenderBlackHoleEnergy extends TileEntitySpecialRenderer {
 		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
 		GL11.glTranslated(x + .5, y + .5, z + .5);
 
-		GL11.glRotatef((front.getFrontOffsetZ() == 1 ? 180 : 0) + front.getFrontOffsetX()*90f, 0, 1, 0);
+		GL11.glRotatef((front.getFrontOffsetZ() == 1 ? 180 : 0) - front.getFrontOffsetX()*90f, 0, 1, 0);
 		
 		bindTexture(texture);
 		

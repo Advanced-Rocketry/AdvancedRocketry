@@ -1,9 +1,6 @@
 package zmaster587.advancedRocketry.integration.jei.electrolyser;
 
 import mezz.jei.api.IJeiHelpers;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 
