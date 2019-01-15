@@ -912,6 +912,9 @@ public class RenderPlanetarySky extends IRenderHandler {
 				GL11.glPopMatrix();
 			}
 
+			GlStateManager.depthMask(true);
+			GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+			GlStateManager.depthMask(false);
 
 		}
 		else {
