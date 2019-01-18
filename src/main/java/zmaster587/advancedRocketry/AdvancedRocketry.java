@@ -21,6 +21,7 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
@@ -959,8 +960,8 @@ public class AdvancedRocketry {
 		proxy.preInitBlocks();
 	}
 	
-    @EventHandler
-    public void registerRecipes(FMLInitializationEvent evt)
+    @SubscribeEvent
+    public void registerRecipes(RegistryEvent<IRecipe> evt)
     {
         List<net.minecraft.item.crafting.IRecipe> toRegister = Lists.newArrayList();
         ItemStack userInterface = new ItemStack(AdvancedRocketryItems.itemMisc, 1,0);
@@ -1228,20 +1229,6 @@ public class AdvancedRocketry {
             setRegistryName(new ResourceLocation("advancedrocketry", "controlCircuitBoard")));
         toRegister.add(new ShapedOreRecipe(null, liquidIOBoard, "rvr", "dwd", "dpd", 'r', "dustRedstone", 'v', "gemDiamond", 'd', new ItemStack(Items.DYE, 1, 4), 'w', "slabWood", 'p', "plateIron").
             setRegistryName(new ResourceLocation("advancedrocketry", "liquidIOBoard")));
-
-        //OreDict stuff
-        OreDictionary.registerOre("waferSilicon", new ItemStack(AdvancedRocketryItems.itemWafer,1,0));
-        OreDictionary.registerOre("ingotCarbon", new ItemStack(AdvancedRocketryItems.itemMisc, 1, 1));
-        OreDictionary.registerOre("concrete", new ItemStack(AdvancedRocketryBlocks.blockConcrete));
-        OreDictionary.registerOre("itemLens", AdvancedRocketryItems.itemLens);
-        OreDictionary.registerOre("itemSilicon", MaterialRegistry.getItemStackFromMaterialAndType("Silicon", AllowedProducts.getProductByName("INGOT")));
-        OreDictionary.registerOre("dustThermite", new ItemStack(AdvancedRocketryItems.itemThermite));
-        OreDictionary.registerOre("turfMoon", new ItemStack(AdvancedRocketryBlocks.blockMoonTurf));
-        OreDictionary.registerOre("turfMoon", new ItemStack(AdvancedRocketryBlocks.blockMoonTurfDark));
-        OreDictionary.registerOre("logWood", new ItemStack(AdvancedRocketryBlocks.blockAlienWood));
-        OreDictionary.registerOre("plankWood", new ItemStack(AdvancedRocketryBlocks.blockAlienPlanks));
-        OreDictionary.registerOre("treeLeaves", new ItemStack(AdvancedRocketryBlocks.blockAlienLeaves));
-        OreDictionary.registerOre("treeSapling", new ItemStack(AdvancedRocketryBlocks.blockAlienSapling));
         
         for(net.minecraft.item.crafting.IRecipe recipe: toRegister)
         {
@@ -1269,6 +1256,20 @@ public class AdvancedRocketry {
 		//TODO: move to proxy
 		//Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor) AdvancedRocketryBlocks.blockFuelFluid, new Block[] {AdvancedRocketryBlocks.blockFuelFluid});
 
+        //OreDict stuff
+        OreDictionary.registerOre("waferSilicon", new ItemStack(AdvancedRocketryItems.itemWafer,1,0));
+        OreDictionary.registerOre("ingotCarbon", new ItemStack(AdvancedRocketryItems.itemMisc, 1, 1));
+        OreDictionary.registerOre("concrete", new ItemStack(AdvancedRocketryBlocks.blockConcrete));
+        OreDictionary.registerOre("itemLens", AdvancedRocketryItems.itemLens);
+        OreDictionary.registerOre("itemSilicon", MaterialRegistry.getItemStackFromMaterialAndType("Silicon", AllowedProducts.getProductByName("INGOT")));
+        OreDictionary.registerOre("dustThermite", new ItemStack(AdvancedRocketryItems.itemThermite));
+        OreDictionary.registerOre("turfMoon", new ItemStack(AdvancedRocketryBlocks.blockMoonTurf));
+        OreDictionary.registerOre("turfMoon", new ItemStack(AdvancedRocketryBlocks.blockMoonTurfDark));
+        OreDictionary.registerOre("logWood", new ItemStack(AdvancedRocketryBlocks.blockAlienWood));
+        OreDictionary.registerOre("plankWood", new ItemStack(AdvancedRocketryBlocks.blockAlienPlanks));
+        OreDictionary.registerOre("treeLeaves", new ItemStack(AdvancedRocketryBlocks.blockAlienLeaves));
+        OreDictionary.registerOre("treeSapling", new ItemStack(AdvancedRocketryBlocks.blockAlienSapling));
+        
 		ARAchivements.register();
 		proxy.init();
 

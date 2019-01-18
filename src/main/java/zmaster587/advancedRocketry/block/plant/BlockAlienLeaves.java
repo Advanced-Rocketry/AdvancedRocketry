@@ -11,6 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -106,9 +107,9 @@ public class BlockAlienLeaves extends BlockLeaves {
     }
 
 	@Override
-	public List<ItemStack> onSheared(ItemStack item, IBlockAccess world,
+	public NonNullList<ItemStack> onSheared(ItemStack item, IBlockAccess world,
 			BlockPos pos, int fortune) {
-		return null;
+		return NonNullList.withSize(1, new ItemStack(this, 1, 0));
 	}
 
 	@Override
