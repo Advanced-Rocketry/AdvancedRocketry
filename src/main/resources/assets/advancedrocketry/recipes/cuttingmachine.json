@@ -1,0 +1,50 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"aba",
+	"cde",
+	"opo"
+    ],
+    "key":
+    {
+        "a":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "gearSteel"
+        },
+        "b":
+        {
+            "item": "advancedrocketry:misc",
+            "data": 0
+        },
+	"c":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 4
+        },
+	"d":
+        {
+            "item": "libvulpes:structuremachine"
+        },
+	"e":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 3
+        },
+	"o":
+        {
+            "item": "minecraft:obsidian"
+        },
+	"p":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "plateSteel"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:cuttingmachine",
+        "count": 1
+    }
+}

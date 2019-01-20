@@ -1,0 +1,46 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	" t ",
+	"abc",
+	"ded"
+    ],
+    "key":
+    {
+	"t":
+        {
+	    "item": "advancedrocketry:ic",
+	    "data": 1
+        },
+	"a":
+        {
+	    "item": "advancedrocketry:ic",
+	    "data": 3
+        },
+	"b":
+        {
+	    "item": "libvulpes:structuremachine"
+        },
+	"c":
+        {
+	    "item": "advancedrocketry:ic",
+	    "data": 4
+        },
+	"d":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "fanSteel"
+        },
+	"e":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "coilCopper"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:railgun",
+        "count": 1
+    }
+}

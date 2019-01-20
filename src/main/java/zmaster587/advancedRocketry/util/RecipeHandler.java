@@ -14,6 +14,7 @@ import zmaster587.advancedRocketry.tile.multiblock.machine.*;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
+import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
@@ -26,7 +27,11 @@ public class RecipeHandler {
 	
 	public void registerMachine(Class<? extends TileMultiblockMachine> clazz) {
 		if(!machineList.contains(clazz))
+		{
 			machineList.add(clazz);
+			RecipesMachine.getInstance().recipeList.put(clazz, new LinkedList<IRecipe>());
+		}
+		
 	}
 
 	public void clearAllMachineRecipes() {

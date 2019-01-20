@@ -1,0 +1,41 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	" c ",
+	"dbt",
+	"scs"
+    ],
+    "key":
+    {
+	"d":
+        {
+	    "item": "advancedrocketry:ic",
+	    "data": 3
+        },
+	"t":
+        {
+	    "item": "advancedrocketry:ic",
+	    "data": 1
+        },
+	"b":
+        {
+	    "item": "libvulpes:structuremachine"
+        },
+	"c":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "coilCopper"
+        },
+	"s":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "sheetIron"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:beacon",
+        "count": 1
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"sss",
+	"rcr",
+	"sss"
+    ],
+    "key":
+    {
+        "c":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 3
+        },
+        "s":
+	{
+            "type": "forge:ore_dict",
+            "ore": "sheetAluminum"
+        },
+        "r":
+        {
+            "type": "forge:ore_dict",
+            "ore": "stickTitanium"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:satellite",
+        "count": 1
+    }
+}

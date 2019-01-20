@@ -1,0 +1,24 @@
+{
+    "type": "advancedrocketry:prescisionassembler",
+    "itemingredients":
+    [
+        {
+	    "type": "forge:ore_dict",
+            "ore": "ingotGold"
+        },
+        {
+	    "item": "minecraft:redstone_block"
+        },
+	{
+	    "item": "advancedrocketry:wafer",
+	    "data": 0
+        }
+    ],
+    "time": 900,
+    "energy": 100,
+    "itemresults":
+    {
+	"item": "advancedrocketry:itemcircuitplate",
+	"data": 1
+    }
+}

@@ -562,6 +562,16 @@ public class AdvancedRocketry {
 
 		//Register item/block crap
 		proxy.preinit();
+		
+        //Register machines
+        machineRecipes.registerMachine(TileElectrolyser.class);
+        machineRecipes.registerMachine(TileCuttingMachine.class);
+        machineRecipes.registerMachine(TileLathe.class);
+        machineRecipes.registerMachine(TilePrecisionAssembler.class);
+        machineRecipes.registerMachine(TileElectricArcFurnace.class);
+        machineRecipes.registerMachine(TileChemicalReactor.class);
+        machineRecipes.registerMachine(TileRollingMachine.class);
+        machineRecipes.registerMachine(TileCrystallizer.class);
 	}
 	
 	@SubscribeEvent(priority=EventPriority.HIGH)
@@ -869,7 +879,7 @@ public class AdvancedRocketry {
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockHotTurf.setRegistryName("hotTurf"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockLoader.setRegistryName("loader"), ItemBlockMeta.class, false);
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockPrecisionAssembler.setRegistryName("precisionassemblingmachine"));
-		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockBlastBrick.setRegistryName("blastBrick"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockBlastBrick.setRegistryName("blastbrick"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockQuartzCrucible.setRegistryName("quartzcrucible"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockCrystallizer.setRegistryName("crystallizer"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockCuttingMachine.setRegistryName("cuttingMachine"));
@@ -883,11 +893,11 @@ public class AdvancedRocketry {
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockSatelliteControlCenter.setRegistryName("satelliteControlCenter"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockPlanetAnalyser.setRegistryName("planetAnalyser"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockGuidanceComputer.setRegistryName("guidanceComputer"));
-		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockArcFurnace.setRegistryName("arcFurnace"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockArcFurnace.setRegistryName("arcfurnace"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockSawBlade.setRegistryName("sawBlade"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockLathe.setRegistryName("lathe"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockRollingMachine.setRegistryName("rollingMachine"));
-		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockPlatePress.setRegistryName("platePress"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockPlatePress.setRegistryName("platepress"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockStationBuilder.setRegistryName("stationBuilder"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockElectrolyser.setRegistryName("electrolyser"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockChemicalReactor.setRegistryName("chemicalReactor"));
@@ -963,287 +973,7 @@ public class AdvancedRocketry {
     @SubscribeEvent
     public void registerRecipes(RegistryEvent<IRecipe> evt)
     {
-        List<net.minecraft.item.crafting.IRecipe> toRegister = Lists.newArrayList();
-        ItemStack userInterface = new ItemStack(AdvancedRocketryItems.itemMisc, 1,0);
-        ItemStack basicCircuit = new ItemStack(AdvancedRocketryItems.itemIC, 1,0);
-        ItemStack advancedCircuit = new ItemStack(AdvancedRocketryItems.itemIC, 1,2);
-        ItemStack controlCircuitBoard =  new ItemStack(AdvancedRocketryItems.itemIC,1,3);
-        ItemStack itemIOBoard = new ItemStack(AdvancedRocketryItems.itemIC,1,4);
-        ItemStack liquidIOBoard = new ItemStack(AdvancedRocketryItems.itemIC,1,5);
-        ItemStack trackingCircuit = new ItemStack(AdvancedRocketryItems.itemIC,1,1);
-        ItemStack opticalSensor = new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0);
-        ItemStack massDetector = new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 2);
-        ItemStack biomeChanger = new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 5);
-        ItemStack smallSolarPanel =  new ItemStack(AdvancedRocketryItems.itemSatellitePowerSource,1,0); 
-        ItemStack largeSolarPanel = new ItemStack(AdvancedRocketryItems.itemSatellitePowerSource,1,1);
-        ItemStack smallBattery = new ItemStack(LibVulpesItems.itemBattery,1,0);
-        ItemStack battery2x = new ItemStack(LibVulpesItems.itemBattery,1,1);
-        ItemStack superHighPressureTime = new ItemStack(AdvancedRocketryItems.itemPressureTank,1,3);
-        ItemStack charcoal = new ItemStack(Items.COAL,1,1);
-        //TODO recipes.
-
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(LibVulpesItems.itemLinker), "x","y","z", 'x', Items.REDSTONE, 'y', Items.GOLD_INGOT, 'z', Items.IRON_INGOT).
-                setRegistryName(new ResourceLocation("libvulpes", "itemlinker")));
-
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(LibVulpesBlocks.blockHatch,1,0), new ItemStack(LibVulpesBlocks.blockHatch,1,1)).
-              setRegistryName(new ResourceLocation("libvulpes", "blockhatchdir01")));
-
-
-
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockBlastBrick,16), new ItemStack(Items.MAGMA_CREAM,1), new ItemStack(Items.MAGMA_CREAM,1), Blocks.BRICK_BLOCK, Blocks.BRICK_BLOCK, Blocks.BRICK_BLOCK, Blocks.BRICK_BLOCK).
-              setRegistryName(new ResourceLocation("advancedrocketry", "blockBlastBrick")));
-        toRegister.add(new ShapedOreRecipe(null,new ItemStack(AdvancedRocketryBlocks.blockArcFurnace), "aga","ice", "aba", 'a', Items.NETHERBRICK, 'g', userInterface, 'i', itemIOBoard, 'e',controlCircuitBoard, 'c', AdvancedRocketryBlocks.blockBlastBrick, 'b', "ingotCopper").
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockArcFurnace")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryItems.itemQuartzCrucible), " a ", "aba", " a ", Character.valueOf('a'), Items.QUARTZ, Character.valueOf('b'), Items.CAULDRON).
-                setRegistryName(new ResourceLocation("advancedrocketry", "itemQuartzCrucible")));
-        toRegister.add(new ShapedOreRecipe(null, MaterialRegistry.getItemStackFromMaterialAndType("Iron", AllowedProducts.getProductByName("STICK"), 4), "x  ", " x ", "  x", 'x', "ingotIron").
-                setRegistryName(new ResourceLocation("advancedrocketry", "ironstick")));
-        toRegister.add(new ShapedOreRecipe(null, AdvancedRocketryBlocks.blockPlatePress, "   ", " a ", "iii", 'a', Blocks.PISTON, 'i', "ingotIron").
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockPlatePress")));
         GameRegistry.addSmelting(MaterialRegistry.getMaterialFromName("Dilithium").getProduct(AllowedProducts.getProductByName("ORE")), MaterialRegistry.getMaterialFromName("Dilithium").getProduct(AllowedProducts.getProductByName("DUST")), 0);
-//
-//      //Supporting Materials
-        toRegister.add(new ShapedOreRecipe(null, userInterface, "lrl", "fgf", 'l', "dyeLime", 'r', "dustRedstone", 'g', Blocks.GLASS_PANE, 'f', Items.GLOWSTONE_DUST).
-                setRegistryName(new ResourceLocation("advancedrocketry", "userInterface")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockGenericSeat), "xxx", 'x', Blocks.WOOL).
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockGenericSeat")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockConcrete, 16), Blocks.SAND, Blocks.GRAVEL, Items.WATER_BUCKET).
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockConcrete")));
-        toRegister.add(new ShapelessOreRecipe(null, AdvancedRocketryBlocks.blockLaunchpad, "concrete", "dyeBlack", "dyeYellow").
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockLaunchpad")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockStructureTower, 8), "ooo", " o ", "ooo", 'o', "stickSteel").
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockStructureTower")));
-        toRegister.add(new ShapedOreRecipe(null, AdvancedRocketryBlocks.blockEngine, "sss", " t ","t t", 's', "ingotSteel", 't', "plateTitanium").
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockEngine")));
-        toRegister.add(new ShapedOreRecipe(null, AdvancedRocketryBlocks.blockAdvEngine, "sss", " t ","t t", 's', "ingotTitaniumAluminide", 't', "plateTitaniumIridium").
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockAdvEngine")));
-        toRegister.add(new ShapedOreRecipe(null, AdvancedRocketryBlocks.blockFuelTank, "s s", "p p", "s s", 'p', "plateSteel", 's', "stickSteel").
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockFuelTank")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(LibVulpesItems.itemBattery,4,0), " c ","prp", "prp", 'c', "stickIron", 'r', "dustRedstone", 'p', "plateTin").
-                setRegistryName(new ResourceLocation("advancedrocketry", "itemBattery40")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(LibVulpesItems.itemBattery,1,1), "bpb", "bpb", 'b', smallBattery, 'p', "plateCopper").
-                setRegistryName(new ResourceLocation("advancedrocketry", "itemBattery11")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), "ppp", " g ", " l ", 'p', Blocks.GLASS_PANE, 'g', Items.GLOWSTONE_DUST, 'l', "plateGold").
-                setRegistryName(new ResourceLocation("advancedrocketry", "itemSatellitePrimaryFunction")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockObservatory), "gug", " b ", "rrr", 'g', "paneGlass", 'u', userInterface, 'b', LibVulpesBlocks.blockStructureBlock, 'r', "stickIron").
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockObservatory")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(AdvancedRocketryItems.itemThermite, 3), "dustAluminum", "dustIron","dustIron").
-                setRegistryName(new ResourceLocation("advancedrocketry", "itemThermite")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockThermiteTorch, 4), new ItemStack(Items.STICK), "dustThermite").
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockThermiteTorch")));
-        
-//
-//      //Hatches
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockLoader,1,0), "m", "c"," ", 'c', AdvancedRocketryItems.itemDataUnit, 'm', LibVulpesBlocks.blockStructureBlock).
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockLoader10")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockLoader,1,1), " x ", "xmx"," x ", 'x', "stickTitanium", 'm', LibVulpesBlocks.blockStructureBlock).
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockLoader11")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockLoader,1,2), new ItemStack(LibVulpesBlocks.blockHatch,1,1), trackingCircuit).
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockLoader12")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockLoader,1,3), new ItemStack(LibVulpesBlocks.blockHatch,1,0), trackingCircuit).
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockLoader13")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockLoader,1,4), new ItemStack(LibVulpesBlocks.blockHatch,1,3), trackingCircuit).
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockLoader14")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockLoader,1,5), new ItemStack(LibVulpesBlocks.blockHatch,1,2), trackingCircuit).
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockLoader15")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockLoader,1,6), " z ", "xmx"," z ", 'z' , controlCircuitBoard, 'x', "stickCopper", 'm', LibVulpesBlocks.blockStructureBlock).
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockLoader16")));
-//      
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryItems.itemSatellitePowerSource,1,0), "rrr", "ggg","ppp", 'r', "dustRedstone", 'g', Items.GLOWSTONE_DUST, 'p', "plateGold").
-                setRegistryName(new ResourceLocation("advancedrocketry", "itemSatellitePowerSource")));
-//
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(LibVulpesItems.itemHoloProjector), "oro", "rpr", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'r', "dustRedstone", 'p', "plateIron").
-                setRegistryName(new ResourceLocation("advancedrocketry", "itemHoloProjector")));
-        toRegister.add(new ShapedOreRecipe(null, massDetector, "odo", "pcp", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'p', new ItemStack(AdvancedRocketryItems.itemWafer,1,0), 'c', basicCircuit, 'd', "crystalDilithium").
-                setRegistryName(new ResourceLocation("advancedrocketry", "massDetector")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 1), "odo", "pcp", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'p', new ItemStack(AdvancedRocketryItems.itemWafer,1,0), 'c', basicCircuit, 'd', trackingCircuit).
-                setRegistryName(new ResourceLocation("advancedrocketry", "itemSatellitePrimaryFunction11")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 3), "odo", "pcp", 'o', new ItemStack(AdvancedRocketryItems.itemLens, 1, 0), 'p', new ItemStack(AdvancedRocketryItems.itemWafer,1,0), 'c', basicCircuit, 'd', trackingCircuit).
-                setRegistryName(new ResourceLocation("advancedrocketry", "itemSatellitePrimaryFunction13")));
-//
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryItems.itemSawBlade,1,0), " x ","xox", " x ", 'x', "plateIron", 'o', "stickIron").
-                setRegistryName(new ResourceLocation("advancedrocketry", "itemSawBlade")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockSawBlade,1,0), "r r","xox", "x x", 'r', "stickIron", 'x', "plateIron", 'o', new ItemStack(AdvancedRocketryItems.itemSawBlade,1,0)).
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockSawBlade")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(AdvancedRocketryItems.itemSpaceStationChip), LibVulpesItems.itemLinker , basicCircuit).
-                setRegistryName(new ResourceLocation("advancedrocketry", "itemSpaceStationChip")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryItems.itemCarbonScrubberCartridge), "xix", "xix", "xix", 'x', "sheetIron", 'i', Blocks.IRON_BARS).
-                setRegistryName(new ResourceLocation("advancedrocketry", "itemCarbonScrubberCartridge")));
-//
-//      //O2 Support
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockOxygenVent), "bfb", "bmb", "btb", 'b', Blocks.IRON_BARS, 'f', "fanSteel", 'm', LibVulpesBlocks.blockMotor, 't', AdvancedRocketryBlocks.blockFuelTank).
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockOxygenVent")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockOxygenScrubber), "bfb", "bmb", "btb", 'b', Blocks.IRON_BARS, 'f', "fanSteel", 'm', LibVulpesBlocks.blockMotor, 't', "ingotCarbon").
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockOxygenScrubber")));
-//
-//      //Knicknacks
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockForceFieldProjector), " c ", "pdp","psp", 'c', "coilCopper", 'p', "plateAluminum", 'd', "crystalDilithium", 's', LibVulpesBlocks.blockStructureBlock).
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockForceFieldProjector")));
-        toRegister.add(new ShapedOreRecipe(null, AdvancedRocketryBlocks.blockPipeSealer, " c ", "csc", " c ", 'c', Items.CLAY_BALL, 's', "stickIron").
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockPipeSealer")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockAlienPlanks, 4), AdvancedRocketryBlocks.blockAlienWood).
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockAlienPlanks")));
-//      
-//      if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockGravityMachine), "sds", "sws", 's', "sheetTitanium", 'd', massDetector, 'w', AdvancedRocketryBlocks.blockWarpCore).
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockGravityMachine")));
-//
-//      //MACHINES
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockPrecisionAssembler), "abc", "def", "ghi", 'a', Items.REPEATER, 'b', userInterface, 'c', "gemDiamond", 'd', itemIOBoard, 'e', LibVulpesBlocks.blockStructureBlock, 'f', controlCircuitBoard, 'g', Blocks.FURNACE, 'h', "gearSteel", 'i', Blocks.DROPPER).
-        setRegistryName(new ResourceLocation("advancedrocketry", "blockPrecisionAssembler")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockCrystallizer), "ada", "ecf","bgb", 'a', Items.QUARTZ, 'b', Items.REPEATER, 'c', LibVulpesBlocks.blockStructureBlock, 'd', userInterface, 'e', itemIOBoard, 'f', controlCircuitBoard, 'g', "plateSteel").
-        setRegistryName(new ResourceLocation("advancedrocketry", "blockCrystallizer")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockCuttingMachine), "aba", "cde", "opo", 'a', "gearSteel", 'b', userInterface, 'c', itemIOBoard, 'e', controlCircuitBoard, 'p', "plateSteel", 'o', Blocks.OBSIDIAN, 'd', LibVulpesBlocks.blockStructureBlock).
-        setRegistryName(new ResourceLocation("advancedrocketry", "blockCuttingMachine")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockLathe), "rsr", "abc", "pgp", 'r', "stickIron",'a', itemIOBoard, 'c', controlCircuitBoard, 'g', "gearSteel", 'p', "plateSteel", 'b', LibVulpesBlocks.blockStructureBlock, 's', userInterface).
-        setRegistryName(new ResourceLocation("advancedrocketry", "blockLathe")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockRollingMachine), "psp", "abc", "iti", 'a', itemIOBoard, 'c', controlCircuitBoard, 'p', "gearSteel", 's', userInterface, 'b', LibVulpesBlocks.blockStructureBlock, 'i', "blockIron",'t', liquidIOBoard).
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockRollingMachine")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockMonitoringStation), "coc", "cbc", "cpc", 'c', "stickCopper", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'b', LibVulpesBlocks.blockStructureBlock, 'p', LibVulpesItems.itemBattery).
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockMonitoringStation")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockFuelingStation), "bgb", "lbf", "ppp", 'p', "plateTin", 'f', "fanSteel", 'l', liquidIOBoard, 'g', userInterface, 'b', LibVulpesBlocks.blockStructureBlock).
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockFuelingStation")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockSatelliteControlCenter), "oso", "cbc", "rtr", 'o', new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 's', userInterface, 'c', "stickCopper", 'b', LibVulpesBlocks.blockStructureBlock, 'r', Items.REPEATER, 't', LibVulpesItems.itemBattery).
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockSatelliteControlCenter")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockSatelliteBuilder), "dht", "cbc", "mas", 'd', AdvancedRocketryItems.itemDataUnit, 'h', Blocks.HOPPER, 'c', basicCircuit, 'b', LibVulpesBlocks.blockStructureBlock, 'm', LibVulpesBlocks.blockMotor, 'a', Blocks.ANVIL, 's', AdvancedRocketryBlocks.blockSawBlade, 't', "plateTitanium").
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockSatelliteBuilder")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockPlanetAnalyser), "tst", "pbp", "cpc", 't', trackingCircuit, 's', userInterface, 'b', LibVulpesBlocks.blockStructureBlock, 'p', "plateTin", 'c', AdvancedRocketryItems.itemPlanetIdChip).
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockPlanetAnalyser")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockGuidanceComputer), "ctc", "rbr", "crc", 'c', trackingCircuit, 't', "plateTitanium", 'r', "dustRedstone", 'b', LibVulpesBlocks.blockStructureBlock).
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockGuidanceComputer")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockPlanetSelector), "cpc", "lbl", "coc", 'c', trackingCircuit, 'o',new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 0), 'l', Blocks.LEVER, 'b', AdvancedRocketryBlocks.blockGuidanceComputer, 'p', Blocks.STONE_BUTTON).
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockPlanetSelector")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockRocketBuilder), "sgs", "cbc", "tdt", 's', "stickTitanium", 'g', userInterface, 'c', controlCircuitBoard, 'b', LibVulpesBlocks.blockStructureBlock, 't', "gearTitanium", 'd', AdvancedRocketryBlocks.blockConcrete).
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockRocketBuilder")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockStationBuilder), "gdg", "dsd", "ada", 'g', "gearTitanium", 'a', advancedCircuit, 'd', "dustDilithium", 's', new ItemStack(AdvancedRocketryBlocks.blockRocketBuilder)).
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockStationBuilder")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockElectrolyser), "pip", "abc", "ded", 'd', basicCircuit, 'p', "plateSteel", 'i', userInterface, 'a', liquidIOBoard, 'c', controlCircuitBoard, 'b', LibVulpesBlocks.blockStructureBlock, 'e', Blocks.REDSTONE_TORCH).
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockElectrolyser")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockOxygenCharger), "fif", "tbt", "pcp", 'p', "plateSteel", 'f', "fanSteel", 'c', Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE, 'i', AdvancedRocketryItems.itemMisc, 'b', LibVulpesBlocks.blockStructureBlock, 't', AdvancedRocketryBlocks.blockFuelTank).
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockOxygenCharger")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockChemicalReactor), "pip", "abd", "rcr", 'a', itemIOBoard, 'd', controlCircuitBoard, 'r', basicCircuit, 'p', "plateGold", 'i', userInterface, 'c', liquidIOBoard, 'b', LibVulpesBlocks.blockStructureBlock).
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockChemicalReactor")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockWarpCore), "gcg", "pbp", "gcg", 'p', "plateSteel", 'c', advancedCircuit, 'b', "coilCopper", 'g', "plateTitanium").
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockWarpCore")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockOxygenDetection), "pip", "gbf", "pcp", 'p', "plateSteel",'f', "fanSteel", 'i', userInterface, 'c', basicCircuit, 'b', LibVulpesBlocks.blockStructureBlock, 'g', Blocks.IRON_BARS).
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockOxygenDetection")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockWarpShipMonitor), "pip", "obo", "pcp", 'o', controlCircuitBoard, 'p', "plateSteel", 'i', userInterface, 'c', advancedCircuit, 'b', LibVulpesBlocks.blockStructureBlock).
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockWarpShipMonitor")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockBiomeScanner), "plp", "bsb","ppp", 'p', "plateTin", 'l', biomeChanger, 'b', smallBattery, 's', LibVulpesBlocks.blockStructureBlock).
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockBiomeScanner")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockDeployableRocketBuilder), "gdg", "dad", "rdr", 'g', "gearTitaniumAluminide", 'd', "dustDilithium", 'r', "stickTitaniumAluminide", 'a', AdvancedRocketryBlocks.blockRocketBuilder).
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockDeployableRocketBuilder")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockPressureTank), "tgt","tgt","tgt", 't', superHighPressureTime, 'g', Blocks.GLASS_PANE).
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockPressureTank")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockIntake), "rhr", "hbh", "rhr", 'r', "stickTitanium", 'h', Blocks.HOPPER, 'b', LibVulpesBlocks.blockStructureBlock).
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockIntake")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockRailgun), " t ", "abc", "ded", 't', trackingCircuit, 'a', controlCircuitBoard, 'b', LibVulpesBlocks.blockAdvStructureBlock, 'c', itemIOBoard, 'd', "fanSteel", 'e', "coilCopper").
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockRailgun")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockSpaceElevatorController), " d ", "aba", "ccc", 'd', controlCircuitBoard, 'a', advancedCircuit, 'b', LibVulpesBlocks.blockAdvStructureBlock, 'c', "coilAluminum").
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockSpaceElevatorController")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockBeacon), " c ", "dbt", "scs", 'c', "coilCopper", 'd', controlCircuitBoard, 't', trackingCircuit, 'b', LibVulpesBlocks.blockStructureBlock, 's', "sheetIron" ).
-          setRegistryName(new ResourceLocation("advancedrocketry", "blockBeacon")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockBlackHoleGenerator), "bgb", "pcp", "msm", 'c', LibVulpesBlocks.blockAdvStructureBlock, 'b', battery2x, 'g', AdvancedRocketryBlocks.blockStructureTower, 'p', "plateTitaniumAluminide", 'm', "blockMotor", 's', userInterface ).
-                setRegistryName(new ResourceLocation("advancedrocketry", "blockBlackHoleGenerator")));
-//      //Armor recipes
-        toRegister.add(new ShapedOreRecipe(null, AdvancedRocketryItems.itemSpaceSuit_Boots, " r ", "w w", "p p", 'r', "stickIron", 'w', Blocks.WOOL, 'p', "plateIron").
-            setRegistryName(new ResourceLocation("advancedrocketry", "itemSpaceSuit_Boots")));
-        toRegister.add(new ShapedOreRecipe(null, AdvancedRocketryItems.itemSpaceSuit_Leggings, "wrw", "w w", "w w", 'w', Blocks.WOOL, 'r', "stickIron").
-            setRegistryName(new ResourceLocation("advancedrocketry", "itemSpaceSuit_Leggings")));
-        toRegister.add(new ShapedOreRecipe(null, AdvancedRocketryItems.itemSpaceSuit_Chest, "wrw", "wtw", "wfw", 'w', Blocks.WOOL, 'r', "stickIron", 't', AdvancedRocketryBlocks.blockFuelTank, 'f', "fanSteel").
-            setRegistryName(new ResourceLocation("advancedrocketry", "itemSpaceSuit_Chest")));
-        toRegister.add(new ShapedOreRecipe(null, AdvancedRocketryItems.itemSpaceSuit_Helmet, "prp", "rgr", "www", 'w', Blocks.WOOL, 'r', "stickIron", 'p', "plateIron", 'g', Blocks.GLASS_PANE).
-            setRegistryName(new ResourceLocation("advancedrocketry", "itemSpaceSuit_Helmet")));
-        toRegister.add(new ShapedOreRecipe(null, AdvancedRocketryItems.itemJetpack, "cpc", "lsl", "f f", 'c', AdvancedRocketryItems.itemPressureTank, 'f', Items.FIRE_CHARGE, 's', Items.STRING, 'l', Blocks.LEVER, 'p', "plateSteel").
-            setRegistryName(new ResourceLocation("advancedrocketry", "itemJetpack")));
-      //
-    //            //Tool Recipes
-        toRegister.add(new ShapedOreRecipe(null, AdvancedRocketryItems.itemJackhammer, " pt","imp","di ",'d', "gemDiamond", 'm', LibVulpesBlocks.blockMotor, 'p', "plateAluminum", 't', "stickTitanium", 'i', "stickIron").
-            setRegistryName(new ResourceLocation("advancedrocketry", "itemJackhammer")));
-      //
-    //            //Other blocks
-        toRegister.add(new ShapedOreRecipe(null, AdvancedRocketryItems.itemSmallAirlockDoor, "pp", "pp","pp", 'p', "plateSteel").
-            setRegistryName(new ResourceLocation("advancedrocketry", "itemSmallAirlockDoor")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockCircleLight), "p  ", " l ", "   ", 'p', "sheetIron", 'l', Blocks.GLOWSTONE).
-            setRegistryName(new ResourceLocation("advancedrocketry", "blockCircleLight")));
-      //
-    //            //TEMP RECIPES
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(AdvancedRocketryItems.itemSatelliteIdChip), new ItemStack(AdvancedRocketryItems.itemIC, 1, 0)).
-            setRegistryName(new ResourceLocation("advancedrocketry", "itemSatelliteIdChip")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(AdvancedRocketryItems.itemPlanetIdChip), new ItemStack(AdvancedRocketryItems.itemIC, 1, 0), new ItemStack(AdvancedRocketryItems.itemIC, 1, 0), new ItemStack(AdvancedRocketryItems.itemSatelliteIdChip)).
-            setRegistryName(new ResourceLocation("advancedrocketry", "itemPlanetIdChip")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(AdvancedRocketryItems.itemMisc,1,1), charcoal, charcoal, charcoal, charcoal ,charcoal ,charcoal).
-            setRegistryName(new ResourceLocation("advancedrocketry", "itemMisc11")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockLandingPad), new ItemStack(AdvancedRocketryBlocks.blockConcrete), trackingCircuit).
-            setRegistryName(new ResourceLocation("advancedrocketry", "blockLandingPad")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(AdvancedRocketryItems.itemAsteroidChip), trackingCircuit.copy(), AdvancedRocketryItems.itemDataUnit).
-            setRegistryName(new ResourceLocation("advancedrocketry", "itemAsteroidChip")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockTransciever, 4), "ggg", " d ", "ggg", 'g', Blocks.GLASS_PANE, 'd', AdvancedRocketryItems.itemDataUnit).
-            setRegistryName(new ResourceLocation("advancedrocketry", "blockTransciever")));
-      //
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockDrill), LibVulpesBlocks.blockStructureBlock, Items.IRON_PICKAXE).
-            setRegistryName(new ResourceLocation("advancedrocketry", "blockDrill")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockOrientationController), LibVulpesBlocks.blockStructureBlock, Items.COMPASS, userInterface).
-            setRegistryName(new ResourceLocation("advancedrocketry", "blockOrientationController")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockGravityController), LibVulpesBlocks.blockStructureBlock, Blocks.PISTON, Blocks.REDSTONE_BLOCK).
-            setRegistryName(new ResourceLocation("advancedrocketry", "blockGravityController")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockAltitudeController), LibVulpesBlocks.blockStructureBlock, userInterface, basicCircuit).
-            setRegistryName(new ResourceLocation("advancedrocketry", "blockAltitudeController")));
-      //
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryItems.itemLens), " g ", "g g", 'g', Blocks.GLASS_PANE).
-            setRegistryName(new ResourceLocation("advancedrocketry", "itemLens")));
-        toRegister.add(new ShapelessOreRecipe(null, largeSolarPanel.copy(), smallSolarPanel, smallSolarPanel, smallSolarPanel, smallSolarPanel, smallSolarPanel, smallSolarPanel).
-            setRegistryName(new ResourceLocation("advancedrocketry", "largeSolarPanel")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockMicrowaveReciever), "ggg", "tbc", "aoa", 'g', "plateGold", 't', trackingCircuit, 'b', LibVulpesBlocks.blockStructureBlock, 'c', controlCircuitBoard, 'a', advancedCircuit, 'o', opticalSensor).
-            setRegistryName(new ResourceLocation("advancedrocketry", "blockMicrowaveReciever")));
-        toRegister.add(new ShapedOreRecipe(null, AdvancedRocketryBlocks.blockSolarPanel, "rrr", "gbg", "ppp", 'r' , "dustRedstone", 'g', Items.GLOWSTONE_DUST, 'b', LibVulpesBlocks.blockStructureBlock, 'p', "plateGold").
-            setRegistryName(new ResourceLocation("advancedrocketry", "blockSolarPanel")));
-        toRegister.add(new ShapelessOreRecipe(null, AdvancedRocketryBlocks.blockSolarGenerator, "itemBattery", LibVulpesBlocks.blockForgeOutputPlug, AdvancedRocketryBlocks.blockSolarPanel).
-            setRegistryName(new ResourceLocation("advancedrocketry", "blockSolarGenerator")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockDockingPort), trackingCircuit, new ItemStack(AdvancedRocketryBlocks.blockLoader, 1,1)).
-            setRegistryName(new ResourceLocation("advancedrocketry", "blockDockingPort")));
-      //
-        toRegister.add(new ShapedOreRecipe(null, AdvancedRocketryItems.itemOreScanner, "lwl", "bgb", "   ", 'l', Blocks.LEVER, 'g', userInterface, 'b', "itemBattery", 'w', advancedCircuit).
-            setRegistryName(new ResourceLocation("advancedrocketry", "itemOreScanner")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryItems.itemSatellitePrimaryFunction, 1, 4), " c ","sss", "tot", 'c', "stickCopper", 's', "sheetIron", 'o', AdvancedRocketryItems.itemOreScanner, 't', trackingCircuit).
-            setRegistryName(new ResourceLocation("advancedrocketry", "itemSatellitePrimaryFunction14")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockSuitWorkStation), "c","b", 'c', Blocks.CRAFTING_TABLE, 'b', LibVulpesBlocks.blockStructureBlock).
-            setRegistryName(new ResourceLocation("advancedrocketry", "blockSuitWorkStation")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryItems.itemSatellite), "sss", "rcr", "sss", 's', "sheetAluminum", 'r', "stickTitanium", 'c', controlCircuitBoard).
-            setRegistryName(new ResourceLocation("advancedrocketry", "itemSatellite")));
-    //            
-    //            
-    //            if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill) {
-            toRegister.add(new ShapedOreRecipe(null, AdvancedRocketryBlocks.blockSpaceLaser, "ata", "bec", "gpg", 'a', advancedCircuit, 't', trackingCircuit, 'b', LibVulpesItems.itemBattery, 'e', Items.EMERALD, 'c', controlCircuitBoard, 'g', "gearTitanium", 'p', LibVulpesBlocks.blockStructureBlock).
-            setRegistryName(new ResourceLocation("advancedrocketry", "blockSpaceLaser")));
-    //            }
-    //            if(zmaster587.advancedRocketry.api.Configuration.allowTerraforming) {
-            toRegister.add(new ShapedOreRecipe(null, new ItemStack(AdvancedRocketryBlocks.blockAtmosphereTerraformer), "gdg", "lac", "gbg", 'g', "gearTitaniumAluminide", 'd', "crystalDilithium", 'l', liquidIOBoard, 'a', LibVulpesBlocks.blockAdvStructureBlock, 'c', controlCircuitBoard, 'b', battery2x).
-            setRegistryName(new ResourceLocation("advancedrocketry", "blockAtmosphereTerraformer")));
-    //            }
-      //
-    //            //Control boards
-        toRegister.add(new ShapedOreRecipe(null, itemIOBoard, "rvr", "dwd", "dpd", 'r', "dustRedstone", 'v', "gemDiamond", 'd', "dustGold", 'w', "slabWood", 'p', "plateIron").
-            setRegistryName(new ResourceLocation("advancedrocketry", "itemIOBoard")));
-        toRegister.add(new ShapedOreRecipe(null, controlCircuitBoard, "rvr", "dwd", "dpd", 'r', "dustRedstone", 'v', "gemDiamond", 'd', "dustCopper", 'w', "slabWood", 'p', "plateIron").
-            setRegistryName(new ResourceLocation("advancedrocketry", "controlCircuitBoard")));
-        toRegister.add(new ShapedOreRecipe(null, liquidIOBoard, "rvr", "dwd", "dpd", 'r', "dustRedstone", 'v', "gemDiamond", 'd', new ItemStack(Items.DYE, 1, 4), 'w', "slabWood", 'p', "plateIron").
-            setRegistryName(new ResourceLocation("advancedrocketry", "liquidIOBoard")));
-        
-        for(net.minecraft.item.crafting.IRecipe recipe: toRegister)
-        {
-            GameData.register_impl(recipe);
-        }
-
-        //Register machines
-        machineRecipes.registerMachine(TileElectrolyser.class);
-        machineRecipes.registerMachine(TileCuttingMachine.class);
-        machineRecipes.registerMachine(TileLathe.class);
-        machineRecipes.registerMachine(TilePrecisionAssembler.class);
-        machineRecipes.registerMachine(TileElectricArcFurnace.class);
-        machineRecipes.registerMachine(TileChemicalReactor.class);
-        machineRecipes.registerMachine(TileRollingMachine.class);
-        machineRecipes.registerMachine(TileCrystallizer.class);
 
         //Register the machine recipes
         machineRecipes.registerAllMachineRecipes();

@@ -1,0 +1,36 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients":
+    [
+        {
+	    "item": "advancedrocketry:satellitepowersource",
+	    "data": 1
+        },
+        {
+	    "item": "advancedrocketry:satellitepowersource",
+	    "data": 1
+        },        
+        {
+	    "item": "advancedrocketry:satellitepowersource",
+	    "data": 1
+        },
+	{
+	    "item": "advancedrocketry:satellitepowersource",
+	    "data": 1
+        },
+        {
+	    "item": "advancedrocketry:satellitepowersource",
+	    "data": 1
+        },        
+        {
+	    "item": "advancedrocketry:satellitepowersource",
+	    "data": 1
+        }
+    ],
+    "result":
+    {
+        "item": "advancedrocketry:satellitepowersource",
+        "count": 1,
+        "data": 1
+    }
+}

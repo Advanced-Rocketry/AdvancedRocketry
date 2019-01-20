@@ -1,0 +1,32 @@
+{
+    "type": "advancedrocketry:prescisionassembler",
+    "itemingredients":
+    [
+        {
+	    "item": "libvulpes:battery",
+	    "data": 0
+        },
+        {
+	    "item": "advancedrocketry:ic",
+	    "data": 2
+        },
+	{
+	    "item": "advancedrocketry:misc",
+	    "data": 0
+        },
+	{
+	    "item": "advancedrocketry:ic",
+	    "data": 1
+        },
+	{
+            "type": "forge:ore_dict",
+            "ore": "plateTin"
+        }
+    ],
+    "time": 1000,
+    "energy": 1,
+    "itemresults":
+    {
+	"item": "advancedrocketry:biomechanger"
+    }
+}

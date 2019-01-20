@@ -1,0 +1,45 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"oso",
+	"cbc",
+	"rpr"
+    ],
+    "key":
+    {
+        "s":
+        {
+            "item": "advancedrocketry:misc",
+            "data": 0
+        },
+        "o":
+        {
+            "item": "advancedrocketry:satelliteprimaryfunction",
+            "data": 0
+        },
+	"b":
+        {
+            "item": "libvulpes:structuremachine"
+        },
+	"c":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "stickCopper"
+        },
+	"p":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "itemBattery"
+        },
+	"r":
+        {
+	    "item": "minecraft:repeater"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:satellitecontrolcenter",
+        "count": 1
+    }
+}

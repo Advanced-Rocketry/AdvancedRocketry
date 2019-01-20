@@ -1,0 +1,31 @@
+{
+    "type": "advancedrocketry:prescisionassembler",
+    "itemingredients":
+    [
+        {
+            "type": "forge:ore_dict",
+            "ore": "stickCopper",
+            "count": 2
+        },
+        {
+            "type": "forge:ore_dict",
+            "ore": "stickTitanium"
+        },
+	{
+	    "item": "advancedrocketry:ic",
+	    "data": 2
+        },
+	{
+	    "item": "advancedrocketry:wafer",
+	    "data": 0,
+	    "count": 2
+        }
+    ],
+    "time": 1000,
+    "energy": 1,
+    "itemresults":
+    {
+	"item": "advancedrocketry:satelliteprimaryfunction",
+	"data": 5
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "type": "advancedrocketry:cuttingmachine",
+    "itemingredients":
+    [
+        {
+            "type": "forge:ore_dict",
+            "ore": "bouleSilicon"
+        }
+    ],
+    "time": 300,
+    "energy": 100,
+    "itemresults":
+    {
+            "item": "advancedrocketry:wafer",
+            "data": 0,
+            "count": 4
+    }
+}

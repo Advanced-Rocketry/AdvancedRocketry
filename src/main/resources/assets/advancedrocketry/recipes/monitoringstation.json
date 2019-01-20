@@ -1,0 +1,36 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"coc",
+	"cbc",
+	"cpc"
+    ],
+    "key":
+    {
+        "o":
+        {
+            "item": "advancedrocketry:satelliteprimaryfunction",
+            "data": 0
+        },
+	"b":
+        {
+            "item": "libvulpes:structuremachine"
+        },
+	"c":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "stickCopper"
+        },
+	"p":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "itemBattery"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:monitoringstation",
+        "count": 1
+    }
+}

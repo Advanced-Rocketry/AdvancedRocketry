@@ -1,0 +1,57 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"abc",
+	"def",
+	"ghi"
+    ],
+    "key":
+    {
+        "a":
+        {
+            "item": "minecraft:repeater"
+        },
+        "b":
+        {
+            "item": "advancedrocketry:misc",
+            "data": 0
+        },
+	"c":
+        {
+            "item": "minecraft:diamond"
+        },
+	"d":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 4
+        },
+	"e":
+        {
+            "item": "libvulpes:structuremachine"
+        },
+	"f":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 3
+        },
+	"g":
+        {
+            "item": "minecraft:furnace"
+        },
+	"h":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "gearSteel"
+        },
+	"i":
+        {
+            "item": "minecraft:dropper"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:precisionassemblingmachine",
+        "count": 1
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"cpc",
+	"lbl",
+	"coc"
+    ],
+    "key":
+    {
+	"c":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 1
+        },
+	"o":
+        {
+            "item": "advancedrocketry:satelliteprimaryfunction",
+            "data": 1
+        },
+	"l":
+        {
+            "item": "minecraft:lever"
+        },
+	"b":
+        {
+            "item": "advancedrocketry:guidancecomputer"
+        },
+	"p":
+        {
+            "item": "minecraft:stone_button"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:planetholoselector",
+        "count": 1
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients":
+    [
+        {
+	    "type": "forge:ore_dict",
+            "ore": "dustAluminum"
+        },
+        {
+	    "type": "forge:ore_dict",
+            "ore": "dustIron"
+        },
+	{
+	    "type": "forge:ore_dict",
+            "ore": "dustIron"
+        }
+    ],
+    "result":
+    {
+        "item": "advancedrocketry:thermite",
+        "count": 3
+    }
+}

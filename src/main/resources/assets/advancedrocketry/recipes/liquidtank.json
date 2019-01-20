@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"tgt",
+	"tgt",
+	"tgt"
+    ],
+    "key":
+    {
+	"t":
+        {
+	    "item": "advancedrocketry:pressuretank",
+	    "data": 3
+        },
+	"g":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "paneGlassColorless"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:liquidtank",
+        "count": 1
+    }
+}

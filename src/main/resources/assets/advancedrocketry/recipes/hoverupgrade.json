@@ -1,0 +1,28 @@
+{
+    "type": "advancedrocketry:prescisionassembler",
+    "itemingredients":
+    [
+        {
+	    "type": "forge:ore_dict",
+            "ore": "dustRedstone"
+        },
+        {
+	    "item": "advancedrocketry:ic",
+	    "data": 0
+        },
+	{
+	    "item": "advancedrocketry:ic",
+	    "data": 3
+        },
+	{
+	    "item": "minecraft:redstone_torch"
+        }
+    ],
+    "time": 200,
+    "energy": 1,
+    "itemresults":
+    {
+	"item": "advancedrocketry:itemupgrade",
+	"data": 0
+    }
+}

@@ -1,0 +1,51 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"ata",
+	"bec",
+	"gpg"
+    ],
+    "key":
+    {
+        "c":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 3
+        },
+        "t":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 1
+        },
+        "a":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 2
+        },
+        "e":
+	{
+            "type": "forge:ore_dict",
+            "ore": "gemEmerald"
+        },
+        "g":
+        {
+            "type": "forge:ore_dict",
+            "ore": "gearTitanium"
+        },
+        "b":
+        {
+            "type": "forge:ore_dict",
+            "ore": "itemBattery"
+        },
+        "p":
+        {
+            "item": "libvulpes:structuremachine"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:spacelaser",
+        "count": 1
+    }
+}

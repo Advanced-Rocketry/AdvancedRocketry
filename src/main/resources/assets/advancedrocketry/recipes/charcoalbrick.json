@@ -1,0 +1,36 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients":
+    [
+        {
+	    "item": "minecraft:coal",
+	    "data": 1
+        },
+        {
+	    "item": "minecraft:coal",
+	    "data": 1
+        },
+        {
+	    "item": "minecraft:coal",
+	    "data": 1
+        },
+        {
+	    "item": "minecraft:coal",
+	    "data": 1
+        },
+        {
+	    "item": "minecraft:coal",
+	    "data": 1
+        },
+        {
+	    "item": "minecraft:coal",
+	    "data": 1
+        }
+    ],
+    "result":
+    {
+        "item": "advancedrocketry:misc",
+        "data": 1,
+        "count": 1
+    }
+}

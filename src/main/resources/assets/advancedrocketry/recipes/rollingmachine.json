@@ -1,0 +1,50 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"psp",
+	"abc",
+	"iti"
+    ],
+    "key":
+    {
+        "t":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 5
+        },
+        "s":
+        {
+            "item": "advancedrocketry:misc",
+            "data": 0
+        },
+	"a":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 4
+        },
+	"b":
+        {
+            "item": "libvulpes:structuremachine"
+        },
+	"c":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 3
+        },
+	"p":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "gearSteel"
+        },
+	"i":
+        {
+	    "item": "minecraft:iron_block"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:rollingmachine",
+        "count": 1
+    }
+}

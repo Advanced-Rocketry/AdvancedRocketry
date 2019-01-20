@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients":
+    [
+        {
+	    "item": "minecraft:stick"
+        },
+        {
+	    "item": "advancedrocketry:thermite"
+        }
+    ],
+    "result":
+    {
+        "item": "advancedrocketry:thermitetorch",
+        "count": 4
+    }
+}

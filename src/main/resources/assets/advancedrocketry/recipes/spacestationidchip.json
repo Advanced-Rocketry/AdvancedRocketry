@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients":
+    [
+        {
+            "item": "advancedrocketry:ic",
+            "data": 0
+        },
+        {
+            "item": "libvulpes:linker"
+        }
+    ],
+    "result":
+    {
+        "item": "advancedrocketry:spacestationchip",
+        "count": 1,
+        "data": 0
+    }
+}

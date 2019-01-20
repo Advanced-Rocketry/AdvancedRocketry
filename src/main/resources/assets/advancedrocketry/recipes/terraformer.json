@@ -1,0 +1,46 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"gdg",
+	"lac",
+	"gbg"
+    ],
+    "key":
+    {
+        "c":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 3
+        },
+        "l":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 5
+        },
+        "d":
+	{
+            "type": "forge:ore_dict",
+            "ore": "crystalDilithium"
+        },
+        "g":
+        {
+            "type": "forge:ore_dict",
+            "ore": "gearTitaniumAluminide"
+        },
+        "b":
+        {
+            "type": "forge:ore_dict",
+            "ore": "itemBattery"
+        },
+        "a":
+        {
+            "item": "libvulpes:advstructuremachine"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:terraformer",
+        "count": 1
+    }
+}

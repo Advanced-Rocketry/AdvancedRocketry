@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients":
+    [
+        {
+            "item": "advancedrocketry:concrete"
+        },
+	{
+            "type": "forge:ore_dict",
+            "ore": "dyeBlack"
+            
+	},
+	{
+	    "type": "forge:ore_dict",
+            "ore": "dyeYellow"
+        }
+    ],
+    "result":
+    {
+        "item": "advancedrocketry:launchpad",
+        "count": 1
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"plp",
+	"bsb",
+	"ppp"
+    ],
+    "key":
+    {
+	"l":
+        {
+            "item": "advancedrocketry:satelliteprimaryfunction",
+            "data": 5
+        },
+	"s":
+        {
+	    "item": "libvulpes:structuremachine"
+        },
+	"p":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "plateTin"
+        },
+	"b":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "itemBattery"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:biomescanner",
+        "count": 1
+    }
+}

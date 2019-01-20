@@ -1,0 +1,41 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"pip",
+	"obo",
+	"pcp"
+    ],
+    "key":
+    {
+	"c":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 2
+        },
+	"i":
+        {
+            "item": "advancedrocketry:misc",
+            "data": 0
+        },
+	"b":
+        {
+	    "item": "libvulpes:structuremachine"
+        },
+	"p":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "plateSteel"
+        },
+	"o":
+        {
+	    "item": "advancedrocketry:ic",
+	    "data": 3
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:warpmonitor",
+        "count": 1
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "type": "advancedrocketry:cuttingmachine",
+    "itemingredients":
+    [
+        {
+            "item": "advancedrocketry:alienwood",
+            "data": 0
+        }
+    ],
+    "time": 80,
+    "energy": 10,
+    "itemresults":
+    {
+            "item": "advancedrocketry:planks",
+            "data": 0,
+            "count": 6
+    }
+}

@@ -30,7 +30,8 @@ public class TileLathe extends TileMultiblockMachine implements IModularInventor
 	
 	@Override
 	public void registerRecipes() {
-		RecipesMachine.getInstance().addRecipe(TileLathe.class, MaterialRegistry.getItemStackFromMaterialAndType("Iron", AllowedProducts.getProductByName("STICK"), 2), 300, 100, "ingotIron");
+		//TODO: does it work?
+		//RecipesMachine.getInstance().addRecipe(TileLathe.class, MaterialRegistry.getItemStackFromMaterialAndType("Iron", AllowedProducts.getProductByName("STICK"), 2), 300, 100, "ingotIron");
 	}
 	
 	@Override

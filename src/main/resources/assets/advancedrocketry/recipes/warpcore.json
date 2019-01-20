@@ -1,0 +1,37 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"gcg",
+	"pbp",
+	"gcg"
+    ],
+    "key":
+    {
+	"c":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 2
+        },
+	"b":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "coilCopper"
+        },
+	"p":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "plateSteel"
+        },
+	"g":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "plateTitanium"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:warpcore",
+        "count": 1
+    }
+}

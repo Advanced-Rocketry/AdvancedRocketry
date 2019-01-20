@@ -1,0 +1,39 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"cpc",
+	"lsl",
+	"f f"
+    ],
+    "key":
+    {
+	"c":
+        {
+	    "item": "advancedrocketry:pressuretank",
+	    "data": 32767
+        },
+	"l":
+        {
+	    "item": "minecraft:lever"
+        },
+	"s":
+        {
+	    "item": "minecraft:string"
+        },
+	"p":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "plateSteel"
+        },
+	"f":
+        {
+	    "item": "minecraft:fire_charge"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:jetpack",
+        "count": 1
+    }
+}

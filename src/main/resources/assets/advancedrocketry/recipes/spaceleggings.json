@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"wrw",
+	"w w",
+	"w w"
+    ],
+    "key":
+    {
+	"w":
+        {
+	    "item": "minecraft:wool",
+            "data": 32767
+        },
+	"r":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "stickIron"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:spaceleggings",
+        "count": 1
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients":
+    [
+        {
+            "item": "advancedrocketry:alienwood"
+        }
+    ],
+    "result":
+    {
+        "item": "advancedrocketry:planks",
+        "count": 4
+    }
+}

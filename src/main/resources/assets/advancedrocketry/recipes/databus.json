@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"m",
+	"c",
+	" "
+    ],
+    "key":
+    {
+        "c":
+        {
+            "item": "advancedrocketry:dataunit",
+	    "data": 0,
+            "data": 0
+        },
+	"m":
+        {
+            "item": "libvulpes:structuremachine"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:loader",
+        "data": 0,
+        "count": 1
+    }
+}

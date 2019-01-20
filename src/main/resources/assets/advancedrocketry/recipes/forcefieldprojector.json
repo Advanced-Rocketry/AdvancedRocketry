@@ -1,0 +1,36 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	" c ",
+	"pdp",
+	"psp"
+    ],
+    "key":
+    {
+        "c":
+        {
+            "type": "forge:ore_dict",
+            "ore": "coilCopper"
+        },
+	"s":
+        {
+            "item": "libvulpes:structuremachine"
+        },
+	"p":
+        {
+            "type": "forge:ore_dict",
+            "ore": "plateAluminum"
+        },
+	"d":
+        {
+            "type": "forge:ore_dict",
+            "ore": "crystalDilithium"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:forcefieldprojector",
+        "count": 1
+    }
+}

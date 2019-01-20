@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients":
+    [
+        
+        {
+            "type": "forge:ore_dict",
+            "ore": "itemBattery"
+        },
+	{
+            "item": "advancedrocketry:solarpanel"
+        },
+	{
+            "item": "libvulpes:forgepoweroutput"
+        }
+    ],
+    "result":
+    {
+        "item": "advancedrocketry:solargenerator",
+        "count": 1
+    }
+}

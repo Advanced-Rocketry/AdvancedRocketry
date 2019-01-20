@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients":
+    [
+        {
+	    "item": "libvulpes:structuremachine"
+        },
+        {
+	    "item": "minecraft:compass"
+        },
+	{
+	    "item": "advancedrocketry:misc",
+	    "data": 0
+        }
+    ],
+    "result":
+    {
+        "item": "advancedrocketry:orientationcontroller",
+        "count": 1
+    }
+}

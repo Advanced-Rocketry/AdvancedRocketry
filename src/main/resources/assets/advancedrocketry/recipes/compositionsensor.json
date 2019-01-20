@@ -1,0 +1,37 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"owo",
+        "rpr"
+    ],
+    "key":
+    {
+        "o":
+        {
+	    "item": "advancedrocketry:satelliteprimaryfunction",
+	    "data": 0
+        },
+        "w":
+        {
+	    "item": "advancedrocketry:ic",
+	    "data": 1
+        },
+        "p":
+        {
+	    "item": "advancedrocketry:ic",
+	    "data": 0
+        },
+        "r":
+        {
+	    "item": "advancedrocketry:wafer",
+	    "data": 0
+        }
+    },
+    "result":
+    {
+	"item": "advancedrocketry:satelliteprimaryfunction",
+	"data": 1,
+        "count": 1
+    }
+}

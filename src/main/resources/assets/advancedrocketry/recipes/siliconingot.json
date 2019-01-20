@@ -1,0 +1,17 @@
+{
+    "type": "advancedrocketry:electricarcfurnace",
+    "itemingredients":
+    [
+        {
+	    "item": "minecraft:sand",
+	    "data": 0
+        }
+    ],
+    "time": 12000,
+    "energy": 1,
+    "itemresults":
+    {
+            "type": "forge:ore_dict",
+            "ore": "ingotSilicon"
+    }
+}

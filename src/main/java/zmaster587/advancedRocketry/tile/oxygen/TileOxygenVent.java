@@ -208,8 +208,9 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 				setSealed(false);
 			}
 			else if(!isSealed && getEquivilentPower() && hasEnoughEnergy(getPowerPerOperation())) {
-				setSealed(AtmosphereHandler.getOxygenHandler(this.world.provider.getDimension()).addBlock(this, new HashedBlockPosition(pos)));
-
+				
+				if(world.getTotalWorldTime() % 100 == 0)
+					setSealed(AtmosphereHandler.getOxygenHandler(this.world.provider.getDimension()).addBlock(this, new HashedBlockPosition(pos)));
 
 				if(isSealed) {
 					activateAdjblocks();

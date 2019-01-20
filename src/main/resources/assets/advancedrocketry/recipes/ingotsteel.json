@@ -1,0 +1,21 @@
+{
+    "type": "advancedrocketry:electricarcfurnace",
+    "itemingredients":
+    [
+        {
+	    "item": "minecraft:coal",
+	    "data": 1
+        },
+        {
+            "type": "forge:ore_dict",
+            "ore": "ingotIron"
+        }
+    ],
+    "time": 6000,
+    "energy": 1,
+    "itemresults":
+    {
+            "type": "forge:ore_dict",
+            "ore": "ingotSteel"
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "type": "advancedrocketry:rollingmachine",
+    "itemingredients":
+    [
+        {
+	    "type": "forge:ore_dict",
+            "ore": "sheetAluminum",
+            "count": 2
+        }
+    ],
+    "fluidingredients":
+    [
+        {
+	    "fluid": "water",
+            "amount": 100
+        }
+    ],
+    "time": 100,
+    "energy": 4,
+    "itemresults":
+    {
+	"item": "advancedrocketry:pressuretank",
+	"data": 2
+    }
+}

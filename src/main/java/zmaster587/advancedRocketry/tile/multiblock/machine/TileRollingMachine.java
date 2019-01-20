@@ -56,17 +56,6 @@ public class TileRollingMachine extends TileMultiblockMachine {
 
 		return super.getTimeMultiplierForBlock(state, tile);
 	}
-
-	@Override
-	public void registerRecipes() {
-		FluidStack water = new FluidStack(FluidRegistry.WATER, 100);
-		//Tanks
-		
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 0), 100, 1, new NumberedOreDictStack("sheetIron", 2), water);
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 1), 200, 2, new NumberedOreDictStack("sheetSteel", 2), water);
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 2), 100, 1, new NumberedOreDictStack("sheetAluminum", 2), water);
-        RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 3), 1000, 8, new NumberedOreDictStack("sheetTitanium", 2), water);
-	}
 	
 	@Override
 	public Object[][][] getStructure() {

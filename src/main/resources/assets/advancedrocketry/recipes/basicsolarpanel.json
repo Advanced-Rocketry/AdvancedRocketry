@@ -1,0 +1,33 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "xxx",
+        "yyy",
+        "zzz"
+    ],
+    "key":
+    {
+        "x":
+        {
+            "type": "forge:ore_dict",
+            "ore": "dustRedstone"
+        },
+        "y":
+        {
+            "type": "forge:ore_dict",
+            "ore": "dustGlowstone"
+        },
+	"z":
+        {
+            "type": "forge:ore_dict",
+            "ore": "plateGold"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:satellitepowersource",
+        "count": 1,
+        "data": 0
+    }
+}

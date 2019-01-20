@@ -1,0 +1,37 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"gug",
+	" b ",
+	"rrr"
+    ],
+    "key":
+    {
+        "g":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "paneGlass"
+        },
+        "u":
+        {
+            "item": "advancedrocketry:misc",
+            "data": 0
+        },
+	"b":
+        {
+            "item": "libvulpes:structuremachine",
+            "data": 4
+        },
+	"r":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "stickIron"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:observatory",
+        "count": 1
+    }
+}

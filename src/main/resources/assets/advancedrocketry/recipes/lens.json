@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	" g ",
+	"g g"
+    ],
+    "key":
+    {
+        "g":
+        {
+            "type": "forge:ore_dict",
+            "ore": "paneGlassColorless"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:lens",
+        "data": 0,
+        "count": 1
+    }
+}

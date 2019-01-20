@@ -1,0 +1,28 @@
+{
+    "type": "advancedrocketry:prescisionassembler",
+    "itemingredients":
+    [
+        {
+	    "type": "forge:ore_dict",
+            "ore": "gemDiamond"
+        },
+        {
+	    "item": "advancedrocketry:ic",
+	    "data": 2
+        },
+	{
+	    "item": "advancedrocketry:ic",
+	    "data": 3
+        },
+	{
+	    "item": "minecraft:fire_charge"
+        }
+    ],
+    "time": 200,
+    "energy": 1,
+    "itemresults":
+    {
+	"item": "advancedrocketry:itemupgrade",
+	"data": 1
+    }
+}

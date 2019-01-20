@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"pp",
+	"pp",
+	"pp"
+    ],
+    "key":
+    {
+	"p":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "plateSteel"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:smallairlockdoor",
+        "count": 1
+    }
+}

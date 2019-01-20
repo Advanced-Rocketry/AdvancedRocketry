@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients":
+    [
+        {
+	    "item": "libvulpes:structuremachine"
+        },
+        {
+	    "item": "minecraft:piston"
+        },
+	{
+	    "item": "minecraft:redstone_block"
+        }
+    ],
+    "result":
+    {
+        "item": "advancedrocketry:gravitycontroller",
+        "count": 1
+    }
+}

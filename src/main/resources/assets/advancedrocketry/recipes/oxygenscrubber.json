@@ -1,0 +1,36 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"bfb",
+	"bmb",
+	"btb"
+    ],
+    "key":
+    {
+        "f":
+        {
+            "type": "forge:ore_dict",
+            "ore": "fanSteel"
+        },
+	"b":
+        {
+            "item": "minecraft:iron_bars"
+        },
+	"m":
+        {
+            "type": "forge:ore_dict",
+            "ore": "blockMotor"
+        },
+	"t":
+        {
+            "type": "forge:ore_dict",
+            "ore": "ingotCarbon"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:oxygenscrubber",
+        "count": 1
+    }
+}

@@ -1,0 +1,51 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"psp",
+	"abc",
+	"rdr"
+    ],
+    "key":
+    {
+        "r":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 0
+        },
+        "s":
+        {
+            "item": "advancedrocketry:misc",
+            "data": 0
+        },
+	"a":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 4
+        },
+	"b":
+        {
+            "item": "libvulpes:structuremachine"
+        },
+	"c":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 3
+        },
+	"p":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "plateGold"
+        },
+	"d":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 5
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:chemicalreactor",
+        "count": 1
+    }
+}

@@ -1,0 +1,41 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"lal",
+	"bgb",
+	"   "
+    ],
+    "key":
+    {
+        "l":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 2
+        },
+        "g":
+        {
+            "item": "advancedrocketry:misc",
+            "data": 0
+        },
+        "b":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "itemBattery"
+        },
+	"l":
+        {
+            "item": "minecraft:lever"
+        },
+        "a":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 2
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:orescanner",
+        "count": 1
+    }
+}

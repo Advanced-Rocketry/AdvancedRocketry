@@ -1,0 +1,23 @@
+{
+    "type": "advancedrocketry:chemicalreactor",
+    "fluidingredients":
+    [
+	{
+	    "fluid": "oxygen",
+	    "amount": 10
+	},
+	{
+	    "fluid": "hydrogen",
+	    "amount": 10
+	}
+    ],
+    "time": 100,
+    "energy": 10,
+    "fluidresults":
+    [
+	{
+	    "fluid": "rocketfuel",
+	    "amount": 20
+	}
+    ]
+}

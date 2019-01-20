@@ -1,0 +1,45 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"aga",
+	"ice", 
+	"aba"
+    ],
+    "key":
+    {
+        "a":
+        {
+            "item": "minecraft:netherbrick"
+        },
+        "g":
+        {
+            "item": "advancedrocketry:misc",
+            "data": 0
+        },
+	"i":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 4
+        },
+	"e":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 3
+        },
+	"c":
+        {
+            "item": "advancedrocketry:blastbrick"
+        },
+	"b":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "ingotCopper"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:arcfurnace",
+        "count": 1
+    }
+}

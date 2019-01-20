@@ -1,0 +1,23 @@
+{
+    "type": "advancedrocketry:electrolyser",
+    "fluidingredients":
+    [
+	{
+	    "fluid": "water",
+	    "amount": 10
+	}
+    ],
+    "time": 100,
+    "energy": 20,
+    "fluidresults":
+    [
+	{
+	    "fluid": "hydrogen",
+	    "amount": 100
+	},
+	{
+	    "fluid": "oxygen",
+	    "amount": 100
+	}
+    ]
+}

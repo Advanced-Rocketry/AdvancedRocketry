@@ -1,0 +1,60 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"dht",
+	"cbc",
+	"mas"
+    ],
+    "key":
+    {
+        "s":
+        {
+            "item": "advancedrocketry:misc",
+            "data": 0
+        },
+        "c":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 0
+        },
+	"b":
+        {
+            "item": "libvulpes:structuremachine"
+        },
+	"m":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "blockMotor"
+        },
+	"t":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "plateTitanium"
+        },
+	"d":
+        {
+	    "item": "advancedrocketry:dataunit",
+	    "data": 0
+        },
+	"a":
+        {
+	    "item": "minecraft:anvil",
+	    "data": 0
+        },
+	"s":
+        {
+	    "item": "advancedrocketry:sawblade",
+	    "data": 0
+        },
+	"h":
+        {
+	    "item": "minecraft:hopper"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:satellitebuilder",
+        "count": 1
+    }
+}
