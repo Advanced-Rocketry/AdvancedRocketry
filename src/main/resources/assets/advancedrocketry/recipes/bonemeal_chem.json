@@ -19,7 +19,8 @@
     [
 	{
             "item": "minecraft:dye",
-            "data": 15
+            "data": 15,
+            "count": 8
 	}
     ]
 }
