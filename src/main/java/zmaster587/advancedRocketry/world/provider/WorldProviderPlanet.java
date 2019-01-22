@@ -212,7 +212,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 		}
 		
 		StellarBody star = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getStar();
-		boolean blackHole = star.isBlackHole();
+		boolean blackHole = star != null && star.isBlackHole();
 		for(StellarBody star2 : star.getSubStars())
 			if(!star2.isBlackHole())
 			{
