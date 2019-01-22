@@ -1473,11 +1473,11 @@ public class AdvancedRocketry {
 		logger.info("Checking for config at " + file.getAbsolutePath());
 
 		if(!file.exists() || resetFromXml) { //Hi, I'm if check #42, I am true if the config is not in the world/advRocketry folder
-			
+			String newFilePath = "./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml";
 			if(!file.exists())
-				logger.info("File not found.  Now checking for config at " + file.getAbsolutePath());
+				logger.info("File not found.  Now checking for config at " + newFilePath);
 			
-			file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml");
+			file = new File(newFilePath);
 
 			//Copy file to local dir
 			if(file.exists()) {
