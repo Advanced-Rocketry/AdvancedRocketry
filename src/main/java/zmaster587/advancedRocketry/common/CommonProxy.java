@@ -15,7 +15,8 @@ import zmaster587.libVulpes.network.PacketHandler;
 
 public class CommonProxy {
 
-
+	private static zmaster587.advancedRocketry.dimension.DimensionManager dimensionManagerServer = new zmaster587.advancedRocketry.dimension.DimensionManager();
+	
 	public void registerRenderers() {
 
 	}
@@ -100,5 +101,9 @@ public class CommonProxy {
 
 	public String getNameFromBiome(Biome biome) {
 		return "";
+	}
+
+	public zmaster587.advancedRocketry.dimension.DimensionManager getDimensionManager() {
+		return dimensionManagerServer;
 	}
 }

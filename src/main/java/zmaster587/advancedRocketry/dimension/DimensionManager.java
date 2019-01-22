@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.dimension;
 
-import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
@@ -9,7 +8,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
-import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import org.apache.commons.io.FileUtils;
@@ -78,11 +76,11 @@ public class DimensionManager implements IGalaxy {
 
 	@Deprecated
 	public static StellarBody getSol() {
-		return instance.getStar(0);
+		return getInstance().getStar(0);
 	}
 
 	public static DimensionManager getInstance() {
-		return instance;
+		return AdvancedRocketry.proxy.getDimensionManager(); //instance;
 	};
 
 	public DimensionManager() {

@@ -46,6 +46,7 @@ import zmaster587.advancedRocketry.client.render.RenderLaser;
 import zmaster587.advancedRocketry.client.render.entity.*;
 import zmaster587.advancedRocketry.client.render.multiblocks.*;
 import zmaster587.advancedRocketry.common.CommonProxy;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.entity.*;
 import zmaster587.advancedRocketry.entity.fx.*;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
@@ -66,6 +67,8 @@ import zmaster587.libVulpes.tile.TileSchematic;
 
 public class ClientProxy extends CommonProxy {
 
+	private static zmaster587.advancedRocketry.dimension.DimensionManager dimensionManagerClient = new zmaster587.advancedRocketry.dimension.DimensionManager();
+	
 	@Override
 	public void registerRenderers() {
 
@@ -596,5 +599,10 @@ public class ClientProxy extends CommonProxy {
 	
 	public String getNameFromBiome(Biome biome) {
 		return biome.getBiomeName();
+	}
+	
+	@Override
+	public zmaster587.advancedRocketry.dimension.DimensionManager getDimensionManager() {
+		return dimensionManagerClient;
 	}
 }
