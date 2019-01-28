@@ -747,7 +747,7 @@ public class XMLPlanetLoader {
 		for(SpawnListEntryNBT e : properties.getSpawnListEntries()) {
 			String nbtString = e.getNBTString();
 			if (!nbtString.isEmpty())
-				nbtString = " nbt=\"" + nbtString + "\"";
+				nbtString = " nbt=\"" + nbtString.replaceAll("\"", "&quot;") + "\"";
 			outputString = outputString + tabLen + "\t<spawnable weight=\"" + e.itemWeight + "\" groupMin=\"" + e.minGroupCount + "\" groupMax=\"" + e.maxGroupCount +  "\"" + nbtString + ">" + EntityRegistry.getEntry(e.entityClass).getRegistryName() + "</spawnable>\n";
 		}
 
