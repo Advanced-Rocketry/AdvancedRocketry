@@ -157,6 +157,24 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			int offsetX = star.getPosX() + posX - displaySize/2; 
 			int offsetY = star.getPosZ() + posY - displaySize/2;
 			ModuleButton button;
+			
+			if(star.getSubStars() != null && !star.getSubStars().isEmpty()) {
+				float phaseInc = 360/star.getSubStars().size();
+				float phase = 0;
+				for(StellarBody star2 : star.getSubStars()) {
+					displaySize = (int)(planetSizeMultiplier*star2.getDisplayRadius());
+
+					int deltaX, deltaY;
+					deltaX = (int)(star2.getStarSeperation()*MathHelper.cos(phase)*0.5);
+					deltaY = (int)(star2.getStarSeperation()*MathHelper.sin(phase)*0.5);
+
+					planetList.add(button = new ModuleButton(offsetX + deltaX, offsetY + deltaY, star.getId() + Constants.STAR_ID_OFFSET, "", this, new ResourceLocation[] { star.isBlackHole() ? TextureResources.locationBlackHole_icon : TextureResources.locationSunNew }, String.format("Name: %s\nNumber of Planets: %d",star.getName(), star.getNumPlanets()), displaySize, displaySize));
+					button.setSound("buttonBlipA");
+					button.setBGColor(star2.getColorRGB8());
+					phase += phaseInc;
+				}
+			}
+			
 			planetList.add(button = new ModuleButton(offsetX, offsetY, star.getId() + Constants.STAR_ID_OFFSET, "", this, new ResourceLocation[] { star.isBlackHole() ? TextureResources.locationBlackHole_icon : TextureResources.locationSunNew }, String.format("Name: %s\nNumber of Planets: %d",star.getName(), star.getNumPlanets()), displaySize, displaySize));
 
 			button.setSound("buttonBlipA");
