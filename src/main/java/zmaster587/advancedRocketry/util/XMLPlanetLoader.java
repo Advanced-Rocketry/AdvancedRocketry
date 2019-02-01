@@ -563,6 +563,11 @@ public class XMLPlanetLoader {
 				}
 			}
 
+			nameNode = planetNode.getAttributes().getNamedItem("blackHole");
+			if(nameNode != null && nameNode.getNodeValue().equalsIgnoreCase("true")) {
+				star.setBlackHole(true);
+			}
+			
 			nameNode = planetNode.getAttributes().getNamedItem("seperation");
 			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
 				try {
@@ -638,7 +643,7 @@ public class XMLPlanetLoader {
 					blackHoleBit = "";
 				
 				outputString = outputString + "\t\t<star temp=\"" + star2.getTemperature() + 
-						"\" size=\"" + star2.getSize() + "\" seperation=\"" + star2.getStarSeperation() + "\"" + blackHoleBit +" />\n";
+						"\" size=\"" + star2.getSize() + "\" seperation=\"" + star2.getStarSeperation() + "\" " + blackHoleBit +" />\n";
 
 			}
 
