@@ -162,68 +162,6 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	//Yes i was lazy
 	//TODO: make better
 	private boolean useBucket( int slot, ItemStack stack) {
-
-
-		/*if(stack != null && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-
-			ItemStack stackCpy = stack.copy();
-			IFluidHandler fluidCapability = stackCpy.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-
-			boolean hasFluid = false;
-			for(IFluidTankProperties props : fluidCapability.getTankProperties()) {
-				if(props.getContents() != null) {
-					hasFluid = true;
-					break;
-				}
-			}
-			if(hasFluid) {
-				if(slot == 0 && tank.getCapacity() != tank.getFluidAmount()) {
-					//Do a real drain on the item copy to get the resultant item
-					if(tank.getFluid() != null)
-						fluidCapability.drain(new FluidStack(tank.getFluid().getFluid(), tank.getCapacity() - tank.getFluidAmount()) , true);
-					else
-						fluidCapability.drain(tank.getCapacity() - tank.getFluidAmount(), true);
-
-					if(getStackInSlot(1) == null)
-						inventory.setInventorySlotContents(1, stackCpy);
-					else if(ItemStack.areItemStackTagsEqual(getStackInSlot(1), stackCpy) && getStackInSlot(1).getItem().equals(stackCpy.getItem()) && getStackInSlot(1).getItemDamage() == stackCpy.getItemDamage() && stackCpy.getItem().getItemStackLimit(stackCpy) < getStackInSlot(1).stackSize) {
-						getStackInSlot(1).stackSize++;
-					}
-					else
-						return false;
-
-					fluidCapability = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-					//Don't drain the real thing by mistake
-					if(tank.getFluid() != null)
-						tank.fill(fluidCapability.drain(new FluidStack(tank.getFluid().getFluid(), tank.getCapacity() - tank.getFluidAmount()), false), true);
-					else
-						tank.fill(fluidCapability.drain(tank.getCapacity() - tank.getFluidAmount(), false), true);
-					decrStackSize(0, 1);
-					return true;
-				}
-			}
-			else {
-				if(slot == 0 && tank.getFluidAmount() >= FluidContainerRegistry.BUCKET_VOLUME) {
-					//Do a real drain on the item copy to get the resultant item
-					fluidCapability.fill(tank.getFluid(), true);
-
-					if(getStackInSlot(1) == null)
-						inventory.setInventorySlotContents(1, stackCpy);
-					else if(ItemStack.areItemStackTagsEqual(getStackInSlot(1), stackCpy) && getStackInSlot(1).getItem().equals(stackCpy.getItem()) && getStackInSlot(1).getItemDamage() == stackCpy.getItemDamage() && stackCpy.getItem().getItemStackLimit(stackCpy) < getStackInSlot(1).stackSize) {
-						getStackInSlot(1).stackSize++;
-					}
-					else
-						return false;
-
-					fluidCapability = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-					//Don't drain the real thing by mistake
-					tank.drain(fluidCapability.fill(tank.getFluid(), false), true);
-					decrStackSize(0, 1);
-					return true;
-				}
-			}
-		}*/
-
 		return FluidUtils.attemptDrainContainerIInv(inventory, tank, stack, 0, 1);
 	}
 
