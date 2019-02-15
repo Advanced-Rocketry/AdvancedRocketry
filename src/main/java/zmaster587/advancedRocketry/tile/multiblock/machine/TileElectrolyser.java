@@ -51,7 +51,7 @@ public class TileElectrolyser extends TileMultiblockMachine {
 		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(state.getBlock(),1, state.getBlock().getMetaFromState(state)));
 		if(material == MaterialRegistry.getMaterialFromName("Gold"))
 			return 0.9f;
-		else if(material == MaterialRegistry.getMaterialFromName("Aluiminum"))
+		else if(material == MaterialRegistry.getMaterialFromName("Aluminum"))
 			return 0.8f;
 		else if(material == MaterialRegistry.getMaterialFromName("Titanium"))
 			return 0.75f;
