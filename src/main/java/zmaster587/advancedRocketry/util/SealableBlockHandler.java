@@ -5,6 +5,7 @@ import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockDoor.EnumDoorHalf;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -182,7 +183,20 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 		if(state.getValue(BlockDoor.OPEN))
 			return isBlockSealed(world, pos.offset(state2.getValue(BlockDoor.FACING))) && isBlockSealed(world, pos.offset(state2.getValue(BlockDoor.FACING).rotateYCCW().rotateYCCW())); 
 		//state.getValue(BlockDoor.FACING)
-		return isBlockSealed(world, pos.offset(state2.getValue(BlockDoor.FACING).rotateY())) && isBlockSealed(world, pos.offset(state2.getValue(BlockDoor.FACING).rotateYCCW())); 
+		boolean sealed = isBlockSealed(world, pos.offset(state2.getValue(BlockDoor.FACING).rotateY())) && isBlockSealed(world, pos.offset(state2.getValue(BlockDoor.FACING).rotateYCCW())); 
+		
+		// If not sealed, check if the airlock is against the edge of sealed blocks (see issue #89)
+		// Right now only works for single doors with edges, TODO extend to allow other blocks to be placed alongside the same axis as the door (see photo in #89, has two doors)
+		if(!sealed && !state.getValue(BlockDoor.OPEN)) {
+			EnumFacing face = state2.getValue(BlockDoor.FACING);
+			
+			// Rotate to both opposite axises, offset by the original facing value opposite and check if it's sealed.
+			// ex: D = door - E = first offset result - B = second offset result
+			//   EDE
+			//   B B
+			sealed = isBlockSealed(world, pos.offset(face.rotateYCCW()).offset(face.getOpposite())) && isBlockSealed(world, pos.offset(face.rotateY()).offset(face.getOpposite()));
+		}
+		return sealed;
 	}
 
 	/**
