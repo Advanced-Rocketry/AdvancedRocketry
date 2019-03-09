@@ -8,6 +8,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import org.apache.commons.io.FileUtils;
@@ -17,6 +18,7 @@ import com.google.common.io.Files;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
@@ -365,7 +367,11 @@ public class DimensionManager implements IGalaxy {
 		//Linear is easier. Earth is nominal!
 		properties.averageTemperature = getTemperature(properties.getStar(), properties.orbitalDist, properties.getAtmosphereDensity());
 		properties.setGasGiant(true);
-		//TODO: add gasses
+		
+		// Add all gasses for the default world
+		// TODO: add variation
+		for( Fluid gas : AdvancedRocketryFluids.getGasGiantGasses() )
+			properties.getHarvestableGasses().add(gas);
 		registerDim(properties, true);
 		return properties;
 	}
