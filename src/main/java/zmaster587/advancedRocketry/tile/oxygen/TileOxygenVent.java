@@ -268,7 +268,6 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public void update() {
-		tank.setFluid(new FluidStack(FluidRegistry.getFluid("oxygen"), 1000));
 		if(canPerformFunction()) {
 
 			if(hasEnoughEnergy(getPowerPerOperation())) {
