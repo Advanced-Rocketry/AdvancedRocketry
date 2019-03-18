@@ -56,11 +56,11 @@ public class StellarBody {
 	}
 	
 	//Returns the distance between the star and sub stars
-	public float getStarSeperation() {
+	public float getStarSeparation() {
 		return starSeperation;
 	}
 	
-	public void setStarSeperation(float seperation) {
+	public void setStarSeparation(float seperation) {
 		this.starSeperation = seperation;
 	}
 	

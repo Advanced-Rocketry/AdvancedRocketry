@@ -569,9 +569,14 @@ public class XMLPlanetLoader {
 			}
 			
 			nameNode = planetNode.getAttributes().getNamedItem("seperation");
+			
+			//XXX: Recover from early on spelling error
+			//TODO: remove at a future time
+			if(nameNode == null)
+				nameNode = planetNode.getAttributes().getNamedItem("separation");
 			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
 				try {
-					star.setStarSeperation(Float.parseFloat(nameNode.getNodeValue()));
+					star.setStarSeparation(Float.parseFloat(nameNode.getNodeValue()));
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Error Reading star " + star.getName());
 				}
@@ -643,7 +648,7 @@ public class XMLPlanetLoader {
 					blackHoleBit = "";
 				
 				outputString = outputString + "\t\t<star temp=\"" + star2.getTemperature() + 
-						"\" size=\"" + star2.getSize() + "\" seperation=\"" + star2.getStarSeperation() + "\" " + blackHoleBit +" />\n";
+						"\" size=\"" + star2.getSize() + "\" separation=\"" + star2.getStarSeparation() + "\" " + blackHoleBit +" />\n";
 
 			}
 

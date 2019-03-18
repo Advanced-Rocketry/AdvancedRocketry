@@ -225,7 +225,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			{
 				sunSize = properties.getStar().getSize();
 				subStars = properties.getStar().getSubStars();
-				starSeperation = properties.getStar().getStarSeperation();
+				starSeperation = properties.getStar().getStarSeparation();
 			}
 			if(world.provider.getDimension() == Configuration.spaceDimId) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
@@ -278,7 +278,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			{
 				sunSize = properties.getStar().getSize();
 				subStars = properties.getStar().getSubStars();
-				starSeperation = properties.getStar().getStarSeperation();
+				starSeperation = properties.getStar().getStarSeparation();
 			}
 			if(world.provider.getDimension() == Configuration.spaceDimId) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
@@ -509,7 +509,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 					GL11.glRotatef(phaseInc, 0, 1, 0);
 					GL11.glPushMatrix();
 
-					GL11.glRotatef(subStar.getStarSeperation()*(202-solarOrbitalDistance)/100f, 1, 0, 0);
+					GL11.glRotatef(subStar.getStarSeparation()*(202-solarOrbitalDistance)/100f, 1, 0, 0);
 					float color[] = subStar.getColor();
 					drawStar(buffer, subStar , properties, solarOrbitalDistance, subStar.getSize(), new Vec3d(color[0], color[1], color[2]), multiplier);
 					GL11.glPopMatrix();

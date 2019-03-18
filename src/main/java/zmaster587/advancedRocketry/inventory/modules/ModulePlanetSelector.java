@@ -165,8 +165,8 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 					displaySize = (int)(planetSizeMultiplier*star2.getDisplayRadius());
 
 					int deltaX, deltaY;
-					deltaX = (int)(star2.getStarSeperation()*MathHelper.cos(phase)*0.5);
-					deltaY = (int)(star2.getStarSeperation()*MathHelper.sin(phase)*0.5);
+					deltaX = (int)(star2.getStarSeparation()*MathHelper.cos(phase)*0.5);
+					deltaY = (int)(star2.getStarSeparation()*MathHelper.sin(phase)*0.5);
 
 					planetList.add(button = new ModuleButton(offsetX + deltaX, offsetY + deltaY, star.getId() + Constants.STAR_ID_OFFSET, "", this, new ResourceLocation[] { star.isBlackHole() ? TextureResources.locationBlackHole_icon : TextureResources.locationSunNew }, String.format("Name: %s\nNumber of Planets: %d",star.getName(), star.getNumPlanets()), displaySize, displaySize));
 					button.setSound("buttonBlipA");
@@ -205,8 +205,8 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 				displaySize = (int)(planetSizeMultiplier*star2.getDisplayRadius());
 
 				int deltaX, deltaY;
-				deltaX = (int)(star2.getStarSeperation()*MathHelper.cos(phase)*0.5);
-				deltaY = (int)(star2.getStarSeperation()*MathHelper.sin(phase)*0.5);
+				deltaX = (int)(star2.getStarSeparation()*MathHelper.cos(phase)*0.5);
+				deltaY = (int)(star2.getStarSeparation()*MathHelper.sin(phase)*0.5);
 
 				planetList.add(button = new ModuleButton(offsetX + deltaX, offsetY + deltaY, star.getId() + Constants.STAR_ID_OFFSET, "", this, new ResourceLocation[] { star.isBlackHole() ? TextureResources.locationBlackHole_icon : TextureResources.locationSunNew }, String.format("Name: %s\nNumber of Planets: %d",star.getName(), star.getNumPlanets()), displaySize, displaySize));
 				button.setSound("buttonBlipA");
