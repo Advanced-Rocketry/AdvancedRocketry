@@ -593,7 +593,8 @@ public class WorldCommand implements ICommand {
 								commandOffset = 1;
 							} 
 							catch (NumberFormatException e) {
-								sender.sendMessage(new TextComponentString("Invalid Dimensions"));
+								//XXX: Ugh... ordering sucks, what properties does the dimension class have if you don't know what dim it is yet?
+								//sender.sendMessage(new TextComponentString("Invalid Property or Dimension"));
 							}
 						}
 
@@ -606,6 +607,7 @@ public class WorldCommand implements ICommand {
 						try {
 							if(string[2 + commandOffset].equalsIgnoreCase("atmosphereDensity")) {
 								properties.setAtmosphereDensityDirect(Integer.parseUnsignedInt(string[3 + commandOffset]));
+								sender.sendMessage(new TextComponentString("Setting " + string[2 + commandOffset] + " for dimension " + dimId + " to " + string[3 + commandOffset]));
 								PacketHandler.sendToAll(new PacketDimInfo(dimId, properties));
 							}
 							else {
@@ -620,12 +622,14 @@ public class WorldCommand implements ICommand {
 										if(string.length - 3 - commandOffset == var.length) {
 
 											//Make sure we catch if some invalid arg is entered
+											String outString = "";
 											for(int i = 0; i < var.length; i++) {
 												var[i] = Float.parseFloat(string[3+i + commandOffset]);
+												outString = outString + string[3+i + commandOffset] + " ";
 											}
 
 											field.set(properties, var);
-
+											sender.sendMessage(new TextComponentString("Setting " + string[2 + commandOffset] + " for dimension " + dimId + " to " + outString));
 										}
 									}
 
@@ -635,13 +639,14 @@ public class WorldCommand implements ICommand {
 										if(string.length - 3 - commandOffset == var.length) {
 
 											//Make sure we catch if some invalid arg is entered
-
+											String outString = "";
 											for(int i = 0; i < var.length; i++) {
 												var[i] = Integer.parseInt(string[3+i + commandOffset]);
+												outString = outString + string[3+i + commandOffset] + " ";
 											}
 
 											field.set(properties, var);
-
+											sender.sendMessage(new TextComponentString("Setting " + string[2 + commandOffset] + " for dimension " + dimId + " to " + outString));
 										}
 									}
 								}
@@ -656,8 +661,9 @@ public class WorldCommand implements ICommand {
 										field.set(properties, Boolean.parseBoolean(string[3 + commandOffset]));
 									else
 										field.set(properties, string[3 + commandOffset]);
+									sender.sendMessage(new TextComponentString("Setting " + string[2 + commandOffset] + " for dimension " + dimId + " to " + string[3 + commandOffset]));
 								}
-
+								
 								PacketHandler.sendToAll(new PacketDimInfo(dimId, properties));
 								return;
 							}
