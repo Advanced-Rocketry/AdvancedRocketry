@@ -29,6 +29,11 @@ public class ItemData extends ItemIngredient {
 		return 0;
 	}
 
+	@Override
+	public int getItemStackLimit(ItemStack stack) {
+		return getData(stack) == 0 ? super.getItemStackLimit(stack) : 1;
+	}
+	
 	public int getData(ItemStack stack) {
 		return getDataStorage(stack).getData();
 	}
