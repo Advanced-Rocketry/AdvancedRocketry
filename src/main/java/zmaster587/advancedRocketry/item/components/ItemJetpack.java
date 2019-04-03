@@ -86,6 +86,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 		player.motionX *= 1 + speedUpgrades*0.02f;
 		player.motionZ *= 1 + speedUpgrades*0.02f;
 		
+		// If the move
 		if(hasModeSwitched(componentStack))
 			player.capabilities.isFlying = false;
 
@@ -94,7 +95,11 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 				if(!allowsHover)
 					changeMode(componentStack, inv, player);
 				
-				if (InputSyncHandler.isSpaceDown(player))
+				if(!hasFuel(inv))
+				{
+					player.capabilities.isFlying = false;
+				}
+				else if (InputSyncHandler.isSpaceDown(player))
 				{
 					onAccelerate(componentStack, inv, player);
 					setHeight(componentStack, (int)player.posY + player.height);
@@ -164,11 +169,9 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 		}
 	}
 
-	@Override
-	public void onAccelerate(ItemStack stack, IInventory inv, EntityPlayer player) {
+	boolean hasFuel(IInventory inv)
+	{
 		boolean hasFuel = false;
-
-		MODES mode = getMode(stack);
 
 		for(int i = 0; i < inv.getSizeInventory(); i++) {
 			ItemStack fuelTank = inv.getStackInSlot(i);
@@ -180,6 +183,14 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 			}
 
 		}
+		return hasFuel;
+	}
+	
+	@Override
+	public void onAccelerate(ItemStack stack, IInventory inv, EntityPlayer player) {
+		boolean hasFuel = hasFuel(inv);
+
+		MODES mode = getMode(stack);
 
 		if(hasFuel) {
 
