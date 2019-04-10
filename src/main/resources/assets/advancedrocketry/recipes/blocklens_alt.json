@@ -1,0 +1,26 @@
+{
+    "type": "advancedrocketry:precisionassembler",
+    "itemingredients":
+    [
+        {
+            "type": "forge:ore_dict",
+            "ore": "rodIron"
+        },
+        {
+	    "item": "advancedrocketry:lens",
+	    "data": 0,
+	    "count": 3
+        },
+	{
+	    "item": "minecraft:glass",
+	    "count": 3
+        }
+    ],
+    "time": 100,
+    "energy": 1,
+    "itemresults":
+    {
+	"item": "advancedrocketry:blocklens",
+	"data": 0
+    }
+}

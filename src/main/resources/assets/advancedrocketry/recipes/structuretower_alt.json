@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"xxx",
+	" x ",
+	"xxx"
+    ],
+    "key":
+    {
+        "x":
+        {
+            "type": "forge:ore_dict",
+            "ore": "rodSteel"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:structuretower",
+        "count": 8
+    }
+}

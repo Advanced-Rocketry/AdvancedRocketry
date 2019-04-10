@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	" s ",
+	"sps",
+	" s "
+    ],
+    "key":
+    {
+        "s":
+        {
+            "type": "forge:ore_dict",
+            "ore": "rodIron"
+        },
+	"p":
+        {
+            "type": "forge:ore_dict",
+            "ore": "plateIron"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:sawbladeiron",
+        "count": 1,
+        "data": 0
+    }
+}

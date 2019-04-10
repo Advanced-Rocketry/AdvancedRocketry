@@ -1,0 +1,37 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	" r ",
+	"sss",
+        "cwc"
+    ],
+    "key":
+    {
+        "r":
+        {
+            "type": "forge:ore_dict",
+            "ore": "rodCopper"
+        },
+        "s":
+        {
+            "type": "forge:ore_dict",
+            "ore": "sheetIron"
+        },
+        "c":
+        {
+	    "item": "advancedrocketry:ic",
+	    "data": 1
+        },
+        "w":
+        {
+	    "item": "advancedrocketry:orescanner"
+        }
+    },
+    "result":
+    {
+	"item": "advancedrocketry:satelliteprimaryfunction",
+	"data": 4,
+        "count": 1
+    }
+}

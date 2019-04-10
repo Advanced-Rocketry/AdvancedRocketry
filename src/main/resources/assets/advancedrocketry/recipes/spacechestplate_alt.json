@@ -1,0 +1,36 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"wrw",
+	"wtw",
+	"wfw"
+    ],
+    "key":
+    {
+	"w":
+        {
+	    "item": "minecraft:wool",
+            "data": 32767
+        },
+	"t":
+        {
+	    "item": "advancedrocketry:fueltank"
+        },
+	"r":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "rodIron"
+        },
+	"f":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "fanSteel"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:spacechestplate",
+        "count": 1
+    }
+}
