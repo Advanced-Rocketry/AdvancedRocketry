@@ -4,6 +4,7 @@ itemGroup.advancedRocketryOres=Руды Advanced Rocketry
 death.attack.Vacuum=Вас разгерметизировало
 death.attack.Vacuum.player=был разгерметизирован
 entity.advancedRocketry.rocket.name=Ракета
+entity.rocket.name=Ракета
 
 tile.landingPad.name=Посадочная площадка
 tile.seat.name=Сиденье
