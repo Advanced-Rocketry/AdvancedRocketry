@@ -2,6 +2,7 @@ itemGroup.advancedRocketry = Advanced Rocketry
 itemGroup.advancedRocketryOres=Руди Advanced Rocketry
  
 entity.advancedRocketry.rocket.name = Ракета
+entity.rocket.name = Ракета
  
 tile.seat.name=Сидіння
 tile.pad.name=Стартовий майданчик

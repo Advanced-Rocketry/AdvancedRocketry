@@ -4,6 +4,7 @@ itemGroup.advancedRocketryOres=Advanced Rocketry Erze
 death.attack.Vacuum=Du standest nicht mehr unter Druck 
 death.attack.Vacuum.player=Stand nicht mehr unter Druck
 entity.advancedRocketry.rocket.name=Rakete
+entity.rocket.name=Rakete
 
 tile.rocketAssembler.name=Raketenmonteur
 tile.turf.name=Monderde
