@@ -16,7 +16,8 @@ public class GuiHandler implements IGuiHandler {
 	public enum guiId {
 		RocketBuilder,
 		BlastFurnace,
-		OreMappingSatellite
+		OreMappingSatellite,
+		StationChip
 	}
 
 	//X coord is entity ID num if entity

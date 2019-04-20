@@ -735,6 +735,17 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		}
 		return null;
 	}
+	
+	public String getDestinationName(int destDimID) {
+		Iterator<TileEntity> iterator = getTileEntityList().iterator();
+		while(iterator.hasNext()) {
+			TileEntity tile = iterator.next();
+			if(tile instanceof TileGuidanceComputer) {
+				return ((TileGuidanceComputer)tile).getDestinationName(destDimID);
+			}
+		}
+		return "";
+	}
 
 	public void setDestinationCoordinates(Vector3F<Float> vec, int dimid) {
 		Iterator<TileEntity> iterator = getTileEntityList().iterator();

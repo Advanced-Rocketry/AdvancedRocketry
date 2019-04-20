@@ -303,6 +303,18 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 			else if(dimid != Constants.INVALID_PLANET && dimid != SpaceObjectManager.WARPDIMID) {
 				displayStr = DimensionManager.getInstance().getDimensionProperties(dimid).getName();
+				Vector3F<Float> loc = storage.getDestinationCoordinates(dimid, false);
+				if(loc != null)
+				{
+					String name = storage.getDestinationName(dimid);
+					if(!name.isEmpty())
+						displayStr += String.format("\n%s: %s", LibVulpes.proxy.getLocalizedString("msg.label.destName"), name);
+					displayStr += String.format("\n%s: %.0f, %.0f", LibVulpes.proxy.getLocalizedString("msg.label.coords"), loc.x, loc.z);
+				}
+				else
+				{
+					displayStr += "\nCoords: ???, ???";
+				}
 			}
 		}
 

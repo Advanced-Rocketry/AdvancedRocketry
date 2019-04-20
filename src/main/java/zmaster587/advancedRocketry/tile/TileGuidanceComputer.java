@@ -16,6 +16,7 @@ import zmaster587.advancedRocketry.item.ItemAsteroidChip;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
+import zmaster587.advancedRocketry.item.ItemStationChip.LandingLocation;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.StationLandingLocation;
@@ -163,10 +164,31 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				return new Vector3F<Float>(new Float(vec.x), new Float(vec.y), new Float(vec.z));
 			}
 			else {
-				return chip.getTakeoffCoords(stack, landingDimension);
+				LandingLocation loc = chip.getTakeoffCoords(stack, landingDimension);
+				if(loc != null)
+				{
+					return loc.location;
+				}
+				return null;
 			}
 		}
 		return null;
+	}
+	
+	public String getDestinationName(int landingDimension)
+	{
+		ItemStack stack = getStackInSlot(0);
+		if(!stack.isEmpty() && stack.getItem() instanceof ItemStationChip) {
+			ItemStationChip chip = (ItemStationChip)stack.getItem();
+			if(landingDimension != Configuration.spaceDimId) {
+				LandingLocation loc = chip.getTakeoffCoords(stack, landingDimension);
+				if(loc != null)
+				{
+					return loc.name;
+				}
+			}
+		}
+		return "";
 	}
 
 	public void setFallbackDestination(int dimID, Vector3F<Float> coords) {
@@ -231,7 +253,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 
 		if(!stack.isEmpty() && stack.getItem() instanceof ItemStationChip) {
 			ItemStationChip item = (ItemStationChip)stack.getItem();
-			item.setTakeoffCoords(stack, pos, dimId);
+			item.setTakeoffCoords(stack, pos, dimId, 0);
 		}
 	}
 
