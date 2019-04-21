@@ -51,21 +51,34 @@ public class TileFluidTank extends TileFluidHatch {
 		
 		if(resource == null)
 			return 0;
+
+		TileFluidTank handler2 = this.getFluidTankInDirection(EnumFacing.UP);
 		
-		IFluidHandler handler = this.getFluidTankInDirection(EnumFacing.DOWN);
+		//Move up, check if we can fill there, do top down
+		if(handler2 != null && handler2.canFill(resource))
+		{
+			return handler2.fill(resource, doFill);
+		}
+		return fillInternal2(resource, doFill);
+	}
+	
+	private int fillInternal2(FluidStack resource, boolean doFill) {
+		
+		TileFluidTank handler = this.getFluidTankInDirection(EnumFacing.DOWN);
+		
 		int amt = 0;
 
 		if(handler != null) {
-			amt = handler.fill(resource, doFill);
+			amt = handler.fillInternal2(resource, doFill);
 		}
-		//Copy to avoid modifiying the passed one
+		//Copy to avoid modifying the passed one
 		FluidStack resource2 = resource.copy();
 		resource2.amount -= amt;
 		if(resource2.amount > 0)
 			amt += super.fill(resource2, doFill);
 		
 		if(amt > 0 && doFill)
-			fluidChanged = true;	
+			fluidChanged = true;
 		
 		checkForUpdate();
 		
@@ -122,6 +135,11 @@ public class TileFluidTank extends TileFluidHatch {
 			return ((TileFluidTank) tile);
 		}
 		return null;
+	}
+	
+	private boolean canFill(FluidStack stack)
+	{
+		return fluidTank.canFillFluidType(stack);
 	}
 
 	@Override
