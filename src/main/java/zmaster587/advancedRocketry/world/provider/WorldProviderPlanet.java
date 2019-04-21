@@ -12,7 +12,10 @@ import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.IChunkGenerator;
+import net.minecraft.world.storage.DerivedWorldInfo;
+import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.client.IRenderHandler;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -118,7 +121,8 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	public void updateWeather() {
 		super.updateWeather();
 		if (getAtmosphereDensity(new BlockPos(0,0,0)) <= 75 && world.isRaining()) {
-			this.world.getWorldInfo().setRaining(false);
+			WorldInfo worldInfo = ReflectionHelper.getPrivateValue(DerivedWorldInfo.class, (DerivedWorldInfo)this.world.getWorldInfo(), "delegate");
+			worldInfo.setRaining(false);
 		}
 	}
 
