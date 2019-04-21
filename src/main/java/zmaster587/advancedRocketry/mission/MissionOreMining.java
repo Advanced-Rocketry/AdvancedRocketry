@@ -9,11 +9,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
+import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.advancedRocketry.util.AsteroidSmall.StackEntry;
 import zmaster587.libVulpes.util.HashedBlockPosition;
@@ -39,7 +41,13 @@ public class MissionOreMining extends MissionResourceCollection {
 		if(rocketStats.getDrillingPower() != 0f) {
 			int distanceData, compositionData, massData, maxData;
 
-			ItemStack stack = rocketStorage.getGuidanceComputer().getStackInSlot(0);
+			TileGuidanceComputer computer = rocketStorage.getGuidanceComputer();
+			if(computer == null)
+			{
+				AdvancedRocketry.logger.warn("Cannot find guidance computer in rocket landing at " + x + ", " + z + " in dim " + launchDimension + ".  Unable to respawn the rocket.");
+				return;
+			}
+			ItemStack stack = computer.getStackInSlot(0);
 
 			if(!stack.isEmpty() && stack.getItem() instanceof ItemAsteroidChip) {
 
@@ -101,7 +109,6 @@ public class MissionOreMining extends MissionResourceCollection {
 					}
 				}
 			}
-
 		}
 
 		rocketStorage.getGuidanceComputer().setInventorySlotContents(0, ItemStack.EMPTY);
