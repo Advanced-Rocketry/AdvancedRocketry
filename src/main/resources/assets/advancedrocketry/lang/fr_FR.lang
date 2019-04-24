@@ -4,6 +4,7 @@ itemGroup.advancedRocketryOres=Minerai d'Advanced Rocketry
 death.attack.Vacuum=Accident de décompression
 death.attack.Vacuum.player=Est mort dans un accident de décompression
 entity.advancedRocketry.rocket.name=Fusée
+entity.rocket.name=Fusée
 
 tile.landingPad.name=Plate-forme d'atterrissage 
 tile.seat.name=Siège

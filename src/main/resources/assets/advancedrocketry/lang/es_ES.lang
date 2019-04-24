@@ -2,6 +2,7 @@ itemGroup.advancedRocketry=Advanced Rocketry
 itemGroup.advancedRocketryOres=Menas de Advanced Rocketry
 
 entity.advancedRocketry.rocket.name=Cohete
+entity.rocket.name=Cohete
 
 tile.seat.name=Asiento
 tile.pad.name=Plataforma de lanzamiento
