@@ -80,6 +80,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -119,14 +120,26 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	public void SpawnEntity(WorldEvent.PotentialSpawns event) {
 		World world = event.getWorld();
-
-		if (event.getType() != EnumCreatureType.MONSTER)
-			return;
 		
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
 		if(properties != null) {
+			
+			//Can it spawn in the given atmosphere?
+			ListIterator<SpawnListEntry> itr = event.getList().listIterator();
+			while(itr.hasNext())
+			{
+				SpawnListEntry entry = itr.next();
+				try {
+					if(!properties.getAtmosphere().isImmune(entry.newInstance(world)))
+						itr.remove();
+				} catch (Exception e) {
+					//Just let it spawn
+					e.printStackTrace();
+				}
+			}
+			
 			List<SpawnListEntryNBT> entries = properties.getSpawnListEntries();
-			if(!entries.isEmpty())
+			if(!entries.isEmpty() && event.getType() != EnumCreatureType.MONSTER)
 				event.getList().addAll(entries);
 		}
 	}

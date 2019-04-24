@@ -56,10 +56,10 @@ public class RenderTank extends TileEntitySpecialRenderer {
 
 			float amt = fluid.amount / (float)fluidTile.getTankProperties()[0].getCapacity();
 			
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glDisable(GL11.GL_LIGHTING);
-			
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GlStateManager.disableLighting();
+			GlStateManager.enableBlend();
+
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			
 			AxisAlignedBB bb = block.getDefaultState().getBoundingBox(tile.getWorld(), tile.getPos());
 			
@@ -67,10 +67,10 @@ public class RenderTank extends TileEntitySpecialRenderer {
 			RenderHelper.renderCubeWithUV(tess.getBuffer(), bb.minX + 0.01, bb.minY + 0.01, bb.minZ + 0.01, bb.maxX - 0.01, bb.maxY*amt - 0.01, bb.maxZ - 0.01, minU, maxU, minV, maxV);
 			tess.draw();
 
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glDisable(GL11.GL_BLEND);
+			GlStateManager.enableLighting();
+			GlStateManager.disableBlend();
 			GL11.glPopMatrix();
-			GL11.glColor3f(1f, 1f, 1f);
+			GlStateManager.color(1f, 1f, 1f);
 		}
 	}
 }

@@ -367,7 +367,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	public int getAverageTemperature(BlockPos pos) {
-		return getDimensionProperties(pos).averageTemperature;
+		return getDimensionProperties(pos).getAverageTemp();
 	}
 
 	@Override

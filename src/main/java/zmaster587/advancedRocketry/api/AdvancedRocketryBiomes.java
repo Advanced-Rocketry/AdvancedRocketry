@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.api;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -31,6 +32,7 @@ public class AdvancedRocketryBiomes {
 	public static Biome marsh;
 	public static Biome oceanSpires;
 	public static Biome moonBiomeDark;
+	public static Biome volcanic;
 
 	private AdvancedRocketryBiomes() {
 		registeredBiomes = new ArrayList<Biome>();
@@ -133,6 +135,22 @@ public class AdvancedRocketryBiomes {
 		}
 
 		return Biome.getBiome(id);
+	}
+	
+	public static Biome getBiome(String string)
+	{
+		Biome biome;
+		int id = 0;
+		biome = Biome.REGISTRY.getObject(new ResourceLocation(string));
+		
+		//Fallback to ID
+		if( biome == null)
+		{
+			id = Integer.parseInt(string);
+			biome = Biome.getBiome(id, null);
+		}
+		
+		return biome;
 	}
 
 }

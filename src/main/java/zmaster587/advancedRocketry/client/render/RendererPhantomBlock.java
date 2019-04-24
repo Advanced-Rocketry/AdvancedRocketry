@@ -4,6 +4,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -46,8 +47,8 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 		//Render Each block
 
 		this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_ONE_MINUS_SRC_COLOR, GL11.GL_SRC_ALPHA);
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GL11.GL_ONE_MINUS_SRC_COLOR, GL11.GL_SRC_ALPHA);
 		Tessellator tess = Tessellator.getInstance();
 		BufferBuilder buffer =tess.getBuffer();
 
@@ -57,7 +58,7 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 		tess.draw();
 
 		net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
-		GL11.glDisable(GL11.GL_BLEND);
+		GlStateManager.disableBlend();
 		GL11.glPopMatrix();
 
 
@@ -77,7 +78,6 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 			} catch (NullPointerException e) {
 				//silence you fool
 			}
-
 		}
 	}
 }

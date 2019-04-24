@@ -101,6 +101,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.TileGravityController.class, new zmaster587.advancedRocketry.client.render.multiblocks.RenderGravityMachine());
 		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.TileSpaceElevator.class, new zmaster587.advancedRocketry.client.render.multiblocks.RendererSpaceElevator());
 		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.TileBeacon.class, new zmaster587.advancedRocketry.client.render.multiblocks.RenderBeacon());
+		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.machine.TileCentrifuge.class, new zmaster587.advancedRocketry.client.render.multiblocks.RenderCentrifuge());
 
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileModelRenderRotatable.class, modelBlock);
 
@@ -258,33 +259,7 @@ public class ClientProxy extends CommonProxy {
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockNitrogenFluid);
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockHydrogenFluid);
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockFuelFluid);
-		/*ModelLoader.setCustomMeshDefinition(Item, new ItemMeshDefinition() {
-
-		@Override
-		public ModelResourceLocation getModelLocation(ItemStack stack) {
-			return new ModelResourceLocation("advancedRocketry:fluid", "rocketFuel");
-		}
-	});*/
-
-
-		/*Item item = Item.getItemFromBlock((Block) AdvancedRocketryBlocks.blockFuelFluid);
-	ModelBakery.registerItemVariants(item, );
-	ModelResourceLocation modeEgylResourceLocation = new ModelResourceLocation(FLUID_MODEL_PATH, fluidBlock.getFluid().getName());
-	ModelLoader.setCustomMeshDefinition(AdvancedRocketryItems.itemBucketRocketFuel, new ItemMeshDefinition() {
-		@Override
-		public ModelResourceLocation getModelLocation(ItemStack stack) {
-			FluidStack fluidStack = AdvancedRocketryItems.itemBucketRocketFuel.getFluid(stack);
-			return fluidStack != null ? new ModelResourceLocation("advancedrocketry:bucket/" + fluidStack.getFluid().getName(), "inventory") : null;
-		}
-	});
-	//Register Fluid Block
-	ModelLoader.setCustomStateMapper(AdvancedRocketryBlocks.blockFuelFluid, new StateMapperBase() {
-
-		@Override
-		protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-			return new ModelResourceLocation("advancedrocketry:fluid");
-		}
-	});*/
+		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockEnrichedLavaFluid);
 	}
 	
 	@Override
@@ -328,6 +303,7 @@ public class ClientProxy extends CommonProxy {
 				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBucketOxygen, 0, new ModelResourceLocation("advancedrocketry:bucketOxygen", "inventory"));
 				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBucketNitrogen, 0, new ModelResourceLocation("advancedrocketry:bucketNitrogen", "inventory"));
 				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBucketRocketFuel, 0, new ModelResourceLocation("advancedrocketry:bucketRocketFuel", "inventory"));
+				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBucketEnrichedLava, 0, new ModelResourceLocation("advancedrocketry:bucketEnrichedLava", "inventory"));
 
 
 				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSpaceSuit_Chest, 0, new ModelResourceLocation("advancedrocketry:spaceChestplate", "inventory"));

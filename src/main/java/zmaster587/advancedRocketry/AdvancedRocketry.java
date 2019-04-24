@@ -225,6 +225,7 @@ public class AdvancedRocketry {
         AdvancedRocketryBiomes.marsh = new BiomeGenMarsh();
         AdvancedRocketryBiomes.oceanSpires = new BiomeGenOceanSpires();
         AdvancedRocketryBiomes.moonBiomeDark = new BiomeGenMoonDark();
+        AdvancedRocketryBiomes.volcanic = new BiomeGenVolcanic();
 
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.moonBiome, evt.getRegistry());
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.alienForest, evt.getRegistry());
@@ -236,6 +237,7 @@ public class AdvancedRocketry {
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.marsh, evt.getRegistry());
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.oceanSpires, evt.getRegistry());
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.moonBiomeDark, evt.getRegistry());
+        AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.volcanic, evt.getRegistry());
         
         BiomeDictionary.addTypes(AdvancedRocketryBiomes.moonBiome, 
         		BiomeDictionary.Type.WASTELAND,
@@ -254,7 +256,13 @@ public class AdvancedRocketry {
         BiomeDictionary.addTypes(AdvancedRocketryBiomes.hotDryBiome, 
         		BiomeDictionary.Type.WASTELAND,
         		BiomeDictionary.Type.DRY,
-        		BiomeDictionary.Type.COLD
+        		BiomeDictionary.Type.HOT
+        		);
+        BiomeDictionary.addTypes(AdvancedRocketryBiomes.volcanic, 
+        		BiomeDictionary.Type.WASTELAND,
+        		BiomeDictionary.Type.DRY,
+        		BiomeDictionary.Type.HOT,
+        		BiomeDictionary.Type.MOUNTAIN
         		);
         BiomeDictionary.addTypes(AdvancedRocketryBiomes.spaceBiome, BiomeDictionary.Type.VOID);
         BiomeDictionary.addTypes(AdvancedRocketryBiomes.stormLandsBiome, 
@@ -403,6 +411,11 @@ public class AdvancedRocketry {
 		blackListRocketBlocks = config.getStringList("rocketBlockBlackList", Configuration.CATEGORY_GENERAL, new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
 		breakableTorches = config.getStringList("torchBlocks", Configuration.CATEGORY_GENERAL, new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
 		
+		//Enriched Lava in the centrifuge
+		zmaster587.advancedRocketry.api.Configuration.lavaCentrifugeOutputs = config.getStringList("lavaCentrifugeOutputs", Configuration.CATEGORY_GENERAL, 
+				new String[] {"nuggetCopper:100", "nuggetIron:100", "nuggetTin:100", "nuggetLead:100", "nuggetSilver:100",
+							  "nuggetGold:75" ,"nuggetDiamond:10", "nuggetUranium:10", "nuggetIridium:1"}, "Outputs and chances of objects from Enriched Lava in the Centrifuge.  Format: <oredictionaryEntry>:<weight>.  Larger weights are more frequent");
+		
 		harvestableGasses = config.getStringList("harvestableGasses", GAS_MINING, new String[] {}, "list of fluid names that can be harvested as Gas");
 
 		entityList = config.getStringList("entityAtmBypass", Configuration.CATEGORY_GENERAL, new String[] {}, "list entities which should not be affected by atmosphere properties");
@@ -446,6 +459,8 @@ public class AdvancedRocketry {
 		PacketHandler.INSTANCE.addDiscriminator(PacketAirParticle.class);
 		PacketHandler.INSTANCE.addDiscriminator(PacketInvalidLocationNotify.class);
 		PacketHandler.INSTANCE.addDiscriminator(PacketConfigSync.class);
+		PacketHandler.INSTANCE.addDiscriminator(PacketFluidParticle.class);
+		
 		
 		//if(zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods)
 		MinecraftForge.EVENT_BUS.register(this);
@@ -535,6 +550,8 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileBeacon.class, "ARBeacon");
 		GameRegistry.registerTileEntity(TileWirelessTransciever.class, "ARTransciever");
 		GameRegistry.registerTileEntity(TileBlackHoleGenerator.class, "ARblackholegenerator");
+		GameRegistry.registerTileEntity(TilePump.class, new ResourceLocation(Constants.modId, "ARpump"));
+		GameRegistry.registerTileEntity(TileCentrifuge.class, new ResourceLocation(Constants.modId, "ARCentrifuge"));
 		
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
 			GameRegistry.registerTileEntity(TileGravityController.class, "ARGravityMachine");
@@ -550,6 +567,7 @@ public class AdvancedRocketry {
 		LibVulpes.registerRecipeHandler(TileLathe.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/Lathe.xml");
 		LibVulpes.registerRecipeHandler(TileRollingMachine.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/RollingMachine.xml");
 		LibVulpes.registerRecipeHandler(BlockPress.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/SmallPlatePress.xml");
+		LibVulpes.registerRecipeHandler(TileCentrifuge.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/Centrifuge.xml");
 
 
 		
@@ -575,6 +593,7 @@ public class AdvancedRocketry {
         machineRecipes.registerMachine(TileChemicalReactor.class);
         machineRecipes.registerMachine(TileRollingMachine.class);
         machineRecipes.registerMachine(TileCrystallizer.class);
+        machineRecipes.registerMachine(TileCentrifuge.class);
 	}
 	
 	@SubscribeEvent(priority=EventPriority.HIGH)
@@ -622,6 +641,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryItems.itemBucketNitrogen = new ItemARBucket(AdvancedRocketryFluids.fluidNitrogen).setCreativeTab(LibVulpes.tabLibVulpesOres).setUnlocalizedName("bucketNitrogen").setContainerItem(Items.BUCKET);
 		AdvancedRocketryItems.itemBucketHydrogen = new ItemARBucket(AdvancedRocketryFluids.fluidHydrogen).setCreativeTab(LibVulpes.tabLibVulpesOres).setUnlocalizedName("bucketHydrogen").setContainerItem(Items.BUCKET);
 		AdvancedRocketryItems.itemBucketOxygen = new ItemARBucket(AdvancedRocketryFluids.fluidOxygen).setCreativeTab(LibVulpes.tabLibVulpesOres).setUnlocalizedName("bucketOxygen").setContainerItem(Items.BUCKET);
+		AdvancedRocketryItems.itemBucketEnrichedLava = new ItemARBucket(AdvancedRocketryFluids.fluidEnrichedLava).setCreativeTab(LibVulpes.tabLibVulpesOres).setUnlocalizedName("bucketEnrichedLava").setContainerItem(Items.BUCKET);
 		//FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidHydrogen);
 		//FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidNitrogen);
 		//FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidOxygen);
@@ -687,6 +707,7 @@ public class AdvancedRocketry {
 		LibVulpesBlocks.registerItem(AdvancedRocketryItems.itemBucketNitrogen.setRegistryName("bucketNitrogen"));
 		LibVulpesBlocks.registerItem(AdvancedRocketryItems.itemBucketHydrogen.setRegistryName("bucketHydrogen"));
 		LibVulpesBlocks.registerItem(AdvancedRocketryItems.itemBucketOxygen.setRegistryName("bucketOxygen"));
+		LibVulpesBlocks.registerItem(AdvancedRocketryItems.itemBucketEnrichedLava.setRegistryName("bucketEnrichedLava"));
 		LibVulpesBlocks.registerItem(AdvancedRocketryItems.itemSmallAirlockDoor.setRegistryName("smallAirlockDoor"));
 		LibVulpesBlocks.registerItem(AdvancedRocketryItems.itemCarbonScrubberCartridge.setRegistryName("carbonScrubberCartridge"));
 		LibVulpesBlocks.registerItem(AdvancedRocketryItems.itemSealDetector.setRegistryName("sealDetector"));
@@ -762,6 +783,9 @@ public class AdvancedRocketry {
 
 		AdvancedRocketryBlocks.blockMicrowaveReciever = new BlockMultiblockMachine(TileMicrowaveReciever.class, GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockMicrowaveReciever.setUnlocalizedName("microwaveReciever");
+		
+		AdvancedRocketryBlocks.blockCentrifuge = new BlockMultiblockMachine(TileCentrifuge.class, GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setHardness(3f);
+		AdvancedRocketryBlocks.blockCentrifuge.setUnlocalizedName("centrifuge");
 
 		//Arcfurnace
 		AdvancedRocketryBlocks.blockArcFurnace = new BlockMultiblockMachine(TileElectricArcFurnace.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("electricArcFurnace").setCreativeTab(tabAdvRocketry).setHardness(3f);
@@ -795,6 +819,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockPlanetAnalyser = new BlockMultiblockMachine(TileAstrobodyDataProcessor.class, GuiHandler.guiId.MODULARNOINV.ordinal()).setUnlocalizedName("planetanalyser").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockObservatory = new BlockMultiblockMachine(TileObservatory.class, GuiHandler.guiId.MODULARNOINV.ordinal()).setUnlocalizedName("observatory").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockBlackHoleGenerator = new BlockMultiblockMachine(TileBlackHoleGenerator.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("blackholegenerator").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		AdvancedRocketryBlocks.blockPump = new BlockTile(TilePump.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("pump").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		
 		AdvancedRocketryBlocks.blockGuidanceComputer = new BlockTile(TileGuidanceComputer.class,GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("guidanceComputer").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockPlanetSelector = new BlockTile(TilePlanetSelector.class,GuiHandler.guiId.MODULARFULLSCREEN.ordinal()).setUnlocalizedName("planetSelector").setCreativeTab(tabAdvRocketry).setHardness(3f);
@@ -812,7 +837,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockDockingPort = new BlockStationModuleDockingPort(Material.IRON).setUnlocalizedName("stationMarker").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockPipeSealer = new BlockSeal(Material.IRON).setUnlocalizedName("pipeSeal").setCreativeTab(tabAdvRocketry).setHardness(0.5f);
 		AdvancedRocketryBlocks.blockThermiteTorch = new BlockThermiteTorch().setUnlocalizedName("thermiteTorch").setCreativeTab(tabAdvRocketry).setHardness(0.1f).setLightLevel(1f);
-		
+		AdvancedRocketryBlocks.blockBasalt = new Block(Material.ROCK).setUnlocalizedName("basalt").setCreativeTab(tabAdvRocketry).setHardness(5f).setResistance(15f);
 		AdvancedRocketryBlocks.blockTransciever = new BlockTransciever(TileWirelessTransciever.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("wirelessTransciever").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		
 		//Configurable stuff
@@ -851,6 +876,12 @@ public class AdvancedRocketry {
 			AdvancedRocketryFluids.fluidNitrogen = FluidRegistry.getFluid("nitrogen");
 		}		
 
+		AdvancedRocketryFluids.fluidEnrichedLava = new FluidEnrichedLava("enrichedLava", 0xFFFFFFFF).setUnlocalizedName("enrichedLava").setLuminosity(15).setDensity(3000).setViscosity(6000).setTemperature(1300);
+		if(!FluidRegistry.registerFluid(AdvancedRocketryFluids.fluidEnrichedLava))
+		{
+			AdvancedRocketryFluids.fluidEnrichedLava = FluidRegistry.getFluid("enrichedLava");
+		}
+
 		AtmosphereRegister.getInstance().registerHarvestableFluid(AdvancedRocketryFluids.fluidNitrogen);
 		AtmosphereRegister.getInstance().registerHarvestableFluid(AdvancedRocketryFluids.fluidHydrogen);
 		AtmosphereRegister.getInstance().registerHarvestableFluid(AdvancedRocketryFluids.fluidOxygen);
@@ -859,6 +890,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockHydrogenFluid = new BlockFluid(AdvancedRocketryFluids.fluidHydrogen, Material.WATER).setUnlocalizedName("hydrogenFluidBlock").setCreativeTab(CreativeTabs.MISC);
 		AdvancedRocketryBlocks.blockFuelFluid = new BlockFluid(AdvancedRocketryFluids.fluidRocketFuel, new MaterialLiquid(MapColor.YELLOW)).setUnlocalizedName("rocketFuelBlock").setCreativeTab(CreativeTabs.MISC);
 		AdvancedRocketryBlocks.blockNitrogenFluid = new BlockFluid(AdvancedRocketryFluids.fluidNitrogen, Material.WATER).setUnlocalizedName("nitrogenFluidBlock").setCreativeTab(CreativeTabs.MISC);
+		AdvancedRocketryBlocks.blockEnrichedLavaFluid = new BlockEnrichedLava(AdvancedRocketryFluids.fluidEnrichedLava, Material.LAVA).setUnlocalizedName("enrichedLavaBlock").setCreativeTab(CreativeTabs.MISC).setLightLevel(15);
 
 		//Cables
 		AdvancedRocketryBlocks.blockFluidPipe = new BlockLiquidPipe(Material.IRON).setUnlocalizedName("liquidPipe").setCreativeTab(tabAdvRocketry).setHardness(1f);
@@ -919,6 +951,7 @@ public class AdvancedRocketry {
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockHydrogenFluid.setRegistryName("hydrogenFluid"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockFuelFluid.setRegistryName("rocketFuel"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockNitrogenFluid.setRegistryName("nitrogenFluid"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockEnrichedLavaFluid.setRegistryName("enrichedLavaFluid"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockVitrifiedSand.setRegistryName("vitrifiedSand"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockCharcoalLog.setRegistryName("charcoalLog"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockElectricMushroom.setRegistryName("electricMushroom"));
@@ -951,6 +984,9 @@ public class AdvancedRocketry {
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockAlienPlanks.setRegistryName("planks"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockThermiteTorch.setRegistryName("thermiteTorch"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockTransciever.setRegistryName("wirelessTransciever"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockPump.setRegistryName("blockPump"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockCentrifuge.setRegistryName("centrifuge"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockBasalt.setRegistryName("basalt"));
 		
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
 			LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockGravityMachine.setRegistryName("gravityMachine"));
@@ -1021,10 +1057,10 @@ public class AdvancedRocketry {
 
 		//Biomes --------------------------------------------------------------------------------------
 
-		String[] biomeBlackList = config.getStringList("BlacklistedBiomes", "Planet", new String[] {"7", "8", "9", "127", String.valueOf(Biome.getIdForBiome(AdvancedRocketryBiomes.alienForest))}, "List of Biomes to be blacklisted from spawning as BiomeIds, default is: river, sky, hell, void, alienForest");
-		String[] biomeHighPressure = config.getStringList("HighPressureBiomes", "Planet", new String[] { String.valueOf(Biome.getIdForBiome(AdvancedRocketryBiomes.swampDeepBiome)), String.valueOf(Biome.getIdForBiome(AdvancedRocketryBiomes.stormLandsBiome)) }, "Biomes that only spawn on worlds with pressures over 125, will override blacklist.  Defaults: StormLands, DeepSwamp");
-		String[] biomeSingle = config.getStringList("SingleBiomes", "Planet", new String[] { String.valueOf(Biome.getIdForBiome(AdvancedRocketryBiomes.swampDeepBiome)), String.valueOf(Biome.getIdForBiome(AdvancedRocketryBiomes.crystalChasms)),  String.valueOf(Biome.getIdForBiome(AdvancedRocketryBiomes.alienForest)), String.valueOf(Biome.getIdForBiome(Biomes.DESERT_HILLS)), 
-				String.valueOf(Biome.getIdForBiome(Biomes.MUSHROOM_ISLAND)), String.valueOf(Biome.getIdForBiome(Biomes.EXTREME_HILLS)), String.valueOf(Biome.getIdForBiome(Biomes.ICE_PLAINS)) }, "Some worlds have a chance of spawning single biomes contained in this list.  Defaults: deepSwamp, crystalChasms, alienForest, desert hills, mushroom island, extreme hills, ice plains");
+		String[] biomeBlackList = config.getStringList("BlacklistedBiomes", "Planet", new String[] {Biomes.RIVER.getRegistryName().toString(), Biomes.SKY.getRegistryName().toString(), Biomes.HELL.getRegistryName().toString(), Biomes.VOID.getRegistryName().toString(), AdvancedRocketryBiomes.alienForest.getRegistryName().toString()}, "List of Biomes to be blacklisted from spawning as BiomeIds, default is: river, sky, hell, void, alienForest");
+		String[] biomeHighPressure = config.getStringList("HighPressureBiomes", "Planet", new String[] { AdvancedRocketryBiomes.swampDeepBiome.getRegistryName().toString(), AdvancedRocketryBiomes.stormLandsBiome.getRegistryName().toString() }, "Biomes that only spawn on worlds with pressures over 125, will override blacklist.  Defaults: StormLands, DeepSwamp");
+		String[] biomeSingle = config.getStringList("SingleBiomes", "Planet", new String[] { AdvancedRocketryBiomes.volcanic.getRegistryName().toString(), AdvancedRocketryBiomes.swampDeepBiome.getRegistryName().toString(), AdvancedRocketryBiomes.crystalChasms.getRegistryName().toString(),  AdvancedRocketryBiomes.alienForest.getRegistryName().toString(), Biomes.DESERT_HILLS.getRegistryName().toString(), 
+				Biomes.MUSHROOM_ISLAND.getRegistryName().toString(), Biomes.EXTREME_HILLS.getRegistryName().toString(), Biomes.ICE_PLAINS.getRegistryName().toString() }, "Some worlds have a chance of spawning single biomes contained in this list.  Defaults: deepSwamp, crystalChasms, alienForest, desert hills, mushroom island, extreme hills, ice plains");
 
 		config.save();
 
@@ -1033,19 +1069,19 @@ public class AdvancedRocketry {
 		AdvancedRocketryBiomes.instance.registerBlackListBiome(AdvancedRocketryBiomes.moonBiomeDark);
 		AdvancedRocketryBiomes.instance.registerBlackListBiome(AdvancedRocketryBiomes.hotDryBiome);
 		AdvancedRocketryBiomes.instance.registerBlackListBiome(AdvancedRocketryBiomes.spaceBiome);
+		AdvancedRocketryBiomes.instance.registerBlackListBiome(AdvancedRocketryBiomes.volcanic);
 
 		//Read BlackList from config and register Blacklisted biomes
 		for(String string : biomeBlackList) {
 			try {
-				int id = Integer.parseInt(string);
-				Biome biome = Biome.getBiome(id, null);
+				Biome biome = AdvancedRocketryBiomes.getBiome(string);
 
 				if(biome == null)
-					logger.warn(String.format("Error blackListing biome id \"%d\", a biome with that ID does not exist!", id));
+					logger.warn(String.format("Error blackListing biome  \"%s\", a biome with that ID does not exist!", string));
 				else
 					AdvancedRocketryBiomes.instance.registerBlackListBiome(biome);
 			} catch (NumberFormatException e) {
-				logger.warn("Error blackListing \"" + string + "\".  It is not a valid number");
+				logger.warn("Error blackListing \"" + string + "\".  It is not a valid number or Biome ResourceLocation");
 			}
 		}
 
@@ -1057,30 +1093,28 @@ public class AdvancedRocketry {
 		//Read and Register High Pressure biomes from config
 		for(String string : biomeHighPressure) {
 			try {
-				int id = Integer.parseInt(string);
-				Biome biome = Biome.getBiome(id, null);
+				Biome biome = AdvancedRocketryBiomes.getBiome(string);
 
 				if(biome == null)
-					logger.warn(String.format("Error registering high pressure biome id \"%d\", a biome with that ID does not exist!", id));
+					logger.warn(String.format("Error registering high pressure biome \"%s\", a biome with that ID does not exist!", string));
 				else
 					AdvancedRocketryBiomes.instance.registerHighPressureBiome(biome);
 			} catch (NumberFormatException e) {
-				logger.warn("Error registering high pressure biome \"" + string + "\".  It is not a valid number");
+				logger.warn("Error registering high pressure biome \"" + string + "\".  It is not a valid number or Biome ResourceLocation");
 			}
 		}
 
 		//Read and Register Single biomes from config
 		for(String string : biomeSingle) {
 			try {
-				int id = Integer.parseInt(string);
-				Biome biome = Biome.getBiome(id, null);
+				Biome biome = AdvancedRocketryBiomes.getBiome(string);
 
 				if(biome == null)
-					logger.warn(String.format("Error registering single biome id \"%d\", a biome with that ID does not exist!", id));
+					logger.warn(String.format("Error registering single biome \"%s\", a biome with that ID does not exist!", string));
 				else
 					AdvancedRocketryBiomes.instance.registerSingleBiome(biome);
 			} catch (NumberFormatException e) {
-				logger.warn("Error registering single biome \"" + string + "\".  It is not a valid number");
+				logger.warn("Error registering single biome \"" + string + "\".  It is not a valid number or Biome ResourceLocation");
 			}
 		}
 
@@ -1124,6 +1158,7 @@ public class AdvancedRocketry {
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileSpaceElevator(), (BlockTile)AdvancedRocketryBlocks.blockSpaceElevatorController);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileBeacon(), (BlockTile)AdvancedRocketryBlocks.blockBeacon);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileBlackHoleGenerator(), (BlockTile)AdvancedRocketryBlocks.blockBlackHoleGenerator);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileCentrifuge(), (BlockTile)AdvancedRocketryBlocks.blockCentrifuge);
 
 		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
 			((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileGravityController(), (BlockTile)AdvancedRocketryBlocks.blockGravityMachine);
@@ -1172,6 +1207,7 @@ public class AdvancedRocketry {
 		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockHydrogenFluid, AdvancedRocketryItems.itemBucketHydrogen);
 		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockOxygenFluid, AdvancedRocketryItems.itemBucketOxygen);
 		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockNitrogenFluid, AdvancedRocketryItems.itemBucketNitrogen);
+		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockEnrichedLavaFluid, AdvancedRocketryItems.itemBucketEnrichedLava);
 		
 		//register gasses
 		AdvancedRocketryFluids.registerGasGiantGas(AdvancedRocketryFluids.fluidHydrogen);
@@ -1355,7 +1391,7 @@ public class AdvancedRocketry {
 					zmaster587.advancedRocketry.api.Configuration.standardLaserDrillOres.add(oreName);
 			}
 		}
-//TODO recipes?
+		//TODO recipes?
 		machineRecipes.registerXMLRecipes();
 
 		//Add the overworld as a discovered planet
@@ -1522,7 +1558,8 @@ public class AdvancedRocketry {
 				dimCouplingList = loader.readAllPlanets();
 				DimensionManager.dimOffset += dimCouplingList.dims.size();
 			} catch(Exception e) {
-				logger.fatal(e.getMessage());
+				e.printStackTrace();
+				logger.fatal("A serious error has occured while loading the planetDefs XML");
 				FMLCommonHandler.instance().exitJava(-1, false);
 			}
 		}
@@ -1653,19 +1690,6 @@ public class AdvancedRocketry {
 		else {
 			VersionCompat.upgradeDimensionManagerPostLoad(DimensionManager.prevBuild);
 		}
-
-
-		//Clean up floating stations and satellites
-		if(resetFromXml) {
-			//Move all space stations to the overworld
-			for(ISpaceObject obj : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
-				if(obj.getOrbitingPlanetId() != 0 ) {
-					SpaceObjectManager.getSpaceManager().moveStationToBody(obj, 0, false);
-				}
-			}
-			//Satellites are cleaned up on their own as dimension properties are reset
-		}
-
 
 		//Attempt to load ore config from adv planet XML
 		if(dimCouplingList != null) {

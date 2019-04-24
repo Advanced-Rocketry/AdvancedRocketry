@@ -59,4 +59,6 @@ public class AdvancedRocketryItems {
 	public static Item itemBeaconFinder;
 
 	public static Item itemThermite;
+
+	public static Item itemBucketEnrichedLava;
 }

@@ -204,6 +204,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public double rotationalPhi;
 	public OreGenProperties oreProperties = null;
 	public String customIcon;
+	IAtmosphere atmosphereType;
 
 	StellarBody star;
 	int starId;
@@ -293,7 +294,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public OreGenProperties getOreGenProperties(World world) {
 		if(oreProperties != null)
 			return oreProperties;
-		return OreGenProperties.getOresForPressure(AtmosphereTypes.getAtmosphereTypeFromValue(originalAtmosphereDensity), Temps.getTempFromValue(averageTemperature));
+		return OreGenProperties.getOresForPressure(AtmosphereTypes.getAtmosphereTypeFromValue(originalAtmosphereDensity), Temps.getTempFromValue(getAverageTemp()));
 	}
 
 	/**
@@ -457,7 +458,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		}
 
 		AtmosphereTypes atmType = AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity);
-		Temps tempType = Temps.getTempFromValue(averageTemperature);
+		Temps tempType = Temps.getTempFromValue(getAverageTemp());
 
 		if(isStar() && getStarData().isBlackHole())
 			return TextureResources.locationBlackHole_icon;
@@ -510,7 +511,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		}
 
 		AtmosphereTypes atmType = AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity);
-		Temps tempType = Temps.getTempFromValue(averageTemperature);
+		Temps tempType = Temps.getTempFromValue(getAverageTemp());
 
 
 		if(isGasGiant())
@@ -698,6 +699,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 */
 	public IAtmosphere getAtmosphere() {
 		if(hasAtmosphere()) {
+			if(Temps.getTempFromValue(getAverageTemp()) == Temps.TOOHOT)
+				return AtmosphereType.VERYHOT;
 			if(AtmosphereTypes.getAtmosphereTypeFromValue(getAtmosphereDensity()) == AtmosphereTypes.HIGHPRESSURE)
 				return AtmosphereType.HIGHPRESSURE;
 			return AtmosphereType.AIR;
@@ -891,7 +894,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return true if this dimension is allowed to have rivers
 	 */
 	public boolean hasRivers() {
-		return AtmosphereTypes.getAtmosphereTypeFromValue(originalAtmosphereDensity).compareTo(AtmosphereTypes.LOW) <= 0 && Temps.getTempFromValue(averageTemperature).isInRange(Temps.COLD, Temps.HOT);
+		return AtmosphereTypes.getAtmosphereTypeFromValue(originalAtmosphereDensity).compareTo(AtmosphereTypes.LOW) <= 0 && Temps.getTempFromValue(getAverageTemp()).isInRange(Temps.COLD, Temps.HOT);
 	}
 
 
@@ -949,6 +952,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		else if(averageTemperature > Temps.TOOHOT.getTemp()) {
 			viableBiomes.add(AdvancedRocketryBiomes.hotDryBiome);
+			viableBiomes.add(AdvancedRocketryBiomes.volcanic);
 		}
 		else if(averageTemperature > Temps.HOT.getTemp()) {
 
@@ -1477,6 +1481,12 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			nbt.setInteger("fillBlockMeta", fillerBlock.getBlock().getMetaFromState(fillerBlock));
 		}
 
+	}
+	
+	public int getAverageTemp()
+	{
+		averageTemperature = DimensionManager.getInstance().getTemperature(this.getStar(), this.orbitalDist, this.getAtmosphereDensity());
+		return averageTemperature;
 	}
 
 	public IBlockState getOceanBlock() {

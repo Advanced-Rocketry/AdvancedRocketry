@@ -10,6 +10,7 @@ import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
 import zmaster587.advancedRocketry.entity.EntityElevatorCapsule;
 import zmaster587.advancedRocketry.util.ItemAirUtils;
+import zmaster587.libVulpes.LibVulpes;
 
 public class AtmosphereHighPressure extends AtmosphereType{
 	
@@ -21,7 +22,7 @@ public class AtmosphereHighPressure extends AtmosphereType{
 
 	@Override
 	public String getDisplayMessage() {
-		return "Warning: Pressure too high!";
+		return LibVulpes.proxy.getLocalizedString("msg.tooDense");
 	}
 	
 	@Override

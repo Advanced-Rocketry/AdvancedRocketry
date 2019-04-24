@@ -51,6 +51,7 @@ public abstract class MachineCategoryTemplate<T extends MachineRecipe> implement
 			T recipeWrapper, IIngredients ingredients) {
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 		IGuiFluidStackGroup guiFluidStacks = recipeLayout.getFluidStacks();
+		int numOutputs = ingredients.getOutputs(ItemStack.class).size() + ingredients.getOutputs(FluidStack.class).size();
 		
 		for(int i = 0; i < 10; i++ ) {
 			guiItemStacks.init(i, true,   18*(i%3),  18*(i/3));
@@ -59,7 +60,7 @@ public abstract class MachineCategoryTemplate<T extends MachineRecipe> implement
 			guiFluidStacks.init(i, true,   18*(i%3) + 1,  18*(i/3) + 1, 16, 16, 1, false, null);
 		}
 		
-		for(int i = 0; i < 10; i++ ) {
+		for(int i = 0; i < numOutputs; i++ ) {
 			guiItemStacks.init(i+9, false, 108 + 18*(i%3),  18*(i/3));
 			guiFluidStacks.init(i+9, false, 108 + 18*(i%3) + 1,  18*(i/3) + 1, 16, 16, 1, false, null);
 		}

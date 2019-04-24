@@ -1,0 +1,51 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"rsr",
+	"abc",
+	"pgp"
+    ],
+    "key":
+    {
+        "r":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "stickIron"
+        },
+        "s":
+        {
+            "item": "advancedrocketry:misc",
+            "data": 0
+        },
+	"a":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 5
+        },
+	"b":
+        {
+            "item": "libvulpes:structuremachine"
+        },
+	"c":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 3
+        },
+	"g":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "fanSteel"
+        },
+	"p":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "plateSteel"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:centrifuge",
+        "count": 1
+    }
+}

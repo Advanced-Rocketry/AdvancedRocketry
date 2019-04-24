@@ -95,4 +95,8 @@ public class AdvancedRocketryBlocks {
 	public static Block blockTransciever;
 	public static Block blockMoonTurfDark;
 	public static Block blockBlackHoleGenerator;
+	public static Block blockEnrichedLavaFluid;
+	public static Block blockPump;
+	public static Block blockCentrifuge;
+	public static Block blockBasalt;
 }

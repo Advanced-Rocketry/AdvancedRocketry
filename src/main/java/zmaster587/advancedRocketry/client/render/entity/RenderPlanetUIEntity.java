@@ -212,7 +212,7 @@ public class RenderPlanetUIEntity extends Render<EntityUIPlanet> implements IRen
 			Minecraft.getMinecraft().renderEngine.bindTexture(planetUIFG);
 			renderATMIndicator(buffer, properties.getAtmosphereDensity()/200f);
 			//Render Temp
-			renderTemperatureIndicator(buffer, properties.averageTemperature/200f);
+			renderTemperatureIndicator(buffer, properties.getAverageTemp()/200f);
 
 			//Render planet name
 			GL11.glEnable(GL11.GL_DEPTH_TEST);

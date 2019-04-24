@@ -139,7 +139,9 @@ public class TileFluidTank extends TileFluidHatch {
 	
 	private boolean canFill(FluidStack stack)
 	{
-		return fluidTank.canFillFluidType(stack);
+		FluidStack stack2 = fluidTank.getFluid();
+		
+		return stack2 == null || (stack2.getFluid() == stack.getFluid());
 	}
 
 	@Override

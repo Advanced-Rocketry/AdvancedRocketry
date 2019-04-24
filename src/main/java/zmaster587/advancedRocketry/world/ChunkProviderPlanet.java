@@ -24,6 +24,7 @@ import net.minecraftforge.event.terraingen.TerrainGen;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.util.OreGenProperties;
 import zmaster587.advancedRocketry.util.OreGenProperties.OreEntry;
@@ -31,6 +32,7 @@ import zmaster587.advancedRocketry.world.decoration.MapGenCaveExt;
 import zmaster587.advancedRocketry.world.decoration.MapGenCrater;
 import zmaster587.advancedRocketry.world.decoration.MapGenGeode;
 import zmaster587.advancedRocketry.world.decoration.MapGenRavineExt;
+import zmaster587.advancedRocketry.world.decoration.MapGenVolcano;
 import zmaster587.advancedRocketry.world.ore.CustomizableOreGen;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 
@@ -77,6 +79,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 
 	private MapGenCrater craterGenerator;
 	private MapGenGeode geodeGenerator;
+	private MapGenVolcano volcanoGenerator;
 
 	{
 		caveGenerator = TerrainGen.getModdedMapGen(caveGenerator, CAVE);
@@ -155,6 +158,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 
 		//TODO: may break on little planets
 		float atmDensity = ((WorldProviderPlanet)worldObj.provider).getAtmosphereDensity(new BlockPos(0,0,0));
+		int heat = ((WorldProviderPlanet)worldObj.provider).getAverageTemperature(new BlockPos(0,0,0));
 
 		if(atmDensity < 0.75f)
 			craterGenerator = new MapGenCrater( (int)(10 +  (26*(1-atmDensity)) ));
@@ -166,6 +170,12 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		}
 		else
 			geodeGenerator = null;
+		
+		if(Temps.getTempFromValue(heat) == Temps.TOOHOT) {
+			volcanoGenerator = new MapGenVolcano(800);
+		}
+		else
+			volcanoGenerator = null;
 	}
 
 	public void setBlocksInChunk(int x, int z, ChunkPrimer primer)
@@ -274,6 +284,9 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 
 		if(this.craterGenerator != null)
 			this.craterGenerator.generate(this.worldObj, x, z, chunkprimer);
+		
+		if(this.volcanoGenerator != null)
+			this.volcanoGenerator.generate(this.worldObj, x, z, chunkprimer);
 
 		if(this.geodeGenerator != null)
 			this.geodeGenerator.generate(this.worldObj, x, z, chunkprimer);

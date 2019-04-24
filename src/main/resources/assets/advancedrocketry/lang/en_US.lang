@@ -110,6 +110,10 @@ tile.beacon.name=Beacon
 tile.thermiteTorch.name=Thermite Torch
 tile.wirelessTransciever.name=Wireless Transciever
 tile.blackholegenerator.name=Black Hole Generator
+tile.pump.name=Fluid Pump
+tile.centrifuge.name=Centrifuge
+tile.enrichedLavaBlock.name=Enriched Lava Block
+tile.basalt.name=Basalt
 
 tile.Dilithium.name=Dilithium Ore
 
@@ -155,6 +159,7 @@ item.bucketRocketFuel.name=Tank of Rocket Fuel
 item.bucketNitrogen.name=Tank of Nitrogen
 item.bucketHydrogen.name=Tank of Hydrogen
 item.bucketOxygen.name=Tank of Oxygen
+item.bucketEnrichedLava.name=Tank of Enriched Lava
 item.smallAirlock.name=Small Airlock Door
 item.carbonScrubberCartridge.name=Carbon Collection Cartridge
 item.jackhammer.name=Jack Hammer
@@ -203,6 +208,7 @@ fluid.oxygen=Oxygen
 fluid.hydrogen=Hydrogen
 fluid.nitrogen=Nitrogen
 fluid.rocketFuel=Rocket Fuel
+fluid.enrichedLava=Enriched Lava
 
 mission.asteroidmining.name=Asteroid Mining
 mission.gascollection.name=Gas Collection
@@ -452,3 +458,5 @@ msg.programfail=Programming Failed
 msg.modules=modules
 msg.na=N/A
 msg.entityDeployedRocket.notGasGiant=No Gas Here
+msg.tooHot=Warning: It's too hot!
+msg.tooDense=Warning: Air Pressure too high!

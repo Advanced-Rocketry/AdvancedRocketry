@@ -33,6 +33,14 @@
 				"fluid": "hydrogen"
 			}
                     }
+		],
+		"enrichedlava": [
+                    {
+			"model": "forge:fluid",
+			"custom": {
+				"fluid": "enrichedlava"
+			}
+                    }
 		]
 	}
 }

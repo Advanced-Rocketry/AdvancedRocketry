@@ -166,4 +166,5 @@ public class Configuration {
 	public static int defaultItemTimeBlackHole;
 
 	public static Map<ItemStack, Integer> blackHoleGeneratorBlocks = new HashMap<ItemStack, Integer>();
+	public static String[] lavaCentrifugeOutputs;
 }

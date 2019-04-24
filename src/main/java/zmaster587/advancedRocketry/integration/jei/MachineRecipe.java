@@ -7,6 +7,8 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import zmaster587.libVulpes.interfaces.IRecipe;
+import zmaster587.libVulpes.recipe.RecipesMachine.ChanceItemStack;
+import zmaster587.libVulpes.recipe.RecipesMachine.Recipe;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ public class MachineRecipe extends BlankRecipeWrapper {
 	
 	private List<List<ItemStack>> ingredients;
 	private ArrayList<ItemStack> result;
+	private ArrayList<ChanceItemStack> resultChance;
 	private List<FluidStack> fluidIngredients;
 	private List<FluidStack> fluidOutputs;
 	private int energy, time;
@@ -23,7 +26,31 @@ public class MachineRecipe extends BlankRecipeWrapper {
 
 	protected MachineRecipe(IRecipe rec) {
 		//TODO: multiple outputs
-		result  = new ArrayList<>(rec.getOutput());
+		if(rec instanceof Recipe)
+		{
+			resultChance = new ArrayList<ChanceItemStack>(((Recipe)rec).getChanceOutputs());
+			result = new ArrayList<>();
+			
+			int i = -1;
+			float totalChance = 0;
+			for( ChanceItemStack stack : resultChance )
+				totalChance += stack.chance;
+			
+			for( ChanceItemStack stack : resultChance )
+			{
+				i++;
+				if(stack.chance <= 0)
+					continue;
+				
+				ItemStack stack2 = stack.stack.copy();
+				stack2.setStackDisplayName(String.format("%s   Chance: %.1f%%",  stack2.getDisplayName(), 100*stack.chance/totalChance));
+				result.add(stack2);
+			}
+		}
+		else
+		{
+			result  = new ArrayList<>(rec.getOutput());
+		}
 		ingredients = rec.getIngredients();
 		energy = rec.getPower();
 		time = rec.getTime();
@@ -62,5 +89,6 @@ public class MachineRecipe extends BlankRecipeWrapper {
 			String timeString = String.format("Time: %d s", time/20);
 			stringWidth = fontRendererObj.getStringWidth(powerString);
 			fontRendererObj.drawString(timeString, recipeWidth - 55, 55, Color.black.getRGB());
+			
 	}
 }

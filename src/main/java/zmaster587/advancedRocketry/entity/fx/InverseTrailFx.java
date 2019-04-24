@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 public class InverseTrailFx extends Particle {
-	public static final ResourceLocation icon = new ResourceLocation("advancedrocketry:textures/particle/soft.png");
+	protected ResourceLocation icon;
 
 	
 	public InverseTrailFx(World world, double x,
@@ -28,6 +28,8 @@ public class InverseTrailFx extends Particle {
         this.motionX = -motx;
         this.motionY = -moty;
         this.motionZ = -motz;
+        
+        icon = new ResourceLocation("advancedrocketry:textures/particle/soft.png");
         
         
 		this.prevPosX = this.posX = x + motx*this.particleMaxAge;
