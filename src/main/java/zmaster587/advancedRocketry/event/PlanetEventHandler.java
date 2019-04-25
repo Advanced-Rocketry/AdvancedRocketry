@@ -193,7 +193,7 @@ public class PlanetEventHandler {
 
 		if(!event.getEntity().world.isRemote && event.getEntity().world.getTotalWorldTime() % 20 ==0 && event.getEntity() instanceof EntityPlayer) {
 			if(DimensionManager.getInstance().getDimensionProperties(event.getEntity().world.provider.getDimension()).getName().equals("Luna") && 
-					event.getEntity().getPosition().distanceSq(67, 80, 2347) < 512 ) {
+					event.getEntity().getPosition().distanceSq(2347,80, 67) < 512 ) {
 				ARAchivements.WENT_TO_THE_MOON.trigger((EntityPlayerMP)event.getEntity());
 			}	
 		}

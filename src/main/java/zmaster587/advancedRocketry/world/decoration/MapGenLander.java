@@ -17,7 +17,7 @@ public class MapGenLander {
 		World worldIn = event.getWorld();
 		BlockPos position = new BlockPos(16*event.getChunkX() + 3,0, 16*event.getChunkZ() + 11);
 
-		if(DimensionManager.getInstance().getDimensionProperties(worldIn.provider.getDimension()).getName().equals("Luna") && position.getX() == 67 && position.getZ() == 2347) {
+		if(DimensionManager.getInstance().getDimensionProperties(worldIn.provider.getDimension()).getName().equals("Luna") && position.getZ() == 67 && position.getX() == 2347) {
 
 			position = worldIn.getHeight(position).down();
 			
