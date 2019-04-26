@@ -133,9 +133,8 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 	@SideOnly(Side.CLIENT)
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		return new AxisAlignedBB(this.pos.getX() -5, this.pos.getY() - 100, this.pos.getZ() - 5, this.pos.getX() + 5, this.pos.getY() +5, this.pos.getZ() + 5);
+		return new AxisAlignedBB(this.pos.getX() -5, this.pos.getY() - 1000, this.pos.getZ() - 5, this.pos.getX() + 5, this.pos.getY() +50, this.pos.getZ() + 5);
 	}
-	
 	
 	
 	@Override
