@@ -45,7 +45,7 @@ hard to read
 [insert here]
 
 Why is this important?
-Full crashlogs contain valuble information like where exactly in the code the error occured, what other mods may be running and what version of forge you have.  This helps us replicate and diagnose the issue FAR faster.
+Full crashlogs contain valuable information like where exactly in the code the error occurred, what other mods may be running and what version of forge you have.  This helps us replicate and diagnose the issue FAR faster.
 
 ## Description of the problem
 [How can you reliably reproduce the problem]
