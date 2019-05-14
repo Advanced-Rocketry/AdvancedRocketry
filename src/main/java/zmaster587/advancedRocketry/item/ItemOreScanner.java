@@ -76,9 +76,17 @@ public class ItemOreScanner extends Item implements IModularInventory {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
 		ItemStack stack = playerIn.getHeldItem(hand);
-		if(!playerIn.world.isRemote && stack != null)
-			playerIn.openGui(AdvancedRocketry.instance, GuiHandler.guiId.OreMappingSatellite.ordinal(), worldIn, (int)playerIn.getPosition().getX(), (int)getSatelliteID(stack), (int)playerIn.getPosition().getZ());
+		if(!playerIn.world.isRemote && !stack.isEmpty())
+		{
+			int satelliteId = (int)getSatelliteID(stack);
+			
+			SatelliteBase satellite = DimensionManager.getInstance().getSatellite(satelliteId);
+			
+			if(satellite != null && (satellite instanceof SatelliteOreMapping) && satellite.getDimensionId() == worldIn.provider.getDimension())
+				playerIn.openGui(AdvancedRocketry.instance, GuiHandler.guiId.OreMappingSatellite.ordinal(), worldIn, (int)playerIn.getPosition().getX(), (int)getSatelliteID(stack), (int)playerIn.getPosition().getZ());
 
+		}
+			
 		return super.onItemRightClick(worldIn, playerIn, hand);
 	}
 	
@@ -87,8 +95,19 @@ public class ItemOreScanner extends Item implements IModularInventory {
 			World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
 			float hitX, float hitY, float hitZ) {
 		if(!playerIn.world.isRemote && hand == EnumHand.MAIN_HAND)
-			playerIn.openGui(AdvancedRocketry.instance, GuiHandler.guiId.OreMappingSatellite.ordinal(), worldIn, (int)playerIn.getPosition().getX(), (int)getSatelliteID(playerIn.getHeldItem(hand)), (int)playerIn.getPosition().getZ());
+		{
+			ItemStack stack = playerIn.getHeldItem(hand);
+			if(!playerIn.world.isRemote && !stack.isEmpty())
+			{
+				int satelliteId = (int)getSatelliteID(stack);
+				
+				SatelliteBase satellite = DimensionManager.getInstance().getSatellite(satelliteId);
+				
+				if(satellite != null && (satellite instanceof SatelliteOreMapping) && satellite.getDimensionId() == worldIn.provider.getDimension())
+					playerIn.openGui(AdvancedRocketry.instance, GuiHandler.guiId.OreMappingSatellite.ordinal(), worldIn, (int)playerIn.getPosition().getX(), (int)getSatelliteID(stack), (int)playerIn.getPosition().getZ());
 
+			}
+		}
 		return super.onItemUse(playerIn, worldIn, pos, hand, facing, hitX, hitY,
 				hitZ);
 	}
