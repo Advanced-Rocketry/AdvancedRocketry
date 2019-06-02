@@ -120,6 +120,7 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityUIButton.class, (IRenderFactory<EntityUIButton>)new RenderButtonUIEntity(null));
 		RenderingRegistry.registerEntityRenderingHandler(EntityUIStar.class, (IRenderFactory<EntityUIStar>)new RenderStarUIEntity(null));
 		RenderingRegistry.registerEntityRenderingHandler(EntityElevatorCapsule.class, (IRenderFactory<EntityElevatorCapsule>)new RenderElevatorCapsule(null));
+		RenderingRegistry.registerEntityRenderingHandler(EntityHoverCraft.class, (IRenderFactory<EntityHoverCraft>)new RenderHoverCraft(null));
 	}
 
 	@Override
@@ -340,6 +341,7 @@ public class ClientProxy extends CommonProxy {
 
 				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBasicLaserGun, 0, new ModelResourceLocation("advancedrocketry:basicLaserGun", "inventory"));
 				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemThermite, 0, new ModelResourceLocation("advancedrocketry:thermite", "inventory"));
+				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemHovercraft, 0, new ModelResourceLocation("advancedrocketry:hoverCraft", "inventory"));
 	}
 	
 	@Override

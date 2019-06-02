@@ -12,6 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
+import zmaster587.advancedRocketry.entity.EntityHoverCraft;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.interfaces.INetworkEntity;
@@ -56,6 +57,16 @@ public class KeyBindings {
 			}
 		}
 
+		if(player.getRidingEntity() != null && player.getRidingEntity() instanceof EntityHoverCraft) {
+			EntityHoverCraft hoverCraft = (EntityHoverCraft)player.getRidingEntity();
+			if(Minecraft.getMinecraft().inGameHasFocus && player.equals(Minecraft.getMinecraft().player)) {
+				hoverCraft.onTurnLeft(Keyboard.isKeyDown(turnRocketLeft.getKeyCode()));
+				hoverCraft.onTurnRight(Keyboard.isKeyDown(turnRocketRight.getKeyCode()));
+				hoverCraft.onUp(Keyboard.isKeyDown(turnRocketUp.getKeyCode()));
+				hoverCraft.onDown(Keyboard.isKeyDown(turnRocketDown.getKeyCode()));
+			}
+		}
+		
 		if(Keyboard.isKeyDown(toggleJetpack.getKeyCode())) {
 			if(player.isSneaking())
 				PacketHandler.sendToServer(new PacketChangeKeyState(1, false));

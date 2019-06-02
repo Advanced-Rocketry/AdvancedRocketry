@@ -50,8 +50,6 @@ public class RenderElevatorCapsule extends Render<EntityElevatorCapsule> impleme
 	@Override
 	public void doRender(EntityElevatorCapsule entity, double x, double y, double z,
 			float entityYaw, float partialTicks) {
-
-		
 		GL11.glPushMatrix();
 		GL11.glTranslated(x, y + 1, z);
 		GL11.glRotated(entityYaw, 0, 1, 0);
@@ -62,8 +60,5 @@ public class RenderElevatorCapsule extends Render<EntityElevatorCapsule> impleme
 			sphere.renderOnly("Door");
 
 		GL11.glPopMatrix();
-
-
-
 	}
 }
