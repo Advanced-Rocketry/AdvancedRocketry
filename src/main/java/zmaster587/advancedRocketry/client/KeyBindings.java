@@ -50,37 +50,37 @@ public class KeyBindings {
 
 					rocket.prepareLaunch();
 				}
-				rocket.onTurnLeft(Keyboard.isKeyDown(turnRocketLeft.getKeyCode()));
-				rocket.onTurnRight(Keyboard.isKeyDown(turnRocketRight.getKeyCode()));
-				rocket.onUp(Keyboard.isKeyDown(turnRocketUp.getKeyCode()));
-				rocket.onDown(Keyboard.isKeyDown(turnRocketDown.getKeyCode()));
+				rocket.onTurnLeft(turnRocketLeft.isKeyDown());
+				rocket.onTurnRight(turnRocketRight.isKeyDown());
+				rocket.onUp(turnRocketUp.isKeyDown());
+				rocket.onDown(turnRocketDown.isKeyDown());
 			}
 		}
 
 		if(player.getRidingEntity() != null && player.getRidingEntity() instanceof EntityHoverCraft) {
 			EntityHoverCraft hoverCraft = (EntityHoverCraft)player.getRidingEntity();
 			if(Minecraft.getMinecraft().inGameHasFocus && player.equals(Minecraft.getMinecraft().player)) {
-				hoverCraft.onTurnLeft(Keyboard.isKeyDown(turnRocketLeft.getKeyCode()));
-				hoverCraft.onTurnRight(Keyboard.isKeyDown(turnRocketRight.getKeyCode()));
-				hoverCraft.onUp(Keyboard.isKeyDown(turnRocketUp.getKeyCode()));
-				hoverCraft.onDown(Keyboard.isKeyDown(turnRocketDown.getKeyCode()));
+				hoverCraft.onTurnLeft(turnRocketLeft.isKeyDown());
+				hoverCraft.onTurnRight(turnRocketRight.isKeyDown());
+				hoverCraft.onUp(turnRocketUp.isKeyDown());
+				hoverCraft.onDown(turnRocketDown.isKeyDown());
 			}
 		}
 		
-		if(Keyboard.isKeyDown(toggleJetpack.getKeyCode())) {
+		if(toggleJetpack.isPressed()) {
 			if(player.isSneaking())
 				PacketHandler.sendToServer(new PacketChangeKeyState(1, false));
 			else
 				PacketHandler.sendToServer(new PacketChangeKeyState(0, false));
 		}
 
-		if(Keyboard.isKeyDown(openRocketUI.getKeyCode())) {
+		if(openRocketUI.isPressed()) {
 			if(player.getRidingEntity() instanceof EntityRocketBase) {
 				PacketHandler.sendToServer(new PacketEntity((INetworkEntity) player.getRidingEntity(), (byte)EntityRocket.PacketType.OPENGUI.ordinal()));
 			}
 		}
 
-		if(Keyboard.isKeyDown(toggleRCS.getKeyCode())) {
+		if(toggleRCS.isPressed()) {
 			if(player.getRidingEntity() instanceof EntityRocketBase) {
 				PacketHandler.sendToServer(new PacketEntity((INetworkEntity) player.getRidingEntity(), (byte)EntityRocket.PacketType.TOGGLE_RCS.ordinal()));
 			}
