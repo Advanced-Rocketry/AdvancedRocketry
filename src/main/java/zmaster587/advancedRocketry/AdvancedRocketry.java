@@ -89,7 +89,6 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties.AtmosphereTypes
 import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
 import zmaster587.advancedRocketry.enchant.EnchantmentSpaceBreathing;
 import zmaster587.advancedRocketry.entity.*;
-import zmaster587.advancedRocketry.event.BucketHandler;
 import zmaster587.advancedRocketry.event.CableTickHandler;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.event.WorldEvents;
@@ -144,6 +143,7 @@ import zmaster587.libVulpes.block.BlockMotor;
 import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisible;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
+import zmaster587.libVulpes.event.BucketHandler;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.items.ItemBlockMeta;
 import zmaster587.libVulpes.items.ItemIngredient;
@@ -1180,7 +1180,6 @@ public class AdvancedRocketry {
 		PlanetEventHandler handle = new PlanetEventHandler();
 		MinecraftForge.EVENT_BUS.register(handle);
 		MinecraftForge.ORE_GEN_BUS.register(handle);
-		MinecraftForge.EVENT_BUS.register(new BucketHandler());
 
 		CableTickHandler cable = new CableTickHandler();
 		MinecraftForge.EVENT_BUS.register(cable);
@@ -1209,11 +1208,11 @@ public class AdvancedRocketry {
 		
 
 		//Register buckets
-		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockFuelFluid, AdvancedRocketryItems.itemBucketRocketFuel);
-		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockHydrogenFluid, AdvancedRocketryItems.itemBucketHydrogen);
-		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockOxygenFluid, AdvancedRocketryItems.itemBucketOxygen);
-		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockNitrogenFluid, AdvancedRocketryItems.itemBucketNitrogen);
-		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockEnrichedLavaFluid, AdvancedRocketryItems.itemBucketEnrichedLava);
+		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockFuelFluid, AdvancedRocketryItems.itemBucketRocketFuel, AdvancedRocketryFluids.fluidRocketFuel);
+		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockHydrogenFluid, AdvancedRocketryItems.itemBucketHydrogen, AdvancedRocketryFluids.fluidHydrogen);
+		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockOxygenFluid, AdvancedRocketryItems.itemBucketOxygen, AdvancedRocketryFluids.fluidOxygen);
+		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockNitrogenFluid, AdvancedRocketryItems.itemBucketNitrogen, AdvancedRocketryFluids.fluidNitrogen);
+		BucketHandler.INSTANCE.registerBucket(AdvancedRocketryBlocks.blockEnrichedLavaFluid, AdvancedRocketryItems.itemBucketEnrichedLava, AdvancedRocketryFluids.fluidEnrichedLava);
 		
 		//register gasses
 		AdvancedRocketryFluids.registerGasGiantGas(AdvancedRocketryFluids.fluidHydrogen);
