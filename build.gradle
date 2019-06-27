@@ -38,7 +38,7 @@ jar {
 
 apply from: "gradle/scripts/getbuildnumber.gradle"
 minecraft {
-    version = "1.12.2-14.23.2.2642"
+    version = "1.12.2-14.23.4.2739"
     runDir = "run"
     mappings = "snapshot_20170624"
     sourceCompatibility = 1.8
