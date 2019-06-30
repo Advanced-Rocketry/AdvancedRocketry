@@ -121,7 +121,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	public void updateWeather() {
 		super.updateWeather();
 		if (getAtmosphereDensity(new BlockPos(0,0,0)) <= 75 && world.isRaining()) {
-			WorldInfo worldInfo = ReflectionHelper.getPrivateValue(DerivedWorldInfo.class, (DerivedWorldInfo)this.world.getWorldInfo(), "delegate");
+			WorldInfo worldInfo = ReflectionHelper.getPrivateValue(DerivedWorldInfo.class, (DerivedWorldInfo)this.world.getWorldInfo(), "delegate", "field_76115_a");
 			worldInfo.setRaining(false);
 		}
 	}
