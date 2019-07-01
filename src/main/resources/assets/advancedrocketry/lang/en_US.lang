@@ -5,6 +5,7 @@ death.attack.Vacuum=You have been depressurized
 death.attack.Vacuum.player=Was depressurized
 entity.advancedRocketry.rocket.name=Rocket
 entity.rocket.name=Rocket
+entity.hovercraft.name=Hovercraft
 
 tile.landingPad.name=Landing Pad
 tile.seat.name=Seat
