@@ -39,8 +39,11 @@ public class MachineRecipe extends BlankRecipeWrapper {
 			for( ChanceItemStack stack : resultChance )
 			{
 				i++;
-				if(stack.chance <= 0)
+				if(stack.chance == 0)
+				{
+					result.add(stack.stack.copy());
 					continue;
+				}
 				
 				ItemStack stack2 = stack.stack.copy();
 				stack2.setStackDisplayName(String.format("%s   Chance: %.1f%%",  stack2.getDisplayName(), 100*stack.chance/totalChance));
