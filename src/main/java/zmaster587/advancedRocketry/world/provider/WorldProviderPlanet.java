@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.world.provider;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -139,6 +140,17 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 		}
 
 		return DimensionCompat.getDefaultSpawnDimension();
+	}
+	
+	@Override
+	public WorldSleepResult canSleepAt(EntityPlayer player, BlockPos pos) {
+		if (Configuration.forcePlayerRespawnInSpace || AtmosphereHandler.hasAtmosphereHandler(player.world.provider.getDimension()) && AtmosphereHandler.getOxygenHandler(player.world.provider.getDimension()).getAtmosphereType(pos).isBreathable()) {
+			return WorldSleepResult.ALLOW;
+		}
+		else
+		{
+			return WorldSleepResult.DENY;
+		}
 	}
 	
 	@Override
