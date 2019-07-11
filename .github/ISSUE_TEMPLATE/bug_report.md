@@ -45,11 +45,14 @@ assignees: ''
 >Why is this important?  
 >Sometimes interactions between mods cause issues.  While it can be a problem with Advanced Rocketry, sometimes it's not.  When there are a lot of mods, it can take bugtesters HOURS to go through the list to determine the root cause.  When there are a lot of bug reports, that can add DAYS to the time it takes to fix a large set of issues.
 
-## Crash report or log (if applicable)
+## Crash report or log or visualVM (if applicable)
 http://pastebin.com is a good place to put them
 crash reports that are put in the issue itself are
 hard to read
 >insert here
+
+> If it's an issue involving lag, please submit a visualVM sampler snapshot.  Mods like lag goggles often do not provide the kind of information needed to debug lag.
+> For more information on how to create a snapshot, please see "How to Run CPU Sampling" [here](http://greyfocus.com/2016/05/visualvm-sampling/).  Then export the snapshot as an .nps.  You may have to zip it since github is weird, then please upload it here.
 
 >Why is this important?
 >Full crashlogs contain valuable information like where exactly in the code the error occurred, what other mods may be running and what version of forge you have.  This helps us replicate and diagnose the issue FAR faster.
