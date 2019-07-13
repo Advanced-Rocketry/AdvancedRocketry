@@ -130,7 +130,7 @@ public class PlanetEventHandler {
 			{
 				SpawnListEntry entry = itr.next();
 				try {
-					if(!properties.getAtmosphere().isImmune(entry.newInstance(world)))
+					if(!properties.getAtmosphere().isImmune(entry.entityClass))
 						itr.remove();
 				} catch (Exception e) {
 					//Just let it spawn

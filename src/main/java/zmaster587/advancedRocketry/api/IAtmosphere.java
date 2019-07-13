@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.api;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.Entity;
 
 public interface IAtmosphere {
 	
@@ -9,6 +10,13 @@ public interface IAtmosphere {
 	 * @return true if the atmosphere does not affect the entity in any way
 	 */
 	public boolean isImmune(EntityLivingBase player);
+	
+	/**
+	 * Used by spawning and atmosphere ticking, this should probably not be used elsewhere, prefer isImmune(EntityLivingBase player) where performance allows
+	 * @param entityClass class of the entity to check for immunity
+	 * @return true if the entity class should ALWAYS be immune
+	 */
+	public boolean isImmune(Class<? extends Entity> entityClass);
 	
 	/**
 	 * To be used to check if combustion can occur in this atmosphere, furnaces, torches, engines, etc could run this check

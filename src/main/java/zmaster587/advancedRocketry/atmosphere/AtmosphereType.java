@@ -1,6 +1,8 @@
 package zmaster587.advancedRocketry.atmosphere;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 
@@ -55,6 +57,11 @@ public class AtmosphereType implements IAtmosphere {
 	 */
 	public boolean isImmune(EntityLivingBase player) {
 		return isBreathable;
+	}
+	
+	public boolean isImmune(Class<? extends Entity> clazz)
+	{
+		return Configuration.bypassEntity.contains(clazz);
 	}
 	
 	@Override
