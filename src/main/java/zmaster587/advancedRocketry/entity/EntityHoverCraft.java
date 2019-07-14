@@ -74,7 +74,7 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 	{
 		super(par1World);
 		inv = new EmbeddedInventory(1);
-		setSize(3f, 3f);
+		setSize(2.5f, 1f);
 	}
 
 	public EntityHoverCraft(World par1World, double par2, double par4, double par6)
