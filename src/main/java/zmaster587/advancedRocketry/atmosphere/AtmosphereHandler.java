@@ -92,7 +92,7 @@ public class AtmosphereHandler {
 					!(event.getEntityLiving().isInLava() || event.getEntityLiving().isInWater()) ) {
 				AtmosphereEvent event2 = new AtmosphereEvent.AtmosphereTickEvent(entity, atmosType);
 				MinecraftForge.EVENT_BUS.post(event2);
-				if(!event2.isCanceled() && !Configuration.bypassEntity.contains(event.getEntity().getClass()))
+				if(!event2.isCanceled() && !atmosType.isImmune(event.getEntity().getClass()))
 					atmosType.onTick((EntityLivingBase)event.getEntityLiving());
 			}
 		}

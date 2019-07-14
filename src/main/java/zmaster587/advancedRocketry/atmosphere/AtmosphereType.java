@@ -61,7 +61,7 @@ public class AtmosphereType implements IAtmosphere {
 	
 	public boolean isImmune(Class<? extends Entity> clazz)
 	{
-		return Configuration.bypassEntity.contains(clazz);
+		return isBreathable() || Configuration.bypassEntity.contains(clazz);
 	}
 	
 	@Override

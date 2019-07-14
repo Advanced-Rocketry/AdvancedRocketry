@@ -27,6 +27,8 @@ import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent.CheckSpawn;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
@@ -46,6 +48,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.opengl.GL11;
 
+import akka.actor.FSM.Event;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
@@ -118,26 +121,22 @@ public class PlanetEventHandler {
 	}
 
 	@SubscribeEvent
+	public void CheckSpawn(LivingSpawnEvent.CheckSpawn event)
+	{
+		World world = event.getWorld();
+		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
+		if(properties != null) {
+			if(!properties.getAtmosphere().isImmune(event.getEntityLiving().getClass()))
+				event.setResult(Result.DENY);
+		}
+	}
+
+	@SubscribeEvent
 	public void SpawnEntity(WorldEvent.PotentialSpawns event) {
 		World world = event.getWorld();
 		
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
 		if(properties != null) {
-			
-			//Can it spawn in the given atmosphere?
-			ListIterator<SpawnListEntry> itr = event.getList().listIterator();
-			while(itr.hasNext())
-			{
-				SpawnListEntry entry = itr.next();
-				try {
-					if(!properties.getAtmosphere().isImmune(entry.entityClass))
-						itr.remove();
-				} catch (Exception e) {
-					//Just let it spawn
-					e.printStackTrace();
-				}
-			}
-			
 			List<SpawnListEntryNBT> entries = properties.getSpawnListEntries();
 			if(!entries.isEmpty() && event.getType() != EnumCreatureType.MONSTER)
 				event.getList().addAll(entries);
