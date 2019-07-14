@@ -7,6 +7,7 @@ import net.minecraft.world.gen.ChunkGeneratorSettings;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.GenLayerZoom;
+import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.world.ChunkProviderPlanet;
 import zmaster587.advancedRocketry.world.GenLayerBiomePlanet;
 
@@ -24,7 +25,7 @@ public class WorldTypePlanetGen extends WorldType {
 
 	@Override
 	public IChunkGenerator getChunkGenerator(World world, String generatorOptions) {
-		return new ChunkProviderPlanet(world, world.getSeed(), false, generatorOptions);
+		return new ChunkProviderPlanet(world, world.getSeed(), Configuration.generateVanillaStructures, generatorOptions);
 	}
 	
 	

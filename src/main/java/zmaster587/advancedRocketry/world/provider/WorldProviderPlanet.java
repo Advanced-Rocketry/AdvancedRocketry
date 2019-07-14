@@ -25,6 +25,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
@@ -63,7 +64,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 			return new ChunkProviderCavePlanet(this.world, false, this.world.getSeed(),world.getWorldInfo().getGeneratorOptions());
 		}
 		else
-			return new ChunkProviderPlanet(this.world, this.world.getSeed(), false, world.getWorldInfo().getGeneratorOptions());
+			return new ChunkProviderPlanet(this.world, this.world.getSeed(), Configuration.generateVanillaStructures, world.getWorldInfo().getGeneratorOptions());
 	}
 
 	@Override
@@ -305,12 +306,6 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 		return getDimensionProperties(new BlockPos(x,0,z)).getAtmosphereDensity() > 100;
 	}
 
-	//Make the world deep
-	@Override
-	public int getAverageGroundLevel() {
-		return 96;
-	}
-
 	@Override
 	public double getHorizon() {
 		int genType = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGenType();
@@ -365,6 +360,11 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	@Override
 	public int getOrbitalDistance(BlockPos pos) {
 		return getDimensionProperties(pos).orbitalDist;
+	}
+	
+	@Override
+	public IAtmosphere getAtmosphere(BlockPos pos) {
+		return getDimensionProperties(pos).getAtmosphere();
 	}
 
 	@Override

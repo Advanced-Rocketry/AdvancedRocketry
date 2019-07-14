@@ -32,12 +32,15 @@ import zmaster587.advancedRocketry.world.decoration.MapGenCaveExt;
 import zmaster587.advancedRocketry.world.decoration.MapGenCrater;
 import zmaster587.advancedRocketry.world.decoration.MapGenGeode;
 import zmaster587.advancedRocketry.world.decoration.MapGenRavineExt;
+import zmaster587.advancedRocketry.world.decoration.MapGenSpaceVillage;
 import zmaster587.advancedRocketry.world.decoration.MapGenVolcano;
 import zmaster587.advancedRocketry.world.ore.CustomizableOreGen;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 
 import java.util.List;
 import java.util.Random;
+
+import javax.annotation.Nullable;
 
 import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.*;
 
@@ -63,7 +66,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 	private double[] depthBuffer = new double[256];
 	private MapGenBase caveGenerator = new MapGenCaveExt();
 	private MapGenStronghold strongholdGenerator = new MapGenStronghold();
-	private MapGenVillage villageGenerator = new MapGenVillage();
+	private MapGenVillage villageGenerator = new MapGenSpaceVillage();
 	private MapGenMineshaft mineshaftGenerator = new MapGenMineshaft();
 	private MapGenScatteredFeature scatteredFeatureGenerator = new MapGenScatteredFeature();
 	private MapGenBase ravineGenerator = new MapGenRavineExt();
@@ -75,6 +78,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 	double[] depthRegion;
 	protected int heightmapOffset = 0;
 	protected float heightmapMult = 1f;
+	protected boolean habitable = false;
 
 
 	private MapGenCrater craterGenerator;
@@ -159,8 +163,10 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		//TODO: may break on little planets
 		float atmDensity = ((WorldProviderPlanet)worldObj.provider).getAtmosphereDensity(new BlockPos(0,0,0));
 		int heat = ((WorldProviderPlanet)worldObj.provider).getAverageTemperature(new BlockPos(0,0,0));
+		habitable = ((WorldProviderPlanet)worldObj.provider).getAtmosphere(new BlockPos(0,0,0)).isBreathable();
+		
 
-		if(atmDensity < 0.75f)
+		if(atmDensity < 0.75f && Configuration.generateCraters)
 			craterGenerator = new MapGenCrater( (int)(10 +  (26*(1-atmDensity)) ));
 		else 
 			craterGenerator = null;
@@ -291,9 +297,32 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		if(this.geodeGenerator != null)
 			this.geodeGenerator.generate(this.worldObj, x, z, chunkprimer);
 
-		if (this.mapFeaturesEnabled)
+		if (this.mapFeaturesEnabled && habitable)
 		{
-			//TODO: structures
+            if (this.settings.useMineShafts)
+            {
+                this.mineshaftGenerator.generate(this.worldObj, x, z, chunkprimer);
+            }
+
+            if (this.settings.useVillages)
+            {
+                this.villageGenerator.generate(this.worldObj, x, z, chunkprimer);
+            }
+
+            if (this.settings.useStrongholds)
+            {
+                this.strongholdGenerator.generate(this.worldObj, x, z, chunkprimer);
+            }
+
+            if (this.settings.useTemples)
+            {
+                this.scatteredFeatureGenerator.generate(this.worldObj, x, z, chunkprimer);
+            }
+
+            if (this.settings.useMonuments)
+            {
+                this.oceanMonumentGenerator.generate(this.worldObj, x, z, chunkprimer);
+            }
 		}
 		
 		return chunkprimer;
@@ -467,7 +496,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 
 		net.minecraftforge.event.ForgeEventFactory.onChunkPopulate(true, this, this.worldObj, this.rand, x, z, flag);
 
-		if (this.mapFeaturesEnabled && false)
+		if (this.mapFeaturesEnabled && habitable)
 		{
 			if (this.settings.useMineShafts)
 			{
@@ -517,7 +546,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 				}
 			}
 
-		if (false && this.settings.useDungeons)
+		if (habitable && this.settings.useDungeons)
 			if (net.minecraftforge.event.terraingen.TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.DUNGEON))
 			{
 				for (int j2 = 0; j2 < this.settings.dungeonChance; ++j2)
@@ -635,22 +664,93 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 	}
 
 	@Override
-	public void recreateStructures(Chunk chunkIn, int x, int z) {
-		
-	}
+    public void recreateStructures(Chunk chunkIn, int x, int z)
+    {
+        if (this.mapFeaturesEnabled || !habitable)
+        {
+            if (this.settings.useMineShafts)
+            {
+                this.mineshaftGenerator.generate(this.worldObj, x, z, (ChunkPrimer)null);
+            }
+
+            if (this.settings.useVillages)
+            {
+                this.villageGenerator.generate(this.worldObj, x, z, (ChunkPrimer)null);
+            }
+
+            if (this.settings.useStrongholds)
+            {
+                this.strongholdGenerator.generate(this.worldObj, x, z, (ChunkPrimer)null);
+            }
+
+            if (this.settings.useTemples)
+            {
+                this.scatteredFeatureGenerator.generate(this.worldObj, x, z, (ChunkPrimer)null);
+            }
+
+            if (this.settings.useMonuments)
+            {
+                this.oceanMonumentGenerator.generate(this.worldObj, x, z, (ChunkPrimer)null);
+            }
+        }
+    }
 
     @Override
-    public BlockPos getNearestStructurePos(World worldIn, String structureName, BlockPos position,
-            boolean findUnexplored)
+    @Nullable
+    public BlockPos getNearestStructurePos(World worldIn, String structureName, BlockPos position, boolean findUnexplored)
     {
-        // TODO Auto-generated method stub
-        return null;
+        if (!this.mapFeaturesEnabled || !habitable)
+        {
+            return null;
+        }
+        else if ("Stronghold".equals(structureName) && this.strongholdGenerator != null)
+        {
+            return this.strongholdGenerator.getNearestStructurePos(worldIn, position, findUnexplored);
+        }
+        else if ("Monument".equals(structureName) && this.oceanMonumentGenerator != null)
+        {
+            return this.oceanMonumentGenerator.getNearestStructurePos(worldIn, position, findUnexplored);
+        }
+        else if ("Village".equals(structureName) && this.villageGenerator != null)
+        {
+            return this.villageGenerator.getNearestStructurePos(worldIn, position, findUnexplored);
+        }
+        else if ("Mineshaft".equals(structureName) && this.mineshaftGenerator != null)
+        {
+            return this.mineshaftGenerator.getNearestStructurePos(worldIn, position, findUnexplored);
+        }
+        else
+        {
+            return "Temple".equals(structureName) && this.scatteredFeatureGenerator != null ? this.scatteredFeatureGenerator.getNearestStructurePos(worldIn, position, findUnexplored) : null;
+        }
     }
 
     @Override
     public boolean isInsideStructure(World worldIn, String structureName, BlockPos pos)
     {
-        // TODO Auto-generated method stub
-        return false;
+        if (!this.mapFeaturesEnabled || !habitable)
+        {
+            return false;
+        }
+        else if ("Stronghold".equals(structureName) && this.strongholdGenerator != null)
+        {
+            return this.strongholdGenerator.isInsideStructure(pos);
+        }
+        else if ("Monument".equals(structureName) && this.oceanMonumentGenerator != null)
+        {
+            return this.oceanMonumentGenerator.isInsideStructure(pos);
+        }
+        else if ("Village".equals(structureName) && this.villageGenerator != null)
+        {
+            return this.villageGenerator.isInsideStructure(pos);
+        }
+        else if ("Mineshaft".equals(structureName) && this.mineshaftGenerator != null)
+        {
+            return this.mineshaftGenerator.isInsideStructure(pos);
+        }
+        else
+        {
+            return "Temple".equals(structureName) && this.scatteredFeatureGenerator != null ? this.scatteredFeatureGenerator.isInsideStructure(pos) : false;
+        }
     }
 }

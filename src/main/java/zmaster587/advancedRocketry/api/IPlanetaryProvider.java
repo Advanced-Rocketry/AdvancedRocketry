@@ -61,8 +61,7 @@ public interface IPlanetaryProvider {
 	public Vec3d getSunColor(BlockPos pos);
 	
 	/**
-	 * @param x location in block coords
-	 * @param z location in block coords
+	 * @param pos location in block coords
 	 * @return {@link DimensionProperties} of this dimension
 	 */
 	public IDimensionProperties getDimensionProperties(BlockPos pos);
@@ -72,5 +71,12 @@ public interface IPlanetaryProvider {
 	 * @return Absolute density of the atmosphere at the given height
 	 */
 	public float getAtmosphereDensityFromHeight(double y, BlockPos pos);
+
+	/**
+	 * 
+	 * @param pos location in block coords
+	 * @return Atmosphere type
+	 */
+	public IAtmosphere getAtmosphere(BlockPos pos);
 
 }

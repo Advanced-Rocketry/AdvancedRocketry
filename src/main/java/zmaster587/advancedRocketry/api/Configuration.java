@@ -167,4 +167,7 @@ public class Configuration {
 
 	public static Map<ItemStack, Integer> blackHoleGeneratorBlocks = new HashMap<ItemStack, Integer>();
 	public static String[] lavaCentrifugeOutputs;
+
+	public static boolean generateVanillaStructures;
+	public static boolean generateCraters;
 }
