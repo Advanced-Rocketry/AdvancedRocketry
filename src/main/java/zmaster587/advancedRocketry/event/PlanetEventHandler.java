@@ -124,17 +124,22 @@ public class PlanetEventHandler {
 	public void CheckSpawn(LivingSpawnEvent.CheckSpawn event)
 	{
 		World world = event.getWorld();
-		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
-		if(properties != null) {
-			if(!properties.getAtmosphere().isImmune(event.getEntityLiving().getClass()))
-				event.setResult(Result.DENY);
+		DimensionManager manager = DimensionManager.getInstance();
+
+		if(manager.isInitialized())
+		{
+			DimensionProperties properties = manager.getDimensionProperties(world.provider.getDimension());
+			if(properties != null) {
+				if(!properties.getAtmosphere().isImmune(event.getEntityLiving().getClass()))
+					event.setResult(Result.DENY);
+			}
 		}
 	}
 
 	@SubscribeEvent
 	public void SpawnEntity(WorldEvent.PotentialSpawns event) {
 		World world = event.getWorld();
-		
+
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
 		if(properties != null) {
 			List<SpawnListEntryNBT> entries = properties.getSpawnListEntries();
@@ -294,7 +299,7 @@ public class PlanetEventHandler {
 
 		//Send config first
 		PacketHandler.sendToDispatcher(new PacketConfigSync(), event.getManager());
-		
+
 		//Make sure stars are sent next
 		for(int i : DimensionManager.getInstance().getStarIds()) {
 			PacketHandler.sendToDispatcher(new PacketStellarInfo(i, DimensionManager.getInstance().getStar(i)), event.getManager());
@@ -316,7 +321,7 @@ public class PlanetEventHandler {
 			PacketHandler.sendToDispatcher(new PacketAsteroidInfo(ent.getValue()), event.getManager());
 		}
 	}
-	
+
 	public void connectToServer(ClientConnectedToServerEvent event)
 	{
 		zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();

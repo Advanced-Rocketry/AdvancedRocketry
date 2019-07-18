@@ -493,6 +493,12 @@ public class DimensionManager implements IGalaxy {
 			e.printStackTrace();
 		}
 	}
+	
+	public boolean isInitialized()
+	{
+		
+		return hasBeenInitiallized;
+	}
 
 	/**
 	 * 
