@@ -28,7 +28,7 @@ Current Features:
 -Asteroids
   -Automated Harvesting
   -Research System
-     -Random asteroid parameters ( size, composition, location (polar coords)
+     -Random asteroid parameters ( size, composition, mass)
      -Research can be done to determine properties
   -Manual Harvesting
      -Player can select as a destination
