@@ -20,8 +20,10 @@ import zmaster587.advancedRocketry.item.ItemStationChip.LandingLocation;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.StationLandingLocation;
+import zmaster587.libVulpes.api.LibVulpesItems;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
@@ -63,7 +65,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 
 	public StationLandingLocation getLandingLocation(int stationId) {
 		
-		//Due to the fact that stations are not garunteed to be loaded on startup, we get a real reference now
+		//Due to the fact that stations are not guaranteed to be loaded on startup, we get a real reference now
 		ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStation(stationId);
 		if(obj == null) {
 			landingLoc.remove(stationId);
@@ -114,6 +116,8 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 			}
 			else if(itemType instanceof ItemAsteroidChip) {
 				destinationId = currentDimension;
+
+				//Caution Side-Effect: Updates landingPos.
 				landingPos = new Vector3F<Float>((float)pos.getX(), (float)pos.getY(), (float)pos.getZ());
 				return currentDimension;
 			}
@@ -125,10 +129,16 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 					if(sat != null)
 						return sat.getDimensionId();
 				}
+			} 
+			else if (stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != Constants.INVALID_PLANET)
+			{
+				//Use the destination the Linker in the Guidance computer directs.
+				return ItemLinker.getDimId(stack);
 			}
 
 		}
 
+		//Almost always the Override setting (Linker in Docking Pad)
 		return destinationId;
 	}
 
@@ -137,41 +147,73 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	 * @return
 	 */
 	public Vector3F<Float> getLandingLocation(int landingDimension, boolean commit) {
+		//Caution Side-Effect dependency: May require a call to getDestinationDimId to populate correct coordinates.
 		ItemStack stack = getStackInSlot(0);
-		if(!stack.isEmpty() && stack.getItem() instanceof ItemStationChip) {
-			ItemStationChip chip = (ItemStationChip)stack.getItem();
-			if(landingDimension == Configuration.spaceDimId) {
-				//TODO: handle Exception
-				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(ItemStationChip.getUUID(stack));
-				HashedBlockPosition vec = null;
-				if(object instanceof SpaceObject) {
-					if(landingLoc.get(object.getId()) != null) {
-						vec = landingLoc.get(object.getId());
-
-						if(commit)
-							((SpaceObject)object).getPadAtLocation(landingLoc.get(object.getId())).setOccupied(true);
-					}
-					else
-						vec = ((SpaceObject)object).getNextLandingPad(commit);
-				}
-
-				if(object == null)
-					return null;
-
-				if(vec == null)
-					vec = object.getSpawnLocation();
-
-				return new Vector3F<Float>(new Float(vec.x), new Float(vec.y), new Float(vec.z));
-			}
-			else {
-				LandingLocation loc = chip.getTakeoffCoords(stack, landingDimension);
-				if(loc != null)
-				{
-					return loc.location;
-				}
+		//ToDo: replace all nulls with current coordinates of the ship.
+		//Make the if tree match the destination if tree:
+		if(!stack.isEmpty()){
+			Item itemType = stack.getItem();
+			if (itemType instanceof ItemPlanetIdentificationChip) {
+				//This could be the location of the rocket.
 				return null;
 			}
+			else if(itemType instanceof ItemStationChip) {
+				ItemStationChip chip = (ItemStationChip)stack.getItem();
+				if(landingDimension == Configuration.spaceDimId) {
+					//TODO: handle Exception
+					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(ItemStationChip.getUUID(stack));
+					HashedBlockPosition vec = null;
+					if(object instanceof SpaceObject) {
+						if(landingLoc.get(object.getId()) != null) {
+							vec = landingLoc.get(object.getId());
+
+							if(commit)
+								((SpaceObject)object).getPadAtLocation(landingLoc.get(object.getId())).setOccupied(true);
+						}
+						else
+							vec = ((SpaceObject)object).getNextLandingPad(commit);
+					}
+
+					if(object == null)
+						return null;
+
+					if(vec == null)
+						vec = object.getSpawnLocation();
+
+					return new Vector3F<Float>(new Float(vec.x), new Float(vec.y), new Float(vec.z));
+				}
+				else {
+					LandingLocation loc = chip.getTakeoffCoords(stack, landingDimension);
+					if(loc != null)
+					{
+						return loc.location;
+					}
+					return null;
+				}
+			}
+			else if(itemType instanceof ItemAsteroidChip) {
+				//Caution Side-Effect dependency: landingPos from getDim.				
+				return landingPos;
+			}
+			else if(itemType instanceof ItemSatelliteIdentificationChip) {
+				//You can't actually go to the Satellites
+				return null;
+			} 
+			else if (stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != Constants.INVALID_PLANET)
+			{
+				//Use the destination the Linker in the Guidance computer directs.
+				BlockPos landingBlock = ItemLinker.getMasterCoords(stack);
+				return new Vector3F<Float>(landingBlock.getX() + 0.5f, (float)Configuration.orbit, landingBlock.getZ() + 0.5f);
+			}
+
+		}		
+		else if (stack.isEmpty() && destinationId != Constants.INVALID_PLANET)
+		{
+			//Use the override coordinates from a Linker in a Docking Pad.
+			return landingPos;
 		}
+		
+		//We got nothing.
 		return null;
 	}
 	
