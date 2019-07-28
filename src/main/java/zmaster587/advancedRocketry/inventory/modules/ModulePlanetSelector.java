@@ -620,7 +620,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			offY = clickablePlanetList.getScrollY();
 		}
 
-		clickablePlanetList = new ModuleContainerPan(0, 128, list2, new LinkedList<ModuleBase>(), null, 512, 256, 0, 0, 258, 256);
+		clickablePlanetList = new ModuleContainerPan(0, 128, list2, new LinkedList<ModuleBase>(), null, 512, 256, 0, 0, 258, 8192);
 		staticModuleList.add(clickablePlanetList);
 		clickablePlanetList.addButtons(0, 0);
 		
