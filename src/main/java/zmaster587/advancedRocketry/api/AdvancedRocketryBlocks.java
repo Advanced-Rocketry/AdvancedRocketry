@@ -99,4 +99,5 @@ public class AdvancedRocketryBlocks {
 	public static Block blockPump;
 	public static Block blockCentrifuge;
 	public static Block blockBasalt;
+	public static Block blockLandingFloat;
 }

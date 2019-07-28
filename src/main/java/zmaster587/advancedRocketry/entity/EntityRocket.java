@@ -9,6 +9,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,6 +29,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
@@ -658,6 +660,25 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 	}
 	
+	private BlockPos getTopBlock(BlockPos pos)
+	{
+		//Yeah... because minecraft's World.getTopSolidOrLiquidBlock does not actually check for liquids like lava
+        Chunk chunk = world.getChunkFromBlockCoords(pos);
+        BlockPos blockpos;
+        BlockPos blockpos1;
+
+        for (blockpos = new BlockPos(pos.getX(), chunk.getTopFilledSegment() + 16, pos.getZ()); blockpos.getY() >= 0; blockpos = blockpos1)
+        {
+            blockpos1 = blockpos.down();
+
+            if (!world.isAirBlock(blockpos))
+            {
+                break;
+            }
+        }
+        return blockpos;
+	}
+	
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
@@ -679,6 +700,42 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 			if(world.isRemote)
 				LibVulpes.proxy.playSound(new SoundRocketEngine( AudioRegistry.combustionRocket, SoundCategory.NEUTRAL,this));
+			else
+			{
+				int rocketSizeX = storage.getSizeX()/2;
+				int rocketSizeZ = storage.getSizeZ()/2;
+				final int bufferSize = 3;
+				
+				// Create float if needed
+				
+				//First check to see if anything at all will catch the rocket
+				boolean safeLanding = false;
+				for(int x = ((int)posX-rocketSizeX); x < (posX+rocketSizeX) && !safeLanding; x++)
+				{
+					for(int z = ((int)posZ-rocketSizeZ); z < (posZ+rocketSizeZ) && !safeLanding; z++)
+					{
+						BlockPos pos = new BlockPos(x, posY, z);
+						pos = getTopBlock(pos);
+
+				        safeLanding = !world.getBlockState(pos).getMaterial().isLiquid() || world.getBlockState(pos).getBlock() == Blocks.WATER;
+					}
+				}
+				
+				// If nothing will catch the rocket, and the material isn't water, then create a float
+				// If anyone asks, the dev thinks underwater rocket launch platforms are cool and players can swim anyway
+				if(!safeLanding)
+				{
+					for(int x = ((int)posX-rocketSizeX - bufferSize); x < (posX+rocketSizeX + bufferSize); x++)
+					{
+						for(int z = ((int)posZ-rocketSizeZ - bufferSize); z < (posZ+rocketSizeZ + bufferSize); z++)
+						{
+							BlockPos pos = new BlockPos(x, posY, z);
+							pos = getTopBlock(pos);
+							world.setBlockState(pos, AdvancedRocketryBlocks.blockLandingFloat.getDefaultState());
+						}
+					}
+				}
+			}
 		}
 
 		if(this.ticksExisted > DESCENT_TIMER && isInOrbit() && !isInFlight())

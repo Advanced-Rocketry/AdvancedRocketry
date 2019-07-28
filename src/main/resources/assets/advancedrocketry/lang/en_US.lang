@@ -116,6 +116,7 @@ tile.pump.name=Fluid Pump
 tile.centrifuge.name=Centrifuge
 tile.enrichedLavaBlock.name=Enriched Lava Block
 tile.basalt.name=Basalt
+tile.landingfloat.name=Landing Float
 
 tile.Dilithium.name=Dilithium Ore
 
