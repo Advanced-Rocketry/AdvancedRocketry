@@ -149,7 +149,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	public Vector3F<Float> getLandingLocation(int landingDimension, boolean commit) {
 		//Caution Side-Effect dependency: May require a call to getDestinationDimId to populate correct coordinates.
 		ItemStack stack = getStackInSlot(0);
-		//ToDo: replace all nulls with current coordinates of the ship.
+		//TODO: replace all nulls with current coordinates of the ship.
 		//Make the if tree match the destination if tree:
 		if(!stack.isEmpty()){
 			Item itemType = stack.getItem();
@@ -196,7 +196,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				return landingPos;
 			}
 			else if(itemType instanceof ItemSatelliteIdentificationChip) {
-				//You can't actually go to the Satellites
+				//You can't actually go to the satellites.
 				return null;
 			} 
 			else if (stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != Constants.INVALID_PLANET)
