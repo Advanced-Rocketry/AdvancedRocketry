@@ -17,6 +17,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.MinecraftForge;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
@@ -34,6 +35,7 @@ import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.unit.IngameTestOrchestrator;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortalSeekBlock;
 import zmaster587.libVulpes.network.PacketHandler;
@@ -112,6 +114,15 @@ public class WorldCommand implements ICommand {
 			} 
 			catch(Exception e) {
 				sender.sendMessage(new TextComponentString("An error has occured writing to the file"));
+			}
+		}
+		else if(string.length >= 1 && string[0].equalsIgnoreCase("beginTest")) {
+			if(sender.getCommandSenderEntity() != null)
+			{
+				if(!IngameTestOrchestrator.registered)
+					MinecraftForge.EVENT_BUS.register(IngameTestOrchestrator.instance);
+				EntityPlayer player = ((EntityPlayer)sender);
+				IngameTestOrchestrator.runTests(player.getEntityWorld(), player);
 			}
 		}
 		else if (string.length >= 1 && string[0].equalsIgnoreCase("addTorch")) {
@@ -831,6 +842,7 @@ public class WorldCommand implements ICommand {
 		ArrayList<String> list = new ArrayList<String>();
 
 		if(string.length == 1) {
+			list.add("beginTest");
 			list.add("planet");
 			list.add("goto");
 			list.add("fetch");
