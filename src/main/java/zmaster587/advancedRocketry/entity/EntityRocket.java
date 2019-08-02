@@ -702,8 +702,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				LibVulpes.proxy.playSound(new SoundRocketEngine( AudioRegistry.combustionRocket, SoundCategory.NEUTRAL,this));
 			else
 			{
-				int rocketSizeX = storage.getSizeX()/2;
-				int rocketSizeZ = storage.getSizeZ()/2;
+				int rocketSizeX = storage.getSizeX()/2+1;
+				int rocketSizeZ = storage.getSizeZ()/2+1;
 				final int bufferSize = 3;
 				
 				// Create float if needed
