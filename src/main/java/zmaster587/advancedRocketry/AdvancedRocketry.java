@@ -83,6 +83,7 @@ import zmaster587.advancedRocketry.block.plant.BlockAlienWood;
 import zmaster587.advancedRocketry.capability.CapabilityProtectiveArmor;
 import zmaster587.advancedRocketry.command.WorldCommand;
 import zmaster587.advancedRocketry.common.CommonProxy;
+import zmaster587.advancedRocketry.compat.Compat;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.AtmosphereTypes;
@@ -1195,12 +1196,15 @@ public class AdvancedRocketry {
 		MinecraftForge.EVENT_BUS.register(new MapGenLander());
 		AdvancedRocketryAPI.gravityManager = new GravityHandler();
 
+		// Compat stuff
 		if(Loader.isModLoaded("galacticraftcore") && zmaster587.advancedRocketry.api.Configuration.overrideGCAir) {
 			GalacticCraftHandler eventHandler = new GalacticCraftHandler();
 			MinecraftForge.EVENT_BUS.register(eventHandler);
 			if(event.getSide().isClient())
 				FMLCommonHandler.instance().bus().register(eventHandler);
 		}
+		Compat.isSpongeInstalled = Loader.isModLoaded("sponge");
+		// End compat stuff
 
 		MinecraftForge.EVENT_BUS.register(SpaceObjectManager.getSpaceManager());
 

@@ -32,6 +32,7 @@ import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.capability.DimensionCompat;
 import zmaster587.advancedRocketry.client.render.planet.RenderAsteroidSky;
 import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
+import zmaster587.advancedRocketry.compat.Compat;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
@@ -113,18 +114,27 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	
 	@Override
 	public void calculateInitialWeather() {
-		if (getAtmosphereDensity(new BlockPos(0,0,0)) <= 75 && world.isRaining()) {
-			this.world.getWorldInfo().setRaining(false);
-		}
 		super.calculateInitialWeather();
+		doWeatherStuff();
 	}
 	
 	@Override
 	public void updateWeather() {
 		super.updateWeather();
+		doWeatherStuff();
+	}
+	
+	private void doWeatherStuff()
+	{
 		if (getAtmosphereDensity(new BlockPos(0,0,0)) <= 75 && world.isRaining()) {
-			WorldInfo worldInfo = ReflectionHelper.getPrivateValue(DerivedWorldInfo.class, (DerivedWorldInfo)this.world.getWorldInfo(), "delegate", "field_76115_a");
-			worldInfo.setRaining(false);
+			if(!Compat.isSpongeInstalled)
+			{
+				WorldInfo worldInfo = ReflectionHelper.getPrivateValue(DerivedWorldInfo.class, (DerivedWorldInfo)this.world.getWorldInfo(), "delegate", "field_76115_a");
+				worldInfo.setRaining(false);
+			}
+			else
+				//Hope that sponge cooperates
+				this.world.getWorldInfo().setRaining(false);
 		}
 	}
 
