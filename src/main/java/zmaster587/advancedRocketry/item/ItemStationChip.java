@@ -97,7 +97,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 			ModuleTextBox box = new ModuleTextBox(this, 172-offset_all, 0+28, 128, 18, 64);
 			box.setText("Name...");
 			modules.add(box);
-			
+
 
 			List<ModuleBase> list2 = new LinkedList<ModuleBase>();
 			ModuleButton btnRename = new ModuleButton(172-offset_all, 18+28, BUTTON_ID_RENAME, LibVulpes.proxy.getLocalizedString("msg.label.rename"), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 128, 18);
@@ -309,13 +309,13 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 					nbt.removeTag("x");
 					nbt.removeTag("y");
 					nbt.removeTag("z");
-					
+
 					List<LandingLocation> list2 = getLandingLocations(stack, dimid);
 					list2.add(0,new LandingLocation("Last", x,y,z));
 					setLandingLocations(stack, dimid, list2);
-					
+
 				}
-				
+
 				for(NBTBase tag : destList)
 				{
 					try {
@@ -332,21 +332,26 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	public void setLandingLocations(ItemStack stack, int dimid, List<LandingLocation> locations)
 	{
 		if(stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
-			if(nbt.hasKey("dimid" + dimid)) {
-				nbt = nbt.getCompoundTag("dimid" + dimid);
-				NBTTagList destList;
-				destList = new NBTTagList();
+			NBTTagCompound stackNBT = stack.getTagCompound();
+			NBTTagCompound nbt;
+			String tagName = "dimid" + dimid;
+			if(stackNBT.hasKey(tagName)) 
+				nbt = stackNBT.getCompoundTag("dimid" + dimid);
+			else
+				nbt = new NBTTagCompound();
 
-				for(LandingLocation loc : locations)
-				{
-					NBTTagCompound nbtTag = new NBTTagCompound();
-					loc.savetoNBT(nbtTag);
-					destList.appendTag(nbtTag);
-				}
+			NBTTagList destList;
+			destList = new NBTTagList();
 
-				nbt.setTag(DESTINATION, destList);
+			for(LandingLocation loc : locations)
+			{
+				NBTTagCompound nbtTag = new NBTTagCompound();
+				loc.savetoNBT(nbtTag);
+				destList.appendTag(nbtTag);
 			}
+
+			nbt.setTag(DESTINATION, destList);
+			stackNBT.setTag(tagName, nbt);
 		}
 	}
 
