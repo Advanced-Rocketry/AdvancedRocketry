@@ -252,7 +252,8 @@ public class ClientProxy extends CommonProxy {
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockWarpShipMonitor));
 		
 		for(Item blockItem2 : blockItems)
-			ModelLoader.setCustomModelResourceLocation(blockItem2, 0, new ModelResourceLocation(blockItem2.getRegistryName(), "inventory"));
+			if(!blockItem2.getRegistryName().toString().equals("minecraft:air"))
+				ModelLoader.setCustomModelResourceLocation(blockItem2, 0, new ModelResourceLocation(blockItem2.getRegistryName(), "inventory"));
 		
 		
 		//TODO fluids
