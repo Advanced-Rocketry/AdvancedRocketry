@@ -148,7 +148,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 		AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
 
 		if(bbCache.intersects(rocket.getEntityBoundingBox())) {
-			if(!world.isRemote)
+			if(!event.world.isRemote)
 				for(IInfrastructure infrastructure : getConnectedInfrastructure()) {
 					rocket.linkInfrastructure(infrastructure);
 				}
