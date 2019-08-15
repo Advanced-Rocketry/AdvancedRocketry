@@ -185,7 +185,6 @@ public class ClientProxy extends CommonProxy {
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockBlastBrick));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockCharcoalLog));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockChemicalReactor));
-		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockChipStorage));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockCircleLight));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockConcrete));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockCrystallizer));
@@ -213,7 +212,6 @@ public class ClientProxy extends CommonProxy {
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockLathe));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockLens));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockMicrowaveReciever));
-		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockMissionComp));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockMonitoringStation));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockMoonTurf));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockMoonTurfDark));
