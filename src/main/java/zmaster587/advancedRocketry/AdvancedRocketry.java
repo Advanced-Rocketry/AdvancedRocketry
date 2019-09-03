@@ -1905,16 +1905,13 @@ public class AdvancedRocketry {
 
 	@EventHandler
 	public void serverStopped(FMLServerStoppedEvent event) {
-		zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
+		zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().onServerStopped();
 		zmaster587.advancedRocketry.cable.NetworkRegistry.clearNetworks();
 		SpaceObjectManager.getSpaceManager().onServerStopped();
 		zmaster587.advancedRocketry.api.Configuration.MoonId = Constants.INVALID_PLANET;
-		DimensionManager.getInstance().overworldProperties.resetProperties();
 		((BlockSeal)AdvancedRocketryBlocks.blockPipeSealer).clearMap();
 		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 8000, "Dimensions including and after this number are allowed to be made into planets");
 		zmaster587.advancedRocketry.api.Configuration.spaceDimId = config.get(Configuration.CATEGORY_GENERAL,"spaceStationId" , -2,"Dimension ID to use for space stations").getInt();
-		
-		DimensionManager.getInstance().knownPlanets.clear();
 		
 		if(!zmaster587.advancedRocketry.api.Configuration.lockUI)
 			proxy.saveUILayout(config);

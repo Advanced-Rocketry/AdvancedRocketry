@@ -499,6 +499,14 @@ public class DimensionManager implements IGalaxy {
 		
 		return hasBeenInitiallized;
 	}
+	
+	public void onServerStopped()
+	{
+		unregisterAllDimensions();
+		knownPlanets.clear();
+		overworldProperties.resetProperties();
+		hasBeenInitiallized = false;
+	}
 
 	/**
 	 * 
