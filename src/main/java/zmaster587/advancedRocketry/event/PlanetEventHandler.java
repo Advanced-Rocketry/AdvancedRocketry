@@ -213,6 +213,8 @@ public class PlanetEventHandler {
 					!AtmosphereHandler.getOxygenHandler(event.getEntity().world.provider.getDimension()).getAtmosphereType(event.getPos()).isBreathable()) {
 				event.setResult(SleepResult.OTHER_PROBLEM);
 			}
+			else
+				event.setResult(SleepResult.OK);
 		}
 	}
 
@@ -233,11 +235,6 @@ public class PlanetEventHandler {
 				else if(event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE|| event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_POWDER || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_ROD || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.LAVA_BUCKET)
 					event.setCanceled(true);
 			}
-		}
-
-		if(!event.getWorld().isRemote && event.getItemStack() != null && event instanceof PlayerInteractEvent.RightClickBlock && event.getItemStack().getItem() == Items.BED && event.getWorld().provider instanceof WorldProviderPlanet) {
-			AdvancedRocketryItems.itemAstroBed.onItemUse( event.getEntityPlayer(),  event.getEntityPlayer().world, event.getPos(), event.getHand(), event.getFace(), 0, 0, 0);
-			event.setCanceled(true);
 		}
 
 		if(!event.getWorld().isRemote && event.getItemStack() != null && event.getItemStack().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
