@@ -129,8 +129,16 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 		if (getAtmosphereDensity(new BlockPos(0,0,0)) <= 75 && world.isRaining()) {
 			if(!Compat.isSpongeInstalled)
 			{
-				WorldInfo worldInfo = ReflectionHelper.getPrivateValue(DerivedWorldInfo.class, (DerivedWorldInfo)this.world.getWorldInfo(), "delegate", "field_76115_a");
-				worldInfo.setRaining(false);
+				try
+				{
+					WorldInfo worldInfo = ReflectionHelper.getPrivateValue(DerivedWorldInfo.class, (DerivedWorldInfo)this.world.getWorldInfo(), "delegate", "field_76115_a");
+					worldInfo.setRaining(false);
+				}
+				catch (ClassCastException e)
+				{
+					//Fallback.  Sometimes mods screw with worldInfo
+					this.world.getWorldInfo().setRaining(false);
+				}
 			}
 			else
 				//Hope that sponge cooperates
