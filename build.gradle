@@ -19,7 +19,7 @@ buildscript {
 plugins {
   id "com.gradle.build-scan" version "1.9"
   id "com.matthewprenger.cursegradle" version "1.1.0"
-  id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.50"
+  id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.64"
 }
 apply plugin: 'java'
 apply plugin: 'net.minecraftforge.gradle.forge'
