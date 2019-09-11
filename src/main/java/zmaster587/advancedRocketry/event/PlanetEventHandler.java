@@ -213,8 +213,6 @@ public class PlanetEventHandler {
 					!AtmosphereHandler.getOxygenHandler(event.getEntity().world.provider.getDimension()).getAtmosphereType(event.getPos()).isBreathable()) {
 				event.setResult(SleepResult.OTHER_PROBLEM);
 			}
-			else
-				event.setResult(SleepResult.OK);
 		}
 	}
 
