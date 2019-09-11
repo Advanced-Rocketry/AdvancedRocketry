@@ -59,7 +59,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 			return;
 		}
 
-		int speedUpgrades = 1;
+		int speedUpgrades = 0;
 		boolean allowsHover = false;
 
 		ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
@@ -82,9 +82,12 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 		boolean isActive = isActive(componentStack, player);
 
 		
-		//Apply speed upgrades
-		player.motionX *= 1 + speedUpgrades*0.02f;
-		player.motionZ *= 1 + speedUpgrades*0.02f;
+		//Apply speed upgrades only if the player isn't using Elytra
+		if(!player.isElytraFlying())
+		{
+			player.motionX *= 1 + speedUpgrades*0.02f;
+			player.motionZ *= 1 + speedUpgrades*0.02f;
+		}
 		
 		// If the move
 		if(hasModeSwitched(componentStack))
