@@ -160,7 +160,7 @@ curseforge{
 }
 
 // Commented out until jenkins supports newer verisons of java
-/*task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
+task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     file = new File ("changelog.html")
     untaggedName = "Current release ${project.version}"
     
@@ -192,11 +192,11 @@ curseforge{
   </ul>
 {{/tags}}
 """
-}*/
+}
 
-/*tasks.build.dependsOn makeChangelog
+tasks.build.dependsOn makeChangelog
 
-buildScan {
+/*buildScan {
     licenseAgreementUrl = 'https://gradle.com/terms-of-service' 
     licenseAgree = 'yes'                                        
 
