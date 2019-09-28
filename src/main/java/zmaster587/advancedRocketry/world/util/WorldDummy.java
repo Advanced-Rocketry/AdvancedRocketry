@@ -39,6 +39,12 @@ public class WorldDummy extends World  {
 	}
 	
 	@Override
+	public World init() {
+		this.mapStorage = new MapStorageDummy(this.saveHandler);
+		return super.init();
+	}
+	
+	@Override
 	public boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, @Nullable EnumFacing facing) {
 		return capabilities != null && capabilities.hasCapability(capability, facing);
 	}
