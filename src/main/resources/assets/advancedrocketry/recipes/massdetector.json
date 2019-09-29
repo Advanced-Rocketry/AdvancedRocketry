@@ -15,7 +15,7 @@
         "w":
         {
 	    "type": "forge:ore_dict",
-            "ore": "crystalDilithium"
+            "ore": "gemDilithium"
         },
         "p":
         {
