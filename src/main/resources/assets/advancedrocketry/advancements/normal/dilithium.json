@@ -1,7 +1,7 @@
 {
     "display": {
         "icon": {
-            "item": "libvulpes:productcrystal"
+            "item": "libvulpes:productgem"
         },
         "title": {
             "translate": "achievement.dilithium"
@@ -17,7 +17,7 @@
             "conditions": {
                 "items": [
                     {
-                        "item": "libvulpes:productcrystal",
+                        "item": "libvulpes:productgem",
                         "data": 0
                     }
                 ]
