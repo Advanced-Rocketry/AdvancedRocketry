@@ -5,6 +5,7 @@ import net.minecraft.block.state.BlockStateBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.util.AsteroidSmall;
+import zmaster587.advancedRocketry.util.SealableBlockHandler;
 
 import java.util.*;
 
@@ -32,6 +33,19 @@ public class Configuration {
 			blocks[index++] = block.getRegistryName().toString();
 		}
 		config.get(net.minecraftforge.common.config.Configuration.CATEGORY_GENERAL, "torchBlocks","").set(blocks);
+		Configuration.save();
+	}
+	
+	public static void addSealedBlock(Block newblock) {
+		SealableBlockHandler.INSTANCE.addSealableBlock(newblock);
+		List<Block> blockList = SealableBlockHandler.INSTANCE.getOverridenSealableBlocks();
+		String[] blocks = new String[blockList.size()];
+		int index = 0;
+		for( Block block : blockList)
+		{
+			blocks[index++] = block.getRegistryName().toString();
+		}
+		config.get(net.minecraftforge.common.config.Configuration.CATEGORY_GENERAL, "sealableBlockWhiteList","").set(blocks);
 		Configuration.save();
 	}
 	

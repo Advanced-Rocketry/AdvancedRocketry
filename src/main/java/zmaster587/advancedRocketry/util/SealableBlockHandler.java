@@ -100,7 +100,7 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 				return doorIsSealed;
 			}
 			//TODO add is side solid check, which will require forge direction or side check. Eg more complex logic...
-			return isFulBlock(world, pos);
+			return isFullBlock(world, pos);
 		}
 		return false;
 	}
@@ -130,6 +130,11 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 			blockBanList.remove(block);
 		}
 	}
+	
+	public List<Block> getOverridenSealableBlocks()
+	{
+		return blockAllowList;
+	}
 
 	/**
 	 * Checks if a block is full sized based off of block bounds. This
@@ -141,7 +146,7 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 	 * @param pos   - location
 	 * @return true if full block
 	 */
-	public static boolean isFulBlock(World world, BlockPos pos)
+	public static boolean isFullBlock(World world, BlockPos pos)
 	{
 		return isFullBlock(world, pos, world.getBlockState(pos));
 	}

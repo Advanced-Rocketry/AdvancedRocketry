@@ -1,5 +1,7 @@
 package zmaster587.advancedRocketry.api.atmosphere;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -36,4 +38,9 @@ public interface IAtmosphereSealHandler
      * @param block - block to allow, will remove off of disable list if present.
      */
     void addSealableBlock(Block block);
+    
+    /**
+     * Returns a list of blocks that can have been forced to be sealable
+     */
+    List<Block> getOverridenSealableBlocks();
 }

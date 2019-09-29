@@ -52,7 +52,7 @@ public class ItemSealDetector extends Item
                 {
                     player.sendMessage(new TextComponentTranslation("msg.sealdetector.notsealblock"));
                 }
-                else if (SealableBlockHandler.isFulBlock(world, pos))
+                else if (SealableBlockHandler.isFullBlock(world, pos))
                 {
                     player.sendMessage(new TextComponentTranslation("msg.sealdetector.notfullblock"));
                 }

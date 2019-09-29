@@ -1,0 +1,35 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"tgt",
+	" f ",
+	" c "
+    ],
+    "key":
+    {
+        "t":
+        {
+            "item": "minecraft:redstone_torch"
+        },
+        "c":
+        {
+            "item": "minecraft:comparator"
+        },
+	"g":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "paneGlass"
+        },
+        "f":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "fanSteel"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:sealdetector",
+        "count": 1
+    }
+}
