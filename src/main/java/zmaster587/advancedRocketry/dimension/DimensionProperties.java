@@ -31,6 +31,7 @@ import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
+import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketSatellite;
@@ -224,6 +225,18 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	private int planetId;
 	private boolean isStation;
 	private boolean isGasGiant;
+	private boolean canGenerateCraters;
+	private boolean generateCratersSet; //XXX: compat variable, remove in future release
+	private boolean canGenerateGeodes;
+	private boolean generateGeodesSet; //XXX: compat variable, remove in future release
+	private boolean canGenerateVolcanos;
+	private boolean generateVolcanosSet; //XXX: compat variable, remove in future release
+	private boolean canGenerateStructures;
+	private boolean generateStructuresSet; //XXX: compat variable, remove in future release
+	private float craterFrequencyMultiplier;
+	private float volcanoFrequencyMultiplier;
+	private float geodeFrequencyMultiplier;
+	
 
 	//Satallites
 	private HashMap<Long,SatelliteBase> satallites;
@@ -256,6 +269,18 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		isNativeDimension = true;
 		isGasGiant = false;
 		hasRings = false;
+		canGenerateCraters = false;
+		canGenerateGeodes = false;
+		canGenerateStructures = false;
+		canGenerateVolcanos = false;
+		generateCratersSet = false;
+		generateGeodesSet = false;
+		generateVolcanosSet = false;
+		generateStructuresSet = false;
+		craterFrequencyMultiplier = 1f;
+		volcanoFrequencyMultiplier = 1f;
+		geodeFrequencyMultiplier = 1f;
+		
 		customIcon = "";
 		harvestableAtmosphere = new LinkedList<Fluid>();
 		spawnableEntities = new LinkedList<SpawnListEntryNBT>();
@@ -1581,5 +1606,64 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	public int getGenType() {
 		return generatorType;
+	}
+
+	public void setGenerateCraters(boolean canGenerateCraters) {
+		this.canGenerateCraters = canGenerateCraters;
+		generateCratersSet = true;
+	}
+	
+	public boolean canGenerateCraters() {
+		return generateCratersSet ? this.canGenerateCraters : getAtmosphereDensity() < 0.75f;
+	}
+	
+	public float getCraterMultiplier() {
+		return craterFrequencyMultiplier;
+	}
+	
+	public void setCraterMultiplier(float craterFrequencyMultiplier) {
+		this.craterFrequencyMultiplier = craterFrequencyMultiplier;
+	}
+	
+	public void setGenerateGeodes(boolean canGenerateGeodes) {
+		this.canGenerateGeodes = canGenerateGeodes;
+		generateGeodesSet= true;
+	}
+	
+	public boolean canGenerateGeodes() {
+		return generateGeodesSet ? this.canGenerateGeodes : getAtmosphereDensity() > 125;
+	}
+	
+	public float getGeodeMultiplier() {
+		return volcanoFrequencyMultiplier;
+	}
+
+	public void setGeodeMultiplier(float geodeFrequencyMultiplier) {
+		this.geodeFrequencyMultiplier = geodeFrequencyMultiplier;
+	}
+	
+	public void setGenerateVolcanos(boolean canGenerateVolcanos) {
+		this.canGenerateVolcanos = canGenerateVolcanos;
+		generateVolcanosSet= true;
+	}
+	
+	public boolean canGenerateVolcanos() {
+		return generateVolcanosSet ? this.canGenerateVolcanos : Temps.getTempFromValue(getAverageTemp()) == Temps.TOOHOT;
+	}
+	
+	public float getVolcanoMultiplier() {
+		return volcanoFrequencyMultiplier;
+	}
+
+	public void setVolcanoMultiplier(float volcanoFrequencyMultiplier) {
+		this.volcanoFrequencyMultiplier = volcanoFrequencyMultiplier;
+	}
+	public void setGenerateStructures(boolean canGenerateStructures) {
+		this.canGenerateStructures = canGenerateStructures;
+		generateStructuresSet = true;
+	}
+	
+	public boolean canGenerateStructures() {
+		return generateStructuresSet ? canGenerateStructures : getAtmosphere().isBreathable();
 	}
 }

@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.util;
 import net.minecraft.block.Block;
 import net.minecraft.util.math.MathHelper;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -257,6 +258,50 @@ public class XMLOreLoader {
 		outputString = tabLen + "<oreGen ";
 		
 		return outputString;
+	}
+	
+	private static Node createTextNode(Document doc, String nodeName, double nodeText)
+	{
+		return createTextNode(doc, nodeName, Double.toString(nodeText));
+	}
+	
+	private static Node createTextNode(Document doc, String nodeName, boolean nodeText)
+	{
+		return createTextNode(doc, nodeName, Boolean.toString(nodeText));
+	}
+	
+	private static Node createTextNode(Document doc, String nodeName, int nodeText)
+	{
+		return createTextNode(doc, nodeName, Integer.toString(nodeText));
+	}
+	
+	private static Node createTextNode(Document doc, String nodeName, String nodeText)
+	{
+		Element element = doc.createElement(nodeName);
+		element.appendChild(doc.createTextNode(nodeText));
+		
+		return element;
+	}
+	
+	public static Node writeOreEntryXML(Document doc, OreGenProperties gen) {
+		
+		Element oreGen = doc.createElement("oreGen");
+		
+		for(OreEntry ore : gen.getOreEntries()) {
+			int meta = ore.getBlockState().getBlock().getMetaFromState(ore.getBlockState());
+			
+			Element oreElement = doc.createElement("ore");
+			oreElement.appendChild(createTextNode(doc, "block", ore.getBlockState().getBlock().getRegistryName().toString()));
+			oreElement.appendChild(createTextNode(doc, "minHeight", ore.getMinHeight()));
+			oreElement.appendChild(createTextNode(doc, "maxHeight", ore.getMaxHeight()));
+			oreElement.appendChild(createTextNode(doc, "clumpSize", ore.getClumpSize()));
+			oreElement.appendChild(createTextNode(doc, "chancePerChunk", ore.getClumpSize()));
+			if(meta != 0)
+				oreElement.appendChild(createTextNode(doc, "meta", meta));
+			
+		}
+		
+		return oreGen;
 	}
 	
 	public static String writeOreEntryXML(OreGenProperties gen, int numTabs) {

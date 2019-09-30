@@ -97,7 +97,6 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 	public ChunkProviderPlanet(World worldIn, long seed, boolean mapFeaturesEnabledIn, String p_i46668_5_)
 	{
 		this.worldObj = worldIn;
-		this.mapFeaturesEnabled = mapFeaturesEnabledIn;
 		this.terrainType = worldIn.getWorldInfo().getTerrainType();
 		this.rand = new Random(seed);
 		this.minLimitPerlinNoise = new NoiseGeneratorOctaves(this.rand, 16);
@@ -159,26 +158,27 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		this.scaleNoise = ctx.getScale();
 		this.depthNoise = ctx.getDepth();
 		this.forestNoise = ctx.getForest();
+		
+		this.mapFeaturesEnabled = dimProps.canGenerateStructures();
 
 		//TODO: may break on little planets
 		float atmDensity = ((WorldProviderPlanet)worldObj.provider).getAtmosphereDensity(new BlockPos(0,0,0));
-		int heat = ((WorldProviderPlanet)worldObj.provider).getAverageTemperature(new BlockPos(0,0,0));
 		habitable = ((WorldProviderPlanet)worldObj.provider).getAtmosphere(new BlockPos(0,0,0)).isBreathable();
 		
 
-		if(atmDensity < 0.75f && Configuration.generateCraters)
-			craterGenerator = new MapGenCrater( (int)(10 +  (26*(1-atmDensity)) ));
+		if(Configuration.generateCraters && dimProps.canGenerateCraters())
+			craterGenerator = new MapGenCrater( (int)((10 +  (26*(1-atmDensity)) )*dimProps.getCraterMultiplier()));
 		else 
 			craterGenerator = null;
 
-		if(atmDensity > 1.25f && Configuration.generateGeodes) {
-			geodeGenerator = new MapGenGeode(800);
+		if(dimProps.canGenerateGeodes() && Configuration.generateGeodes) {
+			geodeGenerator = new MapGenGeode((int)(800 * dimProps.getGeodeMultiplier()));
 		}
 		else
 			geodeGenerator = null;
 		
-		if(Temps.getTempFromValue(heat) == Temps.TOOHOT) {
-			volcanoGenerator = new MapGenVolcano(800);
+		if(dimProps.canGenerateVolcanos()) {
+			volcanoGenerator = new MapGenVolcano((int)(800 * dimProps.getVolcanoMultiplier()));
 		}
 		else
 			volcanoGenerator = null;
