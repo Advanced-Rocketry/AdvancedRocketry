@@ -230,6 +230,7 @@ public class AdvancedRocketry {
         AdvancedRocketryBiomes.oceanSpires = new BiomeGenOceanSpires();
         AdvancedRocketryBiomes.moonBiomeDark = new BiomeGenMoonDark();
         AdvancedRocketryBiomes.volcanic = new BiomeGenVolcanic();
+        AdvancedRocketryBiomes.volcanicBarren = new BiomeGenBarrenVolcanic();
 
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.moonBiome, evt.getRegistry());
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.alienForest, evt.getRegistry());
@@ -242,6 +243,7 @@ public class AdvancedRocketry {
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.oceanSpires, evt.getRegistry());
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.moonBiomeDark, evt.getRegistry());
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.volcanic, evt.getRegistry());
+        AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.volcanicBarren, evt.getRegistry());
         
         BiomeDictionary.addTypes(AdvancedRocketryBiomes.moonBiome, 
         		BiomeDictionary.Type.WASTELAND,
@@ -263,6 +265,12 @@ public class AdvancedRocketry {
         		BiomeDictionary.Type.HOT
         		);
         BiomeDictionary.addTypes(AdvancedRocketryBiomes.volcanic, 
+        		BiomeDictionary.Type.WASTELAND,
+        		BiomeDictionary.Type.DRY,
+        		BiomeDictionary.Type.HOT,
+        		BiomeDictionary.Type.MOUNTAIN
+        		);
+        BiomeDictionary.addTypes(AdvancedRocketryBiomes.volcanicBarren, 
         		BiomeDictionary.Type.WASTELAND,
         		BiomeDictionary.Type.DRY,
         		BiomeDictionary.Type.HOT,
@@ -1074,7 +1082,7 @@ public class AdvancedRocketry {
 
 		String[] biomeBlackList = config.getStringList("BlacklistedBiomes", "Planet", new String[] {Biomes.RIVER.getRegistryName().toString(), Biomes.SKY.getRegistryName().toString(), Biomes.HELL.getRegistryName().toString(), Biomes.VOID.getRegistryName().toString(), AdvancedRocketryBiomes.alienForest.getRegistryName().toString()}, "List of Biomes to be blacklisted from spawning as BiomeIds, default is: river, sky, hell, void, alienForest");
 		String[] biomeHighPressure = config.getStringList("HighPressureBiomes", "Planet", new String[] { AdvancedRocketryBiomes.swampDeepBiome.getRegistryName().toString(), AdvancedRocketryBiomes.stormLandsBiome.getRegistryName().toString() }, "Biomes that only spawn on worlds with pressures over 125, will override blacklist.  Defaults: StormLands, DeepSwamp");
-		String[] biomeSingle = config.getStringList("SingleBiomes", "Planet", new String[] { AdvancedRocketryBiomes.volcanic.getRegistryName().toString(), AdvancedRocketryBiomes.swampDeepBiome.getRegistryName().toString(), AdvancedRocketryBiomes.crystalChasms.getRegistryName().toString(),  AdvancedRocketryBiomes.alienForest.getRegistryName().toString(), Biomes.DESERT_HILLS.getRegistryName().toString(), 
+		String[] biomeSingle = config.getStringList("SingleBiomes", "Planet", new String[] { AdvancedRocketryBiomes.volcanicBarren.getRegistryName().toString(), AdvancedRocketryBiomes.swampDeepBiome.getRegistryName().toString(), AdvancedRocketryBiomes.crystalChasms.getRegistryName().toString(),  AdvancedRocketryBiomes.alienForest.getRegistryName().toString(), Biomes.DESERT_HILLS.getRegistryName().toString(), 
 				Biomes.MUSHROOM_ISLAND.getRegistryName().toString(), Biomes.EXTREME_HILLS.getRegistryName().toString(), Biomes.ICE_PLAINS.getRegistryName().toString() }, "Some worlds have a chance of spawning single biomes contained in this list.  Defaults: deepSwamp, crystalChasms, alienForest, desert hills, mushroom island, extreme hills, ice plains");
 
 		config.save();

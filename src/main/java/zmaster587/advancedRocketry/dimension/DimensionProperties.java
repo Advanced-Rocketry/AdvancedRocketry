@@ -978,6 +978,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		else if(averageTemperature > Temps.TOOHOT.getTemp()) {
 			viableBiomes.add(AdvancedRocketryBiomes.hotDryBiome);
 			viableBiomes.add(AdvancedRocketryBiomes.volcanic);
+			viableBiomes.add(AdvancedRocketryBiomes.volcanicBarren);
 		}
 		else if(averageTemperature > Temps.HOT.getTemp()) {
 

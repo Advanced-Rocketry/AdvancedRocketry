@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import zmaster587.advancedRocketry.world.biome.BiomeGenBarrenVolcanic;
 import zmaster587.advancedRocketry.world.biome.BiomeGenMoon;
 
 
@@ -33,6 +34,7 @@ public class AdvancedRocketryBiomes {
 	public static Biome oceanSpires;
 	public static Biome moonBiomeDark;
 	public static Biome volcanic;
+	public static Biome volcanicBarren;
 
 	private AdvancedRocketryBiomes() {
 		registeredBiomes = new ArrayList<Biome>();
