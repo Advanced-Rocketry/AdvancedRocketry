@@ -341,9 +341,9 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 				status = ErrorCodes.INVALIDBLOCK;
 			else if(!hasGuidance && !hasSatellite)
 				status = ErrorCodes.NOGUIDANCE;
-			else if(getFuel() < getNeededFuel()) 
+			else if(getFuel() <= getNeededFuel()) 
 				status = ErrorCodes.NOFUEL;
-			else if(getThrust() < getNeededThrust()) 
+			else if(getThrust() <= getNeededThrust()) 
 				status = ErrorCodes.NOENGINES;
 			else
 				status = ErrorCodes.SUCCESS;
