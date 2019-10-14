@@ -189,7 +189,7 @@ container.satelliteMonitor=Satellite Terminal
 
 enchantment.spaceBreathing=Airtight Seal
 
-data.undefined.name=Undefined Data
+data.undefined.name=Lack of Intelligible Data
 data.distance.name=Distance
 data.humidity.name=Humidity
 data.temperature.name=Temperature
