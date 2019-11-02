@@ -184,4 +184,5 @@ public class Configuration {
 
 	public static boolean generateVanillaStructures;
 	public static boolean generateCraters;
+	public static boolean generateVolcanos;
 }

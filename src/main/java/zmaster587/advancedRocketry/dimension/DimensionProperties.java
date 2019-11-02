@@ -1615,7 +1615,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 	
 	public boolean canGenerateCraters() {
-		return generateCratersSet ? this.canGenerateCraters : getAtmosphereDensity() < 0.75f;
+		return Configuration.generateCraters && (generateCratersSet ? this.canGenerateCraters : getAtmosphereDensity() < 0.75f);
 	}
 	
 	public float getCraterMultiplier() {
@@ -1632,7 +1632,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 	
 	public boolean canGenerateGeodes() {
-		return generateGeodesSet ? this.canGenerateGeodes : getAtmosphereDensity() > 125;
+		return Configuration.generateGeodes && (generateGeodesSet ? this.canGenerateGeodes : getAtmosphereDensity() > 125);
 	}
 	
 	public float getGeodeMultiplier() {
@@ -1649,7 +1649,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 	
 	public boolean canGenerateVolcanos() {
-		return generateVolcanosSet ? this.canGenerateVolcanos : Temps.getTempFromValue(getAverageTemp()) == Temps.TOOHOT;
+		return Configuration.generateVolcanos && (generateVolcanosSet ? this.canGenerateVolcanos : Temps.getTempFromValue(getAverageTemp()) == Temps.TOOHOT);
 	}
 	
 	public float getVolcanoMultiplier() {
@@ -1665,6 +1665,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 	
 	public boolean canGenerateStructures() {
-		return generateStructuresSet ? canGenerateStructures : getAtmosphere().isBreathable();
+		return Configuration.generateVanillaStructures && (generateStructuresSet ? canGenerateStructures : getAtmosphere().isBreathable());
 	}
 }
