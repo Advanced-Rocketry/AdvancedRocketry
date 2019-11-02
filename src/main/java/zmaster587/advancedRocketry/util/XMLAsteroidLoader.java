@@ -196,20 +196,22 @@ public class XMLAsteroidLoader {
 	}
 
 	public static ItemStack getStack(String text) {
-		String splitStr[] = text.split(" ");
+		//Backwards compat, " " used to be the delimiter
+		String[] splitStr = text.contains(";") ? text.split(";") : text.split(" ");
+		
 		int meta = 0;
 		int size = 1;
-		//format: "name meta size"
+		//format: "name;meta;size"
 		if(splitStr.length > 1) {
 			try {
-				meta = Integer.parseInt(splitStr[1]);
+				meta = Integer.parseInt(splitStr[1].trim());
 			} catch( NumberFormatException e) {}
 		}
 
 		ItemStack stack = null;
-		Block block = Block.getBlockFromName(splitStr[0]);
+		Block block = Block.getBlockFromName(splitStr[0].trim());
 		if(block == null) {
-			Item item = Item.getByNameOrId(splitStr[0]);
+			Item item = Item.getByNameOrId(splitStr[0].trim());
 			if(item != null)
 				stack = new ItemStack(item, size, meta);
 		}
