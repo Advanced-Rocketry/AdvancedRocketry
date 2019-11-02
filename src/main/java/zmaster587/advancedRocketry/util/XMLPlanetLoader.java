@@ -329,10 +329,10 @@ public class XMLPlanetLoader {
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_PERIOD)) {
 				try {
 					int rotationalPeriod =  Integer.parseInt(planetPropertyNode.getTextContent());
-					if(properties.rotationalPeriod > 0)
+					if(rotationalPeriod > 0)
 						properties.rotationalPeriod = rotationalPeriod;
 					else
-						AdvancedRocketry.logger.warn("rotational Period must be greater than 0"); //TODO: more detailed error msg
+						AdvancedRocketry.logger.warn("rotational Period must be greater than 0 for dimension " + properties.getId()); //TODO: more detailed error msg
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid rotational period specified"); //TODO: more detailed error msg
 				}
