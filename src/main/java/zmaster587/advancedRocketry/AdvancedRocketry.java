@@ -196,7 +196,7 @@ public class AdvancedRocketry {
 	private static Configuration config;
 	private static final String BIOMECATETORY = "Biomes";
 	private boolean resetFromXml;
-	String[] sealableBlockWhiteList, breakableTorches,  blackListRocketBlocks, harvestableGasses, entityList, asteriodOres, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres, liquidRocketFuel;
+	String[] sealableBlockWhiteList, sealableBlockBlackList, breakableTorches,  blackListRocketBlocks, harvestableGasses, entityList, asteriodOres, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres, liquidRocketFuel;
 
 	//static {
 	//	FluidRegistry.enableUniversalBucket(); // Must be called before preInit
@@ -425,7 +425,9 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.api.Configuration.rutileClumpSize = config.get(oreGen, "RutilePerClump", 6).getInt();
 		zmaster587.advancedRocketry.api.Configuration.rutilePerChunk = config.get(oreGen, "RutilePerChunk", 6).getInt();
 
-		sealableBlockWhiteList = config.getStringList("sealableBlockWhiteList", Configuration.CATEGORY_GENERAL, new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
+		sealableBlockWhiteList = config.getStringList("sealableBlockWhiteList", Configuration.CATEGORY_GENERAL, new String[] {}, "Blocks that are not automatically detected as sealable but should seal.  Format \"Mod:Blockname\"  for example \"minecraft:chest\"");
+		sealableBlockBlackList = config.getStringList("sealableBlockBlackList", Configuration.CATEGORY_GENERAL, new String[] {}, "Blocks that are automatically detected as sealable but should not seal.  Format \"Mod:Blockname\"  for example \"minecraft:chest\"");
+		
 		blackListRocketBlocks = config.getStringList("rocketBlockBlackList", Configuration.CATEGORY_GENERAL, new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
 		breakableTorches = config.getStringList("torchBlocks", Configuration.CATEGORY_GENERAL, new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
 		
@@ -1265,7 +1267,7 @@ public class AdvancedRocketry {
 		
 		//Register Whitelisted Sealable Blocks
 
-		logger.info("Start registering sealable blocks");
+		logger.info("Start registering sealable blocks (sealableBlockWhiteList)");
 		for(String str : sealableBlockWhiteList) {
 			Block block = Block.getBlockFromName(str);
 			if(block == null)
@@ -1276,6 +1278,17 @@ public class AdvancedRocketry {
 		logger.info("End registering sealable blocks");
 		sealableBlockWhiteList = null;
 
+		logger.info("Start registering unsealable blocks (sealableBlockBlackList)");
+		for(String str : sealableBlockBlackList) {
+			Block block = Block.getBlockFromName(str);
+			if(block == null)
+				logger.warn("'" + str + "' is not a valid Block");
+			else
+				SealableBlockHandler.INSTANCE.addUnsealableBlock(block);
+		}
+		logger.info("End registering unsealable blocks");
+		sealableBlockBlackList = null;
+		
 		logger.info("Start registering torch blocks");
 		for(String str : breakableTorches) {
 			Block block = Block.getBlockFromName(str);
