@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.atmosphere;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -89,7 +90,7 @@ public class AtmosphereHandler {
 			}
 
 			if(atmosType.canTick() &&
-					!(event.getEntityLiving().isInLava() || event.getEntityLiving().isInWater()) ) {
+					!(event.getEntityLiving().isInLava() || event.getEntityLiving().isInsideOfMaterial(Material.WATER)) ) {
 				AtmosphereEvent event2 = new AtmosphereEvent.AtmosphereTickEvent(entity, atmosType);
 				MinecraftForge.EVENT_BUS.post(event2);
 				if(!event2.isCanceled() && !atmosType.isImmune(event.getEntity().getClass()))
