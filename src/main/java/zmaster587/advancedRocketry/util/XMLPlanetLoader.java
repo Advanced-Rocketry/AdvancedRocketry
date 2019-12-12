@@ -454,7 +454,7 @@ public class XMLPlanetLoader {
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_PLANET)) {
 				List<DimensionProperties> childList = readPlanetFromNode(planetPropertyNode, star);
 				if(childList.size() > 0) {
-					DimensionProperties child = childList.get(childList.size()-1); // Last entry in the list is the child planet
+					DimensionProperties child = childList.get(0); // First entry in the list is the child planet
 					properties.addChildPlanet(child);
 					list.addAll(childList);
 				}
