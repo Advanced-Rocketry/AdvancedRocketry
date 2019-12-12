@@ -14,6 +14,7 @@ import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.common.capabilities.CapabilityDispatcher;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -54,7 +55,7 @@ public class WorldDummy extends World  {
 	public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable EnumFacing facing) {
 		return capabilities == null ? null : capabilities.getCapability(capability, facing);
 	}
-
+	
 	@Override
 	public IBlockState getBlockState(BlockPos pos) {
 		return storage.getBlockState(pos);

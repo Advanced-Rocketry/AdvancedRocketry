@@ -74,6 +74,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		liquidTiles = new ArrayList<TileEntity>();
 
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
+		world.init();
 		this.chunk = new Chunk(world, 0, 0);
 	}
 
@@ -90,6 +91,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		liquidTiles = new ArrayList<TileEntity>();
 
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
+		world.init();
 		this.chunk = new Chunk(world, 0, 0);
 	}
 
