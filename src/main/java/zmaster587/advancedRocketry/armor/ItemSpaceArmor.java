@@ -115,7 +115,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 	public ArmorProperties getProperties(EntityLivingBase player,
 			ItemStack armor, DamageSource source, double damage, int slot) {
 		if(!source.isUnblockable())
-			return new ArmorProperties(0, 5, 1);
+			return new ArmorProperties(0, 0, 1);
 		return new ArmorProperties(0, 0, 0);
 	}
 
@@ -159,13 +159,6 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 
 			saveEmbeddedInventory(armor, inv);
 		}
-
-		ItemStack feet = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
-		ItemStack leg = player.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
-		ItemStack chest = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-		ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-//		if(!feet.isEmpty() && feet.getItem() instanceof ItemSpaceArmor && !leg.isEmpty() && leg.getItem() instanceof ItemSpaceArmor && !chest.isEmpty() && chest.getItem() instanceof ItemSpaceArmor && !helm.isEmpty() && helm.getItem() instanceof ItemSpaceArmor)
-//			player.addStat(ARAchivements.suitedUp);TODO Advancement Trigger
 	}
 
 	@Override
