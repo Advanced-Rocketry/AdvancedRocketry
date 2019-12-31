@@ -34,6 +34,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBloc
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.terraingen.OreGenEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
+import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -217,20 +218,31 @@ public class PlanetEventHandler {
 	}
 
 	@SubscribeEvent
-	public void blockPlaceEvent(RightClickBlock event) {
+	public void blockPlacedEvent(PlaceEvent event)
+	{
+		if(!event.getWorld().isRemote  && AtmosphereHandler.getOxygenHandler(event.getWorld().provider.getDimension()) != null &&
+				!AtmosphereHandler.getOxygenHandler(event.getWorld().provider.getDimension()).getAtmosphereType(event.getPos()).allowsCombustion()) {
+
+			if(event.getPlacedBlock().getBlock() == Blocks.TORCH) {
+				EnumFacing direction = event.getPlacedBlock().getValue(BlockTorch.FACING);
+				event.getWorld().setBlockState(event.getPos(), AdvancedRocketryBlocks.blockUnlitTorch.getDefaultState().withProperty(BlockTorch.FACING, direction));
+			}
+			else if(zmaster587.advancedRocketry.api.Configuration.torchBlocks.contains(event.getPlacedBlock().getBlock()))
+			{
+				event.setResult(Result.DENY);
+				event.setCanceled(true);
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void blockRightClicked(RightClickBlock event) {
 		EnumFacing direction = event.getFace();
 		if(!event.getWorld().isRemote && direction != null  && event.getEntityPlayer() != null  && AtmosphereHandler.getOxygenHandler(event.getWorld().provider.getDimension()) != null &&
 				!AtmosphereHandler.getOxygenHandler(event.getWorld().provider.getDimension()).getAtmosphereType(event.getPos().offset(direction)).allowsCombustion()) {
 
 			if(event.getEntityPlayer().getHeldItem(event.getHand()) != null) {
-				if(event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Item.getItemFromBlock(Blocks.TORCH) && 
-						event.getWorld().getBlockState(event.getPos()).isSideSolid(event.getWorld(), event.getPos(), direction)) {
-					event.setCanceled(true);
-					event.getWorld().setBlockState(event.getPos().offset(direction), AdvancedRocketryBlocks.blockUnlitTorch.getDefaultState().withProperty(BlockTorch.FACING, direction));
-				}
-				else if(zmaster587.advancedRocketry.api.Configuration.torchBlocks.contains(Block.getBlockFromItem(event.getEntityPlayer().getHeldItem(event.getHand()).getItem())) )
-					event.setCanceled(true);
-				else if(event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE|| event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_POWDER || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_ROD || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.LAVA_BUCKET)
+				if(event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE|| event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_POWDER || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_ROD || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.LAVA_BUCKET)
 					event.setCanceled(true);
 			}
 		}
