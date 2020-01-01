@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
@@ -57,7 +57,7 @@ public class SpaceObjectAsteroid extends SpaceObjectBase implements IDataHandler
 	
 	public void registerWithSpaceObjectManager() {
 		
-		SpaceObjectManager.getSpaceManager().registerTemporarySpaceObject(this, Constants.INVALID_PLANET,net.minecraftforge.common.DimensionManager.getWorld(Configuration.spaceDimId).getTotalWorldTime() + 100000);
+		SpaceObjectManager.getSpaceManager().registerTemporarySpaceObject(this, Constants.INVALID_PLANET,net.minecraftforge.common.DimensionManager.getWorld(ARConfiguration.getCurrentConfig().spaceDimId).getTotalWorldTime() + 100000);
 	}
 	
 	public static void generateAsteroid(World world, int x, int y, int z) {

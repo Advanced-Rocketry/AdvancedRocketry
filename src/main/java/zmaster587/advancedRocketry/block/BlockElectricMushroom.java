@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.entity.fx.FxSystemElectricArc;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 
@@ -48,7 +48,7 @@ public class BlockElectricMushroom extends BlockMushroom implements IGrowable {
 	@Override
 	public void updateTick(World world, BlockPos pos, IBlockState state,
 			Random rand) {
-		if(!world.isRemote && Configuration.electricPlantsSpawnLightning && world.isRaining() && world.getBiome(pos) == AdvancedRocketryBiomes.stormLandsBiome) {
+		if(!world.isRemote && ARConfiguration.getCurrentConfig().electricPlantsSpawnLightning && world.isRaining() && world.getBiome(pos) == AdvancedRocketryBiomes.stormLandsBiome) {
 			int lightningX = pos.getX() + rand.nextInt(24) - 12;
 			int lightningZ = pos.getZ() + rand.nextInt(24) - 12;
 			BlockPos lightning = new BlockPos(lightningX, 0, lightningZ );

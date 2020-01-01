@@ -21,7 +21,7 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -274,7 +274,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 
 
 	public TileAtmosphereTerraformer() {
-		completionTime = (int) (18000 * Configuration.terraformSpeed);
+		completionTime = (int) (18000 * ARConfiguration.getCurrentConfig().terraformSpeed);
 		buttonIncrease = new ModuleToggleSwitch(40, 20, 1, LibVulpes.proxy.getLocalizedString("msg.terraformer.atminc"), this, TextureResources.buttonScan, 80, 16,true);
 		buttonDecrease = new ModuleToggleSwitch(40, 38, 2, LibVulpes.proxy.getLocalizedString("msg.terraformer.atmdec"), this, TextureResources.buttonScan, 80, 16, false);
 		text = new ModuleText(10, 100, "", 0x282828);
@@ -289,7 +289,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 	}
 
 	private int getCompletionTime() {
-		return (int) (18000 * Configuration.terraformSpeed);
+		return (int) (18000 * ARConfiguration.getCurrentConfig().terraformSpeed);
 	}
 
 	@Override
@@ -376,11 +376,11 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 			}
 		}
 
-		if(!Configuration.terraformRequiresFluid)
+		if(!ARConfiguration.getCurrentConfig().terraformRequiresFluid)
 			return;
 
 		if(!world.isRemote) {
-			int requiredN2 = Configuration.terraformliquidRate, requiredO2 =  Configuration.terraformliquidRate;
+			int requiredN2 = ARConfiguration.getCurrentConfig().terraformliquidRate, requiredO2 =  ARConfiguration.getCurrentConfig().terraformliquidRate;
 
 			for(IFluidHandler handler : fluidInPorts) {
 				FluidStack stack = handler.drain(new FluidStack(AdvancedRocketryFluids.fluidNitrogen, requiredN2), true);
@@ -434,7 +434,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 
 	@Override
 	public boolean isRunning() {
-		boolean bool = getMachineEnabled() && super.isRunning() && zmaster587.advancedRocketry.api.Configuration.allowTerraforming;
+		boolean bool = getMachineEnabled() && super.isRunning() && zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().allowTerraforming;
 
 		if(!bool)
 			currentTime = 0;
@@ -464,7 +464,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
 		if( !world.isRemote && properties != null && properties.getId() == world.provider.getDimension() && ((world.provider.getClass().equals(WorldProviderPlanet.class) && 
-				properties.isNativeDimension) || Configuration.allowTerraformNonAR) ) {
+				properties.isNativeDimension) || ARConfiguration.getCurrentConfig().allowTerraformNonAR) ) {
 			if(buttonIncrease.getState() && properties.getAtmosphereDensity() < 200)
 				properties.setAtmosphereDensity(properties.getAtmosphereDensity()+1);
 			else if(buttonDecrease.getState() && properties.getAtmosphereDensity() > 0) {

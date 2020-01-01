@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
@@ -69,7 +69,7 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 
 	@Override
 	public int getEnergyMTU(EnumFacing side) {
-		return (int) (100* Configuration.microwaveRecieverMulitplier);
+		return (int) (100* ARConfiguration.getCurrentConfig().microwaveRecieverMulitplier);
 	}
 
 	@Override

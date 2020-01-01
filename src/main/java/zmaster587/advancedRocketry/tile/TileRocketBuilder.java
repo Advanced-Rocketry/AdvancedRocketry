@@ -167,9 +167,9 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	public float getNeededThrust() {return getWeight();}
 
-	public float getNeededFuel() { return getAcceleration() > 0 ? 2*stats.getFuelRate(FuelType.LIQUID)*MathHelper.sqrt((2*(Configuration.orbit-this.getPos().getY()))/getAcceleration()) : 0; }
+	public float getNeededFuel() { return getAcceleration() > 0 ? 2*stats.getFuelRate(FuelType.LIQUID)*MathHelper.sqrt((2*(ARConfiguration.getCurrentConfig().orbit-this.getPos().getY()))/getAcceleration()) : 0; }
 
-	public int getFuel() {return (int) (stats.getFuelCapacity(FuelType.LIQUID)*Configuration.fuelCapacityMultiplier);}
+	public int getFuel() {return (int) (stats.getFuelCapacity(FuelType.LIQUID)*ARConfiguration.getCurrentConfig().fuelCapacityMultiplier);}
 
 	public boolean isBuilding() { return building; }
 
@@ -316,7 +316,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 							if(tile instanceof TileGuidanceComputer)
 								hasGuidance = true;
 							
-							if(Configuration.blackListRocketBlocks.contains(block))
+							if(ARConfiguration.getCurrentConfig().blackListRocketBlocks.contains(block))
 							{
 								invalidBlock = true;
 								if(!world.isRemote)
@@ -635,7 +635,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			if(!canScan())
 				return;
 
-			totalProgress = (int) (Configuration.buildSpeedMultiplier*this.getVolume(world, bbCache)/10);
+			totalProgress = (int) (ARConfiguration.getCurrentConfig().buildSpeedMultiplier*this.getVolume(world, bbCache)/10);
 			this.markDirty();
 			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 		}
@@ -651,7 +651,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			if(!canScan())
 				return;
 
-			totalProgress =(int) (Configuration.buildSpeedMultiplier*this.getVolume(world,bbCache)/10);
+			totalProgress =(int) (ARConfiguration.getCurrentConfig().buildSpeedMultiplier*this.getVolume(world,bbCache)/10);
 			this.markDirty();
 			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 

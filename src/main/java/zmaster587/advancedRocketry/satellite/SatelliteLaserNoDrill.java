@@ -11,7 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.libVulpes.util.ZUtils;
 
@@ -32,10 +32,10 @@ public class SatelliteLaserNoDrill extends SatelliteBase {
 		random = new Random(System.currentTimeMillis());
 		
 		//isEmpty check because <init> is called in post init to register for holo projector
-		if(ores == null && !Configuration.standardLaserDrillOres.isEmpty()) {
+		if(ores == null && !ARConfiguration.getCurrentConfig().standardLaserDrillOres.isEmpty()) {
 			ores = new LinkedList<ItemStack>();
-			for(int i = 0; i < Configuration.standardLaserDrillOres.size(); i++) {
-				String oreDictName = Configuration.standardLaserDrillOres.get(i);
+			for(int i = 0; i < ARConfiguration.getCurrentConfig().standardLaserDrillOres.size(); i++) {
+				String oreDictName = ARConfiguration.getCurrentConfig().standardLaserDrillOres.get(i);
 				
 				String args[] = oreDictName.split(":");
 				

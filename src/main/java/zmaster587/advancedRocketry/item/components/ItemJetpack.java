@@ -24,7 +24,7 @@ import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.inventory.TextureResources;
@@ -197,7 +197,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 
 		if(hasFuel) {
 
-			player.addVelocity(0, (double)Configuration.jetPackThrust*0.1f, 0);
+			player.addVelocity(0, (double)ARConfiguration.getCurrentConfig().jetPackThrust*0.1f, 0);
 			if(player.world.isRemote) {
 				double xPos = player.posX;
 				double zPos = player.posZ;

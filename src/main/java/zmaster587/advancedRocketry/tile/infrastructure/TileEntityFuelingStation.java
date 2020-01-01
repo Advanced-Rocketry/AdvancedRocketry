@@ -73,7 +73,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 			if(tank.getFluid() != null) {
 				float multiplier = FuelRegistry.instance.getMultiplier(FuelType.LIQUID, tank.getFluid().getFluid());
 
-				tank.drain(linkedRocket.addFuelAmount((int)(multiplier*Configuration.fuelPointsPer10Mb)), true);
+				tank.drain(linkedRocket.addFuelAmount((int)(multiplier*ARConfiguration.getCurrentConfig().fuelPointsPer10Mb)), true);
 			}
 			//If the rocket is full then emit redstone
 			setRedstoneState(linkedRocket.getFuelAmount() == linkedRocket.getFuelCapacity());

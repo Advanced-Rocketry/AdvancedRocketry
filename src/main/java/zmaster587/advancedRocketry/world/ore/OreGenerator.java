@@ -13,7 +13,7 @@ import net.minecraftforge.event.terraingen.OreGenEvent;
 import net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable.EventType;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
@@ -47,27 +47,27 @@ public class OreGenerator extends WorldGenerator implements IWorldGenerator {
 		OreGenEvent event = new OreGenEvent.GenerateMinable(world, random, this, new BlockPos(chunkX,0,chunkZ), EventType.CUSTOM);
 		MinecraftForge.ORE_GEN_BUS.post(event);
 		if(event.getResult() != Result.DENY) {
-			if(Configuration.generateCopper) {
-				generate(world, MaterialRegistry.getMaterialFromName("Copper"), Configuration.copperPerChunk, Configuration.copperClumpSize, chunkX, chunkZ, random);
+			if(ARConfiguration.getCurrentConfig().generateCopper) {
+				generate(world, MaterialRegistry.getMaterialFromName("Copper"), ARConfiguration.getCurrentConfig().copperPerChunk, ARConfiguration.getCurrentConfig().copperClumpSize, chunkX, chunkZ, random);
 			}
 
-			if(Configuration.generateTin) {
-				generate(world, MaterialRegistry.getMaterialFromName("Tin"), Configuration.tinPerChunk, Configuration.tinClumpSize, chunkX, chunkZ, random);
+			if(ARConfiguration.getCurrentConfig().generateTin) {
+				generate(world, MaterialRegistry.getMaterialFromName("Tin"), ARConfiguration.getCurrentConfig().tinPerChunk, ARConfiguration.getCurrentConfig().tinClumpSize, chunkX, chunkZ, random);
 			}
-			if(Configuration.generateRutile) {
-				generate(world, MaterialRegistry.getMaterialFromName("Rutile"), Configuration.rutilePerChunk, Configuration.rutileClumpSize, chunkX, chunkZ, random);
+			if(ARConfiguration.getCurrentConfig().generateRutile) {
+				generate(world, MaterialRegistry.getMaterialFromName("Rutile"), ARConfiguration.getCurrentConfig().rutilePerChunk, ARConfiguration.getCurrentConfig().rutileClumpSize, chunkX, chunkZ, random);
 			}
-			if(Configuration.generateAluminum) {
-				generate(world, MaterialRegistry.getMaterialFromName("Aluminum"), Configuration.aluminumPerChunk, Configuration.aluminumClumpSize, chunkX, chunkZ, random);
+			if(ARConfiguration.getCurrentConfig().generateAluminum) {
+				generate(world, MaterialRegistry.getMaterialFromName("Aluminum"), ARConfiguration.getCurrentConfig().aluminumPerChunk, ARConfiguration.getCurrentConfig().aluminumClumpSize, chunkX, chunkZ, random);
 			}
-			if(Configuration.generateIridium) {
-				generate(world, MaterialRegistry.getMaterialFromName("Iridium"), Configuration.IridiumPerChunk, Configuration.IridiumClumpSize, chunkX, chunkZ, random);
+			if(ARConfiguration.getCurrentConfig().generateIridium) {
+				generate(world, MaterialRegistry.getMaterialFromName("Iridium"), ARConfiguration.getCurrentConfig().IridiumPerChunk, ARConfiguration.getCurrentConfig().IridiumClumpSize, chunkX, chunkZ, random);
 			}
 
-			if(Configuration.generateDilithium) {
-				int dilithiumChance = Configuration.dilithiumPerChunk;
+			if(ARConfiguration.getCurrentConfig().generateDilithium) {
+				int dilithiumChance = ARConfiguration.getCurrentConfig().dilithiumPerChunk;
 				if(world.provider instanceof WorldProviderPlanet) {
-					dilithiumChance = DimensionProperties.AtmosphereTypes.getAtmosphereTypeFromValue(DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getAtmosphereDensity()) == DimensionProperties.AtmosphereTypes.NONE ? Configuration.dilithiumPerChunkMoon : Configuration.dilithiumPerChunk;;
+					dilithiumChance = DimensionProperties.AtmosphereTypes.getAtmosphereTypeFromValue(DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getAtmosphereDensity()) == DimensionProperties.AtmosphereTypes.NONE ? ARConfiguration.getCurrentConfig().dilithiumPerChunkMoon : ARConfiguration.getCurrentConfig().dilithiumPerChunk;;
 				}
 				
 				for(int i = 0; i < dilithiumChance; i++) {
@@ -75,7 +75,7 @@ public class OreGenerator extends WorldGenerator implements IWorldGenerator {
 					int coordY = random.nextInt(64);
 					int coordZ = 16*chunkZ + random.nextInt(16);
 
-					new WorldGenMinable(MaterialRegistry.getMaterialFromName("Dilithium").getBlock().getDefaultState(), Configuration.dilithiumClumpSize).generate(world, random, new BlockPos(coordX, coordY, coordZ));
+					new WorldGenMinable(MaterialRegistry.getMaterialFromName("Dilithium").getBlock().getDefaultState(), ARConfiguration.getCurrentConfig().dilithiumClumpSize).generate(world, random, new BlockPos(coordX, coordY, coordZ));
 				}
 			}
 		}

@@ -22,7 +22,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import scala.util.Random;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
@@ -452,7 +452,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public void removeBeaconLocation(World world, HashedBlockPosition pos) {
 		beaconLocations.remove(pos);
 
-		if(beaconLocations.isEmpty() && !Configuration.initiallyKnownPlanets.contains(getId()))
+		if(beaconLocations.isEmpty() && !ARConfiguration.getCurrentConfig().initiallyKnownPlanets.contains(getId()))
 			DimensionManager.getInstance().knownPlanets.remove(getId());
 
 		//LAAZZY
@@ -1573,6 +1573,18 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	}
 
+	
+	public double[] getPlanetPositon()
+	{
+		double orbitalDistance = this.orbitalDist;
+		double theta = this.orbitTheta;
+		double phi = this.orbitalPhi;
+		
+		double[] coords = new double[] {orbitalDistance*Math.cos(theta), orbitalDistance*Math.sin(phi), orbitalDistance*Math.sin(theta)};
+		
+		return coords;
+	}
+	
 	public int getStarId() {
 		return starId;
 	}
@@ -1615,7 +1627,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 	
 	public boolean canGenerateCraters() {
-		return Configuration.generateCraters && (generateCratersSet ? this.canGenerateCraters : getAtmosphereDensity() < 0.75f);
+		return ARConfiguration.getCurrentConfig().generateCraters && (generateCratersSet ? this.canGenerateCraters : getAtmosphereDensity() < 0.75f);
 	}
 	
 	public float getCraterMultiplier() {
@@ -1632,7 +1644,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 	
 	public boolean canGenerateGeodes() {
-		return Configuration.generateGeodes && (generateGeodesSet ? this.canGenerateGeodes : getAtmosphereDensity() > 125);
+		return ARConfiguration.getCurrentConfig().generateGeodes && (generateGeodesSet ? this.canGenerateGeodes : getAtmosphereDensity() > 125);
 	}
 	
 	public float getGeodeMultiplier() {
@@ -1649,7 +1661,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 	
 	public boolean canGenerateVolcanos() {
-		return Configuration.generateVolcanos && (generateVolcanosSet ? this.canGenerateVolcanos : Temps.getTempFromValue(getAverageTemp()) == Temps.TOOHOT);
+		return ARConfiguration.getCurrentConfig().generateVolcanos && (generateVolcanosSet ? this.canGenerateVolcanos : Temps.getTempFromValue(getAverageTemp()) == Temps.TOOHOT);
 	}
 	
 	public float getVolcanoMultiplier() {
@@ -1665,6 +1677,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 	
 	public boolean canGenerateStructures() {
-		return Configuration.generateVanillaStructures && (generateStructuresSet ? canGenerateStructures : getAtmosphere().isBreathable());
+		return ARConfiguration.getCurrentConfig().generateVanillaStructures && (generateStructuresSet ? canGenerateStructures : getAtmosphere().isBreathable());
 	}
 }

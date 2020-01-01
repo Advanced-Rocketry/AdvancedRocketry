@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -146,7 +146,7 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 
 
 	public void registerTileWithStation(World world, BlockPos pos) {
-		if(!world.isRemote && world.provider.getDimension() == Configuration.spaceDimId) {
+		if(!world.isRemote && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 			if(spaceObj instanceof SpaceObject) {
@@ -156,7 +156,7 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 	}
 
 	public void unregisterTileWithStation(World world, BlockPos pos) {
-		if(!world.isRemote && world.provider.getDimension() == Configuration.spaceDimId) {
+		if(!world.isRemote && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(spaceObj instanceof SpaceObject)
 				((SpaceObject)spaceObj).removeDockingPosition(pos);
@@ -190,7 +190,7 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 			NBTTagCompound nbt) {
 		if(id == 0) {
 			myIdStr = nbt.getString("id");
-			if(!world.isRemote && world.provider.getDimension() == Configuration.spaceDimId) {
+			if(!world.isRemote && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 				ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 				if(spaceObj instanceof SpaceObject) {

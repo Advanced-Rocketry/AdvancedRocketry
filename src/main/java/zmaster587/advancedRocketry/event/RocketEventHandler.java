@@ -34,7 +34,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
@@ -88,7 +88,7 @@ public class RocketEventHandler extends Gui {
 			//So fix that...
 			ForgeHooksClient.getSkyBlendColour(event.world, event.getEntity().getPosition());
 
-			if(Configuration.planetSkyOverride && !(event.world.provider instanceof IPlanetaryProvider)) {
+			if(ARConfiguration.getCurrentConfig().planetSkyOverride && !(event.world.provider instanceof IPlanetaryProvider)) {
 				prevRenderHanlder = event.world.provider.getSkyRenderer();
 				event.world.provider.setSkyRenderer(new RenderPlanetarySky());
 			}
@@ -103,7 +103,7 @@ public class RocketEventHandler extends Gui {
 	
 	@SubscribeEvent
 	public void onRocketLaunch(RocketEvent.RocketLaunchEvent event) {
-		if(Configuration.planetSkyOverride && event.world.isRemote && !event.getEntity().getPassengers().isEmpty() && event.getEntity().getPassengers().contains(Minecraft.getMinecraft().player)) {
+		if(ARConfiguration.getCurrentConfig().planetSkyOverride && event.world.isRemote && !event.getEntity().getPassengers().isEmpty() && event.getEntity().getPassengers().contains(Minecraft.getMinecraft().player)) {
 			prepareOrbitalMap(event);
 			prevRenderHanlder = event.world.provider.getSkyRenderer();
 			event.world.provider.setSkyRenderer(new RenderPlanetarySky());
@@ -118,7 +118,7 @@ public class RocketEventHandler extends Gui {
 
 	@SideOnly(Side.CLIENT)
 	public static void destroyOrbitalTextures(World world) {
-		if(!Configuration.skyOverride && !(world.provider instanceof IPlanetaryProvider)) {
+		if(!ARConfiguration.getCurrentConfig().skyOverride && !(world.provider instanceof IPlanetaryProvider)) {
 			world.provider.setSkyRenderer(prevRenderHanlder);
 			prevRenderHanlder = null;
 		}
@@ -142,7 +142,7 @@ public class RocketEventHandler extends Gui {
 			outerBounds = new ClientDynamicTexture(outerImgSize, outerImgSize);
 		}
 
-		if(event.world.provider.getDimension() == Configuration.spaceDimId) {
+		if(event.world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 			destroyOrbitalTextures(event.world);
 			return;
 		}
@@ -362,7 +362,7 @@ public class RocketEventHandler extends Gui {
 				this.drawTexturedModalRect(0, 0, 0, 0, 17, 252);
 
 				//Draw altitude indicator
-				float percentOrbit = MathHelper.clamp((float) ((rocket.posY - rocket.world.provider.getAverageGroundLevel())/(float)(Configuration.orbit-rocket.world.provider.getAverageGroundLevel())), 0f, 1f);
+				float percentOrbit = MathHelper.clamp((float) ((rocket.posY - rocket.world.provider.getAverageGroundLevel())/(float)(ARConfiguration.getCurrentConfig().orbit-rocket.world.provider.getAverageGroundLevel())), 0f, 1f);
 				this.drawTexturedModalRect(3, 8 + (int)(79*(1 - percentOrbit)), 17, 0, 6, 6); //6 to 83
 
 				//Draw Velocity indicator
@@ -482,7 +482,7 @@ public class RocketEventHandler extends Gui {
 
 	@SubscribeEvent
 	public void mouseInputEvent(MouseInputEvent event) {
-		if(!Configuration.lockUI && !Mouse.isGrabbed()) {
+		if(!ARConfiguration.getCurrentConfig().lockUI && !Mouse.isGrabbed()) {
 
 			if(Mouse.isButtonDown(2)) {
 				ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());

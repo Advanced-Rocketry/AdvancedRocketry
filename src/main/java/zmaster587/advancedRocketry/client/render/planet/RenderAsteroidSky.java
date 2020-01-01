@@ -15,7 +15,7 @@ import net.minecraftforge.client.IRenderHandler;
 
 import org.lwjgl.opengl.GL11;
 
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
@@ -288,7 +288,7 @@ public class RenderAsteroidSky extends IRenderHandler {
 			sunSize = properties.getStar().getSize();
 			subStars = properties.getStar().getSubStars();
 			starSeperation = properties.getStar().getStarSeparation();
-			if(world.provider.getDimension() == Configuration.spaceDimId) {
+			if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
 				if(isWarp) {
 					SpaceObject station = (SpaceObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.player.getPosition());
@@ -337,7 +337,7 @@ public class RenderAsteroidSky extends IRenderHandler {
 			sunSize = properties.getStar().getSize();
 			subStars = properties.getStar().getSubStars();
 			starSeperation = properties.getStar().getStarSeparation();
-			if(world.provider.getDimension() == Configuration.spaceDimId) {
+			if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
 				if(isWarp) {
 					SpaceObject station = (SpaceObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.player.getPosition());

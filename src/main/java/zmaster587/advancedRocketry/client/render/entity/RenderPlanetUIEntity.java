@@ -125,14 +125,10 @@ public class RenderPlanetUIEntity extends Render<EntityUIPlanet> implements IRen
 				GL11.glScalef(1.02f, 1.02f, 1.02f);
 				sphere.renderAll();
 			}
-
-
+			
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glPopMatrix();
 		}
-
-
-
 
 		//Render hololines
 		GL11.glPushMatrix();

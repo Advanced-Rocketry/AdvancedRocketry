@@ -22,7 +22,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.IGalaxy;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
@@ -515,7 +515,7 @@ public class XMLPlanetLoader {
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_ISKNOWN)) {
 				String text = planetPropertyNode.getTextContent();
 				if(text != null && !text.isEmpty() && text.equalsIgnoreCase("true")) {
-					Configuration.initiallyKnownPlanets.add(properties.getId());
+					ARConfiguration.getCurrentConfig().initiallyKnownPlanets.add(properties.getId());
 				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(GENERATECRATERS)) {
@@ -821,10 +821,10 @@ public class XMLPlanetLoader {
 		if (!properties.customIcon.isEmpty())
 			nodePlanet.setAttribute(ATTR_ICON, properties.customIcon);
 		
-		nodePlanet.appendChild(createTextNode(doc, ELEMENT_ISKNOWN, Boolean.toString(Configuration.initiallyKnownPlanets.contains(properties.getId()))));
+		nodePlanet.appendChild(createTextNode(doc, ELEMENT_ISKNOWN, Boolean.toString(ARConfiguration.getCurrentConfig().initiallyKnownPlanets.contains(properties.getId()))));
 		
 		if(properties.hasRings) {
-			nodePlanet.appendChild(createTextNode(doc, ELEMENT_HASRINGS, Configuration.initiallyKnownPlanets.contains(properties.getId())));
+			nodePlanet.appendChild(createTextNode(doc, ELEMENT_HASRINGS, ARConfiguration.getCurrentConfig().initiallyKnownPlanets.contains(properties.getId())));
 			nodePlanet.appendChild(createTextNode(doc, ELEMENT_RINGCOLOR, properties.ringColor[0] + "," + properties.ringColor[1] + "," + properties.ringColor[2]));
 		}
 		

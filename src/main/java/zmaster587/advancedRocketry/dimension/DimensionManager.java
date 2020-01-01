@@ -19,7 +19,7 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.IGalaxy;
@@ -528,7 +528,7 @@ public class DimensionManager implements IGalaxy {
 		}
 		
 		DimensionProperties properties = dimensionList.get(new Integer(dimId));
-		if(dimId == Configuration.spaceDimId || dimId == Integer.MIN_VALUE) {
+		if(dimId == ARConfiguration.getCurrentConfig().spaceDimId || dimId == Integer.MIN_VALUE) {
 			return defaultSpaceDimensionProperties;
 		}
 		return properties == null ? overworldProperties : properties;
@@ -680,7 +680,7 @@ public class DimensionManager implements IGalaxy {
 	 * @return true if the dimension exists and is registered
 	 */
 	public boolean isDimensionCreated( int dimId) {
-		return dimensionList.containsKey(new Integer(dimId)) || dimId == Configuration.spaceDimId;
+		return dimensionList.containsKey(new Integer(dimId)) || dimId == ARConfiguration.getCurrentConfig().spaceDimId;
 	}
 
 	/**
@@ -826,7 +826,7 @@ public class DimensionManager implements IGalaxy {
 	
 	public static DimensionProperties getEffectiveDimId(int dimId, BlockPos pos) {
 
-		if(dimId == Configuration.spaceDimId) {
+		if(dimId == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(obj != null)
 				return (DimensionProperties) obj.getProperties().getParentProperties();
@@ -839,7 +839,7 @@ public class DimensionManager implements IGalaxy {
 	public static DimensionProperties getEffectiveDimId(World world, BlockPos pos) {
 		int dimId = world.provider.getDimension();
 
-		if(dimId == Configuration.spaceDimId) {
+		if(dimId == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(obj != null)
 				return (DimensionProperties) obj.getProperties().getParentProperties();

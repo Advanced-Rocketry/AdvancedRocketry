@@ -9,7 +9,7 @@ import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.MapGenBase;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.libVulpes.block.BlockMeta;
 
 import java.util.LinkedList;
@@ -25,8 +25,8 @@ public class MapGenGeode extends MapGenBase {
 
 		if(ores == null) {
 			ores = new LinkedList<BlockMeta>();
-			for(int i = 0; i < Configuration.standardGeodeOres.size(); i++) {
-				String oreDictName = Configuration.standardGeodeOres.get(i);
+			for(int i = 0; i < ARConfiguration.getCurrentConfig().standardGeodeOres.size(); i++) {
+				String oreDictName = ARConfiguration.getCurrentConfig().standardGeodeOres.get(i);
 				List<ItemStack> ores2 = OreDictionary.getOres(oreDictName);
 
 				if(ores2 != null && !ores2.isEmpty()) {
@@ -45,7 +45,7 @@ public class MapGenGeode extends MapGenBase {
 
 		if(rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk || rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk) {
 
-			int radius = rand.nextInt(Configuration.geodeVariation) + Configuration.geodeBaseSize - (Configuration.geodeVariation/2); //24; 24 -> 48
+			int radius = rand.nextInt(ARConfiguration.getCurrentConfig().geodeVariation) + ARConfiguration.getCurrentConfig().geodeBaseSize - (ARConfiguration.getCurrentConfig().geodeVariation/2); //24; 24 -> 48
 
 			//TODO: make hemisphere from surface and line the side with ore of some kind
 

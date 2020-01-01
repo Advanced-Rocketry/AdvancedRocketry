@@ -173,7 +173,7 @@ public class RecipeHandler {
         }
 
         // Handle vanilla integration
-        if (zmaster587.advancedRocketry.api.Configuration.allowSawmillVanillaWood)
+        if (zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().allowSawmillVanillaWood)
         {
             for (int i = 0; i < 4; i++)
             {
@@ -187,7 +187,7 @@ public class RecipeHandler {
         }
 
         // Handle items from other mods
-        if (zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods)
+        if (zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().allowMakingItemsForOtherMods)
         {
             for (Entry<AllowedProducts, HashSet<String>> entry : modProducts.entrySet())
             {

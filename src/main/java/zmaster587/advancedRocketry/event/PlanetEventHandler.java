@@ -54,7 +54,7 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
@@ -210,7 +210,7 @@ public class PlanetEventHandler {
 	public void sleepEvent(PlayerSleepInBedEvent event) {
 
 		if(event.getEntity().world.provider instanceof WorldProviderPlanet) {
-			if (!Configuration.forcePlayerRespawnInSpace && AtmosphereHandler.hasAtmosphereHandler(event.getEntity().world.provider.getDimension()) && 
+			if (!ARConfiguration.getCurrentConfig().forcePlayerRespawnInSpace && AtmosphereHandler.hasAtmosphereHandler(event.getEntity().world.provider.getDimension()) && 
 					!AtmosphereHandler.getOxygenHandler(event.getEntity().world.provider.getDimension()).getAtmosphereType(event.getPos()).isBreathable()) {
 				event.setResult(SleepResult.OTHER_PROBLEM);
 			}
@@ -227,7 +227,7 @@ public class PlanetEventHandler {
 				EnumFacing direction = event.getPlacedBlock().getValue(BlockTorch.FACING);
 				event.getWorld().setBlockState(event.getPos(), AdvancedRocketryBlocks.blockUnlitTorch.getDefaultState().withProperty(BlockTorch.FACING, direction));
 			}
-			else if(zmaster587.advancedRocketry.api.Configuration.torchBlocks.contains(event.getPlacedBlock().getBlock()))
+			else if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().torchBlocks.contains(event.getPlacedBlock().getBlock()))
 			{
 				event.setResult(Result.DENY);
 				event.setCanceled(true);
@@ -252,8 +252,10 @@ public class PlanetEventHandler {
 		}
 	}
 
-	@EventHandler
+	@SubscribeEvent
 	public void disconnected(ClientDisconnectionFromServerEvent event) {
+		// Reload configs from disk
+		ARConfiguration.useClientDiskConfig();
 		zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
 	}
 
@@ -305,7 +307,8 @@ public class PlanetEventHandler {
 	public void playerLoggedInEvent(ServerConnectionFromClientEvent event) {
 
 		//Send config first
-		PacketHandler.sendToDispatcher(new PacketConfigSync(), event.getManager());
+		if(!event.isLocal())
+			PacketHandler.sendToDispatcher(new PacketConfigSync(), event.getManager());
 
 		//Make sure stars are sent next
 		for(int i : DimensionManager.getInstance().getStarIds()) {
@@ -321,12 +324,6 @@ public class PlanetEventHandler {
 		}
 
 		PacketHandler.sendToDispatcher(new PacketDimInfo(0, DimensionManager.getInstance().getDimensionProperties(0)), event.getManager());
-
-
-		for(Entry<String, AsteroidSmall> ent : zmaster587.advancedRocketry.api.Configuration.asteroidTypes.entrySet())
-		{
-			PacketHandler.sendToDispatcher(new PacketAsteroidInfo(ent.getValue()), event.getManager());
-		}
 	}
 
 	public void connectToServer(ClientConnectedToServerEvent event)
@@ -337,14 +334,14 @@ public class PlanetEventHandler {
 	/*@SubscribeEvent
 	public void connectToServer(ClientConnectedToServerEvent event) 
 	{
-		zmaster587.advancedRocketry.api.Configuration.prevAsteroidTypes = zmaster587.advancedRocketry.api.Configuration.asteroidTypes;
-		zmaster587.advancedRocketry.api.Configuration.asteroidTypes = new HashMap<String, AsteroidSmall>();
+		zmaster587.advancedRocketry.api.ARConfiguration.prevAsteroidTypes = zmaster587.advancedRocketry.api.ARConfiguration.asteroidTypes;
+		zmaster587.advancedRocketry.api.ARConfiguration.asteroidTypes = new HashMap<String, AsteroidSmall>();
 	}
 
 	@SubscribeEvent
 	public void disconnectFromServer(ClientDisconnectionFromServerEvent event)
 	{
-		zmaster587.advancedRocketry.api.Configuration.asteroidTypes = zmaster587.advancedRocketry.api.Configuration.prevAsteroidTypes;
+		zmaster587.advancedRocketry.api.ARConfiguration.asteroidTypes = zmaster587.advancedRocketry.api.ARConfiguration.prevAsteroidTypes;
 	}*/
 
 
@@ -390,7 +387,7 @@ public class PlanetEventHandler {
 	public void worldLoadEvent(WorldEvent.Load event) {
 		if(!event.getWorld().isRemote)
 			AtmosphereHandler.registerWorld(event.getWorld().provider.getDimension());
-		else if(Configuration.skyOverride && event.getWorld().provider.getDimension() == 0)
+		else if(ARConfiguration.getCurrentConfig().skyOverride && event.getWorld().provider.getDimension() == 0)
 			event.getWorld().provider.setSkyRenderer(new RenderPlanetarySky());
 	}
 
@@ -455,7 +452,7 @@ public class PlanetEventHandler {
 
 	@SubscribeEvent
 	public void serverTickEvent(TickEvent.WorldTickEvent event) {
-		if(zmaster587.advancedRocketry.api.Configuration.allowTerraforming && event.world.provider.getClass() == WorldProviderPlanet.class) {
+		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().allowTerraforming && event.world.provider.getClass() == WorldProviderPlanet.class) {
 
 			if(DimensionManager.getInstance().getDimensionProperties(event.world.provider.getDimension()).isTerraformed()) {
 				Collection<Chunk> list = ((WorldServer)event.world).getChunkProvider().getLoadedChunks();
@@ -465,7 +462,7 @@ public class PlanetEventHandler {
 
 						for(Chunk chunk : list) {
 
-							if(Configuration.terraformingBlockSpeed > listSize || event.world.rand.nextFloat() < Configuration.terraformingBlockSpeed/(float)listSize)
+							if(ARConfiguration.getCurrentConfig().terraformingBlockSpeed > listSize || event.world.rand.nextFloat() < ARConfiguration.getCurrentConfig().terraformingBlockSpeed/(float)listSize)
 							{
 								int coord = event.world.rand.nextInt(256);
 								int x = (coord & 0xF) + chunk.x*16;
@@ -484,7 +481,7 @@ public class PlanetEventHandler {
 
 	@SubscribeEvent
 	public void chunkLoadEvent(PopulateChunkEvent.Post event) {
-		if(zmaster587.advancedRocketry.api.Configuration.allowTerraforming && event.getWorld().provider.getClass() == WorldProviderPlanet.class) {
+		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().allowTerraforming && event.getWorld().provider.getClass() == WorldProviderPlanet.class) {
 
 			if(DimensionManager.getInstance().getDimensionProperties(event.getWorld().provider.getDimension()).isTerraformed()) {
 				Chunk chunk = event.getWorld().getChunkFromChunkCoords(event.getChunkX(), event.getChunkZ());

@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.inventory.TextureResources;
@@ -327,7 +327,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 			int g = 0;
 			AsteroidSmall asteroidSmol;
-			if(lastButton != -1 && lastType != null && !lastType.isEmpty() && (asteroidSmol = Configuration.asteroidTypes.get(lastType)) != null) {
+			if(lastButton != -1 && lastType != null && !lastType.isEmpty() && (asteroidSmol = ARConfiguration.getCurrentConfig().asteroidTypes.get(lastType)) != null) {
 				List<StackEntry> harvestList = asteroidSmol.getHarvest(lastSeed + lastButton, Math.max(1 - ((Math.min(getDataAmt(DataType.COMPOSITION),2000)  + Math.min(getDataAmt(DataType.MASS), 2000) )/4000f), 0));
 				for(StackEntry entry : harvestList) {
 					//buttonList.add(new ModuleButton((g % 3)*24, 24*(g/3), -2, "",this, TextureResources.tabData, 24, 24));
@@ -348,8 +348,8 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			int totalAmountAllowed = 10;
 			float totalWeight = 0;
 			List<AsteroidSmall> viableTypes = new LinkedList<AsteroidSmall>();
-			for(String str :  Configuration.asteroidTypes.keySet()) {
-				AsteroidSmall asteroid = Configuration.asteroidTypes.get(str);
+			for(String str :  ARConfiguration.getCurrentConfig().asteroidTypes.keySet()) {
+				AsteroidSmall asteroid = ARConfiguration.getCurrentConfig().asteroidTypes.get(str);
 				if(asteroid.distance <= getMaxDistance()) {
 					totalWeight += asteroid.getProbability();
 					viableTypes.add(asteroid);

@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
@@ -187,7 +187,7 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 	}
 
 	private long getWorldTime() {
-		return AdvancedRocketry.proxy.getWorldTimeUniversal(Configuration.spaceDimId);
+		return AdvancedRocketry.proxy.getWorldTimeUniversal(ARConfiguration.getCurrentConfig().spaceDimId);
 	}
 
 
@@ -514,9 +514,9 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 	 */
 	public void onModuleUnpack(IStorageChunk chunk) {
 
-		if(DimensionManager.isDimensionRegistered(Configuration.spaceDimId) &&  DimensionManager.getWorld(Configuration.spaceDimId) == null)
-			DimensionManager.initDimension(Configuration.spaceDimId);
-		World worldObj = DimensionManager.getWorld(Configuration.spaceDimId);
+		if(DimensionManager.isDimensionRegistered(ARConfiguration.getCurrentConfig().spaceDimId) &&  DimensionManager.getWorld(ARConfiguration.getCurrentConfig().spaceDimId) == null)
+			DimensionManager.initDimension(ARConfiguration.getCurrentConfig().spaceDimId);
+		World worldObj = DimensionManager.getWorld(ARConfiguration.getCurrentConfig().spaceDimId);
 		if(!created) {
 			chunk.pasteInWorld(worldObj, spawnLocation.x - chunk.getSizeX()/2, spawnLocation.y - chunk.getSizeY()/2, spawnLocation.z - chunk.getSizeZ()/2);
 
@@ -751,7 +751,7 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 
 	@Override
 	public boolean isPlanetKnown(IDimensionProperties properties) {
-		return !Configuration.planetsMustBeDiscovered || knownPlanetList.contains(properties.getId()) || zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().knownPlanets.contains(properties.getId());
+		return !ARConfiguration.getCurrentConfig().planetsMustBeDiscovered || knownPlanetList.contains(properties.getId()) || zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().knownPlanets.contains(properties.getId());
 	}
 
 	@Override

@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -59,7 +59,7 @@ public class TileCentrifuge extends TileMultiblockMachine {
             // Nuggets for centrifuge
             List<RecipesMachine.ChanceItemStack> nuggetList = new LinkedList<RecipesMachine.ChanceItemStack>();
             
-            for(String entry : Configuration.lavaCentrifugeOutputs)
+            for(String entry : ARConfiguration.getCurrentConfig().lavaCentrifugeOutputs)
             {
             	try
             	{

@@ -53,7 +53,7 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 
 	@Override
 	public int getPowerPerOperation() {
-		return zmaster587.advancedRocketry.api.Configuration.solarGeneratorMult;
+		return zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().solarGeneratorMult;
 	}
 
 	@Override

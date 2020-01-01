@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.satellite.SatelliteLaser;
 import zmaster587.advancedRocketry.satellite.SatelliteLaserNoDrill;
@@ -52,7 +52,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 	private EnumFacing prevDir;
 	public int laserX, laserZ, tickSinceLastOperation;
 	private static final EnumFacing[] VALID_INVENTORY_DIRECTIONS = { EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST};
-	private static final int POWER_PER_OPERATION =(int)( 10000* Configuration.spaceLaserPowerMult);
+	private static final int POWER_PER_OPERATION =(int)( 10000* ARConfiguration.getCurrentConfig().spaceLaserPowerMult);
 	private ModuleTextBox locationX, locationZ;
 	private ModuleText updateText;
 	MultiInventory inv;
@@ -114,7 +114,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 		laserZ = 0;
 		inv= new MultiInventory(this.itemOutPorts);
 		
-		if(Configuration.laserDrillPlanet)
+		if(ARConfiguration.getCurrentConfig().laserDrillPlanet)
 			laserSat = new SatelliteLaser(inv);
 		else
 			laserSat = new SatelliteLaserNoDrill(inv);
@@ -497,7 +497,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 
 	private boolean isAllowedToRun() {
 		return !(glassPanel.isEmpty()|| batteries.getUniversalEnergyStored() == 0 || !(this.world.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.world.provider).getDimensionProperties(getPos()).getParentPlanet()) ||
-				Configuration.laserBlackListDims.contains(((WorldProviderSpace)this.world.provider).getDimensionProperties(getPos()).getParentPlanet()));
+				ARConfiguration.getCurrentConfig().laserBlackListDims.contains(((WorldProviderSpace)this.world.provider).getDimensionProperties(getPos()).getParentPlanet()));
 	}
 	
 	/**

@@ -197,8 +197,7 @@ public class AdvancedRocketry {
 	private static Configuration config;
 	private static final String BIOMECATETORY = "Biomes";
 	private boolean resetFromXml;
-	String[] sealableBlockWhiteList, sealableBlockBlackList, breakableTorches,  blackListRocketBlocks, harvestableGasses, entityList, asteriodOres, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres, liquidRocketFuel;
-
+	
 	//static {
 	//	FluidRegistry.enableUniversalBucket(); // Must be called before preInit
 	//}
@@ -308,154 +307,12 @@ public class AdvancedRocketry {
 
 		//Configuration  ---------------------------------------------------------------------------------------------
 
-		config = new Configuration(new File(event.getModConfigurationDirectory(), "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/advancedRocketry.cfg"));
-		zmaster587.advancedRocketry.api.Configuration.config = config;
+		config = new Configuration(new File(event.getModConfigurationDirectory(), "/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/advancedRocketry.cfg"));
+		zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().config = config;
 		config.load();
-
-		AtmosphereVacuum.damageValue = (int) config.get(Configuration.CATEGORY_GENERAL, "vacuumDamage", 1, "Amount of damage taken every second in a vacuum").getInt();
-		zmaster587.advancedRocketry.api.Configuration.buildSpeedMultiplier = (float) config.get(Configuration.CATEGORY_GENERAL, "buildSpeedMultiplier", 1f, "Multiplier for the build speed of the Rocket Builder (0.5 is twice as fast 2 is half as fast").getDouble();
-		zmaster587.advancedRocketry.api.Configuration.spaceDimId = config.get(Configuration.CATEGORY_GENERAL,"spaceStationId" , -2,"Dimension ID to use for space stations").getInt();
-		zmaster587.advancedRocketry.api.Configuration.enableOxygen = config.get(Configuration.CATEGORY_GENERAL, "EnableAtmosphericEffects", true, "If true, allows players being hurt due to lack of oxygen and allows effects from non-standard atmosphere types").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods = config.get(Configuration.CATEGORY_GENERAL, "makeMaterialsForOtherMods", true, "If true the machines from AdvancedRocketry will produce things like plates/rods for other mods even if Advanced Rocketry itself does not use the material (This can increase load time)").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.scrubberRequiresCartrige = config.get(Configuration.CATEGORY_GENERAL, "scrubberRequiresCartrige", true, "If true the Oxygen scrubbers require a consumable carbon collection cartridge").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.enableLaserDrill = config.get(Configuration.CATEGORY_GENERAL, "EnableLaserDrill", true, "Enables the laser drill machine").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.spaceLaserPowerMult = (float)config.get(Configuration.CATEGORY_GENERAL, "LaserDrillPowerMultiplier", 1d, "Power multiplier for the laser drill machine").getDouble();
-		zmaster587.advancedRocketry.api.Configuration.lowGravityBoots = config.get(Configuration.CATEGORY_GENERAL, "lowGravityBoots", false, "If true the boots only protect the player on planets with low gravity").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.jetPackThrust = (float)config.get(Configuration.CATEGORY_GENERAL, "jetPackForce", 1.3, "Amount of force the jetpack provides with respect to gravity, 1 is the same acceleration as caused by Earth's gravity, 2 is 2x the acceleration caused by Earth's gravity, etc.  To make jetpack only work on low gravity planets, simply set it to a value less than 1").getDouble();
-
-		zmaster587.advancedRocketry.api.Configuration.enableTerraforming = config.get(Configuration.CATEGORY_GENERAL, "EnableTerraforming", true,"Enables terraforming items and blocks").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.oxygenVentPowerMultiplier = config.get(Configuration.CATEGORY_GENERAL, "OxygenVentPowerMultiplier", 1.0f, "Power consumption multiplier for the oxygen vent", 0, Float.MAX_VALUE).getDouble();
-		zmaster587.advancedRocketry.api.Configuration.spaceSuitOxygenTime = config.get(Configuration.CATEGORY_GENERAL, "spaceSuitO2Buffer", 30, "Maximum time in minutes that the spacesuit's internal buffer can store O2 for").getInt();
-		zmaster587.advancedRocketry.api.Configuration.travelTimeMultiplier = (float)config.get(Configuration.CATEGORY_GENERAL, "warpTravelTime", 1f, "Multiplier for warp travel time").getDouble();
-		zmaster587.advancedRocketry.api.Configuration.maxBiomesPerPlanet = config.get(Configuration.CATEGORY_GENERAL, "maxBiomesPerPlanet", 5, "Maximum unique biomes per planet, -1 to disable").getInt();
-		zmaster587.advancedRocketry.api.Configuration.allowTerraforming = config.get(Configuration.CATEGORY_GENERAL, "allowTerraforming", false, "EXPERIMENTAL: If set to true allows contruction and usage of the terraformer.  This is known to cause strange world generation after successful terraform").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.terraformingBlockSpeed = config.get(Configuration.CATEGORY_GENERAL, "biomeUpdateSpeed", 1, "How many blocks have the biome changed per tick.  Large numbers can slow the server down", Integer.MAX_VALUE, 1).getInt();
-		zmaster587.advancedRocketry.api.Configuration.terraformSpeed = config.get(Configuration.CATEGORY_GENERAL, "terraformMult", 1f, "Multplier for atmosphere change speed").getDouble();
-		zmaster587.advancedRocketry.api.Configuration.terraformPlanetSpeed = config.get(Configuration.CATEGORY_GENERAL, "terraformBlockPerTick", 1, "Max number of blocks allowed to be changed per tick").getInt();
-		zmaster587.advancedRocketry.api.Configuration.terraformRequiresFluid = config.get(Configuration.CATEGORY_GENERAL, "TerraformerRequiresFluids", true).getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.terraformliquidRate = config.get(Configuration.CATEGORY_GENERAL, "TerraformerFluidConsumeRate", 40, "how many millibuckets/t are required to keep the terraformer running").getInt();
-		zmaster587.advancedRocketry.api.Configuration.allowTerraformNonAR = config.get(Configuration.CATEGORY_GENERAL, "allowTerraformingNonARWorlds", false, "If true dimensions not added by AR can be terraformed, including the overworld").getBoolean();
-		
-		liquidRocketFuel = config.get(ROCKET, "rocketFuels", new String[] {"rocketfuel"}, "List of fluid names for fluids that can be used as rocket fuel").getStringList();
-		
-		zmaster587.advancedRocketry.api.Configuration.stationSize = config.get(Configuration.CATEGORY_GENERAL, "SpaceStationBuildRadius", 1024, "The largest size a space station can be.  Should also be a power of 2 (512, 1024, 2048, 4096, ...).  CAUTION: CHANGING THIS OPTION WILL DAMAGE EXISTING STATIONS!!!").getInt();
-		zmaster587.advancedRocketry.api.Configuration.canPlayerRespawnInSpace = config.get(Configuration.CATEGORY_GENERAL, "allowPlanetRespawn", false, "If true players will respawn near beds on planets IF the spawn location is in a breathable atmosphere").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.forcePlayerRespawnInSpace = config.get(Configuration.CATEGORY_GENERAL, "forcePlanetRespawn", false, "If true players will respawn near beds on planets REGARDLESS of the spawn location being in a non-breathable atmosphere. Requires 'allowPlanetRespawn' being true.").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.solarGeneratorMult = config.get(Configuration.CATEGORY_GENERAL, "solarGeneratorMultiplier", 1, "Amount of power per tick the solar generator should produce").getInt();
-		zmaster587.advancedRocketry.api.Configuration.blackHolePowerMultiplier = config.get(Configuration.CATEGORY_GENERAL, "blackHoleGeneratorMultiplier", 1, "Multiplier for the amount of power per tick the black hole generator should produce").getInt();
-		zmaster587.advancedRocketry.api.Configuration.enableGravityController = config.get(Configuration.CATEGORY_GENERAL, "enableGravityMachine", true, "If false the gravity controller cannot be built or used").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.planetsMustBeDiscovered = config.get(Configuration.CATEGORY_GENERAL, "planetsMustBeDiscovered", false, "If true planets must be discovered in the warp controller before being visible").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.dropExTorches = config.get(Configuration.CATEGORY_GENERAL, "dropExtinguishedTorches", false, "If true, breaking an extinguished torch will drop an extinguished torch instead of a vanilla torch").getBoolean();
-
-		
-		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 8000, "Dimensions including and after this number are allowed to be made into planets");
-		zmaster587.advancedRocketry.api.Configuration.blackListAllVanillaBiomes = config.getBoolean("blackListVanillaBiomes", PLANET, false, "Prevents any vanilla biomes from spawning on planets");
-		zmaster587.advancedRocketry.api.Configuration.overrideGCAir = config.get(MOD_INTERACTION, "OverrideGCAir", true, "If true Galacticcraft's air will be disabled entirely requiring use of Advanced Rocketry's Oxygen system on GC planets").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.fuelPointsPerDilithium = config.get(Configuration.CATEGORY_GENERAL, "pointsPerDilithium", 500, "How many units of fuel should each Dilithium Crystal give to warp ships", 1, 1000).getInt();
-		zmaster587.advancedRocketry.api.Configuration.electricPlantsSpawnLightning = config.get(Configuration.CATEGORY_GENERAL, "electricPlantsSpawnLightning", true, "Should Electric Mushrooms be able to spawn lightning").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.allowSawmillVanillaWood = config.get(Configuration.CATEGORY_GENERAL, "sawMillCutVanillaWood", true, "Should the cutting machine be able to cut vanilla wood into planks").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.automaticRetroRockets = config.get(ROCKET, "autoRetroRockets", true, "Setting to false will disable the retrorockets that fire automatically on reentry on both player and automated rockets").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.atmosphereHandleBitMask = config.get(PERFORMANCE, "atmosphereCalculationMethod", 3, "BitMask: 0: no threading, radius based; 1: threading, radius based (EXP); 2: no threading volume based; 3: threading volume based (EXP)").getInt();
-		zmaster587.advancedRocketry.api.Configuration.oxygenVentSize = config.get(PERFORMANCE, "oxygenVentSize", 32, "Radius of the O2 vent.  if atmosphereCalculationMethod is 2 or 3 then max volume is calculated from this radius.  WARNING: larger numbers can lead to lag").getInt();
-		zmaster587.advancedRocketry.api.Configuration.oxygenVentConsumptionMult = config.get(Configuration.CATEGORY_GENERAL, "oxygenVentConsumptionMultiplier", 1f, "Multiplier on how much O2 an oxygen vent consumes per tick").getDouble();
-		zmaster587.advancedRocketry.api.Configuration.gravityAffectsFuel = config.get(Configuration.CATEGORY_GENERAL, "gravityAffectsFuels", true, "If true planets with higher gravity require more fuel and lower gravity would require less").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.allowZeroGSpacestations = config.get(Configuration.CATEGORY_GENERAL, "allowZeroGSpacestations", false, "If true players will be able to completely disable gravity on spacestation.  It's possible to get stuck and require a teleport, you have been warned!").getBoolean();
-		
-		zmaster587.advancedRocketry.api.Configuration.stationSkyOverride = config.get(CLIENT, "StationSkyOverride", true, "If true, AR will use a custom skybox on space stations").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.planetSkyOverride = config.get(CLIENT, "PlanetSkyOverride", true, "If true, AR will use a custom skybox on planets").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.skyOverride = config.get(CLIENT, "overworldSkyOverride", true).getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.advancedVFX = config.get(PERFORMANCE, "advancedVFX", true, "Advanced visual effects").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.gasCollectionMult = config.get(GAS_MINING, "gasMissionMultiplier", 1.0, "Multiplier for the amount of time gas collection missions take").getDouble();
-		zmaster587.advancedRocketry.api.Configuration.asteroidMiningTimeMult = config.get(ASTEROID, "miningMissionTmeMultiplier", 1.0, "Multiplier changing how long a mining mission takes").getDouble();
-		asteriodOres = config.get(ASTEROID, "standardOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone"}, "List of oredictionary names of ores allowed to spawn in asteriods").getStringList();
-		geodeOres = config.get(oreGen, "geodeOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone"}, "List of oredictionary names of ores allowed to spawn in geodes").getStringList();
-		blackHoleGeneratorTiming = config.get(BLACK_HOLE, "blackHoleTimings", new String[] {"minecraft:stone;1", "minecraft:dirt;1", "minecraft:netherrack;1", "minecraft:cobblestone;1"}, "List of blocks and the amount of ticks they can power the black hole generator format: 'modname:block:meta;number_of_ticks'").getStringList();
-		zmaster587.advancedRocketry.api.Configuration.defaultItemTimeBlackHole = config.get(BLACK_HOLE, "defaultBurnTime", 500, "List of blocks and the amount of ticks they can power the black hole generator format: 'modname:block:meta;number_of_ticks'").getInt();
-		
-		zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList = config.get(oreGen, "geodeOres_blacklist", false, "True if the ores in geodeOres should be a blacklist, false for whitelist").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.generateGeodes = config.get(oreGen, "generateGeodes", true, "If true then ore-containing geodes are generated on high pressure planets").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.geodeBaseSize = config.get(oreGen, "geodeBaseSize", 36, "average size of the geodes").getInt();
-		zmaster587.advancedRocketry.api.Configuration.geodeVariation = config.get(oreGen, "geodeVariation", 24, "variation in geode size").getInt();
-		
-		zmaster587.advancedRocketry.api.Configuration.generateCraters = config.get(oreGen, "generateCraters", true, "If true then low pressure planets will have meteor craters.  Note: setting this option to false overrides 'generageCraters' in the planetDefs.xml").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.generateVolcanos = config.get(oreGen, "generateVolcanos", true, "If true then very hot planets planets will volcanos.  Note: setting this option to false overrides 'generateVolcanos' in the planetDefs.xml").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.generateVanillaStructures = config.getBoolean("generateVanillaStructures", oreGen, false, "Enable to allow structures like villages and mineshafts to generate on planets with a breathable atmosphere.  Note, setting this to false will override 'generateStructures' in the planetDefs.xml");
-		zmaster587.advancedRocketry.api.Configuration.planetDiscoveryChance = config.get(PLANET, "planetDiscoveryChance", 5, "Chance of planet discovery in the warp ship monitor is not all planets are initially discoved, chance is 1/n", 1, Integer.MAX_VALUE).getInt();
-
-		orbitalLaserOres = config.get(Configuration.CATEGORY_GENERAL, "laserDrillOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone", "oreDiamond"}, "List of oredictionary names of ores allowed to be mined by the laser drill if surface drilling is disabled.  Ores can be specified by just the oreName:<size> or by <modname>:<blockname>:<meta>:<size> where size is optional").getStringList();
-		zmaster587.advancedRocketry.api.Configuration.laserDrillOresBlackList = config.get(Configuration.CATEGORY_GENERAL, "laserDrillOres_blacklist", false, "True if the ores in laserDrillOres should be a blacklist, false for whitelist").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.laserDrillPlanet = config.get(Configuration.CATEGORY_GENERAL, "laserDrillPlanet", false, "If true the orbital laser will actually mine blocks on the planet below").getBoolean();
-		boolean resetResetFromXml = config.getBoolean("ResetOnlyOnce", Configuration.CATEGORY_GENERAL, true, "setting this to false will will prevent resetPlanetsFromXML from being set to false upon world reload.  Recommended for those who want to force ALL saves to ALWAYS use the planetDefs XML in the /config folder.  Essentially that 'Are you sure you're sure' option.  If resetPlanetsFromXML is false, this option does nothing.");
-		
+		ARConfiguration.loadPreInit();
 		resetFromXml = config.getBoolean("resetPlanetsFromXML", Configuration.CATEGORY_GENERAL, false, "setting this to true will force AR to read from the XML file in the config/advRocketry instead of the local data, intended for use pack developers to ensure updates are pushed through");
-		//Reset to false
-		if (resetResetFromXml)
-			config.get(Configuration.CATEGORY_GENERAL, "resetPlanetsFromXML",false).set(false);
-
-		//Client
-		zmaster587.advancedRocketry.api.Configuration.rocketRequireFuel = config.get(ROCKET, "rocketsRequireFuel", true, "Set to false if rockets should not require fuel to fly").getBoolean();
-		zmaster587.advancedRocketry.api.Configuration.rocketThrustMultiplier = config.get(ROCKET, "thrustMultiplier", 1f, "Multiplier for per-engine thrust").getDouble();
-		zmaster587.advancedRocketry.api.Configuration.fuelCapacityMultiplier = config.get(ROCKET, "fuelCapacityMultiplier", 1f, "Multiplier for per-tank capacity").getDouble();
 		
-		final boolean masterToggle = zmaster587.advancedRocketry.api.Configuration.generateCopper = config.get(oreGen, "EnableOreGen", true).getBoolean();
-		
-		//Copper Config
-		zmaster587.advancedRocketry.api.Configuration.generateCopper = config.get(oreGen, "GenerateCopper", true).getBoolean() && masterToggle;
-		zmaster587.advancedRocketry.api.Configuration.copperClumpSize = config.get(oreGen, "CopperPerClump", 6).getInt();
-		zmaster587.advancedRocketry.api.Configuration.copperPerChunk = config.get(oreGen, "CopperPerChunk", 10).getInt();
-
-		//Tin Config
-		zmaster587.advancedRocketry.api.Configuration.generateTin = config.get(oreGen, "GenerateTin", true).getBoolean() && masterToggle;
-		zmaster587.advancedRocketry.api.Configuration.tinClumpSize = config.get(oreGen, "TinPerClump", 6).getInt();
-		zmaster587.advancedRocketry.api.Configuration.tinPerChunk = config.get(oreGen, "TinPerChunk", 10).getInt();
-
-		zmaster587.advancedRocketry.api.Configuration.generateDilithium = config.get(oreGen, "generateDilithium", true).getBoolean() && masterToggle;
-		zmaster587.advancedRocketry.api.Configuration.dilithiumClumpSize = config.get(oreGen, "DilithiumPerClump", 16).getInt();
-		zmaster587.advancedRocketry.api.Configuration.dilithiumPerChunk = config.get(oreGen, "DilithiumPerChunk", 1).getInt();
-		zmaster587.advancedRocketry.api.Configuration.dilithiumPerChunkMoon = config.get(oreGen, "DilithiumPerChunkLuna", 10).getInt();
-
-		zmaster587.advancedRocketry.api.Configuration.generateAluminum = config.get(oreGen, "generateAluminum", true).getBoolean() && masterToggle;
-		zmaster587.advancedRocketry.api.Configuration.aluminumClumpSize = config.get(oreGen, "AluminumPerClump", 16).getInt();
-		zmaster587.advancedRocketry.api.Configuration.aluminumPerChunk = config.get(oreGen, "AluminumPerChunk", 1).getInt();
-		
-		zmaster587.advancedRocketry.api.Configuration.generateIridium = config.get(oreGen, "generateIridium", false).getBoolean() && masterToggle;
-		zmaster587.advancedRocketry.api.Configuration.IridiumClumpSize = config.get(oreGen, "IridiumPerClump", 16).getInt();
-		zmaster587.advancedRocketry.api.Configuration.IridiumPerChunk = config.get(oreGen, "IridiumPerChunk", 1).getInt();
-
-		zmaster587.advancedRocketry.api.Configuration.generateRutile = config.get(oreGen, "GenerateRutile", true).getBoolean() && masterToggle;
-		zmaster587.advancedRocketry.api.Configuration.rutileClumpSize = config.get(oreGen, "RutilePerClump", 6).getInt();
-		zmaster587.advancedRocketry.api.Configuration.rutilePerChunk = config.get(oreGen, "RutilePerChunk", 6).getInt();
-
-		sealableBlockWhiteList = config.getStringList("sealableBlockWhiteList", Configuration.CATEGORY_GENERAL, new String[] {}, "Blocks that are not automatically detected as sealable but should seal.  Format \"Mod:Blockname\"  for example \"minecraft:chest\"");
-		sealableBlockBlackList = config.getStringList("sealableBlockBlackList", Configuration.CATEGORY_GENERAL, new String[] {}, "Blocks that are automatically detected as sealable but should not seal.  Format \"Mod:Blockname\"  for example \"minecraft:chest\"");
-		
-		blackListRocketBlocks = config.getStringList("rocketBlockBlackList", Configuration.CATEGORY_GENERAL, new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
-		breakableTorches = config.getStringList("torchBlocks", Configuration.CATEGORY_GENERAL, new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
-		
-		//Enriched Lava in the centrifuge
-		zmaster587.advancedRocketry.api.Configuration.lavaCentrifugeOutputs = config.getStringList("lavaCentrifugeOutputs", Configuration.CATEGORY_GENERAL, 
-				new String[] {"nuggetCopper:100", "nuggetIron:100", "nuggetTin:100", "nuggetLead:100", "nuggetSilver:100",
-							  "nuggetGold:75" ,"nuggetDiamond:10", "nuggetUranium:10", "nuggetIridium:1"}, "Outputs and chances of objects from Enriched Lava in the Centrifuge.  Format: <oredictionaryEntry>:<weight>.  Larger weights are more frequent");
-		
-		harvestableGasses = config.getStringList("harvestableGasses", GAS_MINING, new String[] {}, "list of fluid names that can be harvested as Gas");
-
-		entityList = config.getStringList("entityAtmBypass", Configuration.CATEGORY_GENERAL, new String[] {}, "list entities which should not be affected by atmosphere properties");
-
-		//Satellite config
-		zmaster587.advancedRocketry.api.Configuration.microwaveRecieverMulitplier = 10*(float)config.get(Configuration.CATEGORY_GENERAL, "MicrowaveRecieverMultiplier", 1f, "Multiplier for the amount of energy produced by the microwave reciever").getDouble();
-
-		String str[] = config.getStringList("spaceLaserDimIdBlackList", Configuration.CATEGORY_GENERAL, new String[] {}, "Laser drill will not mine these dimension");
-
-		//Load laser dimid blacklists
-		for(String s : str) {
-
-			try {
-				zmaster587.advancedRocketry.api.Configuration.laserBlackListDims.add(Integer.parseInt(s));
-			} catch (NumberFormatException e) {
-				logger.warn("Invalid number \"" + s + "\" for laser dimid blacklist");
-			}
-		}
-
 		//Load client and UI positioning stuff
 		proxy.loadUILayout(config);
 
@@ -575,21 +432,21 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TilePump.class, new ResourceLocation(Constants.modId, "ARpump"));
 		GameRegistry.registerTileEntity(TileCentrifuge.class, new ResourceLocation(Constants.modId, "ARCentrifuge"));
 		
-		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
+		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableGravityController)
 			GameRegistry.registerTileEntity(TileGravityController.class, "ARGravityMachine");
 
 
 		//Register machine recipes
-		LibVulpes.registerRecipeHandler(TileCuttingMachine.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/CuttingMachine.xml");
-		LibVulpes.registerRecipeHandler(TilePrecisionAssembler.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/PrecisionAssembler.xml");
-		LibVulpes.registerRecipeHandler(TileChemicalReactor.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/ChemicalReactor.xml");
-		LibVulpes.registerRecipeHandler(TileCrystallizer.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/Crystallizer.xml");
-		LibVulpes.registerRecipeHandler(TileElectrolyser.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/Electrolyser.xml");
-		LibVulpes.registerRecipeHandler(TileElectricArcFurnace.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/ElectricArcFurnace.xml");
-		LibVulpes.registerRecipeHandler(TileLathe.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/Lathe.xml");
-		LibVulpes.registerRecipeHandler(TileRollingMachine.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/RollingMachine.xml");
-		LibVulpes.registerRecipeHandler(BlockPress.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/SmallPlatePress.xml");
-		LibVulpes.registerRecipeHandler(TileCentrifuge.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/Centrifuge.xml");
+		LibVulpes.registerRecipeHandler(TileCuttingMachine.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/CuttingMachine.xml");
+		LibVulpes.registerRecipeHandler(TilePrecisionAssembler.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/PrecisionAssembler.xml");
+		LibVulpes.registerRecipeHandler(TileChemicalReactor.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/ChemicalReactor.xml");
+		LibVulpes.registerRecipeHandler(TileCrystallizer.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/Crystallizer.xml");
+		LibVulpes.registerRecipeHandler(TileElectrolyser.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/Electrolyser.xml");
+		LibVulpes.registerRecipeHandler(TileElectricArcFurnace.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/ElectricArcFurnace.xml");
+		LibVulpes.registerRecipeHandler(TileLathe.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/Lathe.xml");
+		LibVulpes.registerRecipeHandler(TileRollingMachine.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/RollingMachine.xml");
+		LibVulpes.registerRecipeHandler(BlockPress.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/SmallPlatePress.xml");
+		LibVulpes.registerRecipeHandler(TileCentrifuge.class, event.getModConfigurationDirectory().getAbsolutePath() + "/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/Centrifuge.xml");
 
 
 		
@@ -747,7 +604,7 @@ public class AdvancedRocketry {
 		LibVulpesBlocks.registerItem(AdvancedRocketryItems.itemThermite.setRegistryName("thermite"));
 		LibVulpesBlocks.registerItem(AdvancedRocketryItems.itemHovercraft.setRegistryName("hoverCraft"));
 
-		if(zmaster587.advancedRocketry.api.Configuration.enableTerraforming)
+		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableTerraforming)
 			LibVulpesBlocks.registerItem(AdvancedRocketryItems.itemBiomeChanger.setRegistryName("biomeChanger"));
 		
         OreDictionary.registerOre("waferSilicon", new ItemStack(AdvancedRocketryItems.itemWafer,1,0));
@@ -872,11 +729,11 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockTransciever = new BlockTransciever(TileWirelessTransciever.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("wirelessTransciever").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		
 		//Configurable stuff
-		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
+		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableGravityController)
 			AdvancedRocketryBlocks.blockGravityMachine = new BlockMultiblockMachine(TileGravityController.class,GuiHandler.guiId.MODULARNOINV.ordinal()).setUnlocalizedName("gravityMachine").setCreativeTab(tabAdvRocketry).setHardness(3f);
 
 
-		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill) {
+		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableLaserDrill) {
 			AdvancedRocketryBlocks.blockSpaceLaser = new BlockLaser().setHardness(2f);
 			AdvancedRocketryBlocks.blockSpaceLaser.setCreativeTab(tabAdvRocketry);
 		}
@@ -1023,11 +880,11 @@ public class AdvancedRocketry {
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockBasalt.setRegistryName("basalt"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockLandingFloat.setRegistryName("landingfloat"));
 		
-		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
+		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableGravityController)
 			LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockGravityMachine.setRegistryName("gravityMachine"));
 
 		//TODO, use different mechanism to enable/disable drill
-		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
+		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableLaserDrill)
 			LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockSpaceLaser.setRegistryName("spaceLaser"));
 
 		
@@ -1115,7 +972,7 @@ public class AdvancedRocketry {
 			}
 		}
 
-		if(zmaster587.advancedRocketry.api.Configuration.blackListAllVanillaBiomes) {
+		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().blackListAllVanillaBiomes) {
 			AdvancedRocketryBiomes.instance.blackListVanillaBiomes();
 		}
 
@@ -1190,10 +1047,10 @@ public class AdvancedRocketry {
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileBlackHoleGenerator(), (BlockTile)AdvancedRocketryBlocks.blockBlackHoleGenerator);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileCentrifuge(), (BlockTile)AdvancedRocketryBlocks.blockCentrifuge);
 
-		if(zmaster587.advancedRocketry.api.Configuration.enableGravityController)
+		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableGravityController)
 			((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileGravityController(), (BlockTile)AdvancedRocketryBlocks.blockGravityMachine);
 
-		if(zmaster587.advancedRocketry.api.Configuration.enableLaserDrill)
+		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableLaserDrill)
 			((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileSpaceLaser(), (BlockTile)AdvancedRocketryBlocks.blockSpaceLaser);
 
 		proxy.registerEventHandlers();
@@ -1215,7 +1072,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryAPI.gravityManager = new GravityHandler();
 
 		// Compat stuff
-		if(Loader.isModLoaded("galacticraftcore") && zmaster587.advancedRocketry.api.Configuration.overrideGCAir) {
+		if(Loader.isModLoaded("galacticraftcore") && zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().overrideGCAir) {
 			GalacticCraftHandler eventHandler = new GalacticCraftHandler();
 			MinecraftForge.EVENT_BUS.register(eventHandler);
 			if(event.getSide().isClient())
@@ -1252,200 +1109,21 @@ public class AdvancedRocketry {
 		}
 
 		//Register space dimension
-		net.minecraftforge.common.DimensionManager.registerDimension(zmaster587.advancedRocketry.api.Configuration.spaceDimId, DimensionManager.spaceDimensionType);
+		net.minecraftforge.common.DimensionManager.registerDimension(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().spaceDimId, DimensionManager.spaceDimensionType);
 
-		//Register fuels
-		logger.info("Start registering liquid rocket fuels");
-		for(String str : liquidRocketFuel) {
-			Fluid fluid = FluidRegistry.getFluid(str);
-			
-			if(fluid != null) {
-				logger.info("Registering fluid "+ str + " as rocket fuel");
-				FuelRegistry.instance.registerFuel(FuelType.LIQUID, fluid, 1f);
-			}
-			else
-				logger.warn("Fluid name" + str  + " is not a registered fluid!");
-		}
-		logger.info("Finished registering liquid rocket fuels");
-		liquidRocketFuel = null; //clean up
-		
-		//Register Whitelisted Sealable Blocks
-
-		logger.info("Start registering sealable blocks (sealableBlockWhiteList)");
-		for(String str : sealableBlockWhiteList) {
-			Block block = Block.getBlockFromName(str);
-			if(block == null)
-				logger.warn("'" + str + "' is not a valid Block");
-			else
-				SealableBlockHandler.INSTANCE.addSealableBlock(block);
-		}
-		logger.info("End registering sealable blocks");
-		sealableBlockWhiteList = null;
-
-		logger.info("Start registering unsealable blocks (sealableBlockBlackList)");
-		for(String str : sealableBlockBlackList) {
-			Block block = Block.getBlockFromName(str);
-			if(block == null)
-				logger.warn("'" + str + "' is not a valid Block");
-			else
-				SealableBlockHandler.INSTANCE.addUnsealableBlock(block);
-		}
-		logger.info("End registering unsealable blocks");
-		sealableBlockBlackList = null;
-		
-		logger.info("Start registering torch blocks");
-		for(String str : breakableTorches) {
-			Block block = Block.getBlockFromName(str);
-			if(block == null)
-				logger.warn("'" + str + "' is not a valid Block");
-			else
-				zmaster587.advancedRocketry.api.Configuration.torchBlocks.add(block);
-		}
-		logger.info("End registering torch blocks");
-		breakableTorches = null;
-		
-		logger.info("Start registering blackhole generator blocks");
-		for(String str : blackHoleGeneratorTiming) {
-			String splitStr[] = str.split(";");
-			
-			String blockString[] = splitStr[0].split(":");
-			
-			Item block = Item.REGISTRY.getObject(new ResourceLocation(blockString[0],blockString[1]));
-			int metaValue = 0;
-			
-			if(blockString.length > 2) {
-				try {
-					metaValue = Integer.parseInt(blockString[2]);
-				}
-				catch(NumberFormatException e) {
-					logger.warn("Invalid meta value location for black hole generator: " + splitStr[0] + " using " + blockString[2] );
-				}
-			}
-			
-			int time = 0;
-			
-			try {
-				time = Integer.parseInt(splitStr[1]);
-			} catch (NumberFormatException e) {
-				logger.warn("Invalid time value for black hole generator: " + str );
-			}
-			
-			if(block == null)
-				logger.warn("'" + splitStr[0] + "' is not a valid Block");
-			else
-				zmaster587.advancedRocketry.api.Configuration.blackHoleGeneratorBlocks.put(new ItemStack(block, 1, metaValue), time);
-		}
-		logger.info("End registering blackhole generator blocks");
-		breakableTorches = null;
-		
-		
-		logger.info("Start registering rocket blacklist blocks");
-		for(String str : blackListRocketBlocks) {
-			Block block = Block.getBlockFromName(str);
-			if(block == null)
-				logger.warn("'" + str + "' is not a valid Block");
-			else
-				zmaster587.advancedRocketry.api.Configuration.blackListRocketBlocks.add(block);
-		}
-		logger.info("End registering rocket blacklist blocks");
-		breakableTorches = null;
-
-		logger.info("Start registering Harvestable Gasses");
-		for(String str : harvestableGasses) {
-			Fluid fluid = FluidRegistry.getFluid(str);
-			if(fluid == null)
-				logger.warn("'" + str + "' is not a valid Fluid");
-			else
-				AtmosphereRegister.getInstance().registerHarvestableFluid(fluid);
-		}
-		logger.info("End registering Harvestable Gasses");
-		harvestableGasses = null;
-
-		logger.info("Start registering entity atmosphere bypass");
-
-		//Add armor stand by default
-		zmaster587.advancedRocketry.api.Configuration.bypassEntity.add(EntityArmorStand.class);
-
-
-		for(String str : entityList) {
-			Class clazz = (Class) EntityList.getClass(new ResourceLocation(str));
-
-			//If not using string name maybe it's a class name?
-			if(clazz == null) {
-				try {
-					clazz = Class.forName(str);
-					if(clazz != null && !Entity.class.isAssignableFrom(clazz))
-						clazz = null;
-
-				} catch (Exception e) {
-					//Fail silently
-				}
-			}
-
-			if(clazz != null) {
-				logger.info("Registering " + clazz.getName() + " for atmosphere bypass");
-				zmaster587.advancedRocketry.api.Configuration.bypassEntity.add(clazz);
-			}
-			else
-				logger.warn("Cannot find " + str + " while registering entity for atmosphere bypass");
-		}
-
-		//Free memory
-		entityList = null;
-		logger.info("End registering entity atmosphere bypass");
-
-		//Register geodeOres
-		if(!zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList) {
-			for(String str  : geodeOres)
-				zmaster587.advancedRocketry.api.Configuration.standardGeodeOres.add(str);
-		}
-
-		//Register laserDrill ores
-		if(!zmaster587.advancedRocketry.api.Configuration.laserDrillOresBlackList) {
-			for(String str  : orbitalLaserOres)
-				zmaster587.advancedRocketry.api.Configuration.standardLaserDrillOres.add(str);
-		}
-
-
-		//Do blacklist stuff for ore registration
-		for(String oreName : OreDictionary.getOreNames()) {
-
-			if(zmaster587.advancedRocketry.api.Configuration.geodeOresBlackList && oreName.startsWith("ore")) {
-				boolean found = false;
-				for(String str : geodeOres) {
-					if(oreName.equals(str)) {
-						found = true;
-						break;
-					}
-				}
-				if(!found)
-					zmaster587.advancedRocketry.api.Configuration.standardGeodeOres.add(oreName);
-			}
-
-			if(zmaster587.advancedRocketry.api.Configuration.laserDrillOresBlackList && oreName.startsWith("ore")) {
-				boolean found = false;
-				for(String str : orbitalLaserOres) {
-					if(oreName.equals(str)) {
-						found = true;
-						break;
-					}
-				}
-				if(!found)
-					zmaster587.advancedRocketry.api.Configuration.standardLaserDrillOres.add(oreName);
-			}
-		}
+		ARConfiguration.loadPostInit();
 		//TODO recipes?
 		machineRecipes.registerXMLRecipes();
 
 		//Add the overworld as a discovered planet
-		zmaster587.advancedRocketry.api.Configuration.initiallyKnownPlanets.add(0);
+		zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().initiallyKnownPlanets.add(0);
 	}
 
 	@EventHandler
 	public void serverStarted(FMLServerStartedEvent event) {
 		for (int dimId : DimensionManager.getInstance().getLoadedDimensions()) {
 			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimId);
-			if(!properties.isNativeDimension && properties.getId() == zmaster587.advancedRocketry.api.Configuration.MoonId && !Loader.isModLoaded("GalacticraftCore")) {
+			if(!properties.isNativeDimension && properties.getId() == zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().MoonId && !Loader.isModLoaded("GalacticraftCore")) {
 				properties.isNativeDimension = true;
 			}
 		}
@@ -1460,7 +1138,7 @@ public class AdvancedRocketry {
 
 		
 		//Load Asteroids from XML
-		File file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/asteroidConfig.xml");
+		File file = new File("./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/asteroidConfig.xml");
 		logger.info("Checking for asteroid config at " + file.getAbsolutePath());
 		if(!file.exists()) {
 			logger.info(file.getAbsolutePath() + " not found, generating");
@@ -1489,7 +1167,7 @@ public class AdvancedRocketry {
 		try {
 			load.loadFile(file);
 			for(AsteroidSmall asteroid : load.loadPropertyFile()) {
-				zmaster587.advancedRocketry.api.Configuration.asteroidTypes.put(asteroid.ID, asteroid);
+				zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().asteroidTypes.put(asteroid.ID, asteroid);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -1497,7 +1175,7 @@ public class AdvancedRocketry {
 		// End load asteroids from XML
 		
 		
-		file = new File("./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/oreConfig.xml");
+		file = new File("./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/oreConfig.xml");
 		logger.info("Checking for ore config at " + file.getAbsolutePath());
 		if(!file.exists()) {
 			logger.info(file.getAbsolutePath() + " not found, generating");
@@ -1556,7 +1234,7 @@ public class AdvancedRocketry {
 		logger.info("Checking for config at " + file.getAbsolutePath());
 
 		if(!file.exists() || resetFromXml) { //Hi, I'm if check #42, I am true if the config is not in the world/advRocketry folder
-			String newFilePath = "./config/" + zmaster587.advancedRocketry.api.Configuration.configFolder + "/planetDefs.xml";
+			String newFilePath = "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/planetDefs.xml";
 			if(!file.exists())
 				logger.info("File not found.  Now checking for config at " + newFilePath);
 			
@@ -1647,14 +1325,14 @@ public class AdvancedRocketry {
 				DimensionManager.getInstance().registerDimNoUpdate(DimensionManager.overworldProperties, false);
 				sol.addPlanet(DimensionManager.overworldProperties);
 
-				if(zmaster587.advancedRocketry.api.Configuration.MoonId == Constants.INVALID_PLANET)
-					zmaster587.advancedRocketry.api.Configuration.MoonId = DimensionManager.getInstance().getNextFreeDim(dimOffset);
+				if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().MoonId == Constants.INVALID_PLANET)
+					zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().MoonId = DimensionManager.getInstance().getNextFreeDim(dimOffset);
 
 
 
 				//Register the moon
-				if(zmaster587.advancedRocketry.api.Configuration.MoonId != Constants.INVALID_PLANET) {
-					DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.api.Configuration.MoonId);
+				if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().MoonId != Constants.INVALID_PLANET) {
+					DimensionProperties dimensionProperties = new DimensionProperties(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().MoonId);
 					dimensionProperties.setAtmosphereDensityDirect(0);
 					dimensionProperties.averageTemperature = 20;
 					dimensionProperties.rotationalPeriod = 128000;
@@ -1855,7 +1533,7 @@ public class AdvancedRocketry {
 		// make sure to set dim offset back to original to make things consistant
 		DimensionManager.dimOffset = dimOffset;
 		
-		DimensionManager.getInstance().knownPlanets.addAll(zmaster587.advancedRocketry.api.Configuration.initiallyKnownPlanets);
+		DimensionManager.getInstance().knownPlanets.addAll(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().initiallyKnownPlanets);
 		
 	}
 
@@ -1937,12 +1615,12 @@ public class AdvancedRocketry {
 		zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().onServerStopped();
 		zmaster587.advancedRocketry.cable.NetworkRegistry.clearNetworks();
 		SpaceObjectManager.getSpaceManager().onServerStopped();
-		zmaster587.advancedRocketry.api.Configuration.MoonId = Constants.INVALID_PLANET;
+		zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().MoonId = Constants.INVALID_PLANET;
 		((BlockSeal)AdvancedRocketryBlocks.blockPipeSealer).clearMap();
 		DimensionManager.dimOffset = config.getInt("minDimension", PLANET, 2, -127, 8000, "Dimensions including and after this number are allowed to be made into planets");
-		zmaster587.advancedRocketry.api.Configuration.spaceDimId = config.get(Configuration.CATEGORY_GENERAL,"spaceStationId" , -2,"Dimension ID to use for space stations").getInt();
+		zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().spaceDimId = config.get(Configuration.CATEGORY_GENERAL,"spaceStationId" , -2,"Dimension ID to use for space stations").getInt();
 		
-		if(!zmaster587.advancedRocketry.api.Configuration.lockUI)
+		if(!zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().lockUI)
 			proxy.saveUILayout(config);
 	}
 
@@ -1950,7 +1628,7 @@ public class AdvancedRocketry {
 	public void registerOre(OreRegisterEvent event) {
 
 		//Register ore products
-		if(!zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods)
+		if(!zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().allowMakingItemsForOtherMods)
 			return;
 
 		for(AllowedProducts product : AllowedProducts.getAllAllowedProducts() ) {

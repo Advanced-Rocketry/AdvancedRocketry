@@ -21,7 +21,7 @@ import net.minecraft.world.gen.feature.WorldGenDungeons;
 import net.minecraft.world.gen.feature.WorldGenLakes;
 import net.minecraft.world.gen.structure.*;
 import net.minecraftforge.event.terraingen.TerrainGen;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
@@ -166,12 +166,12 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		habitable = ((WorldProviderPlanet)worldObj.provider).getAtmosphere(new BlockPos(0,0,0)).isBreathable();
 		
 
-		if(Configuration.generateCraters && dimProps.canGenerateCraters())
+		if(ARConfiguration.getCurrentConfig().generateCraters && dimProps.canGenerateCraters())
 			craterGenerator = new MapGenCrater( (int)((10 +  (26*(1-atmDensity)) )*dimProps.getCraterMultiplier()));
 		else 
 			craterGenerator = null;
 
-		if(dimProps.canGenerateGeodes() && Configuration.generateGeodes) {
+		if(dimProps.canGenerateGeodes() && ARConfiguration.getCurrentConfig().generateGeodes) {
 			geodeGenerator = new MapGenGeode((int)(800 * dimProps.getGeodeMultiplier()));
 		}
 		else
@@ -587,7 +587,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 
 
 		//If a planet is terraformed chenge upper blocks
-		if(zmaster587.advancedRocketry.api.Configuration.allowTerraforming && worldObj.provider.getClass() == WorldProviderPlanet.class) {
+		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().allowTerraforming && worldObj.provider.getClass() == WorldProviderPlanet.class) {
 
 			if(DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension()).isTerraformed()) {
 				Chunk chunk = worldObj.getChunkFromChunkCoords(x, z);

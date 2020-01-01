@@ -8,7 +8,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -37,7 +37,7 @@ public class TileWarpCore extends TileMultiBlock {
 	};
 
 	private SpaceObject getSpaceObject() {
-		if(station == null && world.provider.getDimension() == Configuration.spaceDimId) {
+		if(station == null && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceObject)
 				station = (SpaceObject) object;
@@ -72,7 +72,7 @@ public class TileWarpCore extends TileMultiBlock {
 				if(stack != null && OreDictionary.itemMatches(MaterialRegistry.getItemStackFromMaterialAndType("Dilithium", AllowedProducts.getProductByName("GEM")), stack, false)) {
 					int stackSize = stack.getCount();
 					if(!world.isRemote)
-						amt = getSpaceObject().addFuel(Configuration.fuelPointsPerDilithium*stack.getCount());
+						amt = getSpaceObject().addFuel(ARConfiguration.getCurrentConfig().fuelPointsPerDilithium*stack.getCount());
 					else
 						amt = Math.min(getSpaceObject().getFuelAmount() + 10*stack.getCount(), getSpaceObject().getMaxFuelAmount()) - getSpaceObject().getFuelAmount();//
 					inv.decrStackSize(i, amt/10);

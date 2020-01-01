@@ -20,7 +20,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AreaBlob;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
@@ -35,6 +35,7 @@ import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
+import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.IAdjBlockUpdate;
@@ -65,7 +66,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	
 	
 	public TileOxygenVent() {
-		super(1000,2, 1000);
+		super(1000,2, 2000);
 		isSealed = true;
 		firstRun = true;
 		hasFluid = true;
@@ -157,7 +158,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public int getPowerPerOperation() {
-		return (int)((numScrubbers*10 + 1)*Configuration.oxygenVentPowerMultiplier);
+		return (int)((numScrubbers*10 + 1)*ARConfiguration.getCurrentConfig().oxygenVentPowerMultiplier);
 	}
 
 	@Override
@@ -226,7 +227,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 			if(isSealed) {
 
 				//If scrubbers exist and the config allows then use the cartridge
-				if(Configuration.scrubberRequiresCartrige){
+				if(ARConfiguration.getCurrentConfig().scrubberRequiresCartrige){
 					//TODO: could be optimized
 					if(world.getTotalWorldTime() % 200 == 0) {
 						numScrubbers = 0;
@@ -328,7 +329,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	}
 
 	public float getGasUsageMultiplier() {
-		return (float) (Math.max(0.01f - numScrubbers*0.005f,0)*Configuration.oxygenVentConsumptionMult);
+		return (float) (Math.max(0.01f - numScrubbers*0.005f,0)*ARConfiguration.getCurrentConfig().oxygenVentConsumptionMult);
 	}
 
 	@Override
@@ -363,7 +364,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public int getMaxBlobRadius() {
-		return Configuration.oxygenVentSize;
+		return ARConfiguration.getCurrentConfig().oxygenVentSize;
 	}
 
 	@Override
@@ -375,6 +376,8 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		ArrayList<ModuleBase> modules = new ArrayList<ModuleBase>();
 
+		modules.add(new ModuleSlotArray(52, 20, this, 0, 1));
+		modules.add(new ModuleSlotArray(52, 57, this, 1, 2));
 		modules.add(new ModulePower(18, 20, this));
 		modules.add(new ModuleLiquidIndicator(32, 20, this));
 		modules.add(redstoneControl);
@@ -382,6 +385,13 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		//modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this, TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
 		//TODO add itemStack slots for liqiuid
 		return modules;
+	}
+	
+	@Override
+	public void setInventorySlotContents(int slot, ItemStack stack) {
+		super.setInventorySlotContents(slot, stack);
+		
+		while(FluidUtils.attemptDrainContainerIInv(inventory, this.tank, getStackInSlot(0), 0, 1));
 	}
 
 	@Override

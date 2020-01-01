@@ -26,7 +26,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -152,11 +152,11 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 		
 		private int getTimeFromStack(ItemStack stack)
 		{
-			for(Entry<ItemStack, Integer>  i : Configuration.blackHoleGeneratorBlocks.entrySet()) {
+			for(Entry<ItemStack, Integer>  i : ARConfiguration.getCurrentConfig().blackHoleGeneratorBlocks.entrySet()) {
 				if(i.getKey().getItem() == stack.getItem() && i.getKey().getItemDamage() == stack.getItemDamage())
 					return i.getValue();
 			}
-			return Configuration.defaultItemTimeBlackHole;
+			return ARConfiguration.getCurrentConfig().defaultItemTimeBlackHole;
 		}
 
 		private void attemptFire()
@@ -184,7 +184,7 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 		private boolean isAroundBlackHole()
 		{
 			
-			if(world.provider.getDimension() == Configuration.spaceDimId)
+			if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId)
 			{
 				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos);
 				if(obj != null)
@@ -219,7 +219,7 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 					attemptFire();
 					
 					energyRecieved = last_usage > this.world.getTotalWorldTime() ? 500f : 0f;
-					powerMadeLastTick = (int) (energyRecieved*Configuration.blackHolePowerMultiplier);
+					powerMadeLastTick = (int) (energyRecieved*ARConfiguration.getCurrentConfig().blackHolePowerMultiplier);
 
 					if(powerMadeLastTick != prevPowerMadeLastTick) {
 						prevPowerMadeLastTick = powerMadeLastTick;

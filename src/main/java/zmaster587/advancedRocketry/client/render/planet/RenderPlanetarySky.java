@@ -15,7 +15,7 @@ import net.minecraftforge.client.IRenderHandler;
 
 import org.lwjgl.opengl.GL11;
 
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
@@ -227,7 +227,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 				subStars = properties.getStar().getSubStars();
 				starSeperation = properties.getStar().getStarSeparation();
 			}
-			if(world.provider.getDimension() == Configuration.spaceDimId) {
+			if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
 				if(isWarp) {
 					SpaceObject station = (SpaceObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.player.getPosition());
@@ -280,7 +280,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 				subStars = properties.getStar().getSubStars();
 				starSeperation = properties.getStar().getStarSeparation();
 			}
-			if(world.provider.getDimension() == Configuration.spaceDimId) {
+			if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
 				if(isWarp) {
 					SpaceObject station = (SpaceObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.player.getPosition());
@@ -433,8 +433,6 @@ public class RenderPlanetarySky extends IRenderHandler {
 			GL11.glRotated(70, 1, 0, 0);
 			GL11.glRotatef(isWarp ? 0 : celestialAngle * 360.0F, 0, 1, 0);
 			GL11.glTranslated(0, -10, 0);
-
-
 
 			mc.renderEngine.bindTexture(DimensionProperties.planetRingShadow);
 			GlStateManager.color(0f, 0f, 0f,multiplier);

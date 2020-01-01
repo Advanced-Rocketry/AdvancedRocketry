@@ -21,7 +21,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
@@ -143,7 +143,7 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 	@Override
 	public void registerRecipes() {
 		//Chemical Reactor
-		if(Configuration.enableOxygen) {
+		if(ARConfiguration.getCurrentConfig().enableOxygen) {
 			for(ResourceLocation key : Item.REGISTRY.getKeys()) {
 				Item item = Item.REGISTRY.getObject(key);
 	

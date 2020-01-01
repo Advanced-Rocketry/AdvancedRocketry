@@ -24,7 +24,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
@@ -65,13 +65,13 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 			return new ChunkProviderCavePlanet(this.world, false, this.world.getSeed(),world.getWorldInfo().getGeneratorOptions());
 		}
 		else
-			return new ChunkProviderPlanet(this.world, this.world.getSeed(), Configuration.generateVanillaStructures, world.getWorldInfo().getGeneratorOptions());
+			return new ChunkProviderPlanet(this.world, this.world.getSeed(), ARConfiguration.getCurrentConfig().generateVanillaStructures, world.getWorldInfo().getGeneratorOptions());
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IRenderHandler getSkyRenderer() {
-		if(!Configuration.planetSkyOverride)
+		if(!ARConfiguration.getCurrentConfig().planetSkyOverride)
 			return null;
 		
 		int genType = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGenType();
@@ -148,11 +148,11 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	public int getRespawnDimension(EntityPlayerMP player) {
-		if(Configuration.canPlayerRespawnInSpace) {
+		if(ARConfiguration.getCurrentConfig().canPlayerRespawnInSpace) {
 			BlockPos coords = player.getBedLocation(getDimension());
 
 			if(coords != null) {
-				if (Configuration.forcePlayerRespawnInSpace || AtmosphereHandler.hasAtmosphereHandler(player.world.provider.getDimension()) && AtmosphereHandler.getOxygenHandler(player.world.provider.getDimension()).getAtmosphereType(coords).isBreathable()) {
+				if (ARConfiguration.getCurrentConfig().forcePlayerRespawnInSpace || AtmosphereHandler.hasAtmosphereHandler(player.world.provider.getDimension()) && AtmosphereHandler.getOxygenHandler(player.world.provider.getDimension()).getAtmosphereType(coords).isBreathable()) {
 					return getDimension();
 				}
 			}
@@ -163,7 +163,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	
 	@Override
 	public WorldSleepResult canSleepAt(EntityPlayer player, BlockPos pos) {
-		if (Configuration.forcePlayerRespawnInSpace || AtmosphereHandler.hasAtmosphereHandler(player.world.provider.getDimension()) && AtmosphereHandler.getOxygenHandler(player.world.provider.getDimension()).getAtmosphereType(pos).isBreathable()) {
+		if (ARConfiguration.getCurrentConfig().forcePlayerRespawnInSpace || AtmosphereHandler.hasAtmosphereHandler(player.world.provider.getDimension()) && AtmosphereHandler.getOxygenHandler(player.world.provider.getDimension()).getAtmosphereType(pos).isBreathable()) {
 			return WorldSleepResult.ALLOW;
 		}
 		else

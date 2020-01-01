@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
 import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
@@ -109,7 +109,7 @@ public class ItemAirUtils implements IFillableArmor {
 	@Override
 	public int getMaxAir(ItemStack stack) {
 
-		return Configuration.spaceSuitOxygenTime*1200; //30 minutes;
+		return ARConfiguration.getCurrentConfig().spaceSuitOxygenTime*1200; //30 minutes;
 	}
 
 	public boolean isStackValidAirContainer(ItemStack stack) {

@@ -10,7 +10,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.entity.EntityStationDeployedRocket;
@@ -28,7 +28,7 @@ public class MissionGasCollection extends MissionResourceCollection {
 	}
 
 	public MissionGasCollection(long l, EntityRocket entityRocket, LinkedList<IInfrastructure> connectedInfrastructure, Fluid gasFluid) {
-		super((long) (l*Configuration.gasCollectionMult), entityRocket, connectedInfrastructure);
+		super((long) (l*ARConfiguration.getCurrentConfig().gasCollectionMult), entityRocket, connectedInfrastructure);
 		this.gasFluid = gasFluid;
 	}
 

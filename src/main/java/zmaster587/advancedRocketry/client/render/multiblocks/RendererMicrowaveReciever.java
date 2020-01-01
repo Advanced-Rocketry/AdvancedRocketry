@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.tile.multiblock.energy.TileMicrowaveReciever;
 import zmaster587.libVulpes.render.RenderHelper;
 
@@ -43,7 +43,7 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
         
         
 		//Draw heat FX
-		if(Configuration.advancedVFX && multiBlockTile.getPowerMadeLastTick() > 0) {
+		if(ARConfiguration.getCurrentConfig().advancedVFX && multiBlockTile.getPowerMadeLastTick() > 0) {
 			double distance = Math.sqrt(Minecraft.getMinecraft().player.getDistanceSq(tile.getPos()));
 			if(distance < 16 ) {
 				double u = 256/distance;

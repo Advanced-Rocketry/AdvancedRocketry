@@ -11,7 +11,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.api.IMission;
@@ -325,7 +325,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	@Override
 	public int getTotalProgress(int id) {
 		if(id == 0)
-			return Configuration.orbit;
+			return ARConfiguration.getCurrentConfig().orbit;
 		else if(id == 1)
 			return 200;
 		else if(id == 2)

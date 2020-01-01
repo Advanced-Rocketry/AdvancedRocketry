@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.libVulpes.network.BasePacket;
 
@@ -80,7 +80,7 @@ public class PacketAsteroidInfo extends BasePacket {
 
 	@Override
 	public void executeClient(EntityPlayer thePlayer) {
-		Configuration.asteroidTypes.put(asteroid.ID, asteroid);
+		ARConfiguration.getCurrentConfig().asteroidTypes.put(asteroid.ID, asteroid);
 	}
 
 	@Override

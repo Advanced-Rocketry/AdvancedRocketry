@@ -3,7 +3,7 @@ package zmaster587.advancedRocketry;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.util.AsteroidSmall;
 
 import java.util.LinkedList;
@@ -12,7 +12,7 @@ public class Test {
 	public static void main(String[] args) {
 
 		for(int x = 2048; x < 2048+1024; x++) {
-			int y = (int) Math.round((x)/(2f*Configuration.stationSize));
+			int y = (int) Math.round((x)/(2f*ARConfiguration.getCurrentConfig().stationSize));
 			
 			if(y != 1) {
 				System.out.println("x: " + y);
@@ -28,8 +28,8 @@ public class Test {
 
 	public static int thing2(BlockPos pos) {
 		int x = pos.getX(); int z = pos.getZ();
-		x = (x-Configuration.stationSize/2)/(2*Configuration.stationSize);
-		z = (z-Configuration.stationSize/2)/(2*Configuration.stationSize);
+		x = (x-ARConfiguration.getCurrentConfig().stationSize/2)/(2*ARConfiguration.getCurrentConfig().stationSize);
+		z = (z-ARConfiguration.getCurrentConfig().stationSize/2)/(2*ARConfiguration.getCurrentConfig().stationSize);
 		int radius = Math.max(Math.abs(x), Math.abs(z));
 
 		int index = (int) Math.pow((2*radius-1),2) + x + radius;
@@ -78,7 +78,7 @@ public class Test {
 			else
 				x = radius;
 		}
-		return new BlockPos(2*Configuration.stationSize*x + Configuration.stationSize/2,0,2*Configuration.stationSize*z + Configuration.stationSize/2);
+		return new BlockPos(2*ARConfiguration.getCurrentConfig().stationSize*x + ARConfiguration.getCurrentConfig().stationSize/2,0,2*ARConfiguration.getCurrentConfig().stationSize*z + ARConfiguration.getCurrentConfig().stationSize/2);
 	}
 	
 	public static AsteroidSmall testeroid = new AsteroidSmall();
@@ -107,6 +107,6 @@ public class Test {
 		testeroid.stackProbabilites.add(1f);
 		testeroid.stackProbabilites.add(6f);
 		
-		Configuration.asteroidTypes.put("Test", testeroid);
+		ARConfiguration.getCurrentConfig().asteroidTypes.put("Test", testeroid);
 	}
 }

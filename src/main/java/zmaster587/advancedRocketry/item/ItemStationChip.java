@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.fml.repackage.com.nothome.delta.ByteBufferSeekableSource;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -437,7 +437,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		else {
 			list.add(ChatFormatting.GREEN + LibVulpes.proxy.getLocalizedString("msg.stationchip.sation") + getUUID(stack));
 			super.addInformation(stack, player, list, bool);
-			if(player.provider.getDimension() == Configuration.spaceDimId) {
+			if(player.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 				Entity p = Minecraft.getMinecraft().player;
 				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(p.getPosition());
 

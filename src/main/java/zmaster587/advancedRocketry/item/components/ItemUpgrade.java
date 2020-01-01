@@ -12,7 +12,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.client.ResourceIcon;
@@ -71,7 +71,7 @@ public class ItemUpgrade extends ItemIngredient implements IArmorComponent {
 				//ReflectionHelper.setPrivateValue(net.minecraft.entity.player.PlayerCapabilities.class, player.capabilities, 0.1f,"walkSpeed", "field_75097_g");
 		}
 		else if(componentStack.getItemDamage() == bootsUpgradeDamage && 
-				(!Configuration.lowGravityBoots || DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier() < 1f))
+				(!ARConfiguration.getCurrentConfig().lowGravityBoots || DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier() < 1f))
 			player.fallDistance = 0;
 	}
 

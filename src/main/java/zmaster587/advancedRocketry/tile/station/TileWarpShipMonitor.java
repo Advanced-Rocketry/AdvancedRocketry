@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.achievements.ARAchivements;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
@@ -80,7 +80,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 
 
 	private SpaceObject getSpaceObject() {
-		if(station == null && world.provider.getDimension() == Configuration.spaceDimId) {
+		if(station == null && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceObject)
 				station = (SpaceObject) object;
@@ -858,7 +858,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 			if(progress >= MAX_PROGRESS) {
 				//Do the thing
 				SpaceObject obj = getSpaceObject();
-				if(Math.abs(world.rand.nextInt()) % Configuration.planetDiscoveryChance == 0 && obj != null) {
+				if(Math.abs(world.rand.nextInt()) % ARConfiguration.getCurrentConfig().planetDiscoveryChance == 0 && obj != null) {
 					ItemStack stack = getStackInSlot(PLANETSLOT);
 					if(stack != null && stack.getItem() instanceof ItemPlanetIdentificationChip) {
 						ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)stack.getItem();

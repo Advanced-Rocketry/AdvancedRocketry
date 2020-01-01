@@ -8,7 +8,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.client.render.planet.RenderSpaceSky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -44,7 +44,7 @@ public class WorldProviderSpace extends WorldProviderPlanet {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IRenderHandler getSkyRenderer() {
-		if(Configuration.stationSkyOverride)
+		if(ARConfiguration.getCurrentConfig().stationSkyOverride)
 			return skyRender == null ? skyRender = new RenderSpaceSky() : skyRender;
 		
 		return super.getSkyRenderer();

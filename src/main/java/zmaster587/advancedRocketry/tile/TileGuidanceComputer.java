@@ -7,7 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants.NBT;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
@@ -103,7 +103,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				return item.getDimensionId(stack);
 			}
 			else if(itemType instanceof ItemStationChip) {
-				if(Configuration.spaceDimId == currentDimension) {
+				if(ARConfiguration.getCurrentConfig().spaceDimId == currentDimension) {
 					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 					if(object != null) {
 						if(ItemStationChip.getUUID(stack) == object.getId())
@@ -112,7 +112,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 					else
 						return Constants.INVALID_PLANET;
 				}
-				return Configuration.spaceDimId;
+				return ARConfiguration.getCurrentConfig().spaceDimId;
 			}
 			else if(itemType instanceof ItemAsteroidChip) {
 				destinationId = currentDimension;
@@ -159,7 +159,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 			}
 			else if(itemType instanceof ItemStationChip) {
 				ItemStationChip chip = (ItemStationChip)stack.getItem();
-				if(landingDimension == Configuration.spaceDimId) {
+				if(landingDimension == ARConfiguration.getCurrentConfig().spaceDimId) {
 					//TODO: handle Exception
 					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(ItemStationChip.getUUID(stack));
 					HashedBlockPosition vec = null;
@@ -203,7 +203,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 			{
 				//Use the destination the Linker in the Guidance computer directs.
 				BlockPos landingBlock = ItemLinker.getMasterCoords(stack);
-				return new Vector3F<Float>(landingBlock.getX() + 0.5f, (float)Configuration.orbit, landingBlock.getZ() + 0.5f);
+				return new Vector3F<Float>(landingBlock.getX() + 0.5f, (float)ARConfiguration.getCurrentConfig().orbit, landingBlock.getZ() + 0.5f);
 			}
 
 		}		
@@ -222,7 +222,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		ItemStack stack = getStackInSlot(0);
 		if(!stack.isEmpty() && stack.getItem() instanceof ItemStationChip) {
 			ItemStationChip chip = (ItemStationChip)stack.getItem();
-			if(landingDimension != Configuration.spaceDimId) {
+			if(landingDimension != ARConfiguration.getCurrentConfig().spaceDimId) {
 				LandingLocation loc = chip.getTakeoffCoords(stack, landingDimension);
 				if(loc != null)
 				{

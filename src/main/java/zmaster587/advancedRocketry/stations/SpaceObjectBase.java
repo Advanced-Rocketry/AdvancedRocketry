@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.IStorageChunk;
@@ -139,7 +139,7 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 	}
 
 	private long getWorldTime() {
-		return AdvancedRocketry.proxy.getWorldTimeUniversal(Configuration.spaceDimId);
+		return AdvancedRocketry.proxy.getWorldTimeUniversal(ARConfiguration.getCurrentConfig().spaceDimId);
 	}
 	
 	/**
@@ -223,7 +223,7 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 	 * @param chunk
 	 */
 	public void onModuleUnpack(IStorageChunk chunk) {
-		World worldObj = DimensionManager.getWorld(Configuration.spaceDimId);
+		World worldObj = DimensionManager.getWorld(ARConfiguration.getCurrentConfig().spaceDimId);
 		chunk.pasteInWorld(worldObj, spawnLocation.x - chunk.getSizeX()/2, spawnLocation.y - chunk.getSizeY()/2, spawnLocation.z - chunk.getSizeZ()/2);
 
 	}

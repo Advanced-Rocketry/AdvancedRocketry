@@ -22,7 +22,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
@@ -41,7 +41,7 @@ import java.util.List;
 
 public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 
-	public static final double MAX_HEIGHT = Configuration.orbit;
+	public static final double MAX_HEIGHT = ARConfiguration.getCurrentConfig().orbit;
 	public static final double MAX_STANDTIME = 200;
 	byte motion;
 	int standTime, idleTime;
@@ -166,7 +166,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 
 	@Override
 	public Entity changeDimension(int newDimId) {
-		return changeDimension(newDimId, this.posX, (double)Configuration.orbit, this.posZ);
+		return changeDimension(newDimId, this.posX, (double)ARConfiguration.getCurrentConfig().orbit, this.posZ);
 	}
 
 	public void copyDataFromOld(Entity entityIn)
@@ -345,7 +345,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 						}
 					}
 
-					changeDimension(dstTilePos.dimid, landingLocX, Configuration.orbit, landingLocZ);
+					changeDimension(dstTilePos.dimid, landingLocX, ARConfiguration.getCurrentConfig().orbit, landingLocZ);
 
 					MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketDeOrbitingEvent(this));
 				}

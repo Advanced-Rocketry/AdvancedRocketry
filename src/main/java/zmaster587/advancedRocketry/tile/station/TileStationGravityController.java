@@ -8,7 +8,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.relauncher.Side;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
@@ -38,7 +38,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 		maxGravBuildSpeed = new ModuleText(6, 25, LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.maxaltrate"), 0xaa2020);
 		targetGrav = new ModuleText(6, 35, LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.tgtalt"), 0x202020);
 		
-		minGravity = Configuration.allowZeroGSpacestations ? 0 : 10;
+		minGravity = ARConfiguration.getCurrentConfig().allowZeroGSpacestations ? 0 : 10;
 	}
 
 	@Override
@@ -96,7 +96,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 				if(object != null) {
-					if(gravity < 11  && !Configuration.allowZeroGSpacestations)
+					if(gravity < 11  && !ARConfiguration.getCurrentConfig().allowZeroGSpacestations)
 						gravity = 11;
 					double targetGravity = gravity/100D;
 					double angVel = object.getProperties().getGravitationalMultiplier();

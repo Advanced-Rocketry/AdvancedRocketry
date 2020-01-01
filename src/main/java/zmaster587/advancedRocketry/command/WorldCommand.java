@@ -21,7 +21,7 @@ import net.minecraftforge.common.MinecraftForge;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
@@ -92,12 +92,12 @@ public class WorldCommand implements ICommand {
 		Block block = Block.getBlockFromItem(((EntityPlayer)player).getHeldItemMainhand().getItem());
 		if (block != Blocks.AIR)
 		{
-			if(Configuration.torchBlocks.contains(block) )
+			if(ARConfiguration.getCurrentConfig().torchBlocks.contains(block) )
 				sender.sendMessage(new TextComponentString(block.getLocalizedName() + " is already in the torch list"));
 			else
 			{
 				
-				Configuration.addTorchblock(block);
+				ARConfiguration.getCurrentConfig().addTorchblock(block);
 				
 				sender.sendMessage(new TextComponentString(block.getLocalizedName() + " added to the torch list"));
 			}
@@ -122,12 +122,12 @@ public class WorldCommand implements ICommand {
 		Block block = Block.getBlockFromItem(((EntityPlayer)player).getHeldItemMainhand().getItem());
 		if (block != Blocks.AIR)
 		{
-			if(Configuration. torchBlocks.contains(block) )
+			if(ARConfiguration.getCurrentConfig(). torchBlocks.contains(block) )
 				sender.sendMessage(new TextComponentString(block.getLocalizedName() + " is already in the sealed blocks list"));
 			else
 			{
 				
-				Configuration.addSealedBlock(block);
+				ARConfiguration.getCurrentConfig().addSealedBlock(block);
 				
 				sender.sendMessage(new TextComponentString(block.getLocalizedName() + " added to the sealed block list"));
 			}
@@ -354,12 +354,12 @@ public class WorldCommand implements ICommand {
 						sender.sendMessage(new TextComponentString("Dimension does not exist"));
 				}
 				else if(cmdstring[1].equalsIgnoreCase("station")) {
-					dim = Configuration.spaceDimId;
+					dim = ARConfiguration.getCurrentConfig().spaceDimId;
 					int stationId = Integer.parseInt(cmdstring[2]);
 					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(stationId);
 
 					if(object != null) {
-						if(player.world.provider.getDimension() != Configuration.spaceDimId)
+						if(player.world.provider.getDimension() != ARConfiguration.getCurrentConfig().spaceDimId)
 							player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal((WorldServer)player.world));
 						HashedBlockPosition vec = object.getSpawnLocation();
 						player.setPositionAndUpdate(vec.x, vec.y, vec.z);
