@@ -368,6 +368,11 @@ public class ARConfiguration {
 
 	public static ARConfiguration getCurrentConfig()
 	{
+		if(currentConfig == null)
+		{
+			logger.error("Had to generate a new config, this shouldn't happen");
+			return new ARConfiguration();
+		}
 		return currentConfig;
 	}
 
@@ -383,8 +388,11 @@ public class ARConfiguration {
 
 	public static void useClientDiskConfig()
 	{
-		currentConfig = diskConfig;
-		usingServerConfig = false;
+		if(usingServerConfig)
+		{
+			currentConfig = diskConfig;
+			usingServerConfig = false;
+		}
 	}
 
 	public void save()

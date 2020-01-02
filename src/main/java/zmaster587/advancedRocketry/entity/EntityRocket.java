@@ -104,7 +104,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	private static final int STATION_LOC_OFFSET = 50;
 	private static final int ENGINE_IGNITION_CNT = 100;
 	private ModuleText landingPadDisplayText;
-	private SpacePosition spacePosition;
 
 
 	protected long lastWorldTickTicked;
@@ -241,11 +240,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	public AxisAlignedBB getCollisionBoundingBox() {
 		// TODO Auto-generated method stub
 		return getEntityBoundingBox();
-	}
-
-	public SpacePosition getSpacePosition()
-	{
-		return spacePosition;
 	}
 	
 	/**
