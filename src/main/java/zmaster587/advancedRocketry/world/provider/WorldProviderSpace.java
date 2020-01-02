@@ -1,5 +1,8 @@
 package zmaster587.advancedRocketry.world.provider;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.BiomeProviderSingle;
 import net.minecraft.world.gen.IChunkGenerator;
@@ -11,8 +14,10 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.client.render.planet.RenderSpaceSky;
+import zmaster587.advancedRocketry.client.render.planet.RenderSpaceTravelSky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.world.ChunkProviderSpace;
 
@@ -44,6 +49,24 @@ public class WorldProviderSpace extends WorldProviderPlanet {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IRenderHandler getSkyRenderer() {
+		
+		//Maybe a little hacky
+		EntityPlayerSP player = Minecraft.getMinecraft().player;
+		if(player != null)
+		{
+			Entity e = player.getRidingEntity();
+			if(e instanceof EntityRocket)
+			{
+				if(((EntityRocket)e).getInSpaceFlight())
+				{
+					if(!(skyRender instanceof RenderSpaceTravelSky))
+						skyRender = new RenderSpaceTravelSky();
+					return skyRender;
+				}
+			}
+		}
+		
+		
 		if(ARConfiguration.getCurrentConfig().stationSkyOverride)
 			return skyRender == null ? skyRender = new RenderSpaceSky() : skyRender;
 		

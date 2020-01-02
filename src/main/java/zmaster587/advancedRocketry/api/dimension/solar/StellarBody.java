@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants.NBT;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
+import zmaster587.advancedRocketry.util.SpacePosition;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -263,5 +264,11 @@ public class StellarBody {
 				subStars.add(star);
 			}
 		}
+	}
+	
+	public SpacePosition getSpacePosition()
+	{
+		//TODO
+		return new SpacePosition();
 	}
 }

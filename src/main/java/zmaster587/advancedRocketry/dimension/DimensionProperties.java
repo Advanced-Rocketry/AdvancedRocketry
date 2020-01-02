@@ -37,6 +37,7 @@ import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketSatellite;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.OreGenProperties;
+import zmaster587.advancedRocketry.util.SpacePosition;
 import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
@@ -1678,5 +1679,51 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	
 	public boolean canGenerateStructures() {
 		return ARConfiguration.getCurrentConfig().generateVanillaStructures && (generateStructuresSet ? canGenerateStructures : getAtmosphere().isBreathable());
+	}
+
+	@Override
+	public SpacePosition getSpacePosition() {
+	
+		
+		SpacePosition spacePosition = new SpacePosition();
+		spacePosition.star = getStar();
+		spacePosition.world = this;
+		spacePosition.isInInterplanetarySpace = this.isMoon();
+		spacePosition.pitch = 0;
+		spacePosition.roll = 0;
+		spacePosition.yaw = 0;
+		
+		
+		if(isMoon())
+		{
+			SpacePosition parentPosition = null;
+			parentPosition = getParentProperties().getSpacePosition();
+			
+			spacePosition.x = getParentOrbitalDistance()*MathHelper.cos((float) orbitTheta);
+			spacePosition.y = 0;
+			spacePosition.z = getParentOrbitalDistance()*MathHelper.sin((float) orbitTheta);
+			
+			spacePosition.x += parentPosition.x;
+			spacePosition.y += parentPosition.y;
+			spacePosition.z += parentPosition.z;
+		}
+		else
+		{
+			spacePosition.x = orbitalDist*MathHelper.cos((float) orbitTheta);
+			spacePosition.y = 0;
+			spacePosition.z = orbitalDist*MathHelper.sin((float) orbitTheta);
+		}
+		
+		return spacePosition;
+	}
+
+	@Override
+	public float[] getRingColor() {
+		return ringColor;
+	}
+
+	@Override
+	public float[] getSkyColor() {
+		return skyColor;
 	}
 }
