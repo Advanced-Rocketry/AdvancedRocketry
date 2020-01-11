@@ -38,7 +38,7 @@ public class AdvancedRocketryPlugin implements IFMLLoadingPlugin {
 	@Override
 	public String getAccessTransformerClass() {
 		// TODO Auto-generated method stub
-		return "";
+		return null;
 	}
 
 }
