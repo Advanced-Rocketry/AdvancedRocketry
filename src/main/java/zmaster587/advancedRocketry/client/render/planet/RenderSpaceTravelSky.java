@@ -43,7 +43,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class RenderSpaceTravelSky extends IRenderHandler {
+public class RenderSpaceTravelSky extends RenderPlanetarySky {
 
 
 	private int starGLCallList;
@@ -52,7 +52,7 @@ public class RenderSpaceTravelSky extends IRenderHandler {
 	ResourceLocation currentlyBoundTex = null;
 	float celestialAngle;
 	Vector3F<Float> axis;
-	
+
 	private static WavefrontObject sphere;
 	public static ResourceLocation planetUIBG = new ResourceLocation("advancedrocketry:textures/gui/planetUIOverlay.png");
 	public static ResourceLocation planetUIFG = new ResourceLocation("advancedrocketry:textures/gui/planetUIOverlayFG.png");
@@ -64,7 +64,7 @@ public class RenderSpaceTravelSky extends IRenderHandler {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	private final static double SIZE_SCALE = 0.01;
 
 
@@ -124,14 +124,14 @@ public class RenderSpaceTravelSky extends IRenderHandler {
 
 	Minecraft mc = Minecraft.getMinecraft();
 
-	
-	public void renderPlanet(IDimensionProperties properties, SpacePosition position, SpacePosition playerPosition, float sizeOverride) {
 
+	public void renderPlanet(IDimensionProperties properties, SpacePosition position, SpacePosition playerPosition, float sizeOverride) {
+		
 		GlStateManager.pushMatrix();
 		GlStateManager.translate((float)position.x, (float)position.y, (float)position.z);
 		//Max because moon was too small to be visible
 
-		
+
 		GlStateManager.scale(sizeOverride, sizeOverride, sizeOverride);
 		GlStateManager.disableLighting();
 		GlStateManager.depthMask(true);
@@ -162,13 +162,13 @@ public class RenderSpaceTravelSky extends IRenderHandler {
 			//Rotate for rings
 			GlStateManager.rotate(90, 1, 0, 0);
 			GlStateManager.rotate(-90, 0, 0, 1);
-			
+
 			//Draw ring
 			float[] ringColor = properties.getRingColor();
 			GlStateManager.color(ringColor[0], ringColor[1], ringColor[2],0.5f);
 			Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.planetRings);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.renderTopFaceWithUV(buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
+			//RenderHelper.renderTopFaceWithUV(buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
 			RenderHelper.renderBottomFaceWithUV(buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
 			Tessellator.getInstance().draw();
 
@@ -184,8 +184,11 @@ public class RenderSpaceTravelSky extends IRenderHandler {
 		GL11.glPopMatrix();
 
 		//Render ATM
-		if(properties.hasAtmosphere()) {
+		if(properties.hasAtmosphere() ) {
 			GlStateManager.pushMatrix();
+			GlStateManager.rotate(90, 0, 0, 1);
+			GlStateManager.rotate( (float)-(properties.getOrbitTheta() * 180/Math.PI), 1, 0, 0);
+			GlStateManager.scale(1.1f, 1.1f, 1.1f);
 			GlStateManager.disableTexture2D();
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			float[] skyColor = properties.getSkyColor();
@@ -195,7 +198,7 @@ public class RenderSpaceTravelSky extends IRenderHandler {
 				GlStateManager.scale(1.01f, 1.01f, 1.01f);
 				sphere.renderAll();
 			}
-			
+
 			GlStateManager.enableTexture2D();
 			GlStateManager.popMatrix();
 		}
@@ -209,7 +212,7 @@ public class RenderSpaceTravelSky extends IRenderHandler {
 		GlStateManager.enableLighting();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
-	
+
 	private double getDistance(SpacePosition a, SpacePosition b)
 	{
 		double deltaX = a.x -b.x;
@@ -217,66 +220,170 @@ public class RenderSpaceTravelSky extends IRenderHandler {
 		double deltaZ = a.z - b.z;
 		return Math.sqrt(deltaX*deltaX + deltaY*deltaY + deltaZ*deltaZ);
 	}
-	
-	
+
+
 	public void renderStar(StellarBody entity, SpacePosition position, SpacePosition playerSpacePosition) {
-		
+
 		StellarBody body = entity;
 		if(body == null)
 			return;
-		
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(position.x,position.y,position.z);
-		
-		//RenderHelper.setupPlayerFacingMatrix(getDistance(playerSpacePosition, position)*getDistance(playerSpacePosition, position), playerSpacePosition.x, playerSpacePosition.y, playerSpacePosition.z);
-		Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.locationSunNew);
-		
-		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-		
-		GlStateManager.disableLighting();
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		
-		GL11.glColor3d(body.getColor()[0], body.getColor()[1], body.getColor()[2]);
-		//GL11.glColor3ub((byte)(body.getColorRGB8() & 0xff), (byte)((body.getColorRGB8() >>> 8) & 0xff), (byte)((body.getColorRGB8() >>> 16) & 0xff));
-		//GlStateManager.color();
-	
-		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.0f);
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		RenderHelper.renderNorthFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1);
-		RenderHelper.renderEastFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1);
-		RenderHelper.renderTopFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1);
-		Tessellator.getInstance().draw();
-		
-		if(true) {
+
+		if(entity.isBlackHole())
+		{
+			float sunSize = entity.getDisplayRadius()/500f;
 			GlStateManager.pushMatrix();
-			GlStateManager.disableTexture2D();
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-			GlStateManager.disableDepth();
-			float[] skyColor = entity.getColor();
-			GlStateManager.color(skyColor[0], skyColor[1], skyColor[2], .003f);
+			GlStateManager.translate(position.x,position.y,position.z);
 
-			GlStateManager.scale(7.1f, 7.1f, 7.1f);
-			for(int i = 0; i < 20; i++) {
-				GlStateManager.scale(1.05f, 1.05f, 1.05f);
-				sphere.renderAll();
-			}
+			Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.locationBlackHole);
+
+			BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+
+			GlStateManager.depthMask(true);
+			GlStateManager.enableBlend();
+			GlStateManager.enableAlpha();
+			GlStateManager.alphaFunc(GL11.GL_GREATER, 0.01f);
+			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
+			GlStateManager.color((float)1, (float).5 , (float).4 ,1f);
 			
-			GlStateManager.enableTexture2D();
+			GlStateManager.pushMatrix();
+			//GL11.glTranslatef(0, 100, 0);
+			
+			float f10 = sunSize*5f;
+			
+			float phase = -(System.currentTimeMillis() % 3600)/3600f;
+			float scale = 1+(float)Math.sin(phase*3.14)*0.1f;
+			scale *= 0.1;
+			phase*=360f;
+			GL11.glRotatef(phase, 0, 1, 0);
+			GL11.glScaled(scale,scale,scale);
+			
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			RenderHelper.renderNorthFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1);
+			RenderHelper.renderEastFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1);
+			RenderHelper.renderTopFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1);
+			Tessellator.getInstance().draw();
 			GlStateManager.popMatrix();
-		}
-		
-		GlStateManager.popMatrix();
-		
-		GlStateManager.enableDepth();
+			
+			//Render accretion disk
+			mc.renderEngine.bindTexture(TextureResources.locationAccretionDisk);
+			GlStateManager.depthMask(false);
+			for(int i = 0; i < 3; i++)
+			{
+				float speedMult = (i)*1.01f + 1;
+				GL11.glPushMatrix();
+				//GL11.glTranslatef(0, 100, 0);
+				GL11.glRotatef(80, -1, 1, 0);
+				GL11.glRotatef((System.currentTimeMillis() % (int)(speedMult*36000))/(100f*speedMult), 0, 1, 0);
 
-		//Clean up and make player not transparent
-		GlStateManager.enableLighting();
-		GlStateManager.disableBlend();
-		GlStateManager.color(1, 1, 1, 1);
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				GlStateManager.color((float)1, (float).5 , (float).4 ,1f);
+				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
+				f10 = sunSize*40f;
+				buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
+				buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
+				buffer.pos((double)f10, 0.0D, (double)f10).tex(1.0D, 1.0D).endVertex();
+				buffer.pos((double)(-f10), 0.0D, (double)f10).tex(0.0D, 1.0D).endVertex();
+				Tessellator.getInstance().draw();
+				GL11.glPopMatrix();
+
+				GL11.glPushMatrix();
+
+				GL11.glTranslatef(0, -0.1f, 0);
+				GL11.glRotatef(80, -1, 1, 0);
+				GL11.glRotatef((System.currentTimeMillis() % (int)(speedMult*360*50))/(50f*speedMult), 0, 1, 0);
+
+				GlStateManager.color((float)0.8, (float).7 , (float).4 ,1f);
+				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
+				f10 = sunSize*30f;
+				//multiplier = 2;
+				buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
+				buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
+				buffer.pos((double)f10, 0.0D, (double)f10).tex(1.0D, 1.0D).endVertex();
+				buffer.pos((double)(-f10), 0.0D, (double)f10).tex(0.0D, 1.0D).endVertex();
+				Tessellator.getInstance().draw();
+				GL11.glPopMatrix();
+
+				GL11.glPushMatrix();
+
+				GL11.glTranslatef(0, -0.2f, 0);
+				GL11.glRotatef(80, -1, 1, 0);
+				GL11.glRotatef((System.currentTimeMillis() % (int)(speedMult*360*25))/(25f*speedMult), 0, 1, 0);
+
+				GlStateManager.color((float)0.2, (float).4 , (float)1 ,1f);
+				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
+				f10 = sunSize*15f;
+				//multiplier = 2;
+				buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
+				buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
+				buffer.pos((double)f10, 0.0D, (double)f10).tex(1.0D, 1.0D).endVertex();
+				buffer.pos((double)(-f10), 0.0D, (double)f10).tex(0.0D, 1.0D).endVertex();
+				Tessellator.getInstance().draw();
+				GL11.glPopMatrix();
+			}
+
+			GlStateManager.popMatrix();
+
+			GlStateManager.enableDepth();
+
+			//Clean up and make player not transparent
+			GlStateManager.enableLighting();
+			GlStateManager.disableBlend();
+			GlStateManager.color(1, 1, 1, 1);
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		}
+		else
+		{
+
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(position.x,position.y,position.z);
+
+			//RenderHelper.setupPlayerFacingMatrix(getDistance(playerSpacePosition, position)*getDistance(playerSpacePosition, position), playerSpacePosition.x, playerSpacePosition.y, playerSpacePosition.z);
+			Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.locationSunNew);
+
+			BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+
+			GlStateManager.depthMask(false);
+			GlStateManager.enableBlend();
+			GlStateManager.enableAlpha();
+			GlStateManager.alphaFunc(GL11.GL_GREATER, 0.01f);
+			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
+			GlStateManager.color((float)1, (float).5 , (float).4 ,1f);
+
+			GlStateManager.color(body.getColor()[0], body.getColor()[1], body.getColor()[2]);
+
+			GlStateManager.alphaFunc(GL11.GL_GREATER, 0.0f);
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			RenderHelper.renderNorthFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1);
+			RenderHelper.renderEastFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1);
+			RenderHelper.renderTopFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1);
+			Tessellator.getInstance().draw();
+
+			if(true) {
+				GlStateManager.pushMatrix();
+				GlStateManager.disableTexture2D();
+				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+				float[] skyColor = entity.getColor();
+				GlStateManager.color(skyColor[0]*.02f, skyColor[1]*.02f, skyColor[2]*.02f, 1f);
+
+				GlStateManager.scale(7.1f, 7.1f, 7.1f);
+				for(int i = 0; i < 10; i++) {
+					GlStateManager.scale(1.05f, 1.05f, 1.05f);
+					sphere.renderAll();
+				}
+
+				GlStateManager.enableTexture2D();
+				GlStateManager.popMatrix();
+			}
+
+			GlStateManager.popMatrix();
+
+			//Clean up and make player not transparent
+			GlStateManager.enableLighting();
+			GlStateManager.disableBlend();
+			GlStateManager.color(1, 1, 1, 1);
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		}
 	}
-	
+
 	private void renderStars()
 	{
 		Random random = new Random(10842L);
@@ -327,17 +434,26 @@ public class RenderSpaceTravelSky extends IRenderHandler {
 		}			
 
 		Tessellator.getInstance().draw();
-		//buffer.finishDrawing();
+	}
+
+	private void getAllPlanets(List<IDimensionProperties> allPlanets, IDimensionProperties planet)
+	{
+		for(int i : planet.getChildPlanets())
+		{
+			IDimensionProperties childProps = DimensionManager.getInstance().getDimensionProperties(i);
+			allPlanets.add(DimensionManager.getInstance().getDimensionProperties(i));
+			getAllPlanets(allPlanets, childProps);
+		}
 	}
 	
 	private void buildSolarSystem(SpacePosition playerPosition)
 	{
 		List<IDimensionProperties> planets = playerPosition.star.getPlanets();
-	
 		
-		for(IDimensionProperties property : planets)
+		// Orbiting a planet
+		if(playerPosition.world != null)
 		{
-			if(playerPosition.world != null)
+			for(IDimensionProperties property : planets)
 			{
 				if(property.getId() == playerPosition.world.getId())
 				{
@@ -346,31 +462,152 @@ public class RenderSpaceTravelSky extends IRenderHandler {
 					SpacePosition newSpacePos = new SpacePosition();
 					
 					renderPlanet(property, newSpacePos, playerPosition, sizeScale);
+					
+					//render subplanets
+					List<IDimensionProperties> subPlanets = new LinkedList<IDimensionProperties>();
+					getAllPlanets(subPlanets, property);
+					
+					for(IDimensionProperties subproperty : subPlanets)
+					{
+						SpacePosition subPlanetPos = subproperty.getSpacePosition();
+						sizeScale = 0.1f*Math.max(property.getGravitationalMultiplier()*subproperty.getGravitationalMultiplier(), .5f)*100;
+						
+						subPlanetPos.x = subPlanetPos.x + spacePos.x;
+						subPlanetPos.y = subPlanetPos.y + spacePos.y;
+						subPlanetPos.z = subPlanetPos.z + spacePos.z;
+						
+
+						renderPlanet(subproperty, subPlanetPos, playerPosition, sizeScale);
+					}
+					
+					
 					break;
 				}
 			}
-			else
+		}
+		// Orbiting a star
+		else
+		{
+			for(IDimensionProperties property : planets)
 			{
-				
 				SpacePosition spacePos = property.getSpacePosition();
 				float sizeScale = 0.1f*Math.max(property.getGravitationalMultiplier()*property.getGravitationalMultiplier(), .5f)*100;
 				double distance = getDistance(playerPosition, spacePos);
 				
+				sizeScale = property.isMoon() ? sizeScale*0.2f : sizeScale;
+
 				sizeScale*=100/(distance*distance);
+
+				renderPlanet(property, spacePos, playerPosition, sizeScale);
+				List<IDimensionProperties> subPlanets = new LinkedList<IDimensionProperties>();
+				getAllPlanets(subPlanets, property);
 				
-				renderPlanet(property, property.getSpacePosition(), playerPosition, sizeScale);
+				for(IDimensionProperties subproperty : subPlanets)
+				{
+					SpacePosition subPlanetPos = subproperty.getSpacePosition();
+					sizeScale = 0.1f*Math.max(property.getGravitationalMultiplier()*subproperty.getGravitationalMultiplier(), .5f)*100;
+
+					sizeScale*=10/(distance*distance);
+					
+					subPlanetPos.x = subPlanetPos.x/(distance*2.0f) + spacePos.x;
+					subPlanetPos.y = subPlanetPos.y/(distance*2f) + spacePos.y;
+					subPlanetPos.z = subPlanetPos.z/(distance*2.0f) + spacePos.z;
+					
+
+					renderPlanet(subproperty, subPlanetPos, playerPosition, sizeScale);
+				}
 			}
-		}
-		
-		for(StellarBody star : playerPosition.star.subStars)
-		{
-			//renderStar(star, star.getSpacePosition(), playerPosition);
+
+
+			GlStateManager.pushMatrix();
+			float adjustmentScale = 4;
+			GlStateManager.scale(adjustmentScale,adjustmentScale,adjustmentScale);
+			List<StellarBody> subStars = playerPosition.star.getSubStars();
+			StellarBody star = playerPosition.star;
+			SpacePosition mainStarPos = star.getSpacePosition();
+			renderStar(star, mainStarPos, playerPosition);
+
+
+			if(subStars != null && !subStars.isEmpty()) {
+				float phaseInc = 360/subStars.size();
+				double phase = 0;
+				for(StellarBody subStar : subStars) {
+					float solarOrbitalDistance = subStar.getStarSeparation();
+
+					SpacePosition subStarSpacePosition = new SpacePosition();
+
+					//Radius to put the player
+					double radius = solarOrbitalDistance;
+					double theta = phase;
+					phase += phaseInc;
+					
+					subStarSpacePosition = mainStarPos.getFromSpherical(radius, theta);
+
+					renderStar(subStar, subStarSpacePosition, playerPosition);
+				}
+			}
+			GlStateManager.popMatrix();
+			
+			
+			// Indicators
+			mc.renderEngine.bindTexture(TextureResources.locationReticle);
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+			GlStateManager.color(0, 1, 0);
+			BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+	        
+			for(IDimensionProperties property : planets)
+			{
+				SpacePosition spacePos = property.getSpacePosition();
+				float sizeScale = 0.1f*Math.max(property.getGravitationalMultiplier()*property.getGravitationalMultiplier(), .5f)*100;
+				double distance = getDistance(playerPosition, spacePos);
+
+				sizeScale*=100/(distance*distance);
+				float f = 0;
+		        float f1 = 1;
+		        float f2 = 0;
+		        float f3 = 1;
+		        float f4 = 2F; //scale
+
+		        float f5 = (float) spacePos.x;
+		        float f6 = (float) spacePos.y;
+		        float f7 = (float) spacePos.z;
+		        
+		        float rotationX = ActiveRenderInfo.getRotationX();
+		        float rotationZ = ActiveRenderInfo.getRotationXZ();
+		        float rotationYZ = ActiveRenderInfo.getRotationZ();
+		        float rotationXY = ActiveRenderInfo.getRotationYZ();
+		        float rotationXZ = ActiveRenderInfo.getRotationXY();
+		        
+		        
+		        Vec3d[] avec3d = new Vec3d[] {new Vec3d((double)(-rotationX * f4 - rotationXY * f4), (double)(-rotationZ * f4), (double)(-rotationYZ * f4 - rotationXZ * f4)), new Vec3d((double)(-rotationX * f4 + rotationXY * f4), (double)(rotationZ * f4), (double)(-rotationYZ * f4 + rotationXZ * f4)), new Vec3d((double)(rotationX * f4 + rotationXY * f4), (double)(rotationZ * f4), (double)(rotationYZ * f4 + rotationXZ * f4)), new Vec3d((double)(rotationX * f4 - rotationXY * f4), (double)(-rotationZ * f4), (double)(rotationYZ * f4 - rotationXZ * f4))};
+		        buffer.pos((double)f5 + avec3d[0].x, (double)f6 + avec3d[0].y, (double)f7 + avec3d[0].z).tex((double)f1, (double)f3).endVertex();
+		        buffer.pos((double)f5 + avec3d[1].x, (double)f6 + avec3d[1].y, (double)f7 + avec3d[1].z).tex((double)f1, (double)f2).endVertex();
+		        buffer.pos((double)f5 + avec3d[2].x, (double)f6 + avec3d[2].y, (double)f7 + avec3d[2].z).tex((double)f, (double)f2).endVertex();
+		        buffer.pos((double)f5 + avec3d[3].x, (double)f6 + avec3d[3].y, (double)f7 + avec3d[3].z).tex((double)f, (double)f3).endVertex();
+		        
+		        
+		        
+				
+			}
+			Tessellator.getInstance().draw();
+			
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(0, 3, 0);
+			for(IDimensionProperties property : planets)
+			{
+				SpacePosition spacePos = property.getSpacePosition();
+				double distance = getDistance(playerPosition, spacePos);
+				RenderHelper.renderTag(distance, property.getName(), spacePos.x, spacePos.y, spacePos.z, 55,10);
+			}
+			GlStateManager.popMatrix();
+			GlStateManager.enableBlend();
 		}
 	}
 
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc) {
-		
+
 		//Get player position first
 		SpacePosition spacePosition = null;
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
@@ -383,17 +620,20 @@ public class RenderSpaceTravelSky extends IRenderHandler {
 		}
 		else
 			return;
-		
+
 		celestialAngle = mc.world.getCelestialAngle(partialTicks);
-		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+		
 
 		GlStateManager.enableTexture2D();
 		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
 
 		GL11.glPushMatrix();
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0f);
-		GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-		//GL11.glRotatef((float)spacePosition.yaw, 0f, 1f, 0f);
+		GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(-90.0F, 1.0F, 0.0F, 0.0F);
+		
+		if(spacePosition.world != null)
+			GlStateManager.rotate( -(float)(spacePosition.world.getOrbitTheta() * 180/Math.PI), 0, 0, 1);
 
 		GlStateManager.disableTexture2D();
 		float f18 = 1;
@@ -401,7 +641,7 @@ public class RenderSpaceTravelSky extends IRenderHandler {
 		{
 			GlStateManager.color(f18, f18, f18, f18);
 			GL11.glPushMatrix();
-			
+
 			GL11.glCallList(this.starGLCallList);
 			//Extra stars for low ATM
 			GlStateManager.color(f18, f18, f18, f18/2f);
@@ -409,29 +649,47 @@ public class RenderSpaceTravelSky extends IRenderHandler {
 			GL11.glRotatef(-90, 0, 1, 0);
 			GL11.glCallList(this.starGLCallList);
 			GL11.glPopMatrix();
-			
+
 			//Extra extra, read all about it!
 			GlStateManager.color(f18, f18, f18, f18/4f);
 			GL11.glPushMatrix();
 			GL11.glRotatef(90, 0, 1, 0);
 			GL11.glCallList(this.starGLCallList);
 			GL11.glPopMatrix();
-			
+
 			GlStateManager.color(f18, f18, f18, f18);
 			GL11.glPopMatrix();
 		}
-		
+
+		// If we're orbitting a world, draw the skybox normally
+		if(spacePosition.world != null) {
+
+			GlStateManager.enableBlend();
+			GlStateManager.enableTexture2D();
+			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
+
+			BufferBuilder bufferBuilder =  Tessellator.getInstance().getBuffer();
+			DimensionProperties properties = spacePosition.world;
+			StellarBody sun = spacePosition.star;
+			sun.getSize();
+			float[] suncolorfloat = sun.getColor();
+			Vec3d color = new Vec3d(suncolorfloat[0], suncolorfloat[1], suncolorfloat[2]);
+			drawStarAndSubStars(bufferBuilder, spacePosition.star, spacePosition.world, properties.getSolarOrbitalDistance(), sun.getSize(), color, 1f);
+
+			GlStateManager.disableBlend();
+		}
+
 		GlStateManager.popMatrix();
 		GlStateManager.pushMatrix();
-		
+
 		GL11.glTranslated(-spacePosition.x, -spacePosition.y, -spacePosition.z);
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0f);
-		
+
 		GlStateManager.disableCull();
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableFog();
 		buildSolarSystem(spacePosition);
-		
+
 		GlStateManager.enableFog();
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		GlStateManager.disableBlend();
@@ -445,7 +703,7 @@ public class RenderSpaceTravelSky extends IRenderHandler {
 		RocketEventHandler.onPostWorldRender(partialTicks);
 		//Fix player/items going transparent
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		
+
 		GlStateManager.clear(256);
 	}
 

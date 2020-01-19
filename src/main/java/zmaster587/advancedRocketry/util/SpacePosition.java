@@ -12,6 +12,16 @@ public class SpacePosition {
 	public DimensionProperties world;
 	public boolean isInInterplanetarySpace;
 	
+	public double distanceToSpacePosition2(SpacePosition s)
+	{
+		double xx, yy, zz;
+		xx = x - s.x;
+		yy = y - s.y;
+		zz = z - s.z;
+		
+		return xx*xx + yy*yy + zz*zz;
+	}
+	
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		NBTTagCompound subTag = new NBTTagCompound();
@@ -52,5 +62,20 @@ public class SpacePosition {
 		world = DimensionManager.getInstance().getDimensionProperties(subTag.getInteger("star"));
 		
 		isInInterplanetarySpace = subTag.getBoolean("isInInterplanetarySpace");
+	}
+	
+	public SpacePosition getFromSpherical(double radius, double theta)
+	{
+		SpacePosition returnPos = new SpacePosition();
+		
+		returnPos.world = world;
+		returnPos.star = star;
+		returnPos.isInInterplanetarySpace = isInInterplanetarySpace;
+		
+		returnPos.x = this.x + Math.cos(theta)*radius;
+		returnPos.y = this.y;
+		returnPos.z = this.z + Math.sin(theta)*radius;
+		
+		return returnPos;
 	}
 }

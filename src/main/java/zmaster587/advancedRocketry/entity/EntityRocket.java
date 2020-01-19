@@ -800,20 +800,67 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		if(getInSpaceFlight())
 		{
 			this.rotationYaw += (turningRight ? 5 : 0) - (turningLeft ? 5 : 0);
-			double acc = this.getPassengerMovingForward()*0.02;
+			double acc = this.getPassengerMovingForward()*0.2;
 			//RCS mode, steer like boat
 			float yawAngle = (float)(this.rotationYaw*Math.PI/180f);
 			this.motionX += acc*MathHelper.sin(-yawAngle);
 			this.motionY += (turningUp ? 0.02 : 0) - (turningDownforWhat ? 0.02 : 0);
 			this.motionZ += acc*MathHelper.cos(-yawAngle);
-			this.motionX *= 0.9;
-			this.motionY *= 0.9;
-			this.motionZ *= 0.9;
+			this.motionX *= 0.95;
+			this.motionY *= 0.95;
+			this.motionZ *= 0.95;
 			
-			this.spacePosition.world = DimensionManager.getInstance().getDimensionProperties(0);
+			//this.spacePosition.world = null;// DimensionManager.getInstance().getDimensionProperties(0);
 			spacePosition.x += this.motionX;
 			spacePosition.y += this.motionY;
 			spacePosition.z += this.motionZ;
+			//Check if close to a world
+			if(this.spacePosition.world == null && this.spacePosition.star != null)
+			{
+				for(IDimensionProperties properties : this.spacePosition.star.getPlanets())
+				{
+					SpacePosition worldSpacePosition = properties.getSpacePosition();
+					double distanceSq = this.spacePosition.distanceToSpacePosition2(worldSpacePosition);
+				
+					if(distanceSq < 100)
+					{
+						this.spacePosition.world = (DimensionProperties) properties;
+						
+						
+						//Radius to put the player
+						double radius = -180;
+						//Assume planet centered at 0
+						SpacePosition planetPosition = new SpacePosition();
+						double theta = Math.atan2(this.motionZ, this.motionX);
+						
+						this.spacePosition.x = planetPosition.x + Math.cos(theta)*radius;
+						this.spacePosition.y = planetPosition.y;
+						this.spacePosition.z = planetPosition.z + Math.sin(theta)*radius;
+						
+						break;
+					}
+				}
+			}
+			if(this.spacePosition.world != null)
+			{
+				double distanceSq = this.spacePosition.distanceToSpacePosition2(new SpacePosition());
+				
+				// transition to solar navigation
+				if(distanceSq > 40000*4)
+				{
+					//Radius to put the player
+					double radius = 12;
+					
+					SpacePosition planetPosition = this.spacePosition.world.getSpacePosition();
+					this.spacePosition.world = null;
+					
+					double theta = Math.atan2(this.motionZ, this.motionX);
+					
+					this.spacePosition.x = planetPosition.x + Math.cos(theta)*radius;
+					this.spacePosition.y = planetPosition.y;
+					this.spacePosition.z = planetPosition.z + Math.sin(theta)*radius;
+				}
+			}
 		}
 		else if(isInFlight()) {
 			boolean burningFuel = isBurningFuel();
@@ -1524,11 +1571,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 
 		setInOrbit(isInOrbit = nbt.getBoolean("orbit"));
-		rcs_mode = nbt.getBoolean("rcs_mode");
-		setRCS(rcs_mode);
 		rcs_mode_counter = nbt.getInteger("rcs_mode_cnt");
 		setInSpaceFlight(nbt.getBoolean("inSpaceFlight"));
-
+		rcs_mode = nbt.getBoolean("rcs_mode") || getInSpaceFlight();
+		setRCS(rcs_mode);
+		
 		stats.readFromNBT(nbt);
 
 		setFuelAmount(stats.getFuelAmount(FuelType.LIQUID));
@@ -1559,7 +1606,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 		lastDimensionFrom = nbt.getInteger("lastDimensionFrom");
 
-		//Satallite
+		// TODO: Fix spelling
+		//Satellite
 		if(nbt.hasKey("satallite")) {
 			NBTTagCompound satalliteNbt = nbt.getCompoundTag("satallite");
 			satallite = SatelliteRegistry.createFromNBT(satalliteNbt);

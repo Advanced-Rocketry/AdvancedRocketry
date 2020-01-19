@@ -175,7 +175,6 @@ public class RenderPlanetarySky extends IRenderHandler {
 		ResourceLocation parentPlanetIcon = null;
 		List<DimensionProperties> children;
 		StellarBody primaryStar = DimensionManager.getSol();
-		List<StellarBody> subStars = new LinkedList<StellarBody>();
 		celestialAngle = mc.world.getCelestialAngle(partialTicks);
 
 		Vec3d sunColor;
@@ -224,7 +223,6 @@ public class RenderPlanetarySky extends IRenderHandler {
 			if (primaryStar != null)
 			{
 				sunSize = properties.getStar().getSize();
-				subStars = properties.getStar().getSubStars();
 				starSeperation = properties.getStar().getStarSeparation();
 			}
 			if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
@@ -277,7 +275,6 @@ public class RenderPlanetarySky extends IRenderHandler {
 			if (primaryStar != null)
 			{
 				sunSize = properties.getStar().getSize();
-				subStars = properties.getStar().getSubStars();
 				starSeperation = properties.getStar().getStarSeparation();
 			}
 			if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
@@ -497,23 +494,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		//--------------------------- Draw the suns --------------------
 		if(!isWarp) {
 			//Set sun color and distance
-			drawStar(buffer, primaryStar, properties, solarOrbitalDistance, sunSize, sunColor, multiplier);
-
-			if(subStars != null && !subStars.isEmpty()) {
-				GL11.glPushMatrix();
-				float phaseInc = 360/subStars.size();
-
-				for(StellarBody subStar : subStars) {
-					GL11.glRotatef(phaseInc, 0, 1, 0);
-					GL11.glPushMatrix();
-
-					GL11.glRotatef(subStar.getStarSeparation()*(202-solarOrbitalDistance)/100f, 1, 0, 0);
-					float color[] = subStar.getColor();
-					drawStar(buffer, subStar , properties, solarOrbitalDistance, subStar.getSize(), new Vec3d(color[0], color[1], color[2]), multiplier);
-					GL11.glPopMatrix();
-				}
-				GL11.glPopMatrix();
-			}
+			drawStarAndSubStars(buffer, primaryStar, properties, solarOrbitalDistance, sunSize, sunColor, multiplier);
 
 		}
 		f10 = 20.0F;
@@ -823,6 +804,29 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 
 		GlStateManager.color(1f, 1f, 1f, 1f);
+	}
+	
+	protected void drawStarAndSubStars(BufferBuilder buffer, StellarBody sun, DimensionProperties properties, int solarOrbitalDistance, float sunSize, Vec3d sunColor, float multiplier)
+	{
+		drawStar(buffer, sun, properties, solarOrbitalDistance, sunSize, sunColor, multiplier);
+
+		List<StellarBody> subStars = sun.getSubStars();
+		
+		if(subStars != null && !subStars.isEmpty()) {
+			GL11.glPushMatrix();
+			float phaseInc = 360/subStars.size();
+
+			for(StellarBody subStar : subStars) {
+				GL11.glRotatef(phaseInc, 0, 1, 0);
+				GL11.glPushMatrix();
+
+				GL11.glRotatef(subStar.getStarSeparation()*(202-solarOrbitalDistance)/100f, 1, 0, 0);
+				float color[] = subStar.getColor();
+				drawStar(buffer, subStar , properties, solarOrbitalDistance, subStar.getSize(), new Vec3d(color[0], color[1], color[2]), multiplier);
+				GL11.glPopMatrix();
+			}
+			GL11.glPopMatrix();
+		}
 	}
 
 	protected void drawStar(BufferBuilder buffer, StellarBody sun, DimensionProperties properties, int solarOrbitalDistance, float sunSize, Vec3d sunColor, float multiplier) {

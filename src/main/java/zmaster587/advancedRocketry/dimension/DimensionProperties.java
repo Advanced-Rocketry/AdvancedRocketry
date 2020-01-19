@@ -1681,6 +1681,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		return ARConfiguration.getCurrentConfig().generateVanillaStructures && (generateStructuresSet ? canGenerateStructures : getAtmosphere().isBreathable());
 	}
 
+	// Relative to parent
 	@Override
 	public SpacePosition getSpacePosition() {
 	
@@ -1693,26 +1694,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		spacePosition.roll = 0;
 		spacePosition.yaw = 0;
 		
-		
-		if(isMoon())
-		{
-			SpacePosition parentPosition = null;
-			parentPosition = getParentProperties().getSpacePosition();
-			
-			spacePosition.x = getParentOrbitalDistance()*MathHelper.cos((float) orbitTheta);
-			spacePosition.y = 0;
-			spacePosition.z = getParentOrbitalDistance()*MathHelper.sin((float) orbitTheta);
-			
-			spacePosition.x += parentPosition.x;
-			spacePosition.y += parentPosition.y;
-			spacePosition.z += parentPosition.z;
-		}
-		else
-		{
-			spacePosition.x = orbitalDist*MathHelper.cos((float) orbitTheta);
-			spacePosition.y = 0;
-			spacePosition.z = orbitalDist*MathHelper.sin((float) orbitTheta);
-		}
+		spacePosition = spacePosition.getFromSpherical(orbitalDist + (isMoon() ? 100 : 0), orbitTheta);
 		
 		return spacePosition;
 	}
