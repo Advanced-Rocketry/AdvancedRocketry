@@ -457,8 +457,8 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 			{
 				if(property.getId() == playerPosition.world.getId())
 				{
-					float sizeScale = 2f*Math.max(property.getGravitationalMultiplier()*property.getGravitationalMultiplier(), .5f)*100;
-					SpacePosition spacePos = property.getSpacePosition();
+					float sizeScale = property.getRenderSizePlanetView();
+					//SpacePosition spacePos = property.getSpacePosition();
 					SpacePosition newSpacePos = new SpacePosition();
 					
 					renderPlanet(property, newSpacePos, playerPosition, sizeScale);
@@ -470,11 +470,11 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 					for(IDimensionProperties subproperty : subPlanets)
 					{
 						SpacePosition subPlanetPos = subproperty.getSpacePosition();
-						sizeScale = 0.1f*Math.max(property.getGravitationalMultiplier()*subproperty.getGravitationalMultiplier(), .5f)*100;
+						sizeScale = subproperty.getRenderSizePlanetView();
 						
-						subPlanetPos.x = subPlanetPos.x + spacePos.x;
-						subPlanetPos.y = subPlanetPos.y + spacePos.y;
-						subPlanetPos.z = subPlanetPos.z + spacePos.z;
+						subPlanetPos.x = subPlanetPos.x + newSpacePos.x;
+						subPlanetPos.y = subPlanetPos.y + newSpacePos.y;
+						subPlanetPos.z = subPlanetPos.z + newSpacePos.z;
 						
 
 						renderPlanet(subproperty, subPlanetPos, playerPosition, sizeScale);
@@ -491,11 +491,10 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 			for(IDimensionProperties property : planets)
 			{
 				SpacePosition spacePos = property.getSpacePosition();
-				float sizeScale = 0.1f*Math.max(property.getGravitationalMultiplier()*property.getGravitationalMultiplier(), .5f)*100;
+				float sizeScale = property.getRenderSizeSolarView();
 				double distance = getDistance(playerPosition, spacePos);
 				
 				sizeScale = property.isMoon() ? sizeScale*0.2f : sizeScale;
-
 				sizeScale*=100/(distance*distance);
 
 				renderPlanet(property, spacePos, playerPosition, sizeScale);
@@ -505,12 +504,12 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 				for(IDimensionProperties subproperty : subPlanets)
 				{
 					SpacePosition subPlanetPos = subproperty.getSpacePosition();
-					sizeScale = 0.1f*Math.max(property.getGravitationalMultiplier()*subproperty.getGravitationalMultiplier(), .5f)*100;
+					sizeScale = subproperty.getRenderSizeSolarView();
 
 					sizeScale*=10/(distance*distance);
 					
 					subPlanetPos.x = subPlanetPos.x/(distance*2.0f) + spacePos.x;
-					subPlanetPos.y = subPlanetPos.y/(distance*2f) + spacePos.y;
+					subPlanetPos.y = subPlanetPos.y/(distance*2.0f) + spacePos.y;
 					subPlanetPos.z = subPlanetPos.z/(distance*2.0f) + spacePos.z;
 					
 
@@ -636,6 +635,7 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 			GlStateManager.rotate( -(float)(spacePosition.world.getOrbitTheta() * 180/Math.PI), 0, 0, 1);
 
 		GlStateManager.disableTexture2D();
+		GlStateManager.disableFog();
 		float f18 = 1;
 		if (f18 > 0.0F)
 		{

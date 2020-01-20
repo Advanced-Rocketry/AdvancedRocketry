@@ -191,4 +191,8 @@ public interface IDimensionProperties {
 	// Client side only
 	public ResourceLocation getPlanetIconLEO();
 	
+	public float getRenderSizePlanetView();
+	
+	public float getRenderSizeSolarView();
+	
 }

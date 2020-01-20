@@ -1680,11 +1680,21 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public boolean canGenerateStructures() {
 		return ARConfiguration.getCurrentConfig().generateVanillaStructures && (generateStructuresSet ? canGenerateStructures : getAtmosphere().isBreathable());
 	}
-
+	
+	public float getRenderSizePlanetView()
+	{
+		return (isMoon() ? 0.1f : 2f)*Math.max(this.getGravitationalMultiplier()*this.getGravitationalMultiplier(), .5f)*100;
+	}
+	
+	public float getRenderSizeSolarView()
+	{
+		return 0.1f*Math.max(this.getGravitationalMultiplier()*this.getGravitationalMultiplier(), .5f)*100;
+	}
+	
 	// Relative to parent
 	@Override
 	public SpacePosition getSpacePosition() {
-	
+		float distanceMultiplier = 1f;
 		
 		SpacePosition spacePosition = new SpacePosition();
 		spacePosition.star = getStar();
@@ -1694,7 +1704,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		spacePosition.roll = 0;
 		spacePosition.yaw = 0;
 		
-		spacePosition = spacePosition.getFromSpherical(orbitalDist + (isMoon() ? 100 : 0), orbitTheta);
+		spacePosition = spacePosition.getFromSpherical(distanceMultiplier*orbitalDist + (isMoon() ? 100 : 0), orbitTheta);
 		
 		return spacePosition;
 	}

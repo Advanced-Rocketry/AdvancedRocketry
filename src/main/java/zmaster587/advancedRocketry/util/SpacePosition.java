@@ -58,8 +58,15 @@ public class SpacePosition {
 		subTag.setDouble("pitch", pitch);
 		subTag.setDouble("roll", roll);
 		
-		star = DimensionManager.getInstance().getStar(subTag.getInteger("star"));
-		world = DimensionManager.getInstance().getDimensionProperties(subTag.getInteger("star"));
+		if(subTag.hasKey("star"))
+			star = DimensionManager.getInstance().getStar(subTag.getInteger("star"));
+		else
+			star = null;
+		
+		if(subTag.hasKey("world"))
+			world = DimensionManager.getInstance().getDimensionProperties(subTag.getInteger("world"));
+		else
+			world = null;
 		
 		isInInterplanetarySpace = subTag.getBoolean("isInInterplanetarySpace");
 	}

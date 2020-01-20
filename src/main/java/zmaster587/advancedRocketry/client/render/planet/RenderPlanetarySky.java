@@ -225,6 +225,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 				sunSize = properties.getStar().getSize();
 				starSeperation = properties.getStar().getStarSeparation();
 			}
+			else
+				primaryStar = DimensionManager.getSol();
 			if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
 				if(isWarp) {
@@ -277,6 +279,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 				sunSize = properties.getStar().getSize();
 				starSeperation = properties.getStar().getStarSeparation();
 			}
+			else
+				primaryStar = DimensionManager.getSol();
 			if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
 				if(isWarp) {
