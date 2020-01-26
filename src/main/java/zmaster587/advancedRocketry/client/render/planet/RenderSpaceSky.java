@@ -6,6 +6,7 @@ import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.util.AstronomicalBodyHelper;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.client.Minecraft;
@@ -29,6 +30,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 	protected void renderPlanet2(Tessellator tessellator1, ResourceLocation icon, int locationX, int locationY, double zLevel, float planetOrbitalDistance, float alphaMultiplier, double angle, boolean hasAtmosphere, float[] atmColor, float[] ringColor, boolean isGasgiant, boolean hasRings)  {
 
 		ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
+		AstronomicalBodyHelper astronomicalBodyHelper = new AstronomicalBodyHelper();
 		
 		if(object == null)
 			return;
@@ -53,7 +55,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 		//int i1 = k / 4 % 2;
 
 		//Set planet Orbiting distance; size
-		float f10 = 100f*(200-planetOrbitalDistance)/100f;
+		float f10 = 100f*astronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance);
 
 		float Xoffset = (float)((System.currentTimeMillis()/1000000d % 1));
 
