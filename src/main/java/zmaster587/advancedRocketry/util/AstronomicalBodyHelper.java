@@ -4,11 +4,11 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 
 public class AstronomicalBodyHelper {
 	
-	public float getBodySizeMultiplier(float orbitalDistance) {
+	public static float getBodySizeMultiplier(float orbitalDistance) {
 		//Returns size multiplier relative to Earth standard (1AU = 100 Distance)
 		return 100f/orbitalDistance;
 	}
-	public double getOrbitalTheta(int orbitalDistance, float solarSize) {
+	public static double getOrbitalTheta(int orbitalDistance, float solarSize) {
 		//Gives output in MC Days, uses 40 for Orbital Mechanics G
 		//One MC Year is 48 days, one month is 8
 		double orbitalPeriod = 0;

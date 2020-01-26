@@ -38,7 +38,6 @@ public class RenderPlanetarySky extends IRenderHandler {
 	private int glSkyList2;
 	float celestialAngle;
 	Vector3F<Float> axis;
-	AstronomicalBodyHelper astronomicalBodyHelper = new AstronomicalBodyHelper();
 
 	//Mostly vanilla code
 	//TODO: make usable on other planets
@@ -481,7 +480,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 					GL11.glRotatef(phaseInc, 0, 1, 0);
 					GL11.glPushMatrix();
 					
-					GL11.glRotatef(subStar.getStarSeperation()*astronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance), 1, 0, 0);
+					GL11.glRotatef(subStar.getStarSeperation()*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance), 1, 0, 0);
 					float color[] = subStar.getColor();
 					drawStar(tessellator1, solarOrbitalDistance, subStar.getSize(), color[0], color[1], color[2], multiplier);
 					GL11.glPopMatrix();
@@ -546,7 +545,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 				OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, 1, 0);
 			}
-			renderPlanet2(tessellator1, parentPlanetIcon, 0,0,-100, astronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance), multiplier, rotation, hasAtmosphere, parentAtmColor, parentRingColor, isGasGiant, false);
+			renderPlanet2(tessellator1, parentPlanetIcon, 0,0,-100, AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance), multiplier, rotation, hasAtmosphere, parentAtmColor, parentRingColor, isGasGiant, false);
 
 			GL11.glPopMatrix();
 		}
@@ -665,7 +664,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 	}
 
 	protected void renderPlanet(Tessellator buffer, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing) {
-		renderPlanet2(buffer, icon, 0, 0, -100, 10f*astronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance), alphaMultiplier, shadowAngle, hasAtmosphere, skyColor, ringColor, gasGiant, hasRing);
+		renderPlanet2(buffer, icon, 0, 0, -100, 10f*AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance), alphaMultiplier, shadowAngle, hasAtmosphere, skyColor, ringColor, gasGiant, hasRing);
 	}
 
 	protected void renderPlanet2(Tessellator buffer, ResourceLocation icon, int locationX, int locationY, double zLevel, float size, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing) {
@@ -802,7 +801,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		DimensionProperties properties = (DimensionProperties)planetaryProvider.getDimensionProperties((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
 		GL11.glColor4f(r, g , b ,Math.min((multiplier)*2f,1f));
 		buffer.startDrawingQuads();
-		float f10 = sunSize*20f*astronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
+		float f10 = sunSize*20f*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
 		//multiplier = 2;
 		buffer.addVertexWithUV((double)(-f10), 100.0D, (double)(-f10), 0.0D, 0.0D);
 		buffer.addVertexWithUV((double)f10, 100.0D, (double)(-f10), 1.0D, 0.0D);

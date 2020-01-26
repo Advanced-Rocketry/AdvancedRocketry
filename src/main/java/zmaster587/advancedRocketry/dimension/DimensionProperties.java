@@ -819,10 +819,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	public void updateOrbit() {
 		StellarBody parentStar = new StellarBody();
-		AstronomicalBodyHelper astronomicalBodyHelper = new AstronomicalBodyHelper();
-		this.orbitTheta = astronomicalBodyHelper.getOrbitalTheta(orbitalDist, parentStar.getSize());
+		this.orbitTheta = AstronomicalBodyHelper.getOrbitalTheta(orbitalDist, parentStar.getSize());
 	}
-	
+
 
 	/**
 	 * @return true if this dimension is allowed to have rivers
