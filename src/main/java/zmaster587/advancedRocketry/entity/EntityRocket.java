@@ -25,6 +25,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
@@ -691,6 +692,71 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 		return blockpos;
 	}
+	
+	private Vec3d calculatePullFromPlanets()
+	{
+		double x = 0;
+		double y = 0;
+		double z = 0;
+		double gravityMultiplier = 0.01;
+		if(this.spacePosition.world != null)
+		{
+			 //Sun 
+			 // This is totally cheesed because none of the input is in real values anyway
+			 SpacePosition planetSpacePosition = new SpacePosition();
+			 double acceleration = 100*gravityMultiplier;
+			 double distanceSq = planetSpacePosition.distanceToSpacePosition2(this.spacePosition);
+			 
+			 double shipAcceleration = acceleration/distanceSq;
+			 
+			 Vec3d vector = this.spacePosition.getNormalVectorTo(planetSpacePosition);
+			 
+			 if(distanceSq > 0)
+			 {
+				 x += shipAcceleration*vector.x;
+				 y += shipAcceleration*vector.y;
+				 z += shipAcceleration*vector.z;
+			 }
+		}
+		else if(this.spacePosition.star != null)
+		{
+			 for(IDimensionProperties planet : this.spacePosition.star.getPlanets())
+			 {
+				 // This is totally cheesed because none of the input is in real values anyway
+				 SpacePosition planetSpacePosition = planet.getSpacePosition();
+				 double acceleration = planet.getGravitationalMultiplier()*9.81f*gravityMultiplier;
+				 double distanceSq = planet.getSpacePosition().distanceToSpacePosition2(this.spacePosition);
+				 
+				 double shipAcceleration = acceleration/distanceSq;
+				 
+				 Vec3d vector = this.spacePosition.getNormalVectorTo(planetSpacePosition);
+				 
+				 x += shipAcceleration*vector.x;
+				 y += shipAcceleration*vector.y;
+				 z += shipAcceleration*vector.z;
+				 
+			 }
+			 
+			 //Sun 
+			 // This is totally cheesed because none of the input is in real values anyway
+			 SpacePosition planetSpacePosition = new SpacePosition();
+			 double acceleration = 100*gravityMultiplier;
+			 double distanceSq = planetSpacePosition.distanceToSpacePosition2(this.spacePosition);
+			 
+			 double shipAcceleration = acceleration/distanceSq;
+			 
+			 Vec3d vector = this.spacePosition.getNormalVectorTo(planetSpacePosition);
+			 
+			 if(distanceSq > 0)
+			 {
+				 x += shipAcceleration*vector.x;
+				 y += shipAcceleration*vector.y;
+				 z += shipAcceleration*vector.z;
+			 }
+		}
+		
+		return new Vec3d(x,y,z);
+	}
 
 	@Override
 	public void onUpdate() {
@@ -792,17 +858,19 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		if(getInSpaceFlight())
 		{
 			this.rotationYaw += (turningRight ? 5 : 0) - (turningLeft ? 5 : 0);
-			double acc = this.getPassengerMovingForward()*0.2;
+			double acc = this.getPassengerMovingForward()*0.002;
 			//RCS mode, steer like boat
 			float yawAngle = (float)(this.rotationYaw*Math.PI/180f);
-			this.motionX += acc*MathHelper.sin(-yawAngle);
-			this.motionY += (turningUp ? 0.02 : 0) - (turningDownforWhat ? 0.02 : 0);
-			this.motionZ += acc*MathHelper.cos(-yawAngle);
-			this.motionX *= 0.95;
-			this.motionY *= 0.95;
-			this.motionZ *= 0.95;
+			Vec3d planetPull = calculatePullFromPlanets();
+			this.motionX += acc*MathHelper.sin(-yawAngle) + planetPull.x;
+			this.motionY += (turningUp ? 0.02 : 0) - (turningDownforWhat ? 0.02 : 0) + planetPull.y;
+			this.motionZ += acc*MathHelper.cos(-yawAngle)  + planetPull.z;
 			
-			//this.spacePosition.world = null;// DimensionManager.getInstance().getDimensionProperties(0);
+			//this.motionX *= 0.95;
+			//this.motionY *= 0.95;
+			//this.motionZ *= 0.95;
+			
+			
 			spacePosition.x += this.motionX;
 			spacePosition.y += this.motionY;
 			spacePosition.z += this.motionZ;
@@ -837,24 +905,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			else if(this.spacePosition.world != null)
 			{
 				double distanceSq = this.spacePosition.distanceToSpacePosition2(new SpacePosition());
-				
-				// transition to solar navigation
-				if(distanceSq > 40000*8)
-				{
-					//Radius to put the player
-					double radius = 12;
-					
-					SpacePosition planetPosition = this.spacePosition.world.getSpacePosition();
-					this.spacePosition.world = null;
-					
-					double theta = Math.atan2(this.motionZ, this.motionX);
-					
-					this.spacePosition.x = planetPosition.x + Math.cos(theta)*radius;
-					this.spacePosition.y = planetPosition.y;
-					this.spacePosition.z = planetPosition.z + Math.sin(theta)*radius;
-				}
 				//Land, only handle on server
-				if(!world.isRemote)
+				if(!world.isRemote && false)
 				{
 					if(distanceSq < 0.5f*spacePosition.world.getRenderSizePlanetView()*spacePosition.world.getRenderSizePlanetView())
 					{
@@ -884,6 +936,25 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 							}
 						}
 					}
+				}
+				// transition to solar navigation, this comes after, prevent NPE, client only
+				else if(distanceSq > 40000*8)
+				{
+					//Radius to put the player
+					double radius = 20;
+					
+					SpacePosition planetPosition = this.spacePosition.world.getSpacePosition();
+					this.spacePosition.world = null;
+					
+					double theta = Math.atan2(this.motionZ, this.motionX);
+					
+					this.spacePosition.x = planetPosition.x + Math.cos(theta)*radius;
+					this.spacePosition.y = planetPosition.y;
+					this.spacePosition.z = planetPosition.z + Math.sin(theta)*radius;
+					
+					this.motionX *=0.1;
+					this.motionY *=0.1;
+					this.motionZ *=0.1;
 				}
 			}
 			

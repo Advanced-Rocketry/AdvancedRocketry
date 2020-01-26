@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.util;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.Vec3d;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -69,6 +70,19 @@ public class SpacePosition {
 			world = null;
 		
 		isInInterplanetarySpace = subTag.getBoolean("isInInterplanetarySpace");
+	}
+	
+	public Vec3d getNormalVectorTo(SpacePosition other)
+	{
+		double x,y,z;
+		
+		double distance = Math.sqrt(this.distanceToSpacePosition2(other));
+		
+		x = (other.x - this.x )/distance;
+		y = (other.y - this.y )/distance;
+		z = (other.z - this.z )/distance;
+		
+		return new Vec3d(x,y,z);
 	}
 	
 	public SpacePosition getFromSpherical(double radius, double theta)
