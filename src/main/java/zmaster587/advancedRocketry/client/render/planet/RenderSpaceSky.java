@@ -19,6 +19,7 @@ import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.util.AstronomicalBodyHelper;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.Vector3F;
 
@@ -71,7 +72,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 			//Set sun color and distance
 			GlStateManager.color((float)1, (float).5 , (float).4 ,1f);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
-			f10 = size*2f*(202-planetOrbitalDistance)/100f;
+			f10 = size*2f*(AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance);
 			//multiplier = 2;
 			buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
 			buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
@@ -93,7 +94,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 				
 				GlStateManager.color((float)1, (float).5 , (float).4 ,1f);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
-				f10 = size*40f*(202-planetOrbitalDistance)/100f;
+				f10 = size*40f*AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance);
 				buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
 				buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
 				buffer.pos((double)f10, 0.0D, (double)f10).tex(1.0D, 1.0D).endVertex();
@@ -109,7 +110,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 				
 				GlStateManager.color((float)0.8, (float).7 , (float).4 ,1f);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
-				f10 = size*30f*(202-planetOrbitalDistance)/100f;
+				f10 = size*30f*AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance);
 				//multiplier = 2;
 				buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
 				buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
@@ -126,7 +127,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 				
 				GlStateManager.color((float)0.2, (float).4 , (float)1 ,1f);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
-				f10 = size*15f*(202-planetOrbitalDistance)/100f;
+				f10 = size*15f*AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance);
 				//multiplier = 2;
 				buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
 				buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
@@ -161,7 +162,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 		//int i1 = k / 4 % 2;
 
 		//Set planet Orbiting distance; size
-		float f10 = 100f*(200-planetOrbitalDistance)/100f;
+		float f10 = 100f*AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance);
 
 		float Xoffset = (float)((System.currentTimeMillis()/1000000d % 1));
 

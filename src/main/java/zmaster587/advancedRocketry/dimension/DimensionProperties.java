@@ -36,6 +36,7 @@ import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketSatellite;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.OreGenProperties;
+import zmaster587.advancedRocketry.util.AstronomicalBodyHelper;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.libVulpes.network.PacketHandler;
@@ -176,8 +177,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public static final int MAX_ATM_PRESSURE = 200;
 	public static final int MIN_ATM_PRESSURE = 0;
 
-	public static final int MAX_DISTANCE = 200;
-	public static final int MIN_DISTANCE = 0;
+	public static final int MAX_DISTANCE = Integer.MAX_VALUE;
+	public static final int MIN_DISTANCE = 1;
 
 	public static final int MAX_GRAVITY = 200;
 	public static final int MIN_GRAVITY = 0;
@@ -882,8 +883,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 
 	public void updateOrbit() {
-		this.prevOrbitalTheta = this.orbitTheta;
-		this.orbitTheta = (AdvancedRocketry.proxy.getWorldTimeUniversal(0)*(201-orbitalDist)*0.000002d) % (2*Math.PI);
+		StellarBody parentStar = new StellarBody();
+		this.orbitTheta = AstronomicalBodyHelper.getOrbitalTheta(orbitalDist, parentStar.getSize());
 	}
 
 	/**
