@@ -797,8 +797,6 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 	private void drawStar(Tessellator buffer, int solarOrbitalDistance, float sunSize, float r, float g, float b, float multiplier) {
 		//Set sun color and distance
-		IPlanetaryProvider planetaryProvider = (IPlanetaryProvider)mc.theWorld.provider;
-		DimensionProperties properties = (DimensionProperties)planetaryProvider.getDimensionProperties((int)mc.thePlayer.posX, (int)mc.thePlayer.posZ);
 		GL11.glColor4f(r, g , b ,Math.min((multiplier)*2f,1f));
 		buffer.startDrawingQuads();
 		float f10 = sunSize*20f*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
