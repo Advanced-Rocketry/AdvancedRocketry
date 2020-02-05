@@ -148,7 +148,7 @@ curseforge{
     }
     changelog = file('changelog.html')
     changelogType = 'html'
-    releaseType = "beat"
+    releaseType = "beta"
     addGameVersion minecraft.version
     mainArtifact(jar) {
       displayName = "AdvancedRocketry ${project.version} build " + project.getBuildNumber() +  " for " + minecraft.version
