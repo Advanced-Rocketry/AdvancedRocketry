@@ -326,18 +326,25 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				}
 			}
 			else if(dimid != Constants.INVALID_PLANET && dimid != SpaceObjectManager.WARPDIMID) {
-				displayStr = DimensionManager.getInstance().getDimensionProperties(dimid).getName();
-				Vector3F<Float> loc = storage.getDestinationCoordinates(dimid, false);
-				if(loc != null)
-				{
-					String name = storage.getDestinationName(dimid);
-					if(!name.isEmpty())
-						displayStr += String.format("\n%s: %s", LibVulpes.proxy.getLocalizedString("msg.label.destName"), name);
-					displayStr += String.format("\n%s: %.0f, %.0f", LibVulpes.proxy.getLocalizedString("msg.label.coords"), loc.x, loc.z);
-				}
-				else
-				{
-					displayStr += "\nCoords: ???, ???";
+
+				boolean goingToOrbit = ARConfiguration.getCurrentConfig().experimentalSpaceFlight && dimid != Constants.INVALID_PLANET;
+
+				if(goingToOrbit)
+					displayStr = "Orbit";
+				else {
+					displayStr = DimensionManager.getInstance().getDimensionProperties(dimid).getName();
+					Vector3F<Float> loc = storage.getDestinationCoordinates(dimid, false);
+					if(loc != null)
+					{
+						String name = storage.getDestinationName(dimid);
+						if(!name.isEmpty())
+							displayStr += String.format("\n%s: %s", LibVulpes.proxy.getLocalizedString("msg.label.destName"), name);
+						displayStr += String.format("\n%s: %.0f, %.0f", LibVulpes.proxy.getLocalizedString("msg.label.coords"), loc.x, loc.z);
+					}
+					else
+					{
+						displayStr += "\nCoords: ???, ???";
+					}
 				}
 			}
 		}
@@ -697,7 +704,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 		return blockpos;
 	}
-	
+
 	private Vec3d calculatePullFromPlanets()
 	{
 		double x = 0;
@@ -706,60 +713,60 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		double gravityMultiplier = 0.01;
 		if(this.spacePosition.world != null)
 		{
-			 //Sun 
-			 // This is totally cheesed because none of the input is in real values anyway
-			 SpacePosition planetSpacePosition = new SpacePosition();
-			 double acceleration = 100*gravityMultiplier;
-			 double distanceSq = planetSpacePosition.distanceToSpacePosition2(this.spacePosition);
-			 
-			 double shipAcceleration = acceleration/distanceSq;
-			 
-			 Vec3d vector = this.spacePosition.getNormalVectorTo(planetSpacePosition);
-			 
-			 if(distanceSq > 0)
-			 {
-				 x += shipAcceleration*vector.x;
-				 y += shipAcceleration*vector.y;
-				 z += shipAcceleration*vector.z;
-			 }
+			//Sun 
+			// This is totally cheesed because none of the input is in real values anyway
+			SpacePosition planetSpacePosition = new SpacePosition();
+			double acceleration = 100*gravityMultiplier;
+			double distanceSq = planetSpacePosition.distanceToSpacePosition2(this.spacePosition);
+
+			double shipAcceleration = acceleration/distanceSq;
+
+			Vec3d vector = this.spacePosition.getNormalVectorTo(planetSpacePosition);
+
+			if(distanceSq > 0)
+			{
+				x += shipAcceleration*vector.x;
+				y += shipAcceleration*vector.y;
+				z += shipAcceleration*vector.z;
+			}
 		}
 		else if(this.spacePosition.star != null)
 		{
-			 for(IDimensionProperties planet : this.spacePosition.star.getPlanets())
-			 {
-				 // This is totally cheesed because none of the input is in real values anyway
-				 SpacePosition planetSpacePosition = planet.getSpacePosition();
-				 double acceleration = planet.getGravitationalMultiplier()*9.81f*gravityMultiplier;
-				 double distanceSq = planet.getSpacePosition().distanceToSpacePosition2(this.spacePosition);
-				 
-				 double shipAcceleration = acceleration/distanceSq;
-				 
-				 Vec3d vector = this.spacePosition.getNormalVectorTo(planetSpacePosition);
-				 
-				 x += shipAcceleration*vector.x;
-				 y += shipAcceleration*vector.y;
-				 z += shipAcceleration*vector.z;
-				 
-			 }
-			 
-			 //Sun 
-			 // This is totally cheesed because none of the input is in real values anyway
-			 SpacePosition planetSpacePosition = new SpacePosition();
-			 double acceleration = 100*gravityMultiplier;
-			 double distanceSq = planetSpacePosition.distanceToSpacePosition2(this.spacePosition);
-			 
-			 double shipAcceleration = acceleration/distanceSq;
-			 
-			 Vec3d vector = this.spacePosition.getNormalVectorTo(planetSpacePosition);
-			 
-			 if(distanceSq > 0)
-			 {
-				 x += shipAcceleration*vector.x;
-				 y += shipAcceleration*vector.y;
-				 z += shipAcceleration*vector.z;
-			 }
+			for(IDimensionProperties planet : this.spacePosition.star.getPlanets())
+			{
+				// This is totally cheesed because none of the input is in real values anyway
+				SpacePosition planetSpacePosition = planet.getSpacePosition();
+				double acceleration = planet.getGravitationalMultiplier()*9.81f*gravityMultiplier;
+				double distanceSq = planet.getSpacePosition().distanceToSpacePosition2(this.spacePosition);
+
+				double shipAcceleration = acceleration/distanceSq;
+
+				Vec3d vector = this.spacePosition.getNormalVectorTo(planetSpacePosition);
+
+				x += shipAcceleration*vector.x;
+				y += shipAcceleration*vector.y;
+				z += shipAcceleration*vector.z;
+
+			}
+
+			//Sun 
+			// This is totally cheesed because none of the input is in real values anyway
+			SpacePosition planetSpacePosition = new SpacePosition();
+			double acceleration = 100*gravityMultiplier;
+			double distanceSq = planetSpacePosition.distanceToSpacePosition2(this.spacePosition);
+
+			double shipAcceleration = acceleration/distanceSq;
+
+			Vec3d vector = this.spacePosition.getNormalVectorTo(planetSpacePosition);
+
+			if(distanceSq > 0)
+			{
+				x += shipAcceleration*vector.x;
+				y += shipAcceleration*vector.y;
+				z += shipAcceleration*vector.z;
+			}
 		}
-		
+
 		return new Vec3d(x,y,z);
 	}
 
@@ -824,7 +831,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 		if(this.ticksExisted > DESCENT_TIMER && isInOrbit() && !isInFlight())
 			setInFlight(true);
-		
+
 		//Hackish crap to make clients mount entities immediately after server transfer and fire events
 		//Known race condition... screw me...
 		if(!world.isRemote && (this.isInFlight() || this.isInOrbit()) && this.ticksExisted  == 20) {
@@ -859,9 +866,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			launchCount--;
 			this.dataManager.set(LAUNCH_COUNTER, launchCount);
 		}
+
 		
+		// When flying around in space
 		if(getInSpaceFlight())
 		{
+			double distanceFromPlanetToLeaveOrbitMult = 24.0;
+			
 			this.rotationYaw += (turningRight ? 5 : 0) - (turningLeft ? 5 : 0);
 			double acc = 10*this.getPassengerMovingForward()*0.2;
 			//RCS mode, steer like boat
@@ -870,16 +881,16 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			this.motionX += acc*MathHelper.sin(-yawAngle) + planetPull.x;
 			this.motionY += (turningUp ? 0.02 : 0) - (turningDownforWhat ? 0.02 : 0) + planetPull.y;
 			this.motionZ += acc*MathHelper.cos(-yawAngle)  + planetPull.z;
-			
+
 			this.motionX *= 0.9;
 			this.motionY *= 0.9;
 			this.motionZ *= 0.9;
-			
-			
+
+
 			spacePosition.x += this.motionX;
 			spacePosition.y += this.motionY;
 			spacePosition.z += this.motionZ;
-			
+
 			//Check if close to a world
 			if(this.spacePosition.world == null && this.spacePosition.star != null)
 			{
@@ -887,22 +898,22 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				{
 					SpacePosition worldSpacePosition = properties.getSpacePosition();
 					double distanceSq = this.spacePosition.distanceToSpacePosition2(worldSpacePosition);
-				
+
 					if(distanceSq < properties.getRenderSizeSolarView()*properties.getRenderSizeSolarView()*8)
 					{
 						this.spacePosition.world = (DimensionProperties) properties;
-						
-						
+
+
 						//Radius to put the player
 						double radius = -properties.getRenderSizePlanetView()*2;
 						//Assume planet centered at 0
 						SpacePosition planetPosition = new SpacePosition();
 						double theta = Math.atan2(this.motionZ, this.motionX);
-						
+
 						this.spacePosition.x = planetPosition.x + Math.cos(theta)*radius;
 						this.spacePosition.y = planetPosition.y;
 						this.spacePosition.z = planetPosition.z + Math.sin(theta)*radius;
-						
+
 						break;
 					}
 				}
@@ -911,12 +922,15 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			{
 				double distanceSq = this.spacePosition.distanceToSpacePosition2(new SpacePosition());
 				//Land, only handle on server
-				if(!world.isRemote && false)
+				if(!world.isRemote)
 				{
 					if(distanceSq < 0.5f*spacePosition.world.getRenderSizePlanetView()*spacePosition.world.getRenderSizePlanetView())
 					{
 						this.destinationDimId = spacePosition.world.getId();
 						this.setRCS(false);
+						this.motionX = 0;
+						this.motionZ = 0;
+						this.motionY = 1; // +1 because it gets inverted later
 						rcs_mode = false;
 						rcs_mode_counter = 0;
 						reachSpaceManned();
@@ -928,7 +942,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 						for(int subId : spacePosition.world.getChildPlanets())
 						{
 							DimensionProperties subPlanetProperties = DimensionManager.getInstance().getDimensionProperties(subId);
-							
+
 							distanceSq = this.spacePosition.distanceToSpacePosition2(subPlanetProperties.getSpacePosition());
 							if(distanceSq < 0.5f*subPlanetProperties.getRenderSizePlanetView()*subPlanetProperties.getRenderSizePlanetView())
 							{
@@ -943,20 +957,20 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					}
 				}
 				// transition to solar navigation, this comes after, prevent NPE, client only
-				else if(distanceSq > this.spacePosition.world.getRenderSizePlanetView()*this.spacePosition.world.getRenderSizePlanetView()*8)
+				else if(distanceSq > this.spacePosition.world.getRenderSizePlanetView()*this.spacePosition.world.getRenderSizePlanetView()*distanceFromPlanetToLeaveOrbitMult*distanceFromPlanetToLeaveOrbitMult)
 				{
 					//Radius to put the player
 					double radius = this.spacePosition.world.getRenderSizeSolarView()*10;
-					
+
 					SpacePosition planetPosition = this.spacePosition.world.getSpacePosition();
 					this.spacePosition.world = null;
-					
+
 					double theta = Math.atan2(this.motionZ, this.motionX);
-					
+
 					this.spacePosition.x = planetPosition.x + Math.cos(theta)*radius;
 					this.spacePosition.y = planetPosition.y;
 					this.spacePosition.z = planetPosition.z + Math.sin(theta)*radius;
-					
+
 					this.motionX *=0.1;
 					this.motionY *=0.1;
 					this.motionZ *=0.1;
@@ -1277,26 +1291,24 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	{
 		unpackSatellites();
 		Vector3F<Float> destPos = new Vector3F<Float>(0f, 0f, 0f);
-		
+
 		// Update space position
 		if(ARConfiguration.getCurrentConfig().experimentalSpaceFlight && hasHumanPassenger() && !getInSpaceFlight())
 		{
 			DimensionProperties currentDim = DimensionManager.getInstance().getDimensionProperties( this.world.provider.getDimension());
-			
+
 			// Get top level planet
 			while(currentDim.isMoon()) currentDim = currentDim.getParentProperties();
-			
+
 			SpacePosition planetSpacePos = currentDim.getSpacePosition();
-			
-			SpacePosition modifiedPosition = planetSpacePos.getFromSpherical(200, 0);
-			
+
+			SpacePosition modifiedPosition = new SpacePosition().getFromSpherical(currentDim.getRenderSizePlanetView()*1.1, 0);
+
 			spacePosition.x = modifiedPosition.x;
 			spacePosition.y = modifiedPosition.y;
 			spacePosition.z = modifiedPosition.z;
 			spacePosition.star = planetSpacePos.star;
-			
-			
-			
+
 			spacePosition.world = planetSpacePos.world;
 			setInSpaceFlight(true);
 			setRCS(true);
@@ -1307,9 +1319,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 			destinationDimId = ARConfiguration.getCurrentConfig().spaceDimId;
 			destPos.x = 0f;
-			destPos.y = 10000f;
+			destPos.y = (float) ARConfiguration.getCurrentConfig().orbit;
 			destPos.z = 0f;
-			
+
 			for(Entity e : getPassengers())
 			{
 				if(e instanceof EntityPlayer)
@@ -1463,48 +1475,57 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		if(isInFlight())
 			return;
 
-		//Get destination dimid and lock the computer
-		//TODO: lock the computer
-		destinationDimId = storage.getDestinationDimId(world.provider.getDimension(), (int)this.posX, (int)this.posZ);
+		boolean allowLaunch = false;
 
-		//TODO: make sure this doesn't break asteriod mining
-		if(!(DimensionManager.getInstance().canTravelTo(destinationDimId) || (destinationDimId == Constants.INVALID_PLANET && storage.getSatelliteHatches().size() != 0))) {
-			setError(LibVulpes.proxy.getLocalizedString("error.rocket.cannotGetThere"));
-			return;
-		}
 
-		int finalDest = destinationDimId;
-		if(destinationDimId == ARConfiguration.getCurrentConfig().spaceDimId) {
-			ISpaceObject obj = null;
-			Vector3F<Float> vec = storage.getDestinationCoordinates(destinationDimId,false);
+		if(!(ARConfiguration.getCurrentConfig().experimentalSpaceFlight && storage.getSatelliteHatches().size() == 0))
+		{
 
-			if(vec != null)
-				obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(vec.x, vec.y, vec.z));
+			//Get destination dimid and lock the computer
+			//TODO: lock the computer
+			destinationDimId = storage.getDestinationDimId(world.provider.getDimension(), (int)this.posX, (int)this.posZ);
 
-			if( obj != null)
-				finalDest = obj.getOrbitingPlanetId();
-			else { 
-				setError(LibVulpes.proxy.getLocalizedString("error.rocket.destinationNotExist"));
+			//TODO: make sure this doesn't break asteriod mining
+			if(!(DimensionManager.getInstance().canTravelTo(destinationDimId) || (destinationDimId == Constants.INVALID_PLANET && storage.getSatelliteHatches().size() != 0))) {
+				setError(LibVulpes.proxy.getLocalizedString("error.rocket.cannotGetThere"));
+				return;
+			}
+
+			int finalDest = destinationDimId;
+			if(destinationDimId == ARConfiguration.getCurrentConfig().spaceDimId) {
+				ISpaceObject obj = null;
+				Vector3F<Float> vec = storage.getDestinationCoordinates(destinationDimId,false);
+
+				if(vec != null)
+					obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(vec.x, vec.y, vec.z));
+
+				if( obj != null)
+					finalDest = obj.getOrbitingPlanetId();
+				else { 
+					setError(LibVulpes.proxy.getLocalizedString("error.rocket.destinationNotExist"));
+					return;
+				}
+			}
+
+			//If we're on a space station get the id of the planet, not the station
+			int thisDimId = this.world.provider.getDimension();
+			if(this.world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
+				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.getPosition());
+				if(object != null)
+					thisDimId = object.getProperties().getParentProperties().getId();
+			}
+
+			//Check to see if it's possible to reach
+			if(finalDest != Constants.INVALID_PLANET && (!storage.hasWarpCore() || DimensionManager.getInstance().getDimensionProperties(finalDest).getStarId() != DimensionManager.getInstance().getDimensionProperties(thisDimId).getStarId()) && !DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, thisDimId)) {
+				setError(LibVulpes.proxy.getLocalizedString("error.rocket.notSameSystem"));
 				return;
 			}
 		}
-
-		//If we're on a space station get the id of the planet, not the station
-		int thisDimId = this.world.provider.getDimension();
-		if(this.world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
-			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.getPosition());
-			if(object != null)
-				thisDimId = object.getProperties().getParentProperties().getId();
-		}
-
-		//Check to see if it's possible to reach
-		if(finalDest != Constants.INVALID_PLANET && (!storage.hasWarpCore() || DimensionManager.getInstance().getDimensionProperties(finalDest).getStarId() != DimensionManager.getInstance().getDimensionProperties(thisDimId).getStarId()) && !DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, thisDimId)) {
-			setError(LibVulpes.proxy.getLocalizedString("error.rocket.notSameSystem"));
-			return;
-		}
+		else
+			allowLaunch = true;
 
 		//TODO: Clean this logic a bit?
-		if(!stats.hasSeat() || ((DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || destinationDimId == ARConfiguration.getCurrentConfig().spaceDimId || destinationDimId == 0) ) { //Abort if destination is invalid
+		if(allowLaunch || !stats.hasSeat() || ((DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || destinationDimId == ARConfiguration.getCurrentConfig().spaceDimId || destinationDimId == 0) ) { //Abort if destination is invalid
 
 
 			setInFlight(true);
@@ -1736,7 +1757,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			NBTTagCompound satalliteNbt = nbt.getCompoundTag("satallite");
 			satallite = SatelliteRegistry.createFromNBT(satalliteNbt);
 		}
-		
+
 		spacePosition.readFromNBT(nbt);
 	}
 
@@ -1819,15 +1840,15 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			position.x = in.readDouble();
 			position.y = in.readDouble();
 			position.z = in.readDouble();
-			
+
 			boolean hasWorld = in.readBoolean();
 			if(hasWorld)
 				position.world = DimensionManager.getInstance().getDimensionProperties(in.readInt());
-			
+
 			boolean hasStar = in.readBoolean();
 			if(hasStar)
 				position.star = DimensionManager.getInstance().getStar(in.readInt());
-			
+
 			position.writeToNBT(nbt);
 		}
 	}
@@ -1862,7 +1883,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			out.writeDouble(this.spacePosition.z);
 			boolean hasWorld = this.spacePosition.world != null;
 			boolean hasStar = this.spacePosition.star != null;
-			
+
 			out.writeBoolean(hasWorld);
 			if(hasWorld)
 				out.writeInt(spacePosition.world.getId());

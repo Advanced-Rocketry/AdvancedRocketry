@@ -475,9 +475,9 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 						SpacePosition subPlanetPos = subproperty.getSpacePosition();
 						sizeScale = subproperty.getRenderSizePlanetView();
 						
-						subPlanetPos.x = 5*subPlanetPos.x + newSpacePos.x;
-						subPlanetPos.y = 5*subPlanetPos.y + newSpacePos.y;
-						subPlanetPos.z = 5*subPlanetPos.z + newSpacePos.z;
+						subPlanetPos.x = subPlanetPos.x + newSpacePos.x;
+						subPlanetPos.y = subPlanetPos.y + newSpacePos.y;
+						subPlanetPos.z = subPlanetPos.z + newSpacePos.z;
 						
 
 						renderPlanet(subproperty, subPlanetPos, playerPosition, sizeScale);
@@ -509,9 +509,9 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 
 					//sizeScale*=10/(distance*distance);
 					
-					subPlanetPos.x = subPlanetPos.x + spacePos.x;
-					subPlanetPos.y = subPlanetPos.y + spacePos.y;
-					subPlanetPos.z = subPlanetPos.z + spacePos.z;
+					subPlanetPos.x = subPlanetPos.x/10f + spacePos.x;
+					subPlanetPos.y = subPlanetPos.y/10f + spacePos.y;
+					subPlanetPos.z = subPlanetPos.z/10f + spacePos.z;
 					
 
 					renderPlanet(subproperty, subPlanetPos, playerPosition, sizeScale);
@@ -584,10 +584,6 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 		        buffer.pos((double)f5 + avec3d[1].x, (double)f6 + avec3d[1].y, (double)f7 + avec3d[1].z).tex((double)f1, (double)f2).endVertex();
 		        buffer.pos((double)f5 + avec3d[2].x, (double)f6 + avec3d[2].y, (double)f7 + avec3d[2].z).tex((double)f, (double)f2).endVertex();
 		        buffer.pos((double)f5 + avec3d[3].x, (double)f6 + avec3d[3].y, (double)f7 + avec3d[3].z).tex((double)f, (double)f3).endVertex();
-		        
-		        
-		        
-				
 			}
 			Tessellator.getInstance().draw();
 			
