@@ -819,7 +819,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 		if(this.ticksExisted > DESCENT_TIMER && isInOrbit() && !isInFlight())
 			setInFlight(true);
-
+		
 		//Hackish crap to make clients mount entities immediately after server transfer and fire events
 		//Known race condition... screw me...
 		if(!world.isRemote && (this.isInFlight() || this.isInOrbit()) && this.ticksExisted  == 20) {
@@ -858,17 +858,17 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		if(getInSpaceFlight())
 		{
 			this.rotationYaw += (turningRight ? 5 : 0) - (turningLeft ? 5 : 0);
-			double acc = this.getPassengerMovingForward()*0.002;
+			double acc = 10*this.getPassengerMovingForward()*0.2;
 			//RCS mode, steer like boat
 			float yawAngle = (float)(this.rotationYaw*Math.PI/180f);
-			Vec3d planetPull = calculatePullFromPlanets();
+			Vec3d planetPull = Vec3d.ZERO; //calculatePullFromPlanets();
 			this.motionX += acc*MathHelper.sin(-yawAngle) + planetPull.x;
 			this.motionY += (turningUp ? 0.02 : 0) - (turningDownforWhat ? 0.02 : 0) + planetPull.y;
 			this.motionZ += acc*MathHelper.cos(-yawAngle)  + planetPull.z;
 			
-			//this.motionX *= 0.95;
-			//this.motionY *= 0.95;
-			//this.motionZ *= 0.95;
+			this.motionX *= 0.9;
+			this.motionY *= 0.9;
+			this.motionZ *= 0.9;
 			
 			
 			spacePosition.x += this.motionX;
@@ -883,13 +883,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					SpacePosition worldSpacePosition = properties.getSpacePosition();
 					double distanceSq = this.spacePosition.distanceToSpacePosition2(worldSpacePosition);
 				
-					if(distanceSq < 200)
+					if(distanceSq < properties.getRenderSizeSolarView()*properties.getRenderSizeSolarView()*8)
 					{
 						this.spacePosition.world = (DimensionProperties) properties;
 						
 						
 						//Radius to put the player
-						double radius = -480;
+						double radius = -properties.getRenderSizePlanetView()*2;
 						//Assume planet centered at 0
 						SpacePosition planetPosition = new SpacePosition();
 						double theta = Math.atan2(this.motionZ, this.motionX);
@@ -938,10 +938,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					}
 				}
 				// transition to solar navigation, this comes after, prevent NPE, client only
-				else if(distanceSq > 40000*8)
+				else if(distanceSq > this.spacePosition.world.getRenderSizePlanetView()*this.spacePosition.world.getRenderSizePlanetView()*8)
 				{
 					//Radius to put the player
-					double radius = 20;
+					double radius = this.spacePosition.world.getRenderSizeSolarView()*10;
 					
 					SpacePosition planetPosition = this.spacePosition.world.getSpacePosition();
 					this.spacePosition.world = null;
@@ -957,14 +957,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					this.motionZ *=0.1;
 				}
 			}
-			
 			// Update server of location
 			if(this.world.isRemote && this.world.getTotalWorldTime() % 20 == 0)
 				PacketHandler.sendToServer(new PacketEntity((INetworkEntity)this,(byte)PacketType.SENDSPACEPOS.ordinal()));
-			
-			//TODO: move
-			if(world.isRemote)
-				ClientRenderHelper.setOverridenRenderDistance(16);
 		}
 		else if(isInFlight()) {
 			boolean burningFuel = isBurningFuel();

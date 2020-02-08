@@ -15,8 +15,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.IRenderHandler;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.Project;
 
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
@@ -230,7 +232,7 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 
 		if(entity.isBlackHole())
 		{
-			float sunSize = entity.getDisplayRadius()/500f;
+			float sunSize = entity.getDisplayRadius()/50f;
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(position.x,position.y,position.z);
 
@@ -335,6 +337,7 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(position.x,position.y,position.z);
+			GlStateManager.scale(10, 10, 10);
 
 			//RenderHelper.setupPlayerFacingMatrix(getDistance(playerSpacePosition, position)*getDistance(playerSpacePosition, position), playerSpacePosition.x, playerSpacePosition.y, playerSpacePosition.z);
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.locationSunNew);
@@ -472,15 +475,13 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 						SpacePosition subPlanetPos = subproperty.getSpacePosition();
 						sizeScale = subproperty.getRenderSizePlanetView();
 						
-						subPlanetPos.x = subPlanetPos.x + newSpacePos.x;
-						subPlanetPos.y = subPlanetPos.y + newSpacePos.y;
-						subPlanetPos.z = subPlanetPos.z + newSpacePos.z;
+						subPlanetPos.x = 5*subPlanetPos.x + newSpacePos.x;
+						subPlanetPos.y = 5*subPlanetPos.y + newSpacePos.y;
+						subPlanetPos.z = 5*subPlanetPos.z + newSpacePos.z;
 						
 
 						renderPlanet(subproperty, subPlanetPos, playerPosition, sizeScale);
 					}
-					
-					
 					break;
 				}
 			}
@@ -495,7 +496,7 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 				double distance = getDistance(playerPosition, spacePos);
 				
 				sizeScale = property.isMoon() ? sizeScale*0.2f : sizeScale;
-				sizeScale*=100/(distance*distance);
+				//sizeScale*=100/(distance*distance);
 
 				renderPlanet(property, spacePos, playerPosition, sizeScale);
 				List<IDimensionProperties> subPlanets = new LinkedList<IDimensionProperties>();
@@ -506,11 +507,11 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 					SpacePosition subPlanetPos = subproperty.getSpacePosition();
 					sizeScale = subproperty.getRenderSizeSolarView();
 
-					sizeScale*=10/(distance*distance);
+					//sizeScale*=10/(distance*distance);
 					
-					subPlanetPos.x = subPlanetPos.x/(distance*2.0f) + spacePos.x;
-					subPlanetPos.y = subPlanetPos.y/(distance*2.0f) + spacePos.y;
-					subPlanetPos.z = subPlanetPos.z/(distance*2.0f) + spacePos.z;
+					subPlanetPos.x = subPlanetPos.x + spacePos.x;
+					subPlanetPos.y = subPlanetPos.y + spacePos.y;
+					subPlanetPos.z = subPlanetPos.z + spacePos.z;
 					
 
 					renderPlanet(subproperty, subPlanetPos, playerPosition, sizeScale);
@@ -561,12 +562,11 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 				float sizeScale = 0.1f*Math.max(property.getGravitationalMultiplier()*property.getGravitationalMultiplier(), .5f)*100;
 				double distance = getDistance(playerPosition, spacePos);
 
-				sizeScale*=100/(distance*distance);
 				float f = 0;
 		        float f1 = 1;
 		        float f2 = 0;
 		        float f3 = 1;
-		        float f4 = 2F; //scale
+		        float f4 = 200F; //scale
 
 		        float f5 = (float) spacePos.x;
 		        float f6 = (float) spacePos.y;
@@ -596,18 +596,36 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 			for(IDimensionProperties property : planets)
 			{
 				SpacePosition spacePos = property.getSpacePosition();
-				double distance = getDistance(playerPosition, spacePos);
-				RenderHelper.renderTag(distance, property.getName(), spacePos.x, spacePos.y, spacePos.z, 55,10);
+				float distance = (float)getDistance(playerPosition, spacePos);
+				RenderHelper.renderTag(distance, property.getName(), spacePos.x, spacePos.y, spacePos.z, 200, distance/10f);
 			}
 			GlStateManager.popMatrix();
 			GlStateManager.enableBlend();
 		}
 	}
+	
+	private void setupSpaceCam(float partialTicks)
+	{
+		GlStateManager.matrixMode(5889);
+		GlStateManager.loadIdentity();
+		
+		float fov = this.mc.gameSettings.fovSetting; // Should really be  this.getFOVModifier(partialTicks, true), but that's private
+		Project.gluPerspective(fov, (float)this.mc.displayWidth / (float)this.mc.displayHeight, 0.05F, 100000);
+		GlStateManager.matrixMode(5888);
+	}
+	
+	
+	// This actually gets taken care of inside render entity, keeping around in case it's needed later
+	private void undoSpaceCam(float partialTicks) {
+		float fov = this.mc.gameSettings.fovSetting; // Should really be  this.getFOVModifier(partialTicks, true), but that's private
+		float farplane = this.mc.gameSettings.renderDistanceChunks * 16; // this.farPlaneDistance = (float)(this.mc.gameSettings.renderDistanceChunks * 16);
+		Project.gluPerspective(fov, (float)this.mc.displayWidth / (float)this.mc.displayHeight, 0.05F, farplane * MathHelper.SQRT_2);
+	}
 
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc) {
-
 		//Get player position first
+		setupSpaceCam(partialTicks);
 		SpacePosition spacePosition = null;
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		if(player == null)
@@ -681,7 +699,7 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 
 		GlStateManager.popMatrix();
 		GlStateManager.pushMatrix();
-
+		
 		GL11.glTranslated(-spacePosition.x, -spacePosition.y, -spacePosition.z);
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0f);
 

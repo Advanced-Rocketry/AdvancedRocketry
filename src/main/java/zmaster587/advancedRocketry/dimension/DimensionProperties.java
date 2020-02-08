@@ -913,7 +913,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	public void updateOrbit() {
 		this.prevOrbitalTheta = this.orbitTheta;
-		this.orbitTheta = (AdvancedRocketry.proxy.getWorldTimeUniversal(0)*(201-orbitalDist)*0.000002d) % (2*Math.PI);
+		//this.orbitTheta = (AdvancedRocketry.proxy.getWorldTimeUniversal(0)*(201-orbitalDist)*0.000002d) % (2*Math.PI);
 	}
 
 	/**
@@ -1683,18 +1683,18 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	
 	public float getRenderSizePlanetView()
 	{
-		return (isMoon() ? 0.1f : 2f)*Math.max(this.getGravitationalMultiplier()*this.getGravitationalMultiplier(), .5f)*100;
+		return (isMoon() ? 0.2f : 10f)*Math.max(this.getGravitationalMultiplier()*this.getGravitationalMultiplier(), .5f)*100;
 	}
 	
 	public float getRenderSizeSolarView()
 	{
-		return 0.1f*Math.max(this.getGravitationalMultiplier()*this.getGravitationalMultiplier(), .5f)*100;
+		return (isMoon() ? 0.2f : 1f)*Math.max(this.getGravitationalMultiplier()*this.getGravitationalMultiplier(), .5f)*100;
 	}
 	
 	// Relative to parent
 	@Override
 	public SpacePosition getSpacePosition() {
-		float distanceMultiplier = 1f;
+		float distanceMultiplier = isMoon() ? 1f : 100f;
 		
 		SpacePosition spacePosition = new SpacePosition();
 		spacePosition.star = getStar();
