@@ -8,8 +8,10 @@ package zmaster587.advancedRocketry.tile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -26,6 +28,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
@@ -290,7 +293,19 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 							IBlockState state = world.getBlockState(currBlockPos);
 							Block block = state.getBlock();
 
+							if(ARConfiguration.getCurrentConfig().blackListRocketBlocks.contains(block))
+							{
+								if(!block.isReplaceable(world, currBlockPos))
+								{
+									invalidBlock = true;
+									if(!world.isRemote)
+										PacketHandler.sendToNearby(new PacketInvalidLocationNotify(new HashedBlockPosition(xCurr, yCurr, zCurr)), world.provider.getDimension(), getPos(), 64);
+								}
+								continue;
+							}
+							
 							numBlocks++;
+							
 							//If rocketEngine increaseThrust
 							if(block instanceof IRocketEngine) {
 								thrust += ((IRocketEngine)block).getThrust(world, currBlockPos);
@@ -315,13 +330,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 								hasSatellite = true;
 							if(tile instanceof TileGuidanceComputer)
 								hasGuidance = true;
-							
-							if(ARConfiguration.getCurrentConfig().blackListRocketBlocks.contains(block))
-							{
-								invalidBlock = true;
-								if(!world.isRemote)
-									PacketHandler.sendToNearby(new PacketInvalidLocationNotify(new HashedBlockPosition(xCurr, yCurr, zCurr)), world.provider.getDimension(), getPos(), 64);
-							}
+								
 						}
 					}
 				}
@@ -351,6 +360,28 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	}
 
 
+	private void removeReplaceableBlocks(AxisAlignedBB bb)
+	{
+		for(int yCurr = (int) bb.minY; yCurr <= bb.maxY; yCurr++) {
+			for(int xCurr = (int) bb.minX; xCurr <= bb.maxX; xCurr++) {
+				for(int zCurr = (int) bb.minZ; zCurr <= bb.maxZ; zCurr++) {
+
+					BlockPos currBlockPos = new BlockPos(xCurr, yCurr, zCurr);
+
+					if(!world.isAirBlock(currBlockPos)) {
+						IBlockState state = world.getBlockState(currBlockPos);
+						Block block = state.getBlock();
+						if(ARConfiguration.getCurrentConfig().blackListRocketBlocks.contains(block) && block.isReplaceable(world, currBlockPos))
+						{
+							if(!world.isRemote)
+								world.setBlockToAir(currBlockPos);
+						}
+					}
+				}
+			}
+		}
+	}
+
 	public void assembleRocket() {
 
 		if(bbCache == null || world.isRemote)
@@ -360,6 +391,9 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 		if(status != ErrorCodes.SUCCESS)
 			return;
+
+		// Remove replacable blocks that don't belong on the rocket
+		removeReplaceableBlocks(bbCache);
 
 		StorageChunk storageChunk;
 		try {
@@ -912,6 +946,14 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			return;
 		EntityRocketBase rocket = (EntityRocketBase)event.getEntity();
 
+		
+		//This apparently happens sometimes
+		if(world == null)
+		{
+			AdvancedRocketry.logger.debug("World null for rocket builder during rocket land event @ " + this.pos);
+			return;
+		}
+		
 		if(getBBCache() == null) {
 			bbCache = getRocketPadBounds(world, pos);
 		}

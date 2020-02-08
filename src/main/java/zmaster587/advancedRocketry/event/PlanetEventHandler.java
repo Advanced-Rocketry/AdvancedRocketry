@@ -257,8 +257,7 @@ public class PlanetEventHandler {
 	public void disconnected(ClientDisconnectionFromServerEvent event) {
 		// Reload configs from disk
 		ARConfiguration.useClientDiskConfig();
-		zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
-		ClientRenderHelper.RestoreRenderDistance();
+		//zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
 	}
 
 

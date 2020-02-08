@@ -368,6 +368,11 @@ public class ARConfiguration {
 
 	public static ARConfiguration getCurrentConfig()
 	{
+		if(currentConfig == null)
+		{
+			logger.error("Had to generate a new config, this shouldn't happen");
+			return new ARConfiguration();
+		}
 		return currentConfig;
 	}
 
@@ -383,8 +388,11 @@ public class ARConfiguration {
 
 	public static void useClientDiskConfig()
 	{
-		currentConfig = diskConfig;
-		usingServerConfig = false;
+		if(usingServerConfig)
+		{
+			currentConfig = diskConfig;
+			usingServerConfig = false;
+		}
 	}
 
 	public void save()
@@ -434,7 +442,8 @@ public class ARConfiguration {
 		arConfig.spaceLaserPowerMult = (float)config.get(Configuration.CATEGORY_GENERAL, "LaserDrillPowerMultiplier", 1d, "Power multiplier for the laser drill machine").getDouble();
 		arConfig.lowGravityBoots = config.get(Configuration.CATEGORY_GENERAL, "lowGravityBoots", false, "If true the boots only protect the player on planets with low gravity").getBoolean();
 		arConfig.jetPackThrust = (float)config.get(Configuration.CATEGORY_GENERAL, "jetPackForce", 1.3, "Amount of force the jetpack provides with respect to gravity, 1 is the same acceleration as caused by Earth's gravity, 2 is 2x the acceleration caused by Earth's gravity, etc.  To make jetpack only work on low gravity planets, simply set it to a value less than 1").getDouble();
-
+		arConfig.orbit = config.getInt("OrbitHeight", Configuration.CATEGORY_GENERAL, 1000, 255, Integer.MAX_VALUE, "How high the rocket has to go before it reaches orbit");
+		
 		arConfig.enableTerraforming = config.get(Configuration.CATEGORY_GENERAL, "EnableTerraforming", true,"Enables terraforming items and blocks").getBoolean();
 		arConfig.oxygenVentPowerMultiplier = config.get(Configuration.CATEGORY_GENERAL, "OxygenVentPowerMultiplier", 1.0f, "Power consumption multiplier for the oxygen vent", 0, Float.MAX_VALUE).getDouble();
 		arConfig.spaceSuitOxygenTime = config.get(Configuration.CATEGORY_GENERAL, "spaceSuitO2Buffer", 30, "Maximum time in minutes that the spacesuit's internal buffer can store O2 for").getInt();
@@ -542,7 +551,7 @@ public class ARConfiguration {
 		sealableBlockWhiteList = config.getStringList("sealableBlockWhiteList", Configuration.CATEGORY_GENERAL, new String[] {}, "Blocks that are not automatically detected as sealable but should seal.  Format \"Mod:Blockname\"  for example \"minecraft:chest\"");
 		sealableBlockBlackList = config.getStringList("sealableBlockBlackList", Configuration.CATEGORY_GENERAL, new String[] {}, "Blocks that are automatically detected as sealable but should not seal.  Format \"Mod:Blockname\"  for example \"minecraft:chest\"");
 
-		blackListRocketBlocksStr = config.getStringList("rocketBlockBlackList", Configuration.CATEGORY_GENERAL, new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
+		blackListRocketBlocksStr = config.getStringList("rocketBlockBlackList", Configuration.CATEGORY_GENERAL, new String[] {"minecraft:portal","minecraft:bedrock", "minecraft:snow_layer", "minecraft:water", "minecraft:flowing_water", "minecraft:lava", "minecraft:flowing_lava"}, "Mod:Blockname  for example \"minecraft:chest\"");
 		breakableTorches = config.getStringList("torchBlocks", Configuration.CATEGORY_GENERAL, new String[] {}, "Mod:Blockname  for example \"minecraft:chest\"");
 
 		//Enriched Lava in the centrifuge

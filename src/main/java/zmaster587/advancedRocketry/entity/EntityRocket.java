@@ -106,7 +106,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	private static final int STATION_LOC_OFFSET = 50;
 	private static final int ENGINE_IGNITION_CNT = 100;
 	private ModuleText landingPadDisplayText;
-	private SpacePosition spacePosition;
 
 
 	protected long lastWorldTickTicked;
@@ -118,6 +117,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	private int autoDescendTimer;
 	protected ModulePlanetSelector container;
 	boolean acceptedPacket = false;
+	SpacePosition spacePosition;
 
 	//0 to 100, 100 is fully rotated and ready to go, 0 is normal mode
 	private int rcs_mode_counter = 0;
@@ -543,12 +543,12 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				return false;
 			}
 
-			else if((FluidUtils.containsFluid(heldItem) && (fluidStack = FluidUtils.getFluidForItem(heldItem)) != null && (fuelMult = FuelRegistry.instance.getMultiplier(FuelType.LIQUID, fluidStack.getFluid())) > 0 )) { 
-
-
+			else if((FluidUtils.containsFluid(heldItem) 
+					&& (fluidStack = FluidUtils.getFluidForItem(heldItem)) != null 
+					&& (fuelMult = FuelRegistry.instance.getMultiplier(FuelType.LIQUID, fluidStack.getFluid())) > 0 )
+					&& getFuelCapacity() - getFuelAmount() != 0) {
 				int amountToAdd = (int) (fuelMult*fluidStack.amount);
-				this.addFuelAmount(amountToAdd);
-
+				boolean isDrainSuccessful = false;
 				//if the player is not in creative then try to use the fluid container
 				if(!player.capabilities.isCreativeMode) {
 					heldItem = heldItem.copy();
@@ -559,12 +559,17 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 					if(player.inventory.addItemStackToInventory(emptyStack)) {
 						player.getHeldItem(EnumHand.MAIN_HAND).splitStack(1);
+						isDrainSuccessful = true;
 						if(player.getHeldItem(EnumHand.MAIN_HAND).isEmpty())
 							player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY); 
 					}
 
 				}
+				else
+					isDrainSuccessful = true;
 
+				if(isDrainSuccessful)
+					this.addFuelAmount(amountToAdd);
 				return true;
 			}
 		}
@@ -1359,7 +1364,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					DimensionManager.hasReachedMoon = true;
 				}
 			}
-			
 			destPos.y = (float) ARConfiguration.getCurrentConfig().orbit;
 		}
 
@@ -1696,7 +1700,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		setInSpaceFlight(nbt.getBoolean("inSpaceFlight"));
 		rcs_mode = nbt.getBoolean("rcs_mode") || getInSpaceFlight();
 		setRCS(rcs_mode);
-		
 		stats.readFromNBT(nbt);
 
 		setFuelAmount(stats.getFuelAmount(FuelType.LIQUID));
