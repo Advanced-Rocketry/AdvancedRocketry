@@ -28,6 +28,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
@@ -945,6 +946,14 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			return;
 		EntityRocketBase rocket = (EntityRocketBase)event.getEntity();
 
+		
+		//This apparently happens sometimes
+		if(world == null)
+		{
+			AdvancedRocketry.logger.debug("World null for rocket builder during rocket land event @ " + this.pos);
+			return;
+		}
+		
 		if(getBBCache() == null) {
 			bbCache = getRocketPadBounds(world, pos);
 		}
