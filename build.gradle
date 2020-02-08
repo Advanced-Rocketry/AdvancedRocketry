@@ -148,13 +148,13 @@ curseforge{
     }
     changelog = file('changelog.html')
     changelogType = 'html'
-    releaseType = "alpha"
+    releaseType = "beta"
     addGameVersion minecraft.version
     mainArtifact(jar) {
-      displayName = "AdvancedRocketry ${project.version}-UNSTABLE build " + project.getBuildNumber() +  " for " + minecraft.version
+      displayName = "AdvancedRocketry ${project.version} build " + project.getBuildNumber() +  " for " + minecraft.version
     }
     addArtifact (deobfJar){
-    	 displayName = "AdvancedRocketry ${project.version}-UNSTABLE-deobf build " + project.getBuildNumber() + " for " + minecraft.version
+    	 displayName = "AdvancedRocketry ${project.version}-deobf build " + project.getBuildNumber() + " for " + minecraft.version
     }
    }
 }
@@ -182,7 +182,6 @@ task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     gitHubIssuePattern = "nonada123";
     templateContent = """
 {{#tags}}
-<h1> Highly untested and may break world</h1>
   <h3>{{name}}</h3>
   <ul>
     {{#commits}}
