@@ -7,7 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
@@ -29,8 +29,8 @@ public class BlockWarpCore extends BlockMultiblockMachine {
 		if(!world.isRemote && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 		
-			if(spaceObj instanceof SpaceObject)
-				((SpaceObject)spaceObj).addWarpCore(new HashedBlockPosition(pos));
+			if(spaceObj instanceof SpaceStationObject)
+				((SpaceStationObject)spaceObj).addWarpCore(new HashedBlockPosition(pos));
 		}
 	}
 	
@@ -42,8 +42,8 @@ public class BlockWarpCore extends BlockMultiblockMachine {
 		
 		if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-			if(spaceObj instanceof SpaceObject)
-				((SpaceObject)spaceObj).removeWarpCore(new HashedBlockPosition(pos));
+			if(spaceObj instanceof SpaceStationObject)
+				((SpaceStationObject)spaceObj).removeWarpCore(new HashedBlockPosition(pos));
 		}
 	}
 }

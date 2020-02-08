@@ -63,7 +63,7 @@ import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.mission.MissionOreMining;
 import zmaster587.advancedRocketry.network.PacketSatellite;
-import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
@@ -2013,14 +2013,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		if( slot0 != null && slot0.getItem() instanceof ItemStationChip && (uuid = ItemStationChip.getUUID(slot0)) != 0) {
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStation(uuid);
 
-			if(obj instanceof SpaceObject) {
+			if(obj instanceof SpaceStationObject) {
 
 				if(padIndex == -1) {
 					storage.getGuidanceComputer().setLandingLocation(uuid, null);
 				}
 				else {
 
-					StationLandingLocation location = ((SpaceObject) obj).getLandingPads().get(padIndex);
+					StationLandingLocation location = ((SpaceStationObject) obj).getLandingPads().get(padIndex);
 					if(location != null && !location.getOccupied())
 						storage.getGuidanceComputer().setLandingLocation(uuid, location);
 				}
@@ -2129,7 +2129,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				list2.add(button);
 
 				int i = 1;
-				for( StationLandingLocation pos : ((SpaceObject)obj).getLandingPads()) 
+				for( StationLandingLocation pos : ((SpaceStationObject)obj).getLandingPads()) 
 				{
 					button = new ModuleButton(0, i*18, i + STATION_LOC_OFFSET, pos.toString(), this, TextureResources.buttonGeneric, 72, 18);
 					list2.add(button);

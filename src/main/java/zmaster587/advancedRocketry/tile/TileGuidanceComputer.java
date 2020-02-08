@@ -17,7 +17,7 @@ import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.item.ItemStationChip.LandingLocation;
-import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.StationLandingLocation;
 import zmaster587.libVulpes.api.LibVulpesItems;
@@ -77,7 +77,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		if(myLoc == null)
 			return null;
 		
-		return ((SpaceObject)obj).getPadAtLocation(myLoc);
+		return ((SpaceStationObject)obj).getPadAtLocation(myLoc);
 	}
 
 	public long getTargetSatellite() {
@@ -163,15 +163,15 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 					//TODO: handle Exception
 					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(ItemStationChip.getUUID(stack));
 					HashedBlockPosition vec = null;
-					if(object instanceof SpaceObject) {
+					if(object instanceof SpaceStationObject) {
 						if(landingLoc.get(object.getId()) != null) {
 							vec = landingLoc.get(object.getId());
 
 							if(commit)
-								((SpaceObject)object).getPadAtLocation(landingLoc.get(object.getId())).setOccupied(true);
+								((SpaceStationObject)object).getPadAtLocation(landingLoc.get(object.getId())).setOccupied(true);
 						}
 						else
-							vec = ((SpaceObject)object).getNextLandingPad(commit);
+							vec = ((SpaceStationObject)object).getNextLandingPad(commit);
 					}
 
 					if(object == null)

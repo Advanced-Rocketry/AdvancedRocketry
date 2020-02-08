@@ -33,7 +33,7 @@ import zmaster587.libVulpes.util.HashedBlockPosition;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class SpaceObject implements ISpaceObject, IPlanetDefiner {
+public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	private int launchPosX, launchPosZ, posX, posZ;
 	private boolean created;
 	private int altitude;
@@ -54,7 +54,7 @@ public class SpaceObject implements ISpaceObject, IPlanetDefiner {
 	private DimensionProperties properties;
 	public boolean hasWarpCores = false;
 
-	public SpaceObject() {
+	public SpaceStationObject() {
 		properties = (DimensionProperties) zmaster587.advancedRocketry.dimension.DimensionManager.defaultSpaceDimensionProperties.clone();
 		spawnLocations = new LinkedList<StationLandingLocation>();
 		warpCoreLocation = new LinkedList<HashedBlockPosition>(); 

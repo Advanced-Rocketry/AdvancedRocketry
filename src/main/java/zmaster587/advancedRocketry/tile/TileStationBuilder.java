@@ -14,7 +14,7 @@ import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.item.ItemPackedStructure;
 import zmaster587.advancedRocketry.item.ItemStationChip;
-import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.LibVulpes;
@@ -114,9 +114,9 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 			}
 
 			ItemStack outputStack;
-			SpaceObject object = null;
+			SpaceStationObject object = null;
 			if(storedId == null) {
-				object = new SpaceObject();
+				object = new SpaceStationObject();
 				SpaceObjectManager.getSpaceManager().registerSpaceObject(object, Constants.INVALID_PLANET);
 
 				outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStation,1);

@@ -29,7 +29,7 @@ import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
 import zmaster587.advancedRocketry.item.ItemData;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
-import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.tile.multiblock.TileWarpCore;
 import zmaster587.advancedRocketry.util.IDataInventory;
@@ -54,7 +54,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 	protected ModulePlanetSelector container;
 	private ModuleText canWarp;
 	DimensionProperties dimCache;
-	private SpaceObject station;
+	private SpaceStationObject station;
 	private static final int ARTIFACT_BEGIN_RANGE = 4, ARTIFACT_END_RANGE = 8;
 	ModulePanetImage srcPlanetImg, dstPlanetImg;
 	ModuleSync sync1, sync2, sync3;
@@ -79,11 +79,11 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 	}
 
 
-	private SpaceObject getSpaceObject() {
+	private SpaceStationObject getSpaceObject() {
 		if(station == null && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-			if(object instanceof SpaceObject)
-				station = (SpaceObject) object;
+			if(object instanceof SpaceStationObject)
+				station = (SpaceStationObject) object;
 		}
 		return station;
 	}
@@ -268,7 +268,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 		}
 		else if (ID == guiId.MODULARFULLSCREEN.ordinal()) {
 			//Open planet selector menu
-			SpaceObject station = getSpaceObject();
+			SpaceStationObject station = getSpaceObject();
 			int starId = 0;
 			if(station != null)
 				starId = station.getProperties().getParentProperties().getStar().getId();
@@ -346,7 +346,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 
 
 			warpFuel.setText(LibVulpes.proxy.getLocalizedString("msg.warpmon.fuelcost") + (warpCost < Integer.MAX_VALUE ? String.valueOf(warpCost) : LibVulpes.proxy.getLocalizedString("msg.warpmon.na")));
-			warpCapacity.setText(LibVulpes.proxy.getLocalizedString("msg.warpmon.fuel") + (isOnStation ? ((SpaceObject)station).getFuelAmount() : LibVulpes.proxy.getLocalizedString("msg.warpmon.na")));
+			warpCapacity.setText(LibVulpes.proxy.getLocalizedString("msg.warpmon.fuel") + (isOnStation ? ((SpaceStationObject)station).getFuelAmount() : LibVulpes.proxy.getLocalizedString("msg.warpmon.na")));
 
 
 
@@ -449,7 +449,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				player.openGui(LibVulpes.instance, guiId.MODULARNOINV.ordinal(), world, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
 		}
 		else if(id == 2) {
-			final SpaceObject station = getSpaceObject();
+			final SpaceStationObject station = getSpaceObject();
 
 			if(station != null && station.hasUsableWarpCore() && station.useFuel(getTravelCost()) != 0 && meetsArtifactReq(DimensionManager.getInstance().getDimensionProperties(station.getDestOrbitingBody()))) {
 				SpaceObjectManager.getSpaceManager().moveStationToBody(station, station.getDestOrbitingBody(), Math.max(Math.min(getTravelCost()*5, 5000),0));
@@ -491,7 +491,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				progress = 0;
 		}
 		else if(id == PROGRAMFROMCHIP) {
-			SpaceObject obj = getSpaceObject();
+			SpaceStationObject obj = getSpaceObject();
 			if(obj != null) {
 				ItemStack stack = getStackInSlot(PLANETSLOT);
 				if(stack != null && stack.getItem() instanceof ItemPlanetIdentificationChip) {
@@ -857,7 +857,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 			progress++;
 			if(progress >= MAX_PROGRESS) {
 				//Do the thing
-				SpaceObject obj = getSpaceObject();
+				SpaceStationObject obj = getSpaceObject();
 				if(Math.abs(world.rand.nextInt()) % ARConfiguration.getCurrentConfig().planetDiscoveryChance == 0 && obj != null) {
 					ItemStack stack = getStackInSlot(PLANETSLOT);
 					if(stack != null && stack.getItem() instanceof ItemPlanetIdentificationChip) {
@@ -905,7 +905,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 
 	@Override
 	public boolean isPlanetKnown(IDimensionProperties properties) {
-		SpaceObject obj = getSpaceObject();
+		SpaceStationObject obj = getSpaceObject();
 		if(obj != null)
 			return obj.isPlanetKnown(properties);
 		return false;
@@ -914,7 +914,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 
 	@Override
 	public boolean isStarKnown(StellarBody body) {
-		SpaceObject obj = getSpaceObject();
+		SpaceStationObject obj = getSpaceObject();
 		if(obj != null)
 			return obj.isStarKnown(body);
 		return false;

@@ -25,7 +25,7 @@ import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketPreLaunchEvent;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.entity.EntityRocket;
-import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.StationLandingLocation;
 import zmaster587.libVulpes.LibVulpes;
@@ -190,8 +190,8 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 				ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
-				if(spaceObj instanceof SpaceObject) {
-					((SpaceObject)spaceObj).setPadStatus(pos, false);
+				if(spaceObj instanceof SpaceStationObject) {
+					((SpaceStationObject)spaceObj).setPadStatus(pos, false);
 				}
 			}
 		}
@@ -201,14 +201,14 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 		if(!world.isRemote && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
-			if(spaceObj instanceof SpaceObject) {
-				((SpaceObject)spaceObj).addLandingPad(pos, name);
+			if(spaceObj instanceof SpaceStationObject) {
+				((SpaceStationObject)spaceObj).addLandingPad(pos, name);
 
 				AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
 				List<EntityRocketBase> rockets = world.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
 
 				if(rockets != null && !rockets.isEmpty())
-					((SpaceObject)spaceObj).setPadStatus(pos, true);
+					((SpaceStationObject)spaceObj).setPadStatus(pos, true);
 			}
 		}
 	}
@@ -217,8 +217,8 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 		if(!world.isRemote && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
-			if(spaceObj instanceof SpaceObject) {
-				((SpaceObject)spaceObj).setLandingPadAutoLandStatus(pos, allow);
+			if(spaceObj instanceof SpaceStationObject) {
+				((SpaceStationObject)spaceObj).setLandingPadAutoLandStatus(pos, allow);
 			}
 		}
 	}
@@ -226,8 +226,8 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	public void unregisterTileWithStation(World world, BlockPos pos) {
 		if(!world.isRemote && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-			if(spaceObj instanceof SpaceObject)
-				((SpaceObject)spaceObj).removeLandingPad(pos);
+			if(spaceObj instanceof SpaceStationObject)
+				((SpaceStationObject)spaceObj).removeLandingPad(pos);
 		}
 	}
 
@@ -339,12 +339,12 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			if(!world.isRemote && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 				ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
-				if(spaceObj instanceof SpaceObject) {
-					StationLandingLocation loc = ((SpaceObject)spaceObj).getPadAtLocation(new HashedBlockPosition(pos));
+				if(spaceObj instanceof SpaceStationObject) {
+					StationLandingLocation loc = ((SpaceStationObject)spaceObj).getPadAtLocation(new HashedBlockPosition(pos));
 					if(loc != null)
-						((SpaceObject)spaceObj).setPadName(this.world, new HashedBlockPosition(pos), name);
+						((SpaceStationObject)spaceObj).setPadName(this.world, new HashedBlockPosition(pos), name);
 					else
-						((SpaceObject)spaceObj).addLandingPad(pos, name);
+						((SpaceStationObject)spaceObj).addLandingPad(pos, name);
 				}
 			}
 		}

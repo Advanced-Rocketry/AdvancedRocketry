@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.*;
@@ -149,8 +149,8 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 		if(!world.isRemote && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
-			if(spaceObj instanceof SpaceObject) {
-				((SpaceObject)spaceObj).addDockingPosition(pos, myIdStr);
+			if(spaceObj instanceof SpaceStationObject) {
+				((SpaceStationObject)spaceObj).addDockingPosition(pos, myIdStr);
 			}
 		}
 	}
@@ -158,8 +158,8 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 	public void unregisterTileWithStation(World world, BlockPos pos) {
 		if(!world.isRemote && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-			if(spaceObj instanceof SpaceObject)
-				((SpaceObject)spaceObj).removeDockingPosition(pos);
+			if(spaceObj instanceof SpaceStationObject)
+				((SpaceStationObject)spaceObj).removeDockingPosition(pos);
 		}
 	}
 
@@ -193,8 +193,8 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 			if(!world.isRemote && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 				ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
-				if(spaceObj instanceof SpaceObject) {
-					((SpaceObject)spaceObj).addDockingPosition(pos, myIdStr);
+				if(spaceObj instanceof SpaceStationObject) {
+					((SpaceStationObject)spaceObj).addDockingPosition(pos, myIdStr);
 				}
 			}
 		}

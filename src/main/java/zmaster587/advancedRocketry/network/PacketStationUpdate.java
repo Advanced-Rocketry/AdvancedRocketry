@@ -10,7 +10,7 @@ import net.minecraft.util.EnumFacing;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
-import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.network.BasePacket;
 
@@ -41,7 +41,7 @@ public class PacketStationUpdate extends BasePacket {
 	public PacketStationUpdate() {}
 
 	public PacketStationUpdate(ISpaceObject dimProperties, Type type) {
-		this.spaceObject = (SpaceObject)dimProperties;
+		this.spaceObject = (SpaceStationObject)dimProperties;
 		this.stationNumber = dimProperties.getId();
 		this.type = type;
 	}
@@ -59,8 +59,8 @@ public class PacketStationUpdate extends BasePacket {
 			out.writeInt(spaceObject.getOrbitingPlanetId());
 			break;
 		case FUEL_UPDATE:
-			if(spaceObject instanceof SpaceObject)
-				out.writeInt(((SpaceObject)spaceObject).getFuelAmount());
+			if(spaceObject instanceof SpaceStationObject)
+				out.writeInt(((SpaceStationObject)spaceObject).getFuelAmount());
 			break;
 		case ROTANGLE_UPDATE:
 			out.writeDouble(spaceObject.getRotation(EnumFacing.EAST));
@@ -148,8 +148,8 @@ public class PacketStationUpdate extends BasePacket {
 			spaceObject.setOrbitingBody(destOrbitingBody);
 			break;
 		case FUEL_UPDATE:
-			if(spaceObject instanceof SpaceObject)
-				((SpaceObject)spaceObject).setFuelAmount(fuel);
+			if(spaceObject instanceof SpaceStationObject)
+				((SpaceStationObject)spaceObject).setFuelAmount(fuel);
 			break;
 		case ROTANGLE_UPDATE:
 			spaceObject.setRotation(rx, EnumFacing.EAST);
