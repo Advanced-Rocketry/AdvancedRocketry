@@ -481,7 +481,9 @@ public class ARConfiguration {
 		arConfig.oxygenVentConsumptionMult = config.get(Configuration.CATEGORY_GENERAL, "oxygenVentConsumptionMultiplier", 1f, "Multiplier on how much O2 an oxygen vent consumes per tick").getDouble();
 		arConfig.gravityAffectsFuel = config.get(Configuration.CATEGORY_GENERAL, "gravityAffectsFuels", true, "If true planets with higher gravity require more fuel and lower gravity would require less").getBoolean();
 		arConfig.allowZeroGSpacestations = config.get(Configuration.CATEGORY_GENERAL, "allowZeroGSpacestations", false, "If true players will be able to completely disable gravity on spacestation.  It's possible to get stuck and require a teleport, you have been warned!").getBoolean();
-
+		arConfig.experimentalSpaceFlight = config.get(Configuration.CATEGORY_GENERAL, "experimentalSpaceFlight", false, "If true, rockets will be able to actually fly around space, EXPERIMENTAL").getBoolean();
+		
+		
 		arConfig.stationSkyOverride = config.get(CLIENT, "StationSkyOverride", true, "If true, AR will use a custom skybox on space stations").getBoolean();
 		arConfig.planetSkyOverride = config.get(CLIENT, "PlanetSkyOverride", true, "If true, AR will use a custom skybox on planets").getBoolean();
 		arConfig.skyOverride = config.get(CLIENT, "overworldSkyOverride", true).getBoolean();
@@ -1057,6 +1059,9 @@ public class ARConfiguration {
 
 	@ConfigProperty
 	public boolean generateVolcanos;
+	
+	@ConfigProperty(needsSync=true)
+	public boolean experimentalSpaceFlight;
 
 
 	@Retention(RetentionPolicy.RUNTIME)

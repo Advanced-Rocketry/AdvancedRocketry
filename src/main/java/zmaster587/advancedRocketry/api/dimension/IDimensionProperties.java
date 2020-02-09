@@ -6,6 +6,7 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
+import zmaster587.advancedRocketry.util.SpacePosition;
 
 import java.util.Set;
 
@@ -24,6 +25,11 @@ public interface IDimensionProperties {
 	 * @return the host star for this planet
 	 */
 	public StellarBody getStar();
+	
+	/**
+	 * @return position in space of the planet
+	 */
+	public SpacePosition getSpacePosition();
 	
 	/**
 	 * @return the name of the planet
@@ -65,6 +71,21 @@ public interface IDimensionProperties {
 	 * @return true if the planet has an atmosphere
 	 */
 	public boolean hasAtmosphere();
+	
+	/**
+	 * @return true if the planet has rings
+	 */
+	public boolean hasRings();
+	
+	/**
+	 * @return float[3] array containing ring color
+	 */
+	public float[] getRingColor();
+	
+	/**
+	 * @return float[3] array containing sky color
+	 */
+	public float[] getSkyColor();
 	
 	/**
 	 * @return set of all moons orbiting this planet
@@ -166,5 +187,12 @@ public interface IDimensionProperties {
 	 * @param i new atmosphere density
 	 */
 	public void setAtmosphereDensity(int i);
+
+	// Client side only
+	public ResourceLocation getPlanetIconLEO();
+	
+	public float getRenderSizePlanetView();
+	
+	public float getRenderSizeSolarView();
 	
 }

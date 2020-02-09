@@ -9,7 +9,7 @@ import net.minecraft.util.EnumFacing;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.network.BasePacket;
 
@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 public class PacketSpaceStationInfo extends BasePacket {
-	SpaceObject spaceObject;
+	SpaceStationObject spaceObject;
 	int stationNumber;
 	boolean isBeingDeleted;
 	int direction;
@@ -29,7 +29,7 @@ public class PacketSpaceStationInfo extends BasePacket {
 	public PacketSpaceStationInfo() {}
 
 	public PacketSpaceStationInfo(int stationNumber, ISpaceObject spaceObject) {
-		this.spaceObject = (SpaceObject)spaceObject;
+		this.spaceObject = (SpaceStationObject)spaceObject;
 		this.stationNumber = stationNumber;
 	}
 
@@ -107,25 +107,25 @@ public class PacketSpaceStationInfo extends BasePacket {
 		}
 		else {
 			ISpaceObject iObject = SpaceObjectManager.getSpaceManager().getSpaceStation(stationNumber);
-			spaceObject = (SpaceObject)iObject;
+			spaceObject = (SpaceStationObject)iObject;
 			
 			//Station needs to be created
 			if( iObject == null ) {
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getNewSpaceObjectFromIdentifier(clazzId);
 				object.readFromNbt(nbt);
 				object.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
-				((SpaceObject)object).setForwardDirection(EnumFacing.values()[direction]);
+				((SpaceStationObject)object).setForwardDirection(EnumFacing.values()[direction]);
 				
 				SpaceObjectManager.getSpaceManager().registerSpaceObjectClient(object, object.getOrbitingPlanetId(), stationNumber);
-				((SpaceObject)object).setFuelAmount(fuelAmt);
-				((SpaceObject)object).hasWarpCores = hasWarpCores;
+				((SpaceStationObject)object).setFuelAmount(fuelAmt);
+				((SpaceStationObject)object).hasWarpCores = hasWarpCores;
 			}
 			else {
 				iObject.readFromNbt(nbt);
 				//iObject.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
-				((SpaceObject)iObject).setForwardDirection(EnumFacing.values()[direction]);
-				((SpaceObject)iObject).setFuelAmount(fuelAmt);
-				((SpaceObject)iObject).hasWarpCores = hasWarpCores;
+				((SpaceStationObject)iObject).setForwardDirection(EnumFacing.values()[direction]);
+				((SpaceStationObject)iObject).setFuelAmount(fuelAmt);
+				((SpaceStationObject)iObject).hasWarpCores = hasWarpCores;
 			}
 		}
 			

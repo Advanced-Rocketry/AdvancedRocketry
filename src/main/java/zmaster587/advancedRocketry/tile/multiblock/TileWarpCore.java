@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.advancedRocketry.stations.SpaceObject;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.material.AllowedProducts;
@@ -19,7 +19,7 @@ import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 
 public class TileWarpCore extends TileMultiBlock {
-	private SpaceObject station;
+	private SpaceStationObject station;
 
 	public static final Object[][][] structure = { 
 		{{"blockTitanium", "blockTitanium", "blockTitanium"},
@@ -36,11 +36,11 @@ public class TileWarpCore extends TileMultiBlock {
 
 	};
 
-	private SpaceObject getSpaceObject() {
+	private SpaceStationObject getSpaceObject() {
 		if(station == null && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-			if(object instanceof SpaceObject)
-				station = (SpaceObject) object;
+			if(object instanceof SpaceStationObject)
+				station = (SpaceStationObject) object;
 		}
 		return station;
 	}

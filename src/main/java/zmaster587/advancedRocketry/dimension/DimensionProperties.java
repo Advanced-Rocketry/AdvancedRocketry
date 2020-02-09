@@ -38,6 +38,7 @@ import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketSatellite;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.OreGenProperties;
+import zmaster587.advancedRocketry.util.SpacePosition;
 import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
@@ -1728,5 +1729,43 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	
 	public boolean canGenerateStructures() {
 		return canGenerateStructures;
+	}
+	
+	public float getRenderSizePlanetView()
+	{
+		return (isMoon() ? 8f : 10f)*Math.max(this.getGravitationalMultiplier()*this.getGravitationalMultiplier(), .5f)*100;
+	}
+	
+	public float getRenderSizeSolarView()
+	{
+		return (isMoon() ? 0.2f : 1f)*Math.max(this.getGravitationalMultiplier()*this.getGravitationalMultiplier(), .5f)*100;
+	}
+	
+	// Relative to parent
+	@Override
+	public SpacePosition getSpacePosition() {
+		float distanceMultiplier = isMoon() ? 75f : 100f;
+		
+		SpacePosition spacePosition = new SpacePosition();
+		spacePosition.star = getStar();
+		spacePosition.world = this;
+		spacePosition.isInInterplanetarySpace = this.isMoon();
+		spacePosition.pitch = 0;
+		spacePosition.roll = 0;
+		spacePosition.yaw = 0;
+		
+		spacePosition = spacePosition.getFromSpherical(distanceMultiplier*orbitalDist + (isMoon() ? 100 : 0), orbitTheta);
+		
+		return spacePosition;
+	}
+
+	@Override
+	public float[] getRingColor() {
+		return ringColor;
+	}
+
+	@Override
+	public float[] getSkyColor() {
+		return skyColor;
 	}
 }

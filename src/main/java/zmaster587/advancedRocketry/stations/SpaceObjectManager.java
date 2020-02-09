@@ -59,7 +59,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 
 	/**
 	 * @param id
-	 * @return {@link SpaceObject} object registered to this spaceObject id, or null if doesn't exist
+	 * @return {@link SpaceStationObject} object registered to this spaceObject id, or null if doesn't exist
 	 */
 	public ISpaceObject getSpaceStation(int id) {
 		return stationLocations.get(id);
