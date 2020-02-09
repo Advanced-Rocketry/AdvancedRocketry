@@ -159,7 +159,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		this.depthNoise = ctx.getDepth();
 		this.forestNoise = ctx.getForest();
 		
-		this.mapFeaturesEnabled = dimProps.canGenerateStructures();
+		this.mapFeaturesEnabled = dimProps.canGenerateStructures() && ARConfiguration.getCurrentConfig().generateVanillaStructures;
 
 		//TODO: may break on little planets
 		float atmDensity = ((WorldProviderPlanet)worldObj.provider).getAtmosphereDensity(new BlockPos(0,0,0));
@@ -177,7 +177,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		else
 			geodeGenerator = null;
 		
-		if(dimProps.canGenerateVolcanos()) {
+		if(dimProps.canGenerateVolcanos() && ARConfiguration.getCurrentConfig().generateVolcanos) {
 			volcanoGenerator = new MapGenVolcano((int)(800 * dimProps.getVolcanoMultiplier()));
 		}
 		else

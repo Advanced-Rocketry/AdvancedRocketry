@@ -27,6 +27,7 @@ import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.AtmosphereTypes;
+import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader;
@@ -293,9 +294,6 @@ public class DimensionManager implements IGalaxy {
 		//Linear is easier. Earth is nominal!
 		properties.averageTemperature = getTemperature(properties.getStar(), properties.orbitalDist, properties.getAtmosphereDensity());
 		
-		if(properties.averageTemperature > 100)
-			properties.setOceanBlock(Blocks.LAVA.getDefaultState());
-		
 		
 		if( AtmosphereTypes.getAtmosphereTypeFromValue(properties.getAtmosphereDensity()) == AtmosphereTypes.NONE && random.nextInt() % 5 == 0)
 		{
@@ -323,7 +321,8 @@ public class DimensionManager implements IGalaxy {
 		properties.rotationalPeriod = (int) (Math.pow((1/properties.gravitationalMultiplier),3) * 24000);
 
 		properties.addBiomes(properties.getViableBiomes());
-
+		properties.initDefaultAttributes();
+		
 		registerDim(properties, true);
 		return properties;
 	}

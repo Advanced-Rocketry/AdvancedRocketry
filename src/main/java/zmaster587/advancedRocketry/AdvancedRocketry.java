@@ -1346,7 +1346,8 @@ public class AdvancedRocketry {
 					dimensionProperties.setParentPlanet(DimensionManager.overworldProperties);
 					dimensionProperties.setStar(DimensionManager.getSol());
 					dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");
-
+					dimensionProperties.initDefaultAttributes();
+					
 					DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
 				}
 

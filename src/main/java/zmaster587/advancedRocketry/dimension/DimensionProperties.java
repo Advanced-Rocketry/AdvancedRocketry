@@ -31,6 +31,7 @@ import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
+import zmaster587.advancedRocketry.dimension.DimensionProperties.AtmosphereTypes;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
@@ -72,6 +73,17 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			return temp;
 		}
 
+		
+		public boolean hotterThan(Temps type)
+		{
+			return this.compareTo(type) < 0;
+		}
+		
+		public boolean colderThan(Temps type)
+		{
+			return this.compareTo(type) > 0;
+		}
+		
 		/**
 		 * @param lowerBound lower Bound (inclusive)
 		 * @param upperBound upper Bound (inclusive)
@@ -112,6 +124,16 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		public int getAtmosphereValue() {
 			return value;
+		}
+		
+		public boolean denserThan(AtmosphereTypes type)
+		{
+			return this.compareTo(type) < 0;
+		}
+		
+		public boolean lessDenseThan(AtmosphereTypes type)
+		{
+			return this.compareTo(type) > 0;
 		}
 
 		public static AtmosphereTypes getAtmosphereTypeFromValue(int value) {
@@ -1200,6 +1222,18 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		return biomeEntries;
 	}
 
+	public void initDefaultAttributes()
+	{
+		if(averageTemperature > 100)
+			setOceanBlock(Blocks.LAVA.getDefaultState());
+		
+		//Add planet Properties
+		setGenerateCraters(AtmosphereTypes.getAtmosphereTypeFromValue(getAtmosphereDensity()).lessDenseThan(AtmosphereTypes.NORMAL));
+		setGenerateVolcanos(Temps.getTempFromValue(averageTemperature).hotterThan(DimensionProperties.Temps.HOT));
+		setGenerateStructures(isHabitable());
+		setGenerateGeodes(getAtmosphereDensity() > 125);
+	}
+	
 	public void readFromNBT(NBTTagCompound nbt) {
 		NBTTagList list;
 
@@ -1299,6 +1333,14 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		hasRings = nbt.getBoolean("hasRings");
 		sealevel = nbt.getInteger("sealevel");
 		generatorType = nbt.getInteger("genType");
+		canGenerateCraters = nbt.getBoolean("canGenerateCraters");
+		canGenerateGeodes = nbt.getBoolean("canGenerateGeodes");
+		canGenerateStructures = nbt.getBoolean("canGenerateStructures");
+		canGenerateVolcanos = nbt.getBoolean("canGenerateVolcanos");
+		geodeFrequencyMultiplier = nbt.getFloat("geodeFrequencyMultiplier");
+		craterFrequencyMultiplier = nbt.getFloat("craterFrequencyMultiplier");
+		volcanoFrequencyMultiplier = nbt.getFloat("volcanoFrequencyMultiplier");
+		
 
 		//Hierarchy
 		if(nbt.hasKey("childrenPlanets")) {
@@ -1463,6 +1505,13 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setBoolean("hasRings", hasRings);
 		nbt.setInteger("sealevel", sealevel);
 		nbt.setInteger("genType", generatorType);
+		nbt.setBoolean("canGenerateCraters", canGenerateCraters);
+		nbt.setBoolean("canGenerateGeodes", canGenerateGeodes);
+		nbt.setBoolean("canGenerateStructures", canGenerateStructures);
+		nbt.setBoolean("canGenerateVolcanos", canGenerateVolcanos);
+		nbt.setFloat("geodeFrequencyMultiplier", geodeFrequencyMultiplier);
+		nbt.setFloat("craterFrequencyMultiplier", craterFrequencyMultiplier);
+		nbt.setFloat("volcanoFrequencyMultiplier", volcanoFrequencyMultiplier);
 		
 		//Hierarchy
 		if(!childPlanets.isEmpty()) {
@@ -1558,6 +1607,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		float atmDensity = getAtmosphereDensityAtHeight(y);
 		return new float[] { (float) (atmDensity * fogColor.x), (float) (atmDensity * fogColor.y), (float) (atmDensity * fogColor.z) };
 	}
+	
+	public boolean isHabitable() {
+		return this.getAtmosphere().isBreathable()
+				&& Temps.getTempFromValue(this.averageTemperature).isInRange(Temps.COLD, Temps.HOT);
+	}
 
 	/**
 	 * Sets the planet's id
@@ -1623,11 +1677,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	public void setGenerateCraters(boolean canGenerateCraters) {
 		this.canGenerateCraters = canGenerateCraters;
-		generateCratersSet = true;
 	}
 	
 	public boolean canGenerateCraters() {
-		return ARConfiguration.getCurrentConfig().generateCraters && (generateCratersSet ? this.canGenerateCraters : getAtmosphereDensity() < 0.75f);
+		return this.canGenerateCraters;
 	}
 	
 	public float getCraterMultiplier() {
@@ -1640,11 +1693,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	
 	public void setGenerateGeodes(boolean canGenerateGeodes) {
 		this.canGenerateGeodes = canGenerateGeodes;
-		generateGeodesSet= true;
 	}
 	
 	public boolean canGenerateGeodes() {
-		return ARConfiguration.getCurrentConfig().generateGeodes && (generateGeodesSet ? this.canGenerateGeodes : getAtmosphereDensity() > 125);
+		return this.canGenerateGeodes;
 	}
 	
 	public float getGeodeMultiplier() {
@@ -1657,11 +1709,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	
 	public void setGenerateVolcanos(boolean canGenerateVolcanos) {
 		this.canGenerateVolcanos = canGenerateVolcanos;
-		generateVolcanosSet= true;
 	}
 	
 	public boolean canGenerateVolcanos() {
-		return ARConfiguration.getCurrentConfig().generateVolcanos && (generateVolcanosSet ? this.canGenerateVolcanos : Temps.getTempFromValue(getAverageTemp()) == Temps.TOOHOT);
+		return this.canGenerateVolcanos;
 	}
 	
 	public float getVolcanoMultiplier() {
@@ -1673,10 +1724,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 	public void setGenerateStructures(boolean canGenerateStructures) {
 		this.canGenerateStructures = canGenerateStructures;
-		generateStructuresSet = true;
 	}
 	
 	public boolean canGenerateStructures() {
-		return ARConfiguration.getCurrentConfig().generateVanillaStructures && (generateStructuresSet ? canGenerateStructures : getAtmosphere().isBreathable());
+		return canGenerateStructures;
 	}
 }

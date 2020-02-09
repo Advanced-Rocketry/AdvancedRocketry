@@ -824,7 +824,7 @@ public class XMLPlanetLoader {
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_ISKNOWN, Boolean.toString(ARConfiguration.getCurrentConfig().initiallyKnownPlanets.contains(properties.getId()))));
 		
 		if(properties.hasRings) {
-			nodePlanet.appendChild(createTextNode(doc, ELEMENT_HASRINGS, ARConfiguration.getCurrentConfig().initiallyKnownPlanets.contains(properties.getId())));
+			nodePlanet.appendChild(createTextNode(doc, ELEMENT_HASRINGS, "true"));
 			nodePlanet.appendChild(createTextNode(doc, ELEMENT_RINGCOLOR, properties.ringColor[0] + "," + properties.ringColor[1] + "," + properties.ringColor[2]));
 		}
 		
