@@ -68,7 +68,7 @@ public class WorldProviderSpace extends WorldProviderPlanet {
 		
 		
 		if(ARConfiguration.getCurrentConfig().stationSkyOverride)
-			return skyRender == null ? skyRender = new RenderSpaceSky() : skyRender;
+			return (skyRender == null || !(skyRender instanceof RenderSpaceSky)) ? skyRender = new RenderSpaceSky() : skyRender;
 		
 		return super.getSkyRenderer();
 	}

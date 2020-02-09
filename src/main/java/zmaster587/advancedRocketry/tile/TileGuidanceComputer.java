@@ -162,25 +162,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				if(landingDimension == ARConfiguration.getCurrentConfig().spaceDimId) {
 					//TODO: handle Exception
 					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(ItemStationChip.getUUID(stack));
-					HashedBlockPosition vec = null;
-					if(object instanceof SpaceStationObject) {
-						if(landingLoc.get(object.getId()) != null) {
-							vec = landingLoc.get(object.getId());
-
-							if(commit)
-								((SpaceStationObject)object).getPadAtLocation(landingLoc.get(object.getId())).setOccupied(true);
-						}
-						else
-							vec = ((SpaceStationObject)object).getNextLandingPad(commit);
-					}
-
-					if(object == null)
-						return null;
-
-					if(vec == null)
-						vec = object.getSpawnLocation();
-
-					return new Vector3F<Float>(new Float(vec.x), new Float(vec.y), new Float(vec.z));
+					return getStationLocation(object, commit);
 				}
 				else {
 					LandingLocation loc = chip.getTakeoffCoords(stack, landingDimension);
@@ -215,6 +197,34 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		
 		//We got nothing.
 		return null;
+	}
+	
+	private Vector3F<Float> getStationLocation(ISpaceObject object, boolean commit)
+	{
+		HashedBlockPosition vec = null;
+		if(object instanceof SpaceStationObject) {
+			if(landingLoc.get(object.getId()) != null) {
+				vec = landingLoc.get(object.getId());
+
+				if(commit)
+					((SpaceStationObject)object).getPadAtLocation(landingLoc.get(object.getId())).setOccupied(true);
+			}
+			else
+				vec = ((SpaceStationObject)object).getNextLandingPad(commit);
+		}
+
+		if(object == null)
+			return null;
+
+		if(vec == null)
+			vec = object.getSpawnLocation();
+
+		return new Vector3F<Float>(new Float(vec.x), new Float(vec.y), new Float(vec.z));
+	}
+	
+	public void overrideLandingStation(ISpaceObject object)
+	{
+		setFallbackDestination(ARConfiguration.getCurrentConfig().spaceDimId, getStationLocation(object, true));
 	}
 	
 	public String getDestinationName(int landingDimension)

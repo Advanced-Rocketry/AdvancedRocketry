@@ -25,6 +25,7 @@ import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.network.PacketStationUpdate.Type;
 import zmaster587.advancedRocketry.tile.station.TileDockingPort;
+import zmaster587.advancedRocketry.util.SpacePosition;
 import zmaster587.advancedRocketry.util.StationLandingLocation;
 import zmaster587.libVulpes.block.BlockFullyRotatable;
 import zmaster587.libVulpes.network.PacketHandler;
@@ -32,6 +33,8 @@ import zmaster587.libVulpes.util.HashedBlockPosition;
 
 import java.util.*;
 import java.util.Map.Entry;
+
+import micdoodle8.mods.galacticraft.api.world.SpaceStationType;
 
 public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	private int launchPosX, launchPosZ, posX, posZ;
@@ -116,6 +119,14 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	public int getOrbitingPlanetId() {
 		return created ? properties.getParentPlanet() : Constants.INVALID_PLANET;
 	}
+	
+	public DimensionProperties getOrbitingPlanet()
+	{
+		int planetId = getOrbitingPlanetId();
+		if(planetId != Constants.INVALID_PLANET)
+			return zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(planetId);
+		return null;
+	}
 
 	/**
 	 * Sets the forward Facing direction of the object.  Mostly used for warpships
@@ -183,7 +194,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	}
 
 	public double getMaxRotationalAcceleration() {
-		return 0.00002D;
+		return 0.02D;
 	}
 
 	private long getWorldTime() {
@@ -233,6 +244,20 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		return spawnLocation;
 	}
 
+	public SpacePosition getSpacePosition()
+	{
+		List<ISpaceObject> stations = SpaceObjectManager.getSpaceManager().getSpaceStationsOrbitingPlanet(getOrbitingPlanetId());
+		if(stations.size() == 0)
+			return new SpacePosition();
+		DimensionProperties properties = getOrbitingPlanet();
+		int stationCount = stations.size();
+		int myIndex = stations.indexOf(this);
+		
+		float theta = myIndex*(360/stationCount);
+		
+		return new SpacePosition().getFromSpherical(properties.getRenderSizePlanetView()*2f, theta);
+	}
+	
 	public void addWarpCore(HashedBlockPosition position) {
 		warpCoreLocation.add(position);
 		hasWarpCores = true;
