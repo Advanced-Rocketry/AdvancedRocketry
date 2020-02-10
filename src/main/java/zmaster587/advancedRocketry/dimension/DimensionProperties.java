@@ -98,7 +98,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * where 100 is earthlike, largers values are higher pressure
 	 */
 	public static enum AtmosphereTypes {
-		HIGHPRESSURE(125),
+		HIGHPRESSURE(200),
 		NORMAL(75),
 		LOW(25),
 		NONE(0);
@@ -174,13 +174,13 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		}
 	}
 
-	public static final int MAX_ATM_PRESSURE = 200;
+	public static final int MAX_ATM_PRESSURE = 1600;
 	public static final int MIN_ATM_PRESSURE = 0;
 
 	public static final int MAX_DISTANCE = Integer.MAX_VALUE;
 	public static final int MIN_DISTANCE = 1;
 
-	public static final int MAX_GRAVITY = 200;
+	public static final int MAX_GRAVITY = 400;
 	public static final int MIN_GRAVITY = 0;
 
 
