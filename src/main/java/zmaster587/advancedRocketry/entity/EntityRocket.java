@@ -1519,7 +1519,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		boolean allowLaunch = false;
 
 
-		if(!(ARConfiguration.getCurrentConfig().experimentalSpaceFlight && storage.getGuidanceComputer().isEmpty()))
+		if(!(ARConfiguration.getCurrentConfig().experimentalSpaceFlight && storage.getGuidanceComputer() != null && storage.getGuidanceComputer().isEmpty()))
 		{
 
 			//Get destination dimid and lock the computer
