@@ -325,6 +325,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public void copySatellites(DimensionProperties props) {
 		this.satallites = props.satallites;
 	}
+	
+	public void copyTerraformedBiomes(DimensionProperties props) {
+		this.terraformedBiomes = props.terraformedBiomes;
+		this.isTerraformed = props.isTerraformed;
+	}
 
 	@Override
 	public Object clone() {
@@ -1235,6 +1240,72 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		setGenerateGeodes(getAtmosphereDensity() > 125);
 	}
 	
+
+	private void readFromTechnicalNBT(NBTTagCompound nbt)
+	{
+		isTerraformed = nbt.getBoolean("terraformed");
+		NBTTagList list;
+		if(nbt.hasKey("beaconLocations")) {
+			list = nbt.getTagList("beaconLocations", NBT.TAG_INT_ARRAY);
+
+			for(int i = 0 ; i < list.tagCount(); i++) {
+				int[] location = list.getIntArrayAt(i);
+				beaconLocations.add(new HashedBlockPosition(location[0], location[1], location[2]));
+			}
+			DimensionManager.getInstance().knownPlanets.add(getId());
+		}
+		else
+			beaconLocations.clear();
+		
+		
+		//Load biomes
+		if(nbt.hasKey("biomesTerra")) {
+
+			terraformedBiomes.clear();
+			int biomeIds[] = nbt.getIntArray("biomesTerra");
+			List<Biome> biomesList = new ArrayList<Biome>();
+
+
+			for(int i = 0; i < biomeIds.length; i++) {
+				biomesList.add(AdvancedRocketryBiomes.instance.getBiomeById(biomeIds[i]));
+			}
+
+			terraformedBiomes.addAll(getBiomesEntries(biomesList));
+		}
+		
+		//Satellites
+
+		if(nbt.hasKey("satallites")) {
+			NBTTagCompound allSatalliteNbt = nbt.getCompoundTag("satallites");
+
+			for(Object keyObject : allSatalliteNbt.getKeySet()) {
+				String key = (String)keyObject;
+				Long longKey = Long.parseLong(key);
+
+				NBTTagCompound satalliteNbt = allSatalliteNbt.getCompoundTag(key);
+
+				if(satallites.containsKey(longKey)){
+					satallites.get(longKey).readFromNBT(satalliteNbt);
+				} 
+				else {
+					//Check for NBT errors
+					try {
+						SatelliteBase satallite = SatelliteRegistry.createFromNBT(satalliteNbt);
+
+						satallites.put(longKey, satallite);
+
+						if(satallite.canTick()) {
+							tickingSatallites.put(satallite.getId(), satallite);
+						}
+
+					} catch (NullPointerException e) {
+						AdvancedRocketry.logger.warn("Satellite with bad NBT detected, Removing");
+					}
+				}
+			}
+		}
+	}
+	
 	public void readFromNBT(NBTTagCompound nbt) {
 		NBTTagList list;
 
@@ -1285,33 +1356,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			allowedBiomes.addAll(getBiomesEntries(biomesList));
 		}
 
-		if(nbt.hasKey("beaconLocations")) {
-			list = nbt.getTagList("beaconLocations", NBT.TAG_INT_ARRAY);
-
-			for(int i = 0 ; i < list.tagCount(); i++) {
-				int[] location = list.getIntArrayAt(i);
-				beaconLocations.add(new HashedBlockPosition(location[0], location[1], location[2]));
-			}
-			DimensionManager.getInstance().knownPlanets.add(getId());
-		}
-		else
-			beaconLocations.clear();
-
-		//Load biomes
-		if(nbt.hasKey("biomesTerra")) {
-
-			terraformedBiomes.clear();
-			int biomeIds[] = nbt.getIntArray("biomesTerra");
-			List<Biome> biomesList = new ArrayList<Biome>();
-
-
-			for(int i = 0; i < biomeIds.length; i++) {
-				biomesList.add(AdvancedRocketryBiomes.instance.getBiomeById(biomeIds[i]));
-			}
-
-			terraformedBiomes.addAll(getBiomesEntries(biomesList));
-		}
-
 
 		gravitationalMultiplier = nbt.getFloat("gravitationalMultiplier");
 		orbitalDist = nbt.getInteger("orbitalDist");
@@ -1330,7 +1374,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		name = nbt.getString("name");
 		isNativeDimension = nbt.hasKey("isNative") ? nbt.getBoolean("isNative") : true; //Prevent world breakages when loading from old version
 		isGasGiant = nbt.getBoolean("isGasGiant");
-		isTerraformed = nbt.getBoolean("terraformed");
 		hasRings = nbt.getBoolean("hasRings");
 		sealevel = nbt.getInteger("sealevel");
 		generatorType = nbt.getInteger("genType");
@@ -1352,38 +1395,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		//Note: parent planet must be set before setting the star otherwise it would cause duplicate planets in the StellarBody's array
 		parentPlanet = nbt.getInteger("parentPlanet");
 		this.setStar(DimensionManager.getInstance().getStar(nbt.getInteger("starId")));
-
-		//Satallites
-
-		if(nbt.hasKey("satallites")) {
-			NBTTagCompound allSatalliteNbt = nbt.getCompoundTag("satallites");
-
-			for(Object keyObject : allSatalliteNbt.getKeySet()) {
-				String key = (String)keyObject;
-				Long longKey = Long.parseLong(key);
-
-				NBTTagCompound satalliteNbt = allSatalliteNbt.getCompoundTag(key);
-
-				if(satallites.containsKey(longKey)){
-					satallites.get(longKey).readFromNBT(satalliteNbt);
-				} 
-				else {
-					//Check for NBT errors
-					try {
-						SatelliteBase satallite = SatelliteRegistry.createFromNBT(satalliteNbt);
-
-						satallites.put(longKey, satallite);
-
-						if(satallite.canTick()) {
-							tickingSatallites.put(satallite.getId(), satallite);
-						}
-
-					} catch (NullPointerException e) {
-						AdvancedRocketry.logger.warn("Satellite with bad NBT detected, Removing");
-					}
-				}
-			}
-		}
 
 		if(isGasGiant) {
 			NBTTagList fluidList = nbt.getTagList("fluids", NBT.TAG_STRING);
@@ -1425,8 +1436,47 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		}
 		else
 			fillerBlock = null;
+		
+		readFromTechnicalNBT(nbt);
 	}
 
+	private void writeTechnicalNBT(NBTTagCompound nbt)
+	{
+		nbt.setBoolean("terraformed", isTerraformed);
+		NBTTagList list;
+		if(!beaconLocations.isEmpty()) {
+			list = new NBTTagList();
+
+			for(HashedBlockPosition pos : beaconLocations) {
+				list.appendTag(new NBTTagIntArray(new int[] {pos.x, pos.y, pos.z}));
+			}
+			nbt.setTag("beaconLocations", list);
+		}
+		
+		
+		if(!terraformedBiomes.isEmpty()) {
+			int biomeId[] = new int[terraformedBiomes.size()];
+			for(int i = 0; i < terraformedBiomes.size(); i++) {
+
+				biomeId[i] = Biome.getIdForBiome(terraformedBiomes.get(i).biome);
+			}
+			nbt.setIntArray("biomesTerra", biomeId);
+		}
+		
+		//Satellites
+
+		if(!satallites.isEmpty()) {
+			NBTTagCompound allSatalliteNbt = new NBTTagCompound();
+			for(Entry<Long, SatelliteBase> entry : satallites.entrySet()) {
+				NBTTagCompound satalliteNbt = new NBTTagCompound();
+
+				entry.getValue().writeToNBT(satalliteNbt);
+				allSatalliteNbt.setTag(entry.getKey().toString(), satalliteNbt);
+			}
+			nbt.setTag("satallites", allSatalliteNbt);
+		}
+	}
+	
 	public void writeToNBT(NBTTagCompound nbt) {
 		NBTTagList list;
 
@@ -1460,15 +1510,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			nbt.setTag("ringColor", list);
 		}
 
-		if(!beaconLocations.isEmpty()) {
-			list = new NBTTagList();
-
-			for(HashedBlockPosition pos : beaconLocations) {
-				list.appendTag(new NBTTagIntArray(new int[] {pos.x, pos.y, pos.z}));
-			}
-			nbt.setTag("beaconLocations", list);
-		}
-
 
 		if(!allowedBiomes.isEmpty()) {
 			int biomeId[] = new int[allowedBiomes.size()];
@@ -1476,15 +1517,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				biomeId[i] = Biome.getIdForBiome(allowedBiomes.get(i).biome);
 			}
 			nbt.setIntArray("biomes", biomeId);
-		}
-
-		if(!terraformedBiomes.isEmpty()) {
-			int biomeId[] = new int[terraformedBiomes.size()];
-			for(int i = 0; i < terraformedBiomes.size(); i++) {
-
-				biomeId[i] = Biome.getIdForBiome(terraformedBiomes.get(i).biome);
-			}
-			nbt.setIntArray("biomesTerra", biomeId);
 		}
 
 
@@ -1501,7 +1533,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setInteger("rotationalPeriod", rotationalPeriod);
 		nbt.setString("name", name);
 		nbt.setBoolean("isNative", isNativeDimension);
-		nbt.setBoolean("terraformed", isTerraformed);
 		nbt.setBoolean("isGasGiant", isGasGiant);
 		nbt.setBoolean("hasRings", hasRings);
 		nbt.setInteger("sealevel", sealevel);
@@ -1524,19 +1555,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		nbt.setInteger("parentPlanet", parentPlanet);
 
-		//Satallites
-
-		if(!satallites.isEmpty()) {
-			NBTTagCompound allSatalliteNbt = new NBTTagCompound();
-			for(Entry<Long, SatelliteBase> entry : satallites.entrySet()) {
-				NBTTagCompound satalliteNbt = new NBTTagCompound();
-
-				entry.getValue().writeToNBT(satalliteNbt);
-				allSatalliteNbt.setTag(entry.getKey().toString(), satalliteNbt);
-			}
-			nbt.setTag("satallites", allSatalliteNbt);
-		}
-
 		if(isGasGiant) {
 			NBTTagList fluidList = new NBTTagList();
 
@@ -1557,6 +1575,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			nbt.setInteger("fillBlockMeta", fillerBlock.getBlock().getMetaFromState(fillerBlock));
 		}
 
+		
+		writeTechnicalNBT(nbt);
 	}
 	
 	public int getAverageTemp()
