@@ -107,7 +107,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * where 100 is earthlike, largers values are higher pressure
 	 */
 	public static enum AtmosphereTypes {
-		HIGHPRESSURE(125),
+		HIGHPRESSURE(200),
 		NORMAL(75),
 		LOW(25),
 		NONE(0);
@@ -137,17 +137,17 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 */
 	public static final ResourceLocation atmosphere = new ResourceLocation("advancedrocketry:textures/planets/Atmosphere2.png");
 	public static final ResourceLocation atmosphereLEO = new ResourceLocation("advancedrocketry:textures/planets/AtmosphereLEO.png");
-	public static final ResourceLocation atmGlow = new ResourceLocation("advancedrocketry:textures/planets/atmGlow.png");
-	public static final ResourceLocation planetRings = new ResourceLocation("advancedrocketry:textures/planets/rings.png");
-	public static final ResourceLocation planetRingShadow = new ResourceLocation("advancedrocketry:textures/planets/ringShadow.png");
-	public static final ResourceLocation shadow = new ResourceLocation("advancedrocketry:textures/planets/shadow.png");
-	public static final ResourceLocation shadow3 = new ResourceLocation("advancedrocketry:textures/planets/shadow3.png");
+	public static final ResourceLocation atmGlow = new ResourceLocation("advancedrocketry:textures/planets/AtmGlow.png");
+	public static final ResourceLocation planetRings = new ResourceLocation("advancedrocketry:textures/planets/Rings.png");
+	public static final ResourceLocation planetRingShadow = new ResourceLocation("advancedrocketry:textures/planets/RingShadow.png");
+	public static final ResourceLocation shadow = new ResourceLocation("advancedrocketry:textures/planets/Shadow.png");
+	public static final ResourceLocation shadow3 = new ResourceLocation("advancedrocketry:textures/planets/Shadow3.png");
 
 	public static enum PlanetIcons {
-		EARTHLIKE(new ResourceLocation("advancedrocketry:textures/planets/Earthlike.png")),
+		EARTHLIKE(new ResourceLocation("advancedrocketry:textures/planets/EarthLike.png")),
 		LAVA(new ResourceLocation("advancedrocketry:textures/planets/Lava.png")),
-		MARSLIKE(new ResourceLocation("advancedrocketry:textures/planets/marslike.png")),
-		MOON(new ResourceLocation("advancedrocketry:textures/planets/moon.png")),
+		MARSLIKE(new ResourceLocation("advancedrocketry:textures/planets/MarsLike.png")),
+		MOON(new ResourceLocation("advancedrocketry:textures/planets/Moon.png")),
 		WATERWORLD(new ResourceLocation("advancedrocketry:textures/planets/WaterWorld.png")),
 		ICEWORLD(new ResourceLocation("advancedrocketry:textures/planets/IceWorld.png")),
 		GASGIANTBLUE(new ResourceLocation("advancedrocketry:textures/planets/GasGiantBlue.png")),
