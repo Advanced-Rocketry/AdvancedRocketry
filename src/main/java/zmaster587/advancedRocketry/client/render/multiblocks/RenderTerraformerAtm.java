@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.client.render.multiblocks;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -60,17 +61,17 @@ public class RenderTerraformerAtm extends TileEntitySpecialRenderer {
 		
 		
 		//Baked a light map, make tubes smooth
-		GL11.glDisable(GL11.GL_LIGHTING);
+		GlStateManager.disableLighting();
 		bindTexture(tubeTexture);
 		model.renderOnly("Tubes");
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GlStateManager.disableTexture2D();
 		
-		GL11.glColor3f(0, 0.9f, col);
+		GlStateManager.color(0, 0.9f, col);
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 196, 196);
 		model.renderOnly("BlueRing");
-		GL11.glColor3f(col, col, col);
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GlStateManager.color(col, col, col);
+		GlStateManager.enableLighting();
+		GlStateManager.enableTexture2D();
 		
 		GL11.glPopMatrix();
 	}

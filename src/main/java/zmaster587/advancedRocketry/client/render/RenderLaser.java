@@ -104,7 +104,7 @@ public class RenderLaser extends Render implements IRenderFactory<EntityLaserNod
 		GlStateManager.enableBlend();
 		GlStateManager.depthMask(false);
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 0, 0);
 		Minecraft.getMinecraft().renderEngine.bindTexture(flare);
 		//bindTexture(flare);
 
@@ -119,7 +119,7 @@ public class RenderLaser extends Render implements IRenderFactory<EntityLaserNod
 		Tessellator.getInstance().draw();
 
 		GlStateManager.disableTexture2D();
-		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, 0, 0);
+		OpenGlHelper.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE, 0, 0);
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 		GlStateManager.color(color[0], color[1], color[2], color[3]);//0.9F, 0.2F, 0.3F, 0.5F);

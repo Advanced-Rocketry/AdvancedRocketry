@@ -87,7 +87,7 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			else
 				GlStateManager.color(0.5f, 1, 0.5f, .05f);
 			GlStateManager.disableDepth();
-			GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.05f);
+			GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.01f);
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			
 			bindTexture(grid);
@@ -99,8 +99,6 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			GlStateManager.enableDepth();
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			for(int i = 0; i < 20; i++) {
-				
-				
 				//BOTTOM
 				double offset = i/80d;
 				RenderHelper.renderBottomFaceWithUV(buffer, yOffset + yLocation+offset, xOffset, zOffset, xOffset + xSize, zOffset  + zSize, min, maxU, min, maxV);

@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.client.render;
 
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -20,12 +21,12 @@ public class RenderLaserTile extends TileEntitySpecialRenderer {
 		GL11.glPushMatrix();
 		GL11.glTranslated(x, y, z);
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_FOG);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDepthMask(false);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+		GlStateManager.disableLighting();
+		GlStateManager.disableFog();
+		GlStateManager.enableBlend();
+		GlStateManager.disableDepth();
+		GlStateManager.disableTexture2D();
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 		//GL11.glB
 		//GL11.gl
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
@@ -51,11 +52,11 @@ public class RenderLaserTile extends TileEntitySpecialRenderer {
 
 		buffer.endVertex();
 
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_FOG);
-		GL11.glDepthMask(true);
+		GlStateManager.disableBlend();
+		GlStateManager.enableLighting();
+		GlStateManager.enableTexture2D();
+		GlStateManager.enableFog();
+		GlStateManager.enableDepth();
 		GL11.glPopMatrix();
 	}
 
