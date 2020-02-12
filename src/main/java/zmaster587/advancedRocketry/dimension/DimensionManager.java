@@ -989,12 +989,14 @@ public class DimensionManager implements IGalaxy {
 				}
 
 				
-				if(loadedPlanets.containsKey(properties.getId()) || DimensionManager.getInstance().isDimensionCreated(properties.getId()))
+				if(loadedPlanets.containsKey(properties.getId()))
 				{
 					DimensionProperties loadedDim = (DimensionProperties)loadedPlanets.get(properties.getId());
-					properties.copySatellites(loadedDim);
-					properties.copyTerraformedBiomes(loadedDim);
-					
+					if(loadedDim != null)
+					{
+						properties.copySatellites(loadedDim);
+						properties.copyTerraformedBiomes(loadedDim);
+					}
 				}
 				if(properties.isNativeDimension)
 					DimensionManager.getInstance().registerDim(properties, properties.isNativeDimension);
