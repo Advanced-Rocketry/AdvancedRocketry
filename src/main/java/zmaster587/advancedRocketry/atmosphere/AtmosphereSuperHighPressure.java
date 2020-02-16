@@ -10,11 +10,13 @@ import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
 import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
 import zmaster587.advancedRocketry.integration.CompatibilityMgr;
+import zmaster587.advancedRocketry.network.PacketOxygenState;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.network.PacketHandler;
 
-public class AtmosphereHighPressure extends AtmosphereType {
+public class AtmosphereSuperHighPressure extends AtmosphereType {
 	
-	public AtmosphereHighPressure(boolean canTick, boolean isBreathable,
+	public AtmosphereSuperHighPressure(boolean canTick, boolean isBreathable,
 			String name) {
 		super(canTick, isBreathable, name);
 	}
@@ -22,16 +24,19 @@ public class AtmosphereHighPressure extends AtmosphereType {
 
 	@Override
 	public String getDisplayMessage() {
-		return LibVulpes.proxy.getLocalizedString("msg.highPressure");
+		return LibVulpes.proxy.getLocalizedString("msg.superHighPressure");
 	}
 	
 	@Override
 	public void onTick(EntityLivingBase player) {
 		if(player.worldObj.getTotalWorldTime() % 20  == 0 && !isImmune(player)) {
 			if(!isImmune(player)) {
-				
 				player.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 40, 3));
 				player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 40, 3));
+				player.addPotionEffect(new PotionEffect(Potion.blindness.id, 40, 1));
+				player.attackEntityFrom(AtmosphereHandler.oxygenToxicityDamage, 1);
+				if(player instanceof EntityPlayer)
+					PacketHandler.sendToPlayer(new PacketOxygenState(), (EntityPlayer)player);
 			}
 		}
 	}

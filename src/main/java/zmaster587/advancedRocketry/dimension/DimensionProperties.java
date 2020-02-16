@@ -107,6 +107,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * where 100 is earthlike, largers values are higher pressure
 	 */
 	public static enum AtmosphereTypes {
+		SUPERHIGHPRESSURE(800),
 		HIGHPRESSURE(200),
 		NORMAL(75),
 		LOW(25),

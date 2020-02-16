@@ -1,8 +1,10 @@
 itemGroup.advancedRocketry=Advanced Rocketry
 itemGroup.advancedRocketryOres=Advanced Rocketry Ores
 
-death.attack.Vacuum=You have been depressurized
-death.attack.Vacuum.player=Was depressurized
+death.attack.Vacuum=%1$s was depressurized
+death.attack.Vacuum.player=%1$s was depressurized
+death.attack.OxygenToxicity=%1$s died due to oxygen toxicity
+death.attack.OxygenToxicity.player=%1$s died due to oxygen toxicity
 entity.advancedRocketry.rocket.name=Rocket
 
 tile.seat.name=Seat
@@ -418,6 +420,8 @@ msg.wirelessTransciever.extract=extract
 
 msg.entityDeployedRocket.notGasGiant=No Gas Here
 msg.noOxygen=Warning: No Oxygen detected!
+msg.highPressure=Warning: Atmosphere pressure critically dense!
+msg.superHighPressure=Warning: Atmosphere pressure critically dense, air unbreathable!
 msg.powerunit.rfpertick=RF/t
 msg.linker.error.firstMachine=This must be the first machine to link!
 msg.linker.program=Coordinates programmed into Linker
