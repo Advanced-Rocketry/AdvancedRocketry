@@ -33,7 +33,7 @@ public class AtmosphereSuperHighPressure extends AtmosphereType{
 			if(!isImmune(player)) {
 				player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 40, 3));
 				player.addPotionEffect(new PotionEffect(Potion.getPotionById(4), 40, 3));
-				player.attackEntityFrom(AtmosphereHandler.vacuumDamage, 1);
+				player.attackEntityFrom(AtmosphereHandler.oxygenToxicityDamage, 1);
 				if(player instanceof EntityPlayer)
 					PacketHandler.sendToPlayer(new PacketOxygenState(), (EntityPlayer)player);
 			}
