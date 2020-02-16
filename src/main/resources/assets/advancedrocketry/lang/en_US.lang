@@ -464,3 +464,4 @@ msg.na=N/A
 msg.entityDeployedRocket.notGasGiant=No Gas Here
 msg.tooHot=Warning: It's too hot!
 msg.tooDense=Warning: Air Pressure too high!
+msg.muchTooDense=Warning: Air Pressure Critically Dense, Air Unbreathable!
