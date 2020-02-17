@@ -13,6 +13,6 @@ public class AstronomicalBodyHelper {
 		//One MC Year is 48 MC days (16 IRL Hours), one month is 8 MC Days
 		double orbitalPeriod = 48D*Math.pow((Math.pow(orbitalDistance, 3)*Math.pow(Math.PI, 2)*10D)/solarSize, 0.5D);
 		//Returns angle, relative to 0, of a planet at any given time
-		return ((AdvancedRocketry.proxy.getWorldTimeUniversal(0) % 24000D*orbitalPeriod)/24000D*orbitalPeriod)*(2D*Math.PI);
+		return ((AdvancedRocketry.proxy.getWorldTimeUniversal(0) % (24000D*orbitalPeriod))/(24000D*orbitalPeriod))*(2D*Math.PI);
 	}
 }

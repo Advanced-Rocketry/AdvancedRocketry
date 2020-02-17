@@ -140,7 +140,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public static final ResourceLocation atmosphereLEO = new ResourceLocation("advancedrocketry:textures/planets/AtmosphereLEO.png");
 	public static final ResourceLocation atmGlow = new ResourceLocation("advancedrocketry:textures/planets/AtmGlow.png");
 	public static final ResourceLocation planetRings = new ResourceLocation("advancedrocketry:textures/planets/Rings.png");
-	public static final ResourceLocation planetRingShadow = new ResourceLocation("advancedrocketry:textures/planets/RingShadow.png");
+	public static final ResourceLocation planetRingShadow = new ResourceLocation("advancedrocketry:textures/planets/RingsShadow.png");
 	public static final ResourceLocation shadow = new ResourceLocation("advancedrocketry:textures/planets/Shadow.png");
 	public static final ResourceLocation shadow3 = new ResourceLocation("advancedrocketry:textures/planets/Shadow3.png");
 
