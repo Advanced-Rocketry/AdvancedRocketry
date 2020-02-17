@@ -755,6 +755,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		if(hasAtmosphere()) {
 			if(Temps.getTempFromValue(getAverageTemp()) == Temps.TOOHOT)
 				return AtmosphereType.VERYHOT;
+            if(AtmosphereTypes.getAtmosphereTypeFromValue(getAtmosphereDensity()) == AtmosphereTypes.SUPERHIGHPRESSURE)
+				return AtmosphereType.SUPERHIGHPRESSURE;
 			if(AtmosphereTypes.getAtmosphereTypeFromValue(getAtmosphereDensity()) == AtmosphereTypes.HIGHPRESSURE)
 				return AtmosphereType.HIGHPRESSURE;
 			return AtmosphereType.AIR;
