@@ -13,7 +13,7 @@ public class AtmosphereType implements IAtmosphere {
 	public static final AtmosphereType LOWOXYGEN = new AtmosphereLowOxygen(true, false, "lowO2");
 	public static final AtmosphereType VACUUM = new AtmosphereVacuum();
 	public static final AtmosphereType HIGHPRESSURE = new AtmosphereHighPressure(true, true, "HighPressure");
-	public static final AtmosphereType SUPERHIGHPRESSURE = new AtmosphereHighPressure(true, false, "SuperHighPressure");
+	public static final AtmosphereType SUPERHIGHPRESSURE = new AtmosphereSuperHighPressure(true, false, "SuperHighPressure");
 	public static final AtmosphereType VERYHOT = new AtmosphereVeryHot(true, false, "VeryHot");
 
 	static {
