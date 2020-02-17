@@ -35,8 +35,9 @@ public class AtmosphereSuperHighPressure extends AtmosphereType {
 				player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 40, 3));
 				player.addPotionEffect(new PotionEffect(Potion.blindness.id, 40, 1));
 				player.attackEntityFrom(AtmosphereHandler.oxygenToxicityDamage, 1);
-				if(player instanceof EntityPlayer)
+				if(player instanceof EntityPlayer) {
 					PacketHandler.sendToPlayer(new PacketOxygenState(), (EntityPlayer)player);
+				}
 			}
 		}
 	}
