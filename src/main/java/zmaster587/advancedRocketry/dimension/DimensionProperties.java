@@ -63,11 +63,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * where 100 is earthlike, larger values are hotter
 	 */
 	public static enum Temps {
-		TOOHOT(150),
-		HOT(125),
-		NORMAL(75),
-		COLD(50),
-		FRIGID(25),
+		TOOHOT(450),
+		HOT(375),
+		NORMAL(275),
+		COLD(225),
+		FRIGID(125),
 		SNOWBALL(0);
 
 		private int temp;
@@ -207,6 +207,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public int rotationalPeriod;
 	//Stored in radians
 	public double orbitTheta;
+	public double baseOrbitTheta;
 	StellarBody star;
 	int starId;
 	private String name;
@@ -821,7 +822,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 
 	public void updateOrbit() {
-		this.orbitTheta = AstronomicalBodyHelper.getOrbitalTheta(orbitalDist, getStar().getSize());
+		this.orbitTheta = AstronomicalBodyHelper.getOrbitalTheta(orbitalDist, getStar().getSize()) + baseOrbitTheta;
 	}
 
 
@@ -1182,6 +1183,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		gravitationalMultiplier = nbt.getFloat("gravitationalMultiplier");
 		orbitalDist = nbt.getInteger("orbitalDist");
 		orbitTheta = nbt.getDouble("orbitTheta");
+		baseOrbitTheta = nbt.getDouble("baseOrbitTheta");
 		atmosphereDensity = nbt.getInteger("atmosphereDensity");
 		averageTemperature = nbt.getInteger("avgTemperature");
 		rotationalPeriod = nbt.getInteger("rotationalPeriod");
@@ -1338,6 +1340,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setFloat("gravitationalMultiplier", gravitationalMultiplier);
 		nbt.setInteger("orbitalDist", orbitalDist);
 		nbt.setDouble("orbitTheta", orbitTheta);
+		nbt.setDouble("baseOrbitTheta", baseOrbitTheta);
 		nbt.setInteger("atmosphereDensity", atmosphereDensity);
 		nbt.setInteger("originalAtmosphereDensity", originalAtmosphereDensity);
 		nbt.setInteger("avgTemperature", averageTemperature);
