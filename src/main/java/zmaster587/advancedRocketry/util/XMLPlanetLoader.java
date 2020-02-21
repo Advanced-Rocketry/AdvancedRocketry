@@ -243,7 +243,7 @@ public class XMLPlanetLoader {
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("orbitaltheta")) {
 
 				try {
-					properties.baseOrbitTheta = (Integer.parseInt(planetPropertyNode.getTextContent()) % 360) * 2/Math.PI;
+					properties.baseOrbitTheta = (Integer.parseInt(planetPropertyNode.getTextContent()) % 360) * Math.PI/2;
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid orbitalTheta specified"); //TODO: more detailed error msg
 				}
@@ -559,8 +559,8 @@ public class XMLPlanetLoader {
 		outputString = outputString + tabLen + "\t<skyColor>" + properties.skyColor[0] + "," + properties.skyColor[1] + "," + properties.skyColor[2] + "</skyColor>\n";
 		outputString = outputString + tabLen + "\t<gravitationalMultiplier>" + (int)(properties.getGravitationalMultiplier()*100f) + "</gravitationalMultiplier>\n";
 		outputString = outputString + tabLen + "\t<orbitalDistance>" + properties.getOrbitalDist() + "</orbitalDistance>\n";
-		outputString = outputString + tabLen + "\t<orbitalTheta>" + (int)((properties.orbitTheta * 180)/Math.PI) + "</orbitalTheta>\n";
-		outputString = outputString + tabLen + "\t<orbitalPhi>" + (int)(properties.orbitalPhi* 180/Math.PI) + "</orbitalPhi>\n";
+		outputString = outputString + tabLen + "\t<orbitalTheta>" + (int)(properties.baseOrbitTheta * 180d/Math.PI) + "</orbitalTheta>\n";
+		outputString = outputString + tabLen + "\t<orbitalPhi>" + (int)(properties.orbitalPhi* 180d/Math.PI) + "</orbitalPhi>\n";
 		outputString = outputString + tabLen + "\t<rotationalPeriod>" + (int)properties.rotationalPeriod + "</rotationalPeriod>\n";
 		outputString = outputString + tabLen + "\t<atmosphereDensity>" + (int)properties.getAtmosphereDensity() + "</atmosphereDensity>\n";
 		

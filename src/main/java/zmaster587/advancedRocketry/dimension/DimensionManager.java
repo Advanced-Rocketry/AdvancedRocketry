@@ -282,7 +282,7 @@ public class DimensionManager implements IGalaxy {
 
 		properties.orbitalDist = newDist;
         
-		properties.orbitTheta = random.nextInt(360) * Math.PI/180d;
+		properties.baseOrbitTheta = random.nextInt(360) * Math.PI/180d;
 		properties.orbitalPhi = (random.nextGaussian() -0.5d)*180;
 		properties.rotationalPhi = (random.nextGaussian() -0.5d)*180;
 
@@ -342,7 +342,6 @@ public class DimensionManager implements IGalaxy {
 		}
 		properties.setAtmosphereDensityDirect(MathHelper.clamp_int(baseAtmosphere + random.nextInt(atmosphereFactor) - atmosphereFactor/2, DimensionProperties.MIN_ATM_PRESSURE, DimensionProperties.MAX_ATM_PRESSURE)); 
 		properties.orbitalDist = MathHelper.clamp_int(baseDistance + random.nextInt(distanceFactor), DimensionProperties.MIN_DISTANCE, 800);
-		//System.out.println(properties.orbitalDist);
 		properties.gravitationalMultiplier = Math.min(Math.max(0.05f,(baseGravity + random.nextInt(gravityFactor) - gravityFactor/2)/100f), 1.3f);
 
 		double minDistance;
@@ -350,10 +349,10 @@ public class DimensionManager implements IGalaxy {
 		do {
 			minDistance = Double.MAX_VALUE;
 
-			properties.orbitTheta  = random.nextInt(360)*Math.PI/180d;
+			properties.baseOrbitTheta  = random.nextInt(360)*Math.PI/180d;
 
 			for(IDimensionProperties properties2 : getStar(starId).getPlanets()) {
-				double dist = Math.abs(((DimensionProperties)properties2).orbitTheta - properties.orbitTheta);
+				double dist = Math.abs(((DimensionProperties)properties2).baseOrbitTheta - properties.baseOrbitTheta);
 				if(dist < minDistance)
 					minDistance = dist;
 			}

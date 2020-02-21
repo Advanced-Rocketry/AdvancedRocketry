@@ -64,10 +64,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 */
 	public static enum Temps {
 		TOOHOT(450),
-		HOT(375),
+		HOT(325),
 		NORMAL(275),
-		COLD(225),
-		FRIGID(125),
+		COLD(250),
+		FRIGID(200),
 		SNOWBALL(0);
 
 		private int temp;
