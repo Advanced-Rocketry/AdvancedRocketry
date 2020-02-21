@@ -243,7 +243,7 @@ public class XMLPlanetLoader {
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("orbitaltheta")) {
 
 				try {
-					properties.baseOrbitTheta = (Integer.parseInt(planetPropertyNode.getTextContent()) % 360) * Math.PI/2;
+					properties.baseOrbitTheta = (Integer.parseInt(planetPropertyNode.getTextContent()) % 360) * Math.PI/180f;
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid orbitalTheta specified"); //TODO: more detailed error msg
 				}
@@ -296,7 +296,7 @@ public class XMLPlanetLoader {
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("orbitalPhi")) {
 				try {
-					properties.orbitalPhi = (Integer.parseInt(planetPropertyNode.getTextContent()) % 360) * 180/Math.PI;
+					properties.orbitalPhi = (Integer.parseInt(planetPropertyNode.getTextContent()) % 360) * Math.PI/180f;
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid orbitalTheta specified"); //TODO: more detailed error msg
 				}
