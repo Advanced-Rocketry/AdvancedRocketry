@@ -78,6 +78,7 @@ import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
 import zmaster587.libVulpes.api.IModularArmor;
+import zmaster587.libVulpes.event.BucketHandler;
 import zmaster587.libVulpes.network.PacketHandler;
 
 import java.util.Collection;
@@ -243,7 +244,7 @@ public class PlanetEventHandler {
 				!AtmosphereHandler.getOxygenHandler(event.getWorld().provider.getDimension()).getAtmosphereType(event.getPos().offset(direction)).allowsCombustion()) {
 
 			if(event.getEntityPlayer().getHeldItem(event.getHand()) != null) {
-				if(event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE|| event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_POWDER || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_ROD || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.LAVA_BUCKET)
+				if(event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE|| event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_POWDER || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_ROD )
 					event.setCanceled(true);
 			}
 		}
