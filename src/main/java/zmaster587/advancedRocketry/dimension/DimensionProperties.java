@@ -822,6 +822,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 
 	public void updateOrbit() {
+		this.prevOrbitalTheta = orbitTheta;
 		this.orbitTheta = AstronomicalBodyHelper.getOrbitalTheta(orbitalDist, getStar().getSize()) + baseOrbitTheta;
 	}
 
