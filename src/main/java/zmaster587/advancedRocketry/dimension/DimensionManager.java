@@ -1050,6 +1050,19 @@ public class DimensionManager implements IGalaxy {
 		DimensionManager.dimOffset = dimOffset;
 
 		DimensionManager.getInstance().knownPlanets.addAll(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().initiallyKnownPlanets);
+		
+		
+		// Run all sanity checks now
+		//Try to fix invalid objects
+		for(ISpaceObject i : SpaceObjectManager.getSpaceManager().getSpaceObjects())
+		{
+			int orbitingId = i.getOrbitingPlanetId(); 
+			if(!isDimensionCreated(orbitingId) && orbitingId != 0 && orbitingId != SpaceObjectManager.WARPDIMID && orbitingId < Constants.STAR_ID_OFFSET)
+			{
+				AdvancedRocketry.logger.warn("Dimension ID " + i.getOrbitingPlanetId() + " is not registered and a space station is orbiting it, moving to dimid 0");
+				i.setOrbitingBody(0);
+			}
+		}
 	}
 
 	/**
@@ -1142,17 +1155,6 @@ public class DimensionManager implements IGalaxy {
 		if(nbt.hasKey("spaceObjects")) {
 			NBTTagCompound nbtTag = nbt.getCompoundTag("spaceObjects");
 			SpaceObjectManager.getSpaceManager().readFromNBT(nbtTag);
-		}
-
-		//Try to fix invalid objects
-		for(ISpaceObject i : SpaceObjectManager.getSpaceManager().getSpaceObjects())
-		{
-			int orbitingId = i.getOrbitingPlanetId(); 
-			if(!isDimensionCreated(orbitingId) && orbitingId != 0 && orbitingId != SpaceObjectManager.WARPDIMID && orbitingId < Constants.STAR_ID_OFFSET)
-			{
-				AdvancedRocketry.logger.warn("Dimension ID " + i.getOrbitingPlanetId() + " is not registered and a space station is orbiting it, moving to dimid 0");
-				i.setOrbitingBody(0);
-			}
 		}
 
 		prevBuild = nbt.getString("prevVersion");
