@@ -283,8 +283,8 @@ public class DimensionManager implements IGalaxy {
 		properties.orbitalDist = newDist;
         
 		properties.baseOrbitTheta = random.nextInt(360) * Math.PI/180d;
-		properties.orbitalPhi = (random.nextGaussian()) * Math.PI;
-		properties.rotationalPhi = (random.nextGaussian()) * Math.PI;
+		properties.orbitalPhi = (random.nextGaussian() -0.5d)*180;
+		properties.rotationalPhi = (random.nextGaussian() -0.5d)*180;
 
 		//Get Star Color
 		properties.setStar(getStar(starId));
