@@ -103,13 +103,13 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 		ModuleDualProgressBar progressBar;
 		staticModuleList.add(progressBar = new ModuleDualProgressBar(100, 0, 0, TextureResources.atmIndicator, (IProgressBar)tile, "%b -> %a Earth's atmospheric pressure"));
-		progressBar.setTooltipValueMultiplier(.02f);
+		progressBar.setTooltipValueMultiplier(.16f);
 
 		staticModuleList.add(progressBar = new ModuleDualProgressBar(200, 0, 2, TextureResources.massIndicator, (IProgressBar)tile, "%b -> %a Earth's mass"));
 		progressBar.setTooltipValueMultiplier(.02f);
 
 		staticModuleList.add(progressBar = new ModuleDualProgressBar(300, 0, 1, TextureResources.distanceIndicator, (IProgressBar)tile, "%b -> %a Relative Distance units"));
-		progressBar.setTooltipValueMultiplier(.02f);
+		progressBar.setTooltipValueMultiplier(.16f);
 
 		//renderPlanetarySystem(properties, center, center, 3f);
 		if(FMLCommonHandler.instance().getSide().isClient()) {

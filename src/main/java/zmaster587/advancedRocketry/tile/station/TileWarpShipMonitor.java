@@ -607,9 +607,9 @@ public class TileWarpShipMonitor extends TileEntity implements IModularInventory
 		if(dimCache == null)
 			return 0;
 		if(id == 0)
-			return dimCache.getAtmosphereDensity()/2;
+			return dimCache.getAtmosphereDensity()/16;
 		else if(id == 1)
-			return dimCache.orbitalDist/2;
+			return dimCache.orbitalDist/16;
 		else if(id == 2)
 			return (int) (dimCache.gravitationalMultiplier*50);
 		else if(id == 3) {
