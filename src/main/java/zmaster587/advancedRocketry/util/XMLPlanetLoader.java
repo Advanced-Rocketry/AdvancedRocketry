@@ -321,7 +321,7 @@ public class XMLPlanetLoader {
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("orbitaltheta")) {
 
 				try {
-					properties.orbitTheta = (Integer.parseInt(planetPropertyNode.getTextContent()) % 360) * 2/Math.PI;
+					properties.baseOrbitTheta = (Integer.parseInt(planetPropertyNode.getTextContent()) % 360) * Math.PI/180f;
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid orbitalTheta specified"); //TODO: more detailed error msg
 				}
@@ -461,7 +461,7 @@ public class XMLPlanetLoader {
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_PHI)) {
 				try {
-					properties.orbitalPhi = (Integer.parseInt(planetPropertyNode.getTextContent()) % 360) * 180/Math.PI;
+					properties.orbitalPhi = (Integer.parseInt(planetPropertyNode.getTextContent()) % 360);
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid orbitalPhi specified"); //TODO: more detailed error msg
 				}
@@ -572,7 +572,7 @@ public class XMLPlanetLoader {
 		properties.setStar(star.getId());
 
 		//Set temperature
-		properties.averageTemperature = DimensionManager.getInstance().getTemperature(star, properties.getOrbitalDist(), properties.getAtmosphereDensity());
+		properties.averageTemperature = AstronomicalBodyHelper.getAverageTemperature(star, properties.getOrbitalDist(), properties.getAtmosphereDensity());
 
 		//If no biomes are specified add some!
 		if(properties.getBiomes().isEmpty())
@@ -846,7 +846,7 @@ public class XMLPlanetLoader {
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_SKYCOLOR, properties.skyColor[0] + "," + properties.skyColor[1] + "," + properties.skyColor[2]));
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_GRAVITY, (int)(properties.getGravitationalMultiplier()*100f)));
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_DISTANCE, properties.getOrbitalDist()));
-		nodePlanet.appendChild(createTextNode(doc, ELEMENT_PHI, (int)(properties.orbitalPhi* Math.PI/180)));
+		nodePlanet.appendChild(createTextNode(doc, ELEMENT_PHI, (int)(properties.orbitalPhi)));
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_PERIOD, properties.rotationalPeriod));
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_ATMDENSITY, properties.getAtmosphereDensity()));
 		nodePlanet.appendChild(createTextNode(doc, GENERATECRATERS, properties.canGenerateCraters()));
