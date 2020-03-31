@@ -189,7 +189,6 @@ public class DimensionManager implements IGalaxy {
 	 */
 	public void tickDimensions() {
 		//Tick satellites
-		overworldProperties.tick();
 		for(int i : DimensionManager.getInstance().getLoadedDimensions()) {
 			DimensionManager.getInstance().getDimensionProperties(i).tick();
 		}
@@ -197,7 +196,6 @@ public class DimensionManager implements IGalaxy {
 
 	public void tickDimensionsClient() {
 		//Tick satellites
-		overworldProperties.updateOrbit();
 		for(int i : DimensionManager.getInstance().getLoadedDimensions()) {
 			DimensionManager.getInstance().getDimensionProperties(i).updateOrbit();
 		}
