@@ -253,6 +253,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	private boolean canGenerateGeodes;
 	private boolean canGenerateVolcanos;
 	private boolean canGenerateStructures;
+	private boolean canDecorate; //Should the button draw shadows, etc.  Clientside
+	private boolean overrideDecoration;
 	private float craterFrequencyMultiplier;
 	private float volcanoFrequencyMultiplier;
 	private float geodeFrequencyMultiplier;
@@ -296,6 +298,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		craterFrequencyMultiplier = 1f;
 		volcanoFrequencyMultiplier = 1f;
 		geodeFrequencyMultiplier = 1f;
+		canDecorate = true;
 		
 		customIcon = "";
 		harvestableAtmosphere = new LinkedList<Fluid>();
@@ -787,7 +790,23 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return true if the planet should be rendered with shadows, atmosphere glow, clouds, etc
 	 */
 	public boolean hasDecorators() {
-		return !isAsteroid() && !isStar();
+		return !isAsteroid() && !isStar() || (canDecorate && overrideDecoration);
+	}
+	
+	public void setDecoratoration(boolean value)
+	{
+		canDecorate = value;
+		overrideDecoration = true;
+	}
+	
+	public boolean isDecorationOverridden()
+	{
+		return overrideDecoration;
+	}
+	
+	public void unsetDecoratoration()
+	{
+		overrideDecoration = false;
 	}
 	
 	/**
