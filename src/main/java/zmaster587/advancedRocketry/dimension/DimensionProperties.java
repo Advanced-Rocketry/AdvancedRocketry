@@ -250,13 +250,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	private boolean isStation;
 	private boolean isGasGiant;
 	private boolean canGenerateCraters;
-	private boolean generateCratersSet; //XXX: compat variable, remove in future release
 	private boolean canGenerateGeodes;
-	private boolean generateGeodesSet; //XXX: compat variable, remove in future release
 	private boolean canGenerateVolcanos;
-	private boolean generateVolcanosSet; //XXX: compat variable, remove in future release
 	private boolean canGenerateStructures;
-	private boolean generateStructuresSet; //XXX: compat variable, remove in future release
 	private float craterFrequencyMultiplier;
 	private float volcanoFrequencyMultiplier;
 	private float geodeFrequencyMultiplier;
@@ -297,10 +293,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		canGenerateGeodes = false;
 		canGenerateStructures = false;
 		canGenerateVolcanos = false;
-		generateCratersSet = false;
-		generateGeodesSet = false;
-		generateVolcanosSet = false;
-		generateStructuresSet = false;
 		craterFrequencyMultiplier = 1f;
 		volcanoFrequencyMultiplier = 1f;
 		geodeFrequencyMultiplier = 1f;
