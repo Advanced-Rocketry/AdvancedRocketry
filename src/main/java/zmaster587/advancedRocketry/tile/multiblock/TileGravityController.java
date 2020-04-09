@@ -116,7 +116,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 		if(world.isRemote) {
 			textRadius.setText(String.format("%s%d",LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.radius"), getRadius()));
 
-			targetGrav.setText(String.format("%s%.2f/%.2f", LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.targetgrav" ),currentProgress, gravity/100f));
+			targetGrav.setText(String.format("%s %.2f/%.2f", LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.targetgrav" ),currentProgress, gravity/100f));
 		}
 	}
 
