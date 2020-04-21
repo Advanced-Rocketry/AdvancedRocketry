@@ -194,7 +194,7 @@ public class RenderPlanetUIEntity extends Render<EntityUIPlanet> implements IRen
 			//Draw Mass indicator
 			Minecraft.getMinecraft().renderEngine.bindTexture(planetUIFG);
 			GlStateManager.color(1, 1, 1,0.8f);
-			renderMassIndicator(buffer, properties.gravitationalMultiplier/2f);
+			renderMassIndicator(buffer, Math.min(properties.gravitationalMultiplier/2f, 1f));
 
 			//Draw background
 			GlStateManager.color(1, 1, 1,1);
@@ -206,9 +206,9 @@ public class RenderPlanetUIEntity extends Render<EntityUIPlanet> implements IRen
 
 			//Render ATM
 			Minecraft.getMinecraft().renderEngine.bindTexture(planetUIFG);
-			renderATMIndicator(buffer, properties.getAtmosphereDensity()/200f);
+			renderATMIndicator(buffer, Math.min(properties.getAtmosphereDensity()/200f, 1f));
 			//Render Temp
-			renderTemperatureIndicator(buffer, properties.getAverageTemp()/200f);
+			renderTemperatureIndicator(buffer, Math.min(properties.getAverageTemp()/400f,1f));
 
 			//Render planet name
 			GL11.glEnable(GL11.GL_DEPTH_TEST);

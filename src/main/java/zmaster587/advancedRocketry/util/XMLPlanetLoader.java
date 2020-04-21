@@ -91,6 +91,7 @@ public class XMLPlanetLoader {
 	private static final String ELEMENT_CRATER_MULTIPLIER = "craterFrequencyMultiplier";
 	private static final String ELEMENT_VOLCANO_MULTIPLIER = "volcanoFrequencyMultiplier";
 	private static final String ELEMENT_GEODE_MULTIPLIER = "geodefrequencyMultiplier";
+	private static final String ELEMENT_CAN_DECORATE = "hasShading";
 	private static final String ATTR_WEIGHT = "weight";
 	private static final String ATTR_GROUPMIN = "groupMin";
 	private static final String ATTR_GROUPMAX = "groupMax";
@@ -478,6 +479,8 @@ public class XMLPlanetLoader {
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_HASRINGS))
 				properties.hasRings = Boolean.parseBoolean(planetPropertyNode.getTextContent());
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_CAN_DECORATE))
+				properties.setDecoratoration(Boolean.parseBoolean(planetPropertyNode.getTextContent()));
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_RINGCOLOR)) {
 				String[] colors = planetPropertyNode.getTextContent().split(",");
 				try {
@@ -874,6 +877,8 @@ public class XMLPlanetLoader {
 			nodePlanet.appendChild(XMLOreLoader.writeOreEntryXML(doc, properties.oreProperties));
 		}
 
+		if(properties.isDecorationOverridden())
+			nodePlanet.appendChild(createTextNode(doc, ELEMENT_CAN_DECORATE, properties.hasDecorators()));
 		
 		if(properties.isNativeDimension && !properties.isGasGiant()) {
 			String biomeIds = "";
