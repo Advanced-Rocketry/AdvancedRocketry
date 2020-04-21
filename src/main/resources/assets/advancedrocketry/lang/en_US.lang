@@ -334,6 +334,7 @@ msg.biomescanner.gas=nyehhh, Gassy, ain't it?
 msg.biomescanner.star=If only my sensors had sunshades
 msg.gravitycontroller.radius=Radius: 
 msg.gravitycontroller.targetgrav=Target Gravity:
+msg.gravitycontroller.none=Unset
 msg.gravitycontroller.activeset=Active: set
 msg.gravitycontroller.activeadd=Active: add
 msg.gravitycontroller.targetdir.1=Target->
