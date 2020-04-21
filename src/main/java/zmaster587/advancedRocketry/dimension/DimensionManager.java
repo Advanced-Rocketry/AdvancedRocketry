@@ -105,6 +105,7 @@ public class DimensionManager implements IGalaxy {
 
 		overworldProperties = new DimensionProperties(0);
 		overworldProperties.setAtmosphereDensityDirect(100);
+		//Temperature in Kelvin, 286 is 13 Degrees C
 		overworldProperties.averageTemperature = 286;
 		overworldProperties.gravitationalMultiplier = 1f;
 		overworldProperties.orbitalDist = 100;

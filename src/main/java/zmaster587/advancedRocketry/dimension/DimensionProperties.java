@@ -221,6 +221,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public int orbitalDist;
 	private int originalAtmosphereDensity;
 	private int atmosphereDensity;
+	//Stored in Kelvin
 	public int averageTemperature;
 	public int rotationalPeriod;
 	//Stored in radians
