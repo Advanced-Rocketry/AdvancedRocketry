@@ -54,8 +54,9 @@ import java.util.Map.Entry;
 public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	/**
-	 * Contains standardized temperature ranges for planets
-	 * where 100 is earthlike, larger values are hotter
+	 * Temperatures are stored in Kelvin
+	 * This facilitates precise temperature calculations and specifications
+	 * 286 is Earthlike (13 C), Hot is 52 C, Cold is -23 C. Snowball is absolute zero
 	 */
 	public static enum Temps {
 		TOOHOT(450),
