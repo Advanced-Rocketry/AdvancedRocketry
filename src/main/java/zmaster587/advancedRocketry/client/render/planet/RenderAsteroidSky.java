@@ -26,6 +26,7 @@ import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.util.AstronomicalBodyHelper;
 import zmaster587.libVulpes.util.Vector3F;
 
 import java.util.LinkedList;
@@ -567,7 +568,7 @@ public class RenderAsteroidSky extends IRenderHandler {
 					GL11.glRotatef(phaseInc, 0, 1, 0);
 					GL11.glPushMatrix();
 					
-					GL11.glRotatef(subStar.getStarSeparation()*(202-solarOrbitalDistance)/100f, 1, 0, 0);
+					GL11.glRotatef(subStar.getStarSeparation()*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance), 1, 0, 0);
 					float color[] = subStar.getColor();
 					drawStar(buffer, solarOrbitalDistance, subStar.getSize(), new Vec3d(color[0], color[1], color[2]), multiplier);
 					GL11.glPopMatrix();
@@ -634,8 +635,7 @@ public class RenderAsteroidSky extends IRenderHandler {
 				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 			}
 
-
-			renderPlanet2(buffer, parentPlanetIcon, 0,0,-100, (200-planetOrbitalDistance), multiplier, rotation, hasAtmosphere, parentAtmColor, parentRingColor, isGasGiant, false);
+			renderPlanet2(buffer, parentPlanetIcon, 0,0,-100, AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance), multiplier, rotation, hasAtmosphere, parentAtmColor, parentRingColor, isGasGiant, false);
 			GL11.glPopMatrix();
 		}
 
@@ -718,7 +718,7 @@ public class RenderAsteroidSky extends IRenderHandler {
 	}
 
 	protected void renderPlanet(BufferBuilder buffer, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing) {
-		renderPlanet2(buffer, icon, 0, 0, -100, 10f*(200-planetOrbitalDistance)/100f, alphaMultiplier, shadowAngle, hasAtmosphere, skyColor, ringColor, gasGiant, hasRing);
+		renderPlanet2(buffer, icon, 0, 0, -100, 10f*AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance), alphaMultiplier, shadowAngle, hasAtmosphere, skyColor, ringColor, gasGiant, hasRing);
 	}
 
 	protected void renderPlanet2(BufferBuilder buffer, ResourceLocation icon, int locationX, int locationY, double zLevel, float size, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing) {
@@ -858,7 +858,7 @@ public class RenderAsteroidSky extends IRenderHandler {
 		//Set sun color and distance
 		GlStateManager.color((float)sunColor.x, (float)sunColor.y , (float)sunColor.z ,Math.min((multiplier)*2f,1f));
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
-		float f10 = sunSize*30f*(202-solarOrbitalDistance)/100f;
+		float f10 = sunSize*30f*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
 		//multiplier = 2;
 		buffer.pos((double)(-f10), 100.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
 		buffer.pos((double)f10, 100.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
