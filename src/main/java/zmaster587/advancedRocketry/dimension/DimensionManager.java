@@ -110,7 +110,8 @@ public class DimensionManager implements IGalaxy {
 		overworldProperties.skyColor = new float[] {1f, 1f, 1f};
 		overworldProperties.setName("Earth");
 		overworldProperties.isNativeDimension = false;
-
+		overworldProperties.setStar(sol);
+		
 		defaultSpaceDimensionProperties = new DimensionProperties(SpaceObjectManager.WARPDIMID, false);
 		defaultSpaceDimensionProperties.setAtmosphereDensityDirect(0);
 		defaultSpaceDimensionProperties.averageTemperature = 0;
