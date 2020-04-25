@@ -420,6 +420,7 @@ msg.wirelessTransciever.extract=extract
 
 msg.entityDeployedRocket.notGasGiant=No Gas Here
 msg.noOxygen=Warning: No Oxygen detected!
+msg.tooHot=Warning: Atmosphere temperature at critical value!
 msg.highPressure=Warning: Atmosphere pressure critically dense!
 msg.superHighPressure=Warning: Atmosphere pressure critically dense, air unbreathable!
 msg.powerunit.rfpertick=RF/t
