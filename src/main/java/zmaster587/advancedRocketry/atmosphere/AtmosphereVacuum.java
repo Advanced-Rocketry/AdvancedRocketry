@@ -16,49 +16,26 @@ import zmaster587.libVulpes.network.PacketHandler;
  * Atmosphere type for vaccum (No air)
  * @author Zmaster
  */
-public class AtmosphereVacuum extends AtmosphereType {
+public class AtmosphereVacuum extends AtmosphereNeedsSuit {
 
 
 	public static int damageValue;
 
 	public AtmosphereVacuum() {
-		super(true, false, "vacuum");
+		super(true, false, false, "vacuum");
 	}
 
 	@Override
 	public void onTick(EntityLivingBase player) {
 		if(player.world.getTotalWorldTime() % 10  == 0 && !isImmune(player)) {
-			if(!isImmune(player)) {
-				player.attackEntityFrom(AtmosphereHandler.vacuumDamage, damageValue);
-				if(player instanceof EntityPlayer)
-					PacketHandler.sendToPlayer(new PacketOxygenState(), (EntityPlayer)player);
-			}
+			player.attackEntityFrom(AtmosphereHandler.vacuumDamage, damageValue);
+			if(player instanceof EntityPlayer)
+				PacketHandler.sendToPlayer(new PacketOxygenState(), (EntityPlayer)player);
 		}
 	}
 
 	@Override
 	public String getDisplayMessage() {
 		return LibVulpes.proxy.getLocalizedString("msg.noOxygen");
-	}
-
-	@Override
-	public boolean isImmune(EntityLivingBase player) {
-
-		
-		//Checks if player is wearing spacesuit or anything that extends ItemSpaceArmor
-
-		ItemStack feet = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
-		ItemStack leg = player.getItemStackFromSlot(EntityEquipmentSlot.LEGS /*so hot you can fry an egg*/ );
-		ItemStack chest = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-		ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-
-		return (player instanceof EntityPlayer && ((((EntityPlayer)player).capabilities.isCreativeMode) || ((EntityPlayer)player).isSpectator()))
-				|| player.getRidingEntity() instanceof EntityRocketBase || player.getRidingEntity() instanceof EntityElevatorCapsule ||
-				protectsFrom(helm) && protectsFrom(leg) && protectsFrom(feet) && protectsFrom(chest);
-		}
-
-	public boolean protectsFrom(ItemStack stack) {
-		return (ItemAirUtils.INSTANCE.isStackValidAirContainer(stack) && new ItemAirUtils.ItemAirWrapper(stack).protectsFromSubstance(this, stack, true) ) || (!stack.isEmpty() && stack.hasCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null) &&
-				stack.getCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null).protectsFromSubstance(this, stack, true));
 	}
 }

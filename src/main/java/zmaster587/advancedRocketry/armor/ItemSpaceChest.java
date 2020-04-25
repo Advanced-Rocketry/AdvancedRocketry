@@ -7,6 +7,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.util.EmbeddedInventory;
@@ -263,5 +265,20 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 
 		//return Configuration.spaceSuitOxygenTime*1200; //30 minutes;
 	}
-
+	
+	@Override
+	public boolean protectsFromSubstance(IAtmosphere atmosphere, ItemStack stack, boolean commitProtection) {
+		
+		if(!super.protectsFromSubstance(atmosphere, stack, commitProtection))
+			return false;
+		
+		// Assume for now that the spacesuit has a built in O2 extractor and can magically handle pressure
+		if(atmosphere.allowsCombustion())
+			return true;
+		
+		// If the atmosphere allows for combustion, it probably has O2, TODO: atmosphere with non O2 oxidizers
+		boolean commitAndDecrement = commitProtection && ((IFillableArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).decrementAir(stack, 1) > 0;
+		boolean noncommitAndHasAir = !commitProtection && ((IFillableArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).getAirRemaining(stack) > 0;
+		return noncommitAndHasAir || commitAndDecrement;
+	}
 }

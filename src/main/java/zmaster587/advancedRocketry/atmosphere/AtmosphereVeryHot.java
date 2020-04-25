@@ -12,11 +12,11 @@ import zmaster587.advancedRocketry.entity.EntityElevatorCapsule;
 import zmaster587.advancedRocketry.util.ItemAirUtils;
 import zmaster587.libVulpes.LibVulpes;
 
-public class AtmosphereVeryHot extends AtmosphereType{
+public class AtmosphereVeryHot extends AtmosphereNeedsSuit {
 	
-	public AtmosphereVeryHot(boolean canTick, boolean isBreathable,
+	public AtmosphereVeryHot(boolean canTick, boolean isBreathable, boolean allowsCombustion,
 			String name) {
-		super(canTick, isBreathable, name);
+		super(canTick, isBreathable, allowsCombustion, name);
 	}
 	
 
@@ -28,31 +28,8 @@ public class AtmosphereVeryHot extends AtmosphereType{
 	@Override
 	public void onTick(EntityLivingBase player) {
 		if(player.world.getTotalWorldTime() % 20  == 0 && !isImmune(player)) {
-			if(!isImmune(player)) {
-				player.setFire(1);
-				player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 40, 3));
-			}
+			player.setFire(1);
+			player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 40, 3));
 		}
-	}
-	
-	
-	@Override
-	public boolean isImmune(EntityLivingBase player) {
-
-		//Checks if player is wearing spacesuit or anything that extends ItemSpaceArmor
-
-		ItemStack feet = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
-		ItemStack leg = player.getItemStackFromSlot(EntityEquipmentSlot.LEGS /*so hot you can fry an egg*/ );
-		ItemStack chest = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-		ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-
-		return (player instanceof EntityPlayer && ((((EntityPlayer)player).capabilities.isCreativeMode) || ((EntityPlayer)player).isSpectator()))
-				|| player.getRidingEntity() instanceof EntityRocketBase || player.getRidingEntity() instanceof EntityElevatorCapsule ||
-				protectsFrom(helm) && protectsFrom(leg) && protectsFrom(feet) && protectsFrom(chest);
-	}
-	
-	public boolean protectsFrom(ItemStack stack) {
-		return (ItemAirUtils.INSTANCE.isStackValidAirContainer(stack) && new ItemAirUtils.ItemAirWrapper(stack).protectsFromSubstance(this, stack, true) ) || (stack != null && stack.hasCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null) &&
-				stack.getCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null).protectsFromSubstance(this, stack, true));
 	}
 }

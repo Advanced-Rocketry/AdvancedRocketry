@@ -9,12 +9,12 @@ import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 public class AtmosphereType implements IAtmosphere {
 
 	public static final AtmosphereType AIR = new AtmosphereType(false, true, "air");
-	public static final AtmosphereType PRESSURIZEDAIR = new AtmosphereType(false, true, "PressurizedAir");
-	public static final AtmosphereType LOWOXYGEN = new AtmosphereLowOxygen(true, false, "lowO2");
+	public static final AtmosphereType PRESSURIZEDAIR = new AtmosphereType(false, true, true, "PressurizedAir");
+	public static final AtmosphereType LOWOXYGEN = new AtmosphereLowOxygen(true, false, false, "lowO2");
 	public static final AtmosphereType VACUUM = new AtmosphereVacuum();
-	public static final AtmosphereType HIGHPRESSURE = new AtmosphereHighPressure(true, true, "HighPressure");
-	public static final AtmosphereType SUPERHIGHPRESSURE = new AtmosphereSuperHighPressure(true, false, "SuperHighPressure");
-	public static final AtmosphereType VERYHOT = new AtmosphereVeryHot(true, false, "VeryHot");
+	public static final AtmosphereType HIGHPRESSURE = new AtmosphereHighPressure(true, true, true, "HighPressure");
+	public static final AtmosphereType SUPERHIGHPRESSURE = new AtmosphereSuperHighPressure(true, false, true, "SuperHighPressure");
+	public static final AtmosphereType VERYHOT = new AtmosphereVeryHot(true, false, true, "VeryHot");
 
 	static {
 		AtmosphereRegister.getInstance().registerAtmosphere(AIR);
