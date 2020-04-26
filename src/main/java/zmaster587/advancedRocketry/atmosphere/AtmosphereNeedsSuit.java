@@ -38,7 +38,7 @@ public class AtmosphereNeedsSuit extends AtmosphereType {
 		// this will prevent the O2 level in the chest from being needlessly decremented
 		return (player instanceof EntityPlayer && ((((EntityPlayer)player).capabilities.isCreativeMode)))
 				|| player.ridingEntity instanceof EntityRocketBase || player.ridingEntity instanceof EntityElevatorCapsule ||
-				( ( (!onlyNeedsMask()) && protectsFrom(leg) && protectsFrom(feet) ) && protectsFrom(helm) && protectsFrom(chest) );
+				( ( (!onlyNeedsMask() && protectsFrom(leg) && protectsFrom(feet) ) || onlyNeedsMask() ) && protectsFrom(helm) && protectsFrom(chest) );
 		}
 
 	protected boolean protectsFrom(ItemStack stack) {
