@@ -272,7 +272,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 		if(!super.protectsFromSubstance(atmosphere, stack, commitProtection))
 			return false;
 		
-		// Assume for now that the spacesuit has a built in O2 extractor and can magically handle pressure
+		// Assume for now that the space suit has a built in O2 extractor and can magically handle pressure
 		if(atmosphere.allowsCombustion())
 			return true;
 		

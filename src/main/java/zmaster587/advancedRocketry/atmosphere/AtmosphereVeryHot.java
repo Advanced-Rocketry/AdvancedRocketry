@@ -25,6 +25,12 @@ public class AtmosphereVeryHot extends AtmosphereNeedsSuit {
 		return LibVulpes.proxy.getLocalizedString("msg.tooHot");
 	}
 	
+	// Needs full pressure suit
+	protected boolean onlyNeedsMask()
+	{
+		return false;
+	}
+	
 	@Override
 	public void onTick(EntityLivingBase player) {
 		if(player.world.getTotalWorldTime() % 20  == 0 && !isImmune(player)) {
