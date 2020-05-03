@@ -12,12 +12,12 @@ import zmaster587.advancedRocketry.network.PacketOxygenState;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.network.PacketHandler;
 
-public class AtmosphereLowOxygen extends AtmosphereType {
+public class AtmosphereLowOxygen extends AtmosphereNeedsSuit {
 
 	
-	public AtmosphereLowOxygen(boolean canTick, boolean isBreathable,
+	public AtmosphereLowOxygen(boolean canTick, boolean isBreathable, boolean allowsCombustion,
 			String name) {
-		super(canTick, isBreathable, name);
+		super(canTick, isBreathable, allowsCombustion, name);
 	}
 
 	@Override
@@ -28,45 +28,15 @@ public class AtmosphereLowOxygen extends AtmosphereType {
 	@Override
 	public void onTick(EntityLivingBase player) {
 		if(player.worldObj.getTotalWorldTime() % 10  == 0 && !isImmune(player)) {
-			if(!isImmune(player)) {
-				player.attackEntityFrom(AtmosphereHandler.vacuumDamage, 1);
-				if(player instanceof EntityPlayer)
-					PacketHandler.sendToPlayer(new PacketOxygenState(), (EntityPlayer)player);
-			}
+			player.attackEntityFrom(AtmosphereHandler.vacuumDamage, 1);
+			if(player instanceof EntityPlayer)
+				PacketHandler.sendToPlayer(new PacketOxygenState(), (EntityPlayer)player);
 		}
 	}
 	
-	@Override
-	public boolean isImmune(EntityLivingBase player) {
-
-		//Checks if player is wearing spacesuit or anything that extends ItemSpaceArmor
-		
-		ItemStack chest = player.getEquipmentInSlot(3);
-		ItemStack helm = player.getEquipmentInSlot(4);
-
-
-		//TODO change over to use API #ISealedArmor
-		return (player instanceof EntityPlayer && ((EntityPlayer)player).capabilities.isCreativeMode) 
-				|| player.ridingEntity instanceof EntityRocketBase ||
-				helm != null && (helm.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)helm.getItem()).protectsFromSubstance(this, helm, true) || protectsFrom(helm, 1)) &&
-				chest != null && (chest.getItem() instanceof IProtectiveArmor && ((IProtectiveArmor)chest.getItem()).protectsFromSubstance(this, chest, true) || protectsFrom(chest, 2)) &&
-				((chest.getItem() instanceof IFillableArmor) && ((IFillableArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).decrementAir(chest, 1) > 0);
-	}
-	
-	public boolean protectsFrom(ItemStack stack, int slot) {
-		
-		if(CompatibilityMgr.powerSuits) {
-			if( AtmosphereVacuum.powerSuitItem == null)
-				try {
-					AtmosphereVacuum.powerSuitItem = Class.forName("net.machinemuse.powersuits.item.ItemPowerArmor");
-				} catch (ClassNotFoundException e) {
-					//Silently fail to prevent spam
-					return false;
-				}
-			
-			if(AtmosphereVacuum.powerSuitItem.isInstance(stack.getItem()))
-				return true;
-		}
-		return false;
+	// True if only a helmet is needed
+	protected boolean onlyNeedsMask()
+	{
+		return true;
 	}
 }

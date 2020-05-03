@@ -1,20 +1,18 @@
 package zmaster587.advancedRocketry.atmosphere;
 
-import cpw.mods.fml.common.registry.LanguageRegistry;
-import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
-import net.minecraft.client.resources.Language;
-import net.minecraft.client.resources.LanguageManager;
 import net.minecraft.entity.EntityLivingBase;
 
 public class AtmosphereType implements IAtmosphere {
 
 	public static final AtmosphereType AIR = new AtmosphereType(false, true, "air");
-	public static final AtmosphereType PRESSURIZEDAIR = new AtmosphereType(false, true, "PressurizedAir");
+	public static final AtmosphereType PRESSURIZEDAIR = new AtmosphereType(false, true, true, "PressurizedAir");
+	public static final AtmosphereType LOWOXYGEN = new AtmosphereLowOxygen(true, false, false, "lowO2");
 	public static final AtmosphereType VACUUM = new AtmosphereVacuum();
-	public static final AtmosphereType LOWOXYGEN = new AtmosphereLowOxygen(true, false, "lowO2");
-	public static final AtmosphereType HIGHPRESSURE = new AtmosphereHighPressure(true, true, "HighPressure");
+	public static final AtmosphereType HIGHPRESSURE = new AtmosphereHighPressure(true, true, true, "HighPressure");
+	public static final AtmosphereType SUPERHIGHPRESSURE = new AtmosphereSuperHighPressure(true, false, true, "SuperHighPressure");
+	public static final AtmosphereType VERYHOT = new AtmosphereVeryHot(true, false, true, "VeryHot");
 
 	static {
 		AtmosphereRegister.getInstance().registerAtmosphere(AIR);
@@ -22,6 +20,8 @@ public class AtmosphereType implements IAtmosphere {
 		AtmosphereRegister.getInstance().registerAtmosphere(VACUUM);
 		AtmosphereRegister.getInstance().registerAtmosphere(LOWOXYGEN);
 		AtmosphereRegister.getInstance().registerAtmosphere(HIGHPRESSURE);
+		AtmosphereRegister.getInstance().registerAtmosphere(SUPERHIGHPRESSURE);
+		AtmosphereRegister.getInstance().registerAtmosphere(VERYHOT);
 	}
 	
 	private boolean allowsCombustion;

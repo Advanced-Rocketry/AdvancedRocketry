@@ -54,7 +54,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 		//int i1 = k / 4 % 2;
 
 		//Set planet Orbiting distance; size
-		float f10 = 100f*AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance);
+		float f10 = 66f*AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance);
 
 		float Xoffset = (float)((System.currentTimeMillis()/1000000d % 1));
 

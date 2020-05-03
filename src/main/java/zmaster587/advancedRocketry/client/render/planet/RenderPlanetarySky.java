@@ -545,8 +545,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 				OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, 1, 0);
 			}
-			renderPlanet2(tessellator1, parentPlanetIcon, 0,0,-100, AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance), multiplier, rotation, hasAtmosphere, parentAtmColor, parentRingColor, isGasGiant, false);
-
+			renderPlanet2(tessellator1, parentPlanetIcon, 0,0,-100, 66f*AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance), multiplier, rotation, hasAtmosphere, parentAtmColor, parentRingColor, isGasGiant, false);
 			GL11.glPopMatrix();
 		}
 
@@ -582,7 +581,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 			//System.out.println(x*x + z*z + y*y);
 			//double rotation = Math.atan2(z,hyp );// - MathHelper.sin((float)moons.orbitTheta);//-Math.PI/2f + Math.atan2(x, y) - (moons.orbitTheta - Math.PI)*MathHelper.sin(phiAngle)*hyp;
 
-			renderPlanet(tessellator1, moons.getPlanetIcon(), (1/(float)moons.getParentOrbitalDistance())*moons.gravitationalMultiplier, multiplier, rotation, moons.hasAtmosphere(), moons.skyColor, moons.ringColor, isGasGiant, moons.hasRings());
+			//renderPlanet(tessellator1, moons.getPlanetIcon(), (1/(float)moons.getParentOrbitalDistance())*moons.gravitationalMultiplier, multiplier, rotation, moons.hasAtmosphere(), moons.skyColor, moons.ringColor, isGasGiant, moons.hasRings());
+			renderPlanet(tessellator1, moons.getPlanetIcon(), moons.getParentOrbitalDistance(), multiplier, rotation, moons.hasAtmosphere(), moons.skyColor, moons.ringColor, isGasGiant, moons.hasRings());
 			GL11.glPopMatrix();
 		}
 

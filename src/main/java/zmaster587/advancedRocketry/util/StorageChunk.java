@@ -248,9 +248,9 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	public List<TileEntity> getGUItiles() {
 		List<TileEntity> list = new LinkedList<TileEntity>(inventoryTiles);
 
-		/*TileEntity guidanceComputer = getGuidanceComputer();
+		TileEntity guidanceComputer = getGuidanceComputer();
 		if(guidanceComputer != null)
-			list.add(getGuidanceComputer());*/
+			list.add(getGuidanceComputer());
 		return list;
 	}
 

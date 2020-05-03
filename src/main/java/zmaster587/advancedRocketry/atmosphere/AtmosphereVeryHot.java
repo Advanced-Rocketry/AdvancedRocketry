@@ -5,9 +5,9 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import zmaster587.libVulpes.LibVulpes;
 
-public class AtmosphereHighPressure extends AtmosphereNeedsSuit {
+public class AtmosphereVeryHot extends AtmosphereNeedsSuit {
 	
-	public AtmosphereHighPressure(boolean canTick, boolean isBreathable, boolean allowsCombustion,
+	public AtmosphereVeryHot(boolean canTick, boolean isBreathable, boolean allowsCombustion,
 			String name) {
 		super(canTick, isBreathable, allowsCombustion, name);
 	}
@@ -15,19 +15,19 @@ public class AtmosphereHighPressure extends AtmosphereNeedsSuit {
 
 	@Override
 	public String getDisplayMessage() {
-		return LibVulpes.proxy.getLocalizedString("msg.highPressure");
+		return LibVulpes.proxy.getLocalizedString("msg.tooHot");
 	}
 	
 	// Needs full pressure suit
-	protected boolean onlyNeedsMask()
-	{
-		return false;
-	}
+		protected boolean onlyNeedsMask()
+		{
+			return false;
+		}
 	
 	@Override
 	public void onTick(EntityLivingBase player) {
 		if(player.worldObj.getTotalWorldTime() % 20  == 0 && !isImmune(player)) {
-			player.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 40, 3));
+			player.setFire(1);
 			player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 40, 3));
 		}
 	}

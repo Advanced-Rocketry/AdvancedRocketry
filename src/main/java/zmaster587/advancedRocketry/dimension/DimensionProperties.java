@@ -63,11 +63,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * where 100 is earthlike, larger values are hotter
 	 */
 	public static enum Temps {
-		TOOHOT(150),
-		HOT(125),
-		NORMAL(75),
-		COLD(50),
-		FRIGID(25),
+		TOOHOT(450),
+		HOT(325),
+		NORMAL(275),
+		COLD(250),
+		FRIGID(200),
 		SNOWBALL(0);
 
 		private int temp;
@@ -107,7 +107,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * where 100 is earthlike, largers values are higher pressure
 	 */
 	public static enum AtmosphereTypes {
-		HIGHPRESSURE(125),
+		SUPERHIGHPRESSURE(800),
+		HIGHPRESSURE(200),
 		NORMAL(75),
 		LOW(25),
 		NONE(0);
@@ -135,24 +136,24 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * Contains default graphic {@link ResourceLocation} to display for different planet types
 	 *
 	 */
-	public static final ResourceLocation atmosphere = new ResourceLocation("advancedrocketry:textures/planets/Atmosphere2.png");
-	public static final ResourceLocation atmosphereLEO = new ResourceLocation("advancedrocketry:textures/planets/AtmosphereLEO.png");
-	public static final ResourceLocation atmGlow = new ResourceLocation("advancedrocketry:textures/planets/atmGlow.png");
+	public static final ResourceLocation atmosphere = new ResourceLocation("advancedrocketry:textures/planets/atmosphere2.png");
+	public static final ResourceLocation atmosphereLEO = new ResourceLocation("advancedrocketry:textures/planets/atmosphereleo.png");
+	public static final ResourceLocation atmGlow = new ResourceLocation("advancedrocketry:textures/planets/atmglow.png");
 	public static final ResourceLocation planetRings = new ResourceLocation("advancedrocketry:textures/planets/rings.png");
-	public static final ResourceLocation planetRingShadow = new ResourceLocation("advancedrocketry:textures/planets/ringShadow.png");
+	public static final ResourceLocation planetRingShadow = new ResourceLocation("advancedrocketry:textures/planets/ringshadow.png");
 	public static final ResourceLocation shadow = new ResourceLocation("advancedrocketry:textures/planets/shadow.png");
 	public static final ResourceLocation shadow3 = new ResourceLocation("advancedrocketry:textures/planets/shadow3.png");
 
 	public static enum PlanetIcons {
-		EARTHLIKE(new ResourceLocation("advancedrocketry:textures/planets/Earthlike.png")),
-		LAVA(new ResourceLocation("advancedrocketry:textures/planets/Lava.png")),
+		EARTHLIKE(new ResourceLocation("advancedrocketry:textures/planets/earthlike.png")),
+		LAVA(new ResourceLocation("advancedrocketry:textures/planets/lava.png")),
 		MARSLIKE(new ResourceLocation("advancedrocketry:textures/planets/marslike.png")),
 		MOON(new ResourceLocation("advancedrocketry:textures/planets/moon.png")),
-		WATERWORLD(new ResourceLocation("advancedrocketry:textures/planets/WaterWorld.png")),
-		ICEWORLD(new ResourceLocation("advancedrocketry:textures/planets/IceWorld.png")),
-		GASGIANTBLUE(new ResourceLocation("advancedrocketry:textures/planets/GasGiantBlue.png")),
-		GASGIANTRED(new ResourceLocation("advancedrocketry:textures/planets/GasGiantOrange.png")),
-		UNKNOWN(new ResourceLocation("advancedrocketry:textures/planets/Unknown.png"))
+		WATERWORLD(new ResourceLocation("advancedrocketry:textures/planets/waterworld.png")),
+		ICEWORLD(new ResourceLocation("advancedrocketry:textures/planets/iceworld.png")),
+		GASGIANTBLUE(new ResourceLocation("advancedrocketry:textures/planets/gasgiantblue.png")),
+		GASGIANTRED(new ResourceLocation("advancedrocketry:textures/planets/gasgiantorange.png")),
+		UNKNOWN(new ResourceLocation("advancedrocketry:textures/planets/unknown.png"))
 		;
 
 
@@ -163,7 +164,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		private PlanetIcons(ResourceLocation resource) {
 			this.resource = resource;
 
-			this.resourceLEO = new ResourceLocation(resource.toString().substring(0, resource.toString().length() - 4) + "LEO.jpg");
+			this.resourceLEO = new ResourceLocation(resource.toString().substring(0, resource.toString().length() - 4) + "leo.jpg");
 		}
 
 		private PlanetIcons(ResourceLocation resource, ResourceLocation leo) {
@@ -181,13 +182,13 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		}
 	}
 
-	public static final int MAX_ATM_PRESSURE = 200;
+	public static final int MAX_ATM_PRESSURE = 1600;
 	public static final int MIN_ATM_PRESSURE = 0;
 
 	public static final int MAX_DISTANCE = Integer.MAX_VALUE;
 	public static final int MIN_DISTANCE = 1;
 
-	public static final int MAX_GRAVITY = 200;
+	public static final int MAX_GRAVITY = 400;
 	public static final int MIN_GRAVITY = 0;
 
 
@@ -206,6 +207,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public int rotationalPeriod;
 	//Stored in radians
 	public double orbitTheta;
+	public double baseOrbitTheta;
 	StellarBody star;
 	int starId;
 	private String name;
@@ -666,6 +668,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 */
 	public IAtmosphere getAtmosphere() {
 		if(hasAtmosphere()) {
+			if(Temps.getTempFromValue(averageTemperature) == Temps.TOOHOT)
+				return AtmosphereType.VERYHOT;
+			if(AtmosphereTypes.getAtmosphereTypeFromValue(getAtmosphereDensity()) == AtmosphereTypes.SUPERHIGHPRESSURE)
+				return AtmosphereType.SUPERHIGHPRESSURE;
 			if(AtmosphereTypes.getAtmosphereTypeFromValue(getAtmosphereDensity()) == AtmosphereTypes.HIGHPRESSURE)
 				return AtmosphereType.HIGHPRESSURE;
 			return AtmosphereType.AIR;
@@ -818,7 +824,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 
 	public void updateOrbit() {
-		this.orbitTheta = AstronomicalBodyHelper.getOrbitalTheta(orbitalDist, getStar().getSize());
+		this.prevOrbitalTheta = orbitTheta;
+		this.orbitTheta = AstronomicalBodyHelper.getOrbitalTheta(orbitalDist, getStar().getSize()) + baseOrbitTheta;
 	}
 
 
@@ -1179,6 +1186,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		gravitationalMultiplier = nbt.getFloat("gravitationalMultiplier");
 		orbitalDist = nbt.getInteger("orbitalDist");
 		orbitTheta = nbt.getDouble("orbitTheta");
+		baseOrbitTheta = nbt.getDouble("baseOrbitTheta");
 		atmosphereDensity = nbt.getInteger("atmosphereDensity");
 		averageTemperature = nbt.getInteger("avgTemperature");
 		rotationalPeriod = nbt.getInteger("rotationalPeriod");
@@ -1335,6 +1343,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setFloat("gravitationalMultiplier", gravitationalMultiplier);
 		nbt.setInteger("orbitalDist", orbitalDist);
 		nbt.setDouble("orbitTheta", orbitTheta);
+		nbt.setDouble("baseOrbitTheta", baseOrbitTheta);
 		nbt.setInteger("atmosphereDensity", atmosphereDensity);
 		nbt.setInteger("originalAtmosphereDensity", originalAtmosphereDensity);
 		nbt.setInteger("avgTemperature", averageTemperature);
