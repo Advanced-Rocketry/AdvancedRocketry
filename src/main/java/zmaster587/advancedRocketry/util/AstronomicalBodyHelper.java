@@ -25,7 +25,7 @@ public class AstronomicalBodyHelper {
 		//Gives output in AU
 		float planetaryOrbitalRadius = orbitalDistance/100f;
 		//Albedo is 0.3f hardcoded because of inability to easily calculate
-		double averageWithoutAtmosphere = starSurfaceTemperature * Math.pow(starRadius/planetaryOrbitalRadius, 0.5) * Math.pow((1f-0.3f), 0.25);
+		double averageWithoutAtmosphere = starSurfaceTemperature * Math.pow(starRadius/(2 * planetaryOrbitalRadius), 0.5) * Math.pow((1f-0.3f), 0.25);
 		//Slightly kludgey solution that works out mostly for Venus and well for Earth, without being overly complex
 		return (int)(averageWithoutAtmosphere * Math.max(1, (1.125d * Math.pow((atmPressure/100), 0.25))));
 	}
