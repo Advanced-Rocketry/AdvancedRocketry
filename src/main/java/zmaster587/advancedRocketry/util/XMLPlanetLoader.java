@@ -78,6 +78,7 @@ public class XMLPlanetLoader {
 	private static final String ELEMENT_GRAVITY = "gravitationalMultiplier";
 	private static final String ELEMENT_DISTANCE = "orbitalDistance";
 	private static final String ELEMENT_PHI = "orbitalPhi";
+	private static final String AVG_TEMPERATURE = "avgTemperature";
 	private static final String ELEMENT_PERIOD = "rotationalPeriod";
 	private static final String ELEMENT_ATMDENSITY = "atmosphereDensity";
 	private static final String ELEMENT_SEALEVEL = "seaLevel";
@@ -850,6 +851,7 @@ public class XMLPlanetLoader {
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_GRAVITY, (int)(properties.getGravitationalMultiplier()*100f)));
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_DISTANCE, properties.getOrbitalDist()));
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_PHI, (int)(properties.orbitalPhi)));
+		nodePlanet.appendChild(createTextNode(doc, AVG_TEMPERATURE, (int)(properties.averageTemperature)));
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_PERIOD, properties.rotationalPeriod));
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_ATMDENSITY, properties.getAtmosphereDensity()));
 		nodePlanet.appendChild(createTextNode(doc, GENERATECRATERS, properties.canGenerateCraters()));
