@@ -560,6 +560,7 @@ public class XMLPlanetLoader {
 		outputString = outputString + tabLen + "\t<gravitationalMultiplier>" + (int)(properties.getGravitationalMultiplier()*100f) + "</gravitationalMultiplier>\n";
 		outputString = outputString + tabLen + "\t<orbitalDistance>" + properties.getOrbitalDist() + "</orbitalDistance>\n";
 		outputString = outputString + tabLen + "\t<orbitalTheta>" + (int)(properties.baseOrbitTheta * 180d/Math.PI) + "</orbitalTheta>\n";
+		outputString = outputString + tabLen + "\t<avgTemperature>" + (int)(properties.averageTemperature) + "</avgTemperature>\n";
 		outputString = outputString + tabLen + "\t<orbitalPhi>" + (int)(properties.orbitalPhi) + "</orbitalPhi>\n";
 		outputString = outputString + tabLen + "\t<rotationalPeriod>" + (int)properties.rotationalPeriod + "</rotationalPeriod>\n";
 		outputString = outputString + tabLen + "\t<atmosphereDensity>" + (int)properties.getAtmosphereDensity() + "</atmosphereDensity>\n";
