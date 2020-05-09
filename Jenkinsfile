@@ -7,7 +7,7 @@
                 sh 'mkdir -p libs'
                 sh 'cp ../../libraries/*.jar ./libs'
 
-                sh 'gradle clean build curseforge236542'
+                sh 'gradle clean build curseforge236542 --refresh-dependencies'
                 archiveArtifacts artifacts: '**build/libs/*.jar', fingerprint: true 
             }
         }
