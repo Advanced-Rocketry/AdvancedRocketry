@@ -128,8 +128,8 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 							float phase = 0;
 							for(EntityUIStar entity : starEntities) {
 								double deltaX, deltaY;
-								deltaX = (entity.getStarProperties().getStarSeparation()*MathHelper.cos(phase)*0.01);
-								deltaY = (entity.getStarProperties().getStarSeparation()*MathHelper.sin(phase)*0.01);
+								deltaX = (entity.getStarProperties().getStarSeparation()*MathHelper.cos(phase)*0.05);
+								deltaY = (entity.getStarProperties().getStarSeparation()*MathHelper.sin(phase)*0.05);
 
 								entity.setPosition(this.pos.getX() + .5 + getInterpHologramSize()*deltaX, this.pos.getY() + 1, this.pos.getZ() + .5 + getInterpHologramSize()*deltaY);
 								entity.setScale(getInterpHologramSize()*entity.getStarProperties().getSize());
@@ -258,9 +258,9 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 					Collection<StellarBody> starList = currentStarBody.getSubStars();
 					for(StellarBody body : starList) {
 
-						int deltaX, deltaY;
-						deltaX = (int)(body.getStarSeparation()*MathHelper.cos(phase)*0.05);
-						deltaY = (int)(body.getStarSeparation()*MathHelper.sin(phase)*0.05);
+						double deltaX, deltaY;
+						deltaX =  (body.getStarSeparation()*MathHelper.cos(phase)*0.05);
+						deltaY =  (body.getStarSeparation()*MathHelper.sin(phase)*0.05);
 						EntityUIStar entity = new EntityUIStar(world, body, count++, this, this.pos.getX() + .5 + deltaX, this.pos.getY() + 1, this.pos.getZ() + .5 + deltaY);
 
 						this.getWorld().spawnEntity(entity);

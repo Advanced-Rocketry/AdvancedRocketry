@@ -74,7 +74,8 @@ public class EntityUIStar extends EntityUIPlanet {
 		if((star == null && getPlanetID() != Constants.INVALID_PLANET) || (star != null && getPlanetID() != star.getId())) {
 			star = DimensionManager.getInstance().getStar(getPlanetID());
 			if((subStar = this.dataManager.get(subStarData)) != -1)
-				star = star.getSubStars().get(subStar);
+				if(!star.getSubStars().isEmpty())
+					star = star.getSubStars().get(subStar);
 		}
 
 		return star;
