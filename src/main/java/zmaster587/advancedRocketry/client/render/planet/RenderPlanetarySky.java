@@ -593,6 +593,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GL11.glPopMatrix();
 		GlStateManager.disableTexture2D();
 		GlStateManager.color(0.0F, 0.0F, 0.0F);
+		
 		double d0 = this.mc.player.getPositionEyes(partialTicks).y - mc.world.getHorizon();
 
 		if (d0 < 0.0D)
@@ -630,21 +631,6 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 			Tessellator.getInstance().draw();
 		}
-
-		if (mc.world.provider.isSkyColored())
-		{
-			GlStateManager.color(f1 * 0.2F + 0.04F, f2 * 0.2F + 0.04F, f3 * 0.6F + 0.1F);
-		}
-		else
-		{
-			GlStateManager.color(f1, f2, f3);
-		}
-
-		//Blackness @ bottom of world
-		GL11.glPushMatrix();
-		GL11.glTranslatef(0.0F, -((float)(d0 - 16.0D)), 0.0F);
-		GL11.glCallList(this.glSkyList2);
-		GL11.glPopMatrix();
 
 		GlStateManager.enableTexture2D();
 		GlStateManager.depthMask(true);
