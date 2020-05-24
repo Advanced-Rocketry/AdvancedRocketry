@@ -183,95 +183,31 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 	{
 		if (!this.world.isRemote && !this.isDead)
 		{
-			List<Entity> passengers = getPassengers();
+			float yaw = this.rotationYaw;
+			float pitch = this.rotationPitch;
 
-			if (!net.minecraftforge.common.ForgeHooks.onTravelToDimension(this, dimensionIn)) return null;
-			this.world.profiler.startSection("changeDimension");
-			MinecraftServer minecraftserver = this.getServer();
+			List<Entity> passengers = getPassengers();
 			int i = this.dimension;
+			MinecraftServer minecraftserver = this.getServer();
 			WorldServer worldserver = minecraftserver.getWorld(i);
 			WorldServer worldserver1 = minecraftserver.getWorld(dimensionIn);
-			this.dimension = dimensionIn;
-
-			if (i == 1 && dimensionIn == 1)
-			{
-				worldserver1 = minecraftserver.getWorld(0);
-				this.dimension = 0;
-			}
-
-			this.world.removeEntity(this);
-			this.isDead = false;
-			this.world.profiler.startSection("reposition");
-			BlockPos blockpos;
-
-
-			double d0 = this.posX;
-			double d1 = this.posZ;
-			double d2 = 8.0D;
-
-
-			d0 = MathHelper.clamp(d0 * 8.0D, worldserver1.getWorldBorder().minX() + 16.0D, worldserver1.getWorldBorder().maxX() - 16.0D);
-			d1 = MathHelper.clamp(d1 * 8.0D, worldserver1.getWorldBorder().minZ() + 16.0D, worldserver1.getWorldBorder().maxZ() - 16.0D);
-
-
-			d0 = (double)MathHelper.clamp((int)d0, -29999872, 29999872);
-			d1 = (double)MathHelper.clamp((int)d1, -29999872, 29999872);
-			float f = this.rotationYaw;
-			this.setLocationAndAngles(d0, this.posY, d1, 90.0F, 0.0F);
+			this.setPosition(posX, y, posZ);
+			
 			Teleporter teleporter = new TeleporterNoPortal(worldserver1);
-			teleporter.placeInExistingPortal(this, f);
+			Entity entity = changeDimension(dimensionIn, teleporter);
 
-
-			worldserver.updateEntityWithOptionalForce(this, false);
-			this.world.profiler.endStartSection("reloading");
-			Entity entity = EntityList.newEntity(this.getClass(), worldserver1);
-
-			if (entity != null)
-			{
-
-				this.moveToBlockPosAndAngles(new BlockPos(posX, y, posZ), entity.rotationYaw, entity.rotationPitch);
-				((EntityElevatorCapsule)entity).copyDataFromOld(this);
-
-				entity.forceSpawn = true;
-				worldserver1.spawnEntity(entity);
-				worldserver1.updateEntityWithOptionalForce(entity, true);
-
-				int timeOffset = 1;
-				for(Entity e : passengers) {
-					//Fix that darn random crash?
-					worldserver.resetUpdateEntityTick();
-					worldserver1.resetUpdateEntityTick();
-					//Transfer the player if applicable
-
-					//Need to handle our own removal to avoid race condition where player is mounted on client on the old entity but is already mounted to the new one on server
-					//PacketHandler.sendToPlayer(new PacketEntity(this, (byte)PacketType.DISMOUNTCLIENT.ordinal()), (EntityPlayer) e);
-
-					PlanetEventHandler.addDelayedTransition(new TransitionEntity(worldserver.getTotalWorldTime(), e, dimensionIn, new BlockPos(posX + 16, y, posZ), entity));
-
-					//minecraftserver.getPlayerList().transferPlayerToDimension((EntityPlayerMP)e, dimensionIn, teleporter);
-
-					//e.setLocationAndAngles(posX, Configuration.orbit, posZ, this.rotationYaw, this.rotationPitch);
-
-					//e.startRiding(entity);
-
-
-					//e.playerNetServerHandler.sendPacket(new SPacketRespawn(e.dimension, e.world.getDifficulty(), worldserver1.getWorldInfo().getTerrainType(), ((EntityPlayerMP)e).interactionManager.getGameType()));
-					//((WorldServer)startWorld).getPlayerManager().removePlayer(player);
-
-				}
+			if(entity == null)
+				return null;
+			
+			entity.setPositionAndRotation(posX, y, posZ, yaw, pitch);
+			
+			int timeOffset = 1;
+			for(Entity e : passengers) {
+				PlanetEventHandler.addDelayedTransition(new TransitionEntity(worldserver.getTotalWorldTime() + ++timeOffset, e, dimensionIn, new BlockPos(posX, y, posZ), entity));
 			}
-
-			this.isDead = true;
-			this.world.profiler.endSection();
-			worldserver.resetUpdateEntityTick();
-			worldserver1.resetUpdateEntityTick();
-			this.world.profiler.endSection();
 			return entity;
 		}
-		else
-		{
-			return null;
-		}
+		return null;
 	}
 
 	@Override

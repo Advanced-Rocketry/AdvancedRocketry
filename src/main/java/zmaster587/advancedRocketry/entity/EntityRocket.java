@@ -777,6 +777,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		lastWorldTickTicked = world.getTotalWorldTime();
 
 		if(this.ticksExisted == 20) {
+			
 			//problems with loading on other world then where the infrastructure was set?
 			ListIterator<HashedBlockPosition> itr = (new LinkedList<HashedBlockPosition>(infrastructureCoords)).listIterator();
 			while(itr.hasNext()) {
@@ -837,14 +838,15 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			//Deorbiting
 			MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketDeOrbitingEvent(this));
 			PacketHandler.sendToNearby(new PacketEntity(this, (byte)PacketType.ROCKETLANDEVENT.ordinal()), world.provider.getDimension(), (int)posX, (int)posY, (int)posZ, 64);
-
 			for(Entity riddenByEntity : getPassengers()) {
 				if(riddenByEntity instanceof EntityPlayer) {
 					EntityPlayer player = (EntityPlayer)riddenByEntity;
 
-
+					
 					if(player instanceof EntityPlayer)
+					{
 						PacketHandler.sendToPlayer(new PacketEntity((INetworkEntity)this,(byte)PacketType.FORCEMOUNT.ordinal()), player);
+					}
 				}
 			}
 		}
@@ -1647,94 +1649,27 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			lastDimensionFrom = this.world.provider.getDimension();
 
 			List<Entity> passengers = getPassengers();
-
-			if (!net.minecraftforge.common.ForgeHooks.onTravelToDimension(this, dimensionIn)) return null;
-			this.world.profiler.startSection("changeDimension");
-			MinecraftServer minecraftserver = this.getServer();
 			int i = this.dimension;
+			MinecraftServer minecraftserver = this.getServer();
 			WorldServer worldserver = minecraftserver.getWorld(i);
 			WorldServer worldserver1 = minecraftserver.getWorld(dimensionIn);
-			this.dimension = dimensionIn;
-
-			if (i == 1 && dimensionIn == 1)
-			{
-				worldserver1 = minecraftserver.getWorld(0);
-				this.dimension = 0;
-			}
-
-			this.world.removeEntity(this);
-			this.isDead = false;
-			this.world.profiler.startSection("reposition");
-			BlockPos blockpos;
-
-
-			double d0 = this.posX;
-			double d1 = this.posZ;
-			double d2 = 8.0D;
-
-
-			d0 = MathHelper.clamp(d0 * 8.0D, worldserver1.getWorldBorder().minX() + 16.0D, worldserver1.getWorldBorder().maxX() - 16.0D);
-			d1 = MathHelper.clamp(d1 * 8.0D, worldserver1.getWorldBorder().minZ() + 16.0D, worldserver1.getWorldBorder().maxZ() - 16.0D);
-
-
-			d0 = (double)MathHelper.clamp((int)d0, -29999872, 29999872);
-			d1 = (double)MathHelper.clamp((int)d1, -29999872, 29999872);
-			float f = this.rotationYaw;
-			this.setLocationAndAngles(d0, this.posY, d1, 90.0F, 0.0F);
+			this.setPosition(posX, y, posZ);
+			
 			Teleporter teleporter = new TeleporterNoPortal(worldserver1);
-			teleporter.placeInExistingPortal(this, f);
-
-
-			worldserver.updateEntityWithOptionalForce(this, false);
-			this.world.profiler.endStartSection("reloading");
-			Entity entity = EntityList.newEntity(this.getClass(), worldserver1);
-
-			if (entity != null)
-			{
-
-				this.moveToBlockPosAndAngles(new BlockPos(posX, y, posZ), entity.rotationYaw, entity.rotationPitch);
-				((EntityRocket)entity).copyDataFromOld(this);
-
-				entity.forceSpawn = true;
-				worldserver1.spawnEntity(entity);
-				worldserver1.updateEntityWithOptionalForce(entity, true);
-
-				int timeOffset = 0;
-				for(Entity e : passengers) {
-					//Fix that darn random crash?
-					worldserver.resetUpdateEntityTick();
-					worldserver1.resetUpdateEntityTick();
-					//Transfer the player if applicable
-
-					//Need to handle our own removal to avoid race condition where player is mounted on client on the old entity but is already mounted to the new one on server
-					//PacketHandler.sendToPlayer(new PacketEntity(this, (byte)PacketType.DISMOUNTCLIENT.ordinal()), (EntityPlayer) e);
-
-					PlanetEventHandler.addDelayedTransition(new TransitionEntity(worldserver.getTotalWorldTime() + ++timeOffset, e, dimensionIn, new BlockPos(posX + 16, y, posZ), entity));
-
-					//minecraftserver.getPlayerList().transferPlayerToDimension((EntityPlayerMP)e, dimensionIn, teleporter);
-
-					//e.setLocationAndAngles(posX, Configuration.orbit, posZ, this.rotationYaw, this.rotationPitch);
-
-					//e.startRiding(entity);
-
-
-					//e.playerNetServerHandler.sendPacket(new SPacketRespawn(e.dimension, e.worldObj.getDifficulty(), worldserver1.getWorldInfo().getTerrainType(), ((EntityPlayerMP)e).interactionManager.getGameType()));
-					//((WorldServer)startWorld).getPlayerManager().removePlayer(player);
-
-				}
+			Entity entity = changeDimension(dimensionIn, teleporter);
+			
+			if(entity == null)
+				return null;
+			
+			entity.moveToBlockPosAndAngles(new BlockPos(posX, y, posZ), 0, 0);
+			
+			int timeOffset = 1;
+			for(Entity e : passengers) {
+				PlanetEventHandler.addDelayedTransition(new TransitionEntity(worldserver.getTotalWorldTime() + ++timeOffset, e, dimensionIn, new BlockPos(posX, y, posZ), entity));
 			}
-
-			this.isDead = true;
-			this.world.profiler.endSection();
-			worldserver.resetUpdateEntityTick();
-			worldserver1.resetUpdateEntityTick();
-			this.world.profiler.endSection();
 			return entity;
 		}
-		else
-		{
-			return null;
-		}
+		return null;
 	}
 
 	/**
@@ -1756,7 +1691,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
-
 		setInOrbit(isInOrbit = nbt.getBoolean("orbit"));
 		rcs_mode_counter = nbt.getInteger("rcs_mode_cnt");
 		setInSpaceFlight(nbt.getBoolean("inSpaceFlight"));

@@ -7,6 +7,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayer.SleepResult;
@@ -288,9 +289,12 @@ public class PlanetEventHandler {
 					TransitionEntity ent = itr.next();
 					if(ent.entity.world.getTotalWorldTime() >= ent.time) {
 						ent.entity.setLocationAndAngles(ent.location.getX(), ent.location.getY(), ent.location.getZ(), ent.entity.rotationYaw, ent.entity.rotationPitch);
-						ent.entity.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP)ent.entity, ent.dimId, new TeleporterNoPortal(ent.entity.getServer().getWorld(ent.dimId)));
-						ent.entity.startRiding(ent.entity2);
-
+						WorldServer newWorld = ent.entity.getServer().getWorld(ent.dimId);
+						ent.entity.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP)ent.entity, ent.dimId, new TeleporterNoPortal(newWorld));
+						//should be loaded by now
+						Entity rocket = newWorld.getEntityFromUuid(ent.entity2.getPersistentID());
+						if(rocket != null)
+							ent.entity.startRiding(rocket);
 						itr.remove();
 					}
 				}
