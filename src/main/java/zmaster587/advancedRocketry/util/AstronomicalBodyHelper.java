@@ -45,7 +45,8 @@ public class AstronomicalBodyHelper {
 		//There's no real easy way to get the light emitted by an accretion disc, so this substitutes
 		if(blackHole)
 			lightMultiplier  *=0.25;
-		//Returns ratio compared to Earth, because it'll only matter light level <15 and so we want a multiplier due to how MC handles light
+		//Returns ratio compared to a planet at 1 AU for Sol, because the other values in AR are normalized,
+		//and this works fairly well for hooking into with other mod's solar panels & such
 		return (lightMultiplier * ((Math.pow(star.getSize(), 2) * Math.pow(normalizedStarTemperature, 4))/Math.pow(planetaryOrbitalRadius, 2)));
 	}
 }
