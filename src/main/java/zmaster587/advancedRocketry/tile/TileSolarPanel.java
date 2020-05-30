@@ -1,6 +1,8 @@
 package zmaster587.advancedRocketry.tile;
 
 import net.minecraft.entity.player.EntityPlayer;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
@@ -53,7 +55,9 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 
 	@Override
 	public int getPowerPerOperation() {
-		return zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().solarGeneratorMult;
+		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
+		//Slight adjustment to make Earth 0.9995 into a 1.0
+		return (int)(1.0005d * zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().solarGeneratorMult * properties.getPeakInsolationMultiplier());
 	}
 
 	@Override
