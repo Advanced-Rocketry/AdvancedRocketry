@@ -40,16 +40,38 @@ apply from: "gradle/scripts/getbuildnumber.gradle"
 minecraft {
     version = "1.12.2-14.23.4.2739"
     runDir = "run"
-    mappings = "snapshot_20170624"
+    mappings = "snapshot_20171003"
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
-    replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"
+/*    replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"
     replace "@MAJOR@", version_major
     replace "@MINOR@", version_minor
     replace "@REVIS@", version_revis
     replace "@BUILD@", project.getBuildNumber()
-    
-    replace "%LIBVULPESVERSION%", project.libVulpesVersion
+    replace "%LIBVULPESVERSION%", project.libVulpesVersion*/
+}
+
+import org.apache.tools.ant.filters.FixCrLfFilter
+import org.apache.tools.ant.filters.ReplaceTokens
+
+task filter(type: Copy) {
+    from 'src/main/java'
+    into "${buildDir}/explodedAR"
+    // Substitute property tokens in files
+    expand(MAJOR: project.version_major, MINOR: project.version_minor)
+    expand(project.properties)
+    // Use some of the filters provided by Ant
+    filter(FixCrLfFilter)
+    filter(ReplaceTokens, tokens: [MAJOR: project.version_major, MINOR: project.version_minor])
+    // Use a closure to filter each line
+    filter { String line ->
+        "[$line]"
+    }
+    // Use a closure to remove lines
+    filter { String line ->
+        line.startsWith('-') ? null : line
+    }
+    filteringCharset = 'UTF-8'
 }
 
 apply from: "gradle/scripts/jars.gradle"
@@ -150,6 +172,6 @@ tasks.build.dependsOn makeChangelog
         tag 'Local'
     }
 
-    tag System.getProperty('os.name')                                            
+    //tag System.getProperty('os.name')                                            
 }*/
 
