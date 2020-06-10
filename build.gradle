@@ -65,7 +65,7 @@ task filter(type: Copy) {
     filter(ReplaceTokens, tokens: [MAJOR: project.version_major, MINOR: project.version_minor])
     // Use a closure to filter each line
     filter { String line ->
-        "[$line]"
+        "$line"
     }
     // Use a closure to remove lines
     filter { String line ->
