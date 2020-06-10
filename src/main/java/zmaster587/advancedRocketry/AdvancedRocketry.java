@@ -1073,12 +1073,19 @@ public class AdvancedRocketry {
 		AdvancedRocketryAPI.gravityManager = new GravityHandler();
 
 		// Compat stuff
-		if(Loader.isModLoaded("galacticraftcore") && zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().overrideGCAir) {
+		if(isGalacticraftLoaded() && zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().overrideGCAir) {
 			GalacticCraftHandler eventHandler = new GalacticCraftHandler();
 			MinecraftForge.EVENT_BUS.register(eventHandler);
 			if(event.getSide().isClient())
 				FMLCommonHandler.instance().bus().register(eventHandler);
 		}
+		
+		// Handler checks is Galacticraft is loaded
+		//Simplify?
+		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().overrideGCAir) {
+			MinecraftForge.EVENT_BUS.register(new GalacticCraftHandler());
+		}
+
 		Compat.isSpongeInstalled = Loader.isModLoaded("sponge");
 		// End compat stuff
 
@@ -1124,7 +1131,7 @@ public class AdvancedRocketry {
 	public void serverStarted(FMLServerStartedEvent event) {
 		for (int dimId : DimensionManager.getInstance().getLoadedDimensions()) {
 			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimId);
-			if(!properties.isNativeDimension && properties.getId() == zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().MoonId && !Loader.isModLoaded("GalacticraftCore")) {
+			if(!properties.isNativeDimension && properties.getId() == zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().MoonId && !isGalacticraftLoaded()) {
 				properties.isNativeDimension = true;
 			}
 		}
@@ -1270,5 +1277,14 @@ public class AdvancedRocketry {
 
 			list.add(event.getName().substring("rod".length()));
 		}
+	}
+	
+	/**
+	 * Checks if galacticraft loaded.
+	 *
+	 * @return true, if is galacticraft loaded
+	 */
+	public static boolean isGalacticraftLoaded() {
+		return Loader.isModLoaded("galacticraftcore");
 	}
 }
