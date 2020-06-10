@@ -70,7 +70,7 @@ repositories {
         }
     ivy {
 	    name "GalacticraftCore"
-            artifactPattern "https://ci.micdoodle8.com/job/Galacticraft-1.12/174/artifact/Forge/build/libs/[module]-[revision].[ext]"
+            artifactPattern "https://micdoodle8.com/new-builds/GC-1.12/174/[module]-[revision].[ext]"
         }
 //    ivy {
 //            name "EnderIO"
