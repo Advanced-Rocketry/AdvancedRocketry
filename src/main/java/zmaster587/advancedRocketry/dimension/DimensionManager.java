@@ -290,7 +290,7 @@ public class DimensionManager implements IGalaxy {
 		properties.setStar(getStar(starId));
 
 		//Earth is nominal at ~290
-		properties.averageTemperature = AstronomicalBodyHelper.getAverageTemperature(properties.getStar(), properties.orbitalDist, properties.getAtmosphereDensity());
+		properties.averageTemperature = AstronomicalBodyHelper.getAverageTemperature(properties.getStar(), properties.getSolarOrbitalDistance(), properties.getAtmosphereDensity());
 		
 		if(Temps.getTempFromValue(properties.averageTemperature) == Temps.TOOHOT)
 			properties.setOceanBlock(Blocks.lava);
@@ -363,7 +363,7 @@ public class DimensionManager implements IGalaxy {
 		properties.setStar(getStar(starId));
 
 		//Linear is easier. Earth is nominal!
-		properties.averageTemperature = AstronomicalBodyHelper.getAverageTemperature(properties.getStar(), properties.orbitalDist, properties.getAtmosphereDensity());
+		properties.averageTemperature = AstronomicalBodyHelper.getAverageTemperature(properties.getStar(), properties.getSolarOrbitalDistance(), properties.getAtmosphereDensity());
 		properties.setGasGiant(true);
 		//TODO: add gasses
 		registerDim(properties, true);
