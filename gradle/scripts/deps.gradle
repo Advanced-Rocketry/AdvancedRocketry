@@ -1,0 +1,48 @@
+
+String GCBuild = "174"
+String GCVersion = "1.12.2-4.0.2.${GCBuild}"
+
+repositories {
+    ivy {
+        url "https://micdoodle8.com/new-builds/"
+        layout 'pattern', {
+            artifact "[organization]/${GCBuild}/[module]-[revision].jar"
+        }
+        metadataSources {
+            artifact()
+        }
+    }
+    ivy {
+            name "LibVulpes"
+            artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/1.12/" + project.libVulpesBuildNum +"/artifact/output/[module]-[revision].[ext]"
+        }
+    maven {
+            name = "mezz.jei"
+            url = "http://dvs1.progwml6.com/files/maven"
+        }
+    ivy {
+            name "industrialcraft-2"
+            artifactPattern "http://jenkins.ic2.player.to/job/IC2_111/39/artifact/build/libs/[module]-[revision].[ext]"
+        }
+    ivy {
+            name "Tesla"
+            artifactPattern "https://addons-origin.cursecdn.com/files/2347/256/[module]-[revision].[ext]"
+        }
+}
+
+dependencies {
+    compile name: 'industrialcraft-2', version: '2.7.39-ex111-api', ext: 'jar'
+    //compile name: 'Tesla', version: '1.11-1.3.0.51-deobf', ext: 'jar'
+    //compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
+    compile name: 'LibVulpes', version: '1.12.2-' + project.libVulpesVersion  + '-' + project.libVulpesBuildNum + '-deobf', ext: 'jar'
+    
+    //all the GC crap
+    compile "GC-1.12-dev:GalacticraftCore-Dev:${GCVersion}"
+    compile "GC-1.12-dev:Galacticraft-API:${GCVersion}"
+    compile "GC-1.12-dev:Galacticraft-Planets-Dev:${GCVersion}"
+    compile "GC-1.12-dev:MicdoodleCore-Dev:${GCVersion}"
+
+    deobfCompile "mezz.jei:jei_1.12.2:4.8.0.110:api"
+    // at runtime, use the full JEI jar
+    runtime "mezz.jei:jei_1.12.2:4.8.0.110"
+}
