@@ -576,7 +576,7 @@ public class XMLPlanetLoader {
 		properties.setStar(star.getId());
 
 		//Set temperature
-		properties.averageTemperature = AstronomicalBodyHelper.getAverageTemperature(star, properties.getOrbitalDist(), properties.getAtmosphereDensity());
+		properties.averageTemperature = AstronomicalBodyHelper.getAverageTemperature(star, properties.getSolarOrbitalDistance(), properties.getAtmosphereDensity());
 
 		//If no biomes are specified add some!
 		if(properties.getBiomes().isEmpty())
