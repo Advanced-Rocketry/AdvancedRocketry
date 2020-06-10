@@ -76,19 +76,6 @@ processResources
     }
 }
 
-/*task deobfJar(type: Jar) {
-     from sourceSets.main.output
-     //if project name is BBM-Dev it makes the deobf jar deobf-dev if not its just deobf
-     classifier = "deobf"
-     //sets where the jars go to.
-     destinationDir = file 'output'
-     manifest {
-        attributes 'FMLCorePlugin': 'zmaster587.advancedRocketry.asm.AdvancedRocketryPlugin'
-        attributes 'FMLCorePluginContainsFMLMod': 'true'
-    }
-     mustRunAfter "jar" 
-}*/
-
 curseforge{
   if (project.hasProperty("thecursedkey")) {
         apiKey = project.thecursedkey
@@ -151,7 +138,7 @@ task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
 
 tasks.build.dependsOn makeChangelog
 
-buildScan {
+/*buildScan {
     licenseAgreementUrl = 'https://gradle.com/terms-of-service' 
     licenseAgree = 'yes'                                        
 
@@ -164,5 +151,5 @@ buildScan {
     }
 
     tag System.getProperty('os.name')                                            
-}
+}*/
 

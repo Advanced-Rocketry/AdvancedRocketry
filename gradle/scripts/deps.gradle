@@ -1,8 +1,9 @@
 
 String GCBuild = "174"
-String GCVersion = "1.12.2-4.0.2.${GCBuild}"
+String GCVersion = "1.12.2-4.0.1.${GCBuild}"
 
 repositories {
+    mavenCentral()
     ivy {
         url "https://micdoodle8.com/new-builds/"
         layout 'pattern', {
@@ -24,10 +25,10 @@ repositories {
             name "industrialcraft-2"
             artifactPattern "http://jenkins.ic2.player.to/job/IC2_111/39/artifact/build/libs/[module]-[revision].[ext]"
         }
-    ivy {
+    /*ivy {
             name "Tesla"
             artifactPattern "https://addons-origin.cursecdn.com/files/2347/256/[module]-[revision].[ext]"
-        }
+        }*/
 }
 
 dependencies {
