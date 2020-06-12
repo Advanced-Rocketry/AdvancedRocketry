@@ -10,7 +10,6 @@ jobs:
     - uses: actions/stale@v3.0.6
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        stale-issue-message: 'Stale issue message'
         stale-pr-message: 'Is this pr still needed?'
         stale-issue-message: 'This issue is stale because it has been open 60 days with no activity. Remove stale label or comment or this will be closed in 90 days'
         stale-issue-label: 'no-issue-activity'
