@@ -207,6 +207,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public int orbitalDist;
 	private int atmosphereDensity;
 	private int originalAtmosphereDensity;
+	//Used in solar panels
+	public double peakInsolationMultiplier;
 	public int averageTemperature;
 	public int rotationalPeriod;
 	//Stored in radians
@@ -709,6 +711,13 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 
 	/**
+	 * @return the multiplier compared to Earth(1040W) for peak insolation of the body
+	 */
+	public double getPeakInsolationMultiplier() {
+		return peakInsolationMultiplier;
+	}
+
+	/**
 	 * @return set of all moons orbiting this planet
 	 */
 	public Set<Integer> getChildPlanets() {
@@ -1194,6 +1203,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		orbitTheta = nbt.getDouble("orbitTheta");
 		baseOrbitTheta = nbt.getDouble("baseOrbitTheta");
 		atmosphereDensity = nbt.getInteger("atmosphereDensity");
+		peakInsolationMultiplier = nbt.getDouble("peakInsolationMultiplier");
 		averageTemperature = nbt.getInteger("avgTemperature");
 		rotationalPeriod = nbt.getInteger("rotationalPeriod");
 		name = nbt.getString("name");
@@ -1352,6 +1362,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setDouble("baseOrbitTheta", baseOrbitTheta);
 		nbt.setInteger("atmosphereDensity", atmosphereDensity);
 		nbt.setInteger("originalAtmosphereDensity", originalAtmosphereDensity);
+		nbt.setDouble("peakInsolationMultiplier", peakInsolationMultiplier);
 		nbt.setInteger("avgTemperature", averageTemperature);
 		nbt.setInteger("rotationalPeriod", rotationalPeriod);
 		nbt.setString("name", name);
