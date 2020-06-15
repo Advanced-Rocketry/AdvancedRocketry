@@ -1155,7 +1155,7 @@ public class DimensionManager implements IGalaxy {
 		}
 
 		prevBuild = nbt.getString("prevVersion");
-		nbt.setString("prevVersion", AdvancedRocketry.version);
+		nbt.setString("prevVersion", AdvancedRocketry.MODVERSION);
 
 		return loadedDimProps;
 	}

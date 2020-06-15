@@ -167,14 +167,18 @@ import java.util.*;
 import java.util.Map.Entry;
 
 
-@Mod(modid="advancedrocketry", name="Advanced Rocketry", version="@MAJOR@.@MINOR@.@REVIS@.@BUILD@", dependencies="required-after:libvulpes@[%LIBVULPESVERSION%,)")
+@Mod(modid="advancedrocketry", name="Advanced Rocketry", version= AdvancedRocketry.MODVERSION, dependencies="required-after:libvulpes@[%LIBVULPESVERSION%,)")
 public class AdvancedRocketry {
 
 
 	@SidedProxy(clientSide="zmaster587.advancedRocketry.client.ClientProxy", serverSide="zmaster587.advancedRocketry.common.CommonProxy")
 	public static CommonProxy proxy;
 
-	public final static String version = "@MAJOR@.@MINOR@.@REVIS@@BUILD@";
+	public final static String MODVERSION = "MAJOR + MINOR + REVIS + BUILD";
+        public static String MAJOR = "@MAJOR@.";
+        public static String MINOR = ".@MINOR@.";
+        public static String REVIS = ".@REVIS@.";
+        public static String BUILD = ".@BUILD@";
 
 	@Instance(value = Constants.modId)
 	public static AdvancedRocketry instance;
