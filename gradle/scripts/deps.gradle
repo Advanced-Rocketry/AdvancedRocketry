@@ -1,6 +1,6 @@
 
-String GCBuild = "174"
-String GCVersion = "1.12.2-4.0.1.${GCBuild}"
+String GCBuild = "261"
+String GCVersion = "1.12.2-4.0.2.${GCBuild}"
 
 repositories {
     mavenCentral()
@@ -38,10 +38,7 @@ dependencies {
     compile name: 'LibVulpes', version: '1.12.2-' + project.libVulpesVersion  + '-' + project.libVulpesBuildNum + '-deobf', ext: 'jar'
     
     //all the GC crap
-    compile "GC-1.12-dev:GalacticraftCore-Dev:${GCVersion}"
     compile "GC-1.12-dev:Galacticraft-API:${GCVersion}"
-    compile "GC-1.12-dev:Galacticraft-Planets-Dev:${GCVersion}"
-    compile "GC-1.12-dev:MicdoodleCore-Dev:${GCVersion}"
 
     deobfCompile "mezz.jei:jei_1.12.2:4.8.0.110:api"
     // at runtime, use the full JEI jar
