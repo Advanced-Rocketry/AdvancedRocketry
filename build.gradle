@@ -52,8 +52,17 @@ minecraft {
     replace "%LIBVULPESVERSION%", project.libVulpesVersion*/
 }
 
+apply from: "gradle/scripts/jars.gradle"
+apply from: "gradle/scripts/version.gradle"
+apply from: "gradle/scripts/deps.gradle"
+
+def buildNumber = project.getBuildNumber()
 blossom {
-    replaceToken '@MAJOR@', version_major
+    replaceTokenIn('build/sources/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java')
+    replaceToken('@MAJOR@', "${version_major}")
+    replaceToken('@MINOR@', "${version_minor}")
+    replaceToken('@REVIS@', "${version_revis}")
+    replaceToken('@BUILD@', buildNumber)
 }
 
 import org.apache.tools.ant.filters.FixCrLfFilter
@@ -78,10 +87,6 @@ import org.apache.tools.ant.filters.ReplaceTokens
     }
     filteringCharset = 'UTF-8'
 }*/
-
-apply from: "gradle/scripts/jars.gradle"
-apply from: "gradle/scripts/version.gradle"
-apply from: "gradle/scripts/deps.gradle"
 
 processResources
 {
