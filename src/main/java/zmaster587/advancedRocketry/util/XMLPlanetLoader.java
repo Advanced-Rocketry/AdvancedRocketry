@@ -342,6 +342,11 @@ public class XMLPlanetLoader {
 					AdvancedRocketry.logger.warn("Invalid sky color specified"); //TODO: more detailed error msg
 				}
 			}
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("hasOxygen")) {
+				String text = planetPropertyNode.getTextContent();
+				if(text != null && !text.isEmpty() && text.equalsIgnoreCase("false"))
+					properties.hasOxygen = false;
+			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("GasGiant")) {
 				String text = planetPropertyNode.getTextContent();
 				if(text != null && !text.isEmpty() && text.equalsIgnoreCase("true"))
@@ -540,6 +545,11 @@ public class XMLPlanetLoader {
 		if(properties.hasRings) {
 			outputString = outputString + tabLen + "\t<hasRings>true</hasRings>\n";
 			outputString = outputString + tabLen + "\t<ringColor>" + properties.ringColor[0] + "," + properties.ringColor[1] + "," + properties.ringColor[2] + "</ringColor>\n";
+		}
+
+		if(!properties.hasOxygen)
+		{
+			outputString = outputString + tabLen + "\t<hasOxygen>false</hasOxygen>\n";
 		}
 
 		if(properties.isGasGiant())

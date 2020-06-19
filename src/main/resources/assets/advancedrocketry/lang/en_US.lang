@@ -5,6 +5,10 @@ death.attack.Vacuum=%1$s was depressurized
 death.attack.Vacuum.player=%1$s was depressurized
 death.attack.OxygenToxicity=%1$s died due to oxygen toxicity
 death.attack.OxygenToxicity.player=%1$s died due to oxygen toxicity
+death.attack.LowOxygen=%1$s died due to lack of oxygen
+death.attack.LowOxygen.player=%1$s died due to lack of oxygen
+death.attack.Heat=%1$s died due to overheating
+death.attack.Heat.player=%1$s died due to overheating
 entity.advancedRocketry.rocket.name=Rocket
 
 tile.seat.name=Seat

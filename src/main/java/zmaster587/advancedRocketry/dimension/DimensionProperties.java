@@ -205,6 +205,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public float[] ringColor;
 	public float gravitationalMultiplier;
 	public int orbitalDist;
+	public boolean hasOxygen;
 	private int atmosphereDensity;
 	private int originalAtmosphereDensity;
 	public int averageTemperature;
@@ -264,6 +265,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		requiredArtifacts = new LinkedList<ItemStack>();
 		tickingSatallites = new HashMap<Long,SatelliteBase>();
 		isNativeDimension = true;
+		hasOxygen = true;
 		isGasGiant = false;
 		hasRings = false;
 		customIcon = "";
@@ -671,7 +673,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return the default atmosphere of this dimension
 	 */
 	public IAtmosphere getAtmosphere() {
-		if(hasAtmosphere()) {
+		if(hasAtmosphere() && hasOxygen) {
+			if(averageTemperature >= 750)
+				return AtmosphereType.SUPERHEATED;
 			if(Temps.getTempFromValue(averageTemperature) == Temps.TOOHOT)
 				return AtmosphereType.VERYHOT;
 			if(AtmosphereTypes.getAtmosphereTypeFromValue(getAtmosphereDensity()) == AtmosphereTypes.SUPERHIGHPRESSURE)
@@ -681,6 +685,16 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
             if(AtmosphereTypes.getAtmosphereTypeFromValue(getAtmosphereDensity()) == AtmosphereTypes.LOW)
 				return AtmosphereType.LOWOXYGEN;
 			return AtmosphereType.AIR;
+		} else if(hasAtmosphere() && !hasOxygen){
+			if(averageTemperature >= 750)
+				return AtmosphereType.SUPERHEATEDNOO2;
+			if(Temps.getTempFromValue(averageTemperature) == Temps.TOOHOT)
+				return AtmosphereType.VERYHOTNOO2;
+			if(AtmosphereTypes.getAtmosphereTypeFromValue(getAtmosphereDensity()) == AtmosphereTypes.SUPERHIGHPRESSURE)
+				return AtmosphereType.SUPERHIGHPRESSURENOO2;
+			if(AtmosphereTypes.getAtmosphereTypeFromValue(getAtmosphereDensity()) == AtmosphereTypes.HIGHPRESSURE)
+				return AtmosphereType.HIGHPRESSURENOO2;
+			return AtmosphereType.NOO2;
 		}
 		return AtmosphereType.VACUUM;
 	}
@@ -1193,6 +1207,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		orbitalDist = nbt.getInteger("orbitalDist");
 		orbitTheta = nbt.getDouble("orbitTheta");
 		baseOrbitTheta = nbt.getDouble("baseOrbitTheta");
+		hasOxygen = nbt.getBoolean("hasOxygen");
 		atmosphereDensity = nbt.getInteger("atmosphereDensity");
 		averageTemperature = nbt.getInteger("avgTemperature");
 		rotationalPeriod = nbt.getInteger("rotationalPeriod");
@@ -1350,6 +1365,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setInteger("orbitalDist", orbitalDist);
 		nbt.setDouble("orbitTheta", orbitTheta);
 		nbt.setDouble("baseOrbitTheta", baseOrbitTheta);
+		nbt.setBoolean("hasOxygen", hasOxygen);
 		nbt.setInteger("atmosphereDensity", atmosphereDensity);
 		nbt.setInteger("originalAtmosphereDensity", originalAtmosphereDensity);
 		nbt.setInteger("avgTemperature", averageTemperature);

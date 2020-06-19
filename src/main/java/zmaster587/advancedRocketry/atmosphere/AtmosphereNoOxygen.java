@@ -9,23 +9,24 @@ import zmaster587.advancedRocketry.network.PacketOxygenState;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.network.PacketHandler;
 
-/**
- * Atmosphere type for vaccum (No air)
- * @author Zmaster
- */
-public class AtmosphereVacuum extends AtmosphereNeedsSuit {
+public class AtmosphereNoOxygen extends AtmosphereNeedsSuit {
 
-	public static int damageValue;
 	public static boolean enableNausea = Configuration.enableNausea;
 
-	public AtmosphereVacuum() {
-		super(true, false, false, "vacuum");
+	public AtmosphereNoOxygen(boolean canTick, boolean isBreathable, boolean allowsCombustion,
+							  String name) {
+		super(canTick, isBreathable, allowsCombustion, name);
 	}
 
 	@Override
+	public String getDisplayMessage() {
+		return LibVulpes.proxy.getLocalizedString("msg.noOxygen");
+	}
+	
+	@Override
 	public void onTick(EntityLivingBase player) {
 		if(player.worldObj.getTotalWorldTime() % 10  == 0 && !isImmune(player)) {
-			player.attackEntityFrom(AtmosphereHandler.vacuumDamage, damageValue);
+			player.attackEntityFrom(AtmosphereHandler.lowOxygenDamage, 1);
 			player.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 40, 4));
 			player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 40, 4));
 			if(enableNausea) {
@@ -35,9 +36,10 @@ public class AtmosphereVacuum extends AtmosphereNeedsSuit {
 				PacketHandler.sendToPlayer(new PacketOxygenState(), (EntityPlayer)player);
 		}
 	}
-
-	@Override
-	public String getDisplayMessage() {
-		return LibVulpes.proxy.getLocalizedString("msg.noOxygen");
+	
+	// True if only a helmet is needed
+	protected boolean onlyNeedsMask()
+	{
+		return true;
 	}
 }
