@@ -80,6 +80,7 @@ public class XMLPlanetLoader {
 	private static final String ELEMENT_PHI = "orbitalPhi";
 	private static final String AVG_TEMPERATURE = "avgTemperature";
 	private static final String ELEMENT_PERIOD = "rotationalPeriod";
+	private static final String ELEMENT_HASOXYGEN = "hasOxygen";
 	private static final String ELEMENT_ATMDENSITY = "atmosphereDensity";
 	private static final String ELEMENT_SEALEVEL = "seaLevel";
 	private static final String ELEMENT_GENTYPE = "genType";
@@ -295,6 +296,12 @@ public class XMLPlanetLoader {
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid sky color specified"); //TODO: more detailed error msg
 				}
+			}
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_HASOXYGEN)) {
+
+				String text = planetPropertyNode.getTextContent();
+				if(text != null && !text.isEmpty() && text.equalsIgnoreCase("false"))
+					properties.hasOxygen = false;
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_ATMDENSITY)) {
 
@@ -831,7 +838,12 @@ public class XMLPlanetLoader {
 			nodePlanet.appendChild(createTextNode(doc, ELEMENT_HASRINGS, "true"));
 			nodePlanet.appendChild(createTextNode(doc, ELEMENT_RINGCOLOR, properties.ringColor[0] + "," + properties.ringColor[1] + "," + properties.ringColor[2]));
 		}
-		
+
+		if(!properties.hasOxygen)
+		{
+			nodePlanet.appendChild(createTextNode(doc, ELEMENT_HASOXYGEN, "false"));
+		}
+
 		if(properties.isGasGiant())
 		{
 			nodePlanet.appendChild(createTextNode(doc, ELEMENT_GASGIANT, "true"));
