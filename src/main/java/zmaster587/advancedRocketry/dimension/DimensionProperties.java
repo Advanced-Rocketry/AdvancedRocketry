@@ -674,7 +674,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 */
 	public IAtmosphere getAtmosphere() {
 		if(hasAtmosphere() && hasOxygen) {
-			if(averageTemperature >= 750)
+			if(averageTemperature >= 900)
 				return AtmosphereType.SUPERHEATED;
 			if(Temps.getTempFromValue(averageTemperature) == Temps.TOOHOT)
 				return AtmosphereType.VERYHOT;
@@ -686,7 +686,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				return AtmosphereType.LOWOXYGEN;
 			return AtmosphereType.AIR;
 		} else if(hasAtmosphere() && !hasOxygen){
-			if(averageTemperature >= 750)
+			if(averageTemperature >= 900)
 				return AtmosphereType.SUPERHEATEDNOO2;
 			if(Temps.getTempFromValue(averageTemperature) == Temps.TOOHOT)
 				return AtmosphereType.VERYHOTNOO2;

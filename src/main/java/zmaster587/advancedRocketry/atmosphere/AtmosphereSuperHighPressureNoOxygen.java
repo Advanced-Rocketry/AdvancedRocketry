@@ -39,7 +39,7 @@ public class AtmosphereSuperHighPressureNoOxygen extends AtmosphereNeedsSuit {
 			//Removes the ability to jump. Nitrogen/other gas narcosis
 			player.addPotionEffect(new PotionEffect(Potion.jump.id, 40, 150));
 			if(enableNausea) {
-				player.addPotionEffect(new PotionEffect(Potion.confusion.id, 400, 1));
+				player.addPotionEffect(new PotionEffect(Potion.confusion.id, 400, 2));
 			}
 			if(player instanceof EntityPlayer)
 				PacketHandler.sendToPlayer(new PacketOxygenState(), (EntityPlayer)player);
