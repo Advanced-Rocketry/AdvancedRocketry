@@ -8,6 +8,7 @@ import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 
 public class AtmosphereType implements IAtmosphere {
 
+	//We're probably not getting a polluted atmosphere type
 	public static final AtmosphereType AIR = new AtmosphereType(false, true, "air");
 	public static final AtmosphereType PRESSURIZEDAIR = new AtmosphereType(false, true, true, "PressurizedAir");
 	public static final AtmosphereType LOWOXYGEN = new AtmosphereLowOxygen(true, false, false, "lowO2");
