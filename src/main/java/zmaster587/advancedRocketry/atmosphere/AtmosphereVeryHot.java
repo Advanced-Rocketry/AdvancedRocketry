@@ -28,6 +28,7 @@ public class AtmosphereVeryHot extends AtmosphereNeedsSuit {
 	public void onTick(EntityLivingBase player) {
 		if(player.worldObj.getTotalWorldTime() % 20  == 0 && !isImmune(player)) {
 			player.setFire(1);
+			player.attackEntityFrom(AtmosphereHandler.heatDamage, 1);
 			player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 40, 3));
 		}
 	}
