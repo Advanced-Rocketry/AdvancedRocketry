@@ -28,7 +28,7 @@ public class AtmosphereLowOxygen extends AtmosphereNeedsSuit {
 	
 	@Override
 	public void onTick(EntityLivingBase player) {
-		if(player.world.getTotalWorldTime() % 10  == 0 && !isImmune(player)) {
+		if(player.world.getTotalWorldTime() % 20  == 0 && !isImmune(player)) {
 			player.attackEntityFrom(AtmosphereHandler.lowOxygenDamage, 1);
 			player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 40, 2));
 			player.addPotionEffect(new PotionEffect(Potion.getPotionById(4), 40, 2));
