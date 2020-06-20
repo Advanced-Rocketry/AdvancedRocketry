@@ -12,9 +12,15 @@ public class AtmosphereType implements IAtmosphere {
 	public static final AtmosphereType PRESSURIZEDAIR = new AtmosphereType(false, true, true, "PressurizedAir");
 	public static final AtmosphereType LOWOXYGEN = new AtmosphereLowOxygen(true, false, false, "lowO2");
 	public static final AtmosphereType VACUUM = new AtmosphereVacuum();
-	public static final AtmosphereType HIGHPRESSURE = new AtmosphereHighPressure(true, true, true, "HighPressure");
+	public static final AtmosphereType HIGHPRESSURE = new AtmosphereHighPressure(true, false, true, "HighPressure");
 	public static final AtmosphereType SUPERHIGHPRESSURE = new AtmosphereSuperHighPressure(true, false, true, "SuperHighPressure");
 	public static final AtmosphereType VERYHOT = new AtmosphereVeryHot(true, false, true, "VeryHot");
+	public static final AtmosphereType SUPERHEATED = new AtmosphereSuperheated(true, false, true, "Superheated");
+	public static final AtmosphereType NOO2 = new AtmosphereNoOxygen(true, false, false, "NoO2");
+	public static final AtmosphereType HIGHPRESSURENOO2 = new AtmosphereHighPressureNoOxygen(true, false, false, "HighPressureNoO2");
+	public static final AtmosphereType SUPERHIGHPRESSURENOO2 = new AtmosphereSuperHighPressureNoOxygen(true, false, false, "SuperHighPressureNoO2");
+	public static final AtmosphereType VERYHOTNOO2 = new AtmosphereVeryHotNoOxygen(true, false, false, "VeryHotNoO2");
+	public static final AtmosphereType SUPERHEATEDNOO2 = new AtmosphereSuperheatedNoOxygen(true, false, false, "SuperheatedNoOxygen");
 
 	static {
 		AtmosphereRegister.getInstance().registerAtmosphere(AIR);
@@ -24,6 +30,12 @@ public class AtmosphereType implements IAtmosphere {
 		AtmosphereRegister.getInstance().registerAtmosphere(HIGHPRESSURE);
 		AtmosphereRegister.getInstance().registerAtmosphere(SUPERHIGHPRESSURE);
 		AtmosphereRegister.getInstance().registerAtmosphere(VERYHOT);
+		AtmosphereRegister.getInstance().registerAtmosphere(SUPERHEATED);
+		AtmosphereRegister.getInstance().registerAtmosphere(NOO2);
+		AtmosphereRegister.getInstance().registerAtmosphere(HIGHPRESSURENOO2);
+		AtmosphereRegister.getInstance().registerAtmosphere(SUPERHIGHPRESSURENOO2);
+		AtmosphereRegister.getInstance().registerAtmosphere(VERYHOTNOO2);
+		AtmosphereRegister.getInstance().registerAtmosphere(SUPERHEATEDNOO2);
 	}
 	
 	private boolean allowsCombustion;
