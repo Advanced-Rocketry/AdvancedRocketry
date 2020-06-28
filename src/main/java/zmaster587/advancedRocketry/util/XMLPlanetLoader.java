@@ -77,6 +77,7 @@ public class XMLPlanetLoader {
 	private static final String ELEMENT_SKYCOLOR = "skyColor";
 	private static final String ELEMENT_GRAVITY = "gravitationalMultiplier";
 	private static final String ELEMENT_DISTANCE = "orbitalDistance";
+	private static final String ELEMENT_BASEORBITTHETA = "orbitalTheta";
 	private static final String ELEMENT_PHI = "orbitalPhi";
 	private static final String AVG_TEMPERATURE = "avgTemperature";
 	private static final String ELEMENT_PERIOD = "rotationalPeriod";
@@ -327,7 +328,7 @@ public class XMLPlanetLoader {
 					AdvancedRocketry.logger.warn("Invalid orbitalDist specified"); //TODO: more detailed error msg
 				}
 			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase("orbitaltheta")) {
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_BASEORBITTHETA)) {
 
 				try {
 					properties.baseOrbitTheta = (Integer.parseInt(planetPropertyNode.getTextContent()) % 360) * Math.PI/180f;
@@ -862,6 +863,7 @@ public class XMLPlanetLoader {
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_SKYCOLOR, properties.skyColor[0] + "," + properties.skyColor[1] + "," + properties.skyColor[2]));
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_GRAVITY, (int)(properties.getGravitationalMultiplier()*100f)));
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_DISTANCE, properties.getOrbitalDist()));
+		nodePlanet.appendChild(createTextNode(doc, ELEMENT_BASEORBITTHETA, (int)(properties.baseOrbitTheta * 180f/Math.PI)));
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_PHI, (int)(properties.orbitalPhi)));
 		nodePlanet.appendChild(createTextNode(doc, AVG_TEMPERATURE, (int)(properties.averageTemperature)));
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_PERIOD, properties.rotationalPeriod));
