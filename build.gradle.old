@@ -90,12 +90,12 @@ processResources
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
-        /*include 'mcmod.info'
-        include 'AdvancedRocketry.java'*/
-        filter ReplaceTokens, tokens: [version:project.version, mcversion:mcversion, MAJOR:project.version_major, MINOR:project.version_minor, REVIS:project.version_revis, build:project.getBuildNumber(), LIBVULPESVERSION:project.libVulpesVersion]
+        include 'mcmod.info'
+        include 'AdvancedRocketry.java'
+        //expand version:project.version, mcversion:mcversion, MAJOR:project.version_major, MINOR:project.version_minor, REVIS:project.version_revis, build:project.getBuildNumber(), LIBVULPESVERSION:project.libVulpesVersion]
                 
         // replace version and mcversion
-        //expand 'version':project.version, 'mcversion':mcversion, '@MAJOR@':project.version_major, '@MINOR@':project.version_minor, '@REVIS@':project.version_revis, '@build@':project.getBuildNumber(), '%LIBVULPESVERSION%':project.libVulpesVersion
+        expand 'version':project.version, 'mcversion':mcversion, '@MAJOR@':project.version_major, '@MINOR@':project.version_minor, '@REVIS@':project.version_revis, '@build@':project.getBuildNumber(), '%LIBVULPESVERSION%':project.libVulpesVersion
     }
         
     // copy everything else, thats not the mcmod.info
