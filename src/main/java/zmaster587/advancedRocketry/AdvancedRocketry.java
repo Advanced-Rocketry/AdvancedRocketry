@@ -176,9 +176,9 @@ public class AdvancedRocketry {
 
 	public final static String MODVERSION = "MAJOR + MINOR + REVIS + BUILD";
         public static String MAJOR = "@MAJOR@.";
-        public static String MINOR = ".@MINOR@.";
-        public static String REVIS = ".@REVIS@.";
-        public static String BUILD = ".@BUILD@";
+        public static String MINOR = "@MINOR@.";
+        public static String REVIS = "@REVIS@.";
+        public static String BUILD = "@BUILD@";
 
 	@Instance(value = Constants.modId)
 	public static AdvancedRocketry instance;

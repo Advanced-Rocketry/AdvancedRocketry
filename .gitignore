@@ -22,3 +22,7 @@ eclipse
 run
 refresh.bat
 AdvancedRocketry.txt
+lasthash.txt
+output/
+tasks.txt
+build.bat

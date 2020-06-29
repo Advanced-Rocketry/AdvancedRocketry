@@ -29,18 +29,25 @@ repositories {
             name "Tesla"
             artifactPattern "https://addons-origin.cursecdn.com/files/2347/256/[module]-[revision].[ext]"
         }*/
+    maven {
+    // location of a maven mirror for JEI files, as a fallback
+    name = "ModMaven"
+    url = "https://modmaven.k-4u.nl"
+    }
 }
 
 dependencies {
-    compile name: 'industrialcraft-2', version: '2.7.39-ex111-api', ext: 'jar'
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2854'
+    compileOnly name: 'industrialcraft-2', version: '2.7.39-ex111-api', ext: 'jar'
     //compile name: 'Tesla', version: '1.11-1.3.0.51-deobf', ext: 'jar'
     //compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
-    compile name: 'LibVulpes', version: '1.12.2-' + project.libVulpesVersion  + '-' + project.libVulpesBuildNum + '-deobf', ext: 'jar'
+    compileOnly name: 'LibVulpes', version: '1.12.2-' + project.libVulpesVersion  + '-' + project.libVulpesBuildNum + '-deobf', ext: 'jar'
     
     //all the GC crap
     compile "GC-1.12-dev:Galacticraft-API:${GCVersion}"
 
-    deobfCompile "mezz.jei:jei_1.12.2:4.8.0.110:api"
+    // compile against the JEI API but do not include it at runtime
+    compileOnly fg.deobf("mezz.jei:jei-${mcversion}:${jei_version}:api")
     // at runtime, use the full JEI jar
-    runtime "mezz.jei:jei_1.12.2:4.8.0.110"
+    runtimeOnly fg.deobf("mezz.jei:jei-${mcversion}:${jei_version}")   
 }
