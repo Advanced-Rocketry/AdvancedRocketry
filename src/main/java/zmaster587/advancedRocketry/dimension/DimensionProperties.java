@@ -224,6 +224,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public float[] ringColor;
 	public float gravitationalMultiplier;
 	public int orbitalDist;
+	public boolean hasOxygen;
 	private int originalAtmosphereDensity;
 	private int atmosphereDensity;
 	//Stored in Kelvin
@@ -297,6 +298,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		requiredArtifacts = new LinkedList<ItemStack>();
 		tickingSatallites = new HashMap<Long,SatelliteBase>();
 		isNativeDimension = true;
+		hasOxygen = true;
 		isGasGiant = false;
 		hasRings = false;
 		canGenerateCraters = false;
@@ -755,14 +757,28 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return the default atmosphere of this dimension
 	 */
 	public IAtmosphere getAtmosphere() {
-		if(hasAtmosphere()) {
+		if(hasAtmosphere() && hasOxygen) {
+			if(averageTemperature >= 900)
+				return AtmosphereType.SUPERHEATED;
 			if(Temps.getTempFromValue(getAverageTemp()) == Temps.TOOHOT)
 				return AtmosphereType.VERYHOT;
             if(AtmosphereTypes.getAtmosphereTypeFromValue(getAtmosphereDensity()) == AtmosphereTypes.SUPERHIGHPRESSURE)
 				return AtmosphereType.SUPERHIGHPRESSURE;
 			if(AtmosphereTypes.getAtmosphereTypeFromValue(getAtmosphereDensity()) == AtmosphereTypes.HIGHPRESSURE)
 				return AtmosphereType.HIGHPRESSURE;
+            if(AtmosphereTypes.getAtmosphereTypeFromValue(getAtmosphereDensity()) == AtmosphereTypes.LOW)
+				return AtmosphereType.LOWOXYGEN;
 			return AtmosphereType.AIR;
+		} else if(hasAtmosphere() && !hasOxygen){
+			if(averageTemperature >= 900)
+				return AtmosphereType.SUPERHEATEDNOO2;
+			if(Temps.getTempFromValue(averageTemperature) == Temps.TOOHOT)
+				return AtmosphereType.VERYHOTNOO2;
+			if(AtmosphereTypes.getAtmosphereTypeFromValue(getAtmosphereDensity()) == AtmosphereTypes.SUPERHIGHPRESSURE)
+				return AtmosphereType.SUPERHIGHPRESSURENOO2;
+			if(AtmosphereTypes.getAtmosphereTypeFromValue(getAtmosphereDensity()) == AtmosphereTypes.HIGHPRESSURE)
+				return AtmosphereType.HIGHPRESSURENOO2;
+			return AtmosphereType.NOO2;
 		}
 		return AtmosphereType.VACUUM;
 	}
@@ -962,7 +978,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	public void updateOrbit() {
 		this.prevOrbitalTheta = this.orbitTheta;
-		this.orbitTheta = AstronomicalBodyHelper.getOrbitalTheta(orbitalDist, getStar().getSize()) + baseOrbitTheta;
+		if (this.isMoon()) {
+			this.orbitTheta = AstronomicalBodyHelper.getMoonOrbitalTheta(orbitalDist, getParentProperties().gravitationalMultiplier) + baseOrbitTheta;
+		} else if (!this.isMoon()) {
+			this.orbitTheta = AstronomicalBodyHelper.getOrbitalTheta(orbitalDist, getStar().getSize()) + baseOrbitTheta;
+		}
 	}
 
 	/**
@@ -1385,6 +1405,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		baseOrbitTheta = nbt.getDouble("baseOrbitTheta");
 		orbitalPhi = nbt.getDouble("orbitPhi");
 		rotationalPhi = nbt.getDouble("rotationalPhi");
+		hasOxygen = nbt.getBoolean("hasOxygen");
 		atmosphereDensity = nbt.getInteger("atmosphereDensity");
 
 		if(nbt.hasKey("originalAtmosphereDensity"))
@@ -1551,6 +1572,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setDouble("baseOrbitTheta", baseOrbitTheta);
 		nbt.setDouble("orbitPhi", orbitalPhi);
 		nbt.setDouble("rotationalPhi", rotationalPhi);
+		nbt.setBoolean("hasOxygen", hasOxygen);
 		nbt.setInteger("atmosphereDensity", atmosphereDensity);
 		nbt.setInteger("originalAtmosphereDensity", originalAtmosphereDensity);
 		nbt.setInteger("avgTemperature", averageTemperature);
@@ -1605,7 +1627,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	
 	public int getAverageTemp()
 	{
-		averageTemperature = AstronomicalBodyHelper.getAverageTemperature(this.getStar(), this.orbitalDist, this.getAtmosphereDensity());
+		averageTemperature = AstronomicalBodyHelper.getAverageTemperature(this.getStar(), this.getSolarOrbitalDistance(), this.getAtmosphereDensity());
 		return averageTemperature;
 	}
 

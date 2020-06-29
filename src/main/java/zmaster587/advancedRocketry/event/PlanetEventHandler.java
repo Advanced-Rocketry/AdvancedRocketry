@@ -428,7 +428,7 @@ public class PlanetEventHandler {
 
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.getEntity().dimension);
 		if(properties != null) {
-			float fog = properties.getAtmosphereDensityAtHeight(event.getEntity().posY);
+			float fog = Math.min(properties.getAtmosphereDensityAtHeight(event.getEntity().posY), 200);
 
 			if(event.getEntity().world.provider instanceof IPlanetaryProvider) {
 				Vec3d color = event.getEntity().world.provider.getSkyColor(event.getEntity(), 0f);
@@ -519,7 +519,7 @@ public class PlanetEventHandler {
 		}
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.getEntity().dimension);
 		if(properties != null && event.getState().getBlock() != Blocks.WATER && event.getState().getBlock() != Blocks.LAVA) {//& properties.atmosphereDensity > 125) {
-			float fog = properties.getAtmosphereDensityAtHeight(event.getEntity().posY);
+			float fog = Math.min(properties.getAtmosphereDensityAtHeight(event.getEntity().posY), 200);
 			//GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP);
 			GlStateManager.setFog(GlStateManager.FogMode.LINEAR);
 
@@ -529,7 +529,7 @@ public class PlanetEventHandler {
 			float near;
 			float far;
 
-			int atmosphere = properties.getAtmosphereDensity();
+			int atmosphere = Math.min(properties.getAtmosphereDensity(), 200);
 			ItemStack armor = Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
 			if(armor != null && armor.getItem() instanceof IModularArmor) {
@@ -543,7 +543,7 @@ public class PlanetEventHandler {
 
 			//Check environment
 			if(AtmosphereHandler.currentPressure != -1) {
-				atmosphere = AtmosphereHandler.currentPressure;
+				atmosphere = Math.min(AtmosphereHandler.currentPressure, 200);
 			}
 
 			if(atmosphere > 100) {
