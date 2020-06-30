@@ -26,4 +26,15 @@ public class BlockTransciever extends BlockTile {
 		return bb[state.getValue(FACING).ordinal() - 2];
 	}
 	
+	@Override
+	public boolean isFullCube(IBlockState state)
+	{
+		return false;
+	}
+	
+	@Override
+	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		return false;
+	}
 }
