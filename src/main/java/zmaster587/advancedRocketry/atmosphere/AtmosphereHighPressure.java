@@ -34,8 +34,8 @@ public class AtmosphereHighPressure extends AtmosphereNeedsSuit {
 	@Override
 	public void onTick(EntityLivingBase player) {
 		if(player.world.getTotalWorldTime() % 20  == 0 && !isImmune(player)) {
-			player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 40, 3));
-			player.addPotionEffect(new PotionEffect(Potion.getPotionById(4), 40, 3));
+			player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 40, 2));
+			player.addPotionEffect(new PotionEffect(Potion.getPotionById(4), 40, 2));
 		}
 	}
 }

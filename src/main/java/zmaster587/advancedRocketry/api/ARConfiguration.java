@@ -435,6 +435,7 @@ public class ARConfiguration {
 		AtmosphereVacuum.damageValue = (int) config.get(Configuration.CATEGORY_GENERAL, "vacuumDamage", 1, "Amount of damage taken every second in a vacuum").getInt();
 		arConfig.buildSpeedMultiplier = (float) config.get(Configuration.CATEGORY_GENERAL, "buildSpeedMultiplier", 1f, "Multiplier for the build speed of the Rocket Builder (0.5 is twice as fast 2 is half as fast").getDouble();
 		arConfig.spaceDimId = config.get(Configuration.CATEGORY_GENERAL,"spaceStationId" , -2,"Dimension ID to use for space stations").getInt();
+		arConfig.enableNausea = config.get(Configuration.CATEGORY_GENERAL, "EnableAtmosphericNausea", true, "If true, allows players to experience nausea on non-standard atmosphere types").getBoolean();
 		arConfig.enableOxygen = config.get(Configuration.CATEGORY_GENERAL, "EnableAtmosphericEffects", true, "If true, allows players being hurt due to lack of oxygen and allows effects from non-standard atmosphere types").getBoolean();
 		arConfig.allowMakingItemsForOtherMods = config.get(Configuration.CATEGORY_GENERAL, "makeMaterialsForOtherMods", true, "If true the machines from AdvancedRocketry will produce things like plates/rods for other mods even if Advanced Rocketry itself does not use the material (This can increase load time)").getBoolean();
 		arConfig.scrubberRequiresCartrige = config.get(Configuration.CATEGORY_GENERAL, "scrubberRequiresCartrige", true, "If true the Oxygen scrubbers require a consumable carbon collection cartridge").getBoolean();
@@ -792,6 +793,9 @@ public class ARConfiguration {
 
 	@ConfigProperty
 	public boolean rocketRequireFuel = true;
+
+	@ConfigProperty
+	public boolean enableNausea = true;
 
 	@ConfigProperty
 	public boolean enableOxygen = true;
