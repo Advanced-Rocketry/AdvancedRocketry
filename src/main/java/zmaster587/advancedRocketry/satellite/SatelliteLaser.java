@@ -87,6 +87,7 @@ public class SatelliteLaser extends SatelliteLaserNoDrill {
 				y = 255;
 			
 			laser = new EntityLaserNode(world, x, y, z);
+			laser.markValid();
 			laser.forceSpawn = true;
 			world.spawnEntity(laser);
 			return true;
