@@ -1272,7 +1272,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	public void initDefaultAttributes()
 	{
-		if(averageTemperature > 100)
+		if(Temps.getTempFromValue(averageTemperature).hotterThan(DimensionProperties.Temps.HOT))
 			setOceanBlock(Blocks.LAVA.getDefaultState());
 		
 		//Add planet Properties
