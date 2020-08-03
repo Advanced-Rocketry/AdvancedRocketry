@@ -28,6 +28,7 @@ public class StatsRocket {
 	public boolean lowOrbitOnly;
 	public boolean lowOrbitAndTBI;
 	public boolean stationClearanceAndTBI;
+	public float injectionBurnLenghtMult;
 	public boolean stationClearanceOnly;
 	public boolean warpLaunchStation;
 	public boolean warpLaunchPlanet;
@@ -61,6 +62,7 @@ public class StatsRocket {
 		lowOrbitOnly = false;
 		lowOrbitAndTBI = false;
 		stationClearanceAndTBI = false;
+		injectionBurnLenghtMult = 1;
 		stationClearanceOnly = false;
 		warpLaunchStation = false;
 		warpLaunchPlanet = false;

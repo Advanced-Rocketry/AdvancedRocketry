@@ -10,7 +10,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -1079,17 +1078,18 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					this.setInOrbit(false);
 				}
 
+
 				//Checks heights to see how high the rocket should go
 				if(!isInOrbit() && (stats.lowOrbitOnly) && (this.posY > ARConfiguration.getCurrentConfig().orbit)) {
 					onOrbitReached();
 				}
-				if(!isInOrbit() && (stats.lowOrbitAndTBI) && (this.posY > (ARConfiguration.getCurrentConfig().orbit + ARConfiguration.getCurrentConfig().transBodyInjection))) {
+				if(!isInOrbit() && (stats.lowOrbitAndTBI) && (this.posY > (ARConfiguration.getCurrentConfig().orbit + (stats.injectionBurnLenghtMult * ARConfiguration.getCurrentConfig().transBodyInjection)))) {
 					onOrbitReached();
 				}
 				if(!isInOrbit() && (stats.stationClearanceOnly) && (this.posY > ARConfiguration.getCurrentConfig().stationClearanceHeight)) {
 					onOrbitReached();
 				}
-				if(!isInOrbit() && (stats.stationClearanceAndTBI) && (this.posY > (ARConfiguration.getCurrentConfig().stationClearanceHeight + ARConfiguration.getCurrentConfig().transBodyInjection))) {
+				if(!isInOrbit() && (stats.stationClearanceAndTBI) && (this.posY > (ARConfiguration.getCurrentConfig().stationClearanceHeight + (stats.injectionBurnLenghtMult * ARConfiguration.getCurrentConfig().transBodyInjection)))) {
 					onOrbitReached();
 				}
 				if(!isInOrbit() && (stats.warpLaunchPlanet) && (this.posY > (ARConfiguration.getCurrentConfig().orbit + (10 * ARConfiguration.getCurrentConfig().transBodyInjection)))) {
@@ -1578,7 +1578,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			//This is bad but it works and is mostly intelligible so it's here for now
 			//TODO: There HAS to be a better way to do this
 			//TODO: Find a way to get destination station - currently you can launch from a body in a planetary system that isn't where your station is parked to the station without the TBI burn cost- because I have no clue how to check destination station and what world it is orbiting
-			//TODO: Even worse, the same applies for warp - I can skip the huge fuel costs of warp by warping to a station
+			//TODO: Even worse, the same applies for warp rockets - I can skip the huge fuel costs of warp by warping to a station
 			boolean toAsteroids = false;
 			TileGuidanceComputer guideComputer = storage.getGuidanceComputer();
 			if(guideComputer != null && guideComputer.getStackInSlot(0) != null && guideComputer.getStackInSlot(0).getItem() instanceof ItemAsteroidChip){
@@ -1627,6 +1627,25 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			if ((experimentalFlightTrue && thisDimID == spaceStationDimID) || (destinationDimId == thisDimID && !(toAsteroids) && destinationDimId == spaceStationDimID) || ((thisDimID == spaceStationDimID) && (destinationDimId == parentworldPropertiesStation.getId()))) {
 				this.stats.stationClearanceOnly = true;
 			}
+
+			//TBI Multiplier
+			//Convert TBI distance to TBI burn multiplier
+			float bodyDistanceMultiplier = 1.0f;
+			IDimensionProperties destinationProperties = DimensionManager.getInstance().getDimensionProperties(destinationDimId);
+			if (destinationProperties.isMoon()) {
+				bodyDistanceMultiplier = destinationProperties.getOrbitalDist()/100f;
+			} else if (!destinationProperties.isMoon() && destinationDimId != spaceStationDimID) {
+				for (int moonDimID : destinationProperties.getChildPlanets()) {
+					if (thisDimID == moonDimID) {
+						bodyDistanceMultiplier = DimensionManager.getInstance().getDimensionProperties(moonDimID).getOrbitalDist()/100f;
+					}
+				}
+			} else if (toAsteroids) {
+				bodyDistanceMultiplier = (float) ARConfiguration.getCurrentConfig().asteroidTBIBurnMult;
+			}
+			//This is probably one of the worst ways to do this and I don't really care about realism, just tapering results.... if this turns out to be realistic well then, that's nice.
+			//Not like the mod has an semblance of a concept of orbital mechanics anyway :P
+			stats.injectionBurnLenghtMult = (float)Math.pow(bodyDistanceMultiplier, 0.5d);
 
 
 			//Launch conditions for a warp launch
