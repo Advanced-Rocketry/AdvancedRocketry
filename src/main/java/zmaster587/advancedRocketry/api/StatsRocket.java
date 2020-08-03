@@ -24,6 +24,12 @@ public class StatsRocket {
 	private int fuelWarp;
 	private int fuelImpulse;
 
+	//Used for orbital height calculations
+	public boolean lowOrbitOnly;
+	public boolean lowOrbitAndTBI;
+	public boolean stationClearanceAndTBI;
+	public boolean stationClearanceOnly;
+
 	private int fuelCapacityLiquid;
 	private int fuelCapacityNuclear;
 	private int fuelCapacityIon;
@@ -50,6 +56,10 @@ public class StatsRocket {
 		weight = 0;
 		fuelLiquid = 0;
 		drillingPower = 0f;
+		lowOrbitOnly = false;
+		lowOrbitAndTBI = false;
+		stationClearanceAndTBI = false;
+		stationClearanceOnly = false;
 		pilotSeatPos = new HashedBlockPosition(0,0,0);
 		pilotSeatPos.x = INVALID_SEAT;
 		engineLoc = new ArrayList<Vector3F<Float>>();
