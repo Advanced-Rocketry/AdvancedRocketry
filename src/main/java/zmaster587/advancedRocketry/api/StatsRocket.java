@@ -28,8 +28,8 @@ public class StatsRocket {
 	public boolean lowOrbitOnly;
 	public boolean lowOrbitAndTBI;
 	public boolean stationClearanceAndTBI;
-	public float injectionBurnLenghtMult;
 	public boolean stationClearanceOnly;
+	public float injectionBurnLenghtMult;
 	public boolean warpLaunchStation;
 	public boolean warpLaunchPlanet;
 
@@ -62,8 +62,8 @@ public class StatsRocket {
 		lowOrbitOnly = false;
 		lowOrbitAndTBI = false;
 		stationClearanceAndTBI = false;
-		injectionBurnLenghtMult = 1;
 		stationClearanceOnly = false;
+		injectionBurnLenghtMult = 1;
 		warpLaunchStation = false;
 		warpLaunchPlanet = false;
 		pilotSeatPos = new HashedBlockPosition(0,0,0);

@@ -1080,6 +1080,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 
 				//Checks heights to see how high the rocket should go
+				//I cannot believe I am doing this but it's not like orbital mechanics exists anyway.... here, have an approximation for it being harder to get to farther moons
 				if(!isInOrbit() && (stats.lowOrbitOnly) && (this.posY > ARConfiguration.getCurrentConfig().orbit)) {
 					onOrbitReached();
 				}
@@ -1629,7 +1630,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 
 			//TBI Multiplier
-			//Convert TBI distance to TBI burn multiplier
 			float bodyDistanceMultiplier = 1.0f;
 			IDimensionProperties destinationProperties = DimensionManager.getInstance().getDimensionProperties(destinationDimId);
 			if (destinationProperties.isMoon()) {
@@ -1645,6 +1645,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 			//This is probably one of the worst ways to do this and I don't really care about realism, just tapering results.... if this turns out to be realistic well then, that's nice.
 			//Not like the mod has an semblance of a concept of orbital mechanics anyway :P
+			//This is vaugely a multiplier based on TLI burns, burning for 2x as long can get you 4x as far
 			stats.injectionBurnLenghtMult = (float)Math.pow(bodyDistanceMultiplier, 0.5d);
 
 
