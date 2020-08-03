@@ -29,6 +29,8 @@ public class StatsRocket {
 	public boolean lowOrbitAndTBI;
 	public boolean stationClearanceAndTBI;
 	public boolean stationClearanceOnly;
+	public boolean warpLaunchStation;
+	public boolean warpLaunchPlanet;
 
 	private int fuelCapacityLiquid;
 	private int fuelCapacityNuclear;
@@ -60,6 +62,8 @@ public class StatsRocket {
 		lowOrbitAndTBI = false;
 		stationClearanceAndTBI = false;
 		stationClearanceOnly = false;
+		warpLaunchStation = false;
+		warpLaunchPlanet = false;
 		pilotSeatPos = new HashedBlockPosition(0,0,0);
 		pilotSeatPos.x = INVALID_SEAT;
 		engineLoc = new ArrayList<Vector3F<Float>>();

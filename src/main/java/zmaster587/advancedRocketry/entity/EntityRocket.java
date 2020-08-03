@@ -1092,6 +1092,12 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				if(!isInOrbit() && (stats.stationClearanceAndTBI) && (this.posY > (ARConfiguration.getCurrentConfig().stationClearanceHeight + ARConfiguration.getCurrentConfig().transBodyInjection))) {
 					onOrbitReached();
 				}
+				if(!isInOrbit() && (stats.warpLaunchPlanet) && (this.posY > (ARConfiguration.getCurrentConfig().orbit + (10 * ARConfiguration.getCurrentConfig().transBodyInjection)))) {
+					onOrbitReached();
+				}
+				if(!isInOrbit() && (stats.warpLaunchStation) && (this.posY > (ARConfiguration.getCurrentConfig().stationClearanceHeight + (10 * ARConfiguration.getCurrentConfig().transBodyInjection)))) {
+					onOrbitReached();
+				}
 
 
 				//If the rocket falls out of the world while in orbit either fall back to earth or die
@@ -1216,10 +1222,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	}
 
 	private int getEntryHeight(int entryLocationDimID){
-		if (entryLocationDimID == ARConfiguration.getCurrentConfig().spaceDimId)
+		if (entryLocationDimID == ARConfiguration.getCurrentConfig().spaceDimId) {
 			return ARConfiguration.getCurrentConfig().stationClearanceHeight;
-		else
+		} else {
 			return ARConfiguration.getCurrentConfig().orbit;
+		}
 	}
 
 	private void reachSpaceUnmanned()
@@ -1275,7 +1282,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					connectedTiles.remove();
 				}
 
-				this.setPositionAndUpdate(pos.x, ARConfiguration.getCurrentConfig().orbit, pos.z);
+				this.setPositionAndUpdate(pos.x, getEntryHeight(destinationDimId), pos.z);
 				return;
 			}
 			else {
@@ -1283,7 +1290,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				//Make player confirm deorbit if a player is riding the rocket
 				if(hasHumanPassenger()) {
 					setInFlight(false);
-					pos.y = (float) ARConfiguration.getCurrentConfig().orbit;
+					pos.y = (float) getEntryHeight(destinationDimId);
 
 				}
 				this.setInOrbit(true);
@@ -1296,7 +1303,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					connectedTiles.remove();
 				}
 
-				this.setPositionAndUpdate(this.posX, ARConfiguration.getCurrentConfig().orbit, this.posZ);
+				this.setPositionAndUpdate(this.posX, getEntryHeight(destinationDimId), this.posZ);
 				return;
 			}
 
@@ -1315,7 +1322,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				//Make player confirm deorbit if a player is riding the rocket
 				if(hasHumanPassenger()) {
 					setInFlight(false);
-					pos.y = (float) ARConfiguration.getCurrentConfig().orbit;
+					pos.y = (float) getEntryHeight(destinationDimId);
 
 				}
 				this.setInOrbit(true);
@@ -1377,7 +1384,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 			destinationDimId = ARConfiguration.getCurrentConfig().spaceDimId;
 			destPos.x = 0f;
-			destPos.y = (float) ARConfiguration.getCurrentConfig().orbit;
+			destPos.y = (float) getEntryHeight(destinationDimId);
 			destPos.z = 0f;
 
 			for(Entity e : getPassengers())
@@ -1417,7 +1424,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			//if coordinates are overridden, make sure we grab them
 			destPos = storage.getDestinationCoordinates(destinationDimId, true);
 			if(destPos == null)
-				destPos = new Vector3F<Float>((float)posX, (float)ARConfiguration.getCurrentConfig().orbit, (float)posZ);
+				destPos = new Vector3F<Float>((float)posX, (float)getEntryHeight(destinationDimId), (float)posZ);
 
 			if(hasHumanPassenger()) {
 				//Make player confirm deorbit if a player is riding the rocket
@@ -1441,7 +1448,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		setOverriddenCoords(-1, 0, 0, 0);
 
 		if(destinationDimId != this.world.provider.getDimension())
-			this.changeDimension(!DimensionManager.getInstance().isDimensionCreated(this.world.provider.getDimension()) ? 0 : destinationDimId, destPos.x, ARConfiguration.getCurrentConfig().orbit, destPos.z);
+			this.changeDimension(!DimensionManager.getInstance().isDimensionCreated(this.world.provider.getDimension()) ? 0 : destinationDimId, destPos.x, getEntryHeight(destinationDimId), destPos.z);
 		else
 		{
 			List<Entity> eList = this.getPassengers();
@@ -1566,8 +1573,12 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 
 
-			
+
 			//Check to see what place we should be going to
+			//This is bad but it works and is mostly intelligible so it's here for now
+			//TODO: There HAS to be a better way to do this
+			//TODO: Find a way to get destination station - currently you can launch from a body in a planetary system that isn't where your station is parked to the station without the TBI burn cost- because I have no clue how to check destination station and what world it is orbiting
+			//TODO: Even worse, the same applies for warp - I can skip the huge fuel costs of warp by warping to a station
 			boolean toAsteroids = false;
 			TileGuidanceComputer guideComputer = storage.getGuidanceComputer();
 			if(guideComputer != null && guideComputer.getStackInSlot(0) != null && guideComputer.getStackInSlot(0).getItem() instanceof ItemAsteroidChip){
@@ -1579,51 +1590,51 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			IDimensionProperties parentworldPropertiesStation =  SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.getPosition()).getProperties().getParentProperties();
 			boolean experimentalFlightTrue = (ARConfiguration.getCurrentConfig().experimentalSpaceFlight && guideComputer != null && guideComputer.isEmpty());
 
-			//Launch conditions that need station clearance & TBI
-			//Is it going to a moon
+			//Station intra planet system checks
+			boolean travelBetweenMoonStationAndPlanet = (parentworldPropertiesStation.isMoon() && destinationDimId == parentworldPropertiesStation.getParentPlanet());
+			boolean travelBetweenPlanetStationAndMoon = false;
 			for (int parentMoonDimID : parentworldPropertiesStation.getChildPlanets()) {
 				if ((thisDimID == spaceStationDimID) && (destinationDimId == parentMoonDimID)) {
-					this.stats.stationClearanceAndTBI = true;
+					travelBetweenPlanetStationAndMoon = true;
 				}
 			}
-			//Is the station orbiting a moon already & going to the main planet
-			if ((thisDimID == spaceStationDimID) && (parentworldPropertiesStation.isMoon() && destinationDimId == parentworldPropertiesStation.getParentPlanet())) {
-				this.stats.stationClearanceAndTBI = true;
-			}
-			//Is it going from a station to asteroids
-			if ((destinationDimId == thisDimID && toAsteroids && destinationDimId == spaceStationDimID)) {
-				this.stats.stationClearanceAndTBI = true;
-			}
 
-
-			//Launch conditions that need low orbit and TBI
-			//Is it going from a planet to a moon
+			//Intra planet system checks
+			boolean travelBetweenMoonAndPlanet = (launchworldProperties.isMoon() && destinationDimId == launchworldProperties.getParentPlanet());
+			boolean travelBetweenPlanetAndMoon = false;
 			for (int moonDimID : launchworldProperties.getChildPlanets()) {
 				if (destinationDimId == moonDimID) {
-					this.stats.lowOrbitAndTBI = true;
+					travelBetweenPlanetAndMoon = true;
 				}
 			}
-			//Is it on a moon already & going to the main planet
-			if ((thisDimID != spaceStationDimID) && (launchworldProperties.isMoon() && destinationDimId == launchworldProperties.getParentPlanet())) {
-				this.stats.lowOrbitAndTBI = true;
-			}
-			//Is it going to an asteroid from a planet
-			if ((destinationDimId == thisDimID) && (thisDimID != spaceStationDimID) && toAsteroids) {
-				this.stats.lowOrbitAndTBI = true;
-			}
 
 
+			//Launch conditions that need station clearance & TBI
+			if ((destinationDimId == thisDimID && toAsteroids && destinationDimId == spaceStationDimID) || travelBetweenMoonStationAndPlanet || travelBetweenPlanetStationAndMoon) {
+				this.stats.stationClearanceAndTBI = true;
+			}
+			//Launch conditions that need low orbit and TBI
+			if (((destinationDimId == thisDimID) && (thisDimID != spaceStationDimID) && toAsteroids) || travelBetweenMoonAndPlanet || travelBetweenPlanetAndMoon) {
+				this.stats.lowOrbitAndTBI = true;
+			}
 			//Launch conditions that need low orbit only
 			//Is it going from a planet to a space station or launching satellites or back to the same planet
 			if ((experimentalFlightTrue && thisDimID != spaceStationDimID) || (destinationDimId == spaceStationDimID) || (destinationDimId == thisDimID && !(toAsteroids) && destinationDimId != spaceStationDimID) || guideComputer == null) {
 				this.stats.lowOrbitOnly = true;
 			}
-
-
 			//Launch conditions that need station clearance only
 			//Is it going from either LEO to LEO or from a station to its parent planet
 			if ((experimentalFlightTrue && thisDimID == spaceStationDimID) || (destinationDimId == thisDimID && !(toAsteroids) && destinationDimId == spaceStationDimID) || ((thisDimID == spaceStationDimID) && (destinationDimId == parentworldPropertiesStation.getId()))) {
 				this.stats.stationClearanceOnly = true;
+			}
+
+
+			//Launch conditions for a warp launch
+			if (destinationDimId != spaceStationDimID && destinationDimId != thisDimID && thisDimID != spaceStationDimID && storage.hasWarpCore() && !(travelBetweenMoonAndPlanet || travelBetweenMoonStationAndPlanet || travelBetweenPlanetAndMoon || travelBetweenPlanetStationAndMoon)) {
+				this.stats.warpLaunchPlanet = true;
+			}
+			if (destinationDimId != spaceStationDimID && destinationDimId != thisDimID && thisDimID == spaceStationDimID && storage.hasWarpCore() && !(travelBetweenMoonAndPlanet || travelBetweenMoonStationAndPlanet || travelBetweenPlanetAndMoon || travelBetweenPlanetStationAndMoon)) {
+				this.stats.warpLaunchStation = true;
 			}
 
 
