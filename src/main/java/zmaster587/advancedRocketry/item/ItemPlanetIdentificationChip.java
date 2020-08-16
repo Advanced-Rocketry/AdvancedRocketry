@@ -1,9 +1,11 @@
 package zmaster587.advancedRocketry.item;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -18,7 +20,8 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	private static final String dimensionIdIdentifier = "dimId";
 	private static final String uuidIdentifier = "UUID";
 
-	public ItemPlanetIdentificationChip() {
+	public ItemPlanetIdentificationChip(Properties props) {
+		super(props);
 	}
 
 	@Override
@@ -31,8 +34,8 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 * @return the DimensionProperties of the dimId stored on the item or null if invalid
 	 */
 	public DimensionProperties getDimension(ItemStack stack) {
-		if(stack.hasTagCompound()) {
-			return DimensionManager.getInstance().getDimensionProperties(stack.getTagCompound().getInteger(dimensionIdIdentifier));
+		if(stack.hasTag()) {
+			return DimensionManager.getInstance().getDimensionProperties( new ResourceLocation( stack.getTag().getString(dimensionIdIdentifier)));
 		}
 		return null;
 	}
@@ -43,9 +46,9 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 */
 	public boolean hasValidDimension(ItemStack stack) {
 
-		if(stack.hasTagCompound()) {
-			int dimId = stack.getTagCompound().getInteger(dimensionIdIdentifier);
-			return dimId == 0 || DimensionManager.getInstance().isDimensionCreated(dimId);
+		if(stack.hasTag()) {
+			ResourceLocation dimId = new ResourceLocation(stack.getTag().getString(dimensionIdIdentifier));
+			return DimensionManager.getInstance().isDimensionCreated(dimId);
 		}
 
 		return false;
@@ -56,7 +59,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 * @param stack stack to erase
 	 */
 	public void erase(ItemStack stack) {
-		stack.setTagCompound(null);
+		stack.setTag(null);
 	}
 
 	/**
@@ -64,12 +67,12 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 * @param stack itemStack to operate on
 	 * @param dimensionId dimension Id number
 	 */
-	public void setDimensionId(ItemStack stack, int dimensionId) {
+	public void setDimensionId(ItemStack stack, ResourceLocation dimensionId) {
 
-		NBTTagCompound nbt;
+		CompoundNBT nbt;
 		if(dimensionId == Constants.INVALID_PLANET) {
-			nbt = new NBTTagCompound();
-			nbt.setInteger(dimensionIdIdentifier, dimensionId);
+			nbt = new CompoundNBT();
+			nbt.putString(dimensionIdIdentifier, dimensionId.toString());
 			return;
 		}
 
@@ -79,23 +82,23 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 			return;
 		}
 
-		if(stack.hasTagCompound())
-			nbt = stack.getTagCompound();
+		if(stack.hasTag())
+			nbt = stack.getTag();
 		else
-			nbt = new NBTTagCompound();
+			nbt = new CompoundNBT();
 
-		nbt.setInteger(dimensionIdIdentifier, dimensionId);
-		nbt.setString(dimensionNameIdentifier, properties.getName());
-		stack.setTagCompound(nbt);
+		nbt.putString(dimensionIdIdentifier, dimensionId.toString());
+		nbt.putString(dimensionNameIdentifier, properties.getName());
+		stack.setTag(nbt);
 	}
 
 	/**
 	 * @param stack stack to get the dimId from
 	 * @return id of the dimension stored or Constants.INVALID_PLANET if invalid
 	 */
-	public int getDimensionId(ItemStack stack) {
-		if(stack.hasTagCompound())
-			return stack.getTagCompound().getInteger(dimensionIdIdentifier);
+	public ResourceLocation getDimensionId(ItemStack stack) {
+		if(stack.hasTag())
+			return new ResourceLocation(stack.getTag().getString(dimensionIdIdentifier));
 		return Constants.INVALID_PLANET;
 	}
 
@@ -105,52 +108,52 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 * @return DimensionProperties Object of the relevent dimension or null if invalid
 	 */
 	public DimensionProperties getDimensionProperties(ItemStack stack) {
-		if(stack.hasTagCompound())
-			return DimensionManager.getInstance().getDimensionProperties(stack.getTagCompound().getInteger(dimensionIdIdentifier));
+		if(stack.hasTag())
+			return DimensionManager.getInstance().getDimensionProperties(new ResourceLocation(stack.getTag().getString(dimensionIdIdentifier)));
 		return null;
 	}
 
 	public Long getUUID(ItemStack stack) {
-		if(stack.hasTagCompound())
-			return stack.getTagCompound().getLong(uuidIdentifier);
+		if(stack.hasTag())
+			return stack.getTag().getLong(uuidIdentifier);
 		return null;
 	}
 
 	public void setUUID(ItemStack stack, long uuid) {
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound())
-			nbt = stack.getTagCompound();
+		CompoundNBT nbt;
+		if(stack.hasTag())
+			nbt = stack.getTag();
 		else
-			nbt = new NBTTagCompound();
+			nbt = new CompoundNBT();
 
-		nbt.setLong(uuidIdentifier,uuid);
-		stack.setTagCompound(nbt);
+		nbt.putLong(uuidIdentifier,uuid);
+		stack.setTag(nbt);
 	}
 
 	@Override
 	public void addInformation(ItemStack stack, World player, List list,
             ITooltipFlag bool){
 
-		if(!stack.hasTagCompound()) {
-			list.add(LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
+		if(!stack.hasTag()) {
+			list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.unprogrammed")));
 		}
 		else if(!hasValidDimension(stack)) {
-			list.add(ChatFormatting.RED + LibVulpes.proxy.getLocalizedString("msg.programfail"));
+			list.add(new StringTextComponent(TextFormatting.RED + LibVulpes.proxy.getLocalizedString("msg.programfail")));
 		}
 		else {
-			if(stack.getItemDamage()  == 0) {
+			if(stack.getDamage()  == 0) {
 				DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(getDimensionId(stack));
 
-				String unknown = ChatFormatting.YELLOW + "???";
-				String dimName = stack.getTagCompound().getString(dimensionNameIdentifier);
+				String unknown = TextFormatting.YELLOW + "???";
+				String dimName = stack.getTag().getString(dimensionNameIdentifier);
 
-				list.add(LibVulpes.proxy.getLocalizedString("msg.itemplanetidchip.planetname") + ChatFormatting.DARK_GREEN  + dimName);
+				list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.itemplanetidchip.planetname") + TextFormatting.DARK_GREEN  + dimName));
 
 				if( !props.getRequiredArtifacts().isEmpty()) {
-					list.add(LibVulpes.proxy.getLocalizedString("msg.itemplanetidchip.artifacts"));
+					list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.itemplanetidchip.artifacts")));
 					for(ItemStack stack2 : props.getRequiredArtifacts())
 					{
-						list.add(ChatFormatting.DARK_PURPLE + "    " + stack2.getDisplayName());
+						list.add(new StringTextComponent(TextFormatting.DARK_PURPLE + "    " + stack2.getDisplayName()));
 					}
 				}
 
@@ -162,7 +165,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 
 			}
 			else { //Space station
-				list.add(LibVulpes.proxy.getLocalizedString("msg.itemplanetidchip.stationid") + ChatFormatting.DARK_GREEN + stack.getTagCompound().getString(dimensionNameIdentifier));
+				list.add(LibVulpes.proxy.getLocalizedString("msg.itemplanetidchip.stationid") + TextFormatting.DARK_GREEN + stack.getTag().getString(dimensionNameIdentifier));
 			}
 		}
 	}

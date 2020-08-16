@@ -1,38 +1,39 @@
 package zmaster587.advancedRocketry.item.components;
 
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.capability.TankCapabilityItemStack;
-import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.client.ResourceIcon;
-import zmaster587.libVulpes.items.ItemIngredient;
 import zmaster587.libVulpes.util.FluidUtils;
 
 import java.util.List;
 
-public class ItemPressureTank extends ItemIngredient implements IArmorComponent {
+import com.mojang.blaze3d.matrix.MatrixStack;
+
+public class ItemPressureTank extends Item implements IArmorComponent {
 
 	ResourceIcon icon;
 	
 	int capacity;
-	public ItemPressureTank( int number, int capacity) {
-		super(number);
+	public ItemPressureTank(Properties props, int capacity) {
+		super(props);
 		this.capacity = capacity;
-		this.maxStackSize = 1;
 	}
 	
 	@Override
@@ -43,15 +44,15 @@ public class ItemPressureTank extends ItemIngredient implements IArmorComponent 
 		FluidStack fluidStack = FluidUtils.getFluidForItem(stack);
 		
 		if(fluidStack == null) {
-			list.add(LibVulpes.proxy.getLocalizedString("msg.empty"));
+			list.add(new TranslationTextComponent("msg.empty"));
 		}
 		else {
-			list.add(fluidStack.getLocalizedName() + ": " + fluidStack.amount);
+			list.add(new StringTextComponent(fluidStack.getDisplayName().getString() + ": " + fluidStack.getAmount()));
 		}
 	}
 	
 	@Override
-	public void onTick(World world, EntityPlayer player, ItemStack armorStack, IInventory inv,
+	public void onTick(World world, PlayerEntity player, ItemStack armorStack, IInventory inv,
 			ItemStack componentStack) {
 		
 	}
@@ -67,13 +68,13 @@ public class ItemPressureTank extends ItemIngredient implements IArmorComponent 
 	}
 
 	@Override
-	public void onArmorDamaged(EntityLivingBase entity, ItemStack armorStack,
+	public void onArmorDamaged(LivingEntity entity, ItemStack armorStack,
 			ItemStack componentStack, DamageSource source, int damage) {
 		
 	}
 	
 	public int getCapacity(ItemStack container) {
-		return capacity*(int)Math.pow(2, container.getItemDamage());
+		return capacity;
 	}
 
 	@Override
@@ -82,21 +83,20 @@ public class ItemPressureTank extends ItemIngredient implements IArmorComponent 
 	}
 	
 	@Override
-	public boolean isAllowedInSlot(ItemStack stack, EntityEquipmentSlot slot) {
-		return slot == EntityEquipmentSlot.CHEST;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void renderScreen(ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event, Gui gui) {
-		// TODO Auto-generated method stub
-		
+	public boolean isAllowedInSlot(ItemStack stack, EquipmentSlotType slot) {
+		return slot == EquipmentSlotType.CHEST;
 	}
 
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack,
-			NBTTagCompound nbt) {
+			CompoundNBT nbt) {
 		return new TankCapabilityItemStack(stack, getCapacity(stack));
+	}
+
+	@Override
+	public void renderScreen(MatrixStack mat, ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event,
+			ContainerScreen<? extends Container> gui) {
+		
 	}
 
 }

@@ -2,16 +2,18 @@ package zmaster587.advancedRocketry.unit;
 
 import java.util.List;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.entity.EntityRocket;
@@ -20,6 +22,7 @@ import zmaster587.advancedRocketry.tile.TileRocketBuilder;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.RotatableBlock;
+import zmaster587.libVulpes.util.ZUtils;
 
 public class BuildRocketTest extends BaseTest {
 	
@@ -37,7 +40,7 @@ public class BuildRocketTest extends BaseTest {
 	 */
 
 	BlockPos rocketBuilderPos;
-	int originalWorldId;
+	ResourceLocation originalWorldId;
 	BlockPos originalPos;
 	
 	BuildRocketTest()
@@ -45,9 +48,9 @@ public class BuildRocketTest extends BaseTest {
 		this.name = "Basic Rocket Tests";
 	}
 	
-	public void Phase1(World world, EntityPlayer player)
+	public void Phase1(World world, PlayerEntity player)
 	{
-		originalWorldId = world.provider.getDimension();
+		originalWorldId = ZUtils.getDimensionIdentifier(world);
 		teleportPlayerToStart(player);
 		clearLandscape(world);
 		buildBasicRocketPlatform(world, player);
@@ -55,33 +58,33 @@ public class BuildRocketTest extends BaseTest {
 		buildRocket(world, player);
 		
 		try {
-			IngameTestOrchestrator.scheduleEvent(world, 150, BuildRocketTest.class.getDeclaredMethod("Phase2", World.class, EntityPlayer.class), this);
+			IngameTestOrchestrator.scheduleEvent(world, 150, BuildRocketTest.class.getDeclaredMethod("Phase2", World.class, PlayerEntity.class), this);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void Phase2(World world, EntityPlayer player)
+	public void Phase2(World world, PlayerEntity player)
 	{
 		EntityRocket rocket = findRocketOnPad(world);
-		originalPos = rocket.getPosition();
+		originalPos = new BlockPos(rocket.getPositionVec());
 		FuelRocket(rocket);
-		putStationIntoRocket(rocket, 1);
+		putStationIntoRocket(rocket, new ResourceLocation("station", "1"));
 		mountPlayerToRocket(player, rocket);
 		rocket.prepareLaunch();
 		
 		try {
-			IngameTestOrchestrator.scheduleEvent(world, 1500, BuildRocketTest.class.getDeclaredMethod("Phase3", World.class, EntityPlayer.class), this);
+			IngameTestOrchestrator.scheduleEvent(world, 1500, BuildRocketTest.class.getDeclaredMethod("Phase3", World.class, PlayerEntity.class), this);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	
-	public void Phase3(World world, EntityPlayer player)
+	public void Phase3(World world, PlayerEntity player)
 	{
 		// Make sure we're in space and riding a rocket
-		if(!(player.world.provider instanceof WorldProviderSpace))
+		if(!(ARConfiguration.getCurrentConfig().spaceDimId == ZUtils.getDimensionIdentifier(world)))
 			throw new AssertionError("Expected to be on space station!");
 		if(!(player.getRidingEntity() instanceof EntityRocket))
 			throw new AssertionError("Expected player to be riding a rocket!");
@@ -89,26 +92,26 @@ public class BuildRocketTest extends BaseTest {
 		((EntityRocket)player.getRidingEntity()).prepareLaunch();
 		
 		try {
-			IngameTestOrchestrator.scheduleEvent(world, 1600, BuildRocketTest.class.getDeclaredMethod("Phase4", World.class, EntityPlayer.class), this);
+			IngameTestOrchestrator.scheduleEvent(world, 1600, BuildRocketTest.class.getDeclaredMethod("Phase4", World.class, PlayerEntity.class), this);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void Phase4(World world, EntityPlayer player)
+	public void Phase4(World world, PlayerEntity player)
 	{
 		// Make sure we're in space and riding a rocket
-		if(player.world.provider.getDimension() != originalWorldId)
+		if(ZUtils.getDimensionIdentifier(player.world) != originalWorldId)
 			throw new AssertionError("Expected to return to the same world we started from");
 		if(!(player.getRidingEntity() instanceof EntityRocket))
 			throw new AssertionError("Expected player to be riding a rocket");
-		if(!player.getRidingEntity().getPosition().equals(originalPos) )
+		if(!new BlockPos(player.getRidingEntity().getPositionVec()).equals(originalPos) )
 			throw new AssertionError("Expected to land near where we took off!");
 		
 		success();
 	}
 
-	public void teleportPlayerToStart(EntityPlayer player)
+	public void teleportPlayerToStart(PlayerEntity player)
 	{
 		player.setPositionAndUpdate(0, 100, 0);
 	}
@@ -121,13 +124,13 @@ public class BuildRocketTest extends BaseTest {
 			{
 				for(int y = 62; y < 250; y++)
 				{
-					world.setBlockToAir(new BlockPos(x,y,z));
+					world.removeBlock(new BlockPos(x,y,z), false);
 				}
 			}
 		}
 	}
 	
-	public void buildBasicRocketPlatform(World world, EntityPlayer player)
+	public void buildBasicRocketPlatform(World world, PlayerEntity player)
 	{
 		final int padSize = 5;
 		final int height = 6;
@@ -148,7 +151,7 @@ public class BuildRocketTest extends BaseTest {
 			world.setBlockState(new BlockPos(-1, 64+y, height/2), AdvancedRocketryBlocks.blockStructureTower.getDefaultState());
 		}
 		
-		world.setBlockState(builderPos, AdvancedRocketryBlocks.blockRocketBuilder.getDefaultState().withProperty(RotatableBlock.FACING, EnumFacing.NORTH));
+		world.setBlockState(builderPos, AdvancedRocketryBlocks.blockRocketBuilder.getDefaultState().with(RotatableBlock.FACING, Direction.NORTH));
 		world.setBlockState(builderPos.up(), LibVulpesBlocks.blockCreativeInputPlug.getDefaultState());
 		
 		TileEntity tile = world.getTileEntity(builderPos);
@@ -159,7 +162,7 @@ public class BuildRocketTest extends BaseTest {
 			throw new AssertionError("Invalid Rocket pad!");
 	}
 	
-	public void buildBasicRocketStructure(World world, EntityPlayer player, BlockPos centerBottom)
+	public void buildBasicRocketStructure(World world, PlayerEntity player, BlockPos centerBottom)
 	{
 		final int centerX = centerBottom.getX();
 		final int bottomY = centerBottom.getY();
@@ -176,12 +179,12 @@ public class BuildRocketTest extends BaseTest {
 		world.setBlockState(new BlockPos(centerX,  bottomY+4, centerZ), AdvancedRocketryBlocks.blockGenericSeat.getDefaultState());
 	}
 	
-	public void buildRocket(World world, EntityPlayer player)
+	public void buildRocket(World world, PlayerEntity player)
 	{
 		buildRocket(world, player, rocketBuilderPos);
 	}
 	
-	public void buildRocket(World world, EntityPlayer player, BlockPos tilePos)
+	public void buildRocket(World world, PlayerEntity player, BlockPos tilePos)
 	{
 		TileEntity tile = world.getTileEntity(tilePos);
 		if(!(tile instanceof TileRocketBuilder))
@@ -191,15 +194,15 @@ public class BuildRocketTest extends BaseTest {
 			throw new AssertionError("Invalid Rocket pad!");
 		
 		//Build the rocket
-		((TileRocketBuilder)tile).useNetworkData(player, Side.SERVER, (byte) 1, new NBTTagCompound());
+		((TileRocketBuilder)tile).useNetworkData(player, Dist.DEDICATED_SERVER, (byte) 1, new CompoundNBT());
 	}
 	
-	public void mountPlayerToRocket(EntityPlayer player, EntityRocket rocket)
+	public void mountPlayerToRocket(PlayerEntity player, EntityRocket rocket)
 	{
 		player.startRiding(rocket);
 	}
 	
-	public void putStationIntoRocket(EntityRocket rocket, int stationId)
+	public void putStationIntoRocket(EntityRocket rocket, ResourceLocation stationId)
 	{
 		ItemStack stack = new ItemStack(AdvancedRocketryItems.itemSpaceStationChip);
 		ItemStationChip.setUUID(stack, stationId);

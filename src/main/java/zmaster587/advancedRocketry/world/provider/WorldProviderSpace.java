@@ -7,8 +7,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.BiomeProviderSingle;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.client.IRenderHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.ARConfiguration;
@@ -47,11 +47,11 @@ public class WorldProviderSpace extends WorldProviderPlanet {
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(value=Dist.CLIENT)
 	public IRenderHandler getSkyRenderer() {
 		
 		//Maybe a little hacky
-		EntityPlayerSP player = Minecraft.getMinecraft().player;
+		EntityPlayerSP player = Minecraft.getInstance().player;
 		if(player != null)
 		{
 			Entity e = player.getRidingEntity();

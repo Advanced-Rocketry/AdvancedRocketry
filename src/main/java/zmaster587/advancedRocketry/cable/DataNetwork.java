@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.cable;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.satellite.IDataHandler;
 
@@ -47,12 +47,12 @@ public class DataNetwork extends CableNetwork  {
 			
 			int demand = 0;
 			int supply = 0;
-			Iterator<Entry<TileEntity,EnumFacing>> sinkItr = sinks.iterator();
-			Iterator<Entry<TileEntity,EnumFacing>> sourceItr = sources.iterator();
+			Iterator<Entry<TileEntity,Direction>> sinkItr = sinks.iterator();
+			Iterator<Entry<TileEntity,Direction>> sourceItr = sources.iterator();
 			
 			while(sinkItr.hasNext()) {
 				//Get tile and key
-				Entry<TileEntity,EnumFacing> obj = (Entry<TileEntity, EnumFacing>)sinkItr.next();
+				Entry<TileEntity,Direction> obj = (Entry<TileEntity, Direction>)sinkItr.next();
 				IDataHandler dataHandlerSink = (IDataHandler)obj.getKey();
 
 				demand += dataHandlerSink.addData(amount, data, obj.getValue(), false);
@@ -60,7 +60,7 @@ public class DataNetwork extends CableNetwork  {
 			
 			while(sourceItr.hasNext()) {
 				//Get tile and key
-				Entry<TileEntity,EnumFacing> obj = (Entry<TileEntity, EnumFacing>)sourceItr.next();
+				Entry<TileEntity,Direction> obj = (Entry<TileEntity, Direction>)sourceItr.next();
 				IDataHandler dataHandlerSink = (IDataHandler)obj.getKey();
 				
 				supply += dataHandlerSink.extractData(amount, data, obj.getValue(), false);
@@ -73,7 +73,7 @@ public class DataNetwork extends CableNetwork  {
 
 
 				//Get tile and key
-				Entry<TileEntity,EnumFacing> obj = (Entry<TileEntity, EnumFacing>)sinkItr.next();
+				Entry<TileEntity,Direction> obj = (Entry<TileEntity, Direction>)sinkItr.next();
 				IDataHandler dataHandlerSink = (IDataHandler)obj.getKey();
 
 
@@ -85,7 +85,7 @@ public class DataNetwork extends CableNetwork  {
 
 
 				//Get tile and key
-				Entry<TileEntity,EnumFacing> obj = (Entry<TileEntity, EnumFacing>)sourceItr.next();
+				Entry<TileEntity,Direction> obj = (Entry<TileEntity, Direction>)sourceItr.next();
 				IDataHandler dataHandlerSink = (IDataHandler)obj.getKey();
 
 				amountMoved -= dataHandlerSink.extractData(amountMoved, data, obj.getValue(), true);

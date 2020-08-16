@@ -25,7 +25,7 @@ public class SpaceTravelInteraction {
 					double radius = -480;
 					//Assume planet centered at 0
 					SpacePosition planetPosition = new SpacePosition();
-					double theta = Math.atan2(entity.motionZ, entity.motionX);
+					double theta = Math.atan2(entity.getMotion().z, entity.getMotion().x);
 					
 					spacePosition.x = planetPosition.x + Math.cos(theta)*radius;
 					spacePosition.y = planetPosition.y;
@@ -48,7 +48,7 @@ public class SpaceTravelInteraction {
 				SpacePosition planetPosition = spacePosition.world.getSpacePosition();
 				spacePosition.world = null;
 				
-				double theta = Math.atan2(entity.motionZ, entity.motionX);
+				double theta = Math.atan2(entity.getMotion().z, entity.getMotion().x);
 				
 				spacePosition.x = planetPosition.x + Math.cos(theta)*radius;
 				spacePosition.y = planetPosition.y;

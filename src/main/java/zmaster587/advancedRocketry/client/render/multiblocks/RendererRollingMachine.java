@@ -3,7 +3,7 @@ package zmaster587.advancedRocketry.client.render.multiblocks;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
@@ -39,12 +39,12 @@ public class RendererRollingMachine extends TileEntitySpecialRenderer {
 		if(!multiBlockTile.canRender())
 			return;
 
-		GL11.glPushMatrix();
+		matrix.push();
 		//Rotate and move the model into position
-		GL11.glTranslated(x + .5f, y, z + 0.5f);
-		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 180 : 0) + front.getFrontOffsetZ()*90f, 0, 1, 0);
-		GL11.glTranslated(-.5f, -1f, -0.5f);
+		matrix.translate(x + .5f, y, z + 0.5f);
+		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
+		GL11.glRotatef((front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, 1, 0);
+		matrix.translate(-.5f, -1f, -0.5f);
 
 		bindTexture(coilSide);
 
@@ -59,23 +59,23 @@ public class RendererRollingMachine extends TileEntitySpecialRenderer {
 			bindTexture(texture);
 			model.renderOnly("Hull");
 
-			GL11.glPushMatrix();
+			matrix.push();
 			GL11.glTranslatef(2.12f, 1.0f, 2.56f);
 			GL11.glRotatef(-progress*720, 1, 0, 0);
 			model.renderOnly("Roller1");
-			GL11.glPopMatrix();
+			matrix.pop();
 
-			GL11.glPushMatrix();
+			matrix.push();
 			GL11.glTranslatef(2.12f, 0.375f,2.18f);
 			GL11.glRotatef(progress*720, 1, 0, 0);
 			model.renderOnly("Roller2");
-			GL11.glPopMatrix();
+			matrix.pop();
 
-			GL11.glPushMatrix();
+			matrix.push();
 			GL11.glTranslatef(2.12f, 0.375f, 2.93f);
 			GL11.glRotatef(15 + progress*720, 1, 0, 0);
 			model.renderOnly("Roller2");
-			GL11.glPopMatrix();
+			matrix.pop();
 
 
 			int color;
@@ -89,22 +89,22 @@ public class RendererRollingMachine extends TileEntitySpecialRenderer {
 
 			//Render the ingot
 			if(progress < 0.6f) {
-				GL11.glPushMatrix();
+				matrix.push();
 				GL11.glDisable(GL11.GL_TEXTURE_2D);
 				GL11.glTranslatef(2.125f, 0.875f, 1.3125f + progress*2f);
 				model.renderOnly("Ingot");	
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
-				GL11.glPopMatrix();
+				matrix.pop();
 			}
 			//Render the plate
 			if(progress > 0.5f) {
 
-				GL11.glPushMatrix();
+				matrix.push();
 				GL11.glDisable(GL11.GL_TEXTURE_2D);
 				GL11.glTranslatef(2.125f, 0.875f, 1.7125f + progress*2f);
 				model.renderOnly("Plate");	
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
-				GL11.glPopMatrix();
+				matrix.pop();
 			}
 			GL11.glColor3f(1f,1f,1f);
 		}
@@ -112,25 +112,25 @@ public class RendererRollingMachine extends TileEntitySpecialRenderer {
 			bindTexture(texture);
 			model.renderOnly("Hull");
 
-			GL11.glPushMatrix();
+			matrix.push();
 			GL11.glTranslatef(2.12f, 1.0f, 2.56f);
 			model.renderOnly("Roller1");
-			GL11.glPopMatrix();
+			matrix.pop();
 
-			GL11.glPushMatrix();
+			matrix.push();
 			GL11.glTranslatef(2.12f, 0.375f,2.18f);
 			model.renderOnly("Roller2");
-			GL11.glPopMatrix();
+			matrix.pop();
 
-			GL11.glPushMatrix();
+			matrix.push();
 
 			GL11.glTranslatef(2.12f, 0.375f, 2.93f);
 			GL11.glRotatef(15, 1, 0, 0);
 
 			model.renderOnly("Roller2");
-			GL11.glPopMatrix();
+			matrix.pop();
 
 		}
-		GL11.glPopMatrix();
+		matrix.pop();
 	}
 }

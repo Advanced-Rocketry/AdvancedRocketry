@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.api.satellite;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import zmaster587.advancedRocketry.api.DataStorage;
 
 public interface IDataHandler {
@@ -12,7 +12,7 @@ public interface IDataHandler {
 	 * @param commit true if the change is to be commited, false if simulated
 	 * @return amount of data actually extracted
 	 */
-	public int extractData(int maxAmount, DataStorage.DataType type, EnumFacing dir, boolean commit);
+	public int extractData(int maxAmount, DataStorage.DataType type, Direction dir, boolean commit);
 	
 	/**
 	 * @param maxAmount Maximum amount to add
@@ -21,7 +21,7 @@ public interface IDataHandler {
 	 * @param commit true if the change is to be commited, false if simulated
 	 * @return Amount of data actually added
 	 */
-	public int addData(int maxAmount, DataStorage.DataType type, EnumFacing dir, boolean commit);
+	public int addData(int maxAmount, DataStorage.DataType type, Direction dir, boolean commit);
 	
 	/**
 	 * 

@@ -1,12 +1,12 @@
 package zmaster587.advancedRocketry.network;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.world.biome.Biome.SpawnListEntry;
+import net.minecraft.util.ResourceLocation;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
@@ -20,8 +20,8 @@ import java.util.logging.Logger;
 public class PacketDimInfo extends BasePacket {
 
 	DimensionProperties dimProperties;
-	NBTTagCompound dimNBT;
-	int dimNumber;
+	CompoundNBT dimNBT;
+	ResourceLocation dimNumber;
 	boolean deleteDim;
 	List<ItemStack> artifacts;
 	String customIcon;
@@ -31,16 +31,16 @@ public class PacketDimInfo extends BasePacket {
 		customIcon = "";
 	}
 
-	public PacketDimInfo(int dimNumber,DimensionProperties dimProperties) {
+	public PacketDimInfo(ResourceLocation dimNumber, DimensionProperties dimProperties) {
 		this();
 		this.dimProperties = dimProperties;
 		this.dimNumber = dimNumber;
 	}
 
 	@Override
-	public void write(ByteBuf out) {
-		NBTTagCompound nbt = new NBTTagCompound();
-		out.writeInt(dimNumber);
+	public void write(PacketBuffer out) {
+		CompoundNBT nbt = new CompoundNBT();
+		out.writeResourceLocation(dimNumber);
 		boolean flag = dimProperties == null;
 		
 		if(!flag) {
@@ -54,8 +54,8 @@ public class PacketDimInfo extends BasePacket {
 				
 				out.writeShort(dimProperties.getRequiredArtifacts().size());
 				for(ItemStack i : dimProperties.getRequiredArtifacts()) {
-					NBTTagCompound nbt2 = new NBTTagCompound(); 
-					i.writeToNBT(nbt2);
+					CompoundNBT nbt2 = new CompoundNBT(); 
+					i.write(nbt2);
 					packetBuffer.writeCompoundTag(nbt2);
 				}
 				
@@ -81,25 +81,18 @@ public class PacketDimInfo extends BasePacket {
 	}
 
 	@Override
-	public void readClient(ByteBuf in) {
+	public void readClient(PacketBuffer in) {
 		PacketBuffer packetBuffer = new PacketBuffer(in);
-		dimNumber = in.readInt();
+		dimNumber = in.readResourceLocation();
 		deleteDim = in.readBoolean();
 		
 		if(!deleteDim) {
-			//TODO: error handling
-			try {
-				dimNBT  = packetBuffer.readCompoundTag();
+			dimNBT  = packetBuffer.readCompoundTag();
 
-				int number = packetBuffer.readShort();
-				for(int i = 0; i < number; i++) {
-					NBTTagCompound nbt2 = packetBuffer.readCompoundTag();
-					artifacts.add(new ItemStack(nbt2));
-				}
-				
-			} catch (IOException e) {
-				e.printStackTrace();
-				return;
+			int number = packetBuffer.readShort();
+			for(int i = 0; i < number; i++) {
+				CompoundNBT nbt2 = packetBuffer.readCompoundTag();
+				artifacts.add(ItemStack.read(nbt2));
 			}
 
 			
@@ -112,12 +105,12 @@ public class PacketDimInfo extends BasePacket {
 	}
 
 	@Override
-	public void read(ByteBuf in) {
+	public void read(PacketBuffer in) {
 		//Should never be read on the server!
 	}
 
 	@Override
-	public void executeClient(EntityPlayer thePlayer) {
+	public void executeClient(PlayerEntity thePlayer) {
 		if(deleteDim) {
 			if(DimensionManager.getInstance().isDimensionCreated(dimNumber)) {
 				DimensionManager.getInstance().deleteDimension(dimNumber);
@@ -155,6 +148,6 @@ public class PacketDimInfo extends BasePacket {
 	}
 
 	@Override
-	public void executeServer(EntityPlayerMP player) {}
+	public void executeServer(ServerPlayerEntity player) {}
 
 }

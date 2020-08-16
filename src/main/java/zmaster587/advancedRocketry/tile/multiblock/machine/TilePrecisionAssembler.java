@@ -1,16 +1,16 @@
 package zmaster587.advancedRocketry.tile.multiblock.machine;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -42,15 +42,20 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 				{'*', "blockCoil", "blockCoil", '*'},
 				{'*', LibVulpesBlocks.motors, LibVulpesBlocks.motors, '*'}}};
 
+				
+				public TilePrecisionAssembler() {
+					super(AdvancedRocketryTileEntityType.TILE_PREC_ASS);
+				}
+				
 	@Override
 	public Object[][][] getStructure() {
 		return structure;
 	}
 	
 	@Override
-	public float getTimeMultiplierForBlock(IBlockState state, TileEntity tile) {
+	public float getTimeMultiplierForBlock(BlockState state, TileEntity tile) {
 
-		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(state.getBlock(),1, state.getBlock().getMetaFromState(state)));
+		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(state.getBlock(),1));
 		if(material == MaterialRegistry.getMaterialFromName("Gold"))
 			return 0.9f;
 		else if(material == MaterialRegistry.getMaterialFromName("Aluminum"))
@@ -84,7 +89,7 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = super.getModules(ID, player);
 
 		int yOffset = 16;
@@ -92,9 +97,9 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 
 		if(world.isRemote)
 			modules.add(new ModuleImage(xOffset, yOffset, new IconResource(132, 0, 53, 66, TextureResources.progressBars)));
-		modules.add(new ModuleProgress(xOffset + 35, yOffset + 22, 1, new ProgressBarImage(167, 22, 13, 15, 54, 42, 13, 15, EnumFacing.DOWN, TextureResources.progressBars), this));
-		modules.add(new ModuleProgress(xOffset + 36, yOffset + 41, 2, new ProgressBarImage(168, 41, 11, 15, 67, 42, 11, 15, EnumFacing.DOWN, TextureResources.progressBars), this));
-		modules.add(new ModuleProgress(xOffset + 31, yOffset + 62, 3, new ProgressBarImage(163, 62, 21, 3, 90, 42, 21,  3, EnumFacing.EAST, TextureResources.progressBars), this));
+		modules.add(new ModuleProgress(xOffset + 35, yOffset + 22, 1, new ProgressBarImage(167, 22, 13, 15, 54, 42, 13, 15, Direction.DOWN, TextureResources.progressBars), this));
+		modules.add(new ModuleProgress(xOffset + 36, yOffset + 41, 2, new ProgressBarImage(168, 41, 11, 15, 67, 42, 11, 15, Direction.DOWN, TextureResources.progressBars), this));
+		modules.add(new ModuleProgress(xOffset + 31, yOffset + 62, 3, new ProgressBarImage(163, 62, 21, 3, 90, 42, 21,  3, Direction.EAST, TextureResources.progressBars), this));
 
 		return modules;
 	}

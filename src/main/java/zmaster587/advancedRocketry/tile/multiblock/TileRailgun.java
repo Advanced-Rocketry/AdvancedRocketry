@@ -1,28 +1,33 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.Unit;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.common.ForgeChunkManager.Ticket;
-import net.minecraftforge.common.ForgeChunkManager.Type;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.server.Ticket;
+import net.minecraft.world.server.TicketType;
+import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.entity.EntityItemAbducted;
 import zmaster587.advancedRocketry.util.AudioRegistry;
@@ -44,7 +49,6 @@ import java.util.List;
 
 public class TileRailgun extends TileMultiPowerConsumer implements IInventory, ILinkableTile, IGuiCallback {
 	private EmbeddedInventory inv;
-	Ticket ticket;
 	public long recoil;
 	int minStackTransferSize = 1;
 	ModuleNumericTextbox textBox;
@@ -110,9 +114,10 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	};
 
 	public TileRailgun() {
+		super(AdvancedRocketryTileEntityType.TILE_RAILGUN);
 		inv = new EmbeddedInventory(1);
 		powerPerTick = 100000;
-		redstoneControl = new ModuleRedstoneOutputButton(174, 4, -1, "", this);
+		redstoneControl = new ModuleRedstoneOutputButton(174, 4, "", this);
 		state = RedstoneState.OFF;
 		redstoneControl.setRedstoneState(state);
 	}
@@ -122,7 +127,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		BlockPos pos = getDestPosition();
 		if(pos != null) {
 			int distance = (int)Math.sqrt(Math.pow(pos.getX() - this.pos.getX(),2) + Math.pow(pos.getZ() - this.pos.getZ(), 2));
-			if(getDestDimId() == this.world.provider.getDimension())
+			if(getDestDimId() == ZUtils.getDimensionIdentifier(world))
 				distance = distance*10 + 50000;
 			return Math.min(distance, super.requiredPowerPerTick());
 		}
@@ -132,7 +137,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	/**
 	 * @return the destionation DIMID or Constants.INVALID_PLANET if not valid
 	 */
-	private int getDestDimId() {
+	private ResourceLocation getDestDimId() {
 		ItemStack stack = inv.getStackInSlot(0);
 		if(stack != null && stack.getItem() instanceof ItemLinker) {
 			return ItemLinker.getDimId(stack);
@@ -169,7 +174,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = super.getModules(ID, player);
 
 		modules.add(new ModuleSlotArray(40, 40, this, 0, 1));
@@ -189,17 +194,22 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 
 	@Override
 	public void onLoad() {
-		if(ticket == null) {
-			ticket = ForgeChunkManager.requestTicket(AdvancedRocketry.instance, this.world, Type.NORMAL);
-			if(ticket != null)
-				ForgeChunkManager.forceChunk(ticket, new ChunkPos(getPos().getX() / 16 - (getPos().getX() < 0 ? 1 : 0), getPos().getZ() / 16 - (getPos().getZ() < 0 ? 1 : 0)));
+		super.onLoad();
+		if(!this.world.isRemote)
+		{
+			ServerWorld serverworld = (ServerWorld)world;
+			serverworld.forceChunk(new ChunkPos(getPos()).x, new ChunkPos(getPos()).z, true);
 		}
 	}
 
 	@Override
-	public void invalidate() {
-		super.invalidate();
-		ForgeChunkManager.releaseTicket(ticket);
+	public void remove() {
+		super.remove();
+		if(!this.world.isRemote)
+		{
+			ServerWorld serverworld = (ServerWorld)world;
+			serverworld.forceChunk(new ChunkPos(getPos()).x, new ChunkPos(getPos()).z, false);
+		}
 	}
 
 	@Override
@@ -211,10 +221,10 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	public void onInventoryButtonPressed(int buttonId) {
+	public void onInventoryButtonPressed(ModuleButton buttonId) {
 		super.onInventoryButtonPressed(buttonId);
 
-		if(buttonId == -1) {
+		if(buttonId == redstoneControl) {
 			state = redstoneControl.getState();
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)5));
 		}
@@ -240,7 +250,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		if(state == RedstoneState.OFF)
 			return true;
 
-		boolean powered = world.isBlockIndirectlyGettingPowered(pos) > 0;
+		boolean powered = world.getRedstonePowerFromNeighbors(pos) > 0;
 
 		return (state == RedstoneState.ON && powered) || (!powered && state == RedstoneState.INVERTED);
 	}
@@ -272,16 +282,16 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		if(tfrStack != null) {
 			BlockPos pos = getDestPosition();
 			if(pos != null) {
-				int dimId;
+				ResourceLocation dimId;
 				
 				dimId = getDestDimId();
 
 				if(dimId != Constants.INVALID_PLANET) {
-					World world = DimensionManager.getWorld(dimId);
+					World world = ZUtils.getWorld(dimId);
 					TileEntity tile;
 
 					if(world != null && (tile = world.getTileEntity(pos)) instanceof TileRailgun && ((TileRailgun)tile).canRecieveCargo(tfrStack) &&
-							(zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(this.world.provider.getDimension(),
+							(zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(ZUtils.getDimensionIdentifier(this.world),
 									zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(world, pos).getId()) ||
 									zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(world, pos).getId() == zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(this.world, this.pos).getId()) ) {
 
@@ -290,11 +300,11 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 						inv2.markDirty();
 						world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 2);
 
-						EnumFacing dir = RotatableBlock.getFront(world.getBlockState(pos));
+						Direction dir = RotatableBlock.getFront(world.getBlockState(pos));
 
-						EntityItemAbducted ent = new EntityItemAbducted(this.world, this.pos.getX() - 2*dir.getFrontOffsetX() + 0.5f, this.pos.getY() + 5, this.pos.getZ() - 2*dir.getFrontOffsetZ() + 0.5f, tfrStack);
-						this.world.spawnEntity(ent);
-						PacketHandler.sendToNearby(new PacketMachine(this, (byte) 3), this.world.provider.getDimension(), this.pos.getX() - dir.getFrontOffsetX(), this.pos.getY() + 5, this.pos.getZ() - dir.getFrontOffsetZ(),  64d);
+						EntityItemAbducted ent = new EntityItemAbducted(this.world, this.pos.getX() - 2*dir.getXOffset() + 0.5f, this.pos.getY() + 5, this.pos.getZ() - 2*dir.getZOffset() + 0.5f, tfrStack);
+						this.world.addEntity(ent);
+						PacketHandler.sendToNearby(new PacketMachine(this, (byte) 3), this.world, this.pos.getX() - dir.getXOffset(), this.pos.getY() + 5, this.pos.getZ() - dir.getZOffset(),  64d);
 						return true;
 					}
 				}
@@ -359,7 +369,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(PlayerEntity player) {
 		return true;
 	}
 	
@@ -369,12 +379,12 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player) {
+	public void openInventory(PlayerEntity player) {
 
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer player) {
+	public void closeInventory(PlayerEntity player) {
 
 	}
 
@@ -385,41 +395,41 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 
 	@Override
 	public boolean onLinkStart(ItemStack item, TileEntity entity,
-			EntityPlayer player, World world) {
+			PlayerEntity player, World world) {
 		ItemLinker.setMasterCoords(item, this.getPos());
-		ItemLinker.setDimId(item, world.provider.getDimension());
+		ItemLinker.setDimId(item, ZUtils.getDimensionIdentifier(world));
 		if(!world.isRemote)
-			player.sendMessage(new TextComponentTranslation("msg.linker.program"));
+			player.sendMessage(new TranslationTextComponent("msg.linker.program"), Util.field_240973_b_);
 		return true;
 	}
 
 	@Override
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
-			EntityPlayer player, World world) {
+			PlayerEntity player, World world) {
 		return false;
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		inv.writeToNBT(nbt);
-		nbt.setInteger("minTfrSize", minStackTransferSize);
-		nbt.setByte("redstoneState", (byte) state.ordinal());
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
+		inv.write(nbt);
+		nbt.putInt("minTfrSize", minStackTransferSize);
+		nbt.putByte("redstoneState", (byte) state.ordinal());
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void func_230337_a_(BlockState blkstate, CompoundNBT nbt) {
+		super.func_230337_a_(blkstate, nbt);
 		inv.readFromNBT(nbt);
-		minStackTransferSize = nbt.getInteger("minTfrSize");
+		minStackTransferSize = nbt.getInt("minTfrSize");
 
 		state = RedstoneState.values()[nbt.getByte("redstoneState")];
 		redstoneControl.setRedstoneState(state);
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
 		if(id == 4)
 			out.writeInt(minStackTransferSize);
 		else if(id == 5)
@@ -429,28 +439,28 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
+			CompoundNBT nbt) {
 		if(packetId == 4)
-			nbt.setInteger("minTransferSize", in.readInt());
+			nbt.putInt("minTransferSize", in.readInt());
 		else if(packetId == 5) 
-			nbt.setByte("state", in.readByte());
+			nbt.putByte("state", in.readByte());
 		else
 			super.readDataFromNetwork(in, packetId, nbt);
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 		if(side.isClient()) {
 			if(id == 3) {
-				EnumFacing dir = RotatableBlock.getFront(world.getBlockState(pos));
-				LibVulpes.proxy.playSound(world, pos, AudioRegistry.railgunFire, SoundCategory.BLOCKS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.BLOCKS), 0.975f + world.rand.nextFloat()*0.05f);
-				recoil = world.getTotalWorldTime();
+				Direction dir = RotatableBlock.getFront(world.getBlockState(pos));
+				LibVulpes.proxy.playSound(world, pos, AudioRegistry.railgunFire, SoundCategory.BLOCKS, Minecraft.getInstance().gameSettings.getSoundLevel(SoundCategory.BLOCKS), 0.975f + world.rand.nextFloat()*0.05f);
+				recoil = world.getGameTime();
 			}
 		}
 		else if(id == 4) {
-			minStackTransferSize = nbt.getInteger("minTransferSize");
+			minStackTransferSize = nbt.getInt("minTransferSize");
 
 		}			
 		else if(id == 5) {
@@ -472,48 +482,23 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	protected void writeNetworkData(NBTTagCompound nbt) {
+	protected void writeNetworkData(CompoundNBT nbt) {
 		super.writeNetworkData(nbt);
-		nbt.setByte("state", (byte)state.ordinal());
-		nbt.setInteger("minTfrSize", minStackTransferSize);
+		nbt.putByte("state", (byte)state.ordinal());
+		nbt.putInt("minTfrSize", minStackTransferSize);
 	}
 
 	@Override
-	protected void readNetworkData(NBTTagCompound nbt) {
+	protected void readNetworkData(CompoundNBT nbt) {
 		super.readNetworkData(nbt);
 		state = RedstoneState.values()[nbt.getByte("redstoneState")];
 		redstoneControl.setRedstoneState(state);
-		minStackTransferSize = nbt.getInteger("minTfrSize");
-	}
-
-	@Override
-	public String getName() {
-		return getMachineName();
-	}
-
-	@Override
-	public boolean hasCustomName() {
-		return false;
+		minStackTransferSize = nbt.getInt("minTfrSize");
 	}
 
 	@Override
 	public ItemStack removeStackFromSlot(int index) {
 		return inv.removeStackFromSlot(index);
-	}
-
-	@Override
-	public int getField(int id) {
-		return inv.getField(id);
-	}
-
-	@Override
-	public void setField(int id, int value) {
-		inv.setField(id, value);
-	}
-
-	@Override
-	public int getFieldCount() {
-		return inv.getFieldCount();
 	}
 
 	@Override

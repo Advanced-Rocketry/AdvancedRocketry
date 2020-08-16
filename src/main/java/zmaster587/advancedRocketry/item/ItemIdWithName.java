@@ -1,30 +1,34 @@
 package zmaster587.advancedRocketry.item;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
 public class ItemIdWithName extends Item {
 	
+	public ItemIdWithName(Properties properties) {
+		super(properties);
+	}
+
 	public void setName(ItemStack stack, String name) {
 
-		if(stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
-			nbt.setString("name", name);
-			stack.setTagCompound(nbt);
+		if(stack.hasTag()) {
+			CompoundNBT nbt = stack.getTag();
+			nbt.putString("name", name);
+			stack.setTag(nbt);
 		}
 	}
 
 	public String getName(ItemStack stack) {
-		if(stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
+		if(stack.hasTag()) {
+			CompoundNBT nbt = stack.getTag();
 			return nbt.getString("name");
 		}
 
@@ -33,14 +37,14 @@ public class ItemIdWithName extends Item {
 	
 	
 	@Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(value=Dist.CLIENT)
 	public void addInformation(ItemStack stack, World player,
 			List list, ITooltipFlag bool) {
-		if(stack.getItemDamage() == -1) {
-			list.add(ChatFormatting.GRAY + "Unprogrammed");
+		if(stack.getDamage() == -1) {
+			list.add(new StringTextComponent("Unprogrammed"));
 		}
 		else {
-			list.add(getName(stack));
+			list.add(new StringTextComponent(getName(stack)));
 		}
 	}
 }

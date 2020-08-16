@@ -3,7 +3,9 @@ package zmaster587.advancedRocketry.item;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.ISatelliteIdItem;
@@ -16,6 +18,11 @@ import java.util.List;
 
 public class ItemSatelliteIdentificationChip extends Item implements ISatelliteIdItem {
 
+	public ItemSatelliteIdentificationChip(Properties properties) {
+		super(properties);
+		// TODO Auto-generated constructor stub
+	}
+
 	private static String name = "name";
 
 	@Override
@@ -24,8 +31,8 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 	}
 
 	public long getSatelliteId(ItemStack stack) {
-		if(stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
+		if(stack.hasTag()) {
+			CompoundNBT nbt = stack.getTag();
 
 			return nbt.getLong("satelliteId");
 		}
@@ -33,8 +40,8 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 	}
 
 	public SatelliteBase getSatellite(ItemStack stack) {
-		if(stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
+		if(stack.hasTag()) {
+			CompoundNBT nbt = stack.getTag();
 
 			long satId = nbt.getLong("satelliteId");
 
@@ -42,12 +49,12 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 
 			if(satellite != null) {
 
-				if(!nbt.hasKey("dimId") || nbt.getInteger("dimId") == Constants.INVALID_PLANET) {
-					nbt.setInteger("dimId", satellite.getDimensionId());
+				if(!nbt.contains("dimId") || new ResourceLocation(nbt.getString("dimId")) == Constants.INVALID_PLANET) {
+					nbt.putString("dimId", satellite.getDimensionId().toString());
 				}
 
-				if( zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId()) != null)
-					nbt.setString(name, zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId()).getName());
+				if( zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId().get()) != null)
+					nbt.putString(name, zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId().get()).getName());
 			}
 
 
@@ -57,15 +64,15 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 	}
 
 	public void setSatellite(ItemStack stack, SatelliteBase satellite) {
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound())
-			nbt = stack.getTagCompound();
+		CompoundNBT nbt;
+		if(stack.hasTag())
+			nbt = stack.getTag();
 		else 
-			nbt = new NBTTagCompound();
+			nbt = new CompoundNBT();
 
-		nbt.setString("satelliteName", satellite.getName());
-		nbt.setInteger("dimId", satellite.getDimensionId());
-		nbt.setLong("satelliteId", satellite.getId());
+		nbt.putString("satelliteName", satellite.getName());
+		nbt.putString("dimId", satellite.getDimensionId().toString());
+		nbt.putLong("satelliteId", satellite.getId());
 	}
 
 	/**
@@ -77,50 +84,50 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		erase(stack);
 		SatelliteBase satellite2 = SatelliteRegistry.getSatallite(satellite.getSatelliteType());
 		if(satellite2 != null) {
-			NBTTagCompound nbt;
-			if(stack.hasTagCompound())
-				nbt = stack.getTagCompound();
+			CompoundNBT nbt;
+			if(stack.hasTag())
+				nbt = stack.getTag();
 			else 
-				nbt = new NBTTagCompound();
+				nbt = new CompoundNBT();
 
 
-			nbt.setString("satelliteName", satellite2.getName());
-			nbt.setLong("satelliteId", satellite.getId());
+			nbt.putString("satelliteName", satellite2.getName());
+			nbt.putLong("satelliteId", satellite.getId());
 
-			stack.setTagCompound(nbt);
+			stack.setTag(nbt);
 		}
 	}
 
 	public void erase(ItemStack stack) {
-		stack.setTagCompound(null);
+		stack.setTag(null);
 	}
 
 	public void setDim(ItemStack stack, int dimId) {
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound())
-			nbt = stack.getTagCompound();
+		CompoundNBT nbt;
+		if(stack.hasTag())
+			nbt = stack.getTag();
 		else 
 			return;
 
-		nbt.setInteger("dimId", dimId);
+		nbt.putInt("dimId", dimId);
 	}
 
 	public String getSatelliteName(ItemStack stack) {
-		if(stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
+		if(stack.hasTag()) {
+			CompoundNBT nbt = stack.getTag();
 
 			return nbt.getString("satelliteName");
 		}
 		return "";
 	}
 
-	public int getWorldId(ItemStack stack) {
-		NBTTagCompound nbt;
+	public ResourceLocation getWorldId(ItemStack stack) {
+		CompoundNBT nbt;
 
-		if(stack.hasTagCompound() && (nbt = stack.getTagCompound()).hasKey("dimId") ) {
+		if(stack.hasTag() && (nbt = stack.getTag()).contains("dimId") ) {
 
 
-			return nbt.getInteger("dimId");
+			return new ResourceLocation( nbt.getString("dimId"));
 		}
 		return Constants.INVALID_PLANET; // Cant have a [strike]nether[/strike] satellite anyway...ofc you can
 	}
@@ -128,7 +135,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 	@Override
 	public void addInformation(ItemStack stack, World player,
 			List list, ITooltipFlag bool) {
-		int worldId = getWorldId(stack);
+		ResourceLocation worldId = getWorldId(stack);
 		long satId = getSatelliteId(stack);
 
 		String satelliteName = getSatelliteName(stack);
@@ -137,24 +144,24 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 
 			if(worldId != Constants.INVALID_PLANET) {
 
-				if(stack.getTagCompound().hasKey(name)) {
+				if(stack.getTag().contains(name)) {
 
-					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.id") + satId);
-					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.planet") + stack.getTagCompound().getString(name));
-					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.sat") + satelliteName);
+					list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.id") + satId));
+					list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.planet") + stack.getTag().getString(name)));
+					list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.sat") + satelliteName));
 				}
 				else {
-					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.planetunk"));
-					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.satlost")); //TODO: make satellite respond with name until
+					list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.planetunk")));
+					list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.satlost"))); //TODO: make satellite respond with name until
 				}
 			}
 			else {
-				list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.id") + satId);
-				list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.planetunk"));
-				list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.sat") + satelliteName);
+				list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.id") + satId));
+				list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.planetunk")));
+				list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.sat") + satelliteName));
 			}
 		}
 		else
-			list.add(LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
+			list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.unprogrammed")));
 	}
 }

@@ -1,11 +1,12 @@
 package zmaster587.advancedRocketry.integration.jei.rollingMachine;
 
-import mezz.jei.api.IJeiHelpers;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import mezz.jei.api.helpers.IJeiHelpers;
 
 public class RollingMachineRecipeMaker {
 

@@ -1,37 +1,47 @@
 package zmaster587.advancedRocketry.item;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.HashedBlockPosition;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.List;
 
 public class ItemBeaconFinder extends Item implements IArmorComponent {
 
+	public ItemBeaconFinder(Properties properties) {
+		super(properties);
+	}
+
 	@Override
-	public void onTick(World world, EntityPlayer player, ItemStack armorStack,
+	public void onTick(World world, PlayerEntity player, ItemStack armorStack,
 			IInventory modules, ItemStack componentStack) {
 		// TODO Auto-generated method stub
 		
@@ -47,40 +57,40 @@ public class ItemBeaconFinder extends Item implements IArmorComponent {
 	}
 
 	@Override
-	public void onArmorDamaged(EntityLivingBase entity, ItemStack armorStack,
+	public void onArmorDamaged(LivingEntity entity, ItemStack armorStack,
 			ItemStack componentStack, DamageSource source, int damage) {
 	}
 
 	@Override
 	public boolean isAllowedInSlot(ItemStack componentStack,
-			EntityEquipmentSlot armorType) {
-		return armorType == EntityEquipmentSlot.HEAD;
+			EquipmentSlotType armorType) {
+		return armorType == EquipmentSlotType.HEAD;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void renderScreen(ItemStack componentStack, List<ItemStack> modules,
-			RenderGameOverlayEvent event, Gui gui) {
+	@OnlyIn(value=Dist.CLIENT)
+	public void renderScreen(MatrixStack mat, ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event,
+			ContainerScreen<? extends Container> gui) {
 		
-		int dimid = Minecraft.getMinecraft().world.provider.getDimension();
+		ResourceLocation dimid = ZUtils.getDimensionIdentifier(Minecraft.getInstance().world);
 		
 		if(DimensionManager.getInstance().isDimensionCreated(dimid)) {
 			for(HashedBlockPosition pos : DimensionManager.getInstance().getDimensionProperties(dimid).getBeacons()) {
 				
 				GL11.glPushMatrix();
 				
-				double deltaX = Minecraft.getMinecraft().player.posX - pos.x;
-				double deltaZ = Minecraft.getMinecraft().player.posZ - pos.z;
+				double deltaX = Minecraft.getInstance().player.getPosX() - pos.x;
+				double deltaZ = Minecraft.getInstance().player.getPosZ() - pos.z;
 				
-				double angle = MathHelper.wrapDegrees(MathHelper.atan2(deltaZ, deltaX)*180/Math.PI + 90 - Minecraft.getMinecraft().player.rotationYawHead);
+				double angle = MathHelper.wrapDegrees(MathHelper.atan2(deltaZ, deltaX)*180/Math.PI + 90 - Minecraft.getInstance().player.rotationYawHead);
 				
 				//GL11.glTranslatef(pos.x, pos.y, pos.z);
-				GL11.glTranslated((event.getResolution().getScaledWidth_double()*angle/180f) + event.getResolution().getScaledWidth()/2,0,5);
+				GL11.glTranslated((Minecraft.getInstance().getMainWindow().getScaledWidth()*angle/180f) + Minecraft.getInstance().getMainWindow().getScaledWidth()/2,0,5);
 				//GL11.glDepthMask(false);
 				//GL11.glDisable(GL11.GL_TEXTURE_2D);
-				Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.buttonDown[0]);
+				Minecraft.getInstance().getTextureManager().bindTexture(TextureResources.buttonDown[0]);
 				
-				GlStateManager.color(0.5f, 0.5f, 1, 1);
+				GlStateManager.color4f(0.5f, 0.5f, 1, 1);
 				
 		        Tessellator tessellator = Tessellator.getInstance();
 		        BufferBuilder vertexbuffer = tessellator.getBuffer();
@@ -91,7 +101,7 @@ public class ItemBeaconFinder extends Item implements IArmorComponent {
 				
 				//GL11.glDepthMask(true);
 				//GL11.glEnable(GL11.GL_TEXTURE_2D);
-				GlStateManager.color(1, 1, 1, 1);
+				GlStateManager.color4f(1, 1, 1, 1);
 				GL11.glPopMatrix();
 				
 			}

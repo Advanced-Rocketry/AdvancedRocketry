@@ -1,8 +1,8 @@
 package zmaster587.advancedRocketry.api.capability;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.INBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -17,28 +17,32 @@ public class CapabilitySpaceArmor {
 	public CapabilitySpaceArmor() {}
 
 
+	public static IProtectiveArmor generateArmor()
+	{
+		return new IProtectiveArmor() {
+
+			@Override
+			public boolean protectsFromSubstance(IAtmosphere atmosphere,
+					ItemStack stack, boolean commitProtection) {
+				return false;
+			}
+		};
+	}
 
 	public static void register() { CapabilityManager.INSTANCE.register(IProtectiveArmor.class, new Capability.IStorage<IProtectiveArmor>() 
 			{
-		@Override
-		public void readNBT(Capability<IProtectiveArmor> capability,
-				IProtectiveArmor instance, EnumFacing side, NBTBase nbt) {
-
-		}
-		@Override
-		public NBTBase writeNBT(
-				Capability<IProtectiveArmor> capability,
-				IProtectiveArmor instance, EnumFacing side) {
-			return null;
-		}
-			}, new IProtectiveArmor() {
-
 				@Override
-				public boolean protectsFromSubstance(IAtmosphere atmosphere,
-						ItemStack stack, boolean commitProtection) {
-					return false;
+				public INBT writeNBT(Capability<IProtectiveArmor> capability, IProtectiveArmor instance, Direction side) {
+					// TODO Auto-generated method stub
+					return null;
 				}
-			}.getClass());
+				@Override
+				public void readNBT(Capability<IProtectiveArmor> capability, IProtectiveArmor instance, Direction side,
+						INBT nbt) {
+					// TODO Auto-generated method stub
+					
+				}
+			}, CapabilitySpaceArmor::generateArmor );
 	}
 
 }

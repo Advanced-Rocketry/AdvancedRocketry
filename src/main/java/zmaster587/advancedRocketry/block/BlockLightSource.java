@@ -1,12 +1,13 @@
 package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.IBlockReader;
 
 /**
  * InvisLight source
@@ -14,35 +15,29 @@ import net.minecraft.world.IBlockAccess;
  */
 public class BlockLightSource extends Block {
 
-	public BlockLightSource() {
-		super(Material.GLASS);
-		setUnlocalizedName("lightSource");
-		setLightLevel(1F);
+	public BlockLightSource(Properties properties) {
+		super(properties);
+		properties.func_235838_a_(value -> {return 1;} );
 	}
 
 	@Override
-	public boolean canCollideCheck(IBlockState state, boolean hitIfLiquid) {
-		 return false;
+	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
+		return true;
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState,
-			IBlockAccess worldIn, BlockPos pos) {
-		return null;
+	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
+			ISelectionContext context) {
+		return VoxelShapes.empty();
 	}
-	
+
 	@Override
-	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
+	public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
 		return 15;
 	}
-    
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
 
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.INVISIBLE;
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+		return VoxelShapes.empty();
 	}
 }

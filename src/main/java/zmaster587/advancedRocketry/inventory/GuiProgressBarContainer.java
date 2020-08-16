@@ -1,45 +1,44 @@
 package zmaster587.advancedRocketry.inventory;
 
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.inventory.Container;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import org.lwjgl.opengl.GL11;
 import zmaster587.libVulpes.render.RenderHelper;
 
-public abstract class GuiProgressBarContainer extends GuiContainer {
+public abstract class GuiProgressBarContainer extends ContainerScreen<? extends Container> {
 	
 	public GuiProgressBarContainer(Container container) {
 		super(container);
 	}
 	
-	public void drawProgressBar(int xLoc, int yLoc, int textureOffsetX, int textureOffsetY, int xSize, int ySize,float percent, EnumFacing direction) {
-		if(EnumFacing.WEST == direction) {
+	public void drawProgressBar(int xLoc, int yLoc, int textureOffsetX, int textureOffsetY, int xSize, int ySize,float percent, Direction direction) {
+		if(Direction.WEST == direction) {
 			drawProgressBarHorizontal(xLoc, yLoc, textureOffsetX, textureOffsetY, xSize, ySize, percent);
 		}
-		else if(EnumFacing.UP == direction) {
+		else if(Direction.UP == direction) {
 			drawProgressBarVertical(xLoc, yLoc, textureOffsetX, textureOffsetY, xSize, ySize, percent);
 		}
-		else if(EnumFacing.DOWN == direction) {
-			this.drawTexturedModalRect(xLoc, yLoc, textureOffsetX, textureOffsetY, xSize, (int)(percent*ySize));
+		else if(Direction.DOWN == direction) {
+			this.func_238474_b_(xLoc, yLoc, textureOffsetX, textureOffsetY, xSize, (int)(percent*ySize));
 		}
-		else if (EnumFacing.EAST == direction) {
-			this.drawTexturedModalRect(xLoc, yLoc, textureOffsetX, textureOffsetY, (int)(percent*xSize), ySize);
+		else if (Direction.EAST == direction) {
+			this.func_238474_b_(xLoc, yLoc, textureOffsetX, textureOffsetY, (int)(percent*xSize), ySize);
 		}
 	}
 	
 	public void drawProgressBarVertical(int xLoc, int yLoc, int textureOffsetX, int textureOffsetY, int xSize, int ySize,float percent) {
-		this.drawTexturedModalRect(xLoc, yLoc + (ySize-(int)(percent*ySize)), textureOffsetX, ySize- (int)(percent*ySize) + textureOffsetY, xSize, (int)(percent*ySize));
+		this.func_238474_b_(xLoc, yLoc + (ySize-(int)(percent*ySize)), textureOffsetX, ySize- (int)(percent*ySize) + textureOffsetY, xSize, (int)(percent*ySize));
 	}
 	
 	public void drawProgressBarHorizontal(int xLoc, int yLoc, int textureOffsetX, int textureOffsetY, int xSize, int ySize,float percent) {
-		this.drawTexturedModalRect(xLoc + (xSize-(int)(percent*xSize)), yLoc, xSize- (int)(percent*xSize) + textureOffsetX, textureOffsetY, (int)(percent*xSize), ySize);
+		this.func_238474_b_(xLoc + (xSize-(int)(percent*xSize)), yLoc, xSize- (int)(percent*xSize) + textureOffsetX, textureOffsetY, (int)(percent*xSize), ySize);
 	}
 	
 	public void drawProgressBarIconVertical(int xLoc, int yLoc, TextureAtlasSprite icon, int xSize, int ySize,float percent) {
-		this.drawTexturedModalRect(xLoc, yLoc + (ySize-(int)(percent*ySize)), icon, xSize, (int)(percent*ySize));
+		this.func_238474_b_(xLoc, yLoc + (ySize-(int)(percent*ySize)), icon, xSize, (int)(percent*ySize));
 	}
 	
     /**

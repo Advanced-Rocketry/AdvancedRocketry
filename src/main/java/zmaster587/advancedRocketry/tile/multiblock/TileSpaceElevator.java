@@ -1,26 +1,31 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.entity.EntityElevatorCapsule;
 import zmaster587.advancedRocketry.inventory.modules.ModuleStellarBackground;
 import zmaster587.advancedRocketry.item.ItemSpaceElevatorChip;
@@ -39,11 +44,12 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.HashedBlockPosition;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkableTile, IInventory, ITickable {
+public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkableTile, IInventory, ITickableTileEntity {
 
 	Object[][][] structure =
 		{
@@ -105,7 +111,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 	private static final int BUTTON_ID_OFFSET = 5;
 
 	public TileSpaceElevator() {
-		super();
+		super(AdvancedRocketryTileEntityType.TILE_SPACE_ELEVATOR);
 		inv = new EmbeddedInventory(1);
 		capsule = null;
 		firstTick = true;
@@ -117,13 +123,13 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 	
 	@Override
 	public void deconstructMultiBlock(World world, BlockPos destroyedPos,
-			boolean blockBroken, IBlockState state) {
+			boolean blockBroken, BlockState state) {
 		super.deconstructMultiBlock(world, destroyedPos, blockBroken, state);
 		
 		Entity e = getCapsuleOnLine();
 		
 		if(e != null)
-			e.setDead();
+			e.remove();
 	}
 
 	@Override
@@ -143,14 +149,14 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = super.getModules(ID, player);
 
 
 
 		if(ID == GuiHandler.guiId.MODULAR.ordinal()) {
-			modules.add(new ModuleButton(50, 47, 1, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.button.summon"), this, TextureResources.buttonBuild, 80, 18));
-			modules.add(new ModuleButton(50, 67, 2, LibVulpes.proxy.getLocalizedString("msg.label.selectDst"), this, TextureResources.buttonBuild, 80, 18));
+			modules.add(new ModuleButton(50, 47, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.button.summon"), this, TextureResources.buttonBuild, 80, 18).setAdditionalData(1));
+			modules.add(new ModuleButton(50, 67, LibVulpes.proxy.getLocalizedString("msg.label.selectDst"), this, TextureResources.buttonBuild, 80, 18).setAdditionalData(2));
 			modules.add(new ModuleTexturedSlotArray(50, 20, this, 0, 1, zmaster587.advancedRocketry.inventory.TextureResources.idChip));
 			modules.add(new ModuleText(70, 23, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.label.chip"), 0x2d2d2d));
 		}
@@ -159,7 +165,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 			modules.add(new ModuleStellarBackground(0, 0, zmaster587.libVulpes.inventory.TextureResources.starryBG));
 
 			List<ModuleBase> list2 = new LinkedList<ModuleBase>();
-			ModuleButton button = new ModuleButton(0, 0, BUTTON_ID_OFFSET, LibVulpes.proxy.getLocalizedString("msg.label.clear"), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 256, 18);
+			ModuleButton button = new ModuleButton(0, 0, LibVulpes.proxy.getLocalizedString("msg.label.clear"), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 256, 18).setAdditionalData(BUTTON_ID_OFFSET);
 			list2.add(button);
 
 			ItemStack stack = getChip();
@@ -171,7 +177,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 				int i = 1;
 				for( DimensionBlockPosition pos : list) 
 				{
-					button = new ModuleButton(0, i*18, i + BUTTON_ID_OFFSET, pos.toString(), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 256, 18);
+					button = new ModuleButton(0, i*18, pos.toString(), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 256, 18).setAdditionalData(i + BUTTON_ID_OFFSET);
 					list2.add(button);
 
 					if(!isDstValid(world, pos, new HashedBlockPosition(getPos())))
@@ -195,7 +201,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 		if(pos == null || pos.pos == null)
 			return false;
 		
-		return worldObj.provider.getDimension() != pos.dimid && zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(pos.dimid, pos.pos.getBlockPos()).getId(), zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(worldObj, myPos.getBlockPos()).getId()) ;
+		return ZUtils.getDimensionIdentifier(worldObj) != pos.dimid && zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(pos.dimid, pos.pos.getBlockPos()).getId(), zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(worldObj, myPos.getBlockPos()).getId()) ;
 	}
 
 	public boolean attemptLaunch() {
@@ -206,8 +212,11 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void onInventoryButtonPressed(int buttonId) {
+	@OnlyIn(value=Dist.CLIENT)
+	public void onInventoryButtonPressed(ModuleButton button) {
+		
+		int buttonId = button.getAdditionalData() == null ? -1 : (int)button.getAdditionalData();
+		
 		if(buttonId == 1) {
 			PacketHandler.sendToServer(new PacketMachine(this, SUMMON_PACKET));
 		}
@@ -219,20 +228,20 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 		}
 
 
-		super.onInventoryButtonPressed(buttonId);
+		super.onInventoryButtonPressed(button);
 	}
 
 	public void notifyLanded(EntityElevatorCapsule e) {
-		if(capsule != null && capsule != e && !capsule.isDead)
-			e.setDead();
+		if(capsule != null && capsule != e && capsule.isAlive())
+			e.remove();
 		else {
 			capsule = e;
-			capsule.setSourceTile(new DimensionBlockPosition(world.provider.getDimension(), new HashedBlockPosition(pos)));
+			capsule.setSourceTile(new DimensionBlockPosition(ZUtils.getDimensionIdentifier(world), new HashedBlockPosition(pos)));
 			capsule.setDst(dimBlockPos);
 		}
 		capsule.setPosition(getLandingLocationX(), getPos().getY() - 1, getLandingLocationZ());
 
-		EnumFacing facing = RotatableBlock.getFront(world.getBlockState(getPos()));
+		Direction facing = RotatableBlock.getFront(world.getBlockState(getPos()));
 		switch(facing) {
 		case EAST:
 			capsule.rotationYaw = 180;
@@ -248,32 +257,28 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 		}
 	}
 
-	@Override
-	public void update() {
-		super.update();
-	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
 		super.writeDataToNetwork(out, id);
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
+			CompoundNBT nbt) {
 		super.readDataFromNetwork(in, packetId, nbt);
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 
 		if(id == SUMMON_PACKET) {
 			summonCapsule();
 		}
 		else if (id == SELECT_DST) {
 			player.closeScreen();
-			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARFULLSCREEN.ordinal(), player.world, this.pos.getX(), this.pos.getY(), this.pos.getZ());
+			NetworkHooks.openGui((ServerPlayerEntity) player, this, getPos());
 		}
 		else if(id == BUTTON_ID_OFFSET) {
 			dimBlockPos = null;
@@ -295,9 +300,9 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 
 						dimBlockPos = dstpos;
 						World world;
-						if((world = DimensionManager.getWorld(dimBlockPos.dimid)) == null) {
-							DimensionManager.initDimension(dimBlockPos.dimid);
-							world = DimensionManager.getWorld(dimBlockPos.dimid);
+						if((world = ZUtils.getWorld(dimBlockPos.dimid)) == null) {
+							ZUtils.initDimension(dimBlockPos.dimid);
+							world = ZUtils.getWorld(dimBlockPos.dimid);
 						}
 
 						if(world != null) {
@@ -308,7 +313,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 								summonCapsule();
 
 								capsule.setDst(dimBlockPos);
-								capsule.setSourceTile(new DimensionBlockPosition(this.getWorld().provider.getDimension(), new HashedBlockPosition(getPos())));
+								capsule.setSourceTile(new DimensionBlockPosition(ZUtils.getDimensionIdentifier(this.getWorld()), new HashedBlockPosition(getPos())));
 								markDirty();
 								this.world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 								return;
@@ -328,13 +333,13 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 
 	public EntityElevatorCapsule getCapsuleOnLine() {
 
-		if(capsule != null && capsule.isDead)
+		if(capsule != null && !capsule.isAlive())
 			capsule = null;
 
 		double capsulePosX = getLandingLocationX();
 		double capsulePosZ = getLandingLocationZ();
 		for (EntityElevatorCapsule e :world.getEntitiesWithinAABB(EntityElevatorCapsule.class, new AxisAlignedBB(capsulePosX - 3, getPos().getY() - 1, capsulePosZ - 3, capsulePosX + 3, EntityElevatorCapsule.MAX_HEIGHT, capsulePosZ + 3))) {
-			if(!e.isInMotion() && !e.isDead)
+			if(!e.isInMotion() && e.isAlive())
 				capsule = e;
 		}
 
@@ -342,13 +347,13 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 	}
 
 	public double getLandingLocationX() {
-		EnumFacing facing = RotatableBlock.getFront(world.getBlockState(getPos()));
-		return getPos().getX() + facing.getFrontOffsetX()*-3 - facing.getFrontOffsetZ() + 0.5;
+		Direction facing = RotatableBlock.getFront(world.getBlockState(getPos()));
+		return getPos().getX() + facing.getXOffset()*-3 - facing.getZOffset() + 0.5;
 	}
 
 	public double getLandingLocationZ() {
-		EnumFacing facing = RotatableBlock.getFront(world.getBlockState(getPos()));
-		return getPos().getZ() + facing.getFrontOffsetX()*1 + facing.getFrontOffsetZ()*-3 + 0.5;
+		Direction facing = RotatableBlock.getFront(world.getBlockState(getPos()));
+		return getPos().getZ() + facing.getXOffset()*1 + facing.getZOffset()*-3 + 0.5;
 	}
 
 
@@ -358,7 +363,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 			return;
 
 		capsule = new EntityElevatorCapsule(world);
-		EnumFacing facing = RotatableBlock.getFront(world.getBlockState(getPos()));
+		Direction facing = RotatableBlock.getFront(world.getBlockState(getPos()));
 		switch(facing) {
 		case EAST:
 			capsule.rotationYaw = 180;
@@ -377,9 +382,9 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 		double capsulePosZ = getLandingLocationZ();
 		capsule.setPosition(capsulePosX, getPos().getY() - 1, capsulePosZ);
 
-		capsule.setSourceTile(new DimensionBlockPosition(world.provider.getDimension(), new HashedBlockPosition(this.getPos())));
+		capsule.setSourceTile(new DimensionBlockPosition(ZUtils.getDimensionIdentifier(world), new HashedBlockPosition(this.getPos())));
 
-		world.spawnEntity(capsule);
+		world.addEntity(capsule);
 	}
 
 	@Override
@@ -396,35 +401,35 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 
 	@Override
 	public boolean onLinkStart(ItemStack item, TileEntity entity,
-			EntityPlayer player, World world) {
+			PlayerEntity player, World world) {
 		ItemLinker.setMasterCoords(item, this.getPos());
-		ItemLinker.setDimId(item, world.provider.getDimension());
+		ItemLinker.setDimId(item, ZUtils.getDimensionIdentifier(world));
 		if(!world.isRemote)
-			player.sendMessage(new TextComponentTranslation("msg.linker.program"));
+			player.sendMessage(new TranslationTextComponent("msg.linker.program"), Util.field_240973_b_);
 		return true;
 	}
 
 	@Override
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
-			EntityPlayer player, World myWorld) {
+			PlayerEntity player, World myWorld) {
 
 		if(!myWorld.isRemote) {
 
-			int dimid = ItemLinker.getDimId(item);
+			ResourceLocation dimid = ItemLinker.getDimId(item);
 			BlockPos pos = ItemLinker.getMasterCoords(item);
 
 			DimensionBlockPosition dimPos = new DimensionBlockPosition(dimid, new HashedBlockPosition(pos));
 
-			if(dimPos.dimid == world.provider.getDimension())
+			if(dimPos.dimid == ZUtils.getDimensionIdentifier(myWorld))
 			{
-				player.sendMessage(new TextComponentTranslation("msg.spaceElevator.sameDimensionError"));
+				player.sendMessage(new TranslationTextComponent("msg.spaceElevator.sameDimensionError"), Util.field_240973_b_);
 				return false;
 			}
 
 			World world;
-			if((world = DimensionManager.getWorld(dimPos.dimid)) == null) {
-				DimensionManager.initDimension(dimPos.dimid);
-				world = DimensionManager.getWorld(dimPos.dimid);
+			if((world = ZUtils.getWorld(dimPos.dimid)) == null) {
+				ZUtils.initDimension(dimPos.dimid);
+				world = ZUtils.getWorld(dimPos.dimid);
 			}
 
 			if(world != null) {
@@ -434,16 +439,16 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 					boolean flag = getChip() != null && ((TileSpaceElevator) tile).getChip() != null;
 					if(flag) {
 						addEntryToList(dimPos);
-						addEntryToList(new DimensionBlockPosition(this.world.provider.getDimension(), new HashedBlockPosition(getPos())));
-						((TileSpaceElevator) tile).addEntryToList(new DimensionBlockPosition(this.world.provider.getDimension(), new HashedBlockPosition(getPos())));
+						addEntryToList(new DimensionBlockPosition(ZUtils.getDimensionIdentifier(world), new HashedBlockPosition(getPos())));
+						((TileSpaceElevator) tile).addEntryToList(new DimensionBlockPosition(ZUtils.getDimensionIdentifier(world), new HashedBlockPosition(getPos())));
 						((TileSpaceElevator) tile).addEntryToList(dimPos);
 						
-						player.sendMessage(new TextComponentTranslation("msg.spaceElevator.newDstAdded"));
+						player.sendMessage(new TranslationTextComponent("msg.spaceElevator.newDstAdded"), Util.field_240973_b_);
 						return true;
 					}
 					else
 					{
-						player.sendMessage(new TextComponentTranslation("msg.spaceElevator.noChipError"));
+						player.sendMessage(new TranslationTextComponent("msg.spaceElevator.noChipError"), Util.field_240973_b_);
 						return false;
 					}
 				}
@@ -470,16 +475,6 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 			((ItemSpaceElevatorChip)AdvancedRocketryItems.itemSpaceElevatorChip).setBlockPositions(chip, list);
 			return true;
 		}
-		return false;
-	}
-
-	@Override
-	public String getName() {
-		return getModularInventoryName();
-	}
-
-	@Override
-	public boolean hasCustomName() {
 		return false;
 	}
 
@@ -514,7 +509,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(PlayerEntity player) {
 		return true;
 	}
 	
@@ -524,12 +519,12 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player) {
+	public void openInventory(PlayerEntity player) {
 		inv.openInventory(player);
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer player) {
+	public void closeInventory(PlayerEntity player) {
 		inv.closeInventory(player);
 
 	}
@@ -538,41 +533,26 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 	public boolean isItemValidForSlot(int index, ItemStack stack) {
 		return inv.isItemValidForSlot(index, stack);
 	}
-
-	@Override
-	public int getField(int id) {
-		return inv.getField(id);
-	}
-
-	@Override
-	public void setField(int id, int value) {
-		inv.setField(id, value);
-	}
-
-	@Override
-	public int getFieldCount() {
-		return inv.getFieldCount();
-	}
-
+	
 	@Override
 	public void clear() {
 		inv.clear();
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		inv.writeToNBT(nbt);
-		return super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt) {
+		inv.write(nbt);
+		return super.write(nbt);
 	}
 
 	@Override
-	public void writeNetworkData(NBTTagCompound nbt) {
+	public void writeNetworkData(CompoundNBT nbt) {
 
 
 		if(dimBlockPos != null)
 		{
-			nbt.setInteger("dstDimId", dimBlockPos.dimid);
-			nbt.setIntArray("dstPos", new int[] { dimBlockPos.pos.x, dimBlockPos.pos.y, dimBlockPos.pos.z });
+			nbt.putString("dstDimId", dimBlockPos.dimid.toString());
+			nbt.putIntArray("dstPos", new int[] { dimBlockPos.pos.x, dimBlockPos.pos.y, dimBlockPos.pos.z });
 
 		}
 
@@ -580,18 +560,18 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
 		inv.readFromNBT(nbt);
-		super.readFromNBT(nbt);
+		super.func_230337_a_(state, nbt);
 	}
 
 	@Override
-	public void readNetworkData(NBTTagCompound nbt) {
+	public void readNetworkData(CompoundNBT nbt) {
 		super.readNetworkData(nbt);
 
 
-		if(nbt.hasKey("dstDimId")) {
-			int id = nbt.getInteger("dstDimId");
+		if(nbt.contains("dstDimId")) {
+			ResourceLocation id = new ResourceLocation(nbt.getString("dstDimId"));
 			int[] pos = nbt.getIntArray("dstPos");
 			dimBlockPos = new DimensionBlockPosition(id, new HashedBlockPosition(pos[0], pos[1], pos[2]));
 		}
@@ -599,5 +579,10 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 			dimBlockPos = null;
 
 		landingPadDisplayText.setText(dimBlockPos != null ? dimBlockPos.toString() : LibVulpes.proxy.getLocalizedString("msg.label.noneSelected"));
+	}
+	
+	@Override
+	public int getModularInvType() {
+		return GuiHandler.guiId.MODULARFULLSCREEN.ordinal();
 	}
 }

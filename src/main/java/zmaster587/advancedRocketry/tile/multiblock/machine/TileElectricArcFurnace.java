@@ -1,13 +1,13 @@
 package zmaster587.advancedRocketry.tile.multiblock.machine;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundEvent;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -65,12 +65,16 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 
 	};
 
+	public TileElectricArcFurnace() {
+		super(AdvancedRocketryTileEntityType.TILE_ARC_FURNACE);
+	}
+	
 	@Override
 	public List<BlockMeta> getAllowableWildCardBlocks() {
 		List<BlockMeta> list = super.getAllowableWildCardBlocks();
-		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 0));
-		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 1));
-		list.add(new BlockMeta(AdvancedRocketryBlocks.blockBlastBrick, -1));
+		list.add(new BlockMeta(LibVulpesBlocks.blockItemInputHatch));
+		list.add(new BlockMeta(LibVulpesBlocks.blockItemOutputHatch));
+		list.add(new BlockMeta(AdvancedRocketryBlocks.blockBlastBrick));
 		return list;
 	}
 
@@ -95,9 +99,9 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 	}
 
 	@Override
-	public float getTimeMultiplierForBlock(IBlockState state, TileEntity tile) {
+	public float getTimeMultiplierForBlock(BlockState state, TileEntity tile) {
 
-		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(state.getBlock(),1, state.getBlock().getMetaFromState(state)));
+		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(state.getBlock(),1));
 		if(material == MaterialRegistry.getMaterialFromName("Gold"))
 			return 0.9f;
 		else if(material == MaterialRegistry.getMaterialFromName("Aluminum"))
@@ -111,7 +115,7 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		// TODO Auto-generated method stub
 		List<ModuleBase> modules = super.getModules(ID, player);
 

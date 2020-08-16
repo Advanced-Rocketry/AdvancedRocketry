@@ -1,26 +1,31 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.client.settings.ParticleStatus;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -43,6 +48,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine.NetworkPackets;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.IconResource;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -274,9 +280,10 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 
 
 	public TileAtmosphereTerraformer() {
+		super(AdvancedRocketryTileEntityType.TILE_TERRAFORMER);
 		completionTime = (int) (18000 * ARConfiguration.getCurrentConfig().terraformSpeed);
-		buttonIncrease = new ModuleToggleSwitch(40, 20, 1, LibVulpes.proxy.getLocalizedString("msg.terraformer.atminc"), this, TextureResources.buttonScan, 80, 16,true);
-		buttonDecrease = new ModuleToggleSwitch(40, 38, 2, LibVulpes.proxy.getLocalizedString("msg.terraformer.atmdec"), this, TextureResources.buttonScan, 80, 16, false);
+		buttonIncrease = new ModuleToggleSwitch(40, 20, LibVulpes.proxy.getLocalizedString("msg.terraformer.atminc"), this, TextureResources.buttonScan, 80, 16,true);
+		buttonDecrease = new ModuleToggleSwitch(40, 38, LibVulpes.proxy.getLocalizedString("msg.terraformer.atmdec"), this, TextureResources.buttonScan, 80, 16, false);
 		text = new ModuleText(10, 100, "", 0x282828);
 		powerPerTick = 1000;
 
@@ -293,7 +300,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules =  super.getModules(ID, player);
 		
 		//Backgrounds
@@ -331,7 +338,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 		else
 			statusText = LibVulpes.proxy.getLocalizedString("msg.terraformer.notrunning");
 
-		text.setText(String.format("%s:\n%s\n\n%s: %.2f" , LibVulpes.proxy.getLocalizedString("msg.terraformer.status"), statusText, LibVulpes.proxy.getLocalizedString("msg.terraformer.pressure"), DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getAtmosphereDensity()/100f));
+		text.setText(String.format("%s:\n%s\n\n%s: %.2f" , LibVulpes.proxy.getLocalizedString("msg.terraformer.status"), statusText, LibVulpes.proxy.getLocalizedString("msg.terraformer.pressure"), DimensionManager.getInstance().getDimensionProperties(world).getAtmosphereDensity()/100f));
 	}
 
 	@Override
@@ -349,11 +356,11 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 		super.onRunningPoweredTick();
 
 		if(world.isRemote) {
-			if(Minecraft.getMinecraft().gameSettings.particleSetting < 2) {
-				EnumFacing dir = RotatableBlock.getFront(world.getBlockState(pos)).getOpposite();
+			if(Minecraft.getInstance().gameSettings.particles != ParticleStatus.MINIMAL) {
+				Direction dir = RotatableBlock.getFront(world.getBlockState(pos)).getOpposite();
 
 				if(radioButton.getOptionSelected() == 0) {
-					if(world.getTotalWorldTime() % 20 == 0) {
+					if(world.getGameTime() % 20 == 0) {
 						float xMot = (float) ((0.5f - world.rand.nextGaussian())/40f);
 						float zMot = (float) ((0.5f - world.rand.nextGaussian())/40f);
 						BlockPos offsetPos = pos.offset(dir);
@@ -383,15 +390,15 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 			int requiredN2 = ARConfiguration.getCurrentConfig().terraformliquidRate, requiredO2 =  ARConfiguration.getCurrentConfig().terraformliquidRate;
 
 			for(IFluidHandler handler : fluidInPorts) {
-				FluidStack stack = handler.drain(new FluidStack(AdvancedRocketryFluids.fluidNitrogen, requiredN2), true);
+				FluidStack stack = handler.drain(new FluidStack(AdvancedRocketryFluids.fluidNitrogen, requiredN2), FluidAction.EXECUTE);
 
 				if(stack != null)
-					requiredN2 -= stack.amount;
+					requiredN2 -= stack.getAmount();
 
-				stack = handler.drain(new FluidStack(AdvancedRocketryFluids.fluidOxygen, requiredO2), true);
+				stack = handler.drain(new FluidStack(AdvancedRocketryFluids.fluidOxygen, requiredO2), FluidAction.EXECUTE);
 
 				if(stack != null)
-					requiredO2 -= stack.amount;
+					requiredO2 -= stack.getAmount();
 			}
 
 			if(!world.isRemote) {
@@ -423,13 +430,13 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 		SatelliteBase satellite;
 				
 		return biomeChanger != null && (biomeChanger.getItem() instanceof ItemBiomeChanger) && DimensionManager.getInstance().getSatellite(((ItemBiomeChanger)biomeChanger.getItem()).getSatelliteId(biomeChanger)) != null &&
-				(satellite = ((ItemSatelliteIdentificationChip)AdvancedRocketryItems.itemBiomeChanger).getSatellite(biomeChanger)).getDimensionId() == world.provider.getDimension() &&
+				(satellite = ((ItemSatelliteIdentificationChip)AdvancedRocketryItems.itemBiomeChanger).getSatellite(biomeChanger)).getDimensionId().get() == ZUtils.getDimensionIdentifier(world) &&
 				satellite instanceof SatelliteBiomeChanger;
 	}
 
 	@Override
 	protected void playMachineSound(SoundEvent event) {
-		world.playSound(getPos().getX(), getPos().getY() + 7, getPos().getZ(), event, SoundCategory.BLOCKS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.BLOCKS),  0.975f + world.rand.nextFloat()*0.05f, false);
+		world.playSound(getPos().getX(), getPos().getY() + 7, getPos().getZ(), event, SoundCategory.BLOCKS, Minecraft.getInstance().gameSettings.getSoundLevel(SoundCategory.BLOCKS),  0.975f + world.rand.nextFloat()*0.05f, false);
 	}
 
 	@Override
@@ -443,16 +450,16 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 	}
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound nbt = new NBTTagCompound();
-		writeToNBT(nbt);
-		return new SPacketUpdateTileEntity(pos, 0, nbt);
+	public SUpdateTileEntityPacket getUpdatePacket() {
+		CompoundNBT nbt = new CompoundNBT();
+		write(nbt);
+		return new SUpdateTileEntityPacket(pos, 0, nbt);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		NBTTagCompound nbt = pkt.getNbtCompound();
-		readFromNBT(nbt);
+	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+		CompoundNBT nbt = pkt.getNbtCompound();
+		func_230337_a_(getBlockState(), nbt);
 		setText();
 		
 	}
@@ -462,8 +469,8 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 		super.processComplete();
 		completionTime = getCompletionTime();
 
-		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
-		if( !world.isRemote && properties != null && properties.getId() == world.provider.getDimension() && ((world.provider.getClass().equals(WorldProviderPlanet.class) && 
+		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world);
+		if( !world.isRemote && properties != null && properties.getId() == ZUtils.getDimensionIdentifier(world) && ((world.provider.getClass().equals(WorldProviderPlanet.class) && 
 				properties.isNativeDimension) || ARConfiguration.getCurrentConfig().allowTerraformNonAR) ) {
 			if(buttonIncrease.getState() && properties.getAtmosphereDensity() < 1600)
 				properties.setAtmosphereDensity(properties.getAtmosphereDensity()+1);
@@ -474,8 +481,8 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
+			CompoundNBT nbt) {
 
 
 		if(packetId == (byte)TileMultiblockMachine.NetworkPackets.TOGGLE.ordinal()) {
@@ -485,7 +492,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
 
 		if(id == (byte)TileMultiblockMachine.NetworkPackets.TOGGLE.ordinal()) {
 			out.writeByte(radioButton.getOptionSelected());
@@ -508,8 +515,8 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 		super.useNetworkData(player, side, id, nbt);
 		if(!world.isRemote && id == NetworkPackets.TOGGLE.ordinal()) {
 			outOfFluid = false;
@@ -518,7 +525,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 	}
 
 	@Override
-	public void onInventoryButtonPressed(int buttonId) {
+	public void onInventoryButtonPressed(ModuleButton buttonId) {
 		if(hasValidBiomeChanger()) {
 			super.onInventoryButtonPressed(buttonId);
 			outOfFluid = false;
@@ -530,23 +537,23 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
 
-		nbt.setInteger("selected", radioButton.getOptionSelected());
-		inv.writeToNBT(nbt);
+		nbt.putInt("selected", radioButton.getOptionSelected());
+		inv.write(nbt);
 
-		nbt.setBoolean("oofluid", outOfFluid);
+		nbt.putBoolean("oofluid", outOfFluid);
 		
 		return nbt;
 
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
 
-		radioButton.setOptionSelected(nbt.getInteger("selected"));
+		radioButton.setOptionSelected(nbt.getInt("selected"));
 		inv.readFromNBT(nbt);
 		outOfFluid = nbt.getBoolean("oofluid");
 		
@@ -556,17 +563,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 	public String getMachineName() {
 		return "tile.atmoshereTerraformer.name";
 	}
-
-	@Override
-	public String getName() {
-		return getMachineName();
-	}
-
-	@Override
-	public boolean hasCustomName() {
-		return false;
-	}
-
+	
 	@Override
 	public int getSizeInventory() {
 		return inv.getSizeInventory();
@@ -603,33 +600,18 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player) {
+	public void openInventory(PlayerEntity player) {
 
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer player) {
+	public void closeInventory(PlayerEntity player) {
 
 	}
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack) {
 		return inv.isItemValidForSlot(index, stack);
-	}
-
-	@Override
-	public int getField(int id) {
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value) {
-
-	}
-
-	@Override
-	public int getFieldCount() {
-		return 0;
 	}
 
 	@Override

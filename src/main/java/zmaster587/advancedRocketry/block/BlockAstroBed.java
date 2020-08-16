@@ -1,41 +1,51 @@
 package zmaster587.advancedRocketry.block;
 
-import net.minecraft.block.BlockBed;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BedBlock;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerEntity.SleepResult;
+import net.minecraft.item.DyeColor;
+import net.minecraft.state.properties.BedPart;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Unit;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 
 import javax.annotation.Nullable;
 
-public class BlockAstroBed extends BlockBed {
+import com.mojang.datafixers.util.Either;
+
+public class BlockAstroBed extends BedBlock {
+
+	public BlockAstroBed(DyeColor colorIn, Properties properties) {
+		super(colorIn, properties);
+		// TODO Auto-generated constructor stub
+	}
 	
-	@Override
-	public boolean isBed(IBlockState state, IBlockAccess world, BlockPos pos,
-			Entity player) {
+	/*@Override
+	public boolean isBed(BlockState state, IBlockReader world, BlockPos pos, Entity player) {
 		return this == AdvancedRocketryBlocks.blockAstroBed;
 	}
 	
 	@Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos,
-			IBlockState state, EntityPlayer playerIn, EnumHand hand,
-			EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if (worldIn.isRemote)
         {
             return true;
         }
         else
         {
-            if (state.getValue(PART) != BlockBed.EnumPartType.HEAD)
+            if (state.get(PART) != BedPart.HEAD)
             {
-                pos = pos.offset((EnumFacing)state.getValue(FACING));
+                pos = pos.offset(state.get(HORIZONTAL_FACING));
                 state = worldIn.getBlockState(pos);
 
                 if (state.getBlock() != this)
@@ -46,37 +56,37 @@ public class BlockAstroBed extends BlockBed {
 
             if (worldIn.provider instanceof WorldProviderPlanet)
             {
-                if (((Boolean)state.getValue(OCCUPIED)).booleanValue())
+                if (((Boolean)state.get(OCCUPIED)).booleanValue())
                 {
-                    EntityPlayer entityplayer = this.getPlayerInBed(worldIn, pos);
+                    PlayerEntity entityplayer = this.getPlayerInBed(worldIn, pos);
 
                     if (entityplayer != null)
                     {
-                        playerIn.sendMessage(new TextComponentTranslation("tile.bed.occupied", new Object[0]));
+                    	player.sendStatusMessage(new TranslationTextComponent("tile.bed.occupied"), true);
                         return true;
                     }
 
-                    state = state.withProperty(OCCUPIED, Boolean.valueOf(false));
+                    state = state.with(OCCUPIED, Boolean.valueOf(false));
                     worldIn.setBlockState(pos, state, 4);
                 }
 
-                EntityPlayer.SleepResult entityplayer$sleepresult = playerIn.trySleep(pos);
+                Either<SleepResult, Unit> entityplayer$sleepresult = player.trySleep(pos);
 
-                if (entityplayer$sleepresult == EntityPlayer.SleepResult.OK)
+                if (entityplayer$sleepresult == PlayerEntity.SleepResult.OK)
                 {
-                    state = state.withProperty(OCCUPIED, Boolean.valueOf(true));
+                    state = state.with(OCCUPIED, Boolean.valueOf(true));
                     worldIn.setBlockState(pos, state, 4);
                     return true;
                 }
                 else
                 {
-                    if (entityplayer$sleepresult == EntityPlayer.SleepResult.NOT_POSSIBLE_NOW)
+                    if (entityplayer$sleepresult == PlayerEntity.SleepResult.NOT_POSSIBLE_NOW)
                     {
-                        playerIn.sendMessage(new TextComponentTranslation("tile.bed.noSleep", new Object[0]));
+                        playerIn.sendMessage(new TranslationTextComponent("tile.bed.noSleep", new Object[0]));
                     }
-                    else if (entityplayer$sleepresult == EntityPlayer.SleepResult.NOT_SAFE)
+                    else if (entityplayer$sleepresult == PlayerEntity.SleepResult.NOT_SAFE)
                     {
-                        playerIn.sendMessage(new TextComponentTranslation("tile.bed.notSafe", new Object[0]));
+                        playerIn.sendMessage(new TranslationTextComponent("tile.bed.notSafe", new Object[0]));
                     }
 
                     return true;
@@ -87,9 +97,9 @@ public class BlockAstroBed extends BlockBed {
     }
     
     @Nullable
-    private EntityPlayer getPlayerInBed(World worldIn, BlockPos pos)
+    private PlayerEntity getPlayerInBed(World worldIn, BlockPos pos)
     {
-        for (EntityPlayer entityplayer : worldIn.playerEntities)
+        for (PlayerEntity entityplayer : worldIn.playerEntities)
         {
             if (entityplayer.isPlayerSleeping() && entityplayer.bedLocation.equals(pos))
             {
@@ -98,5 +108,5 @@ public class BlockAstroBed extends BlockBed {
         }
 
         return null;
-    }
+    }*/
 }

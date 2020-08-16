@@ -56,12 +56,12 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			double uMax = 1;
 			double vMax = 1;
 
-			GL11.glPushMatrix();
-			GL11.glTranslated(x,y,z);
+			matrix.push();
+			matrix.translate(x,y,z);
 			
 			
 			//Draw Supports
-			GlStateManager.color(0.78f, 0.5f, 0.34f, 1f);
+			GlStateManager.color4f(0.78f, 0.5f, 0.34f, 1f);
 			bindTexture(girder);
 			GlStateManager.enableDepth();
 			GlStateManager.disableBlend();
@@ -83,9 +83,9 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			GlStateManager.disableFog();
 			GlStateManager.enableBlend();
 			if(renderTile.isBuilding())
-				GlStateManager.color(1, 0.5f, 0.5f, .05f);
+				GlStateManager.color4f(1, 0.5f, 0.5f, .05f);
 			else
-				GlStateManager.color(0.5f, 1, 0.5f, .05f);
+				GlStateManager.color4f(0.5f, 1, 0.5f, .05f);
 			GlStateManager.disableDepth();
 			GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.01f);
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -116,7 +116,7 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 
 			
 			
-			GlStateManager.color(1f, 1f, 1f, 1f);
+			GlStateManager.color4f(1f, 1f, 1f, 1f);
 			bindTexture(round_h);
 			uMax = 1f;
 			vMax = 1f;
@@ -133,15 +133,15 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			RenderHelper.renderTopFaceWithUV(buffer, yMax, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
 			Tessellator.getInstance().draw();
 			
-			GlStateManager.disableTexture2D();
+			GlStateManager.disableTexture();
 			//Set ignore light then draw the glowy bits
 			
 			
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
 			if(renderTile.isBuilding())
-				GlStateManager.color(1, 0.333f, 0.333f, 1f);
+				GlStateManager.color4f(1, 0.333f, 0.333f, 1f);
 			else
-				GlStateManager.color(0.333f, 1f, 0.333f, 1f);
+				GlStateManager.color4f(0.333f, 1f, 0.333f, 1f);
 			
 			RenderHelper.renderEastFace(buffer, xMax, yMin, zMin, yMax, zMax);
 			
@@ -152,8 +152,8 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 			RenderHelper.renderWestFace(buffer, xMin, yMin, zMin, yMax, zMax);
 			Tessellator.getInstance().draw();
 			
-			GlStateManager.enableTexture2D();
-			GlStateManager.color(1f, 1f, 1f, 1f);
+			GlStateManager.enableTexture();
+			GlStateManager.color4f(1f, 1f, 1f, 1f);
 			
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			RenderHelper.renderBottomFaceWithUV(buffer, yMin, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
@@ -166,9 +166,9 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 
 			GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.1f);
 			GlStateManager.enableDepth();
-			GlStateManager.enableTexture2D();
+			GlStateManager.enableTexture();
 			GlStateManager.enableBlend();
-			GL11.glPopMatrix();
+			matrix.pop();
 		}
 	}
 

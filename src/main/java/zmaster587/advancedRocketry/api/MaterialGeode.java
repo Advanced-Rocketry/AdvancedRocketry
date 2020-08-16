@@ -1,15 +1,9 @@
 package zmaster587.advancedRocketry.api;
 
-import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
 
-public class MaterialGeode extends Material {
+public class MaterialGeode {
 
-	public static final MaterialGeode geode = new MaterialGeode(MapColor.OBSIDIAN);
-	
-	public MaterialGeode(MapColor p_i2116_1_) {
-		super(p_i2116_1_);
-		this.setRequiresTool();
-	}
-
+	public static final Material geode = new Material.Builder(MaterialColor.BLACK_TERRACOTTA).build();
 }

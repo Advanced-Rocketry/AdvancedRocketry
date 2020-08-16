@@ -1,10 +1,12 @@
 package zmaster587.advancedRocketry.tile;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants.NBT;
 import zmaster587.advancedRocketry.api.ARConfiguration;
@@ -34,7 +36,7 @@ import java.util.Map;
 
 public class TileGuidanceComputer extends TileInventoryHatch implements IModularInventory {
 
-	int destinationId;
+	ResourceLocation destinationId;
 	Vector3F<Float> landingPos;
 	Map<Integer, HashedBlockPosition> landingLoc;
 
@@ -45,7 +47,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		landingLoc = new HashMap<Integer, HashedBlockPosition>();
 	}
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = super.getModules(ID, player);
 
 		return modules;
@@ -63,7 +65,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 			landingLoc.put(stationId, loc.getPos());
 	}
 
-	public StationLandingLocation getLandingLocation(int stationId) {
+	public StationLandingLocation getLandingLocation(ResourceLocation stationId) {
 		
 		//Due to the fact that stations are not guaranteed to be loaded on startup, we get a real reference now
 		ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStation(stationId);
@@ -92,7 +94,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	 * Gets the dimension to travel to if applicable
 	 * @return The dimension to travel to or Constants.INVALID_PLANET if not valid
 	 */
-	public int getDestinationDimId(int currentDimension, BlockPos pos) {
+	public ResourceLocation getDestinationDimId(ResourceLocation currentDimension, BlockPos pos) {
 		ItemStack stack = getStackInSlot(0);
 
 		if(!stack.isEmpty()){
@@ -123,11 +125,11 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 			}
 			else if(itemType instanceof ItemSatelliteIdentificationChip) {
 				long l = getTargetSatellite();
-				if(l != Constants.INVALID_PLANET) {
+				if(l != Constants.INVALID_SAT) {
 					SatelliteBase sat = DimensionManager.getInstance().getSatellite(l);
 					
 					if(sat != null)
-						return sat.getDimensionId();
+						return sat.getDimensionId().get();
 				}
 			} 
 			else if (stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != Constants.INVALID_PLANET)
@@ -146,7 +148,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	 * returns the location the rocket should land
 	 * @return
 	 */
-	public Vector3F<Float> getLandingLocation(int landingDimension, boolean commit) {
+	public Vector3F<Float> getLandingLocation(ResourceLocation landingDimension, boolean commit) {
 		//Caution Side-Effect dependency: May require a call to getDestinationDimId to populate correct coordinates.
 		ItemStack stack = getStackInSlot(0);
 		//TODO: replace all nulls with current coordinates of the ship.
@@ -227,7 +229,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		setFallbackDestination(ARConfiguration.getCurrentConfig().spaceDimId, getStationLocation(object, true));
 	}
 	
-	public String getDestinationName(int landingDimension)
+	public String getDestinationName(ResourceLocation landingDimension)
 	{
 		ItemStack stack = getStackInSlot(0);
 		if(!stack.isEmpty() && stack.getItem() instanceof ItemStationChip) {
@@ -243,50 +245,50 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		return "";
 	}
 
-	public void setFallbackDestination(int dimID, Vector3F<Float> coords) {
+	public void setFallbackDestination(ResourceLocation dimID, Vector3F<Float> coords) {
 		this.destinationId = dimID;
 		this.landingPos = coords;
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		nbt.setInteger("destDimId", destinationId);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
+		nbt.putString("destDimId", destinationId.toString());
 
-		nbt.setFloat("landingx", landingPos.x);
-		nbt.setFloat("landingy", landingPos.y);
-		nbt.setFloat("landingz", landingPos.z);
+		nbt.putFloat("landingx", landingPos.x);
+		nbt.putFloat("landingy", landingPos.y);
+		nbt.putFloat("landingz", landingPos.z);
 
-		NBTTagList stationList = new NBTTagList();
+		ListNBT stationList = new ListNBT();
 
 		for(int locationID : landingLoc.keySet()) {
-			NBTTagCompound tag = new NBTTagCompound();
+			CompoundNBT tag = new CompoundNBT();
 			HashedBlockPosition loc = landingLoc.get(locationID);
 
-			tag.setIntArray("pos", new int[] { loc.x, loc.y, loc.z });
-			tag.setInteger("id", locationID);
-			stationList.appendTag(tag);
+			tag.putIntArray("pos", new int[] { loc.x, loc.y, loc.z });
+			tag.putInt("id", locationID);
+			stationList.add(tag);
 		}
-		nbt.setTag("stationMapping", stationList);
+		nbt.put("stationMapping", stationList);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		destinationId = nbt.getInteger("destDimId");
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
+		destinationId = new ResourceLocation(nbt.getString("destDimId"));
 
 		landingPos.x = nbt.getFloat("landingx");
 		landingPos.y = nbt.getFloat("landingy");
 		landingPos.z = nbt.getFloat("landingz");
 
-		NBTTagList stationList = nbt.getTagList("stationMapping", NBT.TAG_COMPOUND);
+		ListNBT stationList = nbt.getList("stationMapping", NBT.TAG_COMPOUND);
 
-		for(int i = 0; i < stationList.tagCount(); i++) {
-			NBTTagCompound tag = stationList.getCompoundTagAt(i);
+		for(int i = 0; i < stationList.size(); i++) {
+			CompoundNBT tag = stationList.getCompound(i);
 			int pos[];
 			pos = tag.getIntArray("pos");
-			int id = tag.getInteger("id");
+			int id = tag.getInt("id");
 			landingLoc.put(id, new HashedBlockPosition(pos[0], pos[1], pos[2]));
 		}
 	}
@@ -300,7 +302,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 			destinationId = Constants.INVALID_PLANET;
 	}
 
-	public void setReturnPosition(Vector3F<Float> pos, int dimId) {
+	public void setReturnPosition(Vector3F<Float> pos, ResourceLocation dimId) {
 		ItemStack stack = getStackInSlot(0);
 
 		if(!stack.isEmpty() && stack.getItem() instanceof ItemStationChip) {

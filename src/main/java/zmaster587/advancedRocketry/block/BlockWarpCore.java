@@ -1,8 +1,9 @@
 package zmaster587.advancedRocketry.block;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.ARConfiguration;
@@ -12,21 +13,22 @@ import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.HashedBlockPosition;
+import zmaster587.libVulpes.util.ZUtils;
 
 public class BlockWarpCore extends BlockMultiblockMachine {
 
-	public BlockWarpCore(Class<? extends TileMultiBlock> tileClass,
+	public BlockWarpCore(Properties property, TileEntityType<?> tileClass,
 			int guiId) {
-		super(tileClass, guiId);
+		super(property, tileClass, guiId);
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
-			EntityLivingBase placer, ItemStack stack) {
+	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state,
+			LivingEntity placer, ItemStack stack) {
 		// TODO Auto-generated method stub
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
 		
-		if(!world.isRemote && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
+		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 		
 			if(spaceObj instanceof SpaceStationObject)
@@ -35,15 +37,13 @@ public class BlockWarpCore extends BlockMultiblockMachine {
 	}
 	
 	@Override
-	public void onBlockDestroyedByPlayer(World world, BlockPos pos,
-			IBlockState state) {
-		// TODO Auto-generated method stub
-		super.onBlockDestroyedByPlayer(world, pos, state);
-		
-		if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+		if(ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(spaceObj instanceof SpaceStationObject)
 				((SpaceStationObject)spaceObj).removeWarpCore(new HashedBlockPosition(pos));
 		}
+		
+		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 }

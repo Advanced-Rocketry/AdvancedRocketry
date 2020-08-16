@@ -4,35 +4,37 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.network.IPacket;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryEntities;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
@@ -72,9 +74,8 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 
 	public EntityHoverCraft(World par1World)
 	{
-		super(par1World);
+		super( AdvancedRocketryEntities.ENTITY_HOVER_CRAFT, par1World);
 		inv = new EmbeddedInventory(1);
-		setSize(2.5f, 1f);
 	}
 
 	public EntityHoverCraft(World par1World, double par2, double par4, double par6)
@@ -84,9 +85,6 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 		//System.out.println(localBoundingBox);
 
 		this.setPosition(par2, par4 + (double)this.getYOffset(), par6);
-		this.motionX = 0.0D;
-		this.motionY = 0.0D;
-		this.motionZ = 0.0D;
 		this.prevPosX = par2;
 		this.prevPosY = par4;
 		this.prevPosZ = par6;
@@ -127,7 +125,7 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 	 */
 	public double getMountedYOffset()
 	{
-		return (double)this.height * 0.0D + 0.5D;
+		return (double)this.getHeight() * 0.0D + 0.5D;
 	}
 
 	/**
@@ -143,25 +141,25 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 	 */
 	public boolean canBeCollidedWith()
 	{
-		return !this.isDead;
+		return this.isAlive();
 	}
-
+	
 	/**
 	 * First layer of player interaction
 	 */
 	@Override
-	public boolean processInitialInteract(EntityPlayer player, EnumHand hand)
+	public ActionResultType processInitialInteract(PlayerEntity player, Hand hand)
 	{
-		if(this.getPassengers().isEmpty()/* || (this.riddenByEntity != null && this.riddenByEntity instanceof EntityPlayer && this.riddenByEntity != player)*/) {
+		if(this.getPassengers().isEmpty()/* || (this.riddenByEntity != null && this.riddenByEntity instanceof PlayerEntity && this.riddenByEntity != player)*/) {
 			if (!this.world.isRemote)
 				player.startRiding(this);
 		}
-		return true;
+		return ActionResultType.SUCCESS;
 	}
 	@Override
 	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2)
 	{
-		if(!this.world.isRemote && !this.isDead && par1DamageSource.getImmediateSource() instanceof EntityPlayer && !this.getPassengers().contains(par1DamageSource.getImmediateSource()))
+		if(!this.world.isRemote && this.isAlive() && par1DamageSource.getImmediateSource() instanceof PlayerEntity && !this.getPassengers().contains(par1DamageSource.getImmediateSource()))
 		{
 			for(ItemStack i : getItemsDropOnDeath())
 			{
@@ -169,7 +167,7 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 					this.entityDropItem(i, 0.0F);
 			}
 
-			this.setDead();
+			this.remove();
 			return true;
 		}
 		return false;
@@ -248,8 +246,8 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 	}
 
 	@Override
-	public void onUpdate() {
-		super.onUpdate();
+	public void tick() {
+		super.tick();
 
 		if(this.getPassengers().isEmpty())
 			this.turningDownforWhat = true;
@@ -258,45 +256,52 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 		double acc = this.getPassengerMovingForward()*getMaxAcceleration();
 		//RCS mode, steer like boat
 		float yawAngle = (float)(this.rotationYaw*Math.PI/180f);
-		this.motionX += acc*MathHelper.sin(-yawAngle);
-		this.motionY += (turningUp ? getMaxAcceleration() : 0) - (turningDownforWhat ? getMaxAcceleration() : 0);
-		this.motionZ += acc*MathHelper.cos(-yawAngle);
-		this.motionX *= 0.9;
-		this.motionY *= 0.9;
-		this.motionZ *= 0.9;
+		Vector3d motion = getMotion();
 		
-		if (this.getPosition().getY() > getMaxHeight()*1.1)
-			this.motionY = 0;
-		else if (this.getPosition().getY() > getMaxHeight())
-			this.motionY *= 0.1;
+		float friction = 0.9f;
+		float motionYMult = 1f;
 		
-		this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+		if (this.getPosY() > getMaxHeight()*1.1)
+			motionYMult = 0;
+		else if (this.getPosY() > getMaxHeight())
+			motionYMult *= 0.1;
+		
+		
+		Vector3d newMotion = new Vector3d(friction*(motion.x + acc*MathHelper.sin(-yawAngle)), 
+				motionYMult*friction*( motion.y + (turningUp ? getMaxAcceleration() : 0) - (turningDownforWhat ? getMaxAcceleration() : 0)),
+				friction*(motion.z + acc*MathHelper.cos(-yawAngle)));
+
+		this.setMotion(newMotion);
+		
+
+		
+		this.move(MoverType.SELF, this.getMotion());
 
 	}
 	
 	public float getPassengerMovingForward() {
 
 		for(Entity entity : this.getPassengers()) {
-			if(entity instanceof EntityPlayer) {
-				return ((EntityPlayer) entity).moveForward;
+			if(entity instanceof PlayerEntity) {
+				return ((PlayerEntity) entity).moveForward;
 			}
 		}
 		return 0f;
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
+			CompoundNBT nbt) {
 		if(packetId == PacketType.TURNUPDATE.ordinal()) {
-			nbt.setBoolean("left", in.readBoolean());
-			nbt.setBoolean("right", in.readBoolean());
-			nbt.setBoolean("up", in.readBoolean());
-			nbt.setBoolean("down", in.readBoolean());
+			nbt.putBoolean("left", in.readBoolean());
+			nbt.putBoolean("right", in.readBoolean());
+			nbt.putBoolean("up", in.readBoolean());
+			nbt.putBoolean("down", in.readBoolean());
 		}
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
 		if(id == PacketType.TURNUPDATE.ordinal()) {
 			out.writeBoolean(turningLeft);
 			out.writeBoolean(turningRight);
@@ -306,8 +311,8 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 
 		if(id == PacketType.TURNUPDATE.ordinal()) {
 			this.turningLeft = nbt.getBoolean("left");
@@ -333,17 +338,17 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(PlayerEntity player) {
 		return false;
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player) {
+	public void openInventory(PlayerEntity player) {
 		inv.openInventory(player);
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer player) {
+	public void closeInventory(PlayerEntity player) {
 		inv.closeInventory(player);
 	}
 
@@ -353,37 +358,27 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 	}
 
 	@Override
-	public int getField(int id) {
-		return inv.getField(id);
-	}
-
-	@Override
-	public void setField(int id, int value) {
-		inv.setField(id, value);
-
-	}
-
-	@Override
-	public int getFieldCount() {
-		return inv.getFieldCount();
-	}
-
-	@Override
 	public void clear() {
 		inv.clear();
 	}
 
 	@Override
-	protected void entityInit() {
+	protected void registerData() {
 	}
-
+	
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound compound) {
+	protected void readAdditional(CompoundNBT compound) {
 		inv.readFromNBT(compound);
 	}
+	
 
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound compound) {
-		inv.writeToNBT(compound);
+	protected void writeAdditional(CompoundNBT compound) {
+		inv.write(compound);
+	}
+
+	@Override
+	public IPacket<?> createSpawnPacket() {
+		return new SSpawnObjectPacket(this);
 	}
 }

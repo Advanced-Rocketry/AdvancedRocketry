@@ -1,21 +1,19 @@
 package zmaster587.advancedRocketry.world.util;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.Teleporter;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.server.ServerWorld;
 
 public class TeleporterNoPortalSeekBlock extends Teleporter {
 
-	public TeleporterNoPortalSeekBlock(WorldServer p_i1963_1_) {
+	public TeleporterNoPortalSeekBlock(ServerWorld p_i1963_1_) {
 		super(p_i1963_1_);
 	}
 
-	public void teleport(Entity entity, WorldServer world) {
+	public void teleport(Entity entity, ServerWorld world) {
 
 		if (entity.isEntityAlive()) {
-			entity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
+			entity.setLocationAndAngles(entity.getPosX(), entity.posY, entity.getPosZ(), entity.rotationYaw, entity.rotationPitch);
 			world.spawnEntity(entity);
 			world.updateEntityWithOptionalForce(entity, false);
 		}
@@ -39,9 +37,9 @@ public class TeleporterNoPortalSeekBlock extends Teleporter {
 			}
 		}
         
-	    if (entityIn instanceof EntityPlayerMP)
+	    if (entityIn instanceof ServerPlayerEntity)
 	    {
-	        ((EntityPlayerMP)entityIn).connection.setPlayerLocation(x,y,z, entityIn.rotationYaw, entityIn.rotationPitch);
+	        ((ServerPlayerEntity)entityIn).connection.setPlayerLocation(x,y,z, entityIn.rotationYaw, entityIn.rotationPitch);
 	    }
 	    else
 	    {

@@ -1,9 +1,10 @@
 package zmaster587.advancedRocketry.tile.infrastructure;
 
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.libVulpes.inventory.modules.IButtonInventory;
 import zmaster587.libVulpes.util.INetworkMachine;
@@ -11,14 +12,14 @@ import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
 import java.util.List;
 
-public class TileRocketFluidUnloader extends TileRocketFluidLoader implements IInfrastructure, ITickable,  IButtonInventory, INetworkMachine  {
+public class TileRocketFluidUnloader extends TileRocketFluidLoader implements IInfrastructure, ITickableTileEntity,  IButtonInventory, INetworkMachine  {
 
 	public TileRocketFluidUnloader() {
-		super();
+		super(AdvancedRocketryTileEntityType.TILE_FLUID_UNLOADER);
 	}
 
 	public TileRocketFluidUnloader(int size) {
-		super(size);
+		super(AdvancedRocketryTileEntityType.TILE_FLUID_UNLOADER, size);
 	}
 
 	@Override
@@ -28,7 +29,7 @@ public class TileRocketFluidUnloader extends TileRocketFluidLoader implements II
 
 
 	@Override
-	public void update() {
+	public void tick() {
 
 		//Move a stack of items
 		if( !world.isRemote && rocket != null ) {
@@ -41,20 +42,20 @@ public class TileRocketFluidUnloader extends TileRocketFluidLoader implements II
 			for(TileEntity tile : tiles) {
 				IFluidHandler handler = (IFluidHandler)tile;
 
-				if(handler.drain( 1, false) != null)
+				if(handler.drain( 1, FluidAction.SIMULATE) != null)
 					rocketContainsItems = true;
 
 				if(isAllowToOperate) {
 					FluidStack stack = fluidTank.getFluid();
 					if(stack == null) {
-						this.fill(handler.drain(fluidTank.getCapacity(), true), true);
+						this.fill(handler.drain(fluidTank.getCapacity(), FluidAction.EXECUTE), FluidAction.EXECUTE);
 					}
 					else {
 						stack = stack.copy();
-						stack.amount = fluidTank.getCapacity() - fluidTank.getFluidAmount();
+						stack.setAmount(fluidTank.getCapacity() - fluidTank.getFluidAmount());
 
-						if(stack.amount != 0) {
-							this.fill(handler.drain( stack, true), true);
+						if(stack.getAmount() != 0) {
+							this.fill(handler.drain( stack, FluidAction.EXECUTE), FluidAction.EXECUTE);
 						}
 					}
 				}

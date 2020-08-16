@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.tile.cables.TilePipe;
@@ -29,22 +29,22 @@ public class RendererPipe extends TileEntitySpecialRenderer {
 		
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
-		GL11.glPushMatrix();
+		matrix.push();
 
-		GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
+		matrix.translate(x + 0.5F, y + 0.5F, z + 0.5F);
 		
 		bindTexture(texture);
 		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		//GL11.glDisable(GL11.GL_LIGHTING);
-		GlStateManager.color(0.4f, 0.4f, 0.4f);
+		GlStateManager.color4f(0.4f, 0.4f, 0.4f);
 		for(int i=0; i < 6; i++) {
 			if(((TilePipe)tile).canConnect(i)) {
-				GL11.glPushMatrix();
+				matrix.push();
 
-				EnumFacing dir = EnumFacing.values()[i];
+				Direction dir = Direction.values()[i];
 
-				GL11.glTranslated(0.5*dir.getFrontOffsetX(), 0.5*dir.getFrontOffsetY(), 0.5*dir.getFrontOffsetZ());
+				matrix.translate(0.5*dir.getXOffset(), 0.5*dir.getYOffset(), 0.5*dir.getZOffset());
 				
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
 
@@ -54,14 +54,14 @@ public class RendererPipe extends TileEntitySpecialRenderer {
 				//}
 				Tessellator.getInstance().draw();
 
-				GL11.glPopMatrix();
+				matrix.pop();
 			}
 		}
-		GlStateManager.color(1f,1f,1f);
+		GlStateManager.color4f(1f,1f,1f);
 
 		//GL11.glDisable(GL11.GL_BLEND);
 		//GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glPopMatrix();
+		matrix.pop();
 	}
 }

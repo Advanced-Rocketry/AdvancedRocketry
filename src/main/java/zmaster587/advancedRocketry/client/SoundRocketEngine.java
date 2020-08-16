@@ -27,9 +27,9 @@ public class SoundRocketEngine extends MovingSound {
 		this.pitch = (volume + 1f)*0.6f;
 		
 		if(!rocket.isInOrbit())
-			this.pitch += 0.4f*((float) (Math.max(Math.abs(1 - rocket.motionY), 0f) + 1f));
+			this.pitch += 0.4f*((float) (Math.max(Math.abs(1 - rocket.getMotion().y), 0f) + 1f));
 		else
-			this.pitch += 0.4f*((float) (Math.max(Math.abs(rocket.motionY/5f), 0f) + 1f));
+			this.pitch += 0.4f*((float) (Math.max(Math.abs(rocket.getMotion().y/5f), 0f) + 1f));
 
 		this.xPosF = (float) rocket.posX;
 		this.yPosF = (float) rocket.posY;

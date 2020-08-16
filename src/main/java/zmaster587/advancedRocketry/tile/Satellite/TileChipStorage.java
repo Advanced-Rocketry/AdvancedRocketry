@@ -1,12 +1,15 @@
 package zmaster587.advancedRocketry.tile.Satellite;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.api.distmarker.Dist;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
@@ -25,6 +28,9 @@ public class TileChipStorage extends TileMultiPowerConsumer  implements IModular
 		{{'*'}}
 	};
 
+	public TileChipStorage() {
+		super(AdvancedRocketryTileEntityType.TILE_CHIP_STORAGE);
+	}
 	
 	ItemStack inventory[];
 
@@ -35,12 +41,12 @@ public class TileChipStorage extends TileMultiPowerConsumer  implements IModular
 		ItemStack stack0 = getStackInSlot(0);
 		ItemStack stack1 = getStackInSlot(1);
 		
-		stack1.setTagCompound(stack0.getTagCompound());
+		stack1.setTag(stack0.getTag());
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 		super.useNetworkData(player, side, id, nbt);
 
 		if(id == 100) {
@@ -57,24 +63,25 @@ public class TileChipStorage extends TileMultiPowerConsumer  implements IModular
 		ItemStack stack0 = getStackInSlot(0);
 		ItemStack stack1 = getStackInSlot(1);
 
-		return !isRunning() && stack0 != null && stack0.getItem() instanceof ItemSatelliteIdentificationChip && stack0.hasTagCompound() && stack1 != null && stack1.getItem() instanceof ItemSatelliteIdentificationChip;
+		return !isRunning() && stack0 != null && stack0.getItem() instanceof ItemSatelliteIdentificationChip && stack0.hasTag() && stack1 != null && stack1.getItem() instanceof ItemSatelliteIdentificationChip;
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(new ModuleTexturedSlotArray(58, 16, this, 0, 1, TextureResources.idChip));   // Output
 		modules.add(new ModuleTexturedSlotArray(58, 36, this, 1, 2, TextureResources.idChip)); 	// Id chip
-		modules.add(new ModuleProgress(75, 36, 0, new ProgressBarImage(217,0, 17, 17, 234, 0, EnumFacing.DOWN, TextureResources.progressBars), this));
-		modules.add(new ModuleButton(40, 56, 0, "Copy", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
+		modules.add(new ModuleProgress(75, 36, 0, new ProgressBarImage(217,0, 17, 17, 234, 0, Direction.DOWN, TextureResources.progressBars), this));
+		modules.add(new ModuleButton(40, 56, "Copy", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild).setAdditionalData(0));
 		return modules;
 	}
 
 	@Override
-	public void onInventoryButtonPressed(int buttonId) {
-		PacketHandler.sendToServer(new PacketMachine(this, (byte)(buttonId + 100)) );
+	public void onInventoryButtonPressed(ModuleButton buttonId) {
+		if(buttonId.getAdditionalData() != null && (int)buttonId.getAdditionalData() == 0)
+			PacketHandler.sendToServer(new PacketMachine(this, (byte)(100)) );
 	}
 
 	@Override
@@ -95,7 +102,7 @@ public class TileChipStorage extends TileMultiPowerConsumer  implements IModular
 	@Override
 	public ItemStack decrStackSize(int slot, int amt) {
 		if(inventory[slot] != null) {
-			ItemStack stack = inventory[slot].splitStack(amt);
+			ItemStack stack = inventory[slot].split(amt);
 
 			if(inventory[slot].getCount() == 0)
 				inventory[slot] = null;
@@ -114,25 +121,20 @@ public class TileChipStorage extends TileMultiPowerConsumer  implements IModular
 	}
 
 	@Override
-	public boolean hasCustomName() {
-		return false;
-	}
-
-	@Override
 	public int getInventoryStackLimit() {
 		return 64;
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
-		return player.getDistanceSq(pos) < 4092;
+	public boolean isUsableByPlayer(PlayerEntity player) {
+		return pos.distanceSq(new BlockPos(player.getPositionVec())) < 4096;
 	}
 
 	@Override
-	public void openInventory(EntityPlayer entity) {}
+	public void openInventory(PlayerEntity entity) {}
 
 	@Override
-	public void closeInventory(EntityPlayer entity) {}
+	public void closeInventory(PlayerEntity entity) {}
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
@@ -140,69 +142,46 @@ public class TileChipStorage extends TileMultiPowerConsumer  implements IModular
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
 
-		NBTTagList list = new NBTTagList();
+		ListNBT list = new ListNBT();
 		for(int i = 0; i < inventory.length; i++)
 		{
 			ItemStack stack = inventory[i];
 
 			if(stack != null) {
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setByte("Slot", (byte)(i));
-				stack.writeToNBT(tag);
-				list.appendTag(tag);
+				CompoundNBT tag = new CompoundNBT();
+				tag.putByte("Slot", (byte)(i));
+				stack.write(tag);
+				list.add(tag);
 			}
 		}
 
-		nbt.setTag("outputItems", list);
+		nbt.put("outputItems", list);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
 
-		NBTTagList list = nbt.getTagList("outputItems", 10);
+		ListNBT list = nbt.getList("outputItems", 10);
 
-		for (int i = 0; i < list.tagCount(); i++) {
-			NBTTagCompound tag = (NBTTagCompound) list.getCompoundTagAt(i);
+		for (int i = 0; i < list.size(); i++) {
+			CompoundNBT tag = (CompoundNBT) list.getCompound(i);
 			byte slot = tag.getByte("Slot");
 			if (slot >= 0 && slot < inventory.length) {
-				inventory[slot] = new ItemStack(tag);
+				inventory[slot] = ItemStack.read(tag);
 			}
 		}
 	}
-
-	@Override
-	public String getName() {
-		return null;
-	}
-
 	@Override
 	public ItemStack removeStackFromSlot(int index) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
-	public int getField(int id) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public int getFieldCount() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	@Override
 	public void clear() {

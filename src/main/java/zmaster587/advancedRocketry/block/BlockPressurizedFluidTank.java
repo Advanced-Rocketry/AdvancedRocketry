@@ -1,22 +1,33 @@
 package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.loot.LootContext.Builder;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.item.ItemBlockFluidTank;
 import zmaster587.advancedRocketry.tile.TileFluidTank;
@@ -28,54 +39,55 @@ import java.util.List;
 
 public class BlockPressurizedFluidTank extends Block {
 
-	private static AxisAlignedBB bb = new AxisAlignedBB(.0625, 0, 0.0625, 0.9375, 1, 0.9375);
+	private static VoxelShape bb = VoxelShapes.create(.0625, 0, 0.0625, 0.9375, 1, 0.9375);
 	
-	public BlockPressurizedFluidTank(Material material) {
+	public BlockPressurizedFluidTank(Properties material) {
 		super(material);
-		isBlockContainer = true;
 	}
 
 	@Override
-	public boolean hasTileEntity(IBlockState state) {
+	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
 	
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
-		
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,
+			Hand handIn, BlockRayTraceResult hit) {
 		if(!world.isRemote)
-			player.openGui(LibVulpes.instance, guiId.MODULAR.ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
-		return true;
+		{
+			TileEntity te = world.getTileEntity(pos);
+			if(te != null)
+				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)te, pos);
+		}
+		return ActionResultType.SUCCESS;
 	}
-
+	
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new TileFluidTank((int) (64000*Math.pow(2,0)));
 	}
 	
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos,
-			IBlockState state, int fortune) {
+	public List<ItemStack> getDrops(BlockState state, Builder builder) {
 		return new LinkedList<ItemStack>();
 	}
 	
 	@Override
-	public void harvestBlock(World world, EntityPlayer player, BlockPos pos,
-			IBlockState state, TileEntity te, ItemStack stack) {
+	public void harvestBlock(World world, PlayerEntity player, BlockPos pos,
+			BlockState state, TileEntity te, ItemStack stack) {
 		
 		TileEntity tile = te;//world.getTileEntity(pos);
 
 		if(tile != null && tile instanceof TileFluidTank) {
-			IFluidHandler fluid = ((TileFluidTank)tile).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN);
-
+			LazyOptional<IFluidHandler> cap = ((TileFluidTank)tile).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.DOWN);
+			
+			IFluidHandler fluid = cap.orElse(null);
 
 			ItemStack itemstack = new ItemStack(AdvancedRocketryBlocks.blockPressureTank);
 			
-			((ItemBlockFluidTank)itemstack.getItem()).fill(itemstack, fluid.drain(Integer.MAX_VALUE, false));
+			((ItemBlockFluidTank)itemstack.getItem()).fill(itemstack, fluid.drain(Integer.MAX_VALUE, FluidAction.SIMULATE));
 			
-			EntityItem entityitem;
+			ItemEntity entityitem;
 
 			int j1 = world.rand.nextInt(21) + 10;
 			float f = world.rand.nextFloat() * 0.8F + 0.1F;
@@ -83,65 +95,43 @@ public class BlockPressurizedFluidTank extends Block {
 			float f2 = world.rand.nextFloat() * 0.8F + 0.1F;
 
 			itemstack.setCount(1);
-			entityitem = new EntityItem(world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), new ItemStack(itemstack.getItem(), 1, 0));
+			entityitem = new ItemEntity(world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), itemstack.copy());
 			float f3 = 0.05F;
-			entityitem.motionX = (double)((float)world.rand.nextGaussian() * f3);
-			entityitem.motionY = (double)((float)world.rand.nextGaussian() * f3 + 0.2F);
-			entityitem.motionZ = (double)((float)world.rand.nextGaussian() * f3);
+			entityitem.setMotion((double)((float)world.rand.nextGaussian() * f3),
+							(double)((float)world.rand.nextGaussian() * f3 + 0.2F),
+							(double)((float)world.rand.nextGaussian() * f3));
 
-			if (itemstack.hasTagCompound())
+			if (itemstack.hasTag())
 			{
-				entityitem.getItem().setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
+				entityitem.getItem().setTag((CompoundNBT)itemstack.getTag().copy());
 			}
-			world.spawnEntity(entityitem);
+			world.addEntity(entityitem);
 		}
 		
 		super.harvestBlock(world, player, pos, state, te, stack);
 	}
 	
 	@Override
-	public boolean shouldSideBeRendered(IBlockState blockState,
-			IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
 		
-		if(side.getFrontOffsetY() != 0) {
-			if(blockAccess.getBlockState(pos).getBlock() == this)
-			return true;
+		if(side.getYOffset() != 0) {
+			if(adjacentBlockState.getBlock() == this)
+				return false;
 		}
 		
-		return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
+		return super.isSideInvisible(state, adjacentBlockState, side);
 	}
 	
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source,
-			BlockPos pos) {
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return bb;
 	}
 
+	
 	@Override
-	public boolean isFullCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public void onNeighborChange(IBlockAccess world, BlockPos pos,
-			BlockPos neighbor) {
+	public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileFluidTank)
-			((TileFluidTank)tile).onAdjacentBlockUpdated(EnumFacing.getFacingFromVector(neighbor.getX() - pos.getX(), neighbor.getY() - pos.getY(), neighbor.getZ() - pos.getZ()));
-	}
-	
-	@Override
-	public BlockRenderLayer getBlockLayer() {
-		return BlockRenderLayer.CUTOUT;
-	}
-	
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-	
-	@Override
-	public boolean isBlockNormalCube(IBlockState state) {
-		return false;
+			((TileFluidTank)tile).onAdjacentBlockUpdated(Direction.getFacingFromVector(neighbor.getX() - pos.getX(), neighbor.getY() - pos.getY(), neighbor.getZ() - pos.getZ()));
 	}
 }

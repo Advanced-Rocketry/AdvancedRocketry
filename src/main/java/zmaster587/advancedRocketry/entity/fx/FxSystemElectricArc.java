@@ -1,11 +1,12 @@
 package zmaster587.advancedRocketry.entity.fx;
 
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.libVulpes.util.Vector3F;
 
 public class FxSystemElectricArc {
-	public static void spawnArc(World world, double x, double y, double z, double sizeMult, int numrecursion) {
+	public static void spawnArc(IWorld world, double x, double y, double z, double sizeMult, int numrecursion) {
 
 		//left child = 2*current index
 		//right child = 2*current index + 1
@@ -13,7 +14,7 @@ public class FxSystemElectricArc {
 		makeNextPosition(world, new Vector3F<Double>(x, y, z), sizeMult, numrecursion);
 	}
 
-	private static void makeNextPosition(World world, Vector3F<Double> parent, double scale, int numrecursion) {
+	private static void makeNextPosition(IWorld world, Vector3F<Double> parent, double scale, int numrecursion) {
 
 		double radius = scale*2;
 		double angle = world.rand.nextDouble()*Math.PI*2;

@@ -1,9 +1,9 @@
 package zmaster587.advancedRocketry.network;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.util.AsteroidSmall;
@@ -25,9 +25,9 @@ public class PacketAsteroidInfo extends BasePacket {
 	}
 
 	@Override
-	public void write(ByteBuf out) {
+	public void write(PacketBuffer out) {
 		PacketBuffer packetBuffer = new PacketBuffer(out);
-		NBTTagCompound nbt = new NBTTagCompound();
+		CompoundNBT nbt = new CompoundNBT();
 		
 		packetBuffer.writeString(asteroid.ID);
 		packetBuffer.writeInt(asteroid.distance);
@@ -48,7 +48,7 @@ public class PacketAsteroidInfo extends BasePacket {
 	}
 
 	@Override
-	public void readClient(ByteBuf in) {
+	public void readClient(PacketBuffer in) {
 		PacketBuffer packetBuffer = new PacketBuffer(in);
 		
 		asteroid.ID = packetBuffer.readString(128);
@@ -64,26 +64,22 @@ public class PacketAsteroidInfo extends BasePacket {
 		int size = packetBuffer.readInt();
 		for(int i = 0; i < size; i++)
 		{
-			try {
-				asteroid.itemStacks.add(packetBuffer.readItemStack());
-				asteroid.stackProbabilites.add(packetBuffer.readFloat());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			asteroid.itemStacks.add(packetBuffer.readItemStack());
+			asteroid.stackProbabilites.add(packetBuffer.readFloat());
 		}
 	}
 
 	@Override
-	public void read(ByteBuf in) {
+	public void read(PacketBuffer in) {
 		//Should never be read on the server!
 	}
 
 	@Override
-	public void executeClient(EntityPlayer thePlayer) {
+	public void executeClient(PlayerEntity thePlayer) {
 		ARConfiguration.getCurrentConfig().asteroidTypes.put(asteroid.ID, asteroid);
 	}
 
 	@Override
-	public void executeServer(EntityPlayerMP player) {}
+	public void executeServer(ServerPlayerEntity player) {}
 
 }

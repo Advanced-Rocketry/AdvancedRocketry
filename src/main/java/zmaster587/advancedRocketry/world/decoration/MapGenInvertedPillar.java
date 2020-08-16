@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.world.decoration;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
@@ -9,11 +9,11 @@ import net.minecraft.world.gen.MapGenBase;
 public class MapGenInvertedPillar extends MapGenBase {
 
 	int chancePerChunk;
-	IBlockState block;
-	IBlockState topBlock;
-	IBlockState bottomBlock;
+	BlockState block;
+	BlockState topBlock;
+	BlockState bottomBlock;
 
-	public MapGenInvertedPillar(int chancePerChunk, IBlockState bottom, IBlockState blockType, IBlockState blockTop) {
+	public MapGenInvertedPillar(int chancePerChunk, BlockState bottom, BlockState blockType, BlockState blockTop) {
 		super();
 		this.chancePerChunk = chancePerChunk;
 		block = blockType;
@@ -45,7 +45,7 @@ public class MapGenInvertedPillar extends MapGenBase {
 			y++;
 
 			for(int yOff = -20; yOff < treeHeight; yOff++) {
-				IBlockState actualBlock;// = yOff > (2*(treeHeight+rand.nextInt(4))/3f) ? topBlock : block;
+				BlockState actualBlock;// = yOff > (2*(treeHeight+rand.nextInt(4))/3f) ? topBlock : block;
 				currentEdgeRadius = (int)((SHAPE*(edgeRadius * Math.pow(treeHeight - yOff, 2))) + ((1f-SHAPE)*edgeRadius));
 
 				//Generate the top trapezoid
@@ -79,11 +79,11 @@ public class MapGenInvertedPillar extends MapGenBase {
 		}
 	}
 	
-	protected IBlockState getBlockAtPercentHeight(float percent) {
+	protected BlockState getBlockAtPercentHeight(float percent) {
 		return percent > 0.95f && topBlock == Blocks.DIRT.getDefaultState() ? Blocks.GRASS.getDefaultState() : percent > 0.66f ? topBlock : percent < 0.33f ? bottomBlock : block;
 	}
 
-	private void setBlock(int x, int y, int z , IBlockState block, ChunkPrimer primer) {
+	private void setBlock(int x, int y, int z , BlockState block, ChunkPrimer primer) {
 
 		if(x > 15 || x < 0 || z > 15 || z < 0 || y < 0 || y > 255)
 			return;

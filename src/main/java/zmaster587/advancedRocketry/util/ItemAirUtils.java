@@ -1,11 +1,11 @@
 package zmaster587.advancedRocketry.util;
 
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemArmor;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
@@ -24,13 +24,13 @@ public class ItemAirUtils implements IFillableArmor {
 	@Override
 	public int getAirRemaining(ItemStack stack) {
 
-		if(stack.hasTagCompound()) {
-			return stack.getTagCompound().getInteger("air");
+		if(stack.hasTag()) {
+			return stack.getTag().getInt("air");
 		}
 		else {
-			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setInteger("air", 0);
-			stack.setTagCompound(nbt);
+			CompoundNBT nbt = new CompoundNBT();
+			nbt.putInt("air", 0);
+			stack.setTag(nbt);
 			return getMaxAir(stack);
 		}
 	}
@@ -42,15 +42,15 @@ public class ItemAirUtils implements IFillableArmor {
 	 */
 	@Override
 	public void setAirRemaining(ItemStack stack, int amt) {
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound()) {
-			nbt = stack.getTagCompound();
+		CompoundNBT nbt;
+		if(stack.hasTag()) {
+			nbt = stack.getTag();
 		}
 		else {
-			nbt = new NBTTagCompound();
+			nbt = new CompoundNBT();
 		}
-		nbt.setInteger("air", amt);
-		stack.setTagCompound(nbt);
+		nbt.putInt("air", amt);
+		stack.setTag(nbt);
 	}
 
 	/**
@@ -62,18 +62,18 @@ public class ItemAirUtils implements IFillableArmor {
 	@Override
 	public int decrementAir(ItemStack stack, int amt) {
 
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound()) {
-			nbt = stack.getTagCompound();
+		CompoundNBT nbt;
+		if(stack.hasTag()) {
+			nbt = stack.getTag();
 		}
 		else {
-			nbt = new NBTTagCompound();
+			nbt = new CompoundNBT();
 		}
 
-		int prevAmt = nbt.getInteger("air");
+		int prevAmt = nbt.getInt("air");
 		int newAmt = Math.max(prevAmt - amt,0);
-		nbt.setInteger("air", newAmt);
-		stack.setTagCompound(nbt);
+		nbt.putInt("air", newAmt);
+		stack.setTag(nbt);
 
 		return prevAmt - newAmt;
 	}
@@ -87,18 +87,18 @@ public class ItemAirUtils implements IFillableArmor {
 	@Override
 	public int increment(ItemStack stack, int amt) {
 
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound()) {
-			nbt = stack.getTagCompound();
+		CompoundNBT nbt;
+		if(stack.hasTag()) {
+			nbt = stack.getTag();
 		}
 		else {
-			nbt = new NBTTagCompound();
+			nbt = new CompoundNBT();
 		}
 
-		int prevAmt = nbt.getInteger("air");
+		int prevAmt = nbt.getInt("air");
 		int newAmt = Math.min(prevAmt + amt, getMaxAir(stack));
-		nbt.setInteger("air", newAmt);
-		stack.setTagCompound(nbt);
+		nbt.putInt("air", newAmt);
+		stack.setTag(nbt);
 
 		return newAmt - prevAmt;
 	}
@@ -118,11 +118,11 @@ public class ItemAirUtils implements IFillableArmor {
 
 		//Check for enchantment
 		boolean isEnchanted = false;
-		NBTTagList enchList = stack.getEnchantmentTagList();
+		ListNBT enchList = stack.getEnchantmentTagList();
 		if(enchList != null) {
-			for(int i = 0 ; i < enchList.tagCount(); i++) {
-				NBTTagCompound compound = enchList.getCompoundTagAt(i);
-				isEnchanted = compound.getShort("id") == Enchantment.getEnchantmentID(AdvancedRocketryAPI.enchantmentSpaceProtection);
+			for(int i = 0 ; i < enchList.size(); i++) {
+				CompoundNBT compound = enchList.getCompound(i);
+				isEnchanted = Enchantment.getEnchantmentByID(compound.getShort("id"))== (AdvancedRocketryAPI.enchantmentSpaceProtection);
 				if(isEnchanted)
 					break;
 			}
@@ -165,8 +165,8 @@ public class ItemAirUtils implements IFillableArmor {
 		@Override
 		public boolean protectsFromSubstance(IAtmosphere atmosphere,
 				ItemStack stack, boolean commitProtection) {
-			if(stack != null && stack.getItem() instanceof ItemArmor) {
-				if(((ItemArmor) stack.getItem()).armorType == EntityEquipmentSlot.CHEST )
+			if(stack != null && stack.getItem() instanceof ArmorItem) {
+				if(((ArmorItem) stack.getItem()).getEquipmentSlot() == EquipmentSlotType.CHEST )
 					return decrementAir(stack, 1) == 1;
 				
 				return true;

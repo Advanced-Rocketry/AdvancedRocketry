@@ -1,14 +1,15 @@
 package zmaster587.advancedRocketry.item;
 
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.AdvancedRocketry;
@@ -20,12 +21,17 @@ import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class ItemOreScanner extends Item implements IModularInventory {
 
+
+	public ItemOreScanner(Properties properties) {
+		super(properties);
+	}
 
 	@Override
 	public void addInformation(ItemStack stack, World player,
@@ -37,11 +43,11 @@ public class ItemOreScanner extends Item implements IModularInventory {
 		if(sat instanceof SatelliteOreMapping)
 			mapping = (SatelliteOreMapping)sat;
 		
-		if(!stack.hasTagCompound())
+		if(!stack.hasTag())
 			list.add(LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
 		else if(mapping == null)
 			list.add(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.nosat"));
-		else if(mapping.getDimensionId() == player.provider.getDimension()) {
+		else if(mapping.getDimensionId().get() == ZUtils.getDimensionIdentifier(player)) {
 			list.add(LibVulpes.proxy.getLocalizedString("msg.connected"));
 			list.add(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.maxzoom") + mapping.getZoomRadius());
 			list.add(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.filter") + mapping.canFilterOre());
@@ -53,28 +59,28 @@ public class ItemOreScanner extends Item implements IModularInventory {
 	}
 	
 	public void setSatelliteID(ItemStack stack, long id) {
-		NBTTagCompound nbt;
-		if(!stack.hasTagCompound())
-			nbt = new NBTTagCompound();
+		CompoundNBT nbt;
+		if(!stack.hasTag())
+			nbt = new CompoundNBT();
 		else
-			nbt = stack.getTagCompound();
+			nbt = stack.getTag();
 		
-		nbt.setLong("id", id);
-		stack.setTagCompound(nbt);
+		nbt.putLong("id", id);
+		stack.setTag(nbt);
 	}
 
 	public long getSatelliteID(ItemStack stack) {
-		NBTTagCompound nbt;
-		if(!stack.hasTagCompound())
+		CompoundNBT nbt;
+		if(!stack.hasTag())
 			return -1;
 		
-		nbt = stack.getTagCompound();
+		nbt = stack.getTag();
 		
 		return nbt.getLong("id");
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand) {
 		ItemStack stack = playerIn.getHeldItem(hand);
 		if(!playerIn.world.isRemote && !stack.isEmpty())
 		{
@@ -82,7 +88,7 @@ public class ItemOreScanner extends Item implements IModularInventory {
 			
 			SatelliteBase satellite = DimensionManager.getInstance().getSatellite(satelliteId);
 			
-			if(satellite != null && (satellite instanceof SatelliteOreMapping) && satellite.getDimensionId() == worldIn.provider.getDimension())
+			if(satellite != null && (satellite instanceof SatelliteOreMapping) && satellite.getDimensionId().get() == ZUtils.getDimensionIdentifier(worldIn))
 				playerIn.openGui(AdvancedRocketry.instance, GuiHandler.guiId.OreMappingSatellite.ordinal(), worldIn, (int)playerIn.getPosition().getX(), (int)getSatelliteID(stack), (int)playerIn.getPosition().getZ());
 
 		}
@@ -91,10 +97,12 @@ public class ItemOreScanner extends Item implements IModularInventory {
 	}
 	
 	@Override
-	public EnumActionResult onItemUse(EntityPlayer playerIn,
-			World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
-			float hitX, float hitY, float hitZ) {
-		if(!playerIn.world.isRemote && hand == EnumHand.MAIN_HAND)
+	public ActionResultType onItemUse(ItemUseContext context) {
+		PlayerEntity playerIn = context.getPlayer();
+		Hand hand = context.getHand();
+		World worldIn = context.getWorld();
+		
+		if(!playerIn.world.isRemote && hand == Hand.MAIN_HAND)
 		{
 			ItemStack stack = playerIn.getHeldItem(hand);
 			if(!playerIn.world.isRemote && !stack.isEmpty())
@@ -103,22 +111,21 @@ public class ItemOreScanner extends Item implements IModularInventory {
 				
 				SatelliteBase satellite = DimensionManager.getInstance().getSatellite(satelliteId);
 				
-				if(satellite != null && (satellite instanceof SatelliteOreMapping) && satellite.getDimensionId() == worldIn.provider.getDimension())
+				if(satellite != null && (satellite instanceof SatelliteOreMapping) && satellite.getDimensionId().get() == ZUtils.getDimensionIdentifier(worldIn))
 					playerIn.openGui(AdvancedRocketry.instance, GuiHandler.guiId.OreMappingSatellite.ordinal(), worldIn, (int)playerIn.getPosition().getX(), (int)getSatelliteID(stack), (int)playerIn.getPosition().getZ());
 
 			}
 		}
-		return super.onItemUse(playerIn, worldIn, pos, hand, facing, hitX, hitY,
-				hitZ);
+		return super.onItemUse(context);
 	}
 
 
-	public void interactSatellite(SatelliteBase satellite,EntityPlayer player, World world, BlockPos pos) {
+	public void interactSatellite(SatelliteBase satellite,PlayerEntity player, World world, BlockPos pos) {
 		satellite.performAction(player, world, pos);
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
+	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModuleOreMapper(0, 0));
 		return modules;
@@ -130,7 +137,7 @@ public class ItemOreScanner extends Item implements IModularInventory {
 	}
 
 	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
+	public boolean canInteractWithContainer(PlayerEntity entity) {
 		return true;
 	}
 

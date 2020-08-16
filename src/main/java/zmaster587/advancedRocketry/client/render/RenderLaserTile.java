@@ -18,14 +18,14 @@ public class RenderLaserTile extends TileEntitySpecialRenderer {
 		if(!((TileSpaceLaser)tileentity).isRunning())
 			return;
 		
-		GL11.glPushMatrix();
-		GL11.glTranslated(x, y, z);
+		matrix.push();
+		matrix.translate(x, y, z);
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		GlStateManager.disableLighting();
 		GlStateManager.disableFog();
 		GlStateManager.enableBlend();
 		GlStateManager.disableDepth();
-		GlStateManager.disableTexture2D();
+		GlStateManager.disableTexture();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 		//GL11.glB
 		//GL11.gl
@@ -54,10 +54,10 @@ public class RenderLaserTile extends TileEntitySpecialRenderer {
 
 		GlStateManager.disableBlend();
 		GlStateManager.enableLighting();
-		GlStateManager.enableTexture2D();
+		GlStateManager.enableTexture();
 		GlStateManager.enableFog();
 		GlStateManager.enableDepth();
-		GL11.glPopMatrix();
+		matrix.pop();
 	}
 
 }

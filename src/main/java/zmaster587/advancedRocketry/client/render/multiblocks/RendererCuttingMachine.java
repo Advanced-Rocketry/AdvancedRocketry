@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
@@ -21,7 +21,7 @@ public class RendererCuttingMachine extends TileEntitySpecialRenderer {
 
 	public final static ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/cuttingMachine.png");
 
-	//private final RenderItem dummyItem = Minecraft.getMinecraft().getRenderItem();
+	//private final RenderItem dummyItem = Minecraft.getInstance().getRenderItem();
 
 	public RendererCuttingMachine() {
 		try {
@@ -40,15 +40,15 @@ public class RendererCuttingMachine extends TileEntitySpecialRenderer {
 		if(!multiBlockTile.canRender())
 			return;
 
-		GL11.glPushMatrix();
+		matrix.push();
 
 		//Initial setup
 
 		//Rotate and move the model into position
-		GL11.glTranslated(x+.5f, y, z + 0.5f);
-		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 180 : 0) + front.getFrontOffsetZ()*90f, 0, 1, 0);
-		GL11.glTranslated(-.5f, 0, -1.5f);
+		matrix.translate(x+.5f, y, z + 0.5f);
+		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
+		GL11.glRotatef((front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, 1, 0);
+		matrix.translate(-.5f, 0, -1.5f);
 
 		if(multiBlockTile.isRunning()) {
 
@@ -62,31 +62,31 @@ public class RendererCuttingMachine extends TileEntitySpecialRenderer {
 			if(outputList != null && !outputList.isEmpty()) {
 				ItemStack stack = outputList.get(0);
 
-				GL11.glPushMatrix();
+				matrix.push();
 				GL11.glRotatef(90, 1, 0, 0);
-				GL11.glTranslated(1f, tray + .25, -1.05);
-				RenderHelper.renderItem(multiBlockTile, stack, Minecraft.getMinecraft().getRenderItem());
-				GL11.glPopMatrix();
+				matrix.translate(1f, tray + .25, -1.05);
+				RenderHelper.renderItem(multiBlockTile, stack, Minecraft.getInstance().getRenderItem());
+				matrix.pop();
 			}
 
 			bindTexture(texture);
 			model.renderPart("Hull");
 
-			GL11.glPushMatrix();
+			matrix.push();
 
 			GL11.glTranslatef(1f, 1f, 1.5f);
 
 			GL11.glRotatef(-6*multiBlockTile.getProgress(0) % 360, 1, 0, 0);
 			GL11.glTranslatef(-1f, -1f, -1.5f);
 			model.renderPart("Saw");
-			GL11.glPopMatrix();
+			matrix.pop();
 
 		}
 		else {
 			bindTexture(texture);
 			model.renderAll();
 		}
-		GL11.glPopMatrix();
+		matrix.pop();
 	}
 
 }

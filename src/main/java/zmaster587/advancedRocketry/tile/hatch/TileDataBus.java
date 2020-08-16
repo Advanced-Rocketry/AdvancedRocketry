@@ -1,11 +1,14 @@
 package zmaster587.advancedRocketry.tile.hatch;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.Direction;
+import net.minecraftforge.api.distmarker.Dist;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.inventory.modules.ModuleData;
@@ -27,12 +30,13 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	DataStorage data;
 
 	public TileDataBus() {
+		super(AdvancedRocketryTileEntityType.TILE_DATA_BUS);
 		data = new DataStorage(DataStorage.DataType.UNDEFINED);
 		data.setMaxData(2000);
 	}
 
 	public TileDataBus(int number) {
-		super(number);
+		super(AdvancedRocketryTileEntityType.TILE_DATA_BUS, number);
 		data = new DataStorage(DataStorage.DataType.UNDEFINED);
 
 		data.setMaxData(2000);
@@ -82,7 +86,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 
 	@Override
-	public int addData(int data, DataStorage.DataType dataType, EnumFacing dir, boolean commit) {
+	public int addData(int data, DataStorage.DataType dataType, Direction dir, boolean commit) {
 		return this.data.addData(data, dataType, commit);
 	}
 
@@ -111,51 +115,51 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModuleData(40, 20, 0, this, data));
 		return modules;
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
 		
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
 	}
 	
 	@Override
-	protected NBTTagCompound writeToNBTHelper(NBTTagCompound nbtTagCompound) {
+	protected CompoundNBT writeToNBTHelper(CompoundNBT nbtTagCompound) {
 		super.writeToNBTHelper(nbtTagCompound);
 		data.writeToNBT(nbtTagCompound);
 		return nbtTagCompound;
 	}
 	
 	@Override
-	protected void readFromNBTHelper(NBTTagCompound nbtTagCompound) {
+	protected void readFromNBTHelper(CompoundNBT nbtTagCompound) {
 		super.readFromNBTHelper(nbtTagCompound);
 		data.readFromNBT(nbtTagCompound);
 	}
 	
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
 
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
+			CompoundNBT nbt) {
 
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 
 		if(id == -1) {
 			storeData(0);
@@ -165,7 +169,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 
 	@Override
-	public int extractData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {
+	public int extractData(int maxAmount, DataType type, Direction dir, boolean commit) {
 		if(type == DataStorage.DataType.UNDEFINED || this.data.getDataType() == type)
 			return this.data.removeData(maxAmount, commit);
 		return 0;

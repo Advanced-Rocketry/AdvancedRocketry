@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.atmosphere;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
@@ -70,7 +70,7 @@ public class AtmosphereType implements IAtmosphere {
 	 * @param player living entity inside this atmosphere we are ticking
 	 * @return true if the atmosphere does not affect the entity in any way
 	 */
-	public boolean isImmune(EntityLivingBase player) {
+	public boolean isImmune(LivingEntity player) {
 		return isBreathable;
 	}
 	
@@ -117,10 +117,10 @@ public class AtmosphereType implements IAtmosphere {
 
 	//TODO: tick for all entities
 	/**
-	 * If the canTick() returns true then then this is called every tick on EntityLivingBase objects located inside this atmosphere
+	 * If the canTick() returns true then then this is called every tick on LivingEntity objects located inside this atmosphere
 	 * @param player entity being ticked
 	 */
-	public void onTick(EntityLivingBase player) {
+	public void onTick(LivingEntity player) {
 	}
 
 	@Override

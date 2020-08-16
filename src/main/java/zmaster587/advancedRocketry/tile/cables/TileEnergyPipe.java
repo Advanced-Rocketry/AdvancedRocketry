@@ -1,9 +1,12 @@
 package zmaster587.advancedRocketry.tile.cables;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.cable.EnergyNetwork;
 import zmaster587.advancedRocketry.cable.HandlerCableNetwork;
 import zmaster587.advancedRocketry.cable.NetworkRegistry;
@@ -13,32 +16,27 @@ import zmaster587.libVulpes.cap.TeslaHandler;
 
 public class TileEnergyPipe extends TilePipe implements IUniversalEnergy {
 	
-	@Override
-	public boolean canExtract(EnumFacing dir, TileEntity e) {
-		
-		return e.hasCapability(CapabilityEnergy.ENERGY, dir) && e.getCapability(CapabilityEnergy.ENERGY, dir).canExtract() && !(e instanceof TileEnergyPipe);
-	}
-
-	@Override
-	public boolean canInject(EnumFacing dir, TileEntity e) {
-		return e.hasCapability(CapabilityEnergy.ENERGY, dir) && e.getCapability(CapabilityEnergy.ENERGY, dir).canReceive() && !(e instanceof TileEnergyPipe);
+	public TileEnergyPipe() {
+		super(AdvancedRocketryTileEntityType.TILE_POWER_PIPE);
 	}
 	
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-
-		if(capability == CapabilityEnergy.ENERGY || TeslaHandler.hasTeslaCapability(this, capability))
-			return true;
-		return false;
+	public boolean canExtract(Direction dir, TileEntity e) {
+		LazyOptional<IEnergyStorage> cap = e.getCapability(CapabilityEnergy.ENERGY, dir);
+		return cap.isPresent() && cap.orElse(null).canExtract() && !(e instanceof TileEnergyPipe);
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public boolean canInject(Direction dir, TileEntity e) {
+		LazyOptional<IEnergyStorage> cap = e.getCapability(CapabilityEnergy.ENERGY, dir);
+		return cap.isPresent() && cap.orElse(null).canReceive() && !(e instanceof TileEnergyPipe);
+	}
+	
+	@Override
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
 
 		if(capability == CapabilityEnergy.ENERGY )
-			return (T)(new ForgePowerCapability(this));
-		else if(TeslaHandler.hasTeslaCapability(this, capability))
-			return (T)(TeslaHandler.getHandler(this));
+			return LazyOptional.of(() -> new ForgePowerCapability(this)).cast();
 		
 		return super.getCapability(capability, facing);
 	}
@@ -47,7 +45,7 @@ public class TileEnergyPipe extends TilePipe implements IUniversalEnergy {
 		return NetworkRegistry.energyNetwork;
 	}
 	
-	protected void attemptLink(EnumFacing dir, TileEntity tile) {
+	protected void attemptLink(Direction dir, TileEntity tile) {
 		//If the pipe can inject or extract, add to the cache
 		//if(!(tile instanceof IFluidHandler))
 		//return;

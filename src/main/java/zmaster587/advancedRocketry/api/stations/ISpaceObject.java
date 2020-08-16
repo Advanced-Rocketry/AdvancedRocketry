@@ -1,7 +1,8 @@
 package zmaster587.advancedRocketry.api.stations;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.libVulpes.util.HashedBlockPosition;
@@ -11,7 +12,7 @@ public interface ISpaceObject {
 	/**
 	 * @return id of the space object (NOT the DIMID)
 	 */
-	public int getId();
+	public ResourceLocation getId();
 	
 	public float getOrbitalDistance();
 	
@@ -25,12 +26,12 @@ public interface ISpaceObject {
 	/**
 	 * @return the DIMID of the planet the object is currently orbiting, Constants.INVALID_PLANET if none
 	 */
-	public int getOrbitingPlanetId();
+	public ResourceLocation getOrbitingPlanetId();
 	
 	/**
 	 * @param id the space object id of this object (NOT DIMID)
 	 */
-	public void setId(int id);
+	public void setId(ResourceLocation id);
 	
 	/**
 	 * Sets the coords of the space object on the graph
@@ -51,7 +52,7 @@ public interface ISpaceObject {
 	 * Sets the orbiting planet for the space object but does NOT register it with the planet
 	 * @param id
 	 */
-	public void setOrbitingBody(int id);
+	public void setOrbitingBody(ResourceLocation id);
 	
 	/**
 	 * @return the spawn location of the object
@@ -70,18 +71,18 @@ public interface ISpaceObject {
 	 */
 	public void onModuleUnpack(IStorageChunk chunk);
 	
-	public void writeToNbt(NBTTagCompound nbt);
+	public void writeToNbt(CompoundNBT nbt);
 	
-	public void readFromNbt(NBTTagCompound nbt);
+	public void readFromNbt(CompoundNBT nbt);
 	
-	public double getRotation(EnumFacing dir);
-	public double getDeltaRotation(EnumFacing dir);
+	public double getRotation(Direction dir);
+	public double getDeltaRotation(Direction dir);
 	
-	public void setRotation(double rotation, EnumFacing dir);
+	public void setRotation(double rotation, Direction dir);
 	
 	public double getMaxRotationalAcceleration();
 	
-	public void setDeltaRotation(double rotation, EnumFacing dir);
+	public void setDeltaRotation(double rotation, Direction dir);
 	
 	/**
 	 * @return true if there is an empty pad to land on
@@ -131,13 +132,13 @@ public interface ISpaceObject {
 	 * Set the destination dim id if a jump were to be made
 	 * @param id
 	 */
-	void setDestOrbitingBody(int id);
+	void setDestOrbitingBody(ResourceLocation id);
 
 	/**
 	 * Get the destination dimid of this object
 	 * @return
 	 */
-	int getDestOrbitingBody();
+	ResourceLocation getDestOrbitingBody();
 
 	/**
 	 * Set the properties of the dimension
@@ -154,5 +155,5 @@ public interface ISpaceObject {
 	/**
 	 * @return
 	 */
-	public EnumFacing getForwardDirection();
+	public Direction getForwardDirection();
 }

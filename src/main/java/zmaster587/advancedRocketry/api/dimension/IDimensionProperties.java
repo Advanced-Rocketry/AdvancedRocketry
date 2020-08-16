@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.api.dimension;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.IAtmosphere;
@@ -14,7 +14,7 @@ public interface IDimensionProperties {
 	/**
 	 * @return the DIMID of the planet
 	 */
-	public int getId();
+	public ResourceLocation getId();
 	
 	/**
 	 * @return the color of the sun as an array of floats represented as  {r,g,b}
@@ -90,7 +90,7 @@ public interface IDimensionProperties {
 	/**
 	 * @return set of all moons orbiting this planet
 	 */
-	public Set<Integer> getChildPlanets();
+	public Set<ResourceLocation> getChildPlanets();
 	
 	/**
 	 * sets the gravity multiplier of the object
@@ -124,9 +124,9 @@ public interface IDimensionProperties {
 	 */
 	public SatelliteBase removeSatellite(long id);
 
-	public void writeToNBT(NBTTagCompound nbt);
+	public void writeToNBT(CompoundNBT nbt);
 
-	public void readFromNBT(NBTTagCompound nbt);
+	public void readFromNBT(CompoundNBT nbt);
 
 	public void setParentOrbitalDistance(int distance);
 
@@ -144,7 +144,7 @@ public interface IDimensionProperties {
 	/**
 	 * @return the integer id of the star
 	 */
-	public int getStarId();
+	public ResourceLocation getStarId();
 
 	/**
 	 * @return density of the atmosphere in the range 0 to 200
@@ -180,7 +180,7 @@ public interface IDimensionProperties {
 	/**
 	 * @return id of the parent planet
 	 */
-	public int getParentPlanet();
+	public ResourceLocation getParentPlanet();
 
 	/**
 	 * Set the atmosphere like the terraformer does, can trigger terraform event

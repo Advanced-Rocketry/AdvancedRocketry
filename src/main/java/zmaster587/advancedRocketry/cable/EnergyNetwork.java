@@ -1,7 +1,8 @@
 package zmaster587.advancedRocketry.cable;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import zmaster587.libVulpes.api.IUniversalEnergy;
@@ -62,23 +63,23 @@ public class EnergyNetwork extends CableNetwork implements IUniversalEnergy {
 
 		int demand = 0;
 		int supply = battery.getUniversalEnergyStored();
-		Iterator<Entry<TileEntity,EnumFacing>> sinkItr = sinks.iterator();
-		Iterator<Entry<TileEntity,EnumFacing>> sourceItr = sources.iterator();
+		Iterator<Entry<TileEntity,Direction>> sinkItr = sinks.iterator();
+		Iterator<Entry<TileEntity,Direction>> sourceItr = sources.iterator();
 
 		while(sinkItr.hasNext()) {
 			//Get tile and key
-			Entry<TileEntity,EnumFacing> obj = (Entry<TileEntity, EnumFacing>)sinkItr.next();
-			IEnergyStorage dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
+			Entry<TileEntity,Direction> obj = (Entry<TileEntity, Direction>)sinkItr.next();
+			LazyOptional<IEnergyStorage> dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
 
-			demand += dataHandlerSink.receiveEnergy(amount, true);
+			demand += dataHandlerSink.orElse(null).receiveEnergy(amount, true);
 		}
 
 		while(sourceItr.hasNext()) {
 			//Get tile and key
-			Entry<TileEntity,EnumFacing> obj = (Entry<TileEntity, EnumFacing>)sourceItr.next();
-			IEnergyStorage dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
+			Entry<TileEntity,Direction> obj = (Entry<TileEntity, Direction>)sourceItr.next();
+			LazyOptional<IEnergyStorage> dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
 
-			supply += dataHandlerSink.extractEnergy(amount, true);
+			supply += dataHandlerSink.orElse(null).extractEnergy(amount, true);
 		}
 		int amountMoved, amountToMove;
 		amountMoved = amountToMove = Math.min(supply, demand);
@@ -88,11 +89,11 @@ public class EnergyNetwork extends CableNetwork implements IUniversalEnergy {
 
 
 			//Get tile and key
-			Entry<TileEntity,EnumFacing> obj = (Entry<TileEntity, EnumFacing>)sinkItr.next();
-			IEnergyStorage dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
+			Entry<TileEntity,Direction> obj = (Entry<TileEntity, Direction>)sinkItr.next();
+			LazyOptional<IEnergyStorage> dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
 
 
-			amountToMove -= dataHandlerSink.receiveEnergy(amountToMove, false);
+			amountToMove -= dataHandlerSink.orElse(null).receiveEnergy(amountToMove, false);
 		}
 		
 		//Try to drain internal buffer first
@@ -101,10 +102,10 @@ public class EnergyNetwork extends CableNetwork implements IUniversalEnergy {
 		sourceItr = sources.iterator();
 		while(sourceItr.hasNext()) {
 			//Get tile and key
-			Entry<TileEntity,EnumFacing> obj = (Entry<TileEntity, EnumFacing>)sourceItr.next();
-			IEnergyStorage dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
+			Entry<TileEntity,Direction> obj = (Entry<TileEntity, Direction>)sourceItr.next();
+			LazyOptional<IEnergyStorage> dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
 
-			amountMoved -= dataHandlerSink.extractEnergy(amountMoved, false);
+			amountMoved -= dataHandlerSink.orElse(null).extractEnergy(amountMoved, false);
 		}
 	}
 

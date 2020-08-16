@@ -1,13 +1,14 @@
 package zmaster587.advancedRocketry.mission;
 
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.api.IMission;
@@ -17,6 +18,7 @@ import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.util.HashedBlockPosition;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.LinkedList;
 
@@ -27,11 +29,11 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 	long startWorldTime;
 	double x,y,z;
 	long duration;
-	int launchDimension;
+	ResourceLocation launchDimension;
 	StorageChunk rocketStorage;
 	StatsRocket rocketStats;
-	int worldId;
-	NBTTagCompound missionPersistantNBT;
+	ResourceLocation worldId;
+	CompoundNBT missionPersistantNBT;
 
 	//stores the coordinates of infrastructures, used for when the world loads/saves
 	protected LinkedList<HashedBlockPosition> infrastructureCoords;
@@ -42,20 +44,20 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 
 	public MissionResourceCollection(long duration, EntityRocket entity, LinkedList<IInfrastructure> infrastructureCoords) {
 		super();
-		missionPersistantNBT = new NBTTagCompound();
+		missionPersistantNBT = new CompoundNBT();
 		entity.writeMissionPersistantNBT(missionPersistantNBT);
 		
 		satelliteProperties.setId(zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getNextSatelliteId());
 
-		startWorldTime = DimensionManager.getWorld(0).getTotalWorldTime();
+		startWorldTime = entity.world.getServer().getServerTime();
 		this.duration = duration;
-		this.launchDimension = entity.world.provider.getDimension();
+		this.launchDimension = ZUtils.getDimensionIdentifier(entity.world);
 		rocketStorage = entity.storage;
 		rocketStats = entity.stats;
-		x = entity.posX;
-		y = entity.posY;
-		z = entity.posZ;
-		worldId = entity.world.provider.getDimension();
+		x = entity.getPosX();
+		y = entity.getPosY();
+		z = entity.getPosZ();
+		worldId = ZUtils.getDimensionIdentifier(entity.world);
 
 		this.infrastructureCoords = new LinkedList<HashedBlockPosition>();
 
@@ -84,7 +86,7 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 	}
 
 	@Override
-	public boolean performAction(EntityPlayer player, World world, BlockPos pos) {
+	public boolean performAction(PlayerEntity player, World world, BlockPos pos) {
 		return false;
 	}
 
@@ -103,57 +105,57 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 
 	@Override
 	public void tickEntity() {
-		if(getProgress(DimensionManager.getWorld(getDimensionId())) >= 1 && !DimensionManager.getWorld(0).isRemote) {
-			setDead();
+		if(EffectiveSide.get().isServer() && getProgress(ZUtils.getWorld(getDimensionId().get())) >= 1) {
+			remove();
 			onMissionComplete();
 		}
 	}
 
-	public void writeToNBT(NBTTagCompound nbt) {
+	public void writeToNBT(CompoundNBT nbt) {
 		super.writeToNBT(nbt);
 		
-		nbt.setTag("persist", missionPersistantNBT);
+		nbt.put("persist", missionPersistantNBT);
 		
-		NBTTagCompound nbt2 = new NBTTagCompound();
+		CompoundNBT nbt2 = new CompoundNBT();
 		rocketStats.writeToNBT(nbt2);
-		nbt.setTag("rocketStats", nbt2);
+		nbt.put("rocketStats", nbt2);
 
-		nbt2 = new NBTTagCompound();
+		nbt2 = new CompoundNBT();
 		rocketStorage.writeToNBT(nbt2);
-		nbt.setTag("rocketStorage", nbt2);
+		nbt.put("rocketStorage", nbt2);
 
-		nbt.setDouble("launchPosX", x);
-		nbt.setDouble("launchPosY", y);
-		nbt.setDouble("launchPosZ", z);
+		nbt.putDouble("launchPosX", x);
+		nbt.putDouble("launchPosY", y);
+		nbt.putDouble("launchPosZ", z);
 
-		nbt.setLong("startWorldTime", startWorldTime);
-		nbt.setLong("duration", duration);
-		nbt.setInteger("startDimid", worldId);
-		nbt.setInteger("launchDim", launchDimension);
+		nbt.putLong("startWorldTime", startWorldTime);
+		nbt.putLong("duration", duration);
+		nbt.putString("startDimid", worldId.toString());
+		nbt.putString("launchDim", launchDimension.toString());
 
-		NBTTagList itemList = new NBTTagList();
+		ListNBT itemList = new ListNBT();
 		for(int i = 0; i < infrastructureCoords.size(); i++)
 		{
 			HashedBlockPosition inf = infrastructureCoords.get(i);
 
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setIntArray("loc", new int[] {inf.x, inf.y, inf.z});
-			itemList.appendTag(tag);
+			CompoundNBT tag = new CompoundNBT();
+			tag.putIntArray("loc", new int[] {inf.x, inf.y, inf.z});
+			itemList.add(tag);
 
 		}
-		nbt.setTag("infrastructure", itemList);
+		nbt.put("infrastructure", itemList);
 	}
 
-	public void readFromNBT(NBTTagCompound nbt) {
+	public void readFromNBT(CompoundNBT nbt) {
 		super.readFromNBT(nbt);
 		
-		missionPersistantNBT = nbt.getCompoundTag("persist" );
+		missionPersistantNBT = nbt.getCompound("persist" );
 
 		rocketStats = new StatsRocket();
-		rocketStats.readFromNBT(nbt.getCompoundTag("rocketStats"));
+		rocketStats.readFromNBT(nbt.getCompound("rocketStats"));
 
 		rocketStorage = new StorageChunk();
-		rocketStorage.readFromNBT(nbt.getCompoundTag("rocketStorage"));
+		rocketStorage.readFromNBT(nbt.getCompound("rocketStorage"));
 
 		x = nbt.getDouble("launchPosX");
 		y = nbt.getDouble("launchPosY");
@@ -161,14 +163,14 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 
 		startWorldTime = nbt.getLong("startWorldTime");
 		duration = nbt.getLong("duration");
-		worldId = nbt.getInteger("startDimid");
-		launchDimension = nbt.getInteger("launchDim");
+		worldId = new ResourceLocation(nbt.getString("startDimid"));
+		launchDimension = new ResourceLocation(nbt.getString("launchDim"));
 
-		NBTTagList tagList = nbt.getTagList("infrastructure", 10);
+		ListNBT tagList = nbt.getList("infrastructure", 10);
 		infrastructureCoords.clear();
 
-		for (int i = 0; i < tagList.tagCount(); i++) {
-			int coords[] = tagList.getCompoundTagAt(i).getIntArray("loc");
+		for (int i = 0; i < tagList.size(); i++) {
+			int coords[] = tagList.getCompound(i).getIntArray("loc");
 			infrastructureCoords.add(new HashedBlockPosition(coords[0], coords[1], coords[2]));
 		}
 	}
@@ -179,7 +181,7 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 	}
 
 	@Override
-	public int getOriginatingDimention() {
+	public ResourceLocation getOriginatingDimention() {
 		return worldId;
 	}
 

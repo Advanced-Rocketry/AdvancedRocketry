@@ -1,12 +1,13 @@
 package zmaster587.advancedRocketry.common;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.profiler.IProfiler;
 import net.minecraft.profiler.Profiler;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.network.PacketLaserGun;
@@ -35,8 +36,8 @@ public class CommonProxy {
 
 	}
 
-	public Profiler getProfiler() {
-		return FMLCommonHandler.instance().getMinecraftServerInstance().profiler;
+	public IProfiler getProfiler() {
+		return  ServerLifecycleHooks.getCurrentServer().getProfiler();
 	}
 
 	public void changeClientPlayerWorld(World world) {
@@ -54,8 +55,7 @@ public class CommonProxy {
 	}
 
 	public long getWorldTimeUniversal(int id) {
-		if(DimensionManager.getWorld(id) != null)
-			return DimensionManager.getWorld(id).getTotalWorldTime();
+		ServerLifecycleHooks.getCurrentServer().getServerTime();
 		return 0;
 	}
 
@@ -69,7 +69,7 @@ public class CommonProxy {
 
 	}
 
-	public void spawnLaser(Entity entity, Vec3d toPos) {
+	public void spawnLaser(Entity entity, Vector3d toPos) {
 		PacketHandler.sendToPlayersTrackingEntity(new PacketLaserGun(entity, toPos), entity);
 	}
 

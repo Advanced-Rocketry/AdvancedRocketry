@@ -1,12 +1,12 @@
 package zmaster587.advancedRocketry.satellite;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.DataStorage;
@@ -29,7 +29,7 @@ public abstract class SatelliteData extends SatelliteBase {
 	}
 
 	private int dataCreated(World world) {
-		return Math.min(data.getMaxData() - data.getData() , (int)Math.max(0,  (world.getTotalWorldTime() - lastActionTime)/200)); //TODO: change from 10 seconds
+		return Math.min(data.getMaxData() - data.getData() , (int)Math.max(0,  (world.getGameTime() - lastActionTime)/200)); //TODO: change from 10 seconds
 	}
 
 	@Override
@@ -47,14 +47,14 @@ public abstract class SatelliteData extends SatelliteBase {
 
 
 	@Override
-	public boolean performAction(EntityPlayer player, World world, BlockPos pos) {
+	public boolean performAction(PlayerEntity player, World world, BlockPos pos) {
 
 		//Calculate Data Recieved
 		//TODO: pay attn to power
 		int dataCreated = dataCreated(world);
 		if(dataCreated > 0) {
 			data.addData(dataCreated(world), data.getDataType(), true);
-			lastActionTime = world.getTotalWorldTime();
+			lastActionTime = world.getGameTime();
 		}
 
 		TileEntity tile = world.getTileEntity(pos);
@@ -62,7 +62,7 @@ public abstract class SatelliteData extends SatelliteBase {
 		if(tile instanceof IDataHandler) {
 			IDataInventory dataInv = (IDataInventory)tile;
 
-			data.removeData(dataInv.addData(data.getData(), data.getDataType(), EnumFacing.DOWN, true), true);
+			data.removeData(dataInv.addData(data.getData(), data.getDataType(), Direction.DOWN, true), true);
 		}
 
 		return false;
@@ -73,26 +73,26 @@ public abstract class SatelliteData extends SatelliteBase {
 		//TODO: send packet on orbit reached
 		super.setDimensionId(world);
 
-		lastActionTime = world.getTotalWorldTime();
+		lastActionTime = world.getGameTime();
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
+	public void readFromNBT(CompoundNBT nbt) {
 		super.readFromNBT(nbt);
 
-		this.data.readFromNBT(nbt.getCompoundTag("data"));
+		this.data.readFromNBT(nbt.getCompound("data"));
 		lastActionTime = nbt.getLong("lastActionTime");
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public void writeToNBT(CompoundNBT nbt) {
 		super.writeToNBT(nbt);
 
-		NBTTagCompound data = new NBTTagCompound();
+		CompoundNBT data = new CompoundNBT();
 		this.data.writeToNBT(data);
-		nbt.setTag("data", data);
+		nbt.put("data", data);
 
-		nbt.setLong("lastActionTime",lastActionTime);
+		nbt.putLong("lastActionTime",lastActionTime);
 	}
 
 	@Override

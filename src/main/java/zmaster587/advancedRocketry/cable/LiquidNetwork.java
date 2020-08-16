@@ -1,12 +1,12 @@
 package zmaster587.advancedRocketry.cable;
 
+import net.minecraft.fluid.Fluid;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.util.Direction;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.libVulpes.util.FluidUtils;
 
@@ -47,18 +47,18 @@ public class LiquidNetwork extends CableNetwork {
 		if(sinks.isEmpty() || sources.isEmpty())
 			return;
 
-		Iterator<Entry<TileEntity,EnumFacing>> sinkItr = sinks.iterator();
+		Iterator<Entry<TileEntity,Direction>> sinkItr = sinks.iterator();
 
 		//Go through all sinks, if one is not full attempt to fill it
 		
 		while(sinkItr.hasNext()) {
 
 			//Get tile and key
-			Entry<TileEntity,EnumFacing> obj = (Entry<TileEntity, EnumFacing>)sinkItr.next();
+			Entry<TileEntity,Direction> obj = (Entry<TileEntity, Direction>)sinkItr.next();
 			IFluidHandler fluidHandleSink = (IFluidHandler)obj.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
-			EnumFacing dir = obj.getValue();
+			Direction dir = obj.getValue();
 
-			Iterator<Entry<TileEntity,EnumFacing>> sourceItr = sources.iterator();
+			Iterator<Entry<TileEntity,Direction>> sourceItr = sources.iterator();
 
 			Fluid fluid = null;
 
@@ -69,9 +69,9 @@ public class LiquidNetwork extends CableNetwork {
 			}
 			
 			//If the sink already has fluid in it then lets only try to fill it with that particular fluid
-			for(IFluidTankProperties info : fluidHandleSink.getTankProperties()) {
-				if(info != null && info.getContents() != null) {
-					fluid = info.getContents().getFluid();
+			for(int i = 0; i < fluidHandleSink.getTanks(); i++) {
+				if(fluidHandleSink.getFluidInTank(i) != null) {
+					fluid = fluidHandleSink.getFluidInTank(i).getFluid();
 					break;
 				}
 			}
@@ -80,7 +80,7 @@ public class LiquidNetwork extends CableNetwork {
 			if(fluid == null) {
 				out:
 					while(sourceItr.hasNext()) {
-						Entry<TileEntity,EnumFacing> objSource = (Entry<TileEntity, EnumFacing>)sourceItr.next();
+						Entry<TileEntity,Direction> objSource = (Entry<TileEntity, Direction>)sourceItr.next();
 						IFluidHandler fluidHandleSource = (IFluidHandler)objSource.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
 
 						if(fluidHandleSource == null) {
@@ -89,10 +89,10 @@ public class LiquidNetwork extends CableNetwork {
 							continue;
 						}
 						
-						for(IFluidTankProperties srcInfo : fluidHandleSource.getTankProperties()) {
-							if(srcInfo != null && srcInfo.getContents() != null) {
-								fluid = srcInfo.getContents().getFluid();
-								break out;
+						for(int i = 0; i < fluidHandleSource.getTanks(); i++) {
+							if(fluidHandleSource.getFluidInTank(i) != null) {
+								fluid = fluidHandleSource.getFluidInTank(i).getFluid();
+								break;
 							}
 						}
 					}
@@ -103,27 +103,27 @@ public class LiquidNetwork extends CableNetwork {
 			if(fluid == null)
 				break;
 
-			if(fluidHandleSink.fill(new FluidStack(fluid, 1), false) > 0) {
+			if(fluidHandleSink.fill(new FluidStack(fluid, 1), FluidAction.SIMULATE) > 0) {
 				//Distribute? and drain tanks
 				//Get the max the tank can take this tick then iterate through all sources until it's been filled
 				sourceItr = sources.iterator();
 
-				int maxFill = Math.min(fluidHandleSink.fill(new FluidStack(fluid, amount), false), amount);
+				int maxFill = Math.min(fluidHandleSink.fill(new FluidStack(fluid, amount), FluidAction.SIMULATE), amount);
 				int actualFill = 0;
 				while(sourceItr.hasNext()) {
-					Entry<TileEntity,EnumFacing> objSource = (Entry<TileEntity, EnumFacing>)sourceItr.next();
+					Entry<TileEntity,Direction> objSource = (Entry<TileEntity, Direction>)sourceItr.next();
 					IFluidHandler fluidHandleSource = (IFluidHandler)objSource.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
 					
 					FluidStack fluid2;
-					if((fluid2 = fluidHandleSource.drain(maxFill, false)) != null) {
+					if((fluid2 = fluidHandleSource.drain(maxFill, FluidAction.SIMULATE)) != null) {
 						int buffer;
 						
 						//drain sometimes returns a null value even when canDrain returns true
 						if(fluid2 == null || !FluidUtils.areFluidsSameType(fluid, fluid2.getFluid()))
 							buffer = 0;
 						else {
-							fluidHandleSource.drain(maxFill, true);
-							buffer=fluid2.amount;
+							fluidHandleSource.drain(maxFill, FluidAction.EXECUTE);
+							buffer=fluid2.getAmount();
 						}
 
 						maxFill -= buffer;
@@ -134,7 +134,7 @@ public class LiquidNetwork extends CableNetwork {
 						break;
 				}
 
-				fluidHandleSink.fill(new FluidStack(fluid, actualFill), true);
+				fluidHandleSink.fill(new FluidStack(fluid, actualFill), FluidAction.EXECUTE);
 			}
 		}
 	}

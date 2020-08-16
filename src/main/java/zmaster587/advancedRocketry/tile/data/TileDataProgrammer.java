@@ -1,12 +1,19 @@
 package zmaster587.advancedRocketry.tile.data;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.math.BlockPos;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 
 public class TileDataProgrammer extends TileEntity implements IInventory {
 	
+	public TileDataProgrammer() {
+		super(AdvancedRocketryTileEntityType.TILE_DATA_PROGRAMMER);
+	}
+
 	ItemStack dataCell;
 
 	@Override
@@ -29,15 +36,7 @@ public class TileDataProgrammer extends TileEntity implements IInventory {
 		
 	}
 
-	@Override
-	public String getName() {
-		return "Mission Programmer";
-	}
 
-	@Override
-	public boolean hasCustomName() {
-		return true;
-	}
 
 	@Override
 	public int getInventoryStackLimit() {
@@ -45,8 +44,8 @@ public class TileDataProgrammer extends TileEntity implements IInventory {
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
-		return player.getDistanceSq(pos) < 4096;
+	public boolean isUsableByPlayer(PlayerEntity player) {
+		return pos.distanceSq(new BlockPos(player.getPositionVec())) < 4096;
 	}
 	
 	@Override
@@ -55,12 +54,12 @@ public class TileDataProgrammer extends TileEntity implements IInventory {
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player) {
+	public void openInventory(PlayerEntity player) {
 		
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer player) {
+	public void closeInventory(PlayerEntity player) {
 		
 	}
 
@@ -74,21 +73,6 @@ public class TileDataProgrammer extends TileEntity implements IInventory {
 		ItemStack stack = dataCell;
 		dataCell = null;
 		return stack;
-	}
-
-	@Override
-	public int getField(int id) {
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value) {
-		
-	}
-
-	@Override
-	public int getFieldCount() {
-		return 0;
 	}
 
 	@Override

@@ -6,11 +6,17 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.TextComponentString;
+import com.google.common.base.Predicate;
+
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.Util;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 
 public class IngameTestOrchestrator {
@@ -26,7 +32,7 @@ public class IngameTestOrchestrator {
 		while (itr.hasNext())
 		{
 			Entry<Long, PlayerMapping> e = itr.next();
-			if(event.world.getTotalWorldTime() >= e.getKey())
+			if(event.world.getGameTime() >= e.getKey())
 			{
 				itr.remove();
 				BaseTest test = e.getValue().test;
@@ -35,25 +41,25 @@ public class IngameTestOrchestrator {
 				} catch (AssertionError e1) {
 					AdvancedRocketry.logger.error("Test Failed!!!");
 					AdvancedRocketry.logger.catching(e1);
-					getPlayerFromAnywhere().sendMessage(new TextComponentString(test.getName() + " Failed!"));
+					getPlayerFromAnywhere().sendMessage(new StringTextComponent(test.getName() + " Failed!"), Util.field_240973_b_);
 				} catch (Exception e2) {
 					e2.printStackTrace();
 				}
 				
 				if(test.passed())
 				{
-					getPlayerFromAnywhere().sendMessage(new TextComponentString(test.getName() + " Passed!"));
+					getPlayerFromAnywhere().sendMessage(new StringTextComponent(test.getName() + " Passed!"), Util.field_240973_b_);
 				}
 			}
 		}
 	}
 	
-	public static boolean runTests(World world, EntityPlayer player)
+	public static boolean runTests(World world, PlayerEntity player)
 	{
-		name = player.getName();
+		name = player.getName().getString();
 		BuildRocketTest buildRocketTest = new BuildRocketTest();
 		try {
-			IngameTestOrchestrator.scheduleEvent(world, 1, BuildRocketTest.class.getDeclaredMethod("Phase1", World.class, EntityPlayer.class), buildRocketTest);
+			IngameTestOrchestrator.scheduleEvent(world, 1, BuildRocketTest.class.getDeclaredMethod("Phase1", World.class, PlayerEntity.class), buildRocketTest);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -63,7 +69,7 @@ public class IngameTestOrchestrator {
 	
 	public static void scheduleEvent(World world, long numTicks, Method function, BaseTest test)
 	{
-		eventScheduler.put(world.getTotalWorldTime() + numTicks, new PlayerMapping(world, function, test));
+		eventScheduler.put(world.getGameTime() + numTicks, new PlayerMapping(world, function, test));
 	}
 	
 	private static class PlayerMapping
@@ -79,14 +85,19 @@ public class IngameTestOrchestrator {
 		public BaseTest test;
 	}
 	
-	public static EntityPlayer getPlayerFromAnywhere() {
+	public static PlayerEntity getPlayerFromAnywhere() {
 		return getPlayerByName(name);
 	}
 	
-	private static EntityPlayer getPlayerByName(String name) {
-		EntityPlayer player = null;
-		for(World world : net.minecraftforge.common.DimensionManager.getWorlds()) {
-			player = world.getPlayerEntityByName(name);
+	private static PlayerEntity getPlayerByName(String name) {
+		PlayerEntity player = null;
+		for(ServerWorld world : ServerLifecycleHooks.getCurrentServer().getWorlds()) {
+			player = (PlayerEntity) world.getPlayers(new Predicate<ServerPlayerEntity>() {
+				public boolean apply(ServerPlayerEntity input) 
+				{
+					return input.getName().toString().equals(name);
+				};
+			});
 			if ( player != null) break;
 		}
 

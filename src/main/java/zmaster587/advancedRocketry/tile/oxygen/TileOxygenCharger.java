@@ -1,20 +1,27 @@
 package zmaster587.advancedRocketry.tile.oxygen;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
-import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.util.ItemAirUtils;
 import zmaster587.libVulpes.api.IModularArmor;
+import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.gui.CommonResources;
+import zmaster587.libVulpes.inventory.ContainerModular;
+import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
 import zmaster587.libVulpes.util.FluidUtils;
@@ -25,11 +32,11 @@ import java.util.List;
 
 public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements IModularInventory {
 	public TileOxygenCharger() {
-		super(0, 2, 16000);
+		super(AdvancedRocketryTileEntityType.TILE_OXYGEN_CHARGER, 0, 2, 16000);
 	}
 
 	@Override
-	public int[] getSlotsForFace(EnumFacing side) {
+	public int[] getSlotsForFace(Direction side) {
 		return new int[] {};
 	}
 
@@ -39,7 +46,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	}
 
 	@Override
-	public int fill(FluidStack resource, boolean doFill) {
+	public int fill(FluidStack resource, FluidAction doFill) {
 
 		if(canFill(resource.getFluid()))
 			return super.fill(resource, doFill);
@@ -59,8 +66,8 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	@Override
 	public boolean canPerformFunction() {
 		if(!world.isRemote) {
-			for( Object player : this.world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos, pos.add(1,2,1)))) {
-				ItemStack stack = ((EntityPlayer)player).getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+			for( Object player : this.world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(pos, pos.add(1,2,1)))) {
+				ItemStack stack = ((PlayerEntity)player).getItemStackFromSlot(EquipmentSlotType.CHEST);
 
 				if(!stack.isEmpty()) {
 					IFillableArmor fillable = null;
@@ -73,14 +80,14 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 					//Check for O2 fill
 					if(fillable != null ) {
 						int amtFluid = fillable.getMaxAir(stack) - fillable.getAirRemaining(stack);
-						FluidStack fluidStack = this.drain(amtFluid, false);
+						FluidStack fluidStack = this.drain(amtFluid, FluidAction.SIMULATE);
 
 						if(amtFluid > 0 &&
-								fluidStack != null && FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.fluidOxygen) && fluidStack.amount > 0)  {
-							FluidStack fstack = this.drain(amtFluid, true);
+								fluidStack != null && FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.fluidOxygen) && fluidStack.getAmount() > 0)  {
+							FluidStack fstack = this.drain(amtFluid, FluidAction.EXECUTE);
 							this.markDirty();
 							world.markChunkDirty(getPos(), this);
-							fillable.increment(stack, fstack.amount);
+							fillable.increment(stack, fstack.getAmount());
 							return true;
 						}
 					}
@@ -91,7 +98,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 				if(this.tank.getFluid() != null && !FluidUtils.areFluidsSameType(this.tank.getFluid().getFluid(), AdvancedRocketryFluids.fluidOxygen) && stack != null && stack.getItem() instanceof IModularArmor) {
 					IInventory inv = ((IModularArmor)stack.getItem()).loadModuleInventory(stack);
 
-					FluidStack fluidStack = this.drain(100, false);
+					FluidStack fluidStack = this.drain(100, FluidAction.SIMULATE);
 					if(fluidStack != null) {
 						for(int i = 0; i < inv.getSizeInventory(); i++) {
 
@@ -100,9 +107,9 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 
 							ItemStack module = inv.getStackInSlot(i);
 							if(FluidUtils.containsFluid(module)) {
-								int amtFilled = module.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP).fill(fluidStack, true);
+								int amtFilled = module.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, Direction.UP).orElseThrow(null).fill(fluidStack, FluidAction.EXECUTE);
 								if(amtFilled == 100) {
-									this.drain(100, true);
+									this.drain(100, FluidAction.EXECUTE);
 									
 									this.markDirty();
 									world.markChunkDirty(getPos(), this);
@@ -128,7 +135,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		ArrayList<ModuleBase> modules = new ArrayList<ModuleBase>();
 
 		modules.add(new ModuleSlotArray(50, 21, this, 0, 1));
@@ -150,7 +157,7 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	}
 
 	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
+	public boolean canInteractWithContainer(PlayerEntity entity) {
 		return true;
 	}
 
@@ -169,5 +176,20 @@ public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements 
 	@Override
 	public boolean isEmpty() {
 		return inventory.isEmpty();
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TranslationTextComponent(getModularInventoryName());
+	}
+
+	@Override
+	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType(), player), this);
+	}
+
+	@Override
+	public int getModularInvType() {
+		return guiId.MODULAR.ordinal();
 	}
 }

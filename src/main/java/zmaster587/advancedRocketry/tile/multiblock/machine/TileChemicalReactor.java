@@ -1,15 +1,14 @@
 package zmaster587.advancedRocketry.tile.multiblock.machine;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -17,10 +16,11 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.registries.ForgeRegistries;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.inventory.TextureResources;
@@ -47,11 +47,15 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 
 	};
 
+	public TileChemicalReactor() {
+		super(AdvancedRocketryTileEntityType.TILE_CHEMICAL_REACTOR);
+	}
+	
 	@Override
-	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
+	public boolean shouldHideBlock(World world, BlockPos pos, BlockState tile) {
 		TileEntity tileEntity = world.getTileEntity(pos);
 
-		return !TileMultiBlock.getMapping('P').contains(new BlockMeta(tile.getBlock(), BlockMeta.WILDCARD)) && tileEntity != null && !(tileEntity instanceof TileChemicalReactor);
+		return !TileMultiBlock.getMapping('P').contains(new BlockMeta(tile, BlockMeta.WILDCARD)) && tileEntity != null && !(tileEntity instanceof TileChemicalReactor);
 
 	}
 
@@ -65,12 +69,12 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 		if(getOutputs() == null && (recipe = getRecipe(getMachineRecipeList())) != null && canProcessRecipe(recipe))
 		{
 			if(!recipe.getOutput().isEmpty()) {
-			NBTTagList list = recipe.getOutput().get(0).getEnchantmentTagList();
+			ListNBT list = recipe.getOutput().get(0).getEnchantmentTagList();
 			
 			if(list != null) {
-				for( int i = 0 ; i < list.tagCount(); i++ ) {
-					NBTTagCompound tag = (NBTTagCompound)list.get(i);
-					//if(tag.getInteger("id") == Enchantment.getEnchantmentID(AdvancedRocketryAPI.enchantmentSpaceProtection) ) {
+				for( int i = 0 ; i < list.size(); i++ ) {
+					CompoundNBT tag = (CompoundNBT)list.get(i);
+					//if(tag.getInt("id") == Enchantment.getEnchantmentID(AdvancedRocketryAPI.enchantmentSpaceProtection) ) {
 
 						flag = true;
 						break;
@@ -108,7 +112,7 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 
 	//Consumes the items for the suit recipe and sets the output
 	public void consumeItemsSpecial(IRecipe recipe) {
-		List<List<ItemStack>> ingredients = recipe.getIngredients();
+		List<List<ItemStack>> ingredients = recipe.getPossibleIngredients();
 
 		for(int ingredientNum = 0;ingredientNum < ingredients.size(); ingredientNum++) {
 
@@ -119,10 +123,10 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 				for(int i = 0; i < hatch.getSizeInventory(); i++) {
 					ItemStack stackInSlot = hatch.getStackInSlot(i);
 					for (ItemStack stack : ingredient) {
-						if(stackInSlot != null && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.getItem() == stack.getItem() && (stackInSlot.getItemDamage() == stack.getItemDamage() || stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) )) {
+						if(stackInSlot != null && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.getItem() == stack.getItem() && (stackInSlot.getDamage() == stack.getDamage()) )) {
 							ItemStack stack2 = hatch.decrStackSize(i, stack.getCount());
 							
-							if(stack2.getItem() instanceof ItemArmor)
+							if(stack2.getItem() instanceof ArmorItem)
 							{
 								stack2.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
 								List<ItemStack> list = new LinkedList<ItemStack>();
@@ -144,17 +148,17 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 	public void registerRecipes() {
 		//Chemical Reactor
 		if(ARConfiguration.getCurrentConfig().enableOxygen) {
-			for(ResourceLocation key : Item.REGISTRY.getKeys()) {
-				Item item = Item.REGISTRY.getObject(key);
+			for(ResourceLocation key : ForgeRegistries.ITEMS.getKeys()) {
+				Item item = ForgeRegistries.ITEMS.getValue(key);
 	
-				if(item instanceof ItemArmor && !(item instanceof ItemSpaceArmor)) {
+				if(item instanceof ArmorItem && !(item instanceof ItemSpaceArmor)) {
 					ItemStack enchanted = new ItemStack(item);
 					enchanted.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
 	
-					if(((ItemArmor)item).armorType == EntityEquipmentSlot.CHEST)
-						RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), "gemDiamond", new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 3));
+					if(((ArmorItem)item).getEquipmentSlot() == EquipmentSlotType.CHEST)
+						RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(item, 1), "gemDiamond", new ItemStack(AdvancedRocketryItems.itemHighPressureTank, 1));
 					else
-						RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), "gemDiamond");
+						RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(item, 1), "gemDiamond");
 	
 				}
 			}
@@ -182,7 +186,7 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = super.getModules(ID, player);
 
 		modules.add(new ModuleProgress(100, 4, 0, TextureResources.crystallizerProgressBar, this));

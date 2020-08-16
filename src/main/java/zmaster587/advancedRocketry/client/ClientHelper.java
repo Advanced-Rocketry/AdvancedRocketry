@@ -22,7 +22,7 @@ public class ClientHelper {
 		GL11.glRotatef(roll, 0, 0, 1);
 	}
 
-	public static void netHandlerSetPlayerLocation(EntityPlayerMP player,double a, double b, double c, float d, float e, int rotation) {
+	public static void netHandlerSetPlayerLocation(ServerPlayerEntity player,double a, double b, double c, float d, float e, int rotation) {
 		if(rotation == 0)
 			player.playerNetServerHandler.sendPacket(new S08PacketPlayerPosLook(a, b + 1.6200000047683716D, c, d, e, false));
 		else 
@@ -30,7 +30,7 @@ public class ClientHelper {
 		System.out.println(a + " " + b + " " + c);
 	}
 
-	public static void transformEntity(int rotation, EntityLivingBase base) {
+	public static void transformEntity(int rotation, LivingEntity base) {
 
 		if(rotation == 1) {
 			GL11.glRotatef(90, 1f, 0f, 0f);
@@ -56,12 +56,12 @@ public class ClientHelper {
 		return forward;
 	}
 
-	public static void transformGravity(int rotation, EntityLivingBase player) {
+	public static void transformGravity(int rotation, LivingEntity player) {
 		/*if(!player.worldObj.isRemote)
 			player.boundingBox.setBounds(-1, -1, -1, 1, 1, 1);* /
 
-		player.motionY *= 0.5F;
-		if(!(player instanceof EntityPlayer) || !((EntityPlayer)player).capabilities.isFlying)
+		player.getMotion().y *= 0.5F;
+		if(!(player instanceof PlayerEntity) || !((PlayerEntity)player).capabilities.isFlying)
 		switch(rotation) {
 		case 1:
 			player.motionZ -= 0.08F;
@@ -105,7 +105,7 @@ public class ClientHelper {
 		}
 	}
 
-	public static void setPosition(EntityLivingBase entity, int rotation,double x, double y, double z) {
+	public static void setPosition(LivingEntity entity, int rotation,double x, double y, double z) {
 
 		float f = entity.width / 2.0F;
 		float f1 = entity.height;
@@ -141,7 +141,7 @@ public class ClientHelper {
 		entity.boundingBox.setBounds(xLNew, yLNew, zLNew, xMNew, yMNew, zMNew);
 	}
 
-	public static void livingEntityJump(int rotation,EntityLivingBase entity) {
+	public static void livingEntityJump(int rotation,LivingEntity entity) {
 		double motion;
 		motion = 0.61999998688697815D;
 		if (entity.isPotionActive(Potion.jump))
@@ -164,7 +164,7 @@ public class ClientHelper {
 	}
 
 	//TODO?
-	public static void moveEntity(EntityLivingBase entity, int rotation,double x, double y, double z) {
+	public static void moveEntity(LivingEntity entity, int rotation,double x, double y, double z) {
 
 		if(rotation == 1) {
 
@@ -172,12 +172,12 @@ public class ClientHelper {
 			float f1 = entity.height;
 			double xLNew, yLNew, zLNew, xMNew, yMNew, zMNew;
 
-			xLNew = entity.posX - (double)f;
+			xLNew = entity.getPosX() - (double)f;
 			yLNew = entity.posY - (double)f;
-			zLNew = entity.posZ - (double)entity.yOffset + (double)entity.ySize;
-			xMNew = entity.posX + (double)f;
+			zLNew = entity.getPosZ() - (double)entity.yOffset + (double)entity.ySize;
+			xMNew = entity.getPosX() + (double)f;
 			yMNew = entity.posY + (double)f;
-			zMNew = entity.posZ - (double)entity.yOffset + (double)entity.ySize + (double)f1;
+			zMNew = entity.getPosZ() - (double)entity.yOffset + (double)entity.ySize + (double)f1;
 
 			entity.boundingBox.setBounds(xLNew, yLNew, zLNew, xMNew, yMNew, zMNew);
 		} else {
@@ -199,17 +199,17 @@ public class ClientHelper {
 		if (entity.noClip)
 		{
 			entity.boundingBox.offset(x, y, z);
-			entity.posX = (entity.boundingBox.minX + entity.boundingBox.maxX) / 2.0D;
+			entity.getPosX() = (entity.boundingBox.minX + entity.boundingBox.maxX) / 2.0D;
 			entity.posY = entity.boundingBox.minY + (double)entity.yOffset - (double)entity.ySize;
-			entity.posZ = (entity.boundingBox.minZ + entity.boundingBox.maxZ) / 2.0D;
+			entity.getPosZ() = (entity.boundingBox.minZ + entity.boundingBox.maxZ) / 2.0D;
 		}
 		else
 		{
 			entity.worldObj.theProfiler.startSection("move");
 			entity.ySize *= 0.4F;
-			double d3 = entity.posX;
+			double d3 = entity.getPosX();
 			double d4 = entity.posY;
-			double d5 = entity.posZ;
+			double d5 = entity.getPosZ();
 
 			if (entity.isInWeb)
 			{
@@ -218,7 +218,7 @@ public class ClientHelper {
 				y *= 0.05000000074505806D;
 				z *= 0.25D;
 				entity.motionX = 0.0D;
-				entity.motionY = 0.0D;
+				entity.getMotion().y = 0.0D;
 				entity.motionZ = 0.0D;
 			}
 
@@ -226,7 +226,7 @@ public class ClientHelper {
 			double d7 = y;
 			double d8 = z;
 			AxisAlignedBB axisalignedbb = entity.boundingBox.copy();
-			boolean flag = entity.onGround && entity.isSneaking() && entity instanceof EntityPlayer;
+			boolean flag = entity.onGround && entity.isSneaking() && entity instanceof PlayerEntity;
 
 			if (flag)
 			{
@@ -440,16 +440,16 @@ public class ClientHelper {
 
 			//TODO
 			if(rotation == 1) {
-				entity.posX = (entity.boundingBox.minX + entity.boundingBox.maxX) / 2.0D;
+				entity.getPosX() = (entity.boundingBox.minX + entity.boundingBox.maxX) / 2.0D;
 				entity.posY = (entity.boundingBox.minY + entity.boundingBox.maxY) / 2.0D;
-				entity.posZ = entity.boundingBox.minZ + (double)entity.yOffset - (double)entity.ySize;
+				entity.getPosZ() = entity.boundingBox.minZ + (double)entity.yOffset - (double)entity.ySize;
 
 				entity.onGround = d8 != z && d8 < 0.0D;
 
 			}else {
-				entity.posX = (entity.boundingBox.minX + entity.boundingBox.maxX) / 2.0D;
+				entity.getPosX() = (entity.boundingBox.minX + entity.boundingBox.maxX) / 2.0D;
 				entity.posY = entity.boundingBox.minY + (double)entity.yOffset - (double)entity.ySize;
-				entity.posZ = (entity.boundingBox.minZ + entity.boundingBox.maxZ) / 2.0D;
+				entity.getPosZ() = (entity.boundingBox.minZ + entity.boundingBox.maxZ) / 2.0D;
 
 				entity.onGround = d7 != y && d7 < 0.0D;
 			}
@@ -467,7 +467,7 @@ public class ClientHelper {
 
 			if (d7 != y)
 			{
-				entity.motionY = 0.0D;
+				entity.getMotion().y = 0.0D;
 			}
 
 			if (d8 != z)
@@ -475,15 +475,15 @@ public class ClientHelper {
 				entity.motionZ = 0.0D;
 			}
 
-			d12 = entity.posX - d3;
+			d12 = entity.getPosX() - d3;
 			d10 = entity.posY - d4;
-			d11 = entity.posZ - d5;
+			d11 = entity.getPosZ() - d5;
 
 			if (entity.canTriggerWalking() && !flag && entity.ridingEntity == null)
 			{
-				int j1 = MathHelper.floor_double(entity.posX);
+				int j1 = MathHelper.floor_double(entity.getPosX());
 				k = MathHelper.floor_double(entity.posY - 0.20000000298023224D - (double)entity.yOffset);
-				int l = MathHelper.floor_double(entity.posZ);
+				int l = MathHelper.floor_double(entity.getPosZ());
 				Block block = entity.worldObj.getBlock(j1, k, l);
 				int i1 = entity.worldObj.getBlock(j1, k - 1, l).getRenderType();
 
@@ -506,7 +506,7 @@ public class ClientHelper {
 
 					if (entity.isInWater())
 					{
-						float f = MathHelper.sqrt_double(entity.motionX * entity.motionX * 0.20000000298023224D + entity.motionY * entity.motionY + entity.motionZ * entity.motionZ * 0.20000000298023224D) * 0.35F;
+						float f = MathHelper.sqrt_double(entity.motionX * entity.motionX * 0.20000000298023224D + entity.getMotion().y * entity.getMotion().y + entity.motionZ * entity.motionZ * 0.20000000298023224D) * 0.35F;
 
 						if (f > 1.0F)
 						{
@@ -564,7 +564,7 @@ public class ClientHelper {
 		}
 	}
 
-	public static void moveFlying(EntityLivingBase entity, int rotation,float a, float b, float c) {
+	public static void moveFlying(LivingEntity entity, int rotation,float a, float b, float c) {
 		float f3 = a * a + b * b;
 
 		if (f3 >= 1.0E-4F)
@@ -582,28 +582,28 @@ public class ClientHelper {
 			float f4 = MathHelper.sin(entity.rotationYaw * (float)Math.PI / 180.0F);
 			float f5 = MathHelper.cos(entity.rotationYaw * (float)Math.PI / 180.0F);
 			if(rotation == 1) {
-				entity.motionY -= (double)(a * f5 - b * f4);
+				entity.getMotion().y -= (double)(a * f5 - b * f4);
 				entity.motionX -= (double)(b * f5 + a * f4);
 			}
 
 			if(rotation == 2) {
-				entity.motionY += (double)(a * f5 - b * f4);
+				entity.getMotion().y += (double)(a * f5 - b * f4);
 				entity.motionZ += (double)(b * f5 + a * f4);
 			}
 
 			if(rotation == 3) {
-				entity.motionY += (double)(a * f5 - b * f4);
+				entity.getMotion().y += (double)(a * f5 - b * f4);
 				entity.motionX -= (double)(b * f5 + a * f4);
 			}
 
 			if(rotation == 4) {
-				entity.motionY -= (double)(a * f5 - b * f4);
+				entity.getMotion().y -= (double)(a * f5 - b * f4);
 				entity.motionZ += (double)(b * f5 + a * f4);
 			}
 		}
 	}
 
-	public static void transformCamera2(int rotation, EntityLivingBase base/*float yaw, float pitch, float prevYaw, float prevPitch* /,float p_78467_1_) {
+	public static void transformCamera2(int rotation, LivingEntity base/*float yaw, float pitch, float prevYaw, float prevPitch* /,float p_78467_1_) {
 
 		//Debug code
 		if(rotation == 0)
@@ -633,7 +633,7 @@ public class ClientHelper {
 	}
 
 	//TODO: optimize
-	public static Vec3 createModifiedLookVector(EntityLivingBase base, int rotation, float p_70676_1_) {
+	public static Vec3 createModifiedLookVector(LivingEntity base, int rotation, float p_70676_1_) {
 		float f1;
 		float f2;
 		float f3;

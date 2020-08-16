@@ -1,24 +1,34 @@
 package zmaster587.advancedRocketry.tile.station;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
+import zmaster587.libVulpes.inventory.ContainerModular;
+import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +39,7 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 	String targetIdStr, myIdStr;
 
 	public TileDockingPort() {
+		super(AdvancedRocketryTileEntityType.TILE_DOCKING_PORT);
 		targetIdStr = "";
 		myIdStr = "";
 	}
@@ -42,7 +53,7 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
+	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModuleText(20, 50, LibVulpes.proxy.getLocalizedString("msg.dockingport.target"), 0x2a2a2a));
 		if(world.isRemote) {
@@ -62,14 +73,14 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 	}
 	
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		return new SPacketUpdateTileEntity(pos, getBlockMetadata(), writeToNBT(new NBTTagCompound()));
+	public SUpdateTileEntityPacket getUpdatePacket() {
+		return new SUpdateTileEntityPacket(pos, 0, write(new CompoundNBT()));
 	}
 	
 	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 		super.onDataPacket(net, pkt);
-		readFromNBT(pkt.getNbtCompound());
+		func_230337_a_(getBlockState(), pkt.getNbtCompound());
 		
 		if(targetId != null) {
 			targetId.setText(targetIdStr);
@@ -78,13 +89,14 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 	}
 	
 	@Override
-	public NBTTagCompound getUpdateTag() {
-		return writeToNBT(new NBTTagCompound());
+	public CompoundNBT getUpdateTag() {
+		return write(new CompoundNBT());
 	}
 	
+	
 	@Override
-	public void handleUpdateTag(NBTTagCompound tag) {
-		super.handleUpdateTag(tag);
+	public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+		super.handleUpdateTag(state, tag);
 		
 		if(targetId != null) {
 			targetId.setText(targetIdStr);
@@ -104,31 +116,31 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
 		if(!myIdStr.isEmpty())
-			nbt.setString("myId", myIdStr);
+			nbt.putString("myId", myIdStr);
 		if(!targetIdStr.isEmpty())
-			nbt.setString("targetId", targetIdStr);
+			nbt.putString("targetId", targetIdStr);
 
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
 		myIdStr = nbt.getString("myId");
 		targetIdStr = nbt.getString("targetId");
 	}
 
 	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
+	public boolean canInteractWithContainer(PlayerEntity entity) {
 		return true;
 	}
 
 	@Override
-	public void invalidate() {
-		super.invalidate();
+	public void remove() {
+		super.remove();
 		unregisterTileWithStation(world, pos);
 	}
 
@@ -146,7 +158,7 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 
 
 	public void registerTileWithStation(World world, BlockPos pos) {
-		if(!world.isRemote && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
+		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 			if(spaceObj instanceof SpaceStationObject) {
@@ -156,7 +168,7 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 	}
 
 	public void unregisterTileWithStation(World world, BlockPos pos) {
-		if(!world.isRemote && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
+		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(spaceObj instanceof SpaceStationObject)
 				((SpaceStationObject)spaceObj).removeDockingPosition(pos);
@@ -164,7 +176,7 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
 		if(id == 0) {
 			PacketBuffer buff = new PacketBuffer(out);
 			buff.writeInt(myIdStr.length());
@@ -178,19 +190,19 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
+			CompoundNBT nbt) {
 		int len = in.readInt();
 		PacketBuffer buff = new PacketBuffer(in);
-		nbt.setString("id", buff.readString(len));
+		nbt.putString("id", buff.readString(len));
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 		if(id == 0) {
 			myIdStr = nbt.getString("id");
-			if(!world.isRemote && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
+			if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId) {
 				ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 				if(spaceObj instanceof SpaceStationObject) {
@@ -203,5 +215,20 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 		}
 		markDirty();
 		world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TranslationTextComponent(getModularInventoryName());
+	}
+
+	@Override
+	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType(), player), this);
+	}
+
+	@Override
+	public int getModularInvType() {
+		return guiId.MODULAR.ordinal();
 	}
 }

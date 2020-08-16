@@ -1,13 +1,13 @@
 package zmaster587.advancedRocketry.world.decoration;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.MapGenCaves;
 
 public class MapGenCaveExt extends MapGenCaves {
 
-	IBlockState fillerBlock;
-	IBlockState oceanBlock;
+	BlockState fillerBlock;
+	BlockState oceanBlock;
 	
 	public MapGenCaveExt()
 	{
@@ -16,17 +16,17 @@ public class MapGenCaveExt extends MapGenCaves {
 		oceanBlock = null;
 	}
 	
-	public void setFillerBlock(IBlockState state)
+	public void setFillerBlock(BlockState state)
 	{
 		fillerBlock = state;
 	}
 	
-	public void setOceanBlock(IBlockState state)
+	public void setOceanBlock(BlockState state)
 	{
 		oceanBlock = state;
 	}
 	
-    protected boolean canReplaceBlock(IBlockState p_175793_1_, IBlockState p_175793_2_)
+    protected boolean canReplaceBlock(BlockState p_175793_1_, BlockState p_175793_2_)
     {
     	return super.canReplaceBlock(p_175793_1_, p_175793_2_) || ( fillerBlock != null && p_175793_1_.getBlock() == fillerBlock.getBlock());
     }

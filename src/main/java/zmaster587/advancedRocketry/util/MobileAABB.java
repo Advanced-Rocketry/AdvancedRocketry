@@ -185,8 +185,8 @@ public class MobileAABB extends AxisAlignedBB {
         }
 	}*/
 
-	@Override
-	public double calculateYOffset(AxisAlignedBB aabbIn, double var2) {
+	
+	/*public double calculateYOffset(AxisAlignedBB aabbIn, double var2) {
 		if (aabbIn.maxX > this.minX && aabbIn.minX < this.maxX)
 		{
 			if (aabbIn.maxZ > this.minZ && aabbIn.minZ < this.maxZ)
@@ -316,6 +316,6 @@ public class MobileAABB extends AxisAlignedBB {
 			}
 
 		return collides;
-	}
+	}*/
 
 }

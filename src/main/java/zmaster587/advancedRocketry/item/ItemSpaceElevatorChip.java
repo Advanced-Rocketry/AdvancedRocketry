@@ -3,7 +3,7 @@ package zmaster587.advancedRocketry.item;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.util.DimensionBlockPosition;
 import zmaster587.advancedRocketry.util.NBTStorableListList;
@@ -13,10 +13,11 @@ import java.util.List;
 
 public class ItemSpaceElevatorChip extends Item {
 
-	public ItemSpaceElevatorChip() {
-		
-	}
 	
+	public ItemSpaceElevatorChip(Properties properties) {
+		super(properties);
+	}
+
 	@Override
 	public boolean isDamageable() {
 		return false;
@@ -25,8 +26,8 @@ public class ItemSpaceElevatorChip extends Item {
 	public List<DimensionBlockPosition> getBlockPositions(ItemStack stack) {
 		NBTStorableListList list = new NBTStorableListList();
 		
-		if(stack.hasTagCompound()) {
-				list.readFromNBT(stack.getTagCompound());
+		if(stack.hasTag()) {
+				list.readFromNBT(stack.getTag());
 		}
 		
 		return list.getList();
@@ -35,19 +36,19 @@ public class ItemSpaceElevatorChip extends Item {
 	public void setBlockPositions(ItemStack stack, List<DimensionBlockPosition> listToStore) {
 		NBTStorableListList list = new NBTStorableListList(listToStore);
 		
-		if(stack.hasTagCompound()) {
+		if(stack.hasTag()) {
 			
 			if(listToStore.isEmpty())
-				stack.getTagCompound().removeTag("positions");
+				stack.getTag().remove("positions");
 			else {
-				list.writeToNBT(stack.getTagCompound());
+				list.writeToNBT(stack.getTag());
 			}
 		}
 		else if(!listToStore.isEmpty()) {
-			NBTTagCompound nbt = new NBTTagCompound();
+			CompoundNBT nbt = new CompoundNBT();
 			list.writeToNBT(nbt);
 			
-			stack.setTagCompound(nbt);
+			stack.setTag(nbt);
 		}
 	}
 	

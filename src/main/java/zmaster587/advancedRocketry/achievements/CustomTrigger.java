@@ -7,7 +7,8 @@ import com.google.gson.JsonObject;
 import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.advancements.critereon.AbstractCriterionInstance;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.*;
@@ -101,7 +102,7 @@ public class CustomTrigger implements ICriterionTrigger
      *
      * @param parPlayer the player
      */
-    public void trigger(EntityPlayerMP parPlayer)
+    public void trigger(ServerPlayerEntity parPlayer)
     {
         CustomTrigger.Listeners tameanimaltrigger$listeners = (Listeners) this.listeners.get(parPlayer.getAdvancements());
 
@@ -183,7 +184,7 @@ public class CustomTrigger implements ICriterionTrigger
          *
          * @param player the player
          */
-        public void trigger(EntityPlayerMP player)
+        public void trigger(ServerPlayerEntity player)
         {
             List list = null;
 

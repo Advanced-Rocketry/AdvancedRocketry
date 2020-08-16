@@ -1,45 +1,48 @@
 package zmaster587.advancedRocketry.client.render.entity;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.entity.EntityUIButton;
 import zmaster587.libVulpes.render.RenderHelper;
 
-public class RenderButtonUIEntity extends Render<EntityUIButton> implements IRenderFactory<EntityUIButton> {
+public class RenderButtonUIEntity extends EntityRenderer<EntityUIButton> implements IRenderFactory<EntityUIButton> {
 
-	public RenderButtonUIEntity(RenderManager renderManager) {
+	public RenderButtonUIEntity(EntityRendererManager renderManager) {
 		super(renderManager);
 	}
 
 	@Override
-	public Render<? super EntityUIButton> createRenderFor(
-			RenderManager manager) {
+	public EntityRenderer<? super EntityUIButton> createRenderFor(
+			EntityRendererManager manager) {
 		return new RenderButtonUIEntity(manager);
 	}
 
 	@Override
-	protected ResourceLocation getEntityTexture(EntityUIButton entity) {
+	public ResourceLocation getEntityTexture(EntityUIButton entity) {
 		return DimensionProperties.PlanetIcons.EARTHLIKE.getResource();
 	}
-
 	@Override
-	public void doRender(EntityUIButton entity, double x, double y, double z,
-			float entityYaw, float partialTicks) {
+	public void render(EntityUIButton entity, float entityYaw, float partialTicks, MatrixStack matrix,
+			IRenderTypeBuffer bufferIn, int packedLightIn) {
 
-		GL11.glPushMatrix();
-		GL11.glTranslated(0, -.25, 0);
+		matrix.push();
+		matrix.translate(0, -0.25, 0);
 		
 
-		RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSqToEntity(entity), "Up a level", x,y,z, 8);
-		GL11.glPopMatrix();
+		RenderHelper.renderTag(matrix, Minecraft.getInstance().player.getDistanceSq(entity), "Up a level", 0,0,0, 8);
+		matrix.pop();
 
 		//Clean up and make player not transparent
-		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 0, 0);
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
 }

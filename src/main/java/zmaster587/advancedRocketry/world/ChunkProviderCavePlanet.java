@@ -10,7 +10,7 @@ import zmaster587.advancedRocketry.world.decoration.MapGenHighCaves;
 import zmaster587.advancedRocketry.world.decoration.MapGenMassiveRavine;
 import zmaster587.advancedRocketry.world.decoration.MapGenRavineExt;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.pattern.BlockMatcher;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
@@ -37,8 +37,8 @@ import net.minecraft.world.gen.structure.MapGenNetherBridge;
 
 public class ChunkProviderCavePlanet extends ChunkProviderPlanet {
 
-	protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
-	protected static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
+	protected static final BlockState AIR = Blocks.AIR.getDefaultState();
+	protected static final BlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
 	private final World world;
 	private final boolean generateStructures;
 	private final Random rand;
@@ -64,8 +64,8 @@ public class ChunkProviderCavePlanet extends ChunkProviderPlanet {
 	double[] br;
 	double[] noiseData4;
 	double[] dr;
-	private IBlockState oceanBlock;
-	private IBlockState fillblock;
+	private BlockState oceanBlock;
+	private BlockState fillblock;
 
 
 	public ChunkProviderCavePlanet(World worldIn, boolean p_i45637_2_, long seed, String p_i46668_5_)
@@ -86,7 +86,7 @@ public class ChunkProviderCavePlanet extends ChunkProviderPlanet {
 
 		worldIn.setSeaLevel(dimProps.getSeaLevel());
 
-		IBlockState oceanBlock = dimProps.getOceanBlock();
+		BlockState oceanBlock = dimProps.getOceanBlock();
 		if(oceanBlock != null)
 		{
 			this.oceanBlock = oceanBlock;
@@ -96,7 +96,7 @@ public class ChunkProviderCavePlanet extends ChunkProviderPlanet {
 			this.oceanBlock = Blocks.WATER.getDefaultState();
 		}
 
-		IBlockState fillBlock = dimProps.getStoneBlock();
+		BlockState fillBlock = dimProps.getStoneBlock();
 		if(fillBlock != null)
 		{
 			this.fillblock = fillBlock;
@@ -162,7 +162,7 @@ public class ChunkProviderCavePlanet extends ChunkProviderPlanet {
 
 							for (int k2 = 0; k2 < 4; ++k2)
 							{
-								IBlockState iblockstate = null;
+								BlockState iblockstate = null;
 
 								if (l1 * 8 + i2 < j)
 								{
@@ -212,12 +212,12 @@ public class ChunkProviderCavePlanet extends ChunkProviderPlanet {
 				boolean flag1 = this.gravelNoise[j + k * 16] + this.rand.nextDouble() * 0.2D > 0.0D;
 				int l = (int)(this.depthBuffer[j + k * 16] / 3.0D + 3.0D + this.rand.nextDouble() * 0.25D);
 				int i1 = -1;
-				IBlockState iblockstate = this.fillblock;
-				IBlockState iblockstate1 = this.fillblock;
+				BlockState iblockstate = this.fillblock;
+				BlockState iblockstate1 = this.fillblock;
 
 				for (int j1 = 127; j1 >= 0; --j1)
 				{
-					IBlockState iblockstate2 = primer.getBlockState(k, j1, j);
+					BlockState iblockstate2 = primer.getBlockState(k, j1, j);
 
 					if (iblockstate2.getBlock() != null && iblockstate2.getMaterial() != Material.AIR)
 					{

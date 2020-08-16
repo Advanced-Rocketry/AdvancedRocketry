@@ -2,7 +2,7 @@ package zmaster587.advancedRocketry.world.gen;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
@@ -68,7 +68,7 @@ public class WorldGenCharredTree extends WorldGenAbstractTree {
             }
             else {
             	BlockPos pos3 = new BlockPos(x, y - 1, z);
-            	IBlockState state2 = world.getBlockState(pos3);
+            	BlockState state2 = world.getBlockState(pos3);
                 Block block2 = state2.getBlock();
                 if (y < 256 - l - 1) {
                 	
@@ -80,7 +80,7 @@ public class WorldGenCharredTree extends WorldGenAbstractTree {
                     	state2 = world.getBlockState(new BlockPos(x, y + k1, z));
 
                         if (world.isAirBlock(new BlockPos(x, y + k1, z)) || state2.getBlock().isLeaves(state2, world, new BlockPos(x, y + k1, z))) {
-                            this.setBlockAndNotifyAdequately(world, new BlockPos(x, y + k1, z), AdvancedRocketryBlocks.blockCharcoalLog.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
+                            this.setBlockAndNotifyAdequately(world, new BlockPos(x, y + k1, z), AdvancedRocketryBlocks.blockCharcoalLog.getDefaultState().with(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
                         }
                     }
  

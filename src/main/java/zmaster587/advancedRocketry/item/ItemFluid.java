@@ -1,12 +1,13 @@
 package zmaster587.advancedRocketry.item;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item.Properties;
 
-public class ItemFluid extends ItemBlock {
+public class ItemFluid extends BlockItem {
 
-	public ItemFluid(Block block) {
-		super(block);
+	public ItemFluid(Properties props, Block block) {
+		super(block, props);
 	}
 	
 }

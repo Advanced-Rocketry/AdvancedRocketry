@@ -1,11 +1,10 @@
 package zmaster587.advancedRocketry.api;
 
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Stores AdvancedRocketry Fluids
@@ -30,11 +29,11 @@ public class AdvancedRocketryFluids {
 		return gasses;
 	}
 	
-	public static boolean isGasGiantGasRegistered(String name)
+	public static boolean isGasGiantGasRegistered(ResourceLocation name)
 	{
 		for(Fluid gas : getGasGiantGasses())
 		{
-			if(name.equals(gas.getName()))
+			if(name.equals(gas.getRegistryName()))
 				return true;
 		}
 		return false;

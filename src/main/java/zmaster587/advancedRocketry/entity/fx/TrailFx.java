@@ -21,7 +21,7 @@ public class TrailFx extends InverseTrailFx {
         this.setSize(0.12F, 0.12F);
         this.particleScale = (float)(this.rand.nextFloat() * 0.6F + 6F);
         this.motionX = motx;
-        this.motionY = moty;
+        this.getMotion().y = moty;
         this.motionZ = motz;
         this.particleMaxAge = (int)(1000.0D);
 	}
@@ -51,6 +51,6 @@ public class TrailFx extends InverseTrailFx {
             this.setExpired();
         }
         
-        this.setPosition(posX + this.motionX, posY + this.motionY, posZ  + this.motionZ);
+        this.setPosition(posX + this.motionX, posY + this.getMotion().y, posZ  + this.motionZ);
 	}
 }

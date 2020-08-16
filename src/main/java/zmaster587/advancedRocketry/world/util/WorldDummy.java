@@ -2,13 +2,13 @@ package zmaster587.advancedRocketry.world.util;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
@@ -18,8 +18,8 @@ import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.common.capabilities.CapabilityDispatcher;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.util.StorageChunk;
 
@@ -32,7 +32,7 @@ public class WorldDummy extends World  {
 	private CapabilityDispatcher capabilities;
 	
 	public WorldDummy(Profiler p_i45368_5_, StorageChunk storage) {
-		super(new DummySaveHandler(), new WorldInfo(new NBTTagCompound()), dummyProvider, p_i45368_5_, false);
+		super(new DummySaveHandler(), new WorldInfo(new CompoundNBT()), dummyProvider, p_i45368_5_, false);
 		dummyProvider.setWorld(this);
 		this.storage = storage;
 		this.chunkProvider = new ChunkProviderDummy(this, storage);
@@ -48,18 +48,18 @@ public class WorldDummy extends World  {
 	}
 	
 	@Override
-	public boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, @Nullable EnumFacing facing) {
+	public boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, @Nullable Direction facing) {
 		return capabilities != null && capabilities.hasCapability(capability, facing);
 	}
 
 	@Override
 	@Nullable
-	public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable EnumFacing facing) {
+	public <T> LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
 		return capabilities == null ? null : capabilities.getCapability(capability, facing);
 	}
 	
 	@Override
-	public IBlockState getBlockState(BlockPos pos) {
+	public BlockState getBlockState(BlockPos pos) {
 		return storage.getBlockState(pos);
 	}
 	
@@ -68,7 +68,7 @@ public class WorldDummy extends World  {
 		return storage.getTileEntity(pos);
 	}
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(value=Dist.CLIENT)
     public int getLightFromNeighborsFor(EnumSkyBlock type, BlockPos pos)
     {
     	if(type == EnumSkyBlock.SKY)
@@ -82,7 +82,7 @@ public class WorldDummy extends World  {
 	}
 	
 	@Override
-	public boolean isSideSolid(BlockPos pos, EnumFacing side, boolean bool) {
+	public boolean isSideSolid(BlockPos pos, Direction side, boolean bool) {
 		return storage.isSideSolid(pos, side, bool);
 	}
 
@@ -121,7 +121,7 @@ public class WorldDummy extends World  {
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(value=Dist.CLIENT)
 	public float getSunBrightness(float partialTicks) {
 		return 0;
 	}

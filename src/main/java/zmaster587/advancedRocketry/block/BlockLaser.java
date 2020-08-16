@@ -1,12 +1,15 @@
 package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.inventory.GuiHandler;
@@ -15,56 +18,53 @@ import java.util.Random;
 
 public class BlockLaser extends BlockMultiblockMachine {
 
-	public BlockLaser() {
-		super(TileSpaceLaser.class, (int)GuiHandler.guiId.MODULAR.ordinal());
-		setTickRandomly(true).setUnlocalizedName("spaceLaser");
+	public BlockLaser(Properties properties) {
+		super(properties.tickRandomly(), TileSpaceLaser.class, (int)GuiHandler.guiId.MODULAR.ordinal());
 	}
 
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new TileSpaceLaser();
 	}
 
 	@Override
-	public boolean hasTileEntity(IBlockState state) {
+	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
 	
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos,
-			Block blockIn, BlockPos fromPos) {
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
+			boolean isMoving)  {
 		if(blockIn != this)
 			((TileSpaceLaser)worldIn.getTileEntity(pos)).checkCanRun();
 	}
 
 	//can happen when lever is flipped... Update the state of the tile
 	@Override
-	public void onNeighborChange(IBlockAccess world, BlockPos pos,
-			BlockPos neighbor) {
+	public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
 		if(!(world.getTileEntity(neighbor) instanceof TileSpaceLaser))
 			((TileSpaceLaser)world.getTileEntity(pos)).checkCanRun();
 	}
-
+	
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-		super.breakBlock(worldIn, pos, state);
+	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if(worldIn.getTileEntity(pos) instanceof TileSpaceLaser)
 			((TileSpaceLaser)worldIn.getTileEntity(pos)).onDestroy();
+		super.onReplaced(state, worldIn, pos, newState, isMoving);
 	}
-
+	
 	@Override
-	public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos,
+	public void onExplosionDestroy(World worldIn, BlockPos pos,
 			Explosion explosionIn) {
 		// TODO Auto-generated method stub
-		super.onBlockDestroyedByExplosion(worldIn, pos, explosionIn);
+		super.onExplosionDestroy(worldIn, pos, explosionIn);
 		((TileSpaceLaser)worldIn.getTileEntity(pos)).onDestroy();
 	}
 
 	//To check if the laser is jammed
 	@Override
-	public void updateTick(World worldIn, BlockPos pos, IBlockState state,
-			Random rand) {
-		super.updateTick(worldIn, pos, state, rand);
+	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
+		super.tick(state, worldIn, pos, rand);
 
 		TileSpaceLaser tile = (TileSpaceLaser)worldIn.getTileEntity(pos);
 

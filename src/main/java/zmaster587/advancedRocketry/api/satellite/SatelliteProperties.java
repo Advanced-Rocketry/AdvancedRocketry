@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.api.satellite;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 
 public class SatelliteProperties {
@@ -143,19 +143,19 @@ public class SatelliteProperties {
 	}
 
 
-	public void writeToNBT(NBTTagCompound nbt) {
-		nbt.setInteger("powerGeneration", powerGeneration);
-		nbt.setInteger("powerStorage", powerStorage);
-		nbt.setString("dataType", satType);
-		nbt.setLong("satId", id);
-		nbt.setInteger("maxData", maxData);
+	public void writeToNBT(CompoundNBT nbt) {
+		nbt.putInt("powerGeneration", powerGeneration);
+		nbt.putInt("powerStorage", powerStorage);
+		nbt.putString("dataType", satType);
+		nbt.putLong("satId", id);
+		nbt.putInt("maxData", maxData);
 	}
 
-	public void readFromNBT(NBTTagCompound nbt) {
-		powerGeneration = nbt.getInteger("powerGeneration");
-		powerStorage = nbt.getInteger("powerStorage");
+	public void readFromNBT(CompoundNBT nbt) {
+		powerGeneration = nbt.getInt("powerGeneration");
+		powerStorage = nbt.getInt("powerStorage");
 		satType = nbt.getString("dataType");
 		id = nbt.getLong("satId");
-		maxData = nbt.getInteger("maxData");
+		maxData = nbt.getInt("maxData");
 	}
 }

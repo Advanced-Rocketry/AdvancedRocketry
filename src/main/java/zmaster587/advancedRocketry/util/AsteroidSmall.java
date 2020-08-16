@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.util;
 
-import net.minecraft.init.Blocks;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -100,7 +100,7 @@ public class AsteroidSmall {
 			if(num == 0)
 				continue;
 			
-			ItemStack stack = new ItemStack(itemStacks.get(i).getItem(), num, itemStacks.get(i).getMetadata());
+			ItemStack stack = new ItemStack(itemStacks.get(i).getItem(), num);
 			entry = new StackEntry();
 			
 			entry.stack = stack;

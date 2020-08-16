@@ -2,7 +2,7 @@ package zmaster587.advancedRocketry.client.render.multiblocks;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
@@ -32,28 +32,28 @@ public class RendererRailgun extends TileEntitySpecialRenderer {
 		if(!multiBlockTile.canRender())
 			return;
 
-		GL11.glPushMatrix();
+		matrix.push();
 
 		//Initial setup
 
-		GL11.glTranslated(x + 0.5, y, z + .5);
+		matrix.translate(x + 0.5, y, z + .5);
 		//Rotate and move the model into position
-		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
-		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 180 : 0) + front.getFrontOffsetZ()*90f, 0, 1, 0);
-		GL11.glTranslated(2f, 0, 0f);
+		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
+		GL11.glRotatef((front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, 1, 0);
+		matrix.translate(2f, 0, 0f);
 		bindTexture(texture);
 		
 		
-		if(tile.getWorld().getTotalWorldTime() - multiBlockTile.recoil - 20 <= 0) {
+		if(tile.getWorld().getGameTime() - multiBlockTile.recoil - 20 <= 0) {
 			model.renderOnly("Base");
-			GL11.glPushMatrix();
-			GL11.glTranslated(0, (-20+(tile.getWorld().getTotalWorldTime() - multiBlockTile.recoil))/50f, 0);
+			matrix.push();
+			matrix.translate(0, (-20+(tile.getWorld().getGameTime() - multiBlockTile.recoil))/50f, 0);
 			model.renderOnly("Barrel");
-			GL11.glPopMatrix();
+			matrix.pop();
 		}
 		else
 			model.renderAll();
 		
-		GL11.glPopMatrix();
+		matrix.pop();
 	}
 }

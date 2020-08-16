@@ -6,11 +6,11 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vector3d;
 import net.minecraftforge.client.IRenderHandler;
 
 import org.lwjgl.opengl.GL11;
@@ -54,11 +54,11 @@ public class RenderAsteroidSky extends IRenderHandler {
 		axis = new Vector3F<Float>(1f, 0f, 0f);
 
 		this.starGLCallList = GLAllocation.generateDisplayLists(4);
-		GL11.glPushMatrix();
+		matrix.push();
 		GL11.glNewList(this.starGLCallList, GL11.GL_COMPILE);
 		this.renderStars();
 		GL11.glEndList();
-		GL11.glPopMatrix();
+		matrix.pop();
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		this.glSkyList = this.starGLCallList + 1;
 		GL11.glNewList(this.glSkyList, GL11.GL_COMPILE);
@@ -102,14 +102,14 @@ public class RenderAsteroidSky extends IRenderHandler {
 		GL11.glEndList();
 		
 		this.glSkyList3 = this.starGLCallList + 3;
-		GL11.glPushMatrix();
+		matrix.push();
 		GL11.glNewList(this.glSkyList3, GL11.GL_COMPILE);
 		renderAsteroids();
 		GL11.glEndList();
-		GL11.glPopMatrix();
+		matrix.pop();
 	}
 
-	Minecraft mc = Minecraft.getMinecraft();
+	Minecraft mc = Minecraft.getInstance();
 
 	
 	private void renderAsteroids()
@@ -239,13 +239,13 @@ public class RenderAsteroidSky extends IRenderHandler {
 		boolean isGasGiant = false;
 		boolean hasRings = false;
 		boolean parentHasRings = false;
-		EnumFacing travelDirection = null;
+		Direction travelDirection = null;
 		ResourceLocation parentPlanetIcon = null;
 		List<DimensionProperties> children;
 		List<StellarBody> subStars = new LinkedList<StellarBody>();
 		celestialAngle = mc.world.getCelestialAngle(partialTicks);
 
-		Vec3d sunColor;
+		Vector3d sunColor;
 		
 		
 		if(mc.world.provider instanceof IPlanetaryProvider) {
@@ -254,10 +254,10 @@ public class RenderAsteroidSky extends IRenderHandler {
 			DimensionProperties properties = (DimensionProperties)planetaryProvider.getDimensionProperties(mc.player.getPosition());
 
 			atmosphere = planetaryProvider.getAtmosphereDensityFromHeight(mc.getRenderViewEntity().posY, mc.player.getPosition());
-			EnumFacing dir = getRotationAxis(properties, mc.player.getPosition());
-			axis.x = (float) dir.getFrontOffsetX();
-			axis.y = (float) dir.getFrontOffsetY();
-			axis.z = (float) dir.getFrontOffsetZ();
+			Direction dir = getRotationAxis(properties, mc.player.getPosition());
+			axis.x = (float) dir.getXOffset();
+			axis.y = (float) dir.getYOffset();
+			axis.z = (float) dir.getZOffset();
 
 			myPhi = properties.orbitalPhi;
 			myTheta = properties.orbitTheta;
@@ -302,10 +302,10 @@ public class RenderAsteroidSky extends IRenderHandler {
 			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(mc.world.provider.getDimension());
 
 			atmosphere = properties.getAtmosphereDensityAtHeight(mc.getRenderViewEntity().posY);//planetaryProvider.getAtmosphereDensityFromHeight(mc.getRenderViewEntity().posY, mc.player.getPosition());
-			EnumFacing dir = getRotationAxis(properties, mc.player.getPosition());
-			axis.x = (float) dir.getFrontOffsetX();
-			axis.y = (float) dir.getFrontOffsetY();
-			axis.z = (float) dir.getFrontOffsetZ();
+			Direction dir = getRotationAxis(properties, mc.player.getPosition());
+			axis.x = (float) dir.getXOffset();
+			axis.y = (float) dir.getYOffset();
+			axis.z = (float) dir.getZOffset();
 
 			myPhi = properties.orbitalPhi;
 			myTheta = properties.orbitTheta;
@@ -334,7 +334,7 @@ public class RenderAsteroidSky extends IRenderHandler {
 			}
 
 			float sunColorFloat[] = properties.getSunColor();
-			sunColor = new Vec3d(sunColorFloat[0], sunColorFloat[1], sunColorFloat[2]);//planetaryProvider.getSunColor(mc.player.getPosition());
+			sunColor = new Vector3d(sunColorFloat[0], sunColorFloat[1], sunColorFloat[2]);//planetaryProvider.getSunColor(mc.player.getPosition());
 			sunSize = properties.getStar().getSize();
 			subStars = properties.getStar().getSubStars();
 			starSeperation = properties.getStar().getStarSeparation();
@@ -352,11 +352,11 @@ public class RenderAsteroidSky extends IRenderHandler {
 			hasAtmosphere = DimensionManager.overworldProperties.hasAtmosphere();
 			atmosphere = DimensionManager.overworldProperties.getAtmosphereDensityAtHeight(mc.getRenderViewEntity().posY);
 			solarOrbitalDistance = DimensionManager.overworldProperties.orbitalDist;
-			sunColor = new Vec3d(1, 1, 1);
+			sunColor = new Vector3d(1, 1, 1);
 		}
 
-		GlStateManager.disableTexture2D();
-		Vec3d vec3 = Minecraft.getMinecraft().world.getSkyColor(this.mc.getRenderViewEntity(), partialTicks);
+		GlStateManager.disableTexture();
+		Vector3d vec3 = Minecraft.getInstance().world.getSkyColor(this.mc.getRenderViewEntity(), partialTicks);
 		float f1 = (float)vec3.x;
 		float f2 = (float)vec3.y;
 		float f3 = (float)vec3.z;
@@ -398,9 +398,9 @@ public class RenderAsteroidSky extends IRenderHandler {
 
 		if (afloat != null)
 		{
-			GlStateManager.disableTexture2D();
+			GlStateManager.disableTexture();
 			GL11.glShadeModel(GL11.GL_SMOOTH);
-			GL11.glPushMatrix();
+			matrix.push();
 			GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
 			GL11.glRotatef(MathHelper.sin(mc.world.getCelestialAngleRadians(partialTicks)) < 0.0F ? 180.0F : 0.0F, 0.0F, 0.0F, 1.0F);
 			GL11.glRotated(90.0F - myRotationalPhi, 0.0F, 0.0F, 1.0F);
@@ -434,14 +434,14 @@ public class RenderAsteroidSky extends IRenderHandler {
 			}
 
 			Tessellator.getInstance().draw();
-			GL11.glPopMatrix();
+			matrix.pop();
 			GL11.glShadeModel(GL11.GL_FLAT);
 		}
 		
-		GlStateManager.enableTexture2D();
+		GlStateManager.enableTexture();
 		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
 
-		GL11.glPushMatrix();
+		matrix.push();
 
 
 		if(atmosphere > 0)
@@ -464,7 +464,7 @@ public class RenderAsteroidSky extends IRenderHandler {
 
 		//Draw Rings
 		if(hasRings) {
-			GL11.glPushMatrix();
+			matrix.push();
 			GL11.glRotatef(90f, 0f, 1f, 0f);
 
 			f10 = 100;
@@ -472,36 +472,36 @@ public class RenderAsteroidSky extends IRenderHandler {
 			mc.renderEngine.bindTexture(DimensionProperties.planetRings);
 
 			GL11.glRotated(70, 1, 0, 0);
-			GL11.glTranslated(0, -10, 0);
+			matrix.translate(0, -10, 0);
 
-			GlStateManager.color(ringColor[0], ringColor[1], ringColor[2],multiplier);
+			GlStateManager.color4f(ringColor[0], ringColor[1], ringColor[2],multiplier);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 			buffer.pos((double)f10, ringDist, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
 			buffer.pos((double)(-f10), ringDist, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
 			buffer.pos((double)(-f10), ringDist, (double)f10).tex(0.0D, 1.0D).endVertex();
 			buffer.pos((double)f10, ringDist, (double)f10).tex(1.0D, 1.0D).endVertex();
 			Tessellator.getInstance().draw();
-			GL11.glPopMatrix();
+			matrix.pop();
 
 			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-			GL11.glPushMatrix();
+			matrix.push();
 
 			GL11.glRotatef(90f, 0f, 1f, 0f);
 			GL11.glRotated(70, 1, 0, 0);
 			GL11.glRotatef(isWarp ? 0 : celestialAngle * 360.0F, 0, 1, 0);
-			GL11.glTranslated(0, -10, 0);
+			matrix.translate(0, -10, 0);
 
 
 
 			mc.renderEngine.bindTexture(DimensionProperties.planetRingShadow);
-			GlStateManager.color(0f, 0f, 0f,multiplier);
+			GlStateManager.color4f(0f, 0f, 0f,multiplier);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 			buffer.pos((double)f10, ringDist, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
 			buffer.pos((double)(-f10), ringDist, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
 			buffer.pos((double)(-f10), ringDist, (double)f10).tex(0.0D, 1.0D).endVertex();
 			buffer.pos((double)f10, ringDist, (double)f10).tex(1.0D, 1.0D).endVertex();
 			Tessellator.getInstance().draw();
-			GL11.glPopMatrix();
+			matrix.pop();
 
 			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
 		}
@@ -510,7 +510,7 @@ public class RenderAsteroidSky extends IRenderHandler {
 			rotateAroundAxis();
 
 
-		GlStateManager.disableTexture2D();
+		GlStateManager.disableTexture();
 		float f18 = mc.world.getStarBrightness(partialTicks) * f6 * (atmosphere) + (1-atmosphere);
 
 		if(mc.world.isRainingAt(mc.player.getPosition()))
@@ -519,39 +519,39 @@ public class RenderAsteroidSky extends IRenderHandler {
 		if (f18 > 0.0F)
 		{
 			GL11.glColor4f(f18, f18, f18, f18);
-			GL11.glPushMatrix();
+			matrix.push();
 			if(isWarp) {
 				for(int i = -3; i < 5; i++) {
-					GL11.glPushMatrix();
+					matrix.push();
 					double magnitude = i*-100 + (((System.currentTimeMillis()) + 50) % 2000)/20f;
-					GL11.glTranslated(-travelDirection.getFrontOffsetZ()*magnitude, 0, travelDirection.getFrontOffsetX()*magnitude);
+					matrix.translate(-travelDirection.getZOffset()*magnitude, 0, travelDirection.getXOffset()*magnitude);
 					GL11.glCallList(this.starGLCallList);
-					GL11.glPopMatrix();
+					matrix.pop();
 				}
-				//GL11.glTranslated(((System.currentTimeMillis()/10) + 50) % 100, 0, 0);
+				//matrix.translate(((System.currentTimeMillis()/10) + 50) % 100, 0, 0);
 			}
 			else {
 				GL11.glCallList(this.starGLCallList);
 				//Extra stars for low ATM
 				if(atmosphere < 0.5) {
 					GL11.glColor4f(f18, f18, f18, f18/2f);
-					GL11.glPushMatrix();
+					matrix.push();
 					GL11.glRotatef(-90, 0, 1, 0);
 					GL11.glCallList(this.starGLCallList);
-					GL11.glPopMatrix();
+					matrix.pop();
 				}
 				if(atmosphere < 0.25) {
 					GL11.glColor4f(f18, f18, f18, f18/4f);
-					GL11.glPushMatrix();
+					matrix.push();
 					GL11.glRotatef(90, 0, 1, 0);
 					GL11.glCallList(this.starGLCallList);
-					GL11.glPopMatrix();
+					matrix.pop();
 				}
 				GL11.glColor4f(f18, f18, f18, f18);
 			}
-			GL11.glPopMatrix();
+			matrix.pop();
 		}
-		GlStateManager.enableTexture2D();
+		GlStateManager.enableTexture();
 
 		mc.renderEngine.bindTexture(TextureResources.locationSunPng);
 
@@ -561,19 +561,19 @@ public class RenderAsteroidSky extends IRenderHandler {
 			drawStar(buffer, solarOrbitalDistance, sunSize, sunColor, multiplier);
 
 			if(subStars != null && !subStars.isEmpty()) {
-				GL11.glPushMatrix();
+				matrix.push();
 				float phaseInc = 360/subStars.size();
 				
 				for(StellarBody subStar : subStars) {
 					GL11.glRotatef(phaseInc, 0, 1, 0);
-					GL11.glPushMatrix();
+					matrix.push();
 					
 					GL11.glRotatef(subStar.getStarSeparation()*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance), 1, 0, 0);
 					float color[] = subStar.getColor();
-					drawStar(buffer, solarOrbitalDistance, subStar.getSize(), new Vec3d(color[0], color[1], color[2]), multiplier);
-					GL11.glPopMatrix();
+					drawStar(buffer, solarOrbitalDistance, subStar.getSize(), new Vector3d(color[0], color[1], color[2]), multiplier);
+					matrix.pop();
 				}
-				GL11.glPopMatrix();
+				matrix.pop();
 			}
 
 		}
@@ -581,7 +581,7 @@ public class RenderAsteroidSky extends IRenderHandler {
 
 
 		if(isMoon) {
-			GL11.glPushMatrix();
+			matrix.push();
 
 			GL11.glRotatef((float)myPhi, 0f, 0f, 1f);
 			GL11.glRotatef((float)((partialTicks*myTheta + ((1-partialTicks)*myPrevOrbitalTheta)) * 180F/Math.PI), 1f, 0f, 0f);
@@ -596,7 +596,7 @@ public class RenderAsteroidSky extends IRenderHandler {
 
 			//Draw Rings
 			if(parentHasRings) {
-				GL11.glPushMatrix();
+				matrix.push();
 				GL11.glRotatef(90f, 0f, 1f, 0f);
 
 				f10 = 100;
@@ -604,43 +604,43 @@ public class RenderAsteroidSky extends IRenderHandler {
 				mc.renderEngine.bindTexture(DimensionProperties.planetRings);
 
 				GL11.glRotated(70, 1, 0, 0);
-				GL11.glTranslated(0, -10, 50);
+				matrix.translate(0, -10, 50);
 
-				GlStateManager.color(parentRingColor[0], parentRingColor[1], parentRingColor[2],multiplier);
+				GlStateManager.color4f(parentRingColor[0], parentRingColor[1], parentRingColor[2],multiplier);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 				buffer.pos((double)f10, ringDist, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
 				buffer.pos((double)(-f10), ringDist, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
 				buffer.pos((double)(-f10), ringDist, (double)f10).tex(0.0D, 1.0D).endVertex();
 				buffer.pos((double)f10, ringDist, (double)f10).tex(1.0D, 1.0D).endVertex();
 				Tessellator.getInstance().draw();
-				GL11.glPopMatrix();
+				matrix.pop();
 
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-				GL11.glPushMatrix();
+				matrix.push();
 
 				GL11.glRotatef(90f, 0f, 1f, 0f);
 				GL11.glRotated(70, 1, 0, 0);
-				GL11.glTranslated(0, -10, 50);
+				matrix.translate(0, -10, 50);
 
 				mc.renderEngine.bindTexture(DimensionProperties.planetRingShadow);
-				GlStateManager.color(0f, 0f, 0f,1);
+				GlStateManager.color4f(0f, 0f, 0f,1);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 				buffer.pos((double)f10, ringDist, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
 				buffer.pos((double)(-f10), ringDist, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
 				buffer.pos((double)(-f10), ringDist, (double)f10).tex(0.0D, 1.0D).endVertex();
 				buffer.pos((double)f10, ringDist, (double)f10).tex(1.0D, 1.0D).endVertex();
 				Tessellator.getInstance().draw();
-				GL11.glPopMatrix();
+				matrix.pop();
 
 				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 			}
 
 			renderPlanet2(buffer, parentPlanetIcon, 0,0,-100, AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance), multiplier, rotation, hasAtmosphere, parentAtmColor, parentRingColor, isGasGiant, false);
-			GL11.glPopMatrix();
+			matrix.pop();
 		}
 
 		for(DimensionProperties moons : children) {
-			GL11.glPushMatrix();
+			matrix.push();
 
 			moons.orbitalPhi = 10;
 			double rot = ((partialTicks*moons.orbitTheta + ((1-partialTicks)*moons.prevOrbitalTheta)) * 180F/Math.PI);
@@ -672,7 +672,7 @@ public class RenderAsteroidSky extends IRenderHandler {
 
 
 			renderPlanet(buffer, moons.getPlanetIcon(), (1/(float)moons.getParentOrbitalDistance())*moons.gravitationalMultiplier, multiplier, rotation, moons.hasAtmosphere(), moons.skyColor, moons.ringColor, isGasGiant, moons.hasRings());
-			GL11.glPopMatrix();
+			matrix.pop();
 		}
 
 		GlStateManager.enableFog();
@@ -680,22 +680,22 @@ public class RenderAsteroidSky extends IRenderHandler {
 		GlStateManager.disableBlend();
 		GlStateManager.enableAlpha();
 
-		GL11.glPopMatrix();
+		matrix.pop();
 
-		GlStateManager.enableTexture2D();
+		GlStateManager.enableTexture();
 		
 		mc.renderEngine.bindTexture(asteroid1);
-		GlStateManager.color(1, 1, 1);
+		GlStateManager.color4f(1, 1, 1);
 		GL11.glCallList(this.glSkyList3);
 		
-		GL11.glPushMatrix();
+		matrix.push();
 		GL11.glRotatef(90, 0.2f, 0.8f, 0);
 		mc.renderEngine.bindTexture(asteroid2);
 		GL11.glCallList(this.glSkyList3);
 		GL11.glRotatef(90, 0.2f, 0.8f, 0);
 		mc.renderEngine.bindTexture(asteroid3);
 		GL11.glCallList(this.glSkyList3);
-		GL11.glPopMatrix();
+		matrix.pop();
 		
 		GL11.glDepthMask(true);
 
@@ -713,8 +713,8 @@ public class RenderAsteroidSky extends IRenderHandler {
 		return properties.getPlanetIcon();
 	}
 
-	protected EnumFacing getRotationAxis(DimensionProperties properties, BlockPos pos) {
-		return EnumFacing.EAST;
+	protected Direction getRotationAxis(DimensionProperties properties, BlockPos pos) {
+		return Direction.EAST;
 	}
 
 	protected void renderPlanet(BufferBuilder buffer, ResourceLocation icon, float planetOrbitalDistance, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing) {
@@ -754,20 +754,20 @@ public class RenderAsteroidSky extends IRenderHandler {
 		float f17 = f14;//(float)(i1 + 1) / 2.0F;
 
 
-		GL11.glPushMatrix();
-		GL11.glTranslated(locationX, zLevel, locationY);
+		matrix.push();
+		matrix.translate(locationX, zLevel, locationY);
 
 
 		//ATM Glow
-		GL11.glPushMatrix();
+		matrix.push();
 		GL11.glRotated(90-shadowAngle* 180/Math.PI, 0, 1, 0);
 
 		//Rings
 		if(hasRing) {
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GlStateManager.color(ringColor[0], ringColor[1], ringColor[2], alphaMultiplier*0.2f);
+			GlStateManager.color4f(ringColor[0], ringColor[1], ringColor[2], alphaMultiplier*0.2f);
 			float ringSize = f10 *1.4f;
-			Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.planetRings);
+			Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.planetRings);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
 			buffer.pos(-ringSize, zLevel-0.01f, ringSize).tex((double)f16, (double)f17).endVertex();
@@ -776,8 +776,8 @@ public class RenderAsteroidSky extends IRenderHandler {
 			buffer.pos(-ringSize, zLevel-0.01f, -ringSize).tex((double)f16, (double)f15).endVertex();
 			Tessellator.getInstance().draw();
 
-			GlStateManager.color(0f, 0f, 0f, alphaMultiplier);
-			Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.planetRingShadow);
+			GlStateManager.color4f(0f, 0f, 0f, alphaMultiplier);
+			Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.planetRingShadow);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			buffer.pos(-ringSize, zLevel-0.01f, ringSize).tex((double)f16, (double)f17).endVertex();
 			buffer.pos(ringSize, zLevel-0.01f, ringSize).tex((double)f14, (double)f17).endVertex();
@@ -788,25 +788,25 @@ public class RenderAsteroidSky extends IRenderHandler {
 
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.atmGlow);
+		Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.atmGlow);
 
-		GlStateManager.color(1f, 1f, 1f, alphaMultiplier);
+		GlStateManager.color4f(1f, 1f, 1f, alphaMultiplier);
 		buffer.pos(-f10, zLevel+0.01f, f10).tex((double)f16, (double)f17).endVertex();
 		buffer.pos(f10, zLevel+0.01f, f10).tex((double)f14, (double)f17).endVertex();
 		buffer.pos(f10, zLevel+0.01f, -f10).tex((double)f14, (double)f15).endVertex();
 		buffer.pos(-f10, zLevel+0.01f, -f10).tex((double)f16, (double)f15).endVertex();
 		Tessellator.getInstance().draw();
-		GL11.glPopMatrix();
+		matrix.pop();
 
 		//End ATM glow
 
-		Minecraft.getMinecraft().renderEngine.bindTexture(icon);
+		Minecraft.getInstance().getTextureManager().bindTexture(icon);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		//TODO: draw sky planets
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
-		GlStateManager.color(1f, 1f, 1f, alphaMultiplier);
+		GlStateManager.color4f(1f, 1f, 1f, alphaMultiplier);
 		buffer.pos(-f10, zLevel, f10).tex((double)f16, (double)f17).endVertex();
 		buffer.pos(f10, zLevel, f10).tex((double)f14, (double)f17).endVertex();
 		buffer.pos(f10, zLevel, -f10).tex((double)f14, (double)f15).endVertex();
@@ -823,8 +823,8 @@ public class RenderAsteroidSky extends IRenderHandler {
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.getAtmosphereResource());
-			GlStateManager.color(skyColor[0], skyColor[1], skyColor[2], alphaMultiplier);
+			Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.getAtmosphereResource());
+			GlStateManager.color4f(skyColor[0], skyColor[1], skyColor[2], alphaMultiplier);
 			buffer.pos(-f10, zLevel, f10).tex((double)f16, (double)f17).endVertex();
 			buffer.pos(f10, zLevel, f10).tex((double)f14, (double)f17).endVertex();
 			buffer.pos(f10, zLevel, -f10).tex((double)f14, (double)f15).endVertex();
@@ -839,24 +839,24 @@ public class RenderAsteroidSky extends IRenderHandler {
 
 		//Draw Shadow
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.getShadowResource());
+		Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.getShadowResource());
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GlStateManager.color(1f, 1f, 1f, alphaMultiplier);
+		GlStateManager.color4f(1f, 1f, 1f, alphaMultiplier);
 		buffer.pos(-f10, zLevel-0.01f, f10).tex((double)f16, (double)f17).endVertex();
 		buffer.pos(f10, zLevel-0.01f, f10).tex((double)f14, (double)f17).endVertex();
 		buffer.pos(f10, zLevel-0.01f, -f10).tex((double)f14, (double)f15).endVertex();
 		buffer.pos(-f10, zLevel-0.01f, -f10).tex((double)f16, (double)f15).endVertex();
 		Tessellator.getInstance().draw();
 
-		GL11.glPopMatrix();
+		matrix.pop();
 
 
-		GlStateManager.color(1f, 1f, 1f, 1f);
+		GlStateManager.color4f(1f, 1f, 1f, 1f);
 	}
 
-	private void drawStar(BufferBuilder buffer, int solarOrbitalDistance, float sunSize, Vec3d sunColor, float multiplier) {
+	private void drawStar(BufferBuilder buffer, int solarOrbitalDistance, float sunSize, Vector3d sunColor, float multiplier) {
 		//Set sun color and distance
-		GlStateManager.color((float)sunColor.x, (float)sunColor.y , (float)sunColor.z ,Math.min((multiplier)*2f,1f));
+		GlStateManager.color4f((float)sunColor.x, (float)sunColor.y , (float)sunColor.z ,Math.min((multiplier)*2f,1f));
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 		float f10 = sunSize*30f*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
 		//multiplier = 2;

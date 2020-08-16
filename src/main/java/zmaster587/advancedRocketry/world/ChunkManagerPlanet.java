@@ -60,7 +60,7 @@ public class ChunkManagerPlanet extends BiomeProvider {
 
 	public ChunkManagerPlanet(World world, String str, List biomes)
 	{
-		this(world.getSeed(), (WorldTypePlanetGen)AdvancedRocketry.planetWorldType, str, DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()));
+		this(world.getSeed(), (WorldTypePlanetGen)AdvancedRocketry.planetWorldType, str, DimensionManager.getInstance().getDimensionProperties(world));
 		//Note: world MUST BE REGISTERED WITH THE DIMENSION MANAGER
 		//This is a mess!
 		this.biomes = biomes;

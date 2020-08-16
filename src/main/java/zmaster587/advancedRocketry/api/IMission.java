@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.api;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public interface IMission {
@@ -22,7 +23,7 @@ public interface IMission {
 	/**
 	 * @return the dimension the mission originated from
 	 */
-	public int getOriginatingDimention();
+	public ResourceLocation getOriginatingDimention();
 
 	public void unlinkInfrastructure(IInfrastructure tile);
 

@@ -2,19 +2,20 @@ package zmaster587.advancedRocketry.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.math.vector.Vector3d;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.libVulpes.network.BasePacket;
 
 public class PacketLaserGun extends BasePacket {
 
 	Entity fromEntity;
-	Vec3d toPos;
+	Vector3d toPos;
 	int entityId;
 
-	public PacketLaserGun(Entity fireFrom, Vec3d toPos) {
+	public PacketLaserGun(Entity fireFrom, Vector3d toPos) {
 		this.fromEntity = fireFrom;
 		this.toPos = toPos;
 	}
@@ -23,7 +24,7 @@ public class PacketLaserGun extends BasePacket {
 	}
 
 	@Override
-	public void write(ByteBuf out) {
+	public void write(PacketBuffer out) {
 		out.writeInt(fromEntity.getEntityId());
 		out.writeFloat((float)toPos.x);
 		out.writeFloat((float)toPos.y);
@@ -31,18 +32,18 @@ public class PacketLaserGun extends BasePacket {
 	}
 
 	@Override
-	public void readClient(ByteBuf in) {
+	public void readClient(PacketBuffer in) {
 		entityId = in.readInt();
-		toPos = new Vec3d(in.readFloat(), in.readFloat(), in.readFloat());
+		toPos = new Vector3d(in.readFloat(), in.readFloat(), in.readFloat());
 	}
 
 	@Override
-	public void read(ByteBuf in) {
+	public void read(PacketBuffer in) {
 
 	}
 
 	@Override
-	public void executeClient(EntityPlayer thePlayer) {
+	public void executeClient(PlayerEntity thePlayer) {
 		Entity entity = thePlayer.world.getEntityByID(entityId);
 		if(entity != null) {
 			AdvancedRocketry.proxy.spawnLaser(entity, toPos);
@@ -50,7 +51,7 @@ public class PacketLaserGun extends BasePacket {
 	}
 
 	@Override
-	public void executeServer(EntityPlayerMP player) {
+	public void executeServer(ServerPlayerEntity player) {
 
 	}
 

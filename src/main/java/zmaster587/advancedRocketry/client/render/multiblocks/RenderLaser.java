@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
@@ -38,15 +38,15 @@ public class RenderLaser extends TileEntitySpecialRenderer {
 		if(!multiBlockTile.canRender())
 			return;
 
-		GL11.glPushMatrix();
+		matrix.push();
 
 		//Initial setup
 
 		//Rotate and move the model into position
-		GL11.glTranslated(x + 0.5, y, z + 0.5);
-		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 180 : 0) + front.getFrontOffsetZ()*90f, 0, 1, 0);
-		GL11.glTranslated(2f, 0, 0f);
+		matrix.translate(x + 0.5, y, z + 0.5);
+		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
+		GL11.glRotatef((front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, 1, 0);
+		matrix.translate(2f, 0, 0f);
 		bindTexture(texture);
 		model.renderAll();
 		
@@ -55,15 +55,15 @@ public class RenderLaser extends TileEntitySpecialRenderer {
 		//Laser
 		if(((TileSpaceLaser)multiBlockTile).isRunning())
 		{
-			GL11.glTranslated(-0.5f, 0, -0.5f);
+			matrix.translate(-0.5f, 0, -0.5f);
 			BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 			GlStateManager.disableLighting();
 			GlStateManager.disableFog();
 			GlStateManager.enableBlend();
 			GlStateManager.depthMask(false);
-			GlStateManager.disableTexture2D();
+			GlStateManager.disableTexture();
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-			GlStateManager.color(0.9F, 0.2F, 0.3F, 1F);
+			GlStateManager.color4f(0.9F, 0.2F, 0.3F, 1F);
 			//GL11.glB
 			//GL11.gl
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
@@ -87,13 +87,13 @@ public class RenderLaser extends TileEntitySpecialRenderer {
 	
 			Tessellator.getInstance().draw();
 			
-			GlStateManager.color(1f,1f,1f, 1f);
+			GlStateManager.color4f(1f,1f,1f, 1f);
 			GlStateManager.disableBlend();
 			GlStateManager.enableLighting();
-			GlStateManager.enableTexture2D();
+			GlStateManager.enableTexture();
 			GlStateManager.enableFog();
 			GlStateManager.depthMask(true);
 		}
-		GL11.glPopMatrix();
+		matrix.pop();
 	}
 }

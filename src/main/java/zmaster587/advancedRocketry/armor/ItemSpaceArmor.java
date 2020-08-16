@@ -1,26 +1,29 @@
 package zmaster587.advancedRocketry.armor;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ArmorMaterial;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ISpecialArmor;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
@@ -37,18 +40,19 @@ import zmaster587.libVulpes.util.IconResource;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 /**
  * Space Armor
  * Any class that extends this will gain the ability to store oxygen and will protect players from the vacuum atmosphere type
  *
  */
 
-public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabilityProvider, IProtectiveArmor, IModularArmor {
+public class ItemSpaceArmor extends ArmorItem implements ICapabilityProvider, IProtectiveArmor, IModularArmor {
 
 	private final static String componentNBTName = "componentName";
 	private int numModules;
-	public ItemSpaceArmor(ArmorMaterial material, EntityEquipmentSlot component, int numModules) {
-		super(material, 0, component);
+	public ItemSpaceArmor(Item.Properties props, ArmorMaterial material, EquipmentSlotType component, int numModules) {
+		super(material, component, props);
 		this.numModules = numModules;
 	}
 
@@ -65,7 +69,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 		list.add(LibVulpes.proxy.getLocalizedString("msg.modules"));
 
 		for(ItemStack componentStack : getComponents(stack)) {
-			list.add(ChatFormatting.DARK_GRAY + componentStack.getDisplayName());
+			list.add(componentStack.getDisplayName());
 		}
 	}
 
@@ -78,16 +82,16 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 		//Dummy out
 	}
 	
+	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public ModelBiped getArmorModel(EntityLivingBase entityLiving,
-			ItemStack itemStack, EntityEquipmentSlot armorSlot,
-			ModelBiped _default) {
+	@OnlyIn(value=Dist.CLIENT)
+	public <A extends BipedModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack,
+			EquipmentSlotType armorSlot, A _default) {
 
-		if(armorSlot == EntityEquipmentSlot.CHEST) {
+		if(armorSlot == EquipmentSlotType.CHEST) {
 			for(ItemStack stack : getComponents(itemStack)) {
 				if(stack.getItem() instanceof IJetPack)
-					return new RenderJetPack(_default);
+					return (A) new RenderJetPack(_default);
 			}
 		}
 		return super.getArmorModel(entityLiving, itemStack, armorSlot, _default);
@@ -96,55 +100,55 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 	public int getColor(ItemStack stack)
 	{
 
-		NBTTagCompound nbttagcompound = stack.getTagCompound();
+		CompoundNBT nbttagcompound = stack.getTag();
 
 		if (nbttagcompound != null)
 		{
-			NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag("display");
+			CompoundNBT nbttagcompound1 = nbttagcompound.getCompound("display");
 
-			if (nbttagcompound1 != null && nbttagcompound1.hasKey("color", 3))
+			if (nbttagcompound1 != null && nbttagcompound1.contains("color", 3))
 			{
-				return nbttagcompound1.getInteger("color");
+				return nbttagcompound1.getInt("color");
 			}
 		}
 
 		return 0xFFFFFF;
 
 	}
-	@Override
-	public ArmorProperties getProperties(EntityLivingBase player,
+	
+	/*@Override
+	public ArmorProperties getProperties(LivingEntity player,
 			ItemStack armor, DamageSource source, double damage, int slot) {
 		if(!source.isUnblockable())
 			return new ArmorProperties(0, 0, 1);
 		return new ArmorProperties(0, 0, 0);
-	}
+	}*/
 
 	private EmbeddedInventory loadEmbeddedInventory(ItemStack stack) {
-		if(stack.hasTagCompound()) {
+		if(stack.hasTag()) {
 			EmbeddedInventory inv = new EmbeddedInventory(numModules);
-			inv.readFromNBT(stack.getTagCompound());
+			inv.readFromNBT(stack.getTag());
 			return inv;
 		}
 		return new EmbeddedInventory(numModules);
 	}
 
 	protected void saveEmbeddedInventory(ItemStack stack, EmbeddedInventory inv) {
-		if(stack.hasTagCompound()) {
-			inv.writeToNBT(stack.getTagCompound());
+		if(stack.hasTag()) {
+			inv.write(stack.getTag());
 		}
 		else {
-			NBTTagCompound nbt = new NBTTagCompound();
-			inv.writeToNBT(nbt);
-			stack.setTagCompound(nbt);
+			CompoundNBT nbt = new CompoundNBT();
+			inv.write(nbt);
+			stack.setTag(nbt);
 		}
 	}
-
+	
 	@Override
-	public void onArmorTick(World world, EntityPlayer player,
-			ItemStack armor) {
-		super.onArmorTick(world, player, armor);
+	public void onArmorTick(ItemStack armor, World world, PlayerEntity player) {
+		super.onArmorTick(armor, world, player);
 
-		if(armor.hasTagCompound()) {
+		if(armor.hasTag()) {
 
 			//Some upgrades modify player capabilities
 
@@ -162,7 +166,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 	}
 
 	@Override
-	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+	public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
 
 		if(type != null) {
 			if(stack.getItem() == AdvancedRocketryItems.itemSpaceSuit_Leggings)
@@ -176,16 +180,17 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 	}
 
 	@Override
-	public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot) {
-		return 1;
+	public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
+		// TODO Auto-generated method stub
+		return super.damageItem(stack, amount, entity, onBroken);
 	}
-
-	@Override
-	public void damageArmor(EntityLivingBase entity, ItemStack armor,
+	
+	/*@Override
+	public void damageArmor(LivingEntity entity, ItemStack armor,
 			DamageSource source, int damage, int slot) {
 		// TODO Handle armor damage
 
-		if(armor.hasTagCompound()) {
+		if(armor.hasTag()) {
 
 			EmbeddedInventory inv = loadEmbeddedInventory(armor);
 			for(int i = 0; i < inv.getSizeInventory(); i++ ) {
@@ -198,7 +203,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 
 			saveEmbeddedInventory(armor, inv);
 		}
-	}
+	}*/
 
 	@Override
 	public void addArmorComponent(World world, ItemStack armor, ItemStack component, int slot) {
@@ -215,12 +220,12 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 
 
 	public ItemStack removeComponent(World world, ItemStack armor, int index) {
-		NBTTagCompound nbt;
-		NBTTagList componentList;
+		CompoundNBT nbt;
+		ListNBT componentList;
 
-		if(armor.hasTagCompound()) {
-			nbt = armor.getTagCompound();
-			componentList = nbt.getTagList(componentNBTName, NBT.TAG_COMPOUND);
+		if(armor.hasTag()) {
+			nbt = armor.getTag();
+			componentList = nbt.getList(componentNBTName, NBT.TAG_COMPOUND);
 		}
 		else {
 			return ItemStack.EMPTY;
@@ -244,10 +249,10 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 	public List<ItemStack> getComponents(ItemStack armor) {
 
 		List<ItemStack> list = new LinkedList<ItemStack>();
-		NBTTagCompound nbt;
-		NBTTagList componentList;
+		CompoundNBT nbt;
+		ListNBT componentList;
 
-		if(armor.hasTagCompound()) {
+		if(armor.hasTag()) {
 			EmbeddedInventory inv = loadEmbeddedInventory(armor);
 
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
@@ -285,16 +290,10 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-
-		return capability == CapabilitySpaceArmor.PROTECTIVEARMOR;
-	}
-
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
 		if(capability == CapabilitySpaceArmor.PROTECTIVEARMOR)
-			return (T) this;
-		return null;
+			return LazyOptional.of(() -> this).cast();
+		return LazyOptional.empty();
 	}
 
 	public boolean isItemValidForSlot(ItemStack stack, int slot) {

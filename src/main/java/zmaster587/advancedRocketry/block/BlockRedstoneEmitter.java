@@ -1,88 +1,85 @@
 package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.advancedRocketry.tile.TileAtmosphereDetector;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.GuiHandler;
 
 public class BlockRedstoneEmitter extends Block {
 	
-	public static final PropertyBool POWERED = PropertyBool.create("powered");
+	public static final BooleanProperty POWERED = BooleanProperty.create("powered");
 	
-	public BlockRedstoneEmitter(Material material,String activeIconName) {
+	public BlockRedstoneEmitter(Properties material,String activeIconName) {
 		super(material);
-		this.setDefaultState(this.getDefaultState().withProperty(POWERED, false));
+		this.setDefaultState(this.stateContainer.getBaseState().with(POWERED, false));
 	}
 	
 	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[]{POWERED});
+	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+		super.fillStateContainer(builder);
+		
+		builder.add(POWERED);
 	}
 	
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return this.getDefaultState().withProperty(POWERED, (meta & 8) == 8);
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return state.getValue(POWERED) ? 8 : 0;
-	}
-	
-	@Override
-	public boolean hasTileEntity(IBlockState state) {
+	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
 	
-	public void setState(World world, IBlockState bstate, BlockPos pos, boolean state) {
-		world.setBlockState(pos, bstate.withProperty(POWERED, state));
+	public void setState(World world, BlockState bstate, BlockPos pos, boolean state) {
+		world.setBlockState(pos, bstate.with(POWERED, state));
 	}
 	
-	public boolean getState(World world, IBlockState bstate, BlockPos pos) {
-		return bstate.getValue(POWERED);
+	public boolean getState(World world, BlockState bstate, BlockPos pos) {
+		return bstate.get(POWERED);
 	}
 	
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
-		if(!world.isRemote) {
-			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,
+			Hand handIn, BlockRayTraceResult hit) {
+		if(!world.isRemote)
+		{
+			TileEntity te = world.getTileEntity(pos);
+			if(te != null)
+				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)te, pos);
 		}
-		return true;
+		return ActionResultType.SUCCESS;
 	}
 	
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new TileAtmosphereDetector();
 	}
 	
 	@Override
-	public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess,
-			BlockPos pos, EnumFacing side) {
-		return blockState.getValue(POWERED) ? 15 : 0;
+	public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+		return blockState.get(POWERED) ? 15 : 0;
 	}
 	
 	@Override
-	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess,
-			BlockPos pos, EnumFacing side) {
-		return blockState.getValue(POWERED) ? 15 : 0;
+	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+		return blockState.get(POWERED) ? 15 : 0;
 	}
 	
 	@Override
-	public boolean canProvidePower(IBlockState state) {
+	public boolean canProvidePower(BlockState state) {
 		return true;
 	}
 

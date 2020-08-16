@@ -1,18 +1,21 @@
 package zmaster587.advancedRocketry.satellite;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.loot.LootContext;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.vector.Vector2f;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.common.ForgeChunkManager.Ticket;
-import net.minecraftforge.common.ForgeChunkManager.Type;
+import net.minecraft.world.chunk.ChunkStatus;
+import net.minecraft.world.gen.Heightmap.Type;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
@@ -25,7 +28,6 @@ import java.util.List;
 public class SatelliteLaser extends SatelliteLaserNoDrill {
 
 	private EntityLaserNode laser;
-	private Ticket ticketLaser;
 	protected boolean finished;
 
 	public SatelliteLaser(IInventory boundChest) {
@@ -34,12 +36,14 @@ public class SatelliteLaser extends SatelliteLaserNoDrill {
 	}
 
 	public boolean isAlive() {
-		return laser != null && !laser.isDead;
+		return laser != null && laser.isAlive();
 	}
 	
 	public boolean isFinished() {
 		return finished;
 	}
+	
+	Vector3i ticketLaser = null;
 	
 	public boolean getJammed() { return jammed; }
 	
@@ -47,12 +51,16 @@ public class SatelliteLaser extends SatelliteLaserNoDrill {
 	
 	public void deactivateLaser() {
 		if(laser != null) {
-			laser.setDead();
+			laser.remove();
 			laser = null;
 		}
 		
 		if(ticketLaser != null)
-			ForgeChunkManager.releaseTicket(ticketLaser);
+		{
+			ServerWorld worldServer = (ServerWorld)world;
+			worldServer.forceChunk(ticketLaser.getX(), ticketLaser.getZ(), true);
+			ticketLaser = null;
+		}
 		
 		finished = false;
 	}
@@ -66,17 +74,23 @@ public class SatelliteLaser extends SatelliteLaserNoDrill {
 	 * @return whether creating the laser is successful
 	 */
 	public boolean activateLaser(World world, int x, int z) {
-		ticketLaser = ForgeChunkManager.requestTicket(AdvancedRocketry.instance, world, Type.NORMAL);
 		
-		if(ticketLaser != null) {
-			ForgeChunkManager.forceChunk(ticketLaser, new ChunkPos(x >> 4, z >> 4));
+		if(world.isRemote)
+			return false;
+		
+		ServerWorld worldServer = (ServerWorld)world;
+		ticketLaser = new Vector3i(x>> 4, 0, z >> 4);
+		worldServer.forceChunk(x >> 4, z >> 4, true);
+		
+		if(ticketLaser != null) 
+		{
 			
 			int y = 64;
 			
-			if(world.getChunkFromChunkCoords(x >> 4, z >> 4).isLoaded()) {
+			if(world.getChunk( new BlockPos(x,0,z) ).getStatus().isAtLeast(ChunkStatus.FULL)) {
 				int current = 0;
 				for(int i = 0; i < 9; i++) {
-					current = world.getTopSolidOrLiquidBlock(new BlockPos(x + (i % 3) - 1, 0xFF, z + (i / 3) - 1)).getY();
+					current = world.getHeight(Type.WORLD_SURFACE, x + (i % 3) - 1, z + (i / 3) - 1);
 					if(current > y)
 						y = current;
 				}
@@ -89,7 +103,7 @@ public class SatelliteLaser extends SatelliteLaserNoDrill {
 			laser = new EntityLaserNode(world, x, y, z);
 			laser.markValid();
 			laser.forceSpawn = true;
-			world.spawnEntity(laser);
+			world.addEntity(laser);
 			return true;
 		}
 		return false;
@@ -97,15 +111,15 @@ public class SatelliteLaser extends SatelliteLaserNoDrill {
 
 	public void performOperation() {
 		for(int i = 0; i < 9; i++) {
-			int x = (int)laser.posX + (i % 3) - 1;
-			int z = (int)laser.posZ + (i / 3) - 1;
+			int x = (int)laser.getPosX() + (i % 3) - 1;
+			int z = (int)laser.getPosZ() + (i / 3) - 1;
 			
-			BlockPos laserPos = new BlockPos(x, (int)laser.posY, z);
+			BlockPos laserPos = new BlockPos(x, (int)laser.getPosY(), z);
 
-			 IBlockState state = laser.world.getBlockState(laserPos);//Block.blocksList[laser.worldObj.getBlockId(x, (int)laser.posY, z)];
+			 BlockState state = laser.world.getBlockState(laserPos);//Block.blocksList[laser.worldObj.getBlockId(x, (int)laser.posY, z)];
 			 Block dropBlock;
 			//Post an event to the eventbus to make protections easier
-			LaserBreakEvent event = new LaserBreakEvent(x, (int)laser.posY, z);
+			LaserBreakEvent event = new LaserBreakEvent(x, (int)laser.getPosY(), z);
 			MinecraftForge.EVENT_BUS.post(event);
 
 			if(event.isCanceled())
@@ -118,7 +132,10 @@ public class SatelliteLaser extends SatelliteLaserNoDrill {
 				continue;
 			}
 
-			List<ItemStack> items = state.getBlock().getDrops(laser.world, laserPos, state, 0);
+			LootContext.Builder builder = new LootContext.Builder((ServerWorld) laser.world);
+			state.getDrops(builder);
+			
+			List<ItemStack> items = state.getDrops(builder);
 			
 			//TODO: may need to fix in later builds
 			if(!state.getMaterial().isOpaque() || state.getBlock() == Blocks.BEDROCK)
@@ -134,12 +151,12 @@ public class SatelliteLaser extends SatelliteLaserNoDrill {
 			}
 
 			/*for(ItemStack stack : items) { 
-				EntityItem e = new EntityItem(this.worldObj, x, (int)this.posY, z, stack);
+				ItemEntity e = new ItemEntity(this.worldObj, x, (int)this.posY, z, stack);
 
 				//Don't let anyone pick it up
 				e.delayBeforeCanPickup = Integer.MAX_VALUE;
 				e.motionX = 0;
-				e.motionY = 4;
+				e.getMotion().y = 4;
 				e.motionZ = 0;
 				e.posX = (int)this.posX;
 				e.posY = (int)this.posY + 1;
@@ -170,28 +187,28 @@ public class SatelliteLaser extends SatelliteLaserNoDrill {
 		boolean blockInWay = false;
 		do {
 
-			if(laser.posY < 1) {
-				laser.setDead();
+			if(laser.getPosY() < 1) {
+				laser.remove();
 				laser = null;
 				finished = true;
 				break;
 			}
 
-			laser.setPosition((int)laser.posX, laser.posY - 1, (int)laser.posZ);
+			laser.setPosition((int)laser.getPosX(), laser.getPosY() - 1, (int)laser.getPosZ());
 
 			for(int i = 0; i < 9; i++){
-				int x = (int)laser.posX + (i % 3) - 1;
-				int z = (int)laser.posZ + (i / 3) - 1;
+				int x = (int)laser.getPosX() + (i % 3) - 1;
+				int z = (int)laser.getPosZ() + (i / 3) - 1;
 				
-				BlockPos laserPos = new BlockPos(x, (int)laser.posY, z);
+				BlockPos laserPos = new BlockPos(x, (int)laser.getPosY(), z);
 
-				IBlockState state = laser.world.getBlockState(laserPos);
+				BlockState state = laser.world.getBlockState(laserPos);
 				
 				if(!state.getMaterial().isOpaque() || state.getBlock() == Blocks.BEDROCK)
 					continue;
 
 				if(state == Blocks.AIR.getDefaultState() ||  state.getMaterial().isLiquid()) {
-					laser.world.setBlockToAir(laserPos);
+					laser.world.removeBlock(laserPos, false);
 					continue;
 				}
 
@@ -216,7 +233,7 @@ public class SatelliteLaser extends SatelliteLaserNoDrill {
 	}
 
 	@Override
-	public boolean performAction(EntityPlayer player, World world, BlockPos pos) {
+	public boolean performAction(PlayerEntity player, World world, BlockPos pos) {
 		performOperation();
 		return false;
 	}
@@ -228,13 +245,13 @@ public class SatelliteLaser extends SatelliteLaserNoDrill {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		nbt.setBoolean("finished", finished);
-		nbt.setBoolean("jammed", jammed);
+	public void writeToNBT(CompoundNBT nbt) {
+		nbt.putBoolean("finished", finished);
+		nbt.putBoolean("jammed", jammed);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
+	public void readFromNBT(CompoundNBT nbt) {
 		finished = nbt.getBoolean("finished");
 		jammed = nbt.getBoolean("jammed");
 	}

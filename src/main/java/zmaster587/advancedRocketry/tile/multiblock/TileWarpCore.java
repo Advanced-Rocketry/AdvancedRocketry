@@ -1,24 +1,28 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
-import zmaster587.libVulpes.api.material.AllowedProducts;
-import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
+import zmaster587.libVulpes.util.ZUtils;
 
 public class TileWarpCore extends TileMultiBlock {
+	public TileWarpCore() {
+		super(AdvancedRocketryTileEntityType.TILE_WARP_CORE);
+	}
+
 	private SpaceStationObject station;
 
 	public static final Object[][][] structure = { 
@@ -37,7 +41,7 @@ public class TileWarpCore extends TileMultiBlock {
 	};
 
 	private SpaceStationObject getSpaceObject() {
-		if(station == null && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
+		if(station == null && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceStationObject)
 				station = (SpaceStationObject) object;
@@ -51,7 +55,7 @@ public class TileWarpCore extends TileMultiBlock {
 	}
 
 	@Override
-	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
+	public boolean shouldHideBlock(World world, BlockPos pos, BlockState tile) {
 		return pos.compareTo(this.pos) == 0;
 	}
 	
@@ -69,7 +73,7 @@ public class TileWarpCore extends TileMultiBlock {
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
 				ItemStack stack = inv.getStackInSlot(i);
 				int amt = 0;
-				if(stack != null && OreDictionary.itemMatches(MaterialRegistry.getItemStackFromMaterialAndType("Dilithium", AllowedProducts.getProductByName("GEM")), stack, false)) {
+				if(stack != null && ItemTags.getCollection().getOwningTags(stack.getItem()).stream().anyMatch(value -> { return value.getPath().equalsIgnoreCase("gemdilithium"); }) ) {
 					int stackSize = stack.getCount();
 					if(!world.isRemote)
 						amt = getSpaceObject().addFuel(ARConfiguration.getCurrentConfig().fuelPointsPerDilithium*stack.getCount());

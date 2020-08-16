@@ -1,8 +1,10 @@
 package zmaster587.advancedRocketry.tile.cables;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import zmaster587.advancedRocketry.cable.HandlerCableNetwork;
 import zmaster587.advancedRocketry.cable.NetworkRegistry;
@@ -15,7 +17,8 @@ public class TilePipe extends TileEntity {
 	static boolean debug = false;
 	boolean connectedSides[];
 
-	public TilePipe() {
+	public TilePipe(TileEntityType<?> type) {
+		super(type);
 		initialized = false;
 		destroyed = false;
 		connectedSides = new boolean[6];
@@ -29,15 +32,15 @@ public class TilePipe extends TileEntity {
 	}
 
 	@Override
-	public void invalidate() {
-		super.invalidate();
+	public void remove() {
+		super.remove();
 		removePipeFromSystem();
 
 	}
 
 	@Override
-	public void onChunkUnload() {
-		super.onChunkUnload();
+	public void onChunkUnloaded() {
+		super.onChunkUnloaded();
 		removePipeFromSystem();
 	}
 
@@ -45,7 +48,7 @@ public class TilePipe extends TileEntity {
 		if(!isInitialized())
 			return;
 
-		for(EnumFacing dir : EnumFacing.VALUES) {
+		for(Direction dir : Direction.values()) {
 			TileEntity tile = world.getTileEntity(this.getPos().offset(dir));
 			if(tile != null)
 				getNetworkHandler().removeFromAllTypes(this, tile);
@@ -60,8 +63,8 @@ public class TilePipe extends TileEntity {
 	}
 	
 	@Override
-	public NBTTagCompound getUpdateTag() {
-		NBTTagCompound nbt = super.getUpdateTag();
+	public CompoundNBT getUpdateTag() {
+		CompoundNBT nbt = super.getUpdateTag();
 		
 		byte sides = 0;
 		
@@ -70,23 +73,22 @@ public class TilePipe extends TileEntity {
 				sides += 1<<i;
 		}
 		
-		nbt.setByte("conn", sides);
+		nbt.putByte("conn", sides);
 	
 		return nbt;
 		
 	}
 	
 	@Override
-    public void handleUpdateTag(NBTTagCompound tag)
-    {
-        super.handleUpdateTag(tag);
+	public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+        super.handleUpdateTag(state, tag);
         
         byte sides = tag.getByte("conn");
         
 		for(int i = 0; i < 6; i++) {
 			connectedSides[i] = (sides & (1<<i)) != 0;
 		}
-    }
+	}
 
 
 	@Override
@@ -100,7 +102,7 @@ public class TilePipe extends TileEntity {
 
 	public void onPlaced() {
 
-		for(EnumFacing dir : EnumFacing.values()) {
+		for(Direction dir : Direction.values()) {
 			TileEntity tile = world.getTileEntity(getPos().offset(dir));
 
 
@@ -129,7 +131,7 @@ public class TilePipe extends TileEntity {
 	}
 
 	public void linkSystems() {
-		for(EnumFacing dir : EnumFacing.values()) {
+		for(Direction dir : Direction.values()) {
 			TileEntity tile = world.getTileEntity(getPos().offset(dir));
 
 			if(tile != null) {
@@ -138,12 +140,12 @@ public class TilePipe extends TileEntity {
 		}
 	}
 
-	protected void attemptLink(EnumFacing dir, TileEntity tile) {
+	protected void attemptLink(Direction dir, TileEntity tile) {
 		//If the pipe can inject or extract, add to the cache
 		//if(!(tile instanceof IFluidHandler))
 		//return;
 
-		if(canExtract(dir, tile) && (world.isBlockIndirectlyGettingPowered(pos) > 0 || world.getStrongPower(pos) > 0)) {
+		if(canExtract(dir, tile) && (world.getRedstonePowerFromNeighbors(pos) > 0 || world.getStrongPower(pos) > 0)) {
 			if(world.isRemote)
 				connectedSides[dir.ordinal()]=true;
 			else {
@@ -153,7 +155,7 @@ public class TilePipe extends TileEntity {
 			}
 		}
 
-		if(canInject(dir, tile) && world.isBlockIndirectlyGettingPowered(pos) == 0 && world.getStrongPower(pos) == 0) {
+		if(canInject(dir, tile) && world.getRedstonePowerFromNeighbors(pos) == 0 && world.getStrongPower(pos) == 0) {
 			if(world.isRemote)
 				connectedSides[dir.ordinal()]=true;
 			else {
@@ -188,8 +190,8 @@ public class TilePipe extends TileEntity {
 				TilePipe pipe = ((TilePipe) tile);
 
 				if(world.isRemote) {
-					EnumFacing dir = null;
-					for(EnumFacing dir2 : EnumFacing.values()) {
+					Direction dir = null;
+					for(Direction dir2 : Direction.values()) {
 
 						if(getPos().offset(dir2).compareTo(pos) == 0)
 							dir = dir2;
@@ -237,8 +239,8 @@ public class TilePipe extends TileEntity {
 					}
 				}
 				
-				EnumFacing dir = null;
-				for(EnumFacing dir2 : EnumFacing.values()) {
+				Direction dir = null;
+				for(Direction dir2 : Direction.values()) {
 
 					if(getPos().offset(dir2).compareTo(pos) == 0)
 						connectedSides[dir2.ordinal()] = true;
@@ -250,8 +252,8 @@ public class TilePipe extends TileEntity {
 					initialized = true;
 				}
 
-				EnumFacing dir = null;
-				for(EnumFacing dir2 : EnumFacing.values()) {
+				Direction dir = null;
+				for(Direction dir2 : Direction.values()) {
 					if(getPos().offset(dir2).compareTo(pos) == 0)
 						dir = dir2;
 				}
@@ -262,8 +264,8 @@ public class TilePipe extends TileEntity {
 			}
 		}
 		else {
-			EnumFacing dir = null;
-			for(EnumFacing dir2 : EnumFacing.values()) {
+			Direction dir = null;
+			for(Direction dir2 : Direction.values()) {
 
 				if(getPos().offset(dir2).compareTo(pos) == 0)
 					dir = dir2;
@@ -284,11 +286,11 @@ public class TilePipe extends TileEntity {
 		return connectedSides[side];
 	}
 
-	public boolean canExtract(EnumFacing dir, TileEntity e) {
+	public boolean canExtract(Direction dir, TileEntity e) {
 		return false;
 	}
 
-	public boolean canInject(EnumFacing dir, TileEntity e) {
+	public boolean canInject(Direction dir, TileEntity e) {
 		return false;
 	}
 

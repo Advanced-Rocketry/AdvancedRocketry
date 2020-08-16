@@ -1,10 +1,11 @@
 package zmaster587.advancedRocketry.network;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.libVulpes.network.BasePacket;
@@ -13,21 +14,21 @@ import java.io.IOException;
 
 public class PacketStellarInfo extends BasePacket {
 	StellarBody star;
-	int starId;
-	NBTTagCompound nbt;
+	ResourceLocation starId;
+	CompoundNBT nbt;
 	boolean removeStar;
 
 	public PacketStellarInfo() {}
 
-	public PacketStellarInfo(int starId,StellarBody star) {
+	public PacketStellarInfo(ResourceLocation starId,StellarBody star) {
 		this.star = star;
 		this.starId = starId;
 	}
 
 	@Override
-	public void write(ByteBuf out) {
-		NBTTagCompound nbt = new NBTTagCompound();
-		out.writeInt(starId);
+	public void write(PacketBuffer out) {
+		CompoundNBT nbt = new CompoundNBT();
+		out.writeResourceLocation(starId);
 		out.writeBoolean(star == null);
 
 
@@ -40,30 +41,24 @@ public class PacketStellarInfo extends BasePacket {
 	}
 
 	@Override
-	public void readClient(ByteBuf in) {
+	public void readClient(PacketBuffer in) {
 		PacketBuffer packetBuffer = new PacketBuffer(in);
 
-		starId = in.readInt();
+		starId = in.readResourceLocation();
 		removeStar = in.readBoolean();
 
 		if(!removeStar) {
-			try {
-				nbt = packetBuffer.readCompoundTag();
-			} catch (IOException e) {
-				e.printStackTrace();
-				nbt = null;
-				return;
-			}
+			nbt = packetBuffer.readCompoundTag();
 		}
 	}
 
 	@Override
-	public void read(ByteBuf in) {
+	public void read(PacketBuffer in) {
 		//Should never be read on the server!
 	}
 
 	@Override
-	public void executeClient(EntityPlayer thePlayer) {
+	public void executeClient(PlayerEntity thePlayer) {
 		StellarBody star;
 		
 		if(removeStar) {
@@ -83,6 +78,6 @@ public class PacketStellarInfo extends BasePacket {
 	}
 
 	@Override
-	public void executeServer(EntityPlayerMP player) {}
+	public void executeServer(ServerPlayerEntity player) {}
 
 }

@@ -1,36 +1,35 @@
 package zmaster587.advancedRocketry.block;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import zmaster587.libVulpes.block.BlockTile;
 
 public class BlockTileRedstoneEmitter extends BlockTile {
 
-	public BlockTileRedstoneEmitter(Class<? extends TileEntity> tileClass,
+	public BlockTileRedstoneEmitter(Properties properties,
 			int guiId) {
-		super(tileClass, guiId);
+		super(properties, guiId);
 	}
 	
 	@Override
-	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess,
-			BlockPos pos, EnumFacing side) {
-		return blockState.getValue(STATE) ? 15 : 0;
+	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+		return blockState.get(STATE) ? 15 : 0;
 	}
 	
 	@Override
-	public boolean canProvidePower(IBlockState state) {
+	public boolean canProvidePower(BlockState state) {
 		return true;
 	}
 	
-	public void setRedstoneState(World world, IBlockState state, BlockPos pos, boolean newState) {
+	public void setRedstoneState(World world, BlockState state, BlockPos pos, boolean newState) {
 		if(world.getBlockState(pos).getBlock() != this)
 			return;
 		
-		world.setBlockState(pos, state.withProperty(STATE, newState));
+		world.setBlockState(pos, state.with(STATE, newState));
 		world.notifyBlockUpdate(pos, state,  state, 3);
 	}
 }

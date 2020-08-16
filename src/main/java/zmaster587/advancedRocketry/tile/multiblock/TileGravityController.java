@@ -2,17 +2,20 @@ package zmaster587.advancedRocketry.tile.multiblock;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.ParticleStatus;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ArrowEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.Direction;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.advancedRocketry.util.GravityHandler;
@@ -50,12 +53,13 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 	};
 
 	public TileGravityController() {
+		super(AdvancedRocketryTileEntityType.TILE_GRAVITY_CONTROLLER);
 		//numGravPylons = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
 		textRadius = new ModuleText(6, 82, LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.radius") + "5", 0x202020);
 		targetGrav = new ModuleText(6, 110, LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.targetgrav"), 0x202020);
 		sideSelectorModule = new ModuleBlockSideSelector(90, 15, this, new String[] {LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.none"), LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.activeset"), LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.activeadd")});
 
-		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 1, "", this);
+		redstoneControl = new ModuleRedstoneOutputButton(174, 4, "", this);
 		state = RedstoneState.OFF;
 		redstoneControl.setRedstoneState(state);
 		radius = 5;
@@ -72,9 +76,9 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
+	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();//super.getModules(id, player);
-		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
+		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
 		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(sideSelectorModule);
 
@@ -127,11 +131,11 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 	
 	@Override
 	public boolean isRunning() {
-		return getMachineEnabled() && isStateActive(state, world.isBlockIndirectlyGettingPowered(getPos()) > 0);
+		return getMachineEnabled() && isStateActive(state, world.getRedstonePowerFromNeighbors(getPos()) > 0);
 	}
 
 	@Override
-	public void update() {
+	public void tick() {
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0) {
@@ -189,32 +193,33 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 				boolean allowApply = false;
 				e.fallDistance = 0;
 
-				for(EnumFacing dir : EnumFacing.VALUES) {
-					if(!(e instanceof EntityPlayer) || !((EntityPlayer)e).capabilities.isFlying) {
+				for(Direction dir : Direction.values()) {
+					if(!(e instanceof PlayerEntity) || !((PlayerEntity)e).abilities.isFlying) {
 
 						if(sideSelectorModule.getStateForSide(dir) != 0) {
 							allowApply = true;
 							if(sideSelectorModule.getStateForSide(dir)  == 1)
 								additive = false;
 
-							if(e instanceof EntityLivingBase) {
+							if(e instanceof LivingEntity) {
 								{
-									e.motionX += dir.getFrontOffsetX()*GravityHandler.ENTITY_OFFSET*currentProgress;
-									e.motionY += dir.getFrontOffsetY()*GravityHandler.ENTITY_OFFSET*currentProgress;
-									e.motionZ += dir.getFrontOffsetZ()*GravityHandler.ENTITY_OFFSET*currentProgress;
+									
+									e.setMotion(e.getMotion().add(dir.getXOffset()*GravityHandler.ENTITY_OFFSET*currentProgress,
+									dir.getYOffset()*GravityHandler.ENTITY_OFFSET*currentProgress,
+									dir.getZOffset()*GravityHandler.ENTITY_OFFSET*currentProgress));
 								}
 							}
-							else if (e instanceof EntityItem || e instanceof EntityArrow) {
-								e.motionX += dir.getFrontOffsetX()*GravityHandler.ITEM_GRAV_OFFSET*currentProgress;
-								e.motionY += dir.getFrontOffsetY()*GravityHandler.ITEM_GRAV_OFFSET*currentProgress;
-								e.motionZ += dir.getFrontOffsetZ()*GravityHandler.ITEM_GRAV_OFFSET*currentProgress;
+							else if (e instanceof ItemEntity || e instanceof ArrowEntity) {
+								e.setMotion(e.getMotion().add(dir.getXOffset()*GravityHandler.ITEM_GRAV_OFFSET*currentProgress,
+								dir.getYOffset()*GravityHandler.ITEM_GRAV_OFFSET*currentProgress,
+								dir.getZOffset()*GravityHandler.ITEM_GRAV_OFFSET*currentProgress));
 							}
 
 							//Spawn particle effect
 							//TODO: tornados for planets
 							if(world.isRemote) {
-								if(Minecraft.getMinecraft().gameSettings.particleSetting == 0 && !(Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 && Minecraft.getMinecraft().player == e))
-									AdvancedRocketry.proxy.spawnParticle("gravityEffect", world, e.posX, e.posY, e.posZ, .2f*dir.getFrontOffsetX()*currentProgress, .2f*dir.getFrontOffsetY()*currentProgress, .2f*dir.getFrontOffsetZ()*currentProgress);
+								if(Minecraft.getInstance().gameSettings.particles == ParticleStatus.ALL)
+									AdvancedRocketry.proxy.spawnParticle("gravityEffect", world, e.getPosX(), e.getPosY(), e.getPosZ(), .2f*dir.getXOffset()*currentProgress, .2f*dir.getYOffset()*currentProgress, .2f*dir.getZOffset()*currentProgress);
 							}
 
 						}
@@ -223,7 +228,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 
 				//Only apply gravity if none of the directions are set and it's not a player in flight
 				if(allowApply && !additive)
-					e.motionY += (e instanceof EntityItem || e instanceof EntityArrow) ? GravityHandler.ITEM_GRAV_OFFSET :  GravityHandler.ENTITY_OFFSET + 0.005;
+					e.setMotion(e.getMotion().add(0 , (e instanceof ItemEntity || e instanceof ArrowEntity) ? GravityHandler.ITEM_GRAV_OFFSET :  GravityHandler.ENTITY_OFFSET + 0.005, 0));
 			}
 		}
 		else if (currentProgress > 0) {
@@ -251,12 +256,12 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 	}
 
 	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
+	public boolean canInteractWithContainer(PlayerEntity entity) {
 		return true;
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
 		super.writeDataToNetwork(out, id);
 		if(id == 3) {
 			out.writeShort(progress);
@@ -272,27 +277,27 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
+			CompoundNBT nbt) {
 		super.readDataFromNetwork(in, packetId, nbt);
 		if(packetId == 3) {
-			nbt.setShort("progress",  in.readShort());
-			nbt.setShort("radius", in.readShort());
+			nbt.putShort("progress",  in.readShort());
+			nbt.putShort("radius", in.readShort());
 		}
 		else if(packetId == 4) {
 			byte bytes[] = new byte[6];
 			for(int i = 0; i < 6; i++)
 				bytes[i] = in.readByte();
-			nbt.setByteArray("bytes", bytes);
+			nbt.putByteArray("bytes", bytes);
 		}
 		else if(packetId == 5) {
-			nbt.setByte("redstoneState", in.readByte());
+			nbt.putByte("redstoneState", in.readByte());
 		}
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 		super.useNetworkData(player, side, id, nbt);
 
 		if(id == 3) {
@@ -312,17 +317,17 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 
 
 	@Override
-	protected void writeNetworkData(NBTTagCompound nbt) {
+	protected void writeNetworkData(CompoundNBT nbt) {
 		super.writeNetworkData(nbt);
-		nbt.setShort("gravity", (short)gravity);
-		nbt.setFloat("currGravity", currentProgress);
-		nbt.setByte("redstoneState", (byte) state.ordinal());
-		nbt.setShort("radius", (short)radius);
-		sideSelectorModule.writeToNBT(nbt);
+		nbt.putShort("gravity", (short)gravity);
+		nbt.putFloat("currGravity", currentProgress);
+		nbt.putByte("redstoneState", (byte) state.ordinal());
+		nbt.putShort("radius", (short)radius);
+		sideSelectorModule.write(nbt);
 	}
 
 	@Override
-	protected void readNetworkData(NBTTagCompound nbt) {
+	protected void readNetworkData(CompoundNBT nbt) {
 		super.readNetworkData(nbt);
 		gravity = nbt.getShort("gravity");
 		currentProgress = nbt.getFloat("currGravity");
@@ -335,9 +340,9 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 	}
 
 	@Override
-	public void onInventoryButtonPressed(int buttonId) {
+	public void onInventoryButtonPressed(ModuleButton buttonId) {
 		super.onInventoryButtonPressed(buttonId);
-		if(buttonId == 1) {
+		if(buttonId == redstoneControl) {
 			state = redstoneControl.getState();
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)5));
 		}

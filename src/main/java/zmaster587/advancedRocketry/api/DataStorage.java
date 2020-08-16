@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.api;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 import java.util.Locale;
 
@@ -122,18 +122,18 @@ public class DataStorage {
 		return dataRemoved;
 	}
 
-	public void writeToNBT(NBTTagCompound nbt) {
-		nbt.setInteger("Data", data);
-		nbt.setInteger("maxData", maxData);
-		nbt.setInteger("DataType", dataType.ordinal());
-		nbt.setBoolean("locked", locked);
+	public void writeToNBT(CompoundNBT nbt) {
+		nbt.putInt("Data", data);
+		nbt.putInt("maxData", maxData);
+		nbt.putInt("DataType", dataType.ordinal());
+		nbt.putBoolean("locked", locked);
 	}
 
-	public void readFromNBT(NBTTagCompound nbt) {
-		data = nbt.getInteger("Data");
-		maxData = nbt.getInteger("maxData");
+	public void readFromNBT(CompoundNBT nbt) {
+		data = nbt.getInt("Data");
+		maxData = nbt.getInt("maxData");
 		try {
-			dataType = DataType.values()[nbt.getInteger("DataType")];
+			dataType = DataType.values()[nbt.getInt("DataType")];
 		} catch(ArrayIndexOutOfBoundsException e)
 		{
 			dataType = DataType.UNDEFINED;
@@ -141,7 +141,7 @@ public class DataStorage {
 
 
 		///TODO: dev compat
-		if(nbt.hasKey("locked"))
+		if(nbt.contains("locked"))
 			locked = nbt.getBoolean("locked");
 		else
 			locked = false;

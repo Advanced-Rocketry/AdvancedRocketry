@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.api;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.libVulpes.util.AdjacencyGraph;
@@ -76,7 +76,7 @@ public class AreaBlob {
 	protected HashSet<HashedBlockPosition> getPositionsToAdd(HashedBlockPosition blockPos) {
 		HashSet<HashedBlockPosition> set = new HashSet<HashedBlockPosition>();
 		
-		for(EnumFacing direction : EnumFacing.values()) {
+		for(Direction direction : Direction.values()) {
 			
 			HashedBlockPosition offset = blockPos.getPositionAtOffset(direction);
 			if(graph.contains(offset))
@@ -129,7 +129,7 @@ public class AreaBlob {
 		//HashedBlockPosition blockPos = new HashedBlockPosition(x, y, z);
 		graph.remove(blockPos);
 		
-		for(EnumFacing direction : EnumFacing.values()) {
+		for(Direction direction : Direction.values()) {
 
 			HashedBlockPosition newBlock = blockPos.getPositionAtOffset(direction);
 			if(graph.contains(newBlock) && !graph.doesPathExist(newBlock, blobHandler.getRootPosition()))

@@ -1,56 +1,53 @@
 package zmaster587.advancedRocketry.event;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockTorch;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.TorchBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayer.SleepResult;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerEntity.SleepResult;
+import net.minecraft.entity.player.ServerPlayerEntity;
+
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.item.Items;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ServerTickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent.CheckSpawn;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
-import net.minecraftforge.event.terraingen.OreGenEvent;
-import net.minecraftforge.event.terraingen.PopulateChunkEvent;
-import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerConnectionFromClientEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.eventbus.api.Event.Result;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import org.lwjgl.opengl.GL11;
 
-import akka.actor.FSM.Event;
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
@@ -81,6 +78,7 @@ import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.event.BucketHandler;
 import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -102,37 +100,14 @@ public class PlanetEventHandler {
 	}
 
 	@SubscribeEvent
-	public void onCrafting(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent event) {
-		if(event.crafting != null) {
-			Item item = event.crafting.getItem();//TODO Advancments for crafting.
-			//			if(item == LibVulpesItems.itemHoloProjector) 
-			//				event.player.addStat(ARAchivements.holographic);
-			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockRollingMachine))
-			//				event.player.addStat(ARAchivements.rollin);
-			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockCrystallizer))
-			//				event.player.addStat(ARAchivements.crystalline);
-			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockLathe))
-			//				event.player.addStat(ARAchivements.spinDoctor);
-			//			else if(item ==Item.getItemFromBlock(AdvancedRocketryBlocks.blockElectrolyser))
-			//				event.player.addStat(ARAchivements.electrifying);
-			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockArcFurnace))
-			//				event.player.addStat(ARAchivements.feelTheHeat);
-			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockWarpCore))
-			//				event.player.addStat(ARAchivements.warp);
-			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockPlatePress))
-			//				event.player.addStat(ARAchivements.blockPresser);
-		}
-	}
-
-	@SubscribeEvent
 	public void CheckSpawn(LivingSpawnEvent.CheckSpawn event)
 	{
-		World world = event.getWorld();
+		World world = (World) event.getWorld();
 		DimensionManager manager = DimensionManager.getInstance();
 
 		if(manager.isInitialized())
 		{
-			DimensionProperties properties = manager.getDimensionProperties(world.provider.getDimension());
+			DimensionProperties properties = manager.getDimensionProperties(world);
 			if(properties != null) {
 				if(!properties.getAtmosphere().isImmune(event.getEntityLiving().getClass()))
 					event.setResult(Result.DENY);
@@ -142,17 +117,17 @@ public class PlanetEventHandler {
 
 	@SubscribeEvent
 	public void SpawnEntity(WorldEvent.PotentialSpawns event) {
-		World world = event.getWorld();
+		World world = (World) event.getWorld();
 
-		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
+		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world);
 		if(properties != null) {
 			List<SpawnListEntryNBT> entries = properties.getSpawnListEntries();
-			if(!entries.isEmpty() && event.getType() != EnumCreatureType.MONSTER)
+			if(!entries.isEmpty() && event.getType() != EntityClassification.MONSTER)
 				event.getList().addAll(entries);
 		}
 	}
 
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public void onWorldGen(OreGenEvent.GenerateMinable event) {
 
 		if(event.getWorld().provider instanceof WorldProviderPlanet && 
@@ -174,24 +149,13 @@ public class PlanetEventHandler {
 				event.setResult(Result.DEFAULT);
 			}
 		}
-	}
-
-	@SubscribeEvent
-	public void onPickup(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent event) {
-		if(event.pickedUp != null && !event.pickedUp.getItem().isEmpty()) {
-
-			//TODO pickup advancment
-			//			zmaster587.libVulpes.api.material.Material mat = LibVulpes.materialRegistry.getMaterialFromItemStack( event.pickedUp.getEntityItem());
-			//			if(mat != null && mat.getUnlocalizedName().contains("Dilithium"))
-			//				event.player.addStat(ARAchivements.dilithiumCrystals);
-		}
-	}
+	}*/
 
 	//Handle gravity
 	@SubscribeEvent
 	public void playerTick(LivingUpdateEvent event) {
 
-		if(event.getEntity().world.isRemote && event.getEntity().posY > 260 && event.getEntity().posY < 270 && event.getEntity().motionY < -.1) {
+		if(event.getEntity().world.isRemote && event.getEntity().getPosY() > 260 && event.getEntity().getPosY() < 270 && event.getEntity().getMotion().y < -.1) {
 			RocketEventHandler.destroyOrbitalTextures(event.getEntity().world);
 		}
 		if(event.getEntity().isInWater()) {
@@ -199,10 +163,10 @@ public class PlanetEventHandler {
 				event.getEntity().setAir(300);
 		}
 
-		if(!event.getEntity().world.isRemote && event.getEntity().world.getTotalWorldTime() % 20 ==0 && event.getEntity() instanceof EntityPlayer) {
-			if(DimensionManager.getInstance().getDimensionProperties(event.getEntity().world.provider.getDimension()).getName().equals("Luna") && 
-					event.getEntity().getPosition().distanceSq(2347,80, 67) < 512 ) {
-				ARAchivements.WENT_TO_THE_MOON.trigger((EntityPlayerMP)event.getEntity());
+		if(!event.getEntity().world.isRemote && event.getEntity().world.getGameTime() % 20 ==0 && event.getEntity() instanceof PlayerEntity) {
+			if(DimensionManager.getInstance().getDimensionProperties(event.getEntity().world).getName().equals("Luna") && 
+					event.getEntity().getPositionVec().squareDistanceTo(2347,80, 67) < 512 ) {
+				ARAchivements.WENT_TO_THE_MOON.trigger((ServerPlayerEntity)event.getEntity());
 			}	
 		}
 
@@ -211,24 +175,24 @@ public class PlanetEventHandler {
 
 	@SubscribeEvent
 	public void sleepEvent(PlayerSleepInBedEvent event) {
-
-		if(event.getEntity().world.provider instanceof WorldProviderPlanet) {
-			if (!ARConfiguration.getCurrentConfig().forcePlayerRespawnInSpace && AtmosphereHandler.hasAtmosphereHandler(event.getEntity().world.provider.getDimension()) && 
-					!AtmosphereHandler.getOxygenHandler(event.getEntity().world.provider.getDimension()).getAtmosphereType(event.getPos()).isBreathable()) {
+		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(event.getEntity().getEntityWorld());
+		if(props != DimensionManager.defaultSpaceDimensionProperties) {
+			if (!ARConfiguration.getCurrentConfig().forcePlayerRespawnInSpace && AtmosphereHandler.hasAtmosphereHandler(event.getEntity().world) && 
+					!AtmosphereHandler.getOxygenHandler(event.getEntity().world).getAtmosphereType(event.getPos()).isBreathable()) {
 				event.setResult(SleepResult.OTHER_PROBLEM);
 			}
 		}
 	}
 
 	@SubscribeEvent
-	public void blockPlacedEvent(PlaceEvent event)
+	public void blockPlacedEvent(BlockEvent.EntityPlaceEvent event)
 	{
-		if(!event.getWorld().isRemote  && AtmosphereHandler.getOxygenHandler(event.getWorld().provider.getDimension()) != null &&
-				!AtmosphereHandler.getOxygenHandler(event.getWorld().provider.getDimension()).getAtmosphereType(event.getPos()).allowsCombustion()) {
+		World world =event.getEntity().getEntityWorld(); 
+		if(!world.isRemote  && AtmosphereHandler.getOxygenHandler(world) != null &&
+				!AtmosphereHandler.getOxygenHandler(world).getAtmosphereType(event.getPos()).allowsCombustion()) {
 
 			if(event.getPlacedBlock().getBlock() == Blocks.TORCH) {
-				EnumFacing direction = event.getPlacedBlock().getValue(BlockTorch.FACING);
-				event.getWorld().setBlockState(event.getPos(), AdvancedRocketryBlocks.blockUnlitTorch.getDefaultState().withProperty(BlockTorch.FACING, direction));
+				event.getWorld().setBlockState(event.getPos(), AdvancedRocketryBlocks.blockUnlitTorch.getDefaultState(),20);
 			}
 			else if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().torchBlocks.contains(event.getPlacedBlock().getBlock()))
 			{
@@ -240,18 +204,18 @@ public class PlanetEventHandler {
 	
 	@SubscribeEvent
 	public void blockRightClicked(RightClickBlock event) {
-		EnumFacing direction = event.getFace();
-		if(!event.getWorld().isRemote && direction != null  && event.getEntityPlayer() != null  && AtmosphereHandler.getOxygenHandler(event.getWorld().provider.getDimension()) != null &&
-				!AtmosphereHandler.getOxygenHandler(event.getWorld().provider.getDimension()).getAtmosphereType(event.getPos().offset(direction)).allowsCombustion()) {
+		Direction direction = event.getFace();
+		if(!event.getWorld().isRemote && direction != null  && event.getPlayer() != null  && AtmosphereHandler.getOxygenHandler(event.getWorld()) != null &&
+				!AtmosphereHandler.getOxygenHandler(event.getWorld()).getAtmosphereType(event.getPos().offset(direction)).allowsCombustion()) {
 
-			if(event.getEntityPlayer().getHeldItem(event.getHand()) != null) {
-				if(event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE|| event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_POWDER || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_ROD )
+			if(event.getPlayer().getHeldItem(event.getHand()) != null) {
+				if(event.getPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE|| event.getPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_POWDER || event.getPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_ROD )
 					event.setCanceled(true);
 			}
 		}
 
 		if(!event.getWorld().isRemote && event.getItemStack() != null && event.getItemStack().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
-			ARAchivements.BEER.trigger((EntityPlayerMP) event.getEntityPlayer());
+			ARAchivements.BEER.trigger((ServerPlayerEntity) event.getPlayer());
 		}
 	}
 
@@ -276,7 +240,7 @@ public class PlanetEventHandler {
 
 	//Tick dimensions, needed for satellites, and guis
 	@SubscribeEvent
-	public void tick(TickEvent.ServerTickEvent event) {
+	public void tick(ServerTickEvent event) {
 		//Tick satellites
 		if(event.phase == event.phase.END) {
 			DimensionManager.getInstance().tickDimensions();
@@ -287,12 +251,12 @@ public class PlanetEventHandler {
 
 				while(itr.hasNext()) {
 					TransitionEntity ent = itr.next();
-					if(ent.entity.world.getTotalWorldTime() >= ent.time) {
+					if(ent.entity.world.getGameTime() >= ent.time) {
 						ent.entity.setLocationAndAngles(ent.location.getX(), ent.location.getY(), ent.location.getZ(), ent.entity.rotationYaw, ent.entity.rotationPitch);
-						WorldServer newWorld = ent.entity.getServer().getWorld(ent.dimId);
-						ent.entity.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP)ent.entity, ent.dimId, new TeleporterNoPortal(newWorld));
+						ServerWorld newWorld = ent.dimId;
+						ent.entity.changeDimension(newWorld, new TeleporterNoPortal(newWorld));
 						//should be loaded by now
-						Entity rocket = newWorld.getEntityFromUuid(ent.entity2.getPersistentID());
+						Entity rocket = newWorld.getEntityByUuid(ent.entity2.getUniqueID());
 						if(rocket != null)
 							ent.entity.startRiding(rocket);
 						itr.remove();
@@ -337,70 +301,18 @@ public class PlanetEventHandler {
 		zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
 	}
 
-	/*@SubscribeEvent
-	public void connectToServer(ClientConnectedToServerEvent event) 
-	{
-		zmaster587.advancedRocketry.api.ARConfiguration.prevAsteroidTypes = zmaster587.advancedRocketry.api.ARConfiguration.asteroidTypes;
-		zmaster587.advancedRocketry.api.ARConfiguration.asteroidTypes = new HashMap<String, AsteroidSmall>();
-	}
-
-	@SubscribeEvent
-	public void disconnectFromServer(ClientDisconnectionFromServerEvent event)
-	{
-		zmaster587.advancedRocketry.api.ARConfiguration.asteroidTypes = zmaster587.advancedRocketry.api.ARConfiguration.prevAsteroidTypes;
-	}*/
-
-
-	// Used to save extra biome data
-	/*@SubscribeEvent
-	public void worldLoadEvent(WorldEvent.Load event) {
-		if(event.getWorld().provider instanceof ProviderPlanet && DimensionManager.getInstance().getDimensionProperties(event.getWorld().provider.getDimension()).biomeProperties == null) {
-			DimensionManager.getInstance().getDimensionProperties(event.getWorld().provider.getDimension()).biomeProperties = new ExtendedBiomeProperties(event.getWorld());
-		}
-	}
-
-	// Used to load extra biome data
-	@SubscribeEvent
-	public void saveExtraData(ChunkDataEvent.Save event) {
-		if(event.getWorld().provider instanceof ProviderPlanet) {
-			NBTTagCompound nbt = event.getData();
-
-			int xPos = event.getChunk().xPosition;//nbt.getInteger("xPos");
-			int zPos = event.getChunk().zPosition;//nbt.getInteger("zPos");
-
-			ChunkProperties properties = DimensionManager.getInstance().getDimensionProperties(event.getWorld().provider.getDimension()).biomeProperties.getChunkPropertiesFromChunkCoords(xPos, zPos);
-
-			nbt.setIntArray("ExtendedBiomeArray", properties.getBlockBiomeArray());
-		}
-	}
-
-	@SubscribeEvent
-	public void loadExtraData(ChunkDataEvent.Load event) {
-		if(event.getWorld().provider instanceof ProviderPlanet)  {
-			NBTTagCompound nbt = event.getData();
-
-
-			int xPos = event.getChunk().xPosition;//nbt.getInteger("xPos");
-			int zPos = event.getChunk().zPosition;//nbt.getInteger("zPos");
-			ChunkProperties properties = DimensionManager.getInstance().getDimensionProperties(event.getWorld().provider.getDimension()).biomeProperties.getChunkPropertiesFromChunkCoords(xPos, zPos);
-
-			properties.setBlockBiomeArray(event.getData().getIntArray("ExtendedBiomeArray"));
-		}
-	}
-	 */
-
 	@SubscribeEvent
 	public void worldLoadEvent(WorldEvent.Load event) {
-		if(!event.getWorld().isRemote)
-			AtmosphereHandler.registerWorld(event.getWorld().provider.getDimension());
+		if(!event.getWorld().isRemote())
+			AtmosphereHandler.registerWorld((World)event.getWorld());
 		else if(ARConfiguration.getCurrentConfig().skyOverride && event.getWorld().provider.getDimension() == 0)
 			event.getWorld().provider.setSkyRenderer(new RenderPlanetarySky());
 	}
 
 	@SubscribeEvent
 	public void worldUnloadEvent(WorldEvent.Unload event) {
-		if(!event.getWorld().isRemote)
-			AtmosphereHandler.unregisterWorld(event.getWorld().provider.getDimension());
+		if(!event.getWorld().isRemote())
+			AtmosphereHandler.unregisterWorld(event.getWorld());
 	}
 
 	/**
@@ -408,7 +320,7 @@ public class PlanetEventHandler {
 	 * @param endTime
 	 * @param duration
 	 */
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(value=Dist.CLIENT)
 	public static void runBurst(long endTime, long duration) {
 		PlanetEventHandler.endTime = endTime;
 		PlanetEventHandler.duration = duration;
@@ -416,11 +328,9 @@ public class PlanetEventHandler {
 
 	//Handle fog density and color
 	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(value=Dist.CLIENT)
 	public void fogColor(FogColors event) {
-
-
-		IBlockState state = ActiveRenderInfo.getBlockStateAtEntityViewpoint(event.getEntity().world, event.getEntity(), (float)event.getRenderPartialTicks());
+		BlockState state = ActiveRenderInfo.getBlockStateAtEntityViewpoint(event.getEntity().world, event.getEntity(), (float)event.getRenderPartialTicks());
 
 		Block block = state.getBlock();
 		if(block.getMaterial(state) == Material.WATER)
@@ -431,14 +341,14 @@ public class PlanetEventHandler {
 			float fog = Math.min(properties.getAtmosphereDensityAtHeight(event.getEntity().posY), 200);
 
 			if(event.getEntity().world.provider instanceof IPlanetaryProvider) {
-				Vec3d color = event.getEntity().world.provider.getSkyColor(event.getEntity(), 0f);
+				Vector3d color = event.getEntity().world.provider.getSkyColor(event.getEntity(), 0f);
 				event.setRed((float) Math.min(color.x*1.4f,1f));
 				event.setGreen((float) Math.min(color.y*1.4f, 1f));
 				event.setBlue((float) Math.min(color.z*1.4f, 1f));
 			}
 
 			if(endTime > 0) {
-				double amt = (endTime - Minecraft.getMinecraft().world.getTotalWorldTime()) / (double)duration;
+				double amt = (endTime - Minecraft.getInstance().world.getGameTime()) / (double)duration;
 				if(amt < 0) {
 					endTime = 0;
 				}
@@ -460,8 +370,8 @@ public class PlanetEventHandler {
 	public void serverTickEvent(TickEvent.WorldTickEvent event) {
 		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().allowTerraforming && event.world.provider.getClass() == WorldProviderPlanet.class) {
 
-			if(DimensionManager.getInstance().getDimensionProperties(event.world.provider.getDimension()).isTerraformed()) {
-				Collection<Chunk> list = ((WorldServer)event.world).getChunkProvider().getLoadedChunks();
+			if(DimensionManager.getInstance().getDimensionProperties(event.world).isTerraformed()) {
+				Collection<Chunk> list = ((ServerWorld)event.world).getChunkProvider().getLoadedChunks();
 				if(list.size() > 0) {
 					try {
 						int listSize = list.size();
@@ -511,7 +421,7 @@ public class PlanetEventHandler {
 
 	static final ItemStack component = new ItemStack(AdvancedRocketryItems.itemUpgrade, 1, 4);
 	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(value=Dist.CLIENT)
 	public void fogColor(RenderFogEvent event) {
 
 		if(false || event.getFogMode() == -1) {
@@ -530,7 +440,7 @@ public class PlanetEventHandler {
 			float far;
 
 			int atmosphere = Math.min(properties.getAtmosphereDensity(), 200);
-			ItemStack armor = Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+			ItemStack armor = Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD);
 
 			if(armor != null && armor.getItem() instanceof IModularArmor) {
 				for(ItemStack i : ((IModularArmor)armor.getItem()).getComponents(armor)) {
@@ -584,9 +494,9 @@ public class PlanetEventHandler {
 	//Make sure the player doesnt die on low gravity worlds
 	@SubscribeEvent
 	public void fallEvent(LivingFallEvent event) {
-		if(event.getEntity().world.provider instanceof IPlanetaryProvider) {
-			IPlanetaryProvider planet = (IPlanetaryProvider)event.getEntity().world.provider;
-			event.setDistance((float) (event.getDistance() * planet.getGravitationalMultiplier(event.getEntity().getPosition())));
+		if(DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(event.getEntity().world))) {
+			IPlanetaryProvider planet = (IPlanetaryProvider) DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(event.getEntity().world));
+			event.setDistance((float) (event.getDistance() * planet.getGravitationalMultiplier(new BlockPos(event.getEntity().getPositionVec()))));
 		}
 	}
 }

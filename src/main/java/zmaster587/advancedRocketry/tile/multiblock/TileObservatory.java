@@ -2,19 +2,23 @@ package zmaster587.advancedRocketry.tile.multiblock;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
@@ -79,7 +83,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 							{'*',"stone", LibVulpesBlocks.motors, "stone",'*'},
 							{'*',"stone", "stone", "stone",'*'},
 							{null,'*', '*', '*',null}}};
-
+							
 	final static int openTime = 100;
 	final static int observationtime = 1000;
 	private static final byte TAB_SWITCH = 10;
@@ -100,6 +104,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	EmbeddedInventory inv = new EmbeddedInventory(3);
 
 	public TileObservatory() {
+		super(AdvancedRocketryTileEntityType.TILE_OBSERVATORY);
 		openProgress = 0;
 		viewDistance = 0;
 		lastButton = -1;
@@ -125,13 +130,13 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	
 	@Override
 	public void deconstructMultiBlock(World world, BlockPos destroyedPos,
-			boolean blockBroken, IBlockState state) {
+			boolean blockBroken, BlockState state) {
 		super.deconstructMultiBlock(world, destroyedPos, blockBroken, state);
 		viewDistance = 0;
 	}
 
 	@Override
-	protected void replaceStandardBlock(BlockPos newPos, IBlockState state,
+	protected void replaceStandardBlock(BlockPos newPos, BlockState state,
 			TileEntity tile) {
 		
 		Block block = state.getBlock();
@@ -156,7 +161,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 	
 	@Override
-	public void update() {
+	public void tick() {
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0 ) {
@@ -227,41 +232,41 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	protected void writeNetworkData(NBTTagCompound nbt) {
+	protected void writeNetworkData(CompoundNBT nbt) {
 		super.writeNetworkData(nbt);
-		nbt.setInteger("openProgress", openProgress);
-		nbt.setBoolean("isOpen", isOpen);
+		nbt.putInt("openProgress", openProgress);
+		nbt.putBoolean("isOpen", isOpen);
 
-		nbt.setInteger("viewableDist", viewDistance);
-		nbt.setLong("lastSeed", lastSeed);
-		nbt.setInteger("lastButton", lastButton);
+		nbt.putInt("viewableDist", viewDistance);
+		nbt.putLong("lastSeed", lastSeed);
+		nbt.putInt("lastButton", lastButton);
 		if(lastType != null && !lastType.isEmpty())
-			nbt.setString("lastType", lastType);
+			nbt.putString("lastType", lastType);
 	}
 
 	@Override
-	protected void readNetworkData(NBTTagCompound nbt) {
+	protected void readNetworkData(CompoundNBT nbt) {
 		super.readNetworkData(nbt);
-		openProgress = nbt.getInteger("openProgress");
+		openProgress = nbt.getInt("openProgress");
 
 		isOpen = nbt.getBoolean("isOpen");
 
-		viewDistance = nbt.getInteger("viewableDist");
+		viewDistance = nbt.getInt("viewableDist");
 		lastSeed = nbt.getLong("lastSeed");
-		lastButton = nbt.getInteger("lastButton");
+		lastButton = nbt.getInt("lastButton");
 		lastType = nbt.getString("lastType");
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		inv.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
+		inv.write(nbt);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
 
 		inv.readFromNBT(nbt);
 	}
@@ -280,7 +285,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public boolean completeStructure(IBlockState state) {
+	public boolean completeStructure(BlockState state) {
 		boolean result = super.completeStructure(state);
 		if(result) {
 			((BlockMultiblockMachine)world.getBlockState(pos).getBlock()).setBlockState(world, world.getBlockState(pos), pos, true);
@@ -299,7 +304,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		modules.add(tabModule);
@@ -309,13 +314,13 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			//ADD io slots
 			modules.add(new ModuleTexturedSlotArray(5, 120, this, 1, 2, TextureResources.idChip));
 			modules.add(new ModuleOutputSlotArray(45, 120 , this, 2, 3));
-			modules.add(new ModuleProgress(25, 120, 0, new ProgressBarImage(217,0, 17, 17, 234, 0, EnumFacing.DOWN, TextureResources.progressBars), this));
-			modules.add(new ModuleButton(25, 120, 1, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonNull,  LibVulpes.proxy.getLocalizedString("msg.observetory.text.processdiscovery"), 17, 17));
+			modules.add(new ModuleProgress(25, 120, 0, new ProgressBarImage(217,0, 17, 17, 234, 0, Direction.DOWN, TextureResources.progressBars), this));
+			modules.add(new ModuleButton(25, 120, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonNull,  LibVulpes.proxy.getLocalizedString("msg.observetory.text.processdiscovery"), 17, 17).setAdditionalData(1));
 
 			
-			ModuleButton scanButton = new ModuleButton(100, 120, 2, LibVulpes.proxy.getLocalizedString("msg.observetory.scan.button"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, LibVulpes.proxy.getLocalizedString("msg.observetory.scan.tooltip"), 64, 18);
+			ModuleButton scanButton = new ModuleButton(100, 120, LibVulpes.proxy.getLocalizedString("msg.observetory.scan.button"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, LibVulpes.proxy.getLocalizedString("msg.observetory.scan.tooltip"), 64, 18).setAdditionalData(2);
 			
-			scanButton.setColor(extractData(dataConsumedPerRefresh, DataType.DISTANCE, EnumFacing.DOWN, false) == dataConsumedPerRefresh ? 0x00ff00 : 0xff0000);
+			scanButton.setColor(extractData(dataConsumedPerRefresh, DataType.DISTANCE, Direction.DOWN, false) == dataConsumedPerRefresh ? 0x00ff00 : 0xff0000);
 			
 			modules.add(scanButton);
 
@@ -331,7 +336,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 				List<StackEntry> harvestList = asteroidSmol.getHarvest(lastSeed + lastButton, Math.max(1 - ((Math.min(getDataAmt(DataType.COMPOSITION),2000)  + Math.min(getDataAmt(DataType.MASS), 2000) )/4000f), 0));
 				for(StackEntry entry : harvestList) {
 					//buttonList.add(new ModuleButton((g % 3)*24, 24*(g/3), -2, "",this, TextureResources.tabData, 24, 24));
-					buttonList.add(new ModuleSlotButton((g % 3)*24 + 1, 24*(g/3) + 1, -2, this, entry.stack, String.valueOf(entry.midpoint) + " +/-  " + String.valueOf(entry.variablility), getWorld()));
+					buttonList.add(new ModuleSlotButton((g % 3)*24 + 1, 24*(g/3) + 1, this, entry.stack, String.valueOf(entry.midpoint) + " +/-  " + String.valueOf(entry.variablility), getWorld()).setAdditionalData(-2));
 					buttonList.add(new ModuleText((g % 3)*24 + 1, 24*(g/3) + 1, String.valueOf(entry.midpoint) + "\n+/- " + String.valueOf(entry.variablility) , 0xFFFFFF, 0.5f ));
 					g++;
 				}
@@ -370,7 +375,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			for(int i = 0; i < finalList.size(); i++) {
 				AsteroidSmall asteroid = finalList.get(i);
 
-				ModuleButton button = new ModuleButton(0, i*18, LIST_OFFSET + i, asteroid.getName(), this, TextureResources.buttonAsteroid, 72, 18);
+				ModuleButton button = new ModuleButton(0, i*18, asteroid.getName(), this, TextureResources.buttonAsteroid, 72, 18).setAdditionalData(LIST_OFFSET + i);
 
 				if(lastButton - LIST_OFFSET == i) {
 					button.setColor(0xFFFF00);
@@ -420,7 +425,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			modules.add(pan2);
 		} else if(tabModule.getTab() == 0) {
 			modules.add(new ModulePower(18, 20, getBatteries()));
-			modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
+			modules.add(toggleSwitch = (ModuleToggleSwitch)new ModuleToggleSwitch(160, 5, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()).setAdditionalData(0));
 			
 			List<DataStorage> distanceStorage = new LinkedList<DataStorage>();
 			List<DataStorage> compositionStorage = new LinkedList<DataStorage>();
@@ -466,9 +471,11 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public void onInventoryButtonPressed(int buttonId) {
-		super.onInventoryButtonPressed(buttonId);
+	public void onInventoryButtonPressed(ModuleButton button) {
+		super.onInventoryButtonPressed(button);
 
+		int buttonId = button.getAdditionalData() == null ? -100 : (int)button.getAdditionalData();
+		
 		if(buttonId == 1) {
 			//Begin discovery processing
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)PROCESS_CHIP));
@@ -482,8 +489,8 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 		if(buttonId == 2) {
 			
 			//for(TileDataBus bus : getDataBus()) {
-				if(extractData(dataConsumedPerRefresh, DataType.DISTANCE, EnumFacing.UP, false) == dataConsumedPerRefresh) {
-					lastSeed = world.getTotalWorldTime()/100;
+				if(extractData(dataConsumedPerRefresh, DataType.DISTANCE, Direction.UP, false) == dataConsumedPerRefresh) {
+					lastSeed = world.getGameTime()/100;
 					lastButton = -1;
 					lastType = "";
 					PacketHandler.sendToServer(new PacketMachine(this, (byte)SEED_CHANGE));
@@ -494,33 +501,33 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 		super.useNetworkData(player, side, id, nbt);
 
 		if(id == -1)
 			storeData(-1);
 		else if(id == TAB_SWITCH && !world.isRemote) {
 			tabModule.setTab(nbt.getShort("tab"));
-			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), getWorld(), pos.getX(), pos.getY(), pos.getZ());
+			NetworkHooks.openGui((ServerPlayerEntity) player, this, getPos());
 		}
 		else if(id == BUTTON_PRESS && !world.isRemote) {
 			lastButton = nbt.getShort("button");
 			lastType = buttonType.get(lastButton - LIST_OFFSET);
 			markDirty();
 			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 2);
-			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), getWorld(), pos.getX(), pos.getY(), pos.getZ());
+			NetworkHooks.openGui((ServerPlayerEntity) player, this, getPos());
 
 		}
 		else if(id == SEED_CHANGE) {
-			if(extractData(dataConsumedPerRefresh, DataType.DISTANCE, EnumFacing.UP, false) >= dataConsumedPerRefresh) {
-				lastSeed = world.getTotalWorldTime()/100;
+			if(extractData(dataConsumedPerRefresh, DataType.DISTANCE, Direction.UP, false) >= dataConsumedPerRefresh) {
+				lastSeed = world.getGameTime()/100;
 				lastButton = -1;
 				lastType = "";
-				extractData(dataConsumedPerRefresh, DataType.DISTANCE, EnumFacing.UP, true);
+				extractData(dataConsumedPerRefresh, DataType.DISTANCE, Direction.UP, true);
 				world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 2);
 				markDirty();
-				player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), getWorld(), pos.getX(), pos.getY(), pos.getZ());
+				NetworkHooks.openGui((ServerPlayerEntity) player, this, getPos());
 			}
 
 
@@ -535,8 +542,8 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 					((ItemAsteroidChip)(stack.getItem())).setMaxData(stack, 1000);
 					inv.setInventorySlotContents(2, stack);
 
-					extractData(1000, DataType.COMPOSITION, EnumFacing.UP, true);
-					extractData(1000, DataType.MASS, EnumFacing.UP, true);
+					extractData(1000, DataType.COMPOSITION, Direction.UP, true);
+					extractData(1000, DataType.MASS, Direction.UP, true);
 					useEnergy(500);
 				}
 			}
@@ -544,7 +551,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
 		super.writeDataToNetwork(out, id);
 
 		if(id == TAB_SWITCH)
@@ -554,14 +561,14 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
+			CompoundNBT nbt) {
 		super.readDataFromNetwork(in, packetId, nbt);
 
 		if(packetId == TAB_SWITCH)
-			nbt.setShort("tab", in.readShort());
+			nbt.putShort("tab", in.readShort());
 		else if(packetId == BUTTON_PRESS)
-			nbt.setShort("button", in.readShort());
+			nbt.putShort("button", in.readShort());
 
 	}
 
@@ -586,17 +593,12 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public boolean hasCustomName() {
-		return false;
-	}
-
-	@Override
 	public int getInventoryStackLimit() {
 		return 1;
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(PlayerEntity player) {
 		return true;
 	}
 	
@@ -606,12 +608,12 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player) {
+	public void openInventory(PlayerEntity player) {
 
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer player) {
+	public void closeInventory(PlayerEntity player) {
 	}
 
 	@Override
@@ -620,7 +622,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public int extractData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {
+	public int extractData(int maxAmount, DataType type, Direction dir, boolean commit) {
 		int amt = 0;
 		for(TileDataBus tile : getDataBus()) {
 			int dataAmt = tile.extractData(maxAmount, type, dir, commit);
@@ -631,7 +633,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-	public int addData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {
+	public int addData(int maxAmount, DataType type, Direction dir, boolean commit) {
 		return 0;
 	}
 
@@ -651,7 +653,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 			for(TileDataBus tile : dataCables) {
 				DataStorage.DataType dataType = tile.getDataObject().getDataType();
-				data.addData(tile.extractData(data.getMaxData() - data.getData(), data.getDataType(), EnumFacing.UP, true), dataType ,true);
+				data.addData(tile.extractData(data.getMaxData() - data.getData(), data.getDataType(), Direction.UP, true), dataType ,true);
 			}
 
 			dataItem.setData(dataChip, data.getData(), data.getDataType());
@@ -661,35 +663,20 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)-1));
 		}
 	}
-
-	@Override
-	public String getName() {
-		return null;
-	}
-
 	@Override
 	public ItemStack removeStackFromSlot(int index) {
 		return inv.removeStackFromSlot(index);
 	}
 
-	@Override
-	public int getField(int id) {
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value) {
-
-	}
-
-	@Override
-	public int getFieldCount() {
-		return 0;
-	}
 
 	@Override
 	public void clear() {
 
+	}
+	
+	@Override
+	public int getModularInvType() {
+		return GuiHandler.guiId.MODULARNOINV.ordinal();
 	}
 
 	@Override

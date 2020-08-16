@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
@@ -39,15 +39,15 @@ public class RenderBlackHoleEnergy extends TileEntitySpecialRenderer {
 		if(!multiBlockTile.canRender())
 			return;
 
-		GL11.glPushMatrix();
+		matrix.push();
 
 		//Initial setup
 
 		//Rotate and move the model into position
-		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		GL11.glTranslated(x + .5, y + .5, z + .5);
+		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
+		matrix.translate(x + .5, y + .5, z + .5);
 
-		GL11.glRotatef((front.getFrontOffsetZ() == 1 ? 180 : 0) - front.getFrontOffsetX()*90f, 0, 1, 0);
+		GL11.glRotatef((front.getZOffset() == 1 ? 180 : 0) - front.getXOffset()*90f, 0, 1, 0);
 		
 		bindTexture(texture);
 		
@@ -55,38 +55,38 @@ public class RenderBlackHoleEnergy extends TileEntitySpecialRenderer {
 		
 		if(multiBlockTile.isProducingPower())
 		{
-			GlStateManager.disableTexture2D();
+			GlStateManager.disableTexture();
 			GlStateManager.disableLighting();
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE);
-			GlStateManager.color(1f, 1f, 0.5f, 0.5f);
+			GlStateManager.color4f(1f, 1f, 0.5f, 0.5f);
 			BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 			
-			GL11.glPushMatrix();
+			matrix.push();
 			GL11.glTranslatef(0, (float)Math.sin(System.currentTimeMillis() / 128.0)*.3f, 0);
 			
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
 			RenderHelper.renderCube(buffer, -0.45, 0.95, 0.55, 0.45, 1.05, 1.45);
 			Tessellator.getInstance().draw();
 			
-			GL11.glPopMatrix();
+			matrix.pop();
 			
-			GL11.glPushMatrix();
+			matrix.push();
 			GL11.glTranslatef(0, -(float)Math.sin(System.currentTimeMillis() / 128.0)*.3f, 0);
 			
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
 			RenderHelper.renderCube(buffer, -0.45, 0.95, 0.55, 0.45, 1.05, 1.45);
 			Tessellator.getInstance().draw();
-			GL11.glPopMatrix();
+			matrix.pop();
 			
 			GlStateManager.disableBlend();
-			GlStateManager.enableTexture2D();
+			GlStateManager.enableTexture();
 			GlStateManager.enableLighting();
 			GlStateManager.resetColor();
 		}
 		
 		
-		GL11.glPopMatrix();
+		matrix.pop();
 	}
 
 }

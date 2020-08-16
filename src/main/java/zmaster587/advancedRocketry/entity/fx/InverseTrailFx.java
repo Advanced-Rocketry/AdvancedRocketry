@@ -26,7 +26,7 @@ public class InverseTrailFx extends Particle {
         this.particleMaxAge = (int)(100.0D);
         this.particleScale = (float) (this.rand.nextFloat() * 0.6F + 6F + Math.pow(1.04f, this.particleMaxAge));
         this.motionX = -motx;
-        this.motionY = -moty;
+        this.getMotion().y = -moty;
         this.motionZ = -motz;
         
         icon = new ResourceLocation("advancedrocketry:textures/particle/soft.png");
@@ -53,7 +53,7 @@ public class InverseTrailFx extends Particle {
         int j = i >> 16 & 65535;
         int k = i & 65535;
 		
-		Minecraft.getMinecraft().getTextureManager().bindTexture(icon);
+		Minecraft.getInstance().getTextureManager().bindTexture(icon);
         worldRendererIn.finishDrawing();
         worldRendererIn.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
         
@@ -92,6 +92,6 @@ public class InverseTrailFx extends Particle {
             this.setExpired();
         }
         
-        this.setPosition(posX + this.motionX, posY + this.motionY, posZ  + this.motionZ);
+        this.setPosition(posX + this.motionX, posY + this.getMotion().y, posZ  + this.motionZ);
 	}
 }

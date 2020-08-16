@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.client.render;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.chunk.ChunkCompileTaskGenerator;
@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.chunk.IRenderChunkFactory;
 import net.minecraft.client.renderer.chunk.ListChunkFactory;
 import net.minecraft.client.renderer.chunk.RenderChunk;
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -34,13 +34,13 @@ import zmaster587.advancedRocketry.util.StorageChunk;
 
 public class RendererRocket extends Render implements IRenderFactory<EntityRocket> {
 
-	private static BlockRendererDispatcher renderBlocks = Minecraft.getMinecraft().getBlockRendererDispatcher();
+	private static BlockRendererDispatcher renderBlocks = Minecraft.getInstance().getBlockRendererDispatcher();
 	private IRenderChunkFactory factory = new ListChunkFactory();
 
 	Class tileEntityBlockChiseled;
 	Method getState;
 
-	public RendererRocket(RenderManager manager) {
+	public RendererRocket(EntityRendererManager manager) {
 		super(manager);
 
 		try {
@@ -77,21 +77,21 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 		float halfy = storage.getSizeY()/2f;
 		float halfz = storage.getSizeZ()/2f;
 
-		/*if(entity.getPassengers().contains(Minecraft.getMinecraft().player)) {
+		/*if(entity.getPassengers().contains(Minecraft.getInstance().player)) {
 			float angle = (float)(((EntityRocket)entity).getRCSRotateProgress()*0.9f*Math.PI/180f);
 			y = ((EntityRocket)entity).stats.getSeatY();
 			y= (0.5-((EntityRocket)entity).stats.getSeatY())*MathHelper.cos(angle) + (0)*MathHelper.sin(angle);
 			//y = +0.5 -((EntityRocket)entity).stats.getSeatY();
 		}*/
 
-		GL11.glPushMatrix();
+		matrix.push();
 		GL11.glTranslatef((float)x, (float)y, (float)z);
 
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GL11.GL_ONE, GL11.GL_ONE);
-		GlStateManager.color(0.5f, 1f, .5f, .2f);
+		GlStateManager.color4f(0.5f, 1f, .5f, .2f);
 
-		GlStateManager.disableTexture2D();
+		GlStateManager.disableTexture();
 		GL11.glEnable(GL11.GL_LINE_STIPPLE);
 		GL11.glLineWidth(1f);
 		GL11.glLineStipple(5, (short)0x2222);
@@ -104,40 +104,40 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 					buffer.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION);
 
 					buffer.pos(0, storage.getSizeY()/2f, 0).endVertex();
-					buffer.pos((tile.getPos().getX() - entity.posX + 0.5f)/2f, storage.getSizeY()/2f, (tile.getPos().getZ() - entity.posZ + 0.5f)/2f).endVertex();
-					buffer.pos(tile.getPos().getX() - entity.posX + 0.5f, tile.getPos().getY() - entity.posY  + 0.5f, tile.getPos().getZ() - entity.posZ + 0.5f).endVertex();
-					buffer.pos((tile.getPos().getX() - entity.posX + 0.5f)/2f, storage.getSizeY()/2f, (tile.getPos().getZ() - entity.posZ + 0.5f)/2f).endVertex();
+					buffer.pos((tile.getPos().getX() - entity.getPosX() + 0.5f)/2f, storage.getSizeY()/2f, (tile.getPos().getZ() - entity.getPosZ() + 0.5f)/2f).endVertex();
+					buffer.pos(tile.getPos().getX() - entity.getPosX() + 0.5f, tile.getPos().getY() - entity.posY  + 0.5f, tile.getPos().getZ() - entity.getPosZ() + 0.5f).endVertex();
+					buffer.pos((tile.getPos().getX() - entity.getPosX() + 0.5f)/2f, storage.getSizeY()/2f, (tile.getPos().getZ() - entity.getPosZ() + 0.5f)/2f).endVertex();
 
-					//RenderHelper.renderCrossXZ(Tessellator.instance, .2f, 0, storage.getSizeY()/2f, 0, tile.xCoord - entity.posX + 0.5f, tile.yCoord - entity.posY  + 0.5f, tile.zCoord - entity.posZ + 0.5f);
-					//RenderHelper.renderBlockWithEndPointers(Tessellator.instance, .2f, 0, storage.getSizeY()/2f, 0, tile.xCoord - entity.posX, tile.yCoord - entity.posY, tile.zCoord - entity.posZ);
+					//RenderHelper.renderCrossXZ(Tessellator.instance, .2f, 0, storage.getSizeY()/2f, 0, tile.xCoord - entity.getPosX() + 0.5f, tile.yCoord - entity.posY  + 0.5f, tile.zCoord - entity.getPosZ() + 0.5f);
+					//RenderHelper.renderBlockWithEndPointers(Tessellator.instance, .2f, 0, storage.getSizeY()/2f, 0, tile.xCoord - entity.getPosX(), tile.yCoord - entity.posY, tile.zCoord - entity.getPosZ());
 					Tessellator.getInstance().draw();
 					//RenderHelper.renderCubeWithUV(tess, 0, 0, 0, 2, 55, 2, 0, 1, 0, 1);
 				}
 			}
 		}
 
-		GlStateManager.color(1f, 1f, 1f);
+		GlStateManager.color4f(1f, 1f, 1f);
 		GlStateManager.disableBlend();
 		GL11.glDisable(GL11.GL_LINE_STIPPLE);
-		GlStateManager.enableTexture2D();
+		GlStateManager.enableTexture();
 
-		GL11.glPopMatrix();
+		matrix.pop();
 
 		//Initial setup
 		if(storage.world.displayListIndex == -1) {
 
 			storage.world.displayListIndex = GLAllocation.generateDisplayLists(1);
-			GL11.glPushMatrix();
+			matrix.push();
 			GL11.glNewList(storage.world.displayListIndex, GL11.GL_COMPILE);
 			net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
 
 			//Render Each block
 			net.minecraftforge.client.ForgeHooksClient.setRenderLayer(BlockRenderLayer.SOLID);
-			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+			Minecraft.getInstance().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 			for(int xx = 0; xx < storage.getSizeX(); xx++) {
 				for(int zz = 0; zz < storage.getSizeZ(); zz++) {
 					for(int yy = 0; yy < storage.getSizeY(); yy++) {
-						IBlockState block  = storage.getBlockState(new BlockPos(xx, yy, zz));
+						BlockState block  = storage.getBlockState(new BlockPos(xx, yy, zz));
 
 						//I'm not dealing with untextured blocks from chisel and bits today
 						//Just assume everything from C&B is a bit
@@ -146,7 +146,7 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 
 						buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 						try {
-							Minecraft.getMinecraft().getBlockRendererDispatcher().renderBlock(block, new BlockPos(xx, yy, zz), storage.world, buffer);
+							Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(block, new BlockPos(xx, yy, zz), storage.world, buffer);
 						} 
 						catch (NullPointerException e) {
 							System.out.println(block.getBlock().getUnlocalizedName() + " cannot be rendered on rocket at " + entity.getPosition());
@@ -161,15 +161,15 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 
 			GL11.glEndList();
 
-			GL11.glPopMatrix();
+			matrix.pop();
 		}
 
-		GL11.glPushMatrix();
+		matrix.push();
 		GL11.glTranslatef((float)x, (float)y + halfy, (float)z);
 		GL11.glRotatef(((EntityRocket)entity).getRCSRotateProgress()*0.9f, 1f, 0f, 0f);
 		GL11.glRotatef(((EntityRocket)entity).rotationYaw, 0f, 0f, 1f);
 		GL11.glTranslatef((float)- halfx, (float)0 - halfy, (float)- halfz);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		Minecraft.getInstance().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		GL11.glCallList(storage.world.displayListIndex);
 
 
@@ -197,13 +197,13 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 
 					if(tileEntityBlockChiseled.isInstance(tile) && getState != null)
 					{
-						GL11.glPushMatrix();
+						matrix.push();
 						try {
 							getState.invoke(tile, storage.world);
 							//Chisel transforms by -TileEntityRendererDispatcher.staticPlayer, we already transformed, so we must negate it
-							GL11.glTranslated(TileEntityRendererDispatcher.staticPlayerX, TileEntityRendererDispatcher.staticPlayerY, TileEntityRendererDispatcher.staticPlayerZ);
+							matrix.translate(TileEntityRendererDispatcher.staticPlayerX, TileEntityRendererDispatcher.staticPlayerY, TileEntityRendererDispatcher.staticPlayerZ);
 							TileEntityRendererDispatcher.instance.render(tile, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), f1);
-							GL11.glPopMatrix();
+							matrix.pop();
 						} catch (IllegalAccessException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -224,10 +224,10 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 		
 		//Clean up
 		GlStateManager.disableBlend();
-		GlStateManager.enableTexture2D();
+		GlStateManager.enableTexture();
 		GlStateManager.enableLighting();
 		GlStateManager.resetColor();
-		GL11.glPopMatrix();
+		matrix.pop();
 
 
 		//Clean up and make player not transparent
@@ -241,7 +241,7 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 	}
 
 	@Override
-	public Render<? super EntityRocket> createRenderFor(RenderManager manager) {
+	public EntityRenderer<? super EntityRocket> createRenderFor(EntityRendererManager manager) {
 		return new RendererRocket(manager);
 	}
 

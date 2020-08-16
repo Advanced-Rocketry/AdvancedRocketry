@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.world.gen;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class WorldGenElectricMushroom extends WorldGenerator {
 
-	IBlockState state;
+	BlockState state;
 	
 	public WorldGenElectricMushroom(Block block) {
 		state = block.getDefaultState();

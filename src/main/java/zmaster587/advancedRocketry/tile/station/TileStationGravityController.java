@@ -1,29 +1,40 @@
 package zmaster587.advancedRocketry.tile.station;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
+import zmaster587.libVulpes.inventory.ContainerModular;
+import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileStationGravityController extends TileEntity implements IModularInventory, ITickable, INetworkMachine, ISliderBar {
+public class TileStationGravityController extends TileEntity implements IModularInventory, ITickableTileEntity, INetworkMachine, ISliderBar {
 
 	int gravity;
 	int progress;
@@ -33,6 +44,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 	private ModuleText moduleGrav, maxGravBuildSpeed, targetGrav;
 
 	public TileStationGravityController() {
+		super(AdvancedRocketryTileEntityType.TILE_GRAVITY_CONTROLLER);
 		moduleGrav = new ModuleText(6, 15, LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.alt"), 0xaa2020);
 		//numGravPylons = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
 		maxGravBuildSpeed = new ModuleText(6, 25, LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.maxaltrate"), 0xaa2020);
@@ -42,7 +54,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
+	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(moduleGrav);
 		//modules.add(numThrusters);
@@ -56,20 +68,20 @@ public class TileStationGravityController extends TileEntity implements IModular
 	}
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound nbt = writeToNBT(new NBTTagCompound());
-		nbt.setInteger("gravity", gravity);
+	public SUpdateTileEntityPacket getUpdatePacket() {
+		CompoundNBT nbt = write(new CompoundNBT());
+		nbt.putInt("gravity", gravity);
 		
 
-		SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, 0, nbt);
+		SUpdateTileEntityPacket packet = new SUpdateTileEntityPacket(pos, 0, nbt);
 		return packet;
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 		super.onDataPacket(net, pkt);
 
-		gravity = pkt.getNbtCompound().getInteger("gravity");
+		gravity = pkt.getNbtCompound().getInt("gravity");
 
 	}
 	
@@ -88,9 +100,9 @@ public class TileStationGravityController extends TileEntity implements IModular
 	}
 
 	@Override
-	public void update() {
+	public void tick() {
 
-		if(this.world.provider instanceof WorldProviderSpace) {
+		if(ZUtils.getDimensionIdentifier(this.world) == ARConfiguration.getCurrentConfig().spaceDimId) {
 
 			if(!world.isRemote) {
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
@@ -133,41 +145,41 @@ public class TileStationGravityController extends TileEntity implements IModular
 	}
 
 	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
+	public boolean canInteractWithContainer(PlayerEntity entity) {
 		return true;
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
 		if(id == 0) {
 			out.writeShort(progress);
 		}
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
+			CompoundNBT nbt) {
 		if(packetId == 0) {
 			setProgress(0, in.readShort());
 		}
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		nbt.setShort("numRotations", (short)gravity);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
+		nbt.putShort("numRotations", (short)gravity);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
 		gravity = nbt.getShort("numRotations");
 		progress = gravity -minGravity;
 	}
@@ -204,5 +216,20 @@ public class TileStationGravityController extends TileEntity implements IModular
 	public void setProgressByUser(int id, int progress) {
 		setProgress(id, progress);
 		PacketHandler.sendToServer(new PacketMachine(this, (byte)0));
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TranslationTextComponent(getModularInventoryName());
+	}
+
+	@Override
+	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType(), player), this);
+	}
+
+	@Override
+	public int getModularInvType() {
+		return guiId.MODULAR.ordinal();
 	}
 }

@@ -1,14 +1,14 @@
 package zmaster587.advancedRocketry.inventory.modules;
 
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.Slot;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerListener;
+import net.minecraft.inventory.container.Slot;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.inventory.TextureResources;
@@ -19,6 +19,8 @@ import zmaster587.libVulpes.util.IconResource;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
 
 public class ModuleData extends ModuleBase implements IButtonInventory {
 
@@ -42,29 +44,29 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 		this.chipStorage = chipStorage;
 		this.slot = slot;
 
-		buttonStore = new ModuleButton(10 + offsetX, offsetY, 0, "", this, TextureResources.buttonDown, "Store to Chip", 16, 10);
-		buttonLoad = new ModuleButton(12 + offsetX, 36 + offsetY, 1, "", this, TextureResources.buttonLeft, "Store to buffer", 10, 16);
+		buttonStore = new ModuleButton(10 + offsetX, offsetY, "", this, TextureResources.buttonDown, "Store to Chip", 16, 10);
+		buttonLoad = new ModuleButton(12 + offsetX, 36 + offsetY, "", this, TextureResources.buttonLeft, "Store to buffer", 10, 16);
 	}
 
 	@Override
-	public List<GuiButton> addButtons(int x, int y) {
-		List<GuiButton> list = buttonLoad.addButtons(x, y);
+	public List<Button> addButtons(int x, int y) {
+		List<Button> list = buttonLoad.addButtons(x, y);
 		list.addAll(buttonStore.addButtons(x, y));
 		return list;
 	}
 
 	@Override
-	public void onInventoryButtonPressed(int buttonId) {
-		if(buttonId == 0) {
+	public void onInventoryButtonPressed(ModuleButton buttonId) {
+		if(buttonId == buttonStore) {
 			chipStorage.storeData(slot);
 		}
-		else if(buttonId == 1) {
+		else if(buttonId == buttonLoad) {
 			chipStorage.loadData(slot);
 		}
 	}
 
 	@Override
-	public void actionPerform(GuiButton button) {
+	public void actionPerform(Button button) {
 		buttonStore.actionPerform(button);
 		buttonLoad.actionPerform(button);
 	}
@@ -113,12 +115,13 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 			data[0].setDataType(DataStorage.DataType.values()[value]);
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(value=Dist.CLIENT)
 	@Override
-	public void renderForeground(int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel, GuiContainer gui, FontRenderer font) {
+	public void renderForeground(MatrixStack matrix, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY,
+			float zLevel, ContainerScreen<? extends Container> gui, FontRenderer font) {
 
-		buttonLoad.renderForeground(guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
-		buttonStore.renderForeground(guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
+		buttonLoad.renderForeground(matrix, guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
+		buttonStore.renderForeground(matrix, guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
 
 		int relativeX = mouseX - offsetX;
 		int relativeY = mouseY - offsetY;
@@ -135,20 +138,20 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 			List<String> list = new LinkedList<String>();
 			list.add(totalData + " / " + totalMaxData + " Data");
 			list.add("Type: " +  I18n.format(data[0].getDataType().toString(), new Object[0]));
-
-			this.drawTooltip(gui, list, mouseX, mouseY, zLevel, font);
+			this.drawTooltip(gui, matrix, list, mouseX, mouseY, zLevel, font);
 		}
 
 	}
-
+	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY, FontRenderer font) {
-		buttonLoad.renderBackground(gui, x, y, mouseX, mouseY, font);
-		buttonStore.renderBackground(gui, x, y, mouseX, mouseY, font);
+	@OnlyIn(value=Dist.CLIENT)
+	public void renderBackground(ContainerScreen<? extends Container> gui, MatrixStack matrix, int x, int y, int mouseX,
+			int mouseY, FontRenderer font) {
+		buttonLoad.renderBackground(gui, matrix, x, y, mouseX, mouseY, font);
+		buttonStore.renderBackground(gui, matrix, x, y, mouseX, mouseY, font);
 
 		for(Slot slot : slotList) {
-			gui.drawTexturedModalRect(x + slot.xPos - 1, y + slot.yPos - 1, icon.getxLoc(), icon.getyLoc(), icon.getxSize(), icon.getySize());
+			gui.func_238474_b_(matrix, x + slot.xPos - 1, y + slot.yPos - 1, icon.getxLoc(), icon.getyLoc(), icon.getxSize(), icon.getySize());
 		}
 
 		int totalData = 0, totalMaxData = 0;
@@ -160,9 +163,9 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 
 		float percent = totalData/(float)totalMaxData;
 
-		gui.drawTexturedModalRect(offsetX + x, offsetY + y, 176, 18, 8, 40);
-		gui.drawTexturedModalRect(offsetX + x - 1, offsetY + y + barYSize + 4, 19, 171, 10, 10);
+		gui.func_238474_b_(matrix, offsetX + x, offsetY + y, 176, 18, 8, 40);
+		gui.func_238474_b_(matrix, offsetX + x - 1, offsetY + y + barYSize + 4, 19, 171, 10, 10);
 
-		gui.drawTexturedModalRect(offsetX + x + 1, 1 + offsetY + y + (barYSize-(int)(percent*barYSize)), textureOffsetX, barYSize- (int)(percent*barYSize) + textureOffsetY, barXSize, (int)(percent*barYSize));
+		gui.func_238474_b_(matrix, offsetX + x + 1, 1 + offsetY + y + (barYSize-(int)(percent*barYSize)), textureOffsetX, barYSize- (int)(percent*barYSize) + textureOffsetY, barXSize, (int)(percent*barYSize));
 	}
 }

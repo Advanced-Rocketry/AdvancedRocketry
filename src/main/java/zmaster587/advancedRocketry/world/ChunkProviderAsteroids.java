@@ -11,7 +11,7 @@ import zmaster587.advancedRocketry.world.decoration.MapGenHighCaves;
 import zmaster587.advancedRocketry.world.decoration.MapGenMassiveRavine;
 import zmaster587.advancedRocketry.world.ore.CustomizableOreGen;
 import net.minecraft.block.BlockFalling;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -28,8 +28,8 @@ import net.minecraft.world.gen.NoiseGeneratorSimplex;
 
 public class ChunkProviderAsteroids extends ChunkProviderPlanet {
 
-	protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
-	protected static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
+	protected static final BlockState AIR = Blocks.AIR.getDefaultState();
+	protected static final BlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
 	private final World world;
 	private final boolean generateStructures;
 	private final Random rand;
@@ -56,8 +56,8 @@ public class ChunkProviderAsteroids extends ChunkProviderPlanet {
 	double[] br;
 	double[] noiseData4;
 	double[] dr;
-	private IBlockState oceanBlock;
-	private IBlockState fillblock;
+	private BlockState oceanBlock;
+	private BlockState fillblock;
 
 
 	public ChunkProviderAsteroids(World worldIn, boolean p_i45637_2_, long seed, String p_i46668_5_)
@@ -79,7 +79,7 @@ public class ChunkProviderAsteroids extends ChunkProviderPlanet {
 
 		worldIn.setSeaLevel(dimProps.getSeaLevel());
 
-		IBlockState oceanBlock = dimProps.getOceanBlock();
+		BlockState oceanBlock = dimProps.getOceanBlock();
 		if(oceanBlock != null)
 		{
 			this.oceanBlock = oceanBlock;
@@ -89,7 +89,7 @@ public class ChunkProviderAsteroids extends ChunkProviderPlanet {
 			this.oceanBlock = Blocks.WATER.getDefaultState();
 		}
 
-		IBlockState fillBlock = dimProps.getStoneBlock();
+		BlockState fillBlock = dimProps.getStoneBlock();
 		if(fillBlock != null)
 		{
 			this.fillblock = fillBlock;
@@ -154,7 +154,7 @@ public class ChunkProviderAsteroids extends ChunkProviderPlanet {
 
                             for (int k2 = 0; k2 < 4; ++k2)
                             {
-                                IBlockState iblockstate = null;
+                                BlockState iblockstate = null;
 
                                 if (d15 > 10.0D)
                                 {

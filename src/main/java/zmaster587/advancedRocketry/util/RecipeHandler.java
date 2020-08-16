@@ -1,13 +1,16 @@
 package zmaster587.advancedRocketry.util;
 
-import net.minecraft.init.Blocks;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.RecipeManager;
+import net.minecraft.item.crafting.ShapelessRecipe;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.GameData;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.block.BlockPress;
@@ -43,7 +46,7 @@ public class RecipeHandler {
 	
 	public void registerXMLRecipes() {
 		//Load XML recipes
-		LibVulpes.instance.loadXMLRecipe(TileCuttingMachine.class);
+		/*LibVulpes.instance.loadXMLRecipe(TileCuttingMachine.class);
 		LibVulpes.instance.loadXMLRecipe(TilePrecisionAssembler.class);
 		LibVulpes.instance.loadXMLRecipe(TileChemicalReactor.class);
 		LibVulpes.instance.loadXMLRecipe(TileCrystallizer.class);
@@ -51,7 +54,7 @@ public class RecipeHandler {
 		LibVulpes.instance.loadXMLRecipe(TileElectricArcFurnace.class);
 		LibVulpes.instance.loadXMLRecipe(TileLathe.class);
 		LibVulpes.instance.loadXMLRecipe(TileRollingMachine.class);
-		LibVulpes.instance.loadXMLRecipe(BlockPress.class);
+		LibVulpes.instance.loadXMLRecipe(BlockPress.class);*/
 	}
 	
 	public void registerAllMachineRecipes() {
@@ -67,6 +70,9 @@ public class RecipeHandler {
 	}
 	
 	public void createAutoGennedRecipes(HashMap<AllowedProducts, HashSet<String>> modProducts) {
+		
+		// no more auto genned recipies for now
+		/*final String group = "idk";
 		
 		for(zmaster587.libVulpes.api.material.Material ore : MaterialRegistry.getAllMaterials()) {
 			if(AllowedProducts.getProductByName("ORE").isOfType(ore.getAllowedProducts()) && AllowedProducts.getProductByName("INGOT").isOfType(ore.getAllowedProducts()))
@@ -146,8 +152,13 @@ public class RecipeHandler {
 				ingot.setCount(9);
 				for(String str : ore.getOreDictNames())
                 {
-				    GameData.register_impl(new ShapelessOreRecipe(null,ingot,
-                            AllowedProducts.getProductByName("BLOCK").name().toLowerCase(Locale.ENGLISH) + str).setRegistryName("advancedrocketry", "unpackblock"+str));
+					
+					ResourceLocation oreName = new ResourceLocation("forge", AllowedProducts.getProductByName("BLOCK").name().toLowerCase(Locale.ENGLISH) + str);
+					NonNullList<Ingredient> blockToIngot = NonNullList.create();
+					blockToIngot.add(Ingredient.fromTag(ItemTags.getCollection().func_241834_b(oreName)));
+					GameData.register_impl(value)
+					
+				    GameData.register_impl(new ShapelessRecipe(new ResourceLocation("advancedrocketry", "unpackblock"+str), group, ingot,blockToIngot));
 				    GameData.register_impl(new ShapedOreRecipe(null,
                             ore.getProduct(AllowedProducts.getProductByName("BLOCK")), "ooo", "ooo", "ooo", 'o',
                             AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + str).setRegistryName("advancedrocketry", "packblock"+str));
@@ -245,6 +256,6 @@ public class RecipeHandler {
                     }
                 }
             }
-        }
+        }*/
     }
 }

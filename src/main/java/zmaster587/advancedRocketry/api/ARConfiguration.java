@@ -2,7 +2,7 @@ package zmaster587.advancedRocketry.api;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockStateBase;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityArmorStand;
@@ -771,10 +771,10 @@ public class ARConfiguration {
 	public int orbit = 1000;
 
 	@ConfigProperty
-	public int MoonId = Constants.INVALID_PLANET;
+	public ResourceLocation MoonId = Constants.INVALID_PLANET;
 
 	@ConfigProperty(needsSync=true)
-	public int spaceDimId = -2;
+	public ResourceLocation spaceDimId = new ResourceLocation("space");
 
 	@ConfigProperty
 	public int fuelPointsPer10Mb = 10;
@@ -963,7 +963,7 @@ public class ARConfiguration {
 	public LinkedList<String> standardGeodeOres = new LinkedList<String>();
 
 	@ConfigProperty(needsSync=true, internalType=Integer.class)
-	public HashSet<Integer> initiallyKnownPlanets = new HashSet<Integer>();
+	public HashSet<ResourceLocation> initiallyKnownPlanets = new HashSet<ResourceLocation>();
 
 	@ConfigProperty
 	public boolean geodeOresBlackList;

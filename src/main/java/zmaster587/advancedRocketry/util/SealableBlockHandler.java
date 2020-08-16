@@ -1,16 +1,18 @@
 package zmaster587.advancedRocketry.util;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockDoor;
-import net.minecraft.block.BlockDoor.EnumDoorHalf;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.DoorBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.state.properties.DoubleBlockHalf;
+import net.minecraft.util.BlockVoxelShape;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.IFluidBlock;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.atmosphere.IAtmosphereSealHandler;
@@ -60,12 +62,12 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 		{
 			//Prevents orphan chunk loading - DarkGuardsman
 			//ChunkExists
-			if(world instanceof WorldServer && !((WorldServer) world).getChunkProvider().chunkExists(pos.getX() >> 4, pos.getZ() >> 4))
+			if(world instanceof ServerWorld && !((ServerWorld) world).getChunkProvider().chunkExists(pos.getX() >> 4, pos.getZ() >> 4))
 			{
 				return false;
 			}
 
-			IBlockState state = world.getBlockState(pos);
+			BlockState state = world.getBlockState(pos);
 			Block block = state.getBlock();
 			Material material = state.getMaterial();
 
@@ -148,7 +150,7 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 	 */
 	public static boolean isFullBlock(World world, BlockPos pos)
 	{
-		return isFullBlock(world, pos, world.getBlockState(pos));
+		return world.getBlockState(pos).getCollisionShape(world, pos) == VoxelShapes.fullCube();
 	}
 
 	/**
@@ -160,9 +162,9 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 	 * @param block - block to compare
 	 * @return true if full block
 	 */
-	public static boolean isFullBlock(IBlockAccess world, BlockPos pos, IBlockState state)
+	public static boolean isFullBlock(World world, BlockPos pos, BlockState state)
 	{
-		AxisAlignedBB bb = state.getCollisionBoundingBox((World) world, pos);
+		AxisAlignedBB bb = state.getCollisionShape( world, pos).getBoundingBox();
 		
     	if(bb == null)
     		return false;
@@ -178,22 +180,22 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 	}
 
 	//TODO unit test, document, cleanup
-	private boolean checkDoorIsSealed(World world, BlockPos pos, IBlockState state)
+	private boolean checkDoorIsSealed(World world, BlockPos pos, BlockState state)
 	{
-		IBlockState state2 = state;
+		BlockState state2 = state;
 		//For some reason the actual direction is stored in the bottom block of a door, so get that, but use the current block to determine openness due to order of update
-		if(state.getValue(BlockDoor.HALF) == EnumDoorHalf.UPPER)
+		if(state.get(DoorBlock.HALF) == DoubleBlockHalf.UPPER)
 			state2 = world.getBlockState(pos.down());
 		
-		if(state.getValue(BlockDoor.OPEN))
-			return isBlockSealed(world, pos.offset(state2.getValue(BlockDoor.FACING))) && isBlockSealed(world, pos.offset(state2.getValue(BlockDoor.FACING).rotateYCCW().rotateYCCW())); 
-		//state.getValue(BlockDoor.FACING)
-		boolean sealed = isBlockSealed(world, pos.offset(state2.getValue(BlockDoor.FACING).rotateY())) && isBlockSealed(world, pos.offset(state2.getValue(BlockDoor.FACING).rotateYCCW())); 
+		if(state.get(DoorBlock.OPEN))
+			return isBlockSealed(world, pos.offset(state2.get(DoorBlock.FACING))) && isBlockSealed(world, pos.offset(state2.get(DoorBlock.FACING).rotateYCCW().rotateYCCW())); 
+		//state.get(DoorBlock.FACING)
+		boolean sealed = isBlockSealed(world, pos.offset(state2.get(DoorBlock.FACING).rotateY())) && isBlockSealed(world, pos.offset(state2.get(DoorBlock.FACING).rotateYCCW())); 
 		
 		// If not sealed, check if the airlock is against the edge of sealed blocks (see issue #89)
 		// Right now only works for single doors with edges, TODO extend to allow other blocks to be placed alongside the same axis as the door (see photo in #89, has two doors)
-		if(!sealed && !state.getValue(BlockDoor.OPEN)) {
-			EnumFacing face = state2.getValue(BlockDoor.FACING);
+		if(!sealed && !state.get(DoorBlock.OPEN)) {
+			Direction face = state2.get(DoorBlock.FACING);
 			
 			// Rotate to both opposite axises, offset by the original facing value opposite and check if it's sealed.
 			// ex: D = door - E = first offset result - B = second offset result
@@ -233,11 +235,10 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 	{
 		materialBanList.add(Material.AIR);
 		materialBanList.add(Material.CACTUS);
-		materialBanList.add(Material.CRAFTED_SNOW);
+		materialBanList.add(Material.SNOW);
 		materialBanList.add(Material.FIRE);
 		materialBanList.add(Material.LEAVES);
 		materialBanList.add(Material.PORTAL);
-		materialBanList.add(Material.VINE);
 		materialBanList.add(Material.PLANTS);
 		materialBanList.add(Material.CORAL);
 		materialBanList.add(Material.WEB);

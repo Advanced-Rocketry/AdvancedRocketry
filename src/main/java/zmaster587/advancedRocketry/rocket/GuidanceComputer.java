@@ -1,10 +1,15 @@
 package zmaster587.advancedRocketry.rocket;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
+import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
+import zmaster587.libVulpes.inventory.ContainerModular;
+import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
@@ -34,7 +39,7 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 			return null;
 		else {
 			ItemStack stack;
-			stack = inv.splitStack(amount);
+			stack = inv.split(amount);
 			if(inv.getCount() == 0)
 				inv = null;
 			return stack;
@@ -50,16 +55,6 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	public String getModularInventoryName() {
 		return "tile.guidanceComputer.name";
 	}
-	
-	@Override
-	public String getName() {
-		return getModularInventoryName();
-	}
-
-	@Override
-	public boolean hasCustomName() {
-		return false;
-	}
 
 	@Override
 	public int getInventoryStackLimit() {
@@ -72,17 +67,17 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(PlayerEntity player) {
 		return true;
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player) {
+	public void openInventory(PlayerEntity player) {
 		
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer player) {
+	public void closeInventory(PlayerEntity player) {
 		
 	}
 
@@ -91,21 +86,21 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 		return true;
 	}
 	
-	public void writeToNBT(NBTTagCompound nbt) {
+	public void writeToNBT(CompoundNBT nbt) {
 		if(inv != null) {
-			NBTTagCompound itemNbt = new NBTTagCompound();
-			inv.writeToNBT(itemNbt);
-			nbt.setTag(destinationSlot, itemNbt);
+			CompoundNBT itemNbt = new CompoundNBT();
+			inv.write(itemNbt);
+			nbt.put(destinationSlot, itemNbt);
 		}
 	}
 	
-	public void readFromNBT(NBTTagCompound nbt) {
-		//if(nbt.hasKey(destinationSlot))
-			//ItemStack.loadItemStackFromNBT(nbt.getCompoundTag(destinationSlot));
+	public void readFromNBT(CompoundNBT nbt) {
+		//if(nbt.contains(destinationSlot))
+			//ItemStack.loadItemStackFromNBT(nbt.getCompound(destinationSlot));
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 		
 		modules.add(new ModuleSlotArray(8, 17, this, 0, 1));
@@ -114,7 +109,7 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 
 	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
+	public boolean canInteractWithContainer(PlayerEntity entity) {
 		return true;
 	}
 
@@ -131,21 +126,6 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 
 	@Override
-	public int getField(int id) {
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value) {
-		
-	}
-
-	@Override
-	public int getFieldCount() {
-		return 0;
-	}
-
-	@Override
 	public void clear() {
 		
 	}
@@ -153,5 +133,15 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	@Override
 	public boolean isEmpty() {
 		return inv.isEmpty();
+	}
+
+	@Override
+	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType(), player), this);
+	}
+
+	@Override
+	public int getModularInvType() {
+		return GuiHandler.guiId.MODULAR.ordinal();
 	}
 }

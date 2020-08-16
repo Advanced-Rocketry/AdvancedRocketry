@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.inventory;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
@@ -125,7 +125,7 @@ public class ContainerSpaceLaser extends Container {
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slot)
+	public ItemStack transferStackInSlot(PlayerEntity player, int slot)
 	{
 		ItemStack stack = null;
 		Slot slotObject = (Slot) inventorySlots.get(slot);
@@ -164,7 +164,7 @@ public class ContainerSpaceLaser extends Container {
 
 
 	@Override
-	public boolean canInteractWith(EntityPlayer entityplayer) {
+	public boolean canInteractWith(PlayerEntity entityplayer) {
 		return laserTile.isUsableByPlayer(entityplayer);
 	}
 }

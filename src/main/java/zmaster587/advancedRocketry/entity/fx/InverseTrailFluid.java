@@ -17,7 +17,7 @@ public class InverseTrailFluid extends InverseTrailFx {
 		initZ = toZ;
 		distX = (toX - x);
 		distZ = (toZ - z);
-		this.motionY = (toY - y)/(float)time;
+		this.getMotion().y = (toY - y)/(float)time;
 		icon = new ResourceLocation("advancedrocketry:textures/particle/softrounddistorted.png");
 		
 		float intensity = ((float)(Math.random())*0.3f) + 0.7f;
@@ -50,6 +50,6 @@ public class InverseTrailFluid extends InverseTrailFx {
             this.setExpired();
         }
         
-        this.setPosition(newPosX, posY + this.motionY, newPosZ);
+        this.setPosition(newPosX, posY + this.getMotion().y, newPosZ);
 	}
 }

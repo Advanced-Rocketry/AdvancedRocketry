@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.world.gen;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class WorldGenLargeCrystal extends WorldGenerator {
 
-	IBlockState block;
+	BlockState block;
 	public WorldGenLargeCrystal() {
 		this.block = AdvancedRocketryBlocks.blockCrystal.getDefaultState();
 	}
@@ -21,7 +21,7 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 	@Override
 	public boolean generate(World world, Random rand, BlockPos pos) {
 
-		IBlockState state = world.getBiome(pos).fillerBlock;
+		BlockState state = world.getBiome(pos).fillerBlock;
 		Block fillerBlock = state.getBlock();
 
 		int height = rand.nextInt(40) + 10;
@@ -30,7 +30,7 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 		int xShear = 1 - (rand.nextInt(6) + 3) / 4; //1/6 lean right, 1/6 lean left, 4/6 no lean
 		int zShear = 1 - (rand.nextInt(6) + 3) / 4; //1/6 lean right, 1/6 lean left, 4/6 no lean
 		
-		IBlockState usedState = block.withProperty(BlockCrystal.CRYSTALPROPERTY, BlockCrystal.EnumCrystal.values()[rand.nextInt(BlockCrystal.EnumCrystal.values().length)]);
+		BlockState usedState = block.with(BlockCrystal.CRYSTALPROPERTY, BlockCrystal.EnumCrystal.values()[rand.nextInt(BlockCrystal.EnumCrystal.values().length)]);
 		
 		int currentEdgeRadius;
 
@@ -141,7 +141,7 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 	}
 	
 	//Screw thy lighting checks!
-	public void setBlockState(World world, BlockPos pos, IBlockState state) {
+	public void setBlockState(World world, BlockPos pos, BlockState state) {
 		Chunk chunk = world.getChunkFromBlockCoords(pos);
 		chunk.setBlockState(pos, state);
 	}

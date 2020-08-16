@@ -1,20 +1,23 @@
 package zmaster587.advancedRocketry.block;
 
-import net.minecraft.block.BlockMushroom;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.IGrowable;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.MushroomBlock;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.effect.LightningBoltEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.gen.Heightmap.Type;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.entity.fx.FxSystemElectricArc;
@@ -22,63 +25,48 @@ import zmaster587.advancedRocketry.util.AudioRegistry;
 
 import java.util.Random;
 
-public class BlockElectricMushroom extends BlockMushroom implements IGrowable {
+public class BlockElectricMushroom extends MushroomBlock implements IGrowable {
 
-	public BlockElectricMushroom() {
-		super();
+	public BlockElectricMushroom(Properties properties) {
+		super(properties);
 	}
 
 	@Override
-	public boolean canBlockStay(World worldIn, BlockPos pos, IBlockState state) {
-		state.getBlock().canSustainPlant(state, worldIn, pos, EnumFacing.UP, this);
-		if (pos.getY() >= 0 && pos.getY() < 256)
-		{
-			IBlockState iblockstate = worldIn.getBlockState(pos.down());
-			return iblockstate.getBlock().canSustainPlant(iblockstate, worldIn, pos.down(), EnumFacing.UP, this);
-		}
-		return false;
-	}
-	
-	@Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-    {
-        return FULL_BLOCK_AABB;
-    }
-
-	@Override
-	public void updateTick(World world, BlockPos pos, IBlockState state,
-			Random rand) {
+	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
 		if(!world.isRemote && ARConfiguration.getCurrentConfig().electricPlantsSpawnLightning && world.isRaining() && world.getBiome(pos) == AdvancedRocketryBiomes.stormLandsBiome) {
 			int lightningX = pos.getX() + rand.nextInt(24) - 12;
 			int lightningZ = pos.getZ() + rand.nextInt(24) - 12;
 			BlockPos lightning = new BlockPos(lightningX, 0, lightningZ );
-			lightning = world.getTopSolidOrLiquidBlock(lightning);
-			
-			world.addWeatherEffect(new EntityLightningBolt(world, lightning.getX(), lightning.getY(), lightning.getZ(), true));
+			lightning = world.getHeight(Type.WORLD_SURFACE, lightning);
+
+
+			LightningBoltEntity lightningboltentity = EntityType.LIGHTNING_BOLT.create(world);
+			lightningboltentity.moveForced(lightning.getX(), lightning.getY(), lightning.getZ());
+			lightningboltentity.func_233623_a_(true);
+			world.addEntity(lightningboltentity);
 		}
 	}
-	
+
 	@Override
-	public void onBlockDestroyedByPlayer(World world, BlockPos pos,
-			IBlockState state) {
-		super.onBlockDestroyedByPlayer(world, pos, state);
-		
-		if(world.isRemote) {
+	public void onPlayerDestroy(IWorld world, BlockPos pos, BlockState state) {
+		super.onPlayerDestroy(world, pos, state);
+
+		if(world.isRemote()) {
 			FxSystemElectricArc.spawnArc(world, pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, .3, 7);
-			
-			world.playSound(pos.getX(), pos.getY(), pos.getZ(), new SoundEvent( new ResourceLocation("advancedrocketry:ElectricShockSmall")), SoundCategory.BLOCKS, .7f,  0.975f + world.rand.nextFloat()*0.05f, false);
+
+			world.playSound(null, pos, new SoundEvent( new ResourceLocation("advancedrocketry:ElectricShockSmall")), SoundCategory.BLOCKS, .7f,  0.975f + world.getRandom().nextFloat()*0.05f);
 		}
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void randomDisplayTick(IBlockState stateIn, World world,
+	@OnlyIn(value=Dist.CLIENT)
+	public void animateTick(BlockState stateIn, World world,
 			BlockPos pos, Random rand) {
-		
-		super.randomDisplayTick(stateIn, world, pos, rand);
-		if(world.getTotalWorldTime() % 100 == 0 && world.getBiome(pos) == AdvancedRocketryBiomes.stormLandsBiome) {
+
+		super.animateTick(stateIn, world, pos, rand);
+		if(world.getGameTime() % 100 == 0 && world.getBiome(pos) == AdvancedRocketryBiomes.stormLandsBiome) {
 			FxSystemElectricArc.spawnArc(world, pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, .3, 7);
-			world.playSound(Minecraft.getMinecraft().player, pos, AudioRegistry.electricShockSmall, SoundCategory.BLOCKS, .7f,  0.975f + world.rand.nextFloat()*0.05f);
+			world.playSound(Minecraft.getInstance().player, pos, AudioRegistry.electricShockSmall, SoundCategory.BLOCKS, .7f,  0.975f + world.rand.nextFloat()*0.05f);
 		}
 	}
 }

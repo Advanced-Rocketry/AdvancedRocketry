@@ -4,11 +4,11 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.world.util.MultiData;
 
@@ -16,23 +16,23 @@ import java.util.List;
 
 public class ItemMultiData extends Item {
 
-	public ItemMultiData() {
-		super();
+	public ItemMultiData(Properties props) {
+		super(props);
 	}
 
 	public void setMaxData(ItemStack stack, int amount) {
 		MultiData data = getDataStorage(stack);
 		data.setMaxData(amount);
 
-		NBTTagCompound nbt;
+		CompoundNBT nbt;
 
-		if(!stack.hasTagCompound()) {
-			nbt= new NBTTagCompound();
+		if(!stack.hasTag()) {
+			nbt= new CompoundNBT();
 		}
 		else
-			nbt = stack.getTagCompound();
+			nbt = stack.getTag();
 		data.writeToNBT(nbt);
-		stack.setTagCompound(nbt);
+		stack.setTag(nbt);
 	}
 
 	public int getData(ItemStack stack, DataStorage.DataType type) {
@@ -47,12 +47,12 @@ public class ItemMultiData extends Item {
 
 		MultiData data = new MultiData();
 
-		if(!item.hasTagCompound()) {
-			NBTTagCompound nbt = new NBTTagCompound();
+		if(!item.hasTag()) {
+			CompoundNBT nbt = new CompoundNBT();
 			data.writeToNBT(nbt);
 		}
 		else
-			data.readFromNBT(item.getTagCompound());
+			data.readFromNBT(item.getTag());
 
 		return data;
 	}
@@ -65,16 +65,16 @@ public class ItemMultiData extends Item {
 	public int addData(ItemStack item, int amount, DataStorage.DataType dataType) {
 		MultiData data = getDataStorage(item);
 
-		int amt = data.addData(amount, dataType, EnumFacing.DOWN,true);
+		int amt = data.addData(amount, dataType, Direction.DOWN,true);
 
-		NBTTagCompound nbt;
-		if(item.hasTagCompound())
-			nbt = item.getTagCompound();
+		CompoundNBT nbt;
+		if(item.hasTag())
+			nbt = item.getTag();
 		else
-			nbt = new NBTTagCompound();
+			nbt = new CompoundNBT();
 		
 		data.writeToNBT(nbt);
-		item.setTagCompound(nbt);
+		item.setTag(nbt);
 
 		return amt;
 	}
@@ -82,16 +82,16 @@ public class ItemMultiData extends Item {
 	public int removeData(ItemStack item, int amount, DataStorage.DataType dataType) {
 		MultiData data = getDataStorage(item);
 
-		int amt = data.extractData(amount, dataType, EnumFacing.DOWN, true);
+		int amt = data.extractData(amount, dataType, Direction.DOWN, true);
 		
-		NBTTagCompound nbt;
-		if(item.hasTagCompound())
-			nbt = item.getTagCompound();
+		CompoundNBT nbt;
+		if(item.hasTag())
+			nbt = item.getTag();
 		else
-			nbt = new NBTTagCompound();
+			nbt = new CompoundNBT();
 		
 		data.writeToNBT(nbt);
-		item.setTagCompound(nbt);
+		item.setTag(nbt);
 
 		return amt;
 	}
@@ -101,18 +101,18 @@ public class ItemMultiData extends Item {
 
 		data.setDataAmount(amount, dataType);
 
-		NBTTagCompound nbt;
-		if(item.hasTagCompound())
-			nbt = item.getTagCompound();
+		CompoundNBT nbt;
+		if(item.hasTag())
+			nbt = item.getTag();
 		else
-			nbt = new NBTTagCompound();
+			nbt = new CompoundNBT();
 		
 		data.writeToNBT(nbt);
-		item.setTagCompound(nbt);
+		item.setTag(nbt);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(value=Dist.CLIENT)
 	public void addInformation(ItemStack stack, World player,
 			List list, ITooltipFlag bool) {
 		super.addInformation(stack, player, list, bool);

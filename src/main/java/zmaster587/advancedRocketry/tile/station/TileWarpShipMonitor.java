@@ -2,18 +2,28 @@ package zmaster587.advancedRocketry.tile.station;
 
 import com.google.common.base.Predicate;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
@@ -35,7 +45,9 @@ import zmaster587.advancedRocketry.tile.multiblock.TileWarpCore;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.advancedRocketry.world.util.MultiData;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.client.util.IndicatorBarImage;
+import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.*;
@@ -44,12 +56,13 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.INetworkMachine;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileWarpShipMonitor extends TileEntity implements ITickable, IModularInventory, ISelectionNotify, INetworkMachine, IButtonInventory, IProgressBar, IDataSync, IGuiCallback, IDataInventory, IPlanetDefiner {
+public class TileWarpShipMonitor extends TileEntity implements ITickableTileEntity, IModularInventory, ISelectionNotify, INetworkMachine, IButtonInventory, IProgressBar, IDataSync, IGuiCallback, IDataInventory, IPlanetDefiner {
 
 	protected ModulePlanetSelector container;
 	private ModuleText canWarp;
@@ -60,7 +73,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 	ModuleSync sync1, sync2, sync3;
 	ModuleText srcPlanetText, dstPlanetText, warpFuel, status, warpCapacity;
 	int warpCost = -1;
-	int dstPlanet, srcPlanet;
+	ResourceLocation dstPlanet, srcPlanet;
 	private ModuleTab tabModule;
 	private static final byte TAB_SWITCH = 4, STORE_DATA = 10, LOAD_DATA = 20, SEARCH = 5, PROGRAMFROMCHIP = 6;
 	private MultiData data;
@@ -70,6 +83,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 	private int progress;
 
 	public TileWarpShipMonitor() {
+		super(AdvancedRocketryTileEntityType.TILE_WARP_SHIP_CONTROLLER);
 		tabModule = new ModuleTab(4,0,0,this, 3, new String[]{LibVulpes.proxy.getLocalizedString("msg.warpmon.tab.warp"), LibVulpes.proxy.getLocalizedString("msg.warpmon.tab.data"), LibVulpes.proxy.getLocalizedString("msg.warpmon.tab.tracking")}, new ResourceLocation[][] { TextureResources.tabWarp, TextureResources.tabData, TextureResources.tabPlanetTracking} );
 		data = new MultiData();
 		data.setMaxData(10000);
@@ -80,7 +94,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 
 
 	private SpaceStationObject getSpaceObject() {
-		if(station == null && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
+		if(station == null && ZUtils.getDimensionIdentifier(this.world) == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceStationObject)
 				station = (SpaceStationObject) object;
@@ -126,19 +140,19 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 	}
 
 	@Override
-	public int addData(int maxAmount, DataType type, EnumFacing dir,
+	public int addData(int maxAmount, DataType type, Direction dir,
 			boolean commit) {
 		return data.addData(maxAmount, type, dir, commit);
 	}
 
 	@Override
-	public int extractData(int maxAmount, DataType type, EnumFacing dir,
+	public int extractData(int maxAmount, DataType type, Direction dir,
 			boolean commit) {
 		return data.extractData(maxAmount, type, dir, commit);
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		if(ID == guiId.MODULARNOINV.ordinal()) {
@@ -186,7 +200,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 					modules.add(new ModuleScaledImage(baseX,baseY,70,3, TextureResources.horizontalBar));
 					modules.add(new ModuleScaledImage(baseX,baseY + sizeY - 3,70,-3, TextureResources.horizontalBar));
 				}
-				modules.add(new ModuleButton(baseX - 3, baseY + sizeY, 0, LibVulpes.proxy.getLocalizedString("msg.warpmon.selectplanet"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, sizeX + 6, 16));
+				modules.add(new ModuleButton(baseX - 3, baseY + sizeY, LibVulpes.proxy.getLocalizedString("msg.warpmon.selectplanet"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, sizeX + 6, 16).setAdditionalData(0));
 
 
 				//Status text
@@ -197,7 +211,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				canWarp = new ModuleText(baseX, baseY + sizeY + 30, (isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody())) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.nowhere") : 
 					(!artifactFlag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.missingart") : (flag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.ready") : LibVulpes.proxy.getLocalizedString("msg.warpmon.notready"))), flag && artifactFlag ? 0x1baa1b : 0xFF1b1b);
 				modules.add(canWarp);
-				modules.add(new ModuleProgress(baseX, baseY + sizeY + 40, 10, new IndicatorBarImage(70, 58, 53, 8, 122, 58, 5, 8, EnumFacing.EAST, TextureResources.progressBars), this));
+				modules.add(new ModuleProgress(baseX, baseY + sizeY + 40, 10, new IndicatorBarImage(70, 58, 53, 8, 122, 58, 5, 8, Direction.EAST, TextureResources.progressBars), this));
 				//modules.add(new ModuleText(baseX + 82, baseY + sizeY + 20, "Fuel Cost:", 0x1b1b1b));
 				warpCost = getTravelCost();
 				
@@ -209,7 +223,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				baseY = 20;
 				sizeX = 70;
 				sizeY = 70;
-				ModuleButton warp = new ModuleButton(baseX - 3, baseY + sizeY,1, LibVulpes.proxy.getLocalizedString("msg.warpmon.warp"), this ,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, sizeX + 6, 16);
+				ModuleButton warp = new ModuleButton(baseX - 3, baseY + sizeY, LibVulpes.proxy.getLocalizedString("msg.warpmon.warp"), this ,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, sizeX + 6, 16).setAdditionalData(1);
 
 				modules.add(warp);
 
@@ -260,8 +274,8 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				modules.add(new ModuleSlotArray(105, 60, this, 7, 8));
 				modules.add(new ModuleSlotArray(130, 35, this, 8, 9));
 
-				modules.add(new ModuleButton(50, 117, 3, LibVulpes.proxy.getLocalizedString("msg.warpmon.search"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, LibVulpes.proxy.getLocalizedString("msg.warpmon.datareq"), 100, 10));
-				modules.add(new ModuleButton(50, 127, 4, LibVulpes.proxy.getLocalizedString("msg.warpmon.chip"), this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild,100, 10));
+				modules.add(new ModuleButton(50, 117, LibVulpes.proxy.getLocalizedString("msg.warpmon.search"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, LibVulpes.proxy.getLocalizedString("msg.warpmon.datareq"), 100, 10).setAdditionalData(3));
+				modules.add(new ModuleButton(50, 127, LibVulpes.proxy.getLocalizedString("msg.warpmon.chip"), this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild,100, 10).setAdditionalData(4));
 				modules.add(new ModuleTexturedSlotArray(30, 120, this, 3, 4, TextureResources.idChip));
 				modules.add(programmingProgress);
 			}
@@ -269,7 +283,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 		else if (ID == guiId.MODULARFULLSCREEN.ordinal()) {
 			//Open planet selector menu
 			SpaceStationObject station = getSpaceObject();
-			int starId = 0;
+			ResourceLocation starId = Constants.INVALID_STAR;
 			if(station != null)
 				starId = station.getProperties().getParentProperties().getStar().getId();
 			container = new ModulePlanetSelector(starId, zmaster587.libVulpes.inventory.TextureResources.starryBG, this, this, true);
@@ -294,8 +308,8 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 			planetName = properties.getName();
 		}
 		else {
-			location = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
-			planetName = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getName();
+			location = DimensionManager.getInstance().getDimensionProperties(world);
+			planetName = DimensionManager.getInstance().getDimensionProperties(world).getName();
 
 			if(planetName.isEmpty())
 				planetName = "???";
@@ -378,13 +392,16 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 	}
 
 	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
+	public boolean canInteractWithContainer(PlayerEntity entity) {
 		return true;
 	}
 
 	@Override
-	public void onInventoryButtonPressed(int buttonId) {
+	public void onInventoryButtonPressed(ModuleButton button) {
 		if(getSpaceObject() != null) {
+			
+			int buttonId = (int)button.getAdditionalData();
+			
 			if(buttonId == 0)
 				PacketHandler.sendToServer(new PacketMachine(this, (byte)0));
 			else if(buttonId == 1) {
@@ -400,9 +417,9 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
 		if(id == 1 || id == 3)
-			out.writeInt(container.getSelectedSystem());
+			out.writeString(container.getSelectedSystem().toString());
 		else if(id == TAB_SWITCH)
 			out.writeShort(tabModule.getTab());
 		else if(id >= 10 && id < 20) {
@@ -416,27 +433,28 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 	//TODO fix warp controller not sending 
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
+			CompoundNBT nbt) {
 		if(packetId == 1 || packetId == 3)
-			nbt.setInteger("id", in.readInt());
+			nbt.putString("id", in.readString());
 		else if(packetId == TAB_SWITCH)
-			nbt.setShort("tab", in.readShort());
+			nbt.putShort("tab", in.readShort());
 		else if(packetId >= 10 && packetId < 20) {
-			nbt.setByte("id", (byte)(in.readByte() - 10));
+			nbt.putByte("id", (byte)(in.readByte() - 10));
 		}
 		else if(packetId >= 20 && packetId < 30) {
-			nbt.setByte("id", (byte)(in.readByte() - 20));
+			nbt.putByte("id", (byte)(in.readByte() - 20));
 		}
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 		if(id == 0)
-			player.openGui(LibVulpes.instance, guiId.MODULARFULLSCREEN.ordinal(), world, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
+			NetworkHooks.openGui((ServerPlayerEntity) player, this, getPos());
+			//guiId.MODULARFULLSCREEN.ordinal()
 		else if(id == 1 || id == 3) {
-			int dimId = nbt.getInteger("id");
+			ResourceLocation dimId = new ResourceLocation(nbt.getString("id"));
 
 			if(isPlanetKnown(DimensionManager.getInstance().getDimensionProperties(dimId))) {
 				container.setSelectedSystem(dimId);
@@ -446,7 +464,8 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 			//Update known planets
 			markDirty();
 			if(id == 3)
-				player.openGui(LibVulpes.instance, guiId.MODULARNOINV.ordinal(), world, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
+				NetworkHooks.openGui((ServerPlayerEntity) player, this, getPos());
+			//guiId.MODULARNOINV.ordinal()
 		}
 		else if(id == 2) {
 			final SpaceStationObject station = getSpaceObject();
@@ -454,14 +473,14 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 			if(station != null && station.hasUsableWarpCore() && station.useFuel(getTravelCost()) != 0 && meetsArtifactReq(DimensionManager.getInstance().getDimensionProperties(station.getDestOrbitingBody()))) {
 				SpaceObjectManager.getSpaceManager().moveStationToBody(station, station.getDestOrbitingBody(), Math.max(Math.min(getTravelCost()*5, 5000),0));
 
-				for (EntityPlayer player2 : world.getPlayers(EntityPlayer.class, new Predicate<EntityPlayer>() {
-					public boolean apply(EntityPlayer input) {
-						return SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(input.getPosition()) == station;
+				for (PlayerEntity player2 : ((ServerWorld)world).getPlayers(new Predicate<PlayerEntity>() {
+					public boolean apply(PlayerEntity input) {
+						return SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos( input.getPositionVec())) == station;
 					};
 				})) {
-					ARAchivements.ALL_SHE_GOT.trigger((EntityPlayerMP) player2);
+					ARAchivements.ALL_SHE_GOT.trigger((ServerPlayerEntity) player2);
 					if(!DimensionManager.hasReachedWarp)
-						ARAchivements.FLIGHT_OF_PHEONIX.trigger((EntityPlayerMP) player2);
+						ARAchivements.FLIGHT_OF_PHEONIX.trigger((ServerPlayerEntity) player2);
 				}
 
 				DimensionManager.hasReachedWarp = true;
@@ -476,7 +495,8 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 		}
 		else if(id == TAB_SWITCH && !world.isRemote) {
 			tabModule.setTab(nbt.getShort("tab"));
-			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), getWorld(), pos.getX(), pos.getY(), pos.getZ());
+			NetworkHooks.openGui((ServerPlayerEntity) player, this, getPos());
+			// noinv
 		}
 		else if(id >= 10 && id < 20) {
 			storeData(nbt.getByte("id") + 10);
@@ -503,24 +523,24 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		inv.writeToNBT(compound);
+	public CompoundNBT write(CompoundNBT compound) {
+		inv.write(compound);
 		data.writeToNBT(compound);
-		compound.setInteger("progress", progress);
-		return super.writeToNBT(compound);
+		compound.putInt("progress", progress);
+		return super.write(compound);
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag() {
-		return writeToNBT(new NBTTagCompound());
+	public CompoundNBT getUpdateTag() {
+		return write(new CompoundNBT());
 	}
-
+	
 	@Override
-	public void readFromNBT(NBTTagCompound compound) {
-		super.readFromNBT(compound);
+	public void func_230337_a_(BlockState state, CompoundNBT compound) {
+		super.func_230337_a_(state, compound);
 		inv.readFromNBT(compound);
 		data.readFromNBT(compound);
-		progress = compound.getInteger("progress");
+		progress = compound.getInt("progress");
 	}
 
 	@Override
@@ -535,15 +555,15 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 		selectSystem(container.getSelectedSystem());
 	}
 
-	private void selectSystem(int id) {
-		if(getSpaceObject().getOrbitingPlanetId() == SpaceObjectManager.WARPDIMID || id == SpaceObjectManager.WARPDIMID)
+	private void selectSystem(ResourceLocation dimId) {
+		if(getSpaceObject().getOrbitingPlanetId() == SpaceObjectManager.WARPDIMID || dimId == SpaceObjectManager.WARPDIMID)
 			dimCache = null;
 		else {
 			dimCache = DimensionManager.getInstance().getDimensionProperties(container.getSelectedSystem());
 
 			ISpaceObject station = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.getPos());
 			if(station != null) {
-				station.setDestOrbitingBody(id);
+				station.setDestOrbitingBody(dimId);
 			}
 		}
 	}
@@ -699,7 +719,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(PlayerEntity player) {
 		return true;
 	}
 
@@ -709,14 +729,14 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player) {
+	public void openInventory(PlayerEntity player) {
 		inv.openInventory(player);
 
 	}
 
 
 	@Override
-	public void closeInventory(EntityPlayer player) {
+	public void closeInventory(PlayerEntity player) {
 		inv.closeInventory(player);
 
 	}
@@ -729,40 +749,9 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 
 
 	@Override
-	public int getField(int id) {
-		return 0;
-	}
-
-
-	@Override
-	public void setField(int id, int value) {
-
-	}
-
-
-	@Override
-	public int getFieldCount() {
-		return 0;
-	}
-
-
-	@Override
 	public void clear() {
 
 	}
-
-
-	@Override
-	public String getName() {
-		return getModularInventoryName();
-	}
-
-
-	@Override
-	public boolean hasCustomName() {
-		return false;
-	}
-
 
 	@Override
 	public void loadData(int id) {
@@ -792,7 +781,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 		if(!stack.isEmpty() && stack.getItem() instanceof ItemData) {
 			ItemData item = (ItemData) stack.getItem();
 			if(item.getDataType(stack) == type)
-				item.removeData(stack, this.addData(item.getData(stack), item.getDataType(stack), EnumFacing.UP, true), type);
+				item.removeData(stack, this.addData(item.getData(stack), item.getDataType(stack), Direction.UP, true), type);
 		}
 
 		if(world.isRemote) {
@@ -820,7 +809,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 
 		if(stack != null && stack.getItem() instanceof ItemData) {
 			ItemData item = (ItemData) stack.getItem();
-			data.extractData(item.addData(stack, data.getDataAmount(type), type), type, EnumFacing.UP, true);
+			data.extractData(item.addData(stack, data.getDataAmount(type), type), type, Direction.UP, true);
 		}
 
 		if(world.isRemote) {
@@ -841,7 +830,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				Iterator<ItemStack> itr = list.iterator();
 				while(itr.hasNext()) {
 					ItemStack stackInList = itr.next();
-					if(stackInList.getItem().equals(stack2.getItem()) && stackInList.getItemDamage() == stack2.getItemDamage()
+					if(stackInList.getItem().equals(stack2.getItem()) && stackInList.getDamage() == stack2.getDamage()
 							&& ItemStack.areItemStackTagsEqual(stackInList, stack2) && stack2.getCount() >= stackInList.getCount())
 						itr.remove();
 				}
@@ -852,7 +841,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 	}
 	
 	@Override
-	public void update() {
+	public void tick() {
 		if(!world.isRemote && progress != -1) {
 			progress++;
 			if(progress >= MAX_PROGRESS) {
@@ -862,10 +851,10 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 					ItemStack stack = getStackInSlot(PLANETSLOT);
 					if(stack != null && stack.getItem() instanceof ItemPlanetIdentificationChip) {
 						ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)stack.getItem();
-						List<Integer> unknownPlanets = new LinkedList<Integer>();
+						List<ResourceLocation> unknownPlanets = new LinkedList<ResourceLocation>();
 						
 						//Check to see if any planets with artifacts can be discovered
-						for(int id : DimensionManager.getInstance().getLoadedDimensions()) {
+						for(ResourceLocation id : DimensionManager.getInstance().getLoadedDimensions()) {
 							DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(id);
 							if(!isPlanetKnown(props) && !props.getRequiredArtifacts().isEmpty()) {
 								//If all artifacts are met, then add
@@ -876,7 +865,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 
 						//if there are not any planets requiring artifacts then get the regular planets
 						if(unknownPlanets.isEmpty()) {
-							for(int id : DimensionManager.getInstance().getLoadedDimensions()) {
+							for(ResourceLocation id : DimensionManager.getInstance().getLoadedDimensions()) {
 								DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(id);
 								if(!isPlanetKnown(props) && props.getRequiredArtifacts().isEmpty()) {
 									unknownPlanets.add(id);
@@ -885,16 +874,17 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 						}
 
 						if(!unknownPlanets.isEmpty()) {
-							int newId = (int)(world.rand.nextFloat()*unknownPlanets.size());
-							newId = unknownPlanets.get(newId);
+							int newIndex = (int)(world.rand.nextFloat()*unknownPlanets.size());
+							ResourceLocation newId;
+							newId = unknownPlanets.get(newIndex);
 							item.setDimensionId(stack, newId);
 							obj.discoverPlanet(newId);
 						}
 					}
 				}
-				data.extractData(100, DataType.COMPOSITION, EnumFacing.UP, true);
-				data.extractData(100, DataType.DISTANCE, EnumFacing.UP, true);
-				data.extractData(100, DataType.MASS, EnumFacing.UP, true);
+				data.extractData(100, DataType.COMPOSITION, Direction.UP, true);
+				data.extractData(100, DataType.DISTANCE, Direction.UP, true);
+				data.extractData(100, DataType.MASS, Direction.UP, true);
 
 				progress = -1;
 			}
@@ -918,5 +908,24 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 		if(obj != null)
 			return obj.isStarKnown(body);
 		return false;
+	}
+
+
+	@Override
+	public ITextComponent getDisplayName() {
+		// TODO Auto-generated method stub
+		return new TranslationTextComponent(getModularInventoryName());
+	}
+
+
+	@Override
+	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType(), player), this);
+	}
+
+
+	@Override
+	public int getModularInvType() {
+		return guiId.MODULARNOINV.ordinal();
 	}
 }

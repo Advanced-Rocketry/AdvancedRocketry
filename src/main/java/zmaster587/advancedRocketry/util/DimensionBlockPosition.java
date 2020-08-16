@@ -1,21 +1,24 @@
 package zmaster587.advancedRocketry.util;
 
+import net.minecraft.util.ResourceLocation;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
 public class DimensionBlockPosition {
 	public HashedBlockPosition pos;
-	public int dimid;
+	public ResourceLocation dimid;
 	
-	public DimensionBlockPosition(int dimid, HashedBlockPosition pos) {
+	public DimensionBlockPosition(ResourceLocation dimid, HashedBlockPosition pos) {
 		this.dimid = dimid;
 		this.pos = pos;
 	}
 	
 	@Override
 	public int hashCode() {
+		if(dimid == null)
+			return 0;
 		if(pos == null)
-			return dimid;
-		return dimid + pos.hashCode();
+			return dimid.hashCode();
+		return dimid.hashCode() + pos.hashCode();
 	}
 	
 	@Override

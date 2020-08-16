@@ -11,8 +11,8 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.MapGenBase;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.world.gen.WorldGenNoTree;
 import zmaster587.advancedRocketry.world.gen.WorldGenSwampTree;
 
@@ -44,7 +44,7 @@ public class BiomeGenDeepSwamp extends Biome {
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(value=Dist.CLIENT)
 	public int getSkyColorByTemp(float p_76731_1_) {
 		return 0x203020;
 	}
@@ -102,7 +102,7 @@ public class BiomeGenDeepSwamp extends Biome {
     /**
      * Provides the basic grass color based on the biome temperature and rainfall
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(value=Dist.CLIENT)
     public int getBiomeGrassColor(int x, int y, int z)
     {
     	
@@ -113,7 +113,7 @@ public class BiomeGenDeepSwamp extends Biome {
     /**
      * Provides the basic foliage color based on the biome temperature and rainfall
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(value=Dist.CLIENT)
     public int getBiomeFoliageColor(int p_150571_1_, int p_150571_2_, int p_150571_3_)
     {
         return 6975545;

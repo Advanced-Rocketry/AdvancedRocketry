@@ -30,7 +30,7 @@ public class OxygenTraceFX extends Particle {
         this.setSize(0.001F, 0.001F);
         this.particleScale = (float)(this.rand.nextFloat() * 0.6F + 6F);
         this.motionX = motx;
-        this.motionY = moty;
+        this.getMotion().y = moty;
         this.motionZ = motz;
         this.particleMaxAge = (int)(100.0D);
         this.particleAlpha  = 0;
@@ -58,7 +58,7 @@ public class OxygenTraceFX extends Particle {
         int j = i >> 16 & 65535;
         int k = i & 65535;
 		
-		Minecraft.getMinecraft().getTextureManager().bindTexture(icon);
+		Minecraft.getInstance().getTextureManager().bindTexture(icon);
         worldRendererIn.finishDrawing();
         worldRendererIn.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
         
@@ -86,7 +86,7 @@ public class OxygenTraceFX extends Particle {
         this.particleScale = 0.5f*MathHelper.sin((float)Math.PI*(this.particleAge)/ (float)(this.particleMaxAge));
         
         this.motionX *= 1.01;
-        this.motionY *= 1.01;
+        this.getMotion().y *= 1.01;
         this.motionZ *= 1.01;
         
         if (this.particleAge++ >= this.particleMaxAge)
@@ -94,6 +94,6 @@ public class OxygenTraceFX extends Particle {
             this.setExpired();
         }
         
-        this.setPosition(posX + this.motionX, posY + this.motionY, posZ  + this.motionZ);
+        this.setPosition(posX + this.motionX, posY + this.getMotion().y, posZ  + this.motionZ);
 	}
 }

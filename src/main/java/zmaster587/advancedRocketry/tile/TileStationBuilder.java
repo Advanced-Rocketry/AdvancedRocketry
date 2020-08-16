@@ -1,16 +1,20 @@
 package zmaster587.advancedRocketry.tile;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.Constants;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.item.ItemPackedStructure;
 import zmaster587.advancedRocketry.item.ItemStationChip;
@@ -27,9 +31,9 @@ import java.util.List;
 public class TileStationBuilder extends TileRocketBuilder implements IInventory {
 
 	EmbeddedInventory inventory;
-	Long storedId;
+	ResourceLocation storedId;
 	public TileStationBuilder() {
-		super();
+		super(AdvancedRocketryTileEntityType.TILE_STATION_BUILDER);
 		inventory = new EmbeddedInventory(4);
 		status = ErrorCodes.EMPTY;
 	}
@@ -38,7 +42,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 	public boolean canScan() {
 		if(!super.canScan())
 			return false;
-		ItemStack stack = new ItemStack(AdvancedRocketryBlocks.blockLoader,1,1);
+		ItemStack stack = new ItemStack(AdvancedRocketryBlocks.blockLoader,1);
 
 		if(inventory.getStackInSlot(0).isEmpty() || !stack.isItemEqual(inventory.getStackInSlot(0))) {
 			status = ErrorCodes.NOSATELLITEHATCH;
@@ -125,7 +129,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 			}
 			else {
 				outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStation,1);
-				ItemStationChip.setUUID(outputStack, (int)(long)storedId);
+				ItemStationChip.setUUID(outputStack, storedId);
 			}
 
 			((ItemPackedStructure)outputStack.getItem()).setStructure(outputStack, storageChunk);
@@ -159,17 +163,17 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		modules.add(new ModulePower(160, 30, this));
 
 		modules.add(new ModuleProgress(149, 30, 2, verticalProgressBar, this));
 
-		modules.add(new ModuleButton(5, 34, 0, LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.scan"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonScan));
+		modules.add(new ModuleButton(5, 34, LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.scan"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonScan).setAdditionalData(0));
 
 		ModuleButton buttonBuild;
-		modules.add(buttonBuild = new ModuleButton(5, 60, 1, LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.build"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
+		modules.add(buttonBuild = new ModuleButton(5, 60, LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.build"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild).setAdditionalData(1));
 		buttonBuild.setColor(0xFFFF2222);
 		modules.add(errorText = new ModuleText(5, 22, "", 0xFFFFFF22));
 		modules.add(new ModuleSync(4, this));
@@ -186,8 +190,8 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 		
 		boolean isScanningFlag = !isScanning() && canScan();
 		
@@ -195,28 +199,28 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 		if(id == 1 && isScanningFlag) {
 			inventory.decrStackSize(0, 1);
 
-			storedId = (long)ItemStationChip.getUUID(inventory.getStackInSlot(1));
-			if(storedId == 0) storedId = null;
+			storedId = ItemStationChip.getUUID(inventory.getStackInSlot(1));
+			if(storedId == DimensionManager.overworldProperties.getId()) storedId = null;
 			if(storedId == null)
 				inventory.decrStackSize(1, 1);
 		}
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		inventory.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
+		inventory.write(nbt);
 		if(storedId != null) {
-			nbt.setLong("storedID", storedId);
+			nbt.putString("storedID", storedId.toString());
 		}
 		return nbt;
 	}
 
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
 		inventory.readFromNBT(nbt);
-		if(nbt.hasKey("storedID")) {
-			storedId = nbt.getLong("storedID");
+		if(nbt.contains("storedID")) {
+			storedId = new ResourceLocation(nbt.getString("storedID"));
 		}
 	}
 
@@ -243,19 +247,6 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 		inventory.setInventorySlotContents(slot, stack);
 	}
 
-
-	@Override
-	public String getName() {
-		return "tile.stationBuilder.name";
-	}
-
-
-	@Override
-	public boolean hasCustomName() {
-		return false;
-	}
-
-
 	@Override
 	public int getInventoryStackLimit() {
 		return inventory.getInventoryStackLimit();
@@ -263,7 +254,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(PlayerEntity player) {
 		return inventory.isUsableByPlayer(player);
 	}
 
@@ -273,13 +264,13 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 	}
 
 	@Override
-	public void openInventory(EntityPlayer pos) {
+	public void openInventory(PlayerEntity pos) {
 
 	}
 
 
 	@Override
-	public void closeInventory(EntityPlayer pos) {
+	public void closeInventory(PlayerEntity pos) {
 
 	}
 
@@ -292,21 +283,6 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 	@Override
 	public ItemStack removeStackFromSlot(int index) {
 		return inventory.removeStackFromSlot(index);
-	}
-
-	@Override
-	public int getField(int id) {
-		return inventory.getField(id);
-	}
-
-	@Override
-	public void setField(int id, int value) {
-		inventory.setField(id, value);
-	}
-
-	@Override
-	public int getFieldCount() {
-		return inventory.getFieldCount();
 	}
 
 	@Override

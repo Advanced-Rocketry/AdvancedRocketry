@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.world.decoration;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.ChunkPrimer;
@@ -8,16 +8,16 @@ import net.minecraft.world.gen.MapGenRavine;
 
 public class MapGenRavineExt extends MapGenRavine {
 
-	IBlockState fillerBlock;
-	IBlockState oceanBlock;
+	BlockState fillerBlock;
+	BlockState oceanBlock;
 	
 	
-	public void setFillerBlock(IBlockState state)
+	public void setFillerBlock(BlockState state)
 	{
 		fillerBlock = state;
 	}
 	
-	public void setOceanBlock(IBlockState state)
+	public void setOceanBlock(BlockState state)
 	{
 		oceanBlock = state;
 	}
@@ -34,9 +34,9 @@ public class MapGenRavineExt extends MapGenRavine {
     protected void digBlock(ChunkPrimer data, int x, int y, int z, int chunkX, int chunkZ, boolean foundTop)
     {
         net.minecraft.world.biome.Biome biome = world.getBiome(new BlockPos(x + chunkX * 16, 0, z + chunkZ * 16));
-        IBlockState state = data.getBlockState(x, y, z);
-        IBlockState top = isExceptionBiome(biome) ? Blocks.GRASS.getDefaultState() : biome.topBlock;
-        IBlockState filler = isExceptionBiome(biome) ? Blocks.DIRT.getDefaultState() : biome.fillerBlock;
+        BlockState state = data.getBlockState(x, y, z);
+        BlockState top = isExceptionBiome(biome) ? Blocks.GRASS.getDefaultState() : biome.topBlock;
+        BlockState filler = isExceptionBiome(biome) ? Blocks.DIRT.getDefaultState() : biome.fillerBlock;
 
         if (state.getBlock() == Blocks.STONE || state.getBlock() == top.getBlock() || state.getBlock() == filler.getBlock() || (fillerBlock != null && state.getBlock() == fillerBlock.getBlock()))
         {

@@ -1,13 +1,22 @@
 package zmaster587.advancedRocketry.tile;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemArmor;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.api.IModularArmor;
+import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
+import zmaster587.libVulpes.inventory.ContainerModular;
+import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 
@@ -20,12 +29,13 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	ModuleTexturedLimitedSlotArray slotArray[];
 
 	public TileSuitWorkStation() {
+		super(AdvancedRocketryTileEntityType.TILE_WORK_STATION);
 		inventory = new EmbeddedInventory(getSizeInventory());
 		slotArray = new ModuleTexturedLimitedSlotArray[6];
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
+	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		modules.add(new ModuleSlotArray(15, 15, this, 0, 1));
@@ -46,7 +56,7 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 
 	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
+	public boolean canInteractWithContainer(PlayerEntity entity) {
 		return true;
 	}
 
@@ -127,28 +137,18 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
 		
-		inventory.writeToNBT(nbt);
+		inventory.write(nbt);
 		return nbt;
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
 		
 		inventory.readFromNBT(nbt);
-	}
-	
-	@Override
-	public String getName() {
-		return getModularInventoryName();
-	}
-
-	@Override
-	public boolean hasCustomName() {
-		return true;
 	}
 
 	@Override
@@ -157,7 +157,7 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer p_70300_1_) {
+	public boolean isUsableByPlayer(PlayerEntity p_70300_1_) {
 		return true;
 	}
 
@@ -167,21 +167,20 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 	
 	@Override
-	public void openInventory(EntityPlayer player) {
+	public void openInventory(PlayerEntity player) {
 		inventory.openInventory(player);
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer player) {
+	public void closeInventory(PlayerEntity player) {
 		inventory.closeInventory(player);	
 	}
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		
 		return (slot == 0 && stack.getItem() instanceof IModularArmor) || 
 				(!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() instanceof IModularArmor && slot != 0 && stack.getItem() instanceof IArmorComponent && 
-				((IArmorComponent)stack.getItem()).isAllowedInSlot(stack, ((ItemArmor)inventory.getStackInSlot(0).getItem()).armorType) && slot - 1 < ((IModularArmor)inventory.getStackInSlot(0).getItem()).getNumSlots(inventory.getStackInSlot(0))
+				((IArmorComponent)stack.getItem()).isAllowedInSlot(stack, ((ArmorItem)inventory.getStackInSlot(0).getItem()).getEquipmentSlot()) && slot - 1 < ((IModularArmor)inventory.getStackInSlot(0).getItem()).getNumSlots(inventory.getStackInSlot(0))
 				&& ((IModularArmor)inventory.getStackInSlot(0).getItem()).isItemValidForSlot(stack, slot - 1) );
 	}
 
@@ -192,24 +191,24 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 
 	@Override
-	public int getField(int id) {
-		return inventory.getField(id);
-	}
-
-	@Override
-	public void setField(int id, int value) {
-		inventory.setField(id, value);
-	}
-
-	@Override
-	public int getFieldCount() {
-		return inventory.getFieldCount();
-	}
-
-	@Override
 	public void clear() {
 		inventory.clear();
 		
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TranslationTextComponent(getModularInventoryName());
+	}
+
+	@Override
+	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType(), player), this);
+	}
+
+	@Override
+	public int getModularInvType() {
+		return guiId.MODULAR.ordinal();
 	}
 
 }

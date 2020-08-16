@@ -1,12 +1,17 @@
 package zmaster587.advancedRocketry.satellite;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagIntArray;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.IntArrayNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.StringNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.util.Constants.NBT;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
@@ -14,6 +19,7 @@ import zmaster587.advancedRocketry.item.ItemBiomeChanger;
 import zmaster587.advancedRocketry.util.BiomeHandler;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.util.HashedBlockPosition;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.*;
 
@@ -25,13 +31,13 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 	//Stores blocks to be updated
 	//Note: we really don't care about order, in fact, lack of order is better
 	private List<HashedBlockPosition> toChangeList;
-	private Set<Byte> discoveredBiomes;
+	private Set<ResourceLocation> discoveredBiomes;
 	private static int MAX_SIZE = 1024;
 
 	public SatelliteBiomeChanger() {
 		radius = 4;
 		toChangeList = new LinkedList<HashedBlockPosition>();
-		discoveredBiomes = new HashSet<Byte>();
+		discoveredBiomes = new HashSet<ResourceLocation>();
 	}
 
 	public void setBiome(int biomeId) {
@@ -42,15 +48,14 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 		return biomeId;
 	}
 
-	public Set<Byte> discoveredBiomes() {
+	public Set<ResourceLocation> discoveredBiomes() {
 		return discoveredBiomes;
 	}
 
-	public void addBiome(int biome) {
-		byte byteBiome = (byte)biome;
+	public void addBiome(ResourceLocation biome) {
 		
 		if(!AdvancedRocketryBiomes.instance.getBlackListedBiomes().contains(biome))
-			discoveredBiomes.add(byteBiome);
+			discoveredBiomes.add(biome);
 	}
 
 	@Override
@@ -85,12 +90,12 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 	@Override
 	public void tickEntity() {
 		//This is hacky..
-		World world = net.minecraftforge.common.DimensionManager.getWorld(getDimensionId());
+		World world = ZUtils.getWorld(getDimensionId().get());
 
 		if(world != null) {
 
 			for(int i = 0; i < 10; i++) {
-				if(world.getTotalWorldTime() % 1 == 0 && !toChangeList.isEmpty()) {
+				if(world.getGameTime() % 1 == 0 && !toChangeList.isEmpty()) {
 					if(extractEnergy(10, true) ==10 ) {
 						extractEnergy(10, false);
 						HashedBlockPosition pos = toChangeList.remove(world.rand.nextInt(toChangeList.size()));
@@ -111,7 +116,7 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 	}
 
 	@Override
-	public boolean performAction(EntityPlayer player, World world, BlockPos pos) {
+	public boolean performAction(PlayerEntity player, World world, BlockPos pos) {
 		if(world.isRemote)
 			return false;
 		Set<Chunk> set = new HashSet<Chunk>();
@@ -155,9 +160,9 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public void writeToNBT(CompoundNBT nbt) {
 		super.writeToNBT(nbt);
-		nbt.setInteger("biomeId", biomeId);
+		nbt.putInt("biomeId", biomeId);
 
 		int array[] = new int[toChangeList.size()*3];
 		Iterator<HashedBlockPosition> itr = toChangeList.iterator();
@@ -167,23 +172,25 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 			array[i+1] = pos.y;
 			array[i+2] = pos.z;
 		}
-		nbt.setTag("posList", new NBTTagIntArray(array));
+		nbt.put("posList", new IntArrayNBT(array));
 
 		array = new int[discoveredBiomes.size()];
+		
+		ListNBT biomeList = new ListNBT();
 
 		int i = 0;
-		for(byte biome : discoveredBiomes) {
-			array[i] = biome;
+		for(ResourceLocation biome : discoveredBiomes) {
+			biomeList.add(StringNBT.valueOf( biome.toString() ));
 			i++;
 		}
 
-		nbt.setTag("biomeList", new NBTTagIntArray(array));
+		nbt.put("biomeList", biomeList);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
+	public void readFromNBT(CompoundNBT nbt) {
 		super.readFromNBT(nbt);
-		biomeId = nbt.getInteger("biomeId");
+		biomeId = nbt.getInt("biomeId");
 
 		int array[] = nbt.getIntArray("posList");
 
@@ -192,10 +199,12 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 			toChangeList.add(new HashedBlockPosition(array[i], array[i+1], array[i+2]));
 		}
 
-		array = nbt.getIntArray("biomeList");
+		ListNBT biomeList = nbt.getList("biomeList", NBT.TAG_STRING);
 		discoveredBiomes.clear();
+		
+		
 		for(int i = 0; i < array.length; i ++) {
-			discoveredBiomes.add((byte) array[i]);
+			discoveredBiomes.add(new ResourceLocation(biomeList.getString(i)));
 		}
 	}
 
@@ -206,8 +215,8 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 
 	@Override
 	public int extractEnergy(int amt, boolean simulate) {
-		if(getDimensionId() != Constants.INVALID_PLANET) {
-			World world = net.minecraftforge.common.DimensionManager.getWorld(getDimensionId());
+		if(getDimensionId().get() != Constants.INVALID_PLANET) {
+			World world = ZUtils.getWorld(getDimensionId().get());
 			if(world != null) {
 				battery.acceptEnergy(energyCreated(world, false), false);
 			}
@@ -218,8 +227,8 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 	@Override
 	public int getUniversalEnergyStored() {
 
-		if(getDimensionId() != Constants.INVALID_PLANET) {
-			World world = net.minecraftforge.common.DimensionManager.getWorld(getDimensionId());
+		if(getDimensionId().get() != Constants.INVALID_PLANET) {
+			World world = ZUtils.getWorld(getDimensionId().get());
 			if(world != null) {
 				battery.acceptEnergy(energyCreated(world, false), false);
 			}

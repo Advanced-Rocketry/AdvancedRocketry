@@ -1,14 +1,18 @@
 package zmaster587.advancedRocketry.satellite;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext.Builder;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.AbstractChunkProvider;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
@@ -17,12 +21,13 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.item.ItemOreScanner;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class SatelliteOreMapping extends SatelliteBase  {
 
 	int blockCenterX, blockCenterZ;
-	public static ArrayList<Integer> oreList = new ArrayList<Integer>();
+	public static ArrayList<Item> oreList = new ArrayList<Item>();
 
 	ItemStack inv;
 
@@ -62,7 +67,7 @@ public class SatelliteOreMapping extends SatelliteBase  {
 	}
 
 	@Override
-	public boolean performAction(EntityPlayer player, World world, BlockPos pos) {
+	public boolean performAction(PlayerEntity player, World world, BlockPos pos) {
 		player.openGui(AdvancedRocketry.instance, 100, world, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}
@@ -72,8 +77,8 @@ public class SatelliteOreMapping extends SatelliteBase  {
 		blocksPerPixel = Math.max(blocksPerPixel, 1);
 		int[][] ret = new int[(radius*2)/blocksPerPixel][(radius*2)/blocksPerPixel];
 
-		Chunk chunk = world.getChunkFromChunkCoords(offsetX << 4, offsetZ << 4);
-		IChunkProvider provider = world.getChunkProvider();
+		Chunk chunk = world.getChunk(offsetX << 4, offsetZ << 4);
+		AbstractChunkProvider provider = world.getChunkProvider();
 
 
 		for(int z = -radius; z < radius; z+=blocksPerPixel){
@@ -92,10 +97,11 @@ public class SatelliteOreMapping extends SatelliteBase  {
 							//Note:May not work with tileEntities (GT ores)
 							boolean found = false;
 							List<ItemStack> drops;
-							IBlockState state = world.getBlockState(pos);
-							if((drops = state.getBlock().getDrops(world,pos, state, 0)) != null)
+							BlockState state = world.getBlockState(pos);
+
+							if((drops = state.getDrops(new Builder((ServerWorld) world))) != null)
 								for(ItemStack stack : drops) {
-									if(stack.getItem() == block.getItem() && stack.getItemDamage() == block.getItemDamage()) {
+									if(stack.getItem() == block.getItem() && stack.getDamage() == block.getDamage()) {
 										oreCount++;
 										found = true;
 									}
@@ -132,14 +138,15 @@ public class SatelliteOreMapping extends SatelliteBase  {
 		blocksPerPixel = Math.max(blocksPerPixel, 1);
 		int[][] ret = new int[(radius*2)/blocksPerPixel][(radius*2)/blocksPerPixel];
 
-		Chunk chunk = world.getChunkFromChunkCoords(offsetX << 4, offsetZ << 4);
-		IChunkProvider provider = world.getChunkProvider();
+		Chunk chunk = world.getChunk(offsetX << 4, offsetZ << 4);
+		AbstractChunkProvider provider = world.getChunkProvider();
 
 		if(oreList.isEmpty()) {
-			String[] strings = OreDictionary.getOreNames();
-			for(String str : strings) {
+			Collection<ResourceLocation> strings = ItemTags.getCollection().getRegisteredTags();
+			for(ResourceLocation loc : strings) {
+				String str = loc.getPath();
 				if(str.startsWith("ore") || str.startsWith("dust") || str.startsWith("gem"))
-					oreList.add(OreDictionary.getOreID(str));
+					oreList.addAll(ItemTags.getCollection().get(loc).func_230236_b_());
 			}
 		}
 
@@ -157,14 +164,10 @@ public class SatelliteOreMapping extends SatelliteBase  {
 								continue;
 							boolean exists = false;
 							out:
-								for(int i : oreList) {
-									List<ItemStack> itemlist = OreDictionary.getOres(OreDictionary.getOreName(i));
-
-									for(ItemStack item : itemlist) {
-										if(item.getItem() == Item.getItemFromBlock(world.getBlockState(pos).getBlock())) {
-											exists = true;
-											break out;
-										}
+								for(Item item : oreList) {
+									if(item == Item.getItemFromBlock(world.getBlockState(pos).getBlock())) {
+										exists = true;
+										break out;
 									}
 								}
 							if(exists)

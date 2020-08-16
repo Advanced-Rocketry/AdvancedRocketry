@@ -1,9 +1,9 @@
 package zmaster587.advancedRocketry.network;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
@@ -32,22 +32,22 @@ public class PacketConfigSync extends BasePacket {
 	}
 	
 	@Override
-	public void write(ByteBuf out) {
+	public void write(PacketBuffer out) {
 		config.writeConfigToNetwork( new PacketBuffer( out));
 	}
 
 	@Override
-	public void readClient(ByteBuf in) {
+	public void readClient(PacketBuffer in) {
 		config = config.readConfigFromNetwork(new PacketBuffer(in));
 	}
 
 	@Override
-	public void read(ByteBuf in) {
+	public void read(PacketBuffer in) {
 		//nice try
 	}
 
 	@Override
-	public void executeClient(EntityPlayer thePlayer) {
+	public void executeClient(PlayerEntity thePlayer) {
 		try {
 			ARConfiguration.loadConfigFromServer(config);
 		} catch (Exception e) {
@@ -56,6 +56,6 @@ public class PacketConfigSync extends BasePacket {
 	}
 
 	@Override
-	public void executeServer(EntityPlayerMP player) {}
+	public void executeServer(ServerPlayerEntity player) {}
 
 }

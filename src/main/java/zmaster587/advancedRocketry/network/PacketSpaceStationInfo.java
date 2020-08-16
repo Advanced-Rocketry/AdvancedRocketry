@@ -1,11 +1,12 @@
 package zmaster587.advancedRocketry.network;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -18,25 +19,25 @@ import java.util.logging.Logger;
 
 public class PacketSpaceStationInfo extends BasePacket {
 	SpaceStationObject spaceObject;
-	int stationNumber;
+	ResourceLocation stationNumber;
 	boolean isBeingDeleted;
 	int direction;
 	String clazzId;
 	int fuelAmt;
-	NBTTagCompound nbt;
+	CompoundNBT nbt;
 	boolean hasWarpCores;
 	
 	public PacketSpaceStationInfo() {}
 
-	public PacketSpaceStationInfo(int stationNumber, ISpaceObject spaceObject) {
+	public PacketSpaceStationInfo(ResourceLocation stationNumber, ISpaceObject spaceObject) {
 		this.spaceObject = (SpaceStationObject)spaceObject;
 		this.stationNumber = stationNumber;
 	}
 
 	@Override
-	public void write(ByteBuf out) {
-		NBTTagCompound nbt = new NBTTagCompound();
-		out.writeInt(stationNumber);
+	public void write(PacketBuffer out) {
+		CompoundNBT nbt = new CompoundNBT();
+		out.writeResourceLocation(stationNumber);
 		boolean flag = false; //TODO //dimProperties == null;
 		
 		if(!flag) {
@@ -68,24 +69,19 @@ public class PacketSpaceStationInfo extends BasePacket {
 	}
 
 	@Override
-	public void readClient(ByteBuf in) {
+	public void readClient(PacketBuffer in) {
 		PacketBuffer packetBuffer = new PacketBuffer(in);
 		
-		stationNumber = in.readInt();
+		stationNumber = in.readResourceLocation();
 
 		//Is dimension being deleted
 		isBeingDeleted = in.readBoolean();
 		if(!isBeingDeleted) {
 			//TODO: error handling
 
-			try {
-				clazzId = packetBuffer.readString(127);
-				nbt = packetBuffer.readCompoundTag();
-				fuelAmt = packetBuffer.readInt();
-			} catch (IOException e) {
-				e.printStackTrace();
-				return;
-			}
+			clazzId = packetBuffer.readString(127);
+			nbt = packetBuffer.readCompoundTag();
+			fuelAmt = packetBuffer.readInt();
 			
 			hasWarpCores = in.readBoolean();
 			
@@ -94,12 +90,12 @@ public class PacketSpaceStationInfo extends BasePacket {
 	}
 
 	@Override
-	public void read(ByteBuf in) {
+	public void read(PacketBuffer in) {
 		//Should never be read on the server!
 	}
 
 	@Override
-	public void executeClient(EntityPlayer thePlayer) {
+	public void executeClient(PlayerEntity thePlayer) {
 		if(isBeingDeleted) {
 			if(DimensionManager.getInstance().isDimensionCreated(stationNumber)) {
 				DimensionManager.getInstance().deleteDimension(stationNumber);
@@ -114,7 +110,7 @@ public class PacketSpaceStationInfo extends BasePacket {
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getNewSpaceObjectFromIdentifier(clazzId);
 				object.readFromNbt(nbt);
 				object.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
-				((SpaceStationObject)object).setForwardDirection(EnumFacing.values()[direction]);
+				((SpaceStationObject)object).setForwardDirection(Direction.values()[direction]);
 				
 				SpaceObjectManager.getSpaceManager().registerSpaceObjectClient(object, object.getOrbitingPlanetId(), stationNumber);
 				((SpaceStationObject)object).setFuelAmount(fuelAmt);
@@ -123,7 +119,7 @@ public class PacketSpaceStationInfo extends BasePacket {
 			else {
 				iObject.readFromNbt(nbt);
 				//iObject.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
-				((SpaceStationObject)iObject).setForwardDirection(EnumFacing.values()[direction]);
+				((SpaceStationObject)iObject).setForwardDirection(Direction.values()[direction]);
 				((SpaceStationObject)iObject).setFuelAmount(fuelAmt);
 				((SpaceStationObject)iObject).hasWarpCores = hasWarpCores;
 			}
@@ -132,6 +128,6 @@ public class PacketSpaceStationInfo extends BasePacket {
 	}
 
 	@Override
-	public void executeServer(EntityPlayerMP player) {}
+	public void executeServer(ServerPlayerEntity player) {}
 
 }

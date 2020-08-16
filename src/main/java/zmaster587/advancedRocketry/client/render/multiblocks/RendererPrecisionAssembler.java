@@ -2,10 +2,10 @@ package zmaster587.advancedRocketry.client.render.multiblocks;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
@@ -21,7 +21,7 @@ public class RendererPrecisionAssembler extends TileEntitySpecialRenderer {
 
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/precAssembler.png");
 
-	//private final RenderItem dummyItem = Minecraft.getMinecraft().getRenderItem();
+	//private final RenderItem dummyItem = Minecraft.getInstance().getRenderItem();
 	
 	//Model Names:
 	// Tray
@@ -47,13 +47,13 @@ public class RendererPrecisionAssembler extends TileEntitySpecialRenderer {
 		if(!multiBlockTile.canRender())
 			return;
 		
-		GL11.glPushMatrix();
+		matrix.push();
 
 		//Rotate and move the model into position
-		GL11.glTranslated(x+.5f, y, z + .5f);
-		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 180 : 0) + front.getFrontOffsetZ()*90f, 0, 1, 0);
-		GL11.glTranslated(-.5f, 0, -.5f);
+		matrix.translate(x+.5f, y, z + .5f);
+		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
+		GL11.glRotatef((front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, 1, 0);
+		matrix.translate(-.5f, 0, -.5f);
 		
 		if(multiBlockTile.isRunning()) {
 
@@ -66,24 +66,24 @@ public class RendererPrecisionAssembler extends TileEntitySpecialRenderer {
 			List<ItemStack> outputList = multiBlockTile.getOutputs();
 			if(outputList != null && !outputList.isEmpty()) {
 				ItemStack stack = outputList.get(0);
-				EntityItem entity = new EntityItem(tile.getWorld());
+				ItemEntity entity = new ItemEntity(tile.getWorld());
 				
 				entity.setItem(stack);
 				entity.hoverStart = 0;
 				
-				GL11.glPushMatrix();
+				matrix.push();
 				GL11.glRotatef(90, 1, 0, 0);
-				GL11.glTranslated(1, tray + .75, -1.2f);
-				RenderHelper.renderItem(multiBlockTile, entity,  Minecraft.getMinecraft().getRenderItem());
-				GL11.glPopMatrix();
+				matrix.translate(1, tray + .75, -1.2f);
+				RenderHelper.renderItem(multiBlockTile, entity,  Minecraft.getInstance().getRenderItem());
+				matrix.pop();
 			}
 			
 			bindTexture(texture);
 			model.renderPart("Hull");
 			
-			GL11.glTranslated(0, 0, tray);
+			matrix.translate(0, 0, tray);
 			model.renderPart("Tray"); // 0-> 3
-			GL11.glTranslated(0, 0, -tray);
+			matrix.translate(0, 0, -tray);
 			
 			process *= 6;
 			if(process > 2 && process < 4){
@@ -128,18 +128,18 @@ public class RendererPrecisionAssembler extends TileEntitySpecialRenderer {
 				if(process < 2) {
 					process-=1;
 					
-					GL11.glTranslated(1.55, 1.47, 0);
+					matrix.translate(1.55, 1.47, 0);
 					GL11.glRotatef(90*process, 0, 0, 1);
-					GL11.glTranslated(-1.55, -1.47, 0);
+					matrix.translate(-1.55, -1.47, 0);
 					
 					model.renderPart("ProcessC");
 				}
 				else if(process < 3) {
 					process = -process + 3;
 					
-					GL11.glTranslated(1.55, 1.47, 0);
+					matrix.translate(1.55, 1.47, 0);
 					GL11.glRotatef(90*process, 0, 0, 1);
-					GL11.glTranslated(-1.55, -1.47, 0);
+					matrix.translate(-1.55, -1.47, 0);
 					
 					model.renderPart("ProcessC");
 				}
@@ -157,7 +157,7 @@ public class RendererPrecisionAssembler extends TileEntitySpecialRenderer {
 		}
 		
 		
-		GL11.glPopMatrix();
+		matrix.pop();
 
 	}
 

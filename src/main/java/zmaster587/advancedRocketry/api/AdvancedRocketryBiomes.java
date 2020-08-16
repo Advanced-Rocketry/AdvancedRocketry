@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.api;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class AdvancedRocketryBiomes {
 	private List<Biome> registeredBiomes;
 	private List<Biome> registeredHighPressureBiomes;
 	private List<Biome> registeredSingleBiome;
-	private static List<Integer> blackListedBiomeIds;
+	private static List<ResourceLocation> blackListedBiomeIds;
 
 	public static Biome moonBiome;
 	public static Biome hotDryBiome;
@@ -39,7 +40,7 @@ public class AdvancedRocketryBiomes {
 	private AdvancedRocketryBiomes() {
 		registeredBiomes = new ArrayList<Biome>();
 		registeredHighPressureBiomes = new LinkedList<Biome>();
-		blackListedBiomeIds = new ArrayList<Integer>();
+		blackListedBiomeIds = new ArrayList<ResourceLocation>();
 		registeredSingleBiome = new ArrayList<Biome>();
 	}
 
@@ -59,13 +60,13 @@ public class AdvancedRocketryBiomes {
 	 * Registers biomes you don't want to spawn on any planet unless registered with highpressure or similar feature
 	 */
 	public void registerBlackListBiome(Biome biome) {
-		blackListedBiomeIds.add(Biome.getIdForBiome(biome));
+		blackListedBiomeIds.add(ForgeRegistries.BIOMES.getKey(biome));
 	}
 
 	/**
 	 * Gets a list of the blacklisted Biome Ids
 	 */
-	public List<Integer> getBlackListedBiomes() {
+	public List<ResourceLocation> getBlackListedBiomes() {
 		return blackListedBiomeIds;
 	}
 
@@ -87,7 +88,7 @@ public class AdvancedRocketryBiomes {
 	 * @param biome
 	 */
 	public void registerSingleBiome(Biome biome) {
-		if(!blackListedBiomeIds.contains(Biome.getIdForBiome(biome)))
+		if(!blackListedBiomeIds.contains(ForgeRegistries.BIOMES.getKey(biome)))
 			registeredSingleBiome.add(biome);
 	}
 	
@@ -132,24 +133,24 @@ public class AdvancedRocketryBiomes {
 	public Biome getBiomeById(int id) {
 
 		for(Biome biome : registeredBiomes) {
-			if( Biome.getIdForBiome(biome) == id)
+			if( Biome.MUTATION_TO_BASE_ID_MAP.get(biome) == id)
 				return biome;
 		}
 
-		return Biome.getBiome(id);
+		return Biome.MUTATION_TO_BASE_ID_MAP.getByValue(id);
 	}
 	
 	public static Biome getBiome(String string)
 	{
 		Biome biome;
 		int id = 0;
-		biome = Biome.REGISTRY.getObject(new ResourceLocation(string));
+		biome = ForgeRegistries.BIOMES.getValue(new ResourceLocation(string));
 		
 		//Fallback to ID
 		if( biome == null)
 		{
 			id = Integer.parseInt(string);
-			biome = Biome.getBiome(id, null);
+			biome = Biome.MUTATION_TO_BASE_ID_MAP.getByValue(id);
 		}
 		
 		return biome;

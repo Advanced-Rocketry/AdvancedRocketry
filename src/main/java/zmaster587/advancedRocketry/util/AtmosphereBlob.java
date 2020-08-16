@@ -1,11 +1,10 @@
 package zmaster587.advancedRocketry.util;
 
-import net.minecraft.block.BlockTorch;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
@@ -16,6 +15,7 @@ import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.network.PacketAirParticle;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -50,7 +50,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 		synchronized (graph) {
 			graph.remove(blockPos);
 
-			for(EnumFacing direction : EnumFacing.values()) {
+			for(Direction direction : Direction.values()) {
 
 				HashedBlockPosition newBlock = blockPos.getPositionAtOffset(direction);
 				if(graph.contains(newBlock) && !graph.doesPathExist(newBlock, blobHandler.getRootPosition()))
@@ -75,9 +75,9 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 		if(blobHandler.canFormBlob()) {
 
 			if(!this.contains(blockPos) && 
-					(this.graph.size() == 0 || this.contains(blockPos.getPositionAtOffset(EnumFacing.UP)) || this.contains(blockPos.getPositionAtOffset(EnumFacing.DOWN)) ||
-							this.contains(blockPos.getPositionAtOffset(EnumFacing.EAST)) || this.contains(blockPos.getPositionAtOffset(EnumFacing.WEST)) ||
-							this.contains(blockPos.getPositionAtOffset(EnumFacing.NORTH)) || this.contains(blockPos.getPositionAtOffset(EnumFacing.SOUTH)))) {
+					(this.graph.size() == 0 || this.contains(blockPos.getPositionAtOffset(Direction.UP)) || this.contains(blockPos.getPositionAtOffset(Direction.DOWN)) ||
+							this.contains(blockPos.getPositionAtOffset(Direction.EAST)) || this.contains(blockPos.getPositionAtOffset(Direction.WEST)) ||
+							this.contains(blockPos.getPositionAtOffset(Direction.NORTH)) || this.contains(blockPos.getPositionAtOffset(Direction.SOUTH)))) {
 				if(!executing) {
 					this.nearbyBlobs = nearbyBlobs;
 					this.blockPos = blockPos;
@@ -113,7 +113,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 			HashedBlockPosition stackElement = stack.pop();
 			addableBlocks.add(stackElement);
 
-			for(EnumFacing dir2 : EnumFacing.values()) {
+			for(Direction dir2 : Direction.values()) {
 				HashedBlockPosition searchNextPosition = stackElement.getPositionAtOffset(dir2);
 
 				//Don't path areas we have already scanned
@@ -125,9 +125,9 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 						sealed = !isPositionAllowed(blobHandler.getWorldObj(), searchNextPosition, nearbyBlobs);//SealableBlockHandler.INSTANCE.isBlockSealed(blobHandler.getWorldObj(), searchNextPosition.getBlockPos());
 
-						if(blobHandler.getTraceDistance() > 0 && blobHandler.getWorldObj().getTotalWorldTime() % 20 == 0) {
+						if(blobHandler.getTraceDistance() > 0 && blobHandler.getWorldObj().getGameTime() % 20 == 0) {
 							if((int)searchNextPosition.getDistance(this.getRootPosition()) == blobHandler.getTraceDistance())	{
-								PacketHandler.sendToNearby(new PacketAirParticle(searchNextPosition), blobHandler.getWorldObj().provider.getDimension(), blobHandler.getRootPosition().getBlockPos(), 128);
+								PacketHandler.sendToNearby(new PacketAirParticle(searchNextPosition), ZUtils.getDimensionIdentifier(blobHandler.getWorldObj()), blobHandler.getRootPosition().getBlockPos(), 128);
 							}
 								
 						}
@@ -175,7 +175,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	 * @param blocks Collection containing affected locations
 	 */
 	protected void runEffectOnWorldBlocks(World world, Collection<HashedBlockPosition> blocks) {
-		if(!AtmosphereHandler.getOxygenHandler(world.provider.getDimension()).getDefaultAtmosphereType().allowsCombustion()) {
+		if(!AtmosphereHandler.getOxygenHandler(world).getDefaultAtmosphereType().allowsCombustion()) {
 
 			List<HashedBlockPosition> list;
 
@@ -185,14 +185,14 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 
 			for(HashedBlockPosition pos : list) {
-				IBlockState state  = world.getBlockState(pos.getBlockPos());
+				BlockState state  = world.getBlockState(pos.getBlockPos());
 				if(state.getBlock() == Blocks.TORCH) {
-					world.setBlockState(pos.getBlockPos(), AdvancedRocketryBlocks.blockUnlitTorch.getDefaultState().withProperty(BlockTorch.FACING, state.getValue(BlockTorch.FACING)));
+					world.setBlockState(pos.getBlockPos(), AdvancedRocketryBlocks.blockUnlitTorch.getDefaultState());
 				}
 				else if(ARConfiguration.getCurrentConfig().torchBlocks.contains(state.getBlock())) {
-					EntityItem item = new EntityItem(world, pos.x, pos.y, pos.z, new ItemStack(state.getBlock()));
-					world.setBlockToAir(pos.getBlockPos());
-					world.spawnEntity(item);
+					ItemEntity item = new ItemEntity(world, pos.x, pos.y, pos.z, new ItemStack(state.getBlock()));
+					world.removeBlock(pos.getBlockPos(), false);
+					world.addEntity(item);
 				}
 			}
 		}

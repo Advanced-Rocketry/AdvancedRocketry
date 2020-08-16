@@ -5,9 +5,9 @@
 
 package zmaster587.advancedRocketry.inventory;
 
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.Button;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
@@ -19,7 +19,7 @@ import zmaster587.libVulpes.network.PacketMachine;
 import java.io.IOException;
 import java.util.LinkedList;
 
-public class GuiSpaceLaser extends GuiContainer {
+public class GuiSpaceLaser extends ContainerScreen<? extends Container> {
 
 	private ResourceLocation backdrop = new ResourceLocation("advancedrocketry", "textures/gui/LaserTile.png");
 	private TileSpaceLaser laserTile;
@@ -59,7 +59,7 @@ public class GuiSpaceLaser extends GuiContainer {
 		modeUp = new GuiImageButton(1, x + 157, y + 20, 5, 8,  zmaster587.libVulpes.inventory.TextureResources.buttonRight);
 		this.buttonList.add(modeUp);
 		this.buttonList.add(modeDown);
-		this.buttonList.add(new GuiButton(2, x + 103, y + 62, 34,20, "Reset"));
+		this.buttonList.add(new Button(2, x + 103, y + 62, 34,20, "Reset"));
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class GuiSpaceLaser extends GuiContainer {
 
 	//Overridden so the mouse works properly
 	@Override
-	protected void actionPerformed(GuiButton guiButton) {	
+	protected void actionPerformed(Button guiButton) {	
 		//TODO: debug
 		if(guiButton.id == 0){
 			laserTile.decrementMode();
@@ -174,21 +174,21 @@ public class GuiSpaceLaser extends GuiContainer {
 		this.mc.renderEngine.bindTexture(backdrop);
 		//get starting X and Y for the interface
 		int x = (width - xSize) / 2, y = (height - ySize) / 2;
-		this.drawTexturedModalRect(x, y, 0, 0, 176, 171);
+		this.func_238474_b_(x, y, 0, 0, 176, 171);
 
 		//Render the energy bar only if energy exists
 		if(laserTile.hasEnergy()) {
 			int offset = laserTile.getEnergyPercentScaled(42);
-			this.drawTexturedModalRect(x + 11, y + 85 - offset, 176, 42 - offset, 16, offset);
+			this.func_238474_b_(x + 11, y + 85 - offset, 176, 42 - offset, 16, offset);
 		}
 
 		//Display status
 		if(laserTile.isFinished() || laserTile.getStackInSlot(0) == null)
-			this.drawTexturedModalRect(x + 145, y + 64, 32, 171, 16, 16);
+			this.func_238474_b_(x + 145, y + 64, 32, 171, 16, 16);
 		else if(laserTile.isRunning() || laserTile.isJammed())
-			this.drawTexturedModalRect(x + 145, y + 64, 16, 171, 16, 16);
+			this.func_238474_b_(x + 145, y + 64, 16, 171, 16, 16);
 		else
-			this.drawTexturedModalRect(x + 145, y + 64, 0, 171, 16, 16);
+			this.func_238474_b_(x + 145, y + 64, 0, 171, 16, 16);
 
 		//Draw labels next to the input boxes
 		this.drawString(this.fontRenderer, "X:", x + 103, y + 31, 0xffffff);

@@ -2,7 +2,7 @@ package zmaster587.advancedRocketry.client.render.multiblocks;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
@@ -33,29 +33,29 @@ public class RendererChemicalReactor  extends TileEntitySpecialRenderer {
 		if(!multiBlockTile.canRender())
 			return;
 
-		GL11.glPushMatrix();
+		matrix.push();
 
 		
 		//Rotate and move the model into position
-		GL11.glPushMatrix();
-		GL11.glTranslated(x+.5f, y, z + 0.5f);
-		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
+		matrix.push();
+		matrix.translate(x+.5f, y, z + 0.5f);
+		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
 		
-		GL11.glRotatef((front.getFrontOffsetZ() == 1 ? 180 : 0) - front.getFrontOffsetX()*90f, 0, 1, 0);
+		GL11.glRotatef((front.getZOffset() == 1 ? 180 : 0) - front.getXOffset()*90f, 0, 1, 0);
 		bindTexture(texture);
 		model.renderOnly("mesh");
-		GL11.glPopMatrix();
+		matrix.pop();
 		
 		
 		
-		GL11.glTranslated(x+.5f, y, z + 0.5f);
-		GL11.glRotatef((front.getFrontOffsetZ() == 1 ? 180 : 0) - front.getFrontOffsetX()*90f, 0, 1, 0);
+		matrix.translate(x+.5f, y, z + 0.5f);
+		GL11.glRotatef((front.getZOffset() == 1 ? 180 : 0) - front.getXOffset()*90f, 0, 1, 0);
 		
-		GL11.glTranslated(0f, -0.5f, 1f );
+		matrix.translate(0f, -0.5f, 1f );
 		if(multiBlockTile.isRunning())
-			GL11.glRotated((8*tile.getWorld().getTotalWorldTime()) % 360, 1, 0, 0);
+			GL11.glRotated((8*tile.getWorld().getGameTime()) % 360, 1, 0, 0);
 		model.renderOnly("Cylinder");
 		
-		GL11.glPopMatrix();
+		matrix.pop();
 	}
 }

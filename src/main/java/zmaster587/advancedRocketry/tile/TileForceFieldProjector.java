@@ -1,48 +1,51 @@
 package zmaster587.advancedRocketry.tile;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.libVulpes.block.BlockFullyRotatable;
 
-public class TileForceFieldProjector extends TileEntity implements ITickable {
+public class TileForceFieldProjector extends TileEntity implements ITickableTileEntity {
 
 	private short extensionRange;
 	private static short MAX_RANGE = 32;
 
 	public TileForceFieldProjector() {
+		super(AdvancedRocketryTileEntityType.TILE_FORCE_FIELD_PROJECTOR);
 		extensionRange = 0;
 	}
 
 
-	public void destroyField(EnumFacing facing) {
+	public void destroyField(Direction facing) {
 		while(extensionRange > 0) {
 			BlockPos nextPos = pos.offset(facing, extensionRange);
 
 			if(world.getBlockState(nextPos).getBlock() == AdvancedRocketryBlocks.blockForceField)
-				world.setBlockToAir(nextPos);
+				world.removeBlock(nextPos, false);
 			extensionRange--;
 		}
 	}
 
 	@Override
-	public void update() {
+	public void tick() {
 
-		if(world.getTotalWorldTime() % 5 == 0) {
+		if(world.getGameTime() % 5 == 0) {
 			if(world.isBlockPowered(getPos())) {
 				if(extensionRange < MAX_RANGE) {
 					if(extensionRange == 0)
 						extensionRange = 1;
 
-					IBlockState state = world.getBlockState(getPos());
+					BlockState state = world.getBlockState(getPos());
 					if(state.getBlock() == AdvancedRocketryBlocks.blockForceFieldProjector) {
-						EnumFacing facing = BlockFullyRotatable.getFront(state);
+						Direction facing = BlockFullyRotatable.getFront(state);
 						BlockPos nextPos = pos.offset(facing, extensionRange);
-						if(world.getBlockState(nextPos).getBlock().isReplaceable(world, nextPos) ) {
+						if(world.getBlockState(nextPos).isReplaceable(Fluids.WATER)) {
 							world.setBlockState(nextPos, AdvancedRocketryBlocks.blockForceField.getDefaultState());
 							extensionRange++;
 						} else if(world.getBlockState(nextPos).getBlock() == AdvancedRocketryBlocks.blockForceField) {
@@ -53,13 +56,13 @@ public class TileForceFieldProjector extends TileEntity implements ITickable {
 			}
 			else if(extensionRange > 0) {
 
-				IBlockState state = world.getBlockState(getPos());
+				BlockState state = world.getBlockState(getPos());
 				if(state.getBlock() == AdvancedRocketryBlocks.blockForceFieldProjector) {
-					EnumFacing facing = BlockFullyRotatable.getFront(state);
+					Direction facing = BlockFullyRotatable.getFront(state);
 					BlockPos nextPos = pos.offset(facing, extensionRange);
 
 					if(world.getBlockState(nextPos).getBlock() == AdvancedRocketryBlocks.blockForceField)
-						world.setBlockToAir(nextPos);
+						world.removeBlock(nextPos, false);
 					extensionRange--;
 				}
 			}
@@ -67,15 +70,15 @@ public class TileForceFieldProjector extends TileEntity implements ITickable {
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		nbt.setShort("ext", extensionRange);
-		return super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt) {
+		nbt.putShort("ext", extensionRange);
+		return super.write(nbt);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
 		extensionRange = nbt.getShort("ext");
-		super.readFromNBT(nbt);
+		super.func_230337_a_(state, nbt);
 	}
 
 }

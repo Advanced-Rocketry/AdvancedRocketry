@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.integration.jei.centrifuge;
 
-import mezz.jei.api.IJeiHelpers;
+import mezz.jei.api.helpers.IJeiHelpers;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 

@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.world.util;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.chunk.storage.IChunkLoader;
@@ -31,7 +31,7 @@ public class DummySaveHandler implements ISaveHandler {
 
 	@Override
 	public void saveWorldInfoWithPlayer(WorldInfo p_75755_1_,
-			NBTTagCompound p_75755_2_) {
+			CompoundNBT p_75755_2_) {
 		
 	}
 

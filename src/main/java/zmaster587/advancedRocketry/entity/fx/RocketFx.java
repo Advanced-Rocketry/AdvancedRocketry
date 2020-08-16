@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vector3d;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
@@ -30,7 +30,7 @@ public class RocketFx extends Particle {
         this.setSize(0.12F*scale, 0.12F*scale);
         this.particleScale *= (this.rand.nextFloat() * 0.6F + 6F)*scale;
         this.motionX = motx;
-        this.motionY = moty;
+        this.getMotion().y = moty;
         this.motionZ = motz;
         this.particleMaxAge = (int)(8.0D / (Math.random() * 0.8D + 0.6D));
 	}
@@ -68,7 +68,7 @@ public class RocketFx extends Particle {
         int i = this.getBrightnessForRender(partialTicks);
         int j = i >> 16 & 65535;
         int k = i & 65535;
-        Vec3d[] avec3d = new Vec3d[] {new Vec3d((double)(-rotationX * f4 - rotationXY * f4), (double)(-rotationZ * f4), (double)(-rotationYZ * f4 - rotationXZ * f4)), new Vec3d((double)(-rotationX * f4 + rotationXY * f4), (double)(rotationZ * f4), (double)(-rotationYZ * f4 + rotationXZ * f4)), new Vec3d((double)(rotationX * f4 + rotationXY * f4), (double)(rotationZ * f4), (double)(rotationYZ * f4 + rotationXZ * f4)), new Vec3d((double)(rotationX * f4 - rotationXY * f4), (double)(-rotationZ * f4), (double)(rotationYZ * f4 - rotationXZ * f4))};
+        Vector3d[] avec3d = new Vector3d[] {new Vector3d((double)(-rotationX * f4 - rotationXY * f4), (double)(-rotationZ * f4), (double)(-rotationYZ * f4 - rotationXZ * f4)), new Vector3d((double)(-rotationX * f4 + rotationXY * f4), (double)(rotationZ * f4), (double)(-rotationYZ * f4 + rotationXZ * f4)), new Vector3d((double)(rotationX * f4 + rotationXY * f4), (double)(rotationZ * f4), (double)(rotationYZ * f4 + rotationXZ * f4)), new Vector3d((double)(rotationX * f4 - rotationXY * f4), (double)(-rotationZ * f4), (double)(rotationYZ * f4 - rotationXZ * f4))};
 
         if (this.particleAngle != 0.0F)
         {
@@ -77,7 +77,7 @@ public class RocketFx extends Particle {
             float f10 = MathHelper.sin(f8 * 0.5F) * (float)cameraViewDir.x;
             float f11 = MathHelper.sin(f8 * 0.5F) * (float)cameraViewDir.y;
             float f12 = MathHelper.sin(f8 * 0.5F) * (float)cameraViewDir.z;
-            Vec3d vec3d = new Vec3d((double)f10, (double)f11, (double)f12);
+            Vector3d vec3d = new Vector3d((double)f10, (double)f11, (double)f12);
 
             for (int l = 0; l < 4; ++l)
             {
@@ -87,7 +87,7 @@ public class RocketFx extends Particle {
 
         
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-        Minecraft.getMinecraft().renderEngine.bindTexture(icon);
+        Minecraft.getInstance().getTextureManager().bindTexture(icon);
         f= 0f;
         f1 =1f;
         f2 = 0f;
@@ -121,6 +121,6 @@ public class RocketFx extends Particle {
             this.setExpired();
         }
         
-        this.setPosition(posX + this.motionX, posY + this.motionY, posZ  + this.motionZ);
+        this.setPosition(posX + this.motionX, posY + this.getMotion().y, posZ  + this.motionZ);
 	}
 }

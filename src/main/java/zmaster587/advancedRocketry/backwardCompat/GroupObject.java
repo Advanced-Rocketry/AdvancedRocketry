@@ -3,10 +3,12 @@ package zmaster587.advancedRocketry.backwardCompat;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
+
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 public class GroupObject
 {
     public String name;
@@ -30,20 +32,9 @@ public class GroupObject
         this.glDrawingMode = glDrawingMode;
     }
 
-    @SideOnly(Side.CLIENT)
-    public void render()
-    {
-        if (faces.size() > 0)
-        {
-            BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-            buffer.begin(glDrawingMode, drawMode);
-            render(buffer);
-            Tessellator.getInstance().draw();
-        }
-    }
 
-    @SideOnly(Side.CLIENT)
-    public void render(BufferBuilder tessellator)
+    @OnlyIn(value=Dist.CLIENT)
+    public void render(IVertexBuilder tessellator)
     {
         if (faces.size() > 0)
         {

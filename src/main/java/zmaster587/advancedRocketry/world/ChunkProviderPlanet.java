@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.world;
 
 import net.minecraft.block.BlockFalling;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
@@ -46,7 +46,7 @@ import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.*;
 
 public class ChunkProviderPlanet implements IChunkGenerator {
 	/** RNG. */
-	protected static final IBlockState STONE = Blocks.STONE.getDefaultState();
+	protected static final BlockState STONE = Blocks.STONE.getDefaultState();
 	private final Random rand;
 	private NoiseGeneratorOctaves minLimitPerlinNoise;
 	private NoiseGeneratorOctaves maxLimitPerlinNoise;
@@ -61,8 +61,8 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 	private final double[] heightMap;
 	private final float[] biomeWeights;
 	private ChunkGeneratorSettings settings;
-	private IBlockState oceanBlock = Blocks.WATER.getDefaultState();
-	private IBlockState fillblock = Blocks.STONE.getDefaultState();
+	private BlockState oceanBlock = Blocks.WATER.getDefaultState();
+	private BlockState fillblock = Blocks.STONE.getDefaultState();
 	private double[] depthBuffer = new double[256];
 	private MapGenBase caveGenerator = new MapGenCaveExt();
 	private MapGenStronghold strongholdGenerator = new MapGenStronghold();
@@ -127,7 +127,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 			worldIn.setSeaLevel(dimProps.getSeaLevel());
 		}
 
-		IBlockState oceanBlock = dimProps.getOceanBlock();
+		BlockState oceanBlock = dimProps.getOceanBlock();
 		if(oceanBlock != null)
 		{
 			this.oceanBlock = oceanBlock;
@@ -137,7 +137,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 				((MapGenRavineExt)ravineGenerator).setOceanBlock(this.oceanBlock);
 		}
 
-		IBlockState fillBlock = dimProps.getStoneBlock();
+		BlockState fillBlock = dimProps.getStoneBlock();
 		if(fillBlock != null)
 		{
 			this.fillblock = fillBlock;

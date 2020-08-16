@@ -2,45 +2,35 @@ package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.state.EnumProperty;
+import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.IBlockReader;
 
 
 public class BlockLinkedHorizontalTexture extends Block {
 
-	public static final PropertyEnum<IconNames> TYPE = PropertyEnum.create("type", IconNames.class);
+	public static final EnumProperty<IconNames> TYPE = EnumProperty.create("type", IconNames.class);
 	
 	//Mapping of side to names
 	//Order is such that the side with a block can be represented as as bitmask where a side with a block is represented by a 0
 	
-	public BlockLinkedHorizontalTexture(Material material) {
+	public BlockLinkedHorizontalTexture(Properties material) {
 		super(material);
-		this.setDefaultState(this.getDefaultState().withProperty(TYPE, IconNames.ALLEDGE));
+		this.setDefaultState(this.stateContainer.getBaseState().with(TYPE, IconNames.ALLEDGE));
 	}
 	
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return this.getDefaultState().withProperty(TYPE, IconNames.values()[meta]);
+	protected void fillStateContainer(Builder<Block, net.minecraft.block.BlockState> builder) {
+		super.fillStateContainer(builder);
+		builder.add(TYPE);
 	}
 	
 	@Override
-	public int getMetaFromState(IBlockState state) {
-		return state.getValue(TYPE).ordinal();
-	}
-	
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[]{TYPE});
-	}
-	
-	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess world,
-			BlockPos pos) {
+	public net.minecraft.block.BlockState getStateAtViewpoint(net.minecraft.block.BlockState state, IBlockReader world,
+			BlockPos pos, Vector3d viewpoint) {
 		
 		int offset = 0;
 
@@ -53,7 +43,7 @@ public class BlockLinkedHorizontalTexture extends Block {
 		if(world.getBlockState(pos.add(0,0,1)).getBlock() == this)
 			offset |= 0x8;
 		
-		return state.withProperty(TYPE, IconNames.values()[offset]);
+		return state.with(TYPE, IconNames.values()[offset]);
 	}
 	
 	static enum IconNames implements IStringSerializable {
@@ -79,7 +69,7 @@ public class BlockLinkedHorizontalTexture extends Block {
 			this.suffix = suffix;
 		}
 		@Override
-		public String getName() {
+		public String func_176610_l() {
 			return suffix;
 		}
 	}

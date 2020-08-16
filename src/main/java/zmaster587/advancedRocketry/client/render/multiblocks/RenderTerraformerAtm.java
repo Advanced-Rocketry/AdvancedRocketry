@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
@@ -36,15 +36,15 @@ public class RenderTerraformerAtm extends TileEntitySpecialRenderer {
 		if(!multiBlockTile.canRender())
 			return;
 
-		GL11.glPushMatrix();
+		matrix.push();
 
 		//Initial setup
 
 		//Rotate and move the model into position
-		GL11.glTranslated(x + 0.5, y, z + 0.5);
-		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 180 : 0) + front.getFrontOffsetZ()*90f, 0, 1, 0);
-		GL11.glTranslated(1f, 0, 0f);
+		matrix.translate(x + 0.5, y, z + 0.5);
+		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
+		GL11.glRotatef((front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, 1, 0);
+		matrix.translate(1f, 0, 0f);
 		bindTexture(TextureResources.fan);
 		model.renderOnly("Fan");
 		
@@ -64,15 +64,15 @@ public class RenderTerraformerAtm extends TileEntitySpecialRenderer {
 		GlStateManager.disableLighting();
 		bindTexture(tubeTexture);
 		model.renderOnly("Tubes");
-		GlStateManager.disableTexture2D();
+		GlStateManager.disableTexture();
 		
-		GlStateManager.color(0, 0.9f, col);
+		GlStateManager.color4f(0, 0.9f, col);
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 196, 196);
 		model.renderOnly("BlueRing");
-		GlStateManager.color(col, col, col);
+		GlStateManager.color4f(col, col, col);
 		GlStateManager.enableLighting();
-		GlStateManager.enableTexture2D();
+		GlStateManager.enableTexture();
 		
-		GL11.glPopMatrix();
+		matrix.pop();
 	}
 }

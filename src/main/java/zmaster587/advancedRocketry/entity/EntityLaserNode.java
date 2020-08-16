@@ -1,16 +1,21 @@
 package zmaster587.advancedRocketry.entity;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.ParticleStatus;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
+import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryEntities;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.LibVulpes;
 
@@ -21,7 +26,7 @@ public class EntityLaserNode extends Entity {
 	//private TileSpaceLaser creator;
 
 	public EntityLaserNode(World par1World) {
-		super(par1World);
+		super(AdvancedRocketryEntities.ENTITY_LASER_NODE, par1World);
 		ignoreFrustumCheck = true;
 		noClip = true;
 	}
@@ -31,9 +36,7 @@ public class EntityLaserNode extends Entity {
 
 	public EntityLaserNode(World world, double x, double y, double z) {
 		this(world);
-		this.posX = x;
-		this.posY = y;
-		this.posZ = z;
+		this.setPosition(x, y, z);
 	}
 	
 	public void markValid()
@@ -42,15 +45,15 @@ public class EntityLaserNode extends Entity {
 	}
 
 	@Override
-	protected void entityInit() {
+	protected void registerData() {
 	}
 	
 	@Override
-	public boolean isEntityInvulnerable(DamageSource source) { return true;}
+	public boolean isInvulnerable() { return true; }
 	
 	@Override
-	public void setDead() {
-		super.setDead();
+	public void remove() {
+		super.remove();
 		this.cleanUp();
 	}
 
@@ -60,48 +63,44 @@ public class EntityLaserNode extends Entity {
 	 */
 	public void cleanUp() {
 		if(!this.world.isRemote)
-			new Thread(cleanThread).run();
-	}
-
-	Runnable cleanThread = new Runnable() {
-		@Override
-		public void run() {
+		{
 			for(int h = 0; h < world.getHeight(); h++) {
 				for(int i = 0; i < 9; i++) {
-					int x = (int)posX + (i % 3) - 1;
-					int z = (int)posZ + (i / 3) - 1;
+					int x = (int)this.getPosX() + (i % 3) - 1;
+					int z = (int)getPosZ() + (i / 3) - 1;
 					BlockPos pos = new BlockPos(x, h, z);
 					if(world.getBlockState(pos).getBlock() == AdvancedRocketryBlocks.blockLightSource)
-						world.setBlockToAir(pos);
+						world.setBlockState(pos, Blocks.AIR.getDefaultState());
 				}
 			}
 		}
-	};
+	}
+
 	
 	@Override
-	public void onUpdate() {
+	public void tick() {
 
 		if(!world.isRemote && !isValid) {
-			this.setDead();
+			this.remove();
 
 			return;
 		}	
 
-		super.onUpdate();
+		super.tick();
 		
 		if(this.world.isRemote)	{
-			if(Minecraft.getMinecraft().gameSettings.particleSetting < 2){
+			if(Minecraft.getInstance().gameSettings.particles != ParticleStatus.MINIMAL){
 				final double spread = 3;
 				final double initialSpeed = .5;
-				for(int i = 0; i < (Minecraft.getMinecraft().gameSettings.particleSetting == 0 ? 20 : 5); i++)
-					AdvancedRocketry.proxy.spawnParticle("fireworksSpark",world, this.posX + (this.rand.nextDouble()*spread) - (spread/2), this.posY, this.posZ + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble() - (initialSpeed/2), initialSpeed * this.rand.nextDouble() * 20 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
+				for(int i = 0; i < (Minecraft.getInstance().gameSettings.particles == ParticleStatus.ALL ? 20 : 5); i++)
+					AdvancedRocketry.proxy.spawnParticle("fireworksSpark",world, this.getPosX() + (this.rand.nextDouble()*spread) - (spread/2), this.getPosY(), this.getPosZ() + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble() - (initialSpeed/2), initialSpeed * this.rand.nextDouble() * 20 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
 
 
 				//this.worldObj.spawnParticle("tilecrack_" + this.worldObj.getBlockId((int)this.posX, (int)this.posY - 1, (int)this.posZ) + "_" + 0, this.posX + (this.rand.nextDouble()*spread) - (spread/2), this.posY + 5, this.posZ + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble(), initialSpeed * this.rand.nextDouble() * 20 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
-				AdvancedRocketry.proxy.spawnParticle("hugeexplosion", world, this.posX + (this.rand.nextDouble()*spread) - (spread/2), this.posY, this.posZ + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble(), initialSpeed * this.rand.nextDouble() * 4 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
+				AdvancedRocketry.proxy.spawnParticle("hugeexplosion", world, this.getPosX() + (this.rand.nextDouble()*spread) - (spread/2), this.getPosY(), this.getPosZ() + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble(), initialSpeed * this.rand.nextDouble() * 4 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
 			}
 			//TODO: use sound setting
-			LibVulpes.proxy.playSound(world, getPosition(), AudioRegistry.laserDrill, SoundCategory.NEUTRAL, 1.0f, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+			LibVulpes.proxy.playSound(world, getPositionUnderneath(), AudioRegistry.laserDrill, SoundCategory.NEUTRAL, 1.0f, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 			
 		}
 	}
@@ -112,7 +111,7 @@ public class EntityLaserNode extends Entity {
 	 * Checks if the entity is in range to render by using the past in distance and comparing it to its average edge
 	 * length * 64 * renderDistanceWeight Args: distance
 	 */
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(value=Dist.CLIENT)
 	public boolean isInRangeToRenderDist(double par1)
 	{
 		//double d1 = this.boundingBox.getAverageEdgeLength();
@@ -123,13 +122,15 @@ public class EntityLaserNode extends Entity {
 
 	//Dont need to write anything
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbttagcompound) {
-
+	protected void readAdditional(CompoundNBT nbttagcompound) {
 	}
 
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbttagcompound) {
-		// TODO Auto-generated method stub
-
+	protected void writeAdditional(CompoundNBT nbttagcompound) {
+	}
+	
+	@Override
+	public IPacket<?> createSpawnPacket() {
+		return new SSpawnObjectPacket(this);
 	}
 }

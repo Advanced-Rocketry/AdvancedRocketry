@@ -1,11 +1,11 @@
 package zmaster587.advancedRocketry.atmosphere;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
 import zmaster587.advancedRocketry.entity.EntityElevatorCapsule;
@@ -27,13 +27,13 @@ public class AtmosphereLowOxygen extends AtmosphereNeedsSuit {
 	}
 	
 	@Override
-	public void onTick(EntityLivingBase player) {
-		if(player.world.getTotalWorldTime() % 20  == 0 && !isImmune(player)) {
+	public void onTick(LivingEntity player) {
+		if(player.world.getGameTime() % 20  == 0 && !isImmune(player)) {
 			player.attackEntityFrom(AtmosphereHandler.lowOxygenDamage, 1);
-			player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 40, 2));
-			player.addPotionEffect(new PotionEffect(Potion.getPotionById(4), 40, 2));
-			if(player instanceof EntityPlayer)
-				PacketHandler.sendToPlayer(new PacketOxygenState(), (EntityPlayer)player);
+			player.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 40, 2));
+			player.addPotionEffect(new EffectInstance(Effects.MINING_FATIGUE, 40, 2));
+			if(player instanceof PlayerEntity)
+				PacketHandler.sendToPlayer(new PacketOxygenState(), (PlayerEntity)player);
 		}
 	}
 	

@@ -1,6 +1,8 @@
 package zmaster587.advancedRocketry.integration.jei;
 
-import mezz.jei.api.gui.IDrawableAnimated;
+import com.mojang.blaze3d.matrix.MatrixStack;
+
+import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import net.minecraft.client.Minecraft;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 
@@ -24,13 +26,9 @@ public class DrawableProgressBarWrapper implements IDrawableAnimated {
 	}
 
 	@Override
-	public void draw(Minecraft minecraft) {
-		bar.renderProgressBar(0,0,0, 100);
-	}
-
-	@Override
-	public void draw(Minecraft minecraft, int xOffset, int yOffset) {
+	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
 		bar.renderProgressBar(xOffset,0,yOffset, 100);
+		
 	}
 
 }

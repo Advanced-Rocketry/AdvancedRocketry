@@ -1,20 +1,26 @@
 package zmaster587.advancedRocketry.tile.cables;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.api.distmarker.Dist;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.satellite.IDataHandler;
@@ -22,11 +28,15 @@ import zmaster587.advancedRocketry.cable.NetworkRegistry;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.world.util.MultiData;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
+import zmaster587.libVulpes.inventory.ContainerModular;
+import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.IToggleButton;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleButton;
 import zmaster587.libVulpes.inventory.modules.ModuleToggleSwitch;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketHandler;
@@ -36,7 +46,7 @@ import zmaster587.libVulpes.util.INetworkMachine;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileWirelessTransciever extends TileEntity implements INetworkMachine, IModularInventory, ILinkableTile, IDataHandler, ITickable, IToggleButton {
+public class TileWirelessTransciever extends TileEntity implements INetworkMachine, IModularInventory, ILinkableTile, IDataHandler, ITickableTileEntity, IToggleButton {
 
 
 	boolean extractMode;
@@ -47,35 +57,35 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 	protected ModuleToggleSwitch toggleSwitch;
 
 	public TileWirelessTransciever() {
-
+		super(AdvancedRocketryTileEntityType.TILE_WIRELESS_TRANSCIEVER);
 		networkID = -1;
 		data = new MultiData();
 		data.setMaxData(100);
-		toggle = new ModuleToggleSwitch(50, 50, 0, LibVulpes.proxy.getLocalizedString("msg.wirelessTransciever.extract"), this, TextureResources.buttonGeneric, 64, 18, false);
-		toggleSwitch = new ModuleToggleSwitch(160, 5, 1, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, true);
+		toggle = new ModuleToggleSwitch(50, 50, LibVulpes.proxy.getLocalizedString("msg.wirelessTransciever.extract"), this, TextureResources.buttonGeneric, 64, 18, false);
+		toggleSwitch = new ModuleToggleSwitch(160, 5, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, true);
 	}
 
 
 	@Override
-	public boolean onLinkStart(ItemStack item, TileEntity entity, EntityPlayer player, World world) {
+	public boolean onLinkStart(ItemStack item, TileEntity entity, PlayerEntity player, World world) {
 
 		ItemLinker.setMasterCoords(item, getPos());
 
 		if(world.isRemote)
-			player.sendMessage(new TextComponentTranslation("msg.linker.program"));
+			player.sendMessage(new TranslationTextComponent("msg.linker.program"), Util.field_240973_b_);
 
 		return true;
 	}
 
 	@Override
-	public void onChunkUnload() {
-		super.onChunkUnload();
+	public void onChunkUnloaded() {
+		super.onChunkUnloaded();
 		if(NetworkRegistry.dataNetwork.doesNetworkExist(networkID))
 			NetworkRegistry.dataNetwork.getNetwork(networkID).removeFromAll(this);
 	}
 
 	@Override
-	public boolean onLinkComplete(ItemStack item, TileEntity entity, EntityPlayer player, World world) {
+	public boolean onLinkComplete(ItemStack item, TileEntity entity, PlayerEntity player, World world) {
 		BlockPos pos = ItemLinker.getMasterCoords(item);
 
 		TileEntity tile = world.getTileEntity(pos);
@@ -84,7 +94,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 		{
 			if(world.isRemote)
 			{
-				player.sendMessage(new TextComponentTranslation("msg.linker.success"));
+				player.sendMessage(new TranslationTextComponent("msg.linker.success"), Util.field_240973_b_);
 				return true;
 			}
 
@@ -130,44 +140,44 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 
 		if(extractMode)
 		{
-			NetworkRegistry.dataNetwork.getNetwork(networkID).addSource(this, EnumFacing.UP);
+			NetworkRegistry.dataNetwork.getNetwork(networkID).addSource(this, Direction.UP);
 		}
 		else
 		{
-			NetworkRegistry.dataNetwork.getNetwork(networkID).addSink(this, EnumFacing.UP);
+			NetworkRegistry.dataNetwork.getNetwork(networkID).addSink(this, Direction.UP);
 		}
 	}
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound nbt = new NBTTagCompound();
-		this.writeToNBT(nbt);
+	public SUpdateTileEntityPacket getUpdatePacket() {
+		CompoundNBT nbt = new CompoundNBT();
+		this.write(nbt);
 
-		return new SPacketUpdateTileEntity(this.pos, 0, nbt);
+		return new SUpdateTileEntityPacket(this.pos, 0, nbt);
 	}
 
 	@Override 
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.getNbtCompound());
+	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+		this.func_230337_a_(getBlockState(), pkt.getNbtCompound());
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag() {
-		return writeToNBT(new NBTTagCompound());
+	public CompoundNBT getUpdateTag() {
+		return write(new CompoundNBT());
 	}
 
-	public boolean canExtract(EnumFacing dir, TileEntity e) {
+	public boolean canExtract(Direction dir, TileEntity e) {
 
 		return e instanceof IDataHandler;
 	}
 
 
-	public boolean canInject(EnumFacing dir, TileEntity e) {
+	public boolean canInject(Direction dir, TileEntity e) {
 		return e instanceof IDataHandler;
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
+	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		LinkedList list = new LinkedList<ModuleBase>();
 
 		list.add(toggle);
@@ -182,12 +192,12 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 	}
 
 	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
+	public boolean canInteractWithContainer(PlayerEntity entity) {
 		return true;
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
 		if(id == 0)
 			out.writeBoolean(toggle.getState());
 		else if(id == 1)
@@ -195,17 +205,17 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
-		nbt.setBoolean("state", in.readBoolean());
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
+			CompoundNBT nbt) {
+		nbt.putBoolean("state", in.readBoolean());
 
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 
-		if(side.isServer()) 
+		if(side.isDedicatedServer()) 
 		{
 			if(id == 0)
 			{
@@ -215,9 +225,9 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 					NetworkRegistry.dataNetwork.getNetwork(networkID).removeFromAll(this);
 
 					if(extractMode) 
-						NetworkRegistry.dataNetwork.getNetwork(networkID).addSource(this, EnumFacing.UP);
+						NetworkRegistry.dataNetwork.getNetwork(networkID).addSource(this, Direction.UP);
 					else
-						NetworkRegistry.dataNetwork.getNetwork(networkID).addSink(this, EnumFacing.UP);
+						NetworkRegistry.dataNetwork.getNetwork(networkID).addSink(this, Direction.UP);
 				}
 			}
 			else if(id == 1)
@@ -228,12 +238,12 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
 
 		extractMode = nbt.getBoolean("mode");
 		enabled = nbt.getBoolean("enabled");
-		networkID = nbt.getInteger("networkID");
+		networkID = nbt.getInt("networkID");
 		data.readFromNBT(nbt);
 		//addToNetwork();
 
@@ -242,22 +252,22 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		nbt.setBoolean("mode", extractMode);
-		nbt.setBoolean("enabled", enabled);
-		nbt.setInteger("networkID", networkID);
+	public CompoundNBT write(CompoundNBT nbt) {
+		nbt.putBoolean("mode", extractMode);
+		nbt.putBoolean("enabled", enabled);
+		nbt.putInt("networkID", networkID);
 		data.writeToNBT(nbt);
-		return super.writeToNBT(nbt);
+		return super.write(nbt);
 	}
 
 	@Override
-	public int extractData(int maxAmount, DataType type, EnumFacing dir,
+	public int extractData(int maxAmount, DataType type, Direction dir,
 			boolean commit) {
 		return enabled ? data.extractData(maxAmount, type, dir, commit) : 0;
 	}
 
 	@Override
-	public int addData(int maxAmount, DataType type, EnumFacing dir,
+	public int addData(int maxAmount, DataType type, Direction dir,
 			boolean commit) {
 		return enabled ? data.addData(maxAmount, type, dir, commit) : 0;
 	}
@@ -274,22 +284,22 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 			NetworkRegistry.dataNetwork.getNetwork(networkID).removeFromAll(this);
 
 			if(extractMode) 
-				NetworkRegistry.dataNetwork.getNetwork(networkID).addSource(this, EnumFacing.UP);
+				NetworkRegistry.dataNetwork.getNetwork(networkID).addSource(this, Direction.UP);
 			else
-				NetworkRegistry.dataNetwork.getNetwork(networkID).addSink(this, EnumFacing.UP);
+				NetworkRegistry.dataNetwork.getNetwork(networkID).addSink(this, Direction.UP);
 
 		}
 	}
 
 	@Override
-	public void update() {
+	public void tick() {
 
 		if(!world.isRemote) {
-			IBlockState state = world.getBlockState(getPos());
+			BlockState state = world.getBlockState(getPos());
 			if (state.getBlock() instanceof RotatableBlock) {
-				EnumFacing facing = RotatableBlock.getFront(state).getOpposite();
+				Direction facing = RotatableBlock.getFront(state).getOpposite();
 
-				TileEntity tile = world.getTileEntity(getPos().add(facing.getFrontOffsetX(),facing.getFrontOffsetY(),facing.getFrontOffsetZ()));
+				TileEntity tile = world.getTileEntity(getPos().add(facing.getXOffset(),facing.getYOffset(),facing.getZOffset()));
 
 				if( tile instanceof IDataHandler && !(tile instanceof TileWirelessTransciever))
 				{
@@ -319,12 +329,12 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 
 
 	@Override
-	public void onInventoryButtonPressed(int buttonId) {
-		if(buttonId == 1)
+	public void onInventoryButtonPressed(ModuleButton buttonId) {
+		if(buttonId == toggleSwitch)
 			enabled = toggleSwitch.getState();
-		else if(buttonId == 0)
+		else if(buttonId == toggle)
 			extractMode = toggle.getState();
-		PacketHandler.sendToServer(new PacketMachine(this, (byte)buttonId));
+		PacketHandler.sendToServer(new PacketMachine(this, (byte)(buttonId == toggle ? 0  : 1)));
 	}
 
 
@@ -339,6 +349,24 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 			this.markDirty();
 			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 		}
+	}
+
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TranslationTextComponent(getModularInventoryName());
+	}
+
+
+	@Override
+	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType(), player), this);
+	}
+
+
+	@Override
+	public int getModularInvType() {
+		return GuiHandler.guiId.MODULAR.ordinal();
 	}
 
 }

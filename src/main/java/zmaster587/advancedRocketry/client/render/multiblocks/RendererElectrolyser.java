@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
@@ -40,12 +40,12 @@ public class RendererElectrolyser extends TileEntitySpecialRenderer {
 		if(!multiBlockTile.canRender())
 			return;
 
-		GL11.glPushMatrix();
+		matrix.push();
 
 		//Rotate and move the model into position
-		GL11.glTranslated(x+.5f, y, z + 0.5f);
-		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		GL11.glRotatef((front.getFrontOffsetZ() == 1 ? 180 : 0) - front.getFrontOffsetX()*90f, 0, 1, 0);
+		matrix.translate(x+.5f, y, z + 0.5f);
+		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
+		GL11.glRotatef((front.getZOffset() == 1 ? 180 : 0) - front.getXOffset()*90f, 0, 1, 0);
 
 		bindTexture(texture);
 		model.renderAll();
@@ -58,8 +58,8 @@ public class RendererElectrolyser extends TileEntitySpecialRenderer {
 			double width = 0.01;
 
 			//Isn't precision fun?
-			double ySkew = 0.1*MathHelper.sin((tile.getWorld().getTotalWorldTime() & 0xffff)*2f);
-			double xSkew = 0.1*MathHelper.sin((200 + tile.getWorld().getTotalWorldTime() & 0xffff)*3f);
+			double ySkew = 0.1*MathHelper.sin((tile.getWorld().getGameTime() & 0xffff)*2f);
+			double xSkew = 0.1*MathHelper.sin((200 + tile.getWorld().getGameTime() & 0xffff)*3f);
 			double yPos = 1.4;
 
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -68,7 +68,7 @@ public class RendererElectrolyser extends TileEntitySpecialRenderer {
 			GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_SRC_ALPHA);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
-			GlStateManager.color(.64f, 0.64f, 1f, 0.4f);
+			GlStateManager.color4f(.64f, 0.64f, 1f, 0.4f);
 			double xMin = -0.3f;
 			double xMax = -.15f;
 			double zMin = 1f;
@@ -102,7 +102,7 @@ public class RendererElectrolyser extends TileEntitySpecialRenderer {
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			
 		}
-		GL11.glPopMatrix();
+		matrix.pop();
 	}
 
 }

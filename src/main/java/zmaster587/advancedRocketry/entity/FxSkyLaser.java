@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.client.render.RenderLaser;
@@ -30,7 +30,7 @@ public class FxSkyLaser extends Particle {
 			float partialTicks, float rotationX, float rotationZ,
 			float rotationYZ, float rotationXY, float rotationXZ) {
 		//Will this break rendering?
-		EntityPlayer player  = Minecraft.getMinecraft().player;
+		PlayerEntity player  = Minecraft.getInstance().player;
 		//worldRendererIn.finishDrawing();
 		render.doRender(this, this.posX - player.posX, this.posY - player.posY, this.posZ - player.posZ, 0, 0);
 		GL11.glDisable(GL11.GL_LIGHTING);

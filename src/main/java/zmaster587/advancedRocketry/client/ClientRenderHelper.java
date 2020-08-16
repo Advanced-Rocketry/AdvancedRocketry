@@ -13,10 +13,10 @@ public class ClientRenderHelper {
 	public static void setOverridenRenderDistance(int distance)
 	{
 		if(!renderDistanceOverriden)
-			oldRenderDistance = Minecraft.getMinecraft().gameSettings.renderDistanceChunks;
-		Minecraft.getMinecraft().gameSettings.renderDistanceChunks = distance;
+			oldRenderDistance = Minecraft.getInstance().gameSettings.renderDistanceChunks;
+		Minecraft.getInstance().gameSettings.renderDistanceChunks = distance;
 		try {
-			ObfuscationReflectionHelper.setPrivateValue(net.minecraft.client.renderer.RenderGlobal.class, Minecraft.getMinecraft().renderGlobal, distance, "renderDistanceChunks");
+			ObfuscationReflectionHelper.setPrivateValue(net.minecraft.client.renderer.RenderGlobal.class, Minecraft.getInstance().renderGlobal, distance, "renderDistanceChunks");
 		}
 		catch(Exception e)
 		{
@@ -33,7 +33,7 @@ public class ClientRenderHelper {
 		if(renderDistanceOverriden)
 		{
 			renderDistanceOverriden = false;
-			Minecraft.getMinecraft().gameSettings.renderDistanceChunks = oldRenderDistance;
+			Minecraft.getInstance().gameSettings.renderDistanceChunks = oldRenderDistance;
 		}
 	}
 

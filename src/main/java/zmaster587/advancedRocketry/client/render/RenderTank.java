@@ -23,17 +23,17 @@ public class RenderTank extends TileEntitySpecialRenderer {
 			double y, double z, float f, int damage, float a) {
 
 		IFluidHandler fluidTile = (IFluidHandler)tile;
-		FluidStack fluid = fluidTile.getTankProperties()[0].getContents();
+		FluidStack fluid = fluidTile.getFluidInTank(0);
 		ResourceLocation fluidIcon = new ResourceLocation("advancedrocketry:textures/blocks/fluid/oxygen_flow.png");
 
 		if(fluid != null && fluid.getFluid() != null)
 		{
-			GL11.glPushMatrix();
+			matrix.push();
 
 			GL11.glTranslatef((float)x, (float)y, (float)z);
 
 			double minU = 0, maxU = 1, minV = 0, maxV = 1;
-			TextureMap map = Minecraft.getMinecraft().getTextureMapBlocks();
+			TextureMap map = Minecraft.getInstance().getTextureMapBlocks();
 			TextureAtlasSprite sprite = map.getTextureExtry(fluid.getFluid().getStill().toString());
 			if(sprite != null) {
 				minU = sprite.getMinU();
@@ -54,7 +54,7 @@ public class RenderTank extends TileEntitySpecialRenderer {
 			Block block = tile.getBlockType();
 			Tessellator tess = Tessellator.getInstance();
 
-			float amt = fluid.amount / (float)fluidTile.getTankProperties()[0].getCapacity();
+			float amt = fluid.amount / (float)fluidTile.getTankCapacity(0);
 			
 			GlStateManager.disableLighting();
 			GlStateManager.enableBlend();
@@ -69,8 +69,8 @@ public class RenderTank extends TileEntitySpecialRenderer {
 
 			GlStateManager.enableLighting();
 			GlStateManager.disableBlend();
-			GL11.glPopMatrix();
-			GlStateManager.color(1f, 1f, 1f);
+			matrix.pop();
+			GlStateManager.color4f(1f, 1f, 1f);
 		}
 	}
 }

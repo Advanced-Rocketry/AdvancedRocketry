@@ -1,10 +1,15 @@
 package zmaster587.advancedRocketry.inventory.modules;
 
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.inventory.container.Container;
+
 import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -21,9 +26,9 @@ public class ModulePanetImage extends ModuleBase {
 
 
 	@Override
-	public void renderBackground(GuiContainer gui, int x, int y, int mouseX,
+	public void renderBackground(ContainerScreen<? extends Container> gui, MatrixStack matrix, int x, int y, int mouseX,
 			int mouseY, FontRenderer font) {
-		super.renderBackground(gui, x, y, mouseX, mouseY, font);
+		super.renderBackground(gui, matrix, x, y, mouseX, mouseY, font);
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexbuffer = tessellator.getBuffer();

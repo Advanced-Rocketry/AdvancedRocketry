@@ -1,27 +1,37 @@
 package zmaster587.advancedRocketry.tile.station;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.util.Direction;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
-import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
+import zmaster587.libVulpes.inventory.ContainerModular;
+import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileStationOrientationControl extends TileEntity implements ITickable, IModularInventory, INetworkMachine, ISliderBar {
+public class TileStationOrientationControl extends TileEntity implements ITickableTileEntity, IModularInventory, INetworkMachine, ISliderBar {
 
 	int numRotationsPerHour[];
 	int progress[];
@@ -29,6 +39,7 @@ public class TileStationOrientationControl extends TileEntity implements ITickab
 	private ModuleText moduleAngularVelocity, numThrusters, maxAngularAcceleration, targetRotations;
 
 	public TileStationOrientationControl() {
+		super(AdvancedRocketryTileEntityType.TILE_ORIENTATION_CONTROLLER);
 		moduleAngularVelocity = new ModuleText(6, 15, LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.alt"), 0xaa2020);
 		//numThrusters = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
 		targetRotations = new ModuleText(6, 25, LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.tgtalt"), 0x202020);
@@ -41,7 +52,7 @@ public class TileStationOrientationControl extends TileEntity implements ITickab
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
+	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(moduleAngularVelocity);
 		//modules.add(numThrusters);
@@ -63,7 +74,7 @@ public class TileStationOrientationControl extends TileEntity implements ITickab
 		if(world.isRemote) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object != null) {
-				moduleAngularVelocity.setText(String.format("%s%.1f %.1f %.1f", LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.alt"), 72000D*object.getDeltaRotation(EnumFacing.EAST), 72000D*object.getDeltaRotation(EnumFacing.UP), 7200D*object.getDeltaRotation(EnumFacing.NORTH)));
+				moduleAngularVelocity.setText(String.format("%s%.1f %.1f %.1f", LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.alt"), 72000D*object.getDeltaRotation(Direction.EAST), 72000D*object.getDeltaRotation(Direction.UP), 7200D*object.getDeltaRotation(Direction.NORTH)));
 				//maxAngularAcceleration.setText(String.format("Maximum Angular Acceleration: %.1f", 7200D*object.getMaxRotationalAcceleration()));
 			}
 
@@ -74,15 +85,15 @@ public class TileStationOrientationControl extends TileEntity implements ITickab
 	}
 
 	@Override
-	public void update() {
+	public void tick() {
 
-		if(this.world.provider instanceof WorldProviderSpace) {
+		if(ZUtils.getDimensionIdentifier(this.world) == ARConfiguration.getCurrentConfig().spaceDimId) {
 			if(!world.isRemote) {
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 				boolean update = false;
 
 				if(object != null) {
-					EnumFacing dirs[] = { EnumFacing.EAST, EnumFacing.UP, EnumFacing.NORTH };
+					Direction dirs[] = { Direction.EAST, Direction.UP, Direction.NORTH };
 					for(int i = 0; i < 3; i++) {
 						double targetAngularVelocity = numRotationsPerHour[i]/72000D;
 						double angVel = object.getDeltaRotation(dirs[i]);
@@ -122,12 +133,12 @@ public class TileStationOrientationControl extends TileEntity implements ITickab
 	}
 
 	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
+	public boolean canInteractWithContainer(PlayerEntity entity) {
 		return true;
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
 		if(id == 0) {
 			out.writeShort(progress[0]);
 			out.writeShort(progress[1]);
@@ -136,8 +147,8 @@ public class TileStationOrientationControl extends TileEntity implements ITickab
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
+			CompoundNBT nbt) {
 		if(packetId == 0) {
 			setProgress(0, in.readShort());
 			setProgress(1, in.readShort());
@@ -146,23 +157,23 @@ public class TileStationOrientationControl extends TileEntity implements ITickab
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		nbt.setShort("numRotationsX", (short)numRotationsPerHour[0]);
-		nbt.setShort("numRotationsY", (short)numRotationsPerHour[1]);
-		nbt.setShort("numRotationsZ", (short)numRotationsPerHour[2]);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
+		nbt.putShort("numRotationsX", (short)numRotationsPerHour[0]);
+		nbt.putShort("numRotationsY", (short)numRotationsPerHour[1]);
+		nbt.putShort("numRotationsZ", (short)numRotationsPerHour[2]);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
 		numRotationsPerHour[0] = nbt.getShort("numRotationsX");
 		progress[0] = numRotationsPerHour[0] + getTotalProgress(0)/2;
 
@@ -205,5 +216,20 @@ public class TileStationOrientationControl extends TileEntity implements ITickab
 	public void setProgressByUser(int id, int progress) {
 		setProgress(id, progress);
 		PacketHandler.sendToServer(new PacketMachine(this, (byte)0));
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TranslationTextComponent(getModularInventoryName());
+	}
+
+	@Override
+	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType(), player), this);
+	}
+
+	@Override
+	public int getModularInvType() {
+		return guiId.MODULAR.ordinal();
 	}
 }

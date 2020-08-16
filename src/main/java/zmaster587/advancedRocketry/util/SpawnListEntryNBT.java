@@ -4,16 +4,13 @@ import java.util.UUID;
 
 import org.w3c.dom.DOMException;
 
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTException;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome.SpawnListEntry;
 
 public class SpawnListEntryNBT extends SpawnListEntry {
 
-	NBTTagCompound nbt;
+	CompoundNBT nbt;
 	String nbtString;
 	
 	public SpawnListEntryNBT(Class<? extends EntityLiving> entityclassIn, int weight, int groupCountMin,
@@ -41,7 +38,7 @@ public class SpawnListEntryNBT extends SpawnListEntry {
 		EntityLiving entity = super.newInstance(world);
 		if(nbt != null) {
             UUID uuid = entity.getUniqueID();
-            NBTTagCompound oldNbt = entity.writeToNBT(new NBTTagCompound());
+            CompoundNBT oldNbt = entity.writeToNBT(new CompoundNBT());
             oldNbt.merge(nbt);
 			entity.readFromNBT(nbt);
 			entity.setUniqueId(uuid);

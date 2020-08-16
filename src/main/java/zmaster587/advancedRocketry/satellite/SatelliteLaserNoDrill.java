@@ -1,15 +1,14 @@
 package zmaster587.advancedRocketry.satellite;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
@@ -39,7 +38,7 @@ public class SatelliteLaserNoDrill extends SatelliteBase {
 				
 				String args[] = oreDictName.split(":");
 				
-				List<ItemStack> ores2 = OreDictionary.getOres(args[0]);
+				List<ItemStack> ores2 = ItemTags.getCollection() OreDictionary.getOres(args[0]);
 
 				if(ores2 != null && !ores2.isEmpty()) {
 					int amt = 5;
@@ -165,7 +164,7 @@ public class SatelliteLaserNoDrill extends SatelliteBase {
 	}
 
 	@Override
-	public boolean performAction(EntityPlayer player, World world, BlockPos pos) {
+	public boolean performAction(PlayerEntity player, World world, BlockPos pos) {
 		performOperation();
 		return false;
 	}
@@ -176,12 +175,12 @@ public class SatelliteLaserNoDrill extends SatelliteBase {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		nbt.setBoolean("jammed", jammed);
+	public void writeToNBT(CompoundNBT nbt) {
+		nbt.putBoolean("jammed", jammed);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
+	public void readFromNBT(CompoundNBT nbt) {
 		jammed = nbt.getBoolean("jammed");
 	}
 

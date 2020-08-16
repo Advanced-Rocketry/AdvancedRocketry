@@ -1,19 +1,34 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.StringNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.util.Constants.NBT;
+
 import org.apache.commons.lang3.ArrayUtils;
 
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
 import zmaster587.advancedRocketry.util.ITilePlanetSystemSelectable;
+import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
+import zmaster587.libVulpes.inventory.ContainerModular;
+import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.IProgressBar;
@@ -36,6 +51,7 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 	int[] cachedProgressValues;
 
 	public TilePlanetSelector() {
+		super(AdvancedRocketryTileEntityType.TILE_PLANET_SELECTOR);
 		cachedProgressValues = new int[] { -1, -1, -1};
 	}
 
@@ -58,7 +74,7 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 		PacketHandler.sendToServer(new PacketMachine(this, (byte)0));
 	}
 
-	private void selectSystem(int id) {
+	private void selectSystem(ResourceLocation id) {
 		if(id == Constants.INVALID_PLANET)
 			dimCache = null;
 		else
@@ -66,12 +82,12 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
-                DimensionProperties props = DimensionManager.getEffectiveDimId(player.world, player.getPosition());
-		container = new ModulePlanetSelector((props != null ? props.getStarId() : 0), TextureResources.starryBG, this, true);
+                DimensionProperties props = DimensionManager.getEffectiveDimId(player.world, new BlockPos(player.getPositionVec()));
+		container = new ModulePlanetSelector((props != null ? props.getStarId() : DimensionManager.getSol().getId()), TextureResources.starryBG, this, true);
 		container.setOffset(1000, 1000);
 		modules.add(container);
 
@@ -89,7 +105,7 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 	}
 
 	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
+	public boolean canInteractWithContainer(PlayerEntity entity) {
 		return true;
 	}
 
@@ -150,37 +166,43 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 	}
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound comp = new NBTTagCompound();
+	public SUpdateTileEntityPacket getUpdatePacket() {
+		CompoundNBT comp = new CompoundNBT();
 
 		writeToNBTHelper(comp);
 		writeAdditionalNBT(comp);
-		return new SPacketUpdateTileEntity(pos, 0, comp);
+		return new SUpdateTileEntityPacket(pos, 0, comp);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 
 		super.onDataPacket(net, pkt);
 		readAdditionalNBT(pkt.getNbtCompound());
 	}
 
-	public void writeAdditionalNBT(NBTTagCompound nbt) {
+	public void writeAdditionalNBT(CompoundNBT nbt) {
 		if(getMasterBlock() != null) {
-			List<Integer> list = ((ITilePlanetSystemSelectable)getMasterBlock()).getVisiblePlanets();
+			List<ResourceLocation> list = ((ITilePlanetSystemSelectable)getMasterBlock()).getVisiblePlanets();
 
-			Integer[] intList = new Integer[list.size()];
+			ListNBT nbtList = new ListNBT();
+			
+			for(ResourceLocation planet : list)
+			{
+				nbtList.add(StringNBT.valueOf(planet.toString()));
+			}
+			
 
-			nbt.setIntArray("visiblePlanets",ArrayUtils.toPrimitive(list.toArray(intList)));
+			nbt.put("visiblePlanets", nbtList);
 		}
 
 	}
 
-	public void readAdditionalNBT(NBTTagCompound nbt) {
+	public void readAdditionalNBT(CompoundNBT nbt) {
 		if(container != null) {
-			int[] intArray = nbt.getIntArray("visiblePlanets");
-			for(int id : intArray)
-				container.setPlanetAsKnown(id);
+			ListNBT intArray = nbt.getList("visiblePlanets", NBT.TAG_STRING);
+			for(int i = 0; i <  intArray.size(); i++)
+				container.setPlanetAsKnown(new ResourceLocation(intArray.getString(i)));
 		}
 	}
 
@@ -190,23 +212,23 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
 		if(id == 0)
-			out.writeInt(container.getSelectedSystem());
+			out.writeResourceLocation(container.getSelectedSystem());
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
+			CompoundNBT nbt) {
 		if(packetId == 0)
-			nbt.setInteger("id", in.readInt());
+			nbt.putString("id", in.readResourceLocation().toString());
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 		if(id == 0) {
-			int dimId = nbt.getInteger("id");
+			ResourceLocation dimId = new ResourceLocation(nbt.getString("id"));
 			container.setSelectedSystem(dimId);
 			selectSystem(dimId);
 
@@ -218,5 +240,20 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 	@Override
 	public void onSystemFocusChanged(Object sender) {
 		PacketHandler.sendToServer(new PacketMachine(this, (byte)0));
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TranslationTextComponent(getModularInventoryName());
+	}
+
+	@Override
+	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType(), player), this);
+	}
+
+	@Override
+	public int getModularInvType() {
+		return GuiHandler.guiId.MODULARFULLSCREEN.ordinal();
 	}
 }

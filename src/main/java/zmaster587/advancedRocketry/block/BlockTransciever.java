@@ -1,40 +1,26 @@
 package zmaster587.advancedRocketry.block;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.IBlockReader;
 import zmaster587.libVulpes.block.BlockTile;
 
 public class BlockTransciever extends BlockTile {
 
-	private static AxisAlignedBB bb[] = {new AxisAlignedBB(.25, .25, .75, .75, .75, 1),
-		new AxisAlignedBB(.25, .25, 0, .75, .75, 0.25),
-		new AxisAlignedBB(.75, .25, .25, 1, .75, .75),
-		new AxisAlignedBB(0, .25, .25, 0.25, .75, .75)};
+	private static VoxelShape bb[] = {VoxelShapes.create(.25, .25, .75, .75, .75, 1),
+			VoxelShapes.create(.25, .25, 0, .75, .75, 0.25),
+			VoxelShapes.create(.75, .25, .25, 1, .75, .75),
+			VoxelShapes.create(0, .25, .25, 0.25, .75, .75)};
 	
-	public BlockTransciever(Class<? extends TileEntity> tileClass, int guiId) {
-		super(tileClass, guiId);
+	public BlockTransciever(Properties properties, int guiId) {
+		super(properties, guiId);
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source,
-			BlockPos pos) {
-		
-		
-		return bb[state.getValue(FACING).ordinal() - 2];
-	}
-	
-	@Override
-	public boolean isFullCube(IBlockState state)
-	{
-		return false;
-	}
-	
-	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		return false;
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+		return bb[state.get(FACING).ordinal() - 2];
 	}
 }

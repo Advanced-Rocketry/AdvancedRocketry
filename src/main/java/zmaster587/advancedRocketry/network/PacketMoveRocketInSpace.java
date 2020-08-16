@@ -3,9 +3,11 @@ package zmaster587.advancedRocketry.network;
 import java.util.LinkedList;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.util.SpacePosition;
 import zmaster587.libVulpes.network.BasePacket;
@@ -13,7 +15,7 @@ import zmaster587.libVulpes.network.BasePacket;
 public class PacketMoveRocketInSpace extends BasePacket {
 
 	SpacePosition position;
-	int dimId = 0, starId=0;
+	ResourceLocation dimId = null, starId=null;
 	
 	boolean hasWorld;
 	boolean hasStar;
@@ -27,7 +29,7 @@ public class PacketMoveRocketInSpace extends BasePacket {
 	}
 
 	@Override
-	public void write(ByteBuf out) {
+	public void write(PacketBuffer out) {
 		out.writeDouble(position.x);
 		out.writeDouble(position.y);
 		out.writeDouble(position.z);
@@ -36,37 +38,37 @@ public class PacketMoveRocketInSpace extends BasePacket {
 		
 		out.writeBoolean(hasWorld);
 		if(hasWorld)
-			out.writeInt(position.world.getId());
+			out.writeResourceLocation(position.world.getId());
 		out.writeBoolean(hasStar);
 		if(hasStar)
-			out.writeInt(position.star.getId());
+			out.writeResourceLocation(position.star.getId());
 	}
 	
 	@Override
-	public void readClient(ByteBuf in) {
+	public void readClient(PacketBuffer in) {
 	}
 	
 	@Override
-	public void read(ByteBuf in) {
+	public void read(PacketBuffer in) {
 		position.x = in.readDouble();
 		position.y = in.readDouble();
 		position.z = in.readDouble();
 		
 		hasWorld = in.readBoolean();
 		if(hasWorld)
-			dimId = in.readInt();
+			dimId = in.readResourceLocation();
 		
 		hasStar = in.readBoolean();
 		if(hasStar)
-			starId = in.readInt();
+			starId = in.readResourceLocation();
 	}
 
 	@Override
-	public void executeClient(EntityPlayer thePlayer) {
+	public void executeClient(PlayerEntity thePlayer) {
 	}
 	
 	@Override
-	public void executeServer(EntityPlayerMP player) 
+	public void executeServer(ServerPlayerEntity player) 
 	{
 		
 	}

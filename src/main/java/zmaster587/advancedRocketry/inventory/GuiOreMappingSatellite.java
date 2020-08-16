@@ -1,11 +1,11 @@
 package zmaster587.advancedRocketry.inventory;
 
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -21,7 +21,7 @@ import zmaster587.libVulpes.util.VulpineMath;
 import java.io.IOException;
 import java.nio.IntBuffer;
 
-public class GuiOreMappingSatellite extends GuiContainer {
+public class GuiOreMappingSatellite extends ContainerScreen<? extends Container> {
 
 	ClientDynamicTexture texture;
 	Thread currentMapping;
@@ -43,7 +43,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 	World world;
 	SatelliteOreMapping tile;
 
-	public GuiOreMappingSatellite(SatelliteOreMapping tile,EntityPlayer inventoryPlayer) {
+	public GuiOreMappingSatellite(SatelliteOreMapping tile,PlayerEntity inventoryPlayer) {
 		super( new ContainerOreMappingSatallite(tile,inventoryPlayer.inventory));
 		world = inventoryPlayer.world;
 
@@ -61,7 +61,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 			this.tile = null;
 		scanSize = maxZoom;
 
-		prevWorldTickTime = world.getTotalWorldTime();
+		prevWorldTickTime = world.getGameTime();
 
 		fancyScanOffset = 0;
 	}
@@ -238,8 +238,8 @@ public class GuiOreMappingSatellite extends GuiContainer {
 
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		//Draw fancy things
-		GlStateManager.disableTexture2D();
-		GlStateManager.color(0f, 0.8f, 0f);
+		GlStateManager.disableTexture();
+		GlStateManager.color4f(0f, 0.8f, 0f);
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 		buffer.pos(-21, 82 + fancyScanOffset, (double)this.zLevel).endVertex();
 		buffer.pos(0, 84 + fancyScanOffset, (double)this.zLevel).endVertex();
@@ -258,7 +258,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
-		GlStateManager.color(0.5f, 0.5f, 0.0f,0.3f + ((float)Math.sin(Math.PI*(fancyScanOffset/(float)FANCYSCANMAXSIZE))/3f));
+		GlStateManager.color4f(0.5f, 0.5f, 0.0f,0.3f + ((float)Math.sin(Math.PI*(fancyScanOffset/(float)FANCYSCANMAXSIZE))/3f));
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
 		RenderHelper.renderNorthFace(buffer, this.zLevel, 173, 82, 194, 141);
@@ -268,8 +268,8 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		GL11.glDisable(GL11.GL_BLEND);
 
 
-		if(world.getTotalWorldTime() - prevWorldTickTime >= 1 ) {
-			prevWorldTickTime = world.getTotalWorldTime();
+		if(world.getGameTime() - prevWorldTickTime >= 1 ) {
+			prevWorldTickTime = world.getGameTime();
 			if(fancyScanOffset >= FANCYSCANMAXSIZE)
 				fancyScanOffset = 0;
 			else
@@ -281,13 +281,13 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		int slot;
 		if(tile != null && (slot = tile.getSelectedSlot()) != -1) {
 
-			GlStateManager.disableTexture2D();
-			GlStateManager.color(0f, 0.8f, 0f, 1f);
+			GlStateManager.disableTexture();
+			GlStateManager.color4f(0f, 0.8f, 0f, 1f);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel, 13 + (18*slot), 155, 13 + 16 + (18*slot), 155 + 16, 0, 0, 0, 0);
 			Tessellator.getInstance().draw();
-			GlStateManager.enableTexture2D();
+			GlStateManager.enableTexture();
 		}
 
 
@@ -318,9 +318,9 @@ public class GuiOreMappingSatellite extends GuiContainer {
 
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		//Render the background then render
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.renderEngine.bindTexture(backdrop);
-		this.drawTexturedModalRect(x, y, 0, 0, 240, 192);
+		this.func_238474_b_(x, y, 0, 0, 240, 192);
 
 
 		//NOTE: if the controls are rendered first the display never shows up
@@ -343,22 +343,22 @@ public class GuiOreMappingSatellite extends GuiContainer {
 			offsetX *= numPixels;
 			offsetY *= numPixels;
 
-			GlStateManager.disableTexture2D();
-			GlStateManager.color(0.4f, 1f, 0.4f);
+			GlStateManager.disableTexture();
+			GlStateManager.color4f(0.4f, 1f, 0.4f);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel, offsetX + 47 + x + SCREEN_SIZE/2 - radius,  offsetY + 20 + y + SCREEN_SIZE/2 - radius, offsetX + 47 + x + SCREEN_SIZE/2 + radius, offsetY + 20 + y + SCREEN_SIZE/2 + radius, 0, 1, 0, 1);
 			Tessellator.getInstance().draw();
-			GlStateManager.color(1, 1, 1);
-			GlStateManager.enableTexture2D();
+			GlStateManager.color4f(1, 1, 1);
+			GlStateManager.enableTexture();
 			this.drawCenteredString(this.fontRenderer, "You", (int)(offsetX + 47 + x + SCREEN_SIZE/2 - radius), (int)(offsetY + 20 + y + SCREEN_SIZE/2 - radius) -10, 0xF0F0F0);
 		}
 
 		//Render sliders and controls
 		this.mc.renderEngine.bindTexture(backdrop);
 
-		this.drawTexturedModalRect(197 + x, 31 + y, 0, 192, 32, 14);
+		this.func_238474_b_(197 + x, 31 + y, 0, 192, 32, 14);
 		this.drawVerticalLine((int)(32*VulpineMath.log2(scanSize-1)/8F) + 199 + x, 34 + y, 45 + y, 0xFFC00F0F);
-		//this.drawTexturedModalRect(197 + x, 63 + y, 0, 192, 32, 14);
+		//this.func_238474_b_(197 + x, 63 + y, 0, 192, 32, 14);
 		//this.drawVerticalLine((int)(28*MathVulpes.log2(radius)/4F) + 199 + x, 67 + y, 77 + y, 0xFF000000);
 		this.drawString(this.fontRenderer, "Zoom", 198 + x, 22 + y, 0xF0F0F0);
 		//this.drawString(this.fontRendererObj, "Clarity", 198 + x, 52 + y, 0xb0b0b0);

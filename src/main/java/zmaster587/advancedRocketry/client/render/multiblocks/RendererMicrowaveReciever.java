@@ -28,8 +28,8 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
 		if(!multiBlockTile.canRender())
 			return;
 
-		GL11.glPushMatrix();
-		GL11.glTranslated(x, y, z);
+		matrix.push();
+		matrix.translate(x, y, z);
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		//Initial setup
 		bindTexture(texture);
@@ -39,12 +39,12 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
         int j = i2 % 65536;
         int k = i2 / 65536;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j, (float)k);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         
         
 		//Draw heat FX
 		if(ARConfiguration.getCurrentConfig().advancedVFX && multiBlockTile.getPowerMadeLastTick() > 0) {
-			double distance = Math.sqrt(Minecraft.getMinecraft().player.getDistanceSq(tile.getPos()));
+			double distance = Math.sqrt(Minecraft.getInstance().player.getDistanceSq(tile.getPos()));
 			if(distance < 16 ) {
 				double u = 256/distance;
 				double resolution = (int)u;
@@ -58,13 +58,13 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
 						amplitideMax *= (resolution/2) - Math.abs(g - resolution/2);
 						amplitideMax *= (resolution/2) - Math.abs(i - resolution/2);
 
-						yLoc[i][g] = amplitideMax*MathHelper.sin(((i*16 + g + tile.getWorld().getTotalWorldTime()) & 0xffff)*0.5f);
+						yLoc[i][g] = amplitideMax*MathHelper.sin(((i*16 + g + tile.getWorld().getGameTime()) & 0xffff)*0.5f);
 					}
 
 				}
 
-				GL11.glPushMatrix();
-				GL11.glTranslated(-2, 0, -2);
+				matrix.push();
+				matrix.translate(-2, 0, -2);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				
 				for(int i = 0; i < (int)resolution; i++) {
@@ -73,7 +73,7 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
 					}
 				}
 				Tessellator.getInstance().draw();
-				GL11.glPopMatrix();
+				matrix.pop();
 			}
 		}
 
@@ -110,13 +110,13 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
 
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-			GL11.glPushMatrix();
-			GlStateManager.color(0.2F, 0.2F, 0.2F, 0.3F);
+			matrix.push();
+			GlStateManager.color4f(0.2F, 0.2F, 0.2F, 0.3F);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 	
-			//GL11.glTranslated(0.5, 0, 0.5);
-			//GL11.glRotated(tile.getWorldObj().getTotalWorldTime()/10.0 % 360, 0, 1, 0);
-			//GL11.glTranslated(-0.3, 0, -0.3);
+			//matrix.translate(0.5, 0, 0.5);
+			//GL11.glRotated(tile.getWorldObj().getGameTime()/10.0 % 360, 0, 1, 0);
+			//matrix.translate(-0.3, 0, -0.3);
 			
 			for(float radius = 0.25F; radius < 2; radius += .25F) {
 
@@ -136,7 +136,7 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
 			}
 			Tessellator.getInstance().draw();
 
-			GL11.glPopMatrix();
+			matrix.pop();
 			GL11.glDisable(GL11.GL_BLEND);
 			GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -144,6 +144,6 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
 			GL11.glDepthMask(true);
 		}
 
-		GL11.glPopMatrix();
+		matrix.pop();
 	}
 }

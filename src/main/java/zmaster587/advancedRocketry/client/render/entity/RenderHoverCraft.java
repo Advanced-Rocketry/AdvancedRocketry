@@ -1,21 +1,28 @@
 package zmaster587.advancedRocketry.client.render.entity;
 
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderState.CullState;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.culling.ICamera;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.culling.ClippingHelper;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import zmaster587.advancedRocketry.entity.EntityHoverCraft;
 import zmaster587.libVulpes.render.RenderHelper;
 
-public class RenderHoverCraft extends Render<EntityHoverCraft> implements IRenderFactory<EntityHoverCraft> {
+public class RenderHoverCraft extends EntityRenderer<EntityHoverCraft> implements IRenderFactory<EntityHoverCraft> {
 
 	private static WavefrontObject hoverCraft;
 	public ResourceLocation hovercraftTexture =  new ResourceLocation("advancedRocketry:textures/models/hoverCraft.png");
@@ -29,48 +36,45 @@ public class RenderHoverCraft extends Render<EntityHoverCraft> implements IRende
 		}
 	}
 
-	public RenderHoverCraft(RenderManager renderManager) {
+	public RenderHoverCraft(EntityRendererManager renderManager) {
 		super(renderManager);
 	}
 
 	@Override
-	public Render<? super EntityHoverCraft> createRenderFor(
-			RenderManager manager) {
+	public EntityRenderer<? super EntityHoverCraft> createRenderFor(
+			EntityRendererManager manager) {
 		return new RenderHoverCraft(manager);
 	}
 
 	@Override
-	protected ResourceLocation getEntityTexture(EntityHoverCraft entity) {
+	public ResourceLocation getEntityTexture(EntityHoverCraft entity) {
 		return hovercraftTexture;
 	}
+	
 	@Override
-	public boolean shouldRender(EntityHoverCraft livingEntity,
-			ICamera camera, double camX, double camY, double camZ) {
-		// TODO Auto-generated method stub
-		//return super.shouldRender(livingEntity, camera, camX, camY, camZ);
+	public boolean shouldRender(EntityHoverCraft livingEntityIn, ClippingHelper camera, double camX, double camY,
+			double camZ) {
 		return true;
 	}
-
+	
 	@Override
-	public void doRender(EntityHoverCraft entity, double x, double y, double z,
-			float entityYaw, float partialTicks) {
+	public void render(EntityHoverCraft entity, float entityYaw, float partialTicks, MatrixStack matrix,
+			IRenderTypeBuffer bufferIn, int packedLightIn) {
 
 		
-		GL11.glPushMatrix();
-		GL11.glTranslated(x, y + 1, z);
-		GL11.glRotated(180-entityYaw, 0, 1, 0);
-		bindTexture(hovercraftTexture);
-		hoverCraft.renderAll();
+		matrix.push();
+		matrix.translate(0, 1, 0);
+		matrix.rotate(new Quaternion(0, 180-entityYaw, 0, false));
 		
-		GlStateManager.disableTexture2D();
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-		GlStateManager.color(0.1f, 0.1f, 1f, 0.8f);
+		IVertexBuilder entitySolidBuilder = bufferIn.getBuffer(RenderType.getEntitySolid(getEntityTexture(entity)));
 		
-		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
+		hoverCraft.tessellateAll(entitySolidBuilder);
 		
-		final float start = -0.85f - (entity.world.getTotalWorldTime() % 10)*0.01f;
+		float r = 0.1f, g = 0.1f, b = 1f, a = 0.8f;
+		
+		IVertexBuilder entityTransparentBuilder = bufferIn.getBuffer(RenderHelper.SEMI_TRANSLUCENT);
+		
+		final float start = -0.85f - (entity.world.getGameTime() % 10)*0.01f;
 		final int count = 5;
 		final float offsetX = 0.5f;
 		final float offsetZ = 1.9f;
@@ -81,20 +85,17 @@ public class RenderHoverCraft extends Render<EntityHoverCraft> implements IRende
 		{
 			float newRadius = (offset*(count-i) -0.85f - start)*0.5f;
 			
-			RenderHelper.renderTopFace(buffer, start + offset*i, -newRadius, -newRadius, newRadius, newRadius);
-			RenderHelper.renderBottomFace(buffer, start + offset*i, -newRadius, -newRadius, newRadius, newRadius);
+			RenderHelper.renderTopFace(entityTransparentBuilder, start + offset*i, -newRadius, -newRadius, newRadius, newRadius, r,g,b,a);
+			RenderHelper.renderBottomFace(entityTransparentBuilder, start + offset*i, -newRadius, -newRadius, newRadius, newRadius, r,g,b,a);
 			
-			RenderHelper.renderTopFace(buffer, start + offset*i, -newRadius + offsetX, -newRadius + offsetZ, newRadius + offsetX, newRadius + offsetZ);
-			RenderHelper.renderBottomFace(buffer, start + offset*i, -newRadius + offsetX, -newRadius + offsetZ, newRadius + offsetX, newRadius + offsetZ);
+			RenderHelper.renderTopFace(entityTransparentBuilder, start + offset*i, -newRadius + offsetX, -newRadius + offsetZ, newRadius + offsetX, newRadius + offsetZ, r,g,b,a);
+			RenderHelper.renderBottomFace(entityTransparentBuilder, start + offset*i, -newRadius + offsetX, -newRadius + offsetZ, newRadius + offsetX, newRadius + offsetZ, r,g,b,a);
 			
-			RenderHelper.renderTopFace(buffer, start + offset*i, -newRadius - offsetX, -newRadius + offsetZ, newRadius - offsetX, newRadius + offsetZ);
-			RenderHelper.renderBottomFace(buffer, start + offset*i, -newRadius - offsetX, -newRadius + offsetZ, newRadius - offsetX, newRadius + offsetZ);
+			RenderHelper.renderTopFace(entityTransparentBuilder, start + offset*i, -newRadius - offsetX, -newRadius + offsetZ, newRadius - offsetX, newRadius + offsetZ, r,g,b,a);
+			RenderHelper.renderBottomFace(entityTransparentBuilder, start + offset*i, -newRadius - offsetX, -newRadius + offsetZ, newRadius - offsetX, newRadius + offsetZ, r,g,b,a);
 		}
 		Tessellator.getInstance().draw();
 
-		
-		GlStateManager.enableTexture2D();
-		GlStateManager.disableBlend();
-		GL11.glPopMatrix();
+		matrix.pop();
 	}
 }

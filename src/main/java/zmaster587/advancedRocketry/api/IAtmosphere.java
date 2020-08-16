@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.api;
 
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 
 public interface IAtmosphere {
 	
@@ -9,10 +9,10 @@ public interface IAtmosphere {
 	 * @param player living entity inside this atmosphere we are ticking
 	 * @return true if the atmosphere does not affect the entity in any way
 	 */
-	public boolean isImmune(EntityLivingBase player);
+	public boolean isImmune(LivingEntity player);
 	
 	/**
-	 * Used by spawning and atmosphere ticking, this should probably not be used elsewhere, prefer isImmune(EntityLivingBase player) where performance allows
+	 * Used by spawning and atmosphere ticking, this should probably not be used elsewhere, prefer isImmune(LivingEntity player) where performance allows
 	 * @param entityClass class of the entity to check for immunity
 	 * @return true if the entity class should ALWAYS be immune
 	 */
@@ -31,10 +31,10 @@ public interface IAtmosphere {
 	public boolean canTick();
 	
 	/**
-	 * If the canTick() returns true then then this is called every tick on EntityLivingBase objects located inside this atmosphere
+	 * If the canTick() returns true then then this is called every tick on LivingEntity objects located inside this atmosphere
 	 * @param player entity being ticked
 	 */
-	public void onTick(EntityLivingBase player);
+	public void onTick(LivingEntity player);
 	
 	/**
 	 * @return unlocalized name of the gas

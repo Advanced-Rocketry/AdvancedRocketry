@@ -2,22 +2,28 @@ package zmaster587.advancedRocketry.entity;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.ParticleStatus;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.Unit;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.common.ForgeChunkManager.Ticket;
-import net.minecraftforge.common.ForgeChunkManager.Type;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.server.Ticket;
+import net.minecraft.world.server.TicketType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IInfrastructure;
@@ -43,6 +49,7 @@ import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -51,17 +58,17 @@ import java.util.ListIterator;
 
 public class EntityStationDeployedRocket extends EntityRocket {
 
-	public EnumFacing launchDirection;
-	public EnumFacing forwardDirection;
+	public Direction launchDirection;
+	public Direction forwardDirection;
 	public HashedBlockPosition launchLocation;
 	private ModuleText atmText;
 	private short gasId;
 	boolean coastMode;
-	private Ticket ticket;
+	private Ticket<Entity> ticket;
 
 	public EntityStationDeployedRocket(World world) {
 		super(world);
-		launchDirection = EnumFacing.DOWN;
+		launchDirection = Direction.DOWN;
 		launchLocation = new HashedBlockPosition(0,0,0);
 		atmText = new ModuleText(182, 114, "", 0x2d2d2d);
 		gasId = 0;
@@ -71,7 +78,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 	public EntityStationDeployedRocket(World world, StorageChunk storage, StatsRocket stats, double x, double y, double z) {
 		super(world, storage, stats, x,y,z);
 		launchLocation = new HashedBlockPosition((int)x,(int)y,(int)z);
-		launchDirection = EnumFacing.DOWN;
+		launchDirection = Direction.DOWN;
 		stats.setSeatLocation(-1, -1, -1); //No seats
 		atmText = new ModuleText(182, 114, "", 0x2d2d2d);
 		gasId = 0;
@@ -79,10 +86,10 @@ public class EntityStationDeployedRocket extends EntityRocket {
 
 	//Use as a way of checking when chunk is unloaded
 	@Override
-	public void setDead() {
-		super.setDead();
+	public void remove() {
+		super.remove();
 		if(ticket != null)
-			ForgeChunkManager.releaseTicket(ticket);
+			((ServerWorld)this.world).getChunkProvider().chunkManager.getTicketManager().register(type, pos, distance, value); forceChunk(false);
 	}
 
 	@Override
@@ -116,13 +123,13 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			return;
 
 		ISpaceObject spaceObj;
-		if( world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId && (spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(getPosition())) != null && ((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() ) { //Abort if destination is invalid
+		if( ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId && (spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(getPositionVec()))) != null && ((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() ) { //Abort if destination is invalid
 
 
 			setInFlight(true);
-			launchLocation.x = (int) Math.floor(this.posX);
-			launchLocation.y = (short) this.posY;
-			launchLocation.z = (int) Math.floor(this.posZ);
+			launchLocation.x = (int) Math.floor(this.getPosX());
+			launchLocation.y = (short) this.getPosY();
+			launchLocation.z = (int) Math.floor(this.getPosZ());
 			Iterator<IInfrastructure> connectedTiles = connectedInfrastructure.iterator();
 
 			MinecraftForge.EVENT_BUS.post(new RocketLaunchEvent(this));
@@ -139,9 +146,8 @@ public class EntityStationDeployedRocket extends EntityRocket {
 	}
 
 	@Override
-	public void onUpdate() {
-		lastWorldTickTicked = world.getTotalWorldTime();
-
+	public void tick() {
+		lastWorldTickTicked = world.getGameTime();
 		if(this.ticksExisted == 20) {
 			//problems with loading on other world then where the infrastructure was set?
 			ListIterator<HashedBlockPosition> itr = (new LinkedList<HashedBlockPosition>(infrastructureCoords)).listIterator();
@@ -166,33 +172,28 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				return;
 			
 			//Grab a ticket when we take off
-			if(!world.isRemote && ticket == null) {
-				ticket = ForgeChunkManager.requestTicket(AdvancedRocketry.instance, world, Type.ENTITY);
-				if(ticket != null) {
-					ticket.bindEntity(this);
-					for(int i = 0; i < 9; i++)
-						ForgeChunkManager.forceChunk(ticket, new ChunkPos(forwardDirection.getFrontOffsetX()*i + (launchLocation.x >> 4), forwardDirection.getFrontOffsetZ()*i + (launchLocation.z >> 4)));
-				}
+			if(!world.isRemote) {
+				((ServerWorld)this.world).getChunkProvider().registerTicket(TicketType.UNKNOWN, new ChunkPos(getPositionUnderneath()), 3, new ChunkPos(getPositionUnderneath()));
 			}
 			
-			boolean isCoasting = Math.abs(this.posX - launchLocation.x) < 4*storage.getSizeX() && Math.abs(this.posY - launchLocation.y) < 4*storage.getSizeY() && Math.abs(this.posZ - launchLocation.z) < 4*storage.getSizeZ();
+			boolean isCoasting = Math.abs(this.getPosX() - launchLocation.x) < 4*storage.getSizeX() && Math.abs(this.getPosY() - launchLocation.y) < 4*storage.getSizeY() && Math.abs(this.getPosZ() - launchLocation.z) < 4*storage.getSizeZ();
 
 			if(!isCoasting) {
 				//Burn the rocket fuel
 
 				//Spawn in the particle effects for the engines
-				if(world.isRemote && Minecraft.getMinecraft().gameSettings.particleSetting < 2) {
+				if(world.isRemote && Minecraft.getInstance().gameSettings.particles != ParticleStatus.MINIMAL) {
 					for(Vector3F<Float> vec : stats.getEngineLocations()) {
 
-						float xMult = Math.abs(forwardDirection.getFrontOffsetX());
-						float zMult = Math.abs(forwardDirection.getFrontOffsetZ());
+						float xMult = Math.abs(forwardDirection.getXOffset());
+						float zMult = Math.abs(forwardDirection.getZOffset());
 						float xVel, zVel;
 
 						for(int i = 0; i < 4; i++) {
 							xVel = (1-xMult)*((this.rand.nextFloat() - 0.5f)/8f) + xMult*-.15f;
 							zVel = (1-zMult)*((this.rand.nextFloat() - 0.5f)/8f) + zMult*-.15f;
 
-							AdvancedRocketry.proxy.spawnParticle("rocketFlame", world, this.posX + vec.x + motionX, this.posY + vec.y, this.posZ +vec.z, xVel,(this.rand.nextFloat() - 0.5f)/8f, zVel +  motionZ);
+							AdvancedRocketry.proxy.spawnParticle("rocketFlame", world, this.getPosX() + vec.x + getMotion().x, this.getPosY() + vec.y, this.getPosZ() +vec.z, xVel,(this.rand.nextFloat() - 0.5f)/8f, zVel + getMotion().z);
 
 						}
 					}
@@ -205,44 +206,38 @@ public class EntityStationDeployedRocket extends EntityRocket {
 
 			//Returning
 			if(isInOrbit()) { //For unmanned rockets
-				EnumFacing dir;
-				isCoasting = Math.abs(this.posX - launchLocation.x - (storage.getSizeX() % 2 == 0 ? 0 : 0.5f)) < 0.01 && Math.abs(this.posZ - launchLocation.z - (storage.getSizeZ() % 2 == 0 ? 0 : 0.5f)) < .01;
+				Direction dir;
+				isCoasting = Math.abs(this.getPosX() - launchLocation.x - (storage.getSizeX() % 2 == 0 ? 0 : 0.5f)) < 0.01 && Math.abs(this.getPosZ() - launchLocation.z - (storage.getSizeZ() % 2 == 0 ? 0 : 0.5f)) < .01;
 
 				if(isCoasting) {
 					dir = launchDirection.getOpposite();
 					float speed = 0.075f;
-					motionX = speed*dir.getFrontOffsetX();
-					motionY = speed*dir.getFrontOffsetY();
-					motionZ = speed*dir.getFrontOffsetZ();
+					this.setMotion(speed*dir.getXOffset(),
+					speed*dir.getYOffset(),
+					speed*dir.getZOffset());
 				}
 				else {
 					dir = forwardDirection.getOpposite();
 
 					float acc = 0.01f;
-
-					motionX = acc*(launchLocation.x - this.posX + (storage.getSizeX() % 2 == 0 ? 0 : 0.5f)) + 0.01*dir.getFrontOffsetX();
-					motionY = 0;//acc*(launchLocation.y - this.posY) + 0.01*dir.offsetY;
-					motionZ = acc*(launchLocation.z - this.posZ + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5f)) + 0.01*dir.getFrontOffsetZ();
+					this.setMotion(
+					acc*(launchLocation.x - this.getPosX() + (storage.getSizeX() % 2 == 0 ? 0 : 0.5f)) + 0.01*dir.getXOffset(),
+					0,//acc*(launchLocation.y - this.posY) + 0.01*dir.offsetY;
+					acc*(launchLocation.z - this.getPosZ() + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5f)) + 0.01*dir.getZOffset());
 
 				}
 
-				if(this.posY > launchLocation.y ) {
+				if(this.getPosY() > launchLocation.y ) {
 					if(!world.isRemote) {
 						this.setInFlight(false);
 						this.setInOrbit(false);
 						MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketLandedEvent(this));
 						
-						//Release ticket on landing
-						if(ticket != null) {
-							ForgeChunkManager.releaseTicket(ticket);
-							ticket = null;
-						}
-						
 						//PacketHandler.sendToNearby(new PacketEntity(this, (byte)PacketType.ROCKETLANDEVENT.ordinal()), world.provider.dimensionId, (int)posX, (int)posY, (int)posZ, 64);
 						//PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, (byte)PacketType.ROCKETLANDEVENT.ordinal()), this);
 					}
 
-					this.motionY = 0;
+					this.setMotion(getMotion().x, 0, getMotion().z);
 					this.setPosition(launchLocation.x + (storage.getSizeX() % 2 == 0 ? 0 : 0.5f), launchLocation.y, launchLocation.z  + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5f));
 				}
 			}
@@ -251,37 +246,36 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				//Coast away from the station
 				if(isCoasting) {
 					float speed = 0.01f;//(float)Math.min(0.2f, Math.abs(motionY) + 0.0001f);
-					motionX = speed*launchDirection.getFrontOffsetX() * ( 2.1*storage.getSizeX() - Math.abs(2*storage.getSizeX() - Math.abs(this.posX - launchLocation.x)) + 0.05);
-					motionY = speed*launchDirection.getFrontOffsetY() * ( 2.1*storage.getSizeY() - Math.abs(2*storage.getSizeY() - Math.abs(this.posY - launchLocation.y)) + 0.05);
-					motionZ = speed*launchDirection.getFrontOffsetZ() * ( 2.1*storage.getSizeZ() - Math.abs(2*storage.getSizeZ() - Math.abs(this.posZ - launchLocation.z)) + 0.05);
+					
+					double motionX = getMotion().x, motionY = getMotion().y, motionZ = getMotion().z;
+					
+					this.setMotion(
+					motionX + speed*launchDirection.getXOffset() * ( 2.1*storage.getSizeX() - Math.abs(2*storage.getSizeX() - Math.abs(this.getPosX() - launchLocation.x)) + 0.05),
+					motionY + speed*launchDirection.getYOffset() * ( 2.1*storage.getSizeY() - Math.abs(2*storage.getSizeY() - Math.abs(this.getPosY() - launchLocation.y)) + 0.05),
+					motionZ + speed*launchDirection.getZOffset() * ( 2.1*storage.getSizeZ() - Math.abs(2*storage.getSizeZ() - Math.abs(this.getPosZ() - launchLocation.z)) + 0.05));
 				}
 				else {
 					float acc = 0.01f;
-					motionX += acc*forwardDirection.getFrontOffsetX();
-					motionY += acc*forwardDirection.getFrontOffsetY();
-					motionZ += acc*forwardDirection.getFrontOffsetZ();
+					double motionX = getMotion().x, motionY = getMotion().y, motionZ = getMotion().z;
+					this.setMotion(
+					motionX + acc*forwardDirection.getXOffset(),
+					motionY + acc*forwardDirection.getYOffset(),
+					motionZ + acc*forwardDirection.getZOffset());
 
 				}
-				if(!world.isRemote && this.getDistance(launchLocation.x, launchLocation.y, launchLocation.z) > 128) {
-					
-					
-					//Release ticket on landing
-					if(ticket != null) {
-						ForgeChunkManager.releaseTicket(ticket);
-						ticket = null;
-					}
+				if(!world.isRemote && this.getDistanceSq(launchLocation.x, launchLocation.y, launchLocation.z) > 128*128) {
 					onOrbitReached();
 					return;
 				}
 			}
 
 
-			this.move(MoverType.SELF, motionX, motionY, motionZ);
+			this.move(MoverType.SELF, getMotion());
 		}
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules;
 		//If the rocket is flight don't load the interface
 		modules = super.getModules(ID, player);
@@ -296,7 +290,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		}
 
 
-		DimensionProperties props = DimensionManager.getEffectiveDimId(world, this.getPosition());
+		DimensionProperties props = DimensionManager.getEffectiveDimId(world, this.getPositionVec());
 		if(props.isGasGiant()) {
 			try {
 				atmText.setText(props.getHarvestableGasses().get(gasId).getLocalizedName(new FluidStack(props.getHarvestableGasses().get(gasId), 1)));
@@ -316,15 +310,15 @@ public class EntityStationDeployedRocket extends EntityRocket {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void onInventoryButtonPressed(int buttonId) {
+	@OnlyIn(value=Dist.CLIENT)
+	public void onInventoryButtonPressed(ModuleButton buttonId) {
 		DimensionProperties props;
 		switch(buttonId) {
 		case 0:
 			PacketHandler.sendToServer(new PacketEntity(this, (byte)EntityRocket.PacketType.DECONSTRUCT.ordinal()));
 			break;
 		case 1:
-			props = DimensionManager.getEffectiveDimId(world, this.getPosition());
+			props = DimensionManager.getEffectiveDimId(world, this.getPositionVec());
 			if(props.isGasGiant()) {
 				gasId++;
 				if(gasId < 0)
@@ -335,7 +329,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			}
 			break;
 		case 2:
-			props = DimensionManager.getEffectiveDimId(world, this.getPosition());
+			props = DimensionManager.getEffectiveDimId(world, this.getPositionVec());
 			if(props.isGasGiant()) {
 				gasId--;
 				if(gasId < 0)
@@ -357,14 +351,14 @@ public class EntityStationDeployedRocket extends EntityRocket {
 	public void onOrbitReached() {
 		//make it 30 minutes with one drill
 
-		if(this.isDead)
+		if(!this.isAlive())
 			return;
 
 		//Check again to make sure we are around a gas giant
 		ISpaceObject spaceObj = null;
 		setInOrbit(true);
-		if( world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId && ((spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.getPosition())) != null && ((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() )) { //Abort if destination is invalid
-			this.setPosition(forwardDirection.getFrontOffsetX()*64d + this.launchLocation.x + (storage.getSizeX() % 2 == 0 ? 0 : 0.5d), posY, forwardDirection.getFrontOffsetZ()*64d + this.launchLocation.z + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5d));	
+		if( ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId && ((spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(this.getPositionVec()))) != null && ((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() )) { //Abort if destination is invalid
+			this.setPosition(forwardDirection.getXOffset()*64d + this.launchLocation.x + (storage.getSizeX() % 2 == 0 ? 0 : 0.5d), getPosY(), forwardDirection.getZOffset()*64d + this.launchLocation.z + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5d));	
 		}
 		else {
 			setInOrbit(true);
@@ -396,23 +390,23 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			i.linkMission(miningMission);
 		}
 
-		this.setDead();
+		this.remove();
 	}
 
 
 	@Override
-	protected void writeNetworkableNBT(NBTTagCompound nbt) {
+	protected void writeNetworkableNBT(CompoundNBT nbt) {
 		super.writeNetworkableNBT(nbt);
 
 	}
 
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		super.readEntityFromNBT(nbt);
+	protected void readAdditional(CompoundNBT nbt) {
+		super.readAdditional(nbt);
 
 	}
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
 		super.writeDataToNetwork(out, id);
 
 		if(id == PacketType.MENU_CHANGE.ordinal()) {
@@ -423,25 +417,25 @@ public class EntityStationDeployedRocket extends EntityRocket {
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
+			CompoundNBT nbt) {
 
 
 		if(packetId == PacketType.MENU_CHANGE.ordinal()) {
-			nbt.setShort("gas", in.readShort());
+			nbt.putShort("gas", in.readShort());
 		}
 		else
 			super.readDataFromNetwork(in, packetId, nbt);
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 
 
 		if(id == PacketType.MENU_CHANGE.ordinal()) {
 
-			DimensionProperties props = DimensionManager.getEffectiveDimId(world, this.getPosition());
+			DimensionProperties props = DimensionManager.getEffectiveDimId(world, this.getPositionVec());
 			if(props.isGasGiant()) {
 
 				gasId = nbt.getShort("gas");
@@ -451,7 +445,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 					gasId = 0;
 
 				if(!world.isRemote)
-					PacketHandler.sendToNearby(new PacketEntity(this, (byte) PacketType.MENU_CHANGE.ordinal()), world.provider.getDimension(), (int)posX, (int)posY, (int)posZ, 64d);
+					PacketHandler.sendToNearby(new PacketEntity(this, (byte) PacketType.MENU_CHANGE.ordinal()), world, (int)getPosX(), (int)getPosY(), (int)getPosZ(), 64d);
 				else
 					atmText.setText(props.getHarvestableGasses().get(gasId).getLocalizedName(new FluidStack(AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId),1)));
 			}
@@ -462,26 +456,31 @@ public class EntityStationDeployedRocket extends EntityRocket {
 
 
 	@Override
-	public void writeMissionPersistantNBT(NBTTagCompound nbt) {
+	public void writeMissionPersistantNBT(CompoundNBT nbt) {
 		// TODO Auto-generated method stub
 		super.writeMissionPersistantNBT(nbt);
-		nbt.setInteger("fwd", forwardDirection.ordinal());
+		nbt.putInt("fwd", forwardDirection.ordinal());
 
-		nbt.setInteger("launchX", launchLocation.x);
-		nbt.setInteger("launchY", launchLocation.y);
-		nbt.setInteger("launchZ", launchLocation.z);
+		nbt.putInt("launchX", launchLocation.x);
+		nbt.putInt("launchY", launchLocation.y);
+		nbt.putInt("launchZ", launchLocation.z);
 
-		nbt.setShort("gas", gasId);
+		nbt.putShort("gas", gasId);
 	}
 
 	@Override
-	public void readMissionPersistantNBT(NBTTagCompound nbt) {
+	public void readMissionPersistantNBT(CompoundNBT nbt) {
 		super.readMissionPersistantNBT(nbt);
-		forwardDirection = EnumFacing.values()[nbt.getInteger("fwd")];
+		forwardDirection = Direction.values()[nbt.getInt("fwd")];
 
-		launchLocation.x = nbt.getInteger("launchX");
-		launchLocation.y = (short)nbt.getInteger("launchY");
-		launchLocation.z = nbt.getInteger("launchZ");
+		launchLocation.x = nbt.getInt("launchX");
+		launchLocation.y = (short)nbt.getInt("launchY");
+		launchLocation.z = nbt.getInt("launchZ");
 		gasId = nbt.getShort("gas");
+	}
+	
+	@Override
+	public IPacket<?> createSpawnPacket() {
+		return new SSpawnObjectPacket(this);
 	}
 }

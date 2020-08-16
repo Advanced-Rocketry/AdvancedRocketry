@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.world.ore;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -25,7 +25,7 @@ import java.util.Random;
 
 public class OreGenerator extends WorldGenerator implements IWorldGenerator {
 
-	private static IBlockState dilithiumTargetOre;
+	private static BlockState dilithiumTargetOre;
 
 	private void generate(World world, Material material, int numPerChunk,int clumpSize, int chunkX, int chunkZ, Random random) {
 		for(int i = 0; i < numPerChunk; i++) {
@@ -67,7 +67,7 @@ public class OreGenerator extends WorldGenerator implements IWorldGenerator {
 			if(ARConfiguration.getCurrentConfig().generateDilithium) {
 				int dilithiumChance = ARConfiguration.getCurrentConfig().dilithiumPerChunk;
 				if(world.provider instanceof WorldProviderPlanet) {
-					dilithiumChance = DimensionProperties.AtmosphereTypes.getAtmosphereTypeFromValue(DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getAtmosphereDensity()) == DimensionProperties.AtmosphereTypes.NONE ? ARConfiguration.getCurrentConfig().dilithiumPerChunkMoon : ARConfiguration.getCurrentConfig().dilithiumPerChunk;;
+					dilithiumChance = DimensionProperties.AtmosphereTypes.getAtmosphereTypeFromValue(DimensionManager.getInstance().getDimensionProperties(world).getAtmosphereDensity()) == DimensionProperties.AtmosphereTypes.NONE ? ARConfiguration.getCurrentConfig().dilithiumPerChunkMoon : ARConfiguration.getCurrentConfig().dilithiumPerChunk;;
 				}
 				
 				for(int i = 0; i < dilithiumChance; i++) {

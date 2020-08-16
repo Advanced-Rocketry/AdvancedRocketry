@@ -1,8 +1,8 @@
 package zmaster587.advancedRocketry.inventory;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
@@ -22,7 +22,7 @@ public class GuiHandler implements IGuiHandler {
 
 	//X coord is entity ID num if entity
 	@Override
-	public Object getServerGuiElement(int ID, EntityPlayer player, World world,
+	public Object getServerGuiElement(int ID, PlayerEntity player, World world,
 			int x, int y, int z) {
 
 		Object tile;
@@ -30,14 +30,14 @@ public class GuiHandler implements IGuiHandler {
 		if(y > -1)
 			tile = world.getTileEntity(new BlockPos(x, y, z));
 		else if(x == -1) {
-			ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
+			ItemStack stack = player.getHeldItem(Hand.MAIN_HAND);
 			
 			//If there is latency or some desync odd things can happen so check for that
 			if(stack == null || !(stack.getItem() instanceof IModularInventory)) {
 				return null;
 			}
 			
-			tile = player.getHeldItem(EnumHand.MAIN_HAND).getItem();
+			tile = player.getHeldItem(Hand.MAIN_HAND).getItem();
 		}
 		else
 			tile = world.getEntityByID(x);
@@ -54,7 +54,7 @@ public class GuiHandler implements IGuiHandler {
 	}
 
 	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world,
+	public Object getClientGuiElement(int ID, PlayerEntity player, World world,
 			int x, int y, int z) {
 
 		Object tile;
@@ -62,14 +62,14 @@ public class GuiHandler implements IGuiHandler {
 		if(y > -1)
 			tile = world.getTileEntity(new BlockPos(x, y, z));
 		else if(x == -1) {
-			ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
+			ItemStack stack = player.getHeldItem(Hand.MAIN_HAND);
 			
 			//If there is latency or some desync odd things can happen so check for that
 			if(stack == null || !(stack.getItem() instanceof IModularInventory)) {
 				return null;
 			}
 			
-			tile = player.getHeldItem(EnumHand.MAIN_HAND).getItem();
+			tile = player.getHeldItem(Hand.MAIN_HAND).getItem();
 		}
 		else
 			tile = world.getEntityByID(x);

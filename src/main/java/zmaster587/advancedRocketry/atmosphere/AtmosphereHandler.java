@@ -2,19 +2,19 @@ package zmaster587.advancedRocketry.atmosphere;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import zmaster587.advancedRocketry.api.AreaBlob;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
@@ -26,6 +26,7 @@ import zmaster587.advancedRocketry.network.PacketAtmSync;
 import zmaster587.advancedRocketry.util.AtmosphereBlob;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -39,11 +40,11 @@ public class AtmosphereHandler {
 
 	public static long lastSuffocationTime = Integer.MIN_VALUE;
 	private static final int MAX_BLOB_RADIUS = ((ARConfiguration.getCurrentConfig().atmosphereHandleBitMask & 1) == 1) ? 256 : ARConfiguration.getCurrentConfig().oxygenVentSize;
-	private static HashMap<Integer, AtmosphereHandler> dimensionOxygen = new HashMap<Integer, AtmosphereHandler>();
-	private static HashMap<EntityPlayer, IAtmosphere> prevAtmosphere = new HashMap<EntityPlayer, IAtmosphere>();
+	private static HashMap<ResourceLocation, AtmosphereHandler> dimensionOxygen = new HashMap<ResourceLocation, AtmosphereHandler>();
+	private static HashMap<PlayerEntity, IAtmosphere> prevAtmosphere = new HashMap<PlayerEntity, IAtmosphere>();
 
 	private HashMap<IBlobHandler,AreaBlob> blobs;
-	int dimId;
+	ResourceLocation dimId;
 
 	//Stores current Atm on the CLIENT
 	public static IAtmosphere currentAtm;
@@ -53,8 +54,8 @@ public class AtmosphereHandler {
 	 * Registers the Atmosphere handler for the dimension given
 	 * @param dimId the dimension id to register the dimension for
 	 */
-	public static void registerWorld(int dimId) {
-
+	public static void registerWorld(World world) {
+		ResourceLocation dimId = ZUtils.getDimensionIdentifier(world);
 		//If O2 is allowed and
 		DimensionProperties dimProp = DimensionManager.getInstance().getDimensionProperties(dimId);
 		if(ARConfiguration.getCurrentConfig().enableOxygen && dimProp.hasSurface() && (ARConfiguration.getCurrentConfig().overrideGCAir || dimId != ARConfiguration.getCurrentConfig().MoonId || dimProp.isNativeDimension)) {
@@ -67,16 +68,16 @@ public class AtmosphereHandler {
 	 * Unregisters the Atmosphere handler for the dimension given
 	 * @param dimId the dimension id to register the dimension for
 	 */
-	public static void unregisterWorld(int dimId) {
+	public static void unregisterWorld(World dimId) {
 		AtmosphereHandler handler = dimensionOxygen.remove(dimId);
 		if(ARConfiguration.getCurrentConfig().enableOxygen && handler != null) {
 
 			MinecraftForge.EVENT_BUS.unregister(handler);
-			FMLCommonHandler.instance().bus().unregister(handler);
+			FMLJavaModLoadingContext.get().getModEventBus().unregister(handler);
 		}
 	}
 
-	private AtmosphereHandler(int dimId) {
+	private AtmosphereHandler(ResourceLocation dimId) {
 		this.dimId = dimId;
 		blobs = new HashMap<IBlobHandler,AreaBlob>();
 	}
@@ -84,40 +85,40 @@ public class AtmosphereHandler {
 	@SubscribeEvent
 	public void onTick(LivingUpdateEvent event) {
 		Entity entity = event.getEntity();
-		if(!entity.world.isRemote && entity.world.provider.getDimension() == this.dimId) {
+		if(!entity.world.isRemote && ZUtils.getDimensionIdentifier(entity.world) == this.dimId) {
 			IAtmosphere atmosType = getAtmosphereType(entity);
 
-			if(entity instanceof EntityPlayer && atmosType != prevAtmosphere.get(entity)) {
-				PacketHandler.sendToPlayer(new PacketAtmSync(atmosType.getUnlocalizedName(), getAtmospherePressure(entity)), (EntityPlayer)entity);
-				prevAtmosphere.put((EntityPlayer)entity, atmosType);
+			if(entity instanceof PlayerEntity && atmosType != prevAtmosphere.get(entity)) {
+				PacketHandler.sendToPlayer(new PacketAtmSync(atmosType.getUnlocalizedName(), getAtmospherePressure(entity)), (PlayerEntity)entity);
+				prevAtmosphere.put((PlayerEntity)entity, atmosType);
 			}
 
 			if(atmosType.canTick() &&
-					!(event.getEntityLiving().isInLava() || event.getEntityLiving().isInsideOfMaterial(Material.WATER)) ) {
+					!(event.getEntityLiving().isInLava() || event.getEntityLiving().isInWater()) ) {
 				AtmosphereEvent event2 = new AtmosphereEvent.AtmosphereTickEvent(entity, atmosType);
 				MinecraftForge.EVENT_BUS.post(event2);
 				if(!event2.isCanceled() && !atmosType.isImmune(event.getEntity().getClass()))
-					atmosType.onTick((EntityLivingBase)event.getEntityLiving());
+					atmosType.onTick((LivingEntity)event.getEntityLiving());
 			}
 		}
 	}
 
 	@SubscribeEvent
 	public void onPlayerChangeDim(PlayerChangedDimensionEvent event) {
-		prevAtmosphere.remove(event.player);
+		prevAtmosphere.remove(event.getPlayer());
 
 	}
 
 	@SubscribeEvent
 	public void onPlayerLogoutEvent(PlayerLoggedOutEvent event) {
-		prevAtmosphere.remove(event.player);
+		prevAtmosphere.remove(event.getPlayer());
 	}
 
 	private void onBlockRemove(HashedBlockPosition pos) {
 		List<AreaBlob> blobs = getBlobWithinRadius(pos, MAX_BLOB_RADIUS);
 		for(AreaBlob blob : blobs) {
 			//Make sure that a block can actually be attached to the blob
-			for(EnumFacing dir : EnumFacing.VALUES)
+			for(Direction dir : Direction.values())
 				if(blob.contains(pos.getPositionAtOffset(dir))) {
 					blob.addBlock(pos, blobs);
 					break;
@@ -128,14 +129,18 @@ public class AtmosphereHandler {
 	/**
 	 * @return true if the dimension has an atmospherehandler Object associated with it
 	 */
-	public static boolean hasAtmosphereHandler(int dimId) {
+	public static boolean hasAtmosphereHandler(ResourceLocation dimId) {
 		return dimensionOxygen.containsKey(dimId);
+	}
+	
+	public static boolean hasAtmosphereHandler(World dimId) {
+		return dimensionOxygen.containsKey(ZUtils.getDimensionIdentifier(dimId));
 	}
 
 	//Called from World.setBlockMetaDataWithNotify
 	/*public static void onBlockMetaChange(World world, int x , int y, int z) {
 		if(Configuration.enableOxygen && !world.isRemote && world.getChunkFromBlockCoords(new BlockPos(x, y, z)).isLoaded()) {
-			AtmosphereHandler handler = getOxygenHandler(world.provider.getDimension());
+			AtmosphereHandler handler = getOxygenHandler(world);
 			HashedBlockPosition pos = new HashedBlockPosition(x, y, z);
 
 
@@ -158,10 +163,10 @@ public class AtmosphereHandler {
 	//Called from setBlock in World.class
 	public static void onBlockChange(World world, BlockPos bpos) {
 
-		if(ARConfiguration.getCurrentConfig().enableOxygen && !world.isRemote && world.getChunkFromBlockCoords(new BlockPos(bpos)).isLoaded()) {
+		if(ARConfiguration.getCurrentConfig().enableOxygen && !world.isRemote && world.isBlockLoaded(new BlockPos(bpos))) {
 			HashedBlockPosition pos = new HashedBlockPosition(bpos);
 
-			AtmosphereHandler handler = getOxygenHandler(world.provider.getDimension());
+			AtmosphereHandler handler = getOxygenHandler(ZUtils.getDimensionIdentifier(world));
 
 			//Bonus chests cause world gen to begin before loading the world
 			//Because atmosphere handlers are created at world load time
@@ -211,9 +216,18 @@ public class AtmosphereHandler {
 	 * @param dimNumber dimension number for which to get the oxygenhandler
 	 * @return the oxygen handler for the planet or null if none exists
 	 */
-	public static AtmosphereHandler getOxygenHandler(int dimNumber) {
+	public static AtmosphereHandler getOxygenHandler(ResourceLocation dimNumber) {
 		//Get your oxyclean!
 		return dimensionOxygen.get(dimNumber);
+	}
+	
+	/**
+	 * @param dimNumber dimension number for which to get the oxygenhandler
+	 * @return the oxygen handler for the planet or null if none exists
+	 */
+	public static AtmosphereHandler getOxygenHandler(World world) {
+		//Get your oxyclean!
+		return getOxygenHandler(ZUtils.getDimensionIdentifier(world));
 	}
 
 	/**
@@ -327,7 +341,7 @@ public class AtmosphereHandler {
 	 */
 	public IAtmosphere getAtmosphereType(Entity entity) {
 		if(ARConfiguration.getCurrentConfig().enableOxygen) {
-			HashedBlockPosition pos = new HashedBlockPosition((int)Math.floor(entity.posX), (int)Math.ceil(entity.posY), (int)Math.floor(entity.posZ));
+			HashedBlockPosition pos = new HashedBlockPosition((int)Math.floor(entity.getPosX()), (int)Math.ceil(entity.getPosY()), (int)Math.floor(entity.getPosZ()));
 			for(AreaBlob blob : blobs.values()) {
 				if(blob.contains(pos)) {
 					return (IAtmosphere)blob.getData();
@@ -346,7 +360,7 @@ public class AtmosphereHandler {
 	 */
 	public int getAtmospherePressure(Entity entity) {
 		if(ARConfiguration.getCurrentConfig().enableOxygen) {
-			HashedBlockPosition pos = new HashedBlockPosition((int)Math.floor(entity.posX), (int)Math.ceil(entity.posY), (int)Math.floor(entity.posZ));
+			HashedBlockPosition pos = new HashedBlockPosition((int)Math.floor(entity.getPosX()), (int)Math.ceil(entity.getPosY()), (int)Math.floor(entity.getPosZ()));
 			for(AreaBlob blob : blobs.values()) {
 				if(blob.contains(pos) && blob instanceof AtmosphereBlob) {
 					return ((AtmosphereBlob)blob).getPressure();
@@ -360,9 +374,9 @@ public class AtmosphereHandler {
 	 * @param entity entity to check against
 	 * @return true if the entity can breathe in the this atmosphere
 	 */
-	public boolean canEntityBreathe(EntityLiving entity) {
+	public boolean canEntityBreathe(LivingEntity entity) {
 		if(ARConfiguration.getCurrentConfig().enableOxygen) {
-			HashedBlockPosition pos = new HashedBlockPosition((int)Math.floor(entity.posX), (int)Math.ceil(entity.posY), (int)Math.floor(entity.posZ));
+			HashedBlockPosition pos = new HashedBlockPosition((int)Math.floor(entity.getPosX()), (int)Math.ceil(entity.getPosY()), (int)Math.floor(entity.getPosZ()));
 			for(AreaBlob blob : blobs.values()) {
 				if(blob.contains(pos) && ((IAtmosphere)blob.getData()).isImmune(entity)) {
 					return true;

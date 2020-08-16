@@ -1,7 +1,8 @@
 package zmaster587.advancedRocketry.util;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.Constants.NBT;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
@@ -20,26 +21,26 @@ public class NBTStorableListList {
 		pos = list;
 	}
 	
-	public void writeToNBT(NBTTagCompound nbt) {
-		NBTTagList list = new NBTTagList();
+	public void writeToNBT(CompoundNBT nbt) {
+		ListNBT list = new ListNBT();
 		for(DimensionBlockPosition pos : this.pos) {
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setIntArray("loc",new int[] { pos.pos.x, pos.pos.y, pos.pos.z } );
-			tag.setInteger("dim", pos.dimid);
-			list.appendTag(tag);
+			CompoundNBT tag = new CompoundNBT();
+			tag.putIntArray("loc",new int[] { pos.pos.x, pos.pos.y, pos.pos.z } );
+			tag.putString("dim", pos.dimid.toString());
+			list.add(tag);
 		}
-		nbt.setTag("list", list);
+		nbt.put("list", list);
 		
 	}
 	
-	public void readFromNBT(NBTTagCompound nbt) {
+	public void readFromNBT(CompoundNBT nbt) {
 		
-		NBTTagList list = nbt.getTagList("list", NBT.TAG_COMPOUND);
+		ListNBT list = nbt.getList("list", NBT.TAG_COMPOUND);
 		pos.clear();
-		for(int i = 0; i < list.tagCount(); i++) {
-			NBTTagCompound nbttag = list.getCompoundTagAt(i);
+		for(int i = 0; i < list.size(); i++) {
+			CompoundNBT nbttag = list.getCompound(i);
 			int[] tag = nbttag.getIntArray("loc");
-			int dimid = nbttag.getInteger("dim");
+			ResourceLocation dimid = new ResourceLocation(nbttag.getString("dim"));
 			
 			pos.add(new DimensionBlockPosition(dimid, new HashedBlockPosition(tag[0], tag[1], tag[2])));
 		}

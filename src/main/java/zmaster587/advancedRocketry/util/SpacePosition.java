@@ -1,7 +1,8 @@
 package zmaster587.advancedRocketry.util;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Vector3d;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -23,32 +24,32 @@ public class SpacePosition {
 		return xx*xx + yy*yy + zz*zz;
 	}
 	
-	public void writeToNBT(NBTTagCompound nbt)
+	public void writeToNBT(CompoundNBT nbt)
 	{
-		NBTTagCompound subTag = new NBTTagCompound();
+		CompoundNBT subTag = new CompoundNBT();
 		
-		subTag.setDouble("x", x);
-		subTag.setDouble("y", y);
-		subTag.setDouble("z", z);
-		subTag.setDouble("yaw", yaw);
-		subTag.setDouble("pitch", pitch);
-		subTag.setDouble("roll", roll);
+		subTag.putDouble("x", x);
+		subTag.putDouble("y", y);
+		subTag.putDouble("z", z);
+		subTag.putDouble("yaw", yaw);
+		subTag.putDouble("pitch", pitch);
+		subTag.putDouble("roll", roll);
 		
 		if(star != null)
-			subTag.setInteger("star", star.getId());
+			subTag.putString("star", star.getId().toString());
 		if(world != null)
-			subTag.setInteger("world", world.getId());
-		subTag.setBoolean("isInInterplanetarySpace", isInInterplanetarySpace);
-		nbt.setTag("spacePosition", subTag);
+			subTag.putString("world", world.getId().toString());
+		subTag.putBoolean("isInInterplanetarySpace", isInInterplanetarySpace);
+		nbt.put("spacePosition", subTag);
 	}
 	
-	public void readFromNBT(NBTTagCompound nbt)
+	public void readFromNBT(CompoundNBT nbt)
 	{
-		NBTTagCompound subTag;
-		if(!nbt.hasKey("spacePosition"))
+		CompoundNBT subTag;
+		if(!nbt.contains("spacePosition"))
 			return;
 		
-		subTag = nbt.getCompoundTag("spacePosition");
+		subTag = nbt.getCompound("spacePosition");
 		
 		x = subTag.getDouble("x");
 		y = subTag.getDouble("y");
@@ -56,23 +57,23 @@ public class SpacePosition {
 		yaw = subTag.getDouble("yaw");
 		pitch = subTag.getDouble("pitch");
 		roll = subTag.getDouble("roll");
-		subTag.setDouble("pitch", pitch);
-		subTag.setDouble("roll", roll);
+		subTag.putDouble("pitch", pitch);
+		subTag.putDouble("roll", roll);
 		
-		if(subTag.hasKey("star"))
-			star = DimensionManager.getInstance().getStar(subTag.getInteger("star"));
+		if(subTag.contains("star"))
+			star = DimensionManager.getInstance().getStar(new ResourceLocation(subTag.getString("star")));
 		else
 			star = null;
 		
-		if(subTag.hasKey("world"))
-			world = DimensionManager.getInstance().getDimensionProperties(subTag.getInteger("world"));
+		if(subTag.contains("world"))
+			world = DimensionManager.getInstance().getDimensionProperties(new ResourceLocation(subTag.getString("world")));
 		else
 			world = null;
 		
 		isInInterplanetarySpace = subTag.getBoolean("isInInterplanetarySpace");
 	}
 	
-	public Vec3d getNormalVectorTo(SpacePosition other)
+	public Vector3d getNormalVectorTo(SpacePosition other)
 	{
 		double x,y,z;
 		
@@ -82,7 +83,7 @@ public class SpacePosition {
 		y = (other.y - this.y )/distance;
 		z = (other.z - this.z )/distance;
 		
-		return new Vec3d(x,y,z);
+		return new Vector3d(x,y,z);
 	}
 	
 	public SpacePosition getFromSpherical(double radius, double theta)

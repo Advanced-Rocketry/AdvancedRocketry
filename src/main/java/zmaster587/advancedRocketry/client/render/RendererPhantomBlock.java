@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.client.render;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -19,16 +19,16 @@ import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 
 public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 
-	private static BlockRendererDispatcher renderBlocks = Minecraft.getMinecraft().getBlockRendererDispatcher();
+	private static BlockRendererDispatcher renderBlocks = Minecraft.getInstance().getBlockRendererDispatcher();
 
 	@Override
 	public void render(TileEntity tile, double x,
 			double y, double z, float t, int damage, float a) {
 
-		renderBlocks = Minecraft.getMinecraft().getBlockRendererDispatcher();
+		renderBlocks = Minecraft.getInstance().getBlockRendererDispatcher();
 		TilePlaceholder tileGhost = (TilePlaceholder)tile;
 
-		IBlockState state = tileGhost.getReplacedState();
+		BlockState state = tileGhost.getReplacedState();
 
 		//TODO: bring TESRS back
 		/*if(tileGhost.getReplacedTileEntity() != null && !(tileGhost.getReplacedTileEntity() instanceof TileMultiBlock) && TileEntityRendererDispatcher.instance.hasSpecialRenderer(tileGhost.getReplacedTileEntity())) {
@@ -39,9 +39,9 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 			GL11.glDisable(GL11.GL_BLEND);
 		}*/
 
-		GL11.glPushMatrix();
+		matrix.push();
 
-		GL11.glTranslated(x - tile.getPos().getX(),y - tile.getPos().getY(),z - tile.getPos().getZ());
+		matrix.translate(x - tile.getPos().getX(),y - tile.getPos().getY(),z - tile.getPos().getZ());
 
 		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
 		//Render Each block
@@ -59,21 +59,21 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 
 		net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
 		GlStateManager.disableBlend();
-		GL11.glPopMatrix();
+		matrix.pop();
 
 
 		//TODO: bring tags back
 		if(state != null) {
 			//If the player is mousing over this block
-			RayTraceResult movingObjPos = Minecraft.getMinecraft().objectMouseOver;
+			RayTraceResult movingObjPos = Minecraft.getInstance().objectMouseOver;
 			try {
-				if(Minecraft.getMinecraft().objectMouseOver != null && movingObjPos.getBlockPos().getX() == tile.getPos().getX() && movingObjPos.getBlockPos().getY() == tile.getPos().getY() && movingObjPos.getBlockPos().getZ() == tile.getPos().getZ()) {
+				if(Minecraft.getInstance().objectMouseOver != null && movingObjPos.getBlockPos().getX() == tile.getPos().getX() && movingObjPos.getBlockPos().getY() == tile.getPos().getY() && movingObjPos.getBlockPos().getZ() == tile.getPos().getZ()) {
 
-					ItemStack stack = tile.getWorld().getBlockState(tile.getPos()).getBlock().getPickBlock(tile.getWorld().getBlockState(tile.getPos()), movingObjPos, Minecraft.getMinecraft().world, tile.getPos(), Minecraft.getMinecraft().player);
+					ItemStack stack = tile.getWorld().getBlockState(tile.getPos()).getBlock().getPickBlock(tile.getWorld().getBlockState(tile.getPos()), movingObjPos, Minecraft.getInstance().world, tile.getPos(), Minecraft.getInstance().player);
 					if(stack == null)
-						RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(movingObjPos.hitVec.x, movingObjPos.hitVec.y, movingObjPos.hitVec.z), "THIS IS AN ERROR, CONTACT THE DEV!!!", x,y,z, 10);
+						RenderHelper.renderTag(Minecraft.getInstance().player.getDistanceSq(movingObjPos.hitVec.x, movingObjPos.hitVec.y, movingObjPos.hitVec.z), "THIS IS AN ERROR, CONTACT THE DEV!!!", x,y,z, 10);
 					else
-						RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(movingObjPos.hitVec.x, movingObjPos.hitVec.y, movingObjPos.hitVec.z), stack.getDisplayName(), x+ 0.5f,y,z+ 0.5f, 10);
+						RenderHelper.renderTag(Minecraft.getInstance().player.getDistanceSq(movingObjPos.hitVec.x, movingObjPos.hitVec.y, movingObjPos.hitVec.z), stack.getDisplayName(), x+ 0.5f,y,z+ 0.5f, 10);
 				}
 			} catch (NullPointerException e) {
 				//silence you fool

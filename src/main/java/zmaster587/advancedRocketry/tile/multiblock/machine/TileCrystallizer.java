@@ -1,12 +1,13 @@
 package zmaster587.advancedRocketry.tile.multiblock.machine;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.material.Material;
@@ -34,6 +35,7 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 	Material coil[];
 	
 	public TileCrystallizer() {
+		super(AdvancedRocketryTileEntityType.TILE_CRYSTALLIZER);
 		coil = new Material[2];
 	}
 	
@@ -43,9 +45,9 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 	}
 	
 	@Override
-	public float getTimeMultiplierForBlock(IBlockState state, TileEntity tile) {
+	public float getTimeMultiplierForBlock(BlockState state, TileEntity tile) {
 
-		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(state.getBlock(),1, state.getBlock().getMetaFromState(state)));
+		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(state.getBlock(),1));
 		if(material == MaterialRegistry.getMaterialFromName("Gold"))
 			return 0.9f;
 		else if(material == MaterialRegistry.getMaterialFromName("Aluminum"))
@@ -74,7 +76,7 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = super.getModules(ID, player);
 
 		modules.add(new ModuleProgress(100, 4, 0, TextureResources.crystallizerProgressBar, this));

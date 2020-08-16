@@ -2,18 +2,18 @@ package zmaster587.advancedRocketry.world.util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.world.Teleporter;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.server.ServerWorld;
 
 public class TeleporterNoPortal extends Teleporter {
 
-	public TeleporterNoPortal(WorldServer p_i1963_1_) {
+	public TeleporterNoPortal(ServerWorld p_i1963_1_) {
 		super(p_i1963_1_);
 	}
 
-	public void teleport(Entity entity, WorldServer world) {
+	public void teleport(Entity entity, ServerWorld world) {
 
 		if (entity.isEntityAlive()) {
-			entity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
+			entity.setLocationAndAngles(entity.getPosX(), entity.posY, entity.getPosZ(), entity.rotationYaw, entity.rotationPitch);
 			world.spawnEntity(entity);
 			world.updateEntityWithOptionalForce(entity, false);
 		}

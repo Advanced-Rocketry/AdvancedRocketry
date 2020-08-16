@@ -1,9 +1,11 @@
 package zmaster587.advancedRocketry.backwardCompat;
 
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class Face
 {
@@ -12,14 +14,14 @@ public class Face
     public Vertex faceNormal;
     public TextureCoordinate[] textureCoordinates;
 
-    @SideOnly(Side.CLIENT)
-    public void addFaceForRender(BufferBuilder tessellator)
+    @OnlyIn(value=Dist.CLIENT)
+    public void addFaceForRender(IVertexBuilder tessellator)
     {
         addFaceForRender(tessellator, 0.0005F);
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addFaceForRender(BufferBuilder tessellator, float textureOffset)
+    @OnlyIn(value=Dist.CLIENT)
+    public void addFaceForRender(IVertexBuilder tessellator, float textureOffset)
     {
         if (faceNormal == null)
         {
@@ -75,9 +77,9 @@ public class Face
     public Vertex calculateFaceNormal()
     {
     	
-        Vec3d v1 = new Vec3d(vertices[1].x - vertices[0].x, vertices[1].y - vertices[0].y, vertices[1].z - vertices[0].z);
-        Vec3d v2 = new Vec3d(vertices[2].x - vertices[0].x, vertices[2].y - vertices[0].y, vertices[2].z - vertices[0].z);
-        Vec3d normalVector = null;
+        Vector3d v1 = new Vector3d(vertices[1].x - vertices[0].x, vertices[1].y - vertices[0].y, vertices[1].z - vertices[0].z);
+        Vector3d v2 = new Vector3d(vertices[2].x - vertices[0].x, vertices[2].y - vertices[0].y, vertices[2].z - vertices[0].z);
+        Vector3d normalVector = null;
 
         normalVector = v1.crossProduct(v2).normalize();
 

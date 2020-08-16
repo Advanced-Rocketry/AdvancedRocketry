@@ -1,8 +1,15 @@
 package zmaster587.advancedRocketry.tile;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.text.ITextComponent;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
+import zmaster587.libVulpes.inventory.ContainerModular;
+import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleScaledImage;
@@ -16,6 +23,7 @@ public class TileMachineChipInfo extends TileEntity implements IModularInventory
 	ModuleText infoText;
 	
 	public TileMachineChipInfo() {
+		super(AdvancedRocketryTileEntityType.TILE_CHIP_MACHINE);
 		infoText = new ModuleText(16, 16, "", 0x2f2f2f);
 	}
 	
@@ -24,7 +32,7 @@ public class TileMachineChipInfo extends TileEntity implements IModularInventory
 	}
 	
 	@Override
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
+	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 		if(world.isRemote) {
 			//Source planet
@@ -52,9 +60,25 @@ public class TileMachineChipInfo extends TileEntity implements IModularInventory
 	}
 
 	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
+	public boolean canInteractWithContainer(PlayerEntity entity) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType(), player), this);
+	}
+
+	@Override
+	public int getModularInvType() {
+		return guiId.MODULAR.ordinal();
 	}
 
 }

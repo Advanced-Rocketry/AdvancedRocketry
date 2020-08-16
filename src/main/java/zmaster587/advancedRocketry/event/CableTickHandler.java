@@ -1,12 +1,13 @@
 package zmaster587.advancedRocketry.event;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.ChunkEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.cable.NetworkRegistry;
 import zmaster587.advancedRocketry.tile.cables.TilePipe;
@@ -15,6 +16,7 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 public class CableTickHandler {
 
@@ -34,12 +36,12 @@ public class CableTickHandler {
 	@SubscribeEvent
 	public void chunkLoadedEvent(ChunkEvent.Load event) {
 
-		Map map = event.getChunk().getTileEntityMap();
-		Iterator<Entry> iter = map.entrySet().iterator();
+		Set<BlockPos> map = event.getChunk().getTileEntitiesPos();
+		Iterator<BlockPos> iter = map.iterator();
 
 		try {
 			while(iter.hasNext()) {
-				Object obj = iter.next().getValue();
+				TileEntity obj = event.getChunk().getTileEntity(iter.next());
 
 				if(obj instanceof TilePipe) {
 					((TilePipe)obj).markDirty();
@@ -67,14 +69,14 @@ public class CableTickHandler {
 
 				int pipecount=0;
 
-				for(EnumFacing dir : EnumFacing.values()) {
+				for(Direction dir : Direction.values()) {
 					TileEntity tile = event.getWorld().getTileEntity(event.getPos().offset(dir));
 					if(tile instanceof TilePipe) 
 						pipecount++;
 				}
 				//TODO: delete check if sinks/sources need removal
 				if(pipecount > 1) {
-					for(EnumFacing dir : EnumFacing.VALUES) {
+					for(Direction dir : Direction.values()) {
 						TileEntity tile = event.getWorld().getTileEntity(event.getPos().offset(dir));
 
 						if(tile instanceof TilePipe) {
@@ -90,7 +92,7 @@ public class CableTickHandler {
 				((TilePipe)homeTile).markDirty();
 			}
 			else if(homeTile != null) {
-				for(EnumFacing dir : EnumFacing.VALUES) {
+				for(Direction dir : Direction.values()) {
 					TileEntity tile = event.getWorld().getTileEntity(event.getPos().offset(dir));
 
 					if(tile instanceof TilePipe) {

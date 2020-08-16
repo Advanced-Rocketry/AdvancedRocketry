@@ -1,8 +1,8 @@
 package zmaster587.advancedRocketry.integration.nei;
 
-/*import static codechicken.lib.gui.GuiDraw.drawTexturedModalRect;
+/*import static codechicken.lib.gui.GuiDraw.func_238474_b_;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 
 import java.awt.Rectangle;
 import java.util.LinkedList;
@@ -32,29 +32,29 @@ public class PrecisionAssemberNEI extends TemplateNEI {
 	@Override
     public void drawExtras(int recipe)
     {
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureResources.progressBars);
+		Minecraft.getInstance().getTextureManager().bindTexture(TextureResources.progressBars);
 		
-		drawTexturedModalRect(58, 1, 132, 0, 53, 66);
+		func_238474_b_(58, 1, 132, 0, 53, 66);
 		
     	byte mode = (byte) ((cycleticks % ticksPerBar)/(ticksPerBar/3));
-    	drawTexturedModalRect(62, 1, 90, 45, 12, 13);
+    	func_238474_b_(62, 1, 90, 45, 12, 13);
     	
     	//(cycleticks % 100) /100f;
     	if(mode == 0)
     		drawProgressBar(93, 23, 54, 42, 13, 15, (cycleticks % (ticksPerBar/3)) /(float)(ticksPerBar/3), 1);
     	else if(mode == 1) {
-    		drawTexturedModalRect(61, 22, 78, 42, 12, 13);
+    		func_238474_b_(61, 22, 78, 42, 12, 13);
     		
-    		drawTexturedModalRect(93, 23, 54, 42, 13, 15);
+    		func_238474_b_(93, 23, 54, 42, 13, 15);
     		
     		drawProgressBar(94, 42, 67, 42, 11, 15, (cycleticks % (ticksPerBar/3)) /(float)(ticksPerBar/3), 1);
     	}
     	else if(mode == 2) {
-    		drawTexturedModalRect(59, 51, 54, 57, 14, 9);
-    		drawTexturedModalRect(61, 22, 78, 42, 12, 13);
+    		func_238474_b_(59, 51, 54, 57, 14, 9);
+    		func_238474_b_(61, 22, 78, 42, 12, 13);
     		
-    		drawTexturedModalRect(93, 23, 54, 42, 13, 15);
-    		drawTexturedModalRect(94, 42, 67, 42, 11, 15);
+    		func_238474_b_(93, 23, 54, 42, 13, 15);
+    		func_238474_b_(94, 42, 67, 42, 11, 15);
     		
     		drawProgressBar(89, 63, 90, 42, 22, 3, (cycleticks % (ticksPerBar/3)) /(float)(ticksPerBar/3), 0);
     	}

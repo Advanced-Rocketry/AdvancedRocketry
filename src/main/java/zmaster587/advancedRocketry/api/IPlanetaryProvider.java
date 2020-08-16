@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.api;
 
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 
 public interface IPlanetaryProvider {
@@ -58,7 +58,7 @@ public interface IPlanetaryProvider {
 	/**
 	 * @return color of the sun in RGB
 	 */
-	public Vec3d getSunColor(BlockPos pos);
+	public Vector3d getSunColor(BlockPos pos);
 	
 	/**
 	 * @param pos location in block coords

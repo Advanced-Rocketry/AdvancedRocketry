@@ -1,17 +1,29 @@
 package zmaster587.advancedRocketry.tile;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
+import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
+import zmaster587.libVulpes.inventory.ContainerModular;
+import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.IToggleButton;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleButton;
 import zmaster587.libVulpes.inventory.modules.ModuleToggleSwitch;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +35,7 @@ public class TileDrill extends TileEntity implements IModularInventory, IToggleB
 	private ModuleToggleSwitch toggleSwitch;
 
 	public TileDrill() {
+		super(AdvancedRocketryTileEntityType.TILE_DRILL);
 		distanceExtended = 0;
 	}
 
@@ -44,10 +57,10 @@ public class TileDrill extends TileEntity implements IModularInventory, IToggleB
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
+	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
-		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, drillExtended()));
+		modules.add(toggleSwitch = (ModuleToggleSwitch) new ModuleToggleSwitch(160, 5, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, drillExtended()).setAdditionalData(0));
 
 		return modules;
 	}
@@ -58,14 +71,14 @@ public class TileDrill extends TileEntity implements IModularInventory, IToggleB
 	}
 
 	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
+	public boolean canInteractWithContainer(PlayerEntity entity) {
 		return true;
 	}
 
 	@Override
-	public void onInventoryButtonPressed(int buttonId) {
+	public void onInventoryButtonPressed(ModuleButton buttonId) {
 
-		if(buttonId == 0) {
+		if(buttonId == toggleSwitch) {
 			this.setDrillExtended(toggleSwitch.getState());
 			PacketHandler.sendToServer(new PacketMachine(this,(byte)0));
 		}
@@ -78,45 +91,60 @@ public class TileDrill extends TileEntity implements IModularInventory, IToggleB
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
 		out.writeBoolean(extended);
 
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
-		nbt.setBoolean("enabled", in.readBoolean());
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
+			CompoundNBT nbt) {
+		nbt.putBoolean("enabled", in.readBoolean());
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 		setDrillExtended(nbt.getBoolean("enabled"));
 		toggleSwitch.setToggleState(drillExtended());
 
 		//Last ditch effort to update the toggle switch when it's flipped
 		if(!world.isRemote)
-			PacketHandler.sendToNearby(new PacketMachine(this, (byte)0), world.provider.getDimension(), pos, 64);
+			PacketHandler.sendToNearby(new PacketMachine(this, (byte)0), ZUtils.getDimensionIdentifier(world), pos, 64);
 
 	}
 	
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
 		
-		nbt.setFloat("extendAmt", distanceExtended);
-		nbt.setBoolean("extended", extended);
+		nbt.putFloat("extendAmt", distanceExtended);
+		nbt.putBoolean("extended", extended);
 		return nbt;
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
 		
 		distanceExtended = nbt.getFloat("extendAmt");
 		extended = nbt.getBoolean("extended");
 		
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TranslationTextComponent(getModularInventoryName());
+	}
+
+	@Override
+	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType(), player), this);
+	}
+
+	@Override
+	public int getModularInvType() {
+		return guiId.MODULAR.ordinal();
 	}
 
 }

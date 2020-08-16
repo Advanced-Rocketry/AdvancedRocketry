@@ -1,12 +1,15 @@
 package zmaster587.advancedRocketry.tile.Satellite;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
@@ -47,6 +50,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	private static final byte chassisSlot = 11;
 
 	public TileSatelliteBuilder() {
+		super(AdvancedRocketryTileEntityType.TILE_SAT_BUILDER);
 		inventory = new EmbeddedInventory(5);
 		powerPerTick = 10;
 	}
@@ -130,10 +134,10 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		if(!chipsExist)
 			return false;
 		boolean isSatellite = ((stack0.getItem() instanceof ItemSatellite || stack0.getItem() instanceof ItemSatelliteIdentificationChip) && stack1.getItem().equals(stack0.getItem()));
-		boolean isStation = stack0.getItem() instanceof ItemStationChip && ItemStationChip.getUUID(stack0) != 0 && stack1.getItem() instanceof ItemStationChip;
+		boolean isStation = stack0.getItem() instanceof ItemStationChip && ItemStationChip.getUUID(stack0) != DimensionManager.overworldProperties.getId() && stack1.getItem() instanceof ItemStationChip;
 		boolean isPlanet = (stack0.getItem() instanceof ItemPlanetIdentificationChip && stack1.getItem() instanceof ItemPlanetIdentificationChip);
 		boolean isOreScanner = (stack0.getItem() instanceof ItemOreScanner && stack1.getItem() instanceof ItemOreScanner);
-		return !isRunning() && getStackInSlot(outputSlot).isEmpty() && (isStation || stack0.hasTagCompound()) && 
+		return !isRunning() && getStackInSlot(outputSlot).isEmpty() && (isStation || stack0.hasTag()) && 
 				(isSatellite  || isStation || isPlanet || isOreScanner);
 	}
 
@@ -159,17 +163,28 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		this.markDirty();
 	}
 
+	private void doActionById(int buttonId)
+	{
+		if(buttonId == 0) {
+			if(canAssembleSatellite())
+				assembleSatellite();
+		}
+		else if(buttonId == 1)
+			if(canCopy())
+				copyChip();
+	}
+	
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 		super.useNetworkData(player, side, id, nbt);
 
 
-		onInventoryButtonPressed(id - 100);
+		doActionById(id - 100);
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		modules.add(new ModulePower(18, 20, getBatteries()));
@@ -180,25 +195,19 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		modules.add(new ModuleOutputSlotArray(58, 36, this, 7, 8));   // Output
 		modules.add(new ModuleTexturedSlotArray(58, 16, this, chipSlot, chipSlot + 1, TextureResources.idChip)); 	// Id chip
 		modules.add(new ModuleTexturedSlotArray(82, 16, this, chipCopySlot, chipCopySlot+1, TextureResources.idChip)); 	// Id chip
-		modules.add(new ModuleProgress(75, 36, 0, new ProgressBarImage(217,0, 17, 17, 234, 0, EnumFacing.DOWN, TextureResources.progressBars), this));
-		modules.add(new ModuleButton(40, 56, 0, "Build", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
-		modules.add(new ModuleButton(173, 3, 1, "", this, TextureResources.buttonCopy, LibVulpes.proxy.getLocalizedString("msg.satbuilder.writesecondchip"), 24, 24));
+		modules.add(new ModuleProgress(75, 36, 0, new ProgressBarImage(217,0, 17, 17, 234, 0, Direction.DOWN, TextureResources.progressBars), this));
+		modules.add(new ModuleButton(40, 56, "Build", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild).setAdditionalData(0));
+		modules.add(new ModuleButton(173, 3, "", this, TextureResources.buttonCopy, LibVulpes.proxy.getLocalizedString("msg.satbuilder.writesecondchip"), 24, 24).setAdditionalData(1));
 
 		return modules;
 	}
 
 	@Override
-	public void onInventoryButtonPressed(int buttonId) {
+	public void onInventoryButtonPressed(ModuleButton buttonId) {
 		if(world.isRemote)
-			PacketHandler.sendToServer(new PacketMachine(this, (byte)(buttonId + 100)) );
+			PacketHandler.sendToServer(new PacketMachine(this, (byte)((int)buttonId.getAdditionalData() + 100)) );
 
-		if(buttonId == 0) {
-			if(canAssembleSatellite())
-				assembleSatellite();
-		}
-		else if(buttonId == 1)
-			if(canCopy())
-				copyChip();
+		doActionById((int)buttonId.getAdditionalData());
 
 	}
 
@@ -260,10 +269,6 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		inventory.setInventorySlotContents(slot-7, stack);
 	}
 
-	@Override
-	public boolean hasCustomName() {
-		return inventory.hasCustomName();
-	}
 
 	@Override
 	public int getInventoryStackLimit() {
@@ -271,17 +276,17 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
-		return player.getDistanceSq(pos) < 4192;
+	public boolean isUsableByPlayer(PlayerEntity player) {
+		return pos.distanceSq(new BlockPos(player.getPositionVec())) < 4192;
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player) {
+	public void openInventory(PlayerEntity player) {
 		inventory.openInventory(player);
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer player) {
+	public void closeInventory(PlayerEntity player) {
 		inventory.closeInventory(player);
 	}
 
@@ -300,23 +305,18 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
 
-		inventory.writeToNBT(nbt);
+		inventory.write(nbt);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
 
 		inventory.readFromNBT(nbt);
-	}
-
-	@Override
-	public String getName() {
-		return null;
 	}
 
 	@Override
@@ -334,22 +334,6 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		}
 
 		return inventory.removeStackFromSlot(index - 7);
-	}
-
-	@Override
-	public int getField(int id) {
-		return inventory.getField(id);
-	}
-
-	@Override
-	public void setField(int id, int value) {
-		inventory.setField(id, value);
-
-	}
-
-	@Override
-	public int getFieldCount() {
-		return inventory.getFieldCount();
 	}
 
 	@Override

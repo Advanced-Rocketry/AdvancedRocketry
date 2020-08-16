@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
@@ -46,33 +46,33 @@ public class RendererSpaceElevator extends TileEntitySpecialRenderer {
 		
 		laser.doRender((Entity)null, renderX - .5, y+2.5, renderZ - .5, 0, f);
 		
-		GL11.glPushMatrix();
+		matrix.push();
 
 		//Initial setup
 
-		GL11.glTranslated(x + 0.5, y, z + .5);
+		matrix.translate(x + 0.5, y, z + .5);
 		//Rotate and move the model into position
-		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
-		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 180 : 0) + front.getFrontOffsetZ()*90f, 0, 1, 0);
-		//GL11.glTranslated(2f, 0, 0f);
+		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
+		GL11.glRotatef((front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, 1, 0);
+		//matrix.translate(2f, 0, 0f);
 		bindTexture(baseTexture);
 		model.renderOnly("Base");
-		GL11.glPopMatrix();
+		matrix.pop();
 		
 		//Render Beads
-		GL11.glPushMatrix();
-		GL11.glTranslated(x + multiBlockTile.getLandingLocationX() - multiBlockTile.getPos().getX(), y, z + multiBlockTile.getLandingLocationZ() - multiBlockTile.getPos().getZ());
+		matrix.push();
+		matrix.translate(x + multiBlockTile.getLandingLocationX() - multiBlockTile.getPos().getX(), y, z + multiBlockTile.getLandingLocationZ() - multiBlockTile.getPos().getZ());
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		GlStateManager.disableLighting();
 		GlStateManager.disableFog();
 		GlStateManager.enableBlend();
 		GlStateManager.depthMask(false);
 
-		GlStateManager.disableTexture2D();
+		GlStateManager.disableTexture();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
-		GlStateManager.color(1, 1 , 1 , 0.11f);
+		GlStateManager.color4f(1, 1 , 1 , 0.11f);
 
 		double position = (System.currentTimeMillis() % 16000)/200f;
 
@@ -95,11 +95,11 @@ public class RendererSpaceElevator extends TileEntitySpecialRenderer {
 
 		GlStateManager.disableBlend();
 		GlStateManager.enableLighting();
-		GlStateManager.enableTexture2D();
+		GlStateManager.enableTexture();
 		GlStateManager.enableFog();
 		GlStateManager.depthMask(true);
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glPopMatrix();
+		matrix.pop();
 		
 		
 	}

@@ -49,7 +49,7 @@ public class FxLaserHeat extends Particle {
 		
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
-		GlStateManager.color(0.8f, 0.2f, 0.2f, particleAlpha);
+		GlStateManager.color4f(0.8f, 0.2f, 0.2f, particleAlpha);
 		
 	
 		double size = this.size*particleAlpha;
@@ -61,7 +61,7 @@ public class FxLaserHeat extends Particle {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 0, 0);
-		GlStateManager.color(1, 1, 1, 1);
+		GlStateManager.color4f(1, 1, 1, 1);
 		GL11.glLineWidth(1);
 	}
 

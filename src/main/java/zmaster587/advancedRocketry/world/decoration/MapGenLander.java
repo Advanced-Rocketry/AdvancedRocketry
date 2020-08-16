@@ -21,10 +21,10 @@ public class MapGenLander {
 
 			position = worldIn.getHeight(position).down();
 			
-			worldIn.setBlockState(position.add(0, 0, 3), Blocks.STONE_SLAB.getDefaultState().withProperty(BlockSlab.HALF, EnumBlockHalf.TOP));
-			worldIn.setBlockState(position.add(0, 0, -3), Blocks.STONE_SLAB.getDefaultState().withProperty(BlockSlab.HALF, EnumBlockHalf.TOP));
-			worldIn.setBlockState(position.add(3, 0, 0), Blocks.STONE_SLAB.getDefaultState().withProperty(BlockSlab.HALF, EnumBlockHalf.TOP));
-			worldIn.setBlockState(position.add(-3, 0, 0), Blocks.STONE_SLAB.getDefaultState().withProperty(BlockSlab.HALF, EnumBlockHalf.TOP));
+			worldIn.setBlockState(position.add(0, 0, 3), Blocks.STONE_SLAB.getDefaultState().with(BlockSlab.HALF, EnumBlockHalf.TOP));
+			worldIn.setBlockState(position.add(0, 0, -3), Blocks.STONE_SLAB.getDefaultState().with(BlockSlab.HALF, EnumBlockHalf.TOP));
+			worldIn.setBlockState(position.add(3, 0, 0), Blocks.STONE_SLAB.getDefaultState().with(BlockSlab.HALF, EnumBlockHalf.TOP));
+			worldIn.setBlockState(position.add(-3, 0, 0), Blocks.STONE_SLAB.getDefaultState().with(BlockSlab.HALF, EnumBlockHalf.TOP));
 			
 			position = position.up();
 

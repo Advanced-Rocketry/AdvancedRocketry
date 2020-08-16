@@ -19,26 +19,26 @@ public class ClassTransformer implements IClassTransformer {
 
 
 	private static final String CLASS_KEY_ENTITYRENDERER = "net.minecraft.client.renderer.EntityRenderer";
-	private static final String CLASS_KEY_ENTITYLIVEINGBASE = "net.minecraft.entity.EntityLivingBase";
+	private static final String CLASS_KEY_ENTITYLIVEINGBASE = "net.minecraft.entity.LivingEntity";
 	private static final String CLASS_KEY_ENTITYLIVINGRENDERER = "net.minecraft.client.renderer.entity.RenderLivingEntity";
 	private static final String CLASS_KEY_ENTITY = "net.minecraft.entity.Entity";
 	private static final String CLASS_KEY_ENTITY_PLAYER_SP = "net.minecraft.client.entity.EntityPlayerSP";
-	private static final String CLASS_KEY_ENTITY_PLAYER_MP = "net.minecraft.client.entity.EntityPlayerMP";
-	private static final String CLASS_KEY_ENTITY_PLAYER = "net.minecraft.entity.player.EntityPlayer";
-	private static final String CLASS_KEY_ENTITY_ITEM = "net.minecraft.entity.EntityItem";
+	private static final String CLASS_KEY_ENTITY_PLAYER_MP = "net.minecraft.client.entity.ServerPlayerEntity";
+	private static final String CLASS_KEY_ENTITY_PLAYER = "net.minecraft.entity.player.PlayerEntity";
+	private static final String CLASS_KEY_ENTITY_ITEM = "net.minecraft.entity.ItemEntity";
 	private static final String CLASS_KEY_NETHANDLERPLAYSERVER = "net.minecraft.network.NetHandlerPlayServer";
 	private static final String CLASS_KEY_C03PACKETPLAYER = "net.minecraft.network.play.client.C03PacketPlayer";
 	private static final String CLASS_KEY_WORLD = "net.minecraft.world.World";
 	private static final String CLASS_KEY_BLOCK = "net.minecraft.block.Block";
 	private static final String CLASS_KEY_BLOCKPOS = "net.minecraft.util.math.BlockPos";
-	private static final String CLASS_KEY_IBLOCKSTATE = "net.minecraft.block.state.IBlockState";
+	private static final String CLASS_KEY_IBLOCKSTATE = "net.minecraft.block.state.BlockState";
 	private static final String CLASS_KEY_RENDER_GLOBAL = "net.minecraft.client.renderer.RenderGlobal";
 	private static final String CLASS_KEY_ICAMERA = "net.minecraft.client.renderer.culling.ICamera";
 	private static final String CLASS_KEY_BLOCK_BED = "net.minecraft.block.BlockBed";
 	private static final String CLASS_KEY_WORLDPROVIDER = "net.minecraft.world.WorldProvider";
-	private static final String CLASS_KEY_ENUMHAND = "net.minecraft.util.EnumHand";
+	private static final String CLASS_KEY_ENUMHAND = "net.minecraft.util.Hand";
 	private static final String CLASS_KEY_ITEMSTACK = "net.minecraft.item.ItemStack";
-	private static final String CLASS_KEY_ENUMFACING = "net.minecraft.util.EnumFacing";
+	private static final String CLASS_KEY_ENUMFACING = "net.minecraft.util.Direction";
 
 	private static final String METHOD_KEY_PROCESSPLAYER = "processPlayer";
 	private static final String METHOD_KEY_JUMP = "jump";
@@ -47,9 +47,9 @@ public class ClassTransformer implements IClassTransformer {
 	private static final String METHOD_KEY_MOUNTENTITY = "mountEntity";
 	private static final String METHOD_KEY_ONLIVINGUPDATE = "net.minecraft.client.entity.EntityPlayerSP.onLivingUpdate";
 	private static final String METHOD_KEY_ONUPDATE = "net.minecraft.client.entity.Entity.onUpdate";
-	private static final String METHOD_KEY_GETLOOKVEC = "net.minecraft.entity.EntityLivingBase.getLookVec";
+	private static final String METHOD_KEY_GETLOOKVEC = "net.minecraft.entity.LivingEntity.getLookVec";
 	private static final String METHOD_KEY_DORENDER  = "net.minecraft.client.renderer.entity.RenderLivingEntity.doRender";
-	//	private static final String METHOD_KEY_TRAVEL = "net.minecraft.entity.EntityLivingBase.travel";
+	//	private static final String METHOD_KEY_TRAVEL = "net.minecraft.entity.LivingEntity.travel";
 	private static final String METHOD_KEY_MOVEFLYING = "net.minecraft.entity.Entity.moveFlying";
 	private static final String METHOD_KEY_SETBLOCKSTATE = CLASS_KEY_WORLD + ".setBlockState";
 	private static final String METHOD_KEY_SETBLOCKMETADATAWITHNOTIFY = CLASS_KEY_WORLD + ".setBlockMetadataWithNotify";
@@ -90,26 +90,26 @@ public class ClassTransformer implements IClassTransformer {
 		obf = !(boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment");
 		//TODO: obf names
 		//entryMap.put(CLASS_KEY_ENTITYRENDERER, new SimpleEntry<String, String>("net/minecraft/client/renderer/EntityRenderer", "blt"));
-		entryMap.put(CLASS_KEY_ENTITYLIVEINGBASE, new SimpleEntry<String, String>("net/minecraft/entity/EntityLivingBase", "vp"));
+		entryMap.put(CLASS_KEY_ENTITYLIVEINGBASE, new SimpleEntry<String, String>("net/minecraft/entity/LivingEntity", "vp"));
 		//entryMap.put(CLASS_KEY_ENTITYLIVINGRENDERER, new SimpleEntry<String, String>("net/minecraft/client/renderer/entity/RendererLivingEntity", ""));
 		entryMap.put(CLASS_KEY_ENTITY, new SimpleEntry<String, String>("net/minecraft/entity/Entity","vg"));
 		//entryMap.put(CLASS_KEY_ENTITY_PLAYER_SP, new SimpleEntry<String, String>("net/minecraft/client/entity/EntityPlayerSP",""));
-		entryMap.put(CLASS_KEY_ENTITY_PLAYER_MP, new SimpleEntry<String, String>("net/minecraft/entity/player/EntityPlayerMP","oq"));
-		entryMap.put(CLASS_KEY_ENTITY_PLAYER, new SimpleEntry<String, String>("net/minecraft/entity/player/EntityPlayer","aed"));
-		entryMap.put(CLASS_KEY_ENTITY_ITEM, new SimpleEntry<String, String>("net/minecraft/entity/item/EntityItem","acl"));
+		entryMap.put(CLASS_KEY_ENTITY_PLAYER_MP, new SimpleEntry<String, String>("net/minecraft/entity/player/ServerPlayerEntity","oq"));
+		entryMap.put(CLASS_KEY_ENTITY_PLAYER, new SimpleEntry<String, String>("net/minecraft/entity/player/PlayerEntity","aed"));
+		entryMap.put(CLASS_KEY_ENTITY_ITEM, new SimpleEntry<String, String>("net/minecraft/entity/item/ItemEntity","acl"));
 		//entryMap.put(CLASS_KEY_NETHANDLERPLAYSERVER, new SimpleEntry<String, String>("net/minecraft/network/NetHandlerPlayServer",""));
 		//entryMap.put(CLASS_KEY_C03PACKETPLAYER, new SimpleEntry<String, String>("net/minecraft/network/play/client/C03PacketPlayer",""));
 		entryMap.put(CLASS_KEY_WORLD, new SimpleEntry<String, String>("net/minecraft/world/World","amu"));
 		entryMap.put(CLASS_KEY_BLOCK, new SimpleEntry<String, String>("net/minecraft/block/Block","aow"));
 		entryMap.put(CLASS_KEY_BLOCKPOS, new SimpleEntry<String, String>("net/minecraft/util/math/BlockPos","et"));
-		entryMap.put(CLASS_KEY_IBLOCKSTATE, new SimpleEntry<String, String>("net/minecraft/block/state/IBlockState","awt"));
+		entryMap.put(CLASS_KEY_IBLOCKSTATE, new SimpleEntry<String, String>("net/minecraft/block/state/BlockState","awt"));
 		entryMap.put(CLASS_KEY_RENDER_GLOBAL, new SimpleEntry<String, String>("net/minecraft/client/renderer/RenderGlobal","buy"));
 		entryMap.put(CLASS_KEY_ICAMERA, new SimpleEntry<String, String>("net/minecraft/client/renderer/culling/ICamera","bxy"));
 		entryMap.put(CLASS_KEY_BLOCK_BED, new SimpleEntry<String, String>("net/minecraft/block/BlockBed","aou"));
 		entryMap.put(CLASS_KEY_WORLDPROVIDER, new SimpleEntry<String, String>("net/minecraft/world/WorldProvider","aym"));
-		entryMap.put(CLASS_KEY_ENUMHAND, new SimpleEntry<String, String>("net/minecraft/util/EnumHand","ub"));
+		entryMap.put(CLASS_KEY_ENUMHAND, new SimpleEntry<String, String>("net/minecraft/util/Hand","ub"));
 		entryMap.put(CLASS_KEY_ITEMSTACK, new SimpleEntry<String, String>("net/minecraft/item/ItemStack","aip"));
-		entryMap.put(CLASS_KEY_ENUMFACING, new SimpleEntry<String, String>("net/minecraft/util/EnumFacing","fa"));
+		entryMap.put(CLASS_KEY_ENUMFACING, new SimpleEntry<String, String>("net/minecraft/util/Direction","fa"));
 
 
 		//entryMap.put(METHOD_KEY_PROCESSPLAYER, new SimpleEntry<String, String>("processPlayer",""));
@@ -674,7 +674,7 @@ public class ClassTransformer implements IClassTransformer {
 
 			}
 			else
-				AdvancedRocketry.logger.fatal("ASM injection into EntityPlayerMP.onupdate FAILED!");
+				AdvancedRocketry.logger.fatal("ASM injection into ServerPlayerEntity.onupdate FAILED!");
 			return finishInjection(cn);
 		}
 
@@ -719,7 +719,7 @@ public class ClassTransformer implements IClassTransformer {
 
 			}
 			else
-				AdvancedRocketry.logger.fatal("ASM injection into EntityPlayer.onupdate FAILED!");
+				AdvancedRocketry.logger.fatal("ASM injection into PlayerEntity.onupdate FAILED!");
 
 
 			return finishInjection(cn);

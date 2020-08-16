@@ -1,9 +1,8 @@
 package zmaster587.advancedRocketry.network;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
@@ -26,43 +25,39 @@ public class PacketAtmSync extends BasePacket {
 	}
 	
 	@Override
-	public void write(ByteBuf out) {
-		NBTTagCompound nbt = new NBTTagCompound();
+	public void write(PacketBuffer out) {
+		CompoundNBT nbt = new CompoundNBT();
 		
-		nbt.setString("type", type);
-		nbt.setShort("pressure", (short)pressure);
+		nbt.putString("type", type);
+		nbt.putShort("pressure", (short)pressure);
 		PacketBuffer packetBuffer = new PacketBuffer(out);
 		
 		packetBuffer.writeCompoundTag(nbt);
 	}
 
 	@Override
-	public void readClient(ByteBuf in) {
-		NBTTagCompound nbt = new NBTTagCompound();
+	public void readClient(PacketBuffer in) {
+		CompoundNBT nbt = new CompoundNBT();
 		PacketBuffer packetBuffer = new PacketBuffer(in);
 		
-		try {
-			nbt = packetBuffer.readCompoundTag();
-			type = nbt.getString("type");
-			pressure = nbt.getShort("pressure");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		nbt = packetBuffer.readCompoundTag();
+		type = nbt.getString("type");
+		pressure = nbt.getShort("pressure");
 	}
 
 	@Override
-	public void read(ByteBuf in) {
+	public void read(PacketBuffer in) {
 		//Do nothing on server, we don't want hackers now do we ;)
 	}
 
 	@Override
-	public void executeClient(EntityPlayer thePlayer) {
+	public void executeClient(PlayerEntity thePlayer) {
 		AtmosphereHandler.currentAtm = AtmosphereRegister.getInstance().getAtmosphere(type);
 		AtmosphereHandler.currentPressure = pressure;
 	}
 
 	@Override
-	public void executeServer(EntityPlayerMP player) {
+	public void executeServer(ServerPlayerEntity player) {
 		
 	}
 

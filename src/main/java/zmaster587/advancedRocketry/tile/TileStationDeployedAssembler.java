@@ -1,15 +1,14 @@
 package zmaster587.advancedRocketry.tile;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.block.BlockRocketMotor;
@@ -38,7 +37,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 	 */
 	@Override
 	public AxisAlignedBB getRocketPadBounds(World world, BlockPos pos2) {
-		EnumFacing direction = RotatableBlock.getFront(world.getBlockState(pos2)).getOpposite();
+		Direction direction = RotatableBlock.getFront(world.getBlockState(pos2)).getOpposite();
 		int xMin, zMin, xMax, zMax, yMax, yMin;
 		int yCurrent = pos2.getY();
 		int xCurrent = pos2.getX();
@@ -47,44 +46,44 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 		zMax = zMin = zCurrent;
 		int xSize, zSize;
 
-		yMax = ZUtils.getContinuousBlockLength(world, EnumFacing.UP, getPos().add(0,1,0), MAX_SIZE_Y, AdvancedRocketryBlocks.blockStructureTower);
+		yMax = ZUtils.getContinuousBlockLength(world, Direction.UP, getPos().add(0,1,0), MAX_SIZE_Y, AdvancedRocketryBlocks.blockStructureTower);
 
 		//Get min and maximum Z/X bounds
-		if(direction.getFrontOffsetX() != 0) {
+		if(direction.getXOffset() != 0) {
 			xSize = ZUtils.getContinuousBlockLength(world, direction, pos2.add(0, yMax, 0), MAX_SIZE, AdvancedRocketryBlocks.blockStructureTower);
-			zMin = ZUtils.getContinuousBlockLength(world, EnumFacing.NORTH, pos2.add(0, 0, -1), MAX_SIZE, AdvancedRocketryBlocks.blockStructureTower) + 1;
-			zMax = ZUtils.getContinuousBlockLength(world, EnumFacing.SOUTH, pos2.add(0, 0, 1), MAX_SIZE - zMin, AdvancedRocketryBlocks.blockStructureTower);
+			zMin = ZUtils.getContinuousBlockLength(world, Direction.NORTH, pos2.add(0, 0, -1), MAX_SIZE, AdvancedRocketryBlocks.blockStructureTower) + 1;
+			zMax = ZUtils.getContinuousBlockLength(world, Direction.SOUTH, pos2.add(0, 0, 1), MAX_SIZE - zMin, AdvancedRocketryBlocks.blockStructureTower);
 			zSize = zMin + zMax;
 
 			zMin = zCurrent - zMin +1;
 			zMax = zCurrent + zMax;
 
-			if(direction.getFrontOffsetX() > 0) {
+			if(direction.getXOffset() > 0) {
 				xMax = xCurrent + xSize - 1;
 				xMin++;
 			}
 
-			if(direction.getFrontOffsetX() < 0) {
+			if(direction.getXOffset() < 0) {
 				xMin = xCurrent - xSize+1;
 				xMax--;
 			}
 		}
 		else {
 			zSize = ZUtils.getContinuousBlockLength(world, direction, pos2.add(0, yMax, 0), MAX_SIZE, AdvancedRocketryBlocks.blockStructureTower);
-			xMin = ZUtils.getContinuousBlockLength(world, EnumFacing.WEST, pos2.add(-1, 0, 0), MAX_SIZE, AdvancedRocketryBlocks.blockStructureTower) + 1;
-			xMax = ZUtils.getContinuousBlockLength(world, EnumFacing.EAST, pos2.add(1, 0, 0), MAX_SIZE - xMin, AdvancedRocketryBlocks.blockStructureTower);
+			xMin = ZUtils.getContinuousBlockLength(world, Direction.WEST, pos2.add(-1, 0, 0), MAX_SIZE, AdvancedRocketryBlocks.blockStructureTower) + 1;
+			xMax = ZUtils.getContinuousBlockLength(world, Direction.EAST, pos2.add(1, 0, 0), MAX_SIZE - xMin, AdvancedRocketryBlocks.blockStructureTower);
 			xSize = xMin + xMax;
 
 			xMin = xCurrent - xMin +1;
 			xMax = xCurrent + xMax;
 
 
-			if(direction.getFrontOffsetZ() > 0) {
+			if(direction.getZOffset() > 0) {
 				zMax = zCurrent + zSize - 1;
 				zMin++;
 			}
 
-			if(direction.getFrontOffsetZ() < 0) {
+			if(direction.getZOffset() < 0) {
 				zMin = zCurrent - zSize+1;
 				zMax --;
 			}
@@ -121,7 +120,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 
 		//TODO: setRocketDirection
 		rocket.forwardDirection = RotatableBlock.getFront(world.getBlockState(getPos())).getOpposite();
-		rocket.launchDirection = EnumFacing.DOWN;
+		rocket.launchDirection = Direction.DOWN;
 
 		//Change engine direction
 		for(int x = 0; x < storageChunk.getSizeX(); x++) {
@@ -130,17 +129,17 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 
 					BlockPos pos3 = new BlockPos(x,y,z);
 					if(storageChunk.getBlockState(pos3).getBlock() instanceof BlockRocketMotor ) {
-						storageChunk.setBlockState(pos3, storageChunk.getBlockState(pos3).withProperty(BlockFullyRotatable.FACING, rocket.forwardDirection)  );
+						storageChunk.setBlockState(pos3, storageChunk.getBlockState(pos3).with(BlockFullyRotatable.FACING, rocket.forwardDirection)  );
 					}
 				}		
 			}	
 		}
 
-		world.spawnEntity(rocket);
-		NBTTagCompound nbtdata = new NBTTagCompound();
+		world.addEntity(rocket);
+		CompoundNBT nbtdata = new CompoundNBT();
 
-		rocket.writeToNBT(nbtdata);
-		PacketHandler.sendToNearby(new PacketEntity((INetworkEntity)rocket, (byte)0, nbtdata), rocket.world.provider.getDimension(), this.pos, 64);
+		rocket.writeUnlessRemoved(nbtdata);
+		PacketHandler.sendToNearby(new PacketEntity((INetworkEntity)rocket, (byte)0, nbtdata), rocket.world, this.pos, 64);
 
 		stats.reset();
 		this.status = ErrorCodes.UNSCANNED;
@@ -206,7 +205,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 
 						BlockPos currPos = new BlockPos(xCurr, yCurr, zCurr);
 						if(!world.isAirBlock(currPos)) {
-							IBlockState state = world.getBlockState(currPos);
+							BlockState state = world.getBlockState(currPos);
 							Block block = state.getBlock();
 							numBlocks++;
 							//If rocketEngine increaseThrust
@@ -243,8 +242,8 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 								hasGuidance = true;
 
 							if(tile instanceof IFluidHandler) {
-								for(IFluidTankProperties info : ((IFluidHandler)tile).getTankProperties())
-									fluidCapacity += info.getCapacity();
+								for(int i = 0; i < ((IFluidHandler)tile).getTanks(); i++)
+									fluidCapacity += ((IFluidHandler)tile).getTankCapacity(i);
 							}
 						}
 					}

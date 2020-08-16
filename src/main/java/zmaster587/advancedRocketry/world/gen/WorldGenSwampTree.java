@@ -2,7 +2,7 @@ package zmaster587.advancedRocketry.world.gen;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -16,16 +16,16 @@ import java.util.Random;
 
 public class WorldGenSwampTree extends MapGenBase {
 
-	Map<BlockPos, IBlockState> cachedCanopy;
-	Map<BlockPos, IBlockState> cachedRoots;
+	Map<BlockPos, BlockState> cachedCanopy;
+	Map<BlockPos, BlockState> cachedRoots;
 	private final static double arcSize = 16.0;
 	int chancePerChunk;
 
 	public WorldGenSwampTree(int chancePerChunk) {
 		super();
 		chancePerChunk= 10;
-		cachedCanopy = new HashMap<BlockPos, IBlockState>();
-		cachedRoots = new HashMap<BlockPos, IBlockState>();
+		cachedCanopy = new HashMap<BlockPos, BlockState>();
+		cachedRoots = new HashMap<BlockPos, BlockState>();
 		this.chancePerChunk = chancePerChunk;
 		buildCanopy();
 		buildRoots();
@@ -47,17 +47,17 @@ public class WorldGenSwampTree extends MapGenBase {
 				int zz = (int) (xzRadius*Math.sin(Yangle));
 
 				if(!cachedRoots.containsKey(new BlockPos(2 + xx - xOffset, yy - yOffset +2,  zz- zOffset)))
-					cachedRoots.put(  new BlockPos(2 + xx - xOffset, yy - yOffset +2,  zz- zOffset), Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
+					cachedRoots.put(  new BlockPos(2 + xx - xOffset, yy - yOffset +2,  zz- zOffset), Blocks.LOG.getDefaultState().with(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
 				if(!cachedRoots.containsKey(new BlockPos(3 + xx - xOffset, yy - yOffset +2,  zz- zOffset)))
-					cachedRoots.put(new BlockPos(3 + xx - xOffset, yy - yOffset +2,  zz- zOffset), Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
+					cachedRoots.put(new BlockPos(3 + xx - xOffset, yy - yOffset +2,  zz- zOffset), Blocks.LOG.getDefaultState().with(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
 				if(!cachedRoots.containsKey(new BlockPos(2 + xx - xOffset, yy - yOffset +2, 1 + zz- zOffset)))
-					cachedRoots.put( new BlockPos(2 + xx - xOffset, yy - yOffset +2, 1 + zz- zOffset), Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
+					cachedRoots.put( new BlockPos(2 + xx - xOffset, yy - yOffset +2, 1 + zz- zOffset), Blocks.LOG.getDefaultState().with(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
 				if(!cachedRoots.containsKey(new BlockPos(2 + xx - xOffset,  yy - yOffset +3, 1 + zz- zOffset)))
-					cachedRoots.put( new BlockPos(2 + xx - xOffset,  yy - yOffset +3, 1 + zz- zOffset), Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
+					cachedRoots.put( new BlockPos(2 + xx - xOffset,  yy - yOffset +3, 1 + zz- zOffset), Blocks.LOG.getDefaultState().with(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
 				if(!cachedRoots.containsKey(new BlockPos(1 + xx - xOffset  , yy - yOffset +2, zz- zOffset)))
-				cachedRoots.put(new BlockPos(1 + xx - xOffset  , yy - yOffset +2, zz- zOffset), Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
+				cachedRoots.put(new BlockPos(1 + xx - xOffset  , yy - yOffset +2, zz- zOffset), Blocks.LOG.getDefaultState().with(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
 				if(!cachedRoots.containsKey(new BlockPos(2 + xx - xOffset, yy - yOffset +2, zz- zOffset - 1)))
-					cachedRoots.put( new BlockPos(2 + xx - xOffset, yy - yOffset +2, zz- zOffset - 1), Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
+					cachedRoots.put( new BlockPos(2 + xx - xOffset, yy - yOffset +2, zz- zOffset - 1), Blocks.LOG.getDefaultState().with(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
 			}
 		}
 	}
@@ -104,7 +104,7 @@ public class WorldGenSwampTree extends MapGenBase {
 			int numDiag = edgeRadius + 1;
 
 			int meta = 3;
-			IBlockState block = Blocks.LOG.getDefaultState();
+			BlockState block = Blocks.LOG.getDefaultState();
 			int currentEdgeRadius;
 
 			final float SHAPE = 0.1f;
@@ -144,7 +144,7 @@ public class WorldGenSwampTree extends MapGenBase {
 			}
 
 			//Canopy
-			for(Entry<BlockPos, IBlockState> entry : cachedCanopy.entrySet())
+			for(Entry<BlockPos, BlockState> entry : cachedCanopy.entrySet())
 				setBlock( entry.getKey().add(x - radius/2, y + treeHeight, z), entry.getValue(), blocks);
 
 			//Generate Logs
@@ -210,7 +210,7 @@ public class WorldGenSwampTree extends MapGenBase {
 
 			//roots
 
-			for(Entry<BlockPos, IBlockState> entry : cachedRoots.entrySet())
+			for(Entry<BlockPos, BlockState> entry : cachedRoots.entrySet())
 				setBlock( entry.getKey().add( + x - radius/2, y, z), entry.getValue(), blocks);
 		}
 	}
@@ -222,7 +222,7 @@ public class WorldGenSwampTree extends MapGenBase {
 
 	}
 
-	private void setBlock(BlockPos pos, IBlockState block, ChunkPrimer blocks) {
+	private void setBlock(BlockPos pos, BlockState block, ChunkPrimer blocks) {
 		
 		int x = pos.getX();
 		int y = pos.getY();
@@ -234,7 +234,7 @@ public class WorldGenSwampTree extends MapGenBase {
 		blocks.setBlockState(x, y, z, block);
 	}
 	
-	private IBlockState getBlock(BlockPos pos, Block block, ChunkPrimer blocks) {
+	private BlockState getBlock(BlockPos pos, Block block, ChunkPrimer blocks) {
 		int x = pos.getX();
 		int y = pos.getY();
 		int z = pos.getZ();
@@ -257,7 +257,7 @@ public class WorldGenSwampTree extends MapGenBase {
 		int numDiag = edgeRadius + 1;
 
 		int meta = 3;
-		IBlockState block = Blocks.LOG.getDefaultState();
+		BlockState block = Blocks.LOG.getDefaultState();
 		int currentEdgeRadius;
 
 		final float SHAPE = 0.1f;
@@ -330,7 +330,7 @@ public class WorldGenSwampTree extends MapGenBase {
 		}
 
 		//Canopy
-		for(Entry<BlockPos, IBlockState> entry : cachedCanopy.entrySet())
+		for(Entry<BlockPos, BlockState> entry : cachedCanopy.entrySet())
 			world.setBlockState(entry.getKey().add(x - radius/2, y + treeHeight, z), entry.getValue(), 2);
 
 		//Generate Logs
@@ -396,7 +396,7 @@ public class WorldGenSwampTree extends MapGenBase {
 
 		//roots
 
-		for(Entry<BlockPos, IBlockState> entry : cachedRoots.entrySet())
+		for(Entry<BlockPos, BlockState> entry : cachedRoots.entrySet())
 			world.setBlockState( entry.getKey().add( x - radius/2, y , z), entry.getValue(),2);
 
 		return true;

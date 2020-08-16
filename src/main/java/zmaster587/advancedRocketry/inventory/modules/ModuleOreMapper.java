@@ -2,17 +2,22 @@ package zmaster587.advancedRocketry.inventory.modules;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
 import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -20,7 +25,7 @@ import zmaster587.libVulpes.render.RenderHelper;
 
 import java.nio.IntBuffer;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(value=Dist.CLIENT)
 public class ModuleOreMapper extends ModuleBase {
 
 	ClientDynamicTexture texture;
@@ -46,7 +51,7 @@ public class ModuleOreMapper extends ModuleBase {
 	
 	public ModuleOreMapper(int offsetX, int offsetY) {
 		super(offsetX, offsetY);
-		world = Minecraft.getMinecraft().world;
+		world = Minecraft.getInstance().world;
 
 		prevSlot = -1;
 		this.tile = tile;
@@ -54,7 +59,7 @@ public class ModuleOreMapper extends ModuleBase {
 		//xCenter = tile.getBlockCenterX();
 		//zCenter = tile.getBlockCenterZ();
 		
-		prevWorldTickTime = world.getTotalWorldTime();
+		prevWorldTickTime = world.getGameTime();
 		
 		fancyScanOffset = 0;
 	}
@@ -108,17 +113,15 @@ public class ModuleOreMapper extends ModuleBase {
 		texture = new ClientDynamicTexture(Math.max(scanSize/radius,1),Math.max(scanSize/radius,1));
 	}
 	
-	
 	@Override
-	public void renderForeground(int guiOffsetX, int guiOffsetY, int mouseX,
-			int mouseY, float zLevel, GuiContainer gui, FontRenderer font) {
-		super.renderForeground(guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui,
-				font);
+	public void renderForeground(MatrixStack matrix, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY,
+			float zLevel, ContainerScreen<? extends Container> gui, FontRenderer font)  {
+		super.renderForeground(matrix, guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
 		
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		
 		//Draw fancy things
-		GlStateManager.disableTexture2D();
+		GlStateManager.disableTexture();
 		buffer.color(0f, 0.8f, 0f, 1f);
 		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
 		buffer.pos(-21, 82 + fancyScanOffset, (double)zLevel).endVertex();
@@ -143,12 +146,12 @@ public class ModuleOreMapper extends ModuleBase {
 		RenderHelper.renderNorthFace(buffer, (double)zLevel, 173, 82, 194, 141);
 		buffer.finishDrawing();
 		
-		GlStateManager.enableTexture2D();
+		GlStateManager.enableTexture();
 		GlStateManager.disableBlend();
 		
 		
-		if(world.getTotalWorldTime() - prevWorldTickTime >= 1 ) {
-			prevWorldTickTime = world.getTotalWorldTime();
+		if(world.getGameTime() - prevWorldTickTime >= 1 ) {
+			prevWorldTickTime = world.getGameTime();
 			if(fancyScanOffset >= FANCYSCANMAXSIZE)
 				fancyScanOffset = 0;
 			else
@@ -171,9 +174,9 @@ public class ModuleOreMapper extends ModuleBase {
 	}
 	
 	@Override
-	public void renderBackground(GuiContainer gui, int x, int y, int mouseX,
+	public void renderBackground(ContainerScreen<? extends Container> gui, MatrixStack matrix, int x, int y, int mouseX,
 			int mouseY, FontRenderer font) {
-		super.renderBackground(gui, x, y, mouseX, mouseY, font);
+		super.renderBackground(gui, matrix, x, y, mouseX, mouseY, font);
 		
 		//int x = (width - 240) / 2, y = (height - 192) / 2;
 
@@ -193,8 +196,8 @@ public class ModuleOreMapper extends ModuleBase {
 
 		//Render the background then render
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(backdrop);
-		gui.drawTexturedModalRect(x, y, 0, 0, 240, 192);
+		Minecraft.getInstance().getTextureManager().bindTexture(backdrop);
+		gui.func_238474_b_(matrix, x, y, 0, 0, 240, 192);
 
 
 		//NOTE: if the controls are rendered first the display never shows up
@@ -208,19 +211,19 @@ public class ModuleOreMapper extends ModuleBase {
 
 
 		//Render sliders and controls
-		Minecraft.getMinecraft().renderEngine.bindTexture(backdrop);
+		Minecraft.getInstance().getTextureManager().bindTexture(backdrop);
 
-		gui.drawTexturedModalRect(197 + x, 31 + y, 0, 192, 32, 14);
+		gui.func_238474_b_(matrix, 197 + x, 31 + y, 0, 192, 32, 14);
 		
 		//TODO replace with thing
 		//gui.drawVerticalLine((int)(32*VulpineMath.log2(scanSize-1)/8F) + 199 + x, 34 + y, 45 + y, 0xFFC00F0F);
 
-		gui.drawString(font, "Zoom", 198 + x, 22 + y, 0xF0F0F0);
+		font.func_238422_b_(matrix, new StringTextComponent("Zoom"), 198 + x, 22 + y, 0xF0F0F0);
 
-		gui.drawString(font, "X: " + xSelected, 6 + x, 33 + y, 0xF0F0F0);
-		gui.drawString(font, "Z: " + zSelected, 6 + x, 49 + y, 0xF0F0F0);
-		gui.drawString(font, "Value: ", 6 + x, 65 + y, 0xF0F0F0);
-		gui.drawString(font, String.valueOf(mouseValue), 6 + x, 79 + y, 0xF0F0F0);
+		font.func_238422_b_(matrix, new StringTextComponent("X: " + xSelected), 6 + x, 33 + y, 0xF0F0F0);
+		font.func_238422_b_(matrix, new StringTextComponent("Z: " + zSelected), 6 + x, 49 + y, 0xF0F0F0);
+		font.func_238422_b_(matrix, new StringTextComponent("Value: "), 6 + x, 65 + y, 0xF0F0F0);
+		font.func_238422_b_(matrix, new StringTextComponent(String.valueOf(mouseValue)), 6 + x, 79 + y, 0xF0F0F0);
 	}
 	
 }

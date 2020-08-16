@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.api;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 
@@ -36,7 +36,7 @@ public class SatelliteRegistry {
 	public static SatelliteProperties getSatelliteProperty(ItemStack stack) {
 		
 		for(ItemStack keyStack : itemPropertiesRegistry.keySet()) {
-			if(keyStack.getItem() == stack.getItem() && ( !keyStack.getHasSubtypes() || keyStack.getItemDamage() == stack.getItemDamage()) ) {
+			if(keyStack.isItemEqual(stack)) {
 				return itemPropertiesRegistry.get(keyStack);
 			}
 		}
@@ -72,7 +72,7 @@ public class SatelliteRegistry {
 	 * @param nbt NBT to create a satellite Object from
 	 * @return Satellite constructed from the passed NBT
 	 */
-	public static SatelliteBase createFromNBT(NBTTagCompound nbt) {
+	public static SatelliteBase createFromNBT(CompoundNBT nbt) {
 		SatelliteBase satellite = getSatallite(nbt.getString("dataType"));
 
 		satellite.readFromNBT(nbt);

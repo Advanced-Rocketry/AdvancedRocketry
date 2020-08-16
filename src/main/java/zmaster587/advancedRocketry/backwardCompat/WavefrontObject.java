@@ -4,11 +4,17 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.resources.IResource;
+import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.client.renderer.vertex.VertexFormatElement;
+import net.minecraft.resources.IResource;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
 import org.lwjgl.opengl.GL11;
+
+import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,13 +51,16 @@ public class WavefrontObject
     private GroupObject currentGroupObject;
     private String fileName;
     
+    private static final VertexFormat POS_TEX_NORMAL = new VertexFormat(ImmutableList.<VertexFormatElement>builder().add(DefaultVertexFormats.POSITION_3F).add(DefaultVertexFormats.TEX_2F).add(DefaultVertexFormats.NORMAL_3B).add(DefaultVertexFormats.PADDING_1B).build());
+    public static final VertexFormat POS_NORMAL = new VertexFormat(ImmutableList.<VertexFormatElement>builder().add(DefaultVertexFormats.POSITION_3F).add(DefaultVertexFormats.NORMAL_3B).add(DefaultVertexFormats.PADDING_1B).build());
+    
     public WavefrontObject(ResourceLocation resource) throws ModelFormatException
     {
         this.fileName = resource.toString();
 
         try
         {
-            IResource res = Minecraft.getMinecraft().getResourceManager().getResource(resource);
+            IResource res = Minecraft.getInstance().getResourceManager().getResource(resource);
             loadObjModel(res.getInputStream());
         }
         catch (IOException e)
@@ -109,7 +118,8 @@ public class WavefrontObject
                     {
                         textureCoordinates.add(textureCoordinate);
                     }
-                    currentGroupObject.drawMode = DefaultVertexFormats.POSITION_TEX_NORMAL;
+                    
+                    currentGroupObject.drawMode = POS_TEX_NORMAL;
                 }
                 else if (currentLine.startsWith("f "))
                 {
@@ -137,7 +147,7 @@ public class WavefrontObject
                             groupObjects.add(currentGroupObject);
                         }
                     }
-                    group.drawMode = DefaultVertexFormats.POSITION_NORMAL;
+                    group.drawMode = POS_NORMAL;
                     
                     currentGroupObject = group;
                 }
@@ -171,18 +181,18 @@ public class WavefrontObject
         }
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(value=Dist.CLIENT)
     public void renderAll()
     {
         BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
         if (currentGroupObject != null)
         {
-        	buffer.begin(currentGroupObject.glDrawingMode, DefaultVertexFormats.POSITION_TEX_NORMAL);
+        	buffer.begin(currentGroupObject.glDrawingMode, POS_TEX_NORMAL);
         }
         else
         {
-        	buffer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_NORMAL);
+        	buffer.begin(GL11.GL_TRIANGLES, POS_TEX_NORMAL);
         }
         
         tessellateAll(buffer);
@@ -190,8 +200,8 @@ public class WavefrontObject
         Tessellator.getInstance().draw();
     }
 
-    @SideOnly(Side.CLIENT)
-    public void tessellateAll(BufferBuilder tessellator)
+    @OnlyIn(value=Dist.CLIENT)
+    public void tessellateAll(IVertexBuilder tessellator)
     {
         for (GroupObject groupObject : groupObjects)
         {
@@ -199,23 +209,8 @@ public class WavefrontObject
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public void renderOnly(String... groupNames)
-    {
-        for (GroupObject groupObject : groupObjects)
-        {
-            for (String groupName : groupNames)
-            {
-                if (groupName.equalsIgnoreCase(groupObject.name))
-                {
-                    groupObject.render();
-                }
-            }
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void tessellateOnly(BufferBuilder buffer, String... groupNames) {
+    @OnlyIn(value=Dist.CLIENT)
+    public void renderOnly(IVertexBuilder buffer, String... groupNames) {
         for (GroupObject groupObject : groupObjects)
         {
             for (String groupName : groupNames)
@@ -228,20 +223,8 @@ public class WavefrontObject
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public void renderPart(String partName)
-    {
-        for (GroupObject groupObject : groupObjects)
-        {
-            if (partName.equalsIgnoreCase(groupObject.name))
-            {
-                groupObject.render();
-            }
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void tessellatePart(BufferBuilder buffer, String partName) {
+    @OnlyIn(value=Dist.CLIENT)
+    public void tessellatePart(IVertexBuilder buffer, String partName) {
         for (GroupObject groupObject : groupObjects)
         {
             if (partName.equalsIgnoreCase(groupObject.name))
@@ -251,28 +234,8 @@ public class WavefrontObject
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public void renderAllExcept(String... excludedGroupNames)
-    {
-        for (GroupObject groupObject : groupObjects)
-        {
-            boolean skipPart=false;
-            for (String excludedGroupName : excludedGroupNames)
-            {
-                if (excludedGroupName.equalsIgnoreCase(groupObject.name))
-                {
-                    skipPart=true;
-                }
-            }
-            if(!skipPart)
-            {
-                groupObject.render();
-            }
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void tessellateAllExcept(BufferBuilder buffer, String... excludedGroupNames)
+    @OnlyIn(value=Dist.CLIENT)
+    public void tessellateAllExcept(IVertexBuilder buffer, String... excludedGroupNames)
     {
         boolean exclude;
         for (GroupObject groupObject : groupObjects)

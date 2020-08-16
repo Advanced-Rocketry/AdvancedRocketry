@@ -33,7 +33,7 @@ public class FxElectricArc  extends Particle {
 			float rotX, float rotXZ, float rotZ,
 			float rotYZ, float rotXY) {
 
-		Minecraft.getMinecraft().getTextureManager().bindTexture(icon);
+		Minecraft.getInstance().getTextureManager().bindTexture(icon);
 
 		float x = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)x1 - interpPosX);
 		float y = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)x1 - interpPosY);

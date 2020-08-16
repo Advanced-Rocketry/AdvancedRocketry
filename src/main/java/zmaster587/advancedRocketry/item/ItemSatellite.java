@@ -1,9 +1,10 @@
 package zmaster587.advancedRocketry.item;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
@@ -16,12 +17,16 @@ import java.util.List;
 
 public class ItemSatellite extends ItemIdWithName {
 
+	public ItemSatellite(Properties properties) {
+		super(properties);
+	}
+
 	@Deprecated
 	public SatelliteProperties getSatellite(ItemStack stack) {
 
 		//return getSatelliteProperties(stack);
-		if(stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
+		if(stack.hasTag()) {
+			CompoundNBT nbt = stack.getTag();
 
 			//TODO: check
 			SatelliteProperties satellite = new SatelliteProperties();
@@ -33,7 +38,7 @@ public class ItemSatellite extends ItemIdWithName {
 	}
 
 	public SatelliteProperties getSatelliteProperties(ItemStack stackIn) {
-		if(stackIn.hasTagCompound()) {
+		if(stackIn.hasTag()) {
 			int powerStorage = 0, powerGeneration = 0, maxData = 0;
 			EmbeddedInventory inv = readInvFromNBT(stackIn);
 
@@ -65,23 +70,23 @@ public class ItemSatellite extends ItemIdWithName {
 
 	public EmbeddedInventory readInvFromNBT(ItemStack stackIn) {
 		EmbeddedInventory inv = new EmbeddedInventory(7);
-		if(!stackIn.hasTagCompound() || !stackIn.getTagCompound().hasKey("inv"))
+		if(!stackIn.hasTag() || !stackIn.getTag().contains("inv"))
 			return inv;
 
-		inv.readFromNBT(stackIn.getTagCompound().getCompoundTag("inv"));
+		inv.readFromNBT(stackIn.getTag().getCompound("inv"));
 		return inv;
 	}
 
 	public void writeInvToNBT(ItemStack stackIn, EmbeddedInventory inv) {
-		NBTTagCompound nbt = new NBTTagCompound();
-		if(!stackIn.hasTagCompound())
-			stackIn.setTagCompound(nbt);
+		CompoundNBT nbt = new CompoundNBT();
+		if(!stackIn.hasTag())
+			stackIn.setTag(nbt);
 		else
-			nbt = stackIn.getTagCompound();
+			nbt = stackIn.getTag();
 
-		NBTTagCompound tag = new NBTTagCompound(); 
-		inv.writeToNBT(tag);
-		nbt.setTag("inv", tag);
+		CompoundNBT tag = new CompoundNBT(); 
+		inv.write(tag);
+		nbt.put("inv", tag);
 	}
 
 	public void setSatellite(ItemStack stack, SatelliteProperties satellite) {
@@ -89,11 +94,11 @@ public class ItemSatellite extends ItemIdWithName {
 		SatelliteBase satellite2 = SatelliteRegistry.getSatallite(satellite.getSatelliteType());
 		if(satellite2 != null) {
 				
-			NBTTagCompound nbt;
-			if(stack.hasTagCompound())
-				nbt = stack.getTagCompound();
+			CompoundNBT nbt;
+			if(stack.hasTag())
+				nbt = stack.getTag();
 			else
-				nbt = new NBTTagCompound();
+				nbt = new CompoundNBT();
 
 			SatelliteProperties internalProps = getSatelliteProperties(stack);
 			if(internalProps != null) {
@@ -103,12 +108,12 @@ public class ItemSatellite extends ItemIdWithName {
 			}
 			
 			satellite.writeToNBT(nbt);
-			stack.setTagCompound(nbt);
+			stack.setTag(nbt);
 
 			setName(stack, satellite2.getName());
 		}
 		else
-			stack.setTagCompound(null);
+			stack.setTag(null);
 
 	}
 
@@ -122,32 +127,32 @@ public class ItemSatellite extends ItemIdWithName {
 		if(properties != null) {
 			int dataStorage, powerGeneration, powerStorage;
 
-			list.add(getName(stack));
-			list.add("ID: " + properties.getId());
+			list.add(new StringTextComponent(getName(stack)));
+			list.add(new StringTextComponent("ID: " + properties.getId()));
 
 			if(SatelliteProperties.Property.BATTERY.isOfType(properties.getPropertyFlag())) {
 				if( (powerStorage = properties.getPowerStorage()) > 0)
-					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatellite.pwr") + powerStorage);
+					list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.itemsatellite.pwr") + powerStorage));
 				else
-					list.add(ChatFormatting.RED + LibVulpes.proxy.getLocalizedString("msg.itemsatellite.nopwr"));
+					list.add(new StringTextComponent(TextFormatting.RED + LibVulpes.proxy.getLocalizedString("msg.itemsatellite.nopwr")));
 			}
 
 			if(SatelliteProperties.Property.POWER_GEN.isOfType(properties.getPropertyFlag())) {
 				if( ( powerGeneration=properties.getPowerGeneration() ) > 0)
-					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatellite.pwrgen") + powerGeneration);
+					list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.itemsatellite.pwrgen") + powerGeneration));
 				else
-					list.add(ChatFormatting.RED + LibVulpes.proxy.getLocalizedString("msg.itemsatellite.nopwrgen"));
+					list.add(new StringTextComponent(TextFormatting.RED + LibVulpes.proxy.getLocalizedString("msg.itemsatellite.nopwrgen")));
 			}
 
 			if(SatelliteProperties.Property.DATA.isOfType(properties.getPropertyFlag())) {
 				if( (dataStorage = properties.getMaxDataStorage()) > 0 ) 
-					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatellite.data") + ZUtils.formatNumber(dataStorage));
+					list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.itemsatellite.data") + ZUtils.formatNumber(dataStorage)));
 				else
-					list.add(ChatFormatting.YELLOW + LibVulpes.proxy.getLocalizedString("msg.itemsatellite.nodata"));
+					list.add(new StringTextComponent(TextFormatting.YELLOW + LibVulpes.proxy.getLocalizedString("msg.itemsatellite.nodata")));
 			}
 		}
 		else {
-			list.add(ChatFormatting.RED + LibVulpes.proxy.getLocalizedString("msg.itemsatellite.empty"));
+			list.add(new StringTextComponent(TextFormatting.RED + LibVulpes.proxy.getLocalizedString("msg.itemsatellite.empty")));
 		}
 	}
 }

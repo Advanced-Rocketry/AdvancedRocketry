@@ -1,9 +1,10 @@
 package zmaster587.advancedRocketry.capability;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 
@@ -16,16 +17,11 @@ public class TankCapabilityItemStack implements ICapabilityProvider {
 	public TankCapabilityItemStack(ItemStack stack, int capacity) {
 		fluidHandler = new FluidHandlerItemStack(stack, capacity);
 	}
-	
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		return capability == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY;
-	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		if (hasCapability(capability, facing)) {
-			return CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY.cast(fluidHandler);
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY) {
+			return LazyOptional.of(() -> CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).cast();
 		}
 		return null;
 	}

@@ -1,14 +1,15 @@
 package zmaster587.advancedRocketry.network;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.libVulpes.network.BasePacket;
 
 import java.io.IOException;
@@ -17,12 +18,12 @@ public class PacketSatellite extends BasePacket {
 
 	SatelliteBase machine;
 
-	NBTTagCompound nbt;
+	CompoundNBT nbt;
 
 	byte packetId;
 
 	public PacketSatellite() {
-		nbt = new NBTTagCompound();
+		nbt = new CompoundNBT();
 	};
 
 	public PacketSatellite(SatelliteBase machine) {
@@ -32,46 +33,42 @@ public class PacketSatellite extends BasePacket {
 
 
 	@Override
-	public void write(ByteBuf outline) {
+	public void write(PacketBuffer outline) {
 		PacketBuffer packetBuffer = new PacketBuffer(outline);
-		NBTTagCompound nbt = new NBTTagCompound();
+		CompoundNBT nbt = new CompoundNBT();
 		machine.writeToNBT(nbt);
 		
 		packetBuffer.writeCompoundTag(nbt);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void readClient(ByteBuf in) {
+	@OnlyIn(value=Dist.CLIENT)
+	public void readClient(PacketBuffer in) {
 		
 		PacketBuffer packetBuffer = new PacketBuffer(in);
-		NBTTagCompound nbt;
+		CompoundNBT nbt;
 		
-		//TODO: error handling
-		try {
-			nbt = packetBuffer.readCompoundTag();
-			SatelliteBase satellite = SatelliteRegistry.createFromNBT(nbt);
-			
-			zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId()).addSatallite(satellite);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return;
-		}
+		nbt = packetBuffer.readCompoundTag();
+		SatelliteBase satellite = SatelliteRegistry.createFromNBT(nbt);
+		
+		DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId().get()).addSatallite(satellite);
 	}
 
 	@Override
-	public void read(ByteBuf in) {
+	public void read(PacketBuffer in) {
 		//Should never happen
 		
 	}
 
-	public void executeClient(EntityPlayer player) {
+	@Override
+	public void executeClient(PlayerEntity player) {
+	}
+	
+	@Override
+	public void executeServer(ServerPlayerEntity player) {
 	}
 
-	public void executeServer(EntityPlayerMP player) {
-	}
-
-	public void execute(EntityPlayer player, Side side) {
+	public void execute(PlayerEntity player, Dist side) {
 	}
 
 }

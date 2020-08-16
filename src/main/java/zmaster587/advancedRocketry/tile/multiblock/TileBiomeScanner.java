@@ -1,13 +1,14 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -25,6 +26,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class TileBiomeScanner extends TileMultiPowerConsumer {
+
+	public TileBiomeScanner() {
+		super(AdvancedRocketryTileEntityType.TILE_BIOME_SCANNER);
+	}
 
 	private static final Object[][][] structure = new Object[][][]{
 
@@ -59,7 +64,7 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> list = new LinkedList<ModuleBase>();//super.getModules(ID, player);
 
 		boolean suitable = true;
@@ -88,7 +93,7 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 
 
 					int i = 0;
-					if(properties.getId() == 0) {
+					if(properties.getId() == DimensionManager.overworldProperties.getId()) {
 						Iterator<Biome> itr = Biome.REGISTRY.iterator();
 						while (itr.hasNext()) {
 							Biome biome = itr.next();
@@ -109,7 +114,7 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 				list.add(pan);
 			}
 			else
-				list.add(new ModuleText(32, 16, ChatFormatting.OBFUSCATED + "Foxes, that is all", 0x202020));
+				list.add(new ModuleText(32, 16, TextFormatting.OBFUSCATED + "Foxes, that is all", 0x202020));
 		}
 
 		return list;

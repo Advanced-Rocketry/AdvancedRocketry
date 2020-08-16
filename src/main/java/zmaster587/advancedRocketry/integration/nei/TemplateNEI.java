@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.integration.nei;
 /*
 import static codechicken.lib.gui.GuiDraw.changeTexture;
-import static codechicken.lib.gui.GuiDraw.drawTexturedModalRect;
+import static codechicken.lib.gui.GuiDraw.func_238474_b_;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -100,7 +100,7 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 	}
 
 	/*@Override
-	    public List<Class<? extends GuiContainer>> getRecipeTransferRectGuis() {
+	    public List<Class<? extends ContainerScreen<? extends Container>>> getRecipeTransferRectGuis() {
 	    	List list= new LinkedList();
 	    	list.add(GuiModular.class);
 	    	return list;
@@ -195,7 +195,7 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 	{
 		GL11.glColor4f(1, 1, 1, 1);
 		changeTexture(getGuiTexture());
-		drawTexturedModalRect(3,3, 7, 16, 163, 55);
+		func_238474_b_(3,3, 7, 16, 163, 55);
 	}
 
 	@Override
@@ -210,8 +210,8 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 	public void drawExtras(int recipe)
 	{
 		ProgressBarImage progressBar = getProgressBar();
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureResources.progressBars);
-		drawTexturedModalRect(65, 3, progressBar.getBackOffsetX(), progressBar.getBackOffsetY(), progressBar.getBackWidth(), progressBar.getBackHeight());
+		Minecraft.getInstance().getTextureManager().bindTexture(TextureResources.progressBars);
+		func_238474_b_(65, 3, progressBar.getBackOffsetX(), progressBar.getBackOffsetY(), progressBar.getBackWidth(), progressBar.getBackHeight());
 
 
 		drawProgressBar(65 + progressBar.getInsetX(), 3 +  + progressBar.getInsetY(), progressBar.getForeOffsetX(), progressBar.getForeOffsetY(), progressBar.getForeWidth(),  progressBar.getForeHeight(), 50, progressBar.getDirection().getRotation(ForgeDirection.SOUTH).ordinal());

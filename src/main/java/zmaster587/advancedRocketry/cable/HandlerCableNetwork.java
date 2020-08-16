@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.cable;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import zmaster587.advancedRocketry.tile.cables.TilePipe;
 
 import java.util.Hashtable;
@@ -18,7 +18,7 @@ public class HandlerCableNetwork {
 
 		FileInputStream stream = new FileInputStream(saveDir + FILENAME);
 
-		NBTTagCompound nbt = CompressedStreamTools.readCompressed(stream);
+		CompoundNBT nbt = CompressedStreamTools.readCompressed(stream);
 
 		stream.close();
 
@@ -28,7 +28,7 @@ public class HandlerCableNetwork {
 
 			String key = (String)iterator.next();
 
-			NBTTagCompound subNbt = nbt.getCompoundTag(key);
+			CompoundNBT subNbt = nbt.getCompound(key);
 
 			CableNetwork net = CableNetwork.initWithID(Integer.parseInt(key));
 			net.readFromNBT(subNbt);
@@ -37,12 +37,12 @@ public class HandlerCableNetwork {
 
 	public static void saveNetworksToFile() throws IOException {
 
-		NBTTagCompound nbt = new NBTTagCompound();
+		CompoundNBT nbt = new CompoundNBT();
 		for(Entry<Integer,CableNetwork> set : networks.entrySet()) {
 
-			NBTTagCompound subNbt = new NBTTagCompound();
+			CompoundNBT subNbt = new CompoundNBT();
 			set.getValue().writeToNBT(subNbt);
-			nbt.setTag(String.valueOf(set.getKey()), subNbt);
+			nbt.put(String.valueOf(set.getKey()), subNbt);
 		}
 
 		String saveDir = MinecraftServer.getServer().getActiveAnvilConverter().getSaveLoader(MinecraftServer.getServer().getFolderName(), false).getWorldDirectoryName();
@@ -93,7 +93,7 @@ public class HandlerCableNetwork {
 	 * @param tile The source to be added
 	 * @param dir Direction of the source from the pipe
 	 */
-	public void addSource(TilePipe tilePipe, TileEntity tile, EnumFacing dir) {
+	public void addSource(TilePipe tilePipe, TileEntity tile, Direction dir) {
 		networks.get(tilePipe.getNetworkID()).addSource(tile, dir.getOpposite());
 	}
 
@@ -103,7 +103,7 @@ public class HandlerCableNetwork {
 	 * @param tile The sink to be added
 	 * @param dir Direction of the sink from the pipe
 	 */
-	public void addSink(TilePipe tilePipe, TileEntity tile, EnumFacing dir) {
+	public void addSink(TilePipe tilePipe, TileEntity tile, Direction dir) {
 		networks.get(tilePipe.getNetworkID()).addSink(tile, dir.getOpposite());
 	}
 	

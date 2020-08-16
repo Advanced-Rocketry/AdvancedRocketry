@@ -1,17 +1,19 @@
 package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AreaBlob;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.tile.TileSeal;
 import zmaster587.libVulpes.util.HashedBlockPosition;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -20,7 +22,7 @@ public class BlockSeal extends Block {
 
 	private HashMap<HashedBlockPosition,BlobHandler> blobList = new HashMap<HashedBlockPosition,BlobHandler>();
 	
-	public BlockSeal(Material materialIn) {
+	public BlockSeal(Properties materialIn) {
 		super(materialIn);
 	}
 	
@@ -29,48 +31,47 @@ public class BlockSeal extends Block {
 	}
 	
 	@Override
-	public boolean hasTileEntity(IBlockState state) {
+	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
 	
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new TileSeal();
 	}
 	
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-		super.breakBlock(worldIn, pos, state);
-		
-		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension());
+	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(ZUtils.getDimensionId(worldIn));
 		if(atmhandler == null)
 			return;
 		
-		for(EnumFacing dir : EnumFacing.VALUES) {
+		for(Direction dir : Direction.values()) {
 			BlobHandler handler = blobList.remove(new HashedBlockPosition(pos.offset(dir)));
 			if (handler != null) atmhandler.unregisterBlob(handler);
 			
 			fireCheckAllDirections(worldIn, pos.offset(dir), dir);
 		}
+		super.onReplaced(state, worldIn, pos, newState, isMoving);
 	}
 	
 	public void removeSeal(World worldIn, BlockPos pos) {
-		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension());
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(ZUtils.getDimensionId(worldIn));
 		if(atmhandler == null)
 			return;
 		
-		for(EnumFacing dir : EnumFacing.VALUES) {
+		for(Direction dir : Direction.values()) {
 			BlobHandler handler = blobList.remove(new HashedBlockPosition(pos.offset(dir)));
 			if (handler != null) atmhandler.unregisterBlob(handler);
 		}
 	}
 	
-	public void clearBlob(World worldIn, BlockPos pos, IBlockState state) {
-		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension());
+	public void clearBlob(World worldIn, BlockPos pos, BlockState state) {
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(ZUtils.getDimensionId(worldIn));
 		if(atmhandler == null)
 			return;
 		
-		for(EnumFacing dir : EnumFacing.VALUES) {
+		for(Direction dir : Direction.values()) {
 			BlobHandler handler = blobList.remove(new HashedBlockPosition(pos.offset(dir)));
 			if (handler != null) atmhandler.unregisterBlob(handler);
 			
@@ -79,18 +80,18 @@ public class BlockSeal extends Block {
 	}
 
 	@Override
-	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
-		super.onBlockAdded(worldIn, pos, state);
+	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		super.onBlockAdded(state, worldIn, pos, oldState, isMoving);
 
 		checkCompleteness(worldIn, pos);
 		
-		for(EnumFacing dir : EnumFacing.VALUES) {
+		for(Direction dir : Direction.values()) {
 			fireCheckAllDirections(worldIn, pos.offset(dir), dir);
 		}
 	}
 	
-	public void fireCheckAllDirections(World worldIn, BlockPos startBlock, EnumFacing directionFrom) {
-		for(EnumFacing dir : EnumFacing.VALUES) {
+	public void fireCheckAllDirections(World worldIn, BlockPos startBlock, Direction directionFrom) {
+		for(Direction dir : Direction.values()) {
 			if(directionFrom.getOpposite() != dir)
 				fireCheck(worldIn, startBlock.offset(dir));
 		}
@@ -105,7 +106,7 @@ public class BlockSeal extends Block {
 	}
 
 	private boolean checkCompleteness(World worldIn, BlockPos pos) {
-		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension());
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(ZUtils.getDimensionId(worldIn));
 		if(atmhandler == null)
 			return false;
 		

@@ -3,9 +3,9 @@ package zmaster587.advancedRocketry.world.gen;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockSapling;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
@@ -81,10 +81,10 @@ public class WorldGenAlienTree extends WorldGenAbstractTree {
 			}
 			else //Actually generate tree
 			{
-				IBlockState state = world.getBlockState(new BlockPos(x, y - 1, z));
+				BlockState state = world.getBlockState(new BlockPos(x, y - 1, z));
 				Block block2 = state.getBlock();
 
-				boolean isSoil = block2.canSustainPlant(state, world, new BlockPos(x, y - 1, z), EnumFacing.UP, (BlockSapling)Blocks.SAPLING);
+				boolean isSoil = block2.canSustainPlant(state, world, new BlockPos(x, y - 1, z), Direction.UP, (BlockSapling)Blocks.SAPLING);
 				if (isSoil && y < 256 - treeHeight - 1)
 				{
 					//Throw events
@@ -104,7 +104,7 @@ public class WorldGenAlienTree extends WorldGenAbstractTree {
 					{
 						trunkY = y + j2;
 
-						IBlockState state1 = world.getBlockState(new BlockPos(trunkX, trunkY, trunkZ));
+						BlockState state1 = world.getBlockState(new BlockPos(trunkX, trunkY, trunkZ));
 						Block block1 = state1.getBlock();
 
 						if (world.isAirBlock(new BlockPos(trunkX, trunkY, trunkZ)) || block1.isLeaves(state1, world, new BlockPos(trunkX, trunkY, trunkZ)))
@@ -219,7 +219,7 @@ public class WorldGenAlienTree extends WorldGenAbstractTree {
 	private void generatePod(World world, Random random, int intitalDist, int x, int y, int z, int dirX, int dirZ) {
 		int branchLength = random.nextInt(5) + intitalDist;
 
-		EnumFacing direction = EnumFacing.getFront((dirX != 0 && dirZ != 0) ? Math.abs(dirX)*4 : Math.abs(dirX)*4 + Math.abs(dirZ)*8);
+		Direction direction = Direction.getFront((dirX != 0 && dirZ != 0) ? Math.abs(dirX)*4 : Math.abs(dirX)*4 + Math.abs(dirZ)*8);
 
 		boolean flag = true;
 
@@ -247,14 +247,14 @@ public class WorldGenAlienTree extends WorldGenAbstractTree {
 
 	}
 
-	private boolean replaceBlockWithWood(World world, int x, int y, int z, EnumFacing direction) {
+	private boolean replaceBlockWithWood(World world, int x, int y, int z, Direction direction) {
 		BlockPos pos = new BlockPos(x,y,z);
-		IBlockState state = world.getBlockState(pos);
+		BlockState state = world.getBlockState(pos);
 		
 		Block block = state.getBlock();
 
 		if( block.isReplaceable(world, pos) ||  block.isLeaves(state, world, pos) || block == AdvancedRocketryBlocks.blockAlienWood || block == AdvancedRocketryBlocks.blockAlienSapling) {
-			this.setBlockAndNotifyAdequately(world, pos, AdvancedRocketryBlocks.blockAlienWood.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.fromFacingAxis(direction.getAxis())));
+			this.setBlockAndNotifyAdequately(world, pos, AdvancedRocketryBlocks.blockAlienWood.getDefaultState().with(BlockLog.LOG_AXIS, BlockLog.EnumAxis.fromFacingAxis(direction.getAxis())));
 			return true;
 		}
 		else

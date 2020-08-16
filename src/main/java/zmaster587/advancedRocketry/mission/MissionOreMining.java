@@ -3,10 +3,10 @@ package zmaster587.advancedRocketry.mission;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import zmaster587.advancedRocketry.AdvancedRocketry;
@@ -19,6 +19,7 @@ import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.advancedRocketry.util.AsteroidSmall.StackEntry;
 import zmaster587.libVulpes.util.HashedBlockPosition;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -76,7 +77,8 @@ public class MissionOreMining extends MissionResourceCollection {
 
 							//if(entry.stack.getMaxStackSize() < entry.stack.stackSize) {
 							for(int i = 0; i < entry.stack.getCount()/entry.stack.getMaxStackSize(); i++) {
-								ItemStack stack2 = new ItemStack(entry.stack.getItem(), entry.stack.getMaxStackSize(), entry.stack.getMetadata());
+								ItemStack stack2 = entry.stack.copy(); 
+								stack2.setCount(stack2.getMaxStackSize());
 								totalStacksList.add(stack2);
 							}
 							//}
@@ -88,8 +90,11 @@ public class MissionOreMining extends MissionResourceCollection {
 						totalStacksList.toArray(stacks);
 
 						for(int i = 0,  g = 0; i < rocketStorage.getInventoryTiles().size(); i++) {
-							if(rocketStorage.getInventoryTiles().get(i).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP)) {
-								IItemHandler capabilityItemHandle = rocketStorage.getInventoryTiles().get(i).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+							LazyOptional<IItemHandler> capabilityItemHandleOpt = rocketStorage.getInventoryTiles().get(i).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP);
+
+							if(capabilityItemHandleOpt.isPresent())
+							{
+								IItemHandler capabilityItemHandle = capabilityItemHandleOpt.orElse(null);
 
 								for(int offset = 0; offset < capabilityItemHandle.getSlots() && g < stacks.length; offset++, g++) {
 									if(capabilityItemHandle.getStackInSlot(offset).isEmpty())
@@ -112,13 +117,13 @@ public class MissionOreMining extends MissionResourceCollection {
 		}
 
 		rocketStorage.getGuidanceComputer().setInventorySlotContents(0, ItemStack.EMPTY);
-		EntityRocket rocket = new EntityRocket(DimensionManager.getWorld(launchDimension), rocketStorage, rocketStats, x, 999, z);
+		EntityRocket rocket = new EntityRocket(ZUtils.getWorld(launchDimension), rocketStorage, rocketStats, x, 999, z);
 
-		World world = DimensionManager.getWorld(launchDimension);
-		world.spawnEntity(rocket);
+		World world = ZUtils.getWorld(launchDimension);
+		world.addEntity(rocket);
 		rocket.setInOrbit(true);
 		rocket.setInFlight(true);
-		rocket.motionY = -1.0;
+		rocket.setMotion(rocket.getMotion().x, -1.0, rocket.getMotion().z);
 
 		for(HashedBlockPosition i : infrastructureCoords) {
 			TileEntity tile = world.getTileEntity(new BlockPos(i.x, i.y, i.z));

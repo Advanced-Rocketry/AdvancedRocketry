@@ -1,12 +1,20 @@
 package zmaster587.advancedRocketry.tile.station;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
@@ -19,6 +27,9 @@ import zmaster587.advancedRocketry.entity.EntityUIStar;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
+import zmaster587.libVulpes.inventory.ContainerModular;
+import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
@@ -29,7 +40,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TilePlanetaryHologram extends TileEntity implements ITickable,IButtonInventory, IModularInventory, ISliderBar, INetworkMachine {
+public class TilePlanetaryHologram extends TileEntity implements ITickableTileEntity ,IButtonInventory, IModularInventory, ISliderBar, INetworkMachine {
 
 	private List<EntityUIPlanet> entities;
 	private List<EntityUIStar> starEntities;
@@ -41,7 +52,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 
 	private ModuleRedstoneOutputButton redstoneControl;
 	private RedstoneState state;
-	private int selectedId;
+	private ResourceLocation selectedId;
 	private float onTime;
 	private ModuleText targetGrav;
 	private float size;
@@ -51,6 +62,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 	private boolean stellarMode;
 
 	public TilePlanetaryHologram() {
+		super(AdvancedRocketryTileEntityType.TILE_HOLOGRAM);
 		entities = new LinkedList<EntityUIPlanet>();
 		starEntities = new LinkedList<EntityUIStar>();
 		targetGrav = new ModuleText(6, 45, LibVulpes.proxy.getLocalizedString("msg.planetholo.size"), 0x202020);
@@ -59,24 +71,24 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 		selectedId = Constants.INVALID_PLANET;
 		onTime = 1f;
 		size = 0.02f;
-		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 1, "", this);
+		redstoneControl = (ModuleRedstoneOutputButton) new ModuleRedstoneOutputButton(174, 4, "", this).setAdditionalData(1);
 		state = RedstoneState.OFF;
 		redstoneControl.setRedstoneState(state);
 	}
 
 	@Override
-	public void invalidate() {
-		super.invalidate();
+	public void remove() {
+		super.remove();
 		cleanup();
 	}
 
 	private void cleanup() {
 		for(EntityUIPlanet planet : entities) {
-			planet.setDead();
+			planet.remove();
 		}
 		entities.clear();
 
-		for(EntityUIStar star : starEntities) star.setDead();
+		for(EntityUIStar star : starEntities) star.remove();
 		starEntities.clear();
 
 		selectedPlanet = null;
@@ -86,22 +98,22 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 
 
 		if(currentStar != null) {
-			currentStar.setDead();
+			currentStar.remove();
 			currentStar = null;
 		}
 		if(backButton != null) {
-			backButton.setDead();
+			backButton.remove();
 			backButton = null;
 		}
 	}
 
 	public boolean isEnabled() {
-		boolean powered = world.isBlockIndirectlyGettingPowered(getPos()) > 0;
+		boolean powered = world.getRedstonePowerFromNeighbors(getPos()) > 0;
 		return (!powered && state == RedstoneState.INVERTED) || (powered && state == RedstoneState.ON) || state == RedstoneState.OFF;
 	}
 
 	@Override
-	public void update() {
+	public void tick() {
 		if(!world.isRemote) {
 			if(isEnabled()) {
 
@@ -164,13 +176,13 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 		}
 	}
 
-	public void selectSystem(int id) {
+	public void selectSystem(ResourceLocation id) {
 
-		if(id >= EntityUIStar.starIDoffset) {
+		if(DimensionManager.getInstance().isStar(id)) {
 			if(stellarMode) {
 				if(selectedId != id) {
 					for(EntityUIStar entity : starEntities) {
-						if(entity.getPlanetID() + EntityUIStar.starIDoffset == id) {
+						if(entity.getPlanetID() == id) {
 							entity.setSelected(true);
 							selectedPlanet = entity;
 						}
@@ -181,7 +193,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 				}
 				else {
 					stellarMode = false;
-					currentStarBody = DimensionManager.getInstance().getStar(id - EntityUIStar.starIDoffset);
+					currentStarBody = DimensionManager.getInstance().getStar(id);
 					rebuildSystem();
 					selectedId = Constants.INVALID_PLANET;
 				}
@@ -214,10 +226,10 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 	private void rebuildSystem() {
 		onTime = 0;
 		for(EntityUIPlanet entity : entities)
-			entity.setDead();
+			entity.remove();
 
 		for(EntityUIStar body : starEntities)
-			body.setDead();
+			body.remove();
 
 		starEntities.clear();
 		entities.clear();
@@ -226,7 +238,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 		if(backButton == null) {
 			backButton = new EntityUIButton(world, 0, this);
 			backButton.setPosition(this.pos.getX() + .5, this.pos.getY() + 1.5, this.pos.getZ() + .5);
-			this.getWorld().spawnEntity(backButton);
+			this.getWorld().addEntity(backButton);
 		}
 
 		if(!stellarMode) {
@@ -235,11 +247,11 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 				planetList = new LinkedList<IDimensionProperties>();
 				planetList.add(centeredEntity.getProperties());
 
-				for(int id : centeredEntity.getProperties().getChildPlanets())
+				for(ResourceLocation id : centeredEntity.getProperties().getChildPlanets())
 					planetList.add(DimensionManager.getInstance().getDimensionProperties(id));
 
 				if(currentStar != null) {
-					currentStar.setDead();
+					currentStar.remove();
 					currentStar = null;
 				}
 
@@ -248,7 +260,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 				if(currentStarBody == null)
 					currentStarBody = DimensionManager.getSol();
 				currentStar = new EntityUIStar(world, currentStarBody, this, this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5);
-				this.getWorld().spawnEntity(currentStar);
+				this.getWorld().addEntity(currentStar);
 
 				//Spawn substars
 				if(currentStarBody.getSubStars() != null && !currentStarBody.getSubStars().isEmpty()) {
@@ -263,7 +275,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 						deltaY =  (body.getStarSeparation()*MathHelper.sin(phase)*0.05);
 						EntityUIStar entity = new EntityUIStar(world, body, count++, this, this.pos.getX() + .5 + deltaX, this.pos.getY() + 1, this.pos.getZ() + .5 + deltaY);
 
-						this.getWorld().spawnEntity(entity);
+						this.getWorld().addEntity(entity);
 						starEntities.add(entity);
 						phase += phaseInc;
 					}
@@ -273,7 +285,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 			for(IDimensionProperties properties : planetList) {
 				EntityUIPlanet entity = new EntityUIPlanet(world, (DimensionProperties)properties, this, this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5);
 				//entity.setPositionPolar(this.pos.getX() + .5, this.pos.getY() + 10, this.pos.getZ() + .5,  ((DimensionProperties)properties).orbitalDist/100f, ( (DimensionProperties)properties).orbitTheta);
-				this.getWorld().spawnEntity(entity);
+				this.getWorld().addEntity(entity);
 				entities.add(entity);
 
 				if(centeredEntity != null && properties == centeredEntity.getProperties())
@@ -283,7 +295,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 		else {
 
 			if(currentStar != null) {
-				currentStar.setDead();
+				currentStar.remove();
 				currentStar = null;
 			}
 
@@ -292,7 +304,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 			for(StellarBody body : starList) {
 				EntityUIStar entity = new EntityUIStar(world, body, this, this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5);
 
-				this.getWorld().spawnEntity(entity);
+				this.getWorld().addEntity(entity);
 				starEntities.add(entity);
 			}
 		}
@@ -302,7 +314,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 
 
 	@Override
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
+	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		modules.add(targetGrav);
@@ -335,7 +347,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 	}
 
 	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
+	public boolean canInteractWithContainer(PlayerEntity entity) {
 		return true;
 	}
 
@@ -373,7 +385,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
 		if(id == SCALEPACKET) {
 			out.writeFloat(size);
 		}
@@ -384,20 +396,20 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
+			CompoundNBT nbt) {
 		if(packetId == SCALEPACKET) {
-			nbt.setFloat("scale", in.readFloat());
+			nbt.putFloat("scale", in.readFloat());
 		}
 		else if(packetId == STATEUPDATE) {
-			nbt.setByte("state", in.readByte());
+			nbt.putByte("state", in.readByte());
 		}
 
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 		if(id == SCALEPACKET) {
 			size = nbt.getFloat("scale");
 		}
@@ -406,7 +418,10 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 		}
 	}
 
-	public void onInventoryButtonPressed(int buttonId) {
+	public void onInventoryButtonPressed(ModuleButton button) {
+		
+		int buttonId = (int)button.getAdditionalData();
+		
 		//Back button
 		if(buttonId == 0) {
 			if(currentStar != null)
@@ -421,17 +436,32 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		compound = super.writeToNBT(compound);
-		state.writeToNBT(compound);
+	public CompoundNBT write(CompoundNBT compound) {
+		compound = super.write(compound);
+		state.write(compound);
 
 		return compound;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound compound) {
-		super.readFromNBT(compound);
+	public void func_230337_a_(BlockState blkstate, CompoundNBT compound) {
+		super.func_230337_a_(blkstate, compound);
 		state = RedstoneState.createFromNBT(compound);
 		redstoneControl.setRedstoneState(state);
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TranslationTextComponent(getModularInventoryName());
+	}
+
+	@Override
+	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType(), player), this);
+	}
+
+	@Override
+	public int getModularInvType() {
+		return guiId.MODULAR.ordinal();
 	}
 }

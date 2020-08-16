@@ -1,25 +1,30 @@
 package zmaster587.advancedRocketry.tile;
 
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.block.BlockSeal;
 
-public class TileSeal extends TileEntity implements ITickable {
+public class TileSeal extends TileEntity implements ITickableTileEntity {
+
+	public TileSeal(TileEntityType<?> tileEntityTypeIn) {
+		super(tileEntityTypeIn);
+	}
 
 	boolean ticked = false;
 
 	@Override
-	public void onChunkUnload() {
+	public void onChunkUnloaded() {
 		((BlockSeal) AdvancedRocketryBlocks.blockPipeSealer).removeSeal(getWorld(), getPos());
 		ticked = false;
 	}
 	
 	@Override
-	public void update() {
-		if(!world.isRemote && !ticked && !isInvalid()) {
-			for(EnumFacing dir : EnumFacing.VALUES) {
+	public void tick() {
+		if(!world.isRemote && !ticked && !isRemoved()) {
+			for(Direction dir : Direction.values()) {
 				((BlockSeal) AdvancedRocketryBlocks.blockPipeSealer).fireCheckAllDirections(getWorld(), pos.offset(dir), dir);
 			}
 			ticked = true;

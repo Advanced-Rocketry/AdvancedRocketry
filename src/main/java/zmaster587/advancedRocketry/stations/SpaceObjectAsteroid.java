@@ -1,17 +1,20 @@
 package zmaster587.advancedRocketry.stations;
 
 import net.minecraft.block.Block;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.registries.ForgeRegistries;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.satellite.IDataHandler;
 import zmaster587.advancedRocketry.world.util.MultiData;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -25,7 +28,7 @@ public class SpaceObjectAsteroid extends SpaceObjectBase implements IDataHandler
 	public SpaceObjectAsteroid() {
 		data = new MultiData();
 		data.setMaxData(5000);
-		setId(-1);
+		setId(Constants.INVALID_PLANET);
 	}
 	
 	public SpaceObjectAsteroid(HashMap<Block, Integer> compositionMapping, long uuid, int numBlocks) {
@@ -36,7 +39,7 @@ public class SpaceObjectAsteroid extends SpaceObjectBase implements IDataHandler
 	}
 	
 	public boolean registered() {
-		return getId() != -1;
+		return getId() != Constants.INVALID_PLANET;
 	}
 	
 	public long getAsteroidId() {
@@ -57,7 +60,7 @@ public class SpaceObjectAsteroid extends SpaceObjectBase implements IDataHandler
 	
 	public void registerWithSpaceObjectManager() {
 		
-		SpaceObjectManager.getSpaceManager().registerTemporarySpaceObject(this, Constants.INVALID_PLANET,net.minecraftforge.common.DimensionManager.getWorld(ARConfiguration.getCurrentConfig().spaceDimId).getTotalWorldTime() + 100000);
+		SpaceObjectManager.getSpaceManager().registerTemporarySpaceObject(this, Constants.INVALID_PLANET, ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId).getGameTime() + 100000);
 	}
 	
 	public static void generateAsteroid(World world, int x, int y, int z) {
@@ -65,47 +68,47 @@ public class SpaceObjectAsteroid extends SpaceObjectBase implements IDataHandler
 	}
 	
 	@Override
-	public void writeToNbt(NBTTagCompound nbt) {
+	public void writeToNbt(CompoundNBT nbt) {
 		super.writeToNbt(nbt);
 		
-		NBTTagList list = new NBTTagList();
+		ListNBT list = new ListNBT();
 		for(Entry<Block, Integer> entry : compositionMapping.entrySet()) {
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setInteger("id", Block.getIdFromBlock(entry.getKey()));
-			tag.setInteger("amt", entry.getValue());
-			list.appendTag(tag);
+			CompoundNBT tag = new CompoundNBT();
+			tag.putString("id", entry.getKey().getRegistryName().toString());
+			tag.putInt("amt", entry.getValue());
+			list.add(tag);
 		}
-		nbt.setTag("composition", list);
-		nbt.setInteger("numBlocks", numberOfBlocks);
-		nbt.setLong("uuid",uuid);
+		nbt.put("composition", list);
+		nbt.putInt("numBlocks", numberOfBlocks);
+		nbt.putLong("uuid",uuid);
 		data.writeToNBT(nbt);
 	}
 	@Override
-	public void readFromNbt(NBTTagCompound nbt) {
+	public void readFromNbt(CompoundNBT nbt) {
 		super.readFromNbt(nbt);
 		
-		NBTTagList list = nbt.getTagList("composition", NBT.TAG_COMPOUND);
+		ListNBT list = nbt.getList("composition", NBT.TAG_COMPOUND);
 		compositionMapping.clear();
-		for(int i = 0; i < list.tagCount(); i++) {
-			NBTTagCompound tag = list.getCompoundTagAt(i);
-			int blockId = tag.getInteger("id");
-			int rarity = tag.getInteger("amt");
-			compositionMapping.put(Block.getBlockById(blockId), rarity);
+		for(int i = 0; i < list.size(); i++) {
+			CompoundNBT tag = list.getCompound(i);
+			ResourceLocation blockId = new ResourceLocation(tag.getString("id"));
+			int rarity = tag.getInt("amt");
+			compositionMapping.put(ForgeRegistries.BLOCKS.getValue(blockId), rarity);
 		}
 		
-		numberOfBlocks = nbt.getInteger("numBlocks");
+		numberOfBlocks = nbt.getInt("numBlocks");
 		uuid = nbt.getLong("uuid");
 		data.readFromNBT(nbt);
 	}
 
 	@Override
-	public int extractData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {
+	public int extractData(int maxAmount, DataType type, Direction dir, boolean commit) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int addData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {
+	public int addData(int maxAmount, DataType type, Direction dir, boolean commit) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

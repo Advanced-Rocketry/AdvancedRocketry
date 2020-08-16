@@ -2,31 +2,27 @@ package zmaster587.advancedRocketry.item;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.api.DataStorage;
-import zmaster587.libVulpes.items.ItemIngredient;
 
 import java.util.List;
 
-public class ItemData extends ItemIngredient {
+public class ItemData extends Item {
 
 	int maxData;
 
-	public ItemData() {
-		super(1);
-		setMaxStackSize(16);
+	public ItemData(Properties props) {
+		super(props);
 	}
 
-	public int getMaxData(int damage) {
-		switch(damage) {
-		case 0:
-			return 1000;
-		}
-		return 0;
+	public int getMaxData(ItemStack stack) {
+		return 1000;
 	}
 
 	@Override
@@ -46,13 +42,13 @@ public class ItemData extends ItemIngredient {
 
 		DataStorage data = new DataStorage();
 
-		if(!item.hasTagCompound()) {
-			data.setMaxData(getMaxData(item.getItemDamage()));
-			NBTTagCompound nbt = new NBTTagCompound();
+		if(!item.hasTag()) {
+			data.setMaxData(getMaxData(item));
+			CompoundNBT nbt = new CompoundNBT();
 			data.writeToNBT(nbt);
 		}
 		else
-			data.readFromNBT(item.getTagCompound());
+			data.readFromNBT(item.getTag());
 
 		return data;
 	}
@@ -62,9 +58,9 @@ public class ItemData extends ItemIngredient {
 
 		int amt = data.addData(amount, dataType, true);
 
-		NBTTagCompound nbt = new NBTTagCompound();
+		CompoundNBT nbt = new CompoundNBT();
 		data.writeToNBT(nbt);
-		item.setTagCompound(nbt);
+		item.setTag(nbt);
 
 		return amt;
 	}
@@ -74,9 +70,9 @@ public class ItemData extends ItemIngredient {
 
 		int amt = data.removeData(amount, true);
 
-		NBTTagCompound nbt = new NBTTagCompound();
+		CompoundNBT nbt = new CompoundNBT();
 		data.writeToNBT(nbt);
-		item.setTagCompound(nbt);
+		item.setTag(nbt);
 
 		return amt;
 	}
@@ -86,21 +82,21 @@ public class ItemData extends ItemIngredient {
 
 		data.setData(amount, dataType);
 
-		NBTTagCompound nbt = new NBTTagCompound();
+		CompoundNBT nbt = new CompoundNBT();
 		data.writeToNBT(nbt);
-		item.setTagCompound(nbt);
+		item.setTag(nbt);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(value=Dist.CLIENT)
 	public void addInformation(ItemStack stack, World player,
 			List list, ITooltipFlag bool) {
 		super.addInformation(stack, player, list, bool);
 
 		DataStorage data = getDataStorage(stack);
 
-		list.add(data.getData() + " / " + data.getMaxData() + " Data");
-		list.add(I18n.format(data.getDataType().toString(), new Object[0]));
+		list.add(new StringTextComponent(data.getData() + " / " + data.getMaxData() + " Data"));
+		list.add(new StringTextComponent(I18n.format(data.getDataType().toString(), new Object[0])));
 
 	}
 

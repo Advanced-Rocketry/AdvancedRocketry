@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.api.stations;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -22,5 +22,5 @@ public interface IStorageChunk {
 
 	public List<TileEntity> getTileEntityList();
 
-	public void rotateBy(EnumFacing dir);
+	public void rotateBy(Direction dir);
 }

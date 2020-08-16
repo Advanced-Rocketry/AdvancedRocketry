@@ -1,12 +1,13 @@
 package zmaster587.advancedRocketry.tile.multiblock.machine;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -28,6 +29,10 @@ public class TileLathe extends TileMultiblockMachine implements IModularInventor
 		{{'O', LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'P'}},
 	};
 	
+	public TileLathe() {
+		super(AdvancedRocketryTileEntityType.TILE_LATHE);
+	}
+	
 	@Override
 	public void registerRecipes() {
 		//TODO: does it work?
@@ -40,7 +45,7 @@ public class TileLathe extends TileMultiblockMachine implements IModularInventor
 	}
 
 	@Override
-	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
+	public boolean shouldHideBlock(World world, BlockPos pos, BlockState tile) {
 		return true;
 	}
 	
@@ -66,7 +71,7 @@ public class TileLathe extends TileMultiblockMachine implements IModularInventor
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = super.getModules(ID, player);
 
 		modules.add(new ModuleProgress(100, 40, 0, TextureResources.latheProgressBar, this));

@@ -1,20 +1,22 @@
 package zmaster587.advancedRocketry.entity;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
+import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import zmaster587.advancedRocketry.api.AdvancedRocketryEntities;
 
 public class EntityDummy extends Entity {
 
 	
 	//Just a dummy so a player can sit on a chair
 	public EntityDummy(World world) {
-		super(world);
+		super(AdvancedRocketryEntities.ENTITY_DUMMY, world);
 		this.noClip=true;
-		this.height=0f;
 		
 	}
 
@@ -28,7 +30,7 @@ public class EntityDummy extends Entity {
 		return true;
 	}
 	@Override
-	public boolean isInvisibleToPlayer(EntityPlayer player) {
+	public boolean isInvisibleToPlayer(PlayerEntity player) {
 		return true;
 	}
 
@@ -36,17 +38,11 @@ public class EntityDummy extends Entity {
 	 * Checks if the entity is in range to render by using the past in distance and comparing it to its average edge
 	 * length * 64 * renderDistanceWeight Args: distance
 	 */
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(value=Dist.CLIENT)
 	@Override
 	public boolean isInRangeToRenderDist(double p_70112_1_)
 	{
 		return false;
-	}
-
-	
-	@Override
-	protected void entityInit() {
-		
 	}
 
 	@Override
@@ -55,13 +51,41 @@ public class EntityDummy extends Entity {
 	}
 	
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound p_70037_1_) {
+	public void read(CompoundNBT p_70037_1_) {
+		
+	}
+	
+	@Override
+	public CompoundNBT writeWithoutTypeId(CompoundNBT p_70014_1_) {
+		return new CompoundNBT();
+	}
+
+	@Override
+	public boolean writeUnlessPassenger(CompoundNBT compound) {
+		// TODO Auto-generated method stub
+		return super.writeUnlessPassenger(compound);
+	}
+	
+	@Override
+	protected void registerData() {
 		
 	}
 
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound p_70014_1_) {
+	protected void readAdditional(CompoundNBT compound) {
+		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	protected void writeAdditional(CompoundNBT compound) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public IPacket<?> createSpawnPacket() {
+		return new SSpawnObjectPacket(this);
 	}
 
 	

@@ -1,24 +1,28 @@
 package zmaster587.advancedRocketry.api.satellite;
 
+import java.util.Optional;
+
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.ISatelliteIdItem;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.item.ItemSatellite;
+import zmaster587.libVulpes.util.ZUtils;
 
 public abstract class SatelliteBase {
 	
 	protected SatelliteProperties satelliteProperties;
-	private int dimId = Constants.INVALID_PLANET;
+	private Optional<ResourceLocation> dimId = Optional.empty();
 	//Will always be of type ItemSatellite
 	protected ItemStack satellite;
 
@@ -53,7 +57,7 @@ public abstract class SatelliteBase {
 	 * @param Player interacting with the satellite
 	 * @return whether the player has successfully interacted with the satellite
 	 */
-	public abstract boolean performAction(EntityPlayer player, World world, BlockPos pos);
+	public abstract boolean performAction(PlayerEntity player, World world, BlockPos pos);
 	
 	/**
 	 * Note: this is not currently used
@@ -97,7 +101,7 @@ public abstract class SatelliteBase {
 		return satelliteProperties.getId();
 	}
 	
-	public void setDead(){
+	public void remove(){
 		isDead = true;
 	}
 	
@@ -110,19 +114,19 @@ public abstract class SatelliteBase {
 	 * @param world World of which to assign to the satellite
 	 */
 	public void setDimensionId(World world) {
-		int newId = world.provider.getDimension();
-		if(dimId != Constants.INVALID_PLANET) {
+		ResourceLocation newId = ZUtils.getDimensionIdentifier(world);
+		if(dimId.isPresent()) {
 			//TODO: handle dim change
 		}
-		dimId = newId;
+		dimId = Optional.of(newId);
 	}
 	
-	public void setDimensionId(int world) {
-		int newId = world;
-		if(dimId != Constants.INVALID_PLANET) {
+	public void setDimensionId(ResourceLocation world) {
+		ResourceLocation newId = world;
+		if(dimId.isPresent()) {
 			//TODO: handle dim change
 		}
-		dimId = newId;
+		dimId =  Optional.of(newId);
 	}
 	
 	/**
@@ -140,33 +144,37 @@ public abstract class SatelliteBase {
 	/**
 	 * @return dimensionID of the satellite, Constants.INVALID_PLANET if none
 	 */
-	public int getDimensionId() {
+	public Optional<ResourceLocation> getDimensionId() {
 		return dimId;
 	}
 	
 	/**
 	 * @param nbt NBT data to store
 	 */
-	public void writeToNBT(NBTTagCompound nbt) {
-		nbt.setString("dataType", SatelliteRegistry.getKey(this.getClass()));
+	public void writeToNBT(CompoundNBT nbt) {
+		nbt.putString("dataType", SatelliteRegistry.getKey(this.getClass()));
 		
-		NBTTagCompound properties = new NBTTagCompound();
+		CompoundNBT properties = new CompoundNBT();
 		satelliteProperties.writeToNBT(properties);
-		nbt.setTag("properties", properties);
-		nbt.setInteger("dimId", dimId);
+		nbt.put("properties", properties);
+		dimId.ifPresent(value -> nbt.putString("dimId", value.toString() ));
 		
-		NBTTagCompound itemNBT = new NBTTagCompound();
+		CompoundNBT itemNBT = new CompoundNBT();
 		//Transition
 		if(!satellite.isEmpty())
-			satellite.writeToNBT(itemNBT);
-		nbt.setTag("item", itemNBT);
+			satellite.write(itemNBT);
+		nbt.put("item", itemNBT);
 		
 	}
 	
-	public void readFromNBT(NBTTagCompound nbt) {
-		satelliteProperties.readFromNBT(nbt.getCompoundTag("properties"));
-		dimId = nbt.getInteger("dimId");
-		satellite = new ItemStack(nbt.getCompoundTag("item"));
+	public void readFromNBT(CompoundNBT nbt) {
+		satelliteProperties.readFromNBT(nbt.getCompound("properties"));
+		
+		if(nbt.contains("dimId"))
+			dimId = Optional.of( new ResourceLocation(nbt.getString("dimId")));
+		else
+			dimId = Optional.empty();
+		satellite = ItemStack.read(nbt.getCompound("item"));
 	}
 	
 	public void writeDataToNetwork(ByteBuf out, byte packetId) {
@@ -177,8 +185,8 @@ public abstract class SatelliteBase {
 		
 	}
 	
-	public void useNetworkData(EntityPlayer player, Side client, byte packetId,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist client, byte packetId,
+			CompoundNBT nbt) {
 		
 	}
 	

@@ -1,9 +1,9 @@
 package zmaster587.advancedRocketry.satellite;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.ARConfiguration;
@@ -13,6 +13,7 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.libVulpes.api.IUniversalEnergyTransmitter;
 import zmaster587.libVulpes.util.UniversalBattery;
+import zmaster587.libVulpes.util.ZUtils;
 
 public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTransmitter {
 
@@ -42,9 +43,9 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 	}
 
 	protected int energyCreated(World world, boolean simulate) {
-		int amt =(int) ((world.getTotalWorldTime() - lastActionTime)*getPowerPerTick());
+		int amt =(int) ((world.getGameTime() - lastActionTime)*getPowerPerTick());
 		if(!simulate)
-			lastActionTime = world.getTotalWorldTime();
+			lastActionTime = world.getGameTime();
 		return amt;
 	}
 
@@ -58,7 +59,7 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 	}
 
 	@Override
-	public boolean performAction(EntityPlayer player, World world, BlockPos pos) {
+	public boolean performAction(PlayerEntity player, World world, BlockPos pos) {
 		return false;
 	}
 
@@ -68,24 +69,24 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 	}
 
 	@Override
-	public int getEnergyMTU(EnumFacing side) {
+	public int getEnergyMTU(Direction side) {
 		return (int) (100* ARConfiguration.getCurrentConfig().microwaveRecieverMulitplier);
 	}
 
 	@Override
 	public void setDimensionId(World world) {
 		super.setDimensionId(world);
-		lastActionTime = world.getTotalWorldTime();
+		lastActionTime = world.getGameTime();
 	}
 	
 	@Override
-	public int transmitEnergy(EnumFacing dir, boolean simulate) {
-		if(getDimensionId() != Constants.INVALID_PLANET) {
-			World world = net.minecraftforge.common.DimensionManager.getWorld(getDimensionId());
+	public int transmitEnergy(Direction dir, boolean simulate) {
+		if(getDimensionId().get() != Constants.INVALID_PLANET) {
+			World world = ZUtils.getWorld(getDimensionId().get());
 			if(world != null) {
 				int energyCreated = energyCreated(world, simulate);
-				battery.acceptEnergy(Math.max((energyCreated - getEnergyMTU(EnumFacing.DOWN)), 0), simulate);
-				int energy = battery.extractEnergy(Math.max(getEnergyMTU(EnumFacing.DOWN) - energyCreated,0), simulate);
+				battery.acceptEnergy(Math.max((energyCreated - getEnergyMTU(Direction.DOWN)), 0), simulate);
+				int energy = battery.extractEnergy(Math.max(getEnergyMTU(Direction.DOWN) - energyCreated,0), simulate);
 				return energy + energyCreated;
 			}
 		}
@@ -93,16 +94,16 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public void writeToNBT(CompoundNBT nbt) {
 		super.writeToNBT(nbt);
 
-		battery.writeToNBT(nbt);
-		nbt.setLong("lastActionTime", lastActionTime);
-		nbt.setByte("teir", teir);
+		battery.write(nbt);
+		nbt.putLong("lastActionTime", lastActionTime);
+		nbt.putByte("teir", teir);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
+	public void readFromNBT(CompoundNBT nbt) {
 		super.readFromNBT(nbt);
 
 		if(battery == null)

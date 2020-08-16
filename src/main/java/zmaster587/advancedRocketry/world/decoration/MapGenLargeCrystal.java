@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.world.decoration;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
@@ -10,19 +10,19 @@ import zmaster587.advancedRocketry.block.BlockCrystal;
 
 public class MapGenLargeCrystal extends MapGenBase {
 
-	IBlockState fillerBlock;
-	IBlockState crystalBlock;
+	BlockState fillerBlock;
+	BlockState crystalBlock;
 
-	public MapGenLargeCrystal(IBlockState fillerBlock, IBlockState blockCrystal) {
+	public MapGenLargeCrystal(BlockState fillerBlock, BlockState blockCrystal) {
 		this.fillerBlock = fillerBlock;
 		this.crystalBlock = blockCrystal;
 	}
 
-	public void setFillerBlock(IBlockState fillerBlock) {
+	public void setFillerBlock(BlockState fillerBlock) {
 		this.fillerBlock = fillerBlock;
 	}
 
-	public void setCrystalBlock(IBlockState crystalBlock) {
+	public void setCrystalBlock(BlockState crystalBlock) {
 		this.crystalBlock = crystalBlock;
 	}
 
@@ -35,7 +35,7 @@ public class MapGenLargeCrystal extends MapGenBase {
 			int z = 16*(-chunkZ + rangeZ);
 			int y;
 
-			IBlockState state = fillerBlock;
+			BlockState state = fillerBlock;
 			Block fillerBlock = state.getBlock();
 
 			int height = rand.nextInt(40) + 10;
@@ -44,7 +44,7 @@ public class MapGenLargeCrystal extends MapGenBase {
 			int xShear = 1 - (rand.nextInt(6) + 3) / 4; //1/6 lean right, 1/6 lean left, 4/6 no lean
 			int zShear = 1 - (rand.nextInt(6) + 3) / 4; //1/6 lean right, 1/6 lean left, 4/6 no lean
 
-			IBlockState usedState = crystalBlock.withProperty(BlockCrystal.CRYSTALPROPERTY, BlockCrystal.EnumCrystal.values()[rand.nextInt(BlockCrystal.EnumCrystal.values().length)]);
+			BlockState usedState = crystalBlock.with(BlockCrystal.CRYSTALPROPERTY, BlockCrystal.EnumCrystal.values()[rand.nextInt(BlockCrystal.EnumCrystal.values().length)]);
 
 			int currentEdgeRadius;
 
@@ -151,7 +151,7 @@ public class MapGenLargeCrystal extends MapGenBase {
 		}
 	}
 
-	private void setBlock(int x, int y, int z , IBlockState block, ChunkPrimer blocks) {
+	private void setBlock(int x, int y, int z , BlockState block, ChunkPrimer blocks) {
 
 		if(x > 15 || x < 0 || z > 15 || z < 0 || y < 0 || y > 255)
 			return;

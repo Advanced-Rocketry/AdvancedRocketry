@@ -2,8 +2,9 @@ package zmaster587.advancedRocketry.tile.infrastructure;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.libVulpes.inventory.modules.IButtonInventory;
@@ -13,16 +14,16 @@ import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
 import java.util.List;
 
-public class TileRocketUnloader extends TileRocketLoader implements IInfrastructure, ITickable, IButtonInventory, INetworkMachine   {
+public class TileRocketUnloader extends TileRocketLoader implements IInfrastructure, ITickableTileEntity, IButtonInventory, INetworkMachine   {
 	ModuleRedstoneOutputButton redstoneControl;
 	RedstoneState state;
 
 	public TileRocketUnloader() {
-		super();
+		super(AdvancedRocketryTileEntityType.TILE_ROCKET_UNLOADER);
 	}
 
 	public TileRocketUnloader(int size) {
-		super(size);
+		super(AdvancedRocketryTileEntityType.TILE_ROCKET_UNLOADER, size);
 	}
 
 	@Override
@@ -32,7 +33,7 @@ public class TileRocketUnloader extends TileRocketLoader implements IInfrastruct
 
 
 	@Override
-	public void update() {
+	public void tick() {
 
 		//Move a stack of items
 		if(!world.isRemote && rocket != null ) {

@@ -44,7 +44,7 @@ public class FxLaser extends Particle {
 		double radius = .3f;
 		double fwdOffset = 0.075f;
 		double entityOffX = entityFrom.posX - MathHelper.cos((float) (entityFrom.rotationYaw * Math.PI/180f))*radius + fwdOffset*MathHelper.sin((float) (entityFrom.rotationYaw * Math.PI/180f));
-		double entityOffY = entityFrom.posY + (entityFrom.getEntityId() == entityIn.getEntityId() && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 ? entityIn.getEyeHeight() - 0.12f : 1.15f);
+		double entityOffY = entityFrom.posY + (entityFrom.getEntityId() == entityIn.getEntityId() && Minecraft.getInstance().gameSettings.thirdPersonView == 0 ? entityIn.getEyeHeight() - 0.12f : 1.15f);
 		double entityOffZ = entityFrom.posZ - MathHelper.sin((float) (entityFrom.rotationYaw * Math.PI/180f))*radius - fwdOffset*MathHelper.cos((float) (entityFrom.rotationYaw * Math.PI/180f));
 		
 		
@@ -57,7 +57,7 @@ public class FxLaser extends Particle {
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
 		GL11.glLineWidth(5);
-		GlStateManager.color(0.8f, 0.2f, 0.2f, .4f);
+		GlStateManager.color4f(0.8f, 0.2f, 0.2f, .4f);
 		
 		buffer.pos(entityOffX - entityIn.posX, entityOffY - entityIn.posY, entityOffZ - entityIn.posZ).endVertex();
 		buffer.pos(x, y, z).endVertex();
@@ -68,7 +68,7 @@ public class FxLaser extends Particle {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 0, 0);
-		GlStateManager.color(1, 1, 1, 1);
+		GlStateManager.color4f(1, 1, 1, 1);
 		GL11.glLineWidth(1);
 	}
 

@@ -1,12 +1,12 @@
 package zmaster587.advancedRocketry.inventory;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.ClickType;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ResourceLocation;
 import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
 
 public class ContainerOreMappingSatallite extends Container {
@@ -15,18 +15,18 @@ public class ContainerOreMappingSatallite extends Container {
 	private SatelliteOreMapping inv;
 
 	ContainerOreMappingSatallite(SatelliteOreMapping inv, InventoryPlayer inventoryPlayer) {
-		super();
+		super(containerType, dragEvent);
 		this.inv = inv;
 		inv.setSelectedSlot(-1);
 		// Player hotbar
 		for (int j1 = 0; j1 < 9; j1++) {
-			addSlotToContainer(new Slot(inventoryPlayer, j1, 13 + j1 * 18, 155));
+			addSlot(new Slot(inventoryPlayer, j1, 13 + j1 * 18, 155));
 		}
 	}
 
 	@Override
 	public ItemStack slotClick(int slot, int dragType, ClickType clickTypeIn,
-			EntityPlayer player) {
+			PlayerEntity player) {
 		//Check if slot exists
 				ItemStack stack;
 				if(slot != -999)
@@ -39,8 +39,8 @@ public class ContainerOreMappingSatallite extends Container {
 						inv.setSelectedSlot(-1);
 					}
 					else
-						for(int id : OreDictionary.getOreIDs(stack)) {
-							if(OreDictionary.getOreName(id).startsWith("ore") || OreDictionary.getOreName(id).startsWith("gem") || OreDictionary.getOreName(id).startsWith("dust")) {
+						for(ResourceLocation id : ItemTags.getCollection().getOwningTags(stack.getItem())) {
+							if(id.getPath().startsWith("ore") || id.getPath().startsWith("gem") || id.getPath().startsWith("dust")) {
 								inv.setSelectedSlot(slot);
 							}
 
@@ -51,13 +51,13 @@ public class ContainerOreMappingSatallite extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer p_75145_1_) {
+	public boolean canInteractWith(PlayerEntity p_75145_1_) {
 		return true;
 	}
 
 	//int slot.. slot being taken from
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int p_82846_2_)
+	public ItemStack transferStackInSlot(PlayerEntity player, int p_82846_2_)
 	{
 		ItemStack itemstack = null;
 		Slot slot = (Slot)this.inventorySlots.get(p_82846_2_);

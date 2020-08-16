@@ -1,10 +1,10 @@
 package zmaster587.advancedRocketry.block;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -12,13 +12,12 @@ import zmaster587.libVulpes.block.BlockTile;
 
 public class BlockSuitWorkstation extends BlockTile {
 
-	public BlockSuitWorkstation(Class<? extends TileEntity> tileClass, int guiId) {
-		super(tileClass, guiId);
+	public BlockSuitWorkstation(Properties properties, int guiId) {
+		super(properties, guiId);
 	}
 
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state)
-	{
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		TileEntity tile = world.getTileEntity(pos);
 
 		//This code could use some optimization -Dark
@@ -32,9 +31,9 @@ public class BlockSuitWorkstation extends BlockTile {
 			{
 				float f = world.rand.nextFloat() * 0.8F + 0.1F;
 				float f1 = world.rand.nextFloat() * 0.8F + 0.1F;
-				EntityItem entityitem;
+				ItemEntity entityitem;
 
-				for (float f2 = world.rand.nextFloat() * 0.8F + 0.1F; itemstack.getCount() > 0; world.spawnEntity(entityitem))
+				for (float f2 = world.rand.nextFloat() * 0.8F + 0.1F; itemstack.getCount() > 0; world.addEntity(entityitem))
 				{
 					int j1 = world.rand.nextInt(21) + 10;
 
@@ -44,21 +43,23 @@ public class BlockSuitWorkstation extends BlockTile {
 					}
 
 					itemstack.setCount(itemstack.getCount() - j1 );
-					entityitem = new EntityItem(world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), new ItemStack(itemstack.getItem(), j1, itemstack.getItemDamage()));
+					ItemStack newStack = itemstack.copy();
+					newStack.setCount(j1);
+					entityitem = new ItemEntity(world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), newStack);
 					float f3 = 0.05F;
-					entityitem.motionX = (double)((float)world.rand.nextGaussian() * f3);
-					entityitem.motionY = (double)((float)world.rand.nextGaussian() * f3 + 0.2F);
-					entityitem.motionZ = (double)((float)world.rand.nextGaussian() * f3);
+					
+					entityitem.setMotion((double)((float)world.rand.nextGaussian() * f3),
+						(double)((float)world.rand.nextGaussian() * f3 + 0.2F),
+						(double)((float)world.rand.nextGaussian() * f3));
 
-					if (itemstack.hasTagCompound())
+					if (itemstack.hasTag())
 					{
-						entityitem.getItem().setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
+						entityitem.getItem().setTag((CompoundNBT)itemstack.getTag().copy());
 					}
 				}
 			}
 		}
 
 		world.removeTileEntity(pos);
-
 	}
 }

@@ -1,7 +1,8 @@
 package zmaster587.advancedRocketry.api.dimension.solar;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants.NBT;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
@@ -15,11 +16,11 @@ import java.util.List;
 public class StellarBody {
 
 	private int temperature;
-	private HashMap<Integer,IDimensionProperties> planets;
+	private HashMap<ResourceLocation,IDimensionProperties> planets;
 	int numPlanets;
 	int discoveredPlanets;
 	float color[];
-	int id;
+	ResourceLocation id;
 	float size;
 	String name;
 	short posX, posZ;
@@ -29,7 +30,7 @@ public class StellarBody {
 	StellarBody parentStar;
 
 	public StellarBody() {
-		planets = new HashMap<Integer,IDimensionProperties>();
+		planets = new HashMap<ResourceLocation,IDimensionProperties>();
 		size = 1f;
 		subStars = new LinkedList<StellarBody>();
 		starSeperation = 5f;
@@ -131,14 +132,14 @@ public class StellarBody {
 	/**
 	 * @return returns the unique id of this star
 	 */
-	public int getId() {
+	public ResourceLocation getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the new id of this star
 	 */
-	public void setId(int id) {
+	public void setId(ResourceLocation id) {
 		this.id = id;
 	}
 
@@ -224,49 +225,49 @@ public class StellarBody {
 		return new ArrayList<IDimensionProperties>(planets.values());
 	}
 
-	public void writeToNBT(NBTTagCompound nbt) {
-		nbt.setInteger("id", this.id);
-		nbt.setInteger("temperature", temperature);
-		nbt.setString("name", name);
-		nbt.setShort("posX", posX);
-		nbt.setShort("posZ", posZ);
-		nbt.setFloat("size", size);
-		nbt.setFloat("seperation", starSeperation);
-		nbt.setBoolean("isBlackHole", isBlackHole);
+	public void writeToNBT(CompoundNBT nbt) {
+		nbt.putString("id", this.id.toString());
+		nbt.putInt("temperature", temperature);
+		nbt.putString("name", name);
+		nbt.putShort("posX", posX);
+		nbt.putShort("posZ", posZ);
+		nbt.putFloat("size", size);
+		nbt.putFloat("seperation", starSeperation);
+		nbt.putBoolean("isBlackHole", isBlackHole);
 		
-		NBTTagList list = new NBTTagList();
+		ListNBT list = new ListNBT();
 		
 		for(StellarBody body : subStars) {
-			NBTTagCompound tag = new NBTTagCompound();
+			CompoundNBT tag = new CompoundNBT();
 			body.writeToNBT(tag);
-			list.appendTag(tag);
+			list.add(tag);
 		}
 		
-		if(!list.hasNoTags())
-			nbt.setTag("subStars", list);
+		if(!list.isEmpty())
+			nbt.put("subStars", list);
 	}
 
-	public void readFromNBT(NBTTagCompound nbt) {
-		id = nbt.getInteger("id");
-		temperature = nbt.getInteger("temperature");
+	public void readFromNBT(CompoundNBT nbt) {
+		id = new ResourceLocation(nbt.getString("id"));
+		temperature = nbt.getInt("temperature");
 		name = nbt.getString("name");
 		posX = nbt.getShort("posX");
 		posZ = nbt.getShort("posZ");
 		isBlackHole = nbt.getBoolean("isBlackHole");
 		
-		if(nbt.hasKey("size"))
+		if(nbt.contains("size"))
 			size = nbt.getFloat("size");
 		
-		if(nbt.hasKey("seperation"))
+		if(nbt.contains("seperation"))
 			starSeperation = nbt.getFloat("seperation");
 		
 		subStars.clear();
-		if(nbt.hasKey("subStars")) {
-			NBTTagList list = nbt.getTagList("subStars", NBT.TAG_COMPOUND);
+		if(nbt.contains("subStars")) {
+			ListNBT list = nbt.getList("subStars", NBT.TAG_COMPOUND);
 			
-			for(int i = 0; i < list.tagCount(); i++) {
+			for(int i = 0; i < list.size(); i++) {
 				StellarBody star = new StellarBody();
-				star.readFromNBT(list.getCompoundTagAt(i));
+				star.readFromNBT(list.getCompound(i));
 				subStars.add(star);
 				star.parentStar = this;
 			}

@@ -1,7 +1,8 @@
 package zmaster587.advancedRocketry.entity;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumHand;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.tile.station.TilePlanetaryHologram;
 
@@ -22,7 +23,7 @@ public class EntityUIButton extends EntityUIPlanet {
 	}
 	
 	@Override
-	protected void entityInit() {
+	protected void registerData() {
 		this.dataManager.register(planetID, id);
 		this.dataManager.register(scale, 1f);
 		this.dataManager.register(selected, false);
@@ -30,11 +31,11 @@ public class EntityUIButton extends EntityUIPlanet {
 	}
 	
 	@Override
-	public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
+	public ActionResultType processInitialInteract(PlayerEntity player, Hand hand) {
 		if(!world.isRemote && tile != null) {
 			tile.onInventoryButtonPressed(getPlanetID());
 		}
-		return true;
+		return ActionResultType.PASS;
 	}
 	
 	public int getPlanetID() {

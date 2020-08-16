@@ -3,7 +3,7 @@ package zmaster587.advancedRocketry.client.render.multiblocks;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
@@ -39,13 +39,13 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 		if(!multiBlockTile.canRender())
 			return;
 
-		GL11.glPushMatrix();
+		matrix.push();
 
 		//Rotate and move the model into position
-		GL11.glTranslated(x + .5f, y, z + 0.5f);
-		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 180 : 0) + front.getFrontOffsetZ()*90f, 0, 1, 0);
-		GL11.glTranslated(-.5f, -1f, -2.5f);
+		matrix.translate(x + .5f, y, z + 0.5f);
+		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
+		GL11.glRotatef((front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, 1, 0);
+		matrix.translate(-.5f, -1f, -2.5f);
 
 
 		ItemStack outputStack;
@@ -56,7 +56,7 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 			bindTexture(texture);
 			model.renderPart("body");
 
-			GL11.glPushMatrix();
+			matrix.push();
 
 			if(progress < 0.95f)
 				GL11.glTranslatef(0f, 0f, progress/.95f);
@@ -64,9 +64,9 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 				GL11.glTranslatef(0f, 0f, (1 - progress)/.05f);
 
 			model.renderOnly("Tray");
-			GL11.glPopMatrix();
+			matrix.pop();
 
-			GL11.glPushMatrix();
+			matrix.push();
 			GL11.glTranslatef(.5f, 1.5625f, 0f);
 			GL11.glRotatef(progress*1500, 0, 0, 1);
 			model.renderOnly("Cylinder");
@@ -81,7 +81,7 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 			GL11.glColor3d((0xff & color >> 16)/256f, (0xff & color >> 8)/256f , (color & 0xff)/256f);
 
 			model.renderOnly("rod");
-			GL11.glPopMatrix();
+			matrix.pop();
 			
 			GL11.glColor4f(1f, 1f, 1f, 1f);
 		}
@@ -92,6 +92,6 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 			model.renderPart("Tray");
 			//model.renderAllExcept("rod", "Cylinder");
 		}
-		GL11.glPopMatrix();
+		matrix.pop();
 	}
 }

@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fluids.Fluid;
@@ -48,15 +48,15 @@ public class RenderCentrifuge extends TileEntitySpecialRenderer {
 		if(!multiBlockTile.canRender())
 			return;
 
-		GL11.glPushMatrix();
+		matrix.push();
 
 		//Initial setup
 
 		//Rotate and move the model into position
-		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
-		GL11.glTranslated(x + 0.5, y, z + 0.5);
-		GL11.glRotatef((front.getFrontOffsetZ() == 1 ? 180 : 0) - front.getFrontOffsetX()*90f, 0, 1, 0);
-		GL11.glTranslated(0, 0, 0 + 1);
+		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
+		matrix.translate(x + 0.5, y, z + 0.5);
+		GL11.glRotatef((front.getZOffset() == 1 ? 180 : 0) - front.getXOffset()*90f, 0, 1, 0);
+		matrix.translate(0, 0, 0 + 1);
 
 		bindTexture(texture);
 
@@ -66,7 +66,7 @@ public class RenderCentrifuge extends TileEntitySpecialRenderer {
 		if(multiBlockTile.isRunning())
 		{
 			float lavaheight = multiBlockTile.getNormallizedProgress(0);
-			GL11.glRotated(multiBlockTile.getWorld().getTotalWorldTime() * -10f, 0, 1, 0);
+			GL11.glRotated(multiBlockTile.getWorld().getGameTime() * -10f, 0, 1, 0);
 			model.renderOnly("Spinning");
 
 
@@ -74,10 +74,10 @@ public class RenderCentrifuge extends TileEntitySpecialRenderer {
 			Fluid fluid = FluidRegistry.getFluid("enrichedlava");
 			if(fluid != null)
 			{
-				GL11.glPushMatrix();
+				matrix.push();
 
 				double minU = 0, maxU = 1, minV = 0, maxV = 1;
-				TextureMap map = Minecraft.getMinecraft().getTextureMapBlocks();
+				TextureMap map = Minecraft.getInstance().getTextureMapBlocks();
 				TextureAtlasSprite sprite = map.getTextureExtry(fluid.getStill().toString());
 				if(sprite != null) {
 					minU = sprite.getMinU();
@@ -88,7 +88,7 @@ public class RenderCentrifuge extends TileEntitySpecialRenderer {
 				}
 				else {
 					int color = fluid.getColor();
-					GlStateManager.color(((color >>> 16) & 0xFF)/255f, ((color >>> 8) & 0xFF)/255f, ((color& 0xFF)/255f),1f);
+					GlStateManager.color4f(((color >>> 16) & 0xFF)/255f, ((color >>> 8) & 0xFF)/255f, ((color& 0xFF)/255f),1f);
 
 					bindTexture(fluidIcon);
 				}
@@ -113,14 +113,14 @@ public class RenderCentrifuge extends TileEntitySpecialRenderer {
 
 				GlStateManager.enableLighting();
 				GlStateManager.disableBlend();
-				GL11.glPopMatrix();
-				GlStateManager.color(1f, 1f, 1f);
+				matrix.pop();
+				GlStateManager.color4f(1f, 1f, 1f);
 			}
 		}
 		else
 		{
 			model.renderOnly("Spinning");
 		}
-		GL11.glPopMatrix();
+		matrix.pop();
 	}
 }

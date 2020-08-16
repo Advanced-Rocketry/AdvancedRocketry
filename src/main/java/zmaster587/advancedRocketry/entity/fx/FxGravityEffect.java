@@ -26,7 +26,7 @@ public class FxGravityEffect extends Particle {
         this.particleMaxAge = (int)(5.0D);
         this.particleScale = 1f;
         this.motionX = motx;
-        this.motionY = moty;
+        this.getMotion().y = moty;
         this.motionZ = motz;
         
         
@@ -51,7 +51,7 @@ public class FxGravityEffect extends Particle {
         int j = i >> 16 & 65535;
         int k = i & 65535;
 		
-		Minecraft.getMinecraft().getTextureManager().bindTexture(icon);
+		Minecraft.getInstance().getTextureManager().bindTexture(icon);
         worldRendererIn.finishDrawing();
         worldRendererIn.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
         
@@ -84,6 +84,6 @@ public class FxGravityEffect extends Particle {
             this.setExpired();
         }
         
-        this.setPosition(posX + this.motionX, posY + this.motionY, posZ  + this.motionZ);
+        this.setPosition(posX + this.motionX, posY + this.getMotion().y, posZ  + this.motionZ);
 	}
 }

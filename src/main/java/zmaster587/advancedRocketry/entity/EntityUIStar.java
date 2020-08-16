@@ -1,11 +1,14 @@
 package zmaster587.advancedRocketry.entity;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.api.AdvancedRocketryEntities;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -33,13 +36,13 @@ public class EntityUIStar extends EntityUIPlanet {
 	}
 	
 	@Override
-	protected void entityInit() {
-		super.entityInit();
+	protected void registerData() {
+		super.registerData();
 		this.dataManager.register(subStarData, -1);
 	}
 	
 	public EntityUIStar(World worldIn) {
-		super(worldIn);
+		super(AdvancedRocketryEntities.ENTITY_UISTAR, worldIn);
 		setSize(0.2f, 0.2f);
 		subStar = -1;
 	}
@@ -47,18 +50,19 @@ public class EntityUIStar extends EntityUIPlanet {
 	public void setProperties(StellarBody properties) {
 		this.star = properties;
 		if(properties != null)
-			this.dataManager.set(planetID, star.getId());
+			this.dataManager.set(planetID, star.getId().toString());
 		else
-			this.dataManager.set(planetID, Constants.INVALID_PLANET);
+			this.dataManager.set(planetID, Constants.INVALID_STAR.toString());
 	}
 	
-	public int getPlanetID() {
+	@Override
+	public ResourceLocation getPlanetID() {
 		//this.dataManager.set(planetID, 256);
 
 		if(!world.isRemote)
-			return star == null ? -1 : star.getId();
+			return star == null ? Constants.INVALID_STAR : star.getId();
 
-		int planetId = this.dataManager.get(planetID);
+		ResourceLocation planetId = new ResourceLocation(this.dataManager.get(planetID));
 
 		if(star != null && star.getId() != planetId) {
 			if(planetId == Constants.INVALID_PLANET )
@@ -67,7 +71,7 @@ public class EntityUIStar extends EntityUIPlanet {
 				star = DimensionManager.getInstance().getStar(planetId);
 		}
 
-		return this.dataManager.get(planetID);
+		return planetId;
 	}
 	
 	public StellarBody getStarProperties() {
@@ -82,10 +86,10 @@ public class EntityUIStar extends EntityUIPlanet {
 	}
 	
 	@Override
-	public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
+	public ActionResultType processInitialInteract(PlayerEntity player, Hand hand) {
 		if(!world.isRemote && tile != null) {
-			tile.selectSystem(star.getId() + starIDoffset);
+			tile.selectSystem(star.getId());
 		}
-		return true;
+		return ActionResultType.PASS;
 	}
 }

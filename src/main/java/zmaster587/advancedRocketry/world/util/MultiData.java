@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.world.util;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.satellite.IDataHandler;
@@ -31,7 +31,7 @@ public class MultiData implements IDataHandler {
 	}
 
 	@Override
-	public int extractData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {
+	public int extractData(int maxAmount, DataType type, Direction dir, boolean commit) {
 
 		DataStorage storage = dataStorages.get(type);
 		
@@ -42,7 +42,7 @@ public class MultiData implements IDataHandler {
 	}
 
 	@Override
-	public int addData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {
+	public int addData(int maxAmount, DataType type, Direction dir, boolean commit) {
 		DataStorage storage = dataStorages.get(type);
 
 		if(storage == null)
@@ -73,21 +73,21 @@ public class MultiData implements IDataHandler {
 			dataStorages.get(dataType).setData(amount,dataType);
 	}
 	
-	public void writeToNBT(NBTTagCompound nbt) {
+	public void writeToNBT(CompoundNBT nbt) {
 		for(DataStorage.DataType type : DataStorage.DataType.values()) {
 			if(type != DataStorage.DataType.UNDEFINED) {
-				NBTTagCompound dataNBT = new NBTTagCompound(); 
+				CompoundNBT dataNBT = new CompoundNBT(); 
 				
 				dataStorages.get(type).writeToNBT(dataNBT);
-				nbt.setTag(type.name(), dataNBT);
+				nbt.put(type.name(), dataNBT);
 			}
 		}
 	}
 	
-	public void readFromNBT(NBTTagCompound nbt) {
+	public void readFromNBT(CompoundNBT nbt) {
 		for(DataStorage.DataType type : DataStorage.DataType.values()) {
 			if(type != DataStorage.DataType.UNDEFINED) {
-				NBTTagCompound dataNBT = nbt.getCompoundTag(type.name());
+				CompoundNBT dataNBT = nbt.getCompound(type.name());
 				dataStorages.get(type).readFromNBT(dataNBT);
 				
 			}

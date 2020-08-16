@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.world.ore;
 
 import net.minecraft.block.BlockStone;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -20,11 +20,11 @@ import com.google.common.base.Predicate;
 
 public class CustomizableOreGen implements IWorldGenerator {
 
-	IBlockState oreToGen;
+	BlockState oreToGen;
 	int numPerChunk, clumpSize, heightLevel, difference;
 
 
-	public CustomizableOreGen(IBlockState oreToGen, int numPerChunk, int clumpSize, int minHeight, int maxHeight) {
+	public CustomizableOreGen(BlockState oreToGen, int numPerChunk, int clumpSize, int minHeight, int maxHeight) {
 		this.oreToGen = oreToGen;
 		this.numPerChunk = numPerChunk;
 		this.clumpSize = clumpSize;
@@ -44,10 +44,10 @@ public class CustomizableOreGen implements IWorldGenerator {
 	public void generate(Random random, int chunkX, int chunkZ, World world,
 			IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
 
-		Predicate<IBlockState> predicate = null;
+		Predicate<BlockState> predicate = null;
 		if(DimensionManager.getInstance().isDimensionCreated(world.provider.getDimension()))
 		{
-			IBlockState state = ((DimensionProperties)DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension())).getStoneBlock();
+			BlockState state = ((DimensionProperties)DimensionManager.getInstance().getDimensionProperties(world)).getStoneBlock();
 			if(state != null)
 				predicate = new CustomPredicate(state);
 		}
@@ -65,17 +65,17 @@ public class CustomizableOreGen implements IWorldGenerator {
 
 	}
 
-	static class CustomPredicate implements Predicate<IBlockState>
+	static class CustomPredicate implements Predicate<BlockState>
 	{
-		IBlockState state;
-		public CustomPredicate(IBlockState state)
+		BlockState state;
+		public CustomPredicate(BlockState state)
 		{
 			this.state = state;
 		}
 
 
 
-		public boolean apply(IBlockState p_apply_1_)
+		public boolean apply(BlockState p_apply_1_)
 		{
 			if (p_apply_1_ != null) {
 				if(p_apply_1_.getBlock() == Blocks.STONE)

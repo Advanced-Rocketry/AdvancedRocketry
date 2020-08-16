@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
@@ -40,16 +40,16 @@ public class RendererObservatory  extends TileEntitySpecialRenderer {
         int j = i % 65536;
         int k = i / 65536;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j, (float)k);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		
-		GL11.glPushMatrix();
+		matrix.push();
 
 		//Rotate and move the model into position
-		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));//tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		GL11.glTranslated(x + .5, y, z + .5);
-		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 180 : 0) + front.getFrontOffsetZ()*90f, 0, 1, 0);
+		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));//tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
+		matrix.translate(x + .5, y, z + .5);
+		GL11.glRotatef((front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, 1, 0);
 
-		GL11.glTranslated(2, -1, 0);
+		matrix.translate(2, -1, 0);
 
 		bindTexture(texture);
 
@@ -61,15 +61,15 @@ public class RendererObservatory  extends TileEntitySpecialRenderer {
 			model.renderPart("Scope");
 			model.renderPart("Axis");
 
-			GL11.glPushMatrix();
+			matrix.push();
 			GL11.glTranslatef(0, 0, -offset);
 			model.renderOnly("CasingXMinus");
-			GL11.glPopMatrix();
+			matrix.pop();
 
-			GL11.glPushMatrix();
+			matrix.push();
 			GL11.glTranslatef(0,0,offset);
 			model.renderOnly("CasingXPlus");
-			GL11.glPopMatrix();
+			matrix.pop();
 
 		}
 		else {
@@ -77,6 +77,6 @@ public class RendererObservatory  extends TileEntitySpecialRenderer {
 			model.renderOnly("CasingXMinus");
 			model.renderOnly("CasingXPlus");
 		}
-		GL11.glPopMatrix();
+		matrix.pop();
 	}
 }

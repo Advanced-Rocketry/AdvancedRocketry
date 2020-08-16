@@ -1,9 +1,9 @@
 package zmaster587.advancedRocketry.item;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import zmaster587.libVulpes.LibVulpes;
 
@@ -25,53 +25,53 @@ public class ItemAsteroidChip  extends ItemMultiData {
 	 * @param stack stack to erase
 	 */
 	public void erase(ItemStack stack) {
-		stack.setTagCompound(null);
+		stack.setTag(null);
 	}
 
 	public Long getUUID(ItemStack stack) {
-		if(stack.hasTagCompound())
-			return stack.getTagCompound().getLong(uuidIdentifier);
+		if(stack.hasTag())
+			return stack.getTag().getLong(uuidIdentifier);
 		return null;
 	}
 
 	public void setUUID(ItemStack stack, long uuid) {
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound())
-			nbt = stack.getTagCompound();
+		CompoundNBT nbt;
+		if(stack.hasTag())
+			nbt = stack.getTag();
 		else
-			nbt = new NBTTagCompound();
+			nbt = new CompoundNBT();
 
-		nbt.setLong(uuidIdentifier,uuid);
-		stack.setTagCompound(nbt);
+		nbt.putLong(uuidIdentifier,uuid);
+		stack.setTag(nbt);
 	}
 	
 	public String getType(ItemStack stack) {
-		if(stack.hasTagCompound())
-			return stack.getTagCompound().getString(astType);
+		if(stack.hasTag())
+			return stack.getTag().getString(astType);
 		return null;
 	}
 
 	public void setType(ItemStack stack, String type) {
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound())
-			nbt = stack.getTagCompound();
+		CompoundNBT nbt;
+		if(stack.hasTag())
+			nbt = stack.getTag();
 		else
-			nbt = new NBTTagCompound();
+			nbt = new CompoundNBT();
 
-		nbt.setString(astType,type);
-		stack.setTagCompound(nbt);
+		nbt.putString(astType,type);
+		stack.setTag(nbt);
 	}
 
 	@Override
 	public void addInformation(ItemStack stack, World player, java.util.List list, ITooltipFlag bool) {
 
-		if(!stack.hasTagCompound()) {
+		if(!stack.hasTag()) {
 			list.add(LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
 		}
 		else {
-			if(stack.getItemDamage()  == 0) {
+			if(stack.getDamage()  == 0) {
 
-				list.add(LibVulpes.proxy.getLocalizedString("msg.asteroidChip.asteroid") + "-" + ChatFormatting.DARK_GREEN  + getUUID(stack));
+				list.add(LibVulpes.proxy.getLocalizedString("msg.asteroidChip.asteroid") + "-" + TextFormatting.DARK_GREEN  + getUUID(stack));
 
 				super.addInformation(stack, player, list, bool);
 

@@ -7,8 +7,8 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.input.Keyboard;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
@@ -21,7 +21,7 @@ import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.InputSyncHandler;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(value=Dist.CLIENT)
 public class KeyBindings {
 
 	boolean prevState;
@@ -32,7 +32,7 @@ public class KeyBindings {
 
 
 		//Prevent control when a GUI is open
-		if(Minecraft.getMinecraft().currentScreen != null)// && Minecraft.getMinecraft().currentScreen instanceof GuiChat)
+		if(Minecraft.getInstance().currentScreen != null)// && Minecraft.getInstance().currentScreen instanceof GuiChat)
 			return;
 
 
@@ -45,7 +45,7 @@ public class KeyBindings {
 
 		if(player.getRidingEntity() != null && player.getRidingEntity() instanceof EntityRocket) {
 			EntityRocket rocket = (EntityRocket)player.getRidingEntity();
-			if(Minecraft.getMinecraft().inGameHasFocus && player.equals(Minecraft.getMinecraft().player)) {
+			if(Minecraft.getInstance().inGameHasFocus && player.equals(Minecraft.getInstance().player)) {
 				if(!rocket.isInFlight() && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 
 					rocket.prepareLaunch();
@@ -59,7 +59,7 @@ public class KeyBindings {
 
 		if(player.getRidingEntity() != null && player.getRidingEntity() instanceof EntityHoverCraft) {
 			EntityHoverCraft hoverCraft = (EntityHoverCraft)player.getRidingEntity();
-			if(Minecraft.getMinecraft().inGameHasFocus && player.equals(Minecraft.getMinecraft().player)) {
+			if(Minecraft.getInstance().inGameHasFocus && player.equals(Minecraft.getInstance().player)) {
 				hoverCraft.onTurnLeft(turnRocketLeft.isKeyDown());
 				hoverCraft.onTurnRight(turnRocketRight.isKeyDown());
 				hoverCraft.onUp(turnRocketUp.isKeyDown());

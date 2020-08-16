@@ -1,25 +1,24 @@
 package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.block.BlockState;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.tileentity.TileEntityType;
 
 public class BlockActiveState extends Block {
 
 	String activeTextureString;
-	Class tileClass;
+	TileEntityType<?> tileClass;
 	
-	public static final PropertyBool STATE = PropertyBool.create("start");
+	public static final BooleanProperty STATE = BooleanProperty.create("start");
 	
-	public BlockActiveState(Material mat, TileEntity tile) {
+	public BlockActiveState(Properties mat, TileEntityType<?> tile) {
 		super(mat);
-		tileClass = tile == null ? null : tile.getClass();
+		tileClass = tile;
 	}
 	
 	@Override
-	public boolean hasTileEntity(IBlockState state) {
+	public boolean hasTileEntity(BlockState state) {
 		return tileClass != null;
 	}
 	

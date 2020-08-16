@@ -1,12 +1,13 @@
 package zmaster587.advancedRocketry.util;
 
-import net.minecraft.block.state.IBlockState;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.AtmosphereTypes;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import net.minecraft.block.BlockState;
 
 public class OreGenProperties {
 
@@ -23,7 +24,7 @@ public class OreGenProperties {
 		oreEntries = new LinkedList<OreGenProperties.OreEntry>();
 	}
 	
-	public void addEntry(IBlockState state, int minHeight, int maxHeight, int clumpSize, int chancePerChunk) {
+	public void addEntry(BlockState state, int minHeight, int maxHeight, int clumpSize, int chancePerChunk) {
 		oreEntries.add(new OreEntry(state, minHeight, maxHeight, clumpSize, chancePerChunk));
 	}
 	
@@ -55,13 +56,13 @@ public class OreGenProperties {
 	}
 	
 	public static class OreEntry {
-		private IBlockState state;
+		private BlockState state;
 		int minHeight;
 		int maxHeight;
 		int clumpSize;
 		int chancePerChunk;
 		
-		public OreEntry(IBlockState state, int minHeight, int maxHeight, int clumpSize, int chancePerChunk) {
+		public OreEntry(BlockState state, int minHeight, int maxHeight, int clumpSize, int chancePerChunk) {
 			this.state = state;
 			this.minHeight = minHeight;
 			this.maxHeight = maxHeight;
@@ -69,7 +70,7 @@ public class OreGenProperties {
 			this.chancePerChunk = chancePerChunk;
 		}
 		
-		public IBlockState getBlockState() {
+		public BlockState getBlockState() {
 			return state;
 		}
 		

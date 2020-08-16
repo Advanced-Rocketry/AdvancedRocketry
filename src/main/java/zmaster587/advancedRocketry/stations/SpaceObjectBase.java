@@ -1,21 +1,23 @@
 package zmaster587.advancedRocketry.stations;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.IStorageChunk;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
+import zmaster587.libVulpes.util.ZUtils;
 
 public abstract class SpaceObjectBase implements ISpaceObject {
 	private int posX, posY;
@@ -47,7 +49,7 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 	 * @return id of the space object (NOT the DIMID)
 	 */
 	@Override
-	public int getId() {
+	public ResourceLocation getId() {
 		return properties.getId();
 	}
 
@@ -59,7 +61,7 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 		return properties;
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(value=Dist.CLIENT)
 	public void setProperties(DimensionProperties properties) {
 		this.properties = properties;
 	}
@@ -68,7 +70,7 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 	 * @return the DIMID of the planet the object is currently orbiting, Constants.INVALID_PLANET if none
 	 */
 	@Override
-	public int getOrbitingPlanetId() {
+	public ResourceLocation getOrbitingPlanetId() {
 		return properties.getParentPlanet();
 	}
 
@@ -76,7 +78,7 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 	 * Sets the forward Facing direction of the object.  Mostly used for warpships
 	 * @param direction
 	 */
-	public void setForwardDirection(EnumFacing direction) {
+	public void setForwardDirection(Direction direction) {
 		
 	}
 
@@ -84,8 +86,8 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 	 * Gets the forward facing direction of the ship.  Direction is not garunteed to be set
 	 * @return direction of the ship, or UNKNOWN if none exists
 	 */
-	public EnumFacing getForwardDirection() {
-			return EnumFacing.DOWN;
+	public Direction getForwardDirection() {
+			return Direction.DOWN;
 	}
 	/**
 	 * @return the altitude above the parent DIM the object currently is
@@ -97,14 +99,14 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 	/**
 	 * @return rotation of the station in degrees
 	 */
-	public double getRotation(EnumFacing dir) {
+	public double getRotation(Direction dir) {
 		return (rotation[getIDFromDir(dir)] + getDeltaRotation(dir)*(getWorldTime() - lastTimeModification)) % (360D);
 	}
 	
-	protected int getIDFromDir(EnumFacing facing){
-		if(facing == EnumFacing.EAST)
+	protected int getIDFromDir(Direction facing){
+		if(facing == Direction.EAST)
 			return 0;
-		else if(facing == EnumFacing.UP)
+		else if(facing == Direction.UP)
 			return 1;
 		else
 			return 2;
@@ -113,21 +115,21 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 	/**
 	 * @param rotation rotation of the station in degrees
 	 */
-	public void setRotation(double rotation, EnumFacing facing) {
+	public void setRotation(double rotation, Direction facing) {
 		this.rotation[getIDFromDir(facing)] = rotation;
 	}
 	
 	/**
 	 * @return anglarVelocity of the station in degrees per tick
 	 */
-	public double getDeltaRotation(EnumFacing facing) {
+	public double getDeltaRotation(Direction facing) {
 		return this.angularVelocity[getIDFromDir(facing)];
 	}
 	
 	/**
 	 * @param rotation anglarVelocity of the station in degrees per tick
 	 */
-	public void setDeltaRotation(double rotation, EnumFacing facing) {
+	public void setDeltaRotation(double rotation, Direction facing) {
 		this.rotation[getIDFromDir(facing)] = getRotation(facing);
 		this.lastTimeModification = getWorldTime();
 		
@@ -168,7 +170,7 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 	 * @param id the space object id of this object (NOT DIMID)
 	 */
 	@Override
-	public void setId(int id) {
+	public void setId(ResourceLocation id) {
 		properties.setId(id);
 	}
 
@@ -199,7 +201,7 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 	 * @param id
 	 */
 	@Override
-	public void setOrbitingBody(int id) {
+	public void setOrbitingBody(ResourceLocation id) {
 		if(id == this.getOrbitingPlanetId())
 			return;
 
@@ -207,15 +209,15 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 	}
 
 	@Override
-	public void setDestOrbitingBody(int id) {
-		if(FMLCommonHandler.instance().getSide().isServer()) {
+	public void setDestOrbitingBody(ResourceLocation id) {
+		if(EffectiveSide.get().isServer()) {
 			PacketHandler.sendToAll(new PacketStationUpdate(this, PacketStationUpdate.Type.DEST_ORBIT_UPDATE));
 		}
 	}
 
 	@Override
-	public int getDestOrbitingBody() {
-		return 0;
+	public ResourceLocation getDestOrbitingBody() {
+		return DimensionManager.overworldProperties.getId();
 	}
 
 	/**
@@ -223,38 +225,38 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 	 * @param chunk
 	 */
 	public void onModuleUnpack(IStorageChunk chunk) {
-		World worldObj = DimensionManager.getWorld(ARConfiguration.getCurrentConfig().spaceDimId);
+		World worldObj = ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId);
 		chunk.pasteInWorld(worldObj, spawnLocation.x - chunk.getSizeX()/2, spawnLocation.y - chunk.getSizeY()/2, spawnLocation.z - chunk.getSizeZ()/2);
 
 	}
 
 	@Override
-	public void writeToNbt(NBTTagCompound nbt) {
+	public void writeToNbt(CompoundNBT nbt) {
 		properties.writeToNBT(nbt);
-		nbt.setInteger("id", getId());
-		nbt.setInteger("posX", posX);
-		nbt.setInteger("posY", posY);
-		nbt.setInteger("alitude", altitude);
-		nbt.setInteger("spawnX", spawnLocation.x);
-		nbt.setInteger("spawnY", spawnLocation.y);
-		nbt.setInteger("spawnZ", spawnLocation.z);
-		nbt.setDouble("rotationX", rotation[0]);
-		nbt.setDouble("rotationY", rotation[1]);
-		nbt.setDouble("rotationZ", rotation[2]);
-		nbt.setDouble("deltaRotationX", angularVelocity[0]);
-		nbt.setDouble("deltaRotationY", angularVelocity[1]);
-		nbt.setDouble("deltaRotationZ", angularVelocity[2]);
+		nbt.putString("id", getId().toString());
+		nbt.putInt("posX", posX);
+		nbt.putInt("posY", posY);
+		nbt.putInt("alitude", altitude);
+		nbt.putInt("spawnX", spawnLocation.x);
+		nbt.putInt("spawnY", spawnLocation.y);
+		nbt.putInt("spawnZ", spawnLocation.z);
+		nbt.putDouble("rotationX", rotation[0]);
+		nbt.putDouble("rotationY", rotation[1]);
+		nbt.putDouble("rotationZ", rotation[2]);
+		nbt.putDouble("deltaRotationX", angularVelocity[0]);
+		nbt.putDouble("deltaRotationY", angularVelocity[1]);
+		nbt.putDouble("deltaRotationZ", angularVelocity[2]);
 	}
 
 	@Override
-	public void readFromNbt(NBTTagCompound nbt) {
+	public void readFromNbt(CompoundNBT nbt) {
 		properties.readFromNBT(nbt);
 
-		posX = nbt.getInteger("posX");
-		posY = nbt.getInteger("posY");
-		altitude = nbt.getInteger("altitude");
-		spawnLocation = new HashedBlockPosition(nbt.getInteger("spawnX"), nbt.getInteger("spawnY"), nbt.getInteger("spawnZ"));
-		properties.setId(nbt.getInteger("id"));
+		posX = nbt.getInt("posX");
+		posY = nbt.getInt("posY");
+		altitude = nbt.getInt("altitude");
+		spawnLocation = new HashedBlockPosition(nbt.getInt("spawnX"), nbt.getInt("spawnY"), nbt.getInt("spawnZ"));
+		properties.setId(new ResourceLocation(nbt.getString("id")));
 		rotation[0] = nbt.getDouble("rotationX");
 		rotation[1] = nbt.getDouble("rotationY");
 		rotation[2] = nbt.getDouble("rotationZ");

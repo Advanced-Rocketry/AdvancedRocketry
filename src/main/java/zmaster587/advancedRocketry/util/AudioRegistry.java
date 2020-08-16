@@ -3,8 +3,8 @@ package zmaster587.advancedRocketry.util;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class AudioRegistry {
 	public static final SoundEvent electricShockSmall = createSoundEvent("ElectricShockSmall");

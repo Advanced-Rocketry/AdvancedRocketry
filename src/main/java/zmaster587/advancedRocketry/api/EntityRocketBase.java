@@ -1,10 +1,13 @@
 package zmaster587.advancedRocketry.api;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.libVulpes.util.HashedBlockPosition;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.LinkedList;
 import java.util.Set;
@@ -25,8 +28,8 @@ public abstract class EntityRocketBase extends Entity {
 	//Stores other info about the rocket such as fuel and acceleration properties
 	public StatsRocket stats;
 	
-	public EntityRocketBase(World world) {
-		super(world);
+	public EntityRocketBase(EntityType<?> type, World world) {
+		super(type, world);
 	}
 
 	/**
@@ -96,11 +99,11 @@ public abstract class EntityRocketBase extends Entity {
 	public void onOrbitReached() {
 		MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketReachesOrbitEvent(this));
 		
-		if(this.world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
-			ISpaceObject station = AdvancedRocketryAPI.spaceObjectManager.getSpaceStationFromBlockCoords(this.getPosition());
+		if(ZUtils.getDimensionIdentifier(this.world) == ARConfiguration.getCurrentConfig().spaceDimId) {
+			ISpaceObject station = AdvancedRocketryAPI.spaceObjectManager.getSpaceStationFromBlockCoords(new BlockPos(this.getPositionVec()));
 			
 			if(station instanceof ISpaceObject) {
-				((ISpaceObject)station).setPadStatus((int)Math.floor(this.posX), (int)Math.floor(this.posZ), false);
+				((ISpaceObject)station).setPadStatus((int)Math.floor(this.getPosX()), (int)Math.floor(this.getPosZ()), false);
 			}
 		}
 	}
