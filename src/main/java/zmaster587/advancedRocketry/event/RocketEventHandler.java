@@ -8,7 +8,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
@@ -369,7 +368,7 @@ public class RocketEventHandler extends Gui {
 				this.drawTexturedModalRect(3, 94 + (int)(69*(0.5 - (MathHelper.clamp((float) (rocket.motionY), -1f, 1f)/2f))), 17, 0, 6, 6); //94 to 161
 
 				//Draw fuel indicator
-				int size = (int)(68*(rocket.getFuelAmount() /(float)rocket.getFuelCapacity()));
+				int size = (int)(68*(rocket.getFuelAmountMonopropellant() /(float)rocket.getFuelCapacityMonopropellant()));
 				this.drawTexturedModalRect(3, 242 - size, 17, 75 - size, 3, size); //94 to 161
 
 				GlStateManager.disableBlend();

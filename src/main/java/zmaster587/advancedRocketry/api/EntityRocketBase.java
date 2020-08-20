@@ -30,11 +30,46 @@ public abstract class EntityRocketBase extends Entity {
 	}
 
 	/**
-	 * AttempTs to add amt fuel points to the rocket
+	 * AttempTs to add amt fuel points to the rocket for monopropellants
 	 * @param amt
 	 * @return the amount of fuel actually added to the rocket
 	 */
-	public abstract int addFuelAmount(int amt);
+	public abstract int addFuelAmountMonopropellant(int amt);
+
+	/**
+	 * AttempTs to add amt fuel points to the rocket for bipropellants
+	 * @param amt
+	 * @return the amount of fuel actually added to the rocket
+	 */
+	public abstract int addFuelAmountBipropellant(int amt);
+
+	/**
+	 * AttempTs to add amt fuel points to the rocket for oxidizers
+	 * @param amt
+	 * @return the amount of fuel actually added to the rocket
+	 */
+	public abstract int addFuelAmountOxidizer(int amt);
+
+	/**
+	 * AttempTs to set the fuel rate for the rocket for monopropellants
+	 * @param rate
+	 * @return the rate of consumption for the rocket
+	 */
+	public abstract int setFuelRateMonopropellant(int rate);
+
+	/**
+	 * AttempTs to set the fuel rate for the rocket for bipropellants
+	 * @param rate
+	 * @return the rate of consumption for the rocket
+	 */
+	public abstract int setFuelRateBipropellant(int rate);
+
+	/**
+	 * AttempTs to set the fuel rate for the rocket for oxidizers
+	 * @param rate
+	 * @return the rate of consumption for the rocket
+	 */
+	public abstract int setFuelRateOxidizer(int rate);
 
 	/**
 	 * Unlinks the given infrastructure
@@ -64,14 +99,49 @@ public abstract class EntityRocketBase extends Entity {
 	public abstract void launch();
 
 	/**
-	 * @return the amount of fuel points in the rocket
+	 * @return the amount of fuel points in the rocket for monopropellants
 	 */
-	public abstract int getFuelAmount();
+	public abstract int getFuelAmountMonopropellant();
 
 	/**
-	 * @return the total fuel capacity of the rocket
+	 * @return the amount of fuel points in the rocket for bipropellants
 	 */
-	public abstract int getFuelCapacity();
+	public abstract int getFuelAmountBipropellant();
+
+	/**
+	 * @return the amount of fuel points in the rocket for oxidizers
+	 */
+	public abstract int getFuelAmountOxidizer();
+
+	/**
+	 * @return the total fuel capacity of the rocket for monopropellants
+	 */
+	public abstract int getFuelCapacityMonopropellant();
+
+	/**
+	 * @return the total fuel capacity of the rocket for bipropellants
+	 */
+	public abstract int getFuelCapacityBipropellant();
+
+	/**
+	 * @return the total fuel capacity of the rocket for oxidizers
+	 */
+	public abstract int getFuelCapacityOxidizer();
+
+	/**
+	 * @return the rate of consumption for monopropellants
+	 */
+	public abstract int getFuelRateMonopropellant();
+
+	/**
+	 * @return the rate of consumption for bipropellants
+	 */
+	public abstract int getFuelRateBipropellant();
+
+	/**
+	 * @return the rate of consumption  for oxidizers
+	 */
+	public abstract int getFuelRateOxidizer();
 
 	/**
 	 * @return the location of the rocket in the world

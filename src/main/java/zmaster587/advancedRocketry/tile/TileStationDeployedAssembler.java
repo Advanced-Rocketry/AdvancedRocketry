@@ -250,10 +250,10 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 					}
 				}
 			}
-			stats.setFuelRate(FuelType.LIQUID,fuelUse);
+			stats.setFuelRate(FuelType.LIQUID_MONOPROPELLANT,fuelUse);
 			stats.setWeight(numBlocks);
 			stats.setThrust(thrust);
-			stats.setFuelCapacity(FuelType.LIQUID,fuel);
+			stats.setFuelCapacity(FuelType.LIQUID_MONOPROPELLANT,fuel);
 			stats.setDrillingPower(drillPower);
 			stats.setStatTag("liquidCapacity", fluidCapacity);
 
@@ -273,7 +273,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 
 	@Override
 	public float getNeededFuel() {
-		return getAcceleration() > 0 ? stats.getFuelRate(FuelType.LIQUID) : 0;
+		return getAcceleration() > 0 ? stats.getFuelRate(FuelType.LIQUID_MONOPROPELLANT) : 0;
 	}
 
 	//No additional scanning is needed

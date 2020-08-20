@@ -1,8 +1,6 @@
 package zmaster587.advancedRocketry.api;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.BlockStateBase;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityArmorStand;
@@ -14,6 +12,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import org.lwjgl.Sys;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
@@ -22,7 +21,6 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InvalidClassException;
 import java.lang.annotation.ElementType;
@@ -31,12 +29,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.Map.Entry;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import io.netty.buffer.ByteBuf;
 
 /**
  * Stores config variables
@@ -58,7 +53,7 @@ public class ARConfiguration {
 	final static String CLIENT = "Client";
 	public static Logger logger = LogManager.getLogger(Constants.modId);
 
-	static String[] sealableBlockWhiteList, sealableBlockBlackList, breakableTorches,  blackListRocketBlocksStr, harvestableGasses, entityList, asteriodOres, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres, liquidRocketFuel;
+	static String[] sealableBlockWhiteList, sealableBlockBlackList, breakableTorches,  blackListRocketBlocksStr, harvestableGasses, entityList, asteriodOres, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres, liquidMonopropellant, liquidBipropellantFuel, liquidBipropellantOxidizer;
 
 
 	//Only to be set in preinit
@@ -458,7 +453,9 @@ public class ARConfiguration {
 		arConfig.terraformliquidRate = config.get(Configuration.CATEGORY_GENERAL, "TerraformerFluidConsumeRate", 40, "how many millibuckets/t are required to keep the terraformer running").getInt();
 		arConfig.allowTerraformNonAR = config.get(Configuration.CATEGORY_GENERAL, "allowTerraformingNonARWorlds", false, "If true dimensions not added by AR can be terraformed, including the overworld").getBoolean();
 
-		liquidRocketFuel = config.get(ROCKET, "rocketFuels", new String[] {"rocketfuel"}, "List of fluid names for fluids that can be used as rocket fuel").getStringList();
+		liquidMonopropellant = config.get(ROCKET, "rocketFuels", new String[] {"rocketfuel"}, "List of fluid names for fluids that can be used as rocket monopropellants").getStringList();
+		liquidBipropellantFuel = config.get(ROCKET, "rocketBipropellants", new String[] {"hydrogen"}, "List of fluid names for fluids that can be used as rocket bipropellant fuels").getStringList();
+		liquidBipropellantOxidizer = config.get(ROCKET, "rocketOxidizers", new String[] {"oxygen"}, "List of fluid names for fluids that can be used as rocket bipropellant oxidizers").getStringList();
 
 		arConfig.stationSize = config.get(Configuration.CATEGORY_GENERAL, "SpaceStationBuildRadius", 1024, "The largest size a space station can be.  Should also be a power of 2 (512, 1024, 2048, 4096, ...).  CAUTION: CHANGING THIS OPTION WILL DAMAGE EXISTING STATIONS!!!").getInt();
 		arConfig.canPlayerRespawnInSpace = config.get(Configuration.CATEGORY_GENERAL, "allowPlanetRespawn", false, "If true players will respawn near beds on planets IF the spawn location is in a breathable atmosphere").getBoolean();
@@ -587,18 +584,53 @@ public class ARConfiguration {
 
 		//Register fuels
 		logger.info("Start registering liquid rocket fuels");
-		for(String str : liquidRocketFuel) {
-			Fluid fluid = FluidRegistry.getFluid(str);
+		for(String str : liquidMonopropellant) {
+			String splitStr[] = str.split(";");
+			Fluid fluid = FluidRegistry.getFluid(splitStr[0]);
+			float multiplier = 1.0f;
+			if (splitStr.length > 1) {
+				multiplier = Float.parseFloat(splitStr[1]);
+			}
 
 			if(fluid != null) {
-				logger.info("Registering fluid "+ str + " as rocket fuel");
-				FuelRegistry.instance.registerFuel(FuelType.LIQUID, fluid, 1f);
+				logger.info("Registering fluid "+ str + " as rocket monopropellant");
+				FuelRegistry.instance.registerFuel(FuelType.LIQUID_MONOPROPELLANT, fluid, multiplier);
+			}
+			else
+				logger.warn("Fluid name" + str  + " is not a registered fluid!");
+		}
+		for(String str : liquidBipropellantFuel) {
+			String splitStr[] = str.split(";");
+			Fluid fluid = FluidRegistry.getFluid(splitStr[0]);
+			float multiplier = 1.0f;
+			if (splitStr.length > 1) {
+				multiplier = Float.parseFloat(splitStr[1]);
+			}
+
+			if(fluid != null) {
+				logger.info("Registering fluid "+ str + " as rocket bipropellant");
+				FuelRegistry.instance.registerFuel(FuelType.LIQUID_BIPROPELLANT, fluid, multiplier);
+			}
+			else
+				logger.warn("Fluid name" + str  + " is not a registered fluid!");
+		}
+		for(String str : liquidBipropellantOxidizer) {
+			String splitStr[] = str.split(";");
+			Fluid fluid = FluidRegistry.getFluid(splitStr[0]);
+			float multiplier = 1.0f;
+			if (splitStr.length > 1) {
+				multiplier = Float.parseFloat(splitStr[1]);
+			}
+
+			if(fluid != null) {
+				logger.info("Registering fluid "+ str + " as rocket oxidizer");
+				FuelRegistry.instance.registerFuel(FuelType.LIQUID_OXIDIZER, fluid, multiplier);
 			}
 			else
 				logger.warn("Fluid name" + str  + " is not a registered fluid!");
 		}
 		logger.info("Finished registering liquid rocket fuels");
-		liquidRocketFuel = null; //clean up
+		liquidMonopropellant = null; //clean up
 
 		//Register Whitelisted Sealable Blocks
 

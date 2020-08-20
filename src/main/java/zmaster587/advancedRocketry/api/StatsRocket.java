@@ -18,19 +18,25 @@ public class StatsRocket {
 	private int weight;
 	private float drillingPower;
 
-	private int fuelLiquid;
+	private int fuelMonopropellant;
 	private int fuelNuclear;
+	private int fuelBipropellant;
+	private int fuelOxidizer;
 	private int fuelIon;
 	private int fuelWarp;
 	private int fuelImpulse;
 
-	private int fuelCapacityLiquid;
+	private int fuelCapacityMonopropellant;
+	private int fuelCapacityBipropellant;
+	private int fuelCapacityOxidizer;
 	private int fuelCapacityNuclear;
 	private int fuelCapacityIon;
 	private int fuelCapacityWarp;
 	private int fuelCapacityImpulse;
 
-	private int fuelRateLiquid;
+	private int fuelRateMonopropellant;
+	private int fuelRateBipropellant;
+	private int fuelRateOxidizer;
 	private int fuelRateNuclear;
 	private int fuelRateIon;
 	private int fuelRateWarp;
@@ -48,7 +54,9 @@ public class StatsRocket {
 	public StatsRocket() {
 		thrust = 0;
 		weight = 0;
-		fuelLiquid = 0;
+		fuelMonopropellant = 0;
+		fuelBipropellant = 0;
+		fuelOxidizer = 0;
 		drillingPower = 0f;
 		pilotSeatPos = new HashedBlockPosition(0,0,0);
 		pilotSeatPos.x = INVALID_SEAT;
@@ -155,8 +163,12 @@ public class StatsRocket {
 			return fuelImpulse;
 		case ION:
 			return fuelIon;
-		case LIQUID:
-			return fuelLiquid;
+		case LIQUID_MONOPROPELLANT:
+			return fuelMonopropellant;
+		case LIQUID_BIPROPELLANT:
+			return fuelBipropellant;
+		case LIQUID_OXIDIZER:
+			return fuelOxidizer;
 		case NUCLEAR:
 			return fuelNuclear;
 		}
@@ -176,8 +188,12 @@ public class StatsRocket {
 			return fuelCapacityImpulse;
 		case ION:
 			return fuelCapacityIon;
-		case LIQUID:
-			return fuelCapacityLiquid;
+		case LIQUID_MONOPROPELLANT:
+			return fuelCapacityMonopropellant;
+		case LIQUID_BIPROPELLANT:
+			return fuelCapacityBipropellant;
+		case LIQUID_OXIDIZER:
+			return fuelCapacityOxidizer;
 		case NUCLEAR:
 			return fuelCapacityNuclear;
 		}
@@ -200,8 +216,12 @@ public class StatsRocket {
 			return fuelRateImpulse;
 		case ION:
 			return fuelRateIon;
-		case LIQUID:
-			return fuelRateLiquid;
+		case LIQUID_MONOPROPELLANT:
+			return fuelRateMonopropellant;
+		case LIQUID_BIPROPELLANT:
+			return fuelRateBipropellant;
+		case LIQUID_OXIDIZER:
+			return fuelRateOxidizer;
 		case NUCLEAR:
 			return fuelRateNuclear;
 		}
@@ -224,8 +244,14 @@ public class StatsRocket {
 		case ION:
 			fuelIon = amt;
 			break;
-		case LIQUID:
-			fuelLiquid = amt;
+		case LIQUID_MONOPROPELLANT:
+			fuelMonopropellant = amt;
+			break;
+		case LIQUID_BIPROPELLANT:
+			fuelBipropellant = amt;
+			break;
+			case LIQUID_OXIDIZER:
+			fuelOxidizer = amt;
 			break;
 		case NUCLEAR:
 			fuelNuclear = amt;
@@ -248,8 +274,14 @@ public class StatsRocket {
 		case ION:
 			fuelRateIon = amt;
 			break;
-		case LIQUID:
-			fuelRateLiquid = amt;
+		case LIQUID_MONOPROPELLANT:
+			fuelRateMonopropellant = amt;
+			break;
+		case LIQUID_BIPROPELLANT:
+			fuelRateBipropellant = amt;
+			break;
+		case LIQUID_OXIDIZER:
+			fuelRateOxidizer = amt;
 			break;
 		case NUCLEAR:
 			fuelRateNuclear = amt;
@@ -272,8 +304,14 @@ public class StatsRocket {
 		case ION:
 			fuelCapacityIon = amt;
 			break;
-		case LIQUID:
-			fuelCapacityLiquid = amt;
+		case LIQUID_MONOPROPELLANT:
+			fuelCapacityMonopropellant = amt;
+			break;
+		case LIQUID_BIPROPELLANT:
+			fuelCapacityBipropellant = amt;
+			break;
+		case LIQUID_OXIDIZER:
+			fuelCapacityOxidizer = amt;
 			break;
 		case NUCLEAR:
 			fuelCapacityNuclear = amt;
@@ -298,11 +336,21 @@ public class StatsRocket {
 		case ION:
 			fuelIon += amt;
 			return fuelIon;
-		case LIQUID:
-			int maxAdd = fuelCapacityLiquid - fuelLiquid;
-			int amountToAdd = Math.min(amt, maxAdd);
-			fuelLiquid += amountToAdd;
-			return amountToAdd;
+		case LIQUID_MONOPROPELLANT:
+			int maxAddMono = fuelCapacityMonopropellant - fuelMonopropellant;
+			int amountToAddMono = Math.min(amt, maxAddMono);
+			fuelMonopropellant += amountToAddMono;
+			return amountToAddMono;
+		case LIQUID_BIPROPELLANT:
+			int maxAddBi = fuelCapacityBipropellant - fuelBipropellant;
+			int amountToAddBi = Math.min(amt, maxAddBi);
+			fuelBipropellant += amountToAddBi;
+			return amountToAddBi;
+		case LIQUID_OXIDIZER:
+			int maxAddOxi = fuelCapacityOxidizer - fuelOxidizer;
+			int amountToAddOxi = Math.min(amt, maxAddOxi);
+			fuelOxidizer += amountToAddOxi;
+			return amountToAddOxi;
 		case NUCLEAR:
 			fuelNuclear += amt;
 			return fuelNuclear;
@@ -331,7 +379,9 @@ public class StatsRocket {
 			setFuelCapacity(type, 0);
 		}
 
-		fuelLiquid = 0;
+		fuelMonopropellant = 0;
+		fuelBipropellant = 0;
+		fuelOxidizer = 0;
 		pilotSeatPos.x = INVALID_SEAT;
 		clearEngineLocations();
 		passengerSeats.clear();
@@ -374,19 +424,25 @@ public class StatsRocket {
 		stats.setInteger("weight", this.weight);
 		stats.setFloat("drillingPower", this.drillingPower);
 
-		stats.setInteger("fuelLiquid", this.fuelLiquid);
+		stats.setInteger("fuelMonopropellant", this.fuelMonopropellant);
+		stats.setInteger("fuelBipropellant", this.fuelBipropellant);
+		stats.setInteger("fuelOxidizer", this.fuelOxidizer);
 		stats.setInteger("fuelImpulse", this.fuelImpulse);
 		stats.setInteger("fuelIon", this.fuelIon);
 		stats.setInteger("fuelNuclear", this.fuelNuclear);
 		stats.setInteger("fuelWarp", this.fuelWarp);
 
-		stats.setInteger("fuelCapacityLiquid", this.fuelCapacityLiquid);
+		stats.setInteger("fuelCapacityMonopropellant", this.fuelCapacityMonopropellant);
+		stats.setInteger("fuelCapacityBipropellant", this.fuelCapacityBipropellant);
+		stats.setInteger("fuelCapacityOxidizer", this.fuelCapacityOxidizer);
 		stats.setInteger("fuelCapacityImpulse", this.fuelCapacityImpulse);
 		stats.setInteger("fuelCapacityIon", this.fuelCapacityIon);
 		stats.setInteger("fuelCapacityNuclear", this.fuelCapacityNuclear);
 		stats.setInteger("fuelCapacityWarp", this.fuelCapacityWarp);
 
-		stats.setInteger("fuelRateLiquid", this.fuelRateLiquid);
+		stats.setInteger("fuelRateMonopropellant", this.fuelRateMonopropellant);
+		stats.setInteger("fuelRateBipropellant", this.fuelRateBipropellant);
+		stats.setInteger("fuelRateOxidizer", this.fuelRateOxidizer);
 		stats.setInteger("fuelRateImpulse", this.fuelRateImpulse);
 		stats.setInteger("fuelRateIon", this.fuelRateIon);
 		stats.setInteger("fuelRateNuclear", this.fuelRateNuclear);
@@ -444,19 +500,25 @@ public class StatsRocket {
 			this.weight = stats.getInteger("weight");
 			this.drillingPower = stats.getFloat("drillingPower");
 
-			this.fuelLiquid = stats.getInteger("fuelLiquid");
+			this.fuelMonopropellant = stats.getInteger("fuelMonopropellant");
+			this.fuelBipropellant = stats.getInteger("fuelBipropellant");
+			this.fuelOxidizer = stats.getInteger("fuelOxidizer");
 			this.fuelImpulse = stats.getInteger("fuelImpulse");
 			this.fuelIon = stats.getInteger("fuelIon");
 			this.fuelNuclear = stats.getInteger("fuelNuclear");
 			this.fuelWarp = stats.getInteger("fuelWarp");
 
-			this.fuelCapacityLiquid = stats.getInteger("fuelCapacityLiquid");
+			this.fuelCapacityMonopropellant = stats.getInteger("fuelCapacityMonopropellant");
+			this.fuelCapacityBipropellant = stats.getInteger("fuelCapacityBipropellant");
+			this.fuelCapacityOxidizer = stats.getInteger("fuelCapacityOxidizer");
 			this.fuelCapacityImpulse = stats.getInteger("fuelCapacityImpulse");
 			this.fuelCapacityIon = stats.getInteger("fuelCapacityIon");
 			this.fuelCapacityNuclear = stats.getInteger("fuelCapacityNuclear");
 			this.fuelCapacityWarp = stats.getInteger("fuelCapacityWarp");
 
-			this.fuelRateLiquid = stats.getInteger("fuelRateLiquid");
+			this.fuelRateMonopropellant = stats.getInteger("fuelRateMonopropellant");
+			this.fuelRateBipropellant = stats.getInteger("fuelRateBipropellant");
+			this.fuelRateOxidizer = stats.getInteger("fuelRateOxidizer");
 			this.fuelRateImpulse = stats.getInteger("fuelRateImpulse");
 			this.fuelRateIon = stats.getInteger("fuelRateIon");
 			this.fuelRateNuclear = stats.getInteger("fuelRateNuclear");
