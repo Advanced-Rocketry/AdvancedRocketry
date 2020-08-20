@@ -832,7 +832,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	public int getData(int id) {
 		switch(id) {
 		case 0:
-			return getRocketStats().getFuelRate(FuelType.LIQUID_MONOPROPELLANT);
+			return (int)getRocketStats().getFuelRate(FuelType.LIQUID_MONOPROPELLANT);
 		case 1:
 			return getRocketStats().getWeight();
 		case 2:

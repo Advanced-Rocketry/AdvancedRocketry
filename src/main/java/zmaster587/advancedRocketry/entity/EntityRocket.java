@@ -486,6 +486,25 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	}
 
 	/**
+	 * @param rate sets the amount of monopropellant fuel in the rocket
+	 */
+	public void setFuelRateMonopropellant(float rate) { stats.setFuelRate(FuelType.LIQUID_MONOPROPELLANT, rate); }
+
+	/**
+	 * @param rate sets the amount of bipropellant fuel in the rocket
+	 */
+	public void setFuelRateBipropellant(float rate) {
+		stats.setFuelRate(FuelType.LIQUID_BIPROPELLANT, rate);
+	}
+
+	/**
+	 * @param rate sets the amount of oxidizer fuel in the rocket
+	 */
+	public void setFuelRateOxidizer(float rate) {
+		stats.setFuelRate(FuelType.LIQUID_OXIDIZER, rate);
+	}
+
+	/**
 	 * @return gets the monopropellant fuel capacity of the rocket
 	 */
 	public int getFuelCapacityMonopropellant() {
@@ -509,21 +528,21 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	/**
 	 * @return the rate of monoproellant consumption for the rocket
 	 */
-	public int getFuelRateMonopropellant() {
+	public float getFuelRateMonopropellant() {
 		return stats.getFuelRate(FuelType.LIQUID_MONOPROPELLANT);
 	}
 
 	/**
 	 * @return the rate of bipropellant consumption for the rocket
 	 */
-	public int getFuelRateBipropellant() {
+	public float getFuelRateBipropellant() {
 		return stats.getFuelRate(FuelType.LIQUID_BIPROPELLANT);
 	}
 
 	/**
 	 * @return the rate of oxidizer consumption for the rocket
 	 */
-	public int getFuelRateOxidizer() {
+	public float getFuelRateOxidizer() {
 		return stats.getFuelRate(FuelType.LIQUID_OXIDIZER);
 	}
 

@@ -70,11 +70,25 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	@Override
 	public void performFunction() {
 		if(!world.isRemote) {
-			if(tank.getFluid() != null && FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, tank.getFluid().getFluid())) {
-				float multiplier = FuelRegistry.instance.getMultiplier(FuelType.LIQUID_MONOPROPELLANT, tank.getFluid().getFluid());
+			if (tank.getFluid() != null) {
+				if (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, tank.getFluid().getFluid())) {
+					float multiplier = FuelRegistry.instance.getMultiplier(FuelType.LIQUID_MONOPROPELLANT, tank.getFluid().getFluid());
 
-				tank.drain(linkedRocket.addFuelAmountMonopropellant((int)(ARConfiguration.getCurrentConfig().fuelPointsPer10Mb)), true);
-				linkedRocket.setFuelRateMonopropellant((int)(linkedRocket.getFuelRateMonopropellant() + (multiplier * (ARConfiguration.getCurrentConfig().fuelPointsPer10Mb/linkedRocket.getFuelCapacityBipropellant()))));
+					tank.drain(linkedRocket.addFuelAmountMonopropellant((int) (ARConfiguration.getCurrentConfig().fuelPointsPer10Mb)), true);
+					linkedRocket.setFuelRateMonopropellant(linkedRocket.getFuelRateMonopropellant() + (multiplier * (ARConfiguration.getCurrentConfig().fuelPointsPer10Mb / linkedRocket.getFuelCapacityMonopropellant())));
+				}
+				if (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, tank.getFluid().getFluid())) {
+					float multiplier = FuelRegistry.instance.getMultiplier(FuelType.LIQUID_BIPROPELLANT, tank.getFluid().getFluid());
+
+					tank.drain(linkedRocket.addFuelAmountBipropellant((ARConfiguration.getCurrentConfig().fuelPointsPer10Mb)), true);
+					linkedRocket.setFuelRateBipropellant(linkedRocket.getFuelRateBipropellant() + (multiplier * (ARConfiguration.getCurrentConfig().fuelPointsPer10Mb / linkedRocket.getFuelCapacityBipropellant())));
+				}
+				if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, tank.getFluid().getFluid())) {
+					float multiplier = FuelRegistry.instance.getMultiplier(FuelType.LIQUID_OXIDIZER, tank.getFluid().getFluid());
+
+					tank.drain(linkedRocket.addFuelAmountOxidizer((ARConfiguration.getCurrentConfig().fuelPointsPer10Mb)), true);
+					linkedRocket.setFuelRateOxidizer(linkedRocket.getFuelRateOxidizer() + (multiplier * (ARConfiguration.getCurrentConfig().fuelPointsPer10Mb / linkedRocket.getFuelCapacityOxidizer())));
+				}
 			}
 			//If the rocket is full then emit redstone
 			setRedstoneState(linkedRocket.getFuelAmountMonopropellant() == linkedRocket.getFuelCapacityMonopropellant());

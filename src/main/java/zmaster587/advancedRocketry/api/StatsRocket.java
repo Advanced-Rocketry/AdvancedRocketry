@@ -34,13 +34,13 @@ public class StatsRocket {
 	private int fuelCapacityWarp;
 	private int fuelCapacityImpulse;
 
-	private int fuelRateMonopropellant;
-	private int fuelRateBipropellant;
-	private int fuelRateOxidizer;
-	private int fuelRateNuclear;
-	private int fuelRateIon;
-	private int fuelRateWarp;
-	private int fuelRateImpulse;
+	private float fuelRateMonopropellant;
+	private float fuelRateBipropellant;
+	private float fuelRateOxidizer;
+	private float fuelRateNuclear;
+	private float fuelRateIon;
+	private float fuelRateWarp;
+	private float fuelRateImpulse;
 
 	HashedBlockPosition pilotSeatPos;
 	private final List<HashedBlockPosition> passengerSeats = new ArrayList<HashedBlockPosition>();
@@ -204,7 +204,7 @@ public class StatsRocket {
 	 * @param type
 	 * @return the consumption rate of the fuel per tick
 	 */
-	public int getFuelRate(FuelRegistry.FuelType type) {
+	public float getFuelRate(FuelRegistry.FuelType type) {
 
 		if(!ARConfiguration.getCurrentConfig().rocketRequireFuel)
 			return 0;
@@ -261,30 +261,30 @@ public class StatsRocket {
 	/**
 	 * Sets the fuel consumption rate per tick of the stat
 	 * @param type
-	 * @param amt
+	 * @param rate
 	 */
-	public void setFuelRate(FuelRegistry.FuelType type, int amt) {
+	public void setFuelRate(FuelRegistry.FuelType type, float rate) {
 		switch(type) {
 		case WARP:
-			fuelRateWarp = amt;
+			fuelRateWarp = rate;
 			break;
 		case IMPULSE:
-			fuelRateImpulse = amt;
+			fuelRateImpulse = rate;
 			break;
 		case ION:
-			fuelRateIon = amt;
+			fuelRateIon = rate;
 			break;
 		case LIQUID_MONOPROPELLANT:
-			fuelRateMonopropellant = amt;
+			fuelRateMonopropellant = rate;
 			break;
 		case LIQUID_BIPROPELLANT:
-			fuelRateBipropellant = amt;
+			fuelRateBipropellant = rate;
 			break;
 		case LIQUID_OXIDIZER:
-			fuelRateOxidizer = amt;
+			fuelRateOxidizer = rate;
 			break;
 		case NUCLEAR:
-			fuelRateNuclear = amt;
+			fuelRateNuclear = rate;
 		}
 	}
 
@@ -440,13 +440,13 @@ public class StatsRocket {
 		stats.setInteger("fuelCapacityNuclear", this.fuelCapacityNuclear);
 		stats.setInteger("fuelCapacityWarp", this.fuelCapacityWarp);
 
-		stats.setInteger("fuelRateMonopropellant", this.fuelRateMonopropellant);
-		stats.setInteger("fuelRateBipropellant", this.fuelRateBipropellant);
-		stats.setInteger("fuelRateOxidizer", this.fuelRateOxidizer);
-		stats.setInteger("fuelRateImpulse", this.fuelRateImpulse);
-		stats.setInteger("fuelRateIon", this.fuelRateIon);
-		stats.setInteger("fuelRateNuclear", this.fuelRateNuclear);
-		stats.setInteger("fuelRateWarp", this.fuelRateWarp);
+		stats.setFloat("fuelRateMonopropellant", this.fuelRateMonopropellant);
+		stats.setFloat("fuelRateBipropellant", this.fuelRateBipropellant);
+		stats.setFloat("fuelRateOxidizer", this.fuelRateOxidizer);
+		stats.setFloat("fuelRateImpulse", this.fuelRateImpulse);
+		stats.setFloat("fuelRateIon", this.fuelRateIon);
+		stats.setFloat("fuelRateNuclear", this.fuelRateNuclear);
+		stats.setFloat("fuelRateWarp", this.fuelRateWarp);
 
 		NBTTagCompound dynStats = new NBTTagCompound();
 		for(String key : statTags.keySet()) {
