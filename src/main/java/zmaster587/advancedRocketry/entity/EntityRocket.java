@@ -301,7 +301,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	public int addFuelAmountBipropellant(int amount) {
 		int ret = stats.addFuelAmount(FuelType.LIQUID_BIPROPELLANT, amount);
 
-		setFuelAmountMonoproellant(stats.getFuelAmount(FuelType.LIQUID_BIPROPELLANT));
+		setFuelAmountBipropellant(stats.getFuelAmount(FuelType.LIQUID_BIPROPELLANT));
 
 		return ret;
 	}
@@ -314,7 +314,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	public int addFuelAmountOxidizer(int amount) {
 		int ret = stats.addFuelAmount(FuelType.LIQUID_OXIDIZER, amount);
 
-		setFuelAmountMonoproellant(stats.getFuelAmount(FuelType.LIQUID_OXIDIZER));
+		setFuelAmountOxidizer(stats.getFuelAmount(FuelType.LIQUID_OXIDIZER));
 
 		return ret;
 	}
@@ -736,7 +736,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 
 	public boolean isBurningFuel() {
-		return ((getFuelAmountMonopropellant() > 0 || (getFuelAmountBipropellant() > 0 && getFuelAmountOxidizer() >0)) || !ARConfiguration.getCurrentConfig().rocketRequireFuel) && ((!this.getPassengers().isEmpty() && getPassengerMovingForward() > 0) || !isInOrbit());
+		return ((getFuelAmountMonopropellant() > 0 || (getFuelAmountBipropellant() > 0 && getFuelAmountOxidizer() > 0)) || !ARConfiguration.getCurrentConfig().rocketRequireFuel) && ((!this.getPassengers().isEmpty() && getPassengerMovingForward() > 0) || !isInOrbit());
 	}
 
 	public float getPassengerMovingForward() {
@@ -1146,15 +1146,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 			if(burningFuel || descentPhase) {
 				//Burn the rocket fuel
-				boolean isBurningBipropellants = false;
 				if(!world.isRemote && !descentPhase && getFuelAmountBipropellant() > 0) {
 					setFuelAmountBipropellant((int) (getFuelAmountBipropellant() - stats.getFuelRate(FuelType.LIQUID_BIPROPELLANT) * (ARConfiguration.getCurrentConfig().gravityAffectsFuel ? DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier() : 1f)));
 					setFuelAmountOxidizer((int) (getFuelAmountOxidizer() - stats.getFuelRate(FuelType.LIQUID_OXIDIZER) * (ARConfiguration.getCurrentConfig().gravityAffectsFuel ? DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier() : 1f)));
-				    isBurningBipropellants = true;
-				}
-				if(!world.isRemote && !descentPhase && getFuelAmountMonopropellant() > 0 && !isBurningBipropellants) {
+				} else if(!world.isRemote && !descentPhase && getFuelAmountMonopropellant() > 0) {
 					setFuelAmountMonoproellant((int) (getFuelAmountMonopropellant() - stats.getFuelRate(FuelType.LIQUID_MONOPROPELLANT) * (ARConfiguration.getCurrentConfig().gravityAffectsFuel ? DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier() : 1f)));
 				}
+				stats.setUpdateFuel(true);
 
 				runEngines();
 			}

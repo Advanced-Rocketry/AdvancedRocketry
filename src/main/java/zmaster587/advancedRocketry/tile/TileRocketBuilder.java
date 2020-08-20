@@ -236,7 +236,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 		int thrust = 0;
 		int fuelUse = 0;
-		int fuel = 0;
+		int fuelCapacity = 0;
 		int numBlocks = 0;
 		float drillPower = 0f;
 		stats.reset();
@@ -311,7 +311,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 							}
 
 							if(block instanceof IFuelTank) {
-								fuel += ((IFuelTank)block).getMaxFill(world, currBlockPos, state);
+								fuelCapacity += ((IFuelTank)block).getMaxFill(world, currBlockPos, state);
 							}
 
 							if(block instanceof BlockSeat) {
@@ -332,10 +332,14 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 					}
 				}
 			}
-			stats.setFuelRate(FuelType.LIQUID_MONOPROPELLANT,fuelUse);
+			stats.setBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT, fuelUse);
+			stats.setBaseFuelRate(FuelType.LIQUID_BIPROPELLANT, fuelUse);
+			stats.setBaseFuelRate(FuelType.LIQUID_OXIDIZER, fuelUse);
 			stats.setWeight(numBlocks);
 			stats.setThrust(thrust);
-			stats.setFuelCapacity(FuelType.LIQUID_MONOPROPELLANT,fuel);
+			stats.setFuelCapacity(FuelType.LIQUID_MONOPROPELLANT, fuelCapacity);
+			stats.setFuelCapacity(FuelType.LIQUID_BIPROPELLANT, fuelCapacity);
+			stats.setFuelCapacity(FuelType.LIQUID_OXIDIZER, fuelCapacity);
 			stats.setDrillingPower(drillPower);
 
 			//Set status

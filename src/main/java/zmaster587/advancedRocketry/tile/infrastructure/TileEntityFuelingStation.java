@@ -70,23 +70,25 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	@Override
 	public void performFunction() {
 		if(!world.isRemote) {
+			//This logic allows multiple fuels to add to the total fuel points while preserving efficiency of fuels AND making it so that a lower-power fuel does not simply contribute less to the total
+			//This design allows for monopropellants to have a horrible efficiency but still take up the same amount of space as a bipropellant system, unlike the previous system where it would have made going
+			//to space with either possible, you just needed to input more fuel to get the same number of fuel points
+			//It's calculated as a rolling average, so if you add a 3mB/t fuel each time, you will get a 3mB/t burn rate, and if you add half 5mB/t and half 3mB/t, you get a 4mB/t burn rate (per engine)
 			if (tank.getFluid() != null) {
 				if (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, tank.getFluid().getFluid())) {
 					float multiplier = FuelRegistry.instance.getMultiplier(FuelType.LIQUID_MONOPROPELLANT, tank.getFluid().getFluid());
 
-					tank.drain(linkedRocket.addFuelAmountMonopropellant((int) (ARConfiguration.getCurrentConfig().fuelPointsPer10Mb)), true);
-					linkedRocket.setFuelRateMonopropellant(linkedRocket.getFuelRateMonopropellant() + (multiplier * (ARConfiguration.getCurrentConfig().fuelPointsPer10Mb / linkedRocket.getFuelCapacityMonopropellant())));
-				}
-				if (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, tank.getFluid().getFluid())) {
+					tank.drain(linkedRocket.addFuelAmountMonopropellant(ARConfiguration.getCurrentConfig().fuelPointsPer10Mb), true);
+					linkedRocket.setFuelRateMonopropellant(linkedRocket.getFuelRateMonopropellant() + (multiplier * linkedRocket.stats.getBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT) * ARConfiguration.getCurrentConfig().fuelPointsPer10Mb / linkedRocket.getFuelCapacityMonopropellant()));
+				} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, tank.getFluid().getFluid())) {
 					float multiplier = FuelRegistry.instance.getMultiplier(FuelType.LIQUID_BIPROPELLANT, tank.getFluid().getFluid());
 
-					tank.drain(linkedRocket.addFuelAmountBipropellant((ARConfiguration.getCurrentConfig().fuelPointsPer10Mb)), true);
+					tank.drain(linkedRocket.addFuelAmountBipropellant(ARConfiguration.getCurrentConfig().fuelPointsPer10Mb), true);
 					linkedRocket.setFuelRateBipropellant(linkedRocket.getFuelRateBipropellant() + (multiplier * (ARConfiguration.getCurrentConfig().fuelPointsPer10Mb / linkedRocket.getFuelCapacityBipropellant())));
-				}
-				if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, tank.getFluid().getFluid())) {
+				} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, tank.getFluid().getFluid())) {
 					float multiplier = FuelRegistry.instance.getMultiplier(FuelType.LIQUID_OXIDIZER, tank.getFluid().getFluid());
 
-					tank.drain(linkedRocket.addFuelAmountOxidizer((ARConfiguration.getCurrentConfig().fuelPointsPer10Mb)), true);
+					tank.drain(linkedRocket.addFuelAmountOxidizer(ARConfiguration.getCurrentConfig().fuelPointsPer10Mb), true);
 					linkedRocket.setFuelRateOxidizer(linkedRocket.getFuelRateOxidizer() + (multiplier * (ARConfiguration.getCurrentConfig().fuelPointsPer10Mb / linkedRocket.getFuelCapacityOxidizer())));
 				}
 			}
@@ -219,6 +221,12 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	public boolean linkRocket(EntityRocketBase rocket) {
 		this.linkedRocket = rocket;
 		setRedstoneState(linkedRocket.getFuelAmountMonopropellant() == linkedRocket.getFuelCapacityMonopropellant());
+		//When linked, set fuel quality to the percentage of the tank * fuel quality to make sure rates don't get arbitrarily large
+		if (linkedRocket.stats.getUpdateFuel()) {
+			linkedRocket.setFuelRateMonopropellant(linkedRocket.getFuelRateMonopropellant() * (linkedRocket.getFuelAmountMonopropellant() / linkedRocket.getFuelCapacityMonopropellant()));
+			linkedRocket.setFuelRateBipropellant(linkedRocket.getFuelRateBipropellant() * (linkedRocket.getFuelAmountBipropellant() / linkedRocket.getFuelCapacityBipropellant()));
+			linkedRocket.setFuelRateOxidizer(linkedRocket.getFuelRateOxidizer() * (linkedRocket.getFuelAmountOxidizer() / linkedRocket.getFuelCapacityOxidizer()));
+		}
 		return true;
 	}
 

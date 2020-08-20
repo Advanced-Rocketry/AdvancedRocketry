@@ -599,6 +599,7 @@ public class ARConfiguration {
 			else
 				logger.warn("Fluid name" + str  + " is not a registered fluid!");
 		}
+		liquidMonopropellant = null; //clean up
 		for(String str : liquidBipropellantFuel) {
 			String splitStr[] = str.split(";");
 			Fluid fluid = FluidRegistry.getFluid(splitStr[0]);
@@ -614,6 +615,7 @@ public class ARConfiguration {
 			else
 				logger.warn("Fluid name" + str  + " is not a registered fluid!");
 		}
+		liquidBipropellantFuel = null; //clean up
 		for(String str : liquidBipropellantOxidizer) {
 			String splitStr[] = str.split(";");
 			Fluid fluid = FluidRegistry.getFluid(splitStr[0]);
@@ -629,8 +631,9 @@ public class ARConfiguration {
 			else
 				logger.warn("Fluid name" + str  + " is not a registered fluid!");
 		}
+		liquidBipropellantOxidizer = null; //clean up
 		logger.info("Finished registering liquid rocket fuels");
-		liquidMonopropellant = null; //clean up
+
 
 		//Register Whitelisted Sealable Blocks
 
