@@ -55,21 +55,21 @@ public abstract class EntityRocketBase extends Entity {
 	 * @param rate
 	 * @return the rate of consumption for the rocket
 	 */
-	public abstract void setFuelRateMonopropellant(float rate);
+	public abstract void setFuelRateMonopropellant(int rate);
 
 	/**
 	 * AttempTs to set the fuel rate for the rocket for bipropellants
 	 * @param rate
 	 * @return the rate of consumption for the rocket
 	 */
-	public abstract void setFuelRateBipropellant(float rate);
+	public abstract void setFuelRateBipropellant(int rate);
 
 	/**
 	 * AttempTs to set the fuel rate for the rocket for oxidizers
 	 * @param rate
 	 * @return the rate of consumption for the rocket
 	 */
-	public abstract void setFuelRateOxidizer(float rate);
+	public abstract void setFuelRateOxidizer(int rate);
 
 	/**
 	 * Unlinks the given infrastructure
@@ -131,17 +131,17 @@ public abstract class EntityRocketBase extends Entity {
 	/**
 	 * @return the rate of consumption for monopropellants
 	 */
-	public abstract float getFuelRateMonopropellant();
+	public abstract int getFuelRateMonopropellant();
 
 	/**
 	 * @return the rate of consumption for bipropellants
 	 */
-	public abstract float getFuelRateBipropellant();
+	public abstract int getFuelRateBipropellant();
 
 	/**
 	 * @return the rate of consumption  for oxidizers
 	 */
-	public abstract float getFuelRateOxidizer();
+	public abstract int getFuelRateOxidizer();
 
 	/**
 	 * @return the location of the rocket in the world

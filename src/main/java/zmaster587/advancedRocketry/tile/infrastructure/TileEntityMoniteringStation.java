@@ -9,11 +9,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.api.IMission;
+import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
@@ -316,7 +318,11 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 		else if(id == 1)
 			return (int)(linkedRocket.motionY*100);
 		else if (id == 2)
-			return (int)(linkedRocket.getFuelAmountMonopropellant());
+			if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT, FluidRegistry.getFluid(linkedRocket.stats.getFuelFluid()))) {
+				return (linkedRocket.getFuelAmountMonopropellant());
+			} else {
+				return (linkedRocket.getFuelAmountBipropellant());
+			}
 
 		return 0;
 	}
@@ -333,8 +339,11 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 			else
 				if(linkedRocket == null)
 					return 0;
-				else
-					return linkedRocket.getFuelCapacityMonopropellant();
+		    else if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT, FluidRegistry.getFluid(linkedRocket.stats.getFuelFluid()))) {
+			    return (linkedRocket.getFuelCapacityMonopropellant());
+		    } else {
+			    return (linkedRocket.getFuelCapacityBipropellant());
+		}
 
 		return 1;
 	}
