@@ -2,16 +2,20 @@ package zmaster587.advancedRocketry.client.render.entity;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.client.render.multiblocks.RendererWarpCore;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -32,37 +36,31 @@ public class RenderStarUIEntity extends EntityRenderer<EntityUIStar> implements 
 	}
 
 	@Override
-	protected ResourceLocation getEntityTexture(EntityUIStar entity) {
+	public ResourceLocation getEntityTexture(EntityUIStar entity) {
 		return DimensionProperties.PlanetIcons.EARTHLIKE.getResource();
 	}
 
 	@Override
-	public void doRender(EntityUIStar entity, double x, double y, double z,
-			float entityYaw, float partialTicks) {
+	public void render(EntityUIStar entity, float entityYaw, float partialTicks, MatrixStack matrix,
+			IRenderTypeBuffer bufferIn, int packedLightIn) {
 		
 		StellarBody body = entity.getStarProperties();
 		if(body == null)
 			return;
 		float sizeScale = entity.getScale();
 		matrix.push();
-		matrix.translate(x,y,z);
-		GL11.glScalef(sizeScale,sizeScale,sizeScale);
+		matrix.scale(sizeScale,sizeScale,sizeScale);
 		
-		RenderHelper.setupPlayerFacingMatrix(Minecraft.getInstance().player.getDistanceSqToEntity(entity), 0,-.45,0);
-		Minecraft.getInstance().getTextureManager().bindTexture(TextureResources.locationSunNew);
+		//RenderHelper.setupPlayerFacingMatrix(Minecraft.getInstance().player.getDistanceSq(entity), 0,-.45,0);
 		
-		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+		IVertexBuilder translucentBuffer = bufferIn.getBuffer(RenderHelper.getTranslucentTexturedManualRenderType(TextureResources.locationSunNew));
 		
-		GlStateManager.disableLighting();
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
 		GL11.glColor3d(body.getColor()[0], body.getColor()[1], body.getColor()[2]);
 		//GL11.glColor3ub((byte)(body.getColorRGB8() & 0xff), (byte)((body.getColorRGB8() >>> 8) & 0xff), (byte)((body.getColorRGB8() >>> 16) & 0xff));
 		//GlStateManager.color4f();
 		
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		RenderHelper.renderNorthFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1);
+		RenderHelper.renderNorthFaceWithUV(translucentBuffer, 0, -5, -5, 5, 5, 0, 1, 0, 1, body.getColor()[0], body.getColor()[1], body.getColor()[2], 1f);
 		Tessellator.getInstance().draw();
 		
 		
@@ -71,29 +69,21 @@ public class RenderStarUIEntity extends EntityRenderer<EntityUIStar> implements 
 		
 		//Render hololines
 		matrix.push();
-		GL11.glScaled(.1, .1, .1);
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-		BufferBuilder buf = Tessellator.getInstance().getBuffer();
-		GlStateManager.disableTexture();
-
+		matrix.scale(.1f, .1f, .1f);
+		
+		IVertexBuilder buf = bufferIn.getBuffer(RenderHelper.getTranslucentManualRenderType());
 		float myTime = ((entity.world.getGameTime() & 0xF)/16f);
 		
 		for(int i = 0; i < 4; i++ ) {
 			myTime = ((i*4 + entity.world.getGameTime() & 0xF)/16f);
-
-			GlStateManager.color4f(0, 1f, 1f, .2f*(1-myTime));
-			buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
-			RenderHelper.renderTopFace(buf, myTime, -.5f, -.5f, .5f, .5f);
-			RenderHelper.renderBottomFace(buf, myTime - 0.5, -.5f, -.5f, .5f, .5f);
+			RenderHelper.renderTopFace(buf, myTime, -.5f, -.5f, .5f, .5f, 0, 1f, 1f, .2f*(1-myTime));
+			RenderHelper.renderBottomFace(buf, myTime - 0.5, -.5f, -.5f, .5f, .5f, 0, 1f, 1f, .2f*(1-myTime));
 			Tessellator.getInstance().draw();
 		}
-		GlStateManager.alphaFunc(GL11.GL_GREATER, .1f);
-		GlStateManager.enableTexture();
 	
 		
 		//RenderSelection
-		if(entity.isSelected()) {
+		/*if(entity.isSelected()) {
 			GlStateManager.disableTexture();
 			double speedRotate = 0.025d;
 			GlStateManager.color4f(0.4f, 0.4f, 1f, 0.6f);
@@ -108,12 +98,12 @@ public class RenderStarUIEntity extends EntityRenderer<EntityUIStar> implements 
 			RendererWarpCore.model.renderOnly("Rotate1");
 			matrix.pop();
 			GlStateManager.enableTexture();
-		}
+		}*/
 		
 		matrix.pop();
 		matrix.pop();
 		
-		RayTraceResult hitObj = Minecraft.getInstance().objectMouseOver;
+		/*RayTraceResult hitObj = Minecraft.getInstance().objectMouseOver;
 		if(hitObj != null && hitObj.entityHit == entity) {
 			
 			matrix.push();
@@ -145,13 +135,9 @@ public class RenderStarUIEntity extends EntityRenderer<EntityUIStar> implements 
 			RenderHelper.renderTag(Minecraft.getInstance().player.getDistanceSq(hitObj.hitVec.x, hitObj.hitVec.y, hitObj.hitVec.z), "Num Planets: " + body.getNumPlanets(), 0, .6, 0, 5);
 
 			matrix.pop();
-		}
+		}*/
 
 		//Clean up and make player not transparent
-		GlStateManager.enableLighting();
-		GlStateManager.disableBlend();
-		GlStateManager.color4f(1, 1, 1, 1);
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
 	
 	protected void renderMassIndicator(BufferBuilder buffer, float percent) {
@@ -159,7 +145,7 @@ public class RenderStarUIEntity extends EntityRenderer<EntityUIStar> implements 
 		
 		float maxUV = (1-percent)*0.5f;
 		
-		RenderHelper.renderNorthFaceWithUV(buffer, 0, -20, -5 + 41*(1-percent), 20, 36, .5f, 0f, .5, maxUV);
+		RenderHelper.renderNorthFaceWithUV(buffer, 0, -20, -5 + 41*(1-percent), 20, 36, .5f, 0f, .5f, maxUV,1f,1f,1f,1f);
 		Tessellator.getInstance().draw();
 	}
 	
@@ -168,7 +154,7 @@ public class RenderStarUIEntity extends EntityRenderer<EntityUIStar> implements 
 		
 		float maxUV = (1-percent)*0.406f + .578f;
 		//Offset by 15 for Y
-		RenderHelper.renderNorthFaceWithUV(buffer, 0, 6, 20 + (1-percent)*33, 39, 53, .5624f, .984f, .984f, maxUV);
+		RenderHelper.renderNorthFaceWithUV(buffer, 0, 6, 20 + (1-percent)*33, 39, 53, .5624f, .984f, .984f, maxUV,1f,1f,1f,1f);
 		Tessellator.getInstance().draw();
 	}
 	
@@ -177,7 +163,7 @@ public class RenderStarUIEntity extends EntityRenderer<EntityUIStar> implements 
 		
 		float maxUV = (1-percent)*0.406f + .578f;
 		//Offset by 15 for Y
-		RenderHelper.renderNorthFaceWithUV(buffer, 0, -38, 21.4f + (1-percent)*33, -4, 53, .016f, .4376f, .984f, maxUV);
+		RenderHelper.renderNorthFaceWithUV(buffer, 0, -38, 21.4f + (1-percent)*33, -4, 53, .016f, .4376f, .984f, maxUV,1f,1f,1f,1f);
 		Tessellator.getInstance().draw();
 	}
 }

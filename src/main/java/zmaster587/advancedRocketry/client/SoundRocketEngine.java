@@ -1,26 +1,28 @@
 package zmaster587.advancedRocketry.client;
 
-import net.minecraft.client.audio.MovingSound;
+import net.minecraft.client.audio.EntityTickableSound;
+import net.minecraft.client.audio.Sound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 
-public class SoundRocketEngine extends MovingSound {
+public class SoundRocketEngine extends EntityTickableSound {
 
 	EntityRocket rocket;
 
 	public SoundRocketEngine(SoundEvent soundIn, SoundCategory categoryIn, EntityRocket rocket) {
-		super(soundIn, categoryIn);
+		super(soundIn, categoryIn, rocket);
 		this.rocket = rocket;
 		this.repeat = true;
 	}
 
 	@Override
-	public void update() {
+	public void tick() {
 
-		if(rocket.isDead)
-			this.donePlaying = true;
+		if(!rocket.isAlive())
+			// done playing
+			this.func_239509_o_();
 
 		this.volume = rocket.getEnginePower();
 
@@ -31,9 +33,9 @@ public class SoundRocketEngine extends MovingSound {
 		else
 			this.pitch += 0.4f*((float) (Math.max(Math.abs(rocket.getMotion().y/5f), 0f) + 1f));
 
-		this.xPosF = (float) rocket.posX;
-		this.yPosF = (float) rocket.posY;
-		this.zPosF = (float) rocket.posZ;
+		this.x = (float) rocket.getPosX();
+		this.y = (float) rocket.getPosY();
+		this.z = (float) rocket.getPosZ();
 	}
 
 }

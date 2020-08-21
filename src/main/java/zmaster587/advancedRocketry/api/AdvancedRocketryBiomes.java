@@ -1,7 +1,10 @@
 package zmaster587.advancedRocketry.api;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.DynamicRegistries;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biomes;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -56,11 +59,14 @@ public class AdvancedRocketryBiomes {
 	}
 
 
+
 	/**
 	 * Registers biomes you don't want to spawn on any planet unless registered with highpressure or similar feature
 	 */
 	public void registerBlackListBiome(Biome biome) {
-		blackListedBiomeIds.add(ForgeRegistries.BIOMES.getKey(biome));
+		
+		
+		blackListedBiomeIds.add(getBiomeResource(biome));
 	}
 
 	/**
@@ -88,15 +94,15 @@ public class AdvancedRocketryBiomes {
 	 * @param biome
 	 */
 	public void registerSingleBiome(Biome biome) {
-		if(!blackListedBiomeIds.contains(ForgeRegistries.BIOMES.getKey(biome)))
+		if(!blackListedBiomeIds.contains(getBiomeResource(biome)))
 			registeredSingleBiome.add(biome);
 	}
 	
 	public void blackListVanillaBiomes() {
 		//Good grief... this is long, better than making users do it though..
-		for(int i = 0; i < 40; i++)
+		/*for(int i = 0; i < 40; i++)
 			blackListedBiomeIds.add(i);
-		
+		Biomes
 		blackListedBiomeIds.add(127);
 		blackListedBiomeIds.add(129);
 		blackListedBiomeIds.add(130);
@@ -118,42 +124,35 @@ public class AdvancedRocketryBiomes {
 		blackListedBiomeIds.add(164);
 		blackListedBiomeIds.add(165);
 		blackListedBiomeIds.add(166);
-		blackListedBiomeIds.add(167);
+		blackListedBiomeIds.add(167);*/
 	}
 
 	public List<Biome> getSingleBiome() {
 		return registeredSingleBiome;	
-	}
-
-	/**
-	 * Gets Biomes from Advanced Rocketry's biomes registry.  If it does not exist attepts to retrieve from vanilla forge
-	 * @param id biome id
-	 * @return Biome retrieved from the biome ID
-	 */
-	public Biome getBiomeById(int id) {
-
-		for(Biome biome : registeredBiomes) {
-			if( Biome.MUTATION_TO_BASE_ID_MAP.get(biome) == id)
-				return biome;
-		}
-
-		return Biome.MUTATION_TO_BASE_ID_MAP.getByValue(id);
 	}
 	
 	public static Biome getBiome(String string)
 	{
 		Biome biome;
 		int id = 0;
-		biome = ForgeRegistries.BIOMES.getValue(new ResourceLocation(string));
-		
-		//Fallback to ID
-		if( biome == null)
-		{
-			id = Integer.parseInt(string);
-			biome = Biome.MUTATION_TO_BASE_ID_MAP.getByValue(id);
-		}
+		biome = getBiomeFromResourceLocation(new ResourceLocation(string));
 		
 		return biome;
+	}
+	
+	public static ResourceLocation getBiomeResource(Biome biome)
+	{
+		return DynamicRegistries.func_239770_b_().func_230521_a_(Registry.field_239720_u_).get().getKey(biome);
+	}
+	
+	public static Biome getBiomeFromResourceLocation(ResourceLocation key)
+	{
+		return DynamicRegistries.func_239770_b_().func_230521_a_(Registry.field_239720_u_).get().getOrDefault(key);
+	}
+	
+	public static boolean doesBiomeExist(ResourceLocation key)
+	{
+		return DynamicRegistries.func_239770_b_().func_230521_a_(Registry.field_239720_u_).get().containsKey(key);
 	}
 
 }

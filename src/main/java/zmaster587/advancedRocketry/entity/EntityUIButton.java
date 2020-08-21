@@ -3,22 +3,24 @@ package zmaster587.advancedRocketry.entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.api.AdvancedRocketryEntities;
 import zmaster587.advancedRocketry.tile.station.TilePlanetaryHologram;
 
 public class EntityUIButton extends EntityUIPlanet {
 
-	int id;
+	String id;
 	TilePlanetaryHologram tile;
 	
-	public EntityUIButton(World worldIn, int id, TilePlanetaryHologram tile) {
+	public EntityUIButton(World worldIn, ResourceLocation id, TilePlanetaryHologram tile) {
 		this(worldIn);
-		this.id = id;
+		this.id = id.toString();
 		this.tile = tile;
 	}
 	
 	public EntityUIButton(World worldIn) {
-		super(worldIn);
+		super(AdvancedRocketryEntities.ENTITY_UIBUTTON,worldIn);
 		setSize(0.2f, 0.2f);
 	}
 	
@@ -33,12 +35,12 @@ public class EntityUIButton extends EntityUIPlanet {
 	@Override
 	public ActionResultType processInitialInteract(PlayerEntity player, Hand hand) {
 		if(!world.isRemote && tile != null) {
-			tile.onInventoryButtonPressed(getPlanetID());
+			//tile.onInventoryButtonPressed(getPlanetID());
 		}
 		return ActionResultType.PASS;
 	}
 	
-	public int getPlanetID() {
-		return this.dataManager.get(planetID);
+	public ResourceLocation getPlanetID() {
+		return new ResourceLocation(this.dataManager.get(planetID));
 	}
 }

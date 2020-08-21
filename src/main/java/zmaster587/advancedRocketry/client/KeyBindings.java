@@ -1,15 +1,15 @@
 package zmaster587.advancedRocketry.client;
 
+import org.lwjgl.glfw.GLFW;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.lwjgl.input.Keyboard;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.entity.EntityHoverCraft;
@@ -27,8 +27,8 @@ public class KeyBindings {
 	boolean prevState;
 	@SubscribeEvent
 	public void onKeyInput(InputEvent.KeyInputEvent event) {
-		final Minecraft minecraft = FMLClientHandler.instance().getClient();
-		final EntityPlayerSP player = minecraft.player;
+		final Minecraft minecraft = Minecraft.getInstance();
+		final ClientPlayerEntity player = minecraft.player;
 
 
 		//Prevent control when a GUI is open
@@ -42,11 +42,13 @@ public class KeyBindings {
 				PacketHandler.sendToServer(new PacketEntity(rocket, (byte)EntityRocket.PacketType.LAUNCH.ordinal()));
 				rocket.launch();
 			}*/
+		
+		
 
 		if(player.getRidingEntity() != null && player.getRidingEntity() instanceof EntityRocket) {
 			EntityRocket rocket = (EntityRocket)player.getRidingEntity();
-			if(Minecraft.getInstance().inGameHasFocus && player.equals(Minecraft.getInstance().player)) {
-				if(!rocket.isInFlight() && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+			if(Minecraft.getInstance().isGameFocused() && player.equals(Minecraft.getInstance().player)) {
+				if(!rocket.isInFlight() && event.getKey() == GLFW.GLFW_KEY_SPACE && event.getAction() == GLFW.GLFW_PRESS) {
 
 					rocket.prepareLaunch();
 				}
@@ -59,7 +61,7 @@ public class KeyBindings {
 
 		if(player.getRidingEntity() != null && player.getRidingEntity() instanceof EntityHoverCraft) {
 			EntityHoverCraft hoverCraft = (EntityHoverCraft)player.getRidingEntity();
-			if(Minecraft.getInstance().inGameHasFocus && player.equals(Minecraft.getInstance().player)) {
+			if(Minecraft.getInstance().isGameFocused() && player.equals(Minecraft.getInstance().player)) {
 				hoverCraft.onTurnLeft(turnRocketLeft.isKeyDown());
 				hoverCraft.onTurnRight(turnRocketRight.isKeyDown());
 				hoverCraft.onUp(turnRocketUp.isKeyDown());
@@ -87,21 +89,21 @@ public class KeyBindings {
 		}
 
 
-		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE) != prevState) {
-			prevState = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
-			InputSyncHandler.updateKeyPress(player, Keyboard.KEY_SPACE, prevState);
-			PacketHandler.sendToServer(new PacketChangeKeyState(Keyboard.KEY_SPACE, prevState));
+		if(event.getKey() == GLFW.GLFW_KEY_SPACE && (event.getAction() == GLFW.GLFW_PRESS) != prevState) {
+			prevState = event.getAction() == GLFW.GLFW_PRESS;
+			InputSyncHandler.updateKeyPress(player, GLFW.GLFW_KEY_SPACE , prevState);
+			PacketHandler.sendToServer(new PacketChangeKeyState(GLFW.GLFW_KEY_SPACE , prevState));
 		}
 	}
 
 	//static KeyBinding launch = new KeyBinding("Launch", Keyboard.KEY_SPACE, "key.controls." + Constants.modId);
-	static KeyBinding toggleJetpack = new KeyBinding(LibVulpes.proxy.getLocalizedString("key.toggleJetpack"), Keyboard.KEY_X, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
-	static KeyBinding openRocketUI	= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.openRocketUI"), Keyboard.KEY_C, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
-	static KeyBinding toggleRCS		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.togglercs"), Keyboard.KEY_R, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
-	static KeyBinding turnRocketLeft		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnRocketLeft"), Keyboard.KEY_A, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
-	static KeyBinding turnRocketRight		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnRocketRight"), Keyboard.KEY_D, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
-	static KeyBinding turnRocketUp		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnRocketUp"), Keyboard.KEY_Z, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
-	static KeyBinding turnRocketDown		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnRocketDown"), Keyboard.KEY_X, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
+	static KeyBinding toggleJetpack = new KeyBinding(LibVulpes.proxy.getLocalizedString("key.toggleJetpack"), GLFW.GLFW_KEY_X, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
+	static KeyBinding openRocketUI	= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.openRocketUI"), GLFW.GLFW_KEY_C, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
+	static KeyBinding toggleRCS		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.togglercs"), GLFW.GLFW_KEY_R, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
+	static KeyBinding turnRocketLeft		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnRocketLeft"), GLFW.GLFW_KEY_A, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
+	static KeyBinding turnRocketRight		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnRocketRight"), GLFW.GLFW_KEY_D, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
+	static KeyBinding turnRocketUp		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnRocketUp"), GLFW.GLFW_KEY_Z, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
+	static KeyBinding turnRocketDown		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnRocketDown"), GLFW.GLFW_KEY_X, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
 
 	public static final void init() {
 		//ClientRegistry.registerKeyBinding(launch);

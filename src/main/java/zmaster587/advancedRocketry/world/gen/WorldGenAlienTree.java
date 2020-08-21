@@ -1,19 +1,21 @@
 package zmaster587.advancedRocketry.world.gen;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockLog;
-import net.minecraft.block.BlockSapling;
-import net.minecraft.block.state.BlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenAbstractTree;
+import net.minecraft.world.gen.IWorldGenerationReader;
+import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
+import net.minecraft.world.gen.foliageplacer.FoliagePlacer;
+import net.minecraft.world.gen.trunkplacer.AbstractTrunkPlacer;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
-public class WorldGenAlienTree extends WorldGenAbstractTree {
+public class WorldGenAlienTree extends AbstractTrunkPlacer {
 
 	public WorldGenAlienTree(boolean p_i45461_1_)
 	{
@@ -26,8 +28,9 @@ public class WorldGenAlienTree extends WorldGenAbstractTree {
 		return super.canGrowInto(blockType) || blockType == AdvancedRocketryBlocks.blockAlienSapling || blockType == AdvancedRocketryBlocks.blockAlienWood || blockType == AdvancedRocketryBlocks.blockAlienLeaves;
 	}
 
+	// generate
 	@Override
-	public boolean generate(World world, Random random, BlockPos pos) {
+	public boolean List<FoliagePlacer.Foliage> func_230382_a_(IWorldGenerationReader p_230382_1_, Random p_230382_2_, int p_230382_3_, BlockPos p_230382_4_, Set<BlockPos> p_230382_5_, MutableBoundingBox p_230382_6_, BaseTreeFeatureConfig p_230382_7_) { {
 		int treeHeight = random.nextInt(10) + 20;
 		boolean flag = true;
 

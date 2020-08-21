@@ -1,29 +1,29 @@
 package zmaster587.advancedRocketry.client.render.multiblocks;
 
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.util.math.vector.Quaternion;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import zmaster587.advancedRocketry.tile.multiblock.energy.TileBlackHoleGenerator;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.render.RenderHelper;
-import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
-import zmaster587.libVulpes.tile.multiblock.TileMultiPowerProducer;
 
-public class RenderBlackHoleEnergy extends TileEntitySpecialRenderer {
+public class RenderBlackHoleEnergy extends TileEntityRenderer<TileBlackHoleGenerator> {
 
 	WavefrontObject model;
 
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/black_hole_generator.jpg");
 
-	public RenderBlackHoleEnergy(){
+	public RenderBlackHoleEnergy(TileEntityRendererDispatcher tile){
+		super(tile);
 		try {
 			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/black_hole_generator.obj"));
 		} catch (ModelFormatException e) {
@@ -32,8 +32,8 @@ public class RenderBlackHoleEnergy extends TileEntitySpecialRenderer {
 	}
 	
 	@Override
-	public void render(TileEntity tile, double x, double y, double z,
-			float partialTicks, int destroyStage, float a) {
+	public void render(TileBlackHoleGenerator tile, float partialTicks, MatrixStack matrix,
+			IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
 		TileBlackHoleGenerator multiBlockTile = (TileBlackHoleGenerator)tile;
 
 		if(!multiBlockTile.canRender())
@@ -45,44 +45,31 @@ public class RenderBlackHoleEnergy extends TileEntitySpecialRenderer {
 
 		//Rotate and move the model into position
 		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		matrix.translate(x + .5, y + .5, z + .5);
+		matrix.translate(0.5, 0.5,0.5);
 
-		GL11.glRotatef((front.getZOffset() == 1 ? 180 : 0) - front.getXOffset()*90f, 0, 1, 0);
+		matrix.rotate(new Quaternion(0, (front.getZOffset() == 1 ? 180 : 0) - front.getXOffset()*90f, 0, true));
+		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
 		
-		bindTexture(texture);
 		
-		model.renderAll();
+		model.tessellateAll(entitySolidBuilder);
 		
 		if(multiBlockTile.isProducingPower())
 		{
-			GlStateManager.disableTexture();
-			GlStateManager.disableLighting();
-			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE);
-			GlStateManager.color4f(1f, 1f, 0.5f, 0.5f);
-			BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+			IVertexBuilder entityTransparentBuilder = buffer.getBuffer(RenderHelper.getTranslucentManualRenderType());
 			
 			matrix.push();
-			GL11.glTranslatef(0, (float)Math.sin(System.currentTimeMillis() / 128.0)*.3f, 0);
+			matrix.translate(0, (float)Math.sin(System.currentTimeMillis() / 128.0)*.3f, 0);
 			
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
-			RenderHelper.renderCube(buffer, -0.45, 0.95, 0.55, 0.45, 1.05, 1.45);
-			Tessellator.getInstance().draw();
+			RenderHelper.renderCube(entityTransparentBuilder, -0.45, 0.95, 0.55, 0.45, 1.05, 1.45, 1f, 1f, 0.5f, 0.5f);
 			
 			matrix.pop();
 			
 			matrix.push();
-			GL11.glTranslatef(0, -(float)Math.sin(System.currentTimeMillis() / 128.0)*.3f, 0);
+			matrix.translate(0, -(float)Math.sin(System.currentTimeMillis() / 128.0)*.3f, 0);
 			
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
-			RenderHelper.renderCube(buffer, -0.45, 0.95, 0.55, 0.45, 1.05, 1.45);
-			Tessellator.getInstance().draw();
+			RenderHelper.renderCube(entityTransparentBuilder, -0.45, 0.95, 0.55, 0.45, 1.05, 1.45, 1f, 1f, 0.5f, 0.5f);
 			matrix.pop();
 			
-			GlStateManager.disableBlend();
-			GlStateManager.enableTexture();
-			GlStateManager.enableLighting();
-			GlStateManager.resetColor();
 		}
 		
 		

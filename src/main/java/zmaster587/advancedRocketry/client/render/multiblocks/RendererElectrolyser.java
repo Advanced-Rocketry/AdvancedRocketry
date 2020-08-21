@@ -2,28 +2,37 @@ package zmaster587.advancedRocketry.client.render.multiblocks;
 
 
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Quaternion;
+
 import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TileElectrolyser;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
-public class RendererElectrolyser extends TileEntitySpecialRenderer {
+public class RendererElectrolyser extends TileEntityRenderer<TileElectrolyser> {
 
 	WavefrontObject model;
 
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/electrolyser.png");
 
-	public RendererElectrolyser() {
+	public RendererElectrolyser(TileEntityRendererDispatcher tile) {
+		super(tile);
 		try {
 			model = new  WavefrontObject(new ResourceLocation("advancedrocketry:models/electrolyser.obj"));
 		} catch (ModelFormatException e) {
@@ -33,8 +42,8 @@ public class RendererElectrolyser extends TileEntitySpecialRenderer {
 	}
 	
 	@Override
-	public void render(TileEntity tile, double x,
-			double y, double z, float f, int destroyState, float a) {
+	public void render(TileElectrolyser tile, float partialTicks, MatrixStack matrix,
+			IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn){
 		TileMultiblockMachine multiBlockTile = (TileMultiblockMachine)tile;
 
 		if(!multiBlockTile.canRender())
@@ -43,17 +52,16 @@ public class RendererElectrolyser extends TileEntitySpecialRenderer {
 		matrix.push();
 
 		//Rotate and move the model into position
-		matrix.translate(x+.5f, y, z + 0.5f);
+		matrix.translate(.5f, 0, 0.5f);
 		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		GL11.glRotatef((front.getZOffset() == 1 ? 180 : 0) - front.getXOffset()*90f, 0, 1, 0);
+		matrix.rotate(new Quaternion(0,(front.getZOffset() == 1 ? 180 : 0) - front.getXOffset()*90f, 0, true ));
 
-		bindTexture(texture);
-		model.renderAll();
+		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
+		model.tessellateAll(entitySolidBuilder);
 
 		//Lightning effect
 
 		if(multiBlockTile.isRunning()) {
-			BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
 			double width = 0.01;
 
@@ -61,19 +69,16 @@ public class RendererElectrolyser extends TileEntitySpecialRenderer {
 			double ySkew = 0.1*MathHelper.sin((tile.getWorld().getGameTime() & 0xffff)*2f);
 			double xSkew = 0.1*MathHelper.sin((200 + tile.getWorld().getGameTime() & 0xffff)*3f);
 			double yPos = 1.4;
+			
+			IVertexBuilder entityTransparentBuilder = buffer.getBuffer(RenderHelper.getTranslucentManualRenderType());
 
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_SRC_ALPHA);
-
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
-			GlStateManager.color4f(.64f, 0.64f, 1f, 0.4f);
+			float r = .64f, g = 0.64f, b = 1f, a= 0.4f;
+			
 			double xMin = -0.3f;
 			double xMax = -.15f;
 			double zMin = 1f;
 			double zMax = 1;
-			RenderHelper.renderCrossXZ(buffer, width, xMin, yPos, zMin, xMax, yPos + ySkew, zMax  + xSkew);
+			RenderHelper.renderCrossXZ(entityTransparentBuilder, width, xMin, yPos, zMin, xMax, yPos + ySkew, zMax  + xSkew, r,g,b,a);
 
 			//tess.addVertex(xMin, yMax, zMin);
 			//tess.addVertex(xMax, yMax + ySkew, zMin);
@@ -83,23 +88,17 @@ public class RendererElectrolyser extends TileEntitySpecialRenderer {
 			xMax += 0.15;
 			xMin += 0.15;
 
-			RenderHelper.renderCrossXZ(buffer, width, xMin, yPos + ySkew, zMin + xSkew, xMax, yPos - ySkew, zMax - xSkew);
+			RenderHelper.renderCrossXZ(entityTransparentBuilder, width, xMin, yPos + ySkew, zMin + xSkew, xMax, yPos - ySkew, zMax - xSkew, r,g,b,a);
 
 			xMax += 0.15;
 			xMin += 0.15;
 
-			RenderHelper.renderCrossXZ(buffer, width, xMin, yPos - ySkew, zMin - xSkew, xMax, yPos + ySkew, zMax + xSkew);
+			RenderHelper.renderCrossXZ(entityTransparentBuilder, width, xMin, yPos - ySkew, zMin - xSkew, xMax, yPos + ySkew, zMax + xSkew, r,g,b,a);
 
 			xMax += 0.15;
 			xMin += 0.15;
 
-			RenderHelper.renderCrossXZ(buffer, width, xMin, yPos + ySkew, zMin + xSkew, xMax, yPos, zMax);
-
-			Tessellator.getInstance().draw();
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			RenderHelper.renderCrossXZ(entityTransparentBuilder, width, xMin, yPos + ySkew, zMin + xSkew, xMax, yPos, zMax, r,g,b,a);
 			
 		}
 		matrix.pop();

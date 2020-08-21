@@ -66,13 +66,13 @@ public class RenderHoverCraft extends EntityRenderer<EntityHoverCraft> implement
 		matrix.translate(0, 1, 0);
 		matrix.rotate(new Quaternion(0, 180-entityYaw, 0, false));
 		
-		IVertexBuilder entitySolidBuilder = bufferIn.getBuffer(RenderType.getEntitySolid(getEntityTexture(entity)));
+		IVertexBuilder entitySolidBuilder = bufferIn.getBuffer(RenderHelper.getSolidEntityModelRenderType(getEntityTexture(entity)));
 		
 		hoverCraft.tessellateAll(entitySolidBuilder);
 		
 		float r = 0.1f, g = 0.1f, b = 1f, a = 0.8f;
 		
-		IVertexBuilder entityTransparentBuilder = bufferIn.getBuffer(RenderHelper.SEMI_TRANSLUCENT);
+		IVertexBuilder entityTransparentBuilder = bufferIn.getBuffer(RenderHelper.getTranslucentManualRenderType());
 		
 		final float start = -0.85f - (entity.world.getGameTime() % 10)*0.01f;
 		final int count = 5;

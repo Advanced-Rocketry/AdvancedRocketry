@@ -1,23 +1,32 @@
 package zmaster587.advancedRocketry.client.render.multiblocks;
 
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Quaternion;
+
 import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import zmaster587.advancedRocketry.tile.multiblock.TileGravityController;
 import zmaster587.libVulpes.block.RotatableBlock;
+import zmaster587.libVulpes.render.RenderHelper;
 
-public class RenderGravityMachine extends TileEntitySpecialRenderer {
+public class RenderGravityMachine extends TileEntityRenderer<TileGravityController> {
 	
 	WavefrontObject model;
 
 	ResourceLocation texture =  new ResourceLocation("advancedRocketry:textures/models/gravityMachine.png");
 	
-	public RenderGravityMachine() {
+	public RenderGravityMachine(TileEntityRendererDispatcher tile) {
+		super(tile);
 		try {
 			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/gravityMachine.obj"));
 		} catch (ModelFormatException e) {
@@ -26,61 +35,50 @@ public class RenderGravityMachine extends TileEntitySpecialRenderer {
 	}
 	
 	@Override
-	public void render(TileEntity tile, double x,
-			double y, double z, float f, int damage, float a) {
-		TileGravityController multiBlockTile = (TileGravityController)tile;
+	public void render(TileGravityController tile, float partialTicks, MatrixStack matrix,
+			IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
 
-		if(!multiBlockTile.canRender())
+		if(!tile.canRender())
 			return;
 
 		matrix.push();
 
 		//Initial setup
 
-		matrix.translate(x + 0.5, y - .5f, z + .5);
+		matrix.translate(0.5f, 0.5f, 0.5f);
 		//Rotate and move the model into position
 		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
-		GL11.glRotatef((front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, 1, 0);
-		//matrix.translate(2f, 0, 0f);
-		bindTexture(texture);
+		matrix.rotate(new Quaternion(0, (front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, true));
+		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
+		IVertexBuilder entityTransBuilder = buffer.getBuffer(RenderHelper.getTranslucentEntityModelRenderType(texture));
 		
-		model.renderOnly("Base");
+		model.renderOnly(entitySolidBuilder, "Base");
 		GL11.glDisable(GL11.GL_LIGHTING);
 		int maxSize = 5;
 		
 		//Render blur
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GlStateManager.color4f(0f, 1f, 1f, Math.max(((float)multiBlockTile.getGravityMultiplier() - 0.1f)*0.2f,0f));
+		/*GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GlStateManager.color4f(0f, 1f, 1f, Math.max(((float)tile.getGravityMultiplier() - 0.1f)*0.2f,0f));
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDepthMask(false);
 		
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glAlphaFunc(GL11.GL_GREATER, 0f);
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0f);*/
 		
 		matrix.push();
-		GL11.glScaled(1.1, 1, 1.1);
+		matrix.scale(1.1f, 1f, 1.1f);
 		for(int i = 0; i < 4; i++) {
-			GL11.glScaled(.93, 1, .93);
-			model.renderOnly("Blur");
+			matrix.scale(.93f, 1f, .93f);
+			model.renderOnly(entityTransBuilder, "Blur");
 		}
 		matrix.pop();
-		
-		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
-		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		
-		GL11.glDepthMask(true);
-		GL11.glDisable(GL11.GL_BLEND);
-		GlStateManager.color4f(1f, 1f, 1f,1f);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		// END render blur
 		
-		
-		GL11.glRotated(multiBlockTile.getArmRotation(), 0, 1, 0);
+		matrix.rotate(new Quaternion(0, (float) tile.getArmRotation(), 0, true));
 		for(int i = 0; i < maxSize; i++) {
-			GL11.glRotated(360/maxSize, 0, 1, 0);
-			model.renderOnly("Arm");
+			matrix.rotate(new Quaternion(0, (float) 360/maxSize, 0, true));
+			model.renderOnly(entitySolidBuilder, "Arm");
 		}
-		GL11.glEnable(GL11.GL_LIGHTING);
 		matrix.pop();
 	}
 }

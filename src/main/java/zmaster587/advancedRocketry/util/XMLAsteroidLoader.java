@@ -3,6 +3,9 @@ package zmaster587.advancedRocketry.util;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistries;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -132,7 +135,7 @@ public class XMLAsteroidLoader {
 						AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid probability value");
 					}
 				}
-				
+
 				node = att.getNamedItem("timeMultiplier");
 				if(node != null) {
 					try {
@@ -169,7 +172,7 @@ public class XMLAsteroidLoader {
 							asteroidNode = asteroidNode.getNextSibling();
 							continue;
 						}
-						
+
 						try {
 							asteroid.stackProbabilites.add(Float.parseFloat(nodeChance.getTextContent()));
 						} catch (NumberFormatException e) {
@@ -198,7 +201,7 @@ public class XMLAsteroidLoader {
 	public static ItemStack getStack(String text) {
 		//Backwards compat, " " used to be the delimiter
 		String[] splitStr = text.contains(";") ? text.split(";") : text.split(" ");
-		
+
 		int meta = 0;
 		int size = 1;
 		//format: "name;meta;size"
@@ -209,15 +212,11 @@ public class XMLAsteroidLoader {
 		}
 
 		ItemStack stack = null;
-		Block block = Block.getBlockFromName(splitStr[0].trim());
-		if(block == null) {
-			Item item = Item.getByNameOrId(splitStr[0].trim());
-			if(item != null)
-				stack = new ItemStack(item, size, meta);
-		}
-		else
-			stack = new ItemStack(block, size, meta);
-	
+		Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(splitStr[0].trim()));
+		if(item != null)
+			stack = new ItemStack(item, size);
+
+
 		return stack;
 	}
 }

@@ -12,11 +12,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
-import net.minecraft.world.biome.Biome.SpawnListEntry;
-import net.minecraft.world.biome.Biome.TempCategory;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeManager;
-import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.registries.ForgeRegistries;
 import zmaster587.advancedRocketry.AdvancedRocketry;
@@ -1114,10 +1109,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * Adds a biome to the list of biomes allowed to spawn on this planet
 	 * @param biome biome to be added as viable
 	 */
-	public void addBiome(Biome biome) {
+	public boolean addBiome(Biome biome) {
 		ArrayList<Biome> biomes = new ArrayList<Biome>();
 		biomes.add(biome);
 		allowedBiomes.addAll(getBiomesEntries(biomes));
+		return true;
 	}
 
 	/**

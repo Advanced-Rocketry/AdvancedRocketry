@@ -5,12 +5,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.block.BlockSeal;
 
 public class TileSeal extends TileEntity implements ITickableTileEntity {
 
-	public TileSeal(TileEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public TileSeal() {
+		super(AdvancedRocketryTileEntityType.TILE_SEAL);
 	}
 
 	boolean ticked = false;

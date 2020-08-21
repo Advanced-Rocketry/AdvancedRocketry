@@ -10,6 +10,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.inventory.GuiHandler;
@@ -19,7 +20,7 @@ import java.util.Random;
 public class BlockLaser extends BlockMultiblockMachine {
 
 	public BlockLaser(Properties properties) {
-		super(properties.tickRandomly(), TileSpaceLaser.class, (int)GuiHandler.guiId.MODULAR.ordinal());
+		super(properties.tickRandomly(), AdvancedRocketryTileEntityType.TILE_SPACE_LASER, (int)GuiHandler.guiId.MODULAR.ordinal());
 	}
 
 	@Override

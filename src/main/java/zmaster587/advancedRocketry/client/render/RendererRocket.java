@@ -1,41 +1,32 @@
 package zmaster587.advancedRocketry.client.render;
 
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.chunk.ChunkCompileTaskGenerator;
-import net.minecraft.client.renderer.chunk.IRenderChunkFactory;
-import net.minecraft.client.renderer.chunk.ListChunkFactory;
-import net.minecraft.client.renderer.chunk.RenderChunk;
-import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.lwjgl.opengl.GL11;
 
-import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.IInfrastructure;
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.util.StorageChunk;
 
-public class RendererRocket extends Render implements IRenderFactory<EntityRocket> {
+public class RendererRocket extends EntityRenderer<EntityRocket> implements IRenderFactory<EntityRocket> {
 
 	private static BlockRendererDispatcher renderBlocks = Minecraft.getInstance().getBlockRendererDispatcher();
-	private IRenderChunkFactory factory = new ListChunkFactory();
 
 	Class tileEntityBlockChiseled;
 	Method getState;
@@ -43,7 +34,7 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 	public RendererRocket(EntityRendererManager manager) {
 		super(manager);
 
-		try {
+		/*try {
 			tileEntityBlockChiseled = Class.forName("mod.chiselsandbits.chiseledblock.TileEntityBlockChiseled");
 			getState = tileEntityBlockChiseled.getMethod("getRenderState", IBlockAccess.class);
 			AdvancedRocketry.logger.info("Chisel and bits support HAS BEEN loaded");
@@ -54,17 +45,15 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 		catch(NoSuchMethodException e)
 		{
 			AdvancedRocketry.logger.info("Chisel and bits support NOT loaded");
-		}
+		}*/
 	}
-
 
 	//TODO: possibly optimize with GL lists
 	@Override
-	public void doRender(Entity entity, double x,
-			double y, double z, float f1,
-			float f2) {
+	public void render(EntityRocket entity, float entityYaw, float partialTicks, MatrixStack matrix,
+			IRenderTypeBuffer bufferIn, int packedLightIn) {
 
-		StorageChunk storage  = ((EntityRocket)entity).storage;
+		StorageChunk storage  = entity.storage;
 
 
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
@@ -84,8 +73,7 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 			//y = +0.5 -((EntityRocket)entity).stats.getSeatY();
 		}*/
 
-		matrix.push();
-		GL11.glTranslatef((float)x, (float)y, (float)z);
+		/*matrix.push();
 
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GL11.GL_ONE, GL11.GL_ONE);
@@ -121,78 +109,58 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 		GL11.glDisable(GL11.GL_LINE_STIPPLE);
 		GlStateManager.enableTexture();
 
-		matrix.pop();
+		matrix.pop();*/
 
 		//Initial setup
-		if(storage.world.displayListIndex == -1) {
 
-			storage.world.displayListIndex = GLAllocation.generateDisplayLists(1);
-			matrix.push();
-			GL11.glNewList(storage.world.displayListIndex, GL11.GL_COMPILE);
-			net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+		matrix.push();
+		GL11.glNewList(storage.world.displayListIndex, GL11.GL_COMPILE);
+		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
 
-			//Render Each block
-			net.minecraftforge.client.ForgeHooksClient.setRenderLayer(BlockRenderLayer.SOLID);
-			Minecraft.getInstance().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-			for(int xx = 0; xx < storage.getSizeX(); xx++) {
-				for(int zz = 0; zz < storage.getSizeZ(); zz++) {
-					for(int yy = 0; yy < storage.getSizeY(); yy++) {
-						BlockState block  = storage.getBlockState(new BlockPos(xx, yy, zz));
+		//Render Each block
+		for(int xx = 0; xx < storage.getSizeX(); xx++) {
+			for(int zz = 0; zz < storage.getSizeZ(); zz++) {
+				for(int yy = 0; yy < storage.getSizeY(); yy++) {
+					BlockState block  = storage.getBlockState(new BlockPos(xx, yy, zz));
 
-						//I'm not dealing with untextured blocks from chisel and bits today
-						//Just assume everything from C&B is a bit
-						if(block.getBlock().getRegistryName().getResourceDomain().equals("chiselsandbits"))
-							continue;
-
-						buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-						try {
-							Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(block, new BlockPos(xx, yy, zz), storage.world, buffer);
-						} 
-						catch (NullPointerException e) {
-							System.out.println(block.getBlock().getUnlocalizedName() + " cannot be rendered on rocket at " + entity.getPosition());
-						}
-						Tessellator.getInstance().draw();
+					buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+					try {
+						Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(block, matrix, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY);
+					} 
+					catch (NullPointerException e) {
+						//System.out.println(block. + " cannot be rendered on rocket at " + entity.getPosition());
 					}
 				}
 			}
-			net.minecraftforge.client.ForgeHooksClient.setRenderLayer(null);
-
-			net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
-
-			GL11.glEndList();
-
-			matrix.pop();
 		}
 
+		matrix.pop();
+
 		matrix.push();
-		GL11.glTranslatef((float)x, (float)y + halfy, (float)z);
-		GL11.glRotatef(((EntityRocket)entity).getRCSRotateProgress()*0.9f, 1f, 0f, 0f);
-		GL11.glRotatef(((EntityRocket)entity).rotationYaw, 0f, 0f, 1f);
-		GL11.glTranslatef((float)- halfx, (float)0 - halfy, (float)- halfz);
-		Minecraft.getInstance().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-		GL11.glCallList(storage.world.displayListIndex);
-
-
+		matrix.translate((float)0, (float) halfy, (float)0);
+		matrix.rotate(new Quaternion(((EntityRocket)entity).getRCSRotateProgress()*0.9f,0,0, true));
+		matrix.rotate(new Quaternion(0,0, ((EntityRocket)entity).rotationYaw, true));
+		matrix.translate((float)- halfx, (float)0 - halfy, (float)- halfz);
 
 		//Render tile entities if applicable
 		for(TileEntity tile : storage.getTileEntityList()) {
-			TileEntitySpecialRenderer renderer = (TileEntitySpecialRenderer)TileEntityRendererDispatcher.instance.renderers.get(tile.getClass());
+			TileEntityRenderer renderer = (TileEntityRenderer)TileEntityRendererDispatcher.instance.getRenderer(tile);
 			if(renderer != null ) {
 
 				if(tileEntityBlockChiseled == null || !tileEntityBlockChiseled.isInstance(tile))
 				{
-					TileEntityRendererDispatcher.instance.render(tile, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), f1);
+					renderer.render(tile, partialTicks, matrix, bufferIn, packedLightIn, packedLightIn);
 				}
 				//renderer.renderTileEntity(tile, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), f1, 0);
 			}
 		}
 
 		//Chisel compat
-		if(getState != null)
+		/*if(getState != null)
 		{
 			TileEntityRendererDispatcher.instance.preDrawBatch();
 			for(TileEntity tile : storage.getTileEntityList()) {
-				TileEntitySpecialRenderer renderer = (TileEntitySpecialRenderer)TileEntityRendererDispatcher.instance.renderers.get(tile.getClass());
+				TileEntityRenderer renderer = (TileEntityRenderer)TileEntityRendererDispatcher.instance.renderers.get(tile.getClass());
 				if(renderer != null ) {
 
 					if(tileEntityBlockChiseled.isInstance(tile) && getState != null)
@@ -220,29 +188,20 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 				}
 			}
 			TileEntityRendererDispatcher.instance.drawBatch(0);
-		}
+		}*/
 		
 		//Clean up
-		GlStateManager.disableBlend();
-		GlStateManager.enableTexture();
-		GlStateManager.enableLighting();
-		GlStateManager.resetColor();
 		matrix.pop();
-
-
-		//Clean up and make player not transparent
-		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 0, 0);
-
-	}
-
-	@Override
-	protected ResourceLocation getEntityTexture(Entity p_110775_1_) {
-		return null;
 	}
 
 	@Override
 	public EntityRenderer<? super EntityRocket> createRenderFor(EntityRendererManager manager) {
 		return new RendererRocket(manager);
+	}
+
+	@Override
+	public ResourceLocation getEntityTexture(EntityRocket entity) {
+		return null;
 	}
 
 }

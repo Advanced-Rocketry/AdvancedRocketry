@@ -53,7 +53,7 @@ public class BlockTorchUnlit extends TorchBlock {
 			Hand handIn, BlockRayTraceResult hit) {
 		if(player.getHeldItem(Hand.MAIN_HAND) != null) {
 			Item item = player.getHeldItem(Hand.MAIN_HAND).getItem();
-			if(!world.isRemote && item != null && AtmosphereHandler.getOxygenHandler(ZUtils.getDimensionId(world)).getAtmosphereType(pos).allowsCombustion() && (item == Item.getItemFromBlock(Blocks.TORCH) || 
+			if(!world.isRemote && item != null && AtmosphereHandler.getOxygenHandler(world).getAtmosphereType(pos).allowsCombustion() && (item == Item.getItemFromBlock(Blocks.TORCH) || 
 					item == Items.FLINT_AND_STEEL || 
 					item == Items.FIRE_CHARGE)) {
 

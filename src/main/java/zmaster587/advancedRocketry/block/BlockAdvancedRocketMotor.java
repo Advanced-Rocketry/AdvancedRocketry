@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 
 public class BlockAdvancedRocketMotor extends BlockRocketMotor {
 
-	public BlockAdvancedRocketMotor(Material mat) {
+	public BlockAdvancedRocketMotor(Properties mat) {
 		super(mat);
 	}
 

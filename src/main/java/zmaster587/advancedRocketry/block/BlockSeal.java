@@ -42,7 +42,7 @@ public class BlockSeal extends Block {
 	
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(ZUtils.getDimensionId(worldIn));
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn);
 		if(atmhandler == null)
 			return;
 		
@@ -56,7 +56,7 @@ public class BlockSeal extends Block {
 	}
 	
 	public void removeSeal(World worldIn, BlockPos pos) {
-		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(ZUtils.getDimensionId(worldIn));
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn);
 		if(atmhandler == null)
 			return;
 		
@@ -67,7 +67,7 @@ public class BlockSeal extends Block {
 	}
 	
 	public void clearBlob(World worldIn, BlockPos pos, BlockState state) {
-		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(ZUtils.getDimensionId(worldIn));
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn);
 		if(atmhandler == null)
 			return;
 		
@@ -106,7 +106,7 @@ public class BlockSeal extends Block {
 	}
 
 	private boolean checkCompleteness(World worldIn, BlockPos pos) {
-		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(ZUtils.getDimensionId(worldIn));
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn);
 		if(atmhandler == null)
 			return false;
 		

@@ -1,81 +1,71 @@
 package zmaster587.advancedRocketry.client.render.multiblocks;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.util.math.vector.Quaternion;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
+import zmaster587.advancedRocketry.tile.multiblock.TileWarpCore;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
-import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.render.RenderHelper;
-import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
+import zmaster587.libVulpes.util.ZUtils;
 
-public class RendererWarpCore extends TileEntitySpecialRenderer {
+public class RendererWarpCore extends TileEntityRenderer<TileWarpCore> {
 
 	public static WavefrontObject model;
 
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/warpcore.png");
 
-	private final RenderItem dummyItem = Minecraft.getInstance().getRenderItem();
+	//private final RenderItem dummyItem = Minecraft.getInstance().getRenderItem();
 
-	public RendererWarpCore() {
+	public RendererWarpCore(TileEntityRendererDispatcher tile) {
+		super(tile);
 		try {
 			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/warpcore.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}
-	
 	}
 
 	@Override
-	public void render(TileEntity tile, double x,
-			double y, double z, float f, int damage, float a) {
-		TileMultiBlock multiBlockTile = (TileMultiBlock)tile;
+	public void render(TileWarpCore tile, float partialTicks, MatrixStack matrix,
+			IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn)  {
 
-		if(!multiBlockTile.canRender())
+		if(!tile.canRender())
 			return;
 
 		matrix.push();
 
 		//Rotate and move the model into position
-		matrix.translate(x + 0.5, y, z + 0.5);
+		matrix.translate( 0.5, 0, 0.5);
 		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		GL11.glRotatef((front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, 1, 0);
+		matrix.rotate(new Quaternion(0, (front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, true));
 		matrix.translate(1f, 0, 0f);
 
-		bindTexture(texture);
-		model.renderOnly("Base");
-
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
+		IVertexBuilder entitySolidBuilderManual = buffer.getBuffer(RenderHelper.getTranslucentManualRenderType());
+		IVertexBuilder entityTranslucentBuilder = buffer.getBuffer(RenderHelper.getTranslucentEntityModelRenderType(texture));
 		
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GlStateManager.color4f(1f, 0.4f, 0.4f, 0.8f);
+		model.renderOnly(entitySolidBuilder, "Base");
 		matrix.push();
 		
-		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		RenderHelper.renderCubeWithUV(buffer, -0.1f, 1, -0.1f, 0.1f, 2, 0.1f, 0, 1, 0, 1);
-		Tessellator.getInstance().draw();
+		RenderHelper.renderCube(entitySolidBuilderManual, -0.1f, 1, -0.1f, 0.1f, 2, 0f, 0.1f, 0.4f, 0.4f, 0.8f);
 		matrix.pop();
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GlStateManager.color4f(1f, 1f,1f, 1f);
 		
-		if(tile.getWorld().provider instanceof WorldProviderSpace) {
+		
+		if(ZUtils.getDimensionIdentifier(tile.getWorld()) == ARConfiguration.getCurrentConfig().spaceDimId) {
 			
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(tile.getPos());
 			if(obj instanceof SpaceStationObject && ((SpaceStationObject)obj).getFuelAmount() > 50) {
@@ -84,49 +74,42 @@ public class RendererWarpCore extends TileEntitySpecialRenderer {
 				
 				double speedRotate = speedMult*0.25d;
 				
-				
-				GlStateManager.color4f(0.4f, 0.4f, 1f, 0.6f);
 				matrix.push();
-				GL11.glRotated(speedRotate*System.currentTimeMillis() % 360, 0f, 1f, 0f);
-				model.renderOnly("Rotate1");
+				matrix.rotate(new Quaternion(0, (float) (speedRotate*System.currentTimeMillis() % 360), 0, true));
+				model.renderOnly(entityTranslucentBuilder, "Rotate1");
 				matrix.pop();
 
 				matrix.push();
-				GL11.glRotated(180 + speedRotate*System.currentTimeMillis() % 360, 0f, 1f, 0f);
-				model.renderOnly("Rotate1");
+				matrix.rotate(new Quaternion(0, (float) (180 + speedRotate*System.currentTimeMillis() % 360), 0, true));
+				model.renderOnly(entityTranslucentBuilder, "Rotate1");
 				matrix.pop();
 
 				matrix.push();
-				GL11.glRotated(-speedRotate*System.currentTimeMillis() % 360, 0f, 1f, 0f);
-				model.renderOnly("Rotate2");
+				matrix.rotate(new Quaternion(0, (float) -(speedRotate*System.currentTimeMillis() % 360), 0, true));
+				model.renderOnly(entityTranslucentBuilder,"Rotate2");
 				matrix.pop();
 
 				matrix.push();
-				GL11.glRotated(180 -speedRotate*System.currentTimeMillis() % 360, 0f, 1f, 0f);
-				model.renderOnly("Rotate2");
+				matrix.rotate(new Quaternion(0, (float) (180-speedRotate*System.currentTimeMillis() % 360), 0, true));
+				model.renderOnly(entityTranslucentBuilder, "Rotate2");
 				matrix.pop();
 
 				speedRotate = 0.03d*speedMult;
-				
-				GlStateManager.color4f(0.4f, 1f, 0.4f, 0.8f);
 				int amt = 3;
 				float offset = 360/(float)amt;
 				for(int j = 0; j < 5; j++) {
 					for(int i = 0; i < amt; i++) {
 						matrix.push();
-						GL11.glRotated(((j+1)*speedRotate*System.currentTimeMillis() % 360) + (i + j/5f)*offset, 0f, 1f, 0f);
-						GL11.glTranslatef(0, 0.1f*j-.2f + (5-j)*0.02f*(float)Math.sin(0.001d*System.currentTimeMillis()), 0.2f);
-						//GL11.glTranslatef(0f, 0.1f*(0.5f - MathHelper.sin((float)(0.001*System.currentTimeMillis() % 100))), 0f);
-						model.renderOnly("Ball");
+						matrix.rotate(new Quaternion(0, (float) (((j+1)*speedRotate*System.currentTimeMillis() % 360) + (i + j/5f)*offset), 0, true));
+						matrix.translate(0, 0.1f*j-.2f + (5-j)*0.02f*(float)Math.sin(0.001d*System.currentTimeMillis()), 0.2f);
+						//matrix.translate(0f, 0.1f*(0.5f - MathHelper.sin((float)(0.001*System.currentTimeMillis() % 100))), 0f);
+						model.renderOnly(entityTranslucentBuilder, "Ball");
 						matrix.pop();
 					}
 				}
 			}
 		}
 		
-		GlStateManager.color4f(1f, 1f, 1f, 1f);
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		matrix.pop();
 	}
 }

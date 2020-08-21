@@ -68,18 +68,15 @@ public class RenderPlanetUIEntity extends EntityRenderer<EntityUIPlanet> impleme
 		//Max because moon was too small to be visible
 
 		matrix.scale(.1f*sizeScale, .1f*sizeScale, .1f*sizeScale);
-		IVertexBuilder translucentBuffer = bufferIn.getBuffer(RenderType.getEntityTranslucent(properties.getPlanetIconLEO()));
+		IVertexBuilder translucentBuffer = bufferIn.getBuffer(RenderHelper.getTranslucentEntityModelRenderType(properties.getPlanetIconLEO()));
 
 		matrix.push();
 		matrix.rotate(new Quaternion(0, entity.world.getGameTime() & 0xFF, 0, true));
 		sphere.tessellateAll(translucentBuffer);
 		matrix.pop();
-
-
-		IVertexBuilder translucentBuffer = bufferIn.getBuffer(RenderType.get));
 		
 		//Render shadow
-		matrix.push();
+		/*matrix.push();
 		GL11.glScalef(1.1f, 1.1f, 1.1f);
 		GL11.glRotatef(90, 0, 0, 1);
 		GL11.glRotated( -(properties.orbitTheta * 180/Math.PI), 1, 0, 0);
@@ -112,10 +109,10 @@ public class RenderPlanetUIEntity extends EntityRenderer<EntityUIPlanet> impleme
 			Tessellator.getInstance().draw();
 		}
 
-		matrix.pop();
+		matrix.pop();*/
 
 		//Render ATM
-		if(properties.hasAtmosphere()) {
+		/*if(properties.hasAtmosphere()) {
 			matrix.push();
 			GlStateManager.disableTexture();
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -128,51 +125,41 @@ public class RenderPlanetUIEntity extends EntityRenderer<EntityUIPlanet> impleme
 			
 			GlStateManager.enableTexture();
 			matrix.pop();
-		}
+		}*/
 
 		//Render hololines
 		matrix.push();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-		BufferBuilder buf = Tessellator.getInstance().getBuffer();
-		GlStateManager.disableTexture();
+		
+		IVertexBuilder buf = bufferIn.getBuffer(RenderHelper.getTranslucentManualRenderType());
 
 		float myTime = ((entity.world.getGameTime() & 0xF)/16f);
 
 		for(int i = 0; i < 4; i++ ) {
 			myTime = ((i*4 + entity.world.getGameTime() & 0xF)/16f);
-
-			GlStateManager.color4f(0, 1f, 1f, .2f*(1-myTime));
-			buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
-			RenderHelper.renderTopFace(buf, myTime - 0.5, -.5f, -.5f, .5f, .5f);
-			RenderHelper.renderBottomFace(buf, myTime - 0.5, -.5f, -.5f, .5f, .5f);
-			Tessellator.getInstance().draw();
+			RenderHelper.renderTopFace(buf, myTime - 0.5, -.5f, -.5f, .5f, .5f, 0, 1f, 1f, .2f*(1-myTime));
+			RenderHelper.renderBottomFace(buf, myTime - 0.5, -.5f, -.5f, .5f, .5f, 0, 1f, 1f, .2f*(1-myTime));
 		}
-		GlStateManager.alphaFunc(GL11.GL_GREATER, .1f);
-		GlStateManager.enableTexture();
 		matrix.pop();
 
 		//RenderSelection
 		if(entity.isSelected()) {
-			GlStateManager.disableTexture();
 			double speedRotate = 0.025d;
-			GlStateManager.color4f(0.4f, 0.4f, 1f, 0.6f);
+			//GlStateManager.color4f(0.4f, 0.4f, 1f, 0.6f);
 			matrix.translate(0, -1.25, 0);
 			matrix.push();
-			GL11.glRotated(speedRotate*System.currentTimeMillis() % 360, 0f, 1f, 0f);
-			RendererWarpCore.model.renderOnly("Rotate1");
+			matrix.rotate(new Quaternion(0f, (float) (speedRotate*System.currentTimeMillis() % 360), 0f, true));
+			RendererWarpCore.model.renderOnly(translucentBuffer, "Rotate1");
 			matrix.pop();
 
 			matrix.push();
-			GL11.glRotated(180 + speedRotate*System.currentTimeMillis() % 360, 0f, 1f, 0f);
-			RendererWarpCore.model.renderOnly("Rotate1");
+			matrix.rotate(new Quaternion(0f, (float) (180 + speedRotate*System.currentTimeMillis() % 360), 0f, true));
+			RendererWarpCore.model.renderOnly(translucentBuffer, "Rotate1");
 			matrix.pop();
-			GlStateManager.enableTexture();
 		}
 
 		matrix.pop();
 
-		RayTraceResult hitObj = Minecraft.getInstance().objectMouseOver;
+		/*RayTraceResult hitObj = Minecraft.getInstance().objectMouseOver;
 		if(hitObj != null && hitObj.entityHit == entity) {
 
 			matrix.push();
@@ -217,33 +204,27 @@ public class RenderPlanetUIEntity extends EntityRenderer<EntityUIPlanet> impleme
 		GlStateManager.color4f(1, 1, 1);
 		GlStateManager.disableBlend();
 		GlStateManager.enableLighting();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);*/
 	}
 
-	protected void renderMassIndicator(BufferBuilder buffer, float percent) {
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+	protected void renderMassIndicator(IVertexBuilder buffer, float percent) {
 
 		float maxUV = (1-percent)*0.5f;
 
-		RenderHelper.renderNorthFaceWithUV(buffer, 0, -20, -5 + 41*(1-percent), 20, 36, .5f, 0f, .5, maxUV);
-		Tessellator.getInstance().draw();
+		RenderHelper.renderNorthFaceWithUV(buffer, 0, -20, -5 + 41*(1-percent), 20, 36, .5f, 0f, .5f, maxUV,1,1,1,1);
 	}
 
-	protected void renderATMIndicator(BufferBuilder buffer, float percent) {
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+	protected void renderATMIndicator(IVertexBuilder buffer, float percent) {
 
 		float maxUV = (1-percent)*0.406f + .578f;
 		//Offset by 15 for Y
-		RenderHelper.renderNorthFaceWithUV(buffer, 0, 6, 20 + (1-percent)*33, 39, 53, .5624f, .984f, .984f, maxUV);
-		Tessellator.getInstance().draw();
+		RenderHelper.renderNorthFaceWithUV(buffer, 0, 6, 20 + (1-percent)*33, 39, 53, .5624f, .984f, .984f, maxUV, 1,1,1,1);
 	}
 
-	protected void renderTemperatureIndicator(BufferBuilder buffer, float percent) {
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+	protected void renderTemperatureIndicator(IVertexBuilder buffer, float percent) {
 
 		float maxUV = (1-percent)*0.406f + .578f;
 		//Offset by 15 for Y
-		RenderHelper.renderNorthFaceWithUV(buffer, 0, -38, 21.4f + (1-percent)*33, -4, 53, .016f, .4376f, .984f, maxUV);
-		Tessellator.getInstance().draw();
+		RenderHelper.renderNorthFaceWithUV(buffer, 0, -38, 21.4f + (1-percent)*33, -4, 53, .016f, .4376f, .984f, maxUV, 1,1,1,1);
 	}
 }

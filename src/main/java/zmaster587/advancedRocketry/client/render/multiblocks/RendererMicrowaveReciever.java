@@ -2,50 +2,55 @@ package zmaster587.advancedRocketry.client.render.multiblocks;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.tile.multiblock.energy.TileMicrowaveReciever;
 import zmaster587.libVulpes.render.RenderHelper;
 
-public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
+public class RendererMicrowaveReciever extends TileEntityRenderer<TileMicrowaveReciever> {
+
+	public RendererMicrowaveReciever(TileEntityRendererDispatcher rendererDispatcherIn) {
+		super(rendererDispatcherIn);
+	}
 
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/blocks/solar.png");
 	ResourceLocation panelSide = new ResourceLocation("advancedrocketry:textures/blocks/panelSide.png");
-
+	
 	@Override
-	public void render(TileEntity tile, double x,
-			double y, double z, float f, int damage, float a) {
-		TileMicrowaveReciever multiBlockTile = (TileMicrowaveReciever)tile;
+	public void render(TileMicrowaveReciever tile, float partialTicks, MatrixStack matrix,
+			IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
 
-		if(!multiBlockTile.canRender())
+		if(!tile.canRender())
 			return;
 
 		matrix.push();
-		matrix.translate(x, y, z);
-		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		//Initial setup
-		bindTexture(texture);
+		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
+		IVertexBuilder entitySolidManual = buffer.getBuffer(RenderHelper.getSolidTexturedManualRenderType(texture));
+		IVertexBuilder entitySolidSideManual = buffer.getBuffer(RenderHelper.getSolidTexturedManualRenderType(panelSide));
+		IVertexBuilder entitySolidSideManualColor = buffer.getBuffer(RenderHelper.getSolidManualRenderType());
+		IVertexBuilder laserBeam = buffer.getBuffer(RenderHelper.getLaserBeamType());
 		
 		//Initial setup
-        int i2 = this.getWorld().getCombinedLight(tile.getPos().add(0, 1, 0), 0);
-        int j = i2 % 65536;
-        int k = i2 / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j, (float)k);
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         
         
 		//Draw heat FX
-		if(ARConfiguration.getCurrentConfig().advancedVFX && multiBlockTile.getPowerMadeLastTick() > 0) {
-			double distance = Math.sqrt(Minecraft.getInstance().player.getDistanceSq(tile.getPos()));
-			if(distance < 16 ) {
+		if(ARConfiguration.getCurrentConfig().advancedVFX && tile.getPowerMadeLastTick() > 0) {
+			double distance = tile.getPos().distanceSq(new BlockPos( Minecraft.getInstance().player.getPositionVec()));
+			if(distance < 16*16 ) {
 				double u = 256/distance;
 				double resolution = (int)u;
 
@@ -65,83 +70,58 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
 
 				matrix.push();
 				matrix.translate(-2, 0, -2);
-				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				
 				for(int i = 0; i < (int)resolution; i++) {
 					for(int g = 0; g < (int)resolution; g++) {
-						RenderHelper.renderTopFaceWithUV(buffer, 1.01 + yLoc[i][g], 5*i/resolution, 5*g/resolution, 5*(i+1)/resolution, 5*(g+1)/resolution, 5*i/resolution, 5*(i+1)/resolution, 5*g/resolution, 5*(g+1)/resolution);
+						RenderHelper.renderTopFaceWithUV(entitySolidManual, 1.01 + yLoc[i][g], 5*i/resolution, 5*g/resolution, 5*(i+1)/resolution, 5*(g+1)/resolution,(float) (5*i/resolution), (float)(5*(i+1)/resolution), (float)(5*g/resolution), (float)(5*(g+1)/resolution),1f,1f,1f,1f);
 					}
 				}
-				Tessellator.getInstance().draw();
 				matrix.pop();
 			}
 		}
 
 		//Draw main panel
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		RenderHelper.renderTopFaceWithUV(buffer, 1.01, -2, -2, 3, 3, 0, 5, 0, 5);
+		RenderHelper.renderTopFaceWithUV(entitySolidManual, 1.01, -2, -2, 3, 3, 0, 5, 0, 5,1,1,1,1);
 		Tessellator.getInstance().draw();
 		//And sides
 		
-		bindTexture(panelSide);
 		
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		RenderHelper.renderNorthFaceWithUV(buffer, -1.99, -2, 0, 3, 1, 0, 5, 0 ,1);
-		RenderHelper.renderSouthFaceWithUV(buffer, 2.99, -2, 0, 3, 1, 0, 5, 0 ,1);
-		RenderHelper.renderEastFaceWithUV(buffer, 2.99, 0, -2, 1, 3, 0, 5, 0 ,1);
-		RenderHelper.renderWestFaceWithUV(buffer, -1.99, 0, -2, 1, 3, 0, 5, 0 ,1);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		RenderHelper.renderBottomFace(buffer, 0.001, -2, -2, 3, 3);
-		
-		RenderHelper.renderCubeWithUV(buffer, -2, 0.99, -2, -1.9, 1.1, 3, 0, 0, 0,0);
-		RenderHelper.renderCubeWithUV(buffer, -2, 0.99, -2, 3, 1.1, -1.9, 0, 0, 0,0);
-		
-		RenderHelper.renderCubeWithUV(buffer, -1.9, 0.99, 2.9, 3, 1.1, 3, 0, 0, 0,0);
-		RenderHelper.renderCubeWithUV(buffer, 2.9, 0.99, -1.9, 3, 1.1, 3, 0, 0, 0,0);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		
-		Tessellator.getInstance().draw();
+		RenderHelper.renderNorthFaceWithUV(entitySolidSideManual, -1.99, -2, 0, 3, 1, 0, 5, 0 ,1,1,1,1,1);
+		RenderHelper.renderSouthFaceWithUV(entitySolidSideManual, 2.99, -2, 0, 3, 1, 0, 5, 0 ,1,1,1,1,1);
+		RenderHelper.renderEastFaceWithUV(entitySolidSideManual, 2.99, 0, -2, 1, 3, 0, 5, 0 ,1,1,1,1,1);
+		RenderHelper.renderWestFaceWithUV(entitySolidSideManual, -1.99, 0, -2, 1, 3, 0, 5, 0 ,1,1,1,1,1);
 
-		if(multiBlockTile.getPowerMadeLastTick() > 0 ) {
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glDisable(GL11.GL_FOG);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glDepthMask(false);
+		RenderHelper.renderBottomFace(entitySolidSideManualColor, 0.001, -2, -2, 3, 3,1,1,1,1);
+		
+		RenderHelper.renderCube(entitySolidSideManualColor, -2, 0.99, -2, -1.9, 1.1, 3, 1,1,1,1);
+		RenderHelper.renderCube(entitySolidSideManualColor, -2, 0.99, -2, 3, 1.1, -1.9,1,1,1,1);
+		
+		RenderHelper.renderCube(entitySolidSideManualColor, -1.9, 0.99, 2.9, 3, 1.1, 3, 1,1,1,1);
+		RenderHelper.renderCube(entitySolidSideManualColor, 2.9, 0.99, -1.9, 3, 1.1, 3, 1,1,1,1);
 
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+		if(tile.getPowerMadeLastTick() > 0 ) {
 			matrix.push();
-			GlStateManager.color4f(0.2F, 0.2F, 0.2F, 0.3F);
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-	
-			//matrix.translate(0.5, 0, 0.5);
-			//GL11.glRotated(tile.getWorldObj().getGameTime()/10.0 % 360, 0, 1, 0);
-			//matrix.translate(-0.3, 0, -0.3);
+			//GlStateManager.color4f(0.2F, 0.2F, 0.2F, 0.3F);
+			float x = 0, y = 0, z = 0;
 			
 			for(float radius = 0.25F; radius < 2; radius += .25F) {
 
 				for(double i = 0; i < 2*Math.PI; i += Math.PI) {
-					buffer.pos(- x , -y + 200,  - z).endVertex();
-					buffer.pos(- x, -y + 200, - z).endVertex();
-					buffer.pos(- (radius* Math.cos(i)) + 0.5F, 0,- (radius* Math.sin(i)) + 0.5F).endVertex();
-					buffer.pos(+ (radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F).endVertex();
+					laserBeam.pos(- x , -y + 200,  - z).endVertex();
+					laserBeam.pos(- x, -y + 200, - z).endVertex();
+					laserBeam.pos(- (radius* Math.cos(i)) + 0.5F, 0,- (radius* Math.sin(i)) + 0.5F).endVertex();
+					laserBeam.pos(+ (radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F).endVertex();
 				}
 
 				for(double i = 0; i < 2*Math.PI; i += Math.PI) {
-					buffer.pos(- x, -y + 200,- z).endVertex();
-					buffer.pos(- x, -y + 200, - z).endVertex();
-					buffer.pos(+ (radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F).endVertex();
-					buffer.pos(- (radius* Math.cos(i)) + 0.5F, 0,(radius* Math.sin(i)) + 0.5F).endVertex();
+					laserBeam.pos(- x, -y + 200,- z).endVertex();
+					laserBeam.pos(- x, -y + 200, - z).endVertex();
+					laserBeam.pos(+ (radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F).endVertex();
+					laserBeam.pos(- (radius* Math.cos(i)) + 0.5F, 0,(radius* Math.sin(i)) + 0.5F).endVertex();
 				}
 			}
-			Tessellator.getInstance().draw();
 
 			matrix.pop();
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GL11.glEnable(GL11.GL_FOG);
-			GL11.glDepthMask(true);
 		}
 
 		matrix.pop();

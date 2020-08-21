@@ -5,11 +5,11 @@
 package zmaster587.advancedRocketry.client.render.entity;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderEntityItem;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.api.distmarker.Dist;
@@ -17,6 +17,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.entity.EntityItemAbducted;
 
 import java.util.Random;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
 
 @OnlyIn(value=Dist.CLIENT)
 public class RendererItem extends EntityRenderer<EntityItemAbducted> implements IRenderFactory<EntityItemAbducted>
@@ -29,12 +31,10 @@ public class RendererItem extends EntityRenderer<EntityItemAbducted> implements 
     public float zLevel;
     public static boolean renderInFrame;
     private static final String __OBFID = "CL_00001003";
-    RenderEntityItem itemRenderer;
+    //RenderBlock itemRenderer;
 
-    public RendererItem(EntityRendererManager renderManagerIn, RenderItem p_i46167_2_) {
+    public RendererItem(EntityRendererManager renderManagerIn) {
     	super(renderManagerIn);
-    	
-    	itemRenderer = new RenderEntityItem(renderManagerIn, p_i46167_2_);
     }
 
     /**
@@ -44,19 +44,20 @@ public class RendererItem extends EntityRenderer<EntityItemAbducted> implements 
      * double d2, float f, float f1). But JAD is pre 1.5 so doesn't do that.
      */
     @Override
-    public void doRender(EntityItemAbducted p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
+    public void render(EntityItemAbducted entity, float entityYaw, float partialTicks, MatrixStack matrixStackIn,
+    		IRenderTypeBuffer bufferIn, int packedLightIn)
     {
-    	itemRenderer.doRender(p_76986_1_.getItemEntity(), p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+    	Minecraft.getInstance().getItemRenderer().renderItem(entity.getEntityItem(), TransformType.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn);
     }
-
-	@Override
-	protected ResourceLocation getEntityTexture(EntityItemAbducted entity) {
-		return TextureMap.LOCATION_BLOCKS_TEXTURE;
-	}
 
 	@Override
 	public EntityRenderer<? super EntityItemAbducted> createRenderFor(
 			EntityRendererManager manager) {
-		return new RendererItem(manager, Minecraft.getInstance().getRenderItem());
+		return new RendererItem(manager);
+	}
+
+	@Override
+	public ResourceLocation getEntityTexture(EntityItemAbducted entity) {
+		return null;
 	}
 }

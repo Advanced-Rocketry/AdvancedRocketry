@@ -1,9 +1,8 @@
 package zmaster587.advancedRocketry.client.render;
 
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -12,9 +11,9 @@ import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.tile.cables.TilePipe;
 import zmaster587.libVulpes.render.RenderHelper;
 
-public class RendererPipe extends TileEntitySpecialRenderer {
+public class RendererPipe { //extends TileEntityRenderer {
 
-
+/*
 	private ResourceLocation texture;
 	
 
@@ -63,5 +62,5 @@ public class RendererPipe extends TileEntitySpecialRenderer {
 		//GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		matrix.pop();
-	}
+	}*/
 }

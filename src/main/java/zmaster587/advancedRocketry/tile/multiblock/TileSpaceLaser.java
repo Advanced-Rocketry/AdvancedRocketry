@@ -101,7 +101,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 	private MODE mode;
 	
 	public TileSpaceLaser() { 
-		super(AdvancedRocketryTileEntityType.TILE_SPACE_LAZER);
+		super(AdvancedRocketryTileEntityType.TILE_SPACE_LASER);
 		glassPanel = ItemStack.EMPTY;
 		//invBuffer = new ItemStack[INVSIZE];
 		radius = 0;

@@ -28,7 +28,7 @@ public class BlockBeacon extends BlockMultiblockMachine {
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TileBeacon && DimensionManager.getInstance().isDimensionCreated(world.provider.getDimension())) {
+		if(tile instanceof TileBeacon && DimensionManager.getInstance().isDimensionCreated(world)) {
 			DimensionManager.getInstance().getDimensionProperties(world).removeBeaconLocation(world,new HashedBlockPosition(pos));
 		}
 		super.onReplaced(state, world, pos, newState, isMoving);

@@ -1,7 +1,10 @@
 package zmaster587.advancedRocketry.util;
 
 import net.minecraft.block.Block;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.registries.ForgeRegistries;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -229,15 +232,15 @@ public class XMLOreLoader {
 					continue;
 				}
 
-				Block block2 = Block.getBlockFromName(block);
-
+				Block block2 = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(block));
+				
 				if(block2 == null) {
 					AdvancedRocketry.logger.warn(block + " is not a valid name for ore");
 					childNode = childNode.getNextSibling();
 					continue;
 				}
 
-				oreGen.addEntry(block2.getStateFromMeta(meta), minHeight, maxHeight, clumpSize, chancePerChunk);
+				oreGen.addEntry(block2.getDefaultState(), minHeight, maxHeight, clumpSize, chancePerChunk);
 			}
 
 			childNode = childNode.getNextSibling();
@@ -288,7 +291,6 @@ public class XMLOreLoader {
 		Element oreGen = doc.createElement("oreGen");
 		
 		for(OreEntry ore : gen.getOreEntries()) {
-			int meta = ore.getBlockState().getBlock().getMetaFromState(ore.getBlockState());
 			
 			Element oreElement = doc.createElement("ore");
 			oreElement.appendChild(createTextNode(doc, "block", ore.getBlockState().getBlock().getRegistryName().toString()));
@@ -296,8 +298,6 @@ public class XMLOreLoader {
 			oreElement.appendChild(createTextNode(doc, "maxHeight", ore.getMaxHeight()));
 			oreElement.appendChild(createTextNode(doc, "clumpSize", ore.getClumpSize()));
 			oreElement.appendChild(createTextNode(doc, "chancePerChunk", ore.getClumpSize()));
-			if(meta != 0)
-				oreElement.appendChild(createTextNode(doc, "meta", meta));
 			
 		}
 		
@@ -314,10 +314,8 @@ public class XMLOreLoader {
 		}
 		
 		for(OreEntry ore : gen.getOreEntries()) {
-			int meta = ore.getBlockState().getBlock().getMetaFromState(ore.getBlockState());
 			outputString += tabLen + "<ore block=\"" + ore.getBlockState().getBlock().getRegistryName() +
-							(meta == 0 ? "" : "\" meta=\"" + meta)
-							+ "\" minHeight=\"" +
+							"\" minHeight=\"" +
 							ore.getMinHeight() + "\" maxHeight=\"" + ore.getMaxHeight() + "\" clumpSize=\"" + ore.getClumpSize() + "\"" +
 							" chancePerChunk=\"" + ore.getChancePerChunk() + "\" />\n";
 			

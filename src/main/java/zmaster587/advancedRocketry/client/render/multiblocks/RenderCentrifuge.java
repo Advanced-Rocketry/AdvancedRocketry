@@ -1,38 +1,30 @@
 package zmaster587.advancedRocketry.client.render.multiblocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.util.math.vector.Quaternion;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 
-import org.lwjgl.opengl.GL11;
+import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
-import zmaster587.advancedRocketry.tile.multiblock.energy.TileBlackHoleGenerator;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileCentrifuge;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.render.RenderHelper;
-import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
-import zmaster587.libVulpes.tile.multiblock.TileMultiPowerProducer;
 
-public class RenderCentrifuge extends TileEntitySpecialRenderer {
+public class RenderCentrifuge extends TileEntityRenderer<TileCentrifuge> {
 
 	WavefrontObject model;
 
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/centrifuge.png");
 
-	public RenderCentrifuge(){
+	public RenderCentrifuge(TileEntityRendererDispatcher tile){
+		super(tile);
 		try {
 			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/centrifuge.obj"));
 		} catch (ModelFormatException e) {
@@ -40,12 +32,12 @@ public class RenderCentrifuge extends TileEntitySpecialRenderer {
 		}
 	}
 
+	
 	@Override
-	public void render(TileEntity tile, double x, double y, double z,
-			float partialTicks, int destroyStage, float a) {
-		TileCentrifuge multiBlockTile = (TileCentrifuge)tile;
+	public void render(TileCentrifuge tile, float partialTicks, MatrixStack matrix,
+			IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
 
-		if(!multiBlockTile.canRender())
+		if(!tile.canRender())
 			return;
 
 		matrix.push();
@@ -54,28 +46,31 @@ public class RenderCentrifuge extends TileEntitySpecialRenderer {
 
 		//Rotate and move the model into position
 		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
-		matrix.translate(x + 0.5, y, z + 0.5);
-		GL11.glRotatef((front.getZOffset() == 1 ? 180 : 0) - front.getXOffset()*90f, 0, 1, 0);
-		matrix.translate(0, 0, 0 + 1);
+		matrix.translate( 0.5, 0, 0.5);
+		matrix.rotate(new Quaternion(0, (front.getZOffset() == 1 ? 180 : 0) - front.getXOffset()*90f, 0 ,true));
+		matrix.translate(0, 0, 1);
+		
+		IVertexBuilder builder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture)); 
 
-		bindTexture(texture);
-
-		model.renderOnly("Frame");
+		model.renderOnly(builder, "Frame");
 
 
-		if(multiBlockTile.isRunning())
+		if(tile.isRunning())
 		{
-			float lavaheight = multiBlockTile.getNormallizedProgress(0);
-			GL11.glRotated(multiBlockTile.getWorld().getGameTime() * -10f, 0, 1, 0);
-			model.renderOnly("Spinning");
+			float lavaheight = tile.getNormallizedProgress(0);
+			matrix.rotate(new Quaternion(0, tile.getWorld().getGameTime() * -10f, 0, true));
+			model.renderOnly(builder, "Spinning");
 
 
 			ResourceLocation fluidIcon = new ResourceLocation("advancedrocketry:textures/blocks/fluid/oxygen_flow.png");
-			Fluid fluid = FluidRegistry.getFluid("enrichedlava");
-			if(fluid != null)
+			
+			Fluid fluid = AdvancedRocketryFluids.fluidEnrichedLava;
+			/*if(fluid != null)
 			{
 				matrix.push();
 
+				RenderType
+				
 				double minU = 0, maxU = 1, minV = 0, maxV = 1;
 				TextureMap map = Minecraft.getInstance().getTextureMapBlocks();
 				TextureAtlasSprite sprite = map.getTextureExtry(fluid.getStill().toString());
@@ -115,11 +110,11 @@ public class RenderCentrifuge extends TileEntitySpecialRenderer {
 				GlStateManager.disableBlend();
 				matrix.pop();
 				GlStateManager.color4f(1f, 1f, 1f);
-			}
+			}*/
 		}
 		else
 		{
-			model.renderOnly("Spinning");
+			model.renderOnly(builder, "Spinning");
 		}
 		matrix.pop();
 	}

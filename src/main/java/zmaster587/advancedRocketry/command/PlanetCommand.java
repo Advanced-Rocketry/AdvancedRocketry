@@ -16,15 +16,12 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.DimensionArgument;
 import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.IDynamicRegistries;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.Dimension;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -40,7 +37,6 @@ import zmaster587.advancedRocketry.item.ItemMultiData;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
-import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortalSeekBlock;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
@@ -108,12 +104,12 @@ public class PlanetCommand {
 				.then(Commands.literal("help").executes((value) -> {return commandPlanetHelp(value.getSource()); } ))
 				)
 				.then(Commands.literal("goto").then(Commands.argument("dim", DimensionArgument.getDimension()).executes((value -> {return commandGoto(value.getSource(), DimensionArgument.getDimensionArgument(value, "dim"));})))
-				.then(Commands.literal("station").then(Commands.argument("stationId", IntegerArgumentType.integer(1)).executes((value) -> {return commandGotoStation(value.getSource(), IntegerArgumentType.getInteger(value, "stationId"));} )))
+				.then(Commands.literal("station").then(Commands.argument("stationId", IntegerArgumentType.integer(1)).executes((value) -> {return commandGotoStation(value.getSource(), StringArgumentType.getString(value, "stationId"));} )))
 				)
 				// giveStation ID
-				.then(Commands.literal("giveStation").then(Commands.argument("stationId", IntegerArgumentType.integer(1)).executes((value) -> { return commandGiveStation(value.getSource(), null, IntegerArgumentType.getInteger(value, "stationId"));}))
+				.then(Commands.literal("giveStation").then(Commands.argument("stationId", StringArgumentType.string()).executes((value) -> { return commandGiveStation(value.getSource(), null, StringArgumentType.getString(value, "stationId"));}))
 				//giveStation ID player
-					.then(Commands.argument("player", EntityArgument.player()).executes((value) -> {return commandGiveStation(value.getSource(), EntityArgument.getPlayer(value, "player"), IntegerArgumentType.getInteger(value, "stationId")); } )))
+					.then(Commands.argument("player", EntityArgument.player()).executes((value) -> {return commandGiveStation(value.getSource(), EntityArgument.getPlayer(value, "player"), StringArgumentType.getString(value, "stationId")); } )))
 				
 				// filldata Type
 				.then(Commands.literal("fillData").then( Commands.argument("dataType", StringArgumentType.word()).executes( (value) -> { return commandFillData(value.getSource(), StringArgumentType.getString(value, "dataType"), -1); } )
@@ -144,9 +140,10 @@ public class PlanetCommand {
 		return 0;
 	}
 	
-	private static int commandGotoStation(CommandSource sender, int stationId)
+	private static int commandGotoStation(CommandSource sender, String stationIdStr)
 	{
 		PlayerEntity player;
+		ResourceLocation stationId = new ResourceLocation(stationIdStr);
 		ServerWorld world = ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId);
 		if(sender.getEntity() != null && (player = (PlayerEntity) sender.getEntity()) != null) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(stationId);
@@ -247,8 +244,9 @@ public class PlanetCommand {
 		return 0;
 	}
 	
-	private static int commandGiveStation(CommandSource sender, @Nullable PlayerEntity player, int stationId)
+	private static int commandGiveStation(CommandSource sender, @Nullable PlayerEntity player, String stationIdStr)
 	{
+		ResourceLocation stationId = new ResourceLocation(stationIdStr);
 		if(player == null && sender.getEntity() != null)
 			try {
 				player = sender.asPlayer();
@@ -269,7 +267,7 @@ public class PlanetCommand {
 	private static int commandPlanetDelete(CommandSource sender, ServerWorld world)
 	{
 
-		int deletedDimId = ZUtils.getDimensionId(world);
+		ResourceLocation deletedDimId = ZUtils.getDimensionIdentifier(world);
 
 		if(DimensionManager.getInstance().isDimensionCreated(deletedDimId)) {
 
@@ -299,8 +297,8 @@ public class PlanetCommand {
 
 	private static int commandMoonGenerate(CommandSource sender, boolean gas, @Nullable String name, World world, int atm, int dist, int gravity)
 	{
-		int planetId = ZUtils.getDimensionId(world);
-		int starId = DimensionManager.getInstance().getDimensionProperties(planetId).getStarId();
+		ResourceLocation planetId = ZUtils.getDimensionIdentifier(world);
+		ResourceLocation starId = DimensionManager.getInstance().getDimensionProperties(planetId).getStarId();
 
 		DimensionProperties properties;
 		if(!gas)
@@ -320,7 +318,7 @@ public class PlanetCommand {
 	
 	private static int commandPlanetGenerate(CommandSource sender, boolean gas, @Nullable String name, StellarBody starName, int atm, int dist, int gravity)
 	{
-		int starId = starName.getId();
+		ResourceLocation starId = starName.getId();
 
 		DimensionProperties properties;
 		if(!gas)
@@ -337,8 +335,8 @@ public class PlanetCommand {
 
 	private static int commandPlanetSet(CommandSource sender, @Nullable World world, String fieldName, String value)
 	{
-		int dimId;
-		if( !DimensionManager.getInstance().isDimensionCreated((dimId = ZUtils.getDimensionId(sender.getWorld()))))
+		ResourceLocation dimId;
+		if( !DimensionManager.getInstance().isDimensionCreated((dimId = ZUtils.getDimensionIdentifier(sender.getWorld()))))
 			return -1;
 		
 		String[] cmdString = value.split(" ");
@@ -346,7 +344,7 @@ public class PlanetCommand {
 		int commandOffset = 0;
 
 		if(world != null) {
-			dimId = ZUtils.getDimensionId(world);
+			dimId = ZUtils.getDimensionIdentifier(world);
 		}
 
 		if(!DimensionManager.getInstance().isDimensionCreated(dimId)) {
@@ -431,14 +429,14 @@ public class PlanetCommand {
 	private static int commandPlanetGet(CommandSource sender, @Nullable World world, String fieldName)
 	{
 
-		int dimId;
-		if( !DimensionManager.getInstance().isDimensionCreated((dimId = ZUtils.getDimensionId(sender.getWorld()))))
+		ResourceLocation dimId;
+		if( !DimensionManager.getInstance().isDimensionCreated((dimId = ZUtils.getDimensionIdentifier(sender.getWorld()))))
 			return -1;
 		
 		int commandOffset = 0;
 		if(world != null) {
 			try {
-				dimId = ZUtils.getDimensionId(world);
+				dimId = ZUtils.getDimensionIdentifier(world);
 				commandOffset = 1;
 			} 
 			catch (NumberFormatException e) {
@@ -474,7 +472,7 @@ public class PlanetCommand {
 	private static int commandPlanetList(CommandSource sender)
 	{
 		sender.sendFeedback(new StringTextComponent("Dimensions:"), false);
-		for(int i : DimensionManager.getInstance().getRegisteredDimensions()) {
+		for(ResourceLocation i : DimensionManager.getInstance().getRegisteredDimensions()) {
 			sender.sendFeedback(new StringTextComponent("DIM" + i + ":  " + DimensionManager.getInstance().getDimensionProperties(i).getName()), false); 
 		}
 		
@@ -496,10 +494,10 @@ public class PlanetCommand {
 
 	private static int commandPlanetReset(CommandSource sender, World dimension)
 	{
-		int dimId;
+		ResourceLocation dimId;
 		if(dimension != null) {
 			try {
-				dimId = ZUtils.getDimensionId(dimension);
+				dimId = ZUtils.getDimensionIdentifier(dimension);
 				DimensionManager.getInstance().getDimensionProperties(dimId).resetProperties();
 				PacketHandler.sendToAll(new PacketDimInfo(dimId, DimensionManager.getInstance().getDimensionProperties(dimId)));
 			} catch (NumberFormatException e) {
@@ -508,7 +506,7 @@ public class PlanetCommand {
 		}
 		else {
 			if(sender.getEntity() != null) {
-				if(DimensionManager.getInstance().isDimensionCreated((dimId = ZUtils.getDimensionId(sender.getWorld())))) {
+				if(DimensionManager.getInstance().isDimensionCreated((dimId = ZUtils.getDimensionIdentifier(sender.getWorld())))) {
 					DimensionManager.getInstance().getDimensionProperties(dimId).resetProperties();
 					PacketHandler.sendToAll(new PacketDimInfo(dimId, DimensionManager.getInstance().getDimensionProperties(dimId)));
 				}

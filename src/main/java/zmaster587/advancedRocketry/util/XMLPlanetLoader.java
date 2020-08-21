@@ -1,18 +1,16 @@
 package zmaster587.advancedRocketry.util;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.EntityType;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTException;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.ResourceLocationException;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.BiomeManager.BiomeEntry;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -23,6 +21,7 @@ import org.xml.sax.SAXException;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.IGalaxy;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
@@ -158,7 +157,7 @@ public class XMLPlanetLoader {
 		Node planetPropertyNode = planetNode.getFirstChild();
 
 
-		DimensionProperties properties = new DimensionProperties(DimensionManager.getInstance().getNextFreeDim(offset));
+		DimensionProperties properties = new DimensionProperties(DimensionManager.getInstance().getNextFreeDim());
 		list.add(properties);
 		offset++;//Increment for dealing with child planets
 
@@ -174,10 +173,10 @@ public class XMLPlanetLoader {
 			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
 				try {
 					if(nameNode.getTextContent().isEmpty()) throw new NumberFormatException();
-					properties.setId(Integer.parseInt(nameNode.getTextContent()));
+					properties.setId(new ResourceLocation(nameNode.getTextContent()));
 					//We're not using the offset so decrement to prepare for next planet
 					offset--;
-				} catch (NumberFormatException e) {
+				} catch (ResourceLocationException e) {
 					AdvancedRocketry.logger.warn("Invalid DIMID specified for planet " + properties.getName()); //TODO: more detailed error msg
 					list.remove(properties);
 					offset--;
@@ -226,7 +225,7 @@ public class XMLPlanetLoader {
 				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GAS)) {
-				Fluid f = FluidRegistry.getFluid(planetPropertyNode.getTextContent());
+				Fluid f = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(planetPropertyNode.getTextContent()));
 
 				if(f == null)
 					AdvancedRocketry.logger.warn( "\"" + planetPropertyNode.getTextContent() + "\" is not a valid fluid"); //TODO: more detailed error msg
@@ -236,7 +235,7 @@ public class XMLPlanetLoader {
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_OCEANBLOCK)) {
 				String blockName = planetPropertyNode.getTextContent();
-				Block block = Block.REGISTRY.getObject(new ResourceLocation(blockName));
+				Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(blockName));
 
 				if(block == Blocks.AIR)
 					AdvancedRocketry.logger.warn("Invalid ocean block: " + blockName); //TODO: more detailed error msg
@@ -251,7 +250,7 @@ public class XMLPlanetLoader {
 					AdvancedRocketry.logger.warn("Invalid resource location for fillerBlock: " + blockName);
 				}
 				else {
-					Block block = Block.REGISTRY.getObject(new ResourceLocation(splitBlockName[0],splitBlockName[1]));
+					Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(splitBlockName[0],splitBlockName[1]));
 					int metaValue = 0;
 					
 					if(splitBlockName.length > 2) {
@@ -266,7 +265,7 @@ public class XMLPlanetLoader {
 					if(block == Blocks.AIR)
 						AdvancedRocketry.logger.warn("Invalid filler block: " + blockName); //TODO: more detailed error msg
 
-					properties.setStoneBlock(block.getStateFromMeta(metaValue));
+					properties.setStoneBlock(block.getDefaultState());
 				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_SKYCOLOR)) {
@@ -360,15 +359,15 @@ public class XMLPlanetLoader {
 				for(int j = 0; j < biomeList.length; j++) {
 
 					ResourceLocation location = new ResourceLocation(biomeList[j]);
-					if(Biome.REGISTRY.containsKey(location)) {
-						Biome biome = Biome.REGISTRY.getObject(location);
-						if(biome == null || !properties.addBiome(Biome.getIdForBiome(biome)))
+					if( AdvancedRocketryBiomes.doesBiomeExist(location)) {
+						Biome biome = AdvancedRocketryBiomes.getBiomeFromResourceLocation(location);
+						if(biome == null || !properties.addBiome(biome))
 							AdvancedRocketry.logger.warn("Error adding " + biomeList[j]); //TODO: more detailed error msg
 					}
 					else
 					{
 						try {
-							int biome =  Integer.parseInt(biomeList[j]);
+							ResourceLocation biome = new ResourceLocation(biomeList[j]);
 
 							if(!properties.addBiome(biome))
 								AdvancedRocketry.logger.warn(biomeList[j] + " is not a valid biome id"); //TODO: more detailed error msg
@@ -418,19 +417,8 @@ public class XMLPlanetLoader {
 					groupMax = groupMin;
 				}
 
-				Class clazz = (Class) EntityList.getClass(new ResourceLocation(planetPropertyNode.getTextContent()));
-
-				//If not using string name maybe it's a class name?
-				if(clazz == null) {
-					try {
-						clazz = Class.forName(planetPropertyNode.getTextContent());
-						if(clazz != null && !Entity.class.isAssignableFrom(clazz))
-							clazz = null;
-
-					} catch (Exception e) {
-						//Fail silently
-					}
-				}
+				
+				EntityType<?> clazz = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(planetPropertyNode.getTextContent()));
 
 				if(clazz != null) {
 					SpawnListEntryNBT entry = new SpawnListEntryNBT(clazz, weight, groupMin, groupMax);

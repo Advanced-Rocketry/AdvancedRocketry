@@ -265,7 +265,7 @@ public class DimensionManager implements IGalaxy {
 	 * @return the new dimension properties created for this planet
 	 */
 	public DimensionProperties generateRandom(ResourceLocation starId, String name, int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
-		DimensionProperties properties = new DimensionProperties(getNextFreeDim(dimOffset));
+		DimensionProperties properties = new DimensionProperties(getNextFreeDim());
 
 		if(properties.getId() == Constants.INVALID_PLANET)
 			return null;
@@ -351,7 +351,7 @@ public class DimensionManager implements IGalaxy {
 	}
 
 	public DimensionProperties generateRandomGasGiant(ResourceLocation starId, String name, int baseAtmosphere, int baseDistance, int baseGravity,int atmosphereFactor, int distanceFactor, int gravityFactor) {
-		DimensionProperties properties = new DimensionProperties(getNextFreeDim(dimOffset));
+		DimensionProperties properties = new DimensionProperties(getNextFreeDim());
 
 		if(name == "")
 			properties.setName(getNextName(properties.getId()));
@@ -728,6 +728,10 @@ public class DimensionManager implements IGalaxy {
 		return dimensionListResource.containsKey(dimId) || dimId == ARConfiguration.getCurrentConfig().spaceDimId;
 	}
 
+	public boolean isDimensionCreated( World dimId) {
+		return isDimensionCreated(ZUtils.getDimensionIdentifier(dimId));
+	}
+	
 	private List<DimensionProperties> generateRandomPlanets(StellarBody star, int numRandomGeneratedPlanets, int numRandomGeneratedGasGiants) {
 		List<DimensionProperties> dimPropList = new LinkedList<DimensionProperties>();
 
