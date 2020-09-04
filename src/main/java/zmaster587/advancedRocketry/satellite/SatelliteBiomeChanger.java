@@ -72,14 +72,14 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 	public ItemStack getContollerItemStack(ItemStack satIdChip,
 			SatelliteProperties properties) {
 
-		ItemBiomeChanger idChipItem = (ItemBiomeChanger)satIdChip.getItem();
-		idChipItem.setSatellite(satIdChip, properties);
+		//ItemBiomeChanger idChipItem = (ItemBiomeChanger)satIdChip.getItem();
+		//idChipItem.setSatellite(satIdChip, properties);
 		return satIdChip;
 	}
 
 	@Override
 	public boolean isAcceptableControllerItemStack(ItemStack stack) {
-		return !stack.isEmpty() && stack.getItem() instanceof ItemBiomeChanger;
+		return false; //!stack.isEmpty() && stack.getItem() instanceof ItemBiomeChanger;
 	}
 
 	@Override

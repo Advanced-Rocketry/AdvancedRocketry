@@ -109,7 +109,7 @@ public class ItemAirUtils implements IFillableArmor {
 	@Override
 	public int getMaxAir(ItemStack stack) {
 
-		return ARConfiguration.getCurrentConfig().spaceSuitOxygenTime*1200; //30 minutes;
+		return ARConfiguration.getCurrentConfig().spaceSuitOxygenTime.get()*1200; //30 minutes;
 	}
 
 	public boolean isStackValidAirContainer(ItemStack stack) {

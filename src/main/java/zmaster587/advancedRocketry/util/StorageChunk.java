@@ -11,30 +11,70 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.IntArrayNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.LongArrayNBT;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.particles.IParticleData;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SharedConstants;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.SectionPos;
+import net.minecraft.util.palette.UpgradeData;
+import net.minecraft.util.registry.DynamicRegistries;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.village.PointOfInterestManager;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.DimensionType;
+import net.minecraft.world.ITickList;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.LightType;
+import net.minecraft.world.SerializableTickList;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeContainer;
+import net.minecraft.world.biome.BiomeManager;
+import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.biome.provider.BiomeProvider;
+import net.minecraft.world.biome.provider.SingleBiomeProvider;
+import net.minecraft.world.border.WorldBorder;
+import net.minecraft.world.chunk.AbstractChunkProvider;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkPrimer;
+import net.minecraft.world.chunk.ChunkPrimerTickList;
+import net.minecraft.world.chunk.ChunkPrimerWrapper;
+import net.minecraft.world.chunk.ChunkSection;
+import net.minecraft.world.chunk.ChunkStatus;
+import net.minecraft.world.chunk.IChunk;
+import net.minecraft.world.chunk.NibbleArray;
 import net.minecraft.world.chunk.storage.ChunkSerializer;
+import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraft.world.lighting.WorldLightManager;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.IWorldInfo;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
@@ -48,13 +88,23 @@ import zmaster587.libVulpes.util.Vector3F;
 import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+import java.util.function.Predicate;
+import java.util.Map.Entry;
+
+import org.apache.logging.log4j.LogManager;
 
 public class StorageChunk implements IWorld, IStorageChunk {
 
-	BlockState blocks[][][];
+	private static final int CHUNK_SIZE = 16;
+	private static final int CHUNK_HEIGHT = 256;
 	int sizeX, sizeY, sizeZ;
 	public Chunk chunk;
 
@@ -67,7 +117,7 @@ public class StorageChunk implements IWorld, IStorageChunk {
 
 	public WorldDummy world;
 	private Entity entity;
-	public boolean finalized = false; // Mkae sure we are ready to render
+	public boolean finalized = false; // Make sure we are ready to render
 
 	public StorageChunk() {
 		sizeX = 0;
@@ -78,13 +128,10 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		liquidTiles = new ArrayList<TileEntity>();
 
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
-		world.init();
-		this.chunk = new Chunk(world, new ChunkPos(0, 0), new BiomeContainer(p_i241971_1_, p_i241971_2_));
+		this.chunk = new Chunk((World)world, new ChunkPos(0, 0), new BiomeContainer(null, new ChunkPos(0, 0), new SingleBiomeProvider(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getRegistryName()))));
 	}
 
 	protected StorageChunk(int xSize, int ySize, int zSize) {
-		blocks = new Block[xSize][ySize][zSize];
-		metas = new int[xSize][ySize][zSize];
 
 		sizeX = xSize;
 		sizeY = ySize;
@@ -95,8 +142,7 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		liquidTiles = new ArrayList<TileEntity>();
 
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
-		world.init();
-		this.chunk = new Chunk(world, 0, 0);
+		this.chunk = new Chunk((World)world, new ChunkPos(0, 0), new BiomeContainer(null, new ChunkPos(0, 0), new SingleBiomeProvider(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getRegistryName()))));
 	}
 
 	public void setEntity(EntityRocketBase entity) {
@@ -146,9 +192,9 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		int x = pos.getX();
 		int y = pos.getY();
 		int z = pos.getZ();
-		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ || blocks[x][y][z] == null)
+		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ || chunk == null)
 			return Blocks.AIR.getDefaultState();
-		return blocks[x][y][z];
+		return chunk.getBlockState(pos);
 	}
 
 	public void setBlockState(BlockPos pos, BlockState state) {
@@ -156,82 +202,104 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		int y = pos.getY();
 		int z = pos.getZ();
 
-		blocks[x][y][z] = state;
+		chunk.setBlockState(pos, state, false);
 	}
 
 
 	//TODO: optimize the F*** out of this
 	public void writeToNBT(CompoundNBT nbt) {
-		nbt.putInt("xSize", sizeX);
-		nbt.putInt("ySize", sizeY);
-		nbt.putInt("zSize", sizeZ);
+		ChunkPos chunkpos = chunk.getPos();
+		CompoundNBT compoundnbt = new CompoundNBT();
+		CompoundNBT compoundnbt1 = new CompoundNBT();
 
+		ChunkSection[] achunksection = chunk.getSections();
+		ListNBT listnbt = new ListNBT();
+		WorldLightManager worldlightmanager = world.getChunkProvider().getLightManager();
+		boolean flag = chunk.hasLight();
 
-		Iterator<TileEntity> tileEntityIterator = tileEntities.iterator();
-		ListNBT tileList = new ListNBT();
-		while(tileEntityIterator.hasNext()) {
-			TileEntity tile = tileEntityIterator.next();
-			try {
-				CompoundNBT tileNbt = new CompoundNBT();
-				tile.write(tileNbt);
-				tileList.add(tileNbt);
-			} catch(RuntimeException e) {
-				AdvancedRocketry.logger.warn("A tile entity has thrown an error: " + tile.getClass().getCanonicalName());
-				blocks[tile.getPos().getX()][tile.getPos().getY()][tile.getPos().getZ()] = Blocks.AIR.getDefaultState();
-				tileEntityIterator.remove();
-			}
-		}
-
-		int[] blockId = new int[sizeX*sizeY*sizeZ];
-		int[] metasId = new int[sizeX*sizeY*sizeZ];
-		for(int x = 0; x < sizeX; x++) {
-			for(int y = 0; y < sizeY; y++) {
-				for(int z = 0; z < sizeZ; z++) {
-					blockId[z + (sizeZ*y) + (sizeZ*sizeY*x)] = Block.getStateId(blocks[x][y][z]);
+		for(int i = -1; i < 17; ++i) {
+			int j = i;
+			ChunkSection chunksection = Arrays.stream(achunksection).filter((p_222657_1_) -> {
+				return p_222657_1_ != null && p_222657_1_.getYLocation() >> 4 == j;
+			}).findFirst().orElse(Chunk.EMPTY_SECTION);
+			NibbleArray nibblearray = worldlightmanager.getLightEngine(LightType.BLOCK).getData(SectionPos.from(chunkpos, j));
+			NibbleArray nibblearray1 = worldlightmanager.getLightEngine(LightType.SKY).getData(SectionPos.from(chunkpos, j));
+			if (chunksection != Chunk.EMPTY_SECTION || nibblearray != null || nibblearray1 != null) {
+				CompoundNBT compoundnbt2 = new CompoundNBT();
+				compoundnbt2.putByte("Y", (byte)(j & 255));
+				if (chunksection != Chunk.EMPTY_SECTION) {
+					chunksection.getData().writeChunkPalette(compoundnbt2, "Palette", "BlockStates");
 				}
+
+				if (nibblearray != null && !nibblearray.isEmpty()) {
+					compoundnbt2.putByteArray("BlockLight", nibblearray.getData());
+				}
+
+				if (nibblearray1 != null && !nibblearray1.isEmpty()) {
+					compoundnbt2.putByteArray("SkyLight", nibblearray1.getData());
+				}
+
+				listnbt.add(compoundnbt2);
 			}
 		}
 
-		IntArrayNBT idList = new IntArrayNBT(blockId);
-		IntArrayNBT metaList = new IntArrayNBT(metasId);
+		compoundnbt1.put("Sections", listnbt);
+		if (flag) {
+			compoundnbt1.putBoolean("isLightOn", true);
+		}
 
-		nbt.put("idList", idList);
-		nbt.put("metaList", metaList);
-		nbt.put("tiles", tileList);
+		BiomeContainer biomecontainer = chunk.getBiomes();
+		if (biomecontainer != null) {
+			compoundnbt1.putIntArray("Biomes", biomecontainer.getBiomeIds());
+		}
 
+		ListNBT listnbt1 = new ListNBT();
 
-		/*for(int x = 0; x < sizeX; x++) {
-			for(int y = 0; y < sizeY; y++) {
-				for(int z = 0; z < sizeZ; z++) {
+		for(BlockPos blockpos : chunk.getTileEntitiesPos()) {
+			CompoundNBT compoundnbt4 = chunk.getTileEntityNBT(blockpos);
+			if (compoundnbt4 != null) {
+				listnbt1.add(compoundnbt4);
+			}
+		}
 
-					idList.add(new NBTTagInt(Block.getIdFromBlock(blocks[x][y][z])));
-					metaList.add(new NBTTagInt(metas[x][y][z]));
+		compoundnbt1.put("TileEntities", listnbt1);
+		ListNBT listnbt2 = new ListNBT();
+		chunk.setHasEntities(false);
 
-					//CompoundNBT tag = new CompoundNBT();
-					tag.putInt("block", Block.getIdFromBlock(blocks[x][y][z]));
-					tag.putShort("meta", metas[x][y][z]);
-
-					CompoundNBT tileNbtData = null;
-
-					for(TileEntity tile : tileEntities) {
-						CompoundNBT tileNbt = new CompoundNBT();
-
-						tile.writeToNBT(tileNbt);
-
-						if(tileNbt.getInt("x") == x && tileNbt.getInt("y") == y && tileNbt.getInt("z") == z){
-							tileNbtData = tileNbt;
-							break;
-						}
+		for(int k = 0; k < chunk.getEntityLists().length; ++k) {
+			for(Entity entity : chunk.getEntityLists()[k]) {
+				CompoundNBT compoundnbt3 = new CompoundNBT();
+				try {
+					if (entity.writeUnlessPassenger(compoundnbt3)) {
+						chunk.setHasEntities(true);
+						listnbt2.add(compoundnbt3);
 					}
-
-					if(tileNbtData != null)
-						tag.put("tile", tileNbtData);
-
-					nbt.put(String.format("%d.%d.%d", x,y,z), tag);
+				} catch (Exception e) {
+					LogManager.getLogger().error("An Entity type {} has thrown an exception trying to write state. It will not persist. Report this to the mod author", entity.getType(), e);
 				}
-
 			}
-		}*/
+		}
+		try {
+			final CompoundNBT capTag = chunk.writeCapsToNBT();
+			if (capTag != null) compoundnbt1.put("ForgeCaps", capTag);
+		} catch (Exception exception) {
+			LogManager.getLogger().error("A capability provider has thrown an exception trying to write state. It will not persist. Report this to the mod author", exception);
+		}
+
+		compoundnbt1.put("Entities", listnbt2);
+
+
+		CompoundNBT compoundnbt6 = new CompoundNBT();
+
+		for(Entry<Heightmap.Type, Heightmap> entry : chunk.getHeightmaps()) {
+			if (chunk.getStatus().getHeightMaps().contains(entry.getKey())) {
+				compoundnbt6.put(entry.getKey().getId(), new LongArrayNBT(entry.getValue().getDataArray()));
+			}
+		}
+
+		compoundnbt1.put("Heightmaps", compoundnbt6);
+
+		nbt.merge(compoundnbt);
 	}
 
 	public void rotateBy(Direction dir) {
@@ -241,18 +309,36 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		HashedBlockPosition newerSize = remapCoord(newSizes, dir);
 		newSizes = remapCoord(newSizes, dir);
 
-		BlockState blocks[][][] = new Block[newSizes.x][newSizes.y][newSizes.z];
+		BlockState blocks[][][] = new BlockState[newSizes.x][newSizes.y][newSizes.z];
 
 		for(int y = 0; y < getSizeY(); y++) {
 			for(int z = 0; z < getSizeZ(); z++) {
 				for(int x = 0; x < getSizeX(); x++) {
 					newSizes = getNewCoord(new HashedBlockPosition(x, y, z), dir);
-					blocks[newSizes.x][newSizes.y][newSizes.z] = this.blocks[x][y][z];
+					blocks[newSizes.x][newSizes.y][newSizes.z] = getBlockState(new BlockPos(x,y,z));
 				}
 			}
 		}
-		this.blocks = blocks;
 
+		int oldX = sizeX;
+		int oldY = sizeY;
+		int oldZ = sizeZ;
+
+		this.sizeX = newerSize.x;
+		this.sizeY = newerSize.y;
+		this.sizeZ = newerSize.z;
+
+		for(int y = 0; y < getSizeY(); y++) {
+			for(int z = 0; z < getSizeZ(); z++) {
+				for(int x = 0; x < getSizeX(); x++) {
+					chunk.setBlockState(new BlockPos(x,y,z), blocks[newSizes.x][newSizes.y][newSizes.z], false);
+				}
+			}
+		}
+
+		this.sizeX = oldX;
+		this.sizeY = oldY;
+		this.sizeZ = oldZ;
 
 		for(TileEntity e : tileEntities) {
 			newSizes = getNewCoord(new HashedBlockPosition(e.getPos()), dir);
@@ -346,7 +432,7 @@ public class StorageChunk implements IWorld, IStorageChunk {
 
 
 	private static boolean isInventoryBlock(TileEntity tile) {
-		return tile instanceof IInventory || tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP) && !(tile instanceof TileGuidanceComputer);
+		return tile instanceof IInventory || tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent() && !(tile instanceof TileGuidanceComputer);
 	}
 
 	private static boolean isLiquidContainerBlock(TileEntity tile) {
@@ -354,97 +440,94 @@ public class StorageChunk implements IWorld, IStorageChunk {
 	}
 
 	public void readFromNBT(CompoundNBT nbt) {
-		
-		ChunkSerializer.read(this.world, null, new PointOfInterestManager(null, null, finalized), new ChunkPos(0,0), nbt);
-		
-		sizeX = nbt.getInt("xSize");
-		sizeY = nbt.getInt("ySize");
-		sizeZ = nbt.getInt("zSize");
+		CompoundNBT compoundnbt = nbt.getCompound("Level");
+		ChunkPos pos = new ChunkPos(0,0);
 
-		blocks = new BlockState[sizeX][sizeY][sizeZ];
 
-		tileEntities.clear();
-		inventoryTiles.clear();
-		liquidTiles.clear();
-		chunk = new Chunk(world, 0, 0);
+		boolean flag = compoundnbt.getBoolean("isLightOn");
+		ListNBT listnbt = compoundnbt.getList("Sections", 10);
+		ChunkSection[] achunksection = new ChunkSection[16];
+		boolean flag1 = true; //worldIn.func_230315_m_().hasSkyLight();
+		AbstractChunkProvider abstractchunkprovider = this.world.getChunkProvider();
+		WorldLightManager worldlightmanager = abstractchunkprovider.getLightManager();
 
-		int[] blockId = nbt.getIntArray("idList");
-		int[] metasId = nbt.getIntArray("metaList");
+		for(int j = 0; j < listnbt.size(); ++j) {
+			CompoundNBT compoundnbt1 = listnbt.getCompound(j);
+			int k = compoundnbt1.getByte("Y");
+			if (compoundnbt1.contains("Palette", 9) && compoundnbt1.contains("BlockStates", 12)) {
+				ChunkSection chunksection = new ChunkSection(k << 4);
+				chunksection.getData().readChunkPalette(compoundnbt1.getList("Palette", 10), compoundnbt1.getLongArray("BlockStates"));
+				chunksection.recalculateRefCounts();
+				if (!chunksection.isEmpty()) {
+					achunksection[k] = chunksection;
+				}
+			}
 
-		for(int x = 0; x < sizeX; x++) {
-			for(int y = 0; y < sizeY; y++) {
-				for(int z = 0; z < sizeZ; z++) {
-					blocks[x][y][z] = Block.getStateById(blockId[z + (sizeZ*y) + (sizeZ*sizeY*x)]);
+			if (flag) {
+				if (compoundnbt1.contains("BlockLight", 7)) {
+					worldlightmanager.setData(LightType.BLOCK, SectionPos.from(pos, k), new NibbleArray(compoundnbt1.getByteArray("BlockLight")), true);
+				}
 
-					chunk.setBlockState(new BlockPos(x, y, z), this.blocks[x][y][z], false);
+				if (flag1 && compoundnbt1.contains("SkyLight", 7)) {
+					worldlightmanager.setData(LightType.SKY, SectionPos.from(pos, k), new NibbleArray(compoundnbt1.getByteArray("SkyLight")), true);
 				}
 			}
 		}
 
-		ListNBT tileList = nbt.getList("tiles", NBT.TAG_COMPOUND);
+		IChunk ichunk;
+		ichunk = new Chunk(this.world, pos, new BiomeContainer(AdvancedRocketryBiomes.getBiomeRegistry(), pos, new SingleBiomeProvider(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getRegistryName()))));
+		if (compoundnbt.contains("ForgeCaps")) ((Chunk)ichunk).readCapsFromNBT(compoundnbt.getCompound("ForgeCaps"));
 
-		for(int i = 0; i < tileList.size(); i++) {
 
-			try {
-				TileEntity tile = TileEntity.func_235657_b_(p_235657_0_, p_235657_1_);
-				tile.setWorld(world);
+		ichunk.setLight(flag);
+		CompoundNBT compoundnbt3 = compoundnbt.getCompound("Heightmaps");
+		EnumSet<Heightmap.Type> enumset = EnumSet.noneOf(Heightmap.Type.class);
 
-				if(isInventoryBlock(tile)) {
-					inventoryTiles.add(tile);
-				}
-
-				if(isLiquidContainerBlock(tile)) {
-					liquidTiles.add(tile);
-				}
-
-				tileEntities.add(tile);
-				tile.setWorld(world);
-
-				chunk.addTileEntity(tile);
-
-			} catch (Exception e) {
-				AdvancedRocketry.logger.warn("Rocket missing Tile (was a mod removed?)");
+		for(Heightmap.Type heightmap$type : ichunk.getStatus().getHeightMaps()) {
+			String s = heightmap$type.getId();
+			if (compoundnbt3.contains(s, 12)) {
+				ichunk.setHeightmap(heightmap$type, compoundnbt3.getLongArray(s));
+			} else {
+				enumset.add(heightmap$type);
 			}
-
 		}
 
-		/*for(int x = 0; x < sizeX; x++) {
-			for(int y = 0; y < sizeY; y++) {
-				for(int z = 0; z < sizeZ; z++) {
+		Heightmap.updateChunkHeightmaps(ichunk, enumset);
 
+		ListNBT listnbt3 = compoundnbt.getList("PostProcessing", 9);
 
+		for(int l1 = 0; l1 < listnbt3.size(); ++l1) {
+			ListNBT listnbt1 = listnbt3.getList(l1);
 
-					CompoundNBT tag = (CompoundNBT)nbt.getTag(String.format("%d.%d.%d", x,y,z));
-
-					if(!tag.contains("block"))
-						continue;
-					int blockId = tag.getInt("block"); 
-					blocks[x][y][z] = Block.getBlockById(blockId);
-					metas[x][y][z] = tag.getShort("meta");
-
-
-					if(blockId != 0 && blocks[x][y][z] == Blocks.air) {
-						AdvancedRocketry.logger.warn("Removed pre-existing block with id " + blockId + " from a rocket (Was a mod removed?)");
-					}
-					else if(tag.contains("tile")) {
-
-						if(blocks[x][y][z].hasTileEntity(metas[x][y][z])) {
-							TileEntity tile = TileEntity.createAndLoadEntity(tag.getCompound("tile"));
-							tile.setWorldObj(world);
-
-							tileEntities.add(tile);
-
-							//Machines would throw a wrench in the works
-							if(isUsableBlock(tile)) {
-								inventories.add((IInventory)tile);
-								usableTiles.add(tile);
-							}
-						}
-					}
-				}
+			for(int l = 0; l < listnbt1.size(); ++l) {
+				ichunk.func_201636_b(listnbt1.getShort(l), l1);
 			}
-		}*/
-		this.chunk.generateSkylightMap();
+		}
+
+		this.chunk = (Chunk)ichunk;
+
+
+		ListNBT listnbt1 = nbt.getList("TileEntities", NBT.TAG_COMPOUND);
+
+		for(int j = 0; j < listnbt1.size(); ++j) {
+			CompoundNBT compoundnbt1 = listnbt1.getCompound(j);
+			BlockPos blockpos = new BlockPos(compoundnbt1.getInt("x"), compoundnbt1.getInt("y"), compoundnbt1.getInt("z"));
+			TileEntity tileentity = TileEntity.func_235657_b_(chunk.getBlockState(blockpos), compoundnbt1);
+			if (tileentity != null) {
+				if(isInventoryBlock(tileentity)) {
+					inventoryTiles.add(tileentity);
+				}
+
+				if(isLiquidContainerBlock(tileentity)) {
+					liquidTiles.add(tileentity);
+				}
+
+				tileEntities.add(tileentity);
+				tileentity.setWorldAndPos(world, blockpos);
+
+				chunk.addTileEntity(tileentity);
+			}
+		}
 	}
 
 	public static StorageChunk copyWorldBB(World world, AxisAlignedBB bb) {
@@ -494,8 +577,6 @@ public class StorageChunk implements IWorld, IStorageChunk {
 				for(int y = actualMinY; y<= actualMaxY; y++) {
 					BlockPos pos = new BlockPos(x,y,z);
 					BlockState state = world.getBlockState(pos);
-					ret.blocks[x - actualMinX][y - actualMinY][z - actualMinZ] = state.getBlock();
-					ret.metas[x - actualMinX][y - actualMinY][z - actualMinZ] = (short)state.getBlock().getMetaFromState(state);
 
 					TileEntity entity = world.getTileEntity(pos);
 					if(entity != null) {
@@ -507,13 +588,14 @@ public class StorageChunk implements IWorld, IStorageChunk {
 						nbt.putInt("y",nbt.getInt("y") - actualMinY);
 						nbt.putInt("z",nbt.getInt("z") - actualMinZ);
 
-						//XXX: Hack to make chisels & bits renderable
-						if (nbt.getString("id").equals("minecraft:mod.chiselsandbits.tileentitychiseled"))
-							nbt.putString("id", "minecraft:mod.chiselsandbits.tileentitychiseled.tesr");
 
-						TileEntity newTile = ZUtils.createTile(nbt);
+
+
+						TileEntity newTile = entity.getType().create();
+						newTile.deserializeNBT(nbt);
+
 						if(newTile != null) {
-							newTile.setWorld(ret.world);
+							newTile.setWorldAndPos(ret.world, pos);
 
 							if(isInventoryBlock(newTile)) {
 								ret.inventoryTiles.add(newTile);
@@ -542,8 +624,8 @@ public class StorageChunk implements IWorld, IStorageChunk {
 			for(int z = 0; z < sizeZ; z++) {
 				for(int y = 0; y< sizeY; y++) {
 
-					if(blocks[x][y][z] != Blocks.AIR) {
-						world.setBlockState(new BlockPos(xCoord + x, yCoord + y, zCoord + z), blocks[x][y][z].getStateById(metas[x][y][z]), 2);
+					if(chunk != null && !chunk.getBlockState(new BlockPos(x, y, z)).isAir()) {
+						world.setBlockState(new BlockPos(xCoord + x, yCoord + y, zCoord + z), chunk.getBlockState(new BlockPos(x, y, z)), 2);
 					}
 				}
 			}
@@ -572,7 +654,7 @@ public class StorageChunk implements IWorld, IStorageChunk {
 			TileEntity entity = world.getTileEntity(new BlockPos(tmpX, tmpY, tmpZ));
 
 			if(entity != null)
-				entity.readFromNBT(nbt);
+				entity.deserializeNBT(nbt);
 		}
 	}
 
@@ -589,29 +671,14 @@ public class StorageChunk implements IWorld, IStorageChunk {
 
 	@Override
 	public boolean isAirBlock(BlockPos pos) {
-		if(pos.getX() >= blocks.length || pos.getY() >= blocks[0].length || pos.getZ() >= blocks[0][0].length)
+		if(pos.getX() >= CHUNK_SIZE || pos.getY() >= CHUNK_HEIGHT || pos.getZ() >= CHUNK_SIZE)
 			return true;
-		return blocks[pos.getX()][pos.getY()][pos.getZ()] == Blocks.AIR;
+		return chunk.getBlockState(pos).isAir();
 	}
 
 	@Override
 	public Biome getBiome(BlockPos pos) {
-		//Don't care, gen ocean
-		return Biome.getBiome(0);
-	}
-
-	@Override
-	public boolean isSideSolid(BlockPos pos, Direction side, boolean _default) {
-		int x = pos.getX();
-		int y = pos.getY();
-		int z = pos.getZ();
-		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ  || x + side.getXOffset() < 0 
-				|| x + side.getXOffset() >= sizeX || y + side.getYOffset() < 0 || y + side.getYOffset() >= sizeY 
-				|| z + side.getZOffset() < 0 || z + side.getZOffset() >= sizeZ)
-			return false;
-
-		return blocks[x + side.getXOffset()][y + side.getYOffset()][z + side.getZOffset()].isSideSolid(blocks[x + side.getXOffset()][y + side.getYOffset()][z + side.getZOffset()].getStateById(metas[x + side.getXOffset()][y + side.getYOffset()][z + side.getZOffset()]), this, pos.offset(side), side.getOpposite());
-
+		return AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getRegistryName());
 	}
 
 	public static StorageChunk cutWorldBB(World worldObj, AxisAlignedBB bb) {
@@ -723,7 +790,7 @@ public class StorageChunk implements IWorld, IStorageChunk {
 
 		return Constants.INVALID_PLANET;
 	}
-	
+
 	public ResourceLocation getDestinationDimId(World world, int x, int z) {
 		Iterator<TileEntity> iterator = getTileEntityList().iterator();
 		while(iterator.hasNext()) {
@@ -747,7 +814,7 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		}
 		return null;
 	}
-	
+
 	public String getDestinationName(ResourceLocation destDimID) {
 		Iterator<TileEntity> iterator = getTileEntityList().iterator();
 		while(iterator.hasNext()) {
@@ -769,100 +836,17 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		}
 	}
 
-	public void writeToNetwork(ByteBuf out) {
-		PacketBuffer buffer = new PacketBuffer(out);
+	public void writeToNetwork(PacketBuffer out) {
 
-		buffer.writeByte(this.sizeX);
-		buffer.writeByte(this.sizeY);
-		buffer.writeByte(this.sizeZ);
-		buffer.writeShort(tileEntities.size());
 
-		for(int x = 0; x < sizeX; x++) {
-			for(int y = 0; y < sizeY; y++) {
-				for(int z = 0; z < sizeZ; z++) {
-					buffer.writeInt(Block.getIdFromBlock(this.blocks[x][y][z]));
-					buffer.writeShort(this.metas[x][y][z]);
-				}
-			}
-		}
-
-		Iterator<TileEntity> tileIterator = tileEntities.iterator();
-
-		while(tileIterator.hasNext()) {
-			TileEntity tile = tileIterator.next();
-
-			CompoundNBT nbt = new CompoundNBT();
-
-			try {
-				tile.write(nbt);
-
-				try {
-					buffer.writeCompoundTag(nbt);
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-
-			} catch(RuntimeException e) {
-				AdvancedRocketry.logger.warn("A tile entity has thrown an error while writing to network: " + tile.getClass().getCanonicalName());
-				tileIterator.remove();
-			}
-		}
+		CompoundNBT nbt = new CompoundNBT();
+		this.writeToNBT(nbt);
+		out.writeCompoundTag(nbt);
 	}
 
-	public void readFromNetwork(ByteBuf in) {
+	public void readFromNetwork(PacketBuffer in) {
 		PacketBuffer buffer = new PacketBuffer(in);
-
-		this.sizeX = buffer.readByte();
-		this.sizeY = buffer.readByte();
-		this.sizeZ = buffer.readByte();
-		short numTiles = buffer.readShort();
-
-		this.blocks = new Block[sizeX][sizeY][sizeZ];
-		this.metas = new short[sizeX][sizeY][sizeZ];
-		chunk = new Chunk(world, 0, 0);
-
-		for(int x = 0; x < sizeX; x++) {
-			for(int y = 0; y < sizeY; y++) {
-				for(int z = 0; z < sizeZ; z++) {
-
-					this.blocks[x][y][z] = Block.getBlockById(buffer.readInt());
-					this.metas[x][y][z] = buffer.readShort();
-
-					chunk.setBlockState(new BlockPos(x, y, z), this.blocks[x][y][z].getStateById(this.metas[x][y][z]));
-				}
-			}
-		}
-
-		for(short i = 0; i < numTiles; i++) {
-			try {
-				CompoundNBT nbt = buffer.readCompoundTag();
-
-				TileEntity tile = ZUtils.createTile(nbt);
-				tile.setWorld(world);
-				tileEntities.add(tile);
-
-				if(isInventoryBlock(tile)) {
-					inventoryTiles.add(tile);
-				}
-
-				if(isLiquidContainerBlock(tile))
-					liquidTiles.add(tile);
-				tile.setWorld(world);
-
-				chunk.addTileEntity(tile);
-
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-		//We are now ready to render
-		this.chunk.generateSkylightMap();
-		finalized = true;
-	}
-
-	@Override
-	public int getCombinedLight(BlockPos pos, int lightValue) {
-		return lightValue;
+		this.readFromNBT(in.readCompoundTag());
 	}
 
 	@Override
@@ -871,7 +855,152 @@ public class StorageChunk implements IWorld, IStorageChunk {
 	}
 
 	@Override
-	public WorldType getWorldType() {
-		return WorldType.CUSTOMIZED;
+	public DynamicRegistries func_241828_r() {
+		return null;
+	}
+
+	@Override
+	public List<Entity> getEntitiesInAABBexcluding(Entity entityIn, AxisAlignedBB boundingBox,
+			Predicate<? super Entity> predicate) {
+		return new LinkedList<Entity>();
+	}
+
+	@Override
+	public <T extends Entity> List<T> getEntitiesWithinAABB(Class<? extends T> clazz, AxisAlignedBB aabb,
+			Predicate<? super T> filter) {
+		return new LinkedList<T>();
+	}
+
+	@Override
+	public List<? extends PlayerEntity> getPlayers() {
+		return new LinkedList<PlayerEntity>();
+	}
+
+	@Override
+	public IChunk getChunk(int x, int z, ChunkStatus requiredStatus, boolean nonnull) {
+		return chunk;
+	}
+
+	@Override
+	public int getHeight(Type heightmapType, int x, int z) {
+		return chunk.getHeightmap(heightmapType).getHeight(x, z);
+	}
+
+	@Override
+	public int getSkylightSubtracted() {
+		return 0;
+	}
+
+	@Override
+	public BiomeManager getBiomeManager() {
+		return null;
+	}
+
+	@Override
+	public Biome getNoiseBiomeRaw(int x, int y, int z) {
+		return AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getRegistryName());
+	}
+
+	@Override
+	public boolean isRemote() {
+		return false;
+	}
+
+	@Override
+	public int getSeaLevel() {
+		return 0;
+	}
+
+	@Override
+	public DimensionType func_230315_m_() {
+		return null;
+	}
+
+	@Override
+	public float func_230487_a_(Direction p_230487_1_, boolean p_230487_2_) {
+		return 0;
+	}
+
+	@Override
+	public WorldLightManager getLightManager() {
+		return chunk.getWorldLightManager();
+	}
+
+	@Override
+	public FluidState getFluidState(BlockPos pos) {
+		return chunk.getFluidState(pos);
+	}
+
+	@Override
+	public WorldBorder getWorldBorder() {
+		return new WorldBorder();
+	}
+
+	@Override
+	public boolean hasBlockState(BlockPos p_217375_1_, Predicate<BlockState> p_217375_2_) {
+		return false;
+	}
+
+	@Override
+	public boolean func_241211_a_(BlockPos p_241211_1_, BlockState p_241211_2_, int p_241211_3_, int p_241211_4_) {
+		return false;
+	}
+
+	@Override
+	public boolean removeBlock(BlockPos pos, boolean isMoving) {
+		chunk.setBlockState(pos, Blocks.AIR.getDefaultState(), isMoving);
+		return true;
+	}
+
+	@Override
+	public boolean func_241212_a_(BlockPos p_241212_1_, boolean p_241212_2_, Entity p_241212_3_, int p_241212_4_) {
+		return false;
+	}
+
+	@Override
+	public ITickList<Block> getPendingBlockTicks() {
+		return null;
+	}
+
+	@Override
+	public ITickList<Fluid> getPendingFluidTicks() {
+		return null;
+	}
+
+	@Override
+	public IWorldInfo getWorldInfo() {
+		return world.getWorldInfo();
+	}
+
+	@Override
+	public DifficultyInstance getDifficultyForLocation(BlockPos pos) {
+		return null;
+	}
+
+	@Override
+	public AbstractChunkProvider getChunkProvider() {
+		return world.getChunkProvider();
+	}
+
+	@Override
+	public Random getRandom() {
+		return null;
+	}
+
+	@Override
+	public void playSound(PlayerEntity player, BlockPos pos, SoundEvent soundIn, SoundCategory category, float volume,
+			float pitch) {
+
+	}
+
+	@Override
+	public void addParticle(IParticleData particleData, double x, double y, double z, double xSpeed, double ySpeed,
+			double zSpeed) {
+
+	}
+
+	@Override
+	public void playEvent(PlayerEntity player, int type, BlockPos pos, int data) {
+
 	}
 }

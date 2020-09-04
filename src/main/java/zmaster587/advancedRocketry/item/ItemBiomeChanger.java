@@ -8,8 +8,10 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
@@ -40,9 +42,15 @@ import zmaster587.libVulpes.util.ZUtils;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements IModularInventory, IButtonInventory, INetworkItem {
+public class ItemBiomeChanger extends Item {//extends ItemSatelliteIdentificationChip implements IModularInventory, IButtonInventory, INetworkItem {
 
-	@Override
+	public ItemBiomeChanger(Properties properties) {
+		super(properties);
+		// TODO Auto-generated constructor stub
+	}
+	
+
+/*	@Override
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> list = new LinkedList<ModuleBase>();
 
@@ -205,5 +213,5 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 	@Override
 	public int getModularInvType() {
 		return GuiHandler.guiId.MODULARNOINV.ordinal();
-	}
+	}*/
 }

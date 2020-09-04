@@ -20,6 +20,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.advancedRocketry.recipe.RecipeCentrifuge;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
@@ -64,8 +65,8 @@ public class TileCentrifuge extends TileMultiblockMachine {
 	@Override
 	public void registerRecipes() {
 		// Nuggets for centrifuge
-		List<RecipesMachine.ChanceItemStack> nuggetList = new LinkedList<RecipesMachine.ChanceItemStack>();
-
+/*		List<RecipesMachine.ChanceItemStack> nuggetList = new LinkedList<RecipesMachine.ChanceItemStack>();
+		
 		for(String entry : ARConfiguration.getCurrentConfig().lavaCentrifugeOutputs)
 		{
 			try
@@ -98,9 +99,9 @@ public class TileCentrifuge extends TileMultiblockMachine {
 		List<RecipesMachine.ChanceFluidStack> outputFluid = new LinkedList<RecipesMachine.ChanceFluidStack>();
 		List<FluidStack> inputFluid = new LinkedList<FluidStack>();
 		inputFluid.add(new FluidStack(AdvancedRocketryFluids.fluidEnrichedLava, 1000));
-		RecipesMachine.Recipe rec =  new RecipesMachine.Recipe(nuggetList, inputItems,outputFluid,inputFluid, 200, 10, new HashMap<Integer, String>());
+		RecipesMachine.Recipe rec =  new RecipesMachine.Recipe(RecipeCentrifuge.INSTANCE, null, nuggetList, inputItems,outputFluid,inputFluid, 200, 10, new HashMap<Integer, String>());
 		rec.setMaxOutputSize(4);
-		RecipesMachine.getInstance().getRecipes(TileCentrifuge.class).add(rec);
+		RecipesMachine.getInstance().getRecipes(TileCentrifuge.class).add(rec);*/
 	}
 
 	@Override

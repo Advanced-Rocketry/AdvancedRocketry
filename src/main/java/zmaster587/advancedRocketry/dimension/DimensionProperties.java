@@ -11,7 +11,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.biome.Biome.Category;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.registries.ForgeRegistries;
 import zmaster587.advancedRocketry.AdvancedRocketry;
@@ -25,8 +25,7 @@ import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
-import zmaster587.advancedRocketry.dimension.DimensionProperties.AtmosphereTypes;
-import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
+import zmaster587.advancedRocketry.client.render.planet.ISkyRenderer;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketSatellite;
@@ -35,8 +34,6 @@ import zmaster587.advancedRocketry.util.AstronomicalBodyHelper;
 import zmaster587.advancedRocketry.util.OreGenProperties;
 import zmaster587.advancedRocketry.util.SpacePosition;
 import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
-import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
-import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.VulpineMath;
@@ -239,8 +236,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	private String name;
 	public float[] sunriseSunsetColors;
 	//public ExtendedBiomeProperties biomeProperties;
-	private LinkedList<BiomeEntry> allowedBiomes;
-	private LinkedList<BiomeEntry> terraformedBiomes;
+	private LinkedList<Biome> allowedBiomes;
+	private LinkedList<Biome> terraformedBiomes;
 	private boolean isRegistered = false;
 	private boolean isTerraformed = false;
 	public boolean hasRings = false;
@@ -261,6 +258,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	private float craterFrequencyMultiplier;
 	private float volcanoFrequencyMultiplier;
 	private float geodeFrequencyMultiplier;
+	ISkyRenderer sky;
 	
 
 	//Satallites
@@ -286,8 +284,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		oceanBlock = null;
 		fillerBlock = null;
 
-		allowedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
-		terraformedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
+		allowedBiomes = new LinkedList<Biome>();
+		terraformedBiomes = new LinkedList<Biome>();
 		satallites = new HashMap<>();
 		requiredArtifacts = new LinkedList<ItemStack>();
 		tickingSatallites = new HashMap<Long,SatelliteBase>();
@@ -377,6 +375,16 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		generatorType = 0;
 	}
 
+	public ISkyRenderer getSkyRenderer()
+	{
+		return sky;
+	}
+	
+	public void setSkyRenderer(ISkyRenderer sky)
+	{
+		this.sky = sky;
+	}
+	
 	public List<Fluid> getHarvestableGasses() {
 		return harvestableAtmosphere;
 	}
@@ -724,10 +732,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		this.atmosphereDensity = atmosphereDensity;
 
 		if (AtmosphereTypes.getAtmosphereTypeFromValue(prevAtm) != AtmosphereTypes.getAtmosphereTypeFromValue(this.atmosphereDensity)) {
-			setTerraformedBiomes(getViableBiomes());
-			isTerraformed = true;
+			//setTerraformedBiomes(getViableBiomes());
+			//isTerraformed = true;
 
-			((ChunkManagerPlanet)((WorldProviderPlanet)net.minecraftforge.common.DimensionManager.getProvider(getId())).chunkMgrTerraformed).resetCache();
+			//((ChunkManagerPlanet)((WorldProviderPlanet)net.minecraftforge.common.DimensionManager.getProvider(getId())).chunkMgrTerraformed).resetCache();
 
 		}
 
@@ -991,12 +999,12 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * Each Planet is assigned a list of biomes that are allowed to spawn there
 	 * @return List of biomes allowed to spawn on this planet
 	 */
-	public List<BiomeEntry> getBiomes() {
-		return (List<BiomeEntry>)allowedBiomes;
+	public List<Biome> getBiomes() {
+		return (List<Biome>)allowedBiomes;
 	}
 
-	public List<BiomeEntry> getTerraformedBiomes() {
-		return (List<BiomeEntry>)terraformedBiomes;
+	public List<Biome> getTerraformedBiomes() {
+		return (List<Biome>)terraformedBiomes;
 	}
 
 	/**
@@ -1005,7 +1013,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return true if the biome is not allowed to spawn on any Dimension
 	 */
 	public boolean isBiomeblackListed(Biome biome) {
-		return AdvancedRocketryBiomes.instance.getBlackListedBiomes().contains(ForgeRegistries.BIOMES.getKey(biome));
+		return AdvancedRocketryBiomes.instance.getBlackListedBiomes().contains(AdvancedRocketryBiomes.getBiomeResource(biome));
 	}
 
 	/**
@@ -1021,10 +1029,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			while(list.size() > 1) {
 				Biome biome = list.get(random.nextInt(list.size()));
 				Temps temp = Temps.getTempFromValue(averageTemperature);
-				if((biome.getTempCategory() == TempCategory.COLD && temp.isInRange(Temps.FRIGID, Temps.NORMAL)) ||
-						((biome.getTempCategory() == TempCategory.MEDIUM || biome.getTempCategory() == TempCategory.OCEAN) &&
+				Temps biomeTemp = AdvancedRocketryBiomes.getBiomeTemp(biome);
+				if((biomeTemp == Temps.COLD && temp.isInRange(Temps.FRIGID, Temps.NORMAL)) ||
+						((biomeTemp == Temps.NORMAL || biome.getCategory() == Category.OCEAN) &&
 								temp.isInRange(Temps.COLD, Temps.HOT)) ||
-								(biome.getTempCategory() == TempCategory.WARM && temp.isInRange(Temps.NORMAL, Temps.HOT))) {
+								(biomeTemp == Temps.HOT && temp.isInRange(Temps.NORMAL, Temps.HOT))) {
 					viableBiomes.add(biome);
 					return viableBiomes;
 				}
@@ -1033,6 +1042,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		}
 
 
+		
+		
 		if(atmosphereDensity <= AtmosphereTypes.LOW.value)
 		{
 			viableBiomes.add(AdvancedRocketryBiomes.moonBiome);
@@ -1046,49 +1057,52 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		}
 		else if(averageTemperature > Temps.HOT.getTemp()) {
 
-			Iterator<Biome> itr = ForgeRegistries.BIOMES.iterator();
+			Iterator<Biome> itr = AdvancedRocketryBiomes.getAllBiomes();
 			while( itr.hasNext()) {
 				Biome biome = itr.next();
-				if(biome != null && (BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.HOT) || BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.OCEAN))  && !isBiomeblackListed(biome)) {
+				Temps biomeTemp = AdvancedRocketryBiomes.getBiomeTemp(biome);
+				if(biome != null && (biomeTemp == Temps.HOT || biome.getCategory() == Category.OCEAN)  && !isBiomeblackListed(biome)) {
 					viableBiomes.add(biome);
 				}
 			}
 		}
 		else if(averageTemperature > Temps.NORMAL.getTemp()) {
-			Iterator<Biome> itr = ForgeRegistries.BIOMES.iterator();
+			Iterator<Biome> itr = AdvancedRocketryBiomes.getAllBiomes();
 			while( itr.hasNext()) {
 				Biome biome = itr.next();
-				if(biome != null && !BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
+				Temps biomeTemp = AdvancedRocketryBiomes.getBiomeTemp(biome);
+				if(biome != null && biomeTemp.isInRange(Temps.COLD, Temps.HOT) && !isBiomeblackListed(biome) || biome.getCategory() == Category.OCEAN) {
 					viableBiomes.add(biome);
 				}
 			}
-			viableBiomes.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN));
 		}
 		else if(averageTemperature > Temps.COLD.getTemp()) {
-			Iterator<Biome> itr = ForgeRegistries.BIOMES.iterator();
+			Iterator<Biome> itr = AdvancedRocketryBiomes.getAllBiomes();
 			while( itr.hasNext()) {
 				Biome biome = itr.next();
-				if(biome != null && !BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.HOT) && !isBiomeblackListed(biome)) {
+				Temps biomeTemp = AdvancedRocketryBiomes.getBiomeTemp(biome);
+				if(biome != null && biomeTemp.isInRange(Temps.FRIGID, Temps.NORMAL) && !isBiomeblackListed(biome) || biome.getCategory() == Category.OCEAN) {
 					viableBiomes.add(biome);
 				}
 			}
-			viableBiomes.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN));
 		}
 		else if(averageTemperature > Temps.FRIGID.getTemp()) {
 
-			Iterator<Biome> itr = ForgeRegistries.BIOMES.iterator();
+			Iterator<Biome> itr = AdvancedRocketryBiomes.getAllBiomes();
 			while( itr.hasNext()) {
 				Biome biome = itr.next();
-				if(biome != null && !BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
+				Temps biomeTemp = AdvancedRocketryBiomes.getBiomeTemp(biome);
+				if(biome != null && biomeTemp.isInRange(Temps.SNOWBALL, Temps.COLD) && !isBiomeblackListed(biome)) {
 					viableBiomes.add(biome);
 				}
 			}
 		}
 		else {//(averageTemperature >= Temps.SNOWBALL.getTemp())
-			Iterator<Biome> itr = ForgeRegistries.BIOMES.iterator();
+			Iterator<Biome> itr = AdvancedRocketryBiomes.getAllBiomes();
 			while( itr.hasNext()) {
 				Biome biome = itr.next();
-				if(biome != null && !BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
+				Temps biomeTemp = AdvancedRocketryBiomes.getBiomeTemp(biome);
+				if(biome != null && biomeTemp.isInRange(Temps.SNOWBALL, Temps.FRIGID) && !isBiomeblackListed(biome)) {
 					viableBiomes.add(biome);
 				}
 			}
@@ -1122,8 +1136,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return true if the biome was added sucessfully, false otherwise
 	 */
 	public boolean addBiome(ResourceLocation biomeId) {
-		if(ForgeRegistries.BIOMES.containsKey(biomeId)) {
-			Biome biome =  ForgeRegistries.BIOMES.getValue(biomeId);
+		
+		if(AdvancedRocketryBiomes.doesBiomeExist(biomeId)) {
+			Biome biome =  AdvancedRocketryBiomes.getBiomeFromResourceLocation(biomeId);
 			List<Biome> biomes = new ArrayList<Biome>();
 			biomes.add(biome);
 			allowedBiomes.addAll(getBiomesEntries(biomes));
@@ -1150,7 +1165,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		addBiomes(biomes);
 	}
 
-	public void setBiomeEntries(List<BiomeEntry> biomes) {
+	public void setBiomeEntries(List<Biome> biomes) {
 		//If list is itself DO NOT CLEAR IT
 		if(biomes != allowedBiomes) {
 			allowedBiomes.clear();
@@ -1167,7 +1182,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * Adds all biomes of this type to the list of biomes allowed to generate
 	 * @param type
 	 */
-	public void addBiomeType(BiomeDictionary.Type type) {
+	/*public void addBiomeType(BiomeDictionary.Type type) {
 
 		ArrayList<Biome> entryList = new ArrayList<Biome>();
 
@@ -1181,7 +1196,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		Iterator<Biome> iter = entryList.iterator();
 		while(iter.hasNext()) {
 			Biome nextbiome = iter.next();
-			for(BiomeEntry entry : allowedBiomes) {
+			for(Biome entry : allowedBiomes) {
 				if(BiomeDictionary.areSimilar(entry.biome, nextbiome))
 					iter.remove();
 			}
@@ -1189,62 +1204,63 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		}
 		allowedBiomes.addAll(getBiomesEntries(entryList));
 
-	}
+	}*/
 
 	/**
 	 * Removes all biomes of this type from the list of biomes allowed to generate
 	 * @param type
 	 */
-	public void removeBiomeType(BiomeDictionary.Type type) {
+	/*public void removeBiomeType(BiomeDictionary.Type type) {
 
 		ArrayList<Biome> entryList = new ArrayList<Biome>();
 
 		entryList.addAll(BiomeDictionary.getBiomes(type));
 
-		Iterator<Biome> itr = ForgeRegistries.BIOMES.iterator();
+		Iterator<Biome> itr = AdvancedRocketryBiomes.getAllBiomes();
 		while(itr.hasNext()) {
 			Biome biome = itr.next();
-			Iterator<BiomeEntry> iterator = allowedBiomes.iterator();
+			Iterator<Biome> iterator = allowedBiomes.iterator();
 			while(iterator.hasNext()) {
 				if(BiomeDictionary.areSimilar(iterator.next().biome, biome))
 					iterator.remove();
 			}
 		}
-
-	}
+	}*/
 
 	/**
 	 * Gets a list of BiomeEntries allowed to spawn in this dimension
 	 * @param biomeIds
 	 * @return
 	 */
-	private ArrayList<BiomeEntry> getBiomesEntries(List<Biome> biomeIds) {
+	private List<Biome> getBiomesEntries(List<Biome> biomeIds) {
 
-		ArrayList<BiomeEntry> biomeEntries = new ArrayList<BiomeManager.BiomeEntry>();
+		return biomeIds;
+		
+		/*ArrayList<Biome> biomeEntries = new ArrayList<BiomeManager.Biome>();
 
 		Iterator<Biome> itr = biomeIds.iterator();
 		while( itr.hasNext()) {
 			Biome biomes = itr.next();
 
 			/*if(biomes == Biome.desert) {
-				biomeEntries.add(new BiomeEntry(BiomeGenBase.desert, 30));
+				biomeEntries.add(new Biome(BiomeGenBase.desert, 30));
 				continue;
 			}
 			else if(biomes == BiomeGenBase.savanna) {
-				biomeEntries.add(new BiomeEntry(BiomeGenBase.savanna, 20));
+				biomeEntries.add(new Biome(BiomeGenBase.savanna, 20));
 				continue;
 			}
 			else if(biomes == BiomeGenBase.plains) {
-				biomeEntries.add(new BiomeEntry(BiomeGenBase.plains, 10));
+				biomeEntries.add(new Biome(BiomeGenBase.plains, 10));
 				continue;
-			}*/
+			}* /
 
 			boolean notFound = true;
 
 			label:
 
 				for(BiomeManager.BiomeType types : BiomeManager.BiomeType.values()) {
-					for(BiomeEntry entry : BiomeManager.getBiomes(types)) {
+					for(Biome entry : BiomeManager.getBiomes(types)) {
 						if(biomes == null)
 							AdvancedRocketry.logger.warn("Null biomes loaded for DIMID: " + this.getId());
 						else if(entry.biome.equals(biomes)) {
@@ -1257,11 +1273,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				}
 
 			if(notFound && biomes != null) {
-				biomeEntries.add(new BiomeEntry(biomes, 30));
+				biomeEntries.add(new Biome(biomes, 30));
 			}
 		}
 
-		return biomeEntries;
+		return biomeEntries;*/
 	}
 
 	public void initDefaultAttributes()
@@ -1298,12 +1314,13 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		if(nbt.contains("biomesTerra")) {
 
 			terraformedBiomes.clear();
-			int biomeIds[] = nbt.getIntArray("biomesTerra");
+			
+			ListNBT terraformedList = nbt.getList("biomesTerra", NBT.TAG_STRING);
 			List<Biome> biomesList = new ArrayList<Biome>();
-
-
-			for(int i = 0; i < biomeIds.length; i++) {
-				biomesList.add(AdvancedRocketryBiomes.instance.getBiomeById(biomeIds[i]));
+			
+			for(int i = 0; i < terraformedList.size(); i++)
+			{
+				biomesList.add(AdvancedRocketryBiomes.getBiomeFromResourceLocation(new ResourceLocation(terraformedList.getString(i))));
 			}
 
 			terraformedBiomes.addAll(getBiomesEntries(biomesList));
@@ -1381,12 +1398,13 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		if(nbt.contains("biomes")) {
 
 			allowedBiomes.clear();
-			ListNBT biomeIds = nbt.getList("biomes", NBT.TAG_SHORT);
+			ListNBT biomeIds = nbt.getList("biomes", NBT.TAG_STRING);
 			List<Biome> biomesList = new ArrayList<Biome>();
 
 
-			for(int i = 0; i < biomeIds.size(); i++) {
-				biomesList.add(ForgeRegistries.BIOMES.getValue(new ResourceLocation(biomeIds.getString(i))));
+			for(int i = 0; i < biomeIds.size(); i++)
+			{
+				biomesList.add(AdvancedRocketryBiomes.getBiomeFromResourceLocation(new ResourceLocation(biomeIds.getString(i))));
 			}
 
 			allowedBiomes.addAll(getBiomesEntries(biomesList));
@@ -1498,7 +1516,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		if(!terraformedBiomes.isEmpty()) {
 			ListNBT terraformedBiomeList = new ListNBT();
 			for(int i = 0; i < terraformedBiomes.size(); i++) {
-				terraformedBiomeList.add(StringNBT.valueOf(terraformedBiomes.get(i).biome.getRegistryName().toString()));
+				
+				terraformedBiomeList.add(StringNBT.valueOf(AdvancedRocketryBiomes.getBiomeResource(terraformedBiomes.get(i)).toString()));
 			}
 			nbt.put("biomesTerra", terraformedBiomeList);
 		}
@@ -1556,7 +1575,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			
 			ListNBT biomeList = new ListNBT();
 			for(int i = 0; i < allowedBiomes.size(); i++) {
-				biomeList.add(StringNBT.valueOf(allowedBiomes.get(i).biome.getRegistryName().toString()));
+				biomeList.add(StringNBT.valueOf(AdvancedRocketryBiomes.getBiomeResource(allowedBiomes.get(i)).toString()));
 			}
 			nbt.put("biomes", biomeList);
 		}

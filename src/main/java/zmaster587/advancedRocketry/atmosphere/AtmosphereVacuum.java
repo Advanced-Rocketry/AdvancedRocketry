@@ -15,8 +15,7 @@ import zmaster587.libVulpes.network.PacketHandler;
  */
 public class AtmosphereVacuum extends AtmosphereNeedsSuit {
 
-	public static int damageValue;
-	public static boolean enableNausea = ARConfiguration.getCurrentConfig().enableNausea;
+	public static boolean enableNausea = ARConfiguration.getCurrentConfig().enableNausea.get();
 
 	public AtmosphereVacuum() {
 		super(true, false, false, "vacuum");
@@ -25,7 +24,7 @@ public class AtmosphereVacuum extends AtmosphereNeedsSuit {
 	@Override
 	public void onTick(LivingEntity player) {
 		if(player.world.getGameTime() % 10  == 0 && !isImmune(player)) {
-			player.attackEntityFrom(AtmosphereHandler.vacuumDamage, damageValue);
+			player.attackEntityFrom(AtmosphereHandler.vacuumDamage, ARConfiguration.getCurrentConfig().vacuumDamageValue.get());
 			player.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 40, 4));
 			player.addPotionEffect(new EffectInstance(Effects.MINING_FATIGUE, 40, 4));
 			if(enableNausea) {

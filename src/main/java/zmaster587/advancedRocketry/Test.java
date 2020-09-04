@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry;
 
-import net.minecraft.init.Blocks;
+/*import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import zmaster587.advancedRocketry.api.ARConfiguration;
@@ -23,7 +23,7 @@ public class Test {
 			BlockPos pos =  registerSpaceObject(i);
 			//if(thing2(pos) != i)
 			System.out.println(String.format("input id: %d, output id: %d,  coords: %d %d", i, thing2(pos), pos.getX(), pos.getZ()));
-		}*/
+		}* /
 	}
 
 	public static int thing2(BlockPos pos) {
@@ -57,7 +57,7 @@ public class Test {
 		 *  7 0 8
 		 *  4 5 6
 		 *E F.....
-		 */
+		 * /
 
 		int radius = (int) Math.floor(Math.ceil(Math.sqrt(stationId+1))/2);
 		int ringIndex = (int) (stationId-Math.pow((radius*2) - 1,2));
@@ -109,4 +109,4 @@ public class Test {
 		
 		ARConfiguration.getCurrentConfig().asteroidTypes.put("Test", testeroid);
 	}
-}
+}*/

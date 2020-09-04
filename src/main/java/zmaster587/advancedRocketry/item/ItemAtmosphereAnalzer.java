@@ -20,6 +20,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -114,10 +115,11 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 		return targetSlot == EquipmentSlotType.HEAD;
 	}
 	
+	
 	@OnlyIn(value=Dist.CLIENT)
 	@Override
-	public void renderScreen(MatrixStack mat, ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event,
-			ContainerScreen<Container> gui) {
+	public void renderScreen(MatrixStack mat, ItemStack componentStack, List<ItemStack> modules,
+			RenderGameOverlayEvent event, Screen gui) {
 		
 		FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
 		

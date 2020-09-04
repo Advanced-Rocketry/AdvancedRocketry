@@ -158,7 +158,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			if(stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != Constants.INVALID_PLANET &&
 					event.getEntity() instanceof EntityRocket) {
 				((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), 
-						ItemLinker.getMasterX(stack) + 0.5f, ARConfiguration.getCurrentConfig().orbit, ItemLinker.getMasterZ(stack) + 0.5f);
+						ItemLinker.getMasterX(stack) + 0.5f, ARConfiguration.getCurrentConfig().orbit.get(), ItemLinker.getMasterZ(stack) + 0.5f);
 			}
 		}
 	}
@@ -175,7 +175,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			if(bbCache.intersects(rocket.getBoundingBox())) {
 				if(event.getEntity() instanceof EntityRocket) {
 					((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), 
-							ItemLinker.getMasterX(stack) + 0.5f, ARConfiguration.getCurrentConfig().orbit, ItemLinker.getMasterZ(stack) + 0.5f);
+							ItemLinker.getMasterX(stack) + 0.5f, ARConfiguration.getCurrentConfig().orbit.get(), ItemLinker.getMasterZ(stack) + 0.5f);
 				}
 			}
 		}
@@ -183,7 +183,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 	@SubscribeEvent
 	public void onRocketDismantle(RocketDismantleEvent event) {
-		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId) {
+		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
 
 			EntityRocketBase rocket = (EntityRocketBase)event.getEntity();
 			AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
@@ -200,7 +200,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	public void registerTileWithStation(World world, BlockPos pos) {
-		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId) {
+		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 			if(spaceObj instanceof SpaceStationObject) {
@@ -216,7 +216,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	public void setAllowAutoLand(World world, BlockPos pos, boolean allow) {
-		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId) {
+		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 			if(spaceObj instanceof SpaceStationObject) {
@@ -226,7 +226,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	public void unregisterTileWithStation(World world, BlockPos pos) {
-		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId) {
+		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(spaceObj instanceof SpaceStationObject)
 				((SpaceStationObject)spaceObj).removeLandingPad(pos);
@@ -247,7 +247,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 				if(rocket instanceof EntityRocket) {
 					if(stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != Constants.INVALID_PLANET) {
 						((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), 
-								ItemLinker.getMasterX(stack) + 0.5f, ARConfiguration.getCurrentConfig().orbit, ItemLinker.getMasterZ(stack) + 0.5f);
+								ItemLinker.getMasterX(stack) + 0.5f, ARConfiguration.getCurrentConfig().orbit.get(), ItemLinker.getMasterZ(stack) + 0.5f);
 					}
 					else
 						((EntityRocket)rocket).setOverriddenCoords(Constants.INVALID_PLANET, 0,0,0);
@@ -338,7 +338,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			CompoundNBT nbt) {
 		if(id == 0) {
 			name = nbt.getString("id");
-			if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId) {
+			if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
 				ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 				if(spaceObj instanceof SpaceStationObject) {

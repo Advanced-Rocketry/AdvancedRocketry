@@ -30,7 +30,7 @@ public class MissionGasCollection extends MissionResourceCollection {
 	}
 
 	public MissionGasCollection(long l, EntityRocket entityRocket, LinkedList<IInfrastructure> connectedInfrastructure, Fluid gasFluid) {
-		super((long) (l*ARConfiguration.getCurrentConfig().gasCollectionMult), entityRocket, connectedInfrastructure);
+		super((long) (l*ARConfiguration.getCurrentConfig().gasCollectionMult.get()), entityRocket, connectedInfrastructure);
 		this.gasFluid = gasFluid;
 	}
 

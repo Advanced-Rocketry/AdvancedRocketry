@@ -60,7 +60,7 @@ public class SpaceObjectAsteroid extends SpaceObjectBase implements IDataHandler
 	
 	public void registerWithSpaceObjectManager() {
 		
-		SpaceObjectManager.getSpaceManager().registerTemporarySpaceObject(this, Constants.INVALID_PLANET, ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId).getGameTime() + 100000);
+		SpaceObjectManager.getSpaceManager().registerTemporarySpaceObject(this, Constants.INVALID_PLANET, ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId.get()).getGameTime() + 100000);
 	}
 	
 	public static void generateAsteroid(World world, int x, int y, int z) {

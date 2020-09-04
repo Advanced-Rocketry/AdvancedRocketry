@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.entity;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -33,7 +34,7 @@ public class EntityItemAbducted extends Entity {
 		this.setMotion(new Vector3d(0,2,0));
 	}
 	
-	public EntityItemAbducted(World world) {
+	public EntityItemAbducted(EntityType<?> type, World world) {
 		super(AdvancedRocketryEntities.ENTITY_ITEM_ABDUCTED, world);
 		this.noClip = true;
 		this.lifespan = 200;

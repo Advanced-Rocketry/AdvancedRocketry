@@ -29,7 +29,6 @@ import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.satellite.SatelliteLaser;
 import zmaster587.advancedRocketry.satellite.SatelliteLaserNoDrill;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
-import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.RotatableBlock;
@@ -55,7 +54,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 	private Direction prevDir;
 	public int laserX, laserZ, tickSinceLastOperation;
 	private static final Direction[] VALID_INVENTORY_DIRECTIONS = { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
-	private static final int POWER_PER_OPERATION =(int)( 10000* ARConfiguration.getCurrentConfig().spaceLaserPowerMult);
+	private static final int POWER_PER_OPERATION =(int)( 10000* ARConfiguration.getCurrentConfig().spaceLaserPowerMult.get());
 	private ModuleTextBox locationX, locationZ;
 	private ModuleText updateText;
 	MultiInventory inv;
@@ -115,7 +114,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 		laserZ = 0;
 		inv= new MultiInventory(this.itemOutPorts);
 		
-		if(ARConfiguration.getCurrentConfig().laserDrillPlanet)
+		if(ARConfiguration.getCurrentConfig().laserDrillPlanet.get())
 			laserSat = new SatelliteLaser(inv);
 		else
 			laserSat = new SatelliteLaserNoDrill(inv);

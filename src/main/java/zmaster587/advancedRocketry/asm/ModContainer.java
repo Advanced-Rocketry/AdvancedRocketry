@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.asm;
 
-import com.google.common.eventbus.EventBus;
+/*import com.google.common.eventbus.EventBus;
 import net.minecraftforge.fml.common.DummyModContainer;
 import net.minecraftforge.fml.common.LoadController;
 import net.minecraftforge.fml.common.ModMetadata;
@@ -55,4 +55,4 @@ public class ModContainer extends DummyModContainer {
 	
 	@SubscribeEvent
 	public void postInit(FMLPostInitializationEvent event) {}
-}
+}*/

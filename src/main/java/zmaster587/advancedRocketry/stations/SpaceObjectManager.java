@@ -125,8 +125,8 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	public ISpaceObject getSpaceStationFromBlockCoords(BlockPos pos) {
 
 		int x = pos.getX(); int z = pos.getZ();
-		x = (int) Math.round((x)/(2f*ARConfiguration.getCurrentConfig().stationSize));
-		z = (int) Math.round((z)/(2f*ARConfiguration.getCurrentConfig().stationSize));
+		x = (int) Math.round((x)/(2f*ARConfiguration.getCurrentConfig().stationSize.get()));
+		z = (int) Math.round((z)/(2f*ARConfiguration.getCurrentConfig().stationSize.get()));
 		int radius = Math.max(Math.abs(x), Math.abs(z));
 
 		int index = (int) Math.pow((2*radius-1),2) + x + radius;
@@ -188,7 +188,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 		}
 		
 		if(!object.hasCustomSpawnLocation())
-			object.setSpawnLocation(2*ARConfiguration.getCurrentConfig().stationSize*x + ARConfiguration.getCurrentConfig().stationSize/2, 128, 2*ARConfiguration.getCurrentConfig().stationSize*z + ARConfiguration.getCurrentConfig().stationSize/2);
+			object.setSpawnLocation(2*ARConfiguration.getCurrentConfig().stationSize.get()*x + ARConfiguration.getCurrentConfig().stationSize.get()/2, 128, 2*ARConfiguration.getCurrentConfig().stationSize.get()*z + ARConfiguration.getCurrentConfig().stationSize.get()/2);
 
 		object.setOrbitingBody(dimId);
 		moveStationToBody(object, dimId, false);
@@ -252,7 +252,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 */
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent event) {
-		if(ZUtils.getDimensionIdentifier(event.player.world) == ARConfiguration.getCurrentConfig().spaceDimId) {
+		if(ZUtils.getDimensionIdentifier(event.player.world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
 
 			if(event.player.getPosY() < 0 && !event.player.world.isRemote) {
 				ISpaceObject object = getSpaceStationFromBlockCoords(new BlockPos(event.player.getPositionVec()));
@@ -267,7 +267,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 				}
 			}
 
-			int result = Math.abs(2*(((int)event.player.getPosZ() + ARConfiguration.getCurrentConfig().stationSize/2) % (2*ARConfiguration.getCurrentConfig().stationSize) )/ARConfiguration.getCurrentConfig().stationSize);
+			int result = Math.abs(2*(((int)event.player.getPosZ() + ARConfiguration.getCurrentConfig().stationSize.get()/2) % (2*ARConfiguration.getCurrentConfig().stationSize.get()) )/ARConfiguration.getCurrentConfig().stationSize.get());
 			if(result == 0 || result == 3) {
 				event.player.setMotion(event.player.getMotion().mul(1, 1, -1));
 				if(result == 0) {
@@ -280,9 +280,9 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 
 			//double getPosX() = event.player.getPosX() < 0 ? -event.player.getPosX() - Configuration.stationSize : event.player.getPosX();
 
-			result = Math.abs(2*(((int)event.player.getPosX() + ARConfiguration.getCurrentConfig().stationSize/2) % (2*ARConfiguration.getCurrentConfig().stationSize) )/ARConfiguration.getCurrentConfig().stationSize);
+			result = Math.abs(2*(((int)event.player.getPosX() + ARConfiguration.getCurrentConfig().stationSize.get()/2) % (2*ARConfiguration.getCurrentConfig().stationSize.get()) )/ARConfiguration.getCurrentConfig().stationSize.get());
 
-			if(event.player.getPosX() < -ARConfiguration.getCurrentConfig().stationSize/2)
+			if(event.player.getPosX() < -ARConfiguration.getCurrentConfig().stationSize.get()/2)
 				if(result == 3)
 					result = 0;
 				else if(result == 0)
@@ -302,10 +302,10 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 
 	@SubscribeEvent
 	public void onServerTick(TickEvent.ServerTickEvent event) {
-		if(ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId) == null)
+		if(ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId.get()) == null)
 			return;
 		
-		long worldTime = ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId).getGameTime();
+		long worldTime = ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId.get()).getGameTime();
 		//Assuming server
 		//If no dim undergoing transition then nextTransitionTick = -1
 		if((nextStationTransitionTick != -1 && worldTime >= nextStationTransitionTick && spaceStationOrbitMap.get(WARPDIMID) != null) || (nextStationTransitionTick == -1 && spaceStationOrbitMap.get(WARPDIMID) != null && !spaceStationOrbitMap.get(WARPDIMID).isEmpty())) {
@@ -416,7 +416,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 
 
 		((DimensionProperties)station.getProperties()).setAtmosphereDensityDirect(0);
-		nextStationTransitionTick = (int)(ARConfiguration.getCurrentConfig().travelTimeMultiplier*timeDelta) + ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId).getGameTime();
+		nextStationTransitionTick = (int)(ARConfiguration.getCurrentConfig().travelTimeMultiplier.get()*timeDelta) + ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId.get()).getGameTime();
 		station.beginTransition(nextStationTransitionTick);
 		
 	}
@@ -460,7 +460,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 				if(tag.contains("expireTime")) {
 					long expireTime = tag.getLong("expireTime");
 					int numPlayers = tag.getInt("numPlayers");
-					if (ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId).getGameTime() >= expireTime && numPlayers == 0)
+					if (ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId.get()).getGameTime() >= expireTime && numPlayers == 0)
 						continue;
 					temporaryDimensions.put(object.getId(), expireTime);
 					temporaryDimensionPlayerNumber.put(object.getId(), numPlayers);

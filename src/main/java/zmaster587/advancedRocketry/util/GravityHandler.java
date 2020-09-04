@@ -9,7 +9,6 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.IGravityManager;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
-import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.util.ZUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -55,7 +54,7 @@ public class GravityHandler implements IGravityManager {
 					entity.setMotion(entity.getMotion().add(0, multiplier, 0));
 					
 				}
-				else if(DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(entity.world)) || ZUtils.getDimensionIdentifier(entity.world) == ARConfiguration.getCurrentConfig().spaceDimId) {
+				else if(DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(entity.world)) || ZUtils.getDimensionIdentifier(entity.world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
 					double gravMult;
 
 					gravMult = DimensionManager.getInstance().getDimensionProperties(entity.world).gravitationalMultiplier;

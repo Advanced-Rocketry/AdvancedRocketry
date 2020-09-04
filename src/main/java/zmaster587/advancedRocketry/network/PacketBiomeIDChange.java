@@ -67,7 +67,7 @@ public class PacketBiomeIDChange extends BasePacket {
 
 	@Override
 	public void executeClient(PlayerEntity thePlayer) {
-		if(ZUtils.getDimensionIdentifier(thePlayer.world) == worldId) {
+		/*if(ZUtils.getDimensionIdentifier(thePlayer.world) == worldId) {
 			if( thePlayer.getEntityWorld().getChunkProvider().isChunkLoaded(new ChunkPos(xPos, zPos))) {
 				chunk = thePlayer.world.getChunk(xPos, zPos);
 				chunk.setBiomeArray(array);
@@ -77,7 +77,7 @@ public class PacketBiomeIDChange extends BasePacket {
 				if(Minecraft.getInstance().gameSettings.particles  == ParticleStatus.ALL)
 					AdvancedRocketry.proxy.spawnParticle("smallLazer", thePlayer.world, pos.x, pos.y, pos.z, 0,0,0);
 			}
-		}
+		}*/
 	}
 
 	@Override

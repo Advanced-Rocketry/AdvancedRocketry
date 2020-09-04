@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.item.components;
 
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -59,7 +60,7 @@ public class ItemUpgrade extends Item implements IArmorComponent {
 				//ReflectionHelper.setPrivateValue(net.minecraft.entity.player.PlayerCapabilities.class, player.capabilities, 0.1f,"walkSpeed", "field_75097_g");
 		}
 		else if(componentStack.getItem() == AdvancedRocketryItems.itemUpgradeFallBoots && 
-				(!ARConfiguration.getCurrentConfig().lowGravityBoots || DimensionManager.getInstance().getDimensionProperties(world).getGravitationalMultiplier() < 1f))
+				(!ARConfiguration.getCurrentConfig().lowGravityBoots.get() || DimensionManager.getInstance().getDimensionProperties(world).getGravitationalMultiplier() < 1f))
 			player.fallDistance = 0;
 	}
 
@@ -96,7 +97,7 @@ public class ItemUpgrade extends Item implements IArmorComponent {
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
 	public void renderScreen(MatrixStack mat, ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event,
-			ContainerScreen<? extends Container> gui) {
+			Screen gui) {
 		
 	}
 }

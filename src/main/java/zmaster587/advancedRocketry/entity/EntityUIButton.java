@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.entity;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -14,13 +15,13 @@ public class EntityUIButton extends EntityUIPlanet {
 	TilePlanetaryHologram tile;
 	
 	public EntityUIButton(World worldIn, ResourceLocation id, TilePlanetaryHologram tile) {
-		this(worldIn);
+		this(AdvancedRocketryEntities.ENTITY_UIBUTTON, worldIn);
 		this.id = id.toString();
 		this.tile = tile;
 	}
 	
-	public EntityUIButton(World worldIn) {
-		super(AdvancedRocketryEntities.ENTITY_UIBUTTON,worldIn);
+	public EntityUIButton(EntityType<?> type, World worldIn) {
+		super(type, worldIn);
 		setSize(0.2f, 0.2f);
 	}
 	

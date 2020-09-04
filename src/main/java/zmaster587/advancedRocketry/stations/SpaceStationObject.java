@@ -6,9 +6,11 @@ import net.minecraft.nbt.NBTTypes;
 import net.minecraft.nbt.StringNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
@@ -80,7 +82,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	public void beginTransition(long time) {
 		if(time > 0)
 			transitionEta = time;
-		
+
 		//Hack because somehow created ends up being false
 		created = true;
 	}
@@ -114,7 +116,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	public ResourceLocation getOrbitingPlanetId() {
 		return created ? properties.getParentPlanet() : Constants.INVALID_PLANET;
 	}
-	
+
 	public DimensionProperties getOrbitingPlanet()
 	{
 		ResourceLocation planetId = getOrbitingPlanetId();
@@ -151,7 +153,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	 * @return rotation of the station in degrees
 	 */
 	public double getRotation(Direction dir) {
-		
+
 		return (rotation[getIDFromDir(dir)] + getDeltaRotation(dir)*(getWorldTime() - lastTimeModification)) % (360D);
 	}
 
@@ -163,7 +165,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		else
 			return 2;
 	}
-	
+
 	/**
 	 * @param rotation rotation of the station in degrees
 	 */
@@ -184,7 +186,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	public void setDeltaRotation(double rotation, Direction facing) {
 		this.rotation[getIDFromDir(facing)] = getRotation(facing);
 		this.lastTimeModification = getWorldTime();
-		
+
 		this.angularVelocity[getIDFromDir(facing)] = rotation;
 	}
 
@@ -193,7 +195,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	}
 
 	private long getWorldTime() {
-		return AdvancedRocketry.proxy.getWorldTimeUniversal(ARConfiguration.getCurrentConfig().spaceDimId);
+		return AdvancedRocketry.proxy.getWorldTimeUniversal();
 	}
 
 
@@ -210,7 +212,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	public int getLaunchPosZ() {
 		return launchPosZ;
 	}
-	
+
 	/**
 	 * @return the X coordinate over the planet the station is orbiting
 	 */
@@ -224,14 +226,14 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	public int getOrbitalPosZ() {
 		return posZ;
 	}
-	
+
 	/**
 	 * @return orbital velocity in meter per second with respect to the surface
 	 */
 	public double getOrbitalVelocity() {
 		return 0;
 	}
-	
+
 	/**
 	 * @return the spawn location of the object
 	 */
@@ -247,12 +249,12 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		DimensionProperties properties = getOrbitingPlanet();
 		int stationCount = stations.size();
 		int myIndex = stations.indexOf(this);
-		
+
 		float theta = myIndex*(360/stationCount);
-		
+
 		return new SpacePosition().getFromSpherical(properties.getRenderSizePlanetView()*2f, theta);
 	}
-	
+
 	public void addWarpCore(HashedBlockPosition position) {
 		warpCoreLocation.add(position);
 		hasWarpCores = true;
@@ -317,16 +319,16 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 			PacketHandler.sendToAll(new PacketStationUpdate(this, Type.FUEL_UPDATE));
 		return amt;
 	}
-	
+
 	public void setLandingPadAutoLandStatus(BlockPos pos, boolean status) {
 		setLandingPadAutoLandStatus(pos.getX(), pos.getZ(), status);
 	}
-	
+
 	public void setLandingPadAutoLandStatus(int x, int z, boolean status) {
 		HashedBlockPosition pos = new HashedBlockPosition(x, 0, z);
-		
+
 		Iterator<StationLandingLocation> itr = spawnLocations.iterator();
-		
+
 		while(itr.hasNext()) {
 			StationLandingLocation loc = itr.next();
 			if(loc.getPos().equals(pos))
@@ -362,9 +364,9 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	 */
 	public void removeLandingPad(int x, int z) {
 		HashedBlockPosition pos = new HashedBlockPosition(x, 0, z);
-		
+
 		Iterator<StationLandingLocation> itr = spawnLocations.iterator();
-		
+
 		while(itr.hasNext()) {
 			StationLandingLocation loc = itr.next();
 			if(loc.getPos().equals(pos))
@@ -411,7 +413,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	public List<StationLandingLocation> getLandingPads() {
 		return spawnLocations;
 	}
-	
+
 	/**
 	 * @return true if there is an empty pad to land on
 	 */
@@ -436,17 +438,17 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		}
 		return null;
 	}
-	
+
 	public void setPadName(World worldObj, HashedBlockPosition pos, String name) {
 		StationLandingLocation loc = getPadAtLocation(pos);
 		if(loc != null)
 			loc.setName(name);
-		
+
 		//Make sure our remote uses get the data
 		if(!worldObj.isRemote)
 			PacketHandler.sendToAll(new PacketSpaceStationInfo(getId(), this));
 	}
-	
+
 	/**
 	 * @param x
 	 * @param z
@@ -454,7 +456,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	 */
 	public void setPadStatus(int x, int z, boolean full) {
 		StationLandingLocation pos = new StationLandingLocation(new HashedBlockPosition(x, 0, z));
-		
+
 		for(StationLandingLocation loc : spawnLocations) {
 			if(loc.equals(pos))
 				loc.setOccupied(full);
@@ -479,7 +481,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		this.posX = posX;
 		this.posZ = posY;
 	}
-	
+
 	/**
 	 * Sets the launch coordinates of the space object
 	 * @param posX
@@ -534,9 +536,9 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	 */
 	public void onModuleUnpack(IStorageChunk chunk) {
 
-		if(ZUtils.isWorldLoaded(ARConfiguration.getCurrentConfig().spaceDimId) && ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId) == null)
-			DimensionManager.initDimension(ARConfiguration.getCurrentConfig().spaceDimId);
-		World worldObj = ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId);
+		if(ZUtils.isWorldLoaded(ARConfiguration.getCurrentConfig().spaceDimId.get()) && ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId.get()) == null)
+			ZUtils.initDimension(ARConfiguration.getCurrentConfig().spaceDimId.get());
+		World worldObj = ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId.get());
 		if(!created) {
 			chunk.pasteInWorld(worldObj, spawnLocation.x - chunk.getSizeX()/2, spawnLocation.y - chunk.getSizeY()/2, spawnLocation.z - chunk.getSizeZ()/2);
 
@@ -579,7 +581,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 				Direction moduleFacing = srcTile.getBlockState().get(BlockFullyRotatable.FACING);
 
 
-				Direction cross = moduleFacing.rotateFace(new Matrix4f(), directionIn).rotateAround(stationFacing.getAxis());
+				Direction cross = rotateAround(moduleFacing, stationFacing.getAxis());
 
 				if(stationFacing.getAxisDirection() == AxisDirection.NEGATIVE)
 					cross = cross.getOpposite();
@@ -608,6 +610,104 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 			}
 		}
 	}
+
+
+	private static Direction rotateAround(Direction inputDir, Axis axis)
+	{
+		switch (axis)
+		{
+		case X:
+
+			if (inputDir != Direction.WEST && inputDir != Direction.EAST)
+			{
+				return rotateX(inputDir);
+			}
+
+			return inputDir;
+		case Y:
+
+			if (inputDir != Direction.UP && inputDir != Direction.DOWN)
+			{
+				return rotateY(inputDir);
+			}
+
+			return inputDir;
+		case Z:
+
+			if (inputDir != Direction.NORTH && inputDir != Direction.SOUTH)
+			{
+				return rotateZ(inputDir);
+			}
+
+			return inputDir;
+		default:
+			throw new IllegalStateException("Unable to get CW facing for axis " + axis);
+		}
+	}
+	
+
+    /**
+     * Rotate this Facing around the X axis (NORTH => DOWN => SOUTH => UP => NORTH)
+     */
+    private static Direction rotateX(Direction inputDir)
+    {
+        switch (inputDir)
+        {
+            case NORTH:
+                return Direction.DOWN;
+            case EAST:
+            case WEST:
+            default:
+                throw new IllegalStateException("Unable to get X-rotated facing of " + inputDir);
+            case SOUTH:
+                return Direction.UP;
+            case UP:
+                return Direction.NORTH;
+            case DOWN:
+                return Direction.SOUTH;
+        }
+    }
+
+    /**
+     * Rotate this Facing around the Z axis (EAST => DOWN => WEST => UP => EAST)
+     */
+    private static Direction rotateZ(Direction inputDir)
+    {
+        switch (inputDir)
+        {
+            case EAST:
+                return Direction.DOWN;
+            case SOUTH:
+            default:
+                throw new IllegalStateException("Unable to get Z-rotated facing of " + inputDir);
+            case WEST:
+                return Direction.UP;
+            case UP:
+                return Direction.EAST;
+            case DOWN:
+                return Direction.WEST;
+        }
+    }
+    
+    /**
+     * Rotate this Facing around the Y axis clockwise (NORTH => EAST => SOUTH => WEST => NORTH)
+     */
+    private static Direction rotateY(Direction inputDir)
+    {
+        switch (inputDir)
+        {
+            case NORTH:
+                return Direction.EAST;
+            case EAST:
+                return Direction.SOUTH;
+            case SOUTH:
+                return Direction.WEST;
+            case WEST:
+                return Direction.NORTH;
+            default:
+                throw new IllegalStateException("Unable to get Y-rotated facing of " + inputDir);
+        }
+    }
 
 	@Override
 	public void writeToNbt(CompoundNBT nbt) {
@@ -651,7 +751,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 			tag.putBoolean("autoLand", pos.getAllowedForAutoLand());
 			tag.putIntArray("pos", new int[] {pos.getPos().x, pos.getPos().z});
 			//if(pos.getName() != null && !pos.getName().isEmpty())
-				tag.putString("name", pos.getName());
+			tag.putString("name", pos.getName());
 			list.add(tag);
 		}
 		nbt.put("spawnPositions", list);
@@ -769,7 +869,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 
 	@Override
 	public boolean isPlanetKnown(IDimensionProperties properties) {
-		return !ARConfiguration.getCurrentConfig().planetsMustBeDiscovered || knownPlanetList.contains(properties.getId()) || zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().knownPlanets.contains(properties.getId());
+		return !ARConfiguration.getCurrentConfig().planetsMustBeDiscovered.get() || knownPlanetList.contains(properties.getId()) || zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().knownPlanets.contains(properties.getId());
 	}
 
 	@Override

@@ -20,7 +20,7 @@ import java.util.Random;
 public class BlockLaser extends BlockMultiblockMachine {
 
 	public BlockLaser(Properties properties) {
-		super(properties.tickRandomly(), AdvancedRocketryTileEntityType.TILE_SPACE_LASER, (int)GuiHandler.guiId.MODULAR.ordinal());
+		super(properties.tickRandomly(), (int)GuiHandler.guiId.MODULAR.ordinal());
 	}
 
 	@Override

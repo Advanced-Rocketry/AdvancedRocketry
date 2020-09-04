@@ -70,7 +70,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 	private SpaceStationObject station;
 	private static final int ARTIFACT_BEGIN_RANGE = 4, ARTIFACT_END_RANGE = 8;
 	ModulePanetImage srcPlanetImg, dstPlanetImg;
-	ModuleSync sync1, sync2, sync3;
+	ModuleSync sync3;
 	ModuleText srcPlanetText, dstPlanetText, warpFuel, status, warpCapacity;
 	int warpCost = -1;
 	ResourceLocation dstPlanet, srcPlanet;
@@ -94,7 +94,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 
 
 	private SpaceStationObject getSpaceObject() {
-		if(station == null && ZUtils.getDimensionIdentifier(this.world) == ARConfiguration.getCurrentConfig().spaceDimId) {
+		if(station == null && ZUtils.getDimensionIdentifier(this.world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceStationObject)
 				station = (SpaceStationObject) object;
@@ -161,14 +161,9 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 			if(tabModule.getTab() == 0) {
 				modules.add(tabModule);
 				//Don't keep recreating it otherwise data is stale
-				if(sync1 == null) {
-					sync1 = new ModuleSync(0, this);
-					sync2 = new ModuleSync(1, this);
+				if(sync3 == null) {
 					sync3 = new ModuleSync(2, this);
-
 				}
-				modules.add(sync1);
-				modules.add(sync2);
 				modules.add(sync3);
 
 				ISpaceObject station = getSpaceObject();
@@ -478,9 +473,9 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 						return SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos( input.getPositionVec())) == station;
 					};
 				})) {
-					ARAchivements.ALL_SHE_GOT.trigger((ServerPlayerEntity) player2);
+					ARAchivements.triggerAchievement(ARAchivements.ALL_SHE_GOT, (ServerPlayerEntity) player2);
 					if(!DimensionManager.hasReachedWarp)
-						ARAchivements.FLIGHT_OF_PHEONIX.trigger((ServerPlayerEntity) player2);
+						ARAchivements.triggerAchievement(ARAchivements.FLIGHT_OF_PHEONIX, (ServerPlayerEntity) player2);
 				}
 
 				DimensionManager.hasReachedWarp = true;
@@ -648,10 +643,6 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 		if(id == 2) {
 			warpCost = value;
 		}
-		if(id == 1)
-			srcPlanet = value;
-		else if (id == 0)
-			dstPlanet = value;
 		setPlanetModuleInfo();
 	}
 
@@ -664,12 +655,6 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 
 		ISpaceObject station = getSpaceObject();
 		boolean isOnStation = station != null;
-		if(isOnStation) {
-			if(id == 1)
-				return station.getOrbitingPlanetId();
-			else //id == 1
-				return station.getDestOrbitingBody();
-		}
 
 		return 0;
 	}
@@ -847,7 +832,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 			if(progress >= MAX_PROGRESS) {
 				//Do the thing
 				SpaceStationObject obj = getSpaceObject();
-				if(Math.abs(world.rand.nextInt()) % ARConfiguration.getCurrentConfig().planetDiscoveryChance == 0 && obj != null) {
+				if(Math.abs(world.rand.nextInt()) % ARConfiguration.getCurrentConfig().planetDiscoveryChance.get() == 0 && obj != null) {
 					ItemStack stack = getStackInSlot(PLANETSLOT);
 					if(stack != null && stack.getItem() instanceof ItemPlanetIdentificationChip) {
 						ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)stack.getItem();

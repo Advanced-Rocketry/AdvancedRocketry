@@ -40,7 +40,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 		LazyOptional<IFluidHandlerItem> cap = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
 		
 		return !stack.isEmpty() && cap.isPresent() && 
-				((fstack = cap.orElse(null).getFluidInTank(0)) == null || FluidUtils.areFluidsSameType(fstack.getFluid(), AdvancedRocketryFluids.fluidOxygen));
+				((fstack = cap.orElse(null).getFluidInTank(0)) == null || FluidUtils.areFluidsSameType(fstack.getFluid(), AdvancedRocketryFluids.oxygenFlowing.get()));
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 		int airRemaining = 0;
 
 		for(ItemStack component : list) {
-			if(FluidUtils.containsFluid(component, AdvancedRocketryFluids.fluidOxygen)) {
+			if(FluidUtils.containsFluid(component, AdvancedRocketryFluids.oxygenStill.get())) {
 				airRemaining += FluidUtils.getFluidForItem(component).getAmount();
 			}
 		}
@@ -133,7 +133,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 
 					FluidStack fluidDrained = null;
 
-					if(fluidStack != null && FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.fluidOxygen))
+					if(fluidStack != null && FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.oxygenStill.get()))
 						fluidDrained = fluidItem.drain(amtDrained, FluidAction.EXECUTE);
 
 					if(fluidDrained != null)
@@ -191,7 +191,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 					else if(FluidUtils.containsFluid(inv.getStackInSlot(i))) {
 						
 						FluidStack fstack = FluidUtils.getFluidForItem(inv.getStackInSlot(i));
-						if(fstack != null && FluidUtils.areFluidsSameType(fstack.getFluid(), AdvancedRocketryFluids.fluidOxygen))
+						if(fstack != null && FluidUtils.areFluidsSameType(fstack.getFluid(), AdvancedRocketryFluids.oxygenStill.get()))
 							list.add(inv.getStackInSlot(i));
 					}
 					
@@ -206,8 +206,8 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 					IFluidHandlerItem fHandler = component.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).orElse(null);
 					FluidStack fluidStack = fHandler.getFluidInTank(0);
 
-					if(fluidStack == null || FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.fluidOxygen))
-						amtDrained -= fHandler.fill(new FluidStack(AdvancedRocketryFluids.fluidOxygen, amtDrained), FluidAction.EXECUTE);
+					if(fluidStack == null || FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.oxygenStill.get()))
+						amtDrained -= fHandler.fill(new FluidStack(AdvancedRocketryFluids.oxygenStill.get(), amtDrained), FluidAction.EXECUTE);
 
 					if(amtDrained == 0)
 						break;
@@ -260,7 +260,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 					else if(cap.isPresent()) {
 						
 						FluidStack fstack = FluidUtils.getFluidForItem(inv.getStackInSlot(i));
-						if(fstack != null && FluidUtils.areFluidsSameType(fstack.getFluid(), AdvancedRocketryFluids.fluidOxygen))
+						if(fstack != null && FluidUtils.areFluidsSameType(fstack.getFluid(), AdvancedRocketryFluids.oxygenStill.get()))
 							list.add(inv.getStackInSlot(i));
 					}
 					
@@ -274,7 +274,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 					IFluidHandlerItem fHandler = cap.orElse(null);
 					FluidStack fluidStack = fHandler.getFluidInTank(0);
 
-					if(fluidStack == null || fluidStack.getFluid() == null || FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.fluidOxygen))
+					if(fluidStack == null || fluidStack.getFluid() == null || FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.oxygenStill.get()))
 						maxAir += fHandler.getTankCapacity(0);
 			}
 

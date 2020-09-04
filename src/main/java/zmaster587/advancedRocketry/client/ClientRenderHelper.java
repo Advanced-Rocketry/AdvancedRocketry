@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.client;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class ClientRenderHelper {
@@ -16,7 +17,7 @@ public class ClientRenderHelper {
 			oldRenderDistance = Minecraft.getInstance().gameSettings.renderDistanceChunks;
 		Minecraft.getInstance().gameSettings.renderDistanceChunks = distance;
 		try {
-			ObfuscationReflectionHelper.setPrivateValue(net.minecraft.client.renderer.RenderGlobal.class, Minecraft.getInstance().renderGlobal, distance, "renderDistanceChunks");
+			ObfuscationReflectionHelper.setPrivateValue(EntityRendererManager.class, Minecraft.getInstance().getRenderManager(), distance, "renderDistanceChunks");
 		}
 		catch(Exception e)
 		{

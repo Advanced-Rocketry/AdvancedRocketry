@@ -1,6 +1,11 @@
 package zmaster587.advancedRocketry.world.util;
 
+import java.util.Optional;
+
 import net.minecraft.entity.Entity;
+import net.minecraft.util.Direction;
+import net.minecraft.util.TeleportationRepositioner;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.server.ServerWorld;
 
@@ -12,27 +17,22 @@ public class TeleporterNoPortal extends Teleporter {
 
 	public void teleport(Entity entity, ServerWorld world) {
 
-		if (entity.isEntityAlive()) {
-			entity.setLocationAndAngles(entity.getPosX(), entity.posY, entity.getPosZ(), entity.rotationYaw, entity.rotationPitch);
-			world.spawnEntity(entity);
-			world.updateEntityWithOptionalForce(entity, false);
+		if (entity.isAlive()) {
+			entity.setLocationAndAngles(entity.getPosX(), entity.getPosY(), entity.getPosZ(), entity.rotationYaw, entity.rotationPitch);
+			world.addEntity(entity);
 		}
 		entity.setWorld(world);
 	}
 
+
 	@Override
-	public boolean placeInExistingPortal(Entity entityIn, float rotationYaw) {
-		return false;
+	public Optional<TeleportationRepositioner.Result> func_242956_a(BlockPos p_242956_1_, Direction.Axis p_242956_2_) {
+		return Optional.empty();
+
 	}
 
 	@Override
-	public void removeStalePortalLocations(long par1)
-	{
-	}
-
-	
-	@Override
-	public boolean makePortal(Entity p_85188_1_) {
-		return true;
+	public Optional<TeleportationRepositioner.Result> func_242957_a(BlockPos p_242957_1_, boolean p_242957_2_) {
+		return Optional.empty();
 	}
 }

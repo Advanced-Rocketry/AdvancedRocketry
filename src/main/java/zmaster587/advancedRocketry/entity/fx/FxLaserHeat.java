@@ -1,41 +1,45 @@
 package zmaster587.advancedRocketry.entity.fx;
 
+import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.SpriteTexturedParticle;
+import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+
 import zmaster587.libVulpes.render.RenderHelper;
 
-public class FxLaserHeat extends Particle {
+public class FxLaserHeat extends SpriteTexturedParticle {
 
 	
 	double size;
 	
 	public FxLaserHeat(World world, double x,
 			double y, double z, double size) {
-		super(world, x, y, z, 0, 0, 0);
+		super((ClientWorld) world, x, y, z);
 
 		this.prevPosX = this.posX = x;
 		this.prevPosY = this.posY = y;
 		this.prevPosZ = this.posZ  = z;
-		this.particleMaxAge = (int)(20.0D);
+		this.maxAge = (int)(20.0D);
 		this.size = size;
 	}
 
 	@Override
-	public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn,
-			float partialTicks, float rotationX, float rotationZ,
-			float rotationYZ, float rotationXY, float rotationXZ) {
+	public void renderParticle(IVertexBuilder buffer2, ActiveRenderInfo renderInfo, float partialTicks) {
 		//worldRendererIn.finishDrawing();
 		
-		float x = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks - interpPosX);
-		float y = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks - interpPosY);
-		float z = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks - interpPosZ);
+		float x = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks);
+		float y = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks);
+		float z = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks);
 		
 		int i = this.getBrightnessForRender(0);
 		int j = i >> 16 & 65535;
@@ -44,40 +48,36 @@ public class FxLaserHeat extends Particle {
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, 0, 0);
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 		
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
-		GlStateManager.color4f(0.8f, 0.2f, 0.2f, particleAlpha);
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 		
 	
 		double size = this.size*particleAlpha;
-		RenderHelper.renderCube(buffer, x - size, y - size, z - size, x + size, y + size, z + size);
+		RenderHelper.renderCube(buffer, x - size, y - size, z - size, x + size, y + size, z + size,0.8f, 0.2f, 0.2f, particleAlpha);
 		
 		
 		Tessellator.getInstance().draw();
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
-		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 0, 0);
-		GlStateManager.color4f(1, 1, 1, 1);
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glLineWidth(1);
 	}
 
-	
 	@Override
-	public int getFXLayer() {
-		return 3;
+	public IParticleRenderType getRenderType() {
+		return IParticleRenderType.CUSTOM;
 	}
 
 
 	@Override
-	public void onUpdate() {
+	public void tick() {
 
-		this.particleAlpha = 1 - (particleAge/(float)particleMaxAge);
+		this.particleAlpha = 1 - (age/(float)maxAge);
 		
-		if (this.particleAge++ >= this.particleMaxAge)
+		if (this.age++ >= this.maxAge)
 		{
 			this.setExpired();
 		}

@@ -236,7 +236,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickableTileEn
 		selectedPlanet = null;
 
 		if(backButton == null) {
-			backButton = new EntityUIButton(world, 0, this);
+			backButton = new EntityUIButton(world, DimensionManager.getInstance().overworldProperties.getId(), this);
 			backButton.setPosition(this.pos.getX() + .5, this.pos.getY() + 1.5, this.pos.getZ() + .5);
 			this.getWorld().addEntity(backButton);
 		}

@@ -33,7 +33,7 @@ public class BlockElectricMushroom extends MushroomBlock implements IGrowable {
 
 	@Override
 	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
-		if(!world.isRemote && ARConfiguration.getCurrentConfig().electricPlantsSpawnLightning && world.isRaining() && world.getBiome(pos) == AdvancedRocketryBiomes.stormLandsBiome) {
+		if(!world.isRemote && ARConfiguration.getCurrentConfig().electricPlantsSpawnLightning.get() && world.isRaining() && world.getBiome(pos) == AdvancedRocketryBiomes.stormLandsBiome) {
 			int lightningX = pos.getX() + rand.nextInt(24) - 12;
 			int lightningZ = pos.getZ() + rand.nextInt(24) - 12;
 			BlockPos lightning = new BlockPos(lightningX, 0, lightningZ );

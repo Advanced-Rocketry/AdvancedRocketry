@@ -30,6 +30,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
@@ -429,7 +430,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	public static ResourceLocation getUUID(ItemStack stack) {
 		if(stack.hasTag())
 			return new ResourceLocation(stack.getTag().getString(uuidIdentifier));
-		return DimensionManager.overworldProperties.getId();
+		return Constants.INVALID_PLANET;
 	}
 
 	public static void setUUID(ItemStack stack, ResourceLocation uuid) {
@@ -452,7 +453,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		else {
 			list.add(new StringTextComponent(TextFormatting.GREEN + LibVulpes.proxy.getLocalizedString("msg.stationchip.sation") + getUUID(stack)));
 			super.addInformation(stack, player, list, bool);
-			if(ZUtils.getDimensionIdentifier(player) == ARConfiguration.getCurrentConfig().spaceDimId) {
+			if(ZUtils.getDimensionIdentifier(player) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
 				Entity p = Minecraft.getInstance().player;
 				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(p.getPositionVec()));
 

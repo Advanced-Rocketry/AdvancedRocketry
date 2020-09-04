@@ -1,28 +1,34 @@
 package zmaster587.advancedRocketry.world.decoration;
 
+import java.util.BitSet;
+import java.util.Random;
+import java.util.function.Function;
+
+import com.mojang.serialization.Codec;
+
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.ChunkPrimer;
-import net.minecraft.world.gen.MapGenBase;
+import net.minecraft.world.chunk.IChunk;
+import net.minecraft.world.gen.carver.WorldCarver;
+import net.minecraft.world.gen.feature.ProbabilityConfig;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 
-public class MapGenVolcano extends MapGenBase {
+public class MapGenVolcano extends WorldCarver<ProbabilityConfig> {
 
 	int chancePerChunk;
 	private static final Block blockEnrichedLava = AdvancedRocketryBlocks.blockEnrichedLavaFluid;
 	private static final Block blockCasing = AdvancedRocketryBlocks.blockBasalt;
 
-	public MapGenVolcano(int chancePerChunk) {
+	public MapGenVolcano(Codec<ProbabilityConfig> codec, int chancePerChunk) {
+		super(codec, chancePerChunk);
 		this.chancePerChunk = chancePerChunk;
 	}
 
 
 	@Override
-	protected void recursiveGenerate(World world, int chunkX,
-			int chunkZ, int p_180701_4_, int p_180701_5_,
-			ChunkPrimer chunkPrimerIn) {
+	public boolean func_225555_a_(IChunk chunkPrimerIn, Function func3, Random rand, int p_225555_4_,
+			int chunkX, int chunkZ, int rangeX, int rangeZ, BitSet p_225555_9_,
+			ProbabilityConfig p_225555_10_) {
 
 		chancePerChunk = 15;
 
@@ -33,8 +39,8 @@ public class MapGenVolcano extends MapGenBase {
 			int baseHeight = 40;
 			int lavaNodeHeight = 25;
 
-			int xCoord = -chunkX + p_180701_4_;
-			int zCoord =  -chunkZ + p_180701_5_;
+			int xCoord = -chunkX + rangeX;
+			int zCoord =  -chunkZ + rangeZ;
 			int crackle;
 
 			for(int x = 15; x >= 0; x--) {
@@ -59,23 +65,36 @@ public class MapGenVolcano extends MapGenBase {
 						boolean innerLayer = func >= y+crackle && radius < 5 && y > lavaNodeHeight;
 
 						if(innerLayer)
-							chunkPrimerIn.setBlockState(x, y, z, blockEnrichedLava.getDefaultState());
+							chunkPrimerIn.setBlockState(new BlockPos(x, y, z), blockEnrichedLava.getDefaultState(), false);
 						else if(underSurface)
-							chunkPrimerIn.setBlockState(x, y, z, blockCasing.getDefaultState());
+							chunkPrimerIn.setBlockState(new BlockPos(x, y, z), blockCasing.getDefaultState(), false);
 						
 						
 						double sphereradius = x2+z2+(y - lavaNodeHeight)*(y - lavaNodeHeight);
 						if(sphereradius < 23*23)
-							chunkPrimerIn.setBlockState(x, y, z, blockEnrichedLava.getDefaultState());
+							chunkPrimerIn.setBlockState(new BlockPos(x, y, z), blockEnrichedLava.getDefaultState(), false);
 						else if(sphereradius < 25*25)
-							chunkPrimerIn.setBlockState(x, y, z, blockCasing.getDefaultState());
+							chunkPrimerIn.setBlockState(new BlockPos(x, y, z), blockCasing.getDefaultState(), false);
 						
 						//For the top of the bulb, im lazy
 						if(innerLayer)
-							chunkPrimerIn.setBlockState(x, y, z, blockEnrichedLava.getDefaultState());
+							chunkPrimerIn.setBlockState(new BlockPos(x, y, z), blockEnrichedLava.getDefaultState(), false);
 					}
 				}
 			}
 		}
+		return true;
+	}
+
+	@Override
+	public boolean shouldCarve(Random rand, int chunkX, int chunkZ, ProbabilityConfig config) {
+		chancePerChunk = 15;
+		return rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk && rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk;
+	}
+
+
+	@Override
+	protected boolean func_222708_a(double p_222708_1_, double p_222708_3_, double p_222708_5_, int p_222708_7_) {
+		return false;
 	}
 }

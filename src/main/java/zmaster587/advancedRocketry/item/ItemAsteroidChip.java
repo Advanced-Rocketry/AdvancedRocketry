@@ -11,7 +11,8 @@ public class ItemAsteroidChip  extends ItemMultiData {
 
 	private static final String uuidIdentifier = "UUID";
 	private static final String astType = "astype";
-	public ItemAsteroidChip() {
+	public ItemAsteroidChip(Properties props) {
+		super(props);
 	}
 
 	@Override

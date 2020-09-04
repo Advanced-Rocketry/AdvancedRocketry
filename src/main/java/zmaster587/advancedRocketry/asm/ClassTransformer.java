@@ -1,7 +1,5 @@
 package zmaster587.advancedRocketry.asm;
 
-import net.minecraft.launchwrapper.IClassTransformer;
-import net.minecraft.launchwrapper.Launch;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -15,7 +13,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ClassTransformer implements IClassTransformer {
+/*public class ClassTransformer implements IClassTransformer {
 
 
 	private static final String CLASS_KEY_ENTITYRENDERER = "net.minecraft.client.renderer.EntityRenderer";
@@ -83,7 +81,7 @@ public class ClassTransformer implements IClassTransformer {
 		public String getObfName() {return obfName; }
 		public String getDeobfName() {return name; }
 		public String getDesc() {return desc;}
-	}*/
+	}* /
 
 	public ClassTransformer() {
 
@@ -574,7 +572,7 @@ public class ClassTransformer implements IClassTransformer {
 			}
 
 			return finishInjection(cn);
-		}*/
+		}* /
 
 
 		//was causing problems on startup, no idea what it does anymore,
@@ -855,4 +853,4 @@ public class ClassTransformer implements IClassTransformer {
 			return entry.getKey();
 	}
 
-}
+}*/

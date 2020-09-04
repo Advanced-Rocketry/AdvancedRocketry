@@ -2,12 +2,18 @@ package zmaster587.advancedRocketry.satellite;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext.Builder;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.AbstractChunkProvider;
 import net.minecraft.world.chunk.Chunk;
@@ -18,13 +24,16 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
+import zmaster587.advancedRocketry.inventory.ContainerOreMappingSatallite;
+import zmaster587.advancedRocketry.inventory.ContainerRegistry;
 import zmaster587.advancedRocketry.item.ItemOreScanner;
+import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class SatelliteOreMapping extends SatelliteBase  {
+public class SatelliteOreMapping extends SatelliteBase implements INamedContainerProvider {
 
 	int blockCenterX, blockCenterZ;
 	public static ArrayList<Item> oreList = new ArrayList<Item>();
@@ -62,13 +71,13 @@ public class SatelliteOreMapping extends SatelliteBase  {
 		ItemOreScanner scanner = (ItemOreScanner)AdvancedRocketryItems.itemOreScanner;
 
 		scanner.setSatelliteID(stack, properties.getId());
-
+;
 		return stack;
 	}
 
 	@Override
 	public boolean performAction(PlayerEntity player, World world, BlockPos pos) {
-		player.openGui(AdvancedRocketry.instance, 100, world, pos.getX(), pos.getY(), pos.getZ());
+		NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)this, (packet) -> { packet.writeBoolean(false); });
 		return true;
 	}
 
@@ -214,5 +223,15 @@ public class SatelliteOreMapping extends SatelliteBase  {
 
 	public boolean canFilterOre() {
 		return satelliteProperties.getMaxDataStorage() == 3000;
+	}
+
+	@Override
+	public Container createMenu(int id, PlayerInventory playerinv, PlayerEntity player) {
+		return new ContainerOreMappingSatallite(ContainerRegistry.CONTAINER_SATELLITE, id, this, playerinv, player);
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new StringTextComponent(getName());
 	}
 }

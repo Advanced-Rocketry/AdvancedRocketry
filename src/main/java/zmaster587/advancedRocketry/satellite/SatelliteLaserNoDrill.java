@@ -5,10 +5,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.registries.ForgeRegistries;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
@@ -29,65 +32,44 @@ public class SatelliteLaserNoDrill extends SatelliteBase {
 	public SatelliteLaserNoDrill(IInventory boundChest) {
 		this.boundChest = boundChest;
 		random = new Random(System.currentTimeMillis());
-		
+
 		//isEmpty check because <init> is called in post init to register for holo projector
 		if(ores == null && !ARConfiguration.getCurrentConfig().standardLaserDrillOres.isEmpty()) {
 			ores = new LinkedList<ItemStack>();
 			for(int i = 0; i < ARConfiguration.getCurrentConfig().standardLaserDrillOres.size(); i++) {
 				String oreDictName = ARConfiguration.getCurrentConfig().standardLaserDrillOres.get(i);
-				
-				String args[] = oreDictName.split(":");
-				
-				List<ItemStack> ores2 = ItemTags.getCollection() OreDictionary.getOres(args[0]);
 
-				if(ores2 != null && !ores2.isEmpty()) {
-					int amt = 5;
+				String args[] = oreDictName.split(";");
+				ResourceLocation itemResource = ResourceLocation.tryCreate(args[0]);
+				
+				if(itemResource == null)
+					continue;
+				
+				int count = 5;
+				try
+				{
 					if(args.length > 1)
-					{
-						try {
-							amt = Integer.parseInt(args[1]);
-						} catch (NumberFormatException e) {}
-					}
-					ores.add(new ItemStack(ores2.get(0).getItem(), amt, ores2.get(0).getItemDamage()));
+						count = Integer.parseInt(args[1]);
+				}
+				catch(NumberFormatException e) {}
+
+
+				if(ItemTags.getCollection().func_241834_b(new ResourceLocation(args[0])) != null)
+				{
+
+					Item item = ItemTags.getCollection().func_241834_b(itemResource).func_230236_b_().get(0);
+
+					ItemStack stack = new ItemStack(item, count);
+					ores.add(stack);
 				}
 				else
 				{
-					String splitStr[] = oreDictName.split(":");
-					String name;
-					try {
-						name = splitStr[0] + ":" + splitStr[1];
-					}
-					catch(IndexOutOfBoundsException e) {
-						AdvancedRocketry.logger.warn("Unexpected ore name: \"" + oreDictName + "\" during laser drill harvesting");
-						continue;
-					}
-					
-					int meta = 0;
-					int size = 1;
-					//format: "name meta size"
-					if(splitStr.length > 2) {
-						try {
-							meta = Integer.parseInt(splitStr[2]);
-						} catch( NumberFormatException e) {}
-					}
-					if(splitStr.length > 3) {
-						try {
-							size= Integer.parseInt(splitStr[3]);
-						} catch (NumberFormatException e) {}
-					}
-
-					ItemStack stack = ItemStack.EMPTY;
-					Block block = Block.getBlockFromName(name);
-					if(block == null) {
-						Item item = Item.getByNameOrId(name);
-						if(item != null)
-							stack = new ItemStack(item, size, meta);
-					}
-					else
-						stack = new ItemStack(block, size, meta);
-					
-					if(!stack.isEmpty())
+					if(ForgeRegistries.ITEMS.containsKey(itemResource))
+					{
+						Item item = ForgeRegistries.ITEMS.getValue(itemResource);
+						ItemStack stack = new ItemStack(item, count);
 						ores.add(stack);
+					}
 				}
 			}
 		}
@@ -122,7 +104,7 @@ public class SatelliteLaserNoDrill extends SatelliteBase {
 		return true;
 	}
 
-	
+
 	public void performOperation() {
 
 		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
@@ -132,9 +114,9 @@ public class SatelliteLaserNoDrill extends SatelliteBase {
 			items.add(newStack);
 		}
 		else
-			items.add(new ItemStack(Blocks.COBBLESTONE, 5));
-		
-		
+			items.add(new ItemStack(Items.COBBLESTONE, 5));
+
+
 		//TODO: generate Items
 
 		if(boundChest != null){

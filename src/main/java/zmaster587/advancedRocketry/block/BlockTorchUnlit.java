@@ -35,7 +35,7 @@ public class BlockTorchUnlit extends TorchBlock {
 	@Override
 	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
 			PlayerEntity player) {
-		return ARConfiguration.getCurrentConfig().dropExTorches ? super.getPickBlock(state, target, world, pos, player) : new ItemStack(Blocks.TORCH);
+		return ARConfiguration.getCurrentConfig().dropExTorches.get() ? super.getPickBlock(state, target, world, pos, player) : new ItemStack(Blocks.TORCH);
 	}
 	
 	@Override
@@ -43,7 +43,7 @@ public class BlockTorchUnlit extends TorchBlock {
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
 
 		
-		ret.add(new ItemStack(ARConfiguration.getCurrentConfig().dropExTorches ? AdvancedRocketryBlocks.blockUnlitTorch : Blocks.TORCH));
+		ret.add(new ItemStack(ARConfiguration.getCurrentConfig().dropExTorches.get() ? AdvancedRocketryBlocks.blockUnlitTorch : Blocks.TORCH));
 
 		return ret;
 	}

@@ -1,17 +1,6 @@
 package zmaster587.advancedRocketry.inventory;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.IGuiHandler;
-import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
-import zmaster587.advancedRocketry.dimension.DimensionManager;
-import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
-import zmaster587.libVulpes.inventory.modules.IModularInventory;
-
-public class GuiHandler implements IGuiHandler {
+public class GuiHandler {
 
 	public enum guiId {
 		RocketBuilder,
@@ -21,7 +10,7 @@ public class GuiHandler implements IGuiHandler {
 	}
 
 	//X coord is entity ID num if entity
-	@Override
+	/*	@Override
 	public Object getServerGuiElement(int ID, PlayerEntity player, World world,
 			int x, int y, int z) {
 
@@ -84,5 +73,5 @@ public class GuiHandler implements IGuiHandler {
 			return new GuiOreMappingSatellite((SatelliteOreMapping) satellite, player);
 		}
 		return null;
-	}
+	}*/
 }

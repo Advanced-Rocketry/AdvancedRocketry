@@ -1,20 +1,30 @@
 package zmaster587.advancedRocketry.world.decoration;
 
-import net.minecraft.block.state.BlockState;
-import net.minecraft.init.Blocks;
+
+import java.util.BitSet;
+import java.util.Random;
+import java.util.function.Function;
+
+import com.mojang.serialization.Codec;
+
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
-import net.minecraft.world.gen.MapGenBase;
+import net.minecraft.world.chunk.IChunk;
+import net.minecraft.world.gen.carver.WorldCarver;
+import net.minecraft.world.gen.feature.ProbabilityConfig;
 //TODO: finish
-public class MapGenInvertedPillar extends MapGenBase {
+public class MapGenInvertedPillar extends WorldCarver<ProbabilityConfig>  {
 
 	int chancePerChunk;
 	BlockState block;
 	BlockState topBlock;
 	BlockState bottomBlock;
 
-	public MapGenInvertedPillar(int chancePerChunk, BlockState bottom, BlockState blockType, BlockState blockTop) {
-		super();
+	public MapGenInvertedPillar(Codec<ProbabilityConfig> codec, int chancePerChunk, BlockState bottom, BlockState blockType, BlockState blockTop) {
+		super(codec, chancePerChunk);
 		this.chancePerChunk = chancePerChunk;
 		block = blockType;
 		topBlock = blockTop;
@@ -22,9 +32,9 @@ public class MapGenInvertedPillar extends MapGenBase {
 	}
 
 	@Override
-	protected void recursiveGenerate(World worldIn, int rangeX,
-			int rangeZ, int chunkX, int chunkZ, ChunkPrimer chunkPrimerIn) {
-		if(rand.nextInt(chancePerChunk) == Math.abs(rangeX) % chancePerChunk || rand.nextInt(chancePerChunk) == Math.abs(rangeZ) % chancePerChunk) {
+	public boolean func_225555_a_(IChunk chunkPrimerIn, Function func, Random rand, int p_225555_4_,
+			int chunkX, int chunkZ, int rangeX, int rangeZ, BitSet p_225555_9_,
+			ProbabilityConfig p_225555_10_) {
 
 			int x = (rangeX - chunkX)*16 + rand.nextInt(15);
 			int z =  (rangeZ- chunkZ)*16 + rand.nextInt(15);
@@ -75,19 +85,31 @@ public class MapGenInvertedPillar extends MapGenBase {
 						setBlock(x + xOff, y + yOff, z + zOff, actualBlock, chunkPrimerIn);
 					}
 				}
-			}
 		}
+		return true;
+	}
+	
+
+	@Override
+	public boolean shouldCarve(Random rand, int chunkX, int chunkZ, ProbabilityConfig config) {
+		return rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk || rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk;
+	}
+
+
+	@Override
+	protected boolean func_222708_a(double p_222708_1_, double p_222708_3_, double p_222708_5_, int p_222708_7_) {
+		return false;
 	}
 	
 	protected BlockState getBlockAtPercentHeight(float percent) {
 		return percent > 0.95f && topBlock == Blocks.DIRT.getDefaultState() ? Blocks.GRASS.getDefaultState() : percent > 0.66f ? topBlock : percent < 0.33f ? bottomBlock : block;
 	}
 
-	private void setBlock(int x, int y, int z , BlockState block, ChunkPrimer primer) {
+	private void setBlock(int x, int y, int z , BlockState block, IChunk primer) {
 
 		if(x > 15 || x < 0 || z > 15 || z < 0 || y < 0 || y > 255)
 			return;
 
-		primer.setBlockState(x, y, z, block);
+		primer.setBlockState(new BlockPos(x, y, z), block, false);
 	}
 }

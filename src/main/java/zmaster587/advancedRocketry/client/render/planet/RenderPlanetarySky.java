@@ -32,7 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class RenderPlanetarySky { // implements IRenderHandler {
+public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderHandler {
 
 
 	private VertexBuffer starGLCallList;
@@ -225,7 +225,7 @@ public class RenderPlanetarySky { // implements IRenderHandler {
 			}
 			else
 				primaryStar = DimensionManager.getSol();
-			if(properties.getId() == ARConfiguration.getCurrentConfig().spaceDimId) {
+			if(properties.getId() == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
 				if(isWarp) {
 					SpaceStationObject station = (SpaceStationObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(playerPos);

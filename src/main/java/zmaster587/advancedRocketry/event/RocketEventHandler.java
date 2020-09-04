@@ -6,11 +6,13 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
@@ -18,6 +20,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -35,6 +38,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import zmaster587.advancedRocketry.api.ARConfiguration;
@@ -44,8 +48,10 @@ import zmaster587.advancedRocketry.api.armor.IFillableArmor;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
+import zmaster587.advancedRocketry.client.render.planet.ISkyRenderer;
 import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.ItemAirUtils;
@@ -59,7 +65,11 @@ import java.nio.IntBuffer;
 import java.util.List;
 import java.util.Random;
 
-public class RocketEventHandler extends ContainerScreen<Container> {
+public class RocketEventHandler extends Screen {
+
+	public RocketEventHandler( ) {
+		super(new StringTextComponent(""));
+	}
 
 	private ResourceLocation background = TextureResources.rocketHud;
 	private static ClientDynamicTexture earth;
@@ -69,7 +79,7 @@ public class RocketEventHandler extends ContainerScreen<Container> {
 	private static boolean mapReady = false;
 	private static boolean mapNeedsBinding = false;
 	private static IntBuffer table,outerBoundsTable;
-	private static IRenderHandler prevRenderHanlder = null;
+	private static ISkyRenderer prevRenderHanlder = null;
 	Thread thread = null; 
 	public static GuiBox suitPanel = new GuiBox(8,8,24,24);
 	public static GuiBox oxygenBar = new GuiBox(8,-57, 80, 48);
@@ -92,9 +102,10 @@ public class RocketEventHandler extends ContainerScreen<Container> {
 			//So fix that...
 			ForgeHooksClient.getSkyBlendColour(event.world, new BlockPos(event.getEntity().getPositionVec()));
 
-			if(ARConfiguration.getCurrentConfig().planetSkyOverride && !(event.world.provider instanceof IPlanetaryProvider)) {
-				prevRenderHanlder = event.world.provider.getSkyRenderer();
-				event.world.provider.setSkyRenderer(new RenderPlanetarySky());
+			if(ARConfiguration.getCurrentConfig().planetSkyOverride.get() && !DimensionManager.getInstance().isDimensionCreated(event.world)) {
+				DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(event.world);
+				prevRenderHanlder = props.getSkyRenderer();
+				props.setSkyRenderer(new RenderPlanetarySky());
 			}
 		}
 	}
@@ -107,10 +118,11 @@ public class RocketEventHandler extends ContainerScreen<Container> {
 	
 	@SubscribeEvent
 	public void onRocketLaunch(RocketEvent.RocketLaunchEvent event) {
-		if(ARConfiguration.getCurrentConfig().planetSkyOverride && event.world.isRemote && !event.getEntity().getPassengers().isEmpty() && event.getEntity().getPassengers().contains(Minecraft.getInstance().player)) {
+		if(ARConfiguration.getCurrentConfig().planetSkyOverride.get() && event.world.isRemote && !event.getEntity().getPassengers().isEmpty() && event.getEntity().getPassengers().contains(Minecraft.getInstance().player)) {
 			prepareOrbitalMap(event);
-			prevRenderHanlder = event.world.provider.getSkyRenderer();
-			event.world.provider.setSkyRenderer(new RenderPlanetarySky());
+			DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(event.world);
+			prevRenderHanlder = props.getSkyRenderer();
+			props.setSkyRenderer(new RenderPlanetarySky());
 		}
 	}
 
@@ -122,8 +134,9 @@ public class RocketEventHandler extends ContainerScreen<Container> {
 
 	@OnlyIn(value=Dist.CLIENT)
 	public static void destroyOrbitalTextures(World world) {
-		if(!ARConfiguration.getCurrentConfig().skyOverride && !DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(world))) {
-			world.provider.setSkyRenderer(prevRenderHanlder);
+		if(!ARConfiguration.getCurrentConfig().skyOverride.get() && !DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(world))) {
+			DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(world);
+			props.setSkyRenderer(prevRenderHanlder);
 			prevRenderHanlder = null;
 		}
 
@@ -146,7 +159,7 @@ public class RocketEventHandler extends ContainerScreen<Container> {
 			outerBounds = new ClientDynamicTexture(outerImgSize, outerImgSize);
 		}
 
-		if(ZUtils.getDimensionIdentifier(event.world) == ARConfiguration.getCurrentConfig().spaceDimId) {
+		if(ZUtils.getDimensionIdentifier(event.world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
 			destroyOrbitalTextures(event.world);
 			return;
 		}
@@ -302,7 +315,7 @@ public class RocketEventHandler extends ContainerScreen<Container> {
 
 		//Less detailed land
 
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
 		GlStateManager.bindTexture(outerBounds.getTextureId());
 		double size2 = size*16;
 		float brightness2 =brightness*.43f;
@@ -311,7 +324,7 @@ public class RocketEventHandler extends ContainerScreen<Container> {
 		Tessellator.getInstance().draw();
 
 
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
 		GlStateManager.bindTexture(earth.getTextureId());
 
 		float opacityFromHeight = MathHelper.clamp(((float)Minecraft.getInstance().getRenderViewEntity().getPosY() -200f)/100f, 0f, 1f);
@@ -331,7 +344,7 @@ public class RocketEventHandler extends ContainerScreen<Container> {
 		GlStateManager.disableTexture();
 		GlStateManager.bindTexture(0);
 
-		buffer.begin(GL11.GL_QUADS, WavefrontObject.POS_NORMAL);
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 		GlStateManager.color4f((float)skyColor.x, (float)skyColor.y, (float)skyColor.z, 0.05f);
 
 		size = (getImgSize*100/(180-Minecraft.getInstance().getRenderViewEntity().getPosY() - deltaY));
@@ -368,7 +381,7 @@ public class RocketEventHandler extends ContainerScreen<Container> {
 				this.func_238474_b_(event.getMatrixStack(),0, 0, 0, 0, 17, 252);
 
 				//Draw altitude indicator
-				float percentOrbit = MathHelper.clamp((float) ((rocket.getPosY() - rocket.world.getSeaLevel())/(float)(ARConfiguration.getCurrentConfig().orbit-rocket.world.getSeaLevel())), 0f, 1f);
+				float percentOrbit = MathHelper.clamp((float) ((rocket.getPosY() - rocket.world.getSeaLevel())/(float)(ARConfiguration.getCurrentConfig().orbit.get()-rocket.world.getSeaLevel())), 0f, 1f);
 				this.func_238474_b_(event.getMatrixStack(), 3, 8 + (int)(79*(1 - percentOrbit)), 17, 0, 6, 6); //6 to 83
 
 				//Draw Velocity indicator
@@ -397,7 +410,7 @@ public class RocketEventHandler extends ContainerScreen<Container> {
 						GL11.glPushMatrix();
 						GL11.glScalef(scale*3, scale*3, scale*3);
 
-						fontRenderer.func_238422_b_(event.getMatrixStack(), new StringTextComponent(strPart), screenX, screenY, 0xFFFFFF);
+						fontRenderer.func_243246_a(event.getMatrixStack(), new StringTextComponent(strPart), screenX, screenY, 0xFFFFFF);
 
 						GL11.glPopMatrix();
 
@@ -455,7 +468,7 @@ public class RocketEventHandler extends ContainerScreen<Container> {
 				GL11.glPushMatrix();
 				GL11.glScalef(3, 3, 3);
 
-				fontRenderer.func_238422_b_(event.getMatrixStack(), new StringTextComponent(str), screenX, screenY, 0xFF5656);
+				fontRenderer.func_243246_a(event.getMatrixStack(), new StringTextComponent(str), screenX, screenY, 0xFF5656);
 				GlStateManager.color4f(1f, 1f, 1f, 1f);
 				Minecraft.getInstance().getTextureManager().bindTexture(TextureResources.progressBars);
 				this.func_238474_b_( event.getMatrixStack(), screenX + fontRenderer.getStringWidth(str)/2 -8, screenY - 16, 0, 156, 16, 16);
@@ -476,7 +489,7 @@ public class RocketEventHandler extends ContainerScreen<Container> {
 
 
 
-					fontRenderer.func_238422_b_(event.getMatrixStack(), new StringTextComponent(str), screenX, screenY, 0xFF5656);
+					fontRenderer.func_243246_a(event.getMatrixStack(), new StringTextComponent(str), screenX, screenY, 0xFF5656);
 					loc++;
 				}
 
@@ -488,7 +501,7 @@ public class RocketEventHandler extends ContainerScreen<Container> {
 
 	@SubscribeEvent
 	public void mouseInputEvent(MouseInputEvent event) {
-		if(!ARConfiguration.getCurrentConfig().lockUI && Minecraft.getInstance().mouseHelper.isMouseGrabbed()) {
+		if(!ARConfiguration.getCurrentConfig().lockUI.get() && Minecraft.getInstance().mouseHelper.isMouseGrabbed()) {
 
 			if(event.getButton() == GLFW.GLFW_MOUSE_BUTTON_2) {
 				int i = getMinecraft().getMainWindow().getScaledWidth();

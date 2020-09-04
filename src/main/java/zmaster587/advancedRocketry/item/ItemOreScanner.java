@@ -2,6 +2,8 @@ package zmaster587.advancedRocketry.item;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -11,6 +13,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
@@ -26,7 +29,7 @@ import zmaster587.libVulpes.util.ZUtils;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ItemOreScanner extends Item implements IModularInventory {
+public class ItemOreScanner extends Item {
 
 
 	public ItemOreScanner(Properties properties) {
@@ -89,8 +92,7 @@ public class ItemOreScanner extends Item implements IModularInventory {
 			SatelliteBase satellite = DimensionManager.getInstance().getSatellite(satelliteId);
 			
 			if(satellite != null && (satellite instanceof SatelliteOreMapping) && satellite.getDimensionId().get() == ZUtils.getDimensionIdentifier(worldIn))
-				playerIn.openGui(AdvancedRocketry.instance, GuiHandler.guiId.OreMappingSatellite.ordinal(), worldIn, (int)playerIn.getPosition().getX(), (int)getSatelliteID(stack), (int)playerIn.getPosition().getZ());
-
+				satellite.performAction(playerIn, worldIn, new BlockPos(playerIn.getPositionVec()));
 		}
 			
 		return super.onItemRightClick(worldIn, playerIn, hand);
@@ -112,7 +114,7 @@ public class ItemOreScanner extends Item implements IModularInventory {
 				SatelliteBase satellite = DimensionManager.getInstance().getSatellite(satelliteId);
 				
 				if(satellite != null && (satellite instanceof SatelliteOreMapping) && satellite.getDimensionId().get() == ZUtils.getDimensionIdentifier(worldIn))
-					playerIn.openGui(AdvancedRocketry.instance, GuiHandler.guiId.OreMappingSatellite.ordinal(), worldIn, (int)playerIn.getPosition().getX(), (int)getSatelliteID(stack), (int)playerIn.getPosition().getZ());
+					satellite.performAction(playerIn, worldIn, new BlockPos(playerIn.getPositionVec()));
 
 			}
 		}
@@ -124,21 +126,11 @@ public class ItemOreScanner extends Item implements IModularInventory {
 		satellite.performAction(player, world, pos);
 	}
 
-	@Override
+	
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModuleOreMapper(0, 0));
 		return modules;
-	}
-
-	@Override
-	public String getModularInventoryName() {
-		return null;
-	}
-
-	@Override
-	public boolean canInteractWithContainer(PlayerEntity entity) {
-		return true;
 	}
 
 }

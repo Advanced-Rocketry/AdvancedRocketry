@@ -4,23 +4,29 @@ import java.util.UUID;
 
 import org.w3c.dom.DOMException;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+
 import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.entity.EntitySpawnPlacementRegistry;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.MobSpawnInfo.Spawners;
 
-public class SpawnListEntryNBT extends SpawnListEntry {
+public class SpawnListEntryNBT extends Spawners {
 
 	CompoundNBT nbt;
 	String nbtString;
 	
-	public SpawnListEntryNBT(Class<? extends EntityLiving> entityclassIn, int weight, int groupCountMin,
+	public SpawnListEntryNBT(EntityType<?> entityclassIn, int weight, int groupCountMin,
 			int groupCountMax) {
 		super(entityclassIn, weight, groupCountMin, groupCountMax);
 		nbt = null;
 		nbtString = "";
 	}
 	
-	public void setNbt(String nbtString) throws DOMException, NBTException {
+	public void setNbt(String nbtString) throws DOMException, CommandSyntaxException {
 		
 		this.nbtString = nbtString;
 		if(nbtString.isEmpty())
@@ -33,14 +39,14 @@ public class SpawnListEntryNBT extends SpawnListEntry {
 		return this.nbtString;
 	}
 	
-	@Override
-	public EntityLiving newInstance(World world) throws Exception {
-		EntityLiving entity = super.newInstance(world);
+	
+	public LivingEntity newInstance(World world) throws Exception {
+		LivingEntity entity = (LivingEntity) super.field_242588_c.create(world);
 		if(nbt != null) {
             UUID uuid = entity.getUniqueID();
-            CompoundNBT oldNbt = entity.writeToNBT(new CompoundNBT());
+            CompoundNBT oldNbt = entity.serializeNBT();
             oldNbt.merge(nbt);
-			entity.readFromNBT(nbt);
+			entity.deserializeNBT(nbt);
 			entity.setUniqueId(uuid);
 		}
 		return entity;

@@ -48,7 +48,7 @@ public class RendererMicrowaveReciever extends TileEntityRenderer<TileMicrowaveR
         
         
 		//Draw heat FX
-		if(ARConfiguration.getCurrentConfig().advancedVFX && tile.getPowerMadeLastTick() > 0) {
+		if(ARConfiguration.getCurrentConfig().advancedVFX.get() && tile.getPowerMadeLastTick() > 0) {
 			double distance = tile.getPos().distanceSq(new BlockPos( Minecraft.getInstance().player.getPositionVec()));
 			if(distance < 16*16 ) {
 				double u = 256/distance;

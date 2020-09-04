@@ -45,7 +45,7 @@ public class CommonProxy {
 	}
 
 	public void fireFogBurst(ISpaceObject station) {
-		PacketHandler.sendToNearby(new PacketStationUpdate(station, PacketStationUpdate.Type.SIGNAL_WHITE_BURST), ARConfiguration.getCurrentConfig().spaceDimId, station.getSpawnLocation().x, 128, station.getSpawnLocation().z, ARConfiguration.getCurrentConfig().stationSize);
+		PacketHandler.sendToNearby(new PacketStationUpdate(station, PacketStationUpdate.Type.SIGNAL_WHITE_BURST), ARConfiguration.getCurrentConfig().spaceDimId.get(), station.getSpawnLocation().x, 128, station.getSpawnLocation().z, ARConfiguration.getCurrentConfig().stationSize.get());
 	}
 
 
@@ -54,7 +54,7 @@ public class CommonProxy {
 		return 0;
 	}
 
-	public long getWorldTimeUniversal(int id) {
+	public long getWorldTimeUniversal() {
 		ServerLifecycleHooks.getCurrentServer().getServerTime();
 		return 0;
 	}
@@ -74,13 +74,13 @@ public class CommonProxy {
 	}
 
 	public void loadUILayout(
-			net.minecraftforge.common.config.Configuration config) {
+			ARConfiguration config) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	public void saveUILayout(
-			net.minecraftforge.common.config.Configuration configuration) {
+			ARConfiguration configuration) {
 		// TODO Auto-generated method stub
 		
 	}

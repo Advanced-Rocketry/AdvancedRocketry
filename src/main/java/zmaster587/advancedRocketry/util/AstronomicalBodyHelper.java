@@ -20,13 +20,13 @@ public class AstronomicalBodyHelper {
 	public static double getOrbitalTheta(int orbitalDistance, float solarSize) {
 		double orbitalPeriod = getOrbitalPeriod(orbitalDistance, solarSize);
 		//Returns angle, relative to 0, of a planet at any given time
-		return ((AdvancedRocketry.proxy.getWorldTimeUniversal(0) % (24000d*orbitalPeriod))/(24000d*orbitalPeriod))*(2d*Math.PI);
+		return ((AdvancedRocketry.proxy.getWorldTimeUniversal() % (24000d*orbitalPeriod))/(24000d*orbitalPeriod))*(2d*Math.PI);
 	}
 	public static double getMoonOrbitalTheta(int orbitalDistance, float parentGravitationalMultiplier) {
 		//Because the function is still in AU and solar mass, some correctional factors to convert to those units
 		double orbitalPeriod = getMoonOrbitalPeriod(orbitalDistance * 0.0025f, parentGravitationalMultiplier * 0.000003f);
 		//Returns angle, relative to 0, of a moon at any given time
-		return ((AdvancedRocketry.proxy.getWorldTimeUniversal(0) % (24000d*orbitalPeriod))/(24000d*orbitalPeriod))*(2d*Math.PI);
+		return ((AdvancedRocketry.proxy.getWorldTimeUniversal() % (24000d*orbitalPeriod))/(24000d*orbitalPeriod))*(2d*Math.PI);
 	}
 	public static int getAverageTemperature(StellarBody star, int orbitalDistance, int atmPressure) {
 		int starSurfaceTemperature = 58 * star.getTemperature();

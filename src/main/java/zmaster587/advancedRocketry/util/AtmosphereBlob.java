@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 
-	static ThreadPoolExecutor pool = (ARConfiguration.getCurrentConfig().atmosphereHandleBitMask & 1) == 1 ? new ThreadPoolExecutor(2, 16, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(32)) : null;
+	static ThreadPoolExecutor pool = (ARConfiguration.getCurrentConfig().atmosphereHandleBitMask.get() & 1) == 1 ? new ThreadPoolExecutor(2, 16, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(32)) : null;
 
 	boolean executing;
 	HashedBlockPosition blockPos;
@@ -82,7 +82,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 					this.nearbyBlobs = nearbyBlobs;
 					this.blockPos = blockPos;
 					executing = true;
-					if((ARConfiguration.getCurrentConfig().atmosphereHandleBitMask & 1) == 1)
+					if((ARConfiguration.getCurrentConfig().atmosphereHandleBitMask.get() & 1) == 1)
 						try {
 							pool.execute(this);
 						} catch (RejectedExecutionException e) {
@@ -105,7 +105,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 		Stack<HashedBlockPosition> stack = new Stack<HashedBlockPosition>();
 		stack.push(blockPos);
 
-		final int maxSize = (ARConfiguration.getCurrentConfig().atmosphereHandleBitMask & 2) != 0 ? (int)(Math.pow(this.getBlobMaxRadius(), 3)*((4f/3f)*Math.PI)) : this.getBlobMaxRadius();
+		final int maxSize = (ARConfiguration.getCurrentConfig().atmosphereHandleBitMask.get() & 2) != 0 ? (int)(Math.pow(this.getBlobMaxRadius(), 3)*((4f/3f)*Math.PI)) : this.getBlobMaxRadius();
 		final HashSet<HashedBlockPosition> addableBlocks = new HashSet<HashedBlockPosition>();
 
 		//Breadth first search; non recursive
@@ -134,8 +134,8 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 						
 
 						if(!sealed) {
-							if(((ARConfiguration.getCurrentConfig().atmosphereHandleBitMask & 2) == 0 && searchNextPosition.getDistance(this.getRootPosition()) <= maxSize) ||
-									((ARConfiguration.getCurrentConfig().atmosphereHandleBitMask & 2) != 0 && addableBlocks.size() <= maxSize)) {
+							if(((ARConfiguration.getCurrentConfig().atmosphereHandleBitMask.get() & 2) == 0 && searchNextPosition.getDistance(this.getRootPosition()) <= maxSize) ||
+									((ARConfiguration.getCurrentConfig().atmosphereHandleBitMask.get() & 2) != 0 && addableBlocks.size() <= maxSize)) {
 								stack.push(searchNextPosition);
 								addableBlocks.add(searchNextPosition);
 							}

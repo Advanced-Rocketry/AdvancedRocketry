@@ -21,8 +21,8 @@ import java.util.Random;
 
 public class BlockBeacon extends BlockMultiblockMachine {
 
-	public BlockBeacon(AbstractBlock.Properties property, TileEntityType<?> tileClass, int guiId) {
-		super(property, tileClass, guiId);
+	public BlockBeacon(AbstractBlock.Properties property, int guiId) {
+		super(property, guiId);
 	}
 
 	@Override

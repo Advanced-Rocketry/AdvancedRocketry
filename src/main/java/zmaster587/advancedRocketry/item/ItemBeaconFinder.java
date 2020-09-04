@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.item;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -70,7 +71,7 @@ public class ItemBeaconFinder extends Item implements IArmorComponent {
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
 	public void renderScreen(MatrixStack mat, ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event,
-			ContainerScreen<? extends Container> gui) {
+			Screen gui) {
 		
 		ResourceLocation dimid = ZUtils.getDimensionIdentifier(Minecraft.getInstance().world);
 		

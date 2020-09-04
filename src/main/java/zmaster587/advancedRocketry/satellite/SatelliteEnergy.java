@@ -70,7 +70,7 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 
 	@Override
 	public int getEnergyMTU(Direction side) {
-		return (int) (100* ARConfiguration.getCurrentConfig().microwaveRecieverMulitplier);
+		return (int) (100* ARConfiguration.getCurrentConfig().microwaveRecieverMulitplier.get());
 	}
 
 	@Override

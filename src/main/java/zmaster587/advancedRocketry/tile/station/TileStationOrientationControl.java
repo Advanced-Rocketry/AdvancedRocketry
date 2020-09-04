@@ -87,7 +87,7 @@ public class TileStationOrientationControl extends TileEntity implements ITickab
 	@Override
 	public void tick() {
 
-		if(ZUtils.getDimensionIdentifier(this.world) == ARConfiguration.getCurrentConfig().spaceDimId) {
+		if(ZUtils.getDimensionIdentifier(this.world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
 			if(!world.isRemote) {
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 				boolean update = false;

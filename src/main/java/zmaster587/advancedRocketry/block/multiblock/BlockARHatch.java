@@ -4,6 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
@@ -17,9 +18,18 @@ import zmaster587.libVulpes.tile.TilePointer;
 
 public class BlockARHatch extends BlockHatch {
 
+	TileEntityType<? extends TileEntity> tileType;
+	
 	public BlockARHatch(Properties material) {
 		super(material);
 	}
+	
+	public BlockARHatch _setTile(TileEntityType<? extends TileEntity> type)
+	{
+		this.tileType = type;
+		return this;
+	}
+	
 	
 	@Override
 	public boolean isSideInvisible(BlockState blockState, BlockState adjacentBlockState, Direction direction) {
@@ -56,24 +66,6 @@ public class BlockARHatch extends BlockHatch {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		int metadata = state.get(VARIANT);
-		
-		//TODO: multiple sized Hatches
-		if((metadata & 7) == 0)
-			return new TileDataBus(4);
-		else if((metadata & 7) == 1)
-			return new TileSatelliteHatch(1);	
-		else if((metadata & 7) == 2)
-			return new TileRocketUnloader(4);
-		else if((metadata & 7) == 3)
-			return new TileRocketLoader(4);
-		else if((metadata & 7) == 4)
-			return new TileRocketFluidUnloader();
-		else if((metadata & 7) == 5)
-			return new TileRocketFluidLoader();
-		else if((metadata & 7) == 6)
-			return new TileGuidanceComputerHatch();
-		
-		return null;
+		return tileType.create();
 	}
 }

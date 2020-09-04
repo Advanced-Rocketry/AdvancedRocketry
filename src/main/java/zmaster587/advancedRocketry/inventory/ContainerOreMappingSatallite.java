@@ -1,27 +1,56 @@
 package zmaster587.advancedRocketry.inventory;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.item.ItemOreScanner;
 import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
+import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
+import zmaster587.libVulpes.inventory.ContainerModular;
+import zmaster587.libVulpes.inventory.GuiHandler;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
 
 public class ContainerOreMappingSatallite extends Container {
+	
+	public static ContainerOreMappingSatallite createFromNetworkItem(int windowId, PlayerInventory invPlayer, PacketBuffer buf)
+	{
+		ItemStack stack = GuiHandler.getHeldFromBuf(buf);
+		IModularInventory modularItem = (IModularInventory)stack.getItem();
+		int ID = modularItem.getModularInvType();
+		
+		ItemOreScanner item = (ItemOreScanner)stack.getItem();
+		
+		SatelliteOreMapping sat = (SatelliteOreMapping)DimensionManager.getInstance().getSatellite(item.getSatelliteID(stack));
+		
+		boolean includePlayerInv = GuiHandler.doesIncludePlayerInv(ID);
+		boolean includeHotBar = GuiHandler.doesIncludeHotBar(ID);
+		
+		return new ContainerOreMappingSatallite(LibvulpesGuiRegistry.CONTAINER_MODULAR_HELD_ITEM, windowId, sat, invPlayer, Minecraft.getInstance().player);
+	}
 
+	public SatelliteOreMapping inv;
+	public PlayerEntity player;
 
-	private SatelliteOreMapping inv;
-
-	ContainerOreMappingSatallite(SatelliteOreMapping inv, InventoryPlayer inventoryPlayer) {
-		super(containerType, dragEvent);
+	public ContainerOreMappingSatallite(@Nullable ContainerType<?> type, int windowId, SatelliteOreMapping inv, PlayerInventory inventoryPlayer, PlayerEntity player) {
+		super(type, windowId);
 		this.inv = inv;
 		inv.setSelectedSlot(-1);
 		// Player hotbar
 		for (int j1 = 0; j1 < 9; j1++) {
 			addSlot(new Slot(inventoryPlayer, j1, 13 + j1 * 18, 155));
 		}
+		this.player = player;
 	}
 
 	@Override

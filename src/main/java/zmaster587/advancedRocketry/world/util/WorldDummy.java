@@ -1,55 +1,56 @@
 package zmaster587.advancedRocketry.world.util;
 
+import java.util.List;
+import java.util.OptionalLong;
 import javax.annotation.Nullable;
 
-import net.minecraft.block.state.BlockState;
-import net.minecraft.client.multiplayer.ChunkProviderClient;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.item.crafting.RecipeManager;
+import net.minecraft.profiler.IProfiler;
 import net.minecraft.profiler.Profiler;
+import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITagCollectionSupplier;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.EnumSkyBlock;
+import net.minecraft.util.registry.DynamicRegistries;
+import net.minecraft.world.DimensionType;
+import net.minecraft.world.ITickList;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.storage.MapStorage;
-import net.minecraft.world.storage.WorldInfo;
+import net.minecraft.world.biome.ColumnFuzzedBiomeMagnifier;
+import net.minecraft.world.chunk.AbstractChunkProvider;
+import net.minecraft.world.storage.MapData;
 import net.minecraftforge.common.capabilities.CapabilityDispatcher;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.LazyOptional;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.util.StorageChunk;
 
 public class WorldDummy extends World  {
 
-	private final static ProviderDummy dummyProvider = new ProviderDummy();
-
 	StorageChunk storage;
 	public int displayListIndex = -1;
 	private CapabilityDispatcher capabilities;
 	
-	public WorldDummy(Profiler p_i45368_5_, StorageChunk storage) {
-		super(new DummySaveHandler(), new WorldInfo(new CompoundNBT()), dummyProvider, p_i45368_5_, false);
-		dummyProvider.setWorld(this);
+	final static class DummyDimensionType extends DimensionType
+	{
+		public DummyDimensionType() {
+			super(OptionalLong.empty(), true, false, false, true, 1.0D, false, false, true, false, true, 256, ColumnFuzzedBiomeMagnifier.INSTANCE, BlockTags.field_241277_aC_.func_230234_a_(), field_242710_a, 0.0F);
+		}
+	}
+	
+	public WorldDummy(IProfiler p_i45368_5_, StorageChunk storage) {
+		super(null, null, new DummyDimensionType(), () -> AdvancedRocketry.proxy.getProfiler(), false, false, 0);
 		this.storage = storage;
-		this.chunkProvider = new ChunkProviderDummy(this, storage);
 		
-	}
-	
-	@Override
-	public World init() {
-		this.mapStorage = new MapStorageDummy(this.saveHandler);
-		this.capabilities = ForgeEventFactory.gatherCapabilities(this, null);
-		
-		return super.init();
-	}
-	
-	@Override
-	public boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, @Nullable Direction facing) {
-		return capabilities != null && capabilities.hasCapability(capability, facing);
 	}
 
 	@Override
@@ -68,69 +69,13 @@ public class WorldDummy extends World  {
 		return storage.getTileEntity(pos);
 	}
 
-    @OnlyIn(value=Dist.CLIENT)
-    public int getLightFromNeighborsFor(EnumSkyBlock type, BlockPos pos)
-    {
-    	if(type == EnumSkyBlock.SKY)
-    		return 15;
-    	return super.getLightFromNeighborsFor(type, pos);
-    }
-	
-	@Override
-	public long getWorldTime() {
-		return 0;
-	}
-	
-	@Override
-	public boolean isSideSolid(BlockPos pos, Direction side, boolean bool) {
-		return storage.isSideSolid(pos, side, bool);
-	}
 
-	@Override
-	public void updateEntities() {
-		//Dummy out
-	}
-
-	@Override
-	public void tick() {
-		//Dont tick
-	}
-
-	@Override
-	public boolean tickUpdates(boolean p_72955_1_) {
-		//Dont tick
-		return false;
-	}
-	
-	@Override
-	public Biome getBiomeForCoordsBody(BlockPos pos) {
-		return AdvancedRocketryBiomes.spaceBiome;
-	}
 	
 	@Override
 	public Biome getBiome(BlockPos pos) {
 		return AdvancedRocketryBiomes.spaceBiome;
 	}
 
-	@Override
-	protected IChunkProvider createChunkProvider() {
-		if(this.isRemote)
-			return new ChunkProviderClient(this);
-		else 
-			return null;
-	}
-	
-	@Override
-	@OnlyIn(value=Dist.CLIENT)
-	public float getSunBrightness(float partialTicks) {
-		return 0;
-	}
-
-	@Override
-	public int getLight(BlockPos pos, boolean checkNeighbors) {
-		return 15;
-	}
-	
 	//No entities exist
 	@Override
 	public Entity getEntityByID(int p_73045_1_) {
@@ -138,9 +83,93 @@ public class WorldDummy extends World  {
 	}
 
 	@Override
-	protected boolean isChunkLoaded(int x, int z, boolean allowEmpty) {
-		//Dummy out
-		return false;
+	public ITickList<Block> getPendingBlockTicks() {
+		return null;
+	}
+
+	@Override
+	public ITickList<Fluid> getPendingFluidTicks() {
+		return null;
+	}
+
+	@Override
+	public AbstractChunkProvider getChunkProvider() {
+		return null;
+	}
+
+	@Override
+	public void playEvent(PlayerEntity player, int type, BlockPos pos, int data) {
+	}
+
+	@Override
+	public DynamicRegistries func_241828_r() {
+		return null;
+	}
+
+	@Override
+	public List<? extends PlayerEntity> getPlayers() {
+		return null;
+	}
+
+	@Override
+	public Biome getNoiseBiomeRaw(int x, int y, int z) {
+		return null;
+	}
+
+	@Override
+	public float func_230487_a_(Direction p_230487_1_, boolean p_230487_2_) {
+		return 0;
+	}
+
+	@Override
+	public void notifyBlockUpdate(BlockPos pos, BlockState oldState, BlockState newState, int flags) {
+	}
+
+	@Override
+	public void playSound(PlayerEntity player, double x, double y, double z, SoundEvent soundIn, SoundCategory category,
+			float volume, float pitch) {
+		
+	}
+
+	@Override
+	public void playMovingSound(PlayerEntity playerIn, Entity entityIn, SoundEvent eventIn, SoundCategory categoryIn,
+			float volume, float pitch) {
+		
+	}
+
+	@Override
+	public MapData getMapData(String mapName) {
+		return null;
+	}
+
+	@Override
+	public void registerMapData(MapData mapDataIn) {
+		
+	}
+
+	@Override
+	public int getNextMapId() {
+		return 0;
+	}
+
+	@Override
+	public void sendBlockBreakProgress(int breakerId, BlockPos pos, int progress) {
+		
+	}
+
+	@Override
+	public Scoreboard getScoreboard() {
+		return null;
+	}
+
+	@Override
+	public RecipeManager getRecipeManager() {
+		return null;
+	}
+
+	@Override
+	public ITagCollectionSupplier getTags() {
+		return null;
 	}
 
 }

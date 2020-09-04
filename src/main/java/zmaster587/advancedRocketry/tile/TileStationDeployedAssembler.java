@@ -27,6 +27,11 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 
 	private final static int MAX_SIZE = 17, MAX_SIZE_Y = 17, MIN_SIZE = 3, MIN_SIZE_Y = 3;
 
+	public TileStationDeployedAssembler()
+	{
+		super(AdvancedRocketryTileEntityType.TILE_STATION_DEPLOYED_ASSEMBLER);
+	}
+	
 	/**
 	 * Does not make sure the structure is complete, only gets max bounds!
 	 * @param world the world

@@ -17,7 +17,7 @@ public class FxSystemElectricArc {
 	private static void makeNextPosition(IWorld world, Vector3F<Double> parent, double scale, int numrecursion) {
 
 		double radius = scale*2;
-		double angle = world.rand.nextDouble()*Math.PI*2;
+		double angle = world.getRandom().nextDouble()*Math.PI*2;
 		
 		double xOffset = radius* Math.cos(angle);
 		double zOffset = radius* Math.sin(angle);
@@ -31,12 +31,12 @@ public class FxSystemElectricArc {
 			double distance = i/(double)numParticles;
 			double offset = scale*(0.1*Math.sin(numrecursion*1.5f*i/(Math.PI*8f)) + 0.1*Math.sin(numrecursion*0.5*i/(Math.PI*8f)));
 			
-			AdvancedRocketry.proxy.spawnParticle("arc", world, 
+			AdvancedRocketry.proxy.spawnParticle("arc", (World) world, 
 					parent.x + distance*(blockPosL.x - parent.x +  offset),
 					parent.y + distance*(blockPosL.y - parent.y + offset), 
 					parent.z + distance*(blockPosL.z - parent.z), scale/4f, 0, 0);
 			
-			AdvancedRocketry.proxy.spawnParticle("arc", world, 
+			AdvancedRocketry.proxy.spawnParticle("arc", (World) world, 
 					parent.x + distance*(blockPosR.x - parent.x +  offset),
 					parent.y + distance*(blockPosR.y - parent.y - offset), 
 					parent.z + distance*(blockPosR.z - parent.z), scale/4f, 0, 0);
@@ -45,9 +45,9 @@ public class FxSystemElectricArc {
 		numrecursion--;
 
 		if(numrecursion > 0) {
-			if(world.rand.nextInt(4) < 2)
+			if(world.getRandom().nextInt(4) < 2)
 			makeNextPosition(world, blockPosL, scale/2.0, numrecursion);
-			if(world.rand.nextInt(4) < 2)
+			if(world.getRandom().nextInt(4) < 2)
 			makeNextPosition(world, blockPosR, scale/2.0, numrecursion);
 		}
 

@@ -143,7 +143,7 @@ public class ModuleOreMapper extends ModuleBase {
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
 		buffer.color(0.5f, 0.5f, 0.0f,0.3f + ((float)Math.sin(Math.PI*(fancyScanOffset/(float)FANCYSCANMAXSIZE))/3f));
 		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
-		RenderHelper.renderNorthFace(buffer, (double)zLevel, 173, 82, 194, 141);
+		RenderHelper.renderNorthFace(buffer, (double)zLevel, 173, 82, 194, 141,1,1,1,1);
 		buffer.finishDrawing();
 		
 		GlStateManager.enableTexture();
@@ -218,12 +218,12 @@ public class ModuleOreMapper extends ModuleBase {
 		//TODO replace with thing
 		//gui.drawVerticalLine((int)(32*VulpineMath.log2(scanSize-1)/8F) + 199 + x, 34 + y, 45 + y, 0xFFC00F0F);
 
-		font.func_238422_b_(matrix, new StringTextComponent("Zoom"), 198 + x, 22 + y, 0xF0F0F0);
+		font.func_243246_a(matrix, new StringTextComponent("Zoom"), 198 + x, 22 + y, 0xF0F0F0);
 
-		font.func_238422_b_(matrix, new StringTextComponent("X: " + xSelected), 6 + x, 33 + y, 0xF0F0F0);
-		font.func_238422_b_(matrix, new StringTextComponent("Z: " + zSelected), 6 + x, 49 + y, 0xF0F0F0);
-		font.func_238422_b_(matrix, new StringTextComponent("Value: "), 6 + x, 65 + y, 0xF0F0F0);
-		font.func_238422_b_(matrix, new StringTextComponent(String.valueOf(mouseValue)), 6 + x, 79 + y, 0xF0F0F0);
+		font.func_243246_a(matrix, new StringTextComponent("X: " + xSelected), 6 + x, 33 + y, 0xF0F0F0);
+		font.func_243246_a(matrix, new StringTextComponent("Z: " + zSelected), 6 + x, 49 + y, 0xF0F0F0);
+		font.func_243246_a(matrix, new StringTextComponent("Value: "), 6 + x, 65 + y, 0xF0F0F0);
+		font.func_243246_a(matrix, new StringTextComponent(String.valueOf(mouseValue)), 6 + x, 79 + y, 0xF0F0F0);
 	}
 	
 }

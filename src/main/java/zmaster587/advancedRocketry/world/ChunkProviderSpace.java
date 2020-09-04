@@ -1,79 +1,62 @@
 package zmaster587.advancedRocketry.world;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biome.SpawnListEntry;
+import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
-import net.minecraft.world.gen.IChunkGenerator;
+import net.minecraft.world.chunk.IChunk;
+import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.gen.Heightmap.Type;
+import net.minecraft.world.gen.WorldGenRegion;
+import net.minecraft.world.gen.feature.structure.StructureManager;
+import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class ChunkProviderSpace implements IChunkGenerator {
+import com.mojang.serialization.Codec;
+
+public class ChunkProviderSpace extends ChunkGenerator {
 
 	World worldObj;
 	
-	public ChunkProviderSpace(World p_i2006_1_, long p_i2006_2_)
-	{
-		this.worldObj = p_i2006_1_;
+	public ChunkProviderSpace(BiomeProvider p_i231888_1_, DimensionStructuresSettings p_i231888_2_) {
+		super(p_i231888_1_, p_i231888_2_);
+		// TODO Auto-generated constructor stub
 	}
-
+	
 	@Override
-	public Chunk generateChunk(int p_73154_1_, int p_73154_2_) {
-		Block[] ablock = new Block[65536];
-		byte[] abyte = new byte[65536];
-		ChunkPrimer chunkprimer = new ChunkPrimer();
-		
-		//ChunkExtendedBiome
-		Chunk chunk = new Chunk(this.worldObj, chunkprimer, p_73154_1_, p_73154_2_);//new Chunk(this.worldObj, ablock, abyte, p_73154_1_, p_73154_2_);
-		//TODO: convert back to int
-		byte[] abyte1 = chunk.getBiomeArray();
-
-		Arrays.fill(abyte1, (byte)Biome.getIdForBiome(AdvancedRocketryBiomes.spaceBiome));
-
-		chunk.generateSkylightMap();
-		return chunk;
-	}
-
-	@Override
-	public void populate(int x, int z) {
-		
-	}
-
-	@Override
-	public boolean generateStructures(Chunk chunkIn, int x, int z) {
-		return false;
-	}
-
-	@Override
-	public List<SpawnListEntry> getPossibleCreatures(
-			EnumCreatureType creatureType, BlockPos pos) {
+	protected Codec<? extends ChunkGenerator> func_230347_a_() {
 		return null;
 	}
 
 	@Override
-	public void recreateStructures(Chunk chunkIn, int x, int z) {
+	public ChunkGenerator func_230349_a_(long p_230349_1_) {
+		return null;
+	}
+
+	@Override
+	public void generateSurface(WorldGenRegion p_225551_1_, IChunk p_225551_2_) {
+	}
+
+	@Override
+	public void func_230352_b_(IWorld p_230352_1_, StructureManager p_230352_2_, IChunk p_230352_3_) {
 		
 	}
 
-    @Override
-    public BlockPos getNearestStructurePos(World worldIn, String structureName, BlockPos position,
-            boolean findUnexplored)
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public int func_222529_a(int p_222529_1_, int p_222529_2_, Type heightmapType) {
+		return 0;
+	}
 
-    @Override
-    public boolean isInsideStructure(World worldIn, String structureName, BlockPos pos)
-    {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
+	@Override
+	public IBlockReader func_230348_a_(int p_230348_1_, int p_230348_2_) {
+		return null;
+	}
 }

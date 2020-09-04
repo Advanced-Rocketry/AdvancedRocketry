@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.ParticleStatus;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -66,8 +67,8 @@ public class EntityStationDeployedRocket extends EntityRocket {
 	boolean coastMode;
 	private Ticket<Entity> ticket;
 
-	public EntityStationDeployedRocket(World world) {
-		super(world);
+	public EntityStationDeployedRocket(EntityType<?> type, World world) {
+		super(type, world);
 		launchDirection = Direction.DOWN;
 		launchLocation = new HashedBlockPosition(0,0,0);
 		atmText = new ModuleText(182, 114, "", 0x2d2d2d);
@@ -88,8 +89,10 @@ public class EntityStationDeployedRocket extends EntityRocket {
 	@Override
 	public void remove() {
 		super.remove();
-		if(ticket != null)
-			((ServerWorld)this.world).getChunkProvider().chunkManager.getTicketManager().register(type, pos, distance, value); forceChunk(false);
+		
+		// Ticket only lasts for 1 tick, so don't bother cleanup
+		//if(ticket != null)
+			//((ServerWorld)this.world).getChunkProvider().chunkManager.getTicketManager().register(type, pos, distance, value); forceChunk(false);
 	}
 
 	@Override
@@ -123,7 +126,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			return;
 
 		ISpaceObject spaceObj;
-		if( ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId && (spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(getPositionVec()))) != null && ((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() ) { //Abort if destination is invalid
+		if( ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId.get() && (spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(getPositionVec()))) != null && ((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() ) { //Abort if destination is invalid
 
 
 			setInFlight(true);
@@ -293,25 +296,28 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		DimensionProperties props = DimensionManager.getEffectiveDimId(world, this.getPositionVec());
 		if(props.isGasGiant()) {
 			try {
-				atmText.setText(props.getHarvestableGasses().get(gasId).getLocalizedName(new FluidStack(props.getHarvestableGasses().get(gasId), 1)));
+				atmText.setText(props.getHarvestableGasses().get(gasId).getRegistryName().toString());
 			} catch (IndexOutOfBoundsException e) {
 				gasId = 0;
-				atmText.setText(props.getHarvestableGasses().get(gasId).getLocalizedName(new FluidStack(props.getHarvestableGasses().get(gasId), 1)));
+				atmText.setText(props.getHarvestableGasses().get(gasId).getRegistryName().toString());
 			}
 		}
 		else {
 			atmText.setText(LibVulpes.proxy.getLocalizedString("msg.entityDeployedRocket.notGasGiant"));
 		}
-		modules.add(new ModuleButton(170, 114, 1, "", this, zmaster587.libVulpes.inventory.TextureResources.buttonLeft, 5, 8));
+		modules.add(new ModuleButton(170, 114, "", this, zmaster587.libVulpes.inventory.TextureResources.buttonLeft, 5, 8).setAdditionalData(1));
 		modules.add(atmText);
-		modules.add(new ModuleButton(240, 114, 2, "", this, zmaster587.libVulpes.inventory.TextureResources.buttonRight,  5, 8));
+		modules.add(new ModuleButton(240, 114, "", this, zmaster587.libVulpes.inventory.TextureResources.buttonRight,  5, 8).setAdditionalData(2));
 
 		return modules;
 	}
 
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public void onInventoryButtonPressed(ModuleButton buttonId) {
+	public void onInventoryButtonPressed(ModuleButton button) {
+		
+		int buttonId = (int)button.getAdditionalData();
+		
 		DimensionProperties props;
 		switch(buttonId) {
 		case 0:
@@ -340,7 +346,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			}
 			break;
 		default:
-			super.onInventoryButtonPressed(buttonId);
+			super.onInventoryButtonPressed(button);
 		}
 	}
 
@@ -357,7 +363,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		//Check again to make sure we are around a gas giant
 		ISpaceObject spaceObj = null;
 		setInOrbit(true);
-		if( ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId && ((spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(this.getPositionVec()))) != null && ((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() )) { //Abort if destination is invalid
+		if( ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId.get() && ((spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(this.getPositionVec()))) != null && ((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() )) { //Abort if destination is invalid
 			this.setPosition(forwardDirection.getXOffset()*64d + this.launchLocation.x + (storage.getSizeX() % 2 == 0 ? 0 : 0.5d), getPosY(), forwardDirection.getZOffset()*64d + this.launchLocation.z + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5d));	
 		}
 		else {
@@ -447,7 +453,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				if(!world.isRemote)
 					PacketHandler.sendToNearby(new PacketEntity(this, (byte) PacketType.MENU_CHANGE.ordinal()), world, (int)getPosX(), (int)getPosY(), (int)getPosZ(), 64d);
 				else
-					atmText.setText(props.getHarvestableGasses().get(gasId).getLocalizedName(new FluidStack(AtmosphereRegister.getInstance().getHarvestableGasses().get(gasId),1)));
+					atmText.setText(props.getHarvestableGasses().get(gasId).getRegistryName().toString());
 			}
 		}
 		else

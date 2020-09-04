@@ -4,6 +4,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.ParticleStatus;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.play.server.SSpawnObjectPacket;
@@ -25,7 +26,7 @@ public class EntityLaserNode extends Entity {
 	//Also we don't want the chunk loading with the laser being there without an emitter it will cause a crash
 	//private TileSpaceLaser creator;
 
-	public EntityLaserNode(World par1World) {
+	public EntityLaserNode(EntityType<?> type,  World par1World) {
 		super(AdvancedRocketryEntities.ENTITY_LASER_NODE, par1World);
 		ignoreFrustumCheck = true;
 		noClip = true;
@@ -35,7 +36,7 @@ public class EntityLaserNode extends Entity {
 	boolean isValid = false;
 
 	public EntityLaserNode(World world, double x, double y, double z) {
-		this(world);
+		this(AdvancedRocketryEntities.ENTITY_LASER_NODE, world);
 		this.setPosition(x, y, z);
 	}
 	

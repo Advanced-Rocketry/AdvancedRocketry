@@ -1,30 +1,32 @@
 package zmaster587.advancedRocketry.world.decoration;
 
-import net.minecraft.block.BlockSlab;
-import net.minecraft.block.BlockSlab.EnumBlockHalf;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.SlabBlock;
+import net.minecraft.state.properties.SlabType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.event.terraingen.PopulateChunkEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.world.gen.Heightmap.Type;
+import net.minecraftforge.event.world.ChunkEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 
 public class MapGenLander {
 
 	@SubscribeEvent
-	public void populateChunkPostEvent(PopulateChunkEvent.Post event) {
-		World worldIn = event.getWorld();
-		BlockPos position = new BlockPos(16*event.getChunkX() + 11, 0, 16*event.getChunkZ() + 3);
+	public void populateChunkPostEvent(ChunkEvent.Load event) {
+		
+		World worldIn = (World)event.getWorld();
+		BlockPos position = new BlockPos(16*event.getChunk().getPos().x + 11, 0, 16*event.getChunk().getPos().z + 3);
 
-		if(DimensionManager.getInstance().getDimensionProperties(worldIn.provider.getDimension()).getName().equals("Luna") && position.getZ() == 67 && position.getX() == 2347) {
+		if(DimensionManager.getInstance().getDimensionProperties(worldIn).getName().equals("Luna") && position.getZ() == 67 && position.getX() == 2347) {
 
-			position = worldIn.getHeight(position).down();
+			position = worldIn.getHeight(Type.WORLD_SURFACE, position).down();
 			
-			worldIn.setBlockState(position.add(0, 0, 3), Blocks.STONE_SLAB.getDefaultState().with(BlockSlab.HALF, EnumBlockHalf.TOP));
-			worldIn.setBlockState(position.add(0, 0, -3), Blocks.STONE_SLAB.getDefaultState().with(BlockSlab.HALF, EnumBlockHalf.TOP));
-			worldIn.setBlockState(position.add(3, 0, 0), Blocks.STONE_SLAB.getDefaultState().with(BlockSlab.HALF, EnumBlockHalf.TOP));
-			worldIn.setBlockState(position.add(-3, 0, 0), Blocks.STONE_SLAB.getDefaultState().with(BlockSlab.HALF, EnumBlockHalf.TOP));
+			worldIn.setBlockState(position.add(0, 0, 3), Blocks.STONE_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP));
+			worldIn.setBlockState(position.add(0, 0, -3), Blocks.STONE_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP));
+			worldIn.setBlockState(position.add(3, 0, 0), Blocks.STONE_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP));
+			worldIn.setBlockState(position.add(-3, 0, 0), Blocks.STONE_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP));
 			
 			position = position.up();
 
@@ -68,7 +70,7 @@ public class MapGenLander {
 			worldIn.setBlockState(position.add(0, 0, -1), Blocks.IRON_BLOCK.getDefaultState());
 			worldIn.setBlockState(position.add(-1, 0, 0), Blocks.IRON_BLOCK.getDefaultState());
 
-			position = worldIn.getHeight(position.add(10,0,15));
+			position = worldIn.getHeight(Type.WORLD_SURFACE, position.add(10,0,15));
 
 			for(int x = 0; x <= 4; x++ ) 
 				worldIn.setBlockState(position.add(0,x,0), Blocks.IRON_BARS.getDefaultState());

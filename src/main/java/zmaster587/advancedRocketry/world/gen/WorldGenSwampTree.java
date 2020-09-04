@@ -1,28 +1,38 @@
 package zmaster587.advancedRocketry.world.gen;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockLog;
-import net.minecraft.block.state.BlockState;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.RotatedPillarBlock;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.ChunkPrimer;
-import net.minecraft.world.gen.MapGenBase;
+import net.minecraft.world.chunk.IChunk;
+import net.minecraft.world.gen.Heightmap.Type;
+import net.minecraft.world.gen.carver.WorldCarver;
+import net.minecraft.world.gen.feature.ProbabilityConfig;
 
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 
-public class WorldGenSwampTree extends MapGenBase {
+import com.mojang.serialization.Codec;
+
+import java.util.Random;
+import java.util.function.Function;
+
+public class WorldGenSwampTree extends  WorldCarver<ProbabilityConfig>  {
 
 	Map<BlockPos, BlockState> cachedCanopy;
 	Map<BlockPos, BlockState> cachedRoots;
 	private final static double arcSize = 16.0;
 	int chancePerChunk;
 
-	public WorldGenSwampTree(int chancePerChunk) {
-		super();
+	public WorldGenSwampTree(Codec<ProbabilityConfig> codec, int chancePerChunk) {
+		super(codec, chancePerChunk);
 		chancePerChunk= 10;
 		cachedCanopy = new HashMap<BlockPos, BlockState>();
 		cachedRoots = new HashMap<BlockPos, BlockState>();
@@ -47,17 +57,17 @@ public class WorldGenSwampTree extends MapGenBase {
 				int zz = (int) (xzRadius*Math.sin(Yangle));
 
 				if(!cachedRoots.containsKey(new BlockPos(2 + xx - xOffset, yy - yOffset +2,  zz- zOffset)))
-					cachedRoots.put(  new BlockPos(2 + xx - xOffset, yy - yOffset +2,  zz- zOffset), Blocks.LOG.getDefaultState().with(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
+					cachedRoots.put(  new BlockPos(2 + xx - xOffset, yy - yOffset +2,  zz- zOffset), Blocks.OAK_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Axis.Y));
 				if(!cachedRoots.containsKey(new BlockPos(3 + xx - xOffset, yy - yOffset +2,  zz- zOffset)))
-					cachedRoots.put(new BlockPos(3 + xx - xOffset, yy - yOffset +2,  zz- zOffset), Blocks.LOG.getDefaultState().with(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
+					cachedRoots.put(new BlockPos(3 + xx - xOffset, yy - yOffset +2,  zz- zOffset), Blocks.OAK_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Axis.Y));
 				if(!cachedRoots.containsKey(new BlockPos(2 + xx - xOffset, yy - yOffset +2, 1 + zz- zOffset)))
-					cachedRoots.put( new BlockPos(2 + xx - xOffset, yy - yOffset +2, 1 + zz- zOffset), Blocks.LOG.getDefaultState().with(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
+					cachedRoots.put( new BlockPos(2 + xx - xOffset, yy - yOffset +2, 1 + zz- zOffset), Blocks.OAK_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Axis.Y));
 				if(!cachedRoots.containsKey(new BlockPos(2 + xx - xOffset,  yy - yOffset +3, 1 + zz- zOffset)))
-					cachedRoots.put( new BlockPos(2 + xx - xOffset,  yy - yOffset +3, 1 + zz- zOffset), Blocks.LOG.getDefaultState().with(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
+					cachedRoots.put( new BlockPos(2 + xx - xOffset,  yy - yOffset +3, 1 + zz- zOffset), Blocks.OAK_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Axis.Y));
 				if(!cachedRoots.containsKey(new BlockPos(1 + xx - xOffset  , yy - yOffset +2, zz- zOffset)))
-				cachedRoots.put(new BlockPos(1 + xx - xOffset  , yy - yOffset +2, zz- zOffset), Blocks.LOG.getDefaultState().with(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
+					cachedRoots.put(new BlockPos(1 + xx - xOffset  , yy - yOffset +2, zz- zOffset), Blocks.OAK_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Axis.Y));
 				if(!cachedRoots.containsKey(new BlockPos(2 + xx - xOffset, yy - yOffset +2, zz- zOffset - 1)))
-					cachedRoots.put( new BlockPos(2 + xx - xOffset, yy - yOffset +2, zz- zOffset - 1), Blocks.LOG.getDefaultState().with(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
+					cachedRoots.put( new BlockPos(2 + xx - xOffset, yy - yOffset +2, zz- zOffset - 1), Blocks.OAK_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Axis.Y));
 			}
 		}
 	}
@@ -80,7 +90,7 @@ public class WorldGenSwampTree extends MapGenBase {
 
 				for(int yyy = -2 ; yyy < 4; yyy++)
 					if(!cachedCanopy.containsKey(new BlockPos(2 + xx - xOffset, yyy + yy - yOffset +2, zz- zOffset)))
-					cachedCanopy.put(new BlockPos(2 + xx - xOffset, yyy + yy - yOffset +2, zz- zOffset), Blocks.LEAVES.getDefaultState());
+						cachedCanopy.put(new BlockPos(2 + xx - xOffset, yyy + yy - yOffset +2, zz- zOffset), Blocks.OAK_LEAVES.getDefaultState());
 				//world.setBlock( x + 2 + xx - xOffset - radius/2, treeHeight -3 + yy - yOffset +2, z + zz- zOffset, Blocks.vine, 0,2);
 			}
 
@@ -88,164 +98,164 @@ public class WorldGenSwampTree extends MapGenBase {
 	}
 
 	@Override
-	protected void recursiveGenerate(World worldIn, int rangeX,
-			int rangeZ, int chunkX, int chunkZ, ChunkPrimer blocks) {
-		if(rand.nextInt(chancePerChunk) == Math.abs(rangeX) % chancePerChunk && rand.nextInt(chancePerChunk) == Math.abs(rangeZ) % chancePerChunk) {
+	public boolean func_225555_a_(IChunk world, Function<BlockPos, Biome> p_225555_2_, Random rand,
+			int chunkX, int chunkZ, int rangeX, int rangeZ, int p_225555_8_, BitSet p_225555_9_,
+			ProbabilityConfig p_225555_10_) {
 
-			int x = (rangeX - chunkX)*16;
-			int z =  (rangeZ- chunkZ)*16;
-			int y = 56;
-			
-			
-			int treeHeight = rand.nextInt(10) + 40;
-			int radius = 4;
-
-			int edgeRadius = 1;
-			int numDiag = edgeRadius + 1;
-
-			int meta = 3;
-			BlockState block = Blocks.LOG.getDefaultState();
-			int currentEdgeRadius;
-
-			final float SHAPE = 0.1f;
-
-			currentEdgeRadius = (int)((SHAPE*(edgeRadius * treeHeight )) + ((1f-SHAPE)*edgeRadius));
-
-			y++;
+		int x = (rangeX - chunkX)*16;
+		int z =  (rangeZ- chunkZ)*16;
+		int y = 56;
 
 
-			for(int yOff = -20; yOff < treeHeight; yOff++) {
+		int treeHeight = rand.nextInt(10) + 40;
+		int radius = 4;
 
-				currentEdgeRadius = (int)((SHAPE*(edgeRadius * (treeHeight - yOff))) + ((1f-SHAPE)*edgeRadius));
+		int edgeRadius = 1;
+		int numDiag = edgeRadius + 1;
 
-				//Generate the top trapezoid
-				for(int zOff = -numDiag - currentEdgeRadius/2; zOff <= -currentEdgeRadius/2; zOff++) {
+		int meta = 3;
+		BlockState block = Blocks.OAK_LOG.getDefaultState();
+		int currentEdgeRadius;
 
-					for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
-						setBlock(new BlockPos(x + xOff, y + yOff, z + zOff), block, blocks);
-					}
-					currentEdgeRadius++;
+		final float SHAPE = 0.1f;
+
+		currentEdgeRadius = (int)((SHAPE*(edgeRadius * treeHeight )) + ((1f-SHAPE)*edgeRadius));
+
+		y++;
+
+
+		for(int yOff = -20; yOff < treeHeight; yOff++) {
+
+			currentEdgeRadius = (int)((SHAPE*(edgeRadius * (treeHeight - yOff))) + ((1f-SHAPE)*edgeRadius));
+
+			//Generate the top trapezoid
+			for(int zOff = -numDiag - currentEdgeRadius/2; zOff <= -currentEdgeRadius/2; zOff++) {
+
+				for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
+					setBlock(new BlockPos(x + xOff, y + yOff, z + zOff), block, world);
 				}
+				currentEdgeRadius++;
+			}
 
-				//Generate square segment
-				for(int zOff = -currentEdgeRadius/2; zOff <= currentEdgeRadius/2; zOff++) {
-					for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
-						setBlock(new BlockPos(x + xOff, y + yOff, z + zOff), block, blocks);
-					}
-				}
-
-				//Generate the bottom trapezoid
-				for(int zOff = currentEdgeRadius/2; zOff <= numDiag + currentEdgeRadius/2; zOff++) {
-					currentEdgeRadius--;
-					for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
-						setBlock(new BlockPos(x + xOff, y + yOff, z + zOff), block, blocks);
-					}
+			//Generate square segment
+			for(int zOff = -currentEdgeRadius/2; zOff <= currentEdgeRadius/2; zOff++) {
+				for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
+					setBlock(new BlockPos(x + xOff, y + yOff, z + zOff), block, world);
 				}
 			}
 
-			//Canopy
-			for(Entry<BlockPos, BlockState> entry : cachedCanopy.entrySet())
-				setBlock( entry.getKey().add(x - radius/2, y + treeHeight, z), entry.getValue(), blocks);
-
-			//Generate Logs
-			for (double Yangle = 0; Yangle < 2*Math.PI; Yangle+=Math.PI/8.0){
-				// Yangle = 0.0;//Math.PI/4.0;
-				int yOffset = (int)(arcSize*Math.sin(1.5*Math.PI/2.0));
-				int xOffset = (int)(1.25*arcSize*Math.cos(1.5*Math.PI/2.0)*Math.cos(Yangle));
-				int zOffset = (int)(1.25*arcSize*Math.cos(1.5*Math.PI/2.0)*Math.sin(Yangle));
-
-
-				for(double angle = 1.5*Math.PI/2.0; angle > -Math.PI/6.0; angle -= Math.PI/40.0) {
-					int yy = (int)(arcSize*Math.sin(angle));
-					double xzRadius = (1.25*arcSize*Math.cos(angle));
-					int xx = (int) (xzRadius*Math.cos(Yangle));
-					int zz = (int) (xzRadius*Math.sin(Yangle));
-
-					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
-					setBlock( new BlockPos(x + 3 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
-					setBlock( new BlockPos(x + 1 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
-					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +3, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
-					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset + 1), Blocks.LOG.getDefaultState(), blocks);
-					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset - 1), Blocks.LOG.getDefaultState(), blocks);
-
+			//Generate the bottom trapezoid
+			for(int zOff = currentEdgeRadius/2; zOff <= numDiag + currentEdgeRadius/2; zOff++) {
+				currentEdgeRadius--;
+				for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
+					setBlock(new BlockPos(x + xOff, y + yOff, z + zOff), block, world);
 				}
+			}
+		}
+
+		//Canopy
+		for(Entry<BlockPos, BlockState> entry : cachedCanopy.entrySet())
+			setBlock( entry.getKey().add(x - radius/2, y + treeHeight, z), entry.getValue(), world);
+
+		//Generate Logs
+		for (double Yangle = 0; Yangle < 2*Math.PI; Yangle+=Math.PI/8.0){
+			// Yangle = 0.0;//Math.PI/4.0;
+			int yOffset = (int)(arcSize*Math.sin(1.5*Math.PI/2.0));
+			int xOffset = (int)(1.25*arcSize*Math.cos(1.5*Math.PI/2.0)*Math.cos(Yangle));
+			int zOffset = (int)(1.25*arcSize*Math.cos(1.5*Math.PI/2.0)*Math.sin(Yangle));
 
 
-				//Generate the hangy things
-				if(rand.nextInt(4) == 0) {
+			for(double angle = 1.5*Math.PI/2.0; angle > -Math.PI/6.0; angle -= Math.PI/40.0) {
+				int yy = (int)(arcSize*Math.sin(angle));
+				double xzRadius = (1.25*arcSize*Math.cos(angle));
+				int xx = (int) (xzRadius*Math.cos(Yangle));
+				int zz = (int) (xzRadius*Math.sin(Yangle));
 
-					int yy = (int)(arcSize*Math.sin(Math.PI/3.0));
-					double xzRadius = (1.25*arcSize*Math.cos(Math.PI/2.0));
-					int xx = (int) (xzRadius*Math.cos(Yangle));
-					int zz = (int) (xzRadius*Math.sin(Yangle));
-					int xxx = xx;
-					int zzz = zz;
-					//Leaf caps on bottom
-					for(zz = -1; zz < 2; zz++)
-						for(xx = -1; xx < 2; xx++)
-							setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight - 10 + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState(), blocks);
+				setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LOG.getDefaultState(), world);
+				setBlock( new BlockPos(x + 3 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LOG.getDefaultState(), world);
+				setBlock( new BlockPos(x + 1 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LOG.getDefaultState(), world);
+				setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +3, z + zz- zOffset), Blocks.OAK_LOG.getDefaultState(), world);
+				setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset + 1), Blocks.OAK_LOG.getDefaultState(), world);
+				setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset - 1), Blocks.OAK_LOG.getDefaultState(), world);
+
+			}
+
+
+			//Generate the hangy things
+			if(rand.nextInt(4) == 0) {
+
+				int yy = (int)(arcSize*Math.sin(Math.PI/3.0));
+				double xzRadius = (1.25*arcSize*Math.cos(Math.PI/2.0));
+				int xx = (int) (xzRadius*Math.cos(Yangle));
+				int zz = (int) (xzRadius*Math.sin(Yangle));
+				int xxx = xx;
+				int zzz = zz;
+				//Leaf caps on bottom
+				for(zz = -1; zz < 2; zz++)
+					for(xx = -1; xx < 2; xx++)
+						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight - 10 + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LEAVES.getDefaultState(), world);
+				xx=xxx;
+				zz=zzz;
+				//Descending 
+				for(int yyy = 0; yyy < 10; yyy++) {
+
+
+					for(zz = -2; zz < 3; zz++)
+						for(xx = -2; xx < 3; xx++)
+							setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight - yyy + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LEAVES.getDefaultState(), world);
 					xx=xxx;
 					zz=zzz;
-					//Descending 
-					for(int yyy = 0; yyy < 10; yyy++) {
 
-
-						for(zz = -2; zz < 3; zz++)
-							for(xx = -2; xx < 3; xx++)
-								setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight - yyy + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState(), blocks);
-						xx=xxx;
-						zz=zzz;
-
-						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
-						setBlock( new BlockPos(x + 3 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
-						setBlock( new BlockPos(x + 1 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
-						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +3, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
-						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset + 1), Blocks.LOG.getDefaultState(), blocks);
-						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset - 1), Blocks.LOG.getDefaultState(), blocks);
-					}
+					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.OAK_LOG.getDefaultState(), world);
+					setBlock( new BlockPos(x + 3 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.OAK_LOG.getDefaultState(), world);
+					setBlock( new BlockPos(x + 1 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.OAK_LOG.getDefaultState(), world);
+					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +3, z + zz- zOffset), Blocks.OAK_LOG.getDefaultState(), world);
+					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset + 1), Blocks.OAK_LOG.getDefaultState(), world);
+					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset - 1), Blocks.OAK_LOG.getDefaultState(), world);
 				}
-
 			}
 
-
-			//roots
-
-			for(Entry<BlockPos, BlockState> entry : cachedRoots.entrySet())
-				setBlock( entry.getKey().add( + x - radius/2, y, z), entry.getValue(), blocks);
 		}
+
+
+		//roots
+		for(Entry<BlockPos, BlockState> entry : cachedRoots.entrySet())
+			setBlock( entry.getKey().add( + x - radius/2, y, z), entry.getValue(), world);
+		
+		return true;
 	}
-	
+
 	protected void func_151538_a(World world2, int rangeX,
 			int rangeZ, int chunkX, int chunkZ,
 			Block[] blocks) {
-		
+
 
 	}
 
-	private void setBlock(BlockPos pos, BlockState block, ChunkPrimer blocks) {
-		
+	private void setBlock(BlockPos pos, BlockState block, IChunk world) {
+
 		int x = pos.getX();
 		int y = pos.getY();
 		int z = pos.getZ();
-		
+
 		if(x > 15 || x < 0 || z > 15 || z < 0 || y < 0 || y > 255)
 			return;
-		
-		blocks.setBlockState(x, y, z, block);
+
+		world.setBlockState(new BlockPos(x, y, z), block, false);
 	}
-	
+
 	private BlockState getBlock(BlockPos pos, Block block, ChunkPrimer blocks) {
 		int x = pos.getX();
 		int y = pos.getY();
 		int z = pos.getZ();
-		
+
 		if(x > 15 || x < 0 || z > 15 || z < 0 || y < 0 || y > 255)
 			return Blocks.AIR.getDefaultState();
-		
-		return blocks.getBlockState(x, y, z);
+
+		return blocks.getBlockState(pos);
 	}
-	
-	
+
+
 	public boolean generate(World world, Random rand, int x, int y, int z)
 	{
 
@@ -257,7 +267,7 @@ public class WorldGenSwampTree extends MapGenBase {
 		int numDiag = edgeRadius + 1;
 
 		int meta = 3;
-		BlockState block = Blocks.LOG.getDefaultState();
+		BlockState block = Blocks.OAK_LOG.getDefaultState();
 		int currentEdgeRadius;
 
 		final float SHAPE = 0.1f;
@@ -270,7 +280,7 @@ public class WorldGenSwampTree extends MapGenBase {
 
 			for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
 
-				for(BlockPos yOff = world.getHeight(new BlockPos(x + xOff, 0, z + zOff)); yOff.getY() < y; yOff = yOff.up()) //Fills the gaps under the crystal
+				for(BlockPos yOff = world.getHeight(Type.WORLD_SURFACE, new BlockPos(x + xOff, 0, z + zOff)); yOff.getY() < y; yOff = yOff.up()) //Fills the gaps under the crystal
 					world.setBlockState(yOff, block);
 				world.setBlockState(new BlockPos(x + xOff, y, z + zOff), block);
 			}
@@ -281,7 +291,7 @@ public class WorldGenSwampTree extends MapGenBase {
 		for(int zOff = -currentEdgeRadius/2; zOff <= currentEdgeRadius/2; zOff++) {
 			for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
 
-				for(BlockPos yOff = world.getHeight(new BlockPos(x + xOff, 0, z + zOff)); yOff.getY() < y; yOff = yOff.up()) //Fills the gaps under the crystal
+				for(BlockPos yOff = world.getHeight(Type.WORLD_SURFACE, new BlockPos(x + xOff, 0, z + zOff)); yOff.getY() < y; yOff = yOff.up()) //Fills the gaps under the crystal
 					world.setBlockState(yOff, block);
 				world.setBlockState(new BlockPos(x + xOff, y, z + zOff), block);
 			}
@@ -291,7 +301,7 @@ public class WorldGenSwampTree extends MapGenBase {
 		for(int zOff = currentEdgeRadius/2; zOff <= numDiag + currentEdgeRadius/2; zOff++) {
 			currentEdgeRadius--;
 			for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
-				for(BlockPos yOff = world.getHeight(new BlockPos(x + xOff, 0, z + zOff)); yOff.getY() < y; yOff = yOff.up()) //Fills the gaps under the crystal
+				for(BlockPos yOff = world.getHeight(Type.WORLD_SURFACE, new BlockPos(x + xOff, 0, z + zOff)); yOff.getY() < y; yOff = yOff.up()) //Fills the gaps under the crystal
 					world.setBlockState(yOff, block);
 				world.setBlockState(new BlockPos(x + xOff, y, z + zOff), block);
 			}
@@ -347,12 +357,12 @@ public class WorldGenSwampTree extends MapGenBase {
 				int xx = (int) (xzRadius*Math.cos(Yangle));
 				int zz = (int) (xzRadius*Math.sin(Yangle));
 
-				world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), 5); //meta
-				world.setBlockState( new BlockPos(x + 3 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), 5); //meta
-				world.setBlockState( new BlockPos(x + 1 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), 5); //meta
-				world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +3, z + zz- zOffset), Blocks.LOG.getDefaultState(), 5); //meta
-				world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset + 1), Blocks.LOG.getDefaultState(), 5); //meta
-				world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset - 1), Blocks.LOG.getDefaultState(), 5); //meta
+				world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LOG.getDefaultState(), 5); //meta
+				world.setBlockState( new BlockPos(x + 3 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LOG.getDefaultState(), 5); //meta
+				world.setBlockState( new BlockPos(x + 1 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LOG.getDefaultState(), 5); //meta
+				world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +3, z + zz- zOffset), Blocks.OAK_LOG.getDefaultState(), 5); //meta
+				world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset + 1), Blocks.OAK_LOG.getDefaultState(), 5); //meta
+				world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset - 1), Blocks.OAK_LOG.getDefaultState(), 5); //meta
 
 			}
 
@@ -369,7 +379,7 @@ public class WorldGenSwampTree extends MapGenBase {
 				//Leaf caps on bottom
 				for(zz = -1; zz < 2; zz++)
 					for(xx = -1; xx < 2; xx++)
-						world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2,y + treeHeight - 10 + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState(), 5);
+						world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2,y + treeHeight - 10 + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LEAVES.getDefaultState(), 5);
 				xx=xxx;
 				zz=zzz;
 				//Descending 
@@ -378,16 +388,16 @@ public class WorldGenSwampTree extends MapGenBase {
 
 					for(zz = -2; zz < 3; zz++)
 						for(xx = -2; xx < 3; xx++)
-							world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y +treeHeight - yyy + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState(), 5);
+							world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y +treeHeight - yyy + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LEAVES.getDefaultState(), 5);
 					xx=xxx;
 					zz=zzz;
 
-					world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y +treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), 5);
-					world.setBlockState( new BlockPos(x + 3 + xx - xOffset - radius/2, y +treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), 5);
-					world.setBlockState( new BlockPos(x + 1 + xx - xOffset - radius/2, y +treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), 5);
-					world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y +treeHeight + yy - yyy - yOffset +3, z + zz- zOffset), Blocks.LOG.getDefaultState(), 5);
-					world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y +treeHeight + yy - yyy - yOffset +2, z + zz- zOffset + 1), Blocks.LOG.getDefaultState(),5);
-					world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y +treeHeight + yy - yyy - yOffset +2, z + zz- zOffset - 1), Blocks.LOG.getDefaultState(), 5);
+					world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y +treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.OAK_LOG.getDefaultState(), 5);
+					world.setBlockState( new BlockPos(x + 3 + xx - xOffset - radius/2, y +treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.OAK_LOG.getDefaultState(), 5);
+					world.setBlockState( new BlockPos(x + 1 + xx - xOffset - radius/2, y +treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.OAK_LOG.getDefaultState(), 5);
+					world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y +treeHeight + yy - yyy - yOffset +3, z + zz- zOffset), Blocks.OAK_LOG.getDefaultState(), 5);
+					world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y +treeHeight + yy - yyy - yOffset +2, z + zz- zOffset + 1), Blocks.OAK_LOG.getDefaultState(),5);
+					world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y +treeHeight + yy - yyy - yOffset +2, z + zz- zOffset - 1), Blocks.OAK_LOG.getDefaultState(), 5);
 				}
 			}
 
@@ -407,7 +417,18 @@ public class WorldGenSwampTree extends MapGenBase {
 	//Just a helper macro
 	private void onPlantGrow(World world, int x, int y, int z, int sourceX, int sourceY, int sourceZ)
 	{
-		
+
 		world.getBlockState(new BlockPos(x,y,z)).getBlock().onPlantGrow(world.getBlockState(new BlockPos(x,y,z)), world, new BlockPos(x, y, z), new BlockPos(sourceX, sourceY, sourceZ));
+	}
+
+	@Override
+	public boolean shouldCarve(Random rand, int chunkX, int chunkZ, ProbabilityConfig config) {
+		return rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk && rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk;
+	}
+
+	@Override
+	protected boolean func_222708_a(double p_222708_1_, double p_222708_3_, double p_222708_5_, int p_222708_7_) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

@@ -17,9 +17,9 @@ import zmaster587.libVulpes.util.ZUtils;
 
 public class BlockWarpCore extends BlockMultiblockMachine {
 
-	public BlockWarpCore(Properties property, TileEntityType<?> tileClass,
+	public BlockWarpCore(Properties property,
 			int guiId) {
-		super(property, tileClass, guiId);
+		super(property, guiId);
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class BlockWarpCore extends BlockMultiblockMachine {
 		// TODO Auto-generated method stub
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
 		
-		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId) {
+		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 		
 			if(spaceObj instanceof SpaceStationObject)
@@ -38,7 +38,7 @@ public class BlockWarpCore extends BlockMultiblockMachine {
 	
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
-		if(ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId) {
+		if(ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(spaceObj instanceof SpaceStationObject)
 				((SpaceStationObject)spaceObj).removeWarpCore(new HashedBlockPosition(pos));

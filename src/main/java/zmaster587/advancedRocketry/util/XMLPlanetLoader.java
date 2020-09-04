@@ -19,9 +19,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.IGalaxy;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
@@ -429,7 +432,7 @@ public class XMLPlanetLoader {
 							AdvancedRocketry.logger.fatal("===== Configuration Error!  Please check your save's planetDefs.xml config file =====\n"
 									+ e.getLocalizedMessage()
 									+ "\nThe following is not valid JSON:\n" + nbtString);
-						} catch (NBTException e) {
+						} catch (CommandSyntaxException e) {
 							AdvancedRocketry.logger.fatal("===== Configuration Error!  Please check your save's planetDefs.xml config file =====\n"
 									+ e.getLocalizedMessage()
 									+ "\nThe following is not valid NBT data:\n" + nbtString);
@@ -628,7 +631,7 @@ public class XMLPlanetLoader {
 			}
 		}
 
-		star.setId(starId++);
+		star.setId(new ResourceLocation( Constants.STAR_NAMESPACE, String.valueOf(starId++)));
 		return star;
 	}
 
@@ -684,8 +687,6 @@ public class XMLPlanetLoader {
 
 		//readPlanetFromNode changes value
 		//Yes it's hacky but that's another reason why it's private
-
-		offset = DimensionManager.dimOffset;
 		while(masterNode != null) {
 			if(!masterNode.getNodeName().equals("star")) {
 				masterNode = masterNode.getNextSibling();
@@ -815,7 +816,7 @@ public class XMLPlanetLoader {
 	{
 		Element nodePlanet = doc.createElement(ELEMENT_PLANET);
 		nodePlanet.setAttribute(ATTR_NAME, properties.getName());
-		nodePlanet.setAttribute(ATTR_DIMID, Integer.toString(properties.getId()));
+		nodePlanet.setAttribute(ATTR_DIMID, properties.getId().toString());
 		if(!properties.isNativeDimension)
 			nodePlanet.setAttribute(ATTR_NATIVEDIM, "");
 		if (!properties.customIcon.isEmpty())
@@ -841,7 +842,7 @@ public class XMLPlanetLoader {
 			{
 				for(Fluid f : properties.getHarvestableGasses())
 				{
-					nodePlanet.appendChild(createTextNode(doc, ELEMENT_GAS,  f.getName()));
+					nodePlanet.appendChild(createTextNode(doc, ELEMENT_GAS,  f.getRegistryName().toString()));
 				}
 
 			}
@@ -886,9 +887,9 @@ public class XMLPlanetLoader {
 		
 		if(properties.isNativeDimension && !properties.isGasGiant()) {
 			String biomeIds = "";
-			for(BiomeEntry biome : properties.getBiomes()) {
+			for(Biome biome : properties.getBiomes()) {
 				try {
-					biomeIds = biomeIds + "," + Biome.REGISTRY.getNameForObject(biome.biome).toString();//Biome.getIdForBiome(biome.biome);
+					biomeIds = biomeIds + "," + AdvancedRocketryBiomes.getBiomeResource(biome).toString();//Biome.getIdForBiome(biome.biome);
 				} catch (NullPointerException e) {
 					AdvancedRocketry.logger.warn("Error saving biomes for world, biomes list saved may be incomplete.  World: " + properties.getId());
 				}
@@ -901,23 +902,19 @@ public class XMLPlanetLoader {
 		}
 
 		for(ItemStack stack : properties.getRequiredArtifacts()) {
-			nodePlanet.appendChild(createTextNode(doc, ELEMENT_ARTIFACT, stack.getItem().getRegistryName() + " " + stack.getItemDamage() + " " + stack.getCount()));
+			nodePlanet.appendChild(createTextNode(doc, ELEMENT_ARTIFACT, stack.getItem().getRegistryName() + " " + stack.getCount()));
 		}
 
-		for(Integer properties2 : properties.getChildPlanets()) {
+		for(ResourceLocation properties2 : properties.getChildPlanets()) {
 			nodePlanet.appendChild(writePlanet(doc, DimensionManager.getInstance().getDimensionProperties(properties2)));
 		}
 
 		if(properties.getOceanBlock() != null) {
-			nodePlanet.appendChild(createTextNode(doc, ELEMENT_OCEANBLOCK, Block.REGISTRY.getNameForObject(properties.getOceanBlock().getBlock()).toString()));
+			nodePlanet.appendChild(createTextNode(doc, ELEMENT_OCEANBLOCK, ForgeRegistries.BLOCKS.getKey(properties.getOceanBlock().getBlock()).toString()));
 		}
 
 		if(properties.getStoneBlock() != null) {
-			int meta = properties.getStoneBlock().getBlock().getMetaFromState(properties.getStoneBlock());
-			if(meta != 0)
-				nodePlanet.appendChild(createTextNode(doc, ELEMENT_FILLERBLOCK, Block.REGISTRY.getNameForObject(properties.getStoneBlock().getBlock()) + ":" + meta));
-			else
-				nodePlanet.appendChild(createTextNode(doc, ELEMENT_FILLERBLOCK, Block.REGISTRY.getNameForObject(properties.getStoneBlock().getBlock()).toString()));
+				nodePlanet.appendChild(createTextNode(doc, ELEMENT_FILLERBLOCK, ForgeRegistries.BLOCKS.getKey(properties.getStoneBlock().getBlock()).toString()));
 		}
 
 		for(SpawnListEntryNBT e : properties.getSpawnListEntries()) {
@@ -926,11 +923,11 @@ public class XMLPlanetLoader {
 				nbtString = " nbt=\"" + nbtString.replaceAll("\"", "&quot;") + "\"";
 			Element spawnable = doc.createElement(ELEMENT_SPAWNABLE);
 			spawnable.setAttribute(ATTR_WEIGHT, Integer.toString(e.itemWeight));
-			spawnable.setAttribute(ATTR_GROUPMIN, Integer.toString(e.minGroupCount));
-			spawnable.setAttribute(ATTR_GROUPMAX, Integer.toString(e.maxGroupCount));
+			spawnable.setAttribute(ATTR_GROUPMIN, Integer.toString(e.field_242589_d));
+			spawnable.setAttribute(ATTR_GROUPMAX, Integer.toString(e.field_242590_e));
 			spawnable.setAttribute(ATTR_NBT, nbtString.replaceAll("\"", "&quot;"));
 			
-			spawnable.appendChild(doc.createTextNode(EntityRegistry.getEntry(e.entityClass).getRegistryName().toString()));
+			spawnable.appendChild(doc.createTextNode( e.field_242588_c.getRegistryName().toString()));
 			
 			nodePlanet.appendChild(spawnable);
 		}
@@ -949,6 +946,8 @@ public class XMLPlanetLoader {
 		String splitStr[] = text.split(" ");
 		int meta = 0;
 		int size = 1;
+		
+		ResourceLocation name = ResourceLocation.tryCreate(splitStr[0]);
 		//format: "name meta size"
 		if(splitStr.length > 1) {
 			try {
@@ -962,16 +961,12 @@ public class XMLPlanetLoader {
 				} catch( NumberFormatException e) {}
 			}
 		}
-
 		ItemStack stack = null;
-		Block block = Block.getBlockFromName(splitStr[0]);
-		if(block == null) {
-			Item item = Item.getByNameOrId(splitStr[0]);
-			if(item != null)
-				stack = new ItemStack(item, size, meta);
+		if(ForgeRegistries.ITEMS.containsKey(name))
+		{
+			Item item = ForgeRegistries.ITEMS.getValue(name);
+			stack = new ItemStack(item, size);
 		}
-		else
-			stack = new ItemStack(block, size, meta);
 
 		return stack;
 	}

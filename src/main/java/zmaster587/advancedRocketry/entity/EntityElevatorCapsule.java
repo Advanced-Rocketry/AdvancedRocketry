@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.entity;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -47,7 +48,7 @@ import java.util.List;
 
 public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 
-	public static final double MAX_HEIGHT = ARConfiguration.getCurrentConfig().orbit;
+	public static final double MAX_HEIGHT = ARConfiguration.getCurrentConfig().orbit.get();
 	public static final double MAX_STANDTIME = 200;
 	byte motion;
 	int standTime, idleTime;
@@ -63,12 +64,14 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 	protected static final DataParameter<Byte> motionDir =  EntityDataManager.<Byte>createKey(EntityElevatorCapsule.class, DataSerializers.BYTE);
 	protected static final DataParameter<Integer> standTimeCounter =  EntityDataManager.<Integer>createKey(EntityElevatorCapsule.class, DataSerializers.VARINT);
 
-	public EntityElevatorCapsule(World worldIn) {
+	public EntityElevatorCapsule( World worldIn) {
 		super(AdvancedRocketryEntities.ENTITY_ELEVATOR_CAPSULE, worldIn);
 		motion = 0;
 		ignoreFrustumCheck = true;
-		
-
+	}
+	
+	public EntityElevatorCapsule(EntityType<? extends EntityElevatorCapsule> type,  World worldIn) {
+		this(worldIn);
 	}
 	
 	@Override
@@ -172,7 +175,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 	}
 
 	public Entity changeDimension(ServerWorld newDimId) {
-		return changeDimension(newDimId, this.getPosX(), (double)ARConfiguration.getCurrentConfig().orbit, this.getPosZ());
+		return changeDimension(newDimId, this.getPosX(), (double)ARConfiguration.getCurrentConfig().orbit.get(), this.getPosZ());
 	}
 
 	@Override
@@ -284,7 +287,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 						}
 					}
 
-					changeDimension(ZUtils.getWorld(dstTilePos.dimid), landingLocX, ARConfiguration.getCurrentConfig().orbit, landingLocZ);
+					changeDimension(ZUtils.getWorld(dstTilePos.dimid), landingLocX, ARConfiguration.getCurrentConfig().orbit.get(), landingLocZ);
 
 					MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketDeOrbitingEvent(this));
 				}
@@ -406,14 +409,10 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 
 	@Override
 	public AxisAlignedBB getBoundingBox() {
-		return super.getBoundingBox();//new AxisAlignedBB(-10,-20,-10, 10,10,10);
-	}
-
-	@Override
-	public AxisAlignedBB getCollisionBoundingBox() {
-		AxisAlignedBB aabb = new AxisAlignedBB(getBoundingBox().minX, getBoundingBox().minY, getBoundingBox().minZ, getBoundingBox().maxX, getBoundingBox().maxY-3, getBoundingBox().maxZ);
+		AxisAlignedBB aabb = new AxisAlignedBB(super.getBoundingBox().minX, super.getBoundingBox().minY, super.getBoundingBox().minZ, super.getBoundingBox().maxX, super.getBoundingBox().maxY-3, super.getBoundingBox().maxZ);
 		return isAscending() || isDescending() ? null : aabb;
 	}
+	
 
 	@OnlyIn(value=Dist.CLIENT)
 	@Override

@@ -5,6 +5,7 @@ import java.util.ListIterator;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -72,7 +73,7 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 	protected EmbeddedInventory inv;
 	private boolean turningLeft, turningRight, turningUp, turningDownforWhat;
 
-	public EntityHoverCraft(World par1World)
+	public EntityHoverCraft(EntityType<?> type,  World par1World)
 	{
 		super( AdvancedRocketryEntities.ENTITY_HOVER_CRAFT, par1World);
 		inv = new EmbeddedInventory(1);
@@ -80,7 +81,7 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 
 	public EntityHoverCraft(World par1World, double par2, double par4, double par6)
 	{
-		this(par1World);
+		this(AdvancedRocketryEntities.ENTITY_HOVER_CRAFT, par1World);
 
 		//System.out.println(localBoundingBox);
 

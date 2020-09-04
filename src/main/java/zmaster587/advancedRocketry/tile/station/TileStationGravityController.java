@@ -20,7 +20,6 @@ import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
-import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.inventory.ContainerModular;
@@ -50,7 +49,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 		maxGravBuildSpeed = new ModuleText(6, 25, LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.maxaltrate"), 0xaa2020);
 		targetGrav = new ModuleText(6, 35, LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.tgtalt"), 0x202020);
 		
-		minGravity = ARConfiguration.getCurrentConfig().allowZeroGSpacestations ? 0 : 10;
+		minGravity = ARConfiguration.getCurrentConfig().allowZeroGSpacestations.get() ? 0 : 10;
 	}
 
 	@Override
@@ -102,13 +101,13 @@ public class TileStationGravityController extends TileEntity implements IModular
 	@Override
 	public void tick() {
 
-		if(ZUtils.getDimensionIdentifier(this.world) == ARConfiguration.getCurrentConfig().spaceDimId) {
+		if(ZUtils.getDimensionIdentifier(this.world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
 
 			if(!world.isRemote) {
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 				if(object != null) {
-					if(gravity < 11  && !ARConfiguration.getCurrentConfig().allowZeroGSpacestations)
+					if(gravity < 11  && !ARConfiguration.getCurrentConfig().allowZeroGSpacestations.get())
 						gravity = 11;
 					double targetGravity = gravity/100D;
 					double angVel = object.getProperties().getGravitationalMultiplier();

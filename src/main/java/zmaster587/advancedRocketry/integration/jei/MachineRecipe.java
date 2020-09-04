@@ -80,11 +80,11 @@ public class MachineRecipe extends Recipe implements IRecipeCategoryExtension {
 		String powerString = String.format("Power: %d RF/t", energy);
 		FontRenderer fontRendererObj = Minecraft.getInstance().fontRenderer;
 		int stringWidth = fontRendererObj.getStringWidth(powerString);
-		fontRendererObj.func_238422_b_(matrixStack, new StringTextComponent(powerString), 0, 55, Color.black.getRGB());
+		fontRendererObj.func_243246_a(matrixStack, new StringTextComponent(powerString), 0, 55, Color.black.getRGB());
 		
 		String timeString = String.format("Time: %d s", time/20);
 		stringWidth = fontRendererObj.getStringWidth(powerString);
-		fontRendererObj.func_238422_b_(matrixStack, new StringTextComponent(timeString), recipeWidth - 55, 55, Color.black.getRGB());
+		fontRendererObj.func_243246_a(matrixStack, new StringTextComponent(timeString), recipeWidth - 55, 55, Color.black.getRGB());
 	}
 	
 	@Override

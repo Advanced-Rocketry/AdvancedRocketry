@@ -65,7 +65,7 @@ public class RendererWarpCore extends TileEntityRenderer<TileWarpCore> {
 		matrix.pop();
 		
 		
-		if(ZUtils.getDimensionIdentifier(tile.getWorld()) == ARConfiguration.getCurrentConfig().spaceDimId) {
+		if(ZUtils.getDimensionIdentifier(tile.getWorld()) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
 			
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(tile.getPos());
 			if(obj instanceof SpaceStationObject && ((SpaceStationObject)obj).getFuelAmount() > 50) {

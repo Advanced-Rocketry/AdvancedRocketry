@@ -38,7 +38,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class RenderAsteroidSky { //extends IRenderHandler {
+public class RenderAsteroidSky implements ISkyRenderer { //extends IRenderHandler {
 
 
 	private VertexBuffer starGLCallList;
@@ -296,7 +296,7 @@ public class RenderAsteroidSky { //extends IRenderHandler {
 			}
 			else
 				primaryStar = DimensionManager.getSol();
-			if(properties.getId() == ARConfiguration.getCurrentConfig().spaceDimId) {
+			if(properties.getId() == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
 				if(isWarp) {
 					SpaceStationObject station = (SpaceStationObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(playerPos);

@@ -1,8 +1,9 @@
 package zmaster587.advancedRocketry.achievements;
 
-import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.ICriterionTrigger;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import java.lang.reflect.Method;
 
@@ -10,21 +11,30 @@ public class ARAchivements  {
 
 	private static Method CriterionRegister;
 
-	public static final CustomTrigger MOON_LANDING = new CustomTrigger("moonlanding");
-	public static final CustomTrigger ONE_SMALL_STEP = new CustomTrigger("onesmallstep");
-	public static final CustomTrigger BEER = new CustomTrigger("beer");
-	public static final CustomTrigger WENT_TO_THE_MOON = new CustomTrigger("wenttothemoon");
-	public static final CustomTrigger ALL_SHE_GOT = new CustomTrigger("givingitallshesgot");
-	public static final CustomTrigger FLIGHT_OF_PHEONIX = new CustomTrigger("flightofpheonix");
+	public static final ResourceLocation MOON_LANDING = new ResourceLocation("moonlanding");
+	public static final ResourceLocation ONE_SMALL_STEP = new ResourceLocation("onesmallstep");
+	public static final ResourceLocation BEER = new ResourceLocation("beer");
+	public static final ResourceLocation WENT_TO_THE_MOON = new ResourceLocation("wenttothemoon");
+	public static final ResourceLocation ALL_SHE_GOT = new ResourceLocation("givingitallshesgot");
+	public static final ResourceLocation FLIGHT_OF_PHEONIX = new ResourceLocation("flightofpheonix");
 	
-	public static final CustomTrigger[] TRIGGER_ARRAY = new CustomTrigger[] {
+	public static void triggerAchievement(ResourceLocation name, ServerPlayerEntity player)
+	{
+		Advancement advancement = ServerLifecycleHooks.getCurrentServer().getAdvancementManager().getAdvancement(name);
+		
+		if(advancement != null)
+			for(String str : advancement.getCriteria().keySet())
+				player.getAdvancements().grantCriterion(advancement, str);
+	}
+	
+	/*public static final CustomTrigger[] TRIGGER_ARRAY = new CustomTrigger[] {
 		MOON_LANDING,
 		ONE_SMALL_STEP,
 		BEER,
 		WENT_TO_THE_MOON,
 		ALL_SHE_GOT,
 		FLIGHT_OF_PHEONIX
-	};
+	};*/
 
 	/*	public static final Advancement moonLanding = new Advancement("Advancement.AR.moonLanding", "moonLanding", -5, 1, AdvancedRocketryBlocks.blockMoonTurf, null).initIndependentStat().registerStat();
 	public static final Advancement oneSmallStep = new Advancement("Advancement.AR.oneSmallStep", "oneSmallStep", -4, -1, AdvancedRocketryBlocks.blockMoonTurf, moonLanding).setSpecial().registerStat();
@@ -71,17 +81,4 @@ public class ARAchivements  {
 				electrifying,
 				blockPresser));
 	}*/
-
-	public static void register() {
-		Method method;
-		try {
-			method = ReflectionHelper.findMethod(CriteriaTriggers.class, "register", "func_192118_a", ICriterionTrigger.class);
-			method.setAccessible(true);
-			for (int i=0; i < ARAchivements.TRIGGER_ARRAY.length; i++) {
-				method.invoke(null, ARAchivements.TRIGGER_ARRAY[i]);
-			} 
-		} catch (Exception e) {
-			
-		}
-	}
 }

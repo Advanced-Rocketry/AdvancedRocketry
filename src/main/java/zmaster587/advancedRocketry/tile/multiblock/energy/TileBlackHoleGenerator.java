@@ -159,7 +159,7 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 				if(i.getKey().getItem() == stack.getItem() && i.getKey().getDamage() == stack.getDamage())
 					return i.getValue();
 			}
-			return ARConfiguration.getCurrentConfig().defaultItemTimeBlackHole;
+			return ARConfiguration.getCurrentConfig().defaultItemTimeBlackHole.get();
 		}
 
 		private void attemptFire()
@@ -187,7 +187,7 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 		private boolean isAroundBlackHole()
 		{
 
-			if(ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId)
+			if(ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId.get())
 			{
 				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos);
 				if(obj != null)
@@ -222,7 +222,7 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 					attemptFire();
 
 					energyRecieved = last_usage > this.world.getGameTime() ? 500f : 0f;
-					powerMadeLastTick = (int) (energyRecieved*ARConfiguration.getCurrentConfig().blackHolePowerMultiplier);
+					powerMadeLastTick = (int) (energyRecieved*ARConfiguration.getCurrentConfig().blackHolePowerMultiplier.get());
 
 					if(powerMadeLastTick != prevPowerMadeLastTick) {
 						prevPowerMadeLastTick = powerMadeLastTick;

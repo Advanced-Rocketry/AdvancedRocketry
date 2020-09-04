@@ -1,27 +1,33 @@
 package zmaster587.advancedRocketry.inventory;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import org.lwjgl.input.Keyboard;
+
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+
 import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
 import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.render.RenderHelper;
-import zmaster587.libVulpes.util.VulpineMath;
-
-import java.io.IOException;
 import java.nio.IntBuffer;
 
-public class GuiOreMappingSatellite extends ContainerScreen<? extends Container> {
+public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingSatallite> {
 
 	ClientDynamicTexture texture;
 	Thread currentMapping;
@@ -43,15 +49,15 @@ public class GuiOreMappingSatellite extends ContainerScreen<? extends Container>
 	World world;
 	SatelliteOreMapping tile;
 
-	public GuiOreMappingSatellite(SatelliteOreMapping tile,PlayerEntity inventoryPlayer) {
-		super( new ContainerOreMappingSatallite(tile,inventoryPlayer.inventory));
-		world = inventoryPlayer.world;
+	public GuiOreMappingSatellite(ContainerOreMappingSatallite container, PlayerInventory inventoryPlayer, ITextComponent title) {
+		super( container, inventoryPlayer, title);
+		world = container.player.world;
 
 		prevSlot = -1;
-		this.tile = tile;
+		this.tile = container.inv;
 		//masterConsole = tile;
-		playerPosX = xCenter = (int) inventoryPlayer.posX;
-		playerPosZ = zCenter = (int) inventoryPlayer.posZ;
+		playerPosX = xCenter = (int) container.player.getPosX();
+		playerPosZ = zCenter = (int) container.player.getPosZ();
 
 		//Max zoom is 128
 		if(tile != null)
@@ -110,19 +116,19 @@ public class GuiOreMappingSatellite extends ContainerScreen<? extends Container>
 		}
 		else {
 
-			currentMapping = new Thread(new ItemMapper(inventorySlots.getSlot(prevSlot).getStack()));
+			currentMapping = new Thread(new ItemMapper(this.playerInventory.getStackInSlot(prevSlot).getStack()));
 			currentMapping.setName("Ore Scan");
 		}
 		currentMapping.start();
 	}
 
+	//onMouseclicked
 	@Override
-	protected void mouseClicked(int x, int y,
-			int button) throws IOException {
+	public boolean func_231048_c_(double x, double y, int button) {
 		// TODO Auto-generated method stub
-		super.mouseClicked(x, y, button);
+		boolean val = super.func_231048_c_(x, y, button);
 
-		int xOffset = 47 + (width - 240) / 2, yOffset = 20 + (height - 192) / 2;
+		int xOffset = 47 + (field_230708_k_ - 240) / 2, yOffset = 20 + (field_230709_l_ - 192) / 2;
 
 		//Get selected slot and begin scan!
 		if(button == 0 && tile.getSelectedSlot() != prevSlot) {
@@ -132,7 +138,7 @@ public class GuiOreMappingSatellite extends ContainerScreen<? extends Container>
 
 		//Clicked off screen don't do anything
 		if(x < xOffset || x > xOffset + SCREEN_SIZE || y < yOffset || y > yOffset + SCREEN_SIZE)
-			return;
+			return false;
 
 		//If the grid is displayed get the value at this location
 		if(oreMap != null) {
@@ -142,38 +148,38 @@ public class GuiOreMappingSatellite extends ContainerScreen<? extends Container>
 			xSelected = (int)((x - xOffset) * numPixels) + xCenter - (radius*scanSize/2);
 			zSelected = (int)((y - yOffset) * numPixels) + zCenter - (radius*scanSize/2);
 		}
-
+		return val;
 	}
 
 
 
 	@Override
-	protected void keyTyped(char c, int i) throws IOException {
-		if(i == Keyboard.KEY_W) {
+	protected boolean func_195363_d(int keyCode, int scanCode)  {
+		if(keyCode == GLFW.GLFW_KEY_W) {
 			zCenter -= radius;
 			runMapperWithSelection();
 		}
-		else if(i == Keyboard.KEY_S) {
+		else if(keyCode == GLFW.GLFW_KEY_S) {
 			zCenter += radius;
 
 			runMapperWithSelection();
 		}
-		else if(i == Keyboard.KEY_A) {
+		else if(keyCode == GLFW.GLFW_KEY_A) {
 			xCenter -= radius;
 
 			runMapperWithSelection();
 		}
-		else if(i == Keyboard.KEY_D) {
+		else if(keyCode == GLFW.GLFW_KEY_A) {
 			xCenter += radius;
 
 			runMapperWithSelection();
 		}
-		else if(i == Keyboard.KEY_DOWN){
+		else if(keyCode == GLFW.GLFW_KEY_DOWN){
 			scanSize = Math.min(scanSize*2, maxZoom);
 
 			runMapperWithSelection();
 		}
-		else if(i == Keyboard.KEY_UP) {
+		else if(keyCode == GLFW.GLFW_KEY_UP) {
 			if((scanSize/2)/radius > 0) {
 				scanSize = Math.max(scanSize/2, 2);
 
@@ -198,16 +204,18 @@ public class GuiOreMappingSatellite extends ContainerScreen<? extends Container>
 			}
 		}*/
 		else 
-			super.keyTyped(c, i);
+			return super.func_195363_d(keyCode, scanCode);
+		return true;
 	}
 
 	//Create our image here
+	// InitGui
 	@Override
-	public void initGui() {
-		super.initGui();
+	public void func_231160_c_() {
+		super.func_231160_c_();
 		texture = new ClientDynamicTexture(Math.max(scanSize/radius,1),Math.max(scanSize/radius,1));
 
-		ItemStack stack = inventorySlots.getSlot(0).getStack();
+		ItemStack stack = this.playerInventory.getStackInSlot(0).getStack();
 
 		if(tile != null) {
 			currentMapping = new Thread(mapper);
@@ -223,8 +231,8 @@ public class GuiOreMappingSatellite extends ContainerScreen<? extends Container>
 	}
 
 	@Override
-	public void onGuiClosed() {
-		super.onGuiClosed();
+	public void func_231164_f_() {
+		super.func_231164_f_();
 		//Delete texture and stop any mapping on close
 		GL11.glDeleteTextures(texture.getTextureId());
 		if(currentMapping != null)
@@ -233,35 +241,36 @@ public class GuiOreMappingSatellite extends ContainerScreen<? extends Container>
 
 
 
+	// Draw foreground
 	@Override
-	protected void drawGuiContainerForegroundLayer(int p_146979_1_,	int p_146979_2_) {
+	protected void func_230451_b_(MatrixStack matrix, int a, int b)  {
 
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		//Draw fancy things
-		GlStateManager.disableTexture();
-		GlStateManager.color4f(0f, 0.8f, 0f);
+		RenderSystem.disableTexture();
+		RenderSystem.color4f(0f, 0.8f, 0f,1f);
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		buffer.pos(-21, 82 + fancyScanOffset, (double)this.zLevel).endVertex();
-		buffer.pos(0, 84 + fancyScanOffset, (double)this.zLevel).endVertex();
-		buffer.pos(0, 81 + fancyScanOffset, (double)this.zLevel).endVertex();
-		buffer.pos(-21, 81 + fancyScanOffset, (double)this.zLevel).endVertex();
+		buffer.pos(-21, 82 + fancyScanOffset, (double)this.func_230927_p_()).endVertex();
+		buffer.pos(0, 84 + fancyScanOffset, (double)this.func_230927_p_()).endVertex();
+		buffer.pos(0, 81 + fancyScanOffset, (double)this.func_230927_p_()).endVertex();
+		buffer.pos(-21, 81 + fancyScanOffset, (double)this.func_230927_p_()).endVertex();
 		Tessellator.getInstance().draw();
 
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		buffer.pos(-21, 82 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel).endVertex();
-		buffer.pos(0, 84 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel).endVertex();
-		buffer.pos(0, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel).endVertex();
-		buffer.pos(-21, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.zLevel).endVertex();
+		buffer.pos(-21, 82 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.func_230927_p_()).endVertex();
+		buffer.pos(0, 84 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.func_230927_p_()).endVertex();
+		buffer.pos(0, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.func_230927_p_()).endVertex();
+		buffer.pos(-21, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.func_230927_p_()).endVertex();
 		Tessellator.getInstance().draw();
 
 
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
-		GlStateManager.color4f(0.5f, 0.5f, 0.0f,0.3f + ((float)Math.sin(Math.PI*(fancyScanOffset/(float)FANCYSCANMAXSIZE))/3f));
+		RenderSystem.enableBlend();
+		RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
+		RenderSystem.color4f(0.5f, 0.5f, 0.0f,0.3f + ((float)Math.sin(Math.PI*(fancyScanOffset/(float)FANCYSCANMAXSIZE))/3f));
 
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
-		RenderHelper.renderNorthFace(buffer, this.zLevel, 173, 82, 194, 141);
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+		RenderHelper.renderNorthFace(buffer, this.func_230927_p_(), 173, 82, 194, 141,1f,1f,1f,1f);
 		Tessellator.getInstance().draw();
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -281,22 +290,22 @@ public class GuiOreMappingSatellite extends ContainerScreen<? extends Container>
 		int slot;
 		if(tile != null && (slot = tile.getSelectedSlot()) != -1) {
 
-			GlStateManager.disableTexture();
-			GlStateManager.color4f(0f, 0.8f, 0f, 1f);
+			RenderSystem.disableTexture();
+			RenderSystem.color4f(0f, 0.8f, 0f, 1f);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel, 13 + (18*slot), 155, 13 + 16 + (18*slot), 155 + 16, 0, 0, 0, 0);
+			RenderHelper.renderNorthFaceWithUV(buffer, func_230927_p_(), 13 + (18*slot), 155, 13 + 16 + (18*slot), 155 + 16, 0, 0, 0, 0);
 			Tessellator.getInstance().draw();
-			GlStateManager.enableTexture();
+			RenderSystem.enableTexture();
 		}
 
 
 	}
 
+	// Draw background
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float p_146976_1_,
-			int p_146976_2_, int p_146976_3_) {
-		int x = (width - 240) / 2, y = (height - 192) / 2;
+	protected void func_230450_a_(MatrixStack matrix, float f1, int i2, int i3)  {
+		int x = (field_230708_k_ - 240) / 2, y = (field_230709_l_ - 192) / 2;
 
 		//If the scan is done then 
 		if(merged) {
@@ -318,17 +327,17 @@ public class GuiOreMappingSatellite extends ContainerScreen<? extends Container>
 
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		//Render the background then render
-		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.mc.renderEngine.bindTexture(backdrop);
-		this.func_238474_b_(x, y, 0, 0, 240, 192);
+		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		Minecraft.getInstance().getTextureManager().bindTexture(backdrop);
+		this.func_238474_b_(matrix, x, y, 0, 0, 240, 192);
 
 
 		//NOTE: if the controls are rendered first the display never shows up
 		//Draw the actual display
-		GlStateManager.bindTexture( texture.getTextureId() );
+		RenderSystem.bindTexture( texture.getTextureId() );
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel, 47 + x, 20 + y, 47 + x + SCREEN_SIZE, 20 + y + SCREEN_SIZE, 0, 1, 0, 1);
+		RenderHelper.renderNorthFaceWithUV(buffer, this.func_230927_p_(), 47 + x, 20 + y, 47 + x + SCREEN_SIZE, 20 + y + SCREEN_SIZE, 0, 1, 0, 1);
 		Tessellator.getInstance().draw();
 
 
@@ -343,38 +352,46 @@ public class GuiOreMappingSatellite extends ContainerScreen<? extends Container>
 			offsetX *= numPixels;
 			offsetY *= numPixels;
 
-			GlStateManager.disableTexture();
-			GlStateManager.color4f(0.4f, 1f, 0.4f);
+			RenderSystem.disableTexture();
+			RenderSystem.color4f(0.4f, 1f, 0.4f,1f);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel, offsetX + 47 + x + SCREEN_SIZE/2 - radius,  offsetY + 20 + y + SCREEN_SIZE/2 - radius, offsetX + 47 + x + SCREEN_SIZE/2 + radius, offsetY + 20 + y + SCREEN_SIZE/2 + radius, 0, 1, 0, 1);
+			RenderHelper.renderNorthFaceWithUV(buffer, this.func_230927_p_(), offsetX + 47 + x + SCREEN_SIZE/2 - radius,  offsetY + 20 + y + SCREEN_SIZE/2 - radius, offsetX + 47 + x + SCREEN_SIZE/2 + radius, offsetY + 20 + y + SCREEN_SIZE/2 + radius, 0, 1, 0, 1);
 			Tessellator.getInstance().draw();
-			GlStateManager.color4f(1, 1, 1);
-			GlStateManager.enableTexture();
-			this.drawCenteredString(this.fontRenderer, "You", (int)(offsetX + 47 + x + SCREEN_SIZE/2 - radius), (int)(offsetY + 20 + y + SCREEN_SIZE/2 - radius) -10, 0xF0F0F0);
+			RenderSystem.color4f(1, 1, 1,1f);
+			RenderSystem.enableTexture();
+			this.drawCenteredString(matrix, this.field_230712_o_, "You", (int)(offsetX + 47 + x + SCREEN_SIZE/2 - radius), (int)(offsetY + 20 + y + SCREEN_SIZE/2 - radius) -10, 0xF0F0F0);
 		}
 
 		//Render sliders and controls
-		this.mc.renderEngine.bindTexture(backdrop);
+		Minecraft.getInstance().getTextureManager().bindTexture(backdrop);
 
-		this.func_238474_b_(197 + x, 31 + y, 0, 192, 32, 14);
-		this.drawVerticalLine((int)(32*VulpineMath.log2(scanSize-1)/8F) + 199 + x, 34 + y, 45 + y, 0xFFC00F0F);
-		//this.func_238474_b_(197 + x, 63 + y, 0, 192, 32, 14);
-		//this.drawVerticalLine((int)(28*MathVulpes.log2(radius)/4F) + 199 + x, 67 + y, 77 + y, 0xFF000000);
-		this.drawString(this.fontRenderer, "Zoom", 198 + x, 22 + y, 0xF0F0F0);
-		//this.drawString(this.fontRendererObj, "Clarity", 198 + x, 52 + y, 0xb0b0b0);
-		this.drawString(this.fontRenderer, "X: " + xSelected, 6 + x, 33 + y, 0xF0F0F0);
-		this.drawString(this.fontRenderer, "Z: " + zSelected, 6 + x, 49 + y, 0xF0F0F0);
-		this.drawString(this.fontRenderer,  LibVulpes.proxy.getLocalizedString("msg.itemorescanner.value"), 6 + x, 65 + y, 0xF0F0F0);
-		this.drawString(this.fontRenderer, String.valueOf(mouseValue), 6 + x, 79 + y, 0xF0F0F0);
+		this.func_238474_b_(matrix, 197 + x, 31 + y, 0, 192, 32, 14);
+		//this.drawVerticalLine((int)(32*VulpineMath.log2(scanSize-1)/8F) + 199 + x, 34 + y, 45 + y, 0xFFC00F0F);
+		this.drawString(matrix, this.field_230712_o_, "Zoom", 198 + x, 22 + y, 0xF0F0F0);
+		this.drawString(matrix, this.field_230712_o_, "X: " + xSelected, 6 + x, 33 + y, 0xF0F0F0);
+		this.drawString(matrix, this.field_230712_o_, "Z: " + zSelected, 6 + x, 49 + y, 0xF0F0F0);
+		this.drawString(matrix, this.field_230712_o_,  LibVulpes.proxy.getLocalizedString("msg.itemorescanner.value"), 6 + x, 65 + y, 0xF0F0F0);
+		this.drawString(matrix, this.field_230712_o_, String.valueOf(mouseValue), 6 + x, 79 + y, 0xF0F0F0);
 	}
 
+	public void drawString(MatrixStack matrix, FontRenderer font, String str, int x, int z , int color)
+	{
+		font.func_243246_a(matrix, new StringTextComponent(str), x, z, 0);
+	}
+	
+
+	public void drawCenteredString(MatrixStack matrix, FontRenderer font, String str, int x, int z , int color)
+	{
+		font.func_243246_a(matrix, new StringTextComponent(str), x, z, 0);
+	}
+	
 	/**
 	 * Draws the screen and all the components in it.
 	 */
-	public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    public void drawScreen(MatrixStack matrix, int mouseX, int mouseY, float partialTicks)
 	{
-		this.drawDefaultBackground();
-		super.drawScreen(mouseX, mouseY, partialTicks);
-		this.renderHoveredToolTip(mouseX, mouseY);
+        this.func_230446_a_(matrix); // DrawDefaultWorldBackground
+        super.func_230430_a_(matrix, mouseX, mouseY, partialTicks); //drawScreen
+        this.func_230459_a_(matrix, mouseX, mouseY); // renderHoveredToolTip
 	}
 }

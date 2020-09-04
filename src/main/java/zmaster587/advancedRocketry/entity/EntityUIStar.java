@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.entity;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -33,6 +34,11 @@ public class EntityUIStar extends EntityUIPlanet {
 	public EntityUIStar(World worldIn, StellarBody properties, int subStar, TilePlanetaryHologram tile, double x, double y, double z) {
 		this(worldIn, properties, tile, x,y,z);
 		this.dataManager.set(subStarData, (this.subStar = subStar));
+	}
+	
+	public EntityUIStar(EntityType<?> type, World worldIn) {
+		super(type, worldIn);
+		setSize(0.2f, 0.2f);
 	}
 	
 	@Override

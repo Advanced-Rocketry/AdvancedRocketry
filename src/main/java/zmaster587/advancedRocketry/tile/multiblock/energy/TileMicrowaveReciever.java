@@ -181,7 +181,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 					}
 				}
 			}
-			powerMadeLastTick = (int) (energyRecieved*ARConfiguration.getCurrentConfig().microwaveRecieverMulitplier);
+			powerMadeLastTick = (int) (energyRecieved*ARConfiguration.getCurrentConfig().microwaveRecieverMulitplier.get());
 
 			if(powerMadeLastTick != prevPowerMadeLastTick) {
 				prevPowerMadeLastTick = powerMadeLastTick;

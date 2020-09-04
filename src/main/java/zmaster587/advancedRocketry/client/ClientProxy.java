@@ -9,12 +9,17 @@ import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.IDyeableArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.profiler.IProfiler;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -27,13 +32,15 @@ import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.registries.ForgeRegistries;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryEntities;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.advancedRocketry.client.model.ModelRocket;
 import zmaster587.advancedRocketry.client.render.*;
 import zmaster587.advancedRocketry.client.render.RenderLaser;
 import zmaster587.advancedRocketry.client.render.entity.*;
@@ -108,7 +115,7 @@ public class ClientProxy extends CommonProxy {
 
 		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_ROCKET, (IRenderFactory<EntityRocket>)new RendererRocket(null));
 		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_LASER_NODE, (IRenderFactory<EntityLaserNode>)new RenderLaser(2.0, new float[] {1F, 0.25F, 0.25F, 0.2F}, new float[] {0.9F, 0.2F, 0.3F, 0.5F}));
-		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_ITEM_ABDUCTED, (IRenderFactory<EntityItemAbducted>)new RendererItem(Minecraft.getInstance().getRenderManager(), Minecraft.getInstance().getRenderItem()));
+		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_ITEM_ABDUCTED, (IRenderFactory<EntityItemAbducted>)new RendererItem(Minecraft.getInstance().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_UIPLANET, (IRenderFactory<EntityUIPlanet>)new RenderPlanetUIEntity(null));
 		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_UIBUTTON, (IRenderFactory<EntityUIButton>)new RenderButtonUIEntity(null));
 		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_UISTAR, (IRenderFactory<EntityUIStar>)new RenderStarUIEntity(null));
@@ -124,7 +131,7 @@ public class ClientProxy extends CommonProxy {
         {
 			@Override
 			public int getColor(ItemStack stack, int tintIndex) {
-				return tintIndex > 0 ? -1 : ((ArmorItem)stack.getItem()).getColor(stack);
+				return tintIndex > 0 ? -1 : ((IDyeableArmorItem)stack.getItem()).getColor(stack);
 			}
         }, AdvancedRocketryItems.itemSpaceSuit_Boots, AdvancedRocketryItems.itemSpaceSuit_Chest, AdvancedRocketryItems.itemSpaceSuit_Helmet, AdvancedRocketryItems.itemSpaceSuit_Leggings);
 		
@@ -136,11 +143,11 @@ public class ClientProxy extends CommonProxy {
 	{
 
 		//TODO fluids
-		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockOxygenFluid);
+		/*registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockOxygenFluid);
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockNitrogenFluid);
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockHydrogenFluid);
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockFuelFluid);
-		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockEnrichedLavaFluid);
+		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockEnrichedLavaFluid);*/
 	}
 	
 	@Override
@@ -153,7 +160,7 @@ public class ClientProxy extends CommonProxy {
 		registerRenderers();
 	}
 	
-	private void registerFluidModel(IFluidBlock fluidBlock) {
+	/*private void registerFluidModel(IFluidBlock fluidBlock) {
 		Item item = Item.getItemFromBlock((Block) fluidBlock);
 
 		ModelBakery.registerItemVariants(item);
@@ -167,43 +174,8 @@ public class ClientProxy extends CommonProxy {
 		ModelLoader.setCustomStateMapper((Block) fluidBlock, ignoreState);
 		ModelLoader.setCustomMeshDefinition(item, new FluidItemMeshDefinition(modelResourceLocation));
 		ModelBakery.registerItemVariants(item, modelResourceLocation);
-	}
+	}*/
 	
-	private static class FluidStateMapper extends StateMapperBase {
-		private final ModelResourceLocation fluidLocation;
-
-		public FluidStateMapper(ModelResourceLocation fluidLocation) {
-			this.fluidLocation = fluidLocation;
-		}
-
-		@Override
-		protected ModelResourceLocation getModelResourceLocation(BlockState iBlockState) {
-			return fluidLocation;
-		}
-	}
-
-	private static class FluidItemMeshDefinition implements ItemMeshDefinition {
-		private final ModelResourceLocation fluidLocation;
-
-		public FluidItemMeshDefinition(ModelResourceLocation fluidLocation) {
-			this.fluidLocation = fluidLocation;
-		}
-
-		@Override
-		public ModelResourceLocation getModelLocation(ItemStack stack) {
-			return fluidLocation;
-		}
-}
-
-	@SubscribeEvent
-	public void modelBakeEvent(ModelBakeEvent event) {
-		Object object =  event.getModelRegistry().getObject(ModelRocket.resource);
-		if (object instanceof IBakedModel) {
-			IBakedModel existingModel = (IBakedModel)object;
-			ModelRocket customModel = new ModelRocket();
-			event.getModelRegistry().putObject(ModelRocket.resource, existingModel);
-		}
-	}
 
 	@Override
 	public void registerEventHandlers() {
@@ -229,7 +201,7 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public Profiler getProfiler() {
+	public IProfiler getProfiler() {
 		return Minecraft.getInstance().getProfiler();
 	}
 
@@ -258,7 +230,7 @@ public class ClientProxy extends CommonProxy {
 			Minecraft.getInstance().particles.addEffect(fx);
 		}
 		else if(particle == "arc") {
-			FxElectricArc fx = new FxElectricArc(world, x, y, z, motionX);
+			FxElectricArc fx = new FxElectricArc(world, x, y, z, (float) motionX);
 			Minecraft.getInstance().particles.addEffect(fx);
 		}
 		else if(particle == "smallLazer") {
@@ -266,15 +238,17 @@ public class ClientProxy extends CommonProxy {
 			Minecraft.getInstance().particles.addEffect(fx);
 		}
 		else if(particle == "errorBox") {
-			FxErrorBlock fx = new FxErrorBlock(world, x, y, z);
+			FxErrorBlock fx = new FxErrorBlock((ClientWorld) world, x, y, z);
 			Minecraft.getInstance().particles.addEffect(fx);
 		}
 		else if(particle.equals("gravityEffect")) {
 			FxGravityEffect fx = new FxGravityEffect(world, x, y, z, motionX, motionY, motionZ);
 			Minecraft.getInstance().particles.addEffect(fx);
 		}
-		else
-			world.spawnParticle(EnumParticleTypes.getByName(particle), x, y, z, motionX, motionY, motionZ);
+		//else
+		//	ForgeRegistries.PARTICLE_TYPES.getValue(ResourceLocation.tryCreate(particle));
+		//else
+		//	world.spawnParticle(EnumParticleTypes.getByName(particle), x, y, z, motionX, motionY, motionZ);
 	}
 
 	@Override
@@ -297,7 +271,7 @@ public class ClientProxy extends CommonProxy {
 	public float calculateCelestialAngleSpaceStation() {
 		Entity player = Minecraft.getInstance().player;
 		try {
-			return (float) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(player.getPosition()).getRotation(Direction.EAST);
+			return (float) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(player.getPositionVec())).getRotation(Direction.EAST);
 		} catch (NullPointerException e) {
 
 			/*While waiting for network packets various variables required to continue with rendering may be null,
@@ -309,7 +283,7 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public long getWorldTimeUniversal(int id) {
+	public long getWorldTimeUniversal() {
 		try {
 			return Minecraft.getInstance().world.getGameTime();
 		} catch (NullPointerException e) {
@@ -318,8 +292,8 @@ public class ClientProxy extends CommonProxy {
 	}
 	
 	@Override
-	public void loadUILayout(Configuration config) {
-		final String CLIENT = "Client";
+	public void loadUILayout(ARConfiguration config) {
+		/*final String CLIENT = "Client";
 		
 		zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().lockUI = config.get(CLIENT, "lockUI", true, "If UI is not locked, the middle mouse can be used to drag certain AR UIs around the screen, positions are saved on hitting quit in the menu").getBoolean();
 		
@@ -342,12 +316,13 @@ public class ClientProxy extends CommonProxy {
 		RocketEventHandler.atmBar.setRawX(config.get(CLIENT, "atmBarX", 8).getInt());
 		RocketEventHandler.atmBar.setRawY(config.get(CLIENT, "atmBarY", 27).getInt());
 		RocketEventHandler.atmBar.setSizeModeX(config.get(CLIENT, "atmBarModeX", -1).getInt());
-		RocketEventHandler.atmBar.setSizeModeY(config.get(CLIENT, "atmBarModeY", 1).getInt());
+		RocketEventHandler.atmBar.setSizeModeY(config.get(CLIENT, "atmBarModeY", 1).getInt());*/
 	}
 	
 	@Override
-	public void saveUILayout(Configuration configuration) {
-		final String CLIENT = "Client";
+	public void saveUILayout(ARConfiguration configuration) {
+		/*final String CLIENT = "Client";
+		configuration.su
 		configuration.get(CLIENT, "suitPanelX", 1).set(RocketEventHandler.suitPanel.getRawX());
 		configuration.get(CLIENT, "suitPanelY", 1).set(RocketEventHandler.suitPanel.getRawY());
 		configuration.get(CLIENT, "suitPanelModeX", 1).set(RocketEventHandler.suitPanel.getSizeModeX());
@@ -367,7 +342,7 @@ public class ClientProxy extends CommonProxy {
 		configuration.get(CLIENT, "atmBarY", 1).set(RocketEventHandler.atmBar.getRawY());
 		configuration.get(CLIENT, "atmBarModeX", 1).set(RocketEventHandler.atmBar.getSizeModeX());
 		configuration.get(CLIENT, "atmBarModeY", 1).set(RocketEventHandler.atmBar.getSizeModeY());
-		configuration.save();
+		configuration.save();*/
 	}
 	
 	@Override
@@ -376,7 +351,7 @@ public class ClientProxy extends CommonProxy {
 	}
 	
 	public String getNameFromBiome(Biome biome) {
-		return biome.getBiomeName();
+		return AdvancedRocketryBiomes.getBiomeResource(biome).toString();
 	}
 	
 	@Override

@@ -166,12 +166,12 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public int getPowerPerOperation() {
-		return (int)((numScrubbers*10 + 1)*ARConfiguration.getCurrentConfig().oxygenVentPowerMultiplier);
+		return (int)((numScrubbers*10 + 1)*ARConfiguration.getCurrentConfig().oxygenVentPowerMultiplier.get());
 	}
 
 	@Override
 	public boolean canFill( Fluid fluid) {
-		return FluidUtils.areFluidsSameType(fluid, AdvancedRocketryFluids.fluidOxygen) && super.canFill( fluid);
+		return FluidUtils.areFluidsSameType(fluid, AdvancedRocketryFluids.oxygenStill.get()) && super.canFill( fluid);
 	}
 
 	public boolean getEquivilentPower() {
@@ -235,7 +235,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 			if(isSealed) {
 
 				//If scrubbers exist and the config allows then use the cartridge
-				if(ARConfiguration.getCurrentConfig().scrubberRequiresCartrige){
+				if(ARConfiguration.getCurrentConfig().scrubberRequiresCartrige.get()){
 					//TODO: could be optimized
 					if(world.getGameTime() % 200 == 0) {
 						numScrubbers = 0;
@@ -337,7 +337,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	}
 
 	public float getGasUsageMultiplier() {
-		return (float) (Math.max(0.01f - numScrubbers*0.005f,0)*ARConfiguration.getCurrentConfig().oxygenVentConsumptionMult);
+		return (float) (Math.max(0.01f - numScrubbers*0.005f,0)*ARConfiguration.getCurrentConfig().oxygenVentConsumptionMult.get());
 	}
 
 	@Override
@@ -372,7 +372,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public int getMaxBlobRadius() {
-		return ARConfiguration.getCurrentConfig().oxygenVentSize;
+		return ARConfiguration.getCurrentConfig().oxygenVentSize.get();
 	}
 
 	@Override

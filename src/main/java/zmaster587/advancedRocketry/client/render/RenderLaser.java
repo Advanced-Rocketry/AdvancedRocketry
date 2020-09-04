@@ -33,11 +33,11 @@ public class RenderLaser extends EntityRenderer<EntityLaserNode> implements IRen
 			IRenderTypeBuffer buffer, int packedLightIn) {
 
 		matrix.push();
-		doRender(matrix, buffer);
+		doRender(buffer);
 		matrix.pop();
 	}
 	
-	public void doRender(MatrixStack matrix, IRenderTypeBuffer buffer) {
+	public void doRender(IRenderTypeBuffer buffer) {
 		IVertexBuilder translucentRenderer = buffer.getBuffer(RenderHelper.getTranslucentTexturedManualRenderType(flare));
 		float x = 0, y = 0, z = 0;
 

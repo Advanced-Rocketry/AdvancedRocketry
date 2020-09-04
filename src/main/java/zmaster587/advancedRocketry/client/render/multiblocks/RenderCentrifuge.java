@@ -64,7 +64,7 @@ public class RenderCentrifuge extends TileEntityRenderer<TileCentrifuge> {
 
 			ResourceLocation fluidIcon = new ResourceLocation("advancedrocketry:textures/blocks/fluid/oxygen_flow.png");
 			
-			Fluid fluid = AdvancedRocketryFluids.fluidEnrichedLava;
+			Fluid fluid = AdvancedRocketryFluids.enrichedLavaStill.get();
 			/*if(fluid != null)
 			{
 				matrix.push();

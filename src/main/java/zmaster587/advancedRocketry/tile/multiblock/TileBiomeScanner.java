@@ -8,6 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.biome.Biome;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -94,7 +95,7 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 
 					int i = 0;
 					if(properties.getId() == DimensionManager.overworldProperties.getId()) {
-						Iterator<Biome> itr = Biome.REGISTRY.iterator();
+						Iterator<Biome> itr = AdvancedRocketryBiomes.getAllBiomes();
 						while (itr.hasNext()) {
 							Biome biome = itr.next();
 							if(biome != null)
@@ -102,10 +103,10 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 						}
 					}
 					else {
-						Iterator<BiomeEntry> itr = properties.getBiomes().iterator();
+						Iterator<Biome> itr = properties.getBiomes().iterator();
 						while (itr.hasNext()) {
-							BiomeEntry biome = itr.next();
-							list2.add(new ModuleText(32, 16 + 12*(i++), AdvancedRocketry.proxy.getNameFromBiome(biome.biome), 0x202020));
+							Biome biome = itr.next();
+							list2.add(new ModuleText(32, 16 + 12*(i++), AdvancedRocketry.proxy.getNameFromBiome(biome), 0x202020));
 						}
 					}
 				}

@@ -1,27 +1,34 @@
 package zmaster587.advancedRocketry.world.gen;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ISeedReader;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.feature.WorldGenerator;
+import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.gen.Heightmap.Type;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.NoFeatureConfig;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.block.BlockCrystal;
 
 import java.util.Random;
 
-public class WorldGenLargeCrystal extends WorldGenerator {
+import com.mojang.serialization.Codec;
+
+public class WorldGenLargeCrystal extends Feature<NoFeatureConfig> {
 
 	BlockState block;
-	public WorldGenLargeCrystal() {
+	public WorldGenLargeCrystal(Codec<NoFeatureConfig> codec) {
+		super(codec);
 		this.block = AdvancedRocketryBlocks.blockCrystal.getDefaultState();
 	}
 
 	@Override
-	public boolean generate(World world, Random rand, BlockPos pos) {
+	public boolean func_241855_a(ISeedReader world, ChunkGenerator chunkGen, Random rand,
+			BlockPos pos, NoFeatureConfig config) {
 
-		BlockState state = world.getBiome(pos).fillerBlock;
+		BlockState state = world.getBiome(pos).func_242440_e().func_242502_e().getUnder();
 		Block fillerBlock = state.getBlock();
 
 		int height = rand.nextInt(40) + 10;
@@ -30,7 +37,7 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 		int xShear = 1 - (rand.nextInt(6) + 3) / 4; //1/6 lean right, 1/6 lean left, 4/6 no lean
 		int zShear = 1 - (rand.nextInt(6) + 3) / 4; //1/6 lean right, 1/6 lean left, 4/6 no lean
 		
-		BlockState usedState = block.with(BlockCrystal.CRYSTALPROPERTY, BlockCrystal.EnumCrystal.values()[rand.nextInt(BlockCrystal.EnumCrystal.values().length)]);
+		BlockState usedState = AdvancedRocketryBlocks.crystalBlocks[rand.nextInt(AdvancedRocketryBlocks.crystalBlocks.length)].getDefaultState();
 		
 		int currentEdgeRadius;
 
@@ -48,7 +55,7 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 
 			for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
 
-				for(BlockPos yOff = world.getHeight(new BlockPos(x + xOff, y, z + zOff)); yOff.getY() < y; yOff = yOff.up()) //Fills the gaps under the crystal
+				for(BlockPos yOff = world.getHeight(Type.WORLD_SURFACE, new BlockPos(x + xOff, y, z + zOff)); yOff.getY() < y; yOff = yOff.up()) //Fills the gaps under the crystal
 					setBlockState(world,yOff, fillerBlock.getDefaultState());
 				setBlockState(world,new BlockPos(x + xOff, y, z + zOff), fillerBlock.getDefaultState());
 			}
@@ -59,7 +66,7 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 		for(int zOff = -currentEdgeRadius/2; zOff <= currentEdgeRadius/2; zOff++) {
 			for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
 				
-				for(BlockPos yOff = world.getHeight(new BlockPos(x + xOff, y,z + zOff)); yOff.getY() < y; yOff.up()) //Fills the gaps under the crystal
+				for(BlockPos yOff = world.getHeight(Type.WORLD_SURFACE, new BlockPos(x + xOff, y,z + zOff)); yOff.getY() < y; yOff.up()) //Fills the gaps under the crystal
 					setBlockState(world, yOff, fillerBlock.getDefaultState());
 				setBlockState(world, new BlockPos(x + xOff, y, z + zOff), fillerBlock.getDefaultState());
 			}
@@ -69,7 +76,7 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 		for(int zOff = currentEdgeRadius/2; zOff <= numDiag + currentEdgeRadius/2; zOff++) {
 			currentEdgeRadius--;
 			for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
-				for(BlockPos yOff = world.getHeight(new BlockPos(x + xOff, y, z + zOff)); yOff.getY() < y; yOff.getY()) //Fills the gaps under the crystal
+				for(BlockPos yOff = world.getHeight(Type.WORLD_SURFACE, new BlockPos(x + xOff, y, z + zOff)); yOff.getY() < y; yOff.getY()) //Fills the gaps under the crystal
 					setBlockState(world,yOff, fillerBlock.getDefaultState());
 				setBlockState(world,new BlockPos(x + xOff, y, z + zOff), fillerBlock.getDefaultState());
 			}
@@ -140,9 +147,8 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 		return true;
 	}
 	
-	//Screw thy lighting checks!
-	public void setBlockState(World world, BlockPos pos, BlockState state) {
-		Chunk chunk = world.getChunkFromBlockCoords(pos);
-		chunk.setBlockState(pos, state);
+	private void setBlockState(ISeedReader world, BlockPos pos, BlockState state)
+	{
+		world.setBlockState(pos, state, 2);
 	}
 }

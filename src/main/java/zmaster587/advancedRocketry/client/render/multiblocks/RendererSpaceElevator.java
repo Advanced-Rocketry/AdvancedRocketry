@@ -47,7 +47,7 @@ public class RendererSpaceElevator extends TileEntityRenderer<TileSpaceElevator>
 		
 		matrix.push();
 		matrix.translate(renderX - .5, 2.5, renderZ - .5);
-		laser.doRender(matrix, buffer);
+		laser.doRender(buffer);
 		matrix.pop();
 		
 		matrix.push();
@@ -88,7 +88,5 @@ public class RendererSpaceElevator extends TileEntityRenderer<TileSpaceElevator>
 		}
 		
 		matrix.pop();
-		
-		
 	}
 }

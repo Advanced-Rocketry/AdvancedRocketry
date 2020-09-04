@@ -78,7 +78,7 @@ public class StatsRocket {
 		return passengerSeats.size();
 	}
 
-	public int getThrust() {return (int) (thrust*ARConfiguration.getCurrentConfig().rocketThrustMultiplier);}
+	public int getThrust() {return (int) (thrust*ARConfiguration.getCurrentConfig().rocketThrustMultiplier.get());}
 	public int getWeight() {return weight;}
 	public float getDrillingPower() {return drillingPower;}
 	public void setDrillingPower(float power) {drillingPower = power;}
@@ -190,7 +190,7 @@ public class StatsRocket {
 	 */
 	public int getFuelRate(FuelRegistry.FuelType type) {
 
-		if(!ARConfiguration.getCurrentConfig().rocketRequireFuel)
+		if(!ARConfiguration.getCurrentConfig().rocketRequireFuel.get())
 			return 0;
 
 		switch(type) {

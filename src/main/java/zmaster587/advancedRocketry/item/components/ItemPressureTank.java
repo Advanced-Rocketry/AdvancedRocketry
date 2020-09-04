@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.item.components;
 
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
@@ -95,7 +96,7 @@ public class ItemPressureTank extends Item implements IArmorComponent {
 
 	@Override
 	public void renderScreen(MatrixStack mat, ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event,
-			ContainerScreen<? extends Container> gui) {
+			Screen gui) {
 		
 	}
 

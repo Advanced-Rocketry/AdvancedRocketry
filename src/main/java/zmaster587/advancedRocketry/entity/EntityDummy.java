@@ -1,6 +1,8 @@
 package zmaster587.advancedRocketry.entity;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.monster.DrownedEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
@@ -14,14 +16,14 @@ public class EntityDummy extends Entity {
 
 	
 	//Just a dummy so a player can sit on a chair
-	public EntityDummy(World world) {
+	public EntityDummy(EntityType<? extends EntityDummy> type, World world) {
 		super(AdvancedRocketryEntities.ENTITY_DUMMY, world);
 		this.noClip=true;
 		
 	}
 
 	public EntityDummy(World world, double x, double y, double z) {
-		this(world);
+		this(AdvancedRocketryEntities.ENTITY_DUMMY, world);
 		setPosition(x, y, z);
 	}
 	

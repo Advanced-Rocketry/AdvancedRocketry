@@ -12,7 +12,7 @@ public class BiomeHandler {
 	
 	
 	public static void changeBiome(World world, int biomeId, BlockPos pos) {
-		Chunk chunk = world.getChunkFromBlockCoords(pos);
+		/*Chunk chunk = world.getChunkFromBlockCoords(pos);
 
 		Biome biome = world.getBiome(pos);
 		Biome biomeTo = Biome.getBiome(biomeId);
@@ -38,7 +38,7 @@ public class BiomeHandler {
 			e.printStackTrace();
 		}
 
-		PacketHandler.sendToNearby(new PacketBiomeIDChange(chunk, world, new HashedBlockPosition(pos)), world.provider.getDimension(), pos, 256);
+		PacketHandler.sendToNearby(new PacketBiomeIDChange(chunk, world, new HashedBlockPosition(pos)), world.provider.getDimension(), pos, 256);*/
 	}
 	
 	public static void changeBiome(World world, int biomeId, int x, int z) {
@@ -51,7 +51,7 @@ public class BiomeHandler {
 	
 	public static void changeBiome(World world, int biomeId, Chunk chunk, BlockPos pos) {
 
-		Biome biome = world.getBiome(pos);
+		/*Biome biome = world.getBiome(pos);
 		Biome biomeTo = Biome.getBiome(biomeId);
 		
 		int x = pos.getX();
@@ -80,6 +80,6 @@ public class BiomeHandler {
 		byte[] biomeArr = chunk.getBiomeArray();
 		biomeArr[(x & 15) + (z & 15)*16] = (byte)biomeId;
 
-		//PacketHandler.sendToNearby(new PacketBiomeIDChange(chunk, world, new BlockPosition(x, y, z)), world.provider.dimensionId, x, y, z, 256);
+		//PacketHandler.sendToNearby(new PacketBiomeIDChange(chunk, world, new BlockPosition(x, y, z)), world.provider.dimensionId, x, y, z, 256);*/
 	}
 }

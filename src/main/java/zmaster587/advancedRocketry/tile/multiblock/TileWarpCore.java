@@ -41,7 +41,7 @@ public class TileWarpCore extends TileMultiBlock {
 	};
 
 	private SpaceStationObject getSpaceObject() {
-		if(station == null && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId) {
+		if(station == null && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceStationObject)
 				station = (SpaceStationObject) object;
@@ -76,7 +76,7 @@ public class TileWarpCore extends TileMultiBlock {
 				if(stack != null && ItemTags.getCollection().getOwningTags(stack.getItem()).stream().anyMatch(value -> { return value.getPath().equalsIgnoreCase("gemdilithium"); }) ) {
 					int stackSize = stack.getCount();
 					if(!world.isRemote)
-						amt = getSpaceObject().addFuel(ARConfiguration.getCurrentConfig().fuelPointsPerDilithium*stack.getCount());
+						amt = getSpaceObject().addFuel(ARConfiguration.getCurrentConfig().fuelPointsPerDilithium.get()*stack.getCount());
 					else
 						amt = Math.min(getSpaceObject().getFuelAmount() + 10*stack.getCount(), getSpaceObject().getMaxFuelAmount()) - getSpaceObject().getFuelAmount();//
 					inv.decrStackSize(i, amt/10);

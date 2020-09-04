@@ -337,7 +337,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	@Override
 	public int getTotalProgress(int id) {
 		if(id == 0)
-			return ARConfiguration.getCurrentConfig().orbit;
+			return ARConfiguration.getCurrentConfig().orbit.get();
 		else if(id == 1)
 			return 200;
 		else if(id == 2)
