@@ -22,17 +22,17 @@ public class TileWarpCore extends TileMultiBlock {
 	private SpaceStationObject station;
 
 	public static final Object[][][] structure = { 
-		{{"blockTitanium", "blockTitanium", "blockTitanium"},
-			{"blockTitanium", 'I', "blockTitanium"},
-			{"blockTitanium", "blockTitanium", "blockTitanium"}},
+		{{"blockWarpCoreRim", "blockWarpCoreRim", "blockWarpCoreRim"},
+			{"blockWarpCoreRim", 'I', "blockWarpCoreRim"},
+			{"blockWarpCoreRim", "blockWarpCoreRim", "blockWarpCoreRim"}},
 
 			{{null, new BlockMeta(LibVulpesBlocks.blockStructureBlock), null},
-				{new BlockMeta(LibVulpesBlocks.blockStructureBlock), new BlockMeta(Blocks.GOLD_BLOCK), new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
+				{new BlockMeta(LibVulpesBlocks.blockStructureBlock), "blockWarpCoreCore", new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
 				{null, new BlockMeta(LibVulpesBlocks.blockStructureBlock), null}},
 
-				{{"blockTitanium", 'c', "blockTitanium"}, 
-					{"blockTitanium", new BlockMeta(Blocks.GOLD_BLOCK), "blockTitanium"},
-					{"blockTitanium", "blockTitanium", "blockTitanium"}},
+				{{"blockWarpCoreRim", 'c', "blockWarpCoreRim"},
+					{"blockWarpCoreRim", "blockWarpCoreCore", "blockWarpCoreRim"},
+					{"blockWarpCoreRim", "blockWarpCoreRim", "blockWarpCoreRim"}},
 
 	};
 
