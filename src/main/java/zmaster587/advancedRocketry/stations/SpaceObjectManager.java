@@ -252,7 +252,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 */
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent event) {
-		if(ZUtils.getDimensionIdentifier(event.player.world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
+		if(ZUtils.getDimensionIdentifier(event.player.world) == ARConfiguration.GetSpaceDimId()) {
 
 			if(event.player.getPosY() < 0 && !event.player.world.isRemote) {
 				ISpaceObject object = getSpaceStationFromBlockCoords(new BlockPos(event.player.getPositionVec()));
@@ -302,10 +302,10 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 
 	@SubscribeEvent
 	public void onServerTick(TickEvent.ServerTickEvent event) {
-		if(ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId.get()) == null)
+		if(ZUtils.getWorld(ARConfiguration.GetSpaceDimId()) == null)
 			return;
 		
-		long worldTime = ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId.get()).getGameTime();
+		long worldTime = ZUtils.getWorld(ARConfiguration.GetSpaceDimId()).getGameTime();
 		//Assuming server
 		//If no dim undergoing transition then nextTransitionTick = -1
 		if((nextStationTransitionTick != -1 && worldTime >= nextStationTransitionTick && spaceStationOrbitMap.get(WARPDIMID) != null) || (nextStationTransitionTick == -1 && spaceStationOrbitMap.get(WARPDIMID) != null && !spaceStationOrbitMap.get(WARPDIMID).isEmpty())) {
@@ -416,7 +416,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 
 
 		((DimensionProperties)station.getProperties()).setAtmosphereDensityDirect(0);
-		nextStationTransitionTick = (int)(ARConfiguration.getCurrentConfig().travelTimeMultiplier.get()*timeDelta) + ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId.get()).getGameTime();
+		nextStationTransitionTick = (int)(ARConfiguration.getCurrentConfig().travelTimeMultiplier.get()*timeDelta) + ZUtils.getWorld(ARConfiguration.GetSpaceDimId()).getGameTime();
 		station.beginTransition(nextStationTransitionTick);
 		
 	}
@@ -460,7 +460,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 				if(tag.contains("expireTime")) {
 					long expireTime = tag.getLong("expireTime");
 					int numPlayers = tag.getInt("numPlayers");
-					if (ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId.get()).getGameTime() >= expireTime && numPlayers == 0)
+					if (ZUtils.getWorld(ARConfiguration.GetSpaceDimId()).getGameTime() >= expireTime && numPlayers == 0)
 						continue;
 					temporaryDimensions.put(object.getId(), expireTime);
 					temporaryDimensionPlayerNumber.put(object.getId(), numPlayers);

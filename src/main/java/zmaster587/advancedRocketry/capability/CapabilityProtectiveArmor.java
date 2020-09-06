@@ -15,7 +15,7 @@ public class CapabilityProtectiveArmor {
 	    //LibVulpes.logger.info("Forge Energy integration loaded");
 	}
 	
-	private static final ResourceLocation KEY = new ResourceLocation("advancedRocketry:ProtectiveArmor");
+	private static final ResourceLocation KEY = new ResourceLocation("advancedrocketry", "protective_armor");
 
 	
 	@SubscribeEvent

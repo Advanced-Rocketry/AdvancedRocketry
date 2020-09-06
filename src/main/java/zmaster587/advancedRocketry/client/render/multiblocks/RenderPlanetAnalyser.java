@@ -25,12 +25,12 @@ public class RenderPlanetAnalyser extends TileEntityRenderer<TileAstrobodyDataPr
 
 	WavefrontObject model;
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/planetAnalyser.png");
+	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/planetanalyser.png");
 
 	public RenderPlanetAnalyser(TileEntityRendererDispatcher tile){
 		super(tile);
 		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/planetAnalyser.obj"));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry","models/planetanalyser.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}

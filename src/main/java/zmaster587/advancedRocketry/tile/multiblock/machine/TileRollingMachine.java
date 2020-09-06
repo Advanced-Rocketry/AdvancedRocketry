@@ -6,11 +6,13 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -31,8 +33,8 @@ public class TileRollingMachine extends TileMultiblockMachine {
 			{'I', Blocks.AIR, LibVulpesBlocks.blockStructureBlock, Blocks.AIR}},
 
 			{{'P', 'L', LibVulpesBlocks.blockStructureBlock, null},
-				{"blockCoil", LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'O'},
-				{"blockCoil", LibVulpesBlocks.motors, LibVulpesBlocks.blockStructureBlock, 'O'}}
+				{new ResourceLocation(Constants.modId,"blockcoil"), LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'O'},
+				{new ResourceLocation(Constants.modId,"blockcoil"), LibVulpesBlocks.motors, LibVulpesBlocks.blockStructureBlock, 'O'}}
 	};
 	
 	public TileRollingMachine() {

@@ -54,11 +54,12 @@ public class ARConfiguration {
 	final static String CLIENT = "Client";
 	public static Logger logger = LogManager.getLogger(Constants.modId);
 
-	static ConfigValue<String[]>  sealableBlockWhiteList, sealableBlockBlackList, breakableTorches,  blackListRocketBlocksStr, harvestableGasses, entityList, asteriodOres, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres;
-	static ConfigValue<String[]> liquidRocketFuel;
-	public static ConfigValue<List<? extends ResourceLocation>> biomeBlackList;
-	public static ConfigValue<List<? extends ResourceLocation>> biomeHighPressure;
-	public static ConfigValue<List<? extends ResourceLocation>> biomeSingle;
+	static ConfigValue<List<? extends String>> sealableBlockWhiteList;
+	static ConfigValue<List<? extends String>>  sealableBlockBlackList, breakableTorches,  blackListRocketBlocksStr, harvestableGasses, entityList, asteriodOres, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres;
+	static ConfigValue<List<? extends String>> liquidRocketFuel;
+	public static ConfigValue<List<? extends String>> biomeBlackList;
+	public static ConfigValue<List<? extends String>> biomeHighPressure;
+	public static ConfigValue<List<? extends String>> biomeSingle;
 
 
 	//Only to be set in preinit
@@ -72,7 +73,6 @@ public class ARConfiguration {
 	
 	static {
 		Pair<ARConfiguration, ForgeConfigSpec> commonConfiguration = new ForgeConfigSpec.Builder().configure(ARConfiguration::new);
-		currentConfig = commonConfiguration.getLeft();
 		commonSpec = commonConfiguration.getRight();
 	}
 	
@@ -85,8 +85,13 @@ public class ARConfiguration {
 	}
 
 
+	private ARConfiguration()
+	{
+	}
+	
 	public ARConfiguration(ForgeConfigSpec.Builder builder)
 	{
+		currentConfig = new ARConfiguration();
 		//allConfigValues;
 		final String CATEGORY_GENERAL = "General";
 		
@@ -95,7 +100,7 @@ public class ARConfiguration {
 		
 		builder.push(CATEGORY_GENERAL);
 		arConfig.buildSpeedMultiplier = builder.comment("Multiplier for the build speed of the Rocket Builder (0.5 is twice as fast 2 is half as fast").define("buildSpeedMultiplier", 1d);
-		arConfig.spaceDimId = builder.comment("Dimension ID to use for space stations").define("spaceStationId", new ResourceLocation(Constants.PLANET_NAMESPACE, "space"));
+		arConfig.spaceDimId = builder.comment("Dimension ID to use for space stations").define("spaceStationId", Constants.PLANET_NAMESPACE + ":space");
 		arConfig.enableNausea = builder.comment("If true, allows players to experience nausea on non-standard atmosphere types").define("EnableAtmosphericNausea", true);
 		arConfig.enableOxygen = builder.comment("If true, allows players being hurt due to lack of oxygen and allows effects from non-standard atmosphere types").define("EnableAtmosphericEffects", true);
 		arConfig.allowMakingItemsForOtherMods = builder.comment("If true, the machines from AdvancedRocketry will produce things like plates/rods for other mods even if Advanced Rocketry itself does not use the material (This can increase load time)").define("makeMaterialsForOtherMods", true);
@@ -121,7 +126,9 @@ public class ARConfiguration {
 		arConfig.terraformliquidRate = builder.comment("how many millibuckets/t are required to keep the terraformer running").define("TerraformerFluidConsumeRate", 40);
 		arConfig.allowTerraformNonAR = builder.comment("If true, dimensions not added by AR can be terraformed").define("allowTerraformingNonARWorlds", false);
 
-		liquidRocketFuel = builder.comment("List of fluid names for fluids that can be used as rocket fuel").define("rocketFuels", new String[] {"rocketfuel"});
+		List<String> fuels = new LinkedList();
+		fuels.add("rocketfuel");
+		liquidRocketFuel = builder.comment("List of fluid names for fluids that can be used as rocket fuel").defineList("rocketFuels", fuels, (val) -> {return true;} );
 
 		arConfig.stationSize = builder.comment("The largest size a space station can be.  Should also be a power of 2 (512)").define("SpaceStationBuildRadius", 1024);
 		arConfig.canPlayerRespawnInSpace = builder.comment("If true, players will respawn near beds on planets IF the spawn location is in a breathable atmosphere").define("allowPlanetRespawn", false);
@@ -153,9 +160,31 @@ public class ARConfiguration {
 		arConfig.advancedVFX = builder.comment("Advanced visual effects").define("advancedVFX", true);
 		arConfig.gasCollectionMult = builder.comment("Multiplier for the amount of time gas collection missions take").define("gasMissionMultiplier", 1.0);
 		arConfig.asteroidMiningTimeMult = builder.comment("Multiplier changing how long a mining mission takes").define("miningMissionTmeMultiplier", 1.0);
-		asteriodOres = builder.comment("List of oredictionary names of ores allowed to spawn in asteriods").define("standardOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone"});
-		geodeOres = builder.comment("List of oredictionary names of ores allowed to spawn in geodes").define("geodeOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone"});
-		blackHoleGeneratorTiming = builder.comment("minecraft:dirt;1").define("blackHoleTimings", new String[] {"minecraft:stone;1", "minecraft:dirt;1", "minecraft:netherrack;1", "minecraft:cobblestone;1"});
+		List<String> asteroidOres = new LinkedList<>();
+		asteroidOres.add("oreIron");
+		asteroidOres.add("oreGold");
+		asteroidOres.add("oreCopper");
+		asteroidOres.add("oreTin");
+		asteroidOres.add("oreRedstone");
+		
+		asteriodOres = builder.comment("List of oredictionary names of ores allowed to spawn in asteriods").defineList("standardOres", asteroidOres, (val) -> { return true;});
+		
+		List<String> geodeOresList = new LinkedList<>();
+		geodeOresList.add("oreIron");
+		geodeOresList.add("oreGold");
+		geodeOresList.add("oreCopper");
+		geodeOresList.add("oreTin");
+		geodeOresList.add("oreRedstone");
+		
+		geodeOres = builder.comment("List of oredictionary names of ores allowed to spawn in geodes").defineList("geodeOres", geodeOresList, (val) -> {return true;} );
+		
+		List<String> blackHoleGen = new LinkedList<>();
+		blackHoleGen.add("minecraft:stone;1");
+		blackHoleGen.add("minecraft:dirt;1");
+		blackHoleGen.add("minecraft:netherrack;1");
+		blackHoleGen.add("minecraft:cobblestone;1");
+		
+		blackHoleGeneratorTiming = builder.comment("minecraft:dirt;1").defineList("blackHoleTimings", blackHoleGen, (val) -> {return true;});
 		arConfig.defaultItemTimeBlackHole = builder.comment("List of blocks and the amount of ticks they can power the black hole generator format: 'modname:block:meta;number_of_ticks'").define("defaultBurnTime", 500);
 
 		arConfig.geodeOresBlackList = builder.comment("True if the ores in geodeOres should be a blacklist").define("geodeOres_blacklist", false);
@@ -168,7 +197,15 @@ public class ARConfiguration {
 		arConfig.generateVanillaStructures = builder.comment("Enable to allow structures like villages and mineshafts to generate on planets with a breathable atmosphere.  Note, setting this to false will override 'generateStructures' in the planetDefs.xml").define("generateVanillaStructures", false);
 		arConfig.planetDiscoveryChance = builder.comment("Chance of planet discovery in the warp ship monitor is not all planets are initially discovered").define("planetDiscoveryChance", 5);
 
-		orbitalLaserOres = builder.comment("List of oredictionary names of ores allowed to be mined by the laser drill if surface drilling is disabled.  Ores can be specified by just the oreName:<size> or by <modname>:<blockname>:<meta>:<size> where size is optional").define("laserDrillOres", new String[] {"oreIron", "oreGold", "oreCopper", "oreTin", "oreRedstone", "oreDiamond"});
+		List<String> laserOreList = new LinkedList<>();
+		laserOreList.add("oreIron");
+		laserOreList.add("oreGold");
+		laserOreList.add("oreCopper");
+		laserOreList.add("oreTin");
+		laserOreList.add("oreRedstone");
+		laserOreList.add("oreDiamond");
+		
+		orbitalLaserOres = builder.comment("List of oredictionary names of ores allowed to be mined by the laser drill if surface drilling is disabled.  Ores can be specified by just the oreName:<size> or by <modname>:<blockname>:<meta>:<size> where size is optional").defineList("laserDrillOres", laserOreList, (val)->{return true;} );
 		arConfig.laserDrillOresBlackList = builder.comment("True if the ores in laserDrillOres should be a blacklist, false for a whitelist").define("laserDrillOres_blacklist", false);
 		arConfig.laserDrillPlanet = builder.comment("If true, the orbital laser will actually mine blocks on the planet below").define("laserDrillPlanet", false);
 
@@ -179,32 +216,32 @@ public class ARConfiguration {
 		
 		
 		
-		LinkedList<ResourceLocation> blackListedbiomes = new LinkedList<ResourceLocation>();
-		blackListedbiomes.add(Biomes.RIVER.getRegistryName());
-		blackListedbiomes.add(Biomes.THE_END.getRegistryName());
-		blackListedbiomes.add(Biomes.BADLANDS.getRegistryName());
-		blackListedbiomes.add(Biomes.THE_VOID.getRegistryName());
-		blackListedbiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.alienForest));
+		LinkedList<String> blackListedbiomes = new LinkedList<String>();
+		blackListedbiomes.add(Biomes.RIVER.getRegistryName().toString());
+		blackListedbiomes.add(Biomes.THE_END.getRegistryName().toString());
+		blackListedbiomes.add(Biomes.BADLANDS.getRegistryName().toString());
+		blackListedbiomes.add(Biomes.THE_VOID.getRegistryName().toString());
+		//blackListedbiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.alienForest).toString());
 		
 		arConfig.biomeBlackList = builder.comment("List of Biomes to be blacklisted from spawning as BiomeIds, default is: river, sky, hell, void, alienForest").
 				defineList("BlacklistedBiomes", blackListedbiomes, (item) -> { return true; });
 		
 		
-		LinkedList<ResourceLocation> highPressureBiome = new LinkedList<ResourceLocation>();
-		highPressureBiome.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.stormLandsBiome));
-		highPressureBiome.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.swampDeepBiome));
+		LinkedList<String> highPressureBiome = new LinkedList<String>();
+		//highPressureBiome.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.stormLandsBiome).toString());
+		//highPressureBiome.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.swampDeepBiome).toString());
 		arConfig.biomeHighPressure = builder.comment("Biomes that only spawn on worlds with pressures over 125, will override blacklist.").
 				defineList("HighPressureBiomes", highPressureBiome, (item) -> { return true; });
 		
-		LinkedList<ResourceLocation> singleBiomes = new LinkedList<ResourceLocation>();
-		singleBiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.volcanicBarren));
-		singleBiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.swampDeepBiome));
-		singleBiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.crystalChasms));
-		singleBiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.alienForest));
-		singleBiomes.add(Biomes.DESERT_HILLS.getRegistryName());
-		singleBiomes.add(Biomes.MUSHROOM_FIELDS.getRegistryName());
-		singleBiomes.add(Biomes.TALL_BIRCH_HILLS.getRegistryName());
-		singleBiomes.add(Biomes.ICE_SPIKES.getRegistryName());
+		LinkedList<String> singleBiomes = new LinkedList<String>();
+		//singleBiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.volcanicBarren).toString());
+		//singleBiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.swampDeepBiome).toString());
+		//singleBiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.crystalChasms).toString());
+		//singleBiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.alienForest).toString());
+		singleBiomes.add(Biomes.DESERT_HILLS.getRegistryName().toString());
+		singleBiomes.add(Biomes.MUSHROOM_FIELDS.getRegistryName().toString());
+		singleBiomes.add(Biomes.TALL_BIRCH_HILLS.getRegistryName().toString());
+		singleBiomes.add(Biomes.ICE_SPIKES.getRegistryName().toString());
 		
 		arConfig.biomeSingle = builder.comment("Some worlds have a chance of spawning single biomes contained in this list.").
 				defineList("SingleBiomes", singleBiomes, (item) -> { return true; });
@@ -238,33 +275,32 @@ public class ARConfiguration {
 		arConfig.rutileClumpSize = builder.define("RutilePerClump", 6);
 		arConfig.rutilePerChunk = builder.define("RutilePerChunk", 6);
 
-		sealableBlockWhiteList = builder.comment("Blocks that are not automatically detected as sealable but should seal.  Format \"Mod:Blockname\"  for example \"minecraft:chest\"").define("sealableBlockWhiteList", new String[] {});
-		sealableBlockBlackList = builder.comment("Blocks that are automatically detected as sealable but should not seal.  Format \"Mod:Blockname\"  for example \"minecraft:chest\"").define("sealableBlockBlackList", new String[] {});
-		blackListRocketBlocksStr = builder.comment("Mod:Blockname  for example \"minecraft:chest\"").define("rocketBlockBlackList", new String[] {"minecraft:portal","minecraft:bedrock", "minecraft:snow_layer", "minecraft:water", "minecraft:flowing_water", "minecraft:lava", "minecraft:flowing_lava"});
-		breakableTorches = builder.comment("Mod:Blockname  for example \"minecraft:chest\"").define("torchBlocks", new String[] {});
+		sealableBlockWhiteList = builder.comment("Blocks that are not automatically detected as sealable but should seal.  Format \"Mod:Blockname\"  for example \"minecraft:chest\"").defineList("sealableBlockWhiteList", new LinkedList<String>(), (val) -> { return true; });
+		sealableBlockBlackList = builder.comment("Blocks that are automatically detected as sealable but should not seal.  Format \"Mod:Blockname\"  for example \"minecraft:chest\"").defineList("sealableBlockBlackList", new LinkedList<String>(), (val) -> { return true; });
+		
+		LinkedList<String> blackListRocketBlocksStrList = new LinkedList<String>();
+		blackListRocketBlocksStrList.add("minecraft:portal");
+		blackListRocketBlocksStrList.add("minecraft:bedrock");
+		blackListRocketBlocksStrList.add("minecraft:snow_layer");
+		blackListRocketBlocksStrList.add("minecraft:flowing_water");
+		blackListRocketBlocksStrList.add( "minecraft:lava");
+		blackListRocketBlocksStrList.add("minecraft:flowing_lava");
+		
+		blackListRocketBlocksStr = builder.comment("Mod:Blockname  for example \"minecraft:chest\"").defineList("rocketBlockBlackList", blackListRocketBlocksStrList, (val) -> {return true;} );
+		breakableTorches = builder.comment("Mod:Blockname  for example \"minecraft:chest\"").define("torchBlocks", new LinkedList<String>(), (val) -> {return true;});
 
 		//Enriched Lava in the centrifuge
 		//arConfig.lavaCentrifugeOutputs = config.getStringList("lavaCentrifugeOutputs", CATEGORY_GENERAL,
 		//new String[] {"nuggetCopper:100", "nuggetIron:100", "nuggetTin:100", "nuggetLead:100", "nuggetSilver:100",
 		//"nuggetGold:75" ,"nuggetDiamond:10", "nuggetUranium:10", "nuggetIridium:1"}, "Outputs and chances of objects from Enriched Lava in the Centrifuge.  Format: <oredictionaryEntry>:<weight>.  Larger weights are more frequent");
 
-		builder.comment("list of fluid names that can be harvested as Gas").define("harvestableGasses", new String[] {});
-		builder.comment("list entities which should not be affected by atmosphere properties").define("entityAtmBypass", new String[] {});
+		harvestableGasses =  builder.comment("list of fluid names that can be harvested as Gas").defineList("harvestableGasses",  new LinkedList<String>(), (val) -> {return true;} );
+		entityList = builder.comment("list entities which should not be affected by atmosphere properties").defineList("entityAtmBypass", new LinkedList<String>(), (val) -> {return true;});
 		//Satellite config
 		arConfig.microwaveRecieverMulitplier = builder.comment("Multiplier for the amount of energy produced by the microwave reciever").define("MicrowaveRecieverMultiplier", 1d);
 
 		
-		ConfigValue<String[]> str = builder.comment("Laser drill will not mine these dimension").define("spaceLaserDimIdBlackList", new String[] {});
-
-		//Load laser dimid blacklists
-		for(String s : str.get()) {
-
-			try {
-				arConfig.laserBlackListDims.add(Integer.parseInt(s));
-			} catch (NumberFormatException e) {
-				logger.warn("Invalid number \"" + s + "\" for laser dimid blacklist");
-			}
-		}
+		arConfig.laserBlackListDims= builder.comment("Laser drill will not mine these dimension").defineList("spaceLaserDimIdBlackList", new LinkedList<String>(), (val) -> { return true; });
 	}
 	
 	public ARConfiguration(ARConfiguration config)
@@ -565,6 +601,11 @@ public class ARConfiguration {
 		}
 		return currentConfig;
 	}
+	
+	public static ResourceLocation GetSpaceDimId()
+	{
+		return new ResourceLocation(getCurrentConfig().spaceDimId.get());
+	}
 
 	public static void loadConfigFromServer(ARConfiguration config) throws Exception
 	{
@@ -594,11 +635,11 @@ public class ARConfiguration {
 
 	public void addTorchblock(Block newblock) {
 		torchBlocks.add(newblock);
-		String[] blocks = new String[torchBlocks.size()];
+		List<String> blocks = new ArrayList<String>(torchBlocks.size());
 		int index = 0;
 		for( Block block : torchBlocks)
 		{
-			blocks[index++] = block.getRegistryName().toString();
+			blocks.add(block.getRegistryName().toString());
 		}
 		
 		breakableTorches.set(blocks);
@@ -608,11 +649,11 @@ public class ARConfiguration {
 	public void addSealedBlock(Block newblock) {
 		SealableBlockHandler.INSTANCE.addSealableBlock(newblock);
 		List<Block> blockList = SealableBlockHandler.INSTANCE.getOverridenSealableBlocks();
-		String[] blocks = new String[blockList.size()];
+		List<String> blocks = new ArrayList<String>(blockList.size());
 		int index = 0;
 		for( Block block : blockList)
 		{
-			blocks[index++] = block.getRegistryName().toString();
+			blocks.add(block.getRegistryName().toString());
 		}
 		
 		sealableBlockWhiteList.set(blocks);
@@ -811,7 +852,7 @@ public class ARConfiguration {
 	public ResourceLocation MoonId = Constants.INVALID_PLANET;
 
 	@ConfigProperty(needsSync=true)
-	public  ConfigValue<ResourceLocation> spaceDimId;
+	public  ConfigValue<String> spaceDimId;
 
 	@ConfigProperty
 	public  ConfigValue<Integer> fuelPointsPer10Mb;
@@ -978,7 +1019,7 @@ public class ARConfiguration {
 	public  ConfigValue<Double> spaceLaserPowerMult;
 
 	@ConfigProperty
-	public LinkedList<Integer> laserBlackListDims = new LinkedList<Integer>();
+	public ConfigValue<List<? extends String>> laserBlackListDims;
 
 	@ConfigProperty
 	public LinkedList<String> standardLaserDrillOres = new LinkedList<String>();

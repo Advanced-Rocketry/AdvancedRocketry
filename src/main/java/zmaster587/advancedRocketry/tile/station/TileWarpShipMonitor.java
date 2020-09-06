@@ -94,7 +94,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 
 
 	private SpaceStationObject getSpaceObject() {
-		if(station == null && ZUtils.getDimensionIdentifier(this.world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
+		if(station == null && ZUtils.getDimensionIdentifier(this.world) == ARConfiguration.GetSpaceDimId()) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceStationObject)
 				station = (SpaceStationObject) object;

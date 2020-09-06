@@ -26,8 +26,8 @@ public class RendererMicrowaveReciever extends TileEntityRenderer<TileMicrowaveR
 		super(rendererDispatcherIn);
 	}
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/blocks/solar.png");
-	ResourceLocation panelSide = new ResourceLocation("advancedrocketry:textures/blocks/panelSide.png");
+	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/blocks/solar.png");
+	ResourceLocation panelSide = new ResourceLocation("advancedrocketry","textures/blocks/panelside.png");
 	
 	@Override
 	public void render(TileMicrowaveReciever tile, float partialTicks, MatrixStack matrix,

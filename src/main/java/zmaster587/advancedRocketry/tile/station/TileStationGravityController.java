@@ -101,7 +101,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 	@Override
 	public void tick() {
 
-		if(ZUtils.getDimensionIdentifier(this.world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
+		if(ZUtils.getDimensionIdentifier(this.world) == ARConfiguration.GetSpaceDimId()) {
 
 			if(!world.isRemote) {
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);

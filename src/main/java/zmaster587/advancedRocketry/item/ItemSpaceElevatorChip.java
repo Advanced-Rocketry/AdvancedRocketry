@@ -4,6 +4,8 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.util.DimensionBlockPosition;
 import zmaster587.advancedRocketry.util.NBTStorableListList;
@@ -59,9 +61,9 @@ public class ItemSpaceElevatorChip extends Item {
 		int numPos = getBlockPositions(stack).size();
 		
 		if(numPos > 0)
-			list.add("Contains " + numPos + " entries");
+			list.add(new StringTextComponent("Contains " + numPos + " entries"));
 		else
-			list.add(LibVulpes.proxy.getLocalizedString("msg.empty"));
+			list.add(new TranslationTextComponent("msg.empty"));
 	}
 	
 }

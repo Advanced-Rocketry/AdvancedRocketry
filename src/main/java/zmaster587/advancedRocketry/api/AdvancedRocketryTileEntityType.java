@@ -23,6 +23,7 @@ import zmaster587.advancedRocketry.tile.cables.TilePipe;
 import zmaster587.advancedRocketry.tile.cables.TileWirelessTransciever;
 import zmaster587.advancedRocketry.tile.data.TileDataProgrammer;
 import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
+import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.tile.infrastructure.TileEntityFuelingStation;
 import zmaster587.advancedRocketry.tile.infrastructure.TileEntityMoniteringStation;
 import zmaster587.advancedRocketry.tile.infrastructure.TileGuidanceComputerHatch;
@@ -124,6 +125,7 @@ public class AdvancedRocketryTileEntityType {
 	public static TileEntityType<TileSeal> TILE_SEAL;
 	public static TileEntityType<TileStationDeployedAssembler> TILE_STATION_DEPLOYED_ASSEMBLER;
 	public static TileEntityType<TileGuidanceComputer> TILE_GUIDANCE_COMPUTER;
+	public static TileEntityType<TileSatelliteHatch> TILE_SATELLITE_HATCH;
 	
 	public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> evt)
 	{
@@ -131,7 +133,7 @@ public class AdvancedRocketryTileEntityType {
 		TILE_DATA_BUS = TileEntityType.Builder.create(TileDataBus::new, AdvancedRocketryBlocks.blockDataBus).build(null);
 		TILE_FUELING_STATION = TileEntityType.Builder.create(TileEntityFuelingStation::new, AdvancedRocketryBlocks.blockFuelingStation).build(null);
 		TILE_MONITORIING_STATION = TileEntityType.Builder.create(TileEntityMoniteringStation::new, AdvancedRocketryBlocks.blockMonitoringStation).build(null);
-		TILE_GUIDANCE_COMPUTER_HATCH = TileEntityType.Builder.create(TileGuidanceComputerHatch::new, AdvancedRocketryBlocks.blockLoader).build(null);
+		TILE_GUIDANCE_COMPUTER_HATCH = TileEntityType.Builder.create(TileGuidanceComputerHatch::new, AdvancedRocketryBlocks.blockguidanceHatch).build(null);
 		TILE_FLUID_LOADER = TileEntityType.Builder.create(TileFluidHatch::new, AdvancedRocketryBlocks.blockFluidLoader).build(null);
 		TILE_FLUID_UNLOADER = TileEntityType.Builder.create(TileFluidHatch::new, AdvancedRocketryBlocks.blockFluidUnloader).build(null);
 		TILE_ROCKET_LOADER = TileEntityType.Builder.create(TileRocketLoader::new, AdvancedRocketryBlocks.blockRocketLoader).build(null);
@@ -183,14 +185,14 @@ public class AdvancedRocketryTileEntityType {
 		TILE_SEAL = TileEntityType.Builder.create(TileSeal::new, AdvancedRocketryBlocks.blockPipeSealer).build(null);
 		TILE_STATION_DEPLOYED_ASSEMBLER = TileEntityType.Builder.create(TileStationDeployedAssembler::new, AdvancedRocketryBlocks.blockDeployableRocketBuilder).build(null);
 		TILE_GUIDANCE_COMPUTER = TileEntityType.Builder.create(TileGuidanceComputer::new, AdvancedRocketryBlocks.blockGuidanceComputer).build(null);
-		
+		TILE_SATELLITE_HATCH = TileEntityType.Builder.create(TileSatelliteHatch::new, AdvancedRocketryBlocks.blockSatelliteHatch).build(null);
 		
 		IForgeRegistry<TileEntityType<?>> r = evt.getRegistry();
 		r.registerAll(
 				TILE_WIRELESS_TRANSCIEVER.setRegistryName("wireless_transciever"),
 				TILE_DATA_BUS.setRegistryName("data_bus"),
 				TILE_FUELING_STATION.setRegistryName("fueling_station"),
-				TILE_MONITORIING_STATION.setRegistryName("monitoriing_station"),
+				TILE_MONITORIING_STATION.setRegistryName("monitoring_station"),
 				TILE_GUIDANCE_COMPUTER_HATCH.setRegistryName("guidance_computer_hatch"),
 				TILE_FLUID_LOADER.setRegistryName("fluid_loader"),
 				TILE_FLUID_UNLOADER.setRegistryName("fluid_unloader"),

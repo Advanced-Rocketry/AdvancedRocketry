@@ -14,6 +14,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
@@ -47,16 +49,16 @@ public class ItemOreScanner extends Item {
 			mapping = (SatelliteOreMapping)sat;
 		
 		if(!stack.hasTag())
-			list.add(LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
+			list.add( new TranslationTextComponent("msg.unprogrammed"));
 		else if(mapping == null)
-			list.add(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.nosat"));
+			list.add( new TranslationTextComponent("msg.itemorescanner.nosat"));
 		else if(mapping.getDimensionId().get() == ZUtils.getDimensionIdentifier(player)) {
-			list.add(LibVulpes.proxy.getLocalizedString("msg.connected"));
-			list.add(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.maxzoom") + mapping.getZoomRadius());
-			list.add(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.filter") + mapping.canFilterOre());
+			list.add( new TranslationTextComponent("msg.connected"));
+			list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.maxzoom") + mapping.getZoomRadius()));
+			list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.filter") + mapping.canFilterOre()));
 		}
 		else
-			list.add(LibVulpes.proxy.getLocalizedString("msg.notconnected"));
+			list.add( new TranslationTextComponent("msg.notconnected"));
 
 		super.addInformation(stack, player, list, arg5);
 	}

@@ -29,12 +29,12 @@ public class RendererElectrolyser extends TileEntityRenderer<TileElectrolyser> {
 
 	WavefrontObject model;
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/electrolyser.png");
+	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/electrolyser.png");
 
 	public RendererElectrolyser(TileEntityRendererDispatcher tile) {
 		super(tile);
 		try {
-			model = new  WavefrontObject(new ResourceLocation("advancedrocketry:models/electrolyser.obj"));
+			model = new  WavefrontObject(new ResourceLocation("advancedrocketry","models/electrolyser.obj"));
 		} catch (ModelFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

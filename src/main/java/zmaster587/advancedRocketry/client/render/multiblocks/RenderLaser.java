@@ -27,13 +27,13 @@ public class RenderLaser extends TileEntityRenderer<TileSpaceLaser> {
 	
 	WavefrontObject model;
 
-	ResourceLocation texture =  new ResourceLocation("advancedRocketry:textures/models/laser.png");
+	ResourceLocation texture =  new ResourceLocation("advancedrocketry","textures/models/laser.png");
 	
 	
 	public RenderLaser(TileEntityRendererDispatcher tile) {
 		super(tile);
 		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/laser.obj"));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry","models/laser.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}

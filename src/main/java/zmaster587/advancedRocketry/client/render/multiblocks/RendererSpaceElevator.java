@@ -22,14 +22,14 @@ public class RendererSpaceElevator extends TileEntityRenderer<TileSpaceElevator>
 	
 	WavefrontObject model;
 
-	public ResourceLocation baseTexture =  new ResourceLocation("advancedRocketry:textures/models/spaceElevator.jpg");
+	public ResourceLocation baseTexture =  new ResourceLocation("advancedrocketry","textures/models/spaceelevator.jpg");
 	RenderLaser laser;
 	
 	public RendererSpaceElevator(TileEntityRendererDispatcher tile) {
 		super(tile);
 		laser = new RenderLaser(1, new float[] { 0,0 , 0, 0}, new float[] { 1, 1 , 0, 0.11f} );
 		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/spaceElevator.obj"));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry","models/spaceelevator.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}

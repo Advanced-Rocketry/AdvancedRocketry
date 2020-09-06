@@ -21,7 +21,7 @@ public class TankCapabilityItemStack implements ICapabilityProvider {
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
 		if (capability == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY) {
-			return LazyOptional.of(() -> CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).cast();
+			return LazyOptional.of(() -> fluidHandler).cast();
 		}
 		return null;
 	}

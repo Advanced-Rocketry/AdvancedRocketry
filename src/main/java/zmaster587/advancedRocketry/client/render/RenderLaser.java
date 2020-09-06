@@ -14,7 +14,7 @@ import zmaster587.libVulpes.render.RenderHelper;
 
 public class RenderLaser extends EntityRenderer<EntityLaserNode> implements IRenderFactory<EntityLaserNode> {
 
-	private static final ResourceLocation flare = new ResourceLocation("advancedrocketry", "textures/entity/Flare.png");
+	private static final ResourceLocation flare = new ResourceLocation("advancedrocketry", "textures/entity/flare.png");
 
 	float color[];
 	float flareColor[];

@@ -501,7 +501,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 
 	private boolean isAllowedToRun() {
 		return !(glassPanel.isEmpty()|| batteries.getUniversalEnergyStored() == 0 || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(DimensionManager.getInstance().getDimensionProperties(world, getPos()).getParentPlanet()) ||
-				ARConfiguration.getCurrentConfig().laserBlackListDims.contains(DimensionManager.getInstance().getDimensionProperties(world, getPos()).getParentPlanet()));
+				ARConfiguration.getCurrentConfig().laserBlackListDims.get().contains(DimensionManager.getInstance().getDimensionProperties(world, getPos()).getParentPlanet()));
 	}
 	
 	/**

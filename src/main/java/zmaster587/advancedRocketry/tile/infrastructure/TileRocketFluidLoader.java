@@ -164,7 +164,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 
 	protected void setRedstoneState(boolean condition) {
 		condition = isStateActive(state, condition);
-		((BlockARHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(world,world.getBlockState(pos), pos, condition);
+		((BlockARHatch)world.getBlockState(pos).getBlock()).setRedstoneState(world,world.getBlockState(pos), pos, condition);
 
 	}
 
@@ -203,7 +203,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	@Override
 	public void unlinkRocket() {
 		rocket = null;
-		((BlockARHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(world, world.getBlockState(pos), pos, false);
+		((BlockARHatch)world.getBlockState(pos).getBlock()).setRedstoneState(world, world.getBlockState(pos), pos, false);
 		//On unlink prevent the tile from ticking anymore
 
 		//if(!worldObj.isRemote)

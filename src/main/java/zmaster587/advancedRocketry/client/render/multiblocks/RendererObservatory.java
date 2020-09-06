@@ -23,12 +23,12 @@ public class RendererObservatory  extends TileEntityRenderer<TileObservatory> {
 
 	WavefrontObject model;
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/T1Observatory.png");
+	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/t1observatory.png");
 
 	public RendererObservatory(TileEntityRendererDispatcher tile) {
 		super(tile);
 		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/observatory.obj"));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry","models/observatory.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}

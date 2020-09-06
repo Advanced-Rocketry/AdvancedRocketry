@@ -183,7 +183,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 	@SubscribeEvent
 	public void onRocketDismantle(RocketDismantleEvent event) {
-		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
+		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.GetSpaceDimId()) {
 
 			EntityRocketBase rocket = (EntityRocketBase)event.getEntity();
 			AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
@@ -200,7 +200,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	public void registerTileWithStation(World world, BlockPos pos) {
-		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
+		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.GetSpaceDimId()) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 			if(spaceObj instanceof SpaceStationObject) {
@@ -216,7 +216,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	public void setAllowAutoLand(World world, BlockPos pos, boolean allow) {
-		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
+		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.GetSpaceDimId()) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 			if(spaceObj instanceof SpaceStationObject) {
@@ -226,7 +226,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	public void unregisterTileWithStation(World world, BlockPos pos) {
-		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
+		if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.GetSpaceDimId()) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(spaceObj instanceof SpaceStationObject)
 				((SpaceStationObject)spaceObj).removeLandingPad(pos);
@@ -338,7 +338,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			CompoundNBT nbt) {
 		if(id == 0) {
 			name = nbt.getString("id");
-			if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
+			if(!world.isRemote && ZUtils.getDimensionIdentifier(world) == ARConfiguration.GetSpaceDimId()) {
 				ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 				if(spaceObj instanceof SpaceStationObject) {

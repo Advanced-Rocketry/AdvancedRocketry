@@ -21,12 +21,12 @@ public class RenderCentrifuge extends TileEntityRenderer<TileCentrifuge> {
 
 	WavefrontObject model;
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/centrifuge.png");
+	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/centrifuge.png");
 
 	public RenderCentrifuge(TileEntityRendererDispatcher tile){
 		super(tile);
 		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/centrifuge.obj"));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry","models/centrifuge.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}

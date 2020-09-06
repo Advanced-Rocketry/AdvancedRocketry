@@ -106,7 +106,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				return item.getDimensionId(stack);
 			}
 			else if(itemType instanceof ItemStationChip) {
-				if(ARConfiguration.getCurrentConfig().spaceDimId.get() == currentDimension) {
+				if(ARConfiguration.GetSpaceDimId() == currentDimension) {
 					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 					if(object != null) {
 						if(ItemStationChip.getUUID(stack) == object.getId())
@@ -115,7 +115,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 					else
 						return Constants.INVALID_PLANET;
 				}
-				return ARConfiguration.getCurrentConfig().spaceDimId.get();
+				return ARConfiguration.GetSpaceDimId();
 			}
 			else if(itemType instanceof ItemAsteroidChip) {
 				destinationId = currentDimension;
@@ -162,7 +162,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 			}
 			else if(itemType instanceof ItemStationChip) {
 				ItemStationChip chip = (ItemStationChip)stack.getItem();
-				if(landingDimension == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
+				if(landingDimension == ARConfiguration.GetSpaceDimId()) {
 					//TODO: handle Exception
 					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(ItemStationChip.getUUID(stack));
 					return getStationLocation(object, commit);
@@ -227,7 +227,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	
 	public void overrideLandingStation(ISpaceObject object)
 	{
-		setFallbackDestination(ARConfiguration.getCurrentConfig().spaceDimId.get(), getStationLocation(object, true));
+		setFallbackDestination(ARConfiguration.GetSpaceDimId(), getStationLocation(object, true));
 	}
 	
 	public String getDestinationName(ResourceLocation landingDimension)
@@ -235,7 +235,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		ItemStack stack = getStackInSlot(0);
 		if(!stack.isEmpty() && stack.getItem() instanceof ItemStationChip) {
 			ItemStationChip chip = (ItemStationChip)stack.getItem();
-			if(landingDimension != ARConfiguration.getCurrentConfig().spaceDimId.get()) {
+			if(landingDimension != ARConfiguration.GetSpaceDimId()) {
 				LandingLocation loc = chip.getTakeoffCoords(stack, landingDimension);
 				if(loc != null)
 				{

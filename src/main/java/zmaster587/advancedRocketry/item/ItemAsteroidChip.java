@@ -3,7 +3,9 @@ package zmaster587.advancedRocketry.item;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import zmaster587.libVulpes.LibVulpes;
 
@@ -67,12 +69,12 @@ public class ItemAsteroidChip  extends ItemMultiData {
 	public void addInformation(ItemStack stack, World player, java.util.List list, ITooltipFlag bool) {
 
 		if(!stack.hasTag()) {
-			list.add(LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
+			list.add(new TranslationTextComponent("msg.unprogrammed"));
 		}
 		else {
 			if(stack.getDamage()  == 0) {
 
-				list.add(LibVulpes.proxy.getLocalizedString("msg.asteroidChip.asteroid") + "-" + TextFormatting.DARK_GREEN  + getUUID(stack));
+				list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.asteroidChip.asteroid") + "-" + TextFormatting.DARK_GREEN  + getUUID(stack)));
 
 				super.addInformation(stack, player, list, bool);
 

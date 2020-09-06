@@ -209,7 +209,7 @@ public class TileGuidanceComputerHatch extends TilePointer implements IInfrastru
 	@Override
 	public void unlinkRocket() {
 		rocket = null;
-		((BlockARHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(world, world.getBlockState(pos), pos, false);
+		((BlockARHatch)world.getBlockState(pos).getBlock()).setRedstoneState(world, world.getBlockState(pos), pos, false);
 		chipEjected = false;
 	}
 
@@ -312,7 +312,7 @@ public class TileGuidanceComputerHatch extends TilePointer implements IInfrastru
 
 	protected void setRedstoneState(boolean condition) {
 		condition = isStateActive(state, condition);
-		((BlockARHatch)AdvancedRocketryBlocks.blockLoader).setRedstoneState(world,world.getBlockState(pos), pos, condition);
+		((BlockARHatch)world.getBlockState(pos).getBlock()).setRedstoneState(world,world.getBlockState(pos), pos, condition);
 	}
 
 	protected boolean isStateActive(RedstoneState state, boolean condition) {

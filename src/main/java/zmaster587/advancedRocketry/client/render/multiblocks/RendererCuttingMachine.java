@@ -28,14 +28,14 @@ public class RendererCuttingMachine extends TileEntityRenderer<TileCuttingMachin
 
 	WavefrontObject model;
 
-	public final static ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/cuttingMachine.png");
+	public final static ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/cuttingmachine.png");
 
 	//private final RenderItem dummyItem = Minecraft.getInstance().getRenderItem();
 
 	public RendererCuttingMachine(TileEntityRendererDispatcher tile) {
 		super(tile);
 		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/cuttingMachine.obj"));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry","models/cuttingmachine.obj"));
 		} catch (ModelFormatException e) {
 			
 			e.printStackTrace();

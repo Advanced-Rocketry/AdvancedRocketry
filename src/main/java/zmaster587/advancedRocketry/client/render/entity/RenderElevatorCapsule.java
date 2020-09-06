@@ -21,13 +21,13 @@ import zmaster587.advancedRocketry.entity.EntityElevatorCapsule;
 public class RenderElevatorCapsule extends EntityRenderer<EntityElevatorCapsule> implements IRenderFactory<EntityElevatorCapsule> {
 
 	private static WavefrontObject sphere;
-	public ResourceLocation capsuleTexture =  new ResourceLocation("advancedRocketry:textures/models/spaceElevatorCapsule.png");
+	public ResourceLocation capsuleTexture =  new ResourceLocation("advancedrocketry","textures/models/spaceelevatorcapsule.png");
 
 	
 	static {
 
 		try {
-			sphere = new WavefrontObject(new ResourceLocation("advancedrocketry:models/spaceElevator.obj"));
+			sphere = new WavefrontObject(new ResourceLocation("advancedrocketry","models/spaceelevator.obj"));
 		} catch(ModelFormatException e) {
 			throw new RuntimeException(e);
 		}

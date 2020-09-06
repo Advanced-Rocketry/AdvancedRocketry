@@ -187,7 +187,7 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 		private boolean isAroundBlackHole()
 		{
 
-			if(ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId.get())
+			if(ZUtils.getDimensionIdentifier(world) == ARConfiguration.GetSpaceDimId())
 			{
 				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos);
 				if(obj != null)

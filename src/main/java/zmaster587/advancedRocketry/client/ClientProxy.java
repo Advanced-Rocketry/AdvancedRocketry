@@ -85,7 +85,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ROLLING, (dispatcher) -> {return new RendererRollingMachine(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ELECTROLYSER, (dispatcher) -> {return new RendererElectrolyser(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_WARP_CORE, (dispatcher) -> {return new RendererWarpCore(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_CHEMICAL_REACTOR, (dispatcher) -> {return new RendererChemicalReactor(dispatcher, "advancedrocketry:models/ChemicalReactor.obj", "advancedrocketry:textures/models/ChemicalReactor.png");});
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_CHEMICAL_REACTOR, (dispatcher) -> {return new RendererChemicalReactor(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(LibVulpesTileEntityTypes.TILE_SCHEMATIC, (dispatcher) -> {return new RendererPhantomBlock(dispatcher);});
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileDrill.class, new RendererDrill());
 		//ClientRegistry.bindTileEntityRenderer(TileLiquidPipe.class, new RendererPipe(new ResourceLocation("AdvancedRocketry:textures/blocks/pipeLiquid.png")));

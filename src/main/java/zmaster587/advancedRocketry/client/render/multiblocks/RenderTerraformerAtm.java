@@ -25,13 +25,13 @@ public class RenderTerraformerAtm extends TileEntityRenderer<TileAtmosphereTerra
 	
 	WavefrontObject model;
 
-	ResourceLocation tubeTexture =  new ResourceLocation("advancedRocketry:textures/models/tubes.png");
+	ResourceLocation tubeTexture =  new ResourceLocation("advancedrocketry","textures/models/tubes.png");
 	
 	
 	public RenderTerraformerAtm(TileEntityRendererDispatcher tile) {
 		super(tile);
 		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/terraformerAtm.obj"));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry","models/terraformeratm.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}

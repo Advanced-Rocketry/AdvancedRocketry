@@ -23,12 +23,12 @@ public class RenderGravityMachine extends TileEntityRenderer<TileGravityControll
 	
 	WavefrontObject model;
 
-	ResourceLocation texture =  new ResourceLocation("advancedRocketry:textures/models/gravityMachine.png");
+	ResourceLocation texture =  new ResourceLocation("advancedrocketry","textures/models/gravitymachine.png");
 	
 	public RenderGravityMachine(TileEntityRendererDispatcher tile) {
 		super(tile);
 		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/gravityMachine.obj"));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry","models/gravitymachine.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}

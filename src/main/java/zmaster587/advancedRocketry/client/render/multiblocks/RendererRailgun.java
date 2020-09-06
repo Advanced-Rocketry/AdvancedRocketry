@@ -23,12 +23,12 @@ public class RendererRailgun extends TileEntityRenderer<TileRailgun> {
 	
 	WavefrontObject model;
 
-	ResourceLocation texture =  new ResourceLocation("advancedRocketry:textures/models/railgun.png");
+	ResourceLocation texture =  new ResourceLocation("advancedrocketry","textures/models/railgun.png");
 	
 	public RendererRailgun(TileEntityRendererDispatcher tile) {
 		super(tile);
 		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/railgun.obj"));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry","models/railgun.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}

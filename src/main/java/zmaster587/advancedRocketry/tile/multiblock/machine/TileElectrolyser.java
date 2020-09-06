@@ -4,6 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -11,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -28,7 +30,7 @@ import java.util.List;
 public class TileElectrolyser extends TileMultiblockMachine {
 	public static final Object[][][] structure = { 
 		{{null,null,null},
-		{'P', "blockCoil",'P'}},
+		{'P', new ResourceLocation(Constants.modId,"blockcoil"),'P'}},
 		
 		{{'l', 'c', 'l'}, 
 			{new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'L', new BlockMeta(LibVulpesBlocks.blockStructureBlock)}},

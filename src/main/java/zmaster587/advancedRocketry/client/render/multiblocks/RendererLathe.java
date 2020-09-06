@@ -25,12 +25,12 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 public class RendererLathe extends TileEntityRenderer<TileLathe> {
 	WavefrontObject model;
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/lathe.png");
+	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/lathe.png");
 
 	public RendererLathe(TileEntityRendererDispatcher tile) {
 		super(tile);
 		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/lathe.obj"));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry","models/lathe.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}

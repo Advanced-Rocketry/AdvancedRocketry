@@ -83,7 +83,7 @@ public class BuildRocketTest extends BaseTest {
 	public void Phase3(World world, PlayerEntity player)
 	{
 		// Make sure we're in space and riding a rocket
-		if(!(ARConfiguration.getCurrentConfig().spaceDimId.get() == ZUtils.getDimensionIdentifier(world)))
+		if(!(ARConfiguration.GetSpaceDimId() == ZUtils.getDimensionIdentifier(world)))
 			throw new AssertionError("Expected to be on space station!");
 		if(!(player.getRidingEntity() instanceof EntityRocket))
 			throw new AssertionError("Expected player to be riding a rocket!");

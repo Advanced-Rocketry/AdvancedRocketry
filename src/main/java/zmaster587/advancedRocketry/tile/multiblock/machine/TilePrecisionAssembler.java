@@ -6,11 +6,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -39,7 +41,7 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 			{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock}},
 
 			{{'c', '*', '*', '*'},
-				{'*', "blockCoil", "blockCoil", '*'},
+				{'*', new ResourceLocation(Constants.modId,"blockcoil"), new ResourceLocation(Constants.modId,"blockcoil"), '*'},
 				{'*', LibVulpesBlocks.motors, LibVulpesBlocks.motors, '*'}}};
 
 				

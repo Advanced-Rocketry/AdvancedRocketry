@@ -31,24 +31,24 @@ public class AdvancedRocketryEntities {
 	public static void registerEntities(RegistryEvent.Register<EntityType<?>> event)
 	{
 		ENTITY_DUMMY = EntityType.Builder.<EntityDummy>create(EntityDummy::new, EntityClassification.MISC).disableSummoning().build("dummy");
-		ENTITY_ELEVATOR_CAPSULE = EntityType.Builder.<EntityElevatorCapsule>create(EntityElevatorCapsule::new, EntityClassification.MISC).size(3,3).immuneToFire().setTrackingRange(64).setShouldReceiveVelocityUpdates(true).setUpdateInterval(20).disableSummoning().build("spaceElevator");
+		ENTITY_ELEVATOR_CAPSULE = EntityType.Builder.<EntityElevatorCapsule>create(EntityElevatorCapsule::new, EntityClassification.MISC).size(3,3).immuneToFire().setTrackingRange(64).setShouldReceiveVelocityUpdates(true).setUpdateInterval(20).disableSummoning().build("spaceelevator");
 		ENTITY_HOVER_CRAFT = EntityType.Builder.<EntityHoverCraft>create(EntityHoverCraft::new, EntityClassification.MISC).size(2.5f, 1f).immuneToFire().setTrackingRange(64).setShouldReceiveVelocityUpdates(true).setUpdateInterval(3).build("hovercraft");
-		ENTITY_ITEM_ABDUCTED = EntityType.Builder.<EntityItemAbducted>create(EntityItemAbducted::new, EntityClassification.MISC).size(0.25F, 0.25F).setTrackingRange(127).setShouldReceiveVelocityUpdates(true).setUpdateInterval(400).build("itemAbducted");
-		ENTITY_LASER_NODE = EntityType.Builder.<EntityLaserNode>create(EntityLaserNode::new, EntityClassification.MISC).size(0.25F, 0.25F).setTrackingRange(256).setUpdateInterval(20).build("laserNode");
+		ENTITY_ITEM_ABDUCTED = EntityType.Builder.<EntityItemAbducted>create(EntityItemAbducted::new, EntityClassification.MISC).size(0.25F, 0.25F).setTrackingRange(127).setShouldReceiveVelocityUpdates(true).setUpdateInterval(400).build("itemabducted");
+		ENTITY_LASER_NODE = EntityType.Builder.<EntityLaserNode>create(EntityLaserNode::new, EntityClassification.MISC).size(0.25F, 0.25F).setTrackingRange(256).setUpdateInterval(20).build("lasernode");
 		ENTITY_ROCKET = EntityType.Builder.<EntityRocket>create(EntityRocket::new, EntityClassification.MISC).size(0.25F, 0.25F).setTrackingRange(256).setUpdateInterval(3).build("rocket");
-		ENTITY_UIPLANET = EntityType.Builder.<EntityUIPlanet>create(EntityUIPlanet::new, EntityClassification.MISC).size(0.25F, 0.25F).setTrackingRange(64).setUpdateInterval(20).build("uiPlanet");
-		ENTITY_UISTAR = EntityType.Builder.<EntityUIStar>create(EntityUIStar::new, EntityClassification.MISC).size(0.25F, 0.25F).setTrackingRange(64).setUpdateInterval(20).build("uiStar");
-		ENTITY_UIBUTTON = EntityType.Builder.<EntityUIButton>create(EntityUIButton::new, EntityClassification.MISC).size(0.25F, 0.25F).setTrackingRange(64).setUpdateInterval(20).build("uiButton");
+		ENTITY_UIPLANET = EntityType.Builder.<EntityUIPlanet>create(EntityUIPlanet::new, EntityClassification.MISC).size(0.25F, 0.25F).setTrackingRange(64).setUpdateInterval(20).build("uiplanet");
+		ENTITY_UISTAR = EntityType.Builder.<EntityUIStar>create(EntityUIStar::new, EntityClassification.MISC).size(0.25F, 0.25F).setTrackingRange(64).setUpdateInterval(20).build("uistar");
+		ENTITY_UIBUTTON = EntityType.Builder.<EntityUIButton>create(EntityUIButton::new, EntityClassification.MISC).size(0.25F, 0.25F).setTrackingRange(64).setUpdateInterval(20).build("uibutton");
 		
 		event.getRegistry().registerAll(
-				ENTITY_DUMMY, 
-				ENTITY_ELEVATOR_CAPSULE,
-				ENTITY_HOVER_CRAFT,
-				ENTITY_ITEM_ABDUCTED,
-				ENTITY_LASER_NODE,
-				ENTITY_ROCKET,
-				ENTITY_UIPLANET,
-				ENTITY_UISTAR,
-				ENTITY_UIBUTTON);
+				ENTITY_DUMMY.setRegistryName("dummy"),
+				ENTITY_ELEVATOR_CAPSULE.setRegistryName("spaceelevator"),
+				ENTITY_HOVER_CRAFT.setRegistryName("hovercraft"),
+				ENTITY_ITEM_ABDUCTED.setRegistryName("itemabducted"),
+				ENTITY_LASER_NODE.setRegistryName("lasernode"),
+				ENTITY_ROCKET.setRegistryName("rocket"),
+				ENTITY_UIPLANET.setRegistryName("uiplanet"),
+				ENTITY_UISTAR.setRegistryName("uistar"),
+				ENTITY_UIBUTTON.setRegistryName("uibutton"));
 	}
 }

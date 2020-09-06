@@ -51,7 +51,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                advrocketry {
+                advancedrocketry {
                     source sourceSets.main
                 }
             }
@@ -67,7 +67,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                advrocketry {
+                advancedrocketry {
                     source sourceSets.main
                 }
             }
@@ -82,10 +82,10 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'advrocketry', '--all', '--output', file('src/generated/resources/')
+            args '--mod', 'advancedrocketry', '--all', '--output', file('src/generated/resources/')
 
             mods {
-                advrocketry {
+                advancedrocketry {
                     source sourceSets.main
                 }
             }
@@ -118,10 +118,13 @@ repositories {
             name "LibVulpes"
             artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/1.12/" + project.libVulpesBuildNum +"/artifact/output/[module]-[revision].[ext]"
         }*/
+	flatDir {
+	    dirs 'libs'
+	}
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.2-33.0.3'
+    minecraft 'net.minecraftforge:forge:1.16.2-33.0.37'
     //compile name: 'industrialcraft-2', version: '2.7.39-ex111-api', ext: 'jar'
     //compile name: 'Tesla', version: '1.11-1.3.0.51-deobf', ext: 'jar'
     //compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
@@ -131,11 +134,13 @@ dependencies {
     // compile against the JEI API
     //decompile "mezz.jei:jei-1.16.1:7.0.0.6"
     // at runtime, use the full JEI jar
-    runtime "mezz.jei:jei-1.16.1:7.0.0.6:api"
+    compile "mezz.jei:jei-1.16.1:7.0.0.6:api"
 
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    
+    compile name:'LibVulpes', version: '1.16.2-0.4.2-deobf', ext:'jar'
 
 }
 
@@ -143,15 +148,15 @@ dependencies {
 jar {
     manifest {
         attributes([
-            "Specification-Title": "advrocketry",
+            "Specification-Title": "advancedrockety",
             "Specification-Vendor": "zmaster587",
             "Specification-Version": "1", // We are version 1 of ourselves
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"zmaster587",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-            'FMLCorePlugin': 'zmaster587.advancedRocketry.asm.AdvancedRocketryPlugin',
-            'FMLCorePluginContainsFMLMod': 'true'
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+            //'FMLCorePlugin': 'zmaster587.advancedRocketry.asm.AdvancedRocketryPlugin',
+            //'FMLCorePluginContainsFMLMod': 'true'
         ])
     }
 }

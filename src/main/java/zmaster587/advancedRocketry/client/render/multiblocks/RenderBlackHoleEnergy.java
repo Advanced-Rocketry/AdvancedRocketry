@@ -20,12 +20,12 @@ public class RenderBlackHoleEnergy extends TileEntityRenderer<TileBlackHoleGener
 
 	WavefrontObject model;
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/black_hole_generator.jpg");
+	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/black_hole_generator.jpg");
 
 	public RenderBlackHoleEnergy(TileEntityRendererDispatcher tile){
 		super(tile);
 		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/black_hole_generator.obj"));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry","models/black_hole_generator.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}

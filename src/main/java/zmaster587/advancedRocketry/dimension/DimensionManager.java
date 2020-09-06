@@ -33,6 +33,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraftforge.registries.IForgeRegistry;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.NotImplementedException;
@@ -324,7 +325,7 @@ public class DimensionManager implements IGalaxy {
 
 		if( AtmosphereTypes.getAtmosphereTypeFromValue(properties.getAtmosphereDensity()) == AtmosphereTypes.NONE && random.nextInt() % 5 == 0)
 		{
-			properties.setOceanBlock(AdvancedRocketryBlocks.blockOxygenFluid.getDefaultState());
+			properties.setOceanBlock(AdvancedRocketryBlocks.blockOxygenFluid.get().getDefaultState());
 			properties.setSeaLevel(random.nextInt(6) + 72);
 		}
 
@@ -586,7 +587,7 @@ public class DimensionManager implements IGalaxy {
 	public DimensionProperties getDimensionProperties(ResourceLocation resourceLocation)
 	{
 		DimensionProperties properties = dimensionListResource.get(resourceLocation);
-		if(resourceLocation == ARConfiguration.getCurrentConfig().spaceDimId.get() || resourceLocation == null) {
+		if(resourceLocation == ARConfiguration.GetSpaceDimId() || resourceLocation == null) {
 			return defaultSpaceDimensionProperties;
 		}
 		return properties == null ? overworldProperties : properties;
@@ -595,7 +596,7 @@ public class DimensionManager implements IGalaxy {
 	public DimensionProperties getDimensionProperties(ResourceLocation resourceLocation, BlockPos pos)
 	{
 		
-		if(resourceLocation == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
+		if(resourceLocation == ARConfiguration.GetSpaceDimId()) {
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(obj == null)
 				return defaultSpaceDimensionProperties;
@@ -768,7 +769,7 @@ public class DimensionManager implements IGalaxy {
 	 * @return true if the dimension exists and is registered
 	 */
 	public boolean isDimensionCreated( ResourceLocation dimId) {
-		return dimensionListResource.containsKey(dimId) || dimId == ARConfiguration.getCurrentConfig().spaceDimId.get();
+		return dimensionListResource.containsKey(dimId) || dimId == ARConfiguration.GetSpaceDimId();
 	}
 
 	public boolean isDimensionCreated( World dimId) {
@@ -1271,7 +1272,7 @@ public class DimensionManager implements IGalaxy {
 
 	public static DimensionProperties getEffectiveDimId(ResourceLocation dimId, BlockPos pos) {
 
-		if(dimId == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
+		if(dimId == ARConfiguration.GetSpaceDimId()) {
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(obj != null)
 				return (DimensionProperties) obj.getProperties().getParentProperties();
@@ -1284,7 +1285,7 @@ public class DimensionManager implements IGalaxy {
 	public static DimensionProperties getEffectiveDimId(World world, BlockPos pos) {
 		ResourceLocation dimId = ZUtils.getDimensionIdentifier(world);
 
-		if(dimId == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
+		if(dimId == ARConfiguration.GetSpaceDimId()) {
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(obj != null)
 				return (DimensionProperties) obj.getProperties().getParentProperties();

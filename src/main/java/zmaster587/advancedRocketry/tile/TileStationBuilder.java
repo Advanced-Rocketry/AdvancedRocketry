@@ -42,7 +42,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 	public boolean canScan() {
 		if(!super.canScan())
 			return false;
-		ItemStack stack = new ItemStack(AdvancedRocketryBlocks.blockLoader,1);
+		ItemStack stack = new ItemStack(AdvancedRocketryBlocks.blockSatelliteHatch,1);
 
 		if(inventory.getStackInSlot(0).isEmpty() || !stack.isItemEqual(inventory.getStackInSlot(0))) {
 			status = ErrorCodes.NOSATELLITEHATCH;

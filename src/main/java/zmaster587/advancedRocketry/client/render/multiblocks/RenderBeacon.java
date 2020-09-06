@@ -21,14 +21,14 @@ public class RenderBeacon extends TileEntityRenderer<TileBeacon> {
 
 	WavefrontObject model;
 
-	public ResourceLocation baseTexture =  new ResourceLocation("advancedRocketry:textures/models/beacon.jpg");
+	public ResourceLocation baseTexture =  new ResourceLocation("advancedrocketry","textures/models/beacon.jpg");
 	RenderLaser laser;
 
 	public RenderBeacon(TileEntityRendererDispatcher disp) {
 		super(disp);
 
 		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/beacon.obj"));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry","models/beacon.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}

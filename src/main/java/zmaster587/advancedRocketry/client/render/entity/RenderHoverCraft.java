@@ -25,12 +25,12 @@ import zmaster587.libVulpes.render.RenderHelper;
 public class RenderHoverCraft extends EntityRenderer<EntityHoverCraft> implements IRenderFactory<EntityHoverCraft> {
 
 	private static WavefrontObject hoverCraft;
-	public ResourceLocation hovercraftTexture =  new ResourceLocation("advancedRocketry:textures/models/hoverCraft.png");
+	public ResourceLocation hovercraftTexture =  new ResourceLocation("advancedrocketry","textures/models/hovercraft.png");
 	
 	static {
 
 		try {
-			hoverCraft = new WavefrontObject(new ResourceLocation("advancedrocketry:models/hoverCraft.obj"));
+			hoverCraft = new WavefrontObject(new ResourceLocation("advancedrocketry","models/hovercraft.obj"));
 		} catch(ModelFormatException e) {
 			throw new RuntimeException(e);
 		}

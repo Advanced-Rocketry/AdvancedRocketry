@@ -5,9 +5,11 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -36,9 +38,9 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 		},
 
 		{	{null,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,null},
-			{AdvancedRocketryBlocks.blockBlastBrick, "blockCoil",Blocks.AIR, "blockCoil",AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick, new ResourceLocation(Constants.modId, "blockcoil"),Blocks.AIR, new ResourceLocation(Constants.modId,"blockcoil"),AdvancedRocketryBlocks.blockBlastBrick},
 			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.AIR,Blocks.AIR,Blocks.AIR,AdvancedRocketryBlocks.blockBlastBrick},
-			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.AIR, "blockCoil",Blocks.AIR,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.AIR, new ResourceLocation(Constants.modId,"blockcoil"),Blocks.AIR,AdvancedRocketryBlocks.blockBlastBrick},
 			{null,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,null},
 		},
 

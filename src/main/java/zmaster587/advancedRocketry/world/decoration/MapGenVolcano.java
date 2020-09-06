@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.world.decoration;
 import java.util.BitSet;
 import java.util.Random;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.mojang.serialization.Codec;
 
@@ -16,7 +17,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 public class MapGenVolcano extends WorldCarver<ProbabilityConfig> {
 
 	int chancePerChunk;
-	private static final Block blockEnrichedLava = AdvancedRocketryBlocks.blockEnrichedLavaFluid;
+	private static final Supplier<? extends Block> blockEnrichedLava = AdvancedRocketryBlocks.blockEnrichedLavaFluid;
 	private static final Block blockCasing = AdvancedRocketryBlocks.blockBasalt;
 
 	public MapGenVolcano(Codec<ProbabilityConfig> codec, int chancePerChunk) {
@@ -65,20 +66,20 @@ public class MapGenVolcano extends WorldCarver<ProbabilityConfig> {
 						boolean innerLayer = func >= y+crackle && radius < 5 && y > lavaNodeHeight;
 
 						if(innerLayer)
-							chunkPrimerIn.setBlockState(new BlockPos(x, y, z), blockEnrichedLava.getDefaultState(), false);
+							chunkPrimerIn.setBlockState(new BlockPos(x, y, z), blockEnrichedLava.get().getDefaultState(), false);
 						else if(underSurface)
 							chunkPrimerIn.setBlockState(new BlockPos(x, y, z), blockCasing.getDefaultState(), false);
 						
 						
 						double sphereradius = x2+z2+(y - lavaNodeHeight)*(y - lavaNodeHeight);
 						if(sphereradius < 23*23)
-							chunkPrimerIn.setBlockState(new BlockPos(x, y, z), blockEnrichedLava.getDefaultState(), false);
+							chunkPrimerIn.setBlockState(new BlockPos(x, y, z), blockEnrichedLava.get().getDefaultState(), false);
 						else if(sphereradius < 25*25)
 							chunkPrimerIn.setBlockState(new BlockPos(x, y, z), blockCasing.getDefaultState(), false);
 						
 						//For the top of the bulb, im lazy
 						if(innerLayer)
-							chunkPrimerIn.setBlockState(new BlockPos(x, y, z), blockEnrichedLava.getDefaultState(), false);
+							chunkPrimerIn.setBlockState(new BlockPos(x, y, z), blockEnrichedLava.get().getDefaultState(), false);
 					}
 				}
 			}

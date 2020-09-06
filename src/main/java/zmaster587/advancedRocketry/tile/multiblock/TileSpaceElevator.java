@@ -91,11 +91,11 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 			},
 			{
 				{ '*', '*', '*', '*', '*', '*', '*' },
-				{ '*', '*', "blockCoil", "blockCoil", "blockCoil", '*', '*' },
-				{ LibVulpesBlocks.motors, "blockCoil", Blocks.AIR, Blocks.AIR, Blocks.AIR, "blockCoil", LibVulpesBlocks.motors },
-				{ 'P', "blockCoil", Blocks.AIR, Blocks.AIR, Blocks.AIR, "blockCoil", 'P' },
-				{ LibVulpesBlocks.motors, "blockCoil", Blocks.AIR, Blocks.AIR, Blocks.AIR, "blockCoil", LibVulpesBlocks.motors },
-				{ '*', '*', "blockCoil", "blockCoil", "blockCoil", '*', '*' },
+				{ '*', '*', new ResourceLocation("forge","blockcoil"), new ResourceLocation("forge","blockcoil"), new ResourceLocation("forge","blockcoil"), '*', '*' },
+				{ LibVulpesBlocks.motors, new ResourceLocation("forge","blockcoil"), Blocks.AIR, Blocks.AIR, Blocks.AIR, new ResourceLocation("forge","blockcoil"), LibVulpesBlocks.motors },
+				{ 'P', new ResourceLocation("forge","blockcoil"), Blocks.AIR, Blocks.AIR, Blocks.AIR, new ResourceLocation("forge","blockcoil"), 'P' },
+				{ LibVulpesBlocks.motors, new ResourceLocation("forge","blockcoil"), Blocks.AIR, Blocks.AIR, Blocks.AIR, new ResourceLocation("forge","blockcoil"), LibVulpesBlocks.motors },
+				{ '*', '*', new ResourceLocation("forge","blockcoil"), new ResourceLocation("forge","blockcoil"), new ResourceLocation("forge","blockcoil"), '*', '*' },
 				{ '*', '*', LibVulpesBlocks.motors, 'P', LibVulpesBlocks.motors, '*', '*' },
 			}
 		};

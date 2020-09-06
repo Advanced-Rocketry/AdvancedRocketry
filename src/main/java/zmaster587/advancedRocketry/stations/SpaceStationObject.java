@@ -536,9 +536,9 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	 */
 	public void onModuleUnpack(IStorageChunk chunk) {
 
-		if(ZUtils.isWorldLoaded(ARConfiguration.getCurrentConfig().spaceDimId.get()) && ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId.get()) == null)
-			ZUtils.initDimension(ARConfiguration.getCurrentConfig().spaceDimId.get());
-		World worldObj = ZUtils.getWorld(ARConfiguration.getCurrentConfig().spaceDimId.get());
+		if(ZUtils.isWorldLoaded(ARConfiguration.GetSpaceDimId()) && ZUtils.getWorld(ARConfiguration.GetSpaceDimId()) == null)
+			ZUtils.initDimension(ARConfiguration.GetSpaceDimId());
+		World worldObj = ZUtils.getWorld(ARConfiguration.GetSpaceDimId());
 		if(!created) {
 			chunk.pasteInWorld(worldObj, spawnLocation.x - chunk.getSizeX()/2, spawnLocation.y - chunk.getSizeY()/2, spawnLocation.z - chunk.getSizeZ()/2);
 

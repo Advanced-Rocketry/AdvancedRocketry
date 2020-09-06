@@ -10,7 +10,6 @@ public class EnchantmentSpaceBreathing extends Enchantment {
 
 	public EnchantmentSpaceBreathing() {
 		super(Rarity.COMMON, EnchantmentType.ARMOR, new EquipmentSlotType[] {EquipmentSlotType.CHEST, EquipmentSlotType.FEET, EquipmentSlotType.HEAD, EquipmentSlotType.LEGS});
-		this.setRegistryName("spaceBreathing");
 	}
 	
 	@Override

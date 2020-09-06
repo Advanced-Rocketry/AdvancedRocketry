@@ -13,6 +13,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent.Register;
+import net.minecraftforge.fml.RegistryObject;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.armor.ItemSpaceChest;
@@ -84,7 +85,6 @@ public class AdvancedRocketryItems {
 	public static Item itemSpaceSuit_Chest;
 	public static Item itemSpaceSuit_Leggings;
 	public static Item itemSpaceSuit_Boots;
-	public static Item itemBucketRocketFuel;
 	public static Item itemSmallAirlockDoor;
 	public static Item itemCarbonScrubberCartridge;
 	public static Item itemSealDetector;
@@ -105,19 +105,21 @@ public class AdvancedRocketryItems {
 	public static Item itemUpgradeFogGoggles;
 	public static Item itemAtmAnalyser;
 	public static Item itemBiomeChanger;
-	public static Item itemBucketNitrogen;
-	public static Item itemBucketHydrogen;
 
-	public static Item itemBucketOxygen;
 	public static Item itemAstroBed;
 	public static Item itemBasicLaserGun;
 	public static Item itemSpaceElevatorChip;
 	public static Item itemBeaconFinder;
 	public static Item itemThermite;
-	public static Item itemBucketEnrichedLava;
 	public static Item itemHovercraft;
 
 	public static Item[] itemUpgrades;
+	
+	public static RegistryObject<Item> itemBucketRocketFuel;
+	public static RegistryObject<Item> itemBucketNitrogen;
+	public static RegistryObject<Item> itemBucketHydrogen;
+	public static RegistryObject<Item> itemBucketOxygen;
+	public static RegistryObject<Item> itemBucketEnrichedLava;
 	
 	
 	// block items
@@ -159,7 +161,6 @@ public class AdvancedRocketryItems {
 	public static Item itemStationBuilder;
 	public static Item itemElectrolyser;
 	public static Item itemChemicalReactor;
-	public static Item itemFuelFluid;
 	public static Item itemOxygenVent;
 	public static Item itemOxygenScrubber;
 	public static Item itemOxygenCharger;
@@ -182,12 +183,13 @@ public class AdvancedRocketryItems {
 	public static Item itemMicrowaveReciever;
 	public static Item itemSolarPanel;
 	public static Item itemSuitWorkStation;
-	public static Item itemLoader;
+	public static Item itemSatelliteHatch;
 	public static Item itemDataBus;
 	public static Item itemFluidLoader;
 	public static Item itemFluidUnloader;
 	public static Item itemRocketLoader;
 	public static Item itemRocketUnloader;
+	public static Item itemguidanceHatch;
 	public static Item itemBiomeScanner;
 	public static Item itemAtmosphereTerraformer;
 	public static Item itemDeployableRocketBuilder;
@@ -201,6 +203,7 @@ public class AdvancedRocketryItems {
 	public static Item itemRailgun;
 	public static Item itemAdvEngine;
 	public static Item itemPlanetHoloSelector;
+	public static Item itemLensBlock;
 	public static Item itemForceField;
 	public static Item itemForceFieldProjector;
 	public static Item itemGravityMachine;
@@ -221,7 +224,6 @@ public class AdvancedRocketryItems {
 		//Items -------------------------------------------------------------------------------------
 		Item.Properties typicalProperties = new Item.Properties().group(AdvancedRocketry.tabAdvRocketry);
 		Item.Properties singleStackSize = new Item.Properties().group(AdvancedRocketry.tabAdvRocketry).maxStackSize(1);
-		Item.Properties bucketItem = new Item.Properties().group(LibVulpes.tabLibVulpesOres).containerItem(Items.BUCKET);
 
 		AdvancedRocketryItems.itemSiliconWafer = new Item(typicalProperties).setRegistryName("wafer");
 		AdvancedRocketryItems.itemBasicCircuitPlate = new Item(typicalProperties).setRegistryName("basiccircuitplate");
@@ -234,12 +236,12 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemICFluidIO = new Item(typicalProperties).setRegistryName("circuit_ic_fluid_io");
 		AdvancedRocketryItems.itemUi = new Item(typicalProperties).setRegistryName("item_ui");
 		AdvancedRocketryItems.itemCarbonBrick = new Item(typicalProperties).setRegistryName("carbon_brick");
-		AdvancedRocketryItems.itemSawBlade = new Item(typicalProperties).setRegistryName("sawBlade");
+		AdvancedRocketryItems.itemSawBlade = new Item(typicalProperties).setRegistryName("sawblade");
 		AdvancedRocketryItems.itemSpaceStationChip = new ItemStationChip(singleStackSize).setRegistryName("chip_station");
 		AdvancedRocketryItems.itemSpaceElevatorChip = new ItemSpaceElevatorChip(singleStackSize).setRegistryName("chip_elevator");
 		AdvancedRocketryItems.itemAsteroidChip = new ItemAsteroidChip(singleStackSize).setRegistryName("chip_asteroid");
 		AdvancedRocketryItems.itemSpaceStation = new ItemPackedStructure(singleStackSize).setRegistryName("station");
-		AdvancedRocketryItems.itemSmallAirlockDoor = new TallBlockItem(AdvancedRocketryBlocks.blockAirLock, singleStackSize).setRegistryName("smallAirlock");
+		AdvancedRocketryItems.itemSmallAirlockDoor = new TallBlockItem(AdvancedRocketryBlocks.blockAirLock, singleStackSize).setRegistryName("smallairlock");
 		//Short.MAX_VALUE is forge's wildcard, don't use it
 		AdvancedRocketryItems.itemCarbonScrubberCartridge = new Item(new Item.Properties().group(AdvancedRocketry.tabAdvRocketry).defaultMaxDamage(Short.MAX_VALUE-1)).setRegistryName("carbon_scrubber_cartridge");
 		AdvancedRocketryItems.itemLens = new Item(typicalProperties).setRegistryName("lens");
@@ -264,15 +266,8 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemBasicLaserGun = new ItemBasicLaserGun(typicalProperties).setRegistryName("basic_laser_gun");
 		AdvancedRocketryItems.itemHovercraft = new ItemHovercraft(singleStackSize).setRegistryName("hovercraft");
 
-		//Fluids
-		AdvancedRocketryItems.itemBucketRocketFuel = new ItemARBucket(bucketItem, AdvancedRocketryFluids.rocketFuelStill.get()).setRegistryName("bucketRocketFuel");
-		AdvancedRocketryItems.itemBucketNitrogen = new ItemARBucket(bucketItem, AdvancedRocketryFluids.nitrogenStill.get()).setRegistryName("bucketNitrogen");
-		AdvancedRocketryItems.itemBucketHydrogen = new ItemARBucket(bucketItem, AdvancedRocketryFluids.hydrogenStill.get()).setRegistryName("bucketHydrogen");
-		AdvancedRocketryItems.itemBucketOxygen = new ItemARBucket(bucketItem, AdvancedRocketryFluids.oxygenStill.get()).setRegistryName("bucketOxygen");
-		AdvancedRocketryItems.itemBucketEnrichedLava = new ItemARBucket(bucketItem, AdvancedRocketryFluids.enrichedLavaStill.get()).setRegistryName("bucketEnrichedLava");
-
 		//Suit Component Registration
-		AdvancedRocketryItems.itemJetpack = new ItemJetpack(singleStackSize).setRegistryName("jetPack");
+		AdvancedRocketryItems.itemJetpack = new ItemJetpack(singleStackSize).setRegistryName("jetpack");
 		AdvancedRocketryItems.itemPressureTankLow = new ItemPressureTank(new Item.Properties().group(AdvancedRocketry.tabAdvRocketry).maxStackSize(4), 1000).setRegistryName("pressure_tank_low");
 		AdvancedRocketryItems.itemPressureTankMed = new ItemPressureTank(new Item.Properties().group(AdvancedRocketry.tabAdvRocketry).maxStackSize(4), 2000).setRegistryName("pressure_tank_med");
 		AdvancedRocketryItems.itemPressureTankHigh = new ItemPressureTank(new Item.Properties().group(AdvancedRocketry.tabAdvRocketry).maxStackSize(4), 4000).setRegistryName("pressure_tank_high");
@@ -296,7 +291,7 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemSealDetector = new ItemSealDetector(singleStackSize).setRegistryName("sealdetector");
 
 		//Tools
-		AdvancedRocketryItems.itemJackhammer = new ItemJackHammer(ItemTier.DIAMOND).setRegistryName("jackhammer");
+		AdvancedRocketryItems.itemJackhammer = new ItemJackHammer(ItemTier.DIAMOND, new Item.Properties().group(AdvancedRocketry.tabAdvRocketry).maxStackSize(1).maxDamage(1500)).setRegistryName("jackhammer");
 
 		//Note: not registered
 		AdvancedRocketryItems.itemAstroBed = new ItemAstroBed(AdvancedRocketryBlocks.blockAstroBed, singleStackSize).setRegistryName("astrobed");
@@ -334,11 +329,11 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemSpaceSuit_Boots,
 				AdvancedRocketryItems.itemSpaceSuit_Chest,
 				AdvancedRocketryItems.itemSpaceSuit_Leggings,
-				AdvancedRocketryItems.itemBucketRocketFuel,
-				AdvancedRocketryItems.itemBucketNitrogen,
-				AdvancedRocketryItems.itemBucketHydrogen,
-				AdvancedRocketryItems.itemBucketOxygen,
-				AdvancedRocketryItems.itemBucketEnrichedLava,
+				//AdvancedRocketryItems.itemBucketRocketFuel,
+				//AdvancedRocketryItems.itemBucketNitrogen,
+				//AdvancedRocketryItems.itemBucketHydrogen,
+				//AdvancedRocketryItems.itemBucketOxygen,
+				//AdvancedRocketryItems.itemBucketEnrichedLava,
 				AdvancedRocketryItems.itemSmallAirlockDoor,
 				AdvancedRocketryItems.itemCarbonScrubberCartridge,
 				AdvancedRocketryItems.itemSealDetector,
@@ -405,7 +400,6 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemStationBuilder = new BlockItem(AdvancedRocketryBlocks.blockStationBuilder, typicalBlockProperties);
 		AdvancedRocketryItems.itemElectrolyser = new BlockItem(AdvancedRocketryBlocks.blockElectrolyser, typicalBlockProperties);
 		AdvancedRocketryItems.itemChemicalReactor = new BlockItem(AdvancedRocketryBlocks.blockChemicalReactor, typicalBlockProperties);
-		AdvancedRocketryItems.itemFuelFluid = new BlockItem(AdvancedRocketryBlocks.blockFuelFluid, typicalBlockProperties);
 		AdvancedRocketryItems.itemOxygenVent = new BlockItem(AdvancedRocketryBlocks.blockOxygenVent, typicalBlockProperties);
 		AdvancedRocketryItems.itemOxygenScrubber = new BlockItem(AdvancedRocketryBlocks.blockOxygenScrubber, typicalBlockProperties);
 		AdvancedRocketryItems.itemOxygenCharger = new BlockItem(AdvancedRocketryBlocks.blockOxygenCharger, typicalBlockProperties);
@@ -428,12 +422,13 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemMicrowaveReciever = new BlockItem(AdvancedRocketryBlocks.blockMicrowaveReciever, typicalBlockProperties);
 		AdvancedRocketryItems.itemSolarPanel = new BlockItem(AdvancedRocketryBlocks.blockSolarPanel, typicalBlockProperties);
 		AdvancedRocketryItems.itemSuitWorkStation = new BlockItem(AdvancedRocketryBlocks.blockSuitWorkStation, typicalBlockProperties);
-		AdvancedRocketryItems.itemLoader = new BlockItem(AdvancedRocketryBlocks.blockLoader, typicalBlockProperties);
 		AdvancedRocketryItems.itemDataBus = new BlockItem(AdvancedRocketryBlocks.blockDataBus, typicalBlockProperties);
+		AdvancedRocketryItems.itemSatelliteHatch = new BlockItem(AdvancedRocketryBlocks.blockSatelliteHatch, typicalBlockProperties);
 		AdvancedRocketryItems.itemFluidLoader = new BlockItem(AdvancedRocketryBlocks.blockFluidLoader, typicalBlockProperties);
 		AdvancedRocketryItems.itemFluidUnloader = new BlockItem(AdvancedRocketryBlocks.blockFluidUnloader, typicalBlockProperties);
 		AdvancedRocketryItems.itemRocketLoader = new BlockItem(AdvancedRocketryBlocks.blockRocketLoader, typicalBlockProperties);
 		AdvancedRocketryItems.itemRocketUnloader = new BlockItem(AdvancedRocketryBlocks.blockRocketUnloader, typicalBlockProperties);
+		AdvancedRocketryItems.itemguidanceHatch = new BlockItem(AdvancedRocketryBlocks.blockguidanceHatch, typicalBlockProperties);
 		AdvancedRocketryItems.itemBiomeScanner = new BlockItem(AdvancedRocketryBlocks.blockBiomeScanner, typicalBlockProperties);
 		AdvancedRocketryItems.itemAtmosphereTerraformer = new BlockItem(AdvancedRocketryBlocks.blockAtmosphereTerraformer, typicalBlockProperties);
 		AdvancedRocketryItems.itemDeployableRocketBuilder = new BlockItem(AdvancedRocketryBlocks.blockDeployableRocketBuilder, typicalBlockProperties);
@@ -447,6 +442,7 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemRailgun = new BlockItem(AdvancedRocketryBlocks.blockRailgun, typicalBlockProperties);
 		AdvancedRocketryItems.itemAdvEngine = new BlockItem(AdvancedRocketryBlocks.blockAdvEngine, typicalBlockProperties);
 		AdvancedRocketryItems.itemPlanetHoloSelector = new BlockItem(AdvancedRocketryBlocks.blockPlanetHoloSelector, typicalBlockProperties);
+		AdvancedRocketryItems.itemLensBlock = new BlockItem(AdvancedRocketryBlocks.blockLens, typicalBlockProperties);
 		AdvancedRocketryItems.itemForceField = new BlockItem(AdvancedRocketryBlocks.blockForceField, typicalBlockProperties);
 		AdvancedRocketryItems.itemForceFieldProjector = new BlockItem(AdvancedRocketryBlocks.blockForceFieldProjector, typicalBlockProperties);
 		AdvancedRocketryItems.itemGravityMachine = new BlockItem(AdvancedRocketryBlocks.blockGravityMachine, typicalBlockProperties);
@@ -464,96 +460,100 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemLandingFloat = new BlockItem(AdvancedRocketryBlocks.blockLandingFloat, typicalBlockProperties);
 		
 		evt.getRegistry().registerAll(AdvancedRocketryItems.itemLaunchpad.setRegistryName("launchpad"),
-				AdvancedRocketryItems.itemRocketBuilder.setRegistryName("rocketBuilder"),
-				AdvancedRocketryItems.itemStructureTower.setRegistryName("structureTower"),
+				AdvancedRocketryItems.itemRocketBuilder.setRegistryName("rocketbuilder"),
+				AdvancedRocketryItems.itemStructureTower.setRegistryName("structuretower"),
 				AdvancedRocketryItems.itemGenericSeat.setRegistryName("seat"),
 				AdvancedRocketryItems.itemEngine.setRegistryName("rocketmotor"),
-				AdvancedRocketryItems.itemAdvEngine.setRegistryName("advRocketmotor"),
-				AdvancedRocketryItems.itemFuelTank.setRegistryName("fuelTank"),
-				AdvancedRocketryItems.itemFuelingStation.setRegistryName("fuelingStation"),
-				AdvancedRocketryItems.itemMonitoringStation.setRegistryName("monitoringStation"),
-				AdvancedRocketryItems.itemSatelliteBuilder.setRegistryName("satelliteBuilder"),
-				AdvancedRocketryItems.itemMoonTurf.setRegistryName("moonTurf"),
-				AdvancedRocketryItems.itemMoonTurfDark.setRegistryName("moonTurf_dark"),
-				AdvancedRocketryItems.itemHotTurf.setRegistryName("hotTurf"),
-				AdvancedRocketryItems.itemLoader.setRegistryName("loader"),
+				AdvancedRocketryItems.itemAdvEngine.setRegistryName("advrocketmotor"),
+				AdvancedRocketryItems.itemFuelTank.setRegistryName("fueltank"),
+				AdvancedRocketryItems.itemFuelingStation.setRegistryName("fuelingstation"),
+				AdvancedRocketryItems.itemMonitoringStation.setRegistryName("monitoringstation"),
+				AdvancedRocketryItems.itemSatelliteBuilder.setRegistryName("satellitebuilder"),
+				AdvancedRocketryItems.itemMoonTurf.setRegistryName("moonturf"),
+				AdvancedRocketryItems.itemMoonTurfDark.setRegistryName("moonturf_dark"),
+				AdvancedRocketryItems.itemHotTurf.setRegistryName("hotturf"),
 				AdvancedRocketryItems.itemPrecisionAssembler.setRegistryName("precisionassemblingmachine"),
 				AdvancedRocketryItems.itemBlastBrick.setRegistryName("blastbrick"),
-				AdvancedRocketryItems.itemQuartzCrucible.setRegistryName("quartzcrucible"),
 				AdvancedRocketryItems.itemCrystallizer.setRegistryName("crystallizer"),
-				AdvancedRocketryItems.itemCuttingMachine.setRegistryName("cuttingMachine"),
-				AdvancedRocketryItems.itemAlienWood.setRegistryName("alienWood"),
-				AdvancedRocketryItems.itemAlienLeaves.setRegistryName("alienLeaves"),
-				AdvancedRocketryItems.itemAlienSapling.setRegistryName("alienSapling"),
+				AdvancedRocketryItems.itemCuttingMachine.setRegistryName("cuttingmachine"),
+				AdvancedRocketryItems.itemAlienWood.setRegistryName("alienwood"),
+				AdvancedRocketryItems.itemAlienLeaves.setRegistryName("alienleaves"),
+				AdvancedRocketryItems.itemAlienSapling.setRegistryName("aliensapling"),
 				AdvancedRocketryItems.itemObservatory.setRegistryName("observatory"),
 				AdvancedRocketryItems.itemBlackHoleGenerator.setRegistryName("blackholegenerator"),
 				AdvancedRocketryItems.itemConcrete.setRegistryName("concrete"),
-				AdvancedRocketryItems.itemPlanetSelector.setRegistryName("planetSelector"),
-				AdvancedRocketryItems.itemSatelliteControlCenter.setRegistryName("satelliteControlCenter"),
-				AdvancedRocketryItems.itemPlanetAnalyser.setRegistryName("planetAnalyser"),
-				AdvancedRocketryItems.itemGuidanceComputer.setRegistryName("guidanceComputer"),
+				AdvancedRocketryItems.itemPlanetSelector.setRegistryName("planetselector"),
+				AdvancedRocketryItems.itemSatelliteControlCenter.setRegistryName("satellitecontrolcenter"),
+				AdvancedRocketryItems.itemPlanetAnalyser.setRegistryName("planetanalyser"),
+				AdvancedRocketryItems.itemGuidanceComputer.setRegistryName("guidancecomputer"),
 				AdvancedRocketryItems.itemArcFurnace.setRegistryName("arcfurnace"),
-				AdvancedRocketryItems.itemSawBlade.setRegistryName("sawBladeAssbly"),
+				AdvancedRocketryItems.itemSawBladeBlock.setRegistryName("sawbladeassbly"),
 				AdvancedRocketryItems.itemLathe.setRegistryName("lathe"),
-				AdvancedRocketryItems.itemRollingMachine.setRegistryName("rollingMachine"),
+				AdvancedRocketryItems.itemRollingMachine.setRegistryName("rollingmachine"),
 				AdvancedRocketryItems.itemPlatePress.setRegistryName("platepress"),
-				AdvancedRocketryItems.itemStationBuilder.setRegistryName("stationBuilder"),
+				AdvancedRocketryItems.itemStationBuilder.setRegistryName("stationbuilder"),
 				AdvancedRocketryItems.itemElectrolyser.setRegistryName("electrolyser"),
-				AdvancedRocketryItems.itemChemicalReactor.setRegistryName("chemicalReactor"),
-				AdvancedRocketryItems.itemOxygenScrubber.setRegistryName("oxygenScrubber"),
-				AdvancedRocketryItems.itemOxygenVent.setRegistryName("oxygenVent"),
-				AdvancedRocketryItems.itemOxygenCharger.setRegistryName("oxygenCharger"),
+				AdvancedRocketryItems.itemChemicalReactor.setRegistryName("chemicalreactor"),
+				AdvancedRocketryItems.itemOxygenScrubber.setRegistryName("oxygenscrubber"),
+				AdvancedRocketryItems.itemOxygenVent.setRegistryName("oxygenvent"),
+				AdvancedRocketryItems.itemOxygenCharger.setRegistryName("oxygencharger"),
 				AdvancedRocketryItems.itemAirLock.setRegistryName("airlock_door"),
-				AdvancedRocketryItems.itemLandingPad.setRegistryName("landingPad"),
-				AdvancedRocketryItems.itemWarpCore.setRegistryName("warpCore"),
-				AdvancedRocketryItems.itemWarpShipMonitor.setRegistryName("warpMonitor"),
-				AdvancedRocketryItems.itemOxygenDetection.setRegistryName("oxygenDetection"),
-				AdvancedRocketryItems.itemUnlitTorch.setRegistryName("unlitTorch"),
+				AdvancedRocketryItems.itemLandingPad.setRegistryName("landingpad"),
+				AdvancedRocketryItems.itemWarpCore.setRegistryName("warpcore"),
+				AdvancedRocketryItems.itemWarpShipMonitor.setRegistryName("warpmonitor"),
+				AdvancedRocketryItems.itemOxygenDetection.setRegistryName("oxygendetection"),
+				AdvancedRocketryItems.itemUnlitTorch.setRegistryName("unlittorch"),
 				AdvancedRocketryItems.itemsGeode.setRegistryName("geode"),
-				AdvancedRocketryItems.itemFuelFluid.setRegistryName("rocketFuel"),
-				AdvancedRocketryItems.itemVitrifiedSand.setRegistryName("vitrifiedSand"),
-				AdvancedRocketryItems.itemCharcoalLog.setRegistryName("charcoalLog"),
-				AdvancedRocketryItems.itemElectricMushroom.setRegistryName("electricMushroom"),
+				AdvancedRocketryItems.itemVitrifiedSand.setRegistryName("vitrifiedsand"),
+				AdvancedRocketryItems.itemCharcoalLog.setRegistryName("charcoallog"),
+				AdvancedRocketryItems.itemElectricMushroom.setRegistryName("electricmushroom"),
 				AdvancedRocketryItems.itemCrystal.setRegistryName("crystal"),
-				AdvancedRocketryItems.itemOrientationController.setRegistryName("orientationController"),
-				AdvancedRocketryItems.itemGravityController.setRegistryName("gravityController"),
+				AdvancedRocketryItems.itemOrientationController.setRegistryName("orientationcontroller"),
+				AdvancedRocketryItems.itemGravityController.setRegistryName("gravitycontroller"),
 				AdvancedRocketryItems.itemDrill.setRegistryName("drill"),
-				AdvancedRocketryItems.itemMicrowaveReciever.setRegistryName("microwaveReciever"),
-				AdvancedRocketryItems.itemLightSource.setRegistryName("lightSource"),
-				AdvancedRocketryItems.itemSolarPanel.setRegistryName("solarPanel"),
-				AdvancedRocketryItems.itemSuitWorkStation.setRegistryName("suitWorkStation"),
-				AdvancedRocketryItems.itemBiomeScanner.setRegistryName("biomeScanner"),
+				AdvancedRocketryItems.itemMicrowaveReciever.setRegistryName("microwavereciever"),
+				AdvancedRocketryItems.itemLightSource.setRegistryName("lightsource"),
+				AdvancedRocketryItems.itemSolarPanel.setRegistryName("solarpanel"),
+				AdvancedRocketryItems.itemSuitWorkStation.setRegistryName("suitworkstation"),
+				AdvancedRocketryItems.itemDataBus.setRegistryName("databus"),
+				AdvancedRocketryItems.itemSatelliteHatch.setRegistryName("satbay"),
+				AdvancedRocketryItems.itemFluidLoader.setRegistryName("floader"),
+				AdvancedRocketryItems.itemFluidUnloader.setRegistryName("funloader"),
+				AdvancedRocketryItems.itemRocketLoader.setRegistryName("rloader"),
+				AdvancedRocketryItems.itemRocketUnloader.setRegistryName("runloader"),
+				AdvancedRocketryItems.itemguidanceHatch.setRegistryName("compaccesshatch"),
+				AdvancedRocketryItems.itemBiomeScanner.setRegistryName("biomescanner"),
 				AdvancedRocketryItems.itemAtmosphereTerraformer.setRegistryName("terraformer"),
-				AdvancedRocketryItems.itemDeployableRocketBuilder.setRegistryName("deployableRocketBuilder"),
-				AdvancedRocketryItems.itemPressureTank.setRegistryName("liquidTank"), 
+				AdvancedRocketryItems.itemDeployableRocketBuilder.setRegistryName("deployablerocketbuilder"),
+				AdvancedRocketryItems.itemPressureTank.setRegistryName("liquidtank"), 
 				AdvancedRocketryItems.itemIntake.setRegistryName("intake"),
-				AdvancedRocketryItems.itemCircleLight.setRegistryName("circleLight"),
-				AdvancedRocketryItems.itemSolarGenerator.setRegistryName("solarGenerator"),
-				AdvancedRocketryItems.itemDockingPort.setRegistryName("stationMarker"),
-				AdvancedRocketryItems.itemAltitudeController.setRegistryName("altitudeController"),
+				AdvancedRocketryItems.itemCircleLight.setRegistryName("circlelight"),
+				AdvancedRocketryItems.itemSolarGenerator.setRegistryName("solargenerator"),
+				AdvancedRocketryItems.itemDockingPort.setRegistryName("stationmarker"),
+				AdvancedRocketryItems.itemAltitudeController.setRegistryName("altitudecontroller"),
 				AdvancedRocketryItems.itemRailgun .setRegistryName("railgun"),
-				AdvancedRocketryItems.itemAstroBed .setRegistryName("astroBed"),
-				AdvancedRocketryItems.itemPlanetHoloSelector.setRegistryName("planetHoloSelector"),
-				AdvancedRocketryItems.itemLens.setRegistryName("blockLens"),
-				AdvancedRocketryItems.itemForceField.setRegistryName("forceField"),
-				AdvancedRocketryItems.itemForceFieldProjector.setRegistryName("forceFieldProjector"),
-				AdvancedRocketryItems.itemPipeSealer.setRegistryName("pipeSealer"),
-				AdvancedRocketryItems.itemSpaceElevatorController.setRegistryName("spaceElevatorController"),
+				//AdvancedRocketryItems.itemAstroBed .setRegistryName("astrobed"),
+				AdvancedRocketryItems.itemPlanetHoloSelector.setRegistryName("planetholoselector"),
+				AdvancedRocketryItems.itemLensBlock.setRegistryName("blocklens"),
+				AdvancedRocketryItems.itemForceField.setRegistryName("forcefield"),
+				AdvancedRocketryItems.itemForceFieldProjector.setRegistryName("forcefieldprojector"),
+				AdvancedRocketryItems.itemPipeSealer.setRegistryName("pipesealer"),
+				AdvancedRocketryItems.itemSpaceElevatorController.setRegistryName("spaceelevatorcontroller"),
 				AdvancedRocketryItems.itemBeacon.setRegistryName("beacon"),
 				AdvancedRocketryItems.itemAlienPlanks.setRegistryName("planks"),
-				AdvancedRocketryItems.itemThermiteTorch.setRegistryName("thermiteTorch"),
-				AdvancedRocketryItems.itemTransciever.setRegistryName("wirelessTransciever"),
-				AdvancedRocketryItems.itemPump.setRegistryName("blockPump"),
+				AdvancedRocketryItems.itemThermiteTorch.setRegistryName("thermitetorch"),
+				AdvancedRocketryItems.itemTransciever.setRegistryName("wirelesstransciever"),
+				AdvancedRocketryItems.itemPump.setRegistryName("blockpump"),
 				AdvancedRocketryItems.itemCentrifuge.setRegistryName("centrifuge"),
 				AdvancedRocketryItems.itemBasalt.setRegistryName("basalt"),
 				AdvancedRocketryItems.itemLandingFloat.setRegistryName("landingfloat"));
 
 
-		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "waferSilicon")).func_230236_b_().add(AdvancedRocketryItems.itemSiliconWafer);
-		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "ingotCarbon")).func_230236_b_().add(AdvancedRocketryItems.itemCarbonBrick);
-		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "itemLens")).func_230236_b_().add(AdvancedRocketryItems.itemLens);
-		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "itemSilicon")).func_230236_b_().add(MaterialRegistry.getItemStackFromMaterialAndType("Silicon", AllowedProducts.getProductByName("INGOT")).getItem());
-		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "dustThermite")).func_230236_b_().add(AdvancedRocketryItems.itemThermite);
-		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "slab")).func_230236_b_().add(Items.STONE_SLAB);
+		/*ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "wafersilicon")).func_230236_b_().add(AdvancedRocketryItems.itemSiliconWafer);
+		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "ingotcarbon")).func_230236_b_().add(AdvancedRocketryItems.itemCarbonBrick);
+		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "itemlens")).func_230236_b_().add(AdvancedRocketryItems.itemLens);
+		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "itemsilicon")).func_230236_b_().add(MaterialRegistry.getItemStackFromMaterialAndType("Silicon", AllowedProducts.getProductByName("INGOT")).getItem());
+		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "dustthermite")).func_230236_b_().add(AdvancedRocketryItems.itemThermite);
+		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "slab")).func_230236_b_().add(Items.STONE_SLAB);*/
 	}
 }

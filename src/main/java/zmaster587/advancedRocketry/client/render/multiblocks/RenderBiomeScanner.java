@@ -22,12 +22,12 @@ public class RenderBiomeScanner extends TileEntityRenderer<TileBiomeScanner> {
 
 	WavefrontObject model;
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/biomeScanner.jpg");
+	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/biomescanner.jpg");
 
 	public RenderBiomeScanner(TileEntityRendererDispatcher tile){
 		super(tile);
 		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/biomeScanner.obj"));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry","models/biomescanner.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}

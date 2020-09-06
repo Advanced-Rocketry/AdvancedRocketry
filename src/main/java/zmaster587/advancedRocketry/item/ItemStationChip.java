@@ -446,14 +446,14 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public void addInformation(ItemStack stack, World player, List list,
+	public void addInformation(ItemStack stack, World world, List list,
 			ITooltipFlag bool) {
-		if(getUUID(stack) == DimensionManager.overworldProperties.getId())
+		if(world == null || getUUID(stack) == DimensionManager.overworldProperties.getId())
 			list.add(new StringTextComponent(TextFormatting.GRAY + LibVulpes.proxy.getLocalizedString("msg.unprogrammed")));
 		else {
 			list.add(new StringTextComponent(TextFormatting.GREEN + LibVulpes.proxy.getLocalizedString("msg.stationchip.sation") + getUUID(stack)));
-			super.addInformation(stack, player, list, bool);
-			if(ZUtils.getDimensionIdentifier(player) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
+			super.addInformation(stack, world, list, bool);
+			if(ZUtils.getDimensionIdentifier(world) == ARConfiguration.GetSpaceDimId()) {
 				Entity p = Minecraft.getInstance().player;
 				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(p.getPositionVec()));
 
@@ -473,7 +473,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 				}
 			}
 			else {
-				LandingLocation loc = getTakeoffCoords(stack, ZUtils.getDimensionIdentifier(player));
+				LandingLocation loc = getTakeoffCoords(stack, ZUtils.getDimensionIdentifier(world));
 				if(loc != null) {
 					Vector3F<Float> vec = loc.location;
 					list.add(new StringTextComponent("Name: " + loc.name));

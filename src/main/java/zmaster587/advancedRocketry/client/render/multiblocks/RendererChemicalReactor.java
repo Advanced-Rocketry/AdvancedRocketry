@@ -24,11 +24,11 @@ public class RendererChemicalReactor  extends TileEntityRenderer {
 	WavefrontObject model;
 	ResourceLocation texture;
 	
-	public RendererChemicalReactor(TileEntityRendererDispatcher tile, String modelPath, String texturePath) {
+	public RendererChemicalReactor(TileEntityRendererDispatcher tile) {
 		super(tile);
-		texture = new ResourceLocation(texturePath);
+		texture = new ResourceLocation("advancedrocketry","textures/models/chemicalreactor.png");
 		try {
-			model = new WavefrontObject(new ResourceLocation(modelPath));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry","models/chemicalreactor.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}

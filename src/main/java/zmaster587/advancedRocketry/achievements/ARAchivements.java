@@ -11,12 +11,12 @@ public class ARAchivements  {
 
 	private static Method CriterionRegister;
 
-	public static final ResourceLocation MOON_LANDING = new ResourceLocation("moonlanding");
-	public static final ResourceLocation ONE_SMALL_STEP = new ResourceLocation("onesmallstep");
-	public static final ResourceLocation BEER = new ResourceLocation("beer");
-	public static final ResourceLocation WENT_TO_THE_MOON = new ResourceLocation("wenttothemoon");
-	public static final ResourceLocation ALL_SHE_GOT = new ResourceLocation("givingitallshesgot");
-	public static final ResourceLocation FLIGHT_OF_PHEONIX = new ResourceLocation("flightofpheonix");
+	public static final ResourceLocation MOON_LANDING = new ResourceLocation("advancedrocketry", "moonlanding");
+	public static final ResourceLocation ONE_SMALL_STEP = new ResourceLocation("advancedrocketry", "onesmallstep");
+	public static final ResourceLocation BEER = new ResourceLocation("advancedrocketry", "beer");
+	public static final ResourceLocation WENT_TO_THE_MOON = new ResourceLocation("advancedrocketry", "wenttothemoon");
+	public static final ResourceLocation ALL_SHE_GOT = new ResourceLocation("advancedrocketry", "givingitallshesgot");
+	public static final ResourceLocation FLIGHT_OF_PHEONIX = new ResourceLocation("advancedrocketry", "flightofpheonix");
 	
 	public static void triggerAchievement(ResourceLocation name, ServerPlayerEntity player)
 	{

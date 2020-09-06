@@ -25,14 +25,14 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 public class RendererRollingMachine extends TileEntityRenderer<TileRollingMachine> {
 	WavefrontObject model;
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/rollingMachine.png");
-	ResourceLocation coilSide = new ResourceLocation("libvulpes:textures/blocks/coilSide.png");
+	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/rollingmachine.png");
+	ResourceLocation coilSide = new ResourceLocation("libvulpes","textures/blocks/coilside.png");
 	static int i = MaterialRegistry.getMaterialFromName("Copper").getColor();
 
 	public RendererRollingMachine(TileEntityRendererDispatcher tile) {
 		super(tile);
 		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/rollingMachine.obj"));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry","models/rollingmachine.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}

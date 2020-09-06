@@ -16,7 +16,9 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -66,7 +68,7 @@ public class ItemSpaceArmor extends ArmorItem implements ICapabilityProvider, IP
 			List list, ITooltipFlag p_77624_4_) {
 		super.addInformation(stack, p_77624_2_, list, p_77624_4_);
 
-		list.add(LibVulpes.proxy.getLocalizedString("msg.modules"));
+		list.add(new TranslationTextComponent("msg.modules"));
 
 		for(ItemStack componentStack : getComponents(stack)) {
 			list.add(componentStack.getDisplayName());

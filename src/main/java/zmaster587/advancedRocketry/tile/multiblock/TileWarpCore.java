@@ -5,6 +5,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -26,22 +27,22 @@ public class TileWarpCore extends TileMultiBlock {
 	private SpaceStationObject station;
 
 	public static final Object[][][] structure = { 
-		{{"blockTitanium", "blockTitanium", "blockTitanium"},
-			{"blockTitanium", 'I', "blockTitanium"},
-			{"blockTitanium", "blockTitanium", "blockTitanium"}},
+		{{new ResourceLocation("forge","blocktitanium"), new ResourceLocation("forge","blocktitanium"), new ResourceLocation("forge","blocktitanium")},
+			{new ResourceLocation("forge","blocktitanium"), 'I', new ResourceLocation("forge","blocktitanium")},
+			{new ResourceLocation("forge","blocktitanium"), new ResourceLocation("forge","blocktitanium"), new ResourceLocation("forge","blocktitanium")}},
 
 			{{null, new BlockMeta(LibVulpesBlocks.blockStructureBlock), null},
 				{new BlockMeta(LibVulpesBlocks.blockStructureBlock), new BlockMeta(Blocks.GOLD_BLOCK), new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
 				{null, new BlockMeta(LibVulpesBlocks.blockStructureBlock), null}},
 
-				{{"blockTitanium", 'c', "blockTitanium"}, 
-					{"blockTitanium", new BlockMeta(Blocks.GOLD_BLOCK), "blockTitanium"},
-					{"blockTitanium", "blockTitanium", "blockTitanium"}},
+				{{new ResourceLocation("forge","blocktitanium"), 'c', new ResourceLocation("forge","blocktitanium")}, 
+					{new ResourceLocation("forge","blocktitanium"), new BlockMeta(Blocks.GOLD_BLOCK), new ResourceLocation("forge","blocktitanium")},
+					{new ResourceLocation("forge","blocktitanium"), new ResourceLocation("forge","blocktitanium"), new ResourceLocation("forge","blocktitanium")}},
 
 	};
 
 	private SpaceStationObject getSpaceObject() {
-		if(station == null && ZUtils.getDimensionIdentifier(world) == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
+		if(station == null && ZUtils.getDimensionIdentifier(world) == ARConfiguration.GetSpaceDimId()) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceStationObject)
 				station = (SpaceStationObject) object;

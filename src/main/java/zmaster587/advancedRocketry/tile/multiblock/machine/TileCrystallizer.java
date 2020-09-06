@@ -4,10 +4,12 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.material.Material;
@@ -28,7 +30,7 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 		{AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible}},
 		
 		{{'O', 'c', 'I'}, 
-			{"blockCoil", 'P', "blockCoil"}},
+			{new ResourceLocation(Constants.modId,"blockcoil"), 'P', new ResourceLocation(Constants.modId,"blockcoil")}},
 
 	};
 
