@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "advancedrocketry:blocks/BlastBrick"
+        "all": "advancedrocketry:blocks/blastbrick"
     }
 }

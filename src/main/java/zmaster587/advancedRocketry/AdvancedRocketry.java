@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.Dimension;
@@ -142,7 +143,6 @@ public class AdvancedRocketry {
 	public AdvancedRocketry() {
 		MOD_CONTAINER = ModLoadingContext.get().getActiveContainer();
 		FMLJavaModLoadingContext.get().getModEventBus().register(this);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::postInit);
 		MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
 		MinecraftForge.EVENT_BUS.addListener(this::serverStarted);
 		MinecraftForge.EVENT_BUS.addListener(this::serverStarting);
@@ -319,13 +319,13 @@ public class AdvancedRocketry {
 		materialRegistry.registerOres(LibVulpes.tabLibVulpesOres);
 		
         //OreDict stuff
-        /*OreDictionary.registerOre("turfMoon", new ItemStack(AdvancedRocketryBlocks.blockMoonTurf));
-        OreDictionary.registerOre("turfMoon", new ItemStack(AdvancedRocketryBlocks.blockMoonTurfDark));
-        OreDictionary.registerOre("logWood", new ItemStack(AdvancedRocketryBlocks.blockAlienWood));
-        OreDictionary.registerOre("plankWood", new ItemStack(AdvancedRocketryBlocks.blockAlienPlanks));
-        OreDictionary.registerOre("treeLeaves", new ItemStack(AdvancedRocketryBlocks.blockAlienLeaves));
-        OreDictionary.registerOre("treeSapling", new ItemStack(AdvancedRocketryBlocks.blockAlienSapling));
-        OreDictionary.registerOre("concrete", new ItemStack(AdvancedRocketryBlocks.blockConcrete));*/
+		BlockTags.getCollection().func_241834_b(new ResourceLocation("forge", "turfmoon")).func_230235_a_(AdvancedRocketryBlocks.blockMoonTurf);
+		BlockTags.getCollection().func_241834_b(new ResourceLocation("forge", "turfmoon")).func_230235_a_(AdvancedRocketryBlocks.blockMoonTurfDark);
+		BlockTags.getCollection().func_241834_b(new ResourceLocation("minecraft", "logs")).func_230235_a_(AdvancedRocketryBlocks.blockAlienWood);
+		BlockTags.getCollection().func_241834_b(new ResourceLocation("minecraft", "planks")).func_230235_a_(AdvancedRocketryBlocks.blockAlienPlanks);
+		BlockTags.getCollection().func_241834_b(new ResourceLocation("minecraft", "leaves")).func_230235_a_(AdvancedRocketryBlocks.blockAlienLeaves);
+		BlockTags.getCollection().func_241834_b(new ResourceLocation("minecraft", "saplings")).func_230235_a_(AdvancedRocketryBlocks.blockAlienSapling);
+		BlockTags.getCollection().func_241834_b(new ResourceLocation("forge", "concrete")).func_230235_a_(AdvancedRocketryBlocks.blockConcrete);
 	}
 
 	@OnlyIn(value=Dist.CLIENT)

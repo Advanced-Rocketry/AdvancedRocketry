@@ -2,7 +2,7 @@
     "recipes": {
         "rollingmachine": "zmaster587.advancedRocketry.recipe.RecipeRollingMachine",
         "precisionassembler": "zmaster587.advancedRocketry.recipe.RecipePrecisionAssembler",
-        "electricarcfurnace": "zmaster587.advancedRocketry.recipe.RecipeElectricArcFurnace",
+        "electricarcfurnace": "zmaster587.advancedRocketry.recipe.RecipeElectricarcfurnace",
         "cuttingmachine": "zmaster587.advancedRocketry.recipe.RecipeCuttingMachine",
         "chemicalreactor": "zmaster587.advancedRocketry.recipe.RecipeChemicalReactor",
         "electrolyser": "zmaster587.advancedRocketry.recipe.RecipeElectrolyser",

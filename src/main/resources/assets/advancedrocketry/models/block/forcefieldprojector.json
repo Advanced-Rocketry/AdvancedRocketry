@@ -6,7 +6,7 @@
         "south": "advancedrocketry:blocks/forcefieldProjector",
         "west": "advancedrocketry:blocks/forcefieldProjector",
         "east": "advancedrocketry:blocks/forcefieldProjector",
-        "down": "advancedrocketry:blocks/machineGeneric",
-        "particle": "advancedrocketry:blocks/machineGeneric"
+        "down": "advancedrocketry:blocks/machinegeneric",
+        "particle": "advancedrocketry:blocks/machinegeneric"
     }
 }

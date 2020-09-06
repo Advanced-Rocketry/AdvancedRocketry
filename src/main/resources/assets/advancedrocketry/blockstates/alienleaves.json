@@ -1,9 +1,9 @@
 {
     "variants": {
-        "normal": { "model": "advancedrocketry:alienLeaves" },
-        "check_decay=false,decayable=true": { "model": "advancedrocketry:alienLeaves" },
-        "check_decay=false,decayable=false": { "model": "advancedrocketry:alienLeaves" },
-        "check_decay=true,decayable=false": { "model": "advancedrocketry:alienLeaves" },
-        "check_decay=true,decayable=true": { "model": "advancedrocketry:alienLeaves" }
+        "normal": { "model": "advancedrocketry:alienleaves" },
+        "check_decay=false,decayable=true": { "model": "advancedrocketry:alienleaves" },
+        "check_decay=false,decayable=false": { "model": "advancedrocketry:alienleaves" },
+        "check_decay=true,decayable=false": { "model": "advancedrocketry:alienleaves" },
+        "check_decay=true,decayable=true": { "model": "advancedrocketry:alienleaves" }
     }
 }

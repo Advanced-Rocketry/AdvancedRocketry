@@ -1,7 +1,7 @@
 {
     "display": {
         "icon": {
-            "item": "advancedrocketry:rollingMachine"
+            "item": "advancedrocketry:rollingmachine"
         },
         "title": {
             "translate": "achievement.rollin"
@@ -17,7 +17,7 @@
             "conditions": {
                 "items": [
                     {
-                        "item": "advancedrocketry:rollingMachine"
+                        "item": "advancedrocketry:rollingmachine"
                     }
                 ]
             }

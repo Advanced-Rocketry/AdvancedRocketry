@@ -4,6 +4,6 @@
         "top": "advancedrocketry:blocks/gasChargerTop",
         "front": "advancedrocketry:blocks/panelSide",
         "side": "advancedrocketry:blocks/panelSide",
-        "bottom": "libvulpes:blocks/machineGeneric"
+        "bottom": "libvulpes:blocks/machinegeneric"
     }
 }

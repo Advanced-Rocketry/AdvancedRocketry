@@ -549,11 +549,9 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemLandingFloat.setRegistryName("landingfloat"));
 
 
-		/*ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "wafersilicon")).func_230236_b_().add(AdvancedRocketryItems.itemSiliconWafer);
-		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "ingotcarbon")).func_230236_b_().add(AdvancedRocketryItems.itemCarbonBrick);
-		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "itemlens")).func_230236_b_().add(AdvancedRocketryItems.itemLens);
-		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "itemsilicon")).func_230236_b_().add(MaterialRegistry.getItemStackFromMaterialAndType("Silicon", AllowedProducts.getProductByName("INGOT")).getItem());
-		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "dustthermite")).func_230236_b_().add(AdvancedRocketryItems.itemThermite);
-		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "slab")).func_230236_b_().add(Items.STONE_SLAB);*/
+		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "wafersilicon")).func_230235_a_(AdvancedRocketryItems.itemSiliconWafer);
+		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "ingotcarbon")).func_230235_a_(AdvancedRocketryItems.itemCarbonBrick);
+		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "itemlens")).func_230235_a_(AdvancedRocketryItems.itemLens);
+		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "dustthermite")).func_230235_a_(AdvancedRocketryItems.itemThermite);
 	}
 }

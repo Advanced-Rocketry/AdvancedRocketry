@@ -1,8 +1,8 @@
 {
     "parent": "block/orientable",
     "textures": {
-        "top": "libvulpes:blocks/machineGeneric",
-        "front": "advancedrocketry:blocks/CuttingMachine_active",
-        "side": "libvulpes:blocks/machineGeneric"
+        "top": "libvulpes:blocks/machinegeneric",
+        "front": "advancedrocketry:blocks/cuttingmachine_active",
+        "side": "libvulpes:blocks/machinegeneric"
     }
 }

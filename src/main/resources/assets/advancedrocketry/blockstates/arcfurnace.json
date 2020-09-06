@@ -1,12 +1,12 @@
 {
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:arcFurnace" },
-        "facing=south,state=false": { "model": "advancedrocketry:arcFurnace", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:arcFurnace", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:arcFurnace", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:arcFurnace_on" },
-        "facing=south,state=true": { "model": "advancedrocketry:arcFurnace_on", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:arcFurnace_on", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:arcFurnace_on", "y": 90 }
+        "facing=north,state=false": { "model": "advancedrocketry:arcfurnace" },
+        "facing=south,state=false": { "model": "advancedrocketry:arcfurnace", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:arcfurnace", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:arcfurnace", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:arcfurnace_on" },
+        "facing=south,state=true": { "model": "advancedrocketry:arcfurnace_on", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:arcfurnace_on", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:arcfurnace_on", "y": 90 }
     }
 }

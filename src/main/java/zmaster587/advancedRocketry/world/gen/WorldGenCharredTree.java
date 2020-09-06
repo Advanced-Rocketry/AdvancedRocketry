@@ -40,7 +40,7 @@ public class WorldGenCharredTree extends StraightTrunkPlacer {
         return new LinkedList<FoliagePlacer.Foliage>();
      }
     
-    protected TrunkPlacerType<?> func_230381_a_() {
+    /*protected TrunkPlacerType<?> func_230381_a_() {
         return AdvancedRocktryTrees.CHARRED_TREE;
-     }
+     }*/
 }

@@ -2,7 +2,7 @@
     "parent": "block/orientable",
     "textures": {
         "top": "advancedrocketry:blocks/solar",
-        "front": "libvulpes:blocks/machineGeneric",
-        "side": "libvulpes:blocks/machineGeneric"
+        "front": "libvulpes:blocks/machinegeneric",
+        "side": "libvulpes:blocks/machinegeneric"
     }
 }

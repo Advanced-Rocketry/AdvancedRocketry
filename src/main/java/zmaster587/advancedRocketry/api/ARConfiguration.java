@@ -301,6 +301,11 @@ public class ARConfiguration {
 
 		
 		arConfig.laserBlackListDims= builder.comment("Laser drill will not mine these dimension").defineList("spaceLaserDimIdBlackList", new LinkedList<String>(), (val) -> { return true; });
+	
+	
+		//TOOD: Client stuff
+		arConfig.lockUI = builder.comment("If UI is not locked, the middle mouse can be used to drag certain AR UIs around the screen, positions are saved on hitting quit in the menu").define("lockUI", true);
+		
 	}
 	
 	public ARConfiguration(ARConfiguration config)

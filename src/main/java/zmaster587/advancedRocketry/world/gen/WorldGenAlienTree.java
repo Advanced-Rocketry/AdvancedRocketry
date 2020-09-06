@@ -13,6 +13,7 @@ import net.minecraft.world.gen.IWorldGenerationReader;
 import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
 import net.minecraft.world.gen.foliageplacer.FoliagePlacer;
 import net.minecraft.world.gen.trunkplacer.AbstractTrunkPlacer;
+import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
 import net.minecraft.world.gen.trunkplacer.TrunkPlacerType;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocktryTrees;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-public class WorldGenAlienTree extends AbstractTrunkPlacer {
+public class WorldGenAlienTree extends StraightTrunkPlacer {
 
 	public WorldGenAlienTree(int i, int j, int k)
 	{
@@ -285,8 +286,8 @@ public class WorldGenAlienTree extends AbstractTrunkPlacer {
 		}
 	}
 
-	@Override
+	/*@Override
 	protected TrunkPlacerType<?> func_230381_a_() {
 		return AdvancedRocktryTrees.ALIEN_TREE;
-	}
+	}*/
 }

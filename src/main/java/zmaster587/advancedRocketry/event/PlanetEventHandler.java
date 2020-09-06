@@ -22,6 +22,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
@@ -107,12 +108,12 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	public void CheckSpawn(LivingSpawnEvent.CheckSpawn event)
 	{
-		World world = (World) event.getWorld();
+		IWorld world = event.getWorld();
 		DimensionManager manager = DimensionManager.getInstance();
 
 		if(manager.isInitialized())
 		{
-			DimensionProperties properties = manager.getDimensionProperties(world);
+			DimensionProperties properties = manager.getDimensionProperties( ZUtils.getDimensionIdentifier(world) );
 			if(properties != null) {
 				if(!properties.getAtmosphere().isImmune(event.getEntityLiving().getClass()))
 					event.setResult(Result.DENY);

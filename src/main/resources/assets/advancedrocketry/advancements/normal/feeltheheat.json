@@ -1,7 +1,7 @@
 {
     "display": {
         "icon": {
-            "item": "advancedrocketry:arcFurnace"
+            "item": "advancedrocketry:arcfurnace"
         },
         "title": {
             "translate": "achievement.feelTheHeat"
@@ -17,7 +17,7 @@
             "conditions": {
                 "items": [
                     {
-                        "item": "advancedrocketry:arcFurnace"
+                        "item": "advancedrocketry:arcfurnace"
                     }
                 ]
             }

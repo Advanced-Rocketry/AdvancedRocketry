@@ -1450,7 +1450,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		}
 
 		//Note: parent planet must be set before setting the star otherwise it would cause duplicate planets in the StellarBody's array
-		parentPlanet = new ResourceLocation(nbt.getString("parentPlanet"));
+		if(nbt.contains("parentPlanet"))
+			parentPlanet = new ResourceLocation(nbt.getString("parentPlanet"));
 		this.setStar(DimensionManager.getInstance().getStar(new ResourceLocation(nbt.getString("starId"))));
 
 		if(isGasGiant) {
@@ -1617,8 +1618,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			
 			nbt.put("childrenPlanets", childList);
 		}
-
-		nbt.putString("parentPlanet", parentPlanet.toString());
+		
+		if(parentPlanet != null)
+			nbt.putString("parentPlanet", parentPlanet.toString());
 
 		if(isGasGiant) {
 			ListNBT fluidList = new ListNBT();

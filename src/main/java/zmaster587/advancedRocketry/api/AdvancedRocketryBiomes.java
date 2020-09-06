@@ -90,7 +90,7 @@ public class AdvancedRocketryBiomes {
 	public static ConfiguredSurfaceBuilder<SurfaceBuilderConfig> BASALT_CONFIG;
 
 	private static <SC extends ISurfaceBuilderConfig> ConfiguredSurfaceBuilder<SC> registerSurfaceBuilder(String p_244192_0_, ConfiguredSurfaceBuilder<SC> p_244192_1_) {
-		return WorldGenRegistries.func_243663_a(WorldGenRegistries.field_243651_c, p_244192_0_, p_244192_1_);
+		return  WorldGenRegistries.func_243663_a(WorldGenRegistries.field_243651_c, p_244192_0_, p_244192_1_);
 	}
 
 	public static void configureSurfaceBuilders()
@@ -107,30 +107,22 @@ public class AdvancedRocketryBiomes {
 
 
 	// Start Carver config
-	public static WorldCarver<ProbabilityConfig> CRATER;
-	public static WorldCarver<ProbabilityConfig> BIG_TREE;
-	public static WorldCarver<ProbabilityConfig> INVERTED_PILLAR;
-	public static WorldCarver<ProbabilityConfig> VOLCANO;
+	public static WorldCarver<ProbabilityConfig> CRATER = (WorldCarver<ProbabilityConfig>) new MapGenCrater(ProbabilityConfig.field_236576_b_, 256);
+	public static WorldCarver<ProbabilityConfig> BIG_TREE = new WorldGenSwampTree(ProbabilityConfig.field_236576_b_, 256);
+	public static WorldCarver<ProbabilityConfig> INVERTED_PILLAR = new MapGenInvertedPillar(ProbabilityConfig.field_236576_b_, 256, Blocks.STONE.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.DIRT.getDefaultState());
+	public static WorldCarver<ProbabilityConfig> VOLCANO = new MapGenVolcano(ProbabilityConfig.field_236576_b_, 256);
 
-	public static ConfiguredCarver<ProbabilityConfig> CONFIGURED_BIG_TREE;
-	public static ConfiguredCarver<ProbabilityConfig> CONFIGURED_INVERTED_PILLAR;
-	public static ConfiguredCarver<ProbabilityConfig> CONFIGURED_VOLCANO;
+	public static ConfiguredCarver<ProbabilityConfig> CONFIGURED_BIG_TREE = configureCarver("big_tree", BIG_TREE.func_242761_a(new ProbabilityConfig(0.02F)));
+	public static ConfiguredCarver<ProbabilityConfig> CONFIGURED_INVERTED_PILLAR = configureCarver("inverted_pillar", INVERTED_PILLAR.func_242761_a(new ProbabilityConfig(0.02F)));
+	public static ConfiguredCarver<ProbabilityConfig> CONFIGURED_VOLCANO = configureCarver("volcano", VOLCANO.func_242761_a(new ProbabilityConfig(0.02F)));
 
 	public static void registerCarvers(RegistryEvent.Register<WorldCarver<?>> evt)
 	{
-		CRATER = (WorldCarver<ProbabilityConfig>) new MapGenCrater(ProbabilityConfig.field_236576_b_, 256);
-		BIG_TREE = new WorldGenSwampTree(ProbabilityConfig.field_236576_b_, 256);
-		INVERTED_PILLAR = new MapGenInvertedPillar(ProbabilityConfig.field_236576_b_, 256, Blocks.STONE.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.DIRT.getDefaultState());
-		VOLCANO = new MapGenVolcano(ProbabilityConfig.field_236576_b_, 256);
-
 		evt.getRegistry().register(CRATER.setRegistryName("crater"));
 		evt.getRegistry().register(BIG_TREE.setRegistryName("swamp_tree"));
 		evt.getRegistry().register(INVERTED_PILLAR.setRegistryName("inverted_pillar"));
 		evt.getRegistry().register(VOLCANO.setRegistryName("volcano"));
-
-		CONFIGURED_BIG_TREE = configureCarver("big_tree", BIG_TREE.func_242761_a(new ProbabilityConfig(0.02F)));
-		CONFIGURED_INVERTED_PILLAR = configureCarver("inverted_pillar", INVERTED_PILLAR.func_242761_a(new ProbabilityConfig(0.02F)));
-		CONFIGURED_VOLCANO = configureCarver("volcano", VOLCANO.func_242761_a(new ProbabilityConfig(0.02F)));
+		
 	}
 
 	private static <WC extends ICarverConfig> ConfiguredCarver<WC> configureCarver(String p_243773_0_, ConfiguredCarver<WC> p_243773_1_) {
@@ -152,7 +144,6 @@ public class AdvancedRocketryBiomes {
 	public static void initFeature()
 	{
 		CRYSTAL_FEATURE = new WorldGenLargeCrystal(NoFeatureConfig.field_236558_a_);
-		
 
 		ALIEN_TREE = registerTree("alientree", Feature.field_236291_c_.withConfiguration((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(AdvancedRocketryBlocks.blockAlienWood.getDefaultState()), new SimpleBlockStateProvider(AdvancedRocketryBlocks.blockAlienLeaves.getDefaultState()), new BlobFoliagePlacer(FeatureSpread.func_242252_a(2), FeatureSpread.func_242252_a(0), 3), new WorldGenAlienTree(4, 2, 0), new TwoLayerFeature(1, 0, 1))).func_236700_a_().build()));
 		CHARRED_TREE = registerTree("charredtree", Feature.field_236291_c_.withConfiguration((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(AdvancedRocketryBlocks.blockCharcoalLog.getDefaultState()), new SimpleBlockStateProvider(Blocks.AIR.getDefaultState()), new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0), new WorldGenCharredTree(4, 2, 0, 0), new TwoLayerFeature(1, 0, 1))).func_236700_a_().build()));
@@ -193,6 +184,7 @@ public class AdvancedRocketryBiomes {
 
 	public static void registerBiomeGenerationSettings()
 	{
+		configureSurfaceBuilders();
 		barren = createBuilder(MOON_LUNAR_LIGHT_CONFIG, true).func_242508_a();
 		barrenDark = createBuilder(MOON_LUNAR_LIGHT_CONFIG, true).func_242508_a();
 		hotDry = createBuilder(HOTDRY_CONFIG, true).func_242508_a();

@@ -1,6 +1,6 @@
 {
-    "parent": "libvulpes:block/tintedCubeAll",
+    "parent": "minecraft:block/cube_all",
     "textures": {
-        "all": "blocks/iron_block"
+        "all": "advancedrocktry:blocks/blocktitaniumaluminide"
     }
 }

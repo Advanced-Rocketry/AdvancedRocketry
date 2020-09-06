@@ -78,7 +78,6 @@ import java.util.zip.GZIPOutputStream;
 
 
 public class DimensionManager implements IGalaxy {
-	public static Logger logger = AdvancedRocketry.logger;
 	
 	//TODO: fix satellites not unloading on disconnect
 	private Random random;
@@ -239,7 +238,7 @@ public class DimensionManager implements IGalaxy {
 	 */
 	public ResourceLocation getNextFreeDim() {
 		for(int i = 0; i < 10000; i++) {
-			ResourceLocation planetID = new ResourceLocation( Constants.PLANET_NAMESPACE, "Planet-" + String.valueOf(i) );
+			ResourceLocation planetID = new ResourceLocation( Constants.PLANET_NAMESPACE, "planet-" + String.valueOf(i) );
 			if(!ZUtils.isWorldRegistered(planetID) && !dimensionListResource.containsKey(planetID))
 				return planetID;
 		}
@@ -248,7 +247,7 @@ public class DimensionManager implements IGalaxy {
 
 	public ResourceLocation getNextFreeStarId() {
 		for(int i = 0; i < Integer.MAX_VALUE; i++) {
-			ResourceLocation starId = new ResourceLocation(Constants.STAR_NAMESPACE, "Star" + String.valueOf(i));
+			ResourceLocation starId = new ResourceLocation(Constants.STAR_NAMESPACE, "star" + String.valueOf(i));
 			if(!starList.containsKey(starId))
 				return starId;
 		}
@@ -457,7 +456,7 @@ public class DimensionManager implements IGalaxy {
 				
 				long seed = 0;
 				ChunkGenerator chunks = new ChunkProviderAsteroids(new SingleBiomeProvider( AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.THE_END.getRegistryName())), seed, () -> {
-		             return DynamicRegistries.Impl.func_239770_b_().func_230521_a_(Registry.field_243549_ar).get().getOrDefault(DimensionSettings.field_242734_c .getRegistryName());
+		             return DynamicRegistries.Impl.func_239770_b_().func_230521_a_(Registry.field_243549_ar).get().getOrDefault(DimensionSettings.field_242734_c .func_240901_a_());
 		          }, properties);
 				Dimension dimension = new Dimension(() -> dimType, chunks);
 				ZUtils.registerDimension(dimId, dimType, dimension);
@@ -469,7 +468,7 @@ public class DimensionManager implements IGalaxy {
 				Registry<Biome> biomes = AdvancedRocketryBiomes.getBiomeRegistry();
 				long seed = 0;
 				ChunkGenerator chunks = new ChunkProviderPlanet(new CustomPlanetBiomeProvider(seed, false, false, biomes, properties), seed, () -> {
-		             return DynamicRegistries.Impl.func_239770_b_().func_230521_a_(Registry.field_243549_ar).get().getOrDefault(DimensionSettings.field_242734_c .getRegistryName());
+		             return DynamicRegistries.Impl.func_239770_b_().func_230521_a_(Registry.field_243549_ar).get().getOrDefault(DimensionSettings.field_242734_c.func_240901_a_());
 		          }, properties);
 				Dimension dimension = new Dimension(() -> dimType, chunks);
 				
@@ -861,18 +860,18 @@ public class DimensionManager implements IGalaxy {
 		//Check advRocketry folder first
 		File localFile;
 		localFile = file = ServerLifecycleHooks.getCurrentServer().func_240776_a_(new FolderName(DimensionManager.workingPath + "/planetDefs.xml")).toFile();
-		logger.info("Checking for config at " + file.getAbsolutePath());
+		AdvancedRocketry.logger.info("Checking for config at " + file.getAbsolutePath());
 
 		if(!file.exists() || resetFromXml) { //Hi, I'm if check #42, I am true if the config is not in the world/advRocketry folder
 			String newFilePath = "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/planetDefs.xml";
 			if(!file.exists())
-				logger.info("File not found.  Now checking for config at " + newFilePath);
+				AdvancedRocketry.logger.info("File not found.  Now checking for config at " + newFilePath);
 
 			file = new File(newFilePath);
 
 			//Copy file to local dir
 			if(file.exists()) {
-				logger.info("Advanced Planet Config file Found!  Copying to world specific directory");
+				AdvancedRocketry.logger.info("Advanced Planet Config file Found!  Copying to world specific directory");
 				try {
 					File dir = new File(localFile.getAbsolutePath().substring(0, localFile.getAbsolutePath().length() - localFile.getName().length()));
 
@@ -889,18 +888,18 @@ public class DimensionManager implements IGalaxy {
 
 						reader.close();
 						writer.close();
-						logger.info("Copy success!");
+						AdvancedRocketry.logger.info("Copy success!");
 					}
 					else
-						logger.warn("Unable to create file " + localFile.getAbsolutePath());
+						AdvancedRocketry.logger.warn("Unable to create file " + localFile.getAbsolutePath());
 				} catch(IOException e) {
-					logger.warn("Unable to write file " + localFile.getAbsolutePath());
+					AdvancedRocketry.logger.warn("Unable to write file " + localFile.getAbsolutePath());
 				}
 			}
 		}
 
 		if(file.exists()) {
-			logger.info("Advanced Planet Config file Found!  Loading from file.");
+			AdvancedRocketry.logger.info("Advanced Planet Config file Found!  Loading from file.");
 			loader = new XMLPlanetLoader();
 			try {
 				loader.loadFile(file);
@@ -909,7 +908,7 @@ public class DimensionManager implements IGalaxy {
 				dimCouplingList = loader.readAllPlanets();
 			} catch(Exception e) {
 				e.printStackTrace();
-				logger.fatal("A serious error has occured while loading the planetDefs XML");
+				AdvancedRocketry.logger.fatal("A serious error has occured while loading the planetDefs XML");
 				ServerLifecycleHooks.handleExit(-1);
 			}
 		}
@@ -922,7 +921,7 @@ public class DimensionManager implements IGalaxy {
 			int numRandomGeneratedGasGiants = 1;
 
 			if(dimCouplingList != null) {
-				logger.info("Loading initial planet config!");
+				AdvancedRocketry.logger.info("Loading initial planet config!");
 
 				for(StellarBody star : dimCouplingList.stars) {
 					DimensionManager.getInstance().addStar(star);
@@ -1221,7 +1220,7 @@ public class DimensionManager implements IGalaxy {
 				loadedDimProps.put(keyString, propeties);
 			}
 			else{
-				logger.warn("Null Dimension Properties Recieved");
+				AdvancedRocketry.logger.warn("Null Dimension Properties Recieved");
 			}
 			//TODO: print unable to register world
 		}
