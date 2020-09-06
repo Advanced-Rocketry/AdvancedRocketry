@@ -1,6 +1,6 @@
 {
     "variants": {
-        "powered=false": { "model": "advancedrocketry:oxygenDetection" },
-        "powered=true": { "model": "advancedrocketry:oxygenDetection_on" }
+        "powered=false": { "model": "advancedrocketry:block/oxygendetection" },
+        "powered=true": { "model": "advancedrocketry:block/oxygendetection_on" }
     }
 }

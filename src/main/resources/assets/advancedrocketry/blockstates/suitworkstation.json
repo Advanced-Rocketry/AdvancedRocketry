@@ -1,12 +1,12 @@
 {
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:suitWorkStation" },
-        "facing=south,state=false": { "model": "advancedrocketry:suitWorkStation", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:suitWorkStation", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:suitWorkStation", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:suitWorkStation" },
-        "facing=south,state=true": { "model": "advancedrocketry:suitWorkStation", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:suitWorkStation", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:suitWorkStation", "y": 90 }
+        "facing=north,state=false": { "model": "advancedrocketry:block/suitworkstation" },
+        "facing=south,state=false": { "model": "advancedrocketry:block/suitworkstation", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:block/suitworkstation", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:block/suitworkstation", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:block/suitworkstation" },
+        "facing=south,state=true": { "model": "advancedrocketry:block/suitworkstation", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:block/suitworkstation", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:block/suitworkstation", "y": 90 }
     }
 }

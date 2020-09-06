@@ -1,12 +1,12 @@
 {
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:lathe" },
-        "facing=south,state=false": { "model": "advancedrocketry:lathe", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:lathe", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:lathe", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:lathe" },
-        "facing=south,state=true": { "model": "advancedrocketry:lathe", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:lathe", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:lathe", "y": 90 }
+        "facing=north,state=false": { "model": "advancedrocketry:block/lathe" },
+        "facing=south,state=false": { "model": "advancedrocketry:block/lathe", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:block/lathe", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:block/lathe", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:block/lathe" },
+        "facing=south,state=true": { "model": "advancedrocketry:block/lathe", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:block/lathe", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:block/lathe", "y": 90 }
     }
 }

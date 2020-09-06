@@ -1,8 +1,8 @@
 {
     "variants": {
-        "axis=y":    { "model": "advancedrocketry:charcoal_log" },
-        "axis=z":     { "model": "advancedrocketry:charcoal_log", "x": 90 },
-        "axis=x":     { "model": "advancedrocketry:charcoal_log", "x": 90, "y": 90 },
-        "axis=none":   { "model": "advancedrocketry:charcoal_bark" }
+        "axis=y":    { "model": "advancedrocketry:block/charcoal_log" },
+        "axis=z":     { "model": "advancedrocketry:block/charcoal_log", "x": 90 },
+        "axis=x":     { "model": "advancedrocketry:block/charcoal_log", "x": 90, "y": 90 },
+        "axis=none":   { "model": "advancedrocketry:block/charcoal_bark" }
     }
 }

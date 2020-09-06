@@ -1,7 +1,7 @@
 {
     "display": {
         "icon": {
-            "item": "advancedrocketry:warpCore"
+            "item": "advancedrocketry:warpcore"
         },
         "title": {
             "translate": "achievement.warp"
@@ -17,7 +17,7 @@
             "conditions": {
                 "items": [
                     {
-                        "item": "advancedrocketry:warpCore"
+                        "item": "advancedrocketry:warpcore"
                     }
                 ]
             }

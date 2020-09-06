@@ -1,12 +1,12 @@
 {
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:spaceElevatorController" },
-        "facing=south,state=false": { "model": "advancedrocketry:spaceElevatorController", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:spaceElevatorController", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:spaceElevatorController", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:spaceElevatorController" },
-        "facing=south,state=true": { "model": "advancedrocketry:spaceElevatorController", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:spaceElevatorController", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:spaceElevatorController", "y": 90 }
+        "facing=north,state=false": { "model": "advancedrocketry:block/spaceelevatorcontroller" },
+        "facing=south,state=false": { "model": "advancedrocketry:block/spaceelevatorcontroller", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:block/spaceelevatorcontroller", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:block/spaceelevatorcontroller", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:block/spaceelevatorcontroller" },
+        "facing=south,state=true": { "model": "advancedrocketry:block/spaceelevatorcontroller", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:block/spaceelevatorcontroller", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:block/spaceelevatorcontroller", "y": 90 }
     }
 }

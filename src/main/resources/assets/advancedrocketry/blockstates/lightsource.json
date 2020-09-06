@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "advancedrocketry:lightSource" }
+        "normal": { "model": "advancedrocketry:block/lightsource" }
     }
 }

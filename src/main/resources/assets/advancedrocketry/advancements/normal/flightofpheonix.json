@@ -1,7 +1,7 @@
 {
     "display": {
         "icon": {
-            "item": "advancedrocketry:warpCore"
+            "item": "advancedrocketry:warpcore"
         },
         "title": {
             "translate": "achievement.flightOfThePhoenix"

@@ -460,7 +460,7 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemLandingFloat = new BlockItem(AdvancedRocketryBlocks.blockLandingFloat, typicalBlockProperties);
 		
 		evt.getRegistry().registerAll(AdvancedRocketryItems.itemLaunchpad.setRegistryName("launchpad"),
-				AdvancedRocketryItems.itemRocketBuilder.setRegistryName("rocketbuilder"),
+				AdvancedRocketryItems.itemRocketBuilder.setRegistryName("rocketassembler"),
 				AdvancedRocketryItems.itemStructureTower.setRegistryName("structuretower"),
 				AdvancedRocketryItems.itemGenericSeat.setRegistryName("seat"),
 				AdvancedRocketryItems.itemEngine.setRegistryName("rocketmotor"),
@@ -500,8 +500,8 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemAirLock.setRegistryName("airlock_door"),
 				AdvancedRocketryItems.itemLandingPad.setRegistryName("landingpad"),
 				AdvancedRocketryItems.itemWarpCore.setRegistryName("warpcore"),
-				AdvancedRocketryItems.itemWarpShipMonitor.setRegistryName("warpmonitor"),
-				AdvancedRocketryItems.itemOxygenDetection.setRegistryName("oxygendetection"),
+				AdvancedRocketryItems.itemWarpShipMonitor.setRegistryName("stationmonitor"),
+				AdvancedRocketryItems.itemOxygenDetection.setRegistryName("atmospheredetector"),
 				AdvancedRocketryItems.itemUnlitTorch.setRegistryName("unlittorch"),
 				AdvancedRocketryItems.itemsGeode.setRegistryName("geode"),
 				AdvancedRocketryItems.itemVitrifiedSand.setRegistryName("vitrifiedsand"),

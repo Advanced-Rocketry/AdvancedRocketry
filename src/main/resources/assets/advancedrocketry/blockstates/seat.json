@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "advancedrocketry:seat" }
+        "normal": { "model": "advancedrocketry:block/seat" }
     }
 }

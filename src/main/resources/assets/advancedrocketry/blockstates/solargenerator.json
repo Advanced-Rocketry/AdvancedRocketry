@@ -1,12 +1,12 @@
 {
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:solarPanel"},
-        "facing=south,state=false": { "model": "advancedrocketry:solarPanel"},
-        "facing=west,state=false":  { "model": "advancedrocketry:solarPanel"},
-        "facing=east,state=false":  { "model": "advancedrocketry:solarPanel"},
-        "facing=north,state=true": { "model": "advancedrocketry:solarPanel"},
-        "facing=south,state=true": { "model": "advancedrocketry:solarPanel"},
-        "facing=west,state=true":  { "model": "advancedrocketry:solarPanel"},
-        "facing=east,state=true":  { "model": "advancedrocketry:solarPanel"}
+        "facing=north,state=false": { "model": "advancedrocketry:block/solarpanel"},
+        "facing=south,state=false": { "model": "advancedrocketry:block/solarpanel"},
+        "facing=west,state=false":  { "model": "advancedrocketry:block/solarpanel"},
+        "facing=east,state=false":  { "model": "advancedrocketry:block/solarpanel"},
+        "facing=north,state=true": { "model": "advancedrocketry:block/solarpanel"},
+        "facing=south,state=true": { "model": "advancedrocketry:block/solarpanel"},
+        "facing=west,state=true":  { "model": "advancedrocketry:block/solarpanel"},
+        "facing=east,state=true":  { "model": "advancedrocketry:block/solarpanel"}
     }
 }

@@ -1,12 +1,12 @@
 {
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:orientationController" },
-        "facing=south,state=false": { "model": "advancedrocketry:orientationController", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:orientationController", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:orientationController", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:orientationController" },
-        "facing=south,state=true": { "model": "advancedrocketry:orientationController", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:orientationController", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:orientationController", "y": 90 }
+        "facing=north,state=false": { "model": "advancedrocketry:block/orientationcontroller" },
+        "facing=south,state=false": { "model": "advancedrocketry:block/orientationcontroller", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:block/orientationcontroller", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:block/orientationcontroller", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:block/orientationcontroller" },
+        "facing=south,state=true": { "model": "advancedrocketry:block/orientationcontroller", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:block/orientationcontroller", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:block/orientationcontroller", "y": 90 }
     }
 }

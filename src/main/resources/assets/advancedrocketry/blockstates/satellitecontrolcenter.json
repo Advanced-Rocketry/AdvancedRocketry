@@ -1,12 +1,12 @@
 {
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:satellitecontrolcenter" },
-        "facing=south,state=false": { "model": "advancedrocketry:satellitecontrolcenter", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:satellitecontrolcenter", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:satellitecontrolcenter", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:satellitecontrolcenter" },
-        "facing=south,state=true": { "model": "advancedrocketry:satellitecontrolcenter", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:satellitecontrolcenter", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:satellitecontrolcenter", "y": 90 }
+        "facing=north,state=false": { "model": "advancedrocketry:block/satellitecontrolcenter" },
+        "facing=south,state=false": { "model": "advancedrocketry:block/satellitecontrolcenter", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:block/satellitecontrolcenter", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:block/satellitecontrolcenter", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:block/satellitecontrolcenter" },
+        "facing=south,state=true": { "model": "advancedrocketry:block/satellitecontrolcenter", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:block/satellitecontrolcenter", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:block/satellitecontrolcenter", "y": 90 }
     }
 }

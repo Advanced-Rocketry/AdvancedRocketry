@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "advancedrocketry:dataPipe" }
+        "normal": { "model": "advancedrocketry:block/dataPipe" }
     }
 }

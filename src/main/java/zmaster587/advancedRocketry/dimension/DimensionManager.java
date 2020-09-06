@@ -1213,7 +1213,7 @@ public class DimensionManager implements IGalaxy {
 
 
 		for(String key : dimListNbt.keySet()) {
-			ResourceLocation keyString = new ResourceLocation(Constants.PLANET_NAMESPACE,key);
+			ResourceLocation keyString = new ResourceLocation(key);
 			DimensionProperties propeties = DimensionProperties.createFromNBT(keyString ,dimListNbt.getCompound(key));
 
 			if(propeties != null) {

@@ -1,5 +1,5 @@
 {
     "variants": {
-        "variant=alien": { "model": "advancedrocketry:lightwoodPlanks" }
+        "variant=alien": { "model": "advancedrocketry:block/lightwoodplanks" }
     }
 }

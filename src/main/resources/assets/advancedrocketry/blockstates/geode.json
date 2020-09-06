@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "advancedrocketry:geode" }
+        "normal": { "model": "advancedrocketry:block/geode" }
     }
 }

@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "advancedrocketry:energyPipe" }
+        "normal": { "model": "advancedrocketry:block/energyPipe" }
     }
 }

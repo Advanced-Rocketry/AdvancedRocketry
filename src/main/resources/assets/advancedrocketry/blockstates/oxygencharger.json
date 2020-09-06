@@ -1,16 +1,16 @@
 {
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:oxygencharger" },
-        "facing=south,state=false": { "model": "advancedrocketry:oxygencharger", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:oxygencharger", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:oxygencharger", "y": 90 },
-        "facing=down,state=true":  { "model": "advancedrocketry:oxygencharger" },
-        "facing=up,state=true":  { "model": "advancedrocketry:oxygencharger" },
-        "facing=north,state=true": { "model": "advancedrocketry:oxygencharger" },
-        "facing=south,state=true": { "model": "advancedrocketry:oxygencharger", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:oxygencharger", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:oxygencharger", "y": 90 },
-        "facing=down,state=true":  { "model": "advancedrocketry:oxygencharger" },
-        "facing=up,state=true":  { "model": "advancedrocketry:oxygencharger" }
+        "facing=north,state=false": { "model": "advancedrocketry:block/oxygencharger" },
+        "facing=south,state=false": { "model": "advancedrocketry:block/oxygencharger", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:block/oxygencharger", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:block/oxygencharger", "y": 90 },
+        "facing=down,state=true":  { "model": "advancedrocketry:block/oxygencharger" },
+        "facing=up,state=true":  { "model": "advancedrocketry:block/oxygencharger" },
+        "facing=north,state=true": { "model": "advancedrocketry:block/oxygencharger" },
+        "facing=south,state=true": { "model": "advancedrocketry:block/oxygencharger", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:block/oxygencharger", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:block/oxygencharger", "y": 90 },
+        "facing=down,state=true":  { "model": "advancedrocketry:block/oxygencharger" },
+        "facing=up,state=true":  { "model": "advancedrocketry:block/oxygencharger" }
     }
 }

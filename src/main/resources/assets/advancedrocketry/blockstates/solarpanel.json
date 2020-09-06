@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "advancedrocketry:solarPanel" }
+        "normal": { "model": "advancedrocketry:block/solarpanel" }
     }
 }

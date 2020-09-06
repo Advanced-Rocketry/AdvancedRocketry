@@ -1,12 +1,12 @@
 {
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:planetselector" },
-        "facing=south,state=false": { "model": "advancedrocketry:planetselector", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:planetselector", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:planetselector", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:planetselector" },
-        "facing=south,state=true": { "model": "advancedrocketry:planetselector", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:planetselector", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:planetselector", "y": 90 }
+        "facing=north,state=false": { "model": "advancedrocketry:block/planetselector" },
+        "facing=south,state=false": { "model": "advancedrocketry:block/planetselector", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:block/planetselector", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:block/planetselector", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:block/planetselector" },
+        "facing=south,state=true": { "model": "advancedrocketry:block/planetselector", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:block/planetselector", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:block/planetselector", "y": 90 }
     }
 }

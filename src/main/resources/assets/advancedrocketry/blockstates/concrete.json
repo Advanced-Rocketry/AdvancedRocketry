@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "advancedrocketry:concrete" }
+        "normal": { "model": "advancedrocketry:block/concrete" }
     }
 }

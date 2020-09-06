@@ -1,5 +1,5 @@
 {
-    "parent": "advancedrocketry:block/orientableBottom",
+    "parent": "advancedrocketry:block/orientablebottom",
     "textures": {
         "top": "advancedrocketry:blocks/solar",
         "front": "advancedrocketry:blocks/panelSide",

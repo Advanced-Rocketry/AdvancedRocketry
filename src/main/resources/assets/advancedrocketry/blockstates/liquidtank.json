@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "advancedrocketry:liquidTank" }
+        "normal": { "model": "advancedrocketry:block/liquidtank" }
     }
 }
