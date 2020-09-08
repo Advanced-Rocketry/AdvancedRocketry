@@ -335,7 +335,7 @@ public class WorldCommand implements ICommand {
 		if(sender instanceof Entity && (player = sender.getEntityWorld().getPlayerEntityByName(sender.getName())) != null) {
 			if(cmdstring.length < 2 || (cmdstring.length >= 2 && cmdstring[1].equalsIgnoreCase("help"))) {
 				sender.sendMessage(new TextComponentString(cmdstring[0] + " <dimId> - teleports the player to the supplied dimension"));
-				sender.sendMessage(new TextComponentString(cmdstring[0] + "station <station ID> - teleports the player to the supplied station"));
+				sender.sendMessage(new TextComponentString(cmdstring[0] + " station <station ID> - teleports the player to the supplied station"));
 				return;
 			}
 			try {
