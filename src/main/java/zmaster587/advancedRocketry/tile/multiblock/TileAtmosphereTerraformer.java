@@ -465,7 +465,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
 		if( !world.isRemote && properties != null && properties.getId() == world.provider.getDimension() && ((world.provider.getClass().equals(WorldProviderPlanet.class) && 
 				properties.isNativeDimension) || ARConfiguration.getCurrentConfig().allowTerraformNonAR) ) {
-			if(buttonIncrease.getState() && properties.getAtmosphereDensity() < 200)
+			if(buttonIncrease.getState() && properties.getAtmosphereDensity() < 1600)
 				properties.setAtmosphereDensity(properties.getAtmosphereDensity()+1);
 			else if(buttonDecrease.getState() && properties.getAtmosphereDensity() > 0) {
 				properties.setAtmosphereDensity(properties.getAtmosphereDensity()-1);

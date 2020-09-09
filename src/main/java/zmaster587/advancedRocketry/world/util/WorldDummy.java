@@ -29,19 +29,21 @@ public class WorldDummy extends World  {
 
 	StorageChunk storage;
 	public int displayListIndex = -1;
-	private final CapabilityDispatcher capabilities;
+	private CapabilityDispatcher capabilities;
 	
 	public WorldDummy(Profiler p_i45368_5_, StorageChunk storage) {
 		super(new DummySaveHandler(), new WorldInfo(new NBTTagCompound()), dummyProvider, p_i45368_5_, false);
 		dummyProvider.setWorld(this);
 		this.storage = storage;
 		this.chunkProvider = new ChunkProviderDummy(this, storage);
-		this.capabilities = ForgeEventFactory.gatherCapabilities(this, null);
+		
 	}
 	
 	@Override
 	public World init() {
 		this.mapStorage = new MapStorageDummy(this.saveHandler);
+		this.capabilities = ForgeEventFactory.gatherCapabilities(this, null);
+		
 		return super.init();
 	}
 	

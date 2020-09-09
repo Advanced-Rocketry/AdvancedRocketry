@@ -300,8 +300,11 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 							continue;
 
 						if(!extractMode) {
-							int amt = ((IDataHandler)tile).addData(this.data.getDataAmount(data), data, facing.getOpposite(), true);
-							this.data.extractData(amt, data, facing.getOpposite(), true);
+							int amountCurrent = this.data.getDataAmount(data);
+							if (amountCurrent > 0) {
+								int amt = ((IDataHandler)tile).addData(amountCurrent, data, facing.getOpposite(), true);
+								this.data.extractData(amt, data, facing.getOpposite(), true);
+							}
 						}
 						else
 						{

@@ -16,8 +16,6 @@ import zmaster587.libVulpes.LibVulpes;
 
 public class EntityLaserNode extends Entity {
 
-	boolean chunkReloaded = false, firstLoad = false;
-
 	//Used to make sure the emitter is still loaded and so we can send blocks back to the emitter
 	//Also we don't want the chunk loading with the laser being there without an emitter it will cause a crash
 	//private TileSpaceLaser creator;
@@ -27,12 +25,20 @@ public class EntityLaserNode extends Entity {
 		ignoreFrustumCheck = true;
 		noClip = true;
 	}
+	
+	// intentionally not saved, flag to determine if the entity controlling the laser is somehow disconnected
+	boolean isValid = false;
 
 	public EntityLaserNode(World world, double x, double y, double z) {
 		this(world);
 		this.posX = x;
 		this.posY = y;
 		this.posZ = z;
+	}
+	
+	public void markValid()
+	{
+		isValid = true;
 	}
 
 	@Override
@@ -75,7 +81,7 @@ public class EntityLaserNode extends Entity {
 	@Override
 	public void onUpdate() {
 
-		if(chunkReloaded) {
+		if(!world.isRemote && !isValid) {
 			this.setDead();
 
 			return;

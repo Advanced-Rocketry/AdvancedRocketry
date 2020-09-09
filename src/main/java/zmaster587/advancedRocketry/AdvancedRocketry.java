@@ -612,6 +612,9 @@ public class AdvancedRocketry {
         OreDictionary.registerOre("itemLens", AdvancedRocketryItems.itemLens);
         OreDictionary.registerOre("itemSilicon", MaterialRegistry.getItemStackFromMaterialAndType("Silicon", AllowedProducts.getProductByName("INGOT")));
         OreDictionary.registerOre("dustThermite", new ItemStack(AdvancedRocketryItems.itemThermite));
+        OreDictionary.registerOre("slab", new ItemStack(Blocks.STONE_SLAB));
+		OreDictionary.registerOre("blockWarpCoreCore", new ItemStack(Blocks.GOLD_BLOCK));
+		OreDictionary.registerOre("blockWarpCoreRim", MaterialRegistry.getMaterialFromName("Titanium").getProduct(AllowedProducts.getProductByName("BLOCK")));
 	}
 	
 	@SubscribeEvent(priority=EventPriority.HIGH)

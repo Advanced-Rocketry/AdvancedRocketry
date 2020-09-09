@@ -51,33 +51,33 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	private static final Object[][][] structure = new Object[][][]{
 
 		{	{null, null, null, null, null}, 
-			{null, Blocks.STONE, lens, Blocks.STONE, null},
-			{null, Blocks.STONE, Blocks.STONE, Blocks.STONE, null},
-			{null, Blocks.STONE, Blocks.STONE, Blocks.STONE, null},
+			{null, "stone", lens, "stone", null},
+			{null, "stone", "stone", "stone", null},
+			{null, "stone", "stone", "stone", null},
 			{null, null, null, null, null}},
 
 			{	{null,null,null,null,null}, 
-				{null, Blocks.STONE, Blocks.STONE, Blocks.STONE, null},
-				{null, Blocks.STONE, lens, Blocks.STONE, null},
-				{null, Blocks.STONE, Blocks.STONE, Blocks.STONE, null},
+				{null, "stone", "stone", "stone", null},
+				{null, "stone", lens, "stone", null},
+				{null, "stone", "stone", "stone", null},
 				{null,null,null,null,null}},
 
-				{	{null, Blocks.STONE, Blocks.STONE, Blocks.STONE, null}, 
-					{Blocks.STONE, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.STONE},
-					{Blocks.STONE, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.STONE},
-					{Blocks.STONE, Blocks.AIR, lens, Blocks.AIR, Blocks.STONE},
-					{null, Blocks.STONE, Blocks.STONE, Blocks.STONE, null}},
+				{	{null, "stone", "stone", "stone", null},
+					{"stone", Blocks.AIR, Blocks.AIR, Blocks.AIR, "stone"},
+					{"stone", Blocks.AIR, Blocks.AIR, Blocks.AIR, "stone"},
+					{"stone", Blocks.AIR, lens, Blocks.AIR, "stone"},
+					{null, "stone", "stone", "stone", null}},
 
 					{	{ null,'*', 'c', '*',null}, 
-						{'*',Blocks.STONE, Blocks.STONE, Blocks.STONE,'*'},
-						{'*',Blocks.STONE, Blocks.STONE, Blocks.STONE,'*'},
-						{'*',Blocks.STONE, Blocks.STONE, Blocks.STONE,'*'},
+						{'*',"stone", "stone", "stone",'*'},
+						{'*',"stone", "stone", "stone",'*'},
+						{'*',"stone", "stone", "stone",'*'},
 						{null,'*', '*', '*', null}},
 
 						{	{null,'*', '*', '*', null}, 
-							{'*',Blocks.STONE, Blocks.STONE, Blocks.STONE,'*'},
-							{'*',Blocks.STONE, LibVulpesBlocks.motors, Blocks.STONE,'*'},
-							{'*',Blocks.STONE, Blocks.STONE, Blocks.STONE,'*'},
+							{'*',"stone", "stone", "stone",'*'},
+							{'*',"stone", LibVulpesBlocks.motors, "stone",'*'},
+							{'*',"stone", "stone", "stone",'*'},
 							{null,'*', '*', '*',null}}};
 
 	final static int openTime = 100;

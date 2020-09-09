@@ -231,14 +231,16 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 	@Override
 	public int extractData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {
 		//TODO
-		if(type == data.getDataType() ||  data.getDataType() == DataType.UNDEFINED) {
-			SatelliteBase satellite = getSatelliteFromSlot(0);
-			if(satellite != null && satellite instanceof SatelliteData && DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
+		
+		SatelliteBase satellite = getSatelliteFromSlot(0);
+		if(satellite != null && satellite instanceof SatelliteData && DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
 				satellite.performAction(null, world, pos);
-			}
-			
+		}
+		
+		if(type == data.getDataType() ||  data.getDataType() == DataType.UNDEFINED) {
 			return data.removeData(maxAmount, commit);
 		}
+		
 		return 0;
 	}
 
