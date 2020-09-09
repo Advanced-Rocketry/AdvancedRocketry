@@ -2,7 +2,7 @@
     "parent": "block/orientable",
     "textures": {
         "top": "libvulpes:blocks/machinegeneric",
-        "front": "advancedrocketry:blocks/PrecisionAssemblerFront_Active",
+        "front": "advancedrocketry:blocks/precisionassemblerfront_active",
         "side": "libvulpes:blocks/machinegeneric"
     }
 }

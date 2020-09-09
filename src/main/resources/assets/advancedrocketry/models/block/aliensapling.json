@@ -1,6 +1,6 @@
 {
     "parent": "block/cross",
     "textures": {
-        "cross": "advancedrocketry:blocks/sapling_blueTree"
+        "cross": "advancedrocketry:blocks/sapling_bluetree"
     }
 }

@@ -57,30 +57,30 @@ public class RendererRollingMachine extends TileEntityRenderer<TileRollingMachin
 		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
 
 		//GL11.glColor3f(((i >>> 16) & 0xFF)/255f, ((i >>> 8) & 0xFF)/255f, (i & 0xFF)/255f);
-		model.renderOnly(coilSolidBuilder, "Coil");
+		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, coilSolidBuilder, "Coil");
 		
 		ItemStack outputStack;
 		if(tile.isRunning()) {
 			float progress = tile.getProgress(0)/(float)tile.getTotalProgress(0);
 
-			model.renderOnly(entitySolidBuilder, "Hull");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Hull");
 
 			matrix.push();
 			matrix.translate(2.12f, 1.0f, 2.56f);
 			matrix.rotate(new Quaternion(-progress*720,0,0, true));
-			model.renderOnly(entitySolidBuilder, "Roller1");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Roller1");
 			matrix.pop();
 
 			matrix.push();
 			matrix.translate(2.12f, 0.375f,2.18f);
 			matrix.rotate(new Quaternion(-progress*720,0,0, true));
-			model.renderOnly(entitySolidBuilder, "Roller2");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Roller2");
 			matrix.pop();
 
 			matrix.push();
 			matrix.translate(2.12f, 0.375f, 2.93f);
 			matrix.rotate(new Quaternion(-progress*720,0,0, true));
-			model.renderOnly(entitySolidBuilder, "Roller2");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Roller2");
 			matrix.pop();
 
 
@@ -98,7 +98,7 @@ public class RendererRollingMachine extends TileEntityRenderer<TileRollingMachin
 				matrix.push();
 				GL11.glDisable(GL11.GL_TEXTURE_2D);
 				matrix.translate(2.125f, 0.875f, 1.3125f + progress*2f);
-				model.renderOnly("Ingot");	
+				model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, "Ingot");	
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
 				matrix.pop();
 			}
@@ -108,23 +108,23 @@ public class RendererRollingMachine extends TileEntityRenderer<TileRollingMachin
 				matrix.push();
 				GL11.glDisable(GL11.GL_TEXTURE_2D);
 				matrix.translate(2.125f, 0.875f, 1.7125f + progress*2f);
-				model.renderOnly("Plate");	
+				model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, "Plate");	
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
 				matrix.pop();
 			}
 			GL11.glColor3f(1f,1f,1f);*/
 		}
 		else {
-			model.renderOnly(entitySolidBuilder, "Hull");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Hull");
 
 			matrix.push();
 			matrix.translate(2.12f, 1.0f, 2.56f);
-			model.renderOnly(entitySolidBuilder, "Roller1");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Roller1");
 			matrix.pop();
 
 			matrix.push();
 			matrix.translate(2.12f, 0.375f,2.18f);
-			model.renderOnly(entitySolidBuilder, "Roller2");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Roller2");
 			matrix.pop();
 
 			matrix.push();
@@ -132,7 +132,7 @@ public class RendererRollingMachine extends TileEntityRenderer<TileRollingMachin
 			matrix.translate(2.12f, 0.375f, 2.93f);
 			matrix.rotate(new Quaternion(15f, 0,0,true));
 
-			model.renderOnly(entitySolidBuilder, "Roller2");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Roller2");
 			matrix.pop();
 
 		}

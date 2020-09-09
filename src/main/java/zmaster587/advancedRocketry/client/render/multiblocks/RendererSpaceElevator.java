@@ -47,7 +47,7 @@ public class RendererSpaceElevator extends TileEntityRenderer<TileSpaceElevator>
 		
 		matrix.push();
 		matrix.translate(renderX - .5, 2.5, renderZ - .5);
-		laser.doRender(buffer);
+		laser.doRender(buffer, matrix);
 		matrix.pop();
 		
 		matrix.push();
@@ -60,7 +60,7 @@ public class RendererSpaceElevator extends TileEntityRenderer<TileSpaceElevator>
 		matrix.rotate(new Quaternion(0, (front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, true));
 		
 		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(baseTexture));
-		model.renderOnly(entitySolidBuilder, "Base");
+		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Base");
 		matrix.pop();
 		
 		//Render Beads
@@ -75,14 +75,14 @@ public class RendererSpaceElevator extends TileEntityRenderer<TileSpaceElevator>
 		for(int i = 0 ; i < 10; i++) {
 			for(float radius = 0.25F; radius < 1.25; radius += .25F) {
 
-				RenderHelper.renderCube(translucentBuilder, -radius, -radius + position + i*80 + 4, -radius, radius, radius + position + i*80 + 4, radius, 1, 1 , 1 , 0.11f);
+				RenderHelper.renderCube(matrix, translucentBuilder, -radius, -radius + position + i*80 + 4, -radius, radius, radius + position + i*80 + 4, radius, 1, 1 , 1 , 0.11f);
 
 			}
 		}
 		for(int i = 1 ; i < 11; i++) {
 			for(float radius = 0.25F; radius < 1.25; radius += .25F) {
 
-				RenderHelper.renderCube(translucentBuilder, -radius, -radius - position + i*80 + 4, -radius, radius, radius - position + i*80 + 4, radius, 1, 1 , 1 , 0.11f);
+				RenderHelper.renderCube(matrix, translucentBuilder, -radius, -radius - position + i*80 + 4, -radius, radius, radius - position + i*80 + 4, radius, 1, 1 , 1 , 0.11f);
 
 			}
 		}

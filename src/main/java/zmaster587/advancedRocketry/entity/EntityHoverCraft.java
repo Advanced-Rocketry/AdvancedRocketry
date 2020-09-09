@@ -52,6 +52,7 @@ import zmaster587.libVulpes.interfaces.INetworkEntity;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.network.PacketSpawnEntity;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
@@ -380,6 +381,6 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 
 	@Override
 	public IPacket<?> createSpawnPacket() {
-		return new SSpawnObjectPacket(this);
+		return new PacketSpawnEntity(this);
 	}
 }

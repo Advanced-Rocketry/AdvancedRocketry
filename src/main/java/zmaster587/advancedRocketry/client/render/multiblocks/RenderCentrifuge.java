@@ -52,14 +52,14 @@ public class RenderCentrifuge extends TileEntityRenderer<TileCentrifuge> {
 		
 		IVertexBuilder builder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture)); 
 
-		model.renderOnly(builder, "Frame");
+		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, builder, "Frame");
 
 
 		if(tile.isRunning())
 		{
 			float lavaheight = tile.getNormallizedProgress(0);
 			matrix.rotate(new Quaternion(0, tile.getWorld().getGameTime() * -10f, 0, true));
-			model.renderOnly(builder, "Spinning");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, builder, "Spinning");
 
 
 			ResourceLocation fluidIcon = new ResourceLocation("advancedrocketry:textures/blocks/fluid/oxygen_flow.png");
@@ -101,7 +101,7 @@ public class RenderCentrifuge extends TileEntityRenderer<TileCentrifuge> {
 				for(int i = 0; i < 4; i++)
 				{
 					tess.getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-					RenderHelper.renderCubeWithUV(tess.getBuffer(), bb.minX + 0.01, bb.minY + 0.01, bb.minZ + 0.01, bb.maxX - 0.01, bb.maxY*amt - 0.01, bb.maxZ - 0.01, minU, maxU, minV, maxV);
+					RenderHelper.renderCubeWithUV(matrix, tess.getBuffer(), bb.minX + 0.01, bb.minY + 0.01, bb.minZ + 0.01, bb.maxX - 0.01, bb.maxY*amt - 0.01, bb.maxZ - 0.01, minU, maxU, minV, maxV);
 					tess.draw();
 					GL11.glRotatef(45f, 0, 1, 0);
 				}
@@ -114,7 +114,7 @@ public class RenderCentrifuge extends TileEntityRenderer<TileCentrifuge> {
 		}
 		else
 		{
-			model.renderOnly(builder, "Spinning");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, builder, "Spinning");
 		}
 		matrix.pop();
 	}

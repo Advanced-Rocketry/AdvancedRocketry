@@ -48,7 +48,7 @@ public class RendererPipe { //extends TileEntityRenderer {
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
 
 				//buffer.color(.4f, 0.4f, 0.4f,1f);
-				RenderHelper.renderCube(buffer, -0.25f,  -0.25f,  -0.25f,  0.25f, 0.25f, 0.25f);
+				RenderHelper.renderCube(matrix, buffer, -0.25f,  -0.25f,  -0.25f,  0.25f, 0.25f, 0.25f);
 					//drawCube(0.25D, tessellator);
 				//}
 				Tessellator.getInstance().draw();

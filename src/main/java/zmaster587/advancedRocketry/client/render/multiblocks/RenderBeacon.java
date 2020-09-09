@@ -52,19 +52,19 @@ public class RenderBeacon extends TileEntityRenderer<TileBeacon> {
 		Direction front = RotatableBlock.getFront(multiBlockTile.getWorld().getBlockState(multiBlockTile.getPos()));
 		matrix.rotate(new Quaternion( 0, (front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, true ));
 		//matrix.translate(2f, 0, 0f);
-		model.renderOnly(entityTransparentBuilder, "Base");
+		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTransparentBuilder, "Base");
 
 		matrix.translate(1, 0, 0);
 		matrix.push();
 		if(multiBlockTile.getMachineEnabled())
 			matrix.rotate(new Quaternion(0, (System.currentTimeMillis() & 0xFFFF)/20f, 0, true));
-		model.renderOnly(entityTransparentBuilder, "OuterSpin");
+		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTransparentBuilder, "OuterSpin");
 		matrix.pop();
 
 		matrix.push();
 		if(multiBlockTile.getMachineEnabled())
 			matrix.rotate(new Quaternion(0, -(System.currentTimeMillis() & 0xFFFF)/6f, 0, true));
-		model.renderOnly(entityTransparentBuilder, "InnerSpin");
+		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTransparentBuilder, "InnerSpin");
 		matrix.pop();
 
 

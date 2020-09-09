@@ -480,7 +480,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			GL11.glRotated(progress, 0, 0, 1);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.renderNorthFaceWithUVNoNormal(buffer, 1, -radius, -radius, radius, radius, 0, 1, 0, 1,1,1,1,1);
+			RenderHelper.renderNorthFaceWithUVNoNormal(matrix, buffer, 1, -radius, -radius, radius, radius, 0, 1, 0, 1,1,1,1,1);
 			Tessellator.getInstance().draw();
 			GL11.glPopMatrix();
 
@@ -488,7 +488,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			//GL11.glRotatef(-Minecraft.getInstance().theWorld.getGameTime(), 0, 0, 1);
 			radius *= (1.2 + 0.1*Math.sin(progress/10f));
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.renderNorthFaceWithUVNoNormal(buffer, 1, -radius, -radius, radius, radius, 0, 1, 0, 1,1,1,1,1);
+			RenderHelper.renderNorthFaceWithUVNoNormal(matrix, buffer, 1, -radius, -radius, radius, radius, 0, 1, 0, 1,1,1,1,1);
 			Tessellator.getInstance().draw();
 			GL11.glPopMatrix();
 

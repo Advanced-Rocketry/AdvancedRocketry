@@ -70,7 +70,7 @@ public class ItemBeaconFinder extends Item implements IArmorComponent {
 
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public void renderScreen(MatrixStack mat, ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event,
+	public void renderScreen(MatrixStack matrix, ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event,
 			Screen gui) {
 		
 		ResourceLocation dimid = ZUtils.getDimensionIdentifier(Minecraft.getInstance().world);
@@ -97,7 +97,7 @@ public class ItemBeaconFinder extends Item implements IArmorComponent {
 		        BufferBuilder vertexbuffer = tessellator.getBuffer();
 		        
 		        vertexbuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		        RenderHelper.renderNorthFaceWithUV(vertexbuffer, -1000, -10, 0, 10, 20, 0, 1, 0, 1);
+		        RenderHelper.renderNorthFaceWithUV(matrix, vertexbuffer, -1000, -10, 0, 10, 20, 0, 1, 0, 1);
 				tessellator.draw();
 				
 				//GL11.glDepthMask(true);

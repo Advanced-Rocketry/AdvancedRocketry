@@ -1,11 +1,11 @@
 {
     "parent": "block/cube",
     "textures": {
-        "up": "advancedrocketry:blocks/forceFieldProjectorFront",
-        "north": "advancedrocketry:blocks/forcefieldProjector",
-        "south": "advancedrocketry:blocks/forcefieldProjector",
-        "west": "advancedrocketry:blocks/forcefieldProjector",
-        "east": "advancedrocketry:blocks/forcefieldProjector",
+        "up": "advancedrocketry:blocks/forcefieldprojectorfront",
+        "north": "advancedrocketry:blocks/forcefieldprojector",
+        "south": "advancedrocketry:blocks/forcefieldprojector",
+        "west": "advancedrocketry:blocks/forcefieldprojector",
+        "east": "advancedrocketry:blocks/forcefieldprojector",
         "down": "advancedrocketry:blocks/machinegeneric",
         "particle": "advancedrocketry:blocks/machinegeneric"
     }

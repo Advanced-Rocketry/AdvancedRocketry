@@ -9,6 +9,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
+import net.minecraft.item.IDyeableArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -49,7 +50,7 @@ import java.util.function.Consumer;
  *
  */
 
-public class ItemSpaceArmor extends ArmorItem implements ICapabilityProvider, IProtectiveArmor, IModularArmor {
+public class ItemSpaceArmor extends ArmorItem implements ICapabilityProvider, IProtectiveArmor, IModularArmor, IDyeableArmorItem {
 
 	private final static String componentNBTName = "componentName";
 	private int numModules;

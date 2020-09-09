@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "advancedrocketry:blocks/atmosphereDetector_active"
+        "all": "advancedrocketry:blocks/atmospheredetector_active"
     }
 }

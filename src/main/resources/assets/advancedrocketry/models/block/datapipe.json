@@ -1,6 +1,6 @@
 {
     "parent": "advancedrocketry:block/pipe",
     "textures": {
-        "all": "advancedrocketry:blocks/pipeData"
+        "all": "advancedrocketry:blocks/pipedata"
     }
 }

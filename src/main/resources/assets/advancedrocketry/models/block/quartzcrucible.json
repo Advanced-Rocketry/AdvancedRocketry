@@ -1,5 +1,5 @@
 {
-    "parent": "block/cauldron_empty",
+    "parent": "block/cauldron",
     "ambientocclusion": false,
     "textures": {
         "particle": "advancedrocketry:blocks/qcrucible_side",

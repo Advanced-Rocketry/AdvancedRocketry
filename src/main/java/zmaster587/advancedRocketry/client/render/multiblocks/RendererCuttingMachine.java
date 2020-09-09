@@ -80,7 +80,7 @@ public class RendererCuttingMachine extends TileEntityRenderer<TileCuttingMachin
 				matrix.pop();
 			}*/
 
-			model.tessellatePart(entityTransparentBuilder, "Hull");
+			model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entityTransparentBuilder, "Hull");
 
 			matrix.push();
 
@@ -88,12 +88,12 @@ public class RendererCuttingMachine extends TileEntityRenderer<TileCuttingMachin
 
 			matrix.rotate(new Quaternion(-6*tile.getProgress(0) % 360, 0, 0, true));
 			matrix.translate(-1f, -1f, -1.5f);
-			model.tessellatePart(entityTransparentBuilder, "Saw");
+			model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entityTransparentBuilder, "Saw");
 			matrix.pop();
 
 		}
 		else {
-			model.tessellateAll(entityTransparentBuilder);
+			model.tessellateAll(matrix, combinedLightIn, combinedOverlayIn, entityTransparentBuilder);
 		}
 		matrix.pop();
 	}

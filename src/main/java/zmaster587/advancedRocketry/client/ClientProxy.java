@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -136,6 +138,12 @@ public class ClientProxy extends CommonProxy {
         }, AdvancedRocketryItems.itemSpaceSuit_Boots, AdvancedRocketryItems.itemSpaceSuit_Chest, AdvancedRocketryItems.itemSpaceSuit_Helmet, AdvancedRocketryItems.itemSpaceSuit_Leggings);
 		
 		AdvancedRocketry.materialRegistry.init();
+		
+		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockStructureTower, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockUnlitTorch, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockUnlitTorchWall, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockThermiteTorch, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockThermiteTorchWall, RenderType.getCutout());
 	}
 
 	@Override
@@ -208,6 +216,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void changeClientPlayerWorld(World world) {
 		Minecraft.getInstance().player.world = world;
+		//Minecraft.getInstance().world = (ClientWorld)world;
 	}
 
 	@Override
@@ -285,7 +294,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public long getWorldTimeUniversal() {
 		try {
-			return Minecraft.getInstance().world.getGameTime();
+			return 0; //Minecraft.getInstance().world.getGameTime();
 		} catch (NullPointerException e) {
 			return 0;
 		}

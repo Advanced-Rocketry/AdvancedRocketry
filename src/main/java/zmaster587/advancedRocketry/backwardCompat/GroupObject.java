@@ -8,6 +8,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 public class GroupObject
 {
@@ -34,13 +35,25 @@ public class GroupObject
 
 
     @OnlyIn(value=Dist.CLIENT)
-    public void render(IVertexBuilder tessellator)
+    public void render(MatrixStack matrix, int lighting, int lightingOverlay, IVertexBuilder tessellator)
     {
         if (faces.size() > 0)
         {
             for (Face face : faces)
             {
-                face.addFaceForRender(tessellator);
+                face.addFaceForRender(matrix, lighting, lightingOverlay, tessellator);
+            }
+        }
+    }
+    
+    @OnlyIn(value=Dist.CLIENT)
+    public void render(MatrixStack matrix, IVertexBuilder tessellator)
+    {
+        if (faces.size() > 0)
+        {
+            for (Face face : faces)
+            {
+                face.addFaceForRender(matrix, tessellator);
             }
         }
     }

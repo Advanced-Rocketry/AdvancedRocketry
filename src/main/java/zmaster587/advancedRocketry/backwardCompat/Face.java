@@ -1,9 +1,14 @@
 package zmaster587.advancedRocketry.backwardCompat;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.util.math.vector.Matrix3f;
+import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.vector.Vector4f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -15,13 +20,19 @@ public class Face
     public TextureCoordinate[] textureCoordinates;
 
     @OnlyIn(value=Dist.CLIENT)
-    public void addFaceForRender(IVertexBuilder tessellator)
+    public void addFaceForRender(MatrixStack matrix, int lighting, int lightingOverlay, IVertexBuilder tessellator)
     {
-        addFaceForRender(tessellator, 0.0005F);
+        addFaceForRender(matrix, lighting, lightingOverlay, tessellator, 0.0005F);
     }
-
+    
     @OnlyIn(value=Dist.CLIENT)
-    public void addFaceForRender(IVertexBuilder tessellator, float textureOffset)
+    public void addFaceForRender(MatrixStack matrix, IVertexBuilder tessellator)
+    {
+        addFaceForRender(matrix, tessellator, 0.0005F);
+    }
+    
+    @OnlyIn(value=Dist.CLIENT)
+    public void addFaceForRender(MatrixStack matrix, IVertexBuilder tessellator, float textureOffset)
     {
         if (faceNormal == null)
         {
@@ -46,7 +57,8 @@ public class Face
         }
 
         float offsetU, offsetV;
-
+        Matrix4f matrix4f = matrix.getLast().getMatrix();
+        Matrix3f matrix3f = matrix.getLast().getNormal();
         for (int i = 0; i < vertices.length; ++i)
         {
 
@@ -63,13 +75,92 @@ public class Face
                 {
                     offsetV = -offsetV;
                 }
-
-                tessellator.pos(vertices[i].x, vertices[i].y, vertices[i].z).tex(textureCoordinates[i].u + offsetU, textureCoordinates[i].v + offsetV).normal(faceNormal.x, faceNormal.y, faceNormal.z).endVertex();
+                
+                Vector3f vector3f = new Vector3f(faceNormal.x, faceNormal.y, faceNormal.z);
+                vector3f.transform(matrix3f);
+                
+                Vector4f vector4f = new Vector4f(vertices[i].x, vertices[i].y, vertices[i].z, 1.0F);
+                vector4f.transform(matrix4f);
+                tessellator.pos(vector4f.getX(), vector4f.getY(),vector4f.getZ()).tex(textureCoordinates[i].u + offsetU, textureCoordinates[i].v + offsetV).normal(vector3f.getX(), vector3f.getY(), vector3f.getZ()).endVertex();
 
             }
             else
             {
-            	tessellator.pos(vertices[i].x, vertices[i].y, vertices[i].z).normal(faceNormal.x, faceNormal.y, faceNormal.z).endVertex();
+
+                
+                Vector3f vector3f = new Vector3f(faceNormal.x, faceNormal.y, faceNormal.z);
+                vector3f.transform(matrix3f);
+                
+                Vector4f vector4f = new Vector4f(vertices[i].x, vertices[i].y, vertices[i].z, 1.0F);
+                vector4f.transform(matrix4f);
+            	tessellator.pos(vector4f.getX(), vector4f.getY(),vector4f.getZ()).normal(vector3f.getX(), vector3f.getY(), vector3f.getZ()).endVertex();
+            }
+        }
+    }
+    
+
+    @OnlyIn(value=Dist.CLIENT)
+    public void addFaceForRender(MatrixStack matrix, int lighting, int lightingOverlay, IVertexBuilder tessellator, float textureOffset)
+    {
+        if (faceNormal == null)
+        {
+            faceNormal = this.calculateFaceNormal();
+        }
+
+        //tessellator.setNormal(faceNormal.x, faceNormal.y, faceNormal.z);
+
+        float averageU = 0F;
+        float averageV = 0F;
+
+        if ((textureCoordinates != null) && (textureCoordinates.length > 0))
+        {
+            for (int i = 0; i < textureCoordinates.length; ++i)
+            {
+                averageU += textureCoordinates[i].u;
+                averageV += textureCoordinates[i].v;
+            }
+
+            averageU = averageU / textureCoordinates.length;
+            averageV = averageV / textureCoordinates.length;
+        }
+
+        float offsetU, offsetV;
+        Matrix4f matrix4f = matrix.getLast().getMatrix();
+        Matrix3f matrix3f = matrix.getLast().getNormal();
+        for (int i = 0; i < vertices.length; ++i)
+        {
+
+            if ((textureCoordinates != null) && (textureCoordinates.length > 0))
+            {
+                offsetU = textureOffset;
+                offsetV = textureOffset;
+
+                if (textureCoordinates[i].u > averageU)
+                {
+                    offsetU = -offsetU;
+                }
+                if (textureCoordinates[i].v > averageV)
+                {
+                    offsetV = -offsetV;
+                }
+                
+                Vector3f vector3f = new Vector3f(faceNormal.x, faceNormal.y, faceNormal.z);
+                vector3f.transform(matrix3f);
+                
+                Vector4f vector4f = new Vector4f(vertices[i].x, vertices[i].y, vertices[i].z, 1.0F);
+                vector4f.transform(matrix4f);
+                tessellator.addVertex(vector4f.getX(), vector4f.getY(),vector4f.getZ(), 1, 1, 1, 1, textureCoordinates[i].u + offsetU, textureCoordinates[i].v + offsetV, lightingOverlay, lighting, vector3f.getX(), vector3f.getY(), vector3f.getZ());
+            }
+            else
+            {
+
+                
+                Vector3f vector3f = new Vector3f(faceNormal.x, faceNormal.y, faceNormal.z);
+                vector3f.transform(matrix3f);
+                
+                Vector4f vector4f = new Vector4f(vertices[i].x, vertices[i].y, vertices[i].z, 1.0F);
+                vector4f.transform(matrix4f);
+            	tessellator.pos(vector4f.getX(), vector4f.getY(),vector4f.getZ()).color(1, 1, 1, 1).lightmap(lighting, lightingOverlay).normal(vector3f.getX(), vector3f.getY(), vector3f.getZ()).endVertex();
             }
         }
     }

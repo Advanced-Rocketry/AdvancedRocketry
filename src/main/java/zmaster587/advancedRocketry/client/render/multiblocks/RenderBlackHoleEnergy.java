@@ -51,7 +51,7 @@ public class RenderBlackHoleEnergy extends TileEntityRenderer<TileBlackHoleGener
 		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
 		
 		
-		model.tessellateAll(entitySolidBuilder);
+		model.tessellateAll(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder);
 		
 		if(multiBlockTile.isProducingPower())
 		{
@@ -60,14 +60,14 @@ public class RenderBlackHoleEnergy extends TileEntityRenderer<TileBlackHoleGener
 			matrix.push();
 			matrix.translate(0, (float)Math.sin(System.currentTimeMillis() / 128.0)*.3f, 0);
 			
-			RenderHelper.renderCube(entityTransparentBuilder, -0.45, 0.95, 0.55, 0.45, 1.05, 1.45, 1f, 1f, 0.5f, 0.5f);
+			RenderHelper.renderCube(matrix, entityTransparentBuilder, -0.45, 0.95, 0.55, 0.45, 1.05, 1.45, 1f, 1f, 0.5f, 0.5f);
 			
 			matrix.pop();
 			
 			matrix.push();
 			matrix.translate(0, -(float)Math.sin(System.currentTimeMillis() / 128.0)*.3f, 0);
 			
-			RenderHelper.renderCube(entityTransparentBuilder, -0.45, 0.95, 0.55, 0.45, 1.05, 1.45, 1f, 1f, 0.5f, 0.5f);
+			RenderHelper.renderCube(matrix, entityTransparentBuilder, -0.45, 0.95, 0.55, 0.45, 1.05, 1.45, 1f, 1f, 0.5f, 0.5f);
 			matrix.pop();
 			
 		}

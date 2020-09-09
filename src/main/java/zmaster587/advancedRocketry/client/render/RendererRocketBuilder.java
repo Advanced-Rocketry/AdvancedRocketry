@@ -63,7 +63,7 @@ public class RendererRocketBuilder extends TileEntityRenderer<TileRocketBuilder>
 			
 			
 			//Draw Supports
-			IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(girder));
+			IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidTexturedManualRenderType(girder));
 			
 			float size = 0.25f;
 			
@@ -71,42 +71,11 @@ public class RendererRocketBuilder extends TileEntityRenderer<TileRocketBuilder>
 			
 			float r = 0.78f, g= 0.5f, b = 0.34f, a = 1f;
 			
-			RenderHelper.renderCubeWithUV(entitySolidBuilder, xOffset, 0d, zOffset, xOffset + size, yOffset + yLocation, zOffset + size, (float)uMin, (float)uMax, (float)0d, (float)vMax, r,g,b,a);
-			RenderHelper.renderCubeWithUV(entitySolidBuilder, xOffset + xSize - size, 0d, zOffset, xOffset  + xSize , yOffset + yLocation, zOffset + size, uMin, uMax, vMin, vMax, r,g,b,a);
-			RenderHelper.renderCubeWithUV(entitySolidBuilder, xOffset + xSize - size, 0d, zOffset + zSize - size, xOffset  + xSize, yOffset + yLocation, zOffset + zSize, uMin, uMax, vMin, vMax, r,g,b,a);
-			RenderHelper.renderCubeWithUV(entitySolidBuilder, xOffset, 0d, zOffset + zSize  - size, xOffset + size, yOffset + yLocation, zOffset + zSize, uMin, uMax, vMin, vMax, r,g,b,a);
-			Tessellator.getInstance().draw();
-			
-			
-			IVertexBuilder gridBuilder = buffer.getBuffer(RenderHelper.getTranslucentTexturedManualRenderType(grid));
-			
-			//Draw scanning grid
-			if(tile.isBuilding())
-			{
-				r = 1;
-				g = 0.5f;
-				b = 0.5f;
-				a = 0.05f;
-			}
-			else
-			{
-				r = 0.5f;
-				g = 1f;
-				b = 0.5f;
-				a = 0.05f;
-			}
+			RenderHelper.renderCubeWithUV(matrix, entitySolidBuilder, xOffset, 0d, zOffset, xOffset + size, yOffset + yLocation, zOffset + size, (float)uMin, (float)uMax, (float)0d, (float)vMax, r,g,b,a);
+			RenderHelper.renderCubeWithUV(matrix, entitySolidBuilder, xOffset + xSize - size, 0d, zOffset, xOffset  + xSize , yOffset + yLocation, zOffset + size, uMin, uMax, vMin, vMax, r,g,b,a);
+			RenderHelper.renderCubeWithUV(matrix, entitySolidBuilder, xOffset + xSize - size, 0d, zOffset + zSize - size, xOffset  + xSize, yOffset + yLocation, zOffset + zSize, uMin, uMax, vMin, vMax, r,g,b,a);
+			RenderHelper.renderCubeWithUV(matrix, entitySolidBuilder, xOffset, 0d, zOffset + zSize  - size, xOffset + size, yOffset + yLocation, zOffset + zSize, uMin, uMax, vMin, vMax, r,g,b,a);
 
-			float min = 0;
-			float maxU = (float)(1*xSize);
-			float maxV = (float)(1*zSize);
-			for(int i = 0; i < 20; i++) {
-				//BOTTOM
-				double offset = i/80d;
-				RenderHelper.renderBottomFaceWithUV(gridBuilder, yOffset + yLocation+offset, xOffset, zOffset, xOffset + xSize, zOffset  + zSize, min, maxU, min, maxV,r,g,b,a);
-				RenderHelper.renderTopFaceWithUV(gridBuilder, yOffset + yLocation+offset, xOffset, zOffset, xOffset + xSize, zOffset  + zSize, min, maxU, min, maxV, r,g,b,a);
-				
-				//TOP
-			}
 			
 			IVertexBuilder round = buffer.getBuffer(RenderHelper.getSolidTexturedManualRenderType(round_h));
 			uMax = 1f;
@@ -114,11 +83,11 @@ public class RendererRocketBuilder extends TileEntityRenderer<TileRocketBuilder>
 			//Draw "beam emitters"
 			//West block
 			
-			RenderHelper.renderBottomFaceWithUV(round, yMin, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax,1,1,1,1);
-			RenderHelper.renderWestFaceWithUV(round, xMin, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax,1,1,1,1);
-			RenderHelper.renderSouthFaceWithUV(round, zMax, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax,1,1,1,1);
-			RenderHelper.renderNorthFaceWithUV(round, zMin, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax,1,1,1,1);
-			RenderHelper.renderTopFaceWithUV(round, yMax, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax,1,1,1,1);
+			RenderHelper.renderBottomFaceWithUV(matrix, round, yMin, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax,1,1,1,1);
+			RenderHelper.renderWestFaceWithUV(matrix, round, xMin, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax,1,1,1,1);
+			RenderHelper.renderSouthFaceWithUV(matrix, round, zMax, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax,1,1,1,1);
+			RenderHelper.renderNorthFaceWithUV(matrix, round, zMin, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax,1,1,1,1);
+			RenderHelper.renderTopFaceWithUV(matrix, round, yMax, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax,1,1,1,1);
 			
 			//Set ignore light then draw the glowy bits
 			IVertexBuilder beam = buffer.getBuffer(RenderHelper.getTranslucentManualRenderType());
@@ -137,20 +106,51 @@ public class RendererRocketBuilder extends TileEntityRenderer<TileRocketBuilder>
 				a = 1f;
 			}
 			
-			RenderHelper.renderEastFace(beam, xMax, yMin, zMin, yMax, zMax,r,g,b,a);
+			RenderHelper.renderEastFace(matrix, beam, xMax, yMin, zMin, yMax, zMax,r,g,b,a);
 			
 			//Change mins/maxes then render east block
 			xMin = xOffset + xSize - 0.5;
 			xMax = xOffset + xSize;
 			
-			RenderHelper.renderWestFace(beam, xMin, yMin, zMin, yMax, zMax,r,g,b,a);
+			RenderHelper.renderWestFace(matrix, beam, xMin, yMin, zMin, yMax, zMax,r,g,b,a);
 			
+			round = buffer.getBuffer(RenderHelper.getSolidTexturedManualRenderType(round_h));
+			RenderHelper.renderBottomFaceWithUV(matrix, round, yMin, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax,1,1,1,1);
+			RenderHelper.renderEastFaceWithUV(matrix, round, xMax, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax,1,1,1,1);
+			RenderHelper.renderSouthFaceWithUV(matrix, round, zMax, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax,1,1,1,1);
+			RenderHelper.renderNorthFaceWithUV(matrix, round, zMin, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax,1,1,1,1);
+			RenderHelper.renderTopFaceWithUV(matrix, round, yMax, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax,1,1,1,1);
 			
-			RenderHelper.renderBottomFaceWithUV(round, yMin, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax,1,1,1,1);
-			RenderHelper.renderEastFaceWithUV(round, xMax, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax,1,1,1,1);
-			RenderHelper.renderSouthFaceWithUV(round, zMax, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax,1,1,1,1);
-			RenderHelper.renderNorthFaceWithUV(round, zMin, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax,1,1,1,1);
-			RenderHelper.renderTopFaceWithUV(round, yMax, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax,1,1,1,1);
+			//Draw scanning grid
+			if(tile.isBuilding())
+			{
+				r = 1;
+				g = 0.5f;
+				b = 0.5f;
+				a = 0.5f;
+			}
+			else
+			{
+				r = 0.5f;
+				g = 1f;
+				b = 0.5f;
+				a = 0.5f;
+			}
+			float min = 0;
+			float maxU = (float)(1*xSize);
+			float maxV = (float)(1*zSize);
+			IVertexBuilder gridBuilder = buffer.getBuffer(RenderHelper.getTranslucentTexturedManualRenderType(grid));
+			for(int i = 0; i < 20; i++) {
+				//BOTTOM
+				double offset = i/80d;
+				RenderHelper.renderBottomFaceWithUV(matrix, gridBuilder, yOffset + yLocation+offset, xOffset, zOffset, xOffset + xSize, zOffset  + zSize, min, maxU, min, maxV,r,g,b,a);
+				
+				// Spooky magic alpha
+				RenderHelper.renderTopFaceWithUV(matrix, gridBuilder, yOffset + yLocation+offset, xOffset, zOffset, xOffset + xSize, zOffset  + zSize, min, maxU, min, maxV, r,g,b,a*0.1f);
+				
+				//TOP
+			}
+			
 			matrix.pop();
 		}
 	}

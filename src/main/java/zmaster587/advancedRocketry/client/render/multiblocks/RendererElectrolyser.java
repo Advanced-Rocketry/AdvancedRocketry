@@ -57,7 +57,7 @@ public class RendererElectrolyser extends TileEntityRenderer<TileElectrolyser> {
 		matrix.rotate(new Quaternion(0,(front.getZOffset() == 1 ? 180 : 0) - front.getXOffset()*90f, 0, true ));
 
 		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
-		model.tessellateAll(entitySolidBuilder);
+		model.tessellateAll(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder);
 
 		//Lightning effect
 
@@ -78,7 +78,7 @@ public class RendererElectrolyser extends TileEntityRenderer<TileElectrolyser> {
 			double xMax = -.15f;
 			double zMin = 1f;
 			double zMax = 1;
-			RenderHelper.renderCrossXZ(entityTransparentBuilder, width, xMin, yPos, zMin, xMax, yPos + ySkew, zMax  + xSkew, r,g,b,a);
+			RenderHelper.renderCrossXZ(matrix, entityTransparentBuilder, width, xMin, yPos, zMin, xMax, yPos + ySkew, zMax  + xSkew, r,g,b,a);
 
 			//tess.addVertex(xMin, yMax, zMin);
 			//tess.addVertex(xMax, yMax + ySkew, zMin);
@@ -88,17 +88,17 @@ public class RendererElectrolyser extends TileEntityRenderer<TileElectrolyser> {
 			xMax += 0.15;
 			xMin += 0.15;
 
-			RenderHelper.renderCrossXZ(entityTransparentBuilder, width, xMin, yPos + ySkew, zMin + xSkew, xMax, yPos - ySkew, zMax - xSkew, r,g,b,a);
+			RenderHelper.renderCrossXZ(matrix, entityTransparentBuilder, width, xMin, yPos + ySkew, zMin + xSkew, xMax, yPos - ySkew, zMax - xSkew, r,g,b,a);
 
 			xMax += 0.15;
 			xMin += 0.15;
 
-			RenderHelper.renderCrossXZ(entityTransparentBuilder, width, xMin, yPos - ySkew, zMin - xSkew, xMax, yPos + ySkew, zMax + xSkew, r,g,b,a);
+			RenderHelper.renderCrossXZ(matrix, entityTransparentBuilder, width, xMin, yPos - ySkew, zMin - xSkew, xMax, yPos + ySkew, zMax + xSkew, r,g,b,a);
 
 			xMax += 0.15;
 			xMin += 0.15;
 
-			RenderHelper.renderCrossXZ(entityTransparentBuilder, width, xMin, yPos + ySkew, zMin + xSkew, xMax, yPos, zMax, r,g,b,a);
+			RenderHelper.renderCrossXZ(matrix, entityTransparentBuilder, width, xMin, yPos + ySkew, zMin + xSkew, xMax, yPos, zMax, r,g,b,a);
 			
 		}
 		matrix.pop();

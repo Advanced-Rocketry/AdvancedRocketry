@@ -88,10 +88,10 @@ public class RendererPrecisionAssembler extends TileEntityRenderer<TilePrecision
 				matrix.pop();
 			}*/
 			
-			model.tessellatePart(entitySolidBuilder, "Hull");
+			model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "Hull");
 			
 			matrix.translate(0, 0, tray);
-			model.tessellatePart(entitySolidBuilder, "Tray"); // 0-> 3
+			model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "Tray"); // 0-> 3
 			matrix.translate(0, 0, -tray);
 			
 			process *= 6;
@@ -99,18 +99,18 @@ public class RendererPrecisionAssembler extends TileEntityRenderer<TilePrecision
 				if(process < 3) {
 					process-=2;
 					matrix.translate(0, -.25f*process, 0); // 0 -> -.25
-					model.tessellatePart(entitySolidBuilder, "ProcessA");
+					model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "ProcessA");
 					matrix.translate(0, .25f*process, 0);
 				}
 				else if(process < 4) {
 					process = -process + 4;
 					matrix.translate(0, -.25f*process, 0); // 0 -> -.25
-					model.tessellatePart(entitySolidBuilder, "ProcessA");
+					model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "ProcessA");
 					matrix.translate(0, .25f*process, 0);
 				}
 			}
 			else
-				model.tessellatePart(entitySolidBuilder, "ProcessA");
+				model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "ProcessA");
 			
 			
 			
@@ -119,18 +119,18 @@ public class RendererPrecisionAssembler extends TileEntityRenderer<TilePrecision
 				if(process < 3) {
 					process-=2;
 					matrix.translate(0, -.25f*process, 0); // 0 -> -.25
-					model.tessellatePart(entitySolidBuilder, "ProcessB");
+					model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "ProcessB");
 					matrix.translate(0, .25f*process, 0);
 				}
 				else if(process < 4) {
 					process = -process + 4;
 					matrix.translate(0, -.25f*process, 0); // 0 -> -.25
-					model.tessellatePart(entitySolidBuilder, "ProcessB");
+					model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "ProcessB");
 					matrix.translate(0, .25f*process, 0);
 				}
 			}
 			else
-				model.tessellatePart(entitySolidBuilder, "ProcessB");
+				model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "ProcessB");
 			
 			process -= 6;
 			if(process > 1 && process < 3){
@@ -141,7 +141,7 @@ public class RendererPrecisionAssembler extends TileEntityRenderer<TilePrecision
 					matrix.rotate(new Quaternion(0,0, 90*process,true));
 					matrix.translate(-1.55, -1.47, 0);
 					
-					model.tessellatePart(entitySolidBuilder, "ProcessC");
+					model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "ProcessC");
 				}
 				else if(process < 3) {
 					process = -process + 3;
@@ -150,18 +150,18 @@ public class RendererPrecisionAssembler extends TileEntityRenderer<TilePrecision
 					matrix.rotate(new Quaternion(0,0, 90*process,true));
 					matrix.translate(-1.55, -1.47, 0);
 					
-					model.tessellatePart(entitySolidBuilder, "ProcessC");
+					model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "ProcessC");
 				}
 			}
 			else
-				model.tessellatePart(entitySolidBuilder, "ProcessC");
+				model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "ProcessC");
 
 
 
 			
 		}
 		else {
-			model.tessellateAll(entitySolidBuilder);
+			model.tessellateAll(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder);
 		}
 		matrix.pop();
 	}

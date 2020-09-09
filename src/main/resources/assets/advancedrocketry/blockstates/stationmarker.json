@@ -5,9 +5,6 @@
         "facing=west":  { "model": "advancedrocketry:block/stationmarker", "y": 270 },
         "facing=east":  { "model": "advancedrocketry:block/stationmarker", "y": 90 },
         "facing=up":  { "model": "advancedrocketry:block/stationmarker", "x": -90 },
-        "facing=down":  { "model": "advancedrocketry:block/stationmarker", "x": 90 },
-        "inventory": {
-            "model": "advancedrocketry:block/stationmarker"
-        }
+        "facing=down":  { "model": "advancedrocketry:block/stationmarker", "x": 90 }
     }
 }

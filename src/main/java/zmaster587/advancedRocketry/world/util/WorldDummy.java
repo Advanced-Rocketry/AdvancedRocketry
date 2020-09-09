@@ -27,30 +27,42 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.ColumnFuzzedBiomeMagnifier;
 import net.minecraft.world.chunk.AbstractChunkProvider;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkStatus;
+import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.storage.MapData;
 import net.minecraftforge.common.capabilities.CapabilityDispatcher;
 import net.minecraftforge.common.util.LazyOptional;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.util.StorageChunk;
+import zmaster587.advancedRocketry.world.DummyChunkProvider;
 
 public class WorldDummy extends World  {
 
 	StorageChunk storage;
 	public int displayListIndex = -1;
 	private CapabilityDispatcher capabilities;
-	
+
+	DummyChunkProvider cnkprovider;
+	Chunk chunk;
+
 	final static class DummyDimensionType extends DimensionType
 	{
 		public DummyDimensionType() {
 			super(OptionalLong.empty(), true, false, false, true, 1.0D, false, false, true, false, true, 256, ColumnFuzzedBiomeMagnifier.INSTANCE, BlockTags.field_241277_aC_.func_230234_a_(), field_242710_a, 0.0F);
 		}
 	}
-	
+
 	public WorldDummy(IProfiler p_i45368_5_, StorageChunk storage) {
 		super(null, null, new DummyDimensionType(), () -> AdvancedRocketry.proxy.getProfiler(), false, false, 0);
 		this.storage = storage;
-		
+		cnkprovider = new DummyChunkProvider(this);
+	}
+
+	public void setChunk(Chunk chunk)
+	{
+		this.chunk = chunk;
 	}
 
 	@Override
@@ -58,19 +70,23 @@ public class WorldDummy extends World  {
 	public <T> LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
 		return capabilities == null ? null : capabilities.getCapability(capability, facing);
 	}
-	
+
 	@Override
 	public BlockState getBlockState(BlockPos pos) {
 		return storage.getBlockState(pos);
 	}
-	
+
 	@Override
 	public TileEntity getTileEntity(BlockPos pos) {
 		return storage.getTileEntity(pos);
 	}
 
+	@Override
+	public IChunk getChunk(int chunkX, int chunkZ, ChunkStatus requiredStatus) {
+		return chunk;
+	}
 
-	
+
 	@Override
 	public Biome getBiome(BlockPos pos) {
 		return AdvancedRocketryBiomes.spaceBiome;
@@ -94,7 +110,7 @@ public class WorldDummy extends World  {
 
 	@Override
 	public AbstractChunkProvider getChunkProvider() {
-		return null;
+		return cnkprovider;
 	}
 
 	@Override
@@ -128,13 +144,13 @@ public class WorldDummy extends World  {
 	@Override
 	public void playSound(PlayerEntity player, double x, double y, double z, SoundEvent soundIn, SoundCategory category,
 			float volume, float pitch) {
-		
+
 	}
 
 	@Override
 	public void playMovingSound(PlayerEntity playerIn, Entity entityIn, SoundEvent eventIn, SoundCategory categoryIn,
 			float volume, float pitch) {
-		
+
 	}
 
 	@Override
@@ -144,7 +160,7 @@ public class WorldDummy extends World  {
 
 	@Override
 	public void registerMapData(MapData mapDataIn) {
-		
+
 	}
 
 	@Override
@@ -154,12 +170,12 @@ public class WorldDummy extends World  {
 
 	@Override
 	public void sendBlockBreakProgress(int breakerId, BlockPos pos, int progress) {
-		
+
 	}
 
 	@Override
 	public Scoreboard getScoreboard() {
-		return null;
+		return new Scoreboard();
 	}
 
 	@Override

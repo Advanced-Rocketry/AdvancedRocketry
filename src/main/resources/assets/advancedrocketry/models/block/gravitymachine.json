@@ -2,7 +2,7 @@
     "parent": "block/orientable",
     "textures": {
         "top": "advancedrocketry:blocks/warpcore",
-        "front": "advancedrocketry:blocks/forcefieldProjector_off",
-        "side": "advancedrocketry:blocks/forcefieldProjector_off"
+        "front": "advancedrocketry:blocks/forcefieldprojector_off",
+        "side": "advancedrocketry:blocks/forcefieldprojector_off"
     }
 }

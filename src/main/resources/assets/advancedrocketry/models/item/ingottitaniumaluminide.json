@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "advancedrocktry:items/ingottitaniumaluminide"
+        "layer0": "advancedrocketry:items/ingottitaniumaluminide"
     }
 }

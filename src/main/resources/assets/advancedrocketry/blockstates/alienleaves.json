@@ -1,9 +1,7 @@
 {
     "variants": {
-        "normal": { "model": "advancedrocketry:block/alienleaves" },
-        "check_decay=false,decayable=true": { "model": "advancedrocketry:block/alienleaves" },
-        "check_decay=false,decayable=false": { "model": "advancedrocketry:block/alienleaves" },
-        "check_decay=true,decayable=false": { "model": "advancedrocketry:block/alienleaves" },
-        "check_decay=true,decayable=true": { "model": "advancedrocketry:block/alienleaves" }
+        "": { "model": "advancedrocketry:block/alienleaves" },
+        "decayable=true": { "model": "advancedrocketry:block/alienleaves" },
+        "decayable=false": { "model": "advancedrocketry:block/alienleaves" },
     }
 }

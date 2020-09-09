@@ -21,6 +21,7 @@ import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.tile.station.TilePlanetaryHologram;
+import zmaster587.libVulpes.network.PacketSpawnEntity;
 
 public class EntityUIPlanet extends Entity {
 
@@ -165,7 +166,7 @@ public class EntityUIPlanet extends Entity {
 	
 	@Override
 	public IPacket<?> createSpawnPacket() {
-		return new SSpawnObjectPacket(this);
+		return new PacketSpawnEntity(this);
 	}
 
 }

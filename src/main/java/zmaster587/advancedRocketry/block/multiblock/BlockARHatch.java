@@ -17,25 +17,9 @@ import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.tile.TilePointer;
 
 public class BlockARHatch extends BlockHatch {
-
-	TileEntityType<? extends TileEntity> tileType;
 	
 	public BlockARHatch(Properties material) {
 		super(material);
-	}
-	
-	public BlockARHatch _setTile(TileEntityType<? extends TileEntity> type)
-	{
-		this.tileType = type;
-		return this;
-	}
-	
-	
-	@Override
-	public boolean isSideInvisible(BlockState blockState, BlockState adjacentBlockState, Direction direction) {
-		if(blockState.get(VARIANT) < 2)
-			return super.isSideInvisible(blockState, adjacentBlockState, direction);
-		return false;
 	}
 	
 	@Override
@@ -43,17 +27,17 @@ public class BlockARHatch extends BlockHatch {
 		if(blockAccess.getTileEntity(pos) instanceof TilePointer && !((TilePointer)blockAccess.getTileEntity(pos)).allowRedstoneOutputOnSide(side))
 			return 0;
 		
-		return blockState.get(VARIANT) >= 2 ? 15 : 0;
+		return 15;
 	}
 	
 	public void setRedstoneState(World world, BlockState bstate , BlockPos pos, boolean state) {
 		if(bstate.getBlock() == this) {
-			if(state && (bstate.get(VARIANT) & 8) == 0) {
-				world.setBlockState(pos, bstate.with(VARIANT, bstate.get(VARIANT) | 8));
+			if(state && bstate.get(VISIBLE)) {
+				world.setBlockState(pos, bstate.with(VISIBLE, false));
 				world.notifyBlockUpdate(pos, bstate,  bstate, 3);
 			}
-			else if(!state && (bstate.get(VARIANT) & 8) != 0) {
-				world.setBlockState(pos, bstate.with(VARIANT, bstate.get(VARIANT) & 7));
+			else if(!state && !bstate.get(VISIBLE)) {
+				world.setBlockState(pos, bstate.with(VISIBLE, true));
 				world.notifyBlockUpdate(pos, bstate,  bstate, 3);
 			}
 		}
@@ -61,11 +45,6 @@ public class BlockARHatch extends BlockHatch {
 	
 	@Override
 	public boolean canProvidePower(BlockState state) {
-		return state.get(VARIANT) >= 10;
-	}
-
-	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return tileType.create();
+		return !state.get(VISIBLE);
 	}
 }

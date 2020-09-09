@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "advancedrocketry:items/jackHammer"
+        "layer0": "advancedrocketry:items/jackhammer"
     }
 }

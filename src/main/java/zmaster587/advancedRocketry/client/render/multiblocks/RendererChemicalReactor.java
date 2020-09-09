@@ -53,7 +53,7 @@ public class RendererChemicalReactor  extends TileEntityRenderer {
 		
 		matrix.rotate(new Quaternion(0,(front.getZOffset() == 1 ? 180 : 0) - front.getXOffset()*90f,0, true));
 		IVertexBuilder entityTransparentBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
-		model.renderOnly(entityTransparentBuilder, "mesh");
+		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTransparentBuilder, "mesh");
 		matrix.pop();
 		
 		
@@ -65,7 +65,7 @@ public class RendererChemicalReactor  extends TileEntityRenderer {
 		matrix.translate(0f, -0.5f, 1f );
 		if(multiBlockTile.isRunning())
 			matrix.rotate(new Quaternion((8*tile.getWorld().getGameTime()) % 360,0,0, true));
-		model.renderOnly(entityTransparentBuilder, "Cylinder");
+		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTransparentBuilder, "Cylinder");
 		
 		matrix.pop();
 	}

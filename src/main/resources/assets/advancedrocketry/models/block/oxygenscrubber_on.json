@@ -2,7 +2,7 @@
     "parent": "block/orientable",
     "textures": {
         "top": "libvulpes:blocks/machinegeneric",
-        "front": "advancedrocketry:blocks/machineScrubber_active",
+        "front": "advancedrocketry:blocks/machinescrubber_active",
         "side": "libvulpes:blocks/machinegeneric"
     }
 }

@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.api.AdvancedRocketryEntities;
+import zmaster587.libVulpes.network.PacketSpawnEntity;
 
 public class EntityDummy extends Entity {
 
@@ -87,7 +88,7 @@ public class EntityDummy extends Entity {
 
 	@Override
 	public IPacket<?> createSpawnPacket() {
-		return new SSpawnObjectPacket(this);
+		return new PacketSpawnEntity(this);
 	}
 
 	

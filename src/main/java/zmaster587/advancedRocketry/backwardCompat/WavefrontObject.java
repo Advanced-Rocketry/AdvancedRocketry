@@ -14,6 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import java.io.BufferedReader;
@@ -182,7 +183,7 @@ public class WavefrontObject
     }
 
     @OnlyIn(value=Dist.CLIENT)
-    public void renderAll()
+    public void renderAll(MatrixStack matrix)
     {
         BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
@@ -195,47 +196,56 @@ public class WavefrontObject
         	buffer.begin(GL11.GL_TRIANGLES, POS_TEX_NORMAL);
         }
         
-        tessellateAll(buffer);
+        renderAll(matrix, buffer);
 
         Tessellator.getInstance().draw();
     }
 
     @OnlyIn(value=Dist.CLIENT)
-    public void tessellateAll(IVertexBuilder tessellator)
+    public void renderAll(MatrixStack matrix, IVertexBuilder tessellator)
     {
         for (GroupObject groupObject : groupObjects)
         {
-            groupObject.render(tessellator);
+            groupObject.render(matrix, tessellator);
+        }
+    }
+    
+    @OnlyIn(value=Dist.CLIENT)
+    public void tessellateAll(MatrixStack matrix, int lighting, int lightingOverlay, IVertexBuilder tessellator)
+    {
+        for (GroupObject groupObject : groupObjects)
+        {
+            groupObject.render(matrix, lighting, lightingOverlay, tessellator);
         }
     }
 
     @OnlyIn(value=Dist.CLIENT)
-    public void renderOnly(IVertexBuilder buffer, String... groupNames) {
+    public void renderOnly(MatrixStack matrix, int lighting, int lightingOverlay, IVertexBuilder buffer, String... groupNames) {
         for (GroupObject groupObject : groupObjects)
         {
             for (String groupName : groupNames)
             {
                 if (groupName.equalsIgnoreCase(groupObject.name))
                 {
-                    groupObject.render(buffer);
+                    groupObject.render(matrix, lighting, lightingOverlay, buffer);
                 }
             }
         }
     }
 
     @OnlyIn(value=Dist.CLIENT)
-    public void tessellatePart(IVertexBuilder buffer, String partName) {
+    public void tessellatePart(MatrixStack matrix, int lighting, int lightingOverlay, IVertexBuilder buffer, String partName) {
         for (GroupObject groupObject : groupObjects)
         {
             if (partName.equalsIgnoreCase(groupObject.name))
             {
-                groupObject.render(buffer);
+                groupObject.render(matrix, lighting, lightingOverlay, buffer);
             }
         }
     }
 
     @OnlyIn(value=Dist.CLIENT)
-    public void tessellateAllExcept(IVertexBuilder buffer, String... excludedGroupNames)
+    public void tessellateAllExcept(MatrixStack matrix, int lighting, int lightingOverlay, IVertexBuilder buffer, String... excludedGroupNames)
     {
         boolean exclude;
         for (GroupObject groupObject : groupObjects)
@@ -250,7 +260,7 @@ public class WavefrontObject
             }
             if(!exclude)
             {
-                groupObject.render(buffer);
+                groupObject.render(matrix, lighting, lightingOverlay, buffer);
             }
         }
     }

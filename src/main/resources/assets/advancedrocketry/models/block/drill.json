@@ -1,9 +1,9 @@
 {
     "parent": "block/orientable",
     "textures": {
-        "top": "advancedrocketry:blocks/laserBottom",
-        "front": "advancedrocketry:blocks/machineWarning",
-        "side": "advancedrocketry:blocks/machineWarning"
+        "top": "advancedrocketry:blocks/laserbottom",
+        "front": "advancedrocketry:blocks/machinewarning",
+        "side": "advancedrocketry:blocks/machinewarning"
         
     }
 }

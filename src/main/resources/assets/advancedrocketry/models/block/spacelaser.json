@@ -2,8 +2,8 @@
     "parent": "advancedrocketry:block/orientablebottom",
     "textures": {
         "top": "libvulpes:blocks/machinegeneric",
-        "front": "advancedRocketry:blocks/LaserFront",
-        "side": "advancedrocketry:blocks/MonitorSide",
-        "bottom": "advancedRocketry:blocks/laserBottom"
+        "front": "advancedrocketry:blocks/laserfront",
+        "side": "advancedrocketry:blocks/monitorside",
+        "bottom": "advancedrocketry:blocks/laserbottom"
     }
 }

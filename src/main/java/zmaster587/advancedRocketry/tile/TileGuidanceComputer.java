@@ -254,7 +254,8 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	@Override
 	public CompoundNBT write(CompoundNBT nbt) {
 		super.write(nbt);
-		nbt.putString("destDimId", destinationId.toString());
+		if(destinationId != null)
+			nbt.putString("destDimId", destinationId.toString());
 
 		nbt.putFloat("landingx", landingPos.x);
 		nbt.putFloat("landingy", landingPos.y);
@@ -277,7 +278,10 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	@Override
 	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
 		super.func_230337_a_(state, nbt);
-		destinationId = new ResourceLocation(nbt.getString("destDimId"));
+		if(nbt.contains("destDimId"))
+			destinationId = new ResourceLocation(nbt.getString("destDimId"));
+		else
+			destinationId = Constants.INVALID_PLANET;
 
 		landingPos.x = nbt.getFloat("landingx");
 		landingPos.y = nbt.getFloat("landingy");

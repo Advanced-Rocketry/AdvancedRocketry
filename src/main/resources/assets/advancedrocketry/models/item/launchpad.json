@@ -1,6 +1,3 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "advancedrocketry:items/launchpad_all"
-    }
+    "parent": "advancedrocketry:block/launchpad_all"
 }

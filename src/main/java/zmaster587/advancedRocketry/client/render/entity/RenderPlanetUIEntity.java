@@ -62,7 +62,9 @@ public class RenderPlanetUIEntity extends EntityRenderer<EntityUIPlanet> impleme
 			return;
 
 		float sizeScale = Math.max(properties.gravitationalMultiplier*properties.gravitationalMultiplier*entity.getScale(), .5f);
-
+        int j = packedLightIn % 65536;
+        int k = packedLightIn / 65536;
+		
 		matrix.push();
 		matrix.translate(0, sizeScale*0.03f, 0);
 		//Max because moon was too small to be visible
@@ -72,7 +74,7 @@ public class RenderPlanetUIEntity extends EntityRenderer<EntityUIPlanet> impleme
 
 		matrix.push();
 		matrix.rotate(new Quaternion(0, entity.world.getGameTime() & 0xFF, 0, true));
-		sphere.tessellateAll(translucentBuffer);
+		sphere.tessellateAll(matrix, j, k, translucentBuffer);
 		matrix.pop();
 		
 		//Render shadow
@@ -83,7 +85,7 @@ public class RenderPlanetUIEntity extends EntityRenderer<EntityUIPlanet> impleme
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.shadow3);
 		GlStateManager.color4f(.1f, .1f, .1f,0.75f);
-		sphere.renderAll();
+		sphere.renderAll(matrix);
 
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
@@ -96,16 +98,16 @@ public class RenderPlanetUIEntity extends EntityRenderer<EntityUIPlanet> impleme
 			GlStateManager.color4f(properties.ringColor[0], properties.ringColor[1], properties.ringColor[2],0.5f);
 			Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.planetRings);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.renderTopFaceWithUV(buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
-			RenderHelper.renderBottomFaceWithUV(buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
+			RenderHelper.renderTopFaceWithUV(matrix, buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
+			RenderHelper.renderBottomFaceWithUV(matrix, buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
 			Tessellator.getInstance().draw();
 
 			//Draw ring shadow
 			Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.planetRingShadow);
 			GlStateManager.color4f(1,1,1,0.5f);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.renderTopFaceWithUV(buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
-			RenderHelper.renderBottomFaceWithUV(buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
+			RenderHelper.renderTopFaceWithUV(matrix, buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
+			RenderHelper.renderBottomFaceWithUV(matrix, buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
 			Tessellator.getInstance().draw();
 		}
 
@@ -120,7 +122,7 @@ public class RenderPlanetUIEntity extends EntityRenderer<EntityUIPlanet> impleme
 
 			for(int i = 0; i < 5; i++) {
 				GL11.glScalef(1.02f, 1.02f, 1.02f);
-				sphere.renderAll();
+				sphere.renderAll(matrix);
 			}
 			
 			GlStateManager.enableTexture();
@@ -136,8 +138,8 @@ public class RenderPlanetUIEntity extends EntityRenderer<EntityUIPlanet> impleme
 
 		for(int i = 0; i < 4; i++ ) {
 			myTime = ((i*4 + entity.world.getGameTime() & 0xF)/16f);
-			RenderHelper.renderTopFace(buf, myTime - 0.5, -.5f, -.5f, .5f, .5f, 0, 1f, 1f, .2f*(1-myTime));
-			RenderHelper.renderBottomFace(buf, myTime - 0.5, -.5f, -.5f, .5f, .5f, 0, 1f, 1f, .2f*(1-myTime));
+			RenderHelper.renderTopFace(matrix, buf, myTime - 0.5, -.5f, -.5f, .5f, .5f, 0, 1f, 1f, .2f*(1-myTime));
+			RenderHelper.renderBottomFace(matrix, buf, myTime - 0.5, -.5f, -.5f, .5f, .5f, 0, 1f, 1f, .2f*(1-myTime));
 		}
 		matrix.pop();
 
@@ -148,12 +150,12 @@ public class RenderPlanetUIEntity extends EntityRenderer<EntityUIPlanet> impleme
 			matrix.translate(0, -1.25, 0);
 			matrix.push();
 			matrix.rotate(new Quaternion(0f, (float) (speedRotate*System.currentTimeMillis() % 360), 0f, true));
-			RendererWarpCore.model.renderOnly(translucentBuffer, "Rotate1");
+			RendererWarpCore.model.renderOnly(matrix, j, k, translucentBuffer, "Rotate1");
 			matrix.pop();
 
 			matrix.push();
 			matrix.rotate(new Quaternion(0f, (float) (180 + speedRotate*System.currentTimeMillis() % 360), 0f, true));
-			RendererWarpCore.model.renderOnly(translucentBuffer, "Rotate1");
+			RendererWarpCore.model.renderOnly(matrix, j, k, translucentBuffer, "Rotate1");
 			matrix.pop();
 		}
 
@@ -182,7 +184,7 @@ public class RenderPlanetUIEntity extends EntityRenderer<EntityUIPlanet> impleme
 			GlStateManager.color4f(1, 1, 1,1);
 			Minecraft.getInstance().getTextureManager().bindTexture(planetUIBG);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.renderNorthFaceWithUV(buffer, 1, -40, -25, 40, 55, 1, 0, 1, 0);
+			RenderHelper.renderNorthFaceWithUV(matrix, buffer, 1, -40, -25, 40, 55, 1, 0, 1, 0);
 			Tessellator.getInstance().draw();
 
 
@@ -207,24 +209,24 @@ public class RenderPlanetUIEntity extends EntityRenderer<EntityUIPlanet> impleme
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);*/
 	}
 
-	protected void renderMassIndicator(IVertexBuilder buffer, float percent) {
+	protected void renderMassIndicator(MatrixStack matrix, IVertexBuilder buffer, float percent) {
 
 		float maxUV = (1-percent)*0.5f;
 
-		RenderHelper.renderNorthFaceWithUV(buffer, 0, -20, -5 + 41*(1-percent), 20, 36, .5f, 0f, .5f, maxUV,1,1,1,1);
+		RenderHelper.renderNorthFaceWithUV(matrix, buffer, 0, -20, -5 + 41*(1-percent), 20, 36, .5f, 0f, .5f, maxUV,1,1,1,1);
 	}
 
-	protected void renderATMIndicator(IVertexBuilder buffer, float percent) {
+	protected void renderATMIndicator(MatrixStack matrix, IVertexBuilder buffer, float percent) {
 
 		float maxUV = (1-percent)*0.406f + .578f;
 		//Offset by 15 for Y
-		RenderHelper.renderNorthFaceWithUV(buffer, 0, 6, 20 + (1-percent)*33, 39, 53, .5624f, .984f, .984f, maxUV, 1,1,1,1);
+		RenderHelper.renderNorthFaceWithUV(matrix, buffer, 0, 6, 20 + (1-percent)*33, 39, 53, .5624f, .984f, .984f, maxUV, 1,1,1,1);
 	}
 
-	protected void renderTemperatureIndicator(IVertexBuilder buffer, float percent) {
+	protected void renderTemperatureIndicator(MatrixStack matrix, IVertexBuilder buffer, float percent) {
 
 		float maxUV = (1-percent)*0.406f + .578f;
 		//Offset by 15 for Y
-		RenderHelper.renderNorthFaceWithUV(buffer, 0, -38, 21.4f + (1-percent)*33, -4, 53, .016f, .4376f, .984f, maxUV, 1,1,1,1);
+		RenderHelper.renderNorthFaceWithUV(matrix, buffer, 0, -38, 21.4f + (1-percent)*33, -4, 53, .016f, .4376f, .984f, maxUV, 1,1,1,1);
 	}
 }

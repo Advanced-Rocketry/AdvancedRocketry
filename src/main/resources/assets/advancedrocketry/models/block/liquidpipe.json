@@ -1,6 +1,6 @@
 {
     "parent": "advancedrocketry:block/pipe",
     "textures": {
-        "all": "advancedrocketry:blocks/pipeLiquid"
+        "all": "advancedrocketry:blocks/pipeliquid"
     }
 }

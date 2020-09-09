@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.api;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
+import zmaster587.advancedRocketry.block.multiblock.BlockARHatch;
 import zmaster587.advancedRocketry.tile.TileAtmosphereDetector;
 import zmaster587.advancedRocketry.tile.TileDrill;
 import zmaster587.advancedRocketry.tile.TileFluidTank;
@@ -61,6 +62,7 @@ import zmaster587.advancedRocketry.tile.station.TileStationAltitudeController;
 import zmaster587.advancedRocketry.tile.station.TileStationOrientationControl;
 import zmaster587.advancedRocketry.tile.station.TileWarpShipMonitor;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
 
@@ -245,5 +247,74 @@ public class AdvancedRocketryTileEntityType {
 				TILE_SEAL.setRegistryName("seal"),
 				TILE_STATION_DEPLOYED_ASSEMBLER.setRegistryName("deployed_assembler"),
 				TILE_GUIDANCE_COMPUTER.setRegistryName("guidance_computer"));
+		
+		
+		registerTileEntityTypesToBlocks();
+	}
+	
+	
+	public static void registerTileEntityTypesToBlocks()
+	{
+		((BlockTile)AdvancedRocketryBlocks.blockOxygenScrubber)._setTile(AdvancedRocketryTileEntityType.TILE_CO2_SCRUBBER);
+
+		((BlockTile)AdvancedRocketryBlocks.blockOrientationController)._setTile(AdvancedRocketryTileEntityType.TILE_ORIENTATION_CONTROLLER);
+		((BlockTile)AdvancedRocketryBlocks.blockGravityController)._setTile(AdvancedRocketryTileEntityType.TILE_GRAVITY_CONTROLLER);
+		((BlockTile)AdvancedRocketryBlocks.blockAltitudeController)._setTile(AdvancedRocketryTileEntityType.TILE_ALT_CONTROLLER);
+		((BlockTile)AdvancedRocketryBlocks.blockOxygenCharger)._setTile(AdvancedRocketryTileEntityType.TILE_OXYGEN_CHARGER);
+		((BlockTile)AdvancedRocketryBlocks.blockOxygenVent)._setTile(AdvancedRocketryTileEntityType.TILE_OXYGEN_VENT);
+		((BlockTile)AdvancedRocketryBlocks.blockRocketBuilder)._setTile(AdvancedRocketryTileEntityType.TILE_ROCKET_BUILDER);
+		((BlockTile)AdvancedRocketryBlocks.blockDeployableRocketBuilder)._setTile(AdvancedRocketryTileEntityType.TILE_STATION_DEPLOYED_ASSEMBLER);
+		((BlockTile)AdvancedRocketryBlocks.blockStationBuilder)._setTile(AdvancedRocketryTileEntityType.TILE_STATION_BUILDER);
+		((BlockTile)AdvancedRocketryBlocks.blockFuelingStation)._setTile(AdvancedRocketryTileEntityType.TILE_FUELING_STATION);
+
+		((BlockTile)AdvancedRocketryBlocks.blockMonitoringStation)._setTile(AdvancedRocketryTileEntityType.TILE_MONITORIING_STATION);
+
+		((BlockTile)AdvancedRocketryBlocks.blockWarpShipMonitor)._setTile(AdvancedRocketryTileEntityType.TILE_WARP_SHIP_CONTROLLER);
+
+		((BlockTile)AdvancedRocketryBlocks.blockSatelliteBuilder)._setTile(AdvancedRocketryTileEntityType.TILE_SAT_BUILDER);
+
+		((BlockTile)AdvancedRocketryBlocks.blockSatelliteControlCenter)._setTile(AdvancedRocketryTileEntityType.TILE_SAT_CONTROL);
+
+		((BlockTile)AdvancedRocketryBlocks.blockMicrowaveReciever)._setTile(AdvancedRocketryTileEntityType.TILE_MICROWAVE_RECIEVER);
+
+		((BlockTile)AdvancedRocketryBlocks.blockCentrifuge)._setTile(AdvancedRocketryTileEntityType.TILE_CENTRIFUGE);
+
+		//Arcfurnace
+		((BlockTile)AdvancedRocketryBlocks.blockArcFurnace)._setTile(AdvancedRocketryTileEntityType.TILE_ARC_FURNACE);
+		((BlockARHatch)AdvancedRocketryBlocks.blockDataBus)._setTile(AdvancedRocketryTileEntityType.TILE_DATA_BUS);
+		((BlockARHatch)AdvancedRocketryBlocks.blockSatelliteHatch)._setTile(AdvancedRocketryTileEntityType.TILE_SATELLITE_HATCH);
+		((BlockARHatch)AdvancedRocketryBlocks.blockFluidLoader)._setTile(AdvancedRocketryTileEntityType.TILE_FLUID_LOADER);
+		((BlockARHatch)AdvancedRocketryBlocks.blockFluidUnloader)._setTile(AdvancedRocketryTileEntityType.TILE_FLUID_UNLOADER);
+		((BlockARHatch)AdvancedRocketryBlocks.blockRocketLoader)._setTile(AdvancedRocketryTileEntityType.TILE_ROCKET_LOADER);
+		((BlockARHatch)AdvancedRocketryBlocks.blockRocketUnloader)._setTile(AdvancedRocketryTileEntityType.TILE_ROCKET_UNLOADER);
+		((BlockARHatch)AdvancedRocketryBlocks.blockguidanceHatch)._setTile(AdvancedRocketryTileEntityType.TILE_GUIDANCE_COMPUTER_HATCH);
+
+		((BlockTile)AdvancedRocketryBlocks.blockPrecisionAssembler)._setTile(AdvancedRocketryTileEntityType.TILE_PREC_ASS);
+		((BlockTile)AdvancedRocketryBlocks.blockCuttingMachine)._setTile(AdvancedRocketryTileEntityType.TILE_CUTTING_MACHINE);
+		((BlockTile)AdvancedRocketryBlocks.blockCrystallizer)._setTile(AdvancedRocketryTileEntityType.TILE_CRYSTALLIZER);
+		((BlockTile)AdvancedRocketryBlocks.blockWarpCore)._setTile(AdvancedRocketryTileEntityType.TILE_WARP_CORE);
+		((BlockTile)AdvancedRocketryBlocks.blockChemicalReactor)._setTile(AdvancedRocketryTileEntityType.TILE_CHEMICAL_REACTOR);
+		((BlockTile)AdvancedRocketryBlocks.blockLathe)._setTile(AdvancedRocketryTileEntityType.TILE_LATHE);
+		((BlockTile)AdvancedRocketryBlocks.blockRollingMachine)._setTile(AdvancedRocketryTileEntityType.TILE_ROLLING);
+		((BlockTile)AdvancedRocketryBlocks.blockElectrolyser)._setTile(AdvancedRocketryTileEntityType.TILE_ELECTROLYSER);
+		((BlockTile)AdvancedRocketryBlocks.blockAtmosphereTerraformer)._setTile(AdvancedRocketryTileEntityType.TILE_TERRAFORMER);
+		((BlockTile)AdvancedRocketryBlocks.blockPlanetAnalyser)._setTile(AdvancedRocketryTileEntityType.TILE_ASTROBODY_DATA);
+		((BlockTile)AdvancedRocketryBlocks.blockObservatory)._setTile(AdvancedRocketryTileEntityType.TILE_OBSERVATORY);
+		((BlockTile)AdvancedRocketryBlocks.blockBlackHoleGenerator)._setTile(AdvancedRocketryTileEntityType.TILE_BLACK_HOLE_GENERATOR);
+		((BlockTile)AdvancedRocketryBlocks.blockPump)._setTile(AdvancedRocketryTileEntityType.TILE_PUMP);
+
+		((BlockTile)AdvancedRocketryBlocks.blockGuidanceComputer)._setTile(AdvancedRocketryTileEntityType.TILE_GUIDANCE_COMPUTER);
+		((BlockTile)AdvancedRocketryBlocks.blockPlanetSelector)._setTile(AdvancedRocketryTileEntityType.TILE_PLANET_SELECTOR);
+		((BlockTile)AdvancedRocketryBlocks.blockPlanetHoloSelector)._setTile(AdvancedRocketryTileEntityType.TILE_HOLOGRAM);
+		((BlockTile)AdvancedRocketryBlocks.blockBiomeScanner)._setTile(AdvancedRocketryTileEntityType.TILE_BIOME_SCANNER);
+		((BlockTile)AdvancedRocketryBlocks.blockSuitWorkStation)._setTile(AdvancedRocketryTileEntityType.TILE_WORK_STATION);
+		((BlockTile)AdvancedRocketryBlocks.blockRailgun)._setTile(AdvancedRocketryTileEntityType.TILE_RAILGUN);
+		((BlockTile)AdvancedRocketryBlocks.blockSpaceElevatorController)._setTile(AdvancedRocketryTileEntityType.TILE_SPACE_ELEVATOR);
+		((BlockTile)AdvancedRocketryBlocks.blockBeacon)._setTile(AdvancedRocketryTileEntityType.TILE_BEACON);
+		((BlockTile)AdvancedRocketryBlocks.blockSolarGenerator)._setTile(AdvancedRocketryTileEntityType.TILE_SOLAR_PANEL);
+		((BlockTile)AdvancedRocketryBlocks.blockTransciever)._setTile(AdvancedRocketryTileEntityType.TILE_WIRELESS_TRANSCIEVER);
+
+		//Configurable stuff
+		((BlockTile)AdvancedRocketryBlocks.blockGravityMachine)._setTile(AdvancedRocketryTileEntityType.TILE_GRAVITY_CONTROLLER);
 	}
 }

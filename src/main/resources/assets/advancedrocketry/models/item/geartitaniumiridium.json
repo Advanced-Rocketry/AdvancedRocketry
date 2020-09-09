@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "advancedrocktry:items/geartitaniumiridium"
+        "layer0": "advancedrocketry:items/geartitaniumiridium"
     }
 }

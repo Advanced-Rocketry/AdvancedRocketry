@@ -94,8 +94,10 @@ import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.items.ItemLinker;
+import zmaster587.libVulpes.network.IEntitySpawnNBT;
 import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.network.PacketSpawnEntity;
 import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.IconResource;
@@ -107,7 +109,7 @@ import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.*;
 
-public class EntityRocket extends EntityRocketBase implements INetworkEntity, IModularInventory, IProgressBar, IButtonInventory, ISelectionNotify, IPlanetDefiner, INamedContainerProvider {
+public class EntityRocket extends EntityRocketBase implements INetworkEntity, IModularInventory, IProgressBar, IButtonInventory, ISelectionNotify, IPlanetDefiner, INamedContainerProvider, IEntitySpawnNBT {
 
 	//true if the rocket is on decent
 	private boolean isInOrbit;
@@ -446,7 +448,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		super.setEntityId(id);
 		//Ask server for nbt data
 		if(world.isRemote) {
-			PacketHandler.sendToServer(new PacketEntity(this, (byte)PacketType.REQUESTNBT.ordinal()));
+			//PacketHandler.sendToServer(new PacketEntity(this, (byte)PacketType.REQUESTNBT.ordinal()));
 		}
 	}
 
@@ -590,7 +592,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 		//If player is holding shift open GUI
 		if(player.isSneaking()) {
-			openGui(player);
+			if(!world.isRemote)
+				openGui(player);
 		}
 		else if(stats.hasSeat()) { //If pilot seat is open mount entity there
 			if(this.getPassengers().size() < stats.getNumPassengerSeats()) {
@@ -607,7 +610,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	}
 
 	public void openGui(PlayerEntity player) {
-		NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)this, packetBuffer -> packetBuffer.writeUniqueId(this.getUniqueID()));
+		NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)this, packetBuffer -> packetBuffer.writeInt(this.getEntityId()));
 
 		//Only handle the bypass on the server
 		if(!world.isRemote)
@@ -1735,9 +1738,12 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 			}
 		}
-		destinationDimId = new ResourceLocation(nbt.getString("destinationDimId"));
+		
+		if(nbt.contains("destinationDimId"))
+			destinationDimId = new ResourceLocation(nbt.getString("destinationDimId"));
 
-		lastDimensionFrom = new ResourceLocation(nbt.getString("lastDimensionFrom"));
+		if(nbt.contains("lastDimensionFrom"))
+			lastDimensionFrom = new ResourceLocation(nbt.getString("lastDimensionFrom"));
 
 		// TODO: Fix spelling
 		//Satellite
@@ -1771,7 +1777,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			nbt.put("infrastructure", itemList);
 		}
 
-		nbt.putString("destinationDimId", destinationDimId.toString());
+		if(destinationDimId != null)
+			nbt.putString("destinationDimId", destinationDimId.toString());
 
 		//Satallite
 		if(satallite != null) {
@@ -1803,7 +1810,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 
 		//TODO handle non tile Infrastructure
-		nbt.putString("lastDimensionFrom", lastDimensionFrom.toString());
+		
+		if(lastDimensionFrom != null)
+			nbt.putString("lastDimensionFrom", lastDimensionFrom.toString());
 	}
 
 	@Override
@@ -2195,7 +2204,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
 	public void onInventoryButtonPressed(ModuleButton button) {
-		int buttonId = (int)button.getSizeY();
+		int buttonId = (int)button.getAdditionalData();
 		
 		switch(buttonId) {
 		case 0:
@@ -2209,8 +2218,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			//Minecraft.getInstance().thePlayer.closeScreen();
 
 			if(buttonId < STATION_LOC_OFFSET) {
-				TileEntity tile = storage.getGUItiles().get(buttonId - tilebuttonOffset);
-				storage.getBlockState(tile.getPos()).getBlock().onBlockActivated( storage.getBlockState(tile.getPos()), storage.world, tile.getPos(), (PlayerEntity)Minecraft.getInstance().player, Hand.MAIN_HAND, new BlockRayTraceResult(new Vector3d(0,0,0), Direction.DOWN, tile.getPos(), false));
+				//TileEntity tile = storage.getGUItiles().get(buttonId - tilebuttonOffset);
+				//storage.getBlockState(tile.getPos()).getBlock().onBlockActivated( storage.getBlockState(tile.getPos()), storage.world, tile.getPos(), (PlayerEntity)Minecraft.getInstance().player, Hand.MAIN_HAND, new BlockRayTraceResult(new Vector3d(0,0,0), Direction.DOWN, tile.getPos(), false));
 			}
 		}
 	}
@@ -2263,12 +2272,20 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 	@Override
 	public IPacket<?> createSpawnPacket() {
-		return new SSpawnObjectPacket(this);
+		CompoundNBT nbt = new CompoundNBT();
+		writeAdditional(nbt);
+		return new PacketSpawnEntity(this, nbt);
 	}
 
 	@Override
+	public void readSpawnNBT(CompoundNBT nbt)
+	{
+		readNetworkableNBT(nbt);
+	}
+	
+	@Override
 	public Container createMenu(int winId, PlayerInventory inv, PlayerEntity player) {
-		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_HELD_ITEM, winId, player, getModules(getModularInvType(), player), this);
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_ENTITY, winId, player, getModules(getModularInvType(), player), this);
 	}
 
 	@Override

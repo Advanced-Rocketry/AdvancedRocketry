@@ -2,8 +2,8 @@
     "parent": "advancedrocketry:block/orientablebottom",
     "textures": {
         "top": "advancedrocketry:blocks/solar",
-        "front": "advancedrocketry:blocks/panelSide",
-        "side": "advancedrocketry:blocks/panelSide",
+        "front": "advancedrocketry:blocks/panelside",
+        "side": "advancedrocketry:blocks/panelside",
         "bottom": "libvulpes:blocks/machinegeneric"
     }
 }

@@ -15,6 +15,7 @@ import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryEntities;
+import zmaster587.libVulpes.network.PacketSpawnEntity;
 
 public class EntityItemAbducted extends Entity {
 
@@ -152,6 +153,6 @@ public class EntityItemAbducted extends Entity {
 
 	@Override
 	public IPacket<?> createSpawnPacket() {
-		return new SSpawnObjectPacket(this);
+		return new PacketSpawnEntity(this);
 	}
 }

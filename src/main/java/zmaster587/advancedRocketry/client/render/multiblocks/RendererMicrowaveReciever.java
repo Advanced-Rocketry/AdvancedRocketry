@@ -73,7 +73,7 @@ public class RendererMicrowaveReciever extends TileEntityRenderer<TileMicrowaveR
 				
 				for(int i = 0; i < (int)resolution; i++) {
 					for(int g = 0; g < (int)resolution; g++) {
-						RenderHelper.renderTopFaceWithUV(entitySolidManual, 1.01 + yLoc[i][g], 5*i/resolution, 5*g/resolution, 5*(i+1)/resolution, 5*(g+1)/resolution,(float) (5*i/resolution), (float)(5*(i+1)/resolution), (float)(5*g/resolution), (float)(5*(g+1)/resolution),1f,1f,1f,1f);
+						RenderHelper.renderTopFaceWithUV(matrix, entitySolidManual, 1.01 + yLoc[i][g], 5*i/resolution, 5*g/resolution, 5*(i+1)/resolution, 5*(g+1)/resolution,(float) (5*i/resolution), (float)(5*(i+1)/resolution), (float)(5*g/resolution), (float)(5*(g+1)/resolution),1f,1f,1f,1f);
 					}
 				}
 				matrix.pop();
@@ -81,23 +81,23 @@ public class RendererMicrowaveReciever extends TileEntityRenderer<TileMicrowaveR
 		}
 
 		//Draw main panel
-		RenderHelper.renderTopFaceWithUV(entitySolidManual, 1.01, -2, -2, 3, 3, 0, 5, 0, 5,1,1,1,1);
+		RenderHelper.renderTopFaceWithUV(matrix, entitySolidManual, 1.01, -2, -2, 3, 3, 0, 5, 0, 5,1,1,1,1);
 		Tessellator.getInstance().draw();
 		//And sides
 		
 		
-		RenderHelper.renderNorthFaceWithUV(entitySolidSideManual, -1.99, -2, 0, 3, 1, 0, 5, 0 ,1,1,1,1,1);
-		RenderHelper.renderSouthFaceWithUV(entitySolidSideManual, 2.99, -2, 0, 3, 1, 0, 5, 0 ,1,1,1,1,1);
-		RenderHelper.renderEastFaceWithUV(entitySolidSideManual, 2.99, 0, -2, 1, 3, 0, 5, 0 ,1,1,1,1,1);
-		RenderHelper.renderWestFaceWithUV(entitySolidSideManual, -1.99, 0, -2, 1, 3, 0, 5, 0 ,1,1,1,1,1);
+		RenderHelper.renderNorthFaceWithUV(matrix, entitySolidSideManual, -1.99, -2, 0, 3, 1, 0, 5, 0 ,1,1,1,1,1);
+		RenderHelper.renderSouthFaceWithUV(matrix, entitySolidSideManual, 2.99, -2, 0, 3, 1, 0, 5, 0 ,1,1,1,1,1);
+		RenderHelper.renderEastFaceWithUV(matrix, entitySolidSideManual, 2.99, 0, -2, 1, 3, 0, 5, 0 ,1,1,1,1,1);
+		RenderHelper.renderWestFaceWithUV(matrix, entitySolidSideManual, -1.99, 0, -2, 1, 3, 0, 5, 0 ,1,1,1,1,1);
 
-		RenderHelper.renderBottomFace(entitySolidSideManualColor, 0.001, -2, -2, 3, 3,1,1,1,1);
+		RenderHelper.renderBottomFace(matrix, entitySolidSideManualColor, 0.001, -2, -2, 3, 3,1,1,1,1);
 		
-		RenderHelper.renderCube(entitySolidSideManualColor, -2, 0.99, -2, -1.9, 1.1, 3, 1,1,1,1);
-		RenderHelper.renderCube(entitySolidSideManualColor, -2, 0.99, -2, 3, 1.1, -1.9,1,1,1,1);
+		RenderHelper.renderCube(matrix, entitySolidSideManualColor, -2, 0.99, -2, -1.9, 1.1, 3, 1,1,1,1);
+		RenderHelper.renderCube(matrix, entitySolidSideManualColor, -2, 0.99, -2, 3, 1.1, -1.9,1,1,1,1);
 		
-		RenderHelper.renderCube(entitySolidSideManualColor, -1.9, 0.99, 2.9, 3, 1.1, 3, 1,1,1,1);
-		RenderHelper.renderCube(entitySolidSideManualColor, 2.9, 0.99, -1.9, 3, 1.1, 3, 1,1,1,1);
+		RenderHelper.renderCube(matrix, entitySolidSideManualColor, -1.9, 0.99, 2.9, 3, 1.1, 3, 1,1,1,1);
+		RenderHelper.renderCube(matrix, entitySolidSideManualColor, 2.9, 0.99, -1.9, 3, 1.1, 3, 1,1,1,1);
 
 		if(tile.getPowerMadeLastTick() > 0 ) {
 			matrix.push();

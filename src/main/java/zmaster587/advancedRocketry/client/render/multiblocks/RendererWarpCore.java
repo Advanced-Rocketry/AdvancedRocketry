@@ -57,11 +57,11 @@ public class RendererWarpCore extends TileEntityRenderer<TileWarpCore> {
 		IVertexBuilder entitySolidBuilderManual = buffer.getBuffer(RenderHelper.getTranslucentManualRenderType());
 		IVertexBuilder entityTranslucentBuilder = buffer.getBuffer(RenderHelper.getTranslucentEntityModelRenderType(texture));
 		
-		model.renderOnly(entitySolidBuilder, "Base");
+		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Base");
 		matrix.push();
 		
 		
-		RenderHelper.renderCube(entitySolidBuilderManual, -0.1f, 1, -0.1f, 0.1f, 2, 0f, 0.1f, 0.4f, 0.4f, 0.8f);
+		RenderHelper.renderCube(matrix, entitySolidBuilderManual, -0.1f, 1, -0.1f, 0.1f, 2, 0f, 0.1f, 0.4f, 0.4f, 0.8f);
 		matrix.pop();
 		
 		
@@ -76,22 +76,22 @@ public class RendererWarpCore extends TileEntityRenderer<TileWarpCore> {
 				
 				matrix.push();
 				matrix.rotate(new Quaternion(0, (float) (speedRotate*System.currentTimeMillis() % 360), 0, true));
-				model.renderOnly(entityTranslucentBuilder, "Rotate1");
+				model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTranslucentBuilder, "Rotate1");
 				matrix.pop();
 
 				matrix.push();
 				matrix.rotate(new Quaternion(0, (float) (180 + speedRotate*System.currentTimeMillis() % 360), 0, true));
-				model.renderOnly(entityTranslucentBuilder, "Rotate1");
+				model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTranslucentBuilder, "Rotate1");
 				matrix.pop();
 
 				matrix.push();
 				matrix.rotate(new Quaternion(0, (float) -(speedRotate*System.currentTimeMillis() % 360), 0, true));
-				model.renderOnly(entityTranslucentBuilder,"Rotate2");
+				model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTranslucentBuilder,"Rotate2");
 				matrix.pop();
 
 				matrix.push();
 				matrix.rotate(new Quaternion(0, (float) (180-speedRotate*System.currentTimeMillis() % 360), 0, true));
-				model.renderOnly(entityTranslucentBuilder, "Rotate2");
+				model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTranslucentBuilder, "Rotate2");
 				matrix.pop();
 
 				speedRotate = 0.03d*speedMult;
@@ -103,7 +103,7 @@ public class RendererWarpCore extends TileEntityRenderer<TileWarpCore> {
 						matrix.rotate(new Quaternion(0, (float) (((j+1)*speedRotate*System.currentTimeMillis() % 360) + (i + j/5f)*offset), 0, true));
 						matrix.translate(0, 0.1f*j-.2f + (5-j)*0.02f*(float)Math.sin(0.001d*System.currentTimeMillis()), 0.2f);
 						//matrix.translate(0f, 0.1f*(0.5f - MathHelper.sin((float)(0.001*System.currentTimeMillis() % 100))), 0f);
-						model.renderOnly(entityTranslucentBuilder, "Ball");
+						model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTranslucentBuilder, "Ball");
 						matrix.pop();
 					}
 				}

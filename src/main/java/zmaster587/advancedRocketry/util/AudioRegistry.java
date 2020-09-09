@@ -7,21 +7,21 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 public class AudioRegistry {
-	public static final SoundEvent electricShockSmall = createSoundEvent("ElectricShockSmall");
-	public static final SoundEvent laserDrill = createSoundEvent("laserDrill");
-	public static final SoundEvent airHissLoop = createSoundEvent("airHissLoop");
-	public static final SoundEvent railgunFire = createSoundEvent("railgunBang");
-	public static final SoundEvent machineLarge = createSoundEvent("MachineLarge");
-	public static final SoundEvent rollingMachine = createSoundEvent("rollingMachine");
-	public static final SoundEvent basicLaser = createSoundEvent("basicLaserGun");
-	public static final SoundEvent combustionRocket = createSoundEvent("combustionRocket");
+	public static final SoundEvent electricShockSmall = createSoundEvent("electricshocksmall");
+	public static final SoundEvent laserDrill = createSoundEvent("laserdrill");
+	public static final SoundEvent airHissLoop = createSoundEvent("airhissloop");
+	public static final SoundEvent railgunFire = createSoundEvent("railgunbang");
+	public static final SoundEvent machineLarge = createSoundEvent("machinelarge");
+	public static final SoundEvent rollingMachine = createSoundEvent("rollingmachine");
+	public static final SoundEvent basicLaser = createSoundEvent("basiclasergun");
+	public static final SoundEvent combustionRocket = createSoundEvent("combustionrocket");
 	public static final SoundEvent crystallizer = createSoundEvent("crystallizer");
 	public static final SoundEvent lathe = createSoundEvent("lathe");
-	public static final SoundEvent cuttingMachine = createSoundEvent("cuttingMachine");
+	public static final SoundEvent cuttingMachine = createSoundEvent("cuttingmachine");
 	public static final SoundEvent electrolyser = createSoundEvent("electrolyser");
-	public static final SoundEvent precAss = createSoundEvent("precAss");
-	public static final SoundEvent electricArcFurnace = createSoundEvent("electricArcFurnace");
-	public static final SoundEvent gravityOhhh = createSoundEvent("gravityOhhh");
+	public static final SoundEvent precAss = createSoundEvent("precass");
+	public static final SoundEvent electricArcFurnace = createSoundEvent("electricarcfurnace");
+	public static final SoundEvent gravityOhhh = createSoundEvent("gravityohhh");
 	
 	private static SoundEvent createSoundEvent(String name) {
 		final ResourceLocation soundID = new ResourceLocation("advancedrocketry", name);

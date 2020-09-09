@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "visible=false": { "model": "libvulpes:block/fluidoutputhatch" },
+        "visible=true": { "model": "libvulpes:block/fluidoutputhatch" }
+    }
+}

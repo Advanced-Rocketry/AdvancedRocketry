@@ -77,7 +77,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	private final int ENERGYFOROP = 100;
 	//private final int ENERGY = 100;
 
-	protected static final ResourceLocation backdrop =  new ResourceLocation("advancedrocketry","textures/gui/rocketBuilder.png");
+	protected static final ResourceLocation backdrop =  new ResourceLocation("advancedrocketry","textures/gui/rocketbuilder.png");
 	private static final ProgressBarImage horizontalProgressBar = new ProgressBarImage(89, 9, 81, 17, 176, 0, 80, 15, 0, 2, Direction.EAST, backdrop);
 	protected static final ProgressBarImage verticalProgressBar = new ProgressBarImage(76, 93, 8, 52, 176, 15, 2, 38, 3, 2, Direction.UP, backdrop);
 
@@ -621,7 +621,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		super.getUpdatePacket();
 		CompoundNBT nbt = new CompoundNBT();
 
-		func_230337_a_(getBlockState(), nbt);
+		write(nbt);
 
 		return new SUpdateTileEntityPacket(pos, 0, nbt);
 	}
@@ -994,6 +994,6 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	@Override
 	public int getModularInvType() {
-		return guiId.MODULAR.ordinal();
+		return guiId.MODULARNOINV.ordinal();
 	}
 }

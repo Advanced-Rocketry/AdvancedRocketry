@@ -12,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
@@ -55,7 +56,7 @@ public class FxLaserHeat extends SpriteTexturedParticle {
 		
 	
 		double size = this.size*particleAlpha;
-		RenderHelper.renderCube(buffer, x - size, y - size, z - size, x + size, y + size, z + size,0.8f, 0.2f, 0.2f, particleAlpha);
+		RenderHelper.renderCube(new MatrixStack(), buffer, x - size, y - size, z - size, x + size, y + size, z + size,0.8f, 0.2f, 0.2f, particleAlpha);
 		
 		
 		Tessellator.getInstance().draw();

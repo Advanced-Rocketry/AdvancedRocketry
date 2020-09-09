@@ -29,7 +29,7 @@ public class GuiPlanetButton extends GuiImageButton {
 		if (this.visible)
 		{
 			//
-			this.hovered = par2 >= this.x && par3 >= this.y && par2 < this.x + this.width && par3 < this.y + this.height;
+			this.hovered = par2 >= this.field_230690_l_ && par3 >= this.field_230691_m_ && par2 < this.field_230690_l_ + this.width && par3 < this.field_230691_m_ + this.height;
 			int hoverState = this.func_230989_a_(this.hovered);
 	
 	        Tessellator tessellator = Tessellator.getInstance();
@@ -39,7 +39,7 @@ public class GuiPlanetButton extends GuiImageButton {
 	        //GL11.glTranslatef(xPosition, 100 + this.zLevel, yPosition);
 	        float newWidth = width/2f;
 	        
-	        RenderPlanetarySky.renderPlanetPubHelper(vertexbuffer, matrix, properties.getPlanetIcon(), (int)(x + newWidth), (int)(y + newWidth), (double)this.field_230689_k_, newWidth, 1f, properties.getSolarTheta(), properties.hasAtmosphere(), properties.skyColor, properties.ringColor, properties.isGasGiant(), properties.hasRings(),properties.hasDecorators());
+	        RenderPlanetarySky.renderPlanetPubHelper(vertexbuffer, matrix, properties.getPlanetIcon(), (int)(field_230690_l_ + newWidth), (int)(field_230691_m_ + newWidth), (double)this.field_230689_k_, newWidth, 1f, properties.getSolarTheta(), properties.hasAtmosphere(), properties.skyColor, properties.ringColor, properties.isGasGiant(), properties.hasRings(),properties.hasDecorators());
             GL11.glPopMatrix();
 	        
 			

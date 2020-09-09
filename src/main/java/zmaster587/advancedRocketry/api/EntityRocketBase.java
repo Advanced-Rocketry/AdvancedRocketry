@@ -32,6 +32,11 @@ public abstract class EntityRocketBase extends Entity {
 		super(type, world);
 	}
 
+	@Override
+	public void recalculateSize() {
+		// don't recalculate size, it causes NPEs because the forge event returns null for size on the client
+	}
+	
 	/**
 	 * AttempTs to add amt fuel points to the rocket
 	 * @param amt

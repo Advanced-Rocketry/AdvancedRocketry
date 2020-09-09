@@ -65,7 +65,7 @@ public class RenderTank extends TileEntityRenderer<TileFluidTank> {
 			IVertexBuilder tileBuffer = buffer.getBuffer(RenderHelper.getTranslucentBlock());
 			
 			tess.getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.renderCubeWithUV(tileBuffer, bb.minX + 0.01, bb.minY + 0.01, bb.minZ + 0.01, bb.maxX - 0.01, bb.maxY*amt - 0.01, bb.maxZ - 0.01, minU, maxU, minV, maxV,1f,1f,1f,1f);
+			RenderHelper.renderCubeWithUV(matrix, tileBuffer, bb.minX + 0.01, bb.minY + 0.01, bb.minZ + 0.01, bb.maxX - 0.01, bb.maxY*amt - 0.01, bb.maxZ - 0.01, minU, maxU, minV, maxV,1f,1f,1f,1f);
 			tess.draw();
 			matrix.pop();
 		}

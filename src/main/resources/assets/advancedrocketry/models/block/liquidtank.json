@@ -15,7 +15,7 @@
         }
     ],
     "textures": {
-        "side": "advancedrocketry:blocks/liquidTank",
+        "side": "advancedrocketry:blocks/liquidtank",
         "end": "advancedrocketry:blocks/qcrucible_top"
     }
 }

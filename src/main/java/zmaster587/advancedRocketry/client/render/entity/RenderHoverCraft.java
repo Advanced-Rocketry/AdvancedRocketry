@@ -64,15 +64,17 @@ public class RenderHoverCraft extends EntityRenderer<EntityHoverCraft> implement
 		
 		matrix.push();
 		matrix.translate(0, 1, 0);
-		matrix.rotate(new Quaternion(0, 180-entityYaw, 0, false));
+		matrix.rotate(new Quaternion(0, 180-entityYaw, 0, true));
 		
 		IVertexBuilder entitySolidBuilder = bufferIn.getBuffer(RenderHelper.getSolidEntityModelRenderType(getEntityTexture(entity)));
+        int j = packedLightIn % 65536;
+        int k = packedLightIn / 65536;
+        
+		hoverCraft.tessellateAll(matrix,j,k, entitySolidBuilder);
 		
-		hoverCraft.tessellateAll(entitySolidBuilder);
+		float r = 0.1f, g = 0.1f, b = 1.0f, a = 0.8f;
 		
-		float r = 0.1f, g = 0.1f, b = 1f, a = 0.8f;
-		
-		IVertexBuilder entityTransparentBuilder = bufferIn.getBuffer(RenderHelper.getTranslucentManualRenderType());
+		IVertexBuilder entityTransparentBuilder = bufferIn.getBuffer(RenderHelper.getSolidManualRenderType());
 		
 		final float start = -0.85f - (entity.world.getGameTime() % 10)*0.01f;
 		final int count = 5;
@@ -85,16 +87,15 @@ public class RenderHoverCraft extends EntityRenderer<EntityHoverCraft> implement
 		{
 			float newRadius = (offset*(count-i) -0.85f - start)*0.5f;
 			
-			RenderHelper.renderTopFace(entityTransparentBuilder, start + offset*i, -newRadius, -newRadius, newRadius, newRadius, r,g,b,a);
-			RenderHelper.renderBottomFace(entityTransparentBuilder, start + offset*i, -newRadius, -newRadius, newRadius, newRadius, r,g,b,a);
+			RenderHelper.renderTopFace(matrix, entityTransparentBuilder, start + offset*i, -newRadius, -newRadius, newRadius, newRadius, r,g,b,a);
+			RenderHelper.renderBottomFace(matrix, entityTransparentBuilder, start + offset*i, -newRadius, -newRadius, newRadius, newRadius, r,g,b,a);
 			
-			RenderHelper.renderTopFace(entityTransparentBuilder, start + offset*i, -newRadius + offsetX, -newRadius + offsetZ, newRadius + offsetX, newRadius + offsetZ, r,g,b,a);
-			RenderHelper.renderBottomFace(entityTransparentBuilder, start + offset*i, -newRadius + offsetX, -newRadius + offsetZ, newRadius + offsetX, newRadius + offsetZ, r,g,b,a);
+			RenderHelper.renderTopFace(matrix, entityTransparentBuilder, start + offset*i, -newRadius + offsetX, -newRadius + offsetZ, newRadius + offsetX, newRadius + offsetZ, r,g,b,a);
+			RenderHelper.renderBottomFace(matrix, entityTransparentBuilder, start + offset*i, -newRadius + offsetX, -newRadius + offsetZ, newRadius + offsetX, newRadius + offsetZ, r,g,b,a);
 			
-			RenderHelper.renderTopFace(entityTransparentBuilder, start + offset*i, -newRadius - offsetX, -newRadius + offsetZ, newRadius - offsetX, newRadius + offsetZ, r,g,b,a);
-			RenderHelper.renderBottomFace(entityTransparentBuilder, start + offset*i, -newRadius - offsetX, -newRadius + offsetZ, newRadius - offsetX, newRadius + offsetZ, r,g,b,a);
+			RenderHelper.renderTopFace(matrix, entityTransparentBuilder, start + offset*i, -newRadius - offsetX, -newRadius + offsetZ, newRadius - offsetX, newRadius + offsetZ, r,g,b,a);
+			RenderHelper.renderBottomFace(matrix, entityTransparentBuilder, start + offset*i, -newRadius - offsetX, -newRadius + offsetZ, newRadius - offsetX, newRadius + offsetZ, r,g,b,a);
 		}
-		Tessellator.getInstance().draw();
 
 		matrix.pop();
 	}

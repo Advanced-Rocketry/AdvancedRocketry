@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "advancedrocketry:block/hotturf" }
+        "": { "model": "advancedrocketry:block/hotturf" }
     }
 }

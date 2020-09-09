@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "advancedrocketry:block/structuretower" }
+        "": { "model": "advancedrocketry:block/structuretower" }
     }
 }

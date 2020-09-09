@@ -75,7 +75,7 @@ public class RenderJetPack extends BipedModel {
 			matrix.translate(0,.2f, 0);
 		}
 		Minecraft.getInstance().getTextureManager().bindTexture(texture);
-		model.renderAll();
+		model.renderAll(matrix);
 		matrix.pop();*/
 	}
 }

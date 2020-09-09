@@ -53,7 +53,7 @@ public class RenderPlanetAnalyser extends TileEntityRenderer<TileAstrobodyDataPr
 
 		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
 		
-		model.tessellateAll(entitySolidBuilder);
+		model.tessellateAll(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder);
 		
 		matrix.pop();
 	}

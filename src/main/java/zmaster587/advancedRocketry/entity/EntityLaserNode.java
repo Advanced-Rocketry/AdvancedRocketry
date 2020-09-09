@@ -19,6 +19,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryEntities;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.network.PacketSpawnEntity;
 
 public class EntityLaserNode extends Entity {
 
@@ -132,6 +133,6 @@ public class EntityLaserNode extends Entity {
 	
 	@Override
 	public IPacket<?> createSpawnPacket() {
-		return new SSpawnObjectPacket(this);
+		return new PacketSpawnEntity(this);
 	}
 }

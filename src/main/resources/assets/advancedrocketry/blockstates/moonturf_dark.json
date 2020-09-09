@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "advancedrocketry:block/moon_turf_dark" }
+        "": { "model": "advancedrocketry:block/moon_turf_dark" }
     }
 }

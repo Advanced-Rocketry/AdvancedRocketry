@@ -49,7 +49,7 @@ public class RenderBiomeScanner extends TileEntityRenderer<TileBiomeScanner> {
 		matrix.translate(0.5, 0, 0.5);
 		IVertexBuilder entityTransparentBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
 		
-		model.tessellateAll(entityTransparentBuilder);
+		model.tessellateAll(matrix, combinedLightIn, combinedOverlayIn, entityTransparentBuilder);
 		
 		matrix.pop();
 	}

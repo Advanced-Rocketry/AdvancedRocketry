@@ -52,7 +52,7 @@ public class RenderGravityMachine extends TileEntityRenderer<TileGravityControll
 		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
 		IVertexBuilder entityTransBuilder = buffer.getBuffer(RenderHelper.getTranslucentEntityModelRenderType(texture));
 		
-		model.renderOnly(entitySolidBuilder, "Base");
+		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Base");
 		GL11.glDisable(GL11.GL_LIGHTING);
 		int maxSize = 5;
 		
@@ -69,7 +69,7 @@ public class RenderGravityMachine extends TileEntityRenderer<TileGravityControll
 		matrix.scale(1.1f, 1f, 1.1f);
 		for(int i = 0; i < 4; i++) {
 			matrix.scale(.93f, 1f, .93f);
-			model.renderOnly(entityTransBuilder, "Blur");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTransBuilder, "Blur");
 		}
 		matrix.pop();
 		// END render blur
@@ -77,7 +77,7 @@ public class RenderGravityMachine extends TileEntityRenderer<TileGravityControll
 		matrix.rotate(new Quaternion(0, (float) tile.getArmRotation(), 0, true));
 		for(int i = 0; i < maxSize; i++) {
 			matrix.rotate(new Quaternion(0, (float) 360/maxSize, 0, true));
-			model.renderOnly(entitySolidBuilder, "Arm");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Arm");
 		}
 		matrix.pop();
 	}

@@ -1,9 +1,8 @@
 {
-    "parent": "block/half_slab",
+    "parent": "block/slab",
     "textures": {
-        "top": "advancedrocketry:blocks/gasChargerTop",
-        "front": "advancedrocketry:blocks/panelSide",
-        "side": "advancedrocketry:blocks/panelSide",
+        "top": "advancedrocketry:blocks/gaschargertop",
+        "side": "advancedrocketry:blocks/panelside",
         "bottom": "libvulpes:blocks/machinegeneric"
     }
 }

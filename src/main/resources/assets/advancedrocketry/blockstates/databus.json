@@ -1,20 +1,6 @@
 {
     "variants": {
-        "varient=0": { "model": "advancedrocketry:block/databus" },
-        "varient=1": { "model": "advancedrocketry:block/databus" },
-        "varient=2": { "model": "advancedrocketry:block/databus" },
-        "varient=3": { "model": "advancedrocketry:block/databus" },
-        "varient=4": { "model": "advancedrocketry:block/databus" },
-        "varient=5": { "model": "advancedrocketry:block/databus" },
-        "varient=6": { "model": "advancedrocketry:block/databus" },
-        "varient=7": { "model": "advancedrocketry:block/databus" },
-        "varient=8": { "model": "advancedrocketry:block/databus" },
-        "varient=9": { "model": "advancedrocketry:block/databus" },
-        "varient=10": { "model": "advancedrocketry:block/databus" },
-        "varient=11": { "model": "advancedrocketry:block/databus" },
-        "varient=12": { "model": "advancedrocketry:block/databus" },
-        "varient=13": { "model": "advancedrocketry:block/databus" },
-        "varient=14": { "model": "advancedrocketry:block/databus" },
-        "varient=15": { "model": "advancedrocketry:block/databus" }
+        "visible=false": { "model": "advancedrocketry:block/databus" },
+        "visible=true": { "model": "advancedrocketry:block/databus" }
     }
 }

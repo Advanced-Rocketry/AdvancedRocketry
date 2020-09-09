@@ -55,10 +55,7 @@ public class RendererRocket extends EntityRenderer<EntityRocket> implements IRen
 
 		StorageChunk storage  = entity.storage;
 
-
-		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-
-		if(storage == null || !storage.finalized)
+		if(storage == null)
 			return;
 		
 		//Find the halfway point along the XZ plane
@@ -99,7 +96,7 @@ public class RendererRocket extends EntityRenderer<EntityRocket> implements IRen
 					//RenderHelper.renderCrossXZ(Tessellator.instance, .2f, 0, storage.getSizeY()/2f, 0, tile.xCoord - entity.getPosX() + 0.5f, tile.yCoord - entity.posY  + 0.5f, tile.zCoord - entity.getPosZ() + 0.5f);
 					//RenderHelper.renderBlockWithEndPointers(Tessellator.instance, .2f, 0, storage.getSizeY()/2f, 0, tile.xCoord - entity.getPosX(), tile.yCoord - entity.posY, tile.zCoord - entity.getPosZ());
 					Tessellator.getInstance().draw();
-					//RenderHelper.renderCubeWithUV(tess, 0, 0, 0, 2, 55, 2, 0, 1, 0, 1);
+					//RenderHelper.renderCubeWithUV(matrix, tess, 0, 0, 0, 2, 55, 2, 0, 1, 0, 1);
 				}
 			}
 		}
@@ -114,45 +111,44 @@ public class RendererRocket extends EntityRenderer<EntityRocket> implements IRen
 		//Initial setup
 
 		matrix.push();
-		GL11.glNewList(storage.world.displayListIndex, GL11.GL_COMPILE);
-		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+		matrix.translate((float)0, (float) halfy, (float)0);
+		matrix.rotate(new Quaternion(((EntityRocket)entity).getRCSRotateProgress()*0.9f,0,0, true));
+		matrix.rotate(new Quaternion(0,0, ((EntityRocket)entity).rotationYaw, true));
+		matrix.translate((float)- halfx, (float)0 - halfy, (float)- halfz);
+		//GL11.glNewList(storage.world.displayListIndex, GL11.GL_COMPILE);
+		//net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
 
 		//Render Each block
 		for(int xx = 0; xx < storage.getSizeX(); xx++) {
 			for(int zz = 0; zz < storage.getSizeZ(); zz++) {
 				for(int yy = 0; yy < storage.getSizeY(); yy++) {
 					BlockState block  = storage.getBlockState(new BlockPos(xx, yy, zz));
-
-					buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+					matrix.push();
+					matrix.translate(xx, yy, zz);
 					try {
 						Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(block, matrix, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY);
 					} 
 					catch (NullPointerException e) {
 						//System.out.println(block. + " cannot be rendered on rocket at " + entity.getPosition());
 					}
+					matrix.pop();
 				}
 			}
 		}
 
-		matrix.pop();
-
-		matrix.push();
-		matrix.translate((float)0, (float) halfy, (float)0);
-		matrix.rotate(new Quaternion(((EntityRocket)entity).getRCSRotateProgress()*0.9f,0,0, true));
-		matrix.rotate(new Quaternion(0,0, ((EntityRocket)entity).rotationYaw, true));
-		matrix.translate((float)- halfx, (float)0 - halfy, (float)- halfz);
-
 		//Render tile entities if applicable
 		for(TileEntity tile : storage.getTileEntityList()) {
-			TileEntityRenderer renderer = (TileEntityRenderer)TileEntityRendererDispatcher.instance.getRenderer(tile);
-			if(renderer != null ) {
+			
+				matrix.push();
+				matrix.translate(tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ());
 
 				if(tileEntityBlockChiseled == null || !tileEntityBlockChiseled.isInstance(tile))
 				{
-					renderer.render(tile, partialTicks, matrix, bufferIn, packedLightIn, packedLightIn);
+					TileEntityRendererDispatcher.instance.renderTileEntity(tile, partialTicks, matrix, bufferIn);
+					//renderer.render(tile, partialTicks, matrix, bufferIn, packedLightIn / 0xffff, packedLightIn & 0xffff);
 				}
 				//renderer.renderTileEntity(tile, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), f1, 0);
-			}
+				matrix.pop();
 		}
 
 		//Chisel compat

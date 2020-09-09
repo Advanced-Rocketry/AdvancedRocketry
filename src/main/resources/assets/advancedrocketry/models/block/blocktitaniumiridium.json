@@ -1,6 +1,6 @@
 {
     "parent": "minecraft:block/cube_all",
     "textures": {
-        "all": "advancedrocktry:blocks/blocktitaniumiridium"
+        "all": "advancedrocketry:blocks/blocktitaniumiridium"
     }
 }

@@ -61,12 +61,14 @@ public class RenderElevatorCapsule extends EntityRenderer<EntityElevatorCapsule>
 		matrix.push();
 		matrix.translate(0, 1, 0);
 		matrix.rotate(new Quaternion(0, entityYaw, 0, true));
-		
+        int j = packedLightIn % 65536;
+        int k = packedLightIn / 65536;
+        
 		IVertexBuilder builder = bufferIn.getBuffer(zmaster587.libVulpes.render.RenderHelper.getSolidEntityModelRenderType(getEntityTexture(entity)));
-		sphere.renderOnly(builder, "Capsule");
+		sphere.renderOnly(matrix,j,k, builder, "Capsule");
 
 		if(entity.isInMotion())
-			sphere.renderOnly(builder, "Door");
+			sphere.renderOnly(matrix,j,k, builder, "Door");
 
 		matrix.pop();
 	}

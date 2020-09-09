@@ -54,14 +54,14 @@ public class RendererRailgun extends TileEntityRenderer<TileRailgun> {
 		
 		
 		if(tile.getWorld().getGameTime() - tile.recoil - 20 <= 0) {
-			model.renderOnly(entitySolidBuilder, "Base");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Base");
 			matrix.push();
 			matrix.translate(0, (-20+(tile.getWorld().getGameTime() - tile.recoil))/50f, 0);
-			model.renderOnly(entitySolidBuilder, "Barrel");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Barrel");
 			matrix.pop();
 		}
 		else
-			model.tessellateAll(entitySolidBuilder);
+			model.tessellateAll(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder);
 		
 		matrix.pop();
 	}

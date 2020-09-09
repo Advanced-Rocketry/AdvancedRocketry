@@ -270,7 +270,7 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 		RenderSystem.color4f(0.5f, 0.5f, 0.0f,0.3f + ((float)Math.sin(Math.PI*(fancyScanOffset/(float)FANCYSCANMAXSIZE))/3f));
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-		RenderHelper.renderNorthFace(buffer, this.func_230927_p_(), 173, 82, 194, 141,1f,1f,1f,1f);
+		RenderHelper.renderNorthFace(matrix, buffer, this.func_230927_p_(), 173, 82, 194, 141,1f,1f,1f,1f);
 		Tessellator.getInstance().draw();
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -294,7 +294,7 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 			RenderSystem.color4f(0f, 0.8f, 0f, 1f);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.renderNorthFaceWithUV(buffer, func_230927_p_(), 13 + (18*slot), 155, 13 + 16 + (18*slot), 155 + 16, 0, 0, 0, 0);
+			RenderHelper.renderNorthFaceWithUV(matrix, buffer, func_230927_p_(), 13 + (18*slot), 155, 13 + 16 + (18*slot), 155 + 16, 0, 0, 0, 0);
 			Tessellator.getInstance().draw();
 			RenderSystem.enableTexture();
 		}
@@ -337,7 +337,7 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 		RenderSystem.bindTexture( texture.getTextureId() );
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		RenderHelper.renderNorthFaceWithUV(buffer, this.func_230927_p_(), 47 + x, 20 + y, 47 + x + SCREEN_SIZE, 20 + y + SCREEN_SIZE, 0, 1, 0, 1);
+		RenderHelper.renderNorthFaceWithUV(matrix, buffer, this.func_230927_p_(), 47 + x, 20 + y, 47 + x + SCREEN_SIZE, 20 + y + SCREEN_SIZE, 0, 1, 0, 1);
 		Tessellator.getInstance().draw();
 
 
@@ -355,7 +355,7 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 			RenderSystem.disableTexture();
 			RenderSystem.color4f(0.4f, 1f, 0.4f,1f);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.renderNorthFaceWithUV(buffer, this.func_230927_p_(), offsetX + 47 + x + SCREEN_SIZE/2 - radius,  offsetY + 20 + y + SCREEN_SIZE/2 - radius, offsetX + 47 + x + SCREEN_SIZE/2 + radius, offsetY + 20 + y + SCREEN_SIZE/2 + radius, 0, 1, 0, 1);
+			RenderHelper.renderNorthFaceWithUV(matrix, buffer, this.func_230927_p_(), offsetX + 47 + x + SCREEN_SIZE/2 - radius,  offsetY + 20 + y + SCREEN_SIZE/2 - radius, offsetX + 47 + x + SCREEN_SIZE/2 + radius, offsetY + 20 + y + SCREEN_SIZE/2 + radius, 0, 1, 0, 1);
 			Tessellator.getInstance().draw();
 			RenderSystem.color4f(1, 1, 1,1f);
 			RenderSystem.enableTexture();

@@ -147,7 +147,7 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 
 		RenderSystem.color4f(1f, 1, 1f, 1f);
 		matrix.push();
-		sphere.renderAll();
+		sphere.renderAll(matrix);
 		matrix.pop();
 		RenderSystem.blendFunc(GL11.GL_ONE, GL11.GL_SRC_ALPHA);
 
@@ -159,7 +159,7 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 		RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.shadow3);
 		RenderSystem.color4f(.1f, .1f, .1f,0.75f);
-		sphere.renderAll();
+		sphere.renderAll(matrix);
 
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
@@ -173,16 +173,16 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 			RenderSystem.color4f(ringColor[0], ringColor[1], ringColor[2],0.5f);
 			Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.planetRings);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-			//RenderHelper.renderTopFaceWithUV(buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
-			RenderHelper.renderBottomFaceWithUV(buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1, 1,1,1,1);
+			//RenderHelper.renderTopFaceWithUV(matrix, buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
+			RenderHelper.renderBottomFaceWithUV(matrix, buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1, 1,1,1,1);
 			Tessellator.getInstance().draw();
 
 			//Draw ring shadow
 			Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.planetRingShadow);
 			RenderSystem.color4f(1,1,1,0.5f);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-			RenderHelper.renderTopFaceWithUV(buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1, 1,1,1,1);
-			RenderHelper.renderBottomFaceWithUV(buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1, 1,1,1,1);
+			RenderHelper.renderTopFaceWithUV(matrix, buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1, 1,1,1,1);
+			RenderHelper.renderBottomFaceWithUV(matrix, buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1, 1,1,1,1);
 			Tessellator.getInstance().draw();
 		}
 
@@ -201,7 +201,7 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 
 			for(int i = 0; i < 10; i++) {
 				matrix.scale(1.01f, 1.01f, 1.01f);
-				sphere.renderAll();
+				sphere.renderAll(matrix);
 			}
 
 			RenderSystem.enableTexture();
@@ -263,9 +263,9 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 			GL11.glScaled(scale,scale,scale);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-			RenderHelper.renderNorthFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1, 1,1,1,1);
-			RenderHelper.renderEastFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1, 1,1,1,1);
-			RenderHelper.renderTopFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1, 1,1,1,1);
+			RenderHelper.renderNorthFaceWithUV(matrix, buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1, 1,1,1,1);
+			RenderHelper.renderEastFaceWithUV(matrix, buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1, 1,1,1,1);
+			RenderHelper.renderTopFaceWithUV(matrix, buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1, 1,1,1,1);
 			Tessellator.getInstance().draw();
 			matrix.pop();
 
@@ -358,12 +358,12 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 
 			RenderSystem.alphaFunc(GL11.GL_GREATER, 0.0f);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-			RenderHelper.renderNorthFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1,1,1,1,1);
-			RenderHelper.renderEastFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1,1,1,1,1);
-			RenderHelper.renderTopFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1,1,1,1,1);
-			RenderHelper.renderNorthFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1,1,1,1,1);
-			RenderHelper.renderEastFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1,1,1,1,1);
-			RenderHelper.renderTopFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1,1,1,1,1);
+			RenderHelper.renderNorthFaceWithUV(matrix, buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1,1,1,1,1);
+			RenderHelper.renderEastFaceWithUV(matrix, buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1,1,1,1,1);
+			RenderHelper.renderTopFaceWithUV(matrix, buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1,1,1,1,1);
+			RenderHelper.renderNorthFaceWithUV(matrix, buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1,1,1,1,1);
+			RenderHelper.renderEastFaceWithUV(matrix, buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1,1,1,1,1);
+			RenderHelper.renderTopFaceWithUV(matrix, buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1,1,1,1,1);
 			Tessellator.getInstance().draw();
 
 			if(true) {
@@ -376,7 +376,7 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 				matrix.scale(7.1f, 7.1f, 7.1f);
 				for(int i = 0; i < 10; i++) {
 					matrix.scale(1.05f, 1.05f, 1.05f);
-					sphere.renderAll();
+					sphere.renderAll(matrix);
 				}
 
 				RenderSystem.enableTexture();

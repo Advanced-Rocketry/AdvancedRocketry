@@ -118,7 +118,7 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	
 	@OnlyIn(value=Dist.CLIENT)
 	@Override
-	public void renderScreen(MatrixStack mat, ItemStack componentStack, List<ItemStack> modules,
+	public void renderScreen(MatrixStack matrix, ItemStack componentStack, List<ItemStack> modules,
 			RenderGameOverlayEvent event, Screen gui) {
 		
 		FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
@@ -141,16 +141,16 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		RenderHelper.renderNorthFaceWithUV(buffer, -1, -16,  -16, 16,  16, 0, 1, 0, 1);
+		RenderHelper.renderNorthFaceWithUV(matrix, buffer, -1, -16,  -16, 16,  16, 0, 1, 0, 1);
 		Tessellator.getInstance().draw();
 		GL11.glPopMatrix();
 		
 		
 		Minecraft.getInstance().getTextureManager().bindTexture(TextureResources.frameHUDBG);
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		RenderHelper.renderNorthFaceWithUV(buffer, -1, screenX - 8,  screenY - 12, screenX + 8,  screenY + 26, 0, 0.25f, 0, 1);
-		RenderHelper.renderNorthFaceWithUV(buffer, -1, screenX + 8,  screenY - 12, screenX + 212,  screenY + 26, 0.5f, 0.5f, 0, 1);
-		RenderHelper.renderNorthFaceWithUV(buffer, -1, screenX + 212,  screenY - 12, screenX + 228,  screenY + 26, 0.75f, 1f, 0, 1);
+		RenderHelper.renderNorthFaceWithUV(matrix, buffer, -1, screenX - 8,  screenY - 12, screenX + 8,  screenY + 26, 0, 0.25f, 0, 1);
+		RenderHelper.renderNorthFaceWithUV(matrix, buffer, -1, screenX + 8,  screenY - 12, screenX + 212,  screenY + 26, 0.5f, 0.5f, 0, 1);
+		RenderHelper.renderNorthFaceWithUV(matrix, buffer, -1, screenX + 212,  screenY - 12, screenX + 228,  screenY + 26, 0.75f, 1f, 0, 1);
 		Tessellator.getInstance().draw();
 	}
 

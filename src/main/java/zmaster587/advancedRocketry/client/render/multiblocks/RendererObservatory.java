@@ -57,26 +57,26 @@ public class RendererObservatory  extends TileEntityRenderer<TileObservatory> {
 		float offset = tile.getOpenProgress();
 
 		if(offset != 0f) {
-			model.renderOnly(entityTransparentBuilder, "Base");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTransparentBuilder, "Base");
 
-			model.tessellatePart(entityTransparentBuilder, "Scope");
-			model.tessellatePart(entityTransparentBuilder, "Axis");
+			model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entityTransparentBuilder, "Scope");
+			model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entityTransparentBuilder, "Axis");
 
 			matrix.push();
 			matrix.translate(0, 0, -offset);
-			model.renderOnly(entityTransparentBuilder, "CasingXMinus");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTransparentBuilder, "CasingXMinus");
 			matrix.pop();
 
 			matrix.push();
 			matrix.translate(0,0,offset);
-			model.renderOnly(entityTransparentBuilder, "CasingXPlus");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTransparentBuilder, "CasingXPlus");
 			matrix.pop();
 
 		}
 		else {
-			model.renderOnly(entityTransparentBuilder, "Base");
-			model.renderOnly(entityTransparentBuilder, "CasingXMinus");
-			model.renderOnly(entityTransparentBuilder, "CasingXPlus");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTransparentBuilder, "Base");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTransparentBuilder, "CasingXMinus");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTransparentBuilder, "CasingXPlus");
 		}
 		matrix.pop();
 	}

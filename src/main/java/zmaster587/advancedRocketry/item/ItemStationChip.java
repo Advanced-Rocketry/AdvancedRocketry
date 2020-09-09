@@ -486,7 +486,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 					list.add(new StringTextComponent("Z: N/A"));
 				}
 			}
-			list.add(TextFormatting.DARK_GRAY + LibVulpes.proxy.getLocalizedString("item.stationchip.openmenu"));
+			list.add(new StringTextComponent(TextFormatting.DARK_GRAY + LibVulpes.proxy.getLocalizedString("item.stationchip.openmenu")));
 		}
 	}
 

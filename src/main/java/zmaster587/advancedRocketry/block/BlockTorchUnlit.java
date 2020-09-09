@@ -48,6 +48,8 @@ public class BlockTorchUnlit extends TorchBlock {
 		return ret;
 	}
 
+	
+	
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,
 			Hand handIn, BlockRayTraceResult hit) {

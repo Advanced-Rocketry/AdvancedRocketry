@@ -143,7 +143,7 @@ public class ModuleOreMapper extends ModuleBase {
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
 		buffer.color(0.5f, 0.5f, 0.0f,0.3f + ((float)Math.sin(Math.PI*(fancyScanOffset/(float)FANCYSCANMAXSIZE))/3f));
 		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
-		RenderHelper.renderNorthFace(buffer, (double)zLevel, 173, 82, 194, 141,1,1,1,1);
+		RenderHelper.renderNorthFace(matrix, buffer, (double)zLevel, 173, 82, 194, 141,1,1,1,1);
 		buffer.finishDrawing();
 		
 		GlStateManager.enableTexture();
@@ -167,7 +167,7 @@ public class ModuleOreMapper extends ModuleBase {
 			GL11.glColor3f(0f, 0.8f, 0f);
 			
 			buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
-			RenderHelper.renderNorthFaceWithUV(buffer, zLevel, 13 + (18*slot), 155, 13 + 16 + (18*slot), 155 + 16, 0, 1, 0, 1);
+			RenderHelper.renderNorthFaceWithUV(matrix, buffer, zLevel, 13 + (18*slot), 155, 13 + 16 + (18*slot), 155 + 16, 0, 1, 0, 1);
 			buffer.finishDrawing();
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 		}
@@ -206,7 +206,7 @@ public class ModuleOreMapper extends ModuleBase {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureId());
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
-		RenderHelper.renderNorthFaceWithUV(buffer, zLevel, 47 + x,  20 + y, 47 + x + SCREEN_SIZE,  20 + y + SCREEN_SIZE, 0, 1, 0, 1);
+		RenderHelper.renderNorthFaceWithUV(matrix, buffer, zLevel, 47 + x,  20 + y, 47 + x + SCREEN_SIZE,  20 + y + SCREEN_SIZE, 0, 1, 0, 1);
 		buffer.finishDrawing();
 
 

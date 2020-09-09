@@ -45,7 +45,6 @@ public class RendererLathe extends TileEntityRenderer<TileLathe> {
 			return;
 
 		matrix.push();
-
 		//Rotate and move the model into position
 		matrix.translate(.5f, 0, 0.5f);
 		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
@@ -58,7 +57,7 @@ public class RendererLathe extends TileEntityRenderer<TileLathe> {
 
 			float progress = tile.getProgress(0)/(float)tile.getTotalProgress(0);
 
-			model.tessellatePart(entitySolidBuilder, "body");
+			model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "body");
 
 			matrix.push();
 
@@ -67,13 +66,13 @@ public class RendererLathe extends TileEntityRenderer<TileLathe> {
 			else
 				matrix.translate(0f, 0f, (1 - progress)/.05f);
 
-			model.renderOnly(entitySolidBuilder, "Tray");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Tray");
 			matrix.pop();
 
 			matrix.push();
 			matrix.translate(.5f, 1.5625f, 0f);
 			matrix.rotate(new Quaternion(0,0, progress*1500, true));
-			model.renderOnly(entitySolidBuilder, "Cylinder");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Cylinder");
 
 			int color;
 			//Check for rare bug when outputs is null, usually occurs if player opens machine within 1st tick
@@ -84,15 +83,15 @@ public class RendererLathe extends TileEntityRenderer<TileLathe> {
 			
 			//GL11.glColor3d((0xff & color >> 16)/256f, (0xff & color >> 8)/256f , (color & 0xff)/256f);
 
-			model.renderOnly(entitySolidBuilder, "rod");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "rod");
 			matrix.pop();
 			
 			//GL11.glColor4f(1f, 1f, 1f, 1f);
 		}
 		else {
-			model.tessellatePart(entitySolidBuilder, "body");
+			model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "body");
 
-			model.tessellatePart(entitySolidBuilder, "Tray");
+			model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "Tray");
 		}
 		matrix.pop();
 	}

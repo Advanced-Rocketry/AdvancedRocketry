@@ -58,7 +58,7 @@ public class RenderLaser extends TileEntityRenderer<TileSpaceLaser> {
 		matrix.translate(2f, 0, 0f);
 		
 		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
-		model.tessellateAll(entitySolidBuilder);
+		model.tessellateAll(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder);
 		IVertexBuilder lazerType = buffer.getBuffer(RenderHelper.getLaserBeamType());
 		
 		

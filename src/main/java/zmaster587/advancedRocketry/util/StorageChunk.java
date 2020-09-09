@@ -26,6 +26,7 @@ import net.minecraft.particles.IParticleData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ObjectIntIdentityMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedConstants;
 import net.minecraft.util.SoundCategory;
@@ -37,9 +38,11 @@ import net.minecraft.util.math.SectionPos;
 import net.minecraft.util.palette.UpgradeData;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.SimpleRegistry;
 import net.minecraft.village.PointOfInterestManager;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.EmptyTickList;
 import net.minecraft.world.ITickList;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.LightType;
@@ -128,7 +131,9 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		liquidTiles = new ArrayList<TileEntity>();
 
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
-		this.chunk = new Chunk((World)world, new ChunkPos(0, 0), new BiomeContainer(null, new ChunkPos(0, 0), new SingleBiomeProvider(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getRegistryName()))));
+		this.chunk = new Chunk((World)world, new ChunkPos(0, 0), new BiomeContainer(null, new ChunkPos(0, 0), new SingleBiomeProvider(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.func_240901_a_()))));
+		// Hacky, quick workaround, I need a break
+		world.setChunk(chunk);
 	}
 
 	protected StorageChunk(int xSize, int ySize, int zSize) {
@@ -142,7 +147,11 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		liquidTiles = new ArrayList<TileEntity>();
 
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
-		this.chunk = new Chunk((World)world, new ChunkPos(0, 0), new BiomeContainer(null, new ChunkPos(0, 0), new SingleBiomeProvider(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getRegistryName()))));
+		ObjectIntIdentityMap<Biome> registry = new ObjectIntIdentityMap<>(1);
+		registry.add(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getRegistryName()));
+		this.chunk = new Chunk((World)world, new ChunkPos(0, 0), new BiomeContainer(registry, new ChunkPos(0, 0), new SingleBiomeProvider(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.func_240901_a_()))));
+		// Hacky, quick workaround, I need a break
+		world.setChunk(chunk);
 	}
 
 	public void setEntity(EntityRocketBase entity) {
@@ -208,8 +217,11 @@ public class StorageChunk implements IWorld, IStorageChunk {
 
 	//TODO: optimize the F*** out of this
 	public void writeToNBT(CompoundNBT nbt) {
+		nbt.putInt("xSize", sizeX);
+		nbt.putInt("ySize", sizeY);
+		nbt.putInt("zSize", sizeZ);
+		
 		ChunkPos chunkpos = chunk.getPos();
-		CompoundNBT compoundnbt = new CompoundNBT();
 		CompoundNBT compoundnbt1 = new CompoundNBT();
 
 		ChunkSection[] achunksection = chunk.getSections();
@@ -299,7 +311,7 @@ public class StorageChunk implements IWorld, IStorageChunk {
 
 		compoundnbt1.put("Heightmaps", compoundnbt6);
 
-		nbt.merge(compoundnbt);
+		nbt.merge(compoundnbt1);
 	}
 
 	public void rotateBy(Direction dir) {
@@ -440,8 +452,14 @@ public class StorageChunk implements IWorld, IStorageChunk {
 	}
 
 	public void readFromNBT(CompoundNBT nbt) {
-		CompoundNBT compoundnbt = nbt.getCompound("Level");
+		sizeX = nbt.getInt("xSize");
+		sizeY = nbt.getInt("ySize");
+		sizeZ = nbt.getInt("zSize");
+		CompoundNBT compoundnbt = nbt;
 		ChunkPos pos = new ChunkPos(0,0);
+		inventoryTiles.clear();
+		liquidTiles.clear();
+		tileEntities.clear();
 
 
 		boolean flag = compoundnbt.getBoolean("isLightOn");
@@ -475,7 +493,7 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		}
 
 		IChunk ichunk;
-		ichunk = new Chunk(this.world, pos, new BiomeContainer(AdvancedRocketryBiomes.getBiomeRegistry(), pos, new SingleBiomeProvider(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getRegistryName()))));
+		ichunk = new Chunk(this.world, pos, new BiomeContainer(AdvancedRocketryBiomes.getBiomeRegistry(), pos, new SingleBiomeProvider(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.func_240901_a_()))), UpgradeData.EMPTY, EmptyTickList.get(), EmptyTickList.get(), 0L, achunksection, null);
 		if (compoundnbt.contains("ForgeCaps")) ((Chunk)ichunk).readCapsFromNBT(compoundnbt.getCompound("ForgeCaps"));
 
 
@@ -579,6 +597,9 @@ public class StorageChunk implements IWorld, IStorageChunk {
 					BlockState state = world.getBlockState(pos);
 
 					TileEntity entity = world.getTileEntity(pos);
+					
+					ret.setBlockState(new BlockPos(x - actualMinX, y - actualMinY, z - actualMinZ), state);
+					
 					if(entity != null) {
 						CompoundNBT nbt = new CompoundNBT();
 						entity.write(nbt);
@@ -595,7 +616,7 @@ public class StorageChunk implements IWorld, IStorageChunk {
 						newTile.deserializeNBT(nbt);
 
 						if(newTile != null) {
-							newTile.setWorldAndPos(ret.world, pos);
+							newTile.setWorldAndPos(ret.world, pos.add(- actualMinX, - actualMinY, - actualMinZ));
 
 							if(isInventoryBlock(newTile)) {
 								ret.inventoryTiles.add(newTile);

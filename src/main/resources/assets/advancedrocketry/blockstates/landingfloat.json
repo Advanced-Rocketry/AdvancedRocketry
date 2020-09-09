@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "advancedrocketry:block/landingfloat" }
+        "": { "model": "advancedrocketry:block/landingfloat" }
     }
 }

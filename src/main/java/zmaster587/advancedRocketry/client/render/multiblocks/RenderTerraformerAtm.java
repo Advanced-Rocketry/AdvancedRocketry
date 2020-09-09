@@ -57,31 +57,31 @@ public class RenderTerraformerAtm extends TileEntityRenderer<TileAtmosphereTerra
 		
 		IVertexBuilder fanBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(TextureResources.fan));
 		
-		model.renderOnly(fanBuilder, "Fan");
+		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, fanBuilder, "Fan");
 		
 		IVertexBuilder plate = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(TextureResources.metalPlate));
 		
-		model.renderOnly(plate, "Body");
+		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, plate, "Body");
 		
 		
 		float col = .4f;
 		//GL11.glColor3f(col, col, col);
-		model.renderOnly(plate, "DarkBody");
+		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, plate, "DarkBody");
 		col = 1f;
 		//GL11.glColor3f(col, col, col);
 		
 		IVertexBuilder diamondPlate = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(TextureResources.diamondMetal));
 
-		model.renderOnly(diamondPlate, "Floor");
+		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, diamondPlate, "Floor");
 		
 		
 		//Baked a light map, make tubes smooth
 		IVertexBuilder tubes = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(tubeTexture));
-		model.renderOnly(tubes, "Tubes");
+		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, tubes, "Tubes");
 		
 		/*GlStateManager.color4f(0, 0.9f, col);
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 196, 196);
-		model.renderOnly("BlueRing");
+		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, "BlueRing");
 		GlStateManager.color4f(col, col, col);
 		GlStateManager.enableLighting();
 		GlStateManager.enableTexture();*/

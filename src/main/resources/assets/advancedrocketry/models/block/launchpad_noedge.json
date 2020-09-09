@@ -1,8 +1,8 @@
 {
     "parent": "block/cube_bottom_top",
     "textures": {
-        "top": "advancedrocketry:blocks/rocketPad_noEdge",
-        "side": "advancedrocketry:blocks/rocketPad_xCross",
-        "bottom": "advancedrocketry:blocks/rocketPad_noEdge"
+        "top": "advancedrocketry:blocks/rocketpad_noedge",
+        "side": "advancedrocketry:blocks/rocketpad_xcross",
+        "bottom": "advancedrocketry:blocks/rocketpad_noedge"
     }
 }

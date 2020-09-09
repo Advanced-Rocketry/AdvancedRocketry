@@ -63,7 +63,7 @@ public class RendererCrystallizer extends TileEntityRenderer {
 
 			float progress = multiBlockTile.getProgress(0)/(float)multiBlockTile.getTotalProgress(0);
 			
-			model.tessellatePart(entityTransparentBuilder, "Hull");
+			model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entityTransparentBuilder, "Hull");
 
 			List<ItemStack> outputList = multiBlockTile.getOutputs();
 			/*if(outputList != null && !outputList.isEmpty()) {
@@ -128,7 +128,7 @@ public class RendererCrystallizer extends TileEntityRenderer {
 
 		}
 		else {
-			model.tessellatePart(entityTransparentBuilder, "Hull");
+			model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entityTransparentBuilder, "Hull");
 		}
 		matrix.pop();
 	}

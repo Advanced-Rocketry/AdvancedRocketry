@@ -46,8 +46,6 @@ public class RendererPhantomBlock extends TileEntityRenderer<TileSchematic> {
 		}*/
 
 		matrix.push();
-
-		matrix.translate(tile.getPos().getX(),tile.getPos().getY(),tile.getPos().getZ());
 		//Render Each block
 
 
@@ -68,14 +66,17 @@ public class RendererPhantomBlock extends TileEntityRenderer<TileSchematic> {
 				{
 					BlockRayTraceResult result = (BlockRayTraceResult)movingObjPos;
 
+					matrix.push();
+					matrix.translate(0.5, 0.5, 0.5);
 					if(Minecraft.getInstance().objectMouseOver != null && result.getPos().getX() == tile.getPos().getX() && result.getPos().getY() == tile.getPos().getY() && result.getPos().getZ() == tile.getPos().getZ()) {
 
 						ItemStack stack = tile.getWorld().getBlockState(tile.getPos()).getBlock().getPickBlock(tile.getWorld().getBlockState(tile.getPos()), movingObjPos, Minecraft.getInstance().world, tile.getPos(), Minecraft.getInstance().player);
 						if(stack == null)
-							RenderHelper.renderTag(matrix, buffer, Minecraft.getInstance().player.getDistanceSq(result.getHitVec().x, result.getHitVec().y, result.getHitVec().z), "THIS IS AN ERROR, CONTACT THE DEV!!!", 0, 10);
+							RenderHelper.renderTag(matrix, buffer, Minecraft.getInstance().player.getDistanceSq(result.getHitVec().x, result.getHitVec().y, result.getHitVec().z), "THIS IS AN ERROR, CONTACT THE DEV!!!", 0,1);
 						else
-							RenderHelper.renderTag(matrix, buffer, Minecraft.getInstance().player.getDistanceSq(result.getHitVec().x, result.getHitVec().y, result.getHitVec().z), stack.getDisplayName().toString(), 0, 10);
+							RenderHelper.renderTag(matrix, buffer, Minecraft.getInstance().player.getDistanceSq(result.getHitVec().x, result.getHitVec().y, result.getHitVec().z), stack.getDisplayName().getString(), 0xE00000, 1);
 					}
+					matrix.pop();
 				}
 			} catch (NullPointerException e) {
 				//silence you fool
