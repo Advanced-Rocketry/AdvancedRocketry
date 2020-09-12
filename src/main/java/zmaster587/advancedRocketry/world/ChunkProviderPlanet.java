@@ -54,7 +54,7 @@ import it.unimi.dsi.fastutil.objects.ObjectList;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 
 public class ChunkProviderPlanet extends ChunkGenerator {
-	public static final Codec<ChunkProviderPlanet> field_236079_d_ = RecordCodecBuilder.create((p_236091_0_) -> {
+	public static final Codec<ChunkProviderPlanet> planetCodec = RecordCodecBuilder.create((p_236091_0_) -> {
 		return p_236091_0_.group(BiomeProvider.field_235202_a_.fieldOf("biome_source").forGetter((p_236096_0_) -> {
 			return p_236096_0_.biomeProvider;
 		}), Codec.LONG.fieldOf("seed").stable().forGetter((p_236093_0_) -> {
@@ -124,6 +124,7 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 		this.field_236085_x_ = noisesettings.func_236169_a_();
 		this.verticalNoiseGranularity = noisesettings.func_236175_f_() * 4;
 		this.horizontalNoiseGranularity = noisesettings.func_236174_e_() * 4;
+		//TODO: ASM this
 		this.defaultBlock = dimensionProps.getStoneBlock() != null ? dimensionProps.getStoneBlock() : dimensionsettings.func_236115_c_();
 		this.defaultFluid = dimensionProps.getOceanBlock() != null ? dimensionProps.getOceanBlock() : dimensionsettings.func_236116_d_();
 		this.noiseSizeX = 16 / this.horizontalNoiseGranularity;
@@ -147,7 +148,7 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 	}
 
 	protected Codec<? extends ChunkGenerator> func_230347_a_() {
-		return field_236079_d_;
+		return planetCodec;
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -638,6 +639,7 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 	}
 
 	public void func_230354_a_(WorldGenRegion p_230354_1_) {
+		//TODO: asm this
 		if (this.dimensionProps.isHabitable()) {
 			int i = p_230354_1_.getMainChunkX();
 			int j = p_230354_1_.getMainChunkZ();

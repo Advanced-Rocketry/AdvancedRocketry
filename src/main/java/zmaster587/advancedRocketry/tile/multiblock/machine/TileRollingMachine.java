@@ -15,6 +15,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.api.material.Material;
@@ -33,8 +34,8 @@ public class TileRollingMachine extends TileMultiblockMachine {
 			{'I', Blocks.AIR, LibVulpesBlocks.blockStructureBlock, Blocks.AIR}},
 
 			{{'P', 'L', LibVulpesBlocks.blockStructureBlock, null},
-				{new ResourceLocation(Constants.modId,"blockcoil"), LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'O'},
-				{new ResourceLocation(Constants.modId,"blockcoil"), LibVulpesBlocks.motors, LibVulpesBlocks.blockStructureBlock, 'O'}}
+				{new ResourceLocation("forge","blockcoil"), LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'O'},
+				{new ResourceLocation("forge","blockcoil"), LibVulpesBlocks.motors, LibVulpesBlocks.blockStructureBlock, 'O'}}
 	};
 	
 	public TileRollingMachine() {
@@ -88,7 +89,7 @@ public class TileRollingMachine extends TileMultiblockMachine {
 
 	@Override
 	public String getMachineName() {
-		return "tile.rollingMachine.name";
+		return "block.advancedrocketry.rollingmachine";
 	}
 
 	@Override

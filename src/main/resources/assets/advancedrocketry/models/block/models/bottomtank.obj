@@ -1,6 +1,6 @@
 # Blender v2.77 (sub 0) OBJ File: 'bottomTank.blend'
 # www.blender.org
-mtllib bottomTank.mtl
+mtllib bottomtank.mtl
 o Cylinder6
 v 0.968458 0.064000 0.880070
 v 0.119930 0.064000 0.031542

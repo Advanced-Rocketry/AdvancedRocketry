@@ -728,7 +728,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.spaceLaser.name";
+		return "block.advancedrocketry.spacelaser";
 	}
 
 	@Override

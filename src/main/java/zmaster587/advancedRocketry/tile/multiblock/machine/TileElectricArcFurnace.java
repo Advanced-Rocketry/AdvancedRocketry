@@ -12,6 +12,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.api.material.Material;
@@ -38,9 +39,9 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 		},
 
 		{	{null,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,null},
-			{AdvancedRocketryBlocks.blockBlastBrick, new ResourceLocation(Constants.modId, "blockcoil"),Blocks.AIR, new ResourceLocation(Constants.modId,"blockcoil"),AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick, new ResourceLocation(Constants.modId, "blockcoil"),Blocks.AIR, new ResourceLocation("forge","blockcoil"),AdvancedRocketryBlocks.blockBlastBrick},
 			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.AIR,Blocks.AIR,Blocks.AIR,AdvancedRocketryBlocks.blockBlastBrick},
-			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.AIR, new ResourceLocation(Constants.modId,"blockcoil"),Blocks.AIR,AdvancedRocketryBlocks.blockBlastBrick},
+			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.AIR, new ResourceLocation("forge","blockcoil"),Blocks.AIR,AdvancedRocketryBlocks.blockBlastBrick},
 			{null,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,null},
 		},
 
@@ -97,7 +98,7 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 
 	@Override
 	public String getMachineName() {
-		return "tile.electricArcFurnace.name";
+		return "block.advancedrocketry.arcfurnace";
 	}
 
 	@Override

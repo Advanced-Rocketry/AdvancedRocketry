@@ -1,0 +1,57 @@
+{
+      "generator": {
+        "type": "minecraft:noise",
+        "seed": -1464245863,
+        "biome_source": {
+		
+		
+		"altitude_noise": {"firstOctave": -7,"amplitudes": [1.0,1.0]},
+		"humidity_noise": {"firstOctave": -7,"amplitudes": [1.0,1.0]},
+		"temperature_noise": {"firstOctave": -7,"amplitudes": [1.0,1.0]},
+		"weirdness_noise": {"firstOctave": -7,"amplitudes": [1.0,1.0]},
+		
+		
+          "type": "minecraft:multi_noise",
+          "seed": -1464245863,
+          "biomes": [
+            {
+              "biome": "minecraft:dream_1",
+              "parameters": {
+                "altitude": 0.1,
+				"humidity": 0,
+                "temperature": 0,				
+                "weirdness": 0,
+                "offset": 0
+
+              }
+            },
+            {
+              "biome": "minecraft:dream_2",
+              "parameters": {
+                "altitude": 0.1,
+				"humidity": 0.1,
+                "temperature": 0,				
+                "weirdness": 0,
+                "offset": 0
+
+              }
+            },			
+
+            {
+              "biome": "minecraft:nightmare",
+              "parameters": {
+                "altitude": 0.1,
+				"humidity": 0,
+                "temperature": 0.1,				
+                "weirdness": 0.1,
+                "offset": 0
+
+              }
+            }
+			
+          ]
+        },
+        "settings": "minecraft:floating_islands"
+      },
+      "type": "minecraft:dream_dimension"
+    }

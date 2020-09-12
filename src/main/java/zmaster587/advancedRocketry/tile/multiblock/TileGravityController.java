@@ -252,7 +252,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.gravityMachine.name";
+		return "block.advancedrocketry.gravitymachine";
 	}
 
 	@Override

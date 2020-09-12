@@ -95,7 +95,7 @@ public class AdvancedRocketryBiomes {
 
 	public static void configureSurfaceBuilders()
 	{
-		MOON_LUNAR_LIGHT_CONFIG = registerSurfaceBuilder("lunargenerationlight", SurfaceBuilder.DEFAULT.func_242929_a(new SurfaceBuilderConfig(AdvancedRocketryBlocks.blockMoonTurf.getDefaultState(), AdvancedRocketryBlocks.blockMoonTurf.getDefaultState(), Blocks.GRAVEL.getDefaultState())));
+		MOON_LUNAR_LIGHT_CONFIG = registerSurfaceBuilder("advancedrocketry:lunargenerationlight", SurfaceBuilder.DEFAULT.func_242929_a(new SurfaceBuilderConfig(AdvancedRocketryBlocks.blockMoonTurf.getDefaultState(), AdvancedRocketryBlocks.blockMoonTurf.getDefaultState(), Blocks.GRAVEL.getDefaultState())));
 		MOON_LUNAR_DARK_CONFIG = registerSurfaceBuilder("lunargenerationdark", SurfaceBuilder.DEFAULT.func_242929_a(new SurfaceBuilderConfig(AdvancedRocketryBlocks.blockMoonTurfDark.getDefaultState(), AdvancedRocketryBlocks.blockMoonTurfDark.getDefaultState(), Blocks.GRAVEL.getDefaultState())));
 		HOTDRY_CONFIG = registerSurfaceBuilder("hotdrygeneration", SurfaceBuilder.DEFAULT.func_242929_a(new SurfaceBuilderConfig(AdvancedRocketryBlocks.blockHotTurf.getDefaultState(), AdvancedRocketryBlocks.blockHotTurf.getDefaultState(), Blocks.GRAVEL.getDefaultState())));
 		SPACE_CONFIG = registerSurfaceBuilder("spacegeneration", SurfaceBuilder.DEFAULT.func_242929_a(new SurfaceBuilderConfig(Blocks.AIR.getDefaultState(), Blocks.AIR.getDefaultState(), Blocks.AIR.getDefaultState())));
@@ -107,11 +107,12 @@ public class AdvancedRocketryBiomes {
 
 
 	// Start Carver config
-	public static WorldCarver<ProbabilityConfig> CRATER = (WorldCarver<ProbabilityConfig>) new MapGenCrater(ProbabilityConfig.field_236576_b_, 256);
+	public static WorldCarver<ProbabilityConfig> CRATER = (WorldCarver<ProbabilityConfig>) new MapGenCrater(ProbabilityConfig.field_236576_b_, 32);
 	public static WorldCarver<ProbabilityConfig> BIG_TREE = new WorldGenSwampTree(ProbabilityConfig.field_236576_b_, 256);
 	public static WorldCarver<ProbabilityConfig> INVERTED_PILLAR = new MapGenInvertedPillar(ProbabilityConfig.field_236576_b_, 256, Blocks.STONE.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.DIRT.getDefaultState());
 	public static WorldCarver<ProbabilityConfig> VOLCANO = new MapGenVolcano(ProbabilityConfig.field_236576_b_, 256);
 
+	public static ConfiguredCarver<ProbabilityConfig> CONFIGURED_CRATER = configureCarver("crater", CRATER.func_242761_a(new ProbabilityConfig(0.62F)));
 	public static ConfiguredCarver<ProbabilityConfig> CONFIGURED_BIG_TREE = configureCarver("big_tree", BIG_TREE.func_242761_a(new ProbabilityConfig(0.02F)));
 	public static ConfiguredCarver<ProbabilityConfig> CONFIGURED_INVERTED_PILLAR = configureCarver("inverted_pillar", INVERTED_PILLAR.func_242761_a(new ProbabilityConfig(0.02F)));
 	public static ConfiguredCarver<ProbabilityConfig> CONFIGURED_VOLCANO = configureCarver("volcano", VOLCANO.func_242761_a(new ProbabilityConfig(0.02F)));
@@ -185,8 +186,8 @@ public class AdvancedRocketryBiomes {
 	public static void registerBiomeGenerationSettings()
 	{
 		configureSurfaceBuilders();
-		barren = createBuilder(MOON_LUNAR_LIGHT_CONFIG, true).func_242508_a();
-		barrenDark = createBuilder(MOON_LUNAR_LIGHT_CONFIG, true).func_242508_a();
+		barren = createBuilder(MOON_LUNAR_LIGHT_CONFIG, true).func_242512_a(Carving.AIR, CONFIGURED_CRATER).func_242508_a();
+		barrenDark = createBuilder(MOON_LUNAR_DARK_CONFIG, true).func_242512_a(Carving.AIR, CONFIGURED_CRATER).func_242508_a();
 		hotDry = createBuilder(HOTDRY_CONFIG, true).func_242508_a();
 		genalienForest = createBuilder(ConfiguredSurfaceBuilders.field_244178_j, false).func_242513_a(Decoration.VEGETAL_DECORATION, ALIEN_TREE).func_242508_a();
 		spaceBiomeGen = new BiomeGenerationSettings.Builder().func_242517_a(SPACE_CONFIG).func_242508_a();
@@ -307,7 +308,7 @@ public class AdvancedRocketryBiomes {
 		BiomeAmbience noAmbience = new BiomeAmbience.Builder().func_242539_d(/*sky color*/ getSkyColor(0.6F)).func_235246_b_(/*water color*/  4159204).func_235248_c_(/*water fog color*/ 329011).func_235239_a_( /*fog color*/ 12638463).func_235238_a_();
 		MobSpawnInfo noMobs = new MobSpawnInfo.Builder().func_242577_b();
 		
-		moonBiome = (new Biome.Builder()).category(Category.NONE).precipitation(RainType.NONE).depth(1f).downfall(0).scale(0.2f).temperature(0.3f).func_242457_a(barren).func_235097_a_(noAmbience).func_242458_a(noMobs).func_242455_a();
+		moonBiome = (new Biome.Builder()).category(Category.NONE).precipitation(RainType.NONE).depth(1f).downfall(0).scale(0.02f).temperature(0.3f).func_242457_a(barren).func_235097_a_(noAmbience).func_242458_a(noMobs).func_242455_a();
 		hotDryBiome = new Biome.Builder().category(Category.NONE).precipitation(RainType.NONE).depth(1f).scale(0.01f).downfall(0).temperature(0.9f).func_242457_a(hotDry).func_235097_a_(noAmbience).func_242458_a(noMobs).func_242455_a();
 		//int foliagecolor = 0x55ffe1;
 		//int grasscolor = 0x7777ff

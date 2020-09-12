@@ -132,7 +132,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 
 	@Override
 	public String getMachineName() {
-		return "tile.planetanalyser.name";
+		return "block.advancedrocketry.planetanalyser";
 	}
 
 	@Override

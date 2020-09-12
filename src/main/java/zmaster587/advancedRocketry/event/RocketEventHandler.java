@@ -100,7 +100,7 @@ public class RocketEventHandler extends Screen {
 
 			//Sky blend color gets stuck and doesnt update unless a new X/Z coord is passed
 			//So fix that...
-			ForgeHooksClient.getSkyBlendColour(event.world, new BlockPos(event.getEntity().getPositionVec()));
+			//ForgeHooksClient. getSkyBlendColour(event.world, new BlockPos(event.getEntity().getPositionVec()));
 
 			if(ARConfiguration.getCurrentConfig().planetSkyOverride.get() && !DimensionManager.getInstance().isDimensionCreated(event.world)) {
 				DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(event.world);

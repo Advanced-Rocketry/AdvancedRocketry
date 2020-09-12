@@ -333,7 +333,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 
 	@Override
 	public String getMachineName() {
-		return "tile.railgun.name";
+		return "block.advancedrocketry.railgun";
 	}
 
 	@Override

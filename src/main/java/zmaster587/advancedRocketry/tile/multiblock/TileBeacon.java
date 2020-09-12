@@ -53,7 +53,7 @@ public class TileBeacon extends TileMultiPowerConsumer {
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.beacon.name";
+		return "block.advancedrocketry.beacon";
 	}
 
 	@Override

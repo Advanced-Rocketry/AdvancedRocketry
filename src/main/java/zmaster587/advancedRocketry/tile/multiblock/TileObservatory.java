@@ -55,33 +55,33 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	private static final Object[][][] structure = new Object[][][]{
 
 		{	{null, null, null, null, null}, 
-			{null, "stone", lens, "stone", null},
-			{null, "stone", "stone", "stone", null},
-			{null, "stone", "stone", "stone", null},
+			{null, "minecraft:stone_bricks", lens, "minecraft:stone_bricks", null},
+			{null, "minecraft:stone_bricks", "minecraft:stone_bricks", "minecraft:stone_bricks", null},
+			{null, "minecraft:stone_bricks", "minecraft:stone_bricks", "minecraft:stone_bricks", null},
 			{null, null, null, null, null}},
 
 			{	{null,null,null,null,null}, 
-				{null, "stone", "stone", "stone", null},
-				{null, "stone", lens, "stone", null},
-				{null, "stone", "stone", "stone", null},
+				{null, "minecraft:stone_bricks", "minecraft:stone_bricks", "minecraft:stone_bricks", null},
+				{null, "minecraft:stone_bricks", lens, "minecraft:stone_bricks", null},
+				{null, "minecraft:stone_bricks", "minecraft:stone_bricks", "minecraft:stone_bricks", null},
 				{null,null,null,null,null}},
 
-				{	{null, "stone", "stone", "stone", null},
-					{"stone", Blocks.AIR, Blocks.AIR, Blocks.AIR, "stone"},
-					{"stone", Blocks.AIR, Blocks.AIR, Blocks.AIR, "stone"},
-					{"stone", Blocks.AIR, lens, Blocks.AIR, "stone"},
-					{null, "stone", "stone", "stone", null}},
+				{	{null, "minecraft:stone_bricks", "minecraft:stone_bricks", "minecraft:stone_bricks", null},
+					{"minecraft:stone_bricks", Blocks.AIR, Blocks.AIR, Blocks.AIR, "minecraft:stone_bricks"},
+					{"minecraft:stone_bricks", Blocks.AIR, Blocks.AIR, Blocks.AIR, "minecraft:stone_bricks"},
+					{"minecraft:stone_bricks", Blocks.AIR, lens, Blocks.AIR, "minecraft:stone_bricks"},
+					{null, "minecraft:stone_bricks", "minecraft:stone_bricks", "minecraft:stone_bricks", null}},
 
 					{	{ null,'*', 'c', '*',null}, 
-						{'*',"stone", "stone", "stone",'*'},
-						{'*',"stone", "stone", "stone",'*'},
-						{'*',"stone", "stone", "stone",'*'},
+						{'*',"minecraft:stone_bricks", "minecraft:stone_bricks", "minecraft:stone_bricks",'*'},
+						{'*',"minecraft:stone_bricks", "minecraft:stone_bricks", "minecraft:stone_bricks",'*'},
+						{'*',"minecraft:stone_bricks", "minecraft:stone_bricks", "minecraft:stone_bricks",'*'},
 						{null,'*', '*', '*', null}},
 
 						{	{null,'*', '*', '*', null}, 
-							{'*',"stone", "stone", "stone",'*'},
-							{'*',"stone", LibVulpesBlocks.motors, "stone",'*'},
-							{'*',"stone", "stone", "stone",'*'},
+							{'*',"minecraft:stone_bricks", "minecraft:stone_bricks", "minecraft:stone_bricks",'*'},
+							{'*',"minecraft:stone_bricks", LibVulpesBlocks.motors, "minecraft:stone_bricks",'*'},
+							{'*',"minecraft:stone_bricks", "minecraft:stone_bricks", "minecraft:stone_bricks",'*'},
 							{null,'*', '*', '*',null}}};
 							
 	final static int openTime = 100;

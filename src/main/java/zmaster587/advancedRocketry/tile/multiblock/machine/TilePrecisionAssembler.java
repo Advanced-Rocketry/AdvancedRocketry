@@ -15,6 +15,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.LibVulpesItems;
 import zmaster587.libVulpes.api.material.Material;
@@ -41,7 +42,7 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 			{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock}},
 
 			{{'c', '*', '*', '*'},
-				{'*', new ResourceLocation(Constants.modId,"blockcoil"), new ResourceLocation(Constants.modId,"blockcoil"), '*'},
+				{'*', new ResourceLocation("forge","blockcoil"), new ResourceLocation("forge","blockcoil"), '*'},
 				{'*', LibVulpesBlocks.motors, LibVulpesBlocks.motors, '*'}}};
 
 				

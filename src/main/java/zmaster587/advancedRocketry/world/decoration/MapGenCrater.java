@@ -10,6 +10,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.chunk.IChunk;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.carver.WorldCarver;
 import net.minecraft.world.gen.feature.ProbabilityConfig;
 
@@ -28,7 +29,7 @@ public class MapGenCrater extends WorldCarver<ProbabilityConfig> {
 			int chunkX, int chunkZ, int p_180701_4_, int p_180701_5_, BitSet p_225555_9_,
 			ProbabilityConfig p_225555_10_) {
 
-		int radius = rand.nextInt(56) + 8; //64; 8 -> 64
+ 		int radius = rand.nextInt(56) + 8; //64; 8 -> 64
 		IWorld world = chunkPrimerIn.getWorldForge();
 
 		//TODO: make hemisphere from surface and line the side with ore of some kind
@@ -42,6 +43,10 @@ public class MapGenCrater extends WorldCarver<ProbabilityConfig> {
 		for(int x = 15; x >= 0; x--) {
 			for(int z = 15; z >= 0; z--) {
 				for(int y = 254; y >= 0; y--) { //&& chunkPrimerIn.getBlockState(x, y, z).isOpaqueCube()) {
+					
+					if(chunkPrimerIn.getBlockState(new BlockPos(x, y, z)).isAir())
+						continue;
+					
 					int count = ( depth - ( ((xCoord*16)+x)*((xCoord*16)+x) + ((zCoord*16)+z)*((zCoord*16)+z) ) )/(radius*2);
 
 					for(int dist = 0; dist < count; dist++) {
@@ -56,12 +61,13 @@ public class MapGenCrater extends WorldCarver<ProbabilityConfig> {
 
 						for(int dist = 0; dist < ((ridgeSize*ridgeSize) - (count+ridgeSize)*(count+ridgeSize))/(ridgeSize*2); dist++) {
 							if(y + dist < 255)
-								chunkPrimerIn.setBlockState(new BlockPos(x, y + dist, z), world.getBiome(new BlockPos(chunkX*16,0, chunkZ*16)).func_242440_e().func_242502_e().getTop(), false);
+								chunkPrimerIn.setBlockState(new BlockPos(x, y + dist, z), chunkPrimerIn.getBiomes().getNoiseBiome(x, y + dist, z).func_242440_e().func_242502_e().getTop(), false);
 						}
 					}
 
 					if(count > 1 && (y-count > 2))
-						chunkPrimerIn.setBlockState(new BlockPos(x, y - count, z), world.getBiome(new BlockPos(chunkX*16,0, chunkZ*16)).func_242440_e().func_242502_e().getTop(), false);
+						chunkPrimerIn.setBlockState(new BlockPos(x, y - count, z), chunkPrimerIn.getBiomes().getNoiseBiome(x, y -count, z).func_242440_e().func_242502_e().getTop(), false);
+					break;
 				}
 			}
 		}

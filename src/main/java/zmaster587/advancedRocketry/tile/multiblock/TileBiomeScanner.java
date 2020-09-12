@@ -129,6 +129,6 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 
 	@Override
 	public String getMachineName() {
-		return "tile.biomeScanner.name";
+		return "block.advancedrocketry.biomescanner";
 	}
 }

@@ -74,7 +74,7 @@ public class RendererPhantomBlock extends TileEntityRenderer<TileSchematic> {
 						if(stack == null)
 							RenderHelper.renderTag(matrix, buffer, Minecraft.getInstance().player.getDistanceSq(result.getHitVec().x, result.getHitVec().y, result.getHitVec().z), "THIS IS AN ERROR, CONTACT THE DEV!!!", 0,1);
 						else
-							RenderHelper.renderTag(matrix, buffer, Minecraft.getInstance().player.getDistanceSq(result.getHitVec().x, result.getHitVec().y, result.getHitVec().z), stack.getDisplayName().getString(), 0xE00000, 1);
+							RenderHelper.renderTag(matrix, buffer, Minecraft.getInstance().player.getDistanceSq(result.getHitVec().x, result.getHitVec().y, result.getHitVec().z), stack.getDisplayName().getString(), combinedOverlayIn + (combinedLightIn << 16), 1);
 					}
 					matrix.pop();
 				}

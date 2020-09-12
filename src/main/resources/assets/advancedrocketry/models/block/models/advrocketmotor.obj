@@ -1,6 +1,6 @@
 # Blender v2.78 (sub 0) OBJ File: ''
 # www.blender.org
-mtllib advRocketmotor.mtl
+mtllib advrocketmotor.mtl
 o Cylinder
 v 0.050000 0.760000 0.400000
 v 0.093301 0.577936 0.425000

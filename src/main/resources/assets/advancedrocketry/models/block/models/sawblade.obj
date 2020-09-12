@@ -1,6 +1,6 @@
 # Blender v2.77 (sub 0) OBJ File: 'bottomTank.blend'
 # www.blender.org
-mtllib sawBlade.mtl
+mtllib sawblade.mtl
 o Saw
 v 0.511500 0.683394 0.971596
 v 0.511500 0.676035 0.924984

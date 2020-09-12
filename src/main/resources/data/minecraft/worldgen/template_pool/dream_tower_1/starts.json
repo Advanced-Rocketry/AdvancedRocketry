@@ -1,0 +1,15 @@
+{
+  "name": "minecraft:dream_tower_1/starts",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "minecraft:dream_tower_1",
+        "processors": "minecraft:dream_tower_1_degradation",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

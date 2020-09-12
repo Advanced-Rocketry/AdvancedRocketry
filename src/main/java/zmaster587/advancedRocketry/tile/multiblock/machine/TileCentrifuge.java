@@ -121,6 +121,6 @@ public class TileCentrifuge extends TileMultiblockMachine {
 
 	@Override
 	public String getMachineName() {
-		return "tile.centrifuge.name";
+		return "block.advancedrocketry.centrifuge";
 	}
 }

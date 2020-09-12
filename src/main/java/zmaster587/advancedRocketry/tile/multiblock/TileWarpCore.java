@@ -93,7 +93,7 @@ public class TileWarpCore extends TileMultiBlock {
 
 	@Override
 	public String getMachineName() {
-		return "tile.warpCore.name";
+		return "block.advancedrocketry.warpcore";
 	}
 	
 	@Override

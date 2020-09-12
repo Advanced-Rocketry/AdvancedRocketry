@@ -1,23 +1,16 @@
 {
     "defaults": {
         "textures": {
-            "#None": "advancedrocketry:block//models/combustion"
+            "#None": "advancedrocketry:block/models/advrocketmotor"
         },
-        "model": "advancedrocketry:block/models/rocketmotor.obj"
+        "model": "advancedrocketry:block/models/advrocketmotor"
     },
     "variants": {
-        "facing=north": { "model": "advancedrocketry:block/models/advrocketmotor.obj", "texture": "advancedrocketry:block/textures/models/combustion.png", "x": 90 },
-        "facing=south": {  "model": "advancedrocketry:block/models/advrocketmotor.obj", "texture": "advancedrocketry:block/textures/models/combustion.png", "x": 90, "y": 180 },
-        "facing=west":  { "model": "advancedrocketry:block/models/advrocketmotor.obj", "texture": "advancedrocketry:block/textures/models/combustion.png", "x": 90, "y": 270 },
-        "facing=east":  { "model": "advancedrocketry:block/models/advrocketmotor.obj", "texture": "advancedrocketry:block/textures/models/combustion.png", "x": 90, "y": 90 },
-        "facing=up":  { "model": "advancedrocketry:block/models/advrocketmotor.obj", "texture": "advancedrocketry:block/textures/models/combustion.png", "x": 180 },
-        "facing=down":  { "model": "advancedrocketry:block/models/advrocketmotor.obj", "texture": "advancedrocketry:block/textures/models/combustion.png" },
-        "inventory": {
-            "model": "advancedrocketry:block/models/advrocketmotor.obj",
-            "transform": "forge:default-item",
-            "textures": {
-                "layer0": "advancedrocketry:block/textures/models/combustion.png"
-            }
-        }
+        "facing=north": { "model": "advancedrocketry:block/models/advrocketmotor", "x": 90 },
+        "facing=south": {  "model": "advancedrocketry:block/models/advrocketmotor", "x": 90, "y": 180 },
+        "facing=west":  { "model": "advancedrocketry:block/models/advrocketmotor", "x": 90, "y": 270 },
+        "facing=east":  { "model": "advancedrocketry:block/models/advrocketmotor", "x": 90, "y": 90 },
+        "facing=up":  { "model": "advancedrocketry:block/models/advrocketmotor", "x": 180 },
+        "facing=down":  { "model": "advancedrocketry:block/models/advrocketmotor" }
     }
 }

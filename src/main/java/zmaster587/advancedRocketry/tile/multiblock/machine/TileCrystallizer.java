@@ -12,6 +12,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.material.Material;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.interfaces.IRecipe;
@@ -30,7 +31,7 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 		{AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible}},
 		
 		{{'O', 'c', 'I'}, 
-			{new ResourceLocation(Constants.modId,"blockcoil"), 'P', new ResourceLocation(Constants.modId,"blockcoil")}},
+			{new ResourceLocation("forge","blockcoil"), 'P', new ResourceLocation("forge","blockcoil")}},
 
 	};
 

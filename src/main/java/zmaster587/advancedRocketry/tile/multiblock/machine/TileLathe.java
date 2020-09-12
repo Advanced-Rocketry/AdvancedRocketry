@@ -80,6 +80,6 @@ public class TileLathe extends TileMultiblockMachine implements IModularInventor
 
 	@Override
 	public String getMachineName() {
-		return "tile.lathe.name";
+		return "block.advancedrocketry.lathe";
 	}
 }

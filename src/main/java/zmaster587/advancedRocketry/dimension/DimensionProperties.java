@@ -1582,7 +1582,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		}
 
 
-
 		nbt.putString("starId", starId.toString());
 		nbt.putFloat("gravitationalMultiplier", gravitationalMultiplier);
 		nbt.putInt("orbitalDist", orbitalDist);

@@ -15,6 +15,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.material.Material;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
@@ -30,7 +31,7 @@ import java.util.List;
 public class TileElectrolyser extends TileMultiblockMachine {
 	public static final Object[][][] structure = { 
 		{{null,null,null},
-		{'P', new ResourceLocation(Constants.modId,"blockcoil"),'P'}},
+		{'P', new ResourceLocation("forge","blockcoil"),'P'}},
 		
 		{{'l', 'c', 'l'}, 
 			{new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'L', new BlockMeta(LibVulpesBlocks.blockStructureBlock)}},
@@ -96,6 +97,6 @@ public class TileElectrolyser extends TileMultiblockMachine {
 
 	@Override
 	public String getMachineName() {
-		return "tile.electrolyser.name";
+		return "block.advancedrocketry.electrolyser";
 	}
 }
