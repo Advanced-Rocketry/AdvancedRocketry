@@ -41,6 +41,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryEntities;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.AdvancedRocketryParticleTypes;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.client.render.*;
@@ -71,12 +72,18 @@ import zmaster587.libVulpes.tile.TileSchematic;
 public class ClientProxy extends CommonProxy {
 
 	private static zmaster587.advancedRocketry.dimension.DimensionManager dimensionManagerClient = new zmaster587.advancedRocketry.dimension.DimensionManager();
-	
+
+
+	public void initDeferredRegistries() {
+		AdvancedRocketryParticleTypes.init();	
+	}
+
 	@Override
 	public void registerRenderers() {
 
 
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ROCKET_BUILDER, (dispatcher) -> {return new RendererRocketBuilder(dispatcher);} );
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_STATION_BUILDER, (dispatcher) -> {return new RendererRocketBuilder(dispatcher);} );
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileModelRender.class, modelBlock);
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_PREC_ASS, (dispatcher) -> {return new RendererPrecisionAssembler(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_CUTTING_MACHINE, (dispatcher) -> {return new RendererCuttingMachine(dispatcher);});
@@ -94,7 +101,7 @@ public class ClientProxy extends CommonProxy {
 		//ClientRegistry.bindTileEntityRenderer(TileDataPipe.class, new RendererPipe(new ResourceLocation("AdvancedRocketry:textures/blocks/pipeData.png")));
 		//ClientRegistry.bindTileEntityRenderer(TileEnergyPipe.class, new RendererPipe(new ResourceLocation("AdvancedRocketry:textures/blocks/pipeEnergy.png")));
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_MICROWAVE_RECIEVER, (dispatcher) -> {return new RendererMicrowaveReciever(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_SPACE_LASER, (dispatcher) -> {return new RenderLaserTile(dispatcher);});
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_SPACE_LASER, (dispatcher) -> {return new zmaster587.advancedRocketry.client.render.multiblocks.RenderLaser(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_BIOME_SCANNER, (dispatcher) -> {return new RenderBiomeScanner(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_BLACK_HOLE_GENERATOR, (dispatcher) -> {return new RenderBlackHoleEnergy(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_TERRAFORMER, (dispatcher) -> {return new RenderTerraformerAtm(dispatcher);});
@@ -104,7 +111,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_SPACE_ELEVATOR, (dispatcher) -> {return new zmaster587.advancedRocketry.client.render.multiblocks.RendererSpaceElevator(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_BEACON, (dispatcher) -> {return new zmaster587.advancedRocketry.client.render.multiblocks.RenderBeacon(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_CENTRIFUGE, (dispatcher) -> {return new zmaster587.advancedRocketry.client.render.multiblocks.RenderCentrifuge(dispatcher);});
-
+		
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileModelRenderRotatable.class, modelBlock);
 
 		//RendererModelBlock blockRenderer = new RendererModelBlock();
@@ -130,20 +137,24 @@ public class ClientProxy extends CommonProxy {
 
 		//Colorizers
 		Minecraft.getInstance().getItemColors().register(new IItemColor()
-        {
+		{
 			@Override
 			public int getColor(ItemStack stack, int tintIndex) {
 				return tintIndex > 0 ? -1 : ((IDyeableArmorItem)stack.getItem()).getColor(stack);
 			}
-        }, AdvancedRocketryItems.itemSpaceSuit_Boots, AdvancedRocketryItems.itemSpaceSuit_Chest, AdvancedRocketryItems.itemSpaceSuit_Helmet, AdvancedRocketryItems.itemSpaceSuit_Leggings);
-		
+		}, AdvancedRocketryItems.itemSpaceSuit_Boots, AdvancedRocketryItems.itemSpaceSuit_Chest, AdvancedRocketryItems.itemSpaceSuit_Helmet, AdvancedRocketryItems.itemSpaceSuit_Leggings);
+
 		AdvancedRocketry.materialRegistry.init();
-		
+
 		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockStructureTower, RenderType.getCutout());
 		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockUnlitTorch, RenderType.getCutout());
 		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockUnlitTorchWall, RenderType.getCutout());
 		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockThermiteTorch, RenderType.getCutout());
 		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockThermiteTorchWall, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockLens, RenderType.getTranslucent());
+
+		for(Block block : AdvancedRocketryBlocks.crystalBlocks)
+			RenderTypeLookup.setRenderLayer(block, RenderType.getTranslucent());
 	}
 
 	@Override
@@ -157,33 +168,33 @@ public class ClientProxy extends CommonProxy {
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockFuelFluid);
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockEnrichedLavaFluid);*/
 	}
-	
+
 	@Override
 	public void preInitItems()
 	{
 	}
-	
+
 	@Override
 	public void preinit() {
 		registerRenderers();
 	}
-	
+
 	/*private void registerFluidModel(IFluidBlock fluidBlock) {
 		Item item = Item.getItemFromBlock((Block) fluidBlock);
 
 		ModelBakery.registerItemVariants(item);
 
 		final ModelResourceLocation modelResourceLocation = new ModelResourceLocation("advancedrocketry:fluid", fluidBlock.getFluid().getName());
-		
+
 		//ModelLoader.setCustomMeshDefinition(item, MeshDefinitionFix.create(stack -> modelResourceLocation));
 
-		
+
 		StateMapperBase ignoreState = new FluidStateMapper(modelResourceLocation);
 		ModelLoader.setCustomStateMapper((Block) fluidBlock, ignoreState);
 		ModelLoader.setCustomMeshDefinition(item, new FluidItemMeshDefinition(modelResourceLocation));
 		ModelBakery.registerItemVariants(item, modelResourceLocation);
 	}*/
-	
+
 
 	@Override
 	public void registerEventHandlers() {
@@ -223,26 +234,22 @@ public class ClientProxy extends CommonProxy {
 	public void spawnParticle(String particle, World world, double x, double y, double z, double motionX, double motionY, double motionZ) {
 		//WTF how is == working?  Should be .equals
 		if(particle == "rocketFlame") {
-			RocketFx fx = new RocketFx(world, x, y, z, motionX, motionY, motionZ);
-			Minecraft.getInstance().particles.addEffect(fx);
+			world.addParticle(AdvancedRocketryParticleTypes.rocketFx.get(), x, y, z, motionX, motionY, motionZ);
 		}
 		else if(particle == "smallRocketFlame") {
-			RocketFx fx = new RocketFx(world, x, y, z, motionX, motionY, motionZ, 0.25f);
-			Minecraft.getInstance().particles.addEffect(fx);
+			world.addParticle(AdvancedRocketryParticleTypes.rocketFx.get(), x, y, z, motionX, motionY, motionZ);
 		}
 		else if(particle == "rocketSmoke") {
-			TrailFx fx = new TrailFx(world, x, y, z, motionX, motionY, motionZ);
-			Minecraft.getInstance().particles.addEffect(fx);
+			world.addParticle(AdvancedRocketryParticleTypes.trailFx.get(), x, y, z, motionX, motionY, motionZ);
 		}
 		else if(particle == "rocketSmokeInverse") {
-			InverseTrailFx fx = new InverseTrailFx(world, x, y, z, motionX, motionY, motionZ);
-			Minecraft.getInstance().particles.addEffect(fx);
+			world.addParticle(AdvancedRocketryParticleTypes.inverseTrailFx.get(), x, y, z, motionX, motionY, motionZ);
 		}
 		else if(particle == "arc") {
-			FxElectricArc fx = new FxElectricArc(world, x, y, z, (float) motionX);
-			Minecraft.getInstance().particles.addEffect(fx);
+			world.addParticle(AdvancedRocketryParticleTypes.fxElectricArc.get(), x, y, z, motionX, 0, 0);
 		}
 		else if(particle == "smallLazer") {
+			//world.addParticle(AdvancedRocketryParticleTypes.fxElectricArc, x, y, z, motionX, 0, 0);
 			FxSkyLaser fx = new FxSkyLaser(world, x, y, z);
 			Minecraft.getInstance().particles.addEffect(fx);
 		}
@@ -251,8 +258,7 @@ public class ClientProxy extends CommonProxy {
 			Minecraft.getInstance().particles.addEffect(fx);
 		}
 		else if(particle.equals("gravityEffect")) {
-			FxGravityEffect fx = new FxGravityEffect(world, x, y, z, motionX, motionY, motionZ);
-			Minecraft.getInstance().particles.addEffect(fx);
+			world.addParticle(AdvancedRocketryParticleTypes.fxGravityEffect.get(), x, y, z, motionX, motionY, motionZ);
 		}
 		//else
 		//	ForgeRegistries.PARTICLE_TYPES.getValue(ResourceLocation.tryCreate(particle));
@@ -267,7 +273,7 @@ public class ClientProxy extends CommonProxy {
 
 		FxLaserHeat fx2 = new FxLaserHeat(entity.world,  toPos.x, toPos.y, toPos.z, 0.02f);
 		Minecraft.getInstance().particles.addEffect(fx2);
-		
+
 		for(int i = 0; i < 4; i++) {
 			FxLaserSpark fx3 = new FxLaserSpark(entity.world,  toPos.x, toPos.y, toPos.z, 
 					.125 - entity.world.rand.nextFloat()/4f, .125 - entity.world.rand.nextFloat()/4f, .125 - entity.world.rand.nextFloat()/4f, .5f);
@@ -299,35 +305,35 @@ public class ClientProxy extends CommonProxy {
 			return 0;
 		}
 	}
-	
+
 	@Override
 	public void loadUILayout(ARConfiguration config) {
 		/*final String CLIENT = "Client";
-		
+
 		zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().lockUI = config.get(CLIENT, "lockUI", true, "If UI is not locked, the middle mouse can be used to drag certain AR UIs around the screen, positions are saved on hitting quit in the menu").getBoolean();
-		
+
 		config.addCustomCategoryComment(CLIENT, "UI locations can by set by clicking and dragging the middle mouse button ingame");
 		RocketEventHandler.suitPanel.setRawX(config.get(CLIENT, "suitPanelX", 8).getInt());
 		RocketEventHandler.suitPanel.setRawY(config.get(CLIENT, "suitPanelY", 8).getInt());
 		RocketEventHandler.suitPanel.setSizeModeX(config.get(CLIENT, "suitPanelModeX", -1).getInt());
 		RocketEventHandler.suitPanel.setSizeModeY(config.get(CLIENT, "suitPanelModeY", -1).getInt());
-		
+
 		RocketEventHandler.oxygenBar.setRawX(config.get(CLIENT, "oxygenBarX", -8).getInt());
 		RocketEventHandler.oxygenBar.setRawY(config.get(CLIENT, "oxygenBarY", 57).getInt());
 		RocketEventHandler.oxygenBar.setSizeModeX(config.get(CLIENT, "oxygenBarModeX", 0).getInt());
 		RocketEventHandler.oxygenBar.setSizeModeY(config.get(CLIENT, "oxygenBarModeY", 1).getInt());
-		
+
 		RocketEventHandler.hydrogenBar.setRawX(config.get(CLIENT, "hydrogenBarX", -8).getInt());
 		RocketEventHandler.hydrogenBar.setRawY(config.get(CLIENT, "hydrogenBarY", 74).getInt());
 		RocketEventHandler.hydrogenBar.setSizeModeX(config.get(CLIENT, "hydrogenBarModeX", 0).getInt());
 		RocketEventHandler.hydrogenBar.setSizeModeY(config.get(CLIENT, "hydrogenBarModeY", 1).getInt());
-		
+
 		RocketEventHandler.atmBar.setRawX(config.get(CLIENT, "atmBarX", 8).getInt());
 		RocketEventHandler.atmBar.setRawY(config.get(CLIENT, "atmBarY", 27).getInt());
 		RocketEventHandler.atmBar.setSizeModeX(config.get(CLIENT, "atmBarModeX", -1).getInt());
 		RocketEventHandler.atmBar.setSizeModeY(config.get(CLIENT, "atmBarModeY", 1).getInt());*/
 	}
-	
+
 	@Override
 	public void saveUILayout(ARConfiguration configuration) {
 		/*final String CLIENT = "Client";
@@ -336,33 +342,33 @@ public class ClientProxy extends CommonProxy {
 		configuration.get(CLIENT, "suitPanelY", 1).set(RocketEventHandler.suitPanel.getRawY());
 		configuration.get(CLIENT, "suitPanelModeX", 1).set(RocketEventHandler.suitPanel.getSizeModeX());
 		configuration.get(CLIENT, "suitPanelModeY", 1).set(RocketEventHandler.suitPanel.getSizeModeY());
-		
+
 		configuration.get(CLIENT, "oxygenBarX", 1).set(RocketEventHandler.oxygenBar.getRawX());
 		configuration.get(CLIENT, "oxygenBarY", 1).set(RocketEventHandler.oxygenBar.getRawY());
 		configuration.get(CLIENT, "oxygenBarModeX", 1).set(RocketEventHandler.oxygenBar.getSizeModeX());
 		configuration.get(CLIENT, "oxygenBarModeY", 1).set(RocketEventHandler.oxygenBar.getSizeModeY());
-		
+
 		configuration.get(CLIENT, "hydrogenBarX", 1).set(RocketEventHandler.hydrogenBar.getRawX());
 		configuration.get(CLIENT, "hydrogenBarY", 1).set(RocketEventHandler.hydrogenBar.getRawY());
 		configuration.get(CLIENT, "hydrogenBarModeX", 1).set(RocketEventHandler.hydrogenBar.getSizeModeX());
 		configuration.get(CLIENT, "hydrogenBarModeY", 1).set(RocketEventHandler.hydrogenBar.getSizeModeY());
-		
+
 		configuration.get(CLIENT, "atmBarX", 1).set(RocketEventHandler.atmBar.getRawX());
 		configuration.get(CLIENT, "atmBarY", 1).set(RocketEventHandler.atmBar.getRawY());
 		configuration.get(CLIENT, "atmBarModeX", 1).set(RocketEventHandler.atmBar.getSizeModeX());
 		configuration.get(CLIENT, "atmBarModeY", 1).set(RocketEventHandler.atmBar.getSizeModeY());
 		configuration.save();*/
 	}
-	
+
 	@Override
 	public void displayMessage(String msg, int time) {
 		RocketEventHandler.setOverlay(Minecraft.getInstance().world.getGameTime() + time, msg);
 	}
-	
+
 	public String getNameFromBiome(Biome biome) {
 		return AdvancedRocketryBiomes.getBiomeResource(biome).toString();
 	}
-	
+
 	@Override
 	public zmaster587.advancedRocketry.dimension.DimensionManager getDimensionManager() {
 		return dimensionManagerClient;

@@ -106,4 +106,8 @@ public class CommonProxy {
 	public zmaster587.advancedRocketry.dimension.DimensionManager getDimensionManager() {
 		return dimensionManagerServer;
 	}
+
+	public void initDeferredRegistries() {
+		
+	}
 }

@@ -63,6 +63,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 		state = RedstoneState.OFF;
 		redstoneControl.setRedstoneState(state);
 		radius = 5;
+		toggleSwitch = new ModuleToggleSwitch(160, 5, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled());
 	}
 
 	@Override
@@ -78,7 +79,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 	@Override
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();//super.getModules(id, player);
-		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
+		modules.add(toggleSwitch);
 		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(sideSelectorModule);
 

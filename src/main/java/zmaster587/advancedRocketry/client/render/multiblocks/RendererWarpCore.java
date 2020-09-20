@@ -54,18 +54,18 @@ public class RendererWarpCore extends TileEntityRenderer<TileWarpCore> {
 		matrix.translate(1f, 0, 0f);
 
 		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
-		IVertexBuilder entitySolidBuilderManual = buffer.getBuffer(RenderHelper.getTranslucentManualRenderType());
+		
 		IVertexBuilder entityTranslucentBuilder = buffer.getBuffer(RenderHelper.getTranslucentEntityModelRenderType(texture));
 		
 		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Base");
 		matrix.push();
 		
-		
+		IVertexBuilder entitySolidBuilderManual = buffer.getBuffer(RenderHelper.getTranslucentManualRenderType());
 		RenderHelper.renderCube(matrix, entitySolidBuilderManual, -0.1f, 1, -0.1f, 0.1f, 2, 0f, 0.1f, 0.4f, 0.4f, 0.8f);
 		matrix.pop();
 		
 		
-		if(ZUtils.getDimensionIdentifier(tile.getWorld()) == ARConfiguration.GetSpaceDimId()) {
+		if(ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(tile.getWorld()))) {
 			
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(tile.getPos());
 			if(obj instanceof SpaceStationObject && ((SpaceStationObject)obj).getFuelAmount() > 50) {

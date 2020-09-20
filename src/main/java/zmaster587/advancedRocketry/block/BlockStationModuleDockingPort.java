@@ -21,6 +21,7 @@ import zmaster587.advancedRocketry.tile.station.TileLandingPad;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.block.BlockFullyRotatable;
 import zmaster587.libVulpes.inventory.GuiHandler;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
 
 public class BlockStationModuleDockingPort extends BlockFullyRotatable {
 
@@ -44,7 +45,7 @@ public class BlockStationModuleDockingPort extends BlockFullyRotatable {
 		{
 			TileEntity te = world.getTileEntity(pos);
 			if(te != null)
-				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)te, pos);
+				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)te, buf -> {buf.writeInt(((IModularInventory)te).getModularInvType().ordinal()); buf.writeBlockPos(pos); });
 		}
 		return ActionResultType.SUCCESS;
 	}

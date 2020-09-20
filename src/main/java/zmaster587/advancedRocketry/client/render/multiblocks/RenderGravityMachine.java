@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.client.render.multiblocks;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
@@ -41,19 +42,24 @@ public class RenderGravityMachine extends TileEntityRenderer<TileGravityControll
 		if(!tile.canRender())
 			return;
 
+		if (tile.getWorld() != null) {
+			combinedLightIn = WorldRenderer.getCombinedLight(tile.getWorld(), tile.getPos().add(0, 1, 0));
+		} else {
+			combinedLightIn = 15728880;
+		}
+		
 		matrix.push();
 
 		//Initial setup
 
-		matrix.translate(0.5f, 0.5f, 0.5f);
+		matrix.translate(0.5f, -0.5f, 0.5f);
 		//Rotate and move the model into position
 		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
 		matrix.rotate(new Quaternion(0, (front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, true));
 		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
-		IVertexBuilder entityTransBuilder = buffer.getBuffer(RenderHelper.getTranslucentEntityModelRenderType(texture));
+		IVertexBuilder entityTransBuilder;
 		
 		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Base");
-		GL11.glDisable(GL11.GL_LIGHTING);
 		int maxSize = 5;
 		
 		//Render blur
@@ -67,13 +73,14 @@ public class RenderGravityMachine extends TileEntityRenderer<TileGravityControll
 		
 		matrix.push();
 		matrix.scale(1.1f, 1f, 1.1f);
+		entityTransBuilder = buffer.getBuffer(RenderHelper.getTranslucentNoTexEntityModelRenderType());
 		for(int i = 0; i < 4; i++) {
 			matrix.scale(.93f, 1f, .93f);
 			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTransBuilder, "Blur");
 		}
 		matrix.pop();
 		// END render blur
-		
+		entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
 		matrix.rotate(new Quaternion(0, (float) tile.getArmRotation(), 0, true));
 		for(int i = 0; i < maxSize; i++) {
 			matrix.rotate(new Quaternion(0, (float) 360/maxSize, 0, true));

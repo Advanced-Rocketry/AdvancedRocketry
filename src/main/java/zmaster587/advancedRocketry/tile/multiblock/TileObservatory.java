@@ -509,7 +509,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			storeData(-1);
 		else if(id == TAB_SWITCH && !world.isRemote) {
 			tabModule.setTab(nbt.getShort("tab"));
-			NetworkHooks.openGui((ServerPlayerEntity) player, this, getPos());
+			NetworkHooks.openGui((ServerPlayerEntity) player, this, buf -> {buf.writeInt(getModularInvType().ordinal()); buf.writeBlockPos(getPos()); });
 		}
 		else if(id == BUTTON_PRESS && !world.isRemote) {
 			lastButton = nbt.getShort("button");
@@ -675,8 +675,8 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 	
 	@Override
-	public int getModularInvType() {
-		return GuiHandler.guiId.MODULARNOINV.ordinal();
+	public GuiHandler.guiId getModularInvType() {
+		return GuiHandler.guiId.MODULARNOINV;
 	}
 
 	@Override

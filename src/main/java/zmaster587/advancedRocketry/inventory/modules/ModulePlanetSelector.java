@@ -179,7 +179,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 					planetList.add(button = new ModuleButton(offsetX + deltaX, offsetY + deltaY, "", this, new ResourceLocation[] { star.isBlackHole() ? TextureResources.locationBlackHole_icon : TextureResources.locationSunNew }, String.format("Name: %s\nNumber of Planets: %d",star.getName(), star.getNumPlanets()), displaySize, displaySize));
 					button.setAdditionalData(star.getId());
-					button.setSound("buttonBlipA");
+					button.setSound("buttonblipa");
 					button.setBGColor(star2.getColorRGB8());
 					phase += phaseInc;
 				}
@@ -187,7 +187,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			
 			planetList.add(button = new ModuleButton(offsetX, offsetY, "", this, new ResourceLocation[] { star.isBlackHole() ? TextureResources.locationBlackHole_icon : TextureResources.locationSunNew }, String.format("Name: %s\nNumber of Planets: %d",star.getName(), star.getNumPlanets()), displaySize, displaySize));
 			button.setAdditionalData(star.getId());
-			button.setSound("buttonBlipA");
+			button.setSound("buttonblipa");
 			button.setBGColor(star.getColorRGB8());
 
 			renderPropertiesMap.put(star.getId(), new PlanetRenderProperties(displaySize, offsetX, offsetY));
@@ -220,7 +220,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 				planetList.add(button = new ModuleButton(offsetX + deltaX, offsetY + deltaY, "", this, new ResourceLocation[] { star.isBlackHole() ? TextureResources.locationBlackHole_icon : TextureResources.locationSunNew }, String.format("Name: %s\nNumber of Planets: %d",star.getName(), star.getNumPlanets()), displaySize, displaySize));
 				button.setAdditionalData(star.getId());
-				button.setSound("buttonBlipA");
+				button.setSound("buttonblipa");
 				button.setBGColor(star2.getColorRGB8());
 				phase += phaseInc;
 			}
@@ -231,7 +231,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 		planetList.add(button = new ModuleButton(offsetX, offsetY, "", this, new ResourceLocation[] { star.isBlackHole() ? TextureResources.locationBlackHole_icon : TextureResources.locationSunNew }, String.format("Name: %s\nNumber of Planets: %d",star.getName(), star.getNumPlanets()), displaySize, displaySize));
 		button.setAdditionalData(star.getId());
-		button.setSound("buttonBlipA");
+		button.setSound("buttonblipa");
 		button.setBGColor(star.getColorRGB8());
 		renderPropertiesMap.put(star.getId(), new PlanetRenderProperties(displaySize, offsetX, offsetY));
 
@@ -265,7 +265,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		ModuleButton button;
 		planetList.add(button = new ModuleButtonPlanet(offsetX, offsetY, "", this, planet, planet.getName(), displaySize, displaySize));
 		button.setAdditionalData(planet.getId());
-		button.setSound("buttonBlipA");
+		button.setSound("buttonblipa");
 
 		renderPropertiesMap.put(planet.getId(), new PlanetRenderProperties(displaySize, offsetX, offsetY));
 
@@ -294,7 +294,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		ModuleButton button;
 
 		planetList.add(button = new ModuleButtonPlanet(offsetX, offsetY, "", this, planet, planet.getName() + "\nMoons: " + planet.getChildPlanets().size(), displaySize, displaySize));
-		button.setSound("buttonBlipA");
+		button.setSound("buttonblipa");
 		button.setAdditionalData(planet.getId());
 
 		renderPropertiesMap.put(planet.getId(), new PlanetRenderProperties(displaySize, offsetX, offsetY));
@@ -344,7 +344,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 		planetList.clear();
 		if(!stellarView) {
-			if(DimensionManager.getInstance().isStar(currentSystem)) {
+			if(!DimensionManager.getInstance().isStar(currentSystem)) {
 				DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(currentSystem);
 				renderPlanetarySystem(properties, size/2, size/2, 1f,3f*properties.getPathLengthToStar());
 			}
@@ -506,7 +506,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		if(buttonId == btnUpLevel) {
 			DimensionProperties properties =  DimensionManager.getInstance().getDimensionProperties(currentSystem);
 
-			if(topLevel == Constants.INVALID_PLANET || currentSystem != topLevel) {
+			if(Constants.INVALID_PLANET.equals(topLevel) || currentSystem != topLevel) {
 				if(!DimensionManager.getInstance().isStar(currentSystem) && properties.isMoon())
 					currentSystem = properties.getParentPlanet();
 				else {
@@ -549,7 +549,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			else {
 				//Make clicked planet selected
 				selectedSystem = (ResourceLocation)buttonId.getAdditionalData();
-				currentlySelectedPlanet = renderPropertiesMap.get(buttonId);
+				currentlySelectedPlanet = renderPropertiesMap.get(buttonId.getAdditionalData());
 				hostTile.onSelected(this);
 				refreshSideBar(currentSystemChanged, selectedSystem);
 			}
@@ -593,7 +593,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 					if(planetDefiner != null && !planetDefiner.isPlanetKnown(properties))
 						continue;
 
-					if(!properties.isMoon() && properties.getId() != ARConfiguration.GetSpaceDimId()) {
+					if(!properties.isMoon() && !ARConfiguration.GetSpaceDimId().equals(properties.getId())) {
 						ModuleButton button = new ModuleButton(0, i*18, properties.getName(), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 128, 18);
 						button.setAdditionalData(properties.getId());
 						list2.add(button);

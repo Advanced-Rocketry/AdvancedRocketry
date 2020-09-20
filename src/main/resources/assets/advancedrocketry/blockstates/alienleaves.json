@@ -1,7 +1,5 @@
 {
     "variants": {
-        "": { "model": "advancedrocketry:block/alienleaves" },
-        "decayable=true": { "model": "advancedrocketry:block/alienleaves" },
-        "decayable=false": { "model": "advancedrocketry:block/alienleaves" },
+        "": { "model": "advancedrocketry:block/alienleaves" }
     }
 }

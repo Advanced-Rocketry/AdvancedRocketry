@@ -15,10 +15,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.block.BlockTile;
+import zmaster587.libVulpes.inventory.GuiHandler;
 
 public class BlockTileWithMultitooltip extends BlockTile {
 
-	public BlockTileWithMultitooltip(Properties properties, int guiId) {
+	public BlockTileWithMultitooltip(Properties properties, GuiHandler.guiId guiId) {
 		super(properties, guiId);
 	}
 

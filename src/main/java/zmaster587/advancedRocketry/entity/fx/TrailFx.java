@@ -11,7 +11,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TrailFx extends InverseTrailFx {
-	//public static final ResourceLocation icon = new ResourceLocation("advancedrocketry:textures/particle/soft.png");
 
 	
 	public TrailFx(World world, double x,
@@ -27,7 +26,7 @@ public class TrailFx extends InverseTrailFx {
         this.particleGreen = .4F + chroma;
         this.particleBlue = .4F + chroma;
         this.setSize(0.12F, 0.12F);
-        this.particleScale = (float)(this.rand.nextFloat() * 0.6F + 6F);
+        this.particleScale = (float)(this.rand.nextFloat() * 0.6F + 2F);
         this.motionX = motx;
         this.motionY = moty;
         this.motionZ = motz;

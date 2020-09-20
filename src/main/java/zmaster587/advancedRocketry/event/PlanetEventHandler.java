@@ -111,9 +111,9 @@ public class PlanetEventHandler {
 		IWorld world = event.getWorld();
 		DimensionManager manager = DimensionManager.getInstance();
 
-		if(manager.isInitialized())
+		if(manager.isInitialized() && world instanceof World)
 		{
-			DimensionProperties properties = manager.getDimensionProperties( ZUtils.getDimensionIdentifier(world) );
+			DimensionProperties properties = manager.getDimensionProperties( ZUtils.getDimensionIdentifier((World) world) );
 			if(properties != null) {
 				if(!properties.getAtmosphere().isImmune(event.getEntityLiving().getClass()))
 					event.setResult(Result.DENY);
@@ -207,7 +207,7 @@ public class PlanetEventHandler {
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void blockRightClicked(RightClickBlock event) {
 		Direction direction = event.getFace();
@@ -258,9 +258,17 @@ public class PlanetEventHandler {
 				while(itr.hasNext()) {
 					TransitionEntity ent = itr.next();
 					if(ent.entity.world.getGameTime() >= ent.time) {
-						ent.entity.setLocationAndAngles(ent.location.getX(), ent.location.getY(), ent.location.getZ(), ent.entity.rotationYaw, ent.entity.rotationPitch);
 						ServerWorld newWorld = ent.dimId;
-						ent.entity.changeDimension(newWorld, new TeleporterNoPortal(newWorld));
+						if(ent.entity instanceof ServerPlayerEntity)
+						{
+							((ServerPlayerEntity)ent.entity).teleport(newWorld, ent.location.getX(), ent.location.getY(), ent.location.getZ(), ent.entity.rotationYaw, ent.entity.rotationPitch);
+						}
+						else
+						{
+							ent.entity.setLocationAndAngles(ent.location.getX(), ent.location.getY(), ent.location.getZ(), ent.entity.rotationYaw, ent.entity.rotationPitch);
+							
+							ent.entity.changeDimension(newWorld, new TeleporterNoPortal(newWorld));
+						}
 						//should be loaded by now
 						Entity rocket = newWorld.getEntityByUuid(ent.entity2.getUniqueID());
 						if(rocket != null)
@@ -282,7 +290,7 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	public void playerLoggedInEvent(ServerCustomPayloadLoginEvent event) {
 		NetworkManager mgr = event.getSource().get().getNetworkManager();
-		
+
 		//Send config first
 		DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> () -> { PacketHandler.sendToDispatcher(new PacketConfigSync(), mgr); } );
 
@@ -429,7 +437,9 @@ public class PlanetEventHandler {
 	@OnlyIn(value=Dist.CLIENT)
 	public void fogColor(RenderFogEvent event) {
 
-		
+		if(event.getInfo().getRenderViewEntity().getEntityWorld() == null)
+			return;
+
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.getInfo().getRenderViewEntity().getEntityWorld());
 		if(properties != null && event.getInfo().getBlockAtCamera().getBlock() != Blocks.WATER && event.getInfo().getBlockAtCamera().getBlock() != Blocks.LAVA) {//& properties.atmosphereDensity > 125) {
 			float fog = Math.min(properties.getAtmosphereDensityAtHeight(event.getInfo().getRenderViewEntity().getPosY()), 200);
@@ -498,7 +508,7 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	public void fallEvent(LivingFallEvent event) {
 		if(DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(event.getEntity().world))) {
-			IPlanetaryProvider planet = (IPlanetaryProvider) DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(event.getEntity().world));
+			DimensionProperties planet =  DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(event.getEntity().world));
 			event.setDistance((float) (event.getDistance() * planet.getGravitationalMultiplier(new BlockPos(event.getEntity().getPositionVec()))));
 		}
 	}

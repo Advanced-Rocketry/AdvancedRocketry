@@ -7,16 +7,19 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.Category;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.common.util.JsonUtils;
 import net.minecraftforge.registries.ForgeRegistries;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
@@ -24,6 +27,7 @@ import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
+import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.client.render.planet.ISkyRenderer;
 import zmaster587.advancedRocketry.inventory.TextureResources;
@@ -41,6 +45,8 @@ import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.*;
 import java.util.Map.Entry;
+
+import com.google.gson.JsonElement;
 
 public class DimensionProperties implements Cloneable, IDimensionProperties {
 
@@ -159,7 +165,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		MARSLIKE(new ResourceLocation("advancedrocketry:textures/planets/marslike.png")),
 		MOON(new ResourceLocation("advancedrocketry:textures/planets/moon.png")),
 		WATERWORLD(new ResourceLocation("advancedrocketry:textures/planets/waterworld.png")),
-		ICEWORLD(new ResourceLocation("advancedrocketry:textures/planets/iceWorld.png")),
+		ICEWORLD(new ResourceLocation("advancedrocketry:textures/planets/iceworld.png")),
 		DESERT(new ResourceLocation("advancedrocketry:textures/planets/desertworld.png")),
 		CARBON(new ResourceLocation("advancedrocketry:textures/planets/carbonworld.png")),
 		VENUSIAN(new ResourceLocation("advancedrocketry:textures/planets/venusian.png")),
@@ -167,7 +173,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		GASGIANTRED(new ResourceLocation("advancedrocketry:textures/planets/gasgiantred.png")),
 		GASGIANTBROWN(new ResourceLocation("advancedrocketry:textures/planets/gasgiantbrown.png")),
 		ASTEROID(new ResourceLocation("advancedrocketry:textures/planets/asteroid.png")),
-		UNKNOWN(new ResourceLocation("advancedrocketry:textures/planets/Unknown.png"))
+		UNKNOWN(new ResourceLocation("advancedrocketry:textures/planets/unknown.png"))
 		;
 
 
@@ -178,7 +184,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		private PlanetIcons(ResourceLocation resource) {
 			this.resource = resource;
 
-			this.resourceLEO = new ResourceLocation(resource.toString().substring(0, resource.toString().length() - 4) + "LEO.jpg");
+			this.resourceLEO = new ResourceLocation(resource.toString().substring(0, resource.toString().length() - 4) + "leo.jpg");
 		}
 
 		private PlanetIcons(ResourceLocation resource, ResourceLocation leo) {
@@ -398,6 +404,17 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		return gravitationalMultiplier;
 	}
 
+	public float getGravitationalMultiplier(BlockPos blockPos) {
+		if(isStation())
+		{
+			ISpaceObject station = AdvancedRocketryAPI.spaceObjectManager.getSpaceStationFromBlockCoords(blockPos);
+			if(station != null)
+				return station.getProperties().getGravitationalMultiplier();
+		}
+		
+		return getGravitationalMultiplier();
+	}
+	
 	@Override
 	public void setGravitationalMultiplier(float mult) {
 		gravitationalMultiplier = mult;
@@ -419,6 +436,12 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @param star the star to set as the host for this planet
 	 */
 	public void setStar(StellarBody star) {
+		if(star == null)
+		{
+			starId = Constants.INVALID_STAR;
+			return;
+		}
+		
 		this.starId = star.getId();
 		this.star = star;
 		if(!this.isMoon() && !isStation())
@@ -632,7 +655,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return the {@link DimensionProperties} of the parent planet
 	 */
 	public DimensionProperties getParentProperties() {
-		if(parentPlanet != Constants.INVALID_PLANET)
+		if(!Constants.INVALID_PLANET.equals(parentPlanet))
 			return DimensionManager.getInstance().getDimensionProperties(parentPlanet);
 		return null;
 	}
@@ -649,13 +672,13 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return if a planet, the same as getParentOrbitalDistance(), if a moon, the moon's distance from the host star
 	 */
 	public int getSolarOrbitalDistance() {
-		if(parentPlanet != Constants.INVALID_PLANET)
+		if(!Constants.INVALID_PLANET.equals(parentPlanet))
 			return getParentProperties().getSolarOrbitalDistance();
 		return orbitalDist;
 	}
 
 	public double getSolarTheta() {
-		if(parentPlanet != Constants.INVALID_PLANET)
+		if(!Constants.INVALID_PLANET.equals(parentPlanet))
 			return getParentProperties().getSolarTheta();
 		return orbitTheta;
 	}
@@ -676,7 +699,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public void setParentPlanet(DimensionProperties parent, boolean update) {
 
 		if(update) {
-			if(parentPlanet != Constants.INVALID_PLANET)
+			if(!Constants.INVALID_PLANET.equals(parentPlanet))
 				getParentProperties().childPlanets.remove(getId());
 
 			if(parent == null) {
@@ -685,7 +708,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			else {
 				parentPlanet = parent.getId();
 				star = parent.getStar();
-				if(parent.getId() != Constants.INVALID_PLANET)
+				if(!Constants.INVALID_PLANET.equals(parent.getId()))
 					parent.childPlanets.add(getId());
 			}
 		}
@@ -712,7 +735,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return true if this DIM orbits another
 	 */
 	public boolean isMoon() {
-		return parentPlanet != Constants.INVALID_PLANET && parentPlanet != SpaceObjectManager.WARPDIMID;
+		return !Constants.INVALID_PLANET.equals(parentPlanet) && parentPlanet != SpaceObjectManager.WARPDIMID;
 	}
 
 	/**
@@ -1570,7 +1593,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			nbt.put("ringColor", list);
 		}
 
-
 		if(!allowedBiomes.isEmpty()) {
 			
 			
@@ -1645,6 +1667,140 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		writeTechnicalNBT(nbt);
 	}
 	
+	public String generateDimJSON()
+	{
+		long seed = 0;
+		
+		List<String> structures = new LinkedList<String>();
+		List<String> biomeConditionalStructures = new LinkedList<String>();
+		if(canGenerateCraters())
+		{
+			structures.add("\"advancedrocketry:crater\"");
+			
+			biomeConditionalStructures.add(
+					"	          \"advancedrocketry:crater\": {\n" + 
+					"	            \"spacing\": " + String.valueOf(40*getCraterMultiplier()) + ",\n" + 
+					"	            \"separation\": " + String.valueOf(20*getCraterMultiplier()) + ",\n" + 
+					"	            \"salt\": 0\n" + 
+					"	          }");
+			
+		}
+		if(canGenerateVolcanos())
+		{
+			structures.add("\"advancedrocketry:volcano\"");
+			biomeConditionalStructures.add(
+					"	          \"advancedrocketry:volcano\": {\n" + 
+					"	            \"spacing\": " + String.valueOf(40*getVolcanoMultiplier()) + ",\n" + 
+					"	            \"separation\": " + String.valueOf(20*getVolcanoMultiplier()) + ",\n" + 
+					"	            \"salt\": 0\n" + 
+					"	          }");
+		}
+		if(canGenerateGeodes())
+		{
+			structures.add("\"advancedrocketry:geode\"");
+			biomeConditionalStructures.add(
+					"	          \"advancedrocketry:geode\": {\n" + 
+					"	            \"spacing\": " + String.valueOf(40*getGeodeMultiplier()) + ",\n" + 
+					"	            \"separation\": " + String.valueOf(20*getGeodeMultiplier()) + ",\n" + 
+					"	            \"salt\": 0\n" + 
+					"	          }");
+		}
+		
+		List<String> biomeStrings = new LinkedList<String>();
+		
+		Random random = new Random("Yes, I know that temp, altidude and humidity are not the same as the noise generator, but im coming in anywayyy".hashCode());
+		
+		for(Biome biome : getBiomes())
+		{
+			biomeStrings.add(
+			"	    {\n" + 
+			"              \"biome\": \"" + biome.getRegistryName().toString() + "\",\n" + 
+			"              \"parameters\": {\n" + 
+			"                \"altitude\": " +  String.valueOf(random.nextFloat()) + ",\n" + 
+			"		\"humidity\": " + String.valueOf(biome.getDownfall()) + ",\n" + 
+			"                \"temperature\": " + String.valueOf(biome.func_242445_k()) + ",				\n" + 
+			"                \"weirdness\": " + String.valueOf(biome.getScale()) + ",\n" + 
+			"                \"offset\": 0\n" + 
+			"              }\n" + 
+			"            }");
+		}
+		
+		
+		return 
+		"{\n" + 
+		"      \"generator\": {\n" + 
+		"        \"type\": \"advancedrocketry:planetary_noise\",\n" + 
+		"        \"seed\": " + String.valueOf(seed) + ",\n" + 
+		(structures.isEmpty() ?  "        \"starts\": [],\n" : "        \"starts\": [" + String.join(", ", structures) +  "],\n") + 
+		"        \"dimension_props\": \"" + getId().toString() +  "\",\n" + 
+		"        \"biome_source\": {\n" + 
+		"		\n" + 
+		"		\n" + 
+		"		\"altitude_noise\": {\"firstOctave\": -7,\"amplitudes\": [1.0,1.0]},\n" + 
+		"		\"humidity_noise\": {\"firstOctave\": -7,\"amplitudes\": [1.0,1.0]},\n" + 
+		"		\"temperature_noise\": {\"firstOctave\": -7,\"amplitudes\": [1.0,1.0]},\n" + 
+		"		\"weirdness_noise\": {\"firstOctave\": -7,\"amplitudes\": [1.0,1.0]},\n" + 
+		"		\n" + 
+		"		\n" + 
+		"          \"type\": \"advancedrocketry:planetary\",\n" + 
+		"          \"seed\": " + String.valueOf(seed) + ",\n" + 
+		"          \"biomes\": [\n" + 
+					String.join(",\n", biomeStrings) + "\n" +
+		"          ]\n" + 
+		"        },\n" + 
+		"    \"settings\": {\n" + 
+		"      \"name\": \"" + getId().toString() + "\",\n" + 
+		"      \"bedrock_roof_position\": -10,\n" + 
+		"      \"bedrock_floor_position\": 0,\n" + 
+		"      \"sea_level\": "  +  String.valueOf(getSeaLevel()) + ",\n" + 
+		"      \"disable_mob_generation\": " +  (isHabitable() ? "true" : "false") + ",\n" + 
+		"      \"default_block\": {\n" + 
+		"        \"Name\": \"" + getStoneBlock().getBlock().getRegistryName().toString() + "\"\n" + 
+		"      },\n" + 
+		"      \"default_fluid\": {\n" + 
+		"        \"Name\": \"" + getOceanBlock().getBlock().getRegistryName().toString() + "\",\n" + 
+		"        \"Properties\": {\n" + 
+		"          \"level\": \"0\"\n" + 
+		"        }\n" + 
+		"      },\n" + 
+		"      \"noise\": {\n" + 
+		"        \"density_factor\": 1,\n" + 
+		"        \"density_offset\": -0.46875,\n" + 
+		"        \"simplex_surface_noise\": true,\n" + 
+		"        \"random_density_offset\": true,\n" + 
+		"        \"island_noise_override\": false,\n" + 
+		"        \"amplified\": false,\n" + 
+		"        \"size_horizontal\": 1,\n" + 
+		"        \"size_vertical\": 2,\n" + 
+		"        \"height\": 256,\n" + 
+		"        \"sampling\": {\n" + 
+		"          \"xz_scale\": 1,\n" + 
+		"          \"y_scale\": 1,\n" + 
+		"          \"xz_factor\": 80,\n" + 
+		"          \"y_factor\": 160\n" + 
+		"        },\n" + 
+		"        \"bottom_slide\": {\n" + 
+		"          \"target\": -30,\n" + 
+		"          \"size\": 0,\n" + 
+		"          \"offset\": 0\n" + 
+		"        },\n" + 
+		"        \"top_slide\": {\n" + 
+		"          \"target\": -10,\n" + 
+		"          \"size\": 3,\n" + 
+		"          \"offset\": 0\n" + 
+		"        }\n" + 
+		"      },\n" + 
+		"      \"structures\": {\n" + 
+		"        \"structures\": {\n" + 
+					String.join(",\n", biomeConditionalStructures) +
+		"        }\n" + 
+		"      }\n" + 
+		"    }\n" + 
+		"      },\n" + 
+		"      \"type\": \"advancedrocketry:planet\"\n" + 
+		"    }";
+	}
+	
 	public int getAverageTemp()
 	{
 		averageTemperature = AstronomicalBodyHelper.getAverageTemperature(this.getStar(), this.getSolarOrbitalDistance(), this.getAtmosphereDensity());
@@ -1652,7 +1808,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 
 	public BlockState getOceanBlock() {
-		return oceanBlock;
+		return oceanBlock == null ? Blocks.WATER.getDefaultState() : oceanBlock;
 	}
 
 	public void setOceanBlock(BlockState block) {
@@ -1660,7 +1816,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 
 	public BlockState getStoneBlock() {
-		return fillerBlock;
+		return fillerBlock == null ? Blocks.STONE.getDefaultState() : fillerBlock;
 	}
 	
 	public void setStoneBlock(BlockState block) {

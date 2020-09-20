@@ -54,7 +54,7 @@ public class GravityHandler implements IGravityManager {
 					entity.setMotion(entity.getMotion().add(0, multiplier, 0));
 					
 				}
-				else if(DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(entity.world)) || ZUtils.getDimensionIdentifier(entity.world) == ARConfiguration.GetSpaceDimId()) {
+				else if(DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(entity.world)) || ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(entity.world))) {
 					double gravMult;
 
 					gravMult = DimensionManager.getInstance().getDimensionProperties(entity.world).gravitationalMultiplier;

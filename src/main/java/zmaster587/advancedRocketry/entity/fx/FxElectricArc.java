@@ -13,7 +13,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class FxElectricArc extends SpriteTexturedParticle {
-	public static final ResourceLocation icon = new ResourceLocation("advancedrocketry:textures/particle/hardSquare.png");
 	int numRecursions;
 
 	public FxElectricArc(World world, double x,

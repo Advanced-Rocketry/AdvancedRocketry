@@ -89,7 +89,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand) {
 		ItemStack stack = playerIn.getHeldItem(hand);
 		if(!playerIn.world.isRemote && stack != null && playerIn.isSneaking())
-			NetworkHooks.openGui((ServerPlayerEntity)playerIn, (INamedContainerProvider)stack.getItem(), packetBuffer -> packetBuffer.writeBoolean(hand == Hand.MAIN_HAND));
+			NetworkHooks.openGui((ServerPlayerEntity)playerIn, (INamedContainerProvider)stack.getItem(), packetBuffer -> {packetBuffer.writeInt(getModularInvType().ordinal()); packetBuffer.writeBoolean(hand == Hand.MAIN_HAND);});
 
 		return super.onItemRightClick(worldIn, playerIn, hand);
 	}
@@ -271,7 +271,8 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 			}
 			//Re-open the UI
 			player.closeScreen();
-			NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)stack.getItem(), packetBuffer -> packetBuffer.writeBoolean(true));
+			
+			NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)stack.getItem(), packetBuffer -> {packetBuffer.writeInt(getModularInvType().ordinal()); packetBuffer.writeBoolean(true);});
 		}
 	}
 
@@ -453,7 +454,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		else {
 			list.add(new StringTextComponent(TextFormatting.GREEN + LibVulpes.proxy.getLocalizedString("msg.stationchip.sation") + getUUID(stack)));
 			super.addInformation(stack, world, list, bool);
-			if(ZUtils.getDimensionIdentifier(world) == ARConfiguration.GetSpaceDimId()) {
+			if(ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
 				Entity p = Minecraft.getInstance().player;
 				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(p.getPositionVec()));
 
@@ -542,11 +543,11 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 
 	@Override
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
-		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_HELD_ITEM, id, player, getModules(getModularInvType(), player), this);
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_HELD_ITEM, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}
 
 	@Override
-	public int getModularInvType() {
-		return  GuiHandler.guiId.MODULARCENTEREDFULLSCREEN.ordinal();
+	public GuiHandler.guiId getModularInvType() {
+		return  GuiHandler.guiId.MODULARCENTEREDFULLSCREEN;
 	}
 }

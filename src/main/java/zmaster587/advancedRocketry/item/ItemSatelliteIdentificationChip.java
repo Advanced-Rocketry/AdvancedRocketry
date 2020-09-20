@@ -49,7 +49,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 
 			if(satellite != null) {
 
-				if(!nbt.contains("dimId") || new ResourceLocation(nbt.getString("dimId")) == Constants.INVALID_PLANET) {
+				if(!nbt.contains("dimId") || Constants.INVALID_PLANET.equals(new ResourceLocation(nbt.getString("dimId")))) {
 					nbt.putString("dimId", satellite.getDimensionId().toString());
 				}
 

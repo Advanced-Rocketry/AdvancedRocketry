@@ -11,7 +11,7 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 public class TileSatelliteHatch extends TileInventoryHatch {
 
 	public TileSatelliteHatch() {
-		super(AdvancedRocketryTileEntityType.TILE_SATELLITE_HATCH);
+		super(AdvancedRocketryTileEntityType.TILE_SATELLITE_HATCH, 1);
 	}
 
 	public TileSatelliteHatch(int i) {

@@ -42,8 +42,8 @@ import java.util.Random;
 public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implements IModularInventory, IInventory {
 
 	private static final Object[][][] structure = new Object[][][]{
-		{{"slab", 'c', "slab"},
-			{"slab", "slab", "slab"}},
+		{{"slabs", 'c', "slabs"},
+			{"slabs", "slabs", "slabs"}},
 
 			{{'P','I', 'O'},
 				{'D','D','D'}}

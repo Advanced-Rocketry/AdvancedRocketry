@@ -50,7 +50,7 @@ public class RendererLathe extends TileEntityRenderer<TileLathe> {
 		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
 		matrix.rotate(new Quaternion(0, (front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, true));
 		matrix.translate(-.5f, -1f, -2.5f);
-		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
+		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getTranslucentEntityModelRenderType(texture));
 
 		ItemStack outputStack;
 		if(tile.isRunning()) {
@@ -89,9 +89,9 @@ public class RendererLathe extends TileEntityRenderer<TileLathe> {
 			//GL11.glColor4f(1f, 1f, 1f, 1f);
 		}
 		else {
-			model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "body");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "body");
 
-			model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "Tray");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "Tray");
 		}
 		matrix.pop();
 	}

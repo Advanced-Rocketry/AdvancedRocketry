@@ -50,7 +50,7 @@ public class RenderCentrifuge extends TileEntityRenderer<TileCentrifuge> {
 		matrix.rotate(new Quaternion(0, (front.getZOffset() == 1 ? 180 : 0) - front.getXOffset()*90f, 0 ,true));
 		matrix.translate(0, 0, 1);
 		
-		IVertexBuilder builder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture)); 
+		IVertexBuilder builder = buffer.getBuffer(RenderHelper.getTranslucentEntityModelRenderType(texture)); 
 
 		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, builder, "Frame");
 

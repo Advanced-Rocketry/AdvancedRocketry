@@ -1,8 +1,10 @@
 package zmaster587.advancedRocketry.api;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -20,6 +22,9 @@ import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.api.material.AllowedProducts;
+import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.config.CommonConfig;
 
 import java.io.InvalidClassException;
@@ -100,7 +105,7 @@ public class ARConfiguration {
 		
 		builder.push(CATEGORY_GENERAL);
 		arConfig.buildSpeedMultiplier = builder.comment("Multiplier for the build speed of the Rocket Builder (0.5 is twice as fast 2 is half as fast").define("buildSpeedMultiplier", 1d);
-		arConfig.spaceDimId = builder.comment("Dimension ID to use for space stations").define("spaceStationId", Constants.PLANET_NAMESPACE + ":space");
+		arConfig.spaceDimId = builder.comment("Dimension ID to use for space stations, changing this could really break things!").define("spaceStationId", Constants.modId + ":space");
 		arConfig.enableNausea = builder.comment("If true, allows players to experience nausea on non-standard atmosphere types").define("EnableAtmosphericNausea", true);
 		arConfig.enableOxygen = builder.comment("If true, allows players being hurt due to lack of oxygen and allows effects from non-standard atmosphere types").define("EnableAtmosphericEffects", true);
 		arConfig.allowMakingItemsForOtherMods = builder.comment("If true, the machines from AdvancedRocketry will produce things like plates/rods for other mods even if Advanced Rocketry itself does not use the material (This can increase load time)").define("makeMaterialsForOtherMods", true);
@@ -127,7 +132,7 @@ public class ARConfiguration {
 		arConfig.allowTerraformNonAR = builder.comment("If true, dimensions not added by AR can be terraformed").define("allowTerraformingNonARWorlds", false);
 
 		List<String> fuels = new LinkedList();
-		fuels.add("rocketfuel");
+		fuels.add("advancedrocketry:rocket_fuel");
 		liquidRocketFuel = builder.comment("List of fluid names for fluids that can be used as rocket fuel").defineList("rocketFuels", fuels, (val) -> {return true;} );
 
 		arConfig.stationSize = builder.comment("The largest size a space station can be.  Should also be a power of 2 (512)").define("SpaceStationBuildRadius", 1024);
@@ -161,22 +166,22 @@ public class ARConfiguration {
 		arConfig.gasCollectionMult = builder.comment("Multiplier for the amount of time gas collection missions take").define("gasMissionMultiplier", 1.0);
 		arConfig.asteroidMiningTimeMult = builder.comment("Multiplier changing how long a mining mission takes").define("miningMissionTmeMultiplier", 1.0);
 		List<String> asteroidOres = new LinkedList<>();
-		asteroidOres.add("oreIron");
-		asteroidOres.add("oreGold");
-		asteroidOres.add("oreCopper");
-		asteroidOres.add("oreTin");
-		asteroidOres.add("oreRedstone");
+		asteroidOres.add(Blocks.IRON_ORE.getRegistryName().toString());
+		asteroidOres.add(Blocks.GOLD_ORE.getRegistryName().toString());
+		asteroidOres.add("libvulpes:orecopper");
+		asteroidOres.add("libvulpes:oretin");
+		asteroidOres.add(Blocks.REDSTONE_ORE.getRegistryName().toString());
 		
-		asteriodOres = builder.comment("List of oredictionary names of ores allowed to spawn in asteriods").defineList("standardOres", asteroidOres, (val) -> { return true;});
+		asteriodOres = builder.comment("List of b names of ores allowed to spawn in asteriods").defineList("standardOres", asteroidOres, (val) -> { return true;});
 		
 		List<String> geodeOresList = new LinkedList<>();
-		geodeOresList.add("oreIron");
-		geodeOresList.add("oreGold");
-		geodeOresList.add("oreCopper");
-		geodeOresList.add("oreTin");
-		geodeOresList.add("oreRedstone");
+		geodeOresList.add(Blocks.IRON_ORE.getRegistryName().toString());
+		geodeOresList.add(Blocks.GOLD_ORE.getRegistryName().toString());
+		geodeOresList.add("libvulpes:orecopper");
+		geodeOresList.add("libvulpes:oretin");
+		geodeOresList.add(Blocks.REDSTONE_ORE.getRegistryName().toString());
 		
-		geodeOres = builder.comment("List of oredictionary names of ores allowed to spawn in geodes").defineList("geodeOres", geodeOresList, (val) -> {return true;} );
+		geodeOres = builder.comment("List of block names of blocks (usally ores) allowed to spawn in geodes").defineList("geodeOres", geodeOresList, (val) -> {return true;} );
 		
 		List<String> blackHoleGen = new LinkedList<>();
 		blackHoleGen.add("minecraft:stone;1");
@@ -217,10 +222,10 @@ public class ARConfiguration {
 		
 		
 		LinkedList<String> blackListedbiomes = new LinkedList<String>();
-		blackListedbiomes.add(Biomes.RIVER.getRegistryName().toString());
-		blackListedbiomes.add(Biomes.THE_END.getRegistryName().toString());
-		blackListedbiomes.add(Biomes.BADLANDS.getRegistryName().toString());
-		blackListedbiomes.add(Biomes.THE_VOID.getRegistryName().toString());
+		blackListedbiomes.add(Biomes.RIVER.func_240901_a_().toString());
+		blackListedbiomes.add(Biomes.THE_END.func_240901_a_().toString());
+		blackListedbiomes.add(Biomes.BADLANDS.func_240901_a_().toString());
+		blackListedbiomes.add(Biomes.THE_VOID.func_240901_a_().toString());
 		//blackListedbiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.alienForest).toString());
 		
 		arConfig.biomeBlackList = builder.comment("List of Biomes to be blacklisted from spawning as BiomeIds, default is: river, sky, hell, void, alienForest").
@@ -238,10 +243,10 @@ public class ARConfiguration {
 		//singleBiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.swampDeepBiome).toString());
 		//singleBiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.crystalChasms).toString());
 		//singleBiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.alienForest).toString());
-		singleBiomes.add(Biomes.DESERT_HILLS.getRegistryName().toString());
-		singleBiomes.add(Biomes.MUSHROOM_FIELDS.getRegistryName().toString());
-		singleBiomes.add(Biomes.TALL_BIRCH_HILLS.getRegistryName().toString());
-		singleBiomes.add(Biomes.ICE_SPIKES.getRegistryName().toString());
+		singleBiomes.add(Biomes.DESERT_HILLS.func_240901_a_().toString());
+		singleBiomes.add(Biomes.MUSHROOM_FIELDS.func_240901_a_().toString());
+		singleBiomes.add(Biomes.TALL_BIRCH_HILLS.func_240901_a_().toString());
+		singleBiomes.add(Biomes.ICE_SPIKES.func_240901_a_().toString());
 		
 		arConfig.biomeSingle = builder.comment("Some worlds have a chance of spawning single biomes contained in this list.").
 				defineList("SingleBiomes", singleBiomes, (item) -> { return true; });

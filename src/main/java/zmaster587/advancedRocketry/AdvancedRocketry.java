@@ -1,6 +1,8 @@
 package zmaster587.advancedRocketry;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.SpellParticle;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
@@ -8,6 +10,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.particles.BasicParticleType;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleType;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
@@ -15,7 +21,9 @@ import net.minecraft.world.Dimension;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.carver.WorldCarver;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -29,6 +37,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppedEvent;
@@ -53,6 +62,7 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.AtmosphereTypes;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
 import zmaster587.advancedRocketry.enchant.EnchantmentSpaceBreathing;
+import zmaster587.advancedRocketry.entity.fx.FxElectricArc;
 import zmaster587.advancedRocketry.event.CableTickHandler;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.integration.CompatibilityMgr;
@@ -70,6 +80,7 @@ import zmaster587.advancedRocketry.tile.multiblock.energy.TileMicrowaveReciever;
 import zmaster587.advancedRocketry.tile.multiblock.machine.*;
 import zmaster587.advancedRocketry.util.*;
 import zmaster587.advancedRocketry.world.decoration.MapGenLander;
+import zmaster587.advancedRocketry.world.decoration.StructurePieceGeode;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesItems;
 import zmaster587.libVulpes.api.material.AllowedProducts;
@@ -155,6 +166,7 @@ public class AdvancedRocketry {
 		FLUIDS.register(modEventBus);
 		ARConfiguration.register();
 		AdvancedRocketryFluids.init();
+		proxy.initDeferredRegistries();
 	}
 
 	//@SubscribeEvent
@@ -263,6 +275,12 @@ public class AdvancedRocketry {
 	}
 	
 	@SubscribeEvent
+	public void registerStructures(RegistryEvent.Register<Structure<?>> evt)
+	{
+		AdvancedRocketryBiomes.registerStructures(evt);
+	}
+	
+	@SubscribeEvent
 	public void registerCarvers(RegistryEvent.Register<WorldCarver<?>> evt)
 	{
 		AdvancedRocketryBiomes.registerCarvers(evt);	
@@ -286,6 +304,18 @@ public class AdvancedRocketry {
 		//Enchantments
 		AdvancedRocketryAPI.enchantmentSpaceProtection = new EnchantmentSpaceBreathing().setRegistryName("spacebreathing");
 		evt.getRegistry().register(AdvancedRocketryAPI.enchantmentSpaceProtection);
+	}
+	
+	@SubscribeEvent()
+	public void registerParticles(ParticleFactoryRegisterEvent evt)
+	{
+		AdvancedRocketryParticleTypes.registerParticles(evt);
+	}
+	
+	@SubscribeEvent()
+	public void registerParticles(RegistryEvent.Register<ParticleType<?>> evt)
+	{
+		AdvancedRocketryParticleTypes.registerParticles(evt);
 	}
 	
 	@SubscribeEvent(priority=EventPriority.HIGH)
@@ -503,9 +533,12 @@ public class AdvancedRocketry {
 		DimensionManager.getInstance().registerSpaceDimension(ARConfiguration.GetSpaceDimId());
 
 		ARConfiguration.loadPostInit();
+		
+		// Post init mapgen
+		StructurePieceGeode.init();
 
 		//Add the overworld as a discovered planet
-		zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().initiallyKnownPlanets.add(Dimension.field_236053_b_.getRegistryName());
+		zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().initiallyKnownPlanets.add(Dimension.field_236053_b_.func_240901_a_());
 	}
 
 	public void serverStarted(FMLServerStartedEvent event) {
@@ -524,7 +557,7 @@ public class AdvancedRocketry {
 	}
 
 	
-	public void serverStarting(FMLServerStartingEvent event) {
+	public void serverStarting(FMLServerAboutToStartEvent event) {
 		//Open ore files
 
 		

@@ -106,7 +106,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				return item.getDimensionId(stack);
 			}
 			else if(itemType instanceof ItemStationChip) {
-				if(ARConfiguration.GetSpaceDimId() == currentDimension) {
+				if(ARConfiguration.GetSpaceDimId().equals(currentDimension)) {
 					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 					if(object != null) {
 						if(ItemStationChip.getUUID(stack) == object.getId())
@@ -162,7 +162,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 			}
 			else if(itemType instanceof ItemStationChip) {
 				ItemStationChip chip = (ItemStationChip)stack.getItem();
-				if(landingDimension == ARConfiguration.GetSpaceDimId()) {
+				if(ARConfiguration.GetSpaceDimId().equals(landingDimension)) {
 					//TODO: handle Exception
 					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(ItemStationChip.getUUID(stack));
 					return getStationLocation(object, commit);
@@ -235,7 +235,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		ItemStack stack = getStackInSlot(0);
 		if(!stack.isEmpty() && stack.getItem() instanceof ItemStationChip) {
 			ItemStationChip chip = (ItemStationChip)stack.getItem();
-			if(landingDimension != ARConfiguration.GetSpaceDimId()) {
+			if(!ARConfiguration.GetSpaceDimId().equals(landingDimension)) {
 				LandingLocation loc = chip.getTakeoffCoords(stack, landingDimension);
 				if(loc != null)
 				{
@@ -318,6 +318,6 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.guidanceComputer.name";
+		return "block.advancedrocketry.guidancecomputer";
 	}
 }

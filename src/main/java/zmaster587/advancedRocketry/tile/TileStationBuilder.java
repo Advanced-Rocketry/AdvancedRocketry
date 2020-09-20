@@ -22,6 +22,8 @@ import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.inventory.GuiHandler;
+import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 
@@ -119,7 +121,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 			ItemStack outputStack;
 			SpaceStationObject object = null;
-			if(storedId == null) {
+			if(Constants.INVALID_PLANET.equals(storedId)) {
 				object = new SpaceStationObject();
 				SpaceObjectManager.getSpaceManager().registerSpaceObject(object, Constants.INVALID_PLANET);
 
@@ -136,7 +138,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 			inventory.setInventorySlotContents(2, outputStack);
 
-			if(storedId == null) {
+			if(Constants.INVALID_PLANET.equals(storedId)) {
 				ItemStack stack = new ItemStack(AdvancedRocketryItems.itemSpaceStationChip,1);
 				ItemStationChip.setUUID(stack,object.getId() );
 				inventory.setInventorySlotContents(3, stack);
@@ -144,7 +146,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 
 			this.status = ErrorCodes.FINISHED;
-			storedId = null;
+			storedId = Constants.INVALID_PLANET;
 			this.markDirty();
 			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);	
 		}
@@ -200,8 +202,8 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 			inventory.decrStackSize(0, 1);
 
 			storedId = ItemStationChip.getUUID(inventory.getStackInSlot(1));
-			if(storedId == DimensionManager.overworldProperties.getId()) storedId = null;
-			if(storedId == null)
+			if(storedId == DimensionManager.overworldProperties.getId()) storedId = Constants.INVALID_PLANET;
+			if(Constants.INVALID_PLANET.equals(storedId))
 				inventory.decrStackSize(1, 1);
 		}
 	}
@@ -288,5 +290,10 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 	@Override
 	public void clear() {
 		inventory.clear();
+	}
+	
+	@Override
+	public GuiHandler.guiId getModularInvType() {
+		return guiId.MODULAR;
 	}
 }

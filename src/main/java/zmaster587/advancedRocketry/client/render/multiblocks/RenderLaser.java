@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.client.render.multiblocks;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -47,6 +48,13 @@ public class RenderLaser extends TileEntityRenderer<TileSpaceLaser> {
 		if(!multiBlockTile.canRender())
 			return;
 
+		if (tile.getWorld() != null) {
+			combinedLightIn = WorldRenderer.getCombinedLight(tile.getWorld(), tile.getPos().add(0, 1, 0));
+		} else {
+			combinedLightIn = 15728880;
+		}
+		
+		
 		matrix.push();
 
 		//Initial setup
@@ -57,7 +65,7 @@ public class RenderLaser extends TileEntityRenderer<TileSpaceLaser> {
 		matrix.rotate(new Quaternion(0, (front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, true));
 		matrix.translate(2f, 0, 0f);
 		
-		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
+		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getTranslucentEntityModelRenderType(texture));
 		model.tessellateAll(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder);
 		IVertexBuilder lazerType = buffer.getBuffer(RenderHelper.getLaserBeamType());
 		

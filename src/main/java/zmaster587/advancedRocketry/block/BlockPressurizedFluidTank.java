@@ -33,6 +33,7 @@ import zmaster587.advancedRocketry.item.ItemBlockFluidTank;
 import zmaster587.advancedRocketry.tile.TileFluidTank;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.GuiHandler.guiId;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -57,7 +58,7 @@ public class BlockPressurizedFluidTank extends Block {
 		{
 			TileEntity te = world.getTileEntity(pos);
 			if(te != null)
-				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)te, pos);
+				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)te, buf -> {buf.writeInt(((IModularInventory)te).getModularInvType().ordinal()); buf.writeBlockPos(pos); });
 		}
 		return ActionResultType.SUCCESS;
 	}

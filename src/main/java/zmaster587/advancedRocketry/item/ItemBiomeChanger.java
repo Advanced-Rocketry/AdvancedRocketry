@@ -117,7 +117,7 @@ public class ItemBiomeChanger extends Item {//extends ItemSatelliteIdentificatio
 						PacketHandler.sendToPlayer(new PacketSatellite(getSatellite(stack )), player);
 						INamedContainerProvider stack2 = (INamedContainerProvider)stack.getItem();
 						NetworkHooks.openGui((ServerPlayerEntity)player, stack2, packetBuffer -> packetBuffer.writeBoolean(hand == Hand.MAIN_HAND));
-						//player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), world, -1, -1, 0);
+						//player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV, world, -1, -1, 0);
 					}
 				}
 				else {
@@ -207,11 +207,11 @@ public class ItemBiomeChanger extends Item {//extends ItemSatelliteIdentificatio
 	@Override
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		
-		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_HELD_ITEM, id, player, this.getModules(getModularInvType(), player), this);
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_HELD_ITEM, id, player, this.getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}
 
 	@Override
-	public int getModularInvType() {
-		return GuiHandler.guiId.MODULARNOINV.ordinal();
+	public GuiHandler.guiId getModularInvType() {
+		return GuiHandler.guiId.MODULARNOINV;
 	}*/
 }

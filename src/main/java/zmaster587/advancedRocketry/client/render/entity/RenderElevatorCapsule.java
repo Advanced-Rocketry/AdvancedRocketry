@@ -60,7 +60,7 @@ public class RenderElevatorCapsule extends EntityRenderer<EntityElevatorCapsule>
 			IRenderTypeBuffer bufferIn, int packedLightIn) {
 		matrix.push();
 		matrix.translate(0, 1, 0);
-		matrix.rotate(new Quaternion(0, entityYaw, 0, true));
+		matrix.rotate(new Quaternion(0, entity.rotationYaw, 0, true));
         int j = packedLightIn % 65536;
         int k = packedLightIn / 65536;
         

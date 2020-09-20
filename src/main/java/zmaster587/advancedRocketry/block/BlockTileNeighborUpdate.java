@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import zmaster587.libVulpes.block.BlockTile;
+import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.util.IAdjBlockUpdate;
 
 public class BlockTileNeighborUpdate extends BlockTile {
@@ -15,7 +16,7 @@ public class BlockTileNeighborUpdate extends BlockTile {
 	 * @param tileClass must extend IAdjBlockUpdate
 	 */
 	public BlockTileNeighborUpdate(Properties properties,
-			int guiId) {
+			GuiHandler.guiId guiId) {
 		super(properties, guiId);
 	}
 	

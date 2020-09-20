@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.client.render.multiblocks;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.Entity;
@@ -41,6 +42,12 @@ public class RendererSpaceElevator extends TileEntityRenderer<TileSpaceElevator>
 
 		if(!tile.canRender())
 			return;
+		
+		if (tile.getWorld() != null) {
+			combinedLightIn = WorldRenderer.getCombinedLight(tile.getWorld(), tile.getPos().add(0, 1, 0));
+		} else {
+			combinedLightIn = 15728880;
+		}
 
 		double renderX = tile.getLandingLocationX() - tile.getPos().getX();
 		double renderZ = tile.getLandingLocationZ() - tile.getPos().getZ();

@@ -1,7 +1,0 @@
-{
-  "config": {
-    "start_pool": "minecraft:nightmare_tower/starts",
-    "size": 6
-  },
-  "type": "minecraft:village"
-}

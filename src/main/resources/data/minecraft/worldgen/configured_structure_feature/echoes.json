@@ -1,7 +1,0 @@
-{
-  "config": {
-    "start_pool": "minecraft:echoes/starts",
-    "size": 6
-  },
-  "type": "minecraft:bastion_remnant"
-}

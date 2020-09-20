@@ -159,7 +159,7 @@ public class RocketEventHandler extends Screen {
 			outerBounds = new ClientDynamicTexture(outerImgSize, outerImgSize);
 		}
 
-		if(ZUtils.getDimensionIdentifier(event.world) == ARConfiguration.GetSpaceDimId()) {
+		if(ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(event.world))) {
 			destroyOrbitalTextures(event.world);
 			return;
 		}

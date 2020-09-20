@@ -132,7 +132,7 @@ public class EntityUIPlanet extends Entity {
 		ResourceLocation planetId = new ResourceLocation(this.dataManager.get(planetID));
 
 		if(properties != null && properties.getId() != planetId) {
-			if(planetId == Constants.INVALID_PLANET )
+			if(Constants.INVALID_PLANET.equals(planetId) )
 				properties = null;
 			else
 				properties = DimensionManager.getInstance().getDimensionProperties(planetId);

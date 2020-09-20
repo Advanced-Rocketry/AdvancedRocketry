@@ -267,8 +267,8 @@ public class StorageChunk implements IWorld, IStorageChunk {
 
 		ListNBT listnbt1 = new ListNBT();
 
-		for(BlockPos blockpos : chunk.getTileEntitiesPos()) {
-			CompoundNBT compoundnbt4 = chunk.getTileEntityNBT(blockpos);
+		for(TileEntity tile : tileEntities) {
+			CompoundNBT compoundnbt4 = tile.write(new CompoundNBT());
 			if (compoundnbt4 != null) {
 				listnbt1.add(compoundnbt4);
 			}
@@ -628,6 +628,8 @@ public class StorageChunk implements IWorld, IStorageChunk {
 
 							ret.tileEntities.add(newTile);
 						}
+						
+						ret.chunk.addTileEntity(pos, newTile);
 					}
 				}
 			}

@@ -9,10 +9,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.libVulpes.block.BlockTile;
+import zmaster587.libVulpes.inventory.GuiHandler;
 
 public class BlockSuitWorkstation extends BlockTile {
 
-	public BlockSuitWorkstation(Properties properties, int guiId) {
+	public BlockSuitWorkstation(Properties properties, GuiHandler.guiId guiId) {
 		super(properties, guiId);
 	}
 

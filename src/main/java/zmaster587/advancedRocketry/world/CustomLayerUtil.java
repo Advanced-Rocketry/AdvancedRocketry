@@ -1,10 +1,13 @@
 package zmaster587.advancedRocketry.world;
 
+import java.util.List;
 import java.util.function.LongFunction;
+import java.util.function.Supplier;
 
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import net.minecraft.util.Util;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.IExtendedNoiseRandom;
 import net.minecraft.world.gen.LazyAreaLayerContext;
 import net.minecraft.world.gen.area.IArea;
@@ -116,8 +119,7 @@ public class CustomLayerUtil {
 		return iareafactory;
 	}
 
-	private static <T extends IArea, C extends IExtendedNoiseRandom<T>> IAreaFactory<T> func_237216_a_(boolean p_237216_0_, int p_237216_1_, int p_237216_2_, LongFunction<C> p_237216_3_, DimensionProperties properties) {
-		boolean hasRivers = properties.hasRivers();
+	private static <T extends IArea, C extends IExtendedNoiseRandom<T>> IAreaFactory<T> func_237216_a_(boolean p_237216_0_, int p_237216_1_, int p_237216_2_, LongFunction<C> p_237216_3_, List<Biome> biomes, boolean hasRivers) {
 		IAreaFactory<T> iareafactory = IslandLayer.INSTANCE.apply(p_237216_3_.apply(1L));
 		iareafactory = ZoomLayer.FUZZY.apply(p_237216_3_.apply(2000L), iareafactory);
 		iareafactory = AddIslandLayer.INSTANCE.apply(p_237216_3_.apply(1L), iareafactory);
@@ -141,7 +143,7 @@ public class CustomLayerUtil {
 		iareafactory = repeat(1000L, ZoomLayer.NORMAL, iareafactory, 0, p_237216_3_);
 		IAreaFactory<T> lvt_6_1_ = repeat(1000L, ZoomLayer.NORMAL, iareafactory, 0, p_237216_3_);
 		lvt_6_1_ = StartRiverLayer.INSTANCE.apply(p_237216_3_.apply(100L), lvt_6_1_);
-		IAreaFactory<T> lvt_7_1_ = (new GenLayerBiomePlanet(properties.getBiomes())).apply(p_237216_3_.apply(200L), iareafactory);
+		IAreaFactory<T> lvt_7_1_ = (new GenLayerBiomePlanet(biomes)).apply(p_237216_3_.apply(200L), iareafactory);
 		lvt_7_1_ = AddBambooForestLayer.INSTANCE.apply(p_237216_3_.apply(1001L), lvt_7_1_);
 		lvt_7_1_ = repeat(1000L, ZoomLayer.NORMAL, lvt_7_1_, 2, p_237216_3_);
 		lvt_7_1_ = EdgeBiomeLayer.INSTANCE.apply(p_237216_3_.apply(1000L), lvt_7_1_);
@@ -171,11 +173,11 @@ public class CustomLayerUtil {
 		return MixOceansLayer.INSTANCE.apply(p_237216_3_.apply(100L), lvt_7_1_, iareafactory1);
 	}
 
-	public static Layer func_237215_a_(long p_237215_0_, boolean p_237215_2_, int p_237215_3_, int p_237215_4_, DimensionProperties dimensionProperties) {
+	public static Layer func_237215_a_(long p_237215_0_, boolean p_237215_2_, int p_237215_3_, int p_237215_4_, List<Biome> biomes, boolean hasRivers) {
 		int i = 25;
 		IAreaFactory<LazyArea> iareafactory = func_237216_a_(p_237215_2_, p_237215_3_, p_237215_4_, (p_227473_2_) -> {
 			return new LazyAreaLayerContext(25, p_237215_0_, p_227473_2_);
-		}, dimensionProperties);
+		}, biomes, hasRivers);
 		return new Layer(iareafactory);
 	}
 

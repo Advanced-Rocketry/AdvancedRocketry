@@ -1,7 +1,0 @@
-{
-  "config": {
-    "start_pool": "minecraft:dream_tower_2/starts",
-    "size": 6
-  },
-  "type": "minecraft:village"
-}

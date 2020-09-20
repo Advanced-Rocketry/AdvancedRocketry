@@ -38,6 +38,7 @@ import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.interfaces.INetworkEntity;
+import zmaster587.libVulpes.network.IEntitySpawnNBT;
 import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketSpawnEntity;
@@ -47,7 +48,7 @@ import zmaster587.libVulpes.util.ZUtils;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class EntityElevatorCapsule extends Entity implements INetworkEntity {
+public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEntitySpawnNBT {
 
 	public static final double MAX_HEIGHT = ARConfiguration.getCurrentConfig().orbit.get();
 	public static final double MAX_STANDTIME = 200;
@@ -140,7 +141,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 		super.setEntityId(id);
 		//Ask server for nbt data
 		if(world.isRemote) {
-			PacketHandler.sendToServer(new PacketEntity(this, PACKET_RECIEVE_NBT));
+			//PacketHandler.sendToServer(new PacketEntity(this, PACKET_RECIEVE_NBT));
 		}
 	}
 
@@ -392,11 +393,11 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 				
 				
 				if( srcTile != null && srcTile instanceof TileSpaceElevator && !((TileSpaceElevator)srcTile).getMachineEnabled())
-					AdvancedRocketry.proxy.displayMessage(LibVulpes.proxy.getLocalizedString("msg.spaceElevator.turnedOff"),5);
+					AdvancedRocketry.proxy.displayMessage(LibVulpes.proxy.getLocalizedString("msg.spaceelevator.turnedoff"),5);
 				else if(dstTilePos != null) 
-					AdvancedRocketry.proxy.displayMessage(LibVulpes.proxy.getLocalizedString("msg.spaceElevator.ascentReady") + ": " + (int)((MAX_STANDTIME - getStandTime())/20) + "\nDST " + dstTilePos,5);
+					AdvancedRocketry.proxy.displayMessage(LibVulpes.proxy.getLocalizedString("msg.spaceelevator.ascentready") + ": " + (int)((MAX_STANDTIME - getStandTime())/20) + "\nDST " + dstTilePos,5);
 				else 
-					AdvancedRocketry.proxy.displayMessage(LibVulpes.proxy.getLocalizedString("msg.label.noneSelected"), 5);
+					AdvancedRocketry.proxy.displayMessage(LibVulpes.proxy.getLocalizedString("msg.label.noneselected"), 5);
 			}			
 		}
 
@@ -496,6 +497,17 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 
 	@Override
 	public IPacket<?> createSpawnPacket() {
-		return new PacketSpawnEntity(this);
+		CompoundNBT nbt = new CompoundNBT();
+		writeAdditional(nbt);
+		return new PacketSpawnEntity(this, nbt);
+	}
+
+	@Override
+	public void readSpawnNBT(CompoundNBT nbt) {
+		
+		if(nbt.contains("dimid")) {
+			dstTilePos = new DimensionBlockPosition(new ResourceLocation(nbt.getString("dimid")), new HashedBlockPosition(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z")));
+		}
+		else dstTilePos = null;
 	}
 }

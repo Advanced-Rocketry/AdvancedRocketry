@@ -75,7 +75,7 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 	}
 
 	private void selectSystem(ResourceLocation id) {
-		if(id == Constants.INVALID_PLANET)
+		if(Constants.INVALID_PLANET.equals(id))
 			dimCache = null;
 		else
 			dimCache = DimensionManager.getInstance().getDimensionProperties(container.getSelectedSystem());
@@ -86,7 +86,7 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
-                DimensionProperties props = DimensionManager.getEffectiveDimId(player.world, new BlockPos(player.getPositionVec()));
+        DimensionProperties props = DimensionManager.getEffectiveDimId(player.world, new BlockPos(player.getPositionVec()));
 		container = new ModulePlanetSelector((props != null ? props.getStarId() : DimensionManager.getSol().getId()), TextureResources.starryBG, this, true);
 		container.setOffset(1000, 1000);
 		modules.add(container);
@@ -249,11 +249,11 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 
 	@Override
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
-		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType(), player), this);
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}
 
 	@Override
-	public int getModularInvType() {
-		return GuiHandler.guiId.MODULARFULLSCREEN.ordinal();
+	public GuiHandler.guiId getModularInvType() {
+		return GuiHandler.guiId.MODULARFULLSCREEN;
 	}
 }

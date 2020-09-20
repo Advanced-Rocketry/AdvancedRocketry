@@ -33,7 +33,7 @@ public class MapGenInvertedPillar extends WorldCarver<ProbabilityConfig>  {
 
 	@Override
 	public boolean func_225555_a_(IChunk chunkPrimerIn, Function func, Random rand, int p_225555_4_,
-			int chunkX, int chunkZ, int rangeX, int rangeZ, BitSet p_225555_9_,
+			int rangeX, int rangeZ, int chunkX, int chunkZ, BitSet p_225555_9_,
 			ProbabilityConfig p_225555_10_) {
 
 			int x = (rangeX - chunkX)*16 + rand.nextInt(15);

@@ -104,12 +104,12 @@ public class PlanetCommand {
 				.then(Commands.literal("help").executes((value) -> {return commandPlanetHelp(value.getSource()); } ))
 				)
 				.then(Commands.literal("goto").then(Commands.argument("dim", DimensionArgument.getDimension()).executes((value -> {return commandGoto(value.getSource(), DimensionArgument.getDimensionArgument(value, "dim"));})))
-				.then(Commands.literal("station").then(Commands.argument("stationId", IntegerArgumentType.integer(1)).executes((value) -> {return commandGotoStation(value.getSource(), StringArgumentType.getString(value, "stationId"));} )))
+				.then(Commands.literal("station").then(Commands.argument("stationid", IntegerArgumentType.integer(1)).executes((value) -> {return commandGotoStation(value.getSource(), IntegerArgumentType.getInteger(value, "stationid"));} )))
 				)
 				// giveStation ID
-				.then(Commands.literal("giveStation").then(Commands.argument("stationId", StringArgumentType.string()).executes((value) -> { return commandGiveStation(value.getSource(), null, StringArgumentType.getString(value, "stationId"));}))
+				.then(Commands.literal("giveStation").then(Commands.argument("stationId", StringArgumentType.string()).executes((value) -> { return commandGiveStation(value.getSource(), null, StringArgumentType.getString(value, "stationId"));})
 				//giveStation ID player
-					.then(Commands.argument("player", EntityArgument.player()).executes((value) -> {return commandGiveStation(value.getSource(), EntityArgument.getPlayer(value, "player"), StringArgumentType.getString(value, "stationId")); } )))
+					.then(Commands.argument("player", EntityArgument.player()).executes((value) -> {return commandGiveStation(value.getSource(), EntityArgument.getPlayer(value, "player"), StringArgumentType.getString(value, "stationId")); } ))))
 				
 				// filldata Type
 				.then(Commands.literal("fillData").then( Commands.argument("dataType", StringArgumentType.word()).executes( (value) -> { return commandFillData(value.getSource(), StringArgumentType.getString(value, "dataType"), -1); } )
@@ -132,7 +132,7 @@ public class PlanetCommand {
 	{
 		ServerPlayerEntity player;
 		if(sender.getEntity() != null && (player = (ServerPlayerEntity) sender.getEntity()) != null) {
-			player.changeDimension(world, new TeleporterNoPortalSeekBlock(world));
+			player.teleport(world, player.getPosX(), player.getPosY(), player.getPosZ(), 0, 0);
 		}					
 		else 
 			sender.sendFeedback(new StringTextComponent("Must be a player to use this command"), true);
@@ -140,18 +140,19 @@ public class PlanetCommand {
 		return 0;
 	}
 	
-	private static int commandGotoStation(CommandSource sender, String stationIdStr)
+	private static int commandGotoStation(CommandSource sender, int stationIdStr)
 	{
 		PlayerEntity player;
-		ResourceLocation stationId = new ResourceLocation(stationIdStr);
+		ResourceLocation stationId = new ResourceLocation(SpaceObjectManager.STATION_NAMESPACE, String.valueOf(stationIdStr));
 		ServerWorld world = ZUtils.getWorld(ARConfiguration.GetSpaceDimId());
 		if(sender.getEntity() != null && (player = (PlayerEntity) sender.getEntity()) != null) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(stationId);
 
 			if(object != null) {
-				if(ZUtils.getDimensionIdentifier(player.world) != ARConfiguration.GetSpaceDimId())
-					player.changeDimension(world, new TeleporterNoPortalSeekBlock(world));
 				HashedBlockPosition vec = object.getSpawnLocation();
+				if(!ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(player.world)))
+					((ServerPlayerEntity) player).teleport(world, vec.x, vec.y, vec.z, 0, 0);
+				
 				player.setPositionAndUpdate(vec.x, vec.y, vec.z);
 			}
 			else {

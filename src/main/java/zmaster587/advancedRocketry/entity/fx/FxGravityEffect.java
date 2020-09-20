@@ -13,9 +13,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class FxGravityEffect extends SpriteTexturedParticle {
-	public static final ResourceLocation icon = new ResourceLocation("advancedrocketry:textures/particle/donut.png");
-
-	
 	public FxGravityEffect(World world, double x,
 			double y, double z, double motx, double moty, double motz) {
 		super((ClientWorld) world, x, y, z);
@@ -26,7 +23,7 @@ public class FxGravityEffect extends SpriteTexturedParticle {
         this.particleAlpha = .2F;
         this.setSize(0.12F, 0.12F);
         this.maxAge = (int)(5.0D);
-        this.particleScale = 1f;
+        this.particleScale = 0.2f;
         this.motionX = motx;
         this.motionY = moty;
         this.motionZ = motz;

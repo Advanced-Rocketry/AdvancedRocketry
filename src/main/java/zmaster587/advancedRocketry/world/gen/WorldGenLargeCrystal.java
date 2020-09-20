@@ -27,6 +27,9 @@ public class WorldGenLargeCrystal extends Feature<NoFeatureConfig> {
 	@Override
 	public boolean func_241855_a(ISeedReader world, ChunkGenerator chunkGen, Random rand,
 			BlockPos pos, NoFeatureConfig config) {
+		
+		if(rand.nextInt() % 18 != 0)
+			return false;
 
 		BlockState state = world.getBiome(pos).func_242440_e().func_242502_e().getUnder();
 		Block fillerBlock = state.getBlock();
@@ -43,9 +46,10 @@ public class WorldGenLargeCrystal extends Feature<NoFeatureConfig> {
 
 		final float SHAPE = 0.01f + rand.nextFloat()*0.2f;
 
-		int y = pos.getY() - 2;
 		int x = pos.getX();
 		int z = pos.getZ();
+		int y = world.getHeight(Type.WORLD_SURFACE, new BlockPos(x, 0, z)).getY() - 2;
+
 
 		currentEdgeRadius = (int)((SHAPE*(edgeRadius * height )) + ((1f-SHAPE)*edgeRadius));
 
@@ -66,7 +70,7 @@ public class WorldGenLargeCrystal extends Feature<NoFeatureConfig> {
 		for(int zOff = -currentEdgeRadius/2; zOff <= currentEdgeRadius/2; zOff++) {
 			for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
 				
-				for(BlockPos yOff = world.getHeight(Type.WORLD_SURFACE, new BlockPos(x + xOff, y,z + zOff)); yOff.getY() < y; yOff.up()) //Fills the gaps under the crystal
+				for(BlockPos yOff = world.getHeight(Type.WORLD_SURFACE, new BlockPos(x + xOff, y,z + zOff)); yOff.getY() < y; yOff = yOff.up()) //Fills the gaps under the crystal
 					setBlockState(world, yOff, fillerBlock.getDefaultState());
 				setBlockState(world, new BlockPos(x + xOff, y, z + zOff), fillerBlock.getDefaultState());
 			}
@@ -76,7 +80,7 @@ public class WorldGenLargeCrystal extends Feature<NoFeatureConfig> {
 		for(int zOff = currentEdgeRadius/2; zOff <= numDiag + currentEdgeRadius/2; zOff++) {
 			currentEdgeRadius--;
 			for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
-				for(BlockPos yOff = world.getHeight(Type.WORLD_SURFACE, new BlockPos(x + xOff, y, z + zOff)); yOff.getY() < y; yOff.getY()) //Fills the gaps under the crystal
+				for(BlockPos yOff = world.getHeight(Type.WORLD_SURFACE, new BlockPos(x + xOff, y, z + zOff)); yOff.getY() < y;  yOff = yOff.up()) //Fills the gaps under the crystal
 					setBlockState(world,yOff, fillerBlock.getDefaultState());
 				setBlockState(world,new BlockPos(x + xOff, y, z + zOff), fillerBlock.getDefaultState());
 			}

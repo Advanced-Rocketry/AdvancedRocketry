@@ -155,10 +155,10 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 
 
 		if(ID == GuiHandler.guiId.MODULAR.ordinal()) {
-			modules.add(new ModuleButton(50, 47, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.button.summon"), this, TextureResources.buttonBuild, 80, 18).setAdditionalData(1));
-			modules.add(new ModuleButton(50, 67, LibVulpes.proxy.getLocalizedString("msg.label.selectDst"), this, TextureResources.buttonBuild, 80, 18).setAdditionalData(2));
+			modules.add(new ModuleButton(50, 47, LibVulpes.proxy.getLocalizedString("msg.spaceelevator.button.summon"), this, TextureResources.buttonBuild, 80, 18).setAdditionalData(1));
+			modules.add(new ModuleButton(50, 67, LibVulpes.proxy.getLocalizedString("msg.label.selectdst"), this, TextureResources.buttonBuild, 80, 18).setAdditionalData(2));
 			modules.add(new ModuleTexturedSlotArray(50, 20, this, 0, 1, zmaster587.advancedRocketry.inventory.TextureResources.idChip));
-			modules.add(new ModuleText(70, 23, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.label.chip"), 0x2d2d2d));
+			modules.add(new ModuleText(70, 23, LibVulpes.proxy.getLocalizedString("msg.spaceelevator.label.chip"), 0x2d2d2d));
 		}
 		else {
 			modules.clear();
@@ -190,7 +190,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 			ModuleContainerPan pan = new ModuleContainerPan(25, 25, list2, new LinkedList<ModuleBase>(), null, 512, 256, 0, -48, 258, 256);
 			modules.add(pan);
 
-			landingPadDisplayText.setText(dimBlockPos != null ? dimBlockPos.toString() : LibVulpes.proxy.getLocalizedString("msg.label.noneSelected"));
+			landingPadDisplayText.setText(dimBlockPos != null ? dimBlockPos.toString() : LibVulpes.proxy.getLocalizedString("msg.label.noneselected"));
 			modules.add(landingPadDisplayText);
 		}
 
@@ -278,7 +278,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 		}
 		else if (id == SELECT_DST) {
 			player.closeScreen();
-			NetworkHooks.openGui((ServerPlayerEntity) player, this, getPos());
+			NetworkHooks.openGui((ServerPlayerEntity) player, this, buf -> {buf.writeInt(GuiHandler.guiId.MODULARFULLSCREEN.ordinal()); buf.writeBlockPos(pos); });
 		}
 		else if(id == BUTTON_ID_OFFSET) {
 			dimBlockPos = null;
@@ -578,11 +578,11 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 		else
 			dimBlockPos = null;
 
-		landingPadDisplayText.setText(dimBlockPos != null ? dimBlockPos.toString() : LibVulpes.proxy.getLocalizedString("msg.label.noneSelected"));
+		landingPadDisplayText.setText(dimBlockPos != null ? dimBlockPos.toString() : LibVulpes.proxy.getLocalizedString("msg.label.noneselected"));
 	}
 	
 	@Override
-	public int getModularInvType() {
-		return GuiHandler.guiId.MODULARFULLSCREEN.ordinal();
+	public GuiHandler.guiId getModularInvType() {
+		return GuiHandler.guiId.MODULAR;
 	}
 }

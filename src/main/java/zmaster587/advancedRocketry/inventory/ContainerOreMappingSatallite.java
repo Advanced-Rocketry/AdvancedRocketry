@@ -27,7 +27,7 @@ public class ContainerOreMappingSatallite extends Container {
 	{
 		ItemStack stack = GuiHandler.getHeldFromBuf(buf);
 		IModularInventory modularItem = (IModularInventory)stack.getItem();
-		int ID = modularItem.getModularInvType();
+		int ID = modularItem.getModularInvType().ordinal();
 		
 		ItemOreScanner item = (ItemOreScanner)stack.getItem();
 		

@@ -13,6 +13,7 @@ import net.minecraft.world.gen.IWorldGenerationReader;
 import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
 import net.minecraft.world.gen.foliageplacer.FoliagePlacer;
 import net.minecraft.world.gen.trunkplacer.AbstractTrunkPlacer;
+import net.minecraft.world.gen.trunkplacer.MegaJungleTrunkPlacer;
 import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
 import net.minecraft.world.gen.trunkplacer.TrunkPlacerType;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
@@ -23,7 +24,14 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 public class WorldGenAlienTree extends StraightTrunkPlacer {
+	
+   public static final Codec<WorldGenAlienTree> codec = RecordCodecBuilder.create((p_236902_0_) -> {
+	      return func_236915_a_(p_236902_0_).apply(p_236902_0_, WorldGenAlienTree::new);
+	   });
 
 	public WorldGenAlienTree(int i, int j, int k)
 	{

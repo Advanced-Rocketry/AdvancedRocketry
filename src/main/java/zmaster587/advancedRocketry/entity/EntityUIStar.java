@@ -71,7 +71,7 @@ public class EntityUIStar extends EntityUIPlanet {
 		ResourceLocation planetId = new ResourceLocation(this.dataManager.get(planetID));
 
 		if(star != null && star.getId() != planetId) {
-			if(planetId == Constants.INVALID_PLANET )
+			if(Constants.INVALID_PLANET.equals(planetId) )
 				star = null;
 			else
 				star = DimensionManager.getInstance().getStar(planetId);

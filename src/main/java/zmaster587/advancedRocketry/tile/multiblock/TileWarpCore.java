@@ -27,22 +27,22 @@ public class TileWarpCore extends TileMultiBlock {
 	private SpaceStationObject station;
 
 	public static final Object[][][] structure = { 
-		{{new ResourceLocation("forge","blocktitanium"), new ResourceLocation("forge","blocktitanium"), new ResourceLocation("forge","blocktitanium")},
-			{new ResourceLocation("forge","blocktitanium"), 'I', new ResourceLocation("forge","blocktitanium")},
-			{new ResourceLocation("forge","blocktitanium"), new ResourceLocation("forge","blocktitanium"), new ResourceLocation("forge","blocktitanium")}},
+		{{new ResourceLocation("forge","block/titanium"), new ResourceLocation("forge","block/titanium"), new ResourceLocation("forge","block/titanium")},
+			{new ResourceLocation("forge","block/titanium"), 'I', new ResourceLocation("forge","block/titanium")},
+			{new ResourceLocation("forge","block/titanium"), new ResourceLocation("forge","block/titanium"), new ResourceLocation("forge","block/titanium")}},
 
 			{{null, new BlockMeta(LibVulpesBlocks.blockStructureBlock), null},
 				{new BlockMeta(LibVulpesBlocks.blockStructureBlock), new BlockMeta(Blocks.GOLD_BLOCK), new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
 				{null, new BlockMeta(LibVulpesBlocks.blockStructureBlock), null}},
 
-				{{new ResourceLocation("forge","blocktitanium"), 'c', new ResourceLocation("forge","blocktitanium")}, 
-					{new ResourceLocation("forge","blocktitanium"), new BlockMeta(Blocks.GOLD_BLOCK), new ResourceLocation("forge","blocktitanium")},
-					{new ResourceLocation("forge","blocktitanium"), new ResourceLocation("forge","blocktitanium"), new ResourceLocation("forge","blocktitanium")}},
+				{{new ResourceLocation("forge","block/titanium"), 'c', new ResourceLocation("forge","block/titanium")}, 
+					{new ResourceLocation("forge","block/titanium"), new BlockMeta(Blocks.GOLD_BLOCK), new ResourceLocation("forge","block/titanium")},
+					{new ResourceLocation("forge","block/titanium"), new ResourceLocation("forge","block/titanium"), new ResourceLocation("forge","block/titanium")}},
 
 	};
 
 	private SpaceStationObject getSpaceObject() {
-		if(station == null && ZUtils.getDimensionIdentifier(world) == ARConfiguration.GetSpaceDimId()) {
+		if(station == null && ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceStationObject)
 				station = (SpaceStationObject) object;

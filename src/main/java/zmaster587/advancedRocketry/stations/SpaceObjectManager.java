@@ -40,7 +40,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	HashMap<String, Class> nameToClass;
 	HashMap<Class, String> classToString;
 	
-	final String STATION_NAMESPACE = "station";
+	public final static String STATION_NAMESPACE = "station";
 
 	private final static SpaceObjectManager spaceObjectManager = new SpaceObjectManager();
 
@@ -252,7 +252,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 */
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent event) {
-		if(ZUtils.getDimensionIdentifier(event.player.world) == ARConfiguration.GetSpaceDimId()) {
+		if(ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(event.player.world))) {
 
 			if(event.player.getPosY() < 0 && !event.player.world.isRemote) {
 				ISpaceObject object = getSpaceStationFromBlockCoords(new BlockPos(event.player.getPositionVec()));

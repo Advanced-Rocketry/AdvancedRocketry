@@ -9,8 +9,11 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector4f;
+
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -225,7 +228,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			}
 			else
 				primaryStar = DimensionManager.getSol();
-			if(properties.getId() == ARConfiguration.GetSpaceDimId()) {
+			if(ARConfiguration.GetSpaceDimId().equals(properties.getId())) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
 				if(isWarp) {
 					SpaceStationObject station = (SpaceStationObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(playerPos);
@@ -348,10 +351,10 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 
 			RenderSystem.color4f(ringColor[0], ringColor[1], ringColor[2],multiplier);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
-			buffer.pos((double)f10, ringDist, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
-			buffer.pos((double)(-f10), ringDist, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
-			buffer.pos((double)(-f10), ringDist, (double)f10).tex(0.0f, 1.0f).endVertex();
-			buffer.pos((double)f10, ringDist, (double)f10).tex(1.0f, 1.0f).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, ringDist, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), ringDist, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), ringDist, (double)f10).tex(0.0f, 1.0f).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, ringDist, (double)f10).tex(1.0f, 1.0f).endVertex();
 			Tessellator.getInstance().draw();
 			matrix.pop();
 
@@ -366,10 +369,10 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			mc.getTextureManager().bindTexture(DimensionProperties.planetRingShadow);
 			RenderSystem.color4f(0f, 0f, 0f,multiplier);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
-			buffer.pos((double)f10, ringDist, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
-			buffer.pos((double)(-f10), ringDist, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
-			buffer.pos((double)(-f10), ringDist, (double)f10).tex(0.0f, 1.0f).endVertex();
-			buffer.pos((double)f10, ringDist, (double)f10).tex(1.0f, 1.0f).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, ringDist, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), ringDist, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), ringDist, (double)f10).tex(0.0f, 1.0f).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, ringDist, (double)f10).tex(1.0f, 1.0f).endVertex();
 			Tessellator.getInstance().draw();
 			matrix.pop();
 
@@ -478,10 +481,10 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 
 				RenderSystem.color4f(parentRingColor[0], parentRingColor[1], parentRingColor[2],multiplier);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
-				buffer.pos((double)f10, ringDist, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
-				buffer.pos((double)(-f10), ringDist, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
-				buffer.pos((double)(-f10), ringDist, (double)f10).tex(0.0f, 1.0f).endVertex();
-				buffer.pos((double)f10, ringDist, (double)f10).tex(1.0f, 1.0f).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, ringDist, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), ringDist, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), ringDist, (double)f10).tex(0.0f, 1.0f).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, ringDist, (double)f10).tex(1.0f, 1.0f).endVertex();
 				Tessellator.getInstance().draw();
 				matrix.pop();
 
@@ -495,10 +498,10 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 				mc.getTextureManager().bindTexture(DimensionProperties.planetRingShadow);
 				RenderSystem.color4f(0f, 0f, 0f,1);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
-				buffer.pos((double)f10, ringDist, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
-				buffer.pos((double)(-f10), ringDist, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
-				buffer.pos((double)(-f10), ringDist, (double)f10).tex(0.0f, 1.0f).endVertex();
-				buffer.pos((double)f10, ringDist, (double)f10).tex(1.0f, 1.0f).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, ringDist, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), ringDist, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), ringDist, (double)f10).tex(0.0f, 1.0f).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, ringDist, (double)f10).tex(1.0f, 1.0f).endVertex();
 				Tessellator.getInstance().draw();
 				matrix.pop();
 
@@ -557,26 +560,26 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 
 			buffer.color(0,0,0,1f);
-			buffer.pos((double)(-f8), (double)f9, (double)f8).endVertex();
-			buffer.pos((double)f8, (double)f9, (double)f8).endVertex();
-			buffer.pos((double)f8, (double)f10, (double)f8).endVertex();
-			buffer.pos((double)(-f8), (double)f10, (double)f8).endVertex();
-			buffer.pos((double)(-f8), (double)f10, (double)(-f8)).endVertex();
-			buffer.pos((double)f8, (double)f10, (double)(-f8)).endVertex();
-			buffer.pos((double)f8, (double)f9, (double)(-f8)).endVertex();
-			buffer.pos((double)(-f8), (double)f9, (double)(-f8)).endVertex();
-			buffer.pos((double)f8, (double)f10, (double)(-f8)).endVertex();
-			buffer.pos((double)f8, (double)f10, (double)f8).endVertex();
-			buffer.pos((double)f8, (double)f9, (double)f8).endVertex();
-			buffer.pos((double)f8, (double)f9, (double)(-f8)).endVertex();
-			buffer.pos((double)(-f8), (double)f9, (double)(-f8)).endVertex();
-			buffer.pos((double)(-f8), (double)f9, (double)f8).endVertex();
-			buffer.pos((double)(-f8), (double)f10, (double)f8).endVertex();
-			buffer.pos((double)(-f8), (double)f10, (double)(-f8)).endVertex();
-			buffer.pos((double)(-f8), (double)f10, (double)(-f8)).endVertex();
-			buffer.pos((double)(-f8), (double)f10, (double)f8).endVertex();
-			buffer.pos((double)f8, (double)f10, (double)f8).endVertex();
-			buffer.pos((double)f8, (double)f10, (double)(-f8)).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f8), (double)f9, (double)f8).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f8, (double)f9, (double)f8).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f8, (double)f10, (double)f8).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f8), (double)f10, (double)f8).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f8), (double)f10, (double)(-f8)).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f8, (double)f10, (double)(-f8)).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f8, (double)f9, (double)(-f8)).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f8), (double)f9, (double)(-f8)).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f8, (double)f10, (double)(-f8)).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f8, (double)f10, (double)f8).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f8, (double)f9, (double)f8).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f8, (double)f9, (double)(-f8)).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f8), (double)f9, (double)(-f8)).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f8), (double)f9, (double)f8).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f8), (double)f10, (double)f8).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f8), (double)f10, (double)(-f8)).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f8), (double)f10, (double)(-f8)).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f8), (double)f10, (double)f8).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f8, (double)f10, (double)f8).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f8, (double)f10, (double)(-f8)).endVertex();
 
 			Tessellator.getInstance().draw();
 		}
@@ -661,20 +664,20 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 				float ringSize = f10 *1.4f;
 				Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.planetRings);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-
-				buffer.pos(-ringSize, zLevel-0.01f, ringSize).tex(f16, f17).endVertex();
-				buffer.pos(ringSize, zLevel-0.01f, ringSize).tex(f14, f17).endVertex();
-				buffer.pos(ringSize, zLevel-0.01f, -ringSize).tex(f14, f15).endVertex();
-				buffer.pos(-ringSize, zLevel-0.01f, -ringSize).tex(f16, f15).endVertex();
+				
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -ringSize, zLevel-0.01f, ringSize).tex(f16, f17).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, ringSize, zLevel-0.01f, ringSize).tex(f14, f17).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, ringSize, zLevel-0.01f, -ringSize).tex(f14, f15).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -ringSize, zLevel-0.01f, -ringSize).tex(f16, f15).endVertex();
 				Tessellator.getInstance().draw();
 
 				RenderSystem.color4f(0f, 0f, 0f, alphaMultiplier);
 				Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.planetRingShadow);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-				buffer.pos(-ringSize, zLevel-0.01f, ringSize).tex(f16, f17).endVertex();
-				buffer.pos(ringSize, zLevel-0.01f, ringSize).tex(f14, f17).endVertex();
-				buffer.pos(ringSize, zLevel-0.01f, -ringSize).tex(f14, f15).endVertex();
-				buffer.pos(-ringSize, zLevel-0.01f, -ringSize).tex(f16, f15).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -ringSize, zLevel-0.01f, ringSize).tex(f16, f17).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, ringSize, zLevel-0.01f, ringSize).tex(f14, f17).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, ringSize, zLevel-0.01f, -ringSize).tex(f14, f15).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -ringSize, zLevel-0.01f, -ringSize).tex(f16, f15).endVertex();
 				Tessellator.getInstance().draw();
 			}
 
@@ -683,10 +686,10 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.atmGlow);
 
 			RenderSystem.color4f(1f, 1f, 1f, alphaMultiplier);
-			buffer.pos(-f10, zLevel+0.01f, f10).tex(f16, f17).endVertex();
-			buffer.pos(f10, zLevel+0.01f, f10).tex(f14, f17).endVertex();
-			buffer.pos(f10, zLevel+0.01f, -f10).tex(f14, f15).endVertex();
-			buffer.pos(-f10, zLevel+0.01f, -f10).tex(f16, f15).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -f10, zLevel+0.01f, f10).tex(f16, f17).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, f10, zLevel+0.01f, f10).tex(f14, f17).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, f10, zLevel+0.01f, -f10).tex(f14, f15).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -f10, zLevel+0.01f, -f10).tex(f16, f15).endVertex();
 			Tessellator.getInstance().draw();
 			matrix.pop();
 		}
@@ -700,10 +703,10 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
 		RenderSystem.color4f(1f, 1f, 1f, alphaMultiplier);
-		buffer.pos(-f10, zLevel, f10).tex(f16, f17).endVertex();
-		buffer.pos(f10, zLevel, f10).tex(f14, f17).endVertex();
-		buffer.pos(f10, zLevel, -f10).tex(f14, f15).endVertex();
-		buffer.pos(-f10, zLevel, -f10).tex(f16, f15).endVertex();
+		zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -f10, zLevel, f10).tex(f16, f17).endVertex();
+		zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, f10, zLevel, f10).tex(f14, f17).endVertex();
+		zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, f10, zLevel, -f10).tex(f14, f15).endVertex();
+		zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -f10, zLevel, -f10).tex(f16, f15).endVertex();
 		Tessellator.getInstance().draw();
 		//buffer.finishDrawing();
 
@@ -717,10 +720,10 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.getAtmosphereResource());
 				RenderSystem.color4f(skyColor[0], skyColor[1], skyColor[2], alphaMultiplier);
-				buffer.pos(-f10, zLevel, f10).tex(f16, f17).endVertex();
-				buffer.pos(f10, zLevel, f10).tex(f14, f17).endVertex();
-				buffer.pos(f10, zLevel, -f10).tex(f14, f15).endVertex();
-				buffer.pos(-f10, zLevel, -f10).tex(f16, f15).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -f10, zLevel, f10).tex(f16, f17).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, f10, zLevel, f10).tex(f14, f17).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, f10, zLevel, -f10).tex(f14, f15).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -f10, zLevel, -f10).tex(f16, f15).endVertex();
 				Tessellator.getInstance().draw();
 				//buffer.finishDrawing();
 
@@ -734,10 +737,10 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.getShadowResource());
 			RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			RenderSystem.color4f(1f, 1f, 1f, alphaMultiplier);
-			buffer.pos(-f10, zLevel-0.01f, f10).tex(f16, f17).endVertex();
-			buffer.pos(f10, zLevel-0.01f, f10).tex(f14, f17).endVertex();
-			buffer.pos(f10, zLevel-0.01f, -f10).tex(f14, f15).endVertex();
-			buffer.pos(-f10, zLevel-0.01f, -f10).tex(f16, f15).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -f10, zLevel-0.01f, f10).tex(f16, f17).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, f10, zLevel-0.01f, f10).tex(f14, f17).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, f10, zLevel-0.01f, -f10).tex(f14, f15).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -f10, zLevel-0.01f, -f10).tex(f16, f15).endVertex();
 			Tessellator.getInstance().draw();
 		}
 
@@ -791,10 +794,10 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 			float f10 = sunSize*5f*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
 			//multiplier = 2;
-			buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
-			buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
-			buffer.pos((double)f10, 0.0D, (double)f10).tex(1.0f, 1.0f).endVertex();
-			buffer.pos((double)(-f10), 0.0D, (double)f10).tex(0.0f, 1.0f).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), 0.0D, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, 0.0D, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, 0.0D, (double)f10).tex(1.0f, 1.0f).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), 0.0D, (double)f10).tex(0.0f, 1.0f).endVertex();
 			Tessellator.getInstance().draw();
 			matrix.pop();
 
@@ -813,10 +816,10 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 				RenderSystem.color4f((float)1, (float).5 , (float).4 ,1f);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 				f10 = sunSize*40f*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
-				buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
-				buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
-				buffer.pos((double)f10, 0.0D, (double)f10).tex(1.0f, 1.0f).endVertex();
-				buffer.pos((double)(-f10), 0.0D, (double)f10).tex(0.0f, 1.0f).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), 0.0D, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, 0.0D, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, 0.0D, (double)f10).tex(1.0f, 1.0f).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), 0.0D, (double)f10).tex(0.0f, 1.0f).endVertex();
 				Tessellator.getInstance().draw();
 				matrix.pop();
 
@@ -830,10 +833,10 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 				f10 = sunSize*30f*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
 				//multiplier = 2;
-				buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
-				buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
-				buffer.pos((double)f10, 0.0D, (double)f10).tex(1.0f, 1.0f).endVertex();
-				buffer.pos((double)(-f10), 0.0D, (double)f10).tex(0.0f, 1.0f).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), 0.0D, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, 0.0D, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, 0.0D, (double)f10).tex(1.0f, 1.0f).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), 0.0D, (double)f10).tex(0.0f, 1.0f).endVertex();
 				Tessellator.getInstance().draw();
 				matrix.pop();
 
@@ -847,10 +850,10 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 				f10 = sunSize*15f*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
 				//multiplier = 2;
-				buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
-				buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
-				buffer.pos((double)f10, 0.0D, (double)f10).tex(1.0f, 1.0f).endVertex();
-				buffer.pos((double)(-f10), 0.0D, (double)f10).tex(0.0f, 1.0f).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), 0.0D, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, 0.0D, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, 0.0D, (double)f10).tex(1.0f, 1.0f).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), 0.0D, (double)f10).tex(0.0f, 1.0f).endVertex();
 				Tessellator.getInstance().draw();
 				matrix.pop();
 			}
@@ -867,10 +870,10 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 			float f10 = sunSize*30f*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
 			//multiplier = 2;
-			buffer.pos((double)(-f10), 100.0D, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
-			buffer.pos((double)f10, 100.0D, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
-			buffer.pos((double)f10, 100.0D, (double)f10).tex(1.0f, 1.0f).endVertex();
-			buffer.pos((double)(-f10), 100.0D, (double)f10).tex(0.0f, 1.0f).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), 100.0D, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, 100.0D, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, 100.0D, (double)f10).tex(1.0f, 1.0f).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), 100.0D, (double)f10).tex(0.0f, 1.0f).endVertex();
 			Tessellator.getInstance().draw();
 		}
 	}

@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.client.render.multiblocks;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.item.ItemEntity;
@@ -55,6 +56,12 @@ public class RendererPrecisionAssembler extends TileEntityRenderer<TilePrecision
 		if(!tile.canRender())
 			return;
 		
+		if (tile.getWorld() != null) {
+			combinedLightIn = WorldRenderer.getCombinedLight(tile.getWorld(), tile.getPos().add(0, 1, 0));
+		} else {
+			combinedLightIn = 15728880;
+		}
+		
 		matrix.push();
 
 		//Rotate and move the model into position
@@ -63,7 +70,7 @@ public class RendererPrecisionAssembler extends TileEntityRenderer<TilePrecision
 		matrix.rotate(new Quaternion(0, (front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, true));
 		matrix.translate(-.5f, 0, -.5f);
 		
-		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
+		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getTranslucentEntityModelRenderType(texture));
 		
 		if(tile.isRunning()) {
 

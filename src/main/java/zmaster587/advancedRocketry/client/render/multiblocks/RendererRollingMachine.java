@@ -49,7 +49,7 @@ public class RendererRollingMachine extends TileEntityRenderer<TileRollingMachin
 		//Rotate and move the model into position
 		matrix.translate(0.5f, 0, 0.5f);
 		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		GL11.glRotatef((front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, 1, 0);
+
 		matrix.rotate(new Quaternion(0, (front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, true));
 		matrix.translate(-.5f, -1f, -0.5f);
 
@@ -124,7 +124,7 @@ public class RendererRollingMachine extends TileEntityRenderer<TileRollingMachin
 
 			matrix.push();
 			matrix.translate(2.12f, 0.375f,2.18f);
-			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Roller2");
+			//model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Roller2");
 			matrix.pop();
 
 			matrix.push();

@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.client.render.multiblocks;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
@@ -43,6 +44,12 @@ public class RendererChemicalReactor  extends TileEntityRenderer {
 		if(!multiBlockTile.canRender())
 			return;
 
+		if (tile.getWorld() != null) {
+			combinedLightIn = WorldRenderer.getCombinedLight(tile.getWorld(), tile.getPos().add(0, 1, 0));
+		} else {
+			combinedLightIn = 15728880;
+		}
+		
 		matrix.push();
 
 		

@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.client.render.multiblocks;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.ItemStack;
@@ -37,7 +38,7 @@ public class RendererCuttingMachine extends TileEntityRenderer<TileCuttingMachin
 		try {
 			model = new WavefrontObject(new ResourceLocation("advancedrocketry","models/cuttingmachine.obj"));
 		} catch (ModelFormatException e) {
-			
+
 			e.printStackTrace();
 		}
 	}
@@ -49,6 +50,12 @@ public class RendererCuttingMachine extends TileEntityRenderer<TileCuttingMachin
 		if(!tile.canRender())
 			return;
 
+		if (tile.getWorld() != null) {
+			combinedLightIn = WorldRenderer.getCombinedLight(tile.getWorld(), tile.getPos().add(0, 1, 0));
+		} else {
+			combinedLightIn = 15728880;
+		}
+
 		matrix.push();
 
 		//Initial setup
@@ -58,7 +65,7 @@ public class RendererCuttingMachine extends TileEntityRenderer<TileCuttingMachin
 		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
 		matrix.rotate(new Quaternion(0, (front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, true));
 		matrix.translate(-.5f, 0, -1.5f);
-		
+
 		IVertexBuilder entityTransparentBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
 
 		if(tile.isRunning()) {

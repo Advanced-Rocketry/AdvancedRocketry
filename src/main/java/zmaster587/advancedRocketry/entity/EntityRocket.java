@@ -92,6 +92,7 @@ import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.interfaces.INetworkEntity;
 import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.GuiHandler;
+import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.IEntitySpawnNBT;
@@ -321,7 +322,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		if(storage != null) {
 			ResourceLocation dimid = storage.getDestinationDimId(ZUtils.getDimensionIdentifier(this.world), (int)getPosX(), (int)getPosZ());
 
-			if(dimid == ARConfiguration.GetSpaceDimId()) {
+			if(dimid.equals(ARConfiguration.GetSpaceDimId())) {
 				Vector3F<Float> vec = storage.getDestinationCoordinates(dimid, false);
 				if(vec != null) {
 
@@ -610,7 +611,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	}
 
 	public void openGui(PlayerEntity player) {
-		NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)this, packetBuffer -> packetBuffer.writeInt(this.getEntityId()));
+		NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)this, packetBuffer -> {packetBuffer.writeInt(getModularInvType().ordinal()); packetBuffer.writeInt(this.getEntityId());});
 
 		//Only handle the bypass on the server
 		if(!world.isRemote)
@@ -1103,7 +1104,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				if(this.getPosY() < 0) {
 					ResourceLocation dimId = ZUtils.getDimensionIdentifier(world);
 
-					if(dimId == ARConfiguration.GetSpaceDimId()) {
+					if(ARConfiguration.GetSpaceDimId().equals(dimId)) {
 
 						ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(getPositionVec()));
 
@@ -1394,7 +1395,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			setInOrbit(true);
 			//If going to a station or something make sure to set coords accordingly
 			//If in space land on the planet, if on the planet go to space
-			if((destinationDimId == ARConfiguration.GetSpaceDimId() || (ZUtils.getDimensionIdentifier(this.world) == ARConfiguration.GetSpaceDimId() && !getInSpaceFlight())) && ZUtils.getDimensionIdentifier(this.world) != destinationDimId) {
+			if((ARConfiguration.GetSpaceDimId().equals(destinationDimId) || (ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(this.world)) && !getInSpaceFlight())) && ZUtils.getDimensionIdentifier(this.world) != destinationDimId) {
 				Vector3F<Float> pos = storage.getDestinationCoordinates(destinationDimId, true);
 				storage.setDestinationCoordinates(new Vector3F<Float>((float)this.getPosX(), (float)this.getPosY(), (float)this.getPosZ()), ZUtils.getDimensionIdentifier(this.world));
 				if(pos != null) {
@@ -1486,7 +1487,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				ResourceLocation destinationId = storage.getDestinationDimId(ZUtils.getDimensionIdentifier(this.world), (int)getPosX(), (int)getPosZ());
 				DimensionProperties properties = DimensionManager.getEffectiveDimId(ZUtils.getDimensionIdentifier(this.world), new BlockPos(getPositionVec()));
 				ResourceLocation world2;
-				if(destinationId == ARConfiguration.GetSpaceDimId() || destinationId == Constants.INVALID_PLANET)
+				if(ARConfiguration.GetSpaceDimId().equals(destinationId) || Constants.INVALID_PLANET.equals(destinationId))
 					world2 = properties.getId();
 				else
 					world2 = destinationId;
@@ -1542,13 +1543,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			destinationDimId = storage.getDestinationDimId(world, (int)this.getPosX(), (int)this.getPosZ());
 
 			//TODO: make sure this doesn't break asteriod mining
-			if(!(DimensionManager.getInstance().canTravelTo(destinationDimId) || (destinationDimId == Constants.INVALID_PLANET && storage.getSatelliteHatches().size() != 0))) {
-				setError(LibVulpes.proxy.getLocalizedString("error.rocket.cannotGetThere"));
+			if(!(DimensionManager.getInstance().canTravelTo(destinationDimId) || (Constants.INVALID_PLANET.equals(destinationDimId) && storage.getSatelliteHatches().size() != 0))) {
+				setError(LibVulpes.proxy.getLocalizedString("error.rocket.cannotgetthere"));
 				return;
 			}
 
 			ResourceLocation finalDest = destinationDimId;
-			if(destinationDimId == ARConfiguration.GetSpaceDimId()) {
+			if(ARConfiguration.GetSpaceDimId().equals(destinationDimId)) {
 				ISpaceObject obj = null;
 				Vector3F<Float> vec = storage.getDestinationCoordinates(destinationDimId,false);
 
@@ -1558,22 +1559,22 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				if( obj != null)
 					finalDest = obj.getOrbitingPlanetId();
 				else { 
-					setError(LibVulpes.proxy.getLocalizedString("error.rocket.destinationNotExist"));
+					setError(LibVulpes.proxy.getLocalizedString("error.rocket.destinationnotexist"));
 					return;
 				}
 			}
 
 			//If we're on a space station get the id of the planet, not the station
 			ResourceLocation thisDimId = ZUtils.getDimensionIdentifier(this.world);
-			if(thisDimId == ARConfiguration.GetSpaceDimId()) {
+			if(ARConfiguration.GetSpaceDimId().equals(thisDimId)) {
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(this.getPositionVec()));
 				if(object != null)
 					thisDimId = object.getProperties().getParentProperties().getId();
 			}
 
 			//Check to see if it's possible to reach
-			if(finalDest != Constants.INVALID_PLANET && (!storage.hasWarpCore() || DimensionManager.getInstance().getDimensionProperties(finalDest).getStarId() != DimensionManager.getInstance().getDimensionProperties(thisDimId).getStarId()) && !DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, thisDimId)) {
-				setError(LibVulpes.proxy.getLocalizedString("error.rocket.notSameSystem"));
+			if(finalDest != Constants.INVALID_PLANET && (!storage.hasWarpCore() || !DimensionManager.getInstance().getDimensionProperties(thisDimId).getStarId().equals(DimensionManager.getInstance().getDimensionProperties(finalDest).getStarId()) ) && !DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, thisDimId)) {
+				setError(LibVulpes.proxy.getLocalizedString("error.rocket.notsamesystem"));
 				return;
 			}
 		}
@@ -1581,7 +1582,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			allowLaunch = true;
 
 		//TODO: Clean this logic a bit?
-		if(allowLaunch || !stats.hasSeat() || ((DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || destinationDimId == ARConfiguration.GetSpaceDimId() || destinationDimId == Constants.INVALID_PLANET) ) { //Abort if destination is invalid
+		if(allowLaunch || !stats.hasSeat() || ((DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || ARConfiguration.GetSpaceDimId().equals(destinationDimId) || Constants.INVALID_PLANET.equals(destinationDimId)) ) { //Abort if destination is invalid
 
 
 			setInFlight(true);
@@ -1938,7 +1939,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			AdvancedRocketry.proxy.changeClientPlayerWorld(this.world);
 		}
 		else if(id == PacketType.OPENPLANETSELECTION.ordinal()) {
-			NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)this, packetBuffer -> packetBuffer.writeUniqueId(this.getUniqueID()));
+			NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)this, packetBuffer -> {packetBuffer.writeInt(GuiHandler.guiId.MODULARFULLSCREEN.ordinal());packetBuffer.writeUniqueId(this.getUniqueID()); });
 		}
 		else if(id == PacketType.SENDPLANETDATA.ordinal()) {
 			ItemStack stack = storage.getGuidanceComputer().getStackInSlot(0);
@@ -2285,11 +2286,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	
 	@Override
 	public Container createMenu(int winId, PlayerInventory inv, PlayerEntity player) {
-		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_ENTITY, winId, player, getModules(getModularInvType(), player), this);
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_ENTITY, winId, player, getModules(getModularInvType().ordinal(), player), this,getModularInvType());
 	}
 
 	@Override
-	public int getModularInvType() {
-		return 0;
+	public GuiHandler.guiId getModularInvType() {
+		return guiId.MODULAR;
 	}
 }

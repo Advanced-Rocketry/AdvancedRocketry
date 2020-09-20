@@ -14,6 +14,7 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.tile.multiblock.TileBeacon;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
+import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
@@ -21,7 +22,7 @@ import java.util.Random;
 
 public class BlockBeacon extends BlockMultiblockMachine {
 
-	public BlockBeacon(AbstractBlock.Properties property, int guiId) {
+	public BlockBeacon(AbstractBlock.Properties property, GuiHandler.guiId guiId) {
 		super(property, guiId);
 	}
 

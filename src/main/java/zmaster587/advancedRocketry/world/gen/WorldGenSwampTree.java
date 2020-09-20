@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.world.gen;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
@@ -90,7 +91,7 @@ public class WorldGenSwampTree extends  WorldCarver<ProbabilityConfig>  {
 
 				for(int yyy = -2 ; yyy < 4; yyy++)
 					if(!cachedCanopy.containsKey(new BlockPos(2 + xx - xOffset, yyy + yy - yOffset +2, zz- zOffset)))
-						cachedCanopy.put(new BlockPos(2 + xx - xOffset, yyy + yy - yOffset +2, zz- zOffset), Blocks.OAK_LEAVES.getDefaultState());
+						cachedCanopy.put(new BlockPos(2 + xx - xOffset, yyy + yy - yOffset +2, zz- zOffset), Blocks.OAK_LEAVES.getDefaultState().with(LeavesBlock.PERSISTENT, true));
 				//world.setBlock( x + 2 + xx - xOffset - radius/2, treeHeight -3 + yy - yOffset +2, z + zz- zOffset, Blocks.vine, 0,2);
 			}
 
@@ -99,7 +100,7 @@ public class WorldGenSwampTree extends  WorldCarver<ProbabilityConfig>  {
 
 	@Override
 	public boolean func_225555_a_(IChunk world, Function<BlockPos, Biome> p_225555_2_, Random rand,
-			int chunkX, int chunkZ, int rangeX, int rangeZ, int p_225555_8_, BitSet p_225555_9_,
+			int p_225555_8_, int rangeX, int rangeZ, int chunkX, int chunkZ, BitSet p_225555_9_,
 			ProbabilityConfig p_225555_10_) {
 
 		int x = (rangeX - chunkX)*16;
@@ -193,7 +194,7 @@ public class WorldGenSwampTree extends  WorldCarver<ProbabilityConfig>  {
 				//Leaf caps on bottom
 				for(zz = -1; zz < 2; zz++)
 					for(xx = -1; xx < 2; xx++)
-						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight - 10 + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LEAVES.getDefaultState(), world);
+						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight - 10 + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LEAVES.getDefaultState().with(LeavesBlock.PERSISTENT, true), world);
 				xx=xxx;
 				zz=zzz;
 				//Descending 
@@ -202,7 +203,7 @@ public class WorldGenSwampTree extends  WorldCarver<ProbabilityConfig>  {
 
 					for(zz = -2; zz < 3; zz++)
 						for(xx = -2; xx < 3; xx++)
-							setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight - yyy + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LEAVES.getDefaultState(), world);
+							setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight - yyy + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LEAVES.getDefaultState().with(LeavesBlock.PERSISTENT, true), world);
 					xx=xxx;
 					zz=zzz;
 
@@ -379,7 +380,7 @@ public class WorldGenSwampTree extends  WorldCarver<ProbabilityConfig>  {
 				//Leaf caps on bottom
 				for(zz = -1; zz < 2; zz++)
 					for(xx = -1; xx < 2; xx++)
-						world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2,y + treeHeight - 10 + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LEAVES.getDefaultState(), 5);
+						world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2,y + treeHeight - 10 + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LEAVES.getDefaultState().with(LeavesBlock.PERSISTENT, true), 5);
 				xx=xxx;
 				zz=zzz;
 				//Descending 
@@ -388,7 +389,7 @@ public class WorldGenSwampTree extends  WorldCarver<ProbabilityConfig>  {
 
 					for(zz = -2; zz < 3; zz++)
 						for(xx = -2; xx < 3; xx++)
-							world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y +treeHeight - yyy + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LEAVES.getDefaultState(), 5);
+							world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y +treeHeight - yyy + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LEAVES.getDefaultState().with(LeavesBlock.PERSISTENT, true), 5);
 					xx=xxx;
 					zz=zzz;
 

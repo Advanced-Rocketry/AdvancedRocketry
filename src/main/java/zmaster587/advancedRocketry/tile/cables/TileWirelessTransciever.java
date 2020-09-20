@@ -360,13 +360,13 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 
 	@Override
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
-		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType(), player), this);
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}
 
 
 	@Override
-	public int getModularInvType() {
-		return GuiHandler.guiId.MODULAR.ordinal();
+	public GuiHandler.guiId getModularInvType() {
+		return GuiHandler.guiId.MODULAR;
 	}
 
 }

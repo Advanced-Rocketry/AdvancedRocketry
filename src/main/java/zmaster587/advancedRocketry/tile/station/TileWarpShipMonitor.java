@@ -94,7 +94,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 
 
 	private SpaceStationObject getSpaceObject() {
-		if(station == null && ZUtils.getDimensionIdentifier(this.world) == ARConfiguration.GetSpaceDimId()) {
+		if(station == null && ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(this.world))) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceStationObject)
 				station = (SpaceStationObject) object;
@@ -201,9 +201,9 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 				//Status text
 				modules.add(new ModuleText(baseX, baseY + sizeY + 20, LibVulpes.proxy.getLocalizedString("msg.warpmon.corestatus"), 0x1b1b1b));
 				boolean flag = isOnStation && getSpaceObject().getFuelAmount() >= getTravelCost() && getSpaceObject().hasUsableWarpCore();
-				flag = flag && !(isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()));
+				flag = flag && !(isOnStation && (Constants.INVALID_PLANET.equals(getSpaceObject().getDestOrbitingBody()) || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()));
 				boolean artifactFlag = (dimCache != null && meetsArtifactReq(dimCache));
-				canWarp = new ModuleText(baseX, baseY + sizeY + 30, (isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody())) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.nowhere") : 
+				canWarp = new ModuleText(baseX, baseY + sizeY + 30, (isOnStation && (Constants.INVALID_PLANET.equals(getSpaceObject().getDestOrbitingBody()) || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody())) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.nowhere") : 
 					(!artifactFlag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.missingart") : (flag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.ready") : LibVulpes.proxy.getLocalizedString("msg.warpmon.notready"))), flag && artifactFlag ? 0x1baa1b : 0xFF1b1b);
 				modules.add(canWarp);
 				modules.add(new ModuleProgress(baseX, baseY + sizeY + 40, 10, new IndicatorBarImage(70, 58, 53, 8, 122, 58, 5, 8, Direction.EAST, TextureResources.progressBars), this));
@@ -313,10 +313,10 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 		boolean flag = isOnStation && getSpaceObject().getFuelAmount() >= warpCost && getSpaceObject().hasUsableWarpCore();
 
 		if(canWarp != null) {
-			flag = flag && !(isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()));
+			flag = flag && !(isOnStation && (Constants.INVALID_PLANET.equals(getSpaceObject().getDestOrbitingBody()) || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()));
 			boolean artifactFlag = (dimCache != null && meetsArtifactReq(dimCache));
 			
-			canWarp.setText(isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || 
+			canWarp.setText(isOnStation && (Constants.INVALID_PLANET.equals(getSpaceObject().getDestOrbitingBody()) || 
 					getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.nowhere") : 
 				(!artifactFlag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.missingart") : 
 					(flag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.ready") : LibVulpes.proxy.getLocalizedString("msg.warpmon.notready"))));
@@ -446,8 +446,8 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 	public void useNetworkData(PlayerEntity player, Dist side, byte id,
 			CompoundNBT nbt) {
 		if(id == 0)
-			NetworkHooks.openGui((ServerPlayerEntity) player, this, getPos());
-			//guiId.MODULARFULLSCREEN.ordinal()
+			NetworkHooks.openGui((ServerPlayerEntity) player, this, buf -> {buf.writeInt(getModularInvType().ordinal()); buf.writeBlockPos(pos); });
+			//guiId.MODULARFULLSCREEN
 		else if(id == 1 || id == 3) {
 			ResourceLocation dimId = new ResourceLocation(nbt.getString("id"));
 
@@ -459,8 +459,8 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 			//Update known planets
 			markDirty();
 			if(id == 3)
-				NetworkHooks.openGui((ServerPlayerEntity) player, this, getPos());
-			//guiId.MODULARNOINV.ordinal()
+				NetworkHooks.openGui((ServerPlayerEntity) player, this, buf -> {buf.writeInt(getModularInvType().ordinal()); buf.writeBlockPos(pos); });
+			//guiId.MODULARNOINV
 		}
 		else if(id == 2) {
 			final SpaceStationObject station = getSpaceObject();
@@ -490,7 +490,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 		}
 		else if(id == TAB_SWITCH && !world.isRemote) {
 			tabModule.setTab(nbt.getShort("tab"));
-			NetworkHooks.openGui((ServerPlayerEntity) player, this, getPos());
+			NetworkHooks.openGui((ServerPlayerEntity) player, this, buf -> {buf.writeInt(getModularInvType().ordinal()); buf.writeBlockPos(pos); });
 			// noinv
 		}
 		else if(id >= 10 && id < 20) {
@@ -905,12 +905,12 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 
 	@Override
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
-		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType(), player), this);
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}
 
 
 	@Override
-	public int getModularInvType() {
-		return guiId.MODULARNOINV.ordinal();
+	public GuiHandler.guiId getModularInvType() {
+		return guiId.MODULARNOINV;
 	}
 }

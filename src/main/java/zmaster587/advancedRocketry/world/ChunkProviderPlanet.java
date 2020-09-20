@@ -14,6 +14,8 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.SectionPos;
+import net.minecraft.util.registry.DynamicRegistries;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Blockreader;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
@@ -26,13 +28,19 @@ import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.gen.*;
+import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.jigsaw.JigsawJunction;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPattern;
 import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.StructureFeatures;
 import net.minecraft.world.gen.feature.structure.StructureManager;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
+import net.minecraft.world.gen.feature.structure.StructureStart;
+import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.NoiseSettings;
+import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraft.world.spawner.WorldEntitySpawner;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -46,6 +54,9 @@ import java.util.stream.IntStream;
 
 import javax.annotation.Nullable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
@@ -54,6 +65,7 @@ import it.unimi.dsi.fastutil.objects.ObjectList;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 
 public class ChunkProviderPlanet extends ChunkGenerator {
+	public static final Logger logger = LogManager.getLogger();
 	public static final Codec<ChunkProviderPlanet> planetCodec = RecordCodecBuilder.create((p_236091_0_) -> {
 		return p_236091_0_.group(BiomeProvider.field_235202_a_.fieldOf("biome_source").forGetter((p_236096_0_) -> {
 			return p_236096_0_.biomeProvider;
@@ -62,9 +74,12 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 		}), DimensionSettings.field_236098_b_.fieldOf("settings").forGetter((p_236090_0_) -> {
 			return p_236090_0_.dimensionSettings;
 		}),
-		Codec.STRING.fieldOf("dimensionProps").forGetter((p_236090_0_) -> {
-			return p_236090_0_.dimensionProps.getId().toString();
-		})).apply(p_236091_0_, p_236091_0_.stable(ChunkProviderPlanet::new));
+		StructureFeature.field_242770_c.promotePartial(Util.func_240982_a_("Structure start: ", logger::error)).fieldOf("starts").forGetter((p_242488_0_) -> {
+	        return p_242488_0_.starts;
+	      }),
+				Codec.STRING.fieldOf("dimension_props").forGetter((p_236090_0_) -> {
+					return p_236090_0_.dimensionProps.getId().toString();
+				})).apply(p_236091_0_, p_236091_0_.stable(ChunkProviderPlanet::new));
 	});
 	private static final float[] field_222561_h = Util.make(new float[13824], (p_236094_0_) -> {
 		for(int i = 0; i < 24; ++i) {
@@ -105,18 +120,21 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 	protected final Supplier<DimensionSettings> dimensionSettings;
 	private final int field_236085_x_;
 	DimensionProperties dimensionProps;
+	private final DimensionStructuresSettings settings;
+	private final List<Supplier<StructureFeature<?, ?>>> starts;
 
-	public ChunkProviderPlanet(BiomeProvider biomeProvider, long seed, Supplier<DimensionSettings> settings, DimensionProperties dimensionProps) {
-		this(biomeProvider, biomeProvider, seed, settings, dimensionProps);
-	}
-	
-	public ChunkProviderPlanet(BiomeProvider biomeProvider, long seed, Supplier<DimensionSettings> settings, String dimensionProps) {
-		this(biomeProvider, biomeProvider, seed, settings, DimensionManager.getInstance().getDimensionProperties(new ResourceLocation(dimensionProps)));
+	public ChunkProviderPlanet(BiomeProvider biomeProvider, long seed, Supplier<DimensionSettings> settings, List<Supplier<StructureFeature<?, ?>>> starts, DimensionProperties dimensionProps) {
+		this(biomeProvider, biomeProvider, seed, settings, starts, dimensionProps);
 	}
 
-	private ChunkProviderPlanet(BiomeProvider biomeProvider, BiomeProvider biomeProvider2, long seed, Supplier<DimensionSettings> settings, DimensionProperties dimensionProps) {
+	public ChunkProviderPlanet(BiomeProvider biomeProvider, long seed, Supplier<DimensionSettings> settings, List<Supplier<StructureFeature<?, ?>>> starts, String dimensionProps) {
+		this(biomeProvider, biomeProvider, seed, settings, starts, DimensionManager.getInstance().getDimensionProperties(new ResourceLocation(dimensionProps)));
+	}
+
+	private ChunkProviderPlanet(BiomeProvider biomeProvider, BiomeProvider biomeProvider2, long seed, Supplier<DimensionSettings> settings, List<Supplier<StructureFeature<?, ?>>> starts, DimensionProperties dimensionProps) {
 		super(biomeProvider, biomeProvider2, settings.get().func_236108_a_(), seed);
 		this.seed = seed;
+		this.settings = settings.get().func_236108_a_();
 		this.dimensionProps = dimensionProps;
 		DimensionSettings dimensionsettings = settings.get();
 		this.dimensionSettings = settings;
@@ -145,6 +163,7 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 			this.field_236083_v_ = null;
 		}
 
+		this.starts = starts;
 	}
 
 	protected Codec<? extends ChunkGenerator> func_230347_a_() {
@@ -153,11 +172,36 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 
 	@OnlyIn(Dist.CLIENT)
 	public ChunkGenerator func_230349_a_(long p_230349_1_) {
-		return new ChunkProviderPlanet(this.biomeProvider.func_230320_a_(p_230349_1_), p_230349_1_, this.dimensionSettings, dimensionProps);
+		return new ChunkProviderPlanet(this.biomeProvider.func_230320_a_(p_230349_1_), p_230349_1_, this.dimensionSettings, this.starts, dimensionProps);
 	}
 
 	public boolean func_236088_a_(long p_236088_1_, RegistryKey<DimensionSettings> p_236088_3_) {
 		return this.seed == p_236088_1_ && this.dimensionSettings.get().func_242744_a(p_236088_3_);
+	}
+
+	public void func_242707_a(DynamicRegistries p_242707_1_, StructureManager p_242707_2_, IChunk p_242707_3_, TemplateManager p_242707_4_, long p_242707_5_) {
+		ChunkPos chunkpos = p_242707_3_.getPos();
+		Biome biome = this.biomeProvider.getNoiseBiome((chunkpos.x << 2) + 2, 0, (chunkpos.z << 2) + 2);
+		this.func_242705_a(StructureFeatures.field_244145_k, p_242707_1_, p_242707_2_, p_242707_3_, p_242707_4_, p_242707_5_, chunkpos, biome);
+
+		for(Supplier<StructureFeature<?, ?>> supplier : biome.func_242440_e().func_242487_a()) {
+			this.func_242705_a(supplier.get(), p_242707_1_, p_242707_2_, p_242707_3_, p_242707_4_, p_242707_5_, chunkpos, biome);
+		}
+
+		for(Supplier<StructureFeature<?, ?>> supplier : starts) {
+			this.func_242705_a(supplier.get(), p_242707_1_, p_242707_2_, p_242707_3_, p_242707_4_, p_242707_5_, chunkpos, biome);
+		}
+	}
+
+	private void func_242705_a(StructureFeature<?, ?> p_242705_1_, DynamicRegistries p_242705_2_, StructureManager p_242705_3_, IChunk p_242705_4_, TemplateManager p_242705_5_, long p_242705_6_, ChunkPos p_242705_8_, Biome p_242705_9_) {
+		StructureStart<?> structurestart = p_242705_3_.func_235013_a_(SectionPos.from(p_242705_4_.getPos(), 0), p_242705_1_.field_236268_b_, p_242705_4_);
+		int i = structurestart != null ? structurestart.getRefCount() : 0;
+		StructureSeparationSettings structureseparationsettings = this.settings.func_236197_a_(p_242705_1_.field_236268_b_);
+		if (structureseparationsettings != null) {
+			StructureStart<?> structurestart1 = p_242705_1_.func_242771_a(p_242705_2_, this, this.biomeProvider, p_242705_5_, p_242705_6_, p_242705_8_, p_242705_9_, i, structureseparationsettings);
+			p_242705_3_.func_235014_a_(SectionPos.from(p_242705_4_.getPos(), 0), p_242705_1_.field_236268_b_, structurestart1, p_242705_4_);
+		}
+
 	}
 
 	private double func_222552_a(int p_222552_1_, int p_222552_2_, int p_222552_3_, double p_222552_4_, double p_222552_6_, double p_222552_8_, double p_222552_10_) {
@@ -313,10 +357,10 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 		this.func_236087_a_(p_230348_1_, p_230348_2_, ablockstate, (Predicate<BlockState>)null);
 		return new Blockreader(ablockstate);
 	}
-	
+
 	public void func_230350_a_(long p_230350_1_, BiomeManager p_230350_3_, IChunk p_230350_4_, GenerationStage.Carving p_230350_5_) {
 		super.func_230350_a_(p_230350_1_, p_230350_3_, p_230350_4_, p_230350_5_);
-		
+
 		//TODO: add planet specific carving
 	}
 

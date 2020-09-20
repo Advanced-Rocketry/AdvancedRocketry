@@ -176,6 +176,13 @@ public class AdvancedRocketryItems {
 	public static Item itemCharcoalLog;
 	public static Item itemElectricMushroom;
 	public static Item itemCrystal;
+	public static Item itemCrystalRed;
+	public static Item itemCrystalOrange;
+	public static Item itemCrystalYellow;
+	public static Item itemCrystalGreen;
+	public static Item itemCrystalCyan;
+	public static Item itemCrystalBlue;
+	public static Item itemCrystalPurple;
 	public static Item itemOrientationController;
 	public static Item itemGravityController;
 	public static Item itemDrill;
@@ -414,6 +421,13 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemCharcoalLog = new BlockItem(AdvancedRocketryBlocks.blockCharcoalLog, typicalBlockProperties);
 		AdvancedRocketryItems.itemElectricMushroom = new BlockItem(AdvancedRocketryBlocks.blockElectricMushroom, typicalBlockProperties);
 		AdvancedRocketryItems.itemCrystal = new BlockItem(AdvancedRocketryBlocks.blockCrystal, typicalBlockProperties);
+		AdvancedRocketryItems.itemCrystalRed = new BlockItem(AdvancedRocketryBlocks.blockCrystalRed, typicalBlockProperties);
+		AdvancedRocketryItems.itemCrystalOrange = new BlockItem(AdvancedRocketryBlocks.blockCrystalOrange, typicalBlockProperties);
+		AdvancedRocketryItems.itemCrystalYellow = new BlockItem(AdvancedRocketryBlocks.blockCrystalYellow, typicalBlockProperties);
+		AdvancedRocketryItems.itemCrystalGreen = new BlockItem(AdvancedRocketryBlocks.blockCrystalGreen, typicalBlockProperties);
+		AdvancedRocketryItems.itemCrystalCyan = new BlockItem(AdvancedRocketryBlocks.blockCrystalCyan, typicalBlockProperties);
+		AdvancedRocketryItems.itemCrystalBlue = new BlockItem(AdvancedRocketryBlocks.blockCrystalBlue, typicalBlockProperties);
+		AdvancedRocketryItems.itemCrystalPurple = new BlockItem(AdvancedRocketryBlocks.blockCrystalPurple, typicalBlockProperties);
 		AdvancedRocketryItems.itemOrientationController = new BlockItem(AdvancedRocketryBlocks.blockOrientationController, typicalBlockProperties);
 		AdvancedRocketryItems.itemGravityController = new BlockItem(AdvancedRocketryBlocks.blockGravityController, typicalBlockProperties);
 		AdvancedRocketryItems.itemDrill = new BlockItem(AdvancedRocketryBlocks.blockDrill, typicalBlockProperties);
@@ -508,6 +522,13 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemCharcoalLog.setRegistryName("charcoallog"),
 				AdvancedRocketryItems.itemElectricMushroom.setRegistryName("electricmushroom"),
 				AdvancedRocketryItems.itemCrystal.setRegistryName("crystal"),
+				AdvancedRocketryItems.itemCrystalRed.setRegistryName("crystal_red"),
+				AdvancedRocketryItems.itemCrystalOrange.setRegistryName("crystal_orange"),
+				AdvancedRocketryItems.itemCrystalYellow.setRegistryName("crystal_yellow"),
+				AdvancedRocketryItems.itemCrystalGreen.setRegistryName("crystal_green"),
+				AdvancedRocketryItems.itemCrystalCyan.setRegistryName("crystal_cyan"),
+				AdvancedRocketryItems.itemCrystalBlue.setRegistryName("crystal_blue"),
+				AdvancedRocketryItems.itemCrystalPurple.setRegistryName("crystal_purple"),
 				AdvancedRocketryItems.itemOrientationController.setRegistryName("orientationcontroller"),
 				AdvancedRocketryItems.itemGravityController.setRegistryName("gravitycontroller"),
 				AdvancedRocketryItems.itemDrill.setRegistryName("drill"),
@@ -537,6 +558,7 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemLensBlock.setRegistryName("blocklens"),
 				AdvancedRocketryItems.itemForceField.setRegistryName("forcefield"),
 				AdvancedRocketryItems.itemForceFieldProjector.setRegistryName("forcefieldprojector"),
+				AdvancedRocketryItems.itemGravityMachine.setRegistryName("gravitymachine"),
 				AdvancedRocketryItems.itemPipeSealer.setRegistryName("pipesealer"),
 				AdvancedRocketryItems.itemSpaceElevatorController.setRegistryName("spaceelevatorcontroller"),
 				AdvancedRocketryItems.itemBeacon.setRegistryName("beacon"),
@@ -546,7 +568,8 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemPump.setRegistryName("blockpump"),
 				AdvancedRocketryItems.itemCentrifuge.setRegistryName("centrifuge"),
 				AdvancedRocketryItems.itemBasalt.setRegistryName("basalt"),
-				AdvancedRocketryItems.itemLandingFloat.setRegistryName("landingfloat"));
+				AdvancedRocketryItems.itemLandingFloat.setRegistryName("landingfloat"),
+				AdvancedRocketryItems.itemSpaceLaser.setRegistryName("spacelaser"));
 
 
 		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "wafersilicon")).func_230235_a_(AdvancedRocketryItems.itemSiliconWafer);

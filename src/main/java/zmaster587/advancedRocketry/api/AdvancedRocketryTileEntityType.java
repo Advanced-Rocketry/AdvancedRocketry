@@ -151,11 +151,11 @@ public class AdvancedRocketryTileEntityType {
 		TILE_LATHE = TileEntityType.Builder.create(TileLathe::new, AdvancedRocketryBlocks.blockLathe).build(null);
 		TILE_PREC_ASS = TileEntityType.Builder.create(TilePrecisionAssembler::new, AdvancedRocketryBlocks.blockPrecisionAssembler).build(null);
 		TILE_ROLLING = TileEntityType.Builder.create(TileRollingMachine::new, AdvancedRocketryBlocks.blockRollingMachine).build(null);
-		//TILE_ASTROBODY_DATA = TileEntityType.Builder.create(TileAstrobodyDataProcessor::new, AdvancedRocketryBlocks.blockPr).build(null);
+		TILE_ASTROBODY_DATA = TileEntityType.Builder.create(TileAstrobodyDataProcessor::new, AdvancedRocketryBlocks.blockPlanetAnalyser).build(null);
 		TILE_TERRAFORMER = TileEntityType.Builder.create(TileAtmosphereTerraformer::new, AdvancedRocketryBlocks.blockAtmosphereTerraformer).build(null);
-		TILE_BEACON = TileEntityType.Builder.create(TileBeacon::new, AdvancedRocketryBlocks.blockRollingMachine).build(null);
+		TILE_BEACON = TileEntityType.Builder.create(TileBeacon::new, AdvancedRocketryBlocks.blockBeacon).build(null);
 		TILE_BIOME_SCANNER = TileEntityType.Builder.create(TileBiomeScanner::new, AdvancedRocketryBlocks.blockBiomeScanner).build(null);
-		TILE_GRAVITY_CONTROLLER = TileEntityType.Builder.create(TileGravityController::new, AdvancedRocketryBlocks.blockGravityController).build(null);
+		TILE_GRAVITY_CONTROLLER = TileEntityType.Builder.create(TileGravityController::new, AdvancedRocketryBlocks.blockGravityMachine).build(null);
 		TILE_OBSERVATORY = TileEntityType.Builder.create(TileObservatory::new, AdvancedRocketryBlocks.blockObservatory).build(null);
 		TILE_PLANET_SELECTOR = TileEntityType.Builder.create(TilePlanetSelector::new, AdvancedRocketryBlocks.blockPlanetSelector).build(null);
 		TILE_RAILGUN = TileEntityType.Builder.create(TileRailgun::new, AdvancedRocketryBlocks.blockRailgun).build(null);
@@ -211,7 +211,7 @@ public class AdvancedRocketryTileEntityType {
 				TILE_LATHE.setRegistryName("lathe"),
 				TILE_PREC_ASS.setRegistryName("prec_ass"),
 				TILE_ROLLING.setRegistryName("rolling"),
-				//TILE_ASTROBODY_DATA.setRegistryName("//astrobody_data"),
+				TILE_ASTROBODY_DATA.setRegistryName("astrobody_data"),
 				TILE_TERRAFORMER.setRegistryName("terraformer"),
 				TILE_BEACON.setRegistryName("beacon"),
 				TILE_BIOME_SCANNER.setRegistryName("biome_scanner"),
@@ -246,7 +246,9 @@ public class AdvancedRocketryTileEntityType {
 				TILE_WORK_STATION.setRegistryName("work_station"),
 				TILE_SEAL.setRegistryName("seal"),
 				TILE_STATION_DEPLOYED_ASSEMBLER.setRegistryName("deployed_assembler"),
-				TILE_GUIDANCE_COMPUTER.setRegistryName("guidance_computer"));
+				TILE_GUIDANCE_COMPUTER.setRegistryName("guidance_computer"),
+				TILE_SATELLITE_HATCH.setRegistryName("satellite_hatch")
+				);
 		
 		
 		registerTileEntityTypesToBlocks();
@@ -316,5 +318,7 @@ public class AdvancedRocketryTileEntityType {
 
 		//Configurable stuff
 		((BlockTile)AdvancedRocketryBlocks.blockGravityMachine)._setTile(AdvancedRocketryTileEntityType.TILE_GRAVITY_CONTROLLER);
+		
+		((BlockTile)AdvancedRocketryBlocks.blockSpaceLaser)._setTile(AdvancedRocketryTileEntityType.TILE_SPACE_LASER);
 	}
 }

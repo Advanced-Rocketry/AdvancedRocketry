@@ -7,6 +7,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import zmaster587.libVulpes.block.BlockTile;
+import zmaster587.libVulpes.inventory.GuiHandler;
 
 public class BlockTransciever extends BlockTile {
 
@@ -15,7 +16,7 @@ public class BlockTransciever extends BlockTile {
 			VoxelShapes.create(.75, .25, .25, 1, .75, .75),
 			VoxelShapes.create(0, .25, .25, 0.25, .75, .75)};
 	
-	public BlockTransciever(Properties properties, int guiId) {
+	public BlockTransciever(Properties properties, GuiHandler.guiId guiId) {
 		super(properties, guiId);
 	}
 

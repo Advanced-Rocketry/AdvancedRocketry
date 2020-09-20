@@ -70,7 +70,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	public void setDimensionId(ItemStack stack, ResourceLocation dimensionId) {
 
 		CompoundNBT nbt;
-		if(dimensionId == Constants.INVALID_PLANET) {
+		if(Constants.INVALID_PLANET.equals(dimensionId)) {
 			nbt = new CompoundNBT();
 			nbt.putString(dimensionIdIdentifier, dimensionId.toString());
 			return;

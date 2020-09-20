@@ -38,16 +38,16 @@ public class RendererMicrowaveReciever extends TileEntityRenderer<TileMicrowaveR
 
 		matrix.push();
 		//Initial setup
-		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
-		IVertexBuilder entitySolidManual = buffer.getBuffer(RenderHelper.getSolidTexturedManualRenderType(texture));
-		IVertexBuilder entitySolidSideManual = buffer.getBuffer(RenderHelper.getSolidTexturedManualRenderType(panelSide));
-		IVertexBuilder entitySolidSideManualColor = buffer.getBuffer(RenderHelper.getSolidManualRenderType());
-		IVertexBuilder laserBeam = buffer.getBuffer(RenderHelper.getLaserBeamType());
+		IVertexBuilder entitySolidManual;
+		IVertexBuilder entitySolidSideManual;
+		IVertexBuilder entitySolidSideManualColor;
+		IVertexBuilder laserBeam;
 		
 		//Initial setup
         
         
 		//Draw heat FX
+		entitySolidManual = buffer.getBuffer(RenderHelper.getSolidTexturedManualRenderType(texture));
 		if(ARConfiguration.getCurrentConfig().advancedVFX.get() && tile.getPowerMadeLastTick() > 0) {
 			double distance = tile.getPos().distanceSq(new BlockPos( Minecraft.getInstance().player.getPositionVec()));
 			if(distance < 16*16 ) {
@@ -82,15 +82,16 @@ public class RendererMicrowaveReciever extends TileEntityRenderer<TileMicrowaveR
 
 		//Draw main panel
 		RenderHelper.renderTopFaceWithUV(matrix, entitySolidManual, 1.01, -2, -2, 3, 3, 0, 5, 0, 5,1,1,1,1);
-		Tessellator.getInstance().draw();
 		//And sides
 		
-		
+		entitySolidSideManual = buffer.getBuffer(RenderHelper.getSolidTexturedManualRenderType(panelSide));
 		RenderHelper.renderNorthFaceWithUV(matrix, entitySolidSideManual, -1.99, -2, 0, 3, 1, 0, 5, 0 ,1,1,1,1,1);
 		RenderHelper.renderSouthFaceWithUV(matrix, entitySolidSideManual, 2.99, -2, 0, 3, 1, 0, 5, 0 ,1,1,1,1,1);
 		RenderHelper.renderEastFaceWithUV(matrix, entitySolidSideManual, 2.99, 0, -2, 1, 3, 0, 5, 0 ,1,1,1,1,1);
 		RenderHelper.renderWestFaceWithUV(matrix, entitySolidSideManual, -1.99, 0, -2, 1, 3, 0, 5, 0 ,1,1,1,1,1);
 
+		
+		entitySolidSideManualColor = buffer.getBuffer(RenderHelper.getSolidManualRenderType());
 		RenderHelper.renderBottomFace(matrix, entitySolidSideManualColor, 0.001, -2, -2, 3, 3,1,1,1,1);
 		
 		RenderHelper.renderCube(matrix, entitySolidSideManualColor, -2, 0.99, -2, -1.9, 1.1, 3, 1,1,1,1);
@@ -99,25 +100,27 @@ public class RendererMicrowaveReciever extends TileEntityRenderer<TileMicrowaveR
 		RenderHelper.renderCube(matrix, entitySolidSideManualColor, -1.9, 0.99, 2.9, 3, 1.1, 3, 1,1,1,1);
 		RenderHelper.renderCube(matrix, entitySolidSideManualColor, 2.9, 0.99, -1.9, 3, 1.1, 3, 1,1,1,1);
 
+		float r = 1,g = 1,b = 1,a = 0.5f;
 		if(tile.getPowerMadeLastTick() > 0 ) {
 			matrix.push();
 			//GlStateManager.color4f(0.2F, 0.2F, 0.2F, 0.3F);
 			float x = 0, y = 0, z = 0;
+			laserBeam = buffer.getBuffer(RenderHelper.getLaserBeamType());
 			
 			for(float radius = 0.25F; radius < 2; radius += .25F) {
 
 				for(double i = 0; i < 2*Math.PI; i += Math.PI) {
-					laserBeam.pos(- x , -y + 200,  - z).endVertex();
-					laserBeam.pos(- x, -y + 200, - z).endVertex();
-					laserBeam.pos(- (radius* Math.cos(i)) + 0.5F, 0,- (radius* Math.sin(i)) + 0.5F).endVertex();
-					laserBeam.pos(+ (radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F).endVertex();
+					laserBeam.pos(- x , -y + 200,  - z).color(r,g,b,a).endVertex();
+					laserBeam.pos(- x, -y + 200, - z).color(r,g,b,a).endVertex();
+					laserBeam.pos(- (radius* Math.cos(i)) + 0.5F, 0,- (radius* Math.sin(i)) + 0.5F).color(r,g,b,a).endVertex();
+					laserBeam.pos(+ (radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F).color(r,g,b,a).endVertex();
 				}
 
 				for(double i = 0; i < 2*Math.PI; i += Math.PI) {
-					laserBeam.pos(- x, -y + 200,- z).endVertex();
-					laserBeam.pos(- x, -y + 200, - z).endVertex();
-					laserBeam.pos(+ (radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F).endVertex();
-					laserBeam.pos(- (radius* Math.cos(i)) + 0.5F, 0,(radius* Math.sin(i)) + 0.5F).endVertex();
+					laserBeam.pos(- x, -y + 200,- z).color(r,g,b,a).endVertex();
+					laserBeam.pos(- x, -y + 200, - z).color(r,g,b,a).endVertex();
+					laserBeam.pos(+ (radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F).color(r,g,b,a).endVertex();
+					laserBeam.pos(- (radius* Math.cos(i)) + 0.5F, 0,(radius* Math.sin(i)) + 0.5F).color(r,g,b,a).endVertex();
 				}
 			}
 

@@ -5,6 +5,7 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.util.math.vector.Quaternion;
 
 import org.lwjgl.opengl.GL11;
 
@@ -32,8 +33,9 @@ public class ModulePanetImage extends ModuleBase {
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexbuffer = tessellator.getBuffer();
-		GL11.glPushMatrix();
-		GL11.glRotated(90, -1, 0, 0);
+		matrix.push();
+		matrix.rotate(new Quaternion(-90, 0, 0, true));
+		matrix.translate(offsetX, 100, offsetY);
 		//GL11.glTranslatef(xPosition, 100 + this.zLevel, yPosition);
 		float newWidth = width/2f;
 
