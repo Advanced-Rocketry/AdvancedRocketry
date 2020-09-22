@@ -1,5 +1,5 @@
 {
-    "itemGroup.advancedrocketry": "Advanced Rocketry",
+    "itemGroup.advancedRocketry": "Advanced Rocketry",
     "itemGroup.advancedRocketryOres": "Advanced Rocketry Ores",
 
     "death.attack.vacuum": "%1$s was depressurized",
@@ -438,7 +438,7 @@
     "msg.ore_scanner.filter": "Can filter ore:",
     "msg.ore_scanner.value": "Value:",
     "msg.itemplanetidchip.planetname": "Planet Name:",
-    "msg.itemplanetidchip.stationid": "Station Id:",
+    "msg.itemplanetidchip.stationid": "Station Id: ",
     "msg.itemplanetidchip.artifacts": "Artifacts:",
     "msg.vent.trace": "Oxygen Trace",
 

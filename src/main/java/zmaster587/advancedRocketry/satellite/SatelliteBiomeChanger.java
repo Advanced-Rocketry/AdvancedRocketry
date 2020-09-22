@@ -215,7 +215,7 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 
 	@Override
 	public int extractEnergy(int amt, boolean simulate) {
-		if(getDimensionId().get() != Constants.INVALID_PLANET) {
+		if(!Constants.INVALID_PLANET.equals(getDimensionId().get())) {
 			World world = ZUtils.getWorld(getDimensionId().get());
 			if(world != null) {
 				battery.acceptEnergy(energyCreated(world, false), false);
@@ -227,7 +227,7 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 	@Override
 	public int getUniversalEnergyStored() {
 
-		if(getDimensionId().get() != Constants.INVALID_PLANET) {
+		if(!Constants.INVALID_PLANET.equals(getDimensionId().get())) {
 			World world = ZUtils.getWorld(getDimensionId().get());
 			if(world != null) {
 				battery.acceptEnergy(energyCreated(world, false), false);

@@ -286,7 +286,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 				
 				dimId = getDestDimId();
 
-				if(dimId != Constants.INVALID_PLANET) {
+				if(!Constants.INVALID_PLANET.equals(dimId)) {
 					World world = ZUtils.getWorld(dimId);
 					TileEntity tile;
 

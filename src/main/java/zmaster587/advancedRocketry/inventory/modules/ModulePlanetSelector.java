@@ -459,7 +459,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		}
 
 		//Render Selection
-		if(selectedSystem != Constants.INVALID_PLANET) {
+		if(!Constants.INVALID_PLANET.equals(selectedSystem)) {
 
 			Minecraft.getInstance().getTextureManager().bindTexture(TextureResources.selectionCircle);
 			GL11.glPushMatrix();
@@ -525,7 +525,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		//Confirm selection
 		else if(buttonId == btnConfirm) {
 			DimensionProperties properties =  DimensionManager.getInstance().getDimensionProperties(selectedSystem);
-			if(selectedSystem != Constants.INVALID_PLANET && !DimensionManager.getInstance().isStar(selectedSystem) || (this.allowStarSelection && properties.getStar().isBlackHole())) {
+			if(!Constants.INVALID_PLANET.equals(selectedSystem) && !DimensionManager.getInstance().isStar(selectedSystem) || (this.allowStarSelection && properties.getStar().isBlackHole())) {
 				hostTile.onSelectionConfirmed(this);
 				Minecraft.getInstance().player.closeScreen();
 			}

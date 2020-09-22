@@ -1170,7 +1170,7 @@ public class DimensionManager implements IGalaxy {
 		for(ISpaceObject i : SpaceObjectManager.getSpaceManager().getSpaceObjects())
 		{
 			ResourceLocation orbitingId = i.getOrbitingPlanetId(); 
-			if(!isDimensionCreated(orbitingId) && orbitingId != SpaceObjectManager.WARPDIMID && orbitingId.getNamespace().equals(Constants.PLANET_NAMESPACE))
+			if(!isDimensionCreated(orbitingId) && !SpaceObjectManager.WARPDIMID.equals(orbitingId) && orbitingId.getNamespace().equals(Constants.PLANET_NAMESPACE))
 			{
 				AdvancedRocketry.logger.warn("Dimension ID " + i.getOrbitingPlanetId() + " is not registered and a space station is orbiting it, moving to dimid 0");
 				i.setOrbitingBody(defaultSpaceDimensionProperties.getId());

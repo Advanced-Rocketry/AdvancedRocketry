@@ -1,7 +1,41 @@
 package zmaster587.advancedRocketry.client;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import zmaster587.advancedRocketry.client.render.planet.ISkyRenderer;
+import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
+
 public class ClientHelper {
 
+	
+	public static boolean callCustomSkyRenderer(MatrixStack matrix, float partialTicks)
+	{
+		World world = Minecraft.getInstance().world;
+		if(!DimensionManager.getInstance().isDimensionCreated(world))
+			return false;
+		
+		
+		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world,  new BlockPos(Minecraft.getInstance().player.getPositionVec()));
+		
+		ISkyRenderer renderer =  properties.getSkyRenderer();
+		
+		if(renderer == null)
+		{
+			properties.setSkyRenderer(new RenderPlanetarySky());
+			renderer = properties.getSkyRenderer();
+		}
+		
+		
+		renderer.render(matrix, partialTicks);
+		return true;
+	}
+	
+	
 	/* gravRotation
 	 * 1: north
 	 * 2: east

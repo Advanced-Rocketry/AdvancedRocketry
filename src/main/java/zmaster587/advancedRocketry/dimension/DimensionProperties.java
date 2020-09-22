@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.dimension;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.Entity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
@@ -13,7 +14,10 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.Category;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.common.util.JsonUtils;
 import net.minecraftforge.registries.ForgeRegistries;
 import zmaster587.advancedRocketry.AdvancedRocketry;
@@ -30,6 +34,7 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.client.render.planet.ISkyRenderer;
+import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketSatellite;
@@ -158,7 +163,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	public static final ResourceLocation shadow = new ResourceLocation("advancedrocketry:textures/planets/shadow.png");
 	public static final ResourceLocation shadow3 = new ResourceLocation("advancedrocketry:textures/planets/shadow3.png");
-
+	
 	public static enum PlanetIcons {
 		EARTHLIKE(new ResourceLocation("advancedrocketry:textures/planets/earthlike.png")),
 		LAVA(new ResourceLocation("advancedrocketry:textures/planets/lava.png")),
@@ -379,6 +384,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		oceanBlock = null;
 		fillerBlock = null;
 		generatorType = 0;
+		
+		if(EffectiveSide.get().isClient())
+			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {this.sky = new RenderPlanetarySky();});
+		
 	}
 
 	public ISkyRenderer getSkyRenderer()
@@ -735,7 +744,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return true if this DIM orbits another
 	 */
 	public boolean isMoon() {
-		return !Constants.INVALID_PLANET.equals(parentPlanet) && parentPlanet != SpaceObjectManager.WARPDIMID;
+		return !Constants.INVALID_PLANET.equals(parentPlanet) && !SpaceObjectManager.WARPDIMID.equals(parentPlanet);
 	}
 
 	/**

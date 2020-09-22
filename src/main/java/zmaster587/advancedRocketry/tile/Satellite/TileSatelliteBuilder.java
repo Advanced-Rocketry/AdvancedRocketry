@@ -134,7 +134,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		if(!chipsExist)
 			return false;
 		boolean isSatellite = ((stack0.getItem() instanceof ItemSatellite || stack0.getItem() instanceof ItemSatelliteIdentificationChip) && stack1.getItem().equals(stack0.getItem()));
-		boolean isStation = stack0.getItem() instanceof ItemStationChip && ItemStationChip.getUUID(stack0) != DimensionManager.overworldProperties.getId() && stack1.getItem() instanceof ItemStationChip;
+		boolean isStation = stack0.getItem() instanceof ItemStationChip && !ItemStationChip.getUUID(stack0).equals(DimensionManager.overworldProperties.getId()) && stack1.getItem() instanceof ItemStationChip;
 		boolean isPlanet = (stack0.getItem() instanceof ItemPlanetIdentificationChip && stack1.getItem() instanceof ItemPlanetIdentificationChip);
 		boolean isOreScanner = (stack0.getItem() instanceof ItemOreScanner && stack1.getItem() instanceof ItemOreScanner);
 		return !isRunning() && getStackInSlot(outputSlot).isEmpty() && (isStation || stack0.hasTag()) && 

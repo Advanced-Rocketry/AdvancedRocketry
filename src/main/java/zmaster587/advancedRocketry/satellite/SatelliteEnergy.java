@@ -81,7 +81,7 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 	
 	@Override
 	public int transmitEnergy(Direction dir, boolean simulate) {
-		if(getDimensionId().get() != Constants.INVALID_PLANET) {
+		if(!Constants.INVALID_PLANET.equals(getDimensionId().get())) {
 			World world = ZUtils.getWorld(getDimensionId().get());
 			if(world != null) {
 				int energyCreated = energyCreated(world, simulate);

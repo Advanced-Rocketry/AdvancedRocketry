@@ -519,7 +519,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 
 			//Laser will be on at this point
 			ResourceLocation orbitDimId = DimensionManager.getInstance().getDimensionProperties(world, getPos()).getParentPlanet();
-			if(orbitDimId == SpaceObjectManager.WARPDIMID)
+			if(SpaceObjectManager.WARPDIMID.equals(orbitDimId))
 				return;
 			ServerWorld orbitWorld = ZUtils.getWorld(orbitDimId);
 

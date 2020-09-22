@@ -313,7 +313,7 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 			int scanWidth = Math.max(scanSize/radius,1);
 
 			try {
-				for(int yt = 0; yt < (texture.getImage().getHeight() * texture.getImage().getWidth()); yt++) {
+				for(int yt = 0; yt < (texture.getHeight() * texture.getWidth()); yt++) {
 					buffer.put(yt, oreMap[yt % scanWidth][scanWidth - 1 - yt / scanWidth] | 0xFF000000);
 				}
 				buffer.flip();

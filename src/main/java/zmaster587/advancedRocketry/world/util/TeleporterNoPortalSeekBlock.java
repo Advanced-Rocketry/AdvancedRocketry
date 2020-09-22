@@ -1,11 +1,12 @@
 package zmaster587.advancedRocketry.world.util;
 
+import net.minecraft.block.PortalInfo;
 import net.minecraft.world.server.ServerWorld;
 
 public class TeleporterNoPortalSeekBlock extends TeleporterNoPortal {
 
-	public TeleporterNoPortalSeekBlock(ServerWorld p_i1963_1_) {
-		super(p_i1963_1_);
+	public TeleporterNoPortalSeekBlock(ServerWorld p_i1963_1_, PortalInfo info) {
+		super(p_i1963_1_, info);
 	}
 
 

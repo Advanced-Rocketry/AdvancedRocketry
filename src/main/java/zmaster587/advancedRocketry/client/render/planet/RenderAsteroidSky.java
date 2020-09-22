@@ -297,7 +297,7 @@ public class RenderAsteroidSky implements ISkyRenderer { //extends IRenderHandle
 			else
 				primaryStar = DimensionManager.getSol();
 			if(ARConfiguration.GetSpaceDimId().equals(properties.getId())) {
-				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
+				isWarp = SpaceObjectManager.WARPDIMID.equals(properties.getParentPlanet());
 				if(isWarp) {
 					SpaceStationObject station = (SpaceStationObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(playerPos);
 					travelDirection = station.getForwardDirection();

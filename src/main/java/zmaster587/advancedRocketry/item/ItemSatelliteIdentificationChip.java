@@ -142,7 +142,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 
 		if(satId != -1) {
 
-			if(worldId != Constants.INVALID_PLANET) {
+			if(!Constants.INVALID_PLANET.equals(worldId)) {
 
 				if(stack.getTag().contains(name)) {
 

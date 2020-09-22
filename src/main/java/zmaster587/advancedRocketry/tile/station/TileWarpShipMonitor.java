@@ -222,7 +222,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 
 				modules.add(warp);
 
-				if(dimCache == null && isOnStation && station.getOrbitingPlanetId() != SpaceObjectManager.WARPDIMID )
+				if(dimCache == null && isOnStation && !SpaceObjectManager.WARPDIMID.equals(station.getOrbitingPlanetId()) )
 					dimCache = DimensionManager.getInstance().getDimensionProperties(station.getOrbitingPlanetId());
 
 				if(!world.isRemote && isOnStation) {
@@ -360,7 +360,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 
 
 			DimensionProperties dstProps = null;
-			if(isOnStation && station.getOrbitingPlanetId() != SpaceObjectManager.WARPDIMID )
+			if(isOnStation && !SpaceObjectManager.WARPDIMID.equals(station.getOrbitingPlanetId()) )
 				dstProps = DimensionManager.getInstance().getDimensionProperties(dstPlanet);
 
 			if(dstProps != null) {
@@ -551,7 +551,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 	}
 
 	private void selectSystem(ResourceLocation dimId) {
-		if(getSpaceObject().getOrbitingPlanetId() == SpaceObjectManager.WARPDIMID || dimId == SpaceObjectManager.WARPDIMID)
+		if(SpaceObjectManager.WARPDIMID.equals(getSpaceObject().getOrbitingPlanetId()) || SpaceObjectManager.WARPDIMID.equals(dimId))
 			dimCache = null;
 		else {
 			dimCache = DimensionManager.getInstance().getDimensionProperties(container.getSelectedSystem());

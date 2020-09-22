@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.event;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.PortalInfo;
 import net.minecraft.block.TorchBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -21,6 +22,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -55,6 +57,7 @@ import net.minecraftforge.fml.network.NetworkEvent.ServerCustomPayloadLoginEvent
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.achievements.ARAchivements;
@@ -81,6 +84,7 @@ import zmaster587.advancedRocketry.util.GravityHandler;
 import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
 import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
+import zmaster587.advancedRocketry.world.util.WorldDummy;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.event.BucketHandler;
 import zmaster587.libVulpes.network.PacketHandler;
@@ -265,9 +269,8 @@ public class PlanetEventHandler {
 						}
 						else
 						{
-							ent.entity.setLocationAndAngles(ent.location.getX(), ent.location.getY(), ent.location.getZ(), ent.entity.rotationYaw, ent.entity.rotationPitch);
-							
-							ent.entity.changeDimension(newWorld, new TeleporterNoPortal(newWorld));
+							PortalInfo info = new PortalInfo(new Vector3d(ent.location.getX(), ent.location.getY(), ent.location.getZ()), ent.entity.getMotion(), ent.entity.rotationYaw, ent.entity.rotationPitch);
+							ent.entity.changeDimension(newWorld, new TeleporterNoPortal(newWorld, info));
 						}
 						//should be loaded by now
 						Entity rocket = newWorld.getEntityByUuid(ent.entity2.getUniqueID());
@@ -342,22 +345,21 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	@OnlyIn(value=Dist.CLIENT)
 	public void fogColor(FogColors event) {
-		/*BlockState state = ActiveRenderInfo.getBlockStateAtEntityViewpoint(event.getEntity().world, event.getEntity(), (float)event.getRenderPartialTicks());
+		Entity entity = event.getInfo().getRenderViewEntity();
+		World world = entity.world;
+		BlockState state = event.getInfo().getBlockAtCamera();
 
-		Block block = state.getBlock();
-		if(block.getMaterial(state) == Material.WATER)
+		if(state.getMaterial() == Material.WATER)
 			return;
 
-		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.getEntity().dimension);
+		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world);
 		if(properties != null) {
-			float fog = Math.min(properties.getAtmosphereDensityAtHeight(event.getEntity().posY), 200);
+			float fog = Math.min(properties.getAtmosphereDensityAtHeight(entity.getPosY()), 200);
 
-			if(event.getEntity().world.provider instanceof IPlanetaryProvider) {
-				Vector3d color = event.getEntity().world.provider.getSkyColor(event.getEntity(), 0f);
-				event.setRed((float) Math.min(color.x*1.4f,1f));
-				event.setGreen((float) Math.min(color.y*1.4f, 1f));
-				event.setBlue((float) Math.min(color.z*1.4f, 1f));
-			}
+			float[] color =  properties.getSkyColor();
+			event.setRed((float) Math.min(event.getRed()*color[0]*1.4f,1f));
+			event.setGreen((float) Math.min(event.getGreen()*color[1]*1.4f, 1f));
+			event.setBlue((float) Math.min(event.getBlue()*color[2]*1.4f, 1f));
 
 			if(endTime > 0) {
 				double amt = (endTime - Minecraft.getInstance().world.getGameTime()) / (double)duration;
@@ -375,7 +377,7 @@ public class PlanetEventHandler {
 				event.setGreen(event.getGreen()* fog);
 				event.setBlue(event.getBlue()* fog);
 			}
-		}*/
+		}
 	}
 
 	//TODO: terraforming
@@ -437,8 +439,9 @@ public class PlanetEventHandler {
 	@OnlyIn(value=Dist.CLIENT)
 	public void fogColor(RenderFogEvent event) {
 
-		if(event.getInfo().getRenderViewEntity().getEntityWorld() == null)
+		if(event.getInfo().getRenderViewEntity().getEntityWorld() == null || event.getInfo().getRenderViewEntity().getEntityWorld() instanceof WorldDummy)
 			return;
+		
 
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.getInfo().getRenderViewEntity().getEntityWorld());
 		if(properties != null && event.getInfo().getBlockAtCamera().getBlock() != Blocks.WATER && event.getInfo().getBlockAtCamera().getBlock() != Blocks.LAVA) {//& properties.atmosphereDensity > 125) {
@@ -478,11 +481,9 @@ public class PlanetEventHandler {
 				far = f1*(2.002f - atmosphere/100f);
 			}
 
-			GlStateManager.fogStart(near);
-			GlStateManager.fogEnd(far);
-			GlStateManager.fogDensity(0);
-
-
+			RenderSystem.fogStart(near);
+			RenderSystem.fogEnd(far);
+			RenderSystem.fogDensity(0);
 			//event.setCanceled(false);
 		}
 

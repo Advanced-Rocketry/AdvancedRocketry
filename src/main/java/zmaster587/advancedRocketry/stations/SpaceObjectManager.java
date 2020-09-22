@@ -398,7 +398,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 */
 	public void moveStationToBody(ISpaceObject station, ResourceLocation dimId, int timeDelta) {
 		//Remove station from the planet it's in orbit around before moving it!
-		if(station.getOrbitingPlanetId() != WARPDIMID && spaceStationOrbitMap.get(station.getOrbitingPlanetId()) != null) {
+		if(!WARPDIMID.equals(station.getOrbitingPlanetId()) && spaceStationOrbitMap.get(station.getOrbitingPlanetId()) != null) {
 			spaceStationOrbitMap.get(station.getOrbitingPlanetId()).remove(station);
 		}
 

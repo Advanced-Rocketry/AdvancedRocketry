@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexBuffer;
+import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -37,7 +38,7 @@ import java.util.Random;
 
 public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderHandler {
 
-
+	private final VertexFormat skyVertexFormat = DefaultVertexFormats.POSITION;
 	private VertexBuffer starGLCallList;
 	private VertexBuffer glSkyList;
 	private VertexBuffer glSkyList2;
@@ -50,73 +51,88 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 	public RenderPlanetarySky() {
 		axis = new Vector3F<Float>(1f, 0f, 0f);
 
-		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-		starGLCallList = new VertexBuffer(DefaultVertexFormats.POSITION);
-		this.renderStars(buffer);
-		starGLCallList.upload(buffer);
-		
-		
-		buffer = Tessellator.getInstance().getBuffer();
-		this.glSkyList = new VertexBuffer(DefaultVertexFormats.POSITION);
-		byte b2 = 64;
-		int i = 256 / b2 + 2;
-		float f = 16.0F;
-		int j;
-		int k;
-
-		for (j = -b2 * i; j <= b2 * i; j += b2)
-		{
-			for (k = -b2 * i; k <= b2 * i; k += b2)
-			{
-				buffer.pos((double)(j + 0), (double)f, (double)(k + 0)).endVertex();
-				buffer.pos((double)(j + b2), (double)f, (double)(k + 0)).endVertex();
-				buffer.pos((double)(j + b2), (double)f, (double)(k + b2)).endVertex();
-				buffer.pos((double)(j + 0), (double)f, (double)(k + b2)).endVertex();
-				
-			}
-		}
-		buffer.finishDrawing();
-		glSkyList.upload(buffer);
-		
-		buffer = Tessellator.getInstance().getBuffer();
-		this.glSkyList2 = new VertexBuffer(DefaultVertexFormats.POSITION);
-		f = -16.0F;
-
-		for (j = -b2 * i; j <= b2 * i; j += b2)
-		{
-			for (k = -b2 * i; k <= b2 * i; k += b2)
-			{
-				buffer.pos((double)(j + 0), (double)f, (double)(k + 0)).endVertex();
-				buffer.pos((double)(j + b2), (double)f, (double)(k + 0)).endVertex();
-				buffer.pos((double)(j + b2), (double)f, (double)(k + b2)).endVertex();
-				buffer.pos((double)(j + 0), (double)f, (double)(k + b2)).endVertex();
-			}
-		}
-
-		buffer.finishDrawing();
-		glSkyList2.upload(buffer);
+		this.generateStars();
+		this.generateSky();
+		this.generateSky2();
 	}
 
-	Minecraft mc = Minecraft.getInstance();
+	private void generateSky2() {
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder bufferbuilder = tessellator.getBuffer();
+		if (this.glSkyList2 != null) {
+			this.glSkyList2.close();
+		}
 
-	private void renderStars(BufferBuilder buffer)
-	{
+		this.glSkyList2 = new VertexBuffer(this.skyVertexFormat);
+		this.renderSky(bufferbuilder, -16.0F, true);
+		bufferbuilder.finishDrawing();
+		this.glSkyList2.upload(bufferbuilder);
+	}
+
+	private void generateSky() {
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder bufferbuilder = tessellator.getBuffer();
+		if (this.glSkyList != null) {
+			this.glSkyList.close();
+		}
+
+		this.glSkyList = new VertexBuffer(this.skyVertexFormat);
+		this.renderSky(bufferbuilder, 16.0F, false);
+		bufferbuilder.finishDrawing();
+		this.glSkyList.upload(bufferbuilder);
+	}
+
+	private void renderSky(BufferBuilder bufferBuilderIn, float posY, boolean reverseX) {
+		int i = 64;
+		int j = 6;
+		bufferBuilderIn.begin(7, DefaultVertexFormats.POSITION);
+
+		for(int k = -384; k <= 384; k += 64) {
+			for(int l = -384; l <= 384; l += 64) {
+				float f = (float)k;
+				float f1 = (float)(k + 64);
+				if (reverseX) {
+					f1 = (float)k;
+					f = (float)(k + 64);
+				}
+
+				bufferBuilderIn.pos((double)f, (double)posY, (double)l).endVertex();
+				bufferBuilderIn.pos((double)f1, (double)posY, (double)l).endVertex();
+				bufferBuilderIn.pos((double)f1, (double)posY, (double)(l + 64)).endVertex();
+				bufferBuilderIn.pos((double)f, (double)posY, (double)(l + 64)).endVertex();
+			}
+		}
+
+	}
+
+	private void generateStars() {
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder bufferbuilder = tessellator.getBuffer();
+		if (this.starGLCallList != null) {
+			this.starGLCallList.close();
+		}
+
+		this.starGLCallList = new VertexBuffer(this.skyVertexFormat);
+		this.renderStars(bufferbuilder);
+		bufferbuilder.finishDrawing();
+		this.starGLCallList.upload(bufferbuilder);
+	}
+
+	private void renderStars(BufferBuilder bufferBuilderIn) {
 		Random random = new Random(10842L);
+		bufferBuilderIn.begin(7, DefaultVertexFormats.POSITION);
 
-		for (int i = 0; i < 2000; ++i)
-		{
+		for(int i = 0; i < 1500; ++i) {
 			double d0 = (double)(random.nextFloat() * 2.0F - 1.0F);
 			double d1 = (double)(random.nextFloat() * 2.0F - 1.0F);
 			double d2 = (double)(random.nextFloat() * 2.0F - 1.0F);
 			double d3 = (double)(0.15F + random.nextFloat() * 0.1F);
 			double d4 = d0 * d0 + d1 * d1 + d2 * d2;
-
-			if (d4 < 1.0D && d4 > 0.01D)
-			{
+			if (d4 < 1.0D && d4 > 0.01D) {
 				d4 = 1.0D / Math.sqrt(d4);
-				d0 *= d4;
-				d1 *= d4;
-				d2 *= d4;
+				d0 = d0 * d4;
+				d1 = d1 * d4;
+				d2 = d2 * d4;
 				double d5 = d0 * 100.0D;
 				double d6 = d1 * 100.0D;
 				double d7 = d2 * 100.0D;
@@ -130,31 +146,32 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 				double d15 = Math.sin(d14);
 				double d16 = Math.cos(d14);
 
-				for (int j = 0; j < 4; ++j)
-				{
+				for(int j = 0; j < 4; ++j) {
 					double d17 = 0.0D;
 					double d18 = (double)((j & 2) - 1) * d3;
 					double d19 = (double)((j + 1 & 2) - 1) * d3;
-					double d20 = d18 * d16 - d19 * d15;
-					double d21 = d19 * d16 + d18 * d15;
-					double d22 = d20 * d12 + d17 * d13;
-					double d23 = d17 * d12 - d20 * d13;
-					double d24 = d23 * d9 - d21 * d10;
-					double d25 = d21 * d9 + d23 * d10;
-					buffer.pos(d5 + d24, d6 + d22, d7 + d25).endVertex();
+					double d20 = 0.0D;
+					double d21 = d18 * d16 - d19 * d15;
+					double d22 = d19 * d16 + d18 * d15;
+					double d23 = d21 * d12 + 0.0D * d13;
+					double d24 = 0.0D * d12 - d21 * d13;
+					double d25 = d24 * d9 - d22 * d10;
+					double d26 = d22 * d9 + d24 * d10;
+					bufferBuilderIn.pos(d5 + d25, d6 + d23, d7 + d26).endVertex();
 				}
 			}
-		}			
-		buffer.finishDrawing();
+		}
 	}
 
-	
+	Minecraft mc = Minecraft.getInstance();
+
+
 	public void render(MatrixStack matrix, float partialTicks) {
 
 		Minecraft mc = Minecraft.getInstance();
 		DimensionManager dimensionMgr = DimensionManager.getInstance();
 		ClientWorld world = mc.world;
-		
+
 		//TODO: properly handle this
 		float atmosphere;
 		int solarOrbitalDistance, planetOrbitalDistance = 0;
@@ -184,7 +201,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 		if(dimensionMgr.isDimensionCreated(mc.world)) {
 
 			properties = DimensionManager.getInstance().getDimensionProperties(mc.world);
-			
+
 
 			atmosphere = properties.getAtmosphereDensityAtHeight(mc.getRenderViewEntity().getPosY());//planetaryProvider.getAtmosphereDensityFromHeight(mc.getRenderViewEntity().posY, mc.player.getPosition());
 			Direction dir = getRotationAxis(properties, playerPos);
@@ -229,7 +246,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			else
 				primaryStar = DimensionManager.getSol();
 			if(ARConfiguration.GetSpaceDimId().equals(properties.getId())) {
-				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
+				isWarp = SpaceObjectManager.WARPDIMID.equals(properties.getParentPlanet());
 				if(isWarp) {
 					SpaceStationObject station = (SpaceStationObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(playerPos);
 					travelDirection = station.getForwardDirection();
@@ -261,7 +278,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 
 		RenderSystem.color3f(f1, f2, f3);
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-		
+
 		RenderSystem.depthMask(false);
 		RenderSystem.enableFog();
 		RenderSystem.color3f(f1, f2, f3);
@@ -297,7 +314,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			float f11;
 
 			buffer.begin(GL11.GL_TRIANGLE_FAN, DefaultVertexFormats.POSITION_COLOR);
-			buffer.pos(0.0D, 100.0f, 0.0f).color(f6, f7, f8, afloat[3] * atmosphere).endVertex();
+			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, 0.0D, 100.0f, 0.0f).color(f6, f7, f8, afloat[3] * atmosphere).endVertex();
 			byte b0 = 16;
 
 			for (int j = 0; j <= b0; ++j)
@@ -305,7 +322,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 				f11 = (float)j * (float)Math.PI * 2.0F / (float)b0;
 				float f12 = MathHelper.sin(f11);
 				float f13 = MathHelper.cos(f11);
-				buffer.pos((double)(f12 * 120.0F), (double)(f13 * 120.0F), (double)(-f13 * 40.0F * afloat[3])).color(afloat[0], afloat[1], afloat[2], 0.0F).endVertex();
+				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(f12 * 120.0F), (double)(f13 * 120.0F), (double)(-f13 * 40.0F * afloat[3])).color(afloat[0], afloat[1], afloat[2], 0.0F).endVertex();
 			}
 
 			Tessellator.getInstance().draw();
@@ -392,13 +409,14 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 		if (f18 > 0.0F)
 		{
 			RenderSystem.color4f(f18, f18, f18, f18);
+
 			matrix.push();
 			if(isWarp) {
 				for(int i = -3; i < 5; i++) {
 					matrix.push();
 					double magnitude = i*-100 + (((System.currentTimeMillis()) + 50) % 2000)/20f;
 					matrix.translate(-travelDirection.getZOffset()*magnitude, 0, travelDirection.getXOffset()*magnitude);
-					
+
 					starGLCallList.bindBuffer();
 					DefaultVertexFormats.POSITION.setupBufferState(0L);
 					starGLCallList.draw(matrix.getLast().getMatrix(), 7);
@@ -414,7 +432,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 				starGLCallList.draw(matrix.getLast().getMatrix(), 7);
 				VertexBuffer.unbindBuffer();
 				DefaultVertexFormats.POSITION.clearBufferState();
-				
+
 				//Extra stars for low ATM
 				if(atmosphere < 0.5) {
 					RenderSystem.color4f(f18, f18, f18, f18/2f);
@@ -422,7 +440,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 					matrix.rotate(new Quaternion(0, -90, 0, true));
 					starGLCallList.bindBuffer();
 					DefaultVertexFormats.POSITION.setupBufferState(0L);
-					starGLCallList.draw(matrix.getLast().getMatrix(), 7);
+					//starGLCallList.draw(matrix.getLast().getMatrix(), 7);
 					VertexBuffer.unbindBuffer();
 					DefaultVertexFormats.POSITION.clearBufferState();
 					matrix.pop();
@@ -433,7 +451,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 					matrix.rotate(new Quaternion(0, 90, 0, true));
 					starGLCallList.bindBuffer();
 					DefaultVertexFormats.POSITION.setupBufferState(0L);
-					starGLCallList.draw(matrix.getLast().getMatrix(), 7);
+					//starGLCallList.draw(matrix.getLast().getMatrix(), 7);
 					VertexBuffer.unbindBuffer();
 					DefaultVertexFormats.POSITION.clearBufferState();
 					matrix.pop();
@@ -532,57 +550,27 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			renderPlanet(buffer, matrix, moons, moons.getParentOrbitalDistance()*moons.gravitationalMultiplier, multiplier, rotation, moons.hasAtmosphere(), moons.hasRings);
 			matrix.pop();
 		}
-
-		RenderSystem.enableFog();
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.disableBlend();
-		RenderSystem.enableAlphaTest();
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.disableBlend();
+        RenderSystem.enableAlphaTest();
+        RenderSystem.enableFog();
 
 		matrix.pop();
 		RenderSystem.disableTexture();
 		RenderSystem.color3f(0.0F, 0.0F, 0.0F);
-		
+
 		double d0 = this.mc.player.getPosYEye() - world.getWorldInfo().func_239159_f_();
 
-		if (d0 < 0.0D)
-		{
-			matrix.push();
-			matrix.translate(0.0F, 12.0F, 0.0F);
-			glSkyList2.bindBuffer();
-			DefaultVertexFormats.POSITION.setupBufferState(0L);
-			glSkyList2.draw(matrix.getLast().getMatrix(), 7);
-			VertexBuffer.unbindBuffer();
-			DefaultVertexFormats.POSITION.clearBufferState();
-			matrix.pop();
-			f8 = 1.0F;
-			f9 = -((float)(d0 + 65.0D));
-			f10 = -f8;
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-
-			buffer.color(0,0,0,1f);
-			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f8), (double)f9, (double)f8).endVertex();
-			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f8, (double)f9, (double)f8).endVertex();
-			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f8, (double)f10, (double)f8).endVertex();
-			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f8), (double)f10, (double)f8).endVertex();
-			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f8), (double)f10, (double)(-f8)).endVertex();
-			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f8, (double)f10, (double)(-f8)).endVertex();
-			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f8, (double)f9, (double)(-f8)).endVertex();
-			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f8), (double)f9, (double)(-f8)).endVertex();
-			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f8, (double)f10, (double)(-f8)).endVertex();
-			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f8, (double)f10, (double)f8).endVertex();
-			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f8, (double)f9, (double)f8).endVertex();
-			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f8, (double)f9, (double)(-f8)).endVertex();
-			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f8), (double)f9, (double)(-f8)).endVertex();
-			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f8), (double)f9, (double)f8).endVertex();
-			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f8), (double)f10, (double)f8).endVertex();
-			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f8), (double)f10, (double)(-f8)).endVertex();
-			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f8), (double)f10, (double)(-f8)).endVertex();
-			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f8), (double)f10, (double)f8).endVertex();
-			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f8, (double)f10, (double)f8).endVertex();
-			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f8, (double)f10, (double)(-f8)).endVertex();
-
-			Tessellator.getInstance().draw();
-		}
+        if (d0 < 0.0D) {
+            matrix.push();
+            matrix.translate(0.0D, 12.0D, 0.0D);
+            this.glSkyList2.bindBuffer();
+            this.skyVertexFormat.setupBufferState(0L);
+            this.glSkyList2.draw(matrix.getLast().getMatrix(), 7);
+            VertexBuffer.unbindBuffer();
+            this.skyVertexFormat.clearBufferState();
+            matrix.pop();
+         }
 
 		RenderSystem.enableTexture();
 		RenderSystem.depthMask(true);
@@ -664,7 +652,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 				float ringSize = f10 *1.4f;
 				Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.planetRings);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-				
+
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -ringSize, zLevel-0.01f, ringSize).tex(f16, f17).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, ringSize, zLevel-0.01f, ringSize).tex(f14, f17).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, ringSize, zLevel-0.01f, -ringSize).tex(f14, f15).endVertex();
@@ -749,13 +737,13 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 
 		RenderSystem.color4f(1f, 1f, 1f, 1f);
 	}
-	
+
 	protected void drawStarAndSubStars(BufferBuilder buffer, MatrixStack matrix, StellarBody sun, DimensionProperties properties, int solarOrbitalDistance, float sunSize, Vector3d sunColor, float multiplier)
 	{
 		drawStar(buffer, matrix, sun, properties, solarOrbitalDistance, sunSize, sunColor, multiplier);
 
 		List<StellarBody> subStars = sun.getSubStars();
-		
+
 		if(subStars != null && !subStars.isEmpty()) {
 			matrix.push();
 			float phaseInc = 360/subStars.size();

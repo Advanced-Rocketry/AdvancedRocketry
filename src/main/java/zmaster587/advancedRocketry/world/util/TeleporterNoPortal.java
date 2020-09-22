@@ -1,38 +1,31 @@
 package zmaster587.advancedRocketry.world.util;
 
-import java.util.Optional;
+import java.util.function.Function;
 
+import net.minecraft.block.PortalInfo;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.TeleportationRepositioner;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Teleporter;
 import net.minecraft.world.server.ServerWorld;
 
-public class TeleporterNoPortal extends Teleporter {
-
-	public TeleporterNoPortal(ServerWorld p_i1963_1_) {
-		super(p_i1963_1_);
+public class TeleporterNoPortal implements net.minecraftforge.common.util.ITeleporter  {
+	PortalInfo portalinfo; 
+	public TeleporterNoPortal(ServerWorld world, PortalInfo info) {
+		portalinfo = info;
 	}
 
-	public void teleport(Entity entity, ServerWorld world) {
-
-		if (entity.isAlive()) {
-			entity.setLocationAndAngles(entity.getPosX(), entity.getPosY(), entity.getPosZ(), entity.rotationYaw, entity.rotationPitch);
-			world.addEntity(entity);
-		}
-		entity.setWorld(world);
+	private Entity teleport(Entity entityold, ServerWorld world) {
+		
+        Entity entity = entityold.getType().create(world);
+        if (entity != null) {
+           entity.copyDataFromOld(entityold);
+           entity.setLocationAndAngles(portalinfo.pos.x, portalinfo.pos.y, portalinfo.pos.z, portalinfo.field_242960_c, entity.rotationPitch);
+           entity.setMotion(portalinfo.motion);
+           world.addFromAnotherDimension(entity);
+           entity.setUniqueId(entityold.getUniqueID());
+        }
+        return entity;
 	}
 
-
-	@Override
-	public Optional<TeleportationRepositioner.Result> func_242956_a(BlockPos p_242956_1_, Direction.Axis p_242956_2_) {
-		return Optional.empty();
-
-	}
-
-	@Override
-	public Optional<TeleportationRepositioner.Result> func_242957_a(BlockPos p_242957_1_, boolean p_242957_2_) {
-		return Optional.empty();
-	}
+    public Entity placeEntity(Entity entity, ServerWorld currentWorld, ServerWorld destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
+        return teleport(entity, destWorld);
+     }
 }

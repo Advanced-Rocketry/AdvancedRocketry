@@ -109,7 +109,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				if(ARConfiguration.GetSpaceDimId().equals(currentDimension)) {
 					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 					if(object != null) {
-						if(ItemStationChip.getUUID(stack) == object.getId())
+						if(ItemStationChip.getUUID(stack).equals(object.getId()))
 							return object.getOrbitingPlanetId();
 					}
 					else
@@ -192,7 +192,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 			}
 
 		}		
-		else if (stack.isEmpty() && destinationId != Constants.INVALID_PLANET)
+		else if (stack.isEmpty() && !Constants.INVALID_PLANET.equals(destinationId))
 		{
 			//Use the override coordinates from a Linker in a Docking Pad.
 			return landingPos;

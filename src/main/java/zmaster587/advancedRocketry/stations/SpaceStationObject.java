@@ -120,7 +120,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	public DimensionProperties getOrbitingPlanet()
 	{
 		ResourceLocation planetId = getOrbitingPlanetId();
-		if(planetId != Constants.INVALID_PLANET)
+		if(!Constants.INVALID_PLANET.equals(planetId))
 			return zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(planetId);
 		return null;
 	}
@@ -270,7 +270,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	}
 
 	public boolean hasUsableWarpCore() {
-		return hasWarpCores && properties.getParentPlanet() != SpaceObjectManager.WARPDIMID && getDestOrbitingBody() != getOrbitingPlanetId();
+		return hasWarpCores && !SpaceObjectManager.WARPDIMID.equals(properties.getParentPlanet()) && getDestOrbitingBody() != getOrbitingPlanetId();
 	}
 
 	public int getFuelAmount() {
@@ -513,7 +513,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 			return;
 
 		properties.setParentPlanet(zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(id), false);
-		if(id != SpaceObjectManager.WARPDIMID)
+		if(!SpaceObjectManager.WARPDIMID.equals(id))
 			destinationDimId = id;
 	}
 

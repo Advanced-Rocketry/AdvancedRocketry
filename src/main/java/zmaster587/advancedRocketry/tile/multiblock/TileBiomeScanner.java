@@ -79,9 +79,8 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 		if(world.isRemote) {
 			list.add(new ModuleImage(24, 14, zmaster587.advancedRocketry.inventory.TextureResources.earthCandyIcon));
 
-
 			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-			if(suitable && SpaceObjectManager.WARPDIMID != spaceObject.getOrbitingPlanetId()) {
+			if(suitable && !SpaceObjectManager.WARPDIMID.equals(spaceObject.getOrbitingPlanetId())) {
 
 				DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(spaceObject.getOrbitingPlanetId());
 				List<ModuleBase> list2 = new LinkedList<ModuleBase>();

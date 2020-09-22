@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.entity;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.PortalInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MoverType;
@@ -204,9 +205,9 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 			MinecraftServer minecraftserver = this.getServer();
 			ServerWorld worldserver =  (ServerWorld) this.getEntityWorld();
 			ServerWorld worldserver1 = dimensionIn;
-			this.setPosition(posX, y, posZ);
+			PortalInfo info = new PortalInfo(new Vector3d(posX, y, posZ), this.getMotion(), this.rotationYaw, this.rotationPitch);
 			
-			Teleporter teleporter = new TeleporterNoPortal(worldserver1);
+			ITeleporter teleporter = new TeleporterNoPortal(worldserver1, info);
 			Entity entity = changeDimension(dimensionIn, teleporter);
 
 			if(entity == null)
