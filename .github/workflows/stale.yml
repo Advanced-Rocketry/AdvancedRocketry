@@ -11,7 +11,7 @@ jobs:
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         stale-pr-message: 'Is this pr still needed?'
-        stale-issue-message: 'This issue is stale because it has been open 60 days with no activity. Remove stale label or comment or this will be closed in 90 days'
+        stale-issue-message: 'This issue is stale because it has been open 60 days with no activity. Is this still an issue? If yes please comment that it still is.'
         stale-issue-label: 'no-issue-activity'
         exempt-issue-labels: 'enhancement,question,Needs-Info'
         stale-pr-label: 'no-pr-activity'
