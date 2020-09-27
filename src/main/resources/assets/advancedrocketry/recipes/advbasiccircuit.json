@@ -3,16 +3,14 @@
     "itemingredients":
     [
         {
-            "item": "advancedrocketry:itemcircuitplate",
-            "data": 1
+            "item": "advancedrocketry:advcircuitplate"
         }
     ],
     "time": 300,
     "energy": 100,
     "itemresults":
     {
-            "item": "advancedrocketry:ic",
-            "data": 2,
+            "item": "advancedrocketry:circuit_ic_adv",
             "count": 4
     }
 }

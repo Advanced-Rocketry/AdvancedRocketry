@@ -1,3 +1,4 @@
 {
-	"selectSky": "javascript/insertSky.js"
+	"selectSky": "javascript/insertSky.js",
+	"maxTimeOfDay": "javascript/insertMaxTimeOfDay.js"
 }

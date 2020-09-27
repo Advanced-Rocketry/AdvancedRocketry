@@ -270,7 +270,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	}
 
 	public boolean hasUsableWarpCore() {
-		return hasWarpCores && !SpaceObjectManager.WARPDIMID.equals(properties.getParentPlanet()) && getDestOrbitingBody() != getOrbitingPlanetId();
+		return hasWarpCores && !SpaceObjectManager.WARPDIMID.equals(properties.getParentPlanet()) && !getOrbitingPlanetId().equals(getDestOrbitingBody());
 	}
 
 	public int getFuelAmount() {
@@ -509,7 +509,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	 */
 	@Override
 	public void setOrbitingBody(ResourceLocation id) {
-		if(id == this.getOrbitingPlanetId())
+		if(this.getOrbitingPlanetId().equals(id))
 			return;
 
 		properties.setParentPlanet(zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(id), false);

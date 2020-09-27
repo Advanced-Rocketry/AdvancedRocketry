@@ -300,7 +300,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public long getWorldTimeUniversal() {
 		try {
-			return 0; //Minecraft.getInstance().world.getGameTime();
+			return Minecraft.getInstance().world.getGameTime();
 		} catch (NullPointerException e) {
 			return 0;
 		}

@@ -134,7 +134,7 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 	}
 	@Override
 	public String getModularInventoryName() {
-		return "tile.altitudeController.name";
+		return "block.advancedrocketry.altitudecontroller";
 	}
 
 	@Override

@@ -96,10 +96,15 @@ public class DimensionManager implements IGalaxy {
 	public static DimensionProperties overworldProperties;
 	//the default property for any dimension created in space, normally, space over earth
 	public static DimensionProperties defaultSpaceDimensionProperties;
+	
+	public static DimensionProperties warpDimensionProperties;
 
 	@Deprecated
 	public static StellarBody getSol() {
-		return getInstance().getStar(new ResourceLocation(Constants.STAR_NAMESPACE, "sol"));
+		
+		if(sol == null)
+			sol = new StellarBody();
+		return sol;
 	}
 
 	public static DimensionManager getInstance() {
@@ -135,6 +140,16 @@ public class DimensionManager implements IGalaxy {
 		defaultSpaceDimensionProperties.fogColor = new float[] {0f,0f,0f};
 		//defaultSpaceDimensionProperties.setParentPlanet(overworldProperties,false);
 		defaultSpaceDimensionProperties.orbitalDist = 1;
+		
+		warpDimensionProperties = new DimensionProperties(SpaceObjectManager.WARPDIMID, false);
+		warpDimensionProperties.setAtmosphereDensityDirect(0);
+		warpDimensionProperties.averageTemperature = 0;
+		warpDimensionProperties.gravitationalMultiplier = 0.1f;
+		warpDimensionProperties.orbitalDist = 100;
+		warpDimensionProperties.skyColor = new float[] {0f,0f,0f};
+		warpDimensionProperties.setName("Warp");
+		warpDimensionProperties.fogColor = new float[] {0f,0f,0f};
+		warpDimensionProperties.orbitalDist = 1;
 
 		random = new Random(System.currentTimeMillis());
 		knownPlanets = new HashSet<ResourceLocation>();
@@ -631,6 +646,9 @@ public class DimensionManager implements IGalaxy {
 	 */
 	public DimensionProperties getDimensionProperties(ResourceLocation resourceLocation)
 	{
+		if(SpaceObjectManager.WARPDIMID.equals(resourceLocation))
+			return warpDimensionProperties;
+		
 		DimensionProperties properties = dimensionListResource.get(resourceLocation);
 		if(ARConfiguration.GetSpaceDimId().equals(resourceLocation) || resourceLocation == null) {
 			return defaultSpaceDimensionProperties;
@@ -945,6 +963,71 @@ public class DimensionManager implements IGalaxy {
 			}
 		}
 		//End load planet files
+		
+		
+		if(dimCouplingList != null)
+		{
+			//Register new stars
+			for(StellarBody star : dimCouplingList.stars) {
+				if(DimensionManager.getInstance().getStar(star.getId()) == null)
+					DimensionManager.getInstance().addStar(star);
+
+				DimensionManager.getInstance().getStar(star.getId()).setName(star.getName());
+				DimensionManager.getInstance().getStar(star.getId()).setPosX(star.getPosX());
+				DimensionManager.getInstance().getStar(star.getId()).setPosZ(star.getPosZ());
+				DimensionManager.getInstance().getStar(star.getId()).setSize(star.getSize());
+				DimensionManager.getInstance().getStar(star.getId()).setTemperature(star.getTemperature());
+				DimensionManager.getInstance().getStar(star.getId()).subStars = star.subStars;
+				DimensionManager.getInstance().getStar(star.getId()).setBlackHole(star.isBlackHole());
+			}
+
+			for(DimensionProperties properties : dimCouplingList.dims) {
+
+				//Register dimensions loaded by other mods if not already loaded
+				for(StellarBody star : dimCouplingList.stars) {
+					for(StellarBody loadedStar : DimensionManager.getInstance().getStars()) {
+						if(star.getId() == properties.getStarId() && star.getName().equals(loadedStar.getName())) {
+							DimensionManager.getInstance().registerDimNoUpdate(properties, false);
+							properties.setStar(loadedStar);
+						}
+					}
+				}
+
+				if(properties.isNativeDimension)
+					DimensionManager.getInstance().registerDim(properties, properties.isNativeDimension);
+
+				if(!properties.customIcon.isEmpty()) {
+					DimensionProperties loadedProps;
+					if(DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
+						loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
+						loadedProps.customIcon = properties.customIcon;
+					}
+				}
+				//TODO: add properties fromXML
+
+				//Add artifacts if needed
+				if(DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
+					DimensionProperties loadedProps;
+					loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
+					List<ItemStack> list = new LinkedList<ItemStack>(properties.getRequiredArtifacts());
+					loadedProps.getRequiredArtifacts().clear();
+					loadedProps.getRequiredArtifacts().addAll(list);
+
+					List<SpawnListEntryNBT> list2 = new LinkedList<SpawnListEntryNBT>(properties.getSpawnListEntries());
+					loadedProps.getSpawnListEntries().clear();
+					loadedProps.getSpawnListEntries().addAll(list2);
+
+				}
+
+
+				if(properties.oreProperties != null) {
+					DimensionProperties loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
+
+					if(loadedProps != null)
+						loadedProps.oreProperties = properties.oreProperties;
+				}
+			}
+		}
 
 		//Register hard coded dimensions
 		Map<ResourceLocation,IDimensionProperties> loadedPlanets = loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.workingPath);
@@ -1076,77 +1159,6 @@ public class DimensionManager implements IGalaxy {
 
 		//Attempt to load ore config from adv planet XML
 		if(dimCouplingList != null) {
-			//Register new stars
-			for(StellarBody star : dimCouplingList.stars) {
-				if(DimensionManager.getInstance().getStar(star.getId()) == null)
-					DimensionManager.getInstance().addStar(star);
-
-				DimensionManager.getInstance().getStar(star.getId()).setName(star.getName());
-				DimensionManager.getInstance().getStar(star.getId()).setPosX(star.getPosX());
-				DimensionManager.getInstance().getStar(star.getId()).setPosZ(star.getPosZ());
-				DimensionManager.getInstance().getStar(star.getId()).setSize(star.getSize());
-				DimensionManager.getInstance().getStar(star.getId()).setTemperature(star.getTemperature());
-				DimensionManager.getInstance().getStar(star.getId()).subStars = star.subStars;
-				DimensionManager.getInstance().getStar(star.getId()).setBlackHole(star.isBlackHole());
-			}
-
-			for(DimensionProperties properties : dimCouplingList.dims) {
-
-				//Register dimensions loaded by other mods if not already loaded
-				for(StellarBody star : dimCouplingList.stars) {
-					for(StellarBody loadedStar : DimensionManager.getInstance().getStars()) {
-						if(star.getId() == properties.getStarId() && star.getName().equals(loadedStar.getName())) {
-							DimensionManager.getInstance().registerDimNoUpdate(properties, false);
-							properties.setStar(loadedStar);
-						}
-					}
-				}
-
-				
-				if(loadedPlanets.containsKey(properties.getId()))
-				{
-					DimensionProperties loadedDim = (DimensionProperties)loadedPlanets.get(properties.getId());
-					if(loadedDim != null)
-					{
-						properties.copySatellites(loadedDim);
-						properties.copyTerraformedBiomes(loadedDim);
-					}
-				}
-				if(properties.isNativeDimension)
-					DimensionManager.getInstance().registerDim(properties, properties.isNativeDimension);
-
-				if(!properties.customIcon.isEmpty()) {
-					DimensionProperties loadedProps;
-					if(DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
-						loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
-						loadedProps.customIcon = properties.customIcon;
-					}
-				}
-				//TODO: add properties fromXML
-
-				//Add artifacts if needed
-				if(DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
-					DimensionProperties loadedProps;
-					loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
-					List<ItemStack> list = new LinkedList<ItemStack>(properties.getRequiredArtifacts());
-					loadedProps.getRequiredArtifacts().clear();
-					loadedProps.getRequiredArtifacts().addAll(list);
-
-					List<SpawnListEntryNBT> list2 = new LinkedList<SpawnListEntryNBT>(properties.getSpawnListEntries());
-					loadedProps.getSpawnListEntries().clear();
-					loadedProps.getSpawnListEntries().addAll(list2);
-
-				}
-
-
-				if(properties.oreProperties != null) {
-					DimensionProperties loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
-
-					if(loadedProps != null)
-						loadedProps.oreProperties = properties.oreProperties;
-				}
-			}
-
 			//Don't load random planets twice on initial load
 			//TODO: rework the logic, low priority because low time cost and one time run per world
 			if(!loadedFromXML)

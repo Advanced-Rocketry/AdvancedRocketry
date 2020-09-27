@@ -129,7 +129,7 @@ public class TileStationOrientationControl extends TileEntity implements ITickab
 	}
 	@Override
 	public String getModularInventoryName() {
-		return "tile.orientationControl.name";
+		return "block.advancedrocketry.orientationcontroller";
 	}
 
 	@Override

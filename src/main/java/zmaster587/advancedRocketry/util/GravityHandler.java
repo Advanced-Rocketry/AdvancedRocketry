@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.util;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.BlockPos;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
@@ -44,6 +45,7 @@ public class GravityHandler implements IGravityManager {
 
 	public static void applyGravity(Entity entity) {
 		if(entity.hasNoGravity()) return;
+		
 		if(!entity.isInWater() || entity instanceof ItemEntity) {
 			if(!(entity instanceof PlayerEntity) || !((PlayerEntity)entity).abilities.isFlying) {
 				Double d;
@@ -57,7 +59,7 @@ public class GravityHandler implements IGravityManager {
 				else if(DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(entity.world)) || ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(entity.world))) {
 					double gravMult;
 
-					gravMult = DimensionManager.getInstance().getDimensionProperties(entity.world).gravitationalMultiplier;
+					gravMult = DimensionManager.getInstance().getDimensionProperties(entity.world, new BlockPos(entity.getPositionVec())).gravitationalMultiplier;
 					if(entity instanceof ItemEntity)
 						entity.setMotion(entity.getMotion().add(0, -gravMult*ITEM_GRAV_OFFSET, 0));
 					else//Not-Items are not ASMed, so they have to subtract the original gravity.

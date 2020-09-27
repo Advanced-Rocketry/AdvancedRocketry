@@ -345,6 +345,7 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	@OnlyIn(value=Dist.CLIENT)
 	public void fogColor(FogColors event) {
+		
 		Entity entity = event.getInfo().getRenderViewEntity();
 		World world = entity.world;
 		BlockState state = event.getInfo().getBlockAtCamera();
@@ -357,9 +358,9 @@ public class PlanetEventHandler {
 			float fog = Math.min(properties.getAtmosphereDensityAtHeight(entity.getPosY()), 200);
 
 			float[] color =  properties.getSkyColor();
-			event.setRed((float) Math.min(event.getRed()*color[0]*1.4f,1f));
-			event.setGreen((float) Math.min(event.getGreen()*color[1]*1.4f, 1f));
-			event.setBlue((float) Math.min(event.getBlue()*color[2]*1.4f, 1f));
+			event.setRed((float) Math.min(event.getRed()*color[0]*1.0f,1f));
+			event.setGreen((float) Math.min(event.getGreen()*color[1]*1.0f, 1f));
+			event.setBlue((float) Math.min(event.getBlue()*color[2]*1.0f, 1f));
 
 			if(endTime > 0) {
 				double amt = (endTime - Minecraft.getInstance().world.getGameTime()) / (double)duration;
@@ -477,11 +478,11 @@ public class PlanetEventHandler {
 				far = f1;
 			}
 			else {
-				near = 0.75f*f1*(2.00f -atmosphere/100f);
+				near = 0.1f*f1*(2.00f -atmosphere/100f);
 				far = f1*(2.002f - atmosphere/100f);
 			}
 
-			RenderSystem.fogStart(near);
+			//RenderSystem.fogStart(near);
 			RenderSystem.fogEnd(far);
 			RenderSystem.fogDensity(0);
 			//event.setCanceled(false);

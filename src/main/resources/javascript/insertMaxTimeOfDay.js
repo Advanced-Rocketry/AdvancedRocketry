@@ -3,9 +3,9 @@ function initializeCoreMod() {
         'coremodmethod': {
             'target': {
                 'type': 'METHOD',
-                'class': 'net.minecraft.client.renderer.WorldRenderer',
-                'methodName': 'renderSky',
-                'methodDesc': '(Lcom/mojang/blaze3d/matrix/MatrixStack;F)V'
+                'class': 'net.minecraft.world.IDayTimeReader',
+                'methodName': 'func_242415_f',
+                'methodDesc': '(F)F'
             },
             'transformer': function(method) {
 		var ASMAPI = Java.type('net.minecraftforge.coremod.api.ASMAPI');
@@ -16,28 +16,21 @@ function initializeCoreMod() {
 		var MethodInsnNode = Java.type('org.objectweb.asm.tree.MethodInsnNode');
 		var JumpInsnNode = Java.type('org.objectweb.asm.tree.JumpInsnNode');
 		var LabelNode = Java.type('org.objectweb.asm.tree.LabelNode');
-		print("Attempting to transform sky!");
+		print("Attempting to transform Time of day!");
                 for (var i = 0; i < arrayLength; ++i) {
                     var instruction = method.instructions.get(i);
-                    if (instruction.getOpcode() == Opcodes.ALOAD) {
+                    if (instruction.getOpcode() == Opcodes.FRETURN) {
 
-                        var loadMatrix = new VarInsnNode(Opcodes.ALOAD, 1);
-			var loadFloat = new VarInsnNode(Opcodes.FLOAD, 2);
-			var labelNode = new LabelNode();
-			var ifNode = new JumpInsnNode(Opcodes.IFNE, labelNode);
-			var returnNode = new InsnNode(Opcodes.RETURN);
+                        var instArray = new Array(new VarInsnNode(Opcodes.ALOAD, 0));
 			
-			var instArray = new Array(loadMatrix, loadFloat);
-			
-			var invoke = ASMAPI.listOf(ASMAPI.buildMethodCall('zmaster587/advancedRocketry/client/ClientHelper', 'callCustomSkyRenderer', "(Lcom/mojang/blaze3d/matrix/MatrixStack;F)Z", ASMAPI.MethodType.STATIC));
+			var invoke = ASMAPI.listOf(ASMAPI.buildMethodCall('zmaster587/advancedRocketry/client/ClientHelper', 'callTimeOfDay', "(FLnet/minecraft/world/IDayTimeReader;)F", ASMAPI.MethodType.STATIC));
 			
 			instArray = instArray.concat(invoke);
-			instArray = instArray.concat([ifNode, returnNode, labelNode]);
 			
 			for (var j = 0; j < instArray.length; ++j) {
 			    method.instructions.insertBefore(instruction, instArray[j]);
 			}
-                        print("Transformed Sky!");
+                        print("Transformed Time of day!");
                         break;
                     }
                 }

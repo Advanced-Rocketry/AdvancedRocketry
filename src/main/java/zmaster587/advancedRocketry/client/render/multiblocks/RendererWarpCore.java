@@ -55,13 +55,13 @@ public class RendererWarpCore extends TileEntityRenderer<TileWarpCore> {
 
 		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
 		
-		IVertexBuilder entityTranslucentBuilder = buffer.getBuffer(RenderHelper.getTranslucentEntityModelRenderType(texture));
+		
 		
 		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Base");
 		matrix.push();
 		
-		IVertexBuilder entitySolidBuilderManual = buffer.getBuffer(RenderHelper.getTranslucentManualRenderType());
-		RenderHelper.renderCube(matrix, entitySolidBuilderManual, -0.1f, 1, -0.1f, 0.1f, 2, 0f, 0.1f, 0.4f, 0.4f, 0.8f);
+		IVertexBuilder entitySolidBuilderManual = buffer.getBuffer(RenderHelper.getSolidManualRenderType());
+		RenderHelper.renderCube(matrix, entitySolidBuilderManual, -0.1f, 1, -0.1f, 0.1f, 2, 0f, 0.8f, 0.4f, 0.4f, 0.8f);
 		matrix.pop();
 		
 		
@@ -69,7 +69,7 @@ public class RendererWarpCore extends TileEntityRenderer<TileWarpCore> {
 			
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(tile.getPos());
 			if(obj instanceof SpaceStationObject && ((SpaceStationObject)obj).getFuelAmount() > 50) {
-
+				IVertexBuilder entityTranslucentBuilder = buffer.getBuffer(RenderHelper.getTranslucentEntityModelRenderType(texture));
 				double speedMult = 1.5;//((DimensionProperties)obj.getProperties()).getParentPlanet() == SpaceObjectManager.WARPDIMID ? 1.5d : 0.1d;
 				
 				double speedRotate = speedMult*0.25d;

@@ -73,7 +73,6 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 	ModuleSync sync3;
 	ModuleText srcPlanetText, dstPlanetText, warpFuel, status, warpCapacity;
 	int warpCost = -1;
-	ResourceLocation dstPlanet, srcPlanet;
 	private ModuleTab tabModule;
 	private static final byte TAB_SWITCH = 4, STORE_DATA = 10, LOAD_DATA = 20, SEARCH = 5, PROGRAMFROMCHIP = 6;
 	private MultiData data;
@@ -81,6 +80,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 	private static final int DISTANCESLOT = 0, MASSSLOT = 1, COMPOSITION = 2, PLANETSLOT = 3, MAX_PROGRESS = 1000;
 	private ModuleProgress programmingProgress;
 	private int progress;
+	private boolean openFullScreen = false;
 
 	public TileWarpShipMonitor() {
 		super(AdvancedRocketryTileEntityType.TILE_WARP_SHIP_CONTROLLER);
@@ -243,7 +243,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 					}
 					
 					ModuleText text = new ModuleText(baseX + 4, baseY + 4, LibVulpes.proxy.getLocalizedString("msg.warpmon.dest"), 0xFFFFFF);
-					text.setAlwaysOnTop(true);
+					///text.setAlwaysOnTop(true);
 					modules.add(text);
 					modules.add(dstPlanetText);
 					
@@ -313,7 +313,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 		boolean flag = isOnStation && getSpaceObject().getFuelAmount() >= warpCost && getSpaceObject().hasUsableWarpCore();
 
 		if(canWarp != null) {
-			flag = flag && !(isOnStation && (Constants.INVALID_PLANET.equals(getSpaceObject().getDestOrbitingBody()) || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()));
+			flag = flag && !(isOnStation && (Constants.INVALID_PLANET.equals(getSpaceObject().getDestOrbitingBody()) || getSpaceObject().getOrbitingPlanetId().equals(getSpaceObject().getDestOrbitingBody())));
 			boolean artifactFlag = (dimCache != null && meetsArtifactReq(dimCache));
 			
 			canWarp.setText(isOnStation && (Constants.INVALID_PLANET.equals(getSpaceObject().getDestOrbitingBody()) || 
@@ -360,8 +360,8 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 
 
 			DimensionProperties dstProps = null;
-			if(isOnStation && !SpaceObjectManager.WARPDIMID.equals(station.getOrbitingPlanetId()) )
-				dstProps = DimensionManager.getInstance().getDimensionProperties(dstPlanet);
+			if(isOnStation && !SpaceObjectManager.WARPDIMID.equals(station.getOrbitingPlanetId())  && station.getDestOrbitingBody() != null)
+				dstProps = DimensionManager.getInstance().getDimensionProperties(station.getDestOrbitingBody());
 
 			if(dstProps != null) {
 				planetName = dstProps.getName();
@@ -383,7 +383,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.stationmonitor.name";
+		return "block.advancedrocketry.stationmonitor";
 	}
 
 	@Override
@@ -445,15 +445,24 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 	@Override
 	public void useNetworkData(PlayerEntity player, Dist side, byte id,
 			CompoundNBT nbt) {
-		if(id == 0)
-			NetworkHooks.openGui((ServerPlayerEntity) player, this, buf -> {buf.writeInt(getModularInvType().ordinal()); buf.writeBlockPos(pos); });
+		if(id == 0) {
+			openFullScreen = true;
+			NetworkHooks.openGui((ServerPlayerEntity) player, this, buf -> {buf.writeInt(GuiHandler.guiId.MODULARFULLSCREEN.ordinal()); buf.writeBlockPos(pos); });
 			//guiId.MODULARFULLSCREEN
+		}
 		else if(id == 1 || id == 3) {
 			ResourceLocation dimId = new ResourceLocation(nbt.getString("id"));
 
 			if(isPlanetKnown(DimensionManager.getInstance().getDimensionProperties(dimId))) {
 				container.setSelectedSystem(dimId);
 				selectSystem(dimId);
+			}
+			if(id == 3)
+			{
+				ISpaceObject station = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.getPos());
+				if(station != null) {
+					station.setDestOrbitingBody(dimId);
+				}
 			}
 
 			//Update known planets
@@ -555,11 +564,6 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 			dimCache = null;
 		else {
 			dimCache = DimensionManager.getInstance().getDimensionProperties(container.getSelectedSystem());
-
-			ISpaceObject station = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.getPos());
-			if(station != null) {
-				station.setDestOrbitingBody(dimId);
-			}
 		}
 	}
 
@@ -905,7 +909,10 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 
 	@Override
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
-		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
+		GuiHandler.guiId guiType = openFullScreen ? GuiHandler.guiId.MODULARFULLSCREEN : getModularInvType();
+		openFullScreen = false;
+		
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(guiType.ordinal(), player), this, guiType);
 	}
 
 

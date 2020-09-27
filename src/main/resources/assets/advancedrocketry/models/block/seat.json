@@ -14,6 +14,6 @@
         }
     ],
     "textures": {
-        "wool": "blocks/wool_colored_silver"
+        "wool": "block/light_gray_wool"
     }
 }

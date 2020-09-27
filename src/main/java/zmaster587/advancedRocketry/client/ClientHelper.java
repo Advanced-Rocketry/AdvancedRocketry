@@ -4,38 +4,67 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.IDayTimeReader;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.client.render.planet.ISkyRenderer;
 import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
+import zmaster587.advancedRocketry.client.render.planet.RenderSpaceSky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 
 public class ClientHelper {
 
-	
+
 	public static boolean callCustomSkyRenderer(MatrixStack matrix, float partialTicks)
 	{
 		World world = Minecraft.getInstance().world;
 		if(!DimensionManager.getInstance().isDimensionCreated(world))
-			return false;
-		
-		
+			return true;
+
+
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world,  new BlockPos(Minecraft.getInstance().player.getPositionVec()));
-		
+
 		ISkyRenderer renderer =  properties.getSkyRenderer();
-		
+
 		if(renderer == null)
 		{
-			properties.setSkyRenderer(new RenderPlanetarySky());
+			if(properties.isStation())
+				properties.setSkyRenderer(new RenderSpaceSky());
+			else
+				properties.setSkyRenderer(new RenderPlanetarySky());
 			renderer = properties.getSkyRenderer();
 		}
-		
-		
+
+
 		renderer.render(matrix, partialTicks);
-		return true;
+		return false;
 	}
-	
-	
+
+
+	public static float callTimeOfDay(float ogTime, IDayTimeReader reader)
+	{
+
+		if(!(reader instanceof World))
+			return ogTime;
+
+		if(!DimensionManager.getInstance().isDimensionCreated((World)reader))
+			return ogTime;
+
+		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties((World)reader);
+
+
+		if(properties.isStation() || properties.getId().equals(ARConfiguration.GetSpaceDimId()))
+			return AdvancedRocketry.proxy.calculateCelestialAngleSpaceStation();
+		
+		
+		double d0 = MathHelper.frac((double)reader.func_241851_ab() / ((double)properties.rotationalPeriod) - 0.25D);
+		double d1 = 0.5D - Math.cos(d0 * Math.PI) / 2.0D;
+		return (float)(d0 * 2.0D + d1) / 3.0F;
+	}
+
 	/* gravRotation
 	 * 1: north
 	 * 2: east

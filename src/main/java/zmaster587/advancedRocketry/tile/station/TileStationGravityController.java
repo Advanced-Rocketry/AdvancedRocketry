@@ -44,7 +44,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 	private ModuleText moduleGrav, maxGravBuildSpeed, targetGrav;
 
 	public TileStationGravityController() {
-		super(AdvancedRocketryTileEntityType.TILE_GRAVITY_CONTROLLER);
+		super(AdvancedRocketryTileEntityType.TILE_STATION_GRAVITY_CONTROLLER);
 		moduleGrav = new ModuleText(6, 15, LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.alt"), 0xaa2020);
 		//numGravPylons = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
 		maxGravBuildSpeed = new ModuleText(6, 25, LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.maxaltrate"), 0xaa2020);
@@ -141,7 +141,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 	}
 	@Override
 	public String getModularInventoryName() {
-		return "tile.gravityControl.name";
+		return "block.advancedrocketry.gravitycontroller";
 	}
 
 	@Override

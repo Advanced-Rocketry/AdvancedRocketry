@@ -374,7 +374,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		childPlanets = new HashSet<ResourceLocation>();
 		requiredArtifacts = new LinkedList<ItemStack>();
 		parentPlanet = null;
-		starId = Constants.INVALID_PLANET;
+		starId = Constants.INVALID_STAR;
 		averageTemperature = 100;
 		hasRings = false;
 		harvestableAtmosphere = new LinkedList<Fluid>();
@@ -384,9 +384,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		oceanBlock = null;
 		fillerBlock = null;
 		generatorType = 0;
-		
-		if(EffectiveSide.get().isClient())
-			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {this.sky = new RenderPlanetarySky();});
 		
 	}
 
@@ -437,6 +434,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return the color of the sun as an array of floats represented as  {r,g,b}
 	 */
 	public float[] getSunColor() {
+		
+		if(getStar() == null)
+			return new float[] {1,1,1};
+		
 		return getStar().getColor();
 	}
 
@@ -727,7 +728,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			}
 			else {
 				star = parent.getStar();
-				starId = star.getId();
+				starId = star == null ? Constants.INVALID_STAR : star.getId();
 				parentPlanet = parent.getId();
 			}
 		}
@@ -1484,6 +1485,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		//Note: parent planet must be set before setting the star otherwise it would cause duplicate planets in the StellarBody's array
 		if(nbt.contains("parentPlanet"))
 			parentPlanet = new ResourceLocation(nbt.getString("parentPlanet"));
+		this.starId = new ResourceLocation(nbt.getString("starId"));
 		this.setStar(DimensionManager.getInstance().getStar(new ResourceLocation(nbt.getString("starId"))));
 
 		if(isGasGiant) {

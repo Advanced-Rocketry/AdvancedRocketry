@@ -59,6 +59,7 @@ import zmaster587.advancedRocketry.tile.station.TileDockingPort;
 import zmaster587.advancedRocketry.tile.station.TileLandingPad;
 import zmaster587.advancedRocketry.tile.station.TilePlanetaryHologram;
 import zmaster587.advancedRocketry.tile.station.TileStationAltitudeController;
+import zmaster587.advancedRocketry.tile.station.TileStationGravityController;
 import zmaster587.advancedRocketry.tile.station.TileStationOrientationControl;
 import zmaster587.advancedRocketry.tile.station.TileWarpShipMonitor;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -113,6 +114,7 @@ public class AdvancedRocketryTileEntityType {
 	public static TileEntityType<TilePlanetaryHologram> TILE_HOLOGRAM;
 	public static TileEntityType<TileStationAltitudeController> TILE_ALT_CONTROLLER;
 	public static TileEntityType<TileStationOrientationControl> TILE_ORIENTATION_CONTROLLER;
+	public static TileEntityType<TileStationGravityController> TILE_STATION_GRAVITY_CONTROLLER;
 	public static TileEntityType<TileWarpShipMonitor> TILE_WARP_SHIP_CONTROLLER;
 	public static TileEntityType<TileAtmosphereDetector> TILE_ATM_DETECTOR;
 	public static TileEntityType<TileDrill> TILE_DRILL;
@@ -173,6 +175,7 @@ public class AdvancedRocketryTileEntityType {
 		TILE_HOLOGRAM = TileEntityType.Builder.create(TilePlanetaryHologram::new, AdvancedRocketryBlocks.blockPlanetHoloSelector).build(null);
 		TILE_ALT_CONTROLLER = TileEntityType.Builder.create(TileStationAltitudeController::new, AdvancedRocketryBlocks.blockAltitudeController).build(null);
 		TILE_ORIENTATION_CONTROLLER = TileEntityType.Builder.create(TileStationOrientationControl::new, AdvancedRocketryBlocks.blockOrientationController).build(null);
+		TILE_STATION_GRAVITY_CONTROLLER = TileEntityType.Builder.create(TileStationGravityController::new, AdvancedRocketryBlocks.blockGravityController).build(null);
 		TILE_WARP_SHIP_CONTROLLER = TileEntityType.Builder.create(TileWarpShipMonitor::new, AdvancedRocketryBlocks.blockWarpShipMonitor).build(null);
 		TILE_ATM_DETECTOR = TileEntityType.Builder.create(TileAtmosphereDetector::new, AdvancedRocketryBlocks.blockOxygenDetection).build(null);
 		TILE_DRILL = TileEntityType.Builder.create(TileDrill::new, AdvancedRocketryBlocks.blockDrill).build(null);
@@ -234,6 +237,7 @@ public class AdvancedRocketryTileEntityType {
 				TILE_ALT_CONTROLLER.setRegistryName("alt_controller"),
 				TILE_ORIENTATION_CONTROLLER.setRegistryName("orientation_controller"),
 				TILE_WARP_SHIP_CONTROLLER.setRegistryName("warp_ship_controller"),
+				TILE_STATION_GRAVITY_CONTROLLER.setRegistryName("station_gravity_controller"),
 				TILE_ATM_DETECTOR.setRegistryName("atm_detector"),
 				TILE_DRILL.setRegistryName("drill"),
 				TILE_FLUID_TANK.setRegistryName("fluid_tank"),
@@ -260,7 +264,7 @@ public class AdvancedRocketryTileEntityType {
 		((BlockTile)AdvancedRocketryBlocks.blockOxygenScrubber)._setTile(AdvancedRocketryTileEntityType.TILE_CO2_SCRUBBER);
 
 		((BlockTile)AdvancedRocketryBlocks.blockOrientationController)._setTile(AdvancedRocketryTileEntityType.TILE_ORIENTATION_CONTROLLER);
-		((BlockTile)AdvancedRocketryBlocks.blockGravityController)._setTile(AdvancedRocketryTileEntityType.TILE_GRAVITY_CONTROLLER);
+		((BlockTile)AdvancedRocketryBlocks.blockGravityController)._setTile(AdvancedRocketryTileEntityType.TILE_STATION_GRAVITY_CONTROLLER);
 		((BlockTile)AdvancedRocketryBlocks.blockAltitudeController)._setTile(AdvancedRocketryTileEntityType.TILE_ALT_CONTROLLER);
 		((BlockTile)AdvancedRocketryBlocks.blockOxygenCharger)._setTile(AdvancedRocketryTileEntityType.TILE_OXYGEN_CHARGER);
 		((BlockTile)AdvancedRocketryBlocks.blockOxygenVent)._setTile(AdvancedRocketryTileEntityType.TILE_OXYGEN_VENT);

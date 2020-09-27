@@ -93,7 +93,7 @@ public class Face
                 
                 Vector4f vector4f = new Vector4f(vertices[i].x, vertices[i].y, vertices[i].z, 1.0F);
                 vector4f.transform(matrix4f);
-            	tessellator.pos(vector4f.getX(), vector4f.getY(),vector4f.getZ()).normal(vector3f.getX(), vector3f.getY(), vector3f.getZ()).endVertex();
+            	tessellator.pos(vector4f.getX(), vector4f.getY(),vector4f.getZ()).color(1, 1, 1, 1).lightmap(-1, -1).normal(vector3f.getX(), vector3f.getY(), vector3f.getZ()).endVertex();
             }
         }
     }

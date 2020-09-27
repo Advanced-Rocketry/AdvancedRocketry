@@ -39,7 +39,7 @@ public class BlockWarpCore extends BlockMultiblockMachine {
 	
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
-		if(ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
+		if(state.getBlock() != newState.getBlock() && ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(spaceObj instanceof SpaceStationObject)
 				((SpaceStationObject)spaceObj).removeWarpCore(new HashedBlockPosition(pos));

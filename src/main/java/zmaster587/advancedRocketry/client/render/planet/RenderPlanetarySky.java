@@ -200,7 +200,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 
 		if(dimensionMgr.isDimensionCreated(mc.world)) {
 
-			properties = DimensionManager.getInstance().getDimensionProperties(mc.world);
+			properties = DimensionManager.getInstance().getDimensionProperties(mc.world, new BlockPos(mc.player.getPositionVec()));
 
 
 			atmosphere = properties.getAtmosphereDensityAtHeight(mc.getRenderViewEntity().getPosY());//planetaryProvider.getAtmosphereDensityFromHeight(mc.getRenderViewEntity().posY, mc.player.getPosition());
@@ -245,7 +245,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			}
 			else
 				primaryStar = DimensionManager.getSol();
-			if(ARConfiguration.GetSpaceDimId().equals(properties.getId())) {
+			if(properties.isStation()) {
 				isWarp = SpaceObjectManager.WARPDIMID.equals(properties.getParentPlanet());
 				if(isWarp) {
 					SpaceStationObject station = (SpaceStationObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(playerPos);
