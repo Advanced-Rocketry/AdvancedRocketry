@@ -724,7 +724,7 @@ public class RenderAsteroidSky extends IRenderHandler {
 	}
 
 	protected void renderPlanet2(BufferBuilder buffer, ResourceLocation icon, int locationX, int locationY, double zLevel, float size, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing, float gravitationalMultiplier) {
-		renderPlanetPubHelper(buffer, icon, locationX, locationY, zLevel, 2f*size*gravitationalMultiplier, alphaMultiplier, shadowAngle, hasAtmosphere, skyColor, ringColor, gasGiant, hasRing);
+		renderPlanetPubHelper(buffer, icon, locationX, locationY, zLevel, size*gravitationalMultiplier, alphaMultiplier, shadowAngle, hasAtmosphere, skyColor, ringColor, gasGiant, hasRing);
 	}
 
 	protected void rotateAroundAxis() {
