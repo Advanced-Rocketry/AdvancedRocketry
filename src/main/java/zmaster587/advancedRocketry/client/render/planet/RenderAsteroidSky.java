@@ -637,7 +637,7 @@ public class RenderAsteroidSky extends IRenderHandler {
 				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 			}
 
-			renderPlanet2(buffer, parentPlanetIcon, 0,0,-100, 20 * AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance), multiplier, rotation, hasAtmosphere, parentAtmColor, parentRingColor, isGasGiant, false, parentGravitationalMultiplier);
+			renderPlanet2(buffer, parentPlanetIcon, 0,0,-100, 20 * AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance), multiplier, rotation, hasAtmosphere, parentAtmColor, parentRingColor, isGasGiant, false, (float)Math.pow(parentGravitationalMultiplier, 0.4));
 			GL11.glPopMatrix();
 		}
 
@@ -673,7 +673,7 @@ public class RenderAsteroidSky extends IRenderHandler {
 			//double rotation = Math.atan2(z,hyp );// - MathHelper.sin((float)moons.orbitTheta);//-Math.PI/2f + Math.atan2(x, y) - (moons.orbitTheta - Math.PI)*MathHelper.sin(phiAngle)*hyp;
 
 
-			renderPlanet(buffer, moons.getPlanetIcon(), moons.getParentOrbitalDistance(), multiplier, rotation, moons.hasAtmosphere(), moons.skyColor, moons.ringColor, isGasGiant, moons.hasRings(), moons.gravitationalMultiplier);
+			renderPlanet(buffer, moons.getPlanetIcon(), moons.getParentOrbitalDistance(), multiplier, rotation, moons.hasAtmosphere(), moons.skyColor, moons.ringColor, isGasGiant, moons.hasRings(), (float)Math.pow(moons.gravitationalMultiplier, 0.4));
 			GL11.glPopMatrix();
 		}
 
