@@ -644,7 +644,6 @@ public class RenderAsteroidSky extends IRenderHandler {
 		for(DimensionProperties moons : children) {
 			GL11.glPushMatrix();
 
-			moons.orbitalPhi = 10;
 			double rot = ((partialTicks*moons.orbitTheta + ((1-partialTicks)*moons.prevOrbitalTheta)) * 180F/Math.PI);
 
 			GL11.glRotatef((float)moons.orbitalPhi, 0f, 0f, 1f);
