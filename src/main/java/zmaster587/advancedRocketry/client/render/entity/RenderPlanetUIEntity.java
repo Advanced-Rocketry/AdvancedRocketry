@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
@@ -62,8 +63,8 @@ public class RenderPlanetUIEntity extends EntityRenderer<EntityUIPlanet> impleme
 			return;
 
 		float sizeScale = Math.max(properties.gravitationalMultiplier*properties.gravitationalMultiplier*entity.getScale(), .5f);
-        int j = packedLightIn % 65536;
-        int k = packedLightIn / 65536;
+        int j = packedLightIn;
+        int k = OverlayTexture.NO_OVERLAY;
 		
 		matrix.push();
 		matrix.translate(0, sizeScale*0.03f, 0);

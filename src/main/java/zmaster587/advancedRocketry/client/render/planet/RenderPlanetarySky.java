@@ -575,7 +575,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 		RenderSystem.enableTexture();
 		RenderSystem.depthMask(true);
 
-		RocketEventHandler.onPostWorldRender(partialTicks);
+		RocketEventHandler.onPostWorldRender(matrix, partialTicks);
 		//Fix player/items going transparent
 		RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
@@ -609,8 +609,8 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 
 	protected void rotateAroundAxis(MatrixStack matrix) {
 		Vector3F<Float> axis = getRotateAxis();
-		float x = getSkyRotationAmount() * 360.0F*axis.x ,y = getSkyRotationAmount() * 360.0F*axis.y,z = getSkyRotationAmount() * 360.0F*axis.z;
-		matrix.rotate(new Quaternion(x,y,z, true));
+		float x = getSkyRotationAmount() * axis.x ,y = getSkyRotationAmount() * axis.y,z = getSkyRotationAmount() * axis.z;
+		matrix.rotate(new Quaternion(x,y,z, false));
 	}
 
 	protected float getSkyRotationAmount() {
@@ -775,7 +775,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			phase*=360f;
 			matrix.rotate(new Quaternion(0, phase, 0, true));
 
-			GL11.glScaled(scale,scale,scale);
+			matrix.scale(scale,scale,scale);
 
 			//Set sun color and distance
 			RenderSystem.color4f((float)1, (float).5 , (float).4 ,1f);

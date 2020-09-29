@@ -361,7 +361,17 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 
 			DimensionProperties dstProps = null;
 			if(isOnStation && !SpaceObjectManager.WARPDIMID.equals(station.getOrbitingPlanetId())  && station.getDestOrbitingBody() != null)
-				dstProps = DimensionManager.getInstance().getDimensionProperties(station.getDestOrbitingBody());
+			{
+				ResourceLocation dstBody =  station.getDestOrbitingBody();
+				if(DimensionManager.getInstance().isStar(dstBody)) {
+					DimensionProperties starProps = new DimensionProperties(dstBody);;
+					starProps.setStar(dstBody);
+					starProps.setName(starProps.getStar().getName());
+					dstProps = starProps;
+				}
+				else
+					dstProps = DimensionManager.getInstance().getDimensionProperties(station.getDestOrbitingBody());
+			}
 
 			if(dstProps != null) {
 				planetName = dstProps.getName();

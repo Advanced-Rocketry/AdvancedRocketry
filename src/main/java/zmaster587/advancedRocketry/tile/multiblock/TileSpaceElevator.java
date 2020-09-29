@@ -5,8 +5,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
@@ -32,9 +34,11 @@ import zmaster587.advancedRocketry.item.ItemSpaceElevatorChip;
 import zmaster587.advancedRocketry.util.DimensionBlockPosition;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
+import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.inventory.modules.*;
@@ -51,6 +55,8 @@ import java.util.List;
 
 public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkableTile, IInventory, ITickableTileEntity {
 
+boolean openFullScreen = false;
+	
 	Object[][][] structure =
 		{
 			{
@@ -201,7 +207,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 		if(pos == null || pos.pos == null)
 			return false;
 		
-		return ZUtils.getDimensionIdentifier(worldObj) != pos.dimid && zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(pos.dimid, pos.pos.getBlockPos()).getId(), zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(worldObj, myPos.getBlockPos()).getId()) ;
+		return !ZUtils.getDimensionIdentifier(worldObj).equals(pos.dimid) && zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(pos.dimid, pos.pos.getBlockPos()).getId(), zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(worldObj, myPos.getBlockPos()).getId()) ;
 	}
 
 	public boolean attemptLaunch() {
@@ -277,8 +283,10 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 			summonCapsule();
 		}
 		else if (id == SELECT_DST) {
+			openFullScreen = true;
 			player.closeScreen();
 			NetworkHooks.openGui((ServerPlayerEntity) player, this, buf -> {buf.writeInt(GuiHandler.guiId.MODULARFULLSCREEN.ordinal()); buf.writeBlockPos(pos); });
+			openFullScreen = false;
 		}
 		else if(id == BUTTON_ID_OFFSET) {
 			dimBlockPos = null;
@@ -380,7 +388,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 
 		double capsulePosX = getLandingLocationX();
 		double capsulePosZ = getLandingLocationZ();
-		capsule.setPosition(capsulePosX, getPos().getY() - 1, capsulePosZ);
+		capsule.setPositionAndRotation(capsulePosX, getPos().getY() - 1, capsulePosZ, capsule.rotationYaw, capsule.rotationPitch);
 
 		capsule.setSourceTile(new DimensionBlockPosition(ZUtils.getDimensionIdentifier(world), new HashedBlockPosition(this.getPos())));
 
@@ -422,7 +430,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 
 			if(dimPos.dimid == ZUtils.getDimensionIdentifier(myWorld))
 			{
-				player.sendMessage(new TranslationTextComponent("msg.spaceElevator.sameDimensionError"), Util.field_240973_b_);
+				player.sendMessage(new TranslationTextComponent("msg.spaceelevator.samedimensionerror"), Util.field_240973_b_);
 				return false;
 			}
 
@@ -439,16 +447,16 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 					boolean flag = getChip() != null && ((TileSpaceElevator) tile).getChip() != null;
 					if(flag) {
 						addEntryToList(dimPos);
-						addEntryToList(new DimensionBlockPosition(ZUtils.getDimensionIdentifier(world), new HashedBlockPosition(getPos())));
-						((TileSpaceElevator) tile).addEntryToList(new DimensionBlockPosition(ZUtils.getDimensionIdentifier(world), new HashedBlockPosition(getPos())));
+						addEntryToList(new DimensionBlockPosition(ZUtils.getDimensionIdentifier(myWorld), new HashedBlockPosition(getPos())));
+						((TileSpaceElevator) tile).addEntryToList(new DimensionBlockPosition(ZUtils.getDimensionIdentifier(myWorld), new HashedBlockPosition(getPos())));
 						((TileSpaceElevator) tile).addEntryToList(dimPos);
 						
-						player.sendMessage(new TranslationTextComponent("msg.spaceElevator.newDstAdded"), Util.field_240973_b_);
+						player.sendMessage(new TranslationTextComponent("msg.spaceelevator.newdstadded"), Util.field_240973_b_);
 						return true;
 					}
 					else
 					{
-						player.sendMessage(new TranslationTextComponent("msg.spaceElevator.noChipError"), Util.field_240973_b_);
+						player.sendMessage(new TranslationTextComponent("msg.spaceelevator.nocchiperror"), Util.field_240973_b_);
 						return false;
 					}
 				}
@@ -579,6 +587,14 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 			dimBlockPos = null;
 
 		landingPadDisplayText.setText(dimBlockPos != null ? dimBlockPos.toString() : LibVulpes.proxy.getLocalizedString("msg.label.noneselected"));
+	}
+	
+	@Override
+	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+		GuiHandler.guiId guiType = openFullScreen ? GuiHandler.guiId.MODULARFULLSCREEN : getModularInvType();
+		openFullScreen = false;
+		
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(guiType.ordinal(), player), this, guiType);
 	}
 	
 	@Override

@@ -191,7 +191,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	}
 
 	public double getMaxRotationalAcceleration() {
-		return 0.02D;
+		return 0.000005D;
 	}
 
 	private long getWorldTime() {

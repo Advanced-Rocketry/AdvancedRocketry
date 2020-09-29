@@ -93,9 +93,9 @@ public class AreaBlob {
 	public boolean contains(HashedBlockPosition position) {
 		boolean contains = false;
 		
-		synchronized (graph) {
+		//synchronized (graph) {
 			contains = graph.contains(position);
-		}
+		//}
 		return contains;
 	}
 	

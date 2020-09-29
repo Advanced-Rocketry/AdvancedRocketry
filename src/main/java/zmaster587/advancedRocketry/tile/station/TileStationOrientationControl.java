@@ -150,16 +150,18 @@ public class TileStationOrientationControl extends TileEntity implements ITickab
 	public void readDataFromNetwork(PacketBuffer in, byte packetId,
 			CompoundNBT nbt) {
 		if(packetId == 0) {
-			setProgress(0, in.readShort());
-			setProgress(1, in.readShort());
-			setProgress(2, in.readShort());
+			nbt.putShort("0", in.readShort());
+			nbt.putShort("1", in.readShort());
+			nbt.putShort("2", in.readShort());
 		}
 	}
 
 	@Override
 	public void useNetworkData(PlayerEntity player, Dist side, byte id,
 			CompoundNBT nbt) {
-
+		setProgress(0, nbt.getShort("0"));
+		setProgress(1, nbt.getShort("1"));
+		setProgress(2, nbt.getShort("2"));
 	}
 
 	@Override

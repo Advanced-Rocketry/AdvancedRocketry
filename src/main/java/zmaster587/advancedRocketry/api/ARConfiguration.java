@@ -79,10 +79,11 @@ public class ARConfiguration {
 	static {
 		Pair<ARConfiguration, ForgeConfigSpec> commonConfiguration = new ForgeConfigSpec.Builder().configure(ARConfiguration::new);
 		commonSpec = commonConfiguration.getRight();
+		ARConfiguration config = commonConfiguration.getLeft();
 	}
 	
 	public static void register() {
-		registerConfig(ModConfig.Type.COMMON, commonSpec, "advancedRocketry/advancedRocketry.toml");
+		registerConfig(ModConfig.Type.COMMON, commonSpec, "advancedRocketry.toml");
 	}
 
 	private static void registerConfig(ModConfig.Type type, ForgeConfigSpec spec, String fileName) {
@@ -110,6 +111,7 @@ public class ARConfiguration {
 		arConfig.enableOxygen = builder.comment("If true, allows players being hurt due to lack of oxygen and allows effects from non-standard atmosphere types").define("EnableAtmosphericEffects", true);
 		arConfig.allowMakingItemsForOtherMods = builder.comment("If true, the machines from AdvancedRocketry will produce things like plates/rods for other mods even if Advanced Rocketry itself does not use the material (This can increase load time)").define("makeMaterialsForOtherMods", true);
 		arConfig.scrubberRequiresCartrige = builder.comment("If true, the Oxygen scrubbers require a consumable carbon collection cartridge").define("scrubberRequiresCartrige", true);
+		arConfig.vacuumDamageValue = builder.comment("Amount of damage inflicted with each tick on an entity in a vacuum").defineInRange("vacuumDamage", 1, 0, 100);
 		arConfig.enableLaserDrill = builder.comment("Enables the laser drill machine").define("EnableLaserDrill", true);
 		arConfig.spaceLaserPowerMult = builder.comment("Power multiplier for the laser drill machine").define("LaserDrillPowerMultiplier", 1d);
 		arConfig.lowGravityBoots = builder.comment("If true, the boots only protect the player on planets with low gravity").define("lowGravityBoots", false);

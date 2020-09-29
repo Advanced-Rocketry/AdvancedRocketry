@@ -260,6 +260,12 @@ public class ClientProxy extends CommonProxy {
 		else if(particle.equals("gravityEffect")) {
 			world.addParticle(AdvancedRocketryParticleTypes.fxGravityEffect.get(), x, y, z, motionX, motionY, motionZ);
 		}
+		else if(particle.equals("oxygencloudFx")) {
+			world.addParticle(AdvancedRocketryParticleTypes.oxygenCloudFx.get(), x, y, z, motionX, motionY, motionZ);
+		}
+		else if(particle.equals("oxygentraceFx")) {
+			world.addParticle(AdvancedRocketryParticleTypes.oxygenlTraceFx.get(), x, y, z, motionX, motionY, motionZ);
+		}
 		//else
 		//	ForgeRegistries.PARTICLE_TYPES.getValue(ResourceLocation.tryCreate(particle));
 		//else

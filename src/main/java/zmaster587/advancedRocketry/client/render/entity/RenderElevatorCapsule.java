@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.ClippingHelper;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -60,11 +61,11 @@ public class RenderElevatorCapsule extends EntityRenderer<EntityElevatorCapsule>
 			IRenderTypeBuffer bufferIn, int packedLightIn) {
 		matrix.push();
 		matrix.translate(0, 1, 0);
-		matrix.rotate(new Quaternion(0, entity.rotationYaw, 0, true));
-        int j = packedLightIn % 65536;
-        int k = packedLightIn / 65536;
+		matrix.rotate(new Quaternion(0, entityYaw, 0, true));
+        int j = packedLightIn;
+        int k = OverlayTexture.NO_OVERLAY;
         
-		IVertexBuilder builder = bufferIn.getBuffer(zmaster587.libVulpes.render.RenderHelper.getSolidEntityModelRenderType(getEntityTexture(entity)));
+		IVertexBuilder builder = bufferIn.getBuffer(zmaster587.libVulpes.render.RenderHelper.getTranslucentEntityModelRenderType(getEntityTexture(entity)));
 		sphere.renderOnly(matrix,j,k, builder, "Capsule");
 
 		if(entity.isInMotion())

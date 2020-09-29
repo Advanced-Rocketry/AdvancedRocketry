@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.culling.ClippingHelper;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Quaternion;
@@ -67,8 +68,8 @@ public class RenderHoverCraft extends EntityRenderer<EntityHoverCraft> implement
 		matrix.rotate(new Quaternion(0, 180-entityYaw, 0, true));
 		
 		IVertexBuilder entitySolidBuilder = bufferIn.getBuffer(RenderHelper.getSolidEntityModelRenderType(getEntityTexture(entity)));
-        int j = packedLightIn % 65536;
-        int k = packedLightIn / 65536;
+        int j = packedLightIn;
+        int k = OverlayTexture.NO_OVERLAY;
         
 		hoverCraft.tessellateAll(matrix,j,k, entitySolidBuilder);
 		

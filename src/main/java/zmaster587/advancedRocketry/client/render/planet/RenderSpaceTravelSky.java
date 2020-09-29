@@ -260,7 +260,7 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 			scale *= 0.1;
 			phase*=360f;
 			matrix.rotate(new Quaternion(0, phase, 0, true));
-			GL11.glScaled(scale,scale,scale);
+			matrix.scale(scale,scale,scale);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
 			RenderHelper.renderNorthFaceWithUV(matrix, buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1, 1,1,1,1);
@@ -801,7 +801,7 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 		RenderSystem.enableTexture();
 		RenderSystem.depthMask(true);
 
-		RocketEventHandler.onPostWorldRender(partialTicks);
+		RocketEventHandler.onPostWorldRender(matrix, partialTicks);
 		//Fix player/items going transparent
 		RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -967,7 +967,7 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 	}
 
 	protected void drawStar(BufferBuilder buffer, MatrixStack matrix, StellarBody sun, DimensionProperties properties, int solarOrbitalDistance, float sunSize, Vector3d sunColor, float multiplier) {
-		if(sun != null && sun.isBlackHole()) {
+		if(sun != null && sun.isBlackHole() && false) {
 			RenderSystem.depthMask(true);
 			RenderSystem.enableAlphaTest();
 			RenderSystem.alphaFunc(GL11.GL_GREATER, 0.01f);
@@ -979,7 +979,7 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 			phase*=360f;
 			matrix.rotate(new Quaternion(0, phase, 0, true));
 
-			GL11.glScaled(scale,scale,scale);
+			matrix.scale(scale,scale,scale);
 
 			//Set sun color and distance
 			RenderSystem.color4f((float)1, (float).5 , (float).4 ,1f);

@@ -638,7 +638,7 @@ public class RenderAsteroidSky implements ISkyRenderer { //extends IRenderHandle
 		GL11.glDepthMask(true);
 
 
-		RocketEventHandler.onPostWorldRender(partialTicks);
+		RocketEventHandler.onPostWorldRender(matrix, partialTicks);
 		//Fix player/items going transparent
 		RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}

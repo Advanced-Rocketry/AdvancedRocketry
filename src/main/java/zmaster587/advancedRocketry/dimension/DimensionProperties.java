@@ -384,7 +384,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		oceanBlock = null;
 		fillerBlock = null;
 		generatorType = 0;
-		
+		sky = null;
 	}
 
 	public ISkyRenderer getSkyRenderer()
@@ -454,7 +454,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		
 		this.starId = star.getId();
 		this.star = star;
-		if(!this.isMoon() && !isStation())
+		if(!this.isMoon() && !isStation() && !this.isStar())
 			this.star.addPlanet(this);
 	}
 
@@ -484,7 +484,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 	
 	public boolean isStar() {
-		return planetId.getNamespace() == Constants.STAR_NAMESPACE;
+		return Constants.STAR_NAMESPACE.equals(planetId.getNamespace());
 	}
 	
 	public StellarBody getStarData() {

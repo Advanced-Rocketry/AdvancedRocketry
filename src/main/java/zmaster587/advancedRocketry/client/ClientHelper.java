@@ -59,7 +59,6 @@ public class ClientHelper {
 		if(properties.isStation() || properties.getId().equals(ARConfiguration.GetSpaceDimId()))
 			return AdvancedRocketry.proxy.calculateCelestialAngleSpaceStation();
 		
-		
 		double d0 = MathHelper.frac((double)reader.func_241851_ab() / ((double)properties.rotationalPeriod) - 0.25D);
 		double d1 = 0.5D - Math.cos(d0 * Math.PI) / 2.0D;
 		return (float)(d0 * 2.0D + d1) / 3.0F;

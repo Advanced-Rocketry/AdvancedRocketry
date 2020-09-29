@@ -12,7 +12,7 @@ public class TileCO2Scrubber extends TileInventoryHatch {
 	
 	@Override
 	public String getModularInventoryName() {
-		return "tile.scrubber.name";
+		return "block.advancedrocketry.oxygenscrubber";
 	}
 	
 	@Override

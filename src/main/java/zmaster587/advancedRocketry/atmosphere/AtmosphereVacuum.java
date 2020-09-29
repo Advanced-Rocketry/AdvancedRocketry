@@ -28,7 +28,7 @@ public class AtmosphereVacuum extends AtmosphereNeedsSuit {
 			player.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 40, 4));
 			player.addPotionEffect(new EffectInstance(Effects.MINING_FATIGUE, 40, 4));
 			if(enableNausea) {
-				player.addPotionEffect(new EffectInstance(Effects.NAUSEA, 400, 1));
+				player.addPotionEffect(new EffectInstance(Effects.NAUSEA, 100, 1));
 			}
 			if(player instanceof PlayerEntity)
 				PacketHandler.sendToPlayer(new PacketOxygenState(), (PlayerEntity)player);
@@ -37,6 +37,6 @@ public class AtmosphereVacuum extends AtmosphereNeedsSuit {
 
 	@Override
 	public String getDisplayMessage() {
-		return LibVulpes.proxy.getLocalizedString("msg.noOxygen");
+		return LibVulpes.proxy.getLocalizedString("msg.nooxygen");
 	}
 }

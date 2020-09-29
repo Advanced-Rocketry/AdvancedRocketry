@@ -732,8 +732,16 @@ public class XMLPlanetLoader {
 		//galaxy.
 
 		Collection<StellarBody> stars = galaxy.getStars();
+		List<StellarBody> starList = new ArrayList<StellarBody>(stars);
+		starList.sort( new Comparator<StellarBody>() {
 
-		for(StellarBody star : stars) {
+			@Override
+			public int compare(StellarBody star1, StellarBody star2) {
+				return star1.getId().compareTo(star2.getId());
+			}
+		});
+
+		for(StellarBody star : starList) {
 			Element nodeStar = doc.createElement(ELEMENT_STAR);
 			nodeStar.setAttribute(ATTR_BLACKHOLE, Boolean.toString(star.isBlackHole()));
 			nodeStar.setAttribute(ATTR_NAME, star.getName());

@@ -54,9 +54,9 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 		if(properties.isStar())
 		{
 			size = 10;
-			GL11.glDepthMask(true);
-			GL11.glEnable(GL11.GL_ALPHA_TEST);
-			GL11.glAlphaFunc(GL11.GL_GREATER, 0.01f);
+			RenderSystem.depthMask(true);
+			RenderSystem.enableAlphaTest();
+			RenderSystem.alphaFunc(GL11.GL_GREATER, 0.01f);
 			float f10;
 			
 			mc.getTextureManager().bindTexture(TextureResources.locationBlackHole);
@@ -69,7 +69,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 			phase*=360f;
 			matrix.rotate(new Quaternion(0, phase, 0, true));
 			
-			GL11.glScaled(scale,scale,scale);
+			matrix.scale(scale,scale,scale);
 			
 			//Set sun color and distance
 			RenderSystem.color4f((float)1, (float).5 , (float).4 ,1f);

@@ -33,7 +33,7 @@ public class ModulePanetImage extends ModuleBase {
 			int mouseY, FontRenderer font) {
 		super.renderBackground(gui, matrix, x, y, mouseX, mouseY, font);
 
-		if(properties.getStarId() == Constants.INVALID_STAR)
+		if(Constants.INVALID_STAR.equals(properties.getStarId()))
 			return;
 		
 		Tessellator tessellator = Tessellator.getInstance();

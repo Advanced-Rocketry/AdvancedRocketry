@@ -14,7 +14,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class OxygenCloudFX extends SpriteTexturedParticle {
-	public static final ResourceLocation icon = new ResourceLocation("advancedrocketry:textures/particle/soft.png");
 
 	
 	public OxygenCloudFX(World world, double x,

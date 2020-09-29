@@ -649,6 +649,13 @@ public class DimensionManager implements IGalaxy {
 		if(SpaceObjectManager.WARPDIMID.equals(resourceLocation))
 			return warpDimensionProperties;
 		
+		if(isStar(resourceLocation)) {
+			DimensionProperties starProps = new DimensionProperties(resourceLocation);;
+			starProps.setStar(resourceLocation);
+			starProps.setName(starProps.getStar().getName());
+			return starProps;
+		}
+		
 		DimensionProperties properties = dimensionListResource.get(resourceLocation);
 		if(ARConfiguration.GetSpaceDimId().equals(resourceLocation) || resourceLocation == null) {
 			return defaultSpaceDimensionProperties;

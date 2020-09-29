@@ -34,10 +34,6 @@ function initializeCoreMod() {
                         break;
                     }
                 }
-                arrayLength = method.instructions.size();
-                for (var i = 0; i < arrayLength; ++i) {
-		    print( method.instructions.get(i) + "  opcode " + method.instructions.get(i).getOpcode());
-		}
                 return method;
             }
         }
