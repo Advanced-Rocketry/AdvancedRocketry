@@ -4,7 +4,7 @@ function initializeCoreMod() {
             'target': {
                 'type': 'METHOD',
                 'class': 'net.minecraft.client.renderer.WorldRenderer',
-                'methodName': 'renderSky',
+                'methodName': 'func_228424_a_',
                 'methodDesc': '(Lcom/mojang/blaze3d/matrix/MatrixStack;F)V'
             },
             'transformer': function(method) {
