@@ -1,0 +1,22 @@
+{
+    "type": "advancedrocketry:electricarcfurnace",
+    "itemingredients":
+    [
+        {
+
+            "tag": "forge:ingots/iridium"
+        },
+        {
+
+            "tag": "forge:ingots/titanium"
+        }
+    ],
+    "time": 3000,
+    "energy": 20,
+    "itemresults":
+    {
+
+            "tag": "forge:ingots/titaniumiridium",
+            "count": 2
+    }
+}

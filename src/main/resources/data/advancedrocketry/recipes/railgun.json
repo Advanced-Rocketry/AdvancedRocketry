@@ -1,0 +1,43 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	" t ",
+	"abc",
+	"ded"
+    ],
+    "key":
+    {
+	"t":
+        {
+	    "item": "advancedrocketry:circuit_ic_tracking"
+        },
+	"a":
+        {
+	    "item": "advancedrocketry:circuit_ic_control"
+        },
+	"b":
+        {
+	    "item": "libvulpes:structure_machine"
+        },
+	"c":
+        {
+	    "item": "advancedrocketry:circuit_ic_item_io"
+        },
+	"d":
+        {
+
+            "tag": "forge:fans/steel"
+        },
+	"e":
+        {
+
+            "tag": "forge:coils/copper"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:railgun",
+        "count": 1
+    }
+}

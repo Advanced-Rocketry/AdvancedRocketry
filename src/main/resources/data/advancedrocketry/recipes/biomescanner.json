@@ -1,0 +1,34 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"plp",
+	"bsb",
+	"ppp"
+    ],
+    "key":
+    {
+	"l":
+        {
+            "item": "advancedrocketry:sensor_biomechanger"
+        },
+	"s":
+        {
+	    "item": "libvulpes:structure_machine"
+        },
+	"p":
+        {
+
+            "tag": "forge:plates/tin"
+        },
+	"b":
+        {
+            "item": "libvulpes:smallbattery"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:biomescanner",
+        "count": 1
+    }
+}

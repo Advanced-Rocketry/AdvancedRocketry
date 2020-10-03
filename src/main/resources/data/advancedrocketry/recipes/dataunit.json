@@ -1,0 +1,23 @@
+{
+    "type": "advancedrocketry:precisionassembler",
+    "itemingredients":
+    [
+        {
+
+            "tag": "forge:dusts/redstone"
+        },
+        {
+
+            "tag": "forge:gems/emerald"
+        },
+	{
+	    "item": "advancedrocketry:circuit_ic_basic"
+        }
+    ],
+    "time": 500,
+    "energy": 60,
+    "itemresults":
+    {
+	"item": "advancedrocketry:dataunit"
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"lal",
+	"bgb",
+	"   "
+    ],
+    "key":
+    {
+        "l":
+        {
+            "item": "advancedrocketry:circuit_ic_adv"
+        },
+        "g":
+        {
+            "item": "advancedrocketry:item_ui"
+        },
+        "b":
+        {
+
+            "item": "libvulpes:smallbattery"
+        },
+	"l":
+        {
+            "item": "minecraft:lever"
+        },
+        "a":
+        {
+            "item": "advancedrocketry:circuit_ic_adv"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:orescanner",
+        "count": 1
+    }
+}

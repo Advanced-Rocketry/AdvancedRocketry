@@ -1,0 +1,29 @@
+{
+    "display": {
+        "icon": {
+            "item": "advancedrocketry:moonturf"
+        },
+        "title": {
+            "translate": "itemGroup.advancedRocketry"
+        },
+        "description": {
+            "translate": "itemGroup.advancedRocketry"
+        },
+        "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
+        "show_toast": false,
+        "announce_to_chat": false
+    },
+    
+    "criteria": {
+        "crafting_table": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "minecraft:crafting_table"
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -73,7 +73,7 @@ public class RenderGravityMachine extends TileEntityRenderer<TileGravityControll
 		
 		matrix.push();
 		matrix.scale(1.1f, 1f, 1.1f);
-		entityTransBuilder = buffer.getBuffer(RenderHelper.getTranslucentNoTexEntityModelRenderType());
+		entityTransBuilder = buffer.getBuffer(RenderHelper.getLightningTranslucencyNoTexEntityModelRenderType());
 		for(int i = 0; i < 4; i++) {
 			matrix.scale(.93f, 1f, .93f);
 			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTransBuilder, "Blur");

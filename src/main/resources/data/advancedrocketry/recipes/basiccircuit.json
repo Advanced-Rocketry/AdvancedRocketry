@@ -1,0 +1,16 @@
+{
+    "type": "advancedrocketry:cuttingmachine",
+    "itemingredients":
+    [
+        {
+            "item": "advancedrocketry:basiccircuitplate"
+        }
+    ],
+    "time": 300,
+    "energy": 100,
+    "itemresults":
+    {
+            "item": "advancedrocketry:circuit_ic_basic",
+            "count": 4
+    }
+}

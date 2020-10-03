@@ -1,0 +1,35 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"   ",
+	"lrl",
+	"fgf"
+    ],
+    "key":
+    {
+        "l":
+        {
+            "tag": "forge:dyes/lime"
+        },
+        "r":
+        {
+
+            "tag": "forge:dusts/redstone"
+        },
+	"g":
+        {
+            "item": "minecraft:glass_pane"
+        },
+	"f":
+        {
+
+            "tag": "forge:dusts/glowstone"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:item_ui",
+        "count": 1
+    }
+}

@@ -1,10 +1,18 @@
 package zmaster587.advancedRocketry.util;
 
 import net.minecraft.block.Blocks;
+import net.minecraft.data.IFinishedRecipe;
+import net.minecraft.data.ShapedRecipeBuilder;
+import net.minecraft.data.ShapelessRecipeBuilder;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.RecipeManager;
+import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.item.crafting.ShapelessRecipe;
+import net.minecraft.loot.functions.Smelt;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -13,7 +21,12 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.GameData;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.block.BlockPress;
+import zmaster587.advancedRocketry.recipe.RecipeCrystallizer;
+import zmaster587.advancedRocketry.recipe.RecipeLathe;
+import zmaster587.advancedRocketry.recipe.RecipeRollingMachine;
+import zmaster587.advancedRocketry.recipe.RecipeSmallPresser;
 import zmaster587.advancedRocketry.tile.multiblock.machine.*;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.material.AllowedProducts;
@@ -25,11 +38,13 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 import java.util.*;
 import java.util.Map.Entry;
 
+import com.google.gson.JsonObject;
+
 public class RecipeHandler {
 	
-	private List<Class<? extends TileMultiblockMachine>> machineList = new ArrayList<Class<? extends TileMultiblockMachine>>();
+	private List<Class<?>> machineList = new ArrayList<Class<?>>();
 	
-	public void registerMachine(Class<? extends TileMultiblockMachine> clazz) {
+	public void registerMachine(Class<?> clazz) {
 		if(!machineList.contains(clazz))
 		{
 			machineList.add(clazz);
@@ -39,7 +54,7 @@ public class RecipeHandler {
 	}
 
 	public void clearAllMachineRecipes() {
-		for(Class<? extends TileMultiblockMachine>  clazz : machineList) {
+		for(Class<?>  clazz : machineList) {
 			RecipesMachine.getInstance().getRecipes(clazz).clear();
 		}
 	}
@@ -59,9 +74,10 @@ public class RecipeHandler {
 	
 	public void registerAllMachineRecipes() {
 		
-		for(Class<? extends TileMultiblockMachine>  clazz : machineList)
+		for(Class<?>  clazz : machineList)
 			try {
-				clazz.newInstance().registerRecipes();
+				if(clazz.isAssignableFrom(TileMultiblockMachine.class))
+				((TileMultiblockMachine)clazz.newInstance()).registerRecipes();
 			} catch (InstantiationException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
@@ -72,79 +88,106 @@ public class RecipeHandler {
 	public void createAutoGennedRecipes(HashMap<AllowedProducts, HashSet<String>> modProducts) {
 		
 		// no more auto genned recipies for now
-		/*final String group = "idk";
+		final String group = "idk";
+		List<net.minecraft.item.crafting.IRecipe<?>> recipeList = new LinkedList<>();
 		
 		for(zmaster587.libVulpes.api.material.Material ore : MaterialRegistry.getAllMaterials()) {
 			if(AllowedProducts.getProductByName("ORE").isOfType(ore.getAllowedProducts()) && AllowedProducts.getProductByName("INGOT").isOfType(ore.getAllowedProducts()))
-				GameRegistry.addSmelting(ore.getProduct(AllowedProducts.getProductByName("ORE")), ore.getProduct(AllowedProducts.getProductByName("INGOT")), 0);
+            	recipeList.add(new FurnaceRecipe(new ResourceLocation(Constants.modId, "smelting" + ore.getOreDictNames()[0]), "smelting", 
+            			Ingredient.fromItems(ore.getProduct(AllowedProducts.getProductByName("ORE")).getItem()), 
+            			ore.getProduct(AllowedProducts.getProductByName("INGOT")), 0, 600));
 
 			if(AllowedProducts.getProductByName("NUGGET").isOfType(ore.getAllowedProducts())) {
 				ItemStack nugget = ore.getProduct(AllowedProducts.getProductByName("NUGGET"));
 				nugget.setCount(9);
 				for(String str : ore.getOreDictNames()) {
-				    GameData.register_impl(new ShapelessOreRecipe(null, nugget, AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + str)
-				            .setRegistryName("advancedrocketry", "unpacknugget"+str));
-				    GameData.register_impl(new ShapedOreRecipe(null, ore.getProduct(AllowedProducts.getProductByName("INGOT")), "ooo", "ooo", "ooo", 'o', AllowedProducts.getProductByName("NUGGET").name().toLowerCase(Locale.ENGLISH) + str)
-                            .setRegistryName("advancedrocketry", "unpackingot"+str));
+					
+					NonNullList<Ingredient> nuggetList = NonNullList.create();
+					nuggetList.add(Ingredient.fromTag(ItemTags.getCollection().get(new ResourceLocation("forge", AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + "/" + str))));
+					
+					recipeList.add(new ShapelessRecipe(new ResourceLocation(Constants.modId, "unpacknugget"+str), "nuggets", nugget, nuggetList));
+				    
+					ShapedRecipeBuilder.shapedRecipe(ore.getProduct(AllowedProducts.getProductByName("INGOT")).getItem())
+					.patternLine("ooo").patternLine("ooo").patternLine("ooo")
+					.key('o', ItemTags.getCollection().get(new ResourceLocation("forge", AllowedProducts.getProductByName("NUGGET").name().toLowerCase(Locale.ENGLISH) + "/" + str)))
+					.build(finishedRecipe -> { JsonObject json = new JsonObject(); finishedRecipe.serialize(json); recipeList.add(ShapedRecipe.Serializer.CRAFTING_SHAPED.read(new ResourceLocation(Constants.modId, "ingot" + str), json)); });
+				
 				}
 			}
 
 			if(AllowedProducts.getProductByName("GEM").isOfType(ore.getAllowedProducts())) {
 				for(String str : ore.getOreDictNames())
-					RecipesMachine.getInstance().addRecipe(TileCrystallizer.class, ore.getProduct(AllowedProducts.getProductByName("GEM")), 300, 20, AllowedProducts.getProductByName("DUST").name().toLowerCase(Locale.ENGLISH) + str);
+					RecipesMachine.getInstance().addRecipe(new ResourceLocation(Constants.modId, "crystalize_"+str.toLowerCase()), RecipeCrystallizer.INSTANCE, TileCrystallizer.class, ore.getProduct(AllowedProducts.getProductByName("GEM")), 300, 20, AllowedProducts.getProductByName("DUST").name().toLowerCase(Locale.ENGLISH) + str);
 			}
 
 			if(AllowedProducts.getProductByName("BOULE").isOfType(ore.getAllowedProducts())) {
 				for(String str : ore.getOreDictNames())
-					RecipesMachine.getInstance().addRecipe(TileCrystallizer.class, ore.getProduct(AllowedProducts.getProductByName("BOULE")), 300, 20, AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + str, AllowedProducts.getProductByName("NUGGET").name().toLowerCase(Locale.ENGLISH) + str);
+					RecipesMachine.getInstance().addRecipe(new ResourceLocation(Constants.modId, "boule_"+str.toLowerCase()),  RecipeCrystallizer.INSTANCE, TileCrystallizer.class, ore.getProduct(AllowedProducts.getProductByName("BOULE")), 300, 20, AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + str, AllowedProducts.getProductByName("NUGGET").name().toLowerCase(Locale.ENGLISH) + str);
 			}
 
 			if(AllowedProducts.getProductByName("STICK").isOfType(ore.getAllowedProducts()) && AllowedProducts.getProductByName("INGOT").isOfType(ore.getAllowedProducts())) {
 				for(String name : ore.getOreDictNames())
-					if(OreDictionary.doesOreNameExist(AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + name)) {
+					if(ItemTags.getCollection().getRegisteredTags().contains(new ResourceLocation("forge", AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + "/" + name))) {
 
-					    GameData.register_impl(new ShapedOreRecipe(null, ore.getProduct(AllowedProducts.getProductByName("STICK"),4), "x  ", " x ", "  x", 'x', AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + name)
-					            .setRegistryName("advancedrocketry", "stick"+name));
+						ResourceLocation stickInput = new ResourceLocation("forge", AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + "/" + name);
 
-						RecipesMachine.getInstance().addRecipe(TileLathe.class, ore.getProduct(AllowedProducts.getProductByName("STICK"),2), 300, 20, AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + name); //ore.getProduct(AllowedProducts.getProductByName("INGOT")));
+						NonNullList<Ingredient> stickInputList = NonNullList.create();
+						for(int i = 0 ; i < 3; i++)
+							stickInputList.add(Ingredient.fromTag(ItemTags.getCollection().get(stickInput)));
+						
+						new ShapedRecipe(new ResourceLocation(Constants.modId, "stick"+name), "sticks", 3, 3, stickInputList, ore.getProduct(AllowedProducts.getProductByName("STICK"),4));
+
+						RecipesMachine.getInstance().addRecipe(new ResourceLocation(Constants.modId, "stick_"+name.toLowerCase()),  RecipeLathe.INSTANCE, TileLathe.class, ore.getProduct(AllowedProducts.getProductByName("STICK"),2), 300, 20, AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + name); //ore.getProduct(AllowedProducts.getProductByName("INGOT")));
 					}
 			}
 
 			if(AllowedProducts.getProductByName("PLATE").isOfType(ore.getAllowedProducts())) {
 				for(String oreDictNames : ore.getOreDictNames()) {
-					if(OreDictionary.doesOreNameExist(AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + oreDictNames)) {
-						RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, ore.getProduct(AllowedProducts.getProductByName("PLATE")), 300, 20, AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + oreDictNames, new FluidStack(FluidRegistry.WATER, 100));
+					ResourceLocation resource = new ResourceLocation("forge", AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + oreDictNames);
+					if(ItemTags.getCollection().getRegisteredTags().contains(resource)) {
+						
+						RecipesMachine.getInstance().addRecipe(new ResourceLocation(Constants.modId, "plate_"+oreDictNames.toLowerCase()),  RecipeRollingMachine.INSTANCE,TileRollingMachine.class, ore.getProduct(AllowedProducts.getProductByName("PLATE")), 300, 20, AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + oreDictNames, new FluidStack(Fluids.WATER, 100));
 						if(AllowedProducts.getProductByName("BLOCK").isOfType(ore.getAllowedProducts()) || ore.isVanilla())
-							RecipesMachine.getInstance().addRecipe(BlockPress.class, ore.getProduct(AllowedProducts.getProductByName("PLATE"),4), 0, 0, AllowedProducts.getProductByName("BLOCK").name().toLowerCase(Locale.ENGLISH) + oreDictNames);
+							RecipesMachine.getInstance().addRecipe(new ResourceLocation(Constants.modId, "plate_"+oreDictNames.toLowerCase()),  RecipeSmallPresser.INSTANCE, BlockPress.class, ore.getProduct(AllowedProducts.getProductByName("PLATE"),4), 0, 0, AllowedProducts.getProductByName("BLOCK").name().toLowerCase(Locale.ENGLISH) + oreDictNames);
 					}
 				}
 			}
 
 			if(AllowedProducts.getProductByName("SHEET").isOfType(ore.getAllowedProducts())) {
 				for(String oreDictNames : ore.getOreDictNames()) {
-					RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, ore.getProduct(AllowedProducts.getProductByName("SHEET")), 300, 200, AllowedProducts.getProductByName("PLATE").name().toLowerCase(Locale.ENGLISH) + oreDictNames, new FluidStack(FluidRegistry.WATER, 100));
+					RecipesMachine.getInstance().addRecipe(new ResourceLocation(Constants.modId, "sheet_" + oreDictNames.toLowerCase()),  RecipeRollingMachine.INSTANCE, TileRollingMachine.class, ore.getProduct(AllowedProducts.getProductByName("SHEET")), 300, 200, AllowedProducts.getProductByName("PLATE").name().toLowerCase(Locale.ENGLISH) + oreDictNames, new FluidStack(Fluids.WATER, 100));
 				}
 			}
 
 			if(AllowedProducts.getProductByName("COIL").isOfType(ore.getAllowedProducts())) {
+
+				
 				for(String str : ore.getOreDictNames())
-				    GameData.register_impl(new ShapedOreRecipe(null,ore.getProduct(AllowedProducts.getProductByName("COIL")), "ooo", "o o", "ooo",'o', 
-				            AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + str).setRegistryName("advancedrocketry", "coil"+str));
+					ShapedRecipeBuilder.shapedRecipe(ore.getProduct(AllowedProducts.getProductByName("COIL")).getItem()).patternLine("ooo").patternLine("o o").patternLine("ooo")
+					.key('o', ItemTags.getCollection().get(new ResourceLocation("forge", AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + "/" + str)))
+					.build((finishedRecipe -> { JsonObject json = new JsonObject(); finishedRecipe.serialize(json); recipeList.add(ShapedRecipe.Serializer.CRAFTING_SHAPED.read(new ResourceLocation(Constants.modId, "coil" + str), json)); }) );
 			}
 
 			if(AllowedProducts.getProductByName("FAN").isOfType(ore.getAllowedProducts())) {
 				for(String str : ore.getOreDictNames()) {
-				    GameData.register_impl(new ShapedOreRecipe(null,ore.getProduct(AllowedProducts.getProductByName("FAN")), "p p", " r ", "p p", 'p', 
-				            AllowedProducts.getProductByName("PLATE").name().toLowerCase(Locale.ENGLISH) + str, 'r', 
-				            AllowedProducts.getProductByName("STICK").name().toLowerCase(Locale.ENGLISH) + str).setRegistryName("advancedrocketry", "fan"+str));
+					
+					ShapedRecipeBuilder.shapedRecipe(ore.getProduct(AllowedProducts.getProductByName("FAN")).getItem())
+					.patternLine("p p").patternLine(" r ").patternLine("p p")
+					.key('p', ItemTags.getCollection().get(new ResourceLocation("forge", AllowedProducts.getProductByName("PLATE").name().toLowerCase(Locale.ENGLISH) + "/" + str)))
+					.key('r', ItemTags.getCollection().get(new ResourceLocation("forge", AllowedProducts.getProductByName("STICK").name().toLowerCase(Locale.ENGLISH) + "/" + str)))
+					.build(finishedRecipe -> { JsonObject json = new JsonObject(); finishedRecipe.serialize(json); recipeList.add(ShapedRecipe.Serializer.CRAFTING_SHAPED.read(new ResourceLocation(Constants.modId, "coil" + str), json)); });
 				}
 			}
 			if(AllowedProducts.getProductByName("GEAR").isOfType(ore.getAllowedProducts())) {
 				for(String str : ore.getOreDictNames()) {
-				    GameData.register_impl(new ShapedOreRecipe(null,ore.getProduct(AllowedProducts.getProductByName("GEAR")), "sps", " r ", "sps", 'p', 
-				            AllowedProducts.getProductByName("PLATE").name().toLowerCase(Locale.ENGLISH) + str, 's', 
-				            AllowedProducts.getProductByName("STICK").name().toLowerCase(Locale.ENGLISH) + str, 'r', 
-				            AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + str).setRegistryName("advancedrocketry", "gear"+str));
+					
+					ShapedRecipeBuilder.shapedRecipe(ore.getProduct(AllowedProducts.getProductByName("GEAR")).getItem())
+					.patternLine("sps").patternLine(" r ").patternLine("sps")
+					.key('p', ItemTags.getCollection().get(new ResourceLocation("forge", AllowedProducts.getProductByName("PLATE").name().toLowerCase(Locale.ENGLISH) + "/" + str)))
+					.key('s', ItemTags.getCollection().get(new ResourceLocation("forge", AllowedProducts.getProductByName("STICK").name().toLowerCase(Locale.ENGLISH) + "/" + str)))
+					.key('s', ItemTags.getCollection().get(new ResourceLocation("forge", AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + "/" + str)))
+					.build(finishedRecipe -> { JsonObject json = new JsonObject(); finishedRecipe.serialize(json); recipeList.add(ShapedRecipe.Serializer.CRAFTING_SHAPED.read(new ResourceLocation(Constants.modId, "gear" + str), json)); });
+					
 				}
 			}
 			if(AllowedProducts.getProductByName("BLOCK").isOfType(ore.getAllowedProducts())) {
@@ -153,15 +196,17 @@ public class RecipeHandler {
 				for(String str : ore.getOreDictNames())
                 {
 					
-					ResourceLocation oreName = new ResourceLocation("forge", AllowedProducts.getProductByName("BLOCK").name().toLowerCase(Locale.ENGLISH) + str);
+					ResourceLocation oreName = new ResourceLocation("forge", AllowedProducts.getProductByName("BLOCK").name().toLowerCase(Locale.ENGLISH) + "/" + str);
 					NonNullList<Ingredient> blockToIngot = NonNullList.create();
 					blockToIngot.add(Ingredient.fromTag(ItemTags.getCollection().func_241834_b(oreName)));
-					GameData.register_impl(value)
 					
-				    GameData.register_impl(new ShapelessRecipe(new ResourceLocation("advancedrocketry", "unpackblock"+str), group, ingot,blockToIngot));
-				    GameData.register_impl(new ShapedOreRecipe(null,
-                            ore.getProduct(AllowedProducts.getProductByName("BLOCK")), "ooo", "ooo", "ooo", 'o',
-                            AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + str).setRegistryName("advancedrocketry", "packblock"+str));
+					ShapedRecipeBuilder.shapedRecipe(ore.getProduct(AllowedProducts.getProductByName("BLOCK")).getItem())
+					.patternLine("ooo").patternLine("ooo").patternLine("ooo")
+					.key('o', ItemTags.getCollection().get(new ResourceLocation("forge", AllowedProducts.getProductByName("BLOCK").name().toLowerCase(Locale.ENGLISH) + "/" + str)))
+					.build(finishedRecipe -> { JsonObject json = new JsonObject(); finishedRecipe.serialize(json); recipeList.add(ShapedRecipe.Serializer.CRAFTING_SHAPED.read(new ResourceLocation(Constants.modId, "block" + str), json)); });
+				
+					
+					recipeList.add(new ShapelessRecipe(new ResourceLocation(Constants.modId, "unpackblock"+str), "blocks", ingot, blockToIngot));
                 }
             }
 
@@ -173,18 +218,20 @@ public class RecipeHandler {
                     {
                         ItemStack stack = ore.getProduct(AllowedProducts.getProductByName("DUST"));
                         stack.setCount(2);
-                        RecipesMachine.getInstance().addRecipe(BlockPress.class, stack, 0, 0,
+                        RecipesMachine.getInstance().addRecipe(new ResourceLocation(Constants.modId, "oretodust_" + str), RecipeSmallPresser.INSTANCE , BlockPress.class, stack, 0, 0,
                                 AllowedProducts.getProductByName("ORE").name().toLowerCase(Locale.ENGLISH) + str);
                     }
                     if (AllowedProducts.getProductByName("INGOT").isOfType(ore.getAllowedProducts()) || ore.isVanilla())
-                        GameRegistry.addSmelting(ore.getProduct(AllowedProducts.getProductByName("DUST")),
-                                ore.getProduct(AllowedProducts.getProductByName("INGOT")), 0);
+                    	
+                    	recipeList.add(new FurnaceRecipe(new ResourceLocation(Constants.modId, "smelting" + str), "smelting", 
+                    			Ingredient.fromItems(ore.getProduct(AllowedProducts.getProductByName("DUST")).getItem()), 
+                    			ore.getProduct(AllowedProducts.getProductByName("INGOT")), 0, 600));
                 }
             }
         }
 
         // Handle vanilla integration
-        if (zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().allowSawmillVanillaWood)
+        /*if (zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().allowSawmillVanillaWood)
         {
             for (int i = 0; i < 4; i++)
             {
@@ -195,10 +242,10 @@ public class RecipeHandler {
                     new ItemStack(Blocks.LOG2, 1, 0));
             RecipesMachine.getInstance().addRecipe(TileCuttingMachine.class, new ItemStack(Blocks.PLANKS, 6, 5), 80, 10,
                     new ItemStack(Blocks.LOG2, 1, 1));
-        }
+        }*/
 
         // Handle items from other mods
-        if (zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().allowMakingItemsForOtherMods)
+        /*if (zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().allowMakingItemsForOtherMods)
         {
             for (Entry<AllowedProducts, HashSet<String>> entry : modProducts.entrySet())
             {

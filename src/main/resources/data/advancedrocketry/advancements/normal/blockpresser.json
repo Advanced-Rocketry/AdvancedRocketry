@@ -1,0 +1,26 @@
+{
+    "display": {
+        "icon": {
+            "item": "piston"
+        },
+        "title": {
+            "translate": "achievement.flattening"
+        },
+        "description": {
+            "translate": "achievement.flattening.desc"
+        }
+    },
+    "parent": "advancedrocketry:normal/root",
+    "criteria": {
+        "warp": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "advancedrocketry:platepress"
+                    }
+                ]
+            }
+        }
+    }
+} 

@@ -1,0 +1,21 @@
+{
+"type": "advancedrocketry:crystallizer",
+    "itemingredients":
+    [
+        
+        {
+            "tag": "forge:ingots/silicon"
+        },
+        {
+            "tag": "forge:nuggets/silicon"
+        }
+    ],
+    "time": 300,
+    "energy": 20,
+    "itemresults":
+    {
+            "tag":
+"forge:boules/silicon",
+            "count": 1
+    }
+}

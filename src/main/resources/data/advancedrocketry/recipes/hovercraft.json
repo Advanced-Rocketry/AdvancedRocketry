@@ -1,0 +1,38 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"bib",
+	"csc",
+	"e e"
+    ],
+    "key":
+    {
+	"i":
+        {
+	    "item": "advancedrocketry:item_ui"
+        },
+	"b":
+        {
+	    "item": "libvulpes:small2xbattery"
+        },
+	"e":
+        {
+	    "item": "advancedrocketry:rocketmotor"
+        },
+	"c":
+        {
+
+            "tag": "forge:gems/dilithium"
+        },
+	"s":
+        {
+	    "item": "advancedrocketry:structuretower"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:hovercraft",
+        "count": 1
+    }
+}

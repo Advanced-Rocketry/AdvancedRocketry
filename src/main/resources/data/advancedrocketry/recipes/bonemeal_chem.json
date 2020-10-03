@@ -1,0 +1,25 @@
+{
+    "type": "advancedrocketry:chemicalreactor",
+    "itemingredients":
+    [
+        {
+            "item": "minecraft:bone"
+        }
+    ],
+    "fluidingredients":
+    [
+	{
+	    "fluid": "nitrogen",
+	    "amount": 10
+	}
+    ],
+    "time": 100,
+    "energy": 1,
+    "itemresults":
+    [
+	{
+            "tag": "forge:dyes/white",
+            "count": 8
+	}
+    ]
+}

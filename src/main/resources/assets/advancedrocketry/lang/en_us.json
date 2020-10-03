@@ -47,7 +47,7 @@
     "block.advancedrocketry.satellitecontrolcenter": "Satellite Control Center",
     "block.advancedrocketry.aliensapling": "Lightwood Sapling",
     "block.advancedrocketry.alienleaves": "Lightwood Leaves",
-    "block.advancedrocketry.alienwood": "Lightwood planks",
+    "block.advancedrocketry.alienwood": "Lightwood",
     "block.advancedrocketry.chipstorage": "Satellite Id Storage",
     "block.advancedrocketry.planetanalyser": "Astrobody Data Processor",
     "block.advancedrocketry.lunaranalyser": "Lunar Analyser",
@@ -131,7 +131,7 @@
     "block.advancedrocketry.blocktitaniumiridium": "Titanium Iridium Block",
     "block.advancedrocketry.airlock_door": "Small Airlock Door",
     "block.advancedrocketry.liquidtank": "Liquid Tank",
-    "block.advancedrocketry.planks": "Planks",
+    "block.advancedrocketry.planks": "Alien Planks",
 
 
     "block.advancedrocketry.dilithium": "Dilithium Ore",

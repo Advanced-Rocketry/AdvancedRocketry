@@ -1,0 +1,19 @@
+{
+    "display": {
+        "icon": {
+            "item": "advancedrocketry:moonturf"
+        },
+        "title": {
+            "translate": "achievement.moonLanding"
+        },
+        "description": {
+            "translate": "achievement.moonLanding.desc"
+        }
+    },
+    "parent": "advancedrocketry:normal/root",
+    "criteria": {
+        "moonlanding": {
+            "trigger": "moonlanding"
+        }
+    }
+}

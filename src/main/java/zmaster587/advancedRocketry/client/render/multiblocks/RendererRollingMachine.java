@@ -12,6 +12,7 @@ import net.minecraft.util.math.vector.Quaternion;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
@@ -55,6 +56,8 @@ public class RendererRollingMachine extends TileEntityRenderer<TileRollingMachin
 
 		IVertexBuilder coilSolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(coilSide));
 		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
+		
+		IVertexBuilder entityNoTex;
 
 		//GL11.glColor3f(((i >>> 16) & 0xFF)/255f, ((i >>> 8) & 0xFF)/255f, (i & 0xFF)/255f);
 		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, coilSolidBuilder, "Coil");
@@ -89,30 +92,34 @@ public class RendererRollingMachine extends TileEntityRenderer<TileRollingMachin
 				color = MaterialRegistry.getColorFromItemMaterial(outputStack);
 			else
 				color = 0;
-			
-			//int color = MaterialRegistry.getMaterialFromItemStack(tile.getOutputs().get(0)).getColor();
-			/*GL11.glColor3d((0xff & color >> 16)/256f, (0xff & color >> 8)/256f , (color & 0xff)/256f);
 
+			float r = (0xff & (color >> 16))/256f;
+			float g = (0xff & (color >> 8))/256f;
+			float b = ((color & 0xff)/256f);
+			float a = 1f;
+			
+			entityNoTex = buffer.getBuffer(RenderHelper.getTranslucentNoTexEntityModelRenderType());
+			
 			//Render the ingot
 			if(progress < 0.6f) {
 				matrix.push();
-				GL11.glDisable(GL11.GL_TEXTURE_2D);
+				RenderSystem.disableTexture();
 				matrix.translate(2.125f, 0.875f, 1.3125f + progress*2f);
-				model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, "Ingot");	
-				GL11.glEnable(GL11.GL_TEXTURE_2D);
+				model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityNoTex,r,g,b,a, "Ingot");	
+				RenderSystem.enableTexture();
 				matrix.pop();
 			}
 			//Render the plate
 			if(progress > 0.5f) {
 
 				matrix.push();
-				GL11.glDisable(GL11.GL_TEXTURE_2D);
+				RenderSystem.disableTexture();
 				matrix.translate(2.125f, 0.875f, 1.7125f + progress*2f);
-				model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, "Plate");	
-				GL11.glEnable(GL11.GL_TEXTURE_2D);
+				model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityNoTex,r,g,b,a, "Plate");	
+				RenderSystem.enableTexture();
 				matrix.pop();
 			}
-			GL11.glColor3f(1f,1f,1f);*/
+			GL11.glColor3f(1f,1f,1f);
 		}
 		else {
 			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Hull");

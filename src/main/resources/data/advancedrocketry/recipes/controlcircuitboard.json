@@ -1,0 +1,40 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"rvr",
+	"dwd",
+	"dpd"
+    ],
+    "key":
+    {
+        "d":
+        {
+            "tag": "forge:dusts/copper"
+        },
+        "r":
+        {
+
+            "tag": "forge:dusts/redstone"
+        },
+        "p":
+	{
+
+            "tag": "forge:plates/iron"
+        },
+        "w":
+        {
+            "item": "minecraft:oak_slab"
+        },
+        "v":
+        {
+
+            "tag": "forge:gems/diamond"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:circuit_ic_control",
+        "count": 1
+    }
+}

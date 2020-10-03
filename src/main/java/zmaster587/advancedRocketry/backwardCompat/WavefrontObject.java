@@ -218,6 +218,20 @@ public class WavefrontObject
             groupObject.render(matrix, lighting, lightingOverlay, tessellator);
         }
     }
+    
+    @OnlyIn(value=Dist.CLIENT)
+    public void renderOnly(MatrixStack matrix, int lighting, int lightingOverlay, IVertexBuilder buffer, float r, float g, float b, float a, String... groupNames) {
+        for (GroupObject groupObject : groupObjects)
+        {
+            for (String groupName : groupNames)
+            {
+                if (groupName.equalsIgnoreCase(groupObject.name))
+                {
+                    groupObject.render(matrix, lighting, lightingOverlay, buffer,r,g,b,a);
+                }
+            }
+        }
+    }
 
     @OnlyIn(value=Dist.CLIENT)
     public void renderOnly(MatrixStack matrix, int lighting, int lightingOverlay, IVertexBuilder buffer, String... groupNames) {

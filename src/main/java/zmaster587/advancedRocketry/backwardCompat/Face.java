@@ -20,9 +20,9 @@ public class Face
     public TextureCoordinate[] textureCoordinates;
 
     @OnlyIn(value=Dist.CLIENT)
-    public void addFaceForRender(MatrixStack matrix, int lighting, int lightingOverlay, IVertexBuilder tessellator)
+    public void addFaceForRender(MatrixStack matrix, int lighting, int lightingOverlay, IVertexBuilder tessellator, float r, float g, float b, float a)
     {
-        addFaceForRender(matrix, lighting, lightingOverlay, tessellator, 0.0005F);
+        addFaceForRender(matrix, lighting, lightingOverlay, tessellator, 0.0005F,r ,g, b, a);
     }
     
     @OnlyIn(value=Dist.CLIENT)
@@ -98,9 +98,14 @@ public class Face
         }
     }
     
-
     @OnlyIn(value=Dist.CLIENT)
     public void addFaceForRender(MatrixStack matrix, int lighting, int lightingOverlay, IVertexBuilder tessellator, float textureOffset)
+    {
+    	addFaceForRender(matrix, lighting, lightingOverlay, tessellator, textureOffset,1f,1f,1f,1f);
+    }
+    
+    @OnlyIn(value=Dist.CLIENT)
+    public void addFaceForRender(MatrixStack matrix, int lighting, int lightingOverlay, IVertexBuilder tessellator, float textureOffset, float r, float g, float b, float a)
     {
         if (faceNormal == null)
         {
@@ -149,7 +154,7 @@ public class Face
                 
                 Vector4f vector4f = new Vector4f(vertices[i].x, vertices[i].y, vertices[i].z, 1.0F);
                 vector4f.transform(matrix4f);
-                tessellator.addVertex(vector4f.getX(), vector4f.getY(),vector4f.getZ(), 1, 1, 1, 1, textureCoordinates[i].u + offsetU, textureCoordinates[i].v + offsetV, lightingOverlay, lighting, vector3f.getX(), vector3f.getY(), vector3f.getZ());
+                tessellator.addVertex(vector4f.getX(), vector4f.getY(),vector4f.getZ(), r, g, b, a, textureCoordinates[i].u + offsetU, textureCoordinates[i].v + offsetV, lightingOverlay, lighting, vector3f.getX(), vector3f.getY(), vector3f.getZ());
             }
             else
             {
@@ -160,7 +165,7 @@ public class Face
                 
                 Vector4f vector4f = new Vector4f(vertices[i].x, vertices[i].y, vertices[i].z, 1.0F);
                 vector4f.transform(matrix4f);
-            	tessellator.pos(vector4f.getX(), vector4f.getY(),vector4f.getZ()).color(1, 1, 1, 1).lightmap(lighting, lightingOverlay).normal(vector3f.getX(), vector3f.getY(), vector3f.getZ()).endVertex();
+                tessellator.addVertex(vector4f.getX(), vector4f.getY(),vector4f.getZ(), r, g, b, a, 0, 0, lightingOverlay, lighting, vector3f.getX(), vector3f.getY(), vector3f.getZ());
             }
         }
     }

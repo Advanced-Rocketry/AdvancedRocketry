@@ -1,0 +1,35 @@
+{
+    "display": {
+        "icon": {
+            "item": "advancedrocketry:spacehelmet"
+        },
+        "title": {
+            "translate": "achievement.suitedUp"
+        },
+        "description": {
+            "translate": "achievement.suitedUp.desc"
+        }
+    },
+    "parent": "advancedrocketry:normal/root",
+    "criteria": {
+        "suited": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "advancedrocketry:spaceboots"
+                    },
+		    {
+                        "item": "advancedrocketry:spaceleggings"
+                    },
+		    {
+                        "item": "advancedrocketry:spacehelmet"
+                    },
+		    {
+                        "item": "advancedrocketry:spacechestplate"
+                    }
+                ]
+            }
+        }
+    }
+} 

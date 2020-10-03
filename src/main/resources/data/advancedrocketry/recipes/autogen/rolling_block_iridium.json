@@ -1,0 +1,24 @@
+{
+    "type": "advancedrocketry:rollingmachine",
+    "itemingredients":
+    [
+        
+        {
+            "tag": "forge:blocks/iridium"
+        }
+    ],
+    "fluidingredients":
+    [
+        {
+            "fluid": "minecraft:water",
+            "amount": 10
+        }
+    ],
+    "time": 300,
+    "energy": 20,
+    "itemresults":
+    {
+            "tag": "forge:plates/iridium",
+            "count": 4
+    }
+}

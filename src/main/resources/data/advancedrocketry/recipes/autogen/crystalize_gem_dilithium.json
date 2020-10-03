@@ -1,0 +1,18 @@
+{
+"type": "advancedrocketry:crystallizer",
+    "itemingredients":
+    [
+        
+        {
+            "tag": "forge:dusts/dilithium"
+        }
+    ],
+    "time": 300,
+    "energy": 20,
+    "itemresults":
+    {
+            "tag":
+"forge:gems/dilithium",
+            "count": 1
+    }
+}

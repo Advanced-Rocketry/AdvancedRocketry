@@ -97,11 +97,11 @@ boolean openFullScreen = false;
 			},
 			{
 				{ '*', '*', '*', '*', '*', '*', '*' },
-				{ '*', '*', new ResourceLocation("forge","blockcoil"), new ResourceLocation("forge","blockcoil"), new ResourceLocation("forge","blockcoil"), '*', '*' },
-				{ LibVulpesBlocks.motors, new ResourceLocation("forge","blockcoil"), Blocks.AIR, Blocks.AIR, Blocks.AIR, new ResourceLocation("forge","blockcoil"), LibVulpesBlocks.motors },
-				{ 'P', new ResourceLocation("forge","blockcoil"), Blocks.AIR, Blocks.AIR, Blocks.AIR, new ResourceLocation("forge","blockcoil"), 'P' },
-				{ LibVulpesBlocks.motors, new ResourceLocation("forge","blockcoil"), Blocks.AIR, Blocks.AIR, Blocks.AIR, new ResourceLocation("forge","blockcoil"), LibVulpesBlocks.motors },
-				{ '*', '*', new ResourceLocation("forge","blockcoil"), new ResourceLocation("forge","blockcoil"), new ResourceLocation("forge","blockcoil"), '*', '*' },
+				{ '*', '*', new ResourceLocation("forge","coils"), new ResourceLocation("forge","coils"), new ResourceLocation("forge","coils"), '*', '*' },
+				{ LibVulpesBlocks.motors, new ResourceLocation("forge","coils"), Blocks.AIR, Blocks.AIR, Blocks.AIR, new ResourceLocation("forge","coils"), LibVulpesBlocks.motors },
+				{ 'P', new ResourceLocation("forge","coils"), Blocks.AIR, Blocks.AIR, Blocks.AIR, new ResourceLocation("forge","coils"), 'P' },
+				{ LibVulpesBlocks.motors, new ResourceLocation("forge","coils"), Blocks.AIR, Blocks.AIR, Blocks.AIR, new ResourceLocation("forge","coils"), LibVulpesBlocks.motors },
+				{ '*', '*', new ResourceLocation("forge","coils"), new ResourceLocation("forge","coils"), new ResourceLocation("forge","coils"), '*', '*' },
 				{ '*', '*', LibVulpesBlocks.motors, 'P', LibVulpesBlocks.motors, '*', '*' },
 			}
 		};

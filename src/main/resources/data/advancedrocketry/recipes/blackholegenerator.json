@@ -1,0 +1,41 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"bgb",
+	"pcp",
+	"msm"
+    ],
+    "key":
+    {
+	"b":
+        {
+	    "item": "libvulpes:small2xbattery"
+        },
+	"s":
+        {
+	    "item": "advancedrocketry:item_ui"
+        },
+	"g":
+        {
+	    "item": "advancedrocketry:structuretower"
+        },
+	"c":
+        {
+	    "item": "libvulpes:adv_structure_machine"
+        },
+	"p":
+        {
+            "tag": "forge:plates/titaniumaluminide"
+        },
+	"m":
+        {
+            "tag": "forge:motors"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:blackholegenerator",
+        "count": 1
+    }
+}

@@ -31,7 +31,7 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 		{AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible}},
 		
 		{{'O', 'c', 'I'}, 
-			{new ResourceLocation("forge","blockcoil"), 'P', new ResourceLocation("forge","blockcoil")}},
+			{new ResourceLocation("forge","coils"), 'P', new ResourceLocation("forge","coils")}},
 
 	};
 

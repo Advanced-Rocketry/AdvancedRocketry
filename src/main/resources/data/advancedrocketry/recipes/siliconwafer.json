@@ -1,0 +1,17 @@
+{
+    "type": "advancedrocketry:cuttingmachine",
+    "itemingredients":
+    [
+        {
+
+            "tag": "forge:boules/silicon"
+        }
+    ],
+    "time": 300,
+    "energy": 100,
+    "itemresults":
+    {
+            "item": "advancedrocketry:wafer",
+            "count": 4
+    }
+}

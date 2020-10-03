@@ -34,8 +34,8 @@ public class TileRollingMachine extends TileMultiblockMachine {
 			{'I', Blocks.AIR, LibVulpesBlocks.blockStructureBlock, Blocks.AIR}},
 
 			{{'P', 'L', LibVulpesBlocks.blockStructureBlock, null},
-				{new ResourceLocation("forge","blockcoil"), LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'O'},
-				{new ResourceLocation("forge","blockcoil"), LibVulpesBlocks.motors, LibVulpesBlocks.blockStructureBlock, 'O'}}
+				{new ResourceLocation("forge","coils"), LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'O'},
+				{new ResourceLocation("forge","coils"), LibVulpesBlocks.motors, LibVulpesBlocks.blockStructureBlock, 'O'}}
 	};
 	
 	public TileRollingMachine() {

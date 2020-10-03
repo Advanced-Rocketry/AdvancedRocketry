@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "libvulpes:dusttitanium"
+  },
+  "result": "libvulpes:ingottitanium",
+  "experience": 0.0,
+  "cookingtime": 200
+}

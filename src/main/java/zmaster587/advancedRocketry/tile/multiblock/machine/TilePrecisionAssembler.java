@@ -42,7 +42,7 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 			{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock}},
 
 			{{'c', '*', '*', '*'},
-				{'*', new ResourceLocation("forge","blockcoil"), new ResourceLocation("forge","blockcoil"), '*'},
+				{'*', new ResourceLocation("forge","coils"), new ResourceLocation("forge","coils"), '*'},
 				{'*', LibVulpesBlocks.motors, LibVulpesBlocks.motors, '*'}}};
 
 				

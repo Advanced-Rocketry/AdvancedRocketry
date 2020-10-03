@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients":
+    [
+        
+        {
+
+            "item": "libvulpes:smallbattery"
+        },
+	{
+            "item": "advancedrocketry:circuit_ic_tracking"
+        },
+	{
+            "item": "advancedrocketry:satbay"
+        }
+    ],
+    "result":
+    {
+        "item": "advancedrocketry:stationmarker",
+        "count": 1
+    }
+}

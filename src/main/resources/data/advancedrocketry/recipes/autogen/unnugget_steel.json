@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "forge:nuggets/steel"
+    }
+  ],
+  "result": {
+    "item": "libvulpes:ingotsteel",
+    "count": 9
+  }
+}

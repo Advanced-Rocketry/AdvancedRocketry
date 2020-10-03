@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients":
+    [
+        {
+            "item": "minecraft:magma_cream"
+        },
+        {
+            "item": "minecraft:bricks"
+        }
+    ],
+    "result":
+    {
+        "item": "advancedrocketry:blastbrick",
+        "count": 16
+    }
+}

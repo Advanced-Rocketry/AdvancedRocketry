@@ -1,0 +1,17 @@
+{
+"type": "advancedrocketry:smallplate",
+    "itemingredients":
+    [
+        
+        {
+            "tag": "forge:ores/rutile"
+        }
+    ],
+    "time": 300,
+    "energy": 20,
+    "itemresults":
+    {
+            "tag": "forge:dusts/titanium",
+            "count": 2
+    }
+}

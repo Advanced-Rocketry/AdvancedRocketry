@@ -1,0 +1,46 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"psp",
+	"abc",
+	"iti"
+    ],
+    "key":
+    {
+        "t":
+        {
+            "item": "advancedrocketry:circuit_ic_fluid_io"
+        },
+        "s":
+        {
+            "item": "advancedrocketry:item_ui"
+        },
+	"a":
+        {
+            "item": "advancedrocketry:circuit_ic_item_io"
+        },
+	"b":
+        {
+            "item": "libvulpes:structure_machine"
+        },
+	"c":
+        {
+            "item": "advancedrocketry:circuit_ic_control"
+        },
+	"p":
+        {
+
+            "tag": "forge:gears/steel"
+        },
+	"i":
+        {
+	    "item": "minecraft:iron_block"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:rollingmachine",
+        "count": 1
+    }
+}

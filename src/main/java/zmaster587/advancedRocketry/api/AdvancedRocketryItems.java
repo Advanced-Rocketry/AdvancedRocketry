@@ -316,7 +316,7 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemSensorMicrowave,
 				AdvancedRocketryItems.itemSensorOreMapper,
 				AdvancedRocketryItems.itemBasicCircuitPlate,
-				AdvancedRocketryItems.itemBasicCircuitPlate,
+				AdvancedRocketryItems.itemAdvCircuitPlate,
 				AdvancedRocketryItems.itemICBasic,
 				AdvancedRocketryItems.itemICAdv,
 				AdvancedRocketryItems.itemICTracking,

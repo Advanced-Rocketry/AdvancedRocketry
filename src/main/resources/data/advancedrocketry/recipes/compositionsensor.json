@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"owo",
+        "rpr"
+    ],
+    "key":
+    {
+        "o":
+        {
+	    "item": "advancedrocketry:sensor_optical"
+        },
+        "w":
+        {
+	    "item": "advancedrocketry:circuit_ic_tracking"
+        },
+        "p":
+        {
+	    "item": "advancedrocketry:circuit_ic_basic"
+        },
+        "r":
+        {
+	    "item": "advancedrocketry:wafer"
+        }
+    },
+    "result":
+    {
+	"item": "advancedrocketry:sensor_composition",
+        "count": 1
+    }
+}

@@ -31,7 +31,7 @@ import java.util.List;
 public class TileElectrolyser extends TileMultiblockMachine {
 	public static final Object[][][] structure = { 
 		{{null,null,null},
-		{'P', new ResourceLocation("forge","blockcoil"),'P'}},
+		{'P', new ResourceLocation("forge","coils"),'P'}},
 		
 		{{'l', 'c', 'l'}, 
 			{new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'L', new BlockMeta(LibVulpesBlocks.blockStructureBlock)}},

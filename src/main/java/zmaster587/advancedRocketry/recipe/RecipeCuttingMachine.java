@@ -5,6 +5,8 @@ import zmaster587.libVulpes.recipe.RecipeMachineFactory;
 
 public class RecipeCuttingMachine extends RecipeMachineFactory {
 
+	public static RecipeCuttingMachine INSTANCE = new RecipeCuttingMachine();
+
 	@Override
 	public Class getMachine() {
 		return TileCuttingMachine.class;

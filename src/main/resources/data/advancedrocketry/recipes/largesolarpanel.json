@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients":
+    [
+        {
+	    "item": "advancedrocketry:satellite_power_source_basic"
+        },
+        {
+	    "item": "advancedrocketry:satellite_power_source_basic"
+        },        
+        {
+	    "item": "advancedrocketry:satellite_power_source_basic"
+        },
+	{
+	    "item": "advancedrocketry:satellite_power_source_basic"
+        },
+        {
+	    "item": "advancedrocketry:satellite_power_source_basic"
+        },        
+        {
+	    "item": "advancedrocketry:satellite_power_source_basic"
+        }
+    ],
+    "result":
+    {
+        "item": "advancedrocketry:satellite_power_source_adv",
+        "count": 1
+    }
+}

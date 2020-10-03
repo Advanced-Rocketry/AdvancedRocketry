@@ -1,0 +1,45 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"psp",
+	"abc",
+	"rdr"
+    ],
+    "key":
+    {
+        "r":
+        {
+            "item": "advancedrocketry:circuit_ic_basic"
+        },
+        "s":
+        {
+            "item": "advancedrocketry:item_ui"
+        },
+	"a":
+        {
+            "item": "advancedrocketry:circuit_ic_item_io"
+        },
+	"b":
+        {
+            "item": "libvulpes:structure_machine"
+        },
+	"c":
+        {
+            "item": "advancedrocketry:circuit_ic_control"
+        },
+	"p":
+        {
+            "tag": "forge:plates/gold"
+        },
+	"d":
+        {
+            "item": "advancedrocketry:circuit_ic_fluid_io"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:chemicalreactor",
+        "count": 1
+    }
+}

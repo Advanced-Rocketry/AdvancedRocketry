@@ -1,0 +1,35 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	" c ",
+	"pdp",
+	"psp"
+    ],
+    "key":
+    {
+        "c":
+        {
+            "tag": "forge:coils/copper"
+        },
+	"s":
+        {
+            "item": "libvulpes:structure_machine"
+        },
+	"p":
+        {
+
+            "tag": "forge:plates/aluminum"
+        },
+	"d":
+        {
+
+            "tag": "forge:gems/dilithium"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:forcefieldprojector",
+        "count": 1
+    }
+}

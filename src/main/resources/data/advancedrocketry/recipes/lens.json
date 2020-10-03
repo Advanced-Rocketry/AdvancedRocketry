@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	" g ",
+	"g g"
+    ],
+    "key":
+    {
+        "g":
+        {
+
+            "tag": "forge:glass_panes"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:basiclens",
+        "count": 1
+    }
+}

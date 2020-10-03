@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"s s",
+	"p p",
+	"s s"
+    ],
+    "key":
+    {
+        "s":
+        {
+            "tag": "forge:sticks/steel"
+        },
+	"p":
+        {
+
+            "tag": "forge:plates/steel"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:fueltank",
+        "count": 1
+    }
+}

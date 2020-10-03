@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	" s ",
+	"sps",
+	" s "
+    ],
+    "key":
+    {
+        "s":
+        {
+
+            "tag": "forge:sticks/iron"
+        },
+	"p":
+        {
+
+            "tag": "forge:plates/iron"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:sawbladeiron",
+        "count": 1
+    }
+}

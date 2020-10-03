@@ -1,13 +1,5 @@
 {
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:block/blockpump" },
-        "facing=south,state=false": { "model": "advancedrocketry:block/blockpump", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:block/blockpump", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:block/blockpump", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:block/blockpump" },
-        "facing=south,state=true": { "model": "advancedrocketry:block/blockpump", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:block/blockpump", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:block/blockpump", "y": 90 },
         "facing=north": { "model": "advancedrocketry:block/blockpump" },
         "facing=south": { "model": "advancedrocketry:block/blockpump", "y": 180 },
         "facing=west":  { "model": "advancedrocketry:block/blockpump", "y": 270 },

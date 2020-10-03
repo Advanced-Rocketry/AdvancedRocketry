@@ -1,0 +1,47 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"rsr",
+	"abc",
+	"pgp"
+    ],
+    "key":
+    {
+        "r":
+        {
+            "tag": "forge:sticks/iron"
+        },
+        "s":
+        {
+            "item": "advancedrocketry:item_ui"
+        },
+	"a":
+        {
+            "item": "advancedrocketry:circuit_ic_fluid_io"
+        },
+	"b":
+        {
+            "item": "libvulpes:structure_machine"
+        },
+	"c":
+        {
+            "item": "advancedrocketry:circuit_ic_control"
+        },
+	"g":
+        {
+
+            "tag": "forge:fans/steel"
+        },
+	"p":
+        {
+
+            "tag": "forge:plates/steel"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:centrifuge",
+        "count": 1
+    }
+}

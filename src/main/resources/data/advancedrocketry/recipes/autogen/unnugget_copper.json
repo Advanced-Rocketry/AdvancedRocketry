@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "forge:nuggets/copper"
+    }
+  ],
+  "result": {
+    "item": "libvulpes:ingotcopper",
+    "count": 9
+  }
+}

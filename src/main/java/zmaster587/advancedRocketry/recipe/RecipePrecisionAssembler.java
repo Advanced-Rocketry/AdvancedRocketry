@@ -5,6 +5,8 @@ import zmaster587.libVulpes.recipe.RecipeMachineFactory;
 
 public class RecipePrecisionAssembler extends RecipeMachineFactory {
 
+	public static RecipePrecisionAssembler INSTANCE = new RecipePrecisionAssembler();
+
 	@Override
 	public Class getMachine() {
 		return TilePrecisionAssembler.class;

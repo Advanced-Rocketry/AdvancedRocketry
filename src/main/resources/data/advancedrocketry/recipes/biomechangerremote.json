@@ -1,0 +1,27 @@
+{
+    "type": "advancedrocketry:precisionassembler",
+    "itemingredients":
+    [
+        {
+	    "item": "libvulpes:smallbattery"
+        },
+        {
+	    "item": "advancedrocketry:circuit_ic_adv"
+        },
+	{
+	    "item": "advancedrocketry:item_ui"
+        },
+	{
+	    "item": "advancedrocketry:circuit_ic_tracking"
+        },
+	{
+            "tag": "forge:plates/tin"
+        }
+    ],
+    "time": 1000,
+    "energy": 1,
+    "itemresults":
+    {
+	"item": "advancedrocketry:biomechanger"
+    }
+}

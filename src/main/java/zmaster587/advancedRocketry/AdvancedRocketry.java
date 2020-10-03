@@ -10,6 +10,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
@@ -70,7 +72,16 @@ import zmaster587.advancedRocketry.integration.GalacticCraftHandler;
 import zmaster587.advancedRocketry.mission.MissionGasCollection;
 import zmaster587.advancedRocketry.mission.MissionOreMining;
 import zmaster587.advancedRocketry.network.*;
+import zmaster587.advancedRocketry.recipe.RecipeCentrifuge;
+import zmaster587.advancedRocketry.recipe.RecipeChemicalReactor;
+import zmaster587.advancedRocketry.recipe.RecipeCrystallizer;
+import zmaster587.advancedRocketry.recipe.RecipeCuttingMachine;
 import zmaster587.advancedRocketry.recipe.RecipeElectricArcFurnace;
+import zmaster587.advancedRocketry.recipe.RecipeElectrolyser;
+import zmaster587.advancedRocketry.recipe.RecipeLathe;
+import zmaster587.advancedRocketry.recipe.RecipePrecisionAssembler;
+import zmaster587.advancedRocketry.recipe.RecipeRollingMachine;
+import zmaster587.advancedRocketry.recipe.RecipeSmallPresser;
 import zmaster587.advancedRocketry.satellite.*;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -259,7 +270,31 @@ public class AdvancedRocketry {
         machineRecipes.registerMachine(TileRollingMachine.class);
         machineRecipes.registerMachine(TileCrystallizer.class);
         machineRecipes.registerMachine(TileCentrifuge.class);
+        machineRecipes.registerMachine(BlockPress.class);
 	}
+	
+	@SubscribeEvent
+	public void registerRecipeTypes(RegistryEvent.Register<IRecipeSerializer<?>> event)
+	{
+		event.getRegistry().register(RecipeLathe.INSTANCE.setRegistryName("lathe"));
+		event.getRegistry().register(RecipeRollingMachine.INSTANCE.setRegistryName("rollingmachine"));
+		event.getRegistry().register(RecipeCrystallizer.INSTANCE.setRegistryName("crystallizer"));
+		event.getRegistry().register(RecipeSmallPresser.INSTANCE.setRegistryName("smallplate"));
+		event.getRegistry().register(RecipeCuttingMachine.INSTANCE.setRegistryName("cuttingmachine"));
+		event.getRegistry().register(RecipePrecisionAssembler.INSTANCE.setRegistryName("precisionassembler"));
+		event.getRegistry().register(RecipeElectricArcFurnace.INSTANCE.setRegistryName("electricarcfurnace"));
+		event.getRegistry().register(RecipeChemicalReactor.INSTANCE.setRegistryName("chemicalreactor"));
+		event.getRegistry().register(RecipeCentrifuge.INSTANCE.setRegistryName("centrifuge"));
+		event.getRegistry().register(RecipeElectrolyser.INSTANCE.setRegistryName("electrolyser"));
+	}
+	
+    public void registerRecipes()
+    {
+        //GameRegistry.addSmelting(MaterialRegistry.getMaterialFromName("Dilithium").getProduct(AllowedProducts.getProductByName("ORE")), MaterialRegistry.getMaterialFromName("Dilithium").getProduct(AllowedProducts.getProductByName("DUST")), 0);
+
+        //Register the machine recipes
+        machineRecipes.registerAllMachineRecipes();
+    }
 	
 	@SubscribeEvent
 	public void registerEntities(RegistryEvent.Register<EntityType<?>> event)
@@ -385,7 +420,7 @@ public class AdvancedRocketry {
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockDataBus, true));
 		TileMultiBlock.addMapping('D', list);
 		
-		machineRecipes.createAutoGennedRecipes(modProducts);
+		//machineRecipes.createAutoGennedRecipes(modProducts);
 		
         //Register the machine recipes
         machineRecipes.registerAllMachineRecipes();
@@ -396,7 +431,7 @@ public class AdvancedRocketry {
 	public void postInit(FMLLoadCompleteEvent event)
 	{
 		//Biomes --------------------------------------------------------------------------------------
-
+		registerRecipes();
 		List<? extends CharSequence> biomeBlackList = ARConfiguration.getCurrentConfig().biomeBlackList.get();
 		List<? extends CharSequence> biomeHighPressure = ARConfiguration.getCurrentConfig().biomeHighPressure.get();
 		List<? extends CharSequence> biomeSingle = ARConfiguration.getCurrentConfig().biomeSingle.get();
@@ -526,7 +561,7 @@ public class AdvancedRocketry {
 		//Register mixed material's recipes
 		int mixedMetalCount = 0;
 		for(MixedMaterial material : MaterialRegistry.getMixedMaterialList()) {
-			RecipesMachine.getInstance().addRecipe(new ResourceLocation("advancedrocketry", "mixed_metal_auto_" + mixedMetalCount), RecipeElectricArcFurnace.INSTANCE,  material.getMachine(), material.getProducts(), 100, 10, material.getInput());
+			//RecipesMachine.getInstance().addRecipe(new ResourceLocation("advancedrocketry", "mixed_metal_auto_" + mixedMetalCount), RecipeElectricArcFurnace.INSTANCE,  material.getMachine(), material.getProducts(), 100, 10, material.getInput());
 		}
 
 		//Register space dimension

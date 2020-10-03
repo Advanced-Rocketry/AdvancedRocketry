@@ -1,0 +1,36 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"bfb",
+	"bmb",
+	"btb"
+    ],
+    "key":
+    {
+        "f":
+        {
+
+            "tag": "forge:fans/steel"
+        },
+	"b":
+        {
+            "item": "minecraft:iron_bars"
+        },
+	"m":
+        {
+
+            "tag": "forge:motors"
+        },
+	"t":
+        {
+
+            "tag": "forge:ingots/carbon"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:oxygenscrubber",
+        "count": 1
+    }
+}
