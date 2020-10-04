@@ -47,6 +47,14 @@ public class AstronomicalBodyHelper {
 			lightMultiplier  *=0.25;
 		//Returns ratio compared to a planet at 1 AU for Sol, because the other values in AR are normalized,
 		//and this works fairly well for hooking into with other mod's solar panels & such
-		return (lightMultiplier * ((Math.pow(star.getSize(), 2) * Math.pow(normalizedStarTemperature, 4))/Math.pow(planetaryOrbitalRadius, 2)));
+		return (lightMultiplier * (
+				(Math.pow(star.getSize(), 2) * Math.pow(normalizedStarTemperature, 4))
+						/Math.pow(planetaryOrbitalRadius, 2)));
+	}
+	public static double getPlanetaryLightLevelMultiplier(double stellarBrightnessMultiplier) {
+		double log2Multiplier = (Math.log10(stellarBrightnessMultiplier)/Math.log10(2.0));
+		//Returns the brightness visible to the eye, compared to the actual flux - this is a factor of ~1.5x for every 2x increase in luminosity
+        //This is used for planetary light levels, as those would be eyesight based unlike the stellar brightness or similar
+		return Math.pow(1.5, log2Multiplier);
 	}
 }

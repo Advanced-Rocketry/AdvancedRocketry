@@ -237,7 +237,8 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 		f2 = 1.0F - f2;
 
 		//Vary brightness depending upon sun luminosity and planet distance
-		f2 *= (float)AstronomicalBodyHelper.getStellarBrightness(star, properties.getSolarOrbitalDistance());
+		//This takes into account how eyes work, that they're not linear in sensing light
+		f2 *= (float)AstronomicalBodyHelper.getPlanetaryLightLevelMultiplier(AstronomicalBodyHelper.getStellarBrightness(star, properties.getSolarOrbitalDistance()));
 		
 		//Eclipse handling
 		if(this.world.isRemote) {
