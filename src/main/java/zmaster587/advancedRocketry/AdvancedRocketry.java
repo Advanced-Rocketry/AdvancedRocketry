@@ -92,6 +92,7 @@ import zmaster587.advancedRocketry.tile.multiblock.machine.*;
 import zmaster587.advancedRocketry.util.*;
 import zmaster587.advancedRocketry.world.decoration.MapGenLander;
 import zmaster587.advancedRocketry.world.decoration.StructurePieceGeode;
+import zmaster587.advancedRocketry.world.gen.ore.OreGen;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesItems;
 import zmaster587.libVulpes.api.material.AllowedProducts;
@@ -432,6 +433,7 @@ public class AdvancedRocketry {
 	{
 		//Biomes --------------------------------------------------------------------------------------
 		registerRecipes();
+		OreGen.injectOreGen();
 		List<? extends CharSequence> biomeBlackList = ARConfiguration.getCurrentConfig().biomeBlackList.get();
 		List<? extends CharSequence> biomeHighPressure = ARConfiguration.getCurrentConfig().biomeHighPressure.get();
 		List<? extends CharSequence> biomeSingle = ARConfiguration.getCurrentConfig().biomeSingle.get();
