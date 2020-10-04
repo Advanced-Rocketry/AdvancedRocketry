@@ -42,9 +42,14 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 	private VertexBuffer starGLCallList;
 	private VertexBuffer glSkyList;
 	private VertexBuffer glSkyList2;
+	private VertexBuffer glSkyList3;
 	ResourceLocation currentlyBoundTex = null;
 	float celestialAngle;
 	Vector3F<Float> axis;
+	
+	public static final  ResourceLocation asteroid1 = new ResourceLocation("advancedrocketry:textures/planets/asteroid_a.png");
+	public static final  ResourceLocation asteroid2 = new ResourceLocation("advancedrocketry:textures/planets/asteroid_b.png");
+	public static final  ResourceLocation asteroid3 = new ResourceLocation("advancedrocketry:textures/planets/asteroid_c.png");
 
 	//Mostly vanilla code
 	//TODO: make usable on other planets
@@ -54,6 +59,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 		this.generateStars();
 		this.generateSky();
 		this.generateSky2();
+		this.generateAsteroids();
 	}
 
 	private void generateSky2() {
@@ -163,6 +169,74 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 		}
 	}
 
+
+	private void generateAsteroids() {
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder bufferbuilder = tessellator.getBuffer();
+		if (this.glSkyList3 != null) {
+			this.glSkyList3.close();
+		}
+
+		this.glSkyList3 = new VertexBuffer(DefaultVertexFormats.POSITION_TEX);
+		this.renderAsteroids(bufferbuilder);
+		this.glSkyList3.upload(bufferbuilder);
+	}
+	
+	private void renderAsteroids(BufferBuilder buffer)
+	{
+		Random random = new Random(10843L);
+		buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+		
+		for (int i = 0; i < 200; ++i)
+		{
+			double d0 = (double)(random.nextFloat()*2F - 1F);
+			double d1 = (double)(random.nextFloat()*1F - .5F);
+			double d2 = (double)(random.nextFloat()*2F - 1F);
+			double size = (double)(0.15F + random.nextFloat());
+			double d4 = d0 * d0 + d1 * d1 + d2 * d2;
+
+			if (d4 < 1.0D && d4 > 0.01D)
+			{
+				d4 = 0.5D / Math.sqrt(d4);
+				d0 *= d4;
+				d1 *= d4;
+				d2 *= d4;
+				double d5 = d0 * 100.0D;
+				double d6 = d1 * 100.0D;
+				double d7 = d2 * 100.0D;
+				double d8 = Math.atan2(d0, d2);
+				double d9 = Math.sin(d8);
+				double d10 = Math.cos(d8);
+				double d11 = Math.atan2(Math.sqrt(d0 * d0 + d2 * d2), d1);
+				double d12 = Math.sin(d11);
+				double d13 = Math.cos(d11);
+				double d14 = random.nextDouble() * Math.PI * 2.0D;
+				double d15 = Math.sin(d14);
+				double d16 = Math.cos(d14);
+				
+				float r,g,b;
+				r = random.nextFloat()*0.05f + .95f;
+				g = random.nextFloat()*0.1f + .9f;
+				b = random.nextFloat()*0.1f + .9f;
+
+				for (int j = 0; j < 4; ++j)
+				{
+					double d17 = 0.0D;
+					double d18 = (double)((j & 2) - 1) * size;
+					double d19 = (double)((j + 1 & 2) - 1) * size;
+					double d20 = d18 * d16 - d19 * d15;
+					double d21 = d19 * d16 + d18 * d15;
+					double d22 = d20 * d12 + d17 * d13;
+					double d23 = d17 * d12 - d20 * d13;
+					double d24 = d23 * d9 - d21 * d10;
+					double d25 = d21 * d9 + d23 * d10;
+					buffer.pos(d5 + d24, d6 + d22, d7 + d25).tex( (float)(d18/(size*2) + .5f),  (float)(d19/(size*2) +.5f) ).color(r, g, b, 1f).endVertex();
+				}
+			}
+		}
+		buffer.finishDrawing();
+	}
+	
 	Minecraft mc = Minecraft.getInstance();
 
 
@@ -550,10 +624,10 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			renderPlanet(buffer, matrix, moons, moons.getParentOrbitalDistance()*moons.gravitationalMultiplier, multiplier, rotation, moons.hasAtmosphere(), moons.hasRings);
 			matrix.pop();
 		}
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.disableBlend();
-        RenderSystem.enableAlphaTest();
-        RenderSystem.enableFog();
+		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.disableBlend();
+		RenderSystem.enableAlphaTest();
+		RenderSystem.enableFog();
 
 		matrix.pop();
 		RenderSystem.disableTexture();
@@ -561,18 +635,50 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 
 		double d0 = this.mc.player.getPosYEye() - world.getWorldInfo().func_239159_f_();
 
-        if (d0 < 0.0D) {
-            matrix.push();
-            matrix.translate(0.0D, 12.0D, 0.0D);
-            this.glSkyList2.bindBuffer();
-            this.skyVertexFormat.setupBufferState(0L);
-            this.glSkyList2.draw(matrix.getLast().getMatrix(), 7);
-            VertexBuffer.unbindBuffer();
-            this.skyVertexFormat.clearBufferState();
-            matrix.pop();
-         }
+		if (d0 < 0.0D && !properties.isAsteroid() && !properties.isStation()) {
+			matrix.push();
+			matrix.translate(0.0D, 12.0D, 0.0D);
+			this.glSkyList2.bindBuffer();
+			this.skyVertexFormat.setupBufferState(0L);
+			this.glSkyList2.draw(matrix.getLast().getMatrix(), 7);
+			VertexBuffer.unbindBuffer();
+			this.skyVertexFormat.clearBufferState();
+			matrix.pop();
+		}
 
 		RenderSystem.enableTexture();
+
+
+		RenderSystem.enableTexture();
+
+		if(properties.isAsteroid())
+		{
+			mc.getTextureManager().bindTexture(asteroid1);
+			RenderSystem.color3f(1, 1, 1);
+			glSkyList3.bindBuffer();
+			DefaultVertexFormats.POSITION_TEX.setupBufferState(0L);
+			glSkyList3.draw(matrix.getLast().getMatrix(), 7);
+			VertexBuffer.unbindBuffer();
+			DefaultVertexFormats.POSITION_TEX.clearBufferState();
+
+			matrix.push();
+			GL11.glRotatef(90, 0.2f, 0.8f, 0);
+			mc.getTextureManager().bindTexture(asteroid2);
+			glSkyList3.bindBuffer();
+			DefaultVertexFormats.POSITION_TEX.setupBufferState(0L);
+			glSkyList3.draw(matrix.getLast().getMatrix(), 7);
+			VertexBuffer.unbindBuffer();
+			DefaultVertexFormats.POSITION_TEX.clearBufferState();
+			GL11.glRotatef(90, 0.2f, 0.8f, 0);
+			mc.getTextureManager().bindTexture(asteroid3);
+			glSkyList3.bindBuffer();
+			DefaultVertexFormats.POSITION_TEX.setupBufferState(0L);
+			glSkyList3.draw(matrix.getLast().getMatrix(), 7);
+			VertexBuffer.unbindBuffer();
+			DefaultVertexFormats.POSITION_TEX.clearBufferState();
+			matrix.pop();
+		}
+
 		RenderSystem.depthMask(true);
 
 		RocketEventHandler.onPostWorldRender(matrix, partialTicks);
