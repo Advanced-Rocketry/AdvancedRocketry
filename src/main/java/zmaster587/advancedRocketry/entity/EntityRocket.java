@@ -1154,6 +1154,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				    if (getFuelAmountBipropellant() == 0 && getFuelAmountMonopropellant() == 0) {
 				    	stats.setFuelFluid("null");
 					}
+					if (getFuelAmountOxidizer() == 0) {
+						stats.setOxidizerFluid("null");
+					}
 				}
 
 				runEngines();
