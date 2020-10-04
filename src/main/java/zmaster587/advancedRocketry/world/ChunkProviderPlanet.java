@@ -78,7 +78,7 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 	        return p_242488_0_.starts;
 	      }),
 				Codec.STRING.fieldOf("dimension_props").forGetter((p_236090_0_) -> {
-					return p_236090_0_.dimensionProps.getId().toString();
+					return p_236090_0_.dimensionId.toString();
 				})).apply(p_236091_0_, p_236091_0_.stable(ChunkProviderPlanet::new));
 	});
 	private static final float[] field_222561_h = Util.make(new float[13824], (p_236094_0_) -> {
@@ -119,23 +119,24 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 	private final long seed;
 	protected final Supplier<DimensionSettings> dimensionSettings;
 	private final int field_236085_x_;
-	DimensionProperties dimensionProps;
+	DimensionProperties cachedDimensionProps;
+	ResourceLocation dimensionId;
 	private final DimensionStructuresSettings settings;
 	private final List<Supplier<StructureFeature<?, ?>>> starts;
 
-	public ChunkProviderPlanet(BiomeProvider biomeProvider, long seed, Supplier<DimensionSettings> settings, List<Supplier<StructureFeature<?, ?>>> starts, DimensionProperties dimensionProps) {
+	public ChunkProviderPlanet(BiomeProvider biomeProvider, long seed, Supplier<DimensionSettings> settings, List<Supplier<StructureFeature<?, ?>>> starts, ResourceLocation dimensionProps) {
 		this(biomeProvider, biomeProvider, seed, settings, starts, dimensionProps);
 	}
 
 	public ChunkProviderPlanet(BiomeProvider biomeProvider, long seed, Supplier<DimensionSettings> settings, List<Supplier<StructureFeature<?, ?>>> starts, String dimensionProps) {
-		this(biomeProvider, biomeProvider, seed, settings, starts, DimensionManager.getInstance().getDimensionProperties(new ResourceLocation(dimensionProps)));
+		this(biomeProvider, biomeProvider, seed, settings, starts, new ResourceLocation(dimensionProps));
 	}
 
-	private ChunkProviderPlanet(BiomeProvider biomeProvider, BiomeProvider biomeProvider2, long seed, Supplier<DimensionSettings> settings, List<Supplier<StructureFeature<?, ?>>> starts, DimensionProperties dimensionProps) {
+	private ChunkProviderPlanet(BiomeProvider biomeProvider, BiomeProvider biomeProvider2, long seed, Supplier<DimensionSettings> settings, List<Supplier<StructureFeature<?, ?>>> starts, ResourceLocation dimensionProps) {
 		super(biomeProvider, biomeProvider2, settings.get().func_236108_a_(), seed);
 		this.seed = seed;
 		this.settings = settings.get().func_236108_a_();
-		this.dimensionProps = dimensionProps;
+		dimensionId = dimensionProps;
 		DimensionSettings dimensionsettings = settings.get();
 		this.dimensionSettings = settings;
 		NoiseSettings noisesettings = dimensionsettings.func_236113_b_();
@@ -143,8 +144,8 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 		this.verticalNoiseGranularity = noisesettings.func_236175_f_() * 4;
 		this.horizontalNoiseGranularity = noisesettings.func_236174_e_() * 4;
 		//TODO: ASM this
-		this.defaultBlock = dimensionProps.getStoneBlock() != null ? dimensionProps.getStoneBlock() : dimensionsettings.func_236115_c_();
-		this.defaultFluid = dimensionProps.getOceanBlock() != null ? dimensionProps.getOceanBlock() : dimensionsettings.func_236116_d_();
+		this.defaultBlock = dimensionsettings.func_236115_c_();
+		this.defaultFluid = dimensionsettings.func_236116_d_();
 		this.noiseSizeX = 16 / this.horizontalNoiseGranularity;
 		this.noiseSizeY = noisesettings.func_236169_a_() / this.verticalNoiseGranularity;
 		this.noiseSizeZ = 16 / this.horizontalNoiseGranularity;
@@ -170,9 +171,18 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 		return planetCodec;
 	}
 
+	
+	private DimensionProperties getDimensionProperties()
+	{
+		if(cachedDimensionProps == null || !cachedDimensionProps.getId().equals(dimensionId))
+			cachedDimensionProps = DimensionManager.getInstance().getDimensionProperties(dimensionId);
+		
+		return cachedDimensionProps;
+	}
+	
 	@OnlyIn(Dist.CLIENT)
 	public ChunkGenerator func_230349_a_(long p_230349_1_) {
-		return new ChunkProviderPlanet(this.biomeProvider.func_230320_a_(p_230349_1_), p_230349_1_, this.dimensionSettings, this.starts, dimensionProps);
+		return new ChunkProviderPlanet(this.biomeProvider.func_230320_a_(p_230349_1_), p_230349_1_, this.dimensionSettings, this.starts, dimensionId);
 	}
 
 	public boolean func_236088_a_(long p_236088_1_, RegistryKey<DimensionSettings> p_236088_3_) {
@@ -651,7 +661,7 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 	}
 
 	public int func_230356_f_() {
-		return this.dimensionProps.getSeaLevel();
+		return getDimensionProperties().getSeaLevel();
 	}
 
 	public List<MobSpawnInfo.Spawners> func_230353_a_(Biome p_230353_1_, StructureManager p_230353_2_, EntityClassification p_230353_3_, BlockPos p_230353_4_) {
@@ -684,7 +694,7 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 
 	public void func_230354_a_(WorldGenRegion p_230354_1_) {
 		//TODO: asm this
-		if (this.dimensionProps.isHabitable()) {
+		if (getDimensionProperties().isHabitable()) {
 			int i = p_230354_1_.getMainChunkX();
 			int j = p_230354_1_.getMainChunkZ();
 			Biome biome = p_230354_1_.getBiome((new ChunkPos(i, j)).asBlockPos());
