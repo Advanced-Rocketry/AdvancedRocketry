@@ -171,6 +171,10 @@ public interface IDimensionProperties {
 	 */
 	public int getOrbitalDist();
 
+	/**
+	 * @return temperature of the planet in Kelvin
+	 */
+	public int getAverageTemp();
 	
 	/**
 	 * @return depth in the tree planet is.  If the planet orbits the star directly, the result is 0, the moon 1, the moon of a moon 2, etc
