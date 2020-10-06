@@ -607,8 +607,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 
 		for(DimensionProperties moons : children) {
 			matrix.push();
-
-			moons.orbitalPhi = 10;
+			
 			double rot = ((partialTicks*moons.orbitTheta + ((1-partialTicks)*moons.prevOrbitalTheta)) * 180F/Math.PI);
 
 			matrix.rotate(new Quaternion(0, 0, (float)moons.orbitalPhi,true));
