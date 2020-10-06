@@ -113,11 +113,11 @@ repositories {
 //    ivy {
 //            name "EnderIO"
 //            artifactPattern "https://addons-origin.cursecdn.com/files/2238/375/[module]-[revision].[ext]"
-//        }
+//        }*/
     ivy {
             name "LibVulpes"
-            artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/1.12/" + project.libVulpesBuildNum +"/artifact/output/[module]-[revision].[ext]"
-        }*/
+            artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/1.16/" + project.libVulpesBuildNum +"/artifact/output/[module]-[revision].[ext]"
+        }
 	flatDir {
 	    dirs 'libs'
 	}
@@ -128,7 +128,7 @@ dependencies {
     //compile name: 'industrialcraft-2', version: '2.7.39-ex111-api', ext: 'jar'
     //compile name: 'Tesla', version: '1.11-1.3.0.51-deobf', ext: 'jar'
     //compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
-    //compile name: 'LibVulpes', version: '1.12.2-' + project.libVulpesVersion  + '-' + project.libVulpesBuildNum + '-deobf', ext: 'jar'
+    compile name: 'LibVulpes', version: '1.16.2-' + project.libVulpesVersion  + '-' + project.libVulpesBuildNum + '-deobf', ext: 'jar'
     //compile name: 'GalacticraftCore', version: '1.12.2-4.0.1.174', ext: 'jar'
     
     // compile against the JEI API
@@ -139,9 +139,6 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-    
-    compile name:'LibVulpes', version: '1.16.2-0.4.2-deobf', ext:'jar'
-
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
