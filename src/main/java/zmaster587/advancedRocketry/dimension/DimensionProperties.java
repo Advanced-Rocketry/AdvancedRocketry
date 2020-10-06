@@ -1630,6 +1630,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 */
 	@Override
 	public int getAverageTemp() {
+		averageTemperature = AstronomicalBodyHelper.getAverageTemperature(this.getStar(), this.getSolarOrbitalDistance(), this.getAtmosphereDensity());
 		return averageTemperature;
 	}
 
