@@ -1904,7 +1904,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	/**
 	 * @return temperature of the planet in Kelvin
 	 */
-
+    @Override
 	public int getAverageTemp() {
 		averageTemperature = AstronomicalBodyHelper.getAverageTemperature(this.getStar(), this.getSolarOrbitalDistance(), this.getAtmosphereDensity());
 		return averageTemperature;
