@@ -20,12 +20,14 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.0'
 group= "zmaster587.advancedRocketry" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "AdvancedRocketry"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
+apply from: "gradle/scripts/getbuildnumber.gradle"
+apply from: "gradle/scripts/jars.gradle"
+apply from: "gradle/scripts/version.gradle"
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
     // The mappings can be changed at any time, and must be in the following format.
@@ -147,7 +149,7 @@ jar {
         attributes([
             "Specification-Title": "advancedrockety",
             "Specification-Vendor": "zmaster587",
-            "Specification-Version": "1", // We are version 1 of ourselves
+            "Specification-Version": version_major, // We are version 1 of ourselves
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"zmaster587",
@@ -156,6 +158,27 @@ jar {
             //'FMLCorePluginContainsFMLMod': 'true'
         ])
     }
+}
+
+task deobfJar(type: Jar) {
+     from sourceSets.main.output
+     //if project name is BBM-Dev it makes the deobf jar deobf-dev if not its just deobf
+     classifier = "deobf"
+     destinationDir = file 'output'
+     manifest {
+        attributes 'FMLCorePlugin': 'zmaster587.advancedRocketry.asm.AdvancedRocketryPlugin'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+	attributes([
+            "Specification-Title": "AdvancedRocketry",
+            "Specification-Vendor": "zmaster587",
+            "Specification-Version": version_major, // We are version 1 of ourselves
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor" :"zmaster587",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+     mustRunAfter "jar" 
 }
 
 // Example configuration to allow publishing using the maven-publish task
