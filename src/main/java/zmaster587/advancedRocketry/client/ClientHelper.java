@@ -7,6 +7,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IDayTimeReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.client.render.planet.ISkyRenderer;
@@ -17,7 +19,7 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 
 public class ClientHelper {
 
-
+	@OnlyIn(Dist.CLIENT)
 	public static boolean callCustomSkyRenderer(MatrixStack matrix, float partialTicks)
 	{
 		World world = Minecraft.getInstance().world;

@@ -1,13 +1,10 @@
 package zmaster587.advancedRocketry.event;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.PortalInfo;
-import net.minecraft.block.TorchBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,8 +23,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -39,22 +34,15 @@ import net.minecraftforge.event.TickEvent.ServerTickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent.CheckSpawn;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent.ClientCustomPayloadLoginEvent;
-import net.minecraftforge.fml.network.NetworkEvent.GatherLoginPayloadsEvent;
 import net.minecraftforge.fml.network.NetworkEvent.ServerCustomPayloadLoginEvent;
-
-import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -64,40 +52,28 @@ import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
-import zmaster587.advancedRocketry.client.ClientRenderHelper;
-import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.network.PacketAsteroidInfo;
 import zmaster587.advancedRocketry.network.PacketConfigSync;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
-import zmaster587.advancedRocketry.util.AsteroidSmall;
-import zmaster587.advancedRocketry.util.BiomeHandler;
 import zmaster587.advancedRocketry.util.GravityHandler;
 import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
 import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
 import zmaster587.libVulpes.api.IModularArmor;
-import zmaster587.libVulpes.event.BucketHandler;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.ZUtils;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Map.Entry;
 
 public class PlanetEventHandler {
 
@@ -230,6 +206,7 @@ public class PlanetEventHandler {
 	}
 
 	@SubscribeEvent
+	@OnlyIn(value=Dist.CLIENT)
 	public void disconnected(LoggedOutEvent event) {
 		// Reload configs from disk
 		ARConfiguration.useClientDiskConfig();
@@ -284,6 +261,7 @@ public class PlanetEventHandler {
 	}
 
 	@SubscribeEvent
+	@OnlyIn(value=Dist.CLIENT)
 	public void tickClient(TickEvent.ClientTickEvent event) {
 		if(event.phase == event.phase.END)
 			DimensionManager.getInstance().tickDimensionsClient();
@@ -313,6 +291,7 @@ public class PlanetEventHandler {
 		PacketHandler.sendToDispatcher(new PacketDimInfo(DimensionManager.getInstance().overworldProperties.getId(), DimensionManager.overworldProperties), mgr);
 	}
 
+	@OnlyIn(value=Dist.CLIENT)
 	public void connectToServer(ClientCustomPayloadLoginEvent event)
 	{
 		zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().unregisterAllDimensions();
@@ -409,29 +388,6 @@ public class PlanetEventHandler {
 				}
 			}
 		}
-	}
-
-	@SubscribeEvent
-	public void chunkLoadEvent(PopulateChunkEvent.Post event) {
-		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().allowTerraforming && event.getWorld().provider.getClass() == WorldProviderPlanet.class) {
-
-			if(DimensionManager.getInstance().getDimensionProperties(event.getWorld().provider.getDimension()).isTerraformed()) {
-				Chunk chunk = event.getWorld().getChunkFromChunkCoords(event.getChunkX(), event.getChunkZ());
-				modifyChunk(event.getWorld(), (WorldProviderPlanet) event.getWorld().provider, chunk);
-			}
-		}
-	}
-
-	@SubscribeEvent
-	public void chunkLoadEvent(ChunkEvent.Load event) {
-	}
-
-	public static void modifyChunk(World world ,WorldProviderPlanet provider, Chunk chunk) {
-		for(int x = 0; x < 16; x++) {
-			for(int z = 0; z < 16; z++) {
-				BiomeHandler.changeBiome(world, Biome.getIdForBiome(((ChunkManagerPlanet)((WorldProviderPlanet)world.provider).chunkMgrTerraformed).getBiomeGenAt(x + chunk.x*16,z + chunk.z*16)), chunk, x + chunk.x* 16, z + chunk.z*16);
-			}
-		}
 	}*/
 
 
@@ -506,7 +462,7 @@ public class PlanetEventHandler {
 	}
 
 
-	//Make sure the player doesnt die on low gravity worlds
+	//Make sure the player doesn't die on low gravity worlds
 	@SubscribeEvent
 	public void fallEvent(LivingFallEvent event) {
 		if(DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(event.getEntity().world))) {
