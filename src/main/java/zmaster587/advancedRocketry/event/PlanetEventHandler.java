@@ -452,7 +452,8 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	public void worldSaveEvent(WorldEvent.Save event) {
 		//TODO: save only the one dimension
-		if(event.getWorld().func_230315_m_().func_242725_p() == DimensionType.field_242710_a)
+		
+		if(event.getWorld() instanceof World && ZUtils.getDimensionIdentifier((World)event.getWorld()).equals(DimensionType.field_242710_a))
 			try {
 				DimensionManager.getInstance().saveDimensions(DimensionManager.workingPath);
 			} catch (Exception e) {

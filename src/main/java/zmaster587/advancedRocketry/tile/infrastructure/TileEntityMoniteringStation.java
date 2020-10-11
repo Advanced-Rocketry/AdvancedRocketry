@@ -249,7 +249,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 			int minutes = (time/60) % 60;
 			int hours = time/3600;
 			
-			missionText.setText(((SatelliteBase)mission).getName() + LibVulpes.proxy.getLocalizedString("msg.monitoringstation.progress") + String.format("\n%02dhr:%02dm:%02ds", hours, minutes, seconds));
+			missionText.setText(((SatelliteBase)mission).getName() + " " + LibVulpes.proxy.getLocalizedString("msg.monitoringstation.progress") + String.format("\n%02dhr:%02dm:%02ds", hours, minutes, seconds));
 		}
 		else
 			missionText.setText(LibVulpes.proxy.getLocalizedString("msg.monitoringstation.missionprogressna"));

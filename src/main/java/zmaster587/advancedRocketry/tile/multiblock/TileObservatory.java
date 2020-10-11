@@ -343,7 +343,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 				
 				float time = asteroidSmol.timeMultiplier;
 				
-				buttonList.add(new ModuleText(0, 24*(1+(g/3)), String.format("%s\n%.2fx", LibVulpes.proxy.getLocalizedString("msg.observetory.text.missionTime") ,time), 0x2f2f2f));
+				buttonList.add(new ModuleText(0, 24*(1+(g/3)), String.format("%s\n%.2fx", LibVulpes.proxy.getLocalizedString("msg.observetory.text.missiontime") ,time), 0x2f2f2f));
 			}
 			
 			
@@ -516,7 +516,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			lastType = buttonType.get(lastButton - LIST_OFFSET);
 			markDirty();
 			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 2);
-			NetworkHooks.openGui((ServerPlayerEntity) player, this, getPos());
+			NetworkHooks.openGui((ServerPlayerEntity) player, this, (net) -> {net.writeInt(getModularInvType().ordinal()); net.writeBlockPos(getPos()); });
 
 		}
 		else if(id == SEED_CHANGE) {
@@ -527,7 +527,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 				extractData(dataConsumedPerRefresh, DataType.DISTANCE, Direction.UP, true);
 				world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 2);
 				markDirty();
-				NetworkHooks.openGui((ServerPlayerEntity) player, this, getPos());
+				NetworkHooks.openGui((ServerPlayerEntity) player, this, (net) -> {net.writeInt(getModularInvType().ordinal()); net.writeBlockPos(getPos()); });
 			}
 
 

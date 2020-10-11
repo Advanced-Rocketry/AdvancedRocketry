@@ -16,7 +16,7 @@ public class DataStorage {
 		MASS;
 
 		public String toString() {
-			return "data." + name().toLowerCase(Locale.ENGLISH) + ".name";
+			return "data." + name().toLowerCase(Locale.ENGLISH);
 		};
 	}
 

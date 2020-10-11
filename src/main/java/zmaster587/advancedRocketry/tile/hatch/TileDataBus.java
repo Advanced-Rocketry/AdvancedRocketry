@@ -63,7 +63,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.loader.0.name";
+		return "block.advancedrocketry.databus";
 	}
 
 	@Override

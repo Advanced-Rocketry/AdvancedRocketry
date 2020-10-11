@@ -112,6 +112,7 @@ import zmaster587.advancedRocketry.client.ClientProxy;
 import zmaster587.advancedRocketry.command.PlanetCommand;
 
 import java.io.*;
+import java.nio.file.FileSystem;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -235,6 +236,10 @@ public class AdvancedRocketry {
 		//TileEntity Registration ---------------------------------------------------------------------------------------------
 
 		//Register machine recipes
+		File dir = new File( "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder);
+		if(!dir.exists())
+			dir.mkdir();
+		
 		LibVulpes.registerRecipeHandler(TileCuttingMachine.class, "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/CuttingMachine.xml");
 		LibVulpes.registerRecipeHandler(TilePrecisionAssembler.class, "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/PrecisionAssembler.xml");
 		LibVulpes.registerRecipeHandler(TileChemicalReactor.class, "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/ChemicalReactor.xml");

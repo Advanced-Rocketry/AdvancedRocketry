@@ -175,7 +175,10 @@ public class XMLPlanetLoader {
 			nameNode = planetNode.getAttributes().getNamedItem(ATTR_DIMID);
 			if(nameNode != null && !nameNode.getNodeValue().isEmpty()) {
 				try {
-					properties.setId(new ResourceLocation(Constants.PLANET_NAMESPACE, nameNode.getTextContent().replace("planet:", "")));
+					if(!nameNode.getTextContent().contains(":") || nameNode.getTextContent().startsWith("planet:"))
+						properties.setId(new ResourceLocation(Constants.PLANET_NAMESPACE, nameNode.getTextContent().replace("planet:", "")));
+					else
+						properties.setId(new ResourceLocation(nameNode.getTextContent()));
 					//We're not using the offset so decrement to prepare for next planet
 					offset--;
 				} catch (ResourceLocationException e) {
@@ -823,7 +826,11 @@ public class XMLPlanetLoader {
 	{
 		Element nodePlanet = doc.createElement(ELEMENT_PLANET);
 		nodePlanet.setAttribute(ATTR_NAME, properties.getName());
-		nodePlanet.setAttribute(ATTR_DIMID, properties.getId().getPath());
+		if(properties.getId().getNamespace().equals(Constants.PLANET_NAMESPACE))
+			nodePlanet.setAttribute(ATTR_DIMID, properties.getId().getPath());
+		else
+			nodePlanet.setAttribute(ATTR_DIMID, properties.getId().toString());
+		
 		if(!properties.isNativeDimension)
 			nodePlanet.setAttribute(ATTR_NATIVEDIM, "");
 		if (!properties.customIcon.isEmpty())

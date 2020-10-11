@@ -1256,6 +1256,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 
 			this.remove();
+			return;
 			//TODO: Move tracking stations over to the mission handler
 		}
 		else {

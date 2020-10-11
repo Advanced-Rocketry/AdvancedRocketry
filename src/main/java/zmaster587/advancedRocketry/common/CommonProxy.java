@@ -1,10 +1,13 @@
 package zmaster587.advancedRocketry.common;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.Dimension;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -13,6 +16,7 @@ import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.network.PacketLaserGun;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.util.ZUtils;
 
 public class CommonProxy {
 
@@ -55,8 +59,13 @@ public class CommonProxy {
 	}
 
 	public long getWorldTimeUniversal() {
-		ServerLifecycleHooks.getCurrentServer().getServerTime();
-		return 0;
+		
+		try {
+			
+			return ZUtils.getWorld(Dimension.field_236053_b_.getRegistryName()).getGameTime();
+		} catch (NullPointerException e) {
+			return 0;
+		}
 	}
 
 	public void preinit() {

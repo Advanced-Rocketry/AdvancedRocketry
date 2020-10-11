@@ -49,7 +49,7 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 		
 		satelliteProperties.setId(zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getNextSatelliteId());
 
-		startWorldTime = entity.world.getServer().getServerTime();
+		startWorldTime = AdvancedRocketry.proxy.getWorldTimeUniversal();
 		this.duration = duration;
 		this.launchDimension = ZUtils.getDimensionIdentifier(entity.world);
 		rocketStorage = entity.storage;
@@ -82,7 +82,7 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 
 	@Override
 	public String getName() {
-		return LibVulpes.proxy.getLocalizedString("mission.asteroidmining.name");
+		return LibVulpes.proxy.getLocalizedString("mission.asteroidmining");
 	}
 
 	@Override
