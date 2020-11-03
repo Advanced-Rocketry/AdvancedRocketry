@@ -151,7 +151,7 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 		buttonStore.renderBackground(gui, matrix, x, y, mouseX, mouseY, font);
 
 		for(Slot slot : slotList) {
-			gui.func_238474_b_(matrix, x + slot.xPos - 1, y + slot.yPos - 1, icon.getxLoc(), icon.getyLoc(), icon.getxSize(), icon.getySize());
+			gui.blit(matrix, x + slot.xPos - 1, y + slot.yPos - 1, icon.getxLoc(), icon.getyLoc(), icon.getxSize(), icon.getySize());
 		}
 
 		int totalData = 0, totalMaxData = 0;
@@ -163,9 +163,9 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 
 		float percent = totalData/(float)totalMaxData;
 
-		gui.func_238474_b_(matrix, offsetX + x, offsetY + y, 176, 18, 8, 40);
-		gui.func_238474_b_(matrix, offsetX + x - 1, offsetY + y + barYSize + 4, 19, 171, 10, 10);
+		gui.blit(matrix, offsetX + x, offsetY + y, 176, 18, 8, 40);
+		gui.blit(matrix, offsetX + x - 1, offsetY + y + barYSize + 4, 19, 171, 10, 10);
 
-		gui.func_238474_b_(matrix, offsetX + x + 1, 1 + offsetY + y + (barYSize-(int)(percent*barYSize)), textureOffsetX, barYSize- (int)(percent*barYSize) + textureOffsetY, barXSize, (int)(percent*barYSize));
+		gui.blit(matrix, offsetX + x + 1, 1 + offsetY + y + (barYSize-(int)(percent*barYSize)), textureOffsetX, barYSize- (int)(percent*barYSize) + textureOffsetY, barXSize, (int)(percent*barYSize));
 	}
 }

@@ -32,7 +32,7 @@ public class ChunkProviderSpace extends ChunkGenerator {
 	   private final Supplier<DimensionSettings> dimensionSettings;
 	   
 		public static final Codec<ChunkProviderSpace> planetCodec = RecordCodecBuilder.create((p_236091_0_) -> {
-			return p_236091_0_.group(BiomeProvider.field_235202_a_.fieldOf("biome_source").forGetter((p_236096_0_) -> {
+			return p_236091_0_.group(BiomeProvider.CODEC.fieldOf("biome_source").forGetter((p_236096_0_) -> {
 				return p_236096_0_.biomeProvider;
 			}), Codec.LONG.fieldOf("seed").stable().forGetter((p_236093_0_) -> {
 				return p_236093_0_.seed;
@@ -46,7 +46,7 @@ public class ChunkProviderSpace extends ChunkGenerator {
 		}
 		
 	public ChunkProviderSpace(BiomeProvider p_i231888_1_, Supplier< DimensionSettings> p_i231888_2_) {
-		super(p_i231888_1_, p_i231888_2_.get().func_236108_a_());
+		super(p_i231888_1_, p_i231888_2_.get().getStructures());
 		dimensionSettings = p_i231888_2_;
 	}
 	
@@ -70,6 +70,11 @@ public class ChunkProviderSpace extends ChunkGenerator {
 	}
 
 	@Override
+	public int getHeight(int x, int z, Type heightmapType) {
+		return 0;
+	}
+
+	//@Override
 	public int func_222529_a(int p_222529_1_, int p_222529_2_, Type heightmapType) {
 		return 0;
 	}

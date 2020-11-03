@@ -67,7 +67,7 @@ import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 public class ChunkProviderPlanet extends ChunkGenerator {
 	public static final Logger logger = LogManager.getLogger();
 	public static final Codec<ChunkProviderPlanet> planetCodec = RecordCodecBuilder.create((p_236091_0_) -> {
-		return p_236091_0_.group(BiomeProvider.field_235202_a_.fieldOf("biome_source").forGetter((p_236096_0_) -> {
+		return p_236091_0_.group(BiomeProvider.CODEC.fieldOf("biome_source").forGetter((p_236096_0_) -> {
 			return p_236096_0_.biomeProvider;
 		}), Codec.LONG.fieldOf("seed").stable().forGetter((p_236093_0_) -> {
 			return p_236093_0_.seed;
@@ -133,19 +133,19 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 	}
 
 	private ChunkProviderPlanet(BiomeProvider biomeProvider, BiomeProvider biomeProvider2, long seed, Supplier<DimensionSettings> settings, List<Supplier<StructureFeature<?, ?>>> starts, ResourceLocation dimensionProps) {
-		super(biomeProvider, biomeProvider2, settings.get().func_236108_a_(), seed);
+		super(biomeProvider, biomeProvider2, settings.get().getStructures(), seed);
 		this.seed = seed;
-		this.settings = settings.get().func_236108_a_();
+		this.settings = settings.get().getStructures();
 		dimensionId = dimensionProps;
 		DimensionSettings dimensionsettings = settings.get();
 		this.dimensionSettings = settings;
-		NoiseSettings noisesettings = dimensionsettings.func_236113_b_();
+		NoiseSettings noisesettings = dimensionsettings.getNoise();
 		this.field_236085_x_ = noisesettings.func_236169_a_();
 		this.verticalNoiseGranularity = noisesettings.func_236175_f_() * 4;
 		this.horizontalNoiseGranularity = noisesettings.func_236174_e_() * 4;
 		//TODO: ASM this
-		this.defaultBlock = dimensionsettings.func_236115_c_();
-		this.defaultFluid = dimensionsettings.func_236116_d_();
+		this.defaultBlock = dimensionsettings.getDefaultBlock();
+		this.defaultFluid = dimensionsettings.getDefaultFluid();
 		this.noiseSizeX = 16 / this.horizontalNoiseGranularity;
 		this.noiseSizeY = noisesettings.func_236169_a_() / this.verticalNoiseGranularity;
 		this.noiseSizeZ = 16 / this.horizontalNoiseGranularity;
@@ -182,7 +182,7 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 	
 	@OnlyIn(Dist.CLIENT)
 	public ChunkGenerator func_230349_a_(long p_230349_1_) {
-		return new ChunkProviderPlanet(this.biomeProvider.func_230320_a_(p_230349_1_), p_230349_1_, this.dimensionSettings, this.starts, dimensionId);
+		return new ChunkProviderPlanet(this.biomeProvider.getBiomeProvider(p_230349_1_), p_230349_1_, this.dimensionSettings, this.starts, dimensionId);
 	}
 
 	public boolean func_236088_a_(long p_236088_1_, RegistryKey<DimensionSettings> p_236088_3_) {
@@ -192,9 +192,9 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 	public void func_242707_a(DynamicRegistries p_242707_1_, StructureManager p_242707_2_, IChunk p_242707_3_, TemplateManager p_242707_4_, long p_242707_5_) {
 		ChunkPos chunkpos = p_242707_3_.getPos();
 		Biome biome = this.biomeProvider.getNoiseBiome((chunkpos.x << 2) + 2, 0, (chunkpos.z << 2) + 2);
-		this.func_242705_a(StructureFeatures.field_244145_k, p_242707_1_, p_242707_2_, p_242707_3_, p_242707_4_, p_242707_5_, chunkpos, biome);
+		this.func_242705_a(StructureFeatures.STRONGHOLD, p_242707_1_, p_242707_2_, p_242707_3_, p_242707_4_, p_242707_5_, chunkpos, biome);
 
-		for(Supplier<StructureFeature<?, ?>> supplier : biome.func_242440_e().func_242487_a()) {
+		for(Supplier<StructureFeature<?, ?>> supplier : biome.getGenerationSettings().getStructures()) {
 			this.func_242705_a(supplier.get(), p_242707_1_, p_242707_2_, p_242707_3_, p_242707_4_, p_242707_5_, chunkpos, biome);
 		}
 
@@ -204,12 +204,12 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 	}
 
 	private void func_242705_a(StructureFeature<?, ?> p_242705_1_, DynamicRegistries p_242705_2_, StructureManager p_242705_3_, IChunk p_242705_4_, TemplateManager p_242705_5_, long p_242705_6_, ChunkPos p_242705_8_, Biome p_242705_9_) {
-		StructureStart<?> structurestart = p_242705_3_.func_235013_a_(SectionPos.from(p_242705_4_.getPos(), 0), p_242705_1_.field_236268_b_, p_242705_4_);
+		StructureStart<?> structurestart = p_242705_3_.getStructureStart(SectionPos.from(p_242705_4_.getPos(), 0), p_242705_1_.field_236268_b_, p_242705_4_);
 		int i = structurestart != null ? structurestart.getRefCount() : 0;
 		StructureSeparationSettings structureseparationsettings = this.settings.func_236197_a_(p_242705_1_.field_236268_b_);
 		if (structureseparationsettings != null) {
 			StructureStart<?> structurestart1 = p_242705_1_.func_242771_a(p_242705_2_, this, this.biomeProvider, p_242705_5_, p_242705_6_, p_242705_8_, p_242705_9_, i, structureseparationsettings);
-			p_242705_3_.func_235014_a_(SectionPos.from(p_242705_4_.getPos(), 0), p_242705_1_.field_236268_b_, structurestart1, p_242705_4_);
+			p_242705_3_.addStructureStart(SectionPos.from(p_242705_4_.getPos(), 0), p_242705_1_.field_236268_b_, structurestart1, p_242705_4_);
 		}
 
 	}
@@ -256,11 +256,11 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 	}
 
 	private void fillNoiseColumn(double[] noiseColumn, int noiseX, int noiseZ) {
-		NoiseSettings noisesettings = this.dimensionSettings.get().func_236113_b_();
+		NoiseSettings noisesettings = this.dimensionSettings.get().getNoise();
 		double d0;
 		double d1;
 		if (this.field_236083_v_ != null) {
-			d0 = (double)(EndBiomeProvider.func_235317_a_(this.field_236083_v_, noiseX, noiseZ) - 8.0F);
+			d0 = (double)(EndBiomeProvider.getRandomNoise(this.field_236083_v_, noiseX, noiseZ) - 8.0F);
 			if (d0 > 0.0D) {
 				d1 = 0.25D;
 			} else {
@@ -632,6 +632,11 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 
 	}
 
+	@Override
+	public int getHeight(int x, int z, Heightmap.Type heightmapType) {
+		return 0;
+	}
+
 	private static double func_222556_a(int p_222556_0_, int p_222556_1_, int p_222556_2_) {
 		int i = p_222556_0_ + 12;
 		int j = p_222556_1_ + 12;
@@ -665,27 +670,27 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 	}
 
 	public List<MobSpawnInfo.Spawners> func_230353_a_(Biome p_230353_1_, StructureManager p_230353_2_, EntityClassification p_230353_3_, BlockPos p_230353_4_) {
-		if (p_230353_2_.func_235010_a_(p_230353_4_, true, Structure.field_236374_j_).isValid()) {
+		if (p_230353_2_.getStructureStart(p_230353_4_, true, Structure.SWAMP_HUT).isValid()) {
 			if (p_230353_3_ == EntityClassification.MONSTER) {
-				return Structure.field_236374_j_.getSpawnList();
+				return Structure.SWAMP_HUT.getSpawnList();
 			}
 
 			if (p_230353_3_ == EntityClassification.CREATURE) {
-				return Structure.field_236374_j_.getCreatureSpawnList();
+				return Structure.SWAMP_HUT.getCreatureSpawnList();
 			}
 		}
 
 		if (p_230353_3_ == EntityClassification.MONSTER) {
-			if (p_230353_2_.func_235010_a_(p_230353_4_, false, Structure.field_236366_b_).isValid()) {
-				return Structure.field_236366_b_.getSpawnList();
+			if (p_230353_2_.getStructureStart(p_230353_4_, false, Structure.PILLAGER_OUTPOST).isValid()) {
+				return Structure.PILLAGER_OUTPOST.getSpawnList();
 			}
 
-			if (p_230353_2_.func_235010_a_(p_230353_4_, false, Structure.field_236376_l_).isValid()) {
-				return Structure.field_236376_l_.getSpawnList();
+			if (p_230353_2_.getStructureStart(p_230353_4_, false, Structure.MONUMENT).isValid()) {
+				return Structure.MONUMENT.getSpawnList();
 			}
 
-			if (p_230353_2_.func_235010_a_(p_230353_4_, true, Structure.field_236378_n_).isValid()) {
-				return Structure.field_236378_n_.getSpawnList();
+			if (p_230353_2_.getStructureStart(p_230353_4_, true, Structure.FORTRESS).isValid()) {
+				return Structure.FORTRESS.getSpawnList();
 			}
 		}
 

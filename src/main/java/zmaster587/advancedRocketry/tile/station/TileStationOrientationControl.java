@@ -174,8 +174,8 @@ public class TileStationOrientationControl extends TileEntity implements ITickab
 	}
 
 	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
-		super.func_230337_a_(state, nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 		numRotationsPerHour[0] = nbt.getShort("numRotationsX");
 		progress[0] = numRotationsPerHour[0] + getTotalProgress(0)/2;
 

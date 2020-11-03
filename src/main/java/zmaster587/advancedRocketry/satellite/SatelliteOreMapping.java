@@ -155,7 +155,7 @@ public class SatelliteOreMapping extends SatelliteBase implements INamedContaine
 			for(ResourceLocation loc : strings) {
 				String str = loc.getPath();
 				if(str.startsWith("ore") || str.startsWith("dust") || str.startsWith("gem"))
-					oreList.addAll(ItemTags.getCollection().get(loc).func_230236_b_());
+					oreList.addAll(ItemTags.getCollection().get(loc).getAllElements());
 			}
 		}
 

@@ -21,7 +21,7 @@ public class BlockAlienLeaves extends LeavesBlock {
 	public BlockAlienLeaves(AbstractBlock.Properties properties) {
 		super(properties);
 		// light value
-		properties.func_235838_a_(value -> {return 8;} );
+		properties.setLightLevel(value -> {return 8;} );
 		this.setDefaultState(this.stateContainer.getBaseState().with(PERSISTENT, false).with(DISTANCE, 0));
 	}
 	

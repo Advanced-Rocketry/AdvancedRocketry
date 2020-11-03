@@ -937,11 +937,11 @@ public class XMLPlanetLoader {
 				nbtString = " nbt=\"" + nbtString.replaceAll("\"", "&quot;") + "\"";
 			Element spawnable = doc.createElement(ELEMENT_SPAWNABLE);
 			spawnable.setAttribute(ATTR_WEIGHT, Integer.toString(e.itemWeight));
-			spawnable.setAttribute(ATTR_GROUPMIN, Integer.toString(e.field_242589_d));
-			spawnable.setAttribute(ATTR_GROUPMAX, Integer.toString(e.field_242590_e));
+			spawnable.setAttribute(ATTR_GROUPMIN, Integer.toString(e.minCount));
+			spawnable.setAttribute(ATTR_GROUPMAX, Integer.toString(e.maxCount));
 			spawnable.setAttribute(ATTR_NBT, nbtString.replaceAll("\"", "&quot;"));
 			
-			spawnable.appendChild(doc.createTextNode( e.field_242588_c.getRegistryName().toString()));
+			spawnable.appendChild(doc.createTextNode( e.type.getRegistryName().toString()));
 			
 			nodePlanet.appendChild(spawnable);
 		}

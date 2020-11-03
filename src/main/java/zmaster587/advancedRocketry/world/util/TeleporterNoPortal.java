@@ -17,7 +17,7 @@ public class TeleporterNoPortal implements net.minecraftforge.common.util.ITelep
         Entity entity = entityold.getType().create(world);
         if (entity != null) {
            entity.copyDataFromOld(entityold);
-           entity.setLocationAndAngles(portalinfo.pos.x, portalinfo.pos.y, portalinfo.pos.z, portalinfo.field_242960_c, entity.rotationPitch);
+           entity.setLocationAndAngles(portalinfo.pos.x, portalinfo.pos.y, portalinfo.pos.z, portalinfo.rotationYaw, entity.rotationPitch);
            entity.setMotion(portalinfo.motion);
            world.addFromAnotherDimension(entity);
            entity.setUniqueId(entityold.getUniqueID());

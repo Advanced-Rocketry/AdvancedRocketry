@@ -146,8 +146,8 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 	
 	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
-		super.func_230337_a_(state, nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 		
 		inventory.readFromNBT(nbt);
 	}

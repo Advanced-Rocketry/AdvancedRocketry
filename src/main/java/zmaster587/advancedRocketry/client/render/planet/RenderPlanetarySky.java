@@ -632,7 +632,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 		RenderSystem.disableTexture();
 		RenderSystem.color3f(0.0F, 0.0F, 0.0F);
 
-		double d0 = this.mc.player.getPosYEye() - world.getWorldInfo().func_239159_f_();
+		double d0 = this.mc.player.getPosYEye() - world.getWorldInfo().getVoidFogHeight();
 
 		if (d0 < 0.0D && !properties.isAsteroid() && !properties.isStation()) {
 			matrix.push();

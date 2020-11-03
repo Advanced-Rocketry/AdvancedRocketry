@@ -41,7 +41,7 @@ public class SpawnListEntryNBT extends Spawners {
 	
 	
 	public LivingEntity newInstance(World world) throws Exception {
-		LivingEntity entity = (LivingEntity) super.field_242588_c.create(world);
+		LivingEntity entity = (LivingEntity) super.type.create(world);
 		if(nbt != null) {
             UUID uuid = entity.getUniqueID();
             CompoundNBT oldNbt = entity.serializeNBT();

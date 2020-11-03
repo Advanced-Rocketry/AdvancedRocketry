@@ -22,7 +22,7 @@ public class SoundRocketEngine extends EntityTickableSound {
 
 		if(!rocket.isAlive())
 			// done playing
-			this.func_239509_o_();
+			this.finishPlaying();
 
 		this.volume = rocket.getEnginePower();
 

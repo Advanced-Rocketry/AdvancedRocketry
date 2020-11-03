@@ -131,7 +131,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 
 			if(!world.isRemote) {
-				player.sendMessage(new TranslationTextComponent("msg.linker.success"), Util.field_240973_b_);
+				player.sendMessage(new TranslationTextComponent("msg.linker.success"), Util.DUMMY_UUID);
 
 				if(tile instanceof IMultiblock)
 					((IMultiblock)tile).setMasterBlock(getPos());
@@ -317,7 +317,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 		super.onDataPacket(net, pkt);
-		func_230337_a_(getBlockState(), pkt.getNbtCompound());
+		read(getBlockState(), pkt.getNbtCompound());
 		moduleNameTextbox.setText(name);
 	}
 
@@ -355,8 +355,8 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
-		super.func_230337_a_(state, nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 		blockPos.clear();
 		if(nbt.contains("infrastructureLocations")) {
 			int array[] = nbt.getIntArray("infrastructureLocations");

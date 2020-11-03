@@ -22,3 +22,8 @@ eclipse
 run
 refresh.bat
 AdvancedRocketry.txt
+changelog.html
+debug.log
+libs/
+logs/
+output/

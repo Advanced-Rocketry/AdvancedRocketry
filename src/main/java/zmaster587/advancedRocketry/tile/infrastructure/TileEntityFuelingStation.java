@@ -294,8 +294,8 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	}
 
 	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
-		super.func_230337_a_(state, nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 		RedstoneState redstate = RedstoneState.values()[nbt.getByte("redstoneState")];
 		redstoneControl.setRedstoneState(redstate);
 

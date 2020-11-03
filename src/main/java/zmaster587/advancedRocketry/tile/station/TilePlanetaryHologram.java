@@ -445,8 +445,8 @@ public class TilePlanetaryHologram extends TileEntity implements ITickableTileEn
 	}
 
 	@Override
-	public void func_230337_a_(BlockState blkstate, CompoundNBT compound) {
-		super.func_230337_a_(blkstate, compound);
+	public void read(BlockState blkstate, CompoundNBT compound) {
+		super.read(blkstate, compound);
 		state = RedstoneState.createFromNBT(compound);
 		redstoneControl.setRedstoneState(state);
 	}

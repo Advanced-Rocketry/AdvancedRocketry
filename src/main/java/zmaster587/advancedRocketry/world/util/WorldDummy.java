@@ -50,7 +50,7 @@ public class WorldDummy extends World  {
 	final static class DummyDimensionType extends DimensionType
 	{
 		public DummyDimensionType() {
-			super(OptionalLong.empty(), true, false, false, true, 1.0D, false, false, true, false, true, 256, ColumnFuzzedBiomeMagnifier.INSTANCE, BlockTags.field_241277_aC_.func_230234_a_(), field_242710_a, 0.0F);
+			super(OptionalLong.empty(), true, false, false, true, 1.0D, false, false, true, false, true, 256, ColumnFuzzedBiomeMagnifier.INSTANCE, BlockTags.INFINIBURN_OVERWORLD.getName(), OVERWORLD_ID, 0.0F);
 		}
 	}
 

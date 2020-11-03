@@ -423,7 +423,7 @@ public class TileGuidanceComputerHatch extends TilePointer implements IInfrastru
 	}
 
 	@Override
-	public void func_230337_a_(BlockState blkstate, CompoundNBT nbt) {
+	public void read(BlockState blkstate, CompoundNBT nbt) {
 		chipEjected = nbt.getBoolean("chipEjected");
 		state = RedstoneState.values()[nbt.getByte("redstoneState")];
 
@@ -432,7 +432,7 @@ public class TileGuidanceComputerHatch extends TilePointer implements IInfrastru
 			buttonState[i] = (status & 1<<i) != 0; 
 		}
 
-		super.func_230337_a_(blkstate, nbt);
+		super.read(blkstate, nbt);
 	}
 
 	@Override

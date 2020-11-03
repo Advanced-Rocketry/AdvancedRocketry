@@ -17,7 +17,7 @@ public class BlockLightSource extends Block {
 
 	public BlockLightSource(Properties properties) {
 		super(properties);
-		properties.func_235838_a_(value -> {return 1;} );
+		properties.setLightLevel(value -> {return 1;} );
 	}
 
 	@Override

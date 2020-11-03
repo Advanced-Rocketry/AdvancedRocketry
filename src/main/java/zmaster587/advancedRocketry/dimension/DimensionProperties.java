@@ -1222,7 +1222,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		entryList.addAll(BiomeDictionary.getBiomes(type));
 
 		//Neither are acceptable on planets
-		entryList.remove(Biomes.field_235254_j_.getRegistryName());
+		entryList.remove(Biomes.NETHER_WASTES.getRegistryName());
 		entryList.remove(Biomes.THE_END.getRegistryName());
 
 		//Make sure we dont add double entries
@@ -1729,7 +1729,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 								"              \"parameters\": {\n" + 
 								"                \"altitude\": " +  String.valueOf(random.nextFloat()) + ",\n" + 
 								"		\"humidity\": " + String.valueOf(biome.getDownfall()) + ",\n" + 
-								"                \"temperature\": " + String.valueOf(biome.func_242445_k()) + ",				\n" + 
+								"                \"temperature\": " + String.valueOf(biome.getTemperature()) + ",				\n" +
 								"                \"weirdness\": " + String.valueOf(biome.getScale()) + ",\n" + 
 								"                \"offset\": 0\n" + 
 								"              }\n" + 
@@ -1820,7 +1820,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 						"              \"parameters\": {\n" + 
 						"                \"altitude\": " +  String.valueOf(random.nextFloat()) + ",\n" + 
 						"		\"humidity\": " + String.valueOf(biome.getDownfall()) + ",\n" + 
-						"                \"temperature\": " + String.valueOf(biome.func_242445_k()) + ",				\n" + 
+						"                \"temperature\": " + String.valueOf(biome.getTemperature()) + ",				\n" +
 						"                \"weirdness\": " + String.valueOf(biome.getScale()) + ",\n" + 
 						"                \"offset\": 0\n" + 
 						"              }\n" + 

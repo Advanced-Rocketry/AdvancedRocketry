@@ -119,7 +119,7 @@ public class DimensionManager implements IGalaxy {
 		sol.setId(new ResourceLocation(Constants.STAR_NAMESPACE, "sol"));
 		sol.setName("Sol");
 
-		overworldProperties = new DimensionProperties(new ResourceLocation("minecraft", DimensionType.field_235999_c_.func_240901_a_().getPath()));
+		overworldProperties = new DimensionProperties(new ResourceLocation("minecraft", DimensionType.OVERWORLD.getLocation().getPath()));
 		overworldProperties.setAtmosphereDensityDirect(100);
 		//Temperature in Kelvin, 286 is 13 Degrees C
 		overworldProperties.averageTemperature = 286;
@@ -444,7 +444,7 @@ public class DimensionManager implements IGalaxy {
 	public void writeDimAsJSON(DimensionProperties properties) throws IOException
 	{
 		//Getting real sick of my planet file getting toasted during debug...
-		final File saveDir = ServerLifecycleHooks.getCurrentServer().func_240776_a_(FolderName.field_237253_i_).toFile();
+		final File saveDir = ServerLifecycleHooks.getCurrentServer().func_240776_a_(FolderName.DOT).toFile();
 		
 		String fileContents = properties.generateDimJSON();
 		
@@ -509,18 +509,18 @@ public class DimensionManager implements IGalaxy {
 		if(registerWithForge && properties.hasSurface() && !ZUtils.isWorldRegistered(dimId)) {
 			/*if(properties.isAsteroid())
 			{
-				DimensionType dimType = new ModdedDimensionType(OptionalLong.empty(), true, false, false, true, 1.0D, false, false, true, false, true, 256, ColumnFuzzedBiomeMagnifier.INSTANCE, BlockTags.field_241277_aC_.func_230234_a_(), dimId, 0.0F);
+				DimensionType dimType = new ModdedDimensionType(OptionalLong.empty(), true, false, false, true, 1.0D, false, false, true, false, true, 256, ColumnFuzzedBiomeMagnifier.INSTANCE, BlockTags.INFINIBURN_OVERWORLD.getName(), dimId, 0.0F);
 				
 				long seed = 0;
 				ChunkGenerator chunks = new ChunkProviderAsteroids(new SingleBiomeProvider( AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.THE_END.getRegistryName())), seed, () -> {
-		             return DynamicRegistries.Impl.func_239770_b_().func_230521_a_(Registry.field_243549_ar).get().getOrDefault(DimensionSettings.field_242734_c .func_240901_a_());
+		             return DynamicRegistries.Impl.func_239770_b_().func_230521_a_(Registry.field_243549_ar).get().getOrDefault(DimensionSettings.field_242734_c .getLocation());
 		          }, properties);
 				Dimension dimension = new Dimension(() -> dimType, chunks);
 				ZUtils.registerDimension(dimId, dimType, dimension);
 			}
 			else
 			{
-				DimensionType dimType = new ModdedDimensionType(OptionalLong.empty(), true, false, false, true, 1.0D, false, false, true, false, true, 256, ColumnFuzzedBiomeMagnifier.INSTANCE, BlockTags.field_241277_aC_.func_230234_a_(), dimId, 0.0F);
+				DimensionType dimType = new ModdedDimensionType(OptionalLong.empty(), true, false, false, true, 1.0D, false, false, true, false, true, 256, ColumnFuzzedBiomeMagnifier.INSTANCE, BlockTags.INFINIBURN_OVERWORLD.getName(), dimId, 0.0F);
 				
 				Registry<Biome> biomes = AdvancedRocketryBiomes.getBiomeRegistry();
 				long seed = 0;
@@ -529,7 +529,7 @@ public class DimensionManager implements IGalaxy {
 				properties.getBiomes().forEach((i) -> { biomeSupplierList.add(() -> { return i;}); } );
 				
 				ChunkGenerator chunks = new ChunkProviderPlanet(new CustomPlanetBiomeProvider(seed, false, false, biomes, biomeSupplierList, properties.hasRivers()), seed, () -> {
-		             return DynamicRegistries.Impl.func_239770_b_().func_230521_a_(Registry.field_243549_ar).get().getOrDefault(DimensionSettings.field_242734_c.func_240901_a_());
+		             return DynamicRegistries.Impl.func_239770_b_().func_230521_a_(Registry.field_243549_ar).get().getOrDefault(DimensionSettings.field_242734_c.getLocation());
 		          }, properties);
 				Dimension dimension = new Dimension(() -> dimType, chunks);
 				
@@ -545,7 +545,7 @@ public class DimensionManager implements IGalaxy {
 	public void registerSpaceDimension(ResourceLocation dimId)
 	{
 		defaultSpaceDimensionProperties.setId(dimId);
-		/*DimensionType dimType = new ModdedDimensionType(OptionalLong.empty(), true, false, false, true, 1.0D, false, false, true, false, true, 256, ColumnFuzzedBiomeMagnifier.INSTANCE, BlockTags.field_241277_aC_.func_230234_a_(), dimId, 0.0F);
+		/*DimensionType dimType = new ModdedDimensionType(OptionalLong.empty(), true, false, false, true, 1.0D, false, false, true, false, true, 256, ColumnFuzzedBiomeMagnifier.INSTANCE, BlockTags.INFINIBURN_OVERWORLD.getName(), dimId, 0.0F);
 		
 		long seed = 0;
 		ChunkGenerator chunks = new ChunkProviderSpace(new SingleBiomeProvider( AdvancedRocketryBiomes.spaceBiome), new DimensionStructuresSettings(false));
@@ -735,7 +735,7 @@ public class DimensionManager implements IGalaxy {
 	 */
 	public void saveDimensions(String filePath) throws Exception {
 
-		final File saveDir = ServerLifecycleHooks.getCurrentServer().func_240776_a_(FolderName.field_237253_i_).toFile();
+		final File saveDir = ServerLifecycleHooks.getCurrentServer().func_240776_a_(FolderName.DOT).toFile();
 		if(starList.isEmpty() || dimensionListResource.isEmpty()) {
 			throw new Exception("Missing Stars");
 		}

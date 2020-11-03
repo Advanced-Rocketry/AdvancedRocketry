@@ -153,7 +153,7 @@ public class AdvancedRocketryFluids {
 		AdvancedRocketryBlocks.blockHydrogenFluid = AdvancedRocketry.BLOCKS.register("hydrogenfluidblock", () -> new FlowingFluidBlock(AdvancedRocketryFluids.hydrogenStill, AbstractBlock.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops()));
 		AdvancedRocketryBlocks.blockFuelFluid = AdvancedRocketry.BLOCKS.register("rocketfuelblock", () -> new FlowingFluidBlock(AdvancedRocketryFluids.rocketFuelStill, AbstractBlock.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops()));
 		AdvancedRocketryBlocks.blockNitrogenFluid = AdvancedRocketry.BLOCKS.register("nitrogenfluidblock", () -> new FlowingFluidBlock(AdvancedRocketryFluids.nitrogenStill, AbstractBlock.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops()));
-		AdvancedRocketryBlocks.blockEnrichedLavaFluid = AdvancedRocketry.BLOCKS.register("enrichedlavablock", () -> new BlockEnrichedLava(AdvancedRocketryFluids.enrichedLavaStill, AbstractBlock.Properties.create(Material.LAVA).tickRandomly().doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops().func_235838_a_((p_235470_0_) -> {
+		AdvancedRocketryBlocks.blockEnrichedLavaFluid = AdvancedRocketry.BLOCKS.register("enrichedlavablock", () -> new BlockEnrichedLava(AdvancedRocketryFluids.enrichedLavaStill, AbstractBlock.Properties.create(Material.LAVA).tickRandomly().doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops().setLightLevel((p_235470_0_) -> {
 			return 14;
 		})));
 

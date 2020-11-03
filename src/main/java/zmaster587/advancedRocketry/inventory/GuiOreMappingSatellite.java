@@ -124,11 +124,11 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 
 	//onMouseclicked
 	@Override
-	public boolean func_231048_c_(double x, double y, int button) {
+	public boolean mouseReleased(double x, double y, int button) {
 		// TODO Auto-generated method stub
-		boolean val = super.func_231048_c_(x, y, button);
+		boolean val = super.mouseReleased(x, y, button);
 
-		int xOffset = 47 + (field_230708_k_ - 240) / 2, yOffset = 20 + (field_230709_l_ - 192) / 2;
+		int xOffset = 47 + (width - 240) / 2, yOffset = 20 + (height - 192) / 2;
 
 		//Get selected slot and begin scan!
 		if(button == 0 && tile.getSelectedSlot() != prevSlot) {
@@ -154,7 +154,7 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 
 
 	@Override
-	protected boolean func_195363_d(int keyCode, int scanCode)  {
+	protected boolean itemStackMoved(int keyCode, int scanCode)  {
 		if(keyCode == GLFW.GLFW_KEY_W) {
 			zCenter -= radius;
 			runMapperWithSelection();
@@ -204,15 +204,15 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 			}
 		}*/
 		else 
-			return super.func_195363_d(keyCode, scanCode);
+			return super.itemStackMoved(keyCode, scanCode);
 		return true;
 	}
 
 	//Create our image here
 	// InitGui
 	@Override
-	public void func_231160_c_() {
-		super.func_231160_c_();
+	public void init() {
+		super.init();
 		texture = new ClientDynamicTexture(Math.max(scanSize/radius,1),Math.max(scanSize/radius,1));
 
 		ItemStack stack = this.playerInventory.getStackInSlot(0).getStack();
@@ -224,6 +224,11 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 		}
 	}
 
+	@Override
+	protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
+
+	}
+
 	//Reset the texture and prevent memory leaks
 	private void resetTexture() {
 		GL11.glDeleteTextures(texture.getTextureId());
@@ -231,8 +236,8 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 	}
 
 	@Override
-	public void func_231164_f_() {
-		super.func_231164_f_();
+	public void onClose() {
+		super.onClose();
 		//Delete texture and stop any mapping on close
 		GL11.glDeleteTextures(texture.getTextureId());
 		if(currentMapping != null)
@@ -242,7 +247,7 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 
 
 	// Draw foreground
-	@Override
+	//@Override
 	protected void func_230451_b_(MatrixStack matrix, int a, int b)  {
 
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
@@ -250,18 +255,18 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 		RenderSystem.disableTexture();
 		RenderSystem.color4f(0f, 0.8f, 0f,1f);
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		buffer.pos(-21, 82 + fancyScanOffset, (double)this.func_230927_p_()).endVertex();
-		buffer.pos(0, 84 + fancyScanOffset, (double)this.func_230927_p_()).endVertex();
-		buffer.pos(0, 81 + fancyScanOffset, (double)this.func_230927_p_()).endVertex();
-		buffer.pos(-21, 81 + fancyScanOffset, (double)this.func_230927_p_()).endVertex();
+		buffer.pos(-21, 82 + fancyScanOffset, (double)this.getBlitOffset()).endVertex();
+		buffer.pos(0, 84 + fancyScanOffset, (double)this.getBlitOffset()).endVertex();
+		buffer.pos(0, 81 + fancyScanOffset, (double)this.getBlitOffset()).endVertex();
+		buffer.pos(-21, 81 + fancyScanOffset, (double)this.getBlitOffset()).endVertex();
 		Tessellator.getInstance().draw();
 
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		buffer.pos(-21, 82 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.func_230927_p_()).endVertex();
-		buffer.pos(0, 84 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.func_230927_p_()).endVertex();
-		buffer.pos(0, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.func_230927_p_()).endVertex();
-		buffer.pos(-21, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.func_230927_p_()).endVertex();
+		buffer.pos(-21, 82 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.getBlitOffset()).endVertex();
+		buffer.pos(0, 84 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.getBlitOffset()).endVertex();
+		buffer.pos(0, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.getBlitOffset()).endVertex();
+		buffer.pos(-21, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.getBlitOffset()).endVertex();
 		Tessellator.getInstance().draw();
 
 
@@ -270,7 +275,7 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 		RenderSystem.color4f(0.5f, 0.5f, 0.0f,0.3f + ((float)Math.sin(Math.PI*(fancyScanOffset/(float)FANCYSCANMAXSIZE))/3f));
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-		RenderHelper.renderNorthFace(matrix, buffer, this.func_230927_p_(), 173, 82, 194, 141,1f,1f,1f,1f);
+		RenderHelper.renderNorthFace(matrix, buffer, this.getBlitOffset(), 173, 82, 194, 141,1f,1f,1f,1f);
 		Tessellator.getInstance().draw();
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -294,7 +299,7 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 			RenderSystem.color4f(0f, 0.8f, 0f, 1f);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.renderNorthFaceWithUV(matrix, buffer, func_230927_p_(), 13 + (18*slot), 155, 13 + 16 + (18*slot), 155 + 16, 0, 0, 0, 0);
+			RenderHelper.renderNorthFaceWithUV(matrix, buffer, getBlitOffset(), 13 + (18*slot), 155, 13 + 16 + (18*slot), 155 + 16, 0, 0, 0, 0);
 			Tessellator.getInstance().draw();
 			RenderSystem.enableTexture();
 		}
@@ -303,9 +308,9 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 	}
 
 	// Draw background
-	@Override
+	//@Override
 	protected void func_230450_a_(MatrixStack matrix, float f1, int i2, int i3)  {
-		int x = (field_230708_k_ - 240) / 2, y = (field_230709_l_ - 192) / 2;
+		int x = (width - 240) / 2, y = (height - 192) / 2;
 
 		//If the scan is done then 
 		if(merged) {
@@ -329,7 +334,7 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 		//Render the background then render
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getInstance().getTextureManager().bindTexture(backdrop);
-		this.func_238474_b_(matrix, x, y, 0, 0, 240, 192);
+		this.blit(matrix, x, y, 0, 0, 240, 192);
 
 
 		//NOTE: if the controls are rendered first the display never shows up
@@ -337,7 +342,7 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 		RenderSystem.bindTexture( texture.getTextureId() );
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		RenderHelper.renderNorthFaceWithUV(matrix, buffer, this.func_230927_p_(), 47 + x, 20 + y, 47 + x + SCREEN_SIZE, 20 + y + SCREEN_SIZE, 0, 1, 0, 1);
+		RenderHelper.renderNorthFaceWithUV(matrix, buffer, this.getBlitOffset(), 47 + x, 20 + y, 47 + x + SCREEN_SIZE, 20 + y + SCREEN_SIZE, 0, 1, 0, 1);
 		Tessellator.getInstance().draw();
 
 
@@ -355,32 +360,32 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 			RenderSystem.disableTexture();
 			RenderSystem.color4f(0.4f, 1f, 0.4f,1f);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.renderNorthFaceWithUV(matrix, buffer, this.func_230927_p_(), offsetX + 47 + x + SCREEN_SIZE/2 - radius,  offsetY + 20 + y + SCREEN_SIZE/2 - radius, offsetX + 47 + x + SCREEN_SIZE/2 + radius, offsetY + 20 + y + SCREEN_SIZE/2 + radius, 0, 1, 0, 1);
+			RenderHelper.renderNorthFaceWithUV(matrix, buffer, this.getBlitOffset(), offsetX + 47 + x + SCREEN_SIZE/2 - radius,  offsetY + 20 + y + SCREEN_SIZE/2 - radius, offsetX + 47 + x + SCREEN_SIZE/2 + radius, offsetY + 20 + y + SCREEN_SIZE/2 + radius, 0, 1, 0, 1);
 			Tessellator.getInstance().draw();
 			RenderSystem.color4f(1, 1, 1,1f);
 			RenderSystem.enableTexture();
-			this.drawCenteredString(matrix, this.field_230712_o_, "You", (int)(offsetX + 47 + x + SCREEN_SIZE/2 - radius), (int)(offsetY + 20 + y + SCREEN_SIZE/2 - radius) -10, 0xF0F0F0);
+			this.drawCenteredString(matrix, this.font, "You", (int)(offsetX + 47 + x + SCREEN_SIZE/2 - radius), (int)(offsetY + 20 + y + SCREEN_SIZE/2 - radius) -10, 0xF0F0F0);
 		}
 
 		//Render sliders and controls
 		Minecraft.getInstance().getTextureManager().bindTexture(backdrop);
 
-		this.func_238474_b_(matrix, 197 + x, 31 + y, 0, 192, 32, 14);
+		this.blit(matrix, 197 + x, 31 + y, 0, 192, 32, 14);
 		//this.drawVerticalLine((int)(32*VulpineMath.log2(scanSize-1)/8F) + 199 + x, 34 + y, 45 + y, 0xFFC00F0F);
-		this.drawString(matrix, this.field_230712_o_, "Zoom", 198 + x, 22 + y, 0xF0F0F0);
-		this.drawString(matrix, this.field_230712_o_, "X: " + xSelected, 6 + x, 33 + y, 0xF0F0F0);
-		this.drawString(matrix, this.field_230712_o_, "Z: " + zSelected, 6 + x, 49 + y, 0xF0F0F0);
-		this.drawString(matrix, this.field_230712_o_,  LibVulpes.proxy.getLocalizedString("msg.itemorescanner.value"), 6 + x, 65 + y, 0xF0F0F0);
-		this.drawString(matrix, this.field_230712_o_, String.valueOf(mouseValue), 6 + x, 79 + y, 0xF0F0F0);
+		this.drawString(matrix, this.font, "Zoom", 198 + x, 22 + y, 0xF0F0F0);
+		this.drawString(matrix, this.font, "X: " + xSelected, 6 + x, 33 + y, 0xF0F0F0);
+		this.drawString(matrix, this.font, "Z: " + zSelected, 6 + x, 49 + y, 0xF0F0F0);
+		this.drawString(matrix, this.font,  LibVulpes.proxy.getLocalizedString("msg.itemorescanner.value"), 6 + x, 65 + y, 0xF0F0F0);
+		this.drawString(matrix, this.font, String.valueOf(mouseValue), 6 + x, 79 + y, 0xF0F0F0);
 	}
 
-	public void drawString(MatrixStack matrix, FontRenderer font, String str, int x, int z , int color)
+	public static void drawString(MatrixStack matrix, FontRenderer font, String str, int x, int z, int color)
 	{
 		font.func_243246_a(matrix, new StringTextComponent(str), x, z, 0);
 	}
 	
 
-	public void drawCenteredString(MatrixStack matrix, FontRenderer font, String str, int x, int z , int color)
+	public static void drawCenteredString(MatrixStack matrix, FontRenderer font, String str, int x, int z, int color)
 	{
 		font.func_243246_a(matrix, new StringTextComponent(str), x, z, 0);
 	}
@@ -390,8 +395,8 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 	 */
     public void drawScreen(MatrixStack matrix, int mouseX, int mouseY, float partialTicks)
 	{
-        this.func_230446_a_(matrix); // DrawDefaultWorldBackground
-        super.func_230430_a_(matrix, mouseX, mouseY, partialTicks); //drawScreen
-        this.func_230459_a_(matrix, mouseX, mouseY); // renderHoveredToolTip
+        this.renderBackground(matrix); // DrawDefaultWorldBackground
+        super.render(matrix, mouseX, mouseY, partialTicks); //drawScreen
+        this.renderHoveredTooltip(matrix, mouseX, mouseY); // renderHoveredToolTip
 	}
 }

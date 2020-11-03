@@ -399,7 +399,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		ItemLinker.setMasterCoords(item, this.getPos());
 		ItemLinker.setDimId(item, ZUtils.getDimensionIdentifier(world));
 		if(!world.isRemote)
-			player.sendMessage(new TranslationTextComponent("msg.linker.program"), Util.field_240973_b_);
+			player.sendMessage(new TranslationTextComponent("msg.linker.program"), Util.DUMMY_UUID);
 		return true;
 	}
 
@@ -419,8 +419,8 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	public void func_230337_a_(BlockState blkstate, CompoundNBT nbt) {
-		super.func_230337_a_(blkstate, nbt);
+	public void read(BlockState blkstate, CompoundNBT nbt) {
+		super.read(blkstate, nbt);
 		inv.readFromNBT(nbt);
 		minStackTransferSize = nbt.getInt("minTfrSize");
 

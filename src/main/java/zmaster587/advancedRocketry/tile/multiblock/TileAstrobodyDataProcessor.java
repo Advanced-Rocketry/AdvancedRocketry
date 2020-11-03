@@ -472,8 +472,8 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 	}
 
 	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
-		super.func_230337_a_(state, nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 		inventory.readFromNBT(nbt);
 		atmosphereProgress = nbt.getInt("atmosphereProgress");
 		distanceProgress = nbt.getInt("distanceProgress");

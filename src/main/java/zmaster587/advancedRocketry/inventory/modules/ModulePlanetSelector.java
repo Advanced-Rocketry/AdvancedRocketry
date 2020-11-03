@@ -361,7 +361,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		this.screenSizeY = Minecraft.getInstance().getMainWindow().getHeight();
 		for(ModuleBase module : this.planetList) {
 			for(Button module2 : module.addButtons(currentPosX, currentPosY)) {
-				if(module2.field_230690_l_ /* x */ > 128 + offsetX || clickablePlanetList == null || !clickablePlanetList.isEnabled())
+				if(module2.x /* x */ > 128 + offsetX || clickablePlanetList == null || !clickablePlanetList.isEnabled())
 					buttonList.add( module2 );
 			}
 		}

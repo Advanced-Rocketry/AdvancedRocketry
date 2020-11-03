@@ -76,9 +76,9 @@ public class TileForceFieldProjector extends TileEntity implements ITickableTile
 	}
 
 	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+	public void read(BlockState state, CompoundNBT nbt) {
 		extensionRange = nbt.getShort("ext");
-		super.func_230337_a_(state, nbt);
+		super.read(state, nbt);
 	}
 
 }

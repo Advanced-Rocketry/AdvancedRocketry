@@ -198,7 +198,7 @@ public class RecipeHandler {
 					
 					ResourceLocation oreName = new ResourceLocation("forge", AllowedProducts.getProductByName("BLOCK").name().toLowerCase(Locale.ENGLISH) + "/" + str);
 					NonNullList<Ingredient> blockToIngot = NonNullList.create();
-					blockToIngot.add(Ingredient.fromTag(ItemTags.getCollection().func_241834_b(oreName)));
+					blockToIngot.add(Ingredient.fromTag(ItemTags.getCollection().getTagByID(oreName)));
 					
 					ShapedRecipeBuilder.shapedRecipe(ore.getProduct(AllowedProducts.getProductByName("BLOCK")).getItem())
 					.patternLine("ooo").patternLine("ooo").patternLine("ooo")

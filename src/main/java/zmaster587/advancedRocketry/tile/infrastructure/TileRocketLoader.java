@@ -309,8 +309,8 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 	}
 
 	@Override
-	public void func_230337_a_(BlockState blkstate, CompoundNBT nbt) {
-		super.func_230337_a_(blkstate, nbt);
+	public void read(BlockState blkstate, CompoundNBT nbt) {
+		super.read(blkstate, nbt);
 
 		state = RedstoneState.values()[nbt.getByte("redstoneState")];
 		redstoneControl.setRedstoneState(state);

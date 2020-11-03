@@ -588,8 +588,8 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 	}
 
 	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
-		super.func_230337_a_(state, nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 
 		stats.readFromNBT(nbt);
 
@@ -629,7 +629,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-		func_230337_a_(getBlockState(), pkt.getNbtCompound());
+		read(getBlockState(), pkt.getNbtCompound());
 	}
 
 	//Creates the effects for building the rocket and changes state to build
@@ -904,7 +904,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 			}
 
 			if(!world.isRemote) {
-				player.sendMessage(new TranslationTextComponent("msg.linker.success"), Util.field_240973_b_);
+				player.sendMessage(new TranslationTextComponent("msg.linker.success"), Util.DUMMY_UUID);
 
 				if(tile instanceof IMultiblock)
 					((IMultiblock)tile).setMasterBlock(getPos());

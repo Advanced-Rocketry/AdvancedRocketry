@@ -37,7 +37,7 @@ public class ChunkProviderAsteroids extends ChunkGenerator {
 	
 	public ChunkProviderAsteroids(BiomeProvider p_i231887_1_, BiomeProvider p_i231887_2_, long p_i231887_4_,
 			Supplier<DimensionSettings> settings,  DimensionProperties properties) {
-		super(p_i231887_1_, p_i231887_2_, settings.get().func_236108_a_(), p_i231887_4_);
+		super(p_i231887_1_, p_i231887_2_, settings.get().getStructures(), p_i231887_4_);
 	}
 
 	@Override
@@ -65,6 +65,11 @@ public class ChunkProviderAsteroids extends ChunkGenerator {
 	}
 
 	@Override
+	public int getHeight(int x, int z, Type heightmapType) {
+		return 0;
+	}
+
+	//@Override
 	public int func_222529_a(int p_222529_1_, int p_222529_2_, Type heightmapType) {
 		// TODO Auto-generated method stub
 		return 0;

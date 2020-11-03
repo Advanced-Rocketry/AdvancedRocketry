@@ -41,14 +41,14 @@ public class IngameTestOrchestrator {
 				} catch (AssertionError e1) {
 					AdvancedRocketry.logger.error("Test Failed!!!");
 					AdvancedRocketry.logger.catching(e1);
-					getPlayerFromAnywhere().sendMessage(new StringTextComponent(test.getName() + " Failed!"), Util.field_240973_b_);
+					getPlayerFromAnywhere().sendMessage(new StringTextComponent(test.getName() + " Failed!"), Util.DUMMY_UUID);
 				} catch (Exception e2) {
 					e2.printStackTrace();
 				}
 				
 				if(test.passed())
 				{
-					getPlayerFromAnywhere().sendMessage(new StringTextComponent(test.getName() + " Passed!"), Util.field_240973_b_);
+					getPlayerFromAnywhere().sendMessage(new StringTextComponent(test.getName() + " Passed!"), Util.DUMMY_UUID);
 				}
 			}
 		}

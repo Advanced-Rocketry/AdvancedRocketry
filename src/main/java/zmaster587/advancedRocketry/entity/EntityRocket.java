@@ -541,23 +541,23 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 								linkInfrastructure(infrastructure);
 								if(!world.isRemote) {
-									player.sendMessage(new StringTextComponent("Linked Sucessfully"), Util.field_240973_b_);
+									player.sendMessage(new StringTextComponent("Linked Sucessfully"), Util.DUMMY_UUID);
 								}
 								ItemLinker.resetPosition(heldItem);
 
 								return ActionResultType.SUCCESS;
 							}
 							else if(!world.isRemote)
-								player.sendMessage(new StringTextComponent("Already linked!"), Util.field_240973_b_);
+								player.sendMessage(new StringTextComponent("Already linked!"), Util.DUMMY_UUID);
 						}
 						else if(!world.isRemote)
-							player.sendMessage(new StringTextComponent("The object you are trying to link is too far away"), Util.field_240973_b_);
+							player.sendMessage(new StringTextComponent("The object you are trying to link is too far away"), Util.DUMMY_UUID);
 					}
 					else if(!world.isRemote)
-						player.sendMessage(new StringTextComponent("This cannot be linked to a rocket!"), Util.field_240973_b_);
+						player.sendMessage(new StringTextComponent("This cannot be linked to a rocket!"), Util.DUMMY_UUID);
 				}
 				else if(!world.isRemote)
-					player.sendMessage(new StringTextComponent("Nothing to be linked"), Util.field_240973_b_);
+					player.sendMessage(new StringTextComponent("Nothing to be linked"), Util.DUMMY_UUID);
 				return ActionResultType.PASS;
 			}
 

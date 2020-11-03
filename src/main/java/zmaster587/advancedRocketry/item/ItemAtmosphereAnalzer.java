@@ -90,7 +90,7 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 		if(!worldIn.isRemote) {
 			List<ITextComponent> str = getAtmosphereReadout(stack, (AtmosphereType) AtmosphereHandler.getOxygenHandler(worldIn).getAtmosphereType(playerIn),worldIn);
 			for(ITextComponent str1 : str)
-				playerIn.sendMessage(str1, Util.field_240973_b_);
+				playerIn.sendMessage(str1, Util.DUMMY_UUID);
 		}
 		return super.onItemRightClick(worldIn, playerIn, hand);
 	}

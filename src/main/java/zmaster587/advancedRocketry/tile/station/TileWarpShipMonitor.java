@@ -550,8 +550,8 @@ public class TileWarpShipMonitor extends TileEntity implements ITickableTileEnti
 	}
 	
 	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT compound) {
-		super.func_230337_a_(state, compound);
+	public void read(BlockState state, CompoundNBT compound) {
+		super.read(state, compound);
 		inv.readFromNBT(compound);
 		data.readFromNBT(compound);
 		progress = compound.getInt("progress");

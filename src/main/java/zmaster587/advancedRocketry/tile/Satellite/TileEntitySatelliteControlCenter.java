@@ -219,8 +219,8 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 	}
 
 	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
-		super.func_230337_a_(state, nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 
 		CompoundNBT data = nbt.getCompound("data");
 		this.data.readFromNBT(data);

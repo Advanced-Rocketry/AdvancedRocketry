@@ -72,7 +72,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 		ItemLinker.setMasterCoords(item, getPos());
 
 		if(world.isRemote)
-			player.sendMessage(new TranslationTextComponent("msg.linker.program"), Util.field_240973_b_);
+			player.sendMessage(new TranslationTextComponent("msg.linker.program"), Util.DUMMY_UUID);
 
 		return true;
 	}
@@ -94,7 +94,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 		{
 			if(world.isRemote)
 			{
-				player.sendMessage(new TranslationTextComponent("msg.linker.success"), Util.field_240973_b_);
+				player.sendMessage(new TranslationTextComponent("msg.linker.success"), Util.DUMMY_UUID);
 				return true;
 			}
 
@@ -158,7 +158,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 
 	@Override 
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-		this.func_230337_a_(getBlockState(), pkt.getNbtCompound());
+		this.read(getBlockState(), pkt.getNbtCompound());
 	}
 
 	@Override
@@ -238,8 +238,8 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 	}
 
 	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
-		super.func_230337_a_(state, nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 
 		extractMode = nbt.getBoolean("mode");
 		enabled = nbt.getBoolean("enabled");

@@ -224,10 +224,10 @@ public class ARConfiguration {
 		
 		
 		LinkedList<String> blackListedbiomes = new LinkedList<String>();
-		blackListedbiomes.add(Biomes.RIVER.func_240901_a_().toString());
-		blackListedbiomes.add(Biomes.THE_END.func_240901_a_().toString());
-		blackListedbiomes.add(Biomes.BADLANDS.func_240901_a_().toString());
-		blackListedbiomes.add(Biomes.THE_VOID.func_240901_a_().toString());
+		blackListedbiomes.add(Biomes.RIVER.getLocation().toString());
+		blackListedbiomes.add(Biomes.THE_END.getLocation().toString());
+		blackListedbiomes.add(Biomes.BADLANDS.getLocation().toString());
+		blackListedbiomes.add(Biomes.THE_VOID.getLocation().toString());
 		//blackListedbiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.alienForest).toString());
 		
 		arConfig.biomeBlackList = builder.comment("List of Biomes to be blacklisted from spawning as BiomeIds, default is: river, sky, hell, void, alienForest").
@@ -245,10 +245,10 @@ public class ARConfiguration {
 		//singleBiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.swampDeepBiome).toString());
 		//singleBiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.crystalChasms).toString());
 		//singleBiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.alienForest).toString());
-		singleBiomes.add(Biomes.DESERT_HILLS.func_240901_a_().toString());
-		singleBiomes.add(Biomes.MUSHROOM_FIELDS.func_240901_a_().toString());
-		singleBiomes.add(Biomes.TALL_BIRCH_HILLS.func_240901_a_().toString());
-		singleBiomes.add(Biomes.ICE_SPIKES.func_240901_a_().toString());
+		singleBiomes.add(Biomes.DESERT_HILLS.getLocation().toString());
+		singleBiomes.add(Biomes.MUSHROOM_FIELDS.getLocation().toString());
+		singleBiomes.add(Biomes.TALL_BIRCH_HILLS.getLocation().toString());
+		singleBiomes.add(Biomes.ICE_SPIKES.getLocation().toString());
 		
 		arConfig.biomeSingle = builder.comment("Some worlds have a chance of spawning single biomes contained in this list.").
 				defineList("SingleBiomes", singleBiomes, (item) -> { return true; });

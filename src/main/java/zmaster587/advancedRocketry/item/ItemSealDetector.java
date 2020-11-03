@@ -45,7 +45,7 @@ public class ItemSealDetector extends Item
         {
             if (SealableBlockHandler.INSTANCE.isBlockSealed(world, pos))
             {
-                player.sendMessage(new TranslationTextComponent("msg.sealdetector.sealed"), Util.field_240973_b_);
+                player.sendMessage(new TranslationTextComponent("msg.sealdetector.sealed"), Util.DUMMY_UUID);
             }
             else
             {
@@ -53,23 +53,23 @@ public class ItemSealDetector extends Item
                 Material mat = state.getMaterial();
                 if (SealableBlockHandler.INSTANCE.isMaterialBanned(mat))
                 {
-                    player.sendMessage(new TranslationTextComponent("msg.sealdetector.notsealmat"), Util.field_240973_b_);
+                    player.sendMessage(new TranslationTextComponent("msg.sealdetector.notsealmat"), Util.DUMMY_UUID);
                 }
                 else if (SealableBlockHandler.INSTANCE.isBlockBanned(state.getBlock()))
                 {
-                    player.sendMessage(new TranslationTextComponent("msg.sealdetector.notsealblock"), Util.field_240973_b_);
+                    player.sendMessage(new TranslationTextComponent("msg.sealdetector.notsealblock"), Util.DUMMY_UUID);
                 }
                 else if (SealableBlockHandler.isFullBlock(world, pos))
                 {
-                    player.sendMessage(new TranslationTextComponent("msg.sealdetector.notfullblock"), Util.field_240973_b_);
+                    player.sendMessage(new TranslationTextComponent("msg.sealdetector.notfullblock"), Util.DUMMY_UUID);
                 }
                 else if (state.getBlock() instanceof IFluidBlock)
                 {
-                    player.sendMessage(new TranslationTextComponent("msg.sealdetector.fluid"), Util.field_240973_b_);
+                    player.sendMessage(new TranslationTextComponent("msg.sealdetector.fluid"), Util.DUMMY_UUID);
                 }
                 else
                 {
-                    player.sendMessage(new TranslationTextComponent("msg.sealdetector.other"), Util.field_240973_b_);
+                    player.sendMessage(new TranslationTextComponent("msg.sealdetector.other"), Util.DUMMY_UUID);
                 }
             }
         }

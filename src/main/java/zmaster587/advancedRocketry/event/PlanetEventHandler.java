@@ -453,7 +453,7 @@ public class PlanetEventHandler {
 	public void worldSaveEvent(WorldEvent.Save event) {
 		//TODO: save only the one dimension
 		
-		if(event.getWorld() instanceof World && ZUtils.getDimensionIdentifier((World)event.getWorld()).equals(DimensionType.field_242710_a))
+		if(event.getWorld() instanceof World && ZUtils.getDimensionIdentifier((World)event.getWorld()).equals(DimensionType.OVERWORLD_ID))
 			try {
 				DimensionManager.getInstance().saveDimensions(DimensionManager.workingPath);
 			} catch (Exception e) {

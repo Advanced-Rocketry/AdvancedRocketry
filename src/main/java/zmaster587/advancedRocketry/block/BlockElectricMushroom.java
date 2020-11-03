@@ -42,7 +42,7 @@ public class BlockElectricMushroom extends MushroomBlock implements IGrowable {
 
 			LightningBoltEntity lightningboltentity = EntityType.LIGHTNING_BOLT.create(world);
 			lightningboltentity.moveForced(lightning.getX(), lightning.getY(), lightning.getZ());
-			lightningboltentity.func_233623_a_(true);
+			lightningboltentity.setEffectOnly(true);
 			world.addEntity(lightningboltentity);
 		}
 	}

@@ -369,8 +369,8 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 			int screenY = RocketEventHandler.hydrogenBar.getRenderY();
 
 			//Draw BG
-			gui.func_238474_b_(mat,screenX, screenY, 23, 34, width, 17);
-			gui.func_238474_b_(mat, screenX , screenY, 23, 51, (int)(width*size), 17);
+			gui.blit(mat,screenX, screenY, 23, 34, width, 17);
+			gui.blit(mat, screenX , screenY, 23, 51, (int)(width*size), 17);
 
 
 		}

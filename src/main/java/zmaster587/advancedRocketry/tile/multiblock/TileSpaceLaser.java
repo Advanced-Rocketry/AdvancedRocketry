@@ -365,7 +365,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 
 	@Override 
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-		this.func_230337_a_(getBlockState(), pkt.getNbtCompound());
+		this.read(getBlockState(), pkt.getNbtCompound());
 		isRunning = pkt.getNbtCompound().getBoolean("IsRunning");
 	}
 
@@ -399,8 +399,8 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 	}
 
 	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
-		super.func_230337_a_(state, nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 
 		laserSat.readFromNBT(nbt.getCompound("laser"));
 		if(nbt.contains("GlassPane")) {

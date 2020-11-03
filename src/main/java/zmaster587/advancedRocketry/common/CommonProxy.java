@@ -62,7 +62,7 @@ public class CommonProxy {
 		
 		try {
 			
-			return ZUtils.getWorld(Dimension.field_236053_b_.getRegistryName()).getGameTime();
+			return ZUtils.getWorld(Dimension.OVERWORLD.getRegistryName()).getGameTime();
 		} catch (NullPointerException e) {
 			return 0;
 		}

@@ -214,7 +214,7 @@ public class BlockPress extends PistonBlock {
 				BlockPos blockpos5 = entry.getKey();
 				BlockState blockstate2 = entry.getValue();
 				blockstate2.updateDiagonalNeighbors(worldIn, blockpos5, 2);
-				blockstate3.func_235734_a_(worldIn, blockpos5, 2);
+				blockstate3.updateNeighbours(worldIn, blockpos5, 2);
 				blockstate3.updateDiagonalNeighbors(worldIn, blockpos5, 2);
 			}
 
@@ -279,7 +279,7 @@ public class BlockPress extends PistonBlock {
 			 worldIn.setBlockState(pos, blockstate, 20);
 			 worldIn.setTileEntity(pos, MovingPistonBlock.createTilePiston(this.getDefaultState().with(FACING, Direction.byIndex(param & 7)), direction, false, true));
 			 worldIn.func_230547_a_(pos, blockstate.getBlock());
-			 blockstate.func_235734_a_(worldIn, pos, 2);
+			 blockstate.updateNeighbours(worldIn, pos, 2);
 			 worldIn.removeBlock(pos.offset(direction), false);
 
 

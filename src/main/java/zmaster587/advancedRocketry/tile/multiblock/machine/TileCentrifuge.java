@@ -80,7 +80,7 @@ public class TileCentrifuge extends TileMultiblockMachine {
 
 				float floatChance = Float.parseFloat(chance);
 
-				List<Item> list2 = ItemTags.getCollection().get(item).func_230236_b_();
+				List<Item> list2 = ItemTags.getCollection().get(item).getAllElements();
 				if(!list2.isEmpty())
 					nuggetList.add(new RecipesMachine.ChanceItemStack(new ItemStack(list2.get(0)), floatChance ));
 			}

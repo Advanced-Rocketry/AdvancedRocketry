@@ -572,9 +572,9 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemSpaceLaser.setRegistryName("spacelaser"));
 
 
-		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "wafersilicon")).func_230235_a_(AdvancedRocketryItems.itemSiliconWafer);
-		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "ingotcarbon")).func_230235_a_(AdvancedRocketryItems.itemCarbonBrick);
-		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "itemlens")).func_230235_a_(AdvancedRocketryItems.itemLens);
-		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "dustthermite")).func_230235_a_(AdvancedRocketryItems.itemThermite);
+		ItemTags.getCollection().getTagByID(new ResourceLocation("forge", "wafersilicon")).contains(AdvancedRocketryItems.itemSiliconWafer);
+		ItemTags.getCollection().getTagByID(new ResourceLocation("forge", "ingotcarbon")).contains(AdvancedRocketryItems.itemCarbonBrick);
+		ItemTags.getCollection().getTagByID(new ResourceLocation("forge", "itemlens")).contains(AdvancedRocketryItems.itemLens);
+		ItemTags.getCollection().getTagByID(new ResourceLocation("forge", "dustthermite")).contains(AdvancedRocketryItems.itemThermite);
 	}
 }

@@ -390,13 +390,13 @@ public class AdvancedRocketry {
 		materialRegistry.registerOres(LibVulpes.tabLibVulpesOres);
 		
         //OreDict stuff
-		BlockTags.getCollection().func_241834_b(new ResourceLocation("forge", "turfmoon")).func_230235_a_(AdvancedRocketryBlocks.blockMoonTurf);
-		BlockTags.getCollection().func_241834_b(new ResourceLocation("forge", "turfmoon")).func_230235_a_(AdvancedRocketryBlocks.blockMoonTurfDark);
-		BlockTags.getCollection().func_241834_b(new ResourceLocation("minecraft", "logs")).func_230235_a_(AdvancedRocketryBlocks.blockAlienWood);
-		BlockTags.getCollection().func_241834_b(new ResourceLocation("minecraft", "planks")).func_230235_a_(AdvancedRocketryBlocks.blockAlienPlanks);
-		BlockTags.getCollection().func_241834_b(new ResourceLocation("minecraft", "leaves")).func_230235_a_(AdvancedRocketryBlocks.blockAlienLeaves);
-		BlockTags.getCollection().func_241834_b(new ResourceLocation("minecraft", "saplings")).func_230235_a_(AdvancedRocketryBlocks.blockAlienSapling);
-		BlockTags.getCollection().func_241834_b(new ResourceLocation("forge", "concrete")).func_230235_a_(AdvancedRocketryBlocks.blockConcrete);
+		BlockTags.getCollection().getTagByID(new ResourceLocation("forge", "turfmoon")).contains(AdvancedRocketryBlocks.blockMoonTurf);
+		BlockTags.getCollection().getTagByID(new ResourceLocation("forge", "turfmoon")).contains(AdvancedRocketryBlocks.blockMoonTurfDark);
+		BlockTags.getCollection().getTagByID(new ResourceLocation("minecraft", "logs")).contains(AdvancedRocketryBlocks.blockAlienWood);
+		BlockTags.getCollection().getTagByID(new ResourceLocation("minecraft", "planks")).contains(AdvancedRocketryBlocks.blockAlienPlanks);
+		BlockTags.getCollection().getTagByID(new ResourceLocation("minecraft", "leaves")).contains(AdvancedRocketryBlocks.blockAlienLeaves);
+		BlockTags.getCollection().getTagByID(new ResourceLocation("minecraft", "saplings")).contains(AdvancedRocketryBlocks.blockAlienSapling);
+		BlockTags.getCollection().getTagByID(new ResourceLocation("forge", "concrete")).contains(AdvancedRocketryBlocks.blockConcrete);
 	}
 
 	@OnlyIn(value=Dist.CLIENT)
@@ -580,7 +580,7 @@ public class AdvancedRocketry {
 		StructurePieceGeode.init();
 
 		//Add the overworld as a discovered planet
-		zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().initiallyKnownPlanets.add(Dimension.field_236053_b_.func_240901_a_());
+		zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().initiallyKnownPlanets.add(Dimension.OVERWORLD.getLocation());
 	}
 
 	public void serverStarted(FMLServerStartedEvent event) {

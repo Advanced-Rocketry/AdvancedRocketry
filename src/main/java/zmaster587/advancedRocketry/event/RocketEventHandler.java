@@ -394,18 +394,18 @@ public class RocketEventHandler extends Screen {
 				Minecraft.getInstance().getTextureManager().bindTexture(background);
 
 				//Draw BG
-				this.func_238474_b_(event.getMatrixStack(),0, 0, 0, 0, 17, 252);
+				this.blit(event.getMatrixStack(),0, 0, 0, 0, 17, 252);
 
 				//Draw altitude indicator
 				float percentOrbit = MathHelper.clamp((float) ((rocket.getPosY() - rocket.world.getSeaLevel())/(float)(ARConfiguration.getCurrentConfig().orbit.get()-rocket.world.getSeaLevel())), 0f, 1f);
-				this.func_238474_b_(event.getMatrixStack(), 3, 8 + (int)(79*(1 - percentOrbit)), 17, 0, 6, 6); //6 to 83
+				this.blit(event.getMatrixStack(), 3, 8 + (int)(79*(1 - percentOrbit)), 17, 0, 6, 6); //6 to 83
 
 				//Draw Velocity indicator
-				this.func_238474_b_(event.getMatrixStack(), 3, 94 + (int)(69*(0.5 - (MathHelper.clamp((float) (rocket.getMotion().y), -1f, 1f)/2f))), 17, 0, 6, 6); //94 to 161
+				this.blit(event.getMatrixStack(), 3, 94 + (int)(69*(0.5 - (MathHelper.clamp((float) (rocket.getMotion().y), -1f, 1f)/2f))), 17, 0, 6, 6); //94 to 161
 
 				//Draw fuel indicator
 				int size = (int)(68*(rocket.getFuelAmount() /(float)rocket.getFuelCapacity()));
-				this.func_238474_b_(event.getMatrixStack(), 3, 242 - size, 17, 75 - size, 3, size); //94 to 161
+				this.blit(event.getMatrixStack(), 3, 242 - size, 17, 75 - size, 3, size); //94 to 161
 
 				RenderSystem.disableBlend();
 				String str = rocket.getTextOverlay();
@@ -455,8 +455,8 @@ public class RocketEventHandler extends Screen {
 					int screenY = oxygenBar.getRenderY();//- 57;
 
 					//Draw BG
-					this.func_238474_b_(event.getMatrixStack(), screenX, screenY, 23, 0, width, 17);
-					this.func_238474_b_(event.getMatrixStack(),screenX , screenY, 23, 17, (int)(width*size), 17);
+					this.blit(event.getMatrixStack(), screenX, screenY, 23, 0, width, 17);
+					this.blit(event.getMatrixStack(),screenX , screenY, 23, 17, (int)(width*size), 17);
 				}
 			}
 
@@ -487,7 +487,7 @@ public class RocketEventHandler extends Screen {
 				fontRenderer.func_243246_a(event.getMatrixStack(), new StringTextComponent(str), screenX, screenY, 0xFF5656);
 				RenderSystem.color4f(1f, 1f, 1f, 1f);
 				Minecraft.getInstance().getTextureManager().bindTexture(TextureResources.progressBars);
-				this.func_238474_b_( event.getMatrixStack(), screenX + fontRenderer.getStringWidth(str)/2 -8, screenY - 16, 0, 156, 16, 16);
+				this.blit( event.getMatrixStack(), screenX + fontRenderer.getStringWidth(str)/2 -8, screenY - 16, 0, 156, 16, 16);
 
 				GL11.glPopMatrix();
 			}
@@ -582,19 +582,19 @@ public class RocketEventHandler extends Screen {
 				RenderSystem.color4f(1f, 1f, 1f, 1f);
 				Minecraft.getInstance().getTextureManager().bindTexture(TextureResources.frameHUDBG);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-				RenderHelper.renderNorthFaceWithUV(matrix, buffer, this.func_230927_p_()-1, screenX - 4, screenY - 4, screenX + size, screenY + size + 4,0f,0.5f,0f,1f);
+				RenderHelper.renderNorthFaceWithUV(matrix, buffer, this.getBlitOffset()-1, screenX - 4, screenY - 4, screenX + size, screenY + size + 4,0f,0.5f,0f,1f);
 				Tessellator.getInstance().draw();
 
 				Minecraft.getInstance().getTextureManager().bindTexture(TextureResources.frameHUDBG);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-				RenderHelper.renderNorthFaceWithUV(matrix, buffer, this.func_230927_p_()-1, screenX + size, screenY - 3, screenX + 2 + size, screenY + size + 3,0.5f,0.5f,0f,0f);
+				RenderHelper.renderNorthFaceWithUV(matrix, buffer, this.getBlitOffset()-1, screenX + size, screenY - 3, screenX + 2 + size, screenY + size + 3,0.5f,0.5f,0f,0f);
 				Tessellator.getInstance().draw();
 
 				//Draw Icon
 				RenderSystem.color4f(color,color,color, color);
 				Minecraft.getInstance().getTextureManager().bindTexture(TextureResources.armorSlots[slot-1]);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-				RenderHelper.renderNorthFaceWithUV(matrix, buffer, this.func_230927_p_()-1, screenX, screenY, screenX + size, screenY + size,0f,1f,1f,0f);
+				RenderHelper.renderNorthFaceWithUV(matrix, buffer, this.getBlitOffset()-1, screenX, screenY, screenX + size, screenY + size,0f,1f,1f,0f);
 				Tessellator.getInstance().draw();
 
 				if(modularArmorFlag) {
@@ -616,7 +616,7 @@ public class RocketEventHandler extends Screen {
 
 						Minecraft.getInstance().getTextureManager().bindTexture(TextureResources.frameHUDBG);
 						buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-						RenderHelper.renderNorthFaceWithUV(matrix, buffer, this.func_230927_p_() -1, screenX - 4, screenY - 4, screenX + size - 2, screenY + size + 4,0.5f,0.5f,0f,1f);
+						RenderHelper.renderNorthFaceWithUV(matrix, buffer, this.getBlitOffset() -1, screenX - 4, screenY - 4, screenX + size - 2, screenY + size + 4,0.5f,0.5f,0f,1f);
 						Tessellator.getInstance().draw();
 
 
@@ -627,7 +627,7 @@ public class RocketEventHandler extends Screen {
 							Minecraft.getInstance().getTextureManager().bindTexture(texture);
 							RenderSystem.color4f(color,color,color, alpha);
 							buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-							RenderHelper.renderNorthFaceWithUV(matrix, buffer, this.func_230927_p_()-1, screenX, screenY, screenX + size, screenY + size, icon.getMinU(),icon.getMaxU(), icon.getMaxV(),icon.getMinV());
+							RenderHelper.renderNorthFaceWithUV(matrix, buffer, this.getBlitOffset()-1, screenX, screenY, screenX + size, screenY + size, icon.getMinU(),icon.getMaxU(), icon.getMaxV(),icon.getMinV());
 							Tessellator.getInstance().draw();
 						}
 						else {
@@ -648,7 +648,7 @@ public class RocketEventHandler extends Screen {
 				RenderSystem.color4f(1,1,1, 1f);
 				Minecraft.getInstance().getTextureManager().bindTexture(TextureResources.frameHUDBG);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-				RenderHelper.renderNorthFaceWithUV(matrix, buffer, (double) this.func_230927_p_()-1, (double)screenX + 12, (double)screenY - 4, (double)screenX + size, (double)screenY + size + 4,0.75f,1f,0f,1f);
+				RenderHelper.renderNorthFaceWithUV(matrix, buffer, (double) this.getBlitOffset()-1, (double)screenX + 12, (double)screenY - 4, (double)screenX + size, (double)screenY + size + 4,0.75f,1f,0f,1f);
 				Tessellator.getInstance().draw();
 			}
 		}

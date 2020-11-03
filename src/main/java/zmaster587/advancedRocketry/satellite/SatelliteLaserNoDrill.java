@@ -54,10 +54,10 @@ public class SatelliteLaserNoDrill extends SatelliteBase {
 				catch(NumberFormatException e) {}
 
 
-				if(ItemTags.getCollection().func_241834_b(new ResourceLocation(args[0])) != null)
+				if(ItemTags.getCollection().getTagByID(new ResourceLocation(args[0])) != null)
 				{
 
-					Item item = ItemTags.getCollection().func_241834_b(itemResource).func_230236_b_().get(0);
+					Item item = ItemTags.getCollection().getTagByID(itemResource).getAllElements().get(0);
 
 					ItemStack stack = new ItemStack(item, count);
 					ores.add(stack);

@@ -98,12 +98,12 @@ public class StructurePieceCrater extends ScatteredStructurePiece {
 
 						for(int dist = 0; dist < ((ridgeSize*ridgeSize) - (count+ridgeSize)*(count+ridgeSize))/(ridgeSize*2); dist++) {
 							if(y + dist < 255)
-								this.setBlockState(world, world.getBiome(new BlockPos(x, y + dist, z)).func_242440_e().func_242502_e().getTop(), x, y + dist, z,bb);
+								this.setBlockState(world, world.getBiome(new BlockPos(x, y + dist, z)).getGenerationSettings().getSurfaceBuilderConfig().getTop(), x, y + dist, z,bb);
 						}
 					}
 
 					if(count > 1 && (y-count > 2))
-						this.setBlockState(world, world.getBiome(new BlockPos(x, y - count, z)).func_242440_e().func_242502_e().getTop(), x, y - count, z,bb);
+						this.setBlockState(world, world.getBiome(new BlockPos(x, y - count, z)).getGenerationSettings().getSurfaceBuilderConfig().getTop(), x, y - count, z,bb);
 				}
 			}
 		}

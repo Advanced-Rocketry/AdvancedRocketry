@@ -30,7 +30,7 @@ public class ModuleSatellite extends ModuleSlotArray {
 			FontRenderer font) {
 		
 		for(Slot slot : slotList) {
-			gui.func_238474_b_(matrix, x + slot.xPos - 1, y + slot.yPos - 1, satelliteSlot.getxLoc(), satelliteSlot.getyLoc(), satelliteSlot.getxSize(), satelliteSlot.getySize());
+			gui.blit(matrix, x + slot.xPos - 1, y + slot.yPos - 1, satelliteSlot.getxLoc(), satelliteSlot.getyLoc(), satelliteSlot.getxSize(), satelliteSlot.getySize());
 		}
 	}
 	

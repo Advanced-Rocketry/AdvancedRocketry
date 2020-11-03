@@ -44,7 +44,7 @@ public class TileFluidTank extends TileFluidHatch {
 	
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-		func_230337_a_(getBlockState(), pkt.getNbtCompound());
+		read(getBlockState(), pkt.getNbtCompound());
 	}
 	
 	@Override

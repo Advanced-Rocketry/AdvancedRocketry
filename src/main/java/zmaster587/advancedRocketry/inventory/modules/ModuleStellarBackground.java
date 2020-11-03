@@ -24,9 +24,9 @@ public class ModuleStellarBackground extends ModuleBase {
 			int mouseY, FontRenderer font) {
 		if(this.icon != null) {
 			Minecraft.getInstance().getTextureManager().bindTexture(this.icon);
-			gui.func_238474_b_(matrix, 0, 0, 0, 0, gui.getXSize(),  gui.getYSize());
+			gui.blit(matrix, 0, 0, 0, 0, gui.getXSize(),  gui.getYSize());
 			Minecraft.getInstance().getTextureManager().bindTexture(TextureResources.genericStation);
-			gui.func_238474_b_(matrix, (int)(256), (int)(64), 0, 0, 256, 256);
+			gui.blit(matrix, (int)(256), (int)(64), 0, 0, 256, 256);
 		}
 	}
 }

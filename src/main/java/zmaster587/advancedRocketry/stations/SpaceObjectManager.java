@@ -263,7 +263,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 					event.player.fallDistance=0;
 					event.player.setMotion(event.player.getMotion().mul(1, 0, 1));
 					event.player.setPositionAndUpdate(loc.x, loc.y + 2, loc.z);
-					event.player.sendMessage(new StringTextComponent("You wake up finding yourself back on the station"), Util.field_240973_b_);
+					event.player.sendMessage(new StringTextComponent("You wake up finding yourself back on the station"), Util.DUMMY_UUID);
 				}
 			}
 

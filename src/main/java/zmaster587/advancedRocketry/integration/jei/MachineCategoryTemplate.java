@@ -32,7 +32,7 @@ public abstract class MachineCategoryTemplate<T extends MachineRecipe> implement
 	IDrawable icon;
 	
 	public MachineCategoryTemplate(IGuiHelper helper, ProgressBarImage bar, ItemStack icon) {
-		//func_238474_b_(3,3, 7, 16, 163, 55);
+		//blit(3,3, 7, 16, 163, 55);
 		background = helper.createDrawable(new ResourceLocation("advancedrocketry:textures/gui/GenericNeiBackground.png"), 7, 16, 163, 55 ); //helper.createDrawable(bar.getResourceLocation(), bar.getBackOffsetX(),
 				//bar.getBackOffsetY(), bar.getBackWidth(), bar.getBackHeight());
 		this.bar = bar;
@@ -57,7 +57,7 @@ public abstract class MachineCategoryTemplate<T extends MachineRecipe> implement
 		ProgressBarImage progressBar = bar;
 		Minecraft.getInstance().getTextureManager().bindTexture(TextureResources.progressBars);
 		
-		Minecraft.getInstance().currentScreen.func_238474_b_(matrixStack, 65, 3, progressBar.getBackOffsetX(), progressBar.getBackOffsetY(), progressBar.getBackWidth(), progressBar.getBackHeight());
+		Minecraft.getInstance().currentScreen.blit(matrixStack, 65, 3, progressBar.getBackOffsetX(), progressBar.getBackOffsetY(), progressBar.getBackWidth(), progressBar.getBackHeight());
 
 		progressBar.renderProgressBar(matrixStack, 65, 3, (System.currentTimeMillis() % 3000)/3000f, Minecraft.getInstance().currentScreen);
 		//drawProgressBar(65 + progressBar.getInsetX(), 3 +  + progressBar.getInsetY(), progressBar.getForeOffsetX(), progressBar.getForeOffsetY(), progressBar.getForeWidth(),  progressBar.getForeHeight(), 50, progressBar.getDirection().rotateAround(Direction.Axis.Z));

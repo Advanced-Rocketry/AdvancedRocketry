@@ -458,7 +458,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 		CompoundNBT nbt = pkt.getNbtCompound();
-		func_230337_a_(getBlockState(), nbt);
+		read(getBlockState(), nbt);
 		setText();
 		
 	}
@@ -552,8 +552,8 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 	}
 
 	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
-		super.func_230337_a_(state, nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 
 		radioButton.setOptionSelected(nbt.getInt("selected"));
 		inv.readFromNBT(nbt);

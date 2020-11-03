@@ -104,6 +104,8 @@ import java.util.Map.Entry;
 
 import org.apache.logging.log4j.LogManager;
 
+import javax.annotation.Nullable;
+
 public class StorageChunk implements IWorld, IStorageChunk {
 
 	private static final int CHUNK_SIZE = 16;
@@ -131,7 +133,7 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		liquidTiles = new ArrayList<TileEntity>();
 
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
-		this.chunk = new Chunk((World)world, new ChunkPos(0, 0), new BiomeContainer(null, new ChunkPos(0, 0), new SingleBiomeProvider(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.func_240901_a_()))));
+		this.chunk = new Chunk((World)world, new ChunkPos(0, 0), new BiomeContainer(null, new ChunkPos(0, 0), new SingleBiomeProvider(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getLocation()))));
 		// Hacky, quick workaround, I need a break
 		world.setChunk(chunk);
 	}
@@ -149,7 +151,7 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
 		ObjectIntIdentityMap<Biome> registry = new ObjectIntIdentityMap<>(1);
 		registry.add(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getRegistryName()));
-		this.chunk = new Chunk((World)world, new ChunkPos(0, 0), new BiomeContainer(registry, new ChunkPos(0, 0), new SingleBiomeProvider(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.func_240901_a_()))));
+		this.chunk = new Chunk((World)world, new ChunkPos(0, 0), new BiomeContainer(registry, new ChunkPos(0, 0), new SingleBiomeProvider(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getLocation()))));
 		// Hacky, quick workaround, I need a break
 		world.setChunk(chunk);
 	}
@@ -465,7 +467,7 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		boolean flag = compoundnbt.getBoolean("isLightOn");
 		ListNBT listnbt = compoundnbt.getList("Sections", 10);
 		ChunkSection[] achunksection = new ChunkSection[16];
-		boolean flag1 = true; //worldIn.func_230315_m_().hasSkyLight();
+		boolean flag1 = true; //worldIn.getDimensionType().hasSkyLight();
 		AbstractChunkProvider abstractchunkprovider = this.world.getChunkProvider();
 		WorldLightManager worldlightmanager = abstractchunkprovider.getLightManager();
 
@@ -493,7 +495,7 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		}
 
 		IChunk ichunk;
-		ichunk = new Chunk(this.world, pos, new BiomeContainer(AdvancedRocketryBiomes.getBiomeRegistry(), pos, new SingleBiomeProvider(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.func_240901_a_()))), UpgradeData.EMPTY, EmptyTickList.get(), EmptyTickList.get(), 0L, achunksection, null);
+		ichunk = new Chunk(this.world, pos, new BiomeContainer(AdvancedRocketryBiomes.getBiomeRegistry(), pos, new SingleBiomeProvider(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getLocation()))), UpgradeData.EMPTY, EmptyTickList.get(), EmptyTickList.get(), 0L, achunksection, null);
 		if (compoundnbt.contains("ForgeCaps")) ((Chunk)ichunk).readCapsFromNBT(compoundnbt.getCompound("ForgeCaps"));
 
 
@@ -518,7 +520,7 @@ public class StorageChunk implements IWorld, IStorageChunk {
 			ListNBT listnbt1 = listnbt3.getList(l1);
 
 			for(int l = 0; l < listnbt1.size(); ++l) {
-				ichunk.func_201636_b(listnbt1.getShort(l), l1);
+				ichunk.addPackedPosition(listnbt1.getShort(l), l1);
 			}
 		}
 
@@ -530,7 +532,7 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		for(int j = 0; j < listnbt1.size(); ++j) {
 			CompoundNBT compoundnbt1 = listnbt1.getCompound(j);
 			BlockPos blockpos = new BlockPos(compoundnbt1.getInt("x"), compoundnbt1.getInt("y"), compoundnbt1.getInt("z"));
-			TileEntity tileentity = TileEntity.func_235657_b_(chunk.getBlockState(blockpos), compoundnbt1);
+			TileEntity tileentity = TileEntity.readTileEntity(chunk.getBlockState(blockpos), compoundnbt1);
 			if (tileentity != null) {
 				if(isInventoryBlock(tileentity)) {
 					inventoryTiles.add(tileentity);
@@ -935,7 +937,7 @@ public class StorageChunk implements IWorld, IStorageChunk {
 	}
 
 	@Override
-	public DimensionType func_230315_m_() {
+	public DimensionType getDimensionType() {
 		return null;
 	}
 
@@ -964,8 +966,13 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		return false;
 	}
 
-	@Override
+	//@Override
 	public boolean func_241211_a_(BlockPos p_241211_1_, BlockState p_241211_2_, int p_241211_3_, int p_241211_4_) {
+		return false;
+	}
+
+	@Override
+	public boolean setBlockState(BlockPos pos, BlockState state, int flags, int recursionLeft) {
 		return false;
 	}
 
@@ -976,6 +983,11 @@ public class StorageChunk implements IWorld, IStorageChunk {
 	}
 
 	@Override
+	public boolean destroyBlock(BlockPos pos, boolean dropBlock, @Nullable Entity entity, int recursionLeft) {
+		return false;
+	}
+
+	//@Override
 	public boolean func_241212_a_(BlockPos p_241212_1_, boolean p_241212_2_, Entity p_241212_3_, int p_241212_4_) {
 		return false;
 	}

@@ -413,7 +413,7 @@ boolean openFullScreen = false;
 		ItemLinker.setMasterCoords(item, this.getPos());
 		ItemLinker.setDimId(item, ZUtils.getDimensionIdentifier(world));
 		if(!world.isRemote)
-			player.sendMessage(new TranslationTextComponent("msg.linker.program"), Util.field_240973_b_);
+			player.sendMessage(new TranslationTextComponent("msg.linker.program"), Util.DUMMY_UUID);
 		return true;
 	}
 
@@ -430,7 +430,7 @@ boolean openFullScreen = false;
 
 			if(dimPos.dimid == ZUtils.getDimensionIdentifier(myWorld))
 			{
-				player.sendMessage(new TranslationTextComponent("msg.spaceelevator.samedimensionerror"), Util.field_240973_b_);
+				player.sendMessage(new TranslationTextComponent("msg.spaceelevator.samedimensionerror"), Util.DUMMY_UUID);
 				return false;
 			}
 
@@ -451,12 +451,12 @@ boolean openFullScreen = false;
 						((TileSpaceElevator) tile).addEntryToList(new DimensionBlockPosition(ZUtils.getDimensionIdentifier(myWorld), new HashedBlockPosition(getPos())));
 						((TileSpaceElevator) tile).addEntryToList(dimPos);
 						
-						player.sendMessage(new TranslationTextComponent("msg.spaceelevator.newdstadded"), Util.field_240973_b_);
+						player.sendMessage(new TranslationTextComponent("msg.spaceelevator.newdstadded"), Util.DUMMY_UUID);
 						return true;
 					}
 					else
 					{
-						player.sendMessage(new TranslationTextComponent("msg.spaceelevator.nocchiperror"), Util.field_240973_b_);
+						player.sendMessage(new TranslationTextComponent("msg.spaceelevator.nocchiperror"), Util.DUMMY_UUID);
 						return false;
 					}
 				}
@@ -568,9 +568,9 @@ boolean openFullScreen = false;
 	}
 
 	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+	public void read(BlockState state, CompoundNBT nbt) {
 		inv.readFromNBT(nbt);
-		super.func_230337_a_(state, nbt);
+		super.read(state, nbt);
 	}
 
 	@Override

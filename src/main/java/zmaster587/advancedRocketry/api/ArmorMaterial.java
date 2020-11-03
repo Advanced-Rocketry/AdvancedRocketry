@@ -62,6 +62,11 @@ public class ArmorMaterial implements IArmorMaterial {
       return this.toughness;
    }
 
+   @Override
+   public float getKnockbackResistance() {
+      return 0;
+   }
+
    public float func_230304_f_() {
       return this.field_234660_o_;
    }

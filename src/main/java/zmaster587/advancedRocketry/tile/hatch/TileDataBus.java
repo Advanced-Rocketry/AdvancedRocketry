@@ -129,8 +129,8 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 
 	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
-		super.func_230337_a_(state, nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 	}
 	
 	@Override

@@ -81,7 +81,7 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 		super.onDataPacket(net, pkt);
-		func_230337_a_(getBlockState(), pkt.getNbtCompound());
+		read(getBlockState(), pkt.getNbtCompound());
 		
 		if(targetId != null) {
 			targetId.setText(targetIdStr);
@@ -128,8 +128,8 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 	}
 
 	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
-		super.func_230337_a_(state, nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 		myIdStr = nbt.getString("myId");
 		targetIdStr = nbt.getString("targetId");
 	}

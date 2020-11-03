@@ -38,7 +38,7 @@ public class MapGenLargeCrystal extends WorldCarver<ProbabilityConfig> {
 		this.crystalBlock = crystalBlock;
 	}
 
-	@Override
+	//@Override
 	public boolean func_225555_a_(IChunk blocks, Function func, Random rand, int p_225555_4_,
 			int chunkX, int chunkZ, int rangeX, int rangeZ, BitSet p_225555_9_,
 			ProbabilityConfig p_225555_10_) {
@@ -161,6 +161,11 @@ public class MapGenLargeCrystal extends WorldCarver<ProbabilityConfig> {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public boolean carveRegion(IChunk chunk, Function<BlockPos, Biome> biomePos, Random rand, int seaLevel, int chunkXOffset, int chunkZOffset, int chunkX, int chunkZ, BitSet carvingMask, ProbabilityConfig config) {
+		return false;
 	}
 
 	@Override

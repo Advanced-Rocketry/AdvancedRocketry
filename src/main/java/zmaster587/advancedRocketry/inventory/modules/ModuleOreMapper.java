@@ -197,7 +197,7 @@ public class ModuleOreMapper extends ModuleBase {
 		//Render the background then render
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getInstance().getTextureManager().bindTexture(backdrop);
-		gui.func_238474_b_(matrix, x, y, 0, 0, 240, 192);
+		gui.blit(matrix, x, y, 0, 0, 240, 192);
 
 
 		//NOTE: if the controls are rendered first the display never shows up
@@ -213,7 +213,7 @@ public class ModuleOreMapper extends ModuleBase {
 		//Render sliders and controls
 		Minecraft.getInstance().getTextureManager().bindTexture(backdrop);
 
-		gui.func_238474_b_(matrix, 197 + x, 31 + y, 0, 192, 32, 14);
+		gui.blit(matrix, 197 + x, 31 + y, 0, 192, 32, 14);
 		
 		//TODO replace with thing
 		//gui.drawVerticalLine((int)(32*VulpineMath.log2(scanSize-1)/8F) + 199 + x, 34 + y, 45 + y, 0xFFC00F0F);
