@@ -142,7 +142,7 @@ public class BlockFuelTank extends Block implements IFuelTank{
 		BOTTOM,
 		MIDDLE;
 
-		//@Override
+		@Override
 		public String getString() {
 			return name().toLowerCase(Locale.ENGLISH);
 		}

@@ -224,10 +224,10 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 		}
 	}
 
-	@Override
+	/*@Override
 	protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
 
-	}
+	}*/
 
 	//Reset the texture and prevent memory leaks
 	private void resetTexture() {
@@ -247,8 +247,8 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 
 
 	// Draw foreground
-	//@Override
-	protected void func_230451_b_(MatrixStack matrix, int a, int b)  {
+	@Override
+	protected void drawGuiContainerForegroundLayer(MatrixStack matrix, int a, int b)  {
 
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		//Draw fancy things
@@ -308,8 +308,8 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 	}
 
 	// Draw background
-	//@Override
-	protected void func_230450_a_(MatrixStack matrix, float f1, int i2, int i3)  {
+	@Override
+	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float f1, int i2, int i3)  {
 		int x = (width - 240) / 2, y = (height - 192) / 2;
 
 		//If the scan is done then 

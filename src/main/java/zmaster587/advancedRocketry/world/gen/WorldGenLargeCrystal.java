@@ -24,13 +24,13 @@ public class WorldGenLargeCrystal extends Feature<NoFeatureConfig> {
 		this.block = AdvancedRocketryBlocks.blockCrystal.getDefaultState();
 	}
 
-	@Override
+	/*@Override
 	public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config) {
 		return false;
-	}
+	}*/
 
-	//@Override
-	public boolean func_241855_a(ISeedReader world, ChunkGenerator chunkGen, Random rand,
+	@Override
+	public boolean generate(ISeedReader world, ChunkGenerator chunkGen, Random rand,
 			BlockPos pos, NoFeatureConfig config) {
 		
 		if(rand.nextInt() % 18 != 0)

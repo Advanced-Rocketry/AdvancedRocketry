@@ -75,9 +75,9 @@ public class ChunkProviderSpace extends ChunkGenerator {
 	}
 
 	//@Override
-	public int func_222529_a(int p_222529_1_, int p_222529_2_, Type heightmapType) {
+	/*public int func_222529_a(int p_222529_1_, int p_222529_2_, Type heightmapType) {
 		return 0;
-	}
+	}*/
 
 	@Override
 	public IBlockReader func_230348_a_(int p_230348_1_, int p_230348_2_) {

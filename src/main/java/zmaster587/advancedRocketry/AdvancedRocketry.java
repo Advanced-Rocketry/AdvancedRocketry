@@ -318,7 +318,7 @@ public class AdvancedRocketry {
 	@SubscribeEvent
 	public void registerStructures(RegistryEvent.Register<Structure<?>> evt)
 	{
-		AdvancedRocketryBiomes.registerStructures(evt);
+		//AdvancedRocketryBiomes.registerStructures(evt);
 	}
 	
 	@SubscribeEvent

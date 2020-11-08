@@ -358,9 +358,9 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 		return d2 < 0.0D ? d2 * 0.009486607142857142D : Math.min(d2, 1.0D) * 0.006640625D;
 	}
 
-	public int func_222529_a(int p_222529_1_, int p_222529_2_, Heightmap.Type heightmapType) {
+	/*public int func_222529_a(int p_222529_1_, int p_222529_2_, Heightmap.Type heightmapType) {
 		return this.func_236087_a_(p_222529_1_, p_222529_2_, (BlockState[])null, heightmapType.getHeightLimitPredicate());
-	}
+	}*/
 
 	public IBlockReader func_230348_a_(int p_230348_1_, int p_230348_2_) {
 		BlockState[] ablockstate = new BlockState[this.noiseSizeY * this.verticalNoiseGranularity];

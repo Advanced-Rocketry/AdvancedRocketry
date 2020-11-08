@@ -98,13 +98,13 @@ public class CustomPlanetBiomeProvider extends BiomeProvider {
 		this.field_235269_l_ = false;
 	}
 
-	protected Codec<? extends BiomeProvider> func_230319_a_() {
+	/*protected Codec<? extends BiomeProvider> func_230319_a_() {
 		return customPlanetCodec;
-	}
+	}*/
 
 	@Override
 	protected Codec<? extends BiomeProvider> getBiomeProviderCodec() {
-		return null;
+		return customPlanetCodec;
 	}
 
 	@OnlyIn(Dist.CLIENT)

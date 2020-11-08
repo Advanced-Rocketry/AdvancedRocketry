@@ -42,10 +42,10 @@ public class WorldGenSwampTree extends  WorldCarver<ProbabilityConfig>  {
 		buildRoots();
 	}
 
-	@Override
+	/*@Override
 	public boolean carveRegion(IChunk chunk, Function<BlockPos, Biome> biomePos, Random rand, int seaLevel, int chunkXOffset, int chunkZOffset, int chunkX, int chunkZ, BitSet carvingMask, ProbabilityConfig config) {
 		return false;
-	}
+	}*/
 
 	private void buildRoots() {
 		cachedRoots.clear();
@@ -103,10 +103,10 @@ public class WorldGenSwampTree extends  WorldCarver<ProbabilityConfig>  {
 		}
 	}
 
-	//@Override
-	public boolean func_225555_a_(IChunk world, Function<BlockPos, Biome> p_225555_2_, Random rand,
-			int p_225555_8_, int rangeX, int rangeZ, int chunkX, int chunkZ, BitSet p_225555_9_,
-			ProbabilityConfig p_225555_10_) {
+	@Override
+	public boolean carveRegion(IChunk world, Function<BlockPos, Biome> biomePos, Random rand,
+			int p_225555_8_, int rangeX, int rangeZ, int chunkX, int chunkZ, BitSet carvingMask,
+			ProbabilityConfig config) {
 
 		int x = (rangeX - chunkX)*16;
 		int z =  (rangeZ- chunkZ)*16;

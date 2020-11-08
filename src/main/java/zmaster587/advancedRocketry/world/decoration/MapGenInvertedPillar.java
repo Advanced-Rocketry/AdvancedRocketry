@@ -10,9 +10,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.gen.carver.WorldCarver;
 import net.minecraft.world.gen.feature.ProbabilityConfig;
@@ -32,10 +30,10 @@ public class MapGenInvertedPillar extends WorldCarver<ProbabilityConfig>  {
 		bottomBlock = bottom;
 	}
 
-	//@Override
-	public boolean func_225555_a_(IChunk chunkPrimerIn, Function func, Random rand, int p_225555_4_,
-			int rangeX, int rangeZ, int chunkX, int chunkZ, BitSet p_225555_9_,
-			ProbabilityConfig p_225555_10_) {
+	@Override
+	public boolean carveRegion(IChunk chunkPrimerIn, Function<BlockPos, Biome> func, Random rand, int p_225555_4_,
+			int rangeX, int rangeZ, int chunkX, int chunkZ, BitSet carvingMask,
+			 ProbabilityConfig config) {
 
 			int x = (rangeX - chunkX)*16 + rand.nextInt(15);
 			int z =  (rangeZ- chunkZ)*16 + rand.nextInt(15);
@@ -91,10 +89,10 @@ public class MapGenInvertedPillar extends WorldCarver<ProbabilityConfig>  {
 	}
 
 
-	@Override
+	/*@Override
 	public boolean carveRegion(IChunk chunk, Function<BlockPos, Biome> biomePos, Random rand, int seaLevel, int chunkXOffset, int chunkZOffset, int chunkX, int chunkZ, BitSet carvingMask, ProbabilityConfig config) {
 		return false;
-	}
+	}*/
 
 	@Override
 	public boolean shouldCarve(Random rand, int chunkX, int chunkZ, ProbabilityConfig config) {

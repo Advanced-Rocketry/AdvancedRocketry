@@ -966,10 +966,10 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		return false;
 	}
 
-	//@Override
+	/*@Override
 	public boolean func_241211_a_(BlockPos p_241211_1_, BlockState p_241211_2_, int p_241211_3_, int p_241211_4_) {
 		return false;
-	}
+	}*/
 
 	@Override
 	public boolean setBlockState(BlockPos pos, BlockState state, int flags, int recursionLeft) {
@@ -987,10 +987,10 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		return false;
 	}
 
-	//@Override
+	/*@Override
 	public boolean func_241212_a_(BlockPos p_241212_1_, boolean p_241212_2_, Entity p_241212_3_, int p_241212_4_) {
 		return false;
-	}
+	}*/
 
 	@Override
 	public ITickList<Block> getPendingBlockTicks() {
