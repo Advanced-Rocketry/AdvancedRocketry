@@ -6,6 +6,7 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.registry.Registry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IAtmosphere;
@@ -122,6 +123,7 @@ public class ItemAirUtils implements IFillableArmor {
 		if(enchList != null) {
 			for(int i = 0 ; i < enchList.size(); i++) {
 				CompoundNBT compound = enchList.getCompound(i);
+				compound.putString("id", String.valueOf( Registry.ENCHANTMENT.getKey(AdvancedRocketryAPI.enchantmentSpaceProtection)));
 				isEnchanted = Enchantment.getEnchantmentByID(compound.getShort("id"))== (AdvancedRocketryAPI.enchantmentSpaceProtection);
 				if(isEnchanted)
 					break;
