@@ -7,7 +7,7 @@ jobs:
   stale:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/stale@v3.0.6
+    - uses: actions/stale@v3.0.14
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         stale-pr-message: 'Is this pr still needed?'
@@ -18,3 +18,4 @@ jobs:
         exempt-pr-labels: 'awaiting-approval,work-in-progress,PrExempt'
         days-before-stale: 60
         days-before-close: 90
+        close-issue-message: 'Please reopen this issue if you are still having what is described above. this issue has been stale for 150 days.' 
