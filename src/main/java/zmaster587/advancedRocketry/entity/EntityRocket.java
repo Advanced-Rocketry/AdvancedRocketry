@@ -41,6 +41,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.Dimension;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -108,6 +109,7 @@ import zmaster587.libVulpes.util.Vector3F;
 import zmaster587.libVulpes.util.ZUtils;
 
 import javax.annotation.Nullable;
+import javax.annotation.Resource;
 import java.lang.ref.WeakReference;
 import java.util.*;
 
@@ -1095,8 +1097,12 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					this.setInFlight(false);
 					this.setInOrbit(false);
 				}
-				if(!isInOrbit() && (this.getPosY() > ARConfiguration.getCurrentConfig().orbit.get())) {
+
+				//Checks heights to see how high the rocket should go
+				//I cannot believe I am doing this but it's not like orbital mechanics exists anyway.... here, have an approximation for it being harder to get to farther moons
+				if(!isInOrbit() && (this.getPosY() > stats.orbitHeight) && stats.isLaunchPhase) {
 					onOrbitReached();
+					stats.isLaunchPhase = false;
 				}
 
 				this.setMotion(motionX, motionY, motionZ);
@@ -1116,7 +1122,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 							if(pos != null) {
 								setInOrbit(true);
 								setInFlight(false);
-								this.changeDimension(ZUtils.getWorld(targetDimID), pos.x, ARConfiguration.getCurrentConfig().orbit.get(), pos.z);
+								this.changeDimension(ZUtils.getWorld(targetDimID), pos.x, getEntryHeight(destinationDimId), pos.z);
 							}
 							else 
 								this.remove();
@@ -1126,7 +1132,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 							if(pos != null) {
 								setInOrbit(true);
 								setInFlight(false);
-								this.changeDimension(ZUtils.getWorld(lastDimensionFrom), pos.x, ARConfiguration.getCurrentConfig().orbit.get(), pos.z);
+								this.changeDimension(ZUtils.getWorld(lastDimensionFrom), pos.x, getEntryHeight(destinationDimId), pos.z);
 							}
 							else 
 								this.remove();
@@ -1224,6 +1230,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 	}
 
+	private int getEntryHeight(ResourceLocation entryLocationDimID){
+		if (entryLocationDimID == ARConfiguration.GetSpaceDimId()) {
+			return ARConfiguration.getCurrentConfig().stationClearanceHeight.get();
+		} else {
+			return ARConfiguration.getCurrentConfig().orbit.get();
+		}
+	}
+
 	private void reachSpaceUnmanned()
 	{
 		TileGuidanceComputer computer = storage.getGuidanceComputer();
@@ -1278,7 +1292,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					connectedTiles.remove();
 				}
 
-				this.setPositionAndUpdate(pos.x, ARConfiguration.getCurrentConfig().orbit.get(), pos.z);
+				this.setPositionAndUpdate(pos.x, getEntryHeight(destinationDimId), pos.z);
 				return;
 			}
 			else {
@@ -1286,7 +1300,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				//Make player confirm deorbit if a player is riding the rocket
 				if(hasHumanPassenger()) {
 					setInFlight(false);
-					pos.y = (float) ARConfiguration.getCurrentConfig().orbit.get();
+					pos.y = (float) getEntryHeight(destinationDimId);
 
 				}
 				this.setInOrbit(true);
@@ -1299,7 +1313,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					connectedTiles.remove();
 				}
 
-				this.setPositionAndUpdate(this.getPosX(), ARConfiguration.getCurrentConfig().orbit.get(), this.getPosZ());
+				this.setPositionAndUpdate(this.getPosX(), getEntryHeight(destinationDimId), this.getPosZ());
 				return;
 			}
 
@@ -1310,7 +1324,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			if(pos != null) {
 				this.setInOrbit(true);
 				this.setMotion(this.getMotion().x, -this.getMotion().y, this.getMotion().z);
-				this.changeDimension(ZUtils.getWorld(destinationDimId), pos.x, ARConfiguration.getCurrentConfig().orbit.get(), pos.z);
+				this.changeDimension(ZUtils.getWorld(destinationDimId), pos.x, getEntryHeight(destinationDimId), pos.z);
 				return;
 			}
 			else {
@@ -1318,13 +1332,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				//Make player confirm deorbit if a player is riding the rocket
 				if(hasHumanPassenger()) {
 					setInFlight(false);
-					pos.y = (float) ARConfiguration.getCurrentConfig().orbit.get();
+					pos.y = (float) getEntryHeight(destinationDimId);
 
 				}
 				this.setInOrbit(true);
 				this.setMotion(this.getMotion().x, -this.getMotion().y, this.getMotion().z);
 
-				this.changeDimension(ZUtils.getWorld(destinationDimId), this.getPosX(), ARConfiguration.getCurrentConfig().orbit.get(), this.getPosZ());
+				this.changeDimension(ZUtils.getWorld(destinationDimId), this.getPosX(), getEntryHeight(destinationDimId), this.getPosZ());
 				return;
 			}
 		}
@@ -1378,7 +1392,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 			destinationDimId = ARConfiguration.GetSpaceDimId();
 			destPos.x = 0f;
-			destPos.y = (float) ARConfiguration.getCurrentConfig().orbit.get();
+			destPos.y = (float) getEntryHeight(destinationDimId);
 			destPos.z = 0f;
 
 			for(Entity e : getPassengers())
@@ -1405,7 +1419,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					//Make player confirm deorbit if a player is riding the rocket
 					if(hasHumanPassenger()) {
 						setInFlight(false);
-						pos.y = (float) ARConfiguration.getCurrentConfig().orbit.get();
+						pos.y = (float) getEntryHeight(destinationDimId);
 
 					}
 
@@ -1418,7 +1432,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			//if coordinates are overridden, make sure we grab them
 			destPos = storage.getDestinationCoordinates(destinationDimId, true);
 			if(destPos == null)
-				destPos = new Vector3F<Float>((float)getPosX(), (float)ARConfiguration.getCurrentConfig().orbit.get(), (float)getPosZ());
+				destPos = new Vector3F<Float>((float)getPosX(), (float)getEntryHeight(destinationDimId), (float)getPosZ());
 
 			if(hasHumanPassenger()) {
 				//Make player confirm deorbit if a player is riding the rocket
@@ -1435,14 +1449,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					DimensionManager.hasReachedMoon = true;
 				}
 			}
-			destPos.y = (float) ARConfiguration.getCurrentConfig().orbit.get();
+			destPos.y = (float) getEntryHeight(destinationDimId);
 		}
 
 		//Reset override coords
 		setOverriddenCoords(Constants.INVALID_PLANET, 0, 0, 0);
 
 		if(destinationDimId != ZUtils.getDimensionIdentifier(this.world))
-			this.changeDimension(!DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(this.world)) ? ZUtils.getWorld(DimensionManager.defaultSpaceDimensionProperties.getId()) : ZUtils.getWorld(destinationDimId), destPos.x, ARConfiguration.getCurrentConfig().orbit.get(), destPos.z);
+			this.changeDimension(!DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(this.world)) ? ZUtils.getWorld(DimensionManager.defaultSpaceDimensionProperties.getId()) : ZUtils.getWorld(destinationDimId), destPos.x, getEntryHeight(destinationDimId), destPos.z);
 		else
 		{
 			List<Entity> eList = this.getPassengers();
@@ -1583,6 +1597,120 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		else
 			allowLaunch = true;
 
+		//Check to see what place we should be going to
+		//This is bad but it works and is mostly intelligible so it's here for now
+		//TODO: There HAS to be a better way to do this
+		//TODO: Find a way to get destination station - currently you can launch from a body in a planetary system that isn't where your station is parked to the station without the TBI burn cost- because I have no clue how to check destination station and what world it is orbiting
+		//TODO: Even worse, the same applies for warp rockets - I can skip the huge fuel costs of warp by warping to a station
+
+		//Booleans for height calcs
+		boolean TBI = false;
+		boolean orbit = false;
+		boolean stationClearance = false;
+		boolean warp = false;
+
+		//Other variables
+		boolean toAsteroids = false;
+		TileGuidanceComputer guideComputer = storage.getGuidanceComputer();
+		if(guideComputer != null && guideComputer.getStackInSlot(0) != null && guideComputer.getStackInSlot(0).getItem() instanceof ItemAsteroidChip){
+			toAsteroids = true;
+		}
+		ResourceLocation thisDimID = this.world.getDimensionKey().getLocation();
+		ResourceLocation spaceStationDimID = ARConfiguration.GetSpaceDimId();
+		boolean experimentalFlightTrue = (ARConfiguration.getCurrentConfig().experimentalSpaceFlight.get() && guideComputer != null && guideComputer.isEmpty());
+
+		//Station intra planet system checks
+		boolean travelBetweenMoonStationAndPlanet = false;
+		boolean travelBetweenPlanetStationAndMoon = false;
+		boolean travelBetweenStationAndParent = false;
+		if (thisDimID == spaceStationDimID) {
+			IDimensionProperties parentworldPropertiesStation = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.getPosition()).getProperties().getParentProperties();
+			travelBetweenMoonStationAndPlanet = (parentworldPropertiesStation.isMoon() && destinationDimId == parentworldPropertiesStation.getParentPlanet());
+			for (ResourceLocation parentMoonDimID : parentworldPropertiesStation.getChildPlanets()) {
+				if ((thisDimID == spaceStationDimID) && (destinationDimId == parentMoonDimID)) {
+					travelBetweenPlanetStationAndMoon = true;
+				}
+			}
+			travelBetweenStationAndParent = (destinationDimId == parentworldPropertiesStation.getId());
+		}
+
+		//Intra planet system checks
+		boolean travelBetweenPlanetAndMoon = false;
+		boolean travelBetweenMoonAndPlanet = false;
+		if (thisDimID != spaceStationDimID) {
+			IDimensionProperties launchworldProperties = DimensionManager.getInstance().getDimensionProperties(thisDimID);
+			travelBetweenMoonAndPlanet = (launchworldProperties.isMoon() && destinationDimId == launchworldProperties.getParentPlanet());
+			for (ResourceLocation moonDimID : launchworldProperties.getChildPlanets()) {
+				if (destinationDimId == moonDimID) {
+					travelBetweenPlanetAndMoon = true;
+				}
+			}
+		}
+
+		//Launch conditions that need station clearance & TBI
+		if ((destinationDimId == thisDimID && toAsteroids && destinationDimId == spaceStationDimID) || travelBetweenMoonStationAndPlanet || travelBetweenPlanetStationAndMoon) {
+			stationClearance = true;
+			TBI = true;
+		}
+		//Launch conditions that need low orbit and TBI
+		if (((destinationDimId == thisDimID) && (thisDimID != spaceStationDimID) && toAsteroids) || travelBetweenMoonAndPlanet || travelBetweenPlanetAndMoon) {
+			orbit = true;
+			TBI = true;
+		}
+		//Launch conditions that need low orbit only
+		//Is it going from a planet to a space station or launching satellites or back to the same planet
+		if ((experimentalFlightTrue && thisDimID != spaceStationDimID) || (destinationDimId == spaceStationDimID) || (destinationDimId == thisDimID && !(toAsteroids) && destinationDimId != spaceStationDimID) || guideComputer == null) {
+			orbit = true;
+		}
+		//Launch conditions that need station clearance only
+		//Is it going from either LEO to LEO or from a station to its parent planet
+		if ((experimentalFlightTrue && thisDimID == spaceStationDimID) || (destinationDimId == thisDimID && !(toAsteroids) && destinationDimId == spaceStationDimID) || ((thisDimID == spaceStationDimID) && travelBetweenStationAndParent)) {
+			stationClearance = true;
+		}
+
+		//Launch conditions for a warp launch
+		if (destinationDimId != spaceStationDimID && destinationDimId != thisDimID && thisDimID != spaceStationDimID && storage.hasWarpCore() && !(travelBetweenMoonAndPlanet || travelBetweenMoonStationAndPlanet || travelBetweenPlanetAndMoon || travelBetweenPlanetStationAndMoon)) {
+			warp = true;
+			orbit = true;
+		}
+		if (destinationDimId != spaceStationDimID && destinationDimId != thisDimID && thisDimID == spaceStationDimID && storage.hasWarpCore() && !(travelBetweenMoonAndPlanet || travelBetweenMoonStationAndPlanet || travelBetweenPlanetAndMoon || travelBetweenPlanetStationAndMoon)) {
+			warp = true;
+			stationClearance = true;
+		}
+
+		//Turn the destination checks into something that gives a height
+		stats.orbitHeight = 0;
+		if (orbit) {
+			stats.orbitHeight += ARConfiguration.getCurrentConfig().orbit.get();
+		}
+		if (stationClearance) {
+			stats.orbitHeight += ARConfiguration.getCurrentConfig().stationClearanceHeight.get();
+		}
+		if (TBI) {
+			//TBI Multiplier
+			double bodyDistanceMultiplier = 1.0d;
+			IDimensionProperties destinationProperties = DimensionManager.getInstance().getDimensionProperties(destinationDimId);
+			if (destinationProperties.isMoon()) {
+				bodyDistanceMultiplier = destinationProperties.getOrbitalDist()/100d;
+			} else if (!destinationProperties.isMoon() && destinationDimId != spaceStationDimID) {
+				for (ResourceLocation moonDimID : destinationProperties.getChildPlanets()) {
+					if (thisDimID == moonDimID) {
+						bodyDistanceMultiplier = DimensionManager.getInstance().getDimensionProperties(moonDimID).getOrbitalDist()/100d;
+					}
+				}
+			} else if (toAsteroids) {
+				bodyDistanceMultiplier = ARConfiguration.getCurrentConfig().asteroidTBIBurnMult.get();
+			}
+			//This is probably one of the worst ways to do this and I don't really care about realism, just tapering results.... if this turns out to be realistic well then, that's nice.
+			//Not like the mod has an semblance of a concept of orbital mechanics anyway :P
+			//This is vaugely a multiplier based on TLI burns, burning for 2x as long can get you 4x as far
+			stats.orbitHeight += (int)(Math.pow(bodyDistanceMultiplier, 0.5d) * ARConfiguration.getCurrentConfig().transBodyInjection.get());
+		}
+		if (warp) {
+			stats.orbitHeight += (10 * ARConfiguration.getCurrentConfig().transBodyInjection.get());
+		}
+		stats.isLaunchPhase = true;
+
 		//TODO: Clean this logic a bit?
 		if(allowLaunch || !stats.hasSeat() || ((DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || ARConfiguration.GetSpaceDimId().equals(destinationDimId) || Constants.INVALID_PLANET.equals(destinationDimId)) ) { //Abort if destination is invalid
 
@@ -1647,7 +1775,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 
 	public Entity changeDimension(ServerWorld newDimId) {
-		return changeDimension(newDimId, this.getPosX(), (double)ARConfiguration.getCurrentConfig().orbit.get(), this.getPosZ());
+		return changeDimension(newDimId, this.getPosX(), (double)getEntryHeight(destinationDimId), this.getPosZ());
 	}
 
 	@Nullable

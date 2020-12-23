@@ -36,6 +36,11 @@ public class StatsRocket {
 	private int fuelRateWarp;
 	private int fuelRateImpulse;
 
+	//Used for orbital height calculations
+	public int orbitHeight;
+	public float injectionBurnLenghtMult;
+	public boolean isLaunchPhase;
+
 	HashedBlockPosition pilotSeatPos;
 	private final List<HashedBlockPosition> passengerSeats = new ArrayList<HashedBlockPosition>();
 	private List<Vector3F<Float>> engineLoc;
@@ -50,6 +55,9 @@ public class StatsRocket {
 		weight = 0;
 		fuelLiquid = 0;
 		drillingPower = 0f;
+		orbitHeight = ARConfiguration.getCurrentConfig().orbit.get();
+		injectionBurnLenghtMult = 1;
+		isLaunchPhase = false;
 		pilotSeatPos = new HashedBlockPosition(0,0,0);
 		pilotSeatPos.x = INVALID_SEAT;
 		engineLoc = new ArrayList<Vector3F<Float>>();

@@ -116,7 +116,12 @@ public class ARConfiguration {
 		arConfig.spaceLaserPowerMult = builder.comment("Power multiplier for the laser drill machine").define("LaserDrillPowerMultiplier", 1d);
 		arConfig.lowGravityBoots = builder.comment("If true, the boots only protect the player on planets with low gravity").define("lowGravityBoots", false);
 		arConfig.jetPackThrust = builder.comment("Amount of force the jetpack provides with respect to gravity").define("jetPackForce", 1.3);
-		arConfig.orbit = builder.comment("How high the rocket has to go before it reaches orbit").defineInRange("OrbitHeight", 1000, 255, Integer.MAX_VALUE);
+		arConfig.orbit = builder.comment("How high the rocket has to go before it reaches orbit. This is used by itself when launching from a planet to LEO, which can be either a satellite, a space station, or another point on this planet's surface. It's used in conjunction with the TBI burn when launching to the moon or asteroids. Warp flights will need orbit height + 10x TBI to launch from planets").defineInRange("OrbitHeight", 1000, 255, Integer.MAX_VALUE);
+		arConfig.stationClearanceHeight = builder.comment("How high the rocket has to go before it clears a space station and can enter its own orbit - WARNING: This property is not synced with orbitHeight and so will be displayed incorrectly on monitors if not equal to it. Burn length here is used by itself when launching from a station to either another station or the same station, or to the planet it is orbiting. it is used in conjunction with the TBI burn when launching to a moon or asteroid").defineInRange("StationClearance", 1000, 255, Integer.MAX_VALUE);
+		arConfig.transBodyInjection = builder.comment("How long the burn for trans-body injection is - this is performed soley after entering orbit and is in blocks - WARNING: This property is not taken into account by any machines when determining whether the rocket is fit to fly or not - Rockets that can reach LEO and so are flightworthy may not make TBI and will fall back to the parent planet. When enabled, the burn sequence is [Burn to LEO], [TBI Burn] when launching from a planet to moons or asteroids; and the sequence is [Station clearance burn], [TBI Burn] when launching from a station to a moon or asteroid. This distance varies by object distance").defineInRange("TransBodyInjection", 0, 0, Integer.MAX_VALUE);
+		arConfig.asteroidTBIBurnMult = builder.comment("The multiplier should asteroids be considered as for TBI distance").define("AsteroidTBIBurnMult", 1d);
+
+
 		arConfig.resetFromXML = builder.comment("setting this to true will force AR to read from the XML file in the config/advRocketry instead of the local data, intended for use pack developers to ensure updates are pushed through").define("resetPlanetsFromXML", false);
 		
 		
@@ -856,7 +861,16 @@ public class ARConfiguration {
 	
 	@ConfigProperty(needsSync=true)
 	public  ConfigValue<Integer> orbit;
-	
+
+	@ConfigProperty(needsSync=true)
+	public  ConfigValue<Integer> stationClearanceHeight;
+
+	@ConfigProperty(needsSync=true)
+	public  ConfigValue<Integer> transBodyInjection;
+
+	@ConfigProperty(needsSync=true)
+	public  ConfigValue<Double> asteroidTBIBurnMult;
+
 	@ConfigProperty
 	public  ConfigValue<Boolean> resetFromXML;
 
