@@ -39,4 +39,25 @@ public class AstronomicalBodyHelper {
 		//Output is in Kelvin
 		return (int)(averageWithoutAtmosphere * Math.max(1, (1.125d * Math.pow((atmPressure/100), 0.25))));
 	}
+	public static double getStellarBrightness(StellarBody star, int orbitalDistance) {
+		//Normal stars are 1.0 times this value, black holes with accretion discs emit less and so modify it
+		float lightMultiplier = 1.0f;
+		//Make all values ratios of Earth normal to get ratio compared to Earth
+		float normalizedStarTemperature = star.getTemperature()/100;
+		float planetaryOrbitalRadius = orbitalDistance/100f;
+		//Check to see if the star is a black hole
+		boolean blackHole = star.isBlackHole();
+		for(StellarBody star2 : star.getSubStars())
+			if(!star2.isBlackHole()) {
+				blackHole = false;
+				break;
+			}
+		//There's no real easy way to get the light emitted by an accretion disc, so this substitutes
+		if(blackHole)
+			lightMultiplier  *=0.25;
+		//Returns ratio compared to a planet at 1 AU for Sol, because the other values in AR are normalized,
+		//and this works fairly well for hooking into with other mod's solar panels & such
+		return (lightMultiplier * (
+				(Math.pow(star.getSize(), 2) * Math.pow(normalizedStarTemperature, 4)) /Math.pow(planetaryOrbitalRadius, 2)));
+	}
 }

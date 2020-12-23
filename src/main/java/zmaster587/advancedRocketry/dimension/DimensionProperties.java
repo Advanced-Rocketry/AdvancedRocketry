@@ -228,6 +228,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public int orbitalDist;
 	public boolean hasOxygen;
 	private int originalAtmosphereDensity;
+	//Used in solar panels
+	public double peakInsolationMultiplier;
 	private int atmosphereDensity;
 	//Stored in Kelvin
 	public int averageTemperature;
@@ -839,6 +841,13 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 */
 	public boolean hasAtmosphere() {
 		return AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity).compareTo(AtmosphereTypes.NONE) < 0;
+	}
+
+	/**
+	 * @return the multiplier compared to Earth(1040W) for peak insolation of the body
+	 */
+	public double getPeakInsolationMultiplier() {
+		return peakInsolationMultiplier;
 	}
 
 	public boolean isAsteroid() {
@@ -1458,6 +1467,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		else 
 			originalAtmosphereDensity = atmosphereDensity;
 
+		peakInsolationMultiplier = nbt.getDouble("peakInsolationMultiplier");
 		averageTemperature = nbt.getInt("avgTemperature");
 		rotationalPeriod = nbt.getInt("rotationalPeriod");
 		name = nbt.getString("name");
@@ -1625,6 +1635,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.putBoolean("hasOxygen", hasOxygen);
 		nbt.putInt("atmosphereDensity", atmosphereDensity);
 		nbt.putInt("originalAtmosphereDensity", originalAtmosphereDensity);
+		nbt.putDouble("peakInsolationMultiplier", peakInsolationMultiplier);
 		nbt.putInt("avgTemperature", averageTemperature);
 		nbt.putInt("rotationalPeriod", rotationalPeriod);
 		nbt.putString("name", name);

@@ -24,6 +24,7 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
+import zmaster587.advancedRocketry.util.AstronomicalBodyHelper;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IUniversalEnergyTransmitter;
 import zmaster587.libVulpes.block.BlockMeta;
@@ -53,8 +54,10 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 
 	List<Long> connectedSatellites;
 	boolean initialCheck;
+	double insolationPowerMultiplier;
 	int powerMadeLastTick, prevPowerMadeLastTick;
 	ModuleText textModule;
+
 	public TileMicrowaveReciever() {
 		super(AdvancedRocketryTileEntityType.TILE_MICROWAVE_RECIEVER);
 		connectedSatellites = new LinkedList<Long>();
@@ -130,10 +133,20 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 	@Override
 	public void tick() {
 
+		DimensionProperties properties;
+		properties = DimensionManager.getInstance().getDimensionProperties(world);
+
 		if(!initialCheck && !world.isRemote) {
 			completeStructure = attemptCompleteStructure(world.getBlockState(pos));
 			onInventoryUpdated();
 			initialCheck = true;
+		}
+
+		if(insolationPowerMultiplier == 0) {
+			//Gets insolation relative to Earth, without atmosphere because we're in space and meter-long microwaves don't attenuate in the atmosphere
+			double insolationMultiplier = AstronomicalBodyHelper.getStellarBrightness(properties.getStar(), properties.getSolarOrbitalDistance());
+			//Multiply by Earth LEO/Earth Surface for ratio relative to Earth surface (1360/1040)
+			insolationPowerMultiplier = insolationMultiplier * 1.308d;
 		}
 
 		if(!isComplete())
@@ -147,7 +160,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 			List<Entity> entityList = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(this.getPos().getX() - offset.x, this.getPos().getY(), this.getPos().getZ() - offset.z, this.getPos().getX() - offset.x + getStructure()[0][0].length, 256, this.getPos().getZ() - offset.z + getStructure()[0].length));
 
 			for(Entity e : entityList) {
-				e.setFire(5);
+				e.setFire(powerMadeLastTick/10);
 			}
 
 			for(int x=0 ; x < getStructure()[0][0].length; x++) {
@@ -166,9 +179,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 			}
 		}
 
-		DimensionProperties properties;
 		if(!world.isRemote && (DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(world)) || ZUtils.getDimensionIdentifier(world) == DimensionManager.overworldProperties.getId())) {
-			properties = DimensionManager.getInstance().getDimensionProperties(world);
 
 			int energyRecieved = 0;
 
@@ -180,6 +191,8 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 						energyRecieved += ((IUniversalEnergyTransmitter)satellite).transmitEnergy(Direction.UP, false);
 					}
 				}
+				//Multiplied by two for 520W = 1 RF/t becoming 2 RF/t @ 100% efficiency, and by insolation mult for solar stuff
+				energyRecieved *= 2 * insolationPowerMultiplier;
 			}
 			powerMadeLastTick = (int) (energyRecieved*ARConfiguration.getCurrentConfig().microwaveRecieverMulitplier.get());
 

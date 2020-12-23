@@ -6,6 +6,8 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.inventory.ContainerModular;
@@ -24,6 +26,7 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 	public TileSolarPanel() {
 		super(AdvancedRocketryTileEntityType.TILE_SOLAR_PANEL, 10000, 1);
 		text = new ModuleText(60, 40, LibVulpes.proxy.getLocalizedString("msg.solar.collectingEnergy"), 0x2f2f2f);
+
 	}
 
 	@Override
@@ -33,6 +36,7 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 
 	@Override
 	public void tick() {
+
 		if(canGeneratePower()) {
 			if(world.isRemote)
 				text.setText(LibVulpes.proxy.getLocalizedString("msg.solar.collectingEnergy") + "\n" + getPowerPerOperation() + " " + LibVulpes.proxy.getLocalizedString("msg.powerunit.rfpertick"));
@@ -62,7 +66,14 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 
 	@Override
 	public int getPowerPerOperation() {
-		return zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().solarGeneratorMult.get();
+
+		DimensionProperties properties;
+		properties = DimensionManager.getInstance().getDimensionProperties(world);
+
+		//Slight adjustment to make Earth 0.9995 into a 1.0
+		//Then multiplied by two for 520W = 1 RF/t becoming 2 RF/t @ 100% efficiency
+		//Makes solar panels not return 0 everywhere
+		return (int)(1.0005d * 2d * zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().solarGeneratorMult.get() * properties.getPeakInsolationMultiplier());
 	}
 
 	@Override
