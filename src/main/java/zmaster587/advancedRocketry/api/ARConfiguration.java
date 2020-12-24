@@ -1,8 +1,6 @@
 package zmaster587.advancedRocketry.api;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.BlockStateBase;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityArmorStand;
@@ -22,7 +20,6 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InvalidClassException;
 import java.lang.annotation.ElementType;
@@ -31,12 +28,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.Map.Entry;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import io.netty.buffer.ByteBuf;
 
 /**
  * Stores config variables
