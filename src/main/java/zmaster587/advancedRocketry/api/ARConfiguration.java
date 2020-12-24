@@ -446,7 +446,8 @@ public class ARConfiguration {
 		arConfig.orbit = config.getInt("orbitHeight", ROCKET, 1000, 255, Integer.MAX_VALUE, "How high the rocket has to go before it reaches orbit. This is used by itself when launching from a planet to LEO, which can be either a satellite, a space station, or another point on this planet's surface. It's used in conjunction with the TBI burn when launching to the moon or asteroids. Warp flights will need orbit height + 10x TBI to launch from planets");
 		arConfig.stationClearanceHeight = config.getInt("stationClearance", ROCKET, 1000, 255, Integer.MAX_VALUE, "How high the rocket has to go before it clears a space station and can enter its own orbit - WARNING: This property is not synced with orbitHeight and so will be displayed incorrectly on monitors if not equal to it. Burn length here is used by itself when launching from a station to either another station or the same station, or to the planet it is orbiting. it is used in conjunction with the TBI burn when launching to a moon or asteroid");
 		arConfig.transBodyInjection = config.getInt("transBodyInjection", ROCKET, 0, 0, Integer.MAX_VALUE, "How long the burn for trans-body injection is - this is performed soley after entering orbit and is in blocks - WARNING: This property is not taken into account by any machines when determining whether the rocket is fit to fly or not - Rockets that can reach LEO and so are flightworthy may not make TBI and will fall back to the parent planet. When enabled, the burn sequence is [Burn to LEO], [TBI Burn] when launching from a planet to moons or asteroids; and the sequence is [Station clearance burn], [TBI Burn] when launching from a station to a moon or asteroid. This distance varies by object distance");
-		arConfig.asteroidTBIBurnMult = (float) config.get(ROCKET, "asteroidTBIBurnMult", 1.0, "The multiplier should asteroids be considered as for TBI distance").getDouble();
+		arConfig.asteroidTBIBurnMult = (float) config.get(ROCKET, "asteroidTBIBurnMult", 1.0, "The multiplier that asteroids should be considered as for TBI distance").getDouble();
+		arConfig.asteroidTBIBurnMult = (float) config.get(ROCKET, "warpTBIBurnMult", 10.0, "The multiplier that warp rocket flights should be considered as for TBI distance").getDouble();
 
 		arConfig.enableTerraforming = config.get(Configuration.CATEGORY_GENERAL, "EnableTerraforming", true,"Enables terraforming items and blocks").getBoolean();
 		arConfig.oxygenVentPowerMultiplier = config.get(Configuration.CATEGORY_GENERAL, "OxygenVentPowerMultiplier", 1.0f, "Power consumption multiplier for the oxygen vent", 0, Float.MAX_VALUE).getDouble();
@@ -779,8 +780,11 @@ public class ARConfiguration {
 	@ConfigProperty(needsSync=true)
 	public int transBodyInjection = 0;
 
-	@ConfigProperty
+	@ConfigProperty(needsSync=true)
 	public double asteroidTBIBurnMult = 1.0;
+
+	@ConfigProperty(needsSync=true)
+	public double warpTBIBurnMult = 10.0;
 
 	@ConfigProperty
 	public int MoonId = Constants.INVALID_PLANET;
