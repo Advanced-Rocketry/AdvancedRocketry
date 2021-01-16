@@ -1082,9 +1082,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 				//Checks heights to see how high the rocket should go
 				//I cannot believe I am doing this but it's not like orbital mechanics exists anyway.... here, have an approximation for it being harder to get to farther moons
-				if(!isInOrbit() && (this.posY > stats.orbitHeight) && stats.isLaunchPhase) {
+				if(!isInOrbit() && (this.posY > stats.orbitHeight)) {
 					onOrbitReached();
-					stats.isLaunchPhase = false;
 				}
 
 
@@ -1582,7 +1581,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		//Check to see what place we should be going to
 		//This is bad but it works and is mostly intelligible so it's here for now
 		stats.orbitHeight = storage.getGuidanceComputer().getLaunchSequence(this.world.provider.getDimension(), this.getPosition());
-		stats.isLaunchPhase = true;
 
 
 		//TODO: Clean this logic a bit?
