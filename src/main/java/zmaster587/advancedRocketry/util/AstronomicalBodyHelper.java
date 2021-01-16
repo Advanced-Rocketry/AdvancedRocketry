@@ -39,4 +39,12 @@ public class AstronomicalBodyHelper {
 		//Slightly kludgey solution that works out mostly for Venus and well for Earth, without being overly complex
 		return (int)(averageWithoutAtmosphere * Math.max(1, (1.125d * Math.pow((atmPressure/100), 0.25))));
 	}
+	public static double getStellarBrightness(StellarBody star, int orbitalDistance) {
+		//Make all values ratios of Earth normal to get ratio compared to Earth
+		float normalizedStarTemperature = star.getTemperature()/100;
+		float planetaryOrbitalRadius = orbitalDistance/100f;
+		//Returns ratio compared to a planet at 1 AU for Sol, because the other values in AR are normalized,
+		//and this works fairly well for hooking into with other mod's solar panels & such
+		return ((Math.pow(star.getSize(), 2) * Math.pow(normalizedStarTemperature, 4))/Math.pow(planetaryOrbitalRadius, 2));
+	}
 }

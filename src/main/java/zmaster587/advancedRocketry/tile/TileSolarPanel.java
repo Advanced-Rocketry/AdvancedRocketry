@@ -4,6 +4,8 @@ import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import zmaster587.advancedRocketry.api.Configuration;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -58,7 +60,11 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 
 	@Override
 	public int getPowerPerOperation() {
-		return Configuration.solarGeneratorMult;
+		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(worldObj.provider.dimensionId);
+		//Slight adjustment to make Earth 0.9995 into a 1.0
+		//Then multiplied by two for 520W = 1 RF/t becoming 2 RF/t @ 100% efficiency
+		//Makes solar panels not return 0 everywhere
+		return (int)(2.0d * 1.0005d * Configuration.solarGeneratorMult * properties.getPeakInsolationMultiplier());
 	}
 
 	@Override
