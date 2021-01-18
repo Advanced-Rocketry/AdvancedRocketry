@@ -73,7 +73,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 		if(!world.isRemote) {
 			//Lock rocket to a specific fluid so that it has only one oxidizer/bipropellant/monopropellant
 			if (tank.getFluid() != null && linkedRocket.stats.getFuelFluid() == "null") {
-				if (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, tank.getFluid().getFluid()) || FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, tank.getFluid().getFluid())) {
+				if ((FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, tank.getFluid().getFluid())  && linkedRocket.stats.getFuelCapacity(FuelType.LIQUID_MONOPROPELLANT) > 0)|| (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, tank.getFluid().getFluid()) && linkedRocket.stats.getFuelCapacity(FuelType.LIQUID_BIPROPELLANT) > 0)) {
 					linkedRocket.stats.setFuelFluid(tank.getFluid().getFluid().getName());
 				}
 			} else if (tank.getFluid() != null && linkedRocket.stats.getOxidizerFluid() == "null") {

@@ -514,6 +514,7 @@ public class ARConfiguration {
 
 		//Client
 		arConfig.rocketRequireFuel = config.get(ROCKET, "rocketsRequireFuel", true, "Set to false if rockets should not require fuel to fly").getBoolean();
+		arConfig.canBeFueledByHand = config.get(ROCKET, "canBeFueledByHand", true, "Set to false if rockets should not be able to be fueled by and and will require a fueling station").getBoolean();
 		arConfig.rocketThrustMultiplier = config.get(ROCKET, "thrustMultiplier", 1f, "Multiplier for per-engine thrust").getDouble();
 		arConfig.fuelCapacityMultiplier = config.get(ROCKET, "fuelCapacityMultiplier", 1f, "Multiplier for per-tank capacity").getDouble();
 
@@ -828,6 +829,9 @@ public class ARConfiguration {
 
 	@ConfigProperty
 	public boolean rocketRequireFuel = true;
+
+	@ConfigProperty
+	public boolean canBeFueledByHand = true;
 
 	@ConfigProperty
 	public boolean enableNausea = true;
