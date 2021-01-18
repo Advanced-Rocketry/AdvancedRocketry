@@ -82,6 +82,12 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		created = true;
 	}
 
+	public boolean isWarping() {
+		if (getOrbitingPlanetId() == SpaceObjectManager.WARPDIMID)
+			return true;
+		return false;
+	}
+
 	public long getTransitionTime() {
 		return transitionEta;
 	}
@@ -105,6 +111,13 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	@Override
 	public DimensionProperties getProperties() {
 		return properties;
+	}
+
+	/**
+	 * @return the insolation relative to Earth ground of the station - returns 0 for warping!
+	 */
+	public double getInsolationMultiplier() {
+		return (isWarping()) ? 0.0 : getOrbitingPlanet().getPeakInsolationMultiplierWithoutAtmosphere();
 	}
 
 	@SideOnly(Side.CLIENT)

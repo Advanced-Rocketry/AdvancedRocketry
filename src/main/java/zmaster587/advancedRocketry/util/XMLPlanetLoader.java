@@ -80,6 +80,7 @@ public class XMLPlanetLoader {
 	private static final String ELEMENT_BASEORBITTHETA = "orbitalTheta";
 	private static final String ELEMENT_PHI = "orbitalPhi";
 	private static final String PEAK_INSOLATION = "peakInsolation";
+	private static final String PEAK_INSOLATION_WITHOUT_ATMOSPHERE = "peakInsolationNoAtmosphere";
 	private static final String AVG_TEMPERATURE = "avgTemperature";
 	private static final String ELEMENT_PERIOD = "rotationalPeriod";
 	private static final String ELEMENT_HASOXYGEN = "hasOxygen";
@@ -590,6 +591,8 @@ public class XMLPlanetLoader {
 		double insolationRelativeToLEO = AstronomicalBodyHelper.getStellarBrightness(star, properties.getSolarOrbitalDistance()) * Math.pow(Math.E, -(0.0026899d * properties.getAtmosphereDensity()));
 		//Multiply by Earth LEO/Earth Surface for ratio relative to Earth surface (1360/1040)
 		properties.peakInsolationMultiplier = insolationRelativeToLEO * 1.308d;
+		//Without atmosphere
+		properties.peakInsolationMultiplierWithoutAtmosphere = AstronomicalBodyHelper.getStellarBrightness(star, properties.getSolarOrbitalDistance()) * 1.308d;
 		
 		//Set temperature
 		properties.averageTemperature = AstronomicalBodyHelper.getAverageTemperature(star, properties.getSolarOrbitalDistance(), properties.getAtmosphereDensity());
@@ -874,6 +877,7 @@ public class XMLPlanetLoader {
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_BASEORBITTHETA, (int)((properties.baseOrbitTheta * 180f/Math.PI) - 180)));
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_PHI, (int)(properties.orbitalPhi)));
 		nodePlanet.appendChild(createTextNode(doc, PEAK_INSOLATION, (properties.peakInsolationMultiplier)));
+		nodePlanet.appendChild(createTextNode(doc, PEAK_INSOLATION_WITHOUT_ATMOSPHERE, (properties.peakInsolationMultiplierWithoutAtmosphere)));
 		nodePlanet.appendChild(createTextNode(doc, AVG_TEMPERATURE, (int)(properties.averageTemperature)));
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_PERIOD, properties.rotationalPeriod));
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_ATMDENSITY, properties.getAtmosphereDensity()));

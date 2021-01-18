@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
@@ -41,10 +42,10 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 		return "Collecting Energy";
 	}
 
-	protected int energyCreated(World world, boolean simulate) {
-		int amt =(int) ((world.getTotalWorldTime() - lastActionTime)*getPowerPerTick());
+	protected int energyCreated(boolean simulate) {
+		int amt =(int) ((AdvancedRocketry.proxy.getWorldTimeUniversal(0) - lastActionTime)*getPowerPerTick());
 		if(!simulate)
-			lastActionTime = world.getTotalWorldTime();
+			lastActionTime = AdvancedRocketry.proxy.getWorldTimeUniversal(0);
 		return amt;
 	}
 
@@ -80,16 +81,10 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 	
 	@Override
 	public int transmitEnergy(EnumFacing dir, boolean simulate) {
-		if(getDimensionId() != Constants.INVALID_PLANET) {
-			World world = net.minecraftforge.common.DimensionManager.getWorld(getDimensionId());
-			if(world != null) {
-				int energyCreated = energyCreated(world, simulate);
+				int energyCreated = energyCreated(simulate);
 				battery.acceptEnergy(Math.max((energyCreated - getEnergyMTU(EnumFacing.DOWN)), 0), simulate);
 				int energy = battery.extractEnergy(Math.max(getEnergyMTU(EnumFacing.DOWN) - energyCreated,0), simulate);
 				return energy + energyCreated;
-			}
-		}
-		return 0;
 	}
 
 	@Override

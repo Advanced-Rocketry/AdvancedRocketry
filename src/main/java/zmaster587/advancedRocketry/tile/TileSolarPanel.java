@@ -1,8 +1,11 @@
 package zmaster587.advancedRocketry.tile;
 
 import net.minecraft.entity.player.EntityPlayer;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.util.AstronomicalBodyHelper;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
@@ -55,11 +58,12 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 
 	@Override
 	public int getPowerPerOperation() {
-		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
+		DimensionProperties properties =DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
+		double insolationMultiplier = (world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) ? SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getInsolationMultiplier() : properties.getPeakInsolationMultiplier();
 		//Slight adjustment to make Earth 0.9995 into a 1.0
 		//Then multiplied by two for 520W = 1 RF/t becoming 2 RF/t @ 100% efficiency
 		//Makes solar panels not return 0 everywhere
-		return (int)(1.0005d * 2d * zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().solarGeneratorMult * properties.getPeakInsolationMultiplier());
+		return (int)Math.min((1.0005d * 2d * ARConfiguration.getCurrentConfig().solarGeneratorMult * insolationMultiplier), 10000);
 	}
 
 	@Override

@@ -20,7 +20,8 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
-import zmaster587.advancedRocketry.util.AstronomicalBodyHelper;
+import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IUniversalEnergyTransmitter;
 import zmaster587.libVulpes.block.BlockMeta;
@@ -50,6 +51,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 	List<Long> connectedSatellites;
 	boolean initialCheck;
 	double insolationPowerMultiplier;
+	int powerSourceDimensionID;
 	int powerMadeLastTick, prevPowerMadeLastTick;
 	ModuleText textModule;
 	public TileMicrowaveReciever() {
@@ -133,12 +135,12 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 			initialCheck = true;
 		}
 
-		if(insolationPowerMultiplier == 0) {
+		//Checks whenever a station changes dimensions or when the multiblock is intialized - ie any time the multipler could concieveably change
+		if(insolationPowerMultiplier == 0 || ((world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId ) && (powerSourceDimensionID != SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getOrbitingPlanetId()))) {
 			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
-			//Gets insolation relative to Earth, without atmosphere because we're in space and meter-long microwaves don't attenuate in the atmosphere
-			double insolationMultiplier = AstronomicalBodyHelper.getStellarBrightness(properties.getStar(), properties.getSolarOrbitalDistance());
-			//Multiply by Earth LEO/Earth Surface for ratio relative to Earth surface (1360/1040)
-			insolationPowerMultiplier = insolationMultiplier * 1.308d;
+			insolationPowerMultiplier = (world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) ? SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getInsolationMultiplier() : properties.getPeakInsolationMultiplierWithoutAtmosphere();
+			//Sets the ID of the place it's sourcing power from so it does not have to recheck
+			powerSourceDimensionID = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getOrbitingPlanetId();
 		}
 		if(!isComplete())
 			return;
@@ -171,11 +173,12 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 		}
 
 		DimensionProperties properties;
-		if(!world.isRemote && (DimensionManager.getInstance().isDimensionCreated(world.provider.getDimension()) || world.provider.getDimension() == 0)) {
-			properties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
-
+		int dimid = world.provider.getDimension();
+        SpaceStationObject spaceStation = (SpaceStationObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos);
+		if(!world.isRemote && (DimensionManager.getInstance().isDimensionCreated(dimid) || world.provider.getDimension() == 0)) {
+			//This way we check to see if it's on a station, and if so, if it has any satellites in orbit around the planet the station is around to pull from
+			properties = (spaceStation != null) ? spaceStation.getOrbitingPlanet() : DimensionManager.getInstance().getDimensionProperties(dimid);
 			int energyRecieved = 0;
-
 			if(enabled) {
 				for(long lng : connectedSatellites) {
 					SatelliteBase satellite =  properties.getSatellite(lng);
@@ -184,6 +187,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 						energyRecieved += ((IUniversalEnergyTransmitter)satellite).transmitEnergy(EnumFacing.UP, false);
 					}
 				}
+
 				//Multiplied by two for 520W = 1 RF/t becoming 2 RF/t @ 100% efficiency, and by insolation mult for solar stuff
 				energyRecieved *= 2 * insolationPowerMultiplier;
 			}
