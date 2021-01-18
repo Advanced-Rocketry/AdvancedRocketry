@@ -631,7 +631,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 		//Handle linkers and right-click with fuel
 		if(heldItem != null) {
-			float fuelMult;
+			float fuelMult = ARConfiguration.getCurrentConfig().fuelPointsPer10Mb/10;
 			FluidStack fluidStack;
 
 			if(heldItem.getItem() instanceof ItemLinker) {
@@ -667,34 +667,80 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				return false;
 			}
 
-			else if((FluidUtils.containsFluid(heldItem) 
-					&& (fluidStack = FluidUtils.getFluidForItem(heldItem)) != null 
-					&& (fuelMult = FuelRegistry.instance.getMultiplier(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid())) > 0 )
-					&& getFuelCapacityMonopropellant() - getFuelAmountMonopropellant() != 0) {
-				int amountToAdd = (int) (fuelMult*fluidStack.amount);
-				boolean isDrainSuccessful = false;
-				//if the player is not in creative then try to use the fluid container
-				if(!player.capabilities.isCreativeMode) {
-					heldItem = heldItem.copy();
-					heldItem.setCount(1);
-					IFluidHandlerItem handler = FluidUtils.getFluidHandler(heldItem);
-					handler.drain(fluidStack.amount, true);
-					ItemStack emptyStack = handler.getContainer();
+			else if((FluidUtils.containsFluid(heldItem) && (fluidStack = FluidUtils.getFluidForItem(heldItem)) != null)) {
+				if ((getFuelCapacityMonopropellant() - getFuelAmountMonopropellant() != 0) && fluidStack.getFluid().getName() == stats.getFuelFluid()) {
+					int amountToAdd = (int) (fuelMult * fluidStack.amount);
+					boolean isDrainSuccessful = false;
+					//if the player is not in creative then try to use the fluid container
+					if (!player.capabilities.isCreativeMode) {
+						heldItem = heldItem.copy();
+						heldItem.setCount(1);
+						IFluidHandlerItem handler = FluidUtils.getFluidHandler(heldItem);
+						handler.drain(fluidStack.amount, true);
+						ItemStack emptyStack = handler.getContainer();
 
-					if(player.inventory.addItemStackToInventory(emptyStack)) {
-						player.getHeldItem(EnumHand.MAIN_HAND).splitStack(1);
+						if (player.inventory.addItemStackToInventory(emptyStack)) {
+							player.getHeldItem(EnumHand.MAIN_HAND).splitStack(1);
+							isDrainSuccessful = true;
+							if (player.getHeldItem(EnumHand.MAIN_HAND).isEmpty())
+								player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+						}
+
+					} else
 						isDrainSuccessful = true;
-						if(player.getHeldItem(EnumHand.MAIN_HAND).isEmpty())
-							player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY); 
-					}
 
+					if (isDrainSuccessful)
+						this.addFuelAmountMonopropellant(amountToAdd);
+					return true;
+				} else if ((getFuelCapacityBipropellant() - getFuelAmountBipropellant() != 0) && fluidStack.getFluid().getName() == stats.getFuelFluid()) {
+					int amountToAdd = (int) (fuelMult * fluidStack.amount);
+					boolean isDrainSuccessful = false;
+					//if the player is not in creative then try to use the fluid container
+					if (!player.capabilities.isCreativeMode) {
+						heldItem = heldItem.copy();
+						heldItem.setCount(1);
+						IFluidHandlerItem handler = FluidUtils.getFluidHandler(heldItem);
+						handler.drain(fluidStack.amount, true);
+						ItemStack emptyStack = handler.getContainer();
+
+						if (player.inventory.addItemStackToInventory(emptyStack)) {
+							player.getHeldItem(EnumHand.MAIN_HAND).splitStack(1);
+							isDrainSuccessful = true;
+							if (player.getHeldItem(EnumHand.MAIN_HAND).isEmpty())
+								player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+						}
+
+					} else
+						isDrainSuccessful = true;
+
+					if (isDrainSuccessful)
+						this.addFuelAmountBipropellant(amountToAdd);
+					return true;
+				}else if ((getFuelCapacityOxidizer() - getFuelAmountOxidizer() != 0) && fluidStack.getFluid().getName() == stats.getOxidizerFluid()) {
+					int amountToAdd = (int) (fuelMult * fluidStack.amount);
+					boolean isDrainSuccessful = false;
+					//if the player is not in creative then try to use the fluid container
+					if (!player.capabilities.isCreativeMode) {
+						heldItem = heldItem.copy();
+						heldItem.setCount(1);
+						IFluidHandlerItem handler = FluidUtils.getFluidHandler(heldItem);
+						handler.drain(fluidStack.amount, true);
+						ItemStack emptyStack = handler.getContainer();
+
+						if (player.inventory.addItemStackToInventory(emptyStack)) {
+							player.getHeldItem(EnumHand.MAIN_HAND).splitStack(1);
+							isDrainSuccessful = true;
+							if (player.getHeldItem(EnumHand.MAIN_HAND).isEmpty())
+								player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+						}
+
+					} else
+						isDrainSuccessful = true;
+
+					if (isDrainSuccessful)
+						this.addFuelAmountOxidizer(amountToAdd);
+					return true;
 				}
-				else
-					isDrainSuccessful = true;
-
-				if(isDrainSuccessful)
-					this.addFuelAmountMonopropellant(amountToAdd);
-				return true;
 			}
 		}
 
@@ -2277,7 +2323,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			if (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, FluidRegistry.getFluid(stats.getFuelFluid()))){
 				return getFuelAmountMonopropellant()/(float) getFuelCapacityMonopropellant();
 			} else {
-				return getFuelAmountBipropellant()/(float) getFuelCapacityBipropellant();
+				return (getFuelAmountBipropellant() + getFuelAmountOxidizer())/(float) (getFuelCapacityBipropellant() + getFuelCapacityOxidizer());
 			}
 
 		return 0;

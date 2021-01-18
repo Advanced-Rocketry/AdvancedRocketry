@@ -2,31 +2,26 @@
     "type": "minecraft:crafting_shaped",
     "pattern":
     [
-	"s s",
-	"p p",
-	"sSs"
+	"sss",
+	" t ",
+	"t t"
     ],
     "key":
     {
         "s":
         {
             "type": "forge:ore_dict",
-            "ore": "stickSteel"
+            "ore": "ingotTitaniumIridium"
         },
-        "S":
+	"t":
         {
             "type": "forge:ore_dict",
-            "ore": "sheetSteel"
-        },
-	"p":
-        {
-            "type": "forge:ore_dict",
-            "ore": "plateSteel"
+            "ore": "plateTitaniumAluminide"
         }
     },
     "result":
     {
-        "item": "advancedrocketry:fueltank",
+        "item": "advancedrocketry:advbipropellantrocketmotor",
         "count": 1
     }
 }

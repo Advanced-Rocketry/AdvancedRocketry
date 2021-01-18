@@ -321,7 +321,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 			if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT, FluidRegistry.getFluid(linkedRocket.stats.getFuelFluid()))) {
 				return (linkedRocket.getFuelAmountMonopropellant());
 			} else {
-				return (linkedRocket.getFuelAmountBipropellant());
+				return (linkedRocket.getFuelAmountBipropellant() + linkedRocket.getFuelAmountOxidizer());
 			}
 
 		return 0;
@@ -342,7 +342,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 		    else if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT, FluidRegistry.getFluid(linkedRocket.stats.getFuelFluid()))) {
 			    return (linkedRocket.getFuelCapacityMonopropellant());
 		    } else {
-			    return (linkedRocket.getFuelCapacityBipropellant());
+			    return (linkedRocket.getFuelCapacityBipropellant() + linkedRocket.getFuelCapacityOxidizer());
 		}
 
 		return 1;
