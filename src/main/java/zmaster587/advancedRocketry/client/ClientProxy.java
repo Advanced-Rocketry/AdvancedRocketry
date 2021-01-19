@@ -107,12 +107,6 @@ public class ClientProxy extends CommonProxy {
 
 		//RendererModelBlock blockRenderer = new RendererModelBlock();
 
-		//RendererBucket bucket =  new RendererBucket();
-		//MinecraftForgeClient.registerItemRenderer(AdvancedRocketryItems.itemBucketRocketFuel, bucket);
-		//MinecraftForgeClient.registerItemRenderer(AdvancedRocketryItems.itemBucketNitrogen, bucket);
-		//MinecraftForgeClient.registerItemRenderer(AdvancedRocketryItems.itemBucketHydrogen, bucket);
-		//MinecraftForgeClient.registerItemRenderer(AdvancedRocketryItems.itemBucketOxygen, bucket);
-
 		RenderingRegistry.registerEntityRenderingHandler(EntityRocket.class, (IRenderFactory<EntityRocket>)new RendererRocket(null));
 		RenderingRegistry.registerEntityRenderingHandler(EntityLaserNode.class, (IRenderFactory<EntityLaserNode>)new RenderLaser(2.0, new float[] {1F, 0.25F, 0.25F, 0.2F}, new float[] {0.9F, 0.2F, 0.3F, 0.5F}));
 		RenderingRegistry.registerEntityRenderingHandler(EntityItemAbducted.class, (IRenderFactory<EntityItemAbducted>)new RendererItem(Minecraft.getMinecraft().getRenderManager(), Minecraft.getMinecraft().getRenderItem()));
@@ -297,12 +291,6 @@ public class ClientProxy extends CommonProxy {
 				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemWafer, 0, new ModelResourceLocation("advancedrocketry:siliconWafer", "inventory"));
 
 				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSpaceStation, 0, new ModelResourceLocation("advancedrocketry:spaceStation", "inventory"));
-
-				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBucketHydrogen, 0, new ModelResourceLocation("advancedrocketry:bucketHydrogen", "inventory"));
-				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBucketOxygen, 0, new ModelResourceLocation("advancedrocketry:bucketOxygen", "inventory"));
-				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBucketNitrogen, 0, new ModelResourceLocation("advancedrocketry:bucketNitrogen", "inventory"));
-				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBucketRocketFuel, 0, new ModelResourceLocation("advancedrocketry:bucketRocketFuel", "inventory"));
-				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBucketEnrichedLava, 0, new ModelResourceLocation("advancedrocketry:bucketEnrichedLava", "inventory"));
 
 
 				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSpaceSuit_Chest, 0, new ModelResourceLocation("advancedrocketry:spaceChestplate", "inventory"));
