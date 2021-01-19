@@ -59,6 +59,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 
 	public SpaceStationObject() {
 		properties = (DimensionProperties) zmaster587.advancedRocketry.dimension.DimensionManager.defaultSpaceDimensionProperties.clone();
+		orbitalDistance = 4.0f;
 		spawnLocations = new LinkedList<StationLandingLocation>();
 		warpCoreLocation = new LinkedList<HashedBlockPosition>(); 
 		dockingPoints = new HashMap<HashedBlockPosition, String>();
@@ -629,6 +630,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		nbt.setInteger("spawnZ", spawnLocation.z);
 		nbt.setInteger("destinationDimId", destinationDimId);
 		nbt.setInteger("fuel", fuelAmount);
+		nbt.setFloat("orbitalDistance", orbitalDistance);
 		nbt.setDouble("rotationX", rotation[0]);
 		nbt.setDouble("rotationY", rotation[1]);
 		nbt.setDouble("rotationZ", rotation[2]);
@@ -686,9 +688,6 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	public void readFromNbt(NBTTagCompound nbt) {
 		properties.readFromNBT(nbt);
 
-		if((int)orbitalDistance != properties.getParentOrbitalDistance())
-			orbitalDistance = properties.getParentOrbitalDistance();
-
 		destinationDimId = nbt.getInteger("destinationDimId");
 		launchPosX = nbt.getInteger("launchposX");
 		launchPosZ = nbt.getInteger("launchposY");
@@ -697,6 +696,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		created = nbt.getBoolean("created");
 		altitude = nbt.getInteger("altitude");
 		fuelAmount = nbt.getInteger("fuel");
+		orbitalDistance = nbt.getFloat("orbitalDistance");
 		spawnLocation = new HashedBlockPosition(nbt.getInteger("spawnX"), nbt.getInteger("spawnY"), nbt.getInteger("spawnZ"));
 		properties.setId(nbt.getInteger("id"));
 		rotation[0] = nbt.getDouble("rotationX");
@@ -769,9 +769,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 
 	@Override
 	public void setOrbitalDistance(float finalVel) {
-		if((int)orbitalDistance != properties.getParentOrbitalDistance())
-			properties.setParentOrbitalDistance((int)orbitalDistance);
-		orbitalDistance = finalVel;
+		orbitalDistance = Math.max(4.0f, finalVel);
 	}
 
 	@Override
