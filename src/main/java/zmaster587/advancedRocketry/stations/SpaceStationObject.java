@@ -57,9 +57,13 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	private DimensionProperties properties;
 	public boolean hasWarpCores = false;
 
+	public int targetOrbitalDistance;
+	public int targetGravity;
+
 	public SpaceStationObject() {
 		properties = (DimensionProperties) zmaster587.advancedRocketry.dimension.DimensionManager.defaultSpaceDimensionProperties.clone();
 		orbitalDistance = 4.0f;
+		targetOrbitalDistance = 4;
 		spawnLocations = new LinkedList<StationLandingLocation>();
 		warpCoreLocation = new LinkedList<HashedBlockPosition>(); 
 		dockingPoints = new HashMap<HashedBlockPosition, String>();
@@ -631,6 +635,8 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		nbt.setInteger("destinationDimId", destinationDimId);
 		nbt.setInteger("fuel", fuelAmount);
 		nbt.setFloat("orbitalDistance", orbitalDistance);
+		nbt.setInteger("targetOrbitalDistance", targetOrbitalDistance);
+		nbt.setInteger("targetGravity", targetGravity);
 		nbt.setDouble("rotationX", rotation[0]);
 		nbt.setDouble("rotationY", rotation[1]);
 		nbt.setDouble("rotationZ", rotation[2]);
@@ -697,6 +703,8 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		altitude = nbt.getInteger("altitude");
 		fuelAmount = nbt.getInteger("fuel");
 		orbitalDistance = nbt.getFloat("orbitalDistance");
+		targetOrbitalDistance = nbt.getInteger("targetOrbitalDistance");
+		targetGravity = nbt.getInteger("targetGravity");
 		spawnLocation = new HashedBlockPosition(nbt.getInteger("spawnX"), nbt.getInteger("spawnY"), nbt.getInteger("spawnZ"));
 		properties.setId(nbt.getInteger("id"));
 		rotation[0] = nbt.getDouble("rotationX");
