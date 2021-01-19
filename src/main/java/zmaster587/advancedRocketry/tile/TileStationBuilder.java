@@ -138,6 +138,8 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 				inventory.setInventorySlotContents(3, stack);
 			}
 
+			inventory.decrStackSize(0, 1);
+			inventory.decrStackSize(1, 1);
 
 			this.status = ErrorCodes.FINISHED;
 			storedId = null;
