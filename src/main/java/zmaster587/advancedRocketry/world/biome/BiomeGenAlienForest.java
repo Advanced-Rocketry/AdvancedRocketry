@@ -17,9 +17,9 @@ public class BiomeGenAlienForest extends Biome {
 	private final static WorldGenNoTree noTree = new WorldGenNoTree(false);
 
 	public BiomeGenAlienForest() {
-		super(new BiomeProperties("Alien_Forest").setWaterColor(0x8888FF));
+		super(new BiomeProperties("Alien Forest").setWaterColor(0x8888FF));
 
-        this.setRegistryName(new ResourceLocation("advancedrocketry:Alien_Forest"));
+        this.setRegistryName(new ResourceLocation("advancedrocketry:Alien Forest"));
 		
 		this.fillerBlock = Blocks.GRASS.getDefaultState();
 		this.decorator.grassPerChunk = 50;
