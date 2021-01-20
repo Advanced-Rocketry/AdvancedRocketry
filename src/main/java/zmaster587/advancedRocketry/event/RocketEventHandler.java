@@ -371,10 +371,10 @@ public class RocketEventHandler extends Gui {
 
 				//Draw fuel indicator
 				int size = 0;
-				if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT, FluidRegistry.getFluid(rocket.stats.getFuelFluid()))) {
+				if (rocket.getFuelCapacityMonopropellant() > 0) {
 					size = (int) (68 * (rocket.getFuelAmountMonopropellant() / (float) rocket.getFuelCapacityMonopropellant()));
 				} else {
-					size = (int) (68 * (rocket.getFuelAmountBipropellant() / (float) rocket.getFuelCapacityBipropellant()));
+					size = (int) (68 * ((rocket.getFuelAmountBipropellant() + rocket.getFuelAmountOxidizer()) / (float) (rocket.getFuelCapacityBipropellant() + rocket.getFuelCapacityOxidizer())));
 				}
 				this.drawTexturedModalRect(3, 242 - size, 17, 75 - size, 3, size); //94 to 161
 

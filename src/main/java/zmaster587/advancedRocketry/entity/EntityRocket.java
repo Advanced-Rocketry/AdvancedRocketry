@@ -2286,8 +2286,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	@Override
 	public float getNormallizedProgress(int id) {
 		if(id == 0)
-			if (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, FluidRegistry.getFluid(stats.getFuelFluid()))){
-				return getFuelAmountMonopropellant()/(float) getFuelCapacityMonopropellant();
+			if (getFuelCapacityMonopropellant() > 0) {
+				return (getFuelAmountMonopropellant()/(float) getFuelCapacityMonopropellant());
 			} else {
 				return (getFuelAmountBipropellant() + getFuelAmountOxidizer())/((float) (getFuelCapacityBipropellant() + getFuelCapacityOxidizer()));
 			}
