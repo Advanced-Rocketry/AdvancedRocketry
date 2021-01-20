@@ -932,6 +932,8 @@ public class WorldCommand implements ICommand {
 			sender.sendMessage(new TextComponentString("setGravity"));
 			sender.sendMessage(new TextComponentString("addTorch"));
 			sender.sendMessage(new TextComponentString("[Enter /advrocketry <subcommand> help for more info]"));
+			//print help and return
+			return;
 		}
 		
 		switch(string[0])
