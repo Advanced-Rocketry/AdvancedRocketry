@@ -9,6 +9,7 @@ import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,8 +32,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -668,35 +668,21 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 
 			else if((FluidUtils.containsFluid(heldItem) && FluidUtils.getFluidForItem(heldItem) != null) && ARConfiguration.getCurrentConfig().canBeFueledByHand) {
-				boolean isDrainSuccessful = false;
 				fluidStack = FluidUtils.getFluidForItem(heldItem);
-				if (canRocketFitFluid(fluidStack)) {
-					//if the player is not in creative then try to use the fluid container
-					if (!player.capabilities.isCreativeMode) {
-						heldItem = heldItem.copy();
-						heldItem.setCount(1);
-						IFluidHandlerItem handler = FluidUtils.getFluidHandler(heldItem);
-						handler.drain(fluidStack.amount, true);
-						ItemStack emptyStack = handler.getContainer();
+				if ((canRocketFitFluid(fluidStack))) {
 
-						if (player.inventory.addItemStackToInventory(emptyStack)) {
-							player.getHeldItem(EnumHand.MAIN_HAND).splitStack(1);
-							isDrainSuccessful = true;
-							if (player.getHeldItem(EnumHand.MAIN_HAND).isEmpty())
-								player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
-						}
-
-					} else
-						isDrainSuccessful = true;
-				}
-
-				if(isDrainSuccessful) {
 					if (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid())) {
-						this.addFuelAmountMonopropellant(fluidStack.amount);
+						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityMonopropellant() - getFuelAmountMonopropellant());
+						FluidUtil.interactWithFluidHandler(player, EnumHand.MAIN_HAND, rocketFakeTank);
+						this.addFuelAmountMonopropellant(rocketFakeTank.getFluidAmount());
 					} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid())) {
-						this.addFuelAmountBipropellant(fluidStack.amount);
+						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityBipropellant() - getFuelAmountBipropellant());
+						FluidUtil.interactWithFluidHandler(player, EnumHand.MAIN_HAND, rocketFakeTank);
+						this.addFuelAmountBipropellant(rocketFakeTank.getFluidAmount());
 					} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid())) {
-						this.addFuelAmountOxidizer(fluidStack.amount);
+						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityBipropellant() - getFuelAmountBipropellant());
+						FluidUtil.interactWithFluidHandler(player, EnumHand.MAIN_HAND, rocketFakeTank);
+						this.addFuelAmountOxidizer(rocketFakeTank.getFluidAmount());
 					}
 				}
 
@@ -727,17 +713,17 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			boolean isCorrectFluid = (stats.getFuelFluid() == "null") ? true : fluidStack.getFluid() == FluidRegistry.getFluid(stats.getFuelFluid());
 			if (stats.getFuelFluid() == "null" && isCorrectFluid)
 				stats.setFuelFluid(fluidStack.getFluid().getName());
-			return (getFuelCapacityMonopropellant() - getFuelAmountMonopropellant() != 0)  && isCorrectFluid;
+			return isCorrectFluid;
 		} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid())) {
 			boolean isCorrectFluid = (stats.getFuelFluid() == "null") ? true : fluidStack.getFluid() == FluidRegistry.getFluid(stats.getFuelFluid());
 			if (stats.getFuelFluid() == "null" && isCorrectFluid)
 				stats.setFuelFluid(fluidStack.getFluid().getName());
-			return (getFuelCapacityBipropellant() - getFuelAmountBipropellant() != 0)  && isCorrectFluid;
+			return isCorrectFluid;
 		} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid())) {
 			boolean isCorrectFluid = (stats.getOxidizerFluid() == "null") ? true : fluidStack.getFluid() == FluidRegistry.getFluid(stats.getOxidizerFluid());
 			if (stats.getOxidizerFluid() == "null" && isCorrectFluid)
 				stats.setOxidizerFluid(fluidStack.getFluid().getName());
-			return (getFuelCapacityOxidizer() - getFuelAmountOxidizer() != 0)  && isCorrectFluid;
+			return isCorrectFluid;
 		}
 		return false;
 	}
