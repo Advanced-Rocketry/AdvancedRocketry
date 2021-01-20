@@ -56,18 +56,19 @@ public class WorldCommand implements ICommand {
 	private List<String> aliases;
 	public WorldCommand() {
 		aliases = new ArrayList<String>();
-		aliases.add("advancedRocketry");
-		aliases.add("advRocketry");
+		aliases.add("advancedrocketry");
+		aliases.add("advrocketry");
+		aliases.add("ar");
 	}
 
 	@Override
 	public String getName() {
-		return "advancedRocketry";
+		return "advancedrocketry";
 	}
 
 	@Override
 	public String getUsage(ICommandSender sender) {
-		return "advancedRocketry help";
+		return "advancedrocketry help";
 	}
 
 	@Override
@@ -141,7 +142,7 @@ public class WorldCommand implements ICommand {
 		if(cmdstring.length < 2 || (cmdstring.length >= 2 && cmdstring[1].equalsIgnoreCase("help")))
 		{
 			sender.sendMessage(new TextComponentString(aliases.get(0) + " " + cmdstring[0] +  " - Gives the player playerName (if supplied) a spacestation with ID stationID"));
-			sender.sendMessage(new TextComponentString("Usage: /advRocketry " + cmdstring[0] + " <stationId> [PlayerName]"));
+			sender.sendMessage(new TextComponentString("Usage: /advrocketry " + cmdstring[0] + " <stationId> [PlayerName]"));
 			return;
 		}
 		
@@ -163,7 +164,7 @@ public class WorldCommand implements ICommand {
 			player.inventory.addItemStackToInventory(stack);
 		}
 		else
-			sender.sendMessage(new TextComponentString("Usage: /advRocketry " + cmdstring[0] + " <stationId> [PlayerName]"));
+			sender.sendMessage(new TextComponentString("Usage: /advrocketry " + cmdstring[0] + " <stationId> [PlayerName]"));
 	}
 	
 	private void commandFillData(ICommandSender sender, String cmdstring[])
@@ -191,7 +192,7 @@ public class WorldCommand implements ICommand {
 					try {
 						dataType = DataType.valueOf(cmdstring[1].toUpperCase(Locale.ENGLISH));
 					} catch (IllegalArgumentException e) {
-						sender.sendMessage(new TextComponentString("Did you mean: /advRocketry" + cmdstring[0] + " [datatype] [amountFill]"));
+						sender.sendMessage(new TextComponentString("Did you mean: /advrocketry" + cmdstring[0] + " [datatype] [amountFill]"));
 						sender.sendMessage(new TextComponentString("Not a valid datatype"));
 						String value = "";
 						for(DataType data : DataType.values())
@@ -207,7 +208,7 @@ public class WorldCommand implements ICommand {
 					try {
 						dataAmount = Integer.parseInt(cmdstring[2]);
 					} catch(NumberFormatException e) {
-						sender.sendMessage(new TextComponentString("Did you mean: /advRocketry" + cmdstring[0] + " [datatype] [amountFill]"));
+						sender.sendMessage(new TextComponentString("Did you mean: /advrocketry" + cmdstring[0] + " [datatype] [amountFill]"));
 						sender.sendMessage(new TextComponentString("Not a valid number"));
 						return;
 					}
@@ -230,7 +231,7 @@ public class WorldCommand implements ICommand {
 					try {
 						dataType = DataType.valueOf(cmdstring[1].toUpperCase(Locale.ENGLISH));
 					} catch (IllegalArgumentException e) {
-						sender.sendMessage(new TextComponentString("Did you mean: /advRocketry" + cmdstring[0] + " [datatype] [amountFill]"));
+						sender.sendMessage(new TextComponentString("Did you mean: /advrocketry" + cmdstring[0] + " [datatype] [amountFill]"));
 						sender.sendMessage(new TextComponentString("Not a valid datatype"));
 						String value = "";
 						for(DataType data : DataType.values())
@@ -245,7 +246,7 @@ public class WorldCommand implements ICommand {
 					try {
 						dataAmount = Integer.parseInt(cmdstring[2]);
 					} catch(NumberFormatException e) {
-						sender.sendMessage(new TextComponentString("Did you mean: /advRocketry" + cmdstring[0] + " [datatype] [amountFill]"));
+						sender.sendMessage(new TextComponentString("Did you mean: /advrocketry" + cmdstring[0] + " [datatype] [amountFill]"));
 						sender.sendMessage(new TextComponentString("Not a valid number"));
 						return;
 					}
@@ -917,7 +918,7 @@ public class WorldCommand implements ICommand {
 	public void execute(MinecraftServer server, ICommandSender sender,
 			String[] string) throws CommandException {
 
-		//advRocketry planet set <var value>
+		//advrocketry planet set <var value>
 		int opLevel = 2;
 		if(string.length == 0 || (string.length >= 1 && string[0].equalsIgnoreCase("help"))) {
 			sender.sendMessage(new TextComponentString("Subcommands:"));
@@ -930,7 +931,7 @@ public class WorldCommand implements ICommand {
 			sender.sendMessage(new TextComponentString("reloadRecipes"));
 			sender.sendMessage(new TextComponentString("setGravity"));
 			sender.sendMessage(new TextComponentString("addTorch"));
-			sender.sendMessage(new TextComponentString("[Enter /advRocketry <subcommand> help for more info]"));
+			sender.sendMessage(new TextComponentString("[Enter /advrocketry <subcommand> help for more info]"));
 			//print help and return
 			return;
 		}
