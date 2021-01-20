@@ -20,6 +20,10 @@ public class StatsRocket {
 	private String fuelFluid;
 	private String oxidizerFluid;
 
+	//Used for orbital height calculations
+	public int orbitHeight;
+	public float injectionBurnLenghtMult;
+
 	private int fuelMonopropellant;
 	private int fuelNuclear;
 	private int fuelBipropellant;
@@ -31,6 +35,7 @@ public class StatsRocket {
 	private int fuelCapacityMonopropellant;
 	private int fuelCapacityBipropellant;
 	private int fuelCapacityOxidizer;
+
 	private int fuelCapacityNuclear;
 	private int fuelCapacityIon;
 	private int fuelCapacityWarp;
@@ -74,6 +79,8 @@ public class StatsRocket {
 		fuelRateBipropellant = 0;
 		fuelRateOxidizer = 0;
 		drillingPower = 0f;
+		orbitHeight = ARConfiguration.getCurrentConfig().orbit;
+		injectionBurnLenghtMult = 1;
 		pilotSeatPos = new HashedBlockPosition(0,0,0);
 		pilotSeatPos.x = INVALID_SEAT;
 		engineLoc = new ArrayList<Vector3F<Float>>();

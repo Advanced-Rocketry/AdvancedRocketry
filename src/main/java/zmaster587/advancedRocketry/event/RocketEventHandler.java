@@ -292,7 +292,7 @@ public class RocketEventHandler extends Gui {
 
 		double deltaY = (Minecraft.getMinecraft().getRenderViewEntity().posY - Minecraft.getMinecraft().getRenderViewEntity().lastTickPosY)*partialTicks;
 
-		double size = (getImgSize*5/(72-Minecraft.getMinecraft().getRenderViewEntity().posY - deltaY));
+		double size = (getImgSize*5/(72-(Minecraft.getMinecraft().getRenderViewEntity().posY * 1000 / ARConfiguration.getCurrentConfig().orbit)));
 
 
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
@@ -315,7 +315,7 @@ public class RocketEventHandler extends Gui {
 
 		//Detailed Land
 		GlStateManager.color(brightness2, brightness2, brightness2, MathHelper.clamp(((float)Minecraft.getMinecraft().getRenderViewEntity().posY -200f)/50f, 0f, 1f));
-		RenderHelper.renderTopFaceWithUV(buffer, -10 , size, size, -size,  -size, 0f, 1f, 0f, 1f);
+		RenderHelper.renderTopFaceWithUV(buffer, -10 , -size, -size, size,  size, 0f, 1f, 0f, 1f);
 
 		Tessellator.getInstance().draw();
 
