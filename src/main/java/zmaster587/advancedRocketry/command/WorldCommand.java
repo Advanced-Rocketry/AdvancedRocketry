@@ -53,7 +53,7 @@ public class WorldCommand implements ICommand {
 
 
 
-	private List aliases;
+	private List<String> aliases;
 	public WorldCommand() {
 		aliases = new ArrayList<String>();
 		aliases.add("advancedRocketry");
@@ -71,7 +71,7 @@ public class WorldCommand implements ICommand {
 	}
 
 	@Override
-	public List getAliases() {
+	public List<String> getAliases() {
 		return aliases;
 	}
 
