@@ -285,6 +285,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 				stats.setFuelCapacity(FuelType.LIQUID_OXIDIZER, 0);
 			}
 			//Non-fuel stats
+			stats.setThrust(Math.max(thrustMonopropellant, thrustBipropellant));
 			stats.setWeight(numBlocks);
 			stats.setDrillingPower(drillPower);
 			stats.setStatTag("liquidCapacity", fluidCapacity);
