@@ -53,7 +53,7 @@ public class ARConfiguration {
 	final static String CLIENT = "Client";
 	public static Logger logger = LogManager.getLogger(Constants.modId);
 
-	static String[] sealableBlockWhiteList, sealableBlockBlackList, breakableTorches,  blackListRocketBlocksStr, harvestableGasses, entityList, asteriodOres, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres, liquidRocketFuel;
+	static String[] sealableBlockWhiteList, sealableBlockBlackList, breakableTorches,  blackListRocketBlocksStr, harvestableGasses, spawnableGasses, entityList, asteriodOres, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres, liquidRocketFuel;
 
 
 	//Only to be set in preinit
@@ -559,7 +559,9 @@ public class ARConfiguration {
 				new String[] {"nuggetCopper:100", "nuggetIron:100", "nuggetTin:100", "nuggetLead:100", "nuggetSilver:100",
 						"nuggetGold:75" ,"nuggetDiamond:10", "nuggetUranium:10", "nuggetIridium:1"}, "Outputs and chances of objects from Enriched Lava in the Centrifuge.  Format: <oredictionaryEntry>:<weight>.  Larger weights are more frequent");
 
-		harvestableGasses = config.getStringList("harvestableGasses", GAS_MINING, new String[] {}, "list of fluid names that can be harvested as Gas");
+		harvestableGasses = config.getStringList("harvestableGasses", GAS_MINING, new String[] {}, "list of fluid names that can be harvested as Gas from any gas giant");
+
+		spawnableGasses = config.getStringList("spawnableGasses", GAS_MINING, new String[] {"hydrogen;125;1600;1.0", "helium;125;1600;0.9", "helium3;175;1600;0.2", "oxygen;0;124;1.0", "nitrogen;0;124;1.0", "ammonia;0;124;0.75", "methane;0;124;0.25"}, "list of fluid names that can be spawned as a gas giant. Format is fluid;minGravity;maxGravity;chance");
 
 		entityList = config.getStringList("entityAtmBypass", Configuration.CATEGORY_GENERAL, new String[] {}, "list entities which should not be affected by atmosphere properties");
 
@@ -690,6 +692,31 @@ public class ARConfiguration {
 		}
 		logger.info("End registering Harvestable Gasses");
 		harvestableGasses = null;
+
+		logger.info("Start registering Spawnable Gasses");
+		for(String str : spawnableGasses) {
+
+			String splitStr[] = str.split(";");
+			Fluid fluid = FluidRegistry.getFluid(splitStr[0]);
+			int minGravity = 0;
+			int maxGravity = 1600;
+			double chance = 1.0;
+			if (splitStr.length > 1) {
+				minGravity = Integer.parseInt(splitStr[1]);
+			}
+			if (splitStr.length > 2) {
+				maxGravity = Integer.parseInt(splitStr[2]);
+			}
+			if (splitStr.length > 3) {
+				chance = Double.parseDouble(splitStr[3]);
+			}
+			if(fluid == null)
+				logger.warn("'" + str + "' is not a valid Fluid");
+			else
+				AdvancedRocketryFluids.registerGasGiantGas(fluid, minGravity, maxGravity, chance);
+		}
+		logger.info("End registering Spawnable Gasses");
+		spawnableGasses = null;
 
 		logger.info("Start registering entity atmosphere bypass");
 
