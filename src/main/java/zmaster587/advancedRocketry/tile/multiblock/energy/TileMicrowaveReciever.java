@@ -140,7 +140,8 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
 			insolationPowerMultiplier = (world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) ? SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getInsolationMultiplier() : properties.getPeakInsolationMultiplierWithoutAtmosphere();
 			//Sets the ID of the place it's sourcing power from so it does not have to recheck
-			powerSourceDimensionID = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getOrbitingPlanetId();
+			if (world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId)
+			    powerSourceDimensionID = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getOrbitingPlanetId();
 		}
 		if(!isComplete())
 			return;
