@@ -678,10 +678,10 @@ public class AdvancedRocketry {
 
 		AdvancedRocketryBlocks.blockLoader = new BlockARHatch(Material.ROCK).setUnlocalizedName("loader").setCreativeTab(tabAdvRocketry).setHardness(3f);
 
-		AdvancedRocketryBlocks.blockAlienWood = new BlockAlienWood().setUnlocalizedName("log").setCreativeTab(tabAdvRocketry).setHardness(3f);
-		AdvancedRocketryBlocks.blockAlienLeaves = new BlockAlienLeaves().setUnlocalizedName("leaves2").setCreativeTab(tabAdvRocketry).setHardness(3f);
-		AdvancedRocketryBlocks.blockAlienSapling = new BlockAlienSapling().setUnlocalizedName("sapling").setCreativeTab(tabAdvRocketry).setHardness(3f);
-		AdvancedRocketryBlocks.blockAlienPlanks = new BlockAlienPlank().setUnlocalizedName("planks").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		AdvancedRocketryBlocks.blockAlienWood = new BlockAlienWood().setUnlocalizedName("lightwoodlog").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		AdvancedRocketryBlocks.blockAlienLeaves = new BlockAlienLeaves().setUnlocalizedName("lightwoodleaves").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		AdvancedRocketryBlocks.blockAlienSapling = new BlockAlienSapling().setUnlocalizedName("lightwoodsapling").setCreativeTab(tabAdvRocketry).setHardness(3f);
+		AdvancedRocketryBlocks.blockAlienPlanks = new BlockAlienPlank().setUnlocalizedName("lightwoodplanks").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		
 		AdvancedRocketryBlocks.blockLightSource = new BlockLightSource();
 
