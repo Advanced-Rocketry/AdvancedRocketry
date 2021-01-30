@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -342,42 +343,42 @@ public class ClientProxy extends CommonProxy {
 	private void registerFluidModel(IFluidBlock fluidBlock) {
 		Item item = Item.getItemFromBlock((Block) fluidBlock);
 
-		ModelBakery.registerItemVariants(item);
-
 		final ModelResourceLocation modelResourceLocation = new ModelResourceLocation("advancedrocketry:fluid", fluidBlock.getFluid().getName());
+		System.out.println(fluidBlock.getFluid().getName());
 
-		//ModelLoader.setCustomMeshDefinition(item, MeshDefinitionFix.create(stack -> modelResourceLocation));
-
-
-		StateMapperBase ignoreState = new FluidStateMapper(modelResourceLocation);
+		if (item != Items.AIR) {
+			ModelLoader.registerItemVariants(item);
+			ModelLoader.setCustomMeshDefinition(item, new FluidItemMeshDefinition(modelResourceLocation));
+		}
+		FluidStateMapper ignoreState = new FluidStateMapper(modelResourceLocation);
 		ModelLoader.setCustomStateMapper((Block) fluidBlock, ignoreState);
-		ModelLoader.setCustomMeshDefinition(item, new FluidItemMeshDefinition(modelResourceLocation));
 		ModelBakery.registerItemVariants(item, modelResourceLocation);
+
 	}
 
 	private static class FluidStateMapper extends StateMapperBase {
-		private final ModelResourceLocation fluidLocation;
+		private final ModelResourceLocation location;
 
 		public FluidStateMapper(ModelResourceLocation fluidLocation) {
-			this.fluidLocation = fluidLocation;
+			this.location = fluidLocation;
 		}
 
 		@Override
 		protected ModelResourceLocation getModelResourceLocation(IBlockState iBlockState) {
-			return fluidLocation;
+			return location;
 		}
 	}
 
 	private static class FluidItemMeshDefinition implements ItemMeshDefinition {
-		private final ModelResourceLocation fluidLocation;
+		private final ModelResourceLocation location;
 
 		public FluidItemMeshDefinition(ModelResourceLocation fluidLocation) {
-			this.fluidLocation = fluidLocation;
+			this.location = fluidLocation;
 		}
 
 		@Override
 		public ModelResourceLocation getModelLocation(ItemStack stack) {
-			return fluidLocation;
+			return location;
 		}
 }
 
