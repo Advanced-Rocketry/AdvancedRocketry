@@ -40,7 +40,8 @@ public class BlockARHatch extends BlockHatch {
 
 
 		boolean isPointer = blockAccess.getTileEntity(pos.offset(direction.getOpposite())) instanceof TilePointer;
-		
+		if (blockState.getValue(VARIANT) == 8)
+			return false;
 		if(isPointer || blockState.getValue(VARIANT) < 2)
 			return super.shouldSideBeRendered(blockState, blockAccess, pos, direction);
 		return true;

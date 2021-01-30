@@ -200,6 +200,7 @@ public class ClientProxy extends CommonProxy {
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockFluidPipe));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockForceField));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockForceFieldProjector));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockVacuumLaser));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockFuelingStation));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockFuelTank));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat));

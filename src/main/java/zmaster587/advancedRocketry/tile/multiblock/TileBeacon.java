@@ -1,9 +1,14 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TileChemicalReactor;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.util.HashedBlockPosition;
@@ -68,7 +73,10 @@ public class TileBeacon extends TileMultiPowerConsumer {
 				props.removeBeaconLocation(world,new HashedBlockPosition(getPos()));
 		}
 	}
-	
+
+	@Override
+	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) { return true; }
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 

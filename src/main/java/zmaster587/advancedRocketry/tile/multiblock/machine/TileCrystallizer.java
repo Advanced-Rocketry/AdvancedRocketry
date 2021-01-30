@@ -6,6 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
@@ -36,7 +38,12 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 	public TileCrystallizer() {
 		coil = new Material[2];
 	}
-	
+
+	@Override
+	public boolean shouldHideBlock(World world, BlockPos pos2, IBlockState tile) {
+		return true;
+	}
+
 	@Override
 	public Object[][][] getStructure() {
 		return structure;

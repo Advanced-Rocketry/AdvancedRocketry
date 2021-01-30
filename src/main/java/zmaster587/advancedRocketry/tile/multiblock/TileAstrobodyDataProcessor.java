@@ -70,6 +70,9 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 	}
 
 	@Override
+	public boolean shouldHideBlock(World world, BlockPos pos2, IBlockState tile) { return true; }
+
+	@Override
 	protected void integrateTile(TileEntity tile) {
 		super.integrateTile(tile);
 

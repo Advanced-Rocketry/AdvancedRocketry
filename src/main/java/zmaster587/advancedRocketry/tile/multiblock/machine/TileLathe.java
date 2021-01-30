@@ -24,8 +24,8 @@ import java.util.List;
 public class TileLathe extends TileMultiblockMachine implements IModularInventory {
 
 	public static final Object[][][] structure = { 
-		{{'I', LibVulpesBlocks.motors, Blocks.AIR, 'c'}},
-		{{'O', LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'P'}},
+		{{'c', LibVulpesBlocks.motors, Blocks.AIR, 'I'}},
+		{{'P', LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'O'}},
 	};
 	
 	@Override

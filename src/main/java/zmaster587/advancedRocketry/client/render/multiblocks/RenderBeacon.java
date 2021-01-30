@@ -15,7 +15,7 @@ public class RenderBeacon extends TileEntitySpecialRenderer {
 
 	WavefrontObject model;
 
-	public ResourceLocation baseTexture =  new ResourceLocation("advancedRocketry:textures/models/beacon.jpg");
+	public ResourceLocation baseTexture =  new ResourceLocation("advancedRocketry:textures/models/beacon.png");
 	RenderLaser laser;
 
 	public RenderBeacon() {

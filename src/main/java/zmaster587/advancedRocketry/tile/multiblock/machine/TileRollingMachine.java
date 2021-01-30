@@ -32,13 +32,13 @@ import java.util.List;
 public class TileRollingMachine extends TileMultiblockMachine {
 
 	public static final Object structure[][][] = new Object[][][] { 
-		{   {'c', null, Blocks.AIR, Blocks.AIR},
-			{'I', Blocks.AIR, LibVulpesBlocks.blockStructureBlock, Blocks.AIR},
-			{'I', Blocks.AIR, LibVulpesBlocks.blockStructureBlock, Blocks.AIR}},
+		{   {Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR},
+			{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock},
+			{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, "blockSteel", LibVulpesBlocks.blockStructureBlock}},
 
-			{{'P', 'L', LibVulpesBlocks.blockStructureBlock, null},
-				{"blockCoil", LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'O'},
-				{"blockCoil", LibVulpesBlocks.motors, LibVulpesBlocks.blockStructureBlock, 'O'}}
+			{{'P', 'c', 'I', Blocks.AIR, Blocks.AIR},
+				{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.motors, LibVulpesBlocks.motors, "blockSteel", LibVulpesBlocks.blockStructureBlock},
+				{LibVulpesBlocks.blockStructureBlock, 'L', 'O', "blockSteel", LibVulpesBlocks.blockStructureBlock}}
 	};
 
 	@Override

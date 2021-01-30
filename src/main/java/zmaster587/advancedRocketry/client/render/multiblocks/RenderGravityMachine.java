@@ -15,11 +15,11 @@ public class RenderGravityMachine extends TileEntitySpecialRenderer {
 	
 	WavefrontObject model;
 
-	ResourceLocation texture =  new ResourceLocation("advancedRocketry:textures/models/gravityMachine.png");
+	ResourceLocation texture =  new ResourceLocation("advancedRocketry:textures/models/areagravitycontroller.png");
 	
 	public RenderGravityMachine() {
 		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/gravityMachine.obj"));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/areagravitycontroller.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}
@@ -44,7 +44,7 @@ public class RenderGravityMachine extends TileEntitySpecialRenderer {
 		//GL11.glTranslated(2f, 0, 0f);
 		bindTexture(texture);
 		
-		model.renderOnly("Base");
+		model.renderOnly("Hull");
 		GL11.glDisable(GL11.GL_LIGHTING);
 		int maxSize = 5;
 		

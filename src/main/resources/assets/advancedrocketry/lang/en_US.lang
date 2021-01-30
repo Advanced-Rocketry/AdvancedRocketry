@@ -111,6 +111,7 @@ tile.planetHoloSelector.name=Holographic Planet Selector
 tile.lens.name=Lens
 tile.forceField.name=Force Field
 tile.forceFieldProjector.name=Force Field Projector
+tile.vacuumLaser.name=Vacuum-Chamber High Power Laser Emitter
 tile.gravityMachine.name=Area Gravity Controller
 tile.pipeSeal.name=Pipe Seal
 tile.spaceElevatorController.name=Space Elevator

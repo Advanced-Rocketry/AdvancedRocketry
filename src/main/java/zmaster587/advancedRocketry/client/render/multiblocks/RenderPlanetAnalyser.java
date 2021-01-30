@@ -14,11 +14,11 @@ public class RenderPlanetAnalyser extends TileEntitySpecialRenderer {
 
 	WavefrontObject model;
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/planetAnalyser.png");
+	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/astrobodydataprocessor.png");
 
 	public RenderPlanetAnalyser(){
 		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/planetAnalyser.obj"));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/astrobodydataprocessor.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}
@@ -39,7 +39,7 @@ public class RenderPlanetAnalyser extends TileEntitySpecialRenderer {
 		GL11.glTranslated(x + .5, y, z + .5);
 		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 180 : 0) + front.getFrontOffsetZ()*90f, 0, 1, 0);
 		
-		GL11.glTranslated(.5, -1, 0);
+		GL11.glTranslated(-.5, -1, -1.5);
 
 		bindTexture(texture);
 		

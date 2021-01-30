@@ -1,0 +1,35 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	" l ",
+	"pcp",
+	"psp"
+    ],
+    "key":
+    {
+        "c":
+        {
+            "item": "advancedrocketry:crystal",
+            "data": 3
+        },
+	"s":
+        {
+            "item": "libvulpes:structuremachine"
+        },
+	"p":
+        {
+            "type": "forge:ore_dict",
+            "ore": "plateAluminum"
+        },
+	"l":
+        {
+            "item": "advancedrocketry:blocklens"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:vacuumlaser",
+        "count": 1
+    }
+}

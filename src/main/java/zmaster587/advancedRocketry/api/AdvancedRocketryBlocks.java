@@ -86,6 +86,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockLens;
 	public static Block blockForceField;
 	public static Block blockForceFieldProjector;
+	public static Block blockVacuumLaser;
 	public static Block blockGravityMachine;
 	public static Block blockPipeSealer;
 	public static Block blockSpaceElevatorController;
