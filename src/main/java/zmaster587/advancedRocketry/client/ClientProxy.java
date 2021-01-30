@@ -143,10 +143,10 @@ public class ClientProxy extends CommonProxy {
 		Item blockItem = Item.getItemFromBlock(AdvancedRocketryBlocks.blockLoader);
 		ModelLoader.setCustomModelResourceLocation(blockItem, 0, new ModelResourceLocation("advancedrocketry:databus", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(blockItem, 1, new ModelResourceLocation("advancedrocketry:satelliteHatch", "inventory"));
-		ModelLoader.setCustomModelResourceLocation(blockItem, 2, new ModelResourceLocation("libvulpes:inputHatch", "inventory"));
-		ModelLoader.setCustomModelResourceLocation(blockItem, 3, new ModelResourceLocation("libvulpes:outputHatch", "inventory"));
-		ModelLoader.setCustomModelResourceLocation(blockItem, 4, new ModelResourceLocation("libvulpes:fluidInputHatch", "inventory"));
-		ModelLoader.setCustomModelResourceLocation(blockItem, 5, new ModelResourceLocation("libvulpes:fluidOutputHatch", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(blockItem, 2, new ModelResourceLocation("libvulpes:outputHatch", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(blockItem, 3, new ModelResourceLocation("libvulpes:inputHatch", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(blockItem, 4, new ModelResourceLocation("libvulpes:fluidOutputHatch", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(blockItem, 5, new ModelResourceLocation("libvulpes:fluidInputHatch", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(blockItem, 6, new ModelResourceLocation("advancedrocketry:guidancecomputeraccesshatch", "inventory"));
 
 		blockItem = Item.getItemFromBlock(AdvancedRocketryBlocks.blockCrystal);
@@ -246,7 +246,7 @@ public class ClientProxy extends CommonProxy {
 		for(Item blockItem2 : blockItems)
 			ModelLoader.setCustomModelResourceLocation(blockItem2, 0, new ModelResourceLocation(blockItem2.getRegistryName(), "inventory"));
 		
-		
+
 		//TODO fluids
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockOxygenFluid);
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockNitrogenFluid);
@@ -338,23 +338,23 @@ public class ClientProxy extends CommonProxy {
 
 		
 	}
-	
+
 	private void registerFluidModel(IFluidBlock fluidBlock) {
 		Item item = Item.getItemFromBlock((Block) fluidBlock);
 
 		ModelBakery.registerItemVariants(item);
 
 		final ModelResourceLocation modelResourceLocation = new ModelResourceLocation("advancedrocketry:fluid", fluidBlock.getFluid().getName());
-		
+
 		//ModelLoader.setCustomMeshDefinition(item, MeshDefinitionFix.create(stack -> modelResourceLocation));
 
-		
+
 		StateMapperBase ignoreState = new FluidStateMapper(modelResourceLocation);
 		ModelLoader.setCustomStateMapper((Block) fluidBlock, ignoreState);
 		ModelLoader.setCustomMeshDefinition(item, new FluidItemMeshDefinition(modelResourceLocation));
 		ModelBakery.registerItemVariants(item, modelResourceLocation);
 	}
-	
+
 	private static class FluidStateMapper extends StateMapperBase {
 		private final ModelResourceLocation fluidLocation;
 
