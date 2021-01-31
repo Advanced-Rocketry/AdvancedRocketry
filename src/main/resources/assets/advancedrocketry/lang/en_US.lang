@@ -371,6 +371,7 @@ msg.warpmon.tab.data=Data
 msg.warpmon.tab.tracking=Planet Tracking
 msg.warpmon.selectplanet=Select Planet
 msg.warpmon.corestatus=Core Status:
+msg.warpmon.anchored=Station is anchored!
 msg.warpmon.nowhere=Nowhere to go
 msg.warpmon.missingart=Missing Artifact
 msg.warpmon.ready=Ready!

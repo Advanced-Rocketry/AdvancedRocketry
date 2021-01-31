@@ -93,8 +93,8 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 		if(otherPlanet != null) {
 			TileEntity tile = otherPlanet.getTileEntity(dimBlockPos.pos.getBlockPos());
 			if(tile instanceof TileSpaceElevator) {
-				setDimensionBlockPosition(null);
-				((TileSpaceElevator) tile).setDimensionBlockPosition(null);
+				((TileSpaceElevator) tile).updateTetherLinkPosition(dimBlockPos, null);
+				updateTetherLinkPosition(new DimensionBlockPosition(world.provider.getDimension(), new HashedBlockPosition(getPos())), null);
 			}
 		}
 
@@ -139,7 +139,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 	public static boolean isDestinationValid(int destinationDimensionID, DimensionBlockPosition pos, HashedBlockPosition myPos, int myDimensionID) {
 		if (pos == null || pos.pos == null)
 			return false;
-		if (destinationDimensionID == ARConfiguration.getCurrentConfig().spaceDimId && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPos.getBlockPos()) != null) {
+		if (myDimensionID == ARConfiguration.getCurrentConfig().spaceDimId && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPos.getBlockPos()) != null) {
 			return PlanetaryTravelHelper.isTravelWithinGeostationaryOrbit((SpaceStationObject)SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPos.getBlockPos()), pos.dimid);
 		} else if (pos.dimid == ARConfiguration.getCurrentConfig().spaceDimId && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos.pos.getBlockPos()) != null) {
 			return PlanetaryTravelHelper.isTravelWithinGeostationaryOrbit((SpaceStationObject)SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos.pos.getBlockPos()), myDimensionID);
@@ -177,7 +177,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 			capsule.setDst(dimBlockPos);
 		}
 
-		int yOffset = (getIsSpaceStation()) ? - 5 : 1;
+		int yOffset = (isAnchorOnSpaceStation()) ? - 5 : 1;
 		capsule.setPosition(getLandingLocationX(), getPos().getY() + yOffset, getLandingLocationZ());
 
 		EnumFacing facing = RotatableBlock.getFront(world.getBlockState(getPos()));
@@ -198,12 +198,11 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 
 	@Override
 	public void update() {
-		/*
 		if (dimBlockPos != null ) {
 			if (!isDestinationValid(dimBlockPos.dimid, dimBlockPos, new HashedBlockPosition(pos), world.provider.getDimension())) {
-				dimBlockPos = null;
+				updateTetherLinkPosition(new DimensionBlockPosition(world.provider.getDimension(), new HashedBlockPosition(pos)), null);
 			}
-		}*/
+		}
 		super.update();
 	}
 
@@ -284,7 +283,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 
 		double capsulePosX = getLandingLocationX();
 		double capsulePosZ = getLandingLocationZ();
-		int yOffset = (getIsSpaceStation()) ? - 4 : 1;
+		int yOffset = (isAnchorOnSpaceStation()) ? - 4 : 1;
 		capsule.setPosition(capsulePosX, getPos().getY() + yOffset, capsulePosZ);
 
 		capsule.setDst(dimBlockPos);
@@ -344,8 +343,8 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 			if(world != null) {
 				TileEntity tile = world.getTileEntity(dimPos.pos.getBlockPos());
 				if(tile instanceof TileSpaceElevator) {
-					setDimensionBlockPosition(dimPos);
-					((TileSpaceElevator) tile).setDimensionBlockPosition(new DimensionBlockPosition(this.world.provider.getDimension(), new HashedBlockPosition(getPos())));
+					updateTetherLinkPosition(new DimensionBlockPosition(this.world.provider.getDimension(), new HashedBlockPosition(getPos())), dimPos);
+					((TileSpaceElevator) tile).updateTetherLinkPosition(dimPos, new DimensionBlockPosition(this.world.provider.getDimension(), new HashedBlockPosition(getPos())));
 					player.sendMessage(new TextComponentTranslation("msg.spaceElevator.newDstAdded"));
 
 					if (capsule != null) {
@@ -363,11 +362,14 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 		return false;
 	}
 
-	public boolean getIsSpaceStation() {
+	public boolean isAnchorOnSpaceStation() {
 		return world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId;
 	}
 
-	public void setDimensionBlockPosition(DimensionBlockPosition dimensionBlockPosition) {
+	public void updateTetherLinkPosition(DimensionBlockPosition myPosition, DimensionBlockPosition dimensionBlockPosition) {
+		if (myPosition.dimid == ARConfiguration.getCurrentConfig().spaceDimId && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()) != null) {
+			SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setIsAnchored( (dimensionBlockPosition == null) ? false : true);
+		}
 		dimBlockPos = dimensionBlockPosition;
 	}
 

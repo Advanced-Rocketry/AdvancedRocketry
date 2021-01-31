@@ -51,6 +51,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	private HashMap<HashedBlockPosition, String> dockingPoints;
 	private long transitionEta;
 	private EnumFacing direction;
+	private boolean isAnchored = false;
 	private double rotation[];
 	private double angularVelocity[];
 	private long lastTimeModification = 0;
@@ -145,6 +146,20 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 			return EnumFacing.NORTH;
 		return direction;
 	}
+
+	/**
+	 * @return if the object is anchored in place by anything
+	 */
+	@Override
+	public boolean isAnchored() {
+		return isAnchored;}
+
+	/**
+	 * Sets if the object is anchored or not
+	 */
+	@Override
+	public void setIsAnchored(boolean anchored) {isAnchored = anchored; }
+
 	/**
 	 * @return the altitude above the parent DIM the object currently is
 	 */
@@ -620,6 +635,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		nbt.setInteger("id", getId());
 		nbt.setInteger("launchposX", launchPosX);
 		nbt.setInteger("launchposY", launchPosZ);
+		nbt.setBoolean("isAnchored", isAnchored);
 		nbt.setInteger("posX", posX);
 		nbt.setInteger("posY", posZ);
 		nbt.setBoolean("created", created);
@@ -690,6 +706,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 			orbitalDistance = properties.getParentOrbitalDistance();
 
 		destinationDimId = nbt.getInteger("destinationDimId");
+		isAnchored = nbt.getBoolean("isAnchored");
 		launchPosX = nbt.getInteger("launchposX");
 		launchPosZ = nbt.getInteger("launchposY");
 		posX = nbt.getInteger("posX");
@@ -769,9 +786,11 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 
 	@Override
 	public void setOrbitalDistance(float finalVel) {
-		if((int)orbitalDistance != properties.getParentOrbitalDistance())
-			properties.setParentOrbitalDistance((int)orbitalDistance);
-		orbitalDistance = finalVel;
+		if (!isAnchored()) {
+			if ((int) orbitalDistance != properties.getParentOrbitalDistance())
+				properties.setParentOrbitalDistance((int) orbitalDistance);
+			orbitalDistance = finalVel;
+		}
 	}
 
 	@Override

@@ -10,7 +10,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import zmaster587.advancedRocketry.client.render.RenderLaser;
@@ -44,7 +43,7 @@ public class RendererSpaceElevator extends TileEntitySpecialRenderer {
 
 		double renderX = x + multiBlockTile.getLandingLocationX() - multiBlockTile.getPos().getX();
 		double renderZ = z + multiBlockTile.getLandingLocationZ() - multiBlockTile.getPos().getZ();
-		if (multiBlockTile.isTetherConnected()) {
+		if (multiBlockTile.isTetherConnected() && !multiBlockTile.isAnchorOnSpaceStation()) {
 			laser.doRender((Entity) null, renderX + 1.5, y + 4f, renderZ - 0.5, 0, f);
 		}
 		
@@ -56,14 +55,14 @@ public class RendererSpaceElevator extends TileEntitySpecialRenderer {
 		//Rotate and move the model into position
 		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
 
-		float rotationAmount = (multiBlockTile.getIsSpaceStation()) ? 180f : 0;
+		float rotationAmount = (multiBlockTile.isAnchorOnSpaceStation()) ? 180f : 0;
 		if (front.getAxis() == EnumFacing.Axis.X) {
 			GL11.glRotatef(rotationAmount, 1, 0, 0);
 		} else {
 			GL11.glRotatef(rotationAmount, 0, 0, 1);
 		}
 		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 180 : 0) + front.getFrontOffsetZ()*90f, 0, 1, 0);
-		float yOffset = (multiBlockTile.getIsSpaceStation()) ? -1f : 0;
+		float yOffset = (multiBlockTile.isAnchorOnSpaceStation()) ? -1f : 0;
 		GL11.glTranslated(4.5f, yOffset, 0.5f);
 
 		//GL11.glTranslated(2f, 0, 0f);
@@ -74,7 +73,7 @@ public class RendererSpaceElevator extends TileEntitySpecialRenderer {
 		}
 		GL11.glPopMatrix();
 
-		if (multiBlockTile.isTetherConnected()) {
+		if (multiBlockTile.isTetherConnected() && !multiBlockTile.isAnchorOnSpaceStation()) {
 			//Render Beads
 			GL11.glPushMatrix();
 			GL11.glTranslated(x + multiBlockTile.getLandingLocationX() - multiBlockTile.getPos().getX() + 2, y + 4, z + multiBlockTile.getLandingLocationZ() - multiBlockTile.getPos().getZ());

@@ -329,11 +329,11 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 						ent.startRiding(this);
 				}
 
-				if(this.posY <= dstTilePos.pos.y && world.provider.getDimension() != ARConfiguration.getCurrentConfig().spaceDimId) {
+				if(this.posY <= dstTilePos.pos.y + 1 && world.provider.getDimension() != ARConfiguration.getCurrentConfig().spaceDimId) {
 					setCapsuleMotion(0);
 
 
-					setPosition(dstTilePos.pos.x, dstTilePos.pos.y, dstTilePos.pos.z);
+					setPosition(dstTilePos.pos.x, dstTilePos.pos.y + 1, dstTilePos.pos.z);
 
 					TileEntity e;
 

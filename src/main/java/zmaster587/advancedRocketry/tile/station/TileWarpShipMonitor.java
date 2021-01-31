@@ -194,8 +194,13 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				boolean flag = isOnStation && getSpaceObject().getFuelAmount() >= getTravelCost() && getSpaceObject().hasUsableWarpCore();
 				flag = flag && !(isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()));
 				boolean artifactFlag = (dimCache != null && meetsArtifactReq(dimCache));
-				canWarp = new ModuleText(baseX, baseY + sizeY + 30, (isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody())) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.nowhere") : 
-					(!artifactFlag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.missingart") : (flag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.ready") : LibVulpes.proxy.getLocalizedString("msg.warpmon.notready"))), flag && artifactFlag ? 0x1baa1b : 0xFF1b1b);
+
+				canWarp = new ModuleText(baseX, baseY + sizeY + 30,
+						(getSpaceObject().isAnchored()) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.anchored") :
+						((isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody())) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.nowhere") :
+						(!artifactFlag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.missingart") :
+						(flag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.ready") :
+						LibVulpes.proxy.getLocalizedString("msg.warpmon.notready")))), flag && artifactFlag && !getSpaceObject().isAnchored() ? 0x1baa1b : 0xFF1b1b);
 				modules.add(canWarp);
 				modules.add(new ModuleProgress(baseX, baseY + sizeY + 40, 10, new IndicatorBarImage(70, 58, 53, 8, 122, 58, 5, 8, EnumFacing.EAST, TextureResources.progressBars), this));
 				//modules.add(new ModuleText(baseX + 82, baseY + sizeY + 20, "Fuel Cost:", 0x1b1b1b));
@@ -307,11 +312,12 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 			flag = flag && !(isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()));
 			boolean artifactFlag = (dimCache != null && meetsArtifactReq(dimCache));
 			
-			canWarp.setText(isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || 
-					getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.nowhere") : 
+			canWarp.setText(
+				(getSpaceObject().isAnchored()) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.anchored") :
+				(isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.nowhere") :
 				(!artifactFlag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.missingart") : 
-					(flag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.ready") : LibVulpes.proxy.getLocalizedString("msg.warpmon.notready"))));
-			canWarp.setColor(flag && artifactFlag ? 0x1baa1b : 0xFF1b1b);
+				(flag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.ready") : LibVulpes.proxy.getLocalizedString("msg.warpmon.notready")))));
+			canWarp.setColor(flag && artifactFlag && !getSpaceObject().isAnchored() ? 0x1baa1b : 0xFF1b1b);
 		}
 
 
@@ -326,8 +332,8 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 				srcPlanetImg = new ModulePanetImage(baseX + 10,baseY + 10,sizeX - 20, location);
 				srcPlanetText = new ModuleText(baseX + 4, baseY + 56, "", 0xFFFFFF);
 				srcPlanetText.setAlwaysOnTop(true);
-				warpFuel = new ModuleText(baseX + 82, baseY + sizeY + 25, "", 0x1b1b1b);
-				warpCapacity = new ModuleText(baseX + 82, baseY + sizeY + 35, "", 0x1b1b1b);
+				warpFuel = new ModuleText(baseX + 100, baseY + sizeY + 25, "", 0x1b1b1b);
+				warpCapacity = new ModuleText(baseX + 100, baseY + sizeY + 35, "", 0x1b1b1b);
 
 				//DEST planet
 				baseX = 94;
@@ -451,7 +457,7 @@ public class TileWarpShipMonitor extends TileEntity implements ITickable, IModul
 		else if(id == 2) {
 			final SpaceStationObject station = getSpaceObject();
 
-			if(station != null && station.hasUsableWarpCore() && station.useFuel(getTravelCost()) != 0 && meetsArtifactReq(DimensionManager.getInstance().getDimensionProperties(station.getDestOrbitingBody()))) {
+			if(station != null && !station.isAnchored() && station.hasUsableWarpCore() && station.useFuel(getTravelCost()) != 0 && meetsArtifactReq(DimensionManager.getInstance().getDimensionProperties(station.getDestOrbitingBody()))) {
 				SpaceObjectManager.getSpaceManager().moveStationToBody(station, station.getDestOrbitingBody(), Math.max(Math.min(getTravelCost()*5, 5000),0));
 
 				for (EntityPlayer player2 : world.getPlayers(EntityPlayer.class, new Predicate<EntityPlayer>() {
