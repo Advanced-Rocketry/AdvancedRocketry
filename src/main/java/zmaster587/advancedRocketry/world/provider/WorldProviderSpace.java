@@ -1,9 +1,11 @@
 package zmaster587.advancedRocketry.world.provider;
 
+import jdk.nashorn.internal.ir.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.BiomeProviderSingle;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.client.IRenderHandler;
@@ -12,6 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.client.render.planet.RenderSpaceSky;
 import zmaster587.advancedRocketry.client.render.planet.RenderSpaceTravelSky;
@@ -19,6 +22,8 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
+import zmaster587.advancedRocketry.util.AstronomicalBodyHelper;
 import zmaster587.advancedRocketry.world.ChunkProviderSpace;
 
 public class WorldProviderSpace extends WorldProviderPlanet {
@@ -82,7 +87,19 @@ public class WorldProviderSpace extends WorldProviderPlanet {
 	public float calculateCelestialAngle(long worldTime, float p_76563_3_) {
 		return AdvancedRocketry.proxy.calculateCelestialAngleSpaceStation();
 	}
-	
+
+	@Override
+	public float getSunBrightness(float partialTicks) {
+		DimensionProperties properties = getDimensionProperties(Minecraft.getMinecraft().player.getPosition());
+		SpaceStationObject spaceStation = (SpaceStationObject) getSpaceObject(Minecraft.getMinecraft().player.getPosition());
+
+		//Vary brightness depending upon sun luminosity and planet distance
+		//This takes into account how eyes work, that they're not linear in sensing light
+		float preWarpBrightnessMultiplier = (float) AstronomicalBodyHelper.getPlanetaryLightLevelMultiplier(AstronomicalBodyHelper.getStellarBrightness(properties.getStar(), properties.getSolarOrbitalDistance()));
+		//Warp is no light, because there are no stars
+		return (spaceStation.isWarping()) ? (float) 0.0 : preWarpBrightnessMultiplier * world.getSunBrightnessBody(partialTicks);
+	}
+
 	@Override
 	protected void init() {
 		// TODO Auto-generated method stub
@@ -94,11 +111,13 @@ public class WorldProviderSpace extends WorldProviderPlanet {
 		
 	}
 	
-	
+	public ISpaceObject getSpaceObject(BlockPos pos) {
+		return SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+	}
 	
 	@Override
 	public DimensionProperties getDimensionProperties(BlockPos pos) {
-		ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+		ISpaceObject object = getSpaceObject(pos);
 		if(object != null)
 			return (DimensionProperties)object.getProperties();
 		return DimensionManager.defaultSpaceDimensionProperties;
