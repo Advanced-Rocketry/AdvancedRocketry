@@ -17,6 +17,7 @@ import zmaster587.advancedRocketry.item.ItemData;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.advancedRocketry.satellite.SatelliteData;
 import zmaster587.advancedRocketry.util.IDataInventory;
+import zmaster587.advancedRocketry.util.PlanetaryTravelHelper;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.network.PacketHandler;
@@ -94,7 +95,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 		else if( id == 100 ) {
 
 			SatelliteBase satellite = moduleSatellite.getSatellite();
-			if(satellite != null && DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
+			if(satellite != null && PlanetaryTravelHelper.isTravelWithinPlanetarySystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
 				satellite.performAction(player, world, pos);
 			}
 		}
@@ -118,7 +119,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 				if(getUniversalEnergyStored() < getPowerPerOperation()) 
 					moduleText.setText(LibVulpes.proxy.getLocalizedString("msg.notenoughpower"));
 
-				else if(!DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
+				else if(!PlanetaryTravelHelper.isTravelWithinPlanetarySystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
 					moduleText.setText(satellite.getName() + "\n\n" + LibVulpes.proxy.getLocalizedString("msg.satctrlcenter.toofar") );
 				}
 
@@ -233,7 +234,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 		//TODO
 		
 		SatelliteBase satellite = getSatelliteFromSlot(0);
-		if(satellite != null && satellite instanceof SatelliteData && DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
+		if(satellite != null && satellite instanceof SatelliteData && PlanetaryTravelHelper.isTravelWithinPlanetarySystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
 				satellite.performAction(null, world, pos);
 		}
 		

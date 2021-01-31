@@ -34,7 +34,7 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 	public Object[][][] getStructure() {
 		return structure;
 	}
-	
+
 	@Override
 	public void update() {
 		super.update();
@@ -70,6 +70,8 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 	public String getMachineName() {
 		return "container.cuttingmachine";
 	}
+
+
 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {

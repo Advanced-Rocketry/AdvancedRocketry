@@ -1569,7 +1569,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 
 			//Check to see if it's possible to reach
-			if(finalDest != Constants.INVALID_PLANET && (!storage.hasWarpCore() || DimensionManager.getInstance().getDimensionProperties(finalDest).getStarId() != DimensionManager.getInstance().getDimensionProperties(thisDimId).getStarId()) && !DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, thisDimId)) {
+			if(finalDest != Constants.INVALID_PLANET && (!storage.hasWarpCore() || DimensionManager.getInstance().getDimensionProperties(finalDest).getStarId() != DimensionManager.getInstance().getDimensionProperties(thisDimId).getStarId()) && !PlanetaryTravelHelper.isTravelWithinPlanetarySystem(finalDest, thisDimId)) {
 				setError(LibVulpes.proxy.getLocalizedString("error.rocket.notSameSystem"));
 				return;
 			}

@@ -2,7 +2,10 @@ package zmaster587.advancedRocketry.util;
 
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
+import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.stations.SpaceObjectBase;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 
 public class PlanetaryTravelHelper {
 	public static boolean isTravelWithinPlanetarySystem(int currentDimensionID, int destinationDimensionID) {
@@ -59,5 +62,10 @@ public class PlanetaryTravelHelper {
 	}
 	public static boolean isTravelWithinOrbit(int currentDimensionID, int destinationDimensionID) {
 		return (currentDimensionID == destinationDimensionID);
+	}
+
+	public static boolean isTravelWithinGeostationaryOrbit(SpaceStationObject spaceStation, int planetID) {
+		//Returns true if the planet and the dimension (can be any!) are the same parent and if station is 36300 > x > 35500 km
+		return spaceStation.getOrbitingPlanetId() == planetID && (spaceStation.getOrbitalDistance() >= 177.0f && 181.0f >= spaceStation.getOrbitalDistance());
 	}
 }

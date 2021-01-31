@@ -37,6 +37,7 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.AstronomicalBodyHelper;
+import zmaster587.advancedRocketry.util.PlanetaryTravelHelper;
 import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader.DimensionPropertyCoupling;
@@ -1161,34 +1162,14 @@ public class DimensionManager implements IGalaxy {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param destinationDimId
 	 * @param dimension
 	 * @return true if the two dimensions are in the same planet/moon system
 	 */
 	public boolean areDimensionsInSamePlanetMoonSystem(int destinationDimId,
 			int dimension) {
-		//This is a mess, clean up later
-		if(dimension == SpaceObjectManager.WARPDIMID || destinationDimId == SpaceObjectManager.WARPDIMID)
-			return false;
-
-		DimensionProperties properties = getDimensionProperties(dimension);
-		DimensionProperties properties2 = getDimensionProperties(destinationDimId);
-
-		while(properties.getParentProperties() != null) properties = properties.getParentProperties();
-		while(properties2.getParentProperties() != null) properties2 = properties2.getParentProperties();
-
-		return areDimensionsInSamePlanetMoonSystem(properties, destinationDimId) || areDimensionsInSamePlanetMoonSystem(properties2, dimension);
-	}
-
-	private boolean areDimensionsInSamePlanetMoonSystem(DimensionProperties properties, int id) {
-		if(properties.getId() == id)
-			return true;
-
-		for(int child : properties.getChildPlanets()) {
-			if(areDimensionsInSamePlanetMoonSystem(getDimensionProperties(child), id)) return true;
-		}
-		return false;
+		return PlanetaryTravelHelper.isTravelWithinPlanetarySystem(destinationDimId,dimension);
 	}
 
 	public static DimensionProperties getEffectiveDimId(int dimId, BlockPos pos) {

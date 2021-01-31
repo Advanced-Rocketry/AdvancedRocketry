@@ -26,6 +26,7 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.entity.EntityItemAbducted;
 import zmaster587.advancedRocketry.util.AudioRegistry;
+import zmaster587.advancedRocketry.util.PlanetaryTravelHelper;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
@@ -281,7 +282,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 					TileEntity tile;
 
 					if(world != null && (tile = world.getTileEntity(pos)) instanceof TileRailgun && ((TileRailgun)tile).canRecieveCargo(tfrStack) &&
-							(zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(this.world.provider.getDimension(),
+							(PlanetaryTravelHelper.isTravelWithinPlanetarySystem(this.world.provider.getDimension(),
 									zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(world, pos).getId()) ||
 									zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(world, pos).getId() == zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(this.world, this.pos).getId()) ) {
 
