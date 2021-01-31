@@ -18,10 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
-import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
-import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
@@ -30,6 +27,7 @@ import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
+import zmaster587.libVulpes.recipe.NumberedOreDictStack;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
@@ -152,9 +150,9 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 					enchanted.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
 	
 					if(((ItemArmor)item).armorType == EntityEquipmentSlot.CHEST)
-						RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), "gemDiamond", new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 3));
+						RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(AdvancedRocketryBlocks.blockPipeSealer, 1), new NumberedOreDictStack("sheetTitaniumAluminide", 4), new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 3));
 					else
-						RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), "gemDiamond");
+						RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(AdvancedRocketryBlocks.blockPipeSealer, 1), new NumberedOreDictStack("sheetTitaniumAluminide", 4));
 	
 				}
 			}
