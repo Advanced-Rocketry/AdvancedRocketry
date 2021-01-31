@@ -83,9 +83,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	}
 
 	public boolean isWarping() {
-		if (getOrbitingPlanetId() == SpaceObjectManager.WARPDIMID)
-			return true;
-		return false;
+		return getOrbitingPlanetId() == SpaceObjectManager.WARPDIMID;
 	}
 
 	public long getTransitionTime() {
