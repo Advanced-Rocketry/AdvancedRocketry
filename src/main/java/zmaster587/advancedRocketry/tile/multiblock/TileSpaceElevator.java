@@ -147,6 +147,11 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 		return false;
 	}
 
+	public static boolean wouldTetherBreakOnConnect(int destinationDimensionID, DimensionBlockPosition pos, HashedBlockPosition myPos, int myDimensionID) {
+		SpaceStationObject spaceStation = (myDimensionID == ARConfiguration.getCurrentConfig().spaceDimId) ? (SpaceStationObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPos.getBlockPos()) : (SpaceStationObject)SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos.pos.getBlockPos());
+        return spaceStation != null && spaceStation.wouldStationBreakTether();
+	}
+
 	public boolean attemptLaunch() {
 		if(!isComplete() || !enabled || !hasEnergy(50000))
 			return false;
@@ -198,11 +203,6 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 
 	@Override
 	public void update() {
-		if (dimBlockPos != null ) {
-			if (!isDestinationValid(dimBlockPos.dimid, dimBlockPos, new HashedBlockPosition(pos), world.provider.getDimension())) {
-				updateTetherLinkPosition(new DimensionBlockPosition(world.provider.getDimension(), new HashedBlockPosition(pos)), null);
-			}
-		}
 		super.update();
 	}
 
@@ -335,6 +335,11 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 				return false;
 			}
 
+			if(wouldTetherBreakOnConnect(dimPos.dimid, dimPos, new HashedBlockPosition(getPos()), myWorld.provider.getDimension())) {
+				player.sendMessage(new TextComponentTranslation("msg.spaceElevator.tetherWouldBreakError"));
+				return false;
+			}
+
 			if(dimBlockPos != null) {
 				player.sendMessage(new TextComponentTranslation("msg.spaceElevator.linkCannotChangeError"));
 				return false;
@@ -368,6 +373,11 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 
 	public void updateTetherLinkPosition(DimensionBlockPosition myPosition, DimensionBlockPosition dimensionBlockPosition) {
 		if (myPosition.dimid == ARConfiguration.getCurrentConfig().spaceDimId && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()) != null) {
+			if (dimensionBlockPosition != null) {
+				SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setDeltaRotation(0, EnumFacing.EAST);
+				SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setDeltaRotation( 0, EnumFacing.UP);
+				SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setDeltaRotation( 0, EnumFacing.NORTH);
+			}
 			SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setIsAnchored( (dimensionBlockPosition == null) ? false : true);
 		}
 		dimBlockPos = dimensionBlockPosition;

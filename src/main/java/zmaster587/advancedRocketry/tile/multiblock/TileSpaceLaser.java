@@ -31,6 +31,7 @@ import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.satellite.SatelliteLaser;
 import zmaster587.advancedRocketry.satellite.SatelliteLaserNoDrill;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -501,15 +502,11 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 	}
 
 	private boolean canMachineSeeEarth() {
-		//for(int i = getPos().getY() - 1; i > 0; i--) {
-		//	if(worldObj.isBlockNormalCube(new BlockPos(getPos().getX(), i, getPos().getZ()), true))
-		//		return false;
-		//}
 		return true;
 	}
 
 	private boolean isAllowedToRun() {
-		return !(glassPanel.isEmpty()|| batteries.getUniversalEnergyStored() == 0 || !(this.world.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.world.provider).getDimensionProperties(getPos()).getParentPlanet()) ||
+		return !(glassPanel.isEmpty() || !canMachineSeeEarth() || batteries.getUniversalEnergyStored() == 0 || !(this.world.provider instanceof WorldProviderSpace) || !zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().canTravelTo(((WorldProviderSpace)this.world.provider).getDimensionProperties(getPos()).getParentPlanet()) ||
 				ARConfiguration.getCurrentConfig().laserBlackListDims.contains(((WorldProviderSpace)this.world.provider).getDimensionProperties(getPos()).getParentPlanet()));
 	}
 	
@@ -524,7 +521,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 			}
 
 			setRunning(false);
-		} else if(!laserSat.isAlive() && !finished && !laserSat.getJammed() && world.isBlockIndirectlyGettingPowered(getPos()) > 0 && canMachineSeeEarth()) {
+		} else if(!laserSat.isAlive() && !finished && !laserSat.getJammed() && world.isBlockIndirectlyGettingPowered(getPos()) > 0) {
 
 			//Laser will be on at this point
 			int orbitDimId = ((WorldProviderSpace)this.world.provider).getDimensionProperties(getPos()).getParentPlanet();

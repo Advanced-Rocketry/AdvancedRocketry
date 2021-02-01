@@ -55,7 +55,7 @@ public class RenderLaser extends TileEntitySpecialRenderer {
 		//Laser
 		if(((TileSpaceLaser)multiBlockTile).isRunning())
 		{
-			GL11.glTranslated(-0.5f, 0, -0.5f);
+			GL11.glTranslated(-1.0f, 0, -5f);
 			BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 			GlStateManager.disableLighting();
 			GlStateManager.disableFog();

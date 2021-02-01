@@ -175,6 +175,22 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		return (rotation[getIDFromDir(dir)] + getDeltaRotation(dir)*(getWorldTime() - lastTimeModification)) % (360D);
 	}
 
+	/**
+	 * @return whether the bottom of the station is facing the planet or not, this is if a laser would hit the planet at all if shined straight down
+	 */
+	public boolean isStationFacingPlanet () {
+		//They use 0 to 1.0 so we need to convert to that, and to to check angle <150 degrees
+		return Math.abs(rotation[0] - (int)rotation[0] - 0.5) > 0.40 && Math.abs(rotation[2] - (int)rotation[2] - 0.5) > 0.40;
+	}
+
+	/**
+	 * @return whether the station's current rotation would break the tether
+	 */
+	public boolean wouldStationBreakTether () {
+		//0.47 here is approximately between 10 and 15 degrees from the horizontal
+		return 0.47 > Math.abs(rotation[0] - (int)rotation[0] - 0.5) || 0.47 > Math.abs(rotation[2] - (int)rotation[2] - 0.5) || Math.abs(getDeltaRotation(EnumFacing.UP)) > 0 || Math.abs(getDeltaRotation(EnumFacing.NORTH)) > 0 || Math.abs(getDeltaRotation(EnumFacing.EAST)) > 0;
+	}
+
 	private int getIDFromDir(EnumFacing facing){
 		if(facing == EnumFacing.EAST)
 			return 0;
@@ -188,7 +204,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	 * @param rotation rotation of the station in degrees
 	 */
 	public void setRotation(double rotation, EnumFacing facing) {
-		this.rotation[getIDFromDir(facing)] = rotation;
+			this.rotation[getIDFromDir(facing)] = rotation;
 	}
 
 	/**
@@ -202,10 +218,12 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	 * @param rotation anglarVelocity of the station in degrees per tick
 	 */
 	public void setDeltaRotation(double rotation, EnumFacing facing) {
-		this.rotation[getIDFromDir(facing)] = getRotation(facing);
-		this.lastTimeModification = getWorldTime();
-		
-		this.angularVelocity[getIDFromDir(facing)] = rotation;
+		if (!isAnchored()) {
+			this.rotation[getIDFromDir(facing)] = getRotation(facing);
+			this.lastTimeModification = getWorldTime();
+
+			this.angularVelocity[getIDFromDir(facing)] = rotation;
+		}
 	}
 
 	public double getMaxRotationalAcceleration() {

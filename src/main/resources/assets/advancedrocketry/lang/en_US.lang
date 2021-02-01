@@ -296,6 +296,7 @@ msg.label.coords=Coords
 msg.spaceElevator.button.summon=Summon Capsule
 msg.spaceElevator.sameDimensionError=Cannot connect two elevators on the same planet!
 msg.spaceElevator.linkNotGeostationaryError=Station is not in geostationary orbit!
+msg.spaceElevator.tetherWouldBreakError=Station must be upright and stationary to receive tether!
 msg.spaceElevator.linkCannotChangeError=Elevator tethers cannot change position while already linked!
 msg.spaceElevator.newDstAdded=Elevator Tether Linked!
 msg.spaceElevator.ascentReady=Getting ready for ascent
