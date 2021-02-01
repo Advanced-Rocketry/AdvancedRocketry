@@ -43,17 +43,12 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 			{'L', 'I','L'}},
 
 			{{'P', LibVulpesBlocks.motors, 'P'}, 
-				{'l', new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'O'}},
+				{'l', 'O', 'l'}},
 
 	};
 
 	@Override
-	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
-		TileEntity tileEntity = world.getTileEntity(pos);
-
-		return !TileMultiBlock.getMapping('P').contains(new BlockMeta(tile.getBlock(), BlockMeta.WILDCARD)) && tileEntity != null && !(tileEntity instanceof TileChemicalReactor);
-
-	}
+	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) { return true; }
 
 	//Called by inventory blocks that are part of the structure
 	//This includes recipe management etc

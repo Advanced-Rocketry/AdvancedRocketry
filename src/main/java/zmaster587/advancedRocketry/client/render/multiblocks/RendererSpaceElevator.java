@@ -41,11 +41,6 @@ public class RendererSpaceElevator extends TileEntitySpecialRenderer {
 		if(!multiBlockTile.canRender())
 			return;
 
-		double renderX = x + multiBlockTile.getLandingLocationX() - multiBlockTile.getPos().getX();
-		double renderZ = z + multiBlockTile.getLandingLocationZ() - multiBlockTile.getPos().getZ();
-		if (multiBlockTile.isTetherConnected() && !multiBlockTile.isAnchorOnSpaceStation()) {
-			laser.doRender((Entity) null, renderX + 1.5, y + 4f, renderZ - 0.5, 0, f);
-		}
 		
 		GL11.glPushMatrix();
 
@@ -75,8 +70,14 @@ public class RendererSpaceElevator extends TileEntitySpecialRenderer {
 
 		if (multiBlockTile.isTetherConnected() && !multiBlockTile.isAnchorOnSpaceStation()) {
 			//Render Beads
+
+			double renderX = x + multiBlockTile.getLandingLocationX() - multiBlockTile.getPos().getX() - ((front.getAxis() == EnumFacing.Axis.X) ? 0.5 : 2.5);
+			double renderZ = z + multiBlockTile.getLandingLocationZ() - multiBlockTile.getPos().getZ() - ((front.getAxis() == EnumFacing.Axis.X) ? -1.5 : 0.5);
+
+			laser.doRender((Entity) null, renderX, y + 4f, renderZ, 0, f);
+
 			GL11.glPushMatrix();
-			GL11.glTranslated(x + multiBlockTile.getLandingLocationX() - multiBlockTile.getPos().getX() + 2, y + 4, z + multiBlockTile.getLandingLocationZ() - multiBlockTile.getPos().getZ());
+			GL11.glTranslated( renderX, y + 4, renderZ);
 			BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 			GlStateManager.disableLighting();
 			GlStateManager.disableFog();
