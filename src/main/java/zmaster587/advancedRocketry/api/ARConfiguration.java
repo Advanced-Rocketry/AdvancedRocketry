@@ -456,6 +456,8 @@ public class ARConfiguration {
 		arConfig.terraformRequiresFluid = config.get(Configuration.CATEGORY_GENERAL, "TerraformerRequiresFluids", true).getBoolean();
 		arConfig.terraformliquidRate = config.get(Configuration.CATEGORY_GENERAL, "TerraformerFluidConsumeRate", 40, "how many millibuckets/t are required to keep the terraformer running").getInt();
 		arConfig.allowTerraformNonAR = config.get(Configuration.CATEGORY_GENERAL, "allowTerraformingNonARWorlds", false, "If true dimensions not added by AR can be terraformed, including the overworld").getBoolean();
+		arConfig.crystalliserMaximumGravity = (float)config.get(Configuration.CATEGORY_GENERAL, "crystalliserMaximumGravity", 0f, "Maximum gravity the crystalliser will function at. Use 0.0 to disable!").getDouble();
+
 
 		liquidRocketFuel = config.get(ROCKET, "rocketFuels", new String[] {"rocketfuel"}, "List of fluid names for fluids that can be used as rocket fuel").getStringList();
 
@@ -1050,6 +1052,9 @@ public class ARConfiguration {
 
 	@ConfigProperty
 	public boolean allowTerraformNonAR;
+
+	@ConfigProperty
+	public float crystalliserMaximumGravity;
 
 	@ConfigProperty
 	public boolean allowZeroGSpacestations;

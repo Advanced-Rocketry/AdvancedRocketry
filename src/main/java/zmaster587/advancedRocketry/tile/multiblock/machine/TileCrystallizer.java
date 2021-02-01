@@ -8,15 +8,19 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.material.Material;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
+import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
 import java.util.List;
@@ -29,15 +33,9 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 		{AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible}},
 		
 		{{'O', 'c', 'I'}, 
-			{"blockCoil", 'P', "blockCoil"}},
+			{'l', 'P', 'L'}},
 
 	};
-
-	Material coil[];
-	
-	public TileCrystallizer() {
-		coil = new Material[2];
-	}
 
 	@Override
 	public boolean shouldHideBlock(World world, BlockPos pos2, IBlockState tile) {
@@ -47,22 +45,6 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 	@Override
 	public Object[][][] getStructure() {
 		return structure;
-	}
-	
-	@Override
-	public float getTimeMultiplierForBlock(IBlockState state, TileEntity tile) {
-
-		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(state.getBlock(),1, state.getBlock().getMetaFromState(state)));
-		if(material == MaterialRegistry.getMaterialFromName("Gold"))
-			return 0.9f;
-		else if(material == MaterialRegistry.getMaterialFromName("Aluminum"))
-			return 0.8f;
-		else if(material == MaterialRegistry.getMaterialFromName("Titanium"))
-			return 0.75f;
-		else if(material == MaterialRegistry.getMaterialFromName("Iridium"))
-			return 0.5f;
-
-		return super.getTimeMultiplierForBlock(state, tile);
 	}
 
 	@Override
@@ -80,11 +62,29 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 		return new AxisAlignedBB(pos.add(-2,-2,-2), pos.add(2,2,2));
 	}
 
+	public boolean isGravityWithinBounds() {
+		if (!(ARConfiguration.getCurrentConfig().crystalliserMaximumGravity == 0)) {
+			return ARConfiguration.getCurrentConfig().crystalliserMaximumGravity > DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).gravitationalMultiplier;
+		}
+		return true;
+	}
+
+	@Override
+	protected void onRunningPoweredTick() {
+		if (isGravityWithinBounds()) {
+			super.onRunningPoweredTick();
+		}
+
+	}
+
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		List<ModuleBase> modules = super.getModules(ID, player);
 
 		modules.add(new ModuleProgress(100, 4, 0, TextureResources.crystallizerProgressBar, this));
+		if (!isGravityWithinBounds()) {
+			modules.add(new ModuleText(10, 75, LibVulpes.proxy.getLocalizedString("msg.crystalliser.gravityTooHigh"), 0xFF1b1b));
+		}
 		return modules;
 	}
 
