@@ -164,7 +164,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			timeAlive = 0x1;
 		}
 
-		if((world.isRemote && isOpen) || (!world.isRemote && isRunning() && getMachineEnabled() && !world.isRaining() && world.canBlockSeeSky(pos.add(0,1,0)) && !world.isDaytime()) ) {
+		if((world.isRemote && isOpen) || (!world.isRemote && isRunning() && getMachineEnabled() && ((!world.isRaining() && world.canBlockSeeSky(pos.add(0,1,0)) && !world.isDaytime()) || world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) )) {
 
 			if(!isOpen) {
 				isOpen= true;

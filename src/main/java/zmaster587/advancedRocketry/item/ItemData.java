@@ -18,7 +18,7 @@ public class ItemData extends ItemIngredient {
 
 	public ItemData() {
 		super(1);
-		setMaxStackSize(16);
+		setMaxStackSize(1);
 	}
 
 	public int getMaxData(int damage) {
