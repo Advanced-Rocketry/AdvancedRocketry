@@ -15,9 +15,7 @@
         "type=blcorner": { "model": "advancedrocketry:launchpad_blCorner" },
         "type=topedge": { "model": "advancedrocketry:launchpad_topEdge" },
         "type=rightedge": { "model": "advancedrocketry:launchpad_rightEdge" },
-        "type=noedge": { "model": "advancedrocketry:launchpad_noEdge" }
-    },
-    "inventory": {
-        "model": "advancedrocketry:launchpad_all"
+        "type=noedge": { "model": "advancedrocketry:launchpad_noEdge" },
+        "inventory" : { "model": "advancedrocketry:launchpad_all" }
     }
 }

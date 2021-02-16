@@ -5,6 +5,7 @@
         "facing=west":  { "model": "advancedrocketry:forceFieldProjector", "y": 270, "x": 90 },
         "facing=east":  { "model": "advancedrocketry:forceFieldProjector", "y": 90, "x": 90 },
         "facing=up": { "model": "advancedrocketry:forceFieldProjector" },
-        "facing=down": { "model": "advancedrocketry:forceFieldProjector", "y": 180 }
+        "facing=down": { "model": "advancedrocketry:forceFieldProjector", "y": 180 },
+        "inventory" : { "model": "advancedrocketry:forcefieldprojector" }
     }
 }

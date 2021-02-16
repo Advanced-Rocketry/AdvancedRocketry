@@ -11,6 +11,7 @@
         "extended=true,facing=north": { "model": "piston_extended_normal" },
         "extended=true,facing=south": { "model": "piston_extended_normal", "y": 180 },
         "extended=true,facing=west": { "model": "piston_extended_normal", "y": 270 },
-        "extended=true,facing=east": { "model": "piston_extended_normal", "y": 90 }
+        "extended=true,facing=east": { "model": "piston_extended_normal", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:piston_normal", "x": 90 }
     }
 }

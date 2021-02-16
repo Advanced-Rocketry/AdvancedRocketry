@@ -11,6 +11,7 @@
         "facing=west,state=true":  { "model": "advancedrocketry:planetHoloSelector", "y": 270 },
         "facing=east,state=true":  { "model": "advancedrocketry:planetHoloSelector", "y": 90 },
         "facing=down,state=true":  { "model": "advancedrocketry:planetHoloSelector" },
-        "facing=up,state=true":  { "model": "advancedrocketry:planetHoloSelector" }
+        "facing=up,state=true":  { "model": "advancedrocketry:planetHoloSelector" },
+        "inventory" : { "model": "advancedrocketry:planetholoselector" }
     }
 }

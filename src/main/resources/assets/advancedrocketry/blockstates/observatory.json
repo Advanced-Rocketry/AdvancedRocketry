@@ -7,6 +7,7 @@
         "facing=north,state=true": { "model": "advancedrocketry:observatory" },
         "facing=south,state=true": { "model": "advancedrocketry:observatory", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:observatory", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:observatory", "y": 90 }
+        "facing=east,state=true":  { "model": "advancedrocketry:observatory", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:observatory" }
     }
 }
