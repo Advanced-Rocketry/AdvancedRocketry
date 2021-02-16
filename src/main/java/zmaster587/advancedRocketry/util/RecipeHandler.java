@@ -53,6 +53,7 @@ public class RecipeHandler {
 		LibVulpes.instance.loadXMLRecipe(TileRollingMachine.class);
 		LibVulpes.instance.loadXMLRecipe(BlockPress.class);
 		LibVulpes.instance.loadXMLRecipe(TileCentrifuge.class);
+		LibVulpes.instance.loadXMLRecipe(TilePrecisionLaserEngraver.class);
 	}
 	
 	public void registerAllMachineRecipes() {

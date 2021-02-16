@@ -43,6 +43,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockOxygenFluid;
 	public static Block blockHydrogenFluid;
 	public static Block blockChemicalReactor;
+	public static Block blockPrecisionLaserEngraver;
 	public static Block blockFuelFluid;
 	public static Block test;
 	public static Block blockOxygenVent;

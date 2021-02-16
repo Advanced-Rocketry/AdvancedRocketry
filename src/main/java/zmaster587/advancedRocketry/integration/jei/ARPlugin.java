@@ -29,6 +29,9 @@ import zmaster587.advancedRocketry.integration.jei.platePresser.PlatePressRecipe
 import zmaster587.advancedRocketry.integration.jei.precisionAssembler.PrecisionAssemblerCategory;
 import zmaster587.advancedRocketry.integration.jei.precisionAssembler.PrecisionAssemblerRecipeHandler;
 import zmaster587.advancedRocketry.integration.jei.precisionAssembler.PrecisionAssemblerRecipeMaker;
+import zmaster587.advancedRocketry.integration.jei.precisionLaserEngraver.lathe.PrecisionLaserEngraverCategory;
+import zmaster587.advancedRocketry.integration.jei.precisionLaserEngraver.lathe.PrecisionLaserEngraverRecipeHandler;
+import zmaster587.advancedRocketry.integration.jei.precisionLaserEngraver.lathe.PrecisionLaserEngraverRecipeMaker;
 import zmaster587.advancedRocketry.integration.jei.rollingMachine.RollingMachineCategory;
 import zmaster587.advancedRocketry.integration.jei.rollingMachine.RollingMachineRecipeHandler;
 import zmaster587.advancedRocketry.integration.jei.rollingMachine.RollingMachineRecipeMaker;
@@ -54,6 +57,7 @@ public class ARPlugin extends BlankModPlugin {
 	public static final String arcFurnaceUUID = "zmaster587.AR.arcFurnace";
 	public static final String platePresser = "zmaster587.AR.platePresser";
 	public static final String centrifugeUUID = "zmaster587.AR.centrifuge";
+	public static final String precisionLaserEngraverUUID = "zmaster587.AR.precisionlaserengraver";
 	
 	public static void reload() {
 		jeiHelpers.reload();
@@ -92,7 +96,8 @@ public class ARPlugin extends BlankModPlugin {
 		new ElectrolyzerCategory(guiHelper),
 		new BlastFurnaceCategory(guiHelper),
 		new PlatePressCategory(guiHelper),
-		new CentrifugeCategory(guiHelper));
+		new CentrifugeCategory(guiHelper),
+		new PrecisionLaserEngraverCategory(guiHelper));
 		
 		registry.addRecipeHandlers(new RollingMachineRecipeHandler(),
 		new LatheRecipeHandler(),
@@ -103,7 +108,8 @@ public class ARPlugin extends BlankModPlugin {
 		new ElectrolyzerRecipeHandler(),
 		new BlastFurnaceRecipeHandler(),
 		new PlatePressRecipeHandler(),
-		new CentrifugeRecipeHandler());
+		new CentrifugeRecipeHandler(),
+		new PrecisionLaserEngraverRecipeHandler());
 		
 		registry.addRecipes(RollingMachineRecipeMaker.getMachineRecipes(jeiHelpers, TileRollingMachine.class));
 		registry.addRecipes(LatheRecipeMaker.getMachineRecipes(jeiHelpers, TileLathe.class));
@@ -115,6 +121,7 @@ public class ARPlugin extends BlankModPlugin {
 		registry.addRecipes(ElectrolyzerRecipeMaker.getMachineRecipes(jeiHelpers, TileElectrolyser.class));
 		registry.addRecipes(ChemicalReactorRecipeMaker.getMachineRecipes(jeiHelpers, TileChemicalReactor.class));
 		registry.addRecipes(CentrifugeRecipeMaker.getMachineRecipes(jeiHelpers, TileCentrifuge.class));
+		registry.addRecipes(PrecisionLaserEngraverRecipeMaker.getMachineRecipes(jeiHelpers, TilePrecisionLaserEngraver.class));
 		
 		
 		registry.addRecipeCategoryCraftingItem(new ItemStack(AdvancedRocketryBlocks.blockRollingMachine), rollingMachineUUID);
@@ -127,5 +134,6 @@ public class ARPlugin extends BlankModPlugin {
 		registry.addRecipeCategoryCraftingItem(new ItemStack(AdvancedRocketryBlocks.blockArcFurnace), arcFurnaceUUID);
 		registry.addRecipeCategoryCraftingItem(new ItemStack(AdvancedRocketryBlocks.blockPlatePress), platePresser);
 		registry.addRecipeCategoryCraftingItem(new ItemStack(AdvancedRocketryBlocks.blockCentrifuge), centrifugeUUID);
+		registry.addRecipeCategoryCraftingItem(new ItemStack(AdvancedRocketryBlocks.blockPrecisionLaserEngraver), precisionLaserEngraverUUID);
 	}
 }

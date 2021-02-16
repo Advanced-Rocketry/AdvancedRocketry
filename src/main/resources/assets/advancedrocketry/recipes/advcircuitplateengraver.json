@@ -1,0 +1,30 @@
+{
+    "type": "advancedrocketry:precisionlaserengraver",
+    "itemingredients":
+    [
+        {
+	    "type": "forge:ore_dict",
+            "ore": "plateGold"
+        },
+        {
+	    "item": "minecraft:redstone_block"
+        },
+        {
+        "type": "forge:ore_dict",
+        "ore": "lensPrecisionLaserEngraver"
+        },
+	{
+	    "item": "advancedrocketry:wafer",
+	    "data": 0,
+        "count": 2
+        }
+    ],
+    "time": 900,
+    "energy": 400,
+    "itemresults":
+    {
+	"item": "advancedrocketry:itemcircuitplate",
+	"data": 1,
+      "count": 3
+    }
+}

@@ -102,6 +102,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.TileSpaceElevator.class, new zmaster587.advancedRocketry.client.render.multiblocks.RendererSpaceElevator());
 		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.TileBeacon.class, new zmaster587.advancedRocketry.client.render.multiblocks.RenderBeacon());
 		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.machine.TileCentrifuge.class, new zmaster587.advancedRocketry.client.render.multiblocks.RenderCentrifuge());
+		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.machine.TilePrecisionLaserEngraver.class, new RendererPrecisionLaserEngraver());
 
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileModelRenderRotatable.class, modelBlock);
 
@@ -227,6 +228,7 @@ public class ClientProxy extends CommonProxy {
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockPlanetHoloSelector));	
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockPlanetSelector));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockPrecisionAssembler));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockPrecisionLaserEngraver));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockPressureTank));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockQuartzCrucible));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockRailgun));
