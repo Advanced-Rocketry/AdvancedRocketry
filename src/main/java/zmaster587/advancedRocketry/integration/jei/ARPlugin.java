@@ -24,6 +24,7 @@ import zmaster587.advancedRocketry.integration.jei.electrolyser.ElectrolyzerReci
 import zmaster587.advancedRocketry.integration.jei.lathe.LatheCategory;
 import zmaster587.advancedRocketry.integration.jei.lathe.LatheRecipeHandler;
 import zmaster587.advancedRocketry.integration.jei.lathe.LatheRecipeMaker;
+import zmaster587.advancedRocketry.integration.jei.lathe.LatheWrapper;
 import zmaster587.advancedRocketry.integration.jei.platePresser.PlatePressCategory;
 import zmaster587.advancedRocketry.integration.jei.platePresser.PlatePressRecipeHandler;
 import zmaster587.advancedRocketry.integration.jei.platePresser.PlatePressRecipeMaker;
@@ -60,7 +61,9 @@ public class ARPlugin implements IModPlugin {
 	public static final String platePresser = "zmaster587.AR.platePresser";
 	public static final String centrifugeUUID = "zmaster587.AR.centrifuge";
 	public static final String precisionLaserEngraverUUID = "zmaster587.AR.precisionlaserengraver";
-	
+
+	//AR machines can reload recipes. We still need this for JEI to be up-to-date
+	@SuppressWarnings("deprecation")
 	public static void reload() {
 		jeiHelpers.reload();
 	}
@@ -116,17 +119,17 @@ public class ARPlugin implements IModPlugin {
 		new CentrifugeRecipeHandler(),
 		new PrecisionLaserEngraverRecipeHandler());
 		
-		registry.addRecipes(RollingMachineRecipeMaker.getMachineRecipes(jeiHelpers, TileRollingMachine.class));
-		registry.addRecipes(LatheRecipeMaker.getMachineRecipes(jeiHelpers, TileLathe.class));
-		registry.addRecipes(PrecisionAssemblerRecipeMaker.getMachineRecipes(jeiHelpers, TilePrecisionAssembler.class));
-		registry.addRecipes(SawMillRecipeMaker.getMachineRecipes(jeiHelpers, TileCuttingMachine.class));
-		registry.addRecipes(CrystallizerRecipeMaker.getMachineRecipes(jeiHelpers, TileCrystallizer.class));
-		registry.addRecipes(BlastFurnaceRecipeMaker.getMachineRecipes(jeiHelpers, TileElectricArcFurnace.class));
-		registry.addRecipes(PlatePressRecipeMaker.getMachineRecipes(jeiHelpers, BlockPress.class));
-		registry.addRecipes(ElectrolyzerRecipeMaker.getMachineRecipes(jeiHelpers, TileElectrolyser.class));
-		registry.addRecipes(ChemicalReactorRecipeMaker.getMachineRecipes(jeiHelpers, TileChemicalReactor.class));
-		registry.addRecipes(CentrifugeRecipeMaker.getMachineRecipes(jeiHelpers, TileCentrifuge.class));
-		registry.addRecipes(PrecisionLaserEngraverRecipeMaker.getMachineRecipes(jeiHelpers, TilePrecisionLaserEngraver.class));
+		registry.addRecipes(RollingMachineRecipeMaker.getMachineRecipes(jeiHelpers, TileRollingMachine.class), rollingMachineUUID);
+		registry.addRecipes(LatheRecipeMaker.getMachineRecipes(jeiHelpers, TileLathe.class), latheUUID);
+		registry.addRecipes(PrecisionAssemblerRecipeMaker.getMachineRecipes(jeiHelpers, TilePrecisionAssembler.class), precisionAssemblerUUID);
+		registry.addRecipes(SawMillRecipeMaker.getMachineRecipes(jeiHelpers, TileCuttingMachine.class), sawMillUUID);
+		registry.addRecipes(CrystallizerRecipeMaker.getMachineRecipes(jeiHelpers, TileCrystallizer.class), crystallizerUUID);
+		registry.addRecipes(BlastFurnaceRecipeMaker.getMachineRecipes(jeiHelpers, TileElectricArcFurnace.class), arcFurnaceUUID);
+		registry.addRecipes(PlatePressRecipeMaker.getMachineRecipes(jeiHelpers, BlockPress.class), platePresser);
+		registry.addRecipes(ElectrolyzerRecipeMaker.getMachineRecipes(jeiHelpers, TileElectrolyser.class), electrolyzerUUID);
+		registry.addRecipes(ChemicalReactorRecipeMaker.getMachineRecipes(jeiHelpers, TileChemicalReactor.class), chemicalReactorUUID);
+		registry.addRecipes(CentrifugeRecipeMaker.getMachineRecipes(jeiHelpers, TileCentrifuge.class), centrifugeUUID);
+		registry.addRecipes(PrecisionLaserEngraverRecipeMaker.getMachineRecipes(jeiHelpers, TilePrecisionLaserEngraver.class), precisionLaserEngraverUUID);
 		
 		
 		registry.addRecipeCatalyst(new ItemStack(AdvancedRocketryBlocks.blockRollingMachine), rollingMachineUUID);
