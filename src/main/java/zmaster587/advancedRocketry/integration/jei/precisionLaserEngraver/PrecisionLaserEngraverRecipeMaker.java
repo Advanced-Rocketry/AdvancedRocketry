@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.integration.jei.precisionLaserEngraver.lathe;
+package zmaster587.advancedRocketry.integration.jei.precisionLaserEngraver;
 
 import mezz.jei.api.IJeiHelpers;
 import zmaster587.libVulpes.interfaces.IRecipe;
