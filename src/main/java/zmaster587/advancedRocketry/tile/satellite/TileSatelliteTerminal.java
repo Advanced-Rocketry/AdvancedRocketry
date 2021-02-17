@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.tile.Satellite;
+package zmaster587.advancedRocketry.tile.satellite;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;

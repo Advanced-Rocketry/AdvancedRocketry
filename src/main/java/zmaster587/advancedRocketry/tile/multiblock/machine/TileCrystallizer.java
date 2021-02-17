@@ -46,11 +46,6 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 	public Object[][][] getStructure() {
 		return structure;
 	}
-
-	@Override
-	protected float getTimeMultiplierForRecipe(IRecipe recipe) {
-		return super.getTimeMultiplierForRecipe(recipe);
-	}
 	
 	@Override
 	public SoundEvent getSound() {

@@ -40,22 +40,6 @@ public class TileRollingMachine extends TileMultiblockMachine {
 				{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.motors, LibVulpesBlocks.motors, "blockSteel", LibVulpesBlocks.blockStructureBlock},
 				{LibVulpesBlocks.blockStructureBlock, 'L', 'O', "blockSteel", LibVulpesBlocks.blockStructureBlock}}
 	};
-
-	@Override
-	public float getTimeMultiplierForBlock(IBlockState state, TileEntity tile) {
-
-		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(state.getBlock(),1, state.getBlock().getMetaFromState(state)));
-		if(material == MaterialRegistry.getMaterialFromName("Gold"))
-			return 0.9f;
-		else if(material == MaterialRegistry.getMaterialFromName("Aluminum"))
-			return 0.8f;
-		else if(material == MaterialRegistry.getMaterialFromName("Titanium"))
-			return 0.75f;
-		else if(material == MaterialRegistry.getMaterialFromName("Iridium"))
-			return 0.5f;
-
-		return super.getTimeMultiplierForBlock(state, tile);
-	}
 	
 	@Override
 	public Object[][][] getStructure() {
@@ -82,9 +66,7 @@ public class TileRollingMachine extends TileMultiblockMachine {
 	}
 	
 	@Override
-	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
-		return tile != Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem());
-	}
+	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) { return true; }
 
 	@Override
 	public String getMachineName() {

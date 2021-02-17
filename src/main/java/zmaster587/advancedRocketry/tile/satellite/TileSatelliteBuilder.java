@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.tile.Satellite;
+package zmaster587.advancedRocketry.tile.satellite;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
