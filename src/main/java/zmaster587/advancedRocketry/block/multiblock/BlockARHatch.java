@@ -81,7 +81,7 @@ public class BlockARHatch extends BlockHatch {
 		
 		//TODO: multiple sized Hatches
 		if((metadata & 7) == 0)
-			return new TileDataBus(4);
+			return new TileDataBus(2);
 		else if((metadata & 7) == 1)
 			return new TileSatelliteHatch(1);	
 		else if((metadata & 7) == 2)
